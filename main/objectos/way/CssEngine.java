@@ -75,6 +75,8 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
   private String theme;
 
+  private Map<String, String> themeQueries;
+
   private final Map<String, Css.Variant> variants = new LinkedHashMap<>();
 
   public final void base(String value) {
@@ -108,8 +110,10 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
     directoriesToScan.add(value);
   }
 
-  public final void skipLayer(Css.Layer layer) {
-    skipLayer.add(layer);
+  public final void skipLayer(Css.Layer value) {
+    Objects.requireNonNull(value, "value == null");
+
+    skipLayer.add(value);
   }
 
   @Override
@@ -117,6 +121,23 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
     Check.state(theme == null, "Theme was already set");
 
     theme = Objects.requireNonNull(value, "value == null");
+  }
+
+  @Override
+  public final void theme(String query, String value) {
+    Objects.requireNonNull(query, "query == null");
+    Objects.requireNonNull(value, "value == null");
+
+    if (themeQueries == null) {
+      themeQueries = LinkedHashMap.newLinkedHashMap(2);
+    }
+
+    String maybeExisting;
+    maybeExisting = themeQueries.put(query, value);
+
+    if (maybeExisting != null) {
+      throw new IllegalStateException("Theme was already set for " + query);
+    }
   }
 
   // ##################################################################
@@ -137,6 +158,12 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
     // if the user provided a theme, we parse it
     if (theme != null) {
       parseTheme(theme);
+    }
+
+    if (themeQueries != null) {
+      for (var entry : themeQueries.entrySet()) {
+        parseThemeQuery(entry);
+      }
     }
 
     // validate configuration
@@ -501,6 +528,216 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
   // ##################################################################
   // # END: Parse :: @theme {}
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Parse :: @theme w/ query {}
+  // ##################################################################
+
+  @Lang.VisibleForTesting
+  record ThemeQueryEntry(String name, String value) {
+    @Override
+    public final String toString() {
+      StringBuilder out;
+      out = new StringBuilder();
+
+      writeTo(out);
+
+      return out.toString();
+    }
+
+    public final void writeTo(StringBuilder out) {
+      out.append(name);
+      out.append(": ");
+      out.append(value);
+      out.append(';');
+    }
+  }
+
+  private Map<String, List<ThemeQueryEntry>> themeQueryEntries;
+
+  private void parseThemeQuery(Map.Entry<String, String> entry) {
+    String key;
+    key = entry.getKey();
+
+    String query;
+    query = parseThemeQueryKey(key);
+
+    String value;
+    value = entry.getValue();
+
+    parseThemeQueryValue(query, value);
+  }
+
+  private String parseThemeQueryKey(String key) {
+    if ("@media (prefers-color-scheme: dark)".equals(key)) {
+      return key;
+    }
+
+    throw new IllegalArgumentException("Only @media (prefers-color-scheme: dark) is currently supported");
+  }
+
+  private void parseThemeQueryValue(String query, String text) {
+    enum Parser {
+
+      NORMAL,
+      HYPHEN1,
+      NAME_1,
+      NAME_N,
+      OPTIONAL_WS,
+      VALUE,
+      VALUE_TRIM;
+
+    }
+
+    Parser parser;
+    parser = Parser.NORMAL;
+
+    int startIndex;
+    startIndex = 0;
+
+    String name = null;
+
+    for (int idx = 0, len = text.length(); idx < len; idx++) {
+      char c;
+      c = text.charAt(idx);
+
+      switch (parser) {
+        case NORMAL -> {
+          if (Ascii.isWhitespace(c)) {
+            parser = Parser.NORMAL;
+          }
+
+          else if (c == '-') {
+            parser = Parser.HYPHEN1;
+
+            startIndex = idx;
+          }
+
+          else {
+            parseError(text, idx, "Expected start of --variable declaration");
+          }
+        }
+
+        case HYPHEN1 -> {
+          if (c == '-') {
+            parser = Parser.NAME_1;
+          }
+
+          else {
+            parseError(text, idx, "Expected start of --variable declaration");
+          }
+        }
+
+        case NAME_1 -> {
+          if (Ascii.isLetter(c)) {
+            parser = Parser.NAME_N;
+          }
+
+          else {
+            parseError(text, idx, "--variable name must start with a letter");
+          }
+        }
+
+        case NAME_N -> {
+          if (Ascii.isLetterOrDigit(c) || c == '-') {
+            parser = Parser.NAME_N;
+          }
+
+          else if (c == ':') {
+            parser = Parser.OPTIONAL_WS;
+
+            name = text.substring(startIndex, idx);
+          }
+
+          else {
+            parseError(text, idx, "CSS variable name with invalid character=" + c);
+          }
+        }
+
+        case OPTIONAL_WS -> {
+          if (Ascii.isWhitespace(c)) {
+            parser = Parser.OPTIONAL_WS;
+          }
+
+          else if (c == ';') {
+            parseError(text, idx, "Empty variable definition");
+          }
+
+          else {
+            parser = Parser.VALUE;
+
+            sb.setLength(0);
+
+            sb.append(c);
+          }
+        }
+
+        case VALUE -> {
+          if (c == ';') {
+            parser = Parser.NORMAL;
+
+            parseThemeQueryAdd(query, name);
+          }
+
+          else if (Ascii.isWhitespace(c)) {
+            parser = Parser.VALUE_TRIM;
+          }
+
+          else {
+            parser = Parser.VALUE;
+
+            sb.append(c);
+          }
+        }
+
+        case VALUE_TRIM -> {
+          if (c == ';') {
+            parser = Parser.NORMAL;
+
+            parseThemeQueryAdd(query, name);
+          }
+
+          else if (Ascii.isWhitespace(c)) {
+            parser = Parser.VALUE_TRIM;
+          }
+
+          else {
+            parser = Parser.VALUE;
+
+            sb.append(' ');
+
+            sb.append(c);
+          }
+        }
+      }
+    }
+  }
+
+  private void parseThemeQueryAdd(String query, String name) {
+    String value;
+    value = sb.toString();
+
+    ThemeQueryEntry entry;
+    entry = new ThemeQueryEntry(name, value);
+
+    List<ThemeQueryEntry> list;
+
+    if (themeQueryEntries == null) {
+      themeQueryEntries = LinkedHashMap.newLinkedHashMap(2);
+
+      list = Util.createList();
+
+      themeQueryEntries.put(query, list);
+    } else {
+      list = themeQueryEntries.computeIfAbsent(query, k -> Util.createList());
+    }
+
+    list.add(entry);
+  }
+
+  // ##################################################################
+  // # END: Parse :: @theme w/ query {}
   // ##################################################################
 
   // ##################################################################
@@ -1554,6 +1791,14 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
     entries.sort(Comparator.naturalOrder());
 
     return entries.toUnmodifiableList();
+  }
+
+  final List<ThemeQueryEntry> testThemeQueryEntries(String query) {
+    for (var entry : themeQueries.entrySet()) {
+      parseThemeQuery(entry);
+    }
+
+    return themeQueryEntries.get(query);
   }
 
   final List<Css.Variant> testThemeVariants() {

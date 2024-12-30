@@ -70,6 +70,8 @@ public final class Css {
 
       void theme(String value);
 
+      void theme(String query, String value);
+
     }
 
     static StyleSheet generate(Consumer<Config> config) {
