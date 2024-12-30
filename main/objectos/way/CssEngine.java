@@ -1546,6 +1546,39 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
     writeln('}');
 
+    if (themeQueryEntries != null) {
+      for (Map.Entry<String, List<ThemeQueryEntry>> queryEntry : themeQueryEntries.entrySet()) {
+        indent(1);
+
+        String query;
+        query = queryEntry.getKey();
+
+        write(query);
+        writeln(" {");
+
+        indent(2);
+
+        writeln(":root {");
+
+        for (ThemeQueryEntry entry : queryEntry.getValue()) {
+          indent(3);
+
+          write(entry.name());
+          write(": ");
+          write(entry.value());
+          writeln(';');
+        }
+
+        indent(2);
+
+        writeln('}');
+
+        indent(1);
+
+        writeln('}');
+      }
+    }
+
     writeln('}');
   }
 
