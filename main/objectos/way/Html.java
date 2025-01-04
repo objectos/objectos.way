@@ -990,6 +990,16 @@ public final class Html {
     Html.Instruction.OfAttribute ariaLabel(String value);
 
     /**
+     * Renders the {@code as} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute as(String value);
+
+    /**
      * Renders the {@code async} boolean attribute.
      *
      * @return an instruction representing this attribute.
@@ -4397,6 +4407,18 @@ public final class Html {
      */
     protected final Instruction.OfAttribute ariaLabel(String value) {
       return $attributes().ariaLabel(value);
+    }
+
+    /**
+     * Generates the {@code as} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    protected final Instruction.OfAttribute as(String value) {
+      return $attributes().as(value);
     }
 
     /**

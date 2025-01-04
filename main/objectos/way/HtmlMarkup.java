@@ -4505,6 +4505,20 @@ final class HtmlMarkup implements Html.Markup {
   }
 
   /**
+   * Renders the {@code as} attribute with the specified value.
+   *
+   * @param value
+   *        the value of the attribute
+   *
+   * @return an instruction representing this attribute.
+   */
+  @Override
+  public final Html.Instruction.OfAttribute as(String value) {
+    Objects.requireNonNull(value, "value == null");
+    return attribute0(HtmlAttributeName.AS, value);
+  }
+
+  /**
    * Renders the {@code async} boolean attribute.
    *
    * @return an instruction representing this attribute.

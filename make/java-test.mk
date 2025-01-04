@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2023-2024 Objectos Software LTDA.
+# Copyright (C) 2023-2025 Objectos Software LTDA.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -64,6 +64,10 @@ ifeq ($(ENABLE_PREVIEW),1)
 TEST_JAVAX += --enable-preview
 endif
 
+ifndef TEST_ARGS
+TEST_ARGS := $(TEST_RUNTIME_OUTPUT)
+endif
+
 ifeq ($(TEST_RUNTIME_MODE),class-path)
 
 ## test delimiter
@@ -72,7 +76,7 @@ TEST_PATH_DELIMITER := $(CLASS_PATH_SEPARATOR)
 ## test java command
 TEST_JAVAX += --class-path @$(TEST_RUNTIME_PATH)
 TEST_JAVAX += $(TEST_MAIN)
-TEST_JAVAX += $(TEST_RUNTIME_OUTPUT)
+TEST_JAVAX += $(TEST_ARGS)
 
 ## test execution requirements
 TEST_RUNTIME_REQS := $(TEST_COMPILE_MARKER)
@@ -99,7 +103,7 @@ TEST_JAVAX += $(foreach mod,$(TEST_ADD_MODULES),--add-modules $(mod))
 endif
 TEST_JAVAX += --patch-module $(TEST_MODULE)=$(TEST_CLASS_OUTPUT)
 TEST_JAVAX += --module $(TEST_MODULE)/$(TEST_MAIN)
-TEST_JAVAX += $(TEST_RUNTIME_OUTPUT)
+TEST_JAVAX += $(TEST_ARGS)
 
 endif
 

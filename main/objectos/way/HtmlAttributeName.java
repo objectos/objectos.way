@@ -69,6 +69,7 @@ final class HtmlAttributeName implements Html.AttributeName {
   public static final Html.AttributeName ALT = BUILDER.create("alt", false);
   public static final Html.AttributeName ARIA_HIDDEN = BUILDER.create("aria-hidden", false);
   public static final Html.AttributeName ARIA_LABEL = BUILDER.create("aria-label", false);
+  public static final Html.AttributeName AS = BUILDER.create("as", false);
   public static final Html.AttributeName ASYNC = BUILDER.create("async", true);
   public static final Html.AttributeName AUTOCOMPLETE = BUILDER.create("autocomplete", false);
   public static final Html.AttributeName AUTOFOCUS = BUILDER.create("autofocus", true);
