@@ -18,7 +18,6 @@ package testing.site.web;
 import objectos.way.Http;
 import objectos.way.Web;
 import testing.site.auth.User;
-import testing.site.ui.UiHttpModule;
 import testing.zite.TestingSiteInjector;
 
 public class TestingHttpModule extends Http.Module {
@@ -31,13 +30,9 @@ public class TestingHttpModule extends Http.Module {
 
   @Override
   protected final void configure() {
-    install(new UiHttpModule(injector));
-
     route("/login", handlerFactory(Login::new, injector));
 
     route("/common/*", handler(injector.webResources()));
-
-    route("/styles.css", handler(new Styles(injector)));
 
     Web.Store sessionStore;
     sessionStore = injector.sessionStore();

@@ -43,7 +43,7 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
     static Notes get() {
       Class<?> s;
-      s = Css.Generator.class;
+      s = CssEngine.class;
 
       return new Notes(
           Note.Ref2.create(s, "Css.Key not found", Note.DEBUG),

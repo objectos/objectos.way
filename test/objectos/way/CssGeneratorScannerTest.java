@@ -106,10 +106,13 @@ public class CssGeneratorScannerTest {
     List<String> result;
     result = new ArrayList<>();
 
-    CssGeneratorAdapter adapter;
-    adapter = new CssGeneratorAdapter() {
+    CssGeneratorScanner.Adapter adapter;
+    adapter = new CssGeneratorScanner.Adapter() {
       @Override
       public void processStringConstant(String s) { result.add(s); }
+
+      @Override
+      public void sourceName(String value) {}
     };
 
     CssGeneratorScanner scanner;

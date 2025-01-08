@@ -40,7 +40,7 @@ final class CssGeneratorScanner {
 
     static Notes get() {
       Class<?> s;
-      s = Css.Generator.class;
+      s = CssGeneratorScanner.class;
 
       return new Notes(
           Note.Ref1.create(s, "Class file not found", Note.ERROR),
