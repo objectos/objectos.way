@@ -241,6 +241,26 @@ public class CssEngineTestVariants {
   }
 
   @Test
+  public void group() {
+    class Subject extends Html.Template {
+      @Override
+      protected final void render() {
+        a(css("group"), div(css("group-hover:outline:1px_solid_blue-500")));
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .group:hover .group-hover\\:outline\\:1px_solid_blue-500 { outline: 1px solid var(--color-blue-500) }
+        }
+        """
+    );
+  }
+
+  @Test
   public void lastChild() {
     class Subject extends CssSubject {
       @Override

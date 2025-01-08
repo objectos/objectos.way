@@ -47,6 +47,30 @@ sealed interface CssVariant {
 
   }
 
+  record Prefix(String value) implements OfClassName {
+    @Override
+    public final void writeClassName(StringBuilder out, int startIndex) {
+      String original;
+      original = out.substring(startIndex, out.length());
+
+      out.setLength(startIndex);
+
+      out.append(value);
+
+      out.append(original);
+    }
+
+    @Override
+    public final int length() {
+      return value.length();
+    }
+
+    @Override
+    public final CssVariant generateGroup() {
+      return new Prefix(value + ".group ");
+    }
+  }
+
   record Suffix(String value) implements OfClassName {
     @Override
     public final void writeClassName(StringBuilder out, int startIndex) {
@@ -56,6 +80,7 @@ sealed interface CssVariant {
       out.setLength(startIndex);
 
       out.append(original);
+
       out.append(value);
     }
 
@@ -63,6 +88,15 @@ sealed interface CssVariant {
     public final int length() {
       return value.length();
     }
+
+    @Override
+    public final CssVariant generateGroup() {
+      return new Prefix(".group" + value + " ");
+    }
+  }
+
+  default CssVariant generateGroup() {
+    return null;
   }
 
 }

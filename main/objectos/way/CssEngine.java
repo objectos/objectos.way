@@ -1082,23 +1082,77 @@ final class CssEngine implements Css.StyleSheet.Config, CssEngineScanner.Adapter
   }
 
   private CssVariant variantByName(String name) {
-    CssVariant variant;
-    variant = variants.get(name);
+    CssVariant result;
+    result = variants.get(name);
 
-    if (variant != null) {
-      return variant;
+    if (result != null) {
+      return result;
     }
 
-    if (!HtmlElementName.hasName(name)) {
+    result = variantByNameOfElement(name);
+
+    if (result != null) {
+      return result;
+    }
+
+    return variantByNameOfGroup(name);
+  }
+
+  private CssVariant variantByNameOfElement(String name) {
+    if (HtmlElementName.hasName(name)) {
+      CssVariant descendant;
+      descendant = new CssVariant.Suffix(" " + name);
+
+      variants.put(name, descendant);
+
+      return descendant;
+    }
+
+    return null;
+  }
+
+  private CssVariant variantByNameOfGroup(String name) {
+    final int dash;
+    dash = name.indexOf('-');
+
+    if (dash < 0) {
       return null;
     }
 
-    CssVariant descendant;
-    descendant = new CssVariant.Suffix(" " + name);
+    String maybeGroup;
+    maybeGroup = name.substring(0, dash);
 
-    variants.put(name, descendant);
+    if (!maybeGroup.equals("group")) {
+      return null;
+    }
 
-    return descendant;
+    int suffixIndex;
+    suffixIndex = dash + 1;
+
+    if (suffixIndex >= name.length()) {
+      return null;
+    }
+
+    String suffix;
+    suffix = name.substring(suffixIndex);
+
+    final CssVariant groupVariant;
+    groupVariant = variants.get(suffix);
+
+    if (groupVariant == null) {
+      return null;
+    }
+
+    CssVariant generatedGroupVariant;
+    generatedGroupVariant = groupVariant.generateGroup();
+
+    if (generatedGroupVariant == null) {
+      return null;
+    }
+
+    variants.put(name, generatedGroupVariant);
+
+    return generatedGroupVariant;
   }
 
   private CssModifier createModifier() {
