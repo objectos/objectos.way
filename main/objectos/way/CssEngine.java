@@ -31,9 +31,8 @@ import java.util.SequencedMap;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import objectos.way.Css.ClassNameFormat;
 
-final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adapter {
+final class CssEngine implements Css.StyleSheet.Config, CssEngineScanner.Adapter {
 
   record Notes(
       Note.Ref2<String, String> keyNotFound,
@@ -77,7 +76,7 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
   private Map<String, String> themeQueries;
 
-  private final Map<String, Css.Variant> variants = new LinkedHashMap<>();
+  private final Map<String, CssVariant> variants = new LinkedHashMap<>();
 
   public final void base(String value) {
     base = Objects.requireNonNull(value, "value == null");
@@ -188,27 +187,27 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
   // ##################################################################
 
   private void defaultVariants() {
-    variant("dark", new Css.AtRuleVariant("@media (prefers-color-scheme: dark)"));
+    variant("dark", new CssVariant.OfAtRule("@media (prefers-color-scheme: dark)"));
 
-    variant("active", new Css.ClassNameFormat("", ":active"));
-    variant("first-child", new Css.ClassNameFormat("", ":first-child"));
-    variant("focus", new Css.ClassNameFormat("", ":focus"));
-    variant("focus-visible", new Css.ClassNameFormat("", ":focus-visible"));
-    variant("hover", new Css.ClassNameFormat("", ":hover"));
-    variant("last-child", new Css.ClassNameFormat("", ":last-child"));
-    variant("visited", new Css.ClassNameFormat("", ":visited"));
+    variant("active", new CssVariant.Suffix(":active"));
+    variant("first-child", new CssVariant.Suffix(":first-child"));
+    variant("focus", new CssVariant.Suffix(":focus"));
+    variant("focus-visible", new CssVariant.Suffix(":focus-visible"));
+    variant("hover", new CssVariant.Suffix(":hover"));
+    variant("last-child", new CssVariant.Suffix(":last-child"));
+    variant("visited", new CssVariant.Suffix(":visited"));
 
-    variant("after", new Css.ClassNameFormat("", "::after"));
-    variant("before", new Css.ClassNameFormat("", "::before"));
-    variant("first-letter", new Css.ClassNameFormat("", "::first-letter"));
-    variant("first-line", new Css.ClassNameFormat("", "::first-line"));
+    variant("after", new CssVariant.Suffix("::after"));
+    variant("before", new CssVariant.Suffix("::before"));
+    variant("first-letter", new CssVariant.Suffix("::first-letter"));
+    variant("first-line", new CssVariant.Suffix("::first-line"));
 
-    variant("*", new Css.ClassNameFormat("", " > *"));
-    variant("**", new Css.ClassNameFormat("", " *"));
+    variant("*", new CssVariant.Suffix(" > *"));
+    variant("**", new CssVariant.Suffix(" *"));
   }
 
-  private void variant(String name, Css.Variant variant) {
-    Css.Variant maybeExisting;
+  private void variant(String name, CssVariant variant) {
+    CssVariant maybeExisting;
     maybeExisting = variants.put(name, variant);
 
     if (maybeExisting == null) {
@@ -815,8 +814,8 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
       String id;
       id = entry.id();
 
-      Css.Variant variant;
-      variant = new Css.AtRuleVariant("@media (min-width: " + entry.value() + ")");
+      CssVariant variant;
+      variant = new CssVariant.OfAtRule("@media (min-width: " + entry.value() + ")");
 
       variant(id, variant);
     }
@@ -861,8 +860,8 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
   private final UtilMap<String, Set<String>> tokens = new UtilSequencedMap<>();
 
   private void scan() {
-    CssGeneratorScanner scanner;
-    scanner = new CssGeneratorScanner(noteSink);
+    CssEngineScanner scanner;
+    scanner = new CssEngineScanner(noteSink);
 
     if (classesToScan != null) {
       for (Class<?> clazz : classesToScan) {
@@ -979,11 +978,11 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
   private final List<String> classNameSlugs = Util.createList();
 
-  private final List<Css.ClassNameFormat> classNameFormats = Util.createList();
-
-  private final List<Css.MediaQuery> mediaQueries = Util.createList();
-
   private final SequencedMap<String, Css.Rule> rules = Util.createSequencedMap();
+
+  private final List<CssVariant.OfAtRule> variantsOfAtRule = Util.createList();
+
+  private final List<CssVariant.OfClassName> variantsOfClassName = Util.createList();
 
   private void process() {
     outer: for (String token : tokens.keySet()) {
@@ -1021,9 +1020,9 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
       propValue = className.substring(beginIndex);
 
       // process variants
-      classNameFormats.clear();
+      variantsOfClassName.clear();
 
-      mediaQueries.clear();
+      variantsOfAtRule.clear();
 
       int parts;
       parts = classNameSlugs.size();
@@ -1034,7 +1033,7 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
           String variantName;
           variantName = classNameSlugs.get(idx);
 
-          Css.Variant variant;
+          CssVariant variant;
           variant = variantByName(variantName);
 
           if (variant == null) {
@@ -1044,9 +1043,9 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
           }
 
           switch (variant) {
-            case Css.ClassNameFormat format -> classNameFormats.add(format);
+            case CssVariant.OfAtRule ofAtRule -> variantsOfAtRule.add(ofAtRule);
 
-            case Css.MediaQuery query -> mediaQueries.add(query);
+            case CssVariant.OfClassName ofClassName -> variantsOfClassName.add(ofClassName);
           }
         }
 
@@ -1067,7 +1066,7 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
       String formatted;
       formatted = formatValue(propValue);
 
-      Css.Modifier modifier;
+      CssModifier modifier;
       modifier = createModifier();
 
       CssProperties.Builder properties;
@@ -1082,8 +1081,8 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
     }
   }
 
-  private Css.Variant variantByName(String name) {
-    Css.Variant variant;
+  private CssVariant variantByName(String name) {
+    CssVariant variant;
     variant = variants.get(name);
 
     if (variant != null) {
@@ -1094,21 +1093,21 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
       return null;
     }
 
-    ClassNameFormat descendant;
-    descendant = new Css.ClassNameFormat("", " " + name);
+    CssVariant descendant;
+    descendant = new CssVariant.Suffix(" " + name);
 
     variants.put(name, descendant);
 
     return descendant;
   }
 
-  private Css.Modifier createModifier() {
-    if (mediaQueries.isEmpty() && classNameFormats.isEmpty()) {
-      return Css.EMPTY_MODIFIER;
+  private CssModifier createModifier() {
+    if (variantsOfAtRule.isEmpty() && variantsOfClassName.isEmpty()) {
+      return CssModifier.EMPTY_MODIFIER;
     } else {
-      return new Css.Modifier(
-          Util.toUnmodifiableList(mediaQueries),
-          Util.toUnmodifiableList(classNameFormats)
+      return new CssModifier(
+          Util.toUnmodifiableList(variantsOfAtRule),
+          Util.toUnmodifiableList(variantsOfClassName)
       );
     }
   }
@@ -1727,15 +1726,15 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
   // ##################################################################
 
   private void generateUtilities() {
-    CssGeneratorContextOf topLevel;
-    topLevel = new CssGeneratorContextOf();
+    CssEngineContextOf topLevel;
+    topLevel = new CssEngineContextOf();
 
     for (Css.Rule rule : rules.values()) {
       rule.accept(topLevel);
     }
 
-    Css.Indentation indentation;
-    indentation = Css.Indentation.ROOT;
+    CssIndentation indentation;
+    indentation = CssIndentation.ROOT;
 
     writeln("@layer utilities {");
 
@@ -1832,8 +1831,8 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
     return themeQueryEntries.get(query);
   }
 
-  final List<Css.Variant> testThemeVariants() {
-    Collection<Css.Variant> values;
+  final List<CssVariant> testThemeVariants() {
+    Collection<CssVariant> values;
     values = variants.values();
 
     return List.copyOf(values);

@@ -15,41 +15,49 @@
  */
 package objectos.way;
 
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import objectos.way.Css.Rule;
 
-abstract class CssGeneratorContext extends Css.Context {
+/**
+ * CSS generation context.
+ */
+abstract class CssEngineContext {
 
-  Map<Css.MediaQuery, CssGeneratorContextOfMediaQuery> mediaQueries;
+  Map<CssVariant.OfAtRule, CssEngineContextOfAtRule> atRules;
 
-  @Override
-  public final void addComponent(CssComponent component) {
-    add(component);
+  final List<Rule> rules = Util.createList();
+
+  CssEngineContext() {
   }
 
-  @Override
-  public final Css.Context contextOf(Css.Modifier modifier) {
-    List<Css.MediaQuery> modifierQueries;
-    modifierQueries = modifier.mediaQueries();
+  public final void add(Rule rule) {
+    rules.add(rule);
+  }
 
-    if (modifierQueries.isEmpty()) {
+  public final CssEngineContext contextOf(CssModifier modifier) {
+    List<CssVariant.OfAtRule> modifierAtRules;
+    modifierAtRules = modifier.atRules();
+
+    if (modifierAtRules.isEmpty()) {
       return this;
     }
 
-    if (mediaQueries == null) {
-      mediaQueries = new TreeMap<>();
+    if (atRules == null) {
+      atRules = new TreeMap<>();
     }
 
-    Iterator<Css.MediaQuery> iterator;
-    iterator = modifierQueries.iterator();
+    Iterator<CssVariant.OfAtRule> iterator;
+    iterator = modifierAtRules.iterator();
 
-    Css.MediaQuery first;
+    CssVariant.OfAtRule first;
     first = iterator.next(); // safe as list is not empty
 
-    CssGeneratorContextOfMediaQuery result;
-    result = mediaQueries.computeIfAbsent(first, CssGeneratorContextOfMediaQuery::new);
+    CssEngineContextOfAtRule result;
+    result = atRules.computeIfAbsent(first, CssEngineContextOfAtRule::new);
 
     while (iterator.hasNext()) {
       result = result.nest(iterator.next());
@@ -58,7 +66,15 @@ abstract class CssGeneratorContext extends Css.Context {
     return result;
   }
 
-  final void writeContents(StringBuilder out, Css.Indentation indentation) {
+  public final void writeTo(StringBuilder out, CssIndentation indentation) {
+    rules.sort(Comparator.naturalOrder());
+
+    write(out, indentation);
+  }
+
+  abstract void write(StringBuilder out, CssIndentation indentation);
+
+  final void writeContents(StringBuilder out, CssIndentation indentation) {
     int lastKind = 0;
 
     for (Css.Rule rule : rules) {
@@ -74,8 +90,8 @@ abstract class CssGeneratorContext extends Css.Context {
       rule.writeTo(out, indentation);
     }
 
-    if (mediaQueries != null) {
-      for (Css.Context child : mediaQueries.values()) {
+    if (atRules != null) {
+      for (CssEngineContext child : atRules.values()) {
         if (!out.isEmpty()) {
           out.append(System.lineSeparator());
         }

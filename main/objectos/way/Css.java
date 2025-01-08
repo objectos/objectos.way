@@ -20,8 +20,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.nio.file.Path;
-import java.util.Comparator;
-import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
 
@@ -86,107 +84,6 @@ public final class Css {
   //
   // non-public types
   //
-
-  //
-  // A
-  //
-
-  record AtRuleVariant(String rule) implements MediaQuery {
-
-    @Override
-    public final int compareTo(MediaQuery o) {
-      if (o instanceof AtRuleVariant that) {
-        return rule.compareTo(that.rule);
-      } else {
-        return 1;
-      }
-    }
-
-    @Override
-    public final void writeMediaQueryStart(StringBuilder out, Indentation indentation) {
-      indentation.writeTo(out);
-
-      out.append(rule);
-      out.append(" {");
-      out.append(System.lineSeparator());
-    }
-
-  }
-
-  //
-  // C
-  //
-
-  record ClassNameFormat(String before, String after) implements Variant {
-    public final void writeClassName(StringBuilder out, int startIndex) {
-      String original;
-      original = out.substring(startIndex, out.length());
-
-      out.setLength(startIndex);
-
-      out.append(before);
-      out.append(original);
-      out.append(after);
-    }
-
-    final int length() {
-      return before.length() + after.length();
-    }
-  }
-
-  /**
-   * CSS generation context.
-   */
-  static abstract class Context {
-
-    final List<Rule> rules = Util.createList();
-
-    Context() {
-    }
-
-    public final void add(Rule rule) {
-      rules.add(rule);
-    }
-
-    public abstract void addComponent(CssComponent component);
-
-    public abstract Context contextOf(Css.Modifier modifier);
-
-    public final void writeTo(StringBuilder out, Indentation indentation) {
-      rules.sort(Comparator.naturalOrder());
-
-      write(out, indentation);
-    }
-
-    abstract void write(StringBuilder out, Indentation indentation);
-
-  }
-
-  static final class Indentation {
-
-    static final Indentation ROOT = new Indentation(0);
-
-    private final int level;
-
-    private Indentation(int level) {
-      this.level = level;
-    }
-
-    public final String indent(String value) {
-      return value.indent(level * 2);
-    }
-
-    public final Indentation increase() {
-      return new Indentation(level + 1);
-    }
-
-    public final void writeTo(StringBuilder out) {
-      for (int i = 0, count = level * 2; i < count; i++) {
-        out.append(' ');
-      }
-    }
-
-  }
 
   enum Key {
 
@@ -357,48 +254,6 @@ public final class Css {
   }
 
   //
-  // M
-  //
-
-  sealed interface MediaQuery extends Comparable<MediaQuery>, Variant {
-
-    void writeMediaQueryStart(StringBuilder out, Indentation indentation);
-
-  }
-
-  record Modifier(List<MediaQuery> mediaQueries, List<ClassNameFormat> classNameFormats) implements Comparable<Modifier> {
-
-    @Override
-    public final int compareTo(Modifier o) {
-      return Integer.compare(length(), o.length());
-    }
-
-    public final void writeClassName(StringBuilder out, String className) {
-      int startIndex;
-      startIndex = out.length();
-
-      Css.writeClassName(out, className);
-
-      for (var format : classNameFormats) {
-        format.writeClassName(out, startIndex);
-      }
-    }
-
-    final int length() {
-      int result = 0;
-
-      for (var format : classNameFormats) {
-        result += format.length();
-      }
-
-      return result;
-    }
-
-  }
-
-  static final Modifier EMPTY_MODIFIER = new Modifier(List.of(), List.of());
-
-  //
   // N
   //
 
@@ -409,7 +264,7 @@ public final class Css {
     private NoOpRule() {}
 
     @Override
-    public final void accept(Css.Context ctx) {
+    public final void accept(CssEngineContext ctx) {
       // noop
     }
 
@@ -424,32 +279,22 @@ public final class Css {
     }
 
     @Override
-    public final void writeTo(StringBuilder out, Css.Indentation indentation) {
+    public final void writeTo(StringBuilder out, CssIndentation indentation) {
       // noop
     }
 
     @Override
-    public final void writeProps(StringBuilder out, Css.Indentation indentation) {
+    public final void writeProps(StringBuilder out, CssIndentation indentation) {
       // noop
     }
 
   }
 
-  sealed interface Repository permits CssComponent {
-
-    void cycleCheck(String className);
-
-    void consumeRule(String className, Rule existing);
-
-    void putRule(String className, Rule rule);
-
-  }
-
-  sealed interface Rule extends Comparable<Rule> permits CssComponent, NoOpRule, CssUtility {
+  sealed interface Rule extends Comparable<Rule> permits NoOpRule, CssUtility {
 
     Rule NOOP = NoOpRule.INSTANCE;
 
-    void accept(Css.Context ctx);
+    void accept(CssEngineContext ctx);
 
     @Override
     default int compareTo(Rule o) {
@@ -472,17 +317,15 @@ public final class Css {
 
     int kind();
 
-    void writeTo(StringBuilder out, Css.Indentation indentation);
+    void writeTo(StringBuilder out, CssIndentation indentation);
 
-    void writeProps(StringBuilder out, Css.Indentation indentation);
+    void writeProps(StringBuilder out, CssIndentation indentation);
 
   }
 
   //
   // V
   //
-
-  sealed interface Variant {}
 
   private Css() {}
 

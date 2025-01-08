@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.testng.annotations.Test;
 
-public class CssGeneratorScannerTest {
+public class CssEngineScannerTest {
 
   @Test(description = "single class name")
   public void testCase01() {
@@ -106,8 +106,8 @@ public class CssGeneratorScannerTest {
     List<String> result;
     result = new ArrayList<>();
 
-    CssGeneratorScanner.Adapter adapter;
-    adapter = new CssGeneratorScanner.Adapter() {
+    CssEngineScanner.Adapter adapter;
+    adapter = new CssEngineScanner.Adapter() {
       @Override
       public void processStringConstant(String s) { result.add(s); }
 
@@ -115,8 +115,8 @@ public class CssGeneratorScannerTest {
       public void sourceName(String value) {}
     };
 
-    CssGeneratorScanner scanner;
-    scanner = new CssGeneratorScanner(TestingNoteSink.INSTANCE);
+    CssEngineScanner scanner;
+    scanner = new CssEngineScanner(TestingNoteSink.INSTANCE);
 
     scanner.scan(type, adapter);
 

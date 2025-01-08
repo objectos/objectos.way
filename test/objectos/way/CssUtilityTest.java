@@ -27,9 +27,9 @@ public class CssUtilityTest {
 
   @Test(description = "order by utility first")
   public void ordering01() {
-    List<Css.ClassNameFormat> empty = List.of();
-    List<Css.ClassNameFormat> hover = List.of(new Css.ClassNameFormat("", ":hover"));
-    List<Css.ClassNameFormat> active = List.of(new Css.ClassNameFormat("", ":active"));
+    List<CssVariant.OfClassName> empty = List.of();
+    List<CssVariant.OfClassName> hover = List.of(new CssVariant.Suffix(":hover"));
+    List<CssVariant.OfClassName> active = List.of(new CssVariant.Suffix(":active"));
 
     List<Css.Rule> rules = new ArrayList<>();
 
@@ -68,9 +68,9 @@ public class CssUtilityTest {
     testClassName("2xl:m-2", ".\\32xl\\:m-2 {}\n");
   }
 
-  private Css.Rule rule(Css.Key key, String className, List<Css.ClassNameFormat> formats) {
-    Css.Modifier modifier;
-    modifier = new Css.Modifier(List.of(), formats);
+  private Css.Rule rule(Css.Key key, String className, List<CssVariant.OfClassName> formats) {
+    CssModifier modifier;
+    modifier = new CssModifier(List.of(), formats);
 
     return new CssUtility(key, className, modifier, CssProperties.NOOP);
   }
@@ -82,7 +82,7 @@ public class CssUtilityTest {
     Css.Rule rule;
     rule = rule(Css.Key.COLOR, className, List.of());
 
-    rule.writeTo(out, Css.Indentation.ROOT);
+    rule.writeTo(out, CssIndentation.ROOT);
 
     assertEquals(out.toString(), expected);
   }

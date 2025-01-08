@@ -23,7 +23,7 @@ import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
-final class CssGeneratorScanner {
+final class CssEngineScanner {
 
   interface Adapter extends Lang.ClassReader.StringConstantProcessor {
 
@@ -40,7 +40,7 @@ final class CssGeneratorScanner {
 
     static Notes get() {
       Class<?> s;
-      s = CssGeneratorScanner.class;
+      s = CssEngineScanner.class;
 
       return new Notes(
           Note.Ref1.create(s, "Class file not found", Note.ERROR),
@@ -58,7 +58,7 @@ final class CssGeneratorScanner {
 
   private final Lang.ClassReader reader;
 
-  public CssGeneratorScanner(Note.Sink noteSink) {
+  public CssEngineScanner(Note.Sink noteSink) {
     this.noteSink = noteSink;
 
     reader = Lang.createClassReader(noteSink);

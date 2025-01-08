@@ -15,25 +15,23 @@
  */
 package objectos.way;
 
-import objectos.way.Css.MediaQuery;
+final class CssEngineContextOfAtRule extends CssEngineContext {
 
-final class CssGeneratorContextOfMediaQuery extends CssGeneratorContext {
+  private final CssVariant.OfAtRule atRule;
 
-  private final Css.MediaQuery query;
-
-  CssGeneratorContextOfMediaQuery(Css.MediaQuery query) {
-    this.query = query;
+  CssEngineContextOfAtRule(CssVariant.OfAtRule atRule) {
+    this.atRule = atRule;
   }
 
-  public final CssGeneratorContextOfMediaQuery nest(MediaQuery next) {
-    return mediaQueries.computeIfAbsent(next, CssGeneratorContextOfMediaQuery::new);
+  public final CssEngineContextOfAtRule nest(CssVariant.OfAtRule next) {
+    return atRules.computeIfAbsent(next, CssEngineContextOfAtRule::new);
   }
 
   @Override
-  final void write(StringBuilder out, Css.Indentation indentation) {
-    query.writeMediaQueryStart(out, indentation);
+  final void write(StringBuilder out, CssIndentation indentation) {
+    atRule.writeAtRuleStart(out, indentation);
 
-    Css.Indentation blockIndentation;
+    CssIndentation blockIndentation;
     blockIndentation = indentation.increase();
 
     writeContents(out, blockIndentation);

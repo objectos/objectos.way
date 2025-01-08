@@ -15,10 +15,10 @@
  */
 package objectos.way;
 
-final class CssGeneratorContextOf extends CssGeneratorContext {
+final class CssEngineContextOf extends CssEngineContext {
 
   @Override
-  final void write(StringBuilder out, Css.Indentation indentation) {
+  final void write(StringBuilder out, CssIndentation indentation) {
     writeContents(out, indentation);
   }
 
