@@ -141,6 +141,26 @@ public class CssEngineTestVariants {
   }
 
   @Test
+  public void firstChild() {
+    class Subject extends CssSubject {
+      @Override
+      final void classes() {
+        className("hover:first-child:color:white");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .hover\\:first-child\\:color\\:white:hover:first-child { color: var(--color-white) }
+        }
+        """
+    );
+  }
+
+  @Test
   public void firstLetter() {
     class Subject extends CssSubject {
       @Override
@@ -215,6 +235,26 @@ public class CssEngineTestVariants {
         """
         @layer utilities {
           .focus-visible\\:outline\\:solid_blue-500:focus-visible { outline: solid var(--color-blue-500) }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void lastChild() {
+    class Subject extends CssSubject {
+      @Override
+      final void classes() {
+        className("hover:last-child:color:white");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .hover\\:last-child\\:color\\:white:hover:last-child { color: var(--color-white) }
         }
         """
     );
