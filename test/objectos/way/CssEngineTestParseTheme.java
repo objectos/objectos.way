@@ -570,6 +570,8 @@ public class CssEngineTestParseTheme {
     CssEngine engine;
     engine = new CssEngine();
 
+    engine.noteSink(TestingNoteSink.INSTANCE);
+
     engine.theme(theme);
 
     return engine.testThemeEntries();

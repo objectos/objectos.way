@@ -303,6 +303,8 @@ public class CssEngineTestBase {
     CssEngine engine;
     engine = new CssEngine();
 
+    engine.noteSink(TestingNoteSink.INSTANCE);
+
     engine.base(base);
 
     engine.skipLayer(Css.Layer.THEME);

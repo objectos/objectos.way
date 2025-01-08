@@ -834,10 +834,6 @@ final class CssEngine implements Css.StyleSheet.Config, CssGeneratorScanner.Adap
 
   private void spec() {
     for (Css.Key key : Css.Key.values()) {
-      if (!key.engineCompatible) {
-        continue;
-      }
-
       String propertyName;
       propertyName = key.propertyName;
 

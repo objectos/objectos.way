@@ -23,8 +23,6 @@ import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.SequencedMap;
 import java.util.function.Consumer;
 
 /**
@@ -116,31 +114,6 @@ public final class Css {
   }
 
   //
-  // B
-  //
-
-  record Breakpoint(int index, String name, String value) implements MediaQuery {
-    @Override
-    public final int compareTo(MediaQuery o) {
-      if (o instanceof Breakpoint that) {
-        return Integer.compare(index, that.index);
-      } else {
-        return -1;
-      }
-    }
-
-    @Override
-    public final void writeMediaQueryStart(StringBuilder out, Indentation indentation) {
-      indentation.writeTo(out);
-
-      out.append("@media (min-width: ");
-      out.append(value);
-      out.append(") {");
-      out.append(System.lineSeparator());
-    }
-  }
-
-  //
   // C
   //
 
@@ -217,229 +190,158 @@ public final class Css {
 
   enum Key {
 
-    ALIGN_CONTENT(true),
-    ALIGN_ITEMS(true),
-    ALIGN_SELF(true),
-    APPEARANCE(true),
-    ASPECT_RATIO(true),
+    ALIGN_CONTENT,
+    ALIGN_ITEMS,
+    ALIGN_SELF,
+    APPEARANCE,
+    ASPECT_RATIO,
 
-    BACKGROUND_COLOR(true),
-    BORDER(true),
-    BORDER_BOTTOM(true),
-    BORDER_BOTTOM_COLOR(true),
-    BORDER_BOTTOM_STYLE(true),
-    BORDER_BOTTOM_WIDTH(true),
-    BORDER_COLLAPSE(true),
-    BORDER_COLOR(true),
-    BORDER_LEFT(true),
-    BORDER_LEFT_COLOR(true),
-    BORDER_LEFT_STYLE(true),
-    BORDER_LEFT_WIDTH(true),
-    BORDER_RADIUS(true),
-    BORDER_RIGHT(true),
-    BORDER_RIGHT_COLOR(true),
-    BORDER_RIGHT_STYLE(true),
-    BORDER_RIGHT_WIDTH(true),
-    BORDER_SPACING(true),
-    BORDER_STYLE(true),
-    BORDER_TOP(true),
-    BORDER_TOP_COLOR(true),
-    BORDER_TOP_STYLE(true),
-    BORDER_TOP_WIDTH(true),
-    BORDER_WIDTH(true),
-    BOTTOM(true),
-    BOX_SHADOW(true),
+    BACKGROUND_COLOR,
+    BORDER,
+    BORDER_BOTTOM,
+    BORDER_BOTTOM_COLOR,
+    BORDER_BOTTOM_STYLE,
+    BORDER_BOTTOM_WIDTH,
+    BORDER_COLLAPSE,
+    BORDER_COLOR,
+    BORDER_LEFT,
+    BORDER_LEFT_COLOR,
+    BORDER_LEFT_STYLE,
+    BORDER_LEFT_WIDTH,
+    BORDER_RADIUS,
+    BORDER_RIGHT,
+    BORDER_RIGHT_COLOR,
+    BORDER_RIGHT_STYLE,
+    BORDER_RIGHT_WIDTH,
+    BORDER_SPACING,
+    BORDER_STYLE,
+    BORDER_TOP,
+    BORDER_TOP_COLOR,
+    BORDER_TOP_STYLE,
+    BORDER_TOP_WIDTH,
+    BORDER_WIDTH,
+    BOTTOM,
+    BOX_SHADOW,
 
-    CLEAR(true),
-    COLOR(true),
-    COLUMN_GAP(true),
-    CONTENT(true),
-    CURSOR(true),
+    CLEAR,
+    COLOR,
+    COLUMN_GAP,
+    CONTENT,
+    CURSOR,
 
-    DISPLAY(true),
+    DISPLAY,
 
-    FLEX(true),
-    FLEX_BASIS(true),
-    FLEX_DIRECTION(true),
-    FLEX_GROW(true),
-    FLEX_SHRINK(true),
-    FLEX_WRAP(true),
-    FLOAT(true),
-    FILL(true),
-    FILTER(true),
-    FONT_FAMILY(true),
-    FONT_SIZE(true),
-    FONT_STYLE(true),
-    FONT_WEIGHT(true),
+    FLEX,
+    FLEX_BASIS,
+    FLEX_DIRECTION,
+    FLEX_GROW,
+    FLEX_SHRINK,
+    FLEX_WRAP,
+    FLOAT,
+    FILL,
+    FILTER,
+    FONT_FAMILY,
+    FONT_SIZE,
+    FONT_STYLE,
+    FONT_WEIGHT,
 
-    GAP(true),
-    GRID(true),
-    GRID_AREA(true),
-    GRID_COLUMN(true),
-    GRID_COLUMN_END(true),
-    GRID_COLUMN_START(true),
-    GRID_TEMPLATE(true),
-    GRID_TEMPLATE_COLUMNS(true),
-    GRID_TEMPLATE_ROWS(true),
+    GAP,
+    GRID,
+    GRID_AREA,
+    GRID_COLUMN,
+    GRID_COLUMN_END,
+    GRID_COLUMN_START,
+    GRID_TEMPLATE,
+    GRID_TEMPLATE_COLUMNS,
+    GRID_TEMPLATE_ROWS,
 
-    HEIGHT(true),
+    HEIGHT,
 
-    INSET(true),
+    INSET,
 
-    JUSTIFY_CONTENT(true),
-    JUSTIFY_ITEMS(true),
-    JUSTIFY_SELF(true),
+    JUSTIFY_CONTENT,
+    JUSTIFY_ITEMS,
+    JUSTIFY_SELF,
 
-    LEFT(true),
-    LETTER_SPACING(true),
-    LINE_HEIGHT(true),
-    LIST_STYLE_TYPE(true),
+    LEFT,
+    LETTER_SPACING,
+    LINE_HEIGHT,
+    LIST_STYLE_TYPE,
 
-    MARGIN(true),
-    /**/MARGIN_TOP(true),
-    /**/MARGIN_RIGHT(true),
-    /**/MARGIN_BOTTOM(true),
-    /**/MARGIN_LEFT(true),
-    /**/MARGIN_BLOCK(true),
-    /**/MARGIN_INLINE(true),
-    MAX_HEIGHT(true),
-    MAX_WIDTH(true),
-    MIN_HEIGHT(true),
-    MIN_WIDTH(true),
+    MARGIN,
+    /**/MARGIN_TOP,
+    /**/MARGIN_RIGHT,
+    /**/MARGIN_BOTTOM,
+    /**/MARGIN_LEFT,
+    /**/MARGIN_BLOCK,
+    /**/MARGIN_INLINE,
+    MAX_HEIGHT,
+    MAX_WIDTH,
+    MIN_HEIGHT,
+    MIN_WIDTH,
 
-    OPACITY(true),
-    OUTLINE(true),
-    OUTLINE_COLOR(true),
-    OUTLINE_OFFSET(true),
-    OUTLINE_STYLE(true),
-    OUTLINE_WIDTH(true),
-    OVERFLOW(true),
-    OVERFLOW_X(true),
-    OVERFLOW_Y(true),
+    OPACITY,
+    OUTLINE,
+    OUTLINE_COLOR,
+    OUTLINE_OFFSET,
+    OUTLINE_STYLE,
+    OUTLINE_WIDTH,
+    OVERFLOW,
+    OVERFLOW_X,
+    OVERFLOW_Y,
 
-    PADDING(true),
-    /**/PADDING_TOP(true),
-    /**/PADDING_RIGHT(true),
-    /**/PADDING_BOTTOM(true),
-    /**/PADDING_LEFT(true),
-    POINTER_EVENTS(true),
-    POSITION(true),
+    PADDING,
+    /**/PADDING_TOP,
+    /**/PADDING_RIGHT,
+    /**/PADDING_BOTTOM,
+    /**/PADDING_LEFT,
+    POINTER_EVENTS,
+    POSITION,
 
-    RIGHT(true),
-    ROTATE(true),
-    ROW_GAP(true),
+    RIGHT,
+    ROTATE,
+    ROW_GAP,
 
-    SCROLL_BEHAVIOR(true),
-    STROKE(true),
-    STROKE_OPACITY(true),
-    STROKE_WIDTH(true),
+    SCROLL_BEHAVIOR,
+    STROKE,
+    STROKE_OPACITY,
+    STROKE_WIDTH,
 
-    TAB_SIZE(true),
-    TABLE_LAYOUT(true),
-    TEXT_ALIGN(true),
-    TEXT_COLOR(true),
-    TEXT_DECORATION(true),
-    /**/TEXT_DECORATION_COLOR(true),
-    /**/TEXT_DECORATION_LINE(true),
-    /**/TEXT_DECORATION_STYLE(true),
-    /**/TEXT_DECORATION_THICKNESS(true),
-    TEXT_OVERFLOW(true),
-    TEXT_SHADOW(true),
-    TEXT_TRANSFORM(true),
-    TEXT_WRAP(true),
-    TOP(true),
-    TRANSFORM(true),
-    TRANSFORM_ORIGIN(true),
-    TRANSITION(true),
-    TRANSITION_DELAY(true),
-    TRANSITION_DURATION(true),
-    TRANSITION_PROPERTY(true),
-    TRANSITION_TIMING_FUNCTION(true),
-    TRANSLATE(true),
+    TAB_SIZE,
+    TABLE_LAYOUT,
+    TEXT_ALIGN,
+    TEXT_COLOR,
+    TEXT_DECORATION,
+    /**/TEXT_DECORATION_COLOR,
+    /**/TEXT_DECORATION_LINE,
+    /**/TEXT_DECORATION_STYLE,
+    /**/TEXT_DECORATION_THICKNESS,
+    TEXT_OVERFLOW,
+    TEXT_SHADOW,
+    TEXT_TRANSFORM,
+    TEXT_WRAP,
+    TOP,
+    TRANSFORM,
+    TRANSFORM_ORIGIN,
+    TRANSITION,
+    TRANSITION_DELAY,
+    TRANSITION_DURATION,
+    TRANSITION_PROPERTY,
+    TRANSITION_TIMING_FUNCTION,
+    TRANSLATE,
 
-    USER_SELECT(true),
+    USER_SELECT,
 
-    VERTICAL_ALIGN(true),
-    VISIBILITY(true),
+    VERTICAL_ALIGN,
+    VISIBILITY,
 
-    WHITE_SPACE(true),
-    WIDTH(true),
-    WORD_SPACING(true),
+    WHITE_SPACE,
+    WIDTH,
+    WORD_SPACING,
 
-    Z_INDEX(true),
-
-    // legacy and to be removed
-
-    _COLORS,
-
-    _SPACING,
-
-    CUSTOM,
-
-    ACCESSIBILITY,
-
-    INSET_X,
-    INSET_Y,
-
-    MARGIN_X,
-    MARGIN_Y,
-
-    SIZE,
-
-    BORDER_SPACING_X,
-    BORDER_SPACING_Y,
-
-    TRANSLATE_X,
-    TRANSLATE_Y,
-
-    GAP_X,
-    GAP_Y,
-
-    BORDER_RADIUS_T,
-    BORDER_RADIUS_R,
-    BORDER_RADIUS_B,
-    BORDER_RADIUS_L,
-    BORDER_RADIUS_TL,
-    BORDER_RADIUS_TR,
-    BORDER_RADIUS_BR,
-    BORDER_RADIUS_BL,
-
-    BORDER_WIDTH_X,
-    BORDER_WIDTH_Y,
-    BORDER_WIDTH_TOP,
-    BORDER_WIDTH_RIGHT,
-    BORDER_WIDTH_BOTTOM,
-    BORDER_WIDTH_LEFT,
-
-    BORDER_COLOR_X,
-    BORDER_COLOR_Y,
-    BORDER_COLOR_TOP,
-    BORDER_COLOR_RIGHT,
-    BORDER_COLOR_BOTTOM,
-    BORDER_COLOR_LEFT,
-
-    PADDING_X,
-    PADDING_Y,
-
-    BOX_SHADOW_COLOR,
-
-    RING_WIDTH,
-    RING_COLOR,
-    RING_OFFSET_WIDTH,
-    RING_OFFSET_COLOR,
-    RING_INSET;
-
-    final boolean engineCompatible;
+    Z_INDEX;
 
     final String propertyName = name().replace('_', '-').toLowerCase(Locale.US);
-
-    private Key() {
-      this(false);
-    }
-
-    private Key(boolean engineCompatible) {
-      this.engineCompatible = engineCompatible;
-    }
 
   }
 
@@ -533,128 +435,6 @@ public final class Css {
 
   }
 
-  //
-  // P
-  //
-
-  record PropertyType(String borderColorTop,
-      String borderColorRight,
-      String borderColorBottom,
-      String borderColorLeft,
-
-      String borderRadiusTopLeft,
-      String borderRadiusTopRight,
-      String borderRadiusBottomRight,
-      String borderRadiusBottomLeft,
-
-      String borderWidthTop,
-      String borderWidthRight,
-      String borderWidthBottom,
-      String borderWidthLeft,
-
-      String marginTop,
-      String marginRight,
-      String marginBottom,
-      String marginLeft,
-
-      String paddingTop,
-      String paddingRight,
-      String paddingBottom,
-      String paddingLeft,
-
-      String height,
-      String maxHeight,
-      String minHeight,
-
-      String width,
-      String maxWidth,
-      String minWidth,
-
-      String top,
-      String right,
-      String bottom,
-      String left) {}
-
-  static final PropertyType PHYSICAL = new PropertyType(
-      "border-top-color",
-      "border-right-color",
-      "border-bottom-color",
-      "border-left-color",
-
-      "border-top-left-radius",
-      "border-top-right-radius",
-      "border-bottom-right-radius",
-      "border-bottom-left-radius",
-
-      "border-top-width",
-      "border-right-width",
-      "border-bottom-width",
-      "border-left-width",
-
-      "margin-top",
-      "margin-right",
-      "margin-bottom",
-      "margin-left",
-
-      "padding-top",
-      "padding-right",
-      "padding-bottom",
-      "padding-left",
-
-      "height",
-      "max-height",
-      "min-height",
-
-      "width",
-      "max-width",
-      "min-width",
-
-      "top",
-      "right",
-      "bottom",
-      "left"
-  );
-
-  static final PropertyType LOGICAL = new PropertyType(
-      "border-block-start-color",
-      "border-inline-end-color",
-      "border-block-end-color",
-      "border-inline-start-color",
-
-      "border-start-start-radius",
-      "border-start-end-radius",
-      "border-end-end-radius",
-      "border-end-start-radius",
-
-      "border-block-start-width",
-      "border-inline-end-width",
-      "border-block-end-width",
-      "border-inline-start-width",
-
-      "margin-block-start",
-      "margin-inline-end",
-      "margin-block-end",
-      "margin-inline-start",
-
-      "padding-block-start",
-      "padding-inline-end",
-      "padding-block-end",
-      "padding-inline-start",
-
-      "block-size",
-      "max-block-size",
-      "min-block-size",
-
-      "inline-size",
-      "max-inline-size",
-      "min-inline-size",
-
-      "inset-block-start",
-      "inset-inline-end",
-      "inset-block-end",
-      "inset-inline-start"
-  );
-
   sealed interface Repository permits CssComponent {
 
     void cycleCheck(String className);
@@ -698,14 +478,6 @@ public final class Css {
 
   }
 
-  record StaticUtility(Css.Key key, CssProperties properties) {
-
-    public final Css.Rule create(String className, Css.Modifier modifier) {
-      return new CssUtility(key, className, modifier, properties);
-    }
-
-  }
-
   //
   // V
   //
@@ -713,194 +485,6 @@ public final class Css {
   sealed interface Variant {}
 
   private Css() {}
-
-  // private stuff
-
-  static Map<String, String> parseComponents(String text) {
-    SequencedMap<String, String> map;
-    map = Util.createSequencedMap();
-
-    String name;
-    name = "";
-
-    List<String> definition;
-    definition = Util.createList();
-
-    String[] lines;
-    lines = text.split("\n");
-
-    for (int number = 0; number < lines.length; number++) {
-      String line = lines[number];
-
-      if (line.isBlank()) {
-        continue;
-      }
-
-      char first;
-      first = line.charAt(0);
-
-      if (first != '#') {
-        definition.add(line);
-
-        continue;
-      }
-
-      if (!definition.isEmpty()) {
-        String value;
-        value = Util.join(definition, " ");
-
-        map.put(name, value);
-
-        definition.clear();
-      }
-
-      name = line.substring(1).trim();
-
-      if (name.isBlank()) {
-        throw new IllegalArgumentException("No component name defined @ line " + (number + 1));
-      }
-    }
-
-    if (!definition.isEmpty()) {
-      String value;
-      value = Util.join(definition, " ");
-
-      map.put(name, value);
-    }
-
-    return Util.toUnmodifiableMap(map);
-  }
-
-  static CssProperties parseProperties(String text) {
-    CssProperties.Builder builder;
-    builder = new CssProperties.Builder();
-
-    String[] lines;
-    lines = text.split("\n");
-
-    for (String line : lines) {
-      if (line.isBlank()) {
-        continue;
-      }
-
-      int colon;
-      colon = line.indexOf(':');
-
-      if (colon < 0) {
-        throw new IllegalArgumentException(
-            "The colon character ':' was not found in the line listed below:\n\n" + line + "\n"
-        );
-      }
-
-      String key;
-      key = line.substring(0, colon);
-
-      String value;
-      value = line.substring(colon + 1);
-
-      builder.add(key.trim(), value.trim());
-    }
-
-    return builder.build();
-  }
-
-  static Map<String, CssProperties> parseTable(String text) {
-    Map<String, CssProperties> map;
-    map = Util.createMap();
-
-    String[] lines;
-    lines = text.split("\n");
-
-    String className;
-    className = null;
-
-    CssProperties.Builder props;
-    props = null;
-
-    for (String line : lines) {
-      if (line.isBlank()) {
-        continue;
-      }
-
-      int pipe;
-      pipe = line.indexOf('|');
-
-      if (pipe < 0) {
-        throw new IllegalArgumentException(
-            "The vertical bar character '|' was not found in the line listed below:\n\n" + line + "\n"
-        );
-      }
-
-      String maybeClass;
-      maybeClass = line.substring(0, pipe);
-
-      maybeClass = maybeClass.trim();
-
-      if (!maybeClass.isEmpty()) {
-        if (className != null) {
-          map.put(className, props.build());
-        }
-
-        className = maybeClass;
-
-        props = new CssProperties.Builder();
-      }
-
-      int colon;
-      colon = line.indexOf(':', pipe);
-
-      if (colon < 0) {
-        throw new IllegalArgumentException(
-            "The colon character ':' was not found in the line listed below:\n\n" + line + "\n"
-        );
-      }
-
-      String key;
-      key = line.substring(pipe + 1, colon);
-
-      String value;
-      value = line.substring(colon + 1);
-
-      props.add(key.trim(), value.trim());
-    }
-
-    if (className != null) {
-      map.put(className, props.build());
-    }
-
-    return Util.toUnmodifiableMap(map);
-  }
-
-  static Map<String, String> merge(String text, Map<String, String> more) {
-    CssProperties properties;
-    properties = parseProperties(text);
-
-    return properties.toMap(more);
-  }
-
-  static Variant parseVariant(String formatString) {
-    int amper;
-    amper = formatString.indexOf('&');
-
-    if (amper < 0) {
-      throw new IllegalArgumentException("Format string must contain exactly one '&' character: " + formatString);
-    }
-
-    String before;
-    before = formatString.substring(0, amper);
-
-    String after;
-    after = formatString.substring(amper + 1);
-
-    int anotherAmper;
-    anotherAmper = after.indexOf('&');
-
-    if (anotherAmper > 0) {
-      throw new IllegalArgumentException("Format string must contain exactly one '&' character: " + formatString);
-    }
-
-    return new ClassNameFormat(before, after);
-  }
 
   static void writeClassName(StringBuilder out, String className) {
     int length;
@@ -969,334 +553,6 @@ public final class Css {
       }
     }
   }
-
-  static final String DEFAULT_COLORS = """
-      inherit: inherit
-      current: currentColor
-      transparent: transparent
-
-      black: #000000
-      white: #ffffff
-
-      slate-50: #f8fafc
-      slate-100: #f1f5f9
-      slate-200: #e2e8f0
-      slate-300: #cbd5e1
-      slate-400: #94a3b8
-      slate-500: #64748b
-      slate-600: #475569
-      slate-700: #334155
-      slate-800: #1e293b
-      slate-900: #0f172a
-      slate-950: #020617
-
-      gray-50: #f9fafb
-      gray-100: #f3f4f6
-      gray-200: #e5e7eb
-      gray-300: #d1d5db
-      gray-400: #9ca3af
-      gray-500: #6b7280
-      gray-600: #4b5563
-      gray-700: #374151
-      gray-800: #1f2937
-      gray-900: #111827
-      gray-950: #030712
-
-      zinc-50: #fafafa
-      zinc-100: #f4f4f5
-      zinc-200: #e4e4e7
-      zinc-300: #d4d4d8
-      zinc-400: #a1a1aa
-      zinc-500: #71717a
-      zinc-600: #52525b
-      zinc-700: #3f3f46
-      zinc-800: #27272a
-      zinc-900: #18181b
-      zinc-950: #09090b
-
-      neutral-50: #fafafa
-      neutral-100: #f5f5f5
-      neutral-200: #e5e5e5
-      neutral-300: #d4d4d4
-      neutral-400: #a3a3a3
-      neutral-500: #737373
-      neutral-600: #525252
-      neutral-700: #404040
-      neutral-800: #262626
-      neutral-900: #171717
-      neutral-950: #0a0a0a
-
-      stone-50: #fafaf9
-      stone-100: #f5f5f4
-      stone-200: #e7e5e4
-      stone-300: #d6d3d1
-      stone-400: #a8a29e
-      stone-500: #78716c
-      stone-600: #57534e
-      stone-700: #44403c
-      stone-800: #292524
-      stone-900: #1c1917
-      stone-950: #0c0a09
-
-      red-50: #fef2f2
-      red-100: #fee2e2
-      red-200: #fecaca
-      red-300: #fca5a5
-      red-400: #f87171
-      red-500: #ef4444
-      red-600: #dc2626
-      red-700: #b91c1c
-      red-800: #991b1b
-      red-900: #7f1d1d
-      red-950: #450a0a
-
-      orange-50: #fff7ed
-      orange-100: #ffedd5
-      orange-200: #fed7aa
-      orange-300: #fdba74
-      orange-400: #fb923c
-      orange-500: #f97316
-      orange-600: #ea580c
-      orange-700: #c2410c
-      orange-800: #9a3412
-      orange-900: #7c2d12
-      orange-950: #431407
-
-      amber-50: #fffbeb
-      amber-100: #fef3c7
-      amber-200: #fde68a
-      amber-300: #fcd34d
-      amber-400: #fbbf24
-      amber-500: #f59e0b
-      amber-600: #d97706
-      amber-700: #b45309
-      amber-800: #92400e
-      amber-900: #78350f
-      amber-950: #451a03
-
-      yellow-50: #fefce8
-      yellow-100: #fef9c3
-      yellow-200: #fef08a
-      yellow-300: #fde047
-      yellow-400: #facc15
-      yellow-500: #eab308
-      yellow-600: #ca8a04
-      yellow-700: #a16207
-      yellow-800: #854d0e
-      yellow-900: #713f12
-      yellow-950: #422006
-
-      lime-50: #f7fee7
-      lime-100: #ecfccb
-      lime-200: #d9f99d
-      lime-300: #bef264
-      lime-400: #a3e635
-      lime-500: #84cc16
-      lime-600: #65a30d
-      lime-700: #4d7c0f
-      lime-800: #3f6212
-      lime-900: #365314
-      lime-950: #1a2e05
-
-      green-50: #f0fdf4
-      green-100: #dcfce7
-      green-200: #bbf7d0
-      green-300: #86efac
-      green-400: #4ade80
-      green-500: #22c55e
-      green-600: #16a34a
-      green-700: #15803d
-      green-800: #166534
-      green-900: #14532d
-      green-950: #052e16
-
-      emerald-50: #ecfdf5
-      emerald-100: #d1fae5
-      emerald-200: #a7f3d0
-      emerald-300: #6ee7b7
-      emerald-400: #34d399
-      emerald-500: #10b981
-      emerald-600: #059669
-      emerald-700: #047857
-      emerald-800: #065f46
-      emerald-900: #064e3b
-      emerald-950: #022c22
-
-      teal-50: #f0fdfa
-      teal-100: #ccfbf1
-      teal-200: #99f6e4
-      teal-300: #5eead4
-      teal-400: #2dd4bf
-      teal-500: #14b8a6
-      teal-600: #0d9488
-      teal-700: #0f766e
-      teal-800: #115e59
-      teal-900: #134e4a
-      teal-950: #042f2e
-
-      cyan-50: #ecfeff
-      cyan-100: #cffafe
-      cyan-200: #a5f3fc
-      cyan-300: #67e8f9
-      cyan-400: #22d3ee
-      cyan-500: #06b6d4
-      cyan-600: #0891b2
-      cyan-700: #0e7490
-      cyan-800: #155e75
-      cyan-900: #164e63
-      cyan-950: #083344
-
-      sky-50: #f0f9ff
-      sky-100: #e0f2fe
-      sky-200: #bae6fd
-      sky-300: #7dd3fc
-      sky-400: #38bdf8
-      sky-500: #0ea5e9
-      sky-600: #0284c7
-      sky-700: #0369a1
-      sky-800: #075985
-      sky-900: #0c4a6e
-      sky-950: #082f49
-
-      blue-50: #eff6ff
-      blue-100: #dbeafe
-      blue-200: #bfdbfe
-      blue-300: #93c5fd
-      blue-400: #60a5fa
-      blue-500: #3b82f6
-      blue-600: #2563eb
-      blue-700: #1d4ed8
-      blue-800: #1e40af
-      blue-900: #1e3a8a
-      blue-950: #172554
-
-      indigo-50: #eef2ff
-      indigo-100: #e0e7ff
-      indigo-200: #c7d2fe
-      indigo-300: #a5b4fc
-      indigo-400: #818cf8
-      indigo-500: #6366f1
-      indigo-600: #4f46e5
-      indigo-700: #4338ca
-      indigo-800: #3730a3
-      indigo-900: #312e81
-      indigo-950: #1e1b4b
-
-      violet-50: #f5f3ff
-      violet-100: #ede9fe
-      violet-200: #ddd6fe
-      violet-300: #c4b5fd
-      violet-400: #a78bfa
-      violet-500: #8b5cf6
-      violet-600: #7c3aed
-      violet-700: #6d28d9
-      violet-800: #5b21b6
-      violet-900: #4c1d95
-      violet-950: #2e1065
-
-      purple-50: #faf5ff
-      purple-100: #f3e8ff
-      purple-200: #e9d5ff
-      purple-300: #d8b4fe
-      purple-400: #c084fc
-      purple-500: #a855f7
-      purple-600: #9333ea
-      purple-700: #7e22ce
-      purple-800: #6b21a8
-      purple-900: #581c87
-      purple-950: #3b0764
-
-      fuchsia-50: #fdf4ff
-      fuchsia-100: #fae8ff
-      fuchsia-200: #f5d0fe
-      fuchsia-300: #f0abfc
-      fuchsia-400: #e879f9
-      fuchsia-500: #d946ef
-      fuchsia-600: #c026d3
-      fuchsia-700: #a21caf
-      fuchsia-800: #86198f
-      fuchsia-900: #701a75
-      fuchsia-950: #4a044e
-
-      pink-50: #fdf2f8
-      pink-100: #fce7f3
-      pink-200: #fbcfe8
-      pink-300: #f9a8d4
-      pink-400: #f472b6
-      pink-500: #ec4899
-      pink-600: #db2777
-      pink-700: #be185d
-      pink-800: #9d174d
-      pink-900: #831843
-      pink-950: #500724
-
-      rose-50: #fff1f2
-      rose-100: #ffe4e6
-      rose-200: #fecdd3
-      rose-300: #fda4af
-      rose-400: #fb7185
-      rose-500: #f43f5e
-      rose-600: #e11d48
-      rose-700: #be123c
-      rose-800: #9f1239
-      rose-900: #881337
-      rose-950: #4c0519
-      """;
-
-  static final String DEFAULT_LINE_HEIGHT = """
-      3: 0.75rem
-      4: 1rem
-      5: 1.25rem
-      6: 1.5rem
-      7: 1.75rem
-      8: 2rem
-      9: 2.25rem
-      10: 2.5rem
-      none: 1
-      tight: 1.25
-      snug: 1.375
-      normal: 1.5
-      relaxed: 1.625
-      loose: 2
-      """;
-
-  static final String DEFAULT_SPACING = """
-      px: 1px
-      0: 0px
-      0.5: 0.125rem
-      1: 0.25rem
-      1.5: 0.375rem
-      2: 0.5rem
-      2.5: 0.625rem
-      3: 0.75rem
-      3.5: 0.875rem
-      4: 1rem
-      5: 1.25rem
-      6: 1.5rem
-      7: 1.75rem
-      8: 2rem
-      9: 2.25rem
-      10: 2.5rem
-      11: 2.75rem
-      12: 3rem
-      14: 3.5rem
-      16: 4rem
-      20: 5rem
-      24: 6rem
-      28: 7rem
-      32: 8rem
-      36: 9rem
-      40: 10rem
-      44: 11rem
-      48: 12rem
-      52: 13rem
-      56: 14rem
-      60: 15rem
-      64: 16rem
-      72: 18rem
-      80: 20rem
-      96: 24rem
-      """;
 
   //
   // current version:

@@ -80,7 +80,7 @@ public class CssUtilityTest {
     out = new StringBuilder();
 
     Css.Rule rule;
-    rule = rule(Css.Key._COLORS, className, List.of());
+    rule = rule(Css.Key.COLOR, className, List.of());
 
     rule.writeTo(out, Css.Indentation.ROOT);
 

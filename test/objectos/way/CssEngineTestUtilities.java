@@ -2772,6 +2772,8 @@ public class CssEngineTestUtilities {
     CssEngine engine;
     engine = new CssEngine();
 
+    engine.noteSink(TestingNoteSink.INSTANCE);
+
     engine.scanClass(type);
 
     engine.skipLayer(Css.Layer.THEME);

@@ -27,6 +27,8 @@ public class CssEngineTestScan {
 
   @BeforeClass
   public void beforeClass() {
+    engine.noteSink(TestingNoteSink.INSTANCE);
+
     engine.execute();
 
     engine.sourceName(getClass().getCanonicalName());

@@ -26,6 +26,8 @@ public class CssEngineTestFormatValue {
 
   @BeforeClass
   public void beforeClass() {
+    engine.noteSink(TestingNoteSink.INSTANCE);
+
     engine.execute();
   }
 

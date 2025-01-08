@@ -111,6 +111,8 @@ public class CssEngineTestParseThemeQuery {
     CssEngine engine;
     engine = new CssEngine();
 
+    engine.noteSink(TestingNoteSink.INSTANCE);
+
     engine.theme(query, theme);
 
     List<ThemeQueryEntry> list = engine.testThemeQueryEntries(query);
