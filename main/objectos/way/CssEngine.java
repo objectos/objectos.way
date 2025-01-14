@@ -190,6 +190,8 @@ final class CssEngine implements Css.StyleSheet.Config, CssEngineScanner.Adapter
     variant("dark", new CssVariant.OfAtRule("@media (prefers-color-scheme: dark)"));
 
     variant("active", new CssVariant.Suffix(":active"));
+    variant("checked", new CssVariant.Suffix(":checked"));
+    variant("disabled", new CssVariant.Suffix(":disabled"));
     variant("first-child", new CssVariant.Suffix(":first-child"));
     variant("focus", new CssVariant.Suffix(":focus"));
     variant("focus-visible", new CssVariant.Suffix(":focus-visible"));

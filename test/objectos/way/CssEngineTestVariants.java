@@ -92,6 +92,26 @@ public class CssEngineTestVariants {
   }
 
   @Test
+  public void checked() {
+    class Subject extends CssSubject {
+      @Override
+      final void classes() {
+        className("checked:background-color:gray-500");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .checked\\:background-color\\:gray-500:checked { background-color: var(--color-gray-500) }
+        }
+        """
+    );
+  }
+
+  @Test
   public void dark() {
     class Subject extends CssSubject {
       @Override
@@ -115,6 +135,26 @@ public class CssEngineTestVariants {
             .dark\\:background-color\\:black { background-color: var(--color-black) }
             .dark\\:color\\:gray-50 { color: var(--color-gray-50) }
           }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void disabled() {
+    class Subject extends CssSubject {
+      @Override
+      final void classes() {
+        className("disabled:background-color:gray-500");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .disabled\\:background-color\\:gray-500:disabled { background-color: var(--color-gray-500) }
         }
         """
     );
