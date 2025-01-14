@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Objectos Software LTDA.
+ * Copyright (C) 2025 Objectos Software LTDA.
  *
  * This file is part of the Objectos UI project.
  *
