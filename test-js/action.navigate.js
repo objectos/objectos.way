@@ -1,73 +1,73 @@
 suite("Action::navigate test", function() {
 
-	setup(function() {
-		clearWorkArea();
+  setup(function() {
+    clearWorkArea();
 
-		this.errorStub = sinon.stub(console, 'error');
-		this.server = makeServer();
-	});
+    this.errorStub = sinon.stub(console, 'error');
+    this.server = makeServer();
+  });
 
-	teardown(function() {
-		this.server.restore();
-		this.errorStub.restore();
-	});
+  teardown(function() {
+    this.server.restore();
+    this.errorStub.restore();
+  });
 
-	test("it should perform a soft navigation", function() {
-		make(`
+  test("it should perform a soft navigation", function() {
+    make(`
 		<div id='before' data-frame='x:before'>
-		<a id='link' href='/after' data-on-click='[{"cmd":"navigate"}]'>Before</a>
+		<a id='link' href='/after' data-on-click='[["navigate-0"]]'>Before</a>
 		</div>`);
 
-		const after = makeElement(`
+    const after = makeElement(`
 		<html>
 		<div id='after' data-frame='x:after'>After</div>
 		</html>`);
 
-		this.server.respondWith(
-			"GET", "/after",
-			[200, { "Content-Type": "text/html" }, after.outerHTML]
-		);
+    this.server.respondWith(
+      "GET", "/after",
+      [200, { "Content-Type": "text/html" }, after.outerHTML]
+    );
 
-		const link = byId("link");
+    const link = byId("link");
 
-		link.click();
+    link.click();
 
-		this.server.respond();
+    this.server.respond();
 
-		assert.equal(workArea().innerHTML, after.outerHTML);
+    assert.equal(workArea().innerHTML, after.outerHTML);
 
-		const requests = this.server.requests;
+    const requests = this.server.requests;
 
-		assert.equal(requests.length, 1);
-		assert.propertyVal(requests[0].requestHeaders, "Way-Request", "true");
-	});
+    assert.equal(requests.length, 1);
+    assert.propertyVal(requests[0].requestHeaders, "Way-Request", "true");
+  });
 
-	test("it should fail if element is not an anchor", function() {
-		make(`
+  test("it should fail if element is not an anchor", function() {
+    make(`
 		<div id='before' data-frame='x:before'>
-		<button id='link' href='/after' data-on-click='[{"cmd":"navigate"}]'>Before</button>
+		<button id='link' href='/after' data-on-click='[["navigate-0"]]'>Before</button>
 		</div>`);
 
-		const link = byId("link");
+    const link = byId("link");
 
-		link.click();
+    link.click();
 
-		assert.equal(this.errorStub.calledOnce, true);
-		assert.equal(this.errorStub.calledWith("executeNavigate: expected HTMLAnchorElement but got %s", "HTMLButtonElement"), true);
-	});
+    assert.equal(this.errorStub.calledOnce, true);
+    assert.equal(this.errorStub.calledWith("executeNavigate0: expected HTMLAnchorElement but got %s", "HTMLButtonElement"), true);
+  });
 
-	test("it should fail if anchor has no 'href' attribute", function() {
-		make(`
+  test("it should fail if anchor has no 'href' attribute", function() {
+    make(`
 		<div id='before' data-frame='x:before'>
-		<a id='link' data-on-click='[{"cmd":"navigate"}]'>Before</button>
+		<a id='link' data-on-click='[["navigate-0"]]'>Before</button>
 		</div>`);
 
-		const link = byId("link");
+    const link = byId("link");
 
-		link.click();
+    link.click();
 
-		assert.equal(this.errorStub.calledOnce, true);
-		assert.equal(this.errorStub.calledWith("executeNavigate: anchor has no href attribute"), true);
-	});
+    assert.equal(this.errorStub.calledOnce, true);
+    assert.equal(this.errorStub.calledWith("executeNavigate0: anchor has no href attribute"), true);
+  });
 
 });

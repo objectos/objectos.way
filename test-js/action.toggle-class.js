@@ -1,82 +1,85 @@
 suite("Action::toggleClass test", function() {
 
-	setup(function() {
-		clearWorkArea();
-		this.server = makeServer();
-	});
+  setup(function() {
+    clearWorkArea();
+    this.server = makeServer();
+  });
 
-	teardown(function() {
-		this.server.restore();
-	});
+  teardown(function() {
+    this.server.restore();
+  });
 
-	test("it should add the class if it is not present", function() {
-		const clickId = "f";
-		const onClick = JSON.stringify([{
-			cmd: "toggle-class",
-			args: ["subject", "add-me"]
-		}]);
-		make(`
+  test("it should add the class if it is not present", function() {
+    const clickId = "f";
+
+    const onClick = JSON.stringify([
+      ["toggle-class-0", "subject", "add-me"]
+    ]);
+
+    make(`
 		<div id='${clickId}' data-on-click='${onClick}'>
 		<div id='subject' class='foo'></div>
 		</div>		
 		`);
 
-		byId(clickId).click();
+    byId(clickId).click();
 
-		const subject = byId("subject");
+    const subject = byId("subject");
 
-		const l = subject.classList;
+    const l = subject.classList;
 
-		assert.equal(l.length, 2);
-		assert.isTrue(l.contains("foo"));
-		assert.isTrue(l.contains("add-me"));
-	});
+    assert.equal(l.length, 2);
+    assert.isTrue(l.contains("foo"));
+    assert.isTrue(l.contains("add-me"));
+  });
 
-	test("it should remove the class if it is present", function() {
-		const clickId = "f";
-		const onClick = JSON.stringify([{
-			cmd: "toggle-class",
-			args: ["subject", "remove-me"]
-		}]);
-		make(`
-		<div id='${clickId}' data-on-click='${onClick}'>
-		<div id='subject' class='foo remove-me'></div>
-		</div>		
-		`);
+  test("it should remove the class if it is present", function() {
+    const clickId = "f";
 
-		byId(clickId).click();
+    const onClick = JSON.stringify([
+      ["toggle-class-0", "subject", "remove-me"]
+    ]);
 
-		const subject = byId("subject");
+    make(`
+    <div id='${clickId}' data-on-click='${onClick}'>
+    <div id='subject' class='foo remove-me'></div>
+    </div>		
+    `);
 
-		const l = subject.classList;
+    byId(clickId).click();
 
-		assert.equal(l.length, 1);
-		assert.isTrue(l.contains("foo"));
-		assert.isFalse(l.contains("remove-me"));
-	});
+    const subject = byId("subject");
 
-	test("it should toggle all of the classes", function() {
-		const clickId = "f";
-		const onClick = JSON.stringify([{
-			cmd: "toggle-class",
-			args: ["subject", "add-me", "remove-me", "another-add"]
-		}]);
-		make(`
-		<div id='${clickId}' data-on-click='${onClick}'>
-		<div id='subject' class='foo remove-me'></div>
-		</div>		
-		`);
+    const l = subject.classList;
 
-		byId(clickId).click();
+    assert.equal(l.length, 1);
+    assert.isTrue(l.contains("foo"));
+    assert.isFalse(l.contains("remove-me"));
+  });
 
-		const subject = byId("subject");
+  test("it should toggle all of the classes", function() {
+    const clickId = "f";
 
-		const l = subject.classList;
+    const onClick = JSON.stringify([
+      ["toggle-class-0", "subject", "add-me", "remove-me", "another-add"]
+    ]);
 
-		assert.equal(l.length, 3);
-		assert.isTrue(l.contains("foo"));
-		assert.isTrue(l.contains("add-me"));
-		assert.isTrue(l.contains("another-add"));
-	});
+    make(`
+    <div id='${clickId}' data-on-click='${onClick}'>
+    <div id='subject' class='foo remove-me'></div>
+    </div>		
+    `);
+
+    byId(clickId).click();
+
+    const subject = byId("subject");
+
+    const l = subject.classList;
+
+    assert.equal(l.length, 3);
+    assert.isTrue(l.contains("foo"));
+    assert.isTrue(l.contains("add-me"));
+    assert.isTrue(l.contains("another-add"));
+  });
 
 });

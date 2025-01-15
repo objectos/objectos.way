@@ -30,7 +30,7 @@ public final class ScriptSourceGen {
 
   public static void main(String[] args) throws IOException {
     final Path sourceFile;
-    sourceFile = Path.of("main-js", "script.js");
+    sourceFile = Path.of("main-js", "way.js");
 
     final Path targetFile;
     targetFile = Path.of("main", "objectos", "way", "ScriptSource.java");

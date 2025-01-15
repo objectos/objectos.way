@@ -1,71 +1,69 @@
 suite("Action::stopPropagation test", function() {
 
-	setup(function() {
-		clearWorkArea();
-		this.server = makeServer();
-	});
+  setup(function() {
+    clearWorkArea();
+    this.server = makeServer();
+  });
 
-	teardown(function() {
-		this.server.restore();
-	});
+  teardown(function() {
+    this.server.restore();
+  });
 
-	test("WITHOUT stopPropagation it SHOULD fire the parent action", function() {
-		const parentId = "parent";
+  test("WITHOUT stopPropagation it SHOULD fire the parent action", function() {
+    const parentId = "parent";
 
-		const addClass = JSON.stringify([{
-			cmd: "add-class",
-			args: ["subject", "bar"]
-		}]);
+    const addClass = JSON.stringify([
+      ["toggle-class-0", "subject", "bar"]
+    ]);
 
-		const childId = "child";
+    const childId = "child";
 
-		make(`
+    make(`
 		<div id='${parentId}' data-on-click='${addClass}'>
 		<div id='${childId}'></div>
 		<div id='subject' class='foo'></div>
 		</div>
 		`);
 
-		byId(childId).click();
+    byId(childId).click();
 
-		const subject = byId("subject");
+    const subject = byId("subject");
 
-		const l = subject.classList;
+    const l = subject.classList;
 
-		assert.equal(l.length, 2);
-		assert.isTrue(l.contains("foo"));
-		assert.isTrue(l.contains("bar"));
-	});
+    assert.equal(l.length, 2);
+    assert.isTrue(l.contains("foo"));
+    assert.isTrue(l.contains("bar"));
+  });
 
-	test("WITH stopPropagation it SHOULD NOT fire the parent action", function() {
-		const parentId = "parent";
+  test("WITH stopPropagation it SHOULD NOT fire the parent action", function() {
+    const parentId = "parent";
 
-		const addClass = JSON.stringify([{
-			cmd: "add-class",
-			args: ["subject", "bar"]
-		}]);
+    const addClass = JSON.stringify([
+      ["toggle-class-0", "subject", "bar"]
+    ]);
 
-		const childId = "child";
+    const childId = "child";
 
-		const stopPropagation = JSON.stringify([{
-			cmd: "stop-propagation"
-		}]);
+    const stopPropagation = JSON.stringify([
+      ["stop-propagation-0"]
+    ]);
 
-		make(`
+    make(`
 		<div id='${parentId}' data-on-click='${addClass}'>
 		<div id='${childId}' data-on-click='${stopPropagation}'></div>
 		<div id='subject' class='foo'></div>
 		</div>
 		`);
 
-		byId(childId).click();
+    byId(childId).click();
 
-		const subject = byId("subject");
+    const subject = byId("subject");
 
-		const l = subject.classList;
+    const l = subject.classList;
 
-		assert.equal(l.length, 1);
-		assert.isTrue(l.contains("foo"));
-	});
+    assert.equal(l.length, 1);
+    assert.isTrue(l.contains("foo"));
+  });
 
 });

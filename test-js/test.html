@@ -2,50 +2,46 @@
 <html lang="en">
 
 <head>
-	<meta charset="utf-8">
-	<title>Objectos Way Tests</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="../node_modules/mocha/mocha.css">
+  <meta charset="utf-8">
+  <title>Objectos Way Tests</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../node_modules/mocha/mocha.css">
 </head>
 
 <body>
-	<div id="mocha"></div>
+  <div id="mocha"></div>
 
-	<script src="../node_modules/chai/chai.js"></script>
-	<script src="../node_modules/mocha/mocha.js"></script>
-	<script src="../node_modules/sinon/pkg/sinon.js"></script>
-	<script src="../main-js/script.js"></script>
+  <script src="../node_modules/chai/chai.js"></script>
+  <script src="../node_modules/mocha/mocha.js"></script>
+  <script src="../node_modules/sinon/pkg/sinon.js"></script>
+  <script src="../main-js/way.js"></script>
 
-	<script class="mocha-init">
-		mocha.setup('tdd');
-		mocha.checkLeaks();
-		assert = chai.assert;
-	</script>
+  <script class="mocha-init">
+    mocha.setup('tdd');
+    mocha.checkLeaks();
+    assert = chai.assert;
+  </script>
 
-	<script src="util.js"></script>
+  <script src="util.js"></script>
 
-	<script src="action.add-class.js"></script>
-	<script src="action.delay.js"></script>
-	<script src="action.html.js"></script>
-	<script src="action.location.js"></script>
-	<script src="action.navigate.js"></script>
-	<script src="action.remove-class.js"></script>
-	<script src="action.set-property.js"></script>
-	<script src="action.stop-propagation.js"></script>
-	<script src="action.toggle-class.js"></script>
-	<script src="data-on-click.js"></script>
-	<script src="data-on-input.js"></script>
+  <script src="action.delay.js"></script>
+  <script src="action.html.js"></script>
+  <script src="action.navigate.js"></script>
+  <script src="action.stop-propagation.js"></script>
+  <script src="action.toggle-class.js"></script>
+  <script src="data-on-click.js"></script>
+  <script src="data-on-input.js"></script>
 
-	<script class="mocha-exec">
-		Way.disableHistory = true;
+  <script class="mocha-exec">
+    Way.disableHistory = true;
 
-		document.addEventListener("DOMContentLoaded", function () {
-			mocha.run();
-		})
-	</script>
-	<em>Work Area</em>
-	<hr />
-	<div id="work-area"></div>
+    document.addEventListener("DOMContentLoaded", function () {
+      mocha.run();
+    })
+  </script>
+  <em>Work Area</em>
+  <hr />
+  <div id="work-area"></div>
 </body>
 
 </html>

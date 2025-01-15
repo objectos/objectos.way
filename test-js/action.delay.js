@@ -1,76 +1,72 @@
 suite("Action::delay test", function() {
 
-	setup(function() {
-		clearWorkArea();
-		this.server = makeServer();
-	});
+  setup(function() {
+    clearWorkArea();
+    this.server = makeServer();
+  });
 
-	teardown(function() {
-		this.server.restore();
-	});
+  teardown(function() {
+    this.server.restore();
+  });
 
-	test("it should execute the data-on-click action", function() {
-		const clickMe = "click-me";
+  test("it should execute the data-on-click action", function() {
+    const clickMe = "click-me";
 
-		const addClass = JSON.stringify([{
-			cmd: "delay", ms: 200, actions: [
-				{ cmd: "add-class", args: ["subject", "bar"] }
-			]
-		}]);
+    const addClass = JSON.stringify([
+      ["delay-0", 200, [["toggle-class-0", "subject", "bar"]]]
+    ]);
 
-		make(`
+    make(`
 		<div id='${clickMe}' data-on-click='${addClass}'>
 		<div id='subject' class='foo'></div>
 		</div>
 		`);
 
-		byId(clickMe).click();
+    byId(clickMe).click();
 
-		setTimeout(() => {
-			const subject = byId("subject");
+    setTimeout(() => {
+      const subject = byId("subject");
 
-			const l = subject.classList;
+      const l = subject.classList;
 
-			assert.equal(l.length, 2);
-			assert.isTrue(l.contains("foo"));
-			assert.isTrue(l.contains("bar"));
-		}, 300);
-	});
+      assert.equal(l.length, 2);
+      assert.isTrue(l.contains("foo"));
+      assert.isTrue(l.contains("bar"));
+    }, 300);
+  });
 
-	test("it should execute the POST response action", function() {
-		const clickMe = "click-me";
+  test("it should execute the POST response action", function() {
+    const clickMe = "click-me";
 
-		make(`
-		<form method='post' action='/test'>
-		<button id='${clickMe}' type='submit'>Click Me</button>
-		<div id='subject' class='foo'></div>
-		</form>
-		`);
+    make(`
+    <form method='post' action='/test'>
+    <button id='${clickMe}' type='submit'>Click Me</button>
+    <div id='subject' class='foo'></div>
+    </form>
+    `);
 
-		this.server.respondWith(
-			"POST", "/test", [
-			200,
-			{ "Content-Type": "application/json" },
-			JSON.stringify([{
-				cmd: "delay", ms: 200, actions: [
-					{ cmd: "add-class", args: ["subject", "bar"] }
-				]
-			}])
-		]);
+    this.server.respondWith(
+      "POST", "/test", [
+      200,
+      { "Content-Type": "application/json" },
+      JSON.stringify([
+        ["delay-0", 200, [["toggle-class-0", "subject", "bar"]]]
+      ])
+    ]);
 
-		byId(clickMe).click();
+    byId(clickMe).click();
 
-		this.server.respond();
+    this.server.respond();
 
-		setTimeout(() => {
-			const subject = byId("subject");
+    setTimeout(() => {
+      const subject = byId("subject");
 
-			const l = subject.classList;
+      const l = subject.classList;
 
-			assert.equal(l.length, 2);
-			assert.isTrue(l.contains("foo"));
-			assert.isTrue(l.contains("bar"));
-		}, 300);
-	});
+      assert.equal(l.length, 2);
+      assert.isTrue(l.contains("foo"));
+      assert.isTrue(l.contains("bar"));
+    }, 300);
+  });
 
 });
