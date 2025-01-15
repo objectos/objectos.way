@@ -40,10 +40,6 @@ public final class TestingHttpServer {
     ServerHolder.bindHttpServerTest(test);
   }
 
-  public static void bindWebModuleTest(WebModuleTest test) {
-    ServerHolder.bindWebModuleTest(test);
-  }
-
   public static void bindWebResourcesTest(WebResourcesTest test) {
     ServerHolder.bindWebResourcesTest(test);
   }
@@ -125,10 +121,6 @@ public final class TestingHttpServer {
       HANDLER.httpServerTest.delegate = test.compile();
     }
 
-    public static void bindWebModuleTest(WebModuleTest test) {
-      HANDLER.webModuleTest.delegate = test.compile();
-    }
-
     public static void bindWebResourcesTest(WebResourcesTest test) {
       HANDLER.webResourcesTest.delegate = test.compile();
     }
@@ -189,8 +181,6 @@ public final class TestingHttpServer {
 
     private final Http.Module marketing = new MarketingSite();
 
-    private final DelegatingHandler webModuleTest = new DelegatingHandler();
-
     private final DelegatingHandler webResourcesTest = new DelegatingHandler();
 
     @Override
@@ -205,8 +195,6 @@ public final class TestingHttpServer {
       host("http.server.test", httpServerTest);
 
       host("marketing", marketing);
-
-      host("web.module.test", webModuleTest);
 
       host("web.resources.test", webResourcesTest);
     }

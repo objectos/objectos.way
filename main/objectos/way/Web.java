@@ -212,18 +212,6 @@ public final class Web {
   }
 
   /**
-   * An abstract HTTP module suited for web applications.
-   */
-  public static abstract class Module extends WebModule {
-
-    /**
-     * Sole constructor.
-     */
-    protected Module() {}
-
-  }
-
-  /**
    * Allows for pagination of data tables in an web application.
    */
   public sealed interface Paginator extends Sql.PageProvider permits WebPaginator {
@@ -374,20 +362,16 @@ public final class Web {
        * @param propertiesString
        *        a string with a file extension / content-type mapping in each
        *        line
-       *
-       * @return this object
        */
-      Config contentTypes(String propertiesString);
+      void contentTypes(String propertiesString);
 
       /**
        * Set the note sink to the specified instance.
        *
        * @param noteSink
        *        the note sink instance
-       *
-       * @return this object
        */
-      Config noteSink(Note.Sink noteSink);
+      void noteSink(Note.Sink noteSink);
 
       /**
        * Serve the contents of the specified directory as if they were at the
@@ -395,10 +379,8 @@ public final class Web {
        *
        * @param directory
        *        the directory whose contents are to be served
-       *
-       * @return this object
        */
-      Config serveDirectory(Path directory);
+      void serveDirectory(Path directory);
 
       /**
        * Serve at the specified path name a file with the specified
@@ -418,20 +400,16 @@ public final class Web {
        *
        * @param contents
        *        the contents of the resource to be served.
-       *
-       * @return this object
        */
-      Config serveFile(String pathName, byte[] contents);
+      void serveFile(String pathName, byte[] contents);
 
       /**
        * Set the root directory of the web resources to the specified path.
        *
        * @param value
        *        the path of the directory
-       *
-       * @return this object
        */
-      Config rootDirectory(Path value);
+      void rootDirectory(Path value);
 
     }
 
@@ -559,40 +537,32 @@ public final class Web {
        *
        * @param value
        *        the clock instance to use
-       *
-       * @return this object
        */
-      Config clock(Clock value);
+      void clock(Clock value);
 
       /**
        * Use the specified {@code name} when setting the client session cookie.
        *
        * @param name
        *        the cookie name to use
-       *
-       * @return this object
        */
-      Config cookieName(String name);
+      void cookieName(String name);
 
       /**
        * Sets the session cookie Path attribute to the specified value.
        *
        * @param path
        *        the value of the Path attribute
-       *
-       * @return this object
        */
-      Config cookiePath(String path);
+      void cookiePath(String path);
 
       /**
        * Sets the session cookie Max-Age attribute to the specified value.
        *
        * @param duration
        *        the value of the Max-Age attribute
-       *
-       * @return this object
        */
-      Config cookieMaxAge(Duration duration);
+      void cookieMaxAge(Duration duration);
 
       /**
        * Discards empty sessions, during a {@link Store#cleanUp()}
@@ -601,20 +571,16 @@ public final class Web {
        *
        * @param duration
        *        the duration value
-       *
-       * @return this object
        */
-      Config emptyMaxAge(Duration duration);
+      void emptyMaxAge(Duration duration);
 
       /**
        * Use the specified {@link Random} instance for generating session IDs.
        *
        * @param random
        *        the {@link Random} instance to use
-       *
-       * @return this object
        */
-      Config random(Random random);
+      void random(Random random);
 
     }
 

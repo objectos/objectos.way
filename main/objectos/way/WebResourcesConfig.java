@@ -84,42 +84,34 @@ final class WebResourcesConfig implements Web.Resources.Config {
   }
 
   @Override
-  public final Web.Resources.Config contentTypes(String propertiesString) {
+  public final void contentTypes(String propertiesString) {
     Map<String, String> map;
     map = Util.parsePropertiesMap(propertiesString);
 
     contentTypes = map;
-
-    return this;
   }
 
   @Override
-  public final Web.Resources.Config noteSink(Note.Sink noteSink) {
+  public final void noteSink(Note.Sink noteSink) {
     this.noteSink = Check.notNull(noteSink, "noteSink == null");
-
-    return this;
   }
 
   @Override
-  public final Web.Resources.Config rootDirectory(Path directory) {
+  public final void rootDirectory(Path directory) {
     Check.argument(Files.isDirectory(directory), "Path " + directory + " does not represent a directory");
 
     rootDirectory = directory;
-
-    return this;
   }
 
   @Override
-  public final Web.Resources.Config serveDirectory(Path directory) {
+  public final void serveDirectory(Path directory) {
     Check.argument(Files.isDirectory(directory), "Path " + directory + " does not represent a directory");
 
     directories.add(directory);
-
-    return this;
   }
 
   @Override
-  public final Web.Resources.Config serveFile(String pathName, byte[] contents) {
+  public final void serveFile(String pathName, byte[] contents) {
     Http.RequestTarget target;
     target = HttpExchange.parseRequestTarget(pathName);
 
@@ -139,8 +131,6 @@ final class WebResourcesConfig implements Web.Resources.Config {
     fileBytes = new FileBytes(path, contents);
 
     files.add(fileBytes);
-
-    return this;
   }
 
   private class CopyRecursively extends SimpleFileVisitor<Path> {

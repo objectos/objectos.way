@@ -40,28 +40,22 @@ final class WebStoreConfig implements Web.Store.Config {
   }
 
   @Override
-  public final Web.Store.Config clock(Clock value) {
+  public final void clock(Clock value) {
     clock = Objects.requireNonNull(value, "value == null");
-
-    return this;
   }
 
   @Override
-  public final Web.Store.Config cookieName(String name) {
+  public final void cookieName(String name) {
     cookieName = Objects.requireNonNull(name, "name == null");
-
-    return this;
   }
 
   @Override
-  public final Web.Store.Config cookiePath(String path) {
+  public final void cookiePath(String path) {
     cookiePath = Objects.requireNonNull(path, "path == null");
-
-    return this;
   }
 
   @Override
-  public final Web.Store.Config cookieMaxAge(Duration duration) {
+  public final void cookieMaxAge(Duration duration) {
     Objects.requireNonNull(duration, "duration == null");
 
     if (duration.isZero()) {
@@ -73,12 +67,10 @@ final class WebStoreConfig implements Web.Store.Config {
     }
 
     cookieMaxAge = duration;
-
-    return this;
   }
 
   @Override
-  public final Web.Store.Config emptyMaxAge(Duration duration) {
+  public final void emptyMaxAge(Duration duration) {
     Objects.requireNonNull(duration, "duration == null");
 
     if (duration.isZero()) {
@@ -90,15 +82,11 @@ final class WebStoreConfig implements Web.Store.Config {
     }
 
     emptyMaxAge = duration;
-
-    return this;
   }
 
   @Override
-  public final Web.Store.Config random(Random random) {
+  public final void random(Random random) {
     this.random = Objects.requireNonNull(random, "random == null");
-
-    return this;
   }
 
 }
