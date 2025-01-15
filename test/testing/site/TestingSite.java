@@ -16,6 +16,7 @@
 package testing.site;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.time.Clock;
 import objectos.way.App;
 import objectos.way.App.ShutdownHook;
@@ -68,7 +69,7 @@ abstract class TestingSite extends App.Bootstrap {
           .js: text/javascript; charset=utf-8
           """);
 
-        final byte[] script = Script.getBytes();
+        final byte[] script = Script.getSource().getBytes(StandardCharsets.UTF_8);
 
         config.serveFile("/common/way.js", script);
         config.serveFile("/ui/script.js", script);

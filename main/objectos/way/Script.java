@@ -15,18 +15,11 @@
  */
 package objectos.way;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Consumer;
 
 /**
  * The <strong>Objectos Script</strong> main interface, part of Objectos HTML.
- * It represents an action to be executed by the browser in the context of an
- * web application.
  */
 public sealed interface Script permits ScriptWriter {
 
@@ -70,20 +63,8 @@ public sealed interface Script permits ScriptWriter {
 
   }
 
-  public static byte[] getBytes() throws IOException {
-    URL resource;
-    resource = Script.class.getResource("script.js");
-
-    if (resource == null) {
-      throw new FileNotFoundException();
-    }
-
-    try (InputStream in = resource.openStream();
-        ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-      in.transferTo(out);
-
-      return out.toByteArray();
-    }
+  public static String getSource() {
+    return ScriptSource.get();
   }
 
   void delay(int ms, Consumer<Script> callback);

@@ -24,14 +24,17 @@ ARTIFACT_ID := objectos.way
 VERSION := 0.1.12-SNAPSHOT
 MODULE := $(ARTIFACT_ID)
 
-## Dependencies
-H2 := com.h2database/h2/2.2.224
-SLF4J_NOP := org.slf4j/slf4j-nop/1.7.36
-TESTNG := org.testng/testng/7.10.2
+## javac --release option
+JAVA_RELEASE := 21
 
 ## Maven interop
 REMOTE_REPOS := https://repo.maven.apache.org/maven2
 OSSRH_SERVER := https://oss.sonatype.org
+
+## Dependencies
+H2 := com.h2database/h2/2.2.224
+SLF4J_NOP := org.slf4j/slf4j-nop/1.7.36
+TESTNG := org.testng/testng/7.10.2
 
 # Delete the default suffixes
 .SUFFIXES:
@@ -55,13 +58,34 @@ include make/common-clean.mk
 # way@compile
 #
 
-## javac --release option
-JAVA_RELEASE := 21
-
-## resources
-RESOURCES := resources
+## compilation requirements 
+COMPILE_REQS = $(SCRIPT_GEN)
 
 include make/java-compile.mk
+
+#
+# way@script-gen
+#
+
+## script-gen
+SCRIPT_GEN := $(MAIN)/objectos/way/ScriptSource.java
+
+## script-gen java command
+SCRIPT_GEN_JAVAX := $(JAVA)
+SCRIPT_GEN_JAVAX += ScriptSourceGen.java
+
+## when to update
+SCRIPT_GEN_REQS := $(wildcard main-js/*.js)
+
+.PHONY: script-gen
+script-gen: $(SCRIPT_GEN)
+
+.PHONY: script-gen@clean
+script-gen@clean:
+	rm -f $(SCRIPT_GEN)
+
+$(SCRIPT_GEN): $(SCRIPT_GEN_REQS)
+	$(SCRIPT_GEN_JAVAX)
 
 #
 # way@test-compile
