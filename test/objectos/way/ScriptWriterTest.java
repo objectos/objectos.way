@@ -66,6 +66,16 @@ public class ScriptWriterTest {
   }
 
   @Test
+  public void setAttribute() {
+    test(
+        script -> script.setAttribute(FOO, "value", "x"),
+
+        """
+        [["set-attribute-0","foo","value","x"]]"""
+    );
+  }
+
+  @Test
   public void stopPropagation0() {
     test(
         Script::stopPropagation,

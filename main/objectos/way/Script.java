@@ -63,6 +63,11 @@ public sealed interface Script permits ScriptWriter {
 
   }
 
+  /**
+   * Returns the source code of the Objectos Way JS library.
+   *
+   * @return the source code
+   */
   public static String getSource() {
     return ScriptSource.get();
   }
@@ -74,16 +79,24 @@ public sealed interface Script permits ScriptWriter {
   /**
    * Performs a soft navigation to the URL specified by the {@code href}
    * attribute of this {@code <a>} HTML element.
-   *
-   * @return an action that performs a soft navigation.
    */
   void navigate();
 
   /**
-   * Causes the event handling to stop at the current HTML element.
+   * Sets the specified attribute to the given value on the HTML element
+   * identified by the provided ID.
    *
-   * @return an action that causes the event handling to stop at the current
-   *         HTML element.
+   * @param id
+   *        the ID of the target HTML element
+   * @param name
+   *        the name of the attribute to set
+   * @param value
+   *        the value to assign to the attribute
+   */
+  void setAttribute(Html.Id id, String name, String value);
+
+  /**
+   * Causes the event handling to stop at the current HTML element.
    */
   void stopPropagation();
 

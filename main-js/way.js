@@ -180,9 +180,10 @@
   }
 
   const actionHandlers = {
-    "delay-0": executeDelay,
+    "delay-0": executeDelay0,
     "html-0": executeHtml0,
     "navigate-0": executeNavigate0,
+    "set-attribute-0": executeSetAttribute0,
     "stop-propagation-0": executeStopPropagation0,
     "submit-0": executeSubmit0,
     "toggle-class-0": executeToggleClass0
@@ -226,7 +227,7 @@
     return count > 0;
   }
 
-  function executeDelay(obj, el) {
+  function executeDelay0(obj, el) {
     const ms = obj.ms;
 
     if (!ms) {
@@ -394,6 +395,41 @@
     }
 
     executeLocation(href);
+  }
+
+
+  function executeSetAttribute0(args) {
+    if (args.length !== 3) {
+      console.error("set-attribute-0: action invoked with the wrong number of args, expected 3 but got %d", args.length);
+
+      return;
+    }
+
+    const id = args[0];
+
+    if (!id) {
+      return;
+    }
+
+    const el = document.getElementById(id);
+
+    if (!el) {
+      return;
+    }
+
+    const name = args[1];
+
+    if (!name) {
+      return;
+    }
+
+    const value = args[2];
+
+    if (!value) {
+      return;
+    }
+
+    el.setAttribute(name, value);
   }
 
   function executeStopPropagation0() {

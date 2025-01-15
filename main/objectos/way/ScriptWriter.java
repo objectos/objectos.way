@@ -67,6 +67,23 @@ final class ScriptWriter implements Script {
   }
 
   @Override
+  public final void setAttribute(Html.Id id, String name, String value) {
+    final String _id = id.value();
+    Objects.requireNonNull(name, "name == null");
+    Objects.requireNonNull(value, "value == null");
+
+    actionStart();
+    stringLiteral("set-attribute-0");
+    comma();
+    stringLiteral(_id);
+    comma();
+    stringLiteral(name);
+    comma();
+    stringLiteral(value);
+    actionEnd();
+  }
+
+  @Override
   public final void stopPropagation() {
     actionStart();
     stringLiteral("stop-propagation-0");
