@@ -94,7 +94,7 @@ public class WebResourcesTest extends Http.Module {
 
     write(src, a, "AAAA\n");
 
-    config.serveDirectory(src);
+    config.addDirectory(src);
   }
 
   @Test(description = """
@@ -165,7 +165,7 @@ public class WebResourcesTest extends Http.Module {
 
     write(src, a, "AAAA\n");
 
-    config.serveDirectory(src);
+    config.addDirectory(src);
   }
 
   @Test(description = """
@@ -194,7 +194,7 @@ public class WebResourcesTest extends Http.Module {
   }
 
   private void testCase04Option(Web.Resources.Config config) throws IOException {
-    config.serveFile("/tc04.txt", "AAAA\n".getBytes(StandardCharsets.UTF_8));
+    config.addTextFile("/tc04.txt", "AAAA\n", StandardCharsets.UTF_8);
   }
 
   @Test(description = """
@@ -248,7 +248,7 @@ public class WebResourcesTest extends Http.Module {
 
     write(src, a, "AAAA\n");
 
-    config.serveDirectory(src);
+    config.addDirectory(src);
   }
 
   @Test(description = """

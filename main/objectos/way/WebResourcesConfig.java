@@ -16,9 +16,11 @@
 package objectos.way;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
@@ -26,10 +28,19 @@ import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 final class WebResourcesConfig implements Web.Resources.Config {
 
-  private record FileBytes(String pathName, byte[] contents) {}
+  private sealed interface ResourceFile {
+
+    String pathName();
+
+  }
+
+  private record BinaryFile(String pathName, byte[] contents) implements ResourceFile {}
+
+  private record TextFile(String pathName, CharSequence contents, Charset charset) implements ResourceFile {}
 
   private final Note.Ref1<Path> created = Note.Ref1.create(Web.Resources.Config.class, "File created", Note.DEBUG);
 
@@ -39,7 +50,7 @@ final class WebResourcesConfig implements Web.Resources.Config {
 
   final List<Path> directories = Util.createList();
 
-  final List<FileBytes> files = Util.createList();
+  final List<ResourceFile> files = Util.createList();
 
   Note.Sink noteSink = new Note.NoOpSink();
 
@@ -57,11 +68,15 @@ final class WebResourcesConfig implements Web.Resources.Config {
       Files.walkFileTree(directory, copyRecursively);
     }
 
-    for (FileBytes f : files) {
+    final OpenOption[] writeOptions;
+    writeOptions = new OpenOption[] {StandardOpenOption.CREATE_NEW};
+
+    for (ResourceFile f : files) {
       String path;
       path = f.pathName();
 
-      path = path.substring(1); // remove '/'
+      // remove '/'
+      path = path.substring(1);
 
       Path file;
       file = rootDirectory.resolve(path);
@@ -77,10 +92,47 @@ final class WebResourcesConfig implements Web.Resources.Config {
 
       Files.createDirectories(parent);
 
-      Files.write(file, f.contents, StandardOpenOption.CREATE_NEW);
+      switch (f) {
+        case BinaryFile(String pathName, byte[] contents)
+             -> Files.write(file, contents, writeOptions);
+
+        case TextFile(String pathName, CharSequence contents, Charset charset)
+             -> Files.writeString(file, contents, charset, writeOptions);
+      }
     }
 
     return new WebResources(this);
+  }
+
+  @Override
+  public final void addDirectory(Path directory) {
+    Check.argument(Files.isDirectory(directory), "Path " + directory + " does not represent a directory");
+
+    directories.add(directory);
+  }
+
+  @Override
+  public final void addTextFile(String pathName, CharSequence contents, Charset charset) {
+    Http.RequestTarget target;
+    target = HttpExchange.parseRequestTarget(pathName);
+
+    String query;
+    query = target.rawQuery();
+
+    if (query != null) {
+      throw new IllegalArgumentException("Found query component in path name: " + pathName);
+    }
+
+    String path;
+    path = target.path();
+
+    Objects.requireNonNull(contents, "contents == null");
+    Objects.requireNonNull(charset, "charset == null");
+
+    ResourceFile file;
+    file = new TextFile(path, contents, charset);
+
+    files.add(file);
   }
 
   @Override
@@ -101,36 +153,6 @@ final class WebResourcesConfig implements Web.Resources.Config {
     Check.argument(Files.isDirectory(directory), "Path " + directory + " does not represent a directory");
 
     rootDirectory = directory;
-  }
-
-  @Override
-  public final void serveDirectory(Path directory) {
-    Check.argument(Files.isDirectory(directory), "Path " + directory + " does not represent a directory");
-
-    directories.add(directory);
-  }
-
-  @Override
-  public final void serveFile(String pathName, byte[] contents) {
-    Http.RequestTarget target;
-    target = HttpExchange.parseRequestTarget(pathName);
-
-    String query;
-    query = target.rawQuery();
-
-    if (query != null) {
-      throw new IllegalArgumentException("Found query component in path name: " + pathName);
-    }
-
-    String path;
-    path = target.path();
-
-    Check.notNull(contents, "contents == null");
-
-    FileBytes fileBytes;
-    fileBytes = new FileBytes(path, contents);
-
-    files.add(fileBytes);
   }
 
   private class CopyRecursively extends SimpleFileVisitor<Path> {

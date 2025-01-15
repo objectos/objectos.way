@@ -69,10 +69,12 @@ abstract class TestingSite extends App.Bootstrap {
           .js: text/javascript; charset=utf-8
           """);
 
-        final byte[] script = Script.getSource().getBytes(StandardCharsets.UTF_8);
+        final String script;
+        script = Script.getSource();
 
-        config.serveFile("/common/way.js", script);
-        config.serveFile("/ui/script.js", script);
+        config.addTextFile("/common/way.js", script, StandardCharsets.UTF_8);
+
+        config.addTextFile("/ui/script.js", script, StandardCharsets.UTF_8);
       });
     } catch (IOException e) {
       throw App.serviceFailed("WebResources", e);

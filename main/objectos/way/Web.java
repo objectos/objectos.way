@@ -331,6 +331,29 @@ public final class Web {
     public sealed interface Config permits WebResourcesConfig {
 
       /**
+       * Adds the specified directory to this configuration. The contents of the
+       * directory will be recursively copied to the root of the web resources
+       * instance during its creation.
+       *
+       * @param directory
+       *        the directory whose contents are to be copied
+       */
+      void addDirectory(Path directory);
+
+      /**
+       * Adds the specified text file to this configuration.
+       *
+       * @param pathName
+       *        the absolute path of the text file to be created. It must start
+       *        with a '/' character.
+       * @param contents
+       *        the text to be written.
+       * @param charset
+       *        the charset to use for encoding
+       */
+      void addTextFile(String pathName, CharSequence contents, Charset charset);
+
+      /**
        * Map file extension names to content type (media type) values as defined
        * by the specified properties string.
        *
@@ -372,36 +395,6 @@ public final class Web {
        *        the note sink instance
        */
       void noteSink(Note.Sink noteSink);
-
-      /**
-       * Serve the contents of the specified directory as if they were at the
-       * root of the web server.
-       *
-       * @param directory
-       *        the directory whose contents are to be served
-       */
-      void serveDirectory(Path directory);
-
-      /**
-       * Serve at the specified path name a file with the specified
-       * contents. The behavior of this option is not specified if the
-       * contents of the array is changed while this option is configuring the
-       * creation of a resources instance.
-       *
-       * <p>
-       * A typical usage is:
-       *
-       * <pre>
-       * config.serveFile("/robots.txt", Files.readAllBytes(robotsPath));</pre>
-       *
-       * @param pathName
-       *        the path of the resource to be served. It must start with a '/'
-       *        character.
-       *
-       * @param contents
-       *        the contents of the resource to be served.
-       */
-      void serveFile(String pathName, byte[] contents);
 
       /**
        * Set the root directory of the web resources to the specified path.
