@@ -1150,9 +1150,7 @@ public class HtmlTemplateTest {
       @Override
       public void renderHtml(Html.Markup m) {
         m.button(
-            m.dataOnClick(
-                Script.replaceClass(id, "hidden", "block")
-            )
+            m.dataOnClick(s -> s.toggleClass(id, "hidden", "block"))
         );
       }
     }
@@ -1170,7 +1168,7 @@ public class HtmlTemplateTest {
         },
 
         """
-        <div><button data-on-click='[{"cmd":"replace-class","args":["nav","hidden","block"]}]'></button></div>
+        <div><button data-on-click='[["toggle-class-0","nav","hidden","block"]]'></button></div>
         """
     );
   }
@@ -1188,40 +1186,32 @@ public class HtmlTemplateTest {
           @Override
           protected final void render() {
             div(
-                dataOnClick(
-                    Script.replaceClass(FOO, "a", "x")
-                ),
-                dataOnClick(
-                    Script.replaceClass(FOO, "b", "y")
-                )
+                dataOnClick(s -> s.toggleClass(FOO, "a", "x")),
+                dataOnClick(s -> s.toggleClass(FOO, "b", "y"))
             );
 
             div(
-                dataOnClick(
-                    Script.replaceClass(FOO, "a", "x")
-                ),
-                dataOnClick(
-                    Script.replaceClass(FOO, "b", "y"),
-                    Script.replaceClass(FOO, "c", "z")
-                )
+                dataOnClick(s -> s.toggleClass(FOO, "a", "x")),
+                dataOnClick(s -> {
+                  s.toggleClass(FOO, "b", "y");
+                  s.toggleClass(FOO, "c", "z");
+                })
             );
 
             div(
-                dataOnClick(
-                    Script.replaceClass(FOO, "a", "x"),
-                    Script.replaceClass(FOO, "b", "y")
-                ),
-                dataOnClick(
-                    Script.replaceClass(FOO, "c", "z")
-                )
+                dataOnClick(s -> {
+                  s.toggleClass(FOO, "a", "x");
+                  s.toggleClass(FOO, "b", "y");
+                }),
+                dataOnClick(s -> s.toggleClass(FOO, "c", "z"))
             );
           }
         },
 
         """
-        <div data-on-click='[{"cmd":"replace-class","args":["foo","a","x"]},{"cmd":"replace-class","args":["foo","b","y"]}]'></div>
-        <div data-on-click='[{"cmd":"replace-class","args":["foo","a","x"]},{"cmd":"replace-class","args":["foo","b","y"]},{"cmd":"replace-class","args":["foo","c","z"]}]'></div>
-        <div data-on-click='[{"cmd":"replace-class","args":["foo","a","x"]},{"cmd":"replace-class","args":["foo","b","y"]},{"cmd":"replace-class","args":["foo","c","z"]}]'></div>
+        <div data-on-click='[["toggle-class-0","foo","a","x"],["toggle-class-0","foo","b","y"]]'></div>
+        <div data-on-click='[["toggle-class-0","foo","a","x"],["toggle-class-0","foo","b","y"],["toggle-class-0","foo","c","z"]]'></div>
+        <div data-on-click='[["toggle-class-0","foo","a","x"],["toggle-class-0","foo","b","y"],["toggle-class-0","foo","c","z"]]'></div>
         """
     );
   }
@@ -1317,24 +1307,11 @@ public class HtmlTemplateTest {
     );
   }
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   Adding a Script::noop action should behave as a noop() operation
   """)
   public void testCase62() {
-    test(
-        new Html.Template() {
-          @Override
-          protected final void render() {
-            div(
-                dataOnClick(Script.noop())
-            );
-          }
-        },
-
-        """
-        <div></div>
-        """
-    );
+    // Script::noop was removed
   }
 
   @Test(description = """

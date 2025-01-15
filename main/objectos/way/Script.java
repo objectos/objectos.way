@@ -21,17 +21,29 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.function.Consumer;
 
 /**
- * The <strong>Objectos Script</strong> main class. Part of Objectos HTML.
+ * The <strong>Objectos Script</strong> main interface, part of Objectos HTML.
+ * It represents an action to be executed by the browser in the context of an
+ * web application.
  */
-public final class Script {
+public sealed interface Script permits ScriptWriter {
 
   /**
    * Represents an action to be executed by the browser in the context of an web
    * application.
    */
   public sealed interface Action extends Lang.MediaObject permits ScriptAction {
+
+    static Action create(Consumer<Script> script) {
+      final ScriptWriter writer;
+      writer = new ScriptWriter();
+
+      script.accept(writer);
+
+      return writer.build();
+    }
 
     /**
      * Return {@code application/json} always.
@@ -58,37 +70,6 @@ public final class Script {
 
   }
 
-  private Script() {}
-
-  /**
-   * Returns a new action that executes all of the specified actions in order.
-   *
-   * @param actions
-   *        the actions to be joined into a single action instance
-   *
-   * @return a new action that executes all of the specified actions in order.
-   */
-  public static Action actions(Action... actions) {
-    int len = actions.length; // implicit null check
-
-    if (len == 0) {
-      return Empty.INSTANCE;
-    }
-
-    if (len == 1) {
-      return Check.notNull(actions[0], "actions[0] == null");
-    }
-
-    Action[] copy;
-    copy = new Action[len];
-
-    for (int i = 0; i < len; i++) {
-      copy[i] = Check.notNull(actions[i], "actions[", i, "] == null");
-    }
-
-    return new Joined(copy);
-  }
-
   public static byte[] getBytes() throws IOException {
     URL resource;
     resource = Script.class.getResource("script.js");
@@ -105,105 +86,9 @@ public final class Script {
     }
   }
 
-  public static Action addClass(Html.Id id, String... classes) {
-    Check.notNull(id, "id == null");
+  void delay(int ms, Consumer<Script> callback);
 
-    for (int idx = 0; idx < classes.length; idx++) {
-      Check.notNull(classes[idx], "classes[", idx, "] == null");
-    }
-
-    return new ScriptAction() {
-      @Override
-      final void writeTo(StringBuilder json) {
-        objectStart(json);
-
-        property(json, CMD, "add-class");
-
-        comma(json);
-
-        propertyStart(json, "args");
-
-        arrayStart(json);
-
-        stringLiteral(json, id.value());
-
-        for (String className : classes) {
-          comma(json);
-
-          stringLiteral(json, className);
-        }
-
-        arrayEnd(json);
-
-        objectEnd(json);
-      }
-    };
-  }
-
-  public static Action delay(int ms, Action... actions) {
-    Check.argument(ms >= 0, "ms must not be negative");
-
-    Action[] copy;
-    copy = actions.clone(); // implicit null check
-
-    return new ScriptAction() {
-      @Override
-      final void writeTo(StringBuilder json) {
-        objectStart(json);
-
-        property(json, CMD, "delay");
-
-        comma(json);
-
-        property(json, "ms", ms);
-
-        comma(json);
-
-        property(json, "actions", copy);
-
-        objectEnd(json);
-      }
-    };
-  }
-
-  public static Action html(Html.Template template) {
-    final String value;
-    value = template.toJsonString();
-
-    return new ScriptAction() {
-      @Override
-      final void writeTo(StringBuilder json) {
-        objectStart(json);
-
-        property(json, CMD, "html");
-
-        comma(json);
-
-        property(json, "value", value);
-
-        objectEnd(json);
-      }
-    };
-  }
-
-  public static Action location(String url) {
-    Check.notNull(url, "url == null");
-
-    return new ScriptAction() {
-      @Override
-      final void writeTo(StringBuilder json) {
-        objectStart(json);
-
-        property(json, CMD, "location");
-
-        comma(json);
-
-        property(json, "value", url);
-
-        objectEnd(json);
-      }
-    };
-  }
+  void html(Html.Template template);
 
   /**
    * Performs a soft navigation to the URL specified by the {@code href}
@@ -211,114 +96,7 @@ public final class Script {
    *
    * @return an action that performs a soft navigation.
    */
-  public static Action navigate() {
-    return Fixed.NAVIGATE;
-  }
-
-  /**
-   * The no-op action.
-   *
-   * @return the no-op action
-   */
-  public static Action noop() {
-    return Empty.INSTANCE;
-  }
-
-  public static Action removeClass(Html.Id id, String... classes) {
-    Check.notNull(id, "id == null");
-
-    for (int idx = 0; idx < classes.length; idx++) {
-      Check.notNull(classes[idx], "classes[", idx, "] == null");
-    }
-
-    return new ScriptAction() {
-      @Override
-      final void writeTo(StringBuilder json) {
-        objectStart(json);
-
-        property(json, CMD, "remove-class");
-
-        comma(json);
-
-        propertyStart(json, "args");
-
-        arrayStart(json);
-
-        stringLiteral(json, id.value());
-
-        for (String className : classes) {
-          comma(json);
-
-          stringLiteral(json, className);
-        }
-
-        arrayEnd(json);
-
-        objectEnd(json);
-      }
-    };
-  }
-
-  public static Action replaceClass(Html.Id id,
-      Html.ClassName from,
-      Html.ClassName to) {
-    Check.notNull(id, "id == null");
-    Check.notNull(from, "from == null");
-    Check.notNull(to, "to == null");
-
-    return replaceClass0(id, from.value(), to.value());
-  }
-
-  public static Action replaceClass(Html.Id id, String from, String to) {
-    Check.notNull(id, "id == null");
-    Check.notNull(from, "from == null");
-    Check.notNull(to, "to == null");
-
-    return replaceClass0(id, from, to);
-  }
-
-  public static Action replaceClass(Html.Id id, String from, String to, boolean reverse) {
-    Check.notNull(id, "id == null");
-    Check.notNull(from, "from == null");
-    Check.notNull(to, "to == null");
-
-    return !reverse ? replaceClass0(id, from, to) : replaceClass0(id, to, from);
-  }
-
-  public static Action setProperty(Html.Id id, String name, String value) {
-    Check.notNull(id, "id == null");
-    Check.notNull(name, "name == null");
-    Check.notNull(value, "value == null");
-
-    return new ScriptAction() {
-      @Override
-      final void writeTo(StringBuilder json) {
-        objectStart(json);
-
-        property(json, CMD, "set-property");
-
-        comma(json);
-
-        propertyStart(json, "args");
-
-        arrayStart(json);
-
-        stringLiteral(json, id.value());
-
-        comma(json);
-
-        stringLiteral(json, name);
-
-        comma(json);
-
-        stringLiteral(json, value);
-
-        arrayEnd(json);
-
-        objectEnd(json);
-      }
-    };
-  }
+  void navigate();
 
   /**
    * Causes the event handling to stop at the current HTML element.
@@ -326,211 +104,12 @@ public final class Script {
    * @return an action that causes the event handling to stop at the current
    *         HTML element.
    */
-  public static Action stopPropagation() {
-    return Fixed.STOP_PROPAGATION;
-  }
+  void stopPropagation();
 
-  public static Action toggleClass(Html.Id id, String className) {
-    Check.notNull(id, "id == null");
-    Check.notNull(className, "className == null");
+  void toggleClass(Html.Id id, String className);
 
-    return new ScriptAction() {
-      @Override
-      final void writeTo(StringBuilder json) {
-        objectStart(json);
+  void toggleClass(Html.Id id, String class1, String class2);
 
-        property(json, CMD, "toggle-class");
-
-        comma(json);
-
-        propertyStart(json, "args");
-
-        arrayStart(json);
-
-        stringLiteral(json, id.value());
-
-        comma(json);
-
-        stringLiteral(json, className);
-
-        arrayEnd(json);
-
-        objectEnd(json);
-      }
-    };
-  }
-
-  public static Action toggleClass(Html.Id id, String class1, String class2) {
-    Check.notNull(id, "id == null");
-    Check.notNull(class1, "class1 == null");
-    Check.notNull(class2, "class2 == null");
-
-    return new ScriptAction() {
-      @Override
-      final void writeTo(StringBuilder json) {
-        objectStart(json);
-
-        property(json, CMD, "toggle-class");
-
-        comma(json);
-
-        propertyStart(json, "args");
-
-        arrayStart(json);
-
-        stringLiteral(json, id.value());
-
-        comma(json);
-
-        stringLiteral(json, class1);
-
-        comma(json);
-
-        stringLiteral(json, class2);
-
-        arrayEnd(json);
-
-        objectEnd(json);
-      }
-    };
-  }
-
-  private static Action replaceClass0(Html.Id id, String from, String to) {
-    return new ScriptAction() {
-      @Override
-      final void writeTo(StringBuilder json) {
-        objectStart(json);
-
-        property(json, CMD, "replace-class");
-
-        comma(json);
-
-        propertyStart(json, "args");
-
-        arrayStart(json);
-
-        stringLiteral(json, id.value());
-
-        comma(json);
-
-        stringLiteral(json, from);
-
-        comma(json);
-
-        stringLiteral(json, to);
-
-        arrayEnd(json);
-
-        objectEnd(json);
-      }
-    };
-  }
-
-  public static Action submit(Html.Id id) {
-    Check.notNull(id, "id == null");
-
-    final String value;
-    value = id.value();
-
-    return new ScriptAction() {
-      @Override
-      final void writeTo(StringBuilder json) {
-        objectStart(json);
-
-        property(json, CMD, "submit");
-
-        comma(json);
-
-        property(json, "id", value);
-
-        objectEnd(json);
-      }
-    };
-  }
-
-  /**
-   * Casts the specified action interface into its implementation class.
-   *
-   * <p>
-   * The cast is safe as the {@code Action} interface is sealed.
-   */
-  static ScriptAction cast(Action action) {
-    return (ScriptAction) action;
-  }
-
-  static Action join(Action... actions) {
-    return switch (actions.length) {
-      case 0 -> Empty.INSTANCE;
-
-      case 1 -> actions[0];
-
-      default -> {
-        boolean valid = false;
-
-        Action[] copy;
-        copy = new Action[actions.length];
-
-        for (int idx = 0; idx < actions.length; idx++) {
-          Action a;
-          a = Check.notNull(actions[idx], "actions[", idx, "] == null");
-
-          if (!valid && a != Empty.INSTANCE) {
-            valid = true;
-          }
-
-          copy[idx] = a;
-        }
-
-        yield new Joined(copy);
-      }
-    };
-  }
-
-  private static final class Empty extends ScriptAction {
-
-    static final Script.Action INSTANCE = new Empty();
-
-    private Empty() {}
-
-    @Override
-    final void writeTo(StringBuilder json) {}
-
-  }
-
-  private static final class Joined extends ScriptAction {
-
-    private final Script.Action[] actions;
-
-    public Joined(Script.Action[] actions) {
-      this.actions = actions.clone();
-    }
-
-    @Override
-    final void writeTo(StringBuilder json) {
-      actions(json, actions);
-    }
-
-  }
-
-  private static final class Fixed extends ScriptAction {
-
-    static final Script.Action NAVIGATE = new Fixed("""
-    {"cmd":"navigate"}""");
-
-    static final Script.Action STOP_PROPAGATION = new Fixed("""
-    {"cmd":"stop-propagation"}""");
-
-    private final String value;
-
-    private Fixed(String value) {
-      this.value = value;
-    }
-
-    @Override
-    final void writeTo(StringBuilder json) {
-      json.append(value);
-    }
-
-  }
+  void submit(Html.Id id);
 
 }

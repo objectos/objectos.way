@@ -18,6 +18,7 @@ package objectos.way;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 /**
  * The <strong>Objectos HTML</strong> main class.
@@ -700,13 +701,9 @@ public final class Html {
 
     Html.Instruction.OfAttribute dataFrame(String name, String value);
 
-    Html.Instruction.OfDataOn dataOnClick(Script.Action action);
+    Html.Instruction.OfDataOn dataOnClick(Consumer<Script> script);
 
-    Html.Instruction.OfDataOn dataOnClick(Script.Action... actions);
-
-    Html.Instruction.OfDataOn dataOnInput(Script.Action action);
-
-    Html.Instruction.OfDataOn dataOnInput(Script.Action... actions);
+    Html.Instruction.OfDataOn dataOnInput(Consumer<Script> script);
 
     Html.Instruction.OfElement element(Html.ElementName name, Html.Instruction... contents);
 
@@ -3894,20 +3891,12 @@ public final class Html {
       return $html().dataFrame(name, value);
     }
 
-    protected final Html.Instruction.OfDataOn dataOnClick(Script.Action action) {
-      return $html().dataOnClick(action);
+    protected final Html.Instruction.OfDataOn dataOnClick(Consumer<Script> script) {
+      return $html().dataOnClick(script);
     }
 
-    protected final Html.Instruction.OfDataOn dataOnClick(Script.Action... actions) {
-      return $html().dataOnClick(actions);
-    }
-
-    protected final Html.Instruction.OfDataOn dataOnInput(Script.Action action) {
-      return $html().dataOnInput(action);
-    }
-
-    protected final Html.Instruction.OfDataOn dataOnInput(Script.Action... actions) {
-      return $html().dataOnInput(actions);
+    protected final Html.Instruction.OfDataOn dataOnInput(Consumer<Script> script) {
+      return $html().dataOnInput(script);
     }
 
     protected final Html.Instruction.OfElement element(Html.ElementName name, Html.Instruction... contents) {

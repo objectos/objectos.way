@@ -17,6 +17,7 @@ package objectos.way;
 
 import java.io.IOException;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 final class HtmlMarkup implements Html.Markup {
 
@@ -252,44 +253,24 @@ final class HtmlMarkup implements Html.Markup {
   }
 
   @Override
-  public final Html.Instruction.OfDataOn dataOnClick(Script.Action action) {
-    Check.notNull(action, "action == null");
+  public final Html.Instruction.OfDataOn dataOnClick(Consumer<Script> script) {
+    Check.notNull(script, "script == null");
 
-    return dataOn0(HtmlAttributeName.DATA_ON_CLICK, action);
+    return dataOn0(HtmlAttributeName.DATA_ON_CLICK, script);
   }
 
   @Override
-  public final Html.Instruction.OfDataOn dataOnClick(Script.Action... actions) {
-    return dataOn1(HtmlAttributeName.DATA_ON_CLICK, actions);
+  public final Html.Instruction.OfDataOn dataOnInput(Consumer<Script> script) {
+    Check.notNull(script, "script == null");
+
+    return dataOn0(HtmlAttributeName.DATA_ON_INPUT, script);
   }
 
-  @Override
-  public final Html.Instruction.OfDataOn dataOnInput(Script.Action action) {
-    Check.notNull(action, "action == null");
+  private Html.Instruction.OfDataOn dataOn0(Html.AttributeName name, Consumer<Script> script) {
+    final Script.Action action;
+    action = Script.Action.create(script);
 
-    return dataOn0(HtmlAttributeName.DATA_ON_INPUT, action);
-  }
-
-  @Override
-  public final Html.Instruction.OfDataOn dataOnInput(Script.Action... actions) {
-    return dataOn1(HtmlAttributeName.DATA_ON_INPUT, actions);
-  }
-
-  private Html.Instruction.OfDataOn dataOn0(Html.AttributeName name, Script.Action value) {
-    if (value == Script.noop()) {
-      return Html.NOOP;
-    } else {
-      return attribute0(name, value);
-    }
-  }
-
-  private Html.Instruction.OfDataOn dataOn1(Html.AttributeName name, Script.Action... actions) {
-    Check.notNull(actions, "actions == null");
-
-    Script.Action value;
-    value = Script.join(actions);
-
-    return dataOn0(name, value);
+    return attribute0(name, action);
   }
 
   /**
