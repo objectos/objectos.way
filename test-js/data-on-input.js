@@ -42,10 +42,10 @@ suite("data-on-input test", function() {
     assert.equal(workArea().innerHTML, page2.outerHTML);
   });
 
-  test("submit with delay", function() {
+  test("submit with delay", function(done) {
     const formId = "f";
     const onInput = JSON.stringify([
-      ["delay-0", 200, [["submit-0", formId]]]
+      ["delay-0", 10, [["submit-0", formId]]]
     ]);
     make(`
 		<div data-frame='x:foo'>
@@ -74,7 +74,9 @@ suite("data-on-input test", function() {
       this.server.respond();
 
       assert.equal(workArea().innerHTML, page2.outerHTML);
-    }, 300);
+
+      done();
+    }, 20);
   });
 
 });

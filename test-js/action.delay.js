@@ -9,11 +9,11 @@ suite("Action::delay test", function() {
     this.server.restore();
   });
 
-  test("it should execute the data-on-click action", function() {
+  test("it should execute the data-on-click action", function(done) {
     const clickMe = "click-me";
 
     const addClass = JSON.stringify([
-      ["delay-0", 200, [["toggle-class-0", "subject", "bar"]]]
+      ["delay-0", 5, [["toggle-class-0", "subject", "bar"]]]
     ]);
 
     make(`
@@ -32,10 +32,12 @@ suite("Action::delay test", function() {
       assert.equal(l.length, 2);
       assert.isTrue(l.contains("foo"));
       assert.isTrue(l.contains("bar"));
-    }, 300);
+
+      done();
+    }, 15);
   });
 
-  test("it should execute the POST response action", function() {
+  test("it should execute the POST response action", function(done) {
     const clickMe = "click-me";
 
     make(`
@@ -50,7 +52,7 @@ suite("Action::delay test", function() {
       200,
       { "Content-Type": "application/json" },
       JSON.stringify([
-        ["delay-0", 200, [["toggle-class-0", "subject", "bar"]]]
+        ["delay-0", 10, [["toggle-class-0", "subject", "bar"]]]
       ])
     ]);
 
@@ -66,7 +68,9 @@ suite("Action::delay test", function() {
       assert.equal(l.length, 2);
       assert.isTrue(l.contains("foo"));
       assert.isTrue(l.contains("bar"));
-    }, 300);
+
+      done();
+    }, 20);
   });
 
 });
