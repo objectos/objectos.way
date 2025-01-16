@@ -145,6 +145,15 @@ final class HttpTestingExchange extends HttpModuleSupport implements Http.Testin
   }
 
   @Override
+  public final List<String> queryParamAll(String name) {
+    if (queryParams == null) {
+      return List.of();
+    } else {
+      return Http.queryParamsGetAll(queryParams, name);
+    }
+  }
+
+  @Override
   public final Set<String> queryParamNames() {
     if (queryParams == null) {
       return Set.of();

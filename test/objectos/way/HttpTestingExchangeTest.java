@@ -45,6 +45,25 @@ public class HttpTestingExchangeTest {
   }
 
   @Test
+  public void formParam02() {
+    Http.TestingExchange http;
+    http = Http.TestingExchange.create(config -> {
+      config.formParam("i0", Integer.MAX_VALUE);
+      config.formParam("i1", Integer.MIN_VALUE);
+      config.formParam("l0", Long.MAX_VALUE);
+      config.formParam("l1", Long.MIN_VALUE);
+    });
+
+    FormData data;
+    data = Web.FormData.parse(http);
+
+    assertEquals(data.get("i0"), Integer.toString(Integer.MAX_VALUE));
+    assertEquals(data.get("i1"), Integer.toString(Integer.MIN_VALUE));
+    assertEquals(data.get("l0"), Long.toString(Long.MAX_VALUE));
+    assertEquals(data.get("l1"), Long.toString(Long.MIN_VALUE));
+  }
+
+  @Test
   public void header01() {
     Http.TestingExchange http;
     http = Http.TestingExchange.create(config -> {
@@ -103,6 +122,39 @@ public class HttpTestingExchangeTest {
   }
 
   @Test
+  public void queryParam01() {
+    Http.TestingExchange http;
+    http = Http.TestingExchange.create(config -> {
+      config.queryParam("p1", "abc");
+
+      config.queryParam("p2", "val1");
+      config.queryParam("p2", "val2");
+    });
+
+    assertEquals(http.queryParam("p1"), "abc");
+    assertEquals(http.queryParam("p2"), "val1");
+    assertEquals(http.queryParam("x"), null);
+    assertEquals(http.queryParamAll("p2"), List.of("val1", "val2"));
+    assertEquals(http.queryParamAll("x"), List.of());
+  }
+
+  @Test
+  public void queryParam02() {
+    Http.TestingExchange http;
+    http = Http.TestingExchange.create(config -> {
+      config.queryParam("i0", Integer.MAX_VALUE);
+      config.queryParam("i1", Integer.MIN_VALUE);
+      config.queryParam("l0", Long.MAX_VALUE);
+      config.queryParam("l1", Long.MIN_VALUE);
+    });
+
+    assertEquals(http.queryParamAsInt("i0", 0), Integer.MAX_VALUE);
+    assertEquals(http.queryParamAsInt("i1", 0), Integer.MIN_VALUE);
+    assertEquals(http.queryParamAsLong("l0", 0L), Long.MAX_VALUE);
+    assertEquals(http.queryParamAsLong("l1", 0L), Long.MIN_VALUE);
+  }
+
+  @Test
   public void testCase01() {
     Http.TestingExchange http;
     http = Http.TestingExchange.create(config -> {
@@ -110,16 +162,12 @@ public class HttpTestingExchangeTest {
 
       config.path("/foo");
 
-      config.queryParam("page", "1");
-
       config.set(String.class, "Hello");
     });
 
     assertEquals(http.method(), Http.Method.GET);
     assertEquals(http.path(), "/foo");
     assertEquals(http.pathParam("path"), null);
-    assertEquals(http.queryParam("page"), "1");
-    assertEquals(http.queryParam("query"), null);
     assertEquals(http.get(String.class), "Hello");
   }
 

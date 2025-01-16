@@ -78,6 +78,36 @@ final class HttpTestingExchangeConfig implements Http.TestingExchange.Config {
     method = Objects.requireNonNull(value, "value == null");
   }
 
+  @Override
+  public final void formParam(String name, int value) {
+    Objects.requireNonNull(name, "name == null");
+
+    formParam0(name, Integer.toString(value));
+  }
+
+  @Override
+  public final void formParam(String name, long value) {
+    Objects.requireNonNull(name, "name == null");
+
+    formParam0(name, Long.toString(value));
+  }
+
+  @Override
+  public final void formParam(String name, String value) {
+    Objects.requireNonNull(name, "name == null");
+    Objects.requireNonNull(value, "value == null");
+
+    formParam0(name, value);
+  }
+
+  private void formParam0(String name, String value) {
+    if (formParams == null) {
+      formParams = Util.createSequencedMap();
+    }
+
+    Http.queryParamsAdd(formParams, Function.identity(), name, value);
+  }
+
   @SuppressWarnings("unchecked")
   @Override
   public final void header(Http.HeaderName name, String value) {
@@ -142,23 +172,29 @@ final class HttpTestingExchangeConfig implements Http.TestingExchange.Config {
     Objects.requireNonNull(name, "name == null");
     Objects.requireNonNull(value, "value == null");
 
+    queryParam0(name, value);
+  }
+
+  @Override
+  public final void queryParam(String name, int value) {
+    Objects.requireNonNull(name, "name == null");
+
+    queryParam0(name, Integer.toString(value));
+  }
+
+  @Override
+  public final void queryParam(String name, long value) {
+    Objects.requireNonNull(name, "name == null");
+
+    queryParam0(name, Long.toString(value));
+  }
+
+  private void queryParam0(String name, String value) {
     if (queryParams == null) {
       queryParams = Util.createSequencedMap();
     }
 
     Http.queryParamsAdd(queryParams, Function.identity(), name, value);
-  }
-
-  @Override
-  public final void formParam(String name, String value) {
-    Objects.requireNonNull(name, "name == null");
-    Objects.requireNonNull(value, "value == null");
-
-    if (formParams == null) {
-      formParams = Util.createSequencedMap();
-    }
-
-    Http.queryParamsAdd(formParams, Function.identity(), name, value);
   }
 
   @Override

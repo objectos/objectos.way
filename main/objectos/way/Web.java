@@ -203,7 +203,7 @@ public final class Web {
     String getOrDefault(String key, String defaultValue);
 
     /**
-     * Returns the number of distinct keys
+     * Returns the number of distinct keys.
      *
      * @return the number of distinct keys
      */

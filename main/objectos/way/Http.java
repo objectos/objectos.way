@@ -625,11 +625,17 @@ public final class Http {
     String queryParam(String name);
 
     /**
-     * The names of all of the query parameters in this request-target.
+     * Returns all values of the query parameter with the specified name
+     * or an empty list if there are no values. The list contains the values in
+     * encounter order.
      *
-     * @return the names of all of the query parameters
+     * @param name
+     *        the name of the query parameter
+     *
+     * @return a list containing all values in encounter order; or an empty list
+     *         if the parameter was not present in the request query
      */
-    Set<String> queryParamNames();
+    List<String> queryParamAll(String name);
 
     /**
      * Returns, as an {@code int}, the first value of the query parameter with
@@ -663,6 +669,46 @@ public final class Http {
         return defaultValue;
       }
     }
+
+    /**
+     * Returns, as a {@code long}, the first value of the query parameter with
+     * the specified name or returns the specified default value.
+     *
+     * <p>
+     * The specified default value will be returned if the query component
+     * does not contain a parameter with the specified name or if the first
+     * value of such parameter does not represent a {@code long} value.
+     *
+     * @param name
+     *        the name of the query parameter
+     * @param defaultValue
+     *        the value to be returned if the parameter does not exist or if
+     *        its first value cannot be converted to an {@code long} value
+     *
+     * @return the first value converted to {@code long} if it exists or the
+     *         specified default value otherwise
+     */
+    default long queryParamAsLong(String name, long defaultValue) {
+      String maybe;
+      maybe = queryParam(name);
+
+      if (maybe == null) {
+        return defaultValue;
+      }
+
+      try {
+        return Long.parseLong(maybe);
+      } catch (NumberFormatException expected) {
+        return defaultValue;
+      }
+    }
+
+    /**
+     * The names of all of the query parameters in this request-target.
+     *
+     * @return the names of all of the query parameters
+     */
+    Set<String> queryParamNames();
 
     /**
      * The raw (encoded) value of the path component.
@@ -921,6 +967,28 @@ public final class Http {
 
       /**
        * Adds the specified field name and value to the request body as if it
+       * were sent by a HTML form. The name must be decoded.
+       *
+       * @param name
+       *        the field name (decoded)
+       * @param value
+       *        the field value
+       */
+      void formParam(String name, int value);
+
+      /**
+       * Adds the specified field name and value to the request body as if it
+       * were sent by a HTML form. The name must be decoded.
+       *
+       * @param name
+       *        the field name (decoded)
+       * @param value
+       *        the field value
+       */
+      void formParam(String name, long value);
+
+      /**
+       * Adds the specified field name and value to the request body as if it
        * were sent by a HTML form. The name and value must be decoded.
        *
        * @param name
@@ -955,6 +1023,28 @@ public final class Http {
        *        the decoded path value
        */
       void path(String value);
+
+      /**
+       * Sets the request-target query parameter with the specified name to the
+       * specified value.
+       *
+       * @param name
+       *        the name of the query parameter
+       * @param value
+       *        the value of the query parameter
+       */
+      void queryParam(String name, int value);
+
+      /**
+       * Sets the request-target query parameter with the specified name to the
+       * specified value.
+       *
+       * @param name
+       *        the name of the query parameter
+       * @param value
+       *        the value of the query parameter
+       */
+      void queryParam(String name, long value);
 
       /**
        * Sets the request-target query parameter with the specified name to the

@@ -35,6 +35,7 @@ import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HexFormat;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -1175,6 +1176,16 @@ final class HttpExchange extends HttpModuleSupport implements Http.Exchange, Clo
     params = $queryParams();
 
     return Http.queryParamsGet(params, name);
+  }
+
+  @Override
+  public final List<String> queryParamAll(String name) {
+    Check.notNull(name, "name == null");
+
+    Map<String, Object> params;
+    params = $queryParams();
+
+    return Http.queryParamsGetAll(params, name);
   }
 
   @Override
