@@ -138,18 +138,6 @@ final class HttpTestingExchangeConfig implements Http.TestingExchange.Config {
   }
 
   @Override
-  public final void pathParam(String name, String value) {
-    Objects.requireNonNull(name, "name == null");
-    Objects.requireNonNull(value, "value == null");
-
-    if (objectStore == null) {
-      objectStore = Util.createMap();
-    }
-
-    objectStore.put(name, value);
-  }
-
-  @Override
   public final void queryParam(String name, String value) {
     Objects.requireNonNull(name, "name == null");
     Objects.requireNonNull(value, "value == null");

@@ -23,7 +23,7 @@ interface HttpModuleMatcher {
 
   record Exact(String value) implements HttpModuleMatcher {
     @Override
-    public final boolean test(HttpExchange target) {
+    public final boolean test(HttpModuleSupport target) {
       return target.exact(value);
     }
   }
@@ -38,7 +38,7 @@ interface HttpModuleMatcher {
     }
 
     @Override
-    public final boolean test(HttpExchange target) {
+    public final boolean test(HttpModuleSupport target) {
       return matcher1.test(target)
           && matcher2.test(target)
           && target.atEnd();
@@ -56,7 +56,7 @@ interface HttpModuleMatcher {
     }
 
     @Override
-    public final boolean test(HttpExchange target) {
+    public final boolean test(HttpModuleSupport target) {
       return matcher1.test(target)
           && matcher2.test(target)
           && matcher3.test(target)
@@ -76,7 +76,7 @@ interface HttpModuleMatcher {
     }
 
     @Override
-    public final boolean test(HttpExchange target) {
+    public final boolean test(HttpModuleSupport target) {
       return matcher1.test(target)
           && matcher2.test(target)
           && matcher3.test(target)
@@ -98,7 +98,7 @@ interface HttpModuleMatcher {
     }
 
     @Override
-    public final boolean test(HttpExchange target) {
+    public final boolean test(HttpModuleSupport target) {
       return matcher1.test(target)
           && matcher2.test(target)
           && matcher3.test(target)
@@ -121,7 +121,7 @@ interface HttpModuleMatcher {
     }
 
     @Override
-    public final boolean test(HttpExchange target) {
+    public final boolean test(HttpModuleSupport target) {
       for (HttpModuleMatcher matcher : matchers) {
         if (!matcher.test(target)) {
           return false;
@@ -134,32 +134,32 @@ interface HttpModuleMatcher {
 
   record NamedVariable(String name) implements HttpModuleMatcher {
     @Override
-    public final boolean test(HttpExchange target) {
+    public final boolean test(HttpModuleSupport target) {
       return target.namedVariable(name);
     }
   }
 
   record Region(String value) implements HttpModuleMatcher {
     @Override
-    public final boolean test(HttpExchange target) {
+    public final boolean test(HttpModuleSupport target) {
       return target.region(value);
     }
   }
 
   record StartsWith(String value) implements HttpModuleMatcher {
     @Override
-    public final boolean test(HttpExchange target) {
+    public final boolean test(HttpModuleSupport target) {
       return target.startsWithMatcher(value);
     }
   }
 
   record WithConditions(HttpModuleMatcher matcher, HttpModule.Condition[] conditions) implements HttpModuleMatcher {
     @Override
-    public final boolean test(HttpExchange path) {
+    public final boolean test(HttpModuleSupport path) {
       return matcher.test(path) && testConditions(path);
     }
 
-    private boolean testConditions(HttpExchange path) {
+    private boolean testConditions(HttpModuleSupport path) {
       for (HttpModule.Condition condition : conditions) {
         if (!condition.test(path)) {
           return false;
@@ -178,6 +178,6 @@ interface HttpModuleMatcher {
     return new WithConditions(this, conditions);
   }
 
-  boolean test(HttpExchange target);
+  boolean test(HttpModuleSupport target);
 
 }

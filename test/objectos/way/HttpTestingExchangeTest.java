@@ -17,6 +17,7 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import objectos.way.Web.FormData;
 import org.testng.Assert;
@@ -76,6 +77,31 @@ public class HttpTestingExchangeTest {
     Assert.fail("it should have thrown");
   }
 
+  private final Http.Handler moduleInterop = new Http.Module() {
+    @Override
+    protected final void configure() {
+      route("/tc01", handler(this::tc01));
+    }
+
+    private void tc01(Http.Exchange http) {
+      http.okText("TC01", StandardCharsets.UTF_8);
+    }
+  }.compile();
+
+  @Test
+  public void moduleInterop01() {
+    Http.TestingExchange http;
+    http = Http.TestingExchange.create(config -> {
+      config.method(Http.Method.GET);
+
+      config.path("/tc01");
+    });
+
+    moduleInterop.handle(http);
+
+    assertEquals(http.responseStatus(), Http.Status.OK);
+  }
+
   @Test
   public void testCase01() {
     Http.TestingExchange http;
@@ -84,8 +110,6 @@ public class HttpTestingExchangeTest {
 
       config.path("/foo");
 
-      config.pathParam("id", "123");
-
       config.queryParam("page", "1");
 
       config.set(String.class, "Hello");
@@ -93,7 +117,6 @@ public class HttpTestingExchangeTest {
 
     assertEquals(http.method(), Http.Method.GET);
     assertEquals(http.path(), "/foo");
-    assertEquals(http.pathParam("id"), "123");
     assertEquals(http.pathParam("path"), null);
     assertEquals(http.queryParam("page"), "1");
     assertEquals(http.queryParam("query"), null);

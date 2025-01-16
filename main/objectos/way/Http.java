@@ -957,17 +957,6 @@ public final class Http {
       void path(String value);
 
       /**
-       * Sets the request-path parameter with the specified name to the
-       * specified value.
-       *
-       * @param name
-       *        the name of the path parameter
-       * @param value
-       *        the decoded value of the path parameter
-       */
-      void pathParam(String name, String value);
-
-      /**
        * Sets the request-target query parameter with the specified name to the
        * specified value.
        *

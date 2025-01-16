@@ -253,31 +253,37 @@ final class ScriptSource {
     return count > 0;
   }
 
-  function executeDelay0(obj, el) {
-    const ms = obj.ms;
+  function executeDelay0(args, el) {
+    if (args.length !== 2) {
+      console.error("delay-0: action invoked with the wrong number of args. Expected 2 but got %d", args.length);
+
+      return;
+    }
+
+    const ms = args[0];
 
     if (!ms) {
-      console.error("delay: missing 'ms' property");
+      console.error("delay-0: missing 'ms' property");
 
       return;
     }
 
     if (!Number.isInteger(ms)) {
-      console.error("delay: invalid 'ms' property. Expected integer but found %s", ms);
+      console.error("delay-0: invalid 'ms' property. Expected integer but got %s", ms);
 
       return;
     }
 
-    const actions = obj.actions;
+    const actions = args[1];
 
     if (!actions) {
-      console.error("delay: missing 'actions' property");
+      console.error("delay-0: missing 'actions' array value");
 
       return;
     }
 
     if (!Array.isArray(actions)) {
-      console.error("delay: invalid 'actions' property. Expected Array but found %s", actions);
+      console.error("delay: invalid 'actions' property. Expected Array but got %s", actions);
 
       return;
     }

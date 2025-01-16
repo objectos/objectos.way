@@ -40,7 +40,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 
-final class HttpExchange implements Http.Exchange, Closeable {
+final class HttpExchange extends HttpModuleSupport implements Http.Exchange, Closeable {
 
   public enum ParseStatus {
     // keep going
@@ -166,15 +166,11 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   // RequestLine
 
-  private int matcherIndex;
-
   private Http.Method method;
 
   private String path;
 
   private int pathLimit;
-
-  Map<String, String> pathParams;
 
   private Map<String, Object> queryParams;
 
@@ -1172,20 +1168,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
   }
 
   @Override
-  public final String pathParam(String name) {
-    Check.notNull(name, "name == null");
-
-    String result;
-    result = null;
-
-    if (pathParams != null) {
-      result = pathParams.get(name);
-    }
-
-    return result;
-  }
-
-  @Override
   public final String queryParam(String name) {
     Check.notNull(name, "name == null");
 
@@ -2003,92 +1985,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
   public final boolean processed() {
     return testState(_PROCESSED);
   }
-
-  // ##################################################################
-  // # BEGIN: Http.Module support
-  // ##################################################################
-
-  final void matcherReset() {
-    matcherIndex = 0;
-
-    if (pathParams != null) {
-      pathParams.clear();
-    }
-  }
-
-  final boolean atEnd() {
-    return matcherIndex == pathLimit;
-  }
-
-  final boolean exact(String other) {
-    String value;
-    value = path();
-
-    boolean result;
-    result = value.equals(other);
-
-    matcherIndex += value.length();
-
-    return result;
-  }
-
-  final boolean namedVariable(String name) {
-    String value;
-    value = path();
-
-    int solidus;
-    solidus = value.indexOf('/', matcherIndex);
-
-    String varValue;
-
-    if (solidus < 0) {
-      varValue = value.substring(matcherIndex);
-    } else {
-      varValue = value.substring(matcherIndex, solidus);
-    }
-
-    matcherIndex += varValue.length();
-
-    variable(name, varValue);
-
-    return true;
-  }
-
-  final boolean region(String region) {
-    String value;
-    value = path();
-
-    boolean result;
-    result = value.regionMatches(matcherIndex, region, 0, region.length());
-
-    matcherIndex += region.length();
-
-    return result;
-  }
-
-  final boolean startsWithMatcher(String prefix) {
-    String value;
-    value = path();
-
-    boolean result;
-    result = value.startsWith(prefix);
-
-    matcherIndex += prefix.length();
-
-    return result;
-  }
-
-  private void variable(String name, String value) {
-    if (pathParams == null) {
-      pathParams = Util.createMap();
-    }
-
-    pathParams.put(name, value);
-  }
-
-  // ##################################################################
-  // # END: Http.Module support
-  // ##################################################################
 
   private void clearBit(int mask) {
     bitset &= ~mask;

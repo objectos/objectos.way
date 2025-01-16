@@ -33,7 +33,7 @@ import java.util.SequencedMap;
 import java.util.Set;
 import objectos.way.Lang.MediaObject;
 
-final class HttpTestingExchange implements Http.TestingExchange {
+final class HttpTestingExchange extends HttpModuleSupport implements Http.TestingExchange {
 
   private final Clock clock;
 
@@ -133,15 +133,6 @@ final class HttpTestingExchange implements Http.TestingExchange {
     Check.state(path != null, "path was not set");
 
     return path;
-  }
-
-  @Override
-  public final String pathParam(String name) {
-    if (objectStore == null) {
-      return null;
-    } else {
-      return (String) objectStore.get(name);
-    }
   }
 
   @Override
