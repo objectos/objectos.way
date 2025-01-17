@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 
 /**
  * The <strong>Objectos Web</strong> main class.
@@ -185,9 +187,121 @@ public final class Web {
      * @param name
      *        the field name
      *
-     * @return the first decoded value or {@code null}
+     * @return a list containing all of the decoded values in encounter order.
      */
     List<String> getAll(String name);
+
+    /**
+     * Returns an {@code IntStream} of all of the values, converted to
+     * {@code int}, associated to the specified field name. Any value that
+     * cannot be converted to an {@code int} is mapped to the specified
+     * {@code defaultValue} instead.
+     *
+     * @param name
+     *        the field name
+     * @param defaultValue
+     *        the default value to use if it cannot be converted to an
+     *        {@code int}
+     *
+     * @return an {@code IntStream} of the values associated to the field name
+     */
+    default IntStream getAllAsInt(String name, int defaultValue) {
+      return getAll(name).stream().mapToInt(s -> {
+        try {
+          return Integer.parseInt(s);
+        } catch (NumberFormatException expected) {
+          return defaultValue;
+        }
+      });
+    }
+
+    /**
+     * Returns a {@code LongStream} of all of the values, converted to
+     * {@code long}, associated to the specified field name. Any value that
+     * cannot be converted to an {@code long} is mapped to the specified
+     * {@code defaultValue} instead.
+     *
+     * @param name
+     *        the field name
+     * @param defaultValue
+     *        the default value to use if it cannot be converted to an
+     *        {@code long}
+     *
+     * @return an {@code LongStream} of the values associated to the field name
+     */
+    default LongStream getAllAsLong(String name, long defaultValue) {
+      return getAll(name).stream().mapToLong(s -> {
+        try {
+          return Long.parseLong(s);
+        } catch (NumberFormatException expected) {
+          return defaultValue;
+        }
+      });
+    }
+
+    /**
+     * Returns the first value of the form field with the specified
+     * {@code name}, converted to an {@code int} primitive. If the field is not
+     * present in the form data or if its value cannot be converted to an
+     * {@code int}, the specified {@code defaultValue} is returned.
+     *
+     * @param name
+     *        the field name
+     *
+     * @param defaultValue
+     *        the default value to return if the field is not present or cannot
+     *        be converted to an {@code int}
+     *
+     * @return the value of the form field as an {@code int}, or
+     *         {@code defaultValue} if the field is absent or cannot be
+     *         converted
+     */
+    default int getAsInt(String name, int defaultValue) {
+      String maybe;
+      maybe = get(name);
+
+      if (maybe == null) {
+        return defaultValue;
+      }
+
+      try {
+        return Integer.parseInt(maybe);
+      } catch (NumberFormatException expected) {
+        return defaultValue;
+      }
+    }
+
+    /**
+     * Returns the first value of the form field with the specified
+     * {@code name}, converted to a {@code long} primitive. If the field is not
+     * present in the form data or if its value cannot be converted to a
+     * {@code long}, the specified {@code defaultValue} is returned.
+     *
+     * @param name
+     *        the field name
+     *
+     * @param defaultValue
+     *        the default value to return if the field is not present or cannot
+     *        be converted to a {@code long}
+     *
+     * @return the value of the form field as an {@code long}, or
+     *         {@code defaultValue} if the field is absent or cannot be
+     *         converted
+     */
+    default long getAsLong(String name, long defaultValue) {
+      String maybe;
+      maybe = get(name);
+
+      if (maybe == null) {
+        return defaultValue;
+      }
+
+      try {
+        return Long.parseLong(maybe);
+      } catch (NumberFormatException expected) {
+        return defaultValue;
+      }
+    }
 
     /**
      * Returns the first decoded value associated to the specified key or

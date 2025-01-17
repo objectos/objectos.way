@@ -30,6 +30,84 @@ import org.testng.annotations.Test;
 public class WebFormDataTest {
 
   @Test
+  public void getAllAsInt01() {
+    Http.RequestBody body;
+    body = body("v=1&v=2&v=3");
+
+    Web.FormData form;
+    form = Web.FormData.parseRequestBody(body);
+
+    assertEquals(form.size(), 1);
+    assertEquals(form.getAllAsInt("v", -1).toArray(), new int[] {1, 2, 3});
+  }
+
+  @Test
+  public void getAllAsInt02() {
+    Http.RequestBody body;
+    body = body("v=1&v=x&v=3");
+
+    Web.FormData form;
+    form = Web.FormData.parseRequestBody(body);
+
+    assertEquals(form.size(), 1);
+    assertEquals(form.getAllAsInt("v", -1).toArray(), new int[] {1, -1, 3});
+  }
+
+  @Test
+  public void getAllAsLong01() {
+    Http.RequestBody body;
+    body = body("v=1&v=2&v=3");
+
+    Web.FormData form;
+    form = Web.FormData.parseRequestBody(body);
+
+    assertEquals(form.size(), 1);
+    assertEquals(form.getAllAsLong("v", -1).toArray(), new long[] {1, 2, 3});
+  }
+
+  @Test
+  public void getAllAsLong02() {
+    Http.RequestBody body;
+    body = body("v=1&v=x&v=3");
+
+    Web.FormData form;
+    form = Web.FormData.parseRequestBody(body);
+
+    assertEquals(form.size(), 1);
+    assertEquals(form.getAllAsLong("v", -1).toArray(), new long[] {1, -1, 3});
+  }
+
+  @Test
+  public void getAsInt01() {
+    Http.RequestBody body;
+    body = body("vmax=" + Integer.MAX_VALUE + "&vmin=" + Integer.MIN_VALUE + "&text=abc");
+
+    Web.FormData form;
+    form = Web.FormData.parseRequestBody(body);
+
+    assertEquals(form.size(), 3);
+    assertEquals(form.getAsInt("vmax", 0), Integer.MAX_VALUE);
+    assertEquals(form.getAsInt("vmin", 0), Integer.MIN_VALUE);
+    assertEquals(form.getAsInt("x", 1), 1);
+    assertEquals(form.getAsInt("text", 1), 1);
+  }
+
+  @Test
+  public void getAsLong01() {
+    Http.RequestBody body;
+    body = body("vmax=" + Long.MAX_VALUE + "&vmin=" + Long.MIN_VALUE + "&text=abc");
+
+    Web.FormData form;
+    form = Web.FormData.parseRequestBody(body);
+
+    assertEquals(form.size(), 3);
+    assertEquals(form.getAsLong("vmax", 0L), Long.MAX_VALUE);
+    assertEquals(form.getAsLong("vmin", 0L), Long.MIN_VALUE);
+    assertEquals(form.getAsLong("x", 1L), 1L);
+    assertEquals(form.getAsLong("text", 1L), 1L);
+  }
+
+  @Test
   public void parse01() throws Http.UnsupportedMediaTypeException, IOException {
     Web.FormData form;
     form = parse("""
