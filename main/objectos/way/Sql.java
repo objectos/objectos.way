@@ -29,6 +29,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.OptionalInt;
+import java.util.OptionalLong;
 import java.util.function.Consumer;
 import javax.sql.DataSource;
 
@@ -417,18 +418,29 @@ public final class Sql {
     <T> List<T> query(Mapper<T> mapper) throws DatabaseException;
 
     /**
-     * Executes the current SQL statement as a row-retrieving query which must
-     * return a single result (no more and no less).
+     * Executes the current SQL statement as a row-retrieving query and returns
+     * the first result or {@code null} if there were no results.
+     *
+     * @param mapper
+     *        maps rows from the result set to objects
+     *
+     * @return the first result or {@code null} if there were no results
+     */
+    <T> T queryFirst(Mapper<T> mapper) throws DatabaseException;
+
+    /**
+     * Executes the current SQL statement as a row-retrieving query and returns
+     * the first result or throws an exception if there were no results or if
+     * there were more than one result.
+     *
+     * @param mapper
+     *        maps rows from the result set to objects
      */
     <T> T querySingle(Mapper<T> mapper) throws DatabaseException;
 
-    /**
-     * Executes the current SQL statement as a row-retrieving query which may
-     * return a single result or {@code null} if there were no results.
-     */
-    <T> T queryNullable(Mapper<T> mapper) throws DatabaseException;
-
     OptionalInt queryOptionalInt() throws DatabaseException;
+
+    OptionalLong queryOptionalLong() throws DatabaseException;
 
     /**
      * Executes the current SQL contents as a script. The SQL contents is

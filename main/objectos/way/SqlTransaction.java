@@ -23,6 +23,7 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Objects;
 import java.util.OptionalInt;
+import java.util.OptionalLong;
 import java.util.regex.Pattern;
 
 final class SqlTransaction implements Sql.Transaction {
@@ -381,6 +382,46 @@ final class SqlTransaction implements Sql.Transaction {
   }
 
   @Override
+  public final <T> T queryFirst(Sql.Mapper<T> mapper) throws Sql.DatabaseException {
+    checkQuery(mapper);
+    checkNoPage();
+
+    T result;
+
+    if (hasArguments()) {
+
+      try (PreparedStatement stmt = prepare(sql); ResultSet rs = stmt.executeQuery()) {
+        result = queryFirst0(mapper, rs);
+      } catch (SQLException e) {
+        throw new Sql.DatabaseException(e);
+      }
+
+    } else {
+
+      try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+        result = queryFirst0(mapper, rs);
+      } catch (SQLException e) {
+        throw new Sql.DatabaseException(e);
+      }
+
+    }
+
+    return result;
+  }
+
+  private <T> T queryFirst0(Sql.Mapper<T> mapper, ResultSet rs) throws SQLException {
+    T result;
+
+    if (!rs.next()) {
+      result = null;
+    } else {
+      result = mapper.map(rs, 1);
+    }
+
+    return result;
+  }
+
+  @Override
   public final <T> T querySingle(Sql.Mapper<T> mapper) throws Sql.DatabaseException {
     checkQuery(mapper);
     checkNoPage();
@@ -416,50 +457,6 @@ final class SqlTransaction implements Sql.Transaction {
     }
 
     result = mapper.map(rs, 1);
-
-    if (rs.next()) {
-      throw new UnsupportedOperationException("Implement me");
-    }
-
-    return result;
-  }
-
-  @Override
-  public final <T> T queryNullable(Sql.Mapper<T> mapper) throws Sql.DatabaseException {
-    checkQuery(mapper);
-    checkNoPage();
-
-    T result;
-
-    if (hasArguments()) {
-
-      try (PreparedStatement stmt = prepare(sql); ResultSet rs = stmt.executeQuery()) {
-        result = queryNullable0(mapper, rs);
-      } catch (SQLException e) {
-        throw new Sql.DatabaseException(e);
-      }
-
-    } else {
-
-      try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
-        result = queryNullable0(mapper, rs);
-      } catch (SQLException e) {
-        throw new Sql.DatabaseException(e);
-      }
-
-    }
-
-    return result;
-  }
-
-  private <T> T queryNullable0(Sql.Mapper<T> mapper, ResultSet rs) throws SQLException {
-    T result;
-
-    if (!rs.next()) {
-      result = null;
-    } else {
-      result = mapper.map(rs, 1);
-    }
 
     if (rs.next()) {
       throw new UnsupportedOperationException("Implement me");
@@ -508,8 +505,47 @@ final class SqlTransaction implements Sql.Transaction {
       result = OptionalInt.of(value);
     }
 
-    if (rs.next()) {
-      throw new UnsupportedOperationException("Implement me");
+    return result;
+  }
+
+  @Override
+  public final OptionalLong queryOptionalLong() throws Sql.DatabaseException {
+    checkQuery();
+    checkNoPage();
+
+    OptionalLong result;
+
+    if (hasArguments()) {
+
+      try (PreparedStatement stmt = prepare(sql); ResultSet rs = stmt.executeQuery()) {
+        result = queryOptionalLong0(rs);
+      } catch (SQLException e) {
+        throw new Sql.DatabaseException(e);
+      }
+
+    } else {
+
+      try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+        result = queryOptionalLong0(rs);
+      } catch (SQLException e) {
+        throw new Sql.DatabaseException(e);
+      }
+
+    }
+
+    return result;
+  }
+
+  private OptionalLong queryOptionalLong0(ResultSet rs) throws SQLException {
+    OptionalLong result;
+
+    if (!rs.next()) {
+      result = OptionalLong.empty();
+    } else {
+      long value;
+      value = rs.getLong(1);
+
+      result = OptionalLong.of(value);
     }
 
     return result;

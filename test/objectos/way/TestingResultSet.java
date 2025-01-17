@@ -52,6 +52,10 @@ final class TestingResultSet extends AbstractTestable implements ResultSet {
     this.rows = List.of(rows);
   }
 
+  public TestingResultSet(List<Map<String, Object>> rows) {
+    this.rows = rows;
+  }
+
   public final void metaData(TestingResultSetMetaData value) {
     metaData = value;
   }
@@ -121,7 +125,20 @@ final class TestingResultSet extends AbstractTestable implements ResultSet {
   }
 
   @Override
-  public long getLong(int columnIndex) throws SQLException { throw new UnsupportedOperationException("Implement me"); }
+  public long getLong(int columnIndex) throws SQLException {
+    logMethod("getLong", columnIndex);
+
+    String key;
+    key = Integer.toString(columnIndex);
+
+    Map<String, Object> row;
+    row = rows.get(index);
+
+    Object value;
+    value = row.get(key);
+
+    return (long) value;
+  }
 
   @Override
   public float getFloat(int columnIndex) throws SQLException { throw new UnsupportedOperationException("Implement me"); }

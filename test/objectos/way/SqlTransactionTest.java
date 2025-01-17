@@ -27,7 +27,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.OptionalInt;
+import java.util.OptionalLong;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import objectos.way.Sql.RollbackWrapperException;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -51,6 +53,8 @@ public class SqlTransactionTest {
 
   private TestingPreparedStatement preparedStatement;
 
+  private TestingStatement statement;
+
   private TestingResultSet resultSet;
 
   @BeforeMethod
@@ -58,6 +62,8 @@ public class SqlTransactionTest {
     connection = null;
 
     preparedStatement = null;
+
+    statement = null;
 
     resultSet = null;
   }
@@ -1320,10 +1326,335 @@ public class SqlTransactionTest {
   }
 
   @Test(description = """
-  queryNullable:
+  queryFirst:
+  - prepared statement
+  - result with exactly one
+  """)
+  public void queryFirst01() {
+    assertEquals(
+        preparedStatement(
+            List.of(
+                Map.of("1", 1, "2", "FOO", "3", LocalDate.of(2020, 12, 1))
+            ),
+
+            trx -> {
+              trx.sql("select * from FOO where X = ?");
+
+              trx.add(123);
+
+              return trx.queryFirst(Foo::new);
+            }
+        ),
+
+        new Foo(1, "FOO", LocalDate.of(2020, 12, 1))
+    );
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(select * from FOO where X = ?, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setInt(1, 123)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        getInt(1)
+        getString(2)
+        getObject(3, class java.time.LocalDate)
+        close()
+        """
+    );
+  }
+
+  @Test(description = """
+  queryFirst:
+  - prepared statement
+  - result more than one
+  """)
+  public void queryFirst02() {
+    assertEquals(
+        preparedStatement(
+            List.of(
+                Map.of("1", 1, "2", "FOO", "3", LocalDate.of(2020, 12, 1)),
+                Map.of("1", 2, "2", "BAR", "3", LocalDate.of(2024, 12, 1))
+            ),
+
+            trx -> {
+              trx.sql("select * from FOO where X = ?");
+
+              trx.add(123);
+
+              return trx.queryFirst(Foo::new);
+            }
+        ),
+
+        new Foo(1, "FOO", LocalDate.of(2020, 12, 1))
+    );
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(select * from FOO where X = ?, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setInt(1, 123)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        getInt(1)
+        getString(2)
+        getObject(3, class java.time.LocalDate)
+        close()
+        """
+    );
+  }
+
+  @Test(description = """
+  queryFirst:
+  - prepared statement
+  - no result
+  """)
+  public void queryFirst03() {
+    assertEquals(
+        preparedStatement(
+            List.of(),
+
+            trx -> {
+              trx.sql("select * from FOO where X = ?");
+
+              trx.add(123);
+
+              return trx.queryFirst(Foo::new);
+            }
+        ),
+
+        null
+    );
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(select * from FOO where X = ?, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setInt(1, 123)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        close()
+        """
+    );
+  }
+
+  @Test(description = """
+  queryFirst:
+  - statement
+  - result with exactly one
+  """)
+  public void queryFirst04() {
+    assertEquals(
+        statement(
+            List.of(
+                Map.of("1", 1, "2", "FOO", "3", LocalDate.of(2020, 12, 1))
+            ),
+
+            trx -> {
+              trx.sql("select * from FOO");
+
+              return trx.queryFirst(Foo::new);
+            }
+        ),
+
+        new Foo(1, "FOO", LocalDate.of(2020, 12, 1))
+    );
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        createStatement()
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        statement.toString(),
+
+        """
+        executeQuery(select * from FOO)
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        getInt(1)
+        getString(2)
+        getObject(3, class java.time.LocalDate)
+        close()
+        """
+    );
+  }
+
+  @Test(description = """
+  queryFirst:
+  - statement
+  - result more than one
+  """)
+  public void queryFirst05() {
+    assertEquals(
+        statement(
+            List.of(
+                Map.of("1", 1, "2", "FOO", "3", LocalDate.of(2020, 12, 1)),
+                Map.of("1", 2, "2", "BAR", "3", LocalDate.of(2024, 12, 1))
+            ),
+
+            trx -> {
+              trx.sql("select * from FOO");
+
+              return trx.queryFirst(Foo::new);
+            }
+        ),
+
+        new Foo(1, "FOO", LocalDate.of(2020, 12, 1))
+    );
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        createStatement()
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        statement.toString(),
+
+        """
+        executeQuery(select * from FOO)
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        getInt(1)
+        getString(2)
+        getObject(3, class java.time.LocalDate)
+        close()
+        """
+    );
+  }
+
+  @Test(description = """
+  queryFirst:
+  - statement
+  - no result
+  """)
+  public void queryFirst06() {
+    assertEquals(
+        statement(
+            List.of(),
+
+            trx -> {
+              trx.sql("select * from FOO");
+
+              return trx.queryFirst(Foo::new);
+            }
+        ),
+
+        null
+    );
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        createStatement()
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        statement.toString(),
+
+        """
+        executeQuery(select * from FOO)
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        close()
+        """
+    );
+  }
+
+  @Test(description = """
+  queryFirst:
   - disallow page
   """)
-  public void queryNullable02() {
+  public void queryFirst07() {
     TestingConnection conn;
     conn = new TestingConnection();
 
@@ -1335,7 +1666,7 @@ public class SqlTransactionTest {
 
       trx.paginate(Sql.Page.of(1, 15));
 
-      trx.queryNullable(Foo::new);
+      trx.queryFirst(Foo::new);
 
       Assert.fail();
     } catch (IllegalStateException expected) {
@@ -1345,8 +1676,246 @@ public class SqlTransactionTest {
     }
   }
 
-  @Test(description = "trx.sql().queryOptionalInt")
+  @Test(description = """
+  queryOptionalInt:
+  - prepared statement
+  - present
+  """)
   public void queryOptionalInt01() {
+    assertEquals(
+        preparedStatement(
+            List.of(
+                Map.of("1", 23)
+            ),
+
+            trx -> {
+              trx.sql("select max(SEQ) from FOO where X = ?");
+
+              trx.add(123);
+
+              return trx.queryOptionalInt();
+            }
+        ),
+
+        OptionalInt.of(23)
+    );
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(select max(SEQ) from FOO where X = ?, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setInt(1, 123)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        getInt(1)
+        close()
+        """
+    );
+  }
+
+  @Test(description = """
+  queryOptionalInt:
+  - prepared statement
+  - absent
+  """)
+  public void queryOptionalInt02() {
+    assertEquals(
+        preparedStatement(
+            List.of(),
+
+            trx -> {
+              trx.sql("select max(SEQ) from FOO where X = ?");
+
+              trx.add(123);
+
+              return trx.queryOptionalInt();
+            }
+        ),
+
+        OptionalInt.empty()
+    );
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(select max(SEQ) from FOO where X = ?, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setInt(1, 123)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        close()
+        """
+    );
+  }
+
+  @Test(description = """
+  queryOptionalInt:
+  - statement
+  - present
+  """)
+  public void queryOptionalInt03() {
+    assertEquals(
+        statement(
+            List.of(
+                Map.of("1", 23)
+            ),
+
+            trx -> {
+              trx.sql("select max(SEQ) from FOO");
+
+              return trx.queryOptionalInt();
+            }
+        ),
+
+        OptionalInt.of(23)
+    );
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        createStatement()
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        statement.toString(),
+
+        """
+        executeQuery(select max(SEQ) from FOO)
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        getInt(1)
+        close()
+        """
+    );
+  }
+
+  @Test(description = """
+  queryOptionalInt:
+  - statement
+  - absent
+  """)
+  public void queryOptionalInt04() {
+    assertEquals(
+        statement(
+            List.of(),
+
+            trx -> {
+              trx.sql("select max(SEQ) from FOO");
+
+              return trx.queryOptionalInt();
+            }
+        ),
+
+        OptionalInt.empty()
+    );
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        createStatement()
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        statement.toString(),
+
+        """
+        executeQuery(select max(SEQ) from FOO)
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        close()
+        """
+    );
+  }
+
+  @Test(description = """
+  queryOptionalInt:
+  - disallow page
+  """)
+  public void queryOptionalInt05() {
+    TestingConnection conn;
+    conn = new TestingConnection();
+
+    SqlTransaction trx;
+    trx = trx(conn);
+
+    try {
+      trx.sql("select ID from FOO");
+
+      trx.paginate(Sql.Page.of(1, 15));
+
+      trx.queryOptionalInt();
+
+      Assert.fail();
+    } catch (IllegalStateException expected) {
+      assertEquals(expected.getMessage(), "Cannot paginate a query that is expected to return at most 1 row");
+    } finally {
+      trx.close();
+    }
+  }
+
+  @Test(description = """
+  queryOptionalLong:
+  - prepared statement
+  - present
+  """)
+  public void queryOptionalLong01() {
     TestingConnection conn;
     conn = new TestingConnection();
 
@@ -1355,7 +1924,7 @@ public class SqlTransactionTest {
 
     TestingResultSet query;
     query = new TestingResultSet(
-        Map.of("1", 23)
+        Map.of("1", Long.MAX_VALUE)
     );
 
     stmt.queries(query);
@@ -1370,11 +1939,11 @@ public class SqlTransactionTest {
 
       trx.add(123);
 
-      OptionalInt maybe;
-      maybe = trx.queryOptionalInt();
+      OptionalLong maybe;
+      maybe = trx.queryOptionalLong();
 
       assertEquals(maybe.isPresent(), true);
-      assertEquals(maybe.getAsInt(), 23);
+      assertEquals(maybe.getAsLong(), Long.MAX_VALUE);
     } finally {
       trx.close();
     }
@@ -1404,37 +1973,10 @@ public class SqlTransactionTest {
 
         """
         next()
-        getInt(1)
-        next()
+        getLong(1)
         close()
         """
     );
-  }
-
-  @Test(description = """
-  queryOptionalInt:
-  - disallow page
-  """)
-  public void queryOptionalInt02() {
-    TestingConnection conn;
-    conn = new TestingConnection();
-
-    SqlTransaction trx;
-    trx = trx(conn);
-
-    try {
-      trx.sql("select ID from FOO");
-
-      trx.paginate(Sql.Page.of(1, 15));
-
-      trx.queryOptionalInt();
-
-      Assert.fail();
-    } catch (IllegalStateException expected) {
-      assertEquals(expected.getMessage(), "Cannot paginate a query that is expected to return at most 1 row");
-    } finally {
-      trx.close();
-    }
   }
 
   @Test(description = "trx.sql(sql).args(args).queryOne(Record::new)")
@@ -2181,6 +2723,48 @@ public class SqlTransactionTest {
         close()
         """
     );
+  }
+
+  private <T> T preparedStatement(List<Map<String, Object>> rows, Function<SqlTransaction, T> trxConfig) {
+    connection = new TestingConnection();
+
+    preparedStatement = new TestingPreparedStatement();
+
+    resultSet = new TestingResultSet(rows);
+
+    preparedStatement.queries(resultSet);
+
+    connection.preparedStatements(preparedStatement);
+
+    SqlTransaction trx;
+    trx = trx(connection);
+
+    try {
+      return trxConfig.apply(trx);
+    } finally {
+      trx.close();
+    }
+  }
+
+  private <T> T statement(List<Map<String, Object>> rows, Function<SqlTransaction, T> trxConfig) {
+    connection = new TestingConnection();
+
+    statement = new TestingStatement();
+
+    resultSet = new TestingResultSet(rows);
+
+    statement.queries(resultSet);
+
+    connection.statements(statement);
+
+    SqlTransaction trx;
+    trx = trx(connection);
+
+    try {
+      return trxConfig.apply(trx);
+    } finally {
+      trx.close();
+    }
   }
 
   private SqlTransaction trx(Connection connection) {
