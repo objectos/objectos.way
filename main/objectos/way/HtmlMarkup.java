@@ -4604,6 +4604,16 @@ final class HtmlMarkup implements Html.Markup {
   }
 
   /**
+   * Renders the {@code checked} boolean attribute.
+   *
+   * @return an instruction representing this attribute.
+   */
+  @Override
+  public final Html.Instruction.OfAttribute checked() {
+    return attribute0(HtmlAttributeName.CHECKED);
+  }
+
+  /**
    * Renders the {@code cite} attribute with the specified value.
    *
    * @param value

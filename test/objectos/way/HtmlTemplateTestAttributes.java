@@ -37,6 +37,22 @@ public class HtmlTemplateTestAttributes {
     );
   }
 
+  @Test
+  public void checked() {
+    test(
+        new Html.Template() {
+          @Override
+          protected final void render() {
+            input(type("checkbox"), checked());
+          }
+        },
+
+        """
+        <input type="checkbox" checked>
+        """
+    );
+  }
+
   private void test(Html.Template template, String expected) {
     String result;
     result = template.toString();

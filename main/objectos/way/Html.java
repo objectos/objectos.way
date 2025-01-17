@@ -1071,6 +1071,13 @@ public final class Html {
     Html.Instruction.OfAttribute charset(String value);
 
     /**
+     * Renders the {@code checked} boolean attribute.
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute checked();
+
+    /**
      * Renders the {@code cite} attribute with the specified value.
      *
      * @param value
@@ -4498,6 +4505,15 @@ public final class Html {
      */
     protected final Instruction.OfAttribute charset(String value) {
       return $attributes().charset(value);
+    }
+
+    /**
+     * Generates the {@code checked} boolean attribute.
+     *
+     * @return an instruction representing this attribute.
+     */
+    protected final Instruction.OfAttribute checked() {
+      return $attributes().checked();
     }
 
     /**

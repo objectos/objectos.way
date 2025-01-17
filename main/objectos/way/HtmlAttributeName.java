@@ -78,6 +78,7 @@ final class HtmlAttributeName implements Html.AttributeName {
   public static final Html.AttributeName CELLPADDING = BUILDER.create("cellpadding", false);
   public static final Html.AttributeName CELLSPACING = BUILDER.create("cellspacing", false);
   public static final Html.AttributeName CHARSET = BUILDER.create("charset", false);
+  public static final Html.AttributeName CHECKED = BUILDER.create("checked", true);
   public static final Html.AttributeName CITE = BUILDER.create("cite", false);
   public static final Html.AttributeName CLASS = BUILDER.create("class", false);
   public static final Html.AttributeName CLIP_PATH = BUILDER.create("clip-path", false);
