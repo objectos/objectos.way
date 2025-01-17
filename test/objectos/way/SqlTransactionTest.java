@@ -1459,7 +1459,7 @@ public class SqlTransactionTest {
             }
         ),
 
-        null
+        (Foo) null
     );
 
     assertEquals(
@@ -1618,7 +1618,7 @@ public class SqlTransactionTest {
             }
         ),
 
-        null
+        (Foo) null
     );
 
     assertEquals(
