@@ -15,6 +15,8 @@
  */
 package objectos.way;
 
+import java.util.Set;
+
 class HttpModuleMatcherParser {
 
   private static final char ASTERISK = '*';
@@ -26,6 +28,8 @@ class HttpModuleMatcherParser {
   private static final String PATH_DOES_START_WITH_SOLIDUS = "Path does not start with a '/' character";
 
   private static final String WILDCARD_CHAR = "The '*' wildcard character can only be used once at the end of the path expression";
+
+  private final Set<String> distinct = Util.createSet();
 
   final HttpModuleMatcher matcher(String pathExpression) {
     int length;
@@ -44,6 +48,8 @@ class HttpModuleMatcherParser {
     if (c != '/') {
       throw illegal(PATH_DOES_START_WITH_SOLIDUS, pathExpression);
     }
+
+    distinct.clear();
 
     HttpModuleMatcher matcher;
     matcher = null;
@@ -79,6 +85,12 @@ class HttpModuleMatcherParser {
         name = pathExpression.substring(index);
       } else {
         name = pathExpression.substring(index, solidus);
+      }
+
+      if (!distinct.add(name)) {
+        throw new IllegalArgumentException(
+            "The ':%s' path variable was declared more than once".formatted(name)
+        );
       }
 
       matcher = matcher.append(new HttpModuleMatcher.NamedVariable(name));

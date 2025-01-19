@@ -37,7 +37,7 @@ public class HttpModuleCompilerTest {
   }
 
   @Test
-  public void matcherVariable() {
+  public void matcherVariable01() {
     matcher(
         "/foo/:a",
         new HttpModuleMatcher.Matcher2(
@@ -71,6 +71,13 @@ public class HttpModuleCompilerTest {
     );
   }
 
+  @Test(description = """
+  it should disallow duplicate path variable names
+  """)
+  public void matcherVariable02() {
+    matcherError("/foo/:error/bar/:error", "The ':error' path variable was declared more than once");
+  }
+
   @Test
   public void matcherWildcard() {
     matcher("/*", new HttpModuleMatcher.StartsWith("/"));
@@ -94,6 +101,7 @@ public class HttpModuleCompilerTest {
   private void matcherError(String path, String expectedMessage) {
     try {
       compiler.matcher(path);
+
       Assert.fail();
     } catch (IllegalArgumentException expected) {
       assertEquals(expected.getMessage(), expectedMessage);
