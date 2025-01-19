@@ -176,4 +176,9 @@ final class HttpStatus implements Http.Status {
         && code == that.code;
   }
 
+  @Override
+  public final String toString() {
+    return "HttpStatus[" + code + "=" + reasonPhrase + "]";
+  }
+
 }

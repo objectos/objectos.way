@@ -108,6 +108,24 @@
       }
     }
   }
+  
+  function popstateListener(event) {
+    const state = event.state;
+    
+    if (!state) {
+      return;
+    }
+    
+    if (!state.way) {
+      return;
+    }
+    
+    const url = window.location.href;
+    
+    const xhr = createXhr("GET", url);
+    
+    xhr.send();
+  }
 
   function createXhr(method, url) {
     const xhr = new XMLHttpRequest();
@@ -525,5 +543,6 @@
   }
 
   window.addEventListener("DOMContentLoaded", domLoaded);
+  window.addEventListener("popstate", popstateListener);
 
 })(this);
