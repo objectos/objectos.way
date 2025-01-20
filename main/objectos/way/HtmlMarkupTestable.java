@@ -31,10 +31,31 @@ final class HtmlMarkupTestable extends HtmlMarkupElements implements Html.Markup
   }
 
   @Override
-  public final Html.Instruction.OfElement testable(String name, String value) {
+  public final String testableField(String name, String value) {
     formatter.field(name, value);
 
-    return Html.ELEMENT;
+    return value;
+  }
+
+  @Override
+  public final String testableFieldName(String name) {
+    formatter.fieldName(name);
+
+    return name;
+  }
+
+  @Override
+  public final String testableFieldValue(String value) {
+    formatter.fieldValue(value);
+
+    return value;
+  }
+
+  @Override
+  public final String testableHeading1(String value) {
+    formatter.heading1(value);
+
+    return value;
   }
 
   @Override

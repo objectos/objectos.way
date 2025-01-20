@@ -29,11 +29,13 @@ public class HtmlTemplateTestTestable {
         new Html.Template() {
           @Override
           protected void render() {
+            testableHeading1("Test");
+
             dl(
                 dt("ID"),
-                dd(testable("order.id", "123")),
+                dd(testableField("order.id", "123")),
                 dt("Qty"),
-                dd(testable("order.qty", "456"))
+                dd(testableField("order.qty", "456"))
             );
           }
         },
@@ -48,6 +50,8 @@ public class HtmlTemplateTestTestable {
         """,
 
         """
+        # Test
+
         order.id: 123
         order.qty: 456
         """
@@ -62,7 +66,7 @@ public class HtmlTemplateTestTestable {
         new Html.Template() {
           @Override
           protected final void render() {
-            div(className("x"), testable("x", "123"));
+            div(className("x"), text(testableField("x", "123")));
           }
         },
 
@@ -84,7 +88,7 @@ public class HtmlTemplateTestTestable {
         new Html.Template() {
           @Override
           protected final void render() {
-            div(testable("empty", ""));
+            div(testableField("empty", ""));
           }
         },
 
@@ -110,20 +114,43 @@ public class HtmlTemplateTestTestable {
           }
 
           private void fragment() {
-            div(testable("x", "abc"));
-            testable("y", "123");
+            div(testableField("x", "abc"));
+            testableField("y", "123");
           }
         },
 
         """
         <div>
         <div>abc</div>
-        123</div>
+        </div>
         """,
 
         """
         x: abc
         y: 123
+        """
+    );
+  }
+
+  @Test
+  public void field05() {
+    test(
+        new Html.Template() {
+          @Override
+          protected final void render() {
+            div("before");
+            testableField("foo", "bar");
+            div("after");
+          }
+        },
+
+        """
+        <div>before</div>
+        <div>after</div>
+        """,
+
+        """
+        foo: bar
         """
     );
   }

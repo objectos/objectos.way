@@ -160,14 +160,14 @@ public class WebFormSpecTest {
     Testable.Formatter w;
     w = Testable.Formatter.create();
 
-    w.heading("Form");
+    w.heading1("Form");
 
     w.row(
         form.action(), 10,
         Boolean.toString(form.isValid()), 5
     );
 
-    w.heading("Fields");
+    w.heading1("Fields");
 
     for (Web.Form.Field field : form.fields()) {
       switch (field) {

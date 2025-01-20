@@ -40,7 +40,7 @@ public interface Testable {
      */
     void clear();
 
-    void heading(String value);
+    void heading1(String value);
 
     /**
      * Formats the specified name and value as a field.

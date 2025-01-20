@@ -26,7 +26,7 @@ public class TestableFormatterTest {
     Testable.Formatter w;
     w = Testable.Formatter.create();
 
-    w.heading("String cells");
+    w.heading1("String cells");
 
     // happy path
     w.cell("abcde", 5);
@@ -66,7 +66,7 @@ public class TestableFormatterTest {
     Testable.Formatter w;
     w = Testable.Formatter.create();
 
-    w.heading("Field");
+    w.heading1("Field");
 
     w.field("name", "value");
 
@@ -87,12 +87,12 @@ public class TestableFormatterTest {
     w = Testable.Formatter.create();
 
     // no new line before
-    w.heading("First");
+    w.heading1("First");
 
     w.row("test", 5);
 
     // new line before
-    w.heading("Second");
+    w.heading1("Second");
 
     w.row("test", 5);
 

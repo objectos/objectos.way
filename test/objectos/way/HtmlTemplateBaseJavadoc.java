@@ -227,9 +227,9 @@ public class HtmlTemplateBaseJavadoc {
       protected void render() {
         dl(
             dt("ID"),
-            dd(testable("order.id", "123")), // @highlight substring="testable"
+            dd(testableField("order.id", "123")), // @highlight substring="testable"
             dt("Qty"),
-            dd(testable("order.qty", "456")) // @highlight substring="testable"
+            dd(testableField("order.qty", "456")) // @highlight substring="testable"
         );
       }
     }

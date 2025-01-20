@@ -179,7 +179,7 @@ public final class Html {
    * A DOM-like view of a {@code Html.Template} which allows for a one-pass,
    * one-direction traversal of the HTML document.
    */
-  public sealed interface Dom {
+  public sealed interface Dom permits HtmlDom {
 
     /**
      * An attribute of a {@code Html.Template}.
@@ -645,7 +645,7 @@ public final class Html {
   /**
    * Allow for defining the structure of an HTML document using pure Java.
    */
-  public sealed interface Markup extends MarkupAttributes, MarkupElements permits HtmlMarkup, HtmlMarkupTestable {
+  public sealed interface Markup extends MarkupAttributes, MarkupElements, MarkupTestable permits HtmlMarkup, HtmlMarkupTestable {
 
     /**
      * Creates a new {@code Markup} instance.
@@ -874,22 +874,6 @@ public final class Html {
     Html.Instruction.OfFragment renderComponent(Html.Component component);
 
     /**
-     * Renders a named <em>testable</em> text node with the specified name and
-     * value. A <em>testable</em> text node produces the same HTML output of a
-     * regular text node. It participates in the
-     * {@link Html.Template#testableText()} output which a regular text node
-     * does not.
-     *
-     * @param name
-     *        the name of the testable text node
-     * @param value
-     *        the value of the testable text node
-     *
-     * @return an instruction representing the text node
-     */
-    Html.Instruction.OfElement testable(String name, String value);
-
-    /**
      * Renders a text node with the specified {@code text} value. The text
      * value is escaped before being emitted to the output.
      *
@@ -905,7 +889,7 @@ public final class Html {
   /**
    * Provides methods for defining the attributes of an HTML document.
    */
-  public sealed interface MarkupAttributes permits Html.Markup, HtmlMarkupAttributes {
+  public sealed interface MarkupAttributes permits Markup, HtmlMarkupAttributes {
 
     /**
      * Renders an attribute with the specified name and value.
@@ -2312,7 +2296,7 @@ public final class Html {
   /**
    * Provides methods for defining the elements of an HTML document.
    */
-  public sealed interface MarkupElements permits Html.Markup, HtmlMarkupElements {
+  public sealed interface MarkupElements permits Markup, HtmlMarkupElements {
 
     /**
      * Renders the {@code <!DOCTYPE html>} doctype.
@@ -3743,6 +3727,59 @@ public final class Html {
   }
 
   /**
+   * Provides methods for formatting testable nodes during the rendering of an
+   * HTML document.
+   */
+  public sealed interface MarkupTestable permits Markup {
+
+    /**
+     * Formats the specified name and value as a testable field (optional
+     * operation).
+     *
+     * @param name
+     *        the field name
+     * @param value
+     *        the field value
+     *
+     * @return always the field value
+     */
+    String testableField(String name, String value);
+
+    /**
+     * Formats the specified name as a testable field name (optional operation).
+     *
+     * @param name
+     *        the field name
+     *
+     * @return the specified field name
+     */
+    String testableFieldName(String name);
+
+    /**
+     * Formats the specified value as a testable field value (optional
+     * operation).
+     *
+     * @param value
+     *        the field value
+     *
+     * @return the specified field value
+     */
+    String testableFieldValue(String value);
+
+    /**
+     * Formats the specified value as a testable heading level 1 (optional
+     * operation).
+     *
+     * @param value
+     *        the heading value
+     *
+     * @return the specified value
+     */
+    String testableHeading1(String value);
+
+  }
+
+  /**
    * A template in pure Java for generating HTML.
    *
    * <p>
@@ -3836,7 +3873,7 @@ public final class Html {
 
   }
 
-  public sealed static abstract class TemplateBase extends Html.TemplateElements permits Template {
+  public sealed static abstract class TemplateBase extends TemplateTestable permits Template {
 
     /**
      * The {@code data-execute-default} boolean attribute.
@@ -4144,42 +4181,6 @@ public final class Html {
     }
 
     /**
-     * Renders a named <em>testable</em> text node with the specified name and
-     * value. A <em>testable</em> text node produces the same HTML output of a
-     * regular text node. It participates in the
-     * {@link Html.Template#testableText()} output which a regular text node
-     * does not.
-     *
-     * <p>
-     * The following Objectos HTML template:
-     *
-     * {@snippet file = "objectos/way/HtmlTemplateBaseJavadoc.java" region =
-     * "testable0"}
-     *
-     * <p>
-     * Generates the following HTML:
-     *
-     * {@snippet file = "objectos/way/HtmlTemplateBaseJavadoc.java" region =
-     * "testable1"}
-     *
-     * <p>
-     * And produces the following testable text output:
-     *
-     * {@snippet file = "objectos/way/HtmlTemplateBaseJavadoc.java" region =
-     * "testable2"}
-     *
-     * @param name
-     *        the name of the testable text node
-     * @param value
-     *        the value of the testable text node
-     *
-     * @return an instruction representing the text node
-     */
-    protected final Html.Instruction.OfElement testable(String name, String value) {
-      return $html().testable(name, value);
-    }
-
-    /**
      * Renders a text node with the specified {@code text} value. The text
      * value is escaped before being emitted to the output.
      *
@@ -4206,12 +4207,17 @@ public final class Html {
     }
 
     @Override
-    final Html.MarkupAttributes $attributes() {
+    final MarkupAttributes $attributes() {
       return $html();
     }
 
     @Override
-    final Html.MarkupElements $elements() {
+    final MarkupElements $elements() {
+      return $html();
+    }
+
+    @Override
+    final MarkupTestable $testable() {
       return $html();
     }
 
@@ -5995,7 +6001,7 @@ public final class Html {
   /**
    * Provides the HTML elements template methods.
    */
-  public non-sealed static abstract class TemplateElements extends TemplateAttributes {
+  public sealed static abstract class TemplateElements extends TemplateAttributes {
 
     /**
      * Sole constructor.
@@ -7718,38 +7724,71 @@ public final class Html {
 
   }
 
-}
+  /**
+   * Provides methods for integrating testable nodes into the HTML template.
+   */
+  public sealed static abstract class TemplateTestable extends TemplateElements {
 
-final class HtmlDom implements Html.Dom, Lang.IterableOnce<Html.Dom.Node>, Iterator<Html.Dom.Node> {
+    /**
+     * Sole constructor.
+     */
+    TemplateTestable() {}
 
-  private final HtmlMarkup player;
+    /**
+     * Formats the specified name and value as a testable field (optional
+     * operation).
+     *
+     * @param name
+     *        the field name
+     * @param value
+     *        the field value
+     *
+     * @return always the field value
+     */
+    protected final String testableField(String name, String value) {
+      return $testable().testableField(name, value);
+    }
 
-  public HtmlDom(HtmlMarkup ctx) {
-    this.player = ctx;
-  }
+    /**
+     * Formats the specified name as a testable field name (optional operation).
+     *
+     * @param name
+     *        the field name
+     *
+     * @return the specified field name
+     */
+    protected final String testableFieldName(String name) {
+      return $testable().testableFieldName(name);
+    }
 
-  @Override
-  public final Lang.IterableOnce<Html.Dom.Node> nodes() {
-    player.documentIterable();
+    /**
+     * Formats the specified value as a testable field value (optional
+     * operation).
+     *
+     * @param value
+     *        the field value
+     *
+     * @return the specified field value
+     */
+    protected final String testableFieldValue(String name) {
+      return $testable().testableFieldValue(name);
+    }
 
-    return this;
-  }
+    /**
+     * Formats the specified value as a testable heading level 1 (optional
+     * operation).
+     *
+     * @param value
+     *        the heading value
+     *
+     * @return the specified value
+     */
+    protected final String testableHeading1(String name) {
+      return $testable().testableHeading1(name);
+    }
 
-  @Override
-  public final Iterator<Html.Dom.Node> iterator() {
-    player.documentIterator();
+    abstract MarkupTestable $testable();
 
-    return this;
-  }
-
-  @Override
-  public final boolean hasNext() {
-    return player.documentHasNext();
-  }
-
-  @Override
-  public final Html.Dom.Node next() {
-    return player.documentNext();
   }
 
 }

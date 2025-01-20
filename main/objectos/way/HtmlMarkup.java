@@ -310,14 +310,6 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
     return Html.ELEMENT;
   }
 
-  @Override
-  public final Html.Instruction.OfElement testable(String name, String value) {
-    Check.notNull(name, "name == null");
-    Check.notNull(value, "value == null");
-
-    return text(value);
-  }
-
   /**
    * Generates a text node with the specified {@code text} value. The text
    * value is escaped before being emitted to the output.
@@ -348,6 +340,22 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
 
     return Html.ELEMENT;
   }
+
+  //
+  // Section: testable methods
+  //
+
+  @Override
+  public final String testableField(String name, String value) { return value; }
+
+  @Override
+  public final String testableFieldName(String name) { return name; }
+
+  @Override
+  public final String testableFieldValue(String value) { return value; }
+
+  @Override
+  public final String testableHeading1(String value) { return value; }
 
   //
   // Section: DOM related methods

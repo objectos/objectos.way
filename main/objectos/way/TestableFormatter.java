@@ -38,7 +38,7 @@ final class TestableFormatter implements Testable.Formatter {
   }
 
   @Override
-  public final void heading(String value) {
+  public final void heading1(String value) {
     headingNewLineIfRequired();
 
     out.append("# ");
