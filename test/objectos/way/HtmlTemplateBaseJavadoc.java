@@ -255,7 +255,7 @@ public class HtmlTemplateBaseJavadoc {
 
     // @start region="testable2"
     assertEquals(
-        example.testableText(),
+        example.toTestableText(),
 
         """
         order.id: 123

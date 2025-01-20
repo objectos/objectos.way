@@ -3750,7 +3750,7 @@ public final class Html {
    * instance of the class can then be used to generate the represented HTML
    * code.
    */
-  public non-sealed static abstract class Template extends TemplateBase implements Component {
+  public non-sealed static abstract class Template extends TemplateBase implements Component, Testable {
 
     Html.Markup html;
 
@@ -3770,6 +3770,14 @@ public final class Html {
     }
 
     @Override
+    public final void formatTestable(Testable.Formatter formatter) {
+      final HtmlMarkupTestable html;
+      html = new HtmlMarkupTestable(formatter);
+
+      renderHtml(html);
+    }
+
+    @Override
     public final void renderHtml(Html.Markup m) {
       Check.state(html == null, "Concurrent evalution of a HtmlTemplate is not supported");
 
@@ -3780,24 +3788,6 @@ public final class Html {
       } finally {
         html = null;
       }
-    }
-
-    /**
-     * Returns a formatted text of all of the testable text nodes in this
-     * template.
-     *
-     * @return a formatted text of all of the testable text nodes in this
-     *         template
-     *
-     * @see Html.Template#testable(String, String)
-     */
-    public final String testableText() {
-      HtmlMarkupTestable html;
-      html = new HtmlMarkupTestable();
-
-      renderHtml(html);
-
-      return html.toString();
     }
 
     /**

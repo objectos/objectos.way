@@ -20,18 +20,26 @@ import java.util.function.Consumer;
 
 final class HtmlMarkupTestable extends HtmlMarkupElements implements Html.Markup {
 
-  private final Testable.Writer writer = Testable.Writer.create();
+  private final Testable.Formatter formatter;
+
+  HtmlMarkupTestable() {
+    this(Testable.Formatter.create());
+  }
+
+  HtmlMarkupTestable(Testable.Formatter formatter) {
+    this.formatter = formatter;
+  }
 
   @Override
   public final Html.Instruction.OfElement testable(String name, String value) {
-    writer.field(name, value);
+    formatter.field(name, value);
 
     return Html.ELEMENT;
   }
 
   @Override
   public final String toString() {
-    return writer.toString();
+    return formatter.toString();
   }
 
   //

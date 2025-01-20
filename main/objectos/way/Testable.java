@@ -17,28 +17,26 @@ package objectos.way;
 
 /**
  * The <strong>Objectos Testable</strong> main interface. It represents an
- * object that can write out a string representation suitable for testing.
+ * object that can create a string representation suitable for testing.
  */
 public interface Testable {
 
   /**
-   * Creates the string representation of a testable component.
+   * Formats the string representation of a testable component.
    */
-  public sealed interface Writer permits TestableWriter {
+  public sealed interface Formatter permits TestableFormatter {
 
     /**
-     * Creates a new instance of {@code Writer} with a default column
-     * separator.
+     * Creates a new formatter with the default settings.
      *
-     * @return a new instance of {@code Writer}.
+     * @return a new formatter with the default settings.
      */
-    static Writer create() {
-      return new TestableWriter("|");
+    static Formatter create() {
+      return new TestableFormatter("|");
     }
 
     /**
-     * Clears the current content of the writer, resetting it to an empty
-     * state.
+     * Clears the content of this formatter, resetting it to an empty state.
      */
     void clear();
 
@@ -122,6 +120,28 @@ public interface Testable {
      */
     void row(Object... values);
 
+  }
+
+  /**
+   * Formats this testable instance using the specified formatter instance.
+   *
+   * @param formatter
+   *        the formatter to use
+   */
+  void formatTestable(Formatter formatter);
+
+  /**
+   * Returns the formatted string representation of this testable instance.
+   *
+   * @return the formatted string representation of this testable instance
+   */
+  default String toTestableText() {
+    final Formatter f;
+    f = Formatter.create();
+
+    formatTestable(f);
+
+    return f.toString();
   }
 
 }

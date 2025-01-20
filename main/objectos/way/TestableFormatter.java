@@ -17,7 +17,7 @@ package objectos.way;
 
 import java.util.Objects;
 
-final class TestableWriter implements Testable.Writer {
+final class TestableFormatter implements Testable.Formatter {
 
   private final StringBuilder out = new StringBuilder();
 
@@ -31,7 +31,7 @@ final class TestableWriter implements Testable.Writer {
 
   private int padding;
 
-  TestableWriter(String cellSeparator) {
+  TestableFormatter(String cellSeparator) {
     this.cellSeparator = cellSeparator;
 
     firstCell = true;

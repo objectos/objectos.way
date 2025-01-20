@@ -131,7 +131,7 @@ public class HtmlTemplateTestTestable {
   private void test(Html.Template template, String expectedHtml, String expectedTestable) {
     assertEquals(template.toString(), expectedHtml);
 
-    assertEquals(template.testableText(), expectedTestable);
+    assertEquals(template.toTestableText(), expectedTestable);
   }
 
 }
