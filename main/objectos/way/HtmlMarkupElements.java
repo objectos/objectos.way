@@ -15,7 +15,7 @@
  */
 package objectos.way;
 
-non-sealed abstract class HtmlMarkupElements extends HtmlMarkupAttributes implements Html.MarkupElements {
+sealed abstract class HtmlMarkupElements extends HtmlMarkupAttributes implements Html.MarkupElements permits HtmlMarkup, HtmlMarkupTestable {
 
   HtmlMarkupElements() {}
 

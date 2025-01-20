@@ -138,58 +138,6 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
     return Html.FRAGMENT;
   }
 
-  final String testableText() {
-    StringBuilder sb;
-    sb = new StringBuilder();
-
-    HtmlDom document;
-    document = compile();
-
-    for (var node : document.nodes()) {
-      switch (node) {
-        case Html.Dom.Element element -> testableElement(sb, element);
-
-        default -> {}
-      }
-    }
-
-    return sb.toString();
-  }
-
-  private void testableElement(StringBuilder sb, Html.Dom.Element element) {
-    for (var node : element.nodes()) {
-      switch (node) {
-        case Html.Dom.Element child -> testableElement(sb, child);
-
-        case Html.Dom.Text text -> {
-          String testable;
-          testable = text.testable();
-
-          if (testable == null) {
-            continue;
-          }
-
-          sb.append(testable);
-          sb.append(':');
-
-          String value;
-          value = text.value();
-
-          value = value.trim();
-
-          if (!value.isEmpty()) {
-            sb.append(' ');
-            sb.append(value);
-          }
-
-          sb.append(System.lineSeparator());
-        }
-
-        default -> {}
-      }
-    }
-  }
-
   public final String toJsonString() {
     try {
       HtmlDom document;
@@ -219,13 +167,6 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
     } catch (IOException e) {
       throw new AssertionError("StringBuilder does not throw IOException", e);
     }
-  }
-
-  public final Html.Instruction.OfAttribute attribute(Html.AttributeName name, String value) {
-    Check.notNull(name, "name == null");
-    Check.notNull(value, "value == null");
-
-    return attribute0(name, value);
   }
 
   @Override
@@ -374,9 +315,7 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
     Check.notNull(name, "name == null");
     Check.notNull(value, "value == null");
 
-    testableImpl(name, value);
-
-    return Html.ELEMENT;
+    return text(value);
   }
 
   /**
@@ -539,8 +478,6 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
         case HtmlByteProto.MARKED4 -> index += 4;
 
         case HtmlByteProto.MARKED5 -> index += 5;
-
-        case HtmlByteProto.MARKED6 -> index += 6;
 
         default -> throw new UnsupportedOperationException(
             "Implement me :: proto=" + proto
@@ -769,8 +706,7 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
 
         case HtmlByteProto.ELEMENT,
              HtmlByteProto.RAW,
-             HtmlByteProto.TEXT,
-             HtmlByteProto.TESTABLE -> index = skipVarInt(index);
+             HtmlByteProto.TEXT -> index = skipVarInt(index);
 
         case HtmlByteProto.END -> {
           index = rollbackIndex;
@@ -1029,7 +965,6 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
 
         case HtmlByteProto.ELEMENT,
              HtmlByteProto.RAW,
-             HtmlByteProto.TESTABLE,
              HtmlByteProto.TEXT -> index = skipVarInt(index);
 
         case HtmlByteProto.END -> {
@@ -1248,8 +1183,7 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
 
         case HtmlByteProto.ELEMENT,
              HtmlByteProto.RAW,
-             HtmlByteProto.TEXT,
-             HtmlByteProto.TESTABLE -> {
+             HtmlByteProto.TEXT -> {
           index = rollbackIndex;
 
           nextState = _ELEMENT_NODES_HAS_NEXT;
@@ -1390,26 +1324,6 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
         yield raw;
       }
 
-      case HtmlByteProto.TESTABLE -> {
-        index = jmp2(index);
-
-        byte t0;
-        t0 = main[auxStart++];
-
-        byte t1;
-        t1 = main[auxStart++];
-
-        byte v0;
-        v0 = main[auxStart++];
-
-        byte v1;
-        v1 = main[auxStart++];
-
-        elementCtxNodesIndexStore(index);
-
-        yield htmlText(t0, t1, v0, v1);
-      }
-
       case HtmlByteProto.TEXT -> {
         index = jmp2(index);
 
@@ -1433,22 +1347,6 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
   private HtmlDomText htmlText(byte v0, byte v1) {
     HtmlDomText text;
     text = (HtmlDomText) objectArray[objectIndex + OFFSET_TEXT];
-
-    // testable
-    text.testable = null;
-
-    // text value
-    text.value = toObjectString(v0, v1);
-
-    return text;
-  }
-
-  private HtmlDomText htmlText(byte t0, byte t1, byte v0, byte v1) {
-    HtmlDomText text;
-    text = (HtmlDomText) objectArray[objectIndex + OFFSET_TEXT];
-
-    // testable
-    text.testable = toObjectString(t0, t1);
 
     // text value
     text.value = toObjectString(v0, v1);
@@ -1867,8 +1765,6 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
 
         case HtmlByteProto.INTERNAL5 -> mainContents -= 5 - 2;
 
-        case HtmlByteProto.INTERNAL6 -> mainContents -= 6 - 2;
-
         default -> throw new UnsupportedOperationException(
             "Implement me :: proto=" + proto
         );
@@ -1985,17 +1881,9 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
 
               case HtmlByteProto.MARKED5 -> contents += 5;
 
-              case HtmlByteProto.MARKED6 -> contents += 6;
-
               case HtmlByteProto.RAW,
                    HtmlByteProto.TEXT -> {
                 contents = encodeInternal4(contents, proto);
-
-                continue loop;
-              }
-
-              case HtmlByteProto.TESTABLE -> {
-                contents = encodeInternal6(contents, proto);
 
                 continue loop;
               }
@@ -2045,28 +1933,6 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
         HtmlBytes.encodeInt1(object),
 
         HtmlByteProto.INTERNAL4
-    );
-  }
-
-  final void testableImpl(String name, String value) {
-    int nameIdx;
-    nameIdx = objectAdd(name);
-
-    int valueIdx;
-    valueIdx = objectAdd(value);
-
-    mainAdd(
-        HtmlByteProto.TESTABLE,
-
-        // name
-        HtmlBytes.encodeInt0(nameIdx),
-        HtmlBytes.encodeInt1(nameIdx),
-
-        // value
-        HtmlBytes.encodeInt0(valueIdx),
-        HtmlBytes.encodeInt1(valueIdx),
-
-        HtmlByteProto.INTERNAL6
     );
   }
 
@@ -2312,12 +2178,8 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
 
         case HtmlByteProto.MARKED5 -> index += 5;
 
-        case HtmlByteProto.MARKED6 -> index += 6;
-
         case HtmlByteProto.RAW,
              HtmlByteProto.TEXT -> index = encodeInternal4(index, proto);
-
-        case HtmlByteProto.TESTABLE -> index = encodeInternal6(index, proto);
 
         default -> {
           throw new UnsupportedOperationException(
@@ -2395,33 +2257,6 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
     // point to next
     int offset;
     offset = 5;
-
-    // ensure main can hold least 4 elements
-    // 0   - ByteProto
-    // 1-3 - variable length
-    main = Util.growIfNecessary(main, mainIndex + 3);
-
-    main[mainIndex++] = proto;
-
-    int length;
-    length = mainIndex - startIndex;
-
-    mainIndex = HtmlBytes.encodeOffset(main, mainIndex, length);
-
-    return contents + offset;
-  }
-
-  private int encodeInternal6(int contents, byte proto) {
-    return encodeInternalN(contents, proto, HtmlByteProto.MARKED6, 6);
-  }
-
-  private int encodeInternalN(int contents, byte proto, byte marker, int offset) {
-    // keep the start index handy
-    int startIndex;
-    startIndex = contents;
-
-    // mark this element
-    main[contents] = marker;
 
     // ensure main can hold least 4 elements
     // 0   - ByteProto
@@ -2562,16 +2397,6 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
     main[mainIndex++] = b2;
     main[mainIndex++] = b3;
     main[mainIndex++] = b4;
-  }
-
-  private void mainAdd(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5) {
-    main = Util.growIfNecessary(main, mainIndex + 5);
-    main[mainIndex++] = b0;
-    main[mainIndex++] = b1;
-    main[mainIndex++] = b2;
-    main[mainIndex++] = b3;
-    main[mainIndex++] = b4;
-    main[mainIndex++] = b5;
   }
 
   private int objectAdd(Object value) {

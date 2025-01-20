@@ -472,11 +472,11 @@ public class HtmlCompilerTestRecorder {
     html.elementBegin(HtmlElementName.NAV);
     html.elementEnd();
     // template end
-    
+
     html.elementBegin(HtmlElementName.BODY);
     html.elementValue(BaseApi.FRAGMENT);
     html.elementEnd();
-    
+
     html.compilationEnd();
     */
 
@@ -790,78 +790,6 @@ public class HtmlCompilerTestRecorder {
         HtmlBytes.encodeInt0(36),
         HtmlByteProto.END,
         HtmlBytes.encodeInt0(75),
-        HtmlByteProto.INTERNAL
-    );
-  }
-
-  @Test(description = """
-  The test-field pseudo-attribute
-  """)
-  public void testCase65() {
-    HtmlMarkup html;
-    html = new HtmlMarkup();
-
-    html.compilationBegin();
-
-    html.div(
-        html.div(
-            html.testable("x", "123")
-        ),
-        html.div(
-            html.testable("y", "abc")
-        )
-    );
-
-    test(
-        html,
-
-        HtmlByteProto.MARKED6,
-        HtmlBytes.encodeInt0(0),
-        HtmlBytes.encodeInt1(0),
-        HtmlBytes.encodeInt0(1),
-        HtmlBytes.encodeInt1(1),
-        HtmlByteProto.INTERNAL6,
-
-        HtmlByteProto.LENGTH2,
-        HtmlBytes.encodeInt0(7),
-        HtmlBytes.encodeInt1(7),
-        HtmlByteProto.STANDARD_NAME,
-        (byte) HtmlElementName.DIV.index(),
-        HtmlByteProto.TESTABLE,
-        HtmlBytes.encodeInt0(12),
-        HtmlByteProto.END,
-        HtmlBytes.encodeInt0(13),
-        HtmlByteProto.INTERNAL,
-
-        HtmlByteProto.MARKED6,
-        HtmlBytes.encodeInt0(2),
-        HtmlBytes.encodeInt1(2),
-        HtmlBytes.encodeInt0(3),
-        HtmlBytes.encodeInt1(3),
-        HtmlByteProto.INTERNAL6,
-
-        HtmlByteProto.LENGTH2,
-        HtmlBytes.encodeInt0(7),
-        HtmlBytes.encodeInt1(7),
-        HtmlByteProto.STANDARD_NAME,
-        (byte) HtmlElementName.DIV.index(),
-        HtmlByteProto.TESTABLE,
-        HtmlBytes.encodeInt0(12),
-        HtmlByteProto.END,
-        HtmlBytes.encodeInt0(13),
-        HtmlByteProto.INTERNAL,
-
-        HtmlByteProto.ELEMENT,
-        HtmlBytes.encodeInt0(9),
-        HtmlBytes.encodeInt1(9),
-        HtmlByteProto.STANDARD_NAME,
-        (byte) HtmlElementName.DIV.index(),
-        HtmlByteProto.ELEMENT,
-        HtmlBytes.encodeInt0(32),
-        HtmlByteProto.ELEMENT,
-        HtmlBytes.encodeInt0(18),
-        HtmlByteProto.END,
-        HtmlBytes.encodeInt0(41),
         HtmlByteProto.INTERNAL
     );
   }

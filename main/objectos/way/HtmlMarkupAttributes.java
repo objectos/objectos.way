@@ -25,6 +25,14 @@ sealed abstract class HtmlMarkupAttributes implements Html.MarkupAttributes perm
 
   abstract Html.AttributeOrNoOp attribute0(Html.AttributeName name, Object value);
 
+  @Override
+  public final Html.Instruction.OfAttribute attribute(Html.AttributeName name, String value) {
+    Check.notNull(name, "name == null");
+    Check.notNull(value, "value == null");
+
+    return attribute0(name, value);
+  }
+
   /**
    * Renders the {@code accesskey} attribute with the specified value.
    *

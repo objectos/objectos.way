@@ -313,14 +313,6 @@ public final class Html {
     sealed interface Text extends Node {
 
       /**
-       * Returns the value of the testable attribute if one was defined in this
-       * element or {@code null} if there was no testable attribute.
-       *
-       * @return the value of testable attribute
-       */
-      String testable();
-
-      /**
        * Return the value of this text node.
        *
        * @return the value of this text node.
@@ -653,7 +645,7 @@ public final class Html {
   /**
    * Allow for defining the structure of an HTML document using pure Java.
    */
-  public sealed interface Markup extends MarkupAttributes, MarkupElements permits HtmlMarkup {
+  public sealed interface Markup extends MarkupAttributes, MarkupElements permits HtmlMarkup, HtmlMarkupTestable {
 
     /**
      * Creates a new {@code Markup} instance.
@@ -914,6 +906,18 @@ public final class Html {
    * Provides methods for defining the attributes of an HTML document.
    */
   public sealed interface MarkupAttributes permits Html.Markup, HtmlMarkupAttributes {
+
+    /**
+     * Renders an attribute with the specified name and value.
+     *
+     * @param name
+     *        the name of the attribute
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute attribute(Html.AttributeName name, String value);
 
     /**
      * Renders the {@code accesskey} attribute with the specified value.
@@ -3748,7 +3752,7 @@ public final class Html {
    */
   public non-sealed static abstract class Template extends TemplateBase implements Component {
 
-    HtmlMarkup html;
+    Html.Markup html;
 
     /**
      * Sole constructor.
@@ -3770,7 +3774,7 @@ public final class Html {
       Check.state(html == null, "Concurrent evalution of a HtmlTemplate is not supported");
 
       try {
-        html = (HtmlMarkup) m;
+        html = m;
 
         render();
       } finally {
@@ -3788,16 +3792,12 @@ public final class Html {
      * @see Html.Template#testable(String, String)
      */
     public final String testableText() {
-      HtmlMarkup html;
-      html = new HtmlMarkup();
-
-      html.compilationBegin();
+      HtmlMarkupTestable html;
+      html = new HtmlMarkupTestable();
 
       renderHtml(html);
 
-      html.compilationEnd();
-
-      return html.testableText();
+      return html.toString();
     }
 
     /**
@@ -3838,7 +3838,7 @@ public final class Html {
     }
 
     @Override
-    final HtmlMarkup $html() {
+    final Html.Markup $html() {
       Check.state(html != null, "html not set");
 
       return html;
@@ -4225,7 +4225,7 @@ public final class Html {
       return $html();
     }
 
-    abstract HtmlMarkup $html();
+    abstract Html.Markup $html();
 
   }
 
@@ -7960,14 +7960,7 @@ final class HtmlDomRaw implements Html.Dom.Raw {
 
 final class HtmlDomText implements Html.Dom.Text {
 
-  String testable;
-
   String value;
-
-  @Override
-  public final String testable() {
-    return testable;
-  }
 
   @Override
   public final String value() {

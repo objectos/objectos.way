@@ -157,8 +157,8 @@ public class WebFormSpecTest {
   }
 
   private void testWebForm(Web.Form form, String expected) {
-    Lang.Testable.Writer w;
-    w = Lang.Testable.Writer.create();
+    Testable.Writer w;
+    w = Testable.Writer.create();
 
     w.heading("Form");
 

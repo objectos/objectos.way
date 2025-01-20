@@ -19,12 +19,12 @@ import static org.testng.Assert.assertEquals;
 
 import org.testng.annotations.Test;
 
-public class LangTestableTest {
+public class TestableWriterTest {
 
   @Test(description = "cell(String, length)")
   public void cell01() {
-    Lang.Testable.Writer w;
-    w = Lang.Testable.Writer.create();
+    Testable.Writer w;
+    w = Testable.Writer.create();
 
     w.heading("String cells");
 
@@ -62,9 +62,29 @@ public class LangTestableTest {
   }
 
   @Test
+  public void field01() {
+    Testable.Writer w;
+    w = Testable.Writer.create();
+
+    w.heading("Field");
+
+    w.field("name", "value");
+
+    w.fieldName("foo");
+    w.fieldValue("bar");
+
+    assertEquals(w.toString(), """
+    # Field
+
+    name: value
+    foo: bar
+    """);
+  }
+
+  @Test
   public void heading01() {
-    Lang.Testable.Writer w;
-    w = Lang.Testable.Writer.create();
+    Testable.Writer w;
+    w = Testable.Writer.create();
 
     // no new line before
     w.heading("First");
@@ -89,8 +109,8 @@ public class LangTestableTest {
 
   @Test
   public void row01() {
-    Lang.Testable.Writer w;
-    w = Lang.Testable.Writer.create();
+    Testable.Writer w;
+    w = Testable.Writer.create();
 
     w.row("abcde", 5, "abcd", 5, "abc", 5, "ab", 5, "a", 5);
 

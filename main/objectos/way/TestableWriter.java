@@ -15,11 +15,15 @@
  */
 package objectos.way;
 
-final class LangTestableWriter implements Lang.Testable.Writer {
+import java.util.Objects;
+
+final class TestableWriter implements Testable.Writer {
 
   private final StringBuilder out = new StringBuilder();
 
   private final String cellSeparator;
+
+  private final String fieldSeparator = ": ";
 
   private final String nullValue = "null";
 
@@ -27,7 +31,7 @@ final class LangTestableWriter implements Lang.Testable.Writer {
 
   private int padding;
 
-  LangTestableWriter(String cellSeparator) {
+  TestableWriter(String cellSeparator) {
     this.cellSeparator = cellSeparator;
 
     firstCell = true;
@@ -84,6 +88,26 @@ final class LangTestableWriter implements Lang.Testable.Writer {
     if (!suffix.equals(sep)) {
       out.append(sep);
     }
+  }
+
+  @Override
+  public final void field(String name, String value) {
+    fieldName(name);
+    fieldValue(value);
+  }
+
+  @Override
+  public final void fieldName(String name) {
+    Objects.requireNonNull(name, "name == null");
+
+    out.append(name);
+    out.append(fieldSeparator);
+  }
+
+  @Override
+  public final void fieldValue(String value) {
+    out.append(value);
+    out.append(System.lineSeparator());
   }
 
   @Override
