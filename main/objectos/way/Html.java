@@ -913,7 +913,7 @@ public final class Html {
   /**
    * Provides methods for defining the attributes of an HTML document.
    */
-  public sealed interface MarkupAttributes {
+  public sealed interface MarkupAttributes permits Html.Markup, HtmlMarkupAttributes {
 
     /**
      * Renders the {@code accesskey} attribute with the specified value.
@@ -2308,7 +2308,7 @@ public final class Html {
   /**
    * Provides methods for defining the elements of an HTML document.
    */
-  public sealed interface MarkupElements {
+  public sealed interface MarkupElements permits Html.Markup, HtmlMarkupElements {
 
     /**
      * Renders the {@code <!DOCTYPE html>} doctype.
