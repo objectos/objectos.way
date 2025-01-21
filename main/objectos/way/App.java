@@ -109,6 +109,24 @@ public final class App {
   @Target(ElementType.TYPE)
   public @interface DoNotReload {}
 
+  public sealed interface Injector permits AppInjector, Injector.Builder {
+
+    sealed interface Builder extends Injector permits AppInjectorBuilder {
+
+      static Builder create() {
+        return new AppInjectorBuilder();
+      }
+
+      Injector build();
+
+      <T> void putInstance(Class<T> type, T instance);
+
+    }
+
+    <T> T getInstance(Class<T> type);
+
+  }
+
   private sealed interface NoteSinkConfig {
 
     void clock(Clock clock);
