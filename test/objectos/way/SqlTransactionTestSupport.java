@@ -20,8 +20,10 @@ import static org.testng.Assert.assertEquals;
 import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.ToIntFunction;
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 
 public abstract class SqlTransactionTestSupport {
@@ -44,6 +46,12 @@ public abstract class SqlTransactionTestSupport {
 
     resultSet = null;
   }
+
+  public abstract void addIf01();
+
+  public abstract void batchUpdate01();
+
+  public abstract void update01();
 
   final void assertEmpty(Object o) {
     if (o != null) {
@@ -75,6 +83,29 @@ public abstract class SqlTransactionTestSupport {
     preparedStatement.generatedKeys(resultSet);
 
     connection.preparedStatements(preparedStatement);
+
+    SqlTransaction trx;
+    trx = trx(connection);
+
+    try {
+      return trxConfig.apply(trx);
+    } finally {
+      trx.close();
+    }
+  }
+
+  final int[] batchStatement(List<Map<String, Object>> rows, int[][] batches, Function<SqlTransaction, int[]> trxConfig) {
+    connection = new TestingConnection();
+
+    statement = new TestingStatement();
+
+    resultSet = new TestingResultSet(rows);
+
+    statement.batches(batches);
+
+    statement.generatedKeys(resultSet);
+
+    connection.statements(statement);
 
     SqlTransaction trx;
     trx = trx(connection);
@@ -169,6 +200,81 @@ public abstract class SqlTransactionTestSupport {
 
     try {
       return trxConfig.apply(trx);
+    } finally {
+      trx.close();
+    }
+  }
+
+  final void iae(Consumer<SqlTransaction> trxConfig, String expectedMessage) {
+    connection = new TestingConnection();
+
+    statement = new TestingStatement();
+
+    connection.statements(statement);
+
+    preparedStatement = new TestingPreparedStatement();
+
+    connection.preparedStatements(preparedStatement);
+
+    SqlTransaction trx;
+    trx = trx(connection);
+
+    try {
+      trxConfig.accept(trx);
+
+      Assert.fail("It should have thrown IllegalArgumentException");
+    } catch (IllegalArgumentException expected) {
+      assertEquals(expected.getMessage(), expectedMessage);
+    } finally {
+      trx.close();
+    }
+  }
+
+  final void ise(Consumer<SqlTransaction> trxConfig, String expectedMessage) {
+    connection = new TestingConnection();
+
+    statement = new TestingStatement();
+
+    connection.statements(statement);
+
+    preparedStatement = new TestingPreparedStatement();
+
+    connection.preparedStatements(preparedStatement);
+
+    SqlTransaction trx;
+    trx = trx(connection);
+
+    try {
+      trxConfig.accept(trx);
+
+      Assert.fail("It should have thrown IllegalArgumentException");
+    } catch (IllegalStateException expected) {
+      assertEquals(expected.getMessage(), expectedMessage);
+    } finally {
+      trx.close();
+    }
+  }
+
+  final void uoe(Consumer<SqlTransaction> trxConfig, String expectedMessage) {
+    connection = new TestingConnection();
+
+    statement = new TestingStatement();
+
+    connection.statements(statement);
+
+    preparedStatement = new TestingPreparedStatement();
+
+    connection.preparedStatements(preparedStatement);
+
+    SqlTransaction trx;
+    trx = trx(connection);
+
+    try {
+      trxConfig.accept(trx);
+
+      Assert.fail("It should have thrown UnsupportedOperationException");
+    } catch (UnsupportedOperationException expected) {
+      assertEquals(expected.getMessage(), expectedMessage);
     } finally {
       trx.close();
     }

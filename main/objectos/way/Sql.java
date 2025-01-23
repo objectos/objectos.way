@@ -56,6 +56,8 @@ public final class Sql {
 
   public static final Kind SCRIPT = Kind.SCRIPT;
 
+  public static final Kind TEMPLATE = Kind.TEMPLATE;
+
   // types
 
   /**
@@ -194,6 +196,8 @@ public final class Sql {
      *         script.
      */
     Kind SCRIPT = SqlKind.SCRIPT;
+
+    Kind TEMPLATE = SqlKind.TEMPLATE;
 
   }
 

@@ -25,6 +25,12 @@ import org.testng.annotations.Test;
 
 public class SqlTransactionTestUpdate extends SqlTransactionTestSupport {
 
+  @Override
+  public void addIf01() {
+    // TODO
+  }
+
+  @Override
   @Test(description = """
   batchUpdate:
   - happy path
@@ -157,107 +163,7 @@ public class SqlTransactionTestUpdate extends SqlTransactionTestSupport {
     );
   }
 
-  @Test
-  public void sqlScript01() {
-    TestingConnection conn;
-    conn = new TestingConnection();
-
-    TestingStatement stmt;
-    stmt = new TestingStatement();
-
-    stmt.batches(new int[] {1});
-
-    conn.statements(stmt);
-
-    SqlTransaction trx;
-    trx = trx(conn);
-
-    try {
-      trx.sql(Sql.Kind.SCRIPT, """
-      insert into FOO (A, B) values (1, 5)
-      """);
-
-      int[] result;
-      result = trx.batchUpdate();
-
-      assertEquals(result, new int[] {1});
-    } finally {
-      trx.close();
-    }
-
-    assertEquals(
-        conn.toString(),
-
-        """
-        createStatement()
-        setAutoCommit(true)
-        close()
-        """
-    );
-
-    assertEquals(
-        stmt.toString(),
-
-        """
-        addBatch(insert into FOO (A, B) values (1, 5))
-        executeBatch()
-        close()
-        """
-    );
-  }
-
-  @Test
-  public void sqlScript02() {
-    TestingConnection conn;
-    conn = new TestingConnection();
-
-    TestingStatement stmt;
-    stmt = new TestingStatement();
-
-    stmt.batches(new int[] {1});
-
-    conn.statements(stmt);
-
-    SqlTransaction trx;
-    trx = trx(conn);
-
-    try {
-      trx.sql(Sql.Kind.SCRIPT, """
-      insert into FOO (A, B) values (1, 5)
-
-      insert into BAR (X, Y) values ('A', 'B')
-      """);
-
-      int[] result;
-      result = trx.batchUpdate();
-
-      assertEquals(result, new int[] {1});
-    } finally {
-      trx.close();
-    }
-
-    assertEquals(
-        conn.toString(),
-
-        """
-        createStatement()
-        setAutoCommit(true)
-        close()
-        """
-    );
-
-    assertEquals(
-        stmt.toString(),
-
-        """
-        addBatch(insert into FOO (A, B) values (1, 5))
-        addBatch(insert into BAR (X, Y) values ('A', 'B'))
-        executeBatch()
-        close()
-        """
-    );
-  }
-
+  @Override
   @Test(description = "trx.sql(sql).update()")
   public void update01() {
     TestingConnection conn;

@@ -21,6 +21,8 @@ enum SqlKind implements Sql.Kind {
 
   COUNT,
 
-  SCRIPT;
+  SCRIPT,
+
+  TEMPLATE;
 
 }

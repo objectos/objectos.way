@@ -19,156 +19,274 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 final class SqlTemplate {
 
-  private boolean template;
+  static final class Fragment {
 
-  private Connection connection;
+    final String value;
+
+    final int placeholders;
+
+    int consumed;
+
+    boolean remove;
+
+    public Fragment(String value, int placeholders) {
+      this.value = value;
+
+      this.placeholders = placeholders;
+    }
+
+    public boolean exhausted() {
+      return placeholders == consumed;
+    }
+
+  }
+
+  final List<Fragment> fragments;
+
+  private int fragmentIndex;
 
   private List<Object> arguments;
 
-  private static final Pattern TWO_DASHES = Pattern.compile("^--.*$", Pattern.MULTILINE);
+  private SqlTemplate(List<Fragment> fragments) {
+    this.fragments = fragments;
+  }
 
-  @SuppressWarnings("unused")
-  private PreparedStatement prepare(String sql, int generatedKeys) throws SQLException {
-    if (!template) {
-      PreparedStatement stmt;
-      stmt = connection.prepareStatement(sql, generatedKeys);
+  public static SqlTemplate parse(String sql) {
+    enum Parser {
 
-      // we assume this method was called after hasArguments() returned true
-      // so arguments is guaranteed to be non-null
-      setArguments(stmt, arguments);
+      START_OF_LINE,
 
-      return stmt;
+      DASH1,
+
+      DASH2,
+
+      NORMAL;
+
     }
 
-    StringBuilder sqlBuilder;
-    sqlBuilder = new StringBuilder(sql.length());
+    Parser parser;
+    parser = Parser.START_OF_LINE;
 
-    List<Object> values;
-    values = Util.createList();
+    final StringBuilder sb;
+    sb = new StringBuilder();
 
-    int argsIndex;
-    argsIndex = 0;
+    final UtilList<Fragment> fragments;
+    fragments = new UtilList<>();
 
-    String[] fragments;
-    fragments = TWO_DASHES.split(sql);
+    int placeholders = 0;
 
-    String fragment;
-    fragment = fragments[0];
+    for (int idx = 0, len = sql.length(); idx < len; idx++) {
+      char c;
+      c = sql.charAt(idx);
 
-    sqlBuilder.append(fragment);
-
-    int placeholders;
-    placeholders = placeholders(fragment);
-
-    while (values.size() < placeholders) {
-      Object arg;
-      arg = arguments.get(argsIndex++);
-
-      values.add(arg);
-    }
-
-    for (int i = 1; i < fragments.length; i++) {
-      fragment = fragments[i];
-
-      placeholders = placeholders(fragment);
-
-      switch (placeholders) {
-        case 0 -> sqlBuilder.append(fragment);
-
-        case 1 -> {
-          if (argsIndex >= arguments.size()) {
-            throw new IllegalArgumentException(
-                "Missing value for fragment: " + fragment
-            );
+      switch (parser) {
+        case START_OF_LINE -> {
+          if (c == '-') {
+            parser = Parser.DASH1;
           }
 
-          Object arg;
-          arg = arguments.get(argsIndex++);
+          else if (c == '\n') {
+            parser = Parser.START_OF_LINE;
 
-          if (arg instanceof SqlMaybe maybe) {
-            if (maybe.absent()) {
-              continue;
-            }
-
-            arg = maybe.value();
+            sb.append(c);
           }
 
-          sqlBuilder.append(fragment);
+          else {
+            parser = Parser.NORMAL;
 
-          values.add(arg);
+            sb.append(c);
+          }
         }
 
-        default -> {
-          sqlBuilder.append(fragment);
+        case DASH1 -> {
+          if (c == '-') {
+            parser = Parser.DASH2;
 
-          for (int j = 0; j < placeholders; j++) {
+            if (!sb.isEmpty()) {
+              final String value;
+              value = sb.toString();
 
-            if (argsIndex >= arguments.size()) {
-              throw new IllegalArgumentException(
-                  "Missing value for placeholder " + (j + 1) + " of fragment: " + fragment
-              );
+              final Fragment fragment;
+              fragment = new Fragment(value, placeholders);
+
+              fragments.add(fragment);
+
+              sb.setLength(0);
+
+              placeholders = 0;
             }
+          }
 
-            Object arg;
-            arg = arguments.get(argsIndex++);
+          else if (c == '\n') {
+            parser = Parser.START_OF_LINE;
 
-            if (arg instanceof SqlMaybe) {
-              throw new IllegalArgumentException(
-                  "Conditional value must not be used in a fragment with more than one placeholder: " + fragment
-              );
-            }
+            sb.append('-');
+          }
 
-            values.add(arg);
+          else {
+            parser = Parser.NORMAL;
 
+            sb.append(c);
+          }
+        }
+
+        case DASH2 -> {
+          if (c == '\n') {
+            parser = Parser.START_OF_LINE;
+          }
+
+          else {
+            parser = Parser.DASH2;
+
+            // ignore all content until EOL
+          }
+        }
+
+        case NORMAL -> {
+          if (c == '\n') {
+            parser = Parser.START_OF_LINE;
+
+            sb.append(c);
+          }
+
+          else if (c == '?') {
+            parser = Parser.NORMAL;
+
+            placeholders++;
+
+            sb.append(c);
+          }
+
+          else {
+            parser = Parser.NORMAL;
+
+            sb.append(c);
           }
         }
       }
     }
 
-    String sqlToPrepare;
-    sqlToPrepare = sqlBuilder.toString();
+    if (!sb.isEmpty()) {
+      final String value;
+      value = sb.toString();
 
-    PreparedStatement stmt;
-    stmt = connection.prepareStatement(sqlToPrepare, generatedKeys);
+      final Fragment fragment;
+      fragment = new Fragment(value, placeholders);
 
-    setArguments(stmt, values);
+      fragments.add(fragment);
+    }
+
+    return new SqlTemplate(
+        fragments.toUnmodifiableList()
+    );
+  }
+
+  final void add(Object value) {
+    final int size;
+    size = fragments.size();
+
+    while (fragmentIndex < size) {
+      final Fragment fragment;
+      fragment = fragments.get(fragmentIndex);
+
+      if (fragment.placeholders == 0 || fragment.exhausted()) {
+        fragmentIndex++;
+
+        continue;
+      }
+
+      fragment.consumed++;
+
+      if (arguments == null) {
+        arguments = Util.createList();
+      }
+
+      arguments.add(value);
+
+      if (fragment.exhausted()) {
+        fragmentIndex++;
+      }
+
+      return;
+    }
+
+    throw new IllegalStateException("""
+    This SQL template has no more placeholders available.
+    """);
+  }
+
+  final void addIf(Object value, boolean condition) {
+    final int size;
+    size = fragments.size();
+
+    while (fragmentIndex < size) {
+      final Fragment fragment;
+      fragment = fragments.get(fragmentIndex);
+
+      if (fragment.placeholders == 0) {
+        fragmentIndex++;
+
+        continue;
+      }
+
+      if (fragmentIndex == 0) {
+        throw new UnsupportedOperationException("first fragment");
+      }
+
+      if (fragment.placeholders > 1) {
+        throw new IllegalArgumentException(
+            """
+            The 'addIf' operation cannot not be used with a fragment containing more than one placeholder:
+
+            %s
+            """.formatted(fragment.value.trim())
+        );
+      }
+
+      if (condition) {
+        if (arguments == null) {
+          arguments = Util.createList();
+        }
+
+        arguments.add(value);
+      } else {
+        fragment.consumed++;
+
+        fragment.remove = true;
+      }
+
+      fragmentIndex++;
+
+      return;
+    }
+
+    throw new IllegalStateException("""
+    This SQL template has no more placeholders available.
+    """);
+  }
+
+  final PreparedStatement prepare(Connection connection, int generatedKeys) throws SQLException {
+    final String sql = fragments.stream()
+        .filter(frag -> !frag.remove)
+        .map(frag -> frag.value)
+        .collect(Collectors.joining());
+
+    final PreparedStatement stmt;
+    stmt = connection.prepareStatement(sql, generatedKeys);
+
+    if (arguments != null) {
+      int index = 1;
+
+      for (Object arg : arguments) {
+        Sql.set(stmt, index++, arg);
+      }
+    }
 
     return stmt;
-  }
-
-  private static int placeholders(String fragment) {
-    int count;
-    count = 0;
-
-    int question;
-    question = 0;
-
-    while (true) {
-      question = fragment.indexOf('?', question);
-
-      if (question < 0) {
-        break;
-      }
-
-      count++;
-
-      question++;
-    }
-
-    return count;
-  }
-
-  private void setArguments(PreparedStatement stmt, List<Object> arguments) throws SQLException {
-    for (int idx = 0, size = arguments.size(); idx < size; idx++) {
-      Object argument;
-      argument = arguments.get(idx);
-
-      Sql.set(stmt, idx + 1, argument);
-    }
   }
 
 }

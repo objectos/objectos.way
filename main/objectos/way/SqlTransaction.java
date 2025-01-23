@@ -42,6 +42,8 @@ final class SqlTransaction implements Sql.Transaction {
 
     SQL_SCRIPT,
 
+    SQL_TEMPLATE,
+
     PREPARED,
 
     PREPARED_BATCH,
@@ -192,6 +194,12 @@ final class SqlTransaction implements Sql.Transaction {
             }
           }
 
+          case SqlKind.TEMPLATE -> {
+            state = State.SQL_TEMPLATE;
+
+            main = SqlTemplate.parse(value);
+          }
+
           case null -> throw new NullPointerException("kind == null");
         }
 
@@ -201,7 +209,8 @@ final class SqlTransaction implements Sql.Transaction {
            SQL_COUNT,
            SQL_GENERATED,
            SQL_PAGINATED,
-           SQL_SCRIPT -> throw illegalState();
+           SQL_SCRIPT,
+           SQL_TEMPLATE -> throw illegalState();
 
       case PREPARED,
            PREPARED_BATCH,
@@ -294,7 +303,8 @@ final class SqlTransaction implements Sql.Transaction {
            SQL_COUNT,
            SQL_GENERATED,
            SQL_SCRIPT,
-           SQL_PAGINATED -> throw illegalState();
+           SQL_PAGINATED,
+           SQL_TEMPLATE -> throw illegalState();
 
       case PREPARED,
            PREPARED_BATCH,
@@ -322,7 +332,8 @@ final class SqlTransaction implements Sql.Transaction {
            SQL_COUNT,
            SQL_GENERATED,
            SQL_SCRIPT,
-           SQL_PAGINATED -> throw illegalState();
+           SQL_PAGINATED,
+           SQL_TEMPLATE -> throw illegalState();
 
       case PREPARED,
            PREPARED_BATCH,
@@ -348,6 +359,15 @@ final class SqlTransaction implements Sql.Transaction {
 
       case SQL_PAGINATED -> add0Create(value, Statement.NO_GENERATED_KEYS, State.PREPARED_PAGINATED);
 
+      case SQL_TEMPLATE -> {
+        final SqlTemplate tmpl;
+        tmpl = sqlTemplate();
+
+        tmpl.add(value);
+
+        yield state;
+      }
+
       case PREPARED,
            PREPARED_BATCH,
            PREPARED_COUNT,
@@ -366,7 +386,11 @@ final class SqlTransaction implements Sql.Transaction {
         }
       }
 
-      case START, SQL_SCRIPT, ERROR -> throw illegalState();
+      case START -> throw illegalState();
+
+      case SQL_SCRIPT -> throw illegalState();
+
+      case ERROR -> throw illegalState();
     };
   }
 
@@ -385,15 +409,45 @@ final class SqlTransaction implements Sql.Transaction {
 
   @Override
   public final void addIf(Object value, boolean condition) {
-    //    checkSql();
-    //
-    //    Object maybe;
-    //    maybe = SqlMaybe.get(value, condition);
-    //
-    //    template = true;
-    //
-    //    return addValue(maybe);
-    throw new UnsupportedOperationException("Implement me");
+    state = switch (state) {
+      case SQL_TEMPLATE -> {
+        final SqlTemplate tmpl;
+        tmpl = sqlTemplate();
+
+        tmpl.addIf(value, condition);
+
+        yield state;
+      }
+
+      case START -> throw illegalState();
+
+      case SQL_SCRIPT -> throw new UnsupportedOperationException("""
+      The is a SQL script and the 'addIf' operation is not supported.
+
+      To prevent this exception from being thrown:
+
+      1) Do not use the addIf method. Or
+      2) Use a SQL template instead.
+      """);
+
+      case SQL,
+           SQL_COUNT,
+           SQL_GENERATED,
+           SQL_PAGINATED -> throw illegalState();
+
+      case PREPARED,
+           PREPARED_BATCH,
+           PREPARED_COUNT,
+           PREPARED_GENERATED,
+           PREPARED_GENERATED_BATCH,
+           PREPARED_PAGINATED -> throw illegalState();
+
+      case ERROR -> throw illegalState();
+    };
+  }
+
+  private SqlTemplate sqlTemplate() {
+    return (SqlTemplate) main;
   }
 
   @Override
@@ -425,7 +479,12 @@ final class SqlTransaction implements Sql.Transaction {
         }
       }
 
-      case START, SQL_SCRIPT, ERROR -> throw illegalState();
+      case START -> throw illegalState();
+
+      case SQL_SCRIPT,
+           SQL_TEMPLATE -> throw illegalState();
+
+      case ERROR -> throw illegalState();
     };
   }
 
@@ -467,7 +526,8 @@ final class SqlTransaction implements Sql.Transaction {
            SQL_COUNT,
            SQL_GENERATED,
            SQL_PAGINATED,
-           SQL_SCRIPT -> throw illegalState();
+           SQL_SCRIPT,
+           SQL_TEMPLATE -> throw illegalState();
 
       case PREPARED_COUNT,
            PREPARED_PAGINATED -> throw illegalState();
@@ -525,7 +585,8 @@ final class SqlTransaction implements Sql.Transaction {
       case SQL,
            SQL_COUNT,
            SQL_GENERATED,
-           SQL_PAGINATED -> throw illegalState();
+           SQL_PAGINATED,
+           SQL_TEMPLATE -> throw illegalState();
 
       case PREPARED,
            PREPARED_COUNT,
@@ -574,7 +635,8 @@ final class SqlTransaction implements Sql.Transaction {
            SQL_COUNT,
            SQL_GENERATED,
            SQL_PAGINATED,
-           SQL_SCRIPT -> throw illegalState();
+           SQL_SCRIPT,
+           SQL_TEMPLATE -> throw illegalState();
 
       case PREPARED,
            PREPARED_BATCH,
@@ -597,7 +659,7 @@ final class SqlTransaction implements Sql.Transaction {
     state = switch (state) {
       case SQL, SQL_PAGINATED -> {
         try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql())) {
-          query0(mapper, list, rs);
+          query(mapper, list, rs);
         } catch (SQLException e) {
           throw stateAndWrap(e);
         }
@@ -605,15 +667,9 @@ final class SqlTransaction implements Sql.Transaction {
         yield State.START;
       }
 
-      case PREPARED, PREPARED_PAGINATED -> {
-        try (PreparedStatement stmt = prepared(); ResultSet rs = stmt.executeQuery()) {
-          query0(mapper, list, rs);
-        } catch (SQLException e) {
-          throw stateAndWrap(e);
-        }
+      case SQL_TEMPLATE -> query(mapper, list, createTemplate(Statement.NO_GENERATED_KEYS));
 
-        yield State.START;
-      }
+      case PREPARED, PREPARED_PAGINATED -> query(mapper, list, prepared());
 
       case START -> throw illegalState();
 
@@ -632,7 +688,17 @@ final class SqlTransaction implements Sql.Transaction {
     return list.toUnmodifiableList();
   }
 
-  private <T> void query0(Sql.Mapper<T> mapper, List<T> list, ResultSet rs) throws SQLException {
+  private <T> State query(Sql.Mapper<T> mapper, List<T> list, PreparedStatement stmt) {
+    try (stmt; ResultSet rs = stmt.executeQuery()) {
+      query(mapper, list, rs);
+    } catch (SQLException e) {
+      throw stateAndWrap(e);
+    }
+
+    return State.START;
+  }
+
+  private <T> void query(Sql.Mapper<T> mapper, List<T> list, ResultSet rs) throws SQLException {
     while (rs.next()) {
       T instance;
       instance = mapper.map(rs, 1);
@@ -682,7 +748,8 @@ final class SqlTransaction implements Sql.Transaction {
       case START,
            SQL_COUNT,
            SQL_GENERATED,
-           SQL_SCRIPT -> throw illegalState();
+           SQL_SCRIPT,
+           SQL_TEMPLATE -> throw illegalState();
 
       case PREPARED_BATCH,
            PREPARED_COUNT,
@@ -744,7 +811,8 @@ final class SqlTransaction implements Sql.Transaction {
       case START,
            SQL_COUNT,
            SQL_GENERATED,
-           SQL_SCRIPT -> throw illegalState();
+           SQL_SCRIPT,
+           SQL_TEMPLATE -> throw illegalState();
 
       case PREPARED_BATCH,
            PREPARED_COUNT,
@@ -807,7 +875,8 @@ final class SqlTransaction implements Sql.Transaction {
 
       case START,
            SQL_GENERATED,
-           SQL_SCRIPT -> throw illegalState();
+           SQL_SCRIPT,
+           SQL_TEMPLATE -> throw illegalState();
 
       case PREPARED_BATCH,
            PREPARED_GENERATED,
@@ -868,7 +937,8 @@ final class SqlTransaction implements Sql.Transaction {
 
       case START,
            SQL_GENERATED,
-           SQL_SCRIPT -> throw illegalState();
+           SQL_SCRIPT,
+           SQL_TEMPLATE -> throw illegalState();
 
       case PREPARED_BATCH,
            PREPARED_GENERATED,
@@ -930,7 +1000,8 @@ final class SqlTransaction implements Sql.Transaction {
       case START,
            SQL_COUNT,
            SQL_GENERATED,
-           SQL_SCRIPT -> throw illegalState();
+           SQL_SCRIPT,
+           SQL_TEMPLATE -> throw illegalState();
 
       case PREPARED_BATCH,
            PREPARED_COUNT,
@@ -993,7 +1064,8 @@ final class SqlTransaction implements Sql.Transaction {
       case START,
            SQL_COUNT,
            SQL_GENERATED,
-           SQL_SCRIPT -> throw illegalState();
+           SQL_SCRIPT,
+           SQL_TEMPLATE -> throw illegalState();
 
       case PREPARED_BATCH,
            PREPARED_COUNT,
@@ -1051,6 +1123,15 @@ final class SqlTransaction implements Sql.Transaction {
         yield State.START;
       }
 
+      case SQL_SCRIPT -> throw new UnsupportedOperationException("""
+      The is a SQL script and the 'update' operation is not supported.
+
+      To prevent this exception from being thrown:
+
+      1) Use the 'batchUpdate' method instead. Or
+      2) Do not use a SQL script.
+      """);
+
       case PREPARED -> {
         try (PreparedStatement stmt = prepared()) {
           result = stmt.executeUpdate();
@@ -1079,7 +1160,7 @@ final class SqlTransaction implements Sql.Transaction {
       case START,
            SQL_COUNT,
            SQL_PAGINATED,
-           SQL_SCRIPT -> throw illegalState();
+           SQL_TEMPLATE -> throw illegalState();
 
       case PREPARED_BATCH,
            PREPARED_COUNT,
@@ -1099,6 +1180,17 @@ final class SqlTransaction implements Sql.Transaction {
     main = stmt;
 
     return stmt;
+  }
+
+  private PreparedStatement createTemplate(int generatedKeys) {
+    try {
+      final SqlTemplate tmpl;
+      tmpl = sqlTemplate();
+
+      return tmpl.prepare(connection, generatedKeys);
+    } catch (SQLException e) {
+      throw stateAndWrap(e);
+    }
   }
 
   private Sql.SqlGeneratedKeys<?> generatedKeys() {

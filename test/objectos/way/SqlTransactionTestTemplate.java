@@ -32,21 +32,32 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
     }
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   addIf
-  - query
+  - happy path
   - value present
   """)
+  @Override
   public void addIf01() {
-    addIfTransaction(trx -> {
-      trx.sql("""
-      select A, B, C from FOO
-      --
-      where X = ?
-      """);
+    assertEquals(
+        preparedStatement(
+            List.of(),
 
-      trx.addIf("SOME", true);
-    });
+            trx -> {
+              trx.sql(Sql.TEMPLATE, """
+              select A, B, C from FOO
+              --
+              where X = ?
+              """);
+
+              trx.addIf("SOME", true);
+
+              return trx.query(Foo::new);
+            }
+        ),
+
+        List.of()
+    );
 
     assertEquals(
         connection.toString(),
@@ -76,23 +87,35 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
         close()
         """
     );
+
+    assertEmpty(statement);
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   addIf
-  - query
+  - happy path
   - value absent
   """)
   public void addIf02() {
-    addIfTransaction(trx -> {
-      trx.sql("""
-      select A, B, C from FOO
-      --
-      where X = ?
-      """);
+    assertEquals(
+        preparedStatement(
+            List.of(),
 
-      trx.addIf("SOME", false);
-    });
+            trx -> {
+              trx.sql(Sql.TEMPLATE, """
+              select A, B, C from FOO
+              --
+              where X = ?
+              """);
+
+              trx.addIf("SOME", false);
+
+              return trx.query(Foo::new);
+            }
+        ),
+
+        List.of()
+    );
 
     assertEquals(
         connection.toString(),
@@ -121,27 +144,39 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
         close()
         """
     );
+
+    assertEmpty(statement);
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   addIf
   - query
   - prelude with placeholders
   - value absent
   """)
   public void addIf03() {
-    addIfTransaction(trx -> {
-      trx.sql("""
-      select A, B, C from FOO
-      where X = ?
-      --
-      and Y = ?
-      """);
+    assertEquals(
+        preparedStatement(
+            List.of(),
 
-      trx.add("XPTO");
+            trx -> {
+              trx.sql(Sql.TEMPLATE, """
+              select A, B, C from FOO
+              where X = ?
+              --
+              and Y = ?
+              """);
 
-      trx.addIf("SOME", false);
-    });
+              trx.add("XPTO");
+
+              trx.addIf("SOME", false);
+
+              return trx.query(Foo::new);
+            }
+        ),
+
+        List.of()
+    );
 
     assertEquals(
         connection.toString(),
@@ -171,29 +206,41 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
         close()
         """
     );
+
+    assertEmpty(statement);
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   addIf
   - query
   - fragment 1 absent
   - fragment 2 present
   """)
   public void addIf04() {
-    addIfTransaction(trx -> {
-      trx.sql("""
-      select A, B, C from FOO
-      where 1 = 1
-      --
-      and X = ?
-      --
-      and Y = ?
-      """);
+    assertEquals(
+        preparedStatement(
+            List.of(),
 
-      trx.addIf("1", false);
+            trx -> {
+              trx.sql(Sql.TEMPLATE, """
+              select A, B, C from FOO
+              where 1 = 1
+              --
+              and X = ?
+              --
+              and Y = ?
+              """);
 
-      trx.addIf("2", true);
-    });
+              trx.addIf("1", false);
+
+              trx.addIf("2", true);
+
+              return trx.query(Foo::new);
+            }
+        ),
+
+        List.of()
+    );
 
     assertEquals(
         connection.toString(),
@@ -223,29 +270,41 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
         close()
         """
     );
+
+    assertEmpty(statement);
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   addIf
   - query
   - fragment 1 present
   - fragment 2 absent
   """)
   public void addIf05() {
-    addIfTransaction(trx -> {
-      trx.sql("""
-      select A, B, C from FOO
-      where 1 = 1
-      --
-      and X = ?
-      --
-      and Y = ?
-      """);
+    assertEquals(
+        preparedStatement(
+            List.of(),
 
-      trx.add("1");
+            trx -> {
+              trx.sql(Sql.TEMPLATE, """
+              select A, B, C from FOO
+              where 1 = 1
+              --
+              and X = ?
+              --
+              and Y = ?
+              """);
 
-      trx.addIf("2", false);
-    });
+              trx.add("1");
+
+              trx.addIf("2", false);
+
+              return trx.query(Foo::new);
+            }
+        ),
+
+        List.of()
+    );
 
     assertEquals(
         connection.toString(),
@@ -275,45 +334,65 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
         close()
         """
     );
+
+    assertEmpty(statement);
   }
 
-  @Test(
-      enabled = false,
-      description = "addIf\n- reject use in a fragment with more than one placeholder",
-      expectedExceptions = IllegalArgumentException.class,
-      expectedExceptionsMessageRegExp = "Conditional value must not be used in a fragment with more than one placeholder: .*")
+  @Test(description = """
+  addIf
+  - reject use in a fragment with more than one placeholder
+  """)
   public void addIf06() {
-    addIfTransaction(trx -> {
-      trx.sql("""
-      select A, B, C from FOO
-      where 1 = 1
-      --
-      and X = ? and Y = ?
-      """);
+    iae(
+        trx -> {
+          trx.sql(Sql.TEMPLATE, """
+          select A, B, C from FOO
+          where 1 = 1
+          --
+          and X = ? and Y = ?
+          """);
 
-      trx.add("1");
-      trx.addIf("2", false);
-    });
+          trx.add("1");
+
+          trx.addIf("2", false);
+        },
+
+        """
+        The 'addIf' operation cannot not be used with a fragment containing more than one placeholder:
+
+        and X = ? and Y = ?
+        """
+    );
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   addIf
   - query
   - fragment 1 present
   - fragment 2 no placeholders
   """)
   public void addIf07() {
-    addIfTransaction(trx -> {
-      trx.sql("""
-      select A, B, C from FOO
-      --
-      where X = ?
-      --
-      order by C
-      """);
+    assertEquals(
+        preparedStatement(
+            List.of(),
 
-      trx.addIf("2", true);
-    });
+            trx -> {
+              trx.sql(Sql.TEMPLATE, """
+              select A, B, C from FOO
+              --
+              where X = ?
+              --
+              order by C
+              """);
+
+              trx.addIf("2", true);
+
+              return trx.query(Foo::new);
+            }
+        ),
+
+        List.of()
+    );
 
     assertEquals(
         connection.toString(),
@@ -343,30 +422,42 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
         close()
         """
     );
+
+    assertEmpty(statement);
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   addIf
   - query
   - fragment 1 absent
   - fragment 2 present (with > 1 placeholders)
   """)
   public void addIf08() {
-    addIfTransaction(trx -> {
-      trx.sql("""
-      select A, B, C from FOO
-      where 1 = 1
-      --
-      and X = ?
-      --
-      and Y = ?
-      and Z = ?
-      """);
+    assertEquals(
+        preparedStatement(
+            List.of(),
 
-      trx.addIf("X", false);
-      trx.add("Y");
-      trx.add("Z");
-    });
+            trx -> {
+              trx.sql(Sql.TEMPLATE, """
+              select A, B, C from FOO
+              where 1 = 1
+              --
+              and X = ?
+              --
+              and Y = ?
+              and Z = ?
+              """);
+
+              trx.addIf("X", false);
+              trx.add("Y");
+              trx.add("Z");
+
+              return trx.query(Foo::new);
+            }
+        ),
+
+        List.of()
+    );
 
     assertEquals(
         connection.toString(),
@@ -397,6 +488,8 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
         close()
         """
     );
+
+    assertEmpty(statement);
   }
 
   @Test(enabled = false, description = """
@@ -405,21 +498,31 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
   - fail if fragment has less than required args
   """, expectedExceptions = IllegalArgumentException.class)
   public void addIf09() {
-    addIfTransaction(trx -> {
-      trx.sql("""
-      select A, B, C from FOO
-      where 1 = 1
-      --
-      and X = ?
-      --
-      and Y = ?
-      and Z = ?
-      """);
+    ise(
+        trx -> {
+          trx.sql("""
+          select A, B, C from FOO
+          where 1 = 1
+          --
+          and X = ?
+          --
+          and Y = ?
+          and Z = ?
+          """);
 
-      trx.addIf("X", false);
-      trx.add("Y");
-      // missing Z
-    });
+          trx.addIf("X", false);
+          trx.add("Y");
+          // missing Z
+
+          trx.query(Foo::new);
+        },
+
+        """
+        The 'addIf' operation cannot not be used with a fragment containing more than one placeholder:
+
+        and X = ? and Y = ?
+        """
+    );
   }
 
   @Test(enabled = false, description = """
@@ -441,6 +544,16 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
       trx.addIf("X", true);
       // missing Y
     });
+  }
+
+  @Override
+  public void batchUpdate01() {
+    // TODO
+  }
+
+  @Override
+  public void update01() {
+    // TODO
   }
 
   private void addIfTransaction(Consumer<SqlTransaction> config) {
