@@ -24,23 +24,51 @@ import java.util.List;
 import java.util.Objects;
 import java.util.OptionalInt;
 import java.util.OptionalLong;
-import java.util.regex.Pattern;
+import objectos.way.Sql.GeneratedKeys;
 
 final class SqlTransaction implements Sql.Transaction {
+
+  private enum State {
+
+    START,
+
+    SQL,
+
+    SQL_COUNT,
+
+    SQL_GENERATED,
+
+    SQL_PAGINATED,
+
+    SQL_SCRIPT,
+
+    PREPARED,
+
+    PREPARED_BATCH,
+
+    PREPARED_COUNT,
+
+    PREPARED_GENERATED,
+
+    PREPARED_GENERATED_BATCH,
+
+    PREPARED_PAGINATED,
+
+    ERROR;
+
+  }
 
   private final SqlDialect dialect;
 
   private final Connection connection;
 
-  private String sql;
+  private Object main;
 
-  private List<Object> arguments;
+  private Object aux;
 
-  private List<List<Object>> batches;
+  private int parameterIndex;
 
-  private Sql.Page page;
-
-  private boolean template;
+  private State state = State.START;
 
   SqlTransaction(SqlDialect dialect, Connection connection) {
     this.dialect = dialect;
@@ -130,120 +158,71 @@ final class SqlTransaction implements Sql.Transaction {
   }
 
   @Override
-  public final Sql.Transaction sql(String value) {
-    sql = Check.notNull(value, "value == null");
-
-    if (arguments != null) {
-      arguments.clear();
-    }
-
-    if (batches != null) {
-      batches.clear();
-    }
-
-    page = null;
-
-    template = false;
-
-    return this;
+  public final void sql(String value) {
+    sql(Sql.Kind.STATEMENT, value);
   }
 
   @Override
-  public final Sql.Transaction format(Object... args) {
-    checkSql();
+  public final void sql(Sql.Kind kind, String value) {
+    Objects.requireNonNull(value, "value == null");
 
-    sql = String.format(sql, args);
+    switch (state) {
+      case START -> {
 
-    return this;
-  }
+        switch (kind) {
+          case SqlKind.STATEMENT -> {
+            state = State.SQL;
 
-  @Override
-  public final Sql.Transaction add(Object value) {
-    Check.notNull(value, "value == null");
+            main = value;
+          }
 
-    checkSql();
+          case SqlKind.COUNT -> {
+            state = State.SQL_COUNT;
 
-    return addValue(value);
-  }
+            main = sqlCount(value);
+          }
 
-  @Override
-  public final Sql.Transaction addIf(Object value, boolean condition) {
-    checkSql();
+          case SqlKind.SCRIPT -> {
+            state = State.SQL_SCRIPT;
 
-    Object maybe;
-    maybe = SqlMaybe.get(value, condition);
+            try {
+              main = sqlScript(value);
+            } catch (SQLException e) {
+              throw stateAndWrap(e);
+            }
+          }
 
-    template = true;
+          case null -> throw new NullPointerException("kind == null");
+        }
 
-    return addValue(maybe);
-  }
-
-  @Override
-  public final Sql.Transaction add(Object value, int sqlType) {
-    checkSql();
-
-    Object nullable;
-    nullable = Sql.nullable(value, sqlType);
-
-    return addValue(nullable);
-  }
-
-  private Sql.Transaction addValue(Object value) {
-    if (arguments == null) {
-      arguments = Util.createList();
-    }
-
-    arguments.add(value);
-
-    return this;
-  }
-
-  @Override
-  public final Sql.Transaction addBatch() {
-    checkSql();
-
-    if (!hasArguments()) {
-      throw new IllegalStateException("No arguments were defined");
-    }
-
-    if (batches == null) {
-      batches = Util.createList();
-    }
-
-    List<Object> batch;
-    batch = Util.toUnmodifiableList(arguments);
-
-    arguments.clear();
-
-    batches.add(batch);
-
-    return this;
-  }
-
-  @Override
-  public final int[] batchUpdate() {
-    Check.state(hasBatches(), "No batches were defined");
-    Check.state(!hasArguments(), "Dangling arguments not added to a batch");
-
-    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-      for (var batch : batches) {
-        setArguments(stmt, batch);
-
-        stmt.addBatch();
       }
 
-      batches.clear();
+      case SQL,
+           SQL_COUNT,
+           SQL_GENERATED,
+           SQL_PAGINATED,
+           SQL_SCRIPT -> throw illegalState();
 
-      return stmt.executeBatch();
-    } catch (SQLException e) {
-      throw new Sql.DatabaseException(e);
+      case PREPARED,
+           PREPARED_BATCH,
+           PREPARED_COUNT,
+           PREPARED_GENERATED,
+           PREPARED_GENERATED_BATCH,
+           PREPARED_PAGINATED -> throw illegalState();
+
+      case ERROR -> throw illegalState();
     }
+
+    aux = null;
+
+    parameterIndex = 1;
   }
 
-  @Override
-  public final int count() throws Sql.DatabaseException {
-    checkQuery();
+  private String sql() {
+    return (String) main;
+  }
 
+  private String sqlCount(String sql) {
     boolean newLine;
     newLine = shouldAppendNewLine(sql);
 
@@ -264,45 +243,303 @@ final class SqlTransaction implements Sql.Transaction {
 
     builder.append(System.lineSeparator());
 
-    String query;
-    query = builder.toString();
+    return builder.toString();
+  }
 
-    int result;
+  private Statement sqlScript(String value) throws SQLException {
+    final String[] lines;
+    lines = value.split("\n"); // implicit null check
 
-    if (hasArguments()) {
+    final StringBuilder sql;
+    sql = new StringBuilder();
 
-      try (PreparedStatement stmt = prepare(query); ResultSet rs = stmt.executeQuery()) {
-        result = count0(rs);
-      } catch (SQLException e) {
-        throw new Sql.DatabaseException(e);
+    final Statement stmt;
+    stmt = connection.createStatement();
+
+    for (String line : lines) {
+
+      if (!line.isBlank()) {
+        sql.append(line);
       }
 
-    } else {
+      else if (!sql.isEmpty()) {
+        final String batch;
+        batch = sql.toString();
 
-      try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(query)) {
-        result = count0(rs);
-      } catch (SQLException e) {
-        throw new Sql.DatabaseException(e);
+        sql.setLength(0);
+
+        stmt.addBatch(batch);
       }
 
     }
+
+    if (!sql.isEmpty()) {
+      final String batch;
+      batch = sql.toString();
+
+      stmt.addBatch(batch);
+    }
+
+    return stmt;
+  }
+
+  @Override
+  public final void format(Object... args) {
+    switch (state) {
+      case SQL -> {
+        main = String.format(sql(), args);
+      }
+
+      case START,
+           SQL_COUNT,
+           SQL_GENERATED,
+           SQL_SCRIPT,
+           SQL_PAGINATED -> throw illegalState();
+
+      case PREPARED,
+           PREPARED_BATCH,
+           PREPARED_COUNT,
+           PREPARED_GENERATED,
+           PREPARED_GENERATED_BATCH,
+           PREPARED_PAGINATED -> throw illegalState();
+
+      case ERROR -> throw illegalState();
+    }
+  }
+
+  @Override
+  public final void with(GeneratedKeys<?> value) {
+    Objects.requireNonNull(value, "value == null");
+
+    state = switch (state) {
+      case SQL -> {
+        aux = value;
+
+        yield State.SQL_GENERATED;
+      }
+
+      case START,
+           SQL_COUNT,
+           SQL_GENERATED,
+           SQL_SCRIPT,
+           SQL_PAGINATED -> throw illegalState();
+
+      case PREPARED,
+           PREPARED_BATCH,
+           PREPARED_COUNT,
+           PREPARED_GENERATED,
+           PREPARED_GENERATED_BATCH,
+           PREPARED_PAGINATED -> throw illegalState();
+
+      case ERROR -> throw illegalState();
+    };
+  }
+
+  @Override
+  public final void add(Object value) {
+    Objects.requireNonNull(value, "value == null");
+
+    state = switch (state) {
+      case SQL -> add0Create(value, Statement.NO_GENERATED_KEYS, State.PREPARED);
+
+      case SQL_COUNT -> add0Create(value, Statement.NO_GENERATED_KEYS, State.PREPARED_COUNT);
+
+      case SQL_GENERATED -> add0Create(value, Statement.RETURN_GENERATED_KEYS, State.PREPARED_GENERATED);
+
+      case SQL_PAGINATED -> add0Create(value, Statement.NO_GENERATED_KEYS, State.PREPARED_PAGINATED);
+
+      case PREPARED,
+           PREPARED_BATCH,
+           PREPARED_COUNT,
+           PREPARED_GENERATED,
+           PREPARED_GENERATED_BATCH,
+           PREPARED_PAGINATED -> {
+        try {
+          final PreparedStatement stmt;
+          stmt = prepared();
+
+          Sql.set(stmt, parameterIndex++, value);
+
+          yield state;
+        } catch (SQLException e) {
+          throw stateAndWrap(e);
+        }
+      }
+
+      case START, SQL_SCRIPT, ERROR -> throw illegalState();
+    };
+  }
+
+  private State add0Create(Object value, int generatedKeys, State next) {
+    try {
+      final PreparedStatement stmt;
+      stmt = createPrepared(generatedKeys);
+
+      Sql.set(stmt, parameterIndex++, value);
+
+      return next;
+    } catch (SQLException e) {
+      throw stateAndWrap(e);
+    }
+  }
+
+  @Override
+  public final void addIf(Object value, boolean condition) {
+    //    checkSql();
+    //
+    //    Object maybe;
+    //    maybe = SqlMaybe.get(value, condition);
+    //
+    //    template = true;
+    //
+    //    return addValue(maybe);
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  @Override
+  public final void add(Object value, int sqlType) {
+    state = switch (state) {
+      case SQL -> setNullable0Create(value, sqlType, Statement.NO_GENERATED_KEYS, State.PREPARED);
+
+      case SQL_COUNT -> setNullable0Create(value, sqlType, Statement.NO_GENERATED_KEYS, State.PREPARED_COUNT);
+
+      case SQL_GENERATED -> setNullable0Create(value, sqlType, Statement.RETURN_GENERATED_KEYS, State.PREPARED_GENERATED);
+
+      case SQL_PAGINATED -> setNullable0Create(value, sqlType, Statement.NO_GENERATED_KEYS, State.PREPARED_PAGINATED);
+
+      case PREPARED,
+           PREPARED_BATCH,
+           PREPARED_COUNT,
+           PREPARED_GENERATED,
+           PREPARED_GENERATED_BATCH,
+           PREPARED_PAGINATED -> {
+        try {
+          final PreparedStatement stmt;
+          stmt = prepared();
+
+          setNullable0(stmt, value, sqlType);
+
+          yield state;
+        } catch (SQLException e) {
+          throw stateAndWrap(e);
+        }
+      }
+
+      case START, SQL_SCRIPT, ERROR -> throw illegalState();
+    };
+  }
+
+  private State setNullable0Create(Object value, int sqlType, int generatedKeys, State next) {
+    try {
+      final PreparedStatement stmt;
+      stmt = createPrepared(generatedKeys);
+
+      setNullable0(stmt, value, sqlType);
+
+      return next;
+    } catch (SQLException e) {
+      throw stateAndWrap(e);
+    }
+  }
+
+  private void setNullable0(PreparedStatement stmt, Object value, int sqlType) throws SQLException {
+    final int index;
+    index = parameterIndex++;
+
+    if (value == null) {
+      stmt.setNull(index, sqlType);
+    } else {
+      Sql.set(stmt, index, value);
+    }
+  }
+
+  @Override
+  public final void addBatch() {
+    state = switch (state) {
+      case PREPARED,
+           PREPARED_BATCH -> addBatch0(State.PREPARED_BATCH);
+
+      case PREPARED_GENERATED,
+           PREPARED_GENERATED_BATCH -> addBatch0(State.PREPARED_GENERATED_BATCH);
+
+      case START,
+           SQL,
+           SQL_COUNT,
+           SQL_GENERATED,
+           SQL_PAGINATED,
+           SQL_SCRIPT -> throw illegalState();
+
+      case PREPARED_COUNT,
+           PREPARED_PAGINATED -> throw illegalState();
+
+      case ERROR -> throw illegalState();
+    };
+  }
+
+  private State addBatch0(State next) {
+    try {
+      final PreparedStatement prepared;
+      prepared = prepared();
+
+      prepared.addBatch();
+
+      parameterIndex = 1;
+
+      return next;
+    } catch (SQLException e) {
+      throw stateAndWrap(e);
+    }
+  }
+
+  @Override
+  public final int[] batchUpdate() {
+    int[] result;
+
+    state = switch (state) {
+      case SQL_SCRIPT -> {
+        try (Statement stmt = statement()) {
+          result = stmt.executeBatch();
+        } catch (SQLException e) {
+          throw stateAndWrap(e);
+        }
+
+        yield State.START;
+      }
+
+      case PREPARED_BATCH -> {
+        try (PreparedStatement stmt = prepared()) {
+          result = stmt.executeBatch();
+        } catch (SQLException e) {
+          throw stateAndWrap(e);
+        }
+
+        yield State.START;
+      }
+
+      case PREPARED_GENERATED_BATCH -> {
+        throw new UnsupportedOperationException("Implement me");
+      }
+
+      case START -> throw illegalState();
+
+      case SQL,
+           SQL_COUNT,
+           SQL_GENERATED,
+           SQL_PAGINATED -> throw illegalState();
+
+      case PREPARED,
+           PREPARED_COUNT,
+           PREPARED_GENERATED,
+           PREPARED_PAGINATED -> throw illegalState();
+
+      case ERROR -> throw illegalState();
+    };
 
     return result;
   }
 
-  private int count0(ResultSet rs) throws SQLException {
-    if (!rs.next()) {
-      return 0;
-    }
-
-    int result;
-    result = rs.getInt(1);
-
-    if (rs.next()) {
-      throw new UnsupportedOperationException("Implement me");
-    }
-
-    return result;
+  private Statement statement() {
+    return (Statement) main;
   }
 
   private boolean shouldAppendNewLine(CharSequence query) {
@@ -323,49 +560,76 @@ final class SqlTransaction implements Sql.Transaction {
   }
 
   @Override
-  public final Sql.Transaction paginate(Sql.Page page) {
-    this.page = Objects.requireNonNull(page);
+  public final void paginate(Sql.Page page) {
+    Objects.requireNonNull(page, "page == null");
 
-    return this;
+    switch (state) {
+      case SQL -> {
+        state = State.SQL_PAGINATED;
+
+        main = dialect.paginate(sql(), page);
+      }
+
+      case START,
+           SQL_COUNT,
+           SQL_GENERATED,
+           SQL_PAGINATED,
+           SQL_SCRIPT -> throw illegalState();
+
+      case PREPARED,
+           PREPARED_BATCH,
+           PREPARED_COUNT,
+           PREPARED_GENERATED,
+           PREPARED_GENERATED_BATCH,
+           PREPARED_PAGINATED -> throw illegalState();
+
+      case ERROR -> throw illegalState();
+    }
   }
 
   @Override
   public final <T> List<T> query(Sql.Mapper<T> mapper) throws Sql.DatabaseException {
-    checkQuery(mapper);
+    Objects.requireNonNull(mapper, "mapper == null");
 
-    List<T> list;
-    list = Util.createList();
+    UtilList<T> list;
+    list = new UtilList<>();
 
-    String sql;
-    sql = paginateIfNecessary();
+    state = switch (state) {
+      case SQL, SQL_PAGINATED -> {
+        try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql())) {
+          query0(mapper, list, rs);
+        } catch (SQLException e) {
+          throw stateAndWrap(e);
+        }
 
-    if (hasArguments()) {
-
-      try (PreparedStatement stmt = prepare(sql); ResultSet rs = stmt.executeQuery()) {
-        query0(mapper, list, rs);
-      } catch (SQLException e) {
-        throw new Sql.DatabaseException(e);
+        yield State.START;
       }
 
-    } else {
+      case PREPARED, PREPARED_PAGINATED -> {
+        try (PreparedStatement stmt = prepared(); ResultSet rs = stmt.executeQuery()) {
+          query0(mapper, list, rs);
+        } catch (SQLException e) {
+          throw stateAndWrap(e);
+        }
 
-      try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
-        query0(mapper, list, rs);
-      } catch (SQLException e) {
-        throw new Sql.DatabaseException(e);
+        yield State.START;
       }
 
-    }
+      case START -> throw illegalState();
 
-    return Util.toUnmodifiableList(list);
-  }
+      case SQL_COUNT,
+           SQL_GENERATED,
+           SQL_SCRIPT -> throw illegalState();
 
-  private String paginateIfNecessary() {
-    if (page != null) {
-      return dialect.paginate(sql, page);
-    } else {
-      return sql;
-    }
+      case PREPARED_BATCH,
+           PREPARED_COUNT,
+           PREPARED_GENERATED,
+           PREPARED_GENERATED_BATCH -> throw illegalState();
+
+      case ERROR -> throw illegalState();
+    };
+
+    return list.toUnmodifiableList();
   }
 
   private <T> void query0(Sql.Mapper<T> mapper, List<T> list, ResultSet rs) throws SQLException {
@@ -383,28 +647,50 @@ final class SqlTransaction implements Sql.Transaction {
 
   @Override
   public final <T> T queryFirst(Sql.Mapper<T> mapper) throws Sql.DatabaseException {
-    checkQuery(mapper);
-    checkNoPage();
+    Objects.requireNonNull(mapper, "mapper == null");
 
     T result;
 
-    if (hasArguments()) {
+    state = switch (state) {
+      case SQL -> {
+        try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql())) {
+          result = queryFirst0(mapper, rs);
+        } catch (SQLException e) {
+          throw stateAndWrap(e);
+        }
 
-      try (PreparedStatement stmt = prepare(sql); ResultSet rs = stmt.executeQuery()) {
-        result = queryFirst0(mapper, rs);
-      } catch (SQLException e) {
-        throw new Sql.DatabaseException(e);
+        yield State.START;
       }
 
-    } else {
+      case PREPARED -> {
+        try (PreparedStatement stmt = prepared(); ResultSet rs = stmt.executeQuery()) {
+          result = queryFirst0(mapper, rs);
+        } catch (SQLException e) {
+          throw stateAndWrap(e);
+        }
 
-      try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
-        result = queryFirst0(mapper, rs);
-      } catch (SQLException e) {
-        throw new Sql.DatabaseException(e);
+        yield State.START;
       }
 
-    }
+      case SQL_PAGINATED, PREPARED_PAGINATED -> throw new UnsupportedOperationException("""
+      This is a paginated SQL query. To prevent this exception from being thrown:
+
+      1) Invoke the `query` method instead. Or
+      2) Do not paginate this query.
+      """);
+
+      case START,
+           SQL_COUNT,
+           SQL_GENERATED,
+           SQL_SCRIPT -> throw illegalState();
+
+      case PREPARED_BATCH,
+           PREPARED_COUNT,
+           PREPARED_GENERATED,
+           PREPARED_GENERATED_BATCH -> throw illegalState();
+
+      case ERROR -> throw illegalState();
+    };
 
     return result;
   }
@@ -423,28 +709,50 @@ final class SqlTransaction implements Sql.Transaction {
 
   @Override
   public final <T> T querySingle(Sql.Mapper<T> mapper) throws Sql.DatabaseException {
-    checkQuery(mapper);
-    checkNoPage();
+    Objects.requireNonNull(mapper, "mapper == null");
 
     T result;
 
-    if (hasArguments()) {
+    state = switch (state) {
+      case SQL -> {
+        try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql())) {
+          result = querySingle0(mapper, rs);
+        } catch (SQLException e) {
+          throw stateAndWrap(e);
+        }
 
-      try (PreparedStatement stmt = prepare(sql); ResultSet rs = stmt.executeQuery()) {
-        result = querySingle0(mapper, rs);
-      } catch (SQLException e) {
-        throw new Sql.DatabaseException(e);
+        yield State.START;
       }
 
-    } else {
+      case PREPARED -> {
+        try (PreparedStatement stmt = prepared(); ResultSet rs = stmt.executeQuery()) {
+          result = querySingle0(mapper, rs);
+        } catch (SQLException e) {
+          throw stateAndWrap(e);
+        }
 
-      try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
-        result = querySingle0(mapper, rs);
-      } catch (SQLException e) {
-        throw new Sql.DatabaseException(e);
+        yield State.START;
       }
 
-    }
+      case SQL_PAGINATED, PREPARED_PAGINATED -> throw new UnsupportedOperationException("""
+      This is a paginated SQL query. To prevent this exception from being thrown:
+
+      1) Invoke the `query` method instead. Or
+      2) Do not paginate this query.
+      """);
+
+      case START,
+           SQL_COUNT,
+           SQL_GENERATED,
+           SQL_SCRIPT -> throw illegalState();
+
+      case PREPARED_BATCH,
+           PREPARED_COUNT,
+           PREPARED_GENERATED,
+           PREPARED_GENERATED_BATCH -> throw illegalState();
+
+      case ERROR -> throw illegalState();
+    };
 
     return result;
   }
@@ -466,29 +774,171 @@ final class SqlTransaction implements Sql.Transaction {
   }
 
   @Override
-  public final OptionalInt queryOptionalInt() throws Sql.DatabaseException {
-    checkQuery();
-    checkNoPage();
+  public final int querySingleInt() throws Sql.DatabaseException {
+    int result;
 
+    state = switch (state) {
+      case SQL, SQL_COUNT -> {
+        try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql())) {
+          result = querySingleInt0(rs);
+        } catch (SQLException e) {
+          throw stateAndWrap(e);
+        }
+
+        yield State.START;
+      }
+
+      case PREPARED, PREPARED_COUNT -> {
+        try (PreparedStatement stmt = prepared(); ResultSet rs = stmt.executeQuery()) {
+          result = querySingleInt0(rs);
+        } catch (SQLException e) {
+          throw stateAndWrap(e);
+        }
+
+        yield State.START;
+      }
+
+      case SQL_PAGINATED, PREPARED_PAGINATED -> throw new UnsupportedOperationException("""
+      This is a paginated SQL query. To prevent this exception from being thrown:
+
+      1) Invoke the `query` method instead. Or
+      2) Do not paginate this query.
+      """);
+
+      case START,
+           SQL_GENERATED,
+           SQL_SCRIPT -> throw illegalState();
+
+      case PREPARED_BATCH,
+           PREPARED_GENERATED,
+           PREPARED_GENERATED_BATCH -> throw illegalState();
+
+      case ERROR -> throw illegalState();
+    };
+
+    return result;
+  }
+
+  private int querySingleInt0(ResultSet rs) throws SQLException {
+    if (!rs.next()) {
+      return 0;
+    }
+
+    int result;
+    result = rs.getInt(1);
+
+    if (rs.next()) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    return result;
+  }
+
+  @Override
+  public final long querySingleLong() throws Sql.DatabaseException {
+    long result;
+
+    state = switch (state) {
+      case SQL, SQL_COUNT -> {
+        try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql())) {
+          result = querySingleLong0(rs);
+        } catch (SQLException e) {
+          throw stateAndWrap(e);
+        }
+
+        yield State.START;
+      }
+
+      case PREPARED, PREPARED_COUNT -> {
+        try (PreparedStatement stmt = prepared(); ResultSet rs = stmt.executeQuery()) {
+          result = querySingleLong0(rs);
+        } catch (SQLException e) {
+          throw stateAndWrap(e);
+        }
+
+        yield State.START;
+      }
+
+      case SQL_PAGINATED, PREPARED_PAGINATED -> throw new UnsupportedOperationException("""
+      This is a paginated SQL query. To prevent this exception from being thrown:
+
+      1) Invoke the `query` method instead. Or
+      2) Do not paginate this query.
+      """);
+
+      case START,
+           SQL_GENERATED,
+           SQL_SCRIPT -> throw illegalState();
+
+      case PREPARED_BATCH,
+           PREPARED_GENERATED,
+           PREPARED_GENERATED_BATCH -> throw illegalState();
+
+      case ERROR -> throw illegalState();
+    };
+
+    return result;
+  }
+
+  private long querySingleLong0(ResultSet rs) throws SQLException {
+    if (!rs.next()) {
+      return 0L;
+    }
+
+    long result;
+    result = rs.getLong(1);
+
+    if (rs.next()) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    return result;
+  }
+
+  @Override
+  public final OptionalInt queryOptionalInt() throws Sql.DatabaseException {
     OptionalInt result;
 
-    if (hasArguments()) {
+    state = switch (state) {
+      case SQL -> {
+        try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql())) {
+          result = queryOptionalInt0(rs);
+        } catch (SQLException e) {
+          throw stateAndWrap(e);
+        }
 
-      try (PreparedStatement stmt = prepare(sql); ResultSet rs = stmt.executeQuery()) {
-        result = queryOptionalInt0(rs);
-      } catch (SQLException e) {
-        throw new Sql.DatabaseException(e);
+        yield State.START;
       }
 
-    } else {
+      case PREPARED -> {
+        try (PreparedStatement stmt = prepared(); ResultSet rs = stmt.executeQuery()) {
+          result = queryOptionalInt0(rs);
+        } catch (SQLException e) {
+          throw stateAndWrap(e);
+        }
 
-      try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
-        result = queryOptionalInt0(rs);
-      } catch (SQLException e) {
-        throw new Sql.DatabaseException(e);
+        yield State.START;
       }
 
-    }
+      case SQL_PAGINATED, PREPARED_PAGINATED -> throw new UnsupportedOperationException("""
+      This is a paginated SQL query. To prevent this exception from being thrown:
+
+      1) Invoke the `query` method instead. Or
+      2) Do not paginate this query.
+      """);
+
+      case START,
+           SQL_COUNT,
+           SQL_GENERATED,
+           SQL_SCRIPT -> throw illegalState();
+
+      case PREPARED_BATCH,
+           PREPARED_COUNT,
+           PREPARED_GENERATED,
+           PREPARED_GENERATED_BATCH -> throw illegalState();
+
+      case ERROR -> throw illegalState();
+    };
 
     return result;
   }
@@ -510,28 +960,48 @@ final class SqlTransaction implements Sql.Transaction {
 
   @Override
   public final OptionalLong queryOptionalLong() throws Sql.DatabaseException {
-    checkQuery();
-    checkNoPage();
-
     OptionalLong result;
 
-    if (hasArguments()) {
+    state = switch (state) {
+      case SQL -> {
+        try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql())) {
+          result = queryOptionalLong0(rs);
+        } catch (SQLException e) {
+          throw stateAndWrap(e);
+        }
 
-      try (PreparedStatement stmt = prepare(sql); ResultSet rs = stmt.executeQuery()) {
-        result = queryOptionalLong0(rs);
-      } catch (SQLException e) {
-        throw new Sql.DatabaseException(e);
+        yield State.START;
       }
 
-    } else {
+      case PREPARED -> {
+        try (PreparedStatement stmt = prepared(); ResultSet rs = stmt.executeQuery()) {
+          result = queryOptionalLong0(rs);
+        } catch (SQLException e) {
+          throw stateAndWrap(e);
+        }
 
-      try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
-        result = queryOptionalLong0(rs);
-      } catch (SQLException e) {
-        throw new Sql.DatabaseException(e);
+        yield State.START;
       }
 
-    }
+      case SQL_PAGINATED, PREPARED_PAGINATED -> throw new UnsupportedOperationException("""
+      This is a paginated SQL query. To prevent this exception from being thrown:
+
+      1) Invoke the `query` method instead. Or
+      2) Do not paginate this query.
+      """);
+
+      case START,
+           SQL_COUNT,
+           SQL_GENERATED,
+           SQL_SCRIPT -> throw illegalState();
+
+      case PREPARED_BATCH,
+           PREPARED_COUNT,
+           PREPARED_GENERATED,
+           PREPARED_GENERATED_BATCH -> throw illegalState();
+
+      case ERROR -> throw illegalState();
+    };
 
     return result;
   }
@@ -552,282 +1022,101 @@ final class SqlTransaction implements Sql.Transaction {
   }
 
   @Override
-  public final int[] scriptUpdate() throws Sql.DatabaseException {
-    checkSql();
-    Check.state(!hasBatches(), "One or more batches were defined");
-    Check.state(!hasArguments(), "One or more arguments were added to operation");
-
-    String[] lines;
-    lines = sql.split("\n"); // implicit null check
-
-    StringBuilder sql;
-    sql = new StringBuilder();
-
-    try (Statement stmt = connection.createStatement()) {
-      for (String line : lines) {
-
-        if (!line.isBlank()) {
-          sql.append(line);
-        }
-
-        else if (!sql.isEmpty()) {
-          String batch;
-          batch = sql.toString();
-
-          sql.setLength(0);
-
-          stmt.addBatch(batch);
-        }
-
-      }
-
-      if (!sql.isEmpty()) {
-        String batch;
-        batch = sql.toString();
-
-        stmt.addBatch(batch);
-      }
-
-      return stmt.executeBatch();
-    } catch (SQLException e) {
-      throw new Sql.DatabaseException(e);
-    }
-  }
-
-  @Override
   public final int update() {
-    checkSql();
-    Check.state(!hasBatches(), "One or more batches were defined");
-
     int result;
 
-    if (hasArguments()) {
+    state = switch (state) {
+      case SQL -> {
+        try (Statement stmt = connection.createStatement()) {
+          result = stmt.executeUpdate(sql());
+        } catch (SQLException e) {
+          throw stateAndWrap(e);
+        }
 
-      try (PreparedStatement stmt = prepare(sql)) {
-        result = stmt.executeUpdate();
-      } catch (SQLException e) {
-        throw new Sql.DatabaseException(e);
+        yield State.START;
       }
 
-    } else {
+      case SQL_GENERATED -> {
+        try (Statement stmt = connection.createStatement()) {
+          final Sql.SqlGeneratedKeys<?> generatedKeys;
+          generatedKeys = generatedKeys();
 
-      try (Statement stmt = connection.createStatement()) {
-        result = stmt.executeUpdate(sql);
-      } catch (SQLException e) {
-        throw new Sql.DatabaseException(e);
+          result = stmt.executeUpdate(sql(), Statement.RETURN_GENERATED_KEYS);
+
+          generatedKeys.accept(stmt);
+        } catch (SQLException e) {
+          throw stateAndWrap(e);
+        }
+
+        yield State.START;
       }
 
-    }
+      case PREPARED -> {
+        try (PreparedStatement stmt = prepared()) {
+          result = stmt.executeUpdate();
+        } catch (SQLException e) {
+          throw stateAndWrap(e);
+        }
+
+        yield State.START;
+      }
+
+      case PREPARED_GENERATED -> {
+        try (PreparedStatement stmt = prepared()) {
+          final Sql.SqlGeneratedKeys<?> generatedKeys;
+          generatedKeys = generatedKeys();
+
+          result = stmt.executeUpdate();
+
+          generatedKeys.accept(stmt);
+        } catch (SQLException e) {
+          throw stateAndWrap(e);
+        }
+
+        yield State.START;
+      }
+
+      case START,
+           SQL_COUNT,
+           SQL_PAGINATED,
+           SQL_SCRIPT -> throw illegalState();
+
+      case PREPARED_BATCH,
+           PREPARED_COUNT,
+           PREPARED_GENERATED_BATCH,
+           PREPARED_PAGINATED -> throw illegalState();
+
+      case ERROR -> throw illegalState();
+    };
 
     return result;
   }
 
-  @Override
-  public final int updateWithGeneratedKeys(Sql.GeneratedKeys<?> generatedKeys) {
-    checkSql();
-    Check.state(!hasBatches(), "One or more batches were defined");
+  private PreparedStatement createPrepared(int generatedKeys) throws SQLException {
+    final PreparedStatement stmt;
+    stmt = connection.prepareStatement(sql(), generatedKeys);
 
-    Sql.SqlGeneratedKeys<?> impl;
-    impl = (Sql.SqlGeneratedKeys<?>) generatedKeys;
-
-    int result;
-
-    if (hasArguments()) {
-
-      try (PreparedStatement stmt = prepare(sql, Statement.RETURN_GENERATED_KEYS)) {
-        result = stmt.executeUpdate();
-
-        impl.accept(stmt);
-      } catch (SQLException e) {
-        throw new Sql.DatabaseException(e);
-      }
-
-    } else {
-
-      try (Statement stmt = connection.createStatement()) {
-        result = stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
-
-        impl.accept(stmt);
-      } catch (SQLException e) {
-        throw new Sql.DatabaseException(e);
-      }
-
-    }
-
-    return result;
-  }
-
-  private void checkSql() {
-    Check.state(sql != null, "No SQL statement was defined");
-  }
-
-  private void checkQuery(Sql.Mapper<?> mapper) {
-    Check.notNull(mapper, "mapper == null");
-
-    checkQuery();
-  }
-
-  private void checkQuery() {
-    Check.state(sql != null, "No SQL statement was defined");
-
-    Check.state(!hasBatches(), "Cannot execute query: one or more batches were defined");
-  }
-
-  private void checkNoPage() {
-    Check.state(page == null, "Cannot paginate a query that is expected to return at most 1 row");
-  }
-
-  private boolean hasArguments() {
-    return arguments != null && !arguments.isEmpty();
-  }
-
-  private boolean hasBatches() {
-    return batches != null && !batches.isEmpty();
-  }
-
-  private PreparedStatement prepare(String sql) throws SQLException {
-    return prepare(sql, Statement.NO_GENERATED_KEYS);
-  }
-
-  private static final Pattern TWO_DASHES = Pattern.compile("^--.*$", Pattern.MULTILINE);
-
-  private PreparedStatement prepare(String sql, int generatedKeys) throws SQLException {
-    if (!template) {
-      PreparedStatement stmt;
-      stmt = connection.prepareStatement(sql, generatedKeys);
-
-      // we assume this method was called after hasArguments() returned true
-      // so arguments is guaranteed to be non-null
-      setArguments(stmt, arguments);
-
-      return stmt;
-    }
-
-    StringBuilder sqlBuilder;
-    sqlBuilder = new StringBuilder(sql.length());
-
-    List<Object> values;
-    values = Util.createList();
-
-    int argsIndex;
-    argsIndex = 0;
-
-    String[] fragments;
-    fragments = TWO_DASHES.split(sql);
-
-    String fragment;
-    fragment = fragments[0];
-
-    sqlBuilder.append(fragment);
-
-    int placeholders;
-    placeholders = placeholders(fragment);
-
-    while (values.size() < placeholders) {
-      Object arg;
-      arg = arguments.get(argsIndex++);
-
-      values.add(arg);
-    }
-
-    for (int i = 1; i < fragments.length; i++) {
-      fragment = fragments[i];
-
-      placeholders = placeholders(fragment);
-
-      switch (placeholders) {
-        case 0 -> sqlBuilder.append(fragment);
-
-        case 1 -> {
-          if (argsIndex >= arguments.size()) {
-            throw new IllegalArgumentException(
-                "Missing value for fragment: " + fragment
-            );
-          }
-
-          Object arg;
-          arg = arguments.get(argsIndex++);
-
-          if (arg instanceof SqlMaybe maybe) {
-            if (maybe.absent()) {
-              continue;
-            }
-
-            arg = maybe.value();
-          }
-
-          sqlBuilder.append(fragment);
-
-          values.add(arg);
-        }
-
-        default -> {
-          sqlBuilder.append(fragment);
-
-          for (int j = 0; j < placeholders; j++) {
-
-            if (argsIndex >= arguments.size()) {
-              throw new IllegalArgumentException(
-                  "Missing value for placeholder " + (j + 1) + " of fragment: " + fragment
-              );
-            }
-
-            Object arg;
-            arg = arguments.get(argsIndex++);
-
-            if (arg instanceof SqlMaybe) {
-              throw new IllegalArgumentException(
-                  "Conditional value must not be used in a fragment with more than one placeholder: " + fragment
-              );
-            }
-
-            values.add(arg);
-
-          }
-        }
-      }
-    }
-
-    String sqlToPrepare;
-    sqlToPrepare = sqlBuilder.toString();
-
-    PreparedStatement stmt;
-    stmt = connection.prepareStatement(sqlToPrepare, generatedKeys);
-
-    setArguments(stmt, values);
+    main = stmt;
 
     return stmt;
   }
 
-  private static int placeholders(String fragment) {
-    int count;
-    count = 0;
-
-    int question;
-    question = 0;
-
-    while (true) {
-      question = fragment.indexOf('?', question);
-
-      if (question < 0) {
-        break;
-      }
-
-      count++;
-
-      question++;
-    }
-
-    return count;
+  private Sql.SqlGeneratedKeys<?> generatedKeys() {
+    return (Sql.SqlGeneratedKeys<?>) aux;
   }
 
-  private void setArguments(PreparedStatement stmt, List<Object> arguments) throws SQLException {
-    for (int idx = 0, size = arguments.size(); idx < size; idx++) {
-      Object argument;
-      argument = arguments.get(idx);
+  private PreparedStatement prepared() {
+    return (PreparedStatement) main;
+  }
 
-      Sql.set(stmt, idx + 1, argument);
-    }
+  private IllegalStateException illegalState() {
+    return new IllegalStateException(state.name());
+  }
+
+  private Sql.DatabaseException stateAndWrap(SQLException e) {
+    state = State.ERROR;
+
+    return new Sql.DatabaseException(e);
   }
 
 }

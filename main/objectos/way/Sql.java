@@ -48,6 +48,14 @@ public final class Sql {
 
   public static final Transaction.Isolation SERIALIZABLE = TransactionIsolation.SERIALIZABLE;
 
+  // sql kinds
+
+  public static final Kind STATEMENT = Kind.STATEMENT;
+
+  public static final Kind COUNT = Kind.COUNT;
+
+  public static final Kind SCRIPT = Kind.SCRIPT;
+
   // types
 
   /**
@@ -139,6 +147,53 @@ public final class Sql {
     T get(int index);
 
     int size();
+
+  }
+
+  public sealed interface Kind permits SqlKind {
+
+    Kind STATEMENT = SqlKind.STATEMENT;
+
+    /**
+     * Returns the number of rows of the current row-retrieving query SQL
+     * statement. This method works by decorating the current SQL statement.
+     */
+    Kind COUNT = SqlKind.COUNT;
+
+    /**
+     * Executes the current SQL contents as a script. The SQL contents is
+     * assumed to be a blank line separated list of SQL statements. The
+     * statements will typically be SQL {@code INSERT} or {@code UPDATE}
+     * statements.
+     *
+     * <p>
+     * A typical usage is:
+     *
+     * <pre>
+     * trx.sql("""
+     * insert into City (id, name)
+     * values (1, 'São Paulo')
+     * ,      (2, 'New York')
+     * ,      (3, 'Tokyo')
+     *
+     * insert into Country (id, name)
+     * values (1, 'Brazil')
+     * ,      (2, 'United States of America')
+     * ,      (3, 'Japan')
+     * """);
+     *
+     * int[] result = trx.scriptUpdate();
+     *
+     * assertEquals(result.length, 2);
+     * assertEquals(result[0], 3);
+     * assertEquals(result[1], 3);</pre>
+     *
+     * @return an array of update counts containing one element for each
+     *         statement in the script. The elements of the array are ordered
+     *         according to the order in which statements were listed in the
+     *         script.
+     */
+    Kind SCRIPT = SqlKind.SCRIPT;
 
   }
 
@@ -320,21 +375,14 @@ public final class Sql {
     void close() throws DatabaseException;
 
     /**
-     * Sets the SQL contents of this transaction to the specified value.
-     *
-     * <p>
-     * Invoking this method additionally:
-     *
-     * <ul>
-     * <li>clears any previously set arguments;</li>
-     * </ul>
+     * Sets the SQL statement to be executed by this transaction instance.
      *
      * @param value
-     *        the raw SQL contents
-     *
-     * @return this object
+     *        the SQL statement to be executed
      */
-    Transaction sql(String value);
+    void sql(String value);
+
+    void sql(Sql.Kind kind, String value);
 
     /**
      * Replaces the current SQL statement with the result of
@@ -344,44 +392,8 @@ public final class Sql {
      * @param args
      *        arguments referenced by the format specifiers in the format
      *        string.
-     *
-     * @return this object
      */
-    Transaction format(Object... args);
-
-    /**
-     * Adds the specified value to the SQL statement argument list.
-     *
-     * @param value
-     *        the argument value which must not be {@code null}
-     *
-     * @return this object
-     */
-    Transaction add(Object value);
-
-    Transaction addIf(Object value, boolean condition);
-
-    /**
-     * Adds the specified value to the SQL statement argument list.
-     *
-     * @param value
-     *        the argument value which may be {@code null}
-     * @param sqlType
-     *        the SQL type (as defined in java.sql.Types)
-     *
-     * @return this object
-     */
-    Transaction add(Object value, int sqlType);
-
-    Transaction addBatch();
-
-    int[] batchUpdate();
-
-    /**
-     * Returns the number of rows of the current row-retrieving query SQL
-     * statement. This method works by decorating the current SQL statement.
-     */
-    int count() throws DatabaseException;
+    void format(Object... args);
 
     /**
      * Causes the current SQL statement to be paginated according to the
@@ -393,7 +405,7 @@ public final class Sql {
      *        the {@code Page} object defining the page number and the number of
      *        rows per page
      */
-    Transaction paginate(Page page);
+    void paginate(Page page);
 
     /**
      * Causes the current SQL statement to be paginated according to the
@@ -405,12 +417,38 @@ public final class Sql {
      *        provider of the {@code Page} object defining the page number and
      *        the number of rows per page
      */
-    default Transaction paginate(PageProvider provider) {
+    default void paginate(PageProvider provider) {
       Page page;
       page = provider.page();
 
-      return paginate(page);
+      paginate(page);
     }
+
+    void with(GeneratedKeys<?> value);
+
+    /**
+     * Adds the specified value to the SQL statement argument list.
+     *
+     * @param value
+     *        the argument value which must not be {@code null}
+     */
+    void add(Object value);
+
+    void addIf(Object value, boolean condition);
+
+    /**
+     * Adds the specified value to the SQL statement argument list.
+     *
+     * @param value
+     *        the argument value which may be {@code null}
+     * @param sqlType
+     *        the SQL type (as defined in java.sql.Types)
+     */
+    void add(Object value, int sqlType);
+
+    void addBatch();
+
+    int[] batchUpdate();
 
     /**
      * Executes the current SQL statement as a row-retrieving query.
@@ -438,54 +476,18 @@ public final class Sql {
      */
     <T> T querySingle(Mapper<T> mapper) throws DatabaseException;
 
+    int querySingleInt() throws DatabaseException;
+
+    long querySingleLong() throws DatabaseException;
+
     OptionalInt queryOptionalInt() throws DatabaseException;
 
     OptionalLong queryOptionalLong() throws DatabaseException;
 
     /**
-     * Executes the current SQL contents as a script. The SQL contents is
-     * assumed to be a blank line separated list of SQL statements. The
-     * statements will typically be SQL {@code INSERT} or {@code UPDATE}
-     * statements.
-     *
-     * <p>
-     * A typical usage is:
-     *
-     * <pre>
-     * trx.sql("""
-     * insert into City (id, name)
-     * values (1, 'São Paulo')
-     * ,      (2, 'New York')
-     * ,      (3, 'Tokyo')
-     *
-     * insert into Country (id, name)
-     * values (1, 'Brazil')
-     * ,      (2, 'United States of America')
-     * ,      (3, 'Japan')
-     * """);
-     *
-     * int[] result = trx.scriptUpdate();
-     *
-     * assertEquals(result.length, 2);
-     * assertEquals(result[0], 3);
-     * assertEquals(result[1], 3);</pre>
-     *
-     * @return an array of update counts containing one element for each
-     *         statement in the script. The elements of the array are ordered
-     *         according to the order in which statements were listed in the
-     *         script.
-     */
-    int[] scriptUpdate() throws DatabaseException;
-
-    /**
      * Executes the current SQL statement as an update operation.
      */
     int update() throws DatabaseException;
-
-    /**
-     * Executes the current SQL statement as an update operation.
-     */
-    int updateWithGeneratedKeys(GeneratedKeys<?> generatedKeys) throws DatabaseException;
 
   }
 
