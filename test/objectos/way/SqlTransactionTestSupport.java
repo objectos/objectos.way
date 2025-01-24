@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.ToIntFunction;
+import objectos.way.Sql.InvalidOperationException;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 
@@ -255,7 +256,7 @@ public abstract class SqlTransactionTestSupport {
     }
   }
 
-  final void uoe(Consumer<SqlTransaction> trxConfig, String expectedMessage) {
+  final void invalidOperation(Consumer<SqlTransaction> trxConfig, String expectedMessage) {
     connection = new TestingConnection();
 
     statement = new TestingStatement();
@@ -272,8 +273,8 @@ public abstract class SqlTransactionTestSupport {
     try {
       trxConfig.accept(trx);
 
-      Assert.fail("It should have thrown UnsupportedOperationException");
-    } catch (UnsupportedOperationException expected) {
+      Assert.fail("It should have thrown InvalidOperationException");
+    } catch (InvalidOperationException expected) {
       assertEquals(expected.getMessage(), expectedMessage);
     } finally {
       trx.close();

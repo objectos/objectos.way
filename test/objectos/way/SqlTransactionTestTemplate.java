@@ -532,7 +532,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
   """, expectedExceptions = IllegalArgumentException.class)
   public void addIf10() {
     addIfTransaction(trx -> {
-      trx.sql("""
+      trx.sql(Sql.TEMPLATE, """
       select A, B, C from FOO
       where 1 = 1
       --
@@ -546,14 +546,54 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
     });
   }
 
+  @Test(description = """
+  batchUpdate
+  - currently unsupported
+  """)
   @Override
   public void batchUpdate01() {
-    // TODO
+    invalidOperation(
+        trx -> {
+          trx.sql(Sql.TEMPLATE, """
+          select A, B, C from FOO
+          --
+          where X = ?
+          """);
+
+          trx.add("ABC");
+
+          trx.batchUpdate();
+        },
+
+        """
+        The 'batchUpdate' operation cannot be executed on a SQL template.
+        """
+    );
   }
 
+  @Test(description = """
+  update
+  - currently unsupported
+  """)
   @Override
   public void update01() {
-    // TODO
+    invalidOperation(
+        trx -> {
+          trx.sql(Sql.TEMPLATE, """
+          select A, B, C from FOO
+          --
+          where X = ?
+          """);
+
+          trx.add("ABC");
+
+          trx.update();
+        },
+
+        """
+        The 'update' operation cannot be executed on a SQL template.
+        """
+    );
   }
 
   private void addIfTransaction(Consumer<SqlTransaction> config) {

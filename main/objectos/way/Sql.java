@@ -120,24 +120,6 @@ public final class Sql {
 
   }
 
-  /**
-   * Thrown to indicate a database access error.
-   */
-  public static class DatabaseException extends RuntimeException {
-
-    private static final long serialVersionUID = 1L;
-
-    DatabaseException(SQLException cause) {
-      super(cause);
-    }
-
-    @Override
-    public final SQLException getCause() {
-      return (SQLException) super.getCause();
-    }
-
-  }
-
   public sealed interface GeneratedKeys<T> {
 
     public sealed interface OfInt extends GeneratedKeys<Integer> {
@@ -505,6 +487,41 @@ public final class Sql {
 
     MappingException(String message, Throwable cause) {
       super(message, cause);
+    }
+
+  }
+
+  //
+  // Exceptions
+  //
+
+  /**
+   * Thrown to indicate a database access error.
+   */
+  public static class DatabaseException extends RuntimeException {
+
+    private static final long serialVersionUID = 1L;
+
+    DatabaseException(SQLException cause) {
+      super(cause);
+    }
+
+    @Override
+    public final SQLException getCause() {
+      return (SQLException) super.getCause();
+    }
+
+  }
+
+  /**
+   * Thrown to indicate that the requested operation is invalid.
+   */
+  public static final class InvalidOperationException extends RuntimeException {
+
+    private static final long serialVersionUID = 813148817151165616L;
+
+    InvalidOperationException(String message) {
+      super(message);
     }
 
   }

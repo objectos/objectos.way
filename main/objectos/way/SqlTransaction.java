@@ -421,13 +421,8 @@ final class SqlTransaction implements Sql.Transaction {
 
       case START -> throw illegalState();
 
-      case SQL_SCRIPT -> throw new UnsupportedOperationException("""
-      The is a SQL script and the 'addIf' operation is not supported.
-
-      To prevent this exception from being thrown:
-
-      1) Do not use the addIf method. Or
-      2) Use a SQL template instead.
+      case SQL_SCRIPT -> throw new Sql.InvalidOperationException("""
+      The 'addIf' operation cannot be executed on a SQL script.
       """);
 
       case SQL,
@@ -566,6 +561,10 @@ final class SqlTransaction implements Sql.Transaction {
         yield State.START;
       }
 
+      case SQL_TEMPLATE -> throw new Sql.InvalidOperationException("""
+      The 'batchUpdate' operation cannot be executed on a SQL template.
+      """);
+
       case PREPARED_BATCH -> {
         try (PreparedStatement stmt = prepared()) {
           result = stmt.executeBatch();
@@ -576,21 +575,33 @@ final class SqlTransaction implements Sql.Transaction {
         yield State.START;
       }
 
+      case SQL_GENERATED, PREPARED_GENERATED -> throw new Sql.InvalidOperationException("""
+      The 'batchUpdate' operation cannot be executed on a SQL statement with no batches defined.
+      """);
+
       case PREPARED_GENERATED_BATCH -> {
-        throw new UnsupportedOperationException("Implement me");
+        try (PreparedStatement stmt = prepared()) {
+          final Sql.SqlGeneratedKeys<?> generatedKeys;
+          generatedKeys = generatedKeys();
+
+          result = stmt.executeBatch();
+
+          generatedKeys.accept(stmt);
+        } catch (SQLException e) {
+          throw stateAndWrap(e);
+        }
+
+        yield State.START;
       }
 
       case START -> throw illegalState();
 
       case SQL,
            SQL_COUNT,
-           SQL_GENERATED,
-           SQL_PAGINATED,
-           SQL_TEMPLATE -> throw illegalState();
+           SQL_PAGINATED -> throw illegalState();
 
       case PREPARED,
            PREPARED_COUNT,
-           PREPARED_GENERATED,
            PREPARED_PAGINATED -> throw illegalState();
 
       case ERROR -> throw illegalState();
@@ -1123,13 +1134,12 @@ final class SqlTransaction implements Sql.Transaction {
         yield State.START;
       }
 
-      case SQL_SCRIPT -> throw new UnsupportedOperationException("""
-      The is a SQL script and the 'update' operation is not supported.
+      case SQL_SCRIPT -> throw new Sql.InvalidOperationException("""
+      The 'update' operation cannot be executed on a SQL script.
+      """);
 
-      To prevent this exception from being thrown:
-
-      1) Use the 'batchUpdate' method instead. Or
-      2) Do not use a SQL script.
+      case SQL_TEMPLATE -> throw new Sql.InvalidOperationException("""
+      The 'update' operation cannot be executed on a SQL template.
       """);
 
       case PREPARED -> {
@@ -1159,8 +1169,7 @@ final class SqlTransaction implements Sql.Transaction {
 
       case START,
            SQL_COUNT,
-           SQL_PAGINATED,
-           SQL_TEMPLATE -> throw illegalState();
+           SQL_PAGINATED -> throw illegalState();
 
       case PREPARED_BATCH,
            PREPARED_COUNT,

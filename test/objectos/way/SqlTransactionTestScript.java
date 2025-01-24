@@ -25,7 +25,7 @@ public class SqlTransactionTestScript extends SqlTransactionTestSupport {
   @Test
   @Override
   public void addIf01() {
-    uoe(
+    invalidOperation(
         trx -> {
           trx.sql(Sql.Kind.SCRIPT, """
           insert into FOO (A, B) values (1, 5)
@@ -37,12 +37,7 @@ public class SqlTransactionTestScript extends SqlTransactionTestSupport {
         },
 
         """
-        The is a SQL script and the 'addIf' operation is not supported.
-
-        To prevent this exception from being thrown:
-
-        1) Do not use the addIf method. Or
-        2) Use a SQL template instead.
+        The 'addIf' operation cannot be executed on a SQL script.
         """
     );
   }
@@ -156,7 +151,7 @@ public class SqlTransactionTestScript extends SqlTransactionTestSupport {
   @Test
   @Override
   public final void update01() {
-    uoe(
+    invalidOperation(
         trx -> {
           trx.sql(Sql.Kind.SCRIPT, """
           insert into FOO (A, B) values (1, 5)
@@ -168,12 +163,7 @@ public class SqlTransactionTestScript extends SqlTransactionTestSupport {
         },
 
         """
-        The is a SQL script and the 'update' operation is not supported.
-
-        To prevent this exception from being thrown:
-
-        1) Use the 'batchUpdate' method instead. Or
-        2) Do not use a SQL script.
+        The 'update' operation cannot be executed on a SQL script.
         """
     );
   }
