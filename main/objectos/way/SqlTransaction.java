@@ -410,6 +410,20 @@ final class SqlTransaction implements Sql.Transaction {
   @Override
   public final void addIf(Object value, boolean condition) {
     state = switch (state) {
+      case START -> throw illegalState();
+
+      case SQL_COUNT, PREPARED_COUNT -> throw new Sql.InvalidOperationException("""
+      The 'addIf' operation cannot be executed on a SQL count statement.
+      """);
+
+      case SQL_GENERATED, PREPARED_GENERATED, PREPARED_GENERATED_BATCH -> throw new Sql.InvalidOperationException("""
+      The 'addIf' operation cannot be executed on a SQL statement returning generated keys.
+      """);
+
+      case SQL_SCRIPT -> throw new Sql.InvalidOperationException("""
+      The 'addIf' operation cannot be executed on a SQL script.
+      """);
+
       case SQL_TEMPLATE -> {
         final SqlTemplate tmpl;
         tmpl = sqlTemplate();
@@ -419,22 +433,11 @@ final class SqlTransaction implements Sql.Transaction {
         yield state;
       }
 
-      case START -> throw illegalState();
-
-      case SQL_SCRIPT -> throw new Sql.InvalidOperationException("""
-      The 'addIf' operation cannot be executed on a SQL script.
-      """);
-
       case SQL,
-           SQL_COUNT,
-           SQL_GENERATED,
            SQL_PAGINATED -> throw illegalState();
 
       case PREPARED,
            PREPARED_BATCH,
-           PREPARED_COUNT,
-           PREPARED_GENERATED,
-           PREPARED_GENERATED_BATCH,
            PREPARED_PAGINATED -> throw illegalState();
 
       case ERROR -> throw illegalState();
@@ -551,6 +554,10 @@ final class SqlTransaction implements Sql.Transaction {
     int[] result;
 
     state = switch (state) {
+      case SQL_COUNT, PREPARED_COUNT -> throw new Sql.InvalidOperationException("""
+      The 'batchUpdate' operation cannot be executed on a SQL count statement.
+      """);
+
       case SQL_SCRIPT -> {
         try (Statement stmt = statement()) {
           result = stmt.executeBatch();
@@ -597,11 +604,9 @@ final class SqlTransaction implements Sql.Transaction {
       case START -> throw illegalState();
 
       case SQL,
-           SQL_COUNT,
            SQL_PAGINATED -> throw illegalState();
 
       case PREPARED,
-           PREPARED_COUNT,
            PREPARED_PAGINATED -> throw illegalState();
 
       case ERROR -> throw illegalState();
@@ -867,12 +872,22 @@ final class SqlTransaction implements Sql.Transaction {
         yield State.START;
       }
 
+      case SQL_GENERATED, PREPARED_GENERATED, PREPARED_GENERATED_BATCH -> throw new Sql.InvalidOperationException("""
+      The 'querySingleInt' operation cannot be executed on a SQL statement returning generated keys.
+      """);
+
+      case SQL_SCRIPT -> throw new Sql.InvalidOperationException("""
+      The 'querySingleInt' operation cannot be executed on a SQL script.
+      """);
+
+      case SQL_TEMPLATE -> {
+        result = querySingleInt(createTemplate(Statement.NO_GENERATED_KEYS));
+
+        yield State.START;
+      }
+
       case PREPARED, PREPARED_COUNT -> {
-        try (PreparedStatement stmt = prepared(); ResultSet rs = stmt.executeQuery()) {
-          result = querySingleInt0(rs);
-        } catch (SQLException e) {
-          throw stateAndWrap(e);
-        }
+        result = querySingleInt(prepared());
 
         yield State.START;
       }
@@ -884,19 +899,22 @@ final class SqlTransaction implements Sql.Transaction {
       2) Do not paginate this query.
       """);
 
-      case START,
-           SQL_GENERATED,
-           SQL_SCRIPT,
-           SQL_TEMPLATE -> throw illegalState();
+      case START -> throw illegalState();
 
-      case PREPARED_BATCH,
-           PREPARED_GENERATED,
-           PREPARED_GENERATED_BATCH -> throw illegalState();
+      case PREPARED_BATCH -> throw illegalState();
 
       case ERROR -> throw illegalState();
     };
 
     return result;
+  }
+
+  private int querySingleInt(PreparedStatement stmt) {
+    try (stmt; ResultSet rs = stmt.executeQuery()) {
+      return querySingleInt0(rs);
+    } catch (SQLException e) {
+      throw stateAndWrap(e);
+    }
   }
 
   private int querySingleInt0(ResultSet rs) throws SQLException {
@@ -1134,6 +1152,10 @@ final class SqlTransaction implements Sql.Transaction {
         yield State.START;
       }
 
+      case SQL_COUNT, PREPARED_COUNT -> throw new Sql.InvalidOperationException("""
+      The 'update' operation cannot be executed on a SQL count statement.
+      """);
+
       case SQL_SCRIPT -> throw new Sql.InvalidOperationException("""
       The 'update' operation cannot be executed on a SQL script.
       """);
@@ -1168,11 +1190,9 @@ final class SqlTransaction implements Sql.Transaction {
       }
 
       case START,
-           SQL_COUNT,
            SQL_PAGINATED -> throw illegalState();
 
       case PREPARED_BATCH,
-           PREPARED_COUNT,
            PREPARED_GENERATED_BATCH,
            PREPARED_PAGINATED -> throw illegalState();
 

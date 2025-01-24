@@ -17,20 +17,12 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import org.testng.annotations.Test;
 
 public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
-
-  private record Foo(Integer a, String b, LocalDate c) {
-    Foo(ResultSet rs, int idx) throws SQLException {
-      this(rs.getInt(idx++), rs.getString(idx++), rs.getObject(idx++, LocalDate.class));
-    }
-  }
 
   @Test(description = """
   addIf
@@ -569,6 +561,65 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
         The 'batchUpdate' operation cannot be executed on a SQL template.
         """
     );
+  }
+
+  @Test
+  @Override
+  public void querySingleInt01() {
+    assertEquals(
+        preparedStatement(
+            List.of(
+                Map.of("1", 256)
+            ),
+
+            trx -> {
+              trx.sql(Sql.TEMPLATE, """
+              select A from FOO
+              --
+              where X = ?
+              """);
+
+              trx.addIf("SOME", true);
+
+              return trx.querySingleInt();
+            }
+        ),
+
+        256
+    );
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(select A from FOO where X = ?, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setString(1, SOME)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        getInt(1)
+        next()
+        close()
+        """
+    );
+
+    assertEmpty(statement);
   }
 
   @Test(description = """

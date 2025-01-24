@@ -18,6 +18,9 @@ package objectos.way;
 import static org.testng.Assert.assertEquals;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -28,6 +31,12 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 
 public abstract class SqlTransactionTestSupport {
+
+  record Foo(Integer a, String b, LocalDate c) {
+    Foo(ResultSet rs, int idx) throws SQLException {
+      this(rs.getInt(idx++), rs.getString(idx++), rs.getObject(idx++, LocalDate.class));
+    }
+  }
 
   TestingConnection connection;
 
@@ -51,6 +60,8 @@ public abstract class SqlTransactionTestSupport {
   public abstract void addIf01();
 
   public abstract void batchUpdate01();
+
+  public abstract void querySingleInt01();
 
   public abstract void update01();
 

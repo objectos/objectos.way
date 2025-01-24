@@ -31,6 +31,7 @@ public class SqlTransactionTestGenerated extends SqlTransactionTestSupport {
     generatedKeys = Sql.createGeneratedKeysOfInt();
   }
 
+  @Test
   @Override
   public void addIf01() {
     invalidOperation(
@@ -43,7 +44,47 @@ public class SqlTransactionTestGenerated extends SqlTransactionTestSupport {
         },
 
         """
-        The 'addIf' operation can only be executed on a SQL template.
+        The 'addIf' operation cannot be executed on a SQL statement returning generated keys.
+        """
+    );
+  }
+
+  @Test
+  public void addIf02() {
+    invalidOperation(
+        trx -> {
+          trx.sql("insert into BAR (X) values (?)");
+
+          trx.with(generatedKeys);
+
+          trx.add("FOO");
+
+          trx.addIf("abc", true);
+        },
+
+        """
+        The 'addIf' operation cannot be executed on a SQL statement returning generated keys.
+        """
+    );
+  }
+
+  @Test
+  public void addIf03() {
+    invalidOperation(
+        trx -> {
+          trx.sql("insert into BAR (X) values (?)");
+
+          trx.with(generatedKeys);
+
+          trx.add("FOO");
+
+          trx.addBatch();
+
+          trx.addIf("abc", true);
+        },
+
+        """
+        The 'addIf' operation cannot be executed on a SQL statement returning generated keys.
         """
     );
   }
@@ -248,6 +289,64 @@ public class SqlTransactionTestGenerated extends SqlTransactionTestSupport {
 
         """
         The 'batchUpdate' operation cannot be executed on a SQL statement with no batches defined.
+        """
+    );
+  }
+
+  @Test
+  @Override
+  public void querySingleInt01() {
+    invalidOperation(
+        trx -> {
+          trx.sql("insert into BAR (X) values (123)");
+
+          trx.with(generatedKeys);
+
+          trx.querySingleInt();
+        },
+
+        """
+        The 'querySingleInt' operation cannot be executed on a SQL statement returning generated keys.
+        """
+    );
+  }
+
+  @Test
+  public void querySingleInt02() {
+    invalidOperation(
+        trx -> {
+          trx.sql("insert into BAR (X) select A from FOO where X = ?");
+
+          trx.with(generatedKeys);
+
+          trx.add(123);
+
+          trx.querySingleInt();
+        },
+
+        """
+        The 'querySingleInt' operation cannot be executed on a SQL statement returning generated keys.
+        """
+    );
+  }
+
+  @Test
+  public void querySingleInt03() {
+    invalidOperation(
+        trx -> {
+          trx.sql("insert into BAR (X) select A from FOO where X = ?");
+
+          trx.with(generatedKeys);
+
+          trx.add(123);
+
+          trx.addBatch();
+
+          trx.querySingleInt();
+        },
+
+        """
+        The 'querySingleInt' operation cannot be executed on a SQL statement returning generated keys.
         """
     );
   }

@@ -150,6 +150,26 @@ public class SqlTransactionTestScript extends SqlTransactionTestSupport {
 
   @Test
   @Override
+  public void querySingleInt01() {
+    invalidOperation(
+        trx -> {
+          trx.sql(Sql.Kind.SCRIPT, """
+          insert into FOO (A, B) values (1, 5)
+
+          insert into BAR (X, Y) values ('A', 'B')
+          """);
+
+          trx.querySingleInt();
+        },
+
+        """
+        The 'querySingleInt' operation cannot be executed on a SQL script.
+        """
+    );
+  }
+
+  @Test
+  @Override
   public final void update01() {
     invalidOperation(
         trx -> {
