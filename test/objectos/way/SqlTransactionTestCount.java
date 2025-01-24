@@ -19,6 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import org.testng.annotations.Test;
 
 public class SqlTransactionTestCount extends SqlTransactionTestSupport {
@@ -26,77 +27,13 @@ public class SqlTransactionTestCount extends SqlTransactionTestSupport {
   @Test
   @Override
   public void addIf01() {
-    invalidOperation(
-        trx -> {
-          trx.sql(Sql.Kind.COUNT, """
-          select A, B from FOO
-          where X = ?
-          """);
-
-          trx.addIf("ABC", true);
-        },
-
-        """
-        The 'addIf' operation cannot be executed on a SQL count statement.
-        """
-    );
-  }
-
-  @Test
-  public void addIf02() {
-    invalidOperation(
-        trx -> {
-          trx.sql(Sql.Kind.COUNT, """
-          select A, B from FOO
-          where X = ? and Y = ?
-          """);
-
-          trx.add(123);
-
-          trx.addIf("ABC", true);
-        },
-
-        """
-        The 'addIf' operation cannot be executed on a SQL count statement.
-        """
-    );
+    invalidOperation("addIf", trx -> trx.addIf("ABC", true));
   }
 
   @Test
   @Override
   public void batchUpdate01() {
-    invalidOperation(
-        trx -> {
-          trx.sql(Sql.Kind.COUNT, """
-          select A, B from FOO
-          """);
-
-          trx.batchUpdate();
-        },
-
-        """
-        The 'batchUpdate' operation cannot be executed on a SQL count statement.
-        """
-    );
-  }
-
-  @Test
-  public void batchUpdate02() {
-    invalidOperation(
-        trx -> {
-          trx.sql(Sql.Kind.COUNT, """
-          select A, B from FOO where X = ?
-          """);
-
-          trx.add(123);
-
-          trx.batchUpdate();
-        },
-
-        """
-        The 'batchUpdate' operation cannot be executed on a SQL count statement.
-        """
-    );
+    invalidOperation("batchUpdate", Sql.Transaction::batchUpdate);
   }
 
   @Test(description = """
@@ -223,37 +160,34 @@ public class SqlTransactionTestCount extends SqlTransactionTestSupport {
   @Test
   @Override
   public void update01() {
-    invalidOperation(
-        trx -> {
-          trx.sql(Sql.Kind.COUNT, """
-          select A, B from FOO
-          """);
-
-          trx.update();
-        },
-
-        """
-        The 'update' operation cannot be executed on a SQL count statement.
-        """
-    );
+    invalidOperation("update", Sql.Transaction::update);
   }
 
-  @Test
-  public void update02() {
+  private void invalidOperation(String name, Consumer<Sql.Transaction> operation) {
+    String expectedMessage = """
+    The '%s' operation cannot be executed on a SQL count statement.
+    """.formatted(name);
+
     invalidOperation(
         trx -> {
-          trx.sql(Sql.Kind.COUNT, """
-          select A, B from FOO where X = ?
-          """);
+          trx.sql(Sql.COUNT, "select A, B, C from FOO");
 
-          trx.add(123);
-
-          trx.update();
+          operation.accept(trx);
         },
 
-        """
-        The 'update' operation cannot be executed on a SQL count statement.
-        """
+        expectedMessage
+    );
+
+    invalidOperation(
+        trx -> {
+          trx.sql(Sql.COUNT, "select A, B, C from FOO where X = ?");
+
+          trx.add("ABC");
+
+          operation.accept(trx);
+        },
+
+        expectedMessage
     );
   }
 

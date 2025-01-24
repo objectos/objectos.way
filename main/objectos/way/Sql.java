@@ -381,6 +381,8 @@ public final class Sql {
      */
     void format(Object... args);
 
+    void with(GeneratedKeys<?> value);
+
     /**
      * Causes the current SQL statement to be paginated according to the
      * specified {@code Page} object. In other words, when the query is
@@ -391,7 +393,7 @@ public final class Sql {
      *        the {@code Page} object defining the page number and the number of
      *        rows per page
      */
-    void paginate(Page page);
+    void with(Page page);
 
     /**
      * Causes the current SQL statement to be paginated according to the
@@ -403,14 +405,12 @@ public final class Sql {
      *        provider of the {@code Page} object defining the page number and
      *        the number of rows per page
      */
-    default void paginate(PageProvider provider) {
+    default void with(PageProvider provider) {
       Page page;
       page = provider.page();
 
-      paginate(page);
+      with(page);
     }
-
-    void with(GeneratedKeys<?> value);
 
     /**
      * Adds the specified value to the SQL statement argument list.

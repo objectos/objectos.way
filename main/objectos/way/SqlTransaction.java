@@ -347,6 +347,35 @@ final class SqlTransaction implements Sql.Transaction {
   }
 
   @Override
+  public final void with(Sql.Page page) {
+    Objects.requireNonNull(page, "page == null");
+
+    switch (state) {
+      case SQL -> {
+        state = State.SQL_PAGINATED;
+
+        main = dialect.paginate(sql(), page);
+      }
+
+      case START,
+           SQL_COUNT,
+           SQL_GENERATED,
+           SQL_PAGINATED,
+           SQL_SCRIPT,
+           SQL_TEMPLATE -> throw illegalState();
+
+      case PREPARED,
+           PREPARED_BATCH,
+           PREPARED_COUNT,
+           PREPARED_GENERATED,
+           PREPARED_GENERATED_BATCH,
+           PREPARED_PAGINATED -> throw illegalState();
+
+      case ERROR -> throw illegalState();
+    }
+  }
+
+  @Override
   public final void add(Object value) {
     Objects.requireNonNull(value, "value == null");
 
@@ -637,35 +666,6 @@ final class SqlTransaction implements Sql.Transaction {
   }
 
   @Override
-  public final void paginate(Sql.Page page) {
-    Objects.requireNonNull(page, "page == null");
-
-    switch (state) {
-      case SQL -> {
-        state = State.SQL_PAGINATED;
-
-        main = dialect.paginate(sql(), page);
-      }
-
-      case START,
-           SQL_COUNT,
-           SQL_GENERATED,
-           SQL_PAGINATED,
-           SQL_SCRIPT,
-           SQL_TEMPLATE -> throw illegalState();
-
-      case PREPARED,
-           PREPARED_BATCH,
-           PREPARED_COUNT,
-           PREPARED_GENERATED,
-           PREPARED_GENERATED_BATCH,
-           PREPARED_PAGINATED -> throw illegalState();
-
-      case ERROR -> throw illegalState();
-    }
-  }
-
-  @Override
   public final <T> List<T> query(Sql.Mapper<T> mapper) throws Sql.DatabaseException {
     Objects.requireNonNull(mapper, "mapper == null");
 
@@ -744,6 +744,10 @@ final class SqlTransaction implements Sql.Transaction {
         yield State.START;
       }
 
+      case SQL_PAGINATED, PREPARED_PAGINATED -> throw new Sql.InvalidOperationException("""
+      The 'queryFirst' operation cannot be executed on a paginated SQL statement.
+      """);
+
       case PREPARED -> {
         try (PreparedStatement stmt = prepared(); ResultSet rs = stmt.executeQuery()) {
           result = queryFirst0(mapper, rs);
@@ -753,13 +757,6 @@ final class SqlTransaction implements Sql.Transaction {
 
         yield State.START;
       }
-
-      case SQL_PAGINATED, PREPARED_PAGINATED -> throw new UnsupportedOperationException("""
-      This is a paginated SQL query. To prevent this exception from being thrown:
-
-      1) Invoke the `query` method instead. Or
-      2) Do not paginate this query.
-      """);
 
       case START,
            SQL_COUNT,
@@ -807,6 +804,18 @@ final class SqlTransaction implements Sql.Transaction {
         yield State.START;
       }
 
+      case SQL_SCRIPT -> throw new Sql.InvalidOperationException("""
+      The 'querySingle' operation cannot be executed on a SQL script.
+      """);
+
+      case SQL_GENERATED, PREPARED_GENERATED, PREPARED_GENERATED_BATCH -> throw new Sql.InvalidOperationException("""
+      The 'querySingle' operation cannot be executed on a SQL statement returning generated keys.
+      """);
+
+      case SQL_PAGINATED, PREPARED_PAGINATED -> throw new Sql.InvalidOperationException("""
+      The 'querySingle' operation cannot be executed on a paginated SQL statement.
+      """);
+
       case PREPARED -> {
         try (PreparedStatement stmt = prepared(); ResultSet rs = stmt.executeQuery()) {
           result = querySingle0(mapper, rs);
@@ -817,23 +826,12 @@ final class SqlTransaction implements Sql.Transaction {
         yield State.START;
       }
 
-      case SQL_PAGINATED, PREPARED_PAGINATED -> throw new UnsupportedOperationException("""
-      This is a paginated SQL query. To prevent this exception from being thrown:
-
-      1) Invoke the `query` method instead. Or
-      2) Do not paginate this query.
-      """);
-
       case START,
            SQL_COUNT,
-           SQL_GENERATED,
-           SQL_SCRIPT,
            SQL_TEMPLATE -> throw illegalState();
 
       case PREPARED_BATCH,
-           PREPARED_COUNT,
-           PREPARED_GENERATED,
-           PREPARED_GENERATED_BATCH -> throw illegalState();
+           PREPARED_COUNT -> throw illegalState();
 
       case ERROR -> throw illegalState();
     };
@@ -876,6 +874,10 @@ final class SqlTransaction implements Sql.Transaction {
       The 'querySingleInt' operation cannot be executed on a SQL statement returning generated keys.
       """);
 
+      case SQL_PAGINATED, PREPARED_PAGINATED -> throw new Sql.InvalidOperationException("""
+      The 'querySingleInt' operation cannot be executed on a paginated SQL statement.
+      """);
+
       case SQL_SCRIPT -> throw new Sql.InvalidOperationException("""
       The 'querySingleInt' operation cannot be executed on a SQL script.
       """);
@@ -891,13 +893,6 @@ final class SqlTransaction implements Sql.Transaction {
 
         yield State.START;
       }
-
-      case SQL_PAGINATED, PREPARED_PAGINATED -> throw new UnsupportedOperationException("""
-      This is a paginated SQL query. To prevent this exception from being thrown:
-
-      1) Invoke the `query` method instead. Or
-      2) Do not paginate this query.
-      """);
 
       case START -> throw illegalState();
 
@@ -947,6 +942,18 @@ final class SqlTransaction implements Sql.Transaction {
         yield State.START;
       }
 
+      case SQL_GENERATED, PREPARED_GENERATED, PREPARED_GENERATED_BATCH -> throw new Sql.InvalidOperationException("""
+      The 'querySingleLong' operation cannot be executed on a SQL statement returning generated keys.
+      """);
+
+      case SQL_PAGINATED, PREPARED_PAGINATED -> throw new Sql.InvalidOperationException("""
+      The 'querySingleLong' operation cannot be executed on a paginated SQL statement.
+      """);
+
+      case SQL_SCRIPT -> throw new Sql.InvalidOperationException("""
+      The 'querySingleLong' operation cannot be executed on a SQL script.
+      """);
+
       case PREPARED, PREPARED_COUNT -> {
         try (PreparedStatement stmt = prepared(); ResultSet rs = stmt.executeQuery()) {
           result = querySingleLong0(rs);
@@ -957,21 +964,10 @@ final class SqlTransaction implements Sql.Transaction {
         yield State.START;
       }
 
-      case SQL_PAGINATED, PREPARED_PAGINATED -> throw new UnsupportedOperationException("""
-      This is a paginated SQL query. To prevent this exception from being thrown:
-
-      1) Invoke the `query` method instead. Or
-      2) Do not paginate this query.
-      """);
-
       case START,
-           SQL_GENERATED,
-           SQL_SCRIPT,
            SQL_TEMPLATE -> throw illegalState();
 
-      case PREPARED_BATCH,
-           PREPARED_GENERATED,
-           PREPARED_GENERATED_BATCH -> throw illegalState();
+      case PREPARED_BATCH -> throw illegalState();
 
       case ERROR -> throw illegalState();
     };
@@ -1009,6 +1005,10 @@ final class SqlTransaction implements Sql.Transaction {
         yield State.START;
       }
 
+      case SQL_PAGINATED, PREPARED_PAGINATED -> throw new Sql.InvalidOperationException("""
+      The 'queryOptionalInt' operation cannot be executed on a paginated SQL statement.
+      """);
+
       case PREPARED -> {
         try (PreparedStatement stmt = prepared(); ResultSet rs = stmt.executeQuery()) {
           result = queryOptionalInt0(rs);
@@ -1018,13 +1018,6 @@ final class SqlTransaction implements Sql.Transaction {
 
         yield State.START;
       }
-
-      case SQL_PAGINATED, PREPARED_PAGINATED -> throw new UnsupportedOperationException("""
-      This is a paginated SQL query. To prevent this exception from being thrown:
-
-      1) Invoke the `query` method instead. Or
-      2) Do not paginate this query.
-      """);
 
       case START,
            SQL_COUNT,
@@ -1073,6 +1066,10 @@ final class SqlTransaction implements Sql.Transaction {
         yield State.START;
       }
 
+      case SQL_PAGINATED, PREPARED_PAGINATED -> throw new Sql.InvalidOperationException("""
+      The 'queryOptionalLong' operation cannot be executed on a paginated SQL statement.
+      """);
+
       case PREPARED -> {
         try (PreparedStatement stmt = prepared(); ResultSet rs = stmt.executeQuery()) {
           result = queryOptionalLong0(rs);
@@ -1082,13 +1079,6 @@ final class SqlTransaction implements Sql.Transaction {
 
         yield State.START;
       }
-
-      case SQL_PAGINATED, PREPARED_PAGINATED -> throw new UnsupportedOperationException("""
-      This is a paginated SQL query. To prevent this exception from being thrown:
-
-      1) Invoke the `query` method instead. Or
-      2) Do not paginate this query.
-      """);
 
       case START,
            SQL_COUNT,
@@ -1127,6 +1117,8 @@ final class SqlTransaction implements Sql.Transaction {
     int result;
 
     state = switch (state) {
+      case START -> throw illegalState();
+
       case SQL -> {
         try (Statement stmt = connection.createStatement()) {
           result = stmt.executeUpdate(sql());
@@ -1136,6 +1128,10 @@ final class SqlTransaction implements Sql.Transaction {
 
         yield State.START;
       }
+
+      case SQL_COUNT, PREPARED_COUNT -> throw new Sql.InvalidOperationException("""
+      The 'update' operation cannot be executed on a SQL count statement.
+      """);
 
       case SQL_GENERATED -> {
         try (Statement stmt = connection.createStatement()) {
@@ -1152,8 +1148,8 @@ final class SqlTransaction implements Sql.Transaction {
         yield State.START;
       }
 
-      case SQL_COUNT, PREPARED_COUNT -> throw new Sql.InvalidOperationException("""
-      The 'update' operation cannot be executed on a SQL count statement.
+      case SQL_PAGINATED, PREPARED_PAGINATED -> throw new Sql.InvalidOperationException("""
+      The 'update' operation cannot be executed on a paginated SQL statement.
       """);
 
       case SQL_SCRIPT -> throw new Sql.InvalidOperationException("""
@@ -1189,12 +1185,8 @@ final class SqlTransaction implements Sql.Transaction {
         yield State.START;
       }
 
-      case START,
-           SQL_PAGINATED -> throw illegalState();
-
       case PREPARED_BATCH,
-           PREPARED_GENERATED_BATCH,
-           PREPARED_PAGINATED -> throw illegalState();
+           PREPARED_GENERATED_BATCH -> throw illegalState();
 
       case ERROR -> throw illegalState();
     };

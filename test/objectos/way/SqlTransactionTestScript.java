@@ -18,6 +18,7 @@ package objectos.way;
 import static org.testng.Assert.assertEquals;
 
 import java.util.List;
+import java.util.function.Consumer;
 import org.testng.annotations.Test;
 
 public class SqlTransactionTestScript extends SqlTransactionTestSupport {
@@ -25,21 +26,7 @@ public class SqlTransactionTestScript extends SqlTransactionTestSupport {
   @Test
   @Override
   public void addIf01() {
-    invalidOperation(
-        trx -> {
-          trx.sql(Sql.Kind.SCRIPT, """
-          insert into FOO (A, B) values (1, 5)
-
-          insert into BAR (X, Y) values ('A', 'B')
-          """);
-
-          trx.addIf("abc", true);
-        },
-
-        """
-        The 'addIf' operation cannot be executed on a SQL script.
-        """
-    );
+    invalidOperation("addIf", trx -> trx.addIf("abc", true));
   }
 
   @Test(description = """
@@ -149,28 +136,32 @@ public class SqlTransactionTestScript extends SqlTransactionTestSupport {
   }
 
   @Test
+  public void querySingle01() {
+    invalidOperation("querySingle", trx -> trx.querySingle(Foo::new));
+  }
+
+  @Test
   @Override
   public void querySingleInt01() {
-    invalidOperation(
-        trx -> {
-          trx.sql(Sql.Kind.SCRIPT, """
-          insert into FOO (A, B) values (1, 5)
+    invalidOperation("querySingleInt", Sql.Transaction::querySingleInt);
+  }
 
-          insert into BAR (X, Y) values ('A', 'B')
-          """);
-
-          trx.querySingleInt();
-        },
-
-        """
-        The 'querySingleInt' operation cannot be executed on a SQL script.
-        """
-    );
+  @Test
+  public void querySingleLong01() {
+    invalidOperation("querySingleLong", Sql.Transaction::querySingleLong);
   }
 
   @Test
   @Override
   public final void update01() {
+    invalidOperation("update", Sql.Transaction::update);
+  }
+
+  private void invalidOperation(String name, Consumer<Sql.Transaction> operation) {
+    String expectedMessage = """
+    The '%s' operation cannot be executed on a SQL script.
+    """.formatted(name);
+
     invalidOperation(
         trx -> {
           trx.sql(Sql.Kind.SCRIPT, """
@@ -179,12 +170,10 @@ public class SqlTransactionTestScript extends SqlTransactionTestSupport {
           insert into BAR (X, Y) values ('A', 'B')
           """);
 
-          trx.update();
+          operation.accept(trx);
         },
 
-        """
-        The 'update' operation cannot be executed on a SQL script.
-        """
+        expectedMessage
     );
   }
 

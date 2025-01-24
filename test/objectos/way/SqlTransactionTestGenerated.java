@@ -19,6 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -34,59 +35,7 @@ public class SqlTransactionTestGenerated extends SqlTransactionTestSupport {
   @Test
   @Override
   public void addIf01() {
-    invalidOperation(
-        trx -> {
-          trx.sql("insert into BAR (X) values (?)");
-
-          trx.with(generatedKeys);
-
-          trx.addIf("abc", true);
-        },
-
-        """
-        The 'addIf' operation cannot be executed on a SQL statement returning generated keys.
-        """
-    );
-  }
-
-  @Test
-  public void addIf02() {
-    invalidOperation(
-        trx -> {
-          trx.sql("insert into BAR (X) values (?)");
-
-          trx.with(generatedKeys);
-
-          trx.add("FOO");
-
-          trx.addIf("abc", true);
-        },
-
-        """
-        The 'addIf' operation cannot be executed on a SQL statement returning generated keys.
-        """
-    );
-  }
-
-  @Test
-  public void addIf03() {
-    invalidOperation(
-        trx -> {
-          trx.sql("insert into BAR (X) values (?)");
-
-          trx.with(generatedKeys);
-
-          trx.add("FOO");
-
-          trx.addBatch();
-
-          trx.addIf("abc", true);
-        },
-
-        """
-        The 'addIf' operation cannot be executed on a SQL statement returning generated keys.
-        """
-    );
+    invalidOperation("addIf", trx -> trx.addIf("abc", true));
   }
 
   @Test(description = """
@@ -294,61 +243,19 @@ public class SqlTransactionTestGenerated extends SqlTransactionTestSupport {
   }
 
   @Test
+  public void querySingle01() {
+    invalidOperation("querySingle", trx -> trx.querySingle(Foo::new));
+  }
+
+  @Test
   @Override
   public void querySingleInt01() {
-    invalidOperation(
-        trx -> {
-          trx.sql("insert into BAR (X) values (123)");
-
-          trx.with(generatedKeys);
-
-          trx.querySingleInt();
-        },
-
-        """
-        The 'querySingleInt' operation cannot be executed on a SQL statement returning generated keys.
-        """
-    );
+    invalidOperation("querySingleInt", Sql.Transaction::querySingleInt);
   }
 
   @Test
-  public void querySingleInt02() {
-    invalidOperation(
-        trx -> {
-          trx.sql("insert into BAR (X) select A from FOO where X = ?");
-
-          trx.with(generatedKeys);
-
-          trx.add(123);
-
-          trx.querySingleInt();
-        },
-
-        """
-        The 'querySingleInt' operation cannot be executed on a SQL statement returning generated keys.
-        """
-    );
-  }
-
-  @Test
-  public void querySingleInt03() {
-    invalidOperation(
-        trx -> {
-          trx.sql("insert into BAR (X) select A from FOO where X = ?");
-
-          trx.with(generatedKeys);
-
-          trx.add(123);
-
-          trx.addBatch();
-
-          trx.querySingleInt();
-        },
-
-        """
-        The 'querySingleInt' operation cannot be executed on a SQL statement returning generated keys.
-        """
-    );
+  public void querySingleLong01() {
+    invalidOperation("querySingleLong", Sql.Transaction::querySingleLong);
   }
 
   @Test(description = """
@@ -481,6 +388,54 @@ public class SqlTransactionTestGenerated extends SqlTransactionTestSupport {
         next()
         close()
         """
+    );
+  }
+
+  private void invalidOperation(String name, Consumer<Sql.Transaction> operation) {
+    String expectedMessage = """
+    The '%s' operation cannot be executed on a SQL statement returning generated keys.
+    """.formatted(name);
+
+    invalidOperation(
+        trx -> {
+          trx.sql("insert into BAR (X) values (123)");
+
+          trx.with(generatedKeys);
+
+          operation.accept(trx);
+        },
+
+        expectedMessage
+    );
+
+    invalidOperation(
+        trx -> {
+          trx.sql("insert into BAR (X) select A from FOO where X = ?");
+
+          trx.with(generatedKeys);
+
+          trx.add(123);
+
+          operation.accept(trx);
+        },
+
+        expectedMessage
+    );
+
+    invalidOperation(
+        trx -> {
+          trx.sql("insert into BAR (X) select A from FOO where X = ?");
+
+          trx.with(generatedKeys);
+
+          trx.add(123);
+
+          trx.addBatch();
+
+          operation.accept(trx);
+        },
+
+        expectedMessage
     );
   }
 
