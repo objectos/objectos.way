@@ -19,6 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -35,16 +36,83 @@ public class SqlTransactionTestPaginated extends SqlTransactionTestSupport {
   private final Sql.Page page1 = Sql.Page.of(1, 15);
   private final Sql.Page page2 = Sql.Page.of(2, 15);
 
+  @Test
   @Override
   public void addIf01() {
     invalidOperation("addIf", trx -> trx.addIf("FOO", true));
   }
 
+  @Test
+  @Override
+  public void addNullable01() {
+    assertEquals(
+        preparedStatement(
+            List.of(
+                Map.of("1", "Hello", "2", "World!")
+            ),
+
+            trx -> {
+              trx.sql("""
+              select A, B
+              from FOO
+              where C = ?
+              """);
+
+              trx.with(page1);
+
+              trx.add(null, Types.DATE);
+
+              return trx.query(String2::new);
+            }
+        ),
+
+        List.of(
+            new String2("Hello", "World!")
+        )
+    );
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(select A, B from FOO where C = ? limit 15, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setNull(1, 91)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        getString(1)
+        getString(2)
+        next()
+        close()
+        """
+    );
+
+    assertEmpty(statement);
+  }
+
+  @Test
   @Override
   public void batchUpdate01() {
     invalidOperation("batchUpdate", Sql.Transaction::batchUpdate);
   }
 
+  @Override
   @Test(description = """
   query:
   - prepared
@@ -243,20 +311,24 @@ public class SqlTransactionTestPaginated extends SqlTransactionTestSupport {
   }
 
   @Test
-  public void queryFirst01() {
-    invalidOperation("queryFirst", trx -> trx.queryFirst(Foo::new));
+  @Override
+  public void queryOptional01() {
+    invalidOperation("queryOptional", trx -> trx.queryOptional(Foo::new));
   }
 
+  @Override
   @Test
   public void queryOptionalInt01() {
     invalidOperation("queryOptionalInt", Sql.Transaction::queryOptionalInt);
   }
 
+  @Override
   @Test
   public void queryOptionalLong01() {
     invalidOperation("queryOptionalLong", Sql.Transaction::queryOptionalLong);
   }
 
+  @Override
   @Test
   public void querySingle01() {
     invalidOperation("querySingle", trx -> trx.querySingle(Foo::new));
@@ -268,6 +340,7 @@ public class SqlTransactionTestPaginated extends SqlTransactionTestSupport {
     invalidOperation("querySingleInt", Sql.Transaction::querySingleInt);
   }
 
+  @Override
   @Test
   public void querySingleLong01() {
     invalidOperation("querySingleLong", Sql.Transaction::querySingleLong);

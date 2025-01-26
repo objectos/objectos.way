@@ -17,9 +17,15 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import java.sql.Types;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.OptionalInt;
+import java.util.OptionalLong;
 import java.util.function.Consumer;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
@@ -538,6 +544,123 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
     });
   }
 
+  @Test
+  @Override
+  public void addNullable01() {
+    assertEquals(
+        preparedStatement(
+            List.of(
+                Map.of("1", 256L)
+            ),
+
+            trx -> {
+              trx.sql(Sql.TEMPLATE, """
+              select A from FOO
+              --
+              where X = ?
+              """);
+
+              trx.add(null, Types.DATE);
+
+              return trx.querySingleLong();
+            }
+        ),
+
+        256L
+    );
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(select A from FOO where X = ?, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setNull(1, 91)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        getLong(1)
+        next()
+        close()
+        """
+    );
+
+    assertEmpty(statement);
+  }
+
+  @Test
+  public void addNullable02() {
+    assertEquals(
+        preparedStatement(
+            List.of(
+                Map.of("1", 256L)
+            ),
+
+            trx -> {
+              trx.sql(Sql.TEMPLATE, """
+              select A from FOO
+              --
+              where X = ?
+              """);
+
+              trx.add("ABC", Types.VARCHAR);
+
+              return trx.querySingleLong();
+            }
+        ),
+
+        256L
+    );
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(select A from FOO where X = ?, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setString(1, ABC)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        getLong(1)
+        next()
+        close()
+        """
+    );
+
+    assertEmpty(statement);
+  }
+
   @Test(description = """
   batchUpdate
   - currently unsupported
@@ -561,6 +684,774 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
         The 'batchUpdate' operation cannot be executed on a SQL template.
         """
     );
+  }
+
+  @Test
+  @Override
+  public void query01() {
+    assertEquals(
+        preparedStatement(
+            List.of(
+                Map.of("1", 1, "2", "FOO", "3", LocalDate.of(2020, 12, 1))
+            ),
+
+            trx -> {
+              trx.sql(Sql.TEMPLATE, """
+              select A, B, C from FOO
+              --
+              order by C
+              """);
+
+              return trx.query(Foo::new);
+            }
+        ),
+
+        List.of(
+            new Foo(1, "FOO", LocalDate.of(2020, 12, 1))
+        )
+    );
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(select A, B, C from FOO order by C, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        getInt(1)
+        getString(2)
+        getObject(3, class java.time.LocalDate)
+        next()
+        close()
+        """
+    );
+
+    assertEmpty(statement);
+  }
+
+  @Test
+  @Override
+  public void queryOptional01() {
+    assertEquals(
+        preparedStatement(
+            List.of(
+                Map.of("1", 1, "2", "FOO", "3", LocalDate.of(2020, 12, 1))
+            ),
+
+            trx -> {
+              trx.sql(Sql.TEMPLATE, """
+              select A, B, C from FOO
+              --
+              where X = ?
+              """);
+
+              trx.add("BAR");
+
+              return trx.queryOptional(Foo::new);
+            }
+        ),
+
+        Optional.of(
+            new Foo(1, "FOO", LocalDate.of(2020, 12, 1))
+        )
+    );
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(select A, B, C from FOO where X = ?, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setString(1, BAR)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        getInt(1)
+        getString(2)
+        getObject(3, class java.time.LocalDate)
+        next()
+        close()
+        """
+    );
+
+    assertEmpty(statement);
+  }
+
+  @Test
+  public void queryOptional02() {
+    assertEquals(
+        preparedStatement(
+            List.of(),
+
+            trx -> {
+              trx.sql(Sql.TEMPLATE, """
+              select A, B, C from FOO
+              --
+              where X = ?
+              """);
+
+              trx.add("BAR");
+
+              return trx.queryOptional(Foo::new);
+            }
+        ),
+
+        Optional.empty()
+    );
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(select A, B, C from FOO where X = ?, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setString(1, BAR)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        close()
+        """
+    );
+
+    assertEmpty(statement);
+  }
+
+  @Test
+  public void queryOptional03() {
+    try {
+      preparedStatement(
+          List.of(
+              Map.of("1", 1, "2", "FOO1", "3", LocalDate.of(2020, 12, 1)),
+              Map.of("1", 2, "2", "FOO2", "3", LocalDate.of(2020, 12, 2))
+          ),
+
+          trx -> {
+            trx.sql(Sql.TEMPLATE, """
+              select A, B, C from FOO
+              --
+              where X = ?
+              """);
+
+            trx.add("BAR");
+
+            return trx.queryOptional(Foo::new);
+          }
+      );
+
+      Assert.fail("It should have thrown Sql.TooManyRowsException");
+    } catch (Sql.TooManyRowsException expected) {
+
+    }
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(select A, B, C from FOO where X = ?, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setString(1, BAR)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        getInt(1)
+        getString(2)
+        getObject(3, class java.time.LocalDate)
+        next()
+        close()
+        """
+    );
+
+    assertEmpty(statement);
+  }
+
+  @Test
+  @Override
+  public void queryOptionalInt01() {
+    assertEquals(
+        preparedStatement(
+            List.of(
+                Map.of("1", 1)
+            ),
+
+            trx -> {
+              trx.sql(Sql.TEMPLATE, """
+              select A from FOO
+              --
+              where X = ?
+              """);
+
+              trx.add("BAR");
+
+              return trx.queryOptionalInt();
+            }
+        ),
+
+        OptionalInt.of(1)
+    );
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(select A from FOO where X = ?, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setString(1, BAR)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        getInt(1)
+        next()
+        close()
+        """
+    );
+
+    assertEmpty(statement);
+  }
+
+  @Test
+  public void queryOptionalInt02() {
+    assertEquals(
+        preparedStatement(
+            List.of(),
+
+            trx -> {
+              trx.sql(Sql.TEMPLATE, """
+              select A from FOO
+              --
+              where X = ?
+              """);
+
+              trx.add("BAR");
+
+              return trx.queryOptionalInt();
+            }
+        ),
+
+        OptionalInt.empty()
+    );
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(select A from FOO where X = ?, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setString(1, BAR)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        close()
+        """
+    );
+
+    assertEmpty(statement);
+  }
+
+  @Test
+  public void queryOptionalInt03() {
+    try {
+      preparedStatement(
+          List.of(
+              Map.of("1", 1),
+              Map.of("1", 12)
+          ),
+
+          trx -> {
+            trx.sql(Sql.TEMPLATE, """
+              select A from FOO
+              --
+              where X = ?
+              """);
+
+            trx.add("BAR");
+
+            return trx.queryOptionalInt();
+          }
+      );
+
+      Assert.fail("It should have thrown Sql.TooManyRowsException");
+    } catch (Sql.TooManyRowsException expected) {
+
+    }
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(select A from FOO where X = ?, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setString(1, BAR)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        getInt(1)
+        next()
+        close()
+        """
+    );
+
+    assertEmpty(statement);
+  }
+
+  @Test
+  @Override
+  public void queryOptionalLong01() {
+    assertEquals(
+        preparedStatement(
+            List.of(
+                Map.of("1", 1L)
+            ),
+
+            trx -> {
+              trx.sql(Sql.TEMPLATE, """
+              select A from FOO
+              --
+              where X = ?
+              """);
+
+              trx.add("BAR");
+
+              return trx.queryOptionalLong();
+            }
+        ),
+
+        OptionalLong.of(1L)
+    );
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(select A from FOO where X = ?, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setString(1, BAR)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        getLong(1)
+        next()
+        close()
+        """
+    );
+
+    assertEmpty(statement);
+  }
+
+  @Test
+  public void queryOptionalLong02() {
+    assertEquals(
+        preparedStatement(
+            List.of(),
+
+            trx -> {
+              trx.sql(Sql.TEMPLATE, """
+              select A from FOO
+              --
+              where X = ?
+              """);
+
+              trx.add("BAR");
+
+              return trx.queryOptionalLong();
+            }
+        ),
+
+        OptionalLong.empty()
+    );
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(select A from FOO where X = ?, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setString(1, BAR)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        close()
+        """
+    );
+
+    assertEmpty(statement);
+  }
+
+  @Test
+  public void queryOptionalLong03() {
+    try {
+      preparedStatement(
+          List.of(
+              Map.of("1", 1L),
+              Map.of("1", 12L)
+          ),
+
+          trx -> {
+            trx.sql(Sql.TEMPLATE, """
+              select A from FOO
+              --
+              where X = ?
+              """);
+
+            trx.add("BAR");
+
+            return trx.queryOptionalLong();
+          }
+      );
+
+      Assert.fail("It should have thrown Sql.TooManyRowsException");
+    } catch (Sql.TooManyRowsException expected) {
+
+    }
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(select A from FOO where X = ?, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setString(1, BAR)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        getLong(1)
+        next()
+        close()
+        """
+    );
+
+    assertEmpty(statement);
+  }
+
+  @Test
+  @Override
+  public void querySingle01() {
+    assertEquals(
+        preparedStatement(
+            List.of(
+                Map.of("1", 1, "2", "FOO", "3", LocalDate.of(2020, 12, 1))
+            ),
+
+            trx -> {
+              trx.sql(Sql.TEMPLATE, """
+              select A, B, C from FOO
+              --
+              where X = ?
+              """);
+
+              trx.add("BAR");
+
+              return trx.querySingle(Foo::new);
+            }
+        ),
+
+        new Foo(1, "FOO", LocalDate.of(2020, 12, 1))
+    );
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(select A, B, C from FOO where X = ?, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setString(1, BAR)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        getInt(1)
+        getString(2)
+        getObject(3, class java.time.LocalDate)
+        next()
+        close()
+        """
+    );
+
+    assertEmpty(statement);
+  }
+
+  @Test
+  public void querySingle02() {
+    try {
+      preparedStatement(
+          List.of(),
+
+          trx -> {
+            trx.sql(Sql.TEMPLATE, """
+            select A, B, C from FOO
+            --
+            where X = ?
+            """);
+
+            trx.add("BAR");
+
+            return trx.querySingle(Foo::new);
+          }
+      );
+
+      Assert.fail("It should have thrown Sql.NoSuchRowException");
+    } catch (Sql.NoSuchRowException expected) {
+
+    }
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(select A, B, C from FOO where X = ?, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setString(1, BAR)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        close()
+        """
+    );
+
+    assertEmpty(statement);
+  }
+
+  @Test
+  public void querySingle03() {
+    try {
+      preparedStatement(
+          List.of(
+              Map.of("1", 1, "2", "FOO1", "3", LocalDate.of(2020, 12, 1)),
+              Map.of("1", 2, "2", "FOO2", "3", LocalDate.of(2020, 12, 2))
+          ),
+
+          trx -> {
+            trx.sql(Sql.TEMPLATE, """
+            select A, B, C from FOO
+            --
+            where X = ?
+            """);
+
+            trx.add("BAR");
+
+            return trx.querySingle(Foo::new);
+          }
+      );
+
+      Assert.fail("It should have thrown Sql.TooManyRowsException");
+    } catch (Sql.TooManyRowsException expected) {
+
+    }
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(select A, B, C from FOO where X = ?, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setString(1, BAR)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        getInt(1)
+        getString(2)
+        getObject(3, class java.time.LocalDate)
+        next()
+        close()
+        """
+    );
+
+    assertEmpty(statement);
   }
 
   @Test
@@ -614,6 +1505,299 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
         """
         next()
         getInt(1)
+        next()
+        close()
+        """
+    );
+
+    assertEmpty(statement);
+  }
+
+  @Test
+  public void querySingleInt02() {
+    try {
+      preparedStatement(
+          List.of(),
+
+          trx -> {
+            trx.sql(Sql.TEMPLATE, """
+            select A from FOO
+            --
+            where X = ?
+            """);
+
+            trx.addIf("SOME", true);
+
+            return trx.querySingleInt();
+          }
+      );
+
+      Assert.fail("It should have thrown Sql.NoSuchRowException");
+    } catch (Sql.NoSuchRowException expected) {
+
+    }
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(select A from FOO where X = ?, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setString(1, SOME)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        close()
+        """
+    );
+
+    assertEmpty(statement);
+  }
+
+  @Test
+  public void querySingleInt03() {
+    try {
+      preparedStatement(
+          List.of(
+              Map.of("1", 256),
+              Map.of("1", 512)
+          ),
+
+          trx -> {
+            trx.sql(Sql.TEMPLATE, """
+            select A from FOO
+            --
+            where X = ?
+            """);
+
+            trx.addIf("SOME", true);
+
+            return trx.querySingleInt();
+          }
+      );
+
+      Assert.fail("It should have thrown Sql.TooManyRowsException");
+    } catch (Sql.TooManyRowsException expected) {
+
+    }
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(select A from FOO where X = ?, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setString(1, SOME)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        getInt(1)
+        next()
+        close()
+        """
+    );
+
+    assertEmpty(statement);
+  }
+
+  @Test
+  @Override
+  public void querySingleLong01() {
+    assertEquals(
+        preparedStatement(
+            List.of(
+                Map.of("1", 256L)
+            ),
+
+            trx -> {
+              trx.sql(Sql.TEMPLATE, """
+              select A from FOO
+              --
+              where X = ?
+              """);
+
+              trx.addIf("SOME", true);
+
+              return trx.querySingleLong();
+            }
+        ),
+
+        256L
+    );
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(select A from FOO where X = ?, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setString(1, SOME)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        getLong(1)
+        next()
+        close()
+        """
+    );
+
+    assertEmpty(statement);
+  }
+
+  @Test
+  public void querySingleLong02() {
+    try {
+      preparedStatement(
+          List.of(),
+
+          trx -> {
+            trx.sql(Sql.TEMPLATE, """
+            select A from FOO
+            --
+            where X = ?
+            """);
+
+            trx.addIf("SOME", true);
+
+            return trx.querySingleLong();
+          }
+      );
+
+      Assert.fail("It should have thrown Sql.NoSuchRowException");
+    } catch (Sql.NoSuchRowException expected) {
+
+    }
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(select A from FOO where X = ?, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setString(1, SOME)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        close()
+        """
+    );
+
+    assertEmpty(statement);
+  }
+
+  @Test
+  public void querySingleLong03() {
+    try {
+      preparedStatement(
+          List.of(
+              Map.of("1", 256L),
+              Map.of("1", 512L)
+          ),
+
+          trx -> {
+            trx.sql(Sql.TEMPLATE, """
+            select A from FOO
+            --
+            where X = ?
+            """);
+
+            trx.addIf("SOME", true);
+
+            return trx.querySingleLong();
+          }
+      );
+
+      Assert.fail("It should have thrown Sql.TooManyRowsException");
+    } catch (Sql.TooManyRowsException expected) {
+
+    }
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(select A from FOO where X = ?, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setString(1, SOME)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        getLong(1)
         next()
         close()
         """

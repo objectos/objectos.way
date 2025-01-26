@@ -28,6 +28,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.OptionalLong;
 import java.util.function.Consumer;
@@ -450,7 +451,11 @@ public final class Sql {
      *
      * @return the first result or {@code null} if there were no results
      */
-    <T> T queryFirst(Mapper<T> mapper) throws DatabaseException;
+    <T> Optional<T> queryOptional(Mapper<T> mapper) throws DatabaseException, TooManyRowsException;
+
+    OptionalInt queryOptionalInt() throws DatabaseException, TooManyRowsException;
+
+    OptionalLong queryOptionalLong() throws DatabaseException, TooManyRowsException;
 
     /**
      * Executes the current SQL statement as a row-retrieving query and returns
@@ -465,10 +470,6 @@ public final class Sql {
     int querySingleInt() throws DatabaseException;
 
     long querySingleLong() throws DatabaseException;
-
-    OptionalInt queryOptionalInt() throws DatabaseException;
-
-    OptionalLong queryOptionalLong() throws DatabaseException;
 
     /**
      * Executes the current SQL statement as an update operation.
@@ -502,6 +503,8 @@ public final class Sql {
 
     private static final long serialVersionUID = 1L;
 
+    DatabaseException() {}
+
     DatabaseException(SQLException cause) {
       super(cause);
     }
@@ -526,6 +529,14 @@ public final class Sql {
 
   }
 
+  public static final class NoSuchRowException extends DatabaseException {
+
+    private static final long serialVersionUID = 2389101948080888160L;
+
+    NoSuchRowException() {}
+
+  }
+
   public static final class RollbackWrapperException extends RuntimeException {
 
     private static final long serialVersionUID = 6575236786994565106L;
@@ -533,6 +544,14 @@ public final class Sql {
     RollbackWrapperException(Throwable cause) {
       super(cause);
     }
+
+  }
+
+  public static final class TooManyRowsException extends DatabaseException {
+
+    private static final long serialVersionUID = 2389101948080888160L;
+
+    TooManyRowsException() {}
 
   }
 

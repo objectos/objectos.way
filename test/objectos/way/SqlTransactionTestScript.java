@@ -17,6 +17,7 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import java.sql.Types;
 import java.util.List;
 import java.util.function.Consumer;
 import org.testng.annotations.Test;
@@ -27,6 +28,12 @@ public class SqlTransactionTestScript extends SqlTransactionTestSupport {
   @Override
   public void addIf01() {
     invalidOperation("addIf", trx -> trx.addIf("abc", true));
+  }
+
+  @Test
+  @Override
+  public void addNullable01() {
+    invalidOperation("addNullable", trx -> trx.add("abc", Types.VARCHAR));
   }
 
   @Test(description = """
@@ -136,6 +143,31 @@ public class SqlTransactionTestScript extends SqlTransactionTestSupport {
   }
 
   @Test
+  @Override
+  public void query01() {
+    invalidOperation("query", trx -> trx.query(Foo::new));
+  }
+
+  @Test
+  @Override
+  public void queryOptional01() {
+    invalidOperation("queryOptional", trx -> trx.queryOptional(Foo::new));
+  }
+
+  @Test
+  @Override
+  public void queryOptionalInt01() {
+    invalidOperation("queryOptionalInt", Sql.Transaction::queryOptionalInt);
+  }
+
+  @Test
+  @Override
+  public void queryOptionalLong01() {
+    invalidOperation("queryOptionalLong", Sql.Transaction::queryOptionalLong);
+  }
+
+  @Test
+  @Override
   public void querySingle01() {
     invalidOperation("querySingle", trx -> trx.querySingle(Foo::new));
   }
@@ -146,6 +178,7 @@ public class SqlTransactionTestScript extends SqlTransactionTestSupport {
     invalidOperation("querySingleInt", Sql.Transaction::querySingleInt);
   }
 
+  @Override
   @Test
   public void querySingleLong01() {
     invalidOperation("querySingleLong", Sql.Transaction::querySingleLong);

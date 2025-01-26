@@ -17,8 +17,11 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import java.sql.Types;
 import java.util.List;
 import java.util.Map;
+import java.util.OptionalInt;
+import java.util.OptionalLong;
 import java.util.function.Consumer;
 import org.testng.annotations.Test;
 
@@ -32,8 +35,299 @@ public class SqlTransactionTestCount extends SqlTransactionTestSupport {
 
   @Test
   @Override
+  public void addNullable01() {
+    assertEquals(
+        preparedStatement(
+            List.of(),
+
+            trx -> {
+              trx.sql(Sql.Kind.COUNT, """
+              select A, B
+              from FOO
+              where C = ?
+              """);
+
+              trx.add(null, Types.DATE);
+
+              return trx.queryOptionalInt();
+            }
+        ),
+
+        OptionalInt.empty()
+    );
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(select count(*) from ( select A, B from FOO where C = ? ) x, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setNull(1, 91)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        close()
+        """
+    );
+
+    assertEmpty(statement);
+  }
+
+  @Test
+  @Override
   public void batchUpdate01() {
     invalidOperation("batchUpdate", Sql.Transaction::batchUpdate);
+  }
+
+  @Test
+  @Override
+  public void query01() {
+    invalidOperation("query", trx -> trx.query(Foo::new));
+  }
+
+  @Test
+  @Override
+  public void queryOptional01() {
+    invalidOperation("queryOptional", trx -> trx.queryOptional(Foo::new));
+  }
+
+  @Test
+  @Override
+  public void queryOptionalInt01() {
+    assertEquals(
+        statement(
+            List.of(
+                Map.of("1", 23)
+            ),
+
+            trx -> {
+              trx.sql(Sql.Kind.COUNT, """
+              select A, B
+              from FOO
+              """);
+
+              return trx.queryOptionalInt();
+            }
+        ),
+
+        OptionalInt.of(23)
+    );
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        createStatement()
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        statement.toString(),
+
+        """
+        executeQuery(select count(*) from ( select A, B from FOO ) x)
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        getInt(1)
+        next()
+        close()
+        """
+    );
+
+    assertEmpty(preparedStatement);
+  }
+
+  @Test
+  public void queryOptionalInt02() {
+    assertEquals(
+        preparedStatement(
+            List.of(),
+
+            trx -> {
+              trx.sql(Sql.Kind.COUNT, """
+              select A, B
+              from FOO
+              where C = ?
+              """);
+
+              trx.add(123);
+
+              return trx.queryOptionalInt();
+            }
+        ),
+
+        OptionalInt.empty()
+    );
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(select count(*) from ( select A, B from FOO where C = ? ) x, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setInt(1, 123)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        close()
+        """
+    );
+
+    assertEmpty(statement);
+  }
+
+  @Test
+  @Override
+  public void queryOptionalLong01() {
+    assertEquals(
+        statement(
+            List.of(
+                Map.of("1", 23L)
+            ),
+
+            trx -> {
+              trx.sql(Sql.Kind.COUNT, """
+              select A, B
+              from FOO
+              """);
+
+              return trx.queryOptionalLong();
+            }
+        ),
+
+        OptionalLong.of(23L)
+    );
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        createStatement()
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        statement.toString(),
+
+        """
+        executeQuery(select count(*) from ( select A, B from FOO ) x)
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        getLong(1)
+        next()
+        close()
+        """
+    );
+
+    assertEmpty(preparedStatement);
+  }
+
+  @Test
+  public void queryOptionalLong02() {
+    assertEquals(
+        preparedStatement(
+            List.of(),
+
+            trx -> {
+              trx.sql(Sql.Kind.COUNT, """
+              select A, B
+              from FOO
+              where C = ?
+              """);
+
+              trx.add(123);
+
+              return trx.queryOptionalLong();
+            }
+        ),
+
+        OptionalLong.empty()
+    );
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(select count(*) from ( select A, B from FOO where C = ? ) x, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setInt(1, 123)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        close()
+        """
+    );
+
+    assertEmpty(statement);
+  }
+
+  @Test
+  @Override
+  public void querySingle01() {
+    invalidOperation("querySingle", trx -> trx.querySingle(Foo::new));
   }
 
   @Test(description = """
@@ -149,6 +443,123 @@ public class SqlTransactionTestCount extends SqlTransactionTestSupport {
         """
         next()
         getInt(1)
+        next()
+        close()
+        """
+    );
+
+    assertEmpty(statement);
+  }
+
+  @Test
+  @Override
+  public void querySingleLong01() {
+    assertEquals(
+        statement(
+            List.of(
+                Map.of("1", 23L)
+            ),
+
+            trx -> {
+              trx.sql(Sql.Kind.COUNT, """
+              select A, B
+              from FOO
+              """);
+
+              return trx.querySingleLong();
+            }
+        ),
+
+        23L
+    );
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        createStatement()
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        statement.toString(),
+
+        """
+        executeQuery(select count(*) from ( select A, B from FOO ) x)
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        getLong(1)
+        next()
+        close()
+        """
+    );
+
+    assertEmpty(preparedStatement);
+  }
+
+  @Test(description = """
+  querySingleInt
+  - happy path
+  - prepared
+  """)
+  public void querySingleLong02() {
+    assertEquals(
+        preparedStatement(
+            List.of(
+                Map.of("1", 567L)
+            ),
+
+            trx -> {
+              trx.sql(Sql.Kind.COUNT, """
+              select A, B
+              from FOO
+              where C = ?
+              """);
+
+              trx.add(123);
+
+              return trx.querySingleLong();
+            }
+        ),
+
+        567L
+    );
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(select count(*) from ( select A, B from FOO where C = ? ) x, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setInt(1, 123)
+        executeQuery()
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        getLong(1)
         next()
         close()
         """

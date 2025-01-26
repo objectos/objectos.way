@@ -17,6 +17,7 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import java.sql.Types;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -36,6 +37,77 @@ public class SqlTransactionTestGenerated extends SqlTransactionTestSupport {
   @Override
   public void addIf01() {
     invalidOperation("addIf", trx -> trx.addIf("abc", true));
+  }
+
+  @Test
+  @Override
+  public void addNullable01() {
+    assertEquals(
+        batchPrepared(
+            List.of(
+                Map.of("1", 123)
+            ),
+
+            batches(
+                batch(1)
+            ),
+
+            trx -> {
+              trx.sql("insert into FOO (A, B) values (?, ?)");
+
+              trx.with(generatedKeys);
+
+              trx.add(null, Types.DATE);
+
+              trx.add("bar");
+
+              trx.addBatch();
+
+              return trx.batchUpdate();
+            }
+        ),
+
+        batch(1)
+    );
+
+    assertEquals(generatedKeys.size(), 1);
+    assertEquals(generatedKeys.getAsInt(0), 123);
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(insert into FOO (A, B) values (?, ?), 1)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setNull(1, 91)
+        setString(2, bar)
+        addBatch()
+        executeBatch()
+        getGeneratedKeys()
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        getInt(1)
+        next()
+        close()
+        """
+    );
+
+    assertEmpty(statement);
   }
 
   @Test(description = """
@@ -243,6 +315,31 @@ public class SqlTransactionTestGenerated extends SqlTransactionTestSupport {
   }
 
   @Test
+  @Override
+  public void query01() {
+    invalidOperation("query", trx -> trx.query(Foo::new));
+  }
+
+  @Test
+  @Override
+  public void queryOptional01() {
+    invalidOperation("queryOptional", trx -> trx.queryOptional(Foo::new));
+  }
+
+  @Test
+  @Override
+  public void queryOptionalInt01() {
+    invalidOperation("queryOptionalInt", Sql.Transaction::queryOptionalInt);
+  }
+
+  @Test
+  @Override
+  public void queryOptionalLong01() {
+    invalidOperation("queryOptionalLong", Sql.Transaction::queryOptionalLong);
+  }
+
+  @Test
+  @Override
   public void querySingle01() {
     invalidOperation("querySingle", trx -> trx.querySingle(Foo::new));
   }
@@ -254,6 +351,7 @@ public class SqlTransactionTestGenerated extends SqlTransactionTestSupport {
   }
 
   @Test
+  @Override
   public void querySingleLong01() {
     invalidOperation("querySingleLong", Sql.Transaction::querySingleLong);
   }

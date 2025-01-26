@@ -59,9 +59,23 @@ public abstract class SqlTransactionTestSupport {
 
   public abstract void addIf01();
 
+  public abstract void addNullable01();
+
   public abstract void batchUpdate01();
 
+  public abstract void query01();
+
+  public abstract void queryOptional01();
+
+  public abstract void queryOptionalInt01();
+
+  public abstract void queryOptionalLong01();
+
+  public abstract void querySingle01();
+
   public abstract void querySingleInt01();
+
+  public abstract void querySingleLong01();
 
   public abstract void update01();
 

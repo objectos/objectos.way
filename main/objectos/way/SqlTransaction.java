@@ -22,6 +22,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.OptionalLong;
 import objectos.way.Sql.GeneratedKeys;
@@ -441,12 +442,20 @@ final class SqlTransaction implements Sql.Transaction {
     state = switch (state) {
       case START -> throw illegalState();
 
+      case SQL, PREPARED, PREPARED_BATCH -> throw new Sql.InvalidOperationException("""
+      The 'addIf' operation cannot be executed on a plain SQL statement.
+      """);
+
       case SQL_COUNT, PREPARED_COUNT -> throw new Sql.InvalidOperationException("""
       The 'addIf' operation cannot be executed on a SQL count statement.
       """);
 
       case SQL_GENERATED, PREPARED_GENERATED, PREPARED_GENERATED_BATCH -> throw new Sql.InvalidOperationException("""
       The 'addIf' operation cannot be executed on a SQL statement returning generated keys.
+      """);
+
+      case SQL_PAGINATED, PREPARED_PAGINATED -> throw new Sql.InvalidOperationException("""
+      The 'addIf' operation cannot be executed on a paginated SQL statement.
       """);
 
       case SQL_SCRIPT -> throw new Sql.InvalidOperationException("""
@@ -461,13 +470,6 @@ final class SqlTransaction implements Sql.Transaction {
 
         yield state;
       }
-
-      case SQL,
-           SQL_PAGINATED -> throw illegalState();
-
-      case PREPARED,
-           PREPARED_BATCH,
-           PREPARED_PAGINATED -> throw illegalState();
 
       case ERROR -> throw illegalState();
     };
@@ -488,6 +490,22 @@ final class SqlTransaction implements Sql.Transaction {
 
       case SQL_PAGINATED -> setNullable0Create(value, sqlType, Statement.NO_GENERATED_KEYS, State.PREPARED_PAGINATED);
 
+      case SQL_SCRIPT -> throw new Sql.InvalidOperationException("""
+      The 'addNullable' operation cannot be executed on a SQL script.
+      """);
+
+      case SQL_TEMPLATE -> {
+        final Object nullable;
+        nullable = Sql.nullable(value, sqlType);
+
+        final SqlTemplate tmpl;
+        tmpl = sqlTemplate();
+
+        tmpl.add(nullable);
+
+        yield state;
+      }
+
       case PREPARED,
            PREPARED_BATCH,
            PREPARED_COUNT,
@@ -507,9 +525,6 @@ final class SqlTransaction implements Sql.Transaction {
       }
 
       case START -> throw illegalState();
-
-      case SQL_SCRIPT,
-           SQL_TEMPLATE -> throw illegalState();
 
       case ERROR -> throw illegalState();
     };
@@ -583,8 +598,20 @@ final class SqlTransaction implements Sql.Transaction {
     int[] result;
 
     state = switch (state) {
+      case SQL, PREPARED -> throw new Sql.InvalidOperationException("""
+      The 'batchUpdate' operation cannot be executed on a plain SQL statement with no batches defined.
+      """);
+
       case SQL_COUNT, PREPARED_COUNT -> throw new Sql.InvalidOperationException("""
       The 'batchUpdate' operation cannot be executed on a SQL count statement.
+      """);
+
+      case SQL_GENERATED, PREPARED_GENERATED -> throw new Sql.InvalidOperationException("""
+      The 'batchUpdate' operation cannot be executed on a SQL statement with no batches defined.
+      """);
+
+      case SQL_PAGINATED, PREPARED_PAGINATED -> throw new Sql.InvalidOperationException("""
+      The 'batchUpdate' operation cannot be executed on a paginated SQL statement.
       """);
 
       case SQL_SCRIPT -> {
@@ -611,10 +638,6 @@ final class SqlTransaction implements Sql.Transaction {
         yield State.START;
       }
 
-      case SQL_GENERATED, PREPARED_GENERATED -> throw new Sql.InvalidOperationException("""
-      The 'batchUpdate' operation cannot be executed on a SQL statement with no batches defined.
-      """);
-
       case PREPARED_GENERATED_BATCH -> {
         try (PreparedStatement stmt = prepared()) {
           final Sql.SqlGeneratedKeys<?> generatedKeys;
@@ -631,12 +654,6 @@ final class SqlTransaction implements Sql.Transaction {
       }
 
       case START -> throw illegalState();
-
-      case SQL,
-           SQL_PAGINATED -> throw illegalState();
-
-      case PREPARED,
-           PREPARED_PAGINATED -> throw illegalState();
 
       case ERROR -> throw illegalState();
     };
@@ -683,20 +700,25 @@ final class SqlTransaction implements Sql.Transaction {
         yield State.START;
       }
 
+      case SQL_COUNT, PREPARED_COUNT -> throw new Sql.InvalidOperationException("""
+      The 'query' operation cannot be executed on a SQL count statement.
+      """);
+
+      case SQL_GENERATED, PREPARED_GENERATED, PREPARED_GENERATED_BATCH -> throw new Sql.InvalidOperationException("""
+      The 'query' operation cannot be executed on a SQL statement returning generated keys.
+      """);
+
+      case SQL_SCRIPT -> throw new Sql.InvalidOperationException("""
+      The 'query' operation cannot be executed on a SQL script.
+      """);
+
       case SQL_TEMPLATE -> query(mapper, list, createTemplate(Statement.NO_GENERATED_KEYS));
 
       case PREPARED, PREPARED_PAGINATED -> query(mapper, list, prepared());
 
       case START -> throw illegalState();
 
-      case SQL_COUNT,
-           SQL_GENERATED,
-           SQL_SCRIPT -> throw illegalState();
-
-      case PREPARED_BATCH,
-           PREPARED_COUNT,
-           PREPARED_GENERATED,
-           PREPARED_GENERATED_BATCH -> throw illegalState();
+      case PREPARED_BATCH -> throw illegalState();
 
       case ERROR -> throw illegalState();
     };
@@ -728,15 +750,15 @@ final class SqlTransaction implements Sql.Transaction {
   }
 
   @Override
-  public final <T> T queryFirst(Sql.Mapper<T> mapper) throws Sql.DatabaseException {
+  public final <T> Optional<T> queryOptional(Sql.Mapper<T> mapper) throws Sql.DatabaseException {
     Objects.requireNonNull(mapper, "mapper == null");
 
-    T result;
+    Optional<T> result;
 
     state = switch (state) {
       case SQL -> {
         try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql())) {
-          result = queryFirst0(mapper, rs);
+          result = queryOptional(mapper, rs);
         } catch (SQLException e) {
           throw stateAndWrap(e);
         }
@@ -744,30 +766,37 @@ final class SqlTransaction implements Sql.Transaction {
         yield State.START;
       }
 
-      case SQL_PAGINATED, PREPARED_PAGINATED -> throw new Sql.InvalidOperationException("""
-      The 'queryFirst' operation cannot be executed on a paginated SQL statement.
+      case SQL_COUNT, PREPARED_COUNT -> throw new Sql.InvalidOperationException("""
+      The 'queryOptional' operation cannot be executed on a SQL count statement.
       """);
 
-      case PREPARED -> {
-        try (PreparedStatement stmt = prepared(); ResultSet rs = stmt.executeQuery()) {
-          result = queryFirst0(mapper, rs);
-        } catch (SQLException e) {
-          throw stateAndWrap(e);
-        }
+      case SQL_GENERATED, PREPARED_GENERATED, PREPARED_GENERATED_BATCH -> throw new Sql.InvalidOperationException("""
+      The 'queryOptional' operation cannot be executed on a SQL statement returning generated keys.
+      """);
+
+      case SQL_PAGINATED, PREPARED_PAGINATED -> throw new Sql.InvalidOperationException("""
+      The 'queryOptional' operation cannot be executed on a paginated SQL statement.
+      """);
+
+      case SQL_SCRIPT -> throw new Sql.InvalidOperationException("""
+      The 'queryOptional' operation cannot be executed on a SQL script.
+      """);
+
+      case SQL_TEMPLATE -> {
+        result = queryOptional(mapper, createTemplate(Statement.NO_GENERATED_KEYS));
 
         yield State.START;
       }
 
-      case START,
-           SQL_COUNT,
-           SQL_GENERATED,
-           SQL_SCRIPT,
-           SQL_TEMPLATE -> throw illegalState();
+      case PREPARED -> {
+        result = queryOptional(mapper, prepared());
 
-      case PREPARED_BATCH,
-           PREPARED_COUNT,
-           PREPARED_GENERATED,
-           PREPARED_GENERATED_BATCH -> throw illegalState();
+        yield State.START;
+      }
+
+      case START -> throw illegalState();
+
+      case PREPARED_BATCH -> throw illegalState();
 
       case ERROR -> throw illegalState();
     };
@@ -775,13 +804,176 @@ final class SqlTransaction implements Sql.Transaction {
     return result;
   }
 
-  private <T> T queryFirst0(Sql.Mapper<T> mapper, ResultSet rs) throws SQLException {
-    T result;
+  private <T> Optional<T> queryOptional(Sql.Mapper<T> mapper, PreparedStatement stmt) {
+    try (stmt; ResultSet rs = stmt.executeQuery()) {
+      return queryOptional(mapper, rs);
+    } catch (SQLException e) {
+      throw stateAndWrap(e);
+    }
+  }
 
-    if (!rs.next()) {
-      result = null;
-    } else {
-      result = mapper.map(rs, 1);
+  private <T> Optional<T> queryOptional(Sql.Mapper<T> mapper, ResultSet rs) throws SQLException {
+    Optional<T> result;
+    result = Optional.empty();
+
+    if (rs.next()) {
+      T first = mapper.map(rs, 1);
+
+      if (rs.next()) {
+        throw new Sql.TooManyRowsException();
+      }
+
+      result = Optional.of(first);
+    }
+
+    return result;
+  }
+
+  @Override
+  public final OptionalInt queryOptionalInt() throws Sql.DatabaseException {
+    OptionalInt result;
+
+    state = switch (state) {
+      case SQL, SQL_COUNT -> {
+        try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql())) {
+          result = queryOptionalInt(rs);
+        } catch (SQLException e) {
+          throw stateAndWrap(e);
+        }
+
+        yield State.START;
+      }
+
+      case SQL_GENERATED, PREPARED_GENERATED, PREPARED_GENERATED_BATCH -> throw new Sql.InvalidOperationException("""
+      The 'queryOptionalInt' operation cannot be executed on a SQL statement returning generated keys.
+      """);
+
+      case SQL_PAGINATED, PREPARED_PAGINATED -> throw new Sql.InvalidOperationException("""
+      The 'queryOptionalInt' operation cannot be executed on a paginated SQL statement.
+      """);
+
+      case SQL_SCRIPT -> throw new Sql.InvalidOperationException("""
+      The 'queryOptionalInt' operation cannot be executed on a SQL script.
+      """);
+
+      case SQL_TEMPLATE -> {
+        result = queryOptionalInt(createTemplate(Statement.NO_GENERATED_KEYS));
+
+        yield State.START;
+      }
+
+      case PREPARED, PREPARED_COUNT -> {
+        result = queryOptionalInt(prepared());
+
+        yield State.START;
+      }
+
+      case START -> throw illegalState();
+
+      case PREPARED_BATCH -> throw illegalState();
+
+      case ERROR -> throw illegalState();
+    };
+
+    return result;
+  }
+
+  private OptionalInt queryOptionalInt(PreparedStatement stmt) {
+    try (stmt; ResultSet rs = stmt.executeQuery()) {
+      return queryOptionalInt(rs);
+    } catch (SQLException e) {
+      throw stateAndWrap(e);
+    }
+  }
+
+  private OptionalInt queryOptionalInt(ResultSet rs) throws SQLException {
+    OptionalInt result;
+    result = OptionalInt.empty();
+
+    if (rs.next()) {
+      int value;
+      value = rs.getInt(1);
+
+      if (rs.next()) {
+        throw new Sql.TooManyRowsException();
+      }
+
+      result = OptionalInt.of(value);
+    }
+
+    return result;
+  }
+
+  @Override
+  public final OptionalLong queryOptionalLong() throws Sql.DatabaseException {
+    OptionalLong result;
+
+    state = switch (state) {
+      case SQL, SQL_COUNT -> {
+        try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql())) {
+          result = queryOptionalLong(rs);
+        } catch (SQLException e) {
+          throw stateAndWrap(e);
+        }
+
+        yield State.START;
+      }
+
+      case SQL_GENERATED, PREPARED_GENERATED, PREPARED_GENERATED_BATCH -> throw new Sql.InvalidOperationException("""
+      The 'queryOptionalLong' operation cannot be executed on a SQL statement returning generated keys.
+      """);
+
+      case SQL_PAGINATED, PREPARED_PAGINATED -> throw new Sql.InvalidOperationException("""
+      The 'queryOptionalLong' operation cannot be executed on a paginated SQL statement.
+      """);
+
+      case SQL_SCRIPT -> throw new Sql.InvalidOperationException("""
+      The 'queryOptionalLong' operation cannot be executed on a SQL script.
+      """);
+
+      case SQL_TEMPLATE -> {
+        result = queryOptionalLong(createTemplate(Statement.NO_GENERATED_KEYS));
+
+        yield State.START;
+      }
+
+      case PREPARED, PREPARED_COUNT -> {
+        result = queryOptionalLong(prepared());
+
+        yield State.START;
+      }
+
+      case START -> throw illegalState();
+
+      case PREPARED_BATCH -> throw illegalState();
+
+      case ERROR -> throw illegalState();
+    };
+
+    return result;
+  }
+
+  private OptionalLong queryOptionalLong(PreparedStatement stmt) {
+    try (stmt; ResultSet rs = stmt.executeQuery()) {
+      return queryOptionalLong(rs);
+    } catch (SQLException e) {
+      throw stateAndWrap(e);
+    }
+  }
+
+  private OptionalLong queryOptionalLong(ResultSet rs) throws SQLException {
+    OptionalLong result;
+    result = OptionalLong.empty();
+
+    if (rs.next()) {
+      long value;
+      value = rs.getLong(1);
+
+      if (rs.next()) {
+        throw new Sql.TooManyRowsException();
+      }
+
+      result = OptionalLong.of(value);
     }
 
     return result;
@@ -796,7 +988,7 @@ final class SqlTransaction implements Sql.Transaction {
     state = switch (state) {
       case SQL -> {
         try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql())) {
-          result = querySingle0(mapper, rs);
+          result = querySingle(mapper, rs);
         } catch (SQLException e) {
           throw stateAndWrap(e);
         }
@@ -804,8 +996,8 @@ final class SqlTransaction implements Sql.Transaction {
         yield State.START;
       }
 
-      case SQL_SCRIPT -> throw new Sql.InvalidOperationException("""
-      The 'querySingle' operation cannot be executed on a SQL script.
+      case SQL_COUNT, PREPARED_COUNT -> throw new Sql.InvalidOperationException("""
+      The 'querySingle' operation cannot be executed on a SQL count statement.
       """);
 
       case SQL_GENERATED, PREPARED_GENERATED, PREPARED_GENERATED_BATCH -> throw new Sql.InvalidOperationException("""
@@ -816,22 +1008,25 @@ final class SqlTransaction implements Sql.Transaction {
       The 'querySingle' operation cannot be executed on a paginated SQL statement.
       """);
 
-      case PREPARED -> {
-        try (PreparedStatement stmt = prepared(); ResultSet rs = stmt.executeQuery()) {
-          result = querySingle0(mapper, rs);
-        } catch (SQLException e) {
-          throw stateAndWrap(e);
-        }
+      case SQL_SCRIPT -> throw new Sql.InvalidOperationException("""
+      The 'querySingle' operation cannot be executed on a SQL script.
+      """);
+
+      case SQL_TEMPLATE -> {
+        result = querySingle(mapper, createTemplate(Statement.NO_GENERATED_KEYS));
 
         yield State.START;
       }
 
-      case START,
-           SQL_COUNT,
-           SQL_TEMPLATE -> throw illegalState();
+      case PREPARED -> {
+        result = querySingle(mapper, prepared());
 
-      case PREPARED_BATCH,
-           PREPARED_COUNT -> throw illegalState();
+        yield State.START;
+      }
+
+      case START -> throw illegalState();
+
+      case PREPARED_BATCH -> throw illegalState();
 
       case ERROR -> throw illegalState();
     };
@@ -839,17 +1034,25 @@ final class SqlTransaction implements Sql.Transaction {
     return result;
   }
 
-  private <T> T querySingle0(Sql.Mapper<T> mapper, ResultSet rs) throws SQLException {
+  private <T> T querySingle(Sql.Mapper<T> mapper, PreparedStatement stmt) {
+    try (stmt; ResultSet rs = stmt.executeQuery()) {
+      return querySingle(mapper, rs);
+    } catch (SQLException e) {
+      throw stateAndWrap(e);
+    }
+  }
+
+  private <T> T querySingle(Sql.Mapper<T> mapper, ResultSet rs) throws SQLException {
     T result;
 
     if (!rs.next()) {
-      throw new UnsupportedOperationException("Implement me");
+      throw new Sql.NoSuchRowException();
     }
 
     result = mapper.map(rs, 1);
 
     if (rs.next()) {
-      throw new UnsupportedOperationException("Implement me");
+      throw new Sql.TooManyRowsException();
     }
 
     return result;
@@ -914,14 +1117,14 @@ final class SqlTransaction implements Sql.Transaction {
 
   private int querySingleInt0(ResultSet rs) throws SQLException {
     if (!rs.next()) {
-      return 0;
+      throw new Sql.NoSuchRowException();
     }
 
     int result;
     result = rs.getInt(1);
 
     if (rs.next()) {
-      throw new UnsupportedOperationException("Implement me");
+      throw new Sql.TooManyRowsException();
     }
 
     return result;
@@ -934,7 +1137,7 @@ final class SqlTransaction implements Sql.Transaction {
     state = switch (state) {
       case SQL, SQL_COUNT -> {
         try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql())) {
-          result = querySingleLong0(rs);
+          result = querySingleLong(rs);
         } catch (SQLException e) {
           throw stateAndWrap(e);
         }
@@ -954,18 +1157,19 @@ final class SqlTransaction implements Sql.Transaction {
       The 'querySingleLong' operation cannot be executed on a SQL script.
       """);
 
-      case PREPARED, PREPARED_COUNT -> {
-        try (PreparedStatement stmt = prepared(); ResultSet rs = stmt.executeQuery()) {
-          result = querySingleLong0(rs);
-        } catch (SQLException e) {
-          throw stateAndWrap(e);
-        }
+      case SQL_TEMPLATE -> {
+        result = querySingleLong(createTemplate(Statement.NO_GENERATED_KEYS));
 
         yield State.START;
       }
 
-      case START,
-           SQL_TEMPLATE -> throw illegalState();
+      case PREPARED, PREPARED_COUNT -> {
+        result = querySingleLong(prepared());
+
+        yield State.START;
+      }
+
+      case START -> throw illegalState();
 
       case PREPARED_BATCH -> throw illegalState();
 
@@ -975,138 +1179,24 @@ final class SqlTransaction implements Sql.Transaction {
     return result;
   }
 
-  private long querySingleLong0(ResultSet rs) throws SQLException {
+  private long querySingleLong(PreparedStatement stmt) {
+    try (stmt; ResultSet rs = stmt.executeQuery()) {
+      return querySingleLong(rs);
+    } catch (SQLException e) {
+      throw stateAndWrap(e);
+    }
+  }
+
+  private long querySingleLong(ResultSet rs) throws SQLException {
     if (!rs.next()) {
-      return 0L;
+      throw new Sql.NoSuchRowException();
     }
 
     long result;
     result = rs.getLong(1);
 
     if (rs.next()) {
-      throw new UnsupportedOperationException("Implement me");
-    }
-
-    return result;
-  }
-
-  @Override
-  public final OptionalInt queryOptionalInt() throws Sql.DatabaseException {
-    OptionalInt result;
-
-    state = switch (state) {
-      case SQL -> {
-        try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql())) {
-          result = queryOptionalInt0(rs);
-        } catch (SQLException e) {
-          throw stateAndWrap(e);
-        }
-
-        yield State.START;
-      }
-
-      case SQL_PAGINATED, PREPARED_PAGINATED -> throw new Sql.InvalidOperationException("""
-      The 'queryOptionalInt' operation cannot be executed on a paginated SQL statement.
-      """);
-
-      case PREPARED -> {
-        try (PreparedStatement stmt = prepared(); ResultSet rs = stmt.executeQuery()) {
-          result = queryOptionalInt0(rs);
-        } catch (SQLException e) {
-          throw stateAndWrap(e);
-        }
-
-        yield State.START;
-      }
-
-      case START,
-           SQL_COUNT,
-           SQL_GENERATED,
-           SQL_SCRIPT,
-           SQL_TEMPLATE -> throw illegalState();
-
-      case PREPARED_BATCH,
-           PREPARED_COUNT,
-           PREPARED_GENERATED,
-           PREPARED_GENERATED_BATCH -> throw illegalState();
-
-      case ERROR -> throw illegalState();
-    };
-
-    return result;
-  }
-
-  private OptionalInt queryOptionalInt0(ResultSet rs) throws SQLException {
-    OptionalInt result;
-
-    if (!rs.next()) {
-      result = OptionalInt.empty();
-    } else {
-      int value;
-      value = rs.getInt(1);
-
-      result = OptionalInt.of(value);
-    }
-
-    return result;
-  }
-
-  @Override
-  public final OptionalLong queryOptionalLong() throws Sql.DatabaseException {
-    OptionalLong result;
-
-    state = switch (state) {
-      case SQL -> {
-        try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql())) {
-          result = queryOptionalLong0(rs);
-        } catch (SQLException e) {
-          throw stateAndWrap(e);
-        }
-
-        yield State.START;
-      }
-
-      case SQL_PAGINATED, PREPARED_PAGINATED -> throw new Sql.InvalidOperationException("""
-      The 'queryOptionalLong' operation cannot be executed on a paginated SQL statement.
-      """);
-
-      case PREPARED -> {
-        try (PreparedStatement stmt = prepared(); ResultSet rs = stmt.executeQuery()) {
-          result = queryOptionalLong0(rs);
-        } catch (SQLException e) {
-          throw stateAndWrap(e);
-        }
-
-        yield State.START;
-      }
-
-      case START,
-           SQL_COUNT,
-           SQL_GENERATED,
-           SQL_SCRIPT,
-           SQL_TEMPLATE -> throw illegalState();
-
-      case PREPARED_BATCH,
-           PREPARED_COUNT,
-           PREPARED_GENERATED,
-           PREPARED_GENERATED_BATCH -> throw illegalState();
-
-      case ERROR -> throw illegalState();
-    };
-
-    return result;
-  }
-
-  private OptionalLong queryOptionalLong0(ResultSet rs) throws SQLException {
-    OptionalLong result;
-
-    if (!rs.next()) {
-      result = OptionalLong.empty();
-    } else {
-      long value;
-      value = rs.getLong(1);
-
-      result = OptionalLong.of(value);
+      throw new Sql.TooManyRowsException();
     }
 
     return result;
