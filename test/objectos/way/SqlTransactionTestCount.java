@@ -419,7 +419,7 @@ public class SqlTransactionTestCount extends SqlTransactionTestSupport {
   @Override
   public void querySingleInt01() {
     assertEquals(
-        statement(
+        (int) statement(
             List.of(
                 Map.of("1", 23)
             ),
@@ -477,7 +477,7 @@ public class SqlTransactionTestCount extends SqlTransactionTestSupport {
   """)
   public void querySingleInt02() {
     assertEquals(
-        preparedStatement(
+        (int) preparedStatement(
             List.of(
                 Map.of("1", 567)
             ),
@@ -536,7 +536,7 @@ public class SqlTransactionTestCount extends SqlTransactionTestSupport {
   @Override
   public void querySingleLong01() {
     assertEquals(
-        statement(
+        (long) statement(
             List.of(
                 Map.of("1", 23L)
             ),
@@ -594,7 +594,7 @@ public class SqlTransactionTestCount extends SqlTransactionTestSupport {
   """)
   public void querySingleLong02() {
     assertEquals(
-        preparedStatement(
+        (long) preparedStatement(
             List.of(
                 Map.of("1", 567L)
             ),

@@ -570,7 +570,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
   @Override
   public void addNullable01() {
     assertEquals(
-        preparedStatement(
+        (long) preparedStatement(
             List.of(
                 Map.of("1", 256L)
             ),
@@ -628,7 +628,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
   @Test
   public void addNullable02() {
     assertEquals(
-        preparedStatement(
+        (long) preparedStatement(
             List.of(
                 Map.of("1", 256L)
             ),
@@ -1513,7 +1513,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
   @Override
   public void querySingleInt01() {
     assertEquals(
-        preparedStatement(
+        (int) preparedStatement(
             List.of(
                 Map.of("1", 256)
             ),
@@ -1689,7 +1689,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
   @Override
   public void querySingleLong01() {
     assertEquals(
-        preparedStatement(
+        (long) preparedStatement(
             List.of(
                 Map.of("1", 256L)
             ),

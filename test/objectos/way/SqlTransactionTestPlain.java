@@ -1281,7 +1281,7 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
   @Override
   public void querySingleInt01() {
     assertEquals(
-        preparedStatement(
+        (int) preparedStatement(
             List.of(
                 Map.of("1", 567)
             ),
@@ -1336,7 +1336,7 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
   @Override
   public void querySingleLong01() {
     assertEquals(
-        preparedStatement(
+        (long) preparedStatement(
             List.of(
                 Map.of("1", 567L)
             ),
@@ -1350,7 +1350,7 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
             }
         ),
 
-        567
+        567L
     );
 
     assertEquals(
