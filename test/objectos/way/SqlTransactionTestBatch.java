@@ -258,6 +258,50 @@ public class SqlTransactionTestBatch extends SqlTransactionTestSupport {
 
   @Test
   @Override
+  public void close01() {
+    batchPrepared(
+        List.of(),
+
+        batches(),
+
+        trx -> {
+          trx.sql("insert into BAR (X) values (?)");
+
+          trx.add(1);
+
+          trx.addBatch();
+
+          return batch();
+        }
+    );
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(insert into BAR (X) values (?), 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setInt(1, 1)
+        addBatch()
+        close()
+        """
+    );
+
+    assertEmpty(statement);
+
+    assertEmpty(resultSet);
+  }
+
+  @Test
+  @Override
   public void query01() {
     invalidOperation("query", trx -> trx.query(Foo::new));
   }

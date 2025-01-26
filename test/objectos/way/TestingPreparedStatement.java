@@ -46,6 +46,8 @@ final class TestingPreparedStatement extends AbstractTestable implements Prepare
 
   private Iterator<int[]> batches = Collections.emptyIterator();
 
+  private boolean closed;
+
   private Iterator<ResultSet> generatedKeys = Collections.emptyIterator();
 
   private Iterator<ResultSet> queries = Collections.emptyIterator();
@@ -77,6 +79,8 @@ final class TestingPreparedStatement extends AbstractTestable implements Prepare
   @Override
   public void close() throws SQLException {
     logMethod("close");
+
+    closed = true;
   }
 
   @Override
@@ -198,7 +202,7 @@ final class TestingPreparedStatement extends AbstractTestable implements Prepare
   public int getResultSetHoldability() throws SQLException { throw new UnsupportedOperationException("Implement me"); }
 
   @Override
-  public boolean isClosed() throws SQLException { throw new UnsupportedOperationException("Implement me"); }
+  public boolean isClosed() throws SQLException { return closed; }
 
   @Override
   public void setPoolable(boolean poolable) throws SQLException { throw new UnsupportedOperationException("Implement me"); }

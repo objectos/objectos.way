@@ -505,13 +505,8 @@ public final class Sql {
 
     DatabaseException() {}
 
-    DatabaseException(SQLException cause) {
+    DatabaseException(Throwable cause) {
       super(cause);
-    }
-
-    @Override
-    public final SQLException getCause() {
-      return (SQLException) super.getCause();
     }
 
   }

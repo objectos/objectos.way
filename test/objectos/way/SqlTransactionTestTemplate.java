@@ -710,6 +710,39 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
 
   @Test
   @Override
+  public void close01() {
+    preparedStatement(
+        List.of(),
+
+        trx -> {
+          trx.sql(Sql.TEMPLATE, """
+              select A, B, C from FOO
+              --
+              order by C
+              """);
+
+          return 0;
+        }
+    );
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEmpty(preparedStatement);
+
+    assertEmpty(resultSet);
+
+    assertEmpty(statement);
+  }
+
+  @Test
+  @Override
   public void query01() {
     assertEquals(
         preparedStatement(

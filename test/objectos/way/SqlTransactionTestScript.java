@@ -155,6 +155,50 @@ public class SqlTransactionTestScript extends SqlTransactionTestSupport {
 
   @Test
   @Override
+  public void close01() {
+    batchStatement(
+        List.of(),
+
+        batches(),
+
+        trx -> {
+          trx.sql(Sql.Kind.SCRIPT, """
+          insert into FOO (A, B) values (1, 5)
+
+          insert into BAR (X, Y) values ('A', 'B')
+          """);
+
+          return batch();
+        }
+    );
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        createStatement()
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        statement.toString(),
+
+        """
+        addBatch(insert into FOO (A, B) values (1, 5))
+        addBatch(insert into BAR (X, Y) values ('A', 'B'))
+        close()
+        """
+    );
+
+    assertEmpty(preparedStatement);
+
+    assertEmpty(resultSet);
+  }
+
+  @Test
+  @Override
   public void query01() {
     invalidOperation("query", trx -> trx.query(Foo::new));
   }

@@ -118,6 +118,88 @@ public class SqlTransactionTestPaginated extends SqlTransactionTestSupport {
     invalidOperation("batchUpdate", Sql.Transaction::batchUpdate);
   }
 
+  @Test
+  @Override
+  public void close01() {
+    preparedStatement(
+        List.of(),
+
+        trx -> {
+          trx.sql("""
+          select A, B
+          from FOO
+          where C = ?
+          """);
+
+          trx.with(page1);
+
+          return 0;
+        }
+    );
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEmpty(preparedStatement);
+
+    assertEmpty(resultSet);
+
+    assertEmpty(statement);
+  }
+
+  @Test
+  public void close02() {
+    preparedStatement(
+        List.of(
+            Map.of("1", "Hello", "2", "World!")
+        ),
+
+        trx -> {
+          trx.sql("""
+          select A, B
+          from FOO
+          where C = ?
+          """);
+
+          trx.with(page1);
+
+          trx.add(123);
+
+          return 0;
+        }
+    );
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(select A, B from FOO where C = ? limit 15, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setInt(1, 123)
+        close()
+        """
+    );
+
+    assertEmpty(resultSet);
+
+    assertEmpty(statement);
+
+  }
+
   @Override
   @Test(description = """
   query:

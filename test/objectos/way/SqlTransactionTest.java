@@ -121,7 +121,7 @@ public class SqlTransactionTest {
 
       Assert.fail();
     } catch (Sql.DatabaseException e) {
-      SQLException cause;
+      Throwable cause;
       cause = e.getCause();
 
       assertSame(cause, exception);

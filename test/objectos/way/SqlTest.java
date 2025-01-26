@@ -65,7 +65,7 @@ public class SqlTest {
 
       Assert.fail();
     } catch (Sql.DatabaseException expected) {
-      SQLException cause;
+      Throwable cause;
       cause = expected.getCause();
 
       assertSame(cause, error);
@@ -99,7 +99,7 @@ public class SqlTest {
 
       Assert.fail();
     } catch (Sql.DatabaseException expected) {
-      SQLException cause;
+      Throwable cause;
       cause = expected.getCause();
 
       assertSame(cause, error);
@@ -138,7 +138,7 @@ public class SqlTest {
 
       Assert.fail();
     } catch (Sql.DatabaseException expected) {
-      SQLException cause;
+      Throwable cause;
       cause = expected.getCause();
 
       assertSame(cause, rollback);

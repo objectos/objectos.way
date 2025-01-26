@@ -65,6 +65,8 @@ public abstract class SqlTransactionTestSupport {
 
   public abstract void batchUpdate01();
 
+  public abstract void close01();
+
   public abstract void query01();
 
   public abstract void queryOptional01();

@@ -153,11 +153,58 @@ final class SqlTransaction implements Sql.Transaction {
 
   @Override
   public final void close() throws Sql.DatabaseException {
-    try (connection) {
-      connection.setAutoCommit(true);
-    } catch (SQLException e) {
-      throw new Sql.DatabaseException(e);
+    Throwable rethrow;
+    rethrow = null;
+
+    if (main instanceof Statement stmt) {
+
+      try {
+        if (!stmt.isClosed()) {
+          stmt.close();
+        }
+      } catch (Throwable e) {
+        rethrow = rethrowOrSuppress(rethrow, e);
+      }
+
     }
+
+    try {
+      connection.setAutoCommit(true);
+    } catch (Throwable e) {
+      rethrow = rethrowOrSuppress(rethrow, e);
+    } finally {
+
+      try {
+        connection.close();
+      } catch (Throwable e) {
+        rethrow = rethrowOrSuppress(rethrow, e);
+      }
+
+    }
+
+    if (rethrow == null) {
+      return;
+    }
+
+    if (rethrow instanceof Error error) {
+      throw error;
+    }
+
+    if (rethrow instanceof RuntimeException runtime) {
+      throw runtime;
+    }
+
+    throw new Sql.DatabaseException(rethrow);
+  }
+
+  private Throwable rethrowOrSuppress(Throwable rethrow, Throwable e) {
+    if (rethrow != null) {
+      rethrow.addSuppressed(e);
+    } else {
+      rethrow = e;
+    }
+
+    return rethrow;
   }
 
   @Override
