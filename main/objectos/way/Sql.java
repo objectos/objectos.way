@@ -172,11 +172,6 @@ public final class Sql {
      * assertEquals(result.length, 2);
      * assertEquals(result[0], 3);
      * assertEquals(result[1], 3);</pre>
-     *
-     * @return an array of update counts containing one element for each
-     *         statement in the script. The elements of the array are ordered
-     *         according to the order in which statements were listed in the
-     *         script.
      */
     Kind SCRIPT = SqlKind.SCRIPT;
 

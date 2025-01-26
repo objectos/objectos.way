@@ -7765,7 +7765,7 @@ public final class Html {
      * Formats the specified value as a testable field value (optional
      * operation).
      *
-     * @param value
+     * @param name
      *        the field value
      *
      * @return the specified field value
@@ -7778,7 +7778,7 @@ public final class Html {
      * Formats the specified value as a testable heading level 1 (optional
      * operation).
      *
-     * @param value
+     * @param name
      *        the heading value
      *
      * @return the specified value
