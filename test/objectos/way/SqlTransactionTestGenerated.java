@@ -33,6 +33,27 @@ public class SqlTransactionTestGenerated extends SqlTransactionTestSupport {
     generatedKeys = Sql.createGeneratedKeysOfInt();
   }
 
+  @Test // currently unsupported
+  @Override
+  public void addBatch01() {
+    invalidOperation(
+        trx -> {
+          trx.sql("insert into BAR (X) values (123)");
+
+          trx.with(generatedKeys);
+
+          trx.addBatch();
+        },
+
+        """
+        The 'addBatch' operation cannot be executed on a SQL statement:
+
+        1) Returning generated keys; and
+        2) With no parameter values set.
+        """
+    );
+  }
+
   @Test
   @Override
   public void addIf01() {
@@ -356,11 +377,7 @@ public class SqlTransactionTestGenerated extends SqlTransactionTestSupport {
     invalidOperation("querySingleLong", Sql.Transaction::querySingleLong);
   }
 
-  @Test(description = """
-  update
-  - happy path
-  - prepared
-  """)
+  @Test
   @Override
   public void update01() {
     assertEquals(
@@ -426,11 +443,7 @@ public class SqlTransactionTestGenerated extends SqlTransactionTestSupport {
     );
   }
 
-  @Test(description = """
-  update + generated keys
-  - happy path
-  - statement
-  """)
+  @Test
   public void update02() {
     assertEquals(
         updateStatement(
@@ -485,6 +498,27 @@ public class SqlTransactionTestGenerated extends SqlTransactionTestSupport {
         getInt(1)
         next()
         close()
+        """
+    );
+  }
+
+  @Test
+  public void update03() {
+    invalidOperation(
+        trx -> {
+          trx.sql("insert into BAR (X) select A from FOO where X = ?");
+
+          trx.with(generatedKeys);
+
+          trx.add(123);
+
+          trx.addBatch();
+
+          trx.update();
+        },
+
+        """
+        The 'update' operation cannot be executed on a SQL batch statement returning generated keys.
         """
     );
   }

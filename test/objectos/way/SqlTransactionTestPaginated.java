@@ -38,6 +38,12 @@ public class SqlTransactionTestPaginated extends SqlTransactionTestSupport {
 
   @Test
   @Override
+  public void addBatch01() {
+    invalidOperation("addBatch", trx -> trx.addBatch());
+  }
+
+  @Test
+  @Override
   public void addIf01() {
     invalidOperation("addIf", trx -> trx.addIf("FOO", true));
   }

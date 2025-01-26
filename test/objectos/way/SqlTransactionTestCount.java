@@ -29,6 +29,12 @@ public class SqlTransactionTestCount extends SqlTransactionTestSupport {
 
   @Test
   @Override
+  public void addBatch01() {
+    invalidOperation("addBatch", Sql.Transaction::addBatch);
+  }
+
+  @Test
+  @Override
   public void addIf01() {
     invalidOperation("addIf", trx -> trx.addIf("ABC", true));
   }

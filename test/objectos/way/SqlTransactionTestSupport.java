@@ -57,6 +57,8 @@ public abstract class SqlTransactionTestSupport {
     resultSet = null;
   }
 
+  public abstract void addBatch01();
+
   public abstract void addIf01();
 
   public abstract void addNullable01();

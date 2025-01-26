@@ -31,6 +31,22 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
 
   @Test
   @Override
+  public void addBatch01() {
+    invalidOperation(
+        trx -> {
+          trx.sql("insert into FOO (X) values (123)");
+
+          trx.addBatch();
+        },
+
+        """
+        The 'addBatch' operation cannot be executed on a plain SQL statement with no parameters values set.
+        """
+    );
+  }
+
+  @Test
+  @Override
   public void addIf01() {
     String expectedMessage = """
     The 'addIf' operation cannot be executed on a plain SQL statement.
@@ -51,20 +67,6 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
           trx.sql("select T from FOO where X = ?");
 
           trx.add(123);
-
-          trx.addIf("BAR", true);
-        },
-
-        expectedMessage
-    );
-
-    invalidOperation(
-        trx -> {
-          trx.sql("select T from FOO where X = ?");
-
-          trx.add(123);
-
-          trx.addBatch();
 
           trx.addIf("BAR", true);
         },
@@ -125,112 +127,6 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
   @Test
   @Override
   public void batchUpdate01() {
-    assertEquals(
-        batchPrepared(
-            List.of(),
-
-            batches(
-                batch(1)
-            ),
-
-            trx -> {
-              trx.sql("insert into BAR (X) values (?)");
-
-              trx.add(1);
-
-              trx.addBatch();
-
-              return trx.batchUpdate();
-            }
-        ),
-
-        batch(1)
-    );
-
-    assertEquals(
-        connection.toString(),
-
-        """
-        prepareStatement(insert into BAR (X) values (?), 2)
-        setAutoCommit(true)
-        close()
-        """
-    );
-
-    assertEquals(
-        preparedStatement.toString(),
-
-        """
-        setInt(1, 1)
-        addBatch()
-        executeBatch()
-        close()
-        """
-    );
-
-    assertEmpty(statement);
-
-    assertEmpty(resultSet);
-  }
-
-  @Test
-  public void batchUpdate02() {
-    assertEquals(
-        batchPrepared(
-            List.of(),
-
-            batches(
-                batch(1, 1)
-            ),
-
-            trx -> {
-              trx.sql("insert into BAR (X) values (?)");
-
-              trx.add(1);
-
-              trx.addBatch();
-
-              trx.add(2);
-
-              trx.addBatch();
-
-              return trx.batchUpdate();
-            }
-        ),
-
-        batch(1, 1)
-    );
-
-    assertEquals(
-        connection.toString(),
-
-        """
-        prepareStatement(insert into BAR (X) values (?), 2)
-        setAutoCommit(true)
-        close()
-        """
-    );
-
-    assertEquals(
-        preparedStatement.toString(),
-
-        """
-        setInt(1, 1)
-        addBatch()
-        setInt(1, 2)
-        addBatch()
-        executeBatch()
-        close()
-        """
-    );
-
-    assertEmpty(statement);
-
-    assertEmpty(resultSet);
-  }
-
-  @Test
-  public void batchUpdate03() {
     String expectedMessage = """
     The 'batchUpdate' operation cannot be executed on a plain SQL statement with no batches defined.
     """;
@@ -493,6 +389,7 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
         close()
         """
     );
+
     assertEquals(
         query1.toString(),
 

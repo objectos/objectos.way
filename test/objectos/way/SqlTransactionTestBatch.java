@@ -22,40 +22,25 @@ import java.util.List;
 import java.util.function.Consumer;
 import org.testng.annotations.Test;
 
-public class SqlTransactionTestScript extends SqlTransactionTestSupport {
+public class SqlTransactionTestBatch extends SqlTransactionTestSupport {
 
-  @Test
-  public void add() {
-    invalidOperation("add", trx -> trx.add("abc"));
-  }
-
-  @Test
+  @Test(enabled = false)
   @Override
   public void addBatch01() {
-    invalidOperation("addBatch", Sql.Transaction::addBatch);
+    // tested on batchUpdateXY
   }
 
   @Test
   @Override
   public void addIf01() {
-    invalidOperation("addIf", trx -> trx.addIf("abc", true));
+    invalidOperation("addIf", trx -> trx.addIf("ABC", true));
   }
 
   @Test
   @Override
   public void addNullable01() {
-    invalidOperation("addNullable", trx -> trx.add("abc", Types.VARCHAR));
-  }
-
-  @Test(description = """
-  batchUpdate
-  - happy path
-  - one statement
-  """)
-  @Override
-  public void batchUpdate01() {
     assertEquals(
-        batchStatement(
+        batchPrepared(
             List.of(),
 
             batches(
@@ -63,9 +48,15 @@ public class SqlTransactionTestScript extends SqlTransactionTestSupport {
             ),
 
             trx -> {
-              trx.sql(Sql.Kind.SCRIPT, """
-              insert into FOO (A, B) values (1, 5)
-              """);
+              trx.sql("insert into BAR (X) values (?)");
+
+              trx.add(1);
+
+              trx.addBatch();
+
+              trx.add(null, Types.DATE);
+
+              trx.addBatch();
 
               return trx.batchUpdate();
             }
@@ -78,35 +69,141 @@ public class SqlTransactionTestScript extends SqlTransactionTestSupport {
         connection.toString(),
 
         """
-        createStatement()
+        prepareStatement(insert into BAR (X) values (?), 2)
         setAutoCommit(true)
         close()
         """
     );
 
     assertEquals(
-        statement.toString(),
+        preparedStatement.toString(),
 
         """
-        addBatch(insert into FOO (A, B) values (1, 5))
+        setInt(1, 1)
+        addBatch()
+        setNull(1, 91)
+        addBatch()
         executeBatch()
         close()
         """
     );
 
-    assertEmpty(preparedStatement);
+    assertEmpty(statement);
 
     assertEmpty(resultSet);
   }
 
-  @Test(description = """
-  batchUpdate
-  - happy path
-  - two statements
-  """)
+  @Test
+  public void addNullable02() {
+    assertEquals(
+        batchPrepared(
+            List.of(),
+
+            batches(
+                batch(1)
+            ),
+
+            trx -> {
+              trx.sql("insert into BAR (X) values (?)");
+
+              trx.add(1);
+
+              trx.addBatch();
+
+              trx.add(2, Types.INTEGER);
+
+              trx.addBatch();
+
+              return trx.batchUpdate();
+            }
+        ),
+
+        batch(1)
+    );
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(insert into BAR (X) values (?), 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setInt(1, 1)
+        addBatch()
+        setInt(1, 2)
+        addBatch()
+        executeBatch()
+        close()
+        """
+    );
+
+    assertEmpty(statement);
+
+    assertEmpty(resultSet);
+  }
+
+  @Test
+  @Override
+  public void batchUpdate01() {
+    assertEquals(
+        batchPrepared(
+            List.of(),
+
+            batches(
+                batch(1)
+            ),
+
+            trx -> {
+              trx.sql("insert into BAR (X) values (?)");
+
+              trx.add(1);
+
+              trx.addBatch();
+
+              return trx.batchUpdate();
+            }
+        ),
+
+        batch(1)
+    );
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(insert into BAR (X) values (?), 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setInt(1, 1)
+        addBatch()
+        executeBatch()
+        close()
+        """
+    );
+
+    assertEmpty(statement);
+
+    assertEmpty(resultSet);
+  }
+
+  @Test
   public void batchUpdate02() {
     assertEquals(
-        batchStatement(
+        batchPrepared(
             List.of(),
 
             batches(
@@ -114,11 +211,15 @@ public class SqlTransactionTestScript extends SqlTransactionTestSupport {
             ),
 
             trx -> {
-              trx.sql(Sql.Kind.SCRIPT, """
-              insert into FOO (A, B) values (1, 5)
+              trx.sql("insert into BAR (X) values (?)");
 
-              insert into BAR (X, Y) values ('A', 'B')
-              """);
+              trx.add(1);
+
+              trx.addBatch();
+
+              trx.add(2);
+
+              trx.addBatch();
 
               return trx.batchUpdate();
             }
@@ -131,24 +232,26 @@ public class SqlTransactionTestScript extends SqlTransactionTestSupport {
         connection.toString(),
 
         """
-        createStatement()
+        prepareStatement(insert into BAR (X) values (?), 2)
         setAutoCommit(true)
         close()
         """
     );
 
     assertEquals(
-        statement.toString(),
+        preparedStatement.toString(),
 
         """
-        addBatch(insert into FOO (A, B) values (1, 5))
-        addBatch(insert into BAR (X, Y) values ('A', 'B'))
+        setInt(1, 1)
+        addBatch()
+        setInt(1, 2)
+        addBatch()
         executeBatch()
         close()
         """
     );
 
-    assertEmpty(preparedStatement);
+    assertEmpty(statement);
 
     assertEmpty(resultSet);
   }
@@ -189,30 +292,30 @@ public class SqlTransactionTestScript extends SqlTransactionTestSupport {
     invalidOperation("querySingleInt", Sql.Transaction::querySingleInt);
   }
 
-  @Override
   @Test
+  @Override
   public void querySingleLong01() {
     invalidOperation("querySingleLong", Sql.Transaction::querySingleLong);
   }
 
   @Test
   @Override
-  public final void update01() {
+  public void update01() {
     invalidOperation("update", Sql.Transaction::update);
   }
 
   private void invalidOperation(String name, Consumer<Sql.Transaction> operation) {
     String expectedMessage = """
-    The '%s' operation cannot be executed on a SQL script.
+    The '%s' operation cannot be executed on a SQL batch statement.
     """.formatted(name);
 
     invalidOperation(
         trx -> {
-          trx.sql(Sql.Kind.SCRIPT, """
-          insert into FOO (A, B) values (1, 5)
+          trx.sql("insert into FOO (X) values (?)");
 
-          insert into BAR (X, Y) values ('A', 'B')
-          """);
+          trx.add(123);
+
+          trx.addBatch();
 
           operation.accept(trx);
         },

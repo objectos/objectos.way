@@ -30,6 +30,28 @@ import org.testng.annotations.Test;
 
 public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
 
+  @Test
+  @Override
+  public void addBatch01() {
+    invalidOperation(
+        trx -> {
+          trx.sql(Sql.TEMPLATE, """
+          select A, B, C from FOO
+          --
+          where X = ?
+          """);
+
+          trx.add("ABC");
+
+          trx.addBatch();
+        },
+
+        """
+        The 'addBatch' operation cannot be executed on a SQL template.
+        """
+    );
+  }
+
   @Test(description = """
   addIf
   - happy path

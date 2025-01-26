@@ -389,6 +389,10 @@ final class SqlTransaction implements Sql.Transaction {
 
       case SQL_PAGINATED -> add0Create(value, Statement.NO_GENERATED_KEYS, State.PREPARED_PAGINATED);
 
+      case SQL_SCRIPT -> throw new Sql.InvalidOperationException("""
+      The 'add' operation cannot be executed on a SQL script.
+      """);
+
       case SQL_TEMPLATE -> {
         final SqlTemplate tmpl;
         tmpl = sqlTemplate();
@@ -418,8 +422,6 @@ final class SqlTransaction implements Sql.Transaction {
 
       case START -> throw illegalState();
 
-      case SQL_SCRIPT -> throw illegalState();
-
       case ERROR -> throw illegalState();
     };
   }
@@ -442,7 +444,7 @@ final class SqlTransaction implements Sql.Transaction {
     state = switch (state) {
       case START -> throw illegalState();
 
-      case SQL, PREPARED, PREPARED_BATCH -> throw new Sql.InvalidOperationException("""
+      case SQL, PREPARED -> throw new Sql.InvalidOperationException("""
       The 'addIf' operation cannot be executed on a plain SQL statement.
       """);
 
@@ -470,6 +472,10 @@ final class SqlTransaction implements Sql.Transaction {
 
         yield state;
       }
+
+      case PREPARED_BATCH -> throw new Sql.InvalidOperationException("""
+      The 'addIf' operation cannot be executed on a SQL batch statement.
+      """);
 
       case ERROR -> throw illegalState();
     };
@@ -557,22 +563,40 @@ final class SqlTransaction implements Sql.Transaction {
   @Override
   public final void addBatch() {
     state = switch (state) {
+      case SQL -> throw new Sql.InvalidOperationException("""
+      The 'addBatch' operation cannot be executed on a plain SQL statement with no parameters values set.
+      """);
+
+      case SQL_COUNT, PREPARED_COUNT -> throw new Sql.InvalidOperationException("""
+      The 'addBatch' operation cannot be executed on a SQL count statement.
+      """);
+
+      case SQL_GENERATED -> throw new Sql.InvalidOperationException("""
+      The 'addBatch' operation cannot be executed on a SQL statement:
+
+      1) Returning generated keys; and
+      2) With no parameter values set.
+      """);
+
+      case SQL_PAGINATED, PREPARED_PAGINATED -> throw new Sql.InvalidOperationException("""
+      The 'addBatch' operation cannot be executed on a paginated SQL statement.
+      """);
+
+      case SQL_SCRIPT -> throw new Sql.InvalidOperationException("""
+      The 'addBatch' operation cannot be executed on a SQL script.
+      """);
+
+      case SQL_TEMPLATE -> throw new Sql.InvalidOperationException("""
+      The 'addBatch' operation cannot be executed on a SQL template.
+      """);
+
       case PREPARED,
            PREPARED_BATCH -> addBatch0(State.PREPARED_BATCH);
 
       case PREPARED_GENERATED,
            PREPARED_GENERATED_BATCH -> addBatch0(State.PREPARED_GENERATED_BATCH);
 
-      case START,
-           SQL,
-           SQL_COUNT,
-           SQL_GENERATED,
-           SQL_PAGINATED,
-           SQL_SCRIPT,
-           SQL_TEMPLATE -> throw illegalState();
-
-      case PREPARED_COUNT,
-           PREPARED_PAGINATED -> throw illegalState();
+      case START -> throw illegalState();
 
       case ERROR -> throw illegalState();
     };
@@ -716,9 +740,11 @@ final class SqlTransaction implements Sql.Transaction {
 
       case PREPARED, PREPARED_PAGINATED -> query(mapper, list, prepared());
 
-      case START -> throw illegalState();
+      case PREPARED_BATCH -> throw new Sql.InvalidOperationException("""
+      The 'query' operation cannot be executed on a SQL batch statement.
+      """);
 
-      case PREPARED_BATCH -> throw illegalState();
+      case START -> throw illegalState();
 
       case ERROR -> throw illegalState();
     };
@@ -794,9 +820,11 @@ final class SqlTransaction implements Sql.Transaction {
         yield State.START;
       }
 
-      case START -> throw illegalState();
+      case PREPARED_BATCH -> throw new Sql.InvalidOperationException("""
+      The 'queryOptional' operation cannot be executed on a SQL batch statement.
+      """);
 
-      case PREPARED_BATCH -> throw illegalState();
+      case START -> throw illegalState();
 
       case ERROR -> throw illegalState();
     };
@@ -868,9 +896,11 @@ final class SqlTransaction implements Sql.Transaction {
         yield State.START;
       }
 
-      case START -> throw illegalState();
+      case PREPARED_BATCH -> throw new Sql.InvalidOperationException("""
+      The 'queryOptionalInt' operation cannot be executed on a SQL batch statement.
+      """);
 
-      case PREPARED_BATCH -> throw illegalState();
+      case START -> throw illegalState();
 
       case ERROR -> throw illegalState();
     };
@@ -943,9 +973,11 @@ final class SqlTransaction implements Sql.Transaction {
         yield State.START;
       }
 
-      case START -> throw illegalState();
+      case PREPARED_BATCH -> throw new Sql.InvalidOperationException("""
+      The 'queryOptionalLong' operation cannot be executed on a SQL batch statement.
+      """);
 
-      case PREPARED_BATCH -> throw illegalState();
+      case START -> throw illegalState();
 
       case ERROR -> throw illegalState();
     };
@@ -1024,9 +1056,11 @@ final class SqlTransaction implements Sql.Transaction {
         yield State.START;
       }
 
-      case START -> throw illegalState();
+      case PREPARED_BATCH -> throw new Sql.InvalidOperationException("""
+      The 'querySingle' operation cannot be executed on a SQL batch statement.
+      """);
 
-      case PREPARED_BATCH -> throw illegalState();
+      case START -> throw illegalState();
 
       case ERROR -> throw illegalState();
     };
@@ -1097,9 +1131,11 @@ final class SqlTransaction implements Sql.Transaction {
         yield State.START;
       }
 
-      case START -> throw illegalState();
+      case PREPARED_BATCH -> throw new Sql.InvalidOperationException("""
+      The 'querySingleInt' operation cannot be executed on a SQL batch statement.
+      """);
 
-      case PREPARED_BATCH -> throw illegalState();
+      case START -> throw illegalState();
 
       case ERROR -> throw illegalState();
     };
@@ -1169,9 +1205,11 @@ final class SqlTransaction implements Sql.Transaction {
         yield State.START;
       }
 
-      case START -> throw illegalState();
+      case PREPARED_BATCH -> throw new Sql.InvalidOperationException("""
+      The 'querySingleLong' operation cannot be executed on a SQL batch statement.
+      """);
 
-      case PREPARED_BATCH -> throw illegalState();
+      case START -> throw illegalState();
 
       case ERROR -> throw illegalState();
     };
@@ -1260,6 +1298,10 @@ final class SqlTransaction implements Sql.Transaction {
         yield State.START;
       }
 
+      case PREPARED_BATCH -> throw new Sql.InvalidOperationException("""
+      The 'update' operation cannot be executed on a SQL batch statement.
+      """);
+
       case PREPARED_GENERATED -> {
         try (PreparedStatement stmt = prepared()) {
           final Sql.SqlGeneratedKeys<?> generatedKeys;
@@ -1275,8 +1317,9 @@ final class SqlTransaction implements Sql.Transaction {
         yield State.START;
       }
 
-      case PREPARED_BATCH,
-           PREPARED_GENERATED_BATCH -> throw illegalState();
+      case PREPARED_GENERATED_BATCH -> throw new Sql.InvalidOperationException("""
+      The 'update' operation cannot be executed on a SQL batch statement returning generated keys.
+      """);
 
       case ERROR -> throw illegalState();
     };
