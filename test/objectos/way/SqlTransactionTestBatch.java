@@ -20,6 +20,7 @@ import static org.testng.Assert.assertEquals;
 import java.sql.Types;
 import java.util.List;
 import java.util.function.Consumer;
+import objectos.way.Sql.BatchUpdate;
 import org.testng.annotations.Test;
 
 public class SqlTransactionTestBatch extends SqlTransactionTestSupport {
@@ -245,6 +246,61 @@ public class SqlTransactionTestBatch extends SqlTransactionTestSupport {
         setInt(1, 1)
         addBatch()
         setInt(1, 2)
+        addBatch()
+        executeBatch()
+        close()
+        """
+    );
+
+    assertEmpty(statement);
+
+    assertEmpty(resultSet);
+  }
+
+  @Test
+  public void batchUpdateWithResult() {
+    assertEquals(
+        batchPrepared(
+            List.of(),
+
+            batches(
+                batch(1)
+            ),
+
+            trx -> {
+              trx.sql("insert into BAR (X) values (?)");
+
+              trx.add(1);
+
+              trx.addBatch();
+
+              final BatchUpdate result;
+              result = trx.batchUpdateWithResult();
+
+              assertEquals(result, new SqlBatchUpdateSuccess(batch(1)));
+
+              return batch(1);
+            }
+        ),
+
+        batch(1)
+    );
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(insert into BAR (X) values (?), 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setInt(1, 1)
         addBatch()
         executeBatch()
         close()

@@ -25,6 +25,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.OptionalLong;
+import objectos.way.Sql.BatchUpdate;
 import objectos.way.Sql.GeneratedKeys;
 import objectos.way.Sql.Update;
 
@@ -667,6 +668,14 @@ final class SqlTransaction implements Sql.Transaction {
 
   @Override
   public final int[] batchUpdate() {
+    try {
+      return batchUpdate0();
+    } catch (SQLException e) {
+      throw stateAndWrap(e);
+    }
+  }
+
+  private int[] batchUpdate0() throws SQLException {
     int[] result;
 
     state = switch (state) {
@@ -689,8 +698,6 @@ final class SqlTransaction implements Sql.Transaction {
       case SQL_SCRIPT -> {
         try (Statement stmt = statement()) {
           result = stmt.executeBatch();
-        } catch (SQLException e) {
-          throw stateAndWrap(e);
         }
 
         yield State.START;
@@ -703,8 +710,6 @@ final class SqlTransaction implements Sql.Transaction {
       case PREPARED_BATCH -> {
         try (PreparedStatement stmt = prepared()) {
           result = stmt.executeBatch();
-        } catch (SQLException e) {
-          throw stateAndWrap(e);
         }
 
         yield State.START;
@@ -718,8 +723,6 @@ final class SqlTransaction implements Sql.Transaction {
           result = stmt.executeBatch();
 
           generatedKeys.accept(stmt);
-        } catch (SQLException e) {
-          throw stateAndWrap(e);
         }
 
         yield State.START;
@@ -731,6 +734,18 @@ final class SqlTransaction implements Sql.Transaction {
     };
 
     return result;
+  }
+
+  @Override
+  public final BatchUpdate batchUpdateWithResult() {
+    try {
+      final int[] result;
+      result = batchUpdate0();
+
+      return new SqlBatchUpdateSuccess(result);
+    } catch (SQLException e) {
+      return SqlBatchUpdateFailed.create(dialect, e);
+    }
   }
 
   private Statement statement() {

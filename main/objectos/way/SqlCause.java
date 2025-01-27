@@ -17,6 +17,7 @@ package objectos.way;
 
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.List;
 
 sealed abstract class SqlCause implements Sql.Cause {
 
@@ -38,7 +39,26 @@ sealed abstract class SqlCause implements Sql.Cause {
     this.original = original;
   }
 
-  public static Sql.Cause of(SqlDialect dialect, SQLException e) {
+  static List<Sql.Cause> allOf(SqlDialect dialect, SQLException e) {
+    final UtilList<Sql.Cause> causes;
+    causes = new UtilList<>();
+
+    SQLException next;
+    next = e;
+
+    while (next != null) {
+      final Sql.Cause cause;
+      cause = SqlCause.of(dialect, next);
+
+      causes.add(cause);
+
+      next = next.getNextException();
+    }
+
+    return causes.toUnmodifiableList();
+  }
+
+  private static Sql.Cause of(SqlDialect dialect, SQLException e) {
     return switch (e) {
       case SQLIntegrityConstraintViolationException ex -> new IntegrityConstraintViolation(ex);
 

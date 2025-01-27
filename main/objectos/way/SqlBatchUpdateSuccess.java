@@ -15,15 +15,15 @@
  */
 package objectos.way;
 
-import java.sql.SQLException;
-import java.util.List;
+import java.util.Arrays;
+import objectos.way.Sql.BatchUpdateSuccess;
 
-record SqlUpdateFailed(List<Sql.Cause> causes) implements Sql.UpdateFailed {
+record SqlBatchUpdateSuccess(int[] counts) implements BatchUpdateSuccess {
 
-  static SqlUpdateFailed create(SqlDialect dialect, SQLException e) {
-    return new SqlUpdateFailed(
-        SqlCause.allOf(dialect, e)
-    );
+  @Override
+  public final boolean equals(Object obj) {
+    return obj == this || obj instanceof SqlBatchUpdateSuccess that
+        && Arrays.equals(counts, that.counts);
   }
 
 }

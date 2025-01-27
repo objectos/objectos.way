@@ -432,6 +432,8 @@ public final class Sql {
 
     int[] batchUpdate() throws DatabaseException;
 
+    BatchUpdate batchUpdateWithResult();
+
     /**
      * Executes the current SQL statement as a row-retrieving query.
      */
@@ -479,19 +481,26 @@ public final class Sql {
   // Result-like hierarchy
   //
 
-  public sealed interface Cause
-      permits
-      SqlCause,
-      IntegrityConstraintViolation,
-      OtherDatabaseError {
+  /**
+   * Represents the result of a {@code batchUpdateWithResult} operation.
+   */
+  public sealed interface BatchUpdate {}
 
-    SQLException unwrap();
+  public sealed interface BatchUpdateFailed extends BatchUpdate permits SqlBatchUpdateFailed {
+
+    List<Cause> causes();
+
+    long[] largeCounts();
+
+    int[] counts();
 
   }
 
-  public sealed interface IntegrityConstraintViolation extends Cause permits SqlCause.IntegrityConstraintViolation {}
+  public sealed interface BatchUpdateSuccess extends BatchUpdate permits SqlBatchUpdateSuccess {
 
-  public sealed interface OtherDatabaseError extends Cause permits SqlCause.OtherDatabaseError {}
+    int[] counts();
+
+  }
 
   /**
    * Represents the result of a {@code updateWithResult} operation.
@@ -509,6 +518,20 @@ public final class Sql {
     int count();
 
   }
+
+  public sealed interface Cause
+      permits
+      SqlCause,
+      IntegrityConstraintViolation,
+      OtherDatabaseError {
+
+    SQLException unwrap();
+
+  }
+
+  public sealed interface IntegrityConstraintViolation extends Cause permits SqlCause.IntegrityConstraintViolation {}
+
+  public sealed interface OtherDatabaseError extends Cause permits SqlCause.OtherDatabaseError {}
 
   //
   // Exceptions
