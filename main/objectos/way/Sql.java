@@ -430,7 +430,7 @@ public final class Sql {
 
     void addBatch();
 
-    int[] batchUpdate();
+    int[] batchUpdate() throws DatabaseException;
 
     /**
      * Executes the current SQL statement as a row-retrieving query.
@@ -471,19 +471,42 @@ public final class Sql {
      */
     int update() throws DatabaseException;
 
+    Update updateWithResult();
+
   }
 
-  static final class MappingException extends RuntimeException {
+  //
+  // Result-like hierarchy
+  //
 
-    private static final long serialVersionUID = -3104952657116253825L;
+  public sealed interface Cause
+      permits
+      SqlCause,
+      IntegrityConstraintViolation,
+      OtherDatabaseError {
 
-    MappingException(String message) {
-      super(message);
-    }
+    SQLException unwrap();
 
-    MappingException(String message, Throwable cause) {
-      super(message, cause);
-    }
+  }
+
+  public sealed interface IntegrityConstraintViolation extends Cause permits SqlCause.IntegrityConstraintViolation {}
+
+  public sealed interface OtherDatabaseError extends Cause permits SqlCause.OtherDatabaseError {}
+
+  /**
+   * Represents the result of a {@code updateWithResult} operation.
+   */
+  public sealed interface Update {}
+
+  public sealed interface UpdateFailed extends Update permits SqlUpdateFailed {
+
+    List<Cause> causes();
+
+  }
+
+  public sealed interface UpdateSuccess extends Update permits SqlUpdateSuccess {
+
+    int count();
 
   }
 
@@ -515,6 +538,20 @@ public final class Sql {
 
     InvalidOperationException(String message) {
       super(message);
+    }
+
+  }
+
+  static final class MappingException extends RuntimeException {
+
+    private static final long serialVersionUID = -3104952657116253825L;
+
+    MappingException(String message) {
+      super(message);
+    }
+
+    MappingException(String message, Throwable cause) {
+      super(message, cause);
     }
 
   }

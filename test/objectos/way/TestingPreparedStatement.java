@@ -52,6 +52,8 @@ final class TestingPreparedStatement extends AbstractTestable implements Prepare
 
   private Iterator<ResultSet> queries = Collections.emptyIterator();
 
+  private SQLException updateError;
+
   private Iterator<Integer> updates = Collections.emptyIterator();
 
   public final void batches(int[]... values) {
@@ -64,6 +66,10 @@ final class TestingPreparedStatement extends AbstractTestable implements Prepare
 
   public final void queries(ResultSet... values) {
     queries = Stream.of(values).iterator();
+  }
+
+  public final void updateError(SQLException error) {
+    updateError = error;
   }
 
   public final void updates(int... values) {
@@ -236,6 +242,10 @@ final class TestingPreparedStatement extends AbstractTestable implements Prepare
   @Override
   public final int executeUpdate() throws SQLException {
     logMethod("executeUpdate");
+
+    if (updateError != null) {
+      throw updateError;
+    }
 
     if (!updates.hasNext()) {
       throw new IllegalStateException("No more updates");

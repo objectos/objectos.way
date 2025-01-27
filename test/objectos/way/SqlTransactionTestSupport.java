@@ -170,6 +170,25 @@ public abstract class SqlTransactionTestSupport {
     }
   }
 
+  final Sql.Update updatePrepared(SQLException error, Function<SqlTransaction, Sql.Update> trxConfig) {
+    connection = new TestingConnection();
+
+    preparedStatement = new TestingPreparedStatement();
+
+    preparedStatement.updateError(error);
+
+    connection.preparedStatements(preparedStatement);
+
+    SqlTransaction trx;
+    trx = trx(connection);
+
+    try {
+      return trxConfig.apply(trx);
+    } finally {
+      trx.close();
+    }
+  }
+
   final int updateStatement(List<Map<String, Object>> rows, int[] updates, ToIntFunction<SqlTransaction> trxConfig) {
     connection = new TestingConnection();
 

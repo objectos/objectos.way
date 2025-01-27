@@ -26,6 +26,7 @@ import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.OptionalLong;
 import objectos.way.Sql.GeneratedKeys;
+import objectos.way.Sql.Update;
 
 final class SqlTransaction implements Sql.Transaction {
 
@@ -1289,6 +1290,14 @@ final class SqlTransaction implements Sql.Transaction {
 
   @Override
   public final int update() {
+    try {
+      return update0();
+    } catch (SQLException e) {
+      throw stateAndWrap(e);
+    }
+  }
+
+  private int update0() throws SQLException {
     int result;
 
     state = switch (state) {
@@ -1297,8 +1306,6 @@ final class SqlTransaction implements Sql.Transaction {
       case SQL -> {
         try (Statement stmt = connection.createStatement()) {
           result = stmt.executeUpdate(sql());
-        } catch (SQLException e) {
-          throw stateAndWrap(e);
         }
 
         yield State.START;
@@ -1316,8 +1323,6 @@ final class SqlTransaction implements Sql.Transaction {
           result = stmt.executeUpdate(sql(), Statement.RETURN_GENERATED_KEYS);
 
           generatedKeys.accept(stmt);
-        } catch (SQLException e) {
-          throw stateAndWrap(e);
         }
 
         yield State.START;
@@ -1338,8 +1343,6 @@ final class SqlTransaction implements Sql.Transaction {
       case PREPARED -> {
         try (PreparedStatement stmt = prepared()) {
           result = stmt.executeUpdate();
-        } catch (SQLException e) {
-          throw stateAndWrap(e);
         }
 
         yield State.START;
@@ -1357,8 +1360,6 @@ final class SqlTransaction implements Sql.Transaction {
           result = stmt.executeUpdate();
 
           generatedKeys.accept(stmt);
-        } catch (SQLException e) {
-          throw stateAndWrap(e);
         }
 
         yield State.START;
@@ -1372,6 +1373,18 @@ final class SqlTransaction implements Sql.Transaction {
     };
 
     return result;
+  }
+
+  @Override
+  public final Update updateWithResult() {
+    try {
+      final int count;
+      count = update0();
+
+      return new SqlUpdateSuccess(count);
+    } catch (SQLException e) {
+      return SqlUpdateFailed.create(dialect, e);
+    }
   }
 
   private PreparedStatement createPrepared(int generatedKeys) throws SQLException {

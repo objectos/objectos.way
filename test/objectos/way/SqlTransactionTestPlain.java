@@ -16,7 +16,9 @@
 package objectos.way;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Types;
 import java.time.LocalDate;
 import java.util.List;
@@ -1465,6 +1467,101 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
 
         """
         setInt(1, 1)
+        executeUpdate()
+        close()
+        """
+    );
+
+    assertEmpty(statement);
+
+    assertEmpty(resultSet);
+  }
+
+  @Test
+  public void updateWithResult01() {
+    assertEquals(
+        updatePrepared(
+            List.of(),
+
+            updates(1),
+
+            trx -> {
+              trx.sql("insert into BAR (X, Y) values (?, ?)");
+
+              trx.add(1);
+
+              assertEquals(trx.updateWithResult(), new SqlUpdateSuccess(1));
+
+              return 0;
+            }
+        ),
+
+        0
+    );
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(insert into BAR (X, Y) values (?, ?), 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setInt(1, 1)
+        executeUpdate()
+        close()
+        """
+    );
+
+    assertEmpty(statement);
+
+    assertEmpty(resultSet);
+  }
+
+  @Test
+  public void updateWithResult02() {
+    final SQLIntegrityConstraintViolationException error;
+    error = new SQLIntegrityConstraintViolationException();
+
+    final Sql.Update update;
+    update = updatePrepared(
+        error,
+
+        trx -> {
+          trx.sql("insert into BAR (X, Y) values (?, ?)");
+
+          trx.add(123);
+
+          trx.add("foo");
+
+          return trx.updateWithResult();
+        }
+    );
+
+    assertTrue(update instanceof Sql.UpdateFailed);
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(insert into BAR (X, Y) values (?, ?), 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setInt(1, 123)
+        setString(2, foo)
         executeUpdate()
         close()
         """
