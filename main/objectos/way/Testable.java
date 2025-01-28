@@ -40,6 +40,20 @@ public interface Testable {
      */
     void clear();
 
+    /**
+     * Formats the specified value as a table cell with the specified fixed
+     * width.
+     *
+     * @param value
+     *        the string value of the cell; may be {@code null}.
+     * @param width
+     *        the fixed width of the cell.
+     *
+     * @throws IllegalArgumentException if {@code length} is negative or if
+     *         {@code value.length()} exceeds {@code length}.
+     */
+    void cell(String value, int width);
+
     void heading1(String value);
 
     void heading2(String value);
@@ -97,23 +111,9 @@ public interface Testable {
     void fieldValue(String value);
 
     /**
-     * Adds a single cell value to the current row.
-     * The cell content will be right-padded with spaces to match the
-     * specified length.
-     *
-     * @param value the string value of the cell; may be {@code null}.
-     * @param length the fixed width of the cell.
-     *
-     * @throws IllegalArgumentException if {@code length} is negative or if
-     *         {@code value.length()} exceeds {@code length}.
+     * Formats a line separator.
      */
-    void cell(String value, int length);
-
-    /**
-     * Moves the writer to the next row. Any subsequent column operations will
-     * append to a new line.
-     */
-    void nextRow();
+    void newLine();
 
     /**
      * Adds multiple columns to a single row. Columns are specified as

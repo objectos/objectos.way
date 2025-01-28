@@ -3733,6 +3733,19 @@ public final class Html {
   public sealed interface MarkupTestable permits Markup {
 
     /**
+     * Formats the specified value as a testable table cell with the specified
+     * fixed width.
+     *
+     * @param value
+     *        the cell value
+     * @param width
+     *        the fixed width of the cell
+     *
+     * @return always the cell value
+     */
+    String testableCell(String value, int width);
+
+    /**
      * Formats the specified name and value as a testable field (optional
      * operation).
      *
@@ -3831,6 +3844,11 @@ public final class Html {
      * @return the specified value
      */
     String testableH6(String value);
+
+    /**
+     * Formats a line separator at the testable output exclusively.
+     */
+    Html.Instruction.NoOp testableNewLine();
 
   }
 
@@ -7790,6 +7808,21 @@ public final class Html {
     TemplateTestable() {}
 
     /**
+     * Formats the specified value as a testable table cell with the specified
+     * fixed width.
+     *
+     * @param value
+     *        the cell value
+     * @param width
+     *        the fixed width of the cell
+     *
+     * @return always the cell value
+     */
+    protected final String testableCell(String value, int width) {
+      return $testable().testableCell(value, width);
+    }
+
+    /**
      * Formats the specified name and value as a testable field (optional
      * operation).
      *
@@ -7905,6 +7938,13 @@ public final class Html {
      */
     protected final String testableH6(String name) {
       return $testable().testableH6(name);
+    }
+
+    /**
+     * Formats a line separator at the testable output exclusively.
+     */
+    protected final Html.Instruction.NoOp testableNewLine() {
+      return $testable().testableNewLine();
     }
 
     abstract MarkupTestable $testable();

@@ -73,8 +73,8 @@ final class TestableFormatter implements Testable.Formatter {
     out.append(prefix);
     out.append(value);
 
-    nextRow();
-    nextRow();
+    newLine();
+    newLine();
   }
 
   private void headingNewLineIfRequired() {
@@ -195,7 +195,7 @@ final class TestableFormatter implements Testable.Formatter {
   }
 
   @Override
-  public final void nextRow() {
+  public final void newLine() {
     out.append(System.lineSeparator());
 
     firstCell = true;
@@ -217,7 +217,7 @@ final class TestableFormatter implements Testable.Formatter {
       }
 
       if (idx == values.length) {
-        nextRow();
+        newLine();
 
         break;
       }

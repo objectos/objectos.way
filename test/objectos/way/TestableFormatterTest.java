@@ -34,7 +34,7 @@ public class TestableFormatterTest {
     w.cell("abc", 5);
     w.cell("ab", 5);
     w.cell("a", 5);
-    w.nextRow();
+    w.newLine();
 
     // null value
     w.cell("foo", 5);
@@ -42,7 +42,7 @@ public class TestableFormatterTest {
     w.cell(null, 5);
     w.cell("maz", 5);
     w.cell("qux", 5);
-    w.nextRow();
+    w.newLine();
 
     // first cell empty
     w.cell("", 5);
@@ -50,7 +50,7 @@ public class TestableFormatterTest {
     w.cell("test", 5);
     w.cell("test", 5);
     w.cell("test", 5);
-    w.nextRow();
+    w.newLine();
 
     assertEquals(w.toString(), """
     # String cells

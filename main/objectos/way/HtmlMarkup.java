@@ -346,6 +346,9 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
   //
 
   @Override
+  public final String testableCell(String value, int width) { return value; }
+
+  @Override
   public final String testableField(String name, String value) { return value; }
 
   @Override
@@ -371,6 +374,9 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
 
   @Override
   public final String testableH6(String value) { return value; }
+
+  @Override
+  public final Html.Instruction.NoOp testableNewLine() { return Html.NOOP; }
 
   //
   // Section: DOM related methods

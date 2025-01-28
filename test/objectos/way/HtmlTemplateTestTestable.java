@@ -21,9 +21,51 @@ import org.testng.annotations.Test;
 
 public class HtmlTemplateTestTestable {
 
-  @Test(description = """
-  The testable text node
-  """)
+  @Test
+  public void cell01() {
+    test(
+        new Html.Template() {
+          @Override
+          protected void render() {
+            table(
+                tr(
+                    td(testableCell("foo", 5)),
+                    td(testableCell("bar", 5))
+                ),
+
+                testableNewLine(),
+
+                tr(
+                    td(testableCell("lorem", 5)),
+                    td(testableCell("ipsum", 5))
+                ),
+
+                testableNewLine()
+            );
+          }
+        },
+
+        """
+        <table>
+        <tr>
+        <td>foo</td>
+        <td>bar</td>
+        </tr>
+        <tr>
+        <td>lorem</td>
+        <td>ipsum</td>
+        </tr>
+        </table>
+        """,
+
+        """
+        foo   | bar
+        lorem | ipsum
+        """
+    );
+  }
+
+  @Test
   public void field01() {
     test(
         new Html.Template() {

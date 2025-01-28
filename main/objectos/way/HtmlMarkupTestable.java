@@ -31,6 +31,13 @@ final class HtmlMarkupTestable extends HtmlMarkupElements implements Html.Markup
   }
 
   @Override
+  public final String testableCell(String value, int width) {
+    formatter.cell(value, width);
+
+    return value;
+  }
+
+  @Override
   public final String testableField(String name, String value) {
     formatter.field(name, value);
 
@@ -91,6 +98,13 @@ final class HtmlMarkupTestable extends HtmlMarkupElements implements Html.Markup
     formatter.heading6(value);
 
     return value;
+  }
+
+  @Override
+  public final Html.Instruction.NoOp testableNewLine() {
+    formatter.newLine();
+
+    return Html.NOOP;
   }
 
   @Override
