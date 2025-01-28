@@ -86,14 +86,17 @@ public class TestableFormatterTest {
     Testable.Formatter w;
     w = Testable.Formatter.create();
 
-    // no new line before
     w.heading1("First");
-
     w.row("test", 5);
-
-    // new line before
-    w.heading1("Second");
-
+    w.heading2("Second");
+    w.row("test", 5);
+    w.heading3("Third");
+    w.row("test", 5);
+    w.heading4("Fourth");
+    w.row("test", 5);
+    w.heading5("Fifth");
+    w.row("test", 5);
+    w.heading6("Sixth");
     w.row("test", 5);
 
     assertEquals(w.toString(), """
@@ -101,7 +104,23 @@ public class TestableFormatterTest {
 
     test
 
-    # Second
+    ## Second
+
+    test
+
+    ### Third
+
+    test
+
+    #### Fourth
+
+    test
+
+    ##### Fifth
+
+    test
+
+    ###### Sixth
 
     test
     """);

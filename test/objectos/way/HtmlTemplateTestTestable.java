@@ -29,7 +29,7 @@ public class HtmlTemplateTestTestable {
         new Html.Template() {
           @Override
           protected void render() {
-            testableHeading1("Test");
+            testableH1("Test");
 
             dl(
                 dt("ID"),
@@ -151,6 +151,47 @@ public class HtmlTemplateTestTestable {
 
         """
         foo: bar
+        """
+    );
+  }
+
+  @Test
+  public void heading01() {
+    test(
+        new Html.Template() {
+          @Override
+          protected final void render() {
+            h1(testableH1("Level 1"));
+            h2(testableH2("Level 2"));
+            h3(testableH3("Level 3"));
+            h4(testableH4("Level 4"));
+            h5(testableH5("Level 5"));
+            h6(testableH6("Level 6"));
+          }
+        },
+
+        """
+        <h1>Level 1</h1>
+        <h2>Level 2</h2>
+        <h3>Level 3</h3>
+        <h4>Level 4</h4>
+        <h5>Level 5</h5>
+        <h6>Level 6</h6>
+        """,
+
+        """
+        # Level 1
+
+        ## Level 2
+
+        ### Level 3
+
+        #### Level 4
+
+        ##### Level 5
+
+        ###### Level 6
+
         """
     );
   }

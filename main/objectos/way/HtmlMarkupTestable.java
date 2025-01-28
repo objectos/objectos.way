@@ -52,8 +52,43 @@ final class HtmlMarkupTestable extends HtmlMarkupElements implements Html.Markup
   }
 
   @Override
-  public final String testableHeading1(String value) {
+  public final String testableH1(String value) {
     formatter.heading1(value);
+
+    return value;
+  }
+
+  @Override
+  public final String testableH2(String value) {
+    formatter.heading2(value);
+
+    return value;
+  }
+
+  @Override
+  public final String testableH3(String value) {
+    formatter.heading3(value);
+
+    return value;
+  }
+
+  @Override
+  public final String testableH4(String value) {
+    formatter.heading4(value);
+
+    return value;
+  }
+
+  @Override
+  public final String testableH5(String value) {
+    formatter.heading5(value);
+
+    return value;
+  }
+
+  @Override
+  public final String testableH6(String value) {
+    formatter.heading6(value);
 
     return value;
   }

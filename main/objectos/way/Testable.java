@@ -42,6 +42,16 @@ public interface Testable {
 
     void heading1(String value);
 
+    void heading2(String value);
+
+    void heading3(String value);
+
+    void heading4(String value);
+
+    void heading5(String value);
+
+    void heading6(String value);
+
     /**
      * Formats the specified name and value as a field.
      *

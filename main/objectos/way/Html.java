@@ -3775,7 +3775,62 @@ public final class Html {
      *
      * @return the specified value
      */
-    String testableHeading1(String value);
+    String testableH1(String value);
+
+    /**
+     * Formats the specified value as a testable heading level 2 (optional
+     * operation).
+     *
+     * @param value
+     *        the heading value
+     *
+     * @return the specified value
+     */
+    String testableH2(String value);
+
+    /**
+     * Formats the specified value as a testable heading level 3 (optional
+     * operation).
+     *
+     * @param value
+     *        the heading value
+     *
+     * @return the specified value
+     */
+    String testableH3(String value);
+
+    /**
+     * Formats the specified value as a testable heading level 4 (optional
+     * operation).
+     *
+     * @param value
+     *        the heading value
+     *
+     * @return the specified value
+     */
+    String testableH4(String value);
+
+    /**
+     * Formats the specified value as a testable heading level 5 (optional
+     * operation).
+     *
+     * @param value
+     *        the heading value
+     *
+     * @return the specified value
+     */
+    String testableH5(String value);
+
+    /**
+     * Formats the specified value as a testable heading level 6 (optional
+     * operation).
+     *
+     * @param value
+     *        the heading value
+     *
+     * @return the specified value
+     */
+    String testableH6(String value);
 
   }
 
@@ -7783,8 +7838,73 @@ public final class Html {
      *
      * @return the specified value
      */
-    protected final String testableHeading1(String name) {
-      return $testable().testableHeading1(name);
+    protected final String testableH1(String name) {
+      return $testable().testableH1(name);
+    }
+
+    /**
+     * Formats the specified value as a testable heading level 2 (optional
+     * operation).
+     *
+     * @param name
+     *        the heading value
+     *
+     * @return the specified value
+     */
+    protected final String testableH2(String name) {
+      return $testable().testableH2(name);
+    }
+
+    /**
+     * Formats the specified value as a testable heading level 3 (optional
+     * operation).
+     *
+     * @param name
+     *        the heading value
+     *
+     * @return the specified value
+     */
+    protected final String testableH3(String name) {
+      return $testable().testableH3(name);
+    }
+
+    /**
+     * Formats the specified value as a testable heading level 4 (optional
+     * operation).
+     *
+     * @param name
+     *        the heading value
+     *
+     * @return the specified value
+     */
+    protected final String testableH4(String name) {
+      return $testable().testableH4(name);
+    }
+
+    /**
+     * Formats the specified value as a testable heading level 5 (optional
+     * operation).
+     *
+     * @param name
+     *        the heading value
+     *
+     * @return the specified value
+     */
+    protected final String testableH5(String name) {
+      return $testable().testableH5(name);
+    }
+
+    /**
+     * Formats the specified value as a testable heading level 6 (optional
+     * operation).
+     *
+     * @param name
+     *        the heading value
+     *
+     * @return the specified value
+     */
+    protected final String testableH6(String name) {
+      return $testable().testableH6(name);
     }
 
     abstract MarkupTestable $testable();

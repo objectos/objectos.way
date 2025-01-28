@@ -355,7 +355,22 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
   public final String testableFieldValue(String value) { return value; }
 
   @Override
-  public final String testableHeading1(String value) { return value; }
+  public final String testableH1(String value) { return value; }
+
+  @Override
+  public final String testableH2(String value) { return value; }
+
+  @Override
+  public final String testableH3(String value) { return value; }
+
+  @Override
+  public final String testableH4(String value) { return value; }
+
+  @Override
+  public final String testableH5(String value) { return value; }
+
+  @Override
+  public final String testableH6(String value) { return value; }
 
   //
   // Section: DOM related methods

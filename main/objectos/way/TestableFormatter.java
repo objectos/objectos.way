@@ -39,9 +39,38 @@ final class TestableFormatter implements Testable.Formatter {
 
   @Override
   public final void heading1(String value) {
+    heading(value, "# ");
+  }
+
+  @Override
+  public final void heading2(String value) {
+    heading(value, "## ");
+  }
+
+  @Override
+  public final void heading3(String value) {
+    heading(value, "### ");
+  }
+
+  @Override
+  public final void heading4(String value) {
+    heading(value, "#### ");
+  }
+
+  @Override
+  public final void heading5(String value) {
+    heading(value, "##### ");
+  }
+
+  @Override
+  public final void heading6(String value) {
+    heading(value, "###### ");
+  }
+
+  private void heading(String value, String prefix) {
     headingNewLineIfRequired();
 
-    out.append("# ");
+    out.append(prefix);
     out.append(value);
 
     nextRow();
