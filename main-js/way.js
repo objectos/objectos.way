@@ -108,26 +108,16 @@
       }
     }
   }
-  
-  function popstateListener(event) {
-    const state = event.state;
-    
-    if (!state) {
-      return;
-    }
-    
-    if (!state.way) {
-      return;
-    }
-    
+
+  function popstateListener() {
     const url = window.location.href;
-    
-    const xhr = createXhr("GET", url);
-    
+
+    const xhr = createXhr("GET", url, { popstate: true });
+
     xhr.send();
   }
 
-  function createXhr(method, url) {
+  function createXhr(method, url, options) {
     const xhr = new XMLHttpRequest();
 
     xhr.open(method, url, true);
@@ -155,23 +145,15 @@
 
         else if (contentType.startsWith("text/html")) {
           if (!globals.Way.disableHistory) {
-            history.pushState({ way: true }, "", url);
+            if (!options || !options.popstate) {
+              const pushUrl = xhr.responseURL || url;
+
+              history.pushState({ way: true }, "", pushUrl);
+            }
           }
 
           executeHtml(xhr.response);
         }
-
-      }
-
-      else if (xhr.status === 302) {
-
-        const location = xhr.getResponseHeader("location")
-
-        if (!location) {
-          return;
-        }
-
-        executeLocation(location);
 
       }
     }
