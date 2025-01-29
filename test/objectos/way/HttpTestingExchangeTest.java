@@ -293,4 +293,19 @@ public class HttpTestingExchangeTest {
     return http.rawQueryWith(newName, newValue);
   }
 
+  @Test
+  public void responseHeader01() {
+    Http.TestingExchange http;
+    http = Http.TestingExchange.create(config -> {});
+
+    http.header(Http.HeaderName.CONTENT_TYPE, "foo/bar");
+
+    http.header(Http.HeaderName.USER_AGENT, "Agent 1");
+    http.header(Http.HeaderName.USER_AGENT, "Agent 2");
+
+    assertEquals(http.responseHeader(Http.HeaderName.LOCATION), null);
+    assertEquals(http.responseHeader(Http.HeaderName.CONTENT_TYPE), "foo/bar");
+    assertEquals(http.responseHeader(Http.HeaderName.USER_AGENT), "Agent 1");
+  }
+
 }

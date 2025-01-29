@@ -1090,6 +1090,18 @@ public final class Http {
 
     Status responseStatus();
 
+    /**
+     * Returns the value of the first response header field line having the
+     * specified name; returns {@code null} if the field line is not present.
+     *
+     * @param name
+     *        the name of the response header field line
+     *
+     * @return the value of first field line or {@code null} if a field line
+     *         with the specified name is not present.
+     */
+    String responseHeader(Http.HeaderName name);
+
     Object responseBody();
 
     Charset responseCharset();
@@ -1366,9 +1378,9 @@ public final class Http {
     }
   }
 
-  static String queryParamsGet(Map<String, Object> params, String name) {
+  static <K> String queryParamsGet(Map<K, Object> params, K key) {
     Object maybe;
-    maybe = params.get(name);
+    maybe = params.get(key);
 
     return switch (maybe) {
       case null -> null;

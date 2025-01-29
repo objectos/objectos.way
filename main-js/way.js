@@ -421,7 +421,6 @@
     executeLocation(href);
   }
 
-
   function executeSetAttribute0(args) {
     if (args.length !== 3) {
       console.error("set-attribute-0: action invoked with the wrong number of args, expected 3 but got %d", args.length);

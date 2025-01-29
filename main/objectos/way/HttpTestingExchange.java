@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.SequencedMap;
 import java.util.Set;
+import objectos.way.Http.HeaderName;
 import objectos.way.Lang.MediaObject;
 
 final class HttpTestingExchange extends HttpModuleSupport implements Http.TestingExchange {
@@ -81,6 +82,17 @@ final class HttpTestingExchange extends HttpModuleSupport implements Http.Testin
   }
 
   @Override
+  public final String responseHeader(HeaderName name) {
+    Objects.requireNonNull(name, "name == null");
+
+    if (responseHeaders == null) {
+      return null;
+    } else {
+      return Http.queryParamsGet(responseHeaders, name);
+    }
+  }
+
+  @Override
   public final Object responseBody() {
     return responseBody;
   }
@@ -95,7 +107,7 @@ final class HttpTestingExchange extends HttpModuleSupport implements Http.Testin
   @SuppressWarnings("unchecked")
   @Override
   public final String header(Http.HeaderName name) {
-    Check.notNull(name, "name == null");
+    Objects.requireNonNull(name, "name == null");
 
     if (headers == null) {
       return null;
@@ -277,8 +289,8 @@ final class HttpTestingExchange extends HttpModuleSupport implements Http.Testin
 
   @Override
   public final <T> void set(Class<T> key, T value) {
-    Check.notNull(key, "key == null");
-    Check.notNull(value, "value == null");
+    Objects.requireNonNull(key, "key == null");
+    Objects.requireNonNull(value, "value == null");
 
     if (objectStore == null) {
       objectStore = Util.createMap();
