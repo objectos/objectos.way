@@ -697,6 +697,8 @@ public final class Html {
 
     Html.Instruction.OfDataOn dataOnInput(Consumer<Script> script);
 
+    Html.Instruction.OfDataOn dataOnSuccess(Consumer<Script> script);
+
     Html.Instruction.OfElement element(Html.ElementName name, Html.Instruction... contents);
 
     /**
@@ -4004,6 +4006,10 @@ public final class Html {
 
     protected final Html.Instruction.OfDataOn dataOnInput(Consumer<Script> script) {
       return $html().dataOnInput(script);
+    }
+
+    protected final Html.Instruction.OfDataOn dataOnSuccess(Consumer<Script> script) {
+      return $html().dataOnSuccess(script);
     }
 
     protected final Html.Instruction.OfElement element(Html.ElementName name, Html.Instruction... contents) {

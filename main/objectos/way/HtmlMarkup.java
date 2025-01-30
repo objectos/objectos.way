@@ -16,6 +16,7 @@
 package objectos.way;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
@@ -56,7 +57,7 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
 
   @Override
   public final Html.Instruction.OfFragment renderFragment(Html.Fragment.Of0 fragment) {
-    Check.notNull(fragment, "fragment == null");
+    Objects.requireNonNull(fragment, "fragment == null");
 
     int index;
     index = fragmentBegin();
@@ -70,7 +71,7 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
 
   @Override
   public final <T1> Html.Instruction.OfFragment renderFragment(Html.Fragment.Of1<T1> fragment, T1 arg1) {
-    Check.notNull(fragment, "fragment == null");
+    Objects.requireNonNull(fragment, "fragment == null");
 
     int index;
     index = fragmentBegin();
@@ -84,7 +85,7 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
 
   @Override
   public final <T1, T2> Html.Instruction.OfFragment renderFragment(Html.Fragment.Of2<T1, T2> fragment, T1 arg1, T2 arg2) {
-    Check.notNull(fragment, "fragment == null");
+    Objects.requireNonNull(fragment, "fragment == null");
 
     int index;
     index = fragmentBegin();
@@ -98,7 +99,7 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
 
   @Override
   public final <T1, T2, T3> Html.Instruction.OfFragment renderFragment(Html.Fragment.Of3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3) {
-    Check.notNull(fragment, "fragment == null");
+    Objects.requireNonNull(fragment, "fragment == null");
 
     int index;
     index = fragmentBegin();
@@ -112,7 +113,7 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
 
   @Override
   public final <T1, T2, T3, T4> Html.Instruction.OfFragment renderFragment(Html.Fragment.Of4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
-    Check.notNull(fragment, "fragment == null");
+    Objects.requireNonNull(fragment, "fragment == null");
 
     int index;
     index = fragmentBegin();
@@ -126,7 +127,7 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
 
   @Override
   public final Html.Instruction.OfFragment renderComponent(Html.Component component) {
-    Check.notNull(component, "component == null");
+    Objects.requireNonNull(component, "component == null");
 
     int index;
     index = fragmentBegin();
@@ -179,31 +180,38 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
 
   @Override
   public final Html.Instruction.OfAttribute dataFrame(String name) {
-    Check.notNull(name, "name == null");
+    Objects.requireNonNull(name, "name == null");
 
     return attribute(HtmlAttributeName.DATA_FRAME, name);
   }
 
   @Override
   public final Html.Instruction.OfAttribute dataFrame(String name, String value) {
-    Check.notNull(name, "name == null");
-    Check.notNull(value, "value == null");
+    Objects.requireNonNull(name, "name == null");
+    Objects.requireNonNull(value, "value == null");
 
     return attribute(HtmlAttributeName.DATA_FRAME, name + ":" + value);
   }
 
   @Override
   public final Html.Instruction.OfDataOn dataOnClick(Consumer<Script> script) {
-    Check.notNull(script, "script == null");
+    Objects.requireNonNull(script, "script == null");
 
     return dataOn0(HtmlAttributeName.DATA_ON_CLICK, script);
   }
 
   @Override
   public final Html.Instruction.OfDataOn dataOnInput(Consumer<Script> script) {
-    Check.notNull(script, "script == null");
+    Objects.requireNonNull(script, "script == null");
 
     return dataOn0(HtmlAttributeName.DATA_ON_INPUT, script);
+  }
+
+  @Override
+  public final Html.Instruction.OfDataOn dataOnSuccess(Consumer<Script> script) {
+    Objects.requireNonNull(script, "script == null");
+
+    return dataOn0(HtmlAttributeName.DATA_ON_SUCCESS, script);
   }
 
   private Html.Instruction.OfDataOn dataOn0(Html.AttributeName name, Consumer<Script> script) {
@@ -255,7 +263,7 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
    */
   @Override
   public final Html.Instruction.OfElement flatten(Html.Instruction... contents) {
-    Check.notNull(contents, "contents == null");
+    Objects.requireNonNull(contents, "contents == null");
 
     flattenBegin();
 
@@ -303,7 +311,7 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
 
   @Override
   public final Html.Instruction.OfElement raw(String text) {
-    Check.notNull(text, "text == null");
+    Objects.requireNonNull(text, "text == null");
 
     rawImpl(text);
 
@@ -334,7 +342,7 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
    */
   @Override
   public final Html.Instruction.OfElement text(String text) {
-    Check.notNull(text, "text == null");
+    Objects.requireNonNull(text, "text == null");
 
     textImpl(text);
 
@@ -1715,7 +1723,7 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
 
   @Override
   public final Html.Instruction.OfElement element(Html.ElementName name, Html.Instruction... contents) {
-    Check.notNull(name, "name == null");
+    Objects.requireNonNull(name, "name == null");
 
     elementBegin(name);
 
@@ -1733,8 +1741,8 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
 
   @Override
   public final Html.Instruction.OfElement element(Html.ElementName name, String text) {
-    Check.notNull(name, "name == null");
-    Check.notNull(text, "text == null");
+    Objects.requireNonNull(name, "name == null");
+    Objects.requireNonNull(text, "text == null");
 
     textImpl(text);
 

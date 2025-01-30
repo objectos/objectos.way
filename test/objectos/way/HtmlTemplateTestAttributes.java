@@ -53,6 +53,24 @@ public class HtmlTemplateTestAttributes {
     );
   }
 
+  @Test
+  public void dataOnSuccess() {
+    test(
+        new Html.Template() {
+          @Override
+          protected final void render() {
+            form(
+                dataOnSuccess(Script::stopPropagation)
+            );
+          }
+        },
+
+        """
+        <form data-on-success='[["stop-propagation-0"]]'></form>
+        """
+    );
+  }
+
   private void test(Html.Template template, String expected) {
     String result;
     result = template.toString();
