@@ -32,9 +32,10 @@
   <script src="action.toggle-class.js"></script>
   <script src="data-on-click.js"></script>
   <script src="data-on-input.js"></script>
+  <script src="data-on-success.js"></script>
 
   <script class="mocha-exec">
-    Way.disableHistory = true;
+    way.config.history = false;
 
     document.addEventListener("DOMContentLoaded", function () {
       mocha.run();

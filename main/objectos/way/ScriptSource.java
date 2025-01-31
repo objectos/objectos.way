@@ -39,13 +39,23 @@ final class ScriptSource {
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(function(globals) {
+const way = (function() {
 
   "use strict";
 
-  globals.Way = {
-    disableHistory: false
-  }
+  const way = {
+
+    config: {
+
+      history: true
+
+    }
+
+  };
+
+  // ##################################################################
+  // # BEGIN: DOM Event Handlers
+  // ##################################################################
 
   function clickListener(event) {
     let target = event.target;
@@ -138,53 +148,9 @@ final class ScriptSource {
   function popstateListener() {
     const url = window.location.href;
 
-    const xhr = createXhr("GET", url, { popstate: true });
+    const xhr = createXhr("GET", url, { history: false });
 
     xhr.send();
-  }
-
-  function createXhr(method, url, options) {
-    const xhr = new XMLHttpRequest();
-
-    xhr.open(method, url, true);
-
-    xhr.setRequestHeader("Way-Request", "true");
-
-    xhr.onload = (_) => {
-      if (xhr.status === 200) {
-
-        const contentType = xhr.getResponseHeader("content-type");
-
-        if (!contentType) {
-          return;
-        }
-
-        if (contentType.startsWith("application/json")) {
-          const data = JSON.parse(xhr.response);
-
-          if (!Array.isArray(data)) {
-            return;
-          }
-
-          executeActions(data);
-        }
-
-        else if (contentType.startsWith("text/html")) {
-          if (!globals.Way.disableHistory) {
-            if (!options || !options.popstate) {
-              const pushUrl = xhr.responseURL || url;
-
-              history.pushState({ way: true }, "", pushUrl);
-            }
-          }
-
-          executeHtml(xhr.response);
-        }
-
-      }
-    }
-
-    return xhr;
   }
 
   function executeEvent(element, name) {
@@ -205,10 +171,20 @@ final class ScriptSource {
     return executeActions(way, element);
   }
 
+  // ##################################################################
+  // # END: DOM Event Handlers
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Objectos Way Actions
+  // ##################################################################
+
   const actionHandlers = {
     "delay-0": executeDelay0,
     "html-0": executeHtml0,
     "navigate-0": executeNavigate0,
+    "push-state-0": executePushState0,
+    "scroll-0": executeScroll0,
     "set-attribute-0": executeSetAttribute0,
     "stop-propagation-0": executeStopPropagation0,
     "submit-0": executeSubmit0,
@@ -387,13 +363,11 @@ final class ScriptSource {
         elem.replaceWith(newElem);
       }
     }
-
-    window.scrollTo(0, 0);
   }
 
   function executeHtml0(args) {
     if (args.length !== 1) {
-      console.error("html-0 action invoked with the wrong number of args: expected 1 but found ", args.length);
+      logError("Illegal number of args", { action: "html-0", expected: 1, actual: args });
 
       return;
     }
@@ -403,11 +377,6 @@ final class ScriptSource {
     executeHtml(value);
   }
 
-  function executeLocation(location) {
-    const xhr = createXhr("GET", location);
-
-    xhr.send();
-  }
 
   function executeNavigate0(_, element) {
     if (!(element instanceof HTMLAnchorElement)) {
@@ -426,7 +395,47 @@ final class ScriptSource {
       return;
     }
 
-    executeLocation(href);
+    const options = {
+      history: true,
+
+      onSuccess: [
+        ['scroll-0', 0, 0, "instant"]
+      ]
+    };
+
+    const xhr = createXhr("GET", href, options);
+
+    xhr.send();
+  }
+
+  function executePushState0(args) {
+    if (args.length !== 1) {
+      logError("Illegal number of args", { action: "push-state-0", expected: 1, actual: args });
+
+      return;
+    }
+
+    const url = args[0];
+
+    history.pushState({ way: true }, "", url);
+  }
+
+  function executeScroll0(args) {
+    if (args.length !== 3) {
+      logError("Illegal number of args", { action: "scroll-0", expected: 3, actual: args });
+
+      return;
+    }
+
+    const value = {
+      top: args[0],
+
+      left: args[1],
+
+      behavior: args[2]
+    }
+
+    window.scroll(value);
   }
 
   function executeSetAttribute0(args) {
@@ -541,6 +550,80 @@ final class ScriptSource {
     return { name: name, value: value };
   }
 
+  // ##################################################################
+  // # END: Objectos Way Actions
+  // ##################################################################
+
+  function createXhr(method, url, _options = {}) {
+    const defaultOptions = {
+      history: true,
+
+      onSuccess: []
+    };
+
+    const options = { ...defaultOptions, ..._options };
+
+    if (!Array.isArray(options.onSuccess)) {
+      logError("Illegal arg", { name: "onSuccess", expected: "Array", actual: options.onSuccess });
+
+      return;
+    }
+
+    const xhr = new XMLHttpRequest();
+
+    xhr.open(method, url, true);
+
+    xhr.setRequestHeader("Way-Request", "true");
+
+    xhr.onload = (_) => {
+      if (xhr.status === 200) {
+
+        const contentType = xhr.getResponseHeader("content-type");
+
+        if (!contentType) {
+          return;
+        }
+
+        let data;
+
+        if (contentType.startsWith("application/json")) {
+          data = JSON.parse(xhr.response);
+        }
+
+        else if (contentType.startsWith("text/html")) {
+          data = [];
+
+          data.push(['html-0', xhr.response]);
+
+          if (options.history && way.config.history) {
+            const pushUrl = xhr.responseURL || url;
+
+            data.push(['push-state-0', pushUrl]);
+          }
+        }
+
+        else {
+          return;
+        }
+
+        const actions = data.concat(options.onSuccess);
+
+        executeActions(actions);
+
+      }
+    }
+
+    return xhr;
+  }
+
+  function logError(...args) {
+    console.error(...args);
+  }
+
+  // ##################################################################
+  // # BEGIN: Objectos Way Bootstrap
+  // ##################################################################
+
   function domLoaded() {
     const body = document.body;
 
@@ -552,7 +635,13 @@ final class ScriptSource {
   window.addEventListener("DOMContentLoaded", domLoaded);
   window.addEventListener("popstate", popstateListener);
 
-})(this);
+  // ##################################################################
+  // # END: Objectos Way Bootstrap
+  // ##################################################################
+
+  return way;
+
+})();
 """;
   }
 

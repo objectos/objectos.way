@@ -61,7 +61,65 @@ public class ScriptWriterTest {
         Script::navigate,
 
         """
-        [["navigate-0"]]"""
+        [["navigate-0", true]]"""
+    );
+  }
+
+  @Test
+  public void request0Test01() {
+    test(
+        script -> script.request(req -> {
+          req.url("/foo");
+        }),
+
+        """
+        [["request-0","GET","/foo",[]]]"""
+    );
+  }
+
+  @Test
+  public void request0Test02() {
+    test(
+        script -> {
+          var el = script.element();
+
+          script.request(req -> {
+            req.url(el.getAttribute("href"));
+          });
+        },
+
+        """
+        [["request-0","GET",["element-1","getAttribute","href"],[]]]"""
+    );
+  }
+
+  @Test
+  public void request0Test03() {
+    test(
+        script -> script.request(req -> {
+          req.url("/foo");
+
+          req.onSuccess(success -> {
+            success.stopPropagation();
+          });
+        }),
+
+        """
+        [["request-0","GET","/foo",[["stop-propagation-0"]]]]"""
+    );
+  }
+
+  @Test
+  public void request0Test04() {
+    test(
+        script -> script.request(req -> {
+          req.method(Script.POST);
+
+          req.url("/foo");
+        }),
+
+        """
+        [["request-0","POST","/foo",[]]]"""
     );
   }
 

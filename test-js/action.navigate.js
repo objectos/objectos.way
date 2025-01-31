@@ -53,7 +53,7 @@ suite("Action::navigate test", function() {
     link.click();
 
     assert.equal(this.errorStub.calledOnce, true);
-    assert.equal(this.errorStub.calledWith("executeNavigate0: expected HTMLAnchorElement but got %s", "HTMLButtonElement"), true);
+    assert.equal(this.errorStub.calledWith("Illegal element", { action: "navigate-0", expected: "HTMLAnchorElement", actual: "HTMLButtonElement" }), true);
   });
 
   test("it should fail if anchor has no 'href' attribute", function() {
@@ -67,7 +67,7 @@ suite("Action::navigate test", function() {
     link.click();
 
     assert.equal(this.errorStub.calledOnce, true);
-    assert.equal(this.errorStub.calledWith("executeNavigate0: anchor has no href attribute"), true);
+    assert.equal(this.errorStub.calledWith("Illegal arg", { action: "navigate-0", msg: "anchor has no href attribute" }), true);
   });
 
 });

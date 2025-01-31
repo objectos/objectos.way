@@ -15,6 +15,7 @@
  */
 package objectos.way;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -34,6 +35,72 @@ final class ScriptWriter implements Script {
 
     return new ScriptAction(value);
   }
+
+  // types
+
+  // queries
+
+  final class ElementQuery implements Script.Element {
+
+    @Override
+    public final ElementMethodInvocation getAttribute(String name) {
+      Objects.requireNonNull(name, "name == null");
+
+      return new ElementMethodInvocation("getAttribute", name);
+    }
+
+  }
+
+  final class ElementMethodInvocation implements Script.StringLike {
+
+    private final String methodName;
+
+    private final Object argumentOrList;
+
+    public ElementMethodInvocation(String methodName, Object argumentOrList) {
+      this.methodName = methodName;
+
+      this.argumentOrList = argumentOrList;
+    }
+
+    final void write() {
+      arrayStart();
+
+      // arg[0] = instruction
+      stringLiteral("element-1");
+
+      // arg[1] = method name
+      comma();
+      stringLiteral(methodName);
+
+      // arg[rest] = args
+      if (argumentOrList instanceof List<?> list) {
+        for (Object o : list) {
+          comma();
+          literal(o);
+        }
+      } else {
+        comma();
+        stringLiteral(argumentOrList.toString());
+      }
+
+      arrayEnd();
+    }
+
+  }
+
+  private ElementQuery element;
+
+  @Override
+  public final Script.Element element() {
+    if (element == null) {
+      element = new ElementQuery();
+    }
+
+    return element;
+  }
+
+  // actions
 
   @Override
   public final void delay(int ms, Consumer<Script> callback) {
@@ -64,6 +131,77 @@ final class ScriptWriter implements Script {
     actionStart();
     stringLiteral("navigate-0");
     actionEnd();
+  }
+
+  final class RequestConfig implements Script.RequestConfig {
+
+    private Script.Method method = Script.GET;
+
+    private Object url;
+
+    private Consumer<Script> onSuccess = (script) -> {};
+
+    @Override
+    public final void method(Script.Method method) {
+      this.method = Objects.requireNonNull(method, "method == null");
+    }
+
+    @Override
+    public final void url(String value) {
+      url = Objects.requireNonNull(value, "value == null");
+    }
+
+    @Override
+    public final void url(Script.StringLike value) {
+      url = Objects.requireNonNull(value, "value == null");
+    }
+
+    @Override
+    public final void onSuccess(Consumer<Script> config) {
+      onSuccess = Objects.requireNonNull(config, "config == null");
+    }
+
+    final void write() {
+      if (url == null) {
+        throw new IllegalArgumentException("URL was not set");
+      }
+
+      actionStart();
+
+      // action id
+      stringLiteral("request-0");
+
+      // arg[0] = method
+      comma();
+      stringLiteral(method.name());
+
+      // arg[1] = url
+      comma();
+      if (url instanceof ElementMethodInvocation like) {
+        like.write();
+      } else {
+        stringLiteral(url.toString());
+      }
+
+      // arg[2] = onSuccess
+      comma();
+      scriptLiteral(onSuccess);
+
+      actionEnd();
+    }
+
+  }
+
+  @Override
+  public final void request(Consumer<Script.RequestConfig> config) {
+    Objects.requireNonNull(config, "RequestConfig> config == null");
+
+    final RequestConfig delegate;
+    delegate = new RequestConfig();
+
+    config.accept(delegate);
+
+    delegate.write();
   }
 
   @Override
@@ -163,6 +301,16 @@ final class ScriptWriter implements Script {
 
   private void comma() {
     out.append(',');
+  }
+
+  private void literal(Object o) {
+    switch (o) {
+      case Integer i -> intLiteral(i.intValue());
+
+      case String s -> stringLiteral(s);
+
+      default -> throw new IllegalArgumentException("Invalid type for literal: " + o.getClass());
+    }
   }
 
   private void intLiteral(int value) {

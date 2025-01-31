@@ -23,6 +23,10 @@ import java.util.function.Consumer;
  */
 public sealed interface Script permits ScriptWriter {
 
+  Method GET = Method.GET;
+
+  Method POST = Method.POST;
+
   /**
    * Represents an action to be executed by the browser in the context of an web
    * application.
@@ -72,6 +76,30 @@ public sealed interface Script permits ScriptWriter {
     return ScriptSource.get();
   }
 
+  // types
+
+  public enum Method {
+
+    GET,
+
+    POST;
+
+  }
+
+  public sealed interface StringLike permits ScriptWriter.ElementMethodInvocation {}
+
+  // queries
+
+  public sealed interface Element permits ScriptWriter.ElementQuery {
+
+    StringLike getAttribute(String name);
+
+  }
+
+  Element element();
+
+  // actions
+
   void delay(int ms, Consumer<Script> callback);
 
   void html(Html.Template template);
@@ -81,6 +109,24 @@ public sealed interface Script permits ScriptWriter {
    * attribute of this {@code <a>} HTML element.
    */
   void navigate();
+
+  public sealed interface RequestConfig permits ScriptWriter.RequestConfig {
+
+    void method(Script.Method method);
+
+    void url(String value);
+
+    void url(StringLike value);
+
+    void onSuccess(Consumer<Script> config);
+
+  }
+
+  /**
+   * Performs a soft navigation to the URL specified by the {@code href}
+   * attribute of this {@code <a>} HTML element.
+   */
+  void request(Consumer<RequestConfig> config);
 
   /**
    * Sets the specified attribute to the given value on the HTML element
