@@ -144,6 +144,17 @@ final class ScriptWriter implements Script {
     actionEnd();
   }
 
+  @Override
+  public final void replaceState(String url) {
+    Objects.requireNonNull(url, "url == null");
+
+    actionStart();
+    stringLiteral("replace-state-0");
+    comma();
+    stringLiteral(url);
+    actionEnd();
+  }
+
   final class RequestConfig implements Script.RequestConfig {
 
     private Script.Method method = Script.GET;

@@ -117,6 +117,12 @@ public sealed interface Script permits ScriptWriter {
   void pushState(String url);
 
   /**
+   * Causes the specified {@code url} to replace the current entry on the
+   * browser's location history.
+   */
+  void replaceState(String url);
+
+  /**
    * Configures the {@link Script#request(Consumer)} action.
    */
   public sealed interface RequestConfig permits ScriptWriter.RequestConfig {

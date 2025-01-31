@@ -31,6 +31,20 @@ const way = (function() {
 
   };
 
+  const actionHandlers = {
+    "delay-0": executeDelay0,
+    "html-0": executeHtml0,
+    "navigate-0": executeNavigate0,
+    "push-state-0": executePushState0,
+    "replace-state-0": executeReplaceState0,
+    "request-0": executeRequest0,
+    "scroll-0": executeScroll0,
+    "set-attribute-0": executeSetAttribute0,
+    "stop-propagation-0": executeStopPropagation0,
+    "submit-0": executeSubmit0,
+    "toggle-class-0": executeToggleClass0
+  };
+
   const defaultScroll = [['scroll-0', 0, 0, "instant"]];
 
   // ##################################################################
@@ -170,19 +184,6 @@ const way = (function() {
   // ##################################################################
   // # BEGIN: Objectos Way Actions
   // ##################################################################
-
-  const actionHandlers = {
-    "delay-0": executeDelay0,
-    "html-0": executeHtml0,
-    "navigate-0": executeNavigate0,
-    "push-state-0": executePushState0,
-    "request-0": executeRequest0,
-    "scroll-0": executeScroll0,
-    "set-attribute-0": executeSetAttribute0,
-    "stop-propagation-0": executeStopPropagation0,
-    "submit-0": executeSubmit0,
-    "toggle-class-0": executeToggleClass0
-  };
 
   function executeActions(actions, element) {
     checkArray(actions);
@@ -381,15 +382,19 @@ const way = (function() {
   }
 
   function executePushState0(args) {
-    if (args.length !== 1) {
-      logError("Illegal number of args", { action: "push-state-0", expected: 1, actual: args });
-
-      return;
-    }
+    checkArgsLength(args, 1, "push-state-0");
 
     const url = args[0];
 
     history.pushState({ way: true }, "", url);
+  }
+
+  function executeReplaceState0(args) {
+    checkArgsLength(args, 1, "replace-state-0");
+
+    const url = args[0];
+
+    history.replaceState({ way: true }, "", url);
   }
 
   function executeRequest0(args, element) {

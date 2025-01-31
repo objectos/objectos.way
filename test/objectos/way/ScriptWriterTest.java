@@ -76,6 +76,16 @@ public class ScriptWriterTest {
   }
 
   @Test
+  public void replaceState() {
+    test(
+        script -> script.replaceState("/next-location"),
+
+        """
+        [["replace-state-0","/next-location"]]"""
+    );
+  }
+
+  @Test
   public void request0Test01() {
     test(
         script -> script.request(req -> {
