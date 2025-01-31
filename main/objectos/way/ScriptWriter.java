@@ -51,7 +51,7 @@ final class ScriptWriter implements Script {
 
   }
 
-  final class ElementMethodInvocation implements Script.StringLike {
+  final class ElementMethodInvocation implements Script.StringQuery {
 
     private final String methodName;
 
@@ -133,6 +133,17 @@ final class ScriptWriter implements Script {
     actionEnd();
   }
 
+  @Override
+  public final void pushState(String url) {
+    Objects.requireNonNull(url, "url == null");
+
+    actionStart();
+    stringLiteral("push-state-0");
+    comma();
+    stringLiteral(url);
+    actionEnd();
+  }
+
   final class RequestConfig implements Script.RequestConfig {
 
     private Script.Method method = Script.GET;
@@ -152,7 +163,7 @@ final class ScriptWriter implements Script {
     }
 
     @Override
-    public final void url(Script.StringLike value) {
+    public final void url(Script.StringQuery value) {
       url = Objects.requireNonNull(value, "value == null");
     }
 

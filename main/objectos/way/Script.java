@@ -86,13 +86,13 @@ public sealed interface Script permits ScriptWriter {
 
   }
 
-  public sealed interface StringLike permits ScriptWriter.ElementMethodInvocation {}
+  public sealed interface StringQuery permits ScriptWriter.ElementMethodInvocation {}
 
   // queries
 
   public sealed interface Element permits ScriptWriter.ElementQuery {
 
-    StringLike getAttribute(String name);
+    StringQuery getAttribute(String name);
 
   }
 
@@ -110,21 +110,35 @@ public sealed interface Script permits ScriptWriter {
    */
   void navigate();
 
+  /**
+   * Causes the specified {@code url} to be pushed into the browser's location
+   * history.
+   */
+  void pushState(String url);
+
+  /**
+   * Configures the {@link Script#request(Consumer)} action.
+   */
   public sealed interface RequestConfig permits ScriptWriter.RequestConfig {
 
-    void method(Script.Method method);
+    /**
+     * Sets the HTTP method to the specified value.
+     *
+     * @param value
+     *        the HTTP method
+     */
+    void method(Script.Method value);
 
     void url(String value);
 
-    void url(StringLike value);
+    void url(StringQuery value);
 
     void onSuccess(Consumer<Script> config);
 
   }
 
   /**
-   * Performs a soft navigation to the URL specified by the {@code href}
-   * attribute of this {@code <a>} HTML element.
+   * Causes the browser to perform a HTTP request.
    */
   void request(Consumer<RequestConfig> config);
 

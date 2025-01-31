@@ -17,8 +17,6 @@
   <script src="../main-js/way.js"></script>
 
   <script class="mocha-init">
-    var thrown;
-
     mocha.setup('tdd');
     mocha.checkLeaks();
     assert = chai.assert;
@@ -26,21 +24,9 @@
 
   <script src="util.js"></script>
 
-  <script src="action.delay.js"></script>
-  <script src="action.html.js"></script>
-  <script src="action.navigate.js"></script>
-  <script src="action.set-attribute.js"></script>
-  <script src="action.stop-propagation.js"></script>
-  <script src="action.toggle-class.js"></script>
-  <script src="data-on-click.js"></script>
-  <script src="data-on-input.js"></script>
-  <script src="data-on-success.js"></script>
+  <script src="scratch.js"></script>
 
   <script class="mocha-exec">
-    way.config.errorHandler = function (error) {
-      thrown = error;
-    };
-
     way.config.history = false;
 
     document.addEventListener("DOMContentLoaded", function () {

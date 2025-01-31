@@ -61,7 +61,17 @@ public class ScriptWriterTest {
         Script::navigate,
 
         """
-        [["navigate-0", true]]"""
+        [["navigate-0"]]"""
+    );
+  }
+
+  @Test
+  public void pushState() {
+    test(
+        script -> script.pushState("/next-location"),
+
+        """
+        [["push-state-0","/next-location"]]"""
     );
   }
 
@@ -121,6 +131,11 @@ public class ScriptWriterTest {
         """
         [["request-0","POST","/foo",[]]]"""
     );
+  }
+
+  @Test
+  public void scroll() {
+
   }
 
   @Test

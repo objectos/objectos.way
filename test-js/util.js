@@ -2,71 +2,71 @@
 // based on https://github.com/bigskysoftware/htmx/blob/c247cae9bf04b5b274d3bd65937541e8224a359c/test/util/util.js
 
 function byId(id) {
-	return document.getElementById(id);
+  return document.getElementById(id);
 }
 
 function innerHTML(id) {
-	const element = document.getElementById(id);
+  const element = document.getElementById(id);
 
-	return element.innerHTML;
+  return element.innerHTML;
 }
 
 function make(html) {
-	const element = makeElement(html);
+  const element = makeElement(html);
 
-	const wa = workArea();
+  const wa = workArea();
 
-	wa.appendChild(element);
+  wa.appendChild(element);
 
-	return element;
+  return element;
 }
 
 function makeElement(html) {
-	const range = document.createRange();
+  const range = document.createRange();
 
-	const fragment = range.createContextualFragment(html);
+  const fragment = range.createContextualFragment(html);
 
-	const children = fragment.children;
+  const children = fragment.children;
 
-	return children[0];
+  return children[0];
 }
 
 function makeServer() {
-	const server = sinon.fakeServer.create();
+  const server = sinon.fakeServer.create();
 
-	server.fakeHTTPMethods = true;
+  server.fakeHTTPMethods = true;
 
-	return server;
+  return server;
 }
 
 function workArea() {
-	return document.getElementById("work-area");
+  return document.getElementById("work-area");
 }
 
 function clearWorkArea() {
-	workArea().innerHTML = "";
+  workArea().innerHTML = "";
 }
 
 function print(elt) {
-	let text = document.createTextNode(elt.outerHTML + "\n\n");
+  let text = document.createTextNode(elt.outerHTML + "\n\n");
 
-	workArea().appendChild(text);
+  workArea().appendChild(text);
 
-	return elt;
+  return elt;
 }
 
 function queryString(url) {
-	const question = url.indexOf("?");
+  const question = url.indexOf("?");
 
-	if (question == -1) {
-		return "";
-	}
+  if (question == -1) {
+    return "";
+  }
 
-	const hash = url.indexOf("#");
+  const hash = url.indexOf("#");
 
-	if (hash == -1) {
-		return url.substring(question + 1);
-	}
+  if (hash == -1) {
+    return url.substring(question + 1);
+  }
 
-	return url.substring(question + 1, hash);
+  return url.substring(question + 1, hash);
 }

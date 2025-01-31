@@ -2,9 +2,9 @@ suite("Action::navigate test", function() {
 
   setup(function() {
     clearWorkArea();
-
     this.errorStub = sinon.stub(console, 'error');
     this.server = makeServer();
+    thrown = null;
   });
 
   teardown(function() {
@@ -52,8 +52,8 @@ suite("Action::navigate test", function() {
 
     link.click();
 
-    assert.equal(this.errorStub.calledOnce, true);
-    assert.equal(this.errorStub.calledWith("Illegal element", { action: "navigate-0", expected: "HTMLAnchorElement", actual: "HTMLButtonElement" }), true);
+    assert.isNotNull(thrown);
+    assert.equal(thrown.message, "Illegal element: navigate-0 must be executed on an HTMLAnchorElement but got HTMLButtonElement");
   });
 
   test("it should fail if anchor has no 'href' attribute", function() {
@@ -66,8 +66,8 @@ suite("Action::navigate test", function() {
 
     link.click();
 
-    assert.equal(this.errorStub.calledOnce, true);
-    assert.equal(this.errorStub.calledWith("Illegal arg", { action: "navigate-0", msg: "anchor has no href attribute" }), true);
+    assert.isNotNull(thrown);
+    assert.equal(thrown.message, `Invalid type: expected String value but query [href] on <a id="link" data-on-click="[[&quot;navigate-0&quot;]]"></a> returned null`);
   });
 
 });
