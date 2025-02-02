@@ -16,6 +16,7 @@
 package objectos.way;
 
 import java.util.Map;
+import objectos.way.App.Key;
 
 final class AppInjector implements App.Injector {
 
@@ -33,6 +34,19 @@ final class AppInjector implements App.Injector {
 
     if (maybeNull == null) {
       throw new IllegalArgumentException("No mappings were found for " + type);
+    } else {
+      return (T) maybeNull;
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public final <T> T getInstance(Key<T> key) {
+    final Object maybeNull;
+    maybeNull = map.get(key);
+
+    if (maybeNull == null) {
+      throw new IllegalArgumentException("No mappings were found for " + key);
     } else {
       return (T) maybeNull;
     }

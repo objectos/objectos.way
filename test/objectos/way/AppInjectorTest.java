@@ -23,7 +23,7 @@ import org.testng.annotations.Test;
 public class AppInjectorTest {
 
   @Test(description = "happy path: register and get")
-  public void testCase01() {
+  public void class01() {
     final App.Injector.Builder ctx;
     ctx = App.Injector.Builder.create();
 
@@ -38,7 +38,7 @@ public class AppInjectorTest {
   }
 
   @Test(description = "disallow mapping overwrite")
-  public void testCase02() {
+  public void class02() {
     final App.Injector.Builder ctx;
     ctx = App.Injector.Builder.create();
 
@@ -54,7 +54,7 @@ public class AppInjectorTest {
   }
 
   @Test(description = "Query for unknown key should throw")
-  public void testCase03() {
+  public void class03() {
     final App.Injector.Builder ctx;
     ctx = App.Injector.Builder.create();
 
@@ -68,7 +68,7 @@ public class AppInjectorTest {
   }
 
   @Test(description = "Query for unknown key should throw")
-  public void testCase04() {
+  public void class04() {
     final App.Injector.Builder ctx;
     ctx = App.Injector.Builder.create();
 
@@ -81,6 +81,76 @@ public class AppInjectorTest {
       Assert.fail();
     } catch (IllegalArgumentException expected) {
       assertEquals(expected.getMessage(), "No mappings were found for class java.lang.String");
+    }
+  }
+
+  private static final App.Key<String> STRING_A = App.Key.create(String.class, "A");
+
+  private static final App.Key<String> STRING_B = App.Key.create(String.class, "B");
+
+  @Test
+  public void key01() {
+    final App.Injector.Builder ctx;
+    ctx = App.Injector.Builder.create();
+
+    ctx.putInstance(STRING_A, "ABC");
+
+    assertEquals(ctx.getInstance(STRING_A), "ABC");
+
+    final App.Injector injector;
+    injector = ctx.build();
+
+    assertEquals(injector.getInstance(STRING_A), "ABC");
+  }
+
+  @Test
+  public void key02() {
+    final App.Injector.Builder ctx;
+    ctx = App.Injector.Builder.create();
+
+    ctx.putInstance(STRING_A, "ABC");
+
+    try {
+      ctx.putInstance(STRING_A, "Must throw");
+
+      Assert.fail();
+    } catch (IllegalArgumentException expected) {
+      assertEquals(expected.getMessage(), "AppKey[type=class java.lang.String, value=A] is already mapped to ABC");
+    }
+  }
+
+  @Test
+  public void key03() {
+    final App.Injector.Builder ctx;
+    ctx = App.Injector.Builder.create();
+
+    ctx.putInstance(STRING_A, "ABC");
+
+    try {
+      ctx.getInstance(STRING_B);
+
+      Assert.fail();
+    } catch (IllegalArgumentException expected) {
+      assertEquals(expected.getMessage(), "No mappings were found for AppKey[type=class java.lang.String, value=B]");
+    }
+  }
+
+  @Test
+  public void key04() {
+    final App.Injector.Builder ctx;
+    ctx = App.Injector.Builder.create();
+
+    ctx.putInstance(STRING_A, "ABC");
+
+    final App.Injector injector;
+    injector = ctx.build();
+
+    try {
+      injector.getInstance(STRING_B);
+
+      Assert.fail();
+    } catch (IllegalArgumentException expected) {
+      assertEquals(expected.getMessage(), "No mappings were found for AppKey[type=class java.lang.String, value=B]");
     }
   }
 

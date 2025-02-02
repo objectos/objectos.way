@@ -26,6 +26,7 @@ import java.lang.reflect.Constructor;
 import java.nio.file.Path;
 import java.nio.file.WatchService;
 import java.time.Clock;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import objectos.way.App.NoteSink.OfConsole;
@@ -121,9 +122,24 @@ public final class App {
 
       <T> void putInstance(Class<T> type, T instance);
 
+      <T> void putInstance(Key<T> key, T instance);
+
     }
 
     <T> T getInstance(Class<T> type);
+
+    <T> T getInstance(Key<T> key);
+
+  }
+
+  public sealed interface Key<T> permits AppKey {
+
+    static <T> Key<T> create(Class<T> type, Object value) {
+      Objects.requireNonNull(type, "type == null");
+      Objects.requireNonNull(value, "value == null");
+
+      return new AppKey<>(type, value);
+    }
 
   }
 

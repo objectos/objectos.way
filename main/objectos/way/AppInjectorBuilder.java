@@ -17,6 +17,7 @@ package objectos.way;
 
 import java.util.Objects;
 import objectos.way.App.Injector;
+import objectos.way.App.Key;
 
 final class AppInjectorBuilder implements App.Injector.Builder {
 
@@ -42,6 +43,19 @@ final class AppInjectorBuilder implements App.Injector.Builder {
     }
   }
 
+  @SuppressWarnings("unchecked")
+  @Override
+  public final <T> T getInstance(Key<T> key) {
+    final Object maybeNull;
+    maybeNull = map.get(key);
+
+    if (maybeNull == null) {
+      throw new IllegalArgumentException("No mappings were found for " + key);
+    } else {
+      return (T) maybeNull;
+    }
+  }
+
   @Override
   public final <T> void putInstance(Class<T> type, T instance) {
     Objects.requireNonNull(type, "type == null");
@@ -52,6 +66,19 @@ final class AppInjectorBuilder implements App.Injector.Builder {
 
     if (maybeExisting != null) {
       throw new IllegalArgumentException(type + " is already mapped to " + maybeExisting);
+    }
+  }
+
+  @Override
+  public final <T> void putInstance(Key<T> key, T instance) {
+    Objects.requireNonNull(key, "key == null");
+    Objects.requireNonNull(instance, "instance == null");
+
+    final Object maybeExisting;
+    maybeExisting = map.put(key, instance);
+
+    if (maybeExisting != null) {
+      throw new IllegalArgumentException(key + " is already mapped to " + maybeExisting);
     }
   }
 
