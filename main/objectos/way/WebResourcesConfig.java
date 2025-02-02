@@ -54,16 +54,13 @@ final class WebResourcesConfig implements Web.Resources.Config {
 
   Note.Sink noteSink = new Note.NoOpSink();
 
-  Path rootDirectory;
-
-  public Web.Resources build() throws IOException {
-    if (rootDirectory == null) {
-      rootDirectory = Files.createTempDirectory("way-web-resources-");
-    }
+  public WebResourcesKernel build() throws IOException {
+    final Path rootDirectory;
+    rootDirectory = Files.createTempDirectory("way-web-resources-");
 
     for (Path directory : directories) {
       CopyRecursively copyRecursively;
-      copyRecursively = new CopyRecursively(directory);
+      copyRecursively = new CopyRecursively(rootDirectory, directory);
 
       Files.walkFileTree(directory, copyRecursively);
     }
@@ -101,7 +98,17 @@ final class WebResourcesConfig implements Web.Resources.Config {
       }
     }
 
-    return new WebResources(this);
+    return new WebResourcesKernel(
+        contentTypes,
+
+        defaultContentType,
+
+        WebResources.Notes.create(),
+
+        noteSink,
+
+        rootDirectory
+    );
   }
 
   @Override
@@ -148,18 +155,15 @@ final class WebResourcesConfig implements Web.Resources.Config {
     this.noteSink = Check.notNull(noteSink, "noteSink == null");
   }
 
-  @Override
-  public final void rootDirectory(Path directory) {
-    Check.argument(Files.isDirectory(directory), "Path " + directory + " does not represent a directory");
-
-    rootDirectory = directory;
-  }
-
   private class CopyRecursively extends SimpleFileVisitor<Path> {
+
+    private final Path rootDirectory;
 
     private final Path source;
 
-    public CopyRecursively(Path source) {
+    public CopyRecursively(Path rootDirectory, Path source) {
+      this.rootDirectory = rootDirectory;
+
       this.source = source;
     }
 

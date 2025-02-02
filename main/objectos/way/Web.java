@@ -510,14 +510,6 @@ public final class Web {
        */
       void noteSink(Note.Sink noteSink);
 
-      /**
-       * Set the root directory of the web resources to the specified path.
-       *
-       * @param value
-       *        the path of the directory
-       */
-      void rootDirectory(Path value);
-
     }
 
     /**
@@ -533,13 +525,16 @@ public final class Web {
      * @throws IOException
      *         if an I/O error occurs
      */
-    static Resources create(ThrowingConsumer<Config, IOException> config) throws IOException {
-      WebResourcesConfig builder;
+    static Resources create(Consumer<Config> config) throws IOException {
+      final WebResourcesConfig builder;
       builder = new WebResourcesConfig();
 
       config.accept(builder);
 
-      return builder.build();
+      final WebResourcesKernel kernel;
+      kernel = builder.build();
+
+      return new WebResources(kernel);
     }
 
     /**
@@ -549,6 +544,18 @@ public final class Web {
      *         if an I/O error occurs
      */
     boolean deleteIfExists(String path) throws IOException;
+
+    /**
+     * Reconfigures this {@code Resources} instance with the specified
+     * configuration.
+     *
+     * @param config
+     *        the configuration
+     *
+     * @throws IOException
+     *         if an I/O error occurs
+     */
+    void reconfigure(Consumer<Config> config) throws IOException;
 
     /**
      * Creates a new file at the specified path with the specified text content.
@@ -752,13 +759,6 @@ public final class Web {
      * @return the previously stored session instance or {@code null}
      */
     Session store(Session session);
-
-  }
-
-  @FunctionalInterface
-  public interface ThrowingConsumer<T, E extends Exception> {
-
-    void accept(T config) throws E;
 
   }
 

@@ -19,6 +19,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.Socket;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
@@ -41,8 +42,6 @@ public class WebResourcesTest extends Http.Module {
     public byte[] mediaBytes() { return text.getBytes(StandardCharsets.UTF_8); }
   }
 
-  private Path root;
-
   private Web.Resources resources;
 
   private int testCase06Count;
@@ -51,20 +50,25 @@ public class WebResourcesTest extends Http.Module {
 
   @BeforeClass
   public void beforeClass() throws IOException {
-    root = TestingDir.next();
-
     resources = Web.Resources.create(config -> {
-      config.rootDirectory(root);
-
       config.noteSink(TestingNoteSink.INSTANCE);
 
       config.contentTypes("""
-        .txt: text/plain; charset=utf-8
-        """);
+      .txt: text/plain; charset=utf-8
+      """);
+
+      config.addTextFile("/reconfigure.txt", "reconfigure", StandardCharsets.UTF_8);
+    });
+
+    resources.reconfigure(config -> {
+      config.noteSink(TestingNoteSink.INSTANCE);
+
+      config.contentTypes("""
+      .txt: text/plain; charset=utf-8
+      """);
 
       testCase01Option(config);
       testCase03Option(config);
-      testCase04Option(config);
       testCase05Option(config);
     });
 
@@ -85,7 +89,7 @@ public class WebResourcesTest extends Http.Module {
     route("/tc08.txt", handler(resources), handler(this::testCase08));
   }
 
-  private void testCase01Option(Web.Resources.Config config) throws IOException {
+  private void testCase01Option(Web.Resources.Config config) {
     Path src;
     src = TestingDir.next();
 
@@ -156,7 +160,7 @@ public class WebResourcesTest extends Http.Module {
     }
   }
 
-  private void testCase03Option(Web.Resources.Config config) throws IOException {
+  private void testCase03Option(Web.Resources.Config config) {
     Path src;
     src = TestingDir.next();
 
@@ -193,53 +197,24 @@ public class WebResourcesTest extends Http.Module {
     }
   }
 
-  private void testCase04Option(Web.Resources.Config config) throws IOException {
-    config.addTextFile("/tc04.txt", "AAAA\n", StandardCharsets.UTF_8);
-  }
-
   @Test(description = """
-  It should be able to add custom files
+  Web.Resources::reconfigure
+  - resources from before reconfigure should 404
   """)
-  public void testCase04() throws IOException {
-    try (Socket socket = newSocket()) {
-      Path a;
-      a = root.resolve("tc04.txt");
+  public void testCase04() throws IOException, InterruptedException {
+    final HttpResponse<String> resp;
+    resp = Testing.httpClient(
+        "/reconfigure.txt",
 
-      Clock clock;
-      clock = TestingClock.FIXED;
+        builder -> builder.headers(
+            "Host", "web.resources.test"
+        )
+    );
 
-      Instant instant;
-      instant = clock.instant();
-
-      FileTime fileTime;
-      fileTime = FileTime.from(instant);
-
-      Files.setLastModifiedTime(a, fileTime);
-
-      test(
-          socket,
-
-          """
-          GET /tc04.txt HTTP/1.1\r
-          Host: web.resources.test\r
-          Connection: close\r
-          \r
-          """,
-
-          """
-          HTTP/1.1 200 OK\r
-          Content-Type: text/plain; charset=utf-8\r
-          Content-Length: 5\r
-          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-          ETag: 18901e7e8f8-5\r
-          \r
-          AAAA
-          """
-      );
-    }
+    assertEquals(resp.statusCode(), 404);
   }
 
-  private void testCase05Option(Web.Resources.Config config) throws IOException {
+  private void testCase05Option(Web.Resources.Config config) {
     Path src;
     src = TestingDir.next();
 
@@ -418,28 +393,32 @@ public class WebResourcesTest extends Http.Module {
     assertEquals(testCase08Count, 1);
   }
 
-  private void write(Path directory, Path file, String text) throws IOException {
-    Path target;
-    target = directory.resolve(file);
+  private void write(Path directory, Path file, String text) {
+    try {
+      Path target;
+      target = directory.resolve(file);
 
-    Path parent;
-    parent = target.getParent();
+      Path parent;
+      parent = target.getParent();
 
-    Files.createDirectories(parent);
+      Files.createDirectories(parent);
 
-    Files.writeString(target, text);
+      Files.writeString(target, text);
 
-    // set last modified time for etag purposes
-    Clock clock;
-    clock = TestingClock.FIXED;
+      // set last modified time for etag purposes
+      Clock clock;
+      clock = TestingClock.FIXED;
 
-    Instant instant;
-    instant = clock.instant();
+      Instant instant;
+      instant = clock.instant();
 
-    FileTime fileTime;
-    fileTime = FileTime.from(instant);
+      FileTime fileTime;
+      fileTime = FileTime.from(instant);
 
-    Files.setLastModifiedTime(target, fileTime);
+      Files.setLastModifiedTime(target, fileTime);
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
   }
 
   private Socket newSocket() throws IOException {
