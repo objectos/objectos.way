@@ -15,6 +15,7 @@
  */
 package objectos.way;
 
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 import org.testng.annotations.Test;
@@ -30,6 +31,17 @@ public class HtmlAttributeNameTest {
     max = 1 << 8;
 
     assertTrue(size < max);
+  }
+
+  @Test
+  public void create01() {
+    final Html.AttributeName active;
+    active = Html.AttributeName.of("data-active");
+
+    assertEquals(active.index(), -1);
+    assertEquals(active.name(), "data-active");
+    assertEquals(active.booleanAttribute(), false);
+    assertEquals(active.singleQuoted(), false);
   }
 
 }

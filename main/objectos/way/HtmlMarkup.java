@@ -516,6 +516,8 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
 
         case HtmlByteProto.MARKED5 -> index += 5;
 
+        case HtmlByteProto.MARKED6 -> index += 6;
+
         default -> throw new UnsupportedOperationException(
             "Implement me :: proto=" + proto
         );
@@ -733,7 +735,8 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
 
         case HtmlByteProto.ATTRIBUTE0,
              HtmlByteProto.ATTRIBUTE1,
-             HtmlByteProto.ATTRIBUTE_EXT1 -> {
+             HtmlByteProto.ATTRIBUTE_EXT1,
+             HtmlByteProto.CUSTOM_ATTR1 -> {
           index = rollbackIndex;
 
           nextState = _ELEMENT_ATTRS_HAS_NEXT;
@@ -789,7 +792,7 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
     attribute = htmlAttribute();
 
     // values to set
-    byte attr, v0 = -1, v1 = -1;
+    byte v0 = -1, v1 = -1;
 
     byte proto;
     proto = main[index++];
@@ -804,7 +807,10 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
         HtmlAmbiguous ambiguous;
         ambiguous = HtmlAmbiguous.decode(ordinalByte);
 
+        byte attr;
         attr = ambiguous.encodeAttribute();
+
+        attribute.name = attributeName(attr);
 
         v0 = main[auxStart++];
 
@@ -814,13 +820,19 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
       case HtmlByteProto.ATTRIBUTE0 -> {
         index = jmp2(index);
 
+        byte attr;
         attr = main[auxStart++];
+
+        attribute.name = attributeName(attr);
       }
 
       case HtmlByteProto.ATTRIBUTE1 -> {
         index = jmp2(index);
 
+        byte attr;
         attr = main[auxStart++];
+
+        attribute.name = attributeName(attr);
 
         v0 = main[auxStart++];
 
@@ -828,11 +840,33 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
       }
 
       case HtmlByteProto.ATTRIBUTE_EXT1 -> {
+        byte attr;
         attr = main[index++];
+
+        attribute.name = attributeName(attr);
 
         v0 = main[index++];
 
         v1 = main[index++];
+      }
+
+      case HtmlByteProto.CUSTOM_ATTR1 -> {
+        index = jmp2(index);
+
+        byte attr0;
+        attr0 = main[auxStart++];
+
+        byte attr1;
+        attr1 = main[auxStart++];
+
+        Object object;
+        object = toObject(attr0, attr1);
+
+        attribute.name = (HtmlAttributeName) object;
+
+        v0 = main[auxStart++];
+
+        v1 = main[auxStart++];
       }
 
       default -> {
@@ -841,12 +875,6 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
         throw new IllegalStateException();
       }
     }
-
-    // attribute name
-    int ordinal;
-    ordinal = HtmlBytes.decodeInt(attr);
-
-    attribute.name = HtmlAttributeName.get(ordinal);
 
     // attribute value
     Object value;
@@ -864,6 +892,13 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
     stateSet(_ELEMENT_ATTRS_NEXT);
 
     return attribute;
+  }
+
+  private HtmlAttributeName attributeName(byte attr) {
+    int ordinal;
+    ordinal = HtmlBytes.decodeInt(attr);
+
+    return HtmlAttributeName.get(ordinal);
   }
 
   private HtmlDomAttribute htmlAttribute() {
@@ -1214,7 +1249,8 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
         }
 
         case HtmlByteProto.ATTRIBUTE0,
-             HtmlByteProto.ATTRIBUTE1 -> index = skipVarInt(index);
+             HtmlByteProto.ATTRIBUTE1,
+             HtmlByteProto.CUSTOM_ATTR1 -> index = skipVarInt(index);
 
         case HtmlByteProto.ATTRIBUTE_EXT1 -> index += 3;
 
@@ -1691,32 +1727,46 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
 
   @Override
   final Html.AttributeOrNoOp attribute0(Html.AttributeName name, Object value) {
-    return attribute1(name, value, HtmlByteProto.ATTRIBUTE1);
-  }
-
-  private Html.AttributeOrNoOp attribute1(Html.AttributeName name, Object value, byte proto) {
     int index;
     index = name.index();
 
-    if (index < 0) {
-      throw new UnsupportedOperationException("Custom attribute name");
+    if (index >= 0) {
+      int object;
+      object = objectAdd(value);
+
+      mainAdd(
+          HtmlByteProto.ATTRIBUTE1,
+
+          // name
+          HtmlBytes.encodeInt0(index),
+
+          // value
+          HtmlBytes.encodeInt0(object),
+          HtmlBytes.encodeInt1(object),
+
+          HtmlByteProto.INTERNAL5
+      );
+    } else {
+      int nameIndex;
+      nameIndex = objectAdd(name);
+
+      int valueIndex;
+      valueIndex = objectAdd(value);
+
+      mainAdd(
+          HtmlByteProto.CUSTOM_ATTR1,
+
+          // name
+          HtmlBytes.encodeInt0(nameIndex),
+          HtmlBytes.encodeInt1(nameIndex),
+
+          // value
+          HtmlBytes.encodeInt0(valueIndex),
+          HtmlBytes.encodeInt1(valueIndex),
+
+          HtmlByteProto.INTERNAL6
+      );
     }
-
-    int object;
-    object = objectAdd(value);
-
-    mainAdd(
-        proto,
-
-        // name
-        HtmlBytes.encodeInt0(index),
-
-        // value
-        HtmlBytes.encodeInt0(object),
-        HtmlBytes.encodeInt1(object),
-
-        HtmlByteProto.INTERNAL5
-    );
 
     return Html.ATTRIBUTE;
   }
@@ -1801,6 +1851,8 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
         case HtmlByteProto.INTERNAL4 -> mainContents -= 4 - 2;
 
         case HtmlByteProto.INTERNAL5 -> mainContents -= 5 - 2;
+
+        case HtmlByteProto.INTERNAL6 -> mainContents -= 6 - 2;
 
         default -> throw new UnsupportedOperationException(
             "Implement me :: proto=" + proto
@@ -1890,6 +1942,12 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
                 continue loop;
               }
 
+              case HtmlByteProto.CUSTOM_ATTR1 -> {
+                contents = encodeInternal6(contents, proto);
+
+                continue loop;
+              }
+
               case HtmlByteProto.ELEMENT -> {
                 contents = encodeElement(contents, proto);
 
@@ -1917,6 +1975,8 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
               case HtmlByteProto.MARKED4 -> contents += 4;
 
               case HtmlByteProto.MARKED5 -> contents += 5;
+
+              case HtmlByteProto.MARKED6 -> contents += 6;
 
               case HtmlByteProto.RAW,
                    HtmlByteProto.TEXT -> {
@@ -2310,6 +2370,33 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
     return contents + offset;
   }
 
+  private int encodeInternal6(int contents, byte proto) {
+    // keep the start index handy
+    int startIndex;
+    startIndex = contents;
+
+    // mark this element
+    main[contents] = HtmlByteProto.MARKED6;
+
+    // point to next
+    int offset;
+    offset = 6;
+
+    // ensure main can hold least 4 elements
+    // 0   - ByteProto
+    // 1-3 - variable length
+    main = Util.growIfNecessary(main, mainIndex + 3);
+
+    main[mainIndex++] = proto;
+
+    int length;
+    length = mainIndex - startIndex;
+
+    mainIndex = HtmlBytes.encodeOffset(main, mainIndex, length);
+
+    return contents + offset;
+  }
+
   private int encodeLength2(int contents) {
     contents++;
 
@@ -2434,6 +2521,16 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
     main[mainIndex++] = b2;
     main[mainIndex++] = b3;
     main[mainIndex++] = b4;
+  }
+
+  private void mainAdd(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5) {
+    main = Util.growIfNecessary(main, mainIndex + 5);
+    main[mainIndex++] = b0;
+    main[mainIndex++] = b1;
+    main[mainIndex++] = b2;
+    main[mainIndex++] = b3;
+    main[mainIndex++] = b4;
+    main[mainIndex++] = b5;
   }
 
   private int objectAdd(Object value) {

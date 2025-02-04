@@ -24,11 +24,13 @@ final class HtmlByteProto {
   public static final byte INTERNAL3 = -3;
   public static final byte INTERNAL4 = -4;
   public static final byte INTERNAL5 = -5;
+  public static final byte INTERNAL6 = -6;
   public static final byte LENGTH2 = -7;
   public static final byte LENGTH3 = -8;
   public static final byte MARKED3 = -9;
   public static final byte MARKED4 = -10;
   public static final byte MARKED5 = -11;
+  public static final byte MARKED6 = -12;
   public static final byte NULL = -13;
   public static final byte STANDARD_NAME = -14;
 
@@ -46,9 +48,8 @@ final class HtmlByteProto {
 
   public static final byte ATTRIBUTE0 = -23;
   public static final byte ATTRIBUTE1 = -24;
-  //public static final byte ATTRIBUTE_CLASS = -22;
-  //public static final byte ATTRIBUTE_ID = -23;
   public static final byte ATTRIBUTE_EXT1 = -25;
+  public static final byte CUSTOM_ATTR1 = -27;
 
   private HtmlByteProto() {}
 

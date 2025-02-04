@@ -38,6 +38,27 @@ public class HtmlTemplateTestAttributes {
   }
 
   @Test
+  public void attribute() {
+    final Html.AttributeName active;
+    active = Html.AttributeName.of("data-active");
+
+    test(
+        new Html.Template() {
+          @Override
+          protected final void render() {
+            div(
+                attribute(active, "foo")
+            );
+          }
+        },
+
+        """
+        <div data-active="foo"></div>
+        """
+    );
+  }
+
+  @Test
   public void checked() {
     test(
         new Html.Template() {

@@ -30,6 +30,10 @@ public final class Html {
    */
   public sealed interface AttributeName extends HtmlAttributeNameGenerated permits HtmlAttributeName {
 
+    static AttributeName of(String name) {
+      return HtmlAttributeName.custom(name);
+    }
+
     /**
      * Index of this attribute.
      *
@@ -3935,10 +3939,6 @@ public final class Html {
      */
     protected abstract void render();
 
-    final void attribute(Html.AttributeName name, String value) {
-      $html().attribute(name, value);
-    }
-
     @Override
     final Html.Markup $html() {
       Check.state(html != null, "html not set");
@@ -4394,6 +4394,10 @@ public final class Html {
   public sealed static abstract class TemplateAttributes {
 
     TemplateAttributes() {}
+
+    protected final Instruction.OfAttribute attribute(AttributeName name, String value) {
+      return $attributes().attribute(name, value);
+    }
 
     /**
      * Generates the {@code accesskey} attribute with the specified value.
