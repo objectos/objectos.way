@@ -2289,17 +2289,13 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
     return maxIndex;
   }
 
-  private int encodeInternal3(int contents, byte proto) {
+  private int encodeInternal(int contents, byte proto, int offset, byte marked) {
     // keep the start index handy
     int startIndex;
     startIndex = contents;
 
     // mark this element
-    main[contents] = HtmlByteProto.MARKED3;
-
-    // point to next
-    int offset;
-    offset = 3;
+    main[contents] = marked;
 
     // ensure main can hold least 4 elements
     // 0   - ByteProto
@@ -2314,87 +2310,22 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
     mainIndex = HtmlBytes.encodeOffset(main, mainIndex, length);
 
     return contents + offset;
+  }
+
+  private int encodeInternal3(int contents, byte proto) {
+    return encodeInternal(contents, proto, 3, HtmlByteProto.MARKED3);
   }
 
   private int encodeInternal4(int contents, byte proto) {
-    // keep the start index handy
-    int startIndex;
-    startIndex = contents;
-
-    // mark this element
-    main[contents] = HtmlByteProto.MARKED4;
-
-    // point to next
-    int offset;
-    offset = 4;
-
-    // ensure main can hold least 4 elements
-    // 0   - ByteProto
-    // 1-3 - variable length
-    main = Util.growIfNecessary(main, mainIndex + 3);
-
-    main[mainIndex++] = proto;
-
-    int length;
-    length = mainIndex - startIndex;
-
-    mainIndex = HtmlBytes.encodeOffset(main, mainIndex, length);
-
-    return contents + offset;
+    return encodeInternal(contents, proto, 4, HtmlByteProto.MARKED4);
   }
 
   private int encodeInternal5(int contents, byte proto) {
-    // keep the start index handy
-    int startIndex;
-    startIndex = contents;
-
-    // mark this element
-    main[contents] = HtmlByteProto.MARKED5;
-
-    // point to next
-    int offset;
-    offset = 5;
-
-    // ensure main can hold least 4 elements
-    // 0   - ByteProto
-    // 1-3 - variable length
-    main = Util.growIfNecessary(main, mainIndex + 3);
-
-    main[mainIndex++] = proto;
-
-    int length;
-    length = mainIndex - startIndex;
-
-    mainIndex = HtmlBytes.encodeOffset(main, mainIndex, length);
-
-    return contents + offset;
+    return encodeInternal(contents, proto, 5, HtmlByteProto.MARKED5);
   }
 
   private int encodeInternal6(int contents, byte proto) {
-    // keep the start index handy
-    int startIndex;
-    startIndex = contents;
-
-    // mark this element
-    main[contents] = HtmlByteProto.MARKED6;
-
-    // point to next
-    int offset;
-    offset = 6;
-
-    // ensure main can hold least 4 elements
-    // 0   - ByteProto
-    // 1-3 - variable length
-    main = Util.growIfNecessary(main, mainIndex + 3);
-
-    main[mainIndex++] = proto;
-
-    int length;
-    length = mainIndex - startIndex;
-
-    mainIndex = HtmlBytes.encodeOffset(main, mainIndex, length);
-
-    return contents + offset;
+    return encodeInternal(contents, proto, 6, HtmlByteProto.MARKED6);
   }
 
   private int encodeLength2(int contents) {
