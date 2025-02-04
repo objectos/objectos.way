@@ -98,6 +98,8 @@ public sealed interface Script permits ScriptWriter {
 
   Element element();
 
+  Element elementById(Html.Id id);
+
   // actions
 
   void delay(int ms, Consumer<Script> callback);

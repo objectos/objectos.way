@@ -40,24 +40,58 @@ final class ScriptWriter implements Script {
 
   // queries
 
+  private enum ElementQueryKind {
+
+    ELEMENT,
+
+    BY_ID;
+
+  }
+
   final class ElementQuery implements Script.Element {
+
+    private final ElementQueryKind kind;
+
+    private final String value;
+
+    public ElementQuery(ElementQueryKind kind, String value) {
+      this.kind = kind;
+
+      this.value = value;
+    }
 
     @Override
     public final ElementMethodInvocation getAttribute(String name) {
       Objects.requireNonNull(name, "name == null");
 
-      return new ElementMethodInvocation("getAttribute", name);
+      return new ElementMethodInvocation(this, "getAttribute", name);
+    }
+
+    final void methodInvocation() {
+      switch (kind) {
+        case ELEMENT -> stringLiteral("element-1");
+
+        case BY_ID -> {
+          stringLiteral("id-1");
+          comma();
+          stringLiteral(value);
+        }
+      }
     }
 
   }
 
   final class ElementMethodInvocation implements Script.StringQuery {
 
+    private final ElementQuery query;
+
     private final String methodName;
 
     private final Object argumentOrList;
 
-    public ElementMethodInvocation(String methodName, Object argumentOrList) {
+    public ElementMethodInvocation(ElementQuery query, String methodName, Object argumentOrList) {
+      this.query = query;
+
       this.methodName = methodName;
 
       this.argumentOrList = argumentOrList;
@@ -66,14 +100,14 @@ final class ScriptWriter implements Script {
     final void write() {
       arrayStart();
 
-      // arg[0] = instruction
-      stringLiteral("element-1");
+      // instruction
+      query.methodInvocation();
 
-      // arg[1] = method name
+      // method name
       comma();
       stringLiteral(methodName);
 
-      // arg[rest] = args
+      // args
       if (argumentOrList instanceof List<?> list) {
         for (Object o : list) {
           comma();
@@ -94,10 +128,17 @@ final class ScriptWriter implements Script {
   @Override
   public final Script.Element element() {
     if (element == null) {
-      element = new ElementQuery();
+      element = new ElementQuery(ElementQueryKind.ELEMENT, null);
     }
 
     return element;
+  }
+
+  @Override
+  public final Element elementById(Html.Id id) {
+    final String _id = id.value();
+
+    return new ElementQuery(ElementQueryKind.BY_ID, _id);
   }
 
   // actions

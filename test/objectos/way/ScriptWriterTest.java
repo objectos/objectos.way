@@ -35,6 +35,22 @@ public class ScriptWriterTest {
   }
 
   @Test
+  public void elementById() {
+    test(
+        script -> {
+          var foo = script.elementById(FOO);
+
+          script.request(req -> {
+            req.url(foo.getAttribute("href"));
+          });
+        },
+
+        """
+        [["request-0","GET",["id-1","foo","getAttribute","href"],[]]]"""
+    );
+  }
+
+  @Test
   public void html() {
     Html.Template template = new Html.Template() {
       @Override
