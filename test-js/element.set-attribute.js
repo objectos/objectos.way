@@ -13,7 +13,7 @@ suite("Action::setProperty test", function() {
     const clickMe = "click-me";
 
     const action = JSON.stringify([
-      ["set-attribute-0", "subject", "value", "bar"]
+      ["id-1", "subject", "setAttribute", "value", "bar"]
     ]);
 
     make(`

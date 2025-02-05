@@ -68,6 +68,27 @@ final class ScriptWriter implements Script {
     }
 
     @Override
+    public final void attr(String name, String value) {
+      Objects.requireNonNull(name, "name == null");
+      Objects.requireNonNull(value, "value == null");
+
+      actionStart();
+
+      methodInvocation();
+
+      comma();
+      stringLiteral("setAttribute");
+
+      comma();
+      stringLiteral(name);
+
+      comma();
+      stringLiteral(value);
+
+      actionEnd();
+    }
+
+    @Override
     public final void toggleClass(String classes) {
       Check.argument(!classes.isBlank(), "Classes to toggle must not be blank");
 
@@ -75,7 +96,9 @@ final class ScriptWriter implements Script {
       parts = classes.split(" ");
 
       actionStart();
+
       action();
+
       comma();
       stringLiteral("toggle-class-0");
 
@@ -297,23 +320,6 @@ final class ScriptWriter implements Script {
     config.accept(delegate);
 
     delegate.write();
-  }
-
-  @Override
-  public final void setAttribute(Html.Id id, String name, String value) {
-    final String _id = id.value();
-    Objects.requireNonNull(name, "name == null");
-    Objects.requireNonNull(value, "value == null");
-
-    actionStart();
-    stringLiteral("set-attribute-0");
-    comma();
-    stringLiteral(_id);
-    comma();
-    stringLiteral(name);
-    comma();
-    stringLiteral(value);
-    actionEnd();
   }
 
   @Override

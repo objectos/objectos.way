@@ -51,6 +51,30 @@ public class ScriptWriterTest {
   }
 
   @Test
+  public void elementAttr() {
+    test(
+        script -> script.elementById(FOO).attr("value", "x"),
+
+        """
+        [["id-1","foo","setAttribute","value","x"]]"""
+    );
+  }
+
+  @Test
+  public void elementToggleClass0() {
+    test(
+        script -> {
+          var foo = script.elementById(FOO);
+          foo.toggleClass("x");
+          foo.toggleClass("c1 c2");
+        },
+
+        """
+        [["id-2","foo","toggle-class-0","x"],["id-2","foo","toggle-class-0","c1","c2"]]"""
+    );
+  }
+
+  @Test
   public void html() {
     Html.Template template = new Html.Template() {
       @Override
@@ -160,16 +184,6 @@ public class ScriptWriterTest {
   }
 
   @Test
-  public void setAttribute() {
-    test(
-        script -> script.setAttribute(FOO, "value", "x"),
-
-        """
-        [["set-attribute-0","foo","value","x"]]"""
-    );
-  }
-
-  @Test
   public void stopPropagation0() {
     test(
         Script::stopPropagation,
@@ -186,20 +200,6 @@ public class ScriptWriterTest {
 
         """
         [["submit-0","foo"]]"""
-    );
-  }
-
-  @Test
-  public void toggleClass0() {
-    test(
-        script -> {
-          var foo = script.elementById(FOO);
-          foo.toggleClass("x");
-          foo.toggleClass("c1 c2");
-        },
-
-        """
-        [["id-2","foo","toggle-class-0","x"],["id-2","foo","toggle-class-0","c1","c2"]]"""
     );
   }
 

@@ -101,6 +101,16 @@ public sealed interface Script permits ScriptWriter {
 
     StringQuery getAttribute(String name);
 
+    /**
+     * Sets the specified attribute to the given value.
+     *
+     * @param name
+     *        the name of the attribute to set
+     * @param value
+     *        the value to assign to the attribute
+     */
+    void attr(String name, String value);
+
     void toggleClass(String className);
 
   }
@@ -158,19 +168,6 @@ public sealed interface Script permits ScriptWriter {
    * Causes the browser to perform a HTTP request.
    */
   void request(Consumer<RequestConfig> config);
-
-  /**
-   * Sets the specified attribute to the given value on the HTML element
-   * identified by the provided ID.
-   *
-   * @param id
-   *        the ID of the target HTML element
-   * @param name
-   *        the name of the attribute to set
-   * @param value
-   *        the value to assign to the attribute
-   */
-  void setAttribute(Html.Id id, String name, String value);
 
   /**
    * Causes the event handling to stop at the current HTML element.

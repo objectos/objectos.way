@@ -36,7 +36,7 @@ suite("Action::html test", function() {
     assert.equal(requests.length, 1);
     assert.propertyVal(requests[0].requestHeaders, "Way-Request", "true");
   });
-
+ 
   test("single data-frame: same name same value", function() {
     const frame1 = make("<form data-frame='x:1' method='post' action='/test'><button id='b' type='submit'>Before</button></form>");
     const frame2 = makeElement("<form data-frame='x:1' method='post' action='/test'><button type='submit'>Ignored</button></form>");
@@ -375,5 +375,5 @@ suite("Action::html test", function() {
 
     assert.equal(workArea().innerHTML, page2.outerHTML);
   });
-
+  
 });

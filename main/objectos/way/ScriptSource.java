@@ -60,6 +60,7 @@ const way = (function() {
   const actionHandlers = {
     "delay-0": executeDelay0,
     "html-0": executeHtml0,
+    "id-2": executeId2,
     "navigate-0": executeNavigate0,
     "push-state-0": executePushState0,
     "replace-state-0": executeReplaceState0,
@@ -67,8 +68,7 @@ const way = (function() {
     "scroll-0": executeScroll0,
     "set-attribute-0": executeSetAttribute0,
     "stop-propagation-0": executeStopPropagation0,
-    "submit-0": executeSubmit0,
-    "toggle-class-0": executeToggleClass0
+    "submit-0": executeSubmit0
   };
 
   const defaultScroll = [['scroll-0', 0, 0, "instant"]];
@@ -391,6 +391,10 @@ const way = (function() {
     executeHtml(value);
   }
 
+  function executeId2(args) {
+    queryId2(args);
+  }
+
   function executeNavigate0(_, element) {
     if (!(element instanceof HTMLAnchorElement)) {
       const actual = element.constructor ? element.constructor.name : "Unknown";
@@ -521,35 +525,10 @@ const way = (function() {
     el.dispatchEvent(new Event("submit", { bubbles: true }));
   }
 
-  function executeToggleClass0(action) {
-    withElementClassList(action, "toggle");
-  }
 
   function checkArgsLength(args, expected, action) {
     if (args.length !== expected) {
       throw new Error(`Illegal number of args: ${action} action expected ${expected} args but got ${args.length}`);
-    }
-  }
-
-  function withElementClassList(args, methodName) {
-    if (args.length < 2) {
-      return;
-    }
-
-    const id = args[0];
-
-    const el = document.getElementById(id);
-
-    if (!el) {
-      return;
-    }
-
-    const classList = el.classList;
-
-    for (let idx = 1; idx < args.length; idx++) {
-      const className = args[idx];
-
-      classList[methodName](className);
     }
   }
 
@@ -584,7 +563,8 @@ const way = (function() {
   // ##################################################################
 
   const queryHandlers = {
-    "element-1": queryElement1
+    "element-1": queryElement1,
+    "id-2": queryId2
   };
 
   function stringQuery(value, element) {
@@ -629,6 +609,48 @@ const way = (function() {
     }
 
     return method.apply(element, args);
+  }
+
+  function queryId2(args) {
+    checkArrayLengthMin(args, 1, "args");
+
+    const id = checkString(args.shift(), "id");
+
+    const element = document.getElementById(id);
+
+    if (!element) {
+      throw new Error(`Illegal arg: element not found with ID ${id}`);
+    }
+
+    elementAction(args, element);
+  }
+
+  const elementActions = {
+    "toggle-class-0": elementToggleClass0
+  };
+
+  function elementAction(args, element) {
+    checkArrayLengthMin(args, 1, "args");
+
+    const key = args.shift();
+
+    const action = elementActions[key];
+
+    if (!action) {
+      throw new Error(`Illegal arg: unknown element action for ${key}`);
+    }
+
+    action(args, element);
+  }
+
+  function elementToggleClass0(args, element) {
+    checkArrayLengthMin(args, 1, "args");
+
+    const classList = element.classList;
+
+    for (const className of args) {
+      classList.toggle(className);
+    }
   }
 
   // ##################################################################
