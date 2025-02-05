@@ -62,6 +62,26 @@ public class CssEngineTestVariants {
   }
 
   @Test
+  public void attribute() {
+    class Subject extends CssSubject {
+      @Override
+      final void classes() {
+        className("[data-marker]:content:''");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .\\[data-marker\\]\\:content\\:\\'\\'[data-marker] { content: '' }
+        }
+        """
+    );
+  }
+
+  @Test
   public void breakpoint() {
     class Subject extends CssSubject {
       @Override
@@ -285,7 +305,13 @@ public class CssEngineTestVariants {
     class Subject extends Html.Template {
       @Override
       protected final void render() {
-        a(css("group"), div(css("group-hover:outline:1px_solid_blue-500")));
+        a(
+            css("group"),
+
+            div(css("group-hover:outline:1px_solid_blue-500")),
+
+            div(css("group-[data-marker]:background-color:blue-500"))
+        );
       }
     }
 
@@ -294,6 +320,7 @@ public class CssEngineTestVariants {
 
         """
         @layer utilities {
+          .group[data-marker] .group-\\[data-marker\\]\\:background-color\\:blue-500 { background-color: var(--color-blue-500) }
           .group:hover .group-hover\\:outline\\:1px_solid_blue-500 { outline: 1px solid var(--color-blue-500) }
         }
         """

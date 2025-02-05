@@ -1091,6 +1091,12 @@ final class CssEngine implements Css.StyleSheet.Config, CssEngineScanner.Adapter
       return result;
     }
 
+    result = variantByNameOfAttribute(name);
+
+    if (result != null) {
+      return result;
+    }
+
     result = variantByNameOfElement(name);
 
     if (result != null) {
@@ -1098,6 +1104,31 @@ final class CssEngine implements Css.StyleSheet.Config, CssEngineScanner.Adapter
     }
 
     return variantByNameOfGroup(name);
+  }
+
+  private CssVariant variantByNameOfAttribute(String name) {
+    final int length;
+    length = name.length();
+
+    if (length == 0) {
+      return null;
+    }
+
+    final char first;
+    first = name.charAt(0);
+
+    if (first != '[') {
+      return null;
+    }
+
+    final char last;
+    last = name.charAt(length - 1);
+
+    if (last != ']') {
+      return null;
+    }
+
+    return new CssVariant.Suffix(name);
   }
 
   private CssVariant variantByNameOfElement(String name) {
@@ -1138,13 +1169,23 @@ final class CssEngine implements Css.StyleSheet.Config, CssEngineScanner.Adapter
     String suffix;
     suffix = name.substring(suffixIndex);
 
-    final CssVariant groupVariant;
+    CssVariant groupVariant;
     groupVariant = variants.get(suffix);
 
-    if (groupVariant == null) {
-      return null;
+    if (groupVariant != null) {
+      return variantByNameOfGroup(name, groupVariant);
     }
 
+    groupVariant = variantByNameOfAttribute(suffix);
+
+    if (groupVariant != null) {
+      return variantByNameOfGroup(name, groupVariant);
+    }
+
+    return null;
+  }
+
+  private CssVariant variantByNameOfGroup(String name, CssVariant groupVariant) {
     CssVariant generatedGroupVariant;
     generatedGroupVariant = groupVariant.generateGroup();
 
