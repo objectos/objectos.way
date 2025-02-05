@@ -38,7 +38,7 @@ public class HtmlTemplateTestAttributes {
   }
 
   @Test
-  public void attribute() {
+  public void attr() {
     final Html.AttributeName active;
     active = Html.AttributeName.of("data-active");
 
@@ -47,7 +47,7 @@ public class HtmlTemplateTestAttributes {
           @Override
           protected final void render() {
             div(
-                attribute(active, "foo")
+                attr(active, "foo")
             );
           }
         },

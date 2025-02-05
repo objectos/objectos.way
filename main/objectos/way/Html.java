@@ -907,7 +907,7 @@ public final class Html {
      *
      * @return an instruction representing this attribute.
      */
-    Html.Instruction.OfAttribute attribute(Html.AttributeName name, String value);
+    Html.Instruction.OfAttribute attr(Html.AttributeName name, String value);
 
     /**
      * Renders the {@code accesskey} attribute with the specified value.
@@ -4395,8 +4395,8 @@ public final class Html {
 
     TemplateAttributes() {}
 
-    protected final Instruction.OfAttribute attribute(AttributeName name, String value) {
-      return $attributes().attribute(name, value);
+    protected final Instruction.OfAttribute attr(AttributeName name, String value) {
+      return $attributes().attr(name, value);
     }
 
     /**

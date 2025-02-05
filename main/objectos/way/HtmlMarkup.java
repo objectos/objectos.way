@@ -182,7 +182,7 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
   public final Html.Instruction.OfAttribute dataFrame(String name) {
     Objects.requireNonNull(name, "name == null");
 
-    return attribute(HtmlAttributeName.DATA_FRAME, name);
+    return attr(HtmlAttributeName.DATA_FRAME, name);
   }
 
   @Override
@@ -190,7 +190,7 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
     Objects.requireNonNull(name, "name == null");
     Objects.requireNonNull(value, "value == null");
 
-    return attribute(HtmlAttributeName.DATA_FRAME, name + ":" + value);
+    return attr(HtmlAttributeName.DATA_FRAME, name + ":" + value);
   }
 
   @Override

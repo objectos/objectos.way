@@ -26,7 +26,7 @@ sealed abstract class HtmlMarkupAttributes implements Html.MarkupAttributes perm
   abstract Html.AttributeOrNoOp attribute0(Html.AttributeName name, Object value);
 
   @Override
-  public final Html.Instruction.OfAttribute attribute(Html.AttributeName name, String value) {
+  public final Html.Instruction.OfAttribute attr(Html.AttributeName name, String value) {
     Objects.requireNonNull(name, "name == null");
     Objects.requireNonNull(value, "value == null");
 
