@@ -44,4 +44,21 @@ public class HtmlAttributeNameTest {
     assertEquals(active.singleQuoted(), false);
   }
 
+  @Test
+  public void create02() {
+    final Html.AttributeName active1;
+    active1 = Html.AttributeName.of("data-active");
+
+    final Html.AttributeName active2;
+    active2 = Html.AttributeName.of("data-active");
+
+    final Html.AttributeName other;
+    other = Html.AttributeName.of("data-other");
+
+    assertEquals(active1, active2);
+    assertEquals(active2, active1);
+    assertEquals(active1.equals(other), false);
+    assertEquals(other.equals(active1), false);
+  }
+
 }

@@ -288,6 +288,26 @@ final class HtmlAttributeName implements Html.AttributeName {
   }
 
   @Override
+  public final boolean equals(Object obj) {
+    if (obj == this) {
+      return true;
+    }
+
+    if (!(obj instanceof Html.AttributeName that)) {
+      return false;
+    }
+
+    return index > 0
+        ? index == that.index()
+        : name.equals(that.name());
+  }
+
+  @Override
+  public final int hashCode() {
+    return index > 0 ? index : name.hashCode();
+  }
+
+  @Override
   public final int index() {
     return index;
   }

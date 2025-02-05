@@ -21,6 +21,8 @@ import org.testng.annotations.Test;
 
 public class HtmlTemplateTestAttributes {
 
+  private final Html.AttributeName dataActive = Html.AttributeName.of("data-active");
+
   @Test
   public void as() {
     test(
@@ -38,22 +40,80 @@ public class HtmlTemplateTestAttributes {
   }
 
   @Test
-  public void attr() {
-    final Html.AttributeName active;
-    active = Html.AttributeName.of("data-active");
-
+  public void attr01() {
     test(
         new Html.Template() {
           @Override
           protected final void render() {
             div(
-                attr(active, "foo")
+                attr(dataActive, "foo")
             );
           }
         },
 
         """
         <div data-active="foo"></div>
+        """
+    );
+  }
+
+  @Test
+  public void attr02() {
+    test(
+        new Html.Template() {
+          @Override
+          protected final void render() {
+            div(
+                renderFragment(this::attribute)
+            );
+          }
+
+          private void attribute() {
+            attr(dataActive, "foo");
+          }
+        },
+
+        """
+        <div data-active="foo"></div>
+        """
+    );
+  }
+
+  @Test
+  public void attr03() {
+    test(
+        new Html.Template() {
+          @Override
+          protected final void render() {
+            div(
+                className("bar"),
+                attr(dataActive, "foo")
+            );
+          }
+        },
+
+        """
+        <div class="bar" data-active="foo"></div>
+        """
+    );
+  }
+
+  @Test
+  public void attr04() {
+    test(
+        new Html.Template() {
+          @Override
+          protected final void render() {
+            div(
+                attr(dataActive, "v1"),
+                attr(dataActive, "v2"),
+                attr(dataActive, "v3")
+            );
+          }
+        },
+
+        """
+        <div data-active="v1 v2 v3"></div>
         """
     );
   }
