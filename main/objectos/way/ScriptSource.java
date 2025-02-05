@@ -527,7 +527,6 @@ const way = (function() {
   function query(query, element) {
     checkArray(query, "query");
     checkArrayLengthMin(query, 2, "query");
-    checkElement(element);
 
     const key = query.shift();
 
@@ -585,6 +584,7 @@ const way = (function() {
   }
 
   const elementActions = {
+    "attr-0": elementAttr0,
     "submit-0": elementSubmit0,
     "toggle-class-0": elementToggleClass0
   };
@@ -601,6 +601,16 @@ const way = (function() {
     }
 
     action(args, element);
+  }
+
+  function elementAttr0(args, element) {
+    checkArgsLength(args, 2, "arg");
+
+    const name = args.shift();
+
+    const value = stringQuery(args.shift());
+
+    element.setAttribute(name, value);
   }
 
   function elementSubmit0(_, element) {

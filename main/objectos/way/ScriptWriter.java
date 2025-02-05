@@ -61,15 +61,36 @@ final class ScriptWriter implements Script {
     }
 
     @Override
-    public final ElementMethodInvocation attr(String name) {
-      Objects.requireNonNull(name, "name == null");
+    public final ElementMethodInvocation attr(Html.AttributeName name) {
+      final String _name = name.name();
 
-      return new ElementMethodInvocation(this, "getAttribute", name);
+      return new ElementMethodInvocation(this, "getAttribute", _name);
     }
 
     @Override
-    public final void attr(String name, String value) {
-      Objects.requireNonNull(name, "name == null");
+    public final void attr(Html.AttributeName name, StringQuery value) {
+      String _name = name.name();
+      Objects.requireNonNull(value, "value == null");
+
+      actionStart();
+
+      elementAction();
+
+      comma();
+      stringLiteral("attr-0");
+
+      comma();
+      stringLiteral(_name);
+
+      comma();
+      stringQuery(value);
+
+      actionEnd();
+    }
+
+    @Override
+    public final void attr(Html.AttributeName name, String value) {
+      String _name = name.name();
       Objects.requireNonNull(value, "value == null");
 
       actionStart();
@@ -80,7 +101,7 @@ final class ScriptWriter implements Script {
       stringLiteral("setAttribute");
 
       comma();
-      stringLiteral(name);
+      stringLiteral(_name);
 
       comma();
       stringLiteral(value);
@@ -97,7 +118,7 @@ final class ScriptWriter implements Script {
 
       actionStart();
 
-      action();
+      elementAction();
 
       comma();
       stringLiteral("toggle-class-0");
@@ -114,7 +135,7 @@ final class ScriptWriter implements Script {
     public final void submit() {
       actionStart();
 
-      action();
+      elementAction();
 
       comma();
       stringLiteral("submit-0");
@@ -122,7 +143,7 @@ final class ScriptWriter implements Script {
       actionEnd();
     }
 
-    final void action() {
+    final void elementAction() {
       switch (kind) {
         case ELEMENT -> stringLiteral("element-2");
 
@@ -406,6 +427,12 @@ final class ScriptWriter implements Script {
     // TODO escape json string literal
     out.append(s);
     out.append('"');
+  }
+
+  private void stringQuery(StringQuery value) {
+    switch (value) {
+      case ElementMethodInvocation invocation -> invocation.write();
+    }
   }
 
 }

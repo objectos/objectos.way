@@ -105,7 +105,7 @@ public sealed interface Script permits ScriptWriter {
      * @param name
      *        the attribute name
      */
-    StringQuery attr(String name);
+    StringQuery attr(Html.AttributeName name);
 
     /**
      * Sets the specified attribute to the given value.
@@ -115,7 +115,17 @@ public sealed interface Script permits ScriptWriter {
      * @param value
      *        the attribute value
      */
-    void attr(String name, String value);
+    void attr(Html.AttributeName name, String value);
+
+    /**
+     * Sets the specified attribute to the given value.
+     *
+     * @param name
+     *        the attribute name
+     * @param value
+     *        the attribute value
+     */
+    void attr(Html.AttributeName name, StringQuery value);
 
     void submit();
 

@@ -15,6 +15,8 @@
  */
 package objectos.way;
 
+import static objectos.way.HtmlAttributeNameGenerated.HREF;
+import static objectos.way.HtmlAttributeNameGenerated.VALUE;
 import static org.testng.Assert.assertEquals;
 
 import java.util.function.Consumer;
@@ -23,6 +25,8 @@ import org.testng.annotations.Test;
 public class ScriptWriterTest {
 
   private static final Html.Id FOO = Html.Id.of("foo");
+
+  private final Html.AttributeName dataItem = Html.AttributeName.of("data-item");
 
   @Test
   public void delay() {
@@ -45,7 +49,7 @@ public class ScriptWriterTest {
           var foo = script.elementById(FOO);
 
           script.request(req -> {
-            req.url(foo.attr("href"));
+            req.url(foo.attr(HREF));
           });
         },
 
@@ -57,10 +61,15 @@ public class ScriptWriterTest {
   @Test
   public void elementAttr() {
     test(
-        script -> script.elementById(FOO).attr("value", "x"),
+        script -> {
+          var foo = script.elementById(FOO);
+
+          foo.attr(VALUE, "x");
+          foo.attr(VALUE, foo.attr(dataItem));
+        },
 
         """
-        [["id-1","foo","setAttribute","value","x"]]"""
+        [["id-1","foo","setAttribute","value","x"],["id-2","foo","attr-0","value",["id-1","foo","getAttribute","data-item"]]]"""
     );
   }
 
@@ -162,7 +171,7 @@ public class ScriptWriterTest {
           var el = script.element();
 
           script.request(req -> {
-            req.url(el.attr("href"));
+            req.url(el.attr(HREF));
           });
         },
 
