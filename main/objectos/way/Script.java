@@ -111,6 +111,8 @@ public sealed interface Script permits ScriptWriter {
      */
     void attr(String name, String value);
 
+    void submit();
+
     void toggleClass(String className);
 
   }
@@ -173,7 +175,5 @@ public sealed interface Script permits ScriptWriter {
    * Causes the event handling to stop at the current HTML element.
    */
   void stopPropagation();
-
-  void submit(Html.Id id);
 
 }

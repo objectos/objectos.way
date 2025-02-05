@@ -27,10 +27,14 @@ public class ScriptWriterTest {
   @Test
   public void delay() {
     test(
-        script -> script.delay(500, callback -> callback.submit(FOO)),
+        script -> {
+          var foo = script.elementById(FOO);
+
+          script.delay(500, (callback) -> foo.submit());
+        },
 
         """
-        [["delay-0",500,[["submit-0","foo"]]]]"""
+        [["delay-0",500,[["id-2","foo","submit-0"]]]]"""
     );
   }
 
@@ -57,6 +61,19 @@ public class ScriptWriterTest {
 
         """
         [["id-1","foo","setAttribute","value","x"]]"""
+    );
+  }
+
+  @Test
+  public void elementSubmit() {
+    test(
+        script -> {
+          var foo = script.elementById(FOO);
+          foo.submit();
+        },
+
+        """
+        [["id-2","foo","submit-0"]]"""
     );
   }
 
@@ -190,16 +207,6 @@ public class ScriptWriterTest {
 
         """
         [["stop-propagation-0"]]"""
-    );
-  }
-
-  @Test
-  public void submit() {
-    test(
-        script -> script.submit(FOO),
-
-        """
-        [["submit-0","foo"]]"""
     );
   }
 

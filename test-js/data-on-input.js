@@ -12,7 +12,7 @@ suite("data-on-input test", function() {
   test("submit", function() {
     const formId = "f";
     const onInput = JSON.stringify([
-      ["submit-0", formId]
+      ["id-2", formId, "submit-0"]
     ]);
     make(`
 		<div data-frame='x:foo'>
@@ -45,7 +45,7 @@ suite("data-on-input test", function() {
   test("submit with delay", function(done) {
     const formId = "f";
     const onInput = JSON.stringify([
-      ["delay-0", 10, [["submit-0", formId]]]
+      ["delay-0", 10, [["id-2", formId, "submit-0"]]]
     ]);
     make(`
 		<div data-frame='x:foo'>

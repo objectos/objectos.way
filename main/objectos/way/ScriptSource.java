@@ -60,15 +60,14 @@ const way = (function() {
   const actionHandlers = {
     "delay-0": executeDelay0,
     "html-0": executeHtml0,
+    "id-1": executeId1,
     "id-2": executeId2,
     "navigate-0": executeNavigate0,
     "push-state-0": executePushState0,
     "replace-state-0": executeReplaceState0,
     "request-0": executeRequest0,
     "scroll-0": executeScroll0,
-    "set-attribute-0": executeSetAttribute0,
-    "stop-propagation-0": executeStopPropagation0,
-    "submit-0": executeSubmit0
+    "stop-propagation-0": executeStopPropagation0
   };
 
   const defaultScroll = [['scroll-0', 0, 0, "instant"]];
@@ -391,6 +390,10 @@ const way = (function() {
     executeHtml(value);
   }
 
+  function executeId1(args) {
+    queryId1(args);
+  }
+
   function executeId2(args) {
     queryId2(args);
   }
@@ -461,70 +464,9 @@ const way = (function() {
     window.scroll(value);
   }
 
-  function executeSetAttribute0(args) {
-    if (args.length !== 3) {
-      console.error("set-attribute-0: action invoked with the wrong number of args, expected 3 but got %d", args.length);
-
-      return;
-    }
-
-    const id = args[0];
-
-    if (!id) {
-      return;
-    }
-
-    const el = document.getElementById(id);
-
-    if (!el) {
-      return;
-    }
-
-    const name = args[1];
-
-    if (!name) {
-      return;
-    }
-
-    const value = args[2];
-
-    if (!value) {
-      return;
-    }
-
-    el.setAttribute(name, value);
-  }
-
   function executeStopPropagation0() {
     // noop
   }
-
-  function executeSubmit0(args) {
-    if (args.length !== 1) {
-      console.error("submit-0 action invoked with the wrong number of args: expected 1 but found ", args.length);
-
-      return;
-    }
-
-    const id = args[0];
-
-    if (!id) {
-      return;
-    }
-
-    const el = document.getElementById(id);
-
-    if (!el) {
-      return;
-    }
-
-    if (!(el instanceof HTMLFormElement)) {
-      return;
-    }
-
-    el.dispatchEvent(new Event("submit", { bubbles: true }));
-  }
-
 
   function checkArgsLength(args, expected, action) {
     if (args.length !== expected) {
@@ -564,6 +506,7 @@ const way = (function() {
 
   const queryHandlers = {
     "element-1": queryElement1,
+    "id-1": queryId1,
     "id-2": queryId2
   };
 
@@ -598,6 +541,10 @@ const way = (function() {
   }
 
   function queryElement1(args, element) {
+    return elementMethod(args, element);
+  }
+
+  function elementMethod(args, element) {
     checkArrayLengthMin(args, 1, "args");
 
     const methodName = checkString(args.shift(), "methodName");
@@ -611,7 +558,7 @@ const way = (function() {
     return method.apply(element, args);
   }
 
-  function queryId2(args) {
+  function queryId(args) {
     checkArrayLengthMin(args, 1, "args");
 
     const id = checkString(args.shift(), "id");
@@ -622,10 +569,23 @@ const way = (function() {
       throw new Error(`Illegal arg: element not found with ID ${id}`);
     }
 
+    return element;
+  }
+
+  function queryId1(args) {
+    const element = queryId(args);
+
+    elementMethod(args, element);
+  }
+
+  function queryId2(args) {
+    const element = queryId(args);
+
     elementAction(args, element);
   }
 
   const elementActions = {
+    "submit-0": elementSubmit0,
     "toggle-class-0": elementToggleClass0
   };
 
@@ -641,6 +601,18 @@ const way = (function() {
     }
 
     action(args, element);
+  }
+
+  function elementSubmit0(_, element) {
+    if (!(element instanceof HTMLFormElement)) {
+      const actual = element.constructor ? element.constructor.name : "Unknown";
+
+      throw new Error(`Illegal element: submit-0 must be executed on an HTMLFormElement but got ${actual}`);
+    }
+
+    const event = new Event("submit", { bubbles: true });
+
+    element.dispatchEvent(event);
   }
 
   function elementToggleClass0(args, element) {

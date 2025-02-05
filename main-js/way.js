@@ -41,8 +41,7 @@ const way = (function() {
     "replace-state-0": executeReplaceState0,
     "request-0": executeRequest0,
     "scroll-0": executeScroll0,
-    "stop-propagation-0": executeStopPropagation0,
-    "submit-0": executeSubmit0
+    "stop-propagation-0": executeStopPropagation0
   };
 
   const defaultScroll = [['scroll-0', 0, 0, "instant"]];
@@ -443,33 +442,6 @@ const way = (function() {
     // noop
   }
 
-  function executeSubmit0(args) {
-    if (args.length !== 1) {
-      console.error("submit-0 action invoked with the wrong number of args: expected 1 but found ", args.length);
-
-      return;
-    }
-
-    const id = args[0];
-
-    if (!id) {
-      return;
-    }
-
-    const el = document.getElementById(id);
-
-    if (!el) {
-      return;
-    }
-
-    if (!(el instanceof HTMLFormElement)) {
-      return;
-    }
-
-    el.dispatchEvent(new Event("submit", { bubbles: true }));
-  }
-
-
   function checkArgsLength(args, expected, action) {
     if (args.length !== expected) {
       throw new Error(`Illegal number of args: ${action} action expected ${expected} args but got ${args.length}`);
@@ -587,6 +559,7 @@ const way = (function() {
   }
 
   const elementActions = {
+    "submit-0": elementSubmit0,
     "toggle-class-0": elementToggleClass0
   };
 
@@ -602,6 +575,18 @@ const way = (function() {
     }
 
     action(args, element);
+  }
+
+  function elementSubmit0(_, element) {
+    if (!(element instanceof HTMLFormElement)) {
+      const actual = element.constructor ? element.constructor.name : "Unknown";
+
+      throw new Error(`Illegal element: submit-0 must be executed on an HTMLFormElement but got ${actual}`);
+    }
+
+    const event = new Event("submit", { bubbles: true });
+
+    element.dispatchEvent(event);
   }
 
   function elementToggleClass0(args, element) {

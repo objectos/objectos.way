@@ -110,6 +110,18 @@ final class ScriptWriter implements Script {
       actionEnd();
     }
 
+    @Override
+    public final void submit() {
+      actionStart();
+
+      action();
+
+      comma();
+      stringLiteral("submit-0");
+
+      actionEnd();
+    }
+
     final void action() {
       switch (kind) {
         case ELEMENT -> stringLiteral("element-2");
@@ -326,17 +338,6 @@ final class ScriptWriter implements Script {
   public final void stopPropagation() {
     actionStart();
     stringLiteral("stop-propagation-0");
-    actionEnd();
-  }
-
-  @Override
-  public final void submit(Html.Id id) {
-    final String _id = id.value();
-
-    actionStart();
-    stringLiteral("submit-0");
-    comma();
-    stringLiteral(_id);
     actionEnd();
   }
 
