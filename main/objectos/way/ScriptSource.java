@@ -575,7 +575,7 @@ const way = (function() {
   function queryId1(args) {
     const element = queryId(args);
 
-    elementMethod(args, element);
+    return elementMethod(args, element);
   }
 
   function queryId2(args) {

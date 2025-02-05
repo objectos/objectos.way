@@ -45,7 +45,7 @@ public class ScriptWriterTest {
           var foo = script.elementById(FOO);
 
           script.request(req -> {
-            req.url(foo.getAttribute("href"));
+            req.url(foo.attr("href"));
           });
         },
 
@@ -69,6 +69,7 @@ public class ScriptWriterTest {
     test(
         script -> {
           var foo = script.elementById(FOO);
+
           foo.submit();
         },
 
@@ -161,7 +162,7 @@ public class ScriptWriterTest {
           var el = script.element();
 
           script.request(req -> {
-            req.url(el.getAttribute("href"));
+            req.url(el.attr("href"));
           });
         },
 

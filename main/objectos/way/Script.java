@@ -99,15 +99,21 @@ public sealed interface Script permits ScriptWriter {
 
   public sealed interface Element permits ScriptWriter.ElementQuery {
 
-    StringQuery getAttribute(String name);
+    /**
+     * Returns the value of the attribute with the specified name.
+     *
+     * @param name
+     *        the attribute name
+     */
+    StringQuery attr(String name);
 
     /**
      * Sets the specified attribute to the given value.
      *
      * @param name
-     *        the name of the attribute to set
+     *        the attribute name
      * @param value
-     *        the value to assign to the attribute
+     *        the attribute value
      */
     void attr(String name, String value);
 

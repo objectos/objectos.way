@@ -61,7 +61,7 @@ final class ScriptWriter implements Script {
     }
 
     @Override
-    public final ElementMethodInvocation getAttribute(String name) {
+    public final ElementMethodInvocation attr(String name) {
       Objects.requireNonNull(name, "name == null");
 
       return new ElementMethodInvocation(this, "getAttribute", name);
