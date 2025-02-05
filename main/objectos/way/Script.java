@@ -78,6 +78,13 @@ public sealed interface Script permits ScriptWriter {
 
   // types
 
+  @FunctionalInterface
+  public interface Callback {
+
+    void execute();
+
+  }
+
   public enum Method {
 
     GET,
@@ -93,6 +100,8 @@ public sealed interface Script permits ScriptWriter {
   public sealed interface Element permits ScriptWriter.ElementQuery {
 
     StringQuery getAttribute(String name);
+
+    void toggleClass(String className);
 
   }
 
@@ -167,10 +176,6 @@ public sealed interface Script permits ScriptWriter {
    * Causes the event handling to stop at the current HTML element.
    */
   void stopPropagation();
-
-  void toggleClass(Html.Id id, String className);
-
-  void toggleClass(Html.Id id, String class1, String class2);
 
   void submit(Html.Id id);
 

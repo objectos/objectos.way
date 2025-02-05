@@ -13,7 +13,7 @@ suite("Action::toggleClass test", function() {
     const clickId = "f";
 
     const onClick = JSON.stringify([
-      ["toggle-class-0", "subject", "add-me"]
+      ["id-2", "subject", "toggle-class-0", "add-me"]
     ]);
 
     make(`
@@ -37,7 +37,7 @@ suite("Action::toggleClass test", function() {
     const clickId = "f";
 
     const onClick = JSON.stringify([
-      ["toggle-class-0", "subject", "remove-me"]
+      ["id-2", "subject", "toggle-class-0", "remove-me"]
     ]);
 
     make(`
@@ -61,7 +61,7 @@ suite("Action::toggleClass test", function() {
     const clickId = "f";
 
     const onClick = JSON.stringify([
-      ["toggle-class-0", "subject", "add-me", "remove-me", "another-add"]
+      ["id-2", "subject", "toggle-class-0", "add-me", "remove-me", "another-add"]
     ]);
 
     make(`

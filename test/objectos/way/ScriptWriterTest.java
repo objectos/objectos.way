@@ -160,11 +160,6 @@ public class ScriptWriterTest {
   }
 
   @Test
-  public void scroll() {
-
-  }
-
-  @Test
   public void setAttribute() {
     test(
         script -> script.setAttribute(FOO, "value", "x"),
@@ -198,12 +193,13 @@ public class ScriptWriterTest {
   public void toggleClass0() {
     test(
         script -> {
-          script.toggleClass(FOO, "x");
-          script.toggleClass(FOO, "c1", "c2");
+          var foo = script.elementById(FOO);
+          foo.toggleClass("x");
+          foo.toggleClass("c1 c2");
         },
 
         """
-        [["toggle-class-0","foo","x"],["toggle-class-0","foo","c1","c2"]]"""
+        [["id-2","foo","toggle-class-0","x"],["id-2","foo","toggle-class-0","c1","c2"]]"""
     );
   }
 

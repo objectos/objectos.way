@@ -13,7 +13,7 @@ suite("Action::delay test", function() {
     const clickMe = "click-me";
 
     const addClass = JSON.stringify([
-      ["delay-0", 5, [["toggle-class-0", "subject", "bar"]]]
+      ["delay-0", 5, [["id-2", "subject", "toggle-class-0", "bar"]]]
     ]);
 
     make(`
@@ -52,7 +52,7 @@ suite("Action::delay test", function() {
       200,
       { "Content-Type": "application/json" },
       JSON.stringify([
-        ["delay-0", 10, [["toggle-class-0", "subject", "bar"]]]
+        ["delay-0", 10, [["id-2", "subject", "toggle-class-0", "bar"]]]
       ])
     ]);
 

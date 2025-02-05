@@ -13,7 +13,7 @@ suite("data-on-success test", function() {
     const clickMe = "click-me";
 
     const onSuccess = JSON.stringify([
-      ["toggle-class-0", "subject", "remove-me"]
+      ["id-2", "subject", "toggle-class-0", "remove-me"]
     ]);
 
     make(`

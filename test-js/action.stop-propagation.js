@@ -12,14 +12,14 @@ suite("Action::stopPropagation test", function() {
   test("WITHOUT stopPropagation it SHOULD fire the parent action", function() {
     const parentId = "parent";
 
-    const addClass = JSON.stringify([
-      ["toggle-class-0", "subject", "bar"]
+    const toggleClass = JSON.stringify([
+      ["id-2", "subject", "toggle-class-0", "bar"]
     ]);
 
     const childId = "child";
 
     make(`
-		<div id='${parentId}' data-on-click='${addClass}'>
+		<div id='${parentId}' data-on-click='${toggleClass}'>
 		<div id='${childId}'></div>
 		<div id='subject' class='foo'></div>
 		</div>
@@ -39,8 +39,8 @@ suite("Action::stopPropagation test", function() {
   test("WITH stopPropagation it SHOULD NOT fire the parent action", function() {
     const parentId = "parent";
 
-    const addClass = JSON.stringify([
-      ["toggle-class-0", "subject", "bar"]
+    const toggleClass = JSON.stringify([
+      ["id-2", "subject", "toggle-class-0", "bar"]
     ]);
 
     const childId = "child";
@@ -50,7 +50,7 @@ suite("Action::stopPropagation test", function() {
     ]);
 
     make(`
-		<div id='${parentId}' data-on-click='${addClass}'>
+		<div id='${parentId}' data-on-click='${toggleClass}'>
 		<div id='${childId}' data-on-click='${stopPropagation}'></div>
 		<div id='subject' class='foo'></div>
 		</div>

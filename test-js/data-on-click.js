@@ -12,7 +12,7 @@ suite("data-on-click test", function() {
   test("submit", function() {
     const clickId = "f";
     const onClick = JSON.stringify([
-      ["toggle-class-0", "subject", "a", "b"]
+      ["id-2", "subject", "toggle-class-0", "a", "b"]
     ]);
     make(`
 		<div id='${clickId}' data-on-click='${onClick}'>
@@ -35,7 +35,7 @@ suite("data-on-click test", function() {
   test("it should prevent anchor default", function() {
     const clickId = "f";
     const onClick = JSON.stringify([
-      ["toggle-class-0", "subject", "a", "b"]
+      ["id-2", "subject", "toggle-class-0", "a", "b"]
     ]);
     make(`
 		<div data-frame='x:foo'>

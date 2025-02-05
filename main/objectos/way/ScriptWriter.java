@@ -67,6 +67,38 @@ final class ScriptWriter implements Script {
       return new ElementMethodInvocation(this, "getAttribute", name);
     }
 
+    @Override
+    public final void toggleClass(String classes) {
+      Check.argument(!classes.isBlank(), "Classes to toggle must not be blank");
+
+      final String[] parts;
+      parts = classes.split(" ");
+
+      actionStart();
+      action();
+      comma();
+      stringLiteral("toggle-class-0");
+
+      for (var part : parts) {
+        comma();
+        stringLiteral(part);
+      }
+
+      actionEnd();
+    }
+
+    final void action() {
+      switch (kind) {
+        case ELEMENT -> stringLiteral("element-2");
+
+        case BY_ID -> {
+          stringLiteral("id-2");
+          comma();
+          stringLiteral(value);
+        }
+      }
+    }
+
     final void methodInvocation() {
       switch (kind) {
         case ELEMENT -> stringLiteral("element-1");
@@ -299,37 +331,6 @@ final class ScriptWriter implements Script {
     stringLiteral("submit-0");
     comma();
     stringLiteral(_id);
-    actionEnd();
-  }
-
-  @Override
-  public final void toggleClass(Html.Id id, String className) {
-    final String _id = id.value();
-    Objects.requireNonNull(className, "className == null");
-
-    actionStart();
-    stringLiteral("toggle-class-0");
-    comma();
-    stringLiteral(_id);
-    comma();
-    stringLiteral(className);
-    actionEnd();
-  }
-
-  @Override
-  public final void toggleClass(Html.Id id, String class1, String class2) {
-    final String _id = id.value();
-    Objects.requireNonNull(class1, "class1 == null");
-    Objects.requireNonNull(class2, "class2 == null");
-
-    actionStart();
-    stringLiteral("toggle-class-0");
-    comma();
-    stringLiteral(_id);
-    comma();
-    stringLiteral(class1);
-    comma();
-    stringLiteral(class2);
     actionEnd();
   }
 

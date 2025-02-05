@@ -75,6 +75,80 @@ public class HtmlTemplateTestAttributes {
   }
 
   @Test
+  public void dataOnClick01() {
+    class ThisComponent implements Html.Component {
+      private final Html.Id id;
+
+      public ThisComponent(Html.Id id) {
+        this.id = id;
+      }
+
+      @Override
+      public void renderHtml(Html.Markup m) {
+        m.button(
+            m.dataOnClick(s -> s.elementById(id).toggleClass("hidden block"))
+        );
+      }
+    }
+
+    test(
+        new Html.Template() {
+          final Html.Id NAV = Html.Id.of("nav");
+
+          @Override
+          protected final void render() {
+            div(
+                renderComponent(new ThisComponent(NAV))
+            );
+          }
+        },
+
+        """
+        <div><button data-on-click='[["id-2","nav","toggle-class-0","hidden","block"]]'></button></div>
+        """
+    );
+  }
+
+  @Test
+  public void dataOnClick02() {
+    test(
+        new Html.Template() {
+          final Html.Id FOO = Html.Id.of("foo");
+
+          @Override
+          protected final void render() {
+            div(
+                dataOnClick(s -> s.elementById(FOO).toggleClass("a x")),
+                dataOnClick(s -> s.elementById(FOO).toggleClass("b y"))
+            );
+
+            div(
+                dataOnClick(s -> s.elementById(FOO).toggleClass("a x")),
+                dataOnClick(s -> {
+                  s.elementById(FOO).toggleClass("b y");
+                  s.elementById(FOO).toggleClass("c z");
+                })
+            );
+
+            div(
+                dataOnClick(s -> {
+                  s.elementById(FOO).toggleClass("a x");
+                  s.elementById(FOO).toggleClass("b y");
+                }),
+                dataOnClick(s -> s.elementById(FOO).toggleClass("c z"))
+            );
+          }
+        },
+
+        """
+        <div data-on-click='[["id-2","foo","toggle-class-0","a","x"],["id-2","foo","toggle-class-0","b","y"]]'></div>
+        <div data-on-click='[["id-2","foo","toggle-class-0","a","x"],["id-2","foo","toggle-class-0","b","y"],["id-2","foo","toggle-class-0","c","z"]]'></div>
+        <div data-on-click='[["id-2","foo","toggle-class-0","a","x"],["id-2","foo","toggle-class-0","b","y"],["id-2","foo","toggle-class-0","c","z"]]'></div>
+        """
+    );
+  }
+
+  @Test
   public void dataOnSuccess() {
     test(
         new Html.Template() {
