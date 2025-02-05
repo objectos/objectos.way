@@ -211,7 +211,7 @@ final class ScriptWriter implements Script {
   // actions
 
   @Override
-  public final void delay(int ms, Consumer<Script> callback) {
+  public final void delay(int ms, Callback callback) {
     Objects.requireNonNull(callback, "callback == null");
 
     actionStart();
@@ -269,7 +269,7 @@ final class ScriptWriter implements Script {
 
     private Object url;
 
-    private Consumer<Script> onSuccess = (script) -> {};
+    private Callback onSuccess = () -> {};
 
     @Override
     public final void method(Script.Method method) {
@@ -287,8 +287,8 @@ final class ScriptWriter implements Script {
     }
 
     @Override
-    public final void onSuccess(Consumer<Script> config) {
-      onSuccess = Objects.requireNonNull(config, "config == null");
+    public final void onSuccess(Callback callback) {
+      onSuccess = Objects.requireNonNull(callback, "callback == null");
     }
 
     final void write() {
@@ -388,14 +388,14 @@ final class ScriptWriter implements Script {
     out.append(value);
   }
 
-  private void scriptLiteral(Consumer<Script> script) {
+  private void scriptLiteral(Callback script) {
     final boolean thisNext;
     thisNext = next;
 
     next = false;
 
     arrayStart();
-    script.accept(this);
+    script.execute();
     arrayEnd();
 
     next = thisNext;

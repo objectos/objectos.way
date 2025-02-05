@@ -30,7 +30,7 @@ public class ScriptWriterTest {
         script -> {
           var foo = script.elementById(FOO);
 
-          script.delay(500, (callback) -> foo.submit());
+          script.delay(500, () -> foo.submit());
         },
 
         """
@@ -177,8 +177,8 @@ public class ScriptWriterTest {
         script -> script.request(req -> {
           req.url("/foo");
 
-          req.onSuccess(success -> {
-            success.stopPropagation();
+          req.onSuccess(() -> {
+            script.stopPropagation();
           });
         }),
 

@@ -129,7 +129,7 @@ public sealed interface Script permits ScriptWriter {
 
   // actions
 
-  void delay(int ms, Consumer<Script> callback);
+  void delay(int ms, Callback callback);
 
   void html(Html.Template template);
 
@@ -168,7 +168,7 @@ public sealed interface Script permits ScriptWriter {
 
     void url(StringQuery value);
 
-    void onSuccess(Consumer<Script> config);
+    void onSuccess(Callback callback);
 
   }
 
