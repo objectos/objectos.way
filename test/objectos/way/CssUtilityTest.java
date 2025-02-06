@@ -65,7 +65,7 @@ public class CssUtilityTest {
   public void writeClassName() {
     testClassName("m-0", ".m-0 {}\n");
     testClassName("sm:m-1", ".sm\\:m-1 {}\n");
-    testClassName("2xl:m-2", ".\\32xl\\:m-2 {}\n");
+    testClassName("2xl:m-2", ".\\32 xl\\:m-2 {}\n");
   }
 
   private Css.Rule rule(Css.Key key, String className, List<CssVariant.OfClassName> formats) {

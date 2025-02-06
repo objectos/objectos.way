@@ -243,7 +243,7 @@ public class CssEngineTestUtilities {
         """
         @layer utilities {
           .border-color\\:red { border-color: red }
-          .border-color\\:red_#f015ca { border-color: red #f015ca }
+          .border-color\\:red_\\#f015ca { border-color: red #f015ca }
           .border-color\\:red_rgb\\(240_30_50_\\/_70\\%\\)_green { border-color: red rgb(240 30 50 / 70%) green }
           .border-color\\:red_yellow_green_blue { border-color: red yellow green blue }
         }
@@ -1077,7 +1077,7 @@ public class CssEngineTestUtilities {
         @layer utilities {
           .grid-template-columns\\:none { grid-template-columns: none }
           .grid-template-columns\\:100px_1fr { grid-template-columns: 100px 1fr }
-          .grid-template-columns\\:minmax\\(100px\\2c 1fr\\) { grid-template-columns: minmax(100px,1fr) }
+          .grid-template-columns\\:minmax\\(100px\\,1fr\\) { grid-template-columns: minmax(100px,1fr) }
         }
         """
     );
@@ -1102,8 +1102,8 @@ public class CssEngineTestUtilities {
         @layer utilities {
           .grid-template-rows\\:none { grid-template-rows: none }
           .grid-template-rows\\:100px_1fr { grid-template-rows: 100px 1fr }
-          .grid-template-rows\\:minmax\\(100px\\2c 1fr\\) { grid-template-rows: minmax(100px,1fr) }
-          .grid-template-rows\\:repeat\\(3\\2c 200px\\) { grid-template-rows: repeat(3,200px) }
+          .grid-template-rows\\:minmax\\(100px\\,1fr\\) { grid-template-rows: minmax(100px,1fr) }
+          .grid-template-rows\\:repeat\\(3\\,200px\\) { grid-template-rows: repeat(3,200px) }
         }
         """
     );
@@ -1620,7 +1620,7 @@ public class CssEngineTestUtilities {
         """
         @layer utilities {
           .outline\\:solid { outline: solid }
-          .outline\\:dashed_#f66 { outline: dashed #f66 }
+          .outline\\:dashed_\\#f66 { outline: dashed #f66 }
           .outline\\:thick_inset { outline: thick inset }
           .outline\\:3px_solid_green { outline: 3px solid green }
         }
@@ -2051,7 +2051,7 @@ public class CssEngineTestUtilities {
       final void classes() {
         className("stroke:none");
         className("stroke:teal-400");
-        className("stroke:rgb(153_51_102_/_1);");
+        className("stroke:rgb(153_51_102_/_1)");
       }
     }
 
@@ -2062,7 +2062,7 @@ public class CssEngineTestUtilities {
         @layer utilities {
           .stroke\\:none { stroke: none }
           .stroke\\:teal-400 { stroke: var(--color-teal-400) }
-          .stroke\\:rgb\\(153_51_102_\\/_1\\); { stroke: rgb(153 51 102 / 1); }
+          .stroke\\:rgb\\(153_51_102_\\/_1\\) { stroke: rgb(153 51 102 / 1) }
         }
         """
     );
@@ -2213,7 +2213,7 @@ public class CssEngineTestUtilities {
       final void classes() {
         className("text-decoration-color:red");
         className("text-decoration-color:slate-100");
-        className("text-decoration-color:#21ff21;");
+        className("text-decoration-color:#21ff21");
       }
     }
 
@@ -2224,7 +2224,7 @@ public class CssEngineTestUtilities {
         @layer utilities {
           .text-decoration-color\\:red { text-decoration-color: red }
           .text-decoration-color\\:slate-100 { text-decoration-color: var(--color-slate-100) }
-          .text-decoration-color\\:#21ff21; { text-decoration-color: #21ff21; }
+          .text-decoration-color\\:\\#21ff21 { text-decoration-color: #21ff21 }
         }
         """
     );
@@ -2431,8 +2431,8 @@ public class CssEngineTestUtilities {
         """
         @layer utilities {
           .transform\\:rotate\\(0\\.5turn\\) { transform: rotate(0.5turn) }
-          .transform\\:translate\\(120px\\2c 50\\%\\) { transform: translate(120px,50%) }
-          .transform\\:scale\\(2\\2c _0\\.5\\) { transform: scale(2, 0.5) }
+          .transform\\:translate\\(120px\\,50\\%\\) { transform: translate(120px,50%) }
+          .transform\\:scale\\(2\\,_0\\.5\\) { transform: scale(2, 0.5) }
         }
         """
     );
@@ -2500,7 +2500,7 @@ public class CssEngineTestUtilities {
         """
         @layer utilities {
           .transition-delay\\:250ms { transition-delay: 250ms }
-          .transition-delay\\:1s\\2c _250ms { transition-delay: 1s, 250ms }
+          .transition-delay\\:1s\\,_250ms { transition-delay: 1s, 250ms }
         }
         """
     );
@@ -2522,7 +2522,7 @@ public class CssEngineTestUtilities {
         """
         @layer utilities {
           .transition-duration\\:123ms { transition-duration: 123ms }
-          .transition-duration\\:1s\\2c 3s { transition-duration: 1s,3s }
+          .transition-duration\\:1s\\,3s { transition-duration: 1s,3s }
         }
         """
     );
@@ -2546,7 +2546,7 @@ public class CssEngineTestUtilities {
         @layer utilities {
           .transition-property\\:all { transition-property: all }
           .transition-property\\:none { transition-property: none }
-          .transition-property\\:height\\2c color { transition-property: height,color }
+          .transition-property\\:height\\,color { transition-property: height,color }
         }
         """
     );

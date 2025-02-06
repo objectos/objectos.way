@@ -33,7 +33,9 @@ record CssModifier(
     int startIndex;
     startIndex = out.length();
 
-    Css.writeClassName(out, className);
+    out.append('.');
+
+    Css.serializeIdentifier(out, className);
 
     for (var format : classNames) {
       format.writeClassName(out, startIndex);

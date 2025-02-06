@@ -329,74 +329,6 @@ public final class Css {
 
   private Css() {}
 
-  static void writeClassName(StringBuilder out, String className) {
-    int length;
-    length = className.length();
-
-    if (length == 0) {
-      return;
-    }
-
-    out.append('.');
-
-    int index;
-    index = 0;
-
-    boolean escaped;
-    escaped = false;
-
-    char first;
-    first = className.charAt(index);
-
-    if (0x30 <= first && first <= 0x39) {
-      out.append("\\3");
-      out.append(first);
-
-      index++;
-
-      escaped = true;
-    }
-
-    for (; index < length; index++) {
-      char c;
-      c = className.charAt(index);
-
-      switch (c) {
-        case ',' -> {
-          out.append("\\");
-
-          out.append(Integer.toHexString(c));
-
-          out.append(' ');
-
-          escaped = false;
-        }
-
-        case ' ', '.', '/', ':', '@', '(', ')', '[', ']', '*', '%', '\'' -> {
-          out.append("\\");
-
-          out.append(c);
-
-          escaped = false;
-        }
-
-        case 'a', 'b', 'c', 'd', 'e', 'f',
-             'A', 'B', 'C', 'D', 'E', 'F',
-             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> {
-          if (escaped) {
-            out.append(' ');
-          }
-
-          out.append(c);
-
-          escaped = false;
-        }
-
-        default -> out.append(c);
-      }
-    }
-  }
-
   //
   // current version:
   // https://github.com/tailwindlabs/tailwindcss/blob/961e8da8fd0b2d96c49a5907bd9df70efcacccf7/packages/tailwindcss/preflight.css
@@ -1085,6 +1017,136 @@ public final class Css {
 
     --rx: 16;
     """;
+  }
+
+  static void escape(StringBuilder out, char c) {
+    out.append("\\");
+
+    out.append(c);
+  }
+
+  static void escapeAsCodePoint(StringBuilder out, char c) {
+    out.append("\\");
+
+    out.append(Integer.toHexString(c));
+
+    out.append(' ');
+  }
+
+  private static final char NULL = '\u0000';
+
+  static void serializeIdentifier(StringBuilder out, String source) {
+    final int length;
+    length = source.length();
+
+    if (length == 0) {
+      return;
+    }
+
+    enum State {
+
+      START,
+
+      START_DASH,
+
+      REST;
+
+    }
+
+    State state;
+    state = State.START;
+
+    for (int idx = 0; idx < length; idx++) {
+      final char c;
+      c = source.charAt(idx);
+
+      switch (state) {
+
+        case START -> {
+          switch (c) {
+            case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> {
+              state = State.REST;
+
+              escapeAsCodePoint(out, c);
+            }
+
+            case '-' -> {
+              state = State.START_DASH;
+            }
+
+            default -> {
+              state = State.REST;
+
+              idx--;
+            }
+          }
+        }
+
+        case START_DASH -> {
+          switch (c) {
+            case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> {
+              state = State.REST;
+
+              out.append('-');
+
+              escapeAsCodePoint(out, c);
+            }
+
+            default -> {
+              state = State.REST;
+
+              out.append('-');
+
+              idx--;
+            }
+          }
+        }
+
+        case REST -> {
+          if ('0' <= c && c <= '9') {
+            out.append(c);
+          }
+
+          else if ('A' <= c && c <= 'Z') {
+            out.append(c);
+          }
+
+          else if ('a' <= c && c <= 'z') {
+            out.append(c);
+          }
+
+          else if (c == '-' || c == '_') {
+            out.append(c);
+          }
+
+          else if (c >= '\u0080') {
+            out.append(c);
+          }
+
+          else if (c == NULL) {
+            out.append('\uFFFD');
+          }
+
+          else if ('\u0001' <= c && c <= '\u001F') {
+            escapeAsCodePoint(out, c);
+          }
+
+          else if (c == '\u007F') {
+            escapeAsCodePoint(out, c);
+          }
+
+          else {
+            escape(out, c);
+          }
+        }
+
+      }
+    }
+
+    if (state == State.START_DASH) {
+      escape(out, '-');
+    }
+
   }
 
 }
