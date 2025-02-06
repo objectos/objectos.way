@@ -44,7 +44,7 @@ const way = (function() {
     "stop-propagation-0": executeStopPropagation0
   };
 
-  const defaultScroll = [['scroll-0', 0, 0, "instant"]];
+  const defaultScroll = ["scroll-0", 0, 0, "instant"];
 
   // ##################################################################
   // # BEGIN: DOM Event Handlers
