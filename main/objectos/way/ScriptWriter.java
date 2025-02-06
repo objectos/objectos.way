@@ -52,9 +52,21 @@ final class ScriptWriter implements Script {
 
     private final ElementQueryKind kind;
 
-    private final String value;
+    private final Object value;
 
-    public ElementQuery(ElementQueryKind kind, String value) {
+    ElementQuery(ElementQueryKind kind) {
+      this.kind = kind;
+
+      this.value = null;
+    }
+
+    ElementQuery(ElementQueryKind kind, String value) {
+      this.kind = kind;
+
+      this.value = value;
+    }
+
+    ElementQuery(ElementQueryKind kind, StringQuery value) {
       this.kind = kind;
 
       this.value = value;
@@ -150,7 +162,7 @@ final class ScriptWriter implements Script {
         case BY_ID -> {
           stringLiteral("id-2");
           comma();
-          stringLiteral(value);
+          stringLiteralOrQuery(value);
         }
       }
     }
@@ -162,7 +174,7 @@ final class ScriptWriter implements Script {
         case BY_ID -> {
           stringLiteral("id-1");
           comma();
-          stringLiteral(value);
+          stringLiteralOrQuery(value);
         }
       }
     }
@@ -216,7 +228,7 @@ final class ScriptWriter implements Script {
   @Override
   public final Script.Element element() {
     if (element == null) {
-      element = new ElementQuery(ElementQueryKind.ELEMENT, null);
+      element = new ElementQuery(ElementQueryKind.ELEMENT);
     }
 
     return element;
@@ -227,6 +239,13 @@ final class ScriptWriter implements Script {
     final String _id = id.value();
 
     return new ElementQuery(ElementQueryKind.BY_ID, _id);
+  }
+
+  @Override
+  public final Element elementById(StringQuery id) {
+    Objects.requireNonNull(id, "id == null");
+
+    return new ElementQuery(ElementQueryKind.BY_ID, id);
   }
 
   // actions
@@ -427,6 +446,16 @@ final class ScriptWriter implements Script {
     // TODO escape json string literal
     out.append(s);
     out.append('"');
+  }
+
+  private void stringLiteralOrQuery(Object o) {
+    switch (o) {
+      case ElementMethodInvocation invocation -> invocation.write();
+
+      case String s -> stringLiteral(s);
+
+      default -> throw new IllegalArgumentException("Invalid type: " + o.getClass());
+    }
   }
 
   private void stringQuery(StringQuery value) {

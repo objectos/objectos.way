@@ -43,7 +43,7 @@ public class ScriptWriterTest {
   }
 
   @Test
-  public void elementById() {
+  public void elementById0() {
     test(
         script -> {
           var foo = script.elementById(FOO);
@@ -55,6 +55,22 @@ public class ScriptWriterTest {
 
         """
         [["request-0","GET",["id-1","foo","getAttribute","href"],[]]]"""
+    );
+  }
+
+  @Test
+  public void elementById1() {
+    test(
+        script -> {
+          var foo = script.elementById(FOO);
+
+          var item = script.elementById(foo.attr(dataItem));
+
+          item.toggleClass("x");
+        },
+
+        """
+        [["id-2",["id-1","foo","getAttribute","data-item"],"toggle-class-0","x"]]"""
     );
   }
 

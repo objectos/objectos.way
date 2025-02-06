@@ -137,6 +137,8 @@ public sealed interface Script permits ScriptWriter {
 
   Element elementById(Html.Id id);
 
+  Element elementById(StringQuery id);
+
   // actions
 
   void delay(int ms, Callback callback);

@@ -560,7 +560,7 @@ const way = (function() {
   function queryId(args) {
     checkArrayLengthMin(args, 1, "args");
 
-    const id = checkString(args.shift(), "id");
+    const id = stringQuery(args.shift());
 
     const element = document.getElementById(id);
 
@@ -660,14 +660,6 @@ const way = (function() {
   function checkBoolean(maybe, name) {
     if (typeof maybe !== "boolean") {
       throw new Error(`Illegal arg: ${name} must be a Boolean value but got ${maybe}`);
-    }
-
-    return maybe;
-  }
-
-  function checkElement(maybe) {
-    if (!(maybe instanceof Element)) {
-      throw new Error(`Illegal arg: expected an Element value but got ${maybe}`);
     }
 
     return maybe;
