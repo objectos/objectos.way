@@ -17,6 +17,7 @@ package objectos.way;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
 import java.util.function.Consumer;
 
 final class WebResources implements Web.Resources {
@@ -64,7 +65,12 @@ final class WebResources implements Web.Resources {
 
     config.accept(builder);
 
-    kernel = builder.build();
+    final WebResourcesKernel newKernel;
+    newKernel = builder.build();
+
+    kernel.close();
+
+    kernel = newKernel;
   }
 
   @Override
@@ -75,6 +81,10 @@ final class WebResources implements Web.Resources {
   @Override
   public final void writeString(String path, CharSequence contents, Charset charset) throws IOException {
     kernel.writeString(path, contents, charset);
+  }
+
+  final Path rootDirectory() {
+    return kernel.rootDirectory();
   }
 
 }

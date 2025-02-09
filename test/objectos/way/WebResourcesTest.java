@@ -16,6 +16,7 @@
 package objectos.way;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
@@ -60,6 +61,14 @@ public class WebResourcesTest extends Http.Module {
       config.addTextFile("/reconfigure.txt", "reconfigure", StandardCharsets.UTF_8);
     });
 
+    final WebResources impl;
+    impl = (WebResources) resources;
+
+    final Path original;
+    original = impl.rootDirectory();
+
+    assertTrue(Files.exists(original));
+
     resources.reconfigure(config -> {
       config.noteSink(TestingNoteSink.INSTANCE);
 
@@ -71,6 +80,8 @@ public class WebResourcesTest extends Http.Module {
       testCase03Option(config);
       testCase05Option(config);
     });
+
+    assertFalse(Files.exists(original));
 
     TestingShutdownHook.register(resources);
 
