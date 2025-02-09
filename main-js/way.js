@@ -153,7 +153,7 @@ const way = (function() {
   function popstateListener() {
     const url = window.location.href;
 
-    const xhr = createXhr({ url: url, history: false, onSuccess: [defaultScroll] });
+    const xhr = createXhr({ url: url, history: false, onSuccess: [[...defaultScroll]] });
 
     xhr.send();
   }
@@ -381,7 +381,7 @@ const way = (function() {
 
     const actions = [
 
-      ["request-0", "GET", ["element-1", "getAttribute", "href"], [defaultScroll]]
+      ["request-0", "GET", ["element-1", "getAttribute", "href"], [[...defaultScroll]]]
 
     ];
 
