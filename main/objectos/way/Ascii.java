@@ -34,6 +34,10 @@ final class Ascii {
         || 'a' <= c && c <= 'z';
   }
 
+  public static boolean isLowerCase(char c) {
+    return 'a' <= c && c <= 'z';
+  }
+
   public static boolean isLetterOrDigit(char c) {
     return isLetter(c) || isDigit(c);
   }
