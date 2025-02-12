@@ -84,10 +84,65 @@ public class SyntaxJavaTest {
   public void stringLiteral01() {
     test(
         """
+        "\"""",
+
+        """
+        <div><span class="string">""</span></div>
+        """
+    );
+  }
+
+  @Test
+  public void stringLiteral02() {
+    test(
+        """
         "abc\"""",
 
         """
         <div><span class="string">"abc"</span></div>
+        """
+    );
+  }
+
+  @Test
+  public void textBlock01() {
+    test("""
+        \"""
+        abc\"\"\"""",
+
+        """
+        <div><span class="string">\"""</span></div>
+        <div><span class="string">abc\"""</span></div>
+        """
+    );
+  }
+
+  @Test
+  public void textBlock02() {
+    test("""
+        \"""
+        abc\"""
+        """,
+
+        """
+        <div><span class="string">\"""</span></div>
+        <div><span class="string">abc\"""</span></div>
+        """
+    );
+  }
+
+  @Test
+  public void textBlock03() {
+    test("""
+        \"""
+        abc
+        \"""
+        """,
+
+        """
+        <div><span class="string">\"""</span></div>
+        <div><span class="string">abc</span></div>
+        <div><span class="string">\"""</span></div>
         """
     );
   }

@@ -19,7 +19,17 @@ import java.util.Objects;
 
 final class SyntaxJavaComponent implements Html.Component {
 
+  private enum Context {
+
+    NORMAL,
+
+    STRING;
+
+  }
+
   private final SyntaxJavaConfig config;
+
+  private Context context;
 
   private Html.Markup html;
 
@@ -42,6 +52,8 @@ final class SyntaxJavaComponent implements Html.Component {
   @Override
   public final void renderHtml(Html.Markup m) {
     html = Objects.requireNonNull(m, "m == null");
+
+    context = Context.NORMAL;
 
     sourceIndex = 0;
 
@@ -69,6 +81,10 @@ final class SyntaxJavaComponent implements Html.Component {
     // 3) TBD
 
     eol = false;
+
+    if (context == Context.STRING) {
+      maybeString();
+    }
 
     while (sourceIndex < sourceLength) {
       final char c;
@@ -194,22 +210,111 @@ final class SyntaxJavaComponent implements Html.Component {
   }
 
   private void maybeString() {
-    // render any preceding normal text (if necessary)
-    renderNormal();
-
     // where the string begins
-    final int beginIndex = sourceIndex;
+    final int beginIndex;
+    beginIndex = sourceIndex;
 
-    // consume opening '"'
-    sourceIndex++;
+    // our 'parser' state
+    enum Parser {
+      START_QUOTE,
 
-    while (sourceIndex < sourceLength) {
-      final char peek;
-      peek = source.charAt(sourceIndex++);
+      CONTENTS,
 
-      if (peek == '"') {
-        break;
+      END_QUOTE;
+    }
+
+    Parser parser;
+    parser = Parser.START_QUOTE;
+
+    // initial state depends on context
+    switch (context) {
+      case NORMAL -> {
+        // render any preceding normal text (if necessary)
+        renderNormal();
+
+        // consume opening '"'
+        sourceIndex++;
+
+        // we are in a string now
+        context = Context.STRING;
       }
+
+      case STRING -> {
+        // we continue previous string
+        parser = Parser.CONTENTS;
+      }
+    }
+
+    outer: for (;;) {
+
+      if (sourceIndex < sourceLength) {
+
+        final char c;
+        c = source.charAt(sourceIndex);
+
+        if (Ascii.isLineTerminator(c)) {
+
+          switch (parser) {
+            case START_QUOTE -> { eol = true; normalIndex = sourceIndex; }
+
+            case CONTENTS -> { eol = true; normalIndex = sourceIndex; }
+
+            case END_QUOTE -> { eol = true; context = Context.NORMAL; normalIndex = sourceIndex; }
+          }
+
+          break outer;
+
+        }
+
+        else if (c == '"') {
+
+          switch (parser) {
+            case START_QUOTE -> { parser = Parser.START_QUOTE; sourceIndex++; }
+
+            case CONTENTS -> { parser = Parser.END_QUOTE; sourceIndex++; }
+
+            case END_QUOTE -> { parser = Parser.END_QUOTE; sourceIndex++; }
+          }
+
+        }
+
+        else {
+
+          switch (parser) {
+            case START_QUOTE -> { parser = Parser.CONTENTS; sourceIndex++; }
+
+            case CONTENTS -> { parser = Parser.CONTENTS; sourceIndex++; }
+
+            case END_QUOTE -> {
+              // we found the end of the string
+              context = Context.NORMAL;
+
+              // set next normal text start
+              normalIndex = sourceIndex;
+
+              break outer;
+            }
+          }
+
+        }
+
+      } else {
+
+        switch (parser) {
+          case START_QUOTE -> { /* stray quote */ }
+
+          case CONTENTS -> { /* malformed */ }
+
+          case END_QUOTE -> { /* valid? */ }
+        }
+
+        // do not emit normal text
+        normalIndex = sourceIndex;
+
+        break outer;
+
+      }
+
     }
 
     final String className;
@@ -225,9 +330,6 @@ final class SyntaxJavaComponent implements Html.Component {
         html.text(text)
 
     );
-
-    // set next normal text start
-    normalIndex = sourceIndex;
   }
 
   private void renderNormal() {
