@@ -20,7 +20,8 @@ import java.util.function.Consumer;
 /**
  * The <strong>Objectos Syntax</strong> main class, part of Objectos HTML.
  */
-public final class Syntax {
+@SuppressWarnings("exports")
+final class Syntax {
 
   public sealed interface Highlighter {
 

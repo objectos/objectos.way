@@ -29,13 +29,65 @@ public class SyntaxJavaTest {
   });
 
   @Test
-  public void commentLine01() {
+  public void eolComment01() {
     test(
         """
         // foo""",
 
         """
-        <span class="comment">// foo</span>
+        <div><span class="comment">// foo</span></div>
+        """
+    );
+  }
+
+  @Test
+  public void eolComment02() {
+    test(
+        """
+        // foo
+        """,
+
+        """
+        <div><span class="comment">// foo</span></div>
+        """
+    );
+  }
+
+  @Test
+  public void eolComment03() {
+    test(
+        """
+        // one\r
+        // two\r
+        """,
+
+        """
+        <div><span class="comment">// one</span></div>
+        <div><span class="comment">// two</span></div>
+        """
+    );
+  }
+
+  @Test
+  public void eolComment04() {
+    test(
+        """
+        /""",
+
+        """
+        <div><span>/</span></div>
+        """
+    );
+  }
+
+  @Test
+  public void stringLiteral01() {
+    test(
+        """
+        "abc\"""",
+
+        """
+        <div><span class="string">"abc"</span></div>
         """
     );
   }

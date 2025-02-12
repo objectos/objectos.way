@@ -29,7 +29,7 @@ final class SyntaxJava implements Syntax.Java {
   public final Html.Component highlight(String value) {
     Objects.requireNonNull(value, "value == null");
 
-    return new SyntaxJavaHtml(config, value);
+    return new SyntaxJavaComponent(config, value);
   }
 
 }

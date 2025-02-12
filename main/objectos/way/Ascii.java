@@ -17,6 +17,9 @@ package objectos.way;
 
 final class Ascii {
 
+  public static final char CR = '\r';
+  public static final char LF = '\n';
+
   private Ascii() {}
 
   public static boolean isDigit(char c) {
@@ -34,12 +37,16 @@ final class Ascii {
         || 'a' <= c && c <= 'z';
   }
 
-  public static boolean isLowerCase(char c) {
-    return 'a' <= c && c <= 'z';
-  }
-
   public static boolean isLetterOrDigit(char c) {
     return isLetter(c) || isDigit(c);
+  }
+
+  public static boolean isLineTerminator(char c) {
+    return c == CR || c == LF;
+  }
+
+  public static boolean isLowerCase(char c) {
+    return 'a' <= c && c <= 'z';
   }
 
   public static boolean isWhitespace(char c) {
