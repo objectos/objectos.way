@@ -23,6 +23,8 @@ final class SyntaxJavaComponent implements Html.Component {
 
     NORMAL,
 
+    CHAR_LITERAL,
+
     STRING;
 
   }
@@ -88,8 +90,12 @@ final class SyntaxJavaComponent implements Html.Component {
 
     eol = false;
 
-    if (context == Context.STRING) {
-      renderString();
+    switch (context) {
+      case NORMAL -> {}
+
+      case CHAR_LITERAL -> renderCharLiteral();
+
+      case STRING -> renderString();
     }
 
     while (sourceIndex < sourceLength) {
@@ -104,6 +110,10 @@ final class SyntaxJavaComponent implements Html.Component {
 
       else if (c == '/') {
         maybeComment();
+      }
+
+      else if (c == '\'') {
+        renderCharLiteral();
       }
 
       else if (c == '"') {
@@ -236,7 +246,15 @@ final class SyntaxJavaComponent implements Html.Component {
     normalIndex = sourceIndex;
   }
 
+  private void renderCharLiteral() {
+    renderString0('\'', Context.CHAR_LITERAL);
+  }
+
   private void renderString() {
+    renderString0('"', Context.STRING);
+  }
+
+  private void renderString0(char quote, Context next) {
     // where the string begins
     final int beginIndex;
     beginIndex = sourceIndex;
@@ -265,10 +283,10 @@ final class SyntaxJavaComponent implements Html.Component {
         sourceIndex++;
 
         // we are in a string now
-        context = Context.STRING;
+        context = next;
       }
 
-      case STRING -> {
+      case CHAR_LITERAL, STRING -> {
         // we continue previous string
         parser = Parser.CONTENTS;
       }
@@ -291,7 +309,7 @@ final class SyntaxJavaComponent implements Html.Component {
 
       }
 
-      else if (c == '"') {
+      else if (c == quote) {
 
         switch (parser) {
           case START_QUOTE1 -> { parser = Parser.START_QUOTE2; sourceIndex++; }

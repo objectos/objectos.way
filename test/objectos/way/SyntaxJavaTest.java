@@ -57,6 +57,19 @@ public class SyntaxJavaTest {
   }
 
   @Test
+  public void charLiteral01() {
+    test(
+        """
+        char c = '9';
+        """,
+
+        """
+        <span data-line="1"><span data-high="keyword">char</span><span> c = </span><span data-high="string">'9'</span><span>;</span></span>
+        """
+    );
+  }
+
+  @Test
   public void eolComment01() {
     test(
         """
