@@ -121,6 +121,23 @@ public class SyntaxJavaTest {
   }
 
   @Test
+  public void eolComment06() {
+    test(
+        """
+        clazz = getClass(); // 1
+
+        final Field field;
+        """,
+
+        """
+        <span data-line="1"><span>clazz = getClass(); </span><span data-high="comment">// 1</span></span>\
+        <span data-line="2"></span>\
+        <span data-line="3"><span data-high="keyword">final</span><span> Field field;</span></span>
+        """
+    );
+  }
+
+  @Test
   public void keyword01() {
     test(
         """
@@ -152,6 +169,19 @@ public class SyntaxJavaTest {
 
         """
         <span data-line="1"><span data-high="string">"abc"</span></span>
+        """
+    );
+  }
+
+  @Test
+  public void stringLiteral03() {
+    test(
+        """
+        empty("", "", "");
+        """,
+
+        """
+        <span data-line="1"><span>empty(</span><span data-high="string">""</span><span>, </span><span data-high="string">""</span><span>, </span><span data-high="string">""</span><span>);</span></span>
         """
     );
   }

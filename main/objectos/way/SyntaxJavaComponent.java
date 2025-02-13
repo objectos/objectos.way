@@ -243,7 +243,9 @@ final class SyntaxJavaComponent implements Html.Component {
 
     // our 'parser' state
     enum Parser {
-      START_QUOTE,
+      START_QUOTE1,
+      START_QUOTE2,
+      START_QUOTEN,
 
       CONTENTS,
 
@@ -251,7 +253,7 @@ final class SyntaxJavaComponent implements Html.Component {
     }
 
     Parser parser;
-    parser = Parser.START_QUOTE;
+    parser = Parser.START_QUOTE1;
 
     // initial state depends on context
     switch (context) {
@@ -280,9 +282,7 @@ final class SyntaxJavaComponent implements Html.Component {
       if (Ascii.isLineTerminator(c)) {
 
         switch (parser) {
-          case START_QUOTE -> { eol = true; normalIndex = sourceIndex; }
-
-          case CONTENTS -> { eol = true; normalIndex = sourceIndex; }
+          case START_QUOTE1, START_QUOTE2, START_QUOTEN, CONTENTS -> { eol = true; normalIndex = sourceIndex; }
 
           case END_QUOTE -> { eol = true; context = Context.NORMAL; normalIndex = sourceIndex; }
         }
@@ -294,7 +294,9 @@ final class SyntaxJavaComponent implements Html.Component {
       else if (c == '"') {
 
         switch (parser) {
-          case START_QUOTE -> { parser = Parser.START_QUOTE; sourceIndex++; }
+          case START_QUOTE1 -> { parser = Parser.START_QUOTE2; sourceIndex++; }
+
+          case START_QUOTE2, START_QUOTEN -> { parser = Parser.START_QUOTEN; sourceIndex++; }
 
           case CONTENTS -> { parser = Parser.END_QUOTE; sourceIndex++; }
 
@@ -306,11 +308,11 @@ final class SyntaxJavaComponent implements Html.Component {
       else {
 
         switch (parser) {
-          case START_QUOTE -> { parser = Parser.CONTENTS; sourceIndex++; }
+          case START_QUOTE1, START_QUOTEN -> { parser = Parser.CONTENTS; sourceIndex++; }
 
           case CONTENTS -> { parser = Parser.CONTENTS; sourceIndex++; }
 
-          case END_QUOTE -> {
+          case START_QUOTE2, END_QUOTE -> {
             // we found the end of the string
             context = Context.NORMAL;
 
