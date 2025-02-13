@@ -212,6 +212,19 @@ public class SyntaxJavaTest {
   }
 
   @Test
+  public void stringLiteral04() {
+    test(
+        """
+        "x\\"x"
+        """,
+
+        """
+        <span data-line="1"><span data-high="string">"x\\"x"</span></span>
+        """
+    );
+  }
+
+  @Test
   public void textBlock01() {
     test("""
         \"""
