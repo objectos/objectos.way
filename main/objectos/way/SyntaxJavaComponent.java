@@ -89,7 +89,7 @@ final class SyntaxJavaComponent implements Html.Component {
     eol = false;
 
     if (context == Context.STRING) {
-      maybeString();
+      renderString();
     }
 
     while (sourceIndex < sourceLength) {
@@ -107,7 +107,11 @@ final class SyntaxJavaComponent implements Html.Component {
       }
 
       else if (c == '"') {
-        maybeString();
+        renderString();
+      }
+
+      else if (c == '@') {
+        renderAnnotation();
       }
 
       else if (isBoundary(c)) {
@@ -224,7 +228,7 @@ final class SyntaxJavaComponent implements Html.Component {
     normalIndex = sourceIndex;
   }
 
-  private void maybeString() {
+  private void renderString() {
     // where the string begins
     final int beginIndex;
     beginIndex = sourceIndex;
@@ -319,6 +323,42 @@ final class SyntaxJavaComponent implements Html.Component {
     html.span(
 
         html.attr(Syntax.DATA_HIGH, "string"),
+
+        html.text(text)
+
+    );
+
+    // do not emit normal text
+    normalIndex = sourceIndex;
+  }
+
+  private void renderAnnotation() {
+    renderNormal();
+
+    // where the (possibly) annotation begins
+    final int beginIndex;
+    beginIndex = sourceIndex;
+
+    // skip '@'
+    sourceIndex++;
+
+    while (sourceIndex < sourceLength) {
+      final char peek;
+      peek = source.charAt(sourceIndex);
+
+      if (isBoundary(peek) || Ascii.isLineTerminator(peek)) {
+        break;
+      }
+
+      sourceIndex++;
+    }
+
+    final String text;
+    text = source.substring(beginIndex, sourceIndex);
+
+    html.span(
+
+        html.attr(Syntax.DATA_HIGH, "annotation"),
 
         html.text(text)
 

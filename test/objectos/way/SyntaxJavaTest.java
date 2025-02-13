@@ -28,7 +28,7 @@ public class SyntaxJavaTest {
     config.set(Syntax.Java.STRING_LITERAL, "string");
   });
 
-  @Test(enabled = false)
+  @Test
   public void all01() {
     test(
         """
@@ -37,8 +37,8 @@ public class SyntaxJavaTest {
         """,
 
         """
-        <span data-line="1"><span>@Target(ElementType.TYPE_USE)</span></span>\
-        <span data-line="2"><span>@interface</span><span> X {}</span></span>
+        <span data-line="1"><span data-high="annotation">@Target</span><span>(ElementType.TYPE_USE)</span></span>\
+        <span data-line="2"><span data-high="annotation">@interface</span><span> X {}</span></span>
         """
     );
   }
