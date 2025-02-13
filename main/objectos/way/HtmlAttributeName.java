@@ -61,6 +61,11 @@ final class HtmlAttributeName implements Html.AttributeName {
   public static final Html.AttributeName DATA_ON_INPUT = BUILDER.action("data-on-input");
   public static final Html.AttributeName DATA_ON_SUCCESS = BUILDER.action("data-on-success");
 
+  // custom (Syntax)
+
+  public static final Html.AttributeName DATA_LINE = BUILDER.create("data-line", false);
+  public static final Html.AttributeName DATA_HIGH = BUILDER.create("data-high", false);
+
   // standard
 
   public static final Html.AttributeName ACCESSKEY = BUILDER.create("accesskey", false);

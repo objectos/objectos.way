@@ -20,8 +20,11 @@ import java.util.function.Consumer;
 /**
  * The <strong>Objectos Syntax</strong> main class, part of Objectos HTML.
  */
-@SuppressWarnings("exports")
-final class Syntax {
+public final class Syntax {
+
+  public static final Html.AttributeName DATA_LINE = HtmlAttributeName.DATA_LINE;
+
+  public static final Html.AttributeName DATA_HIGH = HtmlAttributeName.DATA_HIGH;
 
   public sealed interface Highlighter {
 

@@ -31,9 +31,11 @@ final class SyntaxJavaComponent implements Html.Component {
 
   private Context context;
 
+  private boolean eol;
+
   private Html.Markup html;
 
-  private boolean eol;
+  private int line;
 
   private int normalIndex;
 
@@ -55,6 +57,8 @@ final class SyntaxJavaComponent implements Html.Component {
 
     context = Context.NORMAL;
 
+    line = 1;
+
     sourceIndex = 0;
 
     sourceLength = source.length();
@@ -67,7 +71,9 @@ final class SyntaxJavaComponent implements Html.Component {
   }
 
   private void renderLine() {
-    html.div(
+    html.span(
+
+        html.attr(Syntax.DATA_LINE, Integer.toString(line++)),
 
         html.renderFragment(this::parseLine)
 
@@ -104,6 +110,14 @@ final class SyntaxJavaComponent implements Html.Component {
         maybeString();
       }
 
+      else if (isBoundary(c)) {
+        consumeBoundary();
+      }
+
+      else if (Ascii.isLowerCase(c)) {
+        maybeKeyword();
+      }
+
       else {
         sourceIndex++;
       }
@@ -117,6 +131,8 @@ final class SyntaxJavaComponent implements Html.Component {
   }
 
   private void renderLineTerminator() {
+    renderNormal();
+
     // we must signal parseLine
     eol = true;
 
@@ -194,19 +210,18 @@ final class SyntaxJavaComponent implements Html.Component {
       sourceIndex++;
     }
 
-    final String className;
-    className = config.get(SyntaxJavaElement.COMMENT, "color:high-comment");
-
     final String text;
     text = source.substring(beginIndex, sourceIndex);
 
     html.span(
 
-        html.className(className),
+        html.attr(Syntax.DATA_HIGH, "comment"),
 
         html.text(text)
 
     );
+
+    normalIndex = sourceIndex;
   }
 
   private void maybeString() {
@@ -245,89 +260,128 @@ final class SyntaxJavaComponent implements Html.Component {
       }
     }
 
-    outer: for (;;) {
+    outer: while (sourceIndex < sourceLength) {
 
-      if (sourceIndex < sourceLength) {
+      final char c;
+      c = source.charAt(sourceIndex);
 
-        final char c;
-        c = source.charAt(sourceIndex);
-
-        if (Ascii.isLineTerminator(c)) {
-
-          switch (parser) {
-            case START_QUOTE -> { eol = true; normalIndex = sourceIndex; }
-
-            case CONTENTS -> { eol = true; normalIndex = sourceIndex; }
-
-            case END_QUOTE -> { eol = true; context = Context.NORMAL; normalIndex = sourceIndex; }
-          }
-
-          break outer;
-
-        }
-
-        else if (c == '"') {
-
-          switch (parser) {
-            case START_QUOTE -> { parser = Parser.START_QUOTE; sourceIndex++; }
-
-            case CONTENTS -> { parser = Parser.END_QUOTE; sourceIndex++; }
-
-            case END_QUOTE -> { parser = Parser.END_QUOTE; sourceIndex++; }
-          }
-
-        }
-
-        else {
-
-          switch (parser) {
-            case START_QUOTE -> { parser = Parser.CONTENTS; sourceIndex++; }
-
-            case CONTENTS -> { parser = Parser.CONTENTS; sourceIndex++; }
-
-            case END_QUOTE -> {
-              // we found the end of the string
-              context = Context.NORMAL;
-
-              // set next normal text start
-              normalIndex = sourceIndex;
-
-              break outer;
-            }
-          }
-
-        }
-
-      } else {
+      if (Ascii.isLineTerminator(c)) {
 
         switch (parser) {
-          case START_QUOTE -> { /* stray quote */ }
+          case START_QUOTE -> { eol = true; normalIndex = sourceIndex; }
 
-          case CONTENTS -> { /* malformed */ }
+          case CONTENTS -> { eol = true; normalIndex = sourceIndex; }
 
-          case END_QUOTE -> { /* valid? */ }
+          case END_QUOTE -> { eol = true; context = Context.NORMAL; normalIndex = sourceIndex; }
         }
-
-        // do not emit normal text
-        normalIndex = sourceIndex;
 
         break outer;
 
       }
 
-    }
+      else if (c == '"') {
 
-    final String className;
-    className = config.get(SyntaxJavaElement.STRING_LITERAL, "color:high-string");
+        switch (parser) {
+          case START_QUOTE -> { parser = Parser.START_QUOTE; sourceIndex++; }
+
+          case CONTENTS -> { parser = Parser.END_QUOTE; sourceIndex++; }
+
+          case END_QUOTE -> { parser = Parser.END_QUOTE; sourceIndex++; }
+        }
+
+      }
+
+      else {
+
+        switch (parser) {
+          case START_QUOTE -> { parser = Parser.CONTENTS; sourceIndex++; }
+
+          case CONTENTS -> { parser = Parser.CONTENTS; sourceIndex++; }
+
+          case END_QUOTE -> {
+            // we found the end of the string
+            context = Context.NORMAL;
+
+            // set next normal text start
+            normalIndex = sourceIndex;
+
+            break outer;
+          }
+        }
+
+      }
+
+    }
 
     final String text;
     text = source.substring(beginIndex, sourceIndex);
 
     html.span(
 
-        html.className(className),
+        html.attr(Syntax.DATA_HIGH, "string"),
 
         html.text(text)
+
+    );
+
+    // do not emit normal text
+    normalIndex = sourceIndex;
+  }
+
+  private void consumeBoundary() {
+    // consume current
+    sourceIndex++;
+
+    while (sourceIndex < sourceLength) {
+      final char peek;
+      peek = source.charAt(sourceIndex);
+
+      if (!isBoundary(peek)) {
+        break;
+      }
+
+      sourceIndex++;
+    }
+  }
+
+  private void maybeKeyword() {
+    // if this is a keyword, it begins here
+    final int beginIndex;
+    beginIndex = sourceIndex;
+
+    // consume first char
+    int endIndex;
+    endIndex = sourceIndex + 1;
+
+    while (endIndex < sourceLength) {
+      final char peek;
+      peek = source.charAt(endIndex);
+
+      if (!Ascii.isLowerCase(peek) && peek != '-') {
+        break;
+      }
+
+      endIndex++;
+    }
+
+    final String maybe;
+    maybe = source.substring(beginIndex, endIndex);
+
+    if (!config.isKeyword(maybe)) {
+      sourceIndex = endIndex;
+
+      return;
+    }
+
+    renderNormal();
+
+    normalIndex = sourceIndex = endIndex;
+
+    html.span(
+
+        html.attr(Syntax.DATA_HIGH, "keyword"),
+
+        html.text(maybe)
 
     );
   }
@@ -343,9 +397,13 @@ final class SyntaxJavaComponent implements Html.Component {
     }
   }
 
+  private boolean isBoundary(char c) {
+    return isOperator(c) || isSeparator(c) || isWhiteSpace(c);
+  }
+
   // https://docs.oracle.com/javase/specs/jls/se23/html/jls-3.html#jls-3.12
-  final boolean isOperator(char ch) {
-    return switch (ch) {
+  private boolean isOperator(char c) {
+    return switch (c) {
       case '=',
            '>', '<', '!',
            '~', '&', '|', '^',
@@ -357,8 +415,8 @@ final class SyntaxJavaComponent implements Html.Component {
   }
 
   // https://docs.oracle.com/javase/specs/jls/se23/html/jls-3.html#jls-3.11
-  final boolean isSeparator(char ch) {
-    return switch (ch) {
+  private boolean isSeparator(char c) {
+    return switch (c) {
       case '(', ')',
            '{', '}',
            '[', ']',
@@ -370,6 +428,12 @@ final class SyntaxJavaComponent implements Html.Component {
 
       default -> false;
     };
+  }
+
+  // https://docs.oracle.com/javase/specs/jls/se23/html/jls-3.html#jls-3.6
+  private boolean isWhiteSpace(char c) {
+    // we don't consider line terminator as they're handled separately...
+    return c == ' ' || c == '\t' || c == '\f';
   }
 
 }

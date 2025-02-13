@@ -28,6 +28,21 @@ public class SyntaxJavaTest {
     config.set(Syntax.Java.STRING_LITERAL, "string");
   });
 
+  @Test(enabled = false)
+  public void all01() {
+    test(
+        """
+        @Target(ElementType.TYPE_USE)
+        @interface X {}
+        """,
+
+        """
+        <span data-line="1"><span>@Target(ElementType.TYPE_USE)</span></span>\
+        <span data-line="2"><span>@interface</span><span> X {}</span></span>
+        """
+    );
+  }
+
   @Test
   public void eolComment01() {
     test(
@@ -35,7 +50,7 @@ public class SyntaxJavaTest {
         // foo""",
 
         """
-        <div><span class="comment">// foo</span></div>
+        <span data-line="1"><span data-high="comment">// foo</span></span>
         """
     );
   }
@@ -48,7 +63,7 @@ public class SyntaxJavaTest {
         """,
 
         """
-        <div><span class="comment">// foo</span></div>
+        <span data-line="1"><span data-high="comment">// foo</span></span>
         """
     );
   }
@@ -62,8 +77,8 @@ public class SyntaxJavaTest {
         """,
 
         """
-        <div><span class="comment">// one</span></div>
-        <div><span class="comment">// two</span></div>
+        <span data-line="1"><span data-high="comment">// one</span></span>\
+        <span data-line="2"><span data-high="comment">// two</span></span>
         """
     );
   }
@@ -75,7 +90,19 @@ public class SyntaxJavaTest {
         /""",
 
         """
-        <div><span>/</span></div>
+        <span data-line="1"><span>/</span></span>
+        """
+    );
+  }
+
+  @Test
+  public void keyword01() {
+    test(
+        """
+        public""",
+
+        """
+        <span data-line="1"><span data-high="keyword">public</span></span>
         """
     );
   }
@@ -87,7 +114,7 @@ public class SyntaxJavaTest {
         "\"""",
 
         """
-        <div><span class="string">""</span></div>
+        <span data-line="1"><span data-high="string">""</span></span>
         """
     );
   }
@@ -99,7 +126,7 @@ public class SyntaxJavaTest {
         "abc\"""",
 
         """
-        <div><span class="string">"abc"</span></div>
+        <span data-line="1"><span data-high="string">"abc"</span></span>
         """
     );
   }
@@ -111,8 +138,8 @@ public class SyntaxJavaTest {
         abc\"\"\"""",
 
         """
-        <div><span class="string">\"""</span></div>
-        <div><span class="string">abc\"""</span></div>
+        <span data-line="1"><span data-high="string">\"""</span></span>\
+        <span data-line="2"><span data-high="string">abc\"""</span></span>
         """
     );
   }
@@ -125,8 +152,8 @@ public class SyntaxJavaTest {
         """,
 
         """
-        <div><span class="string">\"""</span></div>
-        <div><span class="string">abc\"""</span></div>
+        <span data-line="1"><span data-high="string">\"""</span></span>\
+        <span data-line="2"><span data-high="string">abc\"""</span></span>
         """
     );
   }
@@ -140,9 +167,9 @@ public class SyntaxJavaTest {
         """,
 
         """
-        <div><span class="string">\"""</span></div>
-        <div><span class="string">abc</span></div>
-        <div><span class="string">\"""</span></div>
+        <span data-line="1"><span data-high="string">\"""</span></span>\
+        <span data-line="2"><span data-high="string">abc</span></span>\
+        <span data-line="3"><span data-high="string">\"""</span></span>
         """
     );
   }
