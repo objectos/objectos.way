@@ -150,6 +150,18 @@ public class SyntaxJavaTest {
   }
 
   @Test
+  public void keyword02() {
+    test(
+        """
+        assertEquals()""",
+
+        """
+        <span data-line="1"><span>assertEquals()</span></span>
+        """
+    );
+  }
+
+  @Test
   public void stringLiteral01() {
     test(
         """

@@ -420,15 +420,32 @@ final class SyntaxJavaComponent implements Html.Component {
     int endIndex;
     endIndex = sourceIndex + 1;
 
+    // was the last char a boundary?
+    boolean wasBoundary = false;
+
     while (endIndex < sourceLength) {
       final char peek;
       peek = source.charAt(endIndex);
 
       if (!Ascii.isLowerCase(peek) && peek != '-') {
+        wasBoundary = isWhiteSpace(peek);
+
+        wasBoundary |= isSeparator(peek);
+
+        wasBoundary |= isOperator(peek);
+
+        wasBoundary |= Ascii.isLineTerminator(peek);
+
         break;
       }
 
       endIndex++;
+    }
+
+    if (!wasBoundary && endIndex < sourceLength) {
+      sourceIndex = endIndex;
+
+      return;
     }
 
     final String maybe;
