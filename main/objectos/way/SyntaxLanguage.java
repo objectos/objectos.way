@@ -15,14 +15,8 @@
  */
 package objectos.way;
 
-enum SyntaxJavaElement implements Syntax.Java.Element {
+enum SyntaxLanguage implements Syntax.Language {
 
-  ANNOTATION,
-
-  COMMENT,
-
-  KEYWORD,
-
-  STRING_LITERAL;
+  JAVA;
 
 }

@@ -21,13 +21,6 @@ import org.testng.annotations.Test;
 
 public class SyntaxJavaTest {
 
-  private final Syntax.Java hl = Syntax.Java.create(config -> {
-    config.set(Syntax.Java.ANNOTATION, "annotation");
-    config.set(Syntax.Java.COMMENT, "comment");
-    config.set(Syntax.Java.KEYWORD, "keyword");
-    config.set(Syntax.Java.STRING_LITERAL, "string");
-  });
-
   @Test
   public void annotation01() {
     test(
@@ -307,7 +300,7 @@ public class SyntaxJavaTest {
 
   private void test(String java, String expected) {
     final Html.Component component;
-    component = hl.highlight(java);
+    component = Syntax.highlight(Syntax.JAVA, java);
 
     assertEquals(component.toHtml(), expected);
   }

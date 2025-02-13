@@ -15,50 +15,27 @@
  */
 package objectos.way;
 
-import java.util.function.Consumer;
-
 /**
  * The <strong>Objectos Syntax</strong> main class, part of Objectos HTML.
  */
 public final class Syntax {
 
+  public sealed interface Language permits SyntaxLanguage {}
+
   public static final Html.AttributeName DATA_LINE = HtmlAttributeName.DATA_LINE;
 
   public static final Html.AttributeName DATA_HIGH = HtmlAttributeName.DATA_HIGH;
 
-  public sealed interface Highlighter {
+  // languages
 
-    Html.Component highlight(String value);
+  public static final Language JAVA = SyntaxLanguage.JAVA;
 
-  }
+  private Syntax() {}
 
-  public sealed interface Java extends Highlighter permits SyntaxJava {
-
-    public sealed interface Config permits SyntaxJavaConfig {
-
-      void set(Element element, String className);
-
-    }
-
-    public sealed interface Element permits SyntaxJavaElement {}
-
-    Element ANNOTATION = SyntaxJavaElement.ANNOTATION;
-
-    Element COMMENT = SyntaxJavaElement.COMMENT;
-
-    Element KEYWORD = SyntaxJavaElement.KEYWORD;
-
-    Element STRING_LITERAL = SyntaxJavaElement.STRING_LITERAL;
-
-    static Java create(Consumer<Config> config) {
-      final SyntaxJavaConfig builder;
-      builder = new SyntaxJavaConfig();
-
-      config.accept(builder);
-
-      return builder.build();
-    }
-
+  public static Html.Component highlight(Language language, String source) {
+    return switch (language) {
+      case SyntaxLanguage.JAVA -> new SyntaxJava(source);
+    };
   }
 
 }
