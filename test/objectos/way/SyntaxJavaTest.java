@@ -50,6 +50,19 @@ public class SyntaxJavaTest {
   }
 
   @Test
+  public void annotation03() {
+    test(
+        """
+        @Foo.Bar
+        """,
+
+        """
+        <span data-line="1"><span data-high="annotation">@Foo.Bar</span></span>
+        """
+    );
+  }
+
+  @Test
   public void charLiteral01() {
     test(
         """
@@ -139,6 +152,19 @@ public class SyntaxJavaTest {
         <span data-line="1"><span>clazz = getClass(); </span><span data-high="comment">// 1</span></span>\
         <span data-line="2"></span>\
         <span data-line="3"><span data-high="keyword">final</span><span> Field field;</span></span>
+        """
+    );
+  }
+
+  @Test
+  public void eolComment07() {
+    test(
+        """
+        r = a / b;
+        """,
+
+        """
+        <span data-line="1"><span>r = a / b;</span></span>
         """
     );
   }

@@ -196,7 +196,7 @@ final class SyntaxJava implements Html.Component {
 
         case '*' -> renderCommentTraditional();
 
-        default -> throw new UnsupportedOperationException("Implement me");
+        default -> sourceIndex = nextIndex;
       }
 
     } else {
@@ -498,7 +498,7 @@ final class SyntaxJava implements Html.Component {
         break;
       }
 
-      if (isSeparator(peek)) {
+      if (isSeparator(peek) && peek != '.') {
         break;
       }
 
