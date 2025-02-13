@@ -267,6 +267,44 @@ public class SyntaxJavaTest {
     );
   }
 
+  @Test
+  public void tradComment01() {
+    test("""
+        /**/
+        """,
+
+        """
+        <span data-line="1"><span data-high="comment">/**/</span></span>
+        """
+    );
+  }
+
+  @Test
+  public void tradComment02() {
+    test("""
+        /*single line*/
+        """,
+
+        """
+        <span data-line="1"><span data-high="comment">/*single line*/</span></span>
+        """
+    );
+  }
+
+  @Test
+  public void tradComment03() {
+    test("""
+        /* multi
+           line */
+        """,
+
+        """
+        <span data-line="1"><span data-high="comment">/* multi</span></span>\
+        <span data-line="2"><span data-high="comment">   line */</span></span>
+        """
+    );
+  }
+
   private void test(String java, String expected) {
     final Html.Component component;
     component = hl.highlight(java);

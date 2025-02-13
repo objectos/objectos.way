@@ -25,7 +25,9 @@ final class SyntaxJavaComponent implements Html.Component {
 
     CHAR_LITERAL,
 
-    STRING;
+    STRING,
+
+    COMMENT;
 
   }
 
@@ -96,6 +98,8 @@ final class SyntaxJavaComponent implements Html.Component {
       case CHAR_LITERAL -> renderCharLiteral();
 
       case STRING -> renderString();
+
+      case COMMENT -> renderCommentTraditional();
     }
 
     while (sourceIndex < sourceLength) {
@@ -193,6 +197,8 @@ final class SyntaxJavaComponent implements Html.Component {
       switch (peekNext) {
         case '/' -> renderCommentEndOfLine();
 
+        case '*' -> renderCommentTraditional();
+
         default -> throw new UnsupportedOperationException("Implement me");
       }
 
@@ -246,6 +252,89 @@ final class SyntaxJavaComponent implements Html.Component {
     normalIndex = sourceIndex;
   }
 
+  private void renderCommentTraditional() {
+    // where the string begins
+    final int beginIndex;
+    beginIndex = sourceIndex;
+
+    // initial state depends on context
+    switch (context) {
+      case NORMAL -> {
+        // render any preceding normal text (if necessary)
+        renderNormal();
+
+        // consume opening '/*'
+        sourceIndex += 2;
+
+        // we are in a string now
+        context = Context.COMMENT;
+      }
+
+      case CHAR_LITERAL, STRING -> throw new IllegalStateException("Cannot render comment as we're in context " + context);
+
+      case COMMENT -> {}
+    }
+
+    boolean wasStar = false;
+
+    outer: while (sourceIndex < sourceLength) {
+
+      final char c;
+      c = source.charAt(sourceIndex);
+
+      if (Ascii.isLineTerminator(c)) {
+
+        eol = true;
+
+        break outer;
+
+      }
+
+      else if (c == '*') {
+
+        wasStar = true;
+
+        sourceIndex++;
+
+      }
+
+      else if (c == '/' && wasStar) {
+
+        // we found the end of the comment
+        context = Context.NORMAL;
+
+        // trailing '/' is part of the comment
+        sourceIndex++;
+
+        break outer;
+
+      }
+
+      else {
+
+        wasStar = false;
+
+        sourceIndex++;
+
+      }
+
+    }
+
+    final String text;
+    text = source.substring(beginIndex, sourceIndex);
+
+    html.span(
+
+        html.attr(Syntax.DATA_HIGH, "comment"),
+
+        html.text(text)
+
+    );
+
+    // do not emit normal text
+    normalIndex = sourceIndex;
+  }
+
   private void renderCharLiteral() {
     renderString0('\'', Context.CHAR_LITERAL);
   }
@@ -292,6 +381,8 @@ final class SyntaxJavaComponent implements Html.Component {
         // we continue previous string
         parser = Parser.CONTENTS;
       }
+
+      case COMMENT -> throw new IllegalStateException("Cannot render string as we're in a comment context");
     }
 
     outer: while (sourceIndex < sourceLength) {
