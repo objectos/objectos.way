@@ -114,8 +114,16 @@ final class SyntaxJavaComponent implements Html.Component {
         renderAnnotation();
       }
 
-      else if (isBoundary(c)) {
-        consumeBoundary();
+      else if (isWhiteSpace(c)) {
+        consume(this::isWhiteSpace);
+      }
+
+      else if (isOperator(c)) {
+        consume(this::isOperator);
+      }
+
+      else if (isSeparator(c)) {
+        consume(this::isSeparator);
       }
 
       else if (Ascii.isLowerCase(c)) {
@@ -346,7 +354,19 @@ final class SyntaxJavaComponent implements Html.Component {
       final char peek;
       peek = source.charAt(sourceIndex);
 
-      if (isBoundary(peek) || Ascii.isLineTerminator(peek)) {
+      if (isWhiteSpace(peek)) {
+        break;
+      }
+
+      if (isSeparator(peek)) {
+        break;
+      }
+
+      if (isOperator(peek)) {
+        break;
+      }
+
+      if (Ascii.isLineTerminator(peek)) {
         break;
       }
 
@@ -368,7 +388,12 @@ final class SyntaxJavaComponent implements Html.Component {
     normalIndex = sourceIndex;
   }
 
-  private void consumeBoundary() {
+  @FunctionalInterface
+  private interface CharPredicate {
+    boolean test(char c);
+  }
+
+  private void consume(CharPredicate test) {
     // consume current
     sourceIndex++;
 
@@ -376,7 +401,7 @@ final class SyntaxJavaComponent implements Html.Component {
       final char peek;
       peek = source.charAt(sourceIndex);
 
-      if (!isBoundary(peek)) {
+      if (!test.test(peek)) {
         break;
       }
 
@@ -437,10 +462,6 @@ final class SyntaxJavaComponent implements Html.Component {
     }
   }
 
-  private boolean isBoundary(char c) {
-    return isOperator(c) || isSeparator(c) || isWhiteSpace(c);
-  }
-
   // https://docs.oracle.com/javase/specs/jls/se23/html/jls-3.html#jls-3.12
   private boolean isOperator(char c) {
     return switch (c) {
@@ -456,6 +477,7 @@ final class SyntaxJavaComponent implements Html.Component {
 
   // https://docs.oracle.com/javase/specs/jls/se23/html/jls-3.html#jls-3.11
   private boolean isSeparator(char c) {
+    // we don't consider '@' as it is handled separately
     return switch (c) {
       case '(', ')',
            '{', '}',
@@ -463,7 +485,6 @@ final class SyntaxJavaComponent implements Html.Component {
            ';',
            ',',
            '.',
-           '@',
            ':' -> true;
 
       default -> false;

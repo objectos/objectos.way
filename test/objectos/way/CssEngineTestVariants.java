@@ -181,7 +181,7 @@ public class CssEngineTestVariants {
   }
 
   @Test
-  public void element() {
+  public void element01() {
     class Subject extends CssSubject {
       @Override
       final void classes() {
@@ -195,6 +195,26 @@ public class CssEngineTestVariants {
         """
         @layer utilities {
           .tr\\:background-color\\:neutral-100 tr { background-color: var(--color-neutral-100) }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void element02() {
+    class Subject extends CssSubject {
+      @Override
+      final void classes() {
+        className("span:[data-line]:display:block");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .span\\:\\[data-line\\]\\:display\\:block span[data-line] { display: block }
         }
         """
     );

@@ -29,7 +29,7 @@ public class SyntaxJavaTest {
   });
 
   @Test
-  public void all01() {
+  public void annotation01() {
     test(
         """
         @Target(ElementType.TYPE_USE)
@@ -39,6 +39,19 @@ public class SyntaxJavaTest {
         """
         <span data-line="1"><span data-high="annotation">@Target</span><span>(ElementType.TYPE_USE)</span></span>\
         <span data-line="2"><span data-high="annotation">@interface</span><span> X {}</span></span>
+        """
+    );
+  }
+
+  @Test
+  public void annotation02() {
+    test(
+        """
+        private @X String a;
+        """,
+
+        """
+        <span data-line="1"><span data-high="keyword">private</span><span> </span><span data-high="annotation">@X</span><span> String a;</span></span>
         """
     );
   }
@@ -91,6 +104,18 @@ public class SyntaxJavaTest {
 
         """
         <span data-line="1"><span>/</span></span>
+        """
+    );
+  }
+
+  @Test
+  public void eolComment05() {
+    test(
+        """
+        clazz = getClass(); // 1""",
+
+        """
+        <span data-line="1"><span>clazz = getClass(); </span><span data-high="comment">// 1</span></span>
         """
     );
   }
