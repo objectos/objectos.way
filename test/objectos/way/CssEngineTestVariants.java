@@ -368,6 +368,26 @@ public class CssEngineTestVariants {
   }
 
   @Test
+  public void nthChild() {
+    class Subject extends CssSubject {
+      @Override
+      final void classes() {
+        className("nth-child(-n+15):display:none");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .nth-child\\(-n\\+15\\)\\:display\\:none:nth-child(-n+15) { display: none }
+        }
+        """
+    );
+  }
+
+  @Test
   public void star() {
     class Subject extends CssSubject {
       @Override

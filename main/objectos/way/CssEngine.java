@@ -1103,6 +1103,12 @@ final class CssEngine implements Css.StyleSheet.Config, CssEngineScanner.Adapter
       return result;
     }
 
+    result = variantByPseudoClass(name);
+
+    if (result != null) {
+      return result;
+    }
+
     return variantByNameOfGroup(name);
   }
 
@@ -1142,6 +1148,38 @@ final class CssEngine implements Css.StyleSheet.Config, CssEngineScanner.Adapter
     }
 
     return null;
+  }
+
+  private CssVariant variantByPseudoClass(String name) {
+    final int openIndex;
+    openIndex = name.indexOf('(');
+
+    if (openIndex < 0) {
+      return null;
+    }
+
+    final int closeIndex;
+    closeIndex = name.lastIndexOf(')');
+
+    if (closeIndex < 0) {
+      return null;
+    }
+
+    final String maybe;
+    maybe = name.substring(0, openIndex);
+
+    final boolean validName;
+    validName = switch (maybe) {
+      case "nth-child" -> true;
+
+      default -> false;
+    };
+
+    if (!validName) {
+      return null;
+    }
+
+    return new CssVariant.Suffix(":" + name);
   }
 
   private CssVariant variantByNameOfGroup(String name) {
