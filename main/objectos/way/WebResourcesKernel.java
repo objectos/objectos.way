@@ -26,7 +26,6 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.util.Map;
 import java.util.Objects;
-import objectos.way.Http.Exchange;
 
 record WebResourcesKernel(
     Map<String, String> contentTypes,
@@ -67,7 +66,7 @@ record WebResourcesKernel(
     handle(http, file);
   }
 
-  private void handle(Exchange http, Path file) {
+  private void handle(Http.Exchange http, Path file) {
     BasicFileAttributes attributes;
 
     try {

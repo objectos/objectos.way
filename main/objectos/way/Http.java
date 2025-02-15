@@ -564,6 +564,13 @@ public final class Http {
      */
     String header(Http.HeaderName name);
 
+    /**
+     * Returns the names of the field lines of this request.
+     *
+     * @return the names of the field lines of this request
+     */
+    Set<Http.HeaderName> headerNames();
+
   }
 
   /**

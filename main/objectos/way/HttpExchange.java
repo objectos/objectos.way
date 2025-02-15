@@ -32,11 +32,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Clock;
 import java.time.ZonedDateTime;
+import java.util.AbstractSet;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HexFormat;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
@@ -1366,6 +1370,63 @@ final class HttpExchange extends HttpModuleSupport implements Http.Exchange, Clo
       }
 
     }
+  }
+
+  @Override
+  public final Set<Http.HeaderName> headerNames() {
+    return new AbstractSet<Http.HeaderName>() {
+      @Override
+      public final int size() {
+        return HttpExchange.this.size();
+      }
+
+      @Override
+      public final Iterator<Http.HeaderName> iterator() {
+        return new Iterator<Http.HeaderName>() {
+
+          private int standard = 0;
+
+          private int standardIndex = 0;
+
+          private final Iterator<Http.HeaderName> unknown = unknownHeaders != null
+              ? unknownHeaders.keySet().iterator()
+              : Collections.emptyIterator();
+
+          @Override
+          public final Http.HeaderName next() {
+            if (!hasNext()) {
+              throw new NoSuchElementException();
+            }
+
+            if (standard < standardHeadersCount) {
+              while (standardIndex < standardHeaders.length) {
+                HttpHeader maybe;
+                maybe = standardHeaders[standardIndex++];
+
+                if (maybe == null) {
+                  continue;
+                }
+
+                standard++;
+
+                return maybe.name;
+              }
+            }
+
+            return unknown.next();
+          }
+
+          @Override
+          public final boolean hasNext() {
+            if (standard < standardHeadersCount) {
+              return true;
+            }
+
+            return unknown.hasNext();
+          }
+        };
+      }
+    };
   }
 
   public final int size() {

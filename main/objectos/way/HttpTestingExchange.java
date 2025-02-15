@@ -134,6 +134,15 @@ final class HttpTestingExchange extends HttpModuleSupport implements Http.Testin
   }
 
   @Override
+  public final Set<Http.HeaderName> headerNames() {
+    if (headers == null) {
+      return Set.of();
+    } else {
+      return headers.keySet();
+    }
+  }
+
+  @Override
   public final Http.Method method() {
     Check.state(method != null, "method was not set");
 
