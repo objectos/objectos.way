@@ -110,8 +110,12 @@ enum HttpHeaderName implements Http.HeaderName {
 
   private final String capitalized;
 
+  private final HttpHeaderType type;
+
   private HttpHeaderName(String capitalized, HttpHeaderType type) {
     this.capitalized = capitalized;
+
+    this.type = type;
   }
 
   public static HttpHeaderName findByName(String name) {
@@ -131,9 +135,17 @@ enum HttpHeaderName implements Http.HeaderName {
     return ordinal();
   }
 
+  public final boolean isResponseOnly() {
+    return type == HttpHeaderType.RESPONSE;
+  }
+
   @Override
   public final String capitalized() {
     return capitalized;
+  }
+
+  public final HttpHeaderType type() {
+    return type;
   }
 
 }

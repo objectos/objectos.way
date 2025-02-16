@@ -353,7 +353,7 @@ public final class Http {
   /**
    * An HTTP header name.
    */
-  public sealed interface HeaderName permits HttpHeaderName, HttpHeaderNameCustom {
+  public sealed interface HeaderName permits HttpHeaderName, HttpHeaderNameUnknown {
 
     /**
      * The {@code Accept-Encoding} header name.
@@ -429,19 +429,6 @@ public final class Http {
      * The {@code Way-Requst} header name.
      */
     HeaderName WAY_REQUEST = HttpHeaderName.WAY_REQUEST;
-
-    static HeaderName create(String name) {
-      Objects.requireNonNull(name, "name == null");
-
-      HeaderName headerName;
-      headerName = HttpHeaderName.findByName(name);
-
-      if (headerName == null) {
-        headerName = new HttpHeaderNameCustom(name);
-      }
-
-      return headerName;
-    }
 
     /**
      * The index of this header name.
@@ -565,20 +552,13 @@ public final class Http {
     String header(Http.HeaderName name);
 
     /**
-     * Returns the names of the field lines of this request.
+     * Returns a formatted string representation of the headers of this HTTP
+     * request message.
      *
-     * @return the names of the field lines of this request
+     * @return a formatted string representation of the headers of this HTTP
+     *         request message.
      */
-    Set<Http.HeaderName> headerNames();
-
-    /**
-     * Returns a string representation of the headers of this HTTP request
-     * message.
-     *
-     * @return a string representation of the headers of this HTTP request
-     *         message.
-     */
-    //String toStringRequestHeaders();
+    String toRequestHeadersText();
 
   }
 

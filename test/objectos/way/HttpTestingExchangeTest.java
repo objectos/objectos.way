@@ -19,7 +19,6 @@ import static org.testng.Assert.assertEquals;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Set;
 import objectos.way.Web.FormData;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -78,14 +77,11 @@ public class HttpTestingExchangeTest {
     assertEquals(http.header(Http.HeaderName.CONTENT_LENGTH), null);
     assertEquals(http.header(Http.HeaderName.USER_AGENT), "first");
 
-    assertEquals(
-        http.headerNames(),
-
-        Set.of(
-            Http.HeaderName.CONTENT_TYPE,
-            Http.HeaderName.USER_AGENT
-        )
-    );
+    assertEquals(http.toRequestHeadersText(), """
+    Content-Type: application/x-www-form-urlencoded
+    User-Agent: first
+    User-Agent: second
+    """);
   }
 
   @Test(description = "config.header should reject null names", expectedExceptions = NullPointerException.class)
@@ -110,19 +106,16 @@ public class HttpTestingExchangeTest {
   public void header04() {
     Http.TestingExchange http;
     http = Http.TestingExchange.create(config -> {
-      config.header(Http.HeaderName.create("Foo"), "bar");
-      config.header(Http.HeaderName.create("Foo"), "another bar");
-      config.header(Http.HeaderName.create("Name"), "some value");
+      config.header(new HttpHeaderNameUnknown("Foo"), "bar");
+      config.header(new HttpHeaderNameUnknown("Foo"), "another bar");
+      config.header(new HttpHeaderNameUnknown("Name"), "some value");
     });
 
-    assertEquals(
-        http.headerNames(),
-
-        Set.of(
-            Http.HeaderName.create("Foo"),
-            Http.HeaderName.create("Name")
-        )
-    );
+    assertEquals(http.toRequestHeadersText(), """
+    Foo: bar
+    Foo: another bar
+    Name: some value
+    """);
   }
 
   private final Http.Handler moduleInterop = new Http.Module() {

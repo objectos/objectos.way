@@ -251,10 +251,11 @@ public class HttpExchangeTest {
       assertEquals(parse.isError(), false);
 
       // headers
-      assertEquals(http.size(), 3);
-      assertEquals(http.header(Http.HeaderName.HOST), "www.example.com");
-      assertEquals(http.header(Http.HeaderName.CONNECTION), "close");
-      assertEquals(http.header(Http.HeaderName.create("Foo")), "bar");
+      assertEquals(http.toRequestHeadersText(), """
+      Host: www.example.com
+      Connection: close
+      Foo: bar
+      """);
 
       // response phase
       byte[] msg;
@@ -316,10 +317,11 @@ public class HttpExchangeTest {
       assertEquals(http.queryParamNames(), Set.of());
 
       // headers
-      assertEquals(http.size(), 3);
-      assertEquals(http.header(Http.HeaderName.HOST), "www.example.com");
-      assertEquals(http.header(Http.HeaderName.CONNECTION), "close");
-      assertEquals(http.header(Http.HeaderName.create("Foo")), "bar");
+      assertEquals(http.toRequestHeadersText(), """
+      Host: www.example.com
+      Connection: close
+      Foo: bar
+      """);
 
       // response phase
       dir = ObjectosHttp.createTempDir();
@@ -1111,6 +1113,53 @@ public class HttpExchangeTest {
       assertEquals(http.header(Http.HeaderName.CONTENT_LENGTH), "24");
       assertEquals(http.header(Http.HeaderName.CONTENT_TYPE), "application/x-www-form-urlencoded");
       assertEquals(http.header(Http.HeaderName.WAY_REQUEST), "true");
+    } catch (IOException e) {
+      throw new AssertionError("Failed with IOException", e);
+    }
+  }
+
+  @Test(description = """
+  Test all standard header request names
+  """)
+  public void testCase025() {
+    StringBuilder req;
+    req = new StringBuilder();
+
+    req.append("GET / HTTP/1.1\r\n");
+
+    for (int idx = 0, size = HttpHeaderName.standardNamesSize(); idx < size; idx++) {
+      HttpHeaderName name;
+      name = HttpHeaderName.standardName(idx);
+
+      if (!name.isResponseOnly()) {
+        req.append(name.capitalized());
+        req.append(": ");
+        req.append(Integer.toString(idx));
+        req.append("\r\n");
+      }
+    }
+
+    req.append("\r\n");
+    req.append("\r\n");
+
+    TestableSocket socket;
+    socket = TestableSocket.of(req.toString());
+
+    try (HttpExchange http = new HttpExchange(socket, 128, 256, Clock.systemDefaultZone(), TestingNoteSink.INSTANCE)) {
+      ParseStatus parse;
+      parse = http.parse();
+
+      assertEquals(parse.isError(), false);
+
+      // headers
+      for (int idx = 0, size = HttpHeaderName.standardNamesSize(); idx < size; idx++) {
+        HttpHeaderName name;
+        name = HttpHeaderName.standardName(idx);
+
+        if (!name.isResponseOnly()) {
+          assertEquals(http.header(name), Integer.toString(idx));
+        }
+      }
     } catch (IOException e) {
       throw new AssertionError("Failed with IOException", e);
     }

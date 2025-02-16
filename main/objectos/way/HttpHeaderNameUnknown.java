@@ -15,11 +15,11 @@
  */
 package objectos.way;
 
-final class HttpHeaderNameCustom implements Http.HeaderName {
+final class HttpHeaderNameUnknown implements Http.HeaderName {
 
   private final String capitalized;
 
-  public HttpHeaderNameCustom(String capitalized) {
+  public HttpHeaderNameUnknown(String capitalized) {
     this.capitalized = capitalized;
   }
 
@@ -35,7 +35,7 @@ final class HttpHeaderNameCustom implements Http.HeaderName {
 
   @Override
   public final boolean equals(Object obj) {
-    return obj == this || obj instanceof HttpHeaderNameCustom that
+    return obj == this || obj instanceof HttpHeaderNameUnknown that
         && capitalized.equals(that.capitalized);
   }
 

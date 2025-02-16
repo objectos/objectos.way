@@ -75,6 +75,11 @@ class HttpHeader {
     return value;
   }
 
+  @Override
+  public final String toString() {
+    return name.capitalized() + ": " + get();
+  }
+
   public final long unsignedLongValue() {
     int thisLength;
     thisLength = end - start;

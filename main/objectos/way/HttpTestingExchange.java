@@ -133,13 +133,51 @@ final class HttpTestingExchange extends HttpModuleSupport implements Http.Testin
     };
   }
 
+  @SuppressWarnings("unchecked")
   @Override
-  public final Set<Http.HeaderName> headerNames() {
-    if (headers == null) {
-      return Set.of();
-    } else {
-      return headers.keySet();
+  public final String toRequestHeadersText() {
+    final StringBuilder sb;
+    sb = new StringBuilder();
+
+    if (headers != null) {
+
+      for (var entry : headers.entrySet()) {
+
+        final HeaderName name;
+        name = entry.getKey();
+
+        final Object value;
+        value = entry.getValue();
+
+        switch (value) {
+          case String s -> {
+            sb.append(name.capitalized());
+            sb.append(": ");
+            sb.append(s);
+            sb.append("\n");
+          }
+
+          case List<?> l -> {
+            List<String> list = (List<String>) l;
+
+            for (var s : list) {
+              sb.append(name.capitalized());
+              sb.append(": ");
+              sb.append(s);
+              sb.append("\n");
+            }
+          }
+
+          default -> throw new AssertionError(
+              "Type should not have been put into the map: " + value.getClass()
+          );
+        }
+
+      }
+
     }
+
+    return sb.toString();
   }
 
   @Override

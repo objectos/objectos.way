@@ -32,20 +32,31 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Clock;
 import java.time.ZonedDateTime;
-import java.util.AbstractSet;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.HexFormat;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 
 final class HttpExchange extends HttpModuleSupport implements Http.Exchange, Closeable {
+
+  private record Notes(
+      Note.Ref2<String, String> hexdump
+  ) {
+
+    static Notes get() {
+      final Class<?> s;
+      s = Http.Exchange.class;
+
+      return new Notes(
+          Note.Ref2.create(s, "Hexdump", Note.ERROR)
+      );
+    }
+
+  }
 
   public enum ParseStatus {
     // keep going
@@ -100,20 +111,6 @@ final class HttpExchange extends HttpModuleSupport implements Http.Exchange, Clo
     }
   }
 
-  private record Notes(
-      Note.Ref2<String, String> hexdump
-  ) {
-
-    static Notes get() {
-      Class<?> s = Http.Exchange.class;
-
-      return new Notes(
-          Note.Ref2.create(s, "Hexdump", Note.ERROR)
-      );
-    }
-
-  }
-
   private enum RequestBodyKind {
     EMPTY,
 
@@ -163,11 +160,11 @@ final class HttpExchange extends HttpModuleSupport implements Http.Exchange, Clo
 
   Http.HeaderName headerName;
 
-  HttpHeader[] standardHeaders;
+  UtilList<HttpHeader> headers;
 
-  int standardHeadersCount;
+  Map<HttpHeaderName, HttpHeader> standardHeaders;
 
-  Map<Http.HeaderName, HttpHeader> unknownHeaders;
+  private boolean standardHeadersReady;
 
   // RequestLine
 
@@ -414,15 +411,15 @@ final class HttpExchange extends HttpModuleSupport implements Http.Exchange, Clo
   private void resetHeaders() {
     headerName = null;
 
+    if (headers != null) {
+      headers.clear();
+    }
+
     if (standardHeaders != null) {
-      Arrays.fill(standardHeaders, null);
+      standardHeaders.clear();
     }
 
-    standardHeadersCount = 0;
-
-    if (unknownHeaders != null) {
-      unknownHeaders.clear();
-    }
+    standardHeadersReady = false;
   }
 
   private void resetRequestBody() {
@@ -769,38 +766,42 @@ final class HttpExchange extends HttpModuleSupport implements Http.Exchange, Clo
 
     switch (first) {
       case 'A' -> parseHeaderName0(
-          Http.HeaderName.ACCEPT_ENCODING
+          HttpHeaderName.ACCEPT_ENCODING
       );
 
       case 'C' -> parseHeaderName0(
-          Http.HeaderName.CONNECTION,
-          Http.HeaderName.CONTENT_LENGTH,
-          Http.HeaderName.CONTENT_TYPE,
-          Http.HeaderName.COOKIE
+          HttpHeaderName.CONNECTION,
+          HttpHeaderName.CONTENT_LENGTH,
+          HttpHeaderName.CONTENT_TYPE,
+          HttpHeaderName.COOKIE
       );
 
       case 'D' -> parseHeaderName0(
-          Http.HeaderName.DATE
+          HttpHeaderName.DATE
       );
 
       case 'F' -> parseHeaderName0(
-          Http.HeaderName.FROM
+          HttpHeaderName.FROM
       );
 
       case 'H' -> parseHeaderName0(
-          Http.HeaderName.HOST
+          HttpHeaderName.HOST
+      );
+
+      case 'I' -> parseHeaderName0(
+          HttpHeaderName.IF_NONE_MATCH
       );
 
       case 'T' -> parseHeaderName0(
-          Http.HeaderName.TRANSFER_ENCODING
+          HttpHeaderName.TRANSFER_ENCODING
       );
 
       case 'U' -> parseHeaderName0(
-          Http.HeaderName.USER_AGENT
+          HttpHeaderName.USER_AGENT
       );
 
       case 'W' -> parseHeaderName0(
-          Http.HeaderName.WAY_REQUEST
+          HttpHeaderName.WAY_REQUEST
       );
     }
   }
@@ -827,9 +828,9 @@ final class HttpExchange extends HttpModuleSupport implements Http.Exchange, Clo
     STD_HEADER_NAME_BYTES = map;
   }
 
-  private void parseHeaderName0(Http.HeaderName candidate) {
+  private void parseHeaderName0(HttpHeaderName candidate) {
     int index;
-    index = candidate.index();
+    index = candidate.ordinal();
 
     final byte[] candidateBytes;
     candidateBytes = STD_HEADER_NAME_BYTES[index];
@@ -862,8 +863,7 @@ final class HttpExchange extends HttpModuleSupport implements Http.Exchange, Clo
     headerName = candidate;
   }
 
-  private void parseHeaderName0(Http.HeaderName c0, Http.HeaderName c1, Http.HeaderName c2,
-      Http.HeaderName c3) {
+  private void parseHeaderName0(HttpHeaderName c0, HttpHeaderName c1, HttpHeaderName c2, HttpHeaderName c3) {
     parseHeaderName0(c0);
 
     if (headerName != null) {
@@ -909,7 +909,7 @@ final class HttpExchange extends HttpModuleSupport implements Http.Exchange, Clo
     String name;
     name = bufferToString(startIndex, colonIndex);
 
-    headerName = Http.HeaderName.create(name);
+    headerName = new HttpHeaderNameUnknown(name);
 
     // resume immediately after the colon
     bufferIndex = colonIndex + 1;
@@ -929,48 +929,14 @@ final class HttpExchange extends HttpModuleSupport implements Http.Exchange, Clo
       throw new UnsupportedOperationException("Implement me");
     }
 
-    int index;
-    index = headerName.index();
+    final HttpHeader header;
+    header = new HttpHeader(headerName, this, startIndex, endIndex);
 
-    if (index >= 0) {
-      if (standardHeaders == null) {
-        int size;
-        size = HttpHeaderName.standardNamesSize();
-
-        standardHeaders = new HttpHeader[size];
-      }
-
-      HttpHeader header;
-      header = standardHeaders[index];
-
-      if (header == null) {
-        header = new HttpHeader(headerName, this, startIndex, endIndex);
-
-        standardHeadersCount++;
-      } else {
-        header = header.add(startIndex, endIndex);
-      }
-
-      standardHeaders[index] = header;
-    } else {
-      if (unknownHeaders == null) {
-        unknownHeaders = new HashMap<>();
-      }
-
-      Http.HeaderName name;
-      name = headerName;
-
-      HttpHeader header;
-      header = unknownHeaders.get(name);
-
-      if (header == null) {
-        header = new HttpHeader(headerName, this, startIndex, endIndex);
-      } else {
-        header = header.add(startIndex, endIndex);
-      }
-
-      unknownHeaders.put(name, header);
+    if (headers == null) {
+      headers = new UtilList<>();
     }
+
+    headers.add(header);
   }
 
   final void hexDump() {
@@ -1039,7 +1005,7 @@ final class HttpExchange extends HttpModuleSupport implements Http.Exchange, Clo
 
   final void parseRequestBody() throws IOException {
     HttpHeader contentLength;
-    contentLength = headerUnchecked(Http.HeaderName.CONTENT_LENGTH);
+    contentLength = headerUnchecked(HttpHeaderName.CONTENT_LENGTH);
 
     if (contentLength != null) {
       long value;
@@ -1081,7 +1047,7 @@ final class HttpExchange extends HttpModuleSupport implements Http.Exchange, Clo
     }
 
     HttpHeader transferEncoding;
-    transferEncoding = headerUnchecked(Http.HeaderName.TRANSFER_ENCODING);
+    transferEncoding = headerUnchecked(HttpHeaderName.TRANSFER_ENCODING);
 
     if (transferEncoding != null) {
       throw new UnsupportedOperationException("Implement me");
@@ -1106,7 +1072,7 @@ final class HttpExchange extends HttpModuleSupport implements Http.Exchange, Clo
     }
 
     HttpHeader connection;
-    connection = headerUnchecked(Http.HeaderName.CONNECTION);
+    connection = headerUnchecked(HttpHeaderName.CONNECTION);
 
     if (connection != null) {
       if (connection.contentEquals(KEEP_ALIVE_BYTES)) {
@@ -1334,124 +1300,64 @@ final class HttpExchange extends HttpModuleSupport implements Http.Exchange, Clo
 
   @Override
   public final String header(Http.HeaderName name) {
-    Check.notNull(name, "name == null");
+    Objects.requireNonNull(name, "name == null");
 
-    int index;
-    index = name.index();
+    final HttpHeader maybe;
+    maybe = switch (name) {
+      case HttpHeaderName std -> headerUnchecked(std);
 
-    if (index >= 0) {
-
-      if (standardHeaders == null) {
-        return null;
-      }
-
-      HttpHeader maybe;
-      maybe = standardHeaders[index];
-
-      if (maybe != null) {
-        return maybe.get();
-      } else {
-        return null;
-      }
-
-    } else {
-
-      if (unknownHeaders == null) {
-        return null;
-      }
-
-      HttpHeader maybe;
-      maybe = unknownHeaders.get(name);
-
-      if (maybe != null) {
-        return maybe.get();
-      } else {
-        return null;
-      }
-
-    }
-  }
-
-  @Override
-  public final Set<Http.HeaderName> headerNames() {
-    return new AbstractSet<Http.HeaderName>() {
-      @Override
-      public final int size() {
-        return HttpExchange.this.size();
-      }
-
-      @Override
-      public final Iterator<Http.HeaderName> iterator() {
-        return new Iterator<Http.HeaderName>() {
-
-          private int standard = 0;
-
-          private int standardIndex = 0;
-
-          private final Iterator<Http.HeaderName> unknown = unknownHeaders != null
-              ? unknownHeaders.keySet().iterator()
-              : Collections.emptyIterator();
-
-          @Override
-          public final Http.HeaderName next() {
-            if (!hasNext()) {
-              throw new NoSuchElementException();
-            }
-
-            if (standard < standardHeadersCount) {
-              while (standardIndex < standardHeaders.length) {
-                HttpHeader maybe;
-                maybe = standardHeaders[standardIndex++];
-
-                if (maybe == null) {
-                  continue;
-                }
-
-                standard++;
-
-                return maybe.name;
-              }
-            }
-
-            return unknown.next();
-          }
-
-          @Override
-          public final boolean hasNext() {
-            if (standard < standardHeadersCount) {
-              return true;
-            }
-
-            return unknown.hasNext();
-          }
-        };
-      }
+      case HttpHeaderNameUnknown unknown -> headerUnchecked(unknown);
     };
+
+    if (maybe == null) {
+      return null;
+    }
+
+    return maybe.get();
   }
 
   public final int size() {
-    int size = 0;
-
-    if (standardHeaders != null) {
-      size += standardHeadersCount;
-    }
-
-    if (unknownHeaders != null) {
-      size += unknownHeaders.size();
-    }
-
-    return size;
+    return headers != null ? headers.size() : 0;
   }
 
-  final HttpHeader headerUnchecked(Http.HeaderName name) {
-    if (standardHeaders == null) {
-      return null;
-    } else {
-      int index;
-      index = name.index();
+  @Override
+  public final String toRequestHeadersText() {
+    return headers != null ? headers.join("\n", "", "\n") : "";
+  }
 
-      return standardHeaders[index];
+  private HttpHeader headerUnchecked(HttpHeaderName name) {
+    outer: if (!standardHeadersReady) {
+
+      standardHeadersReady = true;
+
+      standardHeaders = new EnumMap<>(HttpHeaderName.class);
+
+      if (headers == null) {
+        break outer;
+      }
+
+      for (HttpHeader header : headers) {
+
+        if (header.name instanceof HttpHeaderName std) {
+          final HttpHeader maybeExisting;
+          maybeExisting = standardHeaders.put(std, header);
+
+          if (maybeExisting == null) {
+            continue;
+          }
+
+          throw new UnsupportedOperationException("Implement me");
+        }
+
+      }
+
     }
+
+    return standardHeaders.get(name);
+  }
+
+  private HttpHeader headerUnchecked(HttpHeaderNameUnknown name) {
+    throw new UnsupportedOperationException("Implement me");
   }
 
   // ##################################################################

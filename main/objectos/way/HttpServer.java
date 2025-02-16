@@ -42,7 +42,9 @@ final class HttpServer implements Http.Server, Runnable {
   ) implements Http.Server.Notes {
 
     static Notes get() {
-      Class<?> s = Http.Server.class;
+      final Class<?> s;
+      s = Http.Server.class;
+
       return new Notes(
           Note.Ref1.create(s, "Started", Note.INFO),
           Note.Ref0.create(s, "Stopped", Note.INFO),
