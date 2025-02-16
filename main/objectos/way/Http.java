@@ -353,7 +353,7 @@ public final class Http {
   /**
    * An HTTP header name.
    */
-  public sealed interface HeaderName permits HttpHeaderName {
+  public sealed interface HeaderName permits HttpHeaderName, HttpHeaderNameCustom {
 
     /**
      * The {@code Accept-Encoding} header name.
@@ -437,7 +437,7 @@ public final class Http {
       headerName = HttpHeaderName.findByName(name);
 
       if (headerName == null) {
-        headerName = new HttpHeaderName(name);
+        headerName = new HttpHeaderNameCustom(name);
       }
 
       return headerName;
@@ -570,6 +570,15 @@ public final class Http {
      * @return the names of the field lines of this request
      */
     Set<Http.HeaderName> headerNames();
+
+    /**
+     * Returns a string representation of the headers of this HTTP request
+     * message.
+     *
+     * @return a string representation of the headers of this HTTP request
+     *         message.
+     */
+    //String toStringRequestHeaders();
 
   }
 
@@ -1479,10 +1488,6 @@ public final class Http {
 
   static byte[] utf8(String value) {
     return value.getBytes(StandardCharsets.UTF_8);
-  }
-
-  static int headerNameSize() {
-    return HttpHeaderName.standardNamesSize();
   }
 
   static void init() {

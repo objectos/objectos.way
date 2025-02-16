@@ -24,9 +24,9 @@ public class HttpHeaderNameTest {
   @SuppressWarnings("unlikely-arg-type")
   @Test(description = "equals() should work fine")
   public void testCase01() {
-    HttpHeaderName foo1 = new HttpHeaderName("Foo");
-    HttpHeaderName foo2 = new HttpHeaderName("Foo");
-    HttpHeaderName bar = new HttpHeaderName("Bar");
+    Http.HeaderName foo1 = new HttpHeaderNameCustom("Foo");
+    Http.HeaderName foo2 = new HttpHeaderNameCustom("Foo");
+    Http.HeaderName bar = new HttpHeaderNameCustom("Bar");
 
     assertEquals(foo1.equals(foo2), true);
     assertEquals(foo2.equals(foo1), true);

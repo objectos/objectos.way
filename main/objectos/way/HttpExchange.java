@@ -809,7 +809,7 @@ final class HttpExchange extends HttpModuleSupport implements Http.Exchange, Clo
 
   static {
     int size;
-    size = Http.headerNameSize();
+    size = HttpHeaderName.standardNamesSize();
 
     byte[][] map;
     map = new byte[size][];
