@@ -90,6 +90,11 @@ public class CssEngineTestFormatValue {
     assertEquals(engine.formatValue("12.345s"), "12.345s");
   }
 
+  @Test(description = "dimension: calc")
+  public void dimension06() {
+    assertEquals(engine.formatValue("calc(100%_-_192px)"), "calc(100% - 192px)");
+  }
+
   @Test(description = "keyword: len=1")
   public void keyword01() {
     assertEquals(engine.formatValue("z"), "z");
@@ -168,6 +173,11 @@ public class CssEngineTestFormatValue {
   @Test(description = "rx: negative value")
   public void rx06() {
     assertEquals(engine.formatValue("-10rx"), "calc(-10 / var(--rx) * 1rem)");
+  }
+
+  @Test(description = "rx: calc")
+  public void rx07() {
+    assertEquals(engine.formatValue("calc(100%_-_192rx)"), "calc(100% - calc(192 / var(--rx) * 1rem))");
   }
 
   @Test(description = "slash")

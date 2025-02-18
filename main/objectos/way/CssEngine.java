@@ -1249,374 +1249,371 @@ final class CssEngine implements Css.StyleSheet.Config, CssEngineScanner.Adapter
 
   @Lang.VisibleForTesting
   final String formatValue(String value) {
-    enum FormatValue {
+    sb.setLength(0);
 
-      NORMAL,
+    entryIndex = 0;
+
+    int index = 0;
+
+    final int length;
+    length = value.length();
+
+    while (index < length) {
+      final char c;
+      c = value.charAt(index);
+
+      if (Ascii.isDigit(c)) {
+        index = formatValueNumeric(value, index);
+      }
+
+      else if (Ascii.isLetter(c)) {
+        index = formatValueKeyword(value, index);
+      }
+
+      else if (c == '-') {
+        index = formatValueNegative(value, index);
+      }
+
+      else if (isWhitespace(c)) {
+        index = formatValueWhitespace(value, index);
+      }
+
+      else {
+        index++;
+      }
+    }
+
+    if (sb.isEmpty()) {
+      return value;
+    }
+
+    formatValueNormal(value, length);
+
+    return sb.toString();
+  }
+
+  private int formatValueKeyword(String value, int index) {
+    final int length;
+    length = value.length();
+
+    // where the (possibly) keyword begins
+    final int beginIndex;
+    beginIndex = index;
+
+    // consume initial char
+    index++;
+
+    enum State {
 
       KEYWORD,
 
-      COLOR_SLASH,
+      SLASH,
 
-      COLOR_OPACITY,
+      OPACITY,
 
-      INTEGER,
-
-      INTEGER_DOT,
-
-      MINUS,
-
-      DECIMAL,
-
-      NUMBER_R,
-
-      RX,
-
-      SPACE,
-
-      UNKNOWN;
+      INVALID;
 
     }
 
-    // index of the first char of the word
-    int wordStart;
-    wordStart = 0;
+    State state;
+    state = State.KEYWORD;
 
-    FormatValue parser;
-    parser = FormatValue.NORMAL;
+    int slashIndex;
+    slashIndex = length;
 
-    String colorName;
-    colorName = null;
+    while (index < length) {
+      final char c;
+      c = value.charAt(index);
 
-    int opacity;
-    opacity = 0;
+      if (isBoundary(c)) {
+        break;
+      }
 
-    sb.setLength(0);
-
-    for (int idx = 0, len = value.length(); idx < len; idx++) {
-      char c;
-      c = value.charAt(idx);
-
-      switch (parser) {
-        case NORMAL -> {
-          if (c == '_') {
-            parser = FormatValue.NORMAL;
-          }
-
-          else if (Ascii.isLetter(c)) {
-            parser = FormatValue.KEYWORD;
-
-            wordStart = idx;
-          }
-
-          else if (Ascii.isDigit(c)) {
-            parser = FormatValue.INTEGER;
-
-            wordStart = idx;
-          }
-
-          else if (c == '-') {
-            parser = FormatValue.MINUS;
-
-            wordStart = idx;
-          }
-
-          else {
-            parser = FormatValue.UNKNOWN;
-
-            wordStart = idx;
-          }
-        }
-
+      switch (state) {
         case KEYWORD -> {
-          if (c == '_') {
-            parser = FormatValue.SPACE;
+          if (c == '/') {
+            state = State.SLASH;
 
-            String word;
-            word = value.substring(wordStart, idx);
-
-            String formatted;
-            formatted = formatResultKeyword(word);
-
-            sb.append(formatted);
-          }
-
-          else if (Ascii.isLetterOrDigit(c) || c == '-') {
-            parser = FormatValue.KEYWORD;
-          }
-
-          else if (c == '/') {
-            String word;
-            word = value.substring(wordStart, idx);
-
-            if (colorKeywords.contains(word)) {
-              parser = FormatValue.COLOR_SLASH;
-
-              colorName = word;
-
-              opacity = 0;
-            } else {
-              parser = FormatValue.KEYWORD;
-            }
-          }
-
-          else {
-            parser = FormatValue.UNKNOWN;
+            slashIndex = index;
+          } else {
+            state = State.KEYWORD;
           }
         }
 
-        case COLOR_SLASH -> {
-          if (c == '_') {
-            parser = FormatValue.UNKNOWN;
-
-            String word;
-            word = value.substring(wordStart, idx);
-
-            sb.append(word);
-          }
-
-          else if (Ascii.isDigit(c)) {
-            parser = FormatValue.COLOR_OPACITY;
-
-            int digit;
-            digit = Ascii.digitToInt(c);
-
-            opacity += digit;
-          }
-
-          else {
-            parser = FormatValue.UNKNOWN;
+        case SLASH, OPACITY -> {
+          if (Ascii.isDigit(c)) {
+            state = State.OPACITY;
+          } else {
+            state = State.INVALID;
           }
         }
 
-        case COLOR_OPACITY -> {
-          if (c == '_') {
-            parser = FormatValue.SPACE;
+        case INVALID -> {
+          state = State.INVALID;
+        }
+      }
 
-            formatResultColorOpacity(colorName, opacity);
-          }
+      index++;
+    }
 
-          else if (Ascii.isDigit(c)) {
-            parser = FormatValue.COLOR_OPACITY;
+    switch (state) {
+      case KEYWORD -> {
+        // extract keyword
+        final String maybe;
+        maybe = value.substring(beginIndex, index);
 
-            opacity *= 10;
+        // check for match
+        final String keyword;
+        keyword = keywords.get(maybe);
 
-            int digit;
-            digit = Ascii.digitToInt(c);
-
-            opacity += digit;
-          }
-
-          else {
-            parser = FormatValue.UNKNOWN;
-          }
+        if (keyword == null) {
+          break;
         }
 
+        formatValueNormal(value, beginIndex);
+
+        sb.append(keyword);
+
+        entryIndex = index;
+      }
+
+      case OPACITY -> {
+        // extract keyword
+        final String maybe;
+        maybe = value.substring(beginIndex, slashIndex);
+
+        // check for match
+        final String keyword;
+        keyword = keywords.get(maybe);
+
+        if (keyword == null) {
+          break;
+        }
+
+        formatValueNormal(value, beginIndex);
+
+        final String opacity;
+        opacity = value.substring(slashIndex + 1, index);
+
+        sb.append("color-mix(in oklab, ");
+
+        sb.append(keyword);
+
+        sb.append(' ');
+
+        sb.append(opacity);
+
+        sb.append("%, transparent)");
+
+        entryIndex = index;
+      }
+
+      case SLASH, INVALID -> {}
+    }
+
+    return index;
+  }
+
+  private void formatValueNormal(String value, int endIndex) {
+    sb.append(value, entryIndex, endIndex);
+  }
+
+  private int formatValueNegative(String value, int index) {
+    final int length;
+    length = value.length();
+
+    // where the number begins
+    final int beginIndex;
+    beginIndex = index;
+
+    // consume '-'
+    index++;
+
+    if (index >= length) {
+      // there're no more chars
+      return index;
+    }
+
+    final char c;
+    c = value.charAt(index);
+
+    if (!Ascii.isDigit(c)) {
+      return index;
+    }
+
+    return formatValueNumeric(value, beginIndex);
+  }
+
+  private enum FormatValueNumeric {
+
+    INTEGER,
+
+    DOT,
+
+    DECIMAL;
+
+  }
+
+  private int formatValueNumeric(String value, int index) {
+    final int length;
+    length = value.length();
+
+    // where the number begins
+    final int beginIndex;
+    beginIndex = index;
+
+    // consume '-' or initial digit
+    index++;
+
+    // initial state
+    FormatValueNumeric state;
+    state = FormatValueNumeric.INTEGER;
+
+    loop: while (index < length) {
+      final char c;
+      c = value.charAt(index);
+
+      switch (state) {
         case INTEGER -> {
-          if (c == '_') {
-            parser = FormatValue.SPACE;
-
-            String word;
-            word = value.substring(wordStart, idx);
-
-            sb.append(word);
-          }
-
-          else if (c == 'r') {
-            parser = FormatValue.NUMBER_R;
-          }
-
-          else if (Ascii.isDigit(c)) {
-            parser = FormatValue.INTEGER;
-          }
-
-          else if (c == '.') {
-            parser = FormatValue.DECIMAL;
-          }
-
-          else {
-            parser = FormatValue.UNKNOWN;
+          if (Ascii.isDigit(c)) {
+            state = FormatValueNumeric.INTEGER;
+            index++;
+          } else if (c == '.') {
+            state = FormatValueNumeric.DOT;
+            index++;
+          } else {
+            break loop;
           }
         }
 
-        case INTEGER_DOT -> {
+        case DOT -> {
           if (Ascii.isDigit(c)) {
-            parser = FormatValue.DECIMAL;
-          }
-
-          else {
-            parser = FormatValue.UNKNOWN;
-          }
-        }
-
-        case MINUS -> {
-          if (Ascii.isDigit(c)) {
-            parser = FormatValue.INTEGER;
-          }
-
-          else {
-            parser = FormatValue.UNKNOWN;
+            state = FormatValueNumeric.DECIMAL;
+            index++;
+          } else {
+            break loop;
           }
         }
 
         case DECIMAL -> {
           if (Ascii.isDigit(c)) {
-            parser = FormatValue.DECIMAL;
-          }
-
-          else if (c == 'r') {
-            parser = FormatValue.NUMBER_R;
-          }
-
-          else {
-            parser = FormatValue.UNKNOWN;
-          }
-        }
-
-        case NUMBER_R -> {
-          if (c == 'x') {
-            parser = FormatValue.RX;
-          }
-
-          else {
-            parser = FormatValue.UNKNOWN;
-          }
-        }
-
-        case RX -> {
-          if (c == '_') {
-            parser = FormatValue.SPACE;
-
-            formatResultRx(value, wordStart, idx);
-          }
-
-          else {
-            parser = FormatValue.UNKNOWN;
-          }
-        }
-
-        case SPACE -> {
-          if (c == '_') {
-            parser = FormatValue.SPACE;
-          }
-
-          else {
-            parser = FormatValue.NORMAL;
-
-            idx--;
-
-            sb.append(' ');
-          }
-        }
-
-        case UNKNOWN -> {
-          if (c == '_') {
-            parser = FormatValue.SPACE;
-
-            String word;
-            word = value.substring(wordStart, idx);
-
-            sb.append(word);
+            state = FormatValueNumeric.DECIMAL;
+            index++;
+          } else {
+            break loop;
           }
         }
       }
     }
 
-    return switch (parser) {
-      case NORMAL -> null; // empty value is invalid
+    // where the (maybe) unit begins
+    final int unitIndex;
+    unitIndex = index;
 
-      case KEYWORD -> {
-        String keyword;
-        keyword = trailer(value, wordStart);
+    while (index < length) {
+      final char c;
+      c = value.charAt(index);
 
-        String formatted;
-        formatted = formatResultKeyword(keyword);
-
-        yield formatResult(formatted);
+      if (isBoundary(c)) {
+        break;
       }
 
-      case COLOR_SLASH -> formatResultDefault(value, wordStart);
-
-      case COLOR_OPACITY -> {
-        formatResultColorOpacity(colorName, opacity);
-
-        yield sb.toString();
-      }
-
-      case INTEGER -> formatResultDefault(value, wordStart);
-
-      case INTEGER_DOT -> value;
-
-      case MINUS -> formatResultDefault(value, wordStart);
-
-      case DECIMAL -> formatResultDefault(value, wordStart);
-
-      case NUMBER_R -> formatResultDefault(value, wordStart);
-
-      case RX -> {
-        formatResultRx(value, wordStart, value.length());
-
-        yield sb.toString();
-      }
-
-      case SPACE -> formatResultDefault(value, wordStart);
-
-      case UNKNOWN -> formatResultDefault(value, wordStart);
-    };
-
-  }
-
-  private String trailer(String value, int wordStart) {
-    return wordStart == 0 ? value : value.substring(wordStart);
-  }
-
-  private String formatResult(String trailer) {
-    if (sb.isEmpty()) {
-      return trailer;
-    } else {
-      sb.append(trailer);
-
-      return sb.toString();
+      index++;
     }
+
+    if (state == FormatValueNumeric.DOT) {
+      // invalid state
+      return index;
+    }
+
+    // maybe rx value?
+
+    final int unitLength;
+    unitLength = index - unitIndex;
+
+    if (unitLength != 2) {
+      return index;
+    }
+
+    final char maybeR;
+    maybeR = value.charAt(unitIndex);
+
+    if (maybeR != 'r') {
+      return index;
+    }
+
+    final char maybeX;
+    maybeX = value.charAt(unitIndex + 1);
+
+    if (maybeX != 'x') {
+      return index;
+    }
+
+    // handle rx value
+
+    // 1) emit normal value (if necessary)
+    formatValueNormal(value, beginIndex);
+
+    // 2) extract numeric value
+    String number;
+    number = value.substring(beginIndex, unitIndex);
+
+    // 3) emit value
+    sb.append("calc(");
+
+    sb.append(number);
+
+    sb.append(" / var(--rx) * 1rem)");
+
+    // 4) update normal index
+    entryIndex = index;
+
+    return index;
   }
 
-  private String formatResultDefault(String value, int wordStart) {
-    String trailer;
-    trailer = trailer(value, wordStart);
+  private int formatValueWhitespace(String value, int index) {
+    final int length;
+    length = value.length();
 
-    return formatResult(trailer);
-  }
+    final int beginIndex;
+    beginIndex = index;
 
-  private void formatResultColorOpacity(String colorName, int opacity) {
-    sb.append("color-mix(in oklab, ");
+    index++;
 
-    String colorValue;
-    colorValue = keywords.get(colorName);
+    while (index < length) {
+      final char c;
+      c = value.charAt(index);
 
-    sb.append(colorValue);
+      if (!isWhitespace(c)) {
+        break;
+      }
+
+      index++;
+    }
+
+    formatValueNormal(value, beginIndex);
 
     sb.append(' ');
 
-    sb.append(opacity);
+    entryIndex = index;
 
-    sb.append("%, transparent)");
+    return index;
   }
 
-  private String formatResultKeyword(String keyword) {
-    return keywords.getOrDefault(keyword, keyword);
+  private boolean isBoundary(char c) {
+    return isSeparator(c) || isWhitespace(c);
   }
 
-  private void formatResultRx(String value, int wordStart, int wordEnd) {
-    int endIndex;
-    endIndex = wordEnd - 2; // remove the rx unit
+  private boolean isSeparator(char c) {
+    return switch (c) {
+      case ',', '(', ')' -> true;
 
-    String rx;
-    rx = value.substring(wordStart, endIndex);
+      default -> false;
+    };
+  }
 
-    sb.append("calc(");
-
-    sb.append(rx);
-
-    sb.append(" / var(--rx) * 1rem)");
+  private boolean isWhitespace(char c) {
+    return c == '_';
   }
 
   // ##################################################################
