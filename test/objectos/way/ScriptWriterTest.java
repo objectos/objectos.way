@@ -90,6 +90,19 @@ public class ScriptWriterTest {
   }
 
   @Test
+  public void elementScroll1() {
+    test(
+        script -> {
+          var foo = script.elementById(FOO);
+          foo.scroll(100, 200);
+        },
+
+        """
+        [["id-1","foo","scroll",100,200]]"""
+    );
+  }
+
+  @Test
   public void elementSubmit() {
     test(
         script -> {

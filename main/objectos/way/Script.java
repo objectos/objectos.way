@@ -127,6 +127,18 @@ public sealed interface Script permits ScriptWriter {
      */
     void attr(Html.AttributeName name, StringQuery value);
 
+    /**
+     * Scrolls the element to the specified {@code x} and {@code y} coordinates.
+     *
+     * @param x
+     *        the pixel along the horizontal axis of the element that you want
+     *        displayed in the upper left.
+     * @param y
+     *        the pixel along the vertical axis of the element that you want
+     *        displayed in the upper left.
+     */
+    void scroll(int x, int y);
+
     void submit();
 
     void toggleClass(String className);

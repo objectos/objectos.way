@@ -144,6 +144,24 @@ final class ScriptWriter implements Script {
     }
 
     @Override
+    public final void scroll(int x, int y) {
+      actionStart();
+
+      methodInvocation();
+
+      comma();
+      stringLiteral("scroll");
+
+      comma();
+      intLiteral(x);
+
+      comma();
+      intLiteral(y);
+
+      actionEnd();
+    }
+
+    @Override
     public final void submit() {
       actionStart();
 
