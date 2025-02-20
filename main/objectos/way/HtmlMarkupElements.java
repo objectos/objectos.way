@@ -19,7 +19,7 @@ sealed abstract class HtmlMarkupElements extends HtmlMarkupAttributes implements
 
   HtmlMarkupElements() {}
 
-  abstract void ambiguous(HtmlAmbiguous name, String value);
+  abstract Html.Instruction.OfAmbiguous ambiguous(HtmlAmbiguous name, String value);
 
   abstract Html.Instruction.OfElement element(Html.ElementName name, Html.Instruction... contents);
 
@@ -205,9 +205,8 @@ sealed abstract class HtmlMarkupElements extends HtmlMarkupAttributes implements
    * @return an instruction representing this attribute or element.
    */
   @Override
-  public final Html.Instruction.OfElement clipPath(String text) {
-    ambiguous(HtmlAmbiguous.CLIPPATH, text);
-    return Html.ELEMENT;
+  public final Html.Instruction.OfAmbiguous clipPath(String text) {
+    return ambiguous(HtmlAmbiguous.CLIPPATH, text);
   }
 
   /**
@@ -518,9 +517,8 @@ sealed abstract class HtmlMarkupElements extends HtmlMarkupAttributes implements
    * @return an instruction representing this attribute or element.
    */
   @Override
-  public final Html.Instruction.OfElement form(String text) {
-    ambiguous(HtmlAmbiguous.FORM, text);
-    return Html.ELEMENT;
+  public final Html.Instruction.OfAmbiguous form(String text) {
+    return ambiguous(HtmlAmbiguous.FORM, text);
   }
 
   /**
@@ -896,9 +894,8 @@ sealed abstract class HtmlMarkupElements extends HtmlMarkupAttributes implements
    * @return an instruction representing this attribute or element.
    */
   @Override
-  public final Html.Instruction.OfElement label(String text) {
-    ambiguous(HtmlAmbiguous.LABEL, text);
-    return Html.ELEMENT;
+  public final Html.Instruction.OfAmbiguous label(String text) {
+    return ambiguous(HtmlAmbiguous.LABEL, text);
   }
 
   /**
@@ -1755,9 +1752,8 @@ sealed abstract class HtmlMarkupElements extends HtmlMarkupAttributes implements
    * @return an instruction representing this attribute or element.
    */
   @Override
-  public final Html.Instruction.OfElement title(String text) {
-    ambiguous(HtmlAmbiguous.TITLE, text);
-    return Html.ELEMENT;
+  public final Html.Instruction.OfAmbiguous title(String text) {
+    return ambiguous(HtmlAmbiguous.TITLE, text);
   }
 
   /**

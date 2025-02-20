@@ -21,6 +21,8 @@ import org.testng.annotations.Test;
 
 public class HtmlTemplateTestAttributes {
 
+  private final Html.Id foo = Html.Id.of("foo");
+
   private final Html.AttributeName dataActive = Html.AttributeName.of("data-active");
 
   @Test
@@ -222,6 +224,29 @@ public class HtmlTemplateTestAttributes {
 
         """
         <form data-on-success='[["stop-propagation-0"]]'></form>
+        """
+    );
+  }
+
+  @Test
+  public void form() {
+    test(
+        new Html.Template() {
+          @Override
+          protected final void render() {
+            form(foo);
+
+            div(
+                input(form("foo")),
+                select(form("foo")),
+                textarea(form("foo"))
+            );
+          }
+        },
+
+        """
+        <form id="foo"></form>
+        <div><input form="foo"><select form="foo"></select><textarea form="foo"></textarea></div>
         """
     );
   }

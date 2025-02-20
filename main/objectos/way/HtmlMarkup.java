@@ -1725,7 +1725,7 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
   }
 
   @Override
-  final void ambiguous(HtmlAmbiguous name, String value) {
+  final Html.Instruction.OfAmbiguous ambiguous(HtmlAmbiguous name, String value) {
     int ordinal;
     ordinal = name.ordinal();
 
@@ -1744,6 +1744,8 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
 
         HtmlByteProto.INTERNAL5
     );
+
+    return Html.ELEMENT;
   }
 
   @Override

@@ -544,6 +544,11 @@ public final class Html {
     sealed interface AsMethod extends Instruction {}
 
     /**
+     * An instruction to generate an ambiguous element in a template.
+     */
+    sealed interface OfAmbiguous extends OfAttribute, OfElement {}
+
+    /**
      * An instruction to generate an HTML attribute in template.
      */
     sealed interface OfAttribute extends AsMethod, OfVoid {}
@@ -588,11 +593,12 @@ public final class Html {
   private static final class HtmlInstruction
       implements
       AttributeOrNoOp,
+      Html.Instruction.OfAmbiguous,
       Html.Instruction.OfElement,
       Html.Instruction.OfFragment {}
 
   static final Html.AttributeOrNoOp ATTRIBUTE = new HtmlInstruction();
-  static final Html.Instruction.OfElement ELEMENT = new HtmlInstruction();
+  static final HtmlInstruction ELEMENT = new HtmlInstruction();
   static final Html.Instruction.OfFragment FRAGMENT = new HtmlInstruction();
   static final Html.AttributeOrNoOp NOOP = new HtmlInstruction();
 
@@ -2498,7 +2504,7 @@ public final class Html {
      *
      * @return an instruction representing this attribute or element.
      */
-    Html.Instruction.OfElement clipPath(String text);
+    Html.Instruction.OfAmbiguous clipPath(String text);
 
     /**
      * Renders the {@code code} element with the specified content.
@@ -2738,7 +2744,7 @@ public final class Html {
      *
      * @return an instruction representing this attribute or element.
      */
-    Html.Instruction.OfElement form(String text);
+    Html.Instruction.OfAmbiguous form(String text);
 
     /**
      * Renders the {@code g} element with the specified content.
@@ -3028,7 +3034,7 @@ public final class Html {
      *
      * @return an instruction representing this attribute or element.
      */
-    Html.Instruction.OfElement label(String text);
+    Html.Instruction.OfAmbiguous label(String text);
 
     /**
      * Renders the {@code legend} element with the specified content.
@@ -3688,7 +3694,7 @@ public final class Html {
      *
      * @return an instruction representing this attribute or element.
      */
-    Html.Instruction.OfElement title(String text);
+    Html.Instruction.OfAmbiguous title(String text);
 
     /**
      * Renders the {@code tr} element with the specified content.
@@ -6323,7 +6329,7 @@ public final class Html {
      *
      * @return an instruction representing this attribute or element.
      */
-    protected final Html.Instruction.OfElement clipPath(String text) {
+    protected final Html.Instruction.OfAmbiguous clipPath(String text) {
       return $elements().clipPath(text);
     }
 
@@ -6611,7 +6617,7 @@ public final class Html {
      *
      * @return an instruction representing this attribute or element.
      */
-    protected final Html.Instruction.OfElement form(String text) {
+    protected final Html.Instruction.OfAmbiguous form(String text) {
       return $elements().form(text);
     }
 
@@ -6959,7 +6965,7 @@ public final class Html {
      *
      * @return an instruction representing this attribute or element.
      */
-    protected final Html.Instruction.OfElement label(String text) {
+    protected final Html.Instruction.OfAmbiguous label(String text) {
       return $elements().label(text);
     }
 
@@ -7751,7 +7757,7 @@ public final class Html {
      *
      * @return an instruction representing this attribute or element.
      */
-    protected final Html.Instruction.OfElement title(String text) {
+    protected final Html.Instruction.OfAmbiguous title(String text) {
       return $elements().title(text);
     }
 

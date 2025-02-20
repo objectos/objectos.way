@@ -27,7 +27,8 @@ enum HtmlAmbiguous {
   FORM(HtmlAttributeName.FORM, HtmlElementName.FORM) {
     @Override
     public final boolean isAttributeOf(Html.ElementName element) {
-      return element == Html.ElementName.SELECT
+      return element == Html.ElementName.INPUT
+          || element == Html.ElementName.SELECT
           || element == Html.ElementName.TEXTAREA;
     }
   },
