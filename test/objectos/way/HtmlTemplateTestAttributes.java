@@ -241,12 +241,17 @@ public class HtmlTemplateTestAttributes {
                 select(form("foo")),
                 textarea(form("foo"))
             );
+
+            div(
+                button(form("foo"))
+            );
           }
         },
 
         """
         <form id="foo"></form>
         <div><input form="foo"><select form="foo"></select><textarea form="foo"></textarea></div>
+        <div><button form="foo"></button></div>
         """
     );
   }
