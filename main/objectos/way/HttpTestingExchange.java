@@ -31,8 +31,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.SequencedMap;
 import java.util.Set;
-import objectos.way.Http.HeaderName;
-import objectos.way.Lang.MediaObject;
 
 final class HttpTestingExchange extends HttpModuleSupport implements Http.TestingExchange {
 
@@ -82,7 +80,7 @@ final class HttpTestingExchange extends HttpModuleSupport implements Http.Testin
   }
 
   @Override
-  public final String responseHeader(HeaderName name) {
+  public final String responseHeader(Http.HeaderName name) {
     Objects.requireNonNull(name, "name == null");
 
     if (responseHeaders == null) {
@@ -143,7 +141,7 @@ final class HttpTestingExchange extends HttpModuleSupport implements Http.Testin
 
       for (var entry : headers.entrySet()) {
 
-        final HeaderName name;
+        final Http.HeaderName name;
         name = entry.getKey();
 
         final Object value;
@@ -424,23 +422,14 @@ final class HttpTestingExchange extends HttpModuleSupport implements Http.Testin
   }
 
   @Override
-  public final void ok() {
-    status(Http.Status.OK);
+  public final void respond(Http.Status status, Lang.MediaObject object) {
+    status(status);
 
-    dateNow();
-
-    send();
-  }
-
-  @Override
-  public final void ok(MediaObject object) {
     String contentType;
     contentType = object.contentType();
 
     byte[] bytes;
     bytes = object.mediaBytes();
-
-    status(Http.Status.OK);
 
     dateNow();
 
@@ -449,6 +438,15 @@ final class HttpTestingExchange extends HttpModuleSupport implements Http.Testin
     header(Http.HeaderName.CONTENT_LENGTH, bytes.length);
 
     responseBody = object;
+  }
+
+  @Override
+  public final void ok() {
+    status(Http.Status.OK);
+
+    dateNow();
+
+    send();
   }
 
   @Override

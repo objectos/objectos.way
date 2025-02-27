@@ -1494,6 +1494,7 @@ final class HttpExchange extends HttpModuleSupport implements Http.Exchange, Clo
   @Override
   public final void status(Http.Status status) {
     checkResponse();
+    Objects.requireNonNull(status, "status == null");
 
     Http.Version version;
     version = Http.Version.HTTP_1_1;
@@ -1833,16 +1834,9 @@ final class HttpExchange extends HttpModuleSupport implements Http.Exchange, Clo
   // 200 OK
 
   @Override
-  public final void ok() {
-    status(Http.Status.OK);
+  public final void respond(Http.Status status, Lang.MediaObject object) {
+    status(status);
 
-    dateNow();
-
-    send();
-  }
-
-  @Override
-  public final void ok(Lang.MediaObject object) {
     String contentType;
     contentType = object.contentType();
 
@@ -1857,8 +1851,6 @@ final class HttpExchange extends HttpModuleSupport implements Http.Exchange, Clo
       throw new NullPointerException("Provided Lang.MediaObject provided a null byte array");
     }
 
-    status(Http.Status.OK);
-
     dateNow();
 
     header(Http.HeaderName.CONTENT_TYPE, contentType);
@@ -1867,6 +1859,16 @@ final class HttpExchange extends HttpModuleSupport implements Http.Exchange, Clo
 
     send(bytes);
   }
+
+  @Override
+  public final void ok() {
+    status(Http.Status.OK);
+
+    dateNow();
+
+    send();
+  }
+
 
   // 404 NOT FOUND
 

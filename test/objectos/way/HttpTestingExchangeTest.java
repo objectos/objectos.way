@@ -221,6 +221,34 @@ public class HttpTestingExchangeTest {
     );
   }
 
+  @Test(description = "respond method")
+  public void testCase03() {
+    class Template extends Html.Template {
+      @Override
+      protected void render() {
+        div("tc02");
+      }
+    }
+
+    Http.TestingExchange http;
+    http = Http.TestingExchange.create(config -> {});
+
+    http.respond(Http.Status.BAD_REQUEST, new Template());
+
+    assertEquals(http.responseStatus(), Http.Status.BAD_REQUEST);
+
+    Html.Template body;
+    body = (Html.Template) http.responseBody();
+
+    assertEquals(
+        body.toString(),
+
+        """
+        <div>tc02</div>
+        """
+    );
+  }
+
   @Test(description = "rawPath")
   public void rawPath01() {
     assertEquals(rawPath("/"), "/");

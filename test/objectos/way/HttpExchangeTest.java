@@ -1165,4 +1165,49 @@ public class HttpExchangeTest {
     }
   }
 
+  @Test(description = """
+  Http.Response.respond(status, object)
+  """)
+  public void testCase026() {
+    TestableSocket socket;
+    socket = TestableSocket.of("""
+    GET /index.html HTTP/1.1\r
+    Host: www.example.com\r
+    Connection: close\r
+    \r
+    """);
+
+    String body01 = """
+    Hello World!
+    """;
+
+    String resp01 = """
+    HTTP/1.1 200 OK\r
+    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+    Content-Type: text/plain; charset=utf-8\r
+    Content-Length: 13\r
+    \r
+    %s""".formatted(body01);
+
+    try (HttpExchange http = new HttpExchange(socket, 128, 128, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
+      // request phase
+      ParseStatus parse;
+      parse = http.parse();
+
+      assertEquals(parse.isError(), false);
+
+      // response phase
+      final Lang.MediaObject object;
+      object = new Testing.TextPlain(body01);
+
+      http.respond(Http.Status.OK, object);
+
+      assertEquals(socket.outputAsString(), resp01);
+
+      assertEquals(http.keepAlive(), false);
+    } catch (IOException e) {
+      throw new AssertionError("Failed with IOException", e);
+    }
+  }
+
 }

@@ -46,6 +46,26 @@ final class Testing {
 
   }
 
+  static final class TextPlain implements Lang.MediaObject {
+
+    private final String value;
+
+    TextPlain(String value) {
+      this.value = value;
+    }
+
+    @Override
+    public final String contentType() {
+      return "text/plain; charset=utf-8";
+    }
+
+    @Override
+    public final byte[] mediaBytes() {
+      return value.getBytes(StandardCharsets.UTF_8);
+    }
+
+  }
+
   private Testing() {}
 
   public static HttpResponse<String> httpClient(String path, Consumer<HttpRequest.Builder> config) throws IOException, InterruptedException {

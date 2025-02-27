@@ -191,6 +191,17 @@ public final class Http {
     // pre-made responses
 
     /**
+     * Writes a complete response message with the specified status and the
+     * contents of the specified media object.
+     *
+     * @param status
+     *        the HTTP response status
+     * @param object
+     *        the media object
+     */
+    void respond(Http.Status status, Lang.MediaObject object);
+
+    /**
      * Sends an HTTP {@code 200 OK} response with no response body.
      */
     void ok();
@@ -202,7 +213,9 @@ public final class Http {
      * @param object
      *        the object providing the raw data to be sent over the wire
      */
-    void ok(Lang.MediaObject object);
+    default void ok(Lang.MediaObject object) {
+      respond(Http.Status.OK, object);
+    }
 
     default void okText(String text, Charset charset) {
       byte[] bytes;
