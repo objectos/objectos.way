@@ -19,6 +19,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.RecordComponent;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -270,6 +271,20 @@ public final class Sql {
    * A connection to a running transaction in a database.
    */
   public sealed interface Transaction permits SqlTransaction {
+
+    static Transaction of(Connection connection) {
+      try {
+        DatabaseMetaData data;
+        data = connection.getMetaData();
+
+        SqlDialect dialect;
+        dialect = SqlDialect.of(data);
+
+        return new SqlTransaction(dialect, connection);
+      } catch (SQLException e) {
+        throw new DatabaseException(e);
+      }
+    }
 
     /**
      * The isolation level of a transaction.

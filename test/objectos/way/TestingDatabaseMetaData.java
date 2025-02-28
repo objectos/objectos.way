@@ -31,6 +31,10 @@ final class TestingDatabaseMetaData implements DatabaseMetaData {
       "MySQL", 5, 7, "5.7.44-log"
   );
 
+  public static final TestingDatabaseMetaData TESTING = new TestingDatabaseMetaData(
+      "ObjectosWay", 0, 0, "0"
+  );
+
   private final String databaseProductName;
 
   private final int databaseMajorVersion;

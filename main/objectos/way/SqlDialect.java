@@ -35,6 +35,8 @@ enum SqlDialect {
 
       case "MySQL" -> MYSQL;
 
+      case "ObjectosWay" -> TESTING;
+
       default -> throw new UnsupportedOperationException(
           "Unsupported dialect with databaseProductName=" + productName
       );

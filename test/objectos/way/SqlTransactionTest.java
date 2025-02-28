@@ -19,7 +19,6 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import objectos.way.Sql.RollbackWrapperException;
@@ -320,11 +319,10 @@ public class SqlTransactionTest {
     );
   }
 
-  private SqlTransaction trx(Connection connection) {
-    SqlDialect dialect;
-    dialect = SqlDialect.TESTING;
+  private SqlTransaction trx(TestingConnection connection) {
+    connection.metaData(TestingDatabaseMetaData.TESTING);
 
-    return new SqlTransaction(dialect, connection);
+    return (SqlTransaction) Sql.Transaction.of(connection);
   }
 
 }

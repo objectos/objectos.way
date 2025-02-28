@@ -41,6 +41,8 @@ final class TestingConnection extends AbstractTestable implements Connection {
 
   private SQLException closeException;
 
+  private DatabaseMetaData metaData;
+
   private Iterator<PreparedStatement> preparedStatements = Collections.emptyIterator();
 
   private SQLException rollbackException;
@@ -49,6 +51,10 @@ final class TestingConnection extends AbstractTestable implements Connection {
 
   public final void closeException(SQLException error) {
     closeException = error;
+  }
+
+  public final void metaData(DatabaseMetaData value) {
+    metaData = value;
   }
 
   public final void preparedStatements(PreparedStatement... stmts) {
@@ -132,7 +138,13 @@ final class TestingConnection extends AbstractTestable implements Connection {
   public boolean isClosed() throws SQLException { throw new UnsupportedOperationException("Implement me"); }
 
   @Override
-  public DatabaseMetaData getMetaData() throws SQLException { throw new UnsupportedOperationException("Implement me"); }
+  public final DatabaseMetaData getMetaData() throws SQLException {
+    if (metaData == null) {
+      throw new IllegalStateException("metaData not set");
+    }
+
+    return metaData;
+  }
 
   @Override
   public void setReadOnly(boolean readOnly) throws SQLException { throw new UnsupportedOperationException("Implement me"); }
