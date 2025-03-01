@@ -17,8 +17,10 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import java.sql.BatchUpdateException;
 import java.sql.Types;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import objectos.way.Sql.BatchUpdate;
 import org.testng.annotations.Test;
@@ -258,7 +260,8 @@ public class SqlTransactionTestBatch extends SqlTransactionTestSupport {
   }
 
   @Test
-  public void batchUpdateWithResult() {
+  @Override
+  public void batchUpdateWithResult01() {
     assertEquals(
         batchPrepared(
             List.of(),
@@ -310,6 +313,152 @@ public class SqlTransactionTestBatch extends SqlTransactionTestSupport {
     assertEmpty(statement);
 
     assertEmpty(resultSet);
+  }
+
+  @Test
+  public void batchUpdateWithResult02() {
+    final BatchUpdateException batchUpdateError;
+    batchUpdateError = new BatchUpdateException();
+
+    assertEquals(
+        batchPrepared(
+            List.of(),
+
+            batches(
+                batch(1)
+            ),
+
+            trx -> {
+              preparedStatement.batchUpdateError(batchUpdateError);
+
+              trx.sql("insert into BAR (X) values (?)");
+
+              trx.add(1);
+
+              trx.addBatch();
+
+              final BatchUpdate result;
+              result = trx.batchUpdateWithResult();
+
+              assertEquals(result, new SqlBatchUpdateFailed(batchUpdateError, List.of()));
+
+              return batch(0);
+            }
+        ),
+
+        batch(0)
+    );
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(insert into BAR (X) values (?), 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setInt(1, 1)
+        addBatch()
+        executeBatch()
+        close()
+        """
+    );
+
+    assertEmpty(statement);
+
+    assertEmpty(resultSet);
+  }
+
+  @Test
+  public void batchUpdateWithResult03() {
+    final BatchUpdateException batchUpdateError;
+    batchUpdateError = new BatchUpdateException();
+
+    connection = new TestingConnection();
+
+    preparedStatement = new TestingPreparedStatement();
+
+    TestingPreparedStatement select;
+    select = new TestingPreparedStatement();
+
+    resultSet = new TestingResultSet(List.of(
+        Map.of("1", "Hello", "2", "World!")
+    ));
+
+    select.queries(resultSet);
+
+    connection.preparedStatements(preparedStatement, select);
+
+    SqlTransaction trx;
+    trx = trx(connection);
+
+    try {
+      preparedStatement.batchUpdateError(batchUpdateError);
+
+      trx.sql("insert into BAR (X) values (?)");
+
+      trx.add(1);
+
+      trx.addBatch();
+
+      final BatchUpdate result;
+      result = trx.batchUpdateWithResult();
+
+      assertEquals(result, new SqlBatchUpdateFailed(batchUpdateError, List.of()));
+
+      trx.sql("select A, B from X where NAME = ?");
+
+      trx.add("ABC");
+
+      final List<String2> rows;
+      rows = trx.query(String2::new);
+
+      assertEquals(rows, List.of(new String2("Hello", "World!")));
+    } finally {
+      trx.close();
+    }
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(insert into BAR (X) values (?), 2)
+        prepareStatement(select A, B from X where NAME = ?, 2)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setInt(1, 1)
+        addBatch()
+        executeBatch()
+        close()
+        """
+    );
+
+    assertEmpty(statement);
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        getString(1)
+        getString(2)
+        next()
+        close()
+        """
+    );
   }
 
   @Test

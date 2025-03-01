@@ -21,6 +21,7 @@ import java.sql.Types;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import objectos.way.Sql.BatchUpdate;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -333,6 +334,82 @@ public class SqlTransactionTestGenerated extends SqlTransactionTestSupport {
         The 'batchUpdate' operation cannot be executed on a SQL statement with no batches defined.
         """
     );
+  }
+
+  @Test
+  @Override
+  public void batchUpdateWithResult01() {
+    assertEquals(
+        batchPrepared(
+            List.of(
+                Map.of("1", 123)
+            ),
+
+            batches(
+                batch(1)
+            ),
+
+            trx -> {
+              trx.sql("insert into FOO (A, B) values (?, ?)");
+
+              trx.with(generatedKeys);
+
+              trx.add(123);
+
+              trx.add("bar");
+
+              trx.addBatch();
+
+              final BatchUpdate result;
+              result = trx.batchUpdateWithResult();
+
+              assertEquals(result, new SqlBatchUpdateSuccess(batch(1)));
+
+              return batch(1);
+            }
+        ),
+
+        batch(1)
+    );
+
+    assertEquals(generatedKeys.size(), 1);
+    assertEquals(generatedKeys.getAsInt(0), 123);
+
+    assertEquals(
+        connection.toString(),
+
+        """
+        prepareStatement(insert into FOO (A, B) values (?, ?), 1)
+        setAutoCommit(true)
+        close()
+        """
+    );
+
+    assertEquals(
+        preparedStatement.toString(),
+
+        """
+        setInt(1, 123)
+        setString(2, bar)
+        addBatch()
+        executeBatch()
+        getGeneratedKeys()
+        close()
+        """
+    );
+
+    assertEquals(
+        resultSet.toString(),
+
+        """
+        next()
+        getInt(1)
+        next()
+        close()
+        """
+    );
+
+    assertEmpty(statement);
   }
 
   @Test

@@ -20,6 +20,7 @@ import java.io.Reader;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.Array;
+import java.sql.BatchUpdateException;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.Connection;
@@ -48,6 +49,8 @@ final class TestingPreparedStatement extends AbstractTestable implements Prepare
 
   private boolean closed;
 
+  private BatchUpdateException batchUpdateError;
+
   private Iterator<ResultSet> generatedKeys = Collections.emptyIterator();
 
   private Iterator<ResultSet> queries = Collections.emptyIterator();
@@ -58,6 +61,10 @@ final class TestingPreparedStatement extends AbstractTestable implements Prepare
 
   public final void batches(int[]... values) {
     batches = Stream.of(values).iterator();
+  }
+
+  public final void batchUpdateError(BatchUpdateException error) {
+    batchUpdateError = error;
   }
 
   public final void generatedKeys(ResultSet... values) {
@@ -161,6 +168,10 @@ final class TestingPreparedStatement extends AbstractTestable implements Prepare
   @Override
   public int[] executeBatch() throws SQLException {
     logMethod("executeBatch");
+
+    if (batchUpdateError != null) {
+      throw batchUpdateError;
+    }
 
     if (!batches.hasNext()) {
       throw new IllegalStateException("No more batches");

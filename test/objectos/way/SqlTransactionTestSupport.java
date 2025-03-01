@@ -38,6 +38,12 @@ public abstract class SqlTransactionTestSupport {
     }
   }
 
+  record String2(String a, String b) {
+    String2(ResultSet rs, int idx) throws SQLException {
+      this(rs.getString(idx++), rs.getString(idx++));
+    }
+  }
+
   TestingConnection connection;
 
   TestingPreparedStatement preparedStatement;
@@ -64,6 +70,8 @@ public abstract class SqlTransactionTestSupport {
   public abstract void addNullable01();
 
   public abstract void batchUpdate01();
+
+  public abstract void batchUpdateWithResult01();
 
   public abstract void close01();
 

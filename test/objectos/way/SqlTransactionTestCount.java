@@ -102,6 +102,12 @@ public class SqlTransactionTestCount extends SqlTransactionTestSupport {
 
   @Test
   @Override
+  public void batchUpdateWithResult01() {
+    invalidOperation("batchUpdate", Sql.Transaction::batchUpdateWithResult);
+  }
+
+  @Test
+  @Override
   public void close01() {
     preparedStatement(
         List.of(),

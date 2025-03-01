@@ -744,6 +744,8 @@ final class SqlTransaction implements Sql.Transaction {
 
       return new SqlBatchUpdateSuccess(result);
     } catch (SQLException e) {
+      state = State.START;
+
       return SqlBatchUpdateFailed.create(dialect, e);
     }
   }
@@ -1398,6 +1400,8 @@ final class SqlTransaction implements Sql.Transaction {
 
       return new SqlUpdateSuccess(count);
     } catch (SQLException e) {
+      state = State.START;
+
       return SqlUpdateFailed.create(dialect, e);
     }
   }

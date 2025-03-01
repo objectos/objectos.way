@@ -158,6 +158,36 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
 
   @Test
   @Override
+  public final void batchUpdateWithResult01() {
+    String expectedMessage = """
+    The 'batchUpdate' operation cannot be executed on a plain SQL statement with no batches defined.
+    """;
+
+    invalidOperation(
+        trx -> {
+          trx.sql("insert into BAR (X) values (?)");
+
+          trx.batchUpdateWithResult();
+        },
+
+        expectedMessage
+    );
+
+    invalidOperation(
+        trx -> {
+          trx.sql("insert into BAR (X) values (?)");
+
+          trx.add(123);
+
+          trx.batchUpdateWithResult();
+        },
+
+        expectedMessage
+    );
+  }
+
+  @Test
+  @Override
   public void close01() {
     preparedStatement(
         List.of(),

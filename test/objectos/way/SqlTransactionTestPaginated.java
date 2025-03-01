@@ -17,8 +17,6 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Types;
 import java.util.List;
 import java.util.Map;
@@ -26,12 +24,6 @@ import java.util.function.Consumer;
 import org.testng.annotations.Test;
 
 public class SqlTransactionTestPaginated extends SqlTransactionTestSupport {
-
-  private record String2(String a, String b) {
-    String2(ResultSet rs, int idx) throws SQLException {
-      this(rs.getString(idx++), rs.getString(idx++));
-    }
-  }
 
   private final Sql.Page page1 = Sql.Page.of(1, 15);
   private final Sql.Page page2 = Sql.Page.of(2, 15);
@@ -116,6 +108,12 @@ public class SqlTransactionTestPaginated extends SqlTransactionTestSupport {
   @Override
   public void batchUpdate01() {
     invalidOperation("batchUpdate", Sql.Transaction::batchUpdate);
+  }
+
+  @Test
+  @Override
+  public final void batchUpdateWithResult01() {
+    invalidOperation("batchUpdate", Sql.Transaction::batchUpdateWithResult);
   }
 
   @Test

@@ -710,6 +710,28 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
 
   @Test
   @Override
+  public final void batchUpdateWithResult01() {
+    invalidOperation(
+        trx -> {
+          trx.sql(Sql.TEMPLATE, """
+          select A, B, C from FOO
+          --
+          where X = ?
+          """);
+
+          trx.add("ABC");
+
+          trx.batchUpdateWithResult();
+        },
+
+        """
+        The 'batchUpdate' operation cannot be executed on a SQL template.
+        """
+    );
+  }
+
+  @Test
+  @Override
   public void close01() {
     preparedStatement(
         List.of(),
