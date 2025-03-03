@@ -27,6 +27,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -678,6 +679,8 @@ public final class Sql {
       case LocalDate ld -> stmt.setObject(index, ld);
 
       case LocalDateTime dt -> stmt.setObject(index, dt);
+
+      case LocalTime time -> stmt.setObject(index, time);
 
       case Long i -> stmt.setLong(index, i.longValue());
 
