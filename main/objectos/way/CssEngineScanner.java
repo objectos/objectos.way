@@ -16,11 +16,20 @@
 package objectos.way;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.CodeSource;
+import java.security.ProtectionDomain;
+import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.stream.Stream;
 
 final class CssEngineScanner {
@@ -35,7 +44,13 @@ final class CssEngineScanner {
       Note.Ref1<String> classNotFound,
       Note.Ref2<String, IOException> classIoError,
       Note.Ref1<String> classLoaded,
-      Note.Ref2<Path, IOException> directoryIoError
+
+      Note.Ref2<Path, IOException> directoryIoError,
+
+      Note.Ref2<Class<?>, Throwable> jarFileException,
+      Note.Ref2<Class<?>, String> jarFileNull,
+
+      Note.Ref1<String> skipped
   ) {
 
     static Notes get() {
@@ -46,7 +61,13 @@ final class CssEngineScanner {
           Note.Ref1.create(s, "Class file not found", Note.ERROR),
           Note.Ref2.create(s, "Class file I/O error", Note.ERROR),
           Note.Ref1.create(s, "Class file loaded", Note.DEBUG),
-          Note.Ref2.create(s, "Directory I/O error", Note.ERROR)
+
+          Note.Ref2.create(s, "Directory I/O error", Note.ERROR),
+
+          Note.Ref2.create(s, "JarFile Exception", Note.ERROR),
+          Note.Ref2.create(s, "JarFile No Value", Note.ERROR),
+
+          Note.Ref1.create(s, "Skipped", Note.DEBUG)
       );
     }
 
@@ -131,22 +152,108 @@ final class CssEngineScanner {
         byte[] bytes;
         bytes = Files.readAllBytes(entry);
 
-        reader.init(fileName, bytes);
-
-        if (!reader.isAnnotationPresent(Css.Source.class)) {
-          continue;
-        }
-
-        noteSink.send(notes.classLoaded, fileName);
-
-        adapter.sourceName(fileName);
-
-        reader.processStringConstants(adapter);
+        scanBytes(adapter, fileName, bytes);
       }
 
     } catch (IOException e) {
       noteSink.send(notes.directoryIoError, directory, e);
     }
+  }
+
+  public final void scanJarFile(Class<?> clazz, Adapter adapter) {
+    ProtectionDomain domain;
+
+    try {
+      domain = clazz.getProtectionDomain();
+    } catch (SecurityException e) {
+      noteSink.send(notes.jarFileException, clazz, e);
+
+      return;
+    }
+
+    CodeSource source;
+    source = domain.getCodeSource();
+
+    if (source == null) {
+      noteSink.send(notes.jarFileNull, clazz, "CodeSource");
+
+      return;
+    }
+
+    URL location;
+    location = source.getLocation();
+
+    if (location == null) {
+      noteSink.send(notes.jarFileNull, clazz, "Location");
+
+      return;
+    }
+
+    File file;
+
+    try {
+      URI uri;
+      uri = location.toURI();
+
+      file = new File(uri);
+    } catch (URISyntaxException e) {
+      noteSink.send(notes.jarFileException, clazz, e);
+
+      return;
+    }
+
+    try (JarFile jar = new JarFile(file)) {
+      Enumeration<JarEntry> entries;
+      entries = jar.entries();
+
+      while (entries.hasMoreElements()) {
+        JarEntry entry;
+        entry = entries.nextElement();
+
+        String entryName;
+        entryName = entry.getName();
+
+        if (!entryName.endsWith(".class")) {
+          continue;
+        }
+
+        long size;
+        size = entry.getSize();
+
+        int intSize;
+        intSize = Math.toIntExact(size);
+
+        ByteArrayOutputStream out;
+        out = new ByteArrayOutputStream(intSize);
+
+        try (InputStream in = jar.getInputStream(entry)) {
+          in.transferTo(out);
+        }
+
+        byte[] bytes;
+        bytes = out.toByteArray();
+
+        scanBytes(adapter, entryName, bytes);
+      }
+    } catch (ArithmeticException | IOException e) {
+      noteSink.send(notes.jarFileException, clazz, e);
+    }
+  }
+
+  private void scanBytes(Adapter adapter, String fileName, byte[] bytes) {
+    reader.init(fileName, bytes);
+
+    if (!reader.isAnnotationPresent(Css.Source.class)) {
+      noteSink.send(notes.skipped, fileName);
+
+      return;
+    }
+
+    noteSink.send(notes.classLoaded, fileName);
+
+    adapter.sourceName(fileName);
+
+    reader.processStringConstants(adapter);
   }
 
 }

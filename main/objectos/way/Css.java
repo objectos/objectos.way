@@ -52,6 +52,8 @@ public final class Css {
 
       void scanDirectory(Path value);
 
+      void scanJarFileOf(Class<?> value);
+
       void theme(String value);
 
       void theme(String query, String value);

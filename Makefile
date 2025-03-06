@@ -118,6 +118,7 @@ TEST_ADD_EXPORTS += objectos.way/testing.site.web=org.testng
 
 ## test --add-reads
 TEST_ADD_READS := objectos.way=org.testng
+TEST_ADD_READS += objectos.way=org.slf4j
 TEST_ADD_READS += objectos.way=com.h2database
 TEST_ADD_READS += objectos.way=java.compiler
 TEST_ADD_READS += objectos.way=java.net.http

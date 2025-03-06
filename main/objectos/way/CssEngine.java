@@ -65,6 +65,8 @@ final class CssEngine implements Css.StyleSheet.Config, CssEngineScanner.Adapter
 
   private Set<Path> directoriesToScan;
 
+  private Set<Class<?>> jarFilesToScan;
+
   private Note.Sink noteSink = Note.NoOpSink.INSTANCE;
 
   @SuppressWarnings("unused")
@@ -107,6 +109,17 @@ final class CssEngine implements Css.StyleSheet.Config, CssEngineScanner.Adapter
     }
 
     directoriesToScan.add(value);
+  }
+
+  @Override
+  public final void scanJarFileOf(Class<?> value) {
+    Objects.requireNonNull(value, "value == null");
+
+    if (jarFilesToScan == null) {
+      jarFilesToScan = Util.createSet();
+    }
+
+    jarFilesToScan.add(value);
   }
 
   public final void skipLayer(Css.Layer value) {
@@ -874,6 +887,12 @@ final class CssEngine implements Css.StyleSheet.Config, CssEngineScanner.Adapter
     if (directoriesToScan != null) {
       for (Path directory : directoriesToScan) {
         scanner.scanDirectory(directory, this);
+      }
+    }
+
+    if (jarFilesToScan != null) {
+      for (Class<?> clazz : jarFilesToScan) {
+        scanner.scanJarFile(clazz, this);
       }
     }
   }
