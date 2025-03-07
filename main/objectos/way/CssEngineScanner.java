@@ -223,15 +223,18 @@ final class CssEngineScanner {
         int intSize;
         intSize = Math.toIntExact(size);
 
-        ByteArrayOutputStream out;
-        out = new ByteArrayOutputStream(intSize);
+        byte[] bytes;
+        bytes = new byte[intSize];
+
+        int bytesRead;
 
         try (InputStream in = jar.getInputStream(entry)) {
-          in.transferTo(out);
+          bytesRead = in.read(bytes, 0, bytes.length);
         }
 
-        byte[] bytes;
-        bytes = out.toByteArray();
+        if (bytesRead != bytes.length) {
+          continue;
+        }
 
         scanBytes(adapter, entryName, bytes);
       }
