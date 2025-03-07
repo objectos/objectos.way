@@ -238,7 +238,9 @@ final class SqlTransaction implements Sql.Transaction {
             state = State.SQL_SCRIPT;
 
             try {
-              main = sqlScript(value);
+              main = connection.createStatement();
+
+              sqlScript(';', value);
             } catch (SQLException e) {
               throw stateAndWrap(e);
             }
@@ -305,41 +307,181 @@ final class SqlTransaction implements Sql.Transaction {
     return builder.toString();
   }
 
-  private Statement sqlScript(String value) throws SQLException {
-    final String[] lines;
-    lines = value.split("\n"); // implicit null check
+  private void sqlScript(char sep, String value) throws SQLException {
+    enum Script {
 
-    final StringBuilder sql;
-    sql = new StringBuilder();
+      NORMAL,
 
-    final Statement stmt;
-    stmt = connection.createStatement();
+      DASH1,
 
-    for (String line : lines) {
+      COMMENT_EOL,
 
-      if (!line.isBlank()) {
-        sql.append(line);
-      }
+      COMMENT_TRAD,
 
-      else if (!sql.isEmpty()) {
-        final String batch;
-        batch = sql.toString();
+      COMMENT_TRAD_STAR,
 
-        sql.setLength(0);
+      SLASH1,
 
-        stmt.addBatch(batch);
-      }
+      STMT,
+
+      STRING,
+
+      STRING_QUOTE;
 
     }
 
-    if (!sql.isEmpty()) {
-      final String batch;
-      batch = sql.toString();
+    Script script = Script.NORMAL, comment = null;
 
-      stmt.addBatch(batch);
+    int idx = 0, len = value.length(), stmt = 0;
+
+    while (idx < len) {
+      final char c;
+      c = value.charAt(idx);
+
+      switch (script) {
+        case NORMAL -> {
+          if (Ascii.isWhitespace(c)) {
+            script = Script.NORMAL;
+          }
+
+          else if (c == '-') {
+            script = Script.DASH1;
+
+            stmt = idx;
+          }
+
+          else if (c == '/') {
+            script = Script.SLASH1;
+
+            comment = Script.NORMAL;
+
+            stmt = idx;
+          }
+
+          else {
+            script = Script.STMT;
+
+            stmt = idx;
+          }
+        }
+
+        case DASH1 -> {
+          if (c == '-') {
+            script = Script.COMMENT_EOL;
+          }
+
+          else {
+            script = Script.STMT;
+          }
+        }
+
+        case COMMENT_EOL -> {
+          if (Ascii.isLineTerminator(c)) {
+            script = Script.NORMAL;
+          }
+
+          else {
+            // consume comment
+          }
+        }
+
+        case SLASH1 -> {
+          if (c == '*') {
+            script = Script.COMMENT_TRAD;
+          }
+
+          else if (comment == Script.NORMAL) {
+            // not a comment start and we came from NORMAL state
+            // => assume we are in a statement albeit malformed most likely
+            script = Script.STMT;
+          }
+
+          else {
+            script = comment;
+          }
+        }
+
+        case COMMENT_TRAD -> {
+          if (c == '*') {
+            script = Script.COMMENT_TRAD_STAR;
+          }
+
+          else {
+            // consume comment
+          }
+        }
+
+        case COMMENT_TRAD_STAR -> {
+          if (c == '/') {
+            script = comment;
+          }
+
+          else {
+            script = Script.COMMENT_TRAD;
+          }
+        }
+
+        case STMT -> {
+          if (c == sep) {
+            script = Script.NORMAL;
+
+            String sql;
+            sql = value.substring(stmt, idx);
+
+            ((Statement) main).addBatch(sql);
+          }
+
+          else if (c == '\'') {
+            script = Script.STRING;
+          }
+
+          else if (c == '/') {
+            comment = script;
+
+            script = Script.SLASH1;
+          }
+
+          else {
+            // consume char
+          }
+        }
+
+        case STRING -> {
+          if (c == '\'') {
+            script = Script.STRING_QUOTE;
+          }
+
+          else {
+            // consume string
+          }
+        }
+
+        case STRING_QUOTE -> {
+          if (c == '\'') {
+            script = Script.STRING;
+          }
+
+          else {
+            script = Script.STMT;
+
+            idx--;
+          }
+        }
+      }
+
+      idx++;
     }
 
-    return stmt;
+    switch (script) {
+      case STMT -> {
+        String sql;
+        sql = value.substring(stmt, idx);
+
+        ((Statement) main).addBatch(sql);
+      }
+
+      default -> {}
+    }
   }
 
   @Override

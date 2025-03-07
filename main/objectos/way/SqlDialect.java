@@ -18,30 +18,30 @@ package objectos.way;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 
-enum SqlDialect {
-
-  H2,
-
-  MYSQL,
-
-  TESTING;
+sealed abstract class SqlDialect
+    permits
+    SqlDialectH2,
+    SqlDialectMySQL,
+    SqlDialectTesting {
 
   static SqlDialect of(DatabaseMetaData data) throws SQLException {
     String productName;
     productName = data.getDatabaseProductName();
 
     return switch (productName) {
-      case "H2" -> H2;
+      case "H2" -> new SqlDialectH2();
 
-      case "MySQL" -> MYSQL;
+      case "MySQL" -> new SqlDialectMySQL();
 
-      case "ObjectosWay" -> TESTING;
+      case "ObjectosWay" -> new SqlDialectTesting();
 
       default -> throw new UnsupportedOperationException(
           "Unsupported dialect with databaseProductName=" + productName
       );
     };
   }
+
+  SqlDialect() {}
 
   public void count(StringBuilder sqlBuilder) {
     boolean newLine;
@@ -63,7 +63,7 @@ enum SqlDialect {
   }
 
   public final String paginate(String sql, Sql.Page page) {
-    StringBuilder builder;
+    final StringBuilder builder;
     builder = new StringBuilder(sql);
 
     if (shouldAppendNewLine(builder)) {
@@ -73,53 +73,26 @@ enum SqlDialect {
     int offset;
     offset = 0;
 
-    int pageNumber;
+    final int pageNumber;
     pageNumber = page.number();
 
     if (pageNumber > 1) {
       offset = (pageNumber - 1) * page.size();
     }
 
-    switch (this) {
-      case H2 -> {
-        if (offset > 0) {
-          builder.append("offset ");
+    final int size;
+    size = page.size();
 
-          builder.append(offset);
-
-          builder.append(" rows");
-
-          builder.append(System.lineSeparator());
-        }
-
-        builder.append("fetch first ");
-
-        builder.append(page.size());
-
-        builder.append(" rows only");
-
-        builder.append(System.lineSeparator());
-      }
-
-      case MYSQL, TESTING -> {
-        builder.append("limit ");
-
-        builder.append(page.size());
-
-        builder.append(System.lineSeparator());
-
-        if (offset > 0) {
-          builder.append("offset ");
-
-          builder.append(offset);
-
-          builder.append(System.lineSeparator());
-        }
-      }
-    }
+    paginate(builder, offset, size);
 
     return builder.toString();
   }
+
+  void migratorInitialize(SqlTransaction trx) {
+    throw new UnsupportedOperationException();
+  }
+
+  abstract void paginate(StringBuilder builder, int offset, int size);
 
   private boolean shouldAppendNewLine(CharSequence sqlBuilder) {
     int length;

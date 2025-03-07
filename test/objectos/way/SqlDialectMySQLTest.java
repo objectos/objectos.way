@@ -21,7 +21,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import org.testng.annotations.Test;
 
-public class SqlDialectMysqlTest {
+public class SqlDialectMySQLTest {
 
   @Test
   public void of() throws SQLException {
@@ -31,7 +31,7 @@ public class SqlDialectMysqlTest {
     SqlDialect dialect;
     dialect = SqlDialect.of(data);
 
-    assertEquals(dialect.getClass(), SqlDialect.class);
+    assertEquals(dialect.getClass(), SqlDialectMySQL.class);
   }
 
   @Test

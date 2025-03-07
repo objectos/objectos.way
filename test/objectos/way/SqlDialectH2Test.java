@@ -31,7 +31,7 @@ public class SqlDialectH2Test {
     SqlDialect dialect;
     dialect = SqlDialect.of(data);
 
-    assertEquals(dialect.getClass(), SqlDialect.class);
+    assertEquals(dialect.getClass(), SqlDialectH2.class);
   }
 
   @Test

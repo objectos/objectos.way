@@ -121,6 +121,8 @@ public final class Sql {
      */
     Transaction beginTransaction(Transaction.Isolation level) throws DatabaseException;
 
+    void migrate(Consumer<Migrator> config) throws DatabaseException;
+
   }
 
   public sealed interface GeneratedKeys<T> {
@@ -199,6 +201,12 @@ public final class Sql {
      * @return the mapped object, never {@code null}
      */
     T map(ResultSet rs, int startingParameterIndex) throws SQLException;
+
+  }
+
+  public sealed interface Migrator permits SqlMigrator {
+
+    void add(String name, String script);
 
   }
 

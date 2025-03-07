@@ -28,6 +28,9 @@ public class SqlBatchUpdateFailedTest {
 
   @Test
   public void testing01() {
+    final SqlDialect dialect;
+    dialect = new SqlDialectTesting();
+
     final BatchUpdateException error;
     error = new BatchUpdateException(new int[] {256});
 
@@ -37,7 +40,7 @@ public class SqlBatchUpdateFailedTest {
     error.setNextException(next0);
 
     final SqlBatchUpdateFailed failed;
-    failed = SqlBatchUpdateFailed.create(SqlDialect.TESTING, error);
+    failed = SqlBatchUpdateFailed.create(dialect, error);
 
     assertEquals(failed.counts(), new int[] {256});
 

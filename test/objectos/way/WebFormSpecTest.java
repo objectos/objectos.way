@@ -207,8 +207,11 @@ public class WebFormSpecTest {
 
     conn.preparedStatements(stmt);
 
+    SqlDialectTesting dialect;
+    dialect = new SqlDialectTesting();
+
     SqlTransaction trx;
-    trx = new SqlTransaction(SqlDialect.TESTING, conn);
+    trx = new SqlTransaction(dialect, conn);
 
     trx.sql("insert into dummy values (?)");
 

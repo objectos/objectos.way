@@ -17,7 +17,10 @@ package objectos.way;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.function.Consumer;
 import javax.sql.DataSource;
+import objectos.way.Sql.DatabaseException;
+import objectos.way.Sql.Migrator;
 
 final class SqlDatabase implements Sql.Database {
 
@@ -28,10 +31,12 @@ final class SqlDatabase implements Sql.Database {
   @SuppressWarnings("unused")
   private final Note.Sink noteSink;
 
-  SqlDatabase(DataSource dataSource, SqlDialect dialect, Note.Sink noteSink) {
-    this.dataSource = dataSource;
-    this.dialect = dialect;
+  SqlDatabase(Note.Sink noteSink, DataSource dataSource, SqlDialect dialect) {
     this.noteSink = noteSink;
+
+    this.dataSource = dataSource;
+
+    this.dialect = dialect;
   }
 
   @Override
@@ -63,6 +68,22 @@ final class SqlDatabase implements Sql.Database {
         e.addSuppressed(suppressed);
       }
 
+      throw new Sql.DatabaseException(e);
+    }
+  }
+
+  @Override
+  public final void migrate(Consumer<Migrator> config) throws DatabaseException {
+    try (
+        Connection connection = dataSource.getConnection();
+        SqlMigrator migrator = new SqlMigrator(noteSink, dialect, connection)
+    ) {
+
+      migrator.initialize();
+
+      config.accept(migrator);
+
+    } catch (SQLException e) {
       throw new Sql.DatabaseException(e);
     }
   }

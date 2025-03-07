@@ -339,7 +339,7 @@ public abstract class SqlTransactionTestSupport {
 
   final SqlTransaction trx(Connection connection) {
     SqlDialect dialect;
-    dialect = SqlDialect.TESTING;
+    dialect = new SqlDialectTesting();
 
     return new SqlTransaction(dialect, connection);
   }

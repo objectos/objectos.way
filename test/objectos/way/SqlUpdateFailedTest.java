@@ -27,11 +27,14 @@ public class SqlUpdateFailedTest {
 
   @Test
   public void testing01() {
+    final SqlDialect dialect;
+    dialect = new SqlDialectTesting();
+
     final SQLIntegrityConstraintViolationException error;
     error = new SQLIntegrityConstraintViolationException();
 
     final SqlUpdateFailed failed;
-    failed = SqlUpdateFailed.create(SqlDialect.TESTING, error);
+    failed = SqlUpdateFailed.create(dialect, error);
 
     final List<Cause> causes;
     causes = failed.causes();

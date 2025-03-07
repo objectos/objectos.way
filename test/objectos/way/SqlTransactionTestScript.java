@@ -116,9 +116,9 @@ public class SqlTransactionTestScript extends SqlTransactionTestSupport {
 
             trx -> {
               trx.sql(Sql.Kind.SCRIPT, """
-              insert into FOO (A, B) values (1, 5)
+              insert into FOO (A, B) values (1, 5);
 
-              insert into BAR (X, Y) values ('A', 'B')
+              insert into BAR (X, Y) values ('A', 'B');
               """);
 
               return trx.batchUpdate();
@@ -217,9 +217,9 @@ public class SqlTransactionTestScript extends SqlTransactionTestSupport {
 
         trx -> {
           trx.sql(Sql.Kind.SCRIPT, """
-          insert into FOO (A, B) values (1, 5)
+          insert into FOO (A, B) values (1, 5);
 
-          insert into BAR (X, Y) values ('A', 'B')
+          insert into BAR (X, Y) values ('A', 'B');
           """);
 
           return batch();

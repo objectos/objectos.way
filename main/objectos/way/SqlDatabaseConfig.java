@@ -54,7 +54,7 @@ final class SqlDatabaseConfig implements Sql.Database.Config {
       SqlDialect dialect;
       dialect = SqlDialect.of(data);
 
-      return new SqlDatabase(dataSource, dialect, noteSink);
+      return new SqlDatabase(noteSink, dataSource, dialect);
     } catch (SQLException e) {
       throw new Sql.DatabaseException(e);
     }
