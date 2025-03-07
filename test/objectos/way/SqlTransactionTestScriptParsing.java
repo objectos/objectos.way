@@ -150,6 +150,29 @@ public class SqlTransactionTestScriptParsing {
     );
   }
 
+  @Test
+  public void testCase10() {
+    test(
+        """
+        create schema TEST;
+
+        set schema TEST;
+
+        create table T1 (
+          ID int not null,
+
+          primary key (ID)
+        );
+        """,
+
+        """
+        addBatch(create schema TEST)
+        addBatch(set schema TEST)
+        addBatch(create table T1 (   ID int not null,   primary key (ID) ))
+        """
+    );
+  }
+
   private void test(String script, String expected) {
     SqlDialectTesting dialect;
     dialect = new SqlDialectTesting();

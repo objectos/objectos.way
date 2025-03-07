@@ -42,7 +42,18 @@ final class SqlMigrator implements Sql.Migrator, AutoCloseable {
 
   @Override
   public final void add(String name, String script) {
+    trx.sql(Sql.SCRIPT, script);
 
+    Sql.BatchUpdate result;
+    result = trx.batchUpdateWithResult();
+
+    switch (result) {
+      case Sql.BatchUpdateSuccess ok -> trx.commit();
+
+      case Sql.BatchUpdateFailed error -> {
+        System.out.println(error);
+      }
+    }
   }
 
   @Override
