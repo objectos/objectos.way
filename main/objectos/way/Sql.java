@@ -25,6 +25,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -73,6 +74,15 @@ public final class Sql {
      * Configures the creation of a {@code Sql.Database} instance.
      */
     public sealed interface Config permits SqlDatabaseConfig {
+
+      /**
+       * Sets the clock to the specified value. This clock instance will be used
+       * to define the current time for, e.g., a migration history entry record.
+       *
+       * @param value
+       *        a clock instance
+       */
+      void clock(Clock value);
 
       void dataSource(DataSource value);
 
@@ -204,6 +214,52 @@ public final class Sql {
 
   }
 
+  /**
+   * Provides information about the database. It typically wraps a
+   * {@link DatabaseMetaData} object.
+   */
+  public sealed interface Meta permits SqlMeta {
+
+    sealed interface QueryTables permits SqlMeta.QueryTablesConfig {
+
+      void schemaName(String value);
+
+      void tableName(String value);
+
+    }
+
+    default List<MetaTable> queryTables() {
+      return queryTables(config -> {});
+    }
+
+    List<MetaTable> queryTables(Consumer<QueryTables> config);
+
+  }
+
+  public sealed interface MetaTable permits SqlMeta.TableRecord {
+
+    String catalog();
+
+    String schema();
+
+    String name();
+
+    String type();
+
+    String remarks();
+
+    String typeCatalog();
+
+    String typeSchema();
+
+    String typeName();
+
+    String selfReferencingColumnName();
+
+    String refGeneration();
+
+  }
+
   public sealed interface Migrator permits SqlMigrator {
 
     void add(String name, String script);
@@ -299,6 +355,11 @@ public final class Sql {
      * The isolation level of a transaction.
      */
     public sealed interface Isolation {}
+
+    /**
+     * Returns a newly created {@link Sql.Meta} object.
+     */
+    Meta meta() throws DatabaseException;
 
     /**
      * Commits this transaction.
@@ -820,7 +881,18 @@ public final class Sql {
           type = types[idx];
 
           Object value;
-          value = rs.getObject(idx + 1, type);
+
+          if (type == int.class) {
+            value = rs.getInt(idx + 1);
+          }
+
+          else if (type == boolean.class) {
+            value = rs.getBoolean(idx + 1);
+          }
+
+          else {
+            value = rs.getObject(idx + 1, type);
+          }
 
           values[idx] = value;
         }

@@ -18,14 +18,22 @@ package objectos.way;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
+import java.time.Clock;
 import java.util.Objects;
 import javax.sql.DataSource;
 
 final class SqlDatabaseConfig implements Sql.Database.Config {
 
+  Clock clock;
+
   DataSource dataSource;
 
   Note.Sink noteSink = Note.NoOpSink.INSTANCE;
+
+  @Override
+  public final void clock(Clock value) {
+    clock = Objects.requireNonNull(value, "value == null");
+  }
 
   @Override
   public final void dataSource(DataSource value) {
@@ -42,6 +50,10 @@ final class SqlDatabaseConfig implements Sql.Database.Config {
       throw new IllegalArgumentException("No data source specified. Please use the config.dataSource(DataSource) method to provide a data source.");
     }
 
+    if (clock == null) {
+      clock = Clock.systemDefaultZone();
+    }
+
     try (Connection connection = dataSource.getConnection()) {
       DatabaseMetaData data;
       data = connection.getMetaData();
@@ -54,7 +66,7 @@ final class SqlDatabaseConfig implements Sql.Database.Config {
       SqlDialect dialect;
       dialect = SqlDialect.of(data);
 
-      return new SqlDatabase(noteSink, dataSource, dialect);
+      return new SqlDatabase(clock, noteSink, dataSource, dialect);
     } catch (SQLException e) {
       throw new Sql.DatabaseException(e);
     }

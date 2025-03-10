@@ -16,6 +16,7 @@
 package objectos.way;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -26,6 +27,7 @@ import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.OptionalLong;
 import objectos.way.Sql.BatchUpdate;
+import objectos.way.Sql.DatabaseException;
 import objectos.way.Sql.GeneratedKeys;
 import objectos.way.Sql.Update;
 
@@ -79,6 +81,18 @@ final class SqlTransaction implements Sql.Transaction {
     this.dialect = dialect;
 
     this.connection = connection;
+  }
+
+  @Override
+  public final Sql.Meta meta() throws DatabaseException {
+    try {
+      final DatabaseMetaData metaData;
+      metaData = connection.getMetaData();
+
+      return new SqlMeta(dialect, metaData);
+    } catch (SQLException e) {
+      throw new Sql.DatabaseException(e);
+    }
   }
 
   @Override

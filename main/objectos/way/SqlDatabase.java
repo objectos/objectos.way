@@ -17,12 +17,15 @@ package objectos.way;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.Clock;
 import java.util.function.Consumer;
 import javax.sql.DataSource;
 import objectos.way.Sql.DatabaseException;
 import objectos.way.Sql.Migrator;
 
 final class SqlDatabase implements Sql.Database {
+
+  private final Clock clock;
 
   private final DataSource dataSource;
 
@@ -31,7 +34,9 @@ final class SqlDatabase implements Sql.Database {
   @SuppressWarnings("unused")
   private final Note.Sink noteSink;
 
-  SqlDatabase(Note.Sink noteSink, DataSource dataSource, SqlDialect dialect) {
+  SqlDatabase(Clock clock, Note.Sink noteSink, DataSource dataSource, SqlDialect dialect) {
+    this.clock = clock;
+
     this.noteSink = noteSink;
 
     this.dataSource = dataSource;
@@ -76,7 +81,7 @@ final class SqlDatabase implements Sql.Database {
   public final void migrate(Consumer<Migrator> config) throws DatabaseException {
     try (
         Connection connection = dataSource.getConnection();
-        SqlMigrator migrator = new SqlMigrator(noteSink, dialect, connection)
+        SqlMigrator migrator = new SqlMigrator(clock, noteSink, dialect, connection)
     ) {
 
       migrator.initialize();

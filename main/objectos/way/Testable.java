@@ -15,6 +15,8 @@
  */
 package objectos.way;
 
+import java.time.LocalDateTime;
+
 /**
  * The <strong>Objectos Testable</strong> main interface. It represents an
  * object that can create a string representation suitable for testing.
@@ -39,6 +41,12 @@ public interface Testable {
      * Clears the content of this formatter, resetting it to an empty state.
      */
     void clear();
+
+    void cell(boolean value);
+
+    void cell(int value, int width);
+
+    void cell(LocalDateTime value);
 
     /**
      * Formats the specified value as a table cell with the specified fixed
@@ -94,7 +102,7 @@ public interface Testable {
 
     /**
      * Formats the specified name as a field name. More specifically, writes
-     * out the specified name immediately following by the field separator.
+     * out the specified name immediately followed by the field separator.
      *
      * @param name
      *        the field name
@@ -103,7 +111,7 @@ public interface Testable {
 
     /**
      * Formats the specified value as a field value. More specifically, writes
-     * out the value immediately following by a line separator.
+     * out the value immediately followed by a line separator.
      *
      * @param value
      *        the field value

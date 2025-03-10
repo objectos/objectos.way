@@ -17,135 +17,176 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.function.Consumer;
+import objectos.way.Sql.MetaTable;
 import org.h2.jdbcx.JdbcConnectionPool;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class SqlDatabaseTestH2 {
 
-  private Sql.Database db;
-
-  @BeforeClass
-  public void beforeClass() {
-    db = Sql.Database.create(config -> {
-      final JdbcConnectionPool ds;
-      ds = JdbcConnectionPool.create("jdbc:h2:mem:test", "sa", "");
-
-      TestingShutdownHook.register(ds::dispose);
-
-      config.dataSource(ds);
-
-      config.noteSink(TestingNoteSink.INSTANCE);
-    });
-  }
+  private final IncrementingClock clock = new IncrementingClock(2025, 3, 10);
 
   @Test
   public void migrate01() {
-    assertEquals(
-        showTables(),
+    test(
+        migrator -> migrator.add("First Version", """
+        create schema TEST;
 
-        ""
-    );
+        set schema TEST;
 
-    db.migrate(migrator -> {
+        create table T1 (
+          ID int not null,
 
-      migrator.add("First Version", """
-      create schema TEST;
-
-      set schema TEST;
-
-      create table T1 (
-        ID int not null,
-
-        primary key (ID)
-      );
-      """);
-
-    });
-
-    assertEquals(
-        showTables(),
+          primary key (ID)
+        );
+        """),
 
         """
+        # History
+
+        N/A
+
+        # Tables
+
+        """,
+
+        """
+        # History
+
+        000 | SCHEMA_HISTORY table created   | SA    | 2025-03-10 10:00:00 | true
+        001 | First Version                  | SA    | 2025-03-10 10:01:00 | true
+
+        # Tables
+
         PUBLIC.SCHEMA_HISTORY
         TEST.T1
         """
     );
   }
 
-  @Test(dependsOnMethods = "migrate01")
+  @Test(enabled = false, dependsOnMethods = "migrate01")
   public void migrate02() {
 
   }
 
-  private String showTables() {
-    record Schema(String name) implements Comparable<Schema> {
-      static Sql.Mapper<Schema> MAPPER = Sql.createRecordMapper(Schema.class);
+  private void test(Consumer<Sql.Migrator> migration, String before, String after) {
+    final JdbcConnectionPool ds;
+    ds = JdbcConnectionPool.create("jdbc:h2:mem:test", "sa", "");
 
-      @Override
-      public int compareTo(Schema o) {
-        return name.compareTo(o.name);
-      }
-    }
+    final Sql.Database db;
+    db = Sql.Database.create(config -> {
+      config.clock(clock);
 
-    record Table(String name, String schema) {
-      static Sql.Mapper<Table> MAPPER = Sql.createRecordMapper(Table.class);
+      config.dataSource(ds);
 
-      final String print() {
-        return schema + "." + name;
-      }
-    }
+      config.noteSink(TestingNoteSink.INSTANCE);
+    });
+
+    assertEquals(report(db), before);
+
+    db.migrate(migration);
+
+    assertEquals(report(db), after);
+  }
+
+  private String report(Sql.Database db) {
+    String result;
+    result = null;
 
     Sql.Transaction trx;
     trx = db.beginTransaction(Sql.READ_COMMITED);
 
     try {
-      trx.sql("show schemas");
-
-      List<Schema> _schemas;
-      _schemas = trx.query(Schema.MAPPER);
-
-      List<Schema> schemas;
-      schemas = new ArrayList<>(_schemas);
-
-      schemas.sort(Comparator.naturalOrder());
-
-      List<Table> all;
-      all = Util.createList();
-
-      for (Schema schema : schemas) {
-        if ("INFORMATION_SCHEMA".equals(schema.name)) {
-          continue;
-        }
-
-        trx.sql("show tables from " + schema.name);
-
-        List<Table> tables;
-        tables = trx.query(Table.MAPPER);
-
-        all.addAll(tables);
-      }
-
-      if (all.isEmpty()) {
-        return "";
-      }
-
-      String n;
-      n = System.lineSeparator();
-
-      String result;
-      result = all.stream().map(Table::print).collect(Collectors.joining(n, "", n));
+      result = report(trx);
 
       trx.commit();
-
-      return result;
     } finally {
       trx.close();
     }
+
+    return result;
+  }
+
+  private String report(Sql.Transaction trx) {
+    Testable.Formatter t;
+    t = Testable.Formatter.create();
+
+    t.heading1("History");
+
+    record History(int rank, String description, String installedBy, LocalDateTime installedOn, boolean success)
+        implements Testable {
+
+      static Sql.Mapper<History> MAPPER = Sql.createRecordMapper(History.class);
+
+      @Override
+      public void formatTestable(Testable.Formatter t) {
+        t.row(
+            rank, 3,
+            description, 30,
+            installedBy, 5,
+            installedOn,
+            success
+        );
+      }
+    }
+
+    final Sql.Meta meta;
+    meta = trx.meta();
+
+    final List<MetaTable> beforeSchemaHistory;
+    beforeSchemaHistory = meta.queryTables(filter -> {
+      filter.schemaName("PUBLIC");
+
+      filter.tableName("SCHEMA_HISTORY");
+    });
+
+    if (!beforeSchemaHistory.isEmpty()) {
+
+      trx.sql("""
+      select
+        INSTALLED_RANK,
+        DESCRIPTION,
+        INSTALLED_BY,
+        INSTALLED_ON,
+        SUCCESS
+      from
+        PUBLIC.SCHEMA_HISTORY
+      """);
+
+      List<History> historyRows;
+      historyRows = trx.query(History.MAPPER);
+
+      for (History row : historyRows) {
+        row.formatTestable(t);
+      }
+
+    } else {
+
+      t.row("N/A", 3);
+
+    }
+
+    t.heading1("Tables");
+
+    final List<MetaTable> tables;
+    tables = meta.queryTables();
+
+    for (MetaTable table : tables) {
+
+      final String schema;
+      schema = table.schema();
+
+      if ("INFORMATION_SCHEMA".equals(schema)) {
+        continue;
+      }
+
+      t.fieldValue(schema + "." + table.name());
+
+    }
+
+    return t.toString();
   }
 
 }

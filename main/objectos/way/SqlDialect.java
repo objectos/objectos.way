@@ -88,7 +88,13 @@ sealed abstract class SqlDialect
     return builder.toString();
   }
 
-  void migratorInitialize(SqlTransaction trx) {
+  void metaQueryTables(SqlMeta.QueryTablesConfig q) {}
+
+  SqlMigrator.Initialized migratorInitialize(SqlMigrator migrator) {
+    throw new UnsupportedOperationException();
+  }
+
+  void migratorHistory(SqlMigrator migrator, int rank, String name) {
     throw new UnsupportedOperationException();
   }
 

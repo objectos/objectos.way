@@ -15,6 +15,9 @@
  */
 package objectos.way;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 final class TestableFormatter implements Testable.Formatter {
@@ -139,6 +142,108 @@ final class TestableFormatter implements Testable.Formatter {
     out.append(System.lineSeparator());
   }
 
+  private static final DateTimeFormatter LOCAL_DATE = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+  private static final DateTimeFormatter LOCAL_DATE_TIME = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+  @Override
+  public final void cell(boolean value) {
+    cellSeparatorIfRequired();
+
+    if (value) {
+      out.append("true");
+
+      padding = 1;
+    } else {
+      out.append("false");
+    }
+  }
+
+  @Override
+  public final void cell(int value, int width) {
+    cell((long) value, width);
+  }
+
+  public final void cell(long value, int width) {
+    cellSeparatorIfRequired();
+
+    if (value == 0) {
+      writeZeros(width);
+
+      return;
+    }
+
+    if (value < 0) {
+      out.append('-');
+
+      value = -value;
+
+      width--;
+    }
+
+    long max;
+    max = (long) Math.pow(10, width);
+
+    if (value >= max) {
+      throw new IllegalArgumentException("Value must have at most " + width + " digits");
+    }
+
+    long current;
+    current = value;
+
+    long divisor;
+    divisor = max / 10;
+
+    for (int i = width; i > 0; i--) {
+      long result;
+      result = current / divisor;
+
+      char c;
+      c = (char) (result + 48);
+
+      out.append(c);
+
+      current = current % divisor;
+
+      divisor = divisor / 10;
+    }
+  }
+
+  private void writeZeros(int width) {
+    if (width == 0) {
+      return;
+    }
+
+    if (width < 0) {
+      throw new IllegalArgumentException("Width must not be negative");
+    }
+
+    for (int i = 0; i < width; i++) {
+      out.append('0');
+    }
+  }
+
+  public final void cell(LocalDate value) {
+    cellSeparatorIfRequired();
+
+    if (value != null) {
+      LOCAL_DATE.formatTo(value, out);
+    } else {
+      out.append("----------");
+    }
+  }
+
+  @Override
+  public final void cell(LocalDateTime value) {
+    cellSeparatorIfRequired();
+
+    if (value != null) {
+      LOCAL_DATE_TIME.formatTo(value, out);
+    } else {
+      out.append("---------- --------");
+    }
+  }
+
   @Override
   public final void cell(String value, int length) {
     cellSeparatorIfRequired();
@@ -168,6 +273,8 @@ final class TestableFormatter implements Testable.Formatter {
 
     if (padding > 0) {
       cellPadding(padding);
+
+      padding = 0;
     }
 
     out.append(' ');
@@ -199,6 +306,8 @@ final class TestableFormatter implements Testable.Formatter {
     out.append(System.lineSeparator());
 
     firstCell = true;
+
+    padding = 0;
   }
 
   @Override
@@ -211,6 +320,12 @@ final class TestableFormatter implements Testable.Formatter {
       value = values[idx++];
 
       switch (value) {
+        case Boolean b -> cell(b.booleanValue());
+
+        case Integer i -> cell(i.intValue(), intValue(values[idx++]));
+
+        case LocalDateTime dt -> cell(dt);
+
         case String s -> cell(s, intValue(values[idx++]));
 
         default -> throw new IllegalArgumentException("Unsupported type=" + value.getClass());

@@ -16,10 +16,15 @@
 package objectos.way;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import objectos.way.Note.Sink;
+import java.time.Clock;
+import java.time.LocalDateTime;
+import java.util.Objects;
 
 final class SqlMigrator implements Sql.Migrator, AutoCloseable {
+
+  private final Clock clock;
 
   @SuppressWarnings("unused")
   private final Note.Sink noteSink;
@@ -28,7 +33,13 @@ final class SqlMigrator implements Sql.Migrator, AutoCloseable {
 
   private final SqlTransaction trx;
 
-  SqlMigrator(Sink noteSink, SqlDialect dialect, Connection connection) {
+  private Initialized initialized;
+
+  private int rank = 1;
+
+  SqlMigrator(Clock clock, Note.Sink noteSink, SqlDialect dialect, Connection connection) {
+    this.clock = clock;
+
     this.noteSink = noteSink;
 
     this.dialect = dialect;
@@ -36,19 +47,49 @@ final class SqlMigrator implements Sql.Migrator, AutoCloseable {
     trx = new SqlTransaction(dialect, connection);
   }
 
+  record Initialized(
+      boolean success,
+      int maxRank,
+      String user
+  ) {
+
+    Initialized(ResultSet rs, int idx) throws SQLException {
+      this(
+          rs.getBoolean(idx++),
+          rs.getInt(idx++),
+          rs.getString(idx++)
+      );
+    }
+
+  }
+
   public final void initialize() {
-    dialect.migratorInitialize(trx);
+    initialized = dialect.migratorInitialize(this);
   }
 
   @Override
   public final void add(String name, String script) {
+    Objects.requireNonNull(name, "name == null");
+    Objects.requireNonNull(script, "script == null");
+
+    final int currentRank;
+    currentRank = rank++;
+
+    if (currentRank <= initialized.maxRank) {
+      return;
+    }
+
     trx.sql(Sql.SCRIPT, script);
 
     Sql.BatchUpdate result;
     result = trx.batchUpdateWithResult();
 
     switch (result) {
-      case Sql.BatchUpdateSuccess ok -> trx.commit();
+      case Sql.BatchUpdateSuccess ok -> {
+        dialect.migratorHistory(this, currentRank, name);
+
+        trx.commit();
+      }
 
       case Sql.BatchUpdateFailed error -> {
         System.out.println(error);
@@ -58,5 +99,11 @@ final class SqlMigrator implements Sql.Migrator, AutoCloseable {
 
   @Override
   public final void close() throws SQLException {}
+
+  final LocalDateTime now() {
+    return LocalDateTime.now(clock);
+  }
+
+  final SqlTransaction trx() { return trx; }
 
 }

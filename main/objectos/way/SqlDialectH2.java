@@ -18,7 +18,10 @@ package objectos.way;
 final class SqlDialectH2 extends SqlDialect {
 
   @Override
-  final void migratorInitialize(SqlTransaction trx) {
+  final SqlMigrator.Initialized migratorInitialize(SqlMigrator migrator) {
+    final SqlTransaction trx;
+    trx = migrator.trx();
+
     trx.sql(Sql.SCRIPT, """
     create table if not exists SCHEMA_HISTORY (
       INSTALLED_RANK int not null,
@@ -35,6 +38,43 @@ final class SqlDialectH2 extends SqlDialect {
     """);
 
     trx.batchUpdate();
+
+    migratorHistory(migrator, 0, "SCHEMA_HISTORY table created");
+
+    trx.sql("""
+    select
+      not exists(select 1 from SCHEMA_HISTORY where SUCCESS = false),
+      max(INSTALLED_RANK),
+      user()
+    from
+      SCHEMA_HISTORY
+    """);
+
+    SqlMigrator.Initialized result;
+    result = trx.querySingle(SqlMigrator.Initialized::new);
+
+    trx.commit();
+
+    return result;
+  }
+
+  @Override
+  final void migratorHistory(SqlMigrator migrator, int rank, String name) {
+    final SqlTransaction trx;
+    trx = migrator.trx();
+
+    trx.sql("""
+    insert into PUBLIC.SCHEMA_HISTORY
+    values (?, ?, user(), ?, 0, true)
+    """);
+
+    trx.add(rank);
+
+    trx.add(name);
+
+    trx.add(migrator.now());
+
+    trx.update();
   }
 
   @Override
