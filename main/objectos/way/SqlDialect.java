@@ -94,7 +94,7 @@ sealed abstract class SqlDialect
     throw new UnsupportedOperationException();
   }
 
-  void migratorHistory(SqlMigrator migrator, int rank, String name) {
+  void migratorHistory(SqlMigrator migrator, int rank, String name, boolean success) {
     throw new UnsupportedOperationException();
   }
 

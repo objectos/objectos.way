@@ -17,6 +17,7 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.Consumer;
@@ -26,69 +27,206 @@ import org.testng.annotations.Test;
 
 public class SqlDatabaseTestH2 {
 
-  private final IncrementingClock clock = new IncrementingClock(2025, 3, 10);
+  private final Consumer<Sql.Migrator> v001 = v("First Version", """
+  create schema TEST;
 
-  @Test
+  set schema TEST;
+
+  create table T1 (ID int not null, primary key (ID));
+  """);
+
+  private final Consumer<Sql.Migrator> v002 = v("Second Version", """
+  set schema TEST;
+
+  create table T2 (ID int not null, primary key (ID));
+  """);
+
+  @Test(description = "Single run")
   public void migrate01() {
-    test(
-        migrator -> migrator.add("First Version", """
-        create schema TEST;
-
-        set schema TEST;
-
-        create table T1 (
-          ID int not null,
-
-          primary key (ID)
-        );
-        """),
-
-        """
-        # History
-
-        N/A
-
-        # Tables
-
-        """,
-
-        """
-        # History
-
-        000 | SCHEMA_HISTORY table created   | SA    | 2025-03-10 10:00:00 | true
-        001 | First Version                  | SA    | 2025-03-10 10:01:00 | true
-
-        # Tables
-
-        PUBLIC.SCHEMA_HISTORY
-        TEST.T1
-        """
-    );
-  }
-
-  @Test(enabled = false, dependsOnMethods = "migrate01")
-  public void migrate02() {
-
-  }
-
-  private void test(Consumer<Sql.Migrator> migration, String before, String after) {
-    final JdbcConnectionPool ds;
-    ds = JdbcConnectionPool.create("jdbc:h2:mem:test", "sa", "");
-
     final Sql.Database db;
-    db = Sql.Database.create(config -> {
+    db = createdb();
+
+    assertEquals(report(db), """
+    # History
+
+    N/A
+
+    # Tables
+
+    N/A
+    """);
+
+    db.migrate(v001);
+
+    assertEquals(report(db), """
+    # History
+
+    000 | SCHEMA_HISTORY table created   | SA    | 2025-03-10 10:00:00 | true
+    001 | First Version                  | SA    | 2025-03-10 10:01:00 | true
+
+    # Tables
+
+    PUBLIC.SCHEMA_HISTORY
+    TEST.T1
+    """);
+  }
+
+  @Test(description = "Two runs: same migration")
+  public void migrate02() {
+    final Sql.Database db;
+    db = createdb();
+
+    assertEquals(report(db), """
+    # History
+
+    N/A
+
+    # Tables
+
+    N/A
+    """);
+
+    db.migrate(v001);
+
+    assertEquals(report(db), """
+    # History
+
+    000 | SCHEMA_HISTORY table created   | SA    | 2025-03-10 10:00:00 | true
+    001 | First Version                  | SA    | 2025-03-10 10:01:00 | true
+
+    # Tables
+
+    PUBLIC.SCHEMA_HISTORY
+    TEST.T1
+    """);
+
+    db.migrate(v001);
+
+    assertEquals(report(db), """
+    # History
+
+    000 | SCHEMA_HISTORY table created   | SA    | 2025-03-10 10:00:00 | true
+    001 | First Version                  | SA    | 2025-03-10 10:01:00 | true
+
+    # Tables
+
+    PUBLIC.SCHEMA_HISTORY
+    TEST.T1
+    """);
+  }
+
+  @Test(description = "Two runs: additional migration")
+  public void migrate03() {
+    final Sql.Database db;
+    db = createdb();
+
+    assertEquals(report(db), """
+    # History
+
+    N/A
+
+    # Tables
+
+    N/A
+    """);
+
+    db.migrate(v001);
+
+    assertEquals(report(db), """
+    # History
+
+    000 | SCHEMA_HISTORY table created   | SA    | 2025-03-10 10:00:00 | true
+    001 | First Version                  | SA    | 2025-03-10 10:01:00 | true
+
+    # Tables
+
+    PUBLIC.SCHEMA_HISTORY
+    TEST.T1
+    """);
+
+    db.migrate(v001.andThen(v002));
+
+    assertEquals(report(db), """
+    # History
+
+    000 | SCHEMA_HISTORY table created   | SA    | 2025-03-10 10:00:00 | true
+    001 | First Version                  | SA    | 2025-03-10 10:01:00 | true
+    002 | Second Version                 | SA    | 2025-03-10 10:02:00 | true
+
+    # Tables
+
+    PUBLIC.SCHEMA_HISTORY
+    TEST.T1
+    TEST.T2
+    """);
+  }
+
+  @Test(description = "Single run: invalid migration")
+  public void migrate04() {
+    final Sql.Database db;
+    db = createdb();
+
+    assertEquals(report(db), """
+    # History
+
+    N/A
+
+    # Tables
+
+    N/A
+    """);
+
+    db.migrate(m -> m.add("First Version", """
+    create schema TEST;
+
+    some invalid SQL;
+    """));
+
+    assertEquals(report(db), """
+    # History
+
+    000 | SCHEMA_HISTORY table created   | SA    | 2025-03-10 10:00:00 | true
+    001 | First Version                  | SA    | 2025-03-10 10:01:00 | false
+
+    # Tables
+
+    PUBLIC.SCHEMA_HISTORY
+    """);
+  }
+
+  private Consumer<Sql.Migrator> v(String name, String script) {
+    return migrator -> migrator.add(name, script);
+  }
+
+  private Sql.Database createdb() {
+    final Throwable t;
+    t = new Throwable();
+
+    final StackTraceElement[] stackTrace;
+    stackTrace = t.getStackTrace();
+
+    final StackTraceElement caller;
+    caller = stackTrace[1];
+
+    final String dbName;
+    dbName = caller.getMethodName();
+
+    final String url;
+    url = "jdbc:h2:mem:" + dbName;
+
+    final JdbcConnectionPool ds;
+    ds = JdbcConnectionPool.create(url, "sa", "");
+
+    return Sql.Database.create(config -> {
+      final Clock clock;
+      clock = new IncrementingClock(2025, 3, 10);
+
       config.clock(clock);
 
       config.dataSource(ds);
 
       config.noteSink(TestingNoteSink.INSTANCE);
     });
-
-    assertEquals(report(db), before);
-
-    db.migrate(migration);
-
-    assertEquals(report(db), after);
   }
 
   private String report(Sql.Database db) {
@@ -164,7 +302,7 @@ public class SqlDatabaseTestH2 {
 
     } else {
 
-      t.row("N/A", 3);
+      t.fieldValue("N/A");
 
     }
 
@@ -172,6 +310,8 @@ public class SqlDatabaseTestH2 {
 
     final List<MetaTable> tables;
     tables = meta.queryTables();
+
+    boolean empty = true;
 
     for (MetaTable table : tables) {
 
@@ -182,8 +322,14 @@ public class SqlDatabaseTestH2 {
         continue;
       }
 
+      empty = false;
+
       t.fieldValue(schema + "." + table.name());
 
+    }
+
+    if (empty) {
+      t.fieldValue("N/A");
     }
 
     return t.toString();

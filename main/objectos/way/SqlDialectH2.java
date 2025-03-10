@@ -15,6 +15,9 @@
  */
 package objectos.way;
 
+import java.util.List;
+import objectos.way.Sql.MetaTable;
+
 final class SqlDialectH2 extends SqlDialect {
 
   @Override
@@ -22,24 +25,42 @@ final class SqlDialectH2 extends SqlDialect {
     final SqlTransaction trx;
     trx = migrator.trx();
 
-    trx.sql(Sql.SCRIPT, """
-    create table if not exists SCHEMA_HISTORY (
-      INSTALLED_RANK int not null,
-      DESCRIPTION varchar(200) not null,
-      INSTALLED_BY varchar(100) not null,
-      INSTALLED_ON timestamp default current_timestamp,
-      EXECUTION_TIME int not null,
-      SUCCESS boolean not null,
+    trx.sql("set schema PUBLIC");
 
-      constraint SCHEMA_HISTORY_PK primary key (INSTALLED_RANK)
-    );
+    trx.update();
 
-    create index SCHEMA_HISTORY_S_IDX on SCHEMA_HISTORY (SUCCESS);
-    """);
+    final Sql.Meta meta;
+    meta = trx.meta();
 
-    trx.batchUpdate();
+    final List<MetaTable> tables;
+    tables = meta.queryTables(filter -> {
+      filter.schemaName("PUBLIC");
 
-    migratorHistory(migrator, 0, "SCHEMA_HISTORY table created");
+      filter.tableName("SCHEMA_HISTORY");
+    });
+
+    if (tables.isEmpty()) {
+
+      trx.sql(Sql.SCRIPT, """
+      create table if not exists SCHEMA_HISTORY (
+        INSTALLED_RANK int not null,
+        DESCRIPTION varchar(200) not null,
+        INSTALLED_BY varchar(100) not null,
+        INSTALLED_ON timestamp default current_timestamp,
+        EXECUTION_TIME int not null,
+        SUCCESS boolean not null,
+
+        constraint SCHEMA_HISTORY_PK primary key (INSTALLED_RANK)
+      );
+
+      create index SCHEMA_HISTORY_S_IDX on SCHEMA_HISTORY (SUCCESS);
+      """);
+
+      trx.batchUpdate();
+
+      migratorHistory(migrator, 0, "SCHEMA_HISTORY table created", true);
+
+    }
 
     trx.sql("""
     select
@@ -50,7 +71,7 @@ final class SqlDialectH2 extends SqlDialect {
       SCHEMA_HISTORY
     """);
 
-    SqlMigrator.Initialized result;
+    final SqlMigrator.Initialized result;
     result = trx.querySingle(SqlMigrator.Initialized::new);
 
     trx.commit();
@@ -59,13 +80,13 @@ final class SqlDialectH2 extends SqlDialect {
   }
 
   @Override
-  final void migratorHistory(SqlMigrator migrator, int rank, String name) {
+  final void migratorHistory(SqlMigrator migrator, int rank, String name, boolean success) {
     final SqlTransaction trx;
     trx = migrator.trx();
 
     trx.sql("""
     insert into PUBLIC.SCHEMA_HISTORY
-    values (?, ?, user(), ?, 0, true)
+    values (?, ?, user(), ?, 0, ?)
     """);
 
     trx.add(rank);
@@ -73,6 +94,8 @@ final class SqlDialectH2 extends SqlDialect {
     trx.add(name);
 
     trx.add(migrator.now());
+
+    trx.add(success);
 
     trx.update();
   }

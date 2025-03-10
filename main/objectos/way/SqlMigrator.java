@@ -86,13 +86,17 @@ final class SqlMigrator implements Sql.Migrator, AutoCloseable {
 
     switch (result) {
       case Sql.BatchUpdateSuccess ok -> {
-        dialect.migratorHistory(this, currentRank, name);
+        dialect.migratorHistory(this, currentRank, name, true);
 
         trx.commit();
       }
 
       case Sql.BatchUpdateFailed error -> {
-        System.out.println(error);
+        trx.rollback();
+
+        dialect.migratorHistory(this, currentRank, name, false);
+
+        trx.commit();
       }
     }
   }
