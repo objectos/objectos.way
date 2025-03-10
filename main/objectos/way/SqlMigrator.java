@@ -15,6 +15,7 @@
  */
 package objectos.way;
 
+import java.sql.BatchUpdateException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -91,12 +92,17 @@ final class SqlMigrator implements Sql.Migrator, AutoCloseable {
         trx.commit();
       }
 
-      case Sql.BatchUpdateFailed error -> {
+      case SqlBatchUpdateFailed error -> {
         trx.rollback();
 
         dialect.migratorHistory(this, currentRank, name, false);
 
         trx.commit();
+
+        final BatchUpdateException original;
+        original = error.original();
+
+        throw new Sql.MigrationFailedException(original);
       }
     }
   }

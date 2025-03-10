@@ -17,12 +17,14 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import java.sql.BatchUpdateException;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.Consumer;
 import objectos.way.Sql.MetaTable;
 import org.h2.jdbcx.JdbcConnectionPool;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class SqlDatabaseTestH2 {
@@ -176,11 +178,20 @@ public class SqlDatabaseTestH2 {
     N/A
     """);
 
-    db.migrate(m -> m.add("First Version", """
-    create schema TEST;
+    try {
+      db.migrate(m -> m.add("First Version", """
+      create schema TEST;
 
-    some invalid SQL;
-    """));
+      some invalid SQL;
+      """));
+
+      Assert.fail("It should have thrown");
+    } catch (Sql.MigrationFailedException expected) {
+      final Throwable cause;
+      cause = expected.getCause();
+
+      assertEquals(cause instanceof BatchUpdateException, true);
+    }
 
     assertEquals(report(db), """
     # History

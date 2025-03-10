@@ -664,6 +664,16 @@ public final class Sql {
 
   }
 
+  public static final class MigrationFailedException extends DatabaseException {
+
+    private static final long serialVersionUID = 6604970910171861408L;
+
+    MigrationFailedException(Throwable cause) {
+      super(cause);
+    }
+
+  }
+
   public static final class NoSuchRowException extends DatabaseException {
 
     private static final long serialVersionUID = 2389101948080888160L;
