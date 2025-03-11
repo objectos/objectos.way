@@ -120,6 +120,19 @@ final class WebResourcesConfig implements Web.Resources.Config {
 
   @Override
   public final void addTextFile(String pathName, CharSequence contents, Charset charset) {
+    String path;
+    path = toPath(pathName);
+
+    Objects.requireNonNull(contents, "contents == null");
+    Objects.requireNonNull(charset, "charset == null");
+
+    ResourceFile file;
+    file = new TextFile(path, contents, charset);
+
+    files.add(file);
+  }
+
+  private String toPath(String pathName) {
     Http.RequestTarget target;
     target = HttpExchange.parseRequestTarget(pathName);
 
@@ -130,16 +143,7 @@ final class WebResourcesConfig implements Web.Resources.Config {
       throw new IllegalArgumentException("Found query component in path name: " + pathName);
     }
 
-    String path;
-    path = target.path();
-
-    Objects.requireNonNull(contents, "contents == null");
-    Objects.requireNonNull(charset, "charset == null");
-
-    ResourceFile file;
-    file = new TextFile(path, contents, charset);
-
-    files.add(file);
+    return target.path();
   }
 
   @Override

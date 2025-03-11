@@ -143,11 +143,63 @@ record WebResourcesKernel(
     }
   }
 
-  public final void writeMediaObject(String path, Lang.MediaObject contents) throws IOException {
-    Objects.requireNonNull(path, "path == null");
+  public final void write(String pathName, byte[] contents) throws IOException {
+    final Path file;
+    file = toPath(pathName);
+
+    final Path tmp;
+    tmp = Files.createTempFile(null, null);
+
+    Files.write(tmp, contents);
+
+    move(tmp, file);
+  }
+
+  public final void writeMediaObject(String pathName, Lang.MediaObject contents) throws IOException {
+    final Path file;
+    file = toPath(pathName);
+
+    final Path tmp;
+    tmp = Files.createTempFile(null, null);
 
     final byte[] bytes;
     bytes = contents.mediaBytes();
+
+    Files.write(tmp, bytes);
+
+    move(tmp, file);
+  }
+
+  public final void writeString(String pathName, CharSequence contents, Charset charset) throws IOException {
+    final Path file;
+    file = toPath(pathName);
+
+    Objects.requireNonNull(contents, "contents == null");
+    Objects.requireNonNull(charset, "charset == null");
+
+    final Path tmp;
+    tmp = Files.createTempFile(null, null);
+
+    Files.writeString(tmp, contents, charset);
+
+    move(tmp, file);
+  }
+
+  private Path toPath(String pathName) throws IOException {
+    Objects.requireNonNull(pathName, "pathName == null");
+
+    Http.RequestTarget target;
+    target = HttpExchange.parseRequestTarget(pathName);
+
+    String query;
+    query = target.rawQuery();
+
+    if (query != null) {
+      throw new IllegalArgumentException("Found query component in path name: " + pathName);
+    }
+
+    final String path;
+    path = target.path();
 
     final Path file;
     file = resolve(path);
@@ -156,30 +208,7 @@ record WebResourcesKernel(
 
     checkExists(path, file);
 
-    final Path tmp;
-    tmp = Files.createTempFile(null, null);
-
-    Files.write(tmp, bytes);
-
-    move(tmp, file);
-  }
-
-  public final void writeString(String path, CharSequence contents, Charset charset) throws IOException {
-    Objects.requireNonNull(path, "path == null");
-    Objects.requireNonNull(contents, "contents == null");
-    Objects.requireNonNull(charset, "charset == null");
-
-    final Path file;
-    file = resolve(path);
-
-    checkTraversal(path, file);
-
-    final Path tmp;
-    tmp = Files.createTempFile(null, null);
-
-    Files.writeString(tmp, contents, charset);
-
-    move(tmp, file);
+    return file;
   }
 
   private void checkExists(String path, Path file) throws IOException {

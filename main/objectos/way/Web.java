@@ -558,20 +558,47 @@ public final class Web {
     void reconfigure(Consumer<Config> config) throws IOException;
 
     /**
-     * Creates a new file at the specified path with the specified text content.
+     * Creates a new file at the specified server path with the specified
+     * binary content.
+     *
+     * @param pathName
+     *        the server path of the file to be created. It must start with a
+     *        '/' character.
+     * @param contents
+     *        the contents of the new file
      *
      * @throws IOException
      *         if an I/O error occurs
      */
-    void writeMediaObject(String path, Lang.MediaObject contents) throws IOException;
+    void write(String pathName, byte[] contents) throws IOException;
 
     /**
-     * Creates a new file at the specified path with the specified text content.
+     * Creates a new file at the specified server path with the contents of the
+     * specified media object.
+     *
+     * @param pathName
+     *        the server path of the file to be created. It must start with a
+     *        '/' character.
+     * @param object
+     *        the media object whose contents is to be copied
      *
      * @throws IOException
      *         if an I/O error occurs
      */
-    void writeString(String path, CharSequence contents, Charset charset) throws IOException;
+    void writeMediaObject(String pathName, Lang.MediaObject object) throws IOException;
+
+    /**
+     * Creates a new file at the specified server path with the specified text
+     * content.
+     *
+     * @param pathName
+     *        the server path of the file to be created. It must start with a
+     *        '/' character.
+     *
+     * @throws IOException
+     *         if an I/O error occurs
+     */
+    void writeString(String pathName, CharSequence contents, Charset charset) throws IOException;
 
   }
 

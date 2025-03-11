@@ -81,6 +81,8 @@ public class WebResourcesTest extends Http.Module {
       testCase05Option(config);
     });
 
+    testCase09Option();
+
     assertFalse(Files.exists(original));
 
     TestingShutdownHook.register(resources);
@@ -98,6 +100,7 @@ public class WebResourcesTest extends Http.Module {
     route("/tc06.txt", handler(resources), handler(this::testCase06));
     route("/tc07.txt", handler(this::testCase07));
     route("/tc08.txt", handler(resources), handler(this::testCase08));
+    route("/tc09.txt", handler(resources));
   }
 
   private void testCase01Option(Web.Resources.Config config) {
@@ -402,6 +405,28 @@ public class WebResourcesTest extends Http.Module {
     assertEquals(resp02.statusCode(), 304);
 
     assertEquals(testCase08Count, 1);
+  }
+
+  private void testCase09Option() throws IOException {
+    byte[] bytes;
+    bytes = "TC 09!".getBytes(StandardCharsets.UTF_8);
+
+    resources.write("/tc09.txt", bytes);
+  }
+
+  @Test
+  public void testCase09() throws IOException, InterruptedException {
+    final HttpResponse<String> resp01;
+    resp01 = Testing.httpClient(
+        "/tc09.txt",
+
+        builder -> builder.headers(
+            "Host", "web.resources.test"
+        )
+    );
+
+    assertEquals(resp01.statusCode(), 200);
+    assertEquals(resp01.body(), "TC 09!");
   }
 
   private void write(Path directory, Path file, String text) {

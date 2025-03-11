@@ -340,6 +340,10 @@ public final class App {
 
     private static final long serialVersionUID = -4563807163596633953L;
 
+    ServiceFailedException(String message) {
+      super(message);
+    }
+
     ServiceFailedException(String message, Throwable cause) {
       super(message, cause);
     }
@@ -484,6 +488,10 @@ public final class App {
     Check.notNull(value1, "value1 == null");
 
     return new ReloadingHandlerFactory1(reloader, type1, value1);
+  }
+
+  public static ServiceFailedException serviceFailed(String message) {
+    return new ServiceFailedException(message);
   }
 
   public static ServiceFailedException serviceFailed(String name, Throwable cause) {
