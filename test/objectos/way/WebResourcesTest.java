@@ -79,6 +79,7 @@ public class WebResourcesTest extends Http.Module {
       testCase01Option(config);
       testCase03Option(config);
       testCase05Option(config);
+      testCase10Option(config);
     });
 
     testCase09Option();
@@ -101,6 +102,7 @@ public class WebResourcesTest extends Http.Module {
     route("/tc07.txt", handler(this::testCase07));
     route("/tc08.txt", handler(resources), handler(this::testCase08));
     route("/tc09.txt", handler(resources));
+    route("/tc10.txt", handler(resources));
   }
 
   private void testCase01Option(Web.Resources.Config config) {
@@ -427,6 +429,28 @@ public class WebResourcesTest extends Http.Module {
 
     assertEquals(resp01.statusCode(), 200);
     assertEquals(resp01.body(), "TC 09!");
+  }
+
+  private void testCase10Option(Web.Resources.Config config) {
+    byte[] bytes;
+    bytes = "TC 10!".getBytes(StandardCharsets.UTF_8);
+
+    config.addBinaryFile("/tc10.txt", bytes);
+  }
+
+  @Test
+  public void testCase10() throws IOException, InterruptedException {
+    final HttpResponse<String> resp01;
+    resp01 = Testing.httpClient(
+        "/tc10.txt",
+
+        builder -> builder.headers(
+            "Host", "web.resources.test"
+        )
+    );
+
+    assertEquals(resp01.statusCode(), 200);
+    assertEquals(resp01.body(), "TC 10!");
   }
 
   private void write(Path directory, Path file, String text) {

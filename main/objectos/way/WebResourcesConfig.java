@@ -119,6 +119,20 @@ final class WebResourcesConfig implements Web.Resources.Config {
   }
 
   @Override
+  public final void addBinaryFile(String pathName, byte[] contents) {
+    final String path;
+    path = toPath(pathName);
+
+    final byte[] copy;
+    copy = contents.clone(); // implicit null-check
+
+    final ResourceFile file;
+    file = new BinaryFile(path, copy);
+
+    files.add(file);
+  }
+
+  @Override
   public final void addTextFile(String pathName, CharSequence contents, Charset charset) {
     String path;
     path = toPath(pathName);

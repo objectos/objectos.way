@@ -455,6 +455,17 @@ public final class Web {
       void addDirectory(Path directory);
 
       /**
+       * Adds the specified binary file to this configuration.
+       *
+       * @param pathName
+       *        the absolute path of the text file to be created. It must start
+       *        with a '/' character.
+       * @param contents
+       *        the file contents
+       */
+      void addBinaryFile(String pathName, byte[] contents);
+
+      /**
        * Adds the specified text file to this configuration.
        *
        * @param pathName
