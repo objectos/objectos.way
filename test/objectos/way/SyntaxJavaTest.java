@@ -244,7 +244,33 @@ public class SyntaxJavaTest {
   }
 
   @Test
+  public void stringLiteral05() {
+    test(
+        """
+        "foo\\n"
+        """,
+
+        """
+        <span data-line="1"><span data-high="string">"foo\\n"</span></span>
+        """
+    );
+  }
+
+  @Test
   public void textBlock01() {
+    test("""
+        \"""
+        \"\"\"""",
+
+        """
+        <span data-line="1"><span data-high="string">\"""</span></span>\
+        <span data-line="2"><span data-high="string">\"""</span></span>
+        """
+    );
+  }
+
+  @Test
+  public void textBlock02() {
     test("""
         \"""
         abc\"\"\"""",
@@ -257,7 +283,7 @@ public class SyntaxJavaTest {
   }
 
   @Test
-  public void textBlock02() {
+  public void textBlock03() {
     test("""
         \"""
         abc\"""
@@ -271,7 +297,7 @@ public class SyntaxJavaTest {
   }
 
   @Test
-  public void textBlock03() {
+  public void textBlock04() {
     test("""
         \"""
         abc
@@ -281,6 +307,22 @@ public class SyntaxJavaTest {
         """
         <span data-line="1"><span data-high="string">\"""</span></span>\
         <span data-line="2"><span data-high="string">abc</span></span>\
+        <span data-line="3"><span data-high="string">\"""</span></span>
+        """
+    );
+  }
+
+  @Test
+  public void textBlock05() {
+    test("""
+        \"""
+        a "b" c
+        \"""
+        """,
+
+        """
+        <span data-line="1"><span data-high="string">\"""</span></span>\
+        <span data-line="2"><span data-high="string">a "b" c</span></span>\
         <span data-line="3"><span data-high="string">\"""</span></span>
         """
     );

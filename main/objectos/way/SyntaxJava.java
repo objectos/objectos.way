@@ -24,9 +24,7 @@ final class SyntaxJava implements Html.Component {
 
     NORMAL,
 
-    CHAR_LITERAL,
-
-    STRING,
+    TEXT_BLOCK,
 
     COMMENT;
 
@@ -92,9 +90,7 @@ final class SyntaxJava implements Html.Component {
     switch (context) {
       case NORMAL -> {}
 
-      case CHAR_LITERAL -> renderCharLiteral();
-
-      case STRING -> renderString();
+      case TEXT_BLOCK -> renderTextBlock();
 
       case COMMENT -> renderCommentTraditional();
     }
@@ -118,7 +114,7 @@ final class SyntaxJava implements Html.Component {
       }
 
       else if (c == '"') {
-        renderString();
+        renderStringOrText();
       }
 
       else if (c == '@') {
@@ -267,7 +263,7 @@ final class SyntaxJava implements Html.Component {
         context = Context.COMMENT;
       }
 
-      case CHAR_LITERAL, STRING -> throw new IllegalStateException("Cannot render comment as we're in context " + context);
+      case TEXT_BLOCK -> throw new IllegalStateException("Cannot render comment as we're in context " + context);
 
       case COMMENT -> {}
     }
@@ -333,33 +329,113 @@ final class SyntaxJava implements Html.Component {
   }
 
   private void renderCharLiteral() {
-    renderString0('\'', Context.CHAR_LITERAL);
+    renderString0('\'');
+  }
+
+  private void renderStringOrText() {
+    // a minimal text block
+    // """
+    // """
+    // 3 quotes + \n + 3 quotes = 7 characters
+
+    final int remaining;
+    remaining = sourceLength - sourceIndex;
+
+    if (remaining < 7) {
+      // smaller than minimal text block
+      renderString();
+    }
+
+    else if (source.charAt(sourceIndex + 1) != '"'
+        || source.charAt(sourceIndex + 2) != '"'
+        || source.charAt(sourceIndex + 3) != '\n') {
+      renderString();
+    }
+
+    else {
+      renderTextBlock();
+    }
   }
 
   private void renderString() {
-    renderString0('"', Context.STRING);
+    renderString0('"');
   }
 
-  private void renderString0(char quote, Context next) {
+  private void renderString0(char quote) {
     // where the string begins
     final int beginIndex;
     beginIndex = sourceIndex;
 
-    // our 'parser' state
-    enum Parser {
-      START_QUOTE1,
-      START_QUOTE2,
-      START_QUOTEN,
+    // render any preceding normal text (if necessary)
+    renderNormal();
 
-      ESCAPE,
+    // consume initial quote
+    sourceIndex++;
 
-      CONTENTS,
+    // are we in a escape sequence?
+    boolean escape;
+    escape = false;
 
-      END_QUOTE;
+    outer: while (sourceIndex < sourceLength) {
+
+      final char c;
+      c = source.charAt(sourceIndex++);
+
+      if (c == quote) {
+
+        if (!escape) {
+          break outer;
+        }
+
+        else {
+          escape = false;
+        }
+
+      }
+
+      else if (Ascii.isLineTerminator(c)) {
+
+        // malformed, we move back the index
+        // to delegate the line terminator to the readLine method
+        sourceIndex--;
+
+        break outer;
+
+      }
+
+      else if (c == '\\') {
+
+        escape = true;
+
+      }
+
+      else {
+
+        escape = false;
+
+      }
+
     }
 
-    Parser parser;
-    parser = Parser.START_QUOTE1;
+    final String text;
+    text = source.substring(beginIndex, sourceIndex);
+
+    html.span(
+
+        html.attr(Syntax.DATA_HIGH, "string"),
+
+        html.text(text)
+
+    );
+
+    // do not emit normal text
+    normalIndex = sourceIndex;
+  }
+
+  private void renderTextBlock() {
+    // where the string begins
+    final int beginIndex;
+    beginIndex = sourceIndex;
 
     // initial state depends on context
     switch (context) {
@@ -367,99 +443,66 @@ final class SyntaxJava implements Html.Component {
         // render any preceding normal text (if necessary)
         renderNormal();
 
-        // consume opening '"'
+        // consume opening |"""|
+        sourceIndex++;
+        sourceIndex++;
         sourceIndex++;
 
-        // we are in a string now
-        context = next;
+        // we are in a text block now
+        context = Context.TEXT_BLOCK;
       }
 
-      case CHAR_LITERAL, STRING -> {
-        // we continue previous string
-        parser = Parser.CONTENTS;
-      }
+      case TEXT_BLOCK -> {}
 
       case COMMENT -> throw new IllegalStateException("Cannot render string as we're in a comment context");
     }
 
+    // how many quotes in sequence have we seen?
+    int quotes = 0;
+
+    // are we in a escape sequence?
+    boolean escape = false;
+
     outer: while (sourceIndex < sourceLength) {
 
       final char c;
-      c = source.charAt(sourceIndex);
+      c = source.charAt(sourceIndex++);
 
       if (Ascii.isLineTerminator(c)) {
 
-        switch (parser) {
-          case START_QUOTE1,
-               START_QUOTE2,
-               START_QUOTEN,
-               ESCAPE,
-               CONTENTS -> { eol = true; normalIndex = sourceIndex; }
-
-          case END_QUOTE -> { eol = true; context = Context.NORMAL; normalIndex = sourceIndex; }
-        }
+        sourceIndex--;
 
         break outer;
 
       }
 
-      else if (c == quote) {
+      else if (c == '"') {
 
-        switch (parser) {
-          case START_QUOTE1 -> { parser = Parser.START_QUOTE2; sourceIndex++; }
+        quotes++;
 
-          case START_QUOTE2,
-               START_QUOTEN -> { parser = Parser.START_QUOTEN; sourceIndex++; }
+        if (!escape && quotes == 3) {
+          context = Context.NORMAL;
 
-          case ESCAPE -> { parser = Parser.CONTENTS; sourceIndex++; }
-
-          case CONTENTS,
-               END_QUOTE -> { parser = Parser.END_QUOTE; sourceIndex++; }
+          break outer;
         }
+
+        escape = false;
 
       }
 
       else if (c == '\\') {
 
-        switch (parser) {
-          case START_QUOTE1,
-               START_QUOTE2,
-               START_QUOTEN,
-               CONTENTS -> { parser = Parser.ESCAPE; sourceIndex++; }
+        quotes = 0;
 
-          case ESCAPE -> { parser = Parser.CONTENTS; sourceIndex++; }
-
-          case END_QUOTE -> {
-            // we found the end of the string
-            context = Context.NORMAL;
-
-            // set next normal text start
-            normalIndex = sourceIndex;
-
-            break outer;
-          }
-        }
+        escape = true;
 
       }
 
       else {
 
-        switch (parser) {
-          case START_QUOTE1,
-               START_QUOTEN,
-               ESCAPE,
-               CONTENTS -> { parser = Parser.CONTENTS; sourceIndex++; }
+        quotes = 0;
 
-          case START_QUOTE2, END_QUOTE -> {
-            // we found the end of the string
-            context = Context.NORMAL;
-
-            // set next normal text start
-            normalIndex = sourceIndex;
-
-            break outer;
-          }
-        }
+        escape = false;
 
       }
 
