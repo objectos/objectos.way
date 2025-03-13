@@ -64,7 +64,6 @@ endif
 ifeq ($(ENABLE_PREVIEW),1)
 DEV_JAVAX += --enable-preview
 endif
-DEV_JAVAX += --limit-modules $(MODULE)
 DEV_JAVAX += --module $(MODULE)/$(DEV_MAIN)
 ifdef DEV_APP_ARGS
 DEV_JAVAX += $(DEV_APP_ARGS)
