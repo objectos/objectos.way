@@ -16,10 +16,38 @@
 package objectos.way;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertSame;
 
+import objectos.way.Http.HeaderName;
 import org.testng.annotations.Test;
 
 public class HttpHeaderNameTest {
+
+  @Test
+  public void of01() {
+    for (int i = 0; i < HttpHeaderName.standardNamesSize(); i++) {
+      HttpHeaderName std;
+      std = HttpHeaderName.standardName(i);
+
+      String name;
+      name = std.capitalized();
+
+      HeaderName result;
+      result = Http.HeaderName.of(name);
+
+      assertSame(result, std);
+    }
+  }
+
+  @Test
+  public void of02() {
+    Http.HeaderName res;
+    res = Http.HeaderName.of("Foo-Bar");
+
+    assertEquals(res instanceof HttpHeaderNameUnknown, true);
+    assertEquals(res.index(), -1);
+    assertEquals(res.capitalized(), "Foo-Bar");
+  }
 
   @SuppressWarnings("unlikely-arg-type")
   @Test(description = "equals() should work fine")

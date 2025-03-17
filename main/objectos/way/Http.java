@@ -368,6 +368,19 @@ public final class Http {
    */
   public sealed interface HeaderName permits HttpHeaderName, HttpHeaderNameUnknown {
 
+    static HeaderName of(String name) {
+      Objects.requireNonNull(name, "name == null");
+
+      HeaderName headerName;
+      headerName = HttpHeaderName.findByName(name);
+
+      if (headerName == null) {
+        headerName = new HttpHeaderNameUnknown(name);
+      }
+
+      return headerName;
+    }
+
     /**
      * The {@code Accept-Encoding} header name.
      */

@@ -1513,7 +1513,7 @@ final class HttpExchange extends HttpModuleSupport implements Http.Exchange, Clo
   @Override
   public final void header(Http.HeaderName name, long value) {
     checkResponse();
-    Check.notNull(name, "name == null");
+    Objects.requireNonNull(name, "name == null");
 
     header0(name, Long.toString(value));
   }
@@ -1521,8 +1521,8 @@ final class HttpExchange extends HttpModuleSupport implements Http.Exchange, Clo
   @Override
   public final void header(Http.HeaderName name, String value) {
     checkResponse();
-    Check.notNull(name, "name == null");
-    Check.notNull(value, "value == null");
+    Objects.requireNonNull(name, "name == null");
+    Objects.requireNonNull(value, "value == null");
 
     header0(name, value);
   }
@@ -1547,7 +1547,8 @@ final class HttpExchange extends HttpModuleSupport implements Http.Exchange, Clo
     header0(Http.HeaderName.DATE, value);
   }
 
-  private void header0(Http.HeaderName name, String value) { // write our the name
+  private void header0(Http.HeaderName name, String value) {
+    // write our the name
     int index;
     index = name.index();
 
@@ -1868,7 +1869,6 @@ final class HttpExchange extends HttpModuleSupport implements Http.Exchange, Clo
 
     send();
   }
-
 
   // 404 NOT FOUND
 
