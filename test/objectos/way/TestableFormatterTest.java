@@ -82,6 +82,42 @@ public class TestableFormatterTest {
   }
 
   @Test
+  public void field02() {
+    Testable.Formatter w;
+    w = Testable.Formatter.create();
+
+    w.heading1("Field");
+
+    w.field("name", "");
+
+    w.fieldName("foo");
+    w.fieldValue("");
+
+    assertEquals(w.toString(), """
+    # Field
+
+    name:
+    foo:
+    """);
+  }
+
+  @Test
+  public void field03() {
+    Testable.Formatter w;
+    w = Testable.Formatter.create();
+
+    w.heading1("Field");
+
+    w.fieldValue("foo");
+
+    assertEquals(w.toString(), """
+    # Field
+
+    foo
+    """);
+  }
+
+  @Test
   public void heading01() {
     Testable.Formatter w;
     w = Testable.Formatter.create();

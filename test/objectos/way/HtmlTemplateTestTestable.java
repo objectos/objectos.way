@@ -139,7 +139,7 @@ public class HtmlTemplateTestTestable {
         """,
 
         """
-        empty: \n\
+        empty:
         """
     );
   }

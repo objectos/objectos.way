@@ -26,7 +26,7 @@ final class TestableFormatter implements Testable.Formatter {
 
   private final String cellSeparator;
 
-  private final String fieldSeparator = ": ";
+  private final char fieldSeparator = ':';
 
   private final String nullValue = "null";
 
@@ -138,7 +138,19 @@ final class TestableFormatter implements Testable.Formatter {
 
   @Override
   public final void fieldValue(String value) {
-    out.append(value);
+    if (!"".equals(value)) {
+
+      final int length;
+      length = out.length();
+
+      if (length > 0 && out.charAt(length - 1) == fieldSeparator) {
+        out.append(' ');
+      }
+
+      out.append(value);
+
+    }
+
     out.append(System.lineSeparator());
   }
 
