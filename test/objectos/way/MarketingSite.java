@@ -28,6 +28,8 @@ final class MarketingSite implements Http.Module {
     routing.path("/index.html", path -> {
       path.handler(this::indexHtml);
     });
+
+    routing.handler(Http.Handler.notFound());
   }
 
   private void indexHtml(Http.Exchange http) {

@@ -16,11 +16,12 @@
 package testing.site.web;
 
 import objectos.way.Http;
+import objectos.way.Http.Routing;
 import objectos.way.Web;
 import testing.site.auth.User;
 import testing.zite.TestingSiteInjector;
 
-public class TestingHttpModule extends Http.Module {
+public class TestingHttpModule implements Http.Module {
 
   private final TestingSiteInjector injector;
 
@@ -29,17 +30,22 @@ public class TestingHttpModule extends Http.Module {
   }
 
   @Override
-  protected final void configure() {
-    route("/login", handlerFactory(Login::new, injector));
+  public final void configure(Routing routing) {
+    routing.path("/login", path -> {
+      path.handler(Http.Handler.factory(Login::new, injector));
+    });
 
-    route("/common/*", handler(injector.webResources()));
+    final Web.Resources webResources;
+    webResources = injector.webResources();
 
-    Web.Store sessionStore;
-    sessionStore = injector.sessionStore();
+    routing.path("/common/*", webResources::handlePath);
 
-    filter(sessionStore::filter);
-
-    filter(this::requireLogin);
+    //    Web.Store sessionStore;
+    //    sessionStore = injector.sessionStore();
+    //
+    //    filter(sessionStore::filter);
+    //
+    //    filter(this::requireLogin);
   }
 
   private void requireLogin(Http.Exchange http) {

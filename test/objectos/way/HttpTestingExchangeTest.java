@@ -118,16 +118,13 @@ public class HttpTestingExchangeTest {
     """);
   }
 
-  private final Http.Handler moduleInterop = new Http.Module() {
-    @Override
-    protected final void configure() {
-      route("/tc01", handler(this::tc01));
-    }
-
-    private void tc01(Http.Exchange http) {
-      http.okText("TC01", StandardCharsets.UTF_8);
-    }
-  }.compile();
+  private final Http.Handler moduleInterop = Http.Handler.create(routing -> {
+    routing.path("/tc01", path -> {
+      path.handler(http -> {
+        http.okText("TC01", StandardCharsets.UTF_8);
+      });
+    });
+  });
 
   @Test
   public void moduleInterop01() {

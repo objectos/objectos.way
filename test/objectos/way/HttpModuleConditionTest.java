@@ -54,8 +54,8 @@ public class HttpModuleConditionTest {
     test(condition, "/test/", false);
   }
 
-  private void test(HttpModule.Condition condition, String target, boolean expected) {
-    HttpExchange requestTarget;
+  private void test(HttpModuleCondition condition, String target, boolean expected) {
+    HttpModuleSupport requestTarget;
     requestTarget = HttpExchange.parseRequestTarget(target);
 
     HttpModuleMatcher matcher;

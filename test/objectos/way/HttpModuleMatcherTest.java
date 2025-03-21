@@ -146,14 +146,14 @@ public class HttpModuleMatcherTest {
   }
 
   private void test(HttpModuleMatcher matcher, String target, boolean expected) {
-    HttpExchange requestTarget;
+    HttpModuleSupport requestTarget;
     requestTarget = HttpExchange.parseRequestTarget(target);
 
     assertEquals(matcher.test(requestTarget), expected);
   }
 
   private void test(HttpModuleMatcher matcher, String target, Map<String, String> expected) {
-    HttpExchange requestTarget;
+    HttpModuleSupport requestTarget;
     requestTarget = HttpExchange.parseRequestTarget(target);
 
     assertTrue(matcher.test(requestTarget));

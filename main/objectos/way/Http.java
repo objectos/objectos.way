@@ -330,6 +330,15 @@ public final class Http {
 
     }
 
+    static Handler create(Consumer<? super Routing> config) {
+      final HttpRouting routing;
+      routing = new HttpRouting();
+
+      config.accept(routing);
+
+      return routing.build();
+    }
+
     static <T> Handler factory(Function<T, ? extends Handler> factory, T value) {
       return http -> {
         final Handler handler;
@@ -841,11 +850,14 @@ public final class Http {
 
   }
 
-  public interface Routing {
+  /**
+   * Configures the routing of an HTTP server.
+   */
+  public sealed interface Routing permits HttpRouting {
 
-    void allow(Http.Method method, Http.Handler handler);
+    void allow(Method method, Handler handler);
 
-    void handler(Http.Handler handler);
+    void handler(Handler handler);
 
     void install(Consumer<Routing> module);
 

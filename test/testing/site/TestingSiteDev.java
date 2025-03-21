@@ -15,16 +15,9 @@
  */
 package testing.site;
 
-import java.io.IOException;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.WatchService;
 import objectos.way.App;
-import objectos.way.Http;
-import objectos.way.Note;
-import testing.zite.TestingSiteInjector;
 
 public final class TestingSiteDev extends TestingSite {
 
@@ -50,40 +43,40 @@ public final class TestingSiteDev extends TestingSite {
     return App.NoteSink.OfConsole.create(config -> {});
   }
 
-  @Override
-  final Http.HandlerFactory handlerFactory(Note.Sink noteSink, App.ShutdownHook shutdownHook, TestingSiteInjector injector) {
-    FileSystem fileSystem;
-    fileSystem = FileSystems.getDefault();
-
-    WatchService watchService;
-
-    try {
-      watchService = fileSystem.newWatchService();
-    } catch (IOException e) {
-      throw App.serviceFailed("WatchService", e);
-    }
-
-    shutdownHook.register(watchService);
-
-    App.Reloader reloader;
-
-    try {
-      reloader = App.Reloader.create(config -> {
-        config.binaryName("testing.site.web.TestingHttpModule");
-
-        config.watchService(watchService);
-
-        config.noteSink(noteSink);
-
-        config.directory(testClassOutputOption.get());
-      });
-
-      shutdownHook.register(reloader);
-    } catch (IOException e) {
-      throw App.serviceFailed("ClassReloader", e);
-    }
-
-    return App.createHandlerFactory(reloader, TestingSiteInjector.class, injector);
-  }
+  //  @Override
+  //  final Http.HandlerFactory handlerFactory(Note.Sink noteSink, App.ShutdownHook shutdownHook, TestingSiteInjector injector) {
+  //    FileSystem fileSystem;
+  //    fileSystem = FileSystems.getDefault();
+  //
+  //    WatchService watchService;
+  //
+  //    try {
+  //      watchService = fileSystem.newWatchService();
+  //    } catch (IOException e) {
+  //      throw App.serviceFailed("WatchService", e);
+  //    }
+  //
+  //    shutdownHook.register(watchService);
+  //
+  //    App.Reloader reloader;
+  //
+  //    try {
+  //      reloader = App.Reloader.create(config -> {
+  //        config.binaryName("testing.site.web.TestingHttpModule");
+  //
+  //        config.watchService(watchService);
+  //
+  //        config.noteSink(noteSink);
+  //
+  //        config.directory(testClassOutputOption.get());
+  //      });
+  //
+  //      shutdownHook.register(reloader);
+  //    } catch (IOException e) {
+  //      throw App.serviceFailed("ClassReloader", e);
+  //    }
+  //
+  //    return App.createHandlerFactory(reloader, TestingSiteInjector.class, injector);
+  //  }
 
 }

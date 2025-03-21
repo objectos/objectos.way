@@ -19,9 +19,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Clock;
 import objectos.way.App;
-import objectos.way.App.ShutdownHook;
 import objectos.way.Http;
-import objectos.way.Note;
 import objectos.way.Script;
 import objectos.way.Web;
 import testing.zite.TestingSiteInjector;
@@ -87,8 +85,6 @@ abstract class TestingSite extends App.Bootstrap {
     injector = new TestingSiteInjector(noteSink, sessionStore, webResources);
 
     // HandlerFactory
-    Http.HandlerFactory handlerFactory;
-    handlerFactory = handlerFactory(noteSink, shutdownHook, injector);
 
     // Clock
 
@@ -99,7 +95,7 @@ abstract class TestingSite extends App.Bootstrap {
     try {
       Http.Server httpServer;
       httpServer = Http.Server.create(config -> {
-        config.handlerFactory(handlerFactory);
+        //config.handlerFactory(handlerFactory);
 
         config.bufferSize(1024, 4096);
 
@@ -120,7 +116,7 @@ abstract class TestingSite extends App.Bootstrap {
 
   abstract App.NoteSink noteSink();
 
-  abstract Http.HandlerFactory handlerFactory(Note.Sink noteSink, ShutdownHook shutdownHook, TestingSiteInjector injector);
+  //abstract Http.HandlerFactory handlerFactory(Note.Sink noteSink, ShutdownHook shutdownHook, TestingSiteInjector injector);
 
   Clock clock() {
     return Clock.systemUTC();
