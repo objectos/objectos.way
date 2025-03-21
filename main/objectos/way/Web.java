@@ -548,6 +548,10 @@ public final class Web {
       return new WebResources(kernel);
     }
 
+    default void handlePath(Http.Routing path) {
+      path.handler(this);
+    }
+
     /**
      * Deletes the file at the specified path if it exists.
      *
@@ -775,6 +779,17 @@ public final class Web {
      * @return the session with the specified session ID or {@code null}
      */
     Session get(String id);
+
+    /**
+     * Returns the session associated to the specified request; or returns
+     * {@code null} if a session could not be found.
+     *
+     * @param request
+     *        the HTTP request message
+     *
+     * @return the session associated to the HTTP request or {@code null}
+     */
+    Session get(Http.Request request);
 
     /**
      * Returns a Set-Cookie header value for the specified session ID.

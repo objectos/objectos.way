@@ -154,6 +154,28 @@ final class WebStore implements Web.Store {
   }
 
   @Override
+  public final Web.Session get(Http.Request request) {
+    String cookieHeaderValue;
+    cookieHeaderValue = request.header(Http.HeaderName.COOKIE); // implicit null-check
+
+    if (cookieHeaderValue == null) {
+      return null;
+    }
+
+    Http.Cookies cookies;
+    cookies = Http.Cookies.parse(cookieHeaderValue);
+
+    String id;
+    id = cookies.get(cookieName);
+
+    if (id == null) {
+      return null;
+    }
+
+    return get(id);
+  }
+
+  @Override
   public final String setCookie(String id) {
     Check.notNull(id, "id == null");
 

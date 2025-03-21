@@ -16,10 +16,11 @@
 package objectos.way;
 
 import java.util.Arrays;
+import java.util.function.Predicate;
 import objectos.way.HttpModule.Condition;
 
 @SuppressWarnings("exports")
-interface HttpModuleMatcher {
+interface HttpModuleMatcher extends Predicate<Http.Request> {
 
   record Exact(String value) implements HttpModuleMatcher {
     @Override
@@ -153,6 +154,13 @@ interface HttpModuleMatcher {
     }
   }
 
+  record WithCondition(HttpModuleMatcher matcher, HttpModuleCondition condition) implements HttpModuleMatcher {
+    @Override
+    public final boolean test(HttpModuleSupport path) {
+      return matcher.test(path) && condition.test(path);
+    }
+  }
+
   record WithConditions(HttpModuleMatcher matcher, HttpModule.Condition[] conditions) implements HttpModuleMatcher {
     @Override
     public final boolean test(HttpModuleSupport path) {
@@ -174,8 +182,22 @@ interface HttpModuleMatcher {
     return new Matcher2(this, other);
   }
 
+  default HttpModuleMatcher withCondition(HttpModuleCondition condition) {
+    return new WithCondition(this, condition);
+  }
+
   default HttpModuleMatcher withConditions(Condition[] conditions) {
     return new WithConditions(this, conditions);
+  }
+
+  @Override
+  default boolean test(Http.Request request) {
+    final HttpModuleSupport target;
+    target = (HttpModuleSupport) request;
+
+    target.matcherReset();
+
+    return test(target);
   }
 
   boolean test(HttpModuleSupport target);

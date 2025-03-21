@@ -27,6 +27,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
+import objectos.way.Http.Routing;
 
 public final class TestingHttpServer {
 
@@ -114,15 +115,15 @@ public final class TestingHttpServer {
     static ThisHandlerFactory HANDLER;
 
     public static void bindHttpModuleTest(HttpModuleTest test) {
-      HANDLER.httpModuleTest.delegate = test.compile();
+      HANDLER.httpModuleTest.delegate = Http.Handler.of(test);
     }
 
     public static void bindHttpServerTest(HttpServerTest test) {
-      HANDLER.httpServerTest.delegate = test.compile();
+      HANDLER.httpServerTest.delegate = Http.Handler.of(test);
     }
 
     public static void bindWebResourcesTest(WebResourcesTest test) {
-      HANDLER.webResourcesTest.delegate = test.compile();
+      HANDLER.webResourcesTest.delegate = Http.Handler.of(test);
     }
 
     private static Http.Server create() {
@@ -151,7 +152,10 @@ public final class TestingHttpServer {
 
       Http.Server wayServer;
       wayServer = Http.Server.create(config -> {
-        config.handlerFactory(HANDLER);
+        final Http.Handler serverHandler;
+        serverHandler = Http.Handler.of(HANDLER);
+
+        config.handler(serverHandler);
 
         config.clock(TestingClock.FIXED);
 
@@ -173,7 +177,7 @@ public final class TestingHttpServer {
 
   }
 
-  private static class ThisHandlerFactory extends Http.Module implements Http.HandlerFactory {
+  private static class ThisHandlerFactory implements Http.Module {
 
     private final DelegatingHandler httpModuleTest = new DelegatingHandler();
 
@@ -184,19 +188,27 @@ public final class TestingHttpServer {
     private final DelegatingHandler webResourcesTest = new DelegatingHandler();
 
     @Override
-    public final Http.Handler create() throws Exception {
-      return compile();
+    public final void configure(Routing r) {
+      r.when(req -> host(req, "http.module.test"), matched -> {
+        matched.handler(httpModuleTest);
+      });
+
+      r.when(req -> host(req, "http.server.test"), matched -> {
+        matched.handler(httpServerTest);
+      });
+
+      r.when(req -> host(req, "marketing"), marketing);
+
+      r.when(req -> host(req, "web.resources.test"), matched -> {
+        matched.handler(webResourcesTest);
+      });
     }
 
-    @Override
-    protected final void configure() {
-      host("http.module.test", httpModuleTest);
+    private boolean host(Http.Request req, String hostName) {
+      final String host;
+      host = req.header(Http.HeaderName.HOST);
 
-      host("http.server.test", httpServerTest);
-
-      host("marketing", marketing);
-
-      host("web.resources.test", webResourcesTest);
+      return hostName.equals(host);
     }
 
     private static final class DelegatingHandler implements Http.Handler {

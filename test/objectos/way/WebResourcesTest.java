@@ -33,7 +33,7 @@ import java.util.Optional;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class WebResourcesTest extends Http.Module {
+public class WebResourcesTest implements Http.Module {
 
   private record TextPlain(String text) implements Lang.MediaObject {
     @Override
@@ -92,17 +92,25 @@ public class WebResourcesTest extends Http.Module {
   }
 
   @Override
-  protected final void configure() {
-    route("/tc01.txt", handler(resources));
-    route("/tc02.txt", handler(resources), handler(this::testCase02));
-    route("/tc03.txt", handler(resources));
-    route("/tc04.txt", handler(resources));
-    route("/tc05.txt", handler(resources));
-    route("/tc06.txt", handler(resources), handler(this::testCase06));
-    route("/tc07.txt", handler(this::testCase07));
-    route("/tc08.txt", handler(resources), handler(this::testCase08));
-    route("/tc09.txt", handler(resources));
-    route("/tc10.txt", handler(resources));
+  public final void configure(Http.Routing routing) {
+    routing.path("/tc01.txt", resources::handlePath);
+    routing.path("/tc02.txt", path -> {
+      path.handler(Http.Handler.firstOf(resources, this::testCase02));
+    });
+    routing.path("/tc03.txt", resources::handlePath);
+    routing.path("/tc04.txt", resources::handlePath);
+    routing.path("/tc05.txt", resources::handlePath);
+    routing.path("/tc06.txt", path -> {
+      path.handler(Http.Handler.firstOf(resources, this::testCase06));
+    });
+    routing.path("/tc07.txt", path -> {
+      path.handler(this::testCase07);
+    });
+    routing.path("/tc08.txt", path -> {
+      path.handler(Http.Handler.firstOf(resources, this::testCase08));
+    });
+    routing.path("/tc09.txt", resources::handlePath);
+    routing.path("/tc10.txt", resources::handlePath);
   }
 
   private void testCase01Option(Web.Resources.Config config) {

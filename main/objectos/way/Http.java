@@ -37,6 +37,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -93,7 +94,7 @@ public final class Http {
    * interface return decoded values.
    */
   public sealed interface Exchange
-      extends RequestLine, RequestTarget, RequestHeaders, RequestBody
+      extends Request
       permits HttpExchange, TestingExchange {
 
     /**
@@ -232,19 +233,6 @@ public final class Http {
       send(bytes);
     }
 
-    // 301
-    default void movedPermanently(String location) {
-      Check.notNull(location, "location == null");
-
-      status(Http.Status.MOVED_PERMANENTLY);
-
-      dateNow();
-
-      header(Http.HeaderName.LOCATION, location);
-
-      send();
-    }
-
     // 302
     default void found(String location) {
       Check.notNull(location, "location == null");
@@ -342,6 +330,77 @@ public final class Http {
 
     }
 
+    static <T> Handler factory(Function<T, ? extends Handler> factory, T value) {
+      return http -> {
+        final Handler handler;
+        handler = factory.apply(value);
+
+        handler.handle(http);
+      };
+    }
+
+    static Handler movedPermanently(String location) {
+      Objects.requireNonNull(location, "location == null");
+
+      return http -> {
+        http.status(Http.Status.MOVED_PERMANENTLY);
+
+        http.dateNow();
+
+        http.header(Http.HeaderName.LOCATION, location);
+
+        http.send();
+      };
+    }
+
+    static Handler noop() {
+      return http -> {};
+    }
+
+    static Handler notFound() {
+      return http -> {
+        http.status(Http.Status.NOT_FOUND);
+
+        http.dateNow();
+
+        http.header(Http.HeaderName.CONNECTION, "close");
+
+        http.send();
+      };
+    }
+
+    static Handler of(Module module) {
+      final HttpRouting routing;
+      routing = new HttpRouting();
+
+      module.configure(routing);
+
+      return routing.build();
+    }
+
+    static Handler ofText(String text, Charset charset) {
+      final byte[] bytes;
+      bytes = text.getBytes(charset); // early implicit null-check
+
+      return http -> {
+        http.status(Http.Status.OK);
+
+        http.dateNow();
+
+        final String charsetName;
+        charsetName = charset.name();
+
+        final String contentType;
+        contentType = "text/plain; charset=" + charsetName.toLowerCase(Locale.US);
+
+        http.header(Http.HeaderName.CONTENT_TYPE, contentType);
+
+        http.header(Http.HeaderName.CONTENT_LENGTH, bytes.length);
+
+        http.send(bytes);
+      };
+    }
+
     /**
      * Process the specified exchange i.e. consume the request and generate a
      * response.
@@ -350,16 +409,6 @@ public final class Http {
      *        the exchange to be processed
      */
     void handle(Http.Exchange http);
-
-  }
-
-  /**
-   * The HTTP handler factory of an HTTP server.
-   */
-  @FunctionalInterface
-  public interface HandlerFactory {
-
-    Http.Handler create() throws Exception;
 
   }
 
@@ -530,14 +579,22 @@ public final class Http {
    * A module configures the handlers a server instance will use to process its
    * requests.
    */
-  public static abstract class Module extends HttpModule {
+  @FunctionalInterface
+  public interface Module {
 
-    /**
-     * Sole constructor.
-     */
-    protected Module() {}
+    void configure(Routing routing);
 
   }
+
+  /**
+   * Represents an HTTP request message.
+   */
+  public sealed interface Request
+      extends
+      RequestLine,
+      RequestTarget,
+      RequestHeaders,
+      RequestBody {}
 
   /**
    * Provides methods for reading the body of an HTTP request message.
@@ -784,6 +841,30 @@ public final class Http {
 
   }
 
+  public interface Routing {
+
+    void allow(Http.Method method, Http.Handler handler);
+
+    void handler(Http.Handler handler);
+
+    void install(Consumer<Routing> module);
+
+    void install(Module module);
+
+    void path(String path, Consumer<Routing> config);
+
+    void param(String name, Predicate<String> condition);
+
+    void paramDigits(String name);
+
+    void paramNotEmpty(String name);
+
+    void paramRegex(String name, String value);
+
+    void when(Predicate<Request> condition, Module module);
+
+  }
+
   /**
    * An HTTP server.
    */
@@ -794,15 +875,15 @@ public final class Http {
      */
     public sealed interface Config permits HttpServerConfig {
 
-      Config bufferSize(int initial, int max);
+      void bufferSize(int initial, int max);
 
-      Config clock(Clock clock);
+      void clock(Clock clock);
 
-      Config handlerFactory(HandlerFactory factory);
+      void handler(Handler value);
 
-      Config noteSink(Note.Sink noteSink);
+      void noteSink(Note.Sink noteSink);
 
-      Config port(int port);
+      void port(int port);
 
     }
 
@@ -1219,27 +1300,6 @@ public final class Http {
   }
 
   private Http() {}
-
-  private static final class SimpleHandlerFactory implements Http.HandlerFactory {
-
-    private final Http.Handler handler;
-
-    public SimpleHandlerFactory(Handler handler) {
-      this.handler = handler;
-    }
-
-    @Override
-    public final Handler create() {
-      return handler;
-    }
-
-  }
-
-  public static HandlerFactory createHandlerFactory(Http.Handler handler) {
-    Check.notNull(handler, "handler == null");
-
-    return new SimpleHandlerFactory(handler);
-  }
 
   /**
    * Formats a date so it can be used as the value of a {@code Date} HTTP

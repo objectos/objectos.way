@@ -17,7 +17,6 @@ package objectos.way;
 
 import java.time.Clock;
 import java.util.Objects;
-import objectos.way.Http.HandlerFactory;
 
 final class HttpServerConfig implements Http.Server.Config {
 
@@ -27,7 +26,7 @@ final class HttpServerConfig implements Http.Server.Config {
 
   Clock clock = Clock.systemUTC();
 
-  Http.HandlerFactory factory = () -> http -> {};
+  Http.Handler handler = http -> {};
 
   Note.Sink noteSink = Note.NoOpSink.INSTANCE;
 
@@ -38,7 +37,7 @@ final class HttpServerConfig implements Http.Server.Config {
   }
 
   @Override
-  public final Http.Server.Config bufferSize(int initial, int max) {
+  public final void bufferSize(int initial, int max) {
     Check.argument(initial >= 128, "initial size must be >= 128");
     Check.argument(max >= 128, "max size must be >= 128");
     Check.argument(max >= initial, "max size must be >= initial size");
@@ -46,40 +45,30 @@ final class HttpServerConfig implements Http.Server.Config {
     bufferSizeInitial = initial;
 
     bufferSizeMax = max;
-
-    return this;
   }
 
   @Override
-  public final Http.Server.Config clock(Clock clock) {
+  public final void clock(Clock clock) {
     this.clock = Objects.requireNonNull(clock, "clock == null");
-
-    return this;
   }
 
   @Override
-  public final Http.Server.Config handlerFactory(HandlerFactory factory) {
-    this.factory = Objects.requireNonNull(factory, "factory == null");
-
-    return this;
+  public final void handler(Http.Handler value) {
+    handler = Objects.requireNonNull(value, "value == null");
   }
 
   @Override
-  public final Http.Server.Config noteSink(Note.Sink noteSink) {
+  public final void noteSink(Note.Sink noteSink) {
     this.noteSink = Objects.requireNonNull(noteSink, "noteSink == null");
-
-    return this;
   }
 
   @Override
-  public final Http.Server.Config port(int port) {
+  public final void port(int port) {
     if (port < 0 || port > 0xFFFF) {
       throw new IllegalArgumentException("port out of range:" + port);
     }
 
     this.port = port;
-
-    return this;
   }
 
 }

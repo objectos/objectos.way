@@ -65,7 +65,7 @@ final class HttpServer implements Http.Server, Runnable {
 
   private final Clock clock;
 
-  private final Http.HandlerFactory factory;
+  private final Http.Handler handler;
 
   private final Note.Sink noteSink;
 
@@ -82,7 +82,7 @@ final class HttpServer implements Http.Server, Runnable {
 
     clock = builder.clock;
 
-    factory = builder.factory;
+    handler = builder.handler;
 
     noteSink = builder.noteSink;
 
@@ -209,9 +209,6 @@ final class HttpServer implements Http.Server, Runnable {
           }
 
           try {
-            Http.Handler handler;
-            handler = factory.create();
-
             handler.handle(http);
           } catch (Http.AbstractHandlerException ex) {
             ex.handle(http);

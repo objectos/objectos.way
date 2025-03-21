@@ -29,7 +29,7 @@ import objectos.way.Http.Exchange;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class HttpServerTest extends Http.Module {
+public class HttpServerTest implements Http.Module {
 
   @BeforeClass
   public void beforeClass() throws Exception {
@@ -37,8 +37,10 @@ public class HttpServerTest extends Http.Module {
   }
 
   @Override
-  protected final void configure() {
-    route("/test/:name", handler(this::handle1));
+  public final void configure(Http.Routing routing) {
+    routing.path("/test/:name", path -> {
+      path.handler(this::handle1);
+    });
   }
 
   private void handle1(Http.Exchange http) {

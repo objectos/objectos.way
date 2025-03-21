@@ -24,12 +24,13 @@ import java.net.Socket;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import objectos.way.Http.Routing;
 import objectos.way.TestingRandom.SequentialRandom;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-public class HttpModuleTest extends Http.Module {
+public class HttpModuleTest implements Http.Module {
 
   private record Box(String value) {}
 
@@ -68,81 +69,131 @@ public class HttpModuleTest extends Http.Module {
   }
 
   @Override
-  protected final void configure() {
-    filter(sessionStore::filter);
+  public final void configure(Http.Routing routing) {
+    routing.when(this::notAuthenticated, matched -> {
+      // matches: /testCase01/foo
+      // but not: /testCase01, /testCase01/, /testCase01/foo/bar
+      matched.path("/testCase01/:text", path -> {
+        path.paramNotEmpty("text");
 
-    // matches: /testCase01/foo
-    // but not: /testCase01, /testCase01/, /testCase01/foo/bar
-    route("/testCase01/:text",
-        pathParams(notEmpty("text")),
-        handler(this::$testCase01));
+        path.handler(this::$testCase01);
+      });
 
-    // redirect non-authenticated requests
-    filter(this::testCase02);
+      // redirect non-authenticated requests
+      matched.handler(this::testCase02);
+    });
 
-    // matches: /testCase03, /testCase03/foo, /testCase03/foo/bar
-    Http.Handler testCase03 = this::testCase03;
-    route("/testCase03", handler(testCase03));
-    route("/testCase03/*", handler(testCase03));
+    routing.when(this::authenticated, matched -> {
+      // matches: /testCase03, /testCase03/foo, /testCase03/foo/bar
+      matched.path("/testCase03", path -> {
+        path.handler(this::testCase03);
+      });
+      matched.path("/testCase03/*", path -> {
+        path.handler(this::testCase03);
+      });
 
-    // matches: /testCase04, /testCase04/foo, /testCase04/foo/bar
-    install(new TestCase04());
+      // matches: /testCase04, /testCase04/foo, /testCase04/foo/bar
+      matched.install(new TestCase04());
 
-    // matches: /testCase05/img, /testCase05/img/, /testCase05/img/a, /testCase05/img/b
-    Http.Handler testCase05 = this::testCase05;
-    route("/testCase05/img", handler(testCase05));
-    route("/testCase05/img/*", handler(testCase05));
+      // matches: /testCase05/img, /testCase05/img/, /testCase05/img/a, /testCase05/img/b
+      matched.path("/testCase05/img", path -> {
+        path.handler(this::testCase05);
+      });
+      matched.path("/testCase05/img/*", path -> {
+        path.handler(this::testCase05);
+      });
 
-    // matches: /testCase06/, /testCase06/foo, /testCase06/foo/bar
-    // but not: /testCase06
-    route("/testCase06/*", handler(this::$testCase06));
+      // matches: /testCase06/, /testCase06/foo, /testCase06/foo/bar
+      // but not: /testCase06
+      matched.path("/testCase06/*", path -> {
+        path.handler(this::$testCase06);
+      });
 
-    // tc07: interceptMatched
-    route("/testCase07/before", handler(this::$testCase07));
+      // tc07: interceptMatched
+      matched.path("/testCase07/before", path -> {
+        path.handler(this::$testCase07);
+      });
 
-    interceptMatched(this::testCase07);
+      matched.path("/testCase07/after", path -> {
+        final Http.Handler testCase07;
+        testCase07 = testCase07(this::$testCase07);
 
-    route("/testCase07/after", handler(this::$testCase07));
+        path.handler(testCase07);
+      });
 
-    // tc08: install
-    install(new TestCase08());
+      // tc08: install
+      matched.install(new TestCase08());
 
-    // tc09: notEmpty, digits
-    route("/testCase09/:notEmpty/:digits",
-        pathParams(notEmpty("notEmpty"), digits("digits")),
-        handler(this::$testCase09));
+      // tc09: notEmpty, digits
+      matched.path("/testCase09/:notEmpty/:digits", path -> {
+        path.paramNotEmpty("notEmpty");
 
-    // tc10: regex
-    route("/testCase10/:regex",
-        pathParams(regex("regex", "[0-9a-z]+")),
-        handler(this::$testCase10));
+        path.paramDigits("digits");
 
-    // tc11: multiple handlers
-    Http.Handler noop = http -> {};
-    Http.Handler nono = http -> http.okText("nonono\n", StandardCharsets.UTF_8);
-    route("/testCase11", handler(noop), handler(this::$testCase11), handler(nono));
+        path.handler(this::$testCase09);
+      });
 
-    // tc12: interceptor
-    Http.Handler tc12A = http -> {
-      assertNull(http.get(String.class));
-      http.set(Integer.class, 123);
-    };
+      // tc10: regex
+      matched.path("/testCase10/:regex", path -> {
+        path.paramRegex("regex", "[0-9a-z]+");
 
-    Http.Handler.Interceptor tc12X = handler -> {
-      return http -> {
-        http.set(String.class, "ABC");
+        path.handler(this::$testCase10);
+      });
 
-        handler.handle(http);
-      };
-    };
+      // tc11: multiple handlers
+      matched.path("/testCase11", path -> {
+        path.handler(Http.Handler.noop());
 
-    Http.Handler tc12C = http -> {
-      String s = http.get(String.class);
-      Integer i = http.get(Integer.class);
-      http.okText("tc12=" + s + "-" + i.toString(), StandardCharsets.UTF_8);
-    };
+        path.handler(this::$testCase11);
 
-    route("/testCase12", handler(tc12A), interceptor(tc12X), handler(tc12C));
+        path.handler(Http.Handler.ofText("nonono\n", StandardCharsets.UTF_8));
+      });
+
+      // tc12: interceptor
+      matched.path("/testCase12", path -> {
+        path.handler(http -> {
+          assertNull(http.get(String.class));
+
+          http.set(Integer.class, 123);
+        });
+
+        Http.Handler.Interceptor tc12X = handler -> {
+          return http -> {
+            http.set(String.class, "ABC");
+
+            handler.handle(http);
+          };
+        };
+
+        Http.Handler tc12C = http -> {
+          String s = http.get(String.class);
+          Integer i = http.get(Integer.class);
+          http.okText("tc12=" + s + "-" + i.toString(), StandardCharsets.UTF_8);
+        };
+
+        path.handler(tc12X.intercept(tc12C));
+      });
+    });
+
+    routing.handler(Http.Handler.notFound());
+  }
+
+  private boolean notAuthenticated(Http.Request req) {
+    return !authenticated(req);
+  }
+
+  private boolean authenticated(Http.Request req) {
+    final Web.Session session;
+    session = sessionStore.get(req);
+
+    if (session == null) {
+      return false;
+    }
+
+    final User user;
+    user = session.get(User.class);
+
+    return user != null;
   }
 
   private void $testCase01(Http.Exchange http) {
@@ -350,14 +401,20 @@ public class HttpModuleTest extends Http.Module {
     }
   }
 
-  private static class TestCase04 extends Http.Module {
+  private static class TestCase04 implements Http.Module {
     @Override
-    protected final void configure() {
-      route("/testCase04", handler(http -> http.okText("ROOT", StandardCharsets.UTF_8)));
+    public final void configure(Http.Routing routing) {
+      routing.path("/testCase04", path -> {
+        path.handler(Http.Handler.ofText("ROOT", StandardCharsets.UTF_8));
+      });
 
-      route("/testCase04/", handler(http -> http.movedPermanently("/testCase04")));
+      routing.path("/testCase04/", path -> {
+        path.handler(Http.Handler.movedPermanently("/testCase04"));
+      });
 
-      route("/testCase04/foo", handler(http -> http.okText("foo", StandardCharsets.UTF_8)));
+      routing.path("/testCase04/foo", path -> {
+        path.handler(Http.Handler.ofText("foo", StandardCharsets.UTF_8));
+      });
     }
   }
 
@@ -722,10 +779,12 @@ public class HttpModuleTest extends Http.Module {
     }
   }
 
-  private static class TestCase08 extends Http.Module {
+  private static class TestCase08 implements Http.Module {
     @Override
-    protected final void configure() {
-      route("/testCase08", handler(http -> http.okText("TC08", StandardCharsets.UTF_8)));
+    public final void configure(Routing routing) {
+      routing.path("/testCase08", path -> {
+        path.handler(Http.Handler.ofText("TC08", StandardCharsets.UTF_8));
+      });
     }
   }
 
@@ -904,12 +963,9 @@ public class HttpModuleTest extends Http.Module {
 
   @Test
   public void edge01() {
-    Http.Module empty = new Http.Module() {
-      @Override
-      protected void configure() {}
-    };
+    Http.Module empty = routing -> {};
 
-    Http.Handler handler = empty.compile();
+    Http.Handler handler = Http.Handler.of(empty);
 
     assertNotNull(handler);
   }

@@ -15,13 +15,19 @@
  */
 package objectos.way;
 
-final class MarketingSite extends Http.Module {
+import objectos.way.Http.Routing;
+
+final class MarketingSite implements Http.Module {
 
   @Override
-  protected final void configure() {
-    route("/", movedPermanently("/index.html"));
+  public final void configure(Routing routing) {
+    routing.path("/", path -> {
+      path.handler(Http.Handler.movedPermanently("/index.html"));
+    });
 
-    route("/index.html", handler(this::indexHtml));
+    routing.path("/index.html", path -> {
+      path.handler(this::indexHtml);
+    });
   }
 
   private void indexHtml(Http.Exchange http) {
