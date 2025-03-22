@@ -363,7 +363,7 @@ public final class Http {
     }
 
     static Handler noop() {
-      return http -> {};
+      return HttpHandler.NOOP;
     }
 
     static Handler notFound() {
@@ -376,15 +376,6 @@ public final class Http {
 
         http.send();
       };
-    }
-
-    static Handler of(Module module) {
-      final HttpRouting routing;
-      routing = new HttpRouting();
-
-      module.configure(routing);
-
-      return routing.build();
     }
 
     static Handler ofText(String text, Charset charset) {
@@ -581,17 +572,6 @@ public final class Http {
     TRACE;
 
     static final Method[] VALUES = values();
-
-  }
-
-  /**
-   * A module configures the handlers a server instance will use to process its
-   * requests.
-   */
-  @FunctionalInterface
-  public interface Module {
-
-    void configure(Routing routing);
 
   }
 
@@ -855,25 +835,29 @@ public final class Http {
    */
   public sealed interface Routing permits HttpRouting {
 
-    void allow(Method method, Handler handler);
+    public sealed interface OfPath permits HttpRouting {
+
+      void allow(Method method, Handler handler);
+
+      void param(String name, Predicate<String> condition);
+
+      void paramDigits(String name);
+
+      void paramNotEmpty(String name);
+
+      void paramRegex(String name, String value);
+
+      void handler(Handler handler);
+
+    }
 
     void handler(Handler handler);
 
-    void install(Consumer<Routing> module);
+    void install(Consumer<Routing> routes);
 
-    void install(Module module);
+    void path(String path, Consumer<OfPath> config);
 
-    void path(String path, Consumer<Routing> config);
-
-    void param(String name, Predicate<String> condition);
-
-    void paramDigits(String name);
-
-    void paramNotEmpty(String name);
-
-    void paramRegex(String name, String value);
-
-    void when(Predicate<Request> condition, Module module);
+    void when(Predicate<Request> condition, Consumer<Routing> routes);
 
   }
 

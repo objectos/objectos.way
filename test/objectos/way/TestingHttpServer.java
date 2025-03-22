@@ -33,8 +33,8 @@ public final class TestingHttpServer {
 
   private TestingHttpServer() {}
 
-  public static void bindHttpModuleTest(HttpModuleTest test) {
-    ServerHolder.bindHttpModuleTest(test);
+  public static void bindHttpRoutingTest(HttpRoutingTest test) {
+    ServerHolder.bindHttpRoutingTest(test);
   }
 
   public static void bindHttpServerTest(HttpServerTest test) {
@@ -114,16 +114,16 @@ public final class TestingHttpServer {
 
     static ThisHandlerFactory HANDLER;
 
-    public static void bindHttpModuleTest(HttpModuleTest test) {
-      HANDLER.httpModuleTest.delegate = Http.Handler.of(test);
+    public static void bindHttpRoutingTest(HttpRoutingTest test) {
+      HANDLER.httpModuleTest.delegate = Http.Handler.create(test);
     }
 
     public static void bindHttpServerTest(HttpServerTest test) {
-      HANDLER.httpServerTest.delegate = Http.Handler.of(test);
+      HANDLER.httpServerTest.delegate = Http.Handler.create(test);
     }
 
     public static void bindWebResourcesTest(WebResourcesTest test) {
-      HANDLER.webResourcesTest.delegate = Http.Handler.of(test);
+      HANDLER.webResourcesTest.delegate = Http.Handler.create(test);
     }
 
     private static Http.Server create() {
@@ -153,7 +153,7 @@ public final class TestingHttpServer {
       Http.Server wayServer;
       wayServer = Http.Server.create(config -> {
         final Http.Handler serverHandler;
-        serverHandler = Http.Handler.of(HANDLER);
+        serverHandler = Http.Handler.create(HANDLER::configure);
 
         config.handler(serverHandler);
 
@@ -177,17 +177,16 @@ public final class TestingHttpServer {
 
   }
 
-  private static class ThisHandlerFactory implements Http.Module {
+  private static class ThisHandlerFactory {
 
     private final DelegatingHandler httpModuleTest = new DelegatingHandler();
 
     private final DelegatingHandler httpServerTest = new DelegatingHandler();
 
-    private final Http.Module marketing = new MarketingSite();
+    private final MarketingSite marketing = new MarketingSite();
 
     private final DelegatingHandler webResourcesTest = new DelegatingHandler();
 
-    @Override
     public final void configure(Routing r) {
       r.when(req -> host(req, "http.module.test"), matched -> {
         matched.handler(httpModuleTest);

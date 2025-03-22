@@ -20,18 +20,27 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
+import objectos.way.Http.Request;
+import objectos.way.Http.Routing;
 
-final class HttpRouting extends HttpModuleMatcherParser implements Http.Routing {
+final class HttpRouting implements Http.Routing, Http.Routing.OfPath {
 
-  private Predicate<Http.Request> condition = req -> true;
+  private final Predicate<Http.Request> condition;
 
   private Http.Handler[] handlers;
 
   private int handlersIndex;
 
-  @Override
-  public void allow(Http.Method method, Http.Handler handler) {
-    throw new UnsupportedOperationException("Implement me");
+  private HttpPathParam[] pathParams;
+
+  private int pathParamsIndex;
+
+  HttpRouting() {
+    this(null);
+  }
+
+  HttpRouting(Predicate<Request> condition) {
+    this.condition = condition;
   }
 
   @Override
@@ -42,21 +51,17 @@ final class HttpRouting extends HttpModuleMatcherParser implements Http.Routing 
   }
 
   @Override
-  public void install(Consumer<Http.Routing> module) {
-    throw new UnsupportedOperationException("Implement me");
+  public final void install(Consumer<Http.Routing> routes) {
+    routes.accept(this);
   }
 
   @Override
-  public final void install(Http.Module module) {
-    module.configure(this);
-  }
+  public final void path(String path, Consumer<Http.Routing.OfPath> config) {
+    final HttpPathMatcher matcher;
+    matcher = HttpPathMatcher.parse(path);
 
-  @Override
-  public final void path(String path, Consumer<Http.Routing> config) {
     final HttpRouting routing;
-    routing = new HttpRouting();
-
-    routing.setPath(path);
+    routing = new HttpRouting(matcher);
 
     config.accept(routing);
 
@@ -66,65 +71,15 @@ final class HttpRouting extends HttpModuleMatcherParser implements Http.Routing 
     add(handler);
   }
 
-  private void setPath(String path) {
-    condition = matcher(path);
-  }
-
   @Override
-  public void param(String name, Predicate<String> condition) {
-    throw new UnsupportedOperationException("Implement me");
-  }
+  public final void when(Predicate<Http.Request> condition, Consumer<Routing> routes) {
+    Objects.requireNonNull(condition, "condition == null");
 
-  @Override
-  public final void paramDigits(String name) {
-    Objects.requireNonNull(name, "name == null");
-
-    final HttpModuleCondition.Digits condition;
-    condition = new HttpModuleCondition.Digits(name);
-
-    add(condition);
-  }
-
-  @Override
-  public final void paramNotEmpty(String name) {
-    Objects.requireNonNull(name, "name == null");
-
-    final HttpModuleCondition.NotEmpty condition;
-    condition = new HttpModuleCondition.NotEmpty(name);
-
-    add(condition);
-  }
-
-  @Override
-  public final void paramRegex(String name, String value) {
-    Objects.requireNonNull(name, "name == null");
-
-    final Pattern pattern;
-    pattern = Pattern.compile(value);
-
-    final HttpModuleCondition.Regex condition;
-    condition = new HttpModuleCondition.Regex(name, pattern);
-
-    add(condition);
-  }
-
-  private void add(HttpModuleCondition pathCondition) {
-    if (!(condition instanceof HttpModuleMatcher matcher)) {
-      throw new IllegalStateException("Can't set a path parameter predicate as a path has not been set.");
-    }
-
-    condition = matcher.withCondition(pathCondition);
-  }
-
-  @Override
-  public void when(Predicate<Http.Request> condition, Http.Module module) {
     final HttpRouting builder;
-    builder = new HttpRouting();
+    builder = new HttpRouting(condition);
 
-    builder.condition = Objects.requireNonNull(condition, "condition == null");
-
-    // module implicit null-check
-    module.configure(builder);
+    // implicit null-check
+    routes.accept(builder);
 
     final Http.Handler handler;
     handler = builder.build();
@@ -132,28 +87,8 @@ final class HttpRouting extends HttpModuleMatcherParser implements Http.Routing 
     add(handler);
   }
 
-  final Http.Handler build() {
-    return switch (handlersIndex) {
-      case 0 -> Http.Handler.noop();
-
-      case 1 -> {
-        final Http.Handler single;
-        single = handlers[0];
-
-        yield handler(condition, single);
-      }
-
-      default -> {
-        final Http.Handler[] copy;
-        copy = Arrays.copyOf(handlers, handlersIndex);
-
-        yield handler(condition, copy);
-      }
-    };
-  }
-
   private void add(Http.Handler handler) {
-    int requiredIndex;
+    final int requiredIndex;
     requiredIndex = handlersIndex++;
 
     if (handlers == null) {
@@ -165,32 +100,103 @@ final class HttpRouting extends HttpModuleMatcherParser implements Http.Routing 
     handlers[requiredIndex] = handler;
   }
 
-  private static Http.Handler handler(Predicate<Http.Request> condition, Http.Handler handler) {
-    return http -> {
-      if (http.processed()) {
-        return;
-      }
-
-      if (condition.test(http)) {
-        handler.handle(http);
-      }
-    };
+  @Override
+  public final void allow(Http.Method method, Http.Handler handler) {
+    throw new UnsupportedOperationException("Implement me");
   }
 
-  private static Http.Handler handler(Predicate<Http.Request> condition, Http.Handler[] handlers) {
-    return http -> {
-      if (http.processed()) {
-        return;
+  @Override
+  public void param(String name, Predicate<String> condition) {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  @Override
+  public final void paramDigits(String name) {
+    checkMatcherParam(name);
+
+    final HttpPathParam.Digits param;
+    param = new HttpPathParam.Digits(name);
+
+    add(param);
+  }
+
+  @Override
+  public final void paramNotEmpty(String name) {
+    checkMatcherParam(name);
+
+    final HttpPathParam.NotEmpty param;
+    param = new HttpPathParam.NotEmpty(name);
+
+    add(param);
+  }
+
+  @Override
+  public final void paramRegex(String name, String value) {
+    checkMatcherParam(name);
+
+    final Pattern pattern;
+    pattern = Pattern.compile(value);
+
+    final HttpPathParam.Regex param;
+    param = new HttpPathParam.Regex(name, pattern);
+
+    add(param);
+  }
+
+  private void checkMatcherParam(String name) {
+    if (!(condition instanceof HttpPathMatcher matcher)) {
+      throw new IllegalStateException("Cannot set a path parameter condition as current route does not define path parameters");
+    }
+
+    if (!matcher.hasParam(name)) {
+      throw new IllegalArgumentException("Current route does not define a path parameter named " + name);
+    }
+  }
+
+  private void add(HttpPathParam param) {
+    final int requiredIndex;
+    requiredIndex = pathParamsIndex++;
+
+    if (pathParams == null) {
+      pathParams = new HttpPathParam[2];
+    } else {
+      pathParams = Util.growIfNecessary(pathParams, requiredIndex);
+    }
+
+    pathParams[requiredIndex] = param;
+  }
+
+  final Http.Handler build() {
+
+    Predicate<Http.Request> predicate;
+    predicate = condition;
+
+    if (predicate instanceof HttpPathMatcher matcher) {
+
+      if (pathParamsIndex > 0) {
+        HttpPathParam[] params;
+        params = Arrays.copyOf(pathParams, pathParamsIndex);
+
+        predicate = matcher.with(params);
       }
 
-      if (condition.test(http)) {
-        for (Http.Handler handler : handlers) {
-          handler.handle(http);
+    }
 
-          if (http.processed()) {
-            break;
-          }
-        }
+    return switch (handlersIndex) {
+      case 0 -> HttpHandler.NOOP;
+
+      case 1 -> {
+        final Http.Handler single;
+        single = handlers[0];
+
+        yield HttpHandler.single(predicate, single);
+      }
+
+      default -> {
+        final Http.Handler[] copy;
+        copy = Arrays.copyOf(handlers, handlersIndex);
+
+        yield HttpHandler.many(predicate, copy);
       }
     };
   }

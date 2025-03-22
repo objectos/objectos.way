@@ -18,15 +18,16 @@ package objectos.way;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
+import java.util.List;
 import java.util.Map;
 import org.testng.annotations.Test;
 
-public class HttpModuleMatcherTest {
+public class HttpPathMatcherTest {
 
   @Test
   public void exact01() {
-    HttpModuleMatcher matcher;
-    matcher = new HttpModuleMatcher.Exact("/foo");
+    HttpPathMatcher matcher;
+    matcher = HttpPathMatcher.exact("/foo");
 
     test(matcher, "/foo", true);
     test(matcher, "/fooo", false);
@@ -39,11 +40,11 @@ public class HttpModuleMatcherTest {
 
   @Test
   public void namedVariable02() {
-    HttpModuleMatcher matcher;
-    matcher = new HttpModuleMatcher.Matcher2(
-        new HttpModuleMatcher.StartsWith("/foo/"),
-        new HttpModuleMatcher.NamedVariable("foo")
-    );
+    HttpPathMatcher matcher;
+    matcher = HttpPathMatcher.params(List.of(
+        "/foo/",
+        HttpPathMatcher.param("foo")
+    ));
 
     test(matcher, "/foo", false);
     test(matcher, "/fooo", false);
@@ -57,12 +58,12 @@ public class HttpModuleMatcherTest {
 
   @Test
   public void namedVariable03() {
-    HttpModuleMatcher matcher;
-    matcher = new HttpModuleMatcher.Matcher3(
-        new HttpModuleMatcher.StartsWith("/foo/"),
-        new HttpModuleMatcher.NamedVariable("foo"),
-        new HttpModuleMatcher.Region("/pdf")
-    );
+    HttpPathMatcher matcher;
+    matcher = HttpPathMatcher.params(List.of(
+        "/foo/",
+        HttpPathMatcher.param("foo"),
+        "/pdf"
+    ));
 
     test(matcher, "/foo/bar/pdf", Map.of("foo", "bar"));
     test(matcher, "/foo//pdf", Map.of("foo", ""));
@@ -79,13 +80,13 @@ public class HttpModuleMatcherTest {
 
   @Test
   public void namedVariable04() {
-    HttpModuleMatcher matcher;
-    matcher = new HttpModuleMatcher.Matcher4(
-        new HttpModuleMatcher.StartsWith("/foo/"),
-        new HttpModuleMatcher.NamedVariable("foo"),
-        new HttpModuleMatcher.Region("/bar/"),
-        new HttpModuleMatcher.NamedVariable("bar")
-    );
+    HttpPathMatcher matcher;
+    matcher = HttpPathMatcher.params(List.of(
+        "/foo/",
+        HttpPathMatcher.param("foo"),
+        "/bar/",
+        HttpPathMatcher.param("bar")
+    ));
 
     test(matcher, "/foo/bar/bar/bar", Map.of("foo", "bar", "bar", "bar"));
     test(matcher, "/foo/x/bar/y", Map.of("foo", "x", "bar", "y"));
@@ -99,14 +100,14 @@ public class HttpModuleMatcherTest {
 
   @Test
   public void namedVariable05() {
-    HttpModuleMatcher matcher;
-    matcher = new HttpModuleMatcher.Matcher5(
-        new HttpModuleMatcher.StartsWith("/foo/"),
-        new HttpModuleMatcher.NamedVariable("foo"),
-        new HttpModuleMatcher.Region("/bar/"),
-        new HttpModuleMatcher.NamedVariable("bar"),
-        new HttpModuleMatcher.Region("/pdf")
-    );
+    HttpPathMatcher matcher;
+    matcher = HttpPathMatcher.params(List.of(
+        "/foo/",
+        HttpPathMatcher.param("foo"),
+        "/bar/",
+        HttpPathMatcher.param("bar"),
+        "/pdf"
+    ));
 
     test(matcher, "/foo/x/bar/123/pdf", Map.of("foo", "x", "bar", "123"));
     test(matcher, "/foo//bar//pdf", Map.of("foo", "", "bar", ""));
@@ -116,14 +117,14 @@ public class HttpModuleMatcherTest {
 
   @Test
   public void namedVariableN() {
-    HttpModuleMatcher matcher;
-    matcher = new HttpModuleMatcher.MatcherN(
-        new HttpModuleMatcher.StartsWith("/foo/"),
-        new HttpModuleMatcher.NamedVariable("foo"),
-        new HttpModuleMatcher.Region("/bar/"),
-        new HttpModuleMatcher.NamedVariable("bar"),
-        new HttpModuleMatcher.Region("/pdf")
-    );
+    HttpPathMatcher matcher;
+    matcher = HttpPathMatcher.params(List.of(
+        "/foo/",
+        HttpPathMatcher.param("foo"),
+        "/bar/",
+        HttpPathMatcher.param("bar"),
+        "/pdf"
+    ));
 
     test(matcher, "/foo/x/bar/123/pdf", Map.of("foo", "x", "bar", "123"));
     test(matcher, "/foo//bar//pdf", Map.of("foo", "", "bar", ""));
@@ -133,8 +134,8 @@ public class HttpModuleMatcherTest {
 
   @Test
   public void startsWith01() {
-    HttpModuleMatcher matcher;
-    matcher = new HttpModuleMatcher.StartsWith("/foo");
+    HttpPathMatcher matcher;
+    matcher = HttpPathMatcher.startsWith("/foo");
 
     test(matcher, "/foo", true);
     test(matcher, "/fooo", true);
@@ -145,15 +146,15 @@ public class HttpModuleMatcherTest {
     test(matcher, "/", false);
   }
 
-  private void test(HttpModuleMatcher matcher, String target, boolean expected) {
-    HttpModuleSupport requestTarget;
+  private void test(HttpPathMatcher matcher, String target, boolean expected) {
+    HttpExchange requestTarget;
     requestTarget = HttpExchange.parseRequestTarget(target);
 
     assertEquals(matcher.test(requestTarget), expected);
   }
 
-  private void test(HttpModuleMatcher matcher, String target, Map<String, String> expected) {
-    HttpModuleSupport requestTarget;
+  private void test(HttpPathMatcher matcher, String target, Map<String, String> expected) {
+    HttpExchange requestTarget;
     requestTarget = HttpExchange.parseRequestTarget(target);
 
     assertTrue(matcher.test(requestTarget));

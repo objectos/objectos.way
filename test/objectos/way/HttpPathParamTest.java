@@ -17,15 +17,16 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.List;
 import java.util.regex.Pattern;
 import org.testng.annotations.Test;
 
-public class HttpModuleConditionTest {
+public class HttpPathParamTest {
 
   @Test
   public void digits() {
-    HttpModuleCondition condition;
-    condition = new HttpModuleCondition.Digits("x");
+    HttpPathParam condition;
+    condition = new HttpPathParam.Digits("x");
 
     test(condition, "/test/1", true);
     test(condition, "/test/0123456789", true);
@@ -35,8 +36,8 @@ public class HttpModuleConditionTest {
 
   @Test
   public void notEmpty() {
-    HttpModuleCondition condition;
-    condition = new HttpModuleCondition.NotEmpty("x");
+    HttpPathParam condition;
+    condition = new HttpPathParam.NotEmpty("x");
 
     test(condition, "/test/a", true);
     test(condition, "/test/abc", true);
@@ -45,8 +46,8 @@ public class HttpModuleConditionTest {
 
   @Test
   public void regex() {
-    HttpModuleCondition condition;
-    condition = new HttpModuleCondition.Regex("x", Pattern.compile("[0-9a-z]+"));
+    HttpPathParam condition;
+    condition = new HttpPathParam.Regex("x", Pattern.compile("[0-9a-z]+"));
 
     test(condition, "/test/1", true);
     test(condition, "/test/0123456789", true);
@@ -54,15 +55,15 @@ public class HttpModuleConditionTest {
     test(condition, "/test/", false);
   }
 
-  private void test(HttpModuleCondition condition, String target, boolean expected) {
-    HttpModuleSupport requestTarget;
+  private void test(HttpPathParam condition, String target, boolean expected) {
+    HttpExchange requestTarget;
     requestTarget = HttpExchange.parseRequestTarget(target);
 
-    HttpModuleMatcher matcher;
-    matcher = new HttpModuleMatcher.Matcher2(
-        new HttpModuleMatcher.StartsWith("/test/"),
-        new HttpModuleMatcher.NamedVariable("x")
-    );
+    HttpPathMatcher matcher;
+    matcher = HttpPathMatcher.params(List.of(
+        "/test/",
+        HttpPathMatcher.param("x")
+    ));
 
     assertEquals(matcher.test(requestTarget), true);
 

@@ -24,13 +24,16 @@ import java.net.Socket;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.function.Consumer;
+import objectos.way.Http.HeaderName;
+import objectos.way.Http.Method;
 import objectos.way.Http.Routing;
 import objectos.way.TestingRandom.SequentialRandom;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-public class HttpModuleTest implements Http.Module {
+public class HttpRoutingTest implements Consumer<Http.Routing> {
 
   private record Box(String value) {}
 
@@ -53,7 +56,7 @@ public class HttpModuleTest implements Http.Module {
       config.random(random);
     });
 
-    TestingHttpServer.bindHttpModuleTest(this);
+    TestingHttpServer.bindHttpRoutingTest(this);
   }
 
   @BeforeMethod
@@ -69,7 +72,7 @@ public class HttpModuleTest implements Http.Module {
   }
 
   @Override
-  public final void configure(Http.Routing routing) {
+  public final void accept(Http.Routing routing) {
     routing.when(this::notAuthenticated, matched -> {
       // matches: /testCase01/foo
       // but not: /testCase01, /testCase01/, /testCase01/foo/bar
@@ -78,6 +81,12 @@ public class HttpModuleTest implements Http.Module {
 
         path.handler(this::$testCase01);
       });
+
+      //      matched.path("/testCase13", path -> {
+      //        path.allow(Http.Method.GET, this::$testCase13);
+      //
+      //        path.allow(Http.Method.POST, this::$testCase13);
+      //      });
 
       // redirect non-authenticated requests
       matched.handler(this::testCase02);
@@ -401,9 +410,9 @@ public class HttpModuleTest implements Http.Module {
     }
   }
 
-  private static class TestCase04 implements Http.Module {
+  private static class TestCase04 implements Consumer<Http.Routing> {
     @Override
-    public final void configure(Http.Routing routing) {
+    public final void accept(Http.Routing routing) {
       routing.path("/testCase04", path -> {
         path.handler(Http.Handler.ofText("ROOT", StandardCharsets.UTF_8));
       });
@@ -779,9 +788,9 @@ public class HttpModuleTest implements Http.Module {
     }
   }
 
-  private static class TestCase08 implements Http.Module {
+  private static class TestCase08 implements Consumer<Http.Routing> {
     @Override
-    public final void configure(Routing routing) {
+    public final void accept(Routing routing) {
       routing.path("/testCase08", path -> {
         path.handler(Http.Handler.ofText("TC08", StandardCharsets.UTF_8));
       });
@@ -961,11 +970,37 @@ public class HttpModuleTest implements Http.Module {
     assertEquals(response.body(), "tc12=ABC-123");
   }
 
+  private void $testCase13(Http.Exchange http) {
+    Method method = http.method();
+
+    HeaderName name = Http.HeaderName.of("X-Test-Case-13");
+
+    String value = http.header(name);
+
+    http.okText(method.name() + "=" + value, StandardCharsets.UTF_8);
+  }
+
+  @Test(enabled = false)
+  public void testCase13() throws IOException, InterruptedException {
+    HttpResponse<String> response;
+    response = Testing.httpClient(
+        "/testCase13",
+
+        builder -> builder.headers(
+            "Host", "http.module.test",
+            "X-Test-Case-13", "one"
+        )
+    );
+
+    assertEquals(response.statusCode(), 200);
+    assertEquals(response.body(), "GET=one");
+  }
+
   @Test
   public void edge01() {
-    Http.Module empty = routing -> {};
+    Consumer<Http.Routing> empty = routing -> {};
 
-    Http.Handler handler = Http.Handler.of(empty);
+    Http.Handler handler = Http.Handler.create(empty);
 
     assertNotNull(handler);
   }

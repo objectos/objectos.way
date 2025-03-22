@@ -18,9 +18,9 @@ package objectos.way;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-sealed abstract class HttpModuleCondition {
+sealed abstract class HttpPathParam {
 
-  static final class Digits extends HttpModuleCondition {
+  static final class Digits extends HttpPathParam {
 
     public Digits(String name) {
       super(name);
@@ -49,7 +49,7 @@ sealed abstract class HttpModuleCondition {
 
   }
 
-  static final class NotEmpty extends HttpModuleCondition {
+  static final class NotEmpty extends HttpPathParam {
 
     public NotEmpty(String name) {
       super(name);
@@ -62,7 +62,7 @@ sealed abstract class HttpModuleCondition {
 
   }
 
-  static final class Regex extends HttpModuleCondition {
+  static final class Regex extends HttpPathParam {
 
     private final Pattern pattern;
 
@@ -84,7 +84,7 @@ sealed abstract class HttpModuleCondition {
 
   final String name;
 
-  HttpModuleCondition(String name) {
+  HttpPathParam(String name) {
     this.name = name;
   }
 

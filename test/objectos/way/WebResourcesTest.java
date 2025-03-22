@@ -30,10 +30,11 @@ import java.nio.file.attribute.FileTime;
 import java.time.Clock;
 import java.time.Instant;
 import java.util.Optional;
+import java.util.function.Consumer;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class WebResourcesTest implements Http.Module {
+public class WebResourcesTest implements Consumer<Http.Routing> {
 
   private record TextPlain(String text) implements Lang.MediaObject {
     @Override
@@ -92,7 +93,7 @@ public class WebResourcesTest implements Http.Module {
   }
 
   @Override
-  public final void configure(Http.Routing routing) {
+  public final void accept(Http.Routing routing) {
     routing.path("/tc01.txt", resources::handlePath);
     routing.path("/tc02.txt", path -> {
       path.handler(resources);

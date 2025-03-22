@@ -548,7 +548,7 @@ public final class Web {
       return new WebResources(kernel);
     }
 
-    default void handlePath(Http.Routing path) {
+    default void handlePath(Http.Routing.OfPath path) {
       path.handler(this);
     }
 
