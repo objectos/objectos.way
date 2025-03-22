@@ -164,6 +164,8 @@ final class HttpExchange extends HttpModuleSupport implements Http.Exchange, Clo
 
   Map<HttpHeaderName, HttpHeader> standardHeaders;
 
+  Map<HttpHeaderNameUnknown, HttpHeader> unknownHeaders;
+
   private boolean standardHeadersReady;
 
   // RequestLine
@@ -1303,11 +1305,7 @@ final class HttpExchange extends HttpModuleSupport implements Http.Exchange, Clo
     Objects.requireNonNull(name, "name == null");
 
     final HttpHeader maybe;
-    maybe = switch (name) {
-      case HttpHeaderName std -> headerUnchecked(std);
-
-      case HttpHeaderNameUnknown unknown -> headerUnchecked(unknown);
-    };
+    maybe = headerUnchecked(name);
 
     if (maybe == null) {
       return null;
@@ -1325,12 +1323,14 @@ final class HttpExchange extends HttpModuleSupport implements Http.Exchange, Clo
     return headers != null ? headers.join("\n", "", "\n") : "";
   }
 
-  private HttpHeader headerUnchecked(HttpHeaderName name) {
+  private HttpHeader headerUnchecked(Http.HeaderName name) {
     outer: if (!standardHeadersReady) {
 
       standardHeadersReady = true;
 
       standardHeaders = new EnumMap<>(HttpHeaderName.class);
+
+      unknownHeaders = Util.createMap();
 
       if (headers == null) {
         break outer;
@@ -1338,26 +1338,28 @@ final class HttpExchange extends HttpModuleSupport implements Http.Exchange, Clo
 
       for (HttpHeader header : headers) {
 
-        if (header.name instanceof HttpHeaderName std) {
-          final HttpHeader maybeExisting;
-          maybeExisting = standardHeaders.put(std, header);
+        final HttpHeader maybeExisting;
+        maybeExisting = switch (header.name) {
+          case HttpHeaderName std -> standardHeaders.put(std, header);
 
-          if (maybeExisting == null) {
-            continue;
-          }
+          case HttpHeaderNameUnknown unknown -> unknownHeaders.put(unknown, header);
+        };
 
-          throw new UnsupportedOperationException("Implement me");
+        if (maybeExisting == null) {
+          continue;
         }
+
+        throw new UnsupportedOperationException("Implement me");
 
       }
 
     }
 
-    return standardHeaders.get(name);
-  }
+    return switch (name) {
+      case HttpHeaderName std -> standardHeaders.get(name);
 
-  private HttpHeader headerUnchecked(HttpHeaderNameUnknown name) {
-    throw new UnsupportedOperationException("Implement me");
+      case HttpHeaderNameUnknown unknown -> unknownHeaders.get(unknown);
+    };
   }
 
   // ##################################################################

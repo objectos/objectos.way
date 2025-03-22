@@ -24,13 +24,11 @@ final class HttpHandler implements Http.Handler {
 
     NOOP,
 
-    SINGLE_HANDLER,
+    SINGLE,
 
-    MANY_HANDLERS,
+    MANY,
 
-    PREDICATE_SINGLE_HANDLER,
-
-    PREDICATE_MANY_HANDLERS;
+    METHOD_NOT_ALLOWED;
 
   }
 
@@ -42,71 +40,88 @@ final class HttpHandler implements Http.Handler {
 
   private final Object main;
 
-  private HttpHandler(Kind kind, Predicate<Request> predicate, Object main) {
+  private HttpHandler(Kind kind, Predicate<Http.Request> predicate, Object main) {
     this.kind = kind;
     this.predicate = predicate;
     this.main = main;
   }
 
   public static Http.Handler single(Predicate<Http.Request> predicate, Http.Handler handler) {
-    Kind kind = predicate == null ? Kind.SINGLE_HANDLER : Kind.PREDICATE_SINGLE_HANDLER;
+    return new HttpHandler(Kind.SINGLE, predicate, handler);
+  }
 
-    return new HttpHandler(kind, predicate, handler);
+  public static Http.Handler many(Http.Handler[] handlers) {
+    return new HttpHandler(Kind.MANY, null, handlers);
   }
 
   public static Http.Handler many(Predicate<Http.Request> predicate, Http.Handler[] handlers) {
-    Kind kind = predicate == null ? Kind.MANY_HANDLERS : Kind.PREDICATE_MANY_HANDLERS;
+    return new HttpHandler(Kind.MANY, predicate, handlers);
+  }
 
-    return new HttpHandler(kind, predicate, handlers);
+  public static Http.Handler methodNotAllowed(Predicate<Http.Request> predicate) {
+    return new HttpHandler(Kind.METHOD_NOT_ALLOWED, predicate, null);
+  }
+
+  public static Http.Handler methodAllowed(Predicate<Http.Request> matcher, Http.Method method, Http.Handler handler) {
+    record MethodAllowedPredicate(Predicate<Http.Request> matcher, Http.Method method) implements Predicate<Http.Request> {
+      @Override
+      public final boolean test(Request t) {
+        return matcher.test(t)
+            && (t.method() == method || (t.method() == Http.Method.HEAD && method == Http.Method.GET));
+      }
+    }
+
+    final MethodAllowedPredicate predicate;
+    predicate = new MethodAllowedPredicate(matcher, method);
+
+    return new HttpHandler(Kind.SINGLE, predicate, handler);
   }
 
   @Override
   public final void handle(Http.Exchange http) {
-    switch (kind) {
-      case NOOP -> {}
-
-      case SINGLE_HANDLER -> single(http);
-
-      case MANY_HANDLERS -> many(http);
-
-      case PREDICATE_SINGLE_HANDLER -> {
-        if (predicate.test(http)) {
-          single(http);
-        }
-      }
-
-      case PREDICATE_MANY_HANDLERS -> {
-        if (predicate.test(http)) {
-          many(http);
-        }
-      }
-    }
-  }
-
-  private void many(Http.Exchange http) {
-    final Http.Handler[] many;
-    many = (Http.Handler[]) main;
-
-    int index;
-    index = 0;
-
-    while (!http.processed() && index < many.length) {
-      final Http.Handler handler;
-      handler = many[index++];
-
-      handler.handle(http);
-    }
-  }
-
-  private void single(Http.Exchange http) {
     if (http.processed()) {
       return;
     }
 
-    final Http.Handler single;
-    single = (Http.Handler) main;
+    if (predicate != null && !predicate.test(http)) {
+      return;
+    }
 
-    single.handle(http);
+    switch (kind) {
+      case NOOP -> {}
+
+      case SINGLE -> {
+        final Http.Handler single;
+        single = (Http.Handler) main;
+
+        single.handle(http);
+      }
+
+      case MANY -> {
+        final Http.Handler[] many;
+        many = (Http.Handler[]) main;
+
+        int index;
+        index = 0;
+
+        while (!http.processed() && index < many.length) {
+          final Http.Handler handler;
+          handler = many[index++];
+
+          handler.handle(http);
+        }
+      }
+
+      case METHOD_NOT_ALLOWED -> {
+        http.status(Http.Status.METHOD_NOT_ALLOWED);
+
+        http.dateNow();
+
+        http.header(Http.HeaderName.CONNECTION, "close");
+
+        http.send();
+      }
+    }
   }
 
 }

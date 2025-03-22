@@ -16,6 +16,8 @@
 package objectos.way;
 
 import java.util.Arrays;
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -27,13 +29,17 @@ final class HttpRouting implements Http.Routing, Http.Routing.OfPath {
 
   private final Predicate<Http.Request> condition;
 
-  private Http.Handler[] handlers;
+  private Http.Handler[] many;
 
-  private int handlersIndex;
+  private int manyIndex;
+
+  private Map<Http.Method, Http.Handler> pathMethods;
 
   private HttpPathParam[] pathParams;
 
   private int pathParamsIndex;
+
+  private Http.Handler single;
 
   HttpRouting() {
     this(null);
@@ -45,9 +51,11 @@ final class HttpRouting implements Http.Routing, Http.Routing.OfPath {
 
   @Override
   public final void handler(Http.Handler handler) {
-    Objects.requireNonNull(handler, "handler == null");
+    if (single != null) {
+      throw new IllegalArgumentException("A handler has already been defined");
+    }
 
-    add(handler);
+    single = Objects.requireNonNull(handler, "handler == null");
   }
 
   @Override
@@ -68,7 +76,7 @@ final class HttpRouting implements Http.Routing, Http.Routing.OfPath {
     final Http.Handler handler;
     handler = routing.build();
 
-    add(handler);
+    addMany(handler);
   }
 
   @Override
@@ -84,25 +92,37 @@ final class HttpRouting implements Http.Routing, Http.Routing.OfPath {
     final Http.Handler handler;
     handler = builder.build();
 
-    add(handler);
+    addMany(handler);
   }
 
-  private void add(Http.Handler handler) {
+  private void addMany(Http.Handler handler) {
     final int requiredIndex;
-    requiredIndex = handlersIndex++;
+    requiredIndex = manyIndex++;
 
-    if (handlers == null) {
-      handlers = new Http.Handler[10];
+    if (many == null) {
+      many = new Http.Handler[10];
     } else {
-      handlers = Util.growIfNecessary(handlers, requiredIndex);
+      many = Util.growIfNecessary(many, requiredIndex);
     }
 
-    handlers[requiredIndex] = handler;
+    many[requiredIndex] = handler;
   }
 
   @Override
   public final void allow(Http.Method method, Http.Handler handler) {
-    throw new UnsupportedOperationException("Implement me");
+    Objects.requireNonNull(method, "method == null");
+    Objects.requireNonNull(handler, "handler == null");
+
+    if (pathMethods == null) {
+      pathMethods = new EnumMap<>(Http.Method.class);
+    }
+
+    final Http.Handler maybeExisting;
+    maybeExisting = pathMethods.put(method, handler);
+
+    if (maybeExisting != null) {
+      throw new IllegalArgumentException("A handler has already been defined for method " + method);
+    }
   }
 
   @Override
@@ -171,6 +191,9 @@ final class HttpRouting implements Http.Routing, Http.Routing.OfPath {
     Predicate<Http.Request> predicate;
     predicate = condition;
 
+    Http.Handler[] aux;
+    aux = null;
+
     if (predicate instanceof HttpPathMatcher matcher) {
 
       if (pathParamsIndex > 0) {
@@ -180,25 +203,73 @@ final class HttpRouting implements Http.Routing, Http.Routing.OfPath {
         predicate = matcher.with(params);
       }
 
+      if (pathMethods != null) {
+        int requiredLength;
+        requiredLength = pathMethods.size();
+
+        // add method not allowed;
+        requiredLength += 1;
+
+        aux = new Http.Handler[requiredLength];
+
+        int auxIndex;
+        auxIndex = 0;
+
+        for (Map.Entry<Http.Method, Http.Handler> entry : pathMethods.entrySet()) {
+          final Http.Method method;
+          method = entry.getKey();
+
+          final Http.Handler handler;
+          handler = entry.getValue();
+
+          aux[auxIndex++] = HttpHandler.methodAllowed(matcher, method, handler);
+        }
+
+        aux[auxIndex++] = HttpHandler.methodNotAllowed(matcher);
+      }
+
     }
 
-    return switch (handlersIndex) {
-      case 0 -> HttpHandler.NOOP;
+    if (single != null) {
+      addMany(single);
+    }
+
+    return switch (manyIndex) {
+      case 0 -> aux == null ? HttpHandler.NOOP : HttpHandler.many(aux);
 
       case 1 -> {
         final Http.Handler single;
-        single = handlers[0];
+        single = many[0];
 
-        yield HttpHandler.single(predicate, single);
+        final Http.Handler handler;
+        handler = HttpHandler.single(predicate, single);
+
+        yield merge(aux, handler);
       }
 
       default -> {
         final Http.Handler[] copy;
-        copy = Arrays.copyOf(handlers, handlersIndex);
+        copy = Arrays.copyOf(many, manyIndex);
 
-        yield HttpHandler.many(predicate, copy);
+        final Http.Handler handler;
+        handler = HttpHandler.many(predicate, copy);
+
+        yield merge(aux, handler);
       }
     };
+  }
+
+  private Http.Handler merge(Http.Handler[] aux, Http.Handler handler) {
+    if (aux == null) {
+      return handler;
+    }
+
+    final Http.Handler[] copy;
+    copy = Arrays.copyOf(aux, aux.length + 1);
+
+    copy[copy.length - 1] = handler;
+
+    return HttpHandler.many(copy);
   }
 
 }

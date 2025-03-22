@@ -288,7 +288,7 @@ final class HttpPathMatcher implements Predicate<Http.Request> {
     return test(target);
   }
 
-  public final HttpPathMatcher with(HttpPathParam[] conditions) {
+  final HttpPathMatcher with(HttpPathParam[] conditions) {
     if (kind != Kind.PARAMS) {
       throw new IllegalStateException("Cannot add path parameter conditions to matcher with kind=" + kind);
     }

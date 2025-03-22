@@ -21,6 +21,7 @@ import static org.testng.Assert.assertNull;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -82,11 +83,11 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
         path.handler(this::$testCase01);
       });
 
-      //      matched.path("/testCase13", path -> {
-      //        path.allow(Http.Method.GET, this::$testCase13);
-      //
-      //        path.allow(Http.Method.POST, this::$testCase13);
-      //      });
+      matched.path("/testCase13", path -> {
+        path.allow(Http.Method.GET, this::$testCase13);
+
+        path.allow(Http.Method.POST, this::$testCase13);
+      });
 
       // redirect non-authenticated requests
       matched.handler(this::testCase02);
@@ -151,20 +152,22 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
 
       // tc11: multiple handlers
       matched.path("/testCase11", path -> {
-        path.handler(Http.Handler.noop());
+        path.handler(Http.Handler.firstOf(
+            Http.Handler.noop(),
 
-        path.handler(this::$testCase11);
+            this::$testCase11,
 
-        path.handler(Http.Handler.ofText("nonono\n", StandardCharsets.UTF_8));
+            Http.Handler.ofText("nonono\n", StandardCharsets.UTF_8))
+        );
       });
 
       // tc12: interceptor
       matched.path("/testCase12", path -> {
-        path.handler(http -> {
+        Http.Handler tc12A = http -> {
           assertNull(http.get(String.class));
 
           http.set(Integer.class, 123);
-        });
+        };
 
         Http.Handler.Interceptor tc12X = handler -> {
           return http -> {
@@ -180,7 +183,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           http.okText("tc12=" + s + "-" + i.toString(), StandardCharsets.UTF_8);
         };
 
-        path.handler(tc12X.intercept(tc12C));
+        path.handler(Http.Handler.firstOf(tc12A, tc12X.intercept(tc12C)));
       });
     });
 
@@ -980,13 +983,13 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
     http.okText(method.name() + "=" + value, StandardCharsets.UTF_8);
   }
 
-  @Test(enabled = false)
+  @Test
   public void testCase13() throws IOException, InterruptedException {
     HttpResponse<String> response;
     response = Testing.httpClient(
         "/testCase13",
 
-        builder -> builder.headers(
+        builder -> builder.GET().headers(
             "Host", "http.module.test",
             "X-Test-Case-13", "one"
         )
@@ -994,6 +997,41 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
 
     assertEquals(response.statusCode(), 200);
     assertEquals(response.body(), "GET=one");
+
+    response = Testing.httpClient(
+        "/testCase13",
+
+        builder -> builder.HEAD().headers(
+            "Host", "http.module.test",
+            "X-Test-Case-13", "two"
+        )
+    );
+
+    assertEquals(response.statusCode(), 200);
+    assertEquals(response.body(), "");
+
+    response = Testing.httpClient(
+        "/testCase13",
+
+        builder -> builder.POST(HttpRequest.BodyPublishers.noBody()).headers(
+            "Host", "http.module.test",
+            "X-Test-Case-13", "three"
+        )
+    );
+
+    assertEquals(response.statusCode(), 200);
+    assertEquals(response.body(), "POST=three");
+
+    response = Testing.httpClient(
+        "/testCase13",
+
+        builder -> builder.DELETE().headers(
+            "Host", "http.module.test",
+            "X-Test-Case-13", "four"
+        )
+    );
+
+    assertEquals(response.statusCode(), 405);
   }
 
   @Test
