@@ -340,12 +340,9 @@ public final class Http {
     }
 
     static <T> Handler factory(Function<T, ? extends Handler> factory, T value) {
-      return http -> {
-        final Handler handler;
-        handler = factory.apply(value);
+      Objects.requireNonNull(factory, "factory == null");
 
-        handler.handle(http);
-      };
+      return HttpHandler.factory(factory, value);
     }
 
     static Handler firstOf(Http.Handler h1, Http.Handler h2) {
@@ -366,15 +363,7 @@ public final class Http {
     static Handler movedPermanently(String location) {
       Objects.requireNonNull(location, "location == null");
 
-      return http -> {
-        http.status(Http.Status.MOVED_PERMANENTLY);
-
-        http.dateNow();
-
-        http.header(Http.HeaderName.LOCATION, location);
-
-        http.send();
-      };
+      return HttpHandler.movedPermanently(location);
     }
 
     static Handler noop() {
@@ -382,38 +371,20 @@ public final class Http {
     }
 
     static Handler notFound() {
-      return http -> {
-        http.status(Http.Status.NOT_FOUND);
-
-        http.dateNow();
-
-        http.header(Http.HeaderName.CONNECTION, "close");
-
-        http.send();
-      };
+      return HttpHandler.notFound();
     }
 
     static Handler ofText(String text, Charset charset) {
+      final String charsetName;
+      charsetName = charset.name();
+
+      final String contentType;
+      contentType = "text/plain; charset=" + charsetName.toLowerCase(Locale.US);
+
       final byte[] bytes;
-      bytes = text.getBytes(charset); // early implicit null-check
+      bytes = text.getBytes(charset);
 
-      return http -> {
-        http.status(Http.Status.OK);
-
-        http.dateNow();
-
-        final String charsetName;
-        charsetName = charset.name();
-
-        final String contentType;
-        contentType = "text/plain; charset=" + charsetName.toLowerCase(Locale.US);
-
-        http.header(Http.HeaderName.CONTENT_TYPE, contentType);
-
-        http.header(Http.HeaderName.CONTENT_LENGTH, bytes.length);
-
-        http.send(bytes);
-      };
+      return HttpHandler.ofContent(contentType, bytes);
     }
 
     /**

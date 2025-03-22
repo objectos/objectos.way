@@ -15,7 +15,9 @@
  */
 package objectos.way;
 
+import java.util.function.Function;
 import java.util.function.Predicate;
+import objectos.way.Http.Handler;
 import objectos.way.Http.Request;
 
 final class HttpHandler implements Http.Handler {
@@ -24,15 +26,39 @@ final class HttpHandler implements Http.Handler {
 
     NOOP,
 
+    // delegate
+
     SINGLE,
 
     MANY,
 
-    METHOD_NOT_ALLOWED;
+    FACTORY1,
+
+    // fixed content
+
+    CONTENT,
+
+    // pre-made responses
+
+    METHOD_NOT_ALLOWED,
+
+    MOVED_PERMANENTLY,
+
+    NOT_FOUND;
 
   }
 
+  private record Factory1<T>(Function<T, ? extends Handler> factory, T value) {
+    final Http.Handler create() {
+      return factory.apply(value);
+    }
+  }
+
+  private record Content(String contentType, byte[] bytes) {}
+
   static final Http.Handler NOOP = new HttpHandler(Kind.NOOP, null, null);
+
+  private static final Http.Handler NOT_FOUND = new HttpHandler(Kind.NOT_FOUND, null, null);
 
   private final Kind kind;
 
@@ -58,8 +84,19 @@ final class HttpHandler implements Http.Handler {
     return new HttpHandler(Kind.MANY, predicate, handlers);
   }
 
+  public static <T> Http.Handler factory(Function<T, ? extends Http.Handler> factory, T value) {
+    final Factory1<T> main;
+    main = new Factory1<>(factory, value);
+
+    return new HttpHandler(Kind.FACTORY1, null, main);
+  }
+
   public static Http.Handler methodNotAllowed(Predicate<Http.Request> predicate) {
     return new HttpHandler(Kind.METHOD_NOT_ALLOWED, predicate, null);
+  }
+
+  public static Http.Handler movedPermanently(String location) {
+    return new HttpHandler(Kind.MOVED_PERMANENTLY, null, location);
   }
 
   public static Http.Handler methodAllowed(Predicate<Http.Request> matcher, Http.Method method, Http.Handler handler) {
@@ -75,6 +112,17 @@ final class HttpHandler implements Http.Handler {
     predicate = new MethodAllowedPredicate(matcher, method);
 
     return new HttpHandler(Kind.SINGLE, predicate, handler);
+  }
+
+  public static Http.Handler notFound() {
+    return NOT_FOUND;
+  }
+
+  public static Http.Handler ofContent(String contentType, byte[] bytes) {
+    final Content main;
+    main = new Content(contentType, bytes);
+
+    return new HttpHandler(Kind.CONTENT, null, main);
   }
 
   @Override
@@ -112,6 +160,38 @@ final class HttpHandler implements Http.Handler {
         }
       }
 
+      case FACTORY1 -> {
+        Factory1<?> fac;
+        fac = (Factory1<?>) main;
+
+        Http.Handler handler;
+        handler = fac.create();
+
+        if (handler == null) {
+          throw new NullPointerException("Factory returned a null HTTP handler");
+        }
+
+        handler.handle(http);
+      }
+
+      case CONTENT -> {
+        final Content content;
+        content = (Content) main;
+
+        http.status(Http.Status.OK);
+
+        http.dateNow();
+
+        http.header(Http.HeaderName.CONTENT_TYPE, content.contentType);
+
+        final byte[] bytes;
+        bytes = content.bytes;
+
+        http.header(Http.HeaderName.CONTENT_LENGTH, bytes.length);
+
+        http.send(bytes);
+      }
+
       case METHOD_NOT_ALLOWED -> {
         http.status(Http.Status.METHOD_NOT_ALLOWED);
 
@@ -121,7 +201,31 @@ final class HttpHandler implements Http.Handler {
 
         http.send();
       }
+
+      case MOVED_PERMANENTLY -> {
+        http.status(Http.Status.MOVED_PERMANENTLY);
+
+        http.dateNow();
+
+        http.header(Http.HeaderName.LOCATION, asString());
+
+        http.send();
+      }
+
+      case NOT_FOUND -> {
+        http.status(Http.Status.NOT_FOUND);
+
+        http.dateNow();
+
+        http.header(Http.HeaderName.CONNECTION, "close");
+
+        http.send();
+      }
     }
+  }
+
+  private String asString() {
+    return (String) main;
   }
 
 }
