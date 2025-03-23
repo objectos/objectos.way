@@ -34,13 +34,15 @@ import java.util.Objects;
 
 final class AppReloaderConfig implements App.Reloader.Config {
 
-  String binaryName;
-
   final List<Path> directories = Util.createList();
+
+  App.Reloader.HandlerFactory handlerFactory;
 
   final Map<WatchKey, Path> keys = new HashMap<>();
 
   final AppReloader.Notes notes = AppReloader.Notes.get();
+
+  String moduleName;
 
   Note.Sink noteSink = Note.NoOpSink.INSTANCE;
 
@@ -66,17 +68,22 @@ final class AppReloaderConfig implements App.Reloader.Config {
   };
 
   @Override
-  public final void binaryName(String value) {
-    binaryName = Objects.requireNonNull(value, "value == null");
-  }
-
-  @Override
   public final void directory(Path value) {
     if (!Files.isDirectory(value)) {
       throw new IllegalArgumentException("Path does not represent a directory: " + value);
     }
 
     directories.add(value);
+  }
+
+  @Override
+  public final void handlerFactory(App.Reloader.HandlerFactory value) {
+    handlerFactory = Objects.requireNonNull(value, "value == null");
+  }
+
+  @Override
+  public final void moduleName(String value) {
+    moduleName = Objects.requireNonNull(value, "value == null");
   }
 
   @Override
@@ -90,8 +97,12 @@ final class AppReloaderConfig implements App.Reloader.Config {
   }
 
   final AppReloader build() throws IOException {
-    if (binaryName == null) {
-      throw new IllegalArgumentException("No binary name specified. Please set a name with the config.binaryName(String) method.");
+    if (handlerFactory == null) {
+      throw new IllegalStateException("No handler factory specified");
+    }
+
+    if (moduleName == null) {
+      throw new IllegalStateException("No module name specified");
     }
 
     if (service == null) {
@@ -103,13 +114,22 @@ final class AppReloaderConfig implements App.Reloader.Config {
       serviceClose = true;
     }
 
-    for (var directory : directories) {
+    for (Path directory : directories) {
       noteSink.send(notes.watching(), directory);
 
       Files.walkFileTree(directory, visitor);
     }
 
-    return new AppReloader(this);
+    final AppReloader reloader;
+    reloader = new AppReloader(this);
+
+    reloader.start();
+
+    return reloader;
+  }
+
+  final Path[] directories() {
+    return directories.toArray(Path[]::new);
   }
 
 }

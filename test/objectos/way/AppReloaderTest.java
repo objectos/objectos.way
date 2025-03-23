@@ -18,14 +18,10 @@ package objectos.way;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
-import java.lang.reflect.Constructor;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.WatchService;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Supplier;
-import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class AppReloaderTest {
@@ -33,6 +29,19 @@ public class AppReloaderTest {
   @Test
   public void testCase01() throws Exception {
     try (AppReloaderHelper helper = AppReloaderHelper.of()) {
+      // module-info
+      helper.writeJavaFile(
+          Path.of("module-info.java"),
+
+          """
+          module test.way {
+            exports test;
+
+            requires objectos.way;
+          }
+          """
+      );
+
       // first subject version
       Path subjectSrc;
       subjectSrc = Path.of("test", "Subject.java");
@@ -43,7 +52,8 @@ public class AppReloaderTest {
           """
           package test;
 
-          public class Subject implements java.util.function.Supplier<String> {
+          public class Subject implements objectos.way.Http.Handler {
+            public void handle(objectos.way.Http.Exchange http) {}
             public String get() {
               return "A";
             }
@@ -58,15 +68,13 @@ public class AppReloaderTest {
 
       try (WatchService watchService = fileSystem.newWatchService();
           App.Reloader reloader = App.Reloader.create(config -> {
-            config.binaryName("test.Subject");
-            config.watchService(watchService);
-            config.noteSink(TestingNoteSink.INSTANCE);
             config.directory(helper.classOutput());
+            config.handlerFactory(helper);
+            config.moduleName("test.way");
+            config.noteSink(TestingNoteSink.INSTANCE);
+            config.watchService(watchService);
           })) {
-        String firstGet;
-        firstGet = newInstanceAndGet(reloader);
-
-        assertEquals(firstGet, "A");
+        assertEquals(helper.get(), "A");
 
         // second subject version
         helper.writeJavaFile(
@@ -75,7 +83,8 @@ public class AppReloaderTest {
             """
             package test;
 
-            public class Subject implements java.util.function.Supplier<String> {
+            public class Subject implements objectos.way.Http.Handler {
+              public void handle(objectos.way.Http.Exchange http) {}
               public String get() {
                 return "B";
               }
@@ -83,14 +92,9 @@ public class AppReloaderTest {
             """
         );
 
-        assertTrue(helper.compile());
+        assertTrue(helper.compileAndWait());
 
-        TimeUnit.MILLISECONDS.sleep(5);
-
-        String secondGet;
-        secondGet = newInstanceAndGet(reloader);
-
-        assertEquals(secondGet, "B");
+        assertEquals(helper.get(), "B");
       }
     }
   }
@@ -98,28 +102,22 @@ public class AppReloaderTest {
   @Test
   public void testCase02() throws Exception {
     try (AppReloaderHelper helper = AppReloaderHelper.of()) {
-      // first subject version
-      Path subjectSrc;
-      subjectSrc = Path.of("test", "Subject.java");
-
+      // module-info
       helper.writeJavaFile(
-          Path.of("objectos", "way", "App.java"),
+          Path.of("module-info.java"),
 
           """
-          package objectos.way;
+          module test.way {
+            exports test;
 
-          import java.lang.annotation.ElementType;
-          import java.lang.annotation.Retention;
-          import java.lang.annotation.RetentionPolicy;
-          import java.lang.annotation.Target;
-
-          public final class App {
-            @Retention(RetentionPolicy.CLASS)
-            @Target(ElementType.TYPE)
-            public @interface DoNotReload {}
+            requires objectos.way;
           }
           """
       );
+
+      // first subject version
+      Path subjectSrc;
+      subjectSrc = Path.of("test", "Subject.java");
 
       helper.writeJavaFile(
           subjectSrc,
@@ -127,11 +125,27 @@ public class AppReloaderTest {
           """
           package test;
 
-          @objectos.way.App.DoNotReload
-          public class Subject implements java.util.function.Supplier<String> {
+          public class Subject implements objectos.way.Http.Handler {
+            public void handle(objectos.way.Http.Exchange http) {}
             public String get() {
-              return "A";
+              return Delegate.SUBJECT;
             }
+          }
+          """
+      );
+
+      Path delegateSrc;
+      delegateSrc = Path.of("test", "Delegate.java");
+
+      helper.writeJavaFile(
+          delegateSrc,
+
+          """
+          package test;
+
+          @objectos.way.App.DoNotReload
+          class Delegate {
+            static final String SUBJECT = "A";
           }
           """
       );
@@ -143,19 +157,31 @@ public class AppReloaderTest {
 
       try (WatchService watchService = fileSystem.newWatchService();
           App.Reloader reloader = App.Reloader.create(config -> {
-            config.binaryName("test.Subject");
-            config.watchService(watchService);
-            config.noteSink(TestingNoteSink.INSTANCE);
             config.directory(helper.classOutput());
+            config.handlerFactory(helper);
+            config.moduleName("test.way");
+            config.noteSink(TestingNoteSink.INSTANCE);
+            config.watchService(watchService);
           })) {
+        assertEquals(helper.get(), "A");
 
-        try {
-          newInstanceAndGet(reloader);
+        // second subject version
+        helper.writeJavaFile(
+            delegateSrc,
 
-          Assert.fail();
-        } catch (ClassNotFoundException expected) {
+            """
+            package test;
 
-        }
+            @objectos.way.App.DoNotReload
+            class Delegate {
+              static final String SUBJECT = "B";
+            }
+            """
+        );
+
+        assertTrue(helper.compileAndWait());
+
+        assertEquals(helper.get(), "A");
       }
     }
   }
@@ -165,6 +191,19 @@ public class AppReloaderTest {
   """)
   public void testCase03() throws Exception {
     try (AppReloaderHelper helper = AppReloaderHelper.of()) {
+      // module-info
+      helper.writeJavaFile(
+          Path.of("module-info.java"),
+
+          """
+          module test.way {
+            exports test;
+
+            requires objectos.way;
+          }
+          """
+      );
+
       // first subject version
       Path subjectSrc;
       subjectSrc = Path.of("test", "Subject.java");
@@ -175,7 +214,8 @@ public class AppReloaderTest {
           """
           package test;
 
-          public class Subject implements java.util.function.Supplier<String> {
+          public class Subject implements objectos.way.Http.Handler {
+            public void handle(objectos.way.Http.Exchange http) {}
             public String get() {
               return "A";
             }
@@ -190,16 +230,14 @@ public class AppReloaderTest {
 
       try (WatchService watchService = fileSystem.newWatchService();
           App.Reloader reloader = App.Reloader.create(config -> {
-            config.binaryName("test.Subject");
-            config.watchService(watchService);
-            config.noteSink(TestingNoteSink.INSTANCE);
             config.directory(helper.classOutput());
+            config.handlerFactory(helper);
+            config.moduleName("test.way");
+            config.noteSink(TestingNoteSink.INSTANCE);
+            config.watchService(watchService);
           })) {
 
-        String firstGet;
-        firstGet = newInstanceAndGet(reloader);
-
-        assertEquals(firstGet, "A");
+        assertEquals(helper.get(), "A");
 
         Path packageDir;
         packageDir = helper.classOutput().resolve("test");
@@ -213,7 +251,8 @@ public class AppReloaderTest {
             """
             package test;
 
-            public class Subject implements java.util.function.Supplier<String> {
+            public class Subject implements objectos.way.Http.Handler {
+              public void handle(objectos.way.Http.Exchange http) {}
               public String get() {
                 return "B";
               }
@@ -221,33 +260,11 @@ public class AppReloaderTest {
             """
         );
 
-        assertTrue(helper.compile());
+        assertTrue(helper.compileAndWait());
 
-        TimeUnit.MILLISECONDS.sleep(5);
-
-        String secondGet;
-        secondGet = newInstanceAndGet(reloader);
-
-        assertEquals(secondGet, "B");
+        assertEquals(helper.get(), "B");
       }
     }
-  }
-
-  @SuppressWarnings("unchecked")
-  private String newInstanceAndGet(App.Reloader reloader) throws Exception {
-    Class<?> type;
-    type = reloader.get();
-
-    Constructor<?> constructor;
-    constructor = type.getConstructor();
-
-    Object instance;
-    instance = constructor.newInstance();
-
-    Supplier<String> supplier;
-    supplier = (Supplier<String>) instance;
-
-    return supplier.get();
   }
 
 }

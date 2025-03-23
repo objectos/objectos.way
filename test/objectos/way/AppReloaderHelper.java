@@ -17,6 +17,8 @@ package objectos.way;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -27,7 +29,7 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
 
-final class AppReloaderHelper implements AutoCloseable {
+final class AppReloaderHelper implements AutoCloseable, App.Reloader.HandlerFactory {
 
   private final Path root;
   private final Path src;
@@ -37,6 +39,8 @@ final class AppReloaderHelper implements AutoCloseable {
   private final StandardJavaFileManager fileManager;
 
   private final List<Path> sourceFiles = Util.createList();
+
+  private String message;
 
   public AppReloaderHelper(
       Path root,
@@ -60,6 +64,8 @@ final class AppReloaderHelper implements AutoCloseable {
 
     StandardJavaFileManager fileManager;
     fileManager = javaCompiler.getStandardFileManager(null, null, null);
+
+    fileManager.setLocationForModule(StandardLocation.MODULE_PATH, "objectos.way", List.of(Path.of("work", "main")));
 
     Path src;
     src = root.resolve("src");
@@ -111,8 +117,23 @@ final class AppReloaderHelper implements AutoCloseable {
     return result.booleanValue();
   }
 
+  public final boolean compileAndWait() throws InterruptedException {
+    synchronized (this) {
+      boolean result;
+      result = compile();
+
+      wait();
+
+      return result;
+    }
+  }
+
   public final Path classOutput() {
     return cls;
+  }
+
+  public final String get() {
+    return message;
   }
 
   @Override
@@ -120,6 +141,29 @@ final class AppReloaderHelper implements AutoCloseable {
     try (fileManager) {
       Rmdir.rmdir(root);
     }
+  }
+
+  @Override
+  public final Http.Handler reload(ClassLoader classLoader) throws Exception {
+    Class<?> subject;
+    subject = classLoader.loadClass("test.Subject");
+
+    Constructor<?> constructor;
+    constructor = subject.getConstructor();
+
+    Object instance;
+    instance = constructor.newInstance();
+
+    Method getMethod;
+    getMethod = subject.getMethod("get");
+
+    synchronized (this) {
+      message = (String) getMethod.invoke(instance);
+
+      notifyAll();
+    }
+
+    return (Http.Handler) instance;
   }
 
 }

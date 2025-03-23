@@ -241,21 +241,12 @@ public final class App {
    * observed in configured directories. It is meant to be used during the
    * development of an application.
    */
-  public sealed interface Reloader extends Closeable permits AppReloader {
+  public sealed interface Reloader extends Closeable, Http.Handler permits AppReloader {
 
     /**
      * Configures the creation of an {@code App.Reloader}.
      */
     public sealed interface Config permits AppReloaderConfig {
-
-      /**
-       * Sets the binary name of the application's HTTP handler class. This is
-       * the class that the reloader will try to reload.
-       *
-       * @param value
-       *        the binary name
-       */
-      void binaryName(String value);
 
       /**
        * Watch the specified directory for changes and reload its class files if
@@ -268,6 +259,10 @@ public final class App {
        *         if the path does not represent a directory
        */
       void directory(Path value);
+
+      void handlerFactory(HandlerFactory value);
+
+      void moduleName(String value);
 
       /**
        * Sets the note sink to the specified value.
@@ -284,6 +279,13 @@ public final class App {
        *        the watch service to use
        */
       void watchService(WatchService value);
+
+    }
+
+    @FunctionalInterface
+    public interface HandlerFactory {
+
+      Http.Handler reload(ClassLoader classLoader) throws Exception;
 
     }
 
@@ -315,19 +317,6 @@ public final class App {
      */
     @Override
     void close() throws IOException;
-
-    /**
-     * Returns the class object representing the class of this reloader that is
-     * in sync with any file system change.
-     *
-     * @return the class object that is in sync with any file system change
-     *
-     * @throws ClassNotFoundException
-     *         if a class with the configured binary name could not be found
-     * @throws IOException
-     *         if an I/O error occurs
-     */
-    Class<?> get() throws ClassNotFoundException, IOException;
 
   }
 
