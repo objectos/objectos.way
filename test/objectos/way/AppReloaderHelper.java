@@ -40,6 +40,8 @@ final class AppReloaderHelper implements AutoCloseable, App.Reloader.HandlerFact
 
   private final List<Path> sourceFiles = Util.createList();
 
+  private Path resources;
+
   private String message;
 
   public AppReloaderHelper(
@@ -86,6 +88,65 @@ final class AppReloaderHelper implements AutoCloseable, App.Reloader.HandlerFact
     );
   }
 
+  public final void writeModuleInfo() throws IOException {
+    writeJavaFile(
+        Path.of("module-info.java"),
+
+        """
+        module test.way {
+          exports test;
+
+          requires objectos.way;
+        }
+        """
+    );
+  }
+
+  public final void writeSubject(String string) throws IOException {
+    writeJavaFile(
+        Path.of("test", "Subject.java"),
+
+        """
+        package test;
+
+        public class Subject implements objectos.way.Http.Handler {
+          public void handle(objectos.way.Http.Exchange http) {}
+          public String get() {
+            %s
+          }
+        }
+        """.formatted(string)
+    );
+  }
+
+  public final void writeDelegate(String string) throws IOException {
+    writeJavaFile(
+        Path.of("test", "Delegate.java"),
+
+        """
+        package test;
+
+        @objectos.way.App.DoNotReload
+        class Delegate {
+          static final String SUBJECT = "%s";
+        }
+        """.formatted(string)
+    );
+  }
+
+  public final Path resources() throws IOException {
+    if (resources == null) {
+      Path dir;
+      dir = root.resolve("resources");
+
+      Files.createDirectories(dir);
+
+      resources = dir;
+    }
+
+    return resources;
+  }
+
   public final void writeJavaFile(Path path, String source) throws IOException {
     Path javaFile;
     javaFile = src.resolve(path);
@@ -117,17 +178,6 @@ final class AppReloaderHelper implements AutoCloseable, App.Reloader.HandlerFact
     return result.booleanValue();
   }
 
-  public final boolean compileAndWait() throws InterruptedException {
-    synchronized (this) {
-      boolean result;
-      result = compile();
-
-      wait();
-
-      return result;
-    }
-  }
-
   public final Path classOutput() {
     return cls;
   }
@@ -157,11 +207,7 @@ final class AppReloaderHelper implements AutoCloseable, App.Reloader.HandlerFact
     Method getMethod;
     getMethod = subject.getMethod("get");
 
-    synchronized (this) {
-      message = (String) getMethod.invoke(instance);
-
-      notifyAll();
-    }
+    message = (String) getMethod.invoke(instance);
 
     return (Http.Handler) instance;
   }

@@ -16,21 +16,23 @@
 package objectos.way;
 
 import java.io.IOException;
+import java.lang.module.Configuration;
+import java.lang.module.ModuleFinder;
+import java.lang.module.ModuleReference;
+import java.lang.module.ResolvedModule;
+import java.net.URI;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
-import java.nio.file.FileVisitResult;
-import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 
 final class AppReloaderConfig implements App.Reloader.Config {
 
@@ -42,6 +44,10 @@ final class AppReloaderConfig implements App.Reloader.Config {
 
   final AppReloader.Notes notes = AppReloader.Notes.get();
 
+  Configuration moduleConfiguration;
+
+  Path moduleLocation;
+
   String moduleName;
 
   Note.Sink noteSink = Note.NoOpSink.INSTANCE;
@@ -49,23 +55,6 @@ final class AppReloaderConfig implements App.Reloader.Config {
   WatchService service;
 
   boolean serviceClose;
-
-  private final FileVisitor<Path> visitor = new SimpleFileVisitor<Path>() {
-    @Override
-    public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-      WatchKey key;
-      key = dir.register(
-          service,
-          StandardWatchEventKinds.ENTRY_CREATE,
-          StandardWatchEventKinds.ENTRY_DELETE,
-          StandardWatchEventKinds.ENTRY_MODIFY
-      );
-
-      keys.put(key, dir);
-
-      return FileVisitResult.CONTINUE;
-    }
-  };
 
   @Override
   public final void directory(Path value) {
@@ -82,8 +71,102 @@ final class AppReloaderConfig implements App.Reloader.Config {
   }
 
   @Override
-  public final void moduleName(String value) {
-    moduleName = Objects.requireNonNull(value, "value == null");
+  public final void module(String name, Path location) {
+    if (moduleConfiguration != null) {
+      throw new IllegalStateException("module has already been set");
+    }
+
+    String moduleName;
+    moduleName = Objects.requireNonNull(name, "name == null");
+
+    if (!Files.isDirectory(location)) {
+      throw new IllegalArgumentException("Module location does not represent a directory: " + location);
+    }
+
+    ModuleLayer boot;
+    boot = ModuleLayer.boot();
+
+    Configuration configuration;
+    configuration = boot.configuration();
+
+    final ModuleFinder finder;
+    finder = ModuleFinder.of(location);
+
+    final ModuleFinder afterFinder;
+    afterFinder = ModuleFinder.of();
+
+    final Set<String> roots;
+    roots = Set.of(moduleName);
+
+    moduleConfiguration = configuration.resolve(finder, afterFinder, roots);
+
+    this.moduleLocation = location;
+
+    this.moduleName = moduleName;
+  }
+
+  @Override
+  public final void moduleOf(Class<?> value) {
+    if (moduleConfiguration != null) {
+      throw new IllegalStateException("module has already been set");
+    }
+
+    Module module;
+    module = value.getModule();
+
+    String moduleName;
+    moduleName = module.getName();
+
+    ModuleLayer boot;
+    boot = ModuleLayer.boot();
+
+    Configuration configuration;
+    configuration = boot.configuration();
+
+    Optional<ResolvedModule> maybeResolved;
+    maybeResolved = configuration.findModule(moduleName);
+
+    if (maybeResolved.isEmpty()) {
+      throw new IllegalArgumentException("Could not find ResolvedModule for " + moduleName);
+    }
+
+    ResolvedModule resolved;
+    resolved = maybeResolved.get();
+
+    ModuleReference reference;
+    reference = resolved.reference();
+
+    Optional<URI> maybeLocation;
+    maybeLocation = reference.location();
+
+    if (maybeLocation.isEmpty()) {
+      throw new IllegalArgumentException("Could not resolved location for " + moduleName);
+    }
+
+    URI uri;
+    uri = maybeLocation.get();
+
+    Path location;
+    location = Path.of(uri);
+
+    if (!Files.isDirectory(location)) {
+      throw new IllegalArgumentException("Module location does not represent a directory: " + location);
+    }
+
+    final ModuleFinder finder;
+    finder = ModuleFinder.of(location);
+
+    final ModuleFinder afterFinder;
+    afterFinder = ModuleFinder.of();
+
+    final Set<String> roots;
+    roots = Set.of(moduleName);
+
+    moduleConfiguration = configuration.resolve(finder, afterFinder, roots);
+
+    this.moduleLocation = location;
+
+    this.moduleName = moduleName;
   }
 
   @Override
@@ -101,8 +184,8 @@ final class AppReloaderConfig implements App.Reloader.Config {
       throw new IllegalStateException("No handler factory specified");
     }
 
-    if (moduleName == null) {
-      throw new IllegalStateException("No module name specified");
+    if (moduleConfiguration == null) {
+      throw new IllegalStateException("No module was specified");
     }
 
     if (service == null) {
@@ -114,22 +197,12 @@ final class AppReloaderConfig implements App.Reloader.Config {
       serviceClose = true;
     }
 
-    for (Path directory : directories) {
-      noteSink.send(notes.watching(), directory);
-
-      Files.walkFileTree(directory, visitor);
-    }
-
     final AppReloader reloader;
     reloader = new AppReloader(this);
 
-    reloader.start();
+    reloader.start(directories);
 
     return reloader;
-  }
-
-  final Path[] directories() {
-    return directories.toArray(Path[]::new);
   }
 
 }

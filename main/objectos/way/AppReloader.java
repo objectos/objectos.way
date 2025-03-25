@@ -18,7 +18,6 @@ package objectos.way;
 import java.io.File;
 import java.io.IOException;
 import java.lang.module.Configuration;
-import java.lang.module.ModuleFinder;
 import java.nio.file.FileVisitResult;
 import java.nio.file.FileVisitor;
 import java.nio.file.Files;
@@ -30,14 +29,15 @@ import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-final class AppReloader implements App.Reloader, Runnable {
+final class AppReloader implements App.Reloader {
 
   record Notes(
       Note.Ref1<Path> watching,
-      Note.Ref0 started,
       Note.Ref1<WatchKey> watchKeyIgnored,
       Note.Ref2<WatchEvent.Kind<?>, Object> watchEvent,
       Note.Ref1<Class<?>> loaded,
@@ -53,7 +53,6 @@ final class AppReloader implements App.Reloader, Runnable {
 
       return new Notes(
           Note.Ref1.create(s, "Watch [directory]", Note.INFO),
-          Note.Ref0.create(s, "Started", Note.INFO),
           Note.Ref1.create(s, "Watch key ignored", Note.DEBUG),
           Note.Ref2.create(s, "FS", Note.TRACE),
           Note.Ref1.create(s, "Load", Note.TRACE),
@@ -66,19 +65,11 @@ final class AppReloader implements App.Reloader, Runnable {
 
   }
 
-  record Directory(Path path, String packageName) {
-    public boolean contains(String name) {
-      return name.startsWith(packageName);
-    }
-  }
-
   private final Notes notes;
 
   private final Note.Sink noteSink;
 
   private final Lang.ClassReader classReader;
-
-  private final Path[] directories;
 
   private volatile Http.Handler handler;
 
@@ -86,15 +77,17 @@ final class AppReloader implements App.Reloader, Runnable {
 
   private final Map<WatchKey, Path> keys;
 
+  private final ReadWriteLock lock;
+
   private final Configuration moduleConfiguration;
+
+  private final Path moduleLocation;
 
   private final String moduleName;
 
   private final WatchService service;
 
   private final boolean serviceClose;
-
-  private Thread thread;
 
   AppReloader(AppReloaderConfig builder) {
     notes = builder.notes;
@@ -103,30 +96,17 @@ final class AppReloader implements App.Reloader, Runnable {
 
     classReader = Lang.createClassReader(noteSink);
 
-    directories = builder.directories();
-
     handlerFactory = builder.handlerFactory;
 
-    keys = builder.keys;
+    keys = new HashMap<>();
 
-    final ModuleFinder finder;
-    finder = ModuleFinder.of(directories);
+    lock = new ReentrantReadWriteLock();
 
-    final ModuleLayer parent;
-    parent = ModuleLayer.boot();
+    moduleConfiguration = builder.moduleConfiguration;
 
-    final Configuration parentCfg;
-    parentCfg = parent.configuration();
-
-    final ModuleFinder afterFinder;
-    afterFinder = ModuleFinder.of();
+    moduleLocation = builder.moduleLocation;
 
     moduleName = builder.moduleName;
-
-    final Set<String> roots;
-    roots = Set.of(moduleName);
-
-    moduleConfiguration = parentCfg.resolve(finder, afterFinder, roots);
 
     service = builder.service;
 
@@ -135,14 +115,6 @@ final class AppReloader implements App.Reloader, Runnable {
 
   @Override
   public final void close() throws IOException {
-    if (thread != null) {
-      thread.interrupt();
-
-      while (thread.isAlive()) {
-        Thread.onSpinWait();
-      }
-    }
-
     if (serviceClose) {
       service.close();
     }
@@ -150,17 +122,25 @@ final class AppReloader implements App.Reloader, Runnable {
 
   @Override
   public final void handle(Http.Exchange http) {
+    reloadIfNecessary();
+
     handler.handle(http);
   }
 
-  @Override
-  public final void run() {
-    noteSink.send(notes.started);
-
+  private void reloadIfNecessary() {
+    lock.readLock().lock();
     try {
-      while (!Thread.currentThread().isInterrupted()) {
-        WatchKey key;
-        key = service.take();
+
+      WatchKey key;
+      key = service.poll();
+
+      if (key == null) {
+        return;
+      }
+
+      lock.readLock().unlock();
+      lock.writeLock().lock();
+      try {
 
         boolean shouldReload;
         shouldReload = false;
@@ -179,21 +159,29 @@ final class AppReloader implements App.Reloader, Runnable {
         if (shouldReload) {
           reload();
         }
+
+        lock.readLock().lock();
+      } finally {
+        lock.writeLock().unlock();
       }
-    } catch (InterruptedException expected) {
-      // we're shutting down
+
+    } finally {
+      lock.readLock().unlock();
     }
   }
 
-  final void start() {
+  final void start(Iterable<Path> directories) {
+    register0(moduleLocation);
+
+    for (Path directory : directories) {
+      register0(directory);
+    }
+
     // initial load
     reload();
-
-    // start reloader thread
-    thread = Thread.ofPlatform().name("reloader").start(this);
   }
 
-  private boolean process(WatchKey key) throws InterruptedException {
+  private boolean process(WatchKey key) {
     final Path directory;
     directory = keys.get(key);
 
@@ -213,6 +201,8 @@ final class AppReloader implements App.Reloader, Runnable {
       kind = event.kind();
 
       if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
+        createdOrModified = true;
+
         final Path name;
         name = (Path) event.context();
 
@@ -220,23 +210,12 @@ final class AppReloader implements App.Reloader, Runnable {
         child = directory.resolve(name);
 
         if (Files.isDirectory(child)) {
-          createdOrModified = true;
-
           register0(child);
-        }
-
-        else if (!createdOrModified && isClassFile(name)) {
-          createdOrModified = true;
         }
       }
 
       else if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
-        final Path name;
-        name = (Path) event.context();
-
-        if (!createdOrModified && isClassFile(name)) {
-          createdOrModified = true;
-        }
+        createdOrModified = true;
       }
 
     }
@@ -249,16 +228,6 @@ final class AppReloader implements App.Reloader, Runnable {
     }
 
     return createdOrModified;
-  }
-
-  private boolean isClassFile(Path name) {
-    Path fileName;
-    fileName = name.getFileName();
-
-    String actualName;
-    actualName = fileName.toString();
-
-    return actualName.endsWith(".class");
   }
 
   private final FileVisitor<Path> registerVisitor = new SimpleFileVisitor<Path>() {
@@ -334,32 +303,22 @@ final class AppReloader implements App.Reloader, Runnable {
 
     @Override
     protected final Class<?> findClass(String name) throws ClassNotFoundException {
-      for (int i = 0; i < directories.length; i++) {
-        Path directory;
-        directory = directories[i];
-
+      try {
         String fileName;
         fileName = name.replace('.', File.separatorChar);
 
         fileName += ".class";
 
         Path file;
-        file = directory.resolve(fileName);
+        file = moduleLocation.resolve(fileName);
 
         byte[] bytes;
-
-        try {
-          bytes = Files.readAllBytes(file);
-        } catch (NoSuchFileException e) {
-          continue;
-        } catch (IOException e) {
-          throw new ClassNotFoundException(name, e);
-        }
+        bytes = Files.readAllBytes(file);
 
         if (doNotReload(name, bytes)) {
           noteSink.send(notes.skipped, name);
 
-          break;
+          return load1(name);
         }
 
         Class<?> clazz;
@@ -368,9 +327,11 @@ final class AppReloader implements App.Reloader, Runnable {
         noteSink.send(notes.loaded, clazz);
 
         return clazz;
+      } catch (NoSuchFileException e) {
+        return load1(name);
+      } catch (IOException e) {
+        throw new ClassNotFoundException(name, e);
       }
-
-      return load1(name);
     }
 
     private Class<?> load1(String name) throws ClassNotFoundException {

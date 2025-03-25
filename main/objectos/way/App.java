@@ -237,9 +237,9 @@ public final class App {
   }
 
   /**
-   * Reloads the application's HTTP handler and its dependencies if changes were
-   * observed in configured directories. It is meant to be used during the
-   * development of an application.
+   * An HTTP handler which reloads the classes of the configured module if
+   * changes are observed in the module's location. It is meant to be used
+   * during the development of an application.
    */
   public sealed interface Reloader extends Closeable, Http.Handler permits AppReloader {
 
@@ -249,8 +249,8 @@ public final class App {
     public sealed interface Config permits AppReloaderConfig {
 
       /**
-       * Watch the specified directory for changes and reload its class files if
-       * necessary.
+       * Reloads the module when changes are observed in the specified
+       * directory.
        *
        * @param value
        *        the directory to watch
@@ -260,9 +260,33 @@ public final class App {
        */
       void directory(Path value);
 
+      /**
+       * Use the specified factory to recreate the HTTP handler instance after
+       * filesystem changes are processed.
+       *
+       * @param value
+       *        an HTTP handler factory instance
+       */
       void handlerFactory(HandlerFactory value);
 
-      void moduleName(String value);
+      /**
+       * Sets the module to be reloaded to the one from the specified name and
+       * location.
+       *
+       * @param name
+       *        the module's name
+       * @param location
+       *        the module's location
+       */
+      void module(String name, Path location);
+
+      /**
+       * Sets the module to be reloaded to the one from the specified class.
+       *
+       * @param value
+       *        the class whose module is to be reloaded
+       */
+      void moduleOf(Class<?> value);
 
       /**
        * Sets the note sink to the specified value.
@@ -282,9 +306,28 @@ public final class App {
 
     }
 
+    /**
+     * A factory for HTTP handler instances. Implementations MUST create the new
+     * HTTP handler instance using the provided class loader.
+     */
     @FunctionalInterface
     public interface HandlerFactory {
 
+      /**
+       * Creates a new HTTP handler by loading classes from the specified class
+       * loader.
+       *
+       * @param classLoader
+       *        a newly created class loader instance bound to the reloaded
+       *        module
+       *
+       * @return a newly created HTTP handler instance
+       *
+       * @throws Exception
+       *         when trying to load a non-existing class, trying to reflect a
+       *         non-existing member or other error preventing the creation of a
+       *         new HTTP handler instance
+       */
       Http.Handler reload(ClassLoader classLoader) throws Exception;
 
     }
