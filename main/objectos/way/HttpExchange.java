@@ -52,7 +52,7 @@ final class HttpExchange extends HttpModuleSupport implements Http.Exchange, Clo
       s = Http.Exchange.class;
 
       return new Notes(
-          Note.Ref2.create(s, "Hexdump", Note.ERROR)
+          Note.Ref2.create(s, "HEX", Note.ERROR)
       );
     }
 

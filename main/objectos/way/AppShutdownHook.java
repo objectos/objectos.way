@@ -22,8 +22,8 @@ final class AppShutdownHook implements App.ShutdownHook {
   record Notes(
       Note.Ref1<Object> registered,
       Note.Ref1<Object> ignored,
-
       Note.Ref0 started,
+
       Note.Ref1<Object> resourceStarted,
       Note.Ref2<Object, Throwable> resourceError,
       Note.Long1 totalTime
@@ -34,13 +34,13 @@ final class AppShutdownHook implements App.ShutdownHook {
       s = App.ShutdownHook.class;
 
       return new Notes(
-          Note.Ref1.create(s, "Registered", Note.INFO),
-          Note.Ref1.create(s, "Ignored", Note.INFO),
+          Note.Ref1.create(s, "ADD", Note.INFO),
+          Note.Ref1.create(s, "SKI", Note.INFO),
+          Note.Ref0.create(s, "STA ", Note.INFO),
 
-          Note.Ref0.create(s, "Started", Note.INFO),
-          Note.Ref1.create(s, "Resource started", Note.DEBUG),
-          Note.Ref2.create(s, "Resource error", Note.WARN),
-          Note.Long1.create(s, "Total time [ms]", Note.INFO)
+          Note.Ref1.create(s, "HOK", Note.DEBUG),
+          Note.Ref2.create(s, "ERR", Note.WARN),
+          Note.Long1.create(s, "TIM", Note.INFO)
       );
     }
 

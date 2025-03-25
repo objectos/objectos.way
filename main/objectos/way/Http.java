@@ -19,7 +19,6 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
-import java.net.ServerSocket;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
@@ -886,7 +885,7 @@ public final class Http {
       /**
        * This server has started and is ready to accept requests.
        */
-      Note.Ref1<ServerSocket> started();
+      Note.Ref1<Http.Server> started();
 
     }
 

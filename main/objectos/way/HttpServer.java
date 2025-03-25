@@ -33,7 +33,7 @@ import objectos.way.HttpExchange.ParseStatus;
 final class HttpServer implements Http.Server, Runnable {
 
   record Notes(
-      Note.Ref1<ServerSocket> started,
+      Note.Ref1<Http.Server> started,
       Note.Ref0 stopped,
 
       Note.Ref1<IOException> ioError,
@@ -46,12 +46,12 @@ final class HttpServer implements Http.Server, Runnable {
       s = Http.Server.class;
 
       return new Notes(
-          Note.Ref1.create(s, "Started", Note.INFO),
-          Note.Ref0.create(s, "Stopped", Note.INFO),
+          Note.Ref1.create(s, "STA", Note.INFO),
+          Note.Ref0.create(s, "STO", Note.INFO),
 
-          Note.Ref1.create(s, "I/O error", Note.ERROR),
-          Note.Ref1.create(s, "Loop error", Note.ERROR),
-          Note.Ref1.create(s, "Internal server error", Note.ERROR)
+          Note.Ref1.create(s, "IOE", Note.ERROR),
+          Note.Ref1.create(s, "LOO", Note.ERROR),
+          Note.Ref1.create(s, "ISE", Note.ERROR)
       );
     }
 
@@ -159,7 +159,7 @@ final class HttpServer implements Http.Server, Runnable {
     factory = Thread.ofVirtual().name("http-", 1).factory();
 
     try (ExecutorService executor = Executors.newThreadPerTaskExecutor(factory)) {
-      noteSink.send(notes.started, serverSocket);
+      noteSink.send(notes.started, this);
 
       while (!Thread.currentThread().isInterrupted()) {
         Socket socket;
@@ -183,6 +183,34 @@ final class HttpServer implements Http.Server, Runnable {
 
   private void onIOException(IOException e) {
     noteSink.send(notes.ioError, e);
+  }
+
+  @Override
+  public final String toString() {
+    StringBuilder sb;
+    sb = new StringBuilder("Http.Server[");
+
+    if (serverSocket == null) {
+      sb.append("unbound");
+    }
+
+    else if (!serverSocket.isBound()) {
+      sb.append("unbound");
+    }
+
+    else {
+      sb.append("addr=");
+
+      sb.append(serverSocket.getInetAddress());
+
+      sb.append(",localport=");
+
+      sb.append(serverSocket.getLocalPort());
+    }
+
+    sb.append(']');
+
+    return sb.toString();
   }
 
   private class ExchangeTask implements Runnable {

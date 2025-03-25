@@ -42,7 +42,7 @@ final class WebResourcesConfig implements Web.Resources.Config {
 
   private record TextFile(String pathName, CharSequence contents, Charset charset) implements ResourceFile {}
 
-  private final Note.Ref1<Path> created = Note.Ref1.create(Web.Resources.Config.class, "File created", Note.DEBUG);
+  private final Note.Ref1<Path> created = Note.Ref1.create(Web.Resources.Config.class, "ADD", Note.DEBUG);
 
   Map<String, String> contentTypes = Map.of();
 

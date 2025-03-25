@@ -59,7 +59,7 @@ final class SqlDatabaseConfig implements Sql.Database.Config {
       data = connection.getMetaData();
 
       Note.Ref3<DatabaseMetaData, String, String> metadata;
-      metadata = Note.Ref3.create(Sql.class, "Database metadata", Note.DEBUG);
+      metadata = Note.Ref3.create(Sql.class, "MET", Note.DEBUG);
 
       noteSink.send(metadata, data, data.getDatabaseProductName(), data.getDatabaseProductVersion());
 

@@ -37,12 +37,15 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 final class AppReloader implements App.Reloader {
 
   record Notes(
-      Note.Ref1<Path> watching,
+      Note.Ref2<String, Path> watchModule,
+      Note.Ref1<Path> watchDirectory,
+
       Note.Ref1<WatchKey> watchKeyIgnored,
       Note.Ref2<WatchEvent.Kind<?>, Object> watchEvent,
+
       Note.Ref1<Class<?>> loaded,
-      Note.Ref1<Class<?>> systemLoaded,
       Note.Ref1<String> skipped,
+
       Note.Ref2<Path, IOException> registerFailed,
       Note.Ref1<Throwable> reloadFailed
   ) {
@@ -52,14 +55,17 @@ final class AppReloader implements App.Reloader {
       s = App.Reloader.class;
 
       return new Notes(
-          Note.Ref1.create(s, "Watch [directory]", Note.INFO),
-          Note.Ref1.create(s, "Watch key ignored", Note.DEBUG),
-          Note.Ref2.create(s, "FS", Note.TRACE),
-          Note.Ref1.create(s, "Load", Note.TRACE),
-          Note.Ref1.create(s, "System Load", Note.TRACE),
-          Note.Ref1.create(s, "Do not reload", Note.DEBUG),
-          Note.Ref2.create(s, "Register error", Note.ERROR),
-          Note.Ref1.create(s, "Reload error", Note.ERROR)
+          Note.Ref2.create(s, "MOD", Note.INFO),
+          Note.Ref1.create(s, "DIR", Note.INFO),
+
+          Note.Ref1.create(s, "IGN", Note.DEBUG),
+          Note.Ref2.create(s, "FSE", Note.TRACE),
+
+          Note.Ref1.create(s, "REL", Note.TRACE),
+          Note.Ref1.create(s, "SKI", Note.DEBUG),
+
+          Note.Ref2.create(s, "FSX", Note.ERROR),
+          Note.Ref1.create(s, "REX", Note.ERROR)
       );
     }
 
@@ -127,6 +133,11 @@ final class AppReloader implements App.Reloader {
     handler.handle(http);
   }
 
+  @Override
+  public final String toString() {
+    return "App.Reloader[" + moduleName + ";" + moduleLocation + "]";
+  }
+
   private void reloadIfNecessary() {
     lock.readLock().lock();
     try {
@@ -171,10 +182,14 @@ final class AppReloader implements App.Reloader {
   }
 
   final void start(Iterable<Path> directories) {
-    register0(moduleLocation);
+    register(moduleLocation);
+
+    noteSink.send(notes.watchModule, moduleName, moduleLocation);
 
     for (Path directory : directories) {
-      register0(directory);
+      register(directory);
+
+      noteSink.send(notes.watchDirectory, directory);
     }
 
     // initial load
@@ -210,7 +225,7 @@ final class AppReloader implements App.Reloader {
         child = directory.resolve(name);
 
         if (Files.isDirectory(child)) {
-          register0(child);
+          register(child);
         }
       }
 
@@ -247,7 +262,7 @@ final class AppReloader implements App.Reloader {
     }
   };
 
-  private void register0(Path directory) {
+  private void register(Path directory) {
     try {
       Files.walkFileTree(directory, registerVisitor);
     } catch (IOException e) {
@@ -338,12 +353,7 @@ final class AppReloader implements App.Reloader {
       ClassLoader systemLoader;
       systemLoader = ClassLoader.getSystemClassLoader();
 
-      Class<?> clazz;
-      clazz = systemLoader.loadClass(name);
-
-      noteSink.send(notes.systemLoaded, clazz);
-
-      return clazz;
+      return systemLoader.loadClass(name);
     }
 
   }

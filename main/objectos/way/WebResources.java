@@ -74,6 +74,11 @@ final class WebResources implements Web.Resources {
   }
 
   @Override
+  public final String toString() {
+    return "Web.Resources[" + kernel.rootDirectory() + "]";
+  }
+
+  @Override
   public final void write(String path, byte[] contents) throws IOException {
     kernel.write(path, contents);
   }
