@@ -22,9 +22,9 @@ import java.nio.file.Path;
 import java.time.Clock;
 import java.time.Duration;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.random.RandomGenerator;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 
@@ -623,25 +623,6 @@ public final class Web {
   public sealed interface Session permits WebSession {
 
     /**
-     * Creates a new web session with the specified identifier.
-     *
-     * @param id
-     *        the session identifier
-     *
-     * @return a newly created session object
-     */
-    static Session create(String id) {
-      return new WebSession(id);
-    }
-
-    /**
-     * The identifier of this session.
-     *
-     * @return the identifier of this session.
-     */
-    String id();
-
-    /**
      * Returns the object associated to the specified class instance, or
      * {@code null} if there's no object associated.
      *
@@ -731,12 +712,13 @@ public final class Web {
       void emptyMaxAge(Duration duration);
 
       /**
-       * Use the specified {@link Random} instance for generating session IDs.
+       * Use the specified {@link RandomGenerator} instance for generating
+       * session IDs.
        *
-       * @param random
-       *        the {@link Random} instance to use
+       * @param value
+       *        the {@link RandomGenerator} instance to use
        */
-      void random(Random random);
+      void randomGenerator(RandomGenerator value);
 
     }
 
@@ -758,27 +740,12 @@ public final class Web {
       return builder.build();
     }
 
-    void cleanUp();
-
     /**
      * Creates and immediately stores a new session instance.
      *
      * @return a newly created session instance.
      */
     Session createNext();
-
-    void filter(Http.Exchange http);
-
-    /**
-     * Returns the session with the specified session ID; or returns
-     * {@code null} if the session does not exist.
-     *
-     * @param id
-     *        the session ID
-     *
-     * @return the session with the specified session ID or {@code null}
-     */
-    Session get(String id);
 
     /**
      * Returns the session associated to the specified request; or returns
@@ -791,29 +758,9 @@ public final class Web {
      */
     Session get(Http.Request request);
 
-    /**
-     * Returns a Set-Cookie header value for the specified session ID.
-     *
-     * @param id
-     *        the session ID
-     *
-     * @return the value of a Set-Cookie header for the specified session ID
-     */
-    String setCookie(String id);
-
-    /**
-     * Stores the specified {@code session} in this repository. If a session
-     * instance with the same ID is already managed by this repository then the
-     * existing session is replaced by the specified one.
-     *
-     * @param session
-     *        the session instance to be stored
-     *
-     * @return the previously stored session instance or {@code null}
-     */
-    Session store(Session session);
-
   }
+
+  public sealed interface Token permits WebToken16 {}
 
   private Web() {}
 

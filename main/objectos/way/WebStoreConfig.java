@@ -19,7 +19,7 @@ import java.security.SecureRandom;
 import java.time.Clock;
 import java.time.Duration;
 import java.util.Objects;
-import java.util.Random;
+import java.util.random.RandomGenerator;
 
 final class WebStoreConfig implements Web.Store.Config {
 
@@ -33,11 +33,7 @@ final class WebStoreConfig implements Web.Store.Config {
 
   Duration emptyMaxAge = Duration.ofMinutes(5);
 
-  Random random = new SecureRandom();
-
-  public final Web.Store build() {
-    return new WebStore(this);
-  }
+  RandomGenerator randomGenerator;
 
   @Override
   public final void clock(Clock value) {
@@ -85,8 +81,16 @@ final class WebStoreConfig implements Web.Store.Config {
   }
 
   @Override
-  public final void random(Random random) {
-    this.random = Objects.requireNonNull(random, "random == null");
+  public final void randomGenerator(RandomGenerator value) {
+    this.randomGenerator = Objects.requireNonNull(value, "value == null");
+  }
+
+  final Web.Store build() {
+    if (randomGenerator == null) {
+      randomGenerator = new SecureRandom();
+    }
+
+    return new WebStore(this);
   }
 
 }

@@ -23,7 +23,9 @@ import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.HexFormat;
 import java.util.function.Consumer;
+import java.util.random.RandomGenerator;
 
 final class Testing {
 
@@ -68,6 +70,19 @@ final class Testing {
 
   private Testing() {}
 
+  public static String cookie(String name, long high, long low) {
+    final HexFormat format;
+    format = HexFormat.of();
+
+    final String h;
+    h = format.toHexDigits(high);
+
+    final String l;
+    l = format.toHexDigits(low);
+
+    return name + "=" + h + l;
+  }
+
   public static HttpResponse<String> httpClient(String path, Consumer<HttpRequest.Builder> config) throws IOException, InterruptedException {
     // force early init
     java.net.http.HttpClient client;
@@ -92,6 +107,19 @@ final class Testing {
     request = builder.build();
 
     return client.send(request, BodyHandlers.ofString(StandardCharsets.UTF_8));
+  }
+
+  public static RandomGenerator randomGeneratorOfLongs(long... longs) {
+    return new RandomGenerator() {
+      private final long[] values = longs.clone();
+
+      private int index;
+
+      @Override
+      public final long nextLong() {
+        return values[index++];
+      }
+    };
   }
 
 }

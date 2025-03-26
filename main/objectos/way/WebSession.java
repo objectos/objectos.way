@@ -23,7 +23,7 @@ import java.util.Objects;
 
 final class WebSession implements Web.Session {
 
-  private final String id;
+  public final Web.Token id;
 
   private final Map<Object, Object> values = new HashMap<>();
 
@@ -31,13 +31,8 @@ final class WebSession implements Web.Session {
 
   volatile boolean valid = true;
 
-  public WebSession(String id) {
+  public WebSession(Web.Token id) {
     this.id = Objects.requireNonNull(id, "id == null");
-  }
-
-  @Override
-  public final String id() {
-    return id;
   }
 
   @Override

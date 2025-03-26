@@ -29,9 +29,7 @@ import java.util.function.Consumer;
 import objectos.way.Http.HeaderName;
 import objectos.way.Http.Method;
 import objectos.way.Http.Routing;
-import objectos.way.TestingRandom.SequentialRandom;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 public class HttpRoutingTest implements Consumer<Http.Routing> {
@@ -43,33 +41,26 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
   @SuppressWarnings("serial")
   private static class TestException extends RuntimeException {}
 
-  private Web.Store sessionStore;
+  private String cookie;
 
-  private SequentialRandom random;
+  private Web.Store sessionStore;
 
   @BeforeClass
   public void beforeClass() {
-    random = new SequentialRandom();
-
     this.sessionStore = Web.Store.create(config -> {
       config.cookieName("HTTPMODULETEST");
 
-      config.random(random);
+      config.randomGenerator(Testing.randomGeneratorOfLongs(1L, 2L));
     });
 
-    TestingHttpServer.bindHttpRoutingTest(this);
-  }
+    cookie = Testing.cookie("HTTPMODULETEST", 1L, 2L);
 
-  @BeforeMethod
-  public void beforeMethod() {
     Web.Session session;
-    session = Web.Session.create("TEST_COOKIE");
+    session = sessionStore.createNext();
 
     session.put(User.class, new User("test"));
 
-    sessionStore.store(session);
-
-    random.reset();
+    TestingHttpServer.bindHttpRoutingTest(this);
   }
 
   @Override
@@ -243,7 +234,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
 
         builder -> builder.headers(
             "Host", "http.module.test",
-            "Cookie", "HTTPMODULETEST=TEST_COOKIE"
+            "Cookie", cookie
         )
     );
 
@@ -256,7 +247,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
 
         builder -> builder.headers(
             "Host", "http.module.test",
-            "Cookie", "HTTPMODULETEST=TEST_COOKIE"
+            "Cookie", cookie
         )
     );
 
@@ -269,7 +260,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
 
         builder -> builder.headers(
             "Host", "http.module.test",
-            "Cookie", "HTTPMODULETEST=TEST_COOKIE"
+            "Cookie", cookie
         )
     );
 
@@ -316,7 +307,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """
           GET /testCase02/foo HTTP/1.1\r
           Host: http.module.test\r
-          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          Cookie: HTTPMODULETEST=00000000000000010000000000000002\r
           \r
           """,
 
@@ -347,7 +338,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """
           GET /testCase03 HTTP/1.1\r
           Host: http.module.test\r
-          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          Cookie: HTTPMODULETEST=00000000000000010000000000000002\r
           \r
           """,
 
@@ -364,7 +355,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """
           GET /testCase03/ HTTP/1.1\r
           Host: http.module.test\r
-          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          Cookie: HTTPMODULETEST=00000000000000010000000000000002\r
           \r
           """,
 
@@ -381,7 +372,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """
           GET /testCase03/foo HTTP/1.1\r
           Host: http.module.test\r
-          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          Cookie: HTTPMODULETEST=00000000000000010000000000000002\r
           \r
           """,
 
@@ -398,7 +389,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """
           GET /testCase03/foo/bar HTTP/1.1\r
           Host: http.module.test\r
-          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          Cookie: HTTPMODULETEST=00000000000000010000000000000002\r
           \r
           """,
 
@@ -437,7 +428,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """
           GET /testCase04 HTTP/1.1\r
           Host: http.module.test\r
-          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          Cookie: HTTPMODULETEST=00000000000000010000000000000002\r
           \r
           """,
 
@@ -454,7 +445,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """
           GET /testCase04/ HTTP/1.1\r
           Host: http.module.test\r
-          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          Cookie: HTTPMODULETEST=00000000000000010000000000000002\r
           \r
           """,
 
@@ -470,7 +461,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """
           GET /testCase04/foo HTTP/1.1\r
           Host: http.module.test\r
-          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          Cookie: HTTPMODULETEST=00000000000000010000000000000002\r
           \r
           """,
 
@@ -487,7 +478,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """
           GET /testCase04/bar HTTP/1.1\r
           Host: http.module.test\r
-          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          Cookie: HTTPMODULETEST=00000000000000010000000000000002\r
           \r
           """,
 
@@ -518,7 +509,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """
           GET /testCase05/img/a HTTP/1.1\r
           Host: http.module.test\r
-          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          Cookie: HTTPMODULETEST=00000000000000010000000000000002\r
           \r
           """,
 
@@ -535,7 +526,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """
           GET /testCase05/img HTTP/1.1\r
           Host: http.module.test\r
-          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          Cookie: HTTPMODULETEST=00000000000000010000000000000002\r
           \r
           """,
 
@@ -552,7 +543,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """
           GET /testCase05/img/ HTTP/1.1\r
           Host: http.module.test\r
-          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          Cookie: HTTPMODULETEST=00000000000000010000000000000002\r
           \r
           """,
 
@@ -569,7 +560,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """
           GET /testCase05/img/a/b HTTP/1.1\r
           Host: http.module.test\r
-          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          Cookie: HTTPMODULETEST=00000000000000010000000000000002\r
           \r
           """,
 
@@ -586,7 +577,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """
           GET /testCase05/img/a/b/c HTTP/1.1\r
           Host: http.module.test\r
-          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          Cookie: HTTPMODULETEST=00000000000000010000000000000002\r
           \r
           """,
 
@@ -603,7 +594,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """
           GET /testCase05/imx/a/b/c HTTP/1.1\r
           Host: http.module.test\r
-          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          Cookie: HTTPMODULETEST=00000000000000010000000000000002\r
           \r
           """,
 
@@ -634,7 +625,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """
           GET /testCase06/ HTTP/1.1\r
           Host: http.module.test\r
-          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          Cookie: HTTPMODULETEST=00000000000000010000000000000002\r
           \r
           """,
 
@@ -651,7 +642,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """
           GET /testCase06/foo HTTP/1.1\r
           Host: http.module.test\r
-          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          Cookie: HTTPMODULETEST=00000000000000010000000000000002\r
           \r
           """,
 
@@ -668,7 +659,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """
           GET /testCase06/foo/bar HTTP/1.1\r
           Host: http.module.test\r
-          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          Cookie: HTTPMODULETEST=00000000000000010000000000000002\r
           \r
           """,
 
@@ -685,7 +676,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """
           GET /testCase06 HTTP/1.1\r
           Host: http.module.test\r
-          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          Cookie: HTTPMODULETEST=00000000000000010000000000000002\r
           \r
           """,
 
@@ -742,7 +733,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """
           GET /testCase07/before?value=foo HTTP/1.1\r
           Host: http.module.test\r
-          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          Cookie: HTTPMODULETEST=00000000000000010000000000000002\r
           \r
           """,
 
@@ -759,7 +750,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """
           GET /testCase07/after?value=foo HTTP/1.1\r
           Host: http.module.test\r
-          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          Cookie: HTTPMODULETEST=00000000000000010000000000000002\r
           \r
           """,
 
@@ -776,7 +767,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """
           GET /testCase07/after?value=throw HTTP/1.1\r
           Host: http.module.test\r
-          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          Cookie: HTTPMODULETEST=00000000000000010000000000000002\r
           \r
           """,
 
@@ -807,7 +798,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """
           GET /testCase08 HTTP/1.1\r
           Host: http.module.test\r
-          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          Cookie: HTTPMODULETEST=00000000000000010000000000000002\r
           Connection: close\r
           \r
           """,
@@ -840,7 +831,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """
           GET /testCase09/abc/123 HTTP/1.1\r
           Host: http.module.test\r
-          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          Cookie: HTTPMODULETEST=00000000000000010000000000000002\r
           \r
           """,
 
@@ -857,7 +848,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """
           GET /testCase09//123 HTTP/1.1\r
           Host: http.module.test\r
-          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          Cookie: HTTPMODULETEST=00000000000000010000000000000002\r
           \r
           """,
 
@@ -875,7 +866,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """
           GET /testCase09/abc/x HTTP/1.1\r
           Host: http.module.test\r
-          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          Cookie: HTTPMODULETEST=00000000000000010000000000000002\r
           Connection: close\r
           \r
           """,
@@ -904,7 +895,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """
           GET /testCase10/abc123 HTTP/1.1\r
           Host: http.module.test\r
-          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          Cookie: HTTPMODULETEST=00000000000000010000000000000002\r
           \r
           """,
 
@@ -921,7 +912,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """
           GET /testCase09/abc_123 HTTP/1.1\r
           Host: http.module.test\r
-          Cookie: HTTPMODULETEST=TEST_COOKIE\r
+          Cookie: HTTPMODULETEST=00000000000000010000000000000002\r
           \r
           """,
 
@@ -948,7 +939,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
         builder -> builder.headers(
             "Host", "http.module.test",
             "Connection", "close",
-            "Cookie", "HTTPMODULETEST=TEST_COOKIE"
+            "Cookie", "HTTPMODULETEST=00000000000000010000000000000002"
         )
     );
 
@@ -965,7 +956,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
         builder -> builder.headers(
             "Host", "http.module.test",
             "Connection", "close",
-            "Cookie", "HTTPMODULETEST=TEST_COOKIE"
+            "Cookie", cookie
         )
     );
 

@@ -20,16 +20,17 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.HexFormat;
-import java.util.Random;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.random.RandomGenerator;
 
 /**
  * The Objectos Way {@link SessionStore} implementation.
  */
 final class WebStore implements Web.Store {
 
-  private static final int ID_LENGTH_IN_BYTES = 16;
+  private static final int ENCODED_LENGTH = 32;
 
   private final Clock clock;
 
@@ -41,11 +42,9 @@ final class WebStore implements Web.Store {
 
   private final Duration emptyMaxAge;
 
-  private final HexFormat hexFormat = HexFormat.of();
+  private final RandomGenerator randomGenerator;
 
-  private final Random random;
-
-  private final ConcurrentMap<String, WebSession> sessions = new ConcurrentHashMap<>();
+  private final ConcurrentMap<Web.Token, WebSession> sessions = new ConcurrentHashMap<>();
 
   WebStore(WebStoreConfig builder) {
     clock = builder.clock;
@@ -58,10 +57,9 @@ final class WebStore implements Web.Store {
 
     emptyMaxAge = builder.emptyMaxAge;
 
-    random = builder.random;
+    randomGenerator = builder.randomGenerator;
   }
 
-  @Override
   public final void cleanUp() {
     Instant now;
     now = Instant.now(clock);
@@ -74,7 +72,7 @@ final class WebStore implements Web.Store {
 
     for (WebSession session : values) {
       if (session.shouldCleanUp(min)) {
-        sessions.remove(session.id());
+        sessions.remove(session.id);
       }
     }
   }
@@ -83,19 +81,12 @@ final class WebStore implements Web.Store {
     sessions.clear();
   }
 
-  final WebSession put(String id, WebSession session) {
-    Check.notNull(id, "id == null");
-    Check.notNull(session, "session == null");
-
-    return sessions.put(id, session);
-  }
-
   @Override
   public final Web.Session createNext() {
     WebSession session, maybeExisting;
 
     do {
-      String id;
+      Web.Token id;
       id = nextId();
 
       session = new WebSession(id);
@@ -103,40 +94,12 @@ final class WebStore implements Web.Store {
       maybeExisting = sessions.putIfAbsent(id, session);
     } while (maybeExisting != null);
 
+    session.touch(clock);
+
     return session;
   }
 
-  @Override
-  public final void filter(Http.Exchange http) {
-    String cookieHeaderValue;
-    cookieHeaderValue = http.header(Http.HeaderName.COOKIE);
-
-    if (cookieHeaderValue == null) {
-      return;
-    }
-
-    Http.Cookies cookies;
-    cookies = Http.Cookies.parse(cookieHeaderValue);
-
-    String id;
-    id = cookies.get(cookieName);
-
-    if (id == null) {
-      return;
-    }
-
-    Web.Session session;
-    session = get(id);
-
-    if (session == null) {
-      return;
-    }
-
-    http.set(Web.Session.class, session);
-  }
-
-  @Override
-  public final Web.Session get(String id) {
+  public final Web.Session get(Web.Token id) {
     WebSession session;
     session = sessions.get(id);
 
@@ -155,29 +118,58 @@ final class WebStore implements Web.Store {
 
   @Override
   public final Web.Session get(Http.Request request) {
-    String cookieHeaderValue;
+    final String cookieHeaderValue;
     cookieHeaderValue = request.header(Http.HeaderName.COOKIE); // implicit null-check
 
     if (cookieHeaderValue == null) {
       return null;
     }
 
-    Http.Cookies cookies;
+    final Http.Cookies cookies;
     cookies = Http.Cookies.parse(cookieHeaderValue);
 
-    String id;
-    id = cookies.get(cookieName);
+    final String encoded;
+    encoded = cookies.get(cookieName);
 
-    if (id == null) {
+    if (encoded == null) {
       return null;
     }
+
+    if (encoded.length() != ENCODED_LENGTH) {
+      return null;
+    }
+
+    final long high;
+    high = fromHexDigitsToLong(encoded, 0, 16);
+
+    final long low;
+    low = fromHexDigitsToLong(encoded, 16, 32);
+
+    final WebToken16 id;
+    id = new WebToken16(high, low);
 
     return get(id);
   }
 
-  @Override
+  private long fromHexDigitsToLong(CharSequence string, int fromIndex, int toIndex) {
+    long value;
+    value = 0L;
+
+    for (int i = fromIndex; i < toIndex; i++) {
+      final char c;
+      c = string.charAt(i);
+
+      final int iter;
+      iter = HexFormat.fromHexDigit(c);
+
+      value = (value << 4) + iter;
+    }
+
+    return value;
+  }
+
   public final String setCookie(String id) {
-    Check.notNull(id, "id == null");
+    Objects.requireNonNull(id, "id == null");
 
     StringBuilder s;
     s = new StringBuilder();
@@ -203,21 +195,14 @@ final class WebStore implements Web.Store {
     return s.toString();
   }
 
-  @Override
-  public final Web.Session store(Web.Session session) {
-    String id;
-    id = session.id();
+  private Web.Token nextId() {
+    final long high;
+    high = randomGenerator.nextLong();
 
-    return sessions.put(id, (WebSession) session);
-  }
+    final long low;
+    low = randomGenerator.nextLong();
 
-  private String nextId() {
-    byte[] bytes;
-    bytes = new byte[ID_LENGTH_IN_BYTES];
-
-    random.nextBytes(bytes);
-
-    return hexFormat.formatHex(bytes);
+    return new WebToken16(high, low);
   }
 
 }
