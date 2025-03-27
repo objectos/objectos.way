@@ -21,7 +21,6 @@ import java.io.InputStream;
 import java.net.InetAddress;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
 import java.time.Clock;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -93,8 +92,8 @@ public final class Http {
    * interface return decoded values.
    */
   public sealed interface Exchange
-      extends Request
-      permits HttpExchange, TestingExchange {
+      extends Request, Response
+      permits HttpSupport, TestingExchange {
 
     /**
      * Stores an object in this request. The object will be associated to the
@@ -126,181 +125,6 @@ public final class Http {
      *         object is found
      */
     <T> T get(Class<T> key);
-
-    // response
-
-    /**
-     * Begins the HTTP response by writing out the specified response status.
-     *
-     * @param status
-     *        the HTTP response status
-     */
-    void status(Status status);
-
-    /**
-     * Writes an HTTP response header field with the specified name and value.
-     *
-     * @param name
-     *        the header name
-     * @param value
-     *        the header value
-     */
-    void header(HeaderName name, long value);
-
-    /**
-     * Writes an HTTP response header field with the specified name and value.
-     *
-     * @param name
-     *        the header name
-     * @param value
-     *        the header value
-     */
-    void header(HeaderName name, String value);
-
-    /**
-     * Writes the {@link HeaderName#DATE} HTTP response header field with the
-     * current date and time.
-     */
-    void dateNow();
-
-    // response body
-
-    /**
-     * Writes the end of this HTTP response message with an empty message body.
-     */
-    void send();
-
-    /**
-     * Writes the end of this HTTP response message with the specified message
-     * body.
-     *
-     * @param body
-     *        an array of bytes with the message body contents
-     */
-    void send(byte[] body);
-
-    /**
-     * Writes the end of this HTTP response message with the contents of the
-     * specified file as message body.
-     *
-     * @param file
-     *        the message body contents
-     */
-    void send(Path file);
-
-    // pre-made responses
-
-    /**
-     * Writes a complete response message with the specified status and the
-     * contents of the specified media object.
-     *
-     * @param status
-     *        the HTTP response status
-     * @param object
-     *        the media object
-     */
-    void respond(Http.Status status, Lang.MediaObject object);
-
-    /**
-     * Sends an HTTP {@code 200 OK} response with no response body.
-     */
-    void ok();
-
-    /**
-     * Sends an HTTP {@code 200 OK} response with the specified media object as
-     * the response body.
-     *
-     * @param object
-     *        the object providing the raw data to be sent over the wire
-     */
-    default void ok(Lang.MediaObject object) {
-      respond(Http.Status.OK, object);
-    }
-
-    default void okText(String text, Charset charset) {
-      byte[] bytes;
-      bytes = text.getBytes(charset); // early implicit null-check
-
-      status(Http.Status.OK);
-
-      dateNow();
-
-      header(Http.HeaderName.CONTENT_TYPE, "text/plain; charset=" + charset.name().toLowerCase(Locale.US));
-
-      header(Http.HeaderName.CONTENT_LENGTH, bytes.length);
-
-      send(bytes);
-    }
-
-    // 302
-    default void found(String location) {
-      Check.notNull(location, "location == null");
-
-      status(Http.Status.FOUND);
-
-      dateNow();
-
-      header(Http.HeaderName.LOCATION, location);
-
-      send();
-    }
-
-    // 404
-    void notFound();
-
-    // 405
-    void methodNotAllowed();
-
-    /**
-     * Sends a pre-made 415 Unsupported Media Type response.
-     *
-     * <p>
-     * The response is equivalent to:
-     *
-     * <pre>
-     * ServerExchange http = ...
-     * http.status(Status.UNSUPPORTED_MEDIA_TYPE);
-     * http.dateNow();
-     * http.header(HeaderName.CONNECTION, "close");
-     * http.send();</pre>
-     */
-    // 415
-    default void unsupportedMediaType() {
-      status(Http.Status.UNSUPPORTED_MEDIA_TYPE);
-
-      dateNow();
-
-      header(Http.HeaderName.CONNECTION, "close");
-
-      send();
-    }
-
-    /**
-     * Sends a pre-made 422 Unprocessable Content response.
-     *
-     * <p>
-     * The response is equivalent to:
-     *
-     * <pre>
-     * ServerExchange http = ...
-     * http.status(Status.UNPROCESSABLE_CONTENT);
-     * http.dateNow();
-     * http.header(HeaderName.CONNECTION, "close");
-     * http.send();</pre>
-     */
-    // 422
-    default void unprocessableContent() {
-      status(Http.Status.UNPROCESSABLE_CONTENT);
-
-      dateNow();
-
-      header(Http.HeaderName.CONNECTION, "close");
-
-      send();
-    }
-
-    // 500
-    void internalServerError(Throwable t);
 
     /**
      * Return {@code true} if an HTTP response message has been written to this
@@ -419,6 +243,11 @@ public final class Http {
      * The {@code Accept-Encoding} header name.
      */
     HeaderName ACCEPT_ENCODING = HttpHeaderName.ACCEPT_ENCODING;
+
+    /**
+     * The {@code Allow} header name.
+     */
+    HeaderName ALLOW = HttpHeaderName.ALLOW;
 
     /**
      * The {@code Connection} header name.
@@ -561,7 +390,7 @@ public final class Http {
   }
 
   /**
-   * Represents an HTTP request message.
+   * Provides methods for inspecting the request message of an HTTP exchange.
    */
   public sealed interface Request
       extends
@@ -812,6 +641,141 @@ public final class Http {
      *         if {@code name} is blank
      */
     String rawQueryWith(String name, String value);
+
+  }
+
+  /**
+   * Provides methods for writing the response message of an HTTP exchange.
+   */
+  public sealed interface Response {
+
+    /**
+     * Writes a {@code 200 OK} response message with the contents of the
+     * specified media object.
+     *
+     * @param object
+     *        the media object
+     */
+    void respond(Lang.MediaObject object);
+
+    /**
+     * Writes a {@code 200 OK} response message with the contents of the
+     * specified media object.
+     *
+     * @param writer
+     *        the media writer
+     */
+    void respond(Lang.MediaWriter writer);
+
+    /**
+     * Writes the specified response message.
+     *
+     * @param message
+     *        the response message
+     */
+    void respond(ResponseMessage message);
+
+    /**
+     * Writes a response message with the specified status and the contents of
+     * the specified media object.
+     *
+     * @param status
+     *        the HTTP response status
+     * @param object
+     *        the media object
+     */
+    void respond(Http.Status status, Lang.MediaObject object);
+
+    /**
+     * Writes a response message with the specified status and the contents of
+     * the specified media object. The specified headers will be
+     *
+     * @param status
+     *        the HTTP response status
+     * @param object
+     *        the media object
+     * @param headers
+     *        the additional headers to write
+     */
+    void respond(Http.Status status, Lang.MediaObject object, Consumer<ResponseHeaders> headers);
+
+    /**
+     * Writes a response message with the specified status and the
+     * contents of the specified media writer.
+     *
+     * @param status
+     *        the HTTP response status
+     * @param writer
+     *        the media writer
+     */
+    void respond(Http.Status status, Lang.MediaWriter writer);
+
+    /**
+     * Writes a response message with the specified status and the
+     * contents of the specified media writer.
+     *
+     * @param status
+     *        the HTTP response status
+     * @param writer
+     *        the media writer
+     * @param headers
+     *        the additional headers to write
+     */
+    void respond(Http.Status status, Lang.MediaWriter writer, Consumer<ResponseHeaders> headers);
+
+  }
+
+  /**
+   * Provides messages for writing the headers of an HTTP response message.
+   */
+  public sealed interface ResponseHeaders permits HttpSupport {
+
+    /**
+     * Writes an HTTP response header field with the specified name and value.
+     *
+     * @param name
+     *        the header name
+     * @param value
+     *        the header value
+     */
+    void header(HeaderName name, long value);
+
+    /**
+     * Writes an HTTP response header field with the specified name and value.
+     *
+     * @param name
+     *        the header name
+     * @param value
+     *        the header value
+     */
+    void header(HeaderName name, String value);
+
+    /**
+     * Writes the {@link HeaderName#DATE} HTTP response header field with the
+     * current date and time.
+     */
+    void dateNow();
+
+  }
+
+  /**
+   * Represents an HTTP response message.
+   */
+  public sealed interface ResponseMessage permits HttpResponseMessage {
+
+    static ResponseMessage found(String location) {
+      Objects.requireNonNull(location, "location == null");
+
+      return HttpResponseMessage.found(location);
+    }
+
+    static ResponseMessage methodNotAllowed(Method... methods) {
+      for (int i = 0; i < methods.length; i++) {
+        Check.notNull(methods[i], "methods[", i, "] == null");
+      }
+
+      return HttpResponseMessage.methodNotAllowed(methods);
+    }
 
   }
 
@@ -1197,6 +1161,16 @@ public final class Http {
   public static abstract class AbstractHandlerException extends RuntimeException implements Handler {
 
     private static final long serialVersionUID = -8277337261280606415L;
+
+  }
+
+  public static final class InternalServerException extends RuntimeException {
+
+    private static final long serialVersionUID = 4192238770922308870L;
+
+    public InternalServerException(Throwable cause) {
+      super(cause);
+    }
 
   }
 

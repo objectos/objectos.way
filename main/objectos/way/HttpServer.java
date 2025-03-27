@@ -247,12 +247,19 @@ final class HttpServer implements Http.Server, Runnable {
             noteSink.send(notes.ioError, cause);
 
             break; // could not send response. End this exchange
-          } catch (Throwable t) {
-            noteSink.send(notes.internalServerError, t);
+          } catch (Http.InternalServerException t) {
+            final Throwable cause;
+            cause = t.getCause();
 
-            if (!http.processed()) {
-              http.internalServerError(t);
-            }
+            internalServerError(http, cause);
+
+            // assume handler is in invalid state. End this exchange
+            break;
+          } catch (Throwable t) {
+            internalServerError(http, t);
+
+            // assume handler is in invalid state. End this exchange
+            break;
           }
 
           if (!http.keepAlive()) {
@@ -264,6 +271,12 @@ final class HttpServer implements Http.Server, Runnable {
       } catch (Throwable t) {
         noteSink.send(notes.loopError, t);
       }
+    }
+
+    private void internalServerError(HttpExchange http, Throwable t) {
+      noteSink.send(notes.internalServerError, t);
+
+      http.iseIfPossible(t);
     }
 
   }

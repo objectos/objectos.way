@@ -31,7 +31,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Clock;
-import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.HexFormat;
@@ -39,9 +38,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
-final class HttpExchange extends HttpModuleSupport implements Http.Exchange, Closeable {
+final class HttpExchange extends HttpSupport implements Closeable {
 
   private record Notes(
       Note.Ref2<String, String> hexdump
@@ -139,8 +139,6 @@ final class HttpExchange extends HttpModuleSupport implements Http.Exchange, Clo
   private Map<String, Object> attributes;
 
   private int bitset;
-
-  private final Clock clock;
 
   private final Note.Sink noteSink;
 
@@ -1449,16 +1447,186 @@ final class HttpExchange extends HttpModuleSupport implements Http.Exchange, Clo
   // # BEGIN: Http.Exchange API || response
   // ##################################################################
 
+  @Override
+  public final void respond(Http.Status status, Lang.MediaObject object) {
+    final byte[] bytes;
+    bytes = respond0(status, object);
+
+    send0(bytes);
+  }
+
+  @Override
+  public final void respond(Http.Status status, Lang.MediaObject object, Consumer<Http.ResponseHeaders> headers) {
+    final byte[] bytes;
+    bytes = respond0(status, object);
+
+    headers.accept(this);
+
+    send0(bytes);
+  }
+
+  private byte[] respond0(Http.Status status, Lang.MediaObject object) {
+    Objects.requireNonNull(status, "status == null");
+
+    // early object validation
+    String contentType;
+    contentType = object.contentType();
+
+    if (contentType == null) {
+      throw new NullPointerException("The specified Lang.MediaObject provided a null content-type");
+    }
+
+    byte[] bytes;
+    bytes = object.mediaBytes();
+
+    if (bytes == null) {
+      throw new NullPointerException("The specified Lang.MediaObject provided a null byte array");
+    }
+
+    status0(status);
+
+    dateNow();
+
+    header0(Http.HeaderName.CONTENT_TYPE, contentType);
+
+    header0(Http.HeaderName.CONTENT_LENGTH, bytes.length);
+
+    return bytes;
+  }
+
+  private static final byte[] CHUNKED_TRAILER = "0\r\n\r\n".getBytes(StandardCharsets.UTF_8);
+
+  @Override
+  public final void respond(Http.Status status, Lang.MediaWriter writer) {
+    final Charset charset;
+    charset = respond0(status, writer);
+
+    send0(writer, charset);
+  }
+
+  @Override
+  public final void respond(Http.Status status, Lang.MediaWriter writer, Consumer<Http.ResponseHeaders> headers) {
+    final Charset charset;
+    charset = respond0(status, writer);
+
+    headers.accept(this);
+
+    if (testBit(CONTENT_LENGTH)) {
+      throw new IllegalStateException(
+          "Content-Length must not be set with a Lang.MediaWriter response"
+      );
+    }
+
+    if (!testBit(CHUNKED)) {
+      throw new IllegalStateException(
+          "Transfer-Encoding: chunked must be set with a Lang.MediaWriter response"
+      );
+    }
+
+    send0(writer, charset);
+  }
+
+  private Charset respond0(Http.Status status, Lang.MediaWriter writer) {
+    Objects.requireNonNull(status, "status == null");
+
+    // early writer validation
+    final String contentType;
+    contentType = writer.contentType();
+
+    if (contentType == null) {
+      throw new NullPointerException("The specified Lang.MediaWriter provided a null content-type");
+    }
+
+    final Charset charset;
+    charset = writer.mediaCharset();
+
+    if (charset == null) {
+      throw new NullPointerException("The specified Lang.MediaWriter provided a null charset");
+    }
+
+    status0(status);
+
+    dateNow();
+
+    header0(Http.HeaderName.CONTENT_TYPE, contentType);
+
+    header0(Http.HeaderName.TRANSFER_ENCODING, "chunked");
+
+    return charset;
+  }
+
+  private void send0(Lang.MediaWriter writer, final Charset charset) {
+    if (method == Http.Method.HEAD) {
+
+      send0();
+
+    } else {
+
+      try {
+        OutputStream outputStream;
+        outputStream = sendStart();
+
+        bufferIndex = 0;
+
+        CharWritableAppendable out;
+        out = new CharWritableAppendable(outputStream, charset);
+
+        writer.mediaTo(out);
+
+        out.flush();
+
+        outputStream.write(CHUNKED_TRAILER);
+      } catch (IOException e) {
+        throw new SendException(e);
+      } finally {
+        setState(_PROCESSED);
+      }
+
+    }
+  }
+
+  public final void iseIfPossible(Throwable t) {
+    if (testState(_RESPONSE)) {
+      return;
+    }
+
+    if (testState(_PROCESSED)) {
+      return;
+    }
+
+    StringWriter sw;
+    sw = new StringWriter();
+
+    PrintWriter pw;
+    pw = new PrintWriter(sw);
+
+    t.printStackTrace(pw);
+
+    String msg;
+    msg = sw.toString();
+
+    byte[] bytes;
+    bytes = msg.getBytes();
+
+    status0(Http.Status.INTERNAL_SERVER_ERROR);
+
+    dateNow();
+
+    header0(Http.HeaderName.CONTENT_LENGTH, bytes.length);
+
+    header0(Http.HeaderName.CONTENT_TYPE, "text/plain");
+
+    header0(Http.HeaderName.CONNECTION, "close");
+
+    send0(bytes);
+  }
+
   private void checkResponse() {
     if (testState(_REQUEST)) {
       bufferIndex = 0;
 
       setState(_RESPONSE);
 
-      return;
-    }
-
-    if (testState(_RESPONSE)) {
       return;
     }
 
@@ -1494,9 +1662,8 @@ final class HttpExchange extends HttpModuleSupport implements Http.Exchange, Clo
   }
 
   @Override
-  public final void status(Http.Status status) {
+  final void status0(Http.Status status) {
     checkResponse();
-    Objects.requireNonNull(status, "status == null");
 
     Http.Version version;
     version = Http.Version.HTTP_1_1;
@@ -1513,43 +1680,7 @@ final class HttpExchange extends HttpModuleSupport implements Http.Exchange, Clo
   }
 
   @Override
-  public final void header(Http.HeaderName name, long value) {
-    checkResponse();
-    Objects.requireNonNull(name, "name == null");
-
-    header0(name, Long.toString(value));
-  }
-
-  @Override
-  public final void header(Http.HeaderName name, String value) {
-    checkResponse();
-    Objects.requireNonNull(name, "name == null");
-    Objects.requireNonNull(value, "value == null");
-
-    header0(name, value);
-  }
-
-  @Override
-  public final void dateNow() {
-    checkResponse();
-
-    Clock theClock;
-    theClock = clock;
-
-    if (theClock == null) {
-      theClock = Clock.systemUTC();
-    }
-
-    ZonedDateTime now;
-    now = ZonedDateTime.now(theClock);
-
-    String value;
-    value = Http.formatDate(now);
-
-    header0(Http.HeaderName.DATE, value);
-  }
-
-  private void header0(Http.HeaderName name, String value) {
+  final void header0(Http.HeaderName name, String value) {
     // write our the name
     int index;
     index = name.index();
@@ -1587,15 +1718,17 @@ final class HttpExchange extends HttpModuleSupport implements Http.Exchange, Clo
       setBit(CONTENT_LENGTH);
     }
 
-    else if (name == Http.HeaderName.TRANSFER_ENCODING && value.toLowerCase().contains("chunked")) {
-      setBit(CHUNKED);
+    else if (name == Http.HeaderName.TRANSFER_ENCODING) {
+      if (value.equalsIgnoreCase("chunked")) {
+        setBit(CHUNKED);
+      } else {
+        clearBit(CHUNKED);
+      }
     }
   }
 
   @Override
-  public final void send() {
-    checkResponse();
-
+  final void send0() {
     try {
       sendStart();
     } catch (IOException e) {
@@ -1606,14 +1739,12 @@ final class HttpExchange extends HttpModuleSupport implements Http.Exchange, Clo
   }
 
   @Override
-  public final void send(byte[] body) {
+  final void send0(byte[] body) {
     if (method == Http.Method.HEAD) {
 
-      send();
+      send0();
 
     } else {
-
-      checkResponse();
 
       try {
         OutputStream outputStream;
@@ -1629,66 +1760,15 @@ final class HttpExchange extends HttpModuleSupport implements Http.Exchange, Clo
     }
   }
 
-  private static final byte[] CHUNKED_TRAILER = "0\r\n\r\n".getBytes(StandardCharsets.UTF_8);
-
-  public final void send(Lang.CharWritable body, Charset charset) {
-    Objects.requireNonNull(body, "body == null");
-    Objects.requireNonNull(charset, "charset == null");
-
-    if (testBit(CONTENT_LENGTH)) {
-      throw new IllegalStateException(
-          "Content-Length must not be set with a CharWritable body"
-      );
-    }
-
-    if (!testBit(CHUNKED)) {
-      throw new IllegalStateException(
-          "Transfer-Encoding: chunked must be set with a CharWritable body"
-      );
-    }
-
-    if (method == Http.Method.HEAD) {
-
-      send();
-
-    } else {
-
-      checkResponse();
-
-      try {
-        OutputStream outputStream;
-        outputStream = sendStart();
-
-        bufferIndex = 0;
-
-        CharWritableAppendable out;
-        out = new CharWritableAppendable(outputStream, charset);
-
-        body.writeTo(out);
-
-        out.flush();
-
-        outputStream.write(CHUNKED_TRAILER);
-      } catch (IOException e) {
-        throw new SendException(e);
-      } finally {
-        setState(_PROCESSED);
-      }
-
-    }
-  }
-
   @Override
-  public final void send(java.nio.file.Path file) {
+  final void send0(java.nio.file.Path file) {
     Objects.requireNonNull(file, "file == null");
 
     if (method == Http.Method.HEAD) {
 
-      send();
+      send0();
 
     } else {
-
-      checkResponse();
 
       try {
         OutputStream outputStream;
@@ -1703,6 +1783,16 @@ final class HttpExchange extends HttpModuleSupport implements Http.Exchange, Clo
         setState(_PROCESSED);
       }
 
+    }
+  }
+
+  @Override
+  final void endResponse() {
+    if (testState(_PROCESSED)) {
+      // expected, no action
+    } else if (testState(_RESPONSE)) {
+      // unfinished response?
+      send0();
     }
   }
 
@@ -1832,101 +1922,6 @@ final class HttpExchange extends HttpModuleSupport implements Http.Exchange, Clo
 
       bufferIndex = 0;
     }
-  }
-
-  // 200 OK
-
-  @Override
-  public final void respond(Http.Status status, Lang.MediaObject object) {
-    status(status);
-
-    String contentType;
-    contentType = object.contentType();
-
-    if (contentType == null) {
-      throw new NullPointerException("Provided Lang.MediaObject provided a null content-type");
-    }
-
-    byte[] bytes;
-    bytes = object.mediaBytes();
-
-    if (bytes == null) {
-      throw new NullPointerException("Provided Lang.MediaObject provided a null byte array");
-    }
-
-    dateNow();
-
-    header(Http.HeaderName.CONTENT_TYPE, contentType);
-
-    header(Http.HeaderName.CONTENT_LENGTH, bytes.length);
-
-    send(bytes);
-  }
-
-  @Override
-  public final void ok() {
-    status(Http.Status.OK);
-
-    dateNow();
-
-    send();
-  }
-
-  // 404 NOT FOUND
-
-  @Override
-  public final void notFound() {
-    status(Http.Status.NOT_FOUND);
-
-    dateNow();
-
-    header0(Http.HeaderName.CONNECTION, "close");
-
-    send();
-  }
-
-  // 405 METHOD NOT ALLOWED
-
-  @Override
-  public final void methodNotAllowed() {
-    status(Http.Status.METHOD_NOT_ALLOWED);
-
-    dateNow();
-
-    header0(Http.HeaderName.CONNECTION, "close");
-
-    send();
-  }
-
-  // 500 INTERNAL SERVER ERROR
-
-  @Override
-  public final void internalServerError(Throwable t) {
-    StringWriter sw;
-    sw = new StringWriter();
-
-    PrintWriter pw;
-    pw = new PrintWriter(sw);
-
-    t.printStackTrace(pw);
-
-    String msg;
-    msg = sw.toString();
-
-    byte[] bytes;
-    bytes = msg.getBytes();
-
-    status(Http.Status.INTERNAL_SERVER_ERROR);
-
-    dateNow();
-
-    header(Http.HeaderName.CONTENT_LENGTH, bytes.length);
-
-    header(Http.HeaderName.CONTENT_TYPE, "text/plain");
-
-    header(Http.HeaderName.CONNECTION, "close");
-
-    send(bytes);
   }
 
   private void writeBytes(byte[] bytes) {

@@ -21,7 +21,9 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.nio.charset.Charset;
 import java.util.Iterator;
+import java.util.Objects;
 
 /**
  * The <strong>Objectos Lang</strong> main class.
@@ -29,23 +31,6 @@ import java.util.Iterator;
 public final class Lang {
 
   // public types
-
-  /**
-   * An object that can write out its string representation.
-   */
-  @FunctionalInterface
-  public interface CharWritable {
-
-    /**
-     * Writes this object's textual representation to the appendable.
-     *
-     * @param dest the appendable where to write characters into.
-     *
-     * @throws IOException if an I/O error occurs
-     */
-    void writeTo(Appendable dest) throws IOException;
-
-  }
 
   /**
    * An {@link Iterable} which can be traversed only once. Trying to traverse
@@ -83,6 +68,13 @@ public final class Lang {
    */
   public interface MediaObject {
 
+    static MediaObject textPlain(String text, Charset charset) {
+      Objects.requireNonNull(text, "text == null");
+      Objects.requireNonNull(charset, "charset == null");
+
+      return new LangMediaObjectTextPlain(text, charset);
+    }
+
     /**
      * Returns the MIME content type of this media object, such as
      * {@code text/html} or {@code application/json}.
@@ -98,6 +90,29 @@ public final class Lang {
      * @return the raw data to be sent over the wire as a byte array
      */
     byte[] mediaBytes();
+
+  }
+
+  public interface MediaWriter {
+
+    /**
+     * Returns the MIME content type of this media writer, such as
+     * {@code text/html} or {@code application/json}.
+     *
+     * @return the content type of this media writer, in MIME type format
+     */
+    String contentType();
+
+    Charset mediaCharset();
+
+    /**
+     * Writes this media's contents to the appendable.
+     *
+     * @param dest the appendable where to write characters into.
+     *
+     * @throws IOException if an I/O error occurs
+     */
+    void mediaTo(Appendable dest) throws IOException;
 
   }
 

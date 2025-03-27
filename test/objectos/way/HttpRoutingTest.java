@@ -28,7 +28,9 @@ import java.util.List;
 import java.util.function.Consumer;
 import objectos.way.Http.HeaderName;
 import objectos.way.Http.Method;
+import objectos.way.Http.ResponseMessage;
 import objectos.way.Http.Routing;
+import objectos.way.Lang.MediaObject;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -171,7 +173,8 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
         Http.Handler tc12C = http -> {
           String s = http.get(String.class);
           Integer i = http.get(Integer.class);
-          http.okText("tc12=" + s + "-" + i.toString(), StandardCharsets.UTF_8);
+          MediaObject object = Lang.MediaObject.textPlain("tc12=" + s + "-" + i.toString(), StandardCharsets.UTF_8);
+          http.respond(Http.Status.OK, object);
         };
 
         path.handler(Http.Handler.firstOf(tc12A, tc12X.intercept(tc12C)));
@@ -206,7 +209,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
     TestingSingleParagraph html;
     html = new TestingSingleParagraph(text);
 
-    http.ok(html);
+    http.respond(Http.Status.OK, html);
   }
 
   @Test
@@ -281,7 +284,10 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
     }
 
     if (user == null) {
-      http.found("/login");
+      final ResponseMessage message;
+      message = Http.ResponseMessage.found("/login");
+
+      http.respond(message);
     }
   }
 
@@ -298,6 +304,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """
           HTTP/1.1 302 FOUND\r
           Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Content-Length: 0\r
           Location: /login\r
           \r
           """
@@ -328,7 +335,10 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
     String text;
     text = value.substring("/testCase03".length());
 
-    http.okText(text, StandardCharsets.UTF_8);
+    MediaObject plain;
+    plain = Lang.MediaObject.textPlain(text, StandardCharsets.UTF_8);
+
+    http.respond(Http.Status.OK, plain);
   }
 
   @Test
@@ -499,7 +509,10 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
     String text;
     text = value.substring("/testCase05/img".length());
 
-    http.okText(text, StandardCharsets.UTF_8);
+    MediaObject plain;
+    plain = Lang.MediaObject.textPlain(text, StandardCharsets.UTF_8);
+
+    http.respond(Http.Status.OK, plain);
   }
 
   @Test
@@ -615,7 +628,10 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
     String text;
     text = value.substring("/testCase06".length());
 
-    http.okText(text, StandardCharsets.UTF_8);
+    MediaObject plain;
+    plain = Lang.MediaObject.textPlain(text, StandardCharsets.UTF_8);
+
+    http.respond(Http.Status.OK, plain);
   }
 
   @Test
@@ -701,7 +717,10 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
       throw new TestException();
     }
 
-    http.okText("VALUE=" + value, StandardCharsets.UTF_8);
+    MediaObject plain;
+    plain = Lang.MediaObject.textPlain("VALUE=" + value, StandardCharsets.UTF_8);
+
+    http.respond(Http.Status.OK, plain);
   }
 
   private Http.Handler testCase07(Http.Handler handler) {
@@ -721,7 +740,10 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
       try {
         handler.handle(http);
       } catch (TestException e) {
-        http.okText("TestException", StandardCharsets.UTF_8);
+        MediaObject plain;
+        plain = Lang.MediaObject.textPlain("TestException", StandardCharsets.UTF_8);
+
+        http.respond(Http.Status.OK, plain);
       }
     };
   }
@@ -821,7 +843,10 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
     String digits;
     digits = http.pathParam("digits");
 
-    http.okText(notEmpty + ":" + digits, StandardCharsets.UTF_8);
+    MediaObject plain;
+    plain = Lang.MediaObject.textPlain(notEmpty + ":" + digits, StandardCharsets.UTF_8);
+
+    http.respond(Http.Status.OK, plain);
   }
 
   @Test
@@ -885,7 +910,10 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
     String regex;
     regex = http.pathParam("regex");
 
-    http.okText(regex, StandardCharsets.UTF_8);
+    MediaObject plain;
+    plain = Lang.MediaObject.textPlain(regex, StandardCharsets.UTF_8);
+
+    http.respond(Http.Status.OK, plain);
   }
 
   @Test
@@ -927,7 +955,10 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
   }
 
   private void $testCase11(Http.Exchange http) {
-    http.okText("SECOND", StandardCharsets.UTF_8);
+    MediaObject plain;
+    plain = Lang.MediaObject.textPlain("SECOND", StandardCharsets.UTF_8);
+
+    http.respond(Http.Status.OK, plain);
   }
 
   @Test
@@ -965,13 +996,22 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
   }
 
   private void $testCase13(Http.Exchange http) {
-    Method method = http.method();
+    Method method;
+    method = http.method();
 
-    HeaderName name = Http.HeaderName.of("X-Test-Case-13");
+    HeaderName name;
+    name = Http.HeaderName.of("X-Test-Case-13");
 
-    String value = http.header(name);
+    String value;
+    value = http.header(name);
 
-    http.okText(method.name() + "=" + value, StandardCharsets.UTF_8);
+    String text;
+    text = method.name() + "=" + value;
+
+    MediaObject plain;
+    plain = Lang.MediaObject.textPlain(text, StandardCharsets.UTF_8);
+
+    http.respond(Http.Status.OK, plain);
   }
 
   @Test

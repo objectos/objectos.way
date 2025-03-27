@@ -175,51 +175,63 @@ final class HttpHandler implements Http.Handler {
       }
 
       case CONTENT -> {
+        final HttpSupport support;
+        support = (HttpSupport) http;
+
         final Content content;
         content = (Content) main;
 
-        http.status(Http.Status.OK);
+        support.status0(Http.Status.OK);
 
-        http.dateNow();
+        support.dateNow();
 
-        http.header(Http.HeaderName.CONTENT_TYPE, content.contentType);
+        support.header0(Http.HeaderName.CONTENT_TYPE, content.contentType);
 
         final byte[] bytes;
         bytes = content.bytes;
 
-        http.header(Http.HeaderName.CONTENT_LENGTH, bytes.length);
+        support.header0(Http.HeaderName.CONTENT_LENGTH, bytes.length);
 
-        http.send(bytes);
+        support.send0(bytes);
       }
 
       case METHOD_NOT_ALLOWED -> {
-        http.status(Http.Status.METHOD_NOT_ALLOWED);
+        final HttpSupport support;
+        support = (HttpSupport) http;
 
-        http.dateNow();
+        support.status0(Http.Status.METHOD_NOT_ALLOWED);
 
-        http.header(Http.HeaderName.CONNECTION, "close");
+        support.dateNow();
 
-        http.send();
+        support.header0(Http.HeaderName.CONNECTION, "close");
+
+        support.send0();
       }
 
       case MOVED_PERMANENTLY -> {
-        http.status(Http.Status.MOVED_PERMANENTLY);
+        final HttpSupport support;
+        support = (HttpSupport) http;
 
-        http.dateNow();
+        support.status0(Http.Status.MOVED_PERMANENTLY);
 
-        http.header(Http.HeaderName.LOCATION, asString());
+        support.dateNow();
 
-        http.send();
+        support.header0(Http.HeaderName.LOCATION, asString());
+
+        support.send0();
       }
 
       case NOT_FOUND -> {
-        http.status(Http.Status.NOT_FOUND);
+        final HttpSupport support;
+        support = (HttpSupport) http;
 
-        http.dateNow();
+        support.status0(Http.Status.NOT_FOUND);
 
-        http.header(Http.HeaderName.CONNECTION, "close");
+        support.dateNow();
 
-        http.send();
+        support.header0(Http.HeaderName.CONNECTION, "close");
+
+        support.send0();
       }
     }
   }

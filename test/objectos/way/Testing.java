@@ -15,17 +15,24 @@
  */
 package objectos.way;
 
+import static org.testng.Assert.assertEquals;
+
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.URI;
 import java.net.http.HttpClient.Version;
+import java.net.http.HttpHeaders;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.HexFormat;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.random.RandomGenerator;
+import java.util.stream.Collectors;
 
 final class Testing {
 
@@ -83,30 +90,82 @@ final class Testing {
     return name + "=" + h + l;
   }
 
-  public static HttpResponse<String> httpClient(String path, Consumer<HttpRequest.Builder> config) throws IOException, InterruptedException {
-    // force early init
-    java.net.http.HttpClient client;
-    client = HttpClient.INSTANCE;
+  public static HttpResponse<String> httpClient(String path, Consumer<HttpRequest.Builder> config) {
+    try {
+      // force early init
+      java.net.http.HttpClient client;
+      client = HttpClient.INSTANCE;
 
-    HttpRequest.Builder builder;
-    builder = HttpRequest.newBuilder();
+      HttpRequest.Builder builder;
+      builder = HttpRequest.newBuilder();
 
-    int port;
-    port = TestingHttpServer.port();
+      int port;
+      port = TestingHttpServer.port();
 
-    URI uri;
-    uri = URI.create("http://localhost:" + port + path);
+      URI uri;
+      uri = URI.create("http://localhost:" + port + path);
 
-    builder.uri(uri);
+      builder.uri(uri);
 
-    builder.timeout(Duration.ofMinutes(1));
+      builder.timeout(Duration.ofMinutes(1));
 
-    config.accept(builder);
+      config.accept(builder);
 
-    HttpRequest request;
-    request = builder.build();
+      HttpRequest request;
+      request = builder.build();
 
-    return client.send(request, BodyHandlers.ofString(StandardCharsets.UTF_8));
+      return client.send(request, BodyHandlers.ofString(StandardCharsets.UTF_8));
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public static void test(HttpResponse<String> response, String expected) {
+    final StringBuilder sb;
+    sb = new StringBuilder("HTTP/");
+
+    switch (response.version()) {
+      case HTTP_1_1 -> sb.append("1.1");
+
+      case HTTP_2 -> sb.append("2");
+    }
+
+    sb.append(' ');
+
+    sb.append(response.statusCode());
+
+    sb.append('\n');
+
+    final HttpHeaders headers;
+    headers = response.headers();
+
+    final Map<String, List<String>> map;
+    map = headers.map();
+
+    for (var entry : map.entrySet()) {
+      sb.append(entry.getKey());
+
+      sb.append(':');
+      sb.append(' ');
+
+      List<String> list;
+      list = entry.getValue();
+
+      sb.append(list.stream().collect(Collectors.joining("; ")));
+
+      sb.append('\n');
+    }
+
+    sb.append('\n');
+
+    sb.append(response.body());
+
+    final String result;
+    result = sb.toString();
+
+    assertEquals(result, expected);
   }
 
   public static RandomGenerator randomGeneratorOfLongs(long... longs) {

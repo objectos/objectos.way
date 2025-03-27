@@ -16,15 +16,16 @@
 package objectos.way;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Clock;
 import java.util.Set;
 import objectos.way.HttpExchange.ParseStatus;
+import objectos.way.Lang.MediaObject;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -49,13 +50,14 @@ public class HttpExchangeTest {
 
     String resp01 = """
     HTTP/1.1 200 OK\r
+    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
     Content-Type: text/plain; charset=utf-8\r
     Content-Length: 13\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
     \r
-    %s""".formatted(body01);
+    Hello World!
+    """;
 
-    try (HttpExchange http = new HttpExchange(socket, 128, 128, Clock.systemDefaultZone(), TestingNoteSink.INSTANCE)) {
+    try (HttpExchange http = new HttpExchange(socket, 128, 128, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
       // request phase
       ParseStatus parse;
       parse = http.parse();
@@ -78,14 +80,10 @@ public class HttpExchangeTest {
       assertEquals(ObjectosHttp.readAllBytes(http), Util.EMPTY_BYTE_ARRAY);
 
       // response phase
-      byte[] msg;
-      msg = body01.getBytes(StandardCharsets.UTF_8);
+      final MediaObject media;
+      media = Lang.MediaObject.textPlain(body01, StandardCharsets.UTF_8);
 
-      http.status(Http.Status.OK);
-      http.header(Http.HeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
-      http.header(Http.HeaderName.CONTENT_LENGTH, msg.length);
-      http.header(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
-      http.send(msg);
+      http.respond(Http.Status.OK, media);
 
       assertEquals(socket.outputAsString(), resp01);
 
@@ -127,9 +125,9 @@ public class HttpExchangeTest {
 
     String resp01 = """
     HTTP/1.1 200 OK\r
-    Content-Type: text/html; charset=utf-8\r
-    Content-Length: 171\r
     Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+    Content-Type: text/plain; charset=utf-8\r
+    Content-Length: 171\r
     \r
     %s""".formatted(body01);
 
@@ -141,13 +139,13 @@ public class HttpExchangeTest {
 
     String resp02 = """
     HTTP/1.1 200 OK\r
-    Content-Type: text/css; charset=utf-8\r
-    Content-Length: 32\r
     Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+    Content-Type: text/plain; charset=utf-8\r
+    Content-Length: 32\r
     \r
     %s""".formatted(body02);
 
-    try (HttpExchange http = new HttpExchange(socket, 128, 128, Clock.systemDefaultZone(), TestingNoteSink.INSTANCE)) {
+    try (HttpExchange http = new HttpExchange(socket, 128, 128, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
       // request 01
       ParseStatus parse;
       parse = http.parse();
@@ -168,14 +166,10 @@ public class HttpExchangeTest {
       assertEquals(ObjectosHttp.readAllBytes(http), Util.EMPTY_BYTE_ARRAY);
 
       // response phase
-      byte[] msg;
-      msg = body01.getBytes(StandardCharsets.UTF_8);
+      final MediaObject object01;
+      object01 = Lang.MediaObject.textPlain(body01, StandardCharsets.UTF_8);
 
-      http.status(Http.Status.OK);
-      http.header(Http.HeaderName.CONTENT_TYPE, "text/html; charset=utf-8");
-      http.header(Http.HeaderName.CONTENT_LENGTH, msg.length);
-      http.header(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
-      http.send(msg);
+      http.respond(Http.Status.OK, object01);
 
       assertEquals(socket.outputAsString(), resp01);
 
@@ -199,16 +193,12 @@ public class HttpExchangeTest {
       assertEquals(ObjectosHttp.readAllBytes(http), Util.EMPTY_BYTE_ARRAY);
 
       // response phase
-      msg = body02.getBytes(StandardCharsets.UTF_8);
-
-      http.status(Http.Status.OK);
-      http.header(Http.HeaderName.CONTENT_TYPE, "text/css; charset=utf-8");
-      http.header(Http.HeaderName.CONTENT_LENGTH, msg.length);
-      http.header(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
-
       socket.outputReset();
 
-      http.send(msg);
+      final MediaObject object02;
+      object02 = Lang.MediaObject.textPlain(body02, StandardCharsets.UTF_8);
+
+      http.respond(Http.Status.OK, object02);
 
       assertEquals(socket.outputAsString(), resp02);
 
@@ -237,13 +227,13 @@ public class HttpExchangeTest {
 
     String resp01 = """
     HTTP/1.1 200 OK\r
+    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
     Content-Type: text/plain; charset=utf-8\r
     Content-Length: 13\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
     \r
     %s""".formatted(body01);
 
-    try (HttpExchange http = new HttpExchange(socket, 128, 128, Clock.systemDefaultZone(), TestingNoteSink.INSTANCE)) {
+    try (HttpExchange http = new HttpExchange(socket, 128, 128, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
       // request phase
       ParseStatus parse;
       parse = http.parse();
@@ -258,14 +248,10 @@ public class HttpExchangeTest {
       """);
 
       // response phase
-      byte[] msg;
-      msg = body01.getBytes(StandardCharsets.UTF_8);
+      final MediaObject object;
+      object = Lang.MediaObject.textPlain(body01, StandardCharsets.UTF_8);
 
-      http.status(Http.Status.OK);
-      http.header(Http.HeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
-      http.header(Http.HeaderName.CONTENT_LENGTH, msg.length);
-      http.header(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
-      http.send(msg);
+      http.respond(Http.Status.OK, object);
 
       assertEquals(socket.outputAsString(), resp01);
 
@@ -331,11 +317,11 @@ public class HttpExchangeTest {
 
       Files.writeString(index, body01, StandardCharsets.UTF_8);
 
-      http.status(Http.Status.OK);
-      http.header(Http.HeaderName.CONTENT_TYPE, "text/html; charset=utf-8");
-      http.header(Http.HeaderName.CONTENT_LENGTH, Files.size(index));
-      http.header(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
-      http.send(index);
+      http.status0(Http.Status.OK);
+      http.header0(Http.HeaderName.CONTENT_TYPE, "text/html; charset=utf-8");
+      http.header0(Http.HeaderName.CONTENT_LENGTH, Files.size(index));
+      http.header0(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
+      http.send0(index);
 
       assertEquals(socket.outputAsString(), resp01);
 
@@ -387,11 +373,10 @@ public class HttpExchangeTest {
       assertEquals(http.header(Http.HeaderName.CONNECTION), "close");
 
       // response phase
-
-      http.status(Http.Status.NOT_MODIFIED);
-      http.header(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
-      http.header(Http.HeaderName.ETAG, "some%hash");
-      http.send();
+      http.status0(Http.Status.NOT_MODIFIED);
+      http.header0(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
+      http.header0(Http.HeaderName.ETAG, "some%hash");
+      http.send0();
 
       assertEquals(socket.outputAsString(), resp01);
 
@@ -428,11 +413,10 @@ public class HttpExchangeTest {
       assertEquals(parse.isError(), false);
 
       // response phase
-
-      http.status(Http.Status.NOT_FOUND);
-      http.header(Http.HeaderName.CONNECTION, "close");
-      http.header(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
-      http.send();
+      http.status0(Http.Status.NOT_FOUND);
+      http.header0(Http.HeaderName.CONNECTION, "close");
+      http.header0(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
+      http.send0();
 
       assertEquals(socket.outputAsString(), resp01);
 
@@ -473,11 +457,10 @@ public class HttpExchangeTest {
       assertEquals(http.queryParamNames(), Set.of("foo"));
 
       // response phase
-
-      http.status(Http.Status.NOT_FOUND);
-      http.header(Http.HeaderName.CONNECTION, "close");
-      http.header(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
-      http.send();
+      http.status0(Http.Status.NOT_FOUND);
+      http.header0(Http.HeaderName.CONNECTION, "close");
+      http.header0(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
+      http.send0();
 
       assertEquals(socket.outputAsString(), resp01);
 
@@ -524,13 +507,12 @@ public class HttpExchangeTest {
       assertEquals(ObjectosHttp.readString(http), "email=user%40example.com");
 
       // response phase
-
-      http.status(Http.Status.SEE_OTHER);
-      http.header(Http.HeaderName.LOCATION, "/app");
-      http.header(Http.HeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
-      http.header(Http.HeaderName.CONTENT_LENGTH, "52");
-      http.header(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
-      http.send(body01.getBytes(StandardCharsets.UTF_8));
+      http.status0(Http.Status.SEE_OTHER);
+      http.header0(Http.HeaderName.LOCATION, "/app");
+      http.header0(Http.HeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
+      http.header0(Http.HeaderName.CONTENT_LENGTH, "52");
+      http.header0(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
+      http.send0(body01.getBytes(StandardCharsets.UTF_8));
 
       assertEquals(socket.outputAsString(), resp01);
 
@@ -571,48 +553,12 @@ public class HttpExchangeTest {
 
       assertEquals(parse.isError(), false);
 
-      http.status(Http.Status.OK);
-      http.header(Http.HeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
-      http.header(Http.HeaderName.CONTENT_LENGTH, 5);
-      http.header(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
-      http.header(Http.HeaderName.ETAG, etag);
-      http.send("AAAA\n".getBytes(StandardCharsets.UTF_8));
-
-      assertEquals(socket.outputAsString(), resp01);
-
-      assertEquals(http.keepAlive(), false);
-    } catch (IOException e) {
-      throw new AssertionError("Failed with IOException", e);
-    }
-  }
-
-  @Test(description = """
-  The unsupported media type pre-made response
-  """)
-  public void testCase010() {
-    TestableSocket socket;
-    socket = TestableSocket.of("""
-    POST /login HTTP/1.1\r
-    Host: www.example.com\r
-    Content-Length: 24\r
-    Content-Type: multipart/form-data\r
-    \r
-    email=user%40example.com""");
-
-    String resp01 = """
-    HTTP/1.1 415 UNSUPPORTED MEDIA TYPE\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    Connection: close\r
-    \r
-    """;
-
-    try (HttpExchange http = new HttpExchange(socket, 128, 256, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
-      ParseStatus parse;
-      parse = http.parse();
-
-      assertEquals(parse.isError(), false);
-
-      http.unsupportedMediaType();
+      http.status0(Http.Status.OK);
+      http.header0(Http.HeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
+      http.header0(Http.HeaderName.CONTENT_LENGTH, 5);
+      http.header0(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
+      http.header0(Http.HeaderName.ETAG, etag);
+      http.send0("AAAA\n".getBytes(StandardCharsets.UTF_8));
 
       assertEquals(socket.outputAsString(), resp01);
 
@@ -644,18 +590,16 @@ public class HttpExchangeTest {
 
       assertEquals(parse.isError(), false);
 
-      http.dateNow();
-      http.header(Http.HeaderName.CONTENT_TYPE, "text/plain");
-      http.header(Http.HeaderName.CONTENT_LENGTH, 64);
-      http.send(writable, StandardCharsets.UTF_8);
+      http.respond(Http.Status.OK, writable, resp -> {
+        resp.header(Http.HeaderName.CONTENT_LENGTH, 64);
+      });
 
       Assert.fail("http.commit should have thrown");
     } catch (IllegalStateException expected) {
       String message;
       message = expected.getMessage();
 
-      assertTrue(message.contains("Content-Length"));
-      assertTrue(message.contains("CharWritable"));
+      assertEquals(message, "Content-Length must not be set with a Lang.MediaWriter response");
     } catch (IOException e) {
       throw new AssertionError("Failed with IOException", e);
     }
@@ -683,17 +627,16 @@ public class HttpExchangeTest {
 
       assertEquals(parse.isError(), false);
 
-      http.dateNow();
-      http.header(Http.HeaderName.CONTENT_TYPE, "text/plain");
-      http.send(writable, StandardCharsets.UTF_8);
+      http.respond(Http.Status.OK, writable, resp -> {
+        resp.header(Http.HeaderName.TRANSFER_ENCODING, "foobar");
+      });
 
       Assert.fail("http.commit should have thrown");
     } catch (IllegalStateException expected) {
       String message;
       message = expected.getMessage();
 
-      assertTrue(message.contains("chunked"));
-      assertTrue(message.contains("CharWritable"));
+      assertEquals(message, "Transfer-Encoding: chunked must be set with a Lang.MediaWriter response");
     } catch (IOException e) {
       throw new AssertionError("Failed with IOException", e);
     }
@@ -719,8 +662,9 @@ public class HttpExchangeTest {
     writable = TestingCharWritable.ofLength(128);
 
     String resp01 = """
+    HTTP/1.1 200 OK\r
     Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    Content-Type: text/plain\r
+    Content-Type: text/plain; charset=utf-8\r
     Transfer-Encoding: chunked\r
     \r
     80\r
@@ -737,10 +681,7 @@ public class HttpExchangeTest {
 
       assertEquals(parse.isError(), false);
 
-      http.dateNow();
-      http.header(Http.HeaderName.CONTENT_TYPE, "text/plain");
-      http.header(Http.HeaderName.TRANSFER_ENCODING, "chunked");
-      http.send(writable, StandardCharsets.UTF_8);
+      http.respond(Http.Status.OK, writable);
 
       assertEquals(socket.outputAsString(), resp01);
 
@@ -765,8 +706,9 @@ public class HttpExchangeTest {
     writable = TestingCharWritable.ofLength(256);
 
     String resp01 = """
+    HTTP/1.1 200 OK\r
     Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    Content-Type: text/plain\r
+    Content-Type: text/plain; charset=utf-8\r
     Transfer-Encoding: chunked\r
     \r
     80\r
@@ -788,10 +730,7 @@ public class HttpExchangeTest {
 
       assertEquals(parse.isError(), false);
 
-      http.dateNow();
-      http.header(Http.HeaderName.CONTENT_TYPE, "text/plain");
-      http.header(Http.HeaderName.TRANSFER_ENCODING, "chunked");
-      http.send(writable, StandardCharsets.UTF_8);
+      http.respond(Http.Status.OK, writable);
 
       assertEquals(socket.outputAsString(), resp01);
 
@@ -816,8 +755,9 @@ public class HttpExchangeTest {
     writable = TestingCharWritable.ofLength(256);
 
     String resp01 = """
+    HTTP/1.1 200 OK\r
     Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    Content-Type: text/plain\r
+    Content-Type: text/plain; charset=utf-8\r
     Transfer-Encoding: chunked\r
     \r
     100\r
@@ -837,10 +777,7 @@ public class HttpExchangeTest {
 
       assertEquals(parse.isError(), false);
 
-      http.dateNow();
-      http.header(Http.HeaderName.CONTENT_TYPE, "text/plain");
-      http.header(Http.HeaderName.TRANSFER_ENCODING, "chunked");
-      http.send(writable, StandardCharsets.UTF_8);
+      http.respond(Http.Status.OK, writable);
 
       assertEquals(socket.outputAsString(), resp01);
 
@@ -869,10 +806,20 @@ public class HttpExchangeTest {
     .................................................
     123456""";
 
-    Lang.CharWritable writable;
-    writable = out -> out.append(chunk256);
+    Lang.MediaWriter writable;
+    writable = new Lang.MediaWriter() {
+      @Override
+      public String contentType() { return "text/plain"; }
+
+      @Override
+      public Charset mediaCharset() { return StandardCharsets.UTF_8; }
+
+      @Override
+      public void mediaTo(Appendable dest) throws IOException { dest.append(chunk256); }
+    };
 
     String resp01 = """
+    HTTP/1.1 200 OK\r
     Date: Wed, 28 Jun 2023 12:08:43 GMT\r
     Content-Type: text/plain\r
     Transfer-Encoding: chunked\r
@@ -896,10 +843,7 @@ public class HttpExchangeTest {
 
       assertEquals(parse.isError(), false);
 
-      http.dateNow();
-      http.header(Http.HeaderName.CONTENT_TYPE, "text/plain");
-      http.header(Http.HeaderName.TRANSFER_ENCODING, "chunked");
-      http.send(writable, StandardCharsets.UTF_8);
+      http.respond(Http.Status.OK, writable);
 
       assertEquals(socket.outputAsString(), resp01);
 
@@ -1073,7 +1017,7 @@ public class HttpExchangeTest {
 
       // early response start...
 
-      http.status(Http.Status.SEE_OTHER);
+      http.status0(Http.Status.SEE_OTHER);
 
       try {
         http.bodyInputStream();
@@ -1140,7 +1084,7 @@ public class HttpExchangeTest {
     }
 
     req.append("\r\n");
-    req.append("\r\n");
+    req.append("123");
 
     TestableSocket socket;
     socket = TestableSocket.of(req.toString());

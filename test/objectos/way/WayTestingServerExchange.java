@@ -77,7 +77,7 @@ public final class WayTestingServerExchange implements TestingServerExchange {
       try {
         handler.accept(loop);
       } catch (Throwable t) {
-        loop.internalServerError(t);
+        throw new Http.InternalServerException(t);
       }
 
       return socket.toString();

@@ -88,7 +88,7 @@ sealed abstract class HttpPathParam {
     this.name = name;
   }
 
-  final boolean test(HttpModuleSupport path) {
+  final boolean test(HttpSupport path) {
     String value;
     value = path.pathParam(name);
 

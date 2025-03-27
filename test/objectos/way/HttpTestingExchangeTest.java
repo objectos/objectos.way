@@ -120,9 +120,7 @@ public class HttpTestingExchangeTest {
 
   private final Http.Handler moduleInterop = Http.Handler.create(routing -> {
     routing.path("/tc01", path -> {
-      path.handler(http -> {
-        http.okText("TC01", StandardCharsets.UTF_8);
-      });
+      path.handler(Http.Handler.ofText("TC01", StandardCharsets.UTF_8));
     });
   });
 
@@ -202,7 +200,7 @@ public class HttpTestingExchangeTest {
     Http.TestingExchange http;
     http = Http.TestingExchange.create(config -> {});
 
-    http.ok(new Template());
+    http.respond(Http.Status.OK, new Template());
 
     assertEquals(http.responseStatus(), Http.Status.OK);
 
@@ -345,13 +343,16 @@ public class HttpTestingExchangeTest {
     Http.TestingExchange http;
     http = Http.TestingExchange.create(config -> {});
 
-    http.header(Http.HeaderName.CONTENT_TYPE, "foo/bar");
+    http.respond(Http.Status.OK, new TestingSingleParagraph("foo/bar"), resp -> {
+      resp.header(Http.HeaderName.ALLOW, "foo/bar");
 
-    http.header(Http.HeaderName.USER_AGENT, "Agent 1");
-    http.header(Http.HeaderName.USER_AGENT, "Agent 2");
+      resp.header(Http.HeaderName.USER_AGENT, "Agent 1");
+      resp.header(Http.HeaderName.USER_AGENT, "Agent 2");
+    });
 
     assertEquals(http.responseHeader(Http.HeaderName.LOCATION), null);
-    assertEquals(http.responseHeader(Http.HeaderName.CONTENT_TYPE), "foo/bar");
+    assertEquals(http.responseHeader(Http.HeaderName.ALLOW), "foo/bar");
+    assertEquals(http.responseHeader(Http.HeaderName.CONTENT_TYPE), "text/html; charset=utf-8");
     assertEquals(http.responseHeader(Http.HeaderName.USER_AGENT), "Agent 1");
   }
 

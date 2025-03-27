@@ -18,23 +18,22 @@ package objectos.way;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.time.Clock;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.SequencedMap;
 import java.util.Set;
+import java.util.function.Consumer;
+import objectos.way.Http.ResponseHeaders;
+import objectos.way.Http.Status;
+import objectos.way.Lang.MediaObject;
+import objectos.way.Lang.MediaWriter;
 
-final class HttpTestingExchange extends HttpModuleSupport implements Http.TestingExchange {
-
-  private final Clock clock;
+final class HttpTestingExchange extends HttpSupport implements Http.TestingExchange {
 
   private Map<Object, Object> objectStore;
 
@@ -357,12 +356,73 @@ final class HttpTestingExchange extends HttpModuleSupport implements Http.Testin
   // response methods
 
   @Override
-  public final void header(Http.HeaderName name, long value) {
-    header(name, Long.toString(value));
+  public final void respond(Http.Status status, Lang.MediaObject object) {
+    respond0(status, object);
+
+    responseBody = object;
   }
 
   @Override
-  public final void header(Http.HeaderName name, String value) {
+  public final void respond(Status status, MediaObject object, Consumer<ResponseHeaders> headers) {
+    respond0(status, object);
+
+    headers.accept(this);
+
+    responseBody = object;
+  }
+
+  private void respond0(Http.Status status, Lang.MediaObject object) {
+    status0(status);
+
+    String contentType;
+    contentType = object.contentType();
+
+    byte[] bytes;
+    bytes = object.mediaBytes();
+
+    dateNow();
+
+    header0(Http.HeaderName.CONTENT_TYPE, contentType);
+
+    header0(Http.HeaderName.CONTENT_LENGTH, bytes.length);
+  }
+
+  @Override
+  public final void respond(Status status, MediaWriter writer) {
+    respond0(status, writer);
+
+    responseBody = writer;
+  }
+
+  @Override
+  public final void respond(Status status, MediaWriter writer, Consumer<ResponseHeaders> headers) {
+    respond0(status, writer);
+
+    headers.accept(this);
+
+    responseBody = writer;
+  }
+
+  private void respond0(Status status, MediaWriter writer) {
+    status0(status);
+
+    String contentType;
+    contentType = writer.contentType();
+
+    dateNow();
+
+    header0(Http.HeaderName.CONTENT_TYPE, contentType);
+
+    header0(Http.HeaderName.TRANSFER_ENCODING, "chunked");
+  }
+
+  @Override
+  final void status0(Http.Status value) {
+    responseStatus = value;
+  }
+
+  @Override
+  final void header0(Http.HeaderName name, String value) {
     if (responseHeaders == null) {
       responseHeaders = Util.createSequencedMap();
     }
@@ -389,125 +449,28 @@ final class HttpTestingExchange extends HttpModuleSupport implements Http.Testin
   }
 
   @Override
-  public final void dateNow() {
-    Clock theClock;
-    theClock = clock;
-
-    if (theClock == null) {
-      theClock = Clock.systemUTC();
-    }
-
-    ZonedDateTime now;
-    now = ZonedDateTime.now(theClock);
-
-    String value;
-    value = Http.formatDate(now);
-
-    header(Http.HeaderName.DATE, value);
-  }
-
-  @Override
-  public final void send() {
+  final void send0() {
     responseBody = null;
   }
 
   @Override
-  public final void send(byte[] body) {
-    responseBody = Objects.requireNonNull(body, "body == null");
+  final void send0(byte[] body) {
+    responseBody = body;
   }
 
   @Override
-  public final void send(Path file) {
-    responseBody = Objects.requireNonNull(file, "file == null");
+  final void send0(Path file) {
+    responseBody = file;
   }
 
   @Override
-  public final void respond(Http.Status status, Lang.MediaObject object) {
-    status(status);
+  final void endResponse() {}
 
-    String contentType;
-    contentType = object.contentType();
-
-    byte[] bytes;
-    bytes = object.mediaBytes();
-
-    dateNow();
-
-    header(Http.HeaderName.CONTENT_TYPE, contentType);
-
-    header(Http.HeaderName.CONTENT_LENGTH, bytes.length);
-
-    responseBody = object;
-  }
-
-  @Override
-  public final void ok() {
-    status(Http.Status.OK);
-
-    dateNow();
-
-    send();
-  }
-
-  @Override
-  public final void notFound() {
-    status(Http.Status.NOT_FOUND);
-
-    dateNow();
-
-    header(Http.HeaderName.CONNECTION, "close");
-
-    send();
-  }
-
-  @Override
-  public final void methodNotAllowed() {
-    status(Http.Status.METHOD_NOT_ALLOWED);
-
-    dateNow();
-
-    header(Http.HeaderName.CONNECTION, "close");
-
-    send();
-  }
-
-  @Override
-  public final void internalServerError(Throwable t) {
-    StringWriter sw;
-    sw = new StringWriter();
-
-    PrintWriter pw;
-    pw = new PrintWriter(sw);
-
-    t.printStackTrace(pw);
-
-    String msg;
-    msg = sw.toString();
-
-    byte[] bytes;
-    bytes = msg.getBytes();
-
-    status(Http.Status.INTERNAL_SERVER_ERROR);
-
-    dateNow();
-
-    header(Http.HeaderName.CONTENT_LENGTH, bytes.length);
-
-    header(Http.HeaderName.CONTENT_TYPE, "text/plain");
-
-    header(Http.HeaderName.CONNECTION, "close");
-
-    send(bytes);
-  }
+  //
 
   @Override
   public final boolean processed() {
     return responseStatus != null;
-  }
-
-  @Override
-  public final void status(Http.Status value) {
-    responseStatus = Objects.requireNonNull(value, "value == null");
   }
 
 }

@@ -63,10 +63,15 @@ record WebResourcesKernel(
       return;
     }
 
-    handle(http, file);
+    final HttpSupport support;
+    support = (HttpSupport) http;
+
+    handle(support, file);
   }
 
-  private void handle(Http.Exchange http, Path file) {
+  private static final Http.ResponseMessage MNA = Http.ResponseMessage.methodNotAllowed(Http.Method.GET, Http.Method.HEAD);
+
+  private void handle(HttpSupport http, Path file) {
     BasicFileAttributes attributes;
 
     try {
@@ -74,9 +79,7 @@ record WebResourcesKernel(
     } catch (NoSuchFileException e) {
       return;
     } catch (IOException e) {
-      http.internalServerError(e);
-
-      return;
+      throw new Http.InternalServerException(e);
     }
 
     if (!attributes.isRegularFile()) {
@@ -87,7 +90,7 @@ record WebResourcesKernel(
     method = http.method();
 
     if (method != Http.Method.GET && method != Http.Method.HEAD) {
-      http.methodNotAllowed();
+      http.respond(MNA);
 
       return;
     }
@@ -99,18 +102,18 @@ record WebResourcesKernel(
     ifNoneMatch = http.header(Http.HeaderName.IF_NONE_MATCH);
 
     if (etag.equals(ifNoneMatch)) {
-      http.status(Http.Status.NOT_MODIFIED);
+      http.status0(Http.Status.NOT_MODIFIED);
 
       http.dateNow();
 
-      http.header(Http.HeaderName.ETAG, etag);
+      http.header0(Http.HeaderName.ETAG, etag);
 
-      http.send();
+      http.send0();
 
       return;
     }
 
-    http.status(Http.Status.OK);
+    http.status0(Http.Status.OK);
 
     String contentType;
     contentType = defaultContentType;
@@ -128,18 +131,18 @@ record WebResourcesKernel(
       contentType = contentTypes.getOrDefault(extension, contentType);
     }
 
-    http.header(Http.HeaderName.CONTENT_TYPE, contentType);
+    http.header0(Http.HeaderName.CONTENT_TYPE, contentType);
 
-    http.header(Http.HeaderName.CONTENT_LENGTH, attributes.size());
+    http.header0(Http.HeaderName.CONTENT_LENGTH, attributes.size());
 
     http.dateNow();
 
-    http.header(Http.HeaderName.ETAG, etag);
+    http.header0(Http.HeaderName.ETAG, etag);
 
     if (method == Http.Method.GET) {
-      http.send(file);
+      http.send0(file);
     } else {
-      http.send();
+      http.send0();
     }
   }
 

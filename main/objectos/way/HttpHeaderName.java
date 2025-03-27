@@ -25,6 +25,11 @@ enum HttpHeaderName implements Http.HeaderName {
   ACCEPT_ENCODING("Accept-Encoding", HttpHeaderType.REQUEST),
 
   /**
+   * The {@code Allow} header name.
+   */
+  ALLOW("Allow", HttpHeaderType.RESPONSE),
+
+  /**
    * The {@code Connection} header name.
    */
   CONNECTION("Connection", HttpHeaderType.BOTH),

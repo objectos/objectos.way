@@ -22,6 +22,7 @@ import static org.testng.Assert.assertTrue;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.Socket;
+import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -31,6 +32,7 @@ import java.time.Clock;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.function.Consumer;
+import objectos.way.Lang.MediaObject;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -157,7 +159,13 @@ public class WebResourcesTest implements Consumer<Http.Routing> {
   }
 
   private void testCase02(Http.Exchange http) {
-    http.okText("BBBB\n", StandardCharsets.UTF_8);
+    final String text;
+    text = "BBBB\n";
+
+    final MediaObject object;
+    object = Lang.MediaObject.textPlain(text, StandardCharsets.UTF_8);
+
+    http.respond(Http.Status.OK, object);
   }
 
   @Test(description = """
@@ -203,25 +211,23 @@ public class WebResourcesTest implements Consumer<Http.Routing> {
   It should 405 if the method is not GET or HEAD
   """)
   public void testCase03() throws IOException {
-    try (Socket socket = newSocket()) {
-      test(
-          socket,
+    Testing.test(
+        Testing.httpClient(
+            "/tc03.txt",
 
-          """
-          POST /tc03.txt HTTP/1.1\r
-          Host: web.resources.test\r
-          Connection: close\r
-          \r
-          """,
+            builder -> builder.POST(BodyPublishers.noBody()).headers(
+                "Host", "web.resources.test"
+            )
+        ),
 
-          """
-          HTTP/1.1 405 METHOD NOT ALLOWED\r
-          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-          Connection: close\r
-          \r
-          """
-      );
-    }
+        """
+        HTTP/1.1 405
+        allow: GET, HEAD
+        content-length: 0
+        date: Wed, 28 Jun 2023 12:08:43 GMT
+
+        """
+    );
   }
 
   @Test(description = """
@@ -293,7 +299,7 @@ public class WebResourcesTest implements Consumer<Http.Routing> {
 
       resources.handle(http);
     } catch (IOException e) {
-      http.internalServerError(e);
+      throw new Http.InternalServerException(e);
     }
   }
 
@@ -348,7 +354,7 @@ public class WebResourcesTest implements Consumer<Http.Routing> {
 
       resources.handle(http);
     } catch (IOException e) {
-      http.internalServerError(e);
+      throw new Http.InternalServerException(e);
     }
   }
 
@@ -379,7 +385,7 @@ public class WebResourcesTest implements Consumer<Http.Routing> {
 
       resources.handle(http);
     } catch (IOException e) {
-      http.internalServerError(e);
+      throw new Http.InternalServerException(e);
     }
   }
 

@@ -20,7 +20,7 @@ import static org.testng.Assert.assertEquals;
 import java.io.IOException;
 import org.testng.annotations.Test;
 
-public class LangCharWritableTest {
+public class LangMediaWriterTest {
 
   @Test(description = """
   It fits in the first line
@@ -28,6 +28,7 @@ public class LangCharWritableTest {
   public void testCase01() {
     test(
         TestingCharWritable.ofLength(32),
+
         """
         12345678901234567890123456789012"""
     );
@@ -39,6 +40,7 @@ public class LangCharWritableTest {
   public void testCase02() {
     test(
         TestingCharWritable.ofLength(82),
+
         """
         .................................................
         12345678901234567890123456789012"""
@@ -50,7 +52,7 @@ public class LangCharWritableTest {
       StringBuilder sb;
       sb = new StringBuilder();
 
-      writable.writeTo(sb);
+      writable.mediaTo(sb);
 
       String result = sb.toString();
 

@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -98,21 +99,23 @@ public class MarketingSiteTest {
   Other methods to /index.html should return 405 METHOD NOT ALLOWED
   """)
   public void testCase04() throws IOException {
-    try (Socket socket = newSocket()) {
-      req(socket, """
-          TRACE /index.html HTTP/1.1\r
-          Host: marketing\r
-          Connection: close\r
-          \r
-          """);
+    Testing.test(
+        Testing.httpClient(
+            "/index.html",
 
-      resp(socket, """
-          HTTP/1.1 405 METHOD NOT ALLOWED\r
-          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-          Connection: close\r
-          \r
-          """);
-    }
+            builder -> builder.method("TRACE", BodyPublishers.noBody()).headers(
+                "Host", "marketing"
+            )
+        ),
+
+        """
+        HTTP/1.1 405
+        allow: GET, HEAD
+        content-length: 0
+        date: Wed, 28 Jun 2023 12:08:43 GMT
+
+        """
+    );
   }
 
   @Test(description = """

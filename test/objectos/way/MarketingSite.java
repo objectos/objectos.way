@@ -35,9 +35,9 @@ final class MarketingSite implements Consumer<Http.Routing> {
 
   private void indexHtml(Http.Exchange http) {
     switch (http.method()) {
-      case GET, HEAD -> http.ok(new MarketingSiteHome());
+      case GET, HEAD -> http.respond(Http.Status.OK, new MarketingSiteHome());
 
-      default -> http.methodNotAllowed();
+      default -> http.respond(Http.ResponseMessage.methodNotAllowed(Http.Method.GET, Http.Method.HEAD));
     }
   }
 

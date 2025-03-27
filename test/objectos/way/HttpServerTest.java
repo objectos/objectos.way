@@ -27,6 +27,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.function.Consumer;
 import objectos.way.Http.Exchange;
+import objectos.way.Lang.MediaObject;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -48,6 +49,8 @@ public class HttpServerTest implements Consumer<Http.Routing> {
     String methodName;
     methodName = http.pathParam("name");
 
+    Throwable rethrow = null;
+
     try {
       Class<? extends HttpServerTest> testClass;
       testClass = getClass();
@@ -64,27 +67,38 @@ public class HttpServerTest implements Consumer<Http.Routing> {
         throw re;
       }
 
-      http.internalServerError(e);
+      rethrow = e;
     } catch (Exception e) {
-      http.internalServerError(e);
+      rethrow = e;
+    }
+
+    if (rethrow instanceof Error err) {
+      throw err;
+    }
+
+    if (rethrow instanceof RuntimeException re) {
+      throw re;
+    }
+
+    if (rethrow != null) {
+      throw new Http.InternalServerException(rethrow);
     }
   }
 
   @SuppressWarnings("unused")
   private void testCase01(Http.Exchange http) {
     switch (http.method()) {
-      case GET -> testCase01Get(http);
+      case GET, HEAD -> testCase01Get(http);
 
-      default -> http.methodNotAllowed();
+      default -> http.respond(Http.ResponseMessage.methodNotAllowed(Http.Method.GET, Http.Method.HEAD));
     }
   }
 
   private void testCase01Get(Http.Exchange http) {
-    http.status(Http.Status.OK);
-    http.dateNow();
-    http.header(Http.HeaderName.CONTENT_TYPE, "text/plain");
-    http.header(Http.HeaderName.CONTENT_LENGTH, 5);
-    http.send("TC01\n".getBytes(StandardCharsets.UTF_8));
+    final MediaObject object;
+    object = Lang.MediaObject.textPlain("TC01\n", StandardCharsets.UTF_8);
+
+    http.respond(Http.Status.OK, object);
   }
 
   @Test(description = """
@@ -93,40 +107,42 @@ public class HttpServerTest implements Consumer<Http.Routing> {
   - reject other methods
   """)
   public void testCase01() throws IOException {
-    try (Socket socket = newSocket()) {
-      test(socket,
-          """
-          GET /test/testCase01 HTTP/1.1\r
-          Host: http.server.test\r
-          \r
-          """,
+    Testing.test(
+        Testing.httpClient(
+            "/test/testCase01",
 
-          """
-          HTTP/1.1 200 OK\r
-          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-          Content-Type: text/plain\r
-          Content-Length: 5\r
-          \r
-          TC01
-          """
-      );
+            builder -> builder.headers(
+                "Host", "http.server.test"
+            )
+        ),
 
-      test(socket,
-          """
-          POST /test/testCase01 HTTP/1.1\r
-          Host: http.server.test\r
-          Connection: close\r
-          \r
-          """,
+        """
+        HTTP/1.1 200
+        content-length: 5
+        content-type: text/plain; charset=utf-8
+        date: Wed, 28 Jun 2023 12:08:43 GMT
 
-          """
-          HTTP/1.1 405 METHOD NOT ALLOWED\r
-          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-          Connection: close\r
-          \r
-          """
-      );
-    }
+        TC01
+        """
+    );
+
+    Testing.test(
+        Testing.httpClient(
+            "/test/testCase01",
+
+            builder -> builder.POST(BodyPublishers.noBody()).headers(
+                "Host", "http.server.test"
+            )
+        ),
+
+        """
+        HTTP/1.1 405
+        allow: GET, HEAD
+        content-length: 0
+        date: Wed, 28 Jun 2023 12:08:43 GMT
+
+        """
+    );
   }
 
   @SuppressWarnings("unused")
@@ -134,16 +150,15 @@ public class HttpServerTest implements Consumer<Http.Routing> {
     switch (http.method()) {
       case GET, HEAD -> testCase02Get(http);
 
-      default -> http.methodNotAllowed();
+      default -> http.respond(Http.ResponseMessage.methodNotAllowed(Http.Method.GET, Http.Method.HEAD));
     }
   }
 
   private void testCase02Get(Http.Exchange http) {
-    http.status(Http.Status.OK);
-    http.dateNow();
-    http.header(Http.HeaderName.CONTENT_TYPE, "text/plain");
-    http.header(Http.HeaderName.CONTENT_LENGTH, 5);
-    http.send("TC02\n".getBytes(StandardCharsets.UTF_8));
+    final MediaObject object;
+    object = Lang.MediaObject.textPlain("TC02\n", StandardCharsets.UTF_8);
+
+    http.respond(Http.Status.OK, object);
   }
 
   @Test(description = """
@@ -161,7 +176,7 @@ public class HttpServerTest implements Consumer<Http.Routing> {
           """
           HTTP/1.1 200 OK\r
           Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-          Content-Type: text/plain\r
+          Content-Type: text/plain; charset=utf-8\r
           Content-Length: 5\r
           \r
           """
@@ -177,7 +192,7 @@ public class HttpServerTest implements Consumer<Http.Routing> {
           """
           HTTP/1.1 200 OK\r
           Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-          Content-Type: text/plain\r
+          Content-Type: text/plain; charset=utf-8\r
           Content-Length: 5\r
           \r
           TC02
@@ -193,16 +208,16 @@ public class HttpServerTest implements Consumer<Http.Routing> {
 
       case POST -> testCase03Post(http);
 
-      default -> http.methodNotAllowed();
+      default -> http.respond(Http.ResponseMessage.methodNotAllowed(Http.Method.GET, Http.Method.HEAD, Http.Method.POST));
     }
   }
 
   private void testCase03Get(Http.Exchange http) {
-    http.ok(new TestingSingleParagraph("TC03 GET"));
+    http.respond(Http.Status.OK, new TestingSingleParagraph("TC03 GET"));
   }
 
   private void testCase03Post(Http.Exchange http) {
-    http.ok(new TestingSingleParagraph("TC03 POST"));
+    http.respond(Http.Status.OK, new TestingSingleParagraph("TC03 POST"));
   }
 
   @Test(description = """
@@ -282,58 +297,65 @@ public class HttpServerTest implements Consumer<Http.Routing> {
   @SuppressWarnings("unused")
   private void testCase04(Http.Exchange http) {
     switch (http.method()) {
-      case GET -> testCase04Get(http);
+      case GET, HEAD -> testCase04Get(http);
 
       case POST -> testCase04Post(http);
 
-      default -> http.methodNotAllowed();
+      default -> http.respond(Http.ResponseMessage.methodNotAllowed(Http.Method.GET, Http.Method.HEAD, Http.Method.POST));
     }
   }
 
   private void testCase04Get(Http.Exchange http) {
     http.set(String.class, "TC04 GET");
 
-    http.ok(new AttributeTester(http, String.class));
+    http.respond(Http.Status.OK, new AttributeTester(http, String.class));
   }
 
   private void testCase04Post(Http.Exchange http) {
-    http.ok(new AttributeTester(http, String.class));
+    http.respond(Http.Status.OK, new AttributeTester(http, String.class));
   }
 
   @Test(description = """
   Request attributes should be reset between requests
   """)
   public void testCase04() throws IOException, InterruptedException {
-    HttpResponse<String> response;
-    response = Testing.httpClient(
-        "/test/testCase04",
+    Testing.test(
+        Testing.httpClient(
+            "/test/testCase04",
 
-        builder -> builder.headers(
-            "Host", "http.server.test"
-        )
+            builder -> builder.headers(
+                "Host", "http.server.test"
+            )
+        ),
+
+        """
+        HTTP/1.1 200
+        content-length: 16
+        content-type: text/html; charset=utf-8
+        date: Wed, 28 Jun 2023 12:08:43 GMT
+
+        <p>TC04 GET</p>
+        """
     );
 
-    assertEquals(response.statusCode(), 200);
-    assertEquals(response.headers().allValues("Content-Type"), List.of("text/html; charset=utf-8"));
-    assertEquals(response.headers().allValues("Date"), List.of("Wed, 28 Jun 2023 12:08:43 GMT"));
-    assertEquals(response.body(), """
-    <p>TC04 GET</p>
-    """);
+    Testing.test(
+        Testing.httpClient(
+            "/test/testCase04",
 
-    response = Testing.httpClient(
-        "/test/testCase04",
+            builder -> builder.POST(BodyPublishers.noBody()).headers(
+                "Host", "http.server.test"
+            )
+        ),
 
-        builder -> builder.POST(BodyPublishers.noBody()).headers(
-            "Host", "http.server.test"
-        )
+        """
+        HTTP/1.1 200
+        content-length: 12
+        content-type: text/html; charset=utf-8
+        date: Wed, 28 Jun 2023 12:08:43 GMT
+
+        <p>null</p>
+        """
     );
-
-    assertEquals(response.statusCode(), 200);
-    assertEquals(response.headers().allValues("Content-Type"), List.of("text/html; charset=utf-8"));
-    assertEquals(response.headers().allValues("Date"), List.of("Wed, 28 Jun 2023 12:08:43 GMT"));
-    assertEquals(response.body(), """
-    <p>null</p>
-    """);
   }
 
   @SuppressWarnings("unused")
@@ -342,7 +364,7 @@ public class HttpServerTest implements Consumer<Http.Routing> {
     class NotFoundException extends Http.AbstractHandlerException {
       @Override
       public void handle(Http.Exchange http) {
-        http.notFound();
+        http.respond(Http.Status.NOT_FOUND, new TestingSingleParagraph("NOT FOUND"));
       }
     }
 
@@ -352,20 +374,27 @@ public class HttpServerTest implements Consumer<Http.Routing> {
   @Test(description = """
   An Http.AbstractHandlerException caught by the loop should call its handle method
   """)
-  public void testCase05() throws IOException, InterruptedException {
-    HttpResponse<String> response;
-    response = Testing.httpClient(
-        "/test/testCase05",
+  public void testCase05() {
+    Testing.test(
+        Testing.httpClient(
+            "/test/testCase05",
 
-        builder -> builder.headers(
-            "Host", "http.server.test"
-        )
+            builder -> builder.headers(
+                "Host", "http.server.test"
+            )
+        ),
+
+        """
+        HTTP/1.1 404
+        content-length: 32
+        content-type: text/html; charset=utf-8
+        date: Wed, 28 Jun 2023 12:08:43 GMT
+
+        <html>
+        <p>NOT FOUND</p>
+        </html>
+        """
     );
-
-    assertEquals(response.statusCode(), 404);
-    assertEquals(response.headers().allValues("Connection"), List.of("close"));
-    assertEquals(response.headers().allValues("Date"), List.of("Wed, 28 Jun 2023 12:08:43 GMT"));
-    assertEquals(response.body(), "");
   }
 
   private Socket newSocket() throws IOException {

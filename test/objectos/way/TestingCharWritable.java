@@ -16,8 +16,10 @@
 package objectos.way;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
-public class TestingCharWritable implements Lang.CharWritable {
+public class TestingCharWritable implements Lang.MediaWriter {
 
   private static final int LINE_LENGTH = 50;
 
@@ -34,21 +36,17 @@ public class TestingCharWritable implements Lang.CharWritable {
   }
 
   @Override
-  public final String toString() {
-    try {
-      StringBuilder sb;
-      sb = new StringBuilder();
-
-      writeTo(sb);
-
-      return sb.toString();
-    } catch (IOException e) {
-      throw new AssertionError("StringBuilder should not have thrown", e);
-    }
+  public final String contentType() {
+    return "text/plain; charset=utf-8";
   }
 
   @Override
-  public final void writeTo(Appendable dest) throws IOException {
+  public final Charset mediaCharset() {
+    return StandardCharsets.UTF_8;
+  }
+
+  @Override
+  public final void mediaTo(Appendable dest) throws IOException {
     if (length == 0) {
       return;
     }
@@ -72,6 +70,20 @@ public class TestingCharWritable implements Lang.CharWritable {
       dest.append(Integer.toString(print));
 
       digit++;
+    }
+  }
+
+  @Override
+  public final String toString() {
+    try {
+      StringBuilder sb;
+      sb = new StringBuilder();
+
+      mediaTo(sb);
+
+      return sb.toString();
+    } catch (IOException e) {
+      throw new AssertionError("StringBuilder should not have thrown", e);
     }
   }
 

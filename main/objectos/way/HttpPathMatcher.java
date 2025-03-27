@@ -32,7 +32,7 @@ final class HttpPathMatcher implements Predicate<Http.Request> {
   }
 
   private record Param(String name) {
-    public boolean test(HttpModuleSupport target) {
+    public boolean test(HttpSupport target) {
       return target.namedVariable(name);
     }
   }
@@ -280,8 +280,8 @@ final class HttpPathMatcher implements Predicate<Http.Request> {
 
   @Override
   public final boolean test(Http.Request request) {
-    final HttpModuleSupport target;
-    target = (HttpModuleSupport) request;
+    final HttpSupport target;
+    target = (HttpSupport) request;
 
     target.matcherReset();
 
@@ -320,7 +320,7 @@ final class HttpPathMatcher implements Predicate<Http.Request> {
     return false;
   }
 
-  private boolean test(HttpModuleSupport target) {
+  private boolean test(HttpSupport target) {
     return switch (kind) {
       case EXACT -> target.exact(asString());
 
@@ -349,7 +349,7 @@ final class HttpPathMatcher implements Predicate<Http.Request> {
     };
   }
 
-  private boolean testParams(HttpModuleSupport target, List<Object> params) {
+  private boolean testParams(HttpSupport target, List<Object> params) {
     for (Object o : params) {
       boolean result;
 
@@ -370,7 +370,7 @@ final class HttpPathMatcher implements Predicate<Http.Request> {
     return target.atEnd();
   }
 
-  private boolean testConditions(HttpModuleSupport target, HttpPathParam[] conditions) {
+  private boolean testConditions(HttpSupport target, HttpPathParam[] conditions) {
     for (HttpPathParam condition : conditions) {
       if (!condition.test(target)) {
         return false;
