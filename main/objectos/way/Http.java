@@ -22,6 +22,7 @@ import java.net.InetAddress;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.time.Clock;
+import java.time.Duration;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -891,6 +892,152 @@ public final class Http {
      * @return the port number this server is listening to.
      */
     int port();
+
+  }
+
+  /**
+   * Represents an HTTP Set-Cookie response header as defined in RFC 6265.
+   * Provides a builder pattern through the {@link Config} interface to
+   * construct
+   * cookie instances with various attributes.
+   *
+   * <p>
+   * Example usage:
+   * <pre>{@code
+   * SetCookie cookie = SetCookie.create(config -> {
+   *     config.name("session");
+   *     config.value("abc123");
+   *     config.httpOnly();
+   *     config.sameSite(SetCookie.SameSite.STRICT);
+   * });
+   * }</pre>
+   *
+   * @see <a href="https://tools.ietf.org/html/rfc6265">RFC 6265 - HTTP State
+   *      Management Mechanism</a>
+   */
+  public sealed interface SetCookie extends Consumer<ResponseHeaders> permits HttpSetCookie {
+
+    /**
+     * Configuration interface for building a {@link SetCookie} instance.
+     * Provides methods to set cookie attributes before creation.
+     */
+    public sealed interface Config permits HttpSetCookieConfig {
+
+      /**
+       * Sets the name of the cookie.
+       *
+       * @param value
+       *        the cookie name (required)
+       */
+      void name(String value);
+
+      /**
+       * Sets the value of the cookie.
+       *
+       * @param value
+       *        the cookie value (required)
+       */
+      void value(String value);
+
+      /**
+       * Sets the {@code HttpOnly} attribute.
+       */
+      void httpOnly();
+
+      /**
+       * Sets the {@code Secure} attribute.
+       */
+      void secure();
+
+      /**
+       * Sets the {@code Path} attribute to the specified value.
+       *
+       * @param value
+       *        the path value
+       */
+      void path(String value);
+
+      /**
+       * Sets the {@code Domain} attribute to the specified value.
+       *
+       * @param value
+       *        the domain value
+       */
+      void domain(String value);
+
+      /**
+       * Sets the {@code Max-Age} attribute to the number of seconds of the
+       * specified duration.
+       *
+       * @param value
+       *        the duration after which the cookie expires
+       */
+      void maxAge(Duration value);
+
+      /**
+       * Sets the {@code Expires} attribute to the specified value.
+       *
+       * @param value
+       *        the date/time when the cookie expires
+       */
+      void expires(ZonedDateTime value);
+
+      /**
+       * Sets the {@code SameSite} attribute to the specified value.
+       *
+       * @param value
+       *        the SameSite policy to apply
+       */
+      void sameSite(SameSite value);
+    }
+
+    /**
+     * Enum representing possible values for the SameSite attribute.
+     */
+    enum SameSite {
+      /** Prevents the cookie from being sent in cross-site requests. */
+      STRICT("Strict"),
+
+      /** Allows the cookie in top-level navigation cross-site requests. */
+      LAX("Lax"),
+
+      /** Allows the cookie in all cross-site requests (not recommended). */
+      NONE("None");
+
+      final String text;
+
+      private SameSite(String text) { this.text = text; }
+
+    }
+
+    /**
+     * Creates a new {@link SetCookie} instance using a configuration consumer.
+     *
+     * @param config a consumer that configures the cookie attributes
+     *
+     * @return a new SetCookie instance
+     *
+     * @throws IllegalArgumentException if required attributes (name and value)
+     *         are not set
+     */
+    static SetCookie create(Consumer<Config> config) {
+      final HttpSetCookieConfig builder;
+      builder = new HttpSetCookieConfig();
+
+      config.accept(builder);
+
+      return builder.build();
+    }
+
+    /**
+     * Returns the string representation of this {@code Set-Cookie} header
+     * value. The format follows RFC 6265, with attributes separated by
+     * semicolons.
+     *
+     * @return the {@code Set-Cookie} header value
+     */
+    @Override
+    String toString();
 
   }
 
