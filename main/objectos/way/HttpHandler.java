@@ -15,8 +15,10 @@
  */
 package objectos.way;
 
+import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import objectos.way.Http.Handler;
 import objectos.way.Http.Request;
 
@@ -91,8 +93,11 @@ final class HttpHandler implements Http.Handler {
     return new HttpHandler(Kind.FACTORY1, null, main);
   }
 
-  public static Http.Handler methodNotAllowed(Predicate<Http.Request> predicate) {
-    return new HttpHandler(Kind.METHOD_NOT_ALLOWED, predicate, null);
+  public static Http.Handler methodNotAllowed(Predicate<Http.Request> predicate, Set<Http.Method> allowedMethods) {
+    final String allow;
+    allow = allowedMethods.stream().map(Http.Method::name).collect(Collectors.joining(", "));
+
+    return new HttpHandler(Kind.METHOD_NOT_ALLOWED, predicate, allow);
   }
 
   public static Http.Handler movedPermanently(String location) {
@@ -203,7 +208,9 @@ final class HttpHandler implements Http.Handler {
 
         support.dateNow();
 
-        support.header0(Http.HeaderName.CONNECTION, "close");
+        support.header0(Http.HeaderName.CONTENT_LENGTH, 0L);
+
+        support.header0(Http.HeaderName.ALLOW, asString());
 
         support.send0();
       }

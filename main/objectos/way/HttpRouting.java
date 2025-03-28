@@ -17,8 +17,10 @@ package objectos.way;
 
 import java.util.Arrays;
 import java.util.EnumMap;
+import java.util.EnumSet;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -212,6 +214,9 @@ final class HttpRouting implements Http.Routing, Http.Routing.OfPath {
 
         aux = new Http.Handler[requiredLength];
 
+        final Set<Http.Method> allowedMethods;
+        allowedMethods = EnumSet.noneOf(Http.Method.class);
+
         int auxIndex;
         auxIndex = 0;
 
@@ -219,13 +224,19 @@ final class HttpRouting implements Http.Routing, Http.Routing.OfPath {
           final Http.Method method;
           method = entry.getKey();
 
+          allowedMethods.add(method);
+
           final Http.Handler handler;
           handler = entry.getValue();
 
           aux[auxIndex++] = HttpHandler.methodAllowed(matcher, method, handler);
         }
 
-        aux[auxIndex++] = HttpHandler.methodNotAllowed(matcher);
+        if (allowedMethods.contains(Http.Method.GET)) {
+          allowedMethods.add(Http.Method.HEAD);
+        }
+
+        aux[auxIndex++] = HttpHandler.methodNotAllowed(matcher, allowedMethods);
       }
 
     }

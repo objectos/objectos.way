@@ -1016,53 +1016,83 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
 
   @Test
   public void testCase13() throws IOException, InterruptedException {
-    HttpResponse<String> response;
-    response = Testing.httpClient(
-        "/testCase13",
+    Testing.test(
+        Testing.httpClient(
+            "/testCase13",
 
-        builder -> builder.GET().headers(
-            "Host", "http.module.test",
-            "X-Test-Case-13", "one"
-        )
+            builder -> builder.GET().headers(
+                "Host", "http.module.test",
+                "X-Test-Case-13", "one"
+            )
+        ),
+
+        """
+        HTTP/1.1 200
+        content-length: 7
+        content-type: text/plain; charset=utf-8
+        date: Wed, 28 Jun 2023 12:08:43 GMT
+
+        GET=one\
+        """
     );
 
-    assertEquals(response.statusCode(), 200);
-    assertEquals(response.body(), "GET=one");
+    Testing.test(
+        Testing.httpClient(
+            "/testCase13",
 
-    response = Testing.httpClient(
-        "/testCase13",
+            builder -> builder.HEAD().headers(
+                "Host", "http.module.test",
+                "X-Test-Case-13", "two"
+            )
+        ),
 
-        builder -> builder.HEAD().headers(
-            "Host", "http.module.test",
-            "X-Test-Case-13", "two"
-        )
+        """
+        HTTP/1.1 200
+        content-length: 8
+        content-type: text/plain; charset=utf-8
+        date: Wed, 28 Jun 2023 12:08:43 GMT
+
+        """
     );
 
-    assertEquals(response.statusCode(), 200);
-    assertEquals(response.body(), "");
+    Testing.test(
+        Testing.httpClient(
+            "/testCase13",
 
-    response = Testing.httpClient(
-        "/testCase13",
+            builder -> builder.POST(HttpRequest.BodyPublishers.noBody()).headers(
+                "Host", "http.module.test",
+                "X-Test-Case-13", "three"
+            )
+        ),
 
-        builder -> builder.POST(HttpRequest.BodyPublishers.noBody()).headers(
-            "Host", "http.module.test",
-            "X-Test-Case-13", "three"
-        )
+        """
+        HTTP/1.1 200
+        content-length: 10
+        content-type: text/plain; charset=utf-8
+        date: Wed, 28 Jun 2023 12:08:43 GMT
+
+        POST=three\
+        """
     );
 
-    assertEquals(response.statusCode(), 200);
-    assertEquals(response.body(), "POST=three");
+    Testing.test(
+        Testing.httpClient(
+            "/testCase13",
 
-    response = Testing.httpClient(
-        "/testCase13",
+            builder -> builder.DELETE().headers(
+                "Host", "http.module.test",
+                "X-Test-Case-13", "four"
+            )
+        ),
 
-        builder -> builder.DELETE().headers(
-            "Host", "http.module.test",
-            "X-Test-Case-13", "four"
-        )
+        """
+        HTTP/1.1 405
+        allow: GET, HEAD, POST
+        content-length: 0
+        date: Wed, 28 Jun 2023 12:08:43 GMT
+
+        """
     );
-
-    assertEquals(response.statusCode(), 405);
   }
 
   @Test
