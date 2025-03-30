@@ -18,16 +18,19 @@ package objectos.way;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertSame;
 
+import java.util.random.RandomGenerator;
 import org.testng.annotations.Test;
 
 public class WebSessionTest {
+
+  private final RandomGenerator random = new TestingRandom.SequentialRandom();
 
   @Test(description = """
   It should be possible to store values to and retrieve values from the session.
   """)
   public void testCase01() {
-    final WebToken16 id;
-    id = new WebToken16(1L, 2L);
+    final WebToken id;
+    id = WebToken.of32(random);
 
     final Web.Session session;
     session = new WebSession(id);

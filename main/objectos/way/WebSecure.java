@@ -19,18 +19,29 @@ import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Collection;
-import java.util.HexFormat;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.random.RandomGenerator;
 
-/**
- * The Objectos Way {@link SessionStore} implementation.
- */
-final class WebStore implements Web.Store {
+final class WebSecure implements Web.Secure {
 
-  private static final int ENCODED_LENGTH = 32;
+  record Notes(
+      Note.Ref1<Http.Request> invalidSession
+  ) {
+
+    static Notes create() {
+      final Class<?> s;
+      s = Web.Secure.class;
+
+      return new Notes(
+          Note.Ref1.create(s, "SES", Note.WARN)
+      );
+    }
+
+  }
+
+  private static final int SESSION_LENGTH = 32;
 
   private final Clock clock;
 
@@ -42,11 +53,15 @@ final class WebStore implements Web.Store {
 
   private final Duration emptyMaxAge;
 
+  private final Notes notes = Notes.create();
+
+  private final Note.Sink noteSink = Note.NoOpSink.INSTANCE;
+
   private final RandomGenerator randomGenerator;
 
   private final ConcurrentMap<Web.Token, WebSession> sessions = new ConcurrentHashMap<>();
 
-  WebStore(WebStoreConfig builder) {
+  WebSecure(WebSecureConfig builder) {
     clock = builder.clock;
 
     cookieMaxAge = builder.cookieMaxAge;
@@ -82,7 +97,7 @@ final class WebStore implements Web.Store {
   }
 
   @Override
-  public final Web.Session createNext() {
+  public final Web.Session createSession() {
     WebSession session, maybeExisting;
 
     do {
@@ -117,7 +132,7 @@ final class WebStore implements Web.Store {
   }
 
   @Override
-  public final Web.Session get(Http.Request request) {
+  public final Web.Session getSession(Http.Request request) {
     final String cookieHeaderValue;
     cookieHeaderValue = request.header(Http.HeaderName.COOKIE); // implicit null-check
 
@@ -135,37 +150,21 @@ final class WebStore implements Web.Store {
       return null;
     }
 
-    if (encoded.length() != ENCODED_LENGTH) {
+    try {
+      final Web.Token id;
+      id = WebToken.parse(encoded, SESSION_LENGTH);
+
+      return get(id);
+    } catch (WebToken.ParseException e) {
+      noteSink.send(notes.invalidSession, request);
+
       return null;
     }
-
-    final long high;
-    high = fromHexDigitsToLong(encoded, 0, 16);
-
-    final long low;
-    low = fromHexDigitsToLong(encoded, 16, 32);
-
-    final WebToken16 id;
-    id = new WebToken16(high, low);
-
-    return get(id);
   }
 
-  private long fromHexDigitsToLong(CharSequence string, int fromIndex, int toIndex) {
-    long value;
-    value = 0L;
-
-    for (int i = fromIndex; i < toIndex; i++) {
-      final char c;
-      c = string.charAt(i);
-
-      final int iter;
-      iter = HexFormat.fromHexDigit(c);
-
-      value = (value << 4) + iter;
-    }
-
-    return value;
+  @Override
+  public final Http.SetCookie setCookie(Web.Session session) {
+    throw new UnsupportedOperationException("Implement me");
   }
 
   public final String setCookie(String id) {
@@ -196,13 +195,7 @@ final class WebStore implements Web.Store {
   }
 
   private Web.Token nextId() {
-    final long high;
-    high = randomGenerator.nextLong();
-
-    final long low;
-    low = randomGenerator.nextLong();
-
-    return new WebToken16(high, low);
+    return WebToken.of(randomGenerator, SESSION_LENGTH);
   }
 
 }

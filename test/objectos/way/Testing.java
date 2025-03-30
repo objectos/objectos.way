@@ -27,7 +27,6 @@ import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
-import java.util.HexFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -77,17 +76,11 @@ final class Testing {
 
   private Testing() {}
 
-  public static String cookie(String name, long high, long low) {
-    final HexFormat format;
-    format = HexFormat.of();
+  public static String cookie(String name, long l0, long l1, long l2, long l3) {
+    final WebToken token;
+    token = WebToken.of32(l0, l1, l2, l3);
 
-    final String h;
-    h = format.toHexDigits(high);
-
-    final String l;
-    l = format.toHexDigits(low);
-
-    return name + "=" + h + l;
+    return name + "=" + token.toString();
   }
 
   public static HttpResponse<String> httpClient(String path, Consumer<HttpRequest.Builder> config) {

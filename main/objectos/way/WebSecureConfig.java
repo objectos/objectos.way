@@ -21,7 +21,7 @@ import java.time.Duration;
 import java.util.Objects;
 import java.util.random.RandomGenerator;
 
-final class WebStoreConfig implements Web.Store.Config {
+final class WebSecureConfig implements Web.Secure.Config {
 
   Clock clock = Clock.systemDefaultZone();
 
@@ -85,12 +85,12 @@ final class WebStoreConfig implements Web.Store.Config {
     this.randomGenerator = Objects.requireNonNull(value, "value == null");
   }
 
-  final Web.Store build() {
+  final Web.Secure build() {
     if (randomGenerator == null) {
       randomGenerator = new SecureRandom();
     }
 
-    return new WebStore(this);
+    return new WebSecure(this);
   }
 
 }

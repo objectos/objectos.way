@@ -618,59 +618,17 @@ public final class Web {
   }
 
   /**
-   * An web session uniquely identifies the user of an application.
+   * Manages security related information of an web application.
    */
-  public sealed interface Session permits WebSession {
+  public sealed interface Secure permits WebSecure {
 
     /**
-     * Returns the object associated to the specified class instance, or
-     * {@code null} if there's no object associated.
-     *
-     * @param <T> the type of the object
-     *
-     * @param type
-     *        the class instance to search for
-     *
-     * @return the object associated or {@code null} if there's no object
-     *         associated
+     * Configures the creation of a {@code Secure} instance.
      */
-    <T> T get(Class<T> type);
-
-    /**
-     * Returns the object associated to the specified name, or {@code null} if
-     * there's no object associated.
-     *
-     * @param name
-     *        the name to search for
-     *
-     * @return the object associated or {@code null} if there's no object
-     *         associated
-     */
-    Object get(String name);
-
-    <T> Object put(Class<T> type, T value);
-
-    Object put(String name, Object value);
-
-    Object remove(String name);
-
-    void invalidate();
-
-  }
-
-  /**
-   * Creates, stores and manages session instances.
-   */
-  public sealed interface Store permits WebStore {
-
-    /**
-     * Configures the creation of a {@code Store} instance.
-     */
-    public sealed interface Config permits WebStoreConfig {
+    public sealed interface Config permits WebSecureConfig {
 
       /**
-       * Use the specified {@code clock} when setting session instances time
-       * related values.
+       * Use the specified {@code clock} when setting time related values.
        *
        * @param value
        *        the clock instance to use
@@ -712,8 +670,8 @@ public final class Web {
       void emptyMaxAge(Duration duration);
 
       /**
-       * Use the specified {@link RandomGenerator} instance for generating
-       * session IDs.
+       * Use the specified {@link RandomGenerator} instance for generating token
+       * values.
        *
        * @param value
        *        the {@link RandomGenerator} instance to use
@@ -731,9 +689,9 @@ public final class Web {
      * @return a newly created session store with the specified
      *         configuration
      */
-    static Store create(Consumer<Config> config) {
-      WebStoreConfig builder;
-      builder = new WebStoreConfig();
+    static Secure create(Consumer<Config> config) {
+      WebSecureConfig builder;
+      builder = new WebSecureConfig();
 
       config.accept(builder);
 
@@ -745,7 +703,7 @@ public final class Web {
      *
      * @return a newly created session instance.
      */
-    Session createNext();
+    Session createSession();
 
     /**
      * Returns the session associated to the specified request; or returns
@@ -756,11 +714,62 @@ public final class Web {
      *
      * @return the session associated to the HTTP request or {@code null}
      */
-    Session get(Http.Request request);
+    Session getSession(Http.Request request);
+
+    /**
+     * Returns a new {@link Http.SetCookie} instance for the specified session.
+     *
+     * @param session
+     *        the session
+     *
+     * @return a newly created {@link Http.SetCookie} instance
+     */
+    Http.SetCookie setCookie(Session session);
 
   }
 
-  public sealed interface Token permits WebToken16 {}
+  /**
+   * An web session uniquely identifies the user of an application.
+   */
+  public sealed interface Session permits WebSession {
+
+    /**
+     * Returns the object associated to the specified class instance, or
+     * {@code null} if there's no object associated.
+     *
+     * @param <T> the type of the object
+     *
+     * @param type
+     *        the class instance to search for
+     *
+     * @return the object associated or {@code null} if there's no object
+     *         associated
+     */
+    <T> T get(Class<T> type);
+
+    /**
+     * Returns the object associated to the specified name, or {@code null} if
+     * there's no object associated.
+     *
+     * @param name
+     *        the name to search for
+     *
+     * @return the object associated or {@code null} if there's no object
+     *         associated
+     */
+    Object get(String name);
+
+    <T> Object put(Class<T> type, T value);
+
+    Object put(String name, Object value);
+
+    Object remove(String name);
+
+    void invalidate();
+
+  }
+
+  public sealed interface Token permits WebToken {}
 
   private Web() {}
 
