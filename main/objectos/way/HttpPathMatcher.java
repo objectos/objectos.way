@@ -43,7 +43,7 @@ final class HttpPathMatcher implements Predicate<Http.Request> {
 
   private static final String PARAM_SEPARATOR = "Cannot begin a path parameter immediately after the end of another parameter";
 
-  private static final String PATH_MUST_START_WITH_SOLIDUS = "Path does not start with a '/' character";
+  private static final String PATH_MUST_START_WITH_SOLIDUS = "Path must start with a '/' character";
 
   private static final String WILDCARD_CHAR = "The '*' wildcard character can only be used once at the end of the path expression";
 
@@ -58,7 +58,7 @@ final class HttpPathMatcher implements Predicate<Http.Request> {
     this.state = state;
   }
 
-  public static HttpPathMatcher parse(String pathExpression) {
+  public static HttpPathMatcher parse(String prefix, String pathExpression) {
     enum Parser {
       START,
 
@@ -116,7 +116,10 @@ final class HttpPathMatcher implements Predicate<Http.Request> {
             final String value;
             value = pathExpression.substring(beginIndex, idx);
 
-            params.add(value);
+            final String withPrefix;
+            withPrefix = concat(prefix, value);
+
+            params.add(withPrefix);
           }
 
           else if (c == '*') {
@@ -190,7 +193,12 @@ final class HttpPathMatcher implements Predicate<Http.Request> {
     return switch (parser) {
       case START -> throw illegal(PATH_MUST_START_WITH_SOLIDUS, pathExpression);
 
-      case EXACT -> exact(pathExpression);
+      case EXACT -> {
+        final String withPrefix;
+        withPrefix = concat(prefix, pathExpression);
+
+        yield exact(withPrefix);
+      }
 
       case STARTS_WITH -> {
         final int stripLast;
@@ -199,7 +207,10 @@ final class HttpPathMatcher implements Predicate<Http.Request> {
         final String value;
         value = pathExpression.substring(0, stripLast);
 
-        yield startsWith(value);
+        final String withPrefix;
+        withPrefix = concat(prefix, value);
+
+        yield startsWith(withPrefix);
       }
 
       case PARAM_START -> throw illegal(PARAM_EMPTY, pathExpression);
@@ -225,6 +236,10 @@ final class HttpPathMatcher implements Predicate<Http.Request> {
         yield params(params);
       }
     };
+  }
+
+  private static String concat(String prefix, String value) {
+    return prefix != null ? prefix + value : value;
   }
 
   @Lang.VisibleForTesting
@@ -283,9 +298,12 @@ final class HttpPathMatcher implements Predicate<Http.Request> {
     final HttpSupport target;
     target = (HttpSupport) request;
 
-    target.matcherReset();
-
     return test(target);
+  }
+
+  @Override
+  public final String toString() {
+    return kind + "=" + state;
   }
 
   final HttpPathMatcher with(HttpPathParam[] conditions) {
@@ -321,6 +339,8 @@ final class HttpPathMatcher implements Predicate<Http.Request> {
   }
 
   private boolean test(HttpSupport target) {
+    target.matcherReset();
+
     return switch (kind) {
       case EXACT -> target.exact(asString());
 

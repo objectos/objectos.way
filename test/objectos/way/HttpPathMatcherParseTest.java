@@ -32,7 +32,14 @@ public class HttpPathMatcherParseTest {
 
   @Test
   public void exact02() {
-    matcherError("foo", "Path does not start with a '/' character: foo");
+    matcherError("foo", "Path must start with a '/' character: foo");
+  }
+
+  @Test
+  public void exact03() {
+    matcher("/prefix", "/foo", HttpPathMatcher.exact("/prefix/foo"));
+    matcher("/prefix", "/foo/bar", HttpPathMatcher.exact("/prefix/foo/bar"));
+    matcher("/prefix", "/", HttpPathMatcher.exact("/prefix/"));
   }
 
   @Test
@@ -88,6 +95,53 @@ public class HttpPathMatcherParseTest {
   }
 
   @Test
+  public void params05() {
+    matcher(
+        "/prefix",
+        "/:a",
+        HttpPathMatcher.params(List.of(
+            "/prefix/",
+            HttpPathMatcher.param("a")
+        ))
+    );
+    matcher(
+        "/prefix",
+        "/foo/:a",
+        HttpPathMatcher.params(List.of(
+            "/prefix/foo/",
+            HttpPathMatcher.param("a")
+        ))
+    );
+    matcher(
+        "/prefix",
+        "/foo/:foo",
+        HttpPathMatcher.params(List.of(
+            "/prefix/foo/",
+            HttpPathMatcher.param("foo")
+        ))
+    );
+    matcher(
+        "/prefix",
+        "/foo/:foo/bar/:bar",
+        HttpPathMatcher.params(List.of(
+            "/prefix/foo/",
+            HttpPathMatcher.param("foo"),
+            "/bar/",
+            HttpPathMatcher.param("bar")
+        ))
+    );
+    matcher(
+        "/prefix",
+        "/foo/:foo/bar",
+        HttpPathMatcher.params(List.of(
+            "/prefix/foo/",
+            HttpPathMatcher.param("foo"),
+            "/bar"
+        ))
+    );
+  }
+
+  @Test
   public void startsWith01() {
     matcher("/*", HttpPathMatcher.startsWith("/"));
     matcher("/foo*", HttpPathMatcher.startsWith("/foo"));
@@ -100,16 +154,27 @@ public class HttpPathMatcherParseTest {
     matcherError("/foo**", "The '*' wildcard character can only be used once at the end of the path expression: /foo**");
   }
 
+  @Test
+  public void startsWith03() {
+    matcher("/prefix", "/*", HttpPathMatcher.startsWith("/prefix/"));
+    matcher("/prefix", "/foo*", HttpPathMatcher.startsWith("/prefix/foo"));
+    matcher("/prefix", "/foo/*", HttpPathMatcher.startsWith("/prefix/foo/"));
+  }
+
   private void matcher(String path, HttpPathMatcher expected) {
+    matcher(null, path, expected);
+  }
+
+  private void matcher(String prefix, String path, HttpPathMatcher expected) {
     HttpPathMatcher matcher;
-    matcher = HttpPathMatcher.parse(path);
+    matcher = HttpPathMatcher.parse(prefix, path);
 
     assertEquals(matcher, expected);
   }
 
   private void matcherError(String path, String expectedMessage) {
     try {
-      HttpPathMatcher.parse(path);
+      HttpPathMatcher.parse(null, path);
 
       Assert.fail();
     } catch (IllegalArgumentException expected) {

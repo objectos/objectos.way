@@ -25,7 +25,9 @@ final class HttpResponseMessage implements Http.ResponseMessage {
 
     FOUND,
 
-    METHOD_NOT_ALLOWED;
+    METHOD_NOT_ALLOWED,
+
+    OK_MEDIA_OBJECT;
 
   }
 
@@ -47,6 +49,10 @@ final class HttpResponseMessage implements Http.ResponseMessage {
     allow = Arrays.stream(allowedMethods).map(Http.Method::name).collect(Collectors.joining(", "));
 
     return new HttpResponseMessage(Kind.METHOD_NOT_ALLOWED, allow);
+  }
+
+  static ResponseMessage ok(Lang.MediaObject object) {
+    return new HttpResponseMessage(Kind.OK_MEDIA_OBJECT, object);
   }
 
   final void accept(HttpSupport http) {
@@ -76,6 +82,15 @@ final class HttpResponseMessage implements Http.ResponseMessage {
         http.header0(Http.HeaderName.ALLOW, valueAsString());
 
         http.send0();
+
+      }
+
+      case OK_MEDIA_OBJECT -> {
+
+        final Lang.MediaObject object;
+        object = (Lang.MediaObject) value;
+
+        http.respond(Http.Status.OK, object);
 
       }
     }

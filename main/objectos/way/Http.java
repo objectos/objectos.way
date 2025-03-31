@@ -778,6 +778,13 @@ public final class Http {
       return HttpResponseMessage.methodNotAllowed(methods);
     }
 
+    static ResponseMessage okTextPlain(String text, Charset charset) {
+      final Lang.MediaObject object;
+      object = Lang.MediaObject.textPlain(text, charset);
+
+      return HttpResponseMessage.ok(object);
+    }
+
   }
 
   /**
@@ -801,11 +808,23 @@ public final class Http {
 
     }
 
+    public sealed interface OfPrefix permits HttpRouting {
+
+      void handler(Handler value);
+
+      void install(Consumer<Routing> routes);
+
+      void path(String path, Consumer<OfPath> routes);
+
+    }
+
     void handler(Handler value);
 
     void install(Consumer<Routing> routes);
 
-    void path(String path, Consumer<OfPath> config);
+    void path(String path, Consumer<OfPath> routes);
+
+    void prefix(String prefix, Consumer<OfPrefix> routes);
 
     void when(Predicate<Request> condition, Consumer<Routing> routes);
 

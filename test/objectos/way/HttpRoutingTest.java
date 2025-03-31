@@ -82,6 +82,14 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
         path.allow(Http.Method.POST, this::$testCase13);
       });
 
+      matched.prefix("/testCase14", tc14 -> {
+        tc14.path("/a", path -> {
+          path.allow(Http.Method.GET, this::$testCase14);
+        });
+
+        tc14.handler(Http.Handler.notFound());
+      });
+
       // redirect non-authenticated requests
       matched.handler(this::testCase02);
     });
@@ -1089,6 +1097,61 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
         HTTP/1.1 405
         allow: GET, HEAD, POST
         content-length: 0
+        date: Wed, 28 Jun 2023 12:08:43 GMT
+
+        """
+    );
+  }
+
+  private void $testCase14(Http.Exchange http) {
+    final Http.Method method;
+    method = http.method();
+
+    final String path;
+    path = http.path();
+
+    final String sub;
+    sub = path.substring("/testCase14".length());
+
+    final Http.ResponseMessage resp;
+    resp = Http.ResponseMessage.okTextPlain(method + "=" + sub, StandardCharsets.UTF_8);
+
+    http.respond(resp);
+  }
+
+  @Test
+  public void testCase14() {
+    Testing.test(
+        Testing.httpClient(
+            "/testCase14/a",
+
+            builder -> builder.GET().headers(
+                "Host", "http.module.test"
+            )
+        ),
+
+        """
+        HTTP/1.1 200
+        content-length: 6
+        content-type: text/plain; charset=utf-8
+        date: Wed, 28 Jun 2023 12:08:43 GMT
+
+        GET=/a\
+        """
+    );
+
+    Testing.test(
+        Testing.httpClient(
+            "/testCase14/x",
+
+            builder -> builder.GET().headers(
+                "Host", "http.module.test"
+            )
+        ),
+
+        """
+        HTTP/1.1 404
+        connection: close
         date: Wed, 28 Jun 2023 12:08:43 GMT
 
         """

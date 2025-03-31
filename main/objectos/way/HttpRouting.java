@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
 import objectos.way.Http.Request;
 import objectos.way.Http.Routing;
 
-final class HttpRouting implements Http.Routing, Http.Routing.OfPath {
+final class HttpRouting implements Http.Routing, Http.Routing.OfPath, Http.Routing.OfPrefix {
 
   private final Predicate<Http.Request> condition;
 
@@ -41,6 +41,8 @@ final class HttpRouting implements Http.Routing, Http.Routing.OfPath {
 
   private int pathParamsIndex;
 
+  private String prefix;
+
   private Http.Handler single;
 
   HttpRouting() {
@@ -49,6 +51,12 @@ final class HttpRouting implements Http.Routing, Http.Routing.OfPath {
 
   HttpRouting(Predicate<Request> condition) {
     this.condition = condition;
+  }
+
+  HttpRouting(Predicate<Request> condition, String prefix) {
+    this.condition = condition;
+
+    this.prefix = prefix;
   }
 
   @Override
@@ -66,14 +74,44 @@ final class HttpRouting implements Http.Routing, Http.Routing.OfPath {
   }
 
   @Override
-  public final void path(String path, Consumer<Http.Routing.OfPath> config) {
+  public final void path(String path, Consumer<Http.Routing.OfPath> routes) {
     final HttpPathMatcher matcher;
-    matcher = HttpPathMatcher.parse(path);
+    matcher = HttpPathMatcher.parse(prefix, path);
 
     final HttpRouting routing;
     routing = new HttpRouting(matcher);
 
-    config.accept(routing);
+    routes.accept(routing);
+
+    final Http.Handler handler;
+    handler = routing.build();
+
+    addMany(handler);
+  }
+
+  @Override
+  public final void prefix(String prefix, Consumer<OfPrefix> routes) {
+    final int len;
+    len = prefix.length();
+
+    if (len == 0) {
+      throw new IllegalArgumentException("Path prefix must start with a '/' character");
+    }
+
+    final char first;
+    first = prefix.charAt(0);
+
+    if (first != '/') {
+      throw new IllegalArgumentException("Path prefix must start with a '/' character");
+    }
+
+    final HttpPathMatcher matcher;
+    matcher = HttpPathMatcher.startsWith(prefix);
+
+    final HttpRouting routing;
+    routing = new HttpRouting(matcher, prefix);
+
+    routes.accept(routing);
 
     final Http.Handler handler;
     handler = routing.build();
@@ -189,7 +227,6 @@ final class HttpRouting implements Http.Routing, Http.Routing.OfPath {
   }
 
   final Http.Handler build() {
-
     Predicate<Http.Request> predicate;
     predicate = condition;
 
