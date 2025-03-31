@@ -644,20 +644,30 @@ public final class Web {
       void cookieName(String name);
 
       /**
-       * Sets the session cookie Path attribute to the specified value.
+       * Sets the session cookie {@code Path} attribute to the specified value.
        *
        * @param path
-       *        the value of the Path attribute
+       *        the session cookie {@code Path} attribute value
        */
       void cookiePath(String path);
 
       /**
-       * Sets the session cookie Max-Age attribute to the specified value.
+       * Sets the session cookie {@code Max-Age} attribute to the specified
+       * value.
        *
        * @param duration
-       *        the value of the Max-Age attribute
+       *        the session cookie {@code Max-Age} attribute value
        */
       void cookieMaxAge(Duration duration);
+
+      /**
+       * Sets the session cookie {@code Secure} attribute to the specified
+       * value.
+       *
+       * @param value
+       *        the session cookie {@code Secure} attribute value
+       */
+      void cookieSecure(boolean value);
 
       /**
        * Discards empty sessions, during a {@link Store#cleanUp()}

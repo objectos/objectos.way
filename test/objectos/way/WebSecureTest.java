@@ -78,11 +78,11 @@ public class WebSecureTest {
     assertNull(secure.getSession(http));
   }
 
-  @Test(enabled = false)
+  @Test
   public void testCase03() {
     final Web.Secure secure;
     secure = Web.Secure.create(config -> {
-      config.randomGenerator(generator(5L, 6L));
+      config.randomGenerator(generator(5L, 6L, 7L, 8L));
     });
 
     final Web.Session session;
@@ -94,7 +94,7 @@ public class WebSecureTest {
     assertEquals(
         setCookie.toString(),
 
-        ""
+        "OBJECTOSWAY=AAAAAAAAAAUAAAAAAAAABgAAAAAAAAAHAAAAAAAAAAg=; HttpOnly; Path=/; Secure"
     );
   }
 

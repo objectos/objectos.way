@@ -31,6 +31,8 @@ final class WebSecureConfig implements Web.Secure.Config {
 
   String cookiePath = "/";
 
+  boolean cookieSecure = true;
+
   Duration emptyMaxAge = Duration.ofMinutes(5);
 
   RandomGenerator randomGenerator;
@@ -63,6 +65,11 @@ final class WebSecureConfig implements Web.Secure.Config {
     }
 
     cookieMaxAge = duration;
+  }
+
+  @Override
+  public final void cookieSecure(boolean value) {
+    cookieSecure = value;
   }
 
   @Override

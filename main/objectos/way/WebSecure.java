@@ -51,6 +51,8 @@ final class WebSecure implements Web.Secure {
 
   private final String cookiePath;
 
+  private final boolean cookieSecure = true;
+
   private final Duration emptyMaxAge;
 
   private final Notes notes = Notes.create();
@@ -164,7 +166,31 @@ final class WebSecure implements Web.Secure {
 
   @Override
   public final Http.SetCookie setCookie(Web.Session session) {
-    throw new UnsupportedOperationException("Implement me");
+    final WebSession impl;
+    impl = (WebSession) session;
+
+    final Web.Token id;
+    id = impl.id;
+
+    return Http.SetCookie.create(set -> {
+      set.name(cookieName);
+
+      set.value(id.toString());
+
+      set.httpOnly();
+
+      if (cookieMaxAge != null) {
+        set.maxAge(cookieMaxAge);
+      }
+
+      if (cookiePath != null) {
+        set.path(cookiePath);
+      }
+
+      if (cookieSecure) {
+        set.secure();
+      }
+    });
   }
 
   public final String setCookie(String id) {

@@ -30,9 +30,10 @@ final class WebToken implements Web.Token {
 
   }
 
-  private static final char[] BASE64_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_".toCharArray();
-
-  private static final long BASE64_MASK = 0x3F;
+  private static final char[] BASE64_CHARS = ("ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+      + "abcdefghijklmnopqrstuvwxyz"
+      + "0123456789"
+      + "-_").toCharArray();
 
   private static final byte[] BASE64_VALUES;
 
@@ -52,10 +53,7 @@ final class WebToken implements Web.Token {
     BASE64_VALUES = bytes;
   }
 
-  final long l0;
-  final long l1;
-  final long l2;
-  final long l3;
+  final long l0, l1, l2, l3;
 
   private int hashCode;
 
@@ -189,7 +187,8 @@ final class WebToken implements Web.Token {
 
   @Override
   public final int hashCode() {
-    int hc = hashCode;
+    int hc;
+    hc = hashCode;
 
     if (hc == 0) {
       hc = 17;
@@ -225,7 +224,7 @@ final class WebToken implements Web.Token {
     bytes[offset + 4] = (byte) (value >>> 24);
     bytes[offset + 5] = (byte) (value >>> 16);
     bytes[offset + 6] = (byte) (value >>> 8);
-    bytes[offset + 7] = (byte) value;
+    bytes[offset + 7] = (byte) (value >>> 0);
   }
 
   @Override
@@ -233,93 +232,71 @@ final class WebToken implements Web.Token {
     final StringBuilder sb;
     sb = new StringBuilder(44);
 
-    int prevBits;
-    prevBits = 0;
+    int bits;
+    bits = 0;
 
-    prevBits = encode(sb, prevBits, 0L, l0);
-    prevBits = encode(sb, prevBits, l0, l1);
-    prevBits = encode(sb, prevBits, l1, l2);
-    prevBits = encode(sb, prevBits, l2, l3);
+    bits = encode(sb, bits, l0);
+    bits = encode(sb, bits, l0, l1);
+    bits = encode(sb, bits, l1);
+    bits = encode(sb, bits, l1, l2);
+    bits = encode(sb, bits, l2);
+    bits = encode(sb, bits, l2, l3);
+    bits = encode(sb, bits, l3);
+    bits = encode(sb, bits, l3, 0L);
 
-    if (prevBits > 0) {
-      encodePrev(sb, prevBits, l3, 0L);
-    }
-
-    final int length;
-    length = sb.length();
-
-    final int mod;
-    mod = length % 4;
-
-    if (mod > 0) {
-      final int paddingNeeeded;
-      paddingNeeeded = (4 - mod);
-
-      for (int i = 0; i < paddingNeeeded; i++) {
-        sb.append('=');
-      }
-    }
+    sb.append('=');
 
     return sb.toString();
   }
 
-  private int encode(StringBuilder sb, int prevBits, long prev, long value) {
+  private int encode(StringBuilder sb, int bitsUsed, long value) {
     int bits;
-    bits = 64 - 6;
+    bits = 64 - bitsUsed;
 
-    if (prevBits > 0) {
-      final int valueBits;
-      valueBits = encodePrev(sb, prevBits, prev, value);
+    do {
+      bits -= 6;
 
-      bits -= valueBits;
-    }
+      final long shifted;
+      shifted = (value >>> bits);
 
-    int lastBits;
-    lastBits = bits;
-
-    while (bits >= 0) {
-      long index;
-      index = (value >>> bits) & BASE64_MASK;
+      final long sextet;
+      sextet = shifted & 0x3F;
 
       final char c;
-      c = BASE64_CHARS[(int) index];
+      c = BASE64_CHARS[(int) sextet];
 
       sb.append(c);
+    } while (bits >= 6);
 
-      lastBits = bits;
-
-      bits -= 6;
-    }
-
-    return lastBits;
+    return bits;
   }
 
-  private int encodePrev(StringBuilder sb, int prevBits, long prev, long value) {
+  private int encode(StringBuilder sb, int bits, long prev, long next) {
     final long prevMask;
-    prevMask = mask(prevBits);
+    prevMask = mask(bits);
 
     long index;
     index = prev & prevMask;
 
-    final int valueBits;
-    valueBits = 6 - prevBits;
+    final int nextBits;
+    nextBits = 6 - bits;
 
-    index <<= valueBits;
+    index <<= nextBits;
 
-    final int bits;
-    bits = 64 - valueBits;
+    final int shift;
+    shift = 64 - nextBits;
 
     final long valueMask;
-    valueMask = mask(valueBits);
+    valueMask = mask(nextBits);
 
-    index |= (value >>> bits) & valueMask;
+    index |= (next >>> shift) & valueMask;
 
     final char c;
     c = BASE64_CHARS[(int) index];
 
     sb.append(c);
 
-    return valueBits;
+    return nextBits;
   }
 
   private static long mask(int bits) {
