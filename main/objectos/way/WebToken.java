@@ -30,10 +30,12 @@ final class WebToken implements Web.Token {
 
   }
 
-  private static final char[] BASE64_CHARS = ("ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-      + "abcdefghijklmnopqrstuvwxyz"
-      + "0123456789"
-      + "-_").toCharArray();
+  private static final char[] BASE64_CHARS = """
+      ABCDEFGHIJKLMNOPQRSTUVWXYZ\
+      abcdefghijklmnopqrstuvwxyz\
+      0123456789\
+      -_\
+      """.toCharArray();
 
   private static final byte[] BASE64_VALUES;
 

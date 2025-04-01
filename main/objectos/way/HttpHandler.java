@@ -19,8 +19,6 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import objectos.way.Http.Handler;
-import objectos.way.Http.Request;
 
 final class HttpHandler implements Http.Handler {
 
@@ -36,6 +34,8 @@ final class HttpHandler implements Http.Handler {
 
     FACTORY1,
 
+    FILTER_MATCHED,
+
     // fixed content
 
     CONTENT,
@@ -50,13 +50,15 @@ final class HttpHandler implements Http.Handler {
 
   }
 
-  private record Factory1<T>(Function<T, ? extends Handler> factory, T value) {
+  private record Factory1<T>(Function<T, ? extends Http.Handler> factory, T value) {
     final Http.Handler create() {
       return factory.apply(value);
     }
   }
 
   private record Content(String contentType, byte[] bytes) {}
+
+  private record FilterMatched(Http.Handler before, Kind actual, Object main) {}
 
   static final Http.Handler NOOP = new HttpHandler(Kind.NOOP, null, null);
 
@@ -93,21 +95,21 @@ final class HttpHandler implements Http.Handler {
     return new HttpHandler(Kind.FACTORY1, null, main);
   }
 
-  public static Http.Handler methodNotAllowed(Predicate<Http.Request> predicate, Set<Http.Method> allowedMethods) {
+  public static Http.Handler methodNotAllowed(HttpPathMatcher matcher, Set<Http.Method> allowedMethods) {
     final String allow;
     allow = allowedMethods.stream().map(Http.Method::name).collect(Collectors.joining(", "));
 
-    return new HttpHandler(Kind.METHOD_NOT_ALLOWED, predicate, allow);
+    return new HttpHandler(Kind.METHOD_NOT_ALLOWED, matcher, allow);
   }
 
   public static Http.Handler movedPermanently(String location) {
     return new HttpHandler(Kind.MOVED_PERMANENTLY, null, location);
   }
 
-  public static Http.Handler methodAllowed(Predicate<Http.Request> matcher, Http.Method method, Http.Handler handler) {
+  public static Http.Handler methodAllowed(HttpPathMatcher matcher, Http.Method method, Http.Handler handler) {
     record MethodAllowedPredicate(Predicate<Http.Request> matcher, Http.Method method) implements Predicate<Http.Request> {
       @Override
-      public final boolean test(Request t) {
+      public final boolean test(Http.Request t) {
         return matcher.test(t)
             && (t.method() == method || (t.method() == Http.Method.HEAD && method == Http.Method.GET));
       }
@@ -140,19 +142,28 @@ final class HttpHandler implements Http.Handler {
       return;
     }
 
-    switch (kind) {
+    handle0(http, kind, main);
+  }
+
+  @Override
+  public final String toString() {
+    return "HttpHandler[kind=" + kind + ",predicate=" + predicate + ",main=" + main + "]";
+  }
+
+  private void handle0(Http.Exchange http, Kind actualKind, Object data) {
+    switch (actualKind) {
       case NOOP -> {}
 
       case SINGLE -> {
         final Http.Handler single;
-        single = (Http.Handler) main;
+        single = (Http.Handler) data;
 
         single.handle(http);
       }
 
       case MANY -> {
         final Http.Handler[] many;
-        many = (Http.Handler[]) main;
+        many = (Http.Handler[]) data;
 
         int index;
         index = 0;
@@ -167,7 +178,7 @@ final class HttpHandler implements Http.Handler {
 
       case FACTORY1 -> {
         Factory1<?> fac;
-        fac = (Factory1<?>) main;
+        fac = (Factory1<?>) data;
 
         Http.Handler handler;
         handler = fac.create();
@@ -179,12 +190,30 @@ final class HttpHandler implements Http.Handler {
         handler.handle(http);
       }
 
+      case FILTER_MATCHED -> {
+        final FilterMatched filter;
+        filter = (FilterMatched) data;
+
+        final Http.Handler before;
+        before = filter.before();
+
+        if (before != null) {
+          before.handle(http);
+        }
+
+        if (http.processed()) {
+          return;
+        }
+
+        handle0(http, filter.actual, filter.main);
+      }
+
       case CONTENT -> {
         final HttpSupport support;
         support = (HttpSupport) http;
 
         final Content content;
-        content = (Content) main;
+        content = (Content) data;
 
         support.status0(Http.Status.OK);
 
@@ -210,7 +239,7 @@ final class HttpHandler implements Http.Handler {
 
         support.header0(Http.HeaderName.CONTENT_LENGTH, 0L);
 
-        support.header0(Http.HeaderName.ALLOW, asString());
+        support.header0(Http.HeaderName.ALLOW, (String) data);
 
         support.send0();
       }
@@ -223,7 +252,7 @@ final class HttpHandler implements Http.Handler {
 
         support.dateNow();
 
-        support.header0(Http.HeaderName.LOCATION, asString());
+        support.header0(Http.HeaderName.LOCATION, (String) data);
 
         support.send0();
       }
@@ -243,8 +272,15 @@ final class HttpHandler implements Http.Handler {
     }
   }
 
-  private String asString() {
-    return (String) main;
+  final Http.Handler filterMatched(Http.Handler before) {
+    if (before == main) {
+      throw new IllegalArgumentException("Cycle detected");
+    }
+
+    final FilterMatched matched;
+    matched = new FilterMatched(before, kind, main);
+
+    return new HttpHandler(Kind.FILTER_MATCHED, predicate, matched);
   }
 
 }

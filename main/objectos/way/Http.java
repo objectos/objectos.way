@@ -155,8 +155,8 @@ public final class Http {
     }
 
     static Handler create(Consumer<? super Routing> config) {
-      final HttpRouting routing;
-      routing = new HttpRouting();
+      final HttpRouting.Of routing;
+      routing = new HttpRouting.Of();
 
       config.accept(routing);
 
@@ -790,13 +790,13 @@ public final class Http {
   /**
    * Configures the routing of an HTTP server.
    */
-  public sealed interface Routing permits HttpRouting {
+  public sealed interface Routing permits HttpRouting.Of {
 
-    public sealed interface OfPath permits HttpRouting {
+    public sealed interface OfPath permits HttpRouting.OfPath {
 
       void allow(Method method, Handler handler);
 
-      void param(String name, Predicate<String> condition);
+      void handler(Handler value);
 
       void paramDigits(String name);
 
@@ -804,15 +804,13 @@ public final class Http {
 
       void paramRegex(String name, String value);
 
-      void handler(Handler value);
-
     }
 
-    public sealed interface OfPrefix permits HttpRouting {
+    public sealed interface OfPrefix permits HttpRouting.OfPrefix {
+
+      void beforeMatched(Handler value);
 
       void handler(Handler value);
-
-      void install(Consumer<Routing> routes);
 
       void path(String path, Consumer<OfPath> routes);
 

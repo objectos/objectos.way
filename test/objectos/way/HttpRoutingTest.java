@@ -90,6 +90,18 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
         tc14.handler(Http.Handler.notFound());
       });
 
+      matched.prefix("/testCase15", tc15 -> {
+        tc15.beforeMatched(this::$testCase15Before);
+
+        // filter applies
+        tc15.path("/a", path -> {
+          path.allow(Http.Method.GET, this::$testCase15);
+        });
+
+        // filter does not apply
+        tc15.handler(this::$testCase15);
+      });
+
       // redirect non-authenticated requests
       matched.handler(this::testCase02);
     });
@@ -1154,6 +1166,72 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
         connection: close
         date: Wed, 28 Jun 2023 12:08:43 GMT
 
+        """
+    );
+  }
+
+  private void $testCase15Before(Http.Exchange http) {
+    final HeaderName name;
+    name = Http.HeaderName.of("X-Test-Case-15");
+
+    final String value;
+    value = http.header(name);
+
+    http.set(String.class, value);
+  }
+
+  private void $testCase15(Http.Exchange http) {
+    final String maybe;
+    maybe = http.get(String.class);
+
+    final String value;
+    value = maybe != null ? maybe : "null";
+
+    final Http.ResponseMessage resp;
+    resp = Http.ResponseMessage.okTextPlain(value, StandardCharsets.UTF_8);
+
+    http.respond(resp);
+  }
+
+  @Test
+  public void testCase15() {
+    Testing.test(
+        Testing.httpClient(
+            "/testCase15/a",
+
+            builder -> builder.GET().headers(
+                "Host", "http.module.test",
+                "X-Test-Case-15", "matched"
+            )
+        ),
+
+        """
+        HTTP/1.1 200
+        content-length: 7
+        content-type: text/plain; charset=utf-8
+        date: Wed, 28 Jun 2023 12:08:43 GMT
+
+        matched\
+        """
+    );
+
+    Testing.test(
+        Testing.httpClient(
+            "/testCase15/x",
+
+            builder -> builder.GET().headers(
+                "Host", "http.module.test",
+                "X-Test-Case-15", "not-matched"
+            )
+        ),
+
+        """
+        HTTP/1.1 200
+        content-length: 4
+        content-type: text/plain; charset=utf-8
+        date: Wed, 28 Jun 2023 12:08:43 GMT
+
+        null\
         """
     );
   }
