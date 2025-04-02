@@ -29,13 +29,13 @@ sealed abstract class HttpRouting {
 
   static final class Of extends HttpRouting implements Http.Routing {
 
-    private final Predicate<Http.Request> condition;
+    private final Predicate<? super Http.Request> condition;
 
     public Of() {
       this(null);
     }
 
-    private Of(Predicate<Http.Request> condition) {
+    private Of(Predicate<? super Http.Request> condition) {
       this.condition = condition;
     }
 
@@ -56,8 +56,8 @@ sealed abstract class HttpRouting {
 
     @Override
     public final void path(String path, Consumer<Http.Routing.OfPath> routes) {
-      final HttpPathMatcher matcher;
-      matcher = HttpPathMatcher.parse(null, path);
+      final HttpRequestMatcher matcher;
+      matcher = HttpRequestMatcher.parsePath(path);
 
       final Http.Handler handler;
       handler = ofPath(matcher, routes);
@@ -66,34 +66,7 @@ sealed abstract class HttpRouting {
     }
 
     @Override
-    public final void prefix(String prefix, Consumer<Http.Routing.OfPrefix> routes) {
-      final int len;
-      len = prefix.length();
-
-      if (len == 0) {
-        throw new IllegalArgumentException("Path prefix must start with a '/' character");
-      }
-
-      final char first;
-      first = prefix.charAt(0);
-
-      if (first != '/') {
-        throw new IllegalArgumentException("Path prefix must start with a '/' character");
-      }
-
-      final HttpRouting.OfPrefix routing;
-      routing = new HttpRouting.OfPrefix(prefix);
-
-      routes.accept(routing);
-
-      final Http.Handler handler;
-      handler = routing.build();
-
-      addMany(handler);
-    }
-
-    @Override
-    public final void when(Predicate<Http.Request> condition, Consumer<Http.Routing> routes) {
+    public final void when(Predicate<? super Http.Request> condition, Consumer<Http.Routing> routes) {
       Objects.requireNonNull(condition, "condition == null");
 
       final HttpRouting.Of builder;
@@ -112,7 +85,7 @@ sealed abstract class HttpRouting {
 
   static final class OfPath extends HttpRouting implements Http.Routing.OfPath {
 
-    private final HttpPathMatcher matcher;
+    private final HttpRequestMatcher matcher;
 
     private Map<Http.Method, Http.Handler> pathMethods;
 
@@ -120,7 +93,7 @@ sealed abstract class HttpRouting {
 
     private int pathParamsIndex;
 
-    private OfPath(HttpPathMatcher matcher) {
+    private OfPath(HttpRequestMatcher matcher) {
       this.matcher = matcher;
     }
 
@@ -151,14 +124,14 @@ sealed abstract class HttpRouting {
           final Http.Handler handler;
           handler = entry.getValue();
 
-          addMany(HttpHandler.methodAllowed(matcher, method, handler));
+          addMany(HttpHandler.methodAllowed(method, handler));
         }
 
         if (allowedMethods.contains(Http.Method.GET)) {
           allowedMethods.add(Http.Method.HEAD);
         }
 
-        addMany(HttpHandler.methodNotAllowed(matcher, allowedMethods));
+        addMany(HttpHandler.methodNotAllowed(allowedMethods));
       }
 
       return buildFromMany(condition);
@@ -238,60 +211,15 @@ sealed abstract class HttpRouting {
       pathParams[requiredIndex] = param;
     }
 
-  }
-
-  static final class OfPrefix extends HttpRouting implements Http.Routing.OfPrefix {
-
-    private final String prefix;
-
-    private Http.Handler beforeMatched;
-
-    private OfPrefix(String prefix) {
-      this.prefix = prefix;
-    }
-
     @Override
-    public final Http.Handler build() {
-      final HttpPathMatcher matcher;
-      matcher = HttpPathMatcher.startsWith(prefix);
-
-      return buildFromMany(matcher);
-    }
-
-    @Override
-    public final void beforeMatched(Http.Handler value) {
-      if (beforeMatched != null) {
-        throw new IllegalArgumentException("A handler has already been defined");
-      }
-
-      beforeMatched = Objects.requireNonNull(value, "value == null");
-    }
-
-    @Override
-    public final void handler(Http.Handler value) {
-      single(value);
-    }
-
-    @Override
-    public final void path(String path, Consumer<Http.Routing.OfPath> routes) {
-      final HttpPathMatcher matcher;
-      matcher = HttpPathMatcher.parse(prefix, path);
+    public final void subpath(String path, Consumer<Http.Routing.OfPath> routes) {
+      final HttpRequestMatcher matcher;
+      matcher = HttpRequestMatcher.parseSubpath(path);
 
       final Http.Handler handler;
       handler = ofPath(matcher, routes);
 
-      final Http.Handler result;
-
-      if (beforeMatched != null) {
-        final HttpHandler impl;
-        impl = (HttpHandler) handler;
-
-        result = impl.filterMatched(beforeMatched);
-      } else {
-        result = handler;
-      }
-
-      addMany(result);
+      addMany(handler);
     }
 
   }
@@ -306,7 +234,7 @@ sealed abstract class HttpRouting {
 
   public abstract Http.Handler build();
 
-  final Http.Handler buildFromMany(Predicate<Http.Request> condition) {
+  final Http.Handler buildFromMany(Predicate<? super Http.Request> condition) {
     if (single != null) {
       addMany(single);
     }
@@ -347,7 +275,7 @@ sealed abstract class HttpRouting {
     many[requiredIndex] = handler;
   }
 
-  final Http.Handler ofPath(HttpPathMatcher matcher, Consumer<Http.Routing.OfPath> routes) {
+  final Http.Handler ofPath(HttpRequestMatcher matcher, Consumer<Http.Routing.OfPath> routes) {
     final HttpRouting.OfPath routing;
     routing = new HttpRouting.OfPath(matcher);
 

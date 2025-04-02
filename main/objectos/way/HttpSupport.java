@@ -26,7 +26,7 @@ sealed abstract class HttpSupport implements Http.Exchange, Http.ResponseHeaders
 
   Clock clock;
 
-  int matcherIndex;
+  int pathIndex;
 
   Map<String, String> pathParams;
 
@@ -35,7 +35,7 @@ sealed abstract class HttpSupport implements Http.Exchange, Http.ResponseHeaders
 
   @Override
   public final String pathParam(String name) {
-    Check.notNull(name, "name == null");
+    Objects.requireNonNull(name, "name == null");
 
     String result;
     result = null;
@@ -47,85 +47,81 @@ sealed abstract class HttpSupport implements Http.Exchange, Http.ResponseHeaders
     return result;
   }
 
-  final void matcherReset() {
-    matcherIndex = 0;
+  final void pathReset() {
+    pathIndex = 0;
 
     if (pathParams != null) {
       pathParams.clear();
     }
   }
 
-  final boolean atEnd() {
-    String value;
-    value = path();
-
-    return matcherIndex == value.length();
+  final void pathParams(Map<String, String> value) {
+    pathParams = value;
   }
 
-  final boolean exact(String other) {
-    String value;
-    value = path();
+  final boolean testPathExact(String exact) {
+    final String path;
+    path = path();
 
-    boolean result;
-    result = value.equals(other);
+    final int thisLength;
+    thisLength = path.length() - pathIndex;
 
-    matcherIndex += value.length();
+    final int thatLength;
+    thatLength = exact.length();
 
-    return result;
+    if (thisLength == thatLength && path.regionMatches(pathIndex, exact, 0, thatLength)) {
+      pathIndex += thatLength;
+
+      return true;
+    } else {
+      return false;
+    }
   }
 
-  final boolean namedVariable(String name) {
-    String value;
-    value = path();
+  final boolean testPathParam(String name) {
+    final String path;
+    path = path();
 
-    int solidus;
-    solidus = value.indexOf('/', matcherIndex);
+    final int solidus;
+    solidus = path.indexOf('/', pathIndex);
 
-    String varValue;
+    final String varValue;
 
     if (solidus < 0) {
-      varValue = value.substring(matcherIndex);
+      varValue = path.substring(pathIndex);
     } else {
-      varValue = value.substring(matcherIndex, solidus);
+      varValue = path.substring(pathIndex, solidus);
     }
 
-    matcherIndex += varValue.length();
+    pathIndex += varValue.length();
 
-    variable(name, varValue);
-
-    return true;
-  }
-
-  final boolean region(String region) {
-    String value;
-    value = path();
-
-    boolean result;
-    result = value.regionMatches(matcherIndex, region, 0, region.length());
-
-    matcherIndex += region.length();
-
-    return result;
-  }
-
-  final boolean startsWithMatcher(String prefix) {
-    String value;
-    value = path();
-
-    boolean result;
-    result = value.startsWith(prefix);
-
-    matcherIndex += prefix.length();
-
-    return result;
-  }
-
-  private void variable(String name, String value) {
     if (pathParams == null) {
       pathParams = Util.createMap();
     }
 
-    pathParams.put(name, value);
+    pathParams.put(name, varValue);
+
+    return true;
+  }
+
+  final boolean testPathRegion(String region) {
+    final String path;
+    path = path();
+
+    if (path.regionMatches(pathIndex, region, 0, region.length())) {
+      pathIndex += region.length();
+
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  final boolean testPathEnd() {
+    final String path;
+    path = path();
+
+    return pathIndex == path.length();
   }
 
   // response methods

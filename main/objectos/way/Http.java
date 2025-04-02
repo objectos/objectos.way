@@ -398,7 +398,9 @@ public final class Http {
       RequestLine,
       RequestTarget,
       RequestHeaders,
-      RequestBody {}
+      RequestBody {
+
+  }
 
   /**
    * Provides methods for reading the body of an HTTP request message.
@@ -804,15 +806,7 @@ public final class Http {
 
       void paramRegex(String name, String value);
 
-    }
-
-    public sealed interface OfPrefix permits HttpRouting.OfPrefix {
-
-      void beforeMatched(Handler value);
-
-      void handler(Handler value);
-
-      void path(String path, Consumer<OfPath> routes);
+      void subpath(String path, Consumer<OfPath> routes);
 
     }
 
@@ -822,9 +816,7 @@ public final class Http {
 
     void path(String path, Consumer<OfPath> routes);
 
-    void prefix(String prefix, Consumer<OfPrefix> routes);
-
-    void when(Predicate<Request> condition, Consumer<Routing> routes);
+    void when(Predicate<? super Request> condition, Consumer<Routing> routes);
 
   }
 

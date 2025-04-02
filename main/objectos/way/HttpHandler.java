@@ -66,17 +66,17 @@ final class HttpHandler implements Http.Handler {
 
   private final Kind kind;
 
-  private final Predicate<Http.Request> predicate;
+  private final Predicate<? super Http.Request> predicate;
 
   private final Object main;
 
-  private HttpHandler(Kind kind, Predicate<Http.Request> predicate, Object main) {
+  private HttpHandler(Kind kind, Predicate<? super Http.Request> predicate, Object main) {
     this.kind = kind;
     this.predicate = predicate;
     this.main = main;
   }
 
-  public static Http.Handler single(Predicate<Http.Request> predicate, Http.Handler handler) {
+  public static Http.Handler single(Predicate<? super Http.Request> predicate, Http.Handler handler) {
     return new HttpHandler(Kind.SINGLE, predicate, handler);
   }
 
@@ -84,7 +84,7 @@ final class HttpHandler implements Http.Handler {
     return new HttpHandler(Kind.MANY, null, handlers);
   }
 
-  public static Http.Handler many(Predicate<Http.Request> predicate, Http.Handler[] handlers) {
+  public static Http.Handler many(Predicate<? super Http.Request> predicate, Http.Handler[] handlers) {
     return new HttpHandler(Kind.MANY, predicate, handlers);
   }
 
@@ -95,28 +95,20 @@ final class HttpHandler implements Http.Handler {
     return new HttpHandler(Kind.FACTORY1, null, main);
   }
 
-  public static Http.Handler methodNotAllowed(HttpPathMatcher matcher, Set<Http.Method> allowedMethods) {
+  public static Http.Handler methodNotAllowed(Set<Http.Method> allowedMethods) {
     final String allow;
     allow = allowedMethods.stream().map(Http.Method::name).collect(Collectors.joining(", "));
 
-    return new HttpHandler(Kind.METHOD_NOT_ALLOWED, matcher, allow);
+    return new HttpHandler(Kind.METHOD_NOT_ALLOWED, null, allow);
   }
 
   public static Http.Handler movedPermanently(String location) {
     return new HttpHandler(Kind.MOVED_PERMANENTLY, null, location);
   }
 
-  public static Http.Handler methodAllowed(HttpPathMatcher matcher, Http.Method method, Http.Handler handler) {
-    record MethodAllowedPredicate(Predicate<Http.Request> matcher, Http.Method method) implements Predicate<Http.Request> {
-      @Override
-      public final boolean test(Http.Request t) {
-        return matcher.test(t)
-            && (t.method() == method || (t.method() == Http.Method.HEAD && method == Http.Method.GET));
-      }
-    }
-
-    final MethodAllowedPredicate predicate;
-    predicate = new MethodAllowedPredicate(matcher, method);
+  public static Http.Handler methodAllowed(Http.Method method, Http.Handler handler) {
+    final HttpRequestMatcher predicate;
+    predicate = HttpRequestMatcher.methodAllowed(method);
 
     return new HttpHandler(Kind.SINGLE, predicate, handler);
   }

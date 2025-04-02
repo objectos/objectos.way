@@ -59,10 +59,10 @@ public class HttpPathParamTest {
     HttpExchange requestTarget;
     requestTarget = HttpExchange.parseRequestTarget(target);
 
-    HttpPathMatcher matcher;
-    matcher = HttpPathMatcher.params(List.of(
+    HttpRequestMatcher matcher;
+    matcher = HttpRequestMatcher.pathParams(List.of(
         "/test/",
-        HttpPathMatcher.param("x")
+        HttpRequestMatcher.param("x")
     ));
 
     assertEquals(matcher.test(requestTarget), true);

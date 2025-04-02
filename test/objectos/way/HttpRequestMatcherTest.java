@@ -22,12 +22,12 @@ import java.util.List;
 import java.util.Map;
 import org.testng.annotations.Test;
 
-public class HttpPathMatcherTest {
+public class HttpRequestMatcherTest {
 
   @Test
   public void exact01() {
-    HttpPathMatcher matcher;
-    matcher = HttpPathMatcher.exact("/foo");
+    HttpRequestMatcher matcher;
+    matcher = HttpRequestMatcher.pathExact("/foo");
 
     test(matcher, "/foo", true);
     test(matcher, "/fooo", false);
@@ -40,10 +40,10 @@ public class HttpPathMatcherTest {
 
   @Test
   public void namedVariable02() {
-    HttpPathMatcher matcher;
-    matcher = HttpPathMatcher.params(List.of(
+    HttpRequestMatcher matcher;
+    matcher = HttpRequestMatcher.pathParams(List.of(
         "/foo/",
-        HttpPathMatcher.param("foo")
+        HttpRequestMatcher.param("foo")
     ));
 
     test(matcher, "/foo", false);
@@ -58,10 +58,10 @@ public class HttpPathMatcherTest {
 
   @Test
   public void namedVariable03() {
-    HttpPathMatcher matcher;
-    matcher = HttpPathMatcher.params(List.of(
+    HttpRequestMatcher matcher;
+    matcher = HttpRequestMatcher.pathParams(List.of(
         "/foo/",
-        HttpPathMatcher.param("foo"),
+        HttpRequestMatcher.param("foo"),
         "/pdf"
     ));
 
@@ -80,12 +80,12 @@ public class HttpPathMatcherTest {
 
   @Test
   public void namedVariable04() {
-    HttpPathMatcher matcher;
-    matcher = HttpPathMatcher.params(List.of(
+    HttpRequestMatcher matcher;
+    matcher = HttpRequestMatcher.pathParams(List.of(
         "/foo/",
-        HttpPathMatcher.param("foo"),
+        HttpRequestMatcher.param("foo"),
         "/bar/",
-        HttpPathMatcher.param("bar")
+        HttpRequestMatcher.param("bar")
     ));
 
     test(matcher, "/foo/bar/bar/bar", Map.of("foo", "bar", "bar", "bar"));
@@ -100,12 +100,12 @@ public class HttpPathMatcherTest {
 
   @Test
   public void namedVariable05() {
-    HttpPathMatcher matcher;
-    matcher = HttpPathMatcher.params(List.of(
+    HttpRequestMatcher matcher;
+    matcher = HttpRequestMatcher.pathParams(List.of(
         "/foo/",
-        HttpPathMatcher.param("foo"),
+        HttpRequestMatcher.param("foo"),
         "/bar/",
-        HttpPathMatcher.param("bar"),
+        HttpRequestMatcher.param("bar"),
         "/pdf"
     ));
 
@@ -117,12 +117,12 @@ public class HttpPathMatcherTest {
 
   @Test
   public void namedVariableN() {
-    HttpPathMatcher matcher;
-    matcher = HttpPathMatcher.params(List.of(
+    HttpRequestMatcher matcher;
+    matcher = HttpRequestMatcher.pathParams(List.of(
         "/foo/",
-        HttpPathMatcher.param("foo"),
+        HttpRequestMatcher.param("foo"),
         "/bar/",
-        HttpPathMatcher.param("bar"),
+        HttpRequestMatcher.param("bar"),
         "/pdf"
     ));
 
@@ -134,8 +134,8 @@ public class HttpPathMatcherTest {
 
   @Test
   public void startsWith01() {
-    HttpPathMatcher matcher;
-    matcher = HttpPathMatcher.startsWith("/foo");
+    HttpRequestMatcher matcher;
+    matcher = HttpRequestMatcher.pathStartsWith("/foo");
 
     test(matcher, "/foo", true);
     test(matcher, "/fooo", true);
@@ -146,14 +146,14 @@ public class HttpPathMatcherTest {
     test(matcher, "/", false);
   }
 
-  private void test(HttpPathMatcher matcher, String target, boolean expected) {
+  private void test(HttpRequestMatcher matcher, String target, boolean expected) {
     HttpExchange requestTarget;
     requestTarget = HttpExchange.parseRequestTarget(target);
 
     assertEquals(matcher.test(requestTarget), expected);
   }
 
-  private void test(HttpPathMatcher matcher, String target, Map<String, String> expected) {
+  private void test(HttpRequestMatcher matcher, String target, Map<String, String> expected) {
     HttpExchange requestTarget;
     requestTarget = HttpExchange.parseRequestTarget(target);
 

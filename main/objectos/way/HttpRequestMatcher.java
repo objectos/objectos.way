@@ -19,23 +19,21 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
-final class HttpPathMatcher implements Predicate<Http.Request> {
+final class HttpRequestMatcher implements Predicate<Http.Request> {
 
   private enum Kind {
-    EXACT,
+    METHOD_ALLOWED,
 
-    STARTS_WITH,
+    PATH_EXACT,
 
-    PARAMS,
+    PATH_PARAMS,
 
-    WITH_CONDITIONS;
+    PATH_STARTS_WITH,
+
+    PATH_WITH_CONDITIONS;
   }
 
-  private record Param(String name) {
-    public boolean test(HttpSupport target) {
-      return target.namedVariable(name);
-    }
-  }
+  private record Param(String name) {}
 
   private record WithConditions(List<Object> params, HttpPathParam[] conditions) {}
 
@@ -53,12 +51,12 @@ final class HttpPathMatcher implements Predicate<Http.Request> {
 
   private final Object state;
 
-  private HttpPathMatcher(Kind kind, Object state) {
+  private HttpRequestMatcher(Kind kind, Object state) {
     this.kind = kind;
     this.state = state;
   }
 
-  public static HttpPathMatcher parse(String prefix, String pathExpression) {
+  public static HttpRequestMatcher parsePath(String pathExpression) {
     enum Parser {
       START,
 
@@ -116,10 +114,7 @@ final class HttpPathMatcher implements Predicate<Http.Request> {
             final String value;
             value = pathExpression.substring(beginIndex, idx);
 
-            final String withPrefix;
-            withPrefix = concat(prefix, value);
-
-            params.add(withPrefix);
+            params.add(value);
           }
 
           else if (c == '*') {
@@ -193,12 +188,7 @@ final class HttpPathMatcher implements Predicate<Http.Request> {
     return switch (parser) {
       case START -> throw illegal(PATH_MUST_START_WITH_SOLIDUS, pathExpression);
 
-      case EXACT -> {
-        final String withPrefix;
-        withPrefix = concat(prefix, pathExpression);
-
-        yield exact(withPrefix);
-      }
+      case EXACT -> pathExact(pathExpression);
 
       case STARTS_WITH -> {
         final int stripLast;
@@ -207,10 +197,7 @@ final class HttpPathMatcher implements Predicate<Http.Request> {
         final String value;
         value = pathExpression.substring(0, stripLast);
 
-        final String withPrefix;
-        withPrefix = concat(prefix, value);
-
-        yield startsWith(withPrefix);
+        yield pathStartsWith(value);
       }
 
       case PARAM_START -> throw illegal(PARAM_EMPTY, pathExpression);
@@ -224,7 +211,7 @@ final class HttpPathMatcher implements Predicate<Http.Request> {
 
         params.add(param);
 
-        yield params(params);
+        yield pathParams(params);
       }
 
       case REGION -> {
@@ -233,32 +220,31 @@ final class HttpPathMatcher implements Predicate<Http.Request> {
 
         params.add(value);
 
-        yield params(params);
+        yield pathParams(params);
       }
     };
   }
 
-  private static String concat(String prefix, String value) {
-    return prefix != null ? prefix + value : value;
+  public static HttpRequestMatcher parseSubpath(String path) {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  static HttpRequestMatcher methodAllowed(Http.Method value) {
+    return new HttpRequestMatcher(Kind.METHOD_ALLOWED, value);
   }
 
   @Lang.VisibleForTesting
-  static HttpPathMatcher exact(final String value) {
-    return new HttpPathMatcher(Kind.EXACT, value);
+  static HttpRequestMatcher pathExact(final String value) {
+    return new HttpRequestMatcher(Kind.PATH_EXACT, value);
   }
 
   @Lang.VisibleForTesting
-  static HttpPathMatcher startsWith(final String value) {
-    return new HttpPathMatcher(Kind.STARTS_WITH, value);
+  static HttpRequestMatcher pathStartsWith(final String value) {
+    return new HttpRequestMatcher(Kind.PATH_STARTS_WITH, value);
   }
 
   @Lang.VisibleForTesting
-  static Object param(String name) {
-    return new Param(name);
-  }
-
-  @Lang.VisibleForTesting
-  static HttpPathMatcher params(List<Object> params) {
+  static HttpRequestMatcher pathParams(List<Object> params) {
     final Set<String> distinct;
     distinct = Util.createSet();
 
@@ -279,7 +265,12 @@ final class HttpPathMatcher implements Predicate<Http.Request> {
       );
     }
 
-    return new HttpPathMatcher(Kind.PARAMS, params);
+    return new HttpRequestMatcher(Kind.PATH_PARAMS, params);
+  }
+
+  @Lang.VisibleForTesting
+  static Object param(String name) {
+    return new Param(name);
   }
 
   private static IllegalArgumentException illegal(String prefix, String path) {
@@ -288,7 +279,7 @@ final class HttpPathMatcher implements Predicate<Http.Request> {
 
   @Override
   public final boolean equals(Object obj) {
-    return obj instanceof HttpPathMatcher that
+    return obj instanceof HttpRequestMatcher that
         && kind == that.kind
         && state.equals(that.state);
   }
@@ -306,8 +297,8 @@ final class HttpPathMatcher implements Predicate<Http.Request> {
     return kind + "=" + state;
   }
 
-  final HttpPathMatcher with(HttpPathParam[] conditions) {
-    if (kind != Kind.PARAMS) {
+  final HttpRequestMatcher with(HttpPathParam[] conditions) {
+    if (kind != Kind.PATH_PARAMS) {
       throw new IllegalStateException("Cannot add path parameter conditions to matcher with kind=" + kind);
     }
 
@@ -320,11 +311,11 @@ final class HttpPathMatcher implements Predicate<Http.Request> {
     WithConditions state;
     state = new WithConditions(params, conditions);
 
-    return new HttpPathMatcher(Kind.WITH_CONDITIONS, state);
+    return new HttpRequestMatcher(Kind.PATH_WITH_CONDITIONS, state);
   }
 
   final boolean hasParam(String name) {
-    if (kind == Kind.PARAMS) {
+    if (kind == Kind.PATH_PARAMS) {
       final List<Object> params;
       params = asParams();
 
@@ -339,28 +330,51 @@ final class HttpPathMatcher implements Predicate<Http.Request> {
   }
 
   private boolean test(HttpSupport target) {
-    target.matcherReset();
-
     return switch (kind) {
-      case EXACT -> target.exact(asString());
+      case METHOD_ALLOWED -> {
+        final Http.Method method;
+        method = target.method();
 
-      case STARTS_WITH -> target.startsWithMatcher(asString());
+        yield method == state || (method == Http.Method.HEAD && state == Http.Method.GET);
+      }
 
-      case PARAMS -> {
-        List<Object> params;
+      case PATH_EXACT -> {
+        target.pathReset();
+
+        final String exact;
+        exact = (String) state;
+
+        yield target.testPathExact(exact);
+      }
+
+      case PATH_PARAMS -> {
+        target.pathReset();
+
+        final List<Object> params;
         params = asParams();
 
         yield testParams(target, params);
       }
 
-      case WITH_CONDITIONS -> {
-        WithConditions data;
+      case PATH_STARTS_WITH -> {
+        target.pathReset();
+
+        final String prefix;
+        prefix = (String) state;
+
+        yield target.testPathRegion(prefix);
+      }
+
+      case PATH_WITH_CONDITIONS -> {
+        target.pathReset();
+
+        final WithConditions data;
         data = (WithConditions) state;
 
-        List<Object> params;
+        final List<Object> params;
         params = data.params();
 
-        HttpPathParam[] conditions;
+        final HttpPathParam[] conditions;
         conditions = data.conditions();
 
         yield testParams(target, params)
@@ -374,12 +388,12 @@ final class HttpPathMatcher implements Predicate<Http.Request> {
       boolean result;
 
       if (o instanceof Param p) {
-        result = p.test(target);
+        result = target.testPathParam(p.name);
       } else {
-        final String s;
-        s = (String) o;
+        final String region;
+        region = (String) o;
 
-        result = target.region(s);
+        result = target.testPathRegion(region);
       }
 
       if (!result) {
@@ -387,7 +401,7 @@ final class HttpPathMatcher implements Predicate<Http.Request> {
       }
     }
 
-    return target.atEnd();
+    return target.testPathEnd();
   }
 
   private boolean testConditions(HttpSupport target, HttpPathParam[] conditions) {
@@ -398,10 +412,6 @@ final class HttpPathMatcher implements Predicate<Http.Request> {
     }
 
     return true;
-  }
-
-  private String asString() {
-    return (String) state;
   }
 
   @SuppressWarnings("unchecked")
