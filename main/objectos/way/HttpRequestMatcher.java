@@ -26,16 +26,38 @@ final class HttpRequestMatcher implements Predicate<Http.Request> {
 
     PATH_EXACT,
 
-    PATH_PARAMS,
+    PATH_SEGMENTS,
 
-    PATH_STARTS_WITH,
+    PATH_WILDCARD,
 
     PATH_WITH_CONDITIONS;
   }
 
-  private record Param(String name) {}
+  private enum SegmentKind {
 
-  private record WithConditions(List<Object> params, HttpPathParam[] conditions) {}
+    EXACT,
+
+    PARAM,
+
+    PARAM_LAST,
+
+    REGION;
+
+  }
+
+  private record Segment(SegmentKind kind, String value, char c) {
+
+    final String paramName() {
+      return switch (kind) {
+        case PARAM, PARAM_LAST -> value;
+
+        default -> null;
+      };
+    }
+
+  }
+
+  private record WithConditions(List<Segment> segments, HttpPathParam[] conditions) {}
 
   private static final String PARAM_EMPTY = "Path parameter name must not be empty";
 
@@ -56,38 +78,47 @@ final class HttpRequestMatcher implements Predicate<Http.Request> {
     this.state = state;
   }
 
+  private enum Parser {
+    START_PATH,
+
+    EXACT,
+
+    STARTS_WITH,
+
+    PARAM_START,
+
+    PARAM_PART,
+
+    REGION;
+  }
+
   public static HttpRequestMatcher parsePath(String pathExpression) {
-    enum Parser {
-      START,
+    return parse(Parser.START_PATH, pathExpression);
+  }
 
-      EXACT,
+  public static HttpRequestMatcher parseSubpath(String pathExpression) {
+    return parse(Parser.EXACT, pathExpression);
+  }
 
-      STARTS_WITH,
-
-      PARAM_START,
-
-      PARAM_PART,
-
-      REGION;
-    }
-
+  private static HttpRequestMatcher parse(Parser initialState, String pathExpression) {
     Parser parser;
-    parser = Parser.START;
+    parser = initialState;
 
-    int aux = 0;
+    int aux;
+    aux = 0;
 
     final int length;
     length = pathExpression.length(); // implicit null check
 
-    List<Object> params;
-    params = null;
+    UtilList<Segment> segments;
+    segments = null;
 
     for (int idx = 0; idx < length; idx++) {
       final char c;
       c = pathExpression.charAt(idx);
 
       switch (parser) {
-        case START -> {
+        case START_PATH -> {
           if (c == '/') {
             parser = Parser.EXACT;
           }
@@ -103,8 +134,8 @@ final class HttpRequestMatcher implements Predicate<Http.Request> {
 
             final int beginIndex;
 
-            if (params == null) {
-              params = Util.createList();
+            if (segments == null) {
+              segments = new UtilList<>();
 
               beginIndex = 0;
             } else {
@@ -114,7 +145,10 @@ final class HttpRequestMatcher implements Predicate<Http.Request> {
             final String value;
             value = pathExpression.substring(beginIndex, idx);
 
-            params.add(value);
+            final Segment segment;
+            segment = segmentRegion(value);
+
+            segments.add(segment);
           }
 
           else if (c == '*') {
@@ -155,12 +189,13 @@ final class HttpRequestMatcher implements Predicate<Http.Request> {
             final String name;
             name = pathExpression.substring(aux, idx);
 
-            final Param param;
-            param = new Param(name);
+            final Segment param;
+            param = segmentParam(name, c);
 
-            params.add(param);
+            segments.add(param);
 
-            aux = idx;
+            // skip char terminator
+            aux = idx + 1;
           }
         }
 
@@ -168,10 +203,13 @@ final class HttpRequestMatcher implements Predicate<Http.Request> {
           if (c == ':') {
             parser = Parser.PARAM_START;
 
-            final Object value;
+            final String value;
             value = pathExpression.substring(aux, idx);
 
-            params.add(value);
+            final Segment segment;
+            segment = segmentRegion(value);
+
+            segments.add(segment);
           }
 
           else if (c == '*') {
@@ -186,7 +224,7 @@ final class HttpRequestMatcher implements Predicate<Http.Request> {
     }
 
     return switch (parser) {
-      case START -> throw illegal(PATH_MUST_START_WITH_SOLIDUS, pathExpression);
+      case START_PATH -> throw illegal(PATH_MUST_START_WITH_SOLIDUS, pathExpression);
 
       case EXACT -> pathExact(pathExpression);
 
@@ -197,36 +235,35 @@ final class HttpRequestMatcher implements Predicate<Http.Request> {
         final String value;
         value = pathExpression.substring(0, stripLast);
 
-        yield pathStartsWith(value);
+        yield pathWildcard(value);
       }
 
       case PARAM_START -> throw illegal(PARAM_EMPTY, pathExpression);
 
       case PARAM_PART -> {
-        final String value;
-        value = pathExpression.substring(aux, length);
+        final String name;
+        name = pathExpression.substring(aux, length);
 
-        final Param param;
-        param = new Param(value);
+        final Segment segment;
+        segment = segmentParamLast(name);
 
-        params.add(param);
+        segments.add(segment);
 
-        yield pathParams(params);
+        yield pathSegments(segments.toUnmodifiableList());
       }
 
       case REGION -> {
         final String value;
         value = pathExpression.substring(aux, length);
 
-        params.add(value);
+        final Segment segment;
+        segment = segmentExact(value);
 
-        yield pathParams(params);
+        segments.add(segment);
+
+        yield pathSegments(segments.toUnmodifiableList());
       }
     };
-  }
-
-  public static HttpRequestMatcher parseSubpath(String path) {
-    throw new UnsupportedOperationException("Implement me");
   }
 
   static HttpRequestMatcher methodAllowed(Http.Method value) {
@@ -239,22 +276,17 @@ final class HttpRequestMatcher implements Predicate<Http.Request> {
   }
 
   @Lang.VisibleForTesting
-  static HttpRequestMatcher pathStartsWith(final String value) {
-    return new HttpRequestMatcher(Kind.PATH_STARTS_WITH, value);
-  }
-
-  @Lang.VisibleForTesting
-  static HttpRequestMatcher pathParams(List<Object> params) {
+  static HttpRequestMatcher pathSegments(List<Segment> segments) {
     final Set<String> distinct;
     distinct = Util.createSet();
 
-    for (Object o : params) {
-      if (!(o instanceof Param p)) {
+    for (Segment segment : segments) {
+      final String name;
+      name = segment.paramName();
+
+      if (name == null) {
         continue;
       }
-
-      final String name;
-      name = p.name;
 
       if (distinct.add(name)) {
         continue;
@@ -265,12 +297,31 @@ final class HttpRequestMatcher implements Predicate<Http.Request> {
       );
     }
 
-    return new HttpRequestMatcher(Kind.PATH_PARAMS, params);
+    return new HttpRequestMatcher(Kind.PATH_SEGMENTS, segments);
   }
 
   @Lang.VisibleForTesting
-  static Object param(String name) {
-    return new Param(name);
+  static HttpRequestMatcher pathWildcard(final String value) {
+    return new HttpRequestMatcher(Kind.PATH_WILDCARD, value);
+  }
+
+  @Lang.VisibleForTesting
+  static Segment segmentExact(String value) {
+    return new Segment(SegmentKind.EXACT, value, '\0');
+  }
+
+  @Lang.VisibleForTesting
+  static Segment segmentParam(String name, char c) {
+    return new Segment(SegmentKind.PARAM, name, c);
+  }
+
+  static Segment segmentParamLast(String name) {
+    return new Segment(SegmentKind.PARAM_LAST, name, '\0');
+  }
+
+  @Lang.VisibleForTesting
+  static Segment segmentRegion(String value) {
+    return new Segment(SegmentKind.REGION, value, '\0');
   }
 
   private static IllegalArgumentException illegal(String prefix, String path) {
@@ -297,30 +348,35 @@ final class HttpRequestMatcher implements Predicate<Http.Request> {
     return kind + "=" + state;
   }
 
+  @SuppressWarnings("unchecked")
   final HttpRequestMatcher with(HttpPathParam[] conditions) {
-    if (kind != Kind.PATH_PARAMS) {
+    if (kind != Kind.PATH_SEGMENTS) {
       throw new IllegalStateException("Cannot add path parameter conditions to matcher with kind=" + kind);
     }
 
     // caller, in theory, passed a safe array
     // no safe copy needed
 
-    List<Object> params;
-    params = asParams();
+    List<Segment> segments;
+    segments = (List<Segment>) state;
 
     WithConditions state;
-    state = new WithConditions(params, conditions);
+    state = new WithConditions(segments, conditions);
 
     return new HttpRequestMatcher(Kind.PATH_WITH_CONDITIONS, state);
   }
 
+  @SuppressWarnings("unchecked")
   final boolean hasParam(String name) {
-    if (kind == Kind.PATH_PARAMS) {
-      final List<Object> params;
-      params = asParams();
+    if (kind == Kind.PATH_SEGMENTS) {
+      final List<Segment> segments;
+      segments = (List<Segment>) state;
 
-      for (Object o : params) {
-        if (o instanceof Param p && p.name().equals(name)) {
+      for (Segment segment : segments) {
+        final String paramName;
+        paramName = segment.paramName();
+
+        if (name.equals(paramName)) {
           return true;
         }
       }
@@ -329,6 +385,7 @@ final class HttpRequestMatcher implements Predicate<Http.Request> {
     return false;
   }
 
+  @SuppressWarnings("unchecked")
   private boolean test(HttpSupport target) {
     return switch (kind) {
       case METHOD_ALLOWED -> {
@@ -347,16 +404,16 @@ final class HttpRequestMatcher implements Predicate<Http.Request> {
         yield target.testPathExact(exact);
       }
 
-      case PATH_PARAMS -> {
+      case PATH_SEGMENTS -> {
         target.pathReset();
 
-        final List<Object> params;
-        params = asParams();
+        final List<Segment> segments;
+        segments = (List<Segment>) state;
 
-        yield testParams(target, params);
+        yield testSegments(target, segments);
       }
 
-      case PATH_STARTS_WITH -> {
+      case PATH_WILDCARD -> {
         target.pathReset();
 
         final String prefix;
@@ -371,37 +428,36 @@ final class HttpRequestMatcher implements Predicate<Http.Request> {
         final WithConditions data;
         data = (WithConditions) state;
 
-        final List<Object> params;
-        params = data.params();
+        final List<Segment> segments;
+        segments = data.segments();
 
         final HttpPathParam[] conditions;
         conditions = data.conditions();
 
-        yield testParams(target, params)
-            && testConditions(target, conditions);
+        yield testSegments(target, segments) && testConditions(target, conditions);
       }
     };
   }
 
-  private boolean testParams(HttpSupport target, List<Object> params) {
-    for (Object o : params) {
-      boolean result;
+  private boolean testSegments(HttpSupport target, List<Segment> segments) {
+    for (Segment segment : segments) {
+      final boolean result;
+      result = switch (segment.kind) {
+        case EXACT -> target.testPathExact(segment.value);
 
-      if (o instanceof Param p) {
-        result = target.testPathParam(p.name);
-      } else {
-        final String region;
-        region = (String) o;
+        case PARAM -> target.testPathParam(segment.value, segment.c);
 
-        result = target.testPathRegion(region);
-      }
+        case PARAM_LAST -> target.testPathParamLast(segment.value);
+
+        case REGION -> target.testPathRegion(segment.value);
+      };
 
       if (!result) {
         return false;
       }
     }
 
-    return target.testPathEnd();
+    return true;
   }
 
   private boolean testConditions(HttpSupport target, HttpPathParam[] conditions) {
@@ -412,11 +468,6 @@ final class HttpRequestMatcher implements Predicate<Http.Request> {
     }
 
     return true;
-  }
-
-  @SuppressWarnings("unchecked")
-  private List<Object> asParams() {
-    return (List<Object>) state;
   }
 
 }

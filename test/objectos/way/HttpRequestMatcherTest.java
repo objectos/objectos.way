@@ -25,13 +25,14 @@ import org.testng.annotations.Test;
 public class HttpRequestMatcherTest {
 
   @Test
-  public void exact01() {
+  public void pathExact01() {
     HttpRequestMatcher matcher;
     matcher = HttpRequestMatcher.pathExact("/foo");
 
     test(matcher, "/foo", true);
-    test(matcher, "/fooo", false);
     test(matcher, "/foo?q=foo", true);
+
+    test(matcher, "/fooo", false);
     test(matcher, "/foo/", false);
     test(matcher, "/foo/bar", false);
     test(matcher, "/bar", false);
@@ -39,30 +40,31 @@ public class HttpRequestMatcherTest {
   }
 
   @Test
-  public void namedVariable02() {
+  public void pathSegments01() {
     HttpRequestMatcher matcher;
-    matcher = HttpRequestMatcher.pathParams(List.of(
-        "/foo/",
-        HttpRequestMatcher.param("foo")
+    matcher = HttpRequestMatcher.pathSegments(List.of(
+        HttpRequestMatcher.segmentRegion("/foo/"),
+        HttpRequestMatcher.segmentParamLast("foo")
     ));
+
+    test(matcher, "/foo/", Map.of("foo", ""));
+    test(matcher, "/foo/bar", Map.of("foo", "bar"));
 
     test(matcher, "/foo", false);
     test(matcher, "/fooo", false);
     test(matcher, "/foo?q=foo", false);
-    test(matcher, "/foo/", Map.of("foo", ""));
-    test(matcher, "/foo/bar", Map.of("foo", "bar"));
     test(matcher, "/foo/bar/x", false);
     test(matcher, "/bar", false);
     test(matcher, "/", false);
   }
 
   @Test
-  public void namedVariable03() {
+  public void pathSegments02() {
     HttpRequestMatcher matcher;
-    matcher = HttpRequestMatcher.pathParams(List.of(
-        "/foo/",
-        HttpRequestMatcher.param("foo"),
-        "/pdf"
+    matcher = HttpRequestMatcher.pathSegments(List.of(
+        HttpRequestMatcher.segmentRegion("/foo/"),
+        HttpRequestMatcher.segmentParam("foo", '/'),
+        HttpRequestMatcher.segmentExact("pdf")
     ));
 
     test(matcher, "/foo/bar/pdf", Map.of("foo", "bar"));
@@ -79,13 +81,13 @@ public class HttpRequestMatcherTest {
   }
 
   @Test
-  public void namedVariable04() {
+  public void pathSegments03() {
     HttpRequestMatcher matcher;
-    matcher = HttpRequestMatcher.pathParams(List.of(
-        "/foo/",
-        HttpRequestMatcher.param("foo"),
-        "/bar/",
-        HttpRequestMatcher.param("bar")
+    matcher = HttpRequestMatcher.pathSegments(List.of(
+        HttpRequestMatcher.segmentRegion("/foo/"),
+        HttpRequestMatcher.segmentParam("foo", '/'),
+        HttpRequestMatcher.segmentRegion("bar/"),
+        HttpRequestMatcher.segmentParamLast("bar")
     ));
 
     test(matcher, "/foo/bar/bar/bar", Map.of("foo", "bar", "bar", "bar"));
@@ -99,14 +101,14 @@ public class HttpRequestMatcherTest {
   }
 
   @Test
-  public void namedVariable05() {
+  public void pathSegments04() {
     HttpRequestMatcher matcher;
-    matcher = HttpRequestMatcher.pathParams(List.of(
-        "/foo/",
-        HttpRequestMatcher.param("foo"),
-        "/bar/",
-        HttpRequestMatcher.param("bar"),
-        "/pdf"
+    matcher = HttpRequestMatcher.pathSegments(List.of(
+        HttpRequestMatcher.segmentRegion("/foo/"),
+        HttpRequestMatcher.segmentParam("foo", '/'),
+        HttpRequestMatcher.segmentRegion("bar/"),
+        HttpRequestMatcher.segmentParam("bar", '/'),
+        HttpRequestMatcher.segmentExact("pdf")
     ));
 
     test(matcher, "/foo/x/bar/123/pdf", Map.of("foo", "x", "bar", "123"));
@@ -116,26 +118,9 @@ public class HttpRequestMatcherTest {
   }
 
   @Test
-  public void namedVariableN() {
+  public void pathWildcard01() {
     HttpRequestMatcher matcher;
-    matcher = HttpRequestMatcher.pathParams(List.of(
-        "/foo/",
-        HttpRequestMatcher.param("foo"),
-        "/bar/",
-        HttpRequestMatcher.param("bar"),
-        "/pdf"
-    ));
-
-    test(matcher, "/foo/x/bar/123/pdf", Map.of("foo", "x", "bar", "123"));
-    test(matcher, "/foo//bar//pdf", Map.of("foo", "", "bar", ""));
-
-    test(matcher, "/foo/x/bar/y/pdf/more", false);
-  }
-
-  @Test
-  public void startsWith01() {
-    HttpRequestMatcher matcher;
-    matcher = HttpRequestMatcher.pathStartsWith("/foo");
+    matcher = HttpRequestMatcher.pathWildcard("/foo");
 
     test(matcher, "/foo", true);
     test(matcher, "/fooo", true);

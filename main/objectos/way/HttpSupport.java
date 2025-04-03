@@ -78,22 +78,22 @@ sealed abstract class HttpSupport implements Http.Exchange, Http.ResponseHeaders
     }
   }
 
-  final boolean testPathParam(String name) {
+  final boolean testPathParam(String name, char terminator) {
     final String path;
     path = path();
 
-    final int solidus;
-    solidus = path.indexOf('/', pathIndex);
+    final int terminatorIndex;
+    terminatorIndex = path.indexOf(terminator, pathIndex);
 
-    final String varValue;
-
-    if (solidus < 0) {
-      varValue = path.substring(pathIndex);
-    } else {
-      varValue = path.substring(pathIndex, solidus);
+    if (terminatorIndex < 0) {
+      return false;
     }
 
-    pathIndex += varValue.length();
+    final String varValue;
+    varValue = path.substring(pathIndex, terminatorIndex);
+
+    // immediately after the terminator
+    pathIndex = terminatorIndex + 1;
 
     if (pathParams == null) {
       pathParams = Util.createMap();
@@ -102,6 +102,35 @@ sealed abstract class HttpSupport implements Http.Exchange, Http.ResponseHeaders
     pathParams.put(name, varValue);
 
     return true;
+  }
+
+  final boolean testPathParamLast(String name) {
+    final String path;
+    path = path();
+
+    final int solidus;
+    solidus = path.indexOf('/', pathIndex);
+
+    if (solidus < 0) {
+
+      final String varValue;
+      varValue = path.substring(pathIndex);
+
+      pathIndex += varValue.length();
+
+      if (pathParams == null) {
+        pathParams = Util.createMap();
+      }
+
+      pathParams.put(name, varValue);
+
+      return true;
+
+    } else {
+
+      return false;
+
+    }
   }
 
   final boolean testPathRegion(String region) {

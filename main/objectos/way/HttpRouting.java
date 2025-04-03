@@ -93,7 +93,8 @@ sealed abstract class HttpRouting {
 
     private int pathParamsIndex;
 
-    private OfPath(HttpRequestMatcher matcher) {
+    @Lang.VisibleForTesting
+    OfPath(HttpRequestMatcher matcher) {
       this.matcher = matcher;
     }
 
@@ -213,13 +214,7 @@ sealed abstract class HttpRouting {
 
     @Override
     public final void subpath(String path, Consumer<Http.Routing.OfPath> routes) {
-      final HttpRequestMatcher matcher;
-      matcher = HttpRequestMatcher.parseSubpath(path);
-
-      final Http.Handler handler;
-      handler = ofPath(matcher, routes);
-
-      addMany(handler);
+      throw new UnsupportedOperationException("Implement me");
     }
 
   }

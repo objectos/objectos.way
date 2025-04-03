@@ -15,6 +15,11 @@
  */
 package objectos.way;
 
+import static objectos.way.HttpRequestMatcher.pathSegments;
+import static objectos.way.HttpRequestMatcher.segmentExact;
+import static objectos.way.HttpRequestMatcher.segmentParam;
+import static objectos.way.HttpRequestMatcher.segmentParamLast;
+import static objectos.way.HttpRequestMatcher.segmentRegion;
 import static org.testng.Assert.assertEquals;
 
 import java.util.List;
@@ -36,36 +41,44 @@ public class HttpRequestMatcherParseTest {
   }
 
   @Test
-  public void pathParams01() {
+  public void pathSegments01() {
     path(
         "/foo/:a",
-        HttpRequestMatcher.pathParams(List.of(
-            "/foo/",
-            HttpRequestMatcher.param("a")
+        pathSegments(List.of(
+            segmentRegion("/foo/"),
+            segmentParamLast("a")
         ))
     );
     path(
         "/foo/:foo",
-        HttpRequestMatcher.pathParams(List.of(
-            "/foo/",
-            HttpRequestMatcher.param("foo")
+        pathSegments(List.of(
+            segmentRegion("/foo/"),
+            segmentParamLast("foo")
+        ))
+    );
+    path(
+        "/foo/:foo/",
+        pathSegments(List.of(
+            segmentRegion("/foo/"),
+            segmentParam("foo", '/'),
+            segmentExact("")
         ))
     );
     path(
         "/foo/:foo/bar/:bar",
-        HttpRequestMatcher.pathParams(List.of(
-            "/foo/",
-            HttpRequestMatcher.param("foo"),
-            "/bar/",
-            HttpRequestMatcher.param("bar")
+        HttpRequestMatcher.pathSegments(List.of(
+            segmentRegion("/foo/"),
+            segmentParam("foo", '/'),
+            segmentRegion("bar/"),
+            segmentParamLast("bar")
         ))
     );
     path(
         "/foo/:foo/bar",
-        HttpRequestMatcher.pathParams(List.of(
-            "/foo/",
-            HttpRequestMatcher.param("foo"),
-            "/bar"
+        HttpRequestMatcher.pathSegments(List.of(
+            segmentRegion("/foo/"),
+            segmentParam("foo", '/'),
+            segmentExact("bar")
         ))
     );
   }
@@ -73,29 +86,29 @@ public class HttpRequestMatcherParseTest {
   @Test(description = """
   it should disallow duplicate path variable names
   """)
-  public void pathParams02() {
+  public void pathSegments02() {
     pathError("/foo/:error/bar/:error", "The ':error' path variable was declared more than once");
   }
 
   @Test
-  public void pathParams03() {
+  public void pathSegments03() {
     pathError("/foo/:bar:baz", "Cannot begin a path parameter immediately after the end of another parameter: /foo/:bar:baz");
   }
 
   @Test
-  public void pathParams04() {
+  public void pathSegments04() {
     pathError("/foo/:bar/*", "The '*' wildcard character cannot be used when path parameters are declared: /foo/:bar/*");
   }
 
   @Test
-  public void pathStartsWith01() {
-    path("/*", HttpRequestMatcher.pathStartsWith("/"));
-    path("/foo*", HttpRequestMatcher.pathStartsWith("/foo"));
-    path("/foo/*", HttpRequestMatcher.pathStartsWith("/foo/"));
+  public void pathWildcard01() {
+    path("/*", HttpRequestMatcher.pathWildcard("/"));
+    path("/foo*", HttpRequestMatcher.pathWildcard("/foo"));
+    path("/foo/*", HttpRequestMatcher.pathWildcard("/foo/"));
   }
 
   @Test
-  public void pathStartsWith02() {
+  public void pathWildcard02() {
     pathError("/foo/*/", "The '*' wildcard character can only be used once at the end of the path expression: /foo/*/");
     pathError("/foo**", "The '*' wildcard character can only be used once at the end of the path expression: /foo**");
   }
