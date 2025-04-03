@@ -18,77 +18,43 @@ package objectos.way;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-sealed abstract class HttpPathParam {
+final class HttpPathParam {
 
-  static final class Digits extends HttpPathParam {
+  private enum Kind {
 
-    public Digits(String name) {
-      super(name);
-    }
+    DIGITS,
 
-    @Override
-    final boolean test(String value) {
-      int len;
-      len = value.length();
+    NOT_EMPTY,
 
-      if (len == 0) {
-        return false;
-      }
-
-      for (int i = 0; i < len; i++) {
-        char c;
-        c = value.charAt(i);
-
-        if (!Character.isDigit(c)) {
-          return false;
-        }
-      }
-
-      return true;
-    }
+    REGEX;
 
   }
 
-  static final class NotEmpty extends HttpPathParam {
+  private final Kind kind;
 
-    public NotEmpty(String name) {
-      super(name);
-    }
+  private final String name;
 
-    @Override
-    final boolean test(String value) {
-      return !value.isEmpty();
-    }
+  private final Object aux;
 
-  }
-
-  static final class Regex extends HttpPathParam {
-
-    private final Pattern pattern;
-
-    public Regex(String name, Pattern pattern) {
-      super(name);
-
-      this.pattern = pattern;
-    }
-
-    @Override
-    final boolean test(String value) {
-      Matcher matcher;
-      matcher = pattern.matcher(value);
-
-      return matcher.matches();
-    }
-
-  }
-
-  final String name;
-
-  HttpPathParam(String name) {
+  private HttpPathParam(Kind kind, String name, Object aux) {
+    this.kind = kind;
     this.name = name;
+    this.aux = aux;
   }
 
-  final boolean test(HttpSupport path) {
+  public static HttpPathParam digits(String name) {
+    return new HttpPathParam(Kind.DIGITS, name, null);
+  }
+
+  public static HttpPathParam notEmpty(String name) {
+    return new HttpPathParam(Kind.NOT_EMPTY, name, null);
+  }
+
+  public static HttpPathParam regex(String name, Pattern pattern) {
+    return new HttpPathParam(Kind.REGEX, name, pattern);
+  }
+
+  public final boolean test(HttpSupport path) {
     String value;
     value = path.pathParam(name);
 
@@ -99,6 +65,40 @@ sealed abstract class HttpPathParam {
     }
   }
 
-  abstract boolean test(String value);
+  private boolean test(String value) {
+    return switch (kind) {
+      case DIGITS -> {
+        int len;
+        len = value.length();
+
+        if (len == 0) {
+          yield false;
+        }
+
+        for (int i = 0; i < len; i++) {
+          char c;
+          c = value.charAt(i);
+
+          if (!Character.isDigit(c)) {
+            yield false;
+          }
+        }
+
+        yield true;
+      }
+
+      case NOT_EMPTY -> !value.isEmpty();
+
+      case REGEX -> {
+        final Pattern pattern;
+        pattern = (Pattern) aux;
+
+        final Matcher matcher;
+        matcher = pattern.matcher(value);
+
+        yield matcher.matches();
+      }
+    };
+  }
 
 }

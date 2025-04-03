@@ -26,7 +26,7 @@ public class HttpPathParamTest {
   @Test
   public void digits() {
     HttpPathParam condition;
-    condition = new HttpPathParam.Digits("x");
+    condition = HttpPathParam.digits("x");
 
     test(condition, "/test/1", true);
     test(condition, "/test/0123456789", true);
@@ -37,7 +37,7 @@ public class HttpPathParamTest {
   @Test
   public void notEmpty() {
     HttpPathParam condition;
-    condition = new HttpPathParam.NotEmpty("x");
+    condition = HttpPathParam.notEmpty("x");
 
     test(condition, "/test/a", true);
     test(condition, "/test/abc", true);
@@ -47,7 +47,7 @@ public class HttpPathParamTest {
   @Test
   public void regex() {
     HttpPathParam condition;
-    condition = new HttpPathParam.Regex("x", Pattern.compile("[0-9a-z]+"));
+    condition = HttpPathParam.regex("x", Pattern.compile("[0-9a-z]+"));
 
     test(condition, "/test/1", true);
     test(condition, "/test/0123456789", true);

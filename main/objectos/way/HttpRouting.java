@@ -164,8 +164,8 @@ sealed abstract class HttpRouting {
     public final void paramDigits(String name) {
       checkMatcherParam(name);
 
-      final HttpPathParam.Digits param;
-      param = new HttpPathParam.Digits(name);
+      final HttpPathParam param;
+      param = HttpPathParam.digits(name);
 
       add(param);
     }
@@ -174,8 +174,8 @@ sealed abstract class HttpRouting {
     public final void paramNotEmpty(String name) {
       checkMatcherParam(name);
 
-      final HttpPathParam.NotEmpty param;
-      param = new HttpPathParam.NotEmpty(name);
+      final HttpPathParam param;
+      param = HttpPathParam.notEmpty(name);
 
       add(param);
     }
@@ -187,8 +187,8 @@ sealed abstract class HttpRouting {
       final Pattern pattern;
       pattern = Pattern.compile(value);
 
-      final HttpPathParam.Regex param;
-      param = new HttpPathParam.Regex(name, pattern);
+      final HttpPathParam param;
+      param = HttpPathParam.regex(name, pattern);
 
       add(param);
     }
