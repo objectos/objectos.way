@@ -15,16 +15,25 @@
  */
 package objectos.way;
 
+import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import objectos.way.Http.Handler;
+import objectos.way.Http.Request;
 
 final class HttpHandler implements Http.Handler {
 
   private enum Kind {
 
     NOOP,
+
+    // subpath
+
+    SUBPATH_SINGLE,
+
+    SUBPATH_MANY,
 
     // delegate
 
@@ -80,10 +89,6 @@ final class HttpHandler implements Http.Handler {
     return new HttpHandler(Kind.SINGLE, predicate, handler);
   }
 
-  public static Http.Handler many(Http.Handler[] handlers) {
-    return new HttpHandler(Kind.MANY, null, handlers);
-  }
-
   public static Http.Handler many(Predicate<? super Http.Request> predicate, Http.Handler[] handlers) {
     return new HttpHandler(Kind.MANY, predicate, handlers);
   }
@@ -117,6 +122,62 @@ final class HttpHandler implements Http.Handler {
     return NOT_FOUND;
   }
 
+  public static Http.Handler of(Predicate<? super Request> condition, List<Handler> handlers) {
+    if (handlers == null) {
+      return NOOP;
+    }
+
+    return switch (handlers.size()) {
+      case 0 -> HttpHandler.NOOP;
+
+      case 1 -> {
+        final Http.Handler single;
+        single = handlers.get(0);
+
+        if (condition == null) {
+          yield single;
+        }
+
+        yield new HttpHandler(Kind.SINGLE, condition, single);
+      }
+
+      default -> {
+        final Http.Handler[] copy;
+        copy = handlers.toArray(Http.Handler[]::new);
+
+        yield new HttpHandler(Kind.MANY, condition, copy);
+      }
+    };
+  }
+
+  public static Http.Handler ofSubpath(Predicate<? super Request> condition, List<Handler> handlers) {
+    if (handlers == null) {
+      return NOOP;
+    }
+
+    return switch (handlers.size()) {
+      case 0 -> HttpHandler.NOOP;
+
+      case 1 -> {
+        final Http.Handler single;
+        single = handlers.get(0);
+
+        if (condition == null) {
+          yield single;
+        }
+
+        yield new HttpHandler(Kind.SUBPATH_SINGLE, condition, single);
+      }
+
+      default -> {
+        final Http.Handler[] copy;
+        copy = handlers.toArray(Http.Handler[]::new);
+
+        yield new HttpHandler(Kind.SUBPATH_MANY, condition, copy);
+      }
+    };
+  }
+
   public static Http.Handler ofContent(String contentType, byte[] bytes) {
     final Content main;
     main = new Content(contentType, bytes);
@@ -130,11 +191,20 @@ final class HttpHandler implements Http.Handler {
       return;
     }
 
-    if (predicate != null && !predicate.test(http)) {
+    final HttpSupport support;
+    support = (HttpSupport) http;
+
+    switch (kind) {
+      case SUBPATH_SINGLE, SUBPATH_MANY -> {}
+
+      default -> support.pathReset();
+    }
+
+    if (predicate != null && !predicate.test(support)) {
       return;
     }
 
-    handle0(http, kind, main);
+    handle0(support, kind, main);
   }
 
   @Override
@@ -142,29 +212,47 @@ final class HttpHandler implements Http.Handler {
     return "HttpHandler[kind=" + kind + ",predicate=" + predicate + ",main=" + main + "]";
   }
 
-  private void handle0(Http.Exchange http, Kind actualKind, Object data) {
+  private void handle0(HttpSupport http, Kind actualKind, Object data) {
     switch (actualKind) {
       case NOOP -> {}
 
-      case SINGLE -> {
+      case SUBPATH_SINGLE, SINGLE -> {
+        final int pathIndex;
+        pathIndex = http.pathIndex;
+
         final Http.Handler single;
         single = (Http.Handler) data;
 
         single.handle(http);
+
+        if (!http.processed()) {
+          http.pathIndex = pathIndex;
+        }
       }
 
-      case MANY -> {
+      case SUBPATH_MANY, MANY -> {
+        final int pathIndex;
+        pathIndex = http.pathIndex;
+
+        // TODO path parameters
+
         final Http.Handler[] many;
         many = (Http.Handler[]) data;
 
         int index;
         index = 0;
 
-        while (!http.processed() && index < many.length) {
+        while (index < many.length) {
           final Http.Handler handler;
           handler = many[index++];
 
           handler.handle(http);
+
+          if (http.processed()) {
+            break;
+          }
+
+          http.pathIndex = pathIndex;
         }
       }
 
@@ -201,65 +289,53 @@ final class HttpHandler implements Http.Handler {
       }
 
       case CONTENT -> {
-        final HttpSupport support;
-        support = (HttpSupport) http;
-
         final Content content;
         content = (Content) data;
 
-        support.status0(Http.Status.OK);
+        http.status0(Http.Status.OK);
 
-        support.dateNow();
+        http.dateNow();
 
-        support.header0(Http.HeaderName.CONTENT_TYPE, content.contentType);
+        http.header0(Http.HeaderName.CONTENT_TYPE, content.contentType);
 
         final byte[] bytes;
         bytes = content.bytes;
 
-        support.header0(Http.HeaderName.CONTENT_LENGTH, bytes.length);
+        http.header0(Http.HeaderName.CONTENT_LENGTH, bytes.length);
 
-        support.send0(bytes);
+        http.send0(bytes);
       }
 
       case METHOD_NOT_ALLOWED -> {
-        final HttpSupport support;
-        support = (HttpSupport) http;
+        http.status0(Http.Status.METHOD_NOT_ALLOWED);
 
-        support.status0(Http.Status.METHOD_NOT_ALLOWED);
+        http.dateNow();
 
-        support.dateNow();
+        http.header0(Http.HeaderName.CONTENT_LENGTH, 0L);
 
-        support.header0(Http.HeaderName.CONTENT_LENGTH, 0L);
+        http.header0(Http.HeaderName.ALLOW, (String) data);
 
-        support.header0(Http.HeaderName.ALLOW, (String) data);
-
-        support.send0();
+        http.send0();
       }
 
       case MOVED_PERMANENTLY -> {
-        final HttpSupport support;
-        support = (HttpSupport) http;
+        http.status0(Http.Status.MOVED_PERMANENTLY);
 
-        support.status0(Http.Status.MOVED_PERMANENTLY);
+        http.dateNow();
 
-        support.dateNow();
+        http.header0(Http.HeaderName.LOCATION, (String) data);
 
-        support.header0(Http.HeaderName.LOCATION, (String) data);
-
-        support.send0();
+        http.send0();
       }
 
       case NOT_FOUND -> {
-        final HttpSupport support;
-        support = (HttpSupport) http;
+        http.status0(Http.Status.NOT_FOUND);
 
-        support.status0(Http.Status.NOT_FOUND);
+        http.dateNow();
 
-        support.dateNow();
+        http.header0(Http.HeaderName.CONNECTION, "close");
 
-        support.header0(Http.HeaderName.CONNECTION, "close");
-
-        support.send0();
+        http.send0();
       }
     }
   }

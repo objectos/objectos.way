@@ -22,7 +22,7 @@ import org.testng.annotations.Test;
 
 public class HttpRoutingOfPathTest {
 
-  @Test(enabled = false)
+  @Test
   public void subpath01() {
     final HttpRequestMatcher matcher;
     matcher = HttpRequestMatcher.pathWildcard("/app/");

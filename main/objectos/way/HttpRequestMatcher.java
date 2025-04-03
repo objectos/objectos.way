@@ -348,6 +348,42 @@ final class HttpRequestMatcher implements Predicate<Http.Request> {
     return kind + "=" + state;
   }
 
+  final boolean endsInWildcard() {
+    return switch (kind) {
+      case PATH_WILDCARD -> true;
+
+      case PATH_SEGMENTS -> {
+        final List<Segment> segments;
+        segments = asSegments();
+
+        yield endsInWildcard(segments);
+      }
+
+      case PATH_WITH_CONDITIONS -> {
+        final WithConditions data;
+        data = (WithConditions) state;
+
+        final List<Segment> segments;
+        segments = data.segments();
+
+        yield endsInWildcard(segments);
+      }
+
+      default -> false;
+    };
+  }
+
+  private boolean endsInWildcard(List<Segment> segments) {
+    if (segments.isEmpty()) {
+      return false;
+    } else {
+      final Segment last;
+      last = segments.getLast();
+
+      return last.kind == SegmentKind.REGION;
+    }
+  }
+
   @SuppressWarnings("unchecked")
   final HttpRequestMatcher with(HttpPathParam[] conditions) {
     if (kind != Kind.PATH_SEGMENTS) {
@@ -366,11 +402,10 @@ final class HttpRequestMatcher implements Predicate<Http.Request> {
     return new HttpRequestMatcher(Kind.PATH_WITH_CONDITIONS, state);
   }
 
-  @SuppressWarnings("unchecked")
   final boolean hasParam(String name) {
     if (kind == Kind.PATH_SEGMENTS) {
       final List<Segment> segments;
-      segments = (List<Segment>) state;
+      segments = asSegments();
 
       for (Segment segment : segments) {
         final String paramName;
@@ -386,6 +421,10 @@ final class HttpRequestMatcher implements Predicate<Http.Request> {
   }
 
   @SuppressWarnings("unchecked")
+  private List<Segment> asSegments() {
+    return (List<Segment>) state;
+  }
+
   private boolean test(HttpSupport target) {
     return switch (kind) {
       case METHOD_ALLOWED -> {
@@ -396,8 +435,6 @@ final class HttpRequestMatcher implements Predicate<Http.Request> {
       }
 
       case PATH_EXACT -> {
-        target.pathReset();
-
         final String exact;
         exact = (String) state;
 
@@ -405,17 +442,13 @@ final class HttpRequestMatcher implements Predicate<Http.Request> {
       }
 
       case PATH_SEGMENTS -> {
-        target.pathReset();
-
         final List<Segment> segments;
-        segments = (List<Segment>) state;
+        segments = asSegments();
 
         yield testSegments(target, segments);
       }
 
       case PATH_WILDCARD -> {
-        target.pathReset();
-
         final String prefix;
         prefix = (String) state;
 
@@ -423,8 +456,6 @@ final class HttpRequestMatcher implements Predicate<Http.Request> {
       }
 
       case PATH_WITH_CONDITIONS -> {
-        target.pathReset();
-
         final WithConditions data;
         data = (WithConditions) state;
 

@@ -82,23 +82,23 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
         path.allow(Http.Method.POST, this::$testCase13);
       });
 
-      /*
-      matched.path("/testCase14*", tc14 -> {
-        tc14.subpath("/a", path -> {
+      matched.path("/testCase14/*", tc14 -> {
+        tc14.subpath("a", path -> {
           path.allow(Http.Method.GET, this::$testCase14);
         });
 
         tc14.handler(Http.Handler.notFound());
       });
 
+      /*
       matched.when(req -> req.path().startsWith("/testCase15"), tc15 -> {
         tc15.beforeMatched(this::$testCase15Before);
-      
+
         // filter applies
         tc15.path("/a", path -> {
           path.allow(Http.Method.GET, this::$testCase15);
         });
-      
+
         // filter does not apply
         tc15.handler(this::$testCase15);
       });
@@ -1134,7 +1134,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
     http.respond(resp);
   }
 
-  @Test(enabled = false)
+  @Test
   public void testCase14() {
     Testing.test(
         Testing.httpClient(

@@ -18,12 +18,14 @@ package objectos.way;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
+import objectos.way.Http.Handler;
 
 sealed abstract class HttpRouting {
 
@@ -41,7 +43,11 @@ sealed abstract class HttpRouting {
 
     @Override
     public final Http.Handler build() {
-      return buildFromMany(condition);
+      if (single != null) {
+        addMany(single);
+      }
+
+      return HttpHandler.of(condition, many);
     }
 
     @Override
@@ -56,6 +62,8 @@ sealed abstract class HttpRouting {
 
     @Override
     public final void path(String path, Consumer<Http.Routing.OfPath> routes) {
+      Objects.requireNonNull(path, "path == null");
+
       final HttpRequestMatcher matcher;
       matcher = HttpRequestMatcher.parsePath(path);
 
@@ -93,9 +101,16 @@ sealed abstract class HttpRouting {
 
     private int pathParamsIndex;
 
+    private final boolean subpath;
+
     @Lang.VisibleForTesting
     OfPath(HttpRequestMatcher matcher) {
+      this(matcher, false);
+    }
+
+    private OfPath(HttpRequestMatcher matcher, boolean subpath) {
       this.matcher = matcher;
+      this.subpath = subpath;
     }
 
     @Override
@@ -135,7 +150,13 @@ sealed abstract class HttpRouting {
         addMany(HttpHandler.methodNotAllowed(allowedMethods));
       }
 
-      return buildFromMany(condition);
+      if (single != null) {
+        addMany(single);
+      }
+
+      return subpath
+          ? HttpHandler.ofSubpath(condition, many)
+          : HttpHandler.of(condition, many);
     }
 
     @Override
@@ -214,14 +235,29 @@ sealed abstract class HttpRouting {
 
     @Override
     public final void subpath(String path, Consumer<Http.Routing.OfPath> routes) {
-      throw new UnsupportedOperationException("Implement me");
+      if (!matcher.endsInWildcard()) {
+        throw new IllegalStateException("A subpath can only be defined in a wildcard parent path");
+      }
+
+      Objects.requireNonNull(path, "path == null");
+
+      final HttpRequestMatcher subpathMatcher;
+      subpathMatcher = HttpRequestMatcher.parseSubpath(path);
+
+      final OfPath routing;
+      routing = new OfPath(subpathMatcher, true);
+
+      routes.accept(routing);
+
+      final Handler handler;
+      handler = routing.build();
+
+      addMany(handler);
     }
 
   }
 
-  Http.Handler[] many;
-
-  int manyIndex;
+  List<Http.Handler> many;
 
   Http.Handler single;
 
@@ -229,45 +265,12 @@ sealed abstract class HttpRouting {
 
   public abstract Http.Handler build();
 
-  final Http.Handler buildFromMany(Predicate<? super Http.Request> condition) {
-    if (single != null) {
-      addMany(single);
-    }
-
-    return switch (manyIndex) {
-      case 0 -> HttpHandler.NOOP;
-
-      case 1 -> {
-        final Http.Handler single;
-        single = many[0];
-
-        if (condition == null) {
-          yield single;
-        }
-
-        yield HttpHandler.single(condition, single);
-      }
-
-      default -> {
-        final Http.Handler[] copy;
-        copy = Arrays.copyOf(many, manyIndex);
-
-        yield HttpHandler.many(condition, copy);
-      }
-    };
-  }
-
   final void addMany(Http.Handler handler) {
-    final int requiredIndex;
-    requiredIndex = manyIndex++;
-
     if (many == null) {
-      many = new Http.Handler[10];
-    } else {
-      many = Util.growIfNecessary(many, requiredIndex);
+      many = new UtilList<>();
     }
 
-    many[requiredIndex] = handler;
+    many.add(handler);
   }
 
   final Http.Handler ofPath(HttpRequestMatcher matcher, Consumer<Http.Routing.OfPath> routes) {

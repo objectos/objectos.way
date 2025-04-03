@@ -130,4 +130,18 @@ public class HttpRequestMatcherParseTest {
     }
   }
 
+  @Test
+  public void subpathExact01() {
+    subpath("foo", HttpRequestMatcher.pathExact("foo"));
+    subpath("foo/bar", HttpRequestMatcher.pathExact("foo/bar"));
+    subpath("/", HttpRequestMatcher.pathExact("/"));
+  }
+
+  private void subpath(String path, HttpRequestMatcher expected) {
+    HttpRequestMatcher matcher;
+    matcher = HttpRequestMatcher.parseSubpath(path);
+
+    assertEquals(matcher, expected);
+  }
+
 }
