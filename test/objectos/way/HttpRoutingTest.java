@@ -90,19 +90,13 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
         tc14.handler(Http.Handler.notFound());
       });
 
-      /*
-      matched.when(req -> req.path().startsWith("/testCase15"), tc15 -> {
-        tc15.beforeMatched(this::$testCase15Before);
+      matched.path("/testCase15/*", tc15 -> {
+        tc15.filter(this::$testCase15Filter);
 
-        // filter applies
-        tc15.path("/a", path -> {
+        tc15.subpath("a", path -> {
           path.allow(Http.Method.GET, this::$testCase15);
         });
-
-        // filter does not apply
-        tc15.handler(this::$testCase15);
       });
-      */
 
       // redirect non-authenticated requests
       matched.handler(this::testCase02);
@@ -1174,7 +1168,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
   }
 
   @SuppressWarnings("unused")
-  private void $testCase15Before(Http.Exchange http) {
+  private void $testCase15Filter(Http.Exchange http, Http.Handler handler) {
     final HeaderName name;
     name = Http.HeaderName.of("X-Test-Case-15");
 
@@ -1182,6 +1176,15 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
     value = http.header(name);
 
     http.set(String.class, value);
+
+    handler.handle(http);
+
+    if (!http.processed()) {
+      final Lang.MediaObject object;
+      object = Lang.MediaObject.textPlain("Not Found", StandardCharsets.UTF_8);
+
+      http.respond(Http.Status.NOT_FOUND, object);
+    }
   }
 
   @SuppressWarnings("unused")
@@ -1198,7 +1201,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
     http.respond(resp);
   }
 
-  @Test(enabled = false)
+  @Test
   public void testCase15() {
     Testing.test(
         Testing.httpClient(
@@ -1231,12 +1234,12 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
         ),
 
         """
-        HTTP/1.1 200
-        content-length: 4
+        HTTP/1.1 404
+        content-length: 9
         content-type: text/plain; charset=utf-8
         date: Wed, 28 Jun 2023 12:08:43 GMT
 
-        null\
+        Not Found\
         """
     );
   }

@@ -153,6 +153,54 @@ public class HttpHandlerTest {
   }
 
   @Test
+  public void filter01() {
+    final Http.Handler handler;
+    handler = HttpHandler.filter(
+        HttpRequestMatcher.pathWildcard("/filter/"),
+
+        (http, chain) -> {
+          http.set(String.class, "TC01");
+
+          chain.handle(http);
+
+          if (!http.processed()) {
+            http.set(Integer.class, 1);
+          }
+        },
+
+        HttpHandler.ofSubpath(
+            HttpRequestMatcher.pathExact("test01"),
+
+            List.of(
+                ok(pass)
+            )
+        )
+    );
+
+    final Http.TestingExchange http1;
+    http1 = Http.TestingExchange.create(config -> {
+      config.path("/filter/test01");
+    });
+
+    handler.handle(http1);
+
+    assertEquals(http1.get(Integer.class), null);
+    assertEquals(http1.get(String.class), "TC01");
+    assertSame(http1.responseBody(), pass);
+
+    final Http.TestingExchange http2;
+    http2 = Http.TestingExchange.create(config -> {
+      config.path("/filter/not");
+    });
+
+    handler.handle(http2);
+
+    assertEquals(http2.get(Integer.class), 1);
+    assertEquals(http2.get(String.class), "TC01");
+    assertEquals(http2.responseBody(), null);
+  }
+
+  @Test
   public void subpath01() {
     final Http.Handler handler;
     handler = HttpHandler.single(

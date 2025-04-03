@@ -93,6 +93,8 @@ sealed abstract class HttpRouting {
 
   static final class OfPath extends HttpRouting implements Http.Routing.OfPath {
 
+    private Http.Filter filter;
+
     private final HttpRequestMatcher matcher;
 
     private Map<Http.Method, Http.Handler> pathMethods;
@@ -154,9 +156,27 @@ sealed abstract class HttpRouting {
         addMany(single);
       }
 
-      return subpath
-          ? HttpHandler.ofSubpath(condition, many)
-          : HttpHandler.of(condition, many);
+      if (filter == null) {
+
+        if (subpath) {
+          return HttpHandler.ofSubpath(condition, many);
+        } else {
+          return HttpHandler.of(condition, many);
+        }
+
+      } else {
+
+        final Http.Handler handler;
+
+        if (subpath) {
+          handler = HttpHandler.ofSubpath(null, many);
+        } else {
+          handler = HttpHandler.of(null, many);
+        }
+
+        return HttpHandler.filter(condition, filter, handler);
+
+      }
     }
 
     @Override
@@ -174,6 +194,15 @@ sealed abstract class HttpRouting {
       if (maybeExisting != null) {
         throw new IllegalArgumentException("A handler has already been defined for method " + method);
       }
+    }
+
+    @Override
+    public final void filter(Http.Filter value) {
+      if (filter != null) {
+        throw new IllegalStateException("A filter has already been defined");
+      }
+
+      filter = Objects.requireNonNull(value, "value == null");
     }
 
     @Override
@@ -284,7 +313,7 @@ sealed abstract class HttpRouting {
 
   final void single(Http.Handler value) {
     if (single != null) {
-      throw new IllegalArgumentException("A handler has already been defined");
+      throw new IllegalStateException("A handler has already been defined");
     }
 
     single = Objects.requireNonNull(value, "value == null");

@@ -43,7 +43,7 @@ final class HttpHandler implements Http.Handler {
 
     FACTORY1,
 
-    FILTER_MATCHED,
+    FILTER,
 
     // fixed content
 
@@ -67,7 +67,7 @@ final class HttpHandler implements Http.Handler {
 
   private record Content(String contentType, byte[] bytes) {}
 
-  private record FilterMatched(Http.Handler before, Kind actual, Object main) {}
+  private record FilterHolder(Http.Filter filter, Http.Handler handler) {}
 
   static final Http.Handler NOOP = new HttpHandler(Kind.NOOP, null, null);
 
@@ -98,6 +98,13 @@ final class HttpHandler implements Http.Handler {
     main = new Factory1<>(factory, value);
 
     return new HttpHandler(Kind.FACTORY1, null, main);
+  }
+
+  public static Http.Handler filter(Predicate<? super Http.Request> predicate, Http.Filter filter, Http.Handler handler) {
+    final FilterHolder holder;
+    holder = new FilterHolder(filter, handler);
+
+    return new HttpHandler(Kind.FILTER, predicate, holder);
   }
 
   public static Http.Handler methodNotAllowed(Set<Http.Method> allowedMethods) {
@@ -270,22 +277,17 @@ final class HttpHandler implements Http.Handler {
         handler.handle(http);
       }
 
-      case FILTER_MATCHED -> {
-        final FilterMatched filter;
-        filter = (FilterMatched) data;
+      case FILTER -> {
+        final FilterHolder holder;
+        holder = (FilterHolder) data;
 
-        final Http.Handler before;
-        before = filter.before();
+        final Http.Filter filter;
+        filter = holder.filter;
 
-        if (before != null) {
-          before.handle(http);
-        }
+        final Http.Handler handler;
+        handler = holder.handler;
 
-        if (http.processed()) {
-          return;
-        }
-
-        handle0(http, filter.actual, filter.main);
+        filter.filter(http, handler);
       }
 
       case CONTENT -> {
@@ -338,17 +340,6 @@ final class HttpHandler implements Http.Handler {
         http.send0();
       }
     }
-  }
-
-  final Http.Handler filterMatched(Http.Handler before) {
-    if (before == main) {
-      throw new IllegalArgumentException("Cycle detected");
-    }
-
-    final FilterMatched matched;
-    matched = new FilterMatched(before, kind, main);
-
-    return new HttpHandler(Kind.FILTER_MATCHED, predicate, matched);
   }
 
 }

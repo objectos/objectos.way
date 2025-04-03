@@ -139,6 +139,16 @@ public final class Http {
   }
 
   /**
+   * Executes tasks around the invocation of an HTTP handler.
+   */
+  @FunctionalInterface
+  public interface Filter {
+
+    void filter(Http.Exchange http, Http.Handler handler);
+
+  }
+
+  /**
    * Responsible for processing an HTTP {@linkplain Exchange exchange}.
    */
   @FunctionalInterface
@@ -797,6 +807,8 @@ public final class Http {
     public sealed interface OfPath permits HttpRouting.OfPath {
 
       void allow(Method method, Handler handler);
+
+      void filter(Filter value);
 
       void handler(Handler value);
 
