@@ -20,7 +20,7 @@ import java.nio.charset.StandardCharsets;
 record CssStyleSheet(String css) implements Css.StyleSheet {
 
   @Override
-  public final byte[] mediaBytes() {
+  public final byte[] toByteArray() {
     return css.getBytes(StandardCharsets.UTF_8);
   }
 

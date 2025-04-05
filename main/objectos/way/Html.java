@@ -610,7 +610,7 @@ public final class Html {
    * An object capable of defining the structure of an HTML document.
    */
   @FunctionalInterface
-  public interface Component extends Lang.MediaObject {
+  public interface Component extends Lang.Media {
 
     void renderHtml(Html.Markup m);
 
@@ -625,7 +625,7 @@ public final class Html {
     }
 
     @Override
-    default byte[] mediaBytes() {
+    default byte[] toByteArray() {
       String html;
       html = toHtml();
 

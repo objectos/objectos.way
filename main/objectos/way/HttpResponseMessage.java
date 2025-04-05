@@ -51,7 +51,7 @@ final class HttpResponseMessage implements Http.ResponseMessage {
     return new HttpResponseMessage(Kind.METHOD_NOT_ALLOWED, allow);
   }
 
-  static ResponseMessage ok(Lang.MediaObject object) {
+  static ResponseMessage ok(Lang.Media object) {
     return new HttpResponseMessage(Kind.OK_MEDIA_OBJECT, object);
   }
 
@@ -87,8 +87,8 @@ final class HttpResponseMessage implements Http.ResponseMessage {
 
       case OK_MEDIA_OBJECT -> {
 
-        final Lang.MediaObject object;
-        object = (Lang.MediaObject) value;
+        final Lang.Media object;
+        object = (Lang.Media) value;
 
         http.respond(Http.Status.OK, object);
 

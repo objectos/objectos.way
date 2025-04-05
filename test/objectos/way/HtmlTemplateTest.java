@@ -1327,7 +1327,8 @@ public class HtmlTemplateTest {
 
     assertEquals(template.contentType(), "text/html; charset=utf-8");
 
-    var mediaBytes = template.mediaBytes();
+    byte[] mediaBytes;
+    mediaBytes = template.toByteArray();
 
     assertEquals(new String(mediaBytes, StandardCharsets.UTF_8), """
     <!DOCTYPE html>

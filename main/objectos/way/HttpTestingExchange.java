@@ -30,7 +30,6 @@ import java.util.Set;
 import java.util.function.Consumer;
 import objectos.way.Http.ResponseHeaders;
 import objectos.way.Http.Status;
-import objectos.way.Lang.MediaObject;
 import objectos.way.Lang.MediaWriter;
 
 final class HttpTestingExchange extends HttpSupport implements Http.TestingExchange {
@@ -356,14 +355,14 @@ final class HttpTestingExchange extends HttpSupport implements Http.TestingExcha
   // response methods
 
   @Override
-  public final void respond(Http.Status status, Lang.MediaObject object) {
+  public final void respond(Http.Status status, Lang.Media object) {
     respond0(status, object);
 
     responseBody = object;
   }
 
   @Override
-  public final void respond(Status status, MediaObject object, Consumer<ResponseHeaders> headers) {
+  public final void respond(Status status, Lang.Media object, Consumer<ResponseHeaders> headers) {
     respond0(status, object);
 
     headers.accept(this);
@@ -371,14 +370,14 @@ final class HttpTestingExchange extends HttpSupport implements Http.TestingExcha
     responseBody = object;
   }
 
-  private void respond0(Http.Status status, Lang.MediaObject object) {
+  private void respond0(Http.Status status, Lang.Media object) {
     status0(status);
 
     String contentType;
     contentType = object.contentType();
 
     byte[] bytes;
-    bytes = object.mediaBytes();
+    bytes = object.toByteArray();
 
     dateNow();
 

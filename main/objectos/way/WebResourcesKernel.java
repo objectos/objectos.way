@@ -158,7 +158,7 @@ record WebResourcesKernel(
     move(tmp, file);
   }
 
-  public final void writeMediaObject(String pathName, Lang.MediaObject contents) throws IOException {
+  public final void writeMedia(String pathName, Lang.Media contents) throws IOException {
     final Path file;
     file = toPath(pathName);
 
@@ -166,7 +166,7 @@ record WebResourcesKernel(
     tmp = Files.createTempFile(null, null);
 
     final byte[] bytes;
-    bytes = contents.mediaBytes();
+    bytes = contents.toByteArray();
 
     Files.write(tmp, bytes);
 

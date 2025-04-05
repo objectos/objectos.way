@@ -669,7 +669,7 @@ public final class Http {
      * @param object
      *        the media object
      */
-    void respond(Lang.MediaObject object);
+    void respond(Lang.Media object);
 
     /**
      * Writes a {@code 200 OK} response message with the contents of the
@@ -697,7 +697,7 @@ public final class Http {
      * @param object
      *        the media object
      */
-    void respond(Http.Status status, Lang.MediaObject object);
+    void respond(Http.Status status, Lang.Media object);
 
     /**
      * Writes a response message with the specified status and the contents of
@@ -710,7 +710,7 @@ public final class Http {
      * @param headers
      *        the additional headers to write
      */
-    void respond(Http.Status status, Lang.MediaObject object, Consumer<ResponseHeaders> headers);
+    void respond(Http.Status status, Lang.Media object, Consumer<ResponseHeaders> headers);
 
     /**
      * Writes a response message with the specified status and the
@@ -791,8 +791,8 @@ public final class Http {
     }
 
     static ResponseMessage okTextPlain(String text, Charset charset) {
-      final Lang.MediaObject object;
-      object = Lang.MediaObject.textPlain(text, charset);
+      final Lang.Media object;
+      object = Lang.Media.textPlain(text, charset);
 
       return HttpResponseMessage.ok(object);
     }

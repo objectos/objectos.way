@@ -32,19 +32,10 @@ import java.time.Clock;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.function.Consumer;
-import objectos.way.Lang.MediaObject;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class WebResourcesTest implements Consumer<Http.Routing> {
-
-  private record TextPlain(String text) implements Lang.MediaObject {
-    @Override
-    public String contentType() { return "text/plain; charset=utf-8"; }
-
-    @Override
-    public byte[] mediaBytes() { return text.getBytes(StandardCharsets.UTF_8); }
-  }
 
   private Web.Resources resources;
 
@@ -162,8 +153,8 @@ public class WebResourcesTest implements Consumer<Http.Routing> {
     final String text;
     text = "BBBB\n";
 
-    final MediaObject object;
-    object = Lang.MediaObject.textPlain(text, StandardCharsets.UTF_8);
+    final Lang.Media object;
+    object = Lang.Media.textPlain(text, StandardCharsets.UTF_8);
 
     http.respond(Http.Status.OK, object);
   }
@@ -292,10 +283,10 @@ public class WebResourcesTest implements Consumer<Http.Routing> {
       String path;
       path = http.path();
 
-      Lang.MediaObject contents;
-      contents = new TextPlain("test-case-06");
+      Lang.Media contents;
+      contents = Lang.Media.textPlain("test-case-06");
 
-      resources.writeMediaObject(path, contents);
+      resources.writeMedia(path, contents);
 
       resources.handle(http);
     } catch (IOException e) {
@@ -345,10 +336,10 @@ public class WebResourcesTest implements Consumer<Http.Routing> {
       String path;
       path = http.path();
 
-      Lang.MediaObject contents;
-      contents = new TextPlain("test-case-07");
+      Lang.Media contents;
+      contents = Lang.Media.textPlain("test-case-07");
 
-      resources.writeMediaObject(path, contents);
+      resources.writeMedia(path, contents);
 
       assertTrue(resources.deleteIfExists(path));
 

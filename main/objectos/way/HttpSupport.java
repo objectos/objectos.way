@@ -164,7 +164,7 @@ sealed abstract class HttpSupport implements Http.Exchange, Http.ResponseHeaders
   }
 
   @Override
-  public final void respond(Lang.MediaObject object) {
+  public final void respond(Lang.Media object) {
     respond(Http.Status.OK, object);
   }
 

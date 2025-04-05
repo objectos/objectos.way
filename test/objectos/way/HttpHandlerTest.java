@@ -25,9 +25,9 @@ import org.testng.annotations.Test;
 
 public class HttpHandlerTest {
 
-  private final Lang.MediaObject pass = Lang.MediaObject.textPlain("PASS", StandardCharsets.UTF_8);
+  private final Lang.Media pass = Lang.Media.textPlain("PASS", StandardCharsets.UTF_8);
 
-  private final Lang.MediaObject skip = Lang.MediaObject.textPlain("SKIP", StandardCharsets.UTF_8);
+  private final Lang.Media skip = Lang.Media.textPlain("SKIP", StandardCharsets.UTF_8);
 
   @Test
   public void of01() {
@@ -359,7 +359,7 @@ public class HttpHandlerTest {
     return http -> http.set(String.class, value);
   }
 
-  private Http.Handler ok(Lang.MediaObject object) {
+  private Http.Handler ok(Lang.Media object) {
     return http -> http.respond(object);
   }
 

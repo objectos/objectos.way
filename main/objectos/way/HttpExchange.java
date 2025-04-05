@@ -1448,7 +1448,7 @@ final class HttpExchange extends HttpSupport implements Closeable {
   // ##################################################################
 
   @Override
-  public final void respond(Http.Status status, Lang.MediaObject object) {
+  public final void respond(Http.Status status, Lang.Media object) {
     final byte[] bytes;
     bytes = respond0(status, object);
 
@@ -1456,7 +1456,7 @@ final class HttpExchange extends HttpSupport implements Closeable {
   }
 
   @Override
-  public final void respond(Http.Status status, Lang.MediaObject object, Consumer<Http.ResponseHeaders> headers) {
+  public final void respond(Http.Status status, Lang.Media object, Consumer<Http.ResponseHeaders> headers) {
     final byte[] bytes;
     bytes = respond0(status, object);
 
@@ -1465,7 +1465,7 @@ final class HttpExchange extends HttpSupport implements Closeable {
     send0(bytes);
   }
 
-  private byte[] respond0(Http.Status status, Lang.MediaObject object) {
+  private byte[] respond0(Http.Status status, Lang.Media object) {
     Objects.requireNonNull(status, "status == null");
 
     // early object validation
@@ -1477,7 +1477,7 @@ final class HttpExchange extends HttpSupport implements Closeable {
     }
 
     byte[] bytes;
-    bytes = object.mediaBytes();
+    bytes = object.toByteArray();
 
     if (bytes == null) {
       throw new NullPointerException("The specified Lang.MediaObject provided a null byte array");

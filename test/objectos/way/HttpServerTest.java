@@ -27,7 +27,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.function.Consumer;
 import objectos.way.Http.Exchange;
-import objectos.way.Lang.MediaObject;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -95,8 +94,8 @@ public class HttpServerTest implements Consumer<Http.Routing> {
   }
 
   private void testCase01Get(Http.Exchange http) {
-    final MediaObject object;
-    object = Lang.MediaObject.textPlain("TC01\n", StandardCharsets.UTF_8);
+    final Lang.Media object;
+    object = Lang.Media.textPlain("TC01\n", StandardCharsets.UTF_8);
 
     http.respond(Http.Status.OK, object);
   }
@@ -155,8 +154,8 @@ public class HttpServerTest implements Consumer<Http.Routing> {
   }
 
   private void testCase02Get(Http.Exchange http) {
-    final MediaObject object;
-    object = Lang.MediaObject.textPlain("TC02\n", StandardCharsets.UTF_8);
+    final Lang.Media object;
+    object = Lang.Media.textPlain("TC02\n", StandardCharsets.UTF_8);
 
     http.respond(Http.Status.OK, object);
   }

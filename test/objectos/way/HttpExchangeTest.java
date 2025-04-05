@@ -25,7 +25,6 @@ import java.nio.file.Path;
 import java.time.Clock;
 import java.util.Set;
 import objectos.way.HttpExchange.ParseStatus;
-import objectos.way.Lang.MediaObject;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -80,8 +79,8 @@ public class HttpExchangeTest {
       assertEquals(ObjectosHttp.readAllBytes(http), Util.EMPTY_BYTE_ARRAY);
 
       // response phase
-      final MediaObject media;
-      media = Lang.MediaObject.textPlain(body01, StandardCharsets.UTF_8);
+      final Lang.Media media;
+      media = Lang.Media.textPlain(body01, StandardCharsets.UTF_8);
 
       http.respond(Http.Status.OK, media);
 
@@ -166,8 +165,8 @@ public class HttpExchangeTest {
       assertEquals(ObjectosHttp.readAllBytes(http), Util.EMPTY_BYTE_ARRAY);
 
       // response phase
-      final MediaObject object01;
-      object01 = Lang.MediaObject.textPlain(body01, StandardCharsets.UTF_8);
+      final Lang.Media object01;
+      object01 = Lang.Media.textPlain(body01, StandardCharsets.UTF_8);
 
       http.respond(Http.Status.OK, object01);
 
@@ -195,8 +194,8 @@ public class HttpExchangeTest {
       // response phase
       socket.outputReset();
 
-      final MediaObject object02;
-      object02 = Lang.MediaObject.textPlain(body02, StandardCharsets.UTF_8);
+      final Lang.Media object02;
+      object02 = Lang.Media.textPlain(body02, StandardCharsets.UTF_8);
 
       http.respond(Http.Status.OK, object02);
 
@@ -248,8 +247,8 @@ public class HttpExchangeTest {
       """);
 
       // response phase
-      final MediaObject object;
-      object = Lang.MediaObject.textPlain(body01, StandardCharsets.UTF_8);
+      final Lang.Media object;
+      object = Lang.Media.textPlain(body01, StandardCharsets.UTF_8);
 
       http.respond(Http.Status.OK, object);
 
@@ -1141,8 +1140,8 @@ public class HttpExchangeTest {
       assertEquals(parse.isError(), false);
 
       // response phase
-      final Lang.MediaObject object;
-      object = new Testing.TextPlain(body01);
+      final Lang.Media object;
+      object = Lang.Media.textPlain(body01);
 
       http.respond(Http.Status.OK, object);
 

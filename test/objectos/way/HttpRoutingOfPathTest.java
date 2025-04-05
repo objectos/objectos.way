@@ -30,8 +30,8 @@ public class HttpRoutingOfPathTest {
     final HttpRouting.OfPath routing;
     routing = new HttpRouting.OfPath(matcher);
 
-    final Lang.MediaObject object;
-    object = Lang.MediaObject.textPlain("LOGIN", StandardCharsets.UTF_8);
+    final Lang.Media object;
+    object = Lang.Media.textPlain("LOGIN", StandardCharsets.UTF_8);
 
     routing.subpath("login", path -> {
       path.handler(ok(object));
@@ -52,7 +52,7 @@ public class HttpRoutingOfPathTest {
     assertEquals(http.responseBody(), object);
   }
 
-  private Http.Handler ok(Lang.MediaObject object) {
+  private Http.Handler ok(Lang.Media object) {
     return http -> http.respond(object);
   }
 

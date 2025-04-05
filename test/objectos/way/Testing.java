@@ -54,26 +54,6 @@ final class Testing {
 
   }
 
-  static final class TextPlain implements Lang.MediaObject {
-
-    private final String value;
-
-    TextPlain(String value) {
-      this.value = value;
-    }
-
-    @Override
-    public final String contentType() {
-      return "text/plain; charset=utf-8";
-    }
-
-    @Override
-    public final byte[] mediaBytes() {
-      return value.getBytes(StandardCharsets.UTF_8);
-    }
-
-  }
-
   private Testing() {}
 
   public static String cookie(String name, long l0, long l1, long l2, long l3) {

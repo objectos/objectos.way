@@ -22,6 +22,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.Objects;
 
@@ -52,44 +53,59 @@ public final class Lang {
   }
 
   /**
-   * A representation of media data intended for transmission over an Internet
-   * protocol.
-   *
-   * <p>
-   * The {@code MediaObject} interface defines a generic media entity, providing
-   * access to its content type and raw data in byte form. Implementations of
-   * this interface should specify the type of media content they represent
-   * (e.g., text, image, or binary data) and the necessary encoding details.
-   *
-   * <p>
-   * This interface is designed to be protocol-agnostic, allowing the
-   * implementing class to represent media data for various communication
-   * protocols, including HTTP, WebSocket, and others.
+   * Represents data associated to a content type to be transmitted over an
+   * Internet protocol.
    */
-  public interface MediaObject {
+  public interface Media {
 
-    static MediaObject textPlain(String text, Charset charset) {
+    /**
+     * Creates a new {@code text/plain; charset=utf-8} media by encoding the
+     * specified string using the UTF-8 charset.
+     *
+     * @param text
+     *        the string whose characters are to encoded
+     *
+     * @return a newly created {@code text/plain; charset=utf-8} media instance
+     */
+    static Media textPlain(String text) {
       Objects.requireNonNull(text, "text == null");
-      Objects.requireNonNull(charset, "charset == null");
 
-      return new LangMediaObjectTextPlain(text, charset);
+      return new LangMedia(text, StandardCharsets.UTF_8);
     }
 
     /**
-     * Returns the MIME content type of this media object, such as
-     * {@code text/html} or {@code application/json}.
+     * Creates a new {@code text/plain; charset=<specified charset>} media by
+     * encoding the specified string using the specified charset.
      *
-     * @return the content type of this media object, in MIME type format
+     * @param text
+     *        the string whose characters are to encoded
+     * @param charset
+     *        the charset to use
+     *
+     * @return a newly created {@code text/plain; charset=<specified charset>}
+     *         media instance
+     */
+    static Media textPlain(String text, Charset charset) {
+      Objects.requireNonNull(text, "text == null");
+      Objects.requireNonNull(charset, "charset == null");
+
+      return new LangMedia(text, charset);
+    }
+
+    /**
+     * Returns the content type of this media, such as
+     * {@code text/html; charset=utf-8} or {@code application/json}.
+     *
+     * @return the content type of this media
      */
     String contentType();
 
     /**
-     * Provides the raw data of the media object as a byte array, ready to be
-     * transmitted over a network protocol.
+     * Returns this media data as a byte array.
      *
-     * @return the raw data to be sent over the wire as a byte array
+     * @return the media data
      */
-    byte[] mediaBytes();
+    byte[] toByteArray();
 
   }
 
