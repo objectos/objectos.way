@@ -18,6 +18,7 @@ package objectos.way;
 import static org.testng.Assert.assertEquals;
 
 import java.nio.charset.StandardCharsets;
+import java.util.function.Consumer;
 import org.testng.annotations.Test;
 
 public class HttpRoutingOfPathTest {
@@ -43,17 +44,36 @@ public class HttpRoutingOfPathTest {
     handler = routing.build();
 
     final Http.TestingExchange http;
-    http = Http.TestingExchange.create(config -> {
+    http = http(config -> {
       config.path("/app/login");
     });
 
     handler.handle(http);
 
-    assertEquals(http.responseBody(), object);
+    assertEquals(
+        http.responseToString(),
+
+        """
+        HTTP/1.1 200 OK
+        Date: Wed, 28 Jun 2023 12:08:43 GMT
+        Content-Type: text/plain; charset=utf-8
+        Content-Length: 5
+
+        LOGIN\
+        """
+    );
+  }
+
+  private Http.TestingExchange http(Consumer<Http.TestingExchange.Config> outer) {
+    return Http.TestingExchange.create(config -> {
+      config.clock(TestingClock.FIXED);
+
+      outer.accept(config);
+    });
   }
 
   private Http.Handler ok(Lang.Media object) {
-    return http -> http.respond(object);
+    return http -> http.ok(object);
   }
 
 }

@@ -127,6 +127,17 @@ public final class Http {
      */
     <T> T get(Class<T> key);
 
+    // 2XX responses
+
+    /**
+     * Respond with a {@code 200 OK} message using the bytes from the specified
+     * media as the message body.
+     *
+     * @param media
+     *        the object providing the bytes of the message body
+     */
+    void ok(Lang.Media media);
+
     /**
      * Return {@code true} if an HTTP response message has been written to this
      * exchange; {@code false} otherwise.
@@ -661,15 +672,6 @@ public final class Http {
    * Provides methods for writing the response message of an HTTP exchange.
    */
   public sealed interface Response {
-
-    /**
-     * Writes a {@code 200 OK} response message with the contents of the
-     * specified media object.
-     *
-     * @param object
-     *        the media object
-     */
-    void respond(Lang.Media object);
 
     /**
      * Writes a {@code 200 OK} response message with the contents of the
@@ -1322,6 +1324,8 @@ public final class Http {
 
     Charset responseCharset();
 
+    String responseToString();
+
   }
 
   // exception types
@@ -1418,6 +1422,14 @@ public final class Http {
       response = signature + " ";
 
       responseBytes = Http.utf8(response);
+    }
+
+    final void appendTo(StringBuilder out) {
+      switch (this) {
+        case HTTP_1_0 -> out.append("HTTP/1.0");
+
+        case HTTP_1_1 -> out.append("HTTP/1.1");
+      }
     }
 
   }

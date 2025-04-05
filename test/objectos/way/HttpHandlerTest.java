@@ -16,11 +16,11 @@
 package objectos.way;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertSame;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.function.Consumer;
 import org.testng.annotations.Test;
 
 public class HttpHandlerTest {
@@ -65,23 +65,33 @@ public class HttpHandlerTest {
         List.of(ok(pass))
     );
 
-    final Http.TestingExchange http1;
-    http1 = Http.TestingExchange.create(config -> {
-      config.path("/of04");
-    });
+    test(
+        handler,
 
-    handler.handle(http1);
+        http(config -> {
+          config.path("/of04");
+        }),
 
-    assertSame(http1.responseBody(), pass);
+        """
+        HTTP/1.1 200 OK
+        Date: Wed, 28 Jun 2023 12:08:43 GMT
+        Content-Type: text/plain; charset=utf-8
+        Content-Length: 4
 
-    final Http.TestingExchange http2;
-    http2 = Http.TestingExchange.create(config -> {
-      config.path("/foo");
-    });
+        PASS\
+        """
+    );
 
-    handler.handle(http2);
+    test(
+        handler,
 
-    assertNull(http2.responseBody());
+        http(config -> {
+          config.path("/foo");
+        }),
+
+        """
+        """
+    );
   }
 
   @Test
@@ -97,25 +107,41 @@ public class HttpHandlerTest {
         )
     );
 
-    final Http.TestingExchange http1;
-    http1 = Http.TestingExchange.create(config -> {
-      config.path("/of05");
-    });
+    test(
+        handler,
 
-    handler.handle(http1);
+        http(config -> {
+          config.path("/of05");
+        }),
 
-    assertEquals(http1.get(String.class), "OF-05");
-    assertSame(http1.responseBody(), pass);
+        http -> {
+          assertEquals(http.get(String.class), "OF-05");
+        },
 
-    final Http.TestingExchange http2;
-    http2 = Http.TestingExchange.create(config -> {
-      config.path("/foo");
-    });
+        """
+        HTTP/1.1 200 OK
+        Date: Wed, 28 Jun 2023 12:08:43 GMT
+        Content-Type: text/plain; charset=utf-8
+        Content-Length: 4
 
-    handler.handle(http2);
+        PASS\
+        """
+    );
 
-    assertNull(http2.get(String.class));
-    assertNull(http2.responseBody());
+    test(
+        handler,
+
+        http(config -> {
+          config.path("/foo");
+        }),
+
+        http -> {
+          assertEquals(http.get(String.class), null);
+        },
+
+        """
+        """
+    );
   }
 
   @Test
@@ -131,25 +157,47 @@ public class HttpHandlerTest {
         )
     );
 
-    final Http.TestingExchange http1;
-    http1 = Http.TestingExchange.create(config -> {
-      config.path("/of06");
-    });
+    test(
+        handler,
 
-    handler.handle(http1);
+        http(config -> {
+          config.path("/of06");
+        }),
 
-    assertEquals(http1.get(String.class), "OF-06");
-    assertSame(http1.responseBody(), pass);
+        http -> {
+          assertEquals(http.get(String.class), "OF-06");
+        },
 
-    final Http.TestingExchange http2;
-    http2 = Http.TestingExchange.create(config -> {
-      config.path("/foo");
-    });
+        """
+        HTTP/1.1 200 OK
+        Date: Wed, 28 Jun 2023 12:08:43 GMT
+        Content-Type: text/plain; charset=utf-8
+        Content-Length: 4
 
-    handler.handle(http2);
+        PASS\
+        """
+    );
 
-    assertEquals(http2.get(String.class), "OF-06");
-    assertSame(http2.responseBody(), pass);
+    test(
+        handler,
+
+        http(config -> {
+          config.path("/foo");
+        }),
+
+        http -> {
+          assertEquals(http.get(String.class), "OF-06");
+        },
+
+        """
+        HTTP/1.1 200 OK
+        Date: Wed, 28 Jun 2023 12:08:43 GMT
+        Content-Type: text/plain; charset=utf-8
+        Content-Length: 4
+
+        PASS\
+        """
+    );
   }
 
   @Test
@@ -177,27 +225,43 @@ public class HttpHandlerTest {
         )
     );
 
-    final Http.TestingExchange http1;
-    http1 = Http.TestingExchange.create(config -> {
-      config.path("/filter/test01");
-    });
+    test(
+        handler,
 
-    handler.handle(http1);
+        http(config -> {
+          config.path("/filter/test01");
+        }),
 
-    assertEquals(http1.get(Integer.class), null);
-    assertEquals(http1.get(String.class), "TC01");
-    assertSame(http1.responseBody(), pass);
+        http -> {
+          assertEquals(http.get(Integer.class), null);
+          assertEquals(http.get(String.class), "TC01");
+        },
 
-    final Http.TestingExchange http2;
-    http2 = Http.TestingExchange.create(config -> {
-      config.path("/filter/not");
-    });
+        """
+        HTTP/1.1 200 OK
+        Date: Wed, 28 Jun 2023 12:08:43 GMT
+        Content-Type: text/plain; charset=utf-8
+        Content-Length: 4
 
-    handler.handle(http2);
+        PASS\
+        """
+    );
 
-    assertEquals(http2.get(Integer.class), 1);
-    assertEquals(http2.get(String.class), "TC01");
-    assertEquals(http2.responseBody(), null);
+    test(
+        handler,
+
+        http(config -> {
+          config.path("/filter/not");
+        }),
+
+        http -> {
+          assertEquals(http.get(Integer.class), 1);
+          assertEquals(http.get(String.class), "TC01");
+        },
+
+        """
+        """
+    );
   }
 
   @Test
@@ -215,14 +279,22 @@ public class HttpHandlerTest {
         )
     );
 
-    final Http.TestingExchange http;
-    http = Http.TestingExchange.create(config -> {
-      config.path("/subpath/test01");
-    });
+    test(
+        handler,
 
-    handler.handle(http);
+        http(config -> {
+          config.path("/subpath/test01");
+        }),
 
-    assertSame(http.responseBody(), pass);
+        """
+        HTTP/1.1 200 OK
+        Date: Wed, 28 Jun 2023 12:08:43 GMT
+        Content-Type: text/plain; charset=utf-8
+        Content-Length: 4
+
+        PASS\
+        """
+    );
   }
 
   @Test
@@ -246,25 +318,41 @@ public class HttpHandlerTest {
         )
     );
 
-    final Http.TestingExchange http1;
-    http1 = Http.TestingExchange.create(config -> {
-      config.path("/subpath/test02/more");
-    });
+    test(
+        handler,
 
-    handler.handle(http1);
+        http(config -> {
+          config.path("/subpath/test02/more");
+        }),
 
-    assertEquals(http1.get(String.class), "SUB-02");
-    assertSame(http1.responseBody(), pass);
+        http -> {
+          assertEquals(http.get(String.class), "SUB-02");
+        },
 
-    final Http.TestingExchange http2;
-    http2 = Http.TestingExchange.create(config -> {
-      config.path("/subpath/test02/noop");
-    });
+        """
+        HTTP/1.1 200 OK
+        Date: Wed, 28 Jun 2023 12:08:43 GMT
+        Content-Type: text/plain; charset=utf-8
+        Content-Length: 4
 
-    handler.handle(http2);
+        PASS\
+        """
+    );
 
-    assertEquals(http2.get(String.class), "SUB-02");
-    assertEquals(http2.responseBody(), null);
+    test(
+        handler,
+
+        http(config -> {
+          config.path("/subpath/test02/noop");
+        }),
+
+        http -> {
+          assertEquals(http.get(String.class), "SUB-02");
+        },
+
+        """
+        """
+    );
   }
 
   @Test
@@ -292,23 +380,39 @@ public class HttpHandlerTest {
         )
     );
 
-    final Http.TestingExchange http1;
-    http1 = Http.TestingExchange.create(config -> {
-      config.path("/subpath/test-03");
-    });
+    test(
+        handler,
 
-    handler.handle(http1);
+        http(config -> {
+          config.path("/subpath/test-03");
+        }),
 
-    assertSame(http1.responseBody(), pass);
+        """
+        HTTP/1.1 200 OK
+        Date: Wed, 28 Jun 2023 12:08:43 GMT
+        Content-Type: text/plain; charset=utf-8
+        Content-Length: 4
 
-    final Http.TestingExchange http2;
-    http2 = Http.TestingExchange.create(config -> {
-      config.path("/subpath/skip-me");
-    });
+        PASS\
+        """
+    );
 
-    handler.handle(http2);
+    test(
+        handler,
 
-    assertEquals(http2.responseBody(), skip);
+        http(config -> {
+          config.path("/subpath/skip-me");
+        }),
+
+        """
+        HTTP/1.1 200 OK
+        Date: Wed, 28 Jun 2023 12:08:43 GMT
+        Content-Type: text/plain; charset=utf-8
+        Content-Length: 4
+
+        SKIP\
+        """
+    );
   }
 
   @Test
@@ -336,23 +440,47 @@ public class HttpHandlerTest {
         )
     );
 
-    final Http.TestingExchange http1;
-    http1 = Http.TestingExchange.create(config -> {
-      config.path("/subpath/test04/more");
+    test(
+        handler,
+
+        http(config -> {
+          config.path("/subpath/test04/more");
+        }),
+
+        """
+        HTTP/1.1 200 OK
+        Date: Wed, 28 Jun 2023 12:08:43 GMT
+        Content-Type: text/plain; charset=utf-8
+        Content-Length: 4
+
+        PASS\
+        """
+    );
+
+    test(
+        handler,
+
+        http(config -> {
+          config.path("/subpath/test04/skip");
+        }),
+
+        """
+        HTTP/1.1 200 OK
+        Date: Wed, 28 Jun 2023 12:08:43 GMT
+        Content-Type: text/plain; charset=utf-8
+        Content-Length: 4
+
+        SKIP\
+        """
+    );
+  }
+
+  private Http.TestingExchange http(Consumer<Http.TestingExchange.Config> outer) {
+    return Http.TestingExchange.create(config -> {
+      config.clock(TestingClock.FIXED);
+
+      outer.accept(config);
     });
-
-    handler.handle(http1);
-
-    assertSame(http1.responseBody(), pass);
-
-    final Http.TestingExchange http2;
-    http2 = Http.TestingExchange.create(config -> {
-      config.path("/subpath/test04/skip");
-    });
-
-    handler.handle(http2);
-
-    assertEquals(http2.responseBody(), skip);
   }
 
   private Http.Handler decorate(String value) {
@@ -360,7 +488,24 @@ public class HttpHandlerTest {
   }
 
   private Http.Handler ok(Lang.Media object) {
-    return http -> http.respond(object);
+    return http -> http.ok(object);
+  }
+
+  private void test(Http.Handler handler, Http.TestingExchange http, String expected) {
+    handler.handle(http);
+
+    assertEquals(http.responseToString(), expected);
+  }
+
+  private void test(Http.Handler handler,
+      Http.TestingExchange http,
+      Consumer<Http.TestingExchange> afterListener,
+      String expected) {
+    handler.handle(http);
+
+    afterListener.accept(http);
+
+    assertEquals(http.responseToString(), expected);
   }
 
 }

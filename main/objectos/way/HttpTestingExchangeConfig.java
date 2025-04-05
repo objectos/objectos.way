@@ -35,6 +35,8 @@ final class HttpTestingExchangeConfig implements Http.TestingExchange.Config {
 
   Map<String, Object> queryParams;
 
+  Http.Version version = Http.Version.HTTP_1_1;
+
   Map<Http.HeaderName, Object> headers;
 
   Map<String, Object> formParams;

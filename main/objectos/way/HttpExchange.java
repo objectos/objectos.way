@@ -1728,6 +1728,11 @@ final class HttpExchange extends HttpSupport implements Closeable {
   }
 
   @Override
+  final void body0(Object original, byte[] bytes) {
+    send0(bytes);
+  }
+
+  @Override
   final void send0() {
     try {
       sendStart();

@@ -153,7 +153,35 @@ sealed abstract class HttpSupport implements Http.Exchange, Http.ResponseHeaders
     return pathIndex == path.length();
   }
 
-  // response methods
+  // 2xx responses
+
+  @Override
+  public final void ok(Lang.Media media) {
+    // early media validation
+    final String contentType;
+    contentType = media.contentType();
+
+    if (contentType == null) {
+      throw new NullPointerException("The specified Lang.Media provided a null content-type");
+    }
+
+    final byte[] bytes;
+    bytes = media.toByteArray();
+
+    if (bytes == null) {
+      throw new NullPointerException("The specified Lang.Media provided a null byte array");
+    }
+
+    status0(Http.Status.OK);
+
+    dateNow();
+
+    header0(Http.HeaderName.CONTENT_TYPE, contentType);
+
+    header0(Http.HeaderName.CONTENT_LENGTH, bytes.length);
+
+    body0(media, bytes);
+  }
 
   @Override
   public final void respond(ResponseMessage message) {
@@ -161,11 +189,6 @@ sealed abstract class HttpSupport implements Http.Exchange, Http.ResponseHeaders
     impl = (HttpResponseMessage) message;
 
     impl.accept(this);
-  }
-
-  @Override
-  public final void respond(Lang.Media object) {
-    respond(Http.Status.OK, object);
   }
 
   @Override
@@ -218,6 +241,8 @@ sealed abstract class HttpSupport implements Http.Exchange, Http.ResponseHeaders
   }
 
   abstract void header0(Http.HeaderName name, String value);
+
+  abstract void body0(Object original, byte[] bytes);
 
   abstract void send0();
 

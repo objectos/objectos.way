@@ -28,9 +28,7 @@ import java.util.Objects;
 import java.util.SequencedMap;
 import java.util.Set;
 import java.util.function.Consumer;
-import objectos.way.Http.ResponseHeaders;
-import objectos.way.Http.Status;
-import objectos.way.Lang.MediaWriter;
+import objectos.way.Lang.MediaType;
 
 final class HttpTestingExchange extends HttpSupport implements Http.TestingExchange {
 
@@ -41,6 +39,8 @@ final class HttpTestingExchange extends HttpSupport implements Http.TestingExcha
   private final String path;
 
   private final Map<String, Object> queryParams;
+
+  private final Http.Version version;
 
   private final Map<Http.HeaderName, Object> headers;
 
@@ -64,6 +64,8 @@ final class HttpTestingExchange extends HttpSupport implements Http.TestingExcha
     path = config.path;
 
     queryParams = config.queryParams;
+
+    version = config.version;
 
     headers = config.headers;
 
@@ -98,6 +100,62 @@ final class HttpTestingExchange extends HttpSupport implements Http.TestingExcha
     return responseCharset;
   }
 
+  @Override
+  public final String responseToString() {
+    if (responseStatus != null) {
+      final StringBuilder sb;
+      sb = new StringBuilder();
+
+      version.appendTo(sb);
+
+      if (responseStatus != null) {
+        sb.append(' ');
+
+        sb.append(responseStatus.code());
+
+        sb.append(' ');
+
+        sb.append(responseStatus.reasonPhrase());
+      }
+
+      sb.append('\n');
+
+      writeHeaders(sb, responseHeaders);
+
+      sb.append('\n');
+
+      if (responseBody != null) {
+        responseBodyToString(sb);
+      }
+
+      return sb.toString();
+    } else {
+      return "";
+    }
+  }
+
+  private void responseBodyToString(StringBuilder sb) {
+    final String result;
+
+    if (responseBody instanceof byte[] bytes) {
+      MediaType mediaType;
+      mediaType = Lang.MediaType.wildcard();
+
+      final String contentType;
+      contentType = responseHeader(Http.HeaderName.CONTENT_TYPE);
+
+      if (contentType != null) {
+        mediaType = Lang.MediaType.parse(contentType);
+      }
+
+      result = mediaType.toString(bytes);
+    } else {
+      result = String.valueOf(responseBody);
+    }
+
+    sb.append(result);
+  }
+
   // request methods
 
   @SuppressWarnings("unchecked")
@@ -130,11 +188,7 @@ final class HttpTestingExchange extends HttpSupport implements Http.TestingExcha
   }
 
   @SuppressWarnings("unchecked")
-  @Override
-  public final String toRequestHeadersText() {
-    final StringBuilder sb;
-    sb = new StringBuilder();
-
+  private void writeHeaders(StringBuilder sb, Map<Http.HeaderName, Object> headers) {
     if (headers != null) {
 
       for (var entry : headers.entrySet()) {
@@ -172,6 +226,15 @@ final class HttpTestingExchange extends HttpSupport implements Http.TestingExcha
       }
 
     }
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public final String toRequestHeadersText() {
+    final StringBuilder sb;
+    sb = new StringBuilder();
+
+    writeHeaders(sb, headers);
 
     return sb.toString();
   }
@@ -362,7 +425,7 @@ final class HttpTestingExchange extends HttpSupport implements Http.TestingExcha
   }
 
   @Override
-  public final void respond(Status status, Lang.Media object, Consumer<ResponseHeaders> headers) {
+  public final void respond(Http.Status status, Lang.Media object, Consumer<Http.ResponseHeaders> headers) {
     respond0(status, object);
 
     headers.accept(this);
@@ -387,14 +450,14 @@ final class HttpTestingExchange extends HttpSupport implements Http.TestingExcha
   }
 
   @Override
-  public final void respond(Status status, MediaWriter writer) {
+  public final void respond(Http.Status status, Lang.MediaWriter writer) {
     respond0(status, writer);
 
     responseBody = writer;
   }
 
   @Override
-  public final void respond(Status status, MediaWriter writer, Consumer<ResponseHeaders> headers) {
+  public final void respond(Http.Status status, Lang.MediaWriter writer, Consumer<Http.ResponseHeaders> headers) {
     respond0(status, writer);
 
     headers.accept(this);
@@ -402,7 +465,7 @@ final class HttpTestingExchange extends HttpSupport implements Http.TestingExcha
     responseBody = writer;
   }
 
-  private void respond0(Status status, MediaWriter writer) {
+  private void respond0(Http.Status status, Lang.MediaWriter writer) {
     status0(status);
 
     String contentType;
@@ -445,6 +508,11 @@ final class HttpTestingExchange extends HttpSupport implements Http.TestingExcha
 
       responseHeaders.put(name, list);
     }
+  }
+
+  @Override
+  final void body0(Object original, byte[] bytes) {
+    responseBody = bytes;
   }
 
   @Override
