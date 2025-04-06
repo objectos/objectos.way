@@ -22,11 +22,11 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
-record LangMediaType(String type, String subtype, Map<String, String> params) implements Lang.MediaType {
+record MediaType(String type, String subtype, Map<String, String> params) implements Media.Type {
 
-  public static final LangMediaType WILDCARD = new LangMediaType("*", "*", Map.of());
+  public static final MediaType WILDCARD = new MediaType("*", "*", Map.of());
 
-  static Lang.MediaType parse(String s) {
+  static Media.Type parse(String s) {
     String type = null;
     String subtype = null;
     Map<String, String> params = new HashMap<>();
@@ -300,7 +300,7 @@ record LangMediaType(String type, String subtype, Map<String, String> params) im
 
     params = Map.copyOf(params);
 
-    return new LangMediaType(type, subtype, params);
+    return new MediaType(type, subtype, params);
   }
 
   @Override

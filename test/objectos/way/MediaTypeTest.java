@@ -20,11 +20,11 @@ import static org.testng.Assert.assertNull;
 
 import org.testng.annotations.Test;
 
-public class LangMediaTypeTest {
+public class MediaTypeTest {
 
   @Test
   public void testBasicTextPlainWithCharset() {
-    Lang.MediaType type = Lang.MediaType.parse("text/plain; charset=utf-8");
+    Media.Type type = Media.Type.parse("text/plain; charset=utf-8");
     assertEquals(type.type(), "text", "Main type should be 'text'");
     assertEquals(type.subtype(), "plain", "Subtype should be 'plain'");
     assertEquals(type.param("charset"), "utf-8", "Charset parameter should be 'utf-8'");
@@ -33,7 +33,7 @@ public class LangMediaTypeTest {
 
   @Test
   public void testTextPlainNoParameters() {
-    Lang.MediaType type = Lang.MediaType.parse("text/plain");
+    Media.Type type = Media.Type.parse("text/plain");
     assertEquals(type.type(), "text", "Main type should be 'text'");
     assertEquals(type.subtype(), "plain", "Subtype should be 'plain'");
     assertNull(type.param("charset"), "Charset should be null when not specified");
@@ -41,7 +41,7 @@ public class LangMediaTypeTest {
 
   @Test
   public void testCaseInsensitivity() {
-    Lang.MediaType type = Lang.MediaType.parse("TEXT/HTML; CHARSET=UTF-8");
+    Media.Type type = Media.Type.parse("TEXT/HTML; CHARSET=UTF-8");
     assertEquals(type.type(), "text", "Main type should be lowercase 'text'");
     assertEquals(type.subtype(), "html", "Subtype should be lowercase 'html'");
     assertEquals(type.param("charset"), "UTF-8", "Charset parameter should preserve case");
@@ -49,7 +49,7 @@ public class LangMediaTypeTest {
 
   @Test
   public void testMultipleParameters() {
-    Lang.MediaType type = Lang.MediaType.parse("text/csv; charset=utf-8; boundary=xyz");
+    Media.Type type = Media.Type.parse("text/csv; charset=utf-8; boundary=xyz");
     assertEquals(type.type(), "text");
     assertEquals(type.subtype(), "csv");
     assertEquals(type.param("charset"), "utf-8");
@@ -58,7 +58,7 @@ public class LangMediaTypeTest {
 
   @Test
   public void testQuotedParameter() {
-    Lang.MediaType type = Lang.MediaType.parse("text/plain; charset=\"utf-8\"");
+    Media.Type type = Media.Type.parse("text/plain; charset=\"utf-8\"");
     assertEquals(type.type(), "text");
     assertEquals(type.subtype(), "plain");
     assertEquals(type.param("charset"), "utf-8", "Quotes should be stripped");
@@ -66,7 +66,7 @@ public class LangMediaTypeTest {
 
   @Test
   public void testWhitespaceHandling() {
-    Lang.MediaType type = Lang.MediaType.parse("  text/plain  ;  charset  =  utf-8  ");
+    Media.Type type = Media.Type.parse("  text/plain  ;  charset  =  utf-8  ");
     assertEquals(type.type(), "text");
     assertEquals(type.subtype(), "plain");
     assertEquals(type.param("charset"), "utf-8");
@@ -74,29 +74,29 @@ public class LangMediaTypeTest {
 
   @Test(expectedExceptions = NullPointerException.class, expectedExceptionsMessageRegExp = "s == null")
   public void testNullInput() {
-    Lang.MediaType.parse(null);
+    Media.Type.parse(null);
   }
 
   @Test(expectedExceptions = IllegalArgumentException.class)
   public void testEmptyInput() {
-    Lang.MediaType.parse("");
+    Media.Type.parse("");
   }
 
   @Test(expectedExceptions = IllegalArgumentException.class)
   public void testInvalidFormatNoSlash() {
-    Lang.MediaType.parse("text");
+    Media.Type.parse("text");
   }
 
   @Test
   public void testComplexSubtype() {
-    Lang.MediaType type = Lang.MediaType.parse("application/vnd.api+json");
+    Media.Type type = Media.Type.parse("application/vnd.api+json");
     assertEquals(type.type(), "application");
     assertEquals(type.subtype(), "vnd.api+json");
   }
 
   @Test
   public void testParameterWithNoValue() {
-    Lang.MediaType type = Lang.MediaType.parse("text/plain; charset=");
+    Media.Type type = Media.Type.parse("text/plain; charset=");
     assertEquals(type.type(), "text");
     assertEquals(type.subtype(), "plain");
     assertEquals(type.param("charset"), "", "Empty parameter value should return empty string");
@@ -104,7 +104,7 @@ public class LangMediaTypeTest {
 
   @Test
   public void testMultipleSemicolons() {
-    Lang.MediaType type = Lang.MediaType.parse("text/plain;;;charset=utf-8;;");
+    Media.Type type = Media.Type.parse("text/plain;;;charset=utf-8;;");
     assertEquals(type.type(), "text");
     assertEquals(type.subtype(), "plain");
     assertEquals(type.param("charset"), "utf-8");
@@ -112,7 +112,7 @@ public class LangMediaTypeTest {
 
   @Test(enabled = false)
   public void testWildcardType() {
-    Lang.MediaType type = Lang.MediaType.parse("*/*");
+    Media.Type type = Media.Type.parse("*/*");
     assertEquals(type.type(), "*");
     assertEquals(type.subtype(), "*");
   }

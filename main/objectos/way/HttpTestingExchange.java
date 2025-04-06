@@ -28,7 +28,6 @@ import java.util.Objects;
 import java.util.SequencedMap;
 import java.util.Set;
 import java.util.function.Consumer;
-import objectos.way.Lang.MediaType;
 
 final class HttpTestingExchange extends HttpSupport implements Http.TestingExchange {
 
@@ -138,14 +137,14 @@ final class HttpTestingExchange extends HttpSupport implements Http.TestingExcha
     final String result;
 
     if (responseBody instanceof byte[] bytes) {
-      MediaType mediaType;
-      mediaType = Lang.MediaType.wildcard();
+      Media.Type mediaType;
+      mediaType = Media.Type.wildcard();
 
       final String contentType;
       contentType = responseHeader(Http.HeaderName.CONTENT_TYPE);
 
       if (contentType != null) {
-        mediaType = Lang.MediaType.parse(contentType);
+        mediaType = Media.Type.parse(contentType);
       }
 
       result = mediaType.toString(bytes);

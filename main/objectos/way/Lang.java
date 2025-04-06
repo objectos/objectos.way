@@ -132,28 +132,6 @@ public final class Lang {
 
   }
 
-  sealed interface MediaType permits LangMediaType {
-
-    static MediaType parse(String s) {
-      Objects.requireNonNull(s, "s == null");
-
-      return LangMediaType.parse(s);
-    }
-
-    static MediaType wildcard() {
-      return LangMediaType.WILDCARD;
-    }
-
-    String type();
-
-    String subtype();
-
-    String param(String name);
-
-    String toString(byte[] bytes);
-
-  }
-
   // non-public types
 
   sealed interface ClassReader permits LangClassReader {
