@@ -158,7 +158,7 @@ record WebResourcesKernel(
     move(tmp, file);
   }
 
-  public final void writeMedia(String pathName, Lang.Media contents) throws IOException {
+  public final void writeMedia(String pathName, Media.Bytes contents) throws IOException {
     final Path file;
     file = toPath(pathName);
 

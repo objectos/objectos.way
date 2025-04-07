@@ -24,8 +24,8 @@ public class HttpSupportTest {
 
   @Test
   public void ok01() {
-    final Lang.Media media;
-    media = Lang.Media.textPlain("OK");
+    final Media.Bytes media;
+    media = Media.Bytes.textPlain("OK");
 
     test(
         http -> http.ok(media),

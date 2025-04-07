@@ -610,7 +610,7 @@ public final class Html {
    * An object capable of defining the structure of an HTML document.
    */
   @FunctionalInterface
-  public interface Component extends Lang.Media {
+  public interface Component extends Media.Bytes {
 
     void renderHtml(Html.Markup m);
 

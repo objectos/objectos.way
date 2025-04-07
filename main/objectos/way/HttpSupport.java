@@ -156,20 +156,20 @@ sealed abstract class HttpSupport implements Http.Exchange, Http.ResponseHeaders
   // 2xx responses
 
   @Override
-  public final void ok(Lang.Media media) {
+  public final void ok(Media.Bytes media) {
     // early media validation
     final String contentType;
     contentType = media.contentType();
 
     if (contentType == null) {
-      throw new NullPointerException("The specified Lang.Media provided a null content-type");
+      throw new NullPointerException("The specified Media.Bytes provided a null content-type");
     }
 
     final byte[] bytes;
     bytes = media.toByteArray();
 
     if (bytes == null) {
-      throw new NullPointerException("The specified Lang.Media provided a null byte array");
+      throw new NullPointerException("The specified Media.Bytes provided a null byte array");
     }
 
     status0(Http.Status.OK);

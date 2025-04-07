@@ -22,9 +22,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
-import java.util.Objects;
 
 /**
  * The <strong>Objectos Lang</strong> main class.
@@ -49,63 +47,6 @@ public final class Lang {
      */
     @Override
     Iterator<T> iterator();
-
-  }
-
-  /**
-   * Represents data associated to a content type to be transmitted over an
-   * Internet protocol.
-   */
-  public interface Media {
-
-    /**
-     * Creates a new {@code text/plain; charset=utf-8} media by encoding the
-     * specified string using the UTF-8 charset.
-     *
-     * @param text
-     *        the string whose characters are to encoded
-     *
-     * @return a newly created {@code text/plain; charset=utf-8} media instance
-     */
-    static Media textPlain(String text) {
-      Objects.requireNonNull(text, "text == null");
-
-      return new LangMedia(text, StandardCharsets.UTF_8);
-    }
-
-    /**
-     * Creates a new {@code text/plain; charset=<specified charset>} media by
-     * encoding the specified string using the specified charset.
-     *
-     * @param text
-     *        the string whose characters are to encoded
-     * @param charset
-     *        the charset to use
-     *
-     * @return a newly created {@code text/plain; charset=<specified charset>}
-     *         media instance
-     */
-    static Media textPlain(String text, Charset charset) {
-      Objects.requireNonNull(text, "text == null");
-      Objects.requireNonNull(charset, "charset == null");
-
-      return new LangMedia(text, charset);
-    }
-
-    /**
-     * Returns the content type of this media, such as
-     * {@code text/html; charset=utf-8} or {@code application/json}.
-     *
-     * @return the content type of this media
-     */
-    String contentType();
-
-    /**
-     * Returns this media data as a byte array.
-     *
-     * @return the media data
-     */
-    byte[] toByteArray();
 
   }
 

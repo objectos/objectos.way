@@ -417,14 +417,14 @@ final class HttpTestingExchange extends HttpSupport implements Http.TestingExcha
   // response methods
 
   @Override
-  public final void respond(Http.Status status, Lang.Media object) {
+  public final void respond(Http.Status status, Media.Bytes object) {
     respond0(status, object);
 
     responseBody = object;
   }
 
   @Override
-  public final void respond(Http.Status status, Lang.Media object, Consumer<Http.ResponseHeaders> headers) {
+  public final void respond(Http.Status status, Media.Bytes object, Consumer<Http.ResponseHeaders> headers) {
     respond0(status, object);
 
     headers.accept(this);
@@ -432,7 +432,7 @@ final class HttpTestingExchange extends HttpSupport implements Http.TestingExcha
     responseBody = object;
   }
 
-  private void respond0(Http.Status status, Lang.Media object) {
+  private void respond0(Http.Status status, Media.Bytes object) {
     status0(status);
 
     String contentType;

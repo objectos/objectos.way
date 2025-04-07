@@ -600,7 +600,7 @@ public final class Web {
      * @throws IOException
      *         if an I/O error occurs
      */
-    void writeMedia(String pathName, Lang.Media object) throws IOException;
+    void writeMedia(String pathName, Media.Bytes object) throws IOException;
 
     /**
      * Creates a new file at the specified server path with the specified text

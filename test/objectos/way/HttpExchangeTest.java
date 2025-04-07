@@ -30,66 +30,68 @@ import org.testng.annotations.Test;
 
 public class HttpExchangeTest {
 
+  @FunctionalInterface
+  private interface ThrowingConsumer<T> { void accept(T t) throws IOException; }
+
+  private record HttpRecord(int bufferSizeInitial, int bufferSizeMax, Clock clock, Note.Sink noteSink) {
+    public HttpExchange build(TestableSocket socket) {
+      try {
+        return new HttpExchange(socket, bufferSizeInitial, bufferSizeMax, clock, noteSink);
+      } catch (IOException e) {
+        throw new AssertionError("Failed with IOException", e);
+      }
+    }
+  }
+
   @Test(description = """
   Minimum GET request with explicity close
   text/plain response
   """)
   public void testCase001() {
-    TestableSocket socket;
-    socket = TestableSocket.of("""
-    GET / HTTP/1.1\r
-    Host: www.example.com\r
-    Connection: close\r
-    \r
-    """);
+    test(
+        http(128, 128, TestingClock.FIXED, TestingNoteSink.INSTANCE),
 
-    String body01 = """
-    Hello World!
-    """;
+        """
+        GET / HTTP/1.1\r
+        Host: www.example.com\r
+        Connection: close\r
+        \r
+        """,
 
-    String resp01 = """
-    HTTP/1.1 200 OK\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    Content-Type: text/plain; charset=utf-8\r
-    Content-Length: 13\r
-    \r
-    Hello World!
-    """;
+        http -> {
+          // request line
+          assertEquals(http.method(), Http.Method.GET);
+          assertEquals(http.path(), "/");
+          assertEquals(http.rawQuery(), null);
+          assertEquals(http.queryParam("x"), null);
+          assertEquals(http.queryParamNames(), Set.of());
 
-    try (HttpExchange http = new HttpExchange(socket, 128, 128, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
-      // request phase
-      ParseStatus parse;
-      parse = http.parse();
+          // headers
+          assertEquals(http.size(), 2);
+          assertEquals(http.header(Http.HeaderName.HOST), "www.example.com");
+          assertEquals(http.header(Http.HeaderName.CONNECTION), "close");
 
-      assertEquals(parse.isError(), false);
+          // body
+          assertEquals(ObjectosHttp.readAllBytes(http), Util.EMPTY_BYTE_ARRAY);
 
-      // request line
-      assertEquals(http.method(), Http.Method.GET);
-      assertEquals(http.path(), "/");
-      assertEquals(http.rawQuery(), null);
-      assertEquals(http.queryParam("x"), null);
-      assertEquals(http.queryParamNames(), Set.of());
+          // response phase
+          final Media.Bytes media;
+          media = Media.Bytes.textPlain("Hello World!\n", StandardCharsets.UTF_8);
 
-      // headers
-      assertEquals(http.size(), 2);
-      assertEquals(http.header(Http.HeaderName.HOST), "www.example.com");
-      assertEquals(http.header(Http.HeaderName.CONNECTION), "close");
+          http.ok(media);
+        },
 
-      // body
-      assertEquals(ObjectosHttp.readAllBytes(http), Util.EMPTY_BYTE_ARRAY);
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 13\r
+        \r
+        Hello World!
+        """,
 
-      // response phase
-      final Lang.Media media;
-      media = Lang.Media.textPlain(body01, StandardCharsets.UTF_8);
-
-      http.respond(Http.Status.OK, media);
-
-      assertEquals(socket.outputAsString(), resp01);
-
-      assertEquals(http.keepAlive(), false);
-    } catch (IOException e) {
-      throw new AssertionError("Failed with IOException", e);
-    }
+        keepAlive(false)
+    );
   }
 
   @Test(description = """
@@ -97,19 +99,7 @@ public class HttpExchangeTest {
   2. GET request with explicit close
   """)
   public void testCase002() {
-    TestableSocket socket;
-    socket = TestableSocket.of("""
-    GET /login HTTP/1.1\r
-    Host: www.example.com\r
-    \r
-    """, """
-    GET /login.css HTTP/1.1\r
-    Host: www.example.com\r
-    Connection: close\r
-    \r
-    """);
-
-    String body01 = """
+    final String body01 = """
     <!doctype html>
     <html>
     <head>
@@ -122,142 +112,135 @@ public class HttpExchangeTest {
     </html>
     """;
 
-    String resp01 = """
-    HTTP/1.1 200 OK\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    Content-Type: text/plain; charset=utf-8\r
-    Content-Length: 171\r
-    \r
-    %s""".formatted(body01);
-
-    String body02 = """
+    final String body02 = """
     * {
       box-sizing: border-box;
     }
     """;
 
-    String resp02 = """
-    HTTP/1.1 200 OK\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    Content-Type: text/plain; charset=utf-8\r
-    Content-Length: 32\r
-    \r
-    %s""".formatted(body02);
+    test(
+        http(128, 128, TestingClock.FIXED, TestingNoteSink.INSTANCE),
 
-    try (HttpExchange http = new HttpExchange(socket, 128, 128, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
-      // request 01
-      ParseStatus parse;
-      parse = http.parse();
+        """
+        GET /login HTTP/1.1\r
+        Host: www.example.com\r
+        \r
+        """,
 
-      assertEquals(parse.isError(), false);
+        http -> {
+          // request line
+          assertEquals(http.method(), Http.Method.GET);
+          assertEquals(http.path(), "/login");
+          assertEquals(http.rawQuery(), null);
+          assertEquals(http.queryParamNames(), Set.of());
 
-      // request line
-      assertEquals(http.method(), Http.Method.GET);
-      assertEquals(http.path(), "/login");
-      assertEquals(http.rawQuery(), null);
-      assertEquals(http.queryParamNames(), Set.of());
+          // headers
+          assertEquals(http.size(), 1);
+          assertEquals(http.header(Http.HeaderName.HOST), "www.example.com");
 
-      // headers
-      assertEquals(http.size(), 1);
-      assertEquals(http.header(Http.HeaderName.HOST), "www.example.com");
+          // body
+          assertEquals(ObjectosHttp.readAllBytes(http), Util.EMPTY_BYTE_ARRAY);
 
-      // body
-      assertEquals(ObjectosHttp.readAllBytes(http), Util.EMPTY_BYTE_ARRAY);
+          // response phase
+          final Media.Bytes object01;
+          object01 = Media.Bytes.textPlain(body01, StandardCharsets.UTF_8);
 
-      // response phase
-      final Lang.Media object01;
-      object01 = Lang.Media.textPlain(body01, StandardCharsets.UTF_8);
+          http.ok(object01);
+        },
 
-      http.respond(Http.Status.OK, object01);
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 171\r
+        \r
+        %s""".formatted(body01),
 
-      assertEquals(socket.outputAsString(), resp01);
+        keepAlive(true),
 
-      assertEquals(http.keepAlive(), true);
+        """
+        GET /login.css HTTP/1.1\r
+        Host: www.example.com\r
+        Connection: close\r
+        \r
+        """,
 
-      // request 02
-      parse = http.parse();
+        http -> {
+          // request line
+          assertEquals(http.method(), Http.Method.GET);
+          assertEquals(http.path(), "/login.css");
 
-      assertEquals(parse.isError(), false);
+          // headers
+          assertEquals(http.size(), 2);
+          assertEquals(http.header(Http.HeaderName.HOST), "www.example.com");
+          assertEquals(http.header(Http.HeaderName.CONNECTION), "close");
 
-      // request line
-      assertEquals(http.method(), Http.Method.GET);
-      assertEquals(http.path(), "/login.css");
+          // body
+          assertEquals(ObjectosHttp.readAllBytes(http), Util.EMPTY_BYTE_ARRAY);
 
-      // headers
-      assertEquals(http.size(), 2);
-      assertEquals(http.header(Http.HeaderName.HOST), "www.example.com");
-      assertEquals(http.header(Http.HeaderName.CONNECTION), "close");
+          // response phase
+          final Media.Bytes object02;
+          object02 = Media.Bytes.textPlain(body02, StandardCharsets.UTF_8);
 
-      // body
-      assertEquals(ObjectosHttp.readAllBytes(http), Util.EMPTY_BYTE_ARRAY);
+          http.ok(object02);
+        },
 
-      // response phase
-      socket.outputReset();
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 32\r
+        \r
+        %s""".formatted(body02),
 
-      final Lang.Media object02;
-      object02 = Lang.Media.textPlain(body02, StandardCharsets.UTF_8);
-
-      http.respond(Http.Status.OK, object02);
-
-      assertEquals(socket.outputAsString(), resp02);
-
-      assertEquals(http.keepAlive(), false);
-    } catch (IOException e) {
-      throw new AssertionError("Failed with IOException", e);
-    }
+        keepAlive(false)
+    );
   }
 
   @Test(description = """
   It should handle unkonwn request headers
   """)
   public void testCase003() {
-    TestableSocket socket;
-    socket = TestableSocket.of("""
-    GET / HTTP/1.1\r
-    Host: www.example.com\r
-    Connection: close\r
-    Foo: bar\r
-    \r
-    """);
-
-    String body01 = """
+    final String body01 = """
     Hello World!
     """;
 
-    String resp01 = """
-    HTTP/1.1 200 OK\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    Content-Type: text/plain; charset=utf-8\r
-    Content-Length: 13\r
-    \r
-    %s""".formatted(body01);
+    test(
+        http(128, 128, TestingClock.FIXED, TestingNoteSink.INSTANCE),
 
-    try (HttpExchange http = new HttpExchange(socket, 128, 128, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
-      // request phase
-      ParseStatus parse;
-      parse = http.parse();
+        """
+        GET / HTTP/1.1\r
+        Host: www.example.com\r
+        Connection: close\r
+        Foo: bar\r
+        \r
+        """,
 
-      assertEquals(parse.isError(), false);
+        http -> {
+          // headers
+          assertEquals(http.toRequestHeadersText(), """
+          Host: www.example.com
+          Connection: close
+          Foo: bar
+          """);
 
-      // headers
-      assertEquals(http.toRequestHeadersText(), """
-      Host: www.example.com
-      Connection: close
-      Foo: bar
-      """);
+          // response phase
+          final Media.Bytes object;
+          object = Media.Bytes.textPlain(body01, StandardCharsets.UTF_8);
 
-      // response phase
-      final Lang.Media object;
-      object = Lang.Media.textPlain(body01, StandardCharsets.UTF_8);
+          http.ok(object);
+        },
 
-      http.respond(Http.Status.OK, object);
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 13\r
+        \r
+        %s""".formatted(body01),
 
-      assertEquals(socket.outputAsString(), resp01);
-
-      assertEquals(http.keepAlive(), false);
-    } catch (IOException e) {
-      throw new AssertionError("Failed with IOException", e);
-    }
+        keepAlive(false)
+    );
   }
 
   @Test(description = """
@@ -336,53 +319,46 @@ public class HttpExchangeTest {
   Support for the If-None-Match httpuest header and ETAG Response header
   """)
   public void testCase005() {
-    TestableSocket socket;
-    socket = TestableSocket.of("""
-    GET /atom.xml HTTP/1.1\r
-    Host: www.example.com\r
-    If-None-Match: some%hash\r
-    Connection: close\r
-    \r
-    """);
+    test(
+        http(128, 128, Clock.systemDefaultZone(), TestingNoteSink.INSTANCE),
 
-    String resp01 = """
-    HTTP/1.1 304 NOT MODIFIED\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    ETag: some%hash\r
-    \r
-    """;
+        """
+        GET /atom.xml HTTP/1.1\r
+        Host: www.example.com\r
+        If-None-Match: some%hash\r
+        Connection: close\r
+        \r
+        """,
 
-    try (HttpExchange http = new HttpExchange(socket, 128, 128, Clock.systemDefaultZone(), TestingNoteSink.INSTANCE)) {
-      // request phase
-      ParseStatus parse;
-      parse = http.parse();
+        http -> {
+          // request line
+          assertEquals(http.method(), Http.Method.GET);
+          assertEquals(http.path(), "/atom.xml");
+          assertEquals(http.rawQuery(), null);
+          assertEquals(http.queryParamNames(), Set.of());
 
-      assertEquals(parse.isError(), false);
+          // headers
+          assertEquals(http.size(), 3);
+          assertEquals(http.header(Http.HeaderName.HOST), "www.example.com");
+          assertEquals(http.header(Http.HeaderName.IF_NONE_MATCH), "some%hash");
+          assertEquals(http.header(Http.HeaderName.CONNECTION), "close");
 
-      // request line
-      assertEquals(http.method(), Http.Method.GET);
-      assertEquals(http.path(), "/atom.xml");
-      assertEquals(http.rawQuery(), null);
-      assertEquals(http.queryParamNames(), Set.of());
+          // response phase
+          http.status0(Http.Status.NOT_MODIFIED);
+          http.header0(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
+          http.header0(Http.HeaderName.ETAG, "some%hash");
+          http.send0();
+        },
 
-      // headers
-      assertEquals(http.size(), 3);
-      assertEquals(http.header(Http.HeaderName.HOST), "www.example.com");
-      assertEquals(http.header(Http.HeaderName.IF_NONE_MATCH), "some%hash");
-      assertEquals(http.header(Http.HeaderName.CONNECTION), "close");
+        """
+        HTTP/1.1 304 NOT MODIFIED\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        ETag: some%hash\r
+        \r
+        """,
 
-      // response phase
-      http.status0(Http.Status.NOT_MODIFIED);
-      http.header0(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
-      http.header0(Http.HeaderName.ETAG, "some%hash");
-      http.send0();
-
-      assertEquals(socket.outputAsString(), resp01);
-
-      assertEquals(http.keepAlive(), false);
-    } catch (IOException e) {
-      throw new AssertionError("Failed with IOException", e);
-    }
+        keepAlive(false)
+    );
   }
 
   @Test(description = """
@@ -390,39 +366,32 @@ public class HttpExchangeTest {
   - it should set keep alive to false
   """)
   public void testCase006() {
-    TestableSocket socket;
-    socket = TestableSocket.of("""
-    GET /xml-rpc.php HTTP/1.1\r
-    Host: www.example.com\r
-    \r
-    """);
+    test(
+        http(128, 128, Clock.systemDefaultZone(), TestingNoteSink.INSTANCE),
 
-    String resp01 = """
-    HTTP/1.1 404 NOT FOUND\r
-    Connection: close\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    \r
-    """;
+        """
+        GET /xml-rpc.php HTTP/1.1\r
+        Host: www.example.com\r
+        \r
+        """,
 
-    try (HttpExchange http = new HttpExchange(socket, 128, 128, Clock.systemDefaultZone(), TestingNoteSink.INSTANCE)) {
-      // request phase
-      ParseStatus parse;
-      parse = http.parse();
+        http -> {
+          // response phase
+          http.status0(Http.Status.NOT_FOUND);
+          http.header0(Http.HeaderName.CONNECTION, "close");
+          http.header0(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
+          http.send0();
+        },
 
-      assertEquals(parse.isError(), false);
+        """
+        HTTP/1.1 404 NOT FOUND\r
+        Connection: close\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        \r
+        """,
 
-      // response phase
-      http.status0(Http.Status.NOT_FOUND);
-      http.header0(Http.HeaderName.CONNECTION, "close");
-      http.header0(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
-      http.send0();
-
-      assertEquals(socket.outputAsString(), resp01);
-
-      assertEquals(http.keepAlive(), false);
-    } catch (IOException e) {
-      throw new AssertionError("Failed with IOException", e);
-    }
+        keepAlive(false)
+    );
   }
 
   @Test(description = """
@@ -430,43 +399,36 @@ public class HttpExchangeTest {
   - happy path
   """)
   public void testCase007() {
-    TestableSocket socket;
-    socket = TestableSocket.of("""
-    GET /endpoint?foo=bar HTTP/1.1\r
-    Host: www.example.com\r
-    \r
-    """);
+    test(
+        http(128, 128, Clock.systemDefaultZone(), TestingNoteSink.INSTANCE),
 
-    String resp01 = """
-    HTTP/1.1 404 NOT FOUND\r
-    Connection: close\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    \r
-    """;
+        """
+        GET /endpoint?foo=bar HTTP/1.1\r
+        Host: www.example.com\r
+        \r
+        """,
 
-    try (HttpExchange http = new HttpExchange(socket, 128, 128, Clock.systemDefaultZone(), TestingNoteSink.INSTANCE)) {
-      // request phase
-      ParseStatus parse;
-      parse = http.parse();
+        http -> {
+          assertEquals(http.rawQuery(), "foo=bar");
+          assertEquals(http.queryParam("foo"), "bar");
+          assertEquals(http.queryParamNames(), Set.of("foo"));
 
-      assertEquals(parse.isError(), false);
+          // response phase
+          http.status0(Http.Status.NOT_FOUND);
+          http.header0(Http.HeaderName.CONNECTION, "close");
+          http.header0(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
+          http.send0();
+        },
 
-      assertEquals(http.rawQuery(), "foo=bar");
-      assertEquals(http.queryParam("foo"), "bar");
-      assertEquals(http.queryParamNames(), Set.of("foo"));
+        """
+        HTTP/1.1 404 NOT FOUND\r
+        Connection: close\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        \r
+        """,
 
-      // response phase
-      http.status0(Http.Status.NOT_FOUND);
-      http.header0(Http.HeaderName.CONNECTION, "close");
-      http.header0(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
-      http.send0();
-
-      assertEquals(socket.outputAsString(), resp01);
-
-      assertEquals(http.keepAlive(), false);
-    } catch (IOException e) {
-      throw new AssertionError("Failed with IOException", e);
-    }
+        keepAlive(false)
+    );
   }
 
   @Test(description = """
@@ -474,97 +436,82 @@ public class HttpExchangeTest {
   - happy path
   """)
   public void testCase008() {
-    TestableSocket socket;
-    socket = TestableSocket.of("""
-    POST /login HTTP/1.1\r
-    Host: www.example.com\r
-    Content-Length: 24\r
-    Content-Type: application/x-www-form-urlencoded\r
-    \r
-    email=user%40example.com""");
+    test(
+        http(128, 256, Clock.systemDefaultZone(), TestingNoteSink.INSTANCE),
 
-    String body01 = """
-    Hello user@example.com. Please enter your password.
-    """;
+        """
+        POST /login HTTP/1.1\r
+        Host: www.example.com\r
+        Content-Length: 24\r
+        Content-Type: application/x-www-form-urlencoded\r
+        \r
+        email=user%40example.com""",
 
-    String resp01 = """
-    HTTP/1.1 303 SEE OTHER\r
-    Location: /app\r
-    Content-Type: text/plain; charset=utf-8\r
-    Content-Length: 52\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    \r
-    %s""".formatted(body01);
+        http -> {
+          assertEquals(ObjectosHttp.readString(http), "email=user%40example.com");
 
-    try (HttpExchange http = new HttpExchange(socket, 128, 256, Clock.systemDefaultZone(), TestingNoteSink.INSTANCE)) {
-      // request phase
-      ParseStatus parse;
-      parse = http.parse();
+          // response phase
+          final String body = "Hello user@example.com. Please enter your password.\n";
+          http.status0(Http.Status.SEE_OTHER);
+          http.header0(Http.HeaderName.LOCATION, "/app");
+          http.header0(Http.HeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
+          http.header0(Http.HeaderName.CONTENT_LENGTH, "52");
+          http.header0(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
+          http.send0(body.getBytes(StandardCharsets.UTF_8));
+        },
 
-      assertEquals(parse.isError(), false);
+        """
+        HTTP/1.1 303 SEE OTHER\r
+        Location: /app\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 52\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        \r
+        Hello user@example.com. Please enter your password.
+        """,
 
-      assertEquals(ObjectosHttp.readString(http), "email=user%40example.com");
-
-      // response phase
-      http.status0(Http.Status.SEE_OTHER);
-      http.header0(Http.HeaderName.LOCATION, "/app");
-      http.header0(Http.HeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
-      http.header0(Http.HeaderName.CONTENT_LENGTH, "52");
-      http.header0(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
-      http.send0(body01.getBytes(StandardCharsets.UTF_8));
-
-      assertEquals(socket.outputAsString(), resp01);
-
-      assertEquals(http.keepAlive(), true);
-    } catch (IOException e) {
-      throw new AssertionError("Failed with IOException", e);
-    }
+        keepAlive(true)
+    );
   }
 
   @Test(description = """
   It should resize buffer if necessary when writing out the response headers
   """)
   public void testCase009() {
-    TestableSocket socket;
-    socket = TestableSocket.of("""
-    GET / HTTP/1.1\r
-    Host: www.example.com\r
-    Connection: close\r
-    \r
-    """);
+    test(
+        http(128, 256, TestingClock.FIXED, TestingNoteSink.INSTANCE),
 
-    String etag;
-    etag = "AVeryLongEtagValueToTriggerTheBufferResizeWhenWritingOutTheHeaders";
+        """
+        GET / HTTP/1.1\r
+        Host: www.example.com\r
+        Connection: close\r
+        \r
+        """,
 
-    String resp01 = """
-    HTTP/1.1 200 OK\r
-    Content-Type: text/plain; charset=utf-8\r
-    Content-Length: 5\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    ETag: %s\r
-    \r
-    AAAA
-    """.formatted(etag);
+        http -> {
+          final String etag = "AVeryLongEtagValueToTriggerTheBufferResizeWhenWritingOutTheHeaders";
+          final String body = "AAAA\n";
 
-    try (HttpExchange http = new HttpExchange(socket, 128, 256, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
-      ParseStatus parse;
-      parse = http.parse();
+          http.status0(Http.Status.OK);
+          http.header0(Http.HeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
+          http.header0(Http.HeaderName.CONTENT_LENGTH, 5);
+          http.header0(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
+          http.header0(Http.HeaderName.ETAG, etag);
+          http.send0(body.getBytes(StandardCharsets.UTF_8));
+        },
 
-      assertEquals(parse.isError(), false);
+        """
+        HTTP/1.1 200 OK\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 5\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        ETag: AVeryLongEtagValueToTriggerTheBufferResizeWhenWritingOutTheHeaders\r
+        \r
+        AAAA
+        """,
 
-      http.status0(Http.Status.OK);
-      http.header0(Http.HeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
-      http.header0(Http.HeaderName.CONTENT_LENGTH, 5);
-      http.header0(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
-      http.header0(Http.HeaderName.ETAG, etag);
-      http.send0("AAAA\n".getBytes(StandardCharsets.UTF_8));
-
-      assertEquals(socket.outputAsString(), resp01);
-
-      assertEquals(http.keepAlive(), false);
-    } catch (IOException e) {
-      throw new AssertionError("Failed with IOException", e);
-    }
+        keepAlive(false)
+    );
   }
 
   @Test(description = """
@@ -645,145 +592,119 @@ public class HttpExchangeTest {
   CharWritable: single chunk
   """)
   public void testCase015() {
-    TestableSocket socket;
-    socket = TestableSocket.of("""
-    GET / HTTP/1.1\r
-    Host: www.example.com\r
-    \r
-    """);
+    test(
+        http(128, 128, TestingClock.FIXED, TestingNoteSink.INSTANCE),
 
-    // 80\r\n
-    // [contents]\r\n
-    // 0\r\n
-    // \r\n
+        """
+        GET / HTTP/1.1\r
+        Host: www.example.com\r
+        \r
+        """,
 
-    TestingCharWritable writable;
-    writable = TestingCharWritable.ofLength(128);
+        http -> {
+          TestingCharWritable writable = TestingCharWritable.ofLength(128);
 
-    String resp01 = """
-    HTTP/1.1 200 OK\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    Content-Type: text/plain; charset=utf-8\r
-    Transfer-Encoding: chunked\r
-    \r
-    80\r
-    .................................................
-    .................................................
-    1234567890123456789012345678\r
-    0\r
-    \r
-    """;
+          http.respond(Http.Status.OK, writable);
+        },
 
-    try (HttpExchange http = new HttpExchange(socket, 128, 128, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
-      ParseStatus parse;
-      parse = http.parse();
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Transfer-Encoding: chunked\r
+        \r
+        80\r
+        .................................................
+        .................................................
+        1234567890123456789012345678\r
+        0\r
+        \r
+        """,
 
-      assertEquals(parse.isError(), false);
-
-      http.respond(Http.Status.OK, writable);
-
-      assertEquals(socket.outputAsString(), resp01);
-
-      assertEquals(http.keepAlive(), true);
-    } catch (IOException e) {
-      throw new AssertionError("Failed with IOException", e);
-    }
+        keepAlive(true)
+    );
   }
 
   @Test(description = """
   CharWritable: multiple chunks
   """)
   public void testCase016() {
-    TestableSocket socket;
-    socket = TestableSocket.of("""
-    GET / HTTP/1.1\r
-    Host: www.example.com\r
-    \r
-    """);
+    test(
+        http(128, 128, TestingClock.FIXED, TestingNoteSink.INSTANCE),
 
-    TestingCharWritable writable;
-    writable = TestingCharWritable.ofLength(256);
+        """
+        GET / HTTP/1.1\r
+        Host: www.example.com\r
+        \r
+        """,
 
-    String resp01 = """
-    HTTP/1.1 200 OK\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    Content-Type: text/plain; charset=utf-8\r
-    Transfer-Encoding: chunked\r
-    \r
-    80\r
-    .................................................
-    .................................................
-    ............................\r
-    80\r
-    .....................
-    .................................................
-    .................................................
-    123456\r
-    0\r
-    \r
-    """;
+        http -> {
+          TestingCharWritable writable = TestingCharWritable.ofLength(256);
 
-    try (HttpExchange http = new HttpExchange(socket, 128, 128, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
-      ParseStatus parse;
-      parse = http.parse();
+          http.respond(Http.Status.OK, writable);
+        },
 
-      assertEquals(parse.isError(), false);
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Transfer-Encoding: chunked\r
+        \r
+        80\r
+        .................................................
+        .................................................
+        ............................\r
+        80\r
+        .....................
+        .................................................
+        .................................................
+        123456\r
+        0\r
+        \r
+        """,
 
-      http.respond(Http.Status.OK, writable);
-
-      assertEquals(socket.outputAsString(), resp01);
-
-      assertEquals(http.keepAlive(), true);
-    } catch (IOException e) {
-      throw new AssertionError("Failed with IOException", e);
-    }
+        keepAlive(true)
+    );
   }
 
   @Test(description = """
   CharWritable: single chunk with buffer resize
   """)
   public void testCase017() {
-    TestableSocket socket;
-    socket = TestableSocket.of("""
-    GET / HTTP/1.1\r
-    Host: www.example.com\r
-    \r
-    """);
+    test(
+        http(128, 256, TestingClock.FIXED, TestingNoteSink.INSTANCE),
 
-    TestingCharWritable writable;
-    writable = TestingCharWritable.ofLength(256);
+        """
+        GET / HTTP/1.1\r
+        Host: www.example.com\r
+        \r
+        """,
 
-    String resp01 = """
-    HTTP/1.1 200 OK\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    Content-Type: text/plain; charset=utf-8\r
-    Transfer-Encoding: chunked\r
-    \r
-    100\r
-    .................................................
-    .................................................
-    .................................................
-    .................................................
-    .................................................
-    123456\r
-    0\r
-    \r
-    """;
+        http -> {
+          TestingCharWritable writable = TestingCharWritable.ofLength(256);
 
-    try (HttpExchange http = new HttpExchange(socket, 128, 256, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
-      ParseStatus parse;
-      parse = http.parse();
+          http.respond(Http.Status.OK, writable);
+        },
 
-      assertEquals(parse.isError(), false);
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Transfer-Encoding: chunked\r
+        \r
+        100\r
+        .................................................
+        .................................................
+        .................................................
+        .................................................
+        .................................................
+        123456\r
+        0\r
+        \r
+        """,
 
-      http.respond(Http.Status.OK, writable);
-
-      assertEquals(socket.outputAsString(), resp01);
-
-      assertEquals(http.keepAlive(), true);
-    } catch (IOException e) {
-      throw new AssertionError("Failed with IOException", e);
-    }
+        keepAlive(true)
+    );
   }
 
   @Test(description = """
@@ -1112,42 +1033,100 @@ public class HttpExchangeTest {
   Http.Response.respond(status, object)
   """)
   public void testCase026() {
-    TestableSocket socket;
-    socket = TestableSocket.of("""
-    GET /index.html HTTP/1.1\r
-    Host: www.example.com\r
-    Connection: close\r
-    \r
-    """);
+    test(
+        http(128, 128, TestingClock.FIXED, TestingNoteSink.INSTANCE),
 
-    String body01 = """
-    Hello World!
-    """;
+        """
+        GET /index.html HTTP/1.1\r
+        Host: www.example.com\r
+        Connection: close\r
+        \r
+        """,
 
-    String resp01 = """
-    HTTP/1.1 200 OK\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    Content-Type: text/plain; charset=utf-8\r
-    Content-Length: 13\r
-    \r
-    %s""".formatted(body01);
+        http -> {
+          // response phase
+          final Media.Bytes media;
+          media = Media.Bytes.textPlain("Hello World!\n");
 
-    try (HttpExchange http = new HttpExchange(socket, 128, 128, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
-      // request phase
+          http.ok(media);
+        },
+
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 13\r
+        \r
+        Hello World!
+        """,
+
+        keepAlive(false)
+    );
+  }
+
+  private HttpRecord http(int bufferSizeInitial, int bufferSizeMax, Clock clock, Note.Sink noteSink) {
+    return new HttpRecord(bufferSizeInitial, bufferSizeMax, clock, noteSink);
+  }
+
+  private boolean keepAlive(boolean value) {
+    return value;
+  }
+
+  private void test(
+      HttpRecord httpRecord, String input,
+      ThrowingConsumer<HttpExchange> test, String response, boolean keepAlive) {
+    final TestableSocket socket;
+    socket = TestableSocket.of(input);
+
+    try (HttpExchange http = httpRecord.build(socket)) {
       ParseStatus parse;
       parse = http.parse();
 
       assertEquals(parse.isError(), false);
 
-      // response phase
-      final Lang.Media object;
-      object = Lang.Media.textPlain(body01);
+      test.accept(http);
 
-      http.respond(Http.Status.OK, object);
+      assertEquals(socket.outputAsString(), response);
 
-      assertEquals(socket.outputAsString(), resp01);
+      assertEquals(http.keepAlive(), keepAlive);
+    } catch (IOException e) {
+      throw new AssertionError("Failed with IOException", e);
+    }
+  }
 
-      assertEquals(http.keepAlive(), false);
+  private void test(
+      HttpRecord httpRecord,
+      String input1,
+      ThrowingConsumer<HttpExchange> test1, String response1, boolean keepAlive1,
+      String input2,
+      ThrowingConsumer<HttpExchange> test2, String response2, boolean keepAlive2) {
+    final TestableSocket socket;
+    socket = TestableSocket.of(input1, input2);
+
+    try (HttpExchange http = httpRecord.build(socket)) {
+      final ParseStatus parse1;
+      parse1 = http.parse();
+
+      assertEquals(parse1.isError(), false);
+
+      test1.accept(http);
+
+      assertEquals(socket.outputAsString(), response1);
+
+      assertEquals(http.keepAlive(), keepAlive1);
+
+      socket.outputReset();
+
+      final ParseStatus parse2;
+      parse2 = http.parse();
+
+      assertEquals(parse2.isError(), false);
+
+      test2.accept(http);
+
+      assertEquals(socket.outputAsString(), response2);
+
+      assertEquals(http.keepAlive(), keepAlive2);
     } catch (IOException e) {
       throw new AssertionError("Failed with IOException", e);
     }

@@ -1448,7 +1448,7 @@ final class HttpExchange extends HttpSupport implements Closeable {
   // ##################################################################
 
   @Override
-  public final void respond(Http.Status status, Lang.Media object) {
+  public final void respond(Http.Status status, Media.Bytes object) {
     final byte[] bytes;
     bytes = respond0(status, object);
 
@@ -1456,7 +1456,7 @@ final class HttpExchange extends HttpSupport implements Closeable {
   }
 
   @Override
-  public final void respond(Http.Status status, Lang.Media object, Consumer<Http.ResponseHeaders> headers) {
+  public final void respond(Http.Status status, Media.Bytes object, Consumer<Http.ResponseHeaders> headers) {
     final byte[] bytes;
     bytes = respond0(status, object);
 
@@ -1465,7 +1465,7 @@ final class HttpExchange extends HttpSupport implements Closeable {
     send0(bytes);
   }
 
-  private byte[] respond0(Http.Status status, Lang.Media object) {
+  private byte[] respond0(Http.Status status, Media.Bytes object) {
     Objects.requireNonNull(status, "status == null");
 
     // early object validation

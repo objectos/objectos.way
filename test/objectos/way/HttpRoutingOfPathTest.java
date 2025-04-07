@@ -31,8 +31,8 @@ public class HttpRoutingOfPathTest {
     final HttpRouting.OfPath routing;
     routing = new HttpRouting.OfPath(matcher);
 
-    final Lang.Media object;
-    object = Lang.Media.textPlain("LOGIN", StandardCharsets.UTF_8);
+    final Media.Bytes object;
+    object = Media.Bytes.textPlain("LOGIN", StandardCharsets.UTF_8);
 
     routing.subpath("login", path -> {
       path.handler(ok(object));
@@ -72,7 +72,7 @@ public class HttpRoutingOfPathTest {
     });
   }
 
-  private Http.Handler ok(Lang.Media object) {
+  private Http.Handler ok(Media.Bytes object) {
     return http -> http.ok(object);
   }
 

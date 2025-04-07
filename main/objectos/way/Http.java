@@ -130,13 +130,12 @@ public final class Http {
     // 2XX responses
 
     /**
-     * Respond with a {@code 200 OK} message using the bytes from the specified
-     * media as the message body.
+     * Respond with a {@code 200 OK} message with the specified media entity.
      *
      * @param media
-     *        the object providing the bytes of the message body
+     *        the media entity
      */
-    void ok(Lang.Media media);
+    void ok(Media.Bytes media);
 
     /**
      * Return {@code true} if an HTTP response message has been written to this
@@ -699,7 +698,7 @@ public final class Http {
      * @param object
      *        the media object
      */
-    void respond(Http.Status status, Lang.Media object);
+    void respond(Http.Status status, Media.Bytes object);
 
     /**
      * Writes a response message with the specified status and the contents of
@@ -712,7 +711,7 @@ public final class Http {
      * @param headers
      *        the additional headers to write
      */
-    void respond(Http.Status status, Lang.Media object, Consumer<ResponseHeaders> headers);
+    void respond(Http.Status status, Media.Bytes object, Consumer<ResponseHeaders> headers);
 
     /**
      * Writes a response message with the specified status and the
@@ -793,8 +792,8 @@ public final class Http {
     }
 
     static ResponseMessage okTextPlain(String text, Charset charset) {
-      final Lang.Media object;
-      object = Lang.Media.textPlain(text, charset);
+      final Media.Bytes object;
+      object = Media.Bytes.textPlain(text, charset);
 
       return HttpResponseMessage.ok(object);
     }

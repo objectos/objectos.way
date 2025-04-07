@@ -94,8 +94,8 @@ public class HttpServerTest implements Consumer<Http.Routing> {
   }
 
   private void testCase01Get(Http.Exchange http) {
-    final Lang.Media object;
-    object = Lang.Media.textPlain("TC01\n", StandardCharsets.UTF_8);
+    final Media.Bytes object;
+    object = Media.Bytes.textPlain("TC01\n", StandardCharsets.UTF_8);
 
     http.respond(Http.Status.OK, object);
   }
@@ -154,8 +154,8 @@ public class HttpServerTest implements Consumer<Http.Routing> {
   }
 
   private void testCase02Get(Http.Exchange http) {
-    final Lang.Media object;
-    object = Lang.Media.textPlain("TC02\n", StandardCharsets.UTF_8);
+    final Media.Bytes object;
+    object = Media.Bytes.textPlain("TC02\n", StandardCharsets.UTF_8);
 
     http.respond(Http.Status.OK, object);
   }

@@ -153,8 +153,8 @@ public class WebResourcesTest implements Consumer<Http.Routing> {
     final String text;
     text = "BBBB\n";
 
-    final Lang.Media object;
-    object = Lang.Media.textPlain(text, StandardCharsets.UTF_8);
+    final Media.Bytes object;
+    object = Media.Bytes.textPlain(text, StandardCharsets.UTF_8);
 
     http.respond(Http.Status.OK, object);
   }
@@ -283,8 +283,8 @@ public class WebResourcesTest implements Consumer<Http.Routing> {
       String path;
       path = http.path();
 
-      Lang.Media contents;
-      contents = Lang.Media.textPlain("test-case-06");
+      Media.Bytes contents;
+      contents = Media.Bytes.textPlain("test-case-06");
 
       resources.writeMedia(path, contents);
 
@@ -336,8 +336,8 @@ public class WebResourcesTest implements Consumer<Http.Routing> {
       String path;
       path = http.path();
 
-      Lang.Media contents;
-      contents = Lang.Media.textPlain("test-case-07");
+      Media.Bytes contents;
+      contents = Media.Bytes.textPlain("test-case-07");
 
       resources.writeMedia(path, contents);
 

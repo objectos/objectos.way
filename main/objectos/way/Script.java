@@ -31,7 +31,7 @@ public sealed interface Script permits ScriptWriter {
    * Represents an action to be executed by the browser in the context of an web
    * application.
    */
-  public sealed interface Action extends Lang.Media permits ScriptAction {
+  public sealed interface Action extends Media.Bytes permits ScriptAction {
 
     static Action create(Consumer<Script> script) {
       final ScriptWriter writer;

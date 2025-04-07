@@ -18,7 +18,7 @@ package objectos.way;
 import java.nio.charset.Charset;
 import java.util.Locale;
 
-record LangMedia(String text, Charset charset) implements Lang.Media {
+record MediaBytes(String text, Charset charset) implements Media.Bytes {
 
   @Override
   public final String contentType() {

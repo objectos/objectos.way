@@ -18,6 +18,7 @@ package objectos.way;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 /**
@@ -30,6 +31,40 @@ public sealed interface Media {
    * A media entity which exposes its data as an array of bytes.
    */
   public non-sealed interface Bytes extends Media {
+
+    /**
+     * Creates a new {@code text/plain; charset=utf-8} media by encoding the
+     * specified string using the UTF-8 charset.
+     *
+     * @param text
+     *        the string whose characters are to encoded
+     *
+     * @return a newly created {@code text/plain; charset=utf-8} media instance
+     */
+    static Bytes textPlain(String text) {
+      Objects.requireNonNull(text, "text == null");
+
+      return new MediaBytes(text, StandardCharsets.UTF_8);
+    }
+
+    /**
+     * Creates a new {@code text/plain; charset=<specified charset>} media by
+     * encoding the specified string using the specified charset.
+     *
+     * @param text
+     *        the string whose characters are to encoded
+     * @param charset
+     *        the charset to use
+     *
+     * @return a newly created {@code text/plain; charset=<specified charset>}
+     *         media instance
+     */
+    static Bytes textPlain(String text, Charset charset) {
+      Objects.requireNonNull(text, "text == null");
+      Objects.requireNonNull(charset, "charset == null");
+
+      return new MediaBytes(text, charset);
+    }
 
     /**
      * Returns the data of this entity as an array of bytes.

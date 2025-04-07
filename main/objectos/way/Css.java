@@ -39,7 +39,7 @@ public final class Css {
   /**
    * A CSS style sheet.
    */
-  public sealed interface StyleSheet extends Lang.Media permits CssStyleSheet {
+  public sealed interface StyleSheet extends Media.Bytes permits CssStyleSheet {
 
     /**
      * Configures the generation of a CSS style sheet.

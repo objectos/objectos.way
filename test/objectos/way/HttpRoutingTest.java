@@ -188,7 +188,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
         Http.Handler tc12C = http -> {
           String s = http.get(String.class);
           Integer i = http.get(Integer.class);
-          Lang.Media object = Lang.Media.textPlain("tc12=" + s + "-" + i.toString(), StandardCharsets.UTF_8);
+          Media.Bytes object = Media.Bytes.textPlain("tc12=" + s + "-" + i.toString(), StandardCharsets.UTF_8);
           http.respond(Http.Status.OK, object);
         };
 
@@ -350,8 +350,8 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
     String text;
     text = value.substring("/testCase03".length());
 
-    Lang.Media plain;
-    plain = Lang.Media.textPlain(text, StandardCharsets.UTF_8);
+    Media.Bytes plain;
+    plain = Media.Bytes.textPlain(text, StandardCharsets.UTF_8);
 
     http.respond(Http.Status.OK, plain);
   }
@@ -524,8 +524,8 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
     String text;
     text = value.substring("/testCase05/img".length());
 
-    Lang.Media plain;
-    plain = Lang.Media.textPlain(text, StandardCharsets.UTF_8);
+    Media.Bytes plain;
+    plain = Media.Bytes.textPlain(text, StandardCharsets.UTF_8);
 
     http.respond(Http.Status.OK, plain);
   }
@@ -643,8 +643,8 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
     String text;
     text = value.substring("/testCase06".length());
 
-    Lang.Media plain;
-    plain = Lang.Media.textPlain(text, StandardCharsets.UTF_8);
+    Media.Bytes plain;
+    plain = Media.Bytes.textPlain(text, StandardCharsets.UTF_8);
 
     http.respond(Http.Status.OK, plain);
   }
@@ -732,8 +732,8 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
       throw new TestException();
     }
 
-    Lang.Media plain;
-    plain = Lang.Media.textPlain("VALUE=" + value, StandardCharsets.UTF_8);
+    Media.Bytes plain;
+    plain = Media.Bytes.textPlain("VALUE=" + value, StandardCharsets.UTF_8);
 
     http.respond(Http.Status.OK, plain);
   }
@@ -755,8 +755,8 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
       try {
         handler.handle(http);
       } catch (TestException e) {
-        Lang.Media plain;
-        plain = Lang.Media.textPlain("TestException", StandardCharsets.UTF_8);
+        Media.Bytes plain;
+        plain = Media.Bytes.textPlain("TestException", StandardCharsets.UTF_8);
 
         http.respond(Http.Status.OK, plain);
       }
@@ -858,8 +858,8 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
     String digits;
     digits = http.pathParam("digits");
 
-    Lang.Media plain;
-    plain = Lang.Media.textPlain(notEmpty + ":" + digits, StandardCharsets.UTF_8);
+    Media.Bytes plain;
+    plain = Media.Bytes.textPlain(notEmpty + ":" + digits, StandardCharsets.UTF_8);
 
     http.respond(Http.Status.OK, plain);
   }
@@ -925,8 +925,8 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
     String regex;
     regex = http.pathParam("regex");
 
-    Lang.Media plain;
-    plain = Lang.Media.textPlain(regex, StandardCharsets.UTF_8);
+    Media.Bytes plain;
+    plain = Media.Bytes.textPlain(regex, StandardCharsets.UTF_8);
 
     http.respond(Http.Status.OK, plain);
   }
@@ -970,8 +970,8 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
   }
 
   private void $testCase11(Http.Exchange http) {
-    Lang.Media plain;
-    plain = Lang.Media.textPlain("SECOND", StandardCharsets.UTF_8);
+    Media.Bytes plain;
+    plain = Media.Bytes.textPlain("SECOND", StandardCharsets.UTF_8);
 
     http.respond(Http.Status.OK, plain);
   }
@@ -1023,8 +1023,8 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
     String text;
     text = method.name() + "=" + value;
 
-    Lang.Media plain;
-    plain = Lang.Media.textPlain(text, StandardCharsets.UTF_8);
+    Media.Bytes plain;
+    plain = Media.Bytes.textPlain(text, StandardCharsets.UTF_8);
 
     http.respond(Http.Status.OK, plain);
   }
@@ -1179,8 +1179,8 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
     handler.handle(http);
 
     if (!http.processed()) {
-      final Lang.Media object;
-      object = Lang.Media.textPlain("Not Found", StandardCharsets.UTF_8);
+      final Media.Bytes object;
+      object = Media.Bytes.textPlain("Not Found", StandardCharsets.UTF_8);
 
       http.respond(Http.Status.NOT_FOUND, object);
     }
