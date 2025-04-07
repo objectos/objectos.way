@@ -16,6 +16,7 @@
 package objectos.way;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.EOFException;
 import java.io.IOException;
@@ -131,9 +132,7 @@ final class HttpExchange extends HttpSupport implements Closeable {
   private static final int BITS_MASK = ~STATE_MASK;
 
   private static final int KEEP_ALIVE = 1 << 4;
-
   private static final int CONTENT_LENGTH = 1 << 5;
-
   private static final int CHUNKED = 1 << 6;
 
   private Map<String, Object> attributes;
@@ -208,7 +207,7 @@ final class HttpExchange extends HttpSupport implements Closeable {
     this(socket, socket.getInputStream(), socket.getOutputStream(), bufferSizeInitial, bufferSizeMax, clock, noteSink);
   }
 
-  HttpExchange(
+  private HttpExchange(
       Closeable socket,
       InputStream inputStream,
       OutputStream outputStream,
@@ -218,22 +217,43 @@ final class HttpExchange extends HttpSupport implements Closeable {
       Note.Sink noteSink
   ) {
 
-    this.socket = socket;
-
     final int initialSize;
     initialSize = powerOfTwo(bufferSizeInitial);
 
-    buffer = new byte[initialSize];
-
-    this.maxBufferSize = powerOfTwo(bufferSizeMax);
+    this.buffer = new byte[initialSize];
 
     this.clock = clock;
 
     this.inputStream = inputStream;
 
+    this.maxBufferSize = powerOfTwo(bufferSizeMax);
+
     this.noteSink = noteSink;
 
     this.outputStream = outputStream;
+
+    this.socket = socket;
+
+  }
+
+  HttpExchange(HttpExchangeConfig config) {
+
+    final int initialSize;
+    initialSize = powerOfTwo(config.bufferSizeInitial);
+
+    buffer = new byte[initialSize];
+
+    clock = config.clock;
+
+    inputStream = config.inputStream();
+
+    maxBufferSize = config.bufferSizeMax;
+
+    noteSink = config.noteSink;
+
+    outputStream = new ByteArrayOutputStream();
+
+    socket = () -> {}; // noop closeable
 
   }
 
@@ -312,6 +332,18 @@ final class HttpExchange extends HttpSupport implements Closeable {
     } finally {
       socket.close();
     }
+  }
+
+  @Override
+  public final String toString() {
+    if (testBit(_PROCESSED) && outputStream instanceof ByteArrayOutputStream impl) {
+      final byte[] bytes;
+      bytes = impl.toByteArray();
+
+      return new String(bytes, StandardCharsets.UTF_8);
+    }
+
+    return super.toString();
   }
 
   // ##################################################################

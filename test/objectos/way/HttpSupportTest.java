@@ -33,11 +33,11 @@ public class HttpSupportTest {
         http -> http.ok(media),
 
         """
-        HTTP/1.1 200 OK
-        Date: Wed, 28 Jun 2023 12:08:43 GMT
-        Content-Type: text/plain; charset=utf-8
-        Content-Length: 3
-
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 3\r
+        \r
         OK
         """
     );
@@ -54,11 +54,11 @@ public class HttpSupportTest {
         http -> http.badRequest(media),
 
         """
-        HTTP/1.1 400 Bad Request
-        Date: Wed, 28 Jun 2023 12:08:43 GMT
-        Content-Type: text/plain; charset=utf-8
-        Content-Length: 4
-
+        HTTP/1.1 400 Bad Request\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 4\r
+        \r
         Foo
         """
     );
@@ -73,25 +73,25 @@ public class HttpSupportTest {
         http -> http.notFound(media),
 
         """
-        HTTP/1.1 404 Not Found
-        Date: Wed, 28 Jun 2023 12:08:43 GMT
-        Content-Type: text/plain; charset=utf-8
-        Content-Length: 10
-
+        HTTP/1.1 404 Not Found\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 10\r
+        \r
         Not Found
         """
     );
   }
 
   private void test(Consumer<Http.Exchange> consumer, String expected) {
-    final Http.TestingExchange http;
-    http = Http.TestingExchange.create(config -> {
+    final Http.Exchange http;
+    http = Http.Exchange.create(config -> {
       config.clock(TestingClock.FIXED);
     });
 
     consumer.accept(http);
 
-    assertEquals(http.responseToString(), expected);
+    assertEquals(http.toString(), expected);
   }
 
 }

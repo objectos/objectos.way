@@ -15,6 +15,11 @@
  */
 package objectos.way;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.Clock;
@@ -22,53 +27,48 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
+import objectos.way.HttpExchange.ParseStatus;
 
 final class HttpExchangeConfig implements Http.Exchange.Config {
 
-  Clock clock;
+  final int bufferSizeInitial = 1024;
 
-  Map<Object, Object> objectStore;
+  final int bufferSizeMax = 4096;
 
-  Http.Method method = Http.Method.GET;
+  Clock clock = Clock.systemUTC();
 
-  String path = "/";
+  private Map<Object, Object> objectStore;
 
-  Map<String, Object> queryParams;
+  private Http.Method method = Http.Method.GET;
 
-  Http.Version version = Http.Version.HTTP_1_1;
+  private String path = "/";
 
-  Map<Http.HeaderName, Object> headers;
+  private Map<String, Object> queryParams;
 
-  Map<String, Object> formParams;
+  private final Http.Version version = Http.Version.HTTP_1_1;
 
-  byte[] body;
+  private Map<Http.HeaderName, Object> headers;
+
+  private Map<String, Object> formParams;
+
+  final Note.Sink noteSink = Note.NoOpSink.INSTANCE;
 
   public final Http.Exchange build() {
-    if (formParams == null) {
-      body = Util.EMPTY_BYTE_ARRAY;
-    } else {
+    try {
+      final HttpExchange http;
+      http = new HttpExchange(this);
 
-      if (headers == null) {
-        headers = Util.createSequencedMap();
+      final ParseStatus status;
+      status = http.parse();
+
+      if (status != ParseStatus.NORMAL) {
+        throw new IllegalArgumentException("Invalid request");
       }
 
-      if (!headers.containsKey(Http.HeaderName.CONTENT_TYPE)) {
-        headers.put(Http.HeaderName.CONTENT_TYPE, "application/x-www-form-urlencoded");
-      }
-
-      String body;
-      body = Http.queryParamsToString(formParams, this::encode);
-
-      this.body = body.getBytes(StandardCharsets.UTF_8);
-
+      return http;
+    } catch (IOException e) {
+      throw new AssertionError("ByteArrayInputStream does not throw IOException", e);
     }
-
-    //return new HttpExchange(this);
-    throw new UnsupportedOperationException("Implement me");
-  }
-
-  private String encode(String s) {
-    return URLEncoder.encode(s, StandardCharsets.UTF_8);
   }
 
   @Override
@@ -210,6 +210,112 @@ final class HttpExchangeConfig implements Http.Exchange.Config {
     }
 
     objectStore.put(key, value);
+  }
+
+  final InputStream inputStream() {
+    final byte[] body;
+    body = body();
+
+    final ByteArrayOutputStream out;
+    out = new ByteArrayOutputStream();
+
+    try {
+      final OutputStreamWriter w;
+      w = new OutputStreamWriter(out, StandardCharsets.ISO_8859_1);
+
+      // status line
+
+      w.write(method.name());
+      w.write(' ');
+      w.write(path);
+      w.write(' ');
+
+      switch (version) {
+        case HTTP_1_0 -> w.write("HTTP/1.0");
+
+        case HTTP_1_1 -> w.write("HTTP/1.1");
+      }
+
+      w.write('\r');
+      w.write('\n');
+
+      // fields
+
+      if (headers != null) {
+        for (var entry : headers.entrySet()) {
+
+          final Http.HeaderName name;
+          name = entry.getKey();
+
+          final Object value;
+          value = entry.getValue();
+
+          switch (value) {
+            case String s -> {
+              w.write(name.capitalized());
+              w.write(": ");
+              w.write(s);
+              w.write('\r');
+              w.write('\n');
+            }
+
+            case List<?> l -> {
+              @SuppressWarnings("unchecked")
+              final List<String> list = (List<String>) l;
+
+              for (var s : list) {
+                w.write(name.capitalized());
+                w.write(": ");
+                w.write(s);
+                w.write('\r');
+                w.write('\n');
+              }
+            }
+
+            default -> throw new AssertionError(
+                "Type should not have been put into the map: " + value.getClass()
+            );
+          }
+        }
+      }
+
+      w.write('\r');
+      w.write('\n');
+
+      w.flush();
+
+      out.write(body);
+    } catch (IOException e) {
+      throw new AssertionError("ByteArrayOutputStream should not throw", e);
+    }
+
+    final byte[] bytes;
+    bytes = out.toByteArray();
+
+    return new ByteArrayInputStream(bytes);
+  }
+
+  private byte[] body() {
+    if (formParams == null) {
+      return Util.EMPTY_BYTE_ARRAY;
+    }
+
+    if (headers == null) {
+      headers = Util.createSequencedMap();
+    }
+
+    if (!headers.containsKey(Http.HeaderName.CONTENT_TYPE)) {
+      headers.put(Http.HeaderName.CONTENT_TYPE, "application/x-www-form-urlencoded");
+    }
+
+    final String form;
+    form = Http.queryParamsToString(formParams, this::encode);
+
+    return form.getBytes(StandardCharsets.UTF_8);
+  }
+
+  private String encode(String s) {
+    return URLEncoder.encode(s, StandardCharsets.UTF_8);
   }
 
 }
