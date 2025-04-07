@@ -157,6 +157,30 @@ sealed abstract class HttpSupport implements Http.Exchange, Http.ResponseHeaders
 
   @Override
   public final void ok(Media.Bytes media) {
+    respond(Http.Status.OK, media);
+  }
+
+  // 4xx responses
+
+  @Override
+  public final void badRequest(Media.Bytes media) {
+    respond(Http.Status.BAD_REQUEST, media);
+  }
+
+  @Override
+  public final void notFound(Media.Bytes media) {
+    respond(Http.Status.NOT_FOUND, media);
+  }
+
+  @Override
+  public final void respond(ResponseMessage message) {
+    HttpResponseMessage impl;
+    impl = (HttpResponseMessage) message;
+
+    impl.accept(this);
+  }
+
+  public final void respond(Http.Status status, Media.Bytes media) {
     // early media validation
     final String contentType;
     contentType = media.contentType();
@@ -172,7 +196,7 @@ sealed abstract class HttpSupport implements Http.Exchange, Http.ResponseHeaders
       throw new NullPointerException("The specified Media.Bytes provided a null byte array");
     }
 
-    status0(Http.Status.OK);
+    status0(status);
 
     dateNow();
 
@@ -181,14 +205,6 @@ sealed abstract class HttpSupport implements Http.Exchange, Http.ResponseHeaders
     header0(Http.HeaderName.CONTENT_LENGTH, bytes.length);
 
     body0(media, bytes);
-  }
-
-  @Override
-  public final void respond(ResponseMessage message) {
-    HttpResponseMessage impl;
-    impl = (HttpResponseMessage) message;
-
-    impl.accept(this);
   }
 
   @Override

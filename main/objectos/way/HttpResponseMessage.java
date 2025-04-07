@@ -90,7 +90,7 @@ final class HttpResponseMessage implements Http.ResponseMessage {
         final Media.Bytes object;
         object = (Media.Bytes) value;
 
-        http.respond(Http.Status.OK, object);
+        http.ok(object);
 
       }
     }

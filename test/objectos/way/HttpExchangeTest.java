@@ -384,7 +384,7 @@ public class HttpExchangeTest {
         },
 
         """
-        HTTP/1.1 404 NOT FOUND\r
+        HTTP/1.1 404 Not Found\r
         Connection: close\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
         \r
@@ -421,7 +421,7 @@ public class HttpExchangeTest {
         },
 
         """
-        HTTP/1.1 404 NOT FOUND\r
+        HTTP/1.1 404 Not Found\r
         Connection: close\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
         \r

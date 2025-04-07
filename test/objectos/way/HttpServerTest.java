@@ -97,7 +97,7 @@ public class HttpServerTest implements Consumer<Http.Routing> {
     final Media.Bytes object;
     object = Media.Bytes.textPlain("TC01\n", StandardCharsets.UTF_8);
 
-    http.respond(Http.Status.OK, object);
+    http.ok(object);
   }
 
   @Test(description = """
@@ -157,7 +157,7 @@ public class HttpServerTest implements Consumer<Http.Routing> {
     final Media.Bytes object;
     object = Media.Bytes.textPlain("TC02\n", StandardCharsets.UTF_8);
 
-    http.respond(Http.Status.OK, object);
+    http.ok(object);
   }
 
   @Test(description = """
@@ -212,11 +212,11 @@ public class HttpServerTest implements Consumer<Http.Routing> {
   }
 
   private void testCase03Get(Http.Exchange http) {
-    http.respond(Http.Status.OK, new TestingSingleParagraph("TC03 GET"));
+    http.ok(new TestingSingleParagraph("TC03 GET"));
   }
 
   private void testCase03Post(Http.Exchange http) {
-    http.respond(Http.Status.OK, new TestingSingleParagraph("TC03 POST"));
+    http.ok(new TestingSingleParagraph("TC03 POST"));
   }
 
   @Test(description = """
@@ -307,11 +307,11 @@ public class HttpServerTest implements Consumer<Http.Routing> {
   private void testCase04Get(Http.Exchange http) {
     http.set(String.class, "TC04 GET");
 
-    http.respond(Http.Status.OK, new AttributeTester(http, String.class));
+    http.ok(new AttributeTester(http, String.class));
   }
 
   private void testCase04Post(Http.Exchange http) {
-    http.respond(Http.Status.OK, new AttributeTester(http, String.class));
+    http.ok(new AttributeTester(http, String.class));
   }
 
   @Test(description = """
@@ -363,7 +363,7 @@ public class HttpServerTest implements Consumer<Http.Routing> {
     class NotFoundException extends Http.AbstractHandlerException {
       @Override
       public void handle(Http.Exchange http) {
-        http.respond(Http.Status.NOT_FOUND, new TestingSingleParagraph("NOT FOUND"));
+        http.notFound(new TestingSingleParagraph("NOT FOUND"));
       }
     }
 

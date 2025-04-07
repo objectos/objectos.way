@@ -189,7 +189,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           String s = http.get(String.class);
           Integer i = http.get(Integer.class);
           Media.Bytes object = Media.Bytes.textPlain("tc12=" + s + "-" + i.toString(), StandardCharsets.UTF_8);
-          http.respond(Http.Status.OK, object);
+          http.ok(object);
         };
 
         path.handler(Http.Handler.firstOf(tc12A, tc12X.intercept(tc12C)));
@@ -224,7 +224,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
     TestingSingleParagraph html;
     html = new TestingSingleParagraph(text);
 
-    http.respond(Http.Status.OK, html);
+    http.ok(html);
   }
 
   @Test
@@ -334,7 +334,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """,
 
           """
-          HTTP/1.1 404 NOT FOUND\r
+          HTTP/1.1 404 Not Found\r
           Date: Wed, 28 Jun 2023 12:08:43 GMT\r
           Connection: close\r
           \r
@@ -353,7 +353,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
     Media.Bytes plain;
     plain = Media.Bytes.textPlain(text, StandardCharsets.UTF_8);
 
-    http.respond(Http.Status.OK, plain);
+    http.ok(plain);
   }
 
   @Test
@@ -508,7 +508,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """,
 
           """
-          HTTP/1.1 404 NOT FOUND\r
+          HTTP/1.1 404 Not Found\r
           Date: Wed, 28 Jun 2023 12:08:43 GMT\r
           Connection: close\r
           \r
@@ -527,7 +527,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
     Media.Bytes plain;
     plain = Media.Bytes.textPlain(text, StandardCharsets.UTF_8);
 
-    http.respond(Http.Status.OK, plain);
+    http.ok(plain);
   }
 
   @Test
@@ -627,7 +627,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """,
 
           """
-          HTTP/1.1 404 NOT FOUND\r
+          HTTP/1.1 404 Not Found\r
           Date: Wed, 28 Jun 2023 12:08:43 GMT\r
           Connection: close\r
           \r
@@ -646,7 +646,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
     Media.Bytes plain;
     plain = Media.Bytes.textPlain(text, StandardCharsets.UTF_8);
 
-    http.respond(Http.Status.OK, plain);
+    http.ok(plain);
   }
 
   @Test
@@ -712,7 +712,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """,
 
           """
-          HTTP/1.1 404 NOT FOUND\r
+          HTTP/1.1 404 Not Found\r
           Date: Wed, 28 Jun 2023 12:08:43 GMT\r
           Connection: close\r
           \r
@@ -735,7 +735,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
     Media.Bytes plain;
     plain = Media.Bytes.textPlain("VALUE=" + value, StandardCharsets.UTF_8);
 
-    http.respond(Http.Status.OK, plain);
+    http.ok(plain);
   }
 
   private Http.Handler testCase07(Http.Handler handler) {
@@ -758,7 +758,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
         Media.Bytes plain;
         plain = Media.Bytes.textPlain("TestException", StandardCharsets.UTF_8);
 
-        http.respond(Http.Status.OK, plain);
+        http.ok(plain);
       }
     };
   }
@@ -861,7 +861,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
     Media.Bytes plain;
     plain = Media.Bytes.textPlain(notEmpty + ":" + digits, StandardCharsets.UTF_8);
 
-    http.respond(Http.Status.OK, plain);
+    http.ok(plain);
   }
 
   @Test
@@ -893,7 +893,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """,
 
           """
-          HTTP/1.1 404 NOT FOUND\r
+          HTTP/1.1 404 Not Found\r
           Date: Wed, 28 Jun 2023 12:08:43 GMT\r
           Connection: close\r
           \r
@@ -912,7 +912,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """,
 
           """
-          HTTP/1.1 404 NOT FOUND\r
+          HTTP/1.1 404 Not Found\r
           Date: Wed, 28 Jun 2023 12:08:43 GMT\r
           Connection: close\r
           \r
@@ -928,7 +928,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
     Media.Bytes plain;
     plain = Media.Bytes.textPlain(regex, StandardCharsets.UTF_8);
 
-    http.respond(Http.Status.OK, plain);
+    http.ok(plain);
   }
 
   @Test
@@ -960,7 +960,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """,
 
           """
-          HTTP/1.1 404 NOT FOUND\r
+          HTTP/1.1 404 Not Found\r
           Date: Wed, 28 Jun 2023 12:08:43 GMT\r
           Connection: close\r
           \r
@@ -973,7 +973,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
     Media.Bytes plain;
     plain = Media.Bytes.textPlain("SECOND", StandardCharsets.UTF_8);
 
-    http.respond(Http.Status.OK, plain);
+    http.ok(plain);
   }
 
   @Test
@@ -1026,7 +1026,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
     Media.Bytes plain;
     plain = Media.Bytes.textPlain(text, StandardCharsets.UTF_8);
 
-    http.respond(Http.Status.OK, plain);
+    http.ok(plain);
   }
 
   @Test
@@ -1182,7 +1182,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
       final Media.Bytes object;
       object = Media.Bytes.textPlain("Not Found", StandardCharsets.UTF_8);
 
-      http.respond(Http.Status.NOT_FOUND, object);
+      http.notFound(object);
     }
   }
 

@@ -19,6 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.function.Consumer;
 import objectos.way.Web.FormData;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -198,19 +199,19 @@ public class HttpTestingExchangeTest {
     }
 
     Http.TestingExchange http;
-    http = Http.TestingExchange.create(config -> {});
+    http = http(config -> {});
 
-    http.respond(Http.Status.OK, new Template());
-
-    assertEquals(http.responseStatus(), Http.Status.OK);
-
-    Html.Template body;
-    body = (Html.Template) http.responseBody();
+    http.ok(new Template());
 
     assertEquals(
-        body.toString(),
+        http.responseToString(),
 
         """
+        HTTP/1.1 200 OK
+        Date: Wed, 28 Jun 2023 12:08:43 GMT
+        Content-Type: text/html; charset=utf-8
+        Content-Length: 16
+
         <div>tc02</div>
         """
     );
@@ -226,19 +227,19 @@ public class HttpTestingExchangeTest {
     }
 
     Http.TestingExchange http;
-    http = Http.TestingExchange.create(config -> {});
+    http = http(config -> {});
 
-    http.respond(Http.Status.BAD_REQUEST, new Template());
-
-    assertEquals(http.responseStatus(), Http.Status.BAD_REQUEST);
-
-    Html.Template body;
-    body = (Html.Template) http.responseBody();
+    http.badRequest(new Template());
 
     assertEquals(
-        body.toString(),
+        http.responseToString(),
 
         """
+        HTTP/1.1 400 Bad Request
+        Date: Wed, 28 Jun 2023 12:08:43 GMT
+        Content-Type: text/html; charset=utf-8
+        Content-Length: 16
+
         <div>tc02</div>
         """
     );
@@ -354,6 +355,14 @@ public class HttpTestingExchangeTest {
     assertEquals(http.responseHeader(Http.HeaderName.ALLOW), "foo/bar");
     assertEquals(http.responseHeader(Http.HeaderName.CONTENT_TYPE), "text/html; charset=utf-8");
     assertEquals(http.responseHeader(Http.HeaderName.USER_AGENT), "Agent 1");
+  }
+
+  private Http.TestingExchange http(Consumer<Http.TestingExchange.Config> more) {
+    return Http.TestingExchange.create(config -> {
+      config.clock(TestingClock.FIXED);
+
+      more.accept(config);
+    });
   }
 
 }

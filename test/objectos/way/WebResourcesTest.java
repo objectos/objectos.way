@@ -156,7 +156,7 @@ public class WebResourcesTest implements Consumer<Http.Routing> {
     final Media.Bytes object;
     object = Media.Bytes.textPlain(text, StandardCharsets.UTF_8);
 
-    http.respond(Http.Status.OK, object);
+    http.ok(object);
   }
 
   @Test(description = """

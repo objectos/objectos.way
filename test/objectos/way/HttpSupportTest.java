@@ -22,10 +22,12 @@ import org.testng.annotations.Test;
 
 public class HttpSupportTest {
 
+  // 2xx responses
+
   @Test
   public void ok01() {
     final Media.Bytes media;
-    media = Media.Bytes.textPlain("OK");
+    media = Media.Bytes.textPlain("OK\n");
 
     test(
         http -> http.ok(media),
@@ -34,9 +36,49 @@ public class HttpSupportTest {
         HTTP/1.1 200 OK
         Date: Wed, 28 Jun 2023 12:08:43 GMT
         Content-Type: text/plain; charset=utf-8
-        Content-Length: 2
+        Content-Length: 3
 
-        OK\
+        OK
+        """
+    );
+  }
+
+  // 4xx responses
+
+  @Test
+  public void badRequest01() {
+    final Media.Bytes media;
+    media = Media.Bytes.textPlain("Foo\n");
+
+    test(
+        http -> http.badRequest(media),
+
+        """
+        HTTP/1.1 400 Bad Request
+        Date: Wed, 28 Jun 2023 12:08:43 GMT
+        Content-Type: text/plain; charset=utf-8
+        Content-Length: 4
+
+        Foo
+        """
+    );
+  }
+
+  @Test
+  public void notFound01() {
+    final Media.Bytes media;
+    media = Media.Bytes.textPlain("Not Found\n");
+
+    test(
+        http -> http.notFound(media),
+
+        """
+        HTTP/1.1 404 Not Found
+        Date: Wed, 28 Jun 2023 12:08:43 GMT
+        Content-Type: text/plain; charset=utf-8
+        Content-Length: 10
+
+        Not Found
         """
     );
   }

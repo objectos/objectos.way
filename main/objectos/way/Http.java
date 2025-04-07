@@ -137,6 +137,26 @@ public final class Http {
      */
     void ok(Media.Bytes media);
 
+    // 4XX responses
+
+    /**
+     * Respond with a {@code 400 Bad Request} message with the specified media
+     * entity.
+     *
+     * @param media
+     *        the media entity
+     */
+    void badRequest(Media.Bytes media);
+
+    /**
+     * Respond with a {@code 404 Not Found} message with the specified media
+     * entity.
+     *
+     * @param media
+     *        the media entity
+     */
+    void notFound(Media.Bytes media);
+
     /**
      * Return {@code true} if an HTTP response message has been written to this
      * exchange; {@code false} otherwise.
@@ -691,17 +711,6 @@ public final class Http {
 
     /**
      * Writes a response message with the specified status and the contents of
-     * the specified media object.
-     *
-     * @param status
-     *        the HTTP response status
-     * @param object
-     *        the media object
-     */
-    void respond(Http.Status status, Media.Bytes object);
-
-    /**
-     * Writes a response message with the specified status and the contents of
      * the specified media object. The specified headers will be
      *
      * @param status
@@ -1107,7 +1116,7 @@ public final class Http {
     Status BAD_REQUEST = HttpStatus.BAD_REQUEST;
 
     /**
-     * The {@code 404 NOT FOUND} status.
+     * The {@code 404 Not Found} status.
      */
     Status NOT_FOUND = HttpStatus.NOT_FOUND;
 

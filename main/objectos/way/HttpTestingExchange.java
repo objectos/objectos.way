@@ -417,13 +417,6 @@ final class HttpTestingExchange extends HttpSupport implements Http.TestingExcha
   // response methods
 
   @Override
-  public final void respond(Http.Status status, Media.Bytes object) {
-    respond0(status, object);
-
-    responseBody = object;
-  }
-
-  @Override
   public final void respond(Http.Status status, Media.Bytes object, Consumer<Http.ResponseHeaders> headers) {
     respond0(status, object);
 

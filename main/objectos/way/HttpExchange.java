@@ -1448,14 +1448,6 @@ final class HttpExchange extends HttpSupport implements Closeable {
   // ##################################################################
 
   @Override
-  public final void respond(Http.Status status, Media.Bytes object) {
-    final byte[] bytes;
-    bytes = respond0(status, object);
-
-    send0(bytes);
-  }
-
-  @Override
   public final void respond(Http.Status status, Media.Bytes object, Consumer<Http.ResponseHeaders> headers) {
     final byte[] bytes;
     bytes = respond0(status, object);
