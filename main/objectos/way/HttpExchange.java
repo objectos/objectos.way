@@ -138,13 +138,13 @@ final class HttpExchange extends HttpSupport implements Closeable {
 
   private Map<String, Object> attributes;
 
-  private int bitset;
+  private int bitset = 0;
 
   private final Note.Sink noteSink;
 
-  ParseStatus parseStatus;
+  ParseStatus parseStatus = ParseStatus.NORMAL;
 
-  private final Socket socket;
+  private final Closeable socket;
 
   // RequestBody
 
@@ -192,26 +192,38 @@ final class HttpExchange extends HttpSupport implements Closeable {
 
   byte[] buffer;
 
-  int bufferIndex;
+  int bufferIndex = 0;
 
-  int bufferLimit;
+  int bufferLimit = 0;
 
   private final InputStream inputStream;
 
-  int lineLimit;
+  int lineLimit = 0;
 
   private final int maxBufferSize;
 
+  private final OutputStream outputStream;
+
   public HttpExchange(Socket socket, int bufferSizeInitial, int bufferSizeMax, Clock clock, Note.Sink noteSink) throws IOException {
-    this(socket, socket.getInputStream(), bufferSizeInitial, bufferSizeMax, clock, noteSink);
+    this(socket, socket.getInputStream(), socket.getOutputStream(), bufferSizeInitial, bufferSizeMax, clock, noteSink);
   }
 
-  private HttpExchange(Socket socket, InputStream inputStream, int bufferSizeInitial, int bufferSizeMax, Clock clock, Note.Sink noteSink) {
+  HttpExchange(
+      Closeable socket,
+      InputStream inputStream,
+      OutputStream outputStream,
+      int bufferSizeInitial,
+      int bufferSizeMax,
+      Clock clock,
+      Note.Sink noteSink
+  ) {
+
     this.socket = socket;
 
-    bufferLimit = powerOfTwo(bufferSizeInitial);
+    final int initialSize;
+    initialSize = powerOfTwo(bufferSizeInitial);
 
-    buffer = new byte[bufferLimit];
+    buffer = new byte[initialSize];
 
     this.maxBufferSize = powerOfTwo(bufferSizeMax);
 
@@ -221,15 +233,8 @@ final class HttpExchange extends HttpSupport implements Closeable {
 
     this.noteSink = noteSink;
 
-    bufferLimit = 0;
+    this.outputStream = outputStream;
 
-    bufferIndex = 0;
-
-    lineLimit = 0;
-
-    parseStatus = ParseStatus.NORMAL;
-
-    setState(_START);
   }
 
   /**
@@ -257,7 +262,7 @@ final class HttpExchange extends HttpSupport implements Closeable {
     inputStream = new ByteArrayInputStream(bytes);
 
     HttpExchange requestLine;
-    requestLine = new HttpExchange(null, inputStream, 1024, 4096, null, null);
+    requestLine = new HttpExchange(null, inputStream, null, 1024, 4096, null, null);
 
     try {
       requestLine.parseLine();
@@ -1555,13 +1560,12 @@ final class HttpExchange extends HttpSupport implements Closeable {
     } else {
 
       try {
-        OutputStream outputStream;
-        outputStream = sendStart();
+        sendStart();
 
         bufferIndex = 0;
 
         CharWritableAppendable out;
-        out = new CharWritableAppendable(outputStream, charset);
+        out = new CharWritableAppendable(charset);
 
         writer.mediaTo(out);
 
@@ -1744,8 +1748,7 @@ final class HttpExchange extends HttpSupport implements Closeable {
     } else {
 
       try {
-        OutputStream outputStream;
-        outputStream = sendStart();
+        sendStart();
 
         outputStream.write(body, 0, body.length); // implicity body null-check
       } catch (IOException e) {
@@ -1768,8 +1771,7 @@ final class HttpExchange extends HttpSupport implements Closeable {
     } else {
 
       try {
-        OutputStream outputStream;
-        outputStream = sendStart();
+        sendStart();
 
         try (InputStream in = Files.newInputStream(file)) {
           in.transferTo(outputStream);
@@ -1793,25 +1795,16 @@ final class HttpExchange extends HttpSupport implements Closeable {
     }
   }
 
-  private OutputStream sendStart() throws IOException {
+  private void sendStart() throws IOException {
     writeBytes(Bytes.CRLF);
 
-    OutputStream outputStream;
-    outputStream = socket.getOutputStream();
-
     outputStream.write(buffer, 0, bufferIndex);
-
-    return outputStream;
   }
 
   private class CharWritableAppendable implements Appendable {
-    private final OutputStream outputStream;
-
     private final Charset charset;
 
-    public CharWritableAppendable(OutputStream outputStream, Charset charset) {
-      this.outputStream = outputStream;
-
+    public CharWritableAppendable(Charset charset) {
       this.charset = charset;
     }
 

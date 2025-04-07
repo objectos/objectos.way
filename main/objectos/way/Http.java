@@ -97,6 +97,143 @@ public final class Http {
       permits HttpSupport, TestingExchange {
 
     /**
+     * Configures the creation of a stand-alone exchange instance.
+     */
+    sealed interface Config permits HttpExchangeConfig {
+
+      /**
+       * Use the specified clock instance for generating time related values.
+       *
+       * @param value
+       *        the clock instance to use
+       */
+      void clock(Clock value);
+
+      /**
+       * Adds the specified field name and value to the request body as if it
+       * were sent by a HTML form. The name must be decoded.
+       *
+       * @param name
+       *        the field name (decoded)
+       * @param value
+       *        the field value
+       */
+      void formParam(String name, int value);
+
+      /**
+       * Adds the specified field name and value to the request body as if it
+       * were sent by a HTML form. The name must be decoded.
+       *
+       * @param name
+       *        the field name (decoded)
+       * @param value
+       *        the field value
+       */
+      void formParam(String name, long value);
+
+      /**
+       * Adds the specified field name and value to the request body as if it
+       * were sent by a HTML form. The name and value must be decoded.
+       *
+       * @param name
+       *        the field name (decoded)
+       * @param value
+       *        the field value (decoded)
+       */
+      void formParam(String name, String value);
+
+      /**
+       * Adds the specified request header to the HTTP exchange.
+       *
+       * @param name
+       *        the header field name
+       * @param value
+       *        the header field value
+       */
+      void header(HeaderName name, String value);
+
+      /**
+       * Sets the request method to the specified value.
+       *
+       * @param value
+       *        the HTTP method
+       */
+      void method(Http.Method value);
+
+      /**
+       * Sets the path component of the request-target to the specified value.
+       *
+       * @param value
+       *        the decoded path value
+       */
+      void path(String value);
+
+      /**
+       * Sets the request-target query parameter with the specified name to the
+       * specified value.
+       *
+       * @param name
+       *        the name of the query parameter
+       * @param value
+       *        the value of the query parameter
+       */
+      void queryParam(String name, int value);
+
+      /**
+       * Sets the request-target query parameter with the specified name to the
+       * specified value.
+       *
+       * @param name
+       *        the name of the query parameter
+       * @param value
+       *        the value of the query parameter
+       */
+      void queryParam(String name, long value);
+
+      /**
+       * Sets the request-target query parameter with the specified name to the
+       * specified value.
+       *
+       * @param name
+       *        the name of the query parameter
+       * @param value
+       *        the decoded value of the query parameter
+       */
+      void queryParam(String name, String value);
+
+      /**
+       * Stores the provided key-value pair in the testing exchange.
+       *
+       * @param key
+       *        the key to be stored
+       * @param value
+       *        the value to be stored
+       * @param <T>
+       *        the type of the value
+       */
+      <T> void set(Class<T> key, T value);
+
+    }
+
+    /**
+     * Creates a stand-alone exchange instance typically to be used in test
+     * cases.
+     *
+     * @param config
+     *        configures the exchange instance creation
+     *
+     * @return a newly created exchange instance with the configured options
+     */
+    static Exchange create(Consumer<Config> config) {
+      HttpExchangeConfig builder;
+      builder = new HttpExchangeConfig();
+
+      config.accept(builder);
+
+      return builder.build();
+    }
+
+    /**
      * Stores an object in this request. The object will be associated to the
      * name of the specified {@code Class} instance.
      * Stored objects are reset between requests.
