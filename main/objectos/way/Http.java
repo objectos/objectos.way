@@ -402,19 +402,12 @@ public final class Http {
   /**
    * An HTTP header name.
    */
-  public sealed interface HeaderName permits HttpHeaderName, HttpHeaderNameUnknown {
+  public sealed interface HeaderName permits HttpHeaderName {
 
     static HeaderName of(String name) {
       Objects.requireNonNull(name, "name == null");
 
-      HeaderName headerName;
-      headerName = HttpHeaderName.findByName(name);
-
-      if (headerName == null) {
-        headerName = new HttpHeaderNameUnknown(name);
-      }
-
-      return headerName;
+      return HttpHeaderName.of(name);
     }
 
     /**
@@ -505,11 +498,19 @@ public final class Http {
     int index();
 
     /**
-     * Returns this name with the first letter of each word capitalized.
+     * Returns this name in header case, i.e., first letter of each word
+     * capitalized.
      *
-     * @return this name with the first letter of each word capitalized.
+     * @return this name in header case.
      */
-    String capitalized();
+    String headerCase();
+
+    /**
+     * Returns this name in lower case.
+     *
+     * @return this name in lower case.
+     */
+    String lowerCase();
 
   }
 
@@ -617,15 +618,6 @@ public final class Http {
      */
     String header(Http.HeaderName name);
 
-    /**
-     * Returns a formatted string representation of the headers of this HTTP
-     * request message.
-     *
-     * @return a formatted string representation of the headers of this HTTP
-     *         request message.
-     */
-    String toRequestHeadersText();
-
   }
 
   /**
@@ -644,6 +636,13 @@ public final class Http {
      * @return the code of the method of this request message
      */
     Method method();
+
+    /**
+     * The version of the HTTP protocol of this request message.
+     *
+     * @return the version of the HTTP protocol of this request message.
+     */
+    Version version();
 
   }
 
@@ -1391,7 +1390,10 @@ public final class Http {
 
   }
 
-  enum Version {
+  /**
+   * The version of the HTTP protocol.
+   */
+  public enum Version {
 
     HTTP_1_0("HTTP/1.0"),
 

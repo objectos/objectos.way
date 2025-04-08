@@ -218,11 +218,9 @@ public class HttpExchangeTest {
 
         http -> {
           // headers
-          assertEquals(http.toRequestHeadersText(), """
-          Host: www.example.com
-          Connection: close
-          Foo: bar
-          """);
+          assertEquals(http.header(Http.HeaderName.HOST), "www.example.com");
+          assertEquals(http.header(Http.HeaderName.CONNECTION), "close");
+          assertEquals(http.header(Http.HeaderName.of("Foo")), "bar");
 
           // response phase
           final Media.Bytes object;
@@ -285,11 +283,9 @@ public class HttpExchangeTest {
       assertEquals(http.queryParamNames(), Set.of());
 
       // headers
-      assertEquals(http.toRequestHeadersText(), """
-      Host: www.example.com
-      Connection: close
-      Foo: bar
-      """);
+      assertEquals(http.header(Http.HeaderName.HOST), "www.example.com");
+      assertEquals(http.header(Http.HeaderName.CONNECTION), "close");
+      assertEquals(http.header(Http.HeaderName.of("Foo")), "bar");
 
       // response phase
       dir = ObjectosHttp.createTempDir();
@@ -991,14 +987,11 @@ public class HttpExchangeTest {
 
     req.append("GET / HTTP/1.1\r\n");
 
-    for (int idx = 0, size = HttpHeaderName.standardNamesSize(); idx < size; idx++) {
-      HttpHeaderName name;
-      name = HttpHeaderName.standardName(idx);
-
+    for (HttpHeaderName name : HttpHeaderName.VALUES) {
       if (!name.isResponseOnly()) {
-        req.append(name.capitalized());
+        req.append(name.headerCase());
         req.append(": ");
-        req.append(Integer.toString(idx));
+        req.append(Integer.toString(name.index()));
         req.append("\r\n");
       }
     }
@@ -1016,12 +1009,9 @@ public class HttpExchangeTest {
       assertEquals(parse.isError(), false);
 
       // headers
-      for (int idx = 0, size = HttpHeaderName.standardNamesSize(); idx < size; idx++) {
-        HttpHeaderName name;
-        name = HttpHeaderName.standardName(idx);
-
+      for (HttpHeaderName name : HttpHeaderName.VALUES) {
         if (!name.isResponseOnly()) {
-          assertEquals(http.header(name), Integer.toString(idx));
+          assertEquals(http.header(name), Integer.toString(name.index()));
         }
       }
     } catch (IOException e) {

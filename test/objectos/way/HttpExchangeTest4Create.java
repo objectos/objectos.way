@@ -76,12 +76,6 @@ public class HttpExchangeTest4Create {
     assertEquals(http.header(Http.HeaderName.CONTENT_TYPE), "application/x-www-form-urlencoded");
     assertEquals(http.header(Http.HeaderName.CONTENT_LENGTH), null);
     assertEquals(http.header(Http.HeaderName.USER_AGENT), "first");
-
-    assertEquals(http.toRequestHeadersText(), """
-    Content-Type: application/x-www-form-urlencoded
-    User-Agent: first
-    User-Agent: second
-    """);
   }
 
   @Test(description = "config.header should reject null names", expectedExceptions = NullPointerException.class)
@@ -104,18 +98,18 @@ public class HttpExchangeTest4Create {
 
   @Test(enabled = false)
   public void header04() {
+    Http.HeaderName foo = Http.HeaderName.of("Foo");
+    Http.HeaderName name = Http.HeaderName.of("Name");
+
     Http.Exchange http;
     http = Http.Exchange.create(config -> {
-      config.header(new HttpHeaderNameUnknown("Foo"), "bar");
-      config.header(new HttpHeaderNameUnknown("Foo"), "another bar");
-      config.header(new HttpHeaderNameUnknown("Name"), "some value");
+      config.header(foo, "bar");
+      config.header(foo, "another bar");
+      config.header(name, "some value");
     });
 
-    assertEquals(http.toRequestHeadersText(), """
-    Foo: bar
-    Foo: another bar
-    Name: some value
-    """);
+    assertEquals(http.header(foo), "bar");
+    assertEquals(http.header(name), "some value");
   }
 
   private final Http.Handler moduleInterop = Http.Handler.create(routing -> {

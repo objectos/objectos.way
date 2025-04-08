@@ -40,10 +40,6 @@ public class HttpExchangeTest2RequestHeaders {
     assertEquals(headers.size(), 2);
     assertEquals(headers.header(Http.HeaderName.HOST), "www.example.com");
     assertEquals(headers.header(Http.HeaderName.CONNECTION), "close");
-    assertEquals(headers.toRequestHeadersText(), """
-    Host: www.example.com
-    Connection: close
-    """);
   }
 
   @Test
@@ -61,12 +57,7 @@ public class HttpExchangeTest2RequestHeaders {
     assertEquals(headers.size(), 3);
     assertEquals(headers.header(Http.HeaderName.HOST), "www.example.com");
     assertEquals(headers.header(Http.HeaderName.CONNECTION), "close");
-    //assertEquals(headers.header(foo), "bar");
-    assertEquals(headers.toRequestHeadersText(), """
-    Host: www.example.com
-    Connection: close
-    Foo: bar
-    """);
+    assertEquals(headers.header(Http.HeaderName.of("Foo")), "bar");
   }
 
   @Test(description = """
@@ -88,11 +79,6 @@ public class HttpExchangeTest2RequestHeaders {
     assertEquals(headers.header(Http.HeaderName.HOST), "www.example.com");
     assertEquals(headers.header(Http.HeaderName.CONTENT_LENGTH), "24");
     assertEquals(headers.header(Http.HeaderName.CONTENT_TYPE), "application/x-www-form-urlencoded");
-    assertEquals(headers.toRequestHeadersText(), """
-    Host: www.example.com
-    Content-Length: 24
-    Content-Type: application/x-www-form-urlencoded
-    """);
   }
 
   @Test(description = """
@@ -113,11 +99,6 @@ public class HttpExchangeTest2RequestHeaders {
     assertEquals(headers.header(Http.HeaderName.HOST), "www.example.com");
     assertEquals(headers.header(Http.HeaderName.FROM), "");
     assertEquals(headers.header(Http.HeaderName.ACCEPT_ENCODING), "gzip, deflate, br");
-    assertEquals(headers.toRequestHeadersText(), """
-    Host: www.example.com
-    From:\040
-    Accept-Encoding: gzip, deflate, br
-    """);
   }
 
   @Test
@@ -134,12 +115,10 @@ public class HttpExchangeTest2RequestHeaders {
     headers.parseHeaders();
 
     assertEquals(headers.size(), 4);
-    assertEquals(headers.toRequestHeadersText(), """
-    no-leading-ows: foo
-    empty-value:\040
-    trailing-ows1: foo
-    trailing-ows2: foo
-    """);
+    assertEquals(headers.header(Http.HeaderName.of("no-leading-ows")), "foo");
+    assertEquals(headers.header(Http.HeaderName.of("empty-value")), "");
+    assertEquals(headers.header(Http.HeaderName.of("trailing-ows1")), "foo");
+    assertEquals(headers.header(Http.HeaderName.of("trailing-ows2")), "foo");
   }
 
   private HttpExchange regularInput(Object... data) throws IOException {

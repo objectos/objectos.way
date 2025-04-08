@@ -18,43 +18,50 @@ package objectos.way;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 
-import objectos.way.Http.HeaderName;
+import java.nio.charset.StandardCharsets;
 import org.testng.annotations.Test;
 
 public class HttpHeaderNameTest {
 
   @Test
+  public void map01() {
+    final String tokenChars;
+    tokenChars = "!#$%&'*+-.^`|~ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    final byte[] tokenBytes;
+    tokenBytes = tokenChars.getBytes(StandardCharsets.US_ASCII);
+
+    assertEquals(tokenBytes.length, tokenChars.length());
+
+    for (byte b : tokenBytes) {
+      assertEquals(HttpHeaderName.map(b) > 0, true);
+    }
+  }
+
+  @Test
   public void of01() {
-    for (int i = 0; i < HttpHeaderName.standardNamesSize(); i++) {
-      HttpHeaderName std;
-      std = HttpHeaderName.standardName(i);
-
-      String name;
-      name = std.capitalized();
-
-      HeaderName result;
-      result = Http.HeaderName.of(name);
-
-      assertSame(result, std);
+    for (HttpHeaderName name : HttpHeaderName.VALUES) {
+      assertSame(Http.HeaderName.of(name.headerCase()), name);
+      assertSame(Http.HeaderName.of(name.lowerCase()), name);
     }
   }
 
   @Test
   public void of02() {
-    Http.HeaderName res;
+    final Http.HeaderName res;
     res = Http.HeaderName.of("Foo-Bar");
 
-    assertEquals(res instanceof HttpHeaderNameUnknown, true);
     assertEquals(res.index(), -1);
-    assertEquals(res.capitalized(), "Foo-Bar");
+    assertEquals(res.headerCase(), "Foo-Bar");
+    assertEquals(res.lowerCase(), "foo-bar");
   }
 
   @SuppressWarnings("unlikely-arg-type")
   @Test(description = "equals() should work fine")
   public void testCase01() {
-    Http.HeaderName foo1 = new HttpHeaderNameUnknown("Foo");
-    Http.HeaderName foo2 = new HttpHeaderNameUnknown("Foo");
-    Http.HeaderName bar = new HttpHeaderNameUnknown("Bar");
+    Http.HeaderName foo1 = HttpHeaderName.of("Foo");
+    Http.HeaderName foo2 = HttpHeaderName.of("Foo");
+    Http.HeaderName bar = HttpHeaderName.of("Bar");
 
     assertEquals(foo1.equals(foo2), true);
     assertEquals(foo2.equals(foo1), true);

@@ -192,8 +192,7 @@ public class HttpExchangeTest1RequestLine {
     assertEquals(line.queryParamNames(), Set.of());
 
     // version
-    assertEquals(line.versionMajor, 1);
-    assertEquals(line.versionMinor, 1);
+    assertEquals(line.version(), Http.Version.HTTP_1_1);
 
     // not bad request
     assertEquals(line.parseStatus.isError(), false);
@@ -229,8 +228,7 @@ public class HttpExchangeTest1RequestLine {
     assertEquals(line.queryParamNames(), Set.of("foo"));
 
     // version
-    assertEquals(line.versionMajor, 1);
-    assertEquals(line.versionMinor, 1);
+    assertEquals(line.version(), Http.Version.HTTP_1_1);
 
     // not bad request
     assertEquals(line.parseStatus.isError(), false);

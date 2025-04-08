@@ -264,7 +264,7 @@ final class HttpExchangeConfig implements Http.Exchange.Config {
 
           switch (value) {
             case String s -> {
-              w.write(name.capitalized());
+              w.write(name.headerCase());
               w.write(": ");
               w.write(s);
               w.write('\r');
@@ -276,7 +276,7 @@ final class HttpExchangeConfig implements Http.Exchange.Config {
               final List<String> list = (List<String>) l;
 
               for (var s : list) {
-                w.write(name.capitalized());
+                w.write(name.headerCase());
                 w.write(": ");
                 w.write(s);
                 w.write('\r');

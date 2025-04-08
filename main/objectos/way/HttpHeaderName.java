@@ -15,129 +15,223 @@
  */
 package objectos.way;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
+import objectos.way.Http.HeaderName;
 
-enum HttpHeaderName implements Http.HeaderName {
+final class HttpHeaderName implements Http.HeaderName {
 
-  /**
-   * The {@code Accept-Encoding} header name.
-   */
-  ACCEPT_ENCODING("Accept-Encoding", HttpHeaderType.REQUEST),
+  private static Builder B = new Builder();
 
-  /**
-   * The {@code Allow} header name.
-   */
-  ALLOW("Allow", HttpHeaderType.RESPONSE),
+  static final HttpHeaderName ACCEPT_ENCODING = B.std("Accept-Encoding", HttpHeaderType.REQUEST);
+  static final HttpHeaderName ALLOW = B.std("Allow", HttpHeaderType.RESPONSE);
+  static final HttpHeaderName CONNECTION = B.std("Connection", HttpHeaderType.BOTH);
+  static final HttpHeaderName CONTENT_LENGTH = B.std("Content-Length", HttpHeaderType.BOTH);
+  static final HttpHeaderName CONTENT_TYPE = B.std("Content-Type", HttpHeaderType.BOTH);
+  static final HttpHeaderName COOKIE = B.std("Cookie", HttpHeaderType.REQUEST);
+  static final HttpHeaderName DATE = B.std("Date", HttpHeaderType.BOTH);
+  static final HttpHeaderName ETAG = B.std("ETag", HttpHeaderType.RESPONSE);
+  static final HttpHeaderName FROM = B.std("From", HttpHeaderType.REQUEST);
+  static final HttpHeaderName HOST = B.std("Host", HttpHeaderType.REQUEST);
+  static final HttpHeaderName IF_NONE_MATCH = B.std("If-None-Match", HttpHeaderType.REQUEST);
+  static final HttpHeaderName LOCATION = B.std("Location", HttpHeaderType.RESPONSE);
+  static final HttpHeaderName SET_COOKIE = B.std("Set-Cookie", HttpHeaderType.RESPONSE);
+  static final HttpHeaderName TRANSFER_ENCODING = B.std("Transfer-Encoding", HttpHeaderType.BOTH);
+  static final HttpHeaderName USER_AGENT = B.std("User-Agent", HttpHeaderType.REQUEST);
+  static final HttpHeaderName WAY_REQUEST = B.std("Way-Request", HttpHeaderType.REQUEST);
 
-  /**
-   * The {@code Connection} header name.
-   */
-  CONNECTION("Connection", HttpHeaderType.BOTH),
+  private static final class Builder {
 
-  /**
-   * The {@code Content-Length} header name.
-   */
-  CONTENT_LENGTH("Content-Length", HttpHeaderType.BOTH),
+    private int index;
 
-  /**
-   * The {@code Content-Type} header name.
-   */
-  CONTENT_TYPE("Content-Type", HttpHeaderType.BOTH),
+    private final Set<HttpHeaderName> values = new LinkedHashSet<>();
 
-  /**
-   * The {@code Cookie} header name.
-   */
-  COOKIE("Cookie", HttpHeaderType.REQUEST),
+    final HttpHeaderName std(String headerCase, HttpHeaderType type) {
+      final String lowerCase;
+      lowerCase = headerCase.toLowerCase(Locale.US);
 
-  /**
-   * The {@code Date} header name.
-   */
-  DATE("Date", HttpHeaderType.BOTH),
+      final HttpHeaderName name;
+      name = new HttpHeaderName(index++, headerCase, lowerCase, type);
 
-  /**
-   * The {@code ETag} header name.
-   */
-  ETAG("ETag", HttpHeaderType.RESPONSE),
-
-  /**
-   * The {@code From} header name.
-   */
-  FROM("From", HttpHeaderType.REQUEST),
-
-  /**
-   * The {@code Host} header name.
-   */
-  HOST("Host", HttpHeaderType.REQUEST),
-
-  /**
-   * The {@code If-None-Match} header name.
-   */
-  IF_NONE_MATCH("If-None-Match", HttpHeaderType.REQUEST),
-
-  /**
-   * The {@code Location} header name.
-   */
-  LOCATION("Location", HttpHeaderType.RESPONSE),
-
-  /**
-   * The {@code Set-Cookie} header name.
-   */
-  SET_COOKIE("Set-Cookie", HttpHeaderType.RESPONSE),
-
-  /**
-   * The {@code Transfer-Encoding} header name.
-   */
-  TRANSFER_ENCODING("Transfer-Encoding", HttpHeaderType.BOTH),
-
-  /**
-   * The {@code User-Agent} header name.
-   */
-  USER_AGENT("User-Agent", HttpHeaderType.REQUEST),
-
-  WAY_REQUEST("Way-Request", HttpHeaderType.REQUEST);
-
-  private static final HttpHeaderName[] STANDARD_NAMES;
-
-  private static final Map<String, HttpHeaderName> FIND_BY_NAME;
-
-  static {
-    STANDARD_NAMES = HttpHeaderName.values();
-
-    Map<String, HttpHeaderName> findByName;
-    findByName = Util.createMap();
-
-    for (HttpHeaderName value : STANDARD_NAMES) {
-      findByName.put(value.capitalized, value);
+      if (values.add(name)) {
+        return name;
+      } else {
+        throw new IllegalArgumentException("Duplicate header name " + name);
+      }
     }
 
-    FIND_BY_NAME = Util.toUnmodifiableMap(findByName);
+    final HttpHeaderName[] values() {
+      return values.toArray(HttpHeaderName[]::new);
+    }
+
   }
 
-  private final String capitalized;
+  static final HttpHeaderName[] VALUES;
+
+  private static final Map<String, HttpHeaderName> BY_LOWER_CASE;
+
+  private static final byte[] TABLE;
+
+  static {
+    VALUES = B.values();
+
+    final Map<String, HttpHeaderName> byLowerCase;
+    byLowerCase = Util.createMap();
+
+    for (HttpHeaderName value : VALUES) {
+      byLowerCase.put(value.lowerCase, value);
+    }
+
+    BY_LOWER_CASE = Util.toUnmodifiableMap(byLowerCase);
+
+    B = null;
+
+    final String tokenChars;
+    tokenChars = "!#$%&'*+-.^`|~ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    final String lowerChars;
+    lowerChars = "!#$%&'*+-.^`|~abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz0123456789";
+
+    final byte[] table;
+    table = new byte[128];
+
+    Arrays.fill(table, (byte) -1);
+
+    for (int i = 0, len = tokenChars.length(); i < len; i++) {
+      final char token;
+      token = tokenChars.charAt(i);
+
+      final char lower;
+      lower = lowerChars.charAt(i);
+
+      table[token] = (byte) lower;
+    }
+
+    TABLE = table;
+  }
+
+  private final int index;
+
+  private String headerCase;
+
+  private byte[] headerCaseBytes;
+
+  private final String lowerCase;
 
   private final HttpHeaderType type;
 
-  private HttpHeaderName(String capitalized, HttpHeaderType type) {
-    this.capitalized = capitalized;
-
+  private HttpHeaderName(int index, String headerCase, String lowerCase, HttpHeaderType type) {
+    this.index = index;
+    this.headerCase = headerCase;
+    this.lowerCase = lowerCase;
     this.type = type;
   }
 
-  public static HttpHeaderName findByName(String name) {
-    return FIND_BY_NAME.get(name);
+  public static HttpHeaderName byLowerCase(String name) {
+    return BY_LOWER_CASE.get(name);
   }
 
-  public static HttpHeaderName standardName(int index) {
-    return STANDARD_NAMES[index];
+  public static byte map(byte b) {
+    if (b < 0) {
+      return -1;
+    }
+
+    if (b > 127) {
+      return -1;
+    }
+
+    return TABLE[b];
   }
 
-  public static int standardNamesSize() {
-    return STANDARD_NAMES.length;
+  public static byte map(char b) {
+    if (b < 0) {
+      return -1;
+    }
+
+    if (b > 127) {
+      return -1;
+    }
+
+    return TABLE[b];
+  }
+
+  public static HeaderName of(String name) {
+    // let's be optimistic
+    final HttpHeaderName first;
+    first = BY_LOWER_CASE.get(name);
+
+    if (first != null) {
+      return first;
+    }
+
+    final String lowerCase;
+    lowerCase = name.toLowerCase(Locale.US);
+
+    final HttpHeaderName second;
+    second = BY_LOWER_CASE.get(lowerCase);
+
+    if (second != null) {
+      return second;
+    }
+
+    StringBuilder sb;
+    sb = null;
+
+    for (int idx = 0, len = name.length(); idx < len; idx++) {
+      final char original;
+      original = name.charAt(idx);
+
+      final byte mapped;
+      mapped = map(original);
+
+      if (mapped < 0) {
+        throw new IllegalArgumentException("Invalid header name character '" + original + "' at index " + idx);
+      }
+
+      if (sb != null) {
+        sb.append((char) mapped);
+      } else if (mapped != original) {
+        sb = new StringBuilder();
+
+        sb.append(name, 0, idx);
+
+        sb.append((char) mapped);
+      }
+    }
+
+    final String lowerCaseName;
+
+    if (sb != null) {
+      lowerCaseName = sb.toString();
+    } else {
+      lowerCaseName = name;
+    }
+
+    return ofLowerCase(lowerCaseName);
+  }
+
+  static HttpHeaderName ofLowerCase(String lowerCase) {
+    return new HttpHeaderName(-1, null, lowerCase, HttpHeaderType.BOTH);
+  }
+
+  @Override
+  public final boolean equals(Object obj) {
+    return obj == this || obj instanceof HttpHeaderName that
+        && lowerCase.contentEquals(that.lowerCase);
+  }
+
+  @Override
+  public final int hashCode() {
+    return lowerCase.hashCode();
   }
 
   @Override
   public final int index() {
-    return ordinal();
+    return index;
   }
 
   public final boolean isResponseOnly() {
@@ -145,12 +239,75 @@ enum HttpHeaderName implements Http.HeaderName {
   }
 
   @Override
-  public final String capitalized() {
-    return capitalized;
+  public final String headerCase() {
+    // benign data race
+
+    String result;
+    result = headerCase;
+
+    if (result == null) {
+      final StringBuilder sb;
+      sb = new StringBuilder();
+
+      boolean capitalizeNext;
+      capitalizeNext = true;
+
+      for (int i = 0, len = lowerCase.length(); i < len; i++) {
+        final char lower;
+        lower = lowerCase.charAt(i);
+
+        if (lower == '-') {
+          sb.append('-');
+
+          capitalizeNext = true;
+        } else if (capitalizeNext) {
+          final char upper;
+          upper = Character.toUpperCase(lower);
+
+          sb.append(upper);
+
+          capitalizeNext = false;
+        } else {
+          sb.append(lower);
+        }
+      }
+
+      result = sb.toString();
+
+      headerCase = result;
+    }
+
+    return result;
+  }
+
+  @Override
+  public final String lowerCase() {
+    return lowerCase;
   }
 
   public final HttpHeaderType type() {
     return type;
+  }
+
+  final byte[] getBytes(Http.Version version) {
+    return switch (version) {
+      case HTTP_1_0, HTTP_1_1 -> headerCaseBytes();
+    };
+  }
+
+  private byte[] headerCaseBytes() {
+    // benign data race
+
+    byte[] result;
+    result = headerCaseBytes;
+
+    if (result == null) {
+      result = headerCase().getBytes(StandardCharsets.US_ASCII);
+
+      headerCaseBytes = result;
+    }
+
+    return result;
   }
 
 }

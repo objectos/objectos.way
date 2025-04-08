@@ -33,7 +33,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Clock;
 import java.util.Arrays;
-import java.util.EnumMap;
 import java.util.HexFormat;
 import java.util.List;
 import java.util.Map;
@@ -157,13 +156,7 @@ final class HttpExchange extends HttpSupport implements Closeable {
 
   Http.HeaderName headerName;
 
-  UtilList<HttpHeader> headers;
-
-  Map<HttpHeaderName, HttpHeader> standardHeaders;
-
-  Map<HttpHeaderNameUnknown, HttpHeader> unknownHeaders;
-
-  private boolean standardHeadersReady;
+  Map<Http.HeaderName, HttpHeader> headers;
 
   // RequestLine
 
@@ -181,9 +174,7 @@ final class HttpExchange extends HttpSupport implements Closeable {
 
   private String rawValue;
 
-  byte versionMajor;
-
-  byte versionMinor;
+  private Http.Version version;
 
   // SocketInput
 
@@ -459,7 +450,7 @@ final class HttpExchange extends HttpSupport implements Closeable {
 
     rawValue = null;
 
-    versionMajor = versionMinor = 0;
+    version = null;
   }
 
   private void resetHeaders() {
@@ -468,12 +459,6 @@ final class HttpExchange extends HttpSupport implements Closeable {
     if (headers != null) {
       headers.clear();
     }
-
-    if (standardHeaders != null) {
-      standardHeaders.clear();
-    }
-
-    standardHeadersReady = false;
   }
 
   private void resetRequestBody() {
@@ -761,9 +746,17 @@ final class HttpExchange extends HttpSupport implements Closeable {
       return;
     }
 
-    versionMajor = (byte) (maybeMajor - 0x30);
+    final int major;
+    major = maybeMajor - 0x30;
 
-    versionMinor = (byte) (maybeMinor - 0x30);
+    final int minor;
+    minor = maybeMinor - 0x30;
+
+    if (major == 1 && minor == 1) {
+      version = Http.Version.HTTP_1_1;
+    } else {
+      version = Http.Version.HTTP_1_0;
+    }
   }
 
   // ##################################################################
@@ -778,21 +771,17 @@ final class HttpExchange extends HttpSupport implements Closeable {
     parseLine();
 
     while (parseStatus.isNormal() && !consumeIfEmptyLine()) {
-      parseStandardHeaderName();
+      parseHeaderName();
 
       if (parseStatus.isError()) {
         break;
       }
 
-      if (headerName == null) {
-        parseUnknownHeaderName();
-
-        if (parseStatus.isError()) {
-          break;
-        }
-      }
-
       parseHeaderValue();
+
+      if (parseStatus.isError()) {
+        break;
+      }
 
       parseLine();
     }
@@ -801,145 +790,12 @@ final class HttpExchange extends HttpSupport implements Closeable {
     headerName = null;
   }
 
-  private void parseStandardHeaderName() {
+  private void parseHeaderName() {
     // we reset any previous found header name
 
     headerName = null;
 
-    // we will use the first char as hash code
-    if (bufferIndex >= lineLimit) {
-      parseStatus = ParseStatus.INVALID_HEADER;
-
-      return;
-    }
-
-    final byte first;
-    first = buffer[bufferIndex];
-
-    // ad hoc hash map
-
-    switch (first) {
-      case 'A' -> parseHeaderName0(
-          HttpHeaderName.ACCEPT_ENCODING
-      );
-
-      case 'C' -> parseHeaderName0(
-          HttpHeaderName.CONNECTION,
-          HttpHeaderName.CONTENT_LENGTH,
-          HttpHeaderName.CONTENT_TYPE,
-          HttpHeaderName.COOKIE
-      );
-
-      case 'D' -> parseHeaderName0(
-          HttpHeaderName.DATE
-      );
-
-      case 'F' -> parseHeaderName0(
-          HttpHeaderName.FROM
-      );
-
-      case 'H' -> parseHeaderName0(
-          HttpHeaderName.HOST
-      );
-
-      case 'I' -> parseHeaderName0(
-          HttpHeaderName.IF_NONE_MATCH
-      );
-
-      case 'T' -> parseHeaderName0(
-          HttpHeaderName.TRANSFER_ENCODING
-      );
-
-      case 'U' -> parseHeaderName0(
-          HttpHeaderName.USER_AGENT
-      );
-
-      case 'W' -> parseHeaderName0(
-          HttpHeaderName.WAY_REQUEST
-      );
-    }
-  }
-
-  static final byte[][] STD_HEADER_NAME_BYTES;
-
-  static {
-    int size;
-    size = HttpHeaderName.standardNamesSize();
-
-    byte[][] map;
-    map = new byte[size][];
-
-    for (int i = 0; i < size; i++) {
-      HttpHeaderName headerName;
-      headerName = HttpHeaderName.standardName(i);
-
-      String name;
-      name = headerName.capitalized();
-
-      map[i] = name.getBytes(StandardCharsets.UTF_8);
-    }
-
-    STD_HEADER_NAME_BYTES = map;
-  }
-
-  private void parseHeaderName0(HttpHeaderName candidate) {
-    int index;
-    index = candidate.ordinal();
-
-    final byte[] candidateBytes;
-    candidateBytes = STD_HEADER_NAME_BYTES[index];
-
-    if (!matches(candidateBytes)) {
-      // does not match -> try next
-
-      return;
-    }
-
-    if (bufferIndex >= lineLimit) {
-      // matches but reached end of line -> bad request
-
-      parseStatus = ParseStatus.INVALID_HEADER;
-
-      return;
-    }
-
-    byte maybeColon;
-    maybeColon = buffer[bufferIndex++];
-
-    if (maybeColon != Bytes.COLON) {
-      // matches but is not followed by a colon character
-
-      parseStatus = ParseStatus.INVALID_HEADER;
-
-      return;
-    }
-
-    headerName = candidate;
-  }
-
-  private void parseHeaderName0(HttpHeaderName c0, HttpHeaderName c1, HttpHeaderName c2, HttpHeaderName c3) {
-    parseHeaderName0(c0);
-
-    if (headerName != null) {
-      return;
-    }
-
-    parseHeaderName0(c1);
-
-    if (headerName != null) {
-      return;
-    }
-
-    parseHeaderName0(c2);
-
-    if (headerName != null) {
-      return;
-    }
-
-    parseHeaderName0(c3);
-  }
-
-  private void parseUnknownHeaderName() {
+    // possible header name starts here
     int startIndex;
     startIndex = bufferIndex;
 
@@ -953,17 +809,51 @@ final class HttpExchange extends HttpSupport implements Closeable {
       return;
     }
 
-    if (startIndex == colonIndex) {
+    final int length;
+    length = colonIndex - startIndex;
+
+    if (length == 0) {
       // empty header name
       parseStatus = ParseStatus.INVALID_HEADER;
 
       return;
     }
 
-    String name;
-    name = bufferToString(startIndex, colonIndex);
+    // let's validate and lowercase the header name
+    final byte[] bytes;
+    bytes = new byte[length];
 
-    headerName = new HttpHeaderNameUnknown(name);
+    for (int idx = 0; idx < length; idx++) {
+      final int offset;
+      offset = startIndex + idx;
+
+      final byte b;
+      b = buffer[offset];
+
+      final byte mapped;
+      mapped = HttpHeaderName.map(b);
+
+      if (mapped < 0) {
+        // header name contains an invalid character
+        parseStatus = ParseStatus.INVALID_HEADER;
+
+        return;
+      }
+
+      bytes[idx] = mapped;
+    }
+
+    final String lowerCase;
+    lowerCase = new String(bytes, StandardCharsets.US_ASCII);
+
+    final HttpHeaderName standard;
+    standard = HttpHeaderName.byLowerCase(lowerCase);
+
+    if (standard != null) {
+      headerName = standard;
+    } else {
+      headerName = HttpHeaderName.ofLowerCase(lowerCase);
+    }
 
     // resume immediately after the colon
     bufferIndex = colonIndex + 1;
@@ -987,10 +877,15 @@ final class HttpExchange extends HttpSupport implements Closeable {
     header = new HttpHeader(headerName, this, startIndex, endIndex);
 
     if (headers == null) {
-      headers = new UtilList<>();
+      headers = Util.createMap();
     }
 
-    headers.add(header);
+    final HttpHeader maybeExisting;
+    maybeExisting = headers.put(headerName, header);
+
+    if (maybeExisting != null) {
+      throw new UnsupportedOperationException("Implement me :: existing=" + maybeExisting);
+    }
   }
 
   final void hexDump() {
@@ -1121,7 +1016,7 @@ final class HttpExchange extends HttpSupport implements Closeable {
 
     clearBit(KEEP_ALIVE);
 
-    if (versionMajor == 1 && versionMinor == 1) {
+    if (version == Http.Version.HTTP_1_1) {
       setBit(KEEP_ALIVE);
     }
 
@@ -1158,7 +1053,7 @@ final class HttpExchange extends HttpSupport implements Closeable {
   }
 
   private boolean badRequest() {
-    Check.state(testState(_REQUEST), "Http.Request.Method can only be invoked after a parse() operation");
+    Check.state(testState(_REQUEST), "Http.Request methods can only be invoked after a parse() operation");
 
     return parseStatus.isBadRequest();
   }
@@ -1170,6 +1065,11 @@ final class HttpExchange extends HttpSupport implements Closeable {
   @Override
   public final Http.Method method() {
     return method;
+  }
+
+  @Override
+  public final Http.Version version() {
+    return version;
   }
 
   // ##################################################################
@@ -1370,48 +1270,12 @@ final class HttpExchange extends HttpSupport implements Closeable {
     return headers != null ? headers.size() : 0;
   }
 
-  @Override
-  public final String toRequestHeadersText() {
-    return headers != null ? headers.join("\n", "", "\n") : "";
-  }
-
   private HttpHeader headerUnchecked(Http.HeaderName name) {
-    outer: if (!standardHeadersReady) {
-
-      standardHeadersReady = true;
-
-      standardHeaders = new EnumMap<>(HttpHeaderName.class);
-
-      unknownHeaders = Util.createMap();
-
-      if (headers == null) {
-        break outer;
-      }
-
-      for (HttpHeader header : headers) {
-
-        final HttpHeader maybeExisting;
-        maybeExisting = switch (header.name) {
-          case HttpHeaderName std -> standardHeaders.put(std, header);
-
-          case HttpHeaderNameUnknown unknown -> unknownHeaders.put(unknown, header);
-        };
-
-        if (maybeExisting == null) {
-          continue;
-        }
-
-        throw new UnsupportedOperationException("Implement me :: existing=" + maybeExisting);
-
-      }
-
+    if (headers == null) {
+      return null;
+    } else {
+      return headers.get(name);
     }
-
-    return switch (name) {
-      case HttpHeaderName std -> standardHeaders.get(name);
-
-      case HttpHeaderNameUnknown unknown -> unknownHeaders.get(unknown);
-    };
   }
 
   // ##################################################################
@@ -1727,19 +1591,11 @@ final class HttpExchange extends HttpSupport implements Closeable {
   @Override
   final void header0(Http.HeaderName name, String value) {
     // write our the name
-    int index;
-    index = name.index();
+    final HttpHeaderName impl;
+    impl = (HttpHeaderName) name;
 
-    byte[] nameBytes;
-
-    if (index >= 0) {
-      nameBytes = STD_HEADER_NAME_BYTES[index];
-    } else {
-      String capitalized;
-      capitalized = name.capitalized();
-
-      nameBytes = capitalized.getBytes(StandardCharsets.UTF_8);
-    }
+    final byte[] nameBytes;
+    nameBytes = impl.getBytes(version);
 
     writeBytes(nameBytes);
 

@@ -70,7 +70,7 @@ public class HttpExchangeTest0SocketInput {
     assertEquals(input.bufferIndex, 16);
     assertEquals(input.consumeIfEmptyLine(), false);
     byte[] host;
-    host = HttpExchange.STD_HEADER_NAME_BYTES[Http.HeaderName.HOST.index()];
+    host = HttpHeaderName.HOST.getBytes(Http.Version.HTTP_1_1);
     assertEquals(input.matches(host), true);
     assertEquals(hasNext(input), true);
     assertEquals(next(input), ':');

@@ -38,7 +38,7 @@ class HttpHeader {
   }
 
   public final HttpHeader add(HttpHeader header) {
-    return null;
+    throw new UnsupportedOperationException("Implement me");
   }
 
   public final boolean contentEquals(byte[] that) {
@@ -77,7 +77,7 @@ class HttpHeader {
 
   @Override
   public final String toString() {
-    return name.capitalized() + ": " + get();
+    return name.headerCase() + ": " + get();
   }
 
   public final long unsignedLongValue() {
