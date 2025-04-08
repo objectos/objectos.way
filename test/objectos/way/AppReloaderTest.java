@@ -28,7 +28,7 @@ import org.testng.annotations.Test;
 
 public class AppReloaderTest {
 
-  private final Http.TestingExchange http = Http.TestingExchange.create(config -> {});
+  private final Http.Exchange http = Http.Exchange.create(config -> {});
 
   @Test
   public void testCase01() throws Exception {

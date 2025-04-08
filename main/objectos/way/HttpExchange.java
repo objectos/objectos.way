@@ -238,6 +238,8 @@ final class HttpExchange extends HttpSupport implements Closeable {
 
   HttpExchange(HttpExchangeConfig config) {
 
+    attributes = config.attributes;
+
     final int initialSize;
     initialSize = powerOfTwo(config.bufferSizeInitial);
 
@@ -336,14 +338,29 @@ final class HttpExchange extends HttpSupport implements Closeable {
 
   @Override
   public final String toString() {
-    if (testBit(_PROCESSED) && outputStream instanceof ByteArrayOutputStream impl) {
-      final byte[] bytes;
-      bytes = impl.toByteArray();
+    final int state;
+    state = bitset & STATE_MASK;
 
-      return new String(bytes, StandardCharsets.UTF_8);
-    }
+    return switch (state) {
+      case _START -> "HttpExchange[START]";
 
-    return super.toString();
+      case _PARSE -> "HttpExchange[PARSE]";
+
+      case _REQUEST -> new String(buffer, 0, bufferLimit, StandardCharsets.UTF_8);
+
+      case _PROCESSED -> {
+        if (outputStream instanceof ByteArrayOutputStream impl) {
+          final byte[] bytes;
+          bytes = impl.toByteArray();
+
+          yield new String(bytes, StandardCharsets.UTF_8);
+        } else {
+          yield "HttpExchange[PROCESSED]";
+        }
+      }
+
+      default -> "HttpExchange[" + state + "]";
+    };
   }
 
   // ##################################################################
@@ -1384,7 +1401,7 @@ final class HttpExchange extends HttpSupport implements Closeable {
           continue;
         }
 
-        throw new UnsupportedOperationException("Implement me");
+        throw new UnsupportedOperationException("Implement me :: existing=" + maybeExisting);
 
       }
 

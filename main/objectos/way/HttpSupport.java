@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.Objects;
 import objectos.way.Http.ResponseMessage;
 
-sealed abstract class HttpSupport implements Http.Exchange, Http.ResponseHeaders permits HttpExchange, HttpTestingExchange {
+sealed abstract class HttpSupport implements Http.Exchange, Http.ResponseHeaders permits HttpExchange {
 
   Clock clock;
 

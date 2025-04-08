@@ -63,8 +63,8 @@ public class WebFormSpecTest {
       });
     });
 
-    Http.TestingExchange http;
-    http = Http.TestingExchange.create(config -> {
+    Http.Exchange http;
+    http = Http.Exchange.create(config -> {
       config.formParam("first_name", "First");
     });
 
@@ -102,8 +102,8 @@ public class WebFormSpecTest {
       });
     });
 
-    Http.TestingExchange http;
-    http = Http.TestingExchange.create(config -> {
+    Http.Exchange http;
+    http = Http.Exchange.create(config -> {
       config.formParam("last_name", "Last");
     });
 
@@ -136,8 +136,8 @@ public class WebFormSpecTest {
       });
     });
 
-    Http.TestingExchange http;
-    http = Http.TestingExchange.create(config -> {
+    Http.Exchange http;
+    http = Http.Exchange.create(config -> {
       config.formParam("first_name", "First");
     });
 

@@ -73,11 +73,11 @@ public class HttpHandlerTest {
         }),
 
         """
-        HTTP/1.1 200 OK
-        Date: Wed, 28 Jun 2023 12:08:43 GMT
-        Content-Type: text/plain; charset=utf-8
-        Content-Length: 4
-
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 4\r
+        \r
         PASS\
         """
     );
@@ -90,6 +90,8 @@ public class HttpHandlerTest {
         }),
 
         """
+        GET /foo HTTP/1.1\r
+        \r
         """
     );
   }
@@ -119,11 +121,11 @@ public class HttpHandlerTest {
         },
 
         """
-        HTTP/1.1 200 OK
-        Date: Wed, 28 Jun 2023 12:08:43 GMT
-        Content-Type: text/plain; charset=utf-8
-        Content-Length: 4
-
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 4\r
+        \r
         PASS\
         """
     );
@@ -140,6 +142,8 @@ public class HttpHandlerTest {
         },
 
         """
+        GET /foo HTTP/1.1\r
+        \r
         """
     );
   }
@@ -169,11 +173,11 @@ public class HttpHandlerTest {
         },
 
         """
-        HTTP/1.1 200 OK
-        Date: Wed, 28 Jun 2023 12:08:43 GMT
-        Content-Type: text/plain; charset=utf-8
-        Content-Length: 4
-
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 4\r
+        \r
         PASS\
         """
     );
@@ -190,11 +194,11 @@ public class HttpHandlerTest {
         },
 
         """
-        HTTP/1.1 200 OK
-        Date: Wed, 28 Jun 2023 12:08:43 GMT
-        Content-Type: text/plain; charset=utf-8
-        Content-Length: 4
-
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 4\r
+        \r
         PASS\
         """
     );
@@ -238,11 +242,11 @@ public class HttpHandlerTest {
         },
 
         """
-        HTTP/1.1 200 OK
-        Date: Wed, 28 Jun 2023 12:08:43 GMT
-        Content-Type: text/plain; charset=utf-8
-        Content-Length: 4
-
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 4\r
+        \r
         PASS\
         """
     );
@@ -260,6 +264,8 @@ public class HttpHandlerTest {
         },
 
         """
+        GET /filter/not HTTP/1.1\r
+        \r
         """
     );
   }
@@ -287,11 +293,11 @@ public class HttpHandlerTest {
         }),
 
         """
-        HTTP/1.1 200 OK
-        Date: Wed, 28 Jun 2023 12:08:43 GMT
-        Content-Type: text/plain; charset=utf-8
-        Content-Length: 4
-
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 4\r
+        \r
         PASS\
         """
     );
@@ -330,11 +336,11 @@ public class HttpHandlerTest {
         },
 
         """
-        HTTP/1.1 200 OK
-        Date: Wed, 28 Jun 2023 12:08:43 GMT
-        Content-Type: text/plain; charset=utf-8
-        Content-Length: 4
-
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 4\r
+        \r
         PASS\
         """
     );
@@ -351,6 +357,8 @@ public class HttpHandlerTest {
         },
 
         """
+        GET /subpath/test02/noop HTTP/1.1\r
+        \r
         """
     );
   }
@@ -388,11 +396,11 @@ public class HttpHandlerTest {
         }),
 
         """
-        HTTP/1.1 200 OK
-        Date: Wed, 28 Jun 2023 12:08:43 GMT
-        Content-Type: text/plain; charset=utf-8
-        Content-Length: 4
-
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 4\r
+        \r
         PASS\
         """
     );
@@ -405,11 +413,11 @@ public class HttpHandlerTest {
         }),
 
         """
-        HTTP/1.1 200 OK
-        Date: Wed, 28 Jun 2023 12:08:43 GMT
-        Content-Type: text/plain; charset=utf-8
-        Content-Length: 4
-
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 4\r
+        \r
         SKIP\
         """
     );
@@ -448,11 +456,11 @@ public class HttpHandlerTest {
         }),
 
         """
-        HTTP/1.1 200 OK
-        Date: Wed, 28 Jun 2023 12:08:43 GMT
-        Content-Type: text/plain; charset=utf-8
-        Content-Length: 4
-
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 4\r
+        \r
         PASS\
         """
     );
@@ -465,18 +473,18 @@ public class HttpHandlerTest {
         }),
 
         """
-        HTTP/1.1 200 OK
-        Date: Wed, 28 Jun 2023 12:08:43 GMT
-        Content-Type: text/plain; charset=utf-8
-        Content-Length: 4
-
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 4\r
+        \r
         SKIP\
         """
     );
   }
 
-  private Http.TestingExchange http(Consumer<Http.TestingExchange.Config> outer) {
-    return Http.TestingExchange.create(config -> {
+  private Http.Exchange http(Consumer<Http.Exchange.Config> outer) {
+    return Http.Exchange.create(config -> {
       config.clock(TestingClock.FIXED);
 
       outer.accept(config);
@@ -491,21 +499,21 @@ public class HttpHandlerTest {
     return http -> http.ok(object);
   }
 
-  private void test(Http.Handler handler, Http.TestingExchange http, String expected) {
+  private void test(Http.Handler handler, Http.Exchange http, String expected) {
     handler.handle(http);
 
-    assertEquals(http.responseToString(), expected);
+    assertEquals(http.toString(), expected);
   }
 
   private void test(Http.Handler handler,
-      Http.TestingExchange http,
-      Consumer<Http.TestingExchange> afterListener,
+      Http.Exchange http,
+      Consumer<Http.Exchange> afterListener,
       String expected) {
     handler.handle(http);
 
     afterListener.accept(http);
 
-    assertEquals(http.responseToString(), expected);
+    assertEquals(http.toString(), expected);
   }
 
 }

@@ -1,4 +1,5 @@
 /*
+
  * Copyright (C) 2023-2025 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -43,7 +44,7 @@ public class HttpRoutingOfPathTest {
     final Http.Handler handler;
     handler = routing.build();
 
-    final Http.TestingExchange http;
+    final Http.Exchange http;
     http = http(config -> {
       config.path("/app/login");
     });
@@ -51,21 +52,21 @@ public class HttpRoutingOfPathTest {
     handler.handle(http);
 
     assertEquals(
-        http.responseToString(),
+        http.toString(),
 
         """
-        HTTP/1.1 200 OK
-        Date: Wed, 28 Jun 2023 12:08:43 GMT
-        Content-Type: text/plain; charset=utf-8
-        Content-Length: 5
-
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 5\r
+        \r
         LOGIN\
         """
     );
   }
 
-  private Http.TestingExchange http(Consumer<Http.TestingExchange.Config> outer) {
-    return Http.TestingExchange.create(config -> {
+  private Http.Exchange http(Consumer<Http.Exchange.Config> outer) {
+    return Http.Exchange.create(config -> {
       config.clock(TestingClock.FIXED);
 
       outer.accept(config);

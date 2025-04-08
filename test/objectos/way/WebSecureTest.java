@@ -42,7 +42,7 @@ public class WebSecureTest {
     assertNotNull(session);
 
     final Http.Exchange http;
-    http = Http.TestingExchange.create(config -> {
+    http = Http.Exchange.create(config -> {
       config.header(Http.HeaderName.COOKIE, cookie("OBJECTOSWAY", 1L, 2L, 3L, 4L));
     });
 
@@ -67,7 +67,7 @@ public class WebSecureTest {
     assertNotNull(session);
 
     final Http.Exchange http;
-    http = Http.TestingExchange.create(config -> {
+    http = Http.Exchange.create(config -> {
       config.header(Http.HeaderName.COOKIE, cookie("OBJECTOSWAY", 5L, 6L, 7L, 8L));
     });
 
@@ -119,7 +119,7 @@ public class WebSecureTest {
     start = session.accessTime;
 
     final Http.Exchange http;
-    http = Http.TestingExchange.create(config -> {
+    http = Http.Exchange.create(config -> {
       config.header(Http.HeaderName.COOKIE, cookie("OBJECTOSWAY", -1L, -2L, -3L, -4L));
     });
 

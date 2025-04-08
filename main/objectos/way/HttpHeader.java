@@ -37,8 +37,8 @@ class HttpHeader {
     this.end = end;
   }
 
-  public final HttpHeader add(int startIndex, int endIndex) {
-    throw new UnsupportedOperationException("Implement me");
+  public final HttpHeader add(HttpHeader header) {
+    return null;
   }
 
   public final boolean contentEquals(byte[] that) {

@@ -31,13 +31,13 @@ import objectos.way.HttpExchange.ParseStatus;
 
 final class HttpExchangeConfig implements Http.Exchange.Config {
 
+  Map<String, Object> attributes;
+
   final int bufferSizeInitial = 1024;
 
   final int bufferSizeMax = 4096;
 
   Clock clock = Clock.systemUTC();
-
-  private Map<Object, Object> objectStore;
 
   private Http.Method method = Http.Method.GET;
 
@@ -202,14 +202,16 @@ final class HttpExchangeConfig implements Http.Exchange.Config {
 
   @Override
   public final <T> void set(Class<T> key, T value) {
-    Objects.requireNonNull(key, "key == null");
+    final String name;
+    name = key.getName();
+
     Objects.requireNonNull(value, "value == null");
 
-    if (objectStore == null) {
-      objectStore = Util.createMap();
+    if (attributes == null) {
+      attributes = Util.createMap();
     }
 
-    objectStore.put(key, value);
+    attributes.put(name, value);
   }
 
   final InputStream inputStream() {
@@ -228,6 +230,16 @@ final class HttpExchangeConfig implements Http.Exchange.Config {
       w.write(method.name());
       w.write(' ');
       w.write(path);
+
+      if (queryParams != null) {
+        w.write('?');
+
+        final String query;
+        query = Http.queryParamsToString(queryParams, this::encode);
+
+        w.write(query);
+      }
+
       w.write(' ');
 
       switch (version) {
@@ -311,7 +323,17 @@ final class HttpExchangeConfig implements Http.Exchange.Config {
     final String form;
     form = Http.queryParamsToString(formParams, this::encode);
 
-    return form.getBytes(StandardCharsets.UTF_8);
+    final byte[] body;
+    body = form.getBytes(StandardCharsets.UTF_8);
+
+    if (!headers.containsKey(Http.HeaderName.CONTENT_LENGTH)) {
+      final String length;
+      length = Integer.toString(body.length);
+
+      headers.put(Http.HeaderName.CONTENT_LENGTH, length);
+    }
+
+    return body;
   }
 
   private String encode(String s) {
