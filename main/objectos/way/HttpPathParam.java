@@ -54,7 +54,7 @@ final class HttpPathParam {
     return new HttpPathParam(Kind.REGEX, name, pattern);
   }
 
-  public final boolean test(HttpSupport path) {
+  public final boolean test(HttpExchange path) {
     String value;
     value = path.pathParam(name);
 

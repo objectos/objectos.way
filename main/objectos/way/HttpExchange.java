@@ -32,6 +32,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Clock;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.HexFormat;
 import java.util.List;
@@ -40,8 +41,9 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import objectos.way.Http.ResponseMessage;
 
-final class HttpExchange extends HttpSupport implements Closeable {
+final class HttpExchange implements Http.Exchange, Closeable {
 
   private record Notes(
       Note.Ref2<String, String> hexdump
@@ -137,6 +139,8 @@ final class HttpExchange extends HttpSupport implements Closeable {
   private Map<String, Object> attributes;
 
   private int bitset = 0;
+
+  private final Clock clock;
 
   private final Note.Sink noteSink;
 
@@ -1499,6 +1503,74 @@ final class HttpExchange extends HttpSupport implements Closeable {
   // # BEGIN: Http.Exchange API || response
   // ##################################################################
 
+  // 2xx responses
+
+  @Override
+  public final void ok(Media.Bytes media) {
+    respond(Http.Status.OK, media);
+  }
+
+  // 4xx responses
+
+  @Override
+  public final void badRequest(Media.Bytes media) {
+    respond(Http.Status.BAD_REQUEST, media);
+  }
+
+  @Override
+  public final void notFound(Media.Bytes media) {
+    respond(Http.Status.NOT_FOUND, media);
+  }
+
+  // generic responses
+
+  @Override
+  public final void respond(ResponseMessage message) {
+    HttpResponseMessage impl;
+    impl = (HttpResponseMessage) message;
+
+    impl.accept(this);
+  }
+
+  public final void respond(Http.Status status, Media.Bytes media) {
+    // early media validation
+    final String contentType;
+    contentType = media.contentType();
+
+    if (contentType == null) {
+      throw new NullPointerException("The specified Media.Bytes provided a null content-type");
+    }
+
+    final byte[] bytes;
+    bytes = media.toByteArray();
+
+    if (bytes == null) {
+      throw new NullPointerException("The specified Media.Bytes provided a null byte array");
+    }
+
+    status0(status);
+
+    dateNow();
+
+    header0(Http.HeaderName.CONTENT_TYPE, contentType);
+
+    header0(Http.HeaderName.CONTENT_LENGTH, bytes.length);
+
+    body0(media, bytes);
+  }
+
+  @Override
+  public final void respond(Lang.MediaWriter writer) {
+    respond(Http.Status.OK, writer);
+  }
+
+  @Override
+  public final void header(Http.HeaderName name, long value) {
+    Objects.requireNonNull(name, "name == null");
+
+    header0(name, value);
+  }
+
   @Override
   public final void respond(Http.Status status, Media.Bytes object, Consumer<Http.ResponseHeaders> headers) {
     final byte[] bytes;
@@ -1597,6 +1669,39 @@ final class HttpExchange extends HttpSupport implements Closeable {
     header0(Http.HeaderName.TRANSFER_ENCODING, "chunked");
 
     return charset;
+  }
+
+  @Override
+  public final void header(Http.HeaderName name, String value) {
+    Objects.requireNonNull(name, "name == null");
+    Objects.requireNonNull(value, "value == null");
+
+    header0(name, value);
+  }
+
+  @Override
+  public final void dateNow() {
+    Clock theClock;
+    theClock = clock;
+
+    if (theClock == null) {
+      theClock = Clock.systemUTC();
+    }
+
+    ZonedDateTime now;
+    now = ZonedDateTime.now(theClock);
+
+    String value;
+    value = Http.formatDate(now);
+
+    header0(Http.HeaderName.DATE, value);
+  }
+
+  final void header0(Http.HeaderName name, long value) {
+    final String s;
+    s = Long.toString(value);
+
+    header0(name, s);
   }
 
   private void send0(Lang.MediaWriter writer, final Charset charset) {
@@ -1704,7 +1809,6 @@ final class HttpExchange extends HttpSupport implements Closeable {
     STATUS_LINES = map;
   }
 
-  @Override
   final void status0(Http.Status status) {
     checkResponse();
 
@@ -1722,7 +1826,6 @@ final class HttpExchange extends HttpSupport implements Closeable {
     writeBytes(statusBytes);
   }
 
-  @Override
   final void header0(Http.HeaderName name, String value) {
     // write our the name
     final HttpHeaderName impl;
@@ -1762,12 +1865,10 @@ final class HttpExchange extends HttpSupport implements Closeable {
     }
   }
 
-  @Override
   final void body0(Object original, byte[] bytes) {
     send0(bytes);
   }
 
-  @Override
   final void send0() {
     try {
       sendStart();
@@ -1778,7 +1879,6 @@ final class HttpExchange extends HttpSupport implements Closeable {
     }
   }
 
-  @Override
   final void send0(byte[] body) {
     if (method == Http.Method.HEAD) {
 
@@ -1799,7 +1899,6 @@ final class HttpExchange extends HttpSupport implements Closeable {
     }
   }
 
-  @Override
   final void send0(java.nio.file.Path file) {
     Objects.requireNonNull(file, "file == null");
 
@@ -1824,7 +1923,6 @@ final class HttpExchange extends HttpSupport implements Closeable {
     }
   }
 
-  @Override
   final void endResponse() {
     if (testState(_PROCESSED)) {
       // expected, no action

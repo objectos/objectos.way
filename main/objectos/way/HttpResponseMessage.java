@@ -55,7 +55,7 @@ final class HttpResponseMessage implements Http.ResponseMessage {
     return new HttpResponseMessage(Kind.OK_MEDIA_BYTES, object);
   }
 
-  final void accept(HttpSupport http) {
+  final void accept(HttpExchange http) {
     switch (kind) {
       case FOUND -> {
 

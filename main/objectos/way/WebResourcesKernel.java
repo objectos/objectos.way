@@ -63,15 +63,15 @@ record WebResourcesKernel(
       return;
     }
 
-    final HttpSupport support;
-    support = (HttpSupport) http;
+    final HttpExchange support;
+    support = (HttpExchange) http;
 
     handle(support, file);
   }
 
   private static final Http.ResponseMessage MNA = Http.ResponseMessage.methodNotAllowed(Http.Method.GET, Http.Method.HEAD);
 
-  private void handle(HttpSupport http, Path file) {
+  private void handle(HttpExchange http, Path file) {
     BasicFileAttributes attributes;
 
     try {

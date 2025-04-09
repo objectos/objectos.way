@@ -94,7 +94,7 @@ public final class Http {
    */
   public sealed interface Exchange
       extends Request, Response
-      permits HttpSupport {
+      permits HttpExchange {
 
     /**
      * Configures the creation of a stand-alone exchange instance.
@@ -819,7 +819,7 @@ public final class Http {
   /**
    * Provides methods for writing the response message of an HTTP exchange.
    */
-  public sealed interface Response {
+  public sealed interface Response extends ResponseHeaders {
 
     /**
      * Writes a {@code 200 OK} response message with the contents of the
@@ -880,7 +880,7 @@ public final class Http {
   /**
    * Provides messages for writing the headers of an HTTP response message.
    */
-  public sealed interface ResponseHeaders permits HttpSupport {
+  public sealed interface ResponseHeaders permits Response {
 
     /**
      * Writes an HTTP response header field with the specified name and value.
