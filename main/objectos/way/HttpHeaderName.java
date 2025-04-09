@@ -21,7 +21,6 @@ import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import objectos.way.Http.HeaderName;
 
 final class HttpHeaderName implements Http.HeaderName {
 
@@ -159,7 +158,7 @@ final class HttpHeaderName implements Http.HeaderName {
     return TABLE[b];
   }
 
-  public static HeaderName of(String name) {
+  public static HttpHeaderName of(String name) {
     // let's be optimistic
     final HttpHeaderName first;
     first = BY_LOWER_CASE.get(name);
@@ -229,7 +228,6 @@ final class HttpHeaderName implements Http.HeaderName {
     return lowerCase.hashCode();
   }
 
-  @Override
   public final int index() {
     return index;
   }

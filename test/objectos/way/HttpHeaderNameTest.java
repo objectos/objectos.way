@@ -48,8 +48,8 @@ public class HttpHeaderNameTest {
 
   @Test
   public void of02() {
-    final Http.HeaderName res;
-    res = Http.HeaderName.of("Foo-Bar");
+    final HttpHeaderName res;
+    res = HttpHeaderName.of("Foo-Bar");
 
     assertEquals(res.index(), -1);
     assertEquals(res.headerCase(), "Foo-Bar");

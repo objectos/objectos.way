@@ -93,7 +93,7 @@ public final class Lang {
   }
 
   @Retention(RetentionPolicy.SOURCE)
-  @Target({ElementType.TYPE, ElementType.CONSTRUCTOR, ElementType.METHOD})
+  @Target({ElementType.TYPE, ElementType.FIELD, ElementType.CONSTRUCTOR, ElementType.METHOD})
   @interface VisibleForTesting {}
 
   private Lang() {}

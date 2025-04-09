@@ -63,7 +63,7 @@ public class HttpExchangeTest4Create {
     assertEquals(data.get("l1"), Long.toString(Long.MIN_VALUE));
   }
 
-  @Test(enabled = false)
+  @Test
   public void header01() {
     Http.Exchange http;
     http = Http.Exchange.create(config -> {
@@ -96,7 +96,7 @@ public class HttpExchangeTest4Create {
     Assert.fail("it should have thrown");
   }
 
-  @Test(enabled = false)
+  @Test
   public void header04() {
     Http.HeaderName foo = Http.HeaderName.of("Foo");
     Http.HeaderName name = Http.HeaderName.of("Name");

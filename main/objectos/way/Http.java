@@ -491,13 +491,6 @@ public final class Http {
     HeaderName WAY_REQUEST = HttpHeaderName.WAY_REQUEST;
 
     /**
-     * The index of this header name.
-     *
-     * @return the index of this header name
-     */
-    int index();
-
-    /**
      * Returns this name in header case, i.e., first letter of each word
      * capitalized.
      *

@@ -198,20 +198,20 @@ final class HttpHandler implements Http.Handler {
       return;
     }
 
-    final HttpSupport support;
-    support = (HttpSupport) http;
+    final HttpExchange impl;
+    impl = (HttpExchange) http;
 
     switch (kind) {
       case SUBPATH_SINGLE, SUBPATH_MANY -> {}
 
-      default -> support.pathReset();
+      default -> impl.pathReset();
     }
 
-    if (predicate != null && !predicate.test(support)) {
+    if (predicate != null && !predicate.test(impl)) {
       return;
     }
 
-    handle0(support, kind, main);
+    handle0(impl, kind, main);
   }
 
   @Override
@@ -219,7 +219,7 @@ final class HttpHandler implements Http.Handler {
     return "HttpHandler[kind=" + kind + ",predicate=" + predicate + ",main=" + main + "]";
   }
 
-  private void handle0(HttpSupport http, Kind actualKind, Object data) {
+  private void handle0(HttpExchange http, Kind actualKind, Object data) {
     switch (actualKind) {
       case NOOP -> {}
 

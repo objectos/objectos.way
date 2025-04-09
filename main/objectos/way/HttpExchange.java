@@ -164,7 +164,11 @@ final class HttpExchange extends HttpSupport implements Closeable {
 
   private String path;
 
+  int pathIndex;
+
   private int pathLimit;
+
+  Map<String, String> pathParams;
 
   private Map<String, Object> queryParams;
 
@@ -1100,6 +1104,126 @@ final class HttpExchange extends HttpSupport implements Closeable {
     }
 
     return path;
+  }
+
+  @Override
+  public final String pathParam(String name) {
+    Objects.requireNonNull(name, "name == null");
+
+    String result;
+    result = null;
+
+    if (pathParams != null) {
+      result = pathParams.get(name);
+    }
+
+    return result;
+  }
+
+  final void pathReset() {
+    pathIndex = 0;
+
+    if (pathParams != null) {
+      pathParams.clear();
+    }
+  }
+
+  final void pathParams(Map<String, String> value) {
+    pathParams = value;
+  }
+
+  final boolean testPathExact(String exact) {
+    final String path;
+    path = path();
+
+    final int thisLength;
+    thisLength = path.length() - pathIndex;
+
+    final int thatLength;
+    thatLength = exact.length();
+
+    if (thisLength == thatLength && path.regionMatches(pathIndex, exact, 0, thatLength)) {
+      pathIndex += thatLength;
+
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  final boolean testPathParam(String name, char terminator) {
+    final String path;
+    path = path();
+
+    final int terminatorIndex;
+    terminatorIndex = path.indexOf(terminator, pathIndex);
+
+    if (terminatorIndex < 0) {
+      return false;
+    }
+
+    final String varValue;
+    varValue = path.substring(pathIndex, terminatorIndex);
+
+    // immediately after the terminator
+    pathIndex = terminatorIndex + 1;
+
+    if (pathParams == null) {
+      pathParams = Util.createMap();
+    }
+
+    pathParams.put(name, varValue);
+
+    return true;
+  }
+
+  final boolean testPathParamLast(String name) {
+    final String path;
+    path = path();
+
+    final int solidus;
+    solidus = path.indexOf('/', pathIndex);
+
+    if (solidus < 0) {
+
+      final String varValue;
+      varValue = path.substring(pathIndex);
+
+      pathIndex += varValue.length();
+
+      if (pathParams == null) {
+        pathParams = Util.createMap();
+      }
+
+      pathParams.put(name, varValue);
+
+      return true;
+
+    } else {
+
+      return false;
+
+    }
+  }
+
+  final boolean testPathRegion(String region) {
+    final String path;
+    path = path();
+
+    if (path.regionMatches(pathIndex, region, 0, region.length())) {
+      pathIndex += region.length();
+
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  final boolean testPathEnd() {
+    final String path;
+    path = path();
+
+    return pathIndex == path.length();
   }
 
   @Override

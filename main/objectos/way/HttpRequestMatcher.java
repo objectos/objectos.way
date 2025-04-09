@@ -337,8 +337,8 @@ final class HttpRequestMatcher implements Predicate<Http.Request> {
 
   @Override
   public final boolean test(Http.Request request) {
-    final HttpSupport target;
-    target = (HttpSupport) request;
+    final HttpExchange target;
+    target = (HttpExchange) request;
 
     return test(target);
   }
@@ -425,7 +425,7 @@ final class HttpRequestMatcher implements Predicate<Http.Request> {
     return (List<Segment>) state;
   }
 
-  private boolean test(HttpSupport target) {
+  private boolean test(HttpExchange target) {
     return switch (kind) {
       case METHOD_ALLOWED -> {
         final Http.Method method;
@@ -470,7 +470,7 @@ final class HttpRequestMatcher implements Predicate<Http.Request> {
     };
   }
 
-  private boolean testSegments(HttpSupport target, List<Segment> segments) {
+  private boolean testSegments(HttpExchange target, List<Segment> segments) {
     for (Segment segment : segments) {
       final boolean result;
       result = switch (segment.kind) {
@@ -491,7 +491,7 @@ final class HttpRequestMatcher implements Predicate<Http.Request> {
     return true;
   }
 
-  private boolean testConditions(HttpSupport target, HttpPathParam[] conditions) {
+  private boolean testConditions(HttpExchange target, HttpPathParam[] conditions) {
     for (HttpPathParam condition : conditions) {
       if (!condition.test(target)) {
         return false;
