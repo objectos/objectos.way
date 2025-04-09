@@ -870,15 +870,14 @@ final class HttpExchange implements Http.Exchange, Closeable {
     int endIndex;
     endIndex = parseHeaderValueEnd(startIndex);
 
-    if (startIndex > endIndex) {
-      // value has negative length... is it possible?
-      hexDump();
-
-      throw new UnsupportedOperationException("Implement me");
-    }
-
     final HttpHeader header;
-    header = HttpHeader.create(startIndex, endIndex);
+    header = HttpHeader.createIfValid(buffer, startIndex, endIndex);
+
+    if (header == null) {
+      parseStatus = ParseStatus.INVALID_HEADER;
+
+      return;
+    }
 
     if (headers == null) {
       headers = Util.createMap();
@@ -944,7 +943,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
     }
 
-    // resume immediately after lineLimite
+    // resume immediately after lineLimit
     bufferIndex = lineLimit + 1;
 
     return end;

@@ -17,6 +17,7 @@ package objectos.way;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 final class HttpHeader {
@@ -39,7 +40,7 @@ final class HttpHeader {
     }
 
     final String toString(byte[] data) {
-      return new String(data, startIndex, length(), StandardCharsets.ISO_8859_1);
+      return new String(data, startIndex, length(), StandardCharsets.US_ASCII);
     }
   }
 
@@ -52,7 +53,74 @@ final class HttpHeader {
     this.value = value;
   }
 
-  public static HttpHeader create(int startIndex, int endIndex) {
+  private static final byte[] TABLE;
+
+  static {
+    final byte[] table;
+    table = new byte[128];
+
+    // fill with invalid
+    Arrays.fill(table, (byte) -1);
+
+    // valid under certain circustances
+    table[' '] = 0;
+    table['\t'] = 0;
+
+    for (byte b = 0x21; b < 0x7F; b++) {
+      // VCHAR are valid
+      table[b] = 1;
+    }
+
+    TABLE = table;
+  }
+
+  public static HttpHeader createIfValid(byte[] buffer, int startIndex, int endIndex) {
+    if (startIndex > endIndex) {
+      return null;
+    }
+
+    boolean ws = false;
+
+    for (int idx = startIndex; idx < endIndex; idx++) {
+      final byte b;
+      b = buffer[idx];
+
+      if (b < 0) {
+        // reject non-ascii
+        return null;
+      }
+
+      if (b > 0x7F) {
+        // reject non-ascii
+        return null;
+      }
+
+      final byte flag;
+      flag = TABLE[b];
+
+      switch (flag) {
+        case 0 -> {
+          if (idx == startIndex) {
+            // reject WS at the start
+            return null;
+          }
+
+          ws = true;
+        }
+
+        case 1 -> ws = false;
+
+        default -> {
+          return null;
+        }
+      }
+    }
+
+    if (ws) {
+      // reject WS at the end
+      return null;
+    }
+
     final Range range;
     range = new Range(startIndex, endIndex);
 
