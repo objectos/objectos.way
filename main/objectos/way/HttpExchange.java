@@ -154,9 +154,9 @@ final class HttpExchange extends HttpSupport implements Closeable {
 
   // RequestHeaders
 
-  Http.HeaderName headerName;
+  HttpHeaderName headerName;
 
-  Map<Http.HeaderName, HttpHeader> headers;
+  Map<HttpHeaderName, HttpHeader> headers;
 
   // RequestLine
 
@@ -357,10 +357,6 @@ final class HttpExchange extends HttpSupport implements Closeable {
   // ##################################################################
   // # BEGIN: HTTP/1.1 request parsing
   // ##################################################################
-
-  private static final byte[] CLOSE_BYTES = Http.utf8("close");
-
-  private static final byte[] KEEP_ALIVE_BYTES = Http.utf8("keep-alive");
 
   public final ParseStatus parse() throws IOException, IllegalStateException {
     if (testState(_START)) {
@@ -874,17 +870,19 @@ final class HttpExchange extends HttpSupport implements Closeable {
     }
 
     final HttpHeader header;
-    header = new HttpHeader(headerName, this, startIndex, endIndex);
+    header = HttpHeader.create(startIndex, endIndex);
 
     if (headers == null) {
       headers = Util.createMap();
     }
 
-    final HttpHeader maybeExisting;
-    maybeExisting = headers.put(headerName, header);
+    final HttpHeader existing;
+    existing = headers.put(headerName, header);
 
-    if (maybeExisting != null) {
-      throw new UnsupportedOperationException("Implement me :: existing=" + maybeExisting);
+    if (existing != null) {
+      existing.add(header);
+
+      headers.put(headerName, existing);
     }
   }
 
@@ -953,20 +951,21 @@ final class HttpExchange extends HttpSupport implements Closeable {
   // ##################################################################
 
   final void parseRequestBody() throws IOException {
-    HttpHeader contentLength;
+    final HttpHeader contentLength;
     contentLength = headerUnchecked(HttpHeaderName.CONTENT_LENGTH);
 
     if (contentLength != null) {
-      long value;
-      value = contentLength.unsignedLongValue();
+      final long length;
+      length = contentLength.unsignedLongValue(buffer);
 
-      if (value < 0) {
+      if (length < 0) {
+        // TODO 413 Payload Too Large
         parseStatus = ParseStatus.INVALID_HEADER;
       }
 
-      else if (canBuffer(value)) {
+      else if (canBuffer(length)) {
         int read;
-        read = read(value);
+        read = read(length);
 
         if (read < 0) {
           throw new EOFException();
@@ -983,7 +982,7 @@ final class HttpExchange extends HttpSupport implements Closeable {
         }
 
         long read;
-        read = read(requestBodyFile, value);
+        read = read(requestBodyFile, length);
 
         if (read < 0) {
           parseStatus = ParseStatus.EOF;
@@ -995,12 +994,15 @@ final class HttpExchange extends HttpSupport implements Closeable {
       return;
     }
 
-    HttpHeader transferEncoding;
+    final HttpHeader transferEncoding;
     transferEncoding = headerUnchecked(HttpHeaderName.TRANSFER_ENCODING);
 
     if (transferEncoding != null) {
+      // TODO 501 Not Implemented
       throw new UnsupportedOperationException("Implement me");
     }
+
+    // TODO 411 Length Required
   }
 
   // ##################################################################
@@ -1024,13 +1026,21 @@ final class HttpExchange extends HttpSupport implements Closeable {
     connection = headerUnchecked(HttpHeaderName.CONNECTION);
 
     if (connection != null) {
-      if (connection.contentEquals(KEEP_ALIVE_BYTES)) {
-        setBit(KEEP_ALIVE);
+      final String value;
+      value = connection.get(buffer);
+
+      if (value != null) {
+
+        if (value.equalsIgnoreCase("keep-alive")) {
+          setBit(KEEP_ALIVE);
+        }
+
+        else if (value.equalsIgnoreCase("close")) {
+          clearBit(KEEP_ALIVE);
+        }
+
       }
 
-      else if (connection.contentEquals(CLOSE_BYTES)) {
-        clearBit(KEEP_ALIVE);
-      }
     }
 
     setState(_REQUEST);
@@ -1263,7 +1273,7 @@ final class HttpExchange extends HttpSupport implements Closeable {
       return null;
     }
 
-    return maybe.get();
+    return maybe.get(buffer);
   }
 
   public final int size() {

@@ -15,87 +15,204 @@
  */
 package objectos.way;
 
-class HttpHeader {
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
-  final Http.HeaderName name;
+final class HttpHeader {
 
-  final HttpExchange input;
+  private enum Kind {
 
-  final int start;
+    SINGLE,
 
-  final int end;
+    MANY,
 
-  String value;
+    STRING_SINGLE,
 
-  public HttpHeader(Http.HeaderName name, HttpExchange input, int start, int end) {
-    this.name = name;
+    STRING_MANY;
 
-    this.input = input;
-
-    this.start = start;
-
-    this.end = end;
   }
 
-  public final HttpHeader add(HttpHeader header) {
-    throw new UnsupportedOperationException("Implement me");
-  }
-
-  public final boolean contentEquals(byte[] that) {
-    int thisLength;
-    thisLength = end - start;
-
-    if (thisLength != that.length) {
-      return false;
+  private record Range(int startIndex, int endIndex) {
+    final int length() {
+      return endIndex - startIndex;
     }
 
-    for (int offset = 0; offset < thisLength; offset++) {
-      byte ch;
-      ch = input.get(start + offset);
+    final String toString(byte[] data) {
+      return new String(data, startIndex, length(), StandardCharsets.ISO_8859_1);
+    }
+  }
 
-      byte thisLow;
-      thisLow = Bytes.toLowerCase(ch);
+  private Kind kind;
 
-      byte thatLow;
-      thatLow = that[offset];
+  private Object value;
 
-      if (thisLow != thatLow) {
-        return false;
+  private HttpHeader(Kind kind, Object value) {
+    this.kind = kind;
+    this.value = value;
+  }
+
+  public static HttpHeader create(int startIndex, int endIndex) {
+    final Range range;
+    range = new Range(startIndex, endIndex);
+
+    return new HttpHeader(Kind.SINGLE, range);
+  }
+
+  public final void add(HttpHeader header) {
+    assert header.kind == Kind.SINGLE;
+
+    final Range other;
+    other = (Range) header.value;
+
+    switch (kind) {
+      case SINGLE -> {
+        final List<Range> list;
+        list = Util.createList();
+
+        final Range existing;
+        existing = (Range) value;
+
+        list.add(existing);
+
+        list.add(other);
+
+        kind = Kind.MANY;
+
+        value = list;
       }
+
+      case MANY -> {
+        @SuppressWarnings("unchecked")
+        final List<Range> list = (List<Range>) value;
+
+        list.add(other);
+      }
+
+      default -> throw new IllegalStateException("Cannot invoke add(HttpHeader) after the value has been consumed");
     }
-
-    return true;
   }
 
-  public final String get() {
-    if (value == null) {
-      value = input.bufferToString(start, end);
-    }
+  public final String get(byte[] data) {
+    return switch (kind) {
+      case SINGLE -> {
+        final Range range;
+        range = (Range) value;
 
-    return value;
+        final String s;
+        s = range.toString(data);
+
+        kind = Kind.STRING_SINGLE;
+
+        value = s;
+
+        yield s;
+      }
+
+      case MANY -> {
+        final List<?> source;
+        source = (List<?>) value;
+
+        final List<String> result;
+        result = new ArrayList<>(source.size());
+
+        for (Object o : source) {
+          final Range range;
+          range = (Range) o;
+
+          final String s;
+          s = range.toString(data);
+
+          result.add(s);
+        }
+
+        kind = Kind.STRING_MANY;
+
+        value = result;
+
+        yield result.get(0);
+      }
+
+      case STRING_SINGLE -> (String) value;
+
+      case STRING_MANY -> {
+        final List<?> list;
+        list = (List<?>) value;
+
+        final Object first;
+        first = list.get(0);
+
+        yield (String) first;
+      }
+    };
   }
 
-  @Override
-  public final String toString() {
-    return name.headerCase() + ": " + get();
+  public final long unsignedLongValue(byte[] data) {
+    return switch (kind) {
+      case SINGLE -> {
+        final Range range;
+        range = (Range) value;
+
+        yield unsignedLongValue(data, range);
+      }
+
+      case MANY -> {
+        final List<?> list;
+        list = (List<?>) value;
+
+        final Object first;
+        first = list.get(0);
+
+        final Range range;
+        range = (Range) first;
+
+        yield unsignedLongValue(data, range);
+      }
+
+      case STRING_SINGLE -> {
+        final String s;
+        s = (String) value;
+
+        yield unsignedLongValue(s);
+      }
+
+      case STRING_MANY -> {
+        final List<?> list;
+        list = (List<?>) value;
+
+        final Object first;
+        first = list.get(0);
+
+        final String s;
+        s = (String) first;
+
+        yield unsignedLongValue(s);
+      }
+    };
   }
 
-  public final long unsignedLongValue() {
-    int thisLength;
-    thisLength = end - start;
+  private long unsignedLongValue(byte[] data, Range range) {
+    final int length;
+    length = range.length();
 
-    if (thisLength > 19) {
+    if (length > 19) {
       // larger than max long positive value
 
       return Long.MIN_VALUE;
     }
+
+    final int start;
+    start = range.startIndex;
+
+    final int end;
+    end = range.endIndex;
 
     long result;
     result = 0;
 
     for (int i = start; i < end; i++) {
       byte d;
-      d = input.get(i);
+      d = data[i];
 
       if (!Http.isDigit(d)) {
         return Long.MIN_VALUE;
@@ -114,6 +231,14 @@ class HttpHeader {
     }
 
     return result;
+  }
+
+  private long unsignedLongValue(String s) {
+    try {
+      return Long.parseLong(s);
+    } catch (NumberFormatException e) {
+      return Long.MIN_VALUE;
+    }
   }
 
 }
