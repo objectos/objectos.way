@@ -104,7 +104,8 @@ public class TestingInputStreamTest2 {
 
     @Override
     public final void run() {
-      byte[] buffer = new byte[1024];
+      byte[] buffer;
+      buffer = new byte[1024];
 
       while (!Thread.interrupted()) {
         try (Socket client = serverSocket.accept()) {

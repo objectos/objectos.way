@@ -24,6 +24,47 @@ import org.testng.annotations.Test;
 
 public class HttpExchangeTest1RequestLine {
 
+  @Test(description = "method: valid")
+  public void method01() throws IOException {
+    for (Http.Method method : Http.Method.VALUES) {
+      if (method.implemented) {
+        final String request = """
+        %s /index.html HTTP/1.1\r
+        \r
+        """.formatted(method.name());
+
+        final TestableSocket socket;
+        socket = TestableSocket.of(request);
+
+        try (HttpExchange http = new HttpExchange(socket, 128, 256, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
+          assertEquals(http.shouldHandle(), true);
+        }
+      }
+    }
+  }
+
+  @Test(description = "method: valid but not implemented")
+  public void method02() throws IOException {
+    for (Http.Method method : Http.Method.VALUES) {
+      if (!method.implemented) {
+        test(
+            """
+            %s /index.html HTTP/1.1\r
+            \r
+            """.formatted(method.name()),
+
+            """
+            HTTP/1.1 501 NOT IMPLEMENTED
+            Date: Wed, 28 Jun 2023 12:08:43 GMT
+            Content-Length: 0
+            Connection: close
+            \r
+            """
+        );
+      }
+    }
+  }
+
   @Test(description = "rawQueryWith: add a new parameter to an empty query")
   public void rawQueryWith01() throws IOException {
     Http.RequestTarget target;
@@ -247,11 +288,133 @@ public class HttpExchangeTest1RequestLine {
     assertEquals(line.parseStatus.isError(), true);
   }
 
+  @Test(description = "bad request: unknown method")
+  public void badRequest01() throws IOException {
+    test(
+        """
+        XYZ /path?key=value HTTP/1.1\r
+        \r
+        """,
+
+        """
+        HTTP/1.1 400 Bad Request\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 22\r
+        Connection: close\r
+        \r
+        Invalid request line.
+        """
+    );
+
+    test(
+        """
+        \r
+        \r
+        """,
+
+        """
+        HTTP/1.1 400 Bad Request\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 22\r
+        Connection: close\r
+        \r
+        Invalid request line.
+        """
+    );
+
+    test(
+        """
+        POS\r
+        \r
+        """,
+
+        """
+        HTTP/1.1 400 Bad Request\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 22\r
+        Connection: close\r
+        \r
+        Invalid request line.
+        """
+    );
+  }
+
+  @Test(description = "bad request: request line ends after method")
+  public void badRequest02() throws IOException {
+    test(
+        """
+        GET \r
+        \r
+        """,
+
+        """
+        HTTP/1.1 400 Bad Request\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 22\r
+        Connection: close\r
+        \r
+        Invalid request line.
+        """
+    );
+  }
+
+  @Test(description = "bad request: request target does not start with a '/'")
+  public void badRequest03() throws IOException {
+    test(
+        """
+        GET index.html HTTP/1.1\r
+        \r
+        """,
+
+        """
+        HTTP/1.1 400 Bad Request\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 22\r
+        Connection: close\r
+        \r
+        Invalid request line.
+        """
+    );
+
+    test(
+        """
+        GET http://www.example.com/index.html HTTP/1.1\r
+        \r
+        """,
+
+        """
+        HTTP/1.1 400 Bad Request\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 22\r
+        Connection: close\r
+        \r
+        Invalid request line.
+        """
+    );
+  }
+
+  private void test(String request, String response) throws IOException {
+    TestableSocket socket;
+    socket = TestableSocket.of(request);
+
+    try (HttpExchange http = new HttpExchange(socket, 128, 256, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
+      assertEquals(http.shouldHandle(), false);
+
+      assertEquals(http.toString(), response);
+    }
+  }
+
   private HttpExchange regularInput(Object... data) throws IOException {
     TestableSocket socket;
     socket = TestableSocket.of(data);
 
-    return new HttpExchange(socket, 64, 128, null, TestingNoteSink.INSTANCE);
+    return new HttpExchange(socket, 64, 128, TestingClock.FIXED, TestingNoteSink.INSTANCE);
   }
 
 }

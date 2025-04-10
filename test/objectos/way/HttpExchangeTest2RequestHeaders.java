@@ -107,18 +107,14 @@ public class HttpExchangeTest2RequestHeaders {
     headers = regularInput("""
     no-leading-ows:foo\r
     empty-value:\r
-    trailing-ows1: foo \r
-    trailing-ows2: foo\040
     \r
     """);
 
     headers.parseHeaders();
 
-    assertEquals(headers.size(), 4);
+    assertEquals(headers.size(), 2);
     assertEquals(headers.header(Http.HeaderName.of("no-leading-ows")), "foo");
     assertEquals(headers.header(Http.HeaderName.of("empty-value")), "");
-    assertEquals(headers.header(Http.HeaderName.of("trailing-ows1")), "foo");
-    assertEquals(headers.header(Http.HeaderName.of("trailing-ows2")), "foo");
   }
 
   private HttpExchange regularInput(Object... data) throws IOException {

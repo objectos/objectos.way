@@ -515,49 +515,55 @@ public final class Http {
     /**
      * The CONNECT method.
      */
-    CONNECT,
+    CONNECT(false),
 
     /**
      * The DELETE method.
      */
-    DELETE,
+    DELETE(true),
 
     /**
      * The GET method.
      */
-    GET,
+    GET(true),
 
     /**
      * The HEAD method.
      */
-    HEAD,
+    HEAD(true),
 
     /**
      * The OPTIONS method.
      */
-    OPTIONS,
+    OPTIONS(false),
 
     /**
      * The PATCH method.
      */
-    PATCH,
+    PATCH(true),
 
     /**
      * The POST method.
      */
-    POST,
+    POST(true),
 
     /**
      * The PUT method.
      */
-    PUT,
+    PUT(true),
 
     /**
      * The TRACE method.
      */
-    TRACE;
+    TRACE(false);
 
     static final Method[] VALUES = values();
+
+    final boolean implemented;
+
+    private Method(boolean implemented) {
+      this.implemented = implemented;
+    }
 
   }
 

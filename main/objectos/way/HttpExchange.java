@@ -41,12 +41,13 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import objectos.way.Http.ResponseMessage;
 
+@SuppressWarnings("serial")
 final class HttpExchange implements Http.Exchange, Closeable {
 
   private record Notes(
-      Note.Ref2<String, String> hexdump
+      Note.Ref2<String, String> hexdump,
+      Note.Ref2<Integer, String> invalidRequestLine
   ) {
 
     static Notes get() {
@@ -54,11 +55,76 @@ final class HttpExchange implements Http.Exchange, Closeable {
       s = Http.Exchange.class;
 
       return new Notes(
-          Note.Ref2.create(s, "HEX", Note.ERROR)
+          Note.Ref2.create(s, "HEX", Note.ERROR),
+          Note.Ref2.create(s, "IRL", Note.ERROR)
       );
     }
 
   }
+
+  private sealed abstract static class InternalException extends RuntimeException {
+    InternalException() {}
+  }
+
+  private sealed interface ClientErrorKind {
+    byte[] message();
+
+    Http.Status status();
+  }
+
+  private enum InvalidRequestLine implements ClientErrorKind {
+    // do not reorder, do not rename
+
+    INVALID_METHOD,
+
+    REQUEST_TARGET_EOF,
+
+    REQUEST_TARGET_FORM;
+
+    private static final byte[] REQUEST_LINE = "Invalid request line.\n".getBytes(StandardCharsets.US_ASCII);
+
+    @Override
+    public final byte[] message() {
+      return REQUEST_LINE;
+    }
+
+    @Override
+    public final Http.Status status() {
+      return Http.Status.BAD_REQUEST;
+    }
+
+    final ClientErrorException create() {
+      return new ClientErrorException(this);
+    }
+  }
+
+  private static final class ClientErrorException extends InternalException implements Media.Bytes {
+    private final ClientErrorKind kind;
+
+    ClientErrorException(ClientErrorKind kind) {
+      this.kind = kind;
+    }
+
+    @Override
+    public final String contentType() {
+      return "text/plain; charset=utf-8";
+    }
+
+    public final Http.Status status() {
+      return kind.status();
+    }
+
+    @Override
+    public final byte[] toByteArray() {
+      return kind.message();
+    }
+  }
+
+  private static final class MaxBufferSizeException extends InternalException {}
+
+  private static final class RemoteClosedException extends InternalException {}
+
+  private static final class UnexpectedEofException extends InternalException {}
 
   public enum ParseStatus {
     // keep going
@@ -67,13 +133,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
     // SocketInput statuses
     EOF,
 
-    UNEXPECTED_EOF,
-
-    OVERFLOW,
-
     // 400 bad request
-    INVALID_METHOD,
-
     INVALID_TARGET,
 
     INVALID_PROTOCOL,
@@ -96,7 +156,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
     }
 
     final boolean isBadRequest() {
-      return compareTo(INVALID_METHOD) >= 0;
+      return compareTo(INVALID_TARGET) >= 0;
     }
   }
 
@@ -128,6 +188,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
   private static final int _REQUEST = 2;
   private static final int _RESPONSE = 3;
   private static final int _PROCESSED = 4;
+  private static final int _DONE = 5;
 
   private static final int STATE_MASK = 0xF;
   private static final int BITS_MASK = ~STATE_MASK;
@@ -182,7 +243,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   private String rawValue;
 
-  private Http.Version version;
+  private Http.Version version = Http.Version.HTTP_1_1;
 
   // SocketInput
 
@@ -235,7 +296,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   }
 
-  HttpExchange(HttpExchangeConfig config) {
+  private HttpExchange(HttpExchangeConfig config) {
 
     attributes = config.attributes;
 
@@ -283,7 +344,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
     inputStream = new ByteArrayInputStream(bytes);
 
     HttpExchange requestLine;
-    requestLine = new HttpExchange(null, inputStream, null, 1024, 4096, null, null);
+    requestLine = new HttpExchange(null, inputStream, null, bytes.length, bytes.length, null, null);
 
     try {
       requestLine.parseLine();
@@ -291,6 +352,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
       requestLine.parseRequestTarget();
     } catch (IOException e) {
       throw new AssertionError("In-memory stream does not throw IOException", e);
+    } catch (MaxBufferSizeException e) {
+      throw new AssertionError("Buffer is always large enough for input", e);
     }
 
     ParseStatus parseStatus;
@@ -301,6 +364,26 @@ final class HttpExchange implements Http.Exchange, Closeable {
     }
 
     return requestLine;
+  }
+
+  static HttpExchange build(HttpExchangeConfig config) {
+    try {
+      final HttpExchange http;
+      http = new HttpExchange(config);
+
+      final ParseStatus status;
+      status = http.parse();
+
+      if (status != ParseStatus.NORMAL) {
+        throw new IllegalArgumentException("Invalid request");
+      }
+
+      return http;
+    } catch (IOException e) {
+      throw new AssertionError("ByteArrayInputStream does not throw IOException", e);
+    } catch (MaxBufferSizeException e) {
+      throw new IllegalArgumentException("Insufficient buffer size");
+    }
   }
 
   static final int powerOfTwo(int size) {
@@ -335,10 +418,28 @@ final class HttpExchange implements Http.Exchange, Closeable {
     }
   }
 
+  public final boolean shouldHandle() throws IOException {
+    final Thread currentThread;
+    currentThread = Thread.currentThread();
+
+    if (currentThread.isInterrupted()) {
+      return false;
+    }
+
+    final int state;
+    state = state();
+
+    return switch (state) {
+      case _START -> parse0();
+
+      default -> false;
+    };
+  }
+
   @Override
   public final String toString() {
     final int state;
-    state = bitset & STATE_MASK;
+    state = state();
 
     return switch (state) {
       case _START -> "HttpExchange[START]";
@@ -347,26 +448,105 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
       case _REQUEST -> new String(buffer, 0, bufferLimit, StandardCharsets.UTF_8);
 
-      case _PROCESSED -> {
-        if (outputStream instanceof ByteArrayOutputStream impl) {
-          final byte[] bytes;
-          bytes = impl.toByteArray();
+      case _PROCESSED -> toStringOutput("PROCESSED");
 
-          yield new String(bytes, StandardCharsets.UTF_8);
-        } else {
-          yield "HttpExchange[PROCESSED]";
-        }
-      }
+      case _DONE -> toStringOutput("DONE");
 
       default -> "HttpExchange[" + state + "]";
     };
+  }
+
+  private String toStringOutput(String state) {
+    if (outputStream instanceof ByteArrayOutputStream impl) {
+      final byte[] bytes;
+      bytes = impl.toByteArray();
+
+      return new String(bytes, StandardCharsets.UTF_8);
+    } else {
+      return "HttpExchange[" + state + "]";
+    }
+  }
+
+  private int state() {
+    return bitset & STATE_MASK;
   }
 
   // ##################################################################
   // # BEGIN: HTTP/1.1 request parsing
   // ##################################################################
 
-  public final ParseStatus parse() throws IOException, IllegalStateException {
+  private boolean parse0() throws IOException {
+    enum Parse {
+      STATUS_LINE,
+
+      HEADERS,
+
+      BODY;
+    }
+
+    Parse parse;
+    parse = null;
+
+    try {
+      setState(_PARSE);
+
+      parse = Parse.STATUS_LINE;
+
+      parseRequestLine();
+
+      parse = Parse.HEADERS;
+
+      parseHeaders();
+
+      parse = Parse.BODY;
+
+      parseRequestBody();
+
+      parseRequestEnd();
+
+      setState(_REQUEST);
+
+      return true;
+    } catch (InternalException e) {
+      switch (e) {
+        case ClientErrorException ex -> {
+          switch (ex.kind) {
+            case InvalidRequestLine irl -> noteSink.send(NOTES.invalidRequestLine, irl.ordinal(), bufferHex());
+          }
+
+          setState(_REQUEST);
+
+          respond(ex.status(), ex);
+        }
+
+        case MaxBufferSizeException ex -> {
+
+          switch (parse) {
+            case STATUS_LINE -> throw new UnsupportedOperationException("Implement me :: 414");
+
+            case HEADERS -> throw new UnsupportedOperationException("Implement me :: 431");
+
+            case BODY -> throw new UnsupportedOperationException("Implement me :: 413");
+          }
+
+        }
+
+        case RemoteClosedException ex -> {
+          // noop, we assume remote closed the connection gracefully
+        }
+
+        case UnexpectedEofException ex -> {
+          // TODO log?
+        }
+      }
+
+      setState(_DONE);
+
+      return false;
+    }
+  }
+
+  public final ParseStatus parse() throws IOException, MaxBufferSizeException {
     if (testState(_START)) {
       // noop
     }
@@ -391,8 +571,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
       """);
     }
 
-    // force bits reset
-    bitset = _PARSE;
+    setState(_PARSE);
 
     // request line
 
@@ -423,16 +602,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
     return parseStatus;
   }
 
-  private void resetSocketInput() {
-    bufferLimit = 0;
-
-    bufferIndex = 0;
-
-    lineLimit = 0;
-
-    parseStatus = ParseStatus.NORMAL;
-  }
-
   private void resetRequestLine() {
     method = null;
 
@@ -454,7 +623,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
     rawValue = null;
 
-    version = null;
+    // set the version so we send bad request messages
+    version = Http.Version.HTTP_1_1;
   }
 
   private void resetHeaders() {
@@ -484,22 +654,10 @@ final class HttpExchange implements Http.Exchange, Closeable {
   final void parseRequestLine() throws IOException {
     parseLine();
 
-    if (parseStatus == ParseStatus.UNEXPECTED_EOF) {
-      if (bufferLimit == 0) {
-        // buffer is empty, this is an expected EOF
-        parseStatus = ParseStatus.EOF;
-      }
-
-      return;
-    }
-
     parseMethod();
 
     if (method == null) {
-      // parse method failed -> bad request
-      parseStatus = ParseStatus.INVALID_METHOD;
-
-      return;
+      throw InvalidRequestLine.INVALID_METHOD.create();
     }
 
     parseRequestTarget();
@@ -601,11 +759,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
     int startIndex;
     startIndex = parsePathStart();
 
-    if (parseStatus.isError()) {
-      // bad request -> fail
-      return;
-    }
-
     parsePathRest(startIndex);
 
     if (parseStatus.isError()) {
@@ -621,20 +774,14 @@ final class HttpExchange implements Http.Exchange, Closeable {
     targetStart = bufferIndex;
 
     if (bufferIndex >= lineLimit) {
-      // reached EOL -> bad request
-      parseStatus = ParseStatus.INVALID_TARGET;
-
-      return 0;
+      throw InvalidRequestLine.REQUEST_TARGET_EOF.create();
     }
 
     byte b;
     b = buffer[bufferIndex++];
 
     if (b != Bytes.SOLIDUS) {
-      // first char IS NOT '/' => BAD_REQUEST
-      parseStatus = ParseStatus.INVALID_TARGET;
-
-      return 0;
+      throw InvalidRequestLine.REQUEST_TARGET_FORM.create();
     }
 
     // mark request path start
@@ -771,7 +918,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
   // # BEGIN: HTTP/1.1 request parsing || headers
   // ##################################################################
 
-  final void parseHeaders() throws IOException {
+  final void parseHeaders() throws IOException, MaxBufferSizeException {
     parseLine();
 
     while (parseStatus.isNormal() && !consumeIfEmptyLine()) {
@@ -894,16 +1041,20 @@ final class HttpExchange implements Http.Exchange, Closeable {
   }
 
   final void hexDump() {
-    HexFormat format;
-    format = HexFormat.of();
-
     String bufferDump;
-    bufferDump = format.formatHex(buffer, 0, bufferLimit);
+    bufferDump = bufferHex();
 
     String args;
     args = "bufferIndex=" + bufferIndex + ";lineLimit=" + lineLimit;
 
     noteSink.send(NOTES.hexdump, bufferDump, args);
+  }
+
+  private String bufferHex() {
+    HexFormat format;
+    format = HexFormat.of();
+
+    return format.formatHex(buffer, 0, bufferLimit);
   }
 
   private int parseHeaderValueStart() {
@@ -929,18 +1080,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
     if (maybeCR == Bytes.CR) {
       // value ends at the CR of the line end CRLF
       end = end - 1;
-    }
-
-    if (end != startIndex) {
-
-      byte maybeOWS;
-      maybeOWS = buffer[end - 1];
-
-      if (Bytes.isOptionalWhitespace(maybeOWS)) {
-        // value ends at the trailing OWS
-        end = end - 1;
-      }
-
     }
 
     // resume immediately after lineLimit
@@ -1524,7 +1663,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
   // generic responses
 
   @Override
-  public final void respond(ResponseMessage message) {
+  public final void respond(Http.ResponseMessage message) {
     HttpResponseMessage impl;
     impl = (HttpResponseMessage) message;
 
@@ -1554,6 +1693,10 @@ final class HttpExchange implements Http.Exchange, Closeable {
     header0(Http.HeaderName.CONTENT_TYPE, contentType);
 
     header0(Http.HeaderName.CONTENT_LENGTH, bytes.length);
+
+    switch (status.code()) {
+      case 400 -> header0(Http.HeaderName.CONNECTION, "close");
+    }
 
     body0(media, bytes);
   }
@@ -2123,7 +2266,9 @@ final class HttpExchange implements Http.Exchange, Closeable {
     return URLEncoder.encode(value, StandardCharsets.UTF_8);
   }
 
-  final void parseLine() throws IOException {
+  // SocketInput
+
+  final void parseLine() throws IOException, MaxBufferSizeException {
     int startIndex;
     startIndex = bufferIndex;
 
@@ -2153,10 +2298,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
         // buffer is full, try to increase
 
         if (buffer.length == maxBufferSize) {
-          // cannot increase...
-          parseStatus = ParseStatus.OVERFLOW;
-
-          return;
+          throw new MaxBufferSizeException();
         }
 
         int newLength;
@@ -2171,14 +2313,26 @@ final class HttpExchange implements Http.Exchange, Closeable {
       bytesRead = inputStream.read(buffer, bufferLimit, writableLength);
 
       if (bytesRead < 0) {
-        // EOF
-        parseStatus = ParseStatus.UNEXPECTED_EOF;
-
-        return;
+        // we assume that, if bufferLimit == 0, we're at the start of a new regular request.
+        // in this case, we assume the remote closed the connection gracefully.
+        // Otherwise, we assume the client disconnected in middle of a request.
+        throw bufferLimit == 0
+            ? new RemoteClosedException()
+            : new UnexpectedEofException();
       }
 
       bufferLimit += bytesRead;
     }
+  }
+
+  final void resetSocketInput() {
+    bufferLimit = 0;
+
+    bufferIndex = 0;
+
+    lineLimit = 0;
+
+    parseStatus = ParseStatus.NORMAL;
   }
 
   final boolean matches(byte[] bytes) {

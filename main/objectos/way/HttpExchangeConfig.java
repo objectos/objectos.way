@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
-import objectos.way.HttpExchange.ParseStatus;
 
 final class HttpExchangeConfig implements Http.Exchange.Config {
 
@@ -54,21 +53,7 @@ final class HttpExchangeConfig implements Http.Exchange.Config {
   final Note.Sink noteSink = Note.NoOpSink.INSTANCE;
 
   public final Http.Exchange build() {
-    try {
-      final HttpExchange http;
-      http = new HttpExchange(this);
-
-      final ParseStatus status;
-      status = http.parse();
-
-      if (status != ParseStatus.NORMAL) {
-        throw new IllegalArgumentException("Invalid request");
-      }
-
-      return http;
-    } catch (IOException e) {
-      throw new AssertionError("ByteArrayInputStream does not throw IOException", e);
-    }
+    return HttpExchange.build(this);
   }
 
   @Override

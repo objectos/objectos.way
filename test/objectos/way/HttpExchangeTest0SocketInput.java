@@ -22,6 +22,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import objectos.way.HttpExchange.ParseStatus;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class HttpExchangeTest0SocketInput {
@@ -162,9 +163,18 @@ public class HttpExchangeTest0SocketInput {
     assertEquals(input.consumeIfEndOfLine(), true);
 
     // second line
-    input.parseLine();
+    try {
+      input.resetSocketInput();
 
-    assertEquals(input.parseStatus, ParseStatus.UNEXPECTED_EOF);
+      input.parseLine();
+
+      Assert.fail("Should have thrown");
+    } catch (Exception expected) {
+      Class<? extends Exception> type;
+      type = expected.getClass();
+
+      assertEquals(type.getName(), "objectos.way.HttpExchange$RemoteClosedException");
+    }
   }
 
   @Test(description = "Line is larger than initial buffer size")
