@@ -57,4 +57,16 @@ final class Ascii {
     return c - '0';
   }
 
+  public static String alphaUpper() {
+    return "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  }
+
+  public static String alphaLower() {
+    return "abcdefghijklmnopqrstuvwxyz";
+  }
+
+  public static String digit() {
+    return "0123456789";
+  }
+
 }

@@ -62,86 +62,61 @@ public class HttpExchangeTest1ParseMethod {
 
   @Test(description = "bad request: unknown method")
   public void badRequest01() throws IOException {
-    test(
-        """
+    badRequest("""
         XYZ /path?key=value HTTP/1.1\r
         \r
-        """,
-
-        """
-        HTTP/1.1 400 Bad Request\r
-        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-        Content-Type: text/plain; charset=utf-8\r
-        Content-Length: 22\r
-        Connection: close\r
-        \r
-        Invalid request line.
-        """
-    );
+        """);
   }
 
   @Test(description = "bad request: no method")
   public void badRequest02() throws IOException {
-    test(
-        """
+    badRequest("""
         \r
         \r
-        """,
-
-        """
-        HTTP/1.1 400 Bad Request\r
-        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-        Content-Type: text/plain; charset=utf-8\r
-        Content-Length: 22\r
-        Connection: close\r
-        \r
-        Invalid request line.
-        """
-    );
-
-    test(
-        """
-        POS\r
-        \r
-        """,
-
-        """
-        HTTP/1.1 400 Bad Request\r
-        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-        Content-Type: text/plain; charset=utf-8\r
-        Content-Length: 22\r
-        Connection: close\r
-        \r
-        Invalid request line.
-        """
-    );
+        """);
   }
 
   @Test(description = "bad request: incomplete method name")
   public void badRequest03() throws IOException {
-    test(
+    badRequest(
         """
         POS /login HTTP/1.1\r
         \r
-        """,
+        """);
+  }
 
-        """
-        HTTP/1.1 400 Bad Request\r
-        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-        Content-Type: text/plain; charset=utf-8\r
-        Content-Length: 22\r
-        Connection: close\r
-        \r
-        Invalid request line.
-        """
-    );
+  private void badRequest(String request) throws IOException {
+    TestableSocket socket;
+    socket = TestableSocket.of(request);
+
+    final int bufferInitial; // force many buffer resizes
+    bufferInitial = 2;
+
+    try (HttpExchange http = new HttpExchange(socket, bufferInitial, 512, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
+      assertEquals(http.shouldHandle(), false);
+
+      assertEquals(
+          http.toString(),
+
+          """
+          HTTP/1.1 400 Bad Request\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Content-Type: text/plain; charset=utf-8\r
+          Content-Length: 22\r
+          Connection: close\r
+          \r
+          Invalid request line.
+          """
+      );
+    }
   }
 
   private void test(String request, String response) throws IOException {
     TestableSocket socket;
     socket = TestableSocket.of(request);
 
-    final int bufferInitial = 2; // force many buffer resizes
+    final int bufferInitial; // force many buffer resizes
+    bufferInitial = 2;
 
     try (HttpExchange http = new HttpExchange(socket, bufferInitial, 512, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
       assertEquals(http.shouldHandle(), false);

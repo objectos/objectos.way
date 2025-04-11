@@ -1674,4 +1674,23 @@ public final class Http {
     return value.getBytes(StandardCharsets.UTF_8);
   }
 
+  static void fillTable(byte[] table, String ascii, byte value) {
+    final byte[] bytes;
+    bytes = ascii.getBytes(StandardCharsets.US_ASCII);
+
+    for (byte b : bytes) {
+      table[b] = value;
+    }
+  }
+
+  // URI RFC 3986
+
+  static String subDelims() {
+    return "!$&'()*+,;=";
+  }
+
+  static String unreserved() {
+    return Ascii.alphaUpper() + Ascii.alphaLower() + Ascii.digit() + "-._~";
+  }
+
 }

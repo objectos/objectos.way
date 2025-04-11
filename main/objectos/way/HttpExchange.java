@@ -94,7 +94,20 @@ final class HttpExchange implements Http.Exchange, Closeable {
   private enum InvalidRequestLine implements ClientError {
     // do not reorder, do not rename
 
-    INVALID_METHOD,
+    // invalid method
+    METHOD,
+
+    // path does not start with solidus
+    PATH_FIRST_CHAR,
+
+    // path starts with two consecutive '/'
+    PATH_SEGMENT_NZ,
+
+    // path has invalid character
+    PATH_NEXT_CHAR,
+
+    // path has an invalid percent encoded sequence
+    PATH_PERCENT,
 
     REQUEST_TARGET_EOF,
 
@@ -118,19 +131,27 @@ final class HttpExchange implements Http.Exchange, Closeable {
   }
 
   static final byte $START = 0;
+
   static final byte $READ = 1;
   static final byte $READ_MAX_BUFFER = 2;
   static final byte $READ_EOF = 3;
+
   static final byte $PARSE_METHOD = 4;
   static final byte $PARSE_PATH = 5;
-  static final byte $BAD_REQUEST = 6;
-  static final byte $NOT_IMPLEMENTED = 7;
-  static final byte $OK = 8;
-  static final byte $ERROR = 9;
+  static final byte $PARSE_PATH_CONTENTS = 6;
+  static final byte $PARSE_PATH_DECODE = 7;
+  static final byte $PARSE_QUERY = 8;
+  static final byte $PARSE_VERSION = 9;
 
-  private static final AtomicLong ID_GENERATOR = new AtomicLong(1);
+  static final byte $BAD_REQUEST = 10;
+  static final byte $NOT_IMPLEMENTED = 11;
+
+  static final byte $OK = 12;
+  static final byte $ERROR = 13;
 
   private static final int HARD_MAX_BUFFER_SIZE = 1 << 14;
+
+  private static final AtomicLong ID_GENERATOR = new AtomicLong(1);
 
   private static final Notes NOTES = Notes.get();
 
@@ -154,7 +175,11 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   private byte state;
 
+  private byte stateError;
+
   private byte stateNext;
+
+  private StringBuilder stringBuilder;
 
   private Http.Version version = Http.Version.HTTP_1_1;
 
@@ -188,6 +213,12 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
       case $PARSE_METHOD -> executeParseMethod();
       case $PARSE_PATH -> executeParsePath();
+      case $PARSE_PATH_CONTENTS -> executeParsePathContents();
+      case $PARSE_PATH_DECODE -> executeParsePathDecode();
+
+      case $PARSE_QUERY -> executeParseQuery();
+
+      case $PARSE_VERSION -> executeParseVersion();
 
       case $BAD_REQUEST -> executeBadRequest();
       case $NOT_IMPLEMENTED -> executeNotImplemented();
@@ -261,7 +292,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   private byte executeReadEof() {
     return switch (stateNext) {
-      case $PARSE_METHOD -> bufferLimit == 0 ? $OK : toBadRequest(InvalidRequestLine.INVALID_METHOD);
+      case $PARSE_METHOD -> bufferLimit == 0 ? $OK : toBadRequest(InvalidRequestLine.METHOD);
 
       default -> { note(NOTES.readEof); yield $ERROR; }
     };
@@ -292,6 +323,10 @@ final class HttpExchange implements Http.Exchange, Closeable {
   @Lang.VisibleForTesting
   final String bufferToAscii() {
     return new String(buffer, StandardCharsets.US_ASCII);
+  }
+
+  private boolean canRead() {
+    return bufferIndex < bufferLimit;
   }
 
   private boolean canRead(int count) {
@@ -398,7 +433,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
     };
 
     if (internal == null) {
-      return toBadRequest(InvalidRequestLine.INVALID_METHOD);
+      return toBadRequest(InvalidRequestLine.METHOD);
     }
 
     method = internal.external;
@@ -425,12 +460,174 @@ final class HttpExchange implements Http.Exchange, Closeable {
   // # BEGIN: Parse: Path
   // ##################################################################
 
+  private static final byte[] PARSE_PATH_TABLE;
+
+  private static final byte SOLIDUS = '/';
+
+  static {
+    final byte[] table;
+    table = new byte[0x80];
+
+    // 0 = invalid
+    // 1 = valid
+    // 2 = %xx
+    // 3 = stop 'SP'
+    // 4 = stop '?'
+
+    Http.fillTable(table, Http.unreserved(), (byte) 1);
+
+    Http.fillTable(table, Http.subDelims(), (byte) 1);
+
+    table[':'] = 1;
+
+    table['@'] = 1;
+
+    // solidus acts as segment separator
+    table['/'] = 1;
+
+    table['%'] = 2;
+
+    table[' '] = 3;
+
+    table['?'] = 4;
+
+    PARSE_PATH_TABLE = table;
+  }
+
   private byte executeParsePath() {
-    return $OK;
+    if (canRead(2)) {
+      final byte first;
+      first = buffer[bufferIndex++];
+
+      if (first != SOLIDUS) {
+        return toBadRequest(InvalidRequestLine.PATH_FIRST_CHAR);
+      }
+
+      final byte second;
+      second = buffer[bufferIndex]; // do not advance, we still need to do more checks
+
+      if (second == SOLIDUS) {
+        return toBadRequest(InvalidRequestLine.PATH_SEGMENT_NZ);
+      }
+
+      appendInit();
+
+      append(first);
+
+      return executeParsePathContents();
+    } else {
+      return toRead($PARSE_PATH);
+    }
+  }
+
+  private byte executeParsePathContents() {
+    while (bufferIndex < bufferLimit) {
+      final byte b;
+      b = buffer[bufferIndex++];
+
+      if (b < 0) {
+        return toBadRequest(InvalidRequestLine.PATH_NEXT_CHAR);
+      }
+
+      final byte code;
+      code = PARSE_PATH_TABLE[b];
+
+      switch (code) {
+        case 1 -> {
+          append(b);
+
+          continue;
+        }
+
+        case 2 -> {
+          final byte next;
+          next = executeParsePathDecode();
+
+          if (state != next) {
+            return next;
+          }
+        }
+
+        case 3 -> {
+          path = appendToString();
+
+          return $PARSE_VERSION;
+        }
+
+        case 4 -> {
+          path = appendToString();
+
+          return $PARSE_QUERY;
+        }
+
+        default -> {
+          return toBadRequest(InvalidRequestLine.PATH_NEXT_CHAR);
+        }
+      }
+    }
+
+    return toRead($PARSE_PATH_CONTENTS);
+  }
+
+  private byte executeParsePathDecode() {
+    if (canRead(2)) {
+      final byte first;
+      first = buffer[bufferIndex++];
+
+      final byte high;
+      high = Bytes.fromHexDigit(first);
+
+      if (high < 0) {
+        return toBadRequest(InvalidRequestLine.PATH_PERCENT);
+      }
+
+      final byte second;
+      second = buffer[bufferIndex++];
+
+      final byte low;
+      low = Bytes.fromHexDigit(second);
+
+      if (low < 0) {
+        return toBadRequest(InvalidRequestLine.PATH_PERCENT);
+      }
+
+      final int value;
+      value = (high << 4) | low;
+
+      append(value);
+
+      return $PARSE_PATH_CONTENTS;
+    } else {
+      return toRead($PARSE_PATH_DECODE);
+    }
   }
 
   // ##################################################################
   // # END: Parse: Path
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Parse: Query
+  // ##################################################################
+
+  private byte executeParseQuery() {
+    return $OK;
+  }
+
+  // ##################################################################
+  // # END: Parse: Query
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Parse: Version
+  // ##################################################################
+
+  private byte executeParseVersion() {
+    return $OK;
+  }
+
+  // ##################################################################
+  // # END: Parse: Version
   // ##################################################################
 
   // ##################################################################
@@ -511,6 +708,31 @@ final class HttpExchange implements Http.Exchange, Closeable {
   // ##################################################################
   // # BEGIN: Utils
   // ##################################################################
+
+  private void appendInit() {
+    if (stringBuilder == null) {
+      stringBuilder = new StringBuilder();
+    } else {
+      stringBuilder.setLength(0);
+    }
+  }
+
+  private void append(byte b) {
+    stringBuilder.append((char) b);
+  }
+
+  private void append(int c) {
+    stringBuilder.append((char) c);
+  }
+
+  private String appendToString() {
+    final String result;
+    result = stringBuilder.toString();
+
+    stringBuilder.setLength(0);
+
+    return result;
+  }
 
   private void note(Note.Long1Ref1<Http.Exchange> note) {
     noteSink.send(note, id, this);
@@ -1047,7 +1269,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
     parseMethod();
 
     if (method == null) {
-      throw InvalidRequestLine.INVALID_METHOD.create();
+      throw InvalidRequestLine.METHOD.create();
     }
 
     parseRequestTarget();
