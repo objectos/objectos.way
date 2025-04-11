@@ -138,6 +138,34 @@ public class HttpExchangeTest0Read {
     }
   }
 
+  @Test(description = "IOException")
+  public void read05() throws IOException {
+    final String req1;
+    req1 = "1".repeat(64);
+
+    final IOException exception;
+    exception = new IOException("Read Error");
+
+    final TestableSocket socket;
+    socket = TestableSocket.of(req1, exception);
+
+    try (HttpExchange http = new HttpExchange(socket, 64, 128, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
+      byte nextState;
+      nextState = HttpExchange.$PARSE_METHOD;
+
+      byte read;
+      read = http.toRead(nextState);
+
+      assertEquals(http.execute(read), nextState);
+
+      assertEquals(http.bufferToAscii(), req1);
+
+      read = http.toRead(nextState);
+
+      assertEquals(http.execute(read), HttpExchange.$ERROR);
+    }
+  }
+
   private HttpExchange http(int initial, int max, Object... data) throws IOException {
     TestableSocket socket;
     socket = TestableSocket.of(data);

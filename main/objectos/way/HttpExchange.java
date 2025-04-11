@@ -57,6 +57,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
       Note.Long1Ref2<Http.Exchange, IOException> readIOException,
 
       Note.Long1Ref2<ClientError, Http.Exchange> badRequest,
+      Note.Long1Ref1<Http.Exchange> uriTooLong,
       Note.Long1Ref1<Http.Exchange> notImplemented,
 
       Note.Ref2<String, String> hexdump,
@@ -75,8 +76,9 @@ final class HttpExchange implements Http.Exchange, Closeable {
           Note.Long1Ref1.create(s, "MAX", Note.WARN),
           Note.Long1Ref2.create(s, "IOX", Note.ERROR),
 
-          Note.Long1Ref2.create(s, "BAD", Note.INFO),
-          Note.Long1Ref1.create(s, "MNI", Note.INFO),
+          Note.Long1Ref2.create(s, "400", Note.INFO),
+          Note.Long1Ref1.create(s, "414", Note.INFO),
+          Note.Long1Ref1.create(s, "501", Note.INFO),
 
           Note.Ref2.create(s, "HEX", Note.ERROR),
           Note.Ref2.create(s, "IRL", Note.ERROR)
@@ -144,7 +146,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
   static final byte $PARSE_VERSION = 9;
 
   static final byte $BAD_REQUEST = 10;
-  static final byte $NOT_IMPLEMENTED = 11;
+  static final byte $URI_TOO_LONG = 11;
+  static final byte $NOT_IMPLEMENTED = 12;
 
   static final byte $OK = 12;
   static final byte $ERROR = 13;
@@ -174,8 +177,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
   private InetAddress remoteAddress;
 
   private byte state;
-
-  private byte stateError;
 
   private byte stateNext;
 
@@ -221,6 +222,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
       case $PARSE_VERSION -> executeParseVersion();
 
       case $BAD_REQUEST -> executeBadRequest();
+      case $URI_TOO_LONG -> executeUriTooLong();
       case $NOT_IMPLEMENTED -> executeNotImplemented();
 
       default -> throw new AssertionError("Unexpected state=" + state);
@@ -286,6 +288,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   private byte executeReadMaxBuffer() {
     return switch (stateNext) {
+      case $PARSE_PATH, $PARSE_PATH_CONTENTS, $PARSE_PATH_DECODE -> executeUriTooLong();
+
       default -> { note(NOTES.readMaxBuffer); yield $ERROR; }
     };
   }
@@ -512,7 +516,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
       appendInit();
 
-      append(first);
+      appendChar(first);
 
       return executeParsePathContents();
     } else {
@@ -534,7 +538,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
       switch (code) {
         case 1 -> {
-          append(b);
+          appendChar(b);
 
           continue;
         }
@@ -570,36 +574,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
   }
 
   private byte executeParsePathDecode() {
-    if (canRead(2)) {
-      final byte first;
-      first = buffer[bufferIndex++];
-
-      final byte high;
-      high = Bytes.fromHexDigit(first);
-
-      if (high < 0) {
-        return toBadRequest(InvalidRequestLine.PATH_PERCENT);
-      }
-
-      final byte second;
-      second = buffer[bufferIndex++];
-
-      final byte low;
-      low = Bytes.fromHexDigit(second);
-
-      if (low < 0) {
-        return toBadRequest(InvalidRequestLine.PATH_PERCENT);
-      }
-
-      final int value;
-      value = (high << 4) | low;
-
-      append(value);
-
-      return $PARSE_PATH_CONTENTS;
-    } else {
-      return toRead($PARSE_PATH_DECODE);
-    }
+    return decodePercent($PARSE_PATH_CONTENTS, $PARSE_PATH_DECODE, InvalidRequestLine.PATH_PERCENT);
   }
 
   // ##################################################################
@@ -616,6 +591,208 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   // ##################################################################
   // # END: Parse: Query
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Decode Percent
+  // ##################################################################
+
+  private byte decodePercent(byte success, byte read, InvalidRequestLine badRequest) {
+    if (bufferIndex < bufferLimit) {
+      final byte first;
+      first = buffer[bufferIndex];
+
+      final byte high;
+      high = Bytes.fromHexDigit(first);
+
+      if (high < 0) {
+        return toBadRequest(badRequest);
+      }
+
+      // we go back to the '%' character
+      bufferIndex--;
+
+      return switch (high) {
+        // 0yyyzzzz
+        case 0b0000, 0b0001,
+             0b0010, 0b0011,
+             0b0100, 0b0101, 0b0110, 0b0111 -> decodePercent1(success, read, badRequest);
+
+        // 110xxxyy 10yyzzzz
+        case 0b1100, 0b1101 -> decodePercent2(success, read, badRequest);
+
+        // 1110wwww 10xxxxyy 10yyzzzz
+        case 0b1110 -> decodePercent3(success, read, badRequest);
+
+        // 11110uvv 10vvwwww 10xxxxyy 10yyzzzz
+        case 0b1111 -> decodePercent4(success, read, badRequest);
+
+        default -> toBadRequest(badRequest);
+      };
+    } else {
+      return toRead(read);
+    }
+  }
+
+  private byte decodePercent1(byte success, byte read, InvalidRequestLine badRequest) {
+    if (canRead(3)) {
+      final int byte1;
+      byte1 = decodePercent();
+
+      if (byte1 < 0) {
+        return toBadRequest(badRequest);
+      }
+
+      appendChar(byte1);
+
+      return success;
+    } else {
+      return toRead(read);
+    }
+  }
+
+  private byte decodePercent2(byte success, byte read, InvalidRequestLine badRequest) {
+    if (canRead(6)) {
+      final int byte1;
+      byte1 = decodePercent();
+
+      if (byte1 < 0) {
+        return toBadRequest(badRequest);
+      }
+
+      final int byte2;
+      byte2 = decodePercent();
+
+      if (!utf8Byte(byte2)) {
+        return toBadRequest(badRequest);
+      }
+
+      final int c;
+      c = (byte1 & 0b1_1111) << 6 | (byte2 & 0b11_1111);
+
+      appendChar(c);
+
+      return success;
+    } else {
+      return toRead(read);
+    }
+  }
+
+  private byte decodePercent3(byte success, byte read, InvalidRequestLine badRequest) {
+    if (canRead(9)) {
+      final int byte1;
+      byte1 = decodePercent();
+
+      if (byte1 < 0) {
+        return toBadRequest(badRequest);
+      }
+
+      final int byte2;
+      byte2 = decodePercent();
+
+      if (!utf8Byte(byte2)) {
+        return toBadRequest(badRequest);
+      }
+
+      final int byte3;
+      byte3 = decodePercent();
+
+      if (!utf8Byte(byte3)) {
+        return toBadRequest(badRequest);
+      }
+
+      final int c;
+      c = (byte1 & 0b1111) << 12 | (byte2 & 0b11_1111) << 6 | (byte3 & 0b11_1111);
+
+      appendChar(c);
+
+      return success;
+    } else {
+      return toRead(read);
+    }
+  }
+
+  private byte decodePercent4(byte success, byte read, InvalidRequestLine badRequest) {
+    if (canRead(12)) {
+      final int byte1;
+      byte1 = decodePercent();
+
+      if (byte1 < 0) {
+        return toBadRequest(badRequest);
+      }
+
+      final int byte2;
+      byte2 = decodePercent();
+
+      if (!utf8Byte(byte2)) {
+        return toBadRequest(badRequest);
+      }
+
+      final int byte3;
+      byte3 = decodePercent();
+
+      if (!utf8Byte(byte3)) {
+        return toBadRequest(badRequest);
+      }
+
+      final int byte4;
+      byte4 = decodePercent();
+
+      if (!utf8Byte(byte4)) {
+        return toBadRequest(badRequest);
+      }
+
+      final int c;
+      c = (byte1 & 0b111) << 18 | (byte2 & 0b11_1111) << 12 | (byte3 & 0b11_1111) << 6 | (byte4 & 0b11_1111);
+
+      appendCodePoint(c);
+
+      return success;
+    } else {
+      return toRead(read);
+    }
+  }
+
+  private boolean utf8Byte(int utf8) {
+    final int topTwoBits;
+    topTwoBits = utf8 & 0b1100_0000;
+
+    return topTwoBits == 0b1000_0000;
+  }
+
+  private int decodePercent() {
+    final byte percent;
+    percent = buffer[bufferIndex++];
+
+    if (percent != '%') {
+      return -1;
+    }
+
+    final byte first;
+    first = buffer[bufferIndex++];
+
+    final byte high;
+    high = Bytes.fromHexDigit(first);
+
+    if (high < 0) {
+      return -1;
+    }
+
+    final byte second;
+    second = buffer[bufferIndex++];
+
+    final byte low;
+    low = Bytes.fromHexDigit(second);
+
+    if (low < 0) {
+      return -1;
+    }
+
+    return (high << 4) | low;
+  }
+
+  // ##################################################################
+  // # END: Decode Percent
   // ##################################################################
 
   // ##################################################################
@@ -659,6 +836,24 @@ final class HttpExchange implements Http.Exchange, Closeable {
     header0(Http.HeaderName.CONNECTION, "close");
 
     send0(message);
+
+    return $ERROR;
+  }
+
+  private byte executeUriTooLong() {
+    noteSink.send(NOTES.uriTooLong, id, this);
+
+    bufferIndex = 0;
+
+    status1(Http.Status.URI_TOO_LONG);
+
+    dateNow();
+
+    header0(Http.HeaderName.CONTENT_LENGTH, "0");
+
+    header0(Http.HeaderName.CONNECTION, "close");
+
+    send0();
 
     return $ERROR;
   }
@@ -717,12 +912,16 @@ final class HttpExchange implements Http.Exchange, Closeable {
     }
   }
 
-  private void append(byte b) {
+  private void appendChar(byte b) {
     stringBuilder.append((char) b);
   }
 
-  private void append(int c) {
+  private void appendChar(int c) {
     stringBuilder.append((char) c);
+  }
+
+  private void appendCodePoint(int c) {
+    stringBuilder.appendCodePoint(c);
   }
 
   private String appendToString() {
@@ -2008,7 +2207,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
     return params.keySet();
   }
 
-  private Map<String, Object> $queryParams() {
+  final Map<String, Object> $queryParams() {
     if (!queryParamsReady) {
       if (queryParams == null) {
         queryParams = Util.createMap();

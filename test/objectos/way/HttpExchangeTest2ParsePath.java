@@ -23,7 +23,7 @@ import org.testng.annotations.Test;
 public class HttpExchangeTest2ParsePath {
 
   @Test(description = "path: root")
-  public void path01() throws IOException {
+  public void testCase01() throws IOException {
     test(
         """
         GET / HTTP/1.1\r
@@ -35,7 +35,7 @@ public class HttpExchangeTest2ParsePath {
   }
 
   @Test(description = "path: with segment")
-  public void path02() throws IOException {
+  public void testCase02() throws IOException {
     test(
         """
         GET /index.html HTTP/1.1\r
@@ -46,15 +46,51 @@ public class HttpExchangeTest2ParsePath {
     );
   }
 
-  @Test(description = "path: with percent-encoded values")
-  public void path03() throws IOException {
+  @Test(description = "path: 1-byte percent-encoded value")
+  public void testCase03() throws IOException {
     test(
         """
-        GET /user%2Fjohn%40example.com HTTP/1.1\r
+        GET /utf8/%40 HTTP/1.1\r
         \r
         """,
 
-        "/user/john@example.com"
+        "/utf8/@"
+    );
+  }
+
+  @Test(description = "path: 2-bytes percent-encoded value")
+  public void testCase04() throws IOException {
+    test(
+        """
+        GET /utf8/%C3%A1 HTTP/1.1\r
+        \r
+        """,
+
+        "/utf8/á"
+    );
+  }
+
+  @Test(description = "path: 3-bytes percent-encoded value")
+  public void testCase05() throws IOException {
+    test(
+        """
+        GET /utf8/%E2%82%AC HTTP/1.1\r
+        \r
+        """,
+
+        "/utf8/€"
+    );
+  }
+
+  @Test(description = "path: 4-bytes percent-encoded value")
+  public void testCase06() throws IOException {
+    test(
+        """
+        GET /utf8/%F0%9F%98%80 HTTP/1.1\r
+        \r
+        """,
+
+        "/utf8/😀"
     );
   }
 
@@ -123,6 +159,31 @@ public class HttpExchangeTest2ParsePath {
     GET /pct/%xd HTTP/1.1\r
     \r
     """);
+  }
+
+  @Test
+  public void uriTooLong() throws IOException {
+    final String veryLongId;
+    veryLongId = "/12345/sub/abc7890".repeat(200);
+
+    final TestableSocket socket;
+    socket = TestableSocket.of("GET /entity" + veryLongId + " HTTP/1.1\r\n\r\n");
+
+    try (HttpExchange http = new HttpExchange(socket, 256, 512, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
+      assertEquals(http.shouldHandle(), false);
+
+      assertEquals(
+          http.toString(),
+
+          """
+          HTTP/1.1 414 URI Too Long\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Content-Length: 0\r
+          Connection: close\r
+          \r
+          """
+      );
+    }
   }
 
   private void badRequest(String request) throws IOException {

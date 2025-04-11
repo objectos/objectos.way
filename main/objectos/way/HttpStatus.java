@@ -92,7 +92,7 @@ final class HttpStatus implements Http.Status {
   /**
    * The {@code 414 URI TOO LONG} status.
    */
-  public static final HttpStatus URI_TOO_LONG = BUILDER.create(414, "URI TOO LONG");
+  public static final HttpStatus URI_TOO_LONG = BUILDER.create(414, "URI Too Long");
 
   /**
    * The {@code 415 UNSUPPORTED MEDIA TYPE} status.
@@ -114,7 +114,7 @@ final class HttpStatus implements Http.Status {
   /**
    * The {@code 501 NOT IMPLEMENTED} status.
    */
-  public static final HttpStatus NOT_IMPLEMENTED = BUILDER.create(501, "NOT IMPLEMENTED");
+  public static final HttpStatus NOT_IMPLEMENTED = BUILDER.create(501, "Not Implemented");
 
   /**
    * The {@code 505 HTTP VERSION NOT SUPPORTED} status.
