@@ -22,7 +22,7 @@ import java.util.Set;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class HttpExchangeTest1RequestLine {
+public class HttpExchangeTest1ParsePath {
 
   @Test(description = "method: valid")
   public void method01() throws IOException {

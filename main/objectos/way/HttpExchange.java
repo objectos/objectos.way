@@ -43,16 +43,21 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 @SuppressWarnings("serial")
 final class HttpExchange implements Http.Exchange, Closeable {
 
   private record Notes(
-      Note.Long1Ref1<Http.Exchange> start,
+      Note.Long1Ref1<InetAddress> start,
+
       Note.Long2 readResize,
       Note.Long1Ref1<Http.Exchange> readEof,
       Note.Long1Ref1<Http.Exchange> readMaxBuffer,
       Note.Long1Ref2<Http.Exchange, IOException> readIOException,
+
+      Note.Long1Ref2<ClientError, Http.Exchange> badRequest,
+      Note.Long1Ref1<Http.Exchange> notImplemented,
 
       Note.Ref2<String, String> hexdump,
       Note.Ref2<Integer, String> invalidRequestLine
@@ -64,10 +69,14 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
       return new Notes(
           Note.Long1Ref1.create(s, "STA", Note.DEBUG),
+
           Note.Long2.create(s, "RSZ", Note.INFO),
           Note.Long1Ref1.create(s, "EOF", Note.WARN),
           Note.Long1Ref1.create(s, "MAX", Note.WARN),
-          Note.Long1Ref2.create(s, "REX", Note.ERROR),
+          Note.Long1Ref2.create(s, "IOX", Note.ERROR),
+
+          Note.Long1Ref2.create(s, "BAD", Note.INFO),
+          Note.Long1Ref1.create(s, "MNI", Note.INFO),
 
           Note.Ref2.create(s, "HEX", Note.ERROR),
           Note.Ref2.create(s, "IRL", Note.ERROR)
@@ -76,13 +85,48 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   }
 
+  private sealed interface ClientError {
+    byte[] message();
+
+    Http.Status status();
+  }
+
+  private enum InvalidRequestLine implements ClientError {
+    // do not reorder, do not rename
+
+    INVALID_METHOD,
+
+    REQUEST_TARGET_EOF,
+
+    REQUEST_TARGET_FORM;
+
+    private static final byte[] REQUEST_LINE = "Invalid request line.\n".getBytes(StandardCharsets.US_ASCII);
+
+    @Override
+    public final byte[] message() {
+      return REQUEST_LINE;
+    }
+
+    @Override
+    public final Http.Status status() {
+      return Http.Status.BAD_REQUEST;
+    }
+
+    final ClientErrorException create() {
+      return new ClientErrorException(this);
+    }
+  }
+
   static final byte $START = 0;
   static final byte $READ = 1;
   static final byte $READ_MAX_BUFFER = 2;
   static final byte $READ_EOF = 3;
   static final byte $PARSE_METHOD = 4;
-  static final byte $OK = 5;
-  static final byte $ERROR = 6;
+  static final byte $PARSE_PATH = 5;
+  static final byte $BAD_REQUEST = 6;
+  static final byte $NOT_IMPLEMENTED = 7;
+  static final byte $OK = 8;
+  static final byte $ERROR = 9;
 
   private static final AtomicLong ID_GENERATOR = new AtomicLong(1);
 
@@ -98,6 +142,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   int bufferLimit = 0;
 
+  private ClientError clientError;
+
   private final InputStream inputStream;
 
   private final int maxBufferSize;
@@ -109,6 +155,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
   private byte state;
 
   private byte stateNext;
+
+  private Http.Version version = Http.Version.HTTP_1_1;
 
   // ##################################################################
   // # BEGIN: HTTP/1.1 state machine
@@ -126,7 +174,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
       state = execute(state);
     }
 
-    throw new UnsupportedOperationException("Implement me");
+    return state == $OK;
   }
 
   @Lang.VisibleForTesting
@@ -139,19 +187,23 @@ final class HttpExchange implements Http.Exchange, Closeable {
       case $READ_MAX_BUFFER -> executeReadMaxBuffer();
 
       case $PARSE_METHOD -> executeParseMethod();
+      case $PARSE_PATH -> executeParsePath();
+
+      case $BAD_REQUEST -> executeBadRequest();
+      case $NOT_IMPLEMENTED -> executeNotImplemented();
 
       default -> throw new AssertionError("Unexpected state=" + state);
     };
   }
 
   private byte executeStart() {
-    note(NOTES.start);
+    noteSink.send(NOTES.start, id, remoteAddress);
 
     bufferLimit = 0;
 
     bufferIndex = 0;
 
-    return toRead($PARSE_METHOD);
+    return $PARSE_METHOD;
   }
 
   // ##################################################################
@@ -161,18 +213,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
   // ##################################################################
   // # BEGIN: Read
   // ##################################################################
-
-  @Lang.VisibleForTesting
-  final String bufferToAscii() {
-    return new String(buffer, StandardCharsets.US_ASCII);
-  }
-
-  @Lang.VisibleForTesting
-  final byte toRead(byte next) {
-    stateNext = next;
-
-    return $READ;
-  }
 
   private byte executeRead() {
     try {
@@ -221,10 +261,51 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   private byte executeReadEof() {
     return switch (stateNext) {
-      case $PARSE_METHOD -> $OK;
+      case $PARSE_METHOD -> bufferLimit == 0 ? $OK : toBadRequest(InvalidRequestLine.INVALID_METHOD);
 
       default -> { note(NOTES.readEof); yield $ERROR; }
     };
+  }
+
+  private boolean bufferMatches(byte[] bytes) {
+    final int length;
+    length = bytes.length;
+
+    final int toIndex;
+    toIndex = bufferIndex + length;
+
+    final boolean matches;
+    matches = Arrays.equals(
+        buffer, bufferIndex, toIndex,
+        bytes, 0, length
+    );
+
+    if (matches) {
+      bufferIndex += length;
+
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  @Lang.VisibleForTesting
+  final String bufferToAscii() {
+    return new String(buffer, StandardCharsets.US_ASCII);
+  }
+
+  private boolean canRead(int count) {
+    final int readable;
+    readable = bufferLimit - bufferIndex;
+
+    return count <= readable;
+  }
+
+  @Lang.VisibleForTesting
+  final byte toRead(byte next) {
+    stateNext = next;
+
+    return $READ;
   }
 
   // ##################################################################
@@ -232,15 +313,199 @@ final class HttpExchange implements Http.Exchange, Closeable {
   // ##################################################################
 
   // ##################################################################
-  // # BEGIN: Parse Method
+  // # BEGIN: Parse: Method
   // ##################################################################
 
+  private enum $Method {
+    CONNECT,
+    DELETE,
+    GET,
+    HEAD,
+    OPTIONS,
+    PATCH,
+    POST,
+    PUT,
+    TRACE;
+
+    final byte[] ascii;
+
+    final Http.Method external;
+
+    private $Method() {
+      final String name;
+      name = name();
+
+      ascii = (name + ' ').getBytes(StandardCharsets.US_ASCII);
+
+      final Http.Method value;
+      value = Http.Method.valueOf(name);
+
+      external = value.implemented ? value : null;
+    }
+  }
+
+  private static final int MAX_METHOD_LENGTH = Stream.of($Method.values()).mapToInt(m -> m.ascii.length).max().getAsInt();
+
   private byte executeParseMethod() {
-    throw new UnsupportedOperationException("Implement me");
+    if (!canRead(MAX_METHOD_LENGTH)) {
+      return toRead($PARSE_METHOD);
+    }
+
+    final byte first;
+    first = buffer[bufferIndex];
+
+    // based on the first char, we select out method candidate
+
+    final $Method internal;
+    internal = switch (first) {
+      case 'C' -> parseMethod($Method.CONNECT);
+
+      case 'D' -> parseMethod($Method.DELETE);
+
+      case 'G' -> parseMethod($Method.GET);
+
+      case 'H' -> parseMethod($Method.HEAD);
+
+      case 'O' -> parseMethod($Method.OPTIONS);
+
+      case 'P' -> {
+        // method starts with a P. It might be:
+        // - POST
+        // - PUT
+        // - PATCH
+
+        // we'll try them in sequence
+
+        $Method p;
+        p = parseMethod($Method.POST);
+
+        if (p != null) {
+          yield p;
+        }
+
+        p = parseMethod($Method.PUT);
+
+        if (p != null) {
+          yield p;
+        }
+
+        yield parseMethod($Method.PATCH);
+      }
+
+      case 'T' -> parseMethod($Method.TRACE);
+
+      default -> null;
+    };
+
+    if (internal == null) {
+      return toBadRequest(InvalidRequestLine.INVALID_METHOD);
+    }
+
+    method = internal.external;
+
+    if (method == null) {
+      return $NOT_IMPLEMENTED;
+    }
+
+    return $PARSE_PATH;
+  }
+
+  private $Method parseMethod($Method candidate) {
+    final byte[] ascii;
+    ascii = candidate.ascii;
+
+    return bufferMatches(ascii) ? candidate : null;
   }
 
   // ##################################################################
-  // # END: Parse Method
+  // # END: Parse: Method
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Parse: Path
+  // ##################################################################
+
+  private byte executeParsePath() {
+    return $OK;
+  }
+
+  // ##################################################################
+  // # END: Parse: Path
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Response: Early (internal)
+  // ##################################################################
+
+  private byte toBadRequest(ClientError error) {
+    clientError = error;
+
+    return $BAD_REQUEST;
+  }
+
+  private byte executeBadRequest() {
+    noteSink.send(NOTES.badRequest, id, clientError, this);
+
+    bufferIndex = 0;
+
+    final byte[] message;
+    message = clientError.message();
+
+    status1(Http.Status.BAD_REQUEST);
+
+    dateNow();
+
+    header0(Http.HeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
+
+    header0(Http.HeaderName.CONTENT_LENGTH, message.length);
+
+    header0(Http.HeaderName.CONNECTION, "close");
+
+    send0(message);
+
+    return $ERROR;
+  }
+
+  private byte executeNotImplemented() {
+    noteSink.send(NOTES.notImplemented, id, this);
+
+    bufferIndex = 0;
+
+    status1(Http.Status.NOT_IMPLEMENTED);
+
+    dateNow();
+
+    header0(Http.HeaderName.CONTENT_LENGTH, "0");
+
+    header0(Http.HeaderName.CONNECTION, "close");
+
+    send0();
+
+    return $ERROR;
+  }
+
+  // ##################################################################
+  // # END: Response: Early (internal)
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Response
+  // ##################################################################
+
+  private void status1(Http.Status status) {
+    writeBytes(version.responseBytes);
+
+    HttpStatus internal;
+    internal = (HttpStatus) status;
+
+    byte[] statusBytes;
+    statusBytes = STATUS_LINES[internal.index];
+
+    writeBytes(statusBytes);
+  }
+
+  // ##################################################################
+  // # END: Response
   // ##################################################################
 
   // ##################################################################
@@ -259,42 +524,10 @@ final class HttpExchange implements Http.Exchange, Closeable {
     InternalException() {}
   }
 
-  private sealed interface ClientErrorKind {
-    byte[] message();
-
-    Http.Status status();
-  }
-
-  private enum InvalidRequestLine implements ClientErrorKind {
-    // do not reorder, do not rename
-
-    INVALID_METHOD,
-
-    REQUEST_TARGET_EOF,
-
-    REQUEST_TARGET_FORM;
-
-    private static final byte[] REQUEST_LINE = "Invalid request line.\n".getBytes(StandardCharsets.US_ASCII);
-
-    @Override
-    public final byte[] message() {
-      return REQUEST_LINE;
-    }
-
-    @Override
-    public final Http.Status status() {
-      return Http.Status.BAD_REQUEST;
-    }
-
-    final ClientErrorException create() {
-      return new ClientErrorException(this);
-    }
-  }
-
   private static final class ClientErrorException extends InternalException implements Media.Bytes {
-    private final ClientErrorKind kind;
+    private final ClientError kind;
 
-    ClientErrorException(ClientErrorKind kind) {
+    ClientErrorException(ClientError kind) {
       this.kind = kind;
     }
 
@@ -431,8 +664,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
   private int queryStart;
 
   private String rawValue;
-
-  private Http.Version version = Http.Version.HTTP_1_1;
 
   // SocketInput
 
