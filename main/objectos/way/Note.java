@@ -181,6 +181,96 @@ public sealed interface Note {
   }
 
   /**
+   * A note that takes one {@code long}, and one object reference arguments.
+   */
+  sealed interface Long1Ref1<T1> extends Note permits NoteImpl {
+    /**
+     * Creates a new {@code Long1} instance with the specified source, key and
+     * marker.
+     *
+     * @param <T1> the type of the object reference argument
+     * @param source
+     *        a class instance whose canonical name will be used as the source
+     *        of the note
+     * @param key
+     *        the key of the note
+     * @param marker
+     *        the marker to associate to the note
+     *
+     * @return a newly create note instance
+     */
+    @SuppressWarnings("unchecked")
+    static <T1> Long1Ref1<T1> create(Class<?> source, String key, Marker marker) {
+      return (Long1Ref1<T1>) new NoteImpl(source, key, marker);
+    }
+
+    /**
+     * Creates a new {@code Long1} instance with the specified source, key and
+     * marker.
+     *
+     * @param <T1> the type of the object reference argument
+     * @param source
+     *        the source of the note
+     * @param key
+     *        the key of the note
+     * @param marker
+     *        the marker to associate to the note
+     *
+     * @return a newly create note instance
+     */
+    @SuppressWarnings("unchecked")
+    static <T1> Long1Ref1<T1> create(String source, String key, Marker marker) {
+      return (Long1Ref1<T1>) new NoteImpl(source, key, marker);
+    }
+  }
+
+  /**
+   * A note that takes one {@code long}, and two object references arguments.
+   */
+  sealed interface Long1Ref2<T1, T2> extends Note permits NoteImpl {
+    /**
+     * Creates a new {@code Long1} instance with the specified source, key and
+     * marker.
+     *
+     * @param <T1> the type of the first object reference argument
+     * @param <T2> the type of the second object reference argument
+     * @param source
+     *        a class instance whose canonical name will be used as the source
+     *        of the note
+     * @param key
+     *        the key of the note
+     * @param marker
+     *        the marker to associate to the note
+     *
+     * @return a newly create note instance
+     */
+    @SuppressWarnings("unchecked")
+    static <T1, T2> Long1Ref2<T1, T2> create(Class<?> source, String key, Marker marker) {
+      return (Long1Ref2<T1, T2>) new NoteImpl(source, key, marker);
+    }
+
+    /**
+     * Creates a new {@code Long1} instance with the specified source, key and
+     * marker.
+     *
+     * @param <T1> the type of the first object reference argument
+     * @param <T2> the type of the second object reference argument
+     * @param source
+     *        the source of the note
+     * @param key
+     *        the key of the note
+     * @param marker
+     *        the marker to associate to the note
+     *
+     * @return a newly create note instance
+     */
+    @SuppressWarnings("unchecked")
+    static <T1, T2> Long1Ref2<T1, T2> create(String source, String key, Marker marker) {
+      return (Long1Ref2<T1, T2>) new NoteImpl(source, key, marker);
+    }
+  }
+
+  /**
    * A note that takes two {@code long} arguments.
    */
   sealed interface Long2 extends Note permits NoteImpl {
@@ -538,6 +628,32 @@ public sealed interface Note {
      *        a second value (ignored)
      */
     @Override
+    public <T1> void send(Long1Ref1<T1> note, long value1, T1 value2) {}
+
+    /**
+     * Does nothing, this is a no-op sink.
+     *
+     * @param note
+     *        a note instance (ignored)
+     * @param value1
+     *        a first value (ignored)
+     * @param value2
+     *        a second value (ignored)
+     */
+    @Override
+    public <T1, T2> void send(Long1Ref2<T1, T2> note, long value1, T1 value2, T2 value3) {}
+
+    /**
+     * Does nothing, this is a no-op sink.
+     *
+     * @param note
+     *        a note instance (ignored)
+     * @param value1
+     *        a first value (ignored)
+     * @param value2
+     *        a second value (ignored)
+     */
+    @Override
     public void send(Long2 note, long value1, long value2) {}
 
     /**
@@ -652,6 +768,39 @@ public sealed interface Note {
      *        argument of the consumed note
      */
     void send(Long1 note, long value);
+
+    /**
+     * Sends the given note that takes a {@code long}, and a object reference
+     * arguments.
+     *
+     * @param <T1> type of the object reference argument
+     *
+     * @param note
+     *        an note instance
+     * @param value1
+     *        first argument of the consumed note
+     * @param value2
+     *        second argument of the consumed note
+     */
+    <T1> void send(Long1Ref1<T1> note, long value1, T1 value2);
+
+    /**
+     * Sends the given note that takes a {@code long}, and two object references
+     * arguments.
+     *
+     * @param <T1> type of the first object reference argument
+     * @param <T2> type of the second object reference argument
+     *
+     * @param note
+     *        an note instance
+     * @param value1
+     *        first argument of the consumed note
+     * @param value2
+     *        second argument of the consumed note
+     * @param value3
+     *        third argument of the consumed note
+     */
+    <T1, T2> void send(Long1Ref2<T1, T2> note, long value1, T1 value2, T2 value3);
 
     /**
      * Sends the given note that takes two {@code long} arguments.

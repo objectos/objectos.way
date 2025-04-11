@@ -24,6 +24,8 @@ record NoteImpl(String source, String key, Marker marker)
     Note.Int3,
 
     Note.Long1,
+    Note.Long1Ref1<Object>,
+    Note.Long1Ref2<Object, Object>,
     Note.Long2,
 
     Note.Ref0,

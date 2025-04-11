@@ -25,7 +25,125 @@ import objectos.way.HttpExchange.ParseStatus;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class HttpExchangeTest0SocketInput {
+public class HttpExchangeTest0Read {
+
+  @Test(description = "Read into initial buffer")
+  public void read01() throws IOException {
+    final String req1;
+    req1 = "1".repeat(64);
+
+    final int length;
+    length = req1.length();
+
+    try (HttpExchange http = http(length, length, req1)) {
+      byte nextState;
+      nextState = HttpExchange.$PARSE_METHOD;
+
+      byte read;
+      read = http.toRead(nextState);
+
+      assertEquals(http.execute(read), nextState);
+
+      assertEquals(http.bufferToAscii(), req1);
+    }
+  }
+
+  @Test(description = "Read into initial buffer, subsequent requires resize")
+  public void read02() throws IOException {
+    final String req1;
+    req1 = "1".repeat(64);
+
+    final String req2;
+    req2 = "2".repeat(64);
+
+    final int len1;
+    len1 = req1.length();
+
+    final int len2;
+    len2 = req2.length();
+
+    try (HttpExchange http = http(len1, len1 + len2, req1 + req2)) {
+      byte nextState;
+      nextState = HttpExchange.$PARSE_METHOD;
+
+      byte read;
+      read = http.toRead(nextState);
+
+      assertEquals(http.execute(read), nextState);
+
+      assertEquals(http.bufferToAscii(), req1);
+
+      read = http.toRead(nextState);
+
+      assertEquals(http.execute(read), nextState);
+
+      assertEquals(http.bufferToAscii(), req1 + req2);
+    }
+  }
+
+  @Test(description = "Error: data exceeds max buffer length")
+  public void read03() throws IOException {
+    final String req1;
+    req1 = "1".repeat(64);
+
+    final String req2;
+    req2 = "2".repeat(64);
+
+    final int len1;
+    len1 = req1.length();
+
+    try (HttpExchange http = http(len1, len1, req1 + req2)) {
+      byte nextState;
+      nextState = HttpExchange.$PARSE_METHOD;
+
+      byte read;
+      read = http.toRead(nextState);
+
+      assertEquals(http.execute(read), nextState);
+
+      assertEquals(http.bufferToAscii(), req1);
+
+      read = http.toRead(nextState);
+
+      assertEquals(http.execute(read), HttpExchange.$READ_MAX_BUFFER);
+
+      assertEquals(http.bufferToAscii(), req1);
+    }
+  }
+
+  @Test(description = "EOF")
+  public void read04() throws IOException {
+    final String req1;
+    req1 = "1".repeat(64);
+
+    final int length;
+    length = req1.length();
+
+    try (HttpExchange http = http(length, length * 2, req1)) {
+      byte nextState;
+      nextState = HttpExchange.$PARSE_METHOD;
+
+      byte read;
+      read = http.toRead(nextState);
+
+      assertEquals(http.execute(read), nextState);
+
+      assertEquals(http.bufferToAscii(), req1);
+
+      read = http.toRead(nextState);
+
+      assertEquals(http.execute(read), HttpExchange.$READ_EOF);
+
+      assertEquals(http.bufferToAscii(), req1 + "\0".repeat(64));
+    }
+  }
+
+  private HttpExchange http(int initial, int max, Object... data) throws IOException {
+    TestableSocket socket;
+    socket = TestableSocket.of(data);
+
+    return new HttpExchange(socket, initial, max, TestingClock.FIXED, TestingNoteSink.INSTANCE);
+  }
 
   @Test(description = """
   Support for:
@@ -35,8 +153,6 @@ public class HttpExchangeTest0SocketInput {
   Connection: close
   """)
   public void testCase001() throws IOException {
-    Http.init();
-
     HttpExchange input;
     input = regularInput("""
     GET / HTTP/1.1\r

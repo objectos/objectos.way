@@ -19,6 +19,8 @@ import objectos.way.Note.Int1;
 import objectos.way.Note.Int2;
 import objectos.way.Note.Int3;
 import objectos.way.Note.Long1;
+import objectos.way.Note.Long1Ref1;
+import objectos.way.Note.Long1Ref2;
 import objectos.way.Note.Long2;
 import objectos.way.Note.Ref0;
 import objectos.way.Note.Ref1;
@@ -71,6 +73,20 @@ public class TestingNoteSink implements objectos.way.Note.Sink {
     visitNote(note);
 
     INSTANCE.send(note, value1, value2);
+  }
+
+  @Override
+  public <T1> void send(Long1Ref1<T1> note, long value1, T1 value2) {
+    visitNote(note);
+
+    INSTANCE.send(note, value1, value2);
+  }
+
+  @Override
+  public <T1, T2> void send(Long1Ref2<T1, T2> note, long value1, T1 value2, T2 value3) {
+    visitNote(note);
+
+    INSTANCE.send(note, value1, value2, value3);
   }
 
   @Override

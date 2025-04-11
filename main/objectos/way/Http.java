@@ -1674,8 +1674,4 @@ public final class Http {
     return value.getBytes(StandardCharsets.UTF_8);
   }
 
-  static void init() {
-    // noop: mostly for testing
-  }
-
 }

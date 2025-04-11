@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -39,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -46,6 +48,12 @@ import java.util.function.Function;
 final class HttpExchange implements Http.Exchange, Closeable {
 
   private record Notes(
+      Note.Long1Ref1<Http.Exchange> start,
+      Note.Long2 readResize,
+      Note.Long1Ref1<Http.Exchange> readEof,
+      Note.Long1Ref1<Http.Exchange> readMaxBuffer,
+      Note.Long1Ref2<Http.Exchange, IOException> readIOException,
+
       Note.Ref2<String, String> hexdump,
       Note.Ref2<Integer, String> invalidRequestLine
   ) {
@@ -55,12 +63,197 @@ final class HttpExchange implements Http.Exchange, Closeable {
       s = Http.Exchange.class;
 
       return new Notes(
+          Note.Long1Ref1.create(s, "STA", Note.DEBUG),
+          Note.Long2.create(s, "RSZ", Note.INFO),
+          Note.Long1Ref1.create(s, "EOF", Note.WARN),
+          Note.Long1Ref1.create(s, "MAX", Note.WARN),
+          Note.Long1Ref2.create(s, "REX", Note.ERROR),
+
           Note.Ref2.create(s, "HEX", Note.ERROR),
           Note.Ref2.create(s, "IRL", Note.ERROR)
       );
     }
 
   }
+
+  static final byte $START = 0;
+  static final byte $READ = 1;
+  static final byte $READ_MAX_BUFFER = 2;
+  static final byte $READ_EOF = 3;
+  static final byte $PARSE_METHOD = 4;
+  static final byte $OK = 5;
+  static final byte $ERROR = 6;
+
+  private static final AtomicLong ID_GENERATOR = new AtomicLong(1);
+
+  private static final int HARD_MAX_BUFFER_SIZE = 1 << 14;
+
+  private static final Notes NOTES = Notes.get();
+
+  private final long id = ID_GENERATOR.getAndIncrement();
+
+  byte[] buffer;
+
+  int bufferIndex = 0;
+
+  int bufferLimit = 0;
+
+  private final InputStream inputStream;
+
+  private final int maxBufferSize;
+
+  private final Note.Sink noteSink;
+
+  private InetAddress remoteAddress;
+
+  private byte state;
+
+  private byte stateNext;
+
+  // ##################################################################
+  // # BEGIN: HTTP/1.1 state machine
+  // ##################################################################
+
+  public final boolean shouldHandle() throws IOException {
+    final Thread currentThread;
+    currentThread = Thread.currentThread();
+
+    if (currentThread.isInterrupted()) {
+      return false;
+    }
+
+    while (state < $OK) {
+      state = execute(state);
+    }
+
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  @Lang.VisibleForTesting
+  final byte execute(byte state) {
+    return switch (state) {
+      case $START -> executeStart();
+
+      case $READ -> executeRead();
+      case $READ_EOF -> executeReadEof();
+      case $READ_MAX_BUFFER -> executeReadMaxBuffer();
+
+      case $PARSE_METHOD -> executeParseMethod();
+
+      default -> throw new AssertionError("Unexpected state=" + state);
+    };
+  }
+
+  private byte executeStart() {
+    note(NOTES.start);
+
+    bufferLimit = 0;
+
+    bufferIndex = 0;
+
+    return toRead($PARSE_METHOD);
+  }
+
+  // ##################################################################
+  // # END: HTTP/1.1 state machine
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Read
+  // ##################################################################
+
+  @Lang.VisibleForTesting
+  final String bufferToAscii() {
+    return new String(buffer, StandardCharsets.US_ASCII);
+  }
+
+  @Lang.VisibleForTesting
+  final byte toRead(byte next) {
+    stateNext = next;
+
+    return $READ;
+  }
+
+  private byte executeRead() {
+    try {
+      int writableLength;
+      writableLength = buffer.length - bufferLimit;
+
+      if (writableLength == 0) {
+        // buffer is full, try to increase
+
+        if (buffer.length == maxBufferSize) {
+          return $READ_MAX_BUFFER;
+        }
+
+        int newLength;
+        newLength = buffer.length << 1;
+
+        buffer = Arrays.copyOf(buffer, newLength);
+
+        writableLength = buffer.length - bufferLimit;
+
+        noteSink.send(NOTES.readResize, id, newLength);
+      }
+
+      int bytesRead;
+      bytesRead = inputStream.read(buffer, bufferLimit, writableLength);
+
+      if (bytesRead < 0) {
+        return $READ_EOF;
+      }
+
+      bufferLimit += bytesRead;
+
+      return stateNext;
+    } catch (IOException e) {
+      noteSink.send(NOTES.readIOException, id, this, e);
+
+      return $ERROR;
+    }
+  }
+
+  private byte executeReadMaxBuffer() {
+    return switch (stateNext) {
+      default -> { note(NOTES.readMaxBuffer); yield $ERROR; }
+    };
+  }
+
+  private byte executeReadEof() {
+    return switch (stateNext) {
+      case $PARSE_METHOD -> $OK;
+
+      default -> { note(NOTES.readEof); yield $ERROR; }
+    };
+  }
+
+  // ##################################################################
+  // # END: Read
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Parse Method
+  // ##################################################################
+
+  private byte executeParseMethod() {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  // ##################################################################
+  // # END: Parse Method
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Utils
+  // ##################################################################
+
+  private void note(Note.Long1Ref1<Http.Exchange> note) {
+    noteSink.send(note, id, this);
+  }
+
+  // ##################################################################
+  // # END: Utils
+  // ##################################################################
 
   private sealed abstract static class InternalException extends RuntimeException {
     InternalException() {}
@@ -181,8 +374,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
     FILE;
   }
 
-  private static final Notes NOTES = Notes.get();
-
   private static final int _START = 0;
   private static final int _PARSE = 1;
   private static final int _REQUEST = 2;
@@ -202,8 +393,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
   private int bitset = 0;
 
   private final Clock clock;
-
-  private final Note.Sink noteSink;
 
   ParseStatus parseStatus = ParseStatus.NORMAL;
 
@@ -247,19 +436,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   // SocketInput
 
-  private static final int HARD_MAX_BUFFER_SIZE = 1 << 14;
-
-  byte[] buffer;
-
-  int bufferIndex = 0;
-
-  int bufferLimit = 0;
-
-  private final InputStream inputStream;
-
   int lineLimit = 0;
-
-  private final int maxBufferSize;
 
   private final OutputStream outputStream;
 
@@ -416,24 +593,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
     } finally {
       socket.close();
     }
-  }
-
-  public final boolean shouldHandle() throws IOException {
-    final Thread currentThread;
-    currentThread = Thread.currentThread();
-
-    if (currentThread.isInterrupted()) {
-      return false;
-    }
-
-    final int state;
-    state = state();
-
-    return switch (state) {
-      case _START -> parse0();
-
-      default -> false;
-    };
   }
 
   @Override

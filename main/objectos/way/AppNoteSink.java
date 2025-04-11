@@ -26,6 +26,8 @@ import java.util.Objects;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Predicate;
+import objectos.way.Note.Long1Ref1;
+import objectos.way.Note.Long1Ref2;
 import objectos.way.Note.Marker;
 
 sealed abstract class AppNoteSink implements App.NoteSink permits AppNoteSinkOfConsole, AppNoteSinkOfFile {
@@ -151,6 +153,54 @@ sealed abstract class AppNoteSink implements App.NoteSink permits AppNoteSinkOfC
     format(out, note);
 
     formatLong(out, value);
+
+    write(out);
+  }
+
+  @Override
+  public final <T1> void send(Long1Ref1<T1> note, long value1, T1 value2) {
+    if (note == null) {
+      return;
+    }
+
+    if (!test(note)) {
+      return;
+    }
+
+    StringBuilder out;
+    out = new StringBuilder();
+
+    int length;
+    length = format(out, note);
+
+    formatLong(out, value1);
+
+    formatLastValue(out, length, value2);
+
+    write(out);
+  }
+
+  @Override
+  public final <T1, T2> void send(Long1Ref2<T1, T2> note, long value1, T1 value2, T2 value3) {
+    if (note == null) {
+      return;
+    }
+
+    if (!test(note)) {
+      return;
+    }
+
+    StringBuilder out;
+    out = new StringBuilder();
+
+    int length;
+    length = format(out, note);
+
+    formatLong(out, value1);
+
+    length = formatValue(out, length, value2);
+
+    formatLastValue(out, length, value3);
 
     write(out);
   }
