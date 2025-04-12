@@ -106,8 +106,8 @@ public class HttpServerTest implements Consumer<Http.Routing> {
   - reject other methods
   """)
   public void testCase01() throws IOException {
-    Testing.test(
-        Testing.httpClient(
+    Y.test(
+        Y.httpClient(
             "/test/testCase01",
 
             builder -> builder.headers(
@@ -125,8 +125,8 @@ public class HttpServerTest implements Consumer<Http.Routing> {
         """
     );
 
-    Testing.test(
-        Testing.httpClient(
+    Y.test(
+        Y.httpClient(
             "/test/testCase01",
 
             builder -> builder.POST(BodyPublishers.noBody()).headers(
@@ -224,7 +224,7 @@ public class HttpServerTest implements Consumer<Http.Routing> {
   """)
   public void testCase03() throws IOException, InterruptedException {
     HttpResponse<String> response;
-    response = Testing.httpClient(
+    response = Y.httpClient(
         "/test/testCase03",
 
         builder -> builder.HEAD().headers(
@@ -237,7 +237,7 @@ public class HttpServerTest implements Consumer<Http.Routing> {
     assertEquals(response.headers().allValues("Date"), List.of("Wed, 28 Jun 2023 12:08:43 GMT"));
     assertEquals(response.body(), "");
 
-    response = Testing.httpClient(
+    response = Y.httpClient(
         "/test/testCase03",
 
         builder -> builder.headers(
@@ -254,7 +254,7 @@ public class HttpServerTest implements Consumer<Http.Routing> {
     </html>
     """);
 
-    response = Testing.httpClient(
+    response = Y.httpClient(
         "/test/testCase03",
 
         builder -> builder.POST(BodyPublishers.noBody()).headers(
@@ -318,8 +318,8 @@ public class HttpServerTest implements Consumer<Http.Routing> {
   Request attributes should be reset between requests
   """)
   public void testCase04() throws IOException, InterruptedException {
-    Testing.test(
-        Testing.httpClient(
+    Y.test(
+        Y.httpClient(
             "/test/testCase04",
 
             builder -> builder.headers(
@@ -337,8 +337,8 @@ public class HttpServerTest implements Consumer<Http.Routing> {
         """
     );
 
-    Testing.test(
-        Testing.httpClient(
+    Y.test(
+        Y.httpClient(
             "/test/testCase04",
 
             builder -> builder.POST(BodyPublishers.noBody()).headers(
@@ -374,8 +374,8 @@ public class HttpServerTest implements Consumer<Http.Routing> {
   An Http.AbstractHandlerException caught by the loop should call its handle method
   """)
   public void testCase05() {
-    Testing.test(
-        Testing.httpClient(
+    Y.test(
+        Y.httpClient(
             "/test/testCase05",
 
             builder -> builder.headers(

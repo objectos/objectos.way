@@ -57,15 +57,9 @@ public class TestableSocket extends Socket {
     inputStream = null;
   }
 
-  public static TestableSocket empty() {
-    return new TestableSocket(
-        TestingInputStream.EMPTY
-    );
-  }
-
   public static TestableSocket of(Object... data) {
     return new TestableSocket(
-        TestingInputStream.of(data)
+        Y.inputStream(data)
     );
   }
 

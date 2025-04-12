@@ -140,25 +140,24 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   static final byte $PARSE_METHOD = 4;
   static final byte $PARSE_PATH = 5;
-  static final byte $PARSE_PATH_CONTENTS = 6;
-  static final byte $PARSE_PATH_DECODE = 7;
-  static final byte $PARSE_QUERY = 8;
-  static final byte $PARSE_VERSION = 9;
+  static final byte $PARSE_PATH_CONTENTS0 = 6;
+  static final byte $PARSE_PATH_CONTENTS1 = 7;
+  static final byte $PARSE_PATH_DECODE = 8;
+  static final byte $PARSE_QUERY = 9;
+  static final byte $PARSE_VERSION = 10;
 
-  static final byte $BAD_REQUEST = 10;
-  static final byte $URI_TOO_LONG = 11;
-  static final byte $NOT_IMPLEMENTED = 12;
+  static final byte $BAD_REQUEST = 11;
+  static final byte $URI_TOO_LONG = 12;
+  static final byte $NOT_IMPLEMENTED = 13;
 
-  static final byte $OK = 12;
-  static final byte $ERROR = 13;
+  static final byte $OK = 14;
+  static final byte $ERROR = 15;
 
   private static final int HARD_MAX_BUFFER_SIZE = 1 << 14;
 
   private static final AtomicLong ID_GENERATOR = new AtomicLong(1);
 
   private static final Notes NOTES = Notes.get();
-
-  private final long id = ID_GENERATOR.getAndIncrement();
 
   byte[] buffer;
 
@@ -168,7 +167,11 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   private ClientError clientError;
 
+  private final long id = ID_GENERATOR.getAndIncrement();
+
   private final InputStream inputStream;
+
+  private int mark;
 
   private final int maxBufferSize;
 
@@ -214,7 +217,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
       case $PARSE_METHOD -> executeParseMethod();
       case $PARSE_PATH -> executeParsePath();
-      case $PARSE_PATH_CONTENTS -> executeParsePathContents();
+      case $PARSE_PATH_CONTENTS0 -> executeParsePathContents0();
+      case $PARSE_PATH_CONTENTS1 -> executeParsePathContents1();
       case $PARSE_PATH_DECODE -> executeParsePathDecode();
 
       case $PARSE_QUERY -> executeParseQuery();
@@ -288,7 +292,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   private byte executeReadMaxBuffer() {
     return switch (stateNext) {
-      case $PARSE_PATH, $PARSE_PATH_CONTENTS, $PARSE_PATH_DECODE -> executeUriTooLong();
+      case $PARSE_PATH, $PARSE_PATH_CONTENTS0, $PARSE_PATH_CONTENTS1, $PARSE_PATH_DECODE -> executeUriTooLong();
 
       default -> { note(NOTES.readMaxBuffer); yield $ERROR; }
     };
@@ -327,10 +331,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
   @Lang.VisibleForTesting
   final String bufferToAscii() {
     return new String(buffer, StandardCharsets.US_ASCII);
-  }
-
-  private boolean canRead() {
-    return bufferIndex < bufferLimit;
   }
 
   private boolean canRead(int count) {
@@ -500,6 +500,9 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   private byte executeParsePath() {
     if (canRead(2)) {
+      // marks path start
+      mark = bufferIndex;
+
       final byte first;
       first = buffer[bufferIndex++];
 
@@ -514,17 +517,45 @@ final class HttpExchange implements Http.Exchange, Closeable {
         return toBadRequest(InvalidRequestLine.PATH_SEGMENT_NZ);
       }
 
-      appendInit();
-
-      appendChar(first);
-
-      return executeParsePathContents();
+      return executeParsePathContents0();
     } else {
       return toRead($PARSE_PATH);
     }
   }
 
-  private byte executeParsePathContents() {
+  private byte executeParsePathContents0() {
+    while (bufferIndex < bufferLimit) {
+      final byte b;
+      b = buffer[bufferIndex];
+
+      if (b < 0) {
+        return toBadRequest(InvalidRequestLine.PATH_NEXT_CHAR);
+      }
+
+      final byte code;
+      code = PARSE_PATH_TABLE[b];
+
+      switch (code) {
+        case 1 -> { bufferIndex += 1; }
+
+        case 2 -> { return $PARSE_PATH_CONTENTS1; }
+
+        case 3 -> { path = pathFromBuffer(); bufferIndex += 1; return $PARSE_VERSION; }
+
+        case 4 -> { path = pathFromBuffer(); bufferIndex += 1; return $PARSE_QUERY; }
+
+        default -> { return toBadRequest(InvalidRequestLine.PATH_NEXT_CHAR); }
+      }
+    }
+
+    return toRead($PARSE_PATH_CONTENTS0);
+  }
+
+  private String pathFromBuffer() {
+    return new String(buffer, mark, bufferIndex - mark, StandardCharsets.US_ASCII);
+  }
+
+  private byte executeParsePathContents1() {
     while (bufferIndex < bufferLimit) {
       final byte b;
       b = buffer[bufferIndex++];
@@ -537,14 +568,10 @@ final class HttpExchange implements Http.Exchange, Closeable {
       code = PARSE_PATH_TABLE[b];
 
       switch (code) {
-        case 1 -> {
-          appendChar(b);
-
-          continue;
-        }
+        case 1 -> appendChar(b);
 
         case 2 -> {
-          final byte next;
+          byte next;
           next = executeParsePathDecode();
 
           if (state != next) {
@@ -552,29 +579,19 @@ final class HttpExchange implements Http.Exchange, Closeable {
           }
         }
 
-        case 3 -> {
-          path = appendToString();
+        case 3 -> { path = appendToString(); return $PARSE_VERSION; }
 
-          return $PARSE_VERSION;
-        }
+        case 4 -> { path = appendToString(); return $PARSE_QUERY; }
 
-        case 4 -> {
-          path = appendToString();
-
-          return $PARSE_QUERY;
-        }
-
-        default -> {
-          return toBadRequest(InvalidRequestLine.PATH_NEXT_CHAR);
-        }
+        default -> { return toBadRequest(InvalidRequestLine.PATH_NEXT_CHAR); }
       }
     }
 
-    return toRead($PARSE_PATH_CONTENTS);
+    return toRead($PARSE_PATH_CONTENTS1);
   }
 
   private byte executeParsePathDecode() {
-    return decodePercent($PARSE_PATH_CONTENTS, $PARSE_PATH_DECODE, InvalidRequestLine.PATH_PERCENT);
+    return decodePercent($PARSE_PATH_CONTENTS1, $PARSE_PATH_DECODE, InvalidRequestLine.PATH_PERCENT);
   }
 
   // ##################################################################

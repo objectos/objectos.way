@@ -51,10 +51,10 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
     this.webSecure = Web.Secure.create(config -> {
       config.cookieName("HTTPMODULETEST");
 
-      config.randomGenerator(Testing.randomGeneratorOfLongs(1L, 2L, 3L, 4L));
+      config.randomGenerator(Y.randomGeneratorOfLongs(1L, 2L, 3L, 4L));
     });
 
-    cookie = Testing.cookie("HTTPMODULETEST", 1L, 2L, 3L, 4L);
+    cookie = Y.cookie("HTTPMODULETEST", 1L, 2L, 3L, 4L);
 
     Web.Session session;
     session = webSecure.createSession();
@@ -230,7 +230,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
   @Test
   public void testCase01() throws IOException, InterruptedException {
     HttpResponse<String> response;
-    response = Testing.httpClient(
+    response = Y.httpClient(
         "/testCase01/foo",
 
         builder -> builder.headers(
@@ -247,7 +247,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
     </html>
     """);
 
-    response = Testing.httpClient(
+    response = Y.httpClient(
         "/testCase01",
 
         builder -> builder.headers(
@@ -260,7 +260,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
     assertEquals(response.headers().allValues("Connection"), List.of("close"));
     assertEquals(response.headers().allValues("Date"), List.of("Wed, 28 Jun 2023 12:08:43 GMT"));
 
-    response = Testing.httpClient(
+    response = Y.httpClient(
         "/testCase01/",
 
         builder -> builder.headers(
@@ -273,7 +273,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
     assertEquals(response.headers().allValues("Connection"), List.of("close"));
     assertEquals(response.headers().allValues("Date"), List.of("Wed, 28 Jun 2023 12:08:43 GMT"));
 
-    response = Testing.httpClient(
+    response = Y.httpClient(
         "/testCase01/foo/bar",
 
         builder -> builder.headers(
@@ -979,7 +979,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
   @Test
   public void testCase11() throws IOException, InterruptedException {
     HttpResponse<String> response;
-    response = Testing.httpClient(
+    response = Y.httpClient(
         "/testCase11",
 
         builder -> builder.headers(
@@ -996,7 +996,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
   @Test
   public void testCase12() throws IOException, InterruptedException {
     HttpResponse<String> response;
-    response = Testing.httpClient(
+    response = Y.httpClient(
         "/testCase12",
 
         builder -> builder.headers(
@@ -1031,8 +1031,8 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
 
   @Test
   public void testCase13() throws IOException, InterruptedException {
-    Testing.test(
-        Testing.httpClient(
+    Y.test(
+        Y.httpClient(
             "/testCase13",
 
             builder -> builder.GET().headers(
@@ -1051,8 +1051,8 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
         """
     );
 
-    Testing.test(
-        Testing.httpClient(
+    Y.test(
+        Y.httpClient(
             "/testCase13",
 
             builder -> builder.HEAD().headers(
@@ -1070,8 +1070,8 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
         """
     );
 
-    Testing.test(
-        Testing.httpClient(
+    Y.test(
+        Y.httpClient(
             "/testCase13",
 
             builder -> builder.POST(HttpRequest.BodyPublishers.noBody()).headers(
@@ -1090,8 +1090,8 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
         """
     );
 
-    Testing.test(
-        Testing.httpClient(
+    Y.test(
+        Y.httpClient(
             "/testCase13",
 
             builder -> builder.DELETE().headers(
@@ -1129,8 +1129,8 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
 
   @Test
   public void testCase14() {
-    Testing.test(
-        Testing.httpClient(
+    Y.test(
+        Y.httpClient(
             "/testCase14/a",
 
             builder -> builder.GET().headers(
@@ -1148,8 +1148,8 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
         """
     );
 
-    Testing.test(
-        Testing.httpClient(
+    Y.test(
+        Y.httpClient(
             "/testCase14/x",
 
             builder -> builder.GET().headers(
@@ -1202,8 +1202,8 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
 
   @Test
   public void testCase15() {
-    Testing.test(
-        Testing.httpClient(
+    Y.test(
+        Y.httpClient(
             "/testCase15/a",
 
             builder -> builder.GET().headers(
@@ -1222,8 +1222,8 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
         """
     );
 
-    Testing.test(
-        Testing.httpClient(
+    Y.test(
+        Y.httpClient(
             "/testCase15/x",
 
             builder -> builder.GET().headers(

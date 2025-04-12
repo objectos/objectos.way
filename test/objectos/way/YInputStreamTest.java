@@ -26,14 +26,11 @@ import java.nio.charset.StandardCharsets;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class TestingInputStreamTest {
+public class YInputStreamTest {
 
   @Test
   public void testCase01() {
-    TestingInputStream input;
-    input = new TestingInputStream("abc");
-
-    try (input) {
+    try (InputStream input = Y.inputStream("abc")) {
       byte[] buf;
       buf = new byte[3];
 
@@ -47,7 +44,7 @@ public class TestingInputStreamTest {
 
   @Test
   public void testCase02() {
-    try (TestingInputStream input = new TestingInputStream("abc")) {
+    try (InputStream input = Y.inputStream("abc")) {
       byte[] buf;
       buf = new byte[10];
 
@@ -61,7 +58,7 @@ public class TestingInputStreamTest {
 
   @Test
   public void testCase04() {
-    try (TestingInputStream input = new TestingInputStream("abc123")) {
+    try (InputStream input = Y.inputStream("abc123")) {
       byte[] buf;
       buf = new byte[3];
 
@@ -77,7 +74,7 @@ public class TestingInputStreamTest {
 
   @Test
   public void testCase03() {
-    try (TestingInputStream input = new TestingInputStream("abc", "123")) {
+    try (InputStream input = Y.inputStream("abc", "123")) {
       byte[] buf;
       buf = new byte[10];
 
@@ -96,7 +93,7 @@ public class TestingInputStreamTest {
     IOException readError;
     readError = new IOException("On read");
 
-    try (TestingInputStream input = new TestingInputStream("abc", readError)) {
+    try (InputStream input = Y.inputStream("abc", readError)) {
       byte[] buf;
       buf = new byte[3];
 
@@ -114,8 +111,13 @@ public class TestingInputStreamTest {
     IOException closeError;
     closeError = new IOException("On close");
 
-    try (TestingInputStream input = new TestingInputStream("abc", "123")) {
-      input.onClose(closeError);
+    try (InputStream input = Y.inputStream(config -> {
+      config.add("abc");
+
+      config.add("123");
+
+      config.onClose(closeError);
+    })) {
 
       byte[] buf;
       buf = new byte[3];
@@ -135,7 +137,7 @@ public class TestingInputStreamTest {
     byte[] hello = "Hello".getBytes(StandardCharsets.UTF_8);
     byte[] world = "World".getBytes(StandardCharsets.UTF_8);
 
-    try (TestingInputStream input = new TestingInputStream(hello, world)) {
+    try (InputStream input = Y.inputStream(hello, world)) {
       byte[] buf;
       buf = new byte[5];
 
@@ -151,7 +153,7 @@ public class TestingInputStreamTest {
 
   @Test
   public void testCase08() {
-    try (TestingInputStream src = new TestingInputStream("Hello World!");
+    try (InputStream src = Y.inputStream("Hello World!");
         InputStream input = new BufferedInputStream(src);
         ByteArrayOutputStream out = new ByteArrayOutputStream()) {
       int c;

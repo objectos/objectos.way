@@ -55,7 +55,7 @@ public class MarketingSiteTest {
   """)
   public void testCase02() throws IOException, InterruptedException {
     HttpResponse<String> response;
-    response = Testing.httpClient(
+    response = Y.httpClient(
         "/index.html",
 
         builder -> builder.headers(
@@ -79,7 +79,7 @@ public class MarketingSiteTest {
   """)
   public void testCase03() throws IOException, InterruptedException {
     HttpResponse<String> response;
-    response = Testing.httpClient(
+    response = Y.httpClient(
         "/index.html",
 
         builder -> builder.HEAD().headers(
@@ -99,8 +99,8 @@ public class MarketingSiteTest {
   Other methods to /index.html should return 405 METHOD NOT ALLOWED
   """)
   public void testCase04() throws IOException {
-    Testing.test(
-        Testing.httpClient(
+    Y.test(
+        Y.httpClient(
             "/index.html",
 
             builder -> builder.method("TRACE", BodyPublishers.noBody()).headers(

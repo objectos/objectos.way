@@ -18,6 +18,7 @@ package objectos.way;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.net.URI;
 import java.net.http.HttpClient.Version;
@@ -25,6 +26,7 @@ import java.net.http.HttpHeaders;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.List;
@@ -33,7 +35,7 @@ import java.util.function.Consumer;
 import java.util.random.RandomGenerator;
 import java.util.stream.Collectors;
 
-final class Testing {
+final class Y {
 
   static final class HttpClient {
 
@@ -54,7 +56,7 @@ final class Testing {
 
   }
 
-  private Testing() {}
+  private Y() {}
 
   public static String cookie(String name, long l0, long l1, long l2, long l3) {
     final WebToken token;
@@ -94,6 +96,162 @@ final class Testing {
       throw new RuntimeException(e);
     }
   }
+
+  // ##################################################################
+  // # BEGIN: InputStream
+  // ##################################################################
+
+  public static final class InputStreamBuilder {
+
+    private final UtilList<Object> data = new UtilList<>();
+
+    private IOException onClose;
+
+    private InputStreamBuilder() {}
+
+    public final void add(byte[] value) {
+      final byte[] copy;
+      copy = value.clone();
+
+      add0(copy);
+    }
+
+    public final void add(IOException value) {
+      data.add(value);
+    }
+
+    public final void add(String s) {
+      add(s, StandardCharsets.US_ASCII);
+    }
+
+    public final void add(String s, Charset charset) {
+      final byte[] bytes;
+      bytes = s.getBytes(charset);
+
+      add0(bytes);
+    }
+
+    public final void onClose(IOException value) {
+      onClose = value;
+    }
+
+    private void add0(final byte[] bytes) {
+      final InputStreamBytes wrapper;
+      wrapper = new InputStreamBytes(bytes);
+
+      data.add(wrapper);
+    }
+
+  }
+
+  private static final class InputStreamBytes {
+    private final byte[] bytes;
+    private int bytesIndex;
+
+    InputStreamBytes(byte[] bytes) { this.bytes = bytes; }
+
+    final boolean exhausted() {
+      return bytesIndex >= bytes.length;
+    }
+
+    final int read(byte[] b, int off, int len) {
+      final int remaining;
+      remaining = bytes.length - bytesIndex;
+
+      final int length;
+      length = Math.min(remaining, len);
+
+      System.arraycopy(bytes, bytesIndex, b, off, length);
+
+      bytesIndex += length;
+
+      return length;
+    }
+  }
+
+  private static final class InputStreamImpl extends InputStream {
+
+    private final List<Object> data;
+
+    private int dataIndex;
+
+    private final IOException onClose;
+
+    private InputStreamImpl(InputStreamBuilder builder) {
+      data = builder.data.toUnmodifiableList();
+
+      onClose = builder.onClose;
+    }
+
+    @Override
+    public final void close() throws IOException {
+      if (onClose != null) {
+        throw onClose;
+      }
+    }
+
+    @Override
+    public final int read() throws IOException {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public final int read(byte[] b, int off, int len) throws IOException {
+      if (dataIndex < data.size()) {
+        final Object next;
+        next = data.get(dataIndex); // do not advance yet
+
+        return switch (next) {
+          case InputStreamBytes bytes -> {
+            final int result;
+            result = bytes.read(b, off, len);
+
+            if (bytes.exhausted()) {
+              dataIndex++;
+            }
+
+            yield result;
+          }
+
+          case IOException ioe -> { dataIndex++; throw ioe; }
+
+          default -> throw new UnsupportedOperationException("Unsupported type: " + next.getClass());
+        };
+      }
+
+      return -1;
+    }
+
+  }
+
+  public static InputStream inputStream(Object... data) {
+    return inputStream(config -> {
+      for (Object o : data) {
+        switch (o) {
+          case byte[] bytes -> config.add(bytes);
+
+          case String s -> config.add(s);
+
+          case IOException e -> config.add(e);
+
+          default -> throw new IllegalArgumentException("Only String and IOException are currently supported");
+        }
+      }
+    });
+  }
+
+  public static InputStream inputStream(Consumer<InputStreamBuilder> config) {
+    final InputStreamBuilder builder;
+    builder = new InputStreamBuilder();
+
+    config.accept(builder);
+
+    return new InputStreamImpl(builder);
+  }
+
+  // ##################################################################
+  // # END: InputStream
+  // ##################################################################
 
   public static void test(HttpResponse<String> response, String expected) {
     final StringBuilder sb;

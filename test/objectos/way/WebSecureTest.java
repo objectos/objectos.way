@@ -132,11 +132,11 @@ public class WebSecureTest {
   }
 
   private String cookie(String name, long l0, long l1, long l2, long l3) {
-    return Testing.cookie(name, l0, l1, l2, l3);
+    return Y.cookie(name, l0, l1, l2, l3);
   }
 
   private RandomGenerator generator(long... values) {
-    return Testing.randomGeneratorOfLongs(values);
+    return Y.randomGeneratorOfLongs(values);
   }
 
 }

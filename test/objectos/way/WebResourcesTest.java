@@ -202,8 +202,8 @@ public class WebResourcesTest implements Consumer<Http.Routing> {
   It should 405 if the method is not GET or HEAD
   """)
   public void testCase03() throws IOException {
-    Testing.test(
-        Testing.httpClient(
+    Y.test(
+        Y.httpClient(
             "/tc03.txt",
 
             builder -> builder.POST(BodyPublishers.noBody()).headers(
@@ -227,7 +227,7 @@ public class WebResourcesTest implements Consumer<Http.Routing> {
   """)
   public void testCase04() throws IOException, InterruptedException {
     final HttpResponse<String> resp;
-    resp = Testing.httpClient(
+    resp = Y.httpClient(
         "/reconfigure.txt",
 
         builder -> builder.headers(
@@ -299,7 +299,7 @@ public class WebResourcesTest implements Consumer<Http.Routing> {
   """)
   public void testCase06() throws IOException, InterruptedException {
     final HttpResponse<String> resp01;
-    resp01 = Testing.httpClient(
+    resp01 = Y.httpClient(
         "/tc06.txt",
 
         builder -> builder.headers(
@@ -316,7 +316,7 @@ public class WebResourcesTest implements Consumer<Http.Routing> {
     assertTrue(maybeTag.isPresent());
 
     final HttpResponse<String> resp02;
-    resp02 = Testing.httpClient(
+    resp02 = Y.httpClient(
         "/tc06.txt",
 
         builder -> builder.headers(
@@ -354,7 +354,7 @@ public class WebResourcesTest implements Consumer<Http.Routing> {
   """)
   public void testCase07() throws IOException, InterruptedException {
     final HttpResponse<String> resp;
-    resp = Testing.httpClient(
+    resp = Y.httpClient(
         "/tc07.txt",
 
         builder -> builder.headers(
@@ -385,7 +385,7 @@ public class WebResourcesTest implements Consumer<Http.Routing> {
   """)
   public void testCase08() throws IOException, InterruptedException {
     final HttpResponse<String> resp01;
-    resp01 = Testing.httpClient(
+    resp01 = Y.httpClient(
         "/tc08.txt",
 
         builder -> builder.headers(
@@ -402,7 +402,7 @@ public class WebResourcesTest implements Consumer<Http.Routing> {
     assertTrue(maybeTag.isPresent());
 
     final HttpResponse<String> resp02;
-    resp02 = Testing.httpClient(
+    resp02 = Y.httpClient(
         "/tc08.txt",
 
         builder -> builder.headers(
@@ -427,7 +427,7 @@ public class WebResourcesTest implements Consumer<Http.Routing> {
   @Test
   public void testCase09() throws IOException, InterruptedException {
     final HttpResponse<String> resp01;
-    resp01 = Testing.httpClient(
+    resp01 = Y.httpClient(
         "/tc09.txt",
 
         builder -> builder.headers(
@@ -449,7 +449,7 @@ public class WebResourcesTest implements Consumer<Http.Routing> {
   @Test
   public void testCase10() throws IOException, InterruptedException {
     final HttpResponse<String> resp01;
-    resp01 = Testing.httpClient(
+    resp01 = Y.httpClient(
         "/tc10.txt",
 
         builder -> builder.headers(
