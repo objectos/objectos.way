@@ -148,19 +148,25 @@ final class Y {
 
   }
 
-  private static final class InputStreamBytes {
+  private static final class InputStreamBytes extends InputStream {
     private final byte[] bytes;
     private int bytesIndex;
 
     InputStreamBytes(byte[] bytes) { this.bytes = bytes; }
 
-    final boolean exhausted() {
-      return bytesIndex >= bytes.length;
+    @Override
+    public final int read() throws IOException {
+      throw new UnsupportedOperationException();
     }
 
-    final int read(byte[] b, int off, int len) {
+    @Override
+    public final int read(byte[] b, int off, int len) {
       final int remaining;
       remaining = bytes.length - bytesIndex;
+
+      if (remaining <= 0) {
+        return -1;
+      }
 
       final int length;
       length = Math.min(remaining, len);
@@ -206,11 +212,11 @@ final class Y {
         next = data.get(dataIndex); // do not advance yet
 
         return switch (next) {
-          case InputStreamBytes bytes -> {
+          case InputStream stream -> {
             final int result;
-            result = bytes.read(b, off, len);
+            result = stream.read(b, off, len);
 
-            if (bytes.exhausted()) {
+            if (result < 0) {
               dataIndex++;
             }
 
@@ -255,6 +261,70 @@ final class Y {
 
   // ##################################################################
   // # END: InputStream
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: SlowStream
+  // ##################################################################
+
+  private static final class SlowStream extends InputStream {
+
+    private final int bytesPerRead;
+
+    private final byte[] bytes;
+
+    private int bytesIndex;
+
+    private SlowStream(int bytesPerRead, byte[] bytes) {
+      this.bytesPerRead = bytesPerRead;
+
+      this.bytes = bytes;
+    }
+
+    @Override
+    public final int read() throws IOException {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public final int read(byte[] b, int off, int len) throws IOException {
+      final int remaining;
+      remaining = bytes.length - bytesIndex;
+
+      if (remaining <= 0) {
+        return -1;
+      }
+
+      final int length;
+      length = Math.min(Math.min(bytesPerRead, remaining), len);
+
+      System.arraycopy(bytes, bytesIndex, b, off, length);
+
+      bytesIndex += length;
+
+      return length;
+    }
+
+  }
+
+  public static InputStream slowStream(int bytesPerRead, String ascii) {
+    final byte[] bytes;
+    bytes = ascii.getBytes(StandardCharsets.US_ASCII);
+
+    return slowStream(bytesPerRead, bytes);
+  }
+
+  public static InputStream slowStream(int bytesPerRead, byte[] bytes) {
+    if (bytesPerRead <= 0) {
+      throw new IllegalArgumentException("bytesPerRead must be > 0");
+    }
+    Objects.requireNonNull(bytes, "bytes == null");
+
+    return new SlowStream(bytesPerRead, bytes);
+  }
+
+  // ##################################################################
+  // # END: SlowStream
   // ##################################################################
 
   // ##################################################################

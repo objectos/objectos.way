@@ -35,7 +35,7 @@ public class YInputStreamTest {
       buf = new byte[3];
 
       assertEquals(input.read(buf), 3);
-      assertEquals(utf8(buf), "abc");
+      assertEquals(ascii(buf), "abc");
       assertEquals(input.read(buf), -1);
     } catch (IOException e) {
       Assert.fail("It should not have thrown", e);
@@ -49,7 +49,7 @@ public class YInputStreamTest {
       buf = new byte[10];
 
       assertEquals(input.read(buf), 3);
-      assertEquals(utf8(buf, 0, 3), "abc");
+      assertEquals(ascii(buf, 0, 3), "abc");
       assertEquals(input.read(buf), -1);
     } catch (IOException e) {
       Assert.fail("It should not have thrown", e);
@@ -63,9 +63,9 @@ public class YInputStreamTest {
       buf = new byte[3];
 
       assertEquals(input.read(buf), 3);
-      assertEquals(utf8(buf), "abc");
+      assertEquals(ascii(buf), "abc");
       assertEquals(input.read(buf), 3);
-      assertEquals(utf8(buf), "123");
+      assertEquals(ascii(buf), "123");
       assertEquals(input.read(buf), -1);
     } catch (IOException e) {
       Assert.fail("It should not have thrown", e);
@@ -79,9 +79,9 @@ public class YInputStreamTest {
       buf = new byte[10];
 
       assertEquals(input.read(buf), 3);
-      assertEquals(utf8(buf, 0, 3), "abc");
+      assertEquals(ascii(buf, 0, 3), "abc");
       assertEquals(input.read(buf), 3);
-      assertEquals(utf8(buf, 0, 3), "123");
+      assertEquals(ascii(buf, 0, 3), "123");
       assertEquals(input.read(buf), -1);
     } catch (IOException e) {
       Assert.fail("It should not have thrown", e);
@@ -98,7 +98,7 @@ public class YInputStreamTest {
       buf = new byte[3];
 
       assertEquals(input.read(buf), 3);
-      assertEquals(utf8(buf, 0, 3), "abc");
+      assertEquals(ascii(buf, 0, 3), "abc");
       assertEquals(input.read(buf), 3);
       Assert.fail("It should have thrown");
     } catch (IOException e) {
@@ -123,9 +123,9 @@ public class YInputStreamTest {
       buf = new byte[3];
 
       assertEquals(input.read(buf), 3);
-      assertEquals(utf8(buf), "abc");
+      assertEquals(ascii(buf), "abc");
       assertEquals(input.read(buf), 3);
-      assertEquals(utf8(buf), "123");
+      assertEquals(ascii(buf), "123");
       assertEquals(input.read(buf), -1);
     } catch (IOException e) {
       assertSame(e, closeError);
@@ -142,9 +142,9 @@ public class YInputStreamTest {
       buf = new byte[5];
 
       assertEquals(input.read(buf), 5);
-      assertEquals(utf8(buf), "Hello");
+      assertEquals(ascii(buf), "Hello");
       assertEquals(input.read(buf), 5);
-      assertEquals(utf8(buf), "World");
+      assertEquals(ascii(buf), "World");
       assertEquals(input.read(buf), -1);
     } catch (IOException e) {
       Assert.fail("It should not have thrown", e);
@@ -165,18 +165,18 @@ public class YInputStreamTest {
       byte[] bytes;
       bytes = out.toByteArray();
 
-      assertEquals(utf8(bytes), "Hello World!");
+      assertEquals(ascii(bytes), "Hello World!");
     } catch (IOException e) {
       Assert.fail("It should not have thrown", e);
     }
   }
 
-  private String utf8(byte[] bytes) {
-    return new String(bytes, StandardCharsets.UTF_8);
+  private String ascii(byte[] bytes) {
+    return new String(bytes, StandardCharsets.US_ASCII);
   }
 
-  private String utf8(byte[] bytes, int offset, int len) {
-    return new String(bytes, offset, len, StandardCharsets.UTF_8);
+  private String ascii(byte[] bytes, int offset, int len) {
+    return new String(bytes, offset, len, StandardCharsets.US_ASCII);
   }
 
 }
