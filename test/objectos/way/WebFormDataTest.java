@@ -20,6 +20,7 @@ import static org.testng.Assert.assertEquals;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Set;
@@ -272,8 +273,8 @@ public class WebFormDataTest {
   }
 
   private Web.FormData parse(String request) throws Http.UnsupportedMediaTypeException, IOException {
-    TestableSocket socket;
-    socket = TestableSocket.of(request);
+    final Socket socket;
+    socket = Y.socket(request);
 
     try (HttpExchange http = new HttpExchange(socket, 512, 1024, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
       ParseStatus status;

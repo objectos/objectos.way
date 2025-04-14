@@ -18,6 +18,7 @@ package objectos.way;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
+import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -146,8 +147,8 @@ public class HttpExchangeTest0Read {
     final IOException exception;
     exception = new IOException("Read Error");
 
-    final TestableSocket socket;
-    socket = TestableSocket.of(req1, exception);
+    final Socket socket;
+    socket = Y.socket(req1, exception);
 
     try (HttpExchange http = new HttpExchange(socket, 64, 128, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
       byte nextState;
@@ -167,8 +168,8 @@ public class HttpExchangeTest0Read {
   }
 
   private HttpExchange http(int initial, int max, Object... data) throws IOException {
-    TestableSocket socket;
-    socket = TestableSocket.of(data);
+    Socket socket;
+    socket = Y.socket(data);
 
     return new HttpExchange(socket, initial, max, TestingClock.FIXED, TestingNoteSink.INSTANCE);
   }
@@ -328,8 +329,8 @@ public class HttpExchangeTest0Read {
 
     assertEquals(line.length(), 42);
 
-    TestableSocket socket;
-    socket = TestableSocket.of(line);
+    Socket socket;
+    socket = Y.socket(line);
 
     HttpExchange input;
     input = new HttpExchange(socket, 32, 128, null, TestingNoteSink.INSTANCE);
@@ -393,8 +394,8 @@ public class HttpExchangeTest0Read {
   }
 
   private HttpExchange regularInput(Object... data) throws IOException {
-    TestableSocket socket;
-    socket = TestableSocket.of(data);
+    Socket socket;
+    socket = Y.socket(data);
 
     return new HttpExchange(socket, 64, 128, null, TestingNoteSink.INSTANCE);
   }

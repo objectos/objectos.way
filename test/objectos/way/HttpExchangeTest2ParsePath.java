@@ -18,6 +18,7 @@ package objectos.way;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
+import java.net.Socket;
 import org.testng.annotations.Test;
 
 public class HttpExchangeTest2ParsePath {
@@ -126,8 +127,8 @@ public class HttpExchangeTest2ParsePath {
     for (int b = 0; b < 0xFF; b++) {
       System.out.println(b);
 
-      final TestableSocket socket;
-      socket = TestableSocket.of("GET /character/" + (char) b + " HTTP/1.1\r\n\r\n");
+      final Socket socket;
+      socket = Y.socket("GET /character/" + (char) b + " HTTP/1.1\r\n\r\n");
 
       try (HttpExchange http = new HttpExchange(socket, 256, 512, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
         if (http.shouldHandle()) {
@@ -166,8 +167,8 @@ public class HttpExchangeTest2ParsePath {
     final String veryLongId;
     veryLongId = "/12345/sub/abc7890".repeat(200);
 
-    final TestableSocket socket;
-    socket = TestableSocket.of("GET /entity" + veryLongId + " HTTP/1.1\r\n\r\n");
+    final Socket socket;
+    socket = Y.socket("GET /entity" + veryLongId + " HTTP/1.1\r\n\r\n");
 
     try (HttpExchange http = new HttpExchange(socket, 256, 512, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
       assertEquals(http.shouldHandle(), false);
@@ -187,8 +188,8 @@ public class HttpExchangeTest2ParsePath {
   }
 
   private void badRequest(String request) throws IOException {
-    final TestableSocket socket;
-    socket = TestableSocket.of(request);
+    final Socket socket;
+    socket = Y.socket(request);
 
     try (HttpExchange http = new HttpExchange(socket, 256, 512, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
       assertEquals(http.shouldHandle(), false);
@@ -210,8 +211,8 @@ public class HttpExchangeTest2ParsePath {
   }
 
   private void test(String request, String expected) throws IOException {
-    TestableSocket socket;
-    socket = TestableSocket.of(request);
+    final Socket socket;
+    socket = Y.socket(request);
 
     try (HttpExchange http = new HttpExchange(socket, 256, 512, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
       assertEquals(http.shouldHandle(), true);

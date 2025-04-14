@@ -18,6 +18,7 @@ package objectos.way;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
+import java.net.Socket;
 import org.testng.annotations.Test;
 
 public class HttpExchangeTest1ParseMethod {
@@ -29,8 +30,8 @@ public class HttpExchangeTest1ParseMethod {
         final String request;
         request = method.name() + " /index.html HTTP/1.1\r\n\r\n";
 
-        final TestableSocket socket;
-        socket = TestableSocket.of(request);
+        final Socket socket;
+        socket = Y.socket(request);
 
         try (HttpExchange http = new HttpExchange(socket, 2, 256, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
           assertEquals(http.shouldHandle(), true);
@@ -86,8 +87,8 @@ public class HttpExchangeTest1ParseMethod {
   }
 
   private void badRequest(String request) throws IOException {
-    TestableSocket socket;
-    socket = TestableSocket.of(request);
+    Socket socket;
+    socket = Y.socket(request);
 
     final int bufferInitial; // force many buffer resizes
     bufferInitial = 2;
@@ -112,8 +113,8 @@ public class HttpExchangeTest1ParseMethod {
   }
 
   private void test(String request, String response) throws IOException {
-    TestableSocket socket;
-    socket = TestableSocket.of(request);
+    Socket socket;
+    socket = Y.socket(request);
 
     final int bufferInitial; // force many buffer resizes
     bufferInitial = 2;

@@ -18,6 +18,7 @@ package objectos.way;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
+import java.net.Socket;
 import org.testng.annotations.Test;
 
 public class HttpExchangeTest4ParseVersion {
@@ -35,8 +36,8 @@ public class HttpExchangeTest4ParseVersion {
   }
 
   private void badRequest(String request) throws IOException {
-    final TestableSocket socket;
-    socket = TestableSocket.of(request);
+    final Socket socket;
+    socket = Y.socket(request);
 
     try (HttpExchange http = new HttpExchange(socket, 256, 512, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
       assertEquals(http.shouldHandle(), false);
@@ -58,8 +59,8 @@ public class HttpExchangeTest4ParseVersion {
   }
 
   private void test(String request, Http.Version expected) throws IOException {
-    TestableSocket socket;
-    socket = TestableSocket.of(request);
+    final Socket socket;
+    socket = Y.socket(request);
 
     try (HttpExchange http = new HttpExchange(socket, 256, 512, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
       assertEquals(http.shouldHandle(), true);

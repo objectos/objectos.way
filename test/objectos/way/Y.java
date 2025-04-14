@@ -17,9 +17,12 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.UncheckedIOException;
+import java.net.Socket;
 import java.net.URI;
 import java.net.http.HttpClient.Version;
 import java.net.http.HttpHeaders;
@@ -31,6 +34,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.random.RandomGenerator;
 import java.util.stream.Collectors;
@@ -251,6 +255,75 @@ final class Y {
 
   // ##################################################################
   // # END: InputStream
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Socket
+  // ##################################################################
+
+  public static final class SocketBuilder {
+    private InputStream inputStream;
+
+    private OutputStream outputStream;
+
+    private SocketBuilder() {}
+
+    public final void inputStream(InputStream value) {
+      inputStream = Objects.requireNonNull(value, "value == null");
+    }
+
+    final Socket build() {
+      if (inputStream == null) {
+        inputStream = Y.inputStream();
+      }
+
+      if (outputStream == null) {
+        outputStream = new ByteArrayOutputStream();
+      }
+
+      return new SocketImpl(this);
+    }
+
+  }
+
+  private static final class SocketImpl extends Socket {
+    private final InputStream inputStream;
+    private final OutputStream outputStream;
+
+    SocketImpl(SocketBuilder builder) {
+      inputStream = builder.inputStream;
+
+      outputStream = builder.outputStream;
+    }
+
+    @Override
+    public final InputStream getInputStream() throws IOException {
+      return inputStream;
+    }
+
+    @Override
+    public final OutputStream getOutputStream() throws IOException {
+      return outputStream;
+    }
+  }
+
+  public static Socket socket(Consumer<SocketBuilder> config) {
+    final SocketBuilder builder;
+    builder = new SocketBuilder();
+
+    config.accept(builder);
+
+    return builder.build();
+  }
+
+  public static Socket socket(Object... data) {
+    return socket(socket -> {
+      socket.inputStream(Y.inputStream(data));
+    });
+  }
+
+  // ##################################################################
+  // # END: Socket
   // ##################################################################
 
   public static void test(HttpResponse<String> response, String expected) {

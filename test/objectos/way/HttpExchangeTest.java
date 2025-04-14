@@ -18,6 +18,7 @@ package objectos.way;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
+import java.net.Socket;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -34,7 +35,7 @@ public class HttpExchangeTest {
   private interface ThrowingConsumer<T> { void accept(T t) throws IOException; }
 
   private record HttpRecord(int bufferSizeInitial, int bufferSizeMax, Clock clock, Note.Sink noteSink) {
-    public HttpExchange build(TestableSocket socket) {
+    public HttpExchange build(Socket socket) {
       try {
         return new HttpExchange(socket, bufferSizeInitial, bufferSizeMax, clock, noteSink);
       } catch (IOException e) {
@@ -245,8 +246,8 @@ public class HttpExchangeTest {
   It should be possible to send regular files as a response
   """)
   public void testCase004() {
-    TestableSocket socket;
-    socket = TestableSocket.of("""
+    Socket socket;
+    socket = Y.socket("""
     GET /index.html HTTP/1.1\r
     Host: www.example.com\r
     Connection: close\r
@@ -301,7 +302,7 @@ public class HttpExchangeTest {
       http.header0(Http.HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT");
       http.send0(index);
 
-      assertEquals(socket.outputAsString(), resp01);
+      assertEquals(http.toString(), resp01);
 
       assertEquals(http.keepAlive(), false);
     } catch (IOException e) {
@@ -516,8 +517,8 @@ public class HttpExchangeTest {
   - body instanceof CharWritable
   """)
   public void testCase013() {
-    TestableSocket socket;
-    socket = TestableSocket.of("""
+    Socket socket;
+    socket = Y.socket("""
     GET /login HTTP/1.1\r
     Host: www.example.com\r
     \r
@@ -553,8 +554,8 @@ public class HttpExchangeTest {
   - body instanceof CharWritable
   """)
   public void testCase014() {
-    TestableSocket socket;
-    socket = TestableSocket.of("""
+    Socket socket;
+    socket = Y.socket("""
     GET /login HTTP/1.1\r
     Host: www.example.com\r
     \r
@@ -707,8 +708,8 @@ public class HttpExchangeTest {
   CharWritable: chunk is larger than buffer
   """)
   public void testCase018() {
-    TestableSocket socket;
-    socket = TestableSocket.of("""
+    Socket socket;
+    socket = Y.socket("""
     GET / HTTP/1.1\r
     Host: www.example.com\r
     \r
@@ -761,7 +762,7 @@ public class HttpExchangeTest {
 
       http.respond(Http.Status.OK, writable);
 
-      assertEquals(socket.outputAsString(), resp01);
+      assertEquals(http.toString(), resp01);
 
       assertEquals(http.keepAlive(), true);
     } catch (IOException e) {
@@ -781,8 +782,8 @@ public class HttpExchangeTest {
     .................................................
     123456""";
 
-    TestableSocket socket;
-    socket = TestableSocket.of("""
+    Socket socket;
+    socket = Y.socket("""
     POST /upload HTTP/1.1\r
     Host: www.example.com\r
     Content-Length: 256\r
@@ -806,8 +807,8 @@ public class HttpExchangeTest {
   Properly handle empty From: header
   """)
   public void testCase020() {
-    TestableSocket socket;
-    socket = TestableSocket.of("""
+    Socket socket;
+    socket = Y.socket("""
     GET / HTTP/1.0\r
     Host: www.example.com\r
     From: \r
@@ -845,8 +846,8 @@ public class HttpExchangeTest {
   request-target path decoding
   """)
   public void testCase021() {
-    TestableSocket socket;
-    socket = TestableSocket.of("""
+    Socket socket;
+    socket = Y.socket("""
       GET /wiki/%E6%9D%B1%E4%BA%AC HTTP/1.0\r
       Host: www.example.com\r
       \r
@@ -880,8 +881,8 @@ public class HttpExchangeTest {
   Empty query string
   """)
   public void testCase022() {
-    TestableSocket socket;
-    socket = TestableSocket.of("""
+    Socket socket;
+    socket = Y.socket("""
       GET /empty? HTTP/1.1\r
       Host: www.example.com\r
       \r
@@ -915,8 +916,8 @@ public class HttpExchangeTest {
   Disallow access to request body if response phase has started
   """)
   public void testCase023() {
-    TestableSocket socket;
-    socket = TestableSocket.of("""
+    Socket socket;
+    socket = Y.socket("""
     POST /login HTTP/1.1\r
     Host: www.example.com\r
     Content-Length: 24\r
@@ -951,8 +952,8 @@ public class HttpExchangeTest {
   Support the Way-Request request header
   """)
   public void testCase024() {
-    TestableSocket socket;
-    socket = TestableSocket.of("""
+    Socket socket;
+    socket = Y.socket("""
     POST /login HTTP/1.1\r
     Host: www.example.com\r
     Content-Length: 24\r
@@ -999,8 +1000,8 @@ public class HttpExchangeTest {
     req.append("\r\n");
     req.append("123");
 
-    TestableSocket socket;
-    socket = TestableSocket.of(req.toString());
+    Socket socket;
+    socket = Y.socket(req.toString());
 
     try (HttpExchange http = new HttpExchange(socket, 128, 256, Clock.systemDefaultZone(), TestingNoteSink.INSTANCE)) {
       ParseStatus parse;
@@ -1065,8 +1066,8 @@ public class HttpExchangeTest {
   private void test(
       HttpRecord httpRecord, String input,
       ThrowingConsumer<HttpExchange> test, String response, boolean keepAlive) {
-    final TestableSocket socket;
-    socket = TestableSocket.of(input);
+    final Socket socket;
+    socket = Y.socket(input);
 
     try (HttpExchange http = httpRecord.build(socket)) {
       ParseStatus parse;
@@ -1076,7 +1077,7 @@ public class HttpExchangeTest {
 
       test.accept(http);
 
-      assertEquals(socket.outputAsString(), response);
+      assertEquals(http.toString(), response);
 
       assertEquals(http.keepAlive(), keepAlive);
     } catch (IOException e) {
@@ -1090,8 +1091,8 @@ public class HttpExchangeTest {
       ThrowingConsumer<HttpExchange> test1, String response1, boolean keepAlive1,
       String input2,
       ThrowingConsumer<HttpExchange> test2, String response2, boolean keepAlive2) {
-    final TestableSocket socket;
-    socket = TestableSocket.of(input1, input2);
+    final Socket socket;
+    socket = Y.socket(input1, input2);
 
     try (HttpExchange http = httpRecord.build(socket)) {
       final ParseStatus parse1;
@@ -1101,11 +1102,9 @@ public class HttpExchangeTest {
 
       test1.accept(http);
 
-      assertEquals(socket.outputAsString(), response1);
+      assertEquals(http.toString(), response1);
 
       assertEquals(http.keepAlive(), keepAlive1);
-
-      socket.outputReset();
 
       final ParseStatus parse2;
       parse2 = http.parse();
@@ -1114,7 +1113,7 @@ public class HttpExchangeTest {
 
       test2.accept(http);
 
-      assertEquals(socket.outputAsString(), response2);
+      assertEquals(http.toString(), response2);
 
       assertEquals(http.keepAlive(), keepAlive2);
     } catch (IOException e) {

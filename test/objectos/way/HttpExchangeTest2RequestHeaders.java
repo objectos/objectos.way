@@ -18,6 +18,7 @@ package objectos.way;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
+import java.net.Socket;
 import org.testng.annotations.Test;
 
 public class HttpExchangeTest2RequestHeaders {
@@ -118,8 +119,8 @@ public class HttpExchangeTest2RequestHeaders {
   }
 
   private HttpExchange regularInput(Object... data) throws IOException {
-    TestableSocket socket;
-    socket = TestableSocket.of(data);
+    final Socket socket;
+    socket = Y.socket(data);
 
     return new HttpExchange(socket, 64, 128, null, TestingNoteSink.INSTANCE);
   }
