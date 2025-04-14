@@ -120,6 +120,10 @@ final class Y {
       add0(copy);
     }
 
+    public final void add(InputStream value) {
+      data.add(value);
+    }
+
     public final void add(IOException value) {
       data.add(value);
     }
@@ -240,11 +244,15 @@ final class Y {
         switch (o) {
           case byte[] bytes -> config.add(bytes);
 
-          case String s -> config.add(s);
+          case InputStream is -> config.add(is);
 
           case IOException e -> config.add(e);
 
-          default -> throw new IllegalArgumentException("Only String and IOException are currently supported");
+          case String s -> config.add(s);
+
+          default -> throw new IllegalArgumentException(
+              "Only byte[], InputStream, String and IOException are currently supported"
+          );
         }
       }
     });

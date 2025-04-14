@@ -538,7 +538,11 @@ final class HttpExchange implements Http.Exchange, Closeable {
       switch (code) {
         case 1 -> { bufferIndex += 1; }
 
-        case 2 -> { return $PARSE_PATH_CONTENTS1; }
+        case 2 -> {
+          appendInit();
+
+          return $PARSE_PATH_CONTENTS1;
+        }
 
         case 3 -> { path = pathFromBuffer(); bufferIndex += 1; return $PARSE_VERSION; }
 
@@ -558,7 +562,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
   private byte executeParsePathContents1() {
     while (bufferIndex < bufferLimit) {
       final byte b;
-      b = buffer[bufferIndex++];
+      b = buffer[bufferIndex];
 
       if (b < 0) {
         return toBadRequest(InvalidRequestLine.PATH_NEXT_CHAR);
@@ -568,7 +572,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
       code = PARSE_PATH_TABLE[b];
 
       switch (code) {
-        case 1 -> appendChar(b);
+        case 1 -> { appendChar(b); bufferIndex += 1; }
 
         case 2 -> {
           byte next;
@@ -579,9 +583,9 @@ final class HttpExchange implements Http.Exchange, Closeable {
           }
         }
 
-        case 3 -> { path = appendToString(); return $PARSE_VERSION; }
+        case 3 -> { path = appendToString(); bufferIndex += 1; return $PARSE_VERSION; }
 
-        case 4 -> { path = appendToString(); return $PARSE_QUERY; }
+        case 4 -> { path = appendToString(); bufferIndex += 1; return $PARSE_QUERY; }
 
         default -> { return toBadRequest(InvalidRequestLine.PATH_NEXT_CHAR); }
       }
@@ -615,9 +619,12 @@ final class HttpExchange implements Http.Exchange, Closeable {
   // ##################################################################
 
   private byte decodePercent(byte success, byte read, InvalidRequestLine badRequest) {
-    if (bufferIndex < bufferLimit) {
+    final int firstDigitIndex;
+    firstDigitIndex = bufferIndex + 1;
+
+    if (firstDigitIndex < bufferLimit) {
       final byte first;
-      first = buffer[bufferIndex];
+      first = buffer[firstDigitIndex];
 
       final byte high;
       high = Bytes.fromHexDigit(first);
@@ -625,9 +632,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
       if (high < 0) {
         return toBadRequest(badRequest);
       }
-
-      // we go back to the '%' character
-      bufferIndex--;
 
       return switch (high) {
         // 0yyyzzzz
@@ -926,6 +930,13 @@ final class HttpExchange implements Http.Exchange, Closeable {
       stringBuilder = new StringBuilder();
     } else {
       stringBuilder.setLength(0);
+    }
+
+    for (int idx = mark; idx < bufferIndex; idx++) {
+      final byte b;
+      b = buffer[idx];
+
+      stringBuilder.append((char) b);
     }
   }
 

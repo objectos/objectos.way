@@ -17,8 +17,10 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import org.testng.annotations.Test;
 
 public class HttpExchangeTest2ParsePath {
@@ -124,15 +126,20 @@ public class HttpExchangeTest2ParsePath {
     final StringBuilder sb;
     sb = new StringBuilder();
 
-    for (int b = 0; b < 0xFF; b++) {
-      System.out.println(b);
+    for (int idx = 0; idx < 0xFF; idx++) {
+      final ByteArrayOutputStream out;
+      out = new ByteArrayOutputStream();
+
+      out.write(ascii("GET /character"));
+      out.write((byte) idx);
+      out.write(ascii(" HTTP/1.1\r\n\r\n"));
 
       final Socket socket;
-      socket = Y.socket("GET /character/" + (char) b + " HTTP/1.1\r\n\r\n");
+      socket = Y.socket(out.toByteArray());
 
       try (HttpExchange http = new HttpExchange(socket, 256, 512, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
         if (http.shouldHandle()) {
-          sb.append((char) b);
+          sb.append((char) idx);
         } else {
           assertEquals(
               http.toString(),
@@ -154,12 +161,74 @@ public class HttpExchangeTest2ParsePath {
     assertEquals(sb.toString(), " !$&'()*+,-./0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~");
   }
 
+  private byte[] ascii(String s) { return s.getBytes(StandardCharsets.US_ASCII); }
+
   @Test(description = "bad request: invalid percent encoded sequence")
   public void badRequest05() throws IOException {
     badRequest("""
     GET /pct/%xd HTTP/1.1\r
     \r
     """);
+  }
+
+  @Test(description = "slow: regular uri")
+  public void slowClient01() throws IOException {
+    test(
+        Y.slowStream(1, """
+        GET /index.html HTTP/1.1\r
+        \r
+        """),
+
+        "/index.html"
+    );
+  }
+
+  @Test(description = "slow: 1-byte percent-encoded")
+  public void slowClient02() throws IOException {
+    test(
+        Y.slowStream(1, """
+        GET /utf8/%40 HTTP/1.1\r
+        \r
+        """),
+
+        "/utf8/@"
+    );
+  }
+
+  @Test(description = "slow: 2-bytes percent-encoded value")
+  public void slowClient03() throws IOException {
+    test(
+        Y.slowStream(1, """
+        GET /utf8/%C3%A1 HTTP/1.1\r
+        \r
+        """),
+
+        "/utf8/á"
+    );
+  }
+
+  @Test(description = "slow: 3-bytes percent-encoded value")
+  public void slowClient04() throws IOException {
+    test(
+        Y.slowStream(1, """
+        GET /utf8/%E2%82%AC HTTP/1.1\r
+        \r
+        """),
+
+        "/utf8/€"
+    );
+  }
+
+  @Test(description = "path: 4-bytes percent-encoded value")
+  public void slowClient05() throws IOException {
+    test(
+        Y.slowStream(1, """
+        GET /utf8/%F0%9F%98%80 HTTP/1.1\r
+        \r
+        """),
+
+        "/utf8/😀"
+    );
   }
 
   @Test
@@ -210,7 +279,7 @@ public class HttpExchangeTest2ParsePath {
     }
   }
 
-  private void test(String request, String expected) throws IOException {
+  private void test(Object request, String expected) throws IOException {
     final Socket socket;
     socket = Y.socket(request);
 
