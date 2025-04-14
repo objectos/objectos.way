@@ -211,29 +211,33 @@ final class Y {
 
     @Override
     public final int read(byte[] b, int off, int len) throws IOException {
-      if (dataIndex < data.size()) {
+      int result;
+      result = -1;
+
+      outer: while (dataIndex < data.size()) {
         final Object next;
         next = data.get(dataIndex); // do not advance yet
 
-        return switch (next) {
+        switch (next) {
           case InputStream stream -> {
-            final int result;
             result = stream.read(b, off, len);
 
             if (result < 0) {
               dataIndex++;
-            }
 
-            yield result;
+              continue;
+            } else {
+              break outer;
+            }
           }
 
           case IOException ioe -> { dataIndex++; throw ioe; }
 
           default -> throw new UnsupportedOperationException("Unsupported type: " + next.getClass());
-        };
+        }
       }
 
-      return -1;
+      return result;
     }
 
   }

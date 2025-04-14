@@ -105,11 +105,17 @@ final class HttpExchange implements Http.Exchange, Closeable {
     // path starts with two consecutive '/'
     PATH_SEGMENT_NZ,
 
-    // path has invalid character
+    // path has an invalid character
     PATH_NEXT_CHAR,
 
     // path has an invalid percent encoded sequence
     PATH_PERCENT,
+
+    // query has an invalid character
+    QUERY_CHAR,
+
+    // query has an invalid percent encoded sequence
+    QUERY_PERCENT,
 
     REQUEST_TARGET_EOF,
 
@@ -144,14 +150,21 @@ final class HttpExchange implements Http.Exchange, Closeable {
   static final byte $PARSE_PATH_CONTENTS1 = 7;
   static final byte $PARSE_PATH_DECODE = 8;
   static final byte $PARSE_QUERY = 9;
-  static final byte $PARSE_VERSION = 10;
+  static final byte $PARSE_QUERY0 = 10;
+  static final byte $PARSE_QUERY1 = 11;
+  static final byte $PARSE_QUERY1_DECODE = 12;
+  static final byte $PARSE_QUERY_VALUE = 13;
+  static final byte $PARSE_QUERY_VALUE0 = 14;
+  static final byte $PARSE_QUERY_VALUE1 = 15;
+  static final byte $PARSE_QUERY_VALUE1_DECODE = 16;
+  static final byte $PARSE_VERSION = 17;
 
-  static final byte $BAD_REQUEST = 11;
-  static final byte $URI_TOO_LONG = 12;
-  static final byte $NOT_IMPLEMENTED = 13;
+  static final byte $BAD_REQUEST = 18;
+  static final byte $URI_TOO_LONG = 19;
+  static final byte $NOT_IMPLEMENTED = 20;
 
-  static final byte $OK = 14;
-  static final byte $ERROR = 15;
+  static final byte $OK = 21;
+  static final byte $ERROR = 22;
 
   private static final int HARD_MAX_BUFFER_SIZE = 1 << 14;
 
@@ -159,13 +172,11 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   private static final Notes NOTES = Notes.get();
 
-  byte[] buffer;
+  private byte[] buffer;
 
-  int bufferIndex = 0;
+  private int bufferIndex = 0;
 
-  int bufferLimit = 0;
-
-  private ClientError clientError;
+  private int bufferLimit = 0;
 
   private final long id = ID_GENERATOR.getAndIncrement();
 
@@ -175,9 +186,17 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   private final int maxBufferSize;
 
+  private Http.Method method;
+
   private final Note.Sink noteSink;
 
+  private Object object;
+
   private InetAddress remoteAddress;
+
+  private String path;
+
+  private Map<String, Object> queryParams;
 
   private byte state;
 
@@ -222,6 +241,13 @@ final class HttpExchange implements Http.Exchange, Closeable {
       case $PARSE_PATH_DECODE -> executeParsePathDecode();
 
       case $PARSE_QUERY -> executeParseQuery();
+      case $PARSE_QUERY0 -> executeParseQuery0();
+      case $PARSE_QUERY1 -> executeParseQuery1();
+      case $PARSE_QUERY1_DECODE -> executeParseQuery1Decode();
+      case $PARSE_QUERY_VALUE -> executeParseQueryValue();
+      case $PARSE_QUERY_VALUE0 -> executeParseQueryValue0();
+      case $PARSE_QUERY_VALUE1 -> executeParseQueryValue1();
+      case $PARSE_QUERY_VALUE1_DECODE -> executeParseQueryValue1Decode();
 
       case $PARSE_VERSION -> executeParseVersion();
 
@@ -239,6 +265,26 @@ final class HttpExchange implements Http.Exchange, Closeable {
     bufferLimit = 0;
 
     bufferIndex = 0;
+
+    mark = 0;
+
+    method = null;
+
+    object = null;
+
+    path = null;
+
+    stateNext = 0;
+
+    if (stringBuilder != null) {
+      stringBuilder.setLength(0);
+    }
+
+    if (queryParams != null) {
+      queryParams.clear();
+    }
+
+    version = Http.Version.HTTP_1_1;
 
     return $PARSE_METHOD;
   }
@@ -292,7 +338,9 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   private byte executeReadMaxBuffer() {
     return switch (stateNext) {
-      case $PARSE_PATH, $PARSE_PATH_CONTENTS0, $PARSE_PATH_CONTENTS1, $PARSE_PATH_DECODE -> executeUriTooLong();
+      case $PARSE_PATH, $PARSE_PATH_CONTENTS0, $PARSE_PATH_CONTENTS1, $PARSE_PATH_DECODE,
+           $PARSE_QUERY, $PARSE_QUERY0, $PARSE_QUERY1,
+           $PARSE_QUERY_VALUE, $PARSE_QUERY_VALUE0, $PARSE_QUERY_VALUE1 -> executeUriTooLong();
 
       default -> { note(NOTES.readMaxBuffer); yield $ERROR; }
     };
@@ -470,13 +518,13 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   static {
     final byte[] table;
-    table = new byte[0x80];
+    table = new byte[128];
 
     // 0 = invalid
     // 1 = valid
     // 2 = %xx
-    // 3 = stop 'SP'
-    // 4 = stop '?'
+    // 3 = ' ' -> stop
+    // 4 = '?' -> stop
 
     Http.fillTable(table, Http.unreserved(), (byte) 1);
 
@@ -487,7 +535,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
     table['@'] = 1;
 
     // solidus acts as segment separator
-    table['/'] = 1;
+    table[SOLIDUS] = 1;
 
     table['%'] = 2;
 
@@ -538,25 +586,17 @@ final class HttpExchange implements Http.Exchange, Closeable {
       switch (code) {
         case 1 -> { bufferIndex += 1; }
 
-        case 2 -> {
-          appendInit();
+        case 2 -> { appendInit(); return $PARSE_PATH_CONTENTS1; }
 
-          return $PARSE_PATH_CONTENTS1;
-        }
+        case 3 -> { path = markToString(); bufferIndex += 1; return $PARSE_VERSION; }
 
-        case 3 -> { path = pathFromBuffer(); bufferIndex += 1; return $PARSE_VERSION; }
-
-        case 4 -> { path = pathFromBuffer(); bufferIndex += 1; return $PARSE_QUERY; }
+        case 4 -> { path = markToString(); bufferIndex += 1; return $PARSE_QUERY; }
 
         default -> { return toBadRequest(InvalidRequestLine.PATH_NEXT_CHAR); }
       }
     }
 
     return toRead($PARSE_PATH_CONTENTS0);
-  }
-
-  private String pathFromBuffer() {
-    return new String(buffer, mark, bufferIndex - mark, StandardCharsets.US_ASCII);
   }
 
   private byte executeParsePathContents1() {
@@ -606,8 +646,231 @@ final class HttpExchange implements Http.Exchange, Closeable {
   // # BEGIN: Parse: Query
   // ##################################################################
 
+  private static final byte[] PARSE_QUERY_TABLE;
+
+  private static final byte QUERY_VALID = 1;
+  private static final byte QUERY_PERCENT = 2;
+  private static final byte QUERY_PLUS = 3;
+  private static final byte QUERY_EQUALS = 4;
+  private static final byte QUERY_AMPERSAND = 5;
+  private static final byte QUERY_STOP = 6;
+
+  static {
+    final byte[] table;
+    table = new byte[128];
+
+    // 0 = invalid
+    // 1 = valid
+    // 2 = %xx
+    // 3 = '+' -> SPACE
+    // 4 = '=' -> key/value separator
+    // 5 = '&' -> next key
+    // 6 = ' ' -> stop
+
+    Http.fillTable(table, Http.unreserved(), QUERY_VALID);
+
+    Http.fillTable(table, Http.subDelims(), QUERY_VALID);
+
+    table[':'] = QUERY_VALID;
+
+    table['@'] = QUERY_VALID;
+
+    table['/'] = QUERY_VALID;
+
+    table['?'] = QUERY_VALID;
+
+    table['%'] = QUERY_PERCENT;
+
+    table['+'] = QUERY_PLUS;
+
+    table['='] = QUERY_EQUALS;
+
+    table['&'] = QUERY_AMPERSAND;
+
+    table[' '] = QUERY_STOP;
+
+    PARSE_QUERY_TABLE = table;
+  }
+
   private byte executeParseQuery() {
-    return $OK;
+    // where the current key begins
+    mark = bufferIndex;
+
+    return executeParseQuery0();
+  }
+
+  private byte executeParseQuery0() {
+    while (bufferIndex < bufferLimit) {
+      final byte b;
+      b = buffer[bufferIndex];
+
+      if (b < 0) {
+        return toBadRequest(InvalidRequestLine.QUERY_CHAR);
+      }
+
+      final byte code;
+      code = PARSE_QUERY_TABLE[b];
+
+      switch (code) {
+        case QUERY_VALID -> { bufferIndex += 1; }
+
+        case QUERY_PERCENT, QUERY_PLUS -> { appendInit(); return $PARSE_QUERY1; }
+
+        case QUERY_EQUALS -> { object = markToString(); bufferIndex += 1; return $PARSE_QUERY_VALUE; }
+
+        case QUERY_AMPERSAND -> { object = markToString(); bufferIndex += 1; makeQueryParam(""); return $PARSE_QUERY; }
+
+        case QUERY_STOP -> { object = markToString(); bufferIndex += 1; makeQueryParam(""); return $PARSE_VERSION; }
+
+        default -> { return toBadRequest(InvalidRequestLine.QUERY_CHAR); }
+      }
+    }
+
+    return toRead($PARSE_QUERY0);
+  }
+
+  private byte executeParseQuery1() {
+    while (bufferIndex < bufferLimit) {
+      final byte b;
+      b = buffer[bufferIndex];
+
+      if (b < 0) {
+        return toBadRequest(InvalidRequestLine.QUERY_PERCENT);
+      }
+
+      final byte code;
+      code = PARSE_QUERY_TABLE[b];
+
+      switch (code) {
+        case QUERY_VALID -> { appendChar(b); bufferIndex += 1; }
+
+        case QUERY_PERCENT -> { byte next = executeParseQuery1Decode(); if (state != next) { return next; } }
+
+        case QUERY_PLUS -> { appendChar(' '); bufferIndex += 1; }
+
+        case QUERY_EQUALS -> { object = appendToString(); bufferIndex += 1; return $PARSE_QUERY_VALUE; }
+
+        case QUERY_AMPERSAND -> { object = appendToString(); bufferIndex += 1; makeQueryParam(""); return $PARSE_QUERY; }
+
+        case QUERY_STOP -> { object = appendToString(); bufferIndex += 1; makeQueryParam(""); return $PARSE_VERSION; }
+
+        default -> { return toBadRequest(InvalidRequestLine.QUERY_PERCENT); }
+      }
+    }
+
+    return toRead($PARSE_QUERY1);
+  }
+
+  private byte executeParseQuery1Decode() {
+    return decodePercent($PARSE_QUERY1, $PARSE_QUERY1_DECODE, InvalidRequestLine.QUERY_PERCENT);
+  }
+
+  private byte executeParseQueryValue() {
+    // where the current value begins
+    mark = bufferIndex;
+
+    return executeParseQueryValue0();
+  }
+
+  private byte executeParseQueryValue0() {
+    while (bufferIndex < bufferLimit) {
+      final byte b;
+      b = buffer[bufferIndex];
+
+      if (b < 0) {
+        return toBadRequest(InvalidRequestLine.QUERY_CHAR);
+      }
+
+      final byte code;
+      code = PARSE_QUERY_TABLE[b];
+
+      switch (code) {
+        case QUERY_VALID, QUERY_EQUALS -> { bufferIndex += 1; }
+
+        case QUERY_PERCENT, QUERY_PLUS -> { appendInit(); return $PARSE_QUERY_VALUE1; }
+
+        case QUERY_AMPERSAND -> { final String v = markToString(); bufferIndex += 1; makeQueryParam(v); return $PARSE_QUERY; }
+
+        case QUERY_STOP -> { final String v = markToString(); bufferIndex += 1; makeQueryParam(v); return $PARSE_VERSION; }
+
+        default -> { return toBadRequest(InvalidRequestLine.QUERY_CHAR); }
+      }
+    }
+
+    return toRead($PARSE_QUERY_VALUE0);
+  }
+
+  private byte executeParseQueryValue1() {
+    while (bufferIndex < bufferLimit) {
+      final byte b;
+      b = buffer[bufferIndex];
+
+      if (b < 0) {
+        return toBadRequest(InvalidRequestLine.QUERY_CHAR);
+      }
+
+      final byte code;
+      code = PARSE_QUERY_TABLE[b];
+
+      switch (code) {
+        case QUERY_VALID, QUERY_EQUALS -> { appendChar(b); bufferIndex += 1; }
+
+        case QUERY_PERCENT -> { byte next = executeParseQueryValue1Decode(); if (state != next) { return next; } }
+
+        case QUERY_PLUS -> { appendChar(' '); bufferIndex += 1; }
+
+        case QUERY_AMPERSAND -> { final String v = appendToString(); bufferIndex += 1; makeQueryParam(v); return $PARSE_QUERY; }
+
+        case QUERY_STOP -> { final String v = appendToString(); bufferIndex += 1; makeQueryParam(v); return $PARSE_VERSION; }
+
+        default -> { return toBadRequest(InvalidRequestLine.QUERY_PERCENT); }
+      }
+    }
+
+    return toRead($PARSE_QUERY_VALUE0);
+  }
+
+  private byte executeParseQueryValue1Decode() {
+    return decodePercent($PARSE_QUERY_VALUE1, $PARSE_QUERY_VALUE1_DECODE, InvalidRequestLine.QUERY_PERCENT);
+  }
+
+  @SuppressWarnings("unchecked")
+  private void makeQueryParam(String value) {
+    if (queryParams == null) {
+      queryParams = Util.createMap();
+    }
+
+    final String key;
+    key = (String) object;
+
+    final Object maybeExisting;
+    maybeExisting = queryParams.put(key, value);
+
+    if (maybeExisting == null) {
+      return;
+    }
+
+    else if (maybeExisting instanceof String s) {
+
+      List<String> list;
+      list = Util.createList();
+
+      list.add(s);
+
+      list.add(value);
+
+      queryParams.put(key, list);
+
+    }
+
+    else {
+      List<String> list;
+      list = (List<String>) maybeExisting;
+
+      list.add(value);
+
+      queryParams.put(key, list);
+    }
   }
 
   // ##################################################################
@@ -833,12 +1096,15 @@ final class HttpExchange implements Http.Exchange, Closeable {
   // ##################################################################
 
   private byte toBadRequest(ClientError error) {
-    clientError = error;
+    object = error;
 
     return $BAD_REQUEST;
   }
 
   private byte executeBadRequest() {
+    final ClientError clientError;
+    clientError = (ClientError) object;
+
     noteSink.send(NOTES.badRequest, id, clientError, this);
 
     bufferIndex = 0;
@@ -959,6 +1225,10 @@ final class HttpExchange implements Http.Exchange, Closeable {
     stringBuilder.setLength(0);
 
     return result;
+  }
+
+  private String markToString() {
+    return new String(buffer, mark, bufferIndex - mark, StandardCharsets.US_ASCII);
   }
 
   private void note(Note.Long1Ref1<Http.Exchange> note) {
@@ -1096,17 +1366,11 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   // RequestLine
 
-  private Http.Method method;
-
-  private String path;
-
   int pathIndex;
 
   private int pathLimit;
 
   Map<String, String> pathParams;
-
-  private Map<String, Object> queryParams;
 
   private boolean queryParamsReady;
 
@@ -2209,44 +2473,33 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   @Override
   public final String queryParam(String name) {
-    Check.notNull(name, "name == null");
+    Objects.requireNonNull(name, "name == null");
 
-    Map<String, Object> params;
-    params = $queryParams();
-
-    return Http.queryParamsGet(params, name);
+    if (queryParams == null) {
+      return null;
+    } else {
+      return Http.queryParamsGet(queryParams, name);
+    }
   }
 
   @Override
   public final List<String> queryParamAll(String name) {
-    Check.notNull(name, "name == null");
+    Objects.requireNonNull(name, "name == null");
 
-    Map<String, Object> params;
-    params = $queryParams();
-
-    return Http.queryParamsGetAll(params, name);
+    if (queryParams == null) {
+      return List.of();
+    } else {
+      return Http.queryParamsGetAll(queryParams, name);
+    }
   }
 
   @Override
   public final Set<String> queryParamNames() {
-    Map<String, Object> params;
-    params = $queryParams();
-
-    return params.keySet();
-  }
-
-  final Map<String, Object> $queryParams() {
-    if (!queryParamsReady) {
-      if (queryParams == null) {
-        queryParams = Util.createMap();
-      }
-
-      makeQueryParams(queryParams, this::decode);
-
-      queryParamsReady = true;
+    if (queryParams == null) {
+      return Set.of();
+    } else {
+      return queryParams.keySet();
     }
-
-    return queryParams;
   }
 
   @Override

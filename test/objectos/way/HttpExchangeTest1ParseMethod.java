@@ -50,7 +50,7 @@ public class HttpExchangeTest1ParseMethod {
             method.name() + " /index.html HTTP/1.1\r\n\r\n",
 
             """
-            HTTP/1.1 501 NOT IMPLEMENTED\r
+            HTTP/1.1 501 Not Implemented\r
             Date: Wed, 28 Jun 2023 12:08:43 GMT\r
             Content-Length: 0\r
             Connection: close\r
