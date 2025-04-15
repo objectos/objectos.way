@@ -43,7 +43,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.stream.Stream;
+import objectos.way.Http.Status;
 
 @SuppressWarnings("serial")
 final class HttpExchange implements Http.Exchange, Closeable {
@@ -59,6 +59,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
       Note.Long1Ref2<ClientError, Http.Exchange> badRequest,
       Note.Long1Ref1<Http.Exchange> uriTooLong,
       Note.Long1Ref1<Http.Exchange> notImplemented,
+      Note.Long1Ref1<Http.Exchange> httpVersionNotSupported,
 
       Note.Ref2<String, String> hexdump,
       Note.Ref2<Integer, String> invalidRequestLine
@@ -79,6 +80,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
           Note.Long1Ref2.create(s, "400", Note.INFO),
           Note.Long1Ref1.create(s, "414", Note.INFO),
           Note.Long1Ref1.create(s, "501", Note.INFO),
+          Note.Long1Ref1.create(s, "505", Note.INFO),
 
           Note.Ref2.create(s, "HEX", Note.ERROR),
           Note.Ref2.create(s, "IRL", Note.ERROR)
@@ -91,6 +93,22 @@ final class HttpExchange implements Http.Exchange, Closeable {
     byte[] message();
 
     Http.Status status();
+  }
+
+  private enum InvalidLineTerminator implements ClientError {
+    INSTANCE;
+
+    private static final byte[] MESSAGE = "Invalid line terminator.\n".getBytes(StandardCharsets.US_ASCII);
+
+    @Override
+    public final byte[] message() {
+      return MESSAGE;
+    }
+
+    @Override
+    public final Status status() {
+      return Http.Status.BAD_REQUEST;
+    }
   }
 
   private enum InvalidRequestLine implements ClientError {
@@ -117,15 +135,18 @@ final class HttpExchange implements Http.Exchange, Closeable {
     // query has an invalid percent encoded sequence
     QUERY_PERCENT,
 
+    // invalid version
+    VERSION_CHAR,
+
     REQUEST_TARGET_EOF,
 
     REQUEST_TARGET_FORM;
 
-    private static final byte[] REQUEST_LINE = "Invalid request line.\n".getBytes(StandardCharsets.US_ASCII);
+    private static final byte[] MESSAGE = "Invalid request line.\n".getBytes(StandardCharsets.US_ASCII);
 
     @Override
     public final byte[] message() {
-      return REQUEST_LINE;
+      return MESSAGE;
     }
 
     @Override
@@ -157,14 +178,19 @@ final class HttpExchange implements Http.Exchange, Closeable {
   static final byte $PARSE_QUERY_VALUE0 = 14;
   static final byte $PARSE_QUERY_VALUE1 = 15;
   static final byte $PARSE_QUERY_VALUE1_DECODE = 16;
-  static final byte $PARSE_VERSION = 17;
+  static final byte $PARSE_VERSION_0_9 = 17;
+  static final byte $PARSE_VERSION_1_1 = 18;
+  static final byte $PARSE_VERSION_OTHERS = 19;
 
-  static final byte $BAD_REQUEST = 18;
-  static final byte $URI_TOO_LONG = 19;
-  static final byte $NOT_IMPLEMENTED = 20;
+  static final byte $PARSE_HEADER = 20;
 
-  static final byte $OK = 21;
-  static final byte $ERROR = 22;
+  static final byte $BAD_REQUEST = 21;
+  static final byte $URI_TOO_LONG = 22;
+  static final byte $NOT_IMPLEMENTED = 23;
+  static final byte $HTTP_VERSION_NOT_SUPPORTED = 24;
+
+  static final byte $OK = 25;
+  static final byte $ERROR = 26;
 
   private static final int HARD_MAX_BUFFER_SIZE = 1 << 14;
 
@@ -249,11 +275,16 @@ final class HttpExchange implements Http.Exchange, Closeable {
       case $PARSE_QUERY_VALUE1 -> executeParseQueryValue1();
       case $PARSE_QUERY_VALUE1_DECODE -> executeParseQueryValue1Decode();
 
-      case $PARSE_VERSION -> executeParseVersion();
+      case $PARSE_VERSION_0_9 -> executeParseVersion_0_9();
+      case $PARSE_VERSION_1_1 -> executeParseVersion_1_1();
+      case $PARSE_VERSION_OTHERS -> executeParseVersionOthers();
+
+      case $PARSE_HEADER -> executeParseHeader();
 
       case $BAD_REQUEST -> executeBadRequest();
       case $URI_TOO_LONG -> executeUriTooLong();
       case $NOT_IMPLEMENTED -> executeNotImplemented();
+      case $HTTP_VERSION_NOT_SUPPORTED -> executeHttpVersionNotSupported();
 
       default -> throw new AssertionError("Unexpected state=" + state);
     };
@@ -431,70 +462,82 @@ final class HttpExchange implements Http.Exchange, Closeable {
     }
   }
 
-  private static final int MAX_METHOD_LENGTH = Stream.of($Method.values()).mapToInt(m -> m.ascii.length).max().getAsInt();
-
   private byte executeParseMethod() {
-    if (!canRead(MAX_METHOD_LENGTH)) {
+    if (bufferIndex < bufferLimit) {
+
+      final byte first;
+      first = buffer[bufferIndex];
+
+      // based on the first char, we select out method candidate
+
+      return switch (first) {
+        case 'C' -> executeParseMethod($Method.CONNECT);
+
+        case 'D' -> executeParseMethod($Method.DELETE);
+
+        case 'G' -> executeParseMethod($Method.GET);
+
+        case 'H' -> executeParseMethod($Method.HEAD);
+
+        case 'O' -> executeParseMethod($Method.OPTIONS);
+
+        case 'P' -> executeParseMethodP();
+
+        case 'T' -> executeParseMethod($Method.TRACE);
+
+        default -> toBadRequest(InvalidRequestLine.METHOD);
+      };
+
+    } else {
       return toRead($PARSE_METHOD);
     }
+  }
 
-    final byte first;
-    first = buffer[bufferIndex];
+  private byte executeParseMethod($Method candidate) {
+    final byte[] ascii;
+    ascii = candidate.ascii;
 
-    // based on the first char, we select out method candidate
+    if (canRead(ascii.length)) {
 
-    final $Method internal;
-    internal = switch (first) {
-      case 'C' -> parseMethod($Method.CONNECT);
+      if (bufferMatches(ascii)) {
 
-      case 'D' -> parseMethod($Method.DELETE);
+        method = candidate.external;
 
-      case 'G' -> parseMethod($Method.GET);
-
-      case 'H' -> parseMethod($Method.HEAD);
-
-      case 'O' -> parseMethod($Method.OPTIONS);
-
-      case 'P' -> {
-        // method starts with a P. It might be:
-        // - POST
-        // - PUT
-        // - PATCH
-
-        // we'll try them in sequence
-
-        $Method p;
-        p = parseMethod($Method.POST);
-
-        if (p != null) {
-          yield p;
+        if (method == null) {
+          return $NOT_IMPLEMENTED;
+        } else {
+          return $PARSE_PATH;
         }
 
-        p = parseMethod($Method.PUT);
-
-        if (p != null) {
-          yield p;
-        }
-
-        yield parseMethod($Method.PATCH);
+      } else {
+        return toBadRequest(InvalidRequestLine.METHOD);
       }
 
-      case 'T' -> parseMethod($Method.TRACE);
-
-      default -> null;
-    };
-
-    if (internal == null) {
-      return toBadRequest(InvalidRequestLine.METHOD);
+    } else {
+      return toRead($PARSE_METHOD);
     }
+  }
 
-    method = internal.external;
+  private byte executeParseMethodP() {
+    final int secondIndex;
+    secondIndex = bufferIndex + 1;
 
-    if (method == null) {
-      return $NOT_IMPLEMENTED;
+    if (secondIndex < bufferLimit) {
+      final byte second;
+      second = buffer[secondIndex];
+
+      return switch (second) {
+        case 'O' -> executeParseMethod($Method.POST);
+
+        case 'U' -> executeParseMethod($Method.PUT);
+
+        case 'A' -> executeParseMethod($Method.PATCH);
+
+        default -> toBadRequest(InvalidRequestLine.METHOD);
+      };
+    } else {
+      return toRead($PARSE_METHOD);
     }
-
-    return $PARSE_PATH;
   }
 
   private $Method parseMethod($Method candidate) {
@@ -516,6 +559,12 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   private static final byte SOLIDUS = '/';
 
+  private static final byte PATH_VALID = 1;
+  private static final byte PATH_PERCENT = 2;
+  private static final byte PATH_SPACE = 3;
+  private static final byte PATH_QUESTION = 4;
+  private static final byte PATH_CRLF = 5;
+
   static {
     final byte[] table;
     table = new byte[128];
@@ -523,25 +572,31 @@ final class HttpExchange implements Http.Exchange, Closeable {
     // 0 = invalid
     // 1 = valid
     // 2 = %xx
-    // 3 = ' ' -> stop
+    // 3 = ' ' -> version
     // 4 = '?' -> stop
+    // 5 = '\r' -> 0.9
+    // 5 = '\n' -> 0.9
 
-    Http.fillTable(table, Http.unreserved(), (byte) 1);
+    Http.fillTable(table, Http.unreserved(), PATH_VALID);
 
-    Http.fillTable(table, Http.subDelims(), (byte) 1);
+    Http.fillTable(table, Http.subDelims(), PATH_VALID);
 
-    table[':'] = 1;
+    table[':'] = PATH_VALID;
 
-    table['@'] = 1;
+    table['@'] = PATH_VALID;
 
     // solidus acts as segment separator
-    table[SOLIDUS] = 1;
+    table[SOLIDUS] = PATH_VALID;
 
-    table['%'] = 2;
+    table['%'] = PATH_PERCENT;
 
-    table[' '] = 3;
+    table[' '] = PATH_SPACE;
 
-    table['?'] = 4;
+    table['?'] = PATH_QUESTION;
+
+    table['\r'] = PATH_CRLF;
+
+    table['\n'] = PATH_CRLF;
 
     PARSE_PATH_TABLE = table;
   }
@@ -584,13 +639,15 @@ final class HttpExchange implements Http.Exchange, Closeable {
       code = PARSE_PATH_TABLE[b];
 
       switch (code) {
-        case 1 -> { bufferIndex += 1; }
+        case PATH_VALID -> { bufferIndex += 1; }
 
-        case 2 -> { appendInit(); return $PARSE_PATH_CONTENTS1; }
+        case PATH_PERCENT -> { appendInit(); return $PARSE_PATH_CONTENTS1; }
 
-        case 3 -> { path = markToString(); bufferIndex += 1; return $PARSE_VERSION; }
+        case PATH_SPACE -> { path = markToString(); bufferIndex += 1; return $PARSE_VERSION_1_1; }
 
-        case 4 -> { path = markToString(); bufferIndex += 1; return $PARSE_QUERY; }
+        case PATH_QUESTION -> { path = markToString(); bufferIndex += 1; return $PARSE_QUERY; }
+
+        case PATH_CRLF -> { path = markToString(); bufferIndex += 1; return $PARSE_VERSION_0_9; }
 
         default -> { return toBadRequest(InvalidRequestLine.PATH_NEXT_CHAR); }
       }
@@ -612,20 +669,15 @@ final class HttpExchange implements Http.Exchange, Closeable {
       code = PARSE_PATH_TABLE[b];
 
       switch (code) {
-        case 1 -> { appendChar(b); bufferIndex += 1; }
+        case PATH_VALID -> { appendChar(b); bufferIndex += 1; }
 
-        case 2 -> {
-          byte next;
-          next = executeParsePathDecode();
+        case PATH_PERCENT -> { byte next = executeParsePathDecode(); if (state != next) { return next; } }
 
-          if (state != next) {
-            return next;
-          }
-        }
+        case PATH_SPACE -> { path = appendToString(); bufferIndex += 1; return $PARSE_VERSION_1_1; }
 
-        case 3 -> { path = appendToString(); bufferIndex += 1; return $PARSE_VERSION; }
+        case PATH_QUESTION -> { path = appendToString(); bufferIndex += 1; return $PARSE_QUERY; }
 
-        case 4 -> { path = appendToString(); bufferIndex += 1; return $PARSE_QUERY; }
+        case PATH_CRLF -> { path = appendToString(); bufferIndex += 1; return $PARSE_VERSION_0_9; }
 
         default -> { return toBadRequest(InvalidRequestLine.PATH_NEXT_CHAR); }
       }
@@ -653,7 +705,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
   private static final byte QUERY_PLUS = 3;
   private static final byte QUERY_EQUALS = 4;
   private static final byte QUERY_AMPERSAND = 5;
-  private static final byte QUERY_STOP = 6;
+  private static final byte QUERY_SPACE = 6;
+  private static final byte QUERY_CRLF = 7;
 
   static {
     final byte[] table;
@@ -665,7 +718,9 @@ final class HttpExchange implements Http.Exchange, Closeable {
     // 3 = '+' -> SPACE
     // 4 = '=' -> key/value separator
     // 5 = '&' -> next key
-    // 6 = ' ' -> stop
+    // 6 = ' ' -> space
+    // 7 = '\r' -> 0.9
+    // 7 = '\n' -> 0.9
 
     Http.fillTable(table, Http.unreserved(), QUERY_VALID);
 
@@ -687,7 +742,11 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
     table['&'] = QUERY_AMPERSAND;
 
-    table[' '] = QUERY_STOP;
+    table[' '] = QUERY_SPACE;
+
+    table['\r'] = QUERY_CRLF;
+
+    table['\n'] = QUERY_CRLF;
 
     PARSE_QUERY_TABLE = table;
   }
@@ -720,7 +779,9 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
         case QUERY_AMPERSAND -> { object = markToString(); bufferIndex += 1; makeQueryParam(""); return $PARSE_QUERY; }
 
-        case QUERY_STOP -> { object = markToString(); bufferIndex += 1; makeQueryParam(""); return $PARSE_VERSION; }
+        case QUERY_SPACE -> { object = markToString(); bufferIndex += 1; makeQueryParam(""); return $PARSE_VERSION_1_1; }
+
+        case QUERY_CRLF -> { object = markToString(); bufferIndex += 1; makeQueryParam(""); return $PARSE_VERSION_0_9; }
 
         default -> { return toBadRequest(InvalidRequestLine.QUERY_CHAR); }
       }
@@ -752,7 +813,9 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
         case QUERY_AMPERSAND -> { object = appendToString(); bufferIndex += 1; makeQueryParam(""); return $PARSE_QUERY; }
 
-        case QUERY_STOP -> { object = appendToString(); bufferIndex += 1; makeQueryParam(""); return $PARSE_VERSION; }
+        case QUERY_SPACE -> { object = appendToString(); bufferIndex += 1; makeQueryParam(""); return $PARSE_VERSION_1_1; }
+
+        case QUERY_CRLF -> { object = appendToString(); bufferIndex += 1; makeQueryParam(""); return $PARSE_VERSION_0_9; }
 
         default -> { return toBadRequest(InvalidRequestLine.QUERY_PERCENT); }
       }
@@ -791,7 +854,9 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
         case QUERY_AMPERSAND -> { final String v = markToString(); bufferIndex += 1; makeQueryParam(v); return $PARSE_QUERY; }
 
-        case QUERY_STOP -> { final String v = markToString(); bufferIndex += 1; makeQueryParam(v); return $PARSE_VERSION; }
+        case QUERY_SPACE -> { final String v = markToString(); bufferIndex += 1; makeQueryParam(v); return $PARSE_VERSION_1_1; }
+
+        case QUERY_CRLF -> { final String v = markToString(); bufferIndex += 1; makeQueryParam(v); return $PARSE_VERSION_0_9; }
 
         default -> { return toBadRequest(InvalidRequestLine.QUERY_CHAR); }
       }
@@ -821,7 +886,9 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
         case QUERY_AMPERSAND -> { final String v = appendToString(); bufferIndex += 1; makeQueryParam(v); return $PARSE_QUERY; }
 
-        case QUERY_STOP -> { final String v = appendToString(); bufferIndex += 1; makeQueryParam(v); return $PARSE_VERSION; }
+        case QUERY_SPACE -> { final String v = appendToString(); bufferIndex += 1; makeQueryParam(v); return $PARSE_VERSION_1_1; }
+
+        case QUERY_CRLF -> { final String v = appendToString(); bufferIndex += 1; makeQueryParam(v); return $PARSE_VERSION_0_9; }
 
         default -> { return toBadRequest(InvalidRequestLine.QUERY_PERCENT); }
       }
@@ -879,7 +946,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   // ##################################################################
   // # BEGIN: Decode Percent
-  // ##################################################################
+  // ############################################################
 
   private byte decodePercent(byte success, byte read, InvalidRequestLine badRequest) {
     final int firstDigitIndex;
@@ -1083,12 +1150,111 @@ final class HttpExchange implements Http.Exchange, Closeable {
   // # BEGIN: Parse: Version
   // ##################################################################
 
-  private byte executeParseVersion() {
-    return $OK;
+  private byte executeParseVersion_0_9() {
+    return $HTTP_VERSION_NOT_SUPPORTED;
+  }
+
+  private static final byte[] HTTP_1_1_CRLF = {'H', 'T', 'T', 'P', '/', '1', '.', '1', '\r', '\n'};
+
+  private static final byte[] HTTP_1_1_LF = {'H', 'T', 'T', 'P', '/', '1', '.', '1', '\n'};
+
+  private byte executeParseVersion_1_1() {
+    if (canRead(HTTP_1_1_CRLF.length)) {
+
+      if (bufferMatches(HTTP_1_1_CRLF)) {
+        version = Http.Version.HTTP_1_1;
+
+        return $PARSE_HEADER;
+      }
+
+      if (bufferMatches(HTTP_1_1_LF)) {
+        return toBadRequest(InvalidLineTerminator.INSTANCE);
+      }
+
+      return $PARSE_VERSION_OTHERS;
+
+    } else {
+      return toRead($PARSE_VERSION_1_1);
+    }
+  }
+
+  private static final byte[] HTTP_OTHERS = {'H', 'T', 'T', 'P', '/'};
+
+  private byte executeParseVersionOthers() {
+    if (bufferMatches(HTTP_OTHERS)) {
+      // we'll rely solely on what's buffered.
+      // this is already a bad request.
+
+      enum State {
+        START,
+        MAJOR,
+        DOT,
+        MINOR,
+        CR;
+      }
+
+      State state;
+      state = State.START;
+
+      while (bufferIndex < bufferLimit) {
+        final byte b;
+        b = buffer[bufferIndex++];
+
+        if (b == '\n') {
+          switch (state) {
+            case CR -> { return $HTTP_VERSION_NOT_SUPPORTED; }
+
+            default -> { return toBadRequest(InvalidRequestLine.VERSION_CHAR); }
+          }
+        }
+
+        else if (b == '\r') {
+          switch (state) {
+            case MAJOR, MINOR -> state = State.CR;
+
+            default -> { return toBadRequest(InvalidRequestLine.VERSION_CHAR); }
+          }
+        }
+
+        else if (Http.isDigit(b)) {
+          switch (state) {
+            case START, MAJOR -> state = State.MAJOR;
+
+            case DOT, MINOR -> state = State.MINOR;
+
+            default -> { return toBadRequest(InvalidRequestLine.VERSION_CHAR); }
+          }
+        }
+
+        else if (b == '.') {
+          switch (state) {
+            case MAJOR -> state = State.DOT;
+
+            default -> { return toBadRequest(InvalidRequestLine.VERSION_CHAR); }
+          }
+        }
+      }
+
+      return toBadRequest(InvalidRequestLine.VERSION_CHAR);
+    } else {
+      return toBadRequest(InvalidRequestLine.VERSION_CHAR);
+    }
   }
 
   // ##################################################################
   // # END: Parse: Version
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Parse: Headers
+  // ##################################################################
+
+  private byte executeParseHeader() {
+    return $OK;
+  }
+
+  // ##################################################################
+  // # END: Parse: Headers
   // ##################################################################
 
   // ##################################################################
@@ -1159,6 +1325,31 @@ final class HttpExchange implements Http.Exchange, Closeable {
     header0(Http.HeaderName.CONNECTION, "close");
 
     send0();
+
+    return $ERROR;
+  }
+
+  private static final byte[] HTTP_VERSION_NOT_SUPPORTED_MSG = "Supported versions: HTTP/1.1\n".getBytes(StandardCharsets.US_ASCII);
+
+  private byte executeHttpVersionNotSupported() {
+    noteSink.send(NOTES.httpVersionNotSupported, id, this);
+
+    bufferIndex = 0;
+
+    final byte[] message;
+    message = HTTP_VERSION_NOT_SUPPORTED_MSG;
+
+    status1(Http.Status.HTTP_VERSION_NOT_SUPPORTED);
+
+    dateNow();
+
+    header0(Http.HeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
+
+    header0(Http.HeaderName.CONTENT_LENGTH, message.length);
+
+    header0(Http.HeaderName.CONNECTION, "close");
+
+    send0(message);
 
     return $ERROR;
   }
@@ -3075,7 +3266,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
     // write out the value
     byte[] valueBytes;
-    valueBytes = value.getBytes(StandardCharsets.UTF_8);
+    valueBytes = value.getBytes(StandardCharsets.US_ASCII);
 
     writeBytes(valueBytes);
 

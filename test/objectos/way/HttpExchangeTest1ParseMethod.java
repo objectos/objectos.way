@@ -28,7 +28,7 @@ public class HttpExchangeTest1ParseMethod {
     for (Http.Method method : Http.Method.VALUES) {
       if (method.implemented) {
         final String request;
-        request = method.name() + " /index.html HTTP/1.1\r\n\r\n";
+        request = method.name() + " /index.html HTTP/1.1\r\nHost: www.example.com\r\n\r\n";
 
         final Socket socket;
         socket = Y.socket(request);
@@ -47,7 +47,7 @@ public class HttpExchangeTest1ParseMethod {
     for (Http.Method method : Http.Method.VALUES) {
       if (!method.implemented) {
         test(
-            method.name() + " /index.html HTTP/1.1\r\n\r\n",
+            method.name() + " /index.html HTTP/1.1\r\nnHost: www.example.com\r\n\r\n",
 
             """
             HTTP/1.1 501 Not Implemented\r
@@ -65,6 +65,7 @@ public class HttpExchangeTest1ParseMethod {
   public void badRequest01() throws IOException {
     badRequest("""
         XYZ /path?key=value HTTP/1.1\r
+        Host: www.example.com\r
         \r
         """);
   }
@@ -82,6 +83,7 @@ public class HttpExchangeTest1ParseMethod {
     badRequest(
         """
         POS /login HTTP/1.1\r
+        Host: www.example.com\r
         \r
         """);
   }

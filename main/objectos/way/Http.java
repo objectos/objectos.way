@@ -1394,6 +1394,8 @@ public final class Http {
    */
   public enum Version {
 
+    HTTP_0_9("HTTP/0.9"),
+
     HTTP_1_0("HTTP/1.0"),
 
     HTTP_1_1("HTTP/1.1");
@@ -1409,6 +1411,8 @@ public final class Http {
 
     final void appendTo(StringBuilder out) {
       switch (this) {
+        case HTTP_0_9 -> out.append("HTTP/0.9");
+
         case HTTP_1_0 -> out.append("HTTP/1.0");
 
         case HTTP_1_1 -> out.append("HTTP/1.1");

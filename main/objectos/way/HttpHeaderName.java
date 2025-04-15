@@ -289,7 +289,7 @@ final class HttpHeaderName implements Http.HeaderName {
 
   final byte[] getBytes(Http.Version version) {
     return switch (version) {
-      case HTTP_1_0, HTTP_1_1 -> headerCaseBytes();
+      case HTTP_0_9, HTTP_1_0, HTTP_1_1 -> headerCaseBytes();
     };
   }
 

@@ -21,6 +21,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
 import org.testng.annotations.Test;
 
@@ -131,6 +132,15 @@ public class HttpExchangeTest3ParseQuery {
         "key1=value1&key2",
 
         Map.of("key1", "value1", "key2", "")
+    );
+  }
+
+  @Test(description = "query: two + duplicate keys")
+  public void query2Test08() throws IOException {
+    test(
+        "key=value1&key=value2",
+
+        Map.of("key", List.of("value1", "value2"))
     );
   }
 
@@ -260,6 +270,8 @@ public class HttpExchangeTest3ParseQuery {
 
     // space is not valid per se, but will cause parsing to move to VERSION.
     valid[' '] = true;
+    valid['\r'] = true;
+    valid['\n'] = true;
 
     VALID_BYTES = valid;
   }
@@ -407,7 +419,6 @@ public class HttpExchangeTest3ParseQuery {
     \r
     """);
   }
-  private byte[] ascii(String s) { return s.getBytes(StandardCharsets.US_ASCII); }
 
   @Test
   public void uriTooLong() throws IOException {
@@ -415,7 +426,7 @@ public class HttpExchangeTest3ParseQuery {
     veryLongValue = "ba7f9045".repeat(200);
 
     final Socket socket;
-    socket = Y.socket("GET /entity?hash=" + veryLongValue + " HTTP/1.1\r\n\r\n");
+    socket = Y.socket("GET /entity?hash=" + veryLongValue + " HTTP/1.1\r\nHost: www.example.com\r\n\r\n");
 
     try (HttpExchange http = new HttpExchange(socket, 256, 512, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
       assertEquals(http.shouldHandle(), false);
@@ -432,6 +443,10 @@ public class HttpExchangeTest3ParseQuery {
           """
       );
     }
+  }
+
+  private byte[] ascii(String s) {
+    return s.getBytes(StandardCharsets.US_ASCII);
   }
 
   private void badRequest(Object request) throws IOException {
@@ -460,6 +475,7 @@ public class HttpExchangeTest3ParseQuery {
   private void test(String queryString, Map<String, Object> expected) throws IOException {
     final String request = """
     GET /path?%s HTTP/1.1\r
+    Host: www.example.com\r
     \r
     """.formatted(queryString);
 

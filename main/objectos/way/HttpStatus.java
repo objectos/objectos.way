@@ -109,7 +109,7 @@ final class HttpStatus implements Http.Status {
   /**
    * The {@code 500 INTERNAL SERVER ERROR} status.
    */
-  public static final HttpStatus INTERNAL_SERVER_ERROR = BUILDER.create(500, "INTERNAL SERVER ERROR");
+  public static final HttpStatus INTERNAL_SERVER_ERROR = BUILDER.create(500, "Internal Server Error");
 
   /**
    * The {@code 501 NOT IMPLEMENTED} status.
@@ -119,7 +119,7 @@ final class HttpStatus implements Http.Status {
   /**
    * The {@code 505 HTTP VERSION NOT SUPPORTED} status.
    */
-  public static final HttpStatus HTTP_VERSION_NOT_SUPPORTED = BUILDER.create(505, "HTTP VERSION NOT SUPPORTED");
+  public static final HttpStatus HTTP_VERSION_NOT_SUPPORTED = BUILDER.create(505, "HTTP Version Not Supported");
 
   private static final HttpStatus[] VALUES;
 

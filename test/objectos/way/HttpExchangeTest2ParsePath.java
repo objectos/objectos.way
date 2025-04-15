@@ -121,44 +121,48 @@ public class HttpExchangeTest2ParsePath {
     """);
   }
 
-  @Test(description = "bad request: contains any invalid byte value")
-  public void badRequest04() throws IOException {
-    final StringBuilder sb;
-    sb = new StringBuilder();
+  private static final boolean[] VALID_BYTES;
 
-    for (int idx = 0; idx < 0xFF; idx++) {
-      final ByteArrayOutputStream out;
-      out = new ByteArrayOutputStream();
+  static {
+    final boolean[] valid;
+    valid = new boolean[256];
 
-      out.write(ascii("GET /character"));
-      out.write((byte) idx);
-      out.write(ascii(" HTTP/1.1\r\n\r\n"));
+    final String validString;
+    validString = Http.unreserved() + Http.subDelims() + ":@";
 
-      final Socket socket;
-      socket = Y.socket(out.toByteArray());
+    for (int idx = 0, len = validString.length(); idx < len; idx++) {
+      final char c;
+      c = validString.charAt(idx);
 
-      try (HttpExchange http = new HttpExchange(socket, 256, 512, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
-        if (http.shouldHandle()) {
-          sb.append((char) idx);
-        } else {
-          assertEquals(
-              http.toString(),
-
-              """
-              HTTP/1.1 400 Bad Request\r
-              Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-              Content-Type: text/plain; charset=utf-8\r
-              Content-Length: 22\r
-              Connection: close\r
-              \r
-              Invalid request line.
-              """
-          );
-        }
-      }
+      valid[c] = true;
     }
 
-    assertEquals(sb.toString(), " !$&'()*+,-./0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~");
+    // url separator
+    valid['/'] = true;
+    valid['%'] = true;
+    valid['?'] = true;
+
+    // CR / LF are not valid per se, but will trigger 505 instead of 400
+    valid['\r'] = true;
+    valid['\n'] = true;
+
+    VALID_BYTES = valid;
+  }
+
+  @Test(description = "bad request: contains any invalid byte value")
+  public void badRequest04() throws IOException {
+    for (int value = 0; value < VALID_BYTES.length; value++) {
+      if (!VALID_BYTES[value]) {
+        final ByteArrayOutputStream out;
+        out = new ByteArrayOutputStream();
+
+        out.write(ascii("GET /pa"));
+        out.write((byte) value);
+        out.write(ascii("th HTTP/1.1\r\n\r\n"));
+
+        badRequest(out.toByteArray());
+      }
+    }
   }
 
   private byte[] ascii(String s) { return s.getBytes(StandardCharsets.US_ASCII); }
@@ -256,7 +260,7 @@ public class HttpExchangeTest2ParsePath {
     }
   }
 
-  private void badRequest(String request) throws IOException {
+  private void badRequest(Object request) throws IOException {
     final Socket socket;
     socket = Y.socket(request);
 
