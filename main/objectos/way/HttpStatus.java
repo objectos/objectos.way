@@ -104,6 +104,11 @@ final class HttpStatus implements Http.Status {
    */
   public static final HttpStatus UNPROCESSABLE_CONTENT = BUILDER.create(422, "UNPROCESSABLE CONTENT");
 
+  /**
+   * The {@code 431 Request Header Fields Too Large} status.
+   */
+  public static final HttpStatus REQUEST_HEADER_FIELDS_TOO_LARGE = BUILDER.create(431, "Request Header Fields Too Large");
+
   // 5.x.x
 
   /**

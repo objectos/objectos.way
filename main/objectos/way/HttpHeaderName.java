@@ -38,6 +38,7 @@ final class HttpHeaderName implements Http.HeaderName {
   static final HttpHeaderName HOST = B.std("Host", HttpHeaderType.REQUEST);
   static final HttpHeaderName IF_NONE_MATCH = B.std("If-None-Match", HttpHeaderType.REQUEST);
   static final HttpHeaderName LOCATION = B.std("Location", HttpHeaderType.RESPONSE);
+  static final HttpHeaderName REFERER = B.std("Referer", HttpHeaderType.REQUEST);
   static final HttpHeaderName SET_COOKIE = B.std("Set-Cookie", HttpHeaderType.RESPONSE);
   static final HttpHeaderName TRANSFER_ENCODING = B.std("Transfer-Encoding", HttpHeaderType.BOTH);
   static final HttpHeaderName USER_AGENT = B.std("User-Agent", HttpHeaderType.REQUEST);
@@ -75,6 +76,10 @@ final class HttpHeaderName implements Http.HeaderName {
 
   private static final byte[] TABLE;
 
+  static final byte INVALID = -1;
+
+  static final byte COLON = -2;
+
   static {
     VALUES = B.values();
 
@@ -98,7 +103,7 @@ final class HttpHeaderName implements Http.HeaderName {
     final byte[] table;
     table = new byte[128];
 
-    Arrays.fill(table, (byte) -1);
+    Arrays.fill(table, INVALID);
 
     for (int i = 0, len = tokenChars.length(); i < len; i++) {
       final char token;
@@ -109,6 +114,8 @@ final class HttpHeaderName implements Http.HeaderName {
 
       table[token] = (byte) lower;
     }
+
+    table[':'] = COLON;
 
     TABLE = table;
   }
@@ -136,10 +143,6 @@ final class HttpHeaderName implements Http.HeaderName {
 
   public static byte map(byte b) {
     if (b < 0) {
-      return -1;
-    }
-
-    if (b > 127) {
       return -1;
     }
 
@@ -228,14 +231,6 @@ final class HttpHeaderName implements Http.HeaderName {
     return lowerCase.hashCode();
   }
 
-  public final int index() {
-    return index;
-  }
-
-  public final boolean isResponseOnly() {
-    return type == HttpHeaderType.RESPONSE;
-  }
-
   @Override
   public final String headerCase() {
     // benign data race
@@ -278,9 +273,22 @@ final class HttpHeaderName implements Http.HeaderName {
     return result;
   }
 
+  public final int index() {
+    return index;
+  }
+
+  public final boolean isResponseOnly() {
+    return type == HttpHeaderType.RESPONSE;
+  }
+
   @Override
   public final String lowerCase() {
     return lowerCase;
+  }
+
+  @Override
+  public final String toString() {
+    return "Http.Header.Name[" + lowerCase + "]";
   }
 
   public final HttpHeaderType type() {

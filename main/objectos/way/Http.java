@@ -471,6 +471,11 @@ public final class Http {
     HeaderName LOCATION = HttpHeaderName.LOCATION;
 
     /**
+     * The {@code Referer} header name.
+     */
+    HeaderName REFERER = HttpHeaderName.REFERER;
+
+    /**
      * The {@code Set-Cookie} header name.
      */
     HeaderName SET_COOKIE = HttpHeaderName.SET_COOKIE;
@@ -1274,6 +1279,11 @@ public final class Http {
      * The {@code 422 UNPROCESSABLE CONTENT} status.
      */
     Status UNPROCESSABLE_CONTENT = HttpStatus.UNPROCESSABLE_CONTENT;
+
+    /**
+     * The {@code 431 Request Header Fields Too Large} status.
+     */
+    Status REQUEST_HEADER_FIELDS_TOO_LARGE = HttpStatus.REQUEST_HEADER_FIELDS_TOO_LARGE;
 
     // 5.x.x
 

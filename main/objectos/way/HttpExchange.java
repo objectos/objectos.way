@@ -58,6 +58,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
       Note.Long1Ref2<ClientError, Http.Exchange> badRequest,
       Note.Long1Ref1<Http.Exchange> uriTooLong,
+      Note.Long1Ref1<Http.Exchange> requestHeaderFieldsTooLarge,
       Note.Long1Ref1<Http.Exchange> notImplemented,
       Note.Long1Ref1<Http.Exchange> httpVersionNotSupported,
 
@@ -79,6 +80,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
           Note.Long1Ref2.create(s, "400", Note.INFO),
           Note.Long1Ref1.create(s, "414", Note.INFO),
+          Note.Long1Ref1.create(s, "431", Note.INFO),
           Note.Long1Ref1.create(s, "501", Note.INFO),
           Note.Long1Ref1.create(s, "505", Note.INFO),
 
@@ -159,6 +161,31 @@ final class HttpExchange implements Http.Exchange, Closeable {
     }
   }
 
+  private enum InvalidRequestHeaders implements ClientError {
+    // do not reorder, do not rename
+
+    // header name has an invalid character
+    NAME_CHAR,
+
+    // header value has an invalid character
+    VALUE_CHAR,
+
+    // invalid header terminator, i.e., the last '\r\n'
+    TERMINATOR;
+
+    private static final byte[] MESSAGE = "Invalid request headers.\n".getBytes(StandardCharsets.US_ASCII);
+
+    @Override
+    public final byte[] message() {
+      return MESSAGE;
+    }
+
+    @Override
+    public final Http.Status status() {
+      return Http.Status.BAD_REQUEST;
+    }
+  }
+
   static final byte $START = 0;
 
   static final byte $READ = 1;
@@ -183,14 +210,22 @@ final class HttpExchange implements Http.Exchange, Closeable {
   static final byte $PARSE_VERSION_OTHERS = 19;
 
   static final byte $PARSE_HEADER = 20;
+  static final byte $PARSE_HEADER_NAME = 21;
+  static final byte $PARSE_HEADER_VALUE = 22;
+  static final byte $PARSE_HEADER_VALUE_CONTENTS = 23;
+  static final byte $PARSE_HEADER_VALUE_CR = 24;
+  static final byte $PARSE_HEADER_CR = 25;
 
-  static final byte $BAD_REQUEST = 21;
-  static final byte $URI_TOO_LONG = 22;
-  static final byte $NOT_IMPLEMENTED = 23;
-  static final byte $HTTP_VERSION_NOT_SUPPORTED = 24;
+  static final byte $PARSE_BODY = 26;
 
-  static final byte $OK = 25;
-  static final byte $ERROR = 26;
+  static final byte $BAD_REQUEST = 27;
+  static final byte $URI_TOO_LONG = 28;
+  static final byte $REQUEST_HEADER_FIELDS_TOO_LARGE = 29;
+  static final byte $NOT_IMPLEMENTED = 30;
+  static final byte $HTTP_VERSION_NOT_SUPPORTED = 31;
+
+  static final byte $OK = 32;
+  static final byte $ERROR = 33;
 
   private static final int HARD_MAX_BUFFER_SIZE = 1 << 14;
 
@@ -204,11 +239,17 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   private int bufferLimit = 0;
 
+  private HttpHeaderName headerName;
+
+  private Map<HttpHeaderName, HttpHeader> headers;
+
   private final long id = ID_GENERATOR.getAndIncrement();
 
   private final InputStream inputStream;
 
   private int mark;
+
+  private int markEnd;
 
   private final int maxBufferSize;
 
@@ -280,9 +321,17 @@ final class HttpExchange implements Http.Exchange, Closeable {
       case $PARSE_VERSION_OTHERS -> executeParseVersionOthers();
 
       case $PARSE_HEADER -> executeParseHeader();
+      case $PARSE_HEADER_NAME -> executeParseHeaderName();
+      case $PARSE_HEADER_VALUE -> executeParseHeaderValue();
+      case $PARSE_HEADER_VALUE_CONTENTS -> executeParseHeaderValueContents();
+      case $PARSE_HEADER_VALUE_CR -> executeParseHeaderValueCR();
+      case $PARSE_HEADER_CR -> executeParseHeaderCR();
+
+      case $PARSE_BODY -> executeParseBody();
 
       case $BAD_REQUEST -> executeBadRequest();
       case $URI_TOO_LONG -> executeUriTooLong();
+      case $REQUEST_HEADER_FIELDS_TOO_LARGE -> executeRequestHeaderFieldsTooLarge();
       case $NOT_IMPLEMENTED -> executeNotImplemented();
       case $HTTP_VERSION_NOT_SUPPORTED -> executeHttpVersionNotSupported();
 
@@ -369,9 +418,25 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   private byte executeReadMaxBuffer() {
     return switch (stateNext) {
-      case $PARSE_PATH, $PARSE_PATH_CONTENTS0, $PARSE_PATH_CONTENTS1, $PARSE_PATH_DECODE,
-           $PARSE_QUERY, $PARSE_QUERY0, $PARSE_QUERY1,
-           $PARSE_QUERY_VALUE, $PARSE_QUERY_VALUE0, $PARSE_QUERY_VALUE1 -> executeUriTooLong();
+      case $PARSE_PATH,
+           $PARSE_PATH_CONTENTS0,
+           $PARSE_PATH_CONTENTS1,
+           $PARSE_PATH_DECODE,
+           $PARSE_QUERY,
+           $PARSE_QUERY0,
+           $PARSE_QUERY1,
+           $PARSE_QUERY1_DECODE,
+           $PARSE_QUERY_VALUE,
+           $PARSE_QUERY_VALUE0,
+           $PARSE_QUERY_VALUE1,
+           $PARSE_QUERY_VALUE1_DECODE -> executeUriTooLong();
+
+      case $PARSE_HEADER,
+           $PARSE_HEADER_NAME,
+           $PARSE_HEADER_VALUE,
+           $PARSE_HEADER_VALUE_CONTENTS,
+           $PARSE_HEADER_VALUE_CR,
+           $PARSE_HEADER_CR -> executeRequestHeaderFieldsTooLarge();
 
       default -> { note(NOTES.readMaxBuffer); yield $ERROR; }
     };
@@ -538,13 +603,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
     } else {
       return toRead($PARSE_METHOD);
     }
-  }
-
-  private $Method parseMethod($Method candidate) {
-    final byte[] ascii;
-    ascii = candidate.ascii;
-
-    return bufferMatches(ascii) ? candidate : null;
   }
 
   // ##################################################################
@@ -1250,11 +1308,214 @@ final class HttpExchange implements Http.Exchange, Closeable {
   // ##################################################################
 
   private byte executeParseHeader() {
-    return $OK;
+    if (bufferIndex < bufferLimit) {
+      final byte b;
+      b = buffer[bufferIndex];
+
+      return switch (b) {
+        case Bytes.CR -> { bufferIndex++; yield executeParseHeaderCR(); }
+
+        case Bytes.LF -> toBadRequest(InvalidLineTerminator.INSTANCE);
+
+        case Bytes.SP -> throw new UnsupportedOperationException("obs-fold not supported");
+
+        case Bytes.HTAB -> throw new UnsupportedOperationException("obs-fold not supported");
+
+        default -> { stringBuilderInit(); yield executeParseHeaderName(); }
+      };
+    } else {
+      return toRead($PARSE_HEADER);
+    }
+  }
+
+  private byte executeParseHeaderName() {
+    while (bufferIndex < bufferLimit) {
+      final byte b;
+      b = buffer[bufferIndex];
+
+      final byte mapped;
+      mapped = HttpHeaderName.map(b);
+
+      switch (mapped) {
+        case HttpHeaderName.INVALID -> {
+          return toBadRequest(InvalidRequestHeaders.NAME_CHAR);
+        }
+
+        case HttpHeaderName.COLON -> {
+          final String lowerCase;
+          lowerCase = appendToString();
+
+          final HttpHeaderName standard;
+          standard = HttpHeaderName.byLowerCase(lowerCase);
+
+          if (standard != null) {
+            headerName = standard;
+          } else {
+            headerName = HttpHeaderName.ofLowerCase(lowerCase);
+          }
+
+          bufferIndex += 1;
+
+          return $PARSE_HEADER_VALUE;
+        }
+
+        default -> { appendChar(mapped); bufferIndex++; }
+      }
+    }
+
+    return toRead($PARSE_HEADER_NAME);
+  }
+
+  private byte executeParseHeaderValue() {
+    while (bufferIndex < bufferLimit) {
+      final byte b;
+      b = buffer[bufferIndex];
+
+      if (b == Bytes.SP || b == Bytes.HTAB) {
+        // we allow OWS after the ':'
+        bufferIndex++;
+
+        continue;
+      }
+
+      // we mark where the header value starts
+      mark = markEnd = bufferIndex;
+
+      return executeParseHeaderValueContents();
+    }
+
+    return toRead($PARSE_HEADER_VALUE);
+  }
+
+  private static final byte[] PARSE_HEADER_VALUE_TABLE;
+
+  private static final byte HEADER_VALUE_VALID = 1;
+
+  private static final byte HEADER_VALUE_WS = 2;
+
+  private static final byte HEADER_VALUE_CR = 3;
+
+  private static final byte HEADER_VALUE_LF = 4;
+
+  static {
+    final byte[] table;
+    table = new byte[128];
+
+    for (int b = 0x21; b < 0x7F; b++) {
+      // VCHAR are valid
+      table[b] = HEADER_VALUE_VALID;
+    }
+
+    // valid under certain circustances
+    table[' '] = HEADER_VALUE_WS;
+
+    table['\t'] = HEADER_VALUE_WS;
+
+    table['\r'] = HEADER_VALUE_CR;
+
+    table['\n'] = HEADER_VALUE_LF;
+
+    PARSE_HEADER_VALUE_TABLE = table;
+  }
+
+  private byte executeParseHeaderValueContents() {
+    while (bufferIndex < bufferLimit) {
+      final byte b;
+      b = buffer[bufferIndex];
+
+      if (b < 0) {
+        return toBadRequest(InvalidRequestHeaders.VALUE_CHAR);
+      }
+
+      final byte test;
+      test = PARSE_HEADER_VALUE_TABLE[b];
+
+      switch (test) {
+        default -> { return toBadRequest(InvalidRequestHeaders.VALUE_CHAR); }
+
+        case HEADER_VALUE_VALID -> { bufferIndex += 1; markEnd = bufferIndex; }
+
+        case HEADER_VALUE_WS -> { bufferIndex += 1; }
+
+        case HEADER_VALUE_CR -> { bufferIndex += 1; return executeParseHeaderValueCR(); }
+
+        case HEADER_VALUE_LF -> { return toBadRequest(InvalidLineTerminator.INSTANCE); }
+      }
+    }
+
+    return toRead($PARSE_HEADER_VALUE_CONTENTS);
+  }
+
+  private byte executeParseHeaderValueCR() {
+    if (bufferIndex < bufferLimit) {
+      final byte lf;
+      lf = buffer[bufferIndex++];
+
+      if (lf != Bytes.LF) {
+        return toBadRequest(InvalidRequestHeaders.VALUE_CHAR);
+      }
+
+      if (mark < 0 || markEnd < 0) {
+        return $ERROR;
+      }
+
+      if (markEnd - mark < 0) {
+        return $ERROR;
+      }
+
+      final HttpHeader header;
+      header = HttpHeader.create(mark, markEnd);
+
+      if (headers == null) {
+        headers = Util.createMap();
+      }
+
+      final HttpHeader existing;
+      existing = headers.put(headerName, header);
+
+      if (existing != null) {
+        existing.add(header);
+
+        headers.put(headerName, existing);
+      }
+
+      return $PARSE_HEADER;
+    } else {
+      return toRead($PARSE_HEADER_VALUE_CR);
+    }
+  }
+
+  private byte executeParseHeaderCR() {
+    if (bufferIndex < bufferLimit) {
+      final byte lf;
+      lf = buffer[bufferIndex];
+
+      if (lf != Bytes.LF) {
+        return toBadRequest(InvalidRequestHeaders.TERMINATOR);
+      }
+
+      bufferIndex++;
+
+      return $PARSE_BODY;
+    } else {
+      return toRead($PARSE_HEADER_CR);
+    }
   }
 
   // ##################################################################
   // # END: Parse: Headers
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Parse: Body
+  // ##################################################################
+
+  private byte executeParseBody() {
+    return $OK;
+  }
+
+  // ##################################################################
+  // # END: Parse: Body
   // ##################################################################
 
   // ##################################################################
@@ -1299,6 +1560,24 @@ final class HttpExchange implements Http.Exchange, Closeable {
     bufferIndex = 0;
 
     status1(Http.Status.URI_TOO_LONG);
+
+    dateNow();
+
+    header0(Http.HeaderName.CONTENT_LENGTH, "0");
+
+    header0(Http.HeaderName.CONNECTION, "close");
+
+    send0();
+
+    return $ERROR;
+  }
+
+  private byte executeRequestHeaderFieldsTooLarge() {
+    noteSink.send(NOTES.requestHeaderFieldsTooLarge, id, this);
+
+    bufferIndex = 0;
+
+    status1(Http.Status.REQUEST_HEADER_FIELDS_TOO_LARGE);
 
     dateNow();
 
@@ -1383,11 +1662,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
   // ##################################################################
 
   private void appendInit() {
-    if (stringBuilder == null) {
-      stringBuilder = new StringBuilder();
-    } else {
-      stringBuilder.setLength(0);
-    }
+    stringBuilderInit();
 
     for (int idx = mark; idx < bufferIndex; idx++) {
       final byte b;
@@ -1424,6 +1699,14 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   private void note(Note.Long1Ref1<Http.Exchange> note) {
     noteSink.send(note, id, this);
+  }
+
+  private void stringBuilderInit() {
+    if (stringBuilder == null) {
+      stringBuilder = new StringBuilder();
+    } else {
+      stringBuilder.setLength(0);
+    }
   }
 
   // ##################################################################
@@ -1550,10 +1833,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
   private Path requestBodyFile;
 
   // RequestHeaders
-
-  HttpHeaderName headerName;
-
-  Map<HttpHeaderName, HttpHeader> headers;
 
   // RequestLine
 

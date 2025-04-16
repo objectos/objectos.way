@@ -17,7 +17,6 @@ package objectos.way;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 final class HttpHeader {
@@ -55,23 +54,42 @@ final class HttpHeader {
 
   private static final byte[] TABLE;
 
+  static final byte INVALID = 0;
+
+  static final byte VALID = 1;
+
+  static final byte WS = 2;
+
+  static final byte CR = 3;
+
+  static final byte LF = 4;
+
   static {
     final byte[] table;
     table = new byte[128];
 
-    // fill with invalid
-    Arrays.fill(table, (byte) -1);
-
-    // valid under certain circustances
-    table[' '] = 0;
-    table['\t'] = 0;
-
-    for (byte b = 0x21; b < 0x7F; b++) {
+    for (int b = 0x21; b < 0x7F; b++) {
       // VCHAR are valid
-      table[b] = 1;
+      table[b] = VALID;
     }
 
+    // valid under certain circustances
+    table[' '] = WS;
+
+    table['\t'] = WS;
+
+    table['\r'] = CR;
+
+    table['\n'] = LF;
+
     TABLE = table;
+  }
+
+  public static HttpHeader create(int startIndex, int endIndex) {
+    final Range range;
+    range = new Range(startIndex, endIndex);
+
+    return new HttpHeader(Kind.SINGLE, range);
   }
 
   public static HttpHeader createIfValid(byte[] buffer, int startIndex, int endIndex) {
