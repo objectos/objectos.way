@@ -19,9 +19,6 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import org.testng.annotations.Test;
 
 public class HttpExchangeTest0Read {
@@ -143,7 +140,7 @@ public class HttpExchangeTest0Read {
     req1 = "1".repeat(64);
 
     final IOException exception;
-    exception = new IOException("Read Error");
+    exception = Y.trimStackTrace(new IOException("Read Error"), 1);
 
     final Socket socket;
     socket = Y.socket(req1, exception);
@@ -170,64 +167,6 @@ public class HttpExchangeTest0Read {
     socket = Y.socket(data);
 
     return new HttpExchange(socket, initial, max, TestingClock.FIXED, TestingNoteSink.INSTANCE);
-  }
-
-  @Test(description = "Support for request body parsing")
-  public void testCase008() throws IOException {
-    String body;
-    body = "email=user%40example.com";
-
-    HttpExchange input;
-    input = regularInput(body);
-
-    long contentLength;
-    contentLength = 24;
-
-    assertEquals(input.canBuffer(contentLength), true);
-
-    int read;
-    read = input.read(24);
-
-    assertEquals(read, 24);
-    assertEquals(input.bufferToString(0, 24), body);
-  }
-
-  @Test(description = """
-  Request body is larger than buffer
-  """)
-  public void testCase019() throws IOException {
-    String chunk256 = """
-    .................................................
-    .................................................
-    .................................................
-    .................................................
-    .................................................
-    123456""";
-
-    HttpExchange input;
-    input = regularInput(chunk256);
-
-    long contentLength;
-    contentLength = 256;
-
-    assertEquals(input.canBuffer(contentLength), false);
-
-    Path file;
-    file = Files.createTempFile("objectos-way-socket-input-tc19-", ".tmp");
-
-    try {
-      long read;
-      read = input.read(file, contentLength);
-
-      assertEquals(read, contentLength);
-
-      String s;
-      s = Files.readString(file, StandardCharsets.UTF_8);
-
-      assertEquals(s, chunk256);
-    } finally {
-      Files.delete(file);
-    }
   }
 
   @Test(description = "It should be possible to serialize contents for debugging purposes")

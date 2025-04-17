@@ -32,6 +32,7 @@ import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -406,6 +407,26 @@ final class Y {
 
   // ##################################################################
   // # END: Socket
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Throwable
+  // ##################################################################
+
+  public static <T extends Throwable> T trimStackTrace(T t, int newLength) {
+    final StackTraceElement[] stackTrace;
+    stackTrace = t.getStackTrace();
+
+    final StackTraceElement[] copy;
+    copy = Arrays.copyOf(stackTrace, newLength);
+
+    t.setStackTrace(copy);
+
+    return t;
+  }
+
+  // ##################################################################
+  // # END: Throwable
   // ##################################################################
 
   public static void test(HttpResponse<String> response, String expected) {

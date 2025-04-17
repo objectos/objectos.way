@@ -23,7 +23,7 @@ import java.util.function.Consumer;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class HttpExchangeTest4Create {
+public class HttpExchangeTest7Create {
 
   @Test
   public void formParam01() {

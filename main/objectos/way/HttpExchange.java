@@ -18,7 +18,6 @@ package objectos.way;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -56,9 +55,12 @@ final class HttpExchange implements Http.Exchange, Closeable {
       Note.Long1Ref1<Http.Exchange> readMaxBuffer,
       Note.Long1Ref2<Http.Exchange, IOException> readIOException,
 
+      Note.Long1Ref2<Path, Http.Exchange> bodyFile,
+
       Note.Long1Ref2<ClientError, Http.Exchange> badRequest,
       Note.Long1Ref1<Http.Exchange> uriTooLong,
       Note.Long1Ref1<Http.Exchange> requestHeaderFieldsTooLarge,
+      Note.Long1Ref2<Http.Exchange, Throwable> internalServerError,
       Note.Long1Ref1<Http.Exchange> notImplemented,
       Note.Long1Ref1<Http.Exchange> httpVersionNotSupported,
 
@@ -78,9 +80,12 @@ final class HttpExchange implements Http.Exchange, Closeable {
           Note.Long1Ref1.create(s, "MAX", Note.WARN),
           Note.Long1Ref2.create(s, "IOX", Note.ERROR),
 
+          Note.Long1Ref2.create(s, "RBF", Note.INFO),
+
           Note.Long1Ref2.create(s, "400", Note.INFO),
           Note.Long1Ref1.create(s, "414", Note.INFO),
           Note.Long1Ref1.create(s, "431", Note.INFO),
+          Note.Long1Ref2.create(s, "500", Note.ERROR),
           Note.Long1Ref1.create(s, "501", Note.INFO),
           Note.Long1Ref1.create(s, "505", Note.INFO),
 
@@ -89,6 +94,14 @@ final class HttpExchange implements Http.Exchange, Closeable {
       );
     }
 
+  }
+
+  private enum BodyKind {
+    EMPTY,
+
+    IN_BUFFER,
+
+    FILE;
   }
 
   private sealed interface ClientError {
@@ -233,6 +246,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   private static final Notes NOTES = Notes.get();
 
+  private BodyKind bodyKind = BodyKind.EMPTY;
+
   private byte[] buffer;
 
   private int bufferIndex = 0;
@@ -272,6 +287,79 @@ final class HttpExchange implements Http.Exchange, Closeable {
   private StringBuilder stringBuilder;
 
   private Http.Version version = Http.Version.HTTP_1_1;
+
+  @Override
+  public final void close() throws IOException {
+    Throwable rethrow = null;
+
+    try {
+      socket.close();
+    } catch (Throwable e) {
+      rethrow = e;
+    }
+
+    if (object instanceof AutoCloseable c) {
+      try {
+        c.close();
+      } catch (Throwable e) {
+        if (rethrow == null) {
+          rethrow = e;
+        } else {
+          rethrow.addSuppressed(e);
+        }
+      }
+    }
+
+    if (rethrow == null) {
+      return;
+    }
+
+    if (rethrow instanceof Error err) {
+      throw err;
+    }
+
+    if (rethrow instanceof RuntimeException runtime) {
+      throw runtime;
+    }
+
+    if (rethrow instanceof IOException io) {
+      throw io;
+    }
+
+    throw new IOException(rethrow);
+  }
+
+  @Override
+  public final String toString() {
+    return switch (state) {
+      case $OK -> toStringOutput("OK");
+
+      case $ERROR -> toStringOutput("ERROR");
+
+      default -> "HttpExchange[id=" + id + ",state=" + state + ",hexdump=" + bufferHex() + "]";
+    };
+  }
+
+  private String toStringOutput(String state) {
+    if (outputStream instanceof ByteArrayOutputStream impl) {
+      final byte[] bytes;
+      bytes = impl.toByteArray();
+
+      return new String(bytes, StandardCharsets.UTF_8);
+    } else {
+      return "HttpExchange[" + state + "]";
+    }
+  }
+
+  @Lang.VisibleForTesting
+  final void setObject(Object value) {
+    object = value;
+  }
+
+  @Lang.VisibleForTesting
+  final void setState(byte value) {
+    state = value;
+  }
 
   // ##################################################################
   // # BEGIN: HTTP/1.1 state machine
@@ -342,6 +430,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
   private byte executeStart() {
     noteSink.send(NOTES.start, id, remoteAddress);
 
+    bodyKind = BodyKind.EMPTY;
+
     bufferLimit = 0;
 
     bufferIndex = 0;
@@ -349,6 +439,14 @@ final class HttpExchange implements Http.Exchange, Closeable {
     mark = 0;
 
     method = null;
+
+    if (object instanceof AutoCloseable c) {
+      try {
+        c.close();
+      } catch (Exception e) {
+        return internalServerError(e);
+      }
+    }
 
     object = null;
 
@@ -410,9 +508,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
       return stateNext;
     } catch (IOException e) {
-      noteSink.send(NOTES.readIOException, id, this, e);
-
-      return $ERROR;
+      return clientReadIOException(e);
     }
   }
 
@@ -443,7 +539,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
   }
 
   private byte executeReadEof() {
-    return switch (stateNext) {
+    return switch (state) {
       case $PARSE_METHOD -> bufferLimit == 0 ? $OK : toBadRequest(InvalidRequestLine.METHOD);
 
       default -> { note(NOTES.readEof); yield $ERROR; }
@@ -1511,6 +1607,193 @@ final class HttpExchange implements Http.Exchange, Closeable {
   // ##################################################################
 
   private byte executeParseBody() {
+    final HttpHeader contentLength;
+    contentLength = headerUnchecked(HttpHeaderName.CONTENT_LENGTH);
+
+    if (contentLength != null) {
+      return executeParseBodyFixed(contentLength);
+    }
+
+    final HttpHeader transferEncoding;
+    transferEncoding = headerUnchecked(HttpHeaderName.TRANSFER_ENCODING);
+
+    if (transferEncoding != null) {
+      // TODO 501 Not Implemented
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    // TODO 411 Length Required
+    return $OK;
+  }
+
+  private byte executeParseBodyFixed(HttpHeader contentLength) {
+    final long length;
+    length = contentLength.unsignedLongValue(buffer);
+
+    if (length < 0) {
+      // length overflow: we do not handle
+      // TODO 413 Payload Too Large
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    else if (length == 0) {
+      // empty body
+      return executeParseBodyFixedZero();
+    }
+
+    else if (canBuffer(length)) {
+      // fits in buffer
+      return executeParseBodyFixedBuffer(length);
+    }
+
+    else {
+      // does not fit buffer
+      return executeParseBodyFixedFile(length);
+    }
+  }
+
+  private byte executeParseBodyFixedZero() {
+    bodyKind = BodyKind.EMPTY;
+
+    return $OK;
+  }
+
+  private byte executeParseBodyFixedBuffer(long contentLength) {
+    try {
+      // unread bytes in buffer
+      final int unread;
+      unread = bufferLimit - bufferIndex;
+
+      if (unread < contentLength) {
+
+        // we assume canBuffer was invoked before this method...
+        // i.e. max buffer size can hold everything
+        final int length;
+        length = (int) contentLength;
+
+        final int requiredBufferLength;
+        requiredBufferLength = bufferIndex + length;
+
+        // must we increase our buffer?
+        if (requiredBufferLength > buffer.length) {
+          final int newLength;
+          newLength = powerOfTwo(requiredBufferLength);
+
+          buffer = Arrays.copyOf(buffer, newLength);
+
+          noteSink.send(NOTES.readResize, id, newLength);
+        }
+
+        // how many bytes must we read
+        int mustReadCount;
+        mustReadCount = length - unread;
+
+        while (mustReadCount > 0) {
+          final int read;
+          read = inputStream.read(buffer, bufferLimit, mustReadCount);
+
+          if (read < 0) {
+            return $READ_EOF;
+          }
+
+          bufferLimit += read;
+
+          mustReadCount -= read;
+        }
+
+      }
+
+      bodyKind = BodyKind.IN_BUFFER;
+
+      return $OK;
+    } catch (IOException e) {
+      return clientReadIOException(e);
+    }
+  }
+
+  private byte executeParseBodyFixedFile(long contentLength) {
+    HttpExchangeTmp tmp;
+
+    try {
+      if (object == null) {
+        tmp = HttpExchangeTmp.ofFile();
+
+        object = tmp;
+      } else {
+        // support testing
+        tmp = (HttpExchangeTmp) object;
+      }
+    } catch (IOException e) {
+      return internalServerError(e);
+    }
+
+    // max out buffer if necessary
+    if (buffer.length < maxBufferSize) {
+      buffer = Arrays.copyOf(buffer, maxBufferSize);
+
+      noteSink.send(NOTES.readResize, id, maxBufferSize);
+    }
+
+    // prepare OutputStream
+
+    final OutputStream out;
+
+    try {
+      out = tmp.output();
+    } catch (IOException e) {
+      return internalServerError(e);
+    }
+
+    // unread bytes in buffer
+    final int unread;
+    unread = bufferLimit - bufferIndex;
+
+    // how many bytes must we read
+    long mustReadCount;
+    mustReadCount = contentLength - unread;
+
+    try (out) {
+
+      while (mustReadCount > 0) {
+        // this is guaranteed to be an int value
+        final long available;
+        available = buffer.length - bufferLimit;
+
+        // this is guaranteed to be an int value
+        final long iteration;
+        iteration = Math.min(available, mustReadCount);
+
+        final int read;
+
+        try {
+          read = inputStream.read(buffer, bufferLimit, (int) iteration);
+        } catch (IOException e) {
+          return clientReadIOException(e);
+        }
+
+        if (read < 0) {
+          return -1;
+        }
+
+        bufferLimit += read;
+
+        try {
+          out.write(buffer, bufferIndex, bufferLimit - bufferIndex);
+        } catch (IOException e) {
+          return internalServerError(e);
+        }
+
+        bufferLimit = bufferIndex;
+
+        mustReadCount -= read;
+      }
+
+    } catch (IOException e) {
+      return internalServerError(e);
+    }
+
+    bodyKind = BodyKind.FILE;
+
     return $OK;
   }
 
@@ -1633,9 +1916,182 @@ final class HttpExchange implements Http.Exchange, Closeable {
     return $ERROR;
   }
 
+  private static final byte[] INTERNAL_SERVER_ERROR_MSG = "The server encountered an internal error and was unable to complete your request.\n".getBytes(StandardCharsets.US_ASCII);
+
+  private byte internalServerError(Throwable ise) {
+    noteSink.send(NOTES.internalServerError, id, this, ise);
+
+    bufferIndex = 0;
+
+    final byte[] message;
+    message = INTERNAL_SERVER_ERROR_MSG;
+
+    status1(Http.Status.INTERNAL_SERVER_ERROR);
+
+    dateNow();
+
+    header0(Http.HeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
+
+    header0(Http.HeaderName.CONTENT_LENGTH, message.length);
+
+    header0(Http.HeaderName.CONNECTION, "close");
+
+    send0(message);
+
+    return $ERROR;
+  }
+
   // ##################################################################
   // # END: Response: Early (internal)
   // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Error Conditions
+  // ##################################################################
+
+  private byte clientReadIOException(IOException e) {
+    noteSink.send(NOTES.readIOException, id, this, e);
+
+    return $ERROR;
+  }
+
+  // ##################################################################
+  // # END: Error Conditions
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Http.Exchange API || request line
+  // ##################################################################
+
+  @Override
+  public final Http.Method method() {
+    checkRequest();
+
+    return method;
+  }
+
+  @Override
+  public final String path() {
+    checkRequest();
+
+    return path;
+  }
+
+  @Override
+  public final String queryParam(String name) {
+    checkRequest();
+    Objects.requireNonNull(name, "name == null");
+
+    if (queryParams == null) {
+      return null;
+    } else {
+      return Http.queryParamsGet(queryParams, name);
+    }
+  }
+
+  @Override
+  public final List<String> queryParamAll(String name) {
+    checkRequest();
+    Objects.requireNonNull(name, "name == null");
+
+    if (queryParams == null) {
+      return List.of();
+    } else {
+      return Http.queryParamsGetAll(queryParams, name);
+    }
+  }
+
+  @Override
+  public final Set<String> queryParamNames() {
+    checkRequest();
+
+    if (queryParams == null) {
+      return Set.of();
+    } else {
+      return queryParams.keySet();
+    }
+  }
+
+  @Override
+  public final Http.Version version() {
+    checkRequest();
+
+    return version;
+  }
+
+  // ##################################################################
+  // # END: Http.Exchange API || request line
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Http.Exchange API || request headers
+  // ##################################################################
+
+  @Override
+  public final String header(Http.HeaderName name) {
+    checkRequest();
+    Objects.requireNonNull(name, "name == null");
+
+    final HttpHeader maybe;
+    maybe = headerUnchecked(name);
+
+    if (maybe == null) {
+      return null;
+    }
+
+    return maybe.get(buffer);
+  }
+
+  private HttpHeader headerUnchecked(Http.HeaderName name) {
+    if (headers == null) {
+      return null;
+    } else {
+      return headers.get(name);
+    }
+  }
+
+  // ##################################################################
+  // # END: Http.Exchange API || request headers
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Http.Exchange API || request body
+  // ##################################################################
+
+  @Override
+  public final InputStream bodyInputStream() throws IOException {
+    checkRequest();
+
+    return switch (bodyKind) {
+      case EMPTY -> InputStream.nullInputStream();
+
+      case IN_BUFFER -> new ByteArrayInputStream(buffer, bufferIndex, bufferLimit - bufferIndex);
+
+      case FILE -> {
+        if (object instanceof HttpExchangeTmp tmp) {
+          yield tmp.input();
+        } else {
+          throw new IOException("");
+        }
+      }
+    };
+  }
+
+  // ##################################################################
+  // # END: Http.Exchange API || request body
+  // ##################################################################
+
+  private void checkRequest() {
+    Check.state(
+        state == $OK,
+
+        """
+        This request method can only be invoked:
+        - after a successful shouldHandle() operation; and
+        - before a response has been sent.
+        """
+    );
+  }
 
   // ##################################################################
   // # BEGIN: Response
@@ -1691,6 +2147,13 @@ final class HttpExchange implements Http.Exchange, Closeable {
     stringBuilder.setLength(0);
 
     return result;
+  }
+
+  private boolean canBuffer(long contentLength) {
+    int maxAvailable;
+    maxAvailable = maxBufferSize - bufferIndex;
+
+    return maxAvailable >= contentLength;
   }
 
   private String markToString() {
@@ -1792,14 +2255,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
     }
   }
 
-  private enum RequestBodyKind {
-    EMPTY,
-
-    IN_BUFFER,
-
-    FILE;
-  }
-
   private static final int _START = 0;
   private static final int _PARSE = 1;
   private static final int _REQUEST = 2;
@@ -1825,12 +2280,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
   private final Closeable socket;
 
   // RequestBody
-
-  private RequestBodyKind requestBodyKind = RequestBodyKind.EMPTY;
-
-  private Path requestBodyDirectory;
-
-  private Path requestBodyFile;
 
   // RequestHeaders
 
@@ -2000,50 +2449,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
     return n + 1;
   }
 
-  @Override
-  public final void close() throws IOException {
-    try {
-      requestBodyClose();
-    } finally {
-      socket.close();
-    }
-  }
-
-  @Override
-  public final String toString() {
-    final int state;
-    state = state();
-
-    return switch (state) {
-      case _START -> "HttpExchange[START]";
-
-      case _PARSE -> "HttpExchange[PARSE]";
-
-      case _REQUEST -> new String(buffer, 0, bufferLimit, StandardCharsets.UTF_8);
-
-      case _PROCESSED -> toStringOutput("PROCESSED");
-
-      case _DONE -> toStringOutput("DONE");
-
-      default -> "HttpExchange[" + state + "]";
-    };
-  }
-
-  private String toStringOutput(String state) {
-    if (outputStream instanceof ByteArrayOutputStream impl) {
-      final byte[] bytes;
-      bytes = impl.toByteArray();
-
-      return new String(bytes, StandardCharsets.UTF_8);
-    } else {
-      return "HttpExchange[" + state + "]";
-    }
-  }
-
-  private int state() {
-    return bitset & STATE_MASK;
-  }
-
   // ##################################################################
   // # BEGIN: HTTP/1.1 request parsing
   // ##################################################################
@@ -2209,9 +2614,9 @@ final class HttpExchange implements Http.Exchange, Closeable {
   }
 
   private void resetRequestBody() {
-    requestBodyKind = RequestBodyKind.EMPTY;
-
-    requestBodyFile = null;
+    //    requestBodyKind = RequestBodyKind.EMPTY;
+    //
+    //    requestBodyFile = null;
   }
 
   private void resetServerLoop() {
@@ -2666,69 +3071,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
   // ##################################################################
 
   // ##################################################################
-  // # BEGIN: HTTP/1.1 request parsing || body
-  // ##################################################################
-
-  final void parseRequestBody() throws IOException {
-    final HttpHeader contentLength;
-    contentLength = headerUnchecked(HttpHeaderName.CONTENT_LENGTH);
-
-    if (contentLength != null) {
-      final long length;
-      length = contentLength.unsignedLongValue(buffer);
-
-      if (length < 0) {
-        // TODO 413 Payload Too Large
-        parseStatus = ParseStatus.INVALID_HEADER;
-      }
-
-      else if (canBuffer(length)) {
-        int read;
-        read = read(length);
-
-        if (read < 0) {
-          throw new EOFException();
-        }
-
-        requestBodyKind = RequestBodyKind.IN_BUFFER;
-      }
-
-      else {
-        if (requestBodyDirectory == null) {
-          requestBodyFile = Files.createTempFile("objectos-way-request-body-", ".tmp");
-        } else {
-          requestBodyFile = Files.createTempFile(requestBodyDirectory, "objectos-way-request-body-", ".tmp");
-        }
-
-        long read;
-        read = read(requestBodyFile, length);
-
-        if (read < 0) {
-          parseStatus = ParseStatus.EOF;
-        } else {
-          requestBodyKind = RequestBodyKind.FILE;
-        }
-      }
-
-      return;
-    }
-
-    final HttpHeader transferEncoding;
-    transferEncoding = headerUnchecked(HttpHeaderName.TRANSFER_ENCODING);
-
-    if (transferEncoding != null) {
-      // TODO 501 Not Implemented
-      throw new UnsupportedOperationException("Implement me");
-    }
-
-    // TODO 411 Length Required
-  }
-
-  // ##################################################################
-  // # END: HTTP/1.1 request parsing || body
-  // ##################################################################
-
-  // ##################################################################
   // # BEGIN: HTTP/1.1 request parsing || keep alive
   // ##################################################################
 
@@ -2769,18 +3111,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
   // # END: HTTP/1.1 request parsing || keep alive
   // ##################################################################
 
-  private void checkRequest() {
-    Check.state(
-        !badRequest(),
-
-        """
-        This request method can only be invoked:
-        - after a successful parse() operation; and
-        - before any response related method invocation.
-        """
-    );
-  }
-
   private boolean badRequest() {
     Check.state(testState(_REQUEST), "Http.Request methods can only be invoked after a parse() operation");
 
@@ -2788,38 +3118,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
   }
 
   // ##################################################################
-  // # BEGIN: Http.Exchange API || request line
-  // ##################################################################
-
-  @Override
-  public final Http.Method method() {
-    return method;
-  }
-
-  @Override
-  public final Http.Version version() {
-    return version;
-  }
-
-  // ##################################################################
-  // # END: Http.Exchange API || request line
-  // ##################################################################
-
-  // ##################################################################
   // # BEGIN: Http.Exchange API || request target
   // ##################################################################
-
-  @Override
-  public final String path() {
-    if (path == null) {
-      String raw;
-      raw = rawPath();
-
-      path = decode(raw);
-    }
-
-    return path;
-  }
 
   @Override
   public final String pathParam(String name) {
@@ -2942,37 +3242,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
   }
 
   @Override
-  public final String queryParam(String name) {
-    Objects.requireNonNull(name, "name == null");
-
-    if (queryParams == null) {
-      return null;
-    } else {
-      return Http.queryParamsGet(queryParams, name);
-    }
-  }
-
-  @Override
-  public final List<String> queryParamAll(String name) {
-    Objects.requireNonNull(name, "name == null");
-
-    if (queryParams == null) {
-      return List.of();
-    } else {
-      return Http.queryParamsGetAll(queryParams, name);
-    }
-  }
-
-  @Override
-  public final Set<String> queryParamNames() {
-    if (queryParams == null) {
-      return Set.of();
-    } else {
-      return queryParams.keySet();
-    }
-  }
-
-  @Override
   public final String rawPath() {
     return rawValue.substring(0, pathLimit);
   }
@@ -3090,72 +3359,12 @@ final class HttpExchange implements Http.Exchange, Closeable {
   // # BEGIN: Http.Exchange API || request headers
   // ##################################################################
 
-  @Override
-  public final String header(Http.HeaderName name) {
-    Objects.requireNonNull(name, "name == null");
-
-    final HttpHeader maybe;
-    maybe = headerUnchecked(name);
-
-    if (maybe == null) {
-      return null;
-    }
-
-    return maybe.get(buffer);
-  }
-
   public final int size() {
     return headers != null ? headers.size() : 0;
   }
 
-  private HttpHeader headerUnchecked(Http.HeaderName name) {
-    if (headers == null) {
-      return null;
-    } else {
-      return headers.get(name);
-    }
-  }
-
   // ##################################################################
   // # END: Http.Exchange API || request headers
-  // ##################################################################
-
-  // ##################################################################
-  // # BEGIN: Http.Exchange API || request body
-  // ##################################################################
-
-  public void requestBodyDirectory(java.nio.file.Path directory) {
-    requestBodyDirectory = directory;
-  }
-
-  private void requestBodyClose() throws IOException {
-    if (requestBodyFile != null) {
-      Files.delete(requestBodyFile);
-    }
-  }
-
-  @Override
-  public final InputStream bodyInputStream() throws IOException {
-    checkRequest();
-
-    return switch (requestBodyKind) {
-      case EMPTY -> InputStream.nullInputStream();
-
-      case IN_BUFFER -> openStreamImpl();
-
-      case FILE -> Files.newInputStream(requestBodyFile);
-    };
-  }
-
-  private InputStream openStreamImpl() {
-    int length;
-    length = bufferLimit - bufferIndex;
-
-    return new ByteArrayInputStream(buffer, bufferIndex, length);
-  }
-
-  // ##################################################################
-  // # END: Http.Exchange API || request body
   // ##################################################################
 
   // ##################################################################
@@ -4007,105 +4216,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   final byte get(int index) {
     return buffer[index];
-  }
-
-  final boolean canBuffer(long contentLength) {
-    int maxAvailable;
-    maxAvailable = maxBufferSize - bufferIndex;
-
-    return maxAvailable >= contentLength;
-  }
-
-  final int read(long contentLength) throws IOException {
-    // unread bytes in buffer
-    int unread;
-    unread = bufferLimit - bufferIndex;
-
-    if (unread >= contentLength) {
-      // everything is in the buffer already -> do not read
-
-      return 0;
-    }
-
-    // we assume canBuffer was invoked before this method...
-    // i.e. max buffer size can hold everything
-    int length;
-    length = (int) contentLength;
-
-    int requiredBufferLength;
-    requiredBufferLength = bufferIndex + length;
-
-    // must we increase our buffer?
-
-    if (requiredBufferLength > buffer.length) {
-      int newLength;
-      newLength = powerOfTwo(requiredBufferLength);
-
-      buffer = Arrays.copyOf(buffer, newLength);
-    }
-
-    // how many bytes must we read
-    int mustReadCount;
-    mustReadCount = length - unread;
-
-    while (mustReadCount > 0) {
-      int read;
-      read = inputStream.read(buffer, bufferLimit, mustReadCount);
-
-      if (read < 0) {
-        return -1;
-      }
-
-      bufferLimit += read;
-
-      mustReadCount -= read;
-    }
-
-    return length;
-  }
-
-  final long read(Path file, long contentLength) throws IOException {
-    // max out buffer if necessary
-    if (buffer.length < maxBufferSize) {
-      buffer = Arrays.copyOf(buffer, maxBufferSize);
-    }
-
-    // unread bytes in buffer
-    int unread;
-    unread = bufferLimit - bufferIndex;
-
-    // how many bytes must we read
-    long mustReadCount;
-    mustReadCount = contentLength - unread;
-
-    try (OutputStream out = Files.newOutputStream(file)) {
-      while (mustReadCount > 0) {
-        // this is guaranteed to be an int value
-        long available;
-        available = buffer.length - bufferLimit;
-
-        // this is guaranteed to be an int value
-        long iteration;
-        iteration = Math.min(available, mustReadCount);
-
-        int read;
-        read = inputStream.read(buffer, bufferLimit, (int) iteration);
-
-        if (read < 0) {
-          return -1;
-        }
-
-        bufferLimit += read;
-
-        out.write(buffer, bufferIndex, bufferLimit - bufferIndex);
-
-        bufferLimit = bufferIndex;
-
-        mustReadCount -= read;
-      }
-    }
-
-    return contentLength;
   }
 
 }
