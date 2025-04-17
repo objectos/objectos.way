@@ -25,7 +25,6 @@ import java.time.Clock;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
-import objectos.way.HttpExchange.ParseStatus;
 
 /**
  * The Objectos Way {@link HttpServer} implementation.
@@ -224,29 +223,11 @@ final class HttpServer implements Http.Server, Runnable {
     @Override
     public final void run() {
       try (HttpExchange http = new HttpExchange(socket, bufferSizeInitial, bufferSizeMax, clock, noteSink)) {
-        while (!Thread.currentThread().isInterrupted()) {
-          ParseStatus parse;
-          parse = http.parse();
-
-          if (parse == ParseStatus.EOF) {
-            break;
-          }
-
-          if (parse.isError()) {
-            throw new UnsupportedOperationException("Implement me");
-          }
-
+        while (http.shouldHandle()) {
           try {
             handler.handle(http);
           } catch (Http.AbstractHandlerException ex) {
             ex.handle(http);
-          } catch (HttpExchange.SendException ex) {
-            IOException cause;
-            cause = ex.getCause();
-
-            noteSink.send(notes.ioError, cause);
-
-            break; // could not send response. End this exchange
           } catch (Http.InternalServerException t) {
             final Throwable cause;
             cause = t.getCause();
@@ -259,10 +240,6 @@ final class HttpServer implements Http.Server, Runnable {
             internalServerError(http, t);
 
             // assume handler is in invalid state. End this exchange
-            break;
-          }
-
-          if (!http.keepAlive()) {
             break;
           }
         }

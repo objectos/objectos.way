@@ -830,7 +830,7 @@ public final class Http {
   /**
    * Provides methods for writing the response message of an HTTP exchange.
    */
-  public sealed interface Response extends ResponseHeaders {
+  public sealed interface Response {
 
     /**
      * Writes a {@code 200 OK} response message with the contents of the
@@ -891,7 +891,7 @@ public final class Http {
   /**
    * Provides messages for writing the headers of an HTTP response message.
    */
-  public sealed interface ResponseHeaders permits Response {
+  public interface ResponseHeaders {
 
     /**
      * Writes an HTTP response header field with the specified name and value.

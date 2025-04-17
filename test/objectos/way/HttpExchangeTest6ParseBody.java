@@ -26,7 +26,7 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import org.testng.annotations.Test;
 
-public class HttpExchangeTest6RequestBody {
+public class HttpExchangeTest6ParseBody {
 
   private static abstract class AbstractTmp implements HttpExchangeTmp {
     boolean closed;

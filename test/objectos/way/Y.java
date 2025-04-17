@@ -355,6 +355,10 @@ final class Y {
       inputStream = Objects.requireNonNull(value, "value == null");
     }
 
+    public final void outputStream(OutputStream value) {
+      outputStream = Objects.requireNonNull(value, "value == null");
+    }
+
     final Socket build() {
       if (inputStream == null) {
         inputStream = Y.inputStream();

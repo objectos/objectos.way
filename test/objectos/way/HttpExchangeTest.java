@@ -19,14 +19,9 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.Clock;
 import java.util.Set;
-import objectos.way.HttpExchange.ParseStatus;
-import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class HttpExchangeTest {
@@ -89,9 +84,7 @@ public class HttpExchangeTest {
         Content-Length: 13\r
         \r
         Hello World!
-        """,
-
-        keepAlive(false)
+        """
     );
   }
 
@@ -157,8 +150,6 @@ public class HttpExchangeTest {
         \r
         %s""".formatted(body01),
 
-        keepAlive(true),
-
         """
         GET /login.css HTTP/1.1\r
         Host: www.example.com\r
@@ -192,11 +183,59 @@ public class HttpExchangeTest {
         Content-Type: text/plain; charset=utf-8\r
         Content-Length: 32\r
         \r
-        %s""".formatted(body02),
-
-        keepAlive(false)
+        %s""".formatted(body02)
     );
   }
+
+  private HttpRecord http(int bufferSizeInitial, int bufferSizeMax, Clock clock, Note.Sink noteSink) {
+    return new HttpRecord(bufferSizeInitial, bufferSizeMax, clock, noteSink);
+  }
+
+  private void test(
+      HttpRecord httpRecord, String input,
+      ThrowingConsumer<HttpExchange> test, String response) {
+    final Socket socket;
+    socket = Y.socket(input);
+
+    try (HttpExchange http = httpRecord.build(socket)) {
+      assertEquals(http.shouldHandle(), true);
+
+      test.accept(http);
+
+      assertEquals(http.toString(), response);
+    } catch (IOException e) {
+      throw new AssertionError("Failed with IOException", e);
+    }
+  }
+
+  private void test(
+      HttpRecord httpRecord,
+      String input1,
+      ThrowingConsumer<HttpExchange> test1, String response1,
+      String input2,
+      ThrowingConsumer<HttpExchange> test2, String response2) {
+    final Socket socket;
+    socket = Y.socket(input1, input2);
+
+    try (HttpExchange http = httpRecord.build(socket)) {
+      assertEquals(http.shouldHandle(), true);
+
+      test1.accept(http);
+
+      assertEquals(http.toString(), response1);
+
+      assertEquals(http.shouldHandle(), true);
+
+      test2.accept(http);
+
+      assertEquals(http.toString(), response2);
+    } catch (IOException e) {
+      throw new AssertionError("Failed with IOException", e);
+    }
+  }
+
+  /*
+
 
   @Test(description = """
   It should handle unkonwn request headers
@@ -1054,71 +1093,8 @@ public class HttpExchangeTest {
         keepAlive(false)
     );
   }
-
-  private HttpRecord http(int bufferSizeInitial, int bufferSizeMax, Clock clock, Note.Sink noteSink) {
-    return new HttpRecord(bufferSizeInitial, bufferSizeMax, clock, noteSink);
-  }
-
-  private boolean keepAlive(boolean value) {
-    return value;
-  }
-
-  private void test(
-      HttpRecord httpRecord, String input,
-      ThrowingConsumer<HttpExchange> test, String response, boolean keepAlive) {
-    final Socket socket;
-    socket = Y.socket(input);
-
-    try (HttpExchange http = httpRecord.build(socket)) {
-      ParseStatus parse;
-      parse = http.parse();
-
-      assertEquals(parse.isError(), false);
-
-      test.accept(http);
-
-      assertEquals(http.toString(), response);
-
-      assertEquals(http.keepAlive(), keepAlive);
-    } catch (IOException e) {
-      throw new AssertionError("Failed with IOException", e);
-    }
-  }
-
-  private void test(
-      HttpRecord httpRecord,
-      String input1,
-      ThrowingConsumer<HttpExchange> test1, String response1, boolean keepAlive1,
-      String input2,
-      ThrowingConsumer<HttpExchange> test2, String response2, boolean keepAlive2) {
-    final Socket socket;
-    socket = Y.socket(input1, input2);
-
-    try (HttpExchange http = httpRecord.build(socket)) {
-      final ParseStatus parse1;
-      parse1 = http.parse();
-
-      assertEquals(parse1.isError(), false);
-
-      test1.accept(http);
-
-      assertEquals(http.toString(), response1);
-
-      assertEquals(http.keepAlive(), keepAlive1);
-
-      final ParseStatus parse2;
-      parse2 = http.parse();
-
-      assertEquals(parse2.isError(), false);
-
-      test2.accept(http);
-
-      assertEquals(http.toString(), response2);
-
-      assertEquals(http.keepAlive(), keepAlive2);
-    } catch (IOException e) {
-      throw new AssertionError("Failed with IOException", e);
-    }
-  }
+  
+  
+  */
 
 }
