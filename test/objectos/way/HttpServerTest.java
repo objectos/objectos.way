@@ -80,7 +80,7 @@ public class HttpServerTest implements Consumer<Http.Routing> {
     }
 
     if (rethrow != null) {
-      throw new Http.InternalServerException(rethrow);
+      throw new RuntimeException(rethrow);
     }
   }
 

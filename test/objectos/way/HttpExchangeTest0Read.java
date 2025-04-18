@@ -169,21 +169,6 @@ public class HttpExchangeTest0Read {
     return new HttpExchange(socket, initial, max, TestingClock.FIXED, TestingNoteSink.INSTANCE);
   }
 
-  @Test(description = "It should be possible to serialize contents for debugging purposes")
-  public void hexDump() throws IOException {
-    HttpExchange input;
-    input = regularInput("""
-    GET / HTTP/1.1\r
-    Host: www.example.com\r
-    Connection: close\r
-    \r
-    """);
-
-    input.parseLine();
-
-    input.hexDump();
-  }
-
   @Test
   public void powerOfTwo() {
     assertEquals(HttpExchange.powerOfTwo(127), 128);
@@ -195,13 +180,6 @@ public class HttpExchangeTest0Read {
     assertEquals(HttpExchange.powerOfTwo(16383), 16384);
     assertEquals(HttpExchange.powerOfTwo(16384), 16384);
     assertEquals(HttpExchange.powerOfTwo(16385), 16384);
-  }
-
-  private HttpExchange regularInput(Object... data) throws IOException {
-    Socket socket;
-    socket = Y.socket(data);
-
-    return new HttpExchange(socket, 64, 128, null, TestingNoteSink.INSTANCE);
   }
 
 }

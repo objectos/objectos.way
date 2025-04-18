@@ -34,7 +34,7 @@ public class HttpTest {
   @Test
   public void parseRequestTarget01() {
     Http.RequestTarget target;
-    target = HttpExchange.parseRequestTarget("/");
+    target = Http.Exchange.create(cfg -> cfg.path("/"));
 
     assertEquals(target.path(), "/");
   }
@@ -42,7 +42,7 @@ public class HttpTest {
   @Test
   public void parseRequestTarget02() {
     Http.RequestTarget target;
-    target = HttpExchange.parseRequestTarget("/foo/bar?page=1&sort=asc");
+    target = Http.Exchange.create(cfg -> cfg.path("/foo/bar?page=1&sort=asc"));
 
     assertEquals(target.path(), "/foo/bar");
     assertEquals(target.queryParam("page"), "1");

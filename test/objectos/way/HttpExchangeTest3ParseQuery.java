@@ -485,6 +485,8 @@ public class HttpExchangeTest3ParseQuery {
     try (HttpExchange http = new HttpExchange(socket, 256, 512, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
       assertEquals(http.shouldHandle(), true);
 
+      assertEquals(http.queryParamNames(), expected.keySet());
+
       for (var entry : expected.entrySet()) {
         final String key;
         key = entry.getKey();

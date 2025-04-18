@@ -225,12 +225,7 @@ public final class Http {
      * @return a newly created exchange instance with the configured options
      */
     static Exchange create(Consumer<Config> config) {
-      HttpExchangeConfig builder;
-      builder = new HttpExchangeConfig();
-
-      config.accept(builder);
-
-      return builder.build();
+      return HttpExchange.create0(config);
     }
 
     /**
@@ -1323,16 +1318,6 @@ public final class Http {
   public static abstract class AbstractHandlerException extends RuntimeException implements Handler {
 
     private static final long serialVersionUID = -8277337261280606415L;
-
-  }
-
-  public static final class InternalServerException extends RuntimeException {
-
-    private static final long serialVersionUID = 4192238770922308870L;
-
-    public InternalServerException(Throwable cause) {
-      super(cause);
-    }
 
   }
 

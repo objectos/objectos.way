@@ -132,15 +132,19 @@ public class HttpRequestMatcherTest {
   }
 
   private void test(HttpRequestMatcher matcher, String target, boolean expected) {
-    HttpExchange requestTarget;
-    requestTarget = HttpExchange.parseRequestTarget(target);
+    final HttpExchange requestTarget;
+    requestTarget = HttpExchange.create0(config -> {
+      config.path(target);
+    });
 
     assertEquals(matcher.test(requestTarget), expected);
   }
 
   private void test(HttpRequestMatcher matcher, String target, Map<String, String> expected) {
     HttpExchange requestTarget;
-    requestTarget = HttpExchange.parseRequestTarget(target);
+    requestTarget = HttpExchange.create0(config -> {
+      config.path(target);
+    });
 
     assertTrue(matcher.test(requestTarget));
 

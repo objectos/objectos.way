@@ -24,7 +24,6 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Set;
-import objectos.way.HttpExchange.ParseStatus;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -277,10 +276,7 @@ public class WebFormDataTest {
     socket = Y.socket(request);
 
     try (HttpExchange http = new HttpExchange(socket, 512, 1024, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
-      ParseStatus status;
-      status = http.parse();
-
-      assertEquals(status.isError(), false);
+      assertEquals(http.shouldHandle(), true);
 
       Http.Exchange exchange;
       exchange = http;

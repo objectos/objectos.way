@@ -21,12 +21,8 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -42,7 +38,9 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import objectos.way.Http.ResponseHeaders;
 import objectos.way.Http.Status;
+import objectos.way.Lang.MediaWriter;
 
 @SuppressWarnings("serial")
 final class HttpExchange implements Http.Exchange, Closeable {
@@ -164,10 +162,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
     public final Http.Status status() {
       return Http.Status.BAD_REQUEST;
     }
-
-    final ClientErrorException create() {
-      return new ClientErrorException(this);
-    }
   }
 
   private enum InvalidRequestHeaders implements ClientError {
@@ -270,6 +264,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
   private static final int CONTENT_LENGTH = 1 << 1;
   private static final int CHUNKED = 1 << 2;
 
+  private Map<String, Object> attributes;
+
   private int bitset;
 
   private BodyKind bodyKind = BodyKind.EMPTY;
@@ -318,6 +314,78 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   private Http.Version version = Http.Version.HTTP_1_1;
 
+  public HttpExchange(Socket socket, int bufferSizeInitial, int bufferSizeMax, Clock clock, Note.Sink noteSink) throws IOException {
+    this(socket, socket.getInputStream(), socket.getOutputStream(), bufferSizeInitial, bufferSizeMax, clock, noteSink);
+  }
+
+  private HttpExchange(
+      Closeable socket,
+      InputStream inputStream,
+      OutputStream outputStream,
+      int bufferSizeInitial,
+      int bufferSizeMax,
+      Clock clock,
+      Note.Sink noteSink
+  ) {
+
+    final int initialSize;
+    initialSize = powerOfTwo(bufferSizeInitial);
+
+    this.buffer = new byte[initialSize];
+
+    this.clock = clock;
+
+    this.inputStream = inputStream;
+
+    this.maxBufferSize = powerOfTwo(bufferSizeMax);
+
+    this.noteSink = noteSink;
+
+    this.outputStream = outputStream;
+
+    this.socket = socket;
+
+  }
+
+  private HttpExchange(HttpExchangeConfig config) {
+
+    attributes = config.attributes;
+
+    final int initialSize;
+    initialSize = powerOfTwo(config.bufferSizeInitial);
+
+    buffer = new byte[initialSize];
+
+    clock = config.clock;
+
+    inputStream = config.inputStream();
+
+    maxBufferSize = config.bufferSizeMax;
+
+    noteSink = config.noteSink;
+
+    outputStream = new ByteArrayOutputStream();
+
+    socket = () -> {}; // noop closeable
+
+  }
+
+  static HttpExchange create0(Consumer<Config> config) {
+    final HttpExchangeConfig builder;
+    builder = new HttpExchangeConfig();
+
+    config.accept(builder);
+
+    final HttpExchange impl;
+    impl = new HttpExchange(builder);
+
+    if (!impl.shouldHandle()) {
+      throw new IllegalArgumentException("Invalid request");
+    }
+
+    return impl;
+  }
+
   @Override
   public final void close() throws IOException {
     Throwable rethrow = null;
@@ -359,6 +427,18 @@ final class HttpExchange implements Http.Exchange, Closeable {
     throw new IOException(rethrow);
   }
 
+  public final void handle(Http.Handler handler) {
+    try {
+      handler.handle(this);
+    } catch (Http.AbstractHandlerException ex) {
+      ex.handle(this);
+    } catch (Throwable t) {
+      internalServerError(t);
+
+      state = $ERROR;
+    }
+  }
+
   @Override
   public final String toString() {
     return switch (state) {
@@ -368,6 +448,13 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
       default -> "HttpExchange[id=" + id + ",state=" + state + ",hexdump=" + bufferHex() + "]";
     };
+  }
+
+  private String bufferHex() {
+    final HexFormat format;
+    format = HexFormat.of();
+
+    return format.formatHex(buffer, 0, bufferLimit);
   }
 
   private String toStringCommit() {
@@ -380,7 +467,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
     switch (object) {
       case byte[] bytes -> sb.append(new String(bytes, StandardCharsets.UTF_8));
 
-      default -> {}
+      case null, default -> {}
     }
 
     return sb.toString();
@@ -487,6 +574,10 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   private byte executeStart() {
     noteSink.send(NOTES.start, id, remoteAddress);
+
+    if (attributes != null) {
+      attributes.clear();
+    }
 
     bodyKind = BodyKind.EMPTY;
 
@@ -2007,7 +2098,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   private static final byte[] INTERNAL_SERVER_ERROR_MSG = "The server encountered an internal error and was unable to complete your request.\n".getBytes(StandardCharsets.US_ASCII);
 
-  private byte internalServerError(Throwable ise) {
+  final byte internalServerError(Throwable ise) {
     noteSink.send(NOTES.internalServerError, id, this, ise);
 
     final byte[] message;
@@ -2133,6 +2224,47 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   // ##################################################################
   // # END: Error Conditions
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Http.Exchange API || request attributes
+  // ##################################################################
+
+  @Override
+  public final <T> void set(Class<T> key, T value) {
+    final String name;
+    name = key.getName(); // implicit null check
+
+    Objects.requireNonNull(value, "value == null");
+
+    final Map<String, Object> map;
+    map = attributes();
+
+    map.put(name, value);
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public final <T> T get(Class<T> key) {
+    final String name;
+    name = key.getName(); // implicit null check
+
+    final Map<String, Object> map;
+    map = attributes();
+
+    return (T) map.get(name);
+  }
+
+  private Map<String, Object> attributes() {
+    if (attributes == null) {
+      attributes = Util.createMap();
+    }
+
+    return attributes;
+  }
+
+  // ##################################################################
+  // # END: Http.Exchange API || request attributes
   // ##################################################################
 
   // ##################################################################
@@ -2272,6 +2404,16 @@ final class HttpExchange implements Http.Exchange, Closeable {
   // ##################################################################
   // # BEGIN: Http.Exchange API || Response
   // ##################################################################
+
+  @Override
+  public final void respond(Status status, MediaWriter writer) {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  @Override
+  public final void respond(Status status, MediaWriter writer, Consumer<ResponseHeaders> headers) {
+    throw new UnsupportedOperationException("Implement me");
+  }
 
   // 2xx responses
 
@@ -2678,86 +2820,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
   // #
   // ##################################################################
 
-  private sealed abstract static class InternalException extends RuntimeException {
-    InternalException() {}
-  }
-
-  private static final class ClientErrorException extends InternalException implements Media.Bytes {
-    private final ClientError kind;
-
-    ClientErrorException(ClientError kind) {
-      this.kind = kind;
-    }
-
-    @Override
-    public final String contentType() {
-      return "text/plain; charset=utf-8";
-    }
-
-    @Override
-    public final byte[] toByteArray() {
-      return kind.message();
-    }
-  }
-
-  private static final class MaxBufferSizeException extends InternalException {}
-
-  private static final class RemoteClosedException extends InternalException {}
-
-  private static final class UnexpectedEofException extends InternalException {}
-
-  public enum ParseStatus {
-    // keep going
-    NORMAL,
-
-    // SocketInput statuses
-    EOF,
-
-    // 400 bad request
-    INVALID_TARGET,
-
-    INVALID_PROTOCOL,
-
-    INVALID_REQUEST_LINE_TERMINATOR,
-
-    INVALID_HEADER,
-
-    INVALID_CONTENT_LENGTH,
-
-    // 414 actually
-    URI_TOO_LONG;
-
-    public final boolean isError() {
-      return this != NORMAL;
-    }
-
-    final boolean isNormal() {
-      return this == NORMAL;
-    }
-
-    final boolean isBadRequest() {
-      return compareTo(INVALID_TARGET) >= 0;
-    }
-  }
-
-  private static final int _REQUEST = 2;
-  private static final int _RESPONSE = 3;
-  private static final int _PROCESSED = 4;
-
-  private static final int STATE_MASK = 0xF;
-  private static final int BITS_MASK = ~STATE_MASK;
-
-  private Map<String, Object> attributes;
-
-  ParseStatus parseStatus = ParseStatus.NORMAL;
-
   private final Closeable socket;
-
-  // RequestBody
-
-  // RequestHeaders
-
-  // RequestLine
 
   int pathIndex;
 
@@ -2772,129 +2835,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
   // SocketInput
 
   int lineLimit = 0;
-
-  public HttpExchange(Socket socket, int bufferSizeInitial, int bufferSizeMax, Clock clock, Note.Sink noteSink) throws IOException {
-    this(socket, socket.getInputStream(), socket.getOutputStream(), bufferSizeInitial, bufferSizeMax, clock, noteSink);
-  }
-
-  private HttpExchange(
-      Closeable socket,
-      InputStream inputStream,
-      OutputStream outputStream,
-      int bufferSizeInitial,
-      int bufferSizeMax,
-      Clock clock,
-      Note.Sink noteSink
-  ) {
-
-    final int initialSize;
-    initialSize = powerOfTwo(bufferSizeInitial);
-
-    this.buffer = new byte[initialSize];
-
-    this.clock = clock;
-
-    this.inputStream = inputStream;
-
-    this.maxBufferSize = powerOfTwo(bufferSizeMax);
-
-    this.noteSink = noteSink;
-
-    this.outputStream = outputStream;
-
-    this.socket = socket;
-
-  }
-
-  private HttpExchange(HttpExchangeConfig config) {
-
-    attributes = config.attributes;
-
-    final int initialSize;
-    initialSize = powerOfTwo(config.bufferSizeInitial);
-
-    buffer = new byte[initialSize];
-
-    clock = config.clock;
-
-    inputStream = config.inputStream();
-
-    maxBufferSize = config.bufferSizeMax;
-
-    noteSink = config.noteSink;
-
-    outputStream = new ByteArrayOutputStream();
-
-    socket = () -> {}; // noop closeable
-
-  }
-
-  /**
-   * Parses the specified string into a new request-target instance.
-   *
-   * @param target
-   *        the raw (undecoded) request-target value
-   *
-   * @return a new request target instance
-   *
-   * @throws IllegalArgumentException
-   *         if the string represents an invalid request-target value
-   */
-  public static HttpExchange parseRequestTarget(String target) {
-    Objects.requireNonNull(target, "target == null");
-
-    // append a line terminator
-    target = target + " \r\n";
-
-    byte[] bytes;
-    bytes = target.getBytes(StandardCharsets.UTF_8);
-
-    // in-memory stream... no closing needed...
-    InputStream inputStream;
-    inputStream = new ByteArrayInputStream(bytes);
-
-    HttpExchange requestLine;
-    requestLine = new HttpExchange(null, inputStream, null, bytes.length, bytes.length, null, null);
-
-    try {
-      requestLine.parseLine();
-
-      requestLine.parseRequestTarget();
-    } catch (IOException e) {
-      throw new AssertionError("In-memory stream does not throw IOException", e);
-    } catch (MaxBufferSizeException e) {
-      throw new AssertionError("Buffer is always large enough for input", e);
-    }
-
-    ParseStatus parseStatus;
-    parseStatus = requestLine.parseStatus;
-
-    if (parseStatus.isError()) {
-      throw new IllegalArgumentException(parseStatus.name());
-    }
-
-    return requestLine;
-  }
-
-  static HttpExchange build(HttpExchangeConfig config) {
-    try {
-      final HttpExchange http;
-      http = new HttpExchange(config);
-
-      final ParseStatus status;
-      status = http.parse();
-
-      if (status != ParseStatus.NORMAL) {
-        throw new IllegalArgumentException("Invalid request");
-      }
-
-      return http;
-    } catch (IOException e) {
-      throw new AssertionError("ByteArrayInputStream does not throw IOException", e);
-    } catch (MaxBufferSizeException e) {
-      throw new IllegalArgumentException("Insufficient buffer size");
-    }
-  }
 
   static final int powerOfTwo(int size) {
     // maybe size is already power of 2
@@ -2918,472 +2858,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
     return n + 1;
   }
-
-  // ##################################################################
-  // # BEGIN: HTTP/1.1 request parsing
-  // ##################################################################
-
-  // ##################################################################
-  // # BEGIN: HTTP/1.1 request parsing || request line
-  // ##################################################################
-
-  final void parseRequestLine() throws IOException {
-    parseLine();
-
-    parseMethod();
-
-    if (method == null) {
-      throw InvalidRequestLine.METHOD.create();
-    }
-
-    parseRequestTarget();
-
-    parseVersion();
-
-    if (parseStatus.isError()) {
-      // bad request -> fail
-      return;
-    }
-
-    if (!consumeIfEndOfLine()) {
-      parseStatus = ParseStatus.INVALID_REQUEST_LINE_TERMINATOR;
-
-      return;
-    }
-  }
-
-  private static final byte[] _CONNECT = "CONNECT ".getBytes(StandardCharsets.UTF_8);
-
-  private static final byte[] _DELETE = "DELETE ".getBytes(StandardCharsets.UTF_8);
-
-  private static final byte[] _GET = "GET ".getBytes(StandardCharsets.UTF_8);
-
-  private static final byte[] _HEAD = "HEAD ".getBytes(StandardCharsets.UTF_8);
-
-  private static final byte[] _OPTIONS = "OPTIONS ".getBytes(StandardCharsets.UTF_8);
-
-  private static final byte[] _POST = "POST ".getBytes(StandardCharsets.UTF_8);
-
-  private static final byte[] _PUT = "PUT ".getBytes(StandardCharsets.UTF_8);
-
-  private static final byte[] _PATCH = "PATCH ".getBytes(StandardCharsets.UTF_8);
-
-  private static final byte[] _TRACE = "TRACE ".getBytes(StandardCharsets.UTF_8);
-
-  private void parseMethod() throws IOException {
-    if (bufferIndex >= lineLimit) {
-      // empty line... nothing to do
-      return;
-    }
-
-    byte first;
-    first = buffer[bufferIndex];
-
-    // based on the first char, we select out method candidate
-
-    switch (first) {
-      case 'C' -> parseMethod0(Http.Method.CONNECT, _CONNECT);
-
-      case 'D' -> parseMethod0(Http.Method.DELETE, _DELETE);
-
-      case 'G' -> parseMethod0(Http.Method.GET, _GET);
-
-      case 'H' -> parseMethod0(Http.Method.HEAD, _HEAD);
-
-      case 'O' -> parseMethod0(Http.Method.OPTIONS, _OPTIONS);
-
-      case 'P' -> parseMethodP();
-
-      case 'T' -> parseMethod0(Http.Method.TRACE, _TRACE);
-    }
-  }
-
-  private void parseMethod0(Http.Method candidate, byte[] candidateBytes) throws IOException {
-    if (matches(candidateBytes)) {
-      method = candidate;
-    }
-  }
-
-  private void parseMethodP() throws IOException {
-    // method starts with a P. It might be:
-    // - POST
-    // - PUT
-    // - PATCH
-
-    // we'll try them in sequence
-
-    parseMethod0(Http.Method.POST, _POST);
-
-    if (method != null) {
-      return;
-    }
-
-    parseMethod0(Http.Method.PUT, _PUT);
-
-    if (method != null) {
-      return;
-    }
-
-    parseMethod0(Http.Method.PATCH, _PATCH);
-
-    if (method != null) {
-      return;
-    }
-  }
-
-  private void parsePathRest(int startIndex) throws IOException {
-    // we will look for the first:
-    // - ? char
-    // - SP char
-    int index;
-    index = indexOf(Bytes.QUESTION_MARK, Bytes.SP);
-
-    if (index < 0) {
-      // trailing char was not found
-      parseStatus = ParseStatus.URI_TOO_LONG;
-
-      return;
-    }
-
-    // index where path ends
-    int pathEndIndex;
-    pathEndIndex = index;
-
-    // as of now target ends at the path
-    int targetEndIndex;
-    targetEndIndex = pathEndIndex;
-
-    // as of now query starts and ends at path i.e. len = 0
-    int queryStartIndex;
-    queryStartIndex = pathEndIndex;
-
-    // we'll continue at the '?' or SP char
-    bufferIndex = index;
-
-    byte b;
-    b = buffer[bufferIndex++];
-
-    if (b == Bytes.QUESTION_MARK) {
-      queryStartIndex = bufferIndex;
-
-      targetEndIndex = indexOf(Bytes.SP);
-
-      if (targetEndIndex < 0) {
-        // trailing char was not found
-        parseStatus = ParseStatus.URI_TOO_LONG;
-
-        return;
-      }
-
-      // we'll continue immediately after the SP
-      bufferIndex = targetEndIndex + 1;
-    }
-
-    rawValue = bufferToString(startIndex, targetEndIndex);
-
-    pathLimit = pathEndIndex - startIndex;
-
-    queryStart = queryStartIndex - startIndex;
-  }
-
-  static final byte[] HTTP_VERSION_PREFIX = {'H', 'T', 'T', 'P', '/'};
-
-  private void parseVersion() {
-    // 'H' 'T' 'T' 'P' '/' '1' '.' '1' = 8 bytes
-
-    if (!matches(HTTP_VERSION_PREFIX)) {
-      // buffer does not start with 'HTTP/'
-      parseStatus = ParseStatus.INVALID_PROTOCOL;
-
-      return;
-    }
-
-    // check if we  have '1' '.' '1' = 3 bytes
-
-    int requiredIndex;
-    requiredIndex = bufferIndex + 3 - 1;
-
-    if (requiredIndex >= lineLimit) {
-      parseStatus = ParseStatus.INVALID_PROTOCOL;
-
-      return;
-    }
-
-    byte maybeMajor;
-    maybeMajor = buffer[bufferIndex++];
-
-    if (!Http.isDigit(maybeMajor)) {
-      // major version is not a digit => bad request
-      parseStatus = ParseStatus.INVALID_PROTOCOL;
-
-      return;
-    }
-
-    byte maybeDot;
-    maybeDot = buffer[bufferIndex++];
-
-    if (maybeDot != '.') {
-      // major version not followed by a DOT => bad request
-      parseStatus = ParseStatus.INVALID_PROTOCOL;
-
-      return;
-    }
-
-    byte maybeMinor;
-    maybeMinor = buffer[bufferIndex++];
-
-    if (!Http.isDigit(maybeMinor)) {
-      // minor version is not a digit => bad request
-      parseStatus = ParseStatus.INVALID_PROTOCOL;
-
-      return;
-    }
-
-    final int major;
-    major = maybeMajor - 0x30;
-
-    final int minor;
-    minor = maybeMinor - 0x30;
-
-    if (major == 1 && minor == 1) {
-      version = Http.Version.HTTP_1_1;
-    } else {
-      version = Http.Version.HTTP_1_0;
-    }
-  }
-
-  // ##################################################################
-  // # END: HTTP/1.1 request parsing || request line
-  // ##################################################################
-
-  // ##################################################################
-  // # BEGIN: HTTP/1.1 request parsing || headers
-  // ##################################################################
-
-  final void parseHeaders() throws IOException, MaxBufferSizeException {
-    parseLine();
-
-    while (parseStatus.isNormal() && !consumeIfEmptyLine()) {
-      parseHeaderName();
-
-      if (parseStatus.isError()) {
-        break;
-      }
-
-      parseHeaderValue();
-
-      if (parseStatus.isError()) {
-        break;
-      }
-
-      parseLine();
-    }
-
-    // clear last header name just in case
-    headerName = null;
-  }
-
-  private void parseHeaderName() {
-    // we reset any previous found header name
-
-    headerName = null;
-
-    // possible header name starts here
-    int startIndex;
-    startIndex = bufferIndex;
-
-    int colonIndex;
-    colonIndex = indexOf(Bytes.COLON);
-
-    if (colonIndex < 0) {
-      // no colon found
-      parseStatus = ParseStatus.INVALID_HEADER;
-
-      return;
-    }
-
-    final int length;
-    length = colonIndex - startIndex;
-
-    if (length == 0) {
-      // empty header name
-      parseStatus = ParseStatus.INVALID_HEADER;
-
-      return;
-    }
-
-    // let's validate and lowercase the header name
-    final byte[] bytes;
-    bytes = new byte[length];
-
-    for (int idx = 0; idx < length; idx++) {
-      final int offset;
-      offset = startIndex + idx;
-
-      final byte b;
-      b = buffer[offset];
-
-      final byte mapped;
-      mapped = HttpHeaderName.map(b);
-
-      if (mapped < 0) {
-        // header name contains an invalid character
-        parseStatus = ParseStatus.INVALID_HEADER;
-
-        return;
-      }
-
-      bytes[idx] = mapped;
-    }
-
-    final String lowerCase;
-    lowerCase = new String(bytes, StandardCharsets.US_ASCII);
-
-    final HttpHeaderName standard;
-    standard = HttpHeaderName.byLowerCase(lowerCase);
-
-    if (standard != null) {
-      headerName = standard;
-    } else {
-      headerName = HttpHeaderName.ofLowerCase(lowerCase);
-    }
-
-    // resume immediately after the colon
-    bufferIndex = colonIndex + 1;
-  }
-
-  private void parseHeaderValue() {
-    int startIndex;
-    startIndex = parseHeaderValueStart();
-
-    int endIndex;
-    endIndex = parseHeaderValueEnd(startIndex);
-
-    final HttpHeader header;
-    header = HttpHeader.createIfValid(buffer, startIndex, endIndex);
-
-    if (header == null) {
-      parseStatus = ParseStatus.INVALID_HEADER;
-
-      return;
-    }
-
-    if (headers == null) {
-      headers = Util.createMap();
-    }
-
-    final HttpHeader existing;
-    existing = headers.put(headerName, header);
-
-    if (existing != null) {
-      existing.add(header);
-
-      headers.put(headerName, existing);
-    }
-  }
-
-  final void hexDump() {
-    String bufferDump;
-    bufferDump = bufferHex();
-
-    String args;
-    args = "bufferIndex=" + bufferIndex + ";lineLimit=" + lineLimit;
-
-    noteSink.send(NOTES.hexdump, bufferDump, args);
-  }
-
-  private String bufferHex() {
-    HexFormat format;
-    format = HexFormat.of();
-
-    return format.formatHex(buffer, 0, bufferLimit);
-  }
-
-  private int parseHeaderValueStart() {
-    // consumes and discard a single leading OWS if present
-    byte maybeOws;
-    maybeOws = buffer[bufferIndex];
-
-    if (Bytes.isOptionalWhitespace(maybeOws)) {
-      // consume and discard leading OWS
-      bufferIndex++;
-    }
-
-    return bufferIndex;
-  }
-
-  private int parseHeaderValueEnd(int startIndex) {
-    int end;
-    end = lineLimit;
-
-    byte maybeCR;
-    maybeCR = buffer[end - 1];
-
-    if (maybeCR == Bytes.CR) {
-      // value ends at the CR of the line end CRLF
-      end = end - 1;
-    }
-
-    // resume immediately after lineLimit
-    bufferIndex = lineLimit + 1;
-
-    return end;
-  }
-
-  // ##################################################################
-  // # END: HTTP/1.1 request parsing || headers
-  // ##################################################################
-
-  // ##################################################################
-  // # BEGIN: HTTP/1.1 request parsing || keep alive
-  // ##################################################################
-
-  final void parseRequestEnd() {
-    // handle keep alive
-
-    clearBit(KEEP_ALIVE);
-
-    if (version == Http.Version.HTTP_1_1) {
-      setBit(KEEP_ALIVE);
-    }
-
-    HttpHeader connection;
-    connection = headerUnchecked(HttpHeaderName.CONNECTION);
-
-    if (connection != null) {
-      final String value;
-      value = connection.get(buffer);
-
-      if (value != null) {
-
-        if (value.equalsIgnoreCase("keep-alive")) {
-          setBit(KEEP_ALIVE);
-        }
-
-        else if (value.equalsIgnoreCase("close")) {
-          clearBit(KEEP_ALIVE);
-        }
-
-      }
-
-    }
-
-    setState(_REQUEST);
-  }
-
-  // ##################################################################
-  // # END: HTTP/1.1 request parsing || keep alive
-  // ##################################################################
-
-  private boolean badRequest() {
-    Check.state(testState(_REQUEST), "Http.Request methods can only be invoked after a parse() operation");
-
-    return parseStatus.isBadRequest();
-  }
-
-  // ##################################################################
-  // # BEGIN: Http.Exchange API || request target
-  // ##################################################################
 
   @Override
   public final String pathParam(String name) {
@@ -3524,33 +2998,38 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
     Objects.requireNonNull(value, "value == null");
 
+    /*
     String encodedKey;
     encodedKey = encode(name);
-
+    
     String encodedValue;
     encodedValue = encode(value);
-
+    
     int queryLength;
     queryLength = rawValue.length() - queryStart;
-
+    
     if (queryLength < 2) {
       return encodedKey + "=" + encodedValue;
     }
-
+    
     Map<String, Object> params;
     params = Util.createSequencedMap();
-
+    
     makeQueryParams(params, Function.identity());
-
+    
     params.put(encodedKey, encodedValue);
-
+    
     return Http.queryParamsToString(params, Function.identity());
+    */
+
+    throw new UnsupportedOperationException("Implement me");
   }
 
   public final String rawValue() {
     return rawValue;
   }
 
+  @SuppressWarnings("unused")
   private void makeQueryParams(Map<String, Object> map, Function<String, String> decoder) {
     int queryLength;
     queryLength = rawValue.length() - queryStart;
@@ -3631,281 +3110,99 @@ final class HttpExchange implements Http.Exchange, Closeable {
   // # END: Http.Exchange API || request headers
   // ##################################################################
 
-  // ##################################################################
-  // # BEGIN: Http.Exchange API || request attributes
-  // ##################################################################
-
-  @Override
-  public final <T> void set(Class<T> key, T value) {
-    String name;
-    name = key.getName(); // implicit null check
-
-    Check.notNull(value, "value == null");
-
-    Map<String, Object> map;
-    map = attributes();
-
-    map.put(name, value);
-  }
-
-  @SuppressWarnings("unchecked")
-  @Override
-  public final <T> T get(Class<T> key) {
-    String name;
-    name = key.getName(); // implicit null check
-
-    Map<String, Object> map;
-    map = attributes();
-
-    return (T) map.get(name);
-  }
-
-  private Map<String, Object> attributes() {
-    if (attributes == null) {
-      attributes = Util.createMap();
-    }
-
-    return attributes;
-  }
-
-  // ##################################################################
-  // # END: Http.Exchange API || request attributes
-  // ##################################################################
-
-  // ##################################################################
-  // # BEGIN: Http.Exchange API || response
-  // ##################################################################
-
   // 4xx responses
 
   @Override
   public final void badRequest(Media.Bytes media) {
-    respond(Http.Status.BAD_REQUEST, media);
+    throw new UnsupportedOperationException("Implement me");
   }
 
   @Override
   public final void notFound(Media.Bytes media) {
-    respond(Http.Status.NOT_FOUND, media);
+    throw new UnsupportedOperationException("Implement me");
   }
 
   // generic responses
 
   @Override
   public final void respond(Http.ResponseMessage message) {
-    HttpResponseMessage impl;
-    impl = (HttpResponseMessage) message;
-
-    impl.accept(this);
+    throw new UnsupportedOperationException("Implement me");
   }
 
   @Override
   public final void respond(Lang.MediaWriter writer) {
-    respond(Http.Status.OK, writer);
+    throw new UnsupportedOperationException("Implement me");
   }
 
   @Override
   public final void respond(Http.Status status, Media.Bytes object, Consumer<Http.ResponseHeaders> headers) {
-    final byte[] bytes;
-    bytes = respond0(status, object);
-
-    headers.accept(this);
-
-    send0(bytes);
+    throw new UnsupportedOperationException("Implement me");
   }
 
-  private byte[] respond0(Http.Status status, Media.Bytes object) {
-    Objects.requireNonNull(status, "status == null");
-
-    // early object validation
-    String contentType;
-    contentType = object.contentType();
-
-    if (contentType == null) {
-      throw new NullPointerException("The specified Lang.MediaObject provided a null content-type");
-    }
-
-    byte[] bytes;
-    bytes = object.toByteArray();
-
-    if (bytes == null) {
-      throw new NullPointerException("The specified Lang.MediaObject provided a null byte array");
-    }
-
-    status0(status);
-
-    dateNow();
-
-    header0(Http.HeaderName.CONTENT_TYPE, contentType);
-
-    header0(Http.HeaderName.CONTENT_LENGTH, bytes.length);
-
-    return bytes;
-  }
-
+  /*
   private static final byte[] CHUNKED_TRAILER = "0\r\n\r\n".getBytes(StandardCharsets.UTF_8);
-
+  
   @Override
   public final void respond(Http.Status status, Lang.MediaWriter writer) {
     final Charset charset;
     charset = respond0(status, writer);
-
+  
     send0(writer, charset);
   }
-
+  
   @Override
   public final void respond(Http.Status status, Lang.MediaWriter writer, Consumer<Http.ResponseHeaders> headers) {
     final Charset charset;
     charset = respond0(status, writer);
-
+  
     headers.accept(this);
-
+  
     if (testBit(CONTENT_LENGTH)) {
       throw new IllegalStateException(
           "Content-Length must not be set with a Lang.MediaWriter response"
       );
     }
-
+  
     if (!testBit(CHUNKED)) {
       throw new IllegalStateException(
           "Transfer-Encoding: chunked must be set with a Lang.MediaWriter response"
       );
     }
-
+  
     send0(writer, charset);
   }
-
+  
   private Charset respond0(Http.Status status, Lang.MediaWriter writer) {
     Objects.requireNonNull(status, "status == null");
-
+  
     // early writer validation
     final String contentType;
     contentType = writer.contentType();
-
+  
     if (contentType == null) {
       throw new NullPointerException("The specified Lang.MediaWriter provided a null content-type");
     }
-
+  
     final Charset charset;
     charset = writer.mediaCharset();
-
+  
     if (charset == null) {
       throw new NullPointerException("The specified Lang.MediaWriter provided a null charset");
     }
-
+  
     status0(status);
-
+  
     dateNow();
-
+  
     header0(Http.HeaderName.CONTENT_TYPE, contentType);
-
+  
     header0(Http.HeaderName.TRANSFER_ENCODING, "chunked");
-
+  
     return charset;
   }
+  */
 
-  final void header0(Http.HeaderName name, long value) {
-    final String s;
-    s = Long.toString(value);
-
-    header0(name, s);
-  }
-
-  private void send0(Lang.MediaWriter writer, final Charset charset) {
-    if (method == Http.Method.HEAD) {
-
-      send0();
-
-    } else {
-
-      try {
-        sendStart();
-
-        bufferIndex = 0;
-
-        CharWritableAppendable out;
-        out = new CharWritableAppendable(charset);
-
-        writer.mediaTo(out);
-
-        out.flush();
-
-        outputStream.write(CHUNKED_TRAILER);
-      } catch (IOException e) {
-        throw new SendException(e);
-      } finally {
-        setState(_PROCESSED);
-      }
-
-    }
-  }
-
-  public final void iseIfPossible(Throwable t) {
-    if (testState(_RESPONSE)) {
-      return;
-    }
-
-    if (testState(_PROCESSED)) {
-      return;
-    }
-
-    StringWriter sw;
-    sw = new StringWriter();
-
-    PrintWriter pw;
-    pw = new PrintWriter(sw);
-
-    t.printStackTrace(pw);
-
-    String msg;
-    msg = sw.toString();
-
-    byte[] bytes;
-    bytes = msg.getBytes();
-
-    status0(Http.Status.INTERNAL_SERVER_ERROR);
-
-    dateNow();
-
-    header0(Http.HeaderName.CONTENT_LENGTH, bytes.length);
-
-    header0(Http.HeaderName.CONTENT_TYPE, "text/plain");
-
-    header0(Http.HeaderName.CONNECTION, "close");
-
-    send0(bytes);
-  }
-
-  private void checkResponse() {
-    if (testState(_REQUEST)) {
-      bufferIndex = 0;
-
-      setState(_RESPONSE);
-
-      return;
-    }
-
-    throw new IllegalStateException(
-        """
-        Response methods can only be invoked:
-        - after a successful parse() operation; and
-        - before the commit() method invocation.
-        """
-    );
-  }
-
-  final void body0(Object original, byte[] bytes) {
-    send0(bytes);
-  }
-
-  final void endResponse() {
-    if (testState(_PROCESSED)) {
-      // expected, no action
-    } else if (testState(_RESPONSE)) {
-      // unfinished response?
-      send0();
-    }
-  }
-
+  @SuppressWarnings("unused")
   private class CharWritableAppendable implements Appendable {
     private final Charset charset;
 
@@ -4017,213 +3314,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
       bufferIndex = 0;
     }
-  }
-
-  // ##################################################################
-  // # END: Http.Exchange API || response
-  // ##################################################################
-
-  private void setState(int value) {
-    int bits;
-    bits = bitset & BITS_MASK;
-
-    bitset = bits | value;
-  }
-
-  private boolean testState(int value) {
-    int result;
-    result = bitset & STATE_MASK;
-
-    return result == value;
-  }
-
-  private String decode(String raw) {
-    return URLDecoder.decode(raw, StandardCharsets.UTF_8);
-  }
-
-  private String encode(String value) {
-    return URLEncoder.encode(value, StandardCharsets.UTF_8);
-  }
-
-  // SocketInput
-
-  final void parseLine() throws IOException, MaxBufferSizeException {
-    int startIndex;
-    startIndex = bufferIndex;
-
-    byte needle;
-    needle = Bytes.LF;
-
-    while (true) {
-      for (int i = startIndex; i < bufferLimit; i++) {
-        byte maybe;
-        maybe = buffer[i];
-
-        if (maybe == needle) {
-          lineLimit = i;
-
-          return;
-        }
-      }
-
-      // not inside buffer
-      // let's try to read more data
-      startIndex = bufferLimit;
-
-      int writableLength;
-      writableLength = buffer.length - bufferLimit;
-
-      if (writableLength == 0) {
-        // buffer is full, try to increase
-
-        if (buffer.length == maxBufferSize) {
-          throw new MaxBufferSizeException();
-        }
-
-        int newLength;
-        newLength = buffer.length << 1;
-
-        buffer = Arrays.copyOf(buffer, newLength);
-
-        writableLength = buffer.length - bufferLimit;
-      }
-
-      int bytesRead;
-      bytesRead = inputStream.read(buffer, bufferLimit, writableLength);
-
-      if (bytesRead < 0) {
-        // we assume that, if bufferLimit == 0, we're at the start of a new regular request.
-        // in this case, we assume the remote closed the connection gracefully.
-        // Otherwise, we assume the client disconnected in middle of a request.
-        throw bufferLimit == 0
-            ? new RemoteClosedException()
-            : new UnexpectedEofException();
-      }
-
-      bufferLimit += bytesRead;
-    }
-  }
-
-  final void resetSocketInput() {
-    bufferLimit = 0;
-
-    bufferIndex = 0;
-
-    lineLimit = 0;
-
-    parseStatus = ParseStatus.NORMAL;
-  }
-
-  final boolean matches(byte[] bytes) {
-    int length;
-    length = bytes.length;
-
-    int toIndex;
-    toIndex = bufferIndex + length;
-
-    if (toIndex >= lineLimit) {
-      // outside of line...
-      return false;
-    }
-
-    boolean matches;
-    matches = Arrays.equals(
-        buffer, bufferIndex, toIndex,
-        bytes, 0, length
-    );
-
-    if (matches) {
-      bufferIndex += length;
-
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  final int indexOf(byte needle) {
-    for (int i = bufferIndex; i < bufferLimit; i++) {
-      byte maybe;
-      maybe = buffer[i];
-
-      if (maybe == needle) {
-        return i;
-      }
-    }
-
-    return -1;
-  }
-
-  final int indexOf(byte needleA, byte needleB) {
-    for (int i = bufferIndex; i < bufferLimit; i++) {
-      byte maybe;
-      maybe = buffer[i];
-
-      if (maybe == needleA) {
-        return i;
-      }
-
-      if (maybe == needleB) {
-        return i;
-      }
-    }
-
-    return -1;
-  }
-
-  final boolean consumeIfEndOfLine() {
-    if (bufferIndex < lineLimit) {
-      byte next;
-      next = buffer[bufferIndex++];
-
-      if (next != Bytes.CR) {
-        return false;
-      }
-    }
-
-    if (bufferIndex != lineLimit) {
-      return false;
-    }
-
-    // index immediately after LF
-    bufferIndex++;
-
-    return true;
-  }
-
-  final String bufferToString(int start, int end) {
-    int length;
-    length = end - start;
-
-    return new String(buffer, start, length, StandardCharsets.UTF_8);
-  }
-
-  final boolean consumeIfEmptyLine() {
-    int length;
-    length = lineLimit - bufferIndex;
-
-    if (length == 0) {
-      bufferIndex++;
-
-      return true;
-    }
-
-    if (length == 1) {
-      byte cr;
-      cr = buffer[bufferIndex];
-
-      if (cr == Bytes.CR) {
-        bufferIndex += 2;
-
-        return true;
-      }
-    }
-
-    return false;
-  }
-
-  final byte get(int index) {
-    return buffer[index];
   }
 
 }

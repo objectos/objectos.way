@@ -258,8 +258,8 @@ public class HttpExchangeTest9Create {
   }
 
   private String rawPath(String string) {
-    Http.Exchange http;
-    http = Http.Exchange.create(config -> config.path(string));
+    HttpExchange http;
+    http = HttpExchange.create0(config -> config.path(string));
 
     return http.rawPath();
   }

@@ -224,36 +224,11 @@ final class HttpServer implements Http.Server, Runnable {
     public final void run() {
       try (HttpExchange http = new HttpExchange(socket, bufferSizeInitial, bufferSizeMax, clock, noteSink)) {
         while (http.shouldHandle()) {
-          try {
-            handler.handle(http);
-          } catch (Http.AbstractHandlerException ex) {
-            ex.handle(http);
-          } catch (Http.InternalServerException t) {
-            final Throwable cause;
-            cause = t.getCause();
-
-            internalServerError(http, cause);
-
-            // assume handler is in invalid state. End this exchange
-            break;
-          } catch (Throwable t) {
-            internalServerError(http, t);
-
-            // assume handler is in invalid state. End this exchange
-            break;
-          }
+          http.handle(handler);
         }
       } catch (IOException e) {
         noteSink.send(notes.ioError, e);
-      } catch (Throwable t) {
-        noteSink.send(notes.loopError, t);
       }
-    }
-
-    private void internalServerError(HttpExchange http, Throwable t) {
-      noteSink.send(notes.internalServerError, t);
-
-      http.iseIfPossible(t);
     }
 
   }

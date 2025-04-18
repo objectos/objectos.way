@@ -52,10 +52,6 @@ final class HttpExchangeConfig implements Http.Exchange.Config {
 
   final Note.Sink noteSink = Note.NoOpSink.INSTANCE;
 
-  public final Http.Exchange build() {
-    return HttpExchange.build(this);
-  }
-
   @Override
   public final void clock(Clock value) {
     clock = Objects.requireNonNull(value, "value == null");
@@ -225,54 +221,59 @@ final class HttpExchangeConfig implements Http.Exchange.Config {
         w.write(query);
       }
 
-      w.write(' ');
-
       switch (version) {
-        case HTTP_1_0 -> w.write("HTTP/1.0");
+        case HTTP_0_9 -> w.write("\r\n");
 
-        case HTTP_1_1 -> w.write("HTTP/1.1");
+        case HTTP_1_0 -> w.write(" HTTP/1.0\r\n");
+
+        case HTTP_1_1 -> w.write(" HTTP/1.1\r\n");
       }
-
-      w.write('\r');
-      w.write('\n');
 
       // fields
 
-      if (headers != null) {
-        for (var entry : headers.entrySet()) {
+      final Map<Http.HeaderName, Object> h;
 
-          final Http.HeaderName name;
-          name = entry.getKey();
+      if (headers == null) {
+        h = Map.of(Http.HeaderName.HOST, "test");
+      } else {
+        headers.putIfAbsent(Http.HeaderName.HOST, "test");
 
-          final Object value;
-          value = entry.getValue();
+        h = headers;
+      }
 
-          switch (value) {
-            case String s -> {
+      for (var entry : h.entrySet()) {
+
+        final Http.HeaderName name;
+        name = entry.getKey();
+
+        final Object value;
+        value = entry.getValue();
+
+        switch (value) {
+          case String s -> {
+            w.write(name.headerCase());
+            w.write(": ");
+            w.write(s);
+            w.write('\r');
+            w.write('\n');
+          }
+
+          case List<?> l -> {
+            @SuppressWarnings("unchecked")
+            final List<String> list = (List<String>) l;
+
+            for (var s : list) {
               w.write(name.headerCase());
               w.write(": ");
               w.write(s);
               w.write('\r');
               w.write('\n');
             }
-
-            case List<?> l -> {
-              @SuppressWarnings("unchecked")
-              final List<String> list = (List<String>) l;
-
-              for (var s : list) {
-                w.write(name.headerCase());
-                w.write(": ");
-                w.write(s);
-                w.write('\r');
-                w.write('\n');
-              }
-            }
-
-            default -> throw new AssertionError(
-                "Type should not have been put into the map: " + value.getClass()
-            );
           }
+
+          default -> throw new AssertionError(
+              "Type should not have been put into the map: " + value.getClass()
+          );
         }
       }
 

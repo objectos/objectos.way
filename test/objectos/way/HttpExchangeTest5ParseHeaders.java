@@ -35,12 +35,13 @@ public class HttpExchangeTest5ParseHeaders {
   public void name01() {
     test(
         List.of(
-            "Host: x",
+            "Accept-Encoding: x",
             "Referer: x",
             "User-Agent: x"
         ),
 
         Map.of(
+            Http.HeaderName.ACCEPT_ENCODING, "x",
             Http.HeaderName.HOST, "x",
             Http.HeaderName.REFERER, "x",
             Http.HeaderName.USER_AGENT, "x"
@@ -52,7 +53,7 @@ public class HttpExchangeTest5ParseHeaders {
   public void name02() {
     test(
         List.of(
-            "Host: x",
+            "Accept-Encoding: x",
             "Foo: x",
             "User-Agent: x"
         ),
@@ -161,13 +162,14 @@ public class HttpExchangeTest5ParseHeaders {
   public void value01() {
     test(
         List.of(
-            "Host: www.example.com",
+            "Accept-Encoding: gzip",
             "Referer: www.google.com",
             "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
         ),
 
         Map.of(
-            Http.HeaderName.HOST, "www.example.com",
+            Http.HeaderName.ACCEPT_ENCODING, "gzip",
+            Http.HeaderName.HOST, "x",
             Http.HeaderName.REFERER, "www.google.com",
             Http.HeaderName.USER_AGENT, "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
         )
@@ -178,12 +180,13 @@ public class HttpExchangeTest5ParseHeaders {
   public void value02() {
     test(
         List.of(
-            "Host: x ",
+            "Accept-Encoding: x ",
             "Referer:  x  y ",
             "User-Agent:   \t z\t   "
         ),
 
         Map.of(
+            Http.HeaderName.ACCEPT_ENCODING, "x",
             Http.HeaderName.HOST, "x",
             Http.HeaderName.REFERER, "x  y",
             Http.HeaderName.USER_AGENT, "z"
@@ -195,13 +198,14 @@ public class HttpExchangeTest5ParseHeaders {
   public void value03() {
     test(
         List.of(
-            "Host: ",
+            "Accept-Encoding: ",
             "Referer:",
             "User-Agent:   \t"
         ),
 
         Map.of(
-            Http.HeaderName.HOST, "",
+            Http.HeaderName.ACCEPT_ENCODING, "",
+            Http.HeaderName.HOST, "x",
             Http.HeaderName.REFERER, "",
             Http.HeaderName.USER_AGENT, ""
         )
@@ -337,6 +341,7 @@ public class HttpExchangeTest5ParseHeaders {
     request = new StringBuilder();
 
     request.append("GET / HTTP/1.1\r\n");
+    request.append("Host: x\r\n");
 
     headers.stream().map(s -> s + "\r\n").forEach(request::append);
 

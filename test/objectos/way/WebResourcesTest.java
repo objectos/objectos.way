@@ -290,7 +290,7 @@ public class WebResourcesTest implements Consumer<Http.Routing> {
 
       resources.handle(http);
     } catch (IOException e) {
-      throw new Http.InternalServerException(e);
+      throw new UncheckedIOException(e);
     }
   }
 
@@ -345,7 +345,7 @@ public class WebResourcesTest implements Consumer<Http.Routing> {
 
       resources.handle(http);
     } catch (IOException e) {
-      throw new Http.InternalServerException(e);
+      throw new UncheckedIOException(e);
     }
   }
 
@@ -376,7 +376,7 @@ public class WebResourcesTest implements Consumer<Http.Routing> {
 
       resources.handle(http);
     } catch (IOException e) {
-      throw new Http.InternalServerException(e);
+      throw new UncheckedIOException(e);
     }
   }
 

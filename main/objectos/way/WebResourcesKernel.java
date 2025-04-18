@@ -79,7 +79,9 @@ record WebResourcesKernel(
     } catch (NoSuchFileException e) {
       return;
     } catch (IOException e) {
-      throw new Http.InternalServerException(e);
+      http.internalServerError(e);
+
+      return;
     }
 
     if (!attributes.isRegularFile()) {
