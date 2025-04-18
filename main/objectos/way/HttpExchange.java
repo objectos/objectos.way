@@ -50,7 +50,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
   private record Notes(
       Note.Long1Ref1<InetAddress> start,
 
-      Note.Long2 readResize,
+      Note.Long2 bufferResize,
       Note.Long1Ref1<Http.Exchange> readEof,
       Note.Long1Ref1<Http.Exchange> readMaxBuffer,
       Note.Long1Ref2<Http.Exchange, IOException> readIOException,
@@ -183,6 +183,24 @@ final class HttpExchange implements Http.Exchange, Closeable {
     TERMINATOR;
 
     private static final byte[] MESSAGE = "Invalid request headers.\n".getBytes(StandardCharsets.US_ASCII);
+
+    @Override
+    public final byte[] message() {
+      return MESSAGE;
+    }
+
+    @Override
+    public final Http.Status status() {
+      return Http.Status.BAD_REQUEST;
+    }
+  }
+
+  private enum MissingHostHeader implements ClientError {
+    // do not reorder, do not rename
+
+    INSTANCE;
+
+    private static final byte[] MESSAGE = "Missing Host header.\n".getBytes(StandardCharsets.US_ASCII);
 
     @Override
     public final byte[] message() {
@@ -540,7 +558,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
         writableLength = buffer.length - bufferLimit;
 
-        noteSink.send(NOTES.readResize, id, newLength);
+        noteSink.send(NOTES.bufferResize, id, newLength);
       }
 
       int bytesRead;
@@ -1636,6 +1654,20 @@ final class HttpExchange implements Http.Exchange, Closeable {
         return toBadRequest(InvalidRequestHeaders.TERMINATOR);
       }
 
+      final HttpHeader host;
+      host = headerUnchecked(HttpHeaderName.HOST);
+
+      if (host == null) {
+        return toBadRequest(MissingHostHeader.INSTANCE);
+      }
+
+      final String hostValue;
+      hostValue = host.get(buffer);
+
+      if (hostValue.isBlank()) {
+        return toBadRequest(MissingHostHeader.INSTANCE);
+      }
+
       // we only support HTTP/1.1
       // so we begin with keep-alive = true
       boolean keepAlive;
@@ -1748,7 +1780,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
           buffer = Arrays.copyOf(buffer, newLength);
 
-          noteSink.send(NOTES.readResize, id, newLength);
+          noteSink.send(NOTES.bufferResize, id, newLength);
         }
 
         // how many bytes must we read
@@ -1798,7 +1830,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
     if (buffer.length < maxBufferSize) {
       buffer = Arrays.copyOf(buffer, maxBufferSize);
 
-      noteSink.send(NOTES.readResize, id, maxBufferSize);
+      noteSink.send(NOTES.bufferResize, id, maxBufferSize);
     }
 
     // prepare OutputStream
@@ -1897,7 +1929,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
     headerUnchecked(Http.HeaderName.CONNECTION, "close");
 
-    send(message);
+    sendUnchecked(message);
 
     return toWrite($ERROR);
   }
@@ -1968,7 +2000,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
     headerUnchecked(Http.HeaderName.CONNECTION, "close");
 
-    send(message);
+    sendUnchecked(message);
 
     return toWrite($ERROR);
   }
@@ -1991,7 +2023,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
     headerUnchecked(Http.HeaderName.CONNECTION, "close");
 
-    send(message);
+    sendUnchecked(message);
 
     return toWrite($ERROR);
   }
@@ -2024,6 +2056,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
       case byte[] bytes -> executeWriteBytes(bytes);
 
+      case Path file -> executeWriteFile(file);
+
       case Object o -> executeWriteUnknown(o);
     };
   }
@@ -2043,6 +2077,18 @@ final class HttpExchange implements Http.Exchange, Closeable {
       writeBuffer();
 
       outputStream.write(bytes);
+
+      return stateNext;
+    } catch (IOException e) {
+      return clientWriteIOException(e);
+    }
+  }
+
+  private byte executeWriteFile(Path file) {
+    try (InputStream in = Files.newInputStream(file)) {
+      writeBuffer();
+
+      in.transferTo(outputStream);
 
       return stateNext;
     } catch (IOException e) {
@@ -2280,7 +2326,14 @@ final class HttpExchange implements Http.Exchange, Closeable {
       case 400 -> headerUnchecked(Http.HeaderName.CONNECTION, "close");
     }
 
-    send(bytes);
+    sendUnchecked(bytes);
+  }
+
+  final void header(Http.HeaderName name, long value) {
+    checkResponseHeaders();
+    Objects.requireNonNull(name, "name == null");
+
+    headerUnchecked(name, value);
   }
 
   final void header(Http.HeaderName name, String value) {
@@ -2320,18 +2373,20 @@ final class HttpExchange implements Http.Exchange, Closeable {
     STATUS_LINES = map;
   }
 
-  private void statusUnchecked(Http.Status status) {
+  private void statusUnchecked(Http.Status value) {
     bufferIndex = 0;
 
     writeBytes(version.responseBytes);
 
     HttpStatus internal;
-    internal = (HttpStatus) status;
+    internal = (HttpStatus) value;
 
     byte[] statusBytes;
     statusBytes = STATUS_LINES[internal.index];
 
     writeBytes(statusBytes);
+
+    state = $RESPONSE_HEADERS;
   }
 
   private void headerUnchecked(Http.HeaderName name, long value) {
@@ -2377,7 +2432,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
     }
   }
 
-  private void send() {
+  final void send() {
     terminate();
 
     body(null);
@@ -2385,20 +2440,50 @@ final class HttpExchange implements Http.Exchange, Closeable {
     state = $COMMIT;
   }
 
-  private void send(byte[] bytes) {
-    $sendInternal(bytes);
+  final void send(byte[] bytes) {
+    Objects.requireNonNull(bytes, "bytes == null");
+
+    sendUnchecked(bytes);
   }
 
-  private void $sendInternal(Object body) {
+  private void sendUnchecked(byte[] bytes) {
     terminate();
 
-    if (method != Http.Method.HEAD) {
+    if (method == Http.Method.HEAD) {
 
-      body(body);
+      body(null);
 
     } else {
 
+      if (canBuffer(bytes.length)) {
+        body(null);
+
+        writeBytes(bytes);
+      } else {
+        body(bytes);
+      }
+
+    }
+
+    state = $COMMIT;
+  }
+
+  final void send(Path file) {
+    Objects.requireNonNull(file, "file == null");
+
+    sendUnchecked(file);
+  }
+
+  private void sendUnchecked(Path file) {
+    terminate();
+
+    if (method == Http.Method.HEAD) {
+
       body(null);
+
+    } else {
+
+      body(file);
 
     }
 
@@ -2501,7 +2586,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
     noteSink.send(note, id, this);
   }
 
-  private String now() {
+  final String now() {
     Clock theClock;
     theClock = clock;
 
@@ -2542,6 +2627,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
       }
 
       buffer = Arrays.copyOf(buffer, newSize);
+
+      noteSink.send(NOTES.bufferResize, id, newSize);
     }
 
     System.arraycopy(bytes, 0, buffer, bufferIndex, length);
@@ -3808,30 +3895,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   final void body0(Object original, byte[] bytes) {
     send0(bytes);
-  }
-
-  final void send0(java.nio.file.Path file) {
-    Objects.requireNonNull(file, "file == null");
-
-    if (method == Http.Method.HEAD) {
-
-      send0();
-
-    } else {
-
-      try {
-        sendStart();
-
-        try (InputStream in = Files.newInputStream(file)) {
-          in.transferTo(outputStream);
-        }
-      } catch (IOException e) {
-        throw new SendException(e);
-      } finally {
-        setState(_PROCESSED);
-      }
-
-    }
   }
 
   final void endResponse() {

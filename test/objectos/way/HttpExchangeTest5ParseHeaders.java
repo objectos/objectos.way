@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.time.Clock;
 import java.util.List;
 import java.util.Map;
 import org.testng.annotations.Test;
@@ -118,6 +119,42 @@ public class HttpExchangeTest5ParseHeaders {
     %s: x\r
     \r
     """.formatted(tooLong));
+  }
+
+  @Test(description = "name: all predefined names")
+  public void name06() {
+    StringBuilder req;
+    req = new StringBuilder();
+
+    req.append("GET / HTTP/1.1\r\n");
+
+    for (HttpHeaderName name : HttpHeaderName.VALUES) {
+      if (!name.isResponseOnly()) {
+        req.append(name.headerCase());
+        req.append(": ");
+        req.append(Integer.toString(name.index()));
+        req.append("\r\n");
+      }
+    }
+
+    req.append("\r\n");
+    req.append("123");
+
+    Socket socket;
+    socket = Y.socket(req.toString());
+
+    try (HttpExchange http = new HttpExchange(socket, 128, 256, Clock.systemDefaultZone(), TestingNoteSink.INSTANCE)) {
+      assertEquals(http.shouldHandle(), true);
+
+      // headers
+      for (HttpHeaderName name : HttpHeaderName.VALUES) {
+        if (!name.isResponseOnly()) {
+          assertEquals(http.header(name), Integer.toString(name.index()));
+        }
+      }
+    } catch (IOException e) {
+      throw new AssertionError("Failed with IOException", e);
+    }
   }
 
   @Test(description = "value: happy path")

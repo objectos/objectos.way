@@ -102,18 +102,18 @@ record WebResourcesKernel(
     ifNoneMatch = http.header(Http.HeaderName.IF_NONE_MATCH);
 
     if (etag.equals(ifNoneMatch)) {
-      http.status0(Http.Status.NOT_MODIFIED);
+      http.status(Http.Status.NOT_MODIFIED);
 
-      http.dateNow();
+      http.header(Http.HeaderName.DATE, http.now());
 
-      http.header0(Http.HeaderName.ETAG, etag);
+      http.header(Http.HeaderName.ETAG, etag);
 
-      http.send0();
+      http.send();
 
       return;
     }
 
-    http.status0(Http.Status.OK);
+    http.status(Http.Status.OK);
 
     String contentType;
     contentType = defaultContentType;
@@ -131,19 +131,15 @@ record WebResourcesKernel(
       contentType = contentTypes.getOrDefault(extension, contentType);
     }
 
-    http.header0(Http.HeaderName.CONTENT_TYPE, contentType);
+    http.header(Http.HeaderName.CONTENT_TYPE, contentType);
 
-    http.header0(Http.HeaderName.CONTENT_LENGTH, attributes.size());
+    http.header(Http.HeaderName.CONTENT_LENGTH, attributes.size());
 
-    http.dateNow();
+    http.header(Http.HeaderName.DATE, http.now());
 
-    http.header0(Http.HeaderName.ETAG, etag);
+    http.header(Http.HeaderName.ETAG, etag);
 
-    if (method == Http.Method.GET) {
-      http.send0(file);
-    } else {
-      http.send0();
-    }
+    http.send(file);
   }
 
   public final void write(String pathName, byte[] contents) throws IOException {

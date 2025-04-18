@@ -59,29 +59,29 @@ final class HttpResponseMessage implements Http.ResponseMessage {
     switch (kind) {
       case FOUND -> {
 
-        http.status0(Http.Status.FOUND);
+        http.status(Http.Status.FOUND);
 
-        http.dateNow();
+        http.header(Http.HeaderName.DATE, http.now());
 
-        http.header0(Http.HeaderName.CONTENT_LENGTH, 0L);
+        http.header(Http.HeaderName.CONTENT_LENGTH, 0L);
 
-        http.header0(Http.HeaderName.LOCATION, valueAsString());
+        http.header(Http.HeaderName.LOCATION, valueAsString());
 
-        http.send0();
+        http.send();
 
       }
 
       case METHOD_NOT_ALLOWED -> {
 
-        http.status0(Http.Status.METHOD_NOT_ALLOWED);
+        http.status(Http.Status.METHOD_NOT_ALLOWED);
 
-        http.dateNow();
+        http.header(Http.HeaderName.DATE, http.now());
 
-        http.header0(Http.HeaderName.CONTENT_LENGTH, 0L);
+        http.header(Http.HeaderName.CONTENT_LENGTH, 0L);
 
-        http.header0(Http.HeaderName.ALLOW, valueAsString());
+        http.header(Http.HeaderName.ALLOW, valueAsString());
 
-        http.send0();
+        http.send();
 
       }
 

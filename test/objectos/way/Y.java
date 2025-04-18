@@ -18,6 +18,7 @@ package objectos.way;
 import static org.testng.Assert.assertEquals;
 
 import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -31,6 +32,8 @@ import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
@@ -277,6 +280,90 @@ final class Y {
   // ##################################################################
 
   // ##################################################################
+  // # BEGIN: Next
+  // ##################################################################
+
+  private static final class NextPath implements Closeable {
+
+    private final Path root;
+
+    private NextPath(Path root) {
+      this.root = root;
+    }
+
+    private static NextPath create() {
+      try {
+        final Path root;
+        root = Files.createTempDirectory("objectos-way-testing-");
+
+        final NextPath nextPath;
+        nextPath = new NextPath(root);
+
+        shutdownHook(nextPath);
+
+        return nextPath;
+      } catch (IOException e) {
+        throw new UncheckedIOException(e);
+      }
+    }
+
+    @Override
+    public final void close() throws IOException {
+      Io.deleteRecursively(root);
+    }
+
+    final Path nextTempFile() {
+      try {
+        return Files.createTempFile(root, "next-temp-file", ".tmp");
+      } catch (IOException e) {
+        throw new UncheckedIOException(e);
+      }
+    }
+
+  }
+
+  private static final class NextPathHolder {
+
+    static final NextPath INSTANCE = NextPath.create();
+
+  }
+
+  public static Path nextTempFile(String contents, Charset charset) {
+    try {
+      final Path file;
+      file = NextPathHolder.INSTANCE.nextTempFile();
+
+      Files.writeString(file, contents, charset);
+
+      return file;
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
+  }
+
+  // ##################################################################
+  // # END: Next
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: ShutdownHook
+  // ##################################################################
+
+  private static final class ShutdownHookHolder {
+
+    static final App.ShutdownHook INSTANCE = App.ShutdownHook.create(config -> config.noteSink(TestingNoteSink.INSTANCE));
+
+  }
+
+  public static void shutdownHook(AutoCloseable closeable) {
+    ShutdownHookHolder.INSTANCE.register(closeable);
+  }
+
+  // ##################################################################
+  // # END: ShutdownHook
+  // ##################################################################
+
+  // ##################################################################
   // # BEGIN: SlowStream
   // ##################################################################
 
@@ -407,6 +494,26 @@ final class Y {
     return socket(socket -> {
       socket.inputStream(Y.inputStream(data));
     });
+  }
+
+  public static String toString(Socket socket) {
+    try {
+      final OutputStream outputStream;
+      outputStream = socket.getOutputStream();
+
+      if (outputStream instanceof ByteArrayOutputStream baos) {
+        final String result;
+        result = baos.toString(StandardCharsets.UTF_8);
+
+        baos.reset();
+
+        return result;
+      } else {
+        throw new IllegalArgumentException("OutputStream is not an instanceof ByteArrayOutputStream");
+      }
+    } catch (IOException e) {
+      throw new AssertionError(e);
+    }
   }
 
   // ##################################################################

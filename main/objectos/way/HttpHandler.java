@@ -294,50 +294,50 @@ final class HttpHandler implements Http.Handler {
         final Content content;
         content = (Content) data;
 
-        http.status0(Http.Status.OK);
+        http.status(Http.Status.OK);
 
-        http.dateNow();
+        http.header(Http.HeaderName.DATE, http.now());
 
-        http.header0(Http.HeaderName.CONTENT_TYPE, content.contentType);
+        http.header(Http.HeaderName.CONTENT_TYPE, content.contentType);
 
         final byte[] bytes;
         bytes = content.bytes;
 
-        http.header0(Http.HeaderName.CONTENT_LENGTH, bytes.length);
+        http.header(Http.HeaderName.CONTENT_LENGTH, bytes.length);
 
-        http.send0(bytes);
+        http.send(bytes);
       }
 
       case METHOD_NOT_ALLOWED -> {
-        http.status0(Http.Status.METHOD_NOT_ALLOWED);
+        http.status(Http.Status.METHOD_NOT_ALLOWED);
 
-        http.dateNow();
+        http.header(Http.HeaderName.DATE, http.now());
 
-        http.header0(Http.HeaderName.CONTENT_LENGTH, 0L);
+        http.header(Http.HeaderName.CONTENT_LENGTH, 0L);
 
-        http.header0(Http.HeaderName.ALLOW, (String) data);
+        http.header(Http.HeaderName.ALLOW, (String) data);
 
-        http.send0();
+        http.send();
       }
 
       case MOVED_PERMANENTLY -> {
-        http.status0(Http.Status.MOVED_PERMANENTLY);
+        http.status(Http.Status.MOVED_PERMANENTLY);
 
-        http.dateNow();
+        http.header(Http.HeaderName.DATE, http.now());
 
-        http.header0(Http.HeaderName.LOCATION, (String) data);
+        http.header(Http.HeaderName.LOCATION, (String) data);
 
-        http.send0();
+        http.send();
       }
 
       case NOT_FOUND -> {
-        http.status0(Http.Status.NOT_FOUND);
+        http.status(Http.Status.NOT_FOUND);
 
-        http.dateNow();
+        http.header(Http.HeaderName.DATE, http.now());
 
-        http.header0(Http.HeaderName.CONNECTION, "close");
+        http.header(Http.HeaderName.CONNECTION, "close");
 
-        http.send0();
+        http.send();
       }
     }
   }

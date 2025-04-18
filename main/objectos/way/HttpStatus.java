@@ -55,22 +55,22 @@ final class HttpStatus implements Http.Status {
   /**
    * The {@code 301 MOVED PERMANENTLY} status.
    */
-  public static final HttpStatus MOVED_PERMANENTLY = BUILDER.create(301, "MOVED PERMANENTLY");
+  public static final HttpStatus MOVED_PERMANENTLY = BUILDER.create(301, "Moved Permanently");
 
   /**
    * The {@code 302 FOUND} status.
    */
-  public static final HttpStatus FOUND = BUILDER.create(302, "FOUND");
+  public static final HttpStatus FOUND = BUILDER.create(302, "Found");
 
   /**
    * The {@code 303 SEE OTHER} status.
    */
-  public static final HttpStatus SEE_OTHER = BUILDER.create(303, "SEE OTHER");
+  public static final HttpStatus SEE_OTHER = BUILDER.create(303, "See Other");
 
   /**
    * The {@code 304 NOT MODIFIED} status.
    */
-  public static final HttpStatus NOT_MODIFIED = BUILDER.create(304, "NOT MODIFIED");
+  public static final HttpStatus NOT_MODIFIED = BUILDER.create(304, "Not Modified");
 
   // 4.x.x
 
@@ -87,7 +87,7 @@ final class HttpStatus implements Http.Status {
   /**
    * The {@code 405 METHOD NOT ALLOWED} status.
    */
-  public static final HttpStatus METHOD_NOT_ALLOWED = BUILDER.create(405, "METHOD NOT ALLOWED");
+  public static final HttpStatus METHOD_NOT_ALLOWED = BUILDER.create(405, "Method Not Allowed");
 
   /**
    * The {@code 414 URI TOO LONG} status.
