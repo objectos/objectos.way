@@ -475,7 +475,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """,
 
           """
-          HTTP/1.1 301 MOVED PERMANENTLY\r
+          HTTP/1.1 301 Moved Permanently\r
           Date: Wed, 28 Jun 2023 12:08:43 GMT\r
           Location: /testCase04\r
           \r

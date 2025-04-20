@@ -269,7 +269,7 @@ public class HttpExchangeTest9Create {
     assertEquals(rawQuery0(), null);
     assertEquals(rawQuery0("q", "a"), "q=a");
     assertEquals(rawQuery0("q", "a", "foo", "bar"), "q=a&foo=bar");
-    assertEquals(rawQuery0("@", "a", "foo", "~"), "%40=a&foo=%7E");
+    assertEquals(rawQuery0("@", "a", "foo", "~"), "@=a&foo=%7E");
   }
 
   private String rawQuery0(String... values) {

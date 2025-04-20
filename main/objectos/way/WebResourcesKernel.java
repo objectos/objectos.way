@@ -69,8 +69,6 @@ record WebResourcesKernel(
     handle(support, file);
   }
 
-  private static final Http.ResponseMessage MNA = Http.ResponseMessage.methodNotAllowed(Http.Method.GET, Http.Method.HEAD);
-
   private void handle(HttpExchange http, Path file) {
     BasicFileAttributes attributes;
 
@@ -92,7 +90,15 @@ record WebResourcesKernel(
     method = http.method();
 
     if (method != Http.Method.GET && method != Http.Method.HEAD) {
-      http.respond(MNA);
+      http.status(Http.Status.METHOD_NOT_ALLOWED);
+
+      http.header(Http.HeaderName.DATE, http.now());
+
+      http.header(Http.HeaderName.CONTENT_LENGTH, 0);
+
+      http.header(Http.HeaderName.ALLOW, "GET, HEAD");
+
+      http.send();
 
       return;
     }
@@ -189,25 +195,19 @@ record WebResourcesKernel(
   private Path toPath(String pathName) throws IOException {
     Objects.requireNonNull(pathName, "pathName == null");
 
-    Http.RequestTarget target;
-    target = HttpExchange.parseRequestTarget(pathName);
+    final int length;
+    length = pathName.length();
 
-    String query;
-    query = target.rawQuery();
-
-    if (query != null) {
-      throw new IllegalArgumentException("Found query component in path name: " + pathName);
+    if (length < 1 || pathName.charAt(0) != '/') {
+      throw new IllegalArgumentException("pathName must start with the '/' character");
     }
 
-    final String path;
-    path = target.path();
-
     final Path file;
-    file = resolve(path);
+    file = resolve(pathName);
 
-    checkTraversal(path, file);
+    checkTraversal(pathName, file);
 
-    checkExists(path, file);
+    checkExists(pathName, file);
 
     return file;
   }
@@ -250,11 +250,8 @@ record WebResourcesKernel(
     String relative;
     relative = pathName.substring(1);
 
-    Path relativePath;
-    relativePath = Path.of(relative);
-
     Path file;
-    file = rootDirectory.resolve(relativePath);
+    file = rootDirectory.resolve(relative);
 
     file = file.normalize();
 

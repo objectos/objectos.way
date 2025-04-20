@@ -267,7 +267,7 @@ public class WebResourcesTest implements Consumer<Http.Routing> {
           """,
 
           """
-          HTTP/1.1 304 NOT MODIFIED\r
+          HTTP/1.1 304 Not Modified\r
           Date: Wed, 28 Jun 2023 12:08:43 GMT\r
           ETag: 18901e7e8f8-5\r
           \r

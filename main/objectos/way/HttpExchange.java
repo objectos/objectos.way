@@ -37,7 +37,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import objectos.way.Http.ResponseHeaders;
 import objectos.way.Http.Status;
 import objectos.way.Lang.MediaWriter;
@@ -1564,7 +1563,11 @@ final class HttpExchange implements Http.Exchange, Closeable {
       b = buffer[bufferIndex];
 
       return switch (b) {
-        case Bytes.CR -> { bufferIndex++; yield executeParseHeaderCR(); }
+        case Bytes.CR -> {
+          bufferIndex++;
+          yield executeParseHeaderCR();
+
+        }
 
         case Bytes.LF -> toBadRequest(InvalidLineTerminator.INSTANCE);
 
@@ -1572,7 +1575,12 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
         case Bytes.HTAB -> throw new UnsupportedOperationException("obs-fold not supported");
 
-        default -> { stringBuilderInit(); yield executeParseHeaderName(); }
+        default -> {
+          stringBuilderInit();
+
+          yield executeParseHeaderName();
+
+        }
       };
     } else {
       return toRead($PARSE_HEADER);
@@ -2327,6 +2335,60 @@ final class HttpExchange implements Http.Exchange, Closeable {
     return version;
   }
 
+  @Override
+  public final String rawPath() {
+    checkRequest();
+
+    return Http.raw(path);
+  }
+
+  @Override
+  public final String rawQuery() {
+    checkRequest();
+
+    if (queryParams != null) {
+      return Http.queryParamsToString(queryParams, Http::raw);
+    } else {
+      return null;
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public final String rawQueryWith(String name, String value) {
+    if (name.isBlank()) {
+      throw new IllegalArgumentException("name must not be blank");
+    }
+
+    Objects.requireNonNull(value, "value == null");
+
+    /*
+    String encodedKey;
+    encodedKey = encode(name);
+    
+    String encodedValue;
+    encodedValue = encode(value);
+    
+    int queryLength;
+    queryLength = rawValue.length() - queryStart;
+    
+    if (queryLength < 2) {
+      return encodedKey + "=" + encodedValue;
+    }
+    
+    Map<String, Object> params;
+    params = Util.createSequencedMap();
+    
+    makeQueryParams(params, Function.identity());
+    
+    params.put(encodedKey, encodedValue);
+    
+    return Http.queryParamsToString(params, Function.identity());
+    */
+
+    throw new UnsupportedOperationException("Implement me");
+  }
+
   // ##################################################################
   // # END: Http.Exchange API || request line
   // ##################################################################
@@ -2824,17 +2886,9 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   int pathIndex;
 
-  private int pathLimit;
-
   Map<String, String> pathParams;
 
-  private int queryStart;
-
-  private String rawValue;
-
   // SocketInput
-
-  int lineLimit = 0;
 
   static final int powerOfTwo(int size) {
     // maybe size is already power of 2
@@ -2977,121 +3031,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
     path = path();
 
     return pathIndex == path.length();
-  }
-
-  @Override
-  public final String rawPath() {
-    return rawValue.substring(0, pathLimit);
-  }
-
-  @Override
-  public final String rawQuery() {
-    return queryStart == pathLimit ? null : rawValue.substring(queryStart);
-  }
-
-  @SuppressWarnings("unchecked")
-  @Override
-  public final String rawQueryWith(String name, String value) {
-    if (name.isBlank()) {
-      throw new IllegalArgumentException("name must not be blank");
-    }
-
-    Objects.requireNonNull(value, "value == null");
-
-    /*
-    String encodedKey;
-    encodedKey = encode(name);
-    
-    String encodedValue;
-    encodedValue = encode(value);
-    
-    int queryLength;
-    queryLength = rawValue.length() - queryStart;
-    
-    if (queryLength < 2) {
-      return encodedKey + "=" + encodedValue;
-    }
-    
-    Map<String, Object> params;
-    params = Util.createSequencedMap();
-    
-    makeQueryParams(params, Function.identity());
-    
-    params.put(encodedKey, encodedValue);
-    
-    return Http.queryParamsToString(params, Function.identity());
-    */
-
-    throw new UnsupportedOperationException("Implement me");
-  }
-
-  public final String rawValue() {
-    return rawValue;
-  }
-
-  @SuppressWarnings("unused")
-  private void makeQueryParams(Map<String, Object> map, Function<String, String> decoder) {
-    int queryLength;
-    queryLength = rawValue.length() - queryStart;
-
-    if (queryLength < 2) {
-      // query is empty: either "" or "?"
-      return;
-    }
-
-    String source;
-    source = rawQuery();
-
-    StringBuilder sb;
-    sb = new StringBuilder();
-
-    String key;
-    key = null;
-
-    for (int i = 0, len = source.length(); i < len; i++) {
-      char c;
-      c = source.charAt(i);
-
-      switch (c) {
-        case '=' -> {
-          if (key != null) {
-            Http.queryParamsAdd(map, decoder, key, "");
-          }
-
-          key = sb.toString();
-
-          sb.setLength(0);
-        }
-
-        case '&' -> {
-          String value;
-          value = sb.toString();
-
-          sb.setLength(0);
-
-          if (key == null) {
-            key = value;
-
-            continue;
-          }
-
-          Http.queryParamsAdd(map, decoder, key, value);
-
-          key = null;
-        }
-
-        default -> sb.append(c);
-      }
-    }
-
-    String value;
-    value = sb.toString();
-
-    if (key != null) {
-      Http.queryParamsAdd(map, decoder, key, value);
-    } else {
-      Http.queryParamsAdd(map, decoder, value, "");
-    }
   }
 
   // ##################################################################

@@ -17,6 +17,7 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class HttpTest {
@@ -48,6 +49,74 @@ public class HttpTest {
     assertEquals(target.queryParam("page"), "1");
     assertEquals(target.queryParamAsInt("page", 0), 1);
     assertEquals(target.queryParam("sort"), "asc");
+  }
+
+  @Test(description = "no encoding required")
+  public void raw01() {
+    assertEquals(Http.raw("/path"), "/path");
+  }
+
+  @Test(description = "encoding required: utf-8 1-byte form")
+  public void raw02() {
+    assertEquals(Http.raw("/utf8/á"), "/utf8/%C3%A1");
+  }
+
+  @Test(description = "encoding required: utf-8 3-byte form")
+  public void raw03() {
+    assertEquals(Http.raw("/utf8/世界"), "/utf8/%E4%B8%96%E7%95%8C");
+  }
+
+  @Test(description = "encoding required: utf-8 4-byte form")
+  public void raw04() {
+    assertEquals(Http.raw("/utf8/😊"), "/utf8/%F0%9F%98%8A");
+  }
+
+  @Test(description = "mixed ASCII and non-ASCII characters")
+  public void raw05() {
+    assertEquals(Http.raw("/path/Café 世界😊"), "/path/Caf%C3%A9%20%E4%B8%96%E7%95%8C%F0%9F%98%8A");
+  }
+
+  @Test(description = "empty string")
+  public void raw06() {
+    assertEquals(Http.raw(""), "");
+  }
+
+  @Test(description = "initial buffer size will need increasing")
+  public void raw07() {
+    assertEquals(Http.raw("😊".repeat(10)), "%F0%9F%98%8A".repeat(10));
+  }
+
+  @Test(description = "invalid UTF-16: lone low surrogate")
+  public void raw08() {
+    try {
+      Http.raw("xx\uDC00");
+
+      Assert.fail("It should have thrown");
+    } catch (IllegalArgumentException expected) {
+      assertEquals(expected.getMessage(), "Low surrogate \\udc00 must be preceeded by a high surrogate.");
+    }
+  }
+
+  @Test(description = "invalid UTF-16: lone high surrogate")
+  public void raw09() {
+    try {
+      Http.raw("xx\uD800");
+
+      Assert.fail("It should have thrown");
+    } catch (IllegalArgumentException expected) {
+      assertEquals(expected.getMessage(), "Unmatched high surrogate at end of string");
+    }
+  }
+
+  @Test(description = "invalid UTF-16: high surrogate followed by non-surrogate")
+  public void raw10() {
+    try {
+      Http.raw("xx\uD800xx");
+
+      Assert.fail("It should have thrown");
+    } catch (IllegalArgumentException expected) {
+      assertEquals(expected.getMessage(), "High surrogate \\ud800 must be followed by a low surrogate.");
+    }
   }
 
 }

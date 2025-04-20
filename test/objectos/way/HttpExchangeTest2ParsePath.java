@@ -30,6 +30,7 @@ public class HttpExchangeTest2ParsePath {
     test(
         """
         GET / HTTP/1.1\r
+        Host: test\r
         \r
         """,
 
@@ -42,6 +43,7 @@ public class HttpExchangeTest2ParsePath {
     test(
         """
         GET /index.html HTTP/1.1\r
+        Host: test\r
         \r
         """,
 
@@ -54,6 +56,7 @@ public class HttpExchangeTest2ParsePath {
     test(
         """
         GET /utf8/%40 HTTP/1.1\r
+        Host: test\r
         \r
         """,
 
@@ -66,6 +69,7 @@ public class HttpExchangeTest2ParsePath {
     test(
         """
         GET /utf8/%C3%A1 HTTP/1.1\r
+        Host: test\r
         \r
         """,
 
@@ -78,6 +82,7 @@ public class HttpExchangeTest2ParsePath {
     test(
         """
         GET /utf8/%E2%82%AC HTTP/1.1\r
+        Host: test\r
         \r
         """,
 
@@ -90,6 +95,7 @@ public class HttpExchangeTest2ParsePath {
     test(
         """
         GET /utf8/%F0%9F%98%80 HTTP/1.1\r
+        Host: test\r
         \r
         """,
 
@@ -180,6 +186,7 @@ public class HttpExchangeTest2ParsePath {
     test(
         Y.slowStream(1, """
         GET /index.html HTTP/1.1\r
+        Host: test\r
         \r
         """),
 
@@ -192,6 +199,7 @@ public class HttpExchangeTest2ParsePath {
     test(
         Y.slowStream(1, """
         GET /utf8/%40 HTTP/1.1\r
+        Host: test\r
         \r
         """),
 
@@ -204,6 +212,7 @@ public class HttpExchangeTest2ParsePath {
     test(
         Y.slowStream(1, """
         GET /utf8/%C3%A1 HTTP/1.1\r
+        Host: test\r
         \r
         """),
 
@@ -216,6 +225,7 @@ public class HttpExchangeTest2ParsePath {
     test(
         Y.slowStream(1, """
         GET /utf8/%E2%82%AC HTTP/1.1\r
+        Host: test\r
         \r
         """),
 
@@ -228,6 +238,7 @@ public class HttpExchangeTest2ParsePath {
     test(
         Y.slowStream(1, """
         GET /utf8/%F0%9F%98%80 HTTP/1.1\r
+        Host: test\r
         \r
         """),
 

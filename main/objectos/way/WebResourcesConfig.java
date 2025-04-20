@@ -34,13 +34,13 @@ final class WebResourcesConfig implements Web.Resources.Config {
 
   private sealed interface ResourceFile {
 
-    String pathName();
+    Path file();
 
   }
 
-  private record BinaryFile(String pathName, byte[] contents) implements ResourceFile {}
+  private record BinaryFile(Path file, byte[] contents) implements ResourceFile {}
 
-  private record TextFile(String pathName, CharSequence contents, Charset charset) implements ResourceFile {}
+  private record TextFile(Path file, CharSequence contents, Charset charset) implements ResourceFile {}
 
   private final Note.Ref1<Path> created = Note.Ref1.create(Web.Resources.Config.class, "ADD", Note.DEBUG);
 
@@ -54,10 +54,13 @@ final class WebResourcesConfig implements Web.Resources.Config {
 
   Note.Sink noteSink = new Note.NoOpSink();
 
-  public WebResourcesKernel build() throws IOException {
-    final Path rootDirectory;
-    rootDirectory = Files.createTempDirectory("way-web-resources-");
+  private final Path rootDirectory;
 
+  WebResourcesConfig() throws IOException {
+    rootDirectory = Files.createTempDirectory("way-web-resources-").normalize();
+  }
+
+  public WebResourcesKernel build() throws IOException {
     for (Path directory : directories) {
       CopyRecursively copyRecursively;
       copyRecursively = new CopyRecursively(rootDirectory, directory);
@@ -69,32 +72,18 @@ final class WebResourcesConfig implements Web.Resources.Config {
     writeOptions = new OpenOption[] {StandardOpenOption.CREATE_NEW};
 
     for (ResourceFile f : files) {
-      String path;
-      path = f.pathName();
+      final Path file;
+      file = f.file();
 
-      // remove '/'
-      path = path.substring(1);
-
-      Path file;
-      file = rootDirectory.resolve(path);
-
-      file = file.normalize();
-
-      if (!file.startsWith(rootDirectory)) {
-        throw new IllegalArgumentException("Traversal detected: " + path);
-      }
-
-      Path parent;
+      final Path parent;
       parent = file.getParent();
 
       Files.createDirectories(parent);
 
       switch (f) {
-        case BinaryFile(String pathName, byte[] contents)
-             -> Files.write(file, contents, writeOptions);
+        case BinaryFile binary -> Files.write(file, binary.contents, writeOptions);
 
-        case TextFile(String pathName, CharSequence contents, Charset charset)
-             -> Files.writeString(file, contents, charset, writeOptions);
+        case TextFile text -> Files.writeString(file, text.contents, text.charset, writeOptions);
       }
     }
 
@@ -120,7 +109,7 @@ final class WebResourcesConfig implements Web.Resources.Config {
 
   @Override
   public final void addBinaryFile(String pathName, byte[] contents) {
-    final String path;
+    final Path path;
     path = toPath(pathName);
 
     final byte[] copy;
@@ -134,7 +123,7 @@ final class WebResourcesConfig implements Web.Resources.Config {
 
   @Override
   public final void addTextFile(String pathName, CharSequence contents, Charset charset) {
-    String path;
+    final Path path;
     path = toPath(pathName);
 
     Objects.requireNonNull(contents, "contents == null");
@@ -146,18 +135,27 @@ final class WebResourcesConfig implements Web.Resources.Config {
     files.add(file);
   }
 
-  private String toPath(String pathName) {
-    Http.RequestTarget target;
-    target = HttpExchange.parseRequestTarget(pathName);
+  private Path toPath(String pathName) {
+    final int length;
+    length = pathName.length();
 
-    String query;
-    query = target.rawQuery();
-
-    if (query != null) {
-      throw new IllegalArgumentException("Found query component in path name: " + pathName);
+    if (length < 1 || pathName.charAt(0) != '/') {
+      throw new IllegalArgumentException("pathName must start with the '/' character");
     }
 
-    return target.path();
+    final String relative;
+    relative = pathName.substring(1);
+
+    Path file;
+    file = rootDirectory.resolve(relative);
+
+    file = file.normalize();
+
+    if (!file.startsWith(rootDirectory)) {
+      throw new IllegalArgumentException("Traversal detected: " + pathName);
+    }
+
+    return file;
   }
 
   @Override

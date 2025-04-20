@@ -42,7 +42,7 @@ public class MarketingSiteTest {
           """);
 
       resp(socket, """
-          HTTP/1.1 301 MOVED PERMANENTLY\r
+          HTTP/1.1 301 Moved Permanently\r
           Date: Wed, 28 Jun 2023 12:08:43 GMT\r
           Location: /index.html\r
           \r
@@ -103,7 +103,7 @@ public class MarketingSiteTest {
         Y.httpClient(
             "/index.html",
 
-            builder -> builder.method("TRACE", BodyPublishers.noBody()).headers(
+            builder -> builder.method("POST", BodyPublishers.noBody()).headers(
                 "Host", "marketing"
             )
         ),

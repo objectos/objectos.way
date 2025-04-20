@@ -1684,6 +1684,186 @@ public final class Http {
 
   // URI RFC 3986
 
+  static String raw(String input) {
+    final int len;
+    len = input.length();
+
+    if (len == 0) {
+      return input;
+    }
+
+    int firstToEncode;
+    firstToEncode = -1;
+
+    for (int i = 0; i < len; i++) {
+      final char c;
+      c = input.charAt(i);
+
+      if (c > 0x7F) {
+        firstToEncode = i;
+
+        break;
+      }
+    }
+
+    if (firstToEncode == -1) {
+      return input;
+    }
+
+    final int worstCaseChars;
+    worstCaseChars = len - firstToEncode;
+
+    final int initialBytesLength;
+    initialBytesLength = (firstToEncode + 1) + (worstCaseChars * 3);
+
+    byte[] bytes;
+    bytes = new byte[initialBytesLength];
+
+    int bytesIndex;
+    bytesIndex = 0;
+
+    for (int i = 0; i < firstToEncode; i++) {
+      bytes[bytesIndex++] = (byte) input.charAt(i);
+    }
+
+    char highSurrogate;
+    highSurrogate = 0;
+
+    for (int i = firstToEncode; i < input.length(); i++) {
+      final char c;
+      c = input.charAt(i);
+
+      if (c <= ' ') {
+        highSurrogate = ensureZero(highSurrogate);
+
+        bytes = ensureBytes(bytes, bytesIndex, 3);
+
+        bytesIndex = raw(bytes, bytesIndex, c);
+      }
+
+      else if (c <= 0x7F) {
+        highSurrogate = ensureZero(highSurrogate);
+
+        bytes = ensureBytes(bytes, bytesIndex, 1);
+
+        bytes[bytesIndex++] = (byte) c;
+      }
+
+      else if (c <= 0x7FF) {
+        highSurrogate = ensureZero(highSurrogate);
+
+        // 110xxxyy 10yyzzzz
+        bytes = ensureBytes(bytes, bytesIndex, 6);
+
+        final int byte0;
+        byte0 = 0b1100_0000 | (c >> 6); // c <= 0x7FF, no higher bits set.
+
+        final int byte1;
+        byte1 = 0b1000_0000 | (c & 0b0011_1111);
+
+        bytesIndex = raw(bytes, bytesIndex, byte0);
+
+        bytesIndex = raw(bytes, bytesIndex, byte1);
+      }
+
+      else if (Character.isHighSurrogate(c)) {
+        ensureZero(highSurrogate);
+
+        highSurrogate = c;
+      }
+
+      else if (Character.isLowSurrogate(c)) {
+        if (highSurrogate == 0) {
+          throw new IllegalArgumentException("Low surrogate \\u" + Integer.toHexString(c) + " must be preceeded by a high surrogate.");
+        }
+
+        int codePoint;
+        codePoint = Character.toCodePoint(highSurrogate, c);
+
+        highSurrogate = 0;
+
+        // 11110uvv 10vvwwww 10xxxxyy 10yyzzzz
+        bytes = ensureBytes(bytes, bytesIndex, 12);
+
+        final int byte0;
+        byte0 = 0b1111_0000 | (codePoint >> 18);
+
+        final int byte1;
+        byte1 = 0b1000_0000 | ((codePoint >> 12) & 0b0011_1111);
+
+        final int byte2;
+        byte2 = 0b1000_0000 | ((codePoint >> 6) & 0b0011_1111);
+
+        final int byte3;
+        byte3 = 0b1000_0000 | (codePoint & 0b0011_1111);
+
+        bytesIndex = raw(bytes, bytesIndex, byte0);
+
+        bytesIndex = raw(bytes, bytesIndex, byte1);
+
+        bytesIndex = raw(bytes, bytesIndex, byte2);
+
+        bytesIndex = raw(bytes, bytesIndex, byte3);
+      }
+
+      else if (c <= 0xFFFF) {
+        highSurrogate = ensureZero(highSurrogate);
+
+        // 1110wwww 10xxxxyy 10yyzzzz
+        bytes = ensureBytes(bytes, bytesIndex, 9);
+
+        final int byte0;
+        byte0 = 0b1110_0000 | (c >> 12);
+
+        final int byte1;
+        byte1 = 0b1000_0000 | ((c >> 6) & 0b0011_1111);
+
+        final int byte2;
+        byte2 = 0b1000_0000 | (c & 0b0011_1111);
+
+        bytesIndex = raw(bytes, bytesIndex, byte0);
+
+        bytesIndex = raw(bytes, bytesIndex, byte1);
+
+        bytesIndex = raw(bytes, bytesIndex, byte2);
+      }
+    }
+
+    if (highSurrogate != 0) {
+      throw new IllegalArgumentException("Unmatched high surrogate at end of string");
+    }
+
+    return new String(bytes, 0, bytesIndex, StandardCharsets.US_ASCII);
+  }
+
+  private static char ensureZero(char highSurrogate) {
+    if (highSurrogate != 0) {
+      throw new IllegalArgumentException("High surrogate \\u" + Integer.toHexString(highSurrogate) + " must be followed by a low surrogate.");
+    }
+
+    return 0;
+  }
+
+  private static byte[] ensureBytes(byte[] bytes, int bytesIndex, int requiredLength) {
+    final int requiredIndex;
+    requiredIndex = bytesIndex + requiredLength - 1;
+
+    return Util.growIfNecessary(bytes, requiredIndex);
+  }
+
+  private static int raw(byte[] bytes, int bytesIndex, int value) {
+    // value is < 256
+    bytes[bytesIndex++] = '%';
+    bytes[bytesIndex++] = hexDigit(value >> 4);
+    bytes[bytesIndex++] = hexDigit(value & 0b1111);
+
+    return bytesIndex;
+  }
+
+  private static byte hexDigit(int nibble) {
+    return (byte) (nibble < 10 ? '0' + nibble : 'A' + (nibble - 10));
+  }
+
   static String subDelims() {
     return "!$&'()*+,;=";
   }

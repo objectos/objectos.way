@@ -89,10 +89,7 @@ public class HttpHandlerTest {
           config.path("/foo");
         }),
 
-        """
-        GET /foo HTTP/1.1\r
-        \r
-        """
+        ""
     );
   }
 
@@ -141,10 +138,7 @@ public class HttpHandlerTest {
           assertEquals(http.get(String.class), null);
         },
 
-        """
-        GET /foo HTTP/1.1\r
-        \r
-        """
+        ""
     );
   }
 
@@ -263,10 +257,7 @@ public class HttpHandlerTest {
           assertEquals(http.get(String.class), "TC01");
         },
 
-        """
-        GET /filter/not HTTP/1.1\r
-        \r
-        """
+        ""
     );
   }
 
@@ -356,10 +347,7 @@ public class HttpHandlerTest {
           assertEquals(http.get(String.class), "SUB-02");
         },
 
-        """
-        GET /subpath/test02/noop HTTP/1.1\r
-        \r
-        """
+        ""
     );
   }
 
@@ -502,7 +490,13 @@ public class HttpHandlerTest {
   private void test(Http.Handler handler, Http.Exchange http, String expected) {
     handler.handle(http);
 
-    assertEquals(http.toString(), expected);
+    if (expected.isEmpty()) {
+      assertEquals(http.processed(), false);
+    } else {
+      assertEquals(http.processed(), true);
+
+      assertEquals(http.toString(), expected);
+    }
   }
 
   private void test(Http.Handler handler,
@@ -513,7 +507,13 @@ public class HttpHandlerTest {
 
     afterListener.accept(http);
 
-    assertEquals(http.toString(), expected);
+    if (expected.isEmpty()) {
+      assertEquals(http.processed(), false);
+    } else {
+      assertEquals(http.processed(), true);
+
+      assertEquals(http.toString(), expected);
+    }
   }
 
 }
