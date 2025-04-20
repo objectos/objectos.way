@@ -60,8 +60,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
       Note.Long1Ref1<Http.Exchange> notImplemented,
       Note.Long1Ref1<Http.Exchange> httpVersionNotSupported,
 
-      Note.Ref2<String, String> hexdump,
-      Note.Ref2<Integer, String> invalidRequestLine
+      Note.Long1Ref1<Throwable> appInternalServerError
   ) {
 
     static Notes get() {
@@ -85,8 +84,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
           Note.Long1Ref1.create(s, "501", Note.INFO),
           Note.Long1Ref1.create(s, "505", Note.INFO),
 
-          Note.Ref2.create(s, "HEX", Note.ERROR),
-          Note.Ref2.create(s, "IRL", Note.ERROR)
+          Note.Long1Ref1.create(s, "5o0", Note.ERROR)
       );
     }
 
@@ -2364,24 +2362,24 @@ final class HttpExchange implements Http.Exchange, Closeable {
     /*
     String encodedKey;
     encodedKey = encode(name);
-    
+
     String encodedValue;
     encodedValue = encode(value);
-    
+
     int queryLength;
     queryLength = rawValue.length() - queryStart;
-    
+
     if (queryLength < 2) {
       return encodedKey + "=" + encodedValue;
     }
-    
+
     Map<String, Object> params;
     params = Util.createSequencedMap();
-    
+
     makeQueryParams(params, Function.identity());
-    
+
     params.put(encodedKey, encodedValue);
-    
+
     return Http.queryParamsToString(params, Function.identity());
     */
 
@@ -2517,12 +2515,12 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   @Override
   public final void badRequest(Media media) {
-    response(Http.Status.BAD_REQUEST, media);
+    respond(Http.Status.BAD_REQUEST, media);
   }
 
   @Override
   public final void notFound(Media media) {
-    response(Http.Status.NOT_FOUND, media);
+    respond(Http.Status.NOT_FOUND, media);
   }
 
   @Override
@@ -2543,6 +2541,15 @@ final class HttpExchange implements Http.Exchange, Closeable {
     send();
   }
 
+  // 5xx responses
+
+  @Override
+  public final void internalServerError(Media media, Throwable error) {
+    noteSink.send(NOTES.appInternalServerError, id, error);
+
+    respond(Http.Status.INTERNAL_SERVER_ERROR, media);
+  }
+
   // ##################################################################
   // # END: Http.Exchange API || Response
   // ##################################################################
@@ -2559,7 +2566,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
     }
   }
 
-  private void response(Http.Status status, Media media) {
+  private void respond(Http.Status status, Media media) {
     Objects.requireNonNull(media, "media == null");
 
     switch (media) {
@@ -3116,63 +3123,63 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   /*
   private static final byte[] CHUNKED_TRAILER = "0\r\n\r\n".getBytes(StandardCharsets.UTF_8);
-  
+
   @Override
   public final void respond(Http.Status status, Lang.MediaWriter writer) {
     final Charset charset;
     charset = respond0(status, writer);
-  
+
     send0(writer, charset);
   }
-  
+
   @Override
   public final void respond(Http.Status status, Lang.MediaWriter writer, Consumer<Http.ResponseHeaders> headers) {
     final Charset charset;
     charset = respond0(status, writer);
-  
+
     headers.accept(this);
-  
+
     if (testBit(CONTENT_LENGTH)) {
       throw new IllegalStateException(
           "Content-Length must not be set with a Lang.MediaWriter response"
       );
     }
-  
+
     if (!testBit(CHUNKED)) {
       throw new IllegalStateException(
           "Transfer-Encoding: chunked must be set with a Lang.MediaWriter response"
       );
     }
-  
+
     send0(writer, charset);
   }
-  
+
   private Charset respond0(Http.Status status, Lang.MediaWriter writer) {
     Objects.requireNonNull(status, "status == null");
-  
+
     // early writer validation
     final String contentType;
     contentType = writer.contentType();
-  
+
     if (contentType == null) {
       throw new NullPointerException("The specified Lang.MediaWriter provided a null content-type");
     }
-  
+
     final Charset charset;
     charset = writer.mediaCharset();
-  
+
     if (charset == null) {
       throw new NullPointerException("The specified Lang.MediaWriter provided a null charset");
     }
-  
+
     status0(status);
-  
+
     dateNow();
-  
+
     header0(Http.HeaderName.CONTENT_TYPE, contentType);
-  
+
     header0(Http.HeaderName.TRANSFER_ENCODING, "chunked");
-  
+
     return charset;
   }
   */

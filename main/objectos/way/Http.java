@@ -259,7 +259,7 @@ public final class Http {
      */
     <T> T get(Class<T> key);
 
-    // 2XX responses
+    // 2xx responses
 
     /**
      * Respond with a {@code 200 OK} message with the specified media entity.
@@ -269,7 +269,7 @@ public final class Http {
      */
     void ok(Media.Bytes media);
 
-    // 3XX responses
+    // 3xx responses
 
     /**
      * Respond with a {@code 302 Found} message with the specified
@@ -289,7 +289,7 @@ public final class Http {
      */
     void seeOther(String location);
 
-    // 4XX responses
+    // 4xx responses
 
     /**
      * Respond with a {@code 400 Bad Request} message with the specified media
@@ -317,6 +317,19 @@ public final class Http {
      *        the allowed methods
      */
     void allow(Http.Method... methods);
+
+    // 5xx responses
+
+    /**
+     * Respond with a {@code 500 Internal Server Error} message with the
+     * specified media entity. The specified {@code Throwable} will be noted.
+     *
+     * @param media
+     *        the media entity
+     * @param error
+     *        the {@code Throwable} to be noted
+     */
+    void internalServerError(Media media, Throwable error);
 
     /**
      * Return {@code true} if an HTTP response message has been written to this

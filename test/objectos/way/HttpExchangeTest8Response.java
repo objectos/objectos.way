@@ -194,6 +194,24 @@ public class HttpExchangeTest8Response {
     );
   }
 
+  // 5xx responses
+
+  @Test(description = "internalServerError(Media.Bytes, Throwable)")
+  public void internalServerError01() {
+    post(
+        http -> http.internalServerError(Media.Bytes.textPlain("ISE\n"), Y.trimStackTrace(new IOException(), 1)),
+
+        """
+        HTTP/1.1 500 Internal Server Error\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 4\r
+        \r
+        ISE
+        """
+    );
+  }
+
   private void empty01(HttpExchange http) {
     http.status(Http.Status.NOT_MODIFIED);
     http.header(Http.HeaderName.DATE, http.now());
