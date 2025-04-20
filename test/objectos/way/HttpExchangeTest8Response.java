@@ -115,6 +115,85 @@ public class HttpExchangeTest8Response {
     );
   }
 
+  @Test
+  public void seeOther01() {
+    get(
+        http -> http.seeOther("/page"),
+
+        """
+        HTTP/1.1 303 See Other\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Length: 0\r
+        Location: /page\r
+        \r
+        """
+    );
+  }
+
+  @Test
+  public void seeOther02() {
+    get(
+        http -> http.seeOther("/product/café/😀"),
+
+        """
+        HTTP/1.1 303 See Other\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Length: 0\r
+        Location: /product/caf%C3%A9/%F0%9F%98%80\r
+        \r
+        """
+    );
+  }
+
+  // 4xx responses
+
+  @Test(description = "badRequest(Media.Bytes)")
+  public void badRequest01() {
+    post(
+        http -> http.badRequest(Media.Bytes.textPlain("BAD\n")),
+
+        """
+        HTTP/1.1 400 Bad Request\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 4\r
+        \r
+        BAD
+        """
+    );
+  }
+
+  @Test(description = "notFound(Media.Bytes)")
+  public void notFound01() {
+    post(
+        http -> http.notFound(Media.Bytes.textPlain("NOT\n")),
+
+        """
+        HTTP/1.1 404 Not Found\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 4\r
+        \r
+        NOT
+        """
+    );
+  }
+
+  @Test(description = "allow(Http.Method...)")
+  public void allow01() {
+    post(
+        http -> http.allow(Http.Method.GET, Http.Method.HEAD),
+
+        """
+        HTTP/1.1 405 Method Not Allowed\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Allow: GET, HEAD\r
+        Content-Length: 0\r
+        \r
+        """
+    );
+  }
+
   private void empty01(HttpExchange http) {
     http.status(Http.Status.NOT_MODIFIED);
     http.header(Http.HeaderName.DATE, http.now());
@@ -234,6 +313,18 @@ public class HttpExchangeTest8Response {
     Host: www.objectos.com.br\r
     Connection: close\r
     \r
+    """, handler, expectedResponse);
+  }
+
+  private void post(Consumer<HttpExchange> handler, String expectedResponse) {
+    test("""
+    POST /test HTTP/1.1\r
+    Host: www.objectos.com.br\r
+    Content-Length: 24\r
+    Content-Type: application/x-www-form-urlencoded\r
+    Connection: close\r
+    \r
+    email=user%40example.com\
     """, handler, expectedResponse);
   }
 

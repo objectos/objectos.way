@@ -280,6 +280,15 @@ public final class Http {
      */
     void found(String location);
 
+    /**
+     * Respond with a {@code 303 See Other} message with the specified
+     * {@code Location} header.
+     *
+     * @param location
+     *        the value of the {@code Location} header
+     */
+    void seeOther(String location);
+
     // 4XX responses
 
     /**
@@ -299,6 +308,15 @@ public final class Http {
      *        the media entity
      */
     void notFound(Media media);
+
+    /**
+     * Respond with a {@code 405 Method Not Allowed} message with the specified
+     * methods in the {@code Allow} response header.
+     *
+     * @param methods
+     *        the allowed methods
+     */
+    void allow(Http.Method... methods);
 
     /**
      * Return {@code true} if an HTTP response message has been written to this

@@ -37,7 +37,7 @@ final class MarketingSite implements Consumer<Http.Routing> {
     switch (http.method()) {
       case GET, HEAD -> http.ok(new MarketingSiteHome());
 
-      default -> http.respond(Http.ResponseMessage.methodNotAllowed(Http.Method.GET, Http.Method.HEAD));
+      default -> http.allow(Http.Method.GET, Http.Method.HEAD);
     }
   }
 

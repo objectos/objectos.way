@@ -89,7 +89,7 @@ public class HttpServerTest implements Consumer<Http.Routing> {
     switch (http.method()) {
       case GET, HEAD -> testCase01Get(http);
 
-      default -> http.respond(Http.ResponseMessage.methodNotAllowed(Http.Method.GET, Http.Method.HEAD));
+      default -> http.allow(Http.Method.GET, Http.Method.HEAD);
     }
   }
 
@@ -149,7 +149,7 @@ public class HttpServerTest implements Consumer<Http.Routing> {
     switch (http.method()) {
       case GET, HEAD -> testCase02Get(http);
 
-      default -> http.respond(Http.ResponseMessage.methodNotAllowed(Http.Method.GET, Http.Method.HEAD));
+      default -> http.allow(Http.Method.GET, Http.Method.HEAD);
     }
   }
 
@@ -207,7 +207,7 @@ public class HttpServerTest implements Consumer<Http.Routing> {
 
       case POST -> testCase03Post(http);
 
-      default -> http.respond(Http.ResponseMessage.methodNotAllowed(Http.Method.GET, Http.Method.HEAD, Http.Method.POST));
+      default -> http.allow(Http.Method.GET, Http.Method.HEAD, Http.Method.POST);
     }
   }
 
@@ -300,7 +300,7 @@ public class HttpServerTest implements Consumer<Http.Routing> {
 
       case POST -> testCase04Post(http);
 
-      default -> http.respond(Http.ResponseMessage.methodNotAllowed(Http.Method.GET, Http.Method.HEAD, Http.Method.POST));
+      default -> http.allow(Http.Method.GET, Http.Method.HEAD, Http.Method.POST);
     }
   }
 

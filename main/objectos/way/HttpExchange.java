@@ -37,6 +37,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import objectos.way.Http.Status;
 
 @SuppressWarnings("serial")
@@ -2493,6 +2494,25 @@ final class HttpExchange implements Http.Exchange, Closeable {
     send();
   }
 
+  @Override
+  public final void seeOther(String location) {
+    final String nonNull;
+    nonNull = Objects.requireNonNull(location, "location == null");
+
+    final String raw;
+    raw = Http.raw(nonNull);
+
+    statusUnchecked(Http.Status.SEE_OTHER);
+
+    headerUnchecked(Http.HeaderName.DATE, now());
+
+    headerUnchecked(Http.HeaderName.CONTENT_LENGTH, 0L);
+
+    headerUnchecked(Http.HeaderName.LOCATION, raw);
+
+    send();
+  }
+
   // 4xx responses
 
   @Override
@@ -2503,6 +2523,24 @@ final class HttpExchange implements Http.Exchange, Closeable {
   @Override
   public final void notFound(Media media) {
     response(Http.Status.NOT_FOUND, media);
+  }
+
+  @Override
+  public final void allow(Http.Method... methods) {
+    Objects.requireNonNull(methods, "methods == null");
+
+    final String allow;
+    allow = Arrays.stream(methods).map(Http.Method::name).collect(Collectors.joining(", "));
+
+    statusUnchecked(Http.Status.METHOD_NOT_ALLOWED);
+
+    headerUnchecked(Http.HeaderName.DATE, now());
+
+    headerUnchecked(Http.HeaderName.ALLOW, allow);
+
+    headerUnchecked(Http.HeaderName.CONTENT_LENGTH, 0L);
+
+    send();
   }
 
   // ##################################################################
@@ -2522,6 +2560,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
   }
 
   private void response(Http.Status status, Media media) {
+    Objects.requireNonNull(media, "media == null");
+
     switch (media) {
       case Media.Bytes bytes -> respond(status, bytes);
 
@@ -2554,10 +2594,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
     headerUnchecked(Http.HeaderName.CONTENT_TYPE, contentType);
 
     headerUnchecked(Http.HeaderName.CONTENT_LENGTH, bytes.length);
-
-    switch (status.code()) {
-      case 400 -> headerUnchecked(Http.HeaderName.CONNECTION, "close");
-    }
 
     sendUnchecked(bytes);
   }
