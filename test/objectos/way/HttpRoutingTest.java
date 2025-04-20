@@ -26,10 +26,6 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.function.Consumer;
-import objectos.way.Http.HeaderName;
-import objectos.way.Http.Method;
-import objectos.way.Http.ResponseMessage;
-import objectos.way.Http.Routing;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -299,10 +295,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
     }
 
     if (user == null) {
-      final ResponseMessage message;
-      message = Http.ResponseMessage.found("/login");
-
-      http.respond(message);
+      http.found("/login");
     }
   }
 
@@ -821,7 +814,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
 
   private static class TestCase08 implements Consumer<Http.Routing> {
     @Override
-    public final void accept(Routing routing) {
+    public final void accept(Http.Routing routing) {
       routing.path("/testCase08", path -> {
         path.handler(Http.Handler.ofText("TC08", StandardCharsets.UTF_8));
       });
@@ -1011,10 +1004,10 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
   }
 
   private void $testCase13(Http.Exchange http) {
-    Method method;
+    Http.Method method;
     method = http.method();
 
-    HeaderName name;
+    Http.HeaderName name;
     name = Http.HeaderName.of("X-Test-Case-13");
 
     String value;
@@ -1121,10 +1114,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
     final String sub;
     sub = path.substring("/testCase14".length());
 
-    final Http.ResponseMessage resp;
-    resp = Http.ResponseMessage.okTextPlain(method + "=" + sub, StandardCharsets.UTF_8);
-
-    http.respond(resp);
+    http.ok(Media.Bytes.textPlain(method + "=" + sub));
   }
 
   @Test
@@ -1168,7 +1158,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
 
   @SuppressWarnings("unused")
   private void $testCase15Filter(Http.Exchange http, Http.Handler handler) {
-    final HeaderName name;
+    final Http.HeaderName name;
     name = Http.HeaderName.of("X-Test-Case-15");
 
     final String value;
@@ -1194,10 +1184,10 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
     final String value;
     value = maybe != null ? maybe : "null";
 
-    final Http.ResponseMessage resp;
-    resp = Http.ResponseMessage.okTextPlain(value, StandardCharsets.UTF_8);
+    final Media.Bytes media;
+    media = Media.Bytes.textPlain(value);
 
-    http.respond(resp);
+    http.ok(media);
   }
 
   @Test

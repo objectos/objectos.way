@@ -28,6 +28,93 @@ import org.testng.annotations.Test;
 
 public class HttpExchangeTest8Response {
 
+  // 2xx responses
+
+  @Test(description = "ok(Media.Bytes): fits in buffer")
+  public void okMediaBytes01() {
+    get(
+        http -> http.ok(Media.Bytes.textPlain("1\n")),
+
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 2\r
+        \r
+        1
+        """
+    );
+  }
+
+  @Test(description = "ok(Media.Bytes): does not fit in buffer")
+  public void okMediaBytes02() {
+    final String veryLong;
+    veryLong = ".".repeat(2048);
+
+    get(
+        http -> http.ok(Media.Bytes.textPlain(veryLong)),
+
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 2048\r
+        \r
+        %s\
+        """.formatted(veryLong)
+    );
+  }
+
+  @Test(description = "ok(Media.Bytes): HEAD")
+  public void okMediaBytes03() {
+    final String veryLong;
+    veryLong = ".".repeat(2048);
+
+    head(
+        http -> http.ok(Media.Bytes.textPlain(veryLong)),
+
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 2048\r
+        \r
+        """
+    );
+  }
+
+  // 3xx responses
+
+  @Test
+  public void found01() {
+    get(
+        http -> http.found("/login"),
+
+        """
+        HTTP/1.1 302 Found\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Length: 0\r
+        Location: /login\r
+        \r
+        """
+    );
+  }
+
+  @Test
+  public void found02() {
+    get(
+        http -> http.found("/product/café/😀"),
+
+        """
+        HTTP/1.1 302 Found\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Length: 0\r
+        Location: /product/caf%C3%A9/%F0%9F%98%80\r
+        \r
+        """
+    );
+  }
+
   private void empty01(HttpExchange http) {
     http.status(Http.Status.NOT_MODIFIED);
     http.header(Http.HeaderName.DATE, http.now());
@@ -113,59 +200,6 @@ public class HttpExchangeTest8Response {
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
         Content-Type: text/plain; charset=utf-8\r
         Content-Length: 1024\r
-        \r
-        """
-    );
-  }
-
-  @Test(description = "Media.Bytes: fits in buffer")
-  public void mediaBytes01() {
-    get(
-        http -> http.ok(Media.Bytes.textPlain("1\n")),
-
-        """
-        HTTP/1.1 200 OK\r
-        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-        Content-Type: text/plain; charset=utf-8\r
-        Content-Length: 2\r
-        \r
-        1
-        """
-    );
-  }
-
-  @Test(description = "Media.Bytes: does not fit in buffer")
-  public void mediaBytes02() {
-    final String veryLong;
-    veryLong = ".".repeat(2048);
-
-    get(
-        http -> http.ok(Media.Bytes.textPlain(veryLong)),
-
-        """
-        HTTP/1.1 200 OK\r
-        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-        Content-Type: text/plain; charset=utf-8\r
-        Content-Length: 2048\r
-        \r
-        %s\
-        """.formatted(veryLong)
-    );
-  }
-
-  @Test(description = "Media.Bytes: HEAD")
-  public void mediaBytes03() {
-    final String veryLong;
-    veryLong = ".".repeat(2048);
-
-    head(
-        http -> http.ok(Media.Bytes.textPlain(veryLong)),
-
-        """
-        HTTP/1.1 200 OK\r
-        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-        Content-Type: text/plain; charset=utf-8\r
-        Content-Length: 2048\r
         \r
         """
     );

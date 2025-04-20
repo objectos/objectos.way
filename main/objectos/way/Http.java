@@ -93,7 +93,7 @@ public final class Http {
    * interface return decoded values.
    */
   public sealed interface Exchange
-      extends Request, Response
+      extends Request
       permits HttpExchange {
 
     /**
@@ -269,6 +269,17 @@ public final class Http {
      */
     void ok(Media.Bytes media);
 
+    // 3XX responses
+
+    /**
+     * Respond with a {@code 302 Found} message with the specified
+     * {@code Location} header.
+     *
+     * @param location
+     *        the value of the {@code Location} header
+     */
+    void found(String location);
+
     // 4XX responses
 
     /**
@@ -278,7 +289,7 @@ public final class Http {
      * @param media
      *        the media entity
      */
-    void badRequest(Media.Bytes media);
+    void badRequest(Media media);
 
     /**
      * Respond with a {@code 404 Not Found} message with the specified media
@@ -287,7 +298,7 @@ public final class Http {
      * @param media
      *        the media entity
      */
-    void notFound(Media.Bytes media);
+    void notFound(Media media);
 
     /**
      * Return {@code true} if an HTTP response message has been written to this
@@ -823,67 +834,6 @@ public final class Http {
   }
 
   /**
-   * Provides methods for writing the response message of an HTTP exchange.
-   */
-  public sealed interface Response {
-
-    /**
-     * Writes a {@code 200 OK} response message with the contents of the
-     * specified media object.
-     *
-     * @param writer
-     *        the media writer
-     */
-    void respond(Lang.MediaWriter writer);
-
-    /**
-     * Writes the specified response message.
-     *
-     * @param message
-     *        the response message
-     */
-    void respond(ResponseMessage message);
-
-    /**
-     * Writes a response message with the specified status and the contents of
-     * the specified media object. The specified headers will be
-     *
-     * @param status
-     *        the HTTP response status
-     * @param object
-     *        the media object
-     * @param headers
-     *        the additional headers to write
-     */
-    void respond(Http.Status status, Media.Bytes object, Consumer<ResponseHeaders> headers);
-
-    /**
-     * Writes a response message with the specified status and the
-     * contents of the specified media writer.
-     *
-     * @param status
-     *        the HTTP response status
-     * @param writer
-     *        the media writer
-     */
-    void respond(Http.Status status, Lang.MediaWriter writer);
-
-    /**
-     * Writes a response message with the specified status and the
-     * contents of the specified media writer.
-     *
-     * @param status
-     *        the HTTP response status
-     * @param writer
-     *        the media writer
-     * @param headers
-     *        the additional headers to write
-     */
-    void respond(Http.Status status, Lang.MediaWriter writer, Consumer<ResponseHeaders> headers);
-
-  }
-
-  /**
    * Provides messages for writing the headers of an HTTP response message.
    */
   public interface ResponseHeaders {
@@ -913,34 +863,6 @@ public final class Http {
      * current date and time.
      */
     void dateNow();
-
-  }
-
-  /**
-   * Represents an HTTP response message.
-   */
-  public sealed interface ResponseMessage permits HttpResponseMessage {
-
-    static ResponseMessage found(String location) {
-      Objects.requireNonNull(location, "location == null");
-
-      return HttpResponseMessage.found(location);
-    }
-
-    static ResponseMessage methodNotAllowed(Method... methods) {
-      for (int i = 0; i < methods.length; i++) {
-        Check.notNull(methods[i], "methods[", i, "] == null");
-      }
-
-      return HttpResponseMessage.methodNotAllowed(methods);
-    }
-
-    static ResponseMessage okTextPlain(String text, Charset charset) {
-      final Media.Bytes object;
-      object = Media.Bytes.textPlain(text, charset);
-
-      return HttpResponseMessage.ok(object);
-    }
 
   }
 

@@ -342,37 +342,6 @@ public class HttpExchangeTest9Create {
     return http.rawQueryWith(newName, newValue);
   }
 
-  @Test
-  public void responseHeader01() {
-    Http.Exchange http;
-    http = http(config -> {});
-
-    http.respond(Http.Status.OK, new TestingSingleParagraph("foo/bar"), resp -> {
-      resp.header(Http.HeaderName.ALLOW, "foo/bar");
-
-      resp.header(Http.HeaderName.USER_AGENT, "Agent 1");
-      resp.header(Http.HeaderName.USER_AGENT, "Agent 2");
-    });
-
-    assertEquals(
-        http.toString(),
-
-        """
-        HTTP/1.1 200 OK\r
-        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-        Content-Type: text/html; charset=utf-8\r
-        Content-Length: 30\r
-        Allow: foo/bar\r
-        User-Agent: Agent 1\r
-        User-Agent: Agent 2\r
-        \r
-        <html>
-        <p>foo/bar</p>
-        </html>
-        """
-    );
-  }
-
   private Http.Exchange http(Consumer<Http.Exchange.Config> more) {
     return Http.Exchange.create(config -> {
       config.clock(TestingClock.FIXED);

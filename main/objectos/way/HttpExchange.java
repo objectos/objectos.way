@@ -37,9 +37,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
-import objectos.way.Http.ResponseHeaders;
 import objectos.way.Http.Status;
-import objectos.way.Lang.MediaWriter;
 
 @SuppressWarnings("serial")
 final class HttpExchange implements Http.Exchange, Closeable {
@@ -2467,21 +2465,44 @@ final class HttpExchange implements Http.Exchange, Closeable {
   // # BEGIN: Http.Exchange API || Response
   // ##################################################################
 
-  @Override
-  public final void respond(Status status, MediaWriter writer) {
-    throw new UnsupportedOperationException("Implement me");
-  }
-
-  @Override
-  public final void respond(Status status, MediaWriter writer, Consumer<ResponseHeaders> headers) {
-    throw new UnsupportedOperationException("Implement me");
-  }
-
   // 2xx responses
 
   @Override
   public final void ok(Media.Bytes media) {
     respond(Http.Status.OK, media);
+  }
+
+  // 3xx responses
+
+  @Override
+  public final void found(String location) {
+    final String nonNull;
+    nonNull = Objects.requireNonNull(location, "location == null");
+
+    final String raw;
+    raw = Http.raw(nonNull);
+
+    statusUnchecked(Http.Status.FOUND);
+
+    headerUnchecked(Http.HeaderName.DATE, now());
+
+    headerUnchecked(Http.HeaderName.CONTENT_LENGTH, 0L);
+
+    headerUnchecked(Http.HeaderName.LOCATION, raw);
+
+    send();
+  }
+
+  // 4xx responses
+
+  @Override
+  public final void badRequest(Media media) {
+    response(Http.Status.BAD_REQUEST, media);
+  }
+
+  @Override
+  public final void notFound(Media media) {
+    response(Http.Status.NOT_FOUND, media);
   }
 
   // ##################################################################
@@ -2497,6 +2518,14 @@ final class HttpExchange implements Http.Exchange, Closeable {
       throw new IllegalStateException(
           "Method cannot be called when state=" + state
       );
+    }
+  }
+
+  private void response(Http.Status status, Media media) {
+    switch (media) {
+      case Media.Bytes bytes -> respond(status, bytes);
+
+      default -> throw new IllegalArgumentException("Unexpected value: " + media);
     }
   }
 
@@ -3048,35 +3077,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
   // ##################################################################
   // # END: Http.Exchange API || request headers
   // ##################################################################
-
-  // 4xx responses
-
-  @Override
-  public final void badRequest(Media.Bytes media) {
-    throw new UnsupportedOperationException("Implement me");
-  }
-
-  @Override
-  public final void notFound(Media.Bytes media) {
-    throw new UnsupportedOperationException("Implement me");
-  }
-
-  // generic responses
-
-  @Override
-  public final void respond(Http.ResponseMessage message) {
-    throw new UnsupportedOperationException("Implement me");
-  }
-
-  @Override
-  public final void respond(Lang.MediaWriter writer) {
-    throw new UnsupportedOperationException("Implement me");
-  }
-
-  @Override
-  public final void respond(Http.Status status, Media.Bytes object, Consumer<Http.ResponseHeaders> headers) {
-    throw new UnsupportedOperationException("Implement me");
-  }
 
   /*
   private static final byte[] CHUNKED_TRAILER = "0\r\n\r\n".getBytes(StandardCharsets.UTF_8);
