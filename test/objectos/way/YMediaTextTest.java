@@ -20,14 +20,14 @@ import static org.testng.Assert.assertEquals;
 import java.io.IOException;
 import org.testng.annotations.Test;
 
-public class LangMediaWriterTest {
+public class YMediaTextTest {
 
   @Test(description = """
   It fits in the first line
   """)
   public void testCase01() {
     test(
-        TestingCharWritable.ofLength(32),
+        Y.mediaTextOfLength(32),
 
         """
         12345678901234567890123456789012"""
@@ -39,7 +39,7 @@ public class LangMediaWriterTest {
   """)
   public void testCase02() {
     test(
-        TestingCharWritable.ofLength(82),
+        Y.mediaTextOfLength(82),
 
         """
         .................................................
@@ -47,17 +47,17 @@ public class LangMediaWriterTest {
     );
   }
 
-  private void test(TestingCharWritable writable, String expected) {
+  private void test(Media.Text writable, String expected) {
     try {
-      StringBuilder sb;
+      final StringBuilder sb;
       sb = new StringBuilder();
 
-      writable.mediaTo(sb);
+      writable.writeTo(sb);
 
-      String result = sb.toString();
+      final String result;
+      result = sb.toString();
 
       assertEquals(result, expected);
-      assertEquals(writable.length, expected.length());
     } catch (IOException e) {
       throw new AssertionError("StringBuilder does not throw", e);
     }

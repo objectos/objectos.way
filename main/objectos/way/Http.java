@@ -269,6 +269,14 @@ public final class Http {
      */
     void ok(Media.Bytes media);
 
+    /**
+     * Respond with a {@code 200 OK} message with the specified media entity.
+     *
+     * @param media
+     *        the media entity
+     */
+    void ok(Media.Text media);
+
     // 3xx responses
 
     /**
@@ -1813,7 +1821,7 @@ public final class Http {
     return bytesIndex;
   }
 
-  private static byte hexDigit(int nibble) {
+  static byte hexDigit(int nibble) {
     return (byte) (nibble < 10 ? '0' + nibble : 'A' + (nibble - 10));
   }
 
@@ -1823,6 +1831,19 @@ public final class Http {
 
   static String unreserved() {
     return Ascii.alphaUpper() + Ascii.alphaLower() + Ascii.digit() + "-._~";
+  }
+
+  static int requiredHexDigits(int value) {
+    final int leadingZeros;
+    leadingZeros = Integer.numberOfLeadingZeros(value);
+
+    final int magnitude;
+    magnitude = Integer.SIZE - leadingZeros;
+
+    final int chars;
+    chars = ((magnitude + 3) / 4);
+
+    return Math.max(chars, 1);
   }
 
 }

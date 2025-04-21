@@ -15,13 +15,11 @@
  */
 package objectos.way;
 
-import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.nio.charset.Charset;
 import java.util.Iterator;
 
 /**
@@ -47,29 +45,6 @@ public final class Lang {
      */
     @Override
     Iterator<T> iterator();
-
-  }
-
-  public interface MediaWriter {
-
-    /**
-     * Returns the MIME content type of this media writer, such as
-     * {@code text/html} or {@code application/json}.
-     *
-     * @return the content type of this media writer, in MIME type format
-     */
-    String contentType();
-
-    Charset mediaCharset();
-
-    /**
-     * Writes this media's contents to the appendable.
-     *
-     * @param dest the appendable where to write characters into.
-     *
-     * @throws IOException if an I/O error occurs
-     */
-    void mediaTo(Appendable dest) throws IOException;
 
   }
 

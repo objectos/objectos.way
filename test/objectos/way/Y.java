@@ -280,6 +280,84 @@ final class Y {
   // ##################################################################
 
   // ##################################################################
+  // # BEGIN: Media.Text
+  // ##################################################################
+
+  private static final class ThisMediaText implements Media.Text {
+
+    private static final int LINE_LENGTH = 50;
+
+    private static final String FULL_LINE = "..........".repeat(4).concat(".........\n");
+
+    private final int length;
+
+    ThisMediaText(int length) {
+      this.length = length;
+    }
+
+    @Override
+    public final String contentType() {
+      return "text/plain; charset=utf-8";
+    }
+
+    @Override
+    public final Charset charset() {
+      return StandardCharsets.UTF_8;
+    }
+
+    @Override
+    public final void writeTo(Appendable dest) throws IOException {
+      if (length == 0) {
+        return;
+      }
+
+      int count = 0;
+
+      int fullLines = length / LINE_LENGTH;
+
+      for (int fullLine = 0; fullLine < fullLines; fullLine++) {
+        dest.append(FULL_LINE);
+
+        count += LINE_LENGTH;
+      }
+
+      int digit = 1;
+
+      for (; count < length; count++) {
+        int print;
+        print = digit % 10;
+
+        dest.append(Integer.toString(print));
+
+        digit++;
+      }
+    }
+
+    @Override
+    public final String toString() {
+      try {
+        StringBuilder sb;
+        sb = new StringBuilder();
+
+        writeTo(sb);
+
+        return sb.toString();
+      } catch (IOException e) {
+        throw new AssertionError("StringBuilder should not have thrown", e);
+      }
+    }
+
+  }
+
+  public static Media.Text mediaTextOfLength(int length) {
+    return new ThisMediaText(length);
+  }
+
+  // ##################################################################
+  // # END: Media.Text
+  // ##################################################################
+
+  // ##################################################################
   // # BEGIN: Next
   // ##################################################################
 

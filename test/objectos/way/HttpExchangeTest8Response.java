@@ -83,6 +83,228 @@ public class HttpExchangeTest8Response {
     );
   }
 
+  // 125 bytes
+  private static final int TEXT_RESP_LEN = """
+  HTTP/1.1 200 OK\r
+  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+  Content-Type: text/plain; charset=utf-8\r
+  Transfer-Encoding: chunked\r
+  \r
+  """.length();
+
+  @Test(description = "ok(Media.Text): 1 chunk")
+  public void okMediaText01() {
+    final Media.Text text;
+    text = Y.mediaTextOfLength(64);
+
+    assertEquals(
+        text.toString(),
+
+        """
+        .................................................
+        12345678901234\
+        """
+    );
+
+    get(
+        256, 256,
+
+        http -> http.ok(text),
+
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Transfer-Encoding: chunked\r
+        \r
+        40\r
+        .................................................
+        12345678901234\r
+        0\r
+        \r
+        """
+    );
+  }
+
+  @Test(description = "ok(Media.Text): 1 chunk + zero-pad")
+  public void okMediaText02() {
+    final Media.Text text;
+    text = Y.mediaTextOfLength(15);
+
+    assertEquals(
+        text.toString(),
+
+        """
+        123456789012345\
+        """
+    );
+
+    get(
+        256, 256,
+
+        http -> http.ok(text),
+
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Transfer-Encoding: chunked\r
+        \r
+        0F\r
+        123456789012345\r
+        0\r
+        \r
+        """
+    );
+  }
+
+  @Test(description = "ok(Media.Text): 1 chunk + exact size")
+  public void okMediaText03() {
+    // 4 = chunk-size + CR + LF
+    // 2 = CR + LF (after data)
+    // 5 = 0 + CR + LF + CR + LF
+    final Media.Text text;
+    text = Y.mediaTextOfLength(256 - TEXT_RESP_LEN - 4 - 2 - 5);
+
+    final String body;
+    body = text.toString();
+
+    assertEquals(
+        body,
+
+        """
+        .................................................
+        .................................................
+        12345678901234567890\
+        """
+    );
+
+    assertEquals(Integer.toHexString(body.length()), "78");
+
+    final String expectedResponse;
+    expectedResponse = """
+    HTTP/1.1 200 OK\r
+    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+    Content-Type: text/plain; charset=utf-8\r
+    Transfer-Encoding: chunked\r
+    \r
+    78\r
+    .................................................
+    .................................................
+    12345678901234567890\r
+    0\r
+    \r
+    """;
+
+    get(
+        256, 256,
+
+        http -> http.ok(text),
+
+        expectedResponse
+    );
+
+    assertEquals(expectedResponse.length(), 256);
+  }
+
+  @Test(description = "ok(Media.Text): 1 chunk + resize")
+  public void okMediaText04() {
+    // 4 = chunk-size + CR + LF
+    // 2 = CR + LF (after data)
+    // 5 = 0 + CR + LF + CR + LF
+    final Media.Text text;
+    text = Y.mediaTextOfLength(256 + 1 - TEXT_RESP_LEN - 4 - 2 - 5);
+
+    final String body;
+    body = text.toString();
+
+    assertEquals(
+        body,
+
+        """
+        .................................................
+        .................................................
+        123456789012345678901\
+        """
+    );
+
+    assertEquals(Integer.toHexString(body.length()), "79");
+
+    final String expectedResponse;
+    expectedResponse = """
+    HTTP/1.1 200 OK\r
+    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+    Content-Type: text/plain; charset=utf-8\r
+    Transfer-Encoding: chunked\r
+    \r
+    079\r
+    .................................................
+    .................................................
+    123456789012345678901\r
+    0\r
+    \r
+    """;
+
+    get(
+        256, 512,
+
+        http -> http.ok(text),
+
+        expectedResponse
+    );
+
+    assertEquals(expectedResponse.length(), 256 + 1 + 1);
+  }
+
+  @Test(description = "ok(Media.Text): 2 chunks")
+  public void okMediaText05() {
+    // 4 = chunk-size + CR + LF
+    // 2 = CR + LF (after data)
+    // 5 = 0 + CR + LF + CR + LF
+    final Media.Text text;
+    text = Y.mediaTextOfLength(256 + 1 - TEXT_RESP_LEN - 4 - 2 - 5);
+
+    final String body;
+    body = text.toString();
+
+    assertEquals(
+        body,
+
+        """
+        .................................................
+        .................................................
+        123456789012345678901\
+        """
+    );
+
+    assertEquals(Integer.toHexString(body.length()), "79");
+
+    final String expectedResponse;
+    expectedResponse = """
+    HTTP/1.1 200 OK\r
+    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+    Content-Type: text/plain; charset=utf-8\r
+    Transfer-Encoding: chunked\r
+    \r
+    78\r
+    .................................................
+    .................................................
+    12345678901234567890\r
+    01\r
+    1\r
+    0\r
+    \r
+    """;
+
+    get(
+        256, 256,
+
+        http -> http.ok(text),
+
+        expectedResponse
+    );
+  }
+
   // 3xx responses
 
   @Test
@@ -325,6 +547,21 @@ public class HttpExchangeTest8Response {
     """, handler, expectedResponse);
   }
 
+  private void get(int initial, int max, Consumer<HttpExchange> handler, String expectedResponse) {
+    test(
+        initial, max,
+
+        """
+        GET /test HTTP/1.1\r
+        Host: www.objectos.com.br\r
+        Connection: close\r
+        \r
+        """,
+
+        handler, expectedResponse
+    );
+  }
+
   private void head(Consumer<HttpExchange> handler, String expectedResponse) {
     test("""
     HEAD /test HTTP/1.1\r
@@ -383,10 +620,14 @@ public class HttpExchangeTest8Response {
   }
 
   private void test(String request, Consumer<HttpExchange> handler, String expectedResponse) {
+    test(256, 512, request, handler, expectedResponse);
+  }
+
+  private void test(int initial, int max, String request, Consumer<HttpExchange> handler, String expectedResponse) {
     final Socket socket;
     socket = Y.socket(request);
 
-    try (HttpExchange http = new HttpExchange(socket, 256, 512, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
+    try (HttpExchange http = new HttpExchange(socket, initial, max, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
       assertEquals(http.shouldHandle(), true);
 
       handler.accept(http);

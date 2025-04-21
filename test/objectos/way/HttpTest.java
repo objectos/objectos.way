@@ -119,4 +119,13 @@ public class HttpTest {
     }
   }
 
+  @Test
+  public void requiredHexDigits() {
+    assertEquals(Http.requiredHexDigits(0b0000), 1);
+    assertEquals(Http.requiredHexDigits(0b0001), 1);
+    assertEquals(Http.requiredHexDigits(0b1000), 1);
+    assertEquals(Http.requiredHexDigits(0b1111), 1);
+    assertEquals(Http.requiredHexDigits(0b1_0000), 2);
+  }
+
 }
