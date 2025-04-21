@@ -18,13 +18,14 @@ package objectos.way;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.Socket;
 import org.testng.annotations.Test;
 
 public class HttpExchangeTest1ParseMethod {
 
   @Test(description = "method: valid")
-  public void method01() throws IOException {
+  public void method01() {
     for (Http.Method method : Http.Method.VALUES) {
       if (method.implemented) {
         final String request;
@@ -37,6 +38,8 @@ public class HttpExchangeTest1ParseMethod {
           assertEquals(http.shouldHandle(), true);
 
           assertEquals(http.method(), method);
+        } catch (IOException e) {
+          throw new UncheckedIOException(e);
         }
       }
     }
@@ -46,7 +49,7 @@ public class HttpExchangeTest1ParseMethod {
   public void method02() throws IOException {
     for (Http.Method method : Http.Method.VALUES) {
       if (!method.implemented) {
-        test(
+        shouldNot(
             method.name() + " /index.html HTTP/1.1\r\nnHost: www.example.com\r\n\r\n",
 
             """
@@ -88,33 +91,92 @@ public class HttpExchangeTest1ParseMethod {
         """);
   }
 
-  private void badRequest(String request) throws IOException {
+  @Test
+  public void slowClient01() {
+    should(
+        Y.slowStream(1, """
+        GET / HTTP/1.1\r
+        Host: test\r
+        Connection: close\r
+        \r
+        """),
+
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 3\r
+        \r
+        OK
+        """
+    );
+  }
+
+  @Test
+  public void ioException01() {
     Socket socket;
-    socket = Y.socket(request);
+    socket = Y.socket("GE", Y.trimStackTrace(new IOException(), 1));
 
-    final int bufferInitial; // force many buffer resizes
-    bufferInitial = 2;
-
-    try (HttpExchange http = new HttpExchange(socket, bufferInitial, 512, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
+    try (HttpExchange http = new HttpExchange(socket, 256, 512, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
       assertEquals(http.shouldHandle(), false);
 
-      assertEquals(
-          http.toString(),
-
-          """
-          HTTP/1.1 400 Bad Request\r
-          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-          Content-Type: text/plain; charset=utf-8\r
-          Content-Length: 22\r
-          Connection: close\r
-          \r
-          Invalid request line.
-          """
-      );
+      assertEquals(Y.toString(socket), "");
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
     }
   }
 
-  private void test(String request, String response) throws IOException {
+  @Test
+  public void ioException02() {
+    Socket socket;
+    socket = Y.socket("POS", Y.trimStackTrace(new IOException(), 1));
+
+    try (HttpExchange http = new HttpExchange(socket, 256, 512, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
+      assertEquals(http.shouldHandle(), false);
+
+      assertEquals(Y.toString(socket), "");
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
+  }
+
+  private void badRequest(Object request) {
+    shouldNot(
+        request,
+
+        """
+        HTTP/1.1 400 Bad Request\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 22\r
+        Connection: close\r
+        \r
+        Invalid request line.
+        """
+    );
+  }
+
+  private void should(Object request, String response) {
+    Socket socket;
+    socket = Y.socket(request);
+
+    final int bufferInitial; // force many buffer resizes
+    bufferInitial = 2;
+
+    try (HttpExchange http = new HttpExchange(socket, bufferInitial, 512, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
+      assertEquals(http.shouldHandle(), true);
+
+      http.ok(Media.Bytes.textPlain("OK\n"));
+
+      assertEquals(http.shouldHandle(), false);
+
+      assertEquals(Y.toString(socket), response);
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
+  }
+
+  private void shouldNot(Object request, String response) {
     Socket socket;
     socket = Y.socket(request);
 
@@ -124,7 +186,9 @@ public class HttpExchangeTest1ParseMethod {
     try (HttpExchange http = new HttpExchange(socket, bufferInitial, 512, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
       assertEquals(http.shouldHandle(), false);
 
-      assertEquals(http.toString(), response);
+      assertEquals(Y.toString(socket), response);
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
     }
   }
 
