@@ -34,7 +34,12 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Clock;
 import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -104,6 +109,42 @@ final class Y {
       throw new RuntimeException(e);
     }
   }
+
+  // ##################################################################
+  // # BEGIN: Clock
+  // ##################################################################
+
+  private static final class ClockHolder {
+
+    static Clock FIXED = fixed();
+
+    private ClockHolder() {}
+
+    private static Clock fixed() {
+      LocalDateTime dateTime;
+      dateTime = LocalDateTime.of(2023, 6, 28, 12, 8, 43);
+
+      ZoneId zone;
+      zone = ZoneId.of("GMT");
+
+      ZonedDateTime zoned;
+      zoned = dateTime.atZone(zone);
+
+      Instant fixedInstant;
+      fixedInstant = zoned.toInstant();
+
+      return Clock.fixed(fixedInstant, zone);
+    }
+
+  }
+
+  public static Clock clockFixed() {
+    return ClockHolder.FIXED;
+  }
+
+  // ##################################################################
+  // # END: Clock
+  // ##################################################################
 
   // ##################################################################
   // # BEGIN: InputStream
@@ -421,6 +462,20 @@ final class Y {
 
   // ##################################################################
   // # END: Next
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Note.Sink
+  // ##################################################################
+
+  private static final App.NoteSink INSTANCE = App.NoteSink.OfConsole.create(config -> {});
+
+  public static Note.Sink noteSink() {
+    return INSTANCE;
+  }
+
+  // ##################################################################
+  // # END: Note.Sink
   // ##################################################################
 
   // ##################################################################

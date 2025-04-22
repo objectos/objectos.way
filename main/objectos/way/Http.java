@@ -1660,6 +1660,13 @@ public final class Http {
       final char c;
       c = input.charAt(i);
 
+      if (c < 0x20) {
+        // iso control
+        firstToEncode = i;
+
+        break;
+      }
+
       if (c > 0x7F) {
         firstToEncode = i;
 
