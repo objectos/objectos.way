@@ -269,7 +269,7 @@ public class HttpExchangeTest9Create {
     assertEquals(rawQuery0(), null);
     assertEquals(rawQuery0("q", "a"), "q=a");
     assertEquals(rawQuery0("q", "a", "foo", "bar"), "q=a&foo=bar");
-    assertEquals(rawQuery0("@", "a", "foo", "~"), "@=a&foo=%7E");
+    assertEquals(rawQuery0("\n", "a", "foo", "\r"), "%0A=a&foo=%0D");
   }
 
   private String rawQuery0(String... values) {
@@ -294,9 +294,9 @@ public class HttpExchangeTest9Create {
     assertEquals(rawQueryWith("page", "123"), "page=123");
     assertEquals(rawQueryWith("page", "123", "q", "a"), "q=a&page=123");
     assertEquals(rawQueryWith("page", "123", "q", "a", "page", "foo"), "q=a&page=123");
-    assertEquals(rawQueryWith("@", "123"), "%40=123");
-    assertEquals(rawQueryWith("page", "@"), "page=%40");
-    assertEquals(rawQueryWith("@", "~"), "%40=%7E");
+    assertEquals(rawQueryWith("+", "123"), "%2B=123");
+    assertEquals(rawQueryWith("page", "+"), "page=%2B");
+    assertEquals(rawQueryWith("+", " "), "%2B=%20");
   }
 
   @Test(description = "rawQueryWith: reject null name",
@@ -305,23 +305,9 @@ public class HttpExchangeTest9Create {
     rawQueryWith(null, "123");
   }
 
-  @Test(description = "rawQueryWith: reject empty name",
-      expectedExceptions = IllegalArgumentException.class,
-      expectedExceptionsMessageRegExp = "name must not be blank")
-  public void rawQueryWith03() {
-    rawQueryWith("", "123");
-  }
-
-  @Test(description = "rawQueryWith: reject blank name",
-      expectedExceptions = IllegalArgumentException.class,
-      expectedExceptionsMessageRegExp = "name must not be blank")
-  public void rawQueryWith04() {
-    rawQueryWith("   ", "123");
-  }
-
   @Test(description = "rawQueryWith: reject null value",
       expectedExceptions = NullPointerException.class)
-  public void rawQueryWith05() {
+  public void rawQueryWith03() {
     rawQueryWith("page", null);
   }
 

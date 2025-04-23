@@ -40,7 +40,6 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import objectos.way.Http.Status;
 
-@SuppressWarnings("serial")
 final class HttpExchange implements Http.Exchange, Closeable {
 
   private record Notes(
@@ -350,8 +349,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   private HttpExchange(HttpExchangeConfig config) {
 
-    attributes = config.attributes;
-
     final int initialSize;
     initialSize = powerOfTwo(config.bufferSizeInitial);
 
@@ -383,6 +380,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
     if (!impl.shouldHandle()) {
       throw new IllegalArgumentException("Invalid request");
     }
+
+    impl.attributes = builder.attributes;
 
     return impl;
   }
@@ -1250,13 +1249,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
     final String key;
     key = (String) object;
 
-    queryParamPut(queryParams, key, value);
-  }
-
-  @SuppressWarnings("unchecked")
-  private void queryParamPut(Map<String, Object> map, String key, String value) {
     final Object maybeExisting;
-    maybeExisting = map.put(key, value);
+    maybeExisting = queryParams.put(key, value);
 
     if (maybeExisting == null) {
       return;
@@ -1271,7 +1265,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
       list.add(value);
 
-      map.put(key, list);
+      queryParams.put(key, list);
 
     }
 
@@ -1281,7 +1275,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
       list.add(value);
 
-      map.put(key, list);
+      queryParams.put(key, list);
     }
   }
 
@@ -2252,6 +2246,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
    * Differentiates between a Socket OutputStream writing error and other
    * errors.
    */
+  @SuppressWarnings("serial")
   private static final class ThisAppendableIOException extends RuntimeException {
     public ThisAppendableIOException(IOException cause) {
       super(cause);
@@ -2673,7 +2668,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
       params.putAll(queryParams);
     }
 
-    queryParamPut(params, name, value);
+    params.put(name, value);
 
     return Http.queryParamsToString(params, this::rawQuery0);
   }
