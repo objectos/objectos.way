@@ -258,9 +258,10 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   private static final Notes NOTES = Notes.get();
 
-  private static final int KEEP_ALIVE = 1 << 0;
-  private static final int CONTENT_LENGTH = 1 << 1;
-  private static final int CHUNKED = 1 << 2;
+  private static final int BIT_KEEP_ALIVE = 1 << 0;
+  private static final int BIT_CONTENT_LENGTH = 1 << 1;
+  private static final int BIT_CHUNKED = 1 << 2;
+  private static final int BIT_QUERY_STRING = 1 << 3;
 
   private Map<String, Object> attributes;
 
@@ -299,6 +300,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
   private final OutputStream outputStream;
 
   private InetAddress remoteAddress;
+
+  private final Closeable socket;
 
   private String path;
 
@@ -576,6 +579,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
     if (attributes != null) {
       attributes.clear();
     }
+
+    bitset = 0;
 
     bodyKind = BodyKind.EMPTY;
 
@@ -1077,6 +1082,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
     // where the current key begins
     mark = bufferIndex;
 
+    bitSet(BIT_QUERY_STRING);
+
     return executeParseQuery0();
   }
 
@@ -1101,15 +1108,26 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
         case QUERY_AMPERSAND -> { object = markToString(); bufferIndex += 1; makeQueryParam(""); return $PARSE_QUERY; }
 
-        case QUERY_SPACE -> { object = markToString(); bufferIndex += 1; makeQueryParam(""); return $PARSE_VERSION_1_1; }
+        case QUERY_SPACE -> { makeIfNecessary(); bufferIndex += 1; return $PARSE_VERSION_1_1; }
 
-        case QUERY_CRLF -> { object = markToString(); bufferIndex += 1; makeQueryParam(""); return $PARSE_VERSION_0_9; }
+        case QUERY_CRLF -> { makeIfNecessary(); bufferIndex += 1; return $PARSE_VERSION_0_9; }
 
         default -> { return toBadRequest(InvalidRequestLine.QUERY_CHAR); }
       }
     }
 
     return toRead($PARSE_QUERY0);
+  }
+
+  private void makeIfNecessary() {
+    if (mark != bufferIndex || (queryParams != null && !queryParams.isEmpty())) {
+      // make when
+      // 1) key is not empty
+      // 2) not the first key/value
+      object = markToString();
+
+      makeQueryParam("");
+    }
   }
 
   private byte executeParseQuery1() {
@@ -1232,8 +1250,13 @@ final class HttpExchange implements Http.Exchange, Closeable {
     final String key;
     key = (String) object;
 
+    queryParamPut(queryParams, key, value);
+  }
+
+  @SuppressWarnings("unchecked")
+  private void queryParamPut(Map<String, Object> map, String key, String value) {
     final Object maybeExisting;
-    maybeExisting = queryParams.put(key, value);
+    maybeExisting = map.put(key, value);
 
     if (maybeExisting == null) {
       return;
@@ -1248,7 +1271,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
       list.add(value);
 
-      queryParams.put(key, list);
+      map.put(key, list);
 
     }
 
@@ -1258,7 +1281,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
       list.add(value);
 
-      queryParams.put(key, list);
+      map.put(key, list);
     }
   }
 
@@ -1811,9 +1834,9 @@ final class HttpExchange implements Http.Exchange, Closeable {
       }
 
       if (keepAlive) {
-        bitSet(KEEP_ALIVE);
+        bitSet(BIT_KEEP_ALIVE);
       } else {
-        bitClear(KEEP_ALIVE);
+        bitClear(BIT_KEEP_ALIVE);
       }
 
       return $PARSE_BODY;
@@ -2162,7 +2185,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
   // ##################################################################
 
   private byte executeCommit() {
-    stateNext = bitTest(KEEP_ALIVE) ? $START : $ERROR;
+    stateNext = bitTest(BIT_KEEP_ALIVE) ? $START : $ERROR;
 
     return executeWrite();
   }
@@ -2625,47 +2648,38 @@ final class HttpExchange implements Http.Exchange, Closeable {
   public final String rawQuery() {
     checkRequest();
 
-    if (queryParams != null) {
-      return Http.queryParamsToString(queryParams, Http::raw);
-    } else {
+    if (!bitTest(BIT_QUERY_STRING)) {
       return null;
+    }
+
+    else if (queryParams == null) {
+      return "";
+    }
+
+    else {
+      return Http.queryParamsToString(queryParams, this::rawQuery0);
     }
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public final String rawQueryWith(String name, String value) {
-    if (name.isBlank()) {
-      throw new IllegalArgumentException("name must not be blank");
-    }
-
+    Objects.requireNonNull(name, "name == null");
     Objects.requireNonNull(value, "value == null");
 
-    /*
-    String encodedKey;
-    encodedKey = encode(name);
-    
-    String encodedValue;
-    encodedValue = encode(value);
-    
-    int queryLength;
-    queryLength = rawValue.length() - queryStart;
-    
-    if (queryLength < 2) {
-      return encodedKey + "=" + encodedValue;
-    }
-    
     Map<String, Object> params;
     params = Util.createSequencedMap();
-    
-    makeQueryParams(params, Function.identity());
-    
-    params.put(encodedKey, encodedValue);
-    
-    return Http.queryParamsToString(params, Function.identity());
-    */
 
-    throw new UnsupportedOperationException("Implement me");
+    if (queryParams != null) {
+      params.putAll(queryParams);
+    }
+
+    queryParamPut(params, name, value);
+
+    return Http.queryParamsToString(params, this::rawQuery0);
+  }
+
+  private String rawQuery0(String s) {
+    return raw(s, PARSE_QUERY_TABLE);
   }
 
   private String raw(String input, byte[] table) {
@@ -3198,18 +3212,18 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
     // handle connection: close if necessary
     if (name == Http.HeaderName.CONNECTION && value.equalsIgnoreCase("close")) {
-      bitClear(KEEP_ALIVE);
+      bitClear(BIT_KEEP_ALIVE);
     }
 
     else if (name == Http.HeaderName.CONTENT_LENGTH) {
-      bitSet(CONTENT_LENGTH);
+      bitSet(BIT_CONTENT_LENGTH);
     }
 
     else if (name == Http.HeaderName.TRANSFER_ENCODING) {
       if (value.equalsIgnoreCase("chunked")) {
-        bitSet(CHUNKED);
+        bitSet(BIT_CHUNKED);
       } else {
-        bitClear(CHUNKED);
+        bitClear(BIT_CHUNKED);
       }
     }
   }
@@ -3475,8 +3489,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
   // #
   // #
   // ##################################################################
-
-  private final Closeable socket;
 
   int pathIndex;
 

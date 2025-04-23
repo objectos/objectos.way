@@ -136,6 +136,11 @@ public abstract class HttpExchangeTest {
 
   }
 
+  final Object[] arr(Object... arr) {
+    // not safe, oh well...
+    return arr;
+  }
+
   final void exec(Consumer<Tester> config) {
     final Tester tester;
     tester = new Tester();
