@@ -18,7 +18,9 @@ package objectos.way;
 class TestingSingleParagraph extends Html.Template {
   private final String text;
 
-  public TestingSingleParagraph(String text) { this.text = text; }
+  public TestingSingleParagraph(String text) {
+    this.text = text;
+  }
 
   @Override
   protected final void render() {

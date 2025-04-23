@@ -214,7 +214,7 @@ public class HttpExchangeTest9Create {
         HTTP/1.1 200 OK\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
         Content-Type: text/html; charset=utf-8\r
-        Content-Length: 16\r
+        Transfer-Encoding: chunked\r
         \r
         <div>tc02</div>
         """
@@ -226,7 +226,7 @@ public class HttpExchangeTest9Create {
     class Template extends Html.Template {
       @Override
       protected void render() {
-        div("tc02");
+        div("tc03");
       }
     }
 
@@ -242,9 +242,9 @@ public class HttpExchangeTest9Create {
         HTTP/1.1 400 Bad Request\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
         Content-Type: text/html; charset=utf-8\r
-        Content-Length: 16\r
+        Transfer-Encoding: chunked\r
         \r
-        <div>tc02</div>
+        <div>tc03</div>
         """
     );
   }

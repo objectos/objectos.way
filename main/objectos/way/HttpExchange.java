@@ -21,6 +21,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UncheckedIOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.nio.charset.Charset;
@@ -471,6 +472,14 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
     switch (object) {
       case byte[] bytes -> sb.append(new String(bytes, StandardCharsets.UTF_8));
+
+      case Media.Text text -> {
+        try {
+          text.writeTo(sb);
+        } catch (IOException e) {
+          throw new UncheckedIOException(e);
+        }
+      }
 
       case null, default -> {}
     }
@@ -3068,6 +3077,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
     switch (media) {
       case Media.Bytes bytes -> respond(status, bytes);
+
+      case Media.Text text -> respond(status, text);
 
       default -> throw new IllegalArgumentException("Unexpected value: " + media);
     }

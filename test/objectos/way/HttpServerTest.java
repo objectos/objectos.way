@@ -329,9 +329,9 @@ public class HttpServerTest implements Consumer<Http.Routing> {
 
         """
         HTTP/1.1 200
-        content-length: 16
         content-type: text/html; charset=utf-8
         date: Wed, 28 Jun 2023 12:08:43 GMT
+        transfer-encoding: chunked
 
         <p>TC04 GET</p>
         """
@@ -348,9 +348,9 @@ public class HttpServerTest implements Consumer<Http.Routing> {
 
         """
         HTTP/1.1 200
-        content-length: 12
         content-type: text/html; charset=utf-8
         date: Wed, 28 Jun 2023 12:08:43 GMT
+        transfer-encoding: chunked
 
         <p>null</p>
         """
@@ -385,9 +385,9 @@ public class HttpServerTest implements Consumer<Http.Routing> {
 
         """
         HTTP/1.1 404
-        content-length: 32
         content-type: text/html; charset=utf-8
         date: Wed, 28 Jun 2023 12:08:43 GMT
+        transfer-encoding: chunked
 
         <html>
         <p>NOT FOUND</p>

@@ -15,6 +15,8 @@
  */
 package objectos.way;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.Objects;
@@ -610,7 +612,7 @@ public final class Html {
    * An object capable of defining the structure of an HTML document.
    */
   @FunctionalInterface
-  public interface Component extends Media.Bytes {
+  public interface Component extends Media.Text {
 
     void renderHtml(Html.Markup m);
 
@@ -624,12 +626,31 @@ public final class Html {
       return "text/html; charset=utf-8";
     }
 
+    /**
+     * Returns {@code StandardCharsets.UTF_8}.
+     *
+     * @return {@code StandardCharsets.UTF_8}
+     */
     @Override
-    default byte[] toByteArray() {
-      String html;
-      html = toHtml();
+    default Charset charset() {
+      return StandardCharsets.UTF_8;
+    }
 
-      return html.getBytes(StandardCharsets.UTF_8);
+    @Override
+    default void writeTo(Appendable out) throws IOException {
+      final HtmlMarkup html;
+      html = new HtmlMarkup();
+
+      html.compilationBegin();
+
+      renderHtml(html);
+
+      html.compilationEnd();
+
+      final HtmlDom document;
+      document = html.compile();
+
+      HtmlFormatter.STANDARD.formatTo(document, out);
     }
 
     /**

@@ -17,6 +17,7 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import org.testng.annotations.Test;
 
@@ -1314,9 +1315,9 @@ public class HtmlTemplateTest {
   }
 
   @Test(description = """
-  The Lang.MediaObject methods
+  The Media.Text methods
   """)
-  public void testCase70() {
+  public void testCase70() throws IOException {
     var template = new Html.Template() {
       @Override
       protected final void render() {
@@ -1327,10 +1328,14 @@ public class HtmlTemplateTest {
 
     assertEquals(template.contentType(), "text/html; charset=utf-8");
 
-    byte[] mediaBytes;
-    mediaBytes = template.toByteArray();
+    assertEquals(template.charset(), StandardCharsets.UTF_8);
 
-    assertEquals(new String(mediaBytes, StandardCharsets.UTF_8), """
+    final StringBuilder sb;
+    sb = new StringBuilder();
+
+    template.writeTo(sb);
+
+    assertEquals(sb.toString(), """
     <!DOCTYPE html>
     <html></html>
     """);

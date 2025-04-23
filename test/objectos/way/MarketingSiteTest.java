@@ -65,9 +65,9 @@ public class MarketingSiteTest {
     );
 
     assertEquals(response.statusCode(), 200);
-    assertEquals(response.headers().allValues("Content-Length"), List.of("30"));
     assertEquals(response.headers().allValues("Content-Type"), List.of("text/html; charset=utf-8"));
     assertEquals(response.headers().allValues("Date"), List.of("Wed, 28 Jun 2023 12:08:43 GMT"));
+    assertEquals(response.headers().allValues("Transfer-Encoding"), List.of("chunked"));
     assertEquals(response.body(), """
     <!DOCTYPE html>
     <h1>home</h1>
@@ -89,9 +89,9 @@ public class MarketingSiteTest {
     );
 
     assertEquals(response.statusCode(), 200);
-    assertEquals(response.headers().allValues("Content-Length"), List.of("30"));
     assertEquals(response.headers().allValues("Content-Type"), List.of("text/html; charset=utf-8"));
     assertEquals(response.headers().allValues("Date"), List.of("Wed, 28 Jun 2023 12:08:43 GMT"));
+    assertEquals(response.headers().allValues("Transfer-Encoding"), List.of("chunked"));
     assertEquals(response.body(), "");
   }
 
