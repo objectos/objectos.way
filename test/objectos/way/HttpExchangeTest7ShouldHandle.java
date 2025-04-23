@@ -205,7 +205,7 @@ public class HttpExchangeTest7ShouldHandle {
     String previousResponse;
     previousResponse = null;
 
-    try (HttpExchange http = new HttpExchange(socket, 256, 512, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
+    try (HttpExchange http = new HttpExchange(socket, 256, 512, Y.clockFixed(), TestingNoteSink.INSTANCE)) {
       for (int count = 0, len = tuples.length; count < len; count++) {
         final Tuple t;
         t = tuples[count];

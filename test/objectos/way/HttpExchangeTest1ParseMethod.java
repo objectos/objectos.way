@@ -34,7 +34,7 @@ public class HttpExchangeTest1ParseMethod {
         final Socket socket;
         socket = Y.socket(request);
 
-        try (HttpExchange http = new HttpExchange(socket, 2, 256, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
+        try (HttpExchange http = new HttpExchange(socket, 2, 256, Y.clockFixed(), TestingNoteSink.INSTANCE)) {
           assertEquals(http.shouldHandle(), true);
 
           assertEquals(http.method(), method);
@@ -117,7 +117,7 @@ public class HttpExchangeTest1ParseMethod {
     Socket socket;
     socket = Y.socket("GE", Y.trimStackTrace(new IOException(), 1));
 
-    try (HttpExchange http = new HttpExchange(socket, 256, 512, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
+    try (HttpExchange http = new HttpExchange(socket, 256, 512, Y.clockFixed(), TestingNoteSink.INSTANCE)) {
       assertEquals(http.shouldHandle(), false);
 
       assertEquals(Y.toString(socket), "");
@@ -131,7 +131,7 @@ public class HttpExchangeTest1ParseMethod {
     Socket socket;
     socket = Y.socket("POS", Y.trimStackTrace(new IOException(), 1));
 
-    try (HttpExchange http = new HttpExchange(socket, 256, 512, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
+    try (HttpExchange http = new HttpExchange(socket, 256, 512, Y.clockFixed(), TestingNoteSink.INSTANCE)) {
       assertEquals(http.shouldHandle(), false);
 
       assertEquals(Y.toString(socket), "");
@@ -163,7 +163,7 @@ public class HttpExchangeTest1ParseMethod {
     final int bufferInitial; // force many buffer resizes
     bufferInitial = 2;
 
-    try (HttpExchange http = new HttpExchange(socket, bufferInitial, 512, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
+    try (HttpExchange http = new HttpExchange(socket, bufferInitial, 512, Y.clockFixed(), TestingNoteSink.INSTANCE)) {
       assertEquals(http.shouldHandle(), true);
 
       http.ok(Media.Bytes.textPlain("OK\n"));
@@ -183,7 +183,7 @@ public class HttpExchangeTest1ParseMethod {
     final int bufferInitial; // force many buffer resizes
     bufferInitial = 2;
 
-    try (HttpExchange http = new HttpExchange(socket, bufferInitial, 512, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
+    try (HttpExchange http = new HttpExchange(socket, bufferInitial, 512, Y.clockFixed(), TestingNoteSink.INSTANCE)) {
       assertEquals(http.shouldHandle(), false);
 
       assertEquals(Y.toString(socket), response);

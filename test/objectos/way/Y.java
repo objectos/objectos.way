@@ -17,7 +17,6 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
-import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
@@ -479,6 +478,75 @@ final class Y {
   // ##################################################################
 
   // ##################################################################
+  // # BEGIN: OutputStream
+  // ##################################################################
+
+  public static final class TestingOutputStream extends OutputStream {
+
+    private byte[] bytes = new byte[32];
+
+    private int bytesIndex;
+
+    private IOException onClose;
+
+    private IOException onWrite;
+
+    private TestingOutputStream() {}
+
+    @Override
+    public final void close() throws IOException {
+      if (onClose != null) {
+        throw onClose;
+      }
+    }
+
+    public final void reset() {
+      bytesIndex = 0;
+    }
+
+    public final void throwOnClose(IOException value) {
+      onClose = value;
+    }
+
+    public final void throwOnWrite(IOException value) {
+      onWrite = value;
+    }
+
+    public final String toString(Charset charset) {
+      return new String(bytes, 0, bytesIndex, charset);
+    }
+
+    @Override
+    public final void write(int b) throws IOException {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    @Override
+    public final void write(byte[] b, int off, int len) throws IOException {
+      Objects.checkFromIndexSize(off, len, b.length);
+
+      if (onWrite != null) {
+        throw onWrite;
+      }
+
+      bytes = Util.growIfNecessary(bytes, bytesIndex + len);
+
+      System.arraycopy(b, off, bytes, bytesIndex, len);
+
+      bytesIndex += len;
+    }
+
+  }
+
+  public static TestingOutputStream outputStream() {
+    return new TestingOutputStream();
+  }
+
+  // ##################################################################
+  // # END: OutputStream
+  // ##################################################################
+
+  // ##################################################################
   // # BEGIN: ShutdownHook
   // ##################################################################
 
@@ -585,7 +653,7 @@ final class Y {
       }
 
       if (outputStream == null) {
-        outputStream = new ByteArrayOutputStream();
+        outputStream = new TestingOutputStream();
       }
 
       return new SocketImpl(this);
@@ -634,15 +702,15 @@ final class Y {
       final OutputStream outputStream;
       outputStream = socket.getOutputStream();
 
-      if (outputStream instanceof ByteArrayOutputStream baos) {
+      if (outputStream instanceof TestingOutputStream os) {
         final String result;
-        result = baos.toString(StandardCharsets.UTF_8);
+        result = os.toString(StandardCharsets.UTF_8);
 
-        baos.reset();
+        os.reset();
 
         return result;
       } else {
-        throw new IllegalArgumentException("OutputStream is not an instanceof ByteArrayOutputStream");
+        throw new IllegalArgumentException("OutputStream is not an instanceof TestingOutputStream");
       }
     } catch (IOException e) {
       throw new AssertionError(e);

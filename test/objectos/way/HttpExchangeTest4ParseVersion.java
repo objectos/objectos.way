@@ -17,14 +17,12 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
-import java.io.IOException;
-import java.net.Socket;
 import org.testng.annotations.Test;
 
-public class HttpExchangeTest4ParseVersion {
+public class HttpExchangeTest4ParseVersion extends HttpExchangeTest {
 
   @Test(description = "version: 1.1 + path")
-  public void version01() throws IOException {
+  public void version01() {
     test(
         """
         GET / HTTP/1.1\r
@@ -37,7 +35,7 @@ public class HttpExchangeTest4ParseVersion {
   }
 
   @Test(description = "version: 1.1 + path + percent")
-  public void version02() throws IOException {
+  public void version02() {
     test(
         """
         GET /%C3%A1 HTTP/1.1\r
@@ -50,7 +48,7 @@ public class HttpExchangeTest4ParseVersion {
   }
 
   @Test(description = "version: 1.1 + query key + value")
-  public void version03() throws IOException {
+  public void version03() {
     test(
         """
         GET /url?key=value HTTP/1.1\r
@@ -63,7 +61,7 @@ public class HttpExchangeTest4ParseVersion {
   }
 
   @Test(description = "version: 1.1 + query key only")
-  public void version04() throws IOException {
+  public void version04() {
     test(
         """
         GET /url?key HTTP/1.1\r
@@ -76,7 +74,7 @@ public class HttpExchangeTest4ParseVersion {
   }
 
   @Test(description = "version: 1.1 + query key + value percent-encoded")
-  public void version05() throws IOException {
+  public void version05() {
     test(
         """
         GET /url?key=val%C3%A1 HTTP/1.1\r
@@ -89,7 +87,7 @@ public class HttpExchangeTest4ParseVersion {
   }
 
   @Test(description = "version: 1.1 + query key only percent-encoded")
-  public void version06() throws IOException {
+  public void version06() {
     test(
         """
         GET /url?key%C3%A1 HTTP/1.1\r
@@ -102,7 +100,7 @@ public class HttpExchangeTest4ParseVersion {
   }
 
   @Test(description = "version: 1.1 + query key only (equals)")
-  public void version07() throws IOException {
+  public void version07() {
     test(
         """
         GET /url?key= HTTP/1.1\r
@@ -115,7 +113,7 @@ public class HttpExchangeTest4ParseVersion {
   }
 
   @Test(description = "version: 1.1 + query key only percent-encoded (equals)")
-  public void version08() throws IOException {
+  public void version08() {
     test(
         """
         GET /url?key%C3%A1= HTTP/1.1\r
@@ -128,7 +126,7 @@ public class HttpExchangeTest4ParseVersion {
   }
 
   @Test
-  public void invalidLineTerminator() throws IOException {
+  public void invalidLineTerminator() {
     test(
         """
         GET / HTTP/1.1
@@ -149,7 +147,7 @@ public class HttpExchangeTest4ParseVersion {
   }
 
   @Test
-  public void versionNotSupported01() throws IOException {
+  public void versionNotSupported01() {
     versionNotSupported("""
     GET / HTTP/1.0\r
     Host: host\r
@@ -158,7 +156,7 @@ public class HttpExchangeTest4ParseVersion {
   }
 
   @Test
-  public void versionNotSupported02() throws IOException {
+  public void versionNotSupported02() {
     versionNotSupported("""
     GET / HTTP/2\r
     Host: host\r
@@ -167,7 +165,7 @@ public class HttpExchangeTest4ParseVersion {
   }
 
   @Test
-  public void versionNotSupported03() throws IOException {
+  public void versionNotSupported03() {
     versionNotSupported("""
     GET / HTTP/9.9\r
     Host: host\r
@@ -176,43 +174,43 @@ public class HttpExchangeTest4ParseVersion {
   }
 
   @Test
-  public void version09NotSupported01() throws IOException {
+  public void version09NotSupported01() {
     versionNotSupported("GET /\r\n\r\n");
     versionNotSupported("GET /\n\n");
   }
 
   @Test
-  public void version09NotSupported02() throws IOException {
+  public void version09NotSupported02() {
     versionNotSupported("GET /%C3%A1\r\n\r\n");
     versionNotSupported("GET /%C3%A1\n\n");
   }
 
   @Test
-  public void version09NotSupported03() throws IOException {
+  public void version09NotSupported03() {
     versionNotSupported("GET /?key=val%C3%A1\r\n\r\n");
     versionNotSupported("GET /?key=val%C3%A1\n\n");
   }
 
   @Test
-  public void version09NotSupported04() throws IOException {
+  public void version09NotSupported04() {
     versionNotSupported("GET /?key%C3%A1=val\r\n\r\n");
     versionNotSupported("GET /?key%C3%A1=val\n\n");
   }
 
   @Test
-  public void version09NotSupported05() throws IOException {
+  public void version09NotSupported05() {
     versionNotSupported("GET /?key%C3%A1=\r\n\r\n");
     versionNotSupported("GET /?key%C3%A1=\n\n");
   }
 
   @Test
-  public void version09NotSupported06() throws IOException {
+  public void version09NotSupported06() {
     versionNotSupported("GET /?key%C3%A1\r\n\r\n");
     versionNotSupported("GET /?key%C3%A1\n\n");
   }
 
   @Test(description = "bad request: valid chars but just nonsense")
-  public void badRequest01() throws IOException {
+  public void badRequest01() {
     badRequest("""
     GET / HPTP/1.1\r
     Host: host\r
@@ -221,7 +219,7 @@ public class HttpExchangeTest4ParseVersion {
   }
 
   @Test(description = "bad request: invalid chars")
-  public void badRequest02() throws IOException {
+  public void badRequest02() {
     badRequest("""
     GET / ABCD/1.1\r
     Host: host\r
@@ -231,30 +229,23 @@ public class HttpExchangeTest4ParseVersion {
 
   public void versionTooLong() {}
 
-  private void badRequest(String request) throws IOException {
-    final Socket socket;
-    socket = Y.socket(request);
+  private void badRequest(String request) {
+    test(
+        request,
 
-    try (HttpExchange http = new HttpExchange(socket, 256, 512, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
-      assertEquals(http.shouldHandle(), false);
-
-      assertEquals(
-          http.toString(),
-
-          """
-          HTTP/1.1 400 Bad Request\r
-          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-          Content-Type: text/plain; charset=utf-8\r
-          Content-Length: 22\r
-          Connection: close\r
-          \r
-          Invalid request line.
-          """
-      );
-    }
+        """
+        HTTP/1.1 400 Bad Request\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 22\r
+        Connection: close\r
+        \r
+        Invalid request line.
+        """
+    );
   }
 
-  private void versionNotSupported(Object request) throws IOException {
+  private void versionNotSupported(Object request) {
     test(
         request,
 
@@ -270,26 +261,41 @@ public class HttpExchangeTest4ParseVersion {
     );
   }
 
-  private void test(Object request, Http.Version expected) throws IOException {
-    final Socket socket;
-    socket = Y.socket(request);
+  private void test(Object request, Http.Version expected) {
+    exec(test -> {
+      test.bufferSize(256, 512);
 
-    try (HttpExchange http = new HttpExchange(socket, 256, 512, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
-      assertEquals(http.shouldHandle(), true);
+      test.xch(xch -> {
+        xch.req(request);
 
-      assertEquals(http.version(), expected);
-    }
+        xch.handler(http -> {
+          assertEquals(http.version(), expected);
+
+          http.ok(Media.Bytes.textPlain("OK"));
+        });
+
+        xch.resp("""
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 2\r
+        \r
+        OK\
+        """);
+      });
+    });
   }
 
-  private void test(Object request, String expected) throws IOException {
-    final Socket socket;
-    socket = Y.socket(request);
+  private void test(Object request, String expected) {
+    exec(test -> {
+      test.bufferSize(256, 512);
 
-    try (HttpExchange http = new HttpExchange(socket, 256, 512, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
-      assertEquals(http.shouldHandle(), false);
-
-      assertEquals(http.toString(), expected);
-    }
+      test.xch(xch -> {
+        xch.req(request);
+        xch.shouldHandle(false);
+        xch.resp(expected);
+      });
+    });
   }
 
 }

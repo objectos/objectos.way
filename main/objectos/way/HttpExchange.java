@@ -53,6 +53,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
       Note.Long1Ref2<Path, Http.Exchange> bodyFile,
 
       Note.Long2 writeResize,
+      Note.Long1Ref1<IOException> writeIOException,
+
       Note.Long1Ref2<ClientError, Http.Exchange> badRequest,
       Note.Long1Ref1<Http.Exchange> uriTooLong,
       Note.Long1Ref1<Http.Exchange> requestHeaderFieldsTooLarge,
@@ -73,11 +75,13 @@ final class HttpExchange implements Http.Exchange, Closeable {
           Note.Long2.create(s, "RSZ", Note.INFO),
           Note.Long1Ref1.create(s, "EOF", Note.WARN),
           Note.Long1Ref1.create(s, "MAX", Note.WARN),
-          Note.Long1Ref2.create(s, "IOX", Note.ERROR),
+          Note.Long1Ref2.create(s, "REX", Note.ERROR),
 
           Note.Long1Ref2.create(s, "RBF", Note.INFO),
 
           Note.Long2.create(s, "WSZ", Note.INFO),
+          Note.Long1Ref1.create(s, "WEX", Note.ERROR),
+
           Note.Long1Ref2.create(s, "400", Note.INFO),
           Note.Long1Ref1.create(s, "414", Note.INFO),
           Note.Long1Ref1.create(s, "431", Note.INFO),
@@ -261,6 +265,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
   private static final int BIT_CONTENT_LENGTH = 1 << 1;
   private static final int BIT_CHUNKED = 1 << 2;
   private static final int BIT_QUERY_STRING = 1 << 3;
+  private static final int BIT_WRITE_ERROR = 1 << 4;
 
   private Map<String, Object> attributes;
 
@@ -2179,9 +2184,13 @@ final class HttpExchange implements Http.Exchange, Closeable {
   // ##################################################################
 
   private byte executeCommit() {
-    stateNext = bitTest(BIT_KEEP_ALIVE) ? $START : $ERROR;
+    if (!bitTest(BIT_WRITE_ERROR)) {
+      stateNext = bitTest(BIT_KEEP_ALIVE) ? $START : $ERROR;
 
-    return executeWrite();
+      return executeWrite();
+    } else {
+      return $ERROR;
+    }
   }
 
   // ##################################################################
@@ -2500,7 +2509,9 @@ final class HttpExchange implements Http.Exchange, Closeable {
   }
 
   private byte clientWriteIOException(IOException e) {
-    throw new UnsupportedOperationException("Implement me");
+    noteSink.send(NOTES.writeIOException, id, e);
+
+    return $ERROR;
   }
 
   private byte toWrite(byte next) {
@@ -3416,31 +3427,67 @@ final class HttpExchange implements Http.Exchange, Closeable {
   }
 
   private void writeBytes(byte[] bytes) {
-    int length;
-    length = bytes.length;
-
-    int requiredIndex;
-    requiredIndex = bufferIndex + length - 1;
-
-    if (requiredIndex >= buffer.length) {
-      int minSize;
-      minSize = requiredIndex + 1;
-
-      int newSize;
-      newSize = powerOfTwo(minSize);
-
-      if (newSize > maxBufferSize) {
-        throw new UnsupportedOperationException("Implement me");
+    try {
+      if (!bitTest(BIT_WRITE_ERROR)) {
+        writeBytes0(bytes);
       }
+    } catch (IOException e) {
+      bitSet(BIT_WRITE_ERROR);
 
-      buffer = Arrays.copyOf(buffer, newSize);
+      noteSink.send(NOTES.writeIOException, id, e);
+    }
+  }
 
-      noteSink.send(NOTES.writeResize, id, newSize);
+  private void writeBytes0(byte[] bytes) throws IOException {
+    int bytesIndex;
+    bytesIndex = 0;
+
+    int remaining;
+    remaining = bytes.length;
+
+    // max index to write all data
+    final int requiredIndex;
+    requiredIndex = bufferIndex + remaining;
+
+    if (requiredIndex >= buffer.length && buffer.length < maxBufferSize) {
+
+      // buffer resize
+
+      final int length;
+      length = powerOfTwo(requiredIndex + 1);
+
+      final int newLength;
+      newLength = Math.min(length, maxBufferSize);
+
+      buffer = Arrays.copyOf(buffer, newLength);
+
+      noteSink.send(NOTES.writeResize, id, newLength);
+
     }
 
-    System.arraycopy(bytes, 0, buffer, bufferIndex, length);
+    while (remaining > 0) {
+      int available;
+      available = buffer.length - bufferIndex;
 
-    bufferIndex += length;
+      if (available <= 0) {
+        outputStream.write(buffer, 0, bufferIndex);
+
+        bufferIndex = 0;
+
+        available = buffer.length - bufferIndex;
+      }
+
+      final int bytesToCopy;
+      bytesToCopy = Math.min(remaining, available);
+
+      System.arraycopy(bytes, bytesIndex, buffer, bufferIndex, bytesToCopy);
+
+      bufferIndex += bytesToCopy;
+
+      bytesIndex += bytesToCopy;
+
+      remaining -= bytesToCopy;
+    }
   }
 
   // ##################################################################

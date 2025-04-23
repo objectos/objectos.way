@@ -157,7 +157,7 @@ public final class TestingHttpServer {
 
         config.handler(serverHandler);
 
-        config.clock(TestingClock.FIXED);
+        config.clock(Y.clockFixed());
 
         config.noteSink(noteSink);
 

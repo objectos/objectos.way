@@ -64,11 +64,20 @@ public abstract class HttpExchangeTest {
     }
 
     private void execute() {
-      final Object[] data;
-      data = xchs.stream().flatMap(Xch::data).toArray();
+      final Y.TestingOutputStream outputStream;
+      outputStream = Y.outputStream();
 
       final Socket socket;
-      socket = Y.socket(data);
+      socket = Y.socket(config -> {
+        final Object[] data;
+        data = xchs.stream().flatMap(Xch::data).toArray();
+
+        config.inputStream(
+            Y.inputStream(data)
+        );
+
+        config.outputStream(outputStream);
+      });
 
       String previousResponse;
       previousResponse = null;
@@ -82,6 +91,8 @@ public abstract class HttpExchangeTest {
           }
 
           previousResponse = xch.response;
+
+          outputStream.throwOnWrite(xch.responseException);
 
           xch.handler.accept(http);
         }
@@ -108,6 +119,9 @@ public abstract class HttpExchangeTest {
 
     private String response = "";
 
+    @SuppressWarnings("unused")
+    private IOException responseException;
+
     public final void req(Object value) {
       request.add(value);
     }
@@ -128,6 +142,10 @@ public abstract class HttpExchangeTest {
 
     public final void resp(String value) {
       response = Objects.requireNonNull(value, "value == null");
+    }
+
+    public final void resp(IOException writeException, int newLength) {
+      responseException = Y.trimStackTrace(writeException, newLength);
     }
 
     private Stream<Object> data() {

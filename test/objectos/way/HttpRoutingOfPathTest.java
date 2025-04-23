@@ -67,7 +67,7 @@ public class HttpRoutingOfPathTest {
 
   private Http.Exchange http(Consumer<Http.Exchange.Config> outer) {
     return Http.Exchange.create(config -> {
-      config.clock(TestingClock.FIXED);
+      config.clock(Y.clockFixed());
 
       outer.accept(config);
     });

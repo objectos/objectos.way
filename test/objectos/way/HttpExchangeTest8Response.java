@@ -26,7 +26,7 @@ import java.util.function.Consumer;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class HttpExchangeTest8Response {
+public class HttpExchangeTest8Response extends HttpExchangeTest {
 
   // 2xx responses
 
@@ -338,6 +338,27 @@ public class HttpExchangeTest8Response {
   }
 
   @Test
+  public void found03() {
+    final String veryLargeHex;
+    veryLargeHex = "f756cd80".repeat(256);
+
+    final String location;
+    location = "/foo/" + veryLargeHex;
+
+    get(
+        http -> http.found(location),
+
+        """
+        HTTP/1.1 302 Found\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Length: 0\r
+        Location: %s\r
+        \r
+        """.formatted(location)
+    );
+  }
+
+  @Test
   public void seeOther01() {
     get(
         http -> http.seeOther("/page"),
@@ -364,6 +385,27 @@ public class HttpExchangeTest8Response {
         Location: /product/caf%C3%A9/%F0%9F%98%80\r
         \r
         """
+    );
+  }
+
+  @Test
+  public void seeOther03() {
+    final String veryLargeHex;
+    veryLargeHex = "f756cd80".repeat(256);
+
+    final String location;
+    location = "/foo/" + veryLargeHex;
+
+    get(
+        http -> http.seeOther(location),
+
+        """
+        HTTP/1.1 303 See Other\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Length: 0\r
+        Location: %s\r
+        \r
+        """.formatted(location)
     );
   }
 
@@ -524,6 +566,54 @@ public class HttpExchangeTest8Response {
     );
   }
 
+  // ##################################################################
+  // # BEGIN: IOException while writing
+  // ##################################################################
+
+  @Test(description = "throws on COMMIT")
+  public void ioException01() {
+    exec(test -> {
+      test.xch(xch -> {
+        xch.req("""
+        GET / HTTP/1.1\r
+        Host: test\r
+        \r
+        """);
+
+        xch.handler(http -> http.ok(Media.Bytes.textPlain("OK")));
+
+        xch.resp(new IOException(), 1);
+      });
+    });
+  }
+
+  @Test(description = "throws on headerUncheckeds")
+  public void ioException02() {
+    exec(test -> {
+      test.xch(xch -> {
+        xch.req("""
+        GET / HTTP/1.1\r
+        Host: test\r
+        \r
+        """);
+
+        final String veryLargeHex;
+        veryLargeHex = "f756cd80".repeat(256);
+
+        final String location;
+        location = "/foo/" + veryLargeHex;
+
+        xch.handler(http -> http.found(location));
+
+        xch.resp(new IOException(), 1);
+      });
+    });
+  }
+
+  // ##################################################################
+  // # END: IOException while writing
+  // ##################################################################
+
   @Test(description = "Disallow request methods after response is sent")
   public void state01() {
     state(Http.Exchange::method);
@@ -597,7 +687,7 @@ public class HttpExchangeTest8Response {
     \r
     """);
 
-    try (HttpExchange http = new HttpExchange(socket, 256, 512, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
+    try (HttpExchange http = new HttpExchange(socket, 256, 512, Y.clockFixed(), TestingNoteSink.INSTANCE)) {
       assertEquals(http.shouldHandle(), true);
 
       http.ok(Media.Bytes.textPlain("OK"));
@@ -627,7 +717,7 @@ public class HttpExchangeTest8Response {
     final Socket socket;
     socket = Y.socket(request);
 
-    try (HttpExchange http = new HttpExchange(socket, initial, max, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
+    try (HttpExchange http = new HttpExchange(socket, initial, max, Y.clockFixed(), TestingNoteSink.INSTANCE)) {
       assertEquals(http.shouldHandle(), true);
 
       handler.accept(http);

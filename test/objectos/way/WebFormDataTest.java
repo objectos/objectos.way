@@ -275,7 +275,7 @@ public class WebFormDataTest {
     final Socket socket;
     socket = Y.socket(request);
 
-    try (HttpExchange http = new HttpExchange(socket, 512, 1024, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
+    try (HttpExchange http = new HttpExchange(socket, 512, 1024, Y.clockFixed(), TestingNoteSink.INSTANCE)) {
       assertEquals(http.shouldHandle(), true);
 
       Http.Exchange exchange;

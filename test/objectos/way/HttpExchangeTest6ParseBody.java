@@ -26,7 +26,7 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import org.testng.annotations.Test;
 
-public class HttpExchangeTest6ParseBody {
+public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
 
   private static abstract class AbstractTmp implements HttpExchangeTmp {
     boolean closed;
@@ -415,11 +415,6 @@ public class HttpExchangeTest6ParseBody {
     assertEquals(tmp.closed, true);
   }
 
-  private Object[] arr(Object... arr) {
-    // unsafe, but well...
-    return arr;
-  }
-
   private byte[] ascii(String s) {
     return s.getBytes(StandardCharsets.US_ASCII);
   }
@@ -436,7 +431,7 @@ public class HttpExchangeTest6ParseBody {
     final Socket socket;
     socket = Y.socket(data);
 
-    try (HttpExchange http = new HttpExchange(socket, initial, max, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
+    try (HttpExchange http = new HttpExchange(socket, initial, max, Y.clockFixed(), TestingNoteSink.INSTANCE)) {
       assertEquals(http.shouldHandle(), true);
 
       final ByteArrayOutputStream out;
@@ -456,30 +451,30 @@ public class HttpExchangeTest6ParseBody {
   }
 
   private void testError(int initial, int max, Object[] data, String expected) {
-    final Socket socket;
-    socket = Y.socket(data);
-
-    try (HttpExchange http = new HttpExchange(socket, initial, max, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
-      assertEquals(http.shouldHandle(), false);
-
-      assertEquals(http.toString(), expected);
-    } catch (IOException e) {
-      throw new UncheckedIOException(e);
-    }
+    exec(test -> {
+      test.bufferSize(initial, max);
+      test.xch(xch -> {
+        for (Object o : data) {
+          xch.req(o);
+        }
+        xch.shouldHandle(false);
+        xch.resp(expected);
+      });
+    });
   }
 
   private void testFile(int initial, int max, HttpExchangeTmp tmp, Object[] data, String expected) {
     final Socket socket;
     socket = Y.socket(data);
 
-    try (HttpExchange http = new HttpExchange(socket, initial, max, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
+    try (HttpExchange http = new HttpExchange(socket, initial, max, Y.clockFixed(), TestingNoteSink.INSTANCE)) {
       http.setObject(tmp);
 
       http.setState(HttpExchange.$PARSE_METHOD);
 
       assertEquals(http.shouldHandle(), false);
 
-      assertEquals(http.toString(), expected);
+      assertEquals(Y.toString(socket), expected);
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     }

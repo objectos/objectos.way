@@ -330,7 +330,7 @@ public class HttpExchangeTest9Create {
 
   private Http.Exchange http(Consumer<Http.Exchange.Config> more) {
     return Http.Exchange.create(config -> {
-      config.clock(TestingClock.FIXED);
+      config.clock(Y.clockFixed());
 
       more.accept(config);
     });

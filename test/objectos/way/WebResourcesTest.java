@@ -475,7 +475,7 @@ public class WebResourcesTest implements Consumer<Http.Routing> {
 
       // set last modified time for etag purposes
       Clock clock;
-      clock = TestingClock.FIXED;
+      clock = Y.clockFixed();
 
       Instant instant;
       instant = clock.instant();

@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 import org.testng.annotations.Test;
 
-public class HttpExchangeTest5ParseHeaders {
+public class HttpExchangeTest5ParseHeaders extends HttpExchangeTest {
 
   private final Http.HeaderName foo = Http.HeaderName.of("foo");
 
@@ -292,11 +292,11 @@ public class HttpExchangeTest5ParseHeaders {
     final Socket socket;
     socket = Y.socket(request);
 
-    try (HttpExchange http = new HttpExchange(socket, 256, 512, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
+    try (HttpExchange http = new HttpExchange(socket, 256, 512, Y.clockFixed(), TestingNoteSink.INSTANCE)) {
       assertEquals(http.shouldHandle(), false);
 
       assertEquals(
-          http.toString(),
+          Y.toString(socket),
 
           """
           HTTP/1.1 400 Bad Request\r
@@ -317,11 +317,11 @@ public class HttpExchangeTest5ParseHeaders {
     final Socket socket;
     socket = Y.socket(request);
 
-    try (HttpExchange http = new HttpExchange(socket, 256, 512, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
+    try (HttpExchange http = new HttpExchange(socket, 256, 512, Y.clockFixed(), TestingNoteSink.INSTANCE)) {
       assertEquals(http.shouldHandle(), false);
 
       assertEquals(
-          http.toString(),
+          Y.toString(socket),
 
           """
           HTTP/1.1 431 Request Header Fields Too Large\r
@@ -350,7 +350,7 @@ public class HttpExchangeTest5ParseHeaders {
     final Socket socket;
     socket = Y.socket(request.toString());
 
-    try (HttpExchange http = new HttpExchange(socket, 256, 512, TestingClock.FIXED, TestingNoteSink.INSTANCE)) {
+    try (HttpExchange http = new HttpExchange(socket, 256, 512, Y.clockFixed(), TestingNoteSink.INSTANCE)) {
       assertEquals(http.shouldHandle(), true);
 
       for (var entry : expected.entrySet()) {
