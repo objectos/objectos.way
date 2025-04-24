@@ -62,21 +62,21 @@ public class CssEngineTestParseThemeQuery {
   @Test(description = "Full generation + override")
   public void fullGeneration01() {
     CssEngine engine;
-    engine = new CssEngine();
+    engine = CssEngine.create(config -> {
+      config.theme("""
+      --color-*: initial;
+      --breakpoint-*: initial;
+      --font-*: initial;
+      """);
 
-    engine.theme("""
-    --color-*: initial;
-    --breakpoint-*: initial;
-    --font-*: initial;
-    """);
+      config.theme("@media (prefers-color-scheme: dark)", """
+      --color-background: var(--color-gray-800);
+      """);
 
-    engine.theme("@media (prefers-color-scheme: dark)", """
-    --color-background: var(--color-gray-800);
-    """);
-
-    engine.skipLayer(Css.Layer.BASE);
-    engine.skipLayer(Css.Layer.COMPONENTS);
-    engine.skipLayer(Css.Layer.UTILITIES);
+      config.skipLayer(Css.Layer.BASE);
+      config.skipLayer(Css.Layer.COMPONENTS);
+      config.skipLayer(Css.Layer.UTILITIES);
+    });
 
     engine.execute();
 
@@ -109,11 +109,11 @@ public class CssEngineTestParseThemeQuery {
 
   private void test(String query, String theme, String expected) {
     CssEngine engine;
-    engine = new CssEngine();
+    engine = CssEngine.create(config -> {
+      config.noteSink(Y.noteSink());
 
-    engine.noteSink(TestingNoteSink.INSTANCE);
-
-    engine.theme(query, theme);
+      config.theme(query, theme);
+    });
 
     List<ThemeQueryEntry> list = engine.testThemeQueryEntries(query);
 

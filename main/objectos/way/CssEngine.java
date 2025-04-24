@@ -20,19 +20,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.EnumMap;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.SequencedMap;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-final class CssEngine implements Css.StyleSheet.Config, CssEngineScanner.Adapter {
+final class CssEngine implements CssEngineScanner.Adapter {
 
   record Notes(
       Note.Ref2<String, String> keyNotFound,
@@ -53,108 +51,27 @@ final class CssEngine implements Css.StyleSheet.Config, CssEngineScanner.Adapter
 
   }
 
-  // ##################################################################
-  // # BEGIN: Configuration
-  // ##################################################################
+  private final CssConfig config;
 
   private final StringBuilder css = new StringBuilder();
-
-  private String base = Css.defaultBase();
-
-  private Set<Class<?>> classesToScan;
-
-  private Set<Path> directoriesToScan;
-
-  private Set<Class<?>> jarFilesToScan;
-
-  private Note.Sink noteSink = Note.NoOpSink.INSTANCE;
 
   @SuppressWarnings("unused")
   private final Notes notes = Notes.get();
 
-  private final Set<Css.Layer> skipLayer = EnumSet.noneOf(Css.Layer.class);
-
-  private String theme;
-
-  private Map<String, String> themeQueries;
-
   private final Map<String, CssVariant> variants = new LinkedHashMap<>();
 
-  public final void base(String value) {
-    base = Objects.requireNonNull(value, "value == null");
+  private CssEngine(CssConfig config) {
+    this.config = config;
   }
 
-  @Override
-  public final void noteSink(Note.Sink value) {
-    noteSink = Objects.requireNonNull(value, "value == null");
+  static CssEngine create(Consumer<? super CssConfig> config) {
+    final CssConfig builder;
+    builder = new CssConfig();
+
+    config.accept(builder);
+
+    return new CssEngine(builder);
   }
-
-  @Override
-  public final void scanClass(Class<?> value) {
-    Objects.requireNonNull(value, "value == null");
-
-    if (classesToScan == null) {
-      classesToScan = Util.createSet();
-    }
-
-    classesToScan.add(value);
-  }
-
-  @Override
-  public final void scanDirectory(Path value) {
-    Objects.requireNonNull(value, "value == null");
-
-    if (directoriesToScan == null) {
-      directoriesToScan = Util.createSet();
-    }
-
-    directoriesToScan.add(value);
-  }
-
-  @Override
-  public final void scanJarFileOf(Class<?> value) {
-    Objects.requireNonNull(value, "value == null");
-
-    if (jarFilesToScan == null) {
-      jarFilesToScan = Util.createSet();
-    }
-
-    jarFilesToScan.add(value);
-  }
-
-  public final void skipLayer(Css.Layer value) {
-    Objects.requireNonNull(value, "value == null");
-
-    skipLayer.add(value);
-  }
-
-  @Override
-  public final void theme(String value) {
-    Check.state(theme == null, "Theme was already set");
-
-    theme = Objects.requireNonNull(value, "value == null");
-  }
-
-  @Override
-  public final void theme(String query, String value) {
-    Objects.requireNonNull(query, "query == null");
-    Objects.requireNonNull(value, "value == null");
-
-    if (themeQueries == null) {
-      themeQueries = LinkedHashMap.newLinkedHashMap(2);
-    }
-
-    String maybeExisting;
-    maybeExisting = themeQueries.put(query, value);
-
-    if (maybeExisting != null) {
-      throw new IllegalStateException("Theme was already set for " + query);
-    }
-  }
-
-  // ##################################################################
-  // # END: Configuration
-  // ##################################################################
 
   // ##################################################################
   // # BEGIN: Execution
@@ -168,14 +85,10 @@ final class CssEngine implements Css.StyleSheet.Config, CssEngineScanner.Adapter
     parseTheme(Css.defaultTheme());
 
     // if the user provided a theme, we parse it
-    if (theme != null) {
-      parseTheme(theme);
-    }
+    parseTheme(config.theme);
 
-    if (themeQueries != null) {
-      for (var entry : themeQueries.entrySet()) {
-        parseThemeQuery(entry);
-      }
+    for (var entry : config.themeQueries.entrySet()) {
+      parseThemeQuery(entry);
     }
 
     // validate configuration
@@ -324,6 +237,10 @@ final class CssEngine implements Css.StyleSheet.Config, CssEngineScanner.Adapter
   }
 
   private void parseTheme(String text) {
+    if (text.isEmpty()) {
+      return;
+    }
+
     enum Parser {
 
       NORMAL,
@@ -876,24 +793,18 @@ final class CssEngine implements Css.StyleSheet.Config, CssEngineScanner.Adapter
 
   private void scan() {
     CssEngineScanner scanner;
-    scanner = new CssEngineScanner(noteSink);
+    scanner = new CssEngineScanner(config.noteSink);
 
-    if (classesToScan != null) {
-      for (Class<?> clazz : classesToScan) {
-        scanner.scan(clazz, this);
-      }
+    for (Class<?> clazz : config.classesToScan) {
+      scanner.scan(clazz, this);
     }
 
-    if (directoriesToScan != null) {
-      for (Path directory : directoriesToScan) {
-        scanner.scanDirectory(directory, this);
-      }
+    for (Path directory : config.directoriesToScan) {
+      scanner.scanDirectory(directory, this);
     }
 
-    if (jarFilesToScan != null) {
-      for (Class<?> clazz : jarFilesToScan) {
-        scanner.scanJarFile(clazz, this);
-      }
+    for (Class<?> clazz : config.jarFilesToScan) {
+      scanner.scanJarFile(clazz, this);
     }
   }
 
@@ -1644,15 +1555,15 @@ final class CssEngine implements Css.StyleSheet.Config, CssEngineScanner.Adapter
   // ##################################################################
 
   public final String generate() {
-    if (!skipLayer.contains(Css.Layer.THEME)) {
+    if (!config.contains(Css.Layer.THEME)) {
       generateTheme();
     }
 
-    if (!skipLayer.contains(Css.Layer.BASE)) {
-      generateBase(base);
+    if (!config.contains(Css.Layer.BASE)) {
+      generateBase(config.base);
     }
 
-    if (!skipLayer.contains(Css.Layer.UTILITIES)) {
+    if (!config.contains(Css.Layer.UTILITIES)) {
       generateUtilities();
     }
 
@@ -1954,7 +1865,7 @@ final class CssEngine implements Css.StyleSheet.Config, CssEngineScanner.Adapter
   }
 
   final List<ThemeEntry> testThemeEntries() {
-    parseTheme(theme);
+    parseTheme(config.theme);
 
     UtilList<ThemeEntry> entries;
     entries = new UtilList<>();
@@ -1975,7 +1886,7 @@ final class CssEngine implements Css.StyleSheet.Config, CssEngineScanner.Adapter
   }
 
   final List<ThemeQueryEntry> testThemeQueryEntries(String query) {
-    for (var entry : themeQueries.entrySet()) {
+    for (var entry : config.themeQueries.entrySet()) {
       parseThemeQuery(entry);
     }
 

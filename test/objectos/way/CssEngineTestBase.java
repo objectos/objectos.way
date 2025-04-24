@@ -142,11 +142,11 @@ public class CssEngineTestBase {
   @Test
   public void fullGeneration() {
     CssEngine engine;
-    engine = new CssEngine();
-
-    engine.skipLayer(Css.Layer.THEME);
-    engine.skipLayer(Css.Layer.COMPONENTS);
-    engine.skipLayer(Css.Layer.UTILITIES);
+    engine = CssEngine.create(config -> {
+      config.skipLayer(Css.Layer.THEME);
+      config.skipLayer(Css.Layer.COMPONENTS);
+      config.skipLayer(Css.Layer.UTILITIES);
+    });
 
     engine.execute();
 
@@ -300,20 +300,20 @@ public class CssEngineTestBase {
   }
 
   private void base(String base, String expected) {
-    CssEngine engine;
-    engine = new CssEngine();
+    final CssEngine engine;
+    engine = CssEngine.create(config -> {
+      config.noteSink(TestingNoteSink.INSTANCE);
 
-    engine.noteSink(TestingNoteSink.INSTANCE);
+      config.base(base);
 
-    engine.base(base);
-
-    engine.skipLayer(Css.Layer.THEME);
-    engine.skipLayer(Css.Layer.COMPONENTS);
-    engine.skipLayer(Css.Layer.UTILITIES);
+      config.skipLayer(Css.Layer.THEME);
+      config.skipLayer(Css.Layer.COMPONENTS);
+      config.skipLayer(Css.Layer.UTILITIES);
+    });
 
     engine.execute();
 
-    String result;
+    final String result;
     result = engine.generate();
 
     assertEquals(result, expected);

@@ -45,15 +45,15 @@ public class CssEngineTestJar {
     noteSink = new ThisNoteSink(values);
 
     CssEngine engine;
-    engine = new CssEngine();
+    engine = CssEngine.create(config -> {
+      config.noteSink(noteSink);
 
-    engine.noteSink(noteSink);
+      config.scanJarFileOf(Logger.class);
 
-    engine.scanJarFileOf(Logger.class);
-
-    engine.skipLayer(Css.Layer.THEME);
-    engine.skipLayer(Css.Layer.BASE);
-    engine.skipLayer(Css.Layer.COMPONENTS);
+      config.skipLayer(Css.Layer.THEME);
+      config.skipLayer(Css.Layer.BASE);
+      config.skipLayer(Css.Layer.COMPONENTS);
+    });
 
     engine.execute();
 

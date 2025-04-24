@@ -195,11 +195,11 @@ public class CssEngineTestParseTheme {
   @Test(description = "Full generation indeed")
   public void fullGeneration01() {
     CssEngine engine;
-    engine = new CssEngine();
-
-    engine.skipLayer(Css.Layer.BASE);
-    engine.skipLayer(Css.Layer.COMPONENTS);
-    engine.skipLayer(Css.Layer.UTILITIES);
+    engine = CssEngine.create(config -> {
+      config.skipLayer(Css.Layer.BASE);
+      config.skipLayer(Css.Layer.COMPONENTS);
+      config.skipLayer(Css.Layer.UTILITIES);
+    });
 
     engine.execute();
 
@@ -480,16 +480,16 @@ public class CssEngineTestParseTheme {
   @Test(description = "Full generation + clear")
   public void fullGeneration02() {
     CssEngine engine;
-    engine = new CssEngine();
+    engine = CssEngine.create(config -> {
+      config.theme("""
+          --color-*: initial;
+          --color-foo: rebecapurple;
+          """);
 
-    engine.theme("""
-    --color-*: initial;
-    --color-foo: rebecapurple;
-    """);
-
-    engine.skipLayer(Css.Layer.BASE);
-    engine.skipLayer(Css.Layer.COMPONENTS);
-    engine.skipLayer(Css.Layer.UTILITIES);
+      config.skipLayer(Css.Layer.BASE);
+      config.skipLayer(Css.Layer.COMPONENTS);
+      config.skipLayer(Css.Layer.UTILITIES);
+    });
 
     engine.execute();
 
@@ -527,17 +527,17 @@ public class CssEngineTestParseTheme {
   @Test(description = "Full generation + override")
   public void fullGeneration03() {
     CssEngine engine;
-    engine = new CssEngine();
+    engine = CssEngine.create(config -> {
+      config.theme("""
+          --color-*: initial;
+          --breakpoint-*: initial;
+          --font-sans: 'DM Sans', var(--default-font-sans);
+          """);
 
-    engine.theme("""
-    --color-*: initial;
-    --breakpoint-*: initial;
-    --font-sans: 'DM Sans', var(--default-font-sans);
-    """);
-
-    engine.skipLayer(Css.Layer.BASE);
-    engine.skipLayer(Css.Layer.COMPONENTS);
-    engine.skipLayer(Css.Layer.UTILITIES);
+      config.skipLayer(Css.Layer.BASE);
+      config.skipLayer(Css.Layer.COMPONENTS);
+      config.skipLayer(Css.Layer.UTILITIES);
+    });
 
     engine.execute();
 
@@ -568,11 +568,11 @@ public class CssEngineTestParseTheme {
 
   private List<CssEngine.ThemeEntry> test(String theme) {
     CssEngine engine;
-    engine = new CssEngine();
+    engine = CssEngine.create(config -> {
+      config.noteSink(Y.noteSink());
 
-    engine.noteSink(TestingNoteSink.INSTANCE);
-
-    engine.theme(theme);
+      config.theme(theme);
+    });
 
     return engine.testThemeEntries();
   }

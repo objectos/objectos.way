@@ -32,6 +32,25 @@ public final class Css {
   // public API
   //
 
+  /**
+   * Configures the CSS generation process.
+   */
+  public sealed interface Config permits CssConfig {
+
+    void noteSink(Note.Sink value);
+
+    void scanClass(Class<?> value);
+
+    void scanDirectory(Path value);
+
+    void scanJarFileOf(Class<?> value);
+
+    void theme(String value);
+
+    void theme(String query, String value);
+
+  }
+
   @Retention(RetentionPolicy.CLASS)
   @Target(ElementType.TYPE)
   public @interface Source {}
@@ -41,30 +60,9 @@ public final class Css {
    */
   public sealed interface StyleSheet extends Media.Bytes permits CssStyleSheet {
 
-    /**
-     * Configures the generation of a CSS style sheet.
-     */
-    sealed interface Config permits CssEngine {
-
-      void noteSink(Note.Sink value);
-
-      void scanClass(Class<?> value);
-
-      void scanDirectory(Path value);
-
-      void scanJarFileOf(Class<?> value);
-
-      void theme(String value);
-
-      void theme(String query, String value);
-
-    }
-
-    static StyleSheet generate(Consumer<Config> config) {
-      CssEngine engine;
-      engine = new CssEngine();
-
-      config.accept(engine);
+    static StyleSheet generate(Consumer<? super Config> config) {
+      final CssEngine engine;
+      engine = CssEngine.create(config);
 
       engine.execute();
 

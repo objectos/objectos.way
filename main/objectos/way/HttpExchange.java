@@ -321,19 +321,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
   private Http.Version version = Http.Version.HTTP_1_1;
 
   public HttpExchange(Socket socket, int bufferSizeInitial, int bufferSizeMax, Clock clock, Note.Sink noteSink) throws IOException {
-    this(socket, socket.getInputStream(), socket.getOutputStream(), bufferSizeInitial, bufferSizeMax, clock, noteSink);
-  }
-
-  private HttpExchange(
-      Closeable socket,
-      InputStream inputStream,
-      OutputStream outputStream,
-      int bufferSizeInitial,
-      int bufferSizeMax,
-      Clock clock,
-      Note.Sink noteSink
-  ) {
-
     final int initialSize;
     initialSize = powerOfTwo(bufferSizeInitial);
 
@@ -341,16 +328,17 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
     this.clock = clock;
 
-    this.inputStream = inputStream;
+    this.inputStream = socket.getInputStream();
 
     this.maxBufferSize = powerOfTwo(bufferSizeMax);
 
     this.noteSink = noteSink;
 
-    this.outputStream = outputStream;
+    this.outputStream = socket.getOutputStream();
+
+    remoteAddress = socket.getInetAddress();
 
     this.socket = socket;
-
   }
 
   private HttpExchange(HttpExchangeConfig config) {

@@ -429,15 +429,15 @@ public class CssEngineTestVariants {
 
   private void test(Class<?> type, String expected) {
     CssEngine engine;
-    engine = new CssEngine();
+    engine = CssEngine.create(config -> {
+      config.noteSink(Y.noteSink());
 
-    engine.noteSink(TestingNoteSink.INSTANCE);
+      config.scanClass(type);
 
-    engine.scanClass(type);
-
-    engine.skipLayer(Css.Layer.THEME);
-    engine.skipLayer(Css.Layer.BASE);
-    engine.skipLayer(Css.Layer.COMPONENTS);
+      config.skipLayer(Css.Layer.THEME);
+      config.skipLayer(Css.Layer.BASE);
+      config.skipLayer(Css.Layer.COMPONENTS);
+    });
 
     engine.execute();
 

@@ -23,12 +23,12 @@ import org.testng.annotations.Test;
 
 public class CssEngineTestScan {
 
-  private final CssEngine engine = new CssEngine();
+  private final CssEngine engine = CssEngine.create(config -> {
+    config.noteSink(Y.noteSink());
+  });
 
   @BeforeClass
   public void beforeClass() {
-    engine.noteSink(TestingNoteSink.INSTANCE);
-
     engine.execute();
 
     engine.sourceName(getClass().getCanonicalName());

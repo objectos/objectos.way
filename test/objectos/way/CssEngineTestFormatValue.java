@@ -22,12 +22,12 @@ import org.testng.annotations.Test;
 
 public class CssEngineTestFormatValue {
 
-  private final CssEngine engine = new CssEngine();
+  private final CssEngine engine = CssEngine.create(engine -> {
+    engine.noteSink(Y.noteSink());
+  });
 
   @BeforeClass
   public void beforeClass() {
-    engine.noteSink(TestingNoteSink.INSTANCE);
-
     engine.execute();
   }
 
