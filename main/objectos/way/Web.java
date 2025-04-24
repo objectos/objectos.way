@@ -594,13 +594,13 @@ public final class Web {
      * @param pathName
      *        the server path of the file to be created. It must start with a
      *        '/' character.
-     * @param object
+     * @param media
      *        the media object whose contents is to be copied
      *
      * @throws IOException
      *         if an I/O error occurs
      */
-    void writeMedia(String pathName, Media.Bytes object) throws IOException;
+    void writeMedia(String pathName, Media media) throws IOException;
 
     /**
      * Creates a new file at the specified server path with the specified text

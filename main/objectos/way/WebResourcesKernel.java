@@ -16,6 +16,7 @@
 package objectos.way;
 
 import java.io.IOException;
+import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
@@ -162,17 +163,24 @@ record WebResourcesKernel(
     move(tmp, file);
   }
 
-  public final void writeMedia(String pathName, Media.Bytes contents) throws IOException {
+  public final void writeMedia(String pathName, Media media) throws IOException {
     final Path file;
     file = toPath(pathName);
 
     final Path tmp;
     tmp = Files.createTempFile(null, null);
 
-    final byte[] bytes;
-    bytes = contents.toByteArray();
+    switch (media) {
+      case Media.Bytes bytes -> Files.write(tmp, bytes.toByteArray());
 
-    Files.write(tmp, bytes);
+      case Media.Text text -> {
+        try (Writer w = Files.newBufferedWriter(tmp, text.charset())) {
+          text.writeTo(w);
+        }
+      }
+
+      default -> throw new UnsupportedOperationException("Implement me");
+    }
 
     move(tmp, file);
   }

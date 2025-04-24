@@ -105,6 +105,9 @@ public class WebResourcesTest implements Consumer<Http.Routing> {
     });
     routing.path("/tc09.txt", resources::handlePath);
     routing.path("/tc10.txt", resources::handlePath);
+    routing.path("/tc11.html", path -> {
+      path.handler(Http.Handler.firstOf(resources, this::testCase11));
+    });
 
     routing.handler(Http.Handler.notFound());
   }
@@ -459,6 +462,38 @@ public class WebResourcesTest implements Consumer<Http.Routing> {
 
     assertEquals(resp01.statusCode(), 200);
     assertEquals(resp01.body(), "TC 10!");
+  }
+
+  private void testCase11(Http.Exchange http) {
+    try {
+      String path;
+      path = http.path();
+
+      resources.writeMedia(path, new TestingSingleParagraph("TC11"));
+
+      resources.handle(http);
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
+  }
+
+  @Test
+  public void testCase11() throws IOException, InterruptedException {
+    final HttpResponse<String> resp01;
+    resp01 = Y.httpClient(
+        "/tc11.html",
+
+        builder -> builder.headers(
+            "Host", "web.resources.test"
+        )
+    );
+
+    assertEquals(resp01.statusCode(), 200);
+    assertEquals(resp01.body(), """
+    <html>
+    <p>TC11</p>
+    </html>
+    """);
   }
 
   private void write(Path directory, Path file, String text) {

@@ -84,8 +84,8 @@ final class WebResources implements Web.Resources {
   }
 
   @Override
-  public final void writeMedia(String path, Media.Bytes contents) throws IOException {
-    kernel.writeMedia(path, contents);
+  public final void writeMedia(String path, Media media) throws IOException {
+    kernel.writeMedia(path, media);
   }
 
   @Override
