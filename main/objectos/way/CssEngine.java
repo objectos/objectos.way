@@ -929,7 +929,7 @@ final class CssEngine implements CssEngineScanner.Adapter {
 
   private final List<String> classNameSlugs = Util.createList();
 
-  private final SequencedMap<String, Css.Rule> rules = Util.createSequencedMap();
+  private final SequencedMap<String, CssUtility> utilities = Util.createSequencedMap();
 
   private final List<CssVariant.OfAtRule> variantsOfAtRule = Util.createList();
 
@@ -1025,10 +1025,10 @@ final class CssEngine implements CssEngineScanner.Adapter {
 
       properties.add(propName, formatted);
 
-      Css.Rule rule;
-      rule = new CssUtility(key, className, modifier, properties);
+      CssUtility utility;
+      utility = new CssUtility(key, className, modifier, properties);
 
-      rules.put(token, rule);
+      utilities.put(token, utility);
     }
   }
 
@@ -1811,8 +1811,8 @@ final class CssEngine implements CssEngineScanner.Adapter {
     CssEngineContextOf topLevel;
     topLevel = new CssEngineContextOf();
 
-    for (Css.Rule rule : rules.values()) {
-      rule.accept(topLevel);
+    for (CssUtility utility : utilities.values()) {
+      utility.accept(topLevel);
     }
 
     w.writeln("@layer utilities {");

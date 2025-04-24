@@ -32,34 +32,34 @@ public class CssUtilityTest {
     List<CssVariant.OfClassName> hover = List.of(new CssVariant.Suffix(":hover"));
     List<CssVariant.OfClassName> active = List.of(new CssVariant.Suffix(":active"));
 
-    List<Css.Rule> rules = new ArrayList<>();
+    List<CssUtility> utilities = new ArrayList<>();
 
-    Css.Rule a1 = rule(Css.Key.APPEARANCE, "a-1", empty);
-    rules.add(a1);
+    CssUtility a1 = utility(Css.Key.APPEARANCE, "a-1", empty);
+    utilities.add(a1);
 
-    Css.Rule a2 = rule(Css.Key.APPEARANCE, "a-2", empty);
-    rules.add(a2);
+    CssUtility a2 = utility(Css.Key.APPEARANCE, "a-2", empty);
+    utilities.add(a2);
 
-    Css.Rule a1Active = rule(Css.Key.APPEARANCE, "a-2:active", active);
-    rules.add(a1Active);
+    CssUtility a1Active = utility(Css.Key.APPEARANCE, "a-2:active", active);
+    utilities.add(a1Active);
 
-    Css.Rule a1Hover = rule(Css.Key.APPEARANCE, "a-1:hover", hover);
-    rules.add(a1Hover);
+    CssUtility a1Hover = utility(Css.Key.APPEARANCE, "a-1:hover", hover);
+    utilities.add(a1Hover);
 
-    Css.Rule b1 = rule(Css.Key.DISPLAY, "b-1", empty);
-    rules.add(b1);
+    CssUtility b1 = utility(Css.Key.DISPLAY, "b-1", empty);
+    utilities.add(b1);
 
-    Css.Rule b2 = rule(Css.Key.DISPLAY, "b-2", empty);
-    rules.add(b2);
+    CssUtility b2 = utility(Css.Key.DISPLAY, "b-2", empty);
+    utilities.add(b2);
 
-    Collections.sort(rules);
+    Collections.sort(utilities);
 
-    assertSame(rules.get(0), a1);
-    assertSame(rules.get(1), a2);
-    assertSame(rules.get(2), a1Hover);
-    assertSame(rules.get(3), a1Active);
-    assertSame(rules.get(4), b1);
-    assertSame(rules.get(5), b2);
+    assertSame(utilities.get(0), a1);
+    assertSame(utilities.get(1), a2);
+    assertSame(utilities.get(2), a1Hover);
+    assertSame(utilities.get(3), a1Active);
+    assertSame(utilities.get(4), b1);
+    assertSame(utilities.get(5), b2);
   }
 
   @Test
@@ -69,7 +69,7 @@ public class CssUtilityTest {
     testClassName("2xl:m-2", ".\\32 xl\\:m-2 {}\n");
   }
 
-  private Css.Rule rule(Css.Key key, String className, List<CssVariant.OfClassName> formats) {
+  private CssUtility utility(Css.Key key, String className, List<CssVariant.OfClassName> formats) {
     CssModifier modifier;
     modifier = new CssModifier(List.of(), formats);
 
@@ -84,10 +84,10 @@ public class CssUtilityTest {
       CssWriter w;
       w = new CssWriter(out);
 
-      Css.Rule rule;
-      rule = rule(Css.Key.COLOR, className, List.of());
+      CssUtility utility;
+      utility = utility(Css.Key.COLOR, className, List.of());
 
-      rule.writeTo(w, 0);
+      utility.writeTo(w, 0);
 
       assertEquals(out.toString(), expected);
     } catch (IOException e) {

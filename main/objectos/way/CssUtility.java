@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Map.Entry;
 
-final class CssUtility implements Css.Rule {
+final class CssUtility implements Comparable<CssUtility> {
 
   private final Css.Key key;
 
@@ -43,7 +43,6 @@ final class CssUtility implements Css.Rule {
     this.properties = properties;
   }
 
-  @Override
   public final void accept(CssEngineContext ctx) {
     CssEngineContext context;
     context = ctx.contextOf(modifier);
@@ -52,10 +51,7 @@ final class CssUtility implements Css.Rule {
   }
 
   @Override
-  public final int compareSameKind(Css.Rule other) {
-    CssUtility o;
-    o = (CssUtility) other;
-
+  public final int compareTo(CssUtility o) {
     int result;
     result = key.compareTo(o.key);
 
@@ -64,11 +60,6 @@ final class CssUtility implements Css.Rule {
     }
 
     return modifier.compareTo(o.modifier);
-  }
-
-  @Override
-  public final int kind() {
-    return 2;
   }
 
   @Override
@@ -88,7 +79,6 @@ final class CssUtility implements Css.Rule {
     }
   }
 
-  @Override
   public final void writeTo(CssWriter w, int level) throws IOException {
     w.indent(level);
 
@@ -127,7 +117,6 @@ final class CssUtility implements Css.Rule {
     w.writeln();
   }
 
-  @Override
   public final void writeProps(CssWriter w, int level) throws IOException {
     for (Map.Entry<String, String> property : properties) {
       propertyMany(w, level, property);

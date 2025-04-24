@@ -21,7 +21,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import objectos.way.Css.Rule;
 
 /**
  * CSS generation context.
@@ -30,13 +29,13 @@ abstract class CssEngineContext {
 
   Map<CssVariant.OfAtRule, CssEngineContextOfAtRule> atRules;
 
-  final List<Rule> rules = Util.createList();
+  final List<CssUtility> utilities = Util.createList();
 
   CssEngineContext() {
   }
 
-  public final void add(Rule rule) {
-    rules.add(rule);
+  public final void add(CssUtility value) {
+    utilities.add(value);
   }
 
   public final CssEngineContext contextOf(CssModifier modifier) {
@@ -68,7 +67,7 @@ abstract class CssEngineContext {
   }
 
   public final void writeTo(CssWriter w, int level) throws IOException {
-    rules.sort(Comparator.naturalOrder());
+    utilities.sort(Comparator.naturalOrder());
 
     write(w, level);
   }
@@ -76,20 +75,15 @@ abstract class CssEngineContext {
   abstract void write(CssWriter w, int level) throws IOException;
 
   final void writeContents(CssWriter w, int level) throws IOException {
-    int lastKind;
-    lastKind = 0;
-
-    for (Css.Rule rule : rules) {
-      int kind;
-      kind = rule.kind();
-
-      if (lastKind == 1 && kind == 2) {
+    for (int idx = 0, size = utilities.size(); idx < size; idx++) {
+      if (idx != 0) {
         w.writeln();
       }
 
-      lastKind = kind;
+      final CssUtility utility;
+      utility = utilities.get(idx);
 
-      rule.writeTo(w, level);
+      utility.writeTo(w, level);
     }
 
     if (atRules != null) {
