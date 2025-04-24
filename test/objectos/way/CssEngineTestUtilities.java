@@ -2769,23 +2769,19 @@ public class CssEngineTestUtilities {
   }
 
   private void test(Class<?> type, String expected) {
-    CssEngine engine;
-    engine = CssEngine.create(config -> {
-      config.noteSink(Y.noteSink());
+    assertEquals(
+        CssEngine.generate(config -> {
+          config.noteSink(Y.noteSink());
 
-      config.scanClass(type);
+          config.scanClass(type);
 
-      config.skipLayer(Css.Layer.THEME);
-      config.skipLayer(Css.Layer.BASE);
-      config.skipLayer(Css.Layer.COMPONENTS);
-    });
+          config.skipLayer(Css.Layer.THEME);
+          config.skipLayer(Css.Layer.BASE);
+          config.skipLayer(Css.Layer.COMPONENTS);
+        }),
 
-    engine.execute();
-
-    String result;
-    result = engine.generate();
-
-    assertEquals(result, expected);
+        expected
+    );
   }
 
 }

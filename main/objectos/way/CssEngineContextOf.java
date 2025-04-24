@@ -15,11 +15,13 @@
  */
 package objectos.way;
 
+import java.io.IOException;
+
 final class CssEngineContextOf extends CssEngineContext {
 
   @Override
-  final void write(StringBuilder out, CssIndentation indentation) {
-    writeContents(out, indentation);
+  final void write(CssWriter w, int level) throws IOException {
+    writeContents(w, level);
   }
 
 }

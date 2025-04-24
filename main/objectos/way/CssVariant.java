@@ -15,6 +15,8 @@
  */
 package objectos.way;
 
+import java.io.IOException;
+
 @SuppressWarnings("exports")
 sealed interface CssVariant {
 
@@ -29,12 +31,11 @@ sealed interface CssVariant {
       }
     }
 
-    public final void writeAtRuleStart(StringBuilder out, CssIndentation indentation) {
-      indentation.writeTo(out);
+    public final void writeAtRuleStart(CssWriter w, int level) throws IOException {
+      w.indent(level);
 
-      out.append(rule);
-      out.append(" {");
-      out.append(System.lineSeparator());
+      w.write(rule);
+      w.writeln(" {");
     }
 
   }

@@ -15,6 +15,8 @@
  */
 package objectos.way;
 
+import java.io.IOException;
+
 final class CssEngineContextOfAtRule extends CssEngineContext {
 
   private final CssVariant.OfAtRule atRule;
@@ -28,19 +30,14 @@ final class CssEngineContextOfAtRule extends CssEngineContext {
   }
 
   @Override
-  final void write(StringBuilder out, CssIndentation indentation) {
-    atRule.writeAtRuleStart(out, indentation);
+  final void write(CssWriter w, int level) throws IOException {
+    atRule.writeAtRuleStart(w, level);
 
-    CssIndentation blockIndentation;
-    blockIndentation = indentation.increase();
+    writeContents(w, level + 1);
 
-    writeContents(out, blockIndentation);
+    w.indent(level);
 
-    indentation.writeTo(out);
-
-    out.append('}');
-
-    out.append(System.lineSeparator());
+    w.writeln('}');
   }
 
 }

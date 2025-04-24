@@ -17,9 +17,11 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import org.testng.annotations.Test;
 
-public class CssStyleSheetTest {
+public class CssConfigurationTest {
 
   @Test(description = "generate: full generation")
   public void generate01() {
@@ -31,15 +33,15 @@ public class CssStyleSheetTest {
       }
     }
 
-    Css.StyleSheet result;
-    result = Css.StyleSheet.generate(config -> {
+    Css.Configuration result;
+    result = Css.Configuration.create(config -> {
       config.noteSink(TestingNoteSink.INSTANCE);
 
       config.scanClass(Subject.class);
     });
 
     assertEquals(
-        result.css(),
+        toString(result),
 
         """
         @layer theme {
@@ -458,6 +460,16 @@ public class CssStyleSheetTest {
         }
         """
     );
+  }
+
+  private String toString(Css.Configuration result) {
+    try {
+      StringBuilder out = new StringBuilder();
+      result.writeTo(out);
+      return out.toString();
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
   }
 
 }

@@ -15,10 +15,12 @@
  */
 package objectos.way;
 
+import java.io.IOException;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.Locale;
 import java.util.function.Consumer;
@@ -33,53 +35,98 @@ public final class Css {
   //
 
   /**
-   * Configures the CSS generation process.
+   * The configuration of a CSS generation process. It is also capable of
+   * generating CSS on demand by invoking the {@link #writeTo(Appendable)}.
    */
-  public sealed interface Config permits CssConfig {
+  public sealed interface Configuration extends Media.Text permits CssConfiguration {
 
-    void noteSink(Note.Sink value);
+    /**
+     * Options for creating a {@code Configuration} instance.
+     */
+    sealed interface Options permits CssConfigurationBuilder {
 
-    void scanClass(Class<?> value);
+      /**
+       * Use the specified note sink.
+       *
+       * @param value
+       *        the note sink to use
+       */
+      void noteSink(Note.Sink value);
 
-    void scanDirectory(Path value);
+      void scanClass(Class<?> value);
 
-    void scanJarFileOf(Class<?> value);
+      /**
+       * Recursively scan the specified directory for Java class files.
+       *
+       * @param value
+       *        the directory containing Java class files
+       */
+      void scanDirectory(Path value);
 
-    void theme(String value);
+      void scanJarFileOf(Class<?> value);
 
-    void theme(String query, String value);
+      void theme(String value);
+
+      void theme(String query, String value);
+
+    }
+
+    /**
+     * Creates a new {@code Configuration} instance with the specified options.
+     *
+     * @param options
+     *        a handle for an {@code Options} instance
+     *
+     * @return a new {@code Configuration} instance
+     */
+    static Configuration create(Consumer<? super Options> options) {
+      final CssConfigurationBuilder builder;
+      builder = new CssConfigurationBuilder();
+
+      options.accept(builder);
+
+      return builder.build();
+    }
+
+    /**
+     * Returns {@code text/css; charset=utf-8}.
+     *
+     * @return {@code text/css; charset=utf-8}
+     */
+    @Override
+    String contentType();
+
+    /**
+     * Returns {@code StandardCharsets.UTF_8}.
+     *
+     * @return {@code StandardCharsets.UTF_8}
+     */
+    @Override
+    Charset charset();
+
+    /**
+     * Scans the class file of {@code Source} annotated classes for CSS
+     * utilities and writes the resulting CSS to the specified
+     * {@code Appendable}.
+     *
+     * @param out
+     *        the generated CSS will be appended to this object
+     *
+     * @throws IOException
+     *         if an I/O error occurs
+     */
+    @Override
+    void writeTo(Appendable out) throws IOException;
 
   }
 
+  /**
+   * Indicates that the annotated type should be scanned for CSS utilities
+   * during a CSS generation process.
+   */
   @Retention(RetentionPolicy.CLASS)
   @Target(ElementType.TYPE)
   public @interface Source {}
-
-  /**
-   * A CSS style sheet.
-   */
-  public sealed interface StyleSheet extends Media.Bytes permits CssStyleSheet {
-
-    static StyleSheet generate(Consumer<? super Config> config) {
-      final CssEngine engine;
-      engine = CssEngine.create(config);
-
-      engine.execute();
-
-      String css;
-      css = engine.generate();
-
-      return new CssStyleSheet(css);
-    }
-
-    @Override
-    default String contentType() {
-      return "text/css; charset=utf-8";
-    }
-
-    String css();
-
-  }
 
   //
   // non-public types
@@ -279,12 +326,12 @@ public final class Css {
     }
 
     @Override
-    public final void writeTo(StringBuilder out, CssIndentation indentation) {
+    public final void writeTo(CssWriter w, int level) {
       // noop
     }
 
     @Override
-    public final void writeProps(StringBuilder out, CssIndentation indentation) {
+    public final void writeProps(CssWriter w, int level) {
       // noop
     }
 
@@ -317,9 +364,9 @@ public final class Css {
 
     int kind();
 
-    void writeTo(StringBuilder out, CssIndentation indentation);
+    void writeTo(CssWriter w, int level) throws IOException;
 
-    void writeProps(StringBuilder out, CssIndentation indentation);
+    void writeProps(CssWriter w, int level) throws IOException;
 
   }
 

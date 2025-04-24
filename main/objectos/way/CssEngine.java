@@ -15,6 +15,7 @@
  */
 package objectos.way;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -51,26 +52,44 @@ final class CssEngine implements CssEngineScanner.Adapter {
 
   }
 
-  private final CssConfig config;
-
-  private final StringBuilder css = new StringBuilder();
+  private final CssConfiguration config;
 
   @SuppressWarnings("unused")
   private final Notes notes = Notes.get();
 
   private final Map<String, CssVariant> variants = new LinkedHashMap<>();
 
-  private CssEngine(CssConfig config) {
+  CssEngine(CssConfiguration config) {
     this.config = config;
   }
 
-  static CssEngine create(Consumer<? super CssConfig> config) {
-    final CssConfig builder;
-    builder = new CssConfig();
+  static CssEngine create(Consumer<? super CssConfigurationBuilder> config) {
+    final CssConfigurationBuilder builder;
+    builder = new CssConfigurationBuilder();
 
     config.accept(builder);
 
-    return new CssEngine(builder);
+    return new CssEngine(
+        builder.build()
+    );
+  }
+
+  static String generate(Consumer<? super CssConfigurationBuilder> config) {
+    try {
+      final CssEngine engine;
+      engine = create(config);
+
+      engine.execute();
+
+      final StringBuilder out;
+      out = new StringBuilder();
+
+      engine.generate(out);
+
+      return out.toString();
+    } catch (IOException e) {
+      throw new AssertionError("StringBuilder does not throw IOException", e);
+    }
   }
 
   // ##################################################################
@@ -85,9 +104,9 @@ final class CssEngine implements CssEngineScanner.Adapter {
     parseTheme(Css.defaultTheme());
 
     // if the user provided a theme, we parse it
-    parseTheme(config.theme);
+    parseTheme(config.theme());
 
-    for (var entry : config.themeQueries.entrySet()) {
+    for (var entry : config.themeQueries()) {
       parseThemeQuery(entry);
     }
 
@@ -793,17 +812,17 @@ final class CssEngine implements CssEngineScanner.Adapter {
 
   private void scan() {
     CssEngineScanner scanner;
-    scanner = new CssEngineScanner(config.noteSink);
+    scanner = new CssEngineScanner(config.noteSink());
 
-    for (Class<?> clazz : config.classesToScan) {
+    for (Class<?> clazz : config.classesToScan()) {
       scanner.scan(clazz, this);
     }
 
-    for (Path directory : config.directoriesToScan) {
+    for (Path directory : config.directoriesToScan()) {
       scanner.scanDirectory(directory, this);
     }
 
-    for (Class<?> clazz : config.jarFilesToScan) {
+    for (Class<?> clazz : config.jarFilesToScan()) {
       scanner.scanJarFile(clazz, this);
     }
   }
@@ -1554,28 +1573,29 @@ final class CssEngine implements CssEngineScanner.Adapter {
   // # BEGIN: CSS Generation
   // ##################################################################
 
-  public final String generate() {
+  public final void generate(Appendable out) throws IOException {
+    final CssWriter w;
+    w = new CssWriter(out, sb);
+
     if (!config.contains(Css.Layer.THEME)) {
-      generateTheme();
+      generateTheme(w);
     }
 
     if (!config.contains(Css.Layer.BASE)) {
-      generateBase(config.base);
+      generateBase(w, config.base());
     }
 
     if (!config.contains(Css.Layer.UTILITIES)) {
-      generateUtilities();
+      generateUtilities(w);
     }
-
-    return css.toString();
   }
 
-  private void generateTheme() {
-    writeln("@layer theme {");
+  private void generateTheme(CssWriter w) throws IOException {
+    w.writeln("@layer theme {");
 
-    indent(1);
+    w.indent(1);
 
-    writeln(":root {");
+    w.writeln(":root {");
 
     UtilList<ThemeEntry> entries;
     entries = new UtilList<>();
@@ -1593,59 +1613,59 @@ final class CssEngine implements CssEngineScanner.Adapter {
     entries.sort(Comparator.naturalOrder());
 
     for (ThemeEntry entry : entries) {
-      indent(2);
+      w.indent(2);
 
-      write(entry.name());
-      write(": ");
-      write(entry.value());
-      writeln(';');
+      w.write(entry.name());
+      w.write(": ");
+      w.write(entry.value());
+      w.writeln(';');
     }
 
-    indent(1);
+    w.indent(1);
 
-    writeln('}');
+    w.writeln('}');
 
     if (themeQueryEntries != null) {
       for (Map.Entry<String, List<ThemeQueryEntry>> queryEntry : themeQueryEntries.entrySet()) {
-        indent(1);
+        w.indent(1);
 
         String query;
         query = queryEntry.getKey();
 
-        write(query);
-        writeln(" {");
+        w.write(query);
+        w.writeln(" {");
 
-        indent(2);
+        w.indent(2);
 
-        writeln(":root {");
+        w.writeln(":root {");
 
         for (ThemeQueryEntry entry : queryEntry.getValue()) {
-          indent(3);
+          w.indent(3);
 
-          write(entry.name());
-          write(": ");
-          write(entry.value());
-          writeln(';');
+          w.write(entry.name());
+          w.write(": ");
+          w.write(entry.value());
+          w.writeln(';');
         }
 
-        indent(2);
+        w.indent(2);
 
-        writeln('}');
+        w.writeln('}');
 
-        indent(1);
+        w.indent(1);
 
-        writeln('}');
+        w.writeln('}');
       }
     }
 
-    writeln('}');
+    w.writeln('}');
   }
 
   // ##################################################################
   // # BEGIN: Base layer
   // ##################################################################
 
-  private void generateBase(String text) {
+  private void generateBase(CssWriter w, String text) throws IOException {
     enum Parser {
       NORMAL,
 
@@ -1662,7 +1682,7 @@ final class CssEngine implements CssEngineScanner.Adapter {
     Parser parser;
     parser = Parser.NORMAL;
 
-    writeln("@layer base {");
+    w.writeln("@layer base {");
 
     boolean indent;
     indent = true;
@@ -1690,7 +1710,7 @@ final class CssEngine implements CssEngineScanner.Adapter {
 
             level++;
 
-            writeln(c);
+            w.writeln(c);
           }
 
           else if (c == '}') {
@@ -1700,21 +1720,21 @@ final class CssEngine implements CssEngineScanner.Adapter {
 
             level--;
 
-            indent(level);
+            w.indent(level);
 
-            writeln(c);
+            w.writeln(c);
           }
 
           else {
             parser = Parser.TEXT;
 
             if (indent) {
-              indent(level);
+              w.indent(level);
 
               indent = false;
             }
 
-            write(c);
+            w.write(c);
           }
         }
 
@@ -1726,7 +1746,7 @@ final class CssEngine implements CssEngineScanner.Adapter {
           else {
             parser = Parser.UNKNOWN;
 
-            write('/', c);
+            w.write('/', c);
           }
         }
 
@@ -1754,7 +1774,7 @@ final class CssEngine implements CssEngineScanner.Adapter {
           if (Ascii.isWhitespace(c)) {
             parser = Parser.NORMAL;
 
-            write(' ');
+            w.write(' ');
           }
 
           else if (c == '{') {
@@ -1766,28 +1786,28 @@ final class CssEngine implements CssEngineScanner.Adapter {
 
             indent = true;
 
-            writeln(c);
+            w.writeln(c);
           }
 
           else {
             parser = Parser.TEXT;
 
-            write(c);
+            w.write(c);
           }
         }
 
-        case UNKNOWN -> css.append(c);
+        case UNKNOWN -> w.write(c);
       }
     }
 
-    css.append("}\n");
+    w.writeln('}');
   }
 
   // ##################################################################
   // # END: Base layer
   // ##################################################################
 
-  private void generateUtilities() {
+  private void generateUtilities(CssWriter w) throws IOException {
     CssEngineContextOf topLevel;
     topLevel = new CssEngineContextOf();
 
@@ -1795,54 +1815,12 @@ final class CssEngine implements CssEngineScanner.Adapter {
       rule.accept(topLevel);
     }
 
-    CssIndentation indentation;
-    indentation = CssIndentation.ROOT;
+    w.writeln("@layer utilities {");
 
-    writeln("@layer utilities {");
+    topLevel.writeTo(w, 1);
 
-    indentation = indentation.increase();
-
-    topLevel.writeTo(css, indentation);
-
-    writeln('}');
+    w.writeln('}');
   }
-
-  // ##################################################################
-  // # BEGIN: output writing section
-  // ##################################################################
-
-  private void indent(int level) {
-    for (int i = 0, count = level * 2; i < count; i++) {
-      css.append(' ');
-    }
-  }
-
-  private void write(char c) {
-    css.append(c);
-  }
-
-  private void write(char c1, char c2) {
-    css.append(c1);
-    css.append(c2);
-  }
-
-  private void write(String s) {
-    css.append(s);
-  }
-
-  private void writeln(char c) {
-    css.append(c);
-    css.append('\n');
-  }
-
-  private void writeln(String s) {
-    css.append(s);
-    css.append('\n');
-  }
-
-  // ##################################################################
-  // # END: output writing section
-  // ##################################################################
 
   // ##################################################################
   // # END: CSS Generation
@@ -1865,7 +1843,7 @@ final class CssEngine implements CssEngineScanner.Adapter {
   }
 
   final List<ThemeEntry> testThemeEntries() {
-    parseTheme(config.theme);
+    parseTheme(config.theme());
 
     UtilList<ThemeEntry> entries;
     entries = new UtilList<>();
@@ -1886,7 +1864,7 @@ final class CssEngine implements CssEngineScanner.Adapter {
   }
 
   final List<ThemeQueryEntry> testThemeQueryEntries(String query) {
-    for (var entry : config.themeQueries.entrySet()) {
+    for (var entry : config.themeQueries()) {
       parseThemeQuery(entry);
     }
 

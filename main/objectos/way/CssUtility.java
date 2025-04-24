@@ -15,6 +15,7 @@
  */
 package objectos.way;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -72,28 +73,40 @@ final class CssUtility implements Css.Rule {
 
   @Override
   public String toString() {
-    StringBuilder out;
-    out = new StringBuilder();
+    try {
+      final StringBuilder out;
+      out = new StringBuilder();
 
-    writeTo(out, CssIndentation.ROOT);
+      final CssWriter w;
+      w = new CssWriter(out);
 
-    return out.toString();
+      writeTo(w, 0);
+
+      return out.toString();
+    } catch (IOException e) {
+      throw new AssertionError("StringBuilder does not throw IOException", e);
+    }
   }
 
   @Override
-  public final void writeTo(StringBuilder out, CssIndentation indentation) {
-    indentation.writeTo(out);
+  public final void writeTo(CssWriter w, int level) throws IOException {
+    w.indent(level);
 
-    modifier.writeClassName(out, className);
+    final StringBuilder sb;
+    sb = w.stringBuilder();
+
+    modifier.writeClassName(sb, className);
+
+    w.write(sb);
 
     switch (properties.size()) {
-      case 0 -> out.append(" {}");
+      case 0 -> w.write(" {}");
 
       case 1 -> {
         Entry<String, String> prop;
         prop = properties.get(0);
 
-        writeBlockOne(out, prop);
+        writeBlockOne(w, prop);
       }
 
       case 2 -> {
@@ -103,102 +116,99 @@ final class CssUtility implements Css.Rule {
         Entry<String, String> second;
         second = properties.get(1);
 
-        writeBlockTwo(out, first, second);
+        writeBlockTwo(w, first, second);
       }
 
       default -> {
-        writeBlockMany(out, indentation, properties);
+        writeBlockMany(w, level, properties);
       }
     }
 
-    out.append(System.lineSeparator());
+    w.writeln();
   }
 
   @Override
-  public final void writeProps(StringBuilder out, CssIndentation indentation) {
+  public final void writeProps(CssWriter w, int level) throws IOException {
     for (Map.Entry<String, String> property : properties) {
-      propertyMany(out, indentation, property);
+      propertyMany(w, level, property);
     }
   }
 
-  private void writeBlockOne(StringBuilder out, Entry<String, String> property) {
-    blockStart(out);
+  private void writeBlockOne(CssWriter w, Map.Entry<String, String> property) throws IOException {
+    blockStart(w);
 
-    property(out, property);
+    property(w, property);
 
-    blockEnd(out);
+    blockEnd(w);
   }
 
-  private void writeBlockTwo(StringBuilder out, Entry<String, String> prop1, Entry<String, String> prop2) {
-    blockStart(out);
+  private void writeBlockTwo(CssWriter w, Map.Entry<String, String> prop1, Map.Entry<String, String> prop2) throws IOException {
+    blockStart(w);
 
-    property(out, prop1);
+    property(w, prop1);
 
-    nextProperty(out);
+    nextProperty(w);
 
-    property(out, prop2);
+    property(w, prop2);
 
-    blockEnd(out);
+    blockEnd(w);
   }
 
-  private void writeBlockMany(
-      StringBuilder out, CssIndentation indentation, CssProperties properties) {
-    blockStartMany(out);
+  private void writeBlockMany(CssWriter w, int level, CssProperties properties) throws IOException {
+    blockStartMany(w);
 
-    CssIndentation next;
-    next = indentation.increase();
+    final int next;
+    next = level + 1;
 
     for (Map.Entry<String, String> property : properties) {
-      propertyMany(out, next, property);
+      propertyMany(w, next, property);
     }
 
-    blockEndMany(out, indentation);
+    blockEndMany(w, level);
   }
 
-  private void blockStart(StringBuilder out) {
-    out.append(" { ");
+  private void blockStart(CssWriter w) throws IOException {
+    w.write(" { ");
   }
 
-  private void blockStartMany(StringBuilder out) {
-    out.append(" {");
-    out.append(System.lineSeparator());
+  private void blockStartMany(CssWriter w) throws IOException {
+    w.writeln(" {");
   }
 
-  private void blockEnd(StringBuilder out) {
-    out.append(" }");
+  private void blockEnd(CssWriter w) throws IOException {
+    w.write(" }");
   }
 
-  private void blockEndMany(StringBuilder out, CssIndentation indentation) {
-    indentation.writeTo(out);
+  private void blockEndMany(CssWriter w, int level) throws IOException {
+    w.indent(level);
 
-    out.append('}');
+    w.write('}');
   }
 
-  private void nextProperty(StringBuilder out) {
-    out.append("; ");
+  private void nextProperty(CssWriter w) throws IOException {
+    w.write("; ");
   }
 
-  private void property(StringBuilder out, Entry<String, String> property) {
+  private void property(CssWriter w, Map.Entry<String, String> property) throws IOException {
     String name;
     name = property.getKey();
 
-    out.append(name);
+    w.write(name);
 
-    out.append(": ");
+    w.write(": ");
 
     String value;
     value = property.getValue();
 
-    out.append(value);
+    w.write(value);
   }
 
-  private void propertyMany(StringBuilder out, CssIndentation indentation, Entry<String, String> property) {
-    indentation.writeTo(out);
+  private void propertyMany(CssWriter w, int level, Entry<String, String> property) throws IOException {
+    w.indent(level);
 
-    property(out, property);
+    property(w, property);
 
-    out.append(';');
-    out.append(System.lineSeparator());
+    w.writeln(';');
   }
 
 }

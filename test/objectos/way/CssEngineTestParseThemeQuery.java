@@ -61,27 +61,22 @@ public class CssEngineTestParseThemeQuery {
 
   @Test(description = "Full generation + override")
   public void fullGeneration01() {
-    CssEngine engine;
-    engine = CssEngine.create(config -> {
-      config.theme("""
-      --color-*: initial;
-      --breakpoint-*: initial;
-      --font-*: initial;
-      """);
-
-      config.theme("@media (prefers-color-scheme: dark)", """
-      --color-background: var(--color-gray-800);
-      """);
-
-      config.skipLayer(Css.Layer.BASE);
-      config.skipLayer(Css.Layer.COMPONENTS);
-      config.skipLayer(Css.Layer.UTILITIES);
-    });
-
-    engine.execute();
-
     assertEquals(
-        engine.generate(),
+        CssEngine.generate(config -> {
+          config.theme("""
+          --color-*: initial;
+          --breakpoint-*: initial;
+          --font-*: initial;
+          """);
+
+          config.theme("@media (prefers-color-scheme: dark)", """
+          --color-background: var(--color-gray-800);
+          """);
+
+          config.skipLayer(Css.Layer.BASE);
+          config.skipLayer(Css.Layer.COMPONENTS);
+          config.skipLayer(Css.Layer.UTILITIES);
+        }),
 
         """
         @layer theme {

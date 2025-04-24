@@ -18,6 +18,7 @@ package objectos.way;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -76,15 +77,22 @@ public class CssUtilityTest {
   }
 
   private void testClassName(String className, String expected) {
-    StringBuilder out;
-    out = new StringBuilder();
+    try {
+      StringBuilder out;
+      out = new StringBuilder();
 
-    Css.Rule rule;
-    rule = rule(Css.Key.COLOR, className, List.of());
+      CssWriter w;
+      w = new CssWriter(out);
 
-    rule.writeTo(out, CssIndentation.ROOT);
+      Css.Rule rule;
+      rule = rule(Css.Key.COLOR, className, List.of());
 
-    assertEquals(out.toString(), expected);
+      rule.writeTo(w, 0);
+
+      assertEquals(out.toString(), expected);
+    } catch (IOException e) {
+      throw new AssertionError("StringBuilder does not throw IOException", e);
+    }
   }
 
 }

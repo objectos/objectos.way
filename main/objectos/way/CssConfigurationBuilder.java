@@ -16,30 +16,29 @@
 package objectos.way;
 
 import java.nio.file.Path;
-import java.util.EnumSet;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import objectos.way.Css.Layer;
 
-final class CssConfig implements Css.Config {
+final class CssConfigurationBuilder implements Css.Configuration.Options {
 
-  String base = Css.defaultBase();
+  private static final String EMPTY_THEME = "";
 
-  Set<Class<?>> classesToScan = Set.of();
+  private String base = Css.defaultBase();
 
-  Set<Path> directoriesToScan = Set.of();
+  private Set<Class<?>> classesToScan = UtilUnmodifiableSet.of();
 
-  Set<Class<?>> jarFilesToScan = Set.of();
+  private Set<Path> directoriesToScan = UtilUnmodifiableSet.of();
 
-  Note.Sink noteSink = Note.NoOpSink.INSTANCE;
+  private Set<Class<?>> jarFilesToScan = UtilUnmodifiableSet.of();
 
-  final Set<Css.Layer> skipLayer = EnumSet.noneOf(Css.Layer.class);
+  private Note.Sink noteSink = Note.NoOpSink.INSTANCE;
 
-  String theme = "";
+  private Set<Css.Layer> skipLayer = UtilUnmodifiableSet.of();
 
-  Map<String, String> themeQueries = Map.of();
+  private String theme = EMPTY_THEME;
+
+  private Map<String, String> themeQueries = Map.of();
 
   public final void base(String value) {
     base = Objects.requireNonNull(value, "value == null");
@@ -86,12 +85,16 @@ final class CssConfig implements Css.Config {
   public final void skipLayer(Css.Layer value) {
     Objects.requireNonNull(value, "value == null");
 
+    if (skipLayer.isEmpty()) {
+      skipLayer = Util.createSet();
+    }
+
     skipLayer.add(value);
   }
 
   @Override
   public final void theme(String value) {
-    Check.state(theme.isEmpty(), "Theme was already set");
+    Check.state(theme == EMPTY_THEME, "Theme was already set");
 
     theme = Objects.requireNonNull(value, "value == null");
   }
@@ -102,7 +105,7 @@ final class CssConfig implements Css.Config {
     Objects.requireNonNull(value, "value == null");
 
     if (themeQueries.isEmpty()) {
-      themeQueries = LinkedHashMap.newLinkedHashMap(2);
+      themeQueries = Util.createSequencedMap();
     }
 
     String maybeExisting;
@@ -113,8 +116,24 @@ final class CssConfig implements Css.Config {
     }
   }
 
-  final boolean contains(Layer value) {
-    return skipLayer.contains(value);
+  final CssConfiguration build() {
+    return new CssConfiguration(
+        base,
+
+        UtilUnmodifiableList.copyOf(classesToScan),
+
+        UtilUnmodifiableList.copyOf(directoriesToScan),
+
+        UtilUnmodifiableList.copyOf(jarFilesToScan),
+
+        noteSink,
+
+        UtilUnmodifiableSet.copyOf(skipLayer),
+
+        theme,
+
+        UtilUnmodifiableList.copyOf(themeQueries.entrySet())
+    );
   }
 
 }

@@ -15,6 +15,7 @@
  */
 package objectos.way;
 
+import java.io.IOException;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -66,37 +67,36 @@ abstract class CssEngineContext {
     return result;
   }
 
-  public final void writeTo(StringBuilder out, CssIndentation indentation) {
+  public final void writeTo(CssWriter w, int level) throws IOException {
     rules.sort(Comparator.naturalOrder());
 
-    write(out, indentation);
+    write(w, level);
   }
 
-  abstract void write(StringBuilder out, CssIndentation indentation);
+  abstract void write(CssWriter w, int level) throws IOException;
 
-  final void writeContents(StringBuilder out, CssIndentation indentation) {
-    int lastKind = 0;
+  final void writeContents(CssWriter w, int level) throws IOException {
+    int lastKind;
+    lastKind = 0;
 
     for (Css.Rule rule : rules) {
       int kind;
       kind = rule.kind();
 
       if (lastKind == 1 && kind == 2) {
-        out.append(System.lineSeparator());
+        w.writeln();
       }
 
       lastKind = kind;
 
-      rule.writeTo(out, indentation);
+      rule.writeTo(w, level);
     }
 
     if (atRules != null) {
       for (CssEngineContext child : atRules.values()) {
-        if (!out.isEmpty()) {
-          out.append(System.lineSeparator());
-        }
+        w.writeln();
 
-        child.writeTo(out, indentation);
+        child.writeTo(w, level);
       }
     }
   }

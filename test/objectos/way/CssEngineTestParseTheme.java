@@ -194,17 +194,12 @@ public class CssEngineTestParseTheme {
 
   @Test(description = "Full generation indeed")
   public void fullGeneration01() {
-    CssEngine engine;
-    engine = CssEngine.create(config -> {
-      config.skipLayer(Css.Layer.BASE);
-      config.skipLayer(Css.Layer.COMPONENTS);
-      config.skipLayer(Css.Layer.UTILITIES);
-    });
-
-    engine.execute();
-
     assertEquals(
-        engine.generate(),
+        CssEngine.generate(config -> {
+          config.skipLayer(Css.Layer.BASE);
+          config.skipLayer(Css.Layer.COMPONENTS);
+          config.skipLayer(Css.Layer.UTILITIES);
+        }),
 
         """
         @layer theme {
@@ -479,22 +474,17 @@ public class CssEngineTestParseTheme {
 
   @Test(description = "Full generation + clear")
   public void fullGeneration02() {
-    CssEngine engine;
-    engine = CssEngine.create(config -> {
-      config.theme("""
+    assertEquals(
+        CssEngine.generate(config -> {
+          config.theme("""
           --color-*: initial;
           --color-foo: rebecapurple;
           """);
 
-      config.skipLayer(Css.Layer.BASE);
-      config.skipLayer(Css.Layer.COMPONENTS);
-      config.skipLayer(Css.Layer.UTILITIES);
-    });
-
-    engine.execute();
-
-    assertEquals(
-        engine.generate(),
+          config.skipLayer(Css.Layer.BASE);
+          config.skipLayer(Css.Layer.COMPONENTS);
+          config.skipLayer(Css.Layer.UTILITIES);
+        }),
 
         """
         @layer theme {
@@ -526,23 +516,18 @@ public class CssEngineTestParseTheme {
 
   @Test(description = "Full generation + override")
   public void fullGeneration03() {
-    CssEngine engine;
-    engine = CssEngine.create(config -> {
-      config.theme("""
+    assertEquals(
+        CssEngine.generate(config -> {
+          config.theme("""
           --color-*: initial;
           --breakpoint-*: initial;
           --font-sans: 'DM Sans', var(--default-font-sans);
           """);
 
-      config.skipLayer(Css.Layer.BASE);
-      config.skipLayer(Css.Layer.COMPONENTS);
-      config.skipLayer(Css.Layer.UTILITIES);
-    });
-
-    engine.execute();
-
-    assertEquals(
-        engine.generate(),
+          config.skipLayer(Css.Layer.BASE);
+          config.skipLayer(Css.Layer.COMPONENTS);
+          config.skipLayer(Css.Layer.UTILITIES);
+        }),
 
         """
         @layer theme {

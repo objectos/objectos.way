@@ -44,26 +44,22 @@ public class CssEngineTestJar {
     ThisNoteSink noteSink;
     noteSink = new ThisNoteSink(values);
 
-    CssEngine engine;
-    engine = CssEngine.create(config -> {
-      config.noteSink(noteSink);
+    assertEquals(
+        CssEngine.generate(config -> {
+          config.noteSink(noteSink);
 
-      config.scanJarFileOf(Logger.class);
+          config.scanJarFileOf(Logger.class);
 
-      config.skipLayer(Css.Layer.THEME);
-      config.skipLayer(Css.Layer.BASE);
-      config.skipLayer(Css.Layer.COMPONENTS);
-    });
+          config.skipLayer(Css.Layer.THEME);
+          config.skipLayer(Css.Layer.BASE);
+          config.skipLayer(Css.Layer.COMPONENTS);
+        }),
 
-    engine.execute();
-
-    String result;
-    result = engine.generate();
-
-    assertEquals(result, """
-    @layer utilities {
-    }
-    """);
+        """
+        @layer utilities {
+        }
+        """
+    );
 
     assertEquals(values.contains("org/slf4j/Logger.class"), true);
     assertEquals(values.contains("org/slf4j/Marker.class"), true);

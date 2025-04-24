@@ -141,17 +141,12 @@ public class CssEngineTestBase {
 
   @Test
   public void fullGeneration() {
-    CssEngine engine;
-    engine = CssEngine.create(config -> {
-      config.skipLayer(Css.Layer.THEME);
-      config.skipLayer(Css.Layer.COMPONENTS);
-      config.skipLayer(Css.Layer.UTILITIES);
-    });
-
-    engine.execute();
-
     assertEquals(
-        engine.generate(),
+        CssEngine.generate(config -> {
+          config.skipLayer(Css.Layer.THEME);
+          config.skipLayer(Css.Layer.COMPONENTS);
+          config.skipLayer(Css.Layer.UTILITIES);
+        }),
 
         """
         @layer base {
@@ -300,23 +295,19 @@ public class CssEngineTestBase {
   }
 
   private void base(String base, String expected) {
-    final CssEngine engine;
-    engine = CssEngine.create(config -> {
-      config.noteSink(TestingNoteSink.INSTANCE);
+    assertEquals(
+        CssEngine.generate(config -> {
+          config.noteSink(Y.noteSink());
 
-      config.base(base);
+          config.base(base);
 
-      config.skipLayer(Css.Layer.THEME);
-      config.skipLayer(Css.Layer.COMPONENTS);
-      config.skipLayer(Css.Layer.UTILITIES);
-    });
+          config.skipLayer(Css.Layer.THEME);
+          config.skipLayer(Css.Layer.COMPONENTS);
+          config.skipLayer(Css.Layer.UTILITIES);
+        }),
 
-    engine.execute();
-
-    final String result;
-    result = engine.generate();
-
-    assertEquals(result, expected);
+        expected
+    );
   }
 
 }
