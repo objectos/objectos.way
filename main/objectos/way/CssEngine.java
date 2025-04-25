@@ -17,19 +17,14 @@ package objectos.way;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.SequencedMap;
 import java.util.Set;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 final class CssEngine implements CssEngineScanner.Adapter {
 
@@ -56,8 +51,6 @@ final class CssEngine implements CssEngineScanner.Adapter {
 
   @SuppressWarnings("unused")
   private final Notes notes = Notes.get();
-
-  private final Map<String, CssVariant> variants = new LinkedHashMap<>();
 
   CssEngine(CssConfiguration config) {
     this.config = config;
@@ -97,21 +90,9 @@ final class CssEngine implements CssEngineScanner.Adapter {
   // ##################################################################
 
   public final void execute() {
-    // create the default variants
-    defaultVariants();
-
-    // parse the default (built-in) theme
-    parseTheme(Css.defaultTheme());
-
-    // if the user provided a theme, we parse it
-    parseTheme(config.theme());
-
     for (var entry : config.themeQueries()) {
       parseThemeQuery(entry);
     }
-
-    // validate configuration
-    validate();
 
     // let's apply the spec
     spec();
@@ -125,47 +106,6 @@ final class CssEngine implements CssEngineScanner.Adapter {
 
   // ##################################################################
   // # END: Execution
-  // ##################################################################
-
-  // ##################################################################
-  // # BEGIN: Default Variants
-  // ##################################################################
-
-  private void defaultVariants() {
-    variant("dark", new CssVariant.OfAtRule("@media (prefers-color-scheme: dark)"));
-
-    variant("active", new CssVariant.Suffix(":active"));
-    variant("checked", new CssVariant.Suffix(":checked"));
-    variant("disabled", new CssVariant.Suffix(":disabled"));
-    variant("first-child", new CssVariant.Suffix(":first-child"));
-    variant("focus", new CssVariant.Suffix(":focus"));
-    variant("focus-visible", new CssVariant.Suffix(":focus-visible"));
-    variant("hover", new CssVariant.Suffix(":hover"));
-    variant("last-child", new CssVariant.Suffix(":last-child"));
-    variant("visited", new CssVariant.Suffix(":visited"));
-
-    variant("after", new CssVariant.Suffix("::after"));
-    variant("before", new CssVariant.Suffix("::before"));
-    variant("first-letter", new CssVariant.Suffix("::first-letter"));
-    variant("first-line", new CssVariant.Suffix("::first-line"));
-
-    variant("*", new CssVariant.Suffix(" > *"));
-    variant("**", new CssVariant.Suffix(" *"));
-  }
-
-  private void variant(String name, CssVariant variant) {
-    CssVariant maybeExisting;
-    maybeExisting = variants.put(name, variant);
-
-    if (maybeExisting == null) {
-      return;
-    }
-
-    // TODO restore existing and log?
-  }
-
-  // ##################################################################
-  // # END: Default Variants
   // ##################################################################
 
   // ##################################################################
@@ -185,298 +125,17 @@ final class CssEngine implements CssEngineScanner.Adapter {
 
   }
 
-  @Lang.VisibleForTesting
-  record ThemeEntry(int index, String name, String value, String id) implements Comparable<ThemeEntry> {
-
-    @Override
-    public final int compareTo(ThemeEntry o) {
-      return Integer.compare(index, o.index);
-    }
-
-    public final Object key() {
-      return name;
-    }
-
-    @Override
-    public final String toString() {
-      StringBuilder out;
-      out = new StringBuilder();
-
-      writeTo(out);
-
-      return out.toString();
-    }
-
-    public final void writeTo(StringBuilder out) {
-      out.append(name);
-      out.append(": ");
-      out.append(value);
-      out.append(';');
-    }
-
-    private boolean shouldClear() {
-      return "*".equals(id) && "initial".equals(value);
-    }
-
-    private ThemeEntry withValue(ThemeEntry newValue) {
-      return new ThemeEntry(index, name, newValue.value, id);
-    }
-
-  }
-
   private final StringBuilder sb = new StringBuilder();
-
-  private final Map<Namespace, Map<String, ThemeEntry>> themeEntries = new EnumMap<>(Namespace.class);
 
   // ##################################################################
   // # BEGIN: Parse :: @theme {}
   // ##################################################################
 
-  private final Map<String, Namespace> namespacePrefixes = namespacePrefixes();
-
-  private Map<String, Namespace> namespacePrefixes() {
-    Map<String, Namespace> map;
-    map = Util.createMap();
-
-    for (Namespace namespace : Namespace.values()) {
-      String name;
-      name = namespace.name();
-
-      String prefix;
-      prefix = name.toLowerCase(Locale.US);
-
-      map.put(prefix, namespace);
-    }
-
-    return map;
-  }
-
   private void parseError(String text, int idx, String message) {
     throw new IllegalArgumentException(message);
   }
 
-  private void parseTheme(String text) {
-    if (text.isEmpty()) {
-      return;
-    }
-
-    enum Parser {
-
-      NORMAL,
-      HYPHEN1,
-      NAMESPACE_1,
-      NAMESPACE_N,
-      ID_1,
-      ID_N,
-      OPTIONAL_WS,
-      VALUE,
-      VALUE_TRIM;
-
-    }
-
-    Parser parser;
-    parser = Parser.NORMAL;
-
-    int startIndex;
-    startIndex = 0;
-
-    int auxIndex;
-    auxIndex = 0;
-
-    Namespace namespace;
-    namespace = null;
-
-    String name = null, id = null;
-
-    for (int idx = 0, len = text.length(); idx < len; idx++) {
-      char c;
-      c = text.charAt(idx);
-
-      switch (parser) {
-        case NORMAL -> {
-          if (Ascii.isWhitespace(c)) {
-            parser = Parser.NORMAL;
-          }
-
-          else if (c == '-') {
-            parser = Parser.HYPHEN1;
-
-            startIndex = idx;
-          }
-
-          else {
-            parseError(text, idx, "Expected start of --variable declaration");
-          }
-        }
-
-        case HYPHEN1 -> {
-          if (c == '-') {
-            parser = Parser.NAMESPACE_1;
-          }
-
-          else {
-            parseError(text, idx, "Expected start of --variable declaration");
-          }
-        }
-
-        case NAMESPACE_1 -> {
-          if (Ascii.isLetter(c)) {
-            parser = Parser.NAMESPACE_N;
-
-            auxIndex = idx;
-          }
-
-          else {
-            parseError(text, idx, "--variable name must start with a letter");
-          }
-        }
-
-        case NAMESPACE_N -> {
-          if (c == '-') {
-            parser = Parser.ID_1;
-
-            String maybeName;
-            maybeName = text.substring(auxIndex, idx);
-
-            namespace = namespacePrefixes.getOrDefault(maybeName, Namespace.CUSTOM);
-          }
-
-          else if (c == ':') {
-            parser = Parser.OPTIONAL_WS;
-
-            namespace = Namespace.CUSTOM;
-
-            name = text.substring(startIndex, idx);
-
-            id = null;
-          }
-
-          else if (Ascii.isLetterOrDigit(c)) {
-            parser = Parser.NAMESPACE_N;
-          }
-
-          else {
-            parseError(text, idx, "CSS variable name with invalid character=" + c);
-          }
-        }
-
-        case ID_1 -> {
-          if (Ascii.isLetterOrDigit(c) || c == '*') {
-            parser = Parser.ID_N;
-
-            auxIndex = idx;
-          }
-
-          else {
-            parseError(text, idx, "CSS variable name with invalid character=" + c);
-          }
-        }
-
-        case ID_N -> {
-          if (c == ':') {
-            parser = Parser.OPTIONAL_WS;
-
-            name = text.substring(startIndex, idx);
-
-            id = text.substring(auxIndex, idx);
-          }
-
-          else if (c == '-') {
-            parser = Parser.ID_N;
-          }
-
-          else if (Ascii.isLetterOrDigit(c)) {
-            parser = Parser.ID_N;
-          }
-
-          else {
-            parseError(text, idx, "CSS variable name with invalid character=" + c);
-          }
-        }
-
-        case OPTIONAL_WS -> {
-          if (Ascii.isWhitespace(c)) {
-            parser = Parser.OPTIONAL_WS;
-          }
-
-          else if (c == ';') {
-            parseError(text, idx, "Empty variable definition");
-          }
-
-          else {
-            parser = Parser.VALUE;
-
-            sb.setLength(0);
-
-            sb.append(c);
-          }
-        }
-
-        case VALUE -> {
-          if (c == ';') {
-            parser = Parser.NORMAL;
-
-            parseThemeAddVar(namespace, name, id);
-          }
-
-          else if (Ascii.isWhitespace(c)) {
-            parser = Parser.VALUE_TRIM;
-          }
-
-          else {
-            parser = Parser.VALUE;
-
-            sb.append(c);
-          }
-        }
-
-        case VALUE_TRIM -> {
-          if (c == ';') {
-            parser = Parser.NORMAL;
-
-            parseThemeAddVar(namespace, name, id);
-          }
-
-          else if (Ascii.isWhitespace(c)) {
-            parser = Parser.VALUE_TRIM;
-          }
-
-          else {
-            parser = Parser.VALUE;
-
-            sb.append(' ');
-
-            sb.append(c);
-          }
-        }
-      }
-    }
-
-    if (parser != Parser.NORMAL) {
-      parseError(text, text.length(), "Unexpected end of theme");
-    }
-  }
-
   private int entryIndex;
-
-  private void parseThemeAddVar(Namespace namespace, String name, String id) {
-    String value;
-    value = sb.toString();
-
-    Map<String, ThemeEntry> entries;
-    entries = themeEntries.computeIfAbsent(namespace, ns -> new HashMap<>());
-
-    ThemeEntry entry;
-    entry = new ThemeEntry(entryIndex++, name, value, id);
-
-    if (entry.shouldClear()) {
-      entries.clear();
-
-      return;
-    }
-
-    entries.merge(entry.name, entry, (oldValue, newValue) -> oldValue.withValue(newValue));
-  }
 
   // ##################################################################
   // # END: Parse :: @theme {}
@@ -694,86 +353,6 @@ final class CssEngine implements CssEngineScanner.Adapter {
 
   // ##################################################################
   // # END: Parse
-  // ##################################################################
-
-  // ##################################################################
-  // # BEGIN: Theme validation
-  // ##################################################################
-
-  private final Set<String> colorKeywords = Util.createSet();
-
-  private final Map<String, String> keywords = Util.createMap();
-
-  private void validate() {
-    for (Map.Entry<Namespace, Map<String, ThemeEntry>> namespaceEntry : themeEntries.entrySet()) {
-      Namespace namespace;
-      namespace = namespaceEntry.getKey();
-
-      if (namespace == Namespace.CUSTOM) {
-        continue;
-      }
-
-      Consumer<String> keywordConsumer;
-      keywordConsumer = k -> {};
-
-      if (namespace == Namespace.COLOR) {
-        keywordConsumer = colorKeywords::add;
-      }
-
-      Function<String, String> keywordFunction;
-      keywordFunction = Function.identity();
-
-      if (namespace == Namespace.BREAKPOINT) {
-        keywordFunction = id -> "screen-" + id;
-      }
-
-      Map<String, ThemeEntry> namespaceEntries;
-      namespaceEntries = namespaceEntry.getValue();
-
-      for (ThemeEntry entry : namespaceEntries.values()) {
-        String id;
-        id = entry.id();
-
-        String keyword;
-        keyword = keywordFunction.apply(id);
-
-        keywordConsumer.accept(keyword);
-
-        String mappingValue;
-        mappingValue = "var(" + entry.name() + ")";
-
-        String maybeExisting;
-        maybeExisting = keywords.put(keyword, mappingValue);
-
-        if (maybeExisting != null) {
-          throw new IllegalArgumentException("Duplicate mapping for " + entry.name() + ": " + entry.value());
-        }
-      }
-    }
-
-    // generate breakpoint variants
-
-    Map<String, ThemeEntry> breakpoints;
-    breakpoints = themeEntries.getOrDefault(Namespace.BREAKPOINT, Map.of());
-
-    List<ThemeEntry> sorted;
-    sorted = new ArrayList<>(breakpoints.values());
-
-    sorted.sort(Comparator.naturalOrder());
-
-    for (ThemeEntry entry : sorted) {
-      String id;
-      id = entry.id();
-
-      CssVariant variant;
-      variant = new CssVariant.OfAtRule("@media (min-width: " + entry.value() + ")");
-
-      variant(id, variant);
-    }
-  }
-
-  // ##################################################################
-  // # END: Theme validation
   // ##################################################################
 
   // ##################################################################
@@ -1034,7 +613,7 @@ final class CssEngine implements CssEngineScanner.Adapter {
 
   private CssVariant variantByName(String name) {
     CssVariant result;
-    result = variants.get(name);
+    result = config.variant(name);
 
     if (result != null) {
       return result;
@@ -1091,7 +670,7 @@ final class CssEngine implements CssEngineScanner.Adapter {
       CssVariant descendant;
       descendant = new CssVariant.Suffix(" " + name);
 
-      variants.put(name, descendant);
+      config.variant(name, descendant);
 
       return descendant;
     }
@@ -1157,7 +736,7 @@ final class CssEngine implements CssEngineScanner.Adapter {
     suffix = name.substring(suffixIndex);
 
     CssVariant groupVariant;
-    groupVariant = variants.get(suffix);
+    groupVariant = config.variant(suffix);
 
     if (groupVariant != null) {
       return variantByNameOfGroup(name, groupVariant);
@@ -1180,7 +759,7 @@ final class CssEngine implements CssEngineScanner.Adapter {
       return null;
     }
 
-    variants.put(name, generatedGroupVariant);
+    config.variant(name, generatedGroupVariant);
 
     return generatedGroupVariant;
   }
@@ -1313,7 +892,7 @@ final class CssEngine implements CssEngineScanner.Adapter {
 
         // check for match
         final String keyword;
-        keyword = keywords.get(maybe);
+        keyword = config.keyword(maybe);
 
         if (keyword == null) {
           break;
@@ -1333,7 +912,7 @@ final class CssEngine implements CssEngineScanner.Adapter {
 
         // check for match
         final String keyword;
-        keyword = keywords.get(maybe);
+        keyword = config.keyword(maybe);
 
         if (keyword == null) {
           break;
@@ -1597,14 +1176,11 @@ final class CssEngine implements CssEngineScanner.Adapter {
 
     w.writeln(":root {");
 
-    UtilList<ThemeEntry> entries;
+    UtilList<Css.ThemeEntry> entries;
     entries = new UtilList<>();
 
-    Collection<Map<String, ThemeEntry>> values;
-    values = themeEntries.values();
-
-    for (Map<String, ThemeEntry> value : values) {
-      Collection<ThemeEntry> thisEntries;
+    for (Map<String, Css.ThemeEntry> value : config.themeEntries()) {
+      Collection<Css.ThemeEntry> thisEntries;
       thisEntries = value.values();
 
       entries.addAll(thisEntries);
@@ -1612,7 +1188,7 @@ final class CssEngine implements CssEngineScanner.Adapter {
 
     entries.sort(Comparator.naturalOrder());
 
-    for (ThemeEntry entry : entries) {
+    for (Css.ThemeEntry entry : entries) {
       w.indent(2);
 
       w.write(entry.name());
@@ -1842,40 +1418,12 @@ final class CssEngine implements CssEngineScanner.Adapter {
     return copy;
   }
 
-  final List<ThemeEntry> testThemeEntries() {
-    parseTheme(config.theme());
-
-    UtilList<ThemeEntry> entries;
-    entries = new UtilList<>();
-
-    Collection<Map<String, ThemeEntry>> values;
-    values = themeEntries.values();
-
-    for (Map<String, ThemeEntry> value : values) {
-      Collection<ThemeEntry> thisEntries;
-      thisEntries = value.values();
-
-      entries.addAll(thisEntries);
-    }
-
-    entries.sort(Comparator.naturalOrder());
-
-    return entries.toUnmodifiableList();
-  }
-
   final List<ThemeQueryEntry> testThemeQueryEntries(String query) {
     for (var entry : config.themeQueries()) {
       parseThemeQuery(entry);
     }
 
     return themeQueryEntries.get(query);
-  }
-
-  final List<CssVariant> testThemeVariants() {
-    Collection<CssVariant> values;
-    values = variants.values();
-
-    return List.copyOf(values);
   }
 
   // ##################################################################

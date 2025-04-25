@@ -76,10 +76,6 @@ abstract class CssEngineContext {
 
   final void writeContents(CssWriter w, int level) throws IOException {
     for (int idx = 0, size = utilities.size(); idx < size; idx++) {
-      if (idx != 0) {
-        w.writeln();
-      }
-
       final CssUtility utility;
       utility = utilities.get(idx);
 

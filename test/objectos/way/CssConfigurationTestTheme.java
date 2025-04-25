@@ -21,18 +21,18 @@ import java.util.List;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class CssEngineTestParseTheme {
+public class CssConfigurationTestTheme {
 
   @Test(description = "breakpoint :: just one")
   public void breakpoint01() {
-    List<CssEngine.ThemeEntry> entries;
+    List<Css.ThemeEntry> entries;
     entries = test("""
     --breakpoint-sm: 40rem;
     """);
 
     assertEquals(entries.size(), 1);
 
-    CssEngine.ThemeEntry entry0;
+    Css.ThemeEntry entry0;
     entry0 = entries.get(0);
 
     assertEquals(entry0.index(), 0);
@@ -42,14 +42,14 @@ public class CssEngineTestParseTheme {
 
   @Test(description = "colors :: just one")
   public void colors01() {
-    List<CssEngine.ThemeEntry> entries;
+    List<Css.ThemeEntry> entries;
     entries = test("""
     --color-stone-950: oklch(0.147 0.004 49.25);
     """);
 
     assertEquals(entries.size(), 1);
 
-    CssEngine.ThemeEntry entry0;
+    Css.ThemeEntry entry0;
     entry0 = entries.get(0);
 
     assertEquals(entry0.index(), 0);
@@ -59,7 +59,7 @@ public class CssEngineTestParseTheme {
 
   @Test(description = "colors :: two lines")
   public void colors02() {
-    List<CssEngine.ThemeEntry> entries;
+    List<Css.ThemeEntry> entries;
     entries = test("""
     --color-stone-950: oklch(0.147 0.004 49.25);
     --color-red-50: oklch(0.971 0.013 17.38);
@@ -67,14 +67,14 @@ public class CssEngineTestParseTheme {
 
     assertEquals(entries.size(), 2);
 
-    CssEngine.ThemeEntry entry0;
+    Css.ThemeEntry entry0;
     entry0 = entries.get(0);
 
     assertEquals(entry0.index(), 0);
     assertEquals(entry0.toString(), "--color-stone-950: oklch(0.147 0.004 49.25);");
     assertEquals(entry0.id(), "stone-950");
 
-    CssEngine.ThemeEntry entry1;
+    Css.ThemeEntry entry1;
     entry1 = entries.get(1);
 
     assertEquals(entry1.index(), 1);
@@ -84,7 +84,7 @@ public class CssEngineTestParseTheme {
 
   @Test(description = "colors :: multiple w/ blank lines")
   public void colors03() {
-    List<CssEngine.ThemeEntry> entries;
+    List<Css.ThemeEntry> entries;
     entries = test("""
     --color-orange-900: oklch(0.408 0.123 38.172);
     --color-orange-950: oklch(0.266 0.079 36.259);
@@ -94,21 +94,21 @@ public class CssEngineTestParseTheme {
 
     assertEquals(entries.size(), 3);
 
-    CssEngine.ThemeEntry entry0;
+    Css.ThemeEntry entry0;
     entry0 = entries.get(0);
 
     assertEquals(entry0.index(), 0);
     assertEquals(entry0.toString(), "--color-orange-900: oklch(0.408 0.123 38.172);");
     assertEquals(entry0.id(), "orange-900");
 
-    CssEngine.ThemeEntry entry1;
+    Css.ThemeEntry entry1;
     entry1 = entries.get(1);
 
     assertEquals(entry1.index(), 1);
     assertEquals(entry1.toString(), "--color-orange-950: oklch(0.266 0.079 36.259);");
     assertEquals(entry1.id(), "orange-950");
 
-    CssEngine.ThemeEntry entry2;
+    Css.ThemeEntry entry2;
     entry2 = entries.get(2);
 
     assertEquals(entry2.index(), 2);
@@ -118,7 +118,7 @@ public class CssEngineTestParseTheme {
 
   @Test(description = "colors :: it should trim the value")
   public void colors04() {
-    List<CssEngine.ThemeEntry> entries;
+    List<Css.ThemeEntry> entries;
     entries = test("""
     --color-orange-900:
        oklch(0.408 0.123        38.172)     ;
@@ -126,7 +126,7 @@ public class CssEngineTestParseTheme {
 
     assertEquals(entries.size(), 1);
 
-    CssEngine.ThemeEntry entry0;
+    Css.ThemeEntry entry0;
     entry0 = entries.get(0);
 
     assertEquals(entry0.index(), 0);
@@ -136,7 +136,7 @@ public class CssEngineTestParseTheme {
 
   @Test(description = "colors :: clear")
   public void colors05() {
-    List<CssEngine.ThemeEntry> entries;
+    List<Css.ThemeEntry> entries;
     entries = test("""
     --color-*: initial;
     """);
@@ -146,14 +146,14 @@ public class CssEngineTestParseTheme {
 
   @Test(description = "custom :: allow for values without a namespace")
   public void custom01() {
-    List<CssEngine.ThemeEntry> entries;
+    List<Css.ThemeEntry> entries;
     entries = test("""
     --rx: 16px;
     """);
 
     assertEquals(entries.size(), 1);
 
-    CssEngine.ThemeEntry entry0;
+    Css.ThemeEntry entry0;
     entry0 = entries.get(0);
 
     assertEquals(entry0.index(), 0);
@@ -163,14 +163,14 @@ public class CssEngineTestParseTheme {
 
   @Test(description = "font :: just one")
   public void font01() {
-    List<CssEngine.ThemeEntry> entries;
+    List<Css.ThemeEntry> entries;
     entries = test("""
     --font-display: Foo, "Foo bar";
     """);
 
     assertEquals(entries.size(), 1);
 
-    CssEngine.ThemeEntry entry0;
+    Css.ThemeEntry entry0;
     entry0 = entries.get(0);
 
     assertEquals(entry0.index(), 0);
@@ -551,15 +551,15 @@ public class CssEngineTestParseTheme {
     );
   }
 
-  private List<CssEngine.ThemeEntry> test(String theme) {
-    CssEngine engine;
-    engine = CssEngine.create(config -> {
-      config.noteSink(Y.noteSink());
+  private List<Css.ThemeEntry> test(String theme) {
+    final CssConfigurationBuilder builder;
+    builder = new CssConfigurationBuilder(true);
 
-      config.theme(theme);
-    });
+    builder.noteSink(Y.noteSink());
 
-    return engine.testThemeEntries();
+    builder.theme(theme);
+
+    return builder.testThemeEntries();
   }
 
 }

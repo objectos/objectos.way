@@ -232,7 +232,6 @@ final class AppReloader implements App.Reloader {
       else if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
         createdOrModified = true;
       }
-
     }
 
     final boolean valid;

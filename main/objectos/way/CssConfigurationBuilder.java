@@ -16,13 +16,21 @@
 package objectos.way;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Function;
+import objectos.way.CssEngine.Namespace;
 
 final class CssConfigurationBuilder implements Css.Configuration.Options {
-
-  private static final String EMPTY_THEME = "";
 
   private String base = Css.defaultBase();
 
@@ -36,9 +44,15 @@ final class CssConfigurationBuilder implements Css.Configuration.Options {
 
   private Set<Css.Layer> skipLayer = UtilUnmodifiableSet.of();
 
-  private String theme = EMPTY_THEME;
-
   private Map<String, String> themeQueries = Map.of();
+
+  CssConfigurationBuilder() {
+    parseTheme(Css.defaultTheme());
+  }
+
+  CssConfigurationBuilder(boolean test) {
+    /* noop */
+  }
 
   public final void base(String value) {
     base = Objects.requireNonNull(value, "value == null");
@@ -92,12 +106,331 @@ final class CssConfigurationBuilder implements Css.Configuration.Options {
     skipLayer.add(value);
   }
 
+  // ##################################################################
+  // # BEGIN: @theme
+  // ##################################################################
+
+  private int entryIndex;
+
+  private final Map<String, String> keywords = Util.createMap();
+
+  private final Map<String, Namespace> namespacePrefixes = namespacePrefixes();
+
+  private final StringBuilder sb = new StringBuilder();
+
+  private boolean theme;
+
+  private final Map<Namespace, Map<String, Css.ThemeEntry>> themeEntries = new EnumMap<>(Namespace.class);
+
   @Override
   public final void theme(String value) {
-    Check.state(theme == EMPTY_THEME, "Theme was already set");
+    Check.state(!theme, "Theme was already set");
 
-    theme = Objects.requireNonNull(value, "value == null");
+    parseTheme(value);
+
+    theme = true;
   }
+
+  private Map<String, Namespace> namespacePrefixes() {
+    Map<String, Namespace> map;
+    map = Util.createMap();
+
+    for (Namespace namespace : Namespace.values()) {
+      String name;
+      name = namespace.name();
+
+      String prefix;
+      prefix = name.toLowerCase(Locale.US);
+
+      map.put(prefix, namespace);
+    }
+
+    return map;
+  }
+
+  private void parseError(String text, int idx, String message) {
+    throw new IllegalArgumentException(message);
+  }
+
+  private void parseTheme(String text) {
+    enum Parser {
+
+      NORMAL,
+      HYPHEN1,
+      NAMESPACE_1,
+      NAMESPACE_N,
+      ID_1,
+      ID_N,
+      OPTIONAL_WS,
+      VALUE,
+      VALUE_TRIM;
+
+    }
+
+    Parser parser;
+    parser = Parser.NORMAL;
+
+    int startIndex;
+    startIndex = 0;
+
+    int auxIndex;
+    auxIndex = 0;
+
+    Namespace namespace;
+    namespace = null;
+
+    String name = null, id = null;
+
+    for (int idx = 0, len = text.length(); idx < len; idx++) {
+      char c;
+      c = text.charAt(idx);
+
+      switch (parser) {
+        case NORMAL -> {
+          if (Ascii.isWhitespace(c)) {
+            parser = Parser.NORMAL;
+          }
+
+          else if (c == '-') {
+            parser = Parser.HYPHEN1;
+
+            startIndex = idx;
+          }
+
+          else {
+            parseError(text, idx, "Expected start of --variable declaration");
+          }
+        }
+
+        case HYPHEN1 -> {
+          if (c == '-') {
+            parser = Parser.NAMESPACE_1;
+          }
+
+          else {
+            parseError(text, idx, "Expected start of --variable declaration");
+          }
+        }
+
+        case NAMESPACE_1 -> {
+          if (Ascii.isLetter(c)) {
+            parser = Parser.NAMESPACE_N;
+
+            auxIndex = idx;
+          }
+
+          else {
+            parseError(text, idx, "--variable name must start with a letter");
+          }
+        }
+
+        case NAMESPACE_N -> {
+          if (c == '-') {
+            parser = Parser.ID_1;
+
+            String maybeName;
+            maybeName = text.substring(auxIndex, idx);
+
+            namespace = namespacePrefixes.getOrDefault(maybeName, Namespace.CUSTOM);
+          }
+
+          else if (c == ':') {
+            parser = Parser.OPTIONAL_WS;
+
+            namespace = Namespace.CUSTOM;
+
+            name = text.substring(startIndex, idx);
+
+            id = null;
+          }
+
+          else if (Ascii.isLetterOrDigit(c)) {
+            parser = Parser.NAMESPACE_N;
+          }
+
+          else {
+            parseError(text, idx, "CSS variable name with invalid character=" + c);
+          }
+        }
+
+        case ID_1 -> {
+          if (Ascii.isLetterOrDigit(c) || c == '*') {
+            parser = Parser.ID_N;
+
+            auxIndex = idx;
+          }
+
+          else {
+            parseError(text, idx, "CSS variable name with invalid character=" + c);
+          }
+        }
+
+        case ID_N -> {
+          if (c == ':') {
+            parser = Parser.OPTIONAL_WS;
+
+            name = text.substring(startIndex, idx);
+
+            id = text.substring(auxIndex, idx);
+          }
+
+          else if (c == '-') {
+            parser = Parser.ID_N;
+          }
+
+          else if (Ascii.isLetterOrDigit(c)) {
+            parser = Parser.ID_N;
+          }
+
+          else {
+            parseError(text, idx, "CSS variable name with invalid character=" + c);
+          }
+        }
+
+        case OPTIONAL_WS -> {
+          if (Ascii.isWhitespace(c)) {
+            parser = Parser.OPTIONAL_WS;
+          }
+
+          else if (c == ';') {
+            parseError(text, idx, "Empty variable definition");
+          }
+
+          else {
+            parser = Parser.VALUE;
+
+            sb.setLength(0);
+
+            sb.append(c);
+          }
+        }
+
+        case VALUE -> {
+          if (c == ';') {
+            parser = Parser.NORMAL;
+
+            parseThemeAddVar(namespace, name, id);
+          }
+
+          else if (Ascii.isWhitespace(c)) {
+            parser = Parser.VALUE_TRIM;
+          }
+
+          else {
+            parser = Parser.VALUE;
+
+            sb.append(c);
+          }
+        }
+
+        case VALUE_TRIM -> {
+          if (c == ';') {
+            parser = Parser.NORMAL;
+
+            parseThemeAddVar(namespace, name, id);
+          }
+
+          else if (Ascii.isWhitespace(c)) {
+            parser = Parser.VALUE_TRIM;
+          }
+
+          else {
+            parser = Parser.VALUE;
+
+            sb.append(' ');
+
+            sb.append(c);
+          }
+        }
+      }
+    }
+
+    if (parser != Parser.NORMAL) {
+      parseError(text, text.length(), "Unexpected end of theme");
+    }
+  }
+
+  private void parseThemeAddVar(Namespace namespace, String name, String id) {
+    String value;
+    value = sb.toString();
+
+    Map<String, Css.ThemeEntry> entries;
+    entries = themeEntries.computeIfAbsent(namespace, ns -> new HashMap<>());
+
+    Css.ThemeEntry entry;
+    entry = new Css.ThemeEntry(entryIndex++, name, value, id);
+
+    if (entry.shouldClear()) {
+      entries.clear();
+
+      return;
+    }
+
+    entries.merge(entry.name(), entry, (oldValue, newValue) -> oldValue.withValue(newValue));
+  }
+
+  private void validateTheme() {
+    for (Map.Entry<Namespace, Map<String, Css.ThemeEntry>> namespaceEntry : themeEntries.entrySet()) {
+      Namespace namespace;
+      namespace = namespaceEntry.getKey();
+
+      if (namespace == Namespace.CUSTOM) {
+        continue;
+      }
+
+      Function<String, String> keywordFunction;
+      keywordFunction = Function.identity();
+
+      if (namespace == Namespace.BREAKPOINT) {
+        keywordFunction = id -> "screen-" + id;
+      }
+
+      Map<String, Css.ThemeEntry> namespaceEntries;
+      namespaceEntries = namespaceEntry.getValue();
+
+      for (Css.ThemeEntry entry : namespaceEntries.values()) {
+        String id;
+        id = entry.id();
+
+        String keyword;
+        keyword = keywordFunction.apply(id);
+
+        String mappingValue;
+        mappingValue = "var(" + entry.name() + ")";
+
+        String maybeExisting;
+        maybeExisting = keywords.put(keyword, mappingValue);
+
+        if (maybeExisting != null) {
+          throw new IllegalArgumentException("Duplicate mapping for " + entry.name() + ": " + entry.value());
+        }
+      }
+    }
+
+    // generate breakpoint variants
+
+    Map<String, Css.ThemeEntry> breakpoints;
+    breakpoints = themeEntries.getOrDefault(Namespace.BREAKPOINT, Map.of());
+
+    List<Css.ThemeEntry> sorted;
+    sorted = new ArrayList<>(breakpoints.values());
+
+    sorted.sort(Comparator.naturalOrder());
+
+    for (Css.ThemeEntry entry : sorted) {
+      String id;
+      id = entry.id();
+
+      CssVariant variant;
+      variant = new CssVariant.OfAtRule("@media (min-width: " + entry.value() + ")");
+
+      variant(id, variant);
+    }
+  }
+
+  // ##################################################################
+  // # END: @theme
+  // ##################################################################
 
   @Override
   public final void theme(String query, String value) {
@@ -117,6 +450,10 @@ final class CssConfigurationBuilder implements Css.Configuration.Options {
   }
 
   final CssConfiguration build() {
+    defaultVariants();
+
+    validateTheme();
+
     return new CssConfiguration(
         base,
 
@@ -130,10 +467,84 @@ final class CssConfigurationBuilder implements Css.Configuration.Options {
 
         UtilUnmodifiableSet.copyOf(skipLayer),
 
-        theme,
+        keywords,
 
-        UtilUnmodifiableList.copyOf(themeQueries.entrySet())
+        UtilUnmodifiableList.copyOf(themeEntries.values()),
+
+        UtilUnmodifiableList.copyOf(themeQueries.entrySet()),
+
+        variants
     );
   }
+
+  // ##################################################################
+  // # BEGIN: Default Variants
+  // ##################################################################
+
+  private final Map<String, CssVariant> variants = new LinkedHashMap<>();
+
+  private void defaultVariants() {
+    variant("dark", new CssVariant.OfAtRule("@media (prefers-color-scheme: dark)"));
+
+    variant("active", new CssVariant.Suffix(":active"));
+    variant("checked", new CssVariant.Suffix(":checked"));
+    variant("disabled", new CssVariant.Suffix(":disabled"));
+    variant("first-child", new CssVariant.Suffix(":first-child"));
+    variant("focus", new CssVariant.Suffix(":focus"));
+    variant("focus-visible", new CssVariant.Suffix(":focus-visible"));
+    variant("hover", new CssVariant.Suffix(":hover"));
+    variant("last-child", new CssVariant.Suffix(":last-child"));
+    variant("visited", new CssVariant.Suffix(":visited"));
+
+    variant("after", new CssVariant.Suffix("::after"));
+    variant("before", new CssVariant.Suffix("::before"));
+    variant("first-letter", new CssVariant.Suffix("::first-letter"));
+    variant("first-line", new CssVariant.Suffix("::first-line"));
+
+    variant("*", new CssVariant.Suffix(" > *"));
+    variant("**", new CssVariant.Suffix(" *"));
+  }
+
+  private void variant(String name, CssVariant variant) {
+    CssVariant maybeExisting;
+    maybeExisting = variants.put(name, variant);
+
+    if (maybeExisting == null) {
+      return;
+    }
+
+    // TODO restore existing and log?
+  }
+
+  // ##################################################################
+  // # END: Default Variants
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Test-only section
+  // ##################################################################
+
+  final List<Css.ThemeEntry> testThemeEntries() {
+    UtilList<Css.ThemeEntry> entries;
+    entries = new UtilList<>();
+
+    Collection<Map<String, Css.ThemeEntry>> values;
+    values = themeEntries.values();
+
+    for (Map<String, Css.ThemeEntry> value : values) {
+      Collection<Css.ThemeEntry> thisEntries;
+      thisEntries = value.values();
+
+      entries.addAll(thisEntries);
+    }
+
+    entries.sort(Comparator.naturalOrder());
+
+    return entries.toUnmodifiableList();
+  }
+
+  // ##################################################################
+  // # END: Test-only section
+  // ##################################################################
 
 }

@@ -301,8 +301,46 @@ public final class Css {
   }
 
   //
-  // V
+  // T
   //
+
+  record ThemeEntry(int index, String name, String value, String id) implements Comparable<ThemeEntry> {
+
+    @Override
+    public final int compareTo(ThemeEntry o) {
+      return Integer.compare(index, o.index);
+    }
+
+    public final Object key() {
+      return name;
+    }
+
+    @Override
+    public final String toString() {
+      StringBuilder out;
+      out = new StringBuilder();
+
+      writeTo(out);
+
+      return out.toString();
+    }
+
+    public final void writeTo(StringBuilder out) {
+      out.append(name);
+      out.append(": ");
+      out.append(value);
+      out.append(';');
+    }
+
+    final boolean shouldClear() {
+      return "*".equals(id) && "initial".equals(value);
+    }
+
+    final ThemeEntry withValue(ThemeEntry newValue) {
+      return new ThemeEntry(index, name, newValue.value, id);
+    }
+
+  }
 
   private Css() {}
 

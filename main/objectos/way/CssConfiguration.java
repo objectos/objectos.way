@@ -38,9 +38,13 @@ record CssConfiguration(
 
     Set<? extends Css.Layer> skipLayer,
 
-    String theme,
+    Map<String, String> keywords,
 
-    Iterable<? extends Map.Entry<String, String>> themeQueries
+    Iterable<? extends Map<String, Css.ThemeEntry>> themeEntries,
+
+    Iterable<? extends Map.Entry<String, String>> themeQueries,
+
+    Map<String, CssVariant> variants
 
 ) implements Css.Configuration {
 
@@ -68,6 +72,18 @@ record CssConfiguration(
 
   final boolean contains(Layer value) {
     return skipLayer.contains(value);
+  }
+
+  final String keyword(String name) {
+    return keywords.get(name);
+  }
+
+  final CssVariant variant(String name) {
+    return variants.get(name);
+  }
+
+  final CssVariant variant(String name, CssVariant value) {
+    return variants.put(name, value);
   }
 
 }
