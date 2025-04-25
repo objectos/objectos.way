@@ -19,10 +19,10 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import objectos.way.Css.Layer;
 
 record CssConfiguration(
 
@@ -42,7 +42,7 @@ record CssConfiguration(
 
     Iterable<? extends Map<String, Css.ThemeEntry>> themeEntries,
 
-    Iterable<? extends Map.Entry<String, String>> themeQueries,
+    Iterable<? extends Map.Entry<String, List<Css.ThemeQueryEntry>>> themeQueryEntries,
 
     Map<String, CssVariant> variants
 
@@ -70,7 +70,7 @@ record CssConfiguration(
     engine.generate(out);
   }
 
-  final boolean contains(Layer value) {
+  final boolean contains(Css.Layer value) {
     return skipLayer.contains(value);
   }
 

@@ -19,12 +19,12 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.SequencedMap;
 import java.util.Set;
 import java.util.function.Consumer;
+import objectos.way.Css.ThemeQueryEntry;
 
 final class CssEngine implements CssEngineScanner.Adapter {
 
@@ -90,10 +90,6 @@ final class CssEngine implements CssEngineScanner.Adapter {
   // ##################################################################
 
   public final void execute() {
-    for (var entry : config.themeQueries()) {
-      parseThemeQuery(entry);
-    }
-
     // let's apply the spec
     spec();
 
@@ -127,229 +123,7 @@ final class CssEngine implements CssEngineScanner.Adapter {
 
   private final StringBuilder sb = new StringBuilder();
 
-  // ##################################################################
-  // # BEGIN: Parse :: @theme {}
-  // ##################################################################
-
-  private void parseError(String text, int idx, String message) {
-    throw new IllegalArgumentException(message);
-  }
-
   private int entryIndex;
-
-  // ##################################################################
-  // # END: Parse :: @theme {}
-  // ##################################################################
-
-  // ##################################################################
-  // # BEGIN: Parse :: @theme w/ query {}
-  // ##################################################################
-
-  @Lang.VisibleForTesting
-  record ThemeQueryEntry(String name, String value) {
-    @Override
-    public final String toString() {
-      StringBuilder out;
-      out = new StringBuilder();
-
-      writeTo(out);
-
-      return out.toString();
-    }
-
-    public final void writeTo(StringBuilder out) {
-      out.append(name);
-      out.append(": ");
-      out.append(value);
-      out.append(';');
-    }
-  }
-
-  private Map<String, List<ThemeQueryEntry>> themeQueryEntries;
-
-  private void parseThemeQuery(Map.Entry<String, String> entry) {
-    String key;
-    key = entry.getKey();
-
-    String query;
-    query = parseThemeQueryKey(key);
-
-    String value;
-    value = entry.getValue();
-
-    parseThemeQueryValue(query, value);
-  }
-
-  private String parseThemeQueryKey(String key) {
-    if ("@media (prefers-color-scheme: dark)".equals(key)) {
-      return key;
-    }
-
-    throw new IllegalArgumentException("Only @media (prefers-color-scheme: dark) is currently supported");
-  }
-
-  private void parseThemeQueryValue(String query, String text) {
-    enum Parser {
-
-      NORMAL,
-      HYPHEN1,
-      NAME_1,
-      NAME_N,
-      OPTIONAL_WS,
-      VALUE,
-      VALUE_TRIM;
-
-    }
-
-    Parser parser;
-    parser = Parser.NORMAL;
-
-    int startIndex;
-    startIndex = 0;
-
-    String name = null;
-
-    for (int idx = 0, len = text.length(); idx < len; idx++) {
-      char c;
-      c = text.charAt(idx);
-
-      switch (parser) {
-        case NORMAL -> {
-          if (Ascii.isWhitespace(c)) {
-            parser = Parser.NORMAL;
-          }
-
-          else if (c == '-') {
-            parser = Parser.HYPHEN1;
-
-            startIndex = idx;
-          }
-
-          else {
-            parseError(text, idx, "Expected start of --variable declaration");
-          }
-        }
-
-        case HYPHEN1 -> {
-          if (c == '-') {
-            parser = Parser.NAME_1;
-          }
-
-          else {
-            parseError(text, idx, "Expected start of --variable declaration");
-          }
-        }
-
-        case NAME_1 -> {
-          if (Ascii.isLetter(c)) {
-            parser = Parser.NAME_N;
-          }
-
-          else {
-            parseError(text, idx, "--variable name must start with a letter");
-          }
-        }
-
-        case NAME_N -> {
-          if (Ascii.isLetterOrDigit(c) || c == '-') {
-            parser = Parser.NAME_N;
-          }
-
-          else if (c == ':') {
-            parser = Parser.OPTIONAL_WS;
-
-            name = text.substring(startIndex, idx);
-          }
-
-          else {
-            parseError(text, idx, "CSS variable name with invalid character=" + c);
-          }
-        }
-
-        case OPTIONAL_WS -> {
-          if (Ascii.isWhitespace(c)) {
-            parser = Parser.OPTIONAL_WS;
-          }
-
-          else if (c == ';') {
-            parseError(text, idx, "Empty variable definition");
-          }
-
-          else {
-            parser = Parser.VALUE;
-
-            sb.setLength(0);
-
-            sb.append(c);
-          }
-        }
-
-        case VALUE -> {
-          if (c == ';') {
-            parser = Parser.NORMAL;
-
-            parseThemeQueryAdd(query, name);
-          }
-
-          else if (Ascii.isWhitespace(c)) {
-            parser = Parser.VALUE_TRIM;
-          }
-
-          else {
-            parser = Parser.VALUE;
-
-            sb.append(c);
-          }
-        }
-
-        case VALUE_TRIM -> {
-          if (c == ';') {
-            parser = Parser.NORMAL;
-
-            parseThemeQueryAdd(query, name);
-          }
-
-          else if (Ascii.isWhitespace(c)) {
-            parser = Parser.VALUE_TRIM;
-          }
-
-          else {
-            parser = Parser.VALUE;
-
-            sb.append(' ');
-
-            sb.append(c);
-          }
-        }
-      }
-    }
-  }
-
-  private void parseThemeQueryAdd(String query, String name) {
-    String value;
-    value = sb.toString();
-
-    ThemeQueryEntry entry;
-    entry = new ThemeQueryEntry(name, value);
-
-    List<ThemeQueryEntry> list;
-
-    if (themeQueryEntries == null) {
-      themeQueryEntries = LinkedHashMap.newLinkedHashMap(2);
-
-      list = Util.createList();
-
-      themeQueryEntries.put(query, list);
-    } else {
-      list = themeQueryEntries.computeIfAbsent(query, k -> Util.createList());
-    }
-
-    list.add(entry);
-  }
-
-  // ##################################################################
-  // # END: Parse :: @theme w/ query {}
-  // ##################################################################
 
   // ##################################################################
   // # END: Parse
@@ -1201,37 +975,35 @@ final class CssEngine implements CssEngineScanner.Adapter {
 
     w.writeln('}');
 
-    if (themeQueryEntries != null) {
-      for (Map.Entry<String, List<ThemeQueryEntry>> queryEntry : themeQueryEntries.entrySet()) {
-        w.indent(1);
+    for (Map.Entry<String, List<ThemeQueryEntry>> queryEntry : config.themeQueryEntries()) {
+      w.indent(1);
 
-        String query;
-        query = queryEntry.getKey();
+      String query;
+      query = queryEntry.getKey();
 
-        w.write(query);
-        w.writeln(" {");
+      w.write(query);
+      w.writeln(" {");
 
-        w.indent(2);
+      w.indent(2);
 
-        w.writeln(":root {");
+      w.writeln(":root {");
 
-        for (ThemeQueryEntry entry : queryEntry.getValue()) {
-          w.indent(3);
+      for (ThemeQueryEntry entry : queryEntry.getValue()) {
+        w.indent(3);
 
-          w.write(entry.name());
-          w.write(": ");
-          w.write(entry.value());
-          w.writeln(';');
-        }
-
-        w.indent(2);
-
-        w.writeln('}');
-
-        w.indent(1);
-
-        w.writeln('}');
+        w.write(entry.name());
+        w.write(": ");
+        w.write(entry.value());
+        w.writeln(';');
       }
+
+      w.indent(2);
+
+      w.writeln('}');
+
+      w.indent(1);
+
+      w.writeln('}');
     }
 
     w.writeln('}');
@@ -1416,14 +1188,6 @@ final class CssEngine implements CssEngineScanner.Adapter {
     tokens.clear();
 
     return copy;
-  }
-
-  final List<ThemeQueryEntry> testThemeQueryEntries(String query) {
-    for (var entry : config.themeQueries()) {
-      parseThemeQuery(entry);
-    }
-
-    return themeQueryEntries.get(query);
   }
 
   // ##################################################################

@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
+import objectos.way.Css.ThemeQueryEntry;
 import objectos.way.CssEngine.Namespace;
 
 final class CssConfigurationBuilder implements Css.Configuration.Options {
@@ -44,10 +45,10 @@ final class CssConfigurationBuilder implements Css.Configuration.Options {
 
   private Set<Css.Layer> skipLayer = UtilUnmodifiableSet.of();
 
-  private Map<String, String> themeQueries = Map.of();
-
   CssConfigurationBuilder() {
     parseTheme(Css.defaultTheme());
+
+    defaultVariants();
   }
 
   CssConfigurationBuilder(boolean test) {
@@ -432,26 +433,199 @@ final class CssConfigurationBuilder implements Css.Configuration.Options {
   // # END: @theme
   // ##################################################################
 
+  // ##################################################################
+  // # BEGIN: Parse :: @theme w/ query {}
+  // ##################################################################
+
+  private Map<String, List<Css.ThemeQueryEntry>> themeQueryEntries;
+
   @Override
   public final void theme(String query, String value) {
     Objects.requireNonNull(query, "query == null");
     Objects.requireNonNull(value, "value == null");
 
-    if (themeQueries.isEmpty()) {
-      themeQueries = Util.createSequencedMap();
+    final String key;
+    key = parseThemeQueryKey(query);
+
+    if (themeQueryEntries != null && themeQueryEntries.containsKey(key)) {
+      throw new IllegalStateException("Theme was already set for " + key);
     }
 
-    String maybeExisting;
-    maybeExisting = themeQueries.put(query, value);
+    parseThemeQueryValue(query, value);
+  }
 
-    if (maybeExisting != null) {
-      throw new IllegalStateException("Theme was already set for " + query);
+  private String parseThemeQueryKey(String key) {
+    if ("@media (prefers-color-scheme: dark)".equals(key)) {
+      return key;
+    }
+
+    throw new IllegalArgumentException("Only @media (prefers-color-scheme: dark) is currently supported");
+  }
+
+  private void parseThemeQueryValue(String query, String text) {
+    enum Parser {
+
+      NORMAL,
+      HYPHEN1,
+      NAME_1,
+      NAME_N,
+      OPTIONAL_WS,
+      VALUE,
+      VALUE_TRIM;
+
+    }
+
+    Parser parser;
+    parser = Parser.NORMAL;
+
+    int startIndex;
+    startIndex = 0;
+
+    String name = null;
+
+    for (int idx = 0, len = text.length(); idx < len; idx++) {
+      char c;
+      c = text.charAt(idx);
+
+      switch (parser) {
+        case NORMAL -> {
+          if (Ascii.isWhitespace(c)) {
+            parser = Parser.NORMAL;
+          }
+
+          else if (c == '-') {
+            parser = Parser.HYPHEN1;
+
+            startIndex = idx;
+          }
+
+          else {
+            parseError(text, idx, "Expected start of --variable declaration");
+          }
+        }
+
+        case HYPHEN1 -> {
+          if (c == '-') {
+            parser = Parser.NAME_1;
+          }
+
+          else {
+            parseError(text, idx, "Expected start of --variable declaration");
+          }
+        }
+
+        case NAME_1 -> {
+          if (Ascii.isLetter(c)) {
+            parser = Parser.NAME_N;
+          }
+
+          else {
+            parseError(text, idx, "--variable name must start with a letter");
+          }
+        }
+
+        case NAME_N -> {
+          if (Ascii.isLetterOrDigit(c) || c == '-') {
+            parser = Parser.NAME_N;
+          }
+
+          else if (c == ':') {
+            parser = Parser.OPTIONAL_WS;
+
+            name = text.substring(startIndex, idx);
+          }
+
+          else {
+            parseError(text, idx, "CSS variable name with invalid character=" + c);
+          }
+        }
+
+        case OPTIONAL_WS -> {
+          if (Ascii.isWhitespace(c)) {
+            parser = Parser.OPTIONAL_WS;
+          }
+
+          else if (c == ';') {
+            parseError(text, idx, "Empty variable definition");
+          }
+
+          else {
+            parser = Parser.VALUE;
+
+            sb.setLength(0);
+
+            sb.append(c);
+          }
+        }
+
+        case VALUE -> {
+          if (c == ';') {
+            parser = Parser.NORMAL;
+
+            parseThemeQueryAdd(query, name);
+          }
+
+          else if (Ascii.isWhitespace(c)) {
+            parser = Parser.VALUE_TRIM;
+          }
+
+          else {
+            parser = Parser.VALUE;
+
+            sb.append(c);
+          }
+        }
+
+        case VALUE_TRIM -> {
+          if (c == ';') {
+            parser = Parser.NORMAL;
+
+            parseThemeQueryAdd(query, name);
+          }
+
+          else if (Ascii.isWhitespace(c)) {
+            parser = Parser.VALUE_TRIM;
+          }
+
+          else {
+            parser = Parser.VALUE;
+
+            sb.append(' ');
+
+            sb.append(c);
+          }
+        }
+      }
     }
   }
 
-  final CssConfiguration build() {
-    defaultVariants();
+  private void parseThemeQueryAdd(String query, String name) {
+    String value;
+    value = sb.toString();
 
+    Css.ThemeQueryEntry entry;
+    entry = new Css.ThemeQueryEntry(name, value);
+
+    List<Css.ThemeQueryEntry> list;
+
+    if (themeQueryEntries == null) {
+      themeQueryEntries = LinkedHashMap.newLinkedHashMap(2);
+
+      list = Util.createList();
+
+      themeQueryEntries.put(query, list);
+    } else {
+      list = themeQueryEntries.computeIfAbsent(query, k -> Util.createList());
+    }
+
+    list.add(entry);
+  }
+
+  // ##################################################################
+  // # END: Parse :: @theme w/ query {}
+  // ##################################################################
+
+  final CssConfiguration build() {
     validateTheme();
 
     return new CssConfiguration(
@@ -471,7 +645,7 @@ final class CssConfigurationBuilder implements Css.Configuration.Options {
 
         UtilUnmodifiableList.copyOf(themeEntries.values()),
 
-        UtilUnmodifiableList.copyOf(themeQueries.entrySet()),
+        themeQueryEntries != null ? UtilUnmodifiableList.copyOf(themeQueryEntries.entrySet()) : List.of(),
 
         variants
     );
@@ -541,6 +715,10 @@ final class CssConfigurationBuilder implements Css.Configuration.Options {
     entries.sort(Comparator.naturalOrder());
 
     return entries.toUnmodifiableList();
+  }
+
+  final List<ThemeQueryEntry> testThemeQueryEntries(String query) {
+    return themeQueryEntries.get(query);
   }
 
   // ##################################################################

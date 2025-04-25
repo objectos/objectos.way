@@ -342,6 +342,27 @@ public final class Css {
 
   }
 
+  record ThemeQueryEntry(String name, String value) {
+
+    @Override
+    public final String toString() {
+      StringBuilder out;
+      out = new StringBuilder();
+
+      writeTo(out);
+
+      return out.toString();
+    }
+
+    public final void writeTo(StringBuilder out) {
+      out.append(name);
+      out.append(": ");
+      out.append(value);
+      out.append(';');
+    }
+
+  }
+
   private Css() {}
 
   //

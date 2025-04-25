@@ -19,10 +19,9 @@ import static org.testng.Assert.assertEquals;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import objectos.way.CssEngine.ThemeQueryEntry;
 import org.testng.annotations.Test;
 
-public class CssEngineTestParseThemeQuery {
+public class CssConfigurationTestThemeQuery {
 
   @Test(description = "single entry")
   public void query01() {
@@ -103,14 +102,15 @@ public class CssEngineTestParseThemeQuery {
   }
 
   private void test(String query, String theme, String expected) {
-    CssEngine engine;
-    engine = CssEngine.create(config -> {
-      config.noteSink(Y.noteSink());
+    final CssConfigurationBuilder builder;
+    builder = new CssConfigurationBuilder(true);
 
-      config.theme(query, theme);
-    });
+    builder.noteSink(Y.noteSink());
 
-    List<ThemeQueryEntry> list = engine.testThemeQueryEntries(query);
+    builder.theme(query, theme);
+
+    List<Css.ThemeQueryEntry> list;
+    list = builder.testThemeQueryEntries(query);
 
     assertEquals(
         list.stream()
