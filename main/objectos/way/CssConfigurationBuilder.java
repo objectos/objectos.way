@@ -29,9 +29,20 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import objectos.way.Css.ThemeQueryEntry;
-import objectos.way.CssEngine.Namespace;
 
 final class CssConfigurationBuilder implements Css.Configuration.Options {
+
+  private enum Namespace {
+
+    BREAKPOINT,
+
+    COLOR,
+
+    FONT,
+
+    CUSTOM;
+
+  }
 
   private String base = Css.defaultBase();
 

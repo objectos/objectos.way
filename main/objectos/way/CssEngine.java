@@ -15,10 +15,13 @@
  */
 package objectos.way;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.SequencedMap;
@@ -29,6 +32,10 @@ import objectos.way.Css.ThemeQueryEntry;
 final class CssEngine implements CssEngineScanner.Adapter {
 
   record Notes(
+      Note.Ref1<String> classNotFound,
+      Note.Ref2<String, IOException> classIoError,
+      Note.Ref1<String> classLoaded,
+
       Note.Ref2<String, String> keyNotFound,
       Note.Ref3<String, String, Set<Css.Key>> matchNotFound,
       Note.Ref2<Css.Key, String> negativeNotSupported
@@ -39,6 +46,10 @@ final class CssEngine implements CssEngineScanner.Adapter {
       s = CssEngine.class;
 
       return new Notes(
+          Note.Ref1.create(s, "CNF", Note.WARN),
+          Note.Ref2.create(s, "IOE", Note.WARN),
+          Note.Ref1.create(s, "REA", Note.DEBUG),
+
           Note.Ref2.create(s, "Css.Key not found", Note.DEBUG),
           Note.Ref3.create(s, "Match not found", Note.INFO),
           Note.Ref2.create(s, "Does not allow negative values", Note.WARN)
@@ -47,10 +58,150 @@ final class CssEngine implements CssEngineScanner.Adapter {
 
   }
 
+  static final byte $SCAN = 1;
+  static final byte $SCAN_CLASS = 2;
+  static final byte $SCAN_CLASS_NEXT = 3;
+  static final byte $SCAN_DIRECTORY = 4;
+  static final byte $SCAN_DIRECTORY_NEXT = 5;
+  static final byte $SCAN_BYTES = 6;
+
+  static final byte $OK = 10;
+  static final byte $ERROR = 11;
+
+  private static final Notes NOTES = Notes.get();
+
+  @SuppressWarnings("unused")
+  private Lang.ClassReader classReader;
+
+  private Iterable<? extends Class<?>> classesToScan;
+
+  private Note.Sink noteSink;
+
+  private Object object0;
+
+  private Object object1;
+
+  private byte state;
+
+  @SuppressWarnings("unused")
+  private byte stateNext;
+
+  public final void writeTo(Appendable out) throws IOException {
+    state = $SCAN;
+
+    while (state < $OK) {
+      state = execute(state);
+    }
+  }
+
+  // ##################################################################
+  // # BEGIN: State Machine
+  // ##################################################################
+
+  private byte execute(byte state) {
+    return switch (state) {
+      case $SCAN -> executeScan();
+      case $SCAN_CLASS -> executeScanClass();
+      case $SCAN_CLASS_NEXT -> executeScanClassNext();
+      case $SCAN_BYTES -> executeScanBytes();
+
+      default -> throw new AssertionError("Unexpected state=" + state);
+    };
+  }
+
+  // ##################################################################
+  // # END: State Machine
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Scan
+  // ##################################################################
+
+  private byte executeScan() {
+    object0 = classesToScan.iterator();
+
+    return $SCAN_CLASS;
+  }
+
+  private byte executeScanClass() {
+    final Iterator<?> iterator;
+    iterator = (Iterator<?>) object0;
+
+    if (iterator.hasNext()) {
+      object1 = iterator.next();
+
+      return $SCAN_CLASS_NEXT;
+    } else {
+      return $SCAN_DIRECTORY;
+    }
+  }
+
+  private byte executeScanClassNext() {
+    final Class<?> clazz;
+    clazz = (Class<?>) object1;
+
+    final String binaryName;
+    binaryName = clazz.getName();
+
+    // 0. load class file
+
+    String resourceName;
+    resourceName = binaryName.replace('.', '/');
+
+    resourceName += ".class";
+
+    final ClassLoader loader;
+    loader = ClassLoader.getSystemClassLoader();
+
+    final InputStream in;
+    in = loader.getResourceAsStream(resourceName);
+
+    if (in == null) {
+      noteSink.send(NOTES.classNotFound, binaryName);
+
+      return $SCAN_CLASS;
+    }
+
+    try (in) {
+      final ByteArrayOutputStream out;
+      out = new ByteArrayOutputStream();
+
+      in.transferTo(out);
+
+      object1 = out.toByteArray();
+
+      noteSink.send(notes.classLoaded, binaryName);
+
+      return $SCAN_BYTES;
+    } catch (IOException e) {
+      noteSink.send(notes.classIoError, binaryName, e);
+
+      return $SCAN_CLASS;
+    }
+  }
+
+  private byte executeScanBytes() {
+    @SuppressWarnings("unused")
+    final byte[] bytes;
+    bytes = (byte[]) object1;
+
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  // ##################################################################
+  // # END: Scan
+  // ##################################################################
+
   private final CssConfiguration config;
+
+  private int entryIndex;
 
   @SuppressWarnings("unused")
   private final Notes notes = Notes.get();
+
+  private final Map<String, Css.Key> prefixes = Util.createMap();
+
+  private final StringBuilder sb = new StringBuilder();
 
   CssEngine(CssConfiguration config) {
     this.config = config;
@@ -105,35 +256,8 @@ final class CssEngine implements CssEngineScanner.Adapter {
   // ##################################################################
 
   // ##################################################################
-  // # BEGIN: Parse
-  // ##################################################################
-
-  @Lang.VisibleForTesting
-  enum Namespace {
-
-    BREAKPOINT,
-
-    COLOR,
-
-    FONT,
-
-    CUSTOM;
-
-  }
-
-  private final StringBuilder sb = new StringBuilder();
-
-  private int entryIndex;
-
-  // ##################################################################
-  // # END: Parse
-  // ##################################################################
-
-  // ##################################################################
   // # BEGIN: Spec
   // ##################################################################
-
-  private final Map<String, Css.Key> prefixes = Util.createMap();
 
   private void spec() {
     for (Css.Key key : Css.Key.values()) {
