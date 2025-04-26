@@ -310,7 +310,7 @@ final class CssEngine implements CssEngineScanner.Adapter {
   }
 
   @Override
-  public final void processStringConstant(String value) {
+  public final void accept(String value) {
     enum Splitter {
       NORMAL,
 

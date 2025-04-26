@@ -109,7 +109,7 @@ public class CssEngineScannerTest {
     CssEngineScanner.Adapter adapter;
     adapter = new CssEngineScanner.Adapter() {
       @Override
-      public void processStringConstant(String s) { result.add(s); }
+      public void accept(String s) { result.add(s); }
 
       @Override
       public void sourceName(String value) {}

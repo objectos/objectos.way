@@ -24,31 +24,29 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.ElementType;
 import java.util.Set;
-import org.testng.annotations.BeforeClass;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class LangClassReaderTest {
 
-  private Lang.ClassReader reader;
-
-  @BeforeClass
-  public void beforeClass() {
-    reader = Lang.createClassReader(TestingNoteSink.INSTANCE);
-  }
+  private final Lang.ClassReader reader = Lang.createClassReader(TestingNoteSink.INSTANCE);
 
   @Test
-  public void isAnnotationPresent01() throws IOException {
+  public void annotatedWith01() throws Exception {
     @App.DoNotReload
     class Subject {}
 
-    init(Subject.class);
+    final byte[] bytes;
+    bytes = loadBytes(Subject.class);
 
-    assertFalse(reader.isAnnotationPresent(TestingAnnotations.RetentionClass.class));
-    assertTrue(reader.isAnnotationPresent(App.DoNotReload.class));
+    reader.init(bytes);
+
+    assertFalse(reader.annotatedWith(TestingAnnotations.RetentionClass.class));
+    assertTrue(reader.annotatedWith(App.DoNotReload.class));
   }
 
   @Test
-  public void isAnnotationPresent02() throws IOException {
+  public void annotatedWith02() throws Exception {
     @TestingAnnotations.ConstantValues(
         byteValue = 1, charValue = 'c', doubleValue = 2.34, floatValue = 7.89F,
         intValue = 345, longValue = 890, shortValue = 523, booleanValue = true,
@@ -63,29 +61,35 @@ public class LangClassReaderTest {
       }
     }
 
-    init(Subject.class);
+    final byte[] bytes;
+    bytes = loadBytes(Subject.class);
 
-    assertFalse(reader.isAnnotationPresent(TestingAnnotations.RetentionClass.class));
-    assertTrue(reader.isAnnotationPresent(TestingAnnotations.ConstantValues.class));
+    reader.init(bytes);
+
+    assertFalse(reader.annotatedWith(TestingAnnotations.RetentionClass.class));
+    assertTrue(reader.annotatedWith(TestingAnnotations.ConstantValues.class));
   }
 
   @Test
-  public void isAnnotationPresent03() throws IOException {
+  public void annotatedWith03() throws Exception {
     @TestingAnnotations.EnumConstValue(ElementType.ANNOTATION_TYPE)
     @TestingAnnotations.ClassInfoValue(Lang.ClassReader.class)
     @TestingAnnotations.AnnotationValue(@TestingAnnotations.ClassInfoValue(Integer.class))
     class Subject {}
 
-    init(Subject.class);
+    final byte[] bytes;
+    bytes = loadBytes(Subject.class);
 
-    assertFalse(reader.isAnnotationPresent(TestingAnnotations.RetentionClass.class));
-    assertTrue(reader.isAnnotationPresent(TestingAnnotations.EnumConstValue.class));
-    assertTrue(reader.isAnnotationPresent(TestingAnnotations.ClassInfoValue.class));
-    assertTrue(reader.isAnnotationPresent(TestingAnnotations.AnnotationValue.class));
+    reader.init(bytes);
+
+    assertFalse(reader.annotatedWith(TestingAnnotations.RetentionClass.class));
+    assertTrue(reader.annotatedWith(TestingAnnotations.EnumConstValue.class));
+    assertTrue(reader.annotatedWith(TestingAnnotations.ClassInfoValue.class));
+    assertTrue(reader.annotatedWith(TestingAnnotations.AnnotationValue.class));
   }
 
   @Test
-  public void isAnnotationPresent04() throws IOException {
+  public void isAnnotationPresent04() throws Exception {
     @TestingAnnotations.ArrayValue(
         constantArray = {"a", "b", "c"},
         enumArray = {ElementType.ANNOTATION_TYPE, ElementType.PACKAGE},
@@ -97,14 +101,17 @@ public class LangClassReaderTest {
     )
     class Subject {}
 
-    init(Subject.class);
+    final byte[] bytes;
+    bytes = loadBytes(Subject.class);
 
-    assertFalse(reader.isAnnotationPresent(TestingAnnotations.RetentionClass.class));
-    assertTrue(reader.isAnnotationPresent(TestingAnnotations.ArrayValue.class));
+    reader.init(bytes);
+
+    assertFalse(reader.annotatedWith(TestingAnnotations.RetentionClass.class));
+    assertTrue(reader.annotatedWith(TestingAnnotations.ArrayValue.class));
   }
 
   @Test
-  public void processStringConstants01() throws IOException {
+  public void visitStrings01() throws Exception {
     @SuppressWarnings("unused")
     class Subject {
       final String A = "first";
@@ -112,36 +119,56 @@ public class LangClassReaderTest {
       void foo() {
         consume("second");
       }
+
+      private void consume(String string) {}
     }
 
-    init(Subject.class);
+    final byte[] bytes;
+    bytes = loadBytes(Subject.class);
+
+    reader.init(bytes);
+
+    Set<String> set;
+    set = Util.createSet();
+
+    reader.visitStrings(set::add);
 
     assertEquals(
-        processStringConstants(),
+        set,
 
         Set.of("first", "second")
     );
   }
 
-  private void consume(String string) {}
+  @Test
+  public void visitStrings02() throws Exception {
+    @SuppressWarnings("unused")
+    @TestingAnnotations.RetentionClass
+    class Subject {
+      final String a = "a";
+      final String b = "b";
+      final String c = "c";
+    }
 
-  private void init(Class<?> clazz) throws IOException {
-    String binaryName;
-    binaryName = clazz.getName();
+    final byte[] bytes;
+    bytes = loadBytes(Subject.class);
 
-    byte[] bytes;
-    bytes = loadBytes(clazz);
+    reader.init(bytes);
 
-    reader.init(binaryName, bytes);
-  }
+    if (reader.annotatedWith(TestingAnnotations.RetentionClass.class)) {
+      Set<String> set;
+      set = Util.createSet();
 
-  private Set<String> processStringConstants() {
-    Set<String> set;
-    set = Util.createSet();
+      reader.visitStrings(set::add);
 
-    reader.processStringConstants(set::add);
+      assertEquals(
+          set,
 
-    return set;
+          Set.of("a", "b", "c")
+      );
+    } else {
+      Assert.fail();
+    }
   }
 
   private byte[] loadBytes(Class<?> clazz) throws IOException {

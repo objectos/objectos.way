@@ -36,28 +36,28 @@ public class CssEngineTestScan {
 
   @Test(description = "single valid utility")
   public void processStringConstant01() {
-    engine.processStringConstant("display:block");
+    engine.accept("display:block");
 
     assertEquals(engine.testProcess(), Set.of("display:block"));
   }
 
   @Test(description = "space separated utilities")
-  public void processStringConstant02() {
-    engine.processStringConstant("flex:1 cursor:pointer font-weight:400");
+  public void accept02() {
+    engine.accept("flex:1 cursor:pointer font-weight:400");
 
     assertEquals(engine.testProcess(), Set.of("flex:1", "cursor:pointer", "font-weight:400"));
   }
 
   @Test(description = "trailing whitespace")
   public void processStringConstant03() {
-    engine.processStringConstant("flex:2 ");
+    engine.accept("flex:2 ");
 
     assertEquals(engine.testProcess(), Set.of("flex:2"));
   }
 
   @Test(description = "text block")
   public void processStringConstant04() {
-    engine.processStringConstant("""
+    engine.accept("""
     display:none gap:0
     cursor:not-allowed flex:1
     ignore-me
@@ -69,7 +69,7 @@ public class CssEngineTestScan {
 
   @Test(description = "edge cases")
   public void processStringConstant05() {
-    engine.processStringConstant("md::2px");
+    engine.accept("md::2px");
 
     assertEquals(engine.testProcess(), Set.of("md::2px"));
   }

@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import objectos.way.Lang.InvalidClassFileException;
 
 final class AppReloader implements App.Reloader {
 
@@ -329,7 +330,9 @@ final class AppReloader implements App.Reloader {
         byte[] bytes;
         bytes = Files.readAllBytes(file);
 
-        if (doNotReload(name, bytes)) {
+        classReader.init(bytes);
+
+        if (classReader.annotatedWith(App.DoNotReload.class)) {
           noteSink.send(notes.skipped, name);
 
           return load1(name);
@@ -345,6 +348,8 @@ final class AppReloader implements App.Reloader {
         return load1(name);
       } catch (IOException e) {
         throw new ClassNotFoundException(name, e);
+      } catch (InvalidClassFileException e) {
+        throw new ClassNotFoundException(name, e);
       }
     }
 
@@ -355,12 +360,6 @@ final class AppReloader implements App.Reloader {
       return systemLoader.loadClass(name);
     }
 
-  }
-
-  private boolean doNotReload(String binaryName, byte[] contents) {
-    classReader.init(binaryName, contents);
-
-    return classReader.isAnnotationPresent(App.DoNotReload.class);
   }
 
 }

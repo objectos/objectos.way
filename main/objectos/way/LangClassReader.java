@@ -17,18 +17,18 @@ package objectos.way;
 
 import java.lang.annotation.Annotation;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
+import java.util.function.Consumer;
+import objectos.way.Lang.InvalidClassFileException;
 
 final class LangClassReader implements Lang.ClassReader {
 
-  private static final class InvalidClassException extends Exception {
-    private static final long serialVersionUID = -601141059152548162L;
-
-    InvalidClassException(String message) {
-      super(message);
-    }
-  }
-
   private record Notes(
+      Note.Long1 started,
+      Note.Long1 constantPoolTraversed,
+      Note.Long1 classMembersTraversed,
+      Note.Long1 classAnnotationsTraversed,
+
       Note.Ref2<String, Exception> invalidClass
   ) {
 
@@ -37,11 +37,39 @@ final class LangClassReader implements Lang.ClassReader {
       s = Lang.ClassReader.class;
 
       return new Notes(
+          Note.Long1.create(s, "STA", Note.TRACE),
+          Note.Long1.create(s, "CPT", Note.TRACE),
+          Note.Long1.create(s, "CMT", Note.TRACE),
+          Note.Long1.create(s, "CAT", Note.TRACE),
+
           Note.Ref2.create(s, "Invalid class file", Note.ERROR)
       );
     }
 
   }
+
+  private static final byte $START = 1;
+
+  private static final byte $MAGIC = 2;
+  private static final byte $MINOR = 3;
+  private static final byte $MAJOR = 4;
+  private static final byte $CONSTANT_POOL = 5;
+  private static final byte $CONSTANT_POOL_NEXT = 6;
+  private static final byte $CONSTANT_POOL_TRAVERSED = 7;
+
+  private static final byte $TCM = 8; // traverse class members
+  private static final byte $TCM_ACCESS_FLAGS = 9;
+  private static final byte $TCM_THIS_CLASS = 10;
+  private static final byte $TCM_SUPER_CLASS = 11;
+  private static final byte $TCM_INTERFACES = 12;
+  private static final byte $TCM_FIELDS = 13;
+  private static final byte $TCM_METHODS = 14;
+  private static final byte $TCM_STORE = 15;
+  private static final byte $TCM_TRAVERSED = 16;
+
+  private static final byte $TCA = 17; // traverse class annotations
+  private static final byte $TCA_ATTRIBUTES = 18;
+  private static final byte $TCA_TRAVERSED = 19;
 
   private static final byte CONSTANT_Utf8 = 1;
   private static final byte CONSTANT_Integer = 3;
@@ -68,283 +96,250 @@ final class LangClassReader implements Lang.ClassReader {
 
   private final Note.Sink noteSink;
 
-  private String binaryName;
+  private int annotationsInvisible;
+
+  private int annotationsVisible;
 
   private byte[] bytes;
 
   private int bytesIndex;
 
-  private int[] constantPoolIndex;
+  private int[] constantPool;
+
+  private int constantPoolCount;
+
+  private int int0;
+
+  private int int1;
+
+  private long startTime;
+
+  private byte state;
 
   LangClassReader(Note.Sink noteSink) {
     this.noteSink = noteSink;
   }
 
   @Override
-  public final void init(String binaryName, byte[] contents) {
-    this.binaryName = binaryName;
+  public final void init(byte[] value) {
+    bytes = Objects.requireNonNull(value, "value == null");
 
-    bytes = contents;
+    state = $START;
   }
 
   @Override
-  public final boolean isAnnotationPresent(Class<? extends Annotation> annotationType) {
-    String annotationName;
+  public final boolean annotatedWith(Class<? extends Annotation> annotationType) throws InvalidClassFileException {
+    final String annotationName;
+    annotationName = name(annotationType);
+
+    return switch (state) {
+      case $START -> {
+        traverseConstantPool();
+
+        state = $TCM;
+
+        traverseClassMembers();
+
+        state = $TCA;
+
+        traverseClassAnnotations();
+
+        yield annotatedWith0(annotationName);
+      }
+
+      case $TCA_TRAVERSED -> annotatedWith0(annotationName);
+
+      default -> throw new IllegalStateException("state=" + state);
+    };
+  }
+
+  @Override
+  public final void visitStrings(Consumer<? super String> visitor) throws InvalidClassFileException {
+    Objects.requireNonNull(visitor, "visitor == null");
+
+    switch (state) {
+      case $START -> {
+        traverseConstantPool();
+
+        visitStrings0(visitor);
+      }
+
+      case $TCA_TRAVERSED -> visitStrings0(visitor);
+
+      default -> throw new IllegalStateException("state=" + state);
+    }
+  }
+
+  private String name(Class<? extends Annotation> annotationType) {
+    final String annotationName;
     annotationName = annotationType.getName();
 
-    String nameToLookFor;
-    nameToLookFor = "L" + annotationName.replace('.', '/') + ";";
-
-    boolean result;
-    result = false;
-
-    try {
-      result = isAnnotated0(nameToLookFor);
-    } catch (ArrayIndexOutOfBoundsException e) {
-      noteSink.send(notes.invalidClass, binaryName, e);
-    } catch (InvalidClassException e) {
-      noteSink.send(notes.invalidClass, binaryName, e);
-    }
-
-    return result;
+    return "L" + annotationName.replace('.', '/') + ";";
   }
 
-  private boolean isAnnotated0(String annotationName) throws InvalidClassException {
-    reset();
-
-    readConstantPool();
-
-    // skip access_flags
-
-    skipU2();
-
-    // skip this_class
-
-    skipU2();
-
-    // skip super_class
-
-    skipU2();
-
-    // skip interfaces
-
-    int interfacesCount;
-    interfacesCount = readU2();
-
-    bytesIndex += interfacesCount * 2;
-
-    // skip fields
-
-    skipFieldsOrMethods();
-
-    // skip methods
-
-    skipFieldsOrMethods();
-
-    int attributesCount;
-    attributesCount = readU2();
-
-    for (int attr = 0; attr < attributesCount; attr++) {
-      int nameIndex;
-      nameIndex = readU2();
-
-      int attrLength;
-      attrLength = readU4();
-
-      if (attrLength < 0) {
-        throw new UnsupportedOperationException("Implement me :: u4 as int overflow");
-      }
-
-      String attrName;
-      attrName = readUtf8(nameIndex);
-
-      if (RUNTIME_INVISIBLE_ANNOTATIONS.equals(attrName) || RUNTIME_VISIBLE_ANNOTATIONS.equals(attrName)) {
-        int numAnnotations;
-        numAnnotations = readU2();
-
-        for (int ann = 0; ann < numAnnotations; ann++) {
-          int typeIndex;
-          typeIndex = readU2();
-
-          String typeName;
-          typeName = readUtf8(typeIndex);
-
-          if (typeName.equals(annotationName)) {
-            return true;
-          }
-
-          skipAnnotationContents();
-        }
-      } else {
-        bytesIndex += attrLength;
-      }
-    }
-
-    return false;
-  }
-
-  private void skipAnnotation() throws InvalidClassException {
-    // skip typeIndex
-    skipU2();
-
-    // skip contents
-    skipAnnotationContents();
-  }
-
-  private void skipAnnotationContents() throws InvalidClassException {
-    int numElementValuePairs;
-    numElementValuePairs = readU2();
-
-    for (int pair = 0; pair < numElementValuePairs; pair++) {
-      // skip element_name_index
-      skipU2();
-
-      skipAnnotationElementValue();
+  private void traverseConstantPool() throws Lang.InvalidClassFileException {
+    while (state < $CONSTANT_POOL_TRAVERSED) {
+      state = execute(state);
     }
   }
 
-  private void skipAnnotationElementValue() throws InvalidClassException {
-    byte tag;
-    tag = readU1();
-
-    switch (tag) {
-      case 'B', 'C', 'D', 'F', 'I', 'J', 'S', 'Z', 's' -> {
-        // skip const_value_index
-        skipU2();
-      }
-
-      case 'e' -> {
-        // skip type_name_index
-        skipU2();
-
-        // skip const_name_index
-        skipU2();
-      }
-
-      case 'c' -> {
-        // skip class_info_index
-        skipU2();
-      }
-
-      case '@' -> {
-        skipAnnotation();
-      }
-
-      case '[' -> {
-        int numValues;
-        numValues = readU2();
-
-        for (int idx = 0; idx < numValues; idx++) {
-          skipAnnotationElementValue();
-        }
-      }
-
-      default -> {
-        throw new InvalidClassException("Unknown annotation element value tag=" + tag);
-      }
+  private void traverseClassMembers() throws Lang.InvalidClassFileException {
+    while (state < $TCM_TRAVERSED) {
+      state = execute(state);
     }
   }
 
-  @Override
-  public final void processStringConstants(StringConstantProcessor processor) {
-    Check.notNull(processor, "processor == null");
-
-    try {
-      processStringConstants0(processor);
-    } catch (ArrayIndexOutOfBoundsException e) {
-      noteSink.send(notes.invalidClass, binaryName, e);
-    } catch (InvalidClassException e) {
-      noteSink.send(notes.invalidClass, binaryName, e);
+  private void traverseClassAnnotations() throws Lang.InvalidClassFileException {
+    while (state < $TCA_TRAVERSED) {
+      state = execute(state);
     }
   }
 
-  private void processStringConstants0(StringConstantProcessor processor) throws InvalidClassException {
-    reset();
+  // ##################################################################
+  // # BEGIN: State Machine
+  // ##################################################################
 
-    readConstantPool();
+  private byte execute(byte state) throws InvalidClassFileException {
+    return switch (state) {
+      case $START -> executeStart();
 
-    for (int index = 1; index < constantPoolIndex.length; index++) {
-      bytesIndex = constantPoolIndex[index];
+      case $MAGIC -> executeMagic();
+      case $MINOR -> executeMinor();
+      case $MAJOR -> executeMajor();
 
-      // process if String
-      //
-      // next read should be safe
-      // -> we have already been at this index in the previous step
+      case $CONSTANT_POOL -> executeConstantPool();
+      case $CONSTANT_POOL_NEXT -> executeConstantPoolNext();
 
-      byte maybeString;
-      maybeString = readU1();
+      case $TCM -> executeTcm();
+      case $TCM_ACCESS_FLAGS -> executeTcmAccessFlags();
+      case $TCM_THIS_CLASS -> executeTcmThisClass();
+      case $TCM_SUPER_CLASS -> executeTcmSuperClass();
+      case $TCM_INTERFACES -> executeTcmInterfaces();
+      case $TCM_FIELDS -> executeTcmFields();
+      case $TCM_METHODS -> executeTcmMethods();
+      case $TCM_STORE -> executeTcmStore();
 
-      if (maybeString != CONSTANT_String) {
-        // not String -> continue
+      case $TCA -> executeTca();
+      case $TCA_ATTRIBUTES -> executeTcaAttributes();
 
-        continue;
-      }
-
-      // keep the index in the stack
-      //
-      // next read should be safe
-      // -> we have already been at this index in the previous step
-      int stringIndex;
-      stringIndex = readU2();
-
-      // try to load utf8
-
-      String utf8;
-      utf8 = readUtf8(stringIndex);
-
-      processor.processStringConstant(utf8);
-    }
+      default -> throw new AssertionError("Unexpected state=" + state);
+    };
   }
 
-  private void reset() {
+  // ##################################################################
+  // # END: State Machine
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Start
+  // ##################################################################
+
+  private byte executeStart() {
+    startTime = System.nanoTime();
+
+    noteSink.send(notes.started, bytes.length);
+
+    annotationsInvisible = 0;
+
+    annotationsVisible = 0;
+
     bytesIndex = 0;
 
-    constantPoolIndex = null;
+    constantPoolCount = 0;
+
+    int0 = 0;
+
+    int1 = 0;
+
+    return $MAGIC;
   }
 
-  private void readConstantPool() throws InvalidClassException {
-    // 1. verify magic
+  // ##################################################################
+  // # END: Start
+  // ##################################################################
 
-    final int magic;
-    magic = readU4();
+  // ##################################################################
+  // # BEGIN: Magic, Minor, Major
+  // ##################################################################
 
-    if (magic != 0xCAFEBABE) {
-      // magic does not match expected value
-      // -> invalid class
+  private byte executeMagic() throws Lang.InvalidClassFileException {
+    try {
+      final int magic;
+      magic = readU4();
 
-      throw new InvalidClassException("Magic not found");
+      if (magic != 0xCAFEBABE) {
+        throw invalid("Invalid magic byte sequence");
+      }
+
+      return $MINOR;
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw invalid("EOF: no magic byte sequence found", e);
+    }
+  }
+
+  private byte executeMinor() {
+    bytesIndex += 2;
+
+    return $MAJOR;
+  }
+
+  private byte executeMajor() {
+    bytesIndex += 2;
+
+    return $CONSTANT_POOL;
+  }
+
+  // ##################################################################
+  // # END: Magic, Minor, Major
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Constant Pool
+  // ##################################################################
+
+  private byte executeConstantPool() throws Lang.InvalidClassFileException {
+    try {
+      constantPoolCount = readU2();
+
+      if (constantPool == null) {
+        constantPool = new int[constantPoolCount];
+      }
+
+      else {
+        final int requiredIndex;
+        requiredIndex = constantPoolCount;
+
+        constantPool = Util.growIfNecessary(constantPool, requiredIndex);
+      }
+
+      // constant pool starts at 1
+      int0 = 1;
+
+      return $CONSTANT_POOL_NEXT;
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw invalid("EOF: no constant_pool_count found", e);
+    }
+  }
+
+  private byte executeConstantPoolNext() throws Lang.InvalidClassFileException {
+    if (int0 >= constantPoolCount) {
+      // store first index after CP in the unused slot
+      constantPool[0] = bytesIndex;
+
+      noteElapsedTime(notes.constantPoolTraversed);
+
+      return $CONSTANT_POOL_TRAVERSED;
     }
 
-    // 2. skip minor
+    try {
 
-    skipU2();
+      constantPool[int0++] = bytesIndex;
 
-    // 3. skip major
-
-    skipU2();
-
-    // 4. load constant pool count
-
-    int constantPoolCount;
-    constantPoolCount = readU2();
-
-    // 5. load constant pool index
-
-    constantPoolIndex = new int[constantPoolCount];
-
-    for (int index = 1; index < constantPoolCount; index++) {
-      constantPoolIndex[index] = bytesIndex;
-
-      byte tag;
+      final byte tag;
       tag = readU1();
 
       switch (tag) {
-        case CONSTANT_Utf8 -> {
-          int length;
-          length = readU2();
-
-          bytesIndex += length;
-        }
+        case CONSTANT_Utf8 -> { int length = readU2(); bytesIndex += length; }
 
         // u4 bytes;
         case CONSTANT_Integer -> bytesIndex += 4;
@@ -353,10 +348,10 @@ final class LangClassReader implements Lang.ClassReader {
         case CONSTANT_Float -> bytesIndex += 4;
 
         // u4 high_bytes; u4 low_bytes; takes 2 entries
-        case CONSTANT_Long -> { bytesIndex += 8; index++; }
+        case CONSTANT_Long -> { bytesIndex += 8; int0++; }
 
         // u4 high_bytes; u4 low_bytes; takes 2 entries
-        case CONSTANT_Double -> { bytesIndex += 8; index++; }
+        case CONSTANT_Double -> { bytesIndex += 8; int0++; }
 
         // u2 name_index;
         case CONSTANT_Class -> bytesIndex += 2;
@@ -395,119 +390,430 @@ final class LangClassReader implements Lang.ClassReader {
         case CONSTANT_Package -> bytesIndex += 2;
 
         default -> {
-          throw new InvalidClassException("Unknown constant pool tag=" + tag);
+          throw invalid("Unknown constant pool tag=" + tag);
         }
+      }
+
+      return $CONSTANT_POOL_NEXT;
+
+    } catch (ArrayIndexOutOfBoundsException e) {
+
+      throw invalid("EOF: while traversing constant pool", e);
+
+    }
+
+  }
+
+  // ##################################################################
+  // # END: Constant Pool
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Visit Strings
+  // ##################################################################
+
+  private void visitStrings0(Consumer<? super String> processor) throws InvalidClassFileException {
+    for (int index = 1; index < constantPoolCount; index++) {
+      bytesIndex = constantPool[index];
+
+      // process if String
+      //
+      // next read should be safe
+      // -> we have already been at this index in the previous step
+
+      final byte maybeString;
+      maybeString = readU1();
+
+      if (maybeString != CONSTANT_String) {
+        // not String -> continue
+
+        continue;
+      }
+
+      // keep the index in the stack
+      //
+      // next read should be safe
+      // -> we have already been at this index in the previous step
+      final int stringIndex;
+      stringIndex = readU2();
+
+      // try to load utf8
+
+      final String utf8;
+      utf8 = readUtf8(stringIndex);
+
+      processor.accept(utf8);
+    }
+  }
+
+  // ##################################################################
+  // # END: Visit Strings
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Traverse Class Member
+  // ##################################################################
+
+  private byte executeTcm() {
+    startTime = System.nanoTime();
+
+    bytesIndex = constantPool[0];
+
+    return $TCM_ACCESS_FLAGS;
+  }
+
+  private byte executeTcmStore() {
+    noteElapsedTime(notes.classMembersTraversed);
+
+    return $TCM_TRAVERSED;
+  }
+
+  // ##################################################################
+  // # BEGIN: Traverse Class Member
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: access_flags, this_class, super_class
+  // ##################################################################
+
+  private byte executeTcmAccessFlags() {
+    bytesIndex += 2;
+
+    return $TCM_THIS_CLASS;
+  }
+
+  private byte executeTcmThisClass() {
+    bytesIndex += 2;
+
+    return $TCM_SUPER_CLASS;
+  }
+
+  private byte executeTcmSuperClass() {
+    bytesIndex += 2;
+
+    return $TCM_INTERFACES;
+  }
+
+  // ##################################################################
+  // # END: access_flags, this_class, super_class
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Interfaces
+  // ##################################################################
+
+  private byte executeTcmInterfaces() throws InvalidClassFileException {
+    try {
+      final int interfacesCount;
+      interfacesCount = readU2();
+
+      bytesIndex += interfacesCount * 2;
+
+      return $TCM_FIELDS;
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw invalid("EOF: while traversing interfaces", e);
+    }
+  }
+
+  // ##################################################################
+  // # END: Interfaces
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Fields
+  // ##################################################################
+
+  private byte executeTcmFields() throws InvalidClassFileException {
+    return skipFieldsOrMethods($TCM_METHODS, "EOF: while traversing fields");
+  }
+
+  // ##################################################################
+  // # END: Fields
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Methods
+  // ##################################################################
+
+  private byte executeTcmMethods() throws InvalidClassFileException {
+    return skipFieldsOrMethods($TCM_STORE, "EOF: while traversing methods");
+  }
+
+  private byte skipFieldsOrMethods(byte success, String eofMessage) throws Lang.InvalidClassFileException {
+    try {
+
+      final int count;
+      count = readU2();
+
+      for (int item = 0; item < count; item++) {
+        // skip (u2) access_flags
+        bytesIndex += 2;
+
+        // skip (u2) name_index
+        bytesIndex += 2;
+
+        // skip (u2) descriptor_index
+        bytesIndex += 2;
+
+        final int attributeCount;
+        attributeCount = readU2();
+
+        for (int attr = 0; attr < attributeCount; attr++) {
+          // skip (u2) attribute_name_index
+          bytesIndex += 2;
+
+          final int length;
+          length = readU4(); // might overflow...
+
+          if (length < 0) {
+            throw invalidLength(length);
+          }
+
+          bytesIndex += length; // might overflow, next read will throw AIOBE
+        }
+      }
+
+      return success;
+
+    } catch (ArrayIndexOutOfBoundsException e) {
+
+      throw invalid(eofMessage, e);
+
+    }
+  }
+
+  // ##################################################################
+  // # END: Methods
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Traverse Class Annotations
+  // ##################################################################
+
+  private byte executeTca() throws Lang.InvalidClassFileException {
+    try {
+      startTime = System.nanoTime();
+
+      // attributes_count
+      int1 = readU2();
+
+      // attribute index
+      int0 = 0;
+
+      return $TCA_ATTRIBUTES;
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw invalid("EOF: no attributes_count found", e);
+    }
+  }
+
+  private byte executeTcaAttributes() throws Lang.InvalidClassFileException {
+    if (int0++ >= int1) {
+      return toTcaTraversed();
+    }
+
+    try {
+
+      final int startIndex;
+      startIndex = bytesIndex;
+
+      final int nameIndex;
+      nameIndex = readU2();
+
+      final int attrLength;
+      attrLength = readU4(); // might overflow...
+
+      if (attrLength < 0) {
+        throw invalidLength(attrLength);
+      }
+
+      final String attrName;
+      attrName = readUtf8(nameIndex);
+
+      bytesIndex += attrLength;
+
+      if (RUNTIME_INVISIBLE_ANNOTATIONS.equals(attrName)) {
+        annotationsInvisible = startIndex;
+
+        if (annotationsVisible > 0) {
+          return toTcaTraversed();
+        }
+      }
+
+      else if (RUNTIME_VISIBLE_ANNOTATIONS.equals(attrName)) {
+        annotationsVisible = startIndex;
+
+        if (annotationsInvisible > 0) {
+          return toTcaTraversed();
+        }
+      }
+
+      return $TCA_ATTRIBUTES;
+
+    } catch (ArrayIndexOutOfBoundsException e) {
+
+      throw invalid("EOF: while traversing attributes", e);
+
+    }
+  }
+
+  private byte toTcaTraversed() {
+    noteElapsedTime(notes.classAnnotationsTraversed);
+
+    return $TCA_TRAVERSED;
+  }
+
+  // ##################################################################
+  // # END: Traverse Class Annotations
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Annotated?
+  // ##################################################################
+
+  private boolean annotatedWith0(String value) throws Lang.InvalidClassFileException {
+    return annotatedWith1(value, annotationsInvisible)
+        || annotatedWith1(value, annotationsVisible);
+  }
+
+  private boolean annotatedWith1(String annotationName, int attributeIndex) throws Lang.InvalidClassFileException {
+    if (attributeIndex == 0) {
+      return false;
+    }
+
+    bytesIndex = attributeIndex;
+
+    // skip (u2) name_index
+    bytesIndex += 2;
+
+    // skip (u4) attr_length
+    bytesIndex += 4;
+
+    final int numAnnotations;
+    numAnnotations = readU2();
+
+    for (int ann = 0; ann < numAnnotations; ann++) {
+      final int typeIndex;
+      typeIndex = readU2();
+
+      final String typeName;
+      typeName = readUtf8(typeIndex);
+
+      if (typeName.equals(annotationName)) {
+        return true;
+      }
+
+      skipAnnotationContents();
+    }
+
+    return false;
+  }
+
+  private void skipAnnotation() throws Lang.InvalidClassFileException {
+    // skip typeIndex
+    bytesIndex += 2;
+
+    // skip contents
+    skipAnnotationContents();
+  }
+
+  private void skipAnnotationContents() throws Lang.InvalidClassFileException {
+    final int numElementValuePairs;
+    numElementValuePairs = readU2();
+
+    for (int pair = 0; pair < numElementValuePairs; pair++) {
+      // skip (u2) element_name_index
+      bytesIndex += 2;
+
+      skipAnnotationElementValue();
+    }
+  }
+
+  private void skipAnnotationElementValue() throws Lang.InvalidClassFileException {
+    final byte tag;
+    tag = readU1();
+
+    switch (tag) {
+      case 'B', 'C', 'D', 'F', 'I', 'J', 'S', 'Z', 's' -> {
+        // skip const_value_index
+        bytesIndex += 2;
+      }
+
+      case 'e' -> {
+        // skip type_name_index
+        bytesIndex += 2;
+
+        // skip const_name_index
+        bytesIndex += 2;
+      }
+
+      case 'c' -> {
+        // skip class_info_index
+        bytesIndex += 2;
+      }
+
+      case '@' -> {
+        skipAnnotation();
+      }
+
+      case '[' -> {
+        final int numValues;
+        numValues = readU2();
+
+        for (int idx = 0; idx < numValues; idx++) {
+          skipAnnotationElementValue();
+        }
+      }
+
+      default -> {
+        throw invalid("Unknown annotation element value tag=" + tag);
       }
     }
   }
 
-  private void skipFieldsOrMethods() {
-    int count;
-    count = readU2();
+  // ##################################################################
+  // # END: Annotated?
+  // ##################################################################
 
-    for (int item = 0; item < count; item++) {
-      // skip access_flags
+  // ##################################################################
+  // # BEGIN: Utf8
+  // ##################################################################
 
-      skipU2();
-
-      // skip name_index
-
-      skipU2();
-
-      // skip descriptor_index
-
-      skipU2();
-
-      int attributeCount;
-      attributeCount = readU2();
-
-      for (int attr = 0; attr < attributeCount; attr++) {
-        // skip attribute_name_index
-
-        skipU2();
-
-        int length;
-        length = readU4(); // might overflow...
-
-        if (length < 0) {
-          throw new UnsupportedOperationException("Implement me :: u4 as int overflow");
-        }
-
-        bytesIndex += length;
-      }
-    }
-  }
-
-  private byte readU1() {
-    return bytes[bytesIndex++];
-  }
-
-  private int readU2() {
-    byte b0;
-    b0 = bytes[bytesIndex++];
-
-    byte b1;
-    b1 = bytes[bytesIndex++];
-
-    return Lang.toBigEndianInt(b0, b1);
-  }
-
-  private int readU4() {
-    byte b0;
-    b0 = bytes[bytesIndex++];
-
-    byte b1;
-    b1 = bytes[bytesIndex++];
-
-    byte b2;
-    b2 = bytes[bytesIndex++];
-
-    byte b3;
-    b3 = bytes[bytesIndex++];
-
-    return Lang.toBigEndianInt(b0, b1, b2, b3);
-  }
-
-  private String readUtf8(int contanstPoolIndex) throws InvalidClassException {
-    int returnTo;
+  private String readUtf8(int contanstPoolIndex) throws Lang.InvalidClassFileException {
+    final int returnTo;
     returnTo = bytesIndex;
 
-    bytesIndex = constantPoolIndex[contanstPoolIndex];
+    bytesIndex = constantPool[contanstPoolIndex];
 
-    byte tag;
+    final byte tag;
     tag = readU1();
 
     if (tag != CONSTANT_Utf8) {
-      throw new InvalidClassException("Malformed constant pool");
+      throw new Lang.InvalidClassFileException("Malformed constant pool: expected Constant_Utf8_info but found tag=" + tag);
     }
 
-    int length;
+    final int length;
     length = readU2();
 
-    String value;
-    value = utf8Value(length);
+    final String value;
+    value = decodeUtf8(length);
 
     bytesIndex = returnTo;
 
     return value;
   }
 
-  private void skipU2() {
-    bytesIndex += 2;
-  }
-
-  private String utf8Value(int length) {
+  private String decodeUtf8(int length) throws Lang.InvalidClassFileException {
     // 1: assume ASCII only
 
     boolean asciiOnly;
     asciiOnly = true;
 
     for (int offset = 0; offset < length; offset++) {
-      byte b;
+      final byte b;
       b = bytes[bytesIndex + offset];
 
-      int i;
-      i = Lang.toUnsignedInt(b);
+      final int i;
+      i = Byte.toUnsignedInt(b);
 
       if (i > 0x7F) {
         asciiOnly = false;
@@ -517,85 +823,142 @@ final class LangClassReader implements Lang.ClassReader {
     }
 
     if (asciiOnly) {
-      return new String(bytes, bytesIndex, length, StandardCharsets.UTF_8);
+      return new String(bytes, bytesIndex, length, StandardCharsets.US_ASCII);
     }
 
     // 2. parse modified UTF-8
 
-    char[] chars;
+    final char[] chars;
     chars = new char[length];
 
-    int index;
-    index = bytesIndex;
-
-    int max;
+    final int max;
     max = bytesIndex + length;
 
-    int charIndex;
-    charIndex = 0;
+    int charsIndex;
+    charsIndex = 0;
 
-    while (index < max) {
-      int byte0 = Lang.toUnsignedInt(
-          bytes[index++]
-      );
+    while (bytesIndex < max) {
+      final byte byte0;
+      byte0 = readU1();
 
-      int highBytes;
-      highBytes = byte0 >> 4;
+      final int highBits;
+      highBits = Byte.toUnsignedInt(byte0) >> 4;
 
-      switch (highBytes) {
-        case 0, 1, 2, 3, 4, 5, 6, 7:
-          chars[charIndex++] = (char) byte0;
+      char c;
+      c = switch (highBits) {
+        // 0yyyzzzz
+        case 0b0000, 0b0001,
+             0b0010, 0b0011,
+             0b0100, 0b0101, 0b0110, 0b0111 -> (char) byte0;
 
-          break;
+        // 110xxxyy 10yyzzzz
+        case 0b1100, 0b1101 -> decode(byte0, readU1());
 
-        case 12, 13:
-          if (index >= max) {
-            // invalid
-            return "";
-          }
+        // 1110wwww 10xxxxyy 10yyzzzz
+        case 0b1110 -> decode(byte0, readU1(), readU1());
 
-          int byte1 = bytes[index++];
+        default -> throw new Lang.InvalidClassFileException("Malformed UTF-8 value: not a valid prefix");
+      };
 
-          if ((byte1 & 0xC0) != 0x80) {
-            // invalid
-            return "";
-          }
-
-          chars[charIndex++] = (char) (((byte0 & 0x1F) << 6) | (byte1 & 0x3F));
-
-          break;
-
-        case 14:
-          if (index >= max) {
-            // invalid
-            return "";
-          }
-
-          byte1 = bytes[index++];
-
-          if (index >= max) {
-            // invalid
-            return "";
-          }
-
-          int byte2 = bytes[index++];
-
-          if (((byte1 & 0xC0) != 0x80) || ((byte2 & 0xC0) != 0x80)) {
-            // invalid
-            return "";
-          }
-
-          chars[charIndex++] = (char) (((byte0 & 0x0F) << 12) | ((byte1 & 0x3F) << 6) | (byte2 & 0x3F));
-
-          break;
-
-        default:
-          // invalid
-          return "";
-      }
+      chars[charsIndex++] = c;
     }
 
-    return new String(chars, 0, charIndex);
+    return new String(chars, 0, charsIndex);
   }
+
+  private char decode(byte byte0, byte byte1) throws Lang.InvalidClassFileException {
+    checkUtf8(byte1);
+
+    int bits0 = (byte0 & 0b0001_1111) << 6;
+
+    int bits1 = (byte1 & 0b0011_1111) << 0;
+
+    return (char) (bits0 | bits1);
+  }
+
+  private char decode(byte byte0, byte byte1, byte byte2) throws Lang.InvalidClassFileException {
+    checkUtf8(byte1);
+    checkUtf8(byte2);
+
+    int bits0 = (byte0 & 0b0000_1111) << 12;
+
+    int bits1 = (byte1 & 0b0011_1111) << 6;
+
+    int bits2 = (byte2 & 0b0011_1111) << 0;
+
+    return (char) (bits0 | bits1 | bits2);
+  }
+
+  private void checkUtf8(byte b) throws Lang.InvalidClassFileException {
+    final int topTwoBits;
+    topTwoBits = b & 0b1100_0000;
+
+    if (topTwoBits != 0b1000_0000) {
+      throw new Lang.InvalidClassFileException("Malformed UTF-8 value: not a continuation byte");
+    }
+  }
+
+  // ##################################################################
+  // # END: Utf8
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Utils
+  // ##################################################################
+
+  private Lang.InvalidClassFileException invalid(String message) {
+    return new Lang.InvalidClassFileException(message);
+  }
+
+  private Lang.InvalidClassFileException invalid(String message, Throwable cause) {
+    return new Lang.InvalidClassFileException(message, cause);
+  }
+
+  private Lang.InvalidClassFileException invalidLength(int length) {
+    return new Lang.InvalidClassFileException("Maximum supported length exceeded: length=" + Integer.toUnsignedLong(length));
+  }
+
+  private void noteElapsedTime(Note.Long1 note) {
+    final long elapsedNanos;
+    elapsedNanos = System.nanoTime() - startTime;
+
+    noteSink.send(note, elapsedNanos);
+  }
+
+  private byte readU1() {
+    return bytes[bytesIndex++];
+  }
+
+  private int readU2() {
+    final byte b0 = bytes[bytesIndex++];
+    final byte b1 = bytes[bytesIndex++];
+
+    final int v0 = toInt(b0, 8);
+    final int v1 = toInt(b1, 0);
+
+    return v0 | v1;
+  }
+
+  private int readU4() {
+    final byte b0 = bytes[bytesIndex++];
+    final byte b1 = bytes[bytesIndex++];
+    final byte b2 = bytes[bytesIndex++];
+    final byte b3 = bytes[bytesIndex++];
+
+    final int v0 = toInt(b0, 24);
+    final int v1 = toInt(b1, 16);
+    final int v2 = toInt(b2, 8);
+    final int v3 = toInt(b3, 0);
+
+    return v0 | v1 | v2 | v3;
+  }
+
+  private int toInt(byte b, int shift) {
+    return Byte.toUnsignedInt(b) << shift;
+  }
+
+  // ##################################################################
+  // # END: Utils
+  // ##################################################################
 
 }

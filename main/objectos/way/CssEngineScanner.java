@@ -28,13 +28,15 @@ import java.security.CodeSource;
 import java.security.ProtectionDomain;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.function.Consumer;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.stream.Stream;
+import objectos.way.Lang.InvalidClassFileException;
 
 final class CssEngineScanner {
 
-  interface Adapter extends Lang.ClassReader.StringConstantProcessor {
+  interface Adapter extends Consumer<String> {
 
     void sourceName(String value);
 
@@ -43,6 +45,7 @@ final class CssEngineScanner {
   private record Notes(
       Note.Ref1<String> classNotFound,
       Note.Ref2<String, IOException> classIoError,
+      Note.Ref2<String, Lang.InvalidClassFileException> classInvalid,
       Note.Ref1<String> classLoaded,
 
       Note.Ref2<Path, IOException> directoryIoError,
@@ -60,6 +63,7 @@ final class CssEngineScanner {
       return new Notes(
           Note.Ref1.create(s, "Class file not found", Note.ERROR),
           Note.Ref2.create(s, "Class file I/O error", Note.ERROR),
+          Note.Ref2.create(s, "CFI", Note.ERROR),
           Note.Ref1.create(s, "REA", Note.DEBUG),
 
           Note.Ref2.create(s, "Directory I/O error", Note.ERROR),
@@ -122,11 +126,15 @@ final class CssEngineScanner {
       return;
     }
 
-    reader.init(binaryName, bytes);
+    try {
+      reader.init(bytes);
 
-    adapter.sourceName(binaryName);
+      adapter.sourceName(binaryName);
 
-    reader.processStringConstants(adapter);
+      reader.visitStrings(adapter);
+    } catch (InvalidClassFileException e) {
+      noteSink.send(notes.classInvalid, binaryName, e);
+    }
   }
 
   public final void scanDirectory(Path directory, Adapter adapter) {
@@ -244,19 +252,23 @@ final class CssEngineScanner {
   }
 
   private void scanBytes(Adapter adapter, String fileName, byte[] bytes) {
-    reader.init(fileName, bytes);
+    try {
 
-    if (!reader.isAnnotationPresent(Css.Source.class)) {
-      noteSink.send(notes.skipped, fileName);
+      reader.init(bytes);
 
-      return;
+      if (reader.annotatedWith(Css.Source.class)) {
+        noteSink.send(notes.classLoaded, fileName);
+
+        adapter.sourceName(fileName);
+
+        reader.visitStrings(adapter);
+      } else {
+        noteSink.send(notes.skipped, fileName);
+      }
+
+    } catch (Lang.InvalidClassFileException e) {
+      noteSink.send(notes.classInvalid, fileName, e);
     }
-
-    noteSink.send(notes.classLoaded, fileName);
-
-    adapter.sourceName(fileName);
-
-    reader.processStringConstants(adapter);
   }
 
 }

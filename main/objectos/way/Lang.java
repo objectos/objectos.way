@@ -21,6 +21,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.Iterator;
+import java.util.function.Consumer;
 
 /**
  * The <strong>Objectos Lang</strong> main class.
@@ -52,19 +53,24 @@ public final class Lang {
 
   sealed interface ClassReader permits LangClassReader {
 
-    @FunctionalInterface
-    interface StringConstantProcessor {
+    void init(byte[] bytes);
 
-      void processStringConstant(String value);
+    boolean annotatedWith(Class<? extends Annotation> annotationType) throws InvalidClassFileException;
 
+    void visitStrings(Consumer<? super String> visitor) throws InvalidClassFileException;
+
+  }
+
+  static final class InvalidClassFileException extends Exception {
+    private static final long serialVersionUID = -601141059152548162L;
+
+    InvalidClassFileException(String message) {
+      super(message);
     }
 
-    void init(String binaryName, byte[] contents);
-
-    boolean isAnnotationPresent(Class<? extends Annotation> annotationType);
-
-    void processStringConstants(StringConstantProcessor processor);
-
+    InvalidClassFileException(String message, Throwable cause) {
+      super(message, cause);
+    }
   }
 
   @Retention(RetentionPolicy.SOURCE)
