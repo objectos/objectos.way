@@ -23,7 +23,7 @@ import objectos.way.Note.Ref1;
 import org.slf4j.Logger;
 import org.testng.annotations.Test;
 
-public class CssEngineTestJar {
+public class CssEngineTest05ScanJars {
 
   @Test
   public void scanJarFile01() {

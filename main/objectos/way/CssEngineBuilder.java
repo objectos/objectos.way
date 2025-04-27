@@ -25,12 +25,15 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
+import objectos.way.Css.Key;
+import objectos.way.Css.Layer;
 import objectos.way.Css.ThemeQueryEntry;
 
-final class CssConfigurationBuilder implements Css.Configuration.Options {
+final class CssEngineBuilder implements Css.Engine.Options {
 
   private enum Namespace {
 
@@ -46,25 +49,45 @@ final class CssConfigurationBuilder implements Css.Configuration.Options {
 
   private String base = Css.defaultBase();
 
-  private Set<Class<?>> classesToScan = UtilUnmodifiableSet.of();
+  private int entryIndex;
 
-  private Set<Path> directoriesToScan = UtilUnmodifiableSet.of();
+  private final UtilMap<String, String> keywords = new UtilMap<>();
 
-  private Set<Class<?>> jarFilesToScan = UtilUnmodifiableSet.of();
+  private final Map<String, Namespace> namespacePrefixes = namespacePrefixes();
 
   private Note.Sink noteSink = Note.NoOpSink.INSTANCE;
 
-  private Set<Css.Layer> skipLayer = UtilUnmodifiableSet.of();
+  private final StringBuilder sb = new StringBuilder();
 
-  CssConfigurationBuilder() {
+  private Set<Class<?>> scanClasses = UtilUnmodifiableSet.of();
+
+  private Set<Path> scanDirectories = UtilUnmodifiableSet.of();
+
+  private Set<Class<?>> scanJars = UtilUnmodifiableSet.of();
+
+  private Set<Css.Layer> skipLayers = UtilUnmodifiableSet.of();
+
+  private final UtilMap<String, CssVariant> variants = new UtilMap<>();
+
+  private boolean theme;
+
+  private final Map<Namespace, Map<String, Css.ThemeEntry>> themeEntries = new EnumMap<>(Namespace.class);
+
+  private Map<String, List<Css.ThemeQueryEntry>> themeQueryEntries;
+
+  CssEngineBuilder() {
     parseTheme(Css.defaultTheme());
 
     defaultVariants();
   }
 
-  CssConfigurationBuilder(boolean test) {
+  CssEngineBuilder(boolean test) {
     /* noop */
   }
+
+  // ##################################################################
+  // # BEGIN: Public API
+  // ##################################################################
 
   public final void base(String value) {
     base = Objects.requireNonNull(value, "value == null");
@@ -79,60 +102,44 @@ final class CssConfigurationBuilder implements Css.Configuration.Options {
   public final void scanClass(Class<?> value) {
     Objects.requireNonNull(value, "value == null");
 
-    if (classesToScan.isEmpty()) {
-      classesToScan = Util.createSet();
+    if (scanClasses.isEmpty()) {
+      scanClasses = Util.createSet();
     }
 
-    classesToScan.add(value);
+    scanClasses.add(value);
   }
 
   @Override
   public final void scanDirectory(Path value) {
     Objects.requireNonNull(value, "value == null");
 
-    if (directoriesToScan.isEmpty()) {
-      directoriesToScan = Util.createSet();
+    if (scanDirectories.isEmpty()) {
+      scanDirectories = Util.createSet();
     }
 
-    directoriesToScan.add(value);
+    scanDirectories.add(value);
   }
 
   @Override
   public final void scanJarFileOf(Class<?> value) {
     Objects.requireNonNull(value, "value == null");
 
-    if (jarFilesToScan.isEmpty()) {
-      jarFilesToScan = Util.createSet();
+    if (scanJars.isEmpty()) {
+      scanJars = Util.createSet();
     }
 
-    jarFilesToScan.add(value);
+    scanJars.add(value);
   }
 
   public final void skipLayer(Css.Layer value) {
     Objects.requireNonNull(value, "value == null");
 
-    if (skipLayer.isEmpty()) {
-      skipLayer = Util.createSet();
+    if (skipLayers.isEmpty()) {
+      skipLayers = Util.createSet();
     }
 
-    skipLayer.add(value);
+    skipLayers.add(value);
   }
-
-  // ##################################################################
-  // # BEGIN: @theme
-  // ##################################################################
-
-  private int entryIndex;
-
-  private final Map<String, String> keywords = Util.createMap();
-
-  private final Map<String, Namespace> namespacePrefixes = namespacePrefixes();
-
-  private final StringBuilder sb = new StringBuilder();
-
-  private boolean theme;
-
-  private final Map<Namespace, Map<String, Css.ThemeEntry>> themeEntries = new EnumMap<>(Namespace.class);
 
   @Override
   public final void theme(String value) {
@@ -142,6 +149,70 @@ final class CssConfigurationBuilder implements Css.Configuration.Options {
 
     theme = true;
   }
+
+  @Override
+  public final void theme(String query, String value) {
+    Objects.requireNonNull(query, "query == null");
+    Objects.requireNonNull(value, "value == null");
+
+    final String key;
+    key = parseThemeQueryKey(query);
+
+    if (themeQueryEntries != null && themeQueryEntries.containsKey(key)) {
+      throw new IllegalStateException("Theme was already set for " + key);
+    }
+
+    parseThemeQueryValue(query, value);
+  }
+
+  // ##################################################################
+  // # END: Public API
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Default Variants
+  // ##################################################################
+
+  private void defaultVariants() {
+    variant("dark", new CssVariant.OfAtRule("@media (prefers-color-scheme: dark)"));
+
+    variant("active", new CssVariant.Suffix(":active"));
+    variant("checked", new CssVariant.Suffix(":checked"));
+    variant("disabled", new CssVariant.Suffix(":disabled"));
+    variant("first-child", new CssVariant.Suffix(":first-child"));
+    variant("focus", new CssVariant.Suffix(":focus"));
+    variant("focus-visible", new CssVariant.Suffix(":focus-visible"));
+    variant("hover", new CssVariant.Suffix(":hover"));
+    variant("last-child", new CssVariant.Suffix(":last-child"));
+    variant("visited", new CssVariant.Suffix(":visited"));
+
+    variant("after", new CssVariant.Suffix("::after"));
+    variant("before", new CssVariant.Suffix("::before"));
+    variant("first-letter", new CssVariant.Suffix("::first-letter"));
+    variant("first-line", new CssVariant.Suffix("::first-line"));
+
+    variant("*", new CssVariant.Suffix(" > *"));
+    variant("**", new CssVariant.Suffix(" *"));
+  }
+
+  private void variant(String name, CssVariant variant) {
+    CssVariant maybeExisting;
+    maybeExisting = variants.put(name, variant);
+
+    if (maybeExisting == null) {
+      return;
+    }
+
+    // TODO restore existing and log?
+  }
+
+  // ##################################################################
+  // # END: Default Variants
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: @theme
+  // ##################################################################
 
   private Map<String, Namespace> namespacePrefixes() {
     Map<String, Namespace> map;
@@ -448,23 +519,6 @@ final class CssConfigurationBuilder implements Css.Configuration.Options {
   // # BEGIN: Parse :: @theme w/ query {}
   // ##################################################################
 
-  private Map<String, List<Css.ThemeQueryEntry>> themeQueryEntries;
-
-  @Override
-  public final void theme(String query, String value) {
-    Objects.requireNonNull(query, "query == null");
-    Objects.requireNonNull(value, "value == null");
-
-    final String key;
-    key = parseThemeQueryKey(query);
-
-    if (themeQueryEntries != null && themeQueryEntries.containsKey(key)) {
-      throw new IllegalStateException("Theme was already set for " + key);
-    }
-
-    parseThemeQueryValue(query, value);
-  }
-
   private String parseThemeQueryKey(String key) {
     if ("@media (prefers-color-scheme: dark)".equals(key)) {
       return key;
@@ -636,75 +690,6 @@ final class CssConfigurationBuilder implements Css.Configuration.Options {
   // # END: Parse :: @theme w/ query {}
   // ##################################################################
 
-  final CssConfiguration build() {
-    validateTheme();
-
-    return new CssConfiguration(
-        base,
-
-        UtilUnmodifiableList.copyOf(classesToScan),
-
-        UtilUnmodifiableList.copyOf(directoriesToScan),
-
-        UtilUnmodifiableList.copyOf(jarFilesToScan),
-
-        noteSink,
-
-        UtilUnmodifiableSet.copyOf(skipLayer),
-
-        keywords,
-
-        UtilUnmodifiableList.copyOf(themeEntries.values()),
-
-        themeQueryEntries != null ? UtilUnmodifiableList.copyOf(themeQueryEntries.entrySet()) : List.of(),
-
-        variants
-    );
-  }
-
-  // ##################################################################
-  // # BEGIN: Default Variants
-  // ##################################################################
-
-  private final Map<String, CssVariant> variants = new LinkedHashMap<>();
-
-  private void defaultVariants() {
-    variant("dark", new CssVariant.OfAtRule("@media (prefers-color-scheme: dark)"));
-
-    variant("active", new CssVariant.Suffix(":active"));
-    variant("checked", new CssVariant.Suffix(":checked"));
-    variant("disabled", new CssVariant.Suffix(":disabled"));
-    variant("first-child", new CssVariant.Suffix(":first-child"));
-    variant("focus", new CssVariant.Suffix(":focus"));
-    variant("focus-visible", new CssVariant.Suffix(":focus-visible"));
-    variant("hover", new CssVariant.Suffix(":hover"));
-    variant("last-child", new CssVariant.Suffix(":last-child"));
-    variant("visited", new CssVariant.Suffix(":visited"));
-
-    variant("after", new CssVariant.Suffix("::after"));
-    variant("before", new CssVariant.Suffix("::before"));
-    variant("first-letter", new CssVariant.Suffix("::first-letter"));
-    variant("first-line", new CssVariant.Suffix("::first-line"));
-
-    variant("*", new CssVariant.Suffix(" > *"));
-    variant("**", new CssVariant.Suffix(" *"));
-  }
-
-  private void variant(String name, CssVariant variant) {
-    CssVariant maybeExisting;
-    maybeExisting = variants.put(name, variant);
-
-    if (maybeExisting == null) {
-      return;
-    }
-
-    // TODO restore existing and log?
-  }
-
-  // ##################################################################
-  // # END: Default Variants
-  // ##################################################################
-
   // ##################################################################
   // # BEGIN: Test-only section
   // ##################################################################
@@ -734,6 +719,97 @@ final class CssConfigurationBuilder implements Css.Configuration.Options {
 
   // ##################################################################
   // # END: Test-only section
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Build
+  // ##################################################################
+
+  final CssEngine build() {
+    validateTheme();
+
+    return new CssEngine(this);
+  }
+
+  final String base() {
+    return base;
+  }
+
+  final Lang.ClassReader classReader() {
+    return Lang.createClassReader(noteSink);
+  }
+
+  final Map<String, String> keywords() {
+    return keywords.toUnmodifiableMap();
+  }
+
+  final Note.Sink noteSink() {
+    return noteSink;
+  }
+
+  final Map<String, Key> prefixes() {
+    final UtilMap<String, Key> prefixes;
+    prefixes = new UtilMap<>();
+
+    for (Css.Key key : Css.Key.values()) {
+      final String propertyName;
+      propertyName = key.propertyName;
+
+      final Css.Key maybeExisting;
+      maybeExisting = prefixes.put(propertyName, key);
+
+      if (maybeExisting != null) {
+        throw new IllegalArgumentException(
+            "Prefix " + propertyName + " already mapped to " + maybeExisting
+        );
+      }
+    }
+
+    return prefixes.toUnmodifiableMap();
+  }
+
+  final Iterable<? extends Class<?>> scanClasses() {
+    return UtilUnmodifiableList.copyOf(scanClasses);
+  }
+
+  final Iterable<? extends Path> scanDirectories() {
+    return UtilUnmodifiableList.copyOf(scanDirectories);
+  }
+
+  final Iterable<? extends Class<?>> scanJars() {
+    return UtilUnmodifiableList.copyOf(scanJars);
+  }
+
+  final Set<? extends Layer> skipLayers() {
+    return skipLayers;
+  }
+
+  final Iterable<? extends Css.ThemeEntry> themeEntries() {
+    UtilList<Css.ThemeEntry> entries;
+    entries = new UtilList<>();
+
+    for (Map<String, Css.ThemeEntry> value : themeEntries.values()) {
+      Collection<Css.ThemeEntry> thisEntries;
+      thisEntries = value.values();
+
+      entries.addAll(thisEntries);
+    }
+
+    entries.sort(Comparator.naturalOrder());
+
+    return entries.toUnmodifiableList();
+  }
+
+  final Iterable<? extends Entry<String, List<ThemeQueryEntry>>> themeQueryEntries() {
+    return themeQueryEntries != null ? UtilUnmodifiableList.copyOf(themeQueryEntries.entrySet()) : List.of();
+  }
+
+  final Map<String, CssVariant> variants() {
+    return variants;
+  }
+
+  // ##################################################################
+  // # END: Build
   // ##################################################################
 
 }

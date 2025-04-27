@@ -17,19 +17,13 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class CssEngineTestFormatValue {
+public class CssEngineTest08FormatValue {
 
   private final CssEngine engine = CssEngine.create(engine -> {
     engine.noteSink(Y.noteSink());
   });
-
-  @BeforeClass
-  public void beforeClass() {
-    engine.execute();
-  }
 
   @Test(description = "arity: arity=2")
   public void arity02() {

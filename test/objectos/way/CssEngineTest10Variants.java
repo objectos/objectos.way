@@ -19,7 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 import org.testng.annotations.Test;
 
-public class CssEngineTestVariants {
+public class CssEngineTest10Variants {
 
   @Test
   public void active() {

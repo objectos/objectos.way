@@ -19,7 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 import org.testng.annotations.Test;
 
-public class CssEngineTestUtilities {
+public class CssEngineTest09GenerateUtilities {
 
   @Test
   public void alignContent() {

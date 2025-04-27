@@ -17,188 +17,25 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
-import java.util.List;
-import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class CssConfigurationTestTheme {
+public class CssEngineTest11Full {
 
-  @Test(description = "breakpoint :: just one")
-  public void breakpoint01() {
-    List<Css.ThemeEntry> entries;
-    entries = test("""
-    --breakpoint-sm: 40rem;
-    """);
-
-    assertEquals(entries.size(), 1);
-
-    Css.ThemeEntry entry0;
-    entry0 = entries.get(0);
-
-    assertEquals(entry0.index(), 0);
-    assertEquals(entry0.toString(), "--breakpoint-sm: 40rem;");
-    assertEquals(entry0.id(), "sm");
-  }
-
-  @Test(description = "colors :: just one")
-  public void colors01() {
-    List<Css.ThemeEntry> entries;
-    entries = test("""
-    --color-stone-950: oklch(0.147 0.004 49.25);
-    """);
-
-    assertEquals(entries.size(), 1);
-
-    Css.ThemeEntry entry0;
-    entry0 = entries.get(0);
-
-    assertEquals(entry0.index(), 0);
-    assertEquals(entry0.toString(), "--color-stone-950: oklch(0.147 0.004 49.25);");
-    assertEquals(entry0.id(), "stone-950");
-  }
-
-  @Test(description = "colors :: two lines")
-  public void colors02() {
-    List<Css.ThemeEntry> entries;
-    entries = test("""
-    --color-stone-950: oklch(0.147 0.004 49.25);
-    --color-red-50: oklch(0.971 0.013 17.38);
-    """);
-
-    assertEquals(entries.size(), 2);
-
-    Css.ThemeEntry entry0;
-    entry0 = entries.get(0);
-
-    assertEquals(entry0.index(), 0);
-    assertEquals(entry0.toString(), "--color-stone-950: oklch(0.147 0.004 49.25);");
-    assertEquals(entry0.id(), "stone-950");
-
-    Css.ThemeEntry entry1;
-    entry1 = entries.get(1);
-
-    assertEquals(entry1.index(), 1);
-    assertEquals(entry1.toString(), "--color-red-50: oklch(0.971 0.013 17.38);");
-    assertEquals(entry1.id(), "red-50");
-  }
-
-  @Test(description = "colors :: multiple w/ blank lines")
-  public void colors03() {
-    List<Css.ThemeEntry> entries;
-    entries = test("""
-    --color-orange-900: oklch(0.408 0.123 38.172);
-    --color-orange-950: oklch(0.266 0.079 36.259);
-
-    --color-amber-50: oklch(0.987 0.022 95.277);
-    """);
-
-    assertEquals(entries.size(), 3);
-
-    Css.ThemeEntry entry0;
-    entry0 = entries.get(0);
-
-    assertEquals(entry0.index(), 0);
-    assertEquals(entry0.toString(), "--color-orange-900: oklch(0.408 0.123 38.172);");
-    assertEquals(entry0.id(), "orange-900");
-
-    Css.ThemeEntry entry1;
-    entry1 = entries.get(1);
-
-    assertEquals(entry1.index(), 1);
-    assertEquals(entry1.toString(), "--color-orange-950: oklch(0.266 0.079 36.259);");
-    assertEquals(entry1.id(), "orange-950");
-
-    Css.ThemeEntry entry2;
-    entry2 = entries.get(2);
-
-    assertEquals(entry2.index(), 2);
-    assertEquals(entry2.toString(), "--color-amber-50: oklch(0.987 0.022 95.277);");
-    assertEquals(entry2.id(), "amber-50");
-  }
-
-  @Test(description = "colors :: it should trim the value")
-  public void colors04() {
-    List<Css.ThemeEntry> entries;
-    entries = test("""
-    --color-orange-900:
-       oklch(0.408 0.123        38.172)     ;
-    """);
-
-    assertEquals(entries.size(), 1);
-
-    Css.ThemeEntry entry0;
-    entry0 = entries.get(0);
-
-    assertEquals(entry0.index(), 0);
-    assertEquals(entry0.toString(), "--color-orange-900: oklch(0.408 0.123 38.172);");
-    assertEquals(entry0.id(), "orange-900");
-  }
-
-  @Test(description = "colors :: clear")
-  public void colors05() {
-    List<Css.ThemeEntry> entries;
-    entries = test("""
-    --color-*: initial;
-    """);
-
-    assertEquals(entries.size(), 0);
-  }
-
-  @Test(description = "custom :: allow for values without a namespace")
-  public void custom01() {
-    List<Css.ThemeEntry> entries;
-    entries = test("""
-    --rx: 16px;
-    """);
-
-    assertEquals(entries.size(), 1);
-
-    Css.ThemeEntry entry0;
-    entry0 = entries.get(0);
-
-    assertEquals(entry0.index(), 0);
-    assertEquals(entry0.toString(), "--rx: 16px;");
-    assertEquals(entry0.id(), null);
-  }
-
-  @Test(description = "font :: just one")
-  public void font01() {
-    List<Css.ThemeEntry> entries;
-    entries = test("""
-    --font-display: Foo, "Foo bar";
-    """);
-
-    assertEquals(entries.size(), 1);
-
-    Css.ThemeEntry entry0;
-    entry0 = entries.get(0);
-
-    assertEquals(entry0.index(), 0);
-    assertEquals(entry0.toString(), "--font-display: Foo, \"Foo bar\";");
-    assertEquals(entry0.id(), "display");
-  }
-
-  @Test(description = "Incomplete variable declaration at the end")
-  public void errors01() {
-    try {
-      test("""
-      --color-orange-900: oklch(0.408 0.123 38.172);
-      --color-orange-950:
-      """);
-
-      Assert.fail("It should have thrown");
-    } catch (IllegalArgumentException expected) {
-      assertEquals(expected.getMessage(), "Unexpected end of theme");
+  @Test(description = "generate: full generation")
+  public void generate01() {
+    class Subject extends CssSubject {
+      @Override
+      final void classes() {
+        className("width:auto");
+        className("md:max-width:screen-md");
+      }
     }
-  }
 
-  @Test(description = "Full generation indeed")
-  public void fullGeneration01() {
     assertEquals(
         CssEngine.generate(config -> {
-          config.skipLayer(Css.Layer.BASE);
-          config.skipLayer(Css.Layer.COMPONENTS);
-          config.skipLayer(Css.Layer.UTILITIES);
+          config.noteSink(Y.noteSink());
+
+          config.scanClass(Subject.class);
         }),
 
         """
@@ -468,98 +305,156 @@ public class CssConfigurationTestTheme {
             --rx: 16;
           }
         }
-        """
-    );
-  }
+        @layer base {
+          *, ::after, ::before, ::backdrop, ::file-selector-button {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            border: 0 solid;
+          }
+          html, :host {
+            line-height: 1.5;
+            -webkit-text-size-adjust: 100%;
+            tab-size: 4;
+            font-family: var( --default-font-family, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji' );
+            font-feature-settings: var(--default-font-feature-settings, normal);
+            font-variation-settings: var(--default-font-variation-settings, normal);
+            -webkit-tap-highlight-color: transparent;
+          }
+          body {
+            line-height: inherit;
+          }
+          hr {
+            height: 0;
+            color: inherit;
+            border-top-width: 1px;
+          }
+          abbr:where([title]) {
+            -webkit-text-decoration: underline dotted;
+            text-decoration: underline dotted;
+          }
+          h1, h2, h3, h4, h5, h6 {
+            font-size: inherit;
+            font-weight: inherit;
+          }
+          a {
+            color: inherit;
+            -webkit-text-decoration: inherit;
+            text-decoration: inherit;
+          }
+          b, strong {
+            font-weight: bolder;
+          }
+          code, kbd, samp, pre {
+            font-family: var( --default-mono-font-family, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace );
+            font-feature-settings: var(--default-mono-font-feature-settings, normal);
+            font-variation-settings: var(--default-mono-font-variation-settings, normal);
+            font-size: 1em;
+          }
+          small {
+            font-size: 80%;
+          }
+          sub, sup {
+            font-size: 75%;
+            line-height: 0;
+            position: relative;
+            vertical-align: baseline;
+          }
+          sub {
+            bottom: -0.25em;
+          }
+          sup {
+            top: -0.5em;
+          }
+          table {
+            text-indent: 0;
+            border-color: inherit;
+            border-collapse: collapse;
+          }
+          :-moz-focusring {
+            outline: auto;
+          }
+          progress {
+            vertical-align: baseline;
+          }
+          summary {
+            display: list-item;
+          }
+          ol, ul, menu {
+            list-style: none;
+          }
+          img, svg, video, canvas, audio, iframe, embed, object {
+            display: block;
+            vertical-align: middle;
+          }
+          img, video {
+            max-width: 100%;
+            height: auto;
+          }
+          button, input, select, optgroup, textarea, ::file-selector-button {
+            font: inherit;
+            font-feature-settings: inherit;
+            font-variation-settings: inherit;
+            letter-spacing: inherit;
+            color: inherit;
+            border-radius: 0;
+            background-color: transparent;
+            opacity: 1;
+          }
+          :where(select:is([multiple], [size])) optgroup {
+            font-weight: bolder;
+          }
+          :where(select:is([multiple], [size])) optgroup option {
+            padding-inline-start: 20px;
+          }
+          ::file-selector-button {
+            margin-inline-end: 4px;
+          }
+          ::placeholder {
+            opacity: 1;
+            color: color-mix(in oklab, currentColor 50%, transparent);
+          }
+          textarea {
+            resize: vertical;
+          }
+          ::-webkit-search-decoration {
+            -webkit-appearance: none;
+          }
+          ::-webkit-date-and-time-value {
+            min-height: 1lh;
+            text-align: inherit;
+          }
+          ::-webkit-datetime-edit {
+            display: inline-flex;
+          }
+          ::-webkit-datetime-edit-fields-wrapper {
+            padding: 0;
+          }
+          ::-webkit-datetime-edit, ::-webkit-datetime-edit-year-field, ::-webkit-datetime-edit-month-field, ::-webkit-datetime-edit-day-field, ::-webkit-datetime-edit-hour-field, ::-webkit-datetime-edit-minute-field, ::-webkit-datetime-edit-second-field, ::-webkit-datetime-edit-millisecond-field, ::-webkit-datetime-edit-meridiem-field {
+            padding-block: 0;
+          }
+          :-moz-ui-invalid {
+            box-shadow: none;
+          }
+          button, input:where([type='button'], [type='reset'], [type='submit']), ::file-selector-button {
+            appearance: button;
+          }
+          ::-webkit-inner-spin-button, ::-webkit-outer-spin-button {
+            height: auto;
+          }
+          [hidden]:where(:not([hidden='until-found'])) {
+            display: none !important;
+          }
+        }
+        @layer utilities {
+          .width\\:auto { width: auto }
 
-  @Test(description = "Full generation + clear")
-  public void fullGeneration02() {
-    assertEquals(
-        CssEngine.generate(config -> {
-          config.theme("""
-          --color-*: initial;
-          --color-foo: rebecapurple;
-          """);
-
-          config.skipLayer(Css.Layer.BASE);
-          config.skipLayer(Css.Layer.COMPONENTS);
-          config.skipLayer(Css.Layer.UTILITIES);
-        }),
-
-        """
-        @layer theme {
-          :root {
-            --default-font-sans: ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-            --default-font-serif: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
-            --default-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
-            --font-sans: var(--default-font-sans);
-            --font-serif: var(--default-font-serif);
-            --font-mono: var(--default-font-mono);
-            --breakpoint-sm: 40rem;
-            --breakpoint-md: 48rem;
-            --breakpoint-lg: 64rem;
-            --breakpoint-xl: 80rem;
-            --breakpoint-2xl: 96rem;
-            --default-font-family: var(--font-sans);
-            --default-font-feature-settings: var(--font-sans--font-feature-settings);
-            --default-font-variation-settings: var(--font-sans--font-variation-settings);
-            --default-mono-font-family: var(--font-mono);
-            --default-mono-font-feature-settings: var(--font-mono--font-feature-settings);
-            --default-mono-font-variation-settings: var(--font-mono--font-variation-settings);
-            --rx: 16;
-            --color-foo: rebecapurple;
+          @media (min-width: 48rem) {
+            .md\\:max-width\\:screen-md { max-width: var(--breakpoint-md) }
           }
         }
         """
     );
-  }
-
-  @Test(description = "Full generation + override")
-  public void fullGeneration03() {
-    assertEquals(
-        CssEngine.generate(config -> {
-          config.theme("""
-          --color-*: initial;
-          --breakpoint-*: initial;
-          --font-sans: 'DM Sans', var(--default-font-sans);
-          """);
-
-          config.skipLayer(Css.Layer.BASE);
-          config.skipLayer(Css.Layer.COMPONENTS);
-          config.skipLayer(Css.Layer.UTILITIES);
-        }),
-
-        """
-        @layer theme {
-          :root {
-            --default-font-sans: ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-            --default-font-serif: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
-            --default-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
-            --font-sans: 'DM Sans', var(--default-font-sans);
-            --font-serif: var(--default-font-serif);
-            --font-mono: var(--default-font-mono);
-            --default-font-family: var(--font-sans);
-            --default-font-feature-settings: var(--font-sans--font-feature-settings);
-            --default-font-variation-settings: var(--font-sans--font-variation-settings);
-            --default-mono-font-family: var(--font-mono);
-            --default-mono-font-feature-settings: var(--font-mono--font-feature-settings);
-            --default-mono-font-variation-settings: var(--font-mono--font-variation-settings);
-            --rx: 16;
-          }
-        }
-        """
-    );
-  }
-
-  private List<Css.ThemeEntry> test(String theme) {
-    final CssConfigurationBuilder builder;
-    builder = new CssConfigurationBuilder(true);
-
-    builder.noteSink(Y.noteSink());
-
-    builder.theme(theme);
-
-    return builder.testThemeEntries();
   }
 
 }

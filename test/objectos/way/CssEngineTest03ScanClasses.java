@@ -17,22 +17,22 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
+import java.util.Set;
 import org.testng.annotations.Test;
 
-public class CssEngineScannerTest {
+public class CssEngineTest03ScanClasses {
 
   @Test(description = "single class name")
   public void testCase01() {
     class Subject extends Html.Template {
       @Override
       protected final void render() {
-        div(className("m-0"));
+        div(className("margin:0"));
       }
     }
 
-    test(Subject.class, "m-0");
+    test(Subject.class, "margin:0");
   }
 
   @Test(description = "many class names")
@@ -41,14 +41,14 @@ public class CssEngineScannerTest {
       @Override
       protected final void render() {
         div(
-            className("m-0"),
-            className("block"),
-            className("leading-3")
+            className("margin:0"),
+            className("display:block"),
+            className("line-height:1")
         );
       }
     }
 
-    test(Subject.class, "m-0", "block", "leading-3");
+    test(Subject.class, "margin:0", "display:block", "line-height:1");
   }
 
   @Test(description = "long literal")
@@ -57,9 +57,9 @@ public class CssEngineScannerTest {
       @Override
       protected final void render() {
         div(
-            className("m-0"),
-            className("block"),
-            className("leading-3")
+            className("margin:0"),
+            className("display:block"),
+            className("line-height:1")
         );
         foo(123L);
       }
@@ -67,7 +67,7 @@ public class CssEngineScannerTest {
       private void foo(long l) {}
     }
 
-    test(Subject.class, "m-0", "block", "leading-3");
+    test(Subject.class, "margin:0", "display:block", "line-height:1");
   }
 
   @Test(description = "non-ascii modified utf-8")
@@ -77,15 +77,15 @@ public class CssEngineScannerTest {
       protected final void render() {
         div(
             // single byte (last one two bytes to trigger parsing)
-            className("\u0001\u0011\u0021\u0031\u0041\u0051\u0061\u007F\u0000"),
+            className("x:\u0001\u0011\u0021\u0031\u0041\u0051\u0061\u007F\u0000"),
             // two bytes
-            className("\u0000"),
-            className("\u0080\u0081\u07FE\u07FF"),
+            className("x:\u0000"),
+            className("x:\u0080\u0081\u07FE\u07FF"),
             // three bytes
-            className("\u0800\u0801\uFFFE\uFFFF"),
+            className("x:\u0800\u0801\uFFFE\uFFFF"),
             // random
-            className("Olá"),
-            className("こんにちは世界")
+            className("x:Olá"),
+            className("x:こんにちは世界")
         );
       }
     }
@@ -93,34 +93,34 @@ public class CssEngineScannerTest {
     test(
         Subject.class,
 
-        "\u0001\u0011\u0021\u0031\u0041\u0051\u0061\u007F\u0000",
-        "\u0000",
-        "\u0080\u0081\u07FE\u07FF",
-        "\u0800\u0801\uFFFE\uFFFF",
-        "Olá",
-        "こんにちは世界"
+        "x:\u0001\u0011\u0021\u0031\u0041\u0051\u0061\u007F\u0000",
+        "x:\u0000",
+        "x:\u0080\u0081\u07FE\u07FF",
+        "x:\u0800\u0801\uFFFE\uFFFF",
+        "x:Olá",
+        "x:こんにちは世界"
     );
   }
 
   private void test(Class<?> type, String... expected) {
-    List<String> result;
-    result = new ArrayList<>();
+    try {
+      CssEngine engine;
+      engine = CssEngine.create(config -> {
+        config.noteSink(Y.noteSink());
 
-    CssEngineScanner.Adapter adapter;
-    adapter = new CssEngineScanner.Adapter() {
-      @Override
-      public void accept(String s) { result.add(s); }
+        config.scanClass(type);
+      });
 
-      @Override
-      public void sourceName(String value) {}
-    };
+      engine.state(CssEngine.$SCAN);
 
-    CssEngineScanner scanner;
-    scanner = new CssEngineScanner(TestingNoteSink.INSTANCE);
+      while (engine.shouldExecute(CssEngine.$SCAN_DIRECTORY)) {
+        engine.executeOne();
+      }
 
-    scanner.scan(type, adapter);
-
-    assertEquals(result, List.of(expected));
+      assertEquals(engine.tokens(), Set.of(expected));
+    } catch (IOException e) {
+      throw new AssertionError("Should not have thrown", e);
+    }
   }
 
 }

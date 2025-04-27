@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.testng.annotations.Test;
 
-public class CssConfigurationTestThemeQuery {
+public class CssEngineTest02ParseThemeQuery {
 
   @Test(description = "single entry")
   public void query01() {
@@ -58,52 +58,9 @@ public class CssConfigurationTestThemeQuery {
     );
   }
 
-  @Test(description = "Full generation + override")
-  public void fullGeneration01() {
-    assertEquals(
-        CssEngine.generate(config -> {
-          config.theme("""
-          --color-*: initial;
-          --breakpoint-*: initial;
-          --font-*: initial;
-          """);
-
-          config.theme("@media (prefers-color-scheme: dark)", """
-          --color-background: var(--color-gray-800);
-          """);
-
-          config.skipLayer(Css.Layer.BASE);
-          config.skipLayer(Css.Layer.COMPONENTS);
-          config.skipLayer(Css.Layer.UTILITIES);
-        }),
-
-        """
-        @layer theme {
-          :root {
-            --default-font-sans: ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-            --default-font-serif: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
-            --default-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
-            --default-font-family: var(--font-sans);
-            --default-font-feature-settings: var(--font-sans--font-feature-settings);
-            --default-font-variation-settings: var(--font-sans--font-variation-settings);
-            --default-mono-font-family: var(--font-mono);
-            --default-mono-font-feature-settings: var(--font-mono--font-feature-settings);
-            --default-mono-font-variation-settings: var(--font-mono--font-variation-settings);
-            --rx: 16;
-          }
-          @media (prefers-color-scheme: dark) {
-            :root {
-              --color-background: var(--color-gray-800);
-            }
-          }
-        }
-        """
-    );
-  }
-
   private void test(String query, String theme, String expected) {
-    final CssConfigurationBuilder builder;
-    builder = new CssConfigurationBuilder(true);
+    final CssEngineBuilder builder;
+    builder = new CssEngineBuilder(true);
 
     builder.noteSink(Y.noteSink());
 

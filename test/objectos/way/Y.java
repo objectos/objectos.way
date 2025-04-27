@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
+import java.io.Writer;
 import java.net.Socket;
 import java.net.URI;
 import java.net.http.HttpClient.Version;
@@ -46,6 +47,12 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.random.RandomGenerator;
 import java.util.stream.Collectors;
+import javax.tools.JavaCompiler;
+import javax.tools.JavaCompiler.CompilationTask;
+import javax.tools.JavaFileObject;
+import javax.tools.StandardJavaFileManager;
+import javax.tools.StandardLocation;
+import javax.tools.ToolProvider;
 
 final class Y {
 
@@ -320,6 +327,139 @@ final class Y {
   // ##################################################################
 
   // ##################################################################
+  // # BEGIN: JavaProject
+  // ##################################################################
+
+  public sealed interface JavaProject extends AutoCloseable {
+
+    Path classOutput();
+
+    @Override
+    void close();
+
+    boolean compile();
+
+    void writeJavaFile(Path path, String source);
+
+  }
+
+  private static final class JavaProjectImpl implements JavaProject {
+
+    private final Path root;
+    private final Path src;
+    private final Path cls;
+
+    private final JavaCompiler javaCompiler;
+    private final StandardJavaFileManager fileManager;
+
+    private final List<Path> sourceFiles = Util.createList();
+
+    public JavaProjectImpl(
+        Path root,
+        Path src,
+        Path cls,
+        JavaCompiler javaCompiler,
+        StandardJavaFileManager fileManager) {
+      this.root = root;
+      this.src = src;
+      this.cls = cls;
+      this.javaCompiler = javaCompiler;
+      this.fileManager = fileManager;
+    }
+
+    @Override
+    public final Path classOutput() {
+      return cls;
+    }
+
+    @Override
+    public final void close() {
+      try (fileManager) {
+        Io.deleteRecursively(root);
+      } catch (IOException e) {
+        throw new UncheckedIOException(e);
+      }
+    }
+
+    @Override
+    public final boolean compile() {
+      final Iterable<? extends JavaFileObject> compilationUnits;
+      compilationUnits = fileManager.getJavaFileObjectsFromPaths(sourceFiles);
+
+      sourceFiles.clear();
+
+      final CompilationTask task;
+      task = javaCompiler.getTask(null, fileManager, null, null, null, compilationUnits);
+
+      final Boolean result;
+      result = task.call();
+
+      return result.booleanValue();
+    }
+
+    @Override
+    public final void writeJavaFile(Path path, String source) {
+      try {
+        Path javaFile;
+        javaFile = src.resolve(path);
+
+        Path parent;
+        parent = javaFile.getParent();
+
+        Files.createDirectories(parent);
+
+        try (Writer w = Files.newBufferedWriter(javaFile)) {
+          w.write(source);
+        }
+
+        sourceFiles.add(javaFile);
+      } catch (IOException e) {
+        throw new UncheckedIOException(e);
+      }
+    }
+
+  }
+
+  public static JavaProject javaProject() {
+    try {
+      final Path root;
+      root = nextTempDir();
+
+      final JavaCompiler javaCompiler;
+      javaCompiler = ToolProvider.getSystemJavaCompiler();
+
+      final StandardJavaFileManager fileManager;
+      fileManager = javaCompiler.getStandardFileManager(null, null, null);
+
+      fileManager.setLocationForModule(StandardLocation.MODULE_PATH, "objectos.way", List.of(Path.of("work", "main")));
+
+      final Path src;
+      src = root.resolve("src");
+
+      Files.createDirectories(src);
+
+      fileManager.setLocationFromPaths(StandardLocation.SOURCE_PATH, List.of(src));
+
+      final Path cls;
+      cls = root.resolve("cls");
+
+      Files.createDirectories(cls);
+
+      fileManager.setLocationFromPaths(StandardLocation.CLASS_OUTPUT, List.of(cls));
+
+      return new JavaProjectImpl(
+          root, src, cls, javaCompiler, fileManager
+      );
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
+  }
+
+  // ##################################################################
+  // # End: JavaProject
+  // ##################################################################
+
+  // ##################################################################
   // # BEGIN: Media.Text
   // ##################################################################
 
@@ -430,6 +570,14 @@ final class Y {
       Io.deleteRecursively(root);
     }
 
+    final Path nextTempDir() {
+      try {
+        return Files.createTempDirectory(root, "next-temp-dir");
+      } catch (IOException e) {
+        throw new UncheckedIOException(e);
+      }
+    }
+
     final Path nextTempFile() {
       try {
         return Files.createTempFile(root, "next-temp-file", ".tmp");
@@ -444,6 +592,10 @@ final class Y {
 
     static final NextPath INSTANCE = NextPath.create();
 
+  }
+
+  public static Path nextTempDir() {
+    return NextPathHolder.INSTANCE.nextTempDir();
   }
 
   public static Path nextTempFile(String contents, Charset charset) {

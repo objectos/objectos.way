@@ -35,15 +35,14 @@ public final class Css {
   //
 
   /**
-   * The configuration of a CSS generation process. It is also capable of
-   * generating CSS on demand by invoking the {@link #writeTo(Appendable)}.
+   * Generates CSS.
    */
-  public sealed interface Configuration extends Media.Text permits CssConfiguration {
+  public sealed interface Engine extends Media.Text permits CssEngine {
 
     /**
      * Options for creating a {@code Configuration} instance.
      */
-    sealed interface Options permits CssConfigurationBuilder {
+    sealed interface Options permits CssEngineBuilder {
 
       /**
        * Use the specified note sink.
@@ -72,16 +71,16 @@ public final class Css {
     }
 
     /**
-     * Creates a new {@code Configuration} instance with the specified options.
+     * Creates a new {@code Engine} instance with the specified options.
      *
      * @param options
      *        a handle for an {@code Options} instance
      *
-     * @return a new {@code Configuration} instance
+     * @return a new {@code Engine} instance
      */
-    static Configuration create(Consumer<? super Options> options) {
-      final CssConfigurationBuilder builder;
-      builder = new CssConfigurationBuilder();
+    static Engine create(Consumer<? super Options> options) {
+      final CssEngineBuilder builder;
+      builder = new CssEngineBuilder();
 
       options.accept(builder);
 

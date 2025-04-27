@@ -19,7 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 import org.testng.annotations.Test;
 
-public class CssEngineTestBase {
+public class CssEngineTest07GenerateBase {
 
   @Test(description = "Do not emit comments")
   public void comment01() {

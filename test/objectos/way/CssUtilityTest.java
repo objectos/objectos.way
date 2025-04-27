@@ -18,7 +18,6 @@ package objectos.way;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -64,9 +63,9 @@ public class CssUtilityTest {
 
   @Test
   public void writeClassName() {
-    testClassName("m-0", ".m-0 {}\n");
-    testClassName("sm:m-1", ".sm\\:m-1 {}\n");
-    testClassName("2xl:m-2", ".\\32 xl\\:m-2 {}\n");
+    testClassName("m-0", ".m-0");
+    testClassName("sm:m-1", ".sm\\:m-1");
+    testClassName("2xl:m-2", ".\\32 xl\\:m-2");
   }
 
   private CssUtility utility(Css.Key key, String className, List<CssVariant.OfClassName> formats) {
@@ -77,22 +76,15 @@ public class CssUtilityTest {
   }
 
   private void testClassName(String className, String expected) {
-    try {
-      StringBuilder out;
-      out = new StringBuilder();
+    StringBuilder out;
+    out = new StringBuilder();
 
-      CssWriter w;
-      w = new CssWriter(out);
+    CssUtility utility;
+    utility = utility(Css.Key.COLOR, className, List.of());
 
-      CssUtility utility;
-      utility = utility(Css.Key.COLOR, className, List.of());
+    utility.writeClassName(out);
 
-      utility.writeTo(w, 0);
-
-      assertEquals(out.toString(), expected);
-    } catch (IOException e) {
-      throw new AssertionError("StringBuilder does not throw IOException", e);
-    }
+    assertEquals(out.toString(), expected);
   }
 
 }
