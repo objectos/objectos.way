@@ -49,7 +49,7 @@ record CssUtility(
     modifier.writeClassName(sb, className);
   }
 
-  final List<CssVariant.OfAtRule> atRules() {
+  final List<CssVariant> atRules() {
     return modifier.atRules();
   }
 

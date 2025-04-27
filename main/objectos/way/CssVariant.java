@@ -15,89 +15,128 @@
  */
 package objectos.way;
 
-import java.io.IOException;
+import java.util.Objects;
 
-@SuppressWarnings("exports")
-sealed interface CssVariant {
+final class CssVariant implements Comparable<CssVariant> {
 
-  record OfAtRule(String rule) implements Comparable<OfAtRule>, CssVariant {
+  private enum Kind {
 
-    @Override
-    public final int compareTo(OfAtRule o) {
-      if (o instanceof OfAtRule that) {
-        return rule.compareTo(that.rule);
-      } else {
-        return 1;
+    AT_RULE,
+
+    PREFIX,
+
+    SUFFIX;
+
+  }
+
+  private final Kind kind;
+
+  private final String value;
+
+  private CssVariant(Kind kind, String value) {
+    this.kind = kind;
+    this.value = Objects.requireNonNull(value, "value == null");
+  }
+
+  public static CssVariant atRule(String value) {
+    return new CssVariant(Kind.AT_RULE, value);
+  }
+
+  public static CssVariant prefix(String value) {
+    return new CssVariant(Kind.PREFIX, value);
+  }
+
+  public static CssVariant suffix(String value) {
+    return new CssVariant(Kind.SUFFIX, value);
+  }
+
+  @Override
+  public final int compareTo(CssVariant o) {
+    final int result;
+    result = kind.compareTo(o.kind);
+
+    if (result != 0) {
+      return result;
+    }
+
+    return value.compareTo(o.value);
+  }
+
+  @Override
+  public final boolean equals(Object obj) {
+    return obj == this || obj instanceof CssVariant that
+        && kind.equals(that.kind)
+        && value.equals(that.value);
+  }
+
+  @Override
+  public final int hashCode() {
+    int result;
+    result = 1;
+
+    result = 31 * result + kind.hashCode();
+
+    result = 31 * result + value.hashCode();
+
+    return result;
+  }
+
+  public final CssVariant generateGroup() {
+    return switch (kind) {
+      case AT_RULE -> null;
+
+      case PREFIX -> prefix(value + ".group ");
+
+      case SUFFIX -> prefix(".group" + value + " ");
+    };
+  }
+
+  public final boolean isAtRule() {
+    return kind == Kind.AT_RULE;
+  }
+
+  public final int length() {
+    return switch (kind) {
+      case AT_RULE -> throw new UnsupportedOperationException(
+          "length must not be invoked on an AT_RULE variant"
+      );
+
+      default -> value.length();
+    };
+  }
+
+  public final void writeClassName(StringBuilder out, int startIndex) {
+    switch (kind) {
+      case AT_RULE -> throw new UnsupportedOperationException(
+          "writeClassName must not be invoked on an AT_RULE variant"
+      );
+
+      case PREFIX -> {
+        String original;
+        original = out.substring(startIndex, out.length());
+
+        out.setLength(startIndex);
+
+        out.append(value);
+
+        out.append(original);
+      }
+
+      case SUFFIX -> {
+        String original;
+        original = out.substring(startIndex, out.length());
+
+        out.setLength(startIndex);
+
+        out.append(original);
+
+        out.append(value);
       }
     }
-
-    public final void writeAtRuleStart(CssWriter w, int level) throws IOException {
-      w.indent(level);
-
-      w.write(rule);
-      w.writeln(" {");
-    }
-
   }
 
-  sealed interface OfClassName extends CssVariant {
-
-    void writeClassName(StringBuilder out, int startIndex);
-
-    int length();
-
-  }
-
-  record Prefix(String value) implements OfClassName {
-    @Override
-    public final void writeClassName(StringBuilder out, int startIndex) {
-      String original;
-      original = out.substring(startIndex, out.length());
-
-      out.setLength(startIndex);
-
-      out.append(value);
-
-      out.append(original);
-    }
-
-    @Override
-    public final int length() {
-      return value.length();
-    }
-
-    @Override
-    public final CssVariant generateGroup() {
-      return new Prefix(value + ".group ");
-    }
-  }
-
-  record Suffix(String value) implements OfClassName {
-    @Override
-    public final void writeClassName(StringBuilder out, int startIndex) {
-      String original;
-      original = out.substring(startIndex, out.length());
-
-      out.setLength(startIndex);
-
-      out.append(original);
-
-      out.append(value);
-    }
-
-    @Override
-    public final int length() {
-      return value.length();
-    }
-
-    @Override
-    public final CssVariant generateGroup() {
-      return new Prefix(".group" + value + " ");
-    }
-  }
-
-  default CssVariant generateGroup() {
-    return null;
+  public final String value() {
+    return value;
   }
 
 }

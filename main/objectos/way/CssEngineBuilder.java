@@ -174,25 +174,25 @@ final class CssEngineBuilder implements Css.Engine.Options {
   // ##################################################################
 
   private void defaultVariants() {
-    variant("dark", new CssVariant.OfAtRule("@media (prefers-color-scheme: dark)"));
+    variant("dark", CssVariant.atRule("@media (prefers-color-scheme: dark)"));
 
-    variant("active", new CssVariant.Suffix(":active"));
-    variant("checked", new CssVariant.Suffix(":checked"));
-    variant("disabled", new CssVariant.Suffix(":disabled"));
-    variant("first-child", new CssVariant.Suffix(":first-child"));
-    variant("focus", new CssVariant.Suffix(":focus"));
-    variant("focus-visible", new CssVariant.Suffix(":focus-visible"));
-    variant("hover", new CssVariant.Suffix(":hover"));
-    variant("last-child", new CssVariant.Suffix(":last-child"));
-    variant("visited", new CssVariant.Suffix(":visited"));
+    variant("active", CssVariant.suffix(":active"));
+    variant("checked", CssVariant.suffix(":checked"));
+    variant("disabled", CssVariant.suffix(":disabled"));
+    variant("first-child", CssVariant.suffix(":first-child"));
+    variant("focus", CssVariant.suffix(":focus"));
+    variant("focus-visible", CssVariant.suffix(":focus-visible"));
+    variant("hover", CssVariant.suffix(":hover"));
+    variant("last-child", CssVariant.suffix(":last-child"));
+    variant("visited", CssVariant.suffix(":visited"));
 
-    variant("after", new CssVariant.Suffix("::after"));
-    variant("before", new CssVariant.Suffix("::before"));
-    variant("first-letter", new CssVariant.Suffix("::first-letter"));
-    variant("first-line", new CssVariant.Suffix("::first-line"));
+    variant("after", CssVariant.suffix("::after"));
+    variant("before", CssVariant.suffix("::before"));
+    variant("first-letter", CssVariant.suffix("::first-letter"));
+    variant("first-line", CssVariant.suffix("::first-line"));
 
-    variant("*", new CssVariant.Suffix(" > *"));
-    variant("**", new CssVariant.Suffix(" *"));
+    variant("*", CssVariant.suffix(" > *"));
+    variant("**", CssVariant.suffix(" *"));
   }
 
   private void variant(String name, CssVariant variant) {
@@ -505,7 +505,7 @@ final class CssEngineBuilder implements Css.Engine.Options {
       id = entry.id();
 
       CssVariant variant;
-      variant = new CssVariant.OfAtRule("@media (min-width: " + entry.value() + ")");
+      variant = CssVariant.atRule("@media (min-width: " + entry.value() + ")");
 
       variant(id, variant);
     }

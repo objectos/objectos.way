@@ -763,10 +763,10 @@ final class CssEngine implements Css.Engine, Consumer<String>, FileVisitor<Path>
           return $PROCESS_LOOP;
         }
 
-        switch (variant) {
-          case CssVariant.OfAtRule ofAtRule -> variantsOfAtRule.add(ofAtRule);
-
-          case CssVariant.OfClassName ofClassName -> variantsOfClassName.add(ofClassName);
+        if (variant.isAtRule()) {
+          variantsOfAtRule.add(variant);
+        } else {
+          variantsOfClassName.add(variant);
         }
       }
 
@@ -1038,13 +1038,13 @@ final class CssEngine implements Css.Engine, Consumer<String>, FileVisitor<Path>
 
   private static final class Context {
 
-    final CssVariant.OfAtRule parent;
+    final CssVariant parent;
 
-    Map<CssVariant.OfAtRule, Context> atRules;
+    Map<CssVariant, Context> atRules;
 
     List<CssUtility> utilities = Util.createList();
 
-    Context(CssVariant.OfAtRule parent) {
+    Context(CssVariant parent) {
       this.parent = parent;
     }
 
@@ -1052,7 +1052,7 @@ final class CssEngine implements Css.Engine, Consumer<String>, FileVisitor<Path>
       utilities.add(utility);
     }
 
-    final Context nest(CssVariant.OfAtRule next) {
+    final Context nest(CssVariant next) {
       if (atRules == null) {
         atRules = new TreeMap<>();
       }
@@ -1070,12 +1070,12 @@ final class CssEngine implements Css.Engine, Consumer<String>, FileVisitor<Path>
       Context ctx;
       ctx = topLevel;
 
-      final List<CssVariant.OfAtRule> modifierAtRules;
+      final List<CssVariant> modifierAtRules;
       modifierAtRules = utility.atRules();
 
       if (!modifierAtRules.isEmpty()) {
 
-        final Iterator<CssVariant.OfAtRule> iterator;
+        final Iterator<CssVariant> iterator;
         iterator = modifierAtRules.iterator();
 
         while (iterator.hasNext()) {
@@ -1105,7 +1105,7 @@ final class CssEngine implements Css.Engine, Consumer<String>, FileVisitor<Path>
       writeUtility(utility, level);
     }
 
-    final Map<CssVariant.OfAtRule, Context> atRules;
+    final Map<CssVariant, Context> atRules;
     atRules = ctx.atRules;
 
     if (atRules != null) {
@@ -1114,10 +1114,10 @@ final class CssEngine implements Css.Engine, Consumer<String>, FileVisitor<Path>
 
         indent(level);
 
-        final CssVariant.OfAtRule parent;
+        final CssVariant parent;
         parent = child.parent;
 
-        write(parent.rule());
+        write(parent.value());
 
         writeln(" {");
 
@@ -1307,9 +1307,9 @@ final class CssEngine implements Css.Engine, Consumer<String>, FileVisitor<Path>
 
   private final List<String> classNameSlugs = Util.createList();
 
-  private final List<CssVariant.OfAtRule> variantsOfAtRule = Util.createList();
+  private final List<CssVariant> variantsOfAtRule = Util.createList();
 
-  private final List<CssVariant.OfClassName> variantsOfClassName = Util.createList();
+  private final List<CssVariant> variantsOfClassName = Util.createList();
 
   private CssVariant variantByName(String name) {
     CssVariant result;
@@ -1362,13 +1362,13 @@ final class CssEngine implements Css.Engine, Consumer<String>, FileVisitor<Path>
       return null;
     }
 
-    return new CssVariant.Suffix(name);
+    return CssVariant.suffix(name);
   }
 
   private CssVariant variantByNameOfElement(String name) {
     if (HtmlElementName.hasName(name)) {
       final CssVariant descendant;
-      descendant = new CssVariant.Suffix(" " + name);
+      descendant = CssVariant.suffix(" " + name);
 
       final CssVariant maybeExisting;
       maybeExisting = variants.put(name, descendant);
@@ -1412,7 +1412,7 @@ final class CssEngine implements Css.Engine, Consumer<String>, FileVisitor<Path>
       return null;
     }
 
-    return new CssVariant.Suffix(":" + name);
+    return CssVariant.suffix(":" + name);
   }
 
   private CssVariant variantByNameOfGroup(String name) {

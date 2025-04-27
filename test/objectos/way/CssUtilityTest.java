@@ -27,9 +27,9 @@ public class CssUtilityTest {
 
   @Test(description = "order by utility first")
   public void ordering01() {
-    List<CssVariant.OfClassName> empty = List.of();
-    List<CssVariant.OfClassName> hover = List.of(new CssVariant.Suffix(":hover"));
-    List<CssVariant.OfClassName> active = List.of(new CssVariant.Suffix(":active"));
+    List<CssVariant> empty = List.of();
+    List<CssVariant> hover = List.of(CssVariant.suffix(":hover"));
+    List<CssVariant> active = List.of(CssVariant.suffix(":active"));
 
     List<CssUtility> utilities = new ArrayList<>();
 
@@ -68,7 +68,7 @@ public class CssUtilityTest {
     testClassName("2xl:m-2", ".\\32 xl\\:m-2");
   }
 
-  private CssUtility utility(Css.Key key, String className, List<CssVariant.OfClassName> formats) {
+  private CssUtility utility(Css.Key key, String className, List<CssVariant> formats) {
     CssModifier modifier;
     modifier = new CssModifier(List.of(), formats);
 

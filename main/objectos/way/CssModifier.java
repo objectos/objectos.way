@@ -18,8 +18,8 @@ package objectos.way;
 import java.util.List;
 
 record CssModifier(
-    List<CssVariant.OfAtRule> atRules,
-    List<CssVariant.OfClassName> classNames
+    List<CssVariant> atRules,
+    List<CssVariant> classNames
 ) implements Comparable<CssModifier> {
 
   static final CssModifier EMPTY_MODIFIER = new CssModifier(List.of(), List.of());
