@@ -33,7 +33,7 @@ import objectos.way.Css.Key;
 import objectos.way.Css.Layer;
 import objectos.way.Css.ThemeQueryEntry;
 
-final class CssEngineBuilder implements Css.Engine.Options {
+final class CssEngineBuilder implements Css.StyleSheet.Options {
 
   private enum Namespace {
 

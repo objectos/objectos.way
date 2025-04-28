@@ -46,7 +46,7 @@ import java.util.jar.JarFile;
 import objectos.way.Css.ThemeQueryEntry;
 import objectos.way.Lang.InvalidClassFileException;
 
-final class CssEngine implements Css.Engine, Consumer<String>, FileVisitor<Path> {
+final class CssEngine implements Css.StyleSheet, Consumer<String>, FileVisitor<Path> {
 
   record Notes(
       Note.Ref1<String> classNotFound,
@@ -228,6 +228,20 @@ final class CssEngine implements Css.Engine, Consumer<String>, FileVisitor<Path>
   @Override
   public final Charset charset() {
     return StandardCharsets.UTF_8;
+  }
+
+  @Override
+  public final String generate() {
+    try {
+      final StringBuilder out;
+      out = new StringBuilder();
+
+      writeTo(out);
+
+      return out.toString();
+    } catch (IOException e) {
+      throw new AssertionError("StringBuilder does not throw IOException", e);
+    }
   }
 
   @Override

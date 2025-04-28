@@ -35,33 +35,50 @@ public final class Css {
   //
 
   /**
-   * Generates CSS.
+   * A style sheet whose content is generated on demand by scanning Java class
+   * files for CSS utilities.
    */
-  public sealed interface Engine extends Media.Text permits CssEngine {
+  public sealed interface StyleSheet extends Media.Text permits CssEngine {
 
     /**
-     * Options for creating a {@code Configuration} instance.
+     * Options for creating a {@code StyleSheet} instance.
      */
     sealed interface Options permits CssEngineBuilder {
 
       /**
-       * Use the specified note sink.
+       * Use the specified note sink during generation.
        *
        * @param value
        *        the note sink to use
        */
       void noteSink(Note.Sink value);
 
+      /**
+       * The Java class file associated to the specified class will be scanned
+       * during the CSS generation process.
+       *
+       * @param value
+       *        the class whose Java class file will be scanned
+       */
       void scanClass(Class<?> value);
 
       /**
-       * Recursively scan the specified directory for Java class files.
+       * The specified directory will be recursively scanned for {@link Source}
+       * annotated Java class files during the CSS generation process.
        *
        * @param value
        *        the directory containing Java class files
        */
       void scanDirectory(Path value);
 
+      /**
+       * The JAR file (if found) associated to the specified class will be
+       * scanned for {@link Source} annotated Java class files during the CSS
+       * generation process.
+       *
+       * @param value
+       *        the class whose JAR file will be scanned
+       */
       void scanJarFileOf(Class<?> value);
 
       void theme(String value);
@@ -71,14 +88,14 @@ public final class Css {
     }
 
     /**
-     * Creates a new {@code Engine} instance with the specified options.
+     * Creates a new {@code StyleSheet} instance with the specified options.
      *
      * @param options
      *        a handle for an {@code Options} instance
      *
-     * @return a new {@code Engine} instance
+     * @return a new {@code StyleSheet} instance
      */
-    static Engine create(Consumer<? super Options> options) {
+    static StyleSheet create(Consumer<? super Options> options) {
       final CssEngineBuilder builder;
       builder = new CssEngineBuilder();
 
@@ -104,12 +121,19 @@ public final class Css {
     Charset charset();
 
     /**
-     * Scans the class file of {@code Source} annotated classes for CSS
-     * utilities and writes the resulting CSS to the specified
-     * {@code Appendable}.
+     * Scans the configured Java class files for CSS utilities and returns the
+     * generated CSS.
+     *
+     * @return the generated CSS
+     */
+    String generate();
+
+    /**
+     * Scans the configured Java class files for CSS utilities and writes the
+     * resulting CSS to the specified {@code Appendable}.
      *
      * @param out
-     *        the generated CSS will be appended to this object
+     *        where to append the generated CSS
      *
      * @throws IOException
      *         if an I/O error occurs
