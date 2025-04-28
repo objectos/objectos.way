@@ -98,7 +98,7 @@ public final class Http {
     /**
      * Configures the creation of a stand-alone exchange instance.
      */
-    sealed interface Config permits HttpExchangeConfig {
+    sealed interface Options permits HttpExchangeConfig {
 
       /**
        * Use the specified clock instance for generating time related values.
@@ -212,19 +212,27 @@ public final class Http {
        */
       <T> void set(Class<T> key, T value);
 
+      /**
+       * Listen to the response using the specified listener.
+       *
+       * @param value
+       *        the listener to use
+       */
+      void responseListener(ResponseListener value);
+
     }
 
     /**
      * Creates a stand-alone exchange instance typically to be used in test
      * cases.
      *
-     * @param config
-     *        configures the exchange instance creation
+     * @param options
+     *        allows for setting the options
      *
      * @return a newly created exchange instance with the configured options
      */
-    static Exchange create(Consumer<Config> config) {
-      return HttpExchange.create0(config);
+    static Exchange create(Consumer<? super Options> options) {
+      return HttpExchange.create0(options);
     }
 
     /**
@@ -918,6 +926,16 @@ public final class Http {
 
   }
 
+  public interface ResponseListener {
+
+    void status(Http.Status status);
+
+    void header(Http.HeaderName name, String value);
+
+    void body(Object body);
+
+  }
+
   /**
    * Configures the routing of an HTTP server.
    */
@@ -1387,6 +1405,21 @@ public final class Http {
         case HTTP_1_1 -> out.append("HTTP/1.1");
       }
     }
+
+  }
+
+  static final class NoopResponseListener implements ResponseListener {
+
+    static final NoopResponseListener INSTANCE = new NoopResponseListener();
+
+    @Override
+    public final void status(Status status) { /* noop */ }
+
+    @Override
+    public final void header(HeaderName name, String value) { /* noop */ }
+
+    @Override
+    public final void body(Object body) { /* noop */ }
 
   }
 

@@ -17,8 +17,11 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
+import objectos.way.Http.ResponseListener;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -327,7 +330,55 @@ public class HttpExchangeTest9Create {
     return http.rawQueryWith(newName, newValue);
   }
 
-  private Http.Exchange http(Consumer<Http.Exchange.Config> more) {
+  @Test
+  public void responseListener01() {
+    class Subject extends Html.Template implements ResponseListener {
+      Http.Status status;
+
+      final Map<Http.HeaderName, String> headers = new LinkedHashMap<>();
+
+      Object body;
+
+      @Override
+      protected void render() {
+        div("resp listener");
+      }
+
+      @Override
+      public void status(Http.Status status) {
+        this.status = status;
+      }
+
+      @Override
+      public void header(Http.HeaderName name, String value) {
+        headers.put(name, value);
+      }
+
+      @Override
+      public void body(Object body) {
+        this.body = body;
+      }
+    }
+
+    final Subject subject;
+    subject = new Subject();
+
+    Http.Exchange http;
+    http = http(config -> {
+      config.responseListener(subject);
+    });
+
+    http.ok(subject);
+
+    assertEquals(subject.status, Http.Status.OK);
+    assertEquals(subject.headers.size(), 3);
+    assertEquals(subject.headers.get(Http.HeaderName.CONTENT_TYPE), "text/html; charset=utf-8");
+    assertEquals(subject.headers.get(Http.HeaderName.DATE), "Wed, 28 Jun 2023 12:08:43 GMT");
+    assertEquals(subject.headers.get(Http.HeaderName.TRANSFER_ENCODING), "chunked");
+    assertEquals(subject.body, subject);
+  }
+
+  private Http.Exchange http(Consumer<? super Http.Exchange.Options> more) {
     return Http.Exchange.create(config -> {
       config.clock(Y.clockFixed());
 

@@ -91,7 +91,7 @@ public final class Css {
      * Creates a new {@code StyleSheet} instance with the specified options.
      *
      * @param options
-     *        a handle for an {@code Options} instance
+     *        allows for setting the options
      *
      * @return a new {@code StyleSheet} instance
      */

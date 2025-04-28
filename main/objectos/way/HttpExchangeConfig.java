@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 
-final class HttpExchangeConfig implements Http.Exchange.Config {
+final class HttpExchangeConfig implements Http.Exchange.Options {
 
   Map<String, Object> attributes;
 
@@ -51,6 +51,8 @@ final class HttpExchangeConfig implements Http.Exchange.Config {
   private Map<String, Object> formParams;
 
   final Note.Sink noteSink = Note.NoOpSink.INSTANCE;
+
+  Http.ResponseListener responseListener = Http.NoopResponseListener.INSTANCE;
 
   @Override
   public final void clock(Clock value) {
@@ -193,6 +195,15 @@ final class HttpExchangeConfig implements Http.Exchange.Config {
     }
 
     attributes.put(name, value);
+  }
+
+  @Override
+  public final void responseListener(Http.ResponseListener value) {
+    if (responseListener != Http.NoopResponseListener.INSTANCE) {
+      throw new IllegalStateException("Response listener has already been set");
+    }
+
+    responseListener = Objects.requireNonNull(value, "value == null");
   }
 
   final InputStream inputStream() {

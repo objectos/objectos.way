@@ -304,13 +304,15 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   private final OutputStream outputStream;
 
-  private InetAddress remoteAddress;
-
-  private final Closeable socket;
-
   private String path;
 
   private Map<String, Object> queryParams;
+
+  private InetAddress remoteAddress;
+
+  private final Http.ResponseListener responseListener;
+
+  private final Closeable socket;
 
   private byte state;
 
@@ -338,6 +340,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
     remoteAddress = socket.getInetAddress();
 
+    responseListener = Http.NoopResponseListener.INSTANCE;
+
     this.socket = socket;
   }
 
@@ -358,15 +362,17 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
     outputStream = new ByteArrayOutputStream();
 
+    responseListener = config.responseListener;
+
     socket = () -> {}; // noop closeable
 
   }
 
-  static HttpExchange create0(Consumer<Config> config) {
+  static HttpExchange create0(Consumer<? super Http.Exchange.Options> options) {
     final HttpExchangeConfig builder;
     builder = new HttpExchangeConfig();
 
-    config.accept(builder);
+    options.accept(builder);
 
     final HttpExchange impl;
     impl = new HttpExchange(builder);
@@ -3193,6 +3199,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
     writeBytes(statusBytes);
 
     state = $RESPONSE_HEADERS;
+
+    responseListener.status(value);
   }
 
   private void headerUnchecked(Http.HeaderName name, long value) {
@@ -3236,6 +3244,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
         bitClear(BIT_CHUNKED);
       }
     }
+
+    responseListener.header(name, value);
   }
 
   final void send() {
@@ -3322,6 +3332,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
     }
 
     object = value;
+
+    responseListener.body(value);
   }
 
   private void terminate() {

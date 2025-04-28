@@ -543,7 +543,7 @@ public class HttpHandlerTest {
     );
   }
 
-  private Http.Exchange http(Consumer<Http.Exchange.Config> outer) {
+  private Http.Exchange http(Consumer<? super Http.Exchange.Options> outer) {
     return Http.Exchange.create(config -> {
       config.clock(Y.clockFixed());
 
