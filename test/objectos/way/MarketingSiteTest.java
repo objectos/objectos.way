@@ -44,6 +44,7 @@ public class MarketingSiteTest {
       resp(socket, """
           HTTP/1.1 301 Moved Permanently\r
           Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Content-Length: 0\r
           Location: /index.html\r
           \r
           """);

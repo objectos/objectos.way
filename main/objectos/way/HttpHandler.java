@@ -45,11 +45,13 @@ final class HttpHandler implements Http.Handler {
 
     FILTER,
 
-    // fixed content
-
-    CONTENT,
-
     // pre-made responses
+
+    OK_MEDIA_BYTES,
+
+    OK_MEDIA_TEXT,
+
+    OK_MEDIA_STREAM,
 
     METHOD_NOT_ALLOWED,
 
@@ -64,8 +66,6 @@ final class HttpHandler implements Http.Handler {
       return factory.apply(value);
     }
   }
-
-  private record Content(String contentType, byte[] bytes) {}
 
   private record FilterHolder(Http.Filter filter, Http.Handler handler) {}
 
@@ -129,6 +129,18 @@ final class HttpHandler implements Http.Handler {
     return NOT_FOUND;
   }
 
+  public static Http.Handler ok(Media.Bytes bytes) {
+    return new HttpHandler(Kind.OK_MEDIA_BYTES, null, bytes);
+  }
+
+  public static Http.Handler ok(Media.Text text) {
+    return new HttpHandler(Kind.OK_MEDIA_TEXT, null, text);
+  }
+
+  public static Http.Handler ok(Media.Stream stream) {
+    return new HttpHandler(Kind.OK_MEDIA_STREAM, null, stream);
+  }
+
   public static Http.Handler of(Predicate<? super Request> condition, List<Handler> handlers) {
     if (handlers == null) {
       return NOOP;
@@ -185,42 +197,26 @@ final class HttpHandler implements Http.Handler {
     };
   }
 
-  public static Http.Handler ofContent(String contentType, byte[] bytes) {
-    final Content main;
-    main = new Content(contentType, bytes);
-
-    return new HttpHandler(Kind.CONTENT, null, main);
-  }
-
   @Override
-  public final void handle(Http.Exchange http) {
-    if (http.processed()) {
+  public final void handle(Http.Exchange xch) {
+    if (xch.processed()) {
       return;
     }
 
-    final HttpExchange impl;
-    impl = (HttpExchange) http;
+    final HttpExchange http;
+    http = (HttpExchange) xch;
 
     switch (kind) {
       case SUBPATH_SINGLE, SUBPATH_MANY -> {}
 
-      default -> impl.pathReset();
+      default -> http.pathReset();
     }
 
-    if (predicate != null && !predicate.test(impl)) {
+    if (predicate != null && !predicate.test(http)) {
       return;
     }
 
-    handle0(impl, kind, main);
-  }
-
-  @Override
-  public final String toString() {
-    return "HttpHandler[kind=" + kind + ",predicate=" + predicate + ",main=" + main + "]";
-  }
-
-  private void handle0(HttpExchange http, Kind actualKind, Object data) {
-    switch (actualKind) {
+    switch (kind) {
       case NOOP -> {}
 
       case SUBPATH_SINGLE, SINGLE -> {
@@ -228,7 +224,7 @@ final class HttpHandler implements Http.Handler {
         pathIndex = http.pathIndex;
 
         final Http.Handler single;
-        single = (Http.Handler) data;
+        single = (Http.Handler) main;
 
         single.handle(http);
 
@@ -244,7 +240,7 @@ final class HttpHandler implements Http.Handler {
         // TODO path parameters
 
         final Http.Handler[] many;
-        many = (Http.Handler[]) data;
+        many = (Http.Handler[]) main;
 
         int index;
         index = 0;
@@ -265,7 +261,7 @@ final class HttpHandler implements Http.Handler {
 
       case FACTORY1 -> {
         Factory1<?> fac;
-        fac = (Factory1<?>) data;
+        fac = (Factory1<?>) main;
 
         Http.Handler handler;
         handler = fac.create();
@@ -279,7 +275,7 @@ final class HttpHandler implements Http.Handler {
 
       case FILTER -> {
         final FilterHolder holder;
-        holder = (FilterHolder) data;
+        holder = (FilterHolder) main;
 
         final Http.Filter filter;
         filter = holder.filter;
@@ -290,23 +286,11 @@ final class HttpHandler implements Http.Handler {
         filter.filter(http, handler);
       }
 
-      case CONTENT -> {
-        final Content content;
-        content = (Content) data;
+      case OK_MEDIA_BYTES -> http.ok((Media.Bytes) main);
 
-        http.status(Http.Status.OK);
+      case OK_MEDIA_TEXT -> http.ok((Media.Text) main);
 
-        http.header(Http.HeaderName.DATE, http.now());
-
-        http.header(Http.HeaderName.CONTENT_TYPE, content.contentType);
-
-        final byte[] bytes;
-        bytes = content.bytes;
-
-        http.header(Http.HeaderName.CONTENT_LENGTH, bytes.length);
-
-        http.send(bytes);
-      }
+      case OK_MEDIA_STREAM -> http.ok((Media.Stream) main);
 
       case METHOD_NOT_ALLOWED -> {
         http.status(Http.Status.METHOD_NOT_ALLOWED);
@@ -315,20 +299,12 @@ final class HttpHandler implements Http.Handler {
 
         http.header(Http.HeaderName.CONTENT_LENGTH, 0L);
 
-        http.header(Http.HeaderName.ALLOW, (String) data);
+        http.header(Http.HeaderName.ALLOW, (String) main);
 
         http.send();
       }
 
-      case MOVED_PERMANENTLY -> {
-        http.status(Http.Status.MOVED_PERMANENTLY);
-
-        http.header(Http.HeaderName.DATE, http.now());
-
-        http.header(Http.HeaderName.LOCATION, (String) data);
-
-        http.send();
-      }
+      case MOVED_PERMANENTLY -> http.movedPermanently((String) main);
 
       case NOT_FOUND -> {
         http.status(Http.Status.NOT_FOUND);
@@ -340,6 +316,11 @@ final class HttpHandler implements Http.Handler {
         http.send();
       }
     }
+  }
+
+  @Override
+  public final String toString() {
+    return "HttpHandler[kind=" + kind + ",predicate=" + predicate + ",main=" + main + "]";
   }
 
 }

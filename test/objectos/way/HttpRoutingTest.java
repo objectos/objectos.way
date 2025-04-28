@@ -161,7 +161,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
 
             this::$testCase11,
 
-            Http.Handler.ofText("nonono\n", StandardCharsets.UTF_8))
+            Http.Handler.ok(Media.Bytes.textPlain("nonono\n")))
         );
       });
 
@@ -426,7 +426,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
     @Override
     public final void accept(Http.Routing routing) {
       routing.path("/testCase04", path -> {
-        path.handler(Http.Handler.ofText("ROOT", StandardCharsets.UTF_8));
+        path.handler(Http.Handler.ok(Media.Bytes.textPlain("ROOT")));
       });
 
       routing.path("/testCase04/", path -> {
@@ -434,7 +434,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
       });
 
       routing.path("/testCase04/foo", path -> {
-        path.handler(Http.Handler.ofText("foo", StandardCharsets.UTF_8));
+        path.handler(Http.Handler.ok(Media.Bytes.textPlain("foo")));
       });
     }
   }
@@ -470,6 +470,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """
           HTTP/1.1 301 Moved Permanently\r
           Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Content-Length: 0\r
           Location: /testCase04\r
           \r
           """
@@ -816,7 +817,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
     @Override
     public final void accept(Http.Routing routing) {
       routing.path("/testCase08", path -> {
-        path.handler(Http.Handler.ofText("TC08", StandardCharsets.UTF_8));
+        path.handler(Http.Handler.ok(Media.Bytes.textPlain("TC08")));
       });
     }
   }

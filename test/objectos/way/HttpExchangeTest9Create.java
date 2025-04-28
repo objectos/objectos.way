@@ -17,7 +17,6 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.function.Consumer;
 import org.testng.Assert;
@@ -114,7 +113,7 @@ public class HttpExchangeTest9Create {
 
   private final Http.Handler moduleInterop = Http.Handler.create(routing -> {
     routing.path("/tc01", path -> {
-      path.handler(Http.Handler.ofText("TC01", StandardCharsets.UTF_8));
+      path.handler(Http.Handler.ok(Media.Bytes.textPlain("TC01")));
     });
   });
 

@@ -2965,25 +2965,26 @@ final class HttpExchange implements Http.Exchange, Closeable {
     respond(Http.Status.OK, media);
   }
 
+  public final void ok(Media.Stream media) {
+    throw new UnsupportedOperationException();
+  }
+
   // 3xx responses
+
+  @Override
+  public final void movedPermanently(String location) {
+    final String nonNull;
+    nonNull = Objects.requireNonNull(location, "location == null");
+
+    location(Http.Status.MOVED_PERMANENTLY, nonNull);
+  }
 
   @Override
   public final void found(String location) {
     final String nonNull;
     nonNull = Objects.requireNonNull(location, "location == null");
 
-    final String raw;
-    raw = Http.raw(nonNull);
-
-    statusUnchecked(Http.Status.FOUND);
-
-    headerUnchecked(Http.HeaderName.DATE, now());
-
-    headerUnchecked(Http.HeaderName.CONTENT_LENGTH, 0L);
-
-    headerUnchecked(Http.HeaderName.LOCATION, raw);
-
-    send();
+    location(Http.Status.FOUND, nonNull);
   }
 
   @Override
@@ -2991,10 +2992,14 @@ final class HttpExchange implements Http.Exchange, Closeable {
     final String nonNull;
     nonNull = Objects.requireNonNull(location, "location == null");
 
-    final String raw;
-    raw = Http.raw(nonNull);
+    location(Http.Status.SEE_OTHER, nonNull);
+  }
 
-    statusUnchecked(Http.Status.SEE_OTHER);
+  private void location(Http.Status status, String location) {
+    final String raw;
+    raw = Http.raw(location);
+
+    statusUnchecked(status);
 
     headerUnchecked(Http.HeaderName.DATE, now());
 

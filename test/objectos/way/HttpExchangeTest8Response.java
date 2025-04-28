@@ -308,6 +308,57 @@ public class HttpExchangeTest8Response extends HttpExchangeTest {
   // 3xx responses
 
   @Test
+  public void movedPermanently01() {
+    get(
+        http -> http.movedPermanently("/login"),
+
+        """
+        HTTP/1.1 301 Moved Permanently\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Length: 0\r
+        Location: /login\r
+        \r
+        """
+    );
+  }
+
+  @Test
+  public void movedPermanently02() {
+    get(
+        http -> http.movedPermanently("/product/café/😀"),
+
+        """
+        HTTP/1.1 301 Moved Permanently\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Length: 0\r
+        Location: /product/caf%C3%A9/%F0%9F%98%80\r
+        \r
+        """
+    );
+  }
+
+  @Test
+  public void movedPermanently03() {
+    final String veryLargeHex;
+    veryLargeHex = "f756cd80".repeat(256);
+
+    final String location;
+    location = "/foo/" + veryLargeHex;
+
+    get(
+        http -> http.movedPermanently(location),
+
+        """
+        HTTP/1.1 301 Moved Permanently\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Length: 0\r
+        Location: %s\r
+        \r
+        """.formatted(location)
+    );
+  }
+
+  @Test
   public void found01() {
     get(
         http -> http.found("/login"),

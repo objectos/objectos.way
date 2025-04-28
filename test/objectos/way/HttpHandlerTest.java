@@ -262,6 +262,78 @@ public class HttpHandlerTest {
   }
 
   @Test
+  public void movedPermanently01() {
+    final Http.Handler handler;
+    handler = Http.Handler.movedPermanently("/foo");
+
+    test(
+        handler,
+
+        http(config -> {
+          config.path("/test");
+        }),
+
+        """
+        HTTP/1.1 301 Moved Permanently\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Length: 0\r
+        Location: /foo\r
+        \r
+        """
+    );
+  }
+
+  @Test
+  public void ok01() {
+    final Http.Handler handler;
+    handler = Http.Handler.ok(Media.Bytes.textPlain("1\n"));
+
+    test(
+        handler,
+
+        http(config -> {
+          config.path("/test");
+        }),
+
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 2\r
+        \r
+        1
+        """
+    );
+  }
+
+  @Test
+  public void ok02() {
+    final Media.Text text;
+    text = Y.mediaTextOfLength(64);
+
+    final Http.Handler handler;
+    handler = Http.Handler.ok(text);
+
+    test(
+        handler,
+
+        http(config -> {
+          config.path("/test");
+        }),
+
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Transfer-Encoding: chunked\r
+        \r
+        .................................................
+        12345678901234\
+        """
+    );
+  }
+
+  @Test
   public void subpath01() {
     final Http.Handler handler;
     handler = HttpHandler.single(

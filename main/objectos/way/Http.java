@@ -19,7 +19,6 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.time.Clock;
 import java.time.Duration;
@@ -280,6 +279,15 @@ public final class Http {
     // 3xx responses
 
     /**
+     * Respond with a {@code 301 Moved Permanently} message with the specified
+     * {@code Location} header.
+     *
+     * @param location
+     *        the value of the {@code Location} header
+     */
+    void movedPermanently(String location);
+
+    /**
      * Respond with a {@code 302 Found} message with the specified
      * {@code Location} header.
      *
@@ -406,31 +414,36 @@ public final class Http {
       return HttpHandler.many(null, new Handler[] {h1, h2, h3});
     }
 
+    static Handler noop() {
+      return HttpHandler.NOOP;
+    }
+
+    // 2xx responses
+
+    static Handler ok(Media media) {
+      Objects.requireNonNull(media, "media == null");
+
+      return switch (media) {
+        case Media.Bytes bytes -> HttpHandler.ok(bytes);
+
+        case Media.Text text -> HttpHandler.ok(text);
+
+        case Media.Stream stream -> HttpHandler.ok(stream);
+      };
+    }
+
+    // 3xx responses
+
     static Handler movedPermanently(String location) {
       Objects.requireNonNull(location, "location == null");
 
       return HttpHandler.movedPermanently(location);
     }
 
-    static Handler noop() {
-      return HttpHandler.NOOP;
-    }
+    // 4xx responses
 
     static Handler notFound() {
       return HttpHandler.notFound();
-    }
-
-    static Handler ofText(String text, Charset charset) {
-      final String charsetName;
-      charsetName = charset.name();
-
-      final String contentType;
-      contentType = "text/plain; charset=" + charsetName.toLowerCase(Locale.US);
-
-      final byte[] bytes;
-      bytes = text.getBytes(charset);
-
-      return HttpHandler.ofContent(contentType, bytes);
     }
 
     /**
