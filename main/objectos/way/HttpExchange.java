@@ -705,8 +705,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
   }
 
   private byte executeReadEof() {
-    return switch (state) {
-      case $PARSE_METHOD -> bufferLimit == 0 ? $REQUEST : toBadRequest(InvalidRequestLine.METHOD);
+    return switch (stateNext) {
+      case $PARSE_METHOD -> bufferLimit == 0 ? $ERROR : toBadRequest(InvalidRequestLine.METHOD);
 
       default -> { note(NOTES.readEof); yield $ERROR; }
     };
@@ -1943,7 +1943,9 @@ final class HttpExchange implements Http.Exchange, Closeable {
           read = inputStream.read(buffer, bufferLimit, mustReadCount);
 
           if (read < 0) {
-            return $READ_EOF;
+            noteSink.send(NOTES.readEof, id, this);
+
+            return $ERROR;
           }
 
           bufferLimit += read;

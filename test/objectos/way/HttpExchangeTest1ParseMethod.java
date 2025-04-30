@@ -140,6 +140,20 @@ public class HttpExchangeTest1ParseMethod {
     }
   }
 
+  @Test
+  public void eof01() {
+    Socket socket;
+    socket = Y.socket();
+
+    try (HttpExchange http = new HttpExchange(socket, 256, 512, Y.clockFixed(), TestingNoteSink.INSTANCE)) {
+      assertEquals(http.shouldHandle(), false);
+
+      assertEquals(Y.toString(socket), "");
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
+  }
+
   private void badRequest(Object request) {
     shouldNot(
         request,
