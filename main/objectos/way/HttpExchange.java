@@ -39,6 +39,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import objectos.way.Http.HeaderName;
 import objectos.way.Http.Status;
 
 final class HttpExchange implements Http.Exchange, Closeable {
@@ -3055,6 +3056,67 @@ final class HttpExchange implements Http.Exchange, Closeable {
     respond(Http.Status.INTERNAL_SERVER_ERROR, media);
   }
 
+  // response builder
+
+  final class ResponseHandle implements Http.Response {
+
+    @Override
+    public final void status(Http.Status value) {
+      HttpExchange.this.status(value);
+    }
+
+    @Override
+    public final void header(HeaderName name, long value) {
+      HttpExchange.this.header(name, value);
+    }
+
+    @Override
+    public final void header(HeaderName name, String value) {
+      HttpExchange.this.header(name, value);
+    }
+
+    @Override
+    public final String now() {
+      return HttpExchange.this.now();
+    }
+
+    @Override
+    public final void body() {
+      checkBody();
+
+      HttpExchange.this.send();
+    }
+
+    @Override
+    public final void body(byte[] bytes, int offset, int length) {
+      checkBody();
+
+      final byte[] copy;
+      copy = new byte[length];
+
+      System.arraycopy(bytes, offset, copy, 0, length);
+
+      HttpExchange.this.sendUnchecked(copy);
+    }
+
+    private void checkBody() {
+      if (state != $RESPONSE_HEADERS) {
+        throw new IllegalStateException(
+            "Body must be the last part of a response message."
+        );
+      }
+    }
+
+  }
+
+  @Override
+  public final void respond(Consumer<? super Http.Response> response) {
+    final ResponseHandle handle;
+    handle = new ResponseHandle();
+
+    response.accept(handle);
+  }
+
   // ##################################################################
   // # END: Http.Exchange API || Response
   // ##################################################################
@@ -3066,7 +3128,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
   private void checkResponseHeaders() {
     if (state != $RESPONSE_HEADERS) {
       throw new IllegalStateException(
-          "Method cannot be called when state=" + state
+          "Response header can only be set after the status line and before the response body."
       );
     }
   }
@@ -3200,7 +3262,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
     state = $RESPONSE_HEADERS;
 
-    responseListener.status(value);
+    responseListener.status(version, value);
   }
 
   private void headerUnchecked(Http.HeaderName name, long value) {

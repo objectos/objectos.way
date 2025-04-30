@@ -333,6 +333,7 @@ public class HttpExchangeTest9Create {
   @Test
   public void responseListener01() {
     class Subject extends Html.Template implements ResponseListener {
+      Http.Version version;
       Http.Status status;
 
       final Map<Http.HeaderName, String> headers = new LinkedHashMap<>();
@@ -345,7 +346,8 @@ public class HttpExchangeTest9Create {
       }
 
       @Override
-      public void status(Http.Status status) {
+      public void status(Http.Version version, Http.Status status) {
+        this.version = version;
         this.status = status;
       }
 
@@ -370,6 +372,7 @@ public class HttpExchangeTest9Create {
 
     http.ok(subject);
 
+    assertEquals(subject.version, Http.Version.HTTP_1_1);
     assertEquals(subject.status, Http.Status.OK);
     assertEquals(subject.headers.size(), 3);
     assertEquals(subject.headers.get(Http.HeaderName.CONTENT_TYPE), "text/html; charset=utf-8");

@@ -527,6 +527,59 @@ public class HttpExchangeTest8Response extends HttpExchangeTest {
     );
   }
 
+  // response builder
+
+  @Test
+  public void respond01() {
+    get(
+        http -> http.respond(resp -> {
+          resp.status(Http.Status.NOT_FOUND);
+
+          resp.header(Http.HeaderName.DATE, resp.now());
+
+          resp.header(Http.HeaderName.CONTENT_LENGTH, 0L);
+
+          resp.body();
+        }),
+
+        """
+        HTTP/1.1 404 Not Found\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Length: 0\r
+        \r
+        """
+    );
+  }
+
+  @Test
+  public void respond02() {
+    final byte[] body;
+    body = "FOO\n".getBytes(StandardCharsets.US_ASCII);
+
+    get(
+        http -> http.respond(resp -> {
+          resp.status(Http.Status.OK);
+
+          resp.header(Http.HeaderName.DATE, resp.now());
+
+          resp.header(Http.HeaderName.CONTENT_TYPE, "text/plain");
+
+          resp.header(Http.HeaderName.CONTENT_LENGTH, body.length);
+
+          resp.body(body, 0, body.length);
+        }),
+
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain\r
+        Content-Length: 4\r
+        \r
+        FOO
+        """
+    );
+  }
+
   private void empty01(HttpExchange http) {
     http.status(Http.Status.NOT_MODIFIED);
     http.header(Http.HeaderName.DATE, http.now());

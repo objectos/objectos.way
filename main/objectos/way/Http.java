@@ -355,6 +355,16 @@ public final class Http {
      */
     void internalServerError(Media media, Throwable error);
 
+    // response builder
+
+    /**
+     * Respond with the specified response message.
+     *
+     * @param response
+     *        a handle to write the response message
+     */
+    void respond(Consumer<? super Response> response);
+
     /**
      * Return {@code true} if an HTTP response message has been written to this
      * exchange; {@code false} otherwise.
@@ -894,9 +904,17 @@ public final class Http {
   }
 
   /**
-   * Provides messages for writing the headers of an HTTP response message.
+   * Represents a HTTP response message.
    */
-  public interface ResponseHeaders {
+  public sealed interface Response permits HttpExchange.ResponseHandle {
+
+    /**
+     * Begins this HTTP response message by writing out the status line.
+     *
+     * @param value
+     *        the response status
+     */
+    void status(Http.Status value);
 
     /**
      * Writes an HTTP response header field with the specified name and value.
@@ -919,19 +937,56 @@ public final class Http {
     void header(HeaderName name, String value);
 
     /**
-     * Writes the {@link HeaderName#DATE} HTTP response header field with the
-     * current date and time.
+     * Returns the server's current time.
+     *
+     * @return the RFC-5322 formatted server time
      */
-    void dateNow();
+    String now();
+
+    /**
+     * Ends this HTTP response message with an empty body.
+     */
+    void body();
+
+    /**
+     * Ends this HTTP response message with the specified body.
+     */
+    void body(byte[] bytes, int offset, int length);
 
   }
 
+  /**
+   * Listens to the response defined in a HTTP exchange.
+   */
   public interface ResponseListener {
 
-    void status(Http.Status status);
+    /**
+     * Invoked when the response status line is set.
+     *
+     * @param version
+     *        the HTTP version
+     * @param status
+     *        the response status
+     */
+    void status(Version version, Status status);
 
-    void header(Http.HeaderName name, String value);
+    /**
+     * Invoked when a response header is set.
+     *
+     * @param name
+     *        the header name
+     * @param value
+     *        the header value
+     */
+    void header(HeaderName name, String value);
 
+    /**
+     * Invoked when a response body is set; if the response has no body this
+     * method is invoked with {@code null}.
+     *
+     * @param body
+     *        the response body; or {@code null} if the response has no body
+     */
     void body(Object body);
 
   }
@@ -1073,7 +1128,7 @@ public final class Http {
    * @see <a href="https://tools.ietf.org/html/rfc6265">RFC 6265 - HTTP State
    *      Management Mechanism</a>
    */
-  public sealed interface SetCookie extends Consumer<ResponseHeaders> permits HttpSetCookie {
+  public sealed interface SetCookie permits HttpSetCookie {
 
     /**
      * Configuration interface for building a {@link SetCookie} instance.
@@ -1413,7 +1468,7 @@ public final class Http {
     static final NoopResponseListener INSTANCE = new NoopResponseListener();
 
     @Override
-    public final void status(Status status) { /* noop */ }
+    public final void status(Version version, Status status) { /* noop */ }
 
     @Override
     public final void header(HeaderName name, String value) { /* noop */ }

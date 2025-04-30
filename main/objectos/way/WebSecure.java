@@ -51,7 +51,7 @@ final class WebSecure implements Web.Secure {
 
   private final String cookiePath;
 
-  private final boolean cookieSecure = true;
+  private boolean cookieSecure = true;
 
   private final Duration emptyMaxAge;
 
@@ -71,6 +71,8 @@ final class WebSecure implements Web.Secure {
     cookieName = builder.cookieName;
 
     cookiePath = builder.cookiePath;
+
+    cookieSecure = builder.cookieSecure;
 
     emptyMaxAge = builder.emptyMaxAge;
 

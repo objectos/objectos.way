@@ -942,4 +942,27 @@ public sealed interface Note {
         || marker().equals(marker3);
   }
 
+  /**
+   * Returns {@code true} if this note has at least one of the specified
+   * markers.
+   *
+   * @param marker1
+   *        the first marker
+   * @param marker2
+   *        the second marker
+   * @param marker3
+   *        the third marker
+   * @param marker4
+   *        the fourth marker
+   *
+   * @return {@code true} if this note has at least one of the specified
+   *         markers
+   */
+  default boolean hasAny(Marker marker1, Marker marker2, Marker marker3, Marker marker4) {
+    return marker().equals(marker1)
+        || marker().equals(marker2)
+        || marker().equals(marker3)
+        || marker().equals(marker4);
+  }
+
 }

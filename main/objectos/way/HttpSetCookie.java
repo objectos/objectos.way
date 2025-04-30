@@ -15,14 +15,7 @@
  */
 package objectos.way;
 
-import objectos.way.Http.ResponseHeaders;
-
 record HttpSetCookie(String value) implements Http.SetCookie {
-
-  @Override
-  public final void accept(ResponseHeaders resp) {
-    resp.header(Http.HeaderName.SET_COOKIE, value);
-  }
 
   @Override
   public final String toString() {
