@@ -36,7 +36,9 @@ final class HttpRequestMatcher implements Predicate<Http.Request> {
 
     SUBPATH_SEGMENTS,
 
-    SUBPATH_WILDCARD;
+    SUBPATH_WILDCARD,
+
+    SUBPATH_WITH_CONDITIONS;
   }
 
   private enum SegmentKind {
@@ -402,18 +404,9 @@ final class HttpRequestMatcher implements Predicate<Http.Request> {
       case SUBPATH_WILDCARD -> { yield testPathRegion(target, asString()); }
 
       // conditions
-      case PATH_WITH_CONDITIONS -> {
-        final WithConditions data;
-        data = (WithConditions) state;
+      case PATH_WITH_CONDITIONS -> { target.pathReset(); yield testPathWithConditions(target); }
 
-        final List<Segment> segments;
-        segments = data.segments();
-
-        final HttpPathParam[] conditions;
-        conditions = data.conditions();
-
-        yield testSegments(target, segments) && testConditions(target, conditions);
-      }
+      case SUBPATH_WITH_CONDITIONS -> { yield testPathWithConditions(target); }
     };
   }
 
@@ -529,6 +522,19 @@ final class HttpRequestMatcher implements Predicate<Http.Request> {
     }
   }
 
+  private boolean testPathWithConditions(HttpExchange target) {
+    final WithConditions data;
+    data = (WithConditions) state;
+
+    final List<Segment> segments;
+    segments = data.segments();
+
+    final HttpPathParam[] conditions;
+    conditions = data.conditions();
+
+    return testSegments(target, segments) && testConditions(target, conditions);
+  }
+
   private boolean testConditions(HttpExchange target, HttpPathParam[] conditions) {
     for (HttpPathParam condition : conditions) {
       if (!condition.test(target)) {
@@ -546,16 +552,16 @@ final class HttpRequestMatcher implements Predicate<Http.Request> {
 
   final boolean endsInWildcard() {
     return switch (kind) {
-      case PATH_WILDCARD -> true;
+      case PATH_WILDCARD, SUBPATH_WILDCARD -> true;
 
-      case PATH_SEGMENTS -> {
+      case PATH_SEGMENTS, SUBPATH_SEGMENTS -> {
         final List<Segment> segments;
         segments = asSegments();
 
         yield endsInWildcard(segments);
       }
 
-      case PATH_WITH_CONDITIONS -> {
+      case PATH_WITH_CONDITIONS, SUBPATH_WITH_CONDITIONS -> {
         final WithConditions data;
         data = (WithConditions) state;
 
@@ -582,24 +588,29 @@ final class HttpRequestMatcher implements Predicate<Http.Request> {
 
   @SuppressWarnings("unchecked")
   final HttpRequestMatcher with(HttpPathParam[] conditions) {
-    if (kind != Kind.PATH_SEGMENTS) {
+    if (kind != Kind.PATH_SEGMENTS && kind != Kind.SUBPATH_SEGMENTS) {
       throw new IllegalStateException("Cannot add path parameter conditions to matcher with kind=" + kind);
     }
 
     // caller, in theory, passed a safe array
     // no safe copy needed
 
-    List<Segment> segments;
+    final Kind newKind;
+    newKind = kind == Kind.PATH_SEGMENTS
+        ? Kind.PATH_WITH_CONDITIONS
+        : Kind.SUBPATH_WITH_CONDITIONS;
+
+    final List<Segment> segments;
     segments = (List<Segment>) state;
 
-    WithConditions state;
+    final WithConditions state;
     state = new WithConditions(segments, conditions);
 
-    return new HttpRequestMatcher(Kind.PATH_WITH_CONDITIONS, state);
+    return new HttpRequestMatcher(newKind, state);
   }
 
   final boolean hasParam(String name) {
-    if (kind == Kind.PATH_SEGMENTS) {
+    if (kind == Kind.PATH_SEGMENTS || kind == Kind.SUBPATH_SEGMENTS) {
       final List<Segment> segments;
       segments = asSegments();
 
