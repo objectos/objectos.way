@@ -19,7 +19,6 @@ import java.time.Clock;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 final class WebSession implements Web.Session {
 
@@ -32,7 +31,7 @@ final class WebSession implements Web.Session {
   volatile boolean valid = true;
 
   public WebSession(Web.Token id) {
-    this.id = Objects.requireNonNull(id, "id == null");
+    this.id = id;
   }
 
   @Override
@@ -68,16 +67,16 @@ final class WebSession implements Web.Session {
   }
 
   @Override
-  public final Object put(String name, Object value) {
+  public final void put(String name, Object value) {
     synchronized (values) {
-      return values.put(name, value);
+      values.put(name, value);
     }
   }
 
   @Override
-  public final Object remove(String name) {
+  public final void remove(String name) {
     synchronized (values) {
-      return values.remove(name);
+      values.remove(name);
     }
   }
 

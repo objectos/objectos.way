@@ -25,9 +25,20 @@ public class WebSessionTest {
 
   private final RandomGenerator random = new TestingRandom.SequentialRandom();
 
-  @Test(description = """
-  It should be possible to store values to and retrieve values from the session.
-  """)
+  @Test
+  public void create01() {
+    final Web.Session session;
+    session = Web.Session.create();
+
+    final Object user;
+    user = "foo";
+
+    session.put("user", user);
+
+    assertSame(session.get("user"), user);
+  }
+
+  @Test
   public void testCase01() {
     final WebToken id;
     id = WebToken.of32(random);
@@ -38,15 +49,19 @@ public class WebSessionTest {
     final Object user;
     user = "foo";
 
-    assertNull(session.put("user", user));
+    session.put("user", user);
+
     assertSame(session.get("user"), user);
 
     final Object newUser;
     newUser = "bar";
 
-    assertSame(session.put("user", newUser), user);
+    session.put("user", newUser);
 
-    assertSame(session.remove("user"), newUser);
+    assertSame(session.get("user"), newUser);
+
+    session.remove("user");
+
     assertNull(session.get("user"));
   }
 

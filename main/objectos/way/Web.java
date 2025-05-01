@@ -744,6 +744,16 @@ public final class Web {
   public sealed interface Session permits WebSession {
 
     /**
+     * Creates a new {@code Session} object that is not associated to any
+     * session store. The main use case for this is in testing.
+     *
+     * @return a newly created {@code Session} object.
+     */
+    static Session create() {
+      return new WebSession(null);
+    }
+
+    /**
      * Returns the object associated to the specified class instance, or
      * {@code null} if there's no object associated.
      *
@@ -771,9 +781,9 @@ public final class Web {
 
     <T> Object put(Class<T> type, T value);
 
-    Object put(String name, Object value);
+    void put(String name, Object value);
 
-    Object remove(String name);
+    void remove(String name);
 
     void invalidate();
 
