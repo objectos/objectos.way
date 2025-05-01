@@ -30,7 +30,13 @@ final class HttpRequestMatcher implements Predicate<Http.Request> {
 
     PATH_WILDCARD,
 
-    PATH_WITH_CONDITIONS;
+    PATH_WITH_CONDITIONS,
+
+    SUBPATH_EXACT,
+
+    SUBPATH_SEGMENTS,
+
+    SUBPATH_WILDCARD;
   }
 
   private enum SegmentKind {
@@ -93,16 +99,16 @@ final class HttpRequestMatcher implements Predicate<Http.Request> {
   }
 
   public static HttpRequestMatcher parsePath(String pathExpression) {
-    return parse(Parser.START_PATH, pathExpression);
+    return parse(pathExpression, false);
   }
 
   public static HttpRequestMatcher parseSubpath(String pathExpression) {
-    return parse(Parser.EXACT, pathExpression);
+    return parse(pathExpression, true);
   }
 
-  private static HttpRequestMatcher parse(Parser initialState, String pathExpression) {
+  private static HttpRequestMatcher parse(String pathExpression, boolean subpath) {
     Parser parser;
-    parser = initialState;
+    parser = subpath ? Parser.EXACT : Parser.START_PATH;
 
     int aux;
     aux = 0;
@@ -226,7 +232,7 @@ final class HttpRequestMatcher implements Predicate<Http.Request> {
     return switch (parser) {
       case START_PATH -> throw illegal(PATH_MUST_START_WITH_SOLIDUS, pathExpression);
 
-      case EXACT -> pathExact(pathExpression);
+      case EXACT -> subpath ? subpathExact(pathExpression) : pathExact(pathExpression);
 
       case STARTS_WITH -> {
         final int stripLast;
@@ -235,7 +241,7 @@ final class HttpRequestMatcher implements Predicate<Http.Request> {
         final String value;
         value = pathExpression.substring(0, stripLast);
 
-        yield pathWildcard(value);
+        yield subpath ? subpathWildcard(value) : pathWildcard(value);
       }
 
       case PARAM_START -> throw illegal(PARAM_EMPTY, pathExpression);
@@ -249,7 +255,10 @@ final class HttpRequestMatcher implements Predicate<Http.Request> {
 
         segments.add(segment);
 
-        yield pathSegments(segments.toUnmodifiableList());
+        final List<Segment> segs;
+        segs = segments.toUnmodifiableList();
+
+        yield subpath ? subpathSegments(segs) : pathSegments(segs);
       }
 
       case REGION -> {
@@ -261,7 +270,10 @@ final class HttpRequestMatcher implements Predicate<Http.Request> {
 
         segments.add(segment);
 
-        yield pathSegments(segments.toUnmodifiableList());
+        final List<Segment> segs;
+        segs = segments.toUnmodifiableList();
+
+        yield subpath ? subpathSegments(segs) : pathSegments(segs);
       }
     };
   }
@@ -270,12 +282,10 @@ final class HttpRequestMatcher implements Predicate<Http.Request> {
     return new HttpRequestMatcher(Kind.METHOD_ALLOWED, value);
   }
 
-  @Lang.VisibleForTesting
   static HttpRequestMatcher pathExact(final String value) {
     return new HttpRequestMatcher(Kind.PATH_EXACT, value);
   }
 
-  @Lang.VisibleForTesting
   static HttpRequestMatcher pathSegments(List<Segment> segments) {
     final Set<String> distinct;
     distinct = Util.createSet();
@@ -300,17 +310,14 @@ final class HttpRequestMatcher implements Predicate<Http.Request> {
     return new HttpRequestMatcher(Kind.PATH_SEGMENTS, segments);
   }
 
-  @Lang.VisibleForTesting
   static HttpRequestMatcher pathWildcard(final String value) {
     return new HttpRequestMatcher(Kind.PATH_WILDCARD, value);
   }
 
-  @Lang.VisibleForTesting
   static Segment segmentExact(String value) {
     return new Segment(SegmentKind.EXACT, value, '\0');
   }
 
-  @Lang.VisibleForTesting
   static Segment segmentParam(String name, char c) {
     return new Segment(SegmentKind.PARAM, name, c);
   }
@@ -319,9 +326,40 @@ final class HttpRequestMatcher implements Predicate<Http.Request> {
     return new Segment(SegmentKind.PARAM_LAST, name, '\0');
   }
 
-  @Lang.VisibleForTesting
   static Segment segmentRegion(String value) {
     return new Segment(SegmentKind.REGION, value, '\0');
+  }
+
+  static HttpRequestMatcher subpathExact(String value) {
+    return new HttpRequestMatcher(Kind.SUBPATH_EXACT, value);
+  }
+
+  static HttpRequestMatcher subpathSegments(List<Segment> segments) {
+    final Set<String> distinct;
+    distinct = Util.createSet();
+
+    for (Segment segment : segments) {
+      final String name;
+      name = segment.paramName();
+
+      if (name == null) {
+        continue;
+      }
+
+      if (distinct.add(name)) {
+        continue;
+      }
+
+      throw new IllegalArgumentException(
+          "The ':%s' path variable was declared more than once".formatted(name)
+      );
+    }
+
+    return new HttpRequestMatcher(Kind.SUBPATH_SEGMENTS, segments);
+  }
+
+  static HttpRequestMatcher subpathWildcard(String value) {
+    return new HttpRequestMatcher(Kind.SUBPATH_WILDCARD, value);
   }
 
   private static IllegalArgumentException illegal(String prefix, String path) {
@@ -340,7 +378,165 @@ final class HttpRequestMatcher implements Predicate<Http.Request> {
     final HttpExchange target;
     target = (HttpExchange) request;
 
-    return test(target);
+    return switch (kind) {
+      case METHOD_ALLOWED -> {
+        final Http.Method method;
+        method = target.method();
+
+        yield method == state || (method == Http.Method.HEAD && state == Http.Method.GET);
+      }
+
+      // exact
+      case PATH_EXACT -> { target.pathReset(); yield testPathExact(target, asString()); }
+
+      case SUBPATH_EXACT -> { yield testPathExact(target, asString()); }
+
+      // segments
+      case PATH_SEGMENTS -> { target.pathReset(); yield testSegments(target, asSegments()); }
+
+      case SUBPATH_SEGMENTS -> { yield testSegments(target, asSegments()); }
+
+      // wildcard
+      case PATH_WILDCARD -> { target.pathReset(); yield testPathRegion(target, asString()); }
+
+      case SUBPATH_WILDCARD -> { yield testPathRegion(target, asString()); }
+
+      // conditions
+      case PATH_WITH_CONDITIONS -> {
+        final WithConditions data;
+        data = (WithConditions) state;
+
+        final List<Segment> segments;
+        segments = data.segments();
+
+        final HttpPathParam[] conditions;
+        conditions = data.conditions();
+
+        yield testSegments(target, segments) && testConditions(target, conditions);
+      }
+    };
+  }
+
+  private boolean testPathExact(HttpExchange target, String exact) {
+    final int pathIndex;
+    pathIndex = target.pathIndex();
+
+    final String path;
+    path = target.pathUnchecked();
+
+    final int thisLength;
+    thisLength = path.length() - pathIndex;
+
+    final int thatLength;
+    thatLength = exact.length();
+
+    if (thisLength == thatLength && path.regionMatches(pathIndex, exact, 0, thatLength)) {
+      target.pathIndexAdd(thatLength);
+
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  private boolean testPathRegion(HttpExchange target, String region) {
+    final int pathIndex;
+    pathIndex = target.pathIndex();
+
+    final String path;
+    path = target.pathUnchecked();
+
+    if (path.regionMatches(pathIndex, region, 0, region.length())) {
+      target.pathIndexAdd(region.length());
+
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  private boolean testSegments(HttpExchange target, List<Segment> segments) {
+    for (Segment segment : segments) {
+      final boolean result;
+      result = switch (segment.kind) {
+        case EXACT -> testPathExact(target, segment.value);
+
+        case PARAM -> testPathParam(target, segment.value, segment.c);
+
+        case PARAM_LAST -> testPathParamLast(target, segment.value);
+
+        case REGION -> testPathRegion(target, segment.value);
+      };
+
+      if (!result) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  private boolean testPathParam(HttpExchange target, String name, char terminator) {
+    final int pathIndex;
+    pathIndex = target.pathIndex();
+
+    final String path;
+    path = target.pathUnchecked();
+
+    final int terminatorIndex;
+    terminatorIndex = path.indexOf(terminator, pathIndex);
+
+    if (terminatorIndex < 0) {
+      return false;
+    }
+
+    final String varValue;
+    varValue = path.substring(pathIndex, terminatorIndex);
+
+    // immediately after the terminator
+    target.pathIndex(terminatorIndex + 1);
+
+    target.pathParamsPut(name, varValue);
+
+    return true;
+  }
+
+  private boolean testPathParamLast(HttpExchange target, String name) {
+    final int pathIndex;
+    pathIndex = target.pathIndex();
+
+    final String path;
+    path = target.pathUnchecked();
+
+    final int solidus;
+    solidus = path.indexOf('/', pathIndex);
+
+    if (solidus < 0) {
+
+      final String varValue;
+      varValue = path.substring(pathIndex);
+
+      target.pathIndexAdd(varValue.length());
+
+      target.pathParamsPut(name, varValue);
+
+      return true;
+
+    } else {
+
+      return false;
+
+    }
+  }
+
+  private boolean testConditions(HttpExchange target, HttpPathParam[] conditions) {
+    for (HttpPathParam condition : conditions) {
+      if (!condition.test(target)) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   @Override
@@ -425,80 +621,8 @@ final class HttpRequestMatcher implements Predicate<Http.Request> {
     return (List<Segment>) state;
   }
 
-  private boolean test(HttpExchange target) {
-    return switch (kind) {
-      case METHOD_ALLOWED -> {
-        final Http.Method method;
-        method = target.method();
-
-        yield method == state || (method == Http.Method.HEAD && state == Http.Method.GET);
-      }
-
-      case PATH_EXACT -> {
-        final String exact;
-        exact = (String) state;
-
-        yield target.testPathExact(exact);
-      }
-
-      case PATH_SEGMENTS -> {
-        final List<Segment> segments;
-        segments = asSegments();
-
-        yield testSegments(target, segments);
-      }
-
-      case PATH_WILDCARD -> {
-        final String prefix;
-        prefix = (String) state;
-
-        yield target.testPathRegion(prefix);
-      }
-
-      case PATH_WITH_CONDITIONS -> {
-        final WithConditions data;
-        data = (WithConditions) state;
-
-        final List<Segment> segments;
-        segments = data.segments();
-
-        final HttpPathParam[] conditions;
-        conditions = data.conditions();
-
-        yield testSegments(target, segments) && testConditions(target, conditions);
-      }
-    };
-  }
-
-  private boolean testSegments(HttpExchange target, List<Segment> segments) {
-    for (Segment segment : segments) {
-      final boolean result;
-      result = switch (segment.kind) {
-        case EXACT -> target.testPathExact(segment.value);
-
-        case PARAM -> target.testPathParam(segment.value, segment.c);
-
-        case PARAM_LAST -> target.testPathParamLast(segment.value);
-
-        case REGION -> target.testPathRegion(segment.value);
-      };
-
-      if (!result) {
-        return false;
-      }
-    }
-
-    return true;
-  }
-
-  private boolean testConditions(HttpExchange target, HttpPathParam[] conditions) {
-    for (HttpPathParam condition : conditions) {
-      if (!condition.test(target)) {
-        return false;
-      }
-    }
-
-    return true;
+  private String asString() {
+    return (String) state;
   }
 
 }

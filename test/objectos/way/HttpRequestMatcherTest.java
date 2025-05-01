@@ -148,7 +148,7 @@ public class HttpRequestMatcherTest {
 
     assertTrue(matcher.test(requestTarget));
 
-    assertEquals(requestTarget.pathParams, expected);
+    assertEquals(requestTarget.pathParams(), expected);
   }
 
 }

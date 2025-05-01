@@ -47,7 +47,7 @@ sealed abstract class HttpRouting {
         addMany(single);
       }
 
-      return HttpHandler.of(condition, many);
+      return HttpHandler.of(condition, null, many);
     }
 
     @Override
@@ -103,16 +103,9 @@ sealed abstract class HttpRouting {
 
     private int pathParamsIndex;
 
-    private final boolean subpath;
-
     @Lang.VisibleForTesting
     OfPath(HttpRequestMatcher matcher) {
-      this(matcher, false);
-    }
-
-    private OfPath(HttpRequestMatcher matcher, boolean subpath) {
       this.matcher = matcher;
-      this.subpath = subpath;
     }
 
     @Override
@@ -156,27 +149,7 @@ sealed abstract class HttpRouting {
         addMany(single);
       }
 
-      if (filter == null) {
-
-        if (subpath) {
-          return HttpHandler.ofSubpath(condition, many);
-        } else {
-          return HttpHandler.of(condition, many);
-        }
-
-      } else {
-
-        final Http.Handler handler;
-
-        if (subpath) {
-          handler = HttpHandler.ofSubpath(null, many);
-        } else {
-          handler = HttpHandler.of(null, many);
-        }
-
-        return HttpHandler.filter(condition, filter, handler);
-
-      }
+      return HttpHandler.of(condition, filter, many);
     }
 
     @Override
@@ -274,7 +247,7 @@ sealed abstract class HttpRouting {
       subpathMatcher = HttpRequestMatcher.parseSubpath(path);
 
       final OfPath routing;
-      routing = new OfPath(subpathMatcher, true);
+      routing = new OfPath(subpathMatcher);
 
       routes.accept(routing);
 

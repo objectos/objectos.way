@@ -15,112 +15,73 @@
  */
 package objectos.way;
 
+import static objectos.way.HttpRequestMatcher.pathExact;
 import static objectos.way.HttpRequestMatcher.pathSegments;
+import static objectos.way.HttpRequestMatcher.pathWildcard;
 import static objectos.way.HttpRequestMatcher.segmentExact;
 import static objectos.way.HttpRequestMatcher.segmentParam;
 import static objectos.way.HttpRequestMatcher.segmentParamLast;
 import static objectos.way.HttpRequestMatcher.segmentRegion;
+import static objectos.way.HttpRequestMatcher.subpathExact;
+import static objectos.way.HttpRequestMatcher.subpathSegments;
+import static objectos.way.HttpRequestMatcher.subpathWildcard;
 import static org.testng.Assert.assertEquals;
 
 import java.util.List;
 import org.testng.Assert;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class HttpRequestMatcherParseTest {
 
-  @Test
-  public void pathExact01() {
-    path("/foo", HttpRequestMatcher.pathExact("/foo"));
-    path("/foo/bar", HttpRequestMatcher.pathExact("/foo/bar"));
-    path("/", HttpRequestMatcher.pathExact("/"));
+  @DataProvider
+  public Object[][] parsePathValidProvider() {
+    return new Object[][] {
+        {"/foo", pathExact("/foo")},
+        {"/foo/bar", pathExact("/foo/bar")},
+        {"/", pathExact("/")},
+
+        {"/foo/:a",
+            pathSegments(List.of(segmentRegion("/foo/"), segmentParamLast("a")))},
+        {"/foo/:foo",
+            pathSegments(List.of(segmentRegion("/foo/"), segmentParamLast("foo")))},
+        {"/foo/:foo/",
+            pathSegments(List.of(segmentRegion("/foo/"), segmentParam("foo", '/'), segmentExact("")))},
+        {"/foo/:foo/bar/:bar",
+            pathSegments(List.of(segmentRegion("/foo/"), segmentParam("foo", '/'), segmentRegion("bar/"), segmentParamLast("bar")))},
+        {"/foo/:foo/bar",
+            pathSegments(List.of(segmentRegion("/foo/"), segmentParam("foo", '/'), segmentExact("bar")))},
+
+        {"/*", pathWildcard("/")},
+        {"/foo*", pathWildcard("/foo")},
+        {"/foo/*", pathWildcard("/foo/")}
+    };
   }
 
-  @Test
-  public void pathExact02() {
-    pathError("foo", "Path must start with a '/' character: foo");
+  @Test(dataProvider = "parsePathValidProvider")
+  public void parsePathValid(String path, Object expected) {
+    final HttpRequestMatcher result;
+    result = HttpRequestMatcher.parsePath(path);
+
+    assertEquals(result, expected);
   }
 
-  @Test
-  public void pathSegments01() {
-    path(
-        "/foo/:a",
-        pathSegments(List.of(
-            segmentRegion("/foo/"),
-            segmentParamLast("a")
-        ))
-    );
-    path(
-        "/foo/:foo",
-        pathSegments(List.of(
-            segmentRegion("/foo/"),
-            segmentParamLast("foo")
-        ))
-    );
-    path(
-        "/foo/:foo/",
-        pathSegments(List.of(
-            segmentRegion("/foo/"),
-            segmentParam("foo", '/'),
-            segmentExact("")
-        ))
-    );
-    path(
-        "/foo/:foo/bar/:bar",
-        HttpRequestMatcher.pathSegments(List.of(
-            segmentRegion("/foo/"),
-            segmentParam("foo", '/'),
-            segmentRegion("bar/"),
-            segmentParamLast("bar")
-        ))
-    );
-    path(
-        "/foo/:foo/bar",
-        HttpRequestMatcher.pathSegments(List.of(
-            segmentRegion("/foo/"),
-            segmentParam("foo", '/'),
-            segmentExact("bar")
-        ))
-    );
+  @DataProvider
+  public Object[][] parsePathInvalidProvider() {
+    return new Object[][] {
+        {"foo", "Path must start with a '/' character: foo"},
+
+        {"/foo/:error/bar/:error", "The ':error' path variable was declared more than once"},
+        {"/foo/:bar:baz", "Cannot begin a path parameter immediately after the end of another parameter: /foo/:bar:baz"},
+        {"/foo/:bar/*", "The '*' wildcard character cannot be used when path parameters are declared: /foo/:bar/*"},
+
+        {"/foo/*/", "The '*' wildcard character can only be used once at the end of the path expression: /foo/*/"},
+        {"/foo**", "The '*' wildcard character can only be used once at the end of the path expression: /foo**"}
+    };
   }
 
-  @Test(description = """
-  it should disallow duplicate path variable names
-  """)
-  public void pathSegments02() {
-    pathError("/foo/:error/bar/:error", "The ':error' path variable was declared more than once");
-  }
-
-  @Test
-  public void pathSegments03() {
-    pathError("/foo/:bar:baz", "Cannot begin a path parameter immediately after the end of another parameter: /foo/:bar:baz");
-  }
-
-  @Test
-  public void pathSegments04() {
-    pathError("/foo/:bar/*", "The '*' wildcard character cannot be used when path parameters are declared: /foo/:bar/*");
-  }
-
-  @Test
-  public void pathWildcard01() {
-    path("/*", HttpRequestMatcher.pathWildcard("/"));
-    path("/foo*", HttpRequestMatcher.pathWildcard("/foo"));
-    path("/foo/*", HttpRequestMatcher.pathWildcard("/foo/"));
-  }
-
-  @Test
-  public void pathWildcard02() {
-    pathError("/foo/*/", "The '*' wildcard character can only be used once at the end of the path expression: /foo/*/");
-    pathError("/foo**", "The '*' wildcard character can only be used once at the end of the path expression: /foo**");
-  }
-
-  private void path(String path, HttpRequestMatcher expected) {
-    HttpRequestMatcher matcher;
-    matcher = HttpRequestMatcher.parsePath(path);
-
-    assertEquals(matcher, expected);
-  }
-
-  private void pathError(String path, String expectedMessage) {
+  @Test(dataProvider = "parsePathInvalidProvider")
+  public void parsePathInvalid(String path, String expectedMessage) {
     try {
       HttpRequestMatcher.parsePath(path);
 
@@ -130,14 +91,31 @@ public class HttpRequestMatcherParseTest {
     }
   }
 
-  @Test
-  public void subpathExact01() {
-    subpath("foo", HttpRequestMatcher.pathExact("foo"));
-    subpath("foo/bar", HttpRequestMatcher.pathExact("foo/bar"));
-    subpath("/", HttpRequestMatcher.pathExact("/"));
+  @DataProvider
+  public Object[][] parseSubpathValidProvider() {
+    return new Object[][] {
+        {"foo", subpathExact("foo")},
+        {"foo/bar", subpathExact("foo/bar")},
+        {"/", subpathExact("/")},
+
+        {"foo/:a",
+            subpathSegments(List.of(segmentRegion("foo/"), segmentParamLast("a")))},
+        {"foo/:foo",
+            subpathSegments(List.of(segmentRegion("foo/"), segmentParamLast("foo")))},
+        {"foo/:foo/",
+            subpathSegments(List.of(segmentRegion("foo/"), segmentParam("foo", '/'), segmentExact("")))},
+        {"foo/:foo/bar/:bar",
+            subpathSegments(List.of(segmentRegion("foo/"), segmentParam("foo", '/'), segmentRegion("bar/"), segmentParamLast("bar")))},
+        {"foo/:foo/bar",
+            subpathSegments(List.of(segmentRegion("foo/"), segmentParam("foo", '/'), segmentExact("bar")))},
+
+        {"*", subpathWildcard("")},
+        {"foo/*", subpathWildcard("foo/")}
+    };
   }
 
-  private void subpath(String path, HttpRequestMatcher expected) {
+  @Test(dataProvider = "parseSubpathValidProvider")
+  public void parseSubpathValid(String path, Object expected) {
     HttpRequestMatcher matcher;
     matcher = HttpRequestMatcher.parseSubpath(path);
 

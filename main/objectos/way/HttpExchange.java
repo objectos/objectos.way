@@ -307,6 +307,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   private String path;
 
+  private Map<String, String> pathParams;
+
   private Map<String, Object> queryParams;
 
   private InetAddress remoteAddress;
@@ -385,6 +387,29 @@ final class HttpExchange implements Http.Exchange, Closeable {
     impl.attributes = builder.attributes;
 
     return impl;
+  }
+
+  static final int powerOfTwo(int size) {
+    // maybe size is already power of 2
+    int x;
+    x = size - 1;
+
+    int leading;
+    leading = Integer.numberOfLeadingZeros(x);
+
+    int n;
+    n = -1 >>> leading;
+
+    if (n < 0) {
+      // should not happen as minimal buffer size is 128
+      throw new IllegalArgumentException("Buffer size is too small");
+    }
+
+    if (n >= HARD_MAX_BUFFER_SIZE) {
+      return HARD_MAX_BUFFER_SIZE;
+    }
+
+    return n + 1;
   }
 
   @Override
@@ -518,6 +543,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
     while (state < $REQUEST) {
       state = execute(state);
     }
+
+    mark = 0;
 
     return state == $REQUEST;
   }
@@ -2608,6 +2635,57 @@ final class HttpExchange implements Http.Exchange, Closeable {
   }
 
   @Override
+  public final String pathParam(String name) {
+    Objects.requireNonNull(name, "name == null");
+
+    String result;
+    result = null;
+
+    if (pathParams != null) {
+      result = pathParams.get(name);
+    }
+
+    return result;
+  }
+
+  final int pathIndex() {
+    return mark;
+  }
+
+  final void pathIndex(int value) {
+    mark = value;
+  }
+
+  final void pathIndexAdd(int value) {
+    mark += value;
+  }
+
+  @Lang.VisibleForTesting
+  final Map<String, String> pathParams() {
+    return pathParams;
+  }
+
+  final void pathParamsPut(String name, String value) {
+    if (pathParams == null) {
+      pathParams = Util.createMap();
+    }
+
+    pathParams.put(name, value);
+  }
+
+  final void pathReset() {
+    mark = 0;
+
+    if (pathParams != null) {
+      pathParams.clear();
+    }
+  }
+
+  final String pathUnchecked() {
+    return path;
+  }
+
+  @Override
   public final String queryParam(String name) {
     checkRequest();
     Objects.requireNonNull(name, "name == null");
@@ -3572,197 +3650,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   // ##################################################################
   // # END: Utils
-  // ##################################################################
-
-  // ##################################################################
-  // #
-  // #
-  // #
-  // #
-  // #
-  // #
-  // #
-  // #
-  // #
-  // #
-  // #
-  // #
-  // #
-  // #
-  // #
-  // #
-  // # LEGACY
-  // #
-  // #
-  // #
-  // #
-  // #
-  // #
-  // #
-  // #
-  // #
-  // #
-  // #
-  // #
-  // #
-  // #
-  // #
-  // #
-  // #
-  // #
-  // ##################################################################
-
-  int pathIndex;
-
-  Map<String, String> pathParams;
-
-  // SocketInput
-
-  static final int powerOfTwo(int size) {
-    // maybe size is already power of 2
-    int x;
-    x = size - 1;
-
-    int leading;
-    leading = Integer.numberOfLeadingZeros(x);
-
-    int n;
-    n = -1 >>> leading;
-
-    if (n < 0) {
-      // should not happen as minimal buffer size is 128
-      throw new IllegalArgumentException("Buffer size is too small");
-    }
-
-    if (n >= HARD_MAX_BUFFER_SIZE) {
-      return HARD_MAX_BUFFER_SIZE;
-    }
-
-    return n + 1;
-  }
-
-  @Override
-  public final String pathParam(String name) {
-    Objects.requireNonNull(name, "name == null");
-
-    String result;
-    result = null;
-
-    if (pathParams != null) {
-      result = pathParams.get(name);
-    }
-
-    return result;
-  }
-
-  final void pathReset() {
-    pathIndex = 0;
-
-    if (pathParams != null) {
-      pathParams.clear();
-    }
-  }
-
-  final void pathParams(Map<String, String> value) {
-    pathParams = value;
-  }
-
-  final boolean testPathExact(String exact) {
-    final String path;
-    path = path();
-
-    final int thisLength;
-    thisLength = path.length() - pathIndex;
-
-    final int thatLength;
-    thatLength = exact.length();
-
-    if (thisLength == thatLength && path.regionMatches(pathIndex, exact, 0, thatLength)) {
-      pathIndex += thatLength;
-
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  final boolean testPathParam(String name, char terminator) {
-    final String path;
-    path = path();
-
-    final int terminatorIndex;
-    terminatorIndex = path.indexOf(terminator, pathIndex);
-
-    if (terminatorIndex < 0) {
-      return false;
-    }
-
-    final String varValue;
-    varValue = path.substring(pathIndex, terminatorIndex);
-
-    // immediately after the terminator
-    pathIndex = terminatorIndex + 1;
-
-    if (pathParams == null) {
-      pathParams = Util.createMap();
-    }
-
-    pathParams.put(name, varValue);
-
-    return true;
-  }
-
-  final boolean testPathParamLast(String name) {
-    final String path;
-    path = path();
-
-    final int solidus;
-    solidus = path.indexOf('/', pathIndex);
-
-    if (solidus < 0) {
-
-      final String varValue;
-      varValue = path.substring(pathIndex);
-
-      pathIndex += varValue.length();
-
-      if (pathParams == null) {
-        pathParams = Util.createMap();
-      }
-
-      pathParams.put(name, varValue);
-
-      return true;
-
-    } else {
-
-      return false;
-
-    }
-  }
-
-  final boolean testPathRegion(String region) {
-    final String path;
-    path = path();
-
-    if (path.regionMatches(pathIndex, region, 0, region.length())) {
-      pathIndex += region.length();
-
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  final boolean testPathEnd() {
-    final String path;
-    path = path();
-
-    return pathIndex == path.length();
-  }
-
-  // ##################################################################
-  // # END: Http.Exchange API || request target
   // ##################################################################
 
 }

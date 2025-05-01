@@ -29,21 +29,15 @@ final class HttpHandler implements Http.Handler {
 
     NOOP,
 
-    // subpath
-
-    SUBPATH_SINGLE,
-
-    SUBPATH_MANY,
-
     // delegate
 
     SINGLE,
 
     MANY,
 
-    FACTORY1,
-
     FILTER,
+
+    FACTORY1,
 
     // pre-made responses
 
@@ -100,13 +94,6 @@ final class HttpHandler implements Http.Handler {
     return new HttpHandler(Kind.FACTORY1, null, main);
   }
 
-  public static Http.Handler filter(Predicate<? super Http.Request> predicate, Http.Filter filter, Http.Handler handler) {
-    final FilterHolder holder;
-    holder = new FilterHolder(filter, handler);
-
-    return new HttpHandler(Kind.FILTER, predicate, holder);
-  }
-
   public static Http.Handler methodNotAllowed(Set<Http.Method> allowedMethods) {
     final String allow;
     allow = allowedMethods.stream().map(Http.Method::name).collect(Collectors.joining(", "));
@@ -141,60 +128,116 @@ final class HttpHandler implements Http.Handler {
     return new HttpHandler(Kind.OK_MEDIA_STREAM, null, stream);
   }
 
-  public static Http.Handler of(Predicate<? super Request> condition, List<Handler> handlers) {
-    if (handlers == null) {
-      return NOOP;
+  public static Http.Handler of(Predicate<? super Request> condition, Http.Filter filter, List<Handler> handlers) {
+    if (handlers == null || handlers.isEmpty()) {
+      return ofNoop(condition, Kind.FILTER, filter, Kind.SINGLE);
     }
 
     return switch (handlers.size()) {
-      case 0 -> HttpHandler.NOOP;
-
       case 1 -> {
         final Http.Handler single;
         single = handlers.get(0);
 
-        if (condition == null) {
-          yield single;
-        }
-
-        yield new HttpHandler(Kind.SINGLE, condition, single);
+        yield ofSingle(condition, Kind.FILTER, filter, Kind.SINGLE, single);
       }
 
       default -> {
         final Http.Handler[] copy;
         copy = handlers.toArray(Http.Handler[]::new);
 
-        yield new HttpHandler(Kind.MANY, condition, copy);
+        yield ofMany(condition, Kind.FILTER, filter, Kind.MANY, copy);
       }
     };
   }
 
-  public static Http.Handler ofSubpath(Predicate<? super Request> condition, List<Handler> handlers) {
-    if (handlers == null) {
-      return NOOP;
+  private static Http.Handler ofNoop(Predicate<? super Http.Request> condition, Kind filterKind, Http.Filter filter, Kind singleKind) {
+    if (condition == null) {
+
+      if (filter == null) {
+        return NOOP;
+      }
+
+      final FilterHolder holder;
+      holder = new FilterHolder(filter, NOOP);
+
+      return new HttpHandler(filterKind, null, holder);
+
     }
 
-    return switch (handlers.size()) {
-      case 0 -> HttpHandler.NOOP;
+    else {
 
-      case 1 -> {
-        final Http.Handler single;
-        single = handlers.get(0);
-
-        if (condition == null) {
-          yield single;
-        }
-
-        yield new HttpHandler(Kind.SUBPATH_SINGLE, condition, single);
+      if (filter == null) {
+        return new HttpHandler(singleKind, condition, NOOP);
       }
 
-      default -> {
-        final Http.Handler[] copy;
-        copy = handlers.toArray(Http.Handler[]::new);
+      final FilterHolder holder;
+      holder = new FilterHolder(filter, NOOP);
 
-        yield new HttpHandler(Kind.SUBPATH_MANY, condition, copy);
+      return new HttpHandler(filterKind, condition, holder);
+
+    }
+  }
+
+  private static Http.Handler ofSingle(Predicate<? super Http.Request> condition, Kind filterKind, Http.Filter filter, Kind singleKind, Http.Handler single) {
+    if (condition == null) {
+
+      if (filter == null) {
+        return single;
       }
-    };
+
+      final FilterHolder holder;
+      holder = new FilterHolder(filter, single);
+
+      return new HttpHandler(filterKind, null, holder);
+
+    }
+
+    else {
+
+      if (filter == null) {
+        return new HttpHandler(singleKind, condition, single);
+      }
+
+      final FilterHolder holder;
+      holder = new FilterHolder(filter, single);
+
+      return new HttpHandler(filterKind, condition, holder);
+
+    }
+  }
+
+  private static Http.Handler ofMany(Predicate<? super Http.Request> condition, Kind filterKind, Http.Filter filter, Kind manyKind, Http.Handler[] many) {
+    if (condition == null) {
+
+      final HttpHandler handler;
+      handler = new HttpHandler(manyKind, null, many);
+
+      if (filter == null) {
+        return handler;
+      }
+
+      final FilterHolder holder;
+      holder = new FilterHolder(filter, handler);
+
+      return new HttpHandler(filterKind, null, holder);
+
+    }
+
+    else {
+
+      if (filter == null) {
+        return new HttpHandler(manyKind, condition, many);
+      }
+
+      final HttpHandler handler;
+      handler = new HttpHandler(manyKind, null, many);
+
+      final FilterHolder holder;
+      holder = new FilterHolder(filter, handler);
+
+      return new HttpHandler(filterKind, condition, holder);
+
+    }
   }
 
   @Override
@@ -206,12 +249,6 @@ final class HttpHandler implements Http.Handler {
     final HttpExchange http;
     http = (HttpExchange) xch;
 
-    switch (kind) {
-      case SUBPATH_SINGLE, SUBPATH_MANY -> {}
-
-      default -> http.pathReset();
-    }
-
     if (predicate != null && !predicate.test(http)) {
       return;
     }
@@ -219,9 +256,9 @@ final class HttpHandler implements Http.Handler {
     switch (kind) {
       case NOOP -> {}
 
-      case SUBPATH_SINGLE, SINGLE -> {
+      case SINGLE -> {
         final int pathIndex;
-        pathIndex = http.pathIndex;
+        pathIndex = http.pathIndex();
 
         final Http.Handler single;
         single = (Http.Handler) main;
@@ -229,15 +266,13 @@ final class HttpHandler implements Http.Handler {
         single.handle(http);
 
         if (!http.processed()) {
-          http.pathIndex = pathIndex;
+          http.pathIndex(pathIndex);
         }
       }
 
-      case SUBPATH_MANY, MANY -> {
+      case MANY -> {
         final int pathIndex;
-        pathIndex = http.pathIndex;
-
-        // TODO path parameters
+        pathIndex = http.pathIndex();
 
         final Http.Handler[] many;
         many = (Http.Handler[]) main;
@@ -255,8 +290,21 @@ final class HttpHandler implements Http.Handler {
             break;
           }
 
-          http.pathIndex = pathIndex;
+          http.pathIndex(pathIndex);
         }
+      }
+
+      case FILTER -> {
+        final FilterHolder holder;
+        holder = (FilterHolder) main;
+
+        final Http.Filter filter;
+        filter = holder.filter;
+
+        final Http.Handler handler;
+        handler = holder.handler;
+
+        filter.filter(http, handler);
       }
 
       case FACTORY1 -> {
@@ -271,19 +319,6 @@ final class HttpHandler implements Http.Handler {
         }
 
         handler.handle(http);
-      }
-
-      case FILTER -> {
-        final FilterHolder holder;
-        holder = (FilterHolder) main;
-
-        final Http.Filter filter;
-        filter = holder.filter;
-
-        final Http.Handler handler;
-        handler = holder.handler;
-
-        filter.filter(http, handler);
       }
 
       case OK_MEDIA_BYTES -> http.ok((Media.Bytes) main);

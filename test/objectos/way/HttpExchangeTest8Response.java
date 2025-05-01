@@ -691,7 +691,7 @@ public class HttpExchangeTest8Response extends HttpExchangeTest {
     });
   }
 
-  @Test(description = "throws on headerUncheckeds")
+  @Test(description = "throws on headerUnchecked")
   public void ioException02() {
     exec(test -> {
       test.xch(xch -> {
