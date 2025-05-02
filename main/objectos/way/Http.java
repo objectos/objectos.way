@@ -917,7 +917,8 @@ public final class Http {
     void status(Http.Status value);
 
     /**
-     * Writes an HTTP response header field with the specified name and value.
+     * Writes an HTTP response header field with the specified name and
+     * value.
      *
      * @param name
      *        the header name
@@ -927,7 +928,8 @@ public final class Http {
     void header(HeaderName name, long value);
 
     /**
-     * Writes an HTTP response header field with the specified name and value.
+     * Writes an HTTP response header field with the specified name and
+     * value.
      *
      * @param name
      *        the header name
@@ -952,6 +954,15 @@ public final class Http {
      * Ends this HTTP response message with the specified body.
      */
     void body(byte[] bytes, int offset, int length);
+
+    /**
+     * Writes the required response headers for the specified media and ends
+     * this HTTP response message with the contents from the specified media.
+     *
+     * @param media
+     *        the media entity
+     */
+    void media(Media media);
 
   }
 

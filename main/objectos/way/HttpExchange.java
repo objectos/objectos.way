@@ -3179,6 +3179,39 @@ final class HttpExchange implements Http.Exchange, Closeable {
       HttpExchange.this.sendUnchecked(copy);
     }
 
+    @Override
+    public final void media(Media media) {
+      switch (media) {
+        case Media.Bytes bytes -> {
+          final String contentType;
+          contentType = bytes.contentType();
+
+          final byte[] array;
+          array = bytes.toByteArray();
+
+          checkMediaBytes(contentType, array);
+
+          sendMediaBytes(contentType, array);
+        }
+
+        case Media.Text text -> {
+          final String contentType;
+          contentType = text.contentType();
+
+          final Charset charset;
+          charset = text.charset();
+
+          checkMediaText(contentType, charset);
+
+          sendMediaText(contentType, text);
+        }
+
+        case Media.Stream stream -> {
+          throw new UnsupportedOperationException();
+        }
+      }
+    }
+
     private void checkBody() {
       if (state != $RESPONSE_HEADERS) {
         throw new IllegalStateException(
@@ -3232,19 +3265,27 @@ final class HttpExchange implements Http.Exchange, Closeable {
     final String contentType;
     contentType = media.contentType();
 
+    final byte[] bytes;
+    bytes = media.toByteArray();
+
+    checkMediaBytes(contentType, bytes);
+
+    statusUnchecked(status);
+
+    sendMediaBytes(contentType, bytes);
+  }
+
+  private void checkMediaBytes(String contentType, byte[] bytes) {
     if (contentType == null) {
       throw new IllegalArgumentException("The specified Media.Bytes provided a null content-type");
     }
 
-    final byte[] bytes;
-    bytes = media.toByteArray();
-
     if (bytes == null) {
       throw new IllegalArgumentException("The specified Media.Bytes provided a null byte array");
     }
+  }
 
-    statusUnchecked(status);
-
+  private void sendMediaBytes(String contentType, byte[] bytes) {
     headerUnchecked(Http.HeaderName.DATE, now());
 
     headerUnchecked(Http.HeaderName.CONTENT_TYPE, contentType);
@@ -3261,19 +3302,27 @@ final class HttpExchange implements Http.Exchange, Closeable {
     final String contentType;
     contentType = media.contentType();
 
+    final Charset charset;
+    charset = media.charset();
+
+    checkMediaText(contentType, charset);
+
+    statusUnchecked(status);
+
+    sendMediaText(contentType, media);
+  }
+
+  private void checkMediaText(String contentType, Charset charset) {
     if (contentType == null) {
       throw new IllegalArgumentException("The specified Media.Text provided a null content-type");
     }
 
-    final Charset charset;
-    charset = media.charset();
-
     if (charset == null) {
       throw new IllegalArgumentException("The specified Media.Text provided a null charset");
     }
+  }
 
-    statusUnchecked(status);
-
+  private void sendMediaText(String contentType, Media.Text media) {
     headerUnchecked(Http.HeaderName.DATE, now());
 
     headerUnchecked(Http.HeaderName.CONTENT_TYPE, contentType);

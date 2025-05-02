@@ -580,6 +580,61 @@ public class HttpExchangeTest8Response extends HttpExchangeTest {
     );
   }
 
+  @Test
+  public void respond03() {
+    final Media media;
+    media = Media.Bytes.textPlain("FOO\n");
+
+    get(
+        http -> http.respond(resp -> {
+          resp.status(Http.Status.OK);
+
+          resp.header(Http.HeaderName.CONNECTION, "close");
+
+          resp.media(media);
+        }),
+
+        """
+        HTTP/1.1 200 OK\r
+        Connection: close\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 4\r
+        \r
+        FOO
+        """
+    );
+  }
+
+  @Test
+  public void respond04() {
+    final Media media;
+    media = Y.mediaTextOfLength(4);
+
+    get(
+        http -> http.respond(resp -> {
+          resp.status(Http.Status.OK);
+
+          resp.header(Http.HeaderName.CONNECTION, "close");
+
+          resp.media(media);
+        }),
+
+        """
+        HTTP/1.1 200 OK\r
+        Connection: close\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Transfer-Encoding: chunked\r
+        \r
+        004\r
+        1234\r
+        0\r
+        \r
+        """
+    );
+  }
+
   private void empty01(HttpExchange http) {
     http.status(Http.Status.NOT_MODIFIED);
     http.header(Http.HeaderName.DATE, http.now());
