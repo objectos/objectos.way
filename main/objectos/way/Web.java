@@ -623,9 +623,9 @@ public final class Web {
   public sealed interface Secure permits WebSecure {
 
     /**
-     * Configures the creation of a {@code Secure} instance.
+     * Configures the creation of a {@code Web.Secure} instance.
      */
-    public sealed interface Config permits WebSecureConfig {
+    public sealed interface Options permits WebSecureBuilder {
 
       /**
        * Use the specified {@code clock} when setting time related values.
@@ -691,19 +691,19 @@ public final class Web {
     }
 
     /**
-     * Creates a new session store with the specified configuration.
+     * Creates a new {@code Web.Secure} instance with the specified options.
      *
-     * @param config
-     *        the session store configuration
+     * @param options
+     *        allows for setting the options
      *
-     * @return a newly created session store with the specified
-     *         configuration
+     * @return a newly created {@code Web.Secure} instance with the specified
+     *         options
      */
-    static Secure create(Consumer<Config> config) {
-      WebSecureConfig builder;
-      builder = new WebSecureConfig();
+    static Secure create(Consumer<? super Options> options) {
+      WebSecureBuilder builder;
+      builder = new WebSecureBuilder();
 
-      config.accept(builder);
+      options.accept(builder);
 
       return builder.build();
     }
@@ -716,15 +716,28 @@ public final class Web {
     Session createSession();
 
     /**
-     * Returns the session associated to the specified request; or returns
+     * Returns the session associated to the specified request if one exists, or
+     * returns a newly created session and associate it creates and immediately
+     * stores a new session instance.
+     *
+     * @param http
+     *        the HTTP exchange
+     *
+     * @return the session associated to the HTTP request or a newly created
+     *         session
+     */
+    Session ensureSession(Http.Exchange http);
+
+    /**
+     * Returns the session associated to the specified request, or returns
      * {@code null} if a session could not be found.
      *
-     * @param request
+     * @param http
      *        the HTTP request message
      *
      * @return the session associated to the HTTP request or {@code null}
      */
-    Session getSession(Http.Request request);
+    Session getSession(Http.Request http);
 
     /**
      * Returns a new {@link Http.SetCookie} instance for the specified session.

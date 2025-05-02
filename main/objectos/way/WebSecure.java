@@ -63,7 +63,7 @@ final class WebSecure implements Web.Secure {
 
   private final ConcurrentMap<Web.Token, WebSession> sessions = new ConcurrentHashMap<>();
 
-  WebSecure(WebSecureConfig builder) {
+  WebSecure(WebSecureBuilder builder) {
     clock = builder.clock;
 
     cookieMaxAge = builder.cookieMaxAge;
@@ -136,9 +136,27 @@ final class WebSecure implements Web.Secure {
   }
 
   @Override
-  public final Web.Session getSession(Http.Request request) {
+  public final Web.Session ensureSession(Http.Exchange http) {
+    final Web.Session session;
+
+    final Web.Session maybeExisting;
+    maybeExisting = getSession(http);
+
+    if (maybeExisting != null) {
+      session = maybeExisting;
+    } else {
+      session = createSession();
+    }
+
+    http.set(Web.Session.class, session);
+
+    return session;
+  }
+
+  @Override
+  public final Web.Session getSession(Http.Request http) {
     final String cookieHeaderValue;
-    cookieHeaderValue = request.header(Http.HeaderName.COOKIE); // implicit null-check
+    cookieHeaderValue = http.header(Http.HeaderName.COOKIE); // implicit null-check
 
     if (cookieHeaderValue == null) {
       return null;
@@ -160,7 +178,7 @@ final class WebSecure implements Web.Secure {
 
       return get(id);
     } catch (WebToken.ParseException e) {
-      noteSink.send(notes.invalidSession, request);
+      noteSink.send(notes.invalidSession, http);
 
       return null;
     }

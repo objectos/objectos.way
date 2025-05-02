@@ -30,10 +30,10 @@ public class WebSecureTest {
   @Test(description = """
   Create a new session and confirm it can be found in the repo
   """)
-  public void testCase01() {
+  public void createSession01() {
     final Web.Secure secure;
-    secure = Web.Secure.create(config -> {
-      config.randomGenerator(generator(1L, 2L, 3L, 4L));
+    secure = Web.Secure.create(options -> {
+      options.randomGenerator(generator(1L, 2L, 3L, 4L));
     });
 
     final Web.Session session;
@@ -52,13 +52,39 @@ public class WebSecureTest {
     assertSame(maybe, session);
   }
 
+  @Test
+  public void ensureSession01() {
+    final Web.Secure secure;
+    secure = Web.Secure.create(options -> {
+      options.randomGenerator(generator(1L, 2L, 3L, 4L));
+    });
+
+    final Http.Exchange http1;
+    http1 = Http.Exchange.create(config -> {});
+
+    final Web.Session created;
+    created = secure.ensureSession(http1);
+
+    assertNotNull(created);
+
+    final Http.Exchange http2;
+    http2 = Http.Exchange.create(config -> {
+      config.header(Http.HeaderName.COOKIE, cookie("OBJECTOSWAY", 1L, 2L, 3L, 4L));
+    });
+
+    final Web.Session maybe;
+    maybe = secure.ensureSession(http2);
+
+    assertSame(maybe, created);
+  }
+
   @Test(description = """
   It should not be possible to retrieve a session after it has been invalidated
   """)
-  public void testCase02() {
+  public void getSession01() {
     final Web.Secure secure;
-    secure = Web.Secure.create(config -> {
-      config.randomGenerator(generator(5L, 6L, 7L, 8L));
+    secure = Web.Secure.create(options -> {
+      options.randomGenerator(generator(5L, 6L, 7L, 8L));
     });
 
     final Web.Session session;
@@ -78,11 +104,44 @@ public class WebSecureTest {
     assertNull(secure.getSession(http));
   }
 
-  @Test
-  public void testCase03() {
+  @Test(description = """
+  It should update last access time on each get
+  """)
+  public void getSession02() {
+    final IncrementingClock clock;
+    clock = new IncrementingClock(2024, 4, 29);
+
     final Web.Secure secure;
-    secure = Web.Secure.create(config -> {
-      config.randomGenerator(generator(5L, 6L, 7L, 8L));
+    secure = Web.Secure.create(options -> {
+      options.clock(clock);
+
+      options.randomGenerator(generator(-1L, -2L, -3L, -4L));
+    });
+
+    final WebSession session;
+    session = (WebSession) secure.createSession();
+
+    final Instant start;
+    start = session.accessTime;
+
+    final Http.Exchange http;
+    http = Http.Exchange.create(options -> {
+      options.header(Http.HeaderName.COOKIE, cookie("OBJECTOSWAY", -1L, -2L, -3L, -4L));
+    });
+
+    final Web.Session res;
+    res = secure.getSession(http);
+
+    assertSame(res, session);
+
+    assertTrue(session.accessTime.isAfter(start));
+  }
+
+  @Test
+  public void setCookie01() {
+    final Web.Secure secure;
+    secure = Web.Secure.create(options -> {
+      options.randomGenerator(generator(5L, 6L, 7L, 8L));
     });
 
     final Web.Session session;
@@ -96,39 +155,6 @@ public class WebSecureTest {
 
         "OBJECTOSWAY=AAAAAAAAAAUAAAAAAAAABgAAAAAAAAAHAAAAAAAAAAg=; HttpOnly; Path=/; Secure"
     );
-  }
-
-  @Test(description = """
-  It should update last access time on each get
-  """)
-  public void testCase04() {
-    final IncrementingClock clock;
-    clock = new IncrementingClock(2024, 4, 29);
-
-    final Web.Secure secure;
-    secure = Web.Secure.create(config -> {
-      config.clock(clock);
-
-      config.randomGenerator(generator(-1L, -2L, -3L, -4L));
-    });
-
-    final WebSession session;
-    session = (WebSession) secure.createSession();
-
-    final Instant start;
-    start = session.accessTime;
-
-    final Http.Exchange http;
-    http = Http.Exchange.create(config -> {
-      config.header(Http.HeaderName.COOKIE, cookie("OBJECTOSWAY", -1L, -2L, -3L, -4L));
-    });
-
-    final Web.Session res;
-    res = secure.getSession(http);
-
-    assertSame(res, session);
-
-    assertTrue(session.accessTime.isAfter(start));
   }
 
   private String cookie(String name, long l0, long l1, long l2, long l3) {

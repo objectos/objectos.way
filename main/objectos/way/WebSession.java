@@ -85,6 +85,24 @@ final class WebSession implements Web.Session {
     valid = false;
   }
 
+  @Override
+  public final boolean equals(Object obj) {
+    // I think the first test should be enough
+    // but better be safe than sorry I guess
+    return obj == this || obj instanceof WebSession that
+        && id.equals(that.id);
+  }
+
+  @Override
+  public final int hashCode() {
+    return id.hashCode();
+  }
+
+  @Override
+  public final String toString() {
+    return "WebSession[accessTime=" + accessTime + ";valid=" + valid + "]";
+  }
+
   final void touch(Clock clock) {
     accessTime = Instant.now(clock);
   }

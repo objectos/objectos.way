@@ -21,7 +21,7 @@ import java.time.Duration;
 import java.util.Objects;
 import java.util.random.RandomGenerator;
 
-final class WebSecureConfig implements Web.Secure.Config {
+final class WebSecureBuilder implements Web.Secure.Options {
 
   Clock clock = Clock.systemDefaultZone();
 
