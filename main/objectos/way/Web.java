@@ -716,9 +716,21 @@ public final class Web {
     Session createSession();
 
     /**
+     * Returns the CSRF token associated to the specified session, or returns a
+     * newly created token. In either case the returned token will be associated
+     * to the specified session.
+     *
+     * @param session
+     *        the session to which the CSRF token is to be associated
+     *
+     * @return the CSRF already associated to the specified session, or a newly
+     *         created token
+     */
+    Token ensureCsrfToken(Session session);
+
+    /**
      * Returns the session associated to the specified request if one exists, or
-     * returns a newly created session and associate it creates and immediately
-     * stores a new session instance.
+     * returns a newly created session.
      *
      * @param http
      *        the HTTP exchange

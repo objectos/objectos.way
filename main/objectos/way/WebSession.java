@@ -22,15 +22,17 @@ import java.util.Map;
 
 final class WebSession implements Web.Session {
 
-  public final Web.Token id;
-
-  private final Map<Object, Object> values = new HashMap<>();
-
   volatile Instant accessTime;
+
+  volatile Web.Token csrf;
+
+  public final Web.Token id;
 
   volatile boolean valid = true;
 
-  public WebSession(Web.Token id) {
+  private final Map<Object, Object> values = new HashMap<>();
+
+  WebSession(Web.Token id) {
     this.id = id;
   }
 

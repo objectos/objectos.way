@@ -136,6 +136,29 @@ final class WebSecure implements Web.Secure {
   }
 
   @Override
+  public final Web.Token ensureCsrfToken(Web.Session session) {
+    final WebSession impl;
+    impl = (WebSession) session;
+
+    Web.Token token;
+    token = impl.csrf;
+
+    if (token == null) {
+      synchronized (impl) {
+        token = impl.csrf;
+
+        if (token == null) {
+          token = nextId();
+
+          impl.csrf = token;
+        }
+      }
+    }
+
+    return token;
+  }
+
+  @Override
   public final Web.Session ensureSession(Http.Exchange http) {
     final Web.Session session;
 

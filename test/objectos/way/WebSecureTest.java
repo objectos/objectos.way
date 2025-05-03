@@ -53,6 +53,35 @@ public class WebSecureTest {
   }
 
   @Test
+  public void ensureCsrfToken01() {
+    final Web.Secure secure;
+    secure = Web.Secure.create(options -> {
+      options.randomGenerator(
+          generator(
+              1L, 2L, 3L, 4L,
+              -1L, -2L, -3L, -4L
+          )
+      );
+    });
+
+    final Http.Exchange http;
+    http = Http.Exchange.create(config -> {});
+
+    final Web.Session session;
+    session = secure.ensureSession(http);
+
+    final Web.Token created;
+    created = secure.ensureCsrfToken(session);
+
+    assertNotNull(created);
+
+    final Web.Token existing;
+    existing = secure.ensureCsrfToken(session);
+
+    assertSame(created, existing);
+  }
+
+  @Test
   public void ensureSession01() {
     final Web.Secure secure;
     secure = Web.Secure.create(options -> {
