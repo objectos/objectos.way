@@ -21,7 +21,7 @@
 ## Coordinates
 GROUP_ID := br.com.objectos
 ARTIFACT_ID := objectos.way
-VERSION := 0.2.0-SNAPSHOT
+VERSION := 0.2.0
 MODULE := $(ARTIFACT_ID)
 
 ## javac --release option
@@ -34,7 +34,7 @@ OSSRH_SERVER := https://oss.sonatype.org
 ## Dependencies
 H2 := com.h2database/h2/2.3.232
 SLF4J_NOP := org.slf4j/slf4j-nop/1.7.36
-TESTNG := org.testng/testng/7.10.2
+TESTNG := org.testng/testng/7.11.0
 
 # Delete the default suffixes
 .SUFFIXES:
@@ -109,6 +109,7 @@ TEST_RUNTIME_DEPS := $(SLF4J_NOP)
 
 ## test modules
 TEST_ADD_MODULES := org.testng
+TEST_ADD_MODULES += org.slf4j
 TEST_ADD_MODULES += com.h2database
 TEST_ADD_MODULES += java.net.http
 
