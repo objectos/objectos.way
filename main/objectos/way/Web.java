@@ -670,9 +670,8 @@ public final class Web {
       void cookieSecure(boolean value);
 
       /**
-       * Discards empty sessions, during a {@link Store#cleanUp()}
-       * operation, whose last access time is greater than the specified
-       * duration.
+       * Discards empty sessions, during a clean up operation, whose last access
+       * time is greater than the specified duration.
        *
        * @param duration
        *        the duration value
