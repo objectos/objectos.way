@@ -22,6 +22,7 @@ import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
 import java.time.Clock;
 import java.time.Duration;
+import java.time.InstantSource;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -36,6 +37,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.random.RandomGenerator;
 import java.util.stream.Collectors;
 
 /**
@@ -1116,6 +1118,99 @@ public final class Http {
      * @return the port number this server is listening to.
      */
     int port();
+
+  }
+
+  /**
+   * Creates, stores and manages session instances.
+   */
+  public sealed interface SessionStore permits HttpSessionStoreInMemory {
+
+    /**
+     * Configures the creation of a {@code SessionStore} instance.
+     */
+    public sealed interface Options permits HttpSessionStoreBuilder {
+
+      /**
+       * Use the specified {@code name} when setting the client session cookie.
+       *
+       * @param name
+       *        the cookie name to use
+       */
+      void cookieName(String name);
+
+      /**
+       * Sets the session cookie {@code Path} attribute to the specified value.
+       *
+       * @param path
+       *        the session cookie {@code Path} attribute value
+       */
+      void cookiePath(String path);
+
+      /**
+       * Sets the session cookie {@code Max-Age} attribute to the specified
+       * value.
+       *
+       * @param duration
+       *        the session cookie {@code Max-Age} attribute value
+       */
+      void cookieMaxAge(Duration duration);
+
+      /**
+       * Sets the session cookie {@code Secure} attribute to the specified
+       * value.
+       *
+       * @param value
+       *        the session cookie {@code Secure} attribute value
+       */
+      void cookieSecure(boolean value);
+
+      /**
+       * Discards empty sessions, during a clean up operation, whose last access
+       * time is greater than the specified duration.
+       *
+       * @param duration
+       *        the duration value
+       */
+      void emptyMaxAge(Duration duration);
+
+      /**
+       * Use the specified {@link InstantSource} when setting session time
+       * related values.
+       *
+       * @param value
+       *        the {@link InstantSource} instance to use
+       */
+      void instantSource(InstantSource value);
+
+      /**
+       * Use the specified {@link RandomGenerator} instance for generating token
+       * values.
+       *
+       * @param value
+       *        the {@link RandomGenerator} instance to use
+       */
+      void randomGenerator(RandomGenerator value);
+
+    }
+
+    /**
+     * Creates a new session store with the specified configuration.
+     *
+     * @param options
+     *        the session store configuration
+     *
+     * @return a newly created session store with the specified
+     *         configuration
+     */
+    static SessionStore create(Consumer<? super Options> options) {
+      HttpSessionStoreBuilder builder;
+      builder = new HttpSessionStoreBuilder();
+
+      options.accept(builder);
+
+      return builder.build();
+    }
 
   }
 
