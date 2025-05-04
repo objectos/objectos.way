@@ -22,7 +22,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.function.Consumer;
 import org.testng.annotations.Test;
 
-public class HttpRoutingOfPathTest {
+public class HttpRoutingTest0Pojo {
 
   private static final Http.Handler OK = http -> http.ok(Media.Bytes.textPlain("OK\n"));
 

@@ -394,16 +394,6 @@ public final class Http {
   @FunctionalInterface
   public interface Handler {
 
-    /**
-     * Augments a handler.
-     */
-    @FunctionalInterface
-    public interface Interceptor {
-
-      Http.Handler intercept(Http.Handler handler);
-
-    }
-
     static Handler create(Consumer<? super Routing> config) {
       final HttpRouting.Of routing;
       routing = new HttpRouting.Of();

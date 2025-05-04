@@ -26,6 +26,7 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.UnaryOperator;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -173,7 +174,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           http.set(Integer.class, 123);
         };
 
-        Http.Handler.Interceptor tc12X = handler -> {
+        UnaryOperator<Http.Handler> tc12X = handler -> {
           return http -> {
             http.set(String.class, "ABC");
 
@@ -188,7 +189,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           http.ok(object);
         };
 
-        path.handler(Http.Handler.firstOf(tc12A, tc12X.intercept(tc12C)));
+        path.handler(Http.Handler.firstOf(tc12A, tc12X.apply(tc12C)));
       });
     });
 
