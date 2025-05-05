@@ -16,10 +16,8 @@
 package objectos.way;
 
 import java.util.Arrays;
-import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -42,16 +40,7 @@ sealed abstract class HttpRouting {
 
     @Override
     public final Http.Handler build() {
-      if (single != null) {
-        addMany(single);
-      }
-
       return HttpHandler.of(condition, null, many);
-    }
-
-    @Override
-    public final void handler(Http.Handler value) {
-      single(value);
     }
 
     @Override
@@ -92,13 +81,13 @@ sealed abstract class HttpRouting {
 
   static final class OfPath extends HttpRouting implements Http.Routing.OfPath {
 
+    private Set<Http.Method> allowedMethods;
+
     private final boolean allowSubpath;
 
     private final Http.Filter filter;
 
     private final HttpRequestMatcher matcher;
-
-    private Map<Http.Method, Http.Handler> pathMethods;
 
     private HttpPathParam[] pathParams;
 
@@ -135,31 +124,15 @@ sealed abstract class HttpRouting {
         condition = matcher;
       }
 
-      if (pathMethods != null) {
-        final Set<Http.Method> allowedMethods;
-        allowedMethods = EnumSet.noneOf(Http.Method.class);
-
-        for (Map.Entry<Http.Method, Http.Handler> entry : pathMethods.entrySet()) {
-          final Http.Method method;
-          method = entry.getKey();
-
-          allowedMethods.add(method);
-
-          final Http.Handler handler;
-          handler = entry.getValue();
-
-          addMany(HttpHandler.methodAllowed(method, handler));
-        }
-
+      if (allowedMethods != null) {
         if (allowedMethods.contains(Http.Method.GET)) {
           allowedMethods.add(Http.Method.HEAD);
         }
 
-        addMany(HttpHandler.methodNotAllowed(allowedMethods));
-      }
+        final Http.Handler notAllowed;
+        notAllowed = HttpHandler.methodNotAllowed(allowedMethods);
 
-      if (single != null) {
-        addMany(single);
+        addMany(notAllowed);
       }
 
       return HttpHandler.of(condition, filter, many);
@@ -170,14 +143,16 @@ sealed abstract class HttpRouting {
       Objects.requireNonNull(method, "method == null");
       Objects.requireNonNull(handler, "handler == null");
 
-      if (pathMethods == null) {
-        pathMethods = new EnumMap<>(Http.Method.class);
+      if (allowedMethods == null) {
+        allowedMethods = EnumSet.noneOf(Http.Method.class);
       }
 
-      final Http.Handler maybeExisting;
-      maybeExisting = pathMethods.put(method, handler);
+      if (allowedMethods.add(method)) {
+        final Http.Handler allowed;
+        allowed = HttpHandler.methodAllowed(method, handler);
 
-      if (maybeExisting != null) {
+        addMany(allowed);
+      } else {
         throw new IllegalArgumentException("A handler has already been defined for method " + method);
       }
     }
@@ -195,11 +170,6 @@ sealed abstract class HttpRouting {
       handler = routing.build();
 
       addMany(handler);
-    }
-
-    @Override
-    public final void handler(Http.Handler value) {
-      single(value);
     }
 
     @Override
@@ -280,11 +250,15 @@ sealed abstract class HttpRouting {
 
   List<Http.Handler> many;
 
-  Http.Handler single;
-
   HttpRouting() {}
 
   public abstract Http.Handler build();
+
+  public final void handler(Http.Handler value) {
+    addMany(
+        Objects.requireNonNull(value, "value == null")
+    );
+  }
 
   final void addMany(Http.Handler handler) {
     if (many == null) {
@@ -301,14 +275,6 @@ sealed abstract class HttpRouting {
     routes.accept(routing);
 
     return routing.build();
-  }
-
-  final void single(Http.Handler value) {
-    if (single != null) {
-      throw new IllegalStateException("A handler has already been defined");
-    }
-
-    single = Objects.requireNonNull(value, "value == null");
   }
 
 }

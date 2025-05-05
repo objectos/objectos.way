@@ -1,5 +1,4 @@
 /*
-
  * Copyright (C) 2023-2025 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,13 +15,15 @@
  */
 package objectos.way;
 
+import static objectos.way.Http.Method.DELETE;
+import static objectos.way.Http.Method.GET;
 import static org.testng.Assert.assertEquals;
 
 import java.nio.charset.StandardCharsets;
 import java.util.function.Consumer;
 import org.testng.annotations.Test;
 
-public class HttpRoutingTest0Pojo {
+public class HttpRoutingTest1OfPath {
 
   private static final Http.Handler OK = http -> http.ok(Media.Bytes.textPlain("OK\n"));
 
@@ -35,6 +36,124 @@ public class HttpRoutingTest0Pojo {
 
       handler.handle(http);
     }
+  }
+
+  @Test
+  public void allow01() {
+    test(
+        routing -> {
+          routing.path("/allow01", allow01 -> {
+            allow01.allow(GET, ok("GET"));
+          });
+        },
+
+        http -> http.path("/allow01"),
+
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 3\r
+        \r
+        GET\
+        """,
+
+        http -> {
+          http.method(Http.Method.DELETE);
+
+          http.path("/allow01");
+        },
+
+        """
+        HTTP/1.1 405 Method Not Allowed\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Length: 0\r
+        Allow: GET, HEAD\r
+        \r
+        """
+    );
+  }
+
+  @Test
+  public void allow02() {
+    test(
+        routing -> {
+          routing.path("/allow", allow -> {
+            allow.allow(GET, ok("GET"));
+
+            allow.handler(http -> {
+              final String foo;
+              foo = http.queryParam("foo");
+
+              if (foo != null) {
+                http.ok(Media.Bytes.textPlain("foo"));
+              }
+            });
+
+            allow.allow(DELETE, ok("DEL"));
+          });
+        },
+
+        round(
+            http -> http.path("/allow"),
+
+            """
+            HTTP/1.1 200 OK\r
+            Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+            Content-Type: text/plain; charset=utf-8\r
+            Content-Length: 3\r
+            \r
+            GET\
+            """
+        ),
+
+        round(
+            http -> http.path("/allow?foo=bar"),
+
+            """
+            HTTP/1.1 200 OK\r
+            Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+            Content-Type: text/plain; charset=utf-8\r
+            Content-Length: 3\r
+            \r
+            GET\
+            """
+        ),
+
+        round(
+            http -> {
+              http.method(Http.Method.POST);
+
+              http.path("/allow?foo=bar");
+            },
+
+            """
+            HTTP/1.1 200 OK\r
+            Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+            Content-Type: text/plain; charset=utf-8\r
+            Content-Length: 3\r
+            \r
+            foo\
+            """
+        ),
+
+        round(
+            http -> {
+              http.method(DELETE);
+
+              http.path("/allow");
+            },
+
+            """
+            HTTP/1.1 200 OK\r
+            Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+            Content-Type: text/plain; charset=utf-8\r
+            Content-Length: 3\r
+            \r
+            DEL\
+            """
+        )
+    );
   }
 
   @Test
@@ -163,29 +282,16 @@ public class HttpRoutingTest0Pojo {
     final ThisFilter filter;
     filter = new ThisFilter();
 
-    final HttpRouting.Of routing;
-    routing = new HttpRouting.Of();
+    test(
+        routing -> routing.path("/a/exact", exact -> {
+          exact.filter(filter, filtered -> {
+            filtered.handler(OK);
+          });
+        }),
 
-    routing.path("/a/exact", exact -> {
-      exact.filter(filter, filtered -> {
-        filtered.handler(OK);
-      });
-    });
-
-    final Http.Handler handler;
-    handler = routing.build();
-
-    final Http.Exchange http;
-    http = http(config -> {
-      config.path("/a/exact");
-    });
-
-    handler.handle(http);
-
-    assertEquals(filter.count, 1);
-
-    assertEquals(
-        http.toString(),
+        config -> {
+          config.path("/a/exact");
+        },
 
         """
         HTTP/1.1 200 OK\r
@@ -196,6 +302,8 @@ public class HttpRoutingTest0Pojo {
         OK
         """
     );
+
+    assertEquals(filter.count, 1);
   }
 
   @Test(description = "filter: path(wildcard)")
@@ -398,8 +506,58 @@ public class HttpRoutingTest0Pojo {
     });
   }
 
+  private record Round(Consumer<Http.Exchange.Options> req, String resp) {}
+
+  private void test(
+      Consumer<HttpRouting.Of> options,
+      Consumer<Http.Exchange.Options> req1, String resp1) {
+    test(options, new Round(req1, resp1));
+  }
+
+  private void test(
+      Consumer<HttpRouting.Of> options,
+      Consumer<Http.Exchange.Options> req1, String resp1,
+      Consumer<Http.Exchange.Options> req2, String resp2) {
+    test(options, new Round(req1, resp1), new Round(req2, resp2));
+  }
+
+  private void test(Consumer<HttpRouting.Of> options, Round... rounds) {
+    final HttpRouting.Of routing;
+    routing = new HttpRouting.Of();
+
+    options.accept(routing);
+
+    final Http.Handler handler;
+    handler = routing.build();
+
+    for (Round round : rounds) {
+      final Http.Exchange http1;
+      http1 = Http.Exchange.create(cfg -> {
+        cfg.clock(Y.clockFixed());
+
+        round.req.accept(cfg);
+      });
+
+      handler.handle(http1);
+
+      assertEquals(
+          http1.toString(),
+
+          round.resp
+      );
+    }
+  }
+
+  private Round round(Consumer<Http.Exchange.Options> req, String resp) {
+    return new Round(req, resp);
+  }
+
   private Http.Handler ok(Media.Bytes object) {
     return http -> http.ok(object);
+  }
+
+  private Http.Handler ok(String text) {
+    return http -> http.ok(Media.Bytes.textPlain(text));
   }
 
   private Http.Handler notFound(String msg) {
