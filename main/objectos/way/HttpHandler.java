@@ -112,6 +112,22 @@ final class HttpHandler implements Http.Handler {
     return new HttpHandler(Kind.SINGLE, predicate, handler);
   }
 
+  public static Handler methodAllowed(Http.Method method, Http.Handler first, Http.Handler[] rest) {
+    final HttpRequestMatcher predicate;
+    predicate = HttpRequestMatcher.methodAllowed(method);
+
+    final Http.Handler[] array;
+    array = new Http.Handler[rest.length + 1];
+
+    array[0] = first;
+
+    for (int idx = 0; idx < rest.length; idx++) {
+      array[idx + 1] = Check.notNull(rest[idx], "rest[", idx, "] == null");
+    }
+
+    return new HttpHandler(Kind.MANY, predicate, array);
+  }
+
   public static Http.Handler notFound() {
     return NOT_FOUND;
   }

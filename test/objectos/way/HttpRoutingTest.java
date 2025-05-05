@@ -157,22 +157,20 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
 
       // tc11: multiple handlers
       matched.path("/testCase11", path -> {
-        path.handler(Http.Handler.firstOf(
-            Http.Handler.noop(),
+        path.handler(Http.Handler.noop());
 
-            this::$testCase11,
+        path.handler(this::$testCase11);
 
-            Http.Handler.ok(Media.Bytes.textPlain("nonono\n")))
-        );
+        path.handler(Http.Handler.ok(Media.Bytes.textPlain("nonono\n")));
       });
 
       // tc12: interceptor
       matched.path("/testCase12", path -> {
-        Http.Handler tc12A = http -> {
+        path.handler(http -> {
           assertNull(http.get(String.class));
 
           http.set(Integer.class, 123);
-        };
+        });
 
         UnaryOperator<Http.Handler> tc12X = handler -> {
           return http -> {
@@ -189,7 +187,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           http.ok(object);
         };
 
-        path.handler(Http.Handler.firstOf(tc12A, tc12X.apply(tc12C)));
+        path.handler(tc12X.apply(tc12C));
       });
     });
 

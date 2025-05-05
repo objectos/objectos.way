@@ -409,21 +409,6 @@ public final class Http {
       return HttpHandler.factory(factory, value);
     }
 
-    static Handler firstOf(Http.Handler h1, Http.Handler h2) {
-      Objects.requireNonNull(h1, "h1 == null");
-      Objects.requireNonNull(h2, "h2 == null");
-
-      return HttpHandler.many(null, new Handler[] {h1, h2});
-    }
-
-    static Handler firstOf(Http.Handler h1, Http.Handler h2, Http.Handler h3) {
-      Objects.requireNonNull(h1, "h1 == null");
-      Objects.requireNonNull(h2, "h2 == null");
-      Objects.requireNonNull(h3, "h3 == null");
-
-      return HttpHandler.many(null, new Handler[] {h1, h2, h3});
-    }
-
     static Handler noop() {
       return HttpHandler.NOOP;
     }
@@ -1002,6 +987,8 @@ public final class Http {
     public sealed interface OfPath permits HttpRouting.OfPath {
 
       void allow(Method method, Handler handler);
+
+      void allow(Method method, Handler first, Handler... rest);
 
       void filter(Filter value, Consumer<OfPath> routes);
 

@@ -108,7 +108,11 @@ public class HttpRoutingTest1OfPath {
         ),
 
         round(
-            http -> http.path("/allow?foo=bar"),
+            http -> {
+              http.path("/allow");
+
+              http.queryParam("foo", "bar");
+            },
 
             """
             HTTP/1.1 200 OK\r
@@ -124,7 +128,9 @@ public class HttpRoutingTest1OfPath {
             http -> {
               http.method(Http.Method.POST);
 
-              http.path("/allow?foo=bar");
+              http.path("/allow");
+
+              http.queryParam("foo", "bar");
             },
 
             """
@@ -153,6 +159,50 @@ public class HttpRoutingTest1OfPath {
             DEL\
             """
         )
+    );
+  }
+
+  @Test
+  public void allow03() {
+    test(
+        routing -> {
+          routing.path("/allow", allow -> {
+            allow.allow(GET, http -> {
+              final String foo;
+              foo = http.queryParam("foo");
+
+              if (foo != null) {
+                http.ok(Media.Bytes.textPlain("foo"));
+              }
+            }, ok("GET"));
+          });
+        },
+
+        http -> {
+          http.path("/allow");
+
+          http.queryParam("foo", "bar");
+        },
+
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 3\r
+        \r
+        foo\
+        """,
+
+        http -> http.path("/allow"),
+
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 3\r
+        \r
+        GET\
+        """
     );
   }
 

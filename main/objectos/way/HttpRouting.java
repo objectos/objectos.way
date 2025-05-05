@@ -158,6 +158,26 @@ sealed abstract class HttpRouting {
     }
 
     @Override
+    public final void allow(Http.Method method, Http.Handler first, Http.Handler... rest) {
+      Objects.requireNonNull(method, "method == null");
+      Objects.requireNonNull(first, "first == null");
+      Objects.requireNonNull(rest, "rest == null");
+
+      if (allowedMethods == null) {
+        allowedMethods = EnumSet.noneOf(Http.Method.class);
+      }
+
+      if (allowedMethods.add(method)) {
+        final Http.Handler allowed;
+        allowed = HttpHandler.methodAllowed(method, first, rest);
+
+        addMany(allowed);
+      } else {
+        throw new IllegalArgumentException("A handler has already been defined for method " + method);
+      }
+    }
+
+    @Override
     public final void filter(Http.Filter value, Consumer<Http.Routing.OfPath> routes) {
       Objects.requireNonNull(value, "value == null");
 

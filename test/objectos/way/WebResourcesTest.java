@@ -89,24 +89,32 @@ public class WebResourcesTest implements Consumer<Http.Routing> {
   public final void accept(Http.Routing routing) {
     routing.path("/tc01.txt", resources::handlePath);
     routing.path("/tc02.txt", path -> {
-      path.handler(Http.Handler.firstOf(resources, this::testCase02));
+      path.handler(resources);
+
+      path.handler(this::testCase02);
     });
     routing.path("/tc03.txt", resources::handlePath);
     routing.path("/tc04.txt", resources::handlePath);
     routing.path("/tc05.txt", resources::handlePath);
     routing.path("/tc06.txt", path -> {
-      path.handler(Http.Handler.firstOf(resources, this::testCase06));
+      path.handler(resources);
+
+      path.handler(this::testCase06);
     });
     routing.path("/tc07.txt", path -> {
       path.handler(this::testCase07);
     });
     routing.path("/tc08.txt", path -> {
-      path.handler(Http.Handler.firstOf(resources, this::testCase08));
+      path.handler(resources);
+
+      path.handler(this::testCase08);
     });
     routing.path("/tc09.txt", resources::handlePath);
     routing.path("/tc10.txt", resources::handlePath);
     routing.path("/tc11.html", path -> {
-      path.handler(Http.Handler.firstOf(resources, this::testCase11));
+      path.handler(resources);
+
+      path.handler(this::testCase11);
     });
 
     routing.handler(Http.Handler.notFound());
