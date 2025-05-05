@@ -25,7 +25,6 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
-import objectos.way.Http.Handler;
 
 sealed abstract class HttpRouting {
 
@@ -93,7 +92,9 @@ sealed abstract class HttpRouting {
 
   static final class OfPath extends HttpRouting implements Http.Routing.OfPath {
 
-    private Http.Filter filter;
+    private final boolean allowSubpath;
+
+    private final Http.Filter filter;
 
     private final HttpRequestMatcher matcher;
 
@@ -105,7 +106,19 @@ sealed abstract class HttpRouting {
 
     @Lang.VisibleForTesting
     OfPath(HttpRequestMatcher matcher) {
+      allowSubpath = matcher.endsInWildcard();
+
+      filter = null;
+
       this.matcher = matcher;
+    }
+
+    OfPath(boolean allowSubpath, Http.Filter filter) {
+      this.allowSubpath = allowSubpath;
+
+      this.filter = filter;
+
+      this.matcher = null;
     }
 
     @Override
@@ -170,12 +183,18 @@ sealed abstract class HttpRouting {
     }
 
     @Override
-    public final void filter(Http.Filter value) {
-      if (filter != null) {
-        throw new IllegalStateException("A filter has already been defined");
-      }
+    public final void filter(Http.Filter value, Consumer<Http.Routing.OfPath> routes) {
+      Objects.requireNonNull(value, "value == null");
 
-      filter = Objects.requireNonNull(value, "value == null");
+      final OfPath routing;
+      routing = new OfPath(allowSubpath, value);
+
+      routes.accept(routing);
+
+      final Http.Handler handler;
+      handler = routing.build();
+
+      addMany(handler);
     }
 
     @Override
@@ -237,7 +256,7 @@ sealed abstract class HttpRouting {
 
     @Override
     public final void subpath(String path, Consumer<Http.Routing.OfPath> routes) {
-      if (!matcher.endsInWildcard()) {
+      if (!allowSubpath) {
         throw new IllegalStateException("A subpath can only be defined in a wildcard parent path");
       }
 
@@ -251,7 +270,7 @@ sealed abstract class HttpRouting {
 
       routes.accept(routing);
 
-      final Handler handler;
+      final Http.Handler handler;
       handler = routing.build();
 
       addMany(handler);

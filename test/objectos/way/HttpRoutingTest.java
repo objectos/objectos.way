@@ -87,10 +87,10 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
       });
 
       matched.path("/testCase15/*", tc15 -> {
-        tc15.filter(this::$testCase15Filter);
-
-        tc15.subpath("a", path -> {
-          path.allow(Http.Method.GET, this::$testCase15);
+        tc15.filter(this::$testCase15Filter, filtered -> {
+          filtered.subpath("a", a -> {
+            a.allow(Http.Method.GET, this::$testCase15);
+          });
         });
       });
 

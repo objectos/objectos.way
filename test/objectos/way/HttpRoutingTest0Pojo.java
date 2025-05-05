@@ -167,9 +167,9 @@ public class HttpRoutingTest0Pojo {
     routing = new HttpRouting.Of();
 
     routing.path("/a/exact", exact -> {
-      exact.filter(filter);
-
-      exact.handler(OK);
+      exact.filter(filter, filtered -> {
+        filtered.handler(OK);
+      });
     });
 
     final Http.Handler handler;
@@ -207,9 +207,9 @@ public class HttpRoutingTest0Pojo {
     routing = new HttpRouting.Of();
 
     routing.path("/a/*", a -> {
-      a.filter(filter);
-
-      a.handler(OK);
+      a.filter(filter, filtered -> {
+        filtered.handler(OK);
+      });
     });
 
     final Http.Handler handler;
@@ -270,9 +270,9 @@ public class HttpRoutingTest0Pojo {
 
     routing.path("/a/*", a -> {
       a.subpath("b", b -> {
-        b.filter(filter);
-
-        b.handler(OK);
+        b.filter(filter, filtered -> {
+          filtered.handler(OK);
+        });
       });
 
       a.handler(notFound("a\n"));
@@ -313,10 +313,10 @@ public class HttpRoutingTest0Pojo {
     routing = new HttpRouting.Of();
 
     routing.path("/a/*", a -> {
-      a.filter(filter);
-
-      a.subpath("b", b -> {
-        b.handler(OK);
+      a.filter(filter, filtered -> {
+        filtered.subpath("b", b -> {
+          b.handler(OK);
+        });
       });
     });
 
@@ -355,13 +355,13 @@ public class HttpRoutingTest0Pojo {
     routing = new HttpRouting.Of();
 
     routing.path("/a/*", a -> {
-      a.filter(filter);
+      a.filter(filter, filtered -> {
+        filtered.subpath("b", b -> {
+          b.handler(OK);
+        });
 
-      a.subpath("b", b -> {
-        b.handler(OK);
+        filtered.handler(notFound("a\n"));
       });
-
-      a.handler(notFound("a\n"));
     });
 
     final Http.Handler handler;

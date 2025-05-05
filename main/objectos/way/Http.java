@@ -1003,7 +1003,7 @@ public final class Http {
 
       void allow(Method method, Handler handler);
 
-      void filter(Filter value);
+      void filter(Filter value, Consumer<OfPath> routes);
 
       void handler(Handler value);
 
