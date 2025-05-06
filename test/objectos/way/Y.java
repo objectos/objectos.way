@@ -947,7 +947,14 @@ final class Y {
 
       @Override
       public final long nextLong() {
-        return values[index++];
+        final int currentIndex;
+        currentIndex = index++;
+
+        if (index == values.length) {
+          index = 0;
+        }
+
+        return values[currentIndex];
       }
     };
   }

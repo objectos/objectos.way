@@ -38,6 +38,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import objectos.way.Http.HeaderName;
 import objectos.way.Http.Status;
@@ -646,6 +647,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
     object = null;
 
     path = null;
+
+    session = null;
 
     stateNext = 0;
 
@@ -2086,12 +2089,37 @@ final class HttpExchange implements Http.Exchange, Closeable {
   // # BEGIN: Session Support
   // ##################################################################
 
+  @Override
+  public final <T> T sessionAttr(Class<T> key) {
+    checkSession();
+
+    return session.get(key);
+  }
+
+  @Override
+  public final <T> void sessionAttr(Class<T> key, Supplier<? extends T> supplier) {
+    checkSession();
+
+    Objects.requireNonNull(key, "key == null");
+    Objects.requireNonNull(supplier, "supplier == null");
+
+    session.computeIfAbsent(key, supplier);
+  }
+
   public final void session(HttpSession value) {
     session = value;
   }
 
   public final boolean sessionLoaded() {
     return session != null;
+  }
+
+  private void checkSession() {
+    checkRequest();
+
+    if (session == null) {
+      throw new IllegalStateException("No session associated to this exchange");
+    }
   }
 
   // ##################################################################
@@ -3546,6 +3574,17 @@ final class HttpExchange implements Http.Exchange, Closeable {
   }
 
   private void terminate() {
+    if (session != null) {
+
+      final String setCookie;
+      setCookie = session.consumeSetCookie();
+
+      if (setCookie != null) {
+        headerUnchecked(Http.HeaderName.SET_COOKIE, setCookie);
+      }
+
+    }
+
     writeBytes(Bytes.CRLF);
   }
 

@@ -37,6 +37,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.random.RandomGenerator;
 import java.util.stream.Collectors;
 
@@ -267,6 +268,42 @@ public final class Http {
      *         object is found
      */
     <T> T get(Class<T> key);
+
+    // Session Support
+
+    /**
+     * Returns the session attribute associated to the specified key, or
+     * {@code null} if the attribute is not found.
+     *
+     * @param <T>
+     *        the type of the attribute
+     * @param key
+     *        the class object providing the attribute name
+     *
+     * @return the attribute value, or {@code null} if the attribute is not
+     *         found
+     *
+     * @throws IllegalStateException
+     *         if no session is associated to this exchange
+     */
+    <T> T sessionAttr(Class<T> key);
+
+    /**
+     * If a value is not mapped to the attribute name provided by
+     * the specified key, associate the one provided by the specified
+     * supplier.
+     *
+     * @param <T>
+     *        the type of the attribute
+     * @param key
+     *        the class object providing the attribute name
+     * @param supplier
+     *        provides the object to be stored
+     *
+     * @throws IllegalStateException
+     *         if no session is associated to this exchange
+     */
+    <T> void sessionAttr(Class<T> key, Supplier<? extends T> supplier);
 
     // 2xx responses
 
@@ -1002,6 +1039,8 @@ public final class Http {
 
       void subpath(String path, Consumer<OfPath> routes);
 
+      void when(Predicate<? super Request> condition, Consumer<OfPath> routes);
+
     }
 
     void handler(Handler value);
@@ -1189,6 +1228,21 @@ public final class Http {
       return builder.build();
     }
 
+    /**
+     * Loads the session associated to the specified exchange, or creates a new
+     * session if one does not exist.
+     *
+     * @param http
+     *        the HTTP exchange
+     */
+    void ensureSession(Http.Exchange http);
+
+    /**
+     * Loads the session associated to the specified exchange if one exists.
+     *
+     * @param http
+     *        the HTTP exchange
+     */
     void loadSession(Http.Exchange http);
 
   }

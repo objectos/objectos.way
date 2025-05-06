@@ -149,6 +149,59 @@ final class HttpSetCookieConfig implements SetCookie.Config {
     return new HttpSetCookie(value);
   }
 
+  final String buildString() {
+    if (name == null || value == null) {
+      throw new IllegalArgumentException("Cookie name and value are required");
+    }
+
+    final StringBuilder sb;
+    sb = new StringBuilder();
+
+    sb.append(name);
+    sb.append("=");
+    sb.append(value);
+
+    if (domain != null) {
+      sb.append("; Domain=");
+
+      sb.append(domain);
+    }
+
+    if (expires != null) {
+      sb.append("; Expires=");
+
+      sb.append(Http.formatDate(expires));
+    }
+
+    if (httpOnly) {
+      sb.append("; HttpOnly");
+    }
+
+    if (maxAge != null) {
+      sb.append("; Max-Age=");
+
+      sb.append(maxAge.getSeconds());
+    }
+
+    if (path != null) {
+      sb.append("; Path=");
+
+      sb.append(path);
+    }
+
+    if (sameSite != null) {
+      sb.append("; SameSite=");
+
+      sb.append(sameSite.text);
+    }
+
+    if (secure) {
+      sb.append("; Secure");
+    }
+
+    return sb.toString();
+  }
+
   private void checkNotBlank(String value, String name) {
     if (value.isBlank()) {
       throw new IllegalArgumentException(name + " must not be blank");

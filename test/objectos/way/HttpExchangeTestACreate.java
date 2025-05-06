@@ -25,7 +25,7 @@ import objectos.way.Http.ResponseListener;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class HttpExchangeTest9Create {
+public class HttpExchangeTestACreate {
 
   @Test
   public void formParam01() {

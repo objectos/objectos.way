@@ -23,6 +23,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
+import objectos.way.Http.Request;
 
 sealed abstract class HttpRouting {
 
@@ -85,6 +86,8 @@ sealed abstract class HttpRouting {
 
     private final boolean allowSubpath;
 
+    private final Predicate<? super Request> condition;
+
     private final Http.Filter filter;
 
     private final HttpRequestMatcher matcher;
@@ -93,9 +96,10 @@ sealed abstract class HttpRouting {
 
     private int pathParamsIndex;
 
-    @Lang.VisibleForTesting
     OfPath(HttpRequestMatcher matcher) {
       allowSubpath = matcher.endsInWildcard();
+
+      condition = null;
 
       filter = null;
 
@@ -105,23 +109,41 @@ sealed abstract class HttpRouting {
     OfPath(boolean allowSubpath, Http.Filter filter) {
       this.allowSubpath = allowSubpath;
 
+      condition = null;
+
       this.filter = filter;
 
-      this.matcher = null;
+      matcher = null;
+    }
+
+    OfPath(boolean allowSubpath, Predicate<? super Request> condition) {
+      this.allowSubpath = allowSubpath;
+
+      this.condition = condition;
+
+      filter = null;
+
+      matcher = null;
     }
 
     @Override
     public final Http.Handler build() {
       // define the condition, if necessary
-      final Predicate<Http.Request> condition;
+      final Predicate<? super Http.Request> cond;
 
-      if (pathParamsIndex > 0) {
+      if (condition != null) {
+        cond = condition;
+      }
+
+      else if (pathParamsIndex > 0) {
         HttpPathParam[] params;
         params = Arrays.copyOf(pathParams, pathParamsIndex);
 
-        condition = matcher.with(params);
-      } else {
-        condition = matcher;
+        cond = matcher.with(params);
+      }
+
+      else {
+        cond = matcher;
       }
 
       if (allowedMethods != null) {
@@ -135,7 +157,7 @@ sealed abstract class HttpRouting {
         addMany(notAllowed);
       }
 
-      return HttpHandler.of(condition, filter, many);
+      return HttpHandler.of(cond, filter, many);
     }
 
     @Override
@@ -226,7 +248,7 @@ sealed abstract class HttpRouting {
     }
 
     private void checkMatcherParam(String name) {
-      if (!matcher.hasParam(name)) {
+      if (matcher != null && !matcher.hasParam(name)) {
         throw new IllegalArgumentException("Current route does not define a path parameter named " + name);
       }
     }
@@ -257,6 +279,21 @@ sealed abstract class HttpRouting {
 
       final OfPath routing;
       routing = new OfPath(subpathMatcher);
+
+      routes.accept(routing);
+
+      final Http.Handler handler;
+      handler = routing.build();
+
+      addMany(handler);
+    }
+
+    @Override
+    public final void when(Predicate<? super Request> condition, Consumer<Http.Routing.OfPath> routes) {
+      Objects.requireNonNull(condition, "condition == null");
+
+      final OfPath routing;
+      routing = new OfPath(allowSubpath, condition);
 
       routes.accept(routing);
 

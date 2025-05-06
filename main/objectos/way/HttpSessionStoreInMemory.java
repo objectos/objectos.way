@@ -16,10 +16,7 @@
 package objectos.way;
 
 import java.time.Duration;
-import java.time.Instant;
 import java.time.InstantSource;
-import java.util.Collection;
-import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.random.RandomGenerator;
@@ -51,6 +48,7 @@ final class HttpSessionStoreInMemory implements Http.SessionStore {
 
   private boolean cookieSecure = true;
 
+  @SuppressWarnings("unused")
   private final Duration emptyMaxAge;
 
   private final InstantSource instantSource;
@@ -80,6 +78,29 @@ final class HttpSessionStoreInMemory implements Http.SessionStore {
   }
 
   @Override
+  public final void ensureSession(Http.Exchange http) {
+    final HttpExchange impl;
+    impl = (HttpExchange) http;
+
+    if (impl.sessionLoaded()) {
+      return;
+    }
+
+    final HttpSession session;
+
+    final HttpSession maybeExisting;
+    maybeExisting = getSession(http);
+
+    if (maybeExisting != null) {
+      session = maybeExisting;
+    } else {
+      session = createSession();
+    }
+
+    impl.session(session);
+  }
+
+  @Override
   public final void loadSession(Http.Exchange http) {
     final HttpExchange impl;
     impl = (HttpExchange) http;
@@ -88,11 +109,20 @@ final class HttpSessionStoreInMemory implements Http.SessionStore {
       return;
     }
 
+    final HttpSession session;
+    session = findSession(impl);
+
+    if (session != null) {
+      impl.session(session);
+    }
+  }
+
+  private HttpSession findSession(HttpExchange impl) {
     final String cookieHeaderValue;
     cookieHeaderValue = impl.header(Http.HeaderName.COOKIE); // implicit null-check
 
     if (cookieHeaderValue == null) {
-      return;
+      return null;
     }
 
     final Http.Cookies cookies;
@@ -102,58 +132,39 @@ final class HttpSessionStoreInMemory implements Http.SessionStore {
     encoded = cookies.get(cookieName);
 
     if (encoded == null) {
-      return;
+      return null;
     }
 
     try {
       final HttpToken id;
       id = HttpToken.parse(encoded, SESSION_LENGTH);
 
-      final HttpSession session;
-      session = get(id);
-
-      impl.session(session);
+      return get(id);
     } catch (HttpToken.ParseException e) {
-      noteSink.send(notes.invalidSession, http);
+      noteSink.send(notes.invalidSession, impl);
+
+      return null;
     }
   }
 
   // private API
 
-  public final void cleanUp() {
-    Instant now;
-    now = instantSource.instant();
-
-    Instant min;
-    min = now.minus(emptyMaxAge);
-
-    Collection<HttpSession> values;
-    values = sessions.values();
-
-    for (HttpSession session : values) {
-      if (session.shouldCleanUp(min)) {
-        sessions.remove(session.id);
-      }
-    }
-  }
-
-  public final void clear() {
-    sessions.clear();
-  }
-
   public final HttpSession createSession() {
     HttpSession session, maybeExisting;
 
     do {
-      HttpToken id;
+      final HttpToken id;
       id = nextId();
 
-      session = new HttpSession(id);
+      final String setCookie;
+      setCookie = setCookie(id);
+
+      session = new HttpSession(id, setCookie);
 
       maybeExisting = sessions.putIfAbsent(id, session);
     } while (maybeExisting != null);
 
-    session.accessTime = instantSource.instant();
+    session.touch(instantSource);
 
     return session;
   }
@@ -166,26 +177,11 @@ final class HttpSessionStoreInMemory implements Http.SessionStore {
       return null;
     }
 
-    if (!session.valid) {
+    if (!session.valid()) {
       return null;
     }
 
-    session.accessTime = instantSource.instant();
-
-    return session;
-  }
-
-  public final HttpSession ensureSession(Http.Exchange http) {
-    final HttpSession session;
-
-    final HttpSession maybeExisting;
-    maybeExisting = getSession(http);
-
-    if (maybeExisting != null) {
-      session = maybeExisting;
-    } else {
-      session = createSession();
-    }
+    session.touch(instantSource);
 
     return session;
   }
@@ -220,59 +216,29 @@ final class HttpSessionStoreInMemory implements Http.SessionStore {
     }
   }
 
-  public final Http.SetCookie setCookie(Web.Session session) {
-    final WebSession impl;
-    impl = (WebSession) session;
+  private String setCookie(HttpToken id) {
+    final HttpSetCookieConfig builder;
+    builder = new HttpSetCookieConfig();
 
-    final Web.Token id;
-    id = impl.id;
+    builder.name(cookieName);
 
-    return Http.SetCookie.create(set -> {
-      set.name(cookieName);
+    builder.value(id.toString());
 
-      set.value(id.toString());
-
-      set.httpOnly();
-
-      if (cookieMaxAge != null) {
-        set.maxAge(cookieMaxAge);
-      }
-
-      if (cookiePath != null) {
-        set.path(cookiePath);
-      }
-
-      if (cookieSecure) {
-        set.secure();
-      }
-    });
-  }
-
-  public final String setCookie(String id) {
-    Objects.requireNonNull(id, "id == null");
-
-    StringBuilder s;
-    s = new StringBuilder();
-
-    s.append(cookieName);
-
-    s.append('=');
-
-    s.append(id);
+    builder.httpOnly();
 
     if (cookieMaxAge != null) {
-      s.append("; Max-Age=");
-
-      s.append(cookieMaxAge.getSeconds());
+      builder.maxAge(cookieMaxAge);
     }
 
     if (cookiePath != null) {
-      s.append("; Path=");
-
-      s.append(cookiePath);
+      builder.path(cookiePath);
     }
 
-    return s.toString();
+    if (cookieSecure) {
+      builder.secure();
+    }
+
+    return builder.buildString();
   }
 
   private HttpToken nextId() {

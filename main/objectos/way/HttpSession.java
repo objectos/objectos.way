@@ -16,62 +16,191 @@
 package objectos.way;
 
 import java.time.Instant;
-import java.util.HashMap;
+import java.time.InstantSource;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Supplier;
 
 final class HttpSession {
 
-  volatile Instant accessTime;
+  private enum State {
 
-  final HttpToken id;
+    EMPTY,
 
-  volatile boolean valid = true;
+    SINGLE,
 
-  private final Map<Object, Object> values = new HashMap<>();
+    DUO,
 
-  HttpSession(HttpToken id) {
+    MAP;
+
+  }
+
+  private record Store1(String name, Object value) {
+
+    final boolean containsKey(String key) {
+      return name.equals(key);
+    }
+
+    final Store2 add(String name2, Object value2) {
+      return new Store2(name, value, name2, value2);
+    }
+
+    final Object get(String key) {
+      if (name.equals(key)) {
+        return value;
+      }
+
+      return null;
+    }
+
+  }
+
+  private record Store2(String name1, Object value1, String name2, Object value2) {
+
+    final boolean containsKey(String key) {
+      return name1.equals(key) || name2.equals(key);
+    }
+
+    final Map<Object, Object> add(String name3, Object value3) {
+      Map<Object, Object> map;
+      map = Util.createMap();
+
+      map.put(name1, value1);
+      map.put(name2, value2);
+      map.put(name3, value3);
+
+      return map;
+    }
+
+    final Object get(String key) {
+      if (name1.equals(key)) {
+        return value1;
+      }
+
+      if (name2.equals(key)) {
+        return value2;
+      }
+
+      return null;
+    }
+
+  }
+
+  private volatile Instant accessTime;
+
+  private final HttpToken id;
+
+  private final Lock lock = new ReentrantLock();
+
+  private volatile String setCookie;
+
+  private State state = State.EMPTY;
+
+  private Object store;
+
+  private volatile boolean valid = true;
+
+  HttpSession(HttpToken id, String setCookie) {
     this.id = id;
+
+    this.setCookie = setCookie;
   }
 
-  public final <T> T get(Class<T> type) {
-    String key;
-    key = type.getName();
+  public final void computeIfAbsent(Class<?> key, Supplier<?> supplier) {
+    lock.lock();
+    try {
 
-    Object value;
-    value = null;
+      final String name;
+      name = key.getName();
 
-    synchronized (values) {
-      value = values.get(key);
+      switch (state) {
+        case EMPTY -> {
+          store = new Store1(name, get(supplier));
+
+          state = State.SINGLE;
+        }
+
+        case SINGLE -> {
+          final Store1 single;
+          single = single();
+
+          if (!single.containsKey(name)) {
+            store = single.add(name, get(supplier));
+
+            state = State.DUO;
+          }
+        }
+
+        case DUO -> {
+          final Store2 duo;
+          duo = duo();
+
+          if (!duo.containsKey(name)) {
+            store = duo.add(name, get(supplier));
+
+            state = State.MAP;
+          }
+        }
+
+        case MAP -> {
+          final Map<Object, Object> map;
+          map = map();
+
+          if (!map.containsKey(name)) {
+            map.put(name, get(supplier));
+          }
+        }
+      }
+
+    } finally {
+      lock.unlock();
     }
-
-    return type.cast(value);
   }
 
-  public final <T> Object put(Class<T> type, T value) {
-    String key;
-    key = type.getName();
+  @SuppressWarnings("unchecked")
+  public final <T> T get(Class<T> key) {
+    final String name;
+    name = key.getName();
 
-    synchronized (values) {
-      return values.put(key, value);
+    lock.lock();
+    try {
+      return (T) switch (state) {
+        case EMPTY -> null;
+
+        case SINGLE -> single().get(name);
+
+        case DUO -> duo().get(name);
+
+        case MAP -> map().get(name);
+      };
+    } finally {
+      lock.unlock();
     }
   }
 
-  public final Object get(String name) {
-    synchronized (values) {
-      return values.get(name);
+  private Object get(Supplier<?> supplier) {
+    final Object value;
+    value = supplier.get();
+
+    if (value == null) {
+      throw new NullPointerException("supplier provided a null value");
     }
+
+    return value;
   }
 
-  public final void put(String name, Object value) {
-    synchronized (values) {
-      values.put(name, value);
-    }
+  private Store1 single() {
+    return (Store1) store;
   }
 
-  public final void remove(String name) {
-    synchronized (values) {
-      values.remove(name);
-    }
+  private Store2 duo() {
+    return (Store2) store;
+  }
+
+  @SuppressWarnings("unchecked")
+  private Map<Object, Object> map() {
+    return (Map<Object, Object>) store;
   }
 
   public final void invalidate() {
@@ -96,20 +225,38 @@ final class HttpSession {
     return "HttpSession[accessTime=" + accessTime + ";valid=" + valid + "]";
   }
 
-  final boolean shouldCleanUp(Instant min) {
-    if (!valid) {
-      return true;
+  final String consumeSetCookie() {
+    String s;
+    s = setCookie;
+
+    if (s != null) {
+
+      lock.lock();
+      try {
+        s = setCookie;
+
+        if (s != null) {
+          setCookie = null;
+        }
+      } finally {
+        lock.unlock();
+      }
+
     }
 
-    if (!values.isEmpty()) {
-      return false;
-    }
+    return s;
+  }
 
-    if (accessTime == null) {
-      return false;
-    }
+  final HttpToken id() {
+    return id;
+  }
 
-    return accessTime.isBefore(min);
+  final void touch(InstantSource source) {
+    accessTime = source.instant();
+  }
+
+  final boolean valid() {
+    return valid;
   }
 
 }

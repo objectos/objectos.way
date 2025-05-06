@@ -548,6 +548,43 @@ public class HttpRoutingTest1OfPath {
     );
   }
 
+  @Test
+  public void when01() {
+    test(
+        routing -> {
+          routing.path("/prefix/*", prefix -> {
+            prefix.when(req -> req.path().equals("/prefix/a"), matched -> {
+              matched.handler(OK);
+            });
+
+            prefix.handler(notFound("x"));
+          });
+        },
+
+        http -> http.path("/prefix/a"),
+
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 3\r
+        \r
+        OK
+        """,
+
+        http -> http.path("/prefix/b"),
+
+        """
+        HTTP/1.1 404 Not Found\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 1\r
+        \r
+        x\
+        """
+    );
+  }
+
   private Http.Exchange http(Consumer<? super Http.Exchange.Options> outer) {
     return Http.Exchange.create(config -> {
       config.clock(Y.clockFixed());
