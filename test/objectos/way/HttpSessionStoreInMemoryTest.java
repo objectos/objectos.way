@@ -15,6 +15,7 @@
  */
 package objectos.way;
 
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertSame;
 
@@ -24,9 +25,7 @@ import org.testng.annotations.Test;
 
 public class HttpSessionStoreInMemoryTest {
 
-  @Test(description = """
-  Create a new session and confirm it can be found in the repo
-  """)
+  @Test
   public void createSession01() {
     final HttpSessionStoreInMemory store;
     store = create(options -> {
@@ -47,6 +46,30 @@ public class HttpSessionStoreInMemoryTest {
     maybe = store.getSession(http);
 
     assertSame(maybe, session);
+  }
+
+  @Test
+  public void loadSession01() {
+    final HttpSessionStoreInMemory store;
+    store = create(options -> {
+      options.randomGenerator(generator(1L, 2L, 3L, 4L));
+    });
+
+    final HttpSession session;
+    session = store.createSession();
+
+    assertNotNull(session);
+
+    final HttpExchange http;
+    http = HttpExchange.create0(config -> {
+      config.header(Http.HeaderName.COOKIE, cookie("OBJECTOSWAY", 1L, 2L, 3L, 4L));
+    });
+
+    assertEquals(http.sessionLoaded(), false);
+
+    store.loadSession(http);
+
+    assertEquals(http.sessionLoaded(), true);
   }
 
   private HttpSessionStoreInMemory create(Consumer<HttpSessionStoreBuilder> options) {

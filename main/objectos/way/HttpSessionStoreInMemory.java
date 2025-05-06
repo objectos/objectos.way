@@ -79,6 +79,47 @@ final class HttpSessionStoreInMemory implements Http.SessionStore {
     randomGenerator = builder.randomGenerator;
   }
 
+  @Override
+  public final void loadSession(Http.Exchange http) {
+    final HttpExchange impl;
+    impl = (HttpExchange) http;
+
+    if (impl.sessionLoaded()) {
+      return;
+    }
+
+    final String cookieHeaderValue;
+    cookieHeaderValue = impl.header(Http.HeaderName.COOKIE); // implicit null-check
+
+    if (cookieHeaderValue == null) {
+      return;
+    }
+
+    final Http.Cookies cookies;
+    cookies = Http.Cookies.parse(cookieHeaderValue);
+
+    final String encoded;
+    encoded = cookies.get(cookieName);
+
+    if (encoded == null) {
+      return;
+    }
+
+    try {
+      final HttpToken id;
+      id = HttpToken.parse(encoded, SESSION_LENGTH);
+
+      final HttpSession session;
+      session = get(id);
+
+      impl.session(session);
+    } catch (HttpToken.ParseException e) {
+      noteSink.send(notes.invalidSession, http);
+    }
+  }
+
+  // private API
+
   public final void cleanUp() {
     Instant now;
     now = instantSource.instant();

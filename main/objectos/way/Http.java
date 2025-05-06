@@ -1189,6 +1189,8 @@ public final class Http {
       return builder.build();
     }
 
+    void loadSession(Http.Exchange http);
+
   }
 
   /**

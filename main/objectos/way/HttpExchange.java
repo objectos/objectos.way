@@ -315,6 +315,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   private final Http.ResponseListener responseListener;
 
+  private HttpSession session;
+
   private final Closeable socket;
 
   private byte state;
@@ -2078,6 +2080,22 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   // ##################################################################
   // # END: Parse: Body
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Session Support
+  // ##################################################################
+
+  public final void session(HttpSession value) {
+    session = value;
+  }
+
+  public final boolean sessionLoaded() {
+    return session != null;
+  }
+
+  // ##################################################################
+  // # END: Session Support
   // ##################################################################
 
   // ##################################################################

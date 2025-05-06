@@ -33,7 +33,7 @@ OSSRH_SERVER := https://oss.sonatype.org
 
 ## Dependencies
 H2 := com.h2database/h2/2.3.232
-SLF4J_NOP := org.slf4j/slf4j-nop/1.7.36
+SLF4J_NOP := org.slf4j/slf4j-nop/2.0.17
 TESTNG := org.testng/testng/7.11.0
 
 # Delete the default suffixes
