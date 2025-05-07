@@ -97,7 +97,7 @@ final class HttpSessionStoreBuilder implements Http.SessionStore.Options {
       randomGenerator = new SecureRandom();
     }
 
-    return new HttpSessionStoreInMemory(this);
+    return new HttpSessionStore(this);
   }
 
 }

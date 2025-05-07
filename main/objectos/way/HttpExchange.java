@@ -40,8 +40,6 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import objectos.way.Http.HeaderName;
-import objectos.way.Http.Status;
 
 final class HttpExchange implements Http.Exchange, Closeable {
 
@@ -112,6 +110,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
     Http.Status status();
   }
 
+  private record FormSupport(int bufferIndex, InputStream inputStream, Object object, Map<String, Object> queryParams) {}
+
   private enum InvalidLineTerminator implements ClientError {
     INSTANCE;
 
@@ -123,7 +123,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
     }
 
     @Override
-    public final Status status() {
+    public final Http.Status status() {
       return Http.Status.BAD_REQUEST;
     }
   }
@@ -211,6 +211,26 @@ final class HttpExchange implements Http.Exchange, Closeable {
     }
   }
 
+  private enum InvalidApplicationForm implements ClientError {
+    // do not reorder, do not rename
+
+    CHAR,
+
+    PERCENT;
+
+    private static final byte[] MESSAGE = "Invalid application/x-www-form-urlencoded content in request body.\n".getBytes(StandardCharsets.US_ASCII);
+
+    @Override
+    public final byte[] message() {
+      return MESSAGE;
+    }
+
+    @Override
+    public final Http.Status status() {
+      return Http.Status.BAD_REQUEST;
+    }
+  }
+
   static final byte $START = 0;
 
   static final byte $READ = 1;
@@ -242,21 +262,34 @@ final class HttpExchange implements Http.Exchange, Closeable {
   static final byte $PARSE_HEADER_CR = 25;
 
   static final byte $PARSE_BODY = 26;
+  static final byte $PARSE_APP_FORM = 27;
+  static final byte $PARSE_APP_FORM_NAME = 28;
+  static final byte $PARSE_APP_FORM_NAME0 = 29;
+  static final byte $PARSE_APP_FORM_NAME1 = 30;
+  static final byte $PARSE_APP_FORM_NAME1_DECODE = 31;
+  static final byte $PARSE_APP_FORM_VALUE = 32;
+  static final byte $PARSE_APP_FORM_VALUE0 = 33;
+  static final byte $PARSE_APP_FORM_VALUE1 = 34;
+  static final byte $PARSE_APP_FORM_VALUE1_DECODE = 35;
+  static final byte $PARSE_APP_FORM_READ = 36;
+  static final byte $PARSE_APP_FORM_EOF = 37;
+  static final byte $PARSE_APP_FORM_SUCCESS = 38;
+  static final byte $PARSE_APP_FORM_ERROR = 39;
 
-  static final byte $BAD_REQUEST = 27;
-  static final byte $URI_TOO_LONG = 28;
-  static final byte $REQUEST_HEADER_FIELDS_TOO_LARGE = 29;
-  static final byte $NOT_IMPLEMENTED = 30;
-  static final byte $HTTP_VERSION_NOT_SUPPORTED = 31;
+  static final byte $BAD_REQUEST = 40;
+  static final byte $URI_TOO_LONG = 41;
+  static final byte $REQUEST_HEADER_FIELDS_TOO_LARGE = 42;
+  static final byte $NOT_IMPLEMENTED = 43;
+  static final byte $HTTP_VERSION_NOT_SUPPORTED = 44;
 
-  static final byte $COMMIT = 32;
-  static final byte $WRITE = 33;
+  static final byte $COMMIT = 45;
+  static final byte $WRITE = 46;
 
-  static final byte $REQUEST = 34;
+  static final byte $REQUEST = 47;
 
-  static final byte $RESPONSE_HEADERS = 35;
+  static final byte $RESPONSE_HEADERS = 48;
 
-  static final byte $ERROR = 36;
+  static final byte $ERROR = 49;
 
   private static final int HARD_MAX_BUFFER_SIZE = 1 << 14;
 
@@ -284,13 +317,17 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   private final Clock clock;
 
+  private Map<String, Object> formParams;
+
+  private FormSupport formSupport;
+
   private HttpHeaderName headerName;
 
   private Map<HttpHeaderName, HttpHeader> headers;
 
   private final long id = ID_GENERATOR.getAndIncrement();
 
-  private final InputStream inputStream;
+  private InputStream inputStream;
 
   private int mark;
 
@@ -302,6 +339,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   private final Note.Sink noteSink;
 
+  // 1) when request body is Kind.FILE object = HttpExchangeTmp
   private Object object;
 
   private final OutputStream outputStream;
@@ -589,6 +627,18 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
       case $PARSE_BODY -> executeParseBody();
 
+      case $PARSE_APP_FORM -> executeParseAppForm();
+      case $PARSE_APP_FORM_NAME -> executeParseAppFormName();
+      case $PARSE_APP_FORM_NAME0 -> executeParseAppFormName0();
+      case $PARSE_APP_FORM_NAME1 -> executeParseAppFormName1();
+      case $PARSE_APP_FORM_NAME1_DECODE -> executeParseAppFormName1Decode();
+      case $PARSE_APP_FORM_VALUE -> executeParseAppFormValue();
+      case $PARSE_APP_FORM_VALUE0 -> executeParseAppFormValue0();
+      case $PARSE_APP_FORM_VALUE1 -> executeParseAppFormValue1();
+      case $PARSE_APP_FORM_VALUE1_DECODE -> executeParseAppFormValue1Decode();
+      case $PARSE_APP_FORM_EOF -> executeParseAppFormEof();
+      case $PARSE_APP_FORM_SUCCESS -> executeParseAppFormSuccess();
+
       case $BAD_REQUEST -> executeBadRequest();
       case $URI_TOO_LONG -> executeUriTooLong();
       case $REQUEST_HEADER_FIELDS_TOO_LARGE -> executeRequestHeaderFieldsTooLarge();
@@ -625,6 +675,12 @@ final class HttpExchange implements Http.Exchange, Closeable {
     bufferLimit = 0;
 
     bufferIndex = 0;
+
+    if (formParams != null) {
+      formParams.clear();
+    }
+
+    formSupport = null;
 
     headerName = null;
 
@@ -1025,7 +1081,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
   }
 
   private byte executeParsePathDecode() {
-    return decodePercent($PARSE_PATH_CONTENTS1, $PARSE_PATH_DECODE, InvalidRequestLine.PATH_PERCENT);
+    return urlDecodePercent($PARSE_PATH_CONTENTS1, $PARSE_PATH_DECODE, InvalidRequestLine.PATH_PERCENT);
   }
 
   private byte pv(byte next) {
@@ -1159,17 +1215,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
     return toRead($PARSE_QUERY0);
   }
 
-  private void makeIfNecessary() {
-    if (mark != bufferIndex || (queryParams != null && !queryParams.isEmpty())) {
-      // make when
-      // 1) key is not empty
-      // 2) not the first key/value
-      object = markToString();
-
-      makeQueryParam("");
-    }
-  }
-
   private byte executeParseQuery1() {
     while (bufferIndex < bufferLimit) {
       final byte b;
@@ -1205,7 +1250,11 @@ final class HttpExchange implements Http.Exchange, Closeable {
   }
 
   private byte executeParseQuery1Decode() {
-    return decodePercent($PARSE_QUERY1, $PARSE_QUERY1_DECODE, InvalidRequestLine.QUERY_PERCENT);
+    return urlDecodePercent(
+        $PARSE_QUERY1,
+        $PARSE_QUERY1_DECODE,
+        InvalidRequestLine.QUERY_PERCENT
+    );
   }
 
   private byte executeParseQueryValue() {
@@ -1251,7 +1300,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
       b = buffer[bufferIndex];
 
       if (b < 0) {
-        return toBadRequest(InvalidRequestLine.QUERY_CHAR);
+        return toBadRequest(InvalidRequestLine.QUERY_PERCENT);
       }
 
       final byte code;
@@ -1278,7 +1327,11 @@ final class HttpExchange implements Http.Exchange, Closeable {
   }
 
   private byte executeParseQueryValue1Decode() {
-    return decodePercent($PARSE_QUERY_VALUE1, $PARSE_QUERY_VALUE1_DECODE, InvalidRequestLine.QUERY_PERCENT);
+    return urlDecodePercent(
+        $PARSE_QUERY_VALUE1,
+        $PARSE_QUERY_VALUE1_DECODE,
+        InvalidRequestLine.QUERY_PERCENT
+    );
   }
 
   @SuppressWarnings("unchecked")
@@ -1325,10 +1378,21 @@ final class HttpExchange implements Http.Exchange, Closeable {
   // ##################################################################
 
   // ##################################################################
-  // # BEGIN: Decode Percent
+  // # BEGIN: URL Decode
   // ############################################################
 
-  private byte decodePercent(byte success, byte read, InvalidRequestLine badRequest) {
+  private void makeIfNecessary() {
+    if (mark != bufferIndex || (queryParams != null && !queryParams.isEmpty())) {
+      // make when
+      // 1) key is not empty
+      // 2) not the first key/value
+      object = markToString();
+
+      makeQueryParam("");
+    }
+  }
+
+  private byte urlDecodePercent(byte success, byte read, ClientError badRequest) {
     final int firstDigitIndex;
     firstDigitIndex = bufferIndex + 1;
 
@@ -1347,16 +1411,16 @@ final class HttpExchange implements Http.Exchange, Closeable {
         // 0yyyzzzz
         case 0b0000, 0b0001,
              0b0010, 0b0011,
-             0b0100, 0b0101, 0b0110, 0b0111 -> decodePercent1(success, read, badRequest);
+             0b0100, 0b0101, 0b0110, 0b0111 -> urlDecodePercent1(success, read, badRequest);
 
         // 110xxxyy 10yyzzzz
-        case 0b1100, 0b1101 -> decodePercent2(success, read, badRequest);
+        case 0b1100, 0b1101 -> urlDecodePercent2(success, read, badRequest);
 
         // 1110wwww 10xxxxyy 10yyzzzz
-        case 0b1110 -> decodePercent3(success, read, badRequest);
+        case 0b1110 -> urlDecodePercent3(success, read, badRequest);
 
         // 11110uvv 10vvwwww 10xxxxyy 10yyzzzz
-        case 0b1111 -> decodePercent4(success, read, badRequest);
+        case 0b1111 -> urlDecodePercent4(success, read, badRequest);
 
         default -> toBadRequest(badRequest);
       };
@@ -1365,10 +1429,10 @@ final class HttpExchange implements Http.Exchange, Closeable {
     }
   }
 
-  private byte decodePercent1(byte success, byte read, InvalidRequestLine badRequest) {
+  private byte urlDecodePercent1(byte success, byte read, ClientError badRequest) {
     if (canRead(3)) {
       final int byte1;
-      byte1 = decodePercent();
+      byte1 = urlDecodePercent();
 
       if (byte1 < 0) {
         return toBadRequest(badRequest);
@@ -1382,17 +1446,17 @@ final class HttpExchange implements Http.Exchange, Closeable {
     }
   }
 
-  private byte decodePercent2(byte success, byte read, InvalidRequestLine badRequest) {
+  private byte urlDecodePercent2(byte success, byte read, ClientError badRequest) {
     if (canRead(6)) {
       final int byte1;
-      byte1 = decodePercent();
+      byte1 = urlDecodePercent();
 
       if (byte1 < 0) {
         return toBadRequest(badRequest);
       }
 
       final int byte2;
-      byte2 = decodePercent();
+      byte2 = urlDecodePercent();
 
       if (!utf8Byte(byte2)) {
         return toBadRequest(badRequest);
@@ -1413,24 +1477,24 @@ final class HttpExchange implements Http.Exchange, Closeable {
     }
   }
 
-  private byte decodePercent3(byte success, byte read, InvalidRequestLine badRequest) {
+  private byte urlDecodePercent3(byte success, byte read, ClientError badRequest) {
     if (canRead(9)) {
       final int byte1;
-      byte1 = decodePercent();
+      byte1 = urlDecodePercent();
 
       if (byte1 < 0) {
         return toBadRequest(badRequest);
       }
 
       final int byte2;
-      byte2 = decodePercent();
+      byte2 = urlDecodePercent();
 
       if (!utf8Byte(byte2)) {
         return toBadRequest(badRequest);
       }
 
       final int byte3;
-      byte3 = decodePercent();
+      byte3 = urlDecodePercent();
 
       if (!utf8Byte(byte3)) {
         return toBadRequest(badRequest);
@@ -1451,31 +1515,31 @@ final class HttpExchange implements Http.Exchange, Closeable {
     }
   }
 
-  private byte decodePercent4(byte success, byte read, InvalidRequestLine badRequest) {
+  private byte urlDecodePercent4(byte success, byte read, ClientError badRequest) {
     if (canRead(12)) {
       final int byte1;
-      byte1 = decodePercent();
+      byte1 = urlDecodePercent();
 
       if (byte1 < 0) {
         return toBadRequest(badRequest);
       }
 
       final int byte2;
-      byte2 = decodePercent();
+      byte2 = urlDecodePercent();
 
       if (!utf8Byte(byte2)) {
         return toBadRequest(badRequest);
       }
 
       final int byte3;
-      byte3 = decodePercent();
+      byte3 = urlDecodePercent();
 
       if (!utf8Byte(byte3)) {
         return toBadRequest(badRequest);
       }
 
       final int byte4;
-      byte4 = decodePercent();
+      byte4 = urlDecodePercent();
 
       if (!utf8Byte(byte4)) {
         return toBadRequest(badRequest);
@@ -1503,7 +1567,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
     return topTwoBits == 0b1000_0000;
   }
 
-  private int decodePercent() {
+  private int urlDecodePercent() {
     final byte percent;
     percent = buffer[bufferIndex++];
 
@@ -1535,7 +1599,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
   }
 
   // ##################################################################
-  // # END: Decode Percent
+  // # END: URL Decode
   // ##################################################################
 
   // ##################################################################
@@ -1653,7 +1717,9 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
         }
 
-        case Bytes.LF -> toBadRequest(InvalidLineTerminator.INSTANCE);
+        case Bytes.LF ->
+
+             toBadRequest(InvalidLineTerminator.INSTANCE);
 
         case Bytes.SP -> throw new UnsupportedOperationException("obs-fold not supported");
 
@@ -1889,6 +1955,20 @@ final class HttpExchange implements Http.Exchange, Closeable {
   // ##################################################################
 
   private byte executeParseBody() {
+    stateNext = $REQUEST;
+
+    final HttpHeader contentType;
+    contentType = headerUnchecked(HttpHeaderName.CONTENT_TYPE);
+
+    if (contentType != null) {
+      final String value;
+      value = contentType.get(buffer);
+
+      if (value != null && value.equalsIgnoreCase("application/x-www-form-urlencoded")) {
+        stateNext = $PARSE_APP_FORM;
+      }
+    }
+
     final HttpHeader contentLength;
     contentLength = headerUnchecked(HttpHeaderName.CONTENT_LENGTH);
 
@@ -1937,7 +2017,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
   private byte executeParseBodyFixedZero() {
     bodyKind = BodyKind.EMPTY;
 
-    return $REQUEST;
+    return stateNext;
   }
 
   private byte executeParseBodyFixedBuffer(long contentLength) {
@@ -1989,7 +2069,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
       bodyKind = BodyKind.IN_BUFFER;
 
-      return $REQUEST;
+      return stateNext;
     } catch (IOException e) {
       return clientReadIOException(e);
     }
@@ -2078,7 +2158,277 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
     bodyKind = BodyKind.FILE;
 
+    return stateNext;
+  }
+
+  private byte executeParseAppForm() {
+    return switch (bodyKind) {
+      case EMPTY -> $REQUEST;
+
+      case IN_BUFFER -> executeParseAppForm(null);
+
+      case FILE -> {
+        try (InputStream in = bodyInputStream()) {
+          yield executeParseAppForm(in);
+        } catch (
+
+          IOException e) {
+
+          yield internalServerError(e);
+        }
+
+      }
+    };
+  }
+
+  private byte executeParseAppForm(InputStream in) {
+    formSupport = new FormSupport(bufferIndex, inputStream, object, queryParams);
+
+    inputStream = in;
+
+    object = null;
+
+    queryParams = null;
+
+    return executeParseAppFormName();
+  }
+
+  private byte executeParseAppFormName() {
+    // where the current key begins
+    mark = bufferIndex;
+
+    return executeParseAppFormName0();
+  }
+
+  private byte executeParseAppFormName0() {
+    while (bufferIndex < bufferLimit) {
+      final byte b;
+      b = buffer[bufferIndex];
+
+      if (b < 0) {
+        return invalidApplicationForm(InvalidApplicationForm.CHAR);
+      }
+
+      final byte code;
+      code = PARSE_QUERY_TABLE[b];
+
+      switch (code) {
+        case QUERY_VALID -> { bufferIndex += 1; }
+
+        case QUERY_PERCENT, QUERY_PLUS -> { appendInit(); return $PARSE_APP_FORM_NAME1; }
+
+        case QUERY_EQUALS -> { object = markToString(); bufferIndex += 1; return $PARSE_APP_FORM_VALUE; }
+
+        case QUERY_AMPERSAND -> { object = markToString(); bufferIndex += 1; makeQueryParam(""); return $PARSE_APP_FORM_NAME; }
+
+        default -> { return invalidApplicationForm(InvalidApplicationForm.CHAR); }
+      }
+    }
+
+    return parseAppFormBufferExhausted();
+  }
+
+  private byte executeParseAppFormName1() {
+    while (bufferIndex < bufferLimit) {
+      final byte b;
+      b = buffer[bufferIndex];
+
+      if (b < 0) {
+        return invalidApplicationForm(InvalidApplicationForm.PERCENT);
+      }
+
+      final byte code;
+      code = PARSE_QUERY_TABLE[b];
+
+      switch (code) {
+        case QUERY_VALID -> { appendChar(b); bufferIndex += 1; }
+
+        case QUERY_PERCENT -> { byte next = executeParseAppFormName1Decode(); if (state != next) { return next; } }
+
+        case QUERY_PLUS -> { appendChar(' '); bufferIndex += 1; }
+
+        case QUERY_EQUALS -> { object = appendToString(); bufferIndex += 1; return $PARSE_APP_FORM_VALUE; }
+
+        case QUERY_AMPERSAND -> { object = appendToString(); bufferIndex += 1; makeQueryParam(""); return $PARSE_APP_FORM_NAME; }
+
+        default -> { return invalidApplicationForm(InvalidApplicationForm.PERCENT); }
+      }
+    }
+
+    return parseAppFormBufferExhausted();
+  }
+
+  private byte executeParseAppFormName1Decode() {
+    return urlDecodePercent(
+        $PARSE_APP_FORM_NAME1,
+        $PARSE_APP_FORM_NAME1_DECODE,
+        InvalidApplicationForm.PERCENT
+    );
+  }
+
+  private byte executeParseAppFormValue() {
+    // where the current value begins
+    mark = bufferIndex;
+
+    state = $PARSE_APP_FORM_VALUE0;
+
+    return executeParseAppFormValue0();
+  }
+
+  private byte executeParseAppFormValue0() {
+    while (bufferIndex < bufferLimit) {
+      final byte b;
+      b = buffer[bufferIndex];
+
+      if (b < 0) {
+        return invalidApplicationForm(InvalidApplicationForm.CHAR);
+      }
+
+      final byte code;
+      code = PARSE_QUERY_TABLE[b];
+
+      switch (code) {
+        case QUERY_VALID, QUERY_EQUALS -> { bufferIndex += 1; }
+
+        case QUERY_PERCENT, QUERY_PLUS -> { appendInit(); return $PARSE_APP_FORM_VALUE1; }
+
+        case QUERY_AMPERSAND -> executeParseAppFormValue0End($PARSE_APP_FORM_NAME);
+
+        default -> { return invalidApplicationForm(InvalidApplicationForm.CHAR); }
+      }
+    }
+
+    return parseAppFormBufferExhausted();
+  }
+
+  private byte executeParseAppFormValue0End(byte next) {
+    final String v;
+    v = markToString();
+
+    bufferIndex += 1;
+
+    makeQueryParam(v);
+
+    return next;
+  }
+
+  private byte executeParseAppFormValue1() {
+    while (bufferIndex < bufferLimit) {
+      final byte b;
+      b = buffer[bufferIndex];
+
+      if (b < 0) {
+        return invalidApplicationForm(InvalidApplicationForm.PERCENT);
+      }
+
+      final byte code;
+      code = PARSE_QUERY_TABLE[b];
+
+      switch (code) {
+        case QUERY_VALID, QUERY_EQUALS -> { appendChar(b); bufferIndex += 1; }
+
+        case QUERY_PERCENT -> { byte next = executeParseAppFormValue1Decode(); if (state != next) { return next; } }
+
+        case QUERY_PLUS -> { appendChar(' '); bufferIndex += 1; }
+
+        case QUERY_AMPERSAND -> executeParseAppFormValue1End($PARSE_APP_FORM_NAME);
+
+        default -> { return invalidApplicationForm(InvalidApplicationForm.PERCENT); }
+      }
+    }
+
+    return parseAppFormBufferExhausted();
+  }
+
+  private byte executeParseAppFormValue1End(byte next) {
+    final String v;
+    v = appendToString();
+
+    bufferIndex += 1;
+
+    makeQueryParam(v);
+
+    return next;
+  }
+
+  private byte executeParseAppFormValue1Decode() {
+    return urlDecodePercent(
+        $PARSE_APP_FORM_VALUE1,
+        $PARSE_APP_FORM_VALUE1_DECODE,
+        InvalidApplicationForm.PERCENT
+    );
+  }
+
+  private byte parseAppFormBufferExhausted() {
+    // cache current state
+    stateNext = state;
+
+    if (bodyKind == BodyKind.FILE) {
+      // reset buffer
+      bufferIndex = bufferLimit = formSupport.bufferIndex;
+
+      // number of bytes we can write
+      final int writableLength;
+      writableLength = buffer.length - bufferLimit;
+
+      final int bytesRead;
+
+      try {
+        bytesRead = inputStream.read(buffer, bufferLimit, writableLength);
+      } catch (IOException e) {
+        return internalServerError(e);
+      }
+
+      if (bytesRead < 0) {
+        return $PARSE_APP_FORM_EOF;
+      }
+
+      bufferLimit += bytesRead;
+
+      return state;
+    } else {
+      return $PARSE_APP_FORM_EOF;
+    }
+  }
+
+  private byte executeParseAppFormEof() {
+    // restore last state from cache
+    final byte lastState;
+    lastState = stateNext;
+
+    return switch (lastState) {
+      case $PARSE_APP_FORM_VALUE0 -> executeParseAppFormValue0End($PARSE_APP_FORM_SUCCESS);
+
+      case $PARSE_APP_FORM_VALUE1 -> executeParseAppFormValue1End($PARSE_APP_FORM_SUCCESS);
+
+      default -> throw new UnsupportedOperationException("Implement me :: lastState=" + lastState);
+    };
+  }
+
+  private byte executeParseAppFormSuccess() {
+    if (inputStream != null) {
+      try {
+        inputStream.close();
+      } catch (IOException e) {
+        return internalServerError(e);
+      }
+    }
+
+    formParams = queryParams;
+
+    bufferIndex = formSupport.bufferIndex;
+
+    object = formSupport.object;
+
+    queryParams = formSupport.queryParams;
+
+    formSupport = null;
+
     return $REQUEST;
+  }
+
+  private byte invalidApplicationForm(InvalidApplicationForm error) {
+    throw new UnsupportedOperationException("Implement me");
   }
 
   // ##################################################################
@@ -2131,9 +2481,11 @@ final class HttpExchange implements Http.Exchange, Closeable {
   // ##################################################################
 
   private byte toBadRequest(ClientError error) {
-    object = error;
+    return switch (error) {
+      case InvalidApplicationForm form -> invalidApplicationForm(form);
 
-    return $BAD_REQUEST;
+      default -> { object = error; yield $BAD_REQUEST; }
+    };
   }
 
   private byte executeBadRequest() {
@@ -3056,14 +3408,31 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
       case IN_BUFFER -> new ByteArrayInputStream(buffer, bufferIndex, bufferLimit - bufferIndex);
 
-      case FILE -> {
-        if (object instanceof HttpExchangeTmp tmp) {
-          yield tmp.input();
-        } else {
-          throw new IOException("");
-        }
-      }
+      case FILE -> bodyInputStreamOfFile();
     };
+  }
+
+  private final InputStream bodyInputStreamOfFile() throws IOException {
+    if (object instanceof HttpExchangeTmp tmp) {
+      return tmp.input();
+    } else {
+      throw new IOException("");
+    }
+  }
+
+  @Override
+  public final Set<String> formParamNames() {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  @Override
+  public final String formParam(String name) {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  @Override
+  public final List<String> formParamAll(String name) {
+    throw new UnsupportedOperationException("Implement me");
   }
 
   // ##################################################################
@@ -3192,12 +3561,12 @@ final class HttpExchange implements Http.Exchange, Closeable {
     }
 
     @Override
-    public final void header(HeaderName name, long value) {
+    public final void header(Http.HeaderName name, long value) {
       HttpExchange.this.header(name, value);
     }
 
     @Override
-    public final void header(HeaderName name, String value) {
+    public final void header(Http.HeaderName name, String value) {
       HttpExchange.this.header(name, value);
     }
 

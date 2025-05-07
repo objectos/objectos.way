@@ -21,7 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.random.RandomGenerator;
 
-final class HttpSessionStoreInMemory implements Http.SessionStore {
+final class HttpSessionStore implements Http.SessionStore {
 
   record Notes(
       Note.Ref1<Http.Request> invalidSession
@@ -61,7 +61,7 @@ final class HttpSessionStoreInMemory implements Http.SessionStore {
 
   private final ConcurrentMap<HttpToken, HttpSession> sessions = new ConcurrentHashMap<>();
 
-  HttpSessionStoreInMemory(HttpSessionStoreBuilder builder) {
+  HttpSessionStore(HttpSessionStoreBuilder builder) {
     cookieMaxAge = builder.cookieMaxAge;
 
     cookieName = builder.cookieName;

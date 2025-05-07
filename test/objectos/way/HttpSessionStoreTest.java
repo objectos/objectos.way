@@ -23,11 +23,11 @@ import java.util.function.Consumer;
 import java.util.random.RandomGenerator;
 import org.testng.annotations.Test;
 
-public class HttpSessionStoreInMemoryTest {
+public class HttpSessionStoreTest {
 
   @Test
   public void createSession01() {
-    final HttpSessionStoreInMemory store;
+    final HttpSessionStore store;
     store = create(options -> {
       options.randomGenerator(generator(1L, 2L, 3L, 4L));
     });
@@ -50,7 +50,7 @@ public class HttpSessionStoreInMemoryTest {
 
   @Test
   public void loadSession01() {
-    final HttpSessionStoreInMemory store;
+    final HttpSessionStore store;
     store = create(options -> {
       options.randomGenerator(generator(1L, 2L, 3L, 4L));
     });
@@ -72,13 +72,13 @@ public class HttpSessionStoreInMemoryTest {
     assertEquals(http.sessionLoaded(), true);
   }
 
-  private HttpSessionStoreInMemory create(Consumer<HttpSessionStoreBuilder> options) {
+  private HttpSessionStore create(Consumer<HttpSessionStoreBuilder> options) {
     final HttpSessionStoreBuilder builder;
     builder = new HttpSessionStoreBuilder();
 
     options.accept(builder);
 
-    return (HttpSessionStoreInMemory) builder.build();
+    return (HttpSessionStore) builder.build();
   }
 
   private String cookie(String name, long l0, long l1, long l2, long l3) {

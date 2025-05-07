@@ -40,6 +40,8 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.random.RandomGenerator;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 
 /**
  * The <strong>Objectos HTTP</strong> main class.
@@ -269,7 +271,171 @@ public final class Http {
      */
     <T> T get(Class<T> key);
 
-    // Session Support
+    // ##################################################################
+    // # BEGIN: Request Body
+    // ##################################################################
+
+    /**
+     * Returns the names of all of the fields contained in this form data
+     *
+     * @return the names of all of the fields contained in this form data
+     *
+     * @throws IllegalStateException
+     *         if the request body did not contain form data
+     */
+    Set<String> formParamNames();
+
+    /**
+     * Returns the first value of the specified form field name or {@code null}
+     * if the field is not present.
+     *
+     * @param name
+     *        the form field name
+     *
+     * @return the first value or {@code null}
+     *
+     * @throws IllegalStateException
+     *         if the request body did not contain form data
+     */
+    String formParam(String name);
+
+    /**
+     * Returns the first value of the form field with the specified
+     * {@code name}, converted to an {@code int} primitive. If the field is not
+     * present in the form data or if its value cannot be converted to an
+     * {@code int}, the specified {@code defaultValue} is returned.
+     *
+     * @param name
+     *        the field name
+     *
+     * @param defaultValue
+     *        the default value to return if the field is not present or cannot
+     *        be converted to an {@code int}
+     *
+     * @return the value of the form field as an {@code int}, or
+     *         {@code defaultValue} if the field is absent or cannot be
+     *         converted
+     */
+    default int formParamAsInt(String name, int defaultValue) {
+      String maybe;
+      maybe = formParam(name);
+
+      if (maybe == null) {
+        return defaultValue;
+      }
+
+      try {
+        return Integer.parseInt(maybe);
+      } catch (NumberFormatException expected) {
+        return defaultValue;
+      }
+    }
+
+    /**
+     * Returns the first value of the form field with the specified
+     * {@code name}, converted to a {@code long} primitive. If the field is not
+     * present in the form data or if its value cannot be converted to a
+     * {@code long}, the specified {@code defaultValue} is returned.
+     *
+     * @param name
+     *        the field name
+     *
+     * @param defaultValue
+     *        the default value to return if the field is not present or cannot
+     *        be converted to a {@code long}
+     *
+     * @return the value of the form field as an {@code long}, or
+     *         {@code defaultValue} if the field is absent or cannot be
+     *         converted
+     */
+    default long formParamAsLong(String name, long defaultValue) {
+      String maybe;
+      maybe = formParam(name);
+
+      if (maybe == null) {
+        return defaultValue;
+      }
+
+      try {
+        return Long.parseLong(maybe);
+      } catch (NumberFormatException expected) {
+        return defaultValue;
+      }
+    }
+
+    /**
+     * Returns a list containing all values associated to the specified form
+     * field name. This method returns an empty list if the field name
+     * is not present. In other words, this method never returns {@code null}.
+     *
+     * @param name
+     *        the field name
+     *
+     * @return a list containing all of the decoded values in encounter order.
+     *
+     * @throws IllegalStateException
+     *         if the request body did not contain form data
+     */
+    List<String> formParamAll(String name);
+
+    /**
+     * Returns an {@code IntStream} of all of the values, converted to
+     * {@code int}, associated to the specified field name. Any value that
+     * cannot be converted to an {@code int} is mapped to the specified
+     * {@code defaultValue} instead.
+     *
+     * @param name
+     *        the field name
+     * @param defaultValue
+     *        the default value to use if it cannot be converted to an
+     *        {@code int}
+     *
+     * @return an {@code IntStream} of the values associated to the field name
+     *
+     * @throws IllegalStateException
+     *         if the request body did not contain form data
+     */
+    default IntStream formParamAllAsInt(String name, int defaultValue) {
+      return formParamAll(name).stream().mapToInt(s -> {
+        try {
+          return Integer.parseInt(s);
+        } catch (NumberFormatException expected) {
+          return defaultValue;
+        }
+      });
+    }
+
+    /**
+     * Returns a {@code LongStream} of all of the values, converted to
+     * {@code long}, associated to the specified field name. Any value that
+     * cannot be converted to an {@code long} is mapped to the specified
+     * {@code defaultValue} instead.
+     *
+     * @param name
+     *        the field name
+     * @param defaultValue
+     *        the default value to use if it cannot be converted to an
+     *        {@code long}
+     *
+     * @return an {@code LongStream} of the values associated to the field name
+     */
+    default LongStream formParamAllAsLong(String name, long defaultValue) {
+      return formParamAll(name).stream().mapToLong(s -> {
+        try {
+          return Long.parseLong(s);
+        } catch (NumberFormatException expected) {
+          return defaultValue;
+        }
+      });
+    }
+
+    // ##################################################################
+    // # END: Request Body
+    // ##################################################################
+
+    // ##################################################################
+    // # BEGIN: Session Support
+    // ##################################################################
 
     /**
      * Returns the session attribute associated to the specified key, or
@@ -304,6 +470,10 @@ public final class Http {
      *         if no session is associated to this exchange
      */
     <T> void sessionAttr(Class<T> key, Supplier<? extends T> supplier);
+
+    // ##################################################################
+    // # END: Session Support
+    // ##################################################################
 
     // 2xx responses
 
@@ -1140,7 +1310,7 @@ public final class Http {
   /**
    * Creates, stores and manages session instances.
    */
-  public sealed interface SessionStore permits HttpSessionStoreInMemory {
+  public sealed interface SessionStore permits HttpSessionStore {
 
     /**
      * Configures the creation of a {@code SessionStore} instance.
