@@ -1039,7 +1039,7 @@ public final class Http {
 
       void subpath(String path, Consumer<OfPath> routes);
 
-      void when(Predicate<? super Request> condition, Consumer<OfPath> routes);
+      void when(Predicate<? super Exchange> condition, Consumer<OfPath> routes);
 
     }
 
@@ -1049,7 +1049,7 @@ public final class Http {
 
     void path(String path, Consumer<OfPath> routes);
 
-    void when(Predicate<? super Request> condition, Consumer<Routing> routes);
+    void when(Predicate<? super Exchange> condition, Consumer<Routing> routes);
 
   }
 

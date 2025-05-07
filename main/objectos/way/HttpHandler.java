@@ -20,8 +20,6 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import objectos.way.Http.Handler;
-import objectos.way.Http.Request;
 
 final class HttpHandler implements Http.Handler {
 
@@ -69,11 +67,11 @@ final class HttpHandler implements Http.Handler {
 
   private final Kind kind;
 
-  private final Predicate<? super Http.Request> predicate;
+  private final Predicate<? super Http.Exchange> predicate;
 
   private final Object main;
 
-  private HttpHandler(Kind kind, Predicate<? super Http.Request> predicate, Object main) {
+  private HttpHandler(Kind kind, Predicate<? super Http.Exchange> predicate, Object main) {
     this.kind = kind;
     this.predicate = predicate;
     this.main = main;
@@ -112,7 +110,7 @@ final class HttpHandler implements Http.Handler {
     return new HttpHandler(Kind.SINGLE, predicate, handler);
   }
 
-  public static Handler methodAllowed(Http.Method method, Http.Handler first, Http.Handler[] rest) {
+  public static Http.Handler methodAllowed(Http.Method method, Http.Handler first, Http.Handler[] rest) {
     final HttpRequestMatcher predicate;
     predicate = HttpRequestMatcher.methodAllowed(method);
 
@@ -144,7 +142,7 @@ final class HttpHandler implements Http.Handler {
     return new HttpHandler(Kind.OK_MEDIA_STREAM, null, stream);
   }
 
-  public static Http.Handler of(Predicate<? super Request> condition, Http.Filter filter, List<Handler> handlers) {
+  public static Http.Handler of(Predicate<? super Http.Exchange> condition, Http.Filter filter, List<Http.Handler> handlers) {
     if (handlers == null || handlers.isEmpty()) {
       return ofNoop(condition, Kind.FILTER, filter, Kind.SINGLE);
     }
@@ -166,7 +164,7 @@ final class HttpHandler implements Http.Handler {
     };
   }
 
-  private static Http.Handler ofNoop(Predicate<? super Http.Request> condition, Kind filterKind, Http.Filter filter, Kind singleKind) {
+  private static Http.Handler ofNoop(Predicate<? super Http.Exchange> condition, Kind filterKind, Http.Filter filter, Kind singleKind) {
     if (condition == null) {
 
       if (filter == null) {
@@ -194,7 +192,7 @@ final class HttpHandler implements Http.Handler {
     }
   }
 
-  private static Http.Handler ofSingle(Predicate<? super Http.Request> condition, Kind filterKind, Http.Filter filter, Kind singleKind, Http.Handler single) {
+  private static Http.Handler ofSingle(Predicate<? super Http.Exchange> condition, Kind filterKind, Http.Filter filter, Kind singleKind, Http.Handler single) {
     if (condition == null) {
 
       if (filter == null) {
@@ -222,7 +220,7 @@ final class HttpHandler implements Http.Handler {
     }
   }
 
-  private static Http.Handler ofMany(Predicate<? super Http.Request> condition, Kind filterKind, Http.Filter filter, Kind manyKind, Http.Handler[] many) {
+  private static Http.Handler ofMany(Predicate<? super Http.Exchange> condition, Kind filterKind, Http.Filter filter, Kind manyKind, Http.Handler[] many) {
     if (condition == null) {
 
       final HttpHandler handler;

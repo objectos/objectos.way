@@ -23,19 +23,18 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
-import objectos.way.Http.Request;
 
 sealed abstract class HttpRouting {
 
   static final class Of extends HttpRouting implements Http.Routing {
 
-    private final Predicate<? super Http.Request> condition;
+    private final Predicate<? super Http.Exchange> condition;
 
     public Of() {
       this(null);
     }
 
-    private Of(Predicate<? super Http.Request> condition) {
+    private Of(Predicate<? super Http.Exchange> condition) {
       this.condition = condition;
     }
 
@@ -63,7 +62,7 @@ sealed abstract class HttpRouting {
     }
 
     @Override
-    public final void when(Predicate<? super Http.Request> condition, Consumer<Http.Routing> routes) {
+    public final void when(Predicate<? super Http.Exchange> condition, Consumer<Http.Routing> routes) {
       Objects.requireNonNull(condition, "condition == null");
 
       final HttpRouting.Of builder;
@@ -86,7 +85,7 @@ sealed abstract class HttpRouting {
 
     private final boolean allowSubpath;
 
-    private final Predicate<? super Request> condition;
+    private final Predicate<? super Http.Exchange> condition;
 
     private final Http.Filter filter;
 
@@ -116,7 +115,7 @@ sealed abstract class HttpRouting {
       matcher = null;
     }
 
-    OfPath(boolean allowSubpath, Predicate<? super Request> condition) {
+    OfPath(boolean allowSubpath, Predicate<? super Http.Exchange> condition) {
       this.allowSubpath = allowSubpath;
 
       this.condition = condition;
@@ -129,7 +128,7 @@ sealed abstract class HttpRouting {
     @Override
     public final Http.Handler build() {
       // define the condition, if necessary
-      final Predicate<? super Http.Request> cond;
+      final Predicate<? super Http.Exchange> cond;
 
       if (condition != null) {
         cond = condition;
@@ -289,7 +288,7 @@ sealed abstract class HttpRouting {
     }
 
     @Override
-    public final void when(Predicate<? super Request> condition, Consumer<Http.Routing.OfPath> routes) {
+    public final void when(Predicate<? super Http.Exchange> condition, Consumer<Http.Routing.OfPath> routes) {
       Objects.requireNonNull(condition, "condition == null");
 
       final OfPath routing;
