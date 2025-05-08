@@ -43,6 +43,10 @@ import java.util.stream.Collectors;
 
 final class HttpExchange implements Http.Exchange, Closeable {
 
+  // ##################################################################
+  // # BEGIN: Private Types
+  // ##################################################################
+
   private record Notes(
       Note.Long1Ref1<InetAddress> start,
 
@@ -231,6 +235,14 @@ final class HttpExchange implements Http.Exchange, Closeable {
     }
   }
 
+  // ##################################################################
+  // # END: Private Types
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: States
+  // ##################################################################
+
   static final byte $START = 0;
 
   static final byte $READ = 1;
@@ -291,6 +303,14 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   static final byte $ERROR = 49;
 
+  // ##################################################################
+  // # END: States
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Constants
+  // ##################################################################
+
   private static final int HARD_MAX_BUFFER_SIZE = 1 << 14;
 
   private static final AtomicLong ID_GENERATOR = new AtomicLong(1);
@@ -302,6 +322,10 @@ final class HttpExchange implements Http.Exchange, Closeable {
   private static final int BIT_CHUNKED = 1 << 2;
   private static final int BIT_QUERY_STRING = 1 << 3;
   private static final int BIT_WRITE_ERROR = 1 << 4;
+
+  // ##################################################################
+  // # END: Constants
+  // ##################################################################
 
   private Map<String, Object> attributes;
 
@@ -2170,13 +2194,9 @@ final class HttpExchange implements Http.Exchange, Closeable {
       case FILE -> {
         try (InputStream in = bodyInputStream()) {
           yield executeParseAppForm(in);
-        } catch (
-
-          IOException e) {
-
+        } catch (IOException e) {
           yield internalServerError(e);
         }
-
       }
     };
   }
@@ -2196,6 +2216,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
   private byte executeParseAppFormName() {
     // where the current key begins
     mark = bufferIndex;
+
+    state = $PARSE_APP_FORM_NAME0;
 
     return executeParseAppFormName0();
   }
@@ -2219,13 +2241,23 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
         case QUERY_EQUALS -> { object = markToString(); bufferIndex += 1; return $PARSE_APP_FORM_VALUE; }
 
-        case QUERY_AMPERSAND -> { object = markToString(); bufferIndex += 1; makeQueryParam(""); return $PARSE_APP_FORM_NAME; }
+        case QUERY_AMPERSAND -> { return executeParseAppFormName0End($PARSE_APP_FORM_NAME); }
 
         default -> { return invalidApplicationForm(InvalidApplicationForm.CHAR); }
       }
     }
 
     return parseAppFormBufferExhausted();
+  }
+
+  private byte executeParseAppFormName0End(byte next) {
+    object = markToString();
+
+    bufferIndex += 1;
+
+    makeQueryParam("");
+
+    return next;
   }
 
   private byte executeParseAppFormName1() {
@@ -2292,7 +2324,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
         case QUERY_PERCENT, QUERY_PLUS -> { appendInit(); return $PARSE_APP_FORM_VALUE1; }
 
-        case QUERY_AMPERSAND -> executeParseAppFormValue0End($PARSE_APP_FORM_NAME);
+        case QUERY_AMPERSAND -> { return executeParseAppFormValue0End($PARSE_APP_FORM_NAME); }
 
         default -> { return invalidApplicationForm(InvalidApplicationForm.CHAR); }
       }
@@ -2331,7 +2363,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
         case QUERY_PLUS -> { appendChar(' '); bufferIndex += 1; }
 
-        case QUERY_AMPERSAND -> executeParseAppFormValue1End($PARSE_APP_FORM_NAME);
+        case QUERY_AMPERSAND -> { return executeParseAppFormValue1End($PARSE_APP_FORM_NAME); }
 
         default -> { return invalidApplicationForm(InvalidApplicationForm.PERCENT); }
       }
@@ -2397,6 +2429,10 @@ final class HttpExchange implements Http.Exchange, Closeable {
     lastState = stateNext;
 
     return switch (lastState) {
+      case $PARSE_APP_FORM -> $PARSE_APP_FORM_SUCCESS;
+
+      case $PARSE_APP_FORM_NAME0 -> executeParseAppFormName0End($PARSE_APP_FORM_SUCCESS);
+
       case $PARSE_APP_FORM_VALUE0 -> executeParseAppFormValue0End($PARSE_APP_FORM_SUCCESS);
 
       case $PARSE_APP_FORM_VALUE1 -> executeParseAppFormValue1End($PARSE_APP_FORM_SUCCESS);
@@ -2417,6 +2453,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
     formParams = queryParams;
 
     bufferIndex = formSupport.bufferIndex;
+
+    inputStream = formSupport.inputStream;
 
     object = formSupport.object;
 
@@ -3421,18 +3459,38 @@ final class HttpExchange implements Http.Exchange, Closeable {
   }
 
   @Override
-  public final Set<String> formParamNames() {
-    throw new UnsupportedOperationException("Implement me");
-  }
-
-  @Override
   public final String formParam(String name) {
-    throw new UnsupportedOperationException("Implement me");
+    checkRequest();
+    Objects.requireNonNull(name, "name == null");
+
+    if (formParams == null) {
+      return null;
+    } else {
+      return Http.queryParamsGet(formParams, name);
+    }
   }
 
   @Override
   public final List<String> formParamAll(String name) {
-    throw new UnsupportedOperationException("Implement me");
+    checkRequest();
+    Objects.requireNonNull(name, "name == null");
+
+    if (formParams == null) {
+      return List.of();
+    } else {
+      return Http.queryParamsGetAll(formParams, name);
+    }
+  }
+
+  @Override
+  public final Set<String> formParamNames() {
+    checkRequest();
+
+    if (formParams == null) {
+      return Set.of();
+    } else {
+      return formParams.keySet();
+    }
   }
 
   // ##################################################################

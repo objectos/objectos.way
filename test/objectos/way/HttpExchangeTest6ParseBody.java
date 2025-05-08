@@ -24,6 +24,10 @@ import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
@@ -415,6 +419,90 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
     assertEquals(tmp.closed, true);
   }
 
+  private final boolean[] validBytes = queryValidBytes();
+
+  @DataProvider
+  public Object[][] appFormValidProvider() {
+    final List<Object[]> l;
+    l = new ArrayList<>();
+
+    l.add(arr("", Map.of(), "empty"));
+    l.add(arr("key=value", Map.of("key", "value"), "one"));
+    l.add(arr("=value", Map.of("", "value"), "one + empty key"));
+    l.add(arr("key=", Map.of("key", ""), "one + empty value"));
+    l.add(arr("key", Map.of("key", ""), "one + empty value + no equals"));
+    l.add(arr("key1=value1&key2=value2", Map.of("key1", "value1", "key2", "value2"), "two"));
+    l.add(arr("=value1&key2=value2", Map.of("", "value1", "key2", "value2"), "two + empty key1"));
+    l.add(arr("key1=value1&=value2", Map.of("key1", "value1", "", "value2"), "two + empty key2"));
+    l.add(arr("key1=&key2=value2", Map.of("key1", "", "key2", "value2"), "two + empty value1"));
+    l.add(arr("key1=value1&key2=", Map.of("key1", "value1", "key2", ""), "two + empty value2"));
+    l.add(arr("key1&key2=value2", Map.of("key1", "", "key2", "value2"), "two + empty value1 + no equals"));
+    l.add(arr("key1=value1&key2", Map.of("key1", "value1", "key2", ""), "two + empty value2 + no equals"));
+    l.add(arr("key=value1&key=value2", Map.of("key", List.of("value1", "value2")), "two + duplicate keys"));
+
+    for (int value = 0; value < validBytes.length; value++) {
+      switch (value) {
+        case ' ' -> {/* will cause parsing to move to VERSION */}
+
+        case '\n', '\r' -> {/* will trigger 505 not 400 */}
+
+        case '&', '=' -> {/* valid in query string, but has special meaning*/}
+
+        case '+' -> {
+          l.add(arr("+=value", Map.of(" ", "value"), "key contains the '+' character"));
+          l.add(arr("key=+", Map.of("key", " "), "value contains the '+' character"));
+        }
+
+        default -> {
+          if (validBytes[value]) {
+            l.add(appFormValidKey(value));
+            l.add(appFormValidValue(value));
+          }
+        }
+      }
+    }
+
+    return l.toArray(Object[][]::new);
+  }
+
+  private Object[] appFormValidKey(int value) {
+    final String key;
+    key = Character.toString(value);
+
+    return arr(key + "=value", Map.of(key, "value"), "key contains the " + Integer.toHexString(value) + " valid byte");
+  }
+
+  private Object[] appFormValidValue(int value) {
+    final String val;
+    val = Character.toString(value);
+
+    return arr("key=" + val, Map.of("key", val), "value contains the " + Integer.toHexString(value) + " valid byte");
+  }
+
+  @Test(dataProvider = "appFormValidProvider")
+  public void appFormValid(String payload, Map<String, Object> expected, String description) {
+    exec(test -> {
+      test.bufferSize(128, 256);
+
+      test.xch(xch -> {
+        xch.req("""
+        POST / HTTP/1.1\r
+        Host: Host\r
+        Content-Type: application/x-www-form-urlencoded\r
+        Content-Length: %d\r
+        \r
+        %s\
+        """.formatted(payload.length(), payload));
+
+        xch.handler(http -> {
+          formAssert(http, expected);
+        });
+
+        xch.resp(OK_RESP);
+      });
+    });
+  }
+
   private byte[] ascii(String s) {
     return s.getBytes(StandardCharsets.US_ASCII);
   }
@@ -428,26 +516,37 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
   }
 
   private void test(int initial, int max, Object[] data, byte[] body) {
-    final Socket socket;
-    socket = Y.socket(data);
+    exec(test -> {
+      test.bufferSize(initial, max);
 
-    try (HttpExchange http = new HttpExchange(socket, initial, max, Y.clockFixed(), TestingNoteSink.INSTANCE)) {
-      assertEquals(http.shouldHandle(), true);
+      test.xch(xch -> {
+        for (Object o : data) {
+          xch.req(o);
+        }
 
-      final ByteArrayOutputStream out;
-      out = new ByteArrayOutputStream();
+        xch.shouldHandle(true);
 
-      try (InputStream in = http.bodyInputStream()) {
-        in.transferTo(out);
-      }
+        xch.handler(http -> {
+          final ByteArrayOutputStream out;
+          out = new ByteArrayOutputStream();
 
-      final byte[] result;
-      result = out.toByteArray();
+          try (InputStream in = http.bodyInputStream()) {
+            in.transferTo(out);
+          } catch (IOException e) {
+            throw new UncheckedIOException(e);
+          }
 
-      assertEquals(result, body);
-    } catch (IOException e) {
-      throw new UncheckedIOException(e);
-    }
+          final byte[] result;
+          result = out.toByteArray();
+
+          assertEquals(result, body);
+
+          http.ok(OK);
+        });
+
+        xch.resp(OK_RESP);
+      });
+    });
   }
 
   private void testError(int initial, int max, Object[] data, String expected) {
@@ -478,6 +577,31 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     }
+  }
+
+  private void formAssert(HttpExchange http, Map<String, Object> expected) {
+    assertEquals(http.formParamNames(), expected.keySet());
+
+    for (var entry : expected.entrySet()) {
+      final String key;
+      key = entry.getKey();
+
+      final Object value;
+      value = entry.getValue();
+
+      if (value instanceof String s) {
+        assertEquals(http.formParam(key), s, key);
+        assertEquals(http.formParamAll(key), List.of(s));
+      }
+
+      else {
+        List<?> list = (List<?>) value;
+        assertEquals(http.formParam(key), list.get(0), key);
+        assertEquals(http.formParamAll(key), value, key);
+      }
+    }
+
+    http.ok(OK);
   }
 
 }

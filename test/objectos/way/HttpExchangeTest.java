@@ -28,6 +28,17 @@ import java.util.stream.Stream;
 
 public abstract class HttpExchangeTest {
 
+  static final Media.Bytes OK = Media.Bytes.textPlain("OK\n");
+
+  static final String OK_RESP = """
+      HTTP/1.1 200 OK\r
+      Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+      Content-Type: text/plain; charset=utf-8\r
+      Content-Length: 3\r
+      \r
+      OK
+      """;
+
   static final class Tester {
 
     private int bufferSizeInitial = 128;
@@ -166,6 +177,23 @@ public abstract class HttpExchangeTest {
     config.accept(tester);
 
     tester.execute();
+  }
+
+  final boolean[] queryValidBytes() {
+    final boolean[] valid;
+    valid = new boolean[256];
+
+    final String validString;
+    validString = Http.unreserved() + Http.subDelims() + ":@/?";
+
+    for (int idx = 0, len = validString.length(); idx < len; idx++) {
+      final char c;
+      c = validString.charAt(idx);
+
+      valid[c] = true;
+    }
+
+    return valid;
   }
 
 }

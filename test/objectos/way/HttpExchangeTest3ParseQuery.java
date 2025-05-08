@@ -28,6 +28,8 @@ import org.testng.annotations.Test;
 
 public class HttpExchangeTest3ParseQuery extends HttpExchangeTest {
 
+  private final boolean[] validBytes = queryValidBytes();
+
   @Test
   public void noQuery() {
     exec(test -> {
@@ -60,25 +62,6 @@ public class HttpExchangeTest3ParseQuery extends HttpExchangeTest {
     });
   }
 
-  private static final boolean[] VALID_BYTES;
-
-  static {
-    final boolean[] valid;
-    valid = new boolean[256];
-
-    final String validString;
-    validString = Http.unreserved() + Http.subDelims() + ":@/?";
-
-    for (int idx = 0, len = validString.length(); idx < len; idx++) {
-      final char c;
-      c = validString.charAt(idx);
-
-      valid[c] = true;
-    }
-
-    VALID_BYTES = valid;
-  }
-
   @DataProvider
   public Object[][] queryValidProvider() {
     final List<Object[]> l;
@@ -98,7 +81,7 @@ public class HttpExchangeTest3ParseQuery extends HttpExchangeTest {
     l.add(arr("key1=value1&key2", Map.of("key1", "value1", "key2", ""), "two + empty value2 + no equals"));
     l.add(arr("key=value1&key=value2", Map.of("key", List.of("value1", "value2")), "two + duplicate keys"));
 
-    for (int value = 0; value < VALID_BYTES.length; value++) {
+    for (int value = 0; value < validBytes.length; value++) {
       switch (value) {
         case ' ' -> {/* will cause parsing to move to VERSION */}
 
@@ -112,7 +95,7 @@ public class HttpExchangeTest3ParseQuery extends HttpExchangeTest {
         }
 
         default -> {
-          if (VALID_BYTES[value]) {
+          if (validBytes[value]) {
             l.add(queryValidKey(value));
             l.add(queryValidValue(value));
           }
@@ -147,14 +130,14 @@ public class HttpExchangeTest3ParseQuery extends HttpExchangeTest {
     final List<Object[]> l;
     l = new ArrayList<>();
 
-    for (int value = 0; value < VALID_BYTES.length; value++) {
+    for (int value = 0; value < validBytes.length; value++) {
       switch (value) {
         case ' ' -> {/* will cause parsing to move to VERSION */}
 
         case '\n', '\r' -> {/* will trigger 505 not 400 */}
 
         default -> {
-          if (!VALID_BYTES[value]) {
+          if (!validBytes[value]) {
             l.add(queryInvalidKey(value));
             l.add(queryInvalidValue(value));
           }
@@ -293,7 +276,7 @@ public class HttpExchangeTest3ParseQuery extends HttpExchangeTest {
           final String rawValue;
           rawValue = "/raw?key=%%%02X".formatted(value);
 
-          if (VALID_BYTES[value]) {
+          if (validBytes[value]) {
             l.add(new Object[] {rawKey, "/raw?" + (char) value + "=value"});
             l.add(new Object[] {rawValue, "/raw?key=" + (char) value});
           } else {
