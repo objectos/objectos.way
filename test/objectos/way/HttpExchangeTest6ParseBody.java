@@ -481,26 +481,137 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
 
   @Test(dataProvider = "appFormValidProvider")
   public void appFormValid(String payload, Map<String, Object> expected, String description) {
-    exec(test -> {
-      test.bufferSize(128, 256);
+    formValid(payload, expected);
+  }
 
-      test.xch(xch -> {
-        xch.req("""
-        POST / HTTP/1.1\r
-        Host: Host\r
-        Content-Type: application/x-www-form-urlencoded\r
-        Content-Length: %d\r
-        \r
-        %s\
-        """.formatted(payload.length(), payload));
+  @DataProvider
+  public Object[][] appFormInvalidProvider() {
+    final List<Object[]> l;
+    l = new ArrayList<>();
 
-        xch.handler(http -> {
-          formAssert(http, expected);
-        });
+    for (int value = 0; value < validBytes.length; value++) {
+      switch (value) {
+        case ' ' -> {/* will cause parsing to move to VERSION */}
 
-        xch.resp(OK_RESP);
-      });
-    });
+        case '\n', '\r' -> {/* will trigger 505 not 400 */}
+
+        default -> {
+          if (!validBytes[value]) {
+            l.add(appFormInvalidKey(value));
+            l.add(appFormInvalidValue(value));
+          }
+        }
+      }
+    }
+
+    return l.toArray(Object[][]::new);
+  }
+
+  private Object[] appFormInvalidKey(int value) {
+    final String key;
+    key = Character.toString(value);
+
+    return arr(key + "=value", "key contains the " + Integer.toHexString(value) + " invalid byte");
+  }
+
+  private Object[] appFormInvalidValue(int value) {
+    final String val;
+    val = Character.toString(value);
+
+    return arr("key=" + val, "value contains the " + Integer.toHexString(value) + " invalid byte");
+  }
+
+  @Test(dataProvider = "appFormInvalidProvider")
+  public void appFormInvalid(String payload, String description) {
+    formInvalid(payload);
+  }
+
+  @DataProvider
+  public Object[][] appFormPercentValidProvider() {
+    return new Object[][] {
+        {"k%7D=value", Map.of("k}", "value"), "percent: 1-byte + key"},
+        {"k%7D", Map.of("k}", ""), "percent: 1-byte + key (EOF)"},
+        {"key=va%7Dl", Map.of("key", "va}l"), "percent: 1-byte + value"},
+        {"%5E=%3D", Map.of("^", "="), "percent: 1-byte + key + value"},
+        {"k%C2%A0=value", Map.of("k\u00A0", "value"), "percent: 2-byte + key"},
+        {"k%C2%A0", Map.of("k\u00A0", ""), "percent: 2-byte + key (EOF)"},
+        {"key=va%C3%91l", Map.of("key", "vaÑl"), "percent: 2-byte + value"},
+        {"%C2%BF=%C3%80", Map.of("¿", "À"), "percent: 2-byte + key + value"},
+        {"k%E2%80%8B=value", Map.of("k\u200B", "value"), "percent: 3-byte + key"},
+        {"k%E2%80%8B", Map.of("k\u200B", ""), "percent: 3-byte + key (EOF)"},
+        {"key=va%E2%82%ACl", Map.of("key", "va€l"), "percent: 3-byte + value"},
+        {"%E2%98%83=%E2%9C%93", Map.of("☃", "✓"), "percent: 3-byte + key + value"},
+        {"k%F0%9F%98%80=value", Map.of("k😀", "value"), "percent: 4-byte + key"},
+        {"k%F0%9F%98%80", Map.of("k😀", ""), "percent: 4-byte + key (EOF)"},
+        {"key=va%F0%9F%8C%8Al", Map.of("key", "va🌊l"), "percent: 4-byte + value"},
+        {"%F0%9F%90%8C=%F0%9F%8D%8F", Map.of("🐌", "🍏"), "percent: 4-byte + key + value"}
+    };
+  }
+
+  @Test(dataProvider = "appFormPercentValidProvider")
+  public void appFormPercentValid(String raw, Map<String, Object> expected, String description) {
+    formValid(raw, expected);
+  }
+
+  @DataProvider
+  public Object[][] appFormPercentInvalidProvider() {
+    return new Object[][] {
+        {"key%xz=value", "key + invalid percent sequence"},
+        {"key=val%xxue", "value + incomplete percent sequence"},
+        {"k%C3%XZy=value", "key + 2-bytes invalid percent sequence (last)"},
+        {"key=val%C3%XZue", "value + 2-bytes invalid percent sequence (last)"},
+        {"k%E2%80%XZy=value", "key + 3-bytes invalid percent sequence (last)"},
+        {"key=val%E2%80%XZue", "value + 3-bytes invalid percent sequence (last)"},
+        {"k%E2%XZ%8By=value", "key + 3-bytes invalid percent sequence (second)"},
+        {"key=val%E2%XZ%8Bue", "value + 3-bytes invalid percent sequence (second)"},
+        {"k%F0%XZ%98%80=value", "key + 4-bytes invalid percent sequence (second)"},
+        {"key=val%F0%XZ%98%80ue", "value + 4-bytes invalid percent sequence (second)"},
+        {"k%F0%9F%XZ%80=value", "key + 4-bytes invalid percent sequence (third)"},
+        {"key=val%F0%9F%XZ%80ue", "value + 4-bytes invalid percent sequence (third)"},
+        {"k%F0%9F%98%XZ=value", "key + 4-bytes invalid percent sequence (fourth)"},
+        {"key=val%F0%9F%98%XZue", "value + 4-bytes invalid percent sequence (fourth)"},
+
+        {"k%Gy=value", "key + 1-byte invalid percent sequence (non-hex character)"},
+        {"key=val%G0ue", "value + 1-byte invalid percent sequence (non-hex character)"},
+        {"k%=value", "key + 1-byte empty percent sequence"},
+        {"key=val%ue", "value + 1-byte empty percent sequence"},
+        {"k%2=value", "key + 1-byte incomplete percent sequence (single hex digit)"},
+        {"k%2", "key + 1-byte incomplete percent sequence (single hex digit) (EOF)"},
+        {"key=val%2ue", "value + 1-byte incomplete percent sequence (single hex digit)"},
+
+        {"k%C3y=value", "key + 2-bytes incomplete percent sequence (missing second byte)"},
+        {"k%C3", "key + 2-bytes incomplete percent sequence (missing second byte) (EOF)"},
+        {"key=val%C3ue", "value + 2-bytes incomplete percent sequence (missing second byte)"},
+        {"k%80%80y=value", "key + 2-bytes invalid percent sequence (invalid leading byte)"},
+        {"key=val%80%80ue", "value + 2-bytes invalid percent sequence (invalid leading byte)"},
+        {"k%C3%GGy=value", "key + 2-bytes invalid percent sequence (non-hex character)"},
+        {"key=val%C3%GGue", "value + 2-bytes invalid percent sequence (non-hex character)"},
+
+        {"k%E2%80y=value", "key + 3-bytes incomplete percent sequence (missing third byte)"},
+        {"k%E2%80", "key + 3-bytes incomplete percent sequence (missing third byte) (EOF)"},
+        {"key=val%E2%80ue", "value + 3-bytes incomplete percent sequence (missing third byte)"},
+        {"k%E0%80%80y=value", "key + 3-bytes invalid percent sequence (invalid leading byte)"},
+        {"key=val%E0%80%80ue", "value + 3-bytes invalid percent sequence (invalid leading byte)"},
+        {"k%E2%80%GGy=value", "key + 3-bytes invalid percent sequence (non-hex character in last)"},
+        {"key=val%E2%80%GGue", "value + 3-bytes invalid percent sequence (non-hex character in last)"},
+        {"k%E2%GG%80y=value", "key + 3-bytes invalid percent sequence (non-hex character in second)"},
+        {"key=val%E2 procedimientos%GG%80ue", "value + 3-bytes invalid percent sequence (non-hex character in second)"},
+
+        {"k%F0%9F%98y=value", "key + 4-bytes incomplete percent sequence (missing fourth byte)"},
+        {"k%F0%9F%98", "key + 4-bytes incomplete percent sequence (missing fourth byte) (EOF)"},
+        {"key=val%F0%9F%98ue", "value + 4-bytes incomplete percent sequence (missing fourth byte)"},
+        {"k%F5%80%80%80y=value", "key + 4-bytes invalid percent sequence (invalid leading byte > U+10FFFF)"},
+        {"key=val%F5%80%80%80ue", "value + 4-bytes invalid percent sequence (invalid leading byte > U+10FFFF)"},
+        {"k%F0%80%GG%80y=value", "key + 4-bytes invalid percent sequence (non-hex character in third)"},
+        {"key=val%F0%80%GG%80ue", "value + 4-bytes invalid percent sequence (non-hex character in third)"},
+        {"k%F0%GG%98%80y=value", "key + 4-bytes invalid percent sequence (non-hex character in second)"},
+        {"key=val%F0%GG%98%80ue", "value + 4-bytes invalid percent sequence (non-hex character in second)"}
+    };
+  }
+
+  @Test(dataProvider = "appFormPercentInvalidProvider")
+  public void appFormPercentInvalid(String raw, String description) {
+    formInvalid(raw);
   }
 
   private byte[] ascii(String s) {
@@ -602,6 +713,58 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
     }
 
     http.ok(OK);
+  }
+
+  private void formValid(String payload, Map<String, Object> expected) {
+    exec(test -> {
+      test.bufferSize(128, 256);
+
+      test.xch(xch -> {
+        xch.req("""
+        POST / HTTP/1.1\r
+        Host: Host\r
+        Content-Type: application/x-www-form-urlencoded\r
+        Content-Length: %d\r
+        \r
+        %s\
+        """.formatted(payload.length(), payload));
+
+        xch.handler(http -> {
+          formAssert(http, expected);
+        });
+
+        xch.resp(OK_RESP);
+      });
+    });
+  }
+
+  private void formInvalid(String payload) {
+    exec(test -> {
+      test.bufferSize(128, 256);
+
+      test.xch(xch -> {
+        xch.req("""
+        POST / HTTP/1.1\r
+        Host: Host\r
+        Content-Type: application/x-www-form-urlencoded\r
+        Content-Length: %d\r
+        \r
+        %s\
+        """.formatted(payload.length(), payload).getBytes(StandardCharsets.ISO_8859_1));
+
+        xch.shouldHandle(false);
+
+        xch.resp("""
+        HTTP/1.1 400 Bad Request\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 67\r
+        Connection: close\r
+        \r
+        Invalid application/x-www-form-urlencoded content in request body.
+        """);
+      });
+    });
   }
 
 }

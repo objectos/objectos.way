@@ -2194,9 +2194,13 @@ final class HttpExchange implements Http.Exchange, Closeable {
       case FILE -> {
         try (InputStream in = bodyInputStream()) {
           yield executeParseAppForm(in);
-        } catch (IOException e) {
+        } catch (
+
+          IOException e) {
+
           yield internalServerError(e);
         }
+
       }
     };
   }
@@ -2281,7 +2285,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
         case QUERY_EQUALS -> { object = appendToString(); bufferIndex += 1; return $PARSE_APP_FORM_VALUE; }
 
-        case QUERY_AMPERSAND -> { object = appendToString(); bufferIndex += 1; makeQueryParam(""); return $PARSE_APP_FORM_NAME; }
+        case QUERY_AMPERSAND -> { return executeParseAppFormName1End($PARSE_APP_FORM_NAME); }
 
         default -> { return invalidApplicationForm(InvalidApplicationForm.PERCENT); }
       }
@@ -2290,12 +2294,31 @@ final class HttpExchange implements Http.Exchange, Closeable {
     return parseAppFormBufferExhausted();
   }
 
+  private byte executeParseAppFormName1End(byte next) {
+    object = appendToString();
+
+    bufferIndex += 1;
+
+    makeQueryParam("");
+
+    return next;
+  }
+
   private byte executeParseAppFormName1Decode() {
-    return urlDecodePercent(
+    final byte percent;
+    percent = urlDecodePercent(
         $PARSE_APP_FORM_NAME1,
         $PARSE_APP_FORM_NAME1_DECODE,
         InvalidApplicationForm.PERCENT
     );
+
+    if (percent == $READ) {
+      state = $PARSE_APP_FORM_NAME1_DECODE;
+
+      return parseAppFormBufferExhausted();
+    } else {
+      return percent;
+    }
   }
 
   private byte executeParseAppFormValue() {
@@ -2384,11 +2407,20 @@ final class HttpExchange implements Http.Exchange, Closeable {
   }
 
   private byte executeParseAppFormValue1Decode() {
-    return urlDecodePercent(
+    final byte percent;
+    percent = urlDecodePercent(
         $PARSE_APP_FORM_VALUE1,
         $PARSE_APP_FORM_VALUE1_DECODE,
         InvalidApplicationForm.PERCENT
     );
+
+    if (percent == $READ) {
+      state = $PARSE_APP_FORM_VALUE1_DECODE;
+
+      return parseAppFormBufferExhausted();
+    } else {
+      return percent;
+    }
   }
 
   private byte parseAppFormBufferExhausted() {
@@ -2433,24 +2465,54 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
       case $PARSE_APP_FORM_NAME0 -> executeParseAppFormName0End($PARSE_APP_FORM_SUCCESS);
 
+      case $PARSE_APP_FORM_NAME1 -> executeParseAppFormName1End($PARSE_APP_FORM_SUCCESS);
+
+      case $PARSE_APP_FORM_NAME1_DECODE -> invalidApplicationForm(InvalidApplicationForm.PERCENT);
+
       case $PARSE_APP_FORM_VALUE0 -> executeParseAppFormValue0End($PARSE_APP_FORM_SUCCESS);
 
       case $PARSE_APP_FORM_VALUE1 -> executeParseAppFormValue1End($PARSE_APP_FORM_SUCCESS);
+
+      case $PARSE_APP_FORM_VALUE1_DECODE -> invalidApplicationForm(InvalidApplicationForm.PERCENT);
 
       default -> throw new UnsupportedOperationException("Implement me :: lastState=" + lastState);
     };
   }
 
   private byte executeParseAppFormSuccess() {
-    if (inputStream != null) {
-      try {
-        inputStream.close();
-      } catch (IOException e) {
-        return internalServerError(e);
-      }
-    }
+    try {
+      formParams = queryParams;
 
-    formParams = queryParams;
+      clearFormSupport();
+
+      return $REQUEST;
+    } catch (IOException e) {
+      return internalServerError(e);
+    }
+  }
+
+  private byte invalidApplicationForm(InvalidApplicationForm error) {
+    try {
+      formParams = queryParams;
+
+      if (formParams != null) {
+        formParams.clear();
+      }
+
+      clearFormSupport();
+
+      object = error;
+
+      return $BAD_REQUEST;
+    } catch (IOException e) {
+      return internalServerError(e);
+    }
+  }
+
+  private void clearFormSupport() throws IOException {
+    if (inputStream != null) {
+      inputStream.close();
+    }
 
     bufferIndex = formSupport.bufferIndex;
 
@@ -2461,12 +2523,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
     queryParams = formSupport.queryParams;
 
     formSupport = null;
-
-    return $REQUEST;
-  }
-
-  private byte invalidApplicationForm(InvalidApplicationForm error) {
-    throw new UnsupportedOperationException("Implement me");
   }
 
   // ##################################################################
