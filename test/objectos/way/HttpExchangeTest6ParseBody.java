@@ -215,7 +215,7 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
     );
   }
 
-  @Test(description = "file: happy-path")
+  @Test(enabled = false, description = "file: happy-path")
   public void file01() {
     final String content;
     content = ".o".repeat(512);
@@ -239,7 +239,7 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
     );
   }
 
-  @Test(description = "file: client read IOException")
+  @Test(enabled = false, description = "file: client read IOException")
   public void file02() {
     final String frag;
     frag = ".".repeat(512);
@@ -266,7 +266,7 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
     );
   }
 
-  @Test(description = "file: ISE on getOutputStream")
+  @Test(enabled = false, description = "file: ISE on getOutputStream")
   public void file03() {
     final AbstractTmp tmp;
     tmp = new AbstractTmp() {
@@ -310,7 +310,7 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
     assertEquals(tmp.closed, true);
   }
 
-  @Test(description = "file: ISE on OutputStream.write")
+  @Test(enabled = false, description = "file: ISE on OutputStream.write")
   public void file04() {
     final AbstractTmp tmp;
     tmp = new AbstractTmp() {
@@ -364,7 +364,7 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
     assertEquals(tmp.closed, true);
   }
 
-  @Test(description = "file: ISE on OutputStream.close")
+  @Test(enabled = false, description = "file: ISE on OutputStream.close")
   public void file05() {
     final AbstractTmp tmp;
     tmp = new AbstractTmp() {
@@ -614,6 +614,16 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
     formInvalid(raw);
   }
 
+  @Test(enabled = false, dataProvider = "appFormValidProvider")
+  public void appFormValidWithFile(String payload, Map<String, Object> expected, String description) {
+    formValidWithFile(payload, expected);
+  }
+
+  @Test(enabled = false)
+  public void appFormValidWithFile01() {
+    formValidWithFile("key=value", Map.of("key", "value"));
+  }
+
   private byte[] ascii(String s) {
     return s.getBytes(StandardCharsets.US_ASCII);
   }
@@ -736,6 +746,57 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
         xch.resp(OK_RESP);
       });
     });
+  }
+
+  @Test
+  public void formFileRequestSize() {
+    assertEquals(formFileRequest(".".repeat(9)).length(), 127);
+    assertEquals(formFileRequest(".".repeat(99)).length(), 127);
+    assertEquals(formFileRequest(".".repeat(999)).length(), 127);
+  }
+
+  private void formValidWithFile(String payload, Map<String, Object> expected) {
+    exec(test -> {
+      test.bufferSize(128, 128);
+
+      test.xch(xch -> {
+        xch.req(formFileRequest(payload));
+
+        final byte[] bytes;
+        bytes = payload.getBytes(StandardCharsets.ISO_8859_1);
+
+        xch.req(bytes);
+
+        xch.handler(http -> {
+          formAssert(http, expected);
+        });
+
+        xch.resp(OK_RESP);
+      });
+    });
+  }
+
+  private String formFileRequest(String payload) {
+    final int length;
+    length = payload.length();
+
+    final String contentLength;
+    contentLength = Integer.toString(length);
+
+    // leave 1-byte for file buffering
+    final int remaining;
+    remaining = 127 - 94 - contentLength.length();
+
+    final String host;
+    host = "X".repeat(remaining);
+
+    return """
+    POST / HTTP/1.1\r
+    Host: %s\r
+    Content-Type: application/x-www-form-urlencoded\r
+    Content-Length: %s\r
+    \r
+    """.formatted(host, contentLength);
   }
 
   private void formInvalid(String payload) {

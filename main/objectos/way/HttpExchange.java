@@ -274,34 +274,41 @@ final class HttpExchange implements Http.Exchange, Closeable {
   static final byte $PARSE_HEADER_CR = 25;
 
   static final byte $PARSE_BODY = 26;
-  static final byte $PARSE_APP_FORM = 27;
-  static final byte $PARSE_APP_FORM_NAME = 28;
-  static final byte $PARSE_APP_FORM_NAME0 = 29;
-  static final byte $PARSE_APP_FORM_NAME1 = 30;
-  static final byte $PARSE_APP_FORM_NAME1_DECODE = 31;
-  static final byte $PARSE_APP_FORM_VALUE = 32;
-  static final byte $PARSE_APP_FORM_VALUE0 = 33;
-  static final byte $PARSE_APP_FORM_VALUE1 = 34;
-  static final byte $PARSE_APP_FORM_VALUE1_DECODE = 35;
-  static final byte $PARSE_APP_FORM_READ = 36;
-  static final byte $PARSE_APP_FORM_EOF = 37;
-  static final byte $PARSE_APP_FORM_SUCCESS = 38;
-  static final byte $PARSE_APP_FORM_ERROR = 39;
+  static final byte $PARSE_BODY_FIXED = 27;
+  static final byte $PARSE_BODY_FIXED_ZERO = 28;
+  static final byte $PARSE_BODY_FIXED_BUFFER = 29;
+  static final byte $PARSE_BODY_FIXED_BUFFER_READ = 30;
+  static final byte $PARSE_BODY_FIXED_FILE = 31;
+  static final byte $PARSE_BODY_FIXED_FILE_COPY = 32;
 
-  static final byte $BAD_REQUEST = 40;
-  static final byte $URI_TOO_LONG = 41;
-  static final byte $REQUEST_HEADER_FIELDS_TOO_LARGE = 42;
-  static final byte $NOT_IMPLEMENTED = 43;
-  static final byte $HTTP_VERSION_NOT_SUPPORTED = 44;
+  static final byte $PARSE_APP_FORM = 33;
+  static final byte $PARSE_APP_FORM_NAME = 34;
+  static final byte $PARSE_APP_FORM_NAME0 = 35;
+  static final byte $PARSE_APP_FORM_NAME1 = 36;
+  static final byte $PARSE_APP_FORM_NAME1_DECODE = 37;
+  static final byte $PARSE_APP_FORM_VALUE = 38;
+  static final byte $PARSE_APP_FORM_VALUE0 = 39;
+  static final byte $PARSE_APP_FORM_VALUE1 = 40;
+  static final byte $PARSE_APP_FORM_VALUE1_DECODE = 41;
+  static final byte $PARSE_APP_FORM_READ = 42;
+  static final byte $PARSE_APP_FORM_EOF = 43;
+  static final byte $PARSE_APP_FORM_SUCCESS = 44;
+  static final byte $PARSE_APP_FORM_ERROR = 45;
 
-  static final byte $COMMIT = 45;
-  static final byte $WRITE = 46;
+  static final byte $BAD_REQUEST = 46;
+  static final byte $URI_TOO_LONG = 47;
+  static final byte $REQUEST_HEADER_FIELDS_TOO_LARGE = 48;
+  static final byte $NOT_IMPLEMENTED = 49;
+  static final byte $HTTP_VERSION_NOT_SUPPORTED = 50;
 
-  static final byte $REQUEST = 47;
+  static final byte $COMMIT = 51;
+  static final byte $WRITE = 52;
 
-  static final byte $RESPONSE_HEADERS = 48;
+  static final byte $REQUEST = 53;
 
-  static final byte $ERROR = 49;
+  static final byte $RESPONSE_HEADERS = 54;
+
+  static final byte $ERROR = 55;
 
   // ##################################################################
   // # END: States
@@ -352,6 +359,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
   private final long id = ID_GENERATOR.getAndIncrement();
 
   private InputStream inputStream;
+
+  private long long0;
 
   private int mark;
 
@@ -650,6 +659,11 @@ final class HttpExchange implements Http.Exchange, Closeable {
       case $PARSE_HEADER_CR -> executeParseHeaderCR();
 
       case $PARSE_BODY -> executeParseBody();
+      case $PARSE_BODY_FIXED -> executeParseBodyFixed();
+      case $PARSE_BODY_FIXED_ZERO -> executeParseBodyFixedZero();
+      case $PARSE_BODY_FIXED_BUFFER -> executeParseBodyFixedBuffer();
+      case $PARSE_BODY_FIXED_BUFFER_READ -> executeParseBodyFixedBufferRead();
+      case $PARSE_BODY_FIXED_FILE -> executeParseBodyFixedFile();
 
       case $PARSE_APP_FORM -> executeParseAppForm();
       case $PARSE_APP_FORM_NAME -> executeParseAppFormName();
@@ -1997,7 +2011,9 @@ final class HttpExchange implements Http.Exchange, Closeable {
     contentLength = headerUnchecked(HttpHeaderName.CONTENT_LENGTH);
 
     if (contentLength != null) {
-      return executeParseBodyFixed(contentLength);
+      object = contentLength;
+
+      return $PARSE_BODY_FIXED;
     }
 
     final HttpHeader transferEncoding;
@@ -2012,7 +2028,10 @@ final class HttpExchange implements Http.Exchange, Closeable {
     return $REQUEST;
   }
 
-  private byte executeParseBodyFixed(HttpHeader contentLength) {
+  private byte executeParseBodyFixed() {
+    final HttpHeader contentLength;
+    contentLength = (HttpHeader) object;
+
     final long length;
     length = contentLength.unsignedLongValue(buffer);
 
@@ -2024,17 +2043,25 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
     else if (length == 0) {
       // empty body
-      return executeParseBodyFixedZero();
+      return $PARSE_BODY_FIXED_ZERO;
     }
 
     else if (canBuffer(length)) {
       // fits in buffer
-      return executeParseBodyFixedBuffer(length);
+
+      // length is guaranteed to fit in an int
+      // in any case we throw if length overflows...
+      mark = Math.toIntExact(length);
+
+      return $PARSE_BODY_FIXED_BUFFER;
     }
 
     else {
       // does not fit buffer
-      return executeParseBodyFixedFile(length);
+
+      long0 = length;
+
+      return $PARSE_BODY_FIXED_FILE;
     }
   }
 
@@ -2044,62 +2071,88 @@ final class HttpExchange implements Http.Exchange, Closeable {
     return stateNext;
   }
 
-  private byte executeParseBodyFixedBuffer(long contentLength) {
+  private byte executeParseBodyFixedBuffer() {
+    // restore content length
+    final int contentLength;
+    contentLength = mark;
+
+    final int requiredBufferLength;
+    requiredBufferLength = bufferIndex + contentLength;
+
+    // must we increase our buffer?
+    if (requiredBufferLength > buffer.length) {
+      final int newLength;
+      newLength = powerOfTwo(requiredBufferLength);
+
+      buffer = Arrays.copyOf(buffer, newLength);
+
+      noteSink.send(NOTES.readResize, id, newLength);
+    }
+
+    // unread bytes in buffer
+    final int unread;
+    unread = bufferLimit - bufferIndex;
+
+    if (unread < 0) {
+      return internalServerError(
+          new AssertionError("unread < 0")
+      );
+    }
+
+    // mark = remaining bytes to read
+    mark = contentLength - unread;
+
+    return $PARSE_BODY_FIXED_BUFFER_READ;
+  }
+
+  private byte executeParseBodyFixedBufferRead() {
+    // restore remaining bytes to read
+    int remaining;
+    remaining = mark;
+
+    if (remaining < 0) {
+      return internalServerError(
+          new AssertionError("remaining < 0")
+      );
+    }
+
+    else if (remaining == 0) {
+      // read successful
+      return toAfterParseBodyFixedBuffer();
+    }
+
     try {
-      // unread bytes in buffer
-      final int unread;
-      unread = bufferLimit - bufferIndex;
+      final int read;
+      read = inputStream.read(buffer, bufferLimit, remaining);
 
-      if (unread < contentLength) {
+      if (read < 0) {
+        noteSink.send(NOTES.readEof, id, this);
 
-        // we assume canBuffer was invoked before this method...
-        // i.e. max buffer size can hold everything
-        final int length;
-        length = (int) contentLength;
-
-        final int requiredBufferLength;
-        requiredBufferLength = bufferIndex + length;
-
-        // must we increase our buffer?
-        if (requiredBufferLength > buffer.length) {
-          final int newLength;
-          newLength = powerOfTwo(requiredBufferLength);
-
-          buffer = Arrays.copyOf(buffer, newLength);
-
-          noteSink.send(NOTES.readResize, id, newLength);
-        }
-
-        // how many bytes must we read
-        int mustReadCount;
-        mustReadCount = length - unread;
-
-        while (mustReadCount > 0) {
-          final int read;
-          read = inputStream.read(buffer, bufferLimit, mustReadCount);
-
-          if (read < 0) {
-            noteSink.send(NOTES.readEof, id, this);
-
-            return $ERROR;
-          }
-
-          bufferLimit += read;
-
-          mustReadCount -= read;
-        }
-
+        return $ERROR;
       }
 
-      bodyKind = BodyKind.IN_BUFFER;
+      bufferLimit += read;
 
-      return stateNext;
+      remaining -= read;
+
+      mark = remaining;
+
+      return $PARSE_BODY_FIXED_BUFFER_READ;
     } catch (IOException e) {
       return clientReadIOException(e);
     }
   }
 
-  private byte executeParseBodyFixedFile(long contentLength) {
+  private byte toAfterParseBodyFixedBuffer() {
+    bodyKind = BodyKind.IN_BUFFER;
+
+    return stateNext;
+  }
+
+  private byte executeParseBodyFixedFile() {
+    final long contentLength;
+    contentLength = long0;
+
     HttpExchangeTmp tmp;
 
     try {

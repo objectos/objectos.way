@@ -20,9 +20,9 @@ import java.util.Objects;
 
 final class HttpServerConfig implements Http.Server.Config {
 
-  int bufferSizeInitial = 1024;
+  int bufferSizeInitial = 16384;
 
-  int bufferSizeMax = 4096;
+  int bufferSizeMax = 16384;
 
   Clock clock = Clock.systemUTC();
 
