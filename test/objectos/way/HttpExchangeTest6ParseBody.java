@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
-import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -34,25 +33,6 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
-
-  private static abstract class AbstractTmp implements HttpExchangeTmp {
-    boolean closed;
-
-    @Override
-    public void close() throws IOException {
-      closed = true;
-    }
-
-    @Override
-    public InputStream input() throws IOException {
-      throw new UnsupportedOperationException("Implement me");
-    }
-
-    @Override
-    public OutputStream output() throws IOException {
-      throw new UnsupportedOperationException("Implement me");
-    }
-  }
 
   @Test(description = "empty: no content-length")
   public void empty01() {
@@ -281,7 +261,7 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
     assertFalse(tester.fileExists());
   }
 
-  @Test(enabled = false, description = "file: client read IOException")
+  @Test(description = "file: client read IOException")
   public void file02() {
     final String frag;
     frag = ".".repeat(512);
@@ -308,12 +288,12 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
     );
   }
 
-  @Test(enabled = false, description = "file: ISE on getOutputStream")
+  @Test(description = "file: ISE on getOutputStream")
   public void file03() {
-    final AbstractTmp tmp;
-    tmp = new AbstractTmp() {
+    final Tester tester;
+    tester = new Tester() {
       @Override
-      public final OutputStream output() throws IOException {
+      public final OutputStream newOutputStream(Path file) throws IOException {
         throw Y.trimStackTrace(new IOException(), 1);
       }
     };
@@ -321,24 +301,25 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
     final String contents;
     contents = ".".repeat(1024);
 
-    testFile(
-        128, 256,
+    exec(test -> {
+      test.bodyFiles(tester);
 
-        tmp,
+      test.bufferSize(128, 256);
 
-        arr(
-            """
-            POST / HTTP/1.1\r
-            Host: www.example.com\r
-            Content-Type: text/plain\r
-            Content-Length: 1024\r
-            \r
-            """,
+      test.xch(xch -> {
+        xch.req("""
+        POST / HTTP/1.1\r
+        Host: www.example.com\r
+        Content-Type: text/plain\r
+        Content-Length: 1024\r
+        \r
+        """);
 
-            contents
-        ),
+        xch.req(contents);
 
-        """
+        xch.shouldHandle(false);
+
+        xch.resp("""
         HTTP/1.1 500 Internal Server Error\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
         Content-Type: text/plain; charset=utf-8\r
@@ -346,18 +327,19 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
         Connection: close\r
         \r
         The server encountered an internal error and was unable to complete your request.
-        """
-    );
+        """);
+      });
+    });
 
-    assertEquals(tmp.closed, true);
+    assertFalse(tester.fileExists());
   }
 
-  @Test(enabled = false, description = "file: ISE on OutputStream.write")
+  @Test(description = "file: ISE on OutputStream.write")
   public void file04() {
-    final AbstractTmp tmp;
-    tmp = new AbstractTmp() {
+    final Tester tester;
+    tester = new Tester() {
       @Override
-      public final OutputStream output() throws IOException {
+      public final OutputStream newOutputStream(Path file) throws IOException {
         return new OutputStream() {
           @Override
           public final void write(int b) throws IOException {
@@ -375,24 +357,25 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
     final String contents;
     contents = ".".repeat(1024);
 
-    testFile(
-        128, 256,
+    exec(test -> {
+      test.bodyFiles(tester);
 
-        tmp,
+      test.bufferSize(128, 256);
 
-        arr(
-            """
-            POST / HTTP/1.1\r
-            Host: www.example.com\r
-            Content-Type: text/plain\r
-            Content-Length: 1024\r
-            \r
-            """,
+      test.xch(xch -> {
+        xch.req("""
+        POST / HTTP/1.1\r
+        Host: www.example.com\r
+        Content-Type: text/plain\r
+        Content-Length: 1024\r
+        \r
+        """);
 
-            contents
-        ),
+        xch.req(contents);
 
-        """
+        xch.shouldHandle(false);
+
+        xch.resp("""
         HTTP/1.1 500 Internal Server Error\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
         Content-Type: text/plain; charset=utf-8\r
@@ -400,18 +383,19 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
         Connection: close\r
         \r
         The server encountered an internal error and was unable to complete your request.
-        """
-    );
+        """);
+      });
+    });
 
-    assertEquals(tmp.closed, true);
+    assertFalse(tester.fileExists());
   }
 
-  @Test(enabled = false, description = "file: ISE on OutputStream.close")
+  @Test(description = "file: ISE on OutputStream.close")
   public void file05() {
-    final AbstractTmp tmp;
-    tmp = new AbstractTmp() {
+    final Tester tester;
+    tester = new Tester() {
       @Override
-      public final OutputStream output() throws IOException {
+      public final OutputStream newOutputStream(Path file) throws IOException {
         return new OutputStream() {
           @Override
           public final void close() throws IOException {
@@ -430,24 +414,25 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
     final String contents;
     contents = ".".repeat(1024);
 
-    testFile(
-        128, 256,
+    exec(test -> {
+      test.bodyFiles(tester);
 
-        tmp,
+      test.bufferSize(128, 256);
 
-        arr(
-            """
-            POST / HTTP/1.1\r
-            Host: www.example.com\r
-            Content-Type: text/plain\r
-            Content-Length: 1024\r
-            \r
-            """,
+      test.xch(xch -> {
+        xch.req("""
+        POST / HTTP/1.1\r
+        Host: www.example.com\r
+        Content-Type: text/plain\r
+        Content-Length: 1024\r
+        \r
+        """);
 
-            contents
-        ),
+        xch.req(contents);
 
-        """
+        xch.shouldHandle(false);
+
+        xch.resp("""
         HTTP/1.1 500 Internal Server Error\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
         Content-Type: text/plain; charset=utf-8\r
@@ -455,10 +440,11 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
         Connection: close\r
         \r
         The server encountered an internal error and was unable to complete your request.
-        """
-    );
+        """);
+      });
+    });
 
-    assertEquals(tmp.closed, true);
+    assertFalse(tester.fileExists());
   }
 
   private final boolean[] validBytes = queryValidBytes();
@@ -723,23 +709,6 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
         xch.resp(expected);
       });
     });
-  }
-
-  private void testFile(int initial, int max, HttpExchangeTmp tmp, Object[] data, String expected) {
-    final Socket socket;
-    socket = Y.socket(data);
-
-    try (HttpExchange http = new HttpExchange(socket, initial, max, Y.clockFixed(), TestingNoteSink.INSTANCE)) {
-      http.setObject(tmp);
-
-      http.setState(HttpExchange.$PARSE_METHOD);
-
-      assertEquals(http.shouldHandle(), false);
-
-      assertEquals(Y.toString(socket), expected);
-    } catch (IOException e) {
-      throw new UncheckedIOException(e);
-    }
   }
 
   private void formAssert(HttpExchange http, Map<String, Object> expected) {
