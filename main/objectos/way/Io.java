@@ -55,4 +55,8 @@ public final class Io {
     }
   }
 
+  static Path nextTmpDir() throws IOException {
+    return Files.createTempDirectory("do-not-delete-objectos-way-");
+  }
+
 }

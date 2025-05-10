@@ -338,6 +338,9 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   private int bitset;
 
+  @SuppressWarnings("unused")
+  private final HttpExchangeBodyFiles bodyFiles;
+
   private BodyKind bodyKind = BodyKind.EMPTY;
 
   private byte[] buffer;
@@ -372,7 +375,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   private final Note.Sink noteSink;
 
-  // 1) when request body is Kind.FILE object = HttpExchangeTmp
   private Object object;
 
   private final OutputStream outputStream;
@@ -399,7 +401,13 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   private Http.Version version = Http.Version.HTTP_1_1;
 
-  public HttpExchange(Socket socket, int bufferSizeInitial, int bufferSizeMax, Clock clock, Note.Sink noteSink) throws IOException {
+  HttpExchange(Socket socket, int bufferSizeInitial, int bufferSizeMax, Clock clock, Note.Sink noteSink) throws IOException {
+    this(socket, HttpExchangeBodyFiles.standard(), bufferSizeInitial, bufferSizeMax, clock, noteSink);
+  }
+
+  HttpExchange(Socket socket, HttpExchangeBodyFiles bodyFiles, int bufferSizeInitial, int bufferSizeMax, Clock clock, Note.Sink noteSink) throws IOException {
+    this.bodyFiles = bodyFiles;
+
     final int initialSize;
     initialSize = powerOfTwo(bufferSizeInitial);
 
@@ -423,6 +431,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
   }
 
   private HttpExchange(HttpExchangeConfig config) {
+    bodyFiles = config.bodyFiles();
 
     final int initialSize;
     initialSize = powerOfTwo(config.bufferSizeInitial);
@@ -2032,6 +2041,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
     final HttpHeader contentLength;
     contentLength = (HttpHeader) object;
 
+    object = null;
+
     final long length;
     length = contentLength.unsignedLongValue(buffer);
 
@@ -2107,7 +2118,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   private byte executeParseBodyFixedBufferRead() {
     // restore remaining bytes to read
-    int remaining;
+    final int remaining;
     remaining = mark;
 
     if (remaining < 0) {
@@ -2118,7 +2129,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
     else if (remaining == 0) {
       // read successful
-      return toAfterParseBodyFixedBuffer();
+      return toParseBodyFixedBufferSuccess();
     }
 
     try {
@@ -2133,9 +2144,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
       bufferLimit += read;
 
-      remaining -= read;
-
-      mark = remaining;
+      mark -= read;
 
       return $PARSE_BODY_FIXED_BUFFER_READ;
     } catch (IOException e) {
@@ -2143,7 +2152,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
     }
   }
 
-  private byte toAfterParseBodyFixedBuffer() {
+  private byte toParseBodyFixedBufferSuccess() {
     bodyKind = BodyKind.IN_BUFFER;
 
     return stateNext;

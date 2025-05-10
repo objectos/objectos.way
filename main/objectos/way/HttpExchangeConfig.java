@@ -206,6 +206,10 @@ final class HttpExchangeConfig implements Http.Exchange.Options {
     responseListener = Objects.requireNonNull(value, "value == null");
   }
 
+  final HttpExchangeBodyFiles bodyFiles() {
+    return HttpExchangeBodyFiles.standard();
+  }
+
   final InputStream inputStream() {
     final byte[] body;
     body = body();
