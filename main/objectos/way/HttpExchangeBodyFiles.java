@@ -47,7 +47,7 @@ class HttpExchangeBodyFiles {
     return STANDARD;
   }
 
-  public final Path file(long id) throws IOException {
+  public Path file(long id) throws IOException {
     try {
       // fail early if error
       final Path directory;

@@ -16,6 +16,7 @@
 package objectos.way;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -24,6 +25,8 @@ import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -215,28 +218,67 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
     );
   }
 
-  @Test(enabled = false, description = "file: happy-path")
+  private static class Tester extends HttpExchangeBodyFiles {
+
+    private final Path directory = Y.nextTempDir();
+
+    private Path file;
+
+    @Override
+    public final Path file(long id) throws IOException {
+      return file = super.file(id);
+    }
+
+    @Override
+    final Path directory() {
+      return directory;
+    }
+
+    public final boolean fileExists() {
+      return Files.exists(file);
+    }
+
+  }
+
+  @Test(description = "file: happy-path")
   public void file01() {
+    final Tester tester;
+    tester = new Tester();
+
     final String content;
     content = ".o".repeat(512);
 
-    test(
-        2, 256,
+    exec(test -> {
+      test.bodyFiles(tester);
 
-        arr(
-            """
-            POST / HTTP/1.1\r
-            Host: www.example.com\r
-            Content-Type: text/plain\r
-            Content-Length: 1024\r
-            \r
-            """,
+      test.bufferSize(2, 256);
 
-            content
-        ),
+      test.xch(xch -> {
+        xch.req("""
+        POST / HTTP/1.1\r
+        Host: www.example.com\r
+        Content-Type: text/plain\r
+        Content-Length: 1024\r
+        \r
+        """);
 
-        ascii(content)
-    );
+        xch.req(content);
+
+        xch.handler(http -> {
+          try (InputStream in = http.bodyInputStream()) {
+            assertEquals(in.readAllBytes(), ascii(content));
+          } catch (IOException e) {
+            throw new UncheckedIOException(e);
+          }
+
+          http.ok(OK);
+        });
+
+        xch.resp(OK_RESP);
+      });
+    });
+
+    assertFalse(tester.fileExists());
   }
 
   @Test(enabled = false, description = "file: client read IOException")
