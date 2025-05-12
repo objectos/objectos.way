@@ -581,6 +581,11 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
     formValid(raw, expected);
   }
 
+  @Test
+  public void formValid01() {
+    formValid("k%7D=value", Map.of("k}", "value"));
+  }
+
   @DataProvider
   public Object[][] appFormPercentInvalidProvider() {
     return new Object[][] {

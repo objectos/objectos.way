@@ -114,8 +114,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
     Http.Status status();
   }
 
-  private record FormSupport(int bufferIndex, InputStream inputStream, Object object, Map<String, Object> queryParams) {}
-
   private enum InvalidLineTerminator implements ClientError {
     INSTANCE;
 
@@ -282,57 +280,50 @@ final class HttpExchange implements Http.Exchange, Closeable {
   static final byte $PARSE_BODY_FIXED_FILE_CLOSE = 32;
 
   static final byte $PARSE_APP_FORM = 33;
-  static final byte $PARSE_APP_FORM_NAME = 34;
-  static final byte $PARSE_APP_FORM_NAME0 = 35;
-  static final byte $PARSE_APP_FORM_NAME1 = 36;
-  static final byte $PARSE_APP_FORM_NAME1_DECODE = 37;
-  static final byte $PARSE_APP_FORM_VALUE = 38;
-  static final byte $PARSE_APP_FORM_VALUE0 = 39;
-  static final byte $PARSE_APP_FORM_VALUE1 = 40;
-  static final byte $PARSE_APP_FORM_VALUE1_DECODE = 41;
-  static final byte $PARSE_APP_FORM_READ = 42;
-  static final byte $PARSE_APP_FORM_EOF = 43;
-  static final byte $PARSE_APP_FORM_SUCCESS = 44;
-  static final byte $PARSE_APP_FORM_ERROR = 45;
+  static final byte $PARSE_APP_FORM0 = 34;
+  static final byte $PARSE_APP_FORM1 = 35;
+  static final byte $PARSE_APP_FORM_VALUE = 36;
+  static final byte $PARSE_APP_FORM_VALUE0 = 37;
+  static final byte $PARSE_APP_FORM_VALUE1 = 38;
 
-  static final byte $DECODE_PERC = 46;
-  static final byte $DECODE_PERC1_LOW = 47;
-  static final byte $DECODE_PERC2_1_LOW = 48;
-  static final byte $DECODE_PERC2_2 = 49;
-  static final byte $DECODE_PERC2_2_HIGH = 50;
-  static final byte $DECODE_PERC2_2_LOW = 51;
-  static final byte $DECODE_PERC3_1_LOW = 52;
-  static final byte $DECODE_PERC3_2 = 53;
-  static final byte $DECODE_PERC3_2_HIGH = 54;
-  static final byte $DECODE_PERC3_2_LOW = 55;
-  static final byte $DECODE_PERC3_3 = 56;
-  static final byte $DECODE_PERC3_3_HIGH = 57;
-  static final byte $DECODE_PERC3_3_LOW = 58;
-  static final byte $DECODE_PERC4_1_LOW = 59;
-  static final byte $DECODE_PERC4_2 = 60;
-  static final byte $DECODE_PERC4_2_HIGH = 61;
-  static final byte $DECODE_PERC4_2_LOW = 62;
-  static final byte $DECODE_PERC4_3 = 63;
-  static final byte $DECODE_PERC4_3_HIGH = 64;
-  static final byte $DECODE_PERC4_3_LOW = 65;
-  static final byte $DECODE_PERC4_4 = 66;
-  static final byte $DECODE_PERC4_4_HIGH = 67;
-  static final byte $DECODE_PERC4_4_LOW = 68;
+  static final byte $DECODE_PERC = 39;
+  static final byte $DECODE_PERC1_LOW = 40;
+  static final byte $DECODE_PERC2_1_LOW = 41;
+  static final byte $DECODE_PERC2_2 = 42;
+  static final byte $DECODE_PERC2_2_HIGH = 43;
+  static final byte $DECODE_PERC2_2_LOW = 44;
+  static final byte $DECODE_PERC3_1_LOW = 45;
+  static final byte $DECODE_PERC3_2 = 46;
+  static final byte $DECODE_PERC3_2_HIGH = 47;
+  static final byte $DECODE_PERC3_2_LOW = 48;
+  static final byte $DECODE_PERC3_3 = 49;
+  static final byte $DECODE_PERC3_3_HIGH = 50;
+  static final byte $DECODE_PERC3_3_LOW = 51;
+  static final byte $DECODE_PERC4_1_LOW = 52;
+  static final byte $DECODE_PERC4_2 = 53;
+  static final byte $DECODE_PERC4_2_HIGH = 54;
+  static final byte $DECODE_PERC4_2_LOW = 55;
+  static final byte $DECODE_PERC4_3 = 56;
+  static final byte $DECODE_PERC4_3_HIGH = 57;
+  static final byte $DECODE_PERC4_3_LOW = 58;
+  static final byte $DECODE_PERC4_4 = 59;
+  static final byte $DECODE_PERC4_4_HIGH = 60;
+  static final byte $DECODE_PERC4_4_LOW = 61;
 
-  static final byte $BAD_REQUEST = 69;
-  static final byte $URI_TOO_LONG = 70;
-  static final byte $REQUEST_HEADER_FIELDS_TOO_LARGE = 71;
-  static final byte $NOT_IMPLEMENTED = 72;
-  static final byte $HTTP_VERSION_NOT_SUPPORTED = 73;
+  static final byte $BAD_REQUEST = 62;
+  static final byte $URI_TOO_LONG = 63;
+  static final byte $REQUEST_HEADER_FIELDS_TOO_LARGE = 64;
+  static final byte $NOT_IMPLEMENTED = 65;
+  static final byte $HTTP_VERSION_NOT_SUPPORTED = 66;
 
-  static final byte $COMMIT = 74;
-  static final byte $WRITE = 75;
+  static final byte $COMMIT = 67;
+  static final byte $WRITE = 68;
 
-  static final byte $REQUEST = 76;
+  static final byte $REQUEST = 69;
 
-  static final byte $RESPONSE_HEADERS = 77;
+  static final byte $RESPONSE_HEADERS = 70;
 
-  static final byte $ERROR = 78;
+  static final byte $ERROR = 71;
 
   // ##################################################################
   // # END: States
@@ -377,9 +368,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   private byte[] decodePerc;
 
-  private Map<String, Object> formParams;
-
-  private FormSupport formSupport;
+  private Object formParams;
 
   private HttpHeaderName headerName;
 
@@ -387,7 +376,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   private final long id = ID_GENERATOR.getAndIncrement();
 
-  private InputStream inputStream;
+  private final InputStream inputStream;
 
   private long long0;
 
@@ -702,16 +691,11 @@ final class HttpExchange implements Http.Exchange, Closeable {
       case $PARSE_BODY_FIXED_FILE_CLOSE -> executeParseBodyFixedFileClose();
 
       case $PARSE_APP_FORM -> executeParseAppForm();
-      case $PARSE_APP_FORM_NAME -> executeParseAppFormName();
-      case $PARSE_APP_FORM_NAME0 -> executeParseAppFormName0();
-      case $PARSE_APP_FORM_NAME1 -> executeParseAppFormName1();
-      case $PARSE_APP_FORM_NAME1_DECODE -> executeParseAppFormName1Decode();
+      case $PARSE_APP_FORM0 -> executeParseAppForm0();
+      case $PARSE_APP_FORM1 -> executeParseAppForm1();
       case $PARSE_APP_FORM_VALUE -> executeParseAppFormValue();
       case $PARSE_APP_FORM_VALUE0 -> executeParseAppFormValue0();
       case $PARSE_APP_FORM_VALUE1 -> executeParseAppFormValue1();
-      case $PARSE_APP_FORM_VALUE1_DECODE -> executeParseAppFormValue1Decode();
-      case $PARSE_APP_FORM_EOF -> executeParseAppFormEof();
-      case $PARSE_APP_FORM_SUCCESS -> executeParseAppFormSuccess();
 
       case $DECODE_PERC -> executeDecodePerc();
       case $DECODE_PERC1_LOW -> executeDecodePerc1Low();
@@ -779,7 +763,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
     }
 
     if (formParams != null) {
-      formParams.clear();
+      formParams = null;
     }
 
     headerName = null;
@@ -1412,6 +1396,19 @@ final class HttpExchange implements Http.Exchange, Closeable {
     }
   }
 
+  private Map<String, Object> copyQueryParams() {
+    if (queryParams == null) {
+      return null;
+    } else {
+      final Map<String, Object> copy;
+      copy = Util.createMap();
+
+      copy.putAll(queryParams);
+
+      return copy;
+    }
+  }
+
   @SuppressWarnings("unchecked")
   private void makeQueryParam(String value) {
     if (queryParams == null) {
@@ -1723,185 +1720,30 @@ final class HttpExchange implements Http.Exchange, Closeable {
   }
 
   private byte toDecodePercBadRequest() {
-    return switch (markEnd) {
-      case $PARSE_PATH_CONTENTS1 -> toBadRequest(InvalidRequestLine.PATH_PERCENT);
+    final ClientError error;
+    error = switch (markEnd) {
+      case $PARSE_PATH_CONTENTS1 -> InvalidRequestLine.PATH_PERCENT;
 
-      case $PARSE_QUERY1, $PARSE_QUERY_VALUE1 -> toBadRequest(InvalidRequestLine.QUERY_PERCENT);
+      case $PARSE_QUERY1, $PARSE_QUERY_VALUE1 -> InvalidRequestLine.QUERY_PERCENT;
 
-      default -> throw new AssertionError("Unexpected stateNext=" + stateNext);
+      case $PARSE_APP_FORM1, $PARSE_APP_FORM_VALUE1 -> InvalidApplicationForm.PERCENT;
+
+      default -> throw new AssertionError("Unexpected markEnd=" + markEnd);
     };
+
+    return toBadRequest(error);
   }
 
   private byte toDecodePercExhausted() {
-    return toRead(state);
-  }
+    return switch (markEnd) {
+      case $PARSE_PATH_CONTENTS1 -> toRead(state);
 
-  private byte urlDecodePercent(byte success, byte read, ClientError badRequest) {
-    final int firstDigitIndex;
-    firstDigitIndex = bufferIndex + 1;
+      case $PARSE_QUERY1, $PARSE_QUERY_VALUE1 -> toRead(state);
 
-    if (firstDigitIndex < bufferLimit) {
-      final byte first;
-      first = buffer[firstDigitIndex];
+      case $PARSE_APP_FORM1, $PARSE_APP_FORM_VALUE1 -> toBadRequest(InvalidApplicationForm.PERCENT);
 
-      final byte high;
-      high = Bytes.fromHexDigit(first);
-
-      if (high < 0) {
-        return toBadRequest(badRequest);
-      }
-
-      return switch (high) {
-        // 0yyyzzzz
-        case 0b0000, 0b0001,
-             0b0010, 0b0011,
-             0b0100, 0b0101, 0b0110, 0b0111 -> urlDecodePercent1(success, read, badRequest);
-
-        // 110xxxyy 10yyzzzz
-        case 0b1100, 0b1101 -> urlDecodePercent2(success, read, badRequest);
-
-        // 1110wwww 10xxxxyy 10yyzzzz
-        case 0b1110 -> urlDecodePercent3(success, read, badRequest);
-
-        // 11110uvv 10vvwwww 10xxxxyy 10yyzzzz
-        case 0b1111 -> urlDecodePercent4(success, read, badRequest);
-
-        default -> toBadRequest(badRequest);
-      };
-    } else {
-      return toRead(read);
-    }
-  }
-
-  private byte urlDecodePercent1(byte success, byte read, ClientError badRequest) {
-    if (canRead(3)) {
-      final int byte1;
-      byte1 = urlDecodePercent();
-
-      if (byte1 < 0) {
-        return toBadRequest(badRequest);
-      }
-
-      appendChar(byte1);
-
-      return success;
-    } else {
-      return toRead(read);
-    }
-  }
-
-  private byte urlDecodePercent2(byte success, byte read, ClientError badRequest) {
-    if (canRead(6)) {
-      final int byte1;
-      byte1 = urlDecodePercent();
-
-      if (byte1 < 0) {
-        return toBadRequest(badRequest);
-      }
-
-      final int byte2;
-      byte2 = urlDecodePercent();
-
-      if (!utf8Byte(byte2)) {
-        return toBadRequest(badRequest);
-      }
-
-      final int c;
-      c = (byte1 & 0b1_1111) << 6 | (byte2 & 0b11_1111);
-
-      if (c < 0x80 || c > 0x7FF) {
-        return toBadRequest(badRequest);
-      }
-
-      appendChar(c);
-
-      return success;
-    } else {
-      return toRead(read);
-    }
-  }
-
-  private byte urlDecodePercent3(byte success, byte read, ClientError badRequest) {
-    if (canRead(9)) {
-      final int byte1;
-      byte1 = urlDecodePercent();
-
-      if (byte1 < 0) {
-        return toBadRequest(badRequest);
-      }
-
-      final int byte2;
-      byte2 = urlDecodePercent();
-
-      if (!utf8Byte(byte2)) {
-        return toBadRequest(badRequest);
-      }
-
-      final int byte3;
-      byte3 = urlDecodePercent();
-
-      if (!utf8Byte(byte3)) {
-        return toBadRequest(badRequest);
-      }
-
-      final int c;
-      c = (byte1 & 0b1111) << 12 | (byte2 & 0b11_1111) << 6 | (byte3 & 0b11_1111);
-
-      if (c < 0x800 || c > 0xFFFF || Character.isSurrogate((char) c)) {
-        return toBadRequest(badRequest);
-      }
-
-      appendChar(c);
-
-      return success;
-    } else {
-      return toRead(read);
-    }
-  }
-
-  private byte urlDecodePercent4(byte success, byte read, ClientError badRequest) {
-    if (canRead(12)) {
-      final int byte1;
-      byte1 = urlDecodePercent();
-
-      if (byte1 < 0) {
-        return toBadRequest(badRequest);
-      }
-
-      final int byte2;
-      byte2 = urlDecodePercent();
-
-      if (!utf8Byte(byte2)) {
-        return toBadRequest(badRequest);
-      }
-
-      final int byte3;
-      byte3 = urlDecodePercent();
-
-      if (!utf8Byte(byte3)) {
-        return toBadRequest(badRequest);
-      }
-
-      final int byte4;
-      byte4 = urlDecodePercent();
-
-      if (!utf8Byte(byte4)) {
-        return toBadRequest(badRequest);
-      }
-
-      final int c;
-      c = (byte1 & 0b111) << 18 | (byte2 & 0b11_1111) << 12 | (byte3 & 0b11_1111) << 6 | (byte4 & 0b11_1111);
-
-      if (c < 0x1_0000 || !Character.isValidCodePoint(c)) {
-        return toBadRequest(badRequest);
-      }
-
-      appendCodePoint(c);
-
-      return success;
-    } else {
-      return toRead(read);
-    }
+      default -> throw new AssertionError("Unexpected markEnd=" + markEnd);
+    };
   }
 
   private boolean utf8Byte(int utf8) {
@@ -1909,37 +1751,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
     topTwoBits = utf8 & 0b1100_0000;
 
     return topTwoBits == 0b1000_0000;
-  }
-
-  private int urlDecodePercent() {
-    final byte percent;
-    percent = buffer[bufferIndex++];
-
-    if (percent != '%') {
-      return -1;
-    }
-
-    final byte first;
-    first = buffer[bufferIndex++];
-
-    final byte high;
-    high = Bytes.fromHexDigit(first);
-
-    if (high < 0) {
-      return -1;
-    }
-
-    final byte second;
-    second = buffer[bufferIndex++];
-
-    final byte low;
-    low = Bytes.fromHexDigit(second);
-
-    if (low < 0) {
-      return -1;
-    }
-
-    return (high << 4) | low;
   }
 
   // ##################################################################
@@ -2299,20 +2110,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
   // ##################################################################
 
   private byte executeParseBody() {
-    stateNext = $REQUEST;
-
-    final HttpHeader contentType;
-    contentType = headerUnchecked(HttpHeaderName.CONTENT_TYPE);
-
-    if (contentType != null) {
-      final String value;
-      value = contentType.get(buffer);
-
-      if (value != null && value.equalsIgnoreCase("application/x-www-form-urlencoded")) {
-        stateNext = $PARSE_APP_FORM;
-      }
-    }
-
     final HttpHeader contentLength;
     contentLength = headerUnchecked(HttpHeaderName.CONTENT_LENGTH);
 
@@ -2376,7 +2173,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
   private byte executeParseBodyFixedZero() {
     bodyKind = BodyKind.EMPTY;
 
-    return stateNext;
+    return $REQUEST;
   }
 
   private byte executeParseBodyFixedBuffer() {
@@ -2413,6 +2210,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
     return $PARSE_BODY_FIXED_BUFFER_READ;
   }
 
+  private record AppFormBufferSupport(int bufferIndex, Map<String, Object> queryParams) {}
+
   private byte executeParseBodyFixedBufferRead() {
     // restore remaining bytes to read
     final int remaining;
@@ -2426,7 +2225,14 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
     else if (remaining == 0) {
       // read successful
-      return $PARSE_BODY_FIXED_BUFFER_SUCCESS;
+
+      if (shouldParseAppForm()) {
+        formParams = new AppFormBufferSupport(bufferIndex, copyQueryParams());
+
+        return $PARSE_APP_FORM;
+      } else {
+        return $PARSE_BODY_FIXED_BUFFER_SUCCESS;
+      }
     }
 
     try {
@@ -2452,7 +2258,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
   private byte executeParseBodyFixedBufferSuccess() {
     bodyKind = BodyKind.IN_BUFFER;
 
-    return stateNext;
+    return $REQUEST;
   }
 
   private static final class BodyFileSupport {
@@ -2596,7 +2402,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
       object = support.file;
 
-      return stateNext;
+      return $REQUEST;
     } catch (IOException e) {
       return internalServerError(e);
     }
@@ -2646,6 +2452,166 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   }
 
+  private byte executeParseAppForm() {
+    // where the current key begins
+    mark = bufferIndex;
+
+    state = $PARSE_APP_FORM0;
+
+    return executeParseAppForm0();
+  }
+
+  private byte executeParseAppForm0() {
+    if (bufferIndex < bufferLimit) {
+      final byte b;
+      b = buffer[bufferIndex];
+
+      final byte code;
+      code = parseQueryTable(b);
+
+      return switch (code) {
+        case QUERY_VALID -> { bufferIndex += 1; yield $PARSE_APP_FORM0; }
+
+        case QUERY_PERCENT -> { appendInit(); bufferIndex += 1; yield toDecodePerc($PARSE_APP_FORM1); }
+
+        case QUERY_PLUS -> { appendInit(); appendChar(' '); bufferIndex += 1; yield $PARSE_APP_FORM1; }
+
+        case QUERY_EQUALS -> { object = markToString(); bufferIndex += 1; yield $PARSE_APP_FORM_VALUE; }
+
+        case QUERY_AMPERSAND -> executeParseAppFormName0End($PARSE_APP_FORM);
+
+        default -> toBadRequest(InvalidApplicationForm.CHAR);
+      };
+    } else {
+      return toParseAppFormExhausted();
+    }
+  }
+
+  private byte executeParseAppFormName0End(byte next) {
+    object = markToString();
+
+    bufferIndex += 1;
+
+    makeQueryParam("");
+
+    return next;
+  }
+
+  private byte executeParseAppForm1() {
+    if (bufferIndex < bufferLimit) {
+      final byte b;
+      b = buffer[bufferIndex];
+
+      final byte code;
+      code = parseQueryTable(b);
+
+      return switch (code) {
+        case QUERY_VALID -> { appendChar(b); bufferIndex += 1; yield $PARSE_APP_FORM1; }
+
+        case QUERY_PERCENT -> { bufferIndex += 1; yield toDecodePerc($PARSE_APP_FORM1); }
+
+        case QUERY_PLUS -> { appendChar(' '); bufferIndex += 1; yield $PARSE_APP_FORM1; }
+
+        case QUERY_EQUALS -> { object = appendToString(); bufferIndex += 1; yield $PARSE_APP_FORM_VALUE; }
+
+        case QUERY_AMPERSAND -> executeParseAppFormName1End($PARSE_APP_FORM);
+
+        default -> toBadRequest(InvalidApplicationForm.CHAR);
+      };
+    } else {
+      return toParseAppFormExhausted();
+    }
+  }
+
+  private byte executeParseAppFormName1End(byte next) {
+    object = appendToString();
+
+    bufferIndex += 1;
+
+    makeQueryParam("");
+
+    return next;
+  }
+
+  private byte executeParseAppFormValue() {
+    // where the current value begins
+    mark = bufferIndex;
+
+    state = $PARSE_APP_FORM_VALUE0;
+
+    return executeParseAppFormValue0();
+  }
+
+  private byte executeParseAppFormValue0() {
+    if (bufferIndex < bufferLimit) {
+      final byte b;
+      b = buffer[bufferIndex];
+
+      final byte code;
+      code = parseQueryTable(b);
+
+      return switch (code) {
+        case QUERY_VALID, QUERY_EQUALS -> { bufferIndex += 1; yield $PARSE_APP_FORM_VALUE0; }
+
+        case QUERY_PERCENT -> { appendInit(); bufferIndex += 1; yield toDecodePerc($PARSE_APP_FORM_VALUE1); }
+
+        case QUERY_PLUS -> { appendInit(); appendChar(' '); bufferIndex += 1; yield $PARSE_APP_FORM_VALUE1; }
+
+        case QUERY_AMPERSAND -> executeParseAppFormValue0End($PARSE_APP_FORM);
+
+        default -> toBadRequest(InvalidApplicationForm.CHAR);
+      };
+    } else {
+      return toParseAppFormExhausted();
+    }
+  }
+
+  private byte executeParseAppFormValue0End(byte next) {
+    final String v;
+    v = markToString();
+
+    bufferIndex += 1;
+
+    makeQueryParam(v);
+
+    return next;
+  }
+
+  private byte executeParseAppFormValue1() {
+    if (bufferIndex < bufferLimit) {
+      final byte b;
+      b = buffer[bufferIndex];
+
+      final byte code;
+      code = parseQueryTable(b);
+
+      return switch (code) {
+        case QUERY_VALID, QUERY_EQUALS -> { appendChar(b); bufferIndex += 1; yield $PARSE_APP_FORM_VALUE1; }
+
+        case QUERY_PERCENT -> { bufferIndex += 1; yield toDecodePerc($PARSE_APP_FORM_VALUE1); }
+
+        case QUERY_PLUS -> { appendChar(' '); bufferIndex += 1; yield $PARSE_APP_FORM_VALUE1; }
+
+        case QUERY_AMPERSAND -> executeParseAppFormValue1End($PARSE_APP_FORM);
+
+        default -> toBadRequest(InvalidApplicationForm.CHAR);
+      };
+    } else {
+      return toParseAppFormExhausted();
+    }
+  }
+
+  private byte executeParseAppFormValue1End(byte next) {
+    final String v;
+    v = appendToString();
+
+    bufferIndex += 1;
+
+    makeQueryParam(v);
+
+    return next;
+  }
+
   @SuppressWarnings("unused")
   private boolean shouldParseAppForm() {
     final HttpHeader contentType;
@@ -2663,342 +2629,37 @@ final class HttpExchange implements Http.Exchange, Closeable {
     return false;
   }
 
-  private byte executeParseAppForm() {
-    stringBuilderInit();
+  private byte toParseAppFormExhausted() {
+    if (formParams instanceof AppFormBufferSupport support) {
+      final byte next;
+      next = toParseAppFormSuccess($PARSE_BODY_FIXED_BUFFER_SUCCESS);
 
-    return switch (bodyKind) {
-      case EMPTY -> $REQUEST;
+      bufferIndex = support.bufferIndex;
 
-      case IN_BUFFER -> executeParseAppForm(null);
-
-      case FILE -> {
-        try (InputStream in = bodyInputStream()) {
-          yield executeParseAppForm(in);
-        } catch (IOException e) {
-          yield internalServerError(e);
-        }
-      }
-    };
-  }
-
-  private byte executeParseAppForm(InputStream in) {
-    formSupport = new FormSupport(bufferIndex, inputStream, object, queryParams);
-
-    inputStream = in;
-
-    object = null;
-
-    queryParams = null;
-
-    return executeParseAppFormName();
-  }
-
-  private byte executeParseAppFormName() {
-    // where the current key begins
-    mark = bufferIndex;
-
-    state = $PARSE_APP_FORM_NAME0;
-
-    return executeParseAppFormName0();
-  }
-
-  private byte executeParseAppFormName0() {
-    while (bufferIndex < bufferLimit) {
-      final byte b;
-      b = buffer[bufferIndex];
-
-      if (b < 0) {
-        return invalidApplicationForm(InvalidApplicationForm.CHAR);
-      }
-
-      final byte code;
-      code = PARSE_QUERY_TABLE[b];
-
-      switch (code) {
-        case QUERY_VALID -> { bufferIndex += 1; }
-
-        case QUERY_PERCENT, QUERY_PLUS -> { appendInit(); return $PARSE_APP_FORM_NAME1; }
-
-        case QUERY_EQUALS -> { object = markToString(); bufferIndex += 1; return $PARSE_APP_FORM_VALUE; }
-
-        case QUERY_AMPERSAND -> { return executeParseAppFormName0End($PARSE_APP_FORM_NAME); }
-
-        default -> { return invalidApplicationForm(InvalidApplicationForm.CHAR); }
-      }
-    }
-
-    return parseAppFormBufferExhausted();
-  }
-
-  private byte executeParseAppFormName0End(byte next) {
-    object = markToString();
-
-    bufferIndex += 1;
-
-    makeQueryParam("");
-
-    return next;
-  }
-
-  private byte executeParseAppFormName1() {
-    while (bufferIndex < bufferLimit) {
-      final byte b;
-      b = buffer[bufferIndex];
-
-      if (b < 0) {
-        return invalidApplicationForm(InvalidApplicationForm.PERCENT);
-      }
-
-      final byte code;
-      code = PARSE_QUERY_TABLE[b];
-
-      switch (code) {
-        case QUERY_VALID -> { appendChar(b); bufferIndex += 1; }
-
-        case QUERY_PERCENT -> { byte next = executeParseAppFormName1Decode(); if (state != next) { return next; } }
-
-        case QUERY_PLUS -> { appendChar(' '); bufferIndex += 1; }
-
-        case QUERY_EQUALS -> { object = appendToString(); bufferIndex += 1; return $PARSE_APP_FORM_VALUE; }
-
-        case QUERY_AMPERSAND -> { return executeParseAppFormName1End($PARSE_APP_FORM_NAME); }
-
-        default -> { return invalidApplicationForm(InvalidApplicationForm.PERCENT); }
-      }
-    }
-
-    return parseAppFormBufferExhausted();
-  }
-
-  private byte executeParseAppFormName1End(byte next) {
-    object = appendToString();
-
-    bufferIndex += 1;
-
-    makeQueryParam("");
-
-    return next;
-  }
-
-  private byte executeParseAppFormName1Decode() {
-    final byte percent;
-    percent = urlDecodePercent(
-        $PARSE_APP_FORM_NAME1,
-        $PARSE_APP_FORM_NAME1_DECODE,
-        InvalidApplicationForm.PERCENT
-    );
-
-    if (percent == $READ) {
-      state = $PARSE_APP_FORM_NAME1_DECODE;
-
-      return parseAppFormBufferExhausted();
-    } else {
-      return percent;
-    }
-  }
-
-  private byte executeParseAppFormValue() {
-    // where the current value begins
-    mark = bufferIndex;
-
-    state = $PARSE_APP_FORM_VALUE0;
-
-    return executeParseAppFormValue0();
-  }
-
-  private byte executeParseAppFormValue0() {
-    while (bufferIndex < bufferLimit) {
-      final byte b;
-      b = buffer[bufferIndex];
-
-      if (b < 0) {
-        return invalidApplicationForm(InvalidApplicationForm.CHAR);
-      }
-
-      final byte code;
-      code = PARSE_QUERY_TABLE[b];
-
-      switch (code) {
-        case QUERY_VALID, QUERY_EQUALS -> { bufferIndex += 1; }
-
-        case QUERY_PERCENT, QUERY_PLUS -> { appendInit(); return $PARSE_APP_FORM_VALUE1; }
-
-        case QUERY_AMPERSAND -> { return executeParseAppFormValue0End($PARSE_APP_FORM_NAME); }
-
-        default -> { return invalidApplicationForm(InvalidApplicationForm.CHAR); }
-      }
-    }
-
-    return parseAppFormBufferExhausted();
-  }
-
-  private byte executeParseAppFormValue0End(byte next) {
-    final String v;
-    v = markToString();
-
-    bufferIndex += 1;
-
-    makeQueryParam(v);
-
-    return next;
-  }
-
-  private byte executeParseAppFormValue1() {
-    while (bufferIndex < bufferLimit) {
-      final byte b;
-      b = buffer[bufferIndex];
-
-      if (b < 0) {
-        return invalidApplicationForm(InvalidApplicationForm.PERCENT);
-      }
-
-      final byte code;
-      code = PARSE_QUERY_TABLE[b];
-
-      switch (code) {
-        case QUERY_VALID, QUERY_EQUALS -> { appendChar(b); bufferIndex += 1; }
-
-        case QUERY_PERCENT -> { byte next = executeParseAppFormValue1Decode(); if (state != next) { return next; } }
-
-        case QUERY_PLUS -> { appendChar(' '); bufferIndex += 1; }
-
-        case QUERY_AMPERSAND -> { return executeParseAppFormValue1End($PARSE_APP_FORM_NAME); }
-
-        default -> { return invalidApplicationForm(InvalidApplicationForm.PERCENT); }
-      }
-    }
-
-    return parseAppFormBufferExhausted();
-  }
-
-  private byte executeParseAppFormValue1End(byte next) {
-    final String v;
-    v = appendToString();
-
-    bufferIndex += 1;
-
-    makeQueryParam(v);
-
-    return next;
-  }
-
-  private byte executeParseAppFormValue1Decode() {
-    final byte percent;
-    percent = urlDecodePercent(
-        $PARSE_APP_FORM_VALUE1,
-        $PARSE_APP_FORM_VALUE1_DECODE,
-        InvalidApplicationForm.PERCENT
-    );
-
-    if (percent == $READ) {
-      state = $PARSE_APP_FORM_VALUE1_DECODE;
-
-      return parseAppFormBufferExhausted();
-    } else {
-      return percent;
-    }
-  }
-
-  private byte parseAppFormBufferExhausted() {
-    // cache current state
-    stateNext = state;
-
-    if (bodyKind == BodyKind.FILE) {
-      // reset buffer
-      bufferIndex = bufferLimit = formSupport.bufferIndex;
-
-      // number of bytes we can write
-      final int writableLength;
-      writableLength = buffer.length - bufferLimit;
-
-      final int bytesRead;
-
-      try {
-        bytesRead = inputStream.read(buffer, bufferLimit, writableLength);
-      } catch (IOException e) {
-        return internalServerError(e);
-      }
-
-      if (bytesRead < 0) {
-        return $PARSE_APP_FORM_EOF;
-      }
-
-      bufferLimit += bytesRead;
-
-      return state;
-    } else {
-      return $PARSE_APP_FORM_EOF;
-    }
-  }
-
-  private byte executeParseAppFormEof() {
-    // restore last state from cache
-    final byte lastState;
-    lastState = stateNext;
-
-    return switch (lastState) {
-      case $PARSE_APP_FORM -> $PARSE_APP_FORM_SUCCESS;
-
-      case $PARSE_APP_FORM_NAME0 -> executeParseAppFormName0End($PARSE_APP_FORM_SUCCESS);
-
-      case $PARSE_APP_FORM_NAME1 -> executeParseAppFormName1End($PARSE_APP_FORM_SUCCESS);
-
-      case $PARSE_APP_FORM_NAME1_DECODE -> invalidApplicationForm(InvalidApplicationForm.PERCENT);
-
-      case $PARSE_APP_FORM_VALUE0 -> executeParseAppFormValue0End($PARSE_APP_FORM_SUCCESS);
-
-      case $PARSE_APP_FORM_VALUE1 -> executeParseAppFormValue1End($PARSE_APP_FORM_SUCCESS);
-
-      case $PARSE_APP_FORM_VALUE1_DECODE -> invalidApplicationForm(InvalidApplicationForm.PERCENT);
-
-      default -> throw new UnsupportedOperationException("Implement me :: lastState=" + lastState);
-    };
-  }
-
-  private byte executeParseAppFormSuccess() {
-    try {
       formParams = queryParams;
 
-      clearFormSupport();
+      queryParams = support.queryParams;
 
-      return $REQUEST;
-    } catch (IOException e) {
-      return internalServerError(e);
+      return next;
     }
+
+    throw new AssertionError("Unexpected formParams=" + formParams);
   }
 
-  private byte invalidApplicationForm(InvalidApplicationForm error) {
-    try {
-      formParams = queryParams;
+  private byte toParseAppFormSuccess(byte next) {
+    return switch (state) {
+      case $PARSE_APP_FORM -> next;
 
-      if (formParams != null) {
-        formParams.clear();
-      }
+      case $PARSE_APP_FORM0 -> executeParseAppFormName0End(next);
 
-      clearFormSupport();
+      case $PARSE_APP_FORM1 -> executeParseAppFormName1End(next);
 
-      object = error;
+      case $PARSE_APP_FORM_VALUE0 -> executeParseAppFormValue0End(next);
 
-      return $BAD_REQUEST;
-    } catch (IOException e) {
-      return internalServerError(e);
-    }
-  }
+      case $PARSE_APP_FORM_VALUE1 -> executeParseAppFormValue1End(next);
 
-  private void clearFormSupport() throws IOException {
-    if (inputStream != null) {
-      inputStream.close();
-    }
-
-    bufferIndex = formSupport.bufferIndex;
-
-    inputStream = formSupport.inputStream;
-
-    object = formSupport.object;
-
-    queryParams = formSupport.queryParams;
-
-    formSupport = null;
+      default -> throw new AssertionError("EOF unexpected state=" + state);
+    };
   }
 
   // ##################################################################
@@ -3051,11 +2712,9 @@ final class HttpExchange implements Http.Exchange, Closeable {
   // ##################################################################
 
   private byte toBadRequest(ClientError error) {
-    return switch (error) {
-      case InvalidApplicationForm form -> invalidApplicationForm(form);
+    object = error;
 
-      default -> { object = error; yield $BAD_REQUEST; }
-    };
+    return $BAD_REQUEST;
   }
 
   private byte executeBadRequest() {
@@ -3990,7 +3649,10 @@ final class HttpExchange implements Http.Exchange, Closeable {
     if (formParams == null) {
       return null;
     } else {
-      return Http.queryParamsGet(formParams, name);
+      final Map<String, Object> map;
+      map = formParamsMap();
+
+      return Http.queryParamsGet(map, name);
     }
   }
 
@@ -4002,7 +3664,10 @@ final class HttpExchange implements Http.Exchange, Closeable {
     if (formParams == null) {
       return List.of();
     } else {
-      return Http.queryParamsGetAll(formParams, name);
+      final Map<String, Object> map;
+      map = formParamsMap();
+
+      return Http.queryParamsGetAll(map, name);
     }
   }
 
@@ -4013,8 +3678,16 @@ final class HttpExchange implements Http.Exchange, Closeable {
     if (formParams == null) {
       return Set.of();
     } else {
-      return formParams.keySet();
+      final Map<String, Object> map;
+      map = formParamsMap();
+
+      return map.keySet();
     }
+  }
+
+  @SuppressWarnings("unchecked")
+  private Map<String, Object> formParamsMap() {
+    return (Map<String, Object>) formParams;
   }
 
   // ##################################################################

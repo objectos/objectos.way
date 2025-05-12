@@ -72,18 +72,11 @@ final class HttpExchangeStateGen {
     gen.line();
 
     gen.value("$PARSE_APP_FORM");
-    gen.value("$PARSE_APP_FORM_NAME");
-    gen.value("$PARSE_APP_FORM_NAME0");
-    gen.value("$PARSE_APP_FORM_NAME1");
-    gen.value("$PARSE_APP_FORM_NAME1_DECODE");
+    gen.value("$PARSE_APP_FORM0");
+    gen.value("$PARSE_APP_FORM1");
     gen.value("$PARSE_APP_FORM_VALUE");
     gen.value("$PARSE_APP_FORM_VALUE0");
     gen.value("$PARSE_APP_FORM_VALUE1");
-    gen.value("$PARSE_APP_FORM_VALUE1_DECODE");
-    gen.value("$PARSE_APP_FORM_READ");
-    gen.value("$PARSE_APP_FORM_EOF");
-    gen.value("$PARSE_APP_FORM_SUCCESS");
-    gen.value("$PARSE_APP_FORM_ERROR");
 
     gen.line();
 
