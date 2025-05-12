@@ -278,39 +278,40 @@ final class HttpExchange implements Http.Exchange, Closeable {
   static final byte $PARSE_BODY_FIXED_ZERO = 28;
   static final byte $PARSE_BODY_FIXED_BUFFER = 29;
   static final byte $PARSE_BODY_FIXED_BUFFER_READ = 30;
-  static final byte $PARSE_BODY_FIXED_FILE = 31;
-  static final byte $PARSE_BODY_FIXED_FILE_BUFFER = 32;
-  static final byte $PARSE_BODY_FIXED_FILE_READ = 33;
-  static final byte $PARSE_BODY_FIXED_FILE_CLOSE = 34;
+  static final byte $PARSE_BODY_FIXED_BUFFER_SUCCESS = 31;
+  static final byte $PARSE_BODY_FIXED_FILE = 32;
+  static final byte $PARSE_BODY_FIXED_FILE_BUFFER = 33;
+  static final byte $PARSE_BODY_FIXED_FILE_READ = 34;
+  static final byte $PARSE_BODY_FIXED_FILE_CLOSE = 35;
 
-  static final byte $PARSE_APP_FORM = 35;
-  static final byte $PARSE_APP_FORM_NAME = 36;
-  static final byte $PARSE_APP_FORM_NAME0 = 37;
-  static final byte $PARSE_APP_FORM_NAME1 = 38;
-  static final byte $PARSE_APP_FORM_NAME1_DECODE = 39;
-  static final byte $PARSE_APP_FORM_VALUE = 40;
-  static final byte $PARSE_APP_FORM_VALUE0 = 41;
-  static final byte $PARSE_APP_FORM_VALUE1 = 42;
-  static final byte $PARSE_APP_FORM_VALUE1_DECODE = 43;
-  static final byte $PARSE_APP_FORM_READ = 44;
-  static final byte $PARSE_APP_FORM_EOF = 45;
-  static final byte $PARSE_APP_FORM_SUCCESS = 46;
-  static final byte $PARSE_APP_FORM_ERROR = 47;
+  static final byte $PARSE_APP_FORM = 36;
+  static final byte $PARSE_APP_FORM_NAME = 37;
+  static final byte $PARSE_APP_FORM_NAME0 = 38;
+  static final byte $PARSE_APP_FORM_NAME1 = 39;
+  static final byte $PARSE_APP_FORM_NAME1_DECODE = 40;
+  static final byte $PARSE_APP_FORM_VALUE = 41;
+  static final byte $PARSE_APP_FORM_VALUE0 = 42;
+  static final byte $PARSE_APP_FORM_VALUE1 = 43;
+  static final byte $PARSE_APP_FORM_VALUE1_DECODE = 44;
+  static final byte $PARSE_APP_FORM_READ = 45;
+  static final byte $PARSE_APP_FORM_EOF = 46;
+  static final byte $PARSE_APP_FORM_SUCCESS = 47;
+  static final byte $PARSE_APP_FORM_ERROR = 48;
 
-  static final byte $BAD_REQUEST = 48;
-  static final byte $URI_TOO_LONG = 49;
-  static final byte $REQUEST_HEADER_FIELDS_TOO_LARGE = 50;
-  static final byte $NOT_IMPLEMENTED = 51;
-  static final byte $HTTP_VERSION_NOT_SUPPORTED = 52;
+  static final byte $BAD_REQUEST = 49;
+  static final byte $URI_TOO_LONG = 50;
+  static final byte $REQUEST_HEADER_FIELDS_TOO_LARGE = 51;
+  static final byte $NOT_IMPLEMENTED = 52;
+  static final byte $HTTP_VERSION_NOT_SUPPORTED = 53;
 
-  static final byte $COMMIT = 53;
-  static final byte $WRITE = 54;
+  static final byte $COMMIT = 54;
+  static final byte $WRITE = 55;
 
-  static final byte $REQUEST = 55;
+  static final byte $REQUEST = 56;
 
-  static final byte $RESPONSE_HEADERS = 56;
+  static final byte $RESPONSE_HEADERS = 57;
 
-  static final byte $ERROR = 57;
+  static final byte $ERROR = 58;
 
   // ##################################################################
   // # END: States
@@ -674,6 +675,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
       case $PARSE_BODY_FIXED_ZERO -> executeParseBodyFixedZero();
       case $PARSE_BODY_FIXED_BUFFER -> executeParseBodyFixedBuffer();
       case $PARSE_BODY_FIXED_BUFFER_READ -> executeParseBodyFixedBufferRead();
+      case $PARSE_BODY_FIXED_BUFFER_SUCCESS -> executeParseBodyFixedBufferSuccess();
       case $PARSE_BODY_FIXED_FILE -> executeParseBodyFixedFile();
       case $PARSE_BODY_FIXED_FILE_BUFFER -> executeParseBodyFixedFileBuffer();
       case $PARSE_BODY_FIXED_FILE_READ -> executeParseBodyFixedFileRead();
@@ -731,8 +733,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
     if (formParams != null) {
       formParams.clear();
     }
-
-    formSupport = null;
 
     headerName = null;
 
@@ -2134,7 +2134,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
     else if (remaining == 0) {
       // read successful
-      return toParseBodyFixedBufferSuccess();
+      return $PARSE_BODY_FIXED_BUFFER_SUCCESS;
     }
 
     try {
@@ -2157,7 +2157,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
     }
   }
 
-  private byte toParseBodyFixedBufferSuccess() {
+  private byte executeParseBodyFixedBufferSuccess() {
     bodyKind = BodyKind.IN_BUFFER;
 
     return stateNext;
@@ -2310,7 +2310,70 @@ final class HttpExchange implements Http.Exchange, Closeable {
     }
   }
 
+  // ##################################################################
+  // # END: Parse: Body
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Parse: application/x-www-form-urlencoded
+  // ##################################################################
+
+  @SuppressWarnings("unused")
+  private static final class AppFormSupport {
+
+    final byte[] buffer;
+
+    int bufferIndex;
+
+    int bufferLimit;
+
+    @SuppressWarnings("unused")
+    final Map<String, Object> queryParams;
+
+    AppFormSupport(byte[] buffer, int bufferIndex, int bufferLimit, Map<String, Object> queryParams) {
+      this.buffer = buffer;
+
+      this.bufferIndex = bufferIndex;
+
+      this.bufferLimit = bufferLimit;
+
+      this.queryParams = queryParams;
+    }
+
+    final void advance() {
+      bufferIndex += 1;
+    }
+
+    final byte current() {
+      return buffer[bufferIndex];
+    }
+
+    final boolean hasNext() {
+      return bufferIndex < bufferLimit;
+    }
+
+  }
+
+  @SuppressWarnings("unused")
+  private boolean shouldParseAppForm() {
+    final HttpHeader contentType;
+    contentType = headerUnchecked(HttpHeaderName.CONTENT_TYPE);
+
+    if (contentType != null) {
+      final String value;
+      value = contentType.get(buffer);
+
+      if (value != null && value.equalsIgnoreCase("application/x-www-form-urlencoded")) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   private byte executeParseAppForm() {
+    stringBuilderInit();
+
     return switch (bodyKind) {
       case EMPTY -> $REQUEST;
 
@@ -2319,13 +2382,9 @@ final class HttpExchange implements Http.Exchange, Closeable {
       case FILE -> {
         try (InputStream in = bodyInputStream()) {
           yield executeParseAppForm(in);
-        } catch (
-
-          IOException e) {
-
+        } catch (IOException e) {
           yield internalServerError(e);
         }
-
       }
     };
   }
@@ -2651,7 +2710,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
   }
 
   // ##################################################################
-  // # END: Parse: Body
+  // # END: Parse: application/x-www-form-urlencoded
   // ##################################################################
 
   // ##################################################################

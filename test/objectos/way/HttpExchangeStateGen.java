@@ -66,6 +66,7 @@ final class HttpExchangeStateGen {
     gen.value("$PARSE_BODY_FIXED_ZERO");
     gen.value("$PARSE_BODY_FIXED_BUFFER");
     gen.value("$PARSE_BODY_FIXED_BUFFER_READ");
+    gen.value("$PARSE_BODY_FIXED_BUFFER_SUCCESS");
     gen.value("$PARSE_BODY_FIXED_FILE");
     gen.value("$PARSE_BODY_FIXED_FILE_BUFFER");
     gen.value("$PARSE_BODY_FIXED_FILE_READ");
