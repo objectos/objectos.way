@@ -253,89 +253,86 @@ final class HttpExchange implements Http.Exchange, Closeable {
   static final byte $PARSE_PATH = 5;
   static final byte $PARSE_PATH_CONTENTS0 = 6;
   static final byte $PARSE_PATH_CONTENTS1 = 7;
-  static final byte $PARSE_PATH_DECODE = 8;
-  static final byte $PARSE_QUERY = 9;
-  static final byte $PARSE_QUERY0 = 10;
-  static final byte $PARSE_QUERY1 = 11;
-  static final byte $PARSE_QUERY1_DECODE = 12;
-  static final byte $PARSE_QUERY_VALUE = 13;
-  static final byte $PARSE_QUERY_VALUE0 = 14;
-  static final byte $PARSE_QUERY_VALUE1 = 15;
-  static final byte $PARSE_QUERY_VALUE1_DECODE = 16;
-  static final byte $PARSE_VERSION_0_9 = 17;
-  static final byte $PARSE_VERSION_1_1 = 18;
-  static final byte $PARSE_VERSION_OTHERS = 19;
+  static final byte $PARSE_QUERY = 8;
+  static final byte $PARSE_QUERY0 = 9;
+  static final byte $PARSE_QUERY1 = 10;
+  static final byte $PARSE_QUERY_VALUE = 11;
+  static final byte $PARSE_QUERY_VALUE0 = 12;
+  static final byte $PARSE_QUERY_VALUE1 = 13;
+  static final byte $PARSE_VERSION_0_9 = 14;
+  static final byte $PARSE_VERSION_1_1 = 15;
+  static final byte $PARSE_VERSION_OTHERS = 16;
 
-  static final byte $PARSE_HEADER = 20;
-  static final byte $PARSE_HEADER_NAME = 21;
-  static final byte $PARSE_HEADER_VALUE = 22;
-  static final byte $PARSE_HEADER_VALUE_CONTENTS = 23;
-  static final byte $PARSE_HEADER_VALUE_CR = 24;
-  static final byte $PARSE_HEADER_CR = 25;
+  static final byte $PARSE_HEADER = 17;
+  static final byte $PARSE_HEADER_NAME = 18;
+  static final byte $PARSE_HEADER_VALUE = 19;
+  static final byte $PARSE_HEADER_VALUE_CONTENTS = 20;
+  static final byte $PARSE_HEADER_VALUE_CR = 21;
+  static final byte $PARSE_HEADER_CR = 22;
 
-  static final byte $PARSE_BODY = 26;
-  static final byte $PARSE_BODY_FIXED = 27;
-  static final byte $PARSE_BODY_FIXED_ZERO = 28;
-  static final byte $PARSE_BODY_FIXED_BUFFER = 29;
-  static final byte $PARSE_BODY_FIXED_BUFFER_READ = 30;
-  static final byte $PARSE_BODY_FIXED_BUFFER_SUCCESS = 31;
-  static final byte $PARSE_BODY_FIXED_FILE = 32;
-  static final byte $PARSE_BODY_FIXED_FILE_BUFFER = 33;
-  static final byte $PARSE_BODY_FIXED_FILE_READ = 34;
-  static final byte $PARSE_BODY_FIXED_FILE_CLOSE = 35;
+  static final byte $PARSE_BODY = 23;
+  static final byte $PARSE_BODY_FIXED = 24;
+  static final byte $PARSE_BODY_FIXED_ZERO = 25;
+  static final byte $PARSE_BODY_FIXED_BUFFER = 26;
+  static final byte $PARSE_BODY_FIXED_BUFFER_READ = 27;
+  static final byte $PARSE_BODY_FIXED_BUFFER_SUCCESS = 28;
+  static final byte $PARSE_BODY_FIXED_FILE = 29;
+  static final byte $PARSE_BODY_FIXED_FILE_BUFFER = 30;
+  static final byte $PARSE_BODY_FIXED_FILE_READ = 31;
+  static final byte $PARSE_BODY_FIXED_FILE_CLOSE = 32;
 
-  static final byte $PARSE_APP_FORM = 36;
-  static final byte $PARSE_APP_FORM_NAME = 37;
-  static final byte $PARSE_APP_FORM_NAME0 = 38;
-  static final byte $PARSE_APP_FORM_NAME1 = 39;
-  static final byte $PARSE_APP_FORM_NAME1_DECODE = 40;
-  static final byte $PARSE_APP_FORM_VALUE = 41;
-  static final byte $PARSE_APP_FORM_VALUE0 = 42;
-  static final byte $PARSE_APP_FORM_VALUE1 = 43;
-  static final byte $PARSE_APP_FORM_VALUE1_DECODE = 44;
-  static final byte $PARSE_APP_FORM_READ = 45;
-  static final byte $PARSE_APP_FORM_EOF = 46;
-  static final byte $PARSE_APP_FORM_SUCCESS = 47;
-  static final byte $PARSE_APP_FORM_ERROR = 48;
+  static final byte $PARSE_APP_FORM = 33;
+  static final byte $PARSE_APP_FORM_NAME = 34;
+  static final byte $PARSE_APP_FORM_NAME0 = 35;
+  static final byte $PARSE_APP_FORM_NAME1 = 36;
+  static final byte $PARSE_APP_FORM_NAME1_DECODE = 37;
+  static final byte $PARSE_APP_FORM_VALUE = 38;
+  static final byte $PARSE_APP_FORM_VALUE0 = 39;
+  static final byte $PARSE_APP_FORM_VALUE1 = 40;
+  static final byte $PARSE_APP_FORM_VALUE1_DECODE = 41;
+  static final byte $PARSE_APP_FORM_READ = 42;
+  static final byte $PARSE_APP_FORM_EOF = 43;
+  static final byte $PARSE_APP_FORM_SUCCESS = 44;
+  static final byte $PARSE_APP_FORM_ERROR = 45;
 
-  static final byte $DECODE_PERC = 49;
-  static final byte $DECODE_PERC1_LOW = 50;
-  static final byte $DECODE_PERC2_1_LOW = 51;
-  static final byte $DECODE_PERC2_2 = 52;
-  static final byte $DECODE_PERC2_2_HIGH = 53;
-  static final byte $DECODE_PERC2_2_LOW = 54;
-  static final byte $DECODE_PERC3_1_LOW = 55;
-  static final byte $DECODE_PERC3_2 = 56;
-  static final byte $DECODE_PERC3_2_HIGH = 57;
-  static final byte $DECODE_PERC3_2_LOW = 58;
-  static final byte $DECODE_PERC3_3 = 59;
-  static final byte $DECODE_PERC3_3_HIGH = 60;
-  static final byte $DECODE_PERC3_3_LOW = 61;
-  static final byte $DECODE_PERC4_1_LOW = 62;
-  static final byte $DECODE_PERC4_2 = 63;
-  static final byte $DECODE_PERC4_2_HIGH = 64;
-  static final byte $DECODE_PERC4_2_LOW = 65;
-  static final byte $DECODE_PERC4_3 = 66;
-  static final byte $DECODE_PERC4_3_HIGH = 67;
-  static final byte $DECODE_PERC4_3_LOW = 68;
-  static final byte $DECODE_PERC4_4 = 69;
-  static final byte $DECODE_PERC4_4_HIGH = 70;
-  static final byte $DECODE_PERC4_4_LOW = 71;
+  static final byte $DECODE_PERC = 46;
+  static final byte $DECODE_PERC1_LOW = 47;
+  static final byte $DECODE_PERC2_1_LOW = 48;
+  static final byte $DECODE_PERC2_2 = 49;
+  static final byte $DECODE_PERC2_2_HIGH = 50;
+  static final byte $DECODE_PERC2_2_LOW = 51;
+  static final byte $DECODE_PERC3_1_LOW = 52;
+  static final byte $DECODE_PERC3_2 = 53;
+  static final byte $DECODE_PERC3_2_HIGH = 54;
+  static final byte $DECODE_PERC3_2_LOW = 55;
+  static final byte $DECODE_PERC3_3 = 56;
+  static final byte $DECODE_PERC3_3_HIGH = 57;
+  static final byte $DECODE_PERC3_3_LOW = 58;
+  static final byte $DECODE_PERC4_1_LOW = 59;
+  static final byte $DECODE_PERC4_2 = 60;
+  static final byte $DECODE_PERC4_2_HIGH = 61;
+  static final byte $DECODE_PERC4_2_LOW = 62;
+  static final byte $DECODE_PERC4_3 = 63;
+  static final byte $DECODE_PERC4_3_HIGH = 64;
+  static final byte $DECODE_PERC4_3_LOW = 65;
+  static final byte $DECODE_PERC4_4 = 66;
+  static final byte $DECODE_PERC4_4_HIGH = 67;
+  static final byte $DECODE_PERC4_4_LOW = 68;
 
-  static final byte $BAD_REQUEST = 72;
-  static final byte $URI_TOO_LONG = 73;
-  static final byte $REQUEST_HEADER_FIELDS_TOO_LARGE = 74;
-  static final byte $NOT_IMPLEMENTED = 75;
-  static final byte $HTTP_VERSION_NOT_SUPPORTED = 76;
+  static final byte $BAD_REQUEST = 69;
+  static final byte $URI_TOO_LONG = 70;
+  static final byte $REQUEST_HEADER_FIELDS_TOO_LARGE = 71;
+  static final byte $NOT_IMPLEMENTED = 72;
+  static final byte $HTTP_VERSION_NOT_SUPPORTED = 73;
 
-  static final byte $COMMIT = 77;
-  static final byte $WRITE = 78;
+  static final byte $COMMIT = 74;
+  static final byte $WRITE = 75;
 
-  static final byte $REQUEST = 79;
+  static final byte $REQUEST = 76;
 
-  static final byte $RESPONSE_HEADERS = 80;
+  static final byte $RESPONSE_HEADERS = 77;
 
-  static final byte $ERROR = 81;
+  static final byte $ERROR = 78;
 
   // ##################################################################
   // # END: States
@@ -674,16 +671,13 @@ final class HttpExchange implements Http.Exchange, Closeable {
       case $PARSE_PATH -> executeParsePath();
       case $PARSE_PATH_CONTENTS0 -> executeParsePathContents0();
       case $PARSE_PATH_CONTENTS1 -> executeParsePathContents1();
-      case $PARSE_PATH_DECODE -> executeParsePathDecode();
 
       case $PARSE_QUERY -> executeParseQuery();
       case $PARSE_QUERY0 -> executeParseQuery0();
       case $PARSE_QUERY1 -> executeParseQuery1();
-      case $PARSE_QUERY1_DECODE -> executeParseQuery1Decode();
       case $PARSE_QUERY_VALUE -> executeParseQueryValue();
       case $PARSE_QUERY_VALUE0 -> executeParseQueryValue0();
       case $PARSE_QUERY_VALUE1 -> executeParseQueryValue1();
-      case $PARSE_QUERY_VALUE1_DECODE -> executeParseQueryValue1Decode();
 
       case $PARSE_VERSION_0_9 -> executeParseVersion_0_9();
       case $PARSE_VERSION_1_1 -> executeParseVersion_1_1();
@@ -877,15 +871,12 @@ final class HttpExchange implements Http.Exchange, Closeable {
       case $PARSE_PATH,
            $PARSE_PATH_CONTENTS0,
            $PARSE_PATH_CONTENTS1,
-           $PARSE_PATH_DECODE,
            $PARSE_QUERY,
            $PARSE_QUERY0,
            $PARSE_QUERY1,
-           $PARSE_QUERY1_DECODE,
            $PARSE_QUERY_VALUE,
            $PARSE_QUERY_VALUE0,
-           $PARSE_QUERY_VALUE1,
-           $PARSE_QUERY_VALUE1_DECODE -> executeUriTooLong();
+           $PARSE_QUERY_VALUE1 -> executeUriTooLong();
 
       case $PARSE_HEADER,
            $PARSE_HEADER_NAME,
@@ -1127,7 +1118,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
   }
 
   private byte executeParsePathContents0() {
-    while (bufferIndex < bufferLimit) {
+    if (bufferIndex < bufferLimit) {
       final byte b;
       b = buffer[bufferIndex];
 
@@ -1138,26 +1129,26 @@ final class HttpExchange implements Http.Exchange, Closeable {
       final byte code;
       code = PARSE_PATH_TABLE[b];
 
-      switch (code) {
-        case PATH_VALID -> { bufferIndex += 1; }
+      return switch (code) {
+        case PATH_VALID -> { bufferIndex += 1; yield $PARSE_PATH_CONTENTS0; }
 
-        case PATH_PERCENT -> { appendInit(); return $PARSE_PATH_CONTENTS1; }
+        case PATH_PERCENT -> { appendInit(); bufferIndex += 1; yield toDecodePerc($PARSE_PATH_CONTENTS1); }
 
-        case PATH_SPACE -> { path = markToString(); bufferIndex += 1; return pv($PARSE_VERSION_1_1); }
+        case PATH_SPACE -> { path = markToString(); bufferIndex += 1; yield pv($PARSE_VERSION_1_1); }
 
-        case PATH_QUESTION -> { path = markToString(); bufferIndex += 1; return pv($PARSE_QUERY); }
+        case PATH_QUESTION -> { path = markToString(); bufferIndex += 1; yield pv($PARSE_QUERY); }
 
-        case PATH_CRLF -> { path = markToString(); bufferIndex += 1; return pv($PARSE_VERSION_0_9); }
+        case PATH_CRLF -> { path = markToString(); bufferIndex += 1; yield pv($PARSE_VERSION_0_9); }
 
-        default -> { return toBadRequest(InvalidRequestLine.PATH_NEXT_CHAR); }
-      }
+        default -> toBadRequest(InvalidRequestLine.PATH_NEXT_CHAR);
+      };
+    } else {
+      return toRead($PARSE_PATH_CONTENTS0);
     }
-
-    return toRead($PARSE_PATH_CONTENTS0);
   }
 
   private byte executeParsePathContents1() {
-    while (bufferIndex < bufferLimit) {
+    if (bufferIndex < bufferLimit) {
       final byte b;
       b = buffer[bufferIndex];
 
@@ -1168,26 +1159,22 @@ final class HttpExchange implements Http.Exchange, Closeable {
       final byte code;
       code = PARSE_PATH_TABLE[b];
 
-      switch (code) {
-        case PATH_VALID -> { appendChar(b); bufferIndex += 1; }
+      return switch (code) {
+        case PATH_VALID -> { appendChar(b); bufferIndex += 1; yield $PARSE_PATH_CONTENTS1; }
 
-        case PATH_PERCENT -> { byte next = executeParsePathDecode(); if (state != next) { return next; } }
+        case PATH_PERCENT -> { bufferIndex += 1; yield toDecodePerc($PARSE_PATH_CONTENTS1); }
 
-        case PATH_SPACE -> { path = appendToString(); bufferIndex += 1; return pv($PARSE_VERSION_1_1); }
+        case PATH_SPACE -> { path = appendToString(); bufferIndex += 1; yield pv($PARSE_VERSION_1_1); }
 
-        case PATH_QUESTION -> { path = appendToString(); bufferIndex += 1; return pv($PARSE_QUERY); }
+        case PATH_QUESTION -> { path = appendToString(); bufferIndex += 1; yield pv($PARSE_QUERY); }
 
-        case PATH_CRLF -> { path = appendToString(); bufferIndex += 1; return pv($PARSE_VERSION_0_9); }
+        case PATH_CRLF -> { path = appendToString(); bufferIndex += 1; yield pv($PARSE_VERSION_0_9); }
 
-        default -> { return toBadRequest(InvalidRequestLine.PATH_NEXT_CHAR); }
-      }
+        default -> toBadRequest(InvalidRequestLine.PATH_NEXT_CHAR);
+      };
+    } else {
+      return toRead($PARSE_PATH_CONTENTS1);
     }
-
-    return toRead($PARSE_PATH_CONTENTS1);
-  }
-
-  private byte executeParsePathDecode() {
-    return urlDecodePercent($PARSE_PATH_CONTENTS1, $PARSE_PATH_DECODE, InvalidRequestLine.PATH_PERCENT);
   }
 
   private byte pv(byte next) {
@@ -1353,19 +1340,11 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
         case QUERY_CRLF -> { object = appendToString(); bufferIndex += 1; makeQueryParam(""); yield $PARSE_VERSION_0_9; }
 
-        default -> toBadRequest(InvalidRequestLine.QUERY_PERCENT);
+        default -> toBadRequest(InvalidRequestLine.QUERY_CHAR);
       };
     } else {
       return toRead($PARSE_QUERY1);
     }
-  }
-
-  private byte executeParseQuery1Decode() {
-    return urlDecodePercent(
-        $PARSE_QUERY1,
-        $PARSE_QUERY1_DECODE,
-        InvalidRequestLine.QUERY_PERCENT
-    );
   }
 
   private byte executeParseQueryValue() {
@@ -1426,19 +1405,11 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
         case QUERY_CRLF -> { final String v = appendToString(); bufferIndex += 1; makeQueryParam(v); yield $PARSE_VERSION_0_9; }
 
-        default -> toBadRequest(InvalidRequestLine.QUERY_PERCENT);
+        default -> toBadRequest(InvalidRequestLine.QUERY_CHAR);
       };
     } else {
       return toRead($PARSE_QUERY_VALUE1);
     }
-  }
-
-  private byte executeParseQueryValue1Decode() {
-    return urlDecodePercent(
-        $PARSE_QUERY_VALUE1,
-        $PARSE_QUERY_VALUE1_DECODE,
-        InvalidRequestLine.QUERY_PERCENT
-    );
   }
 
   @SuppressWarnings("unchecked")
@@ -1497,12 +1468,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
       makeQueryParam("");
     }
-  }
-
-  private byte toDecodePerc(byte next) {
-    stateNext = next;
-
-    return $DECODE_PERC;
   }
 
   private static final int PERC1_HIGH = 0;
@@ -1574,7 +1539,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
       appendChar(perc1);
 
-      return stateNext;
+      return (byte) markEnd;
     } else {
       return toDecodePercExhausted();
     }
@@ -1598,6 +1563,10 @@ final class HttpExchange implements Http.Exchange, Closeable {
       final int perc2;
       perc2 = decodePerc(decodePerc[PERC2_HIGH], low);
 
+      if (!utf8Byte(perc2)) {
+        return toDecodePercBadRequest();
+      }
+
       final int c;
       c = (perc1 & 0b1_1111) << 6 | (perc2 & 0b11_1111);
 
@@ -1607,7 +1576,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
       appendChar(c);
 
-      return stateNext;
+      return (byte) markEnd;
     } else {
       return toDecodePercExhausted();
     }
@@ -1651,7 +1620,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
       appendChar(c);
 
-      return stateNext;
+      return (byte) markEnd;
     } else {
       return toDecodePercExhausted();
     }
@@ -1702,7 +1671,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
       appendCodePoint(c);
 
-      return stateNext;
+      return (byte) markEnd;
     } else {
       return toDecodePercExhausted();
     }
@@ -1747,8 +1716,16 @@ final class HttpExchange implements Http.Exchange, Closeable {
     }
   }
 
+  private byte toDecodePerc(byte next) {
+    markEnd = next;
+
+    return $DECODE_PERC;
+  }
+
   private byte toDecodePercBadRequest() {
-    return switch (stateNext) {
+    return switch (markEnd) {
+      case $PARSE_PATH_CONTENTS1 -> toBadRequest(InvalidRequestLine.PATH_PERCENT);
+
       case $PARSE_QUERY1, $PARSE_QUERY_VALUE1 -> toBadRequest(InvalidRequestLine.QUERY_PERCENT);
 
       default -> throw new AssertionError("Unexpected stateNext=" + stateNext);

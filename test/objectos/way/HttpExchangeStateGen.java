@@ -37,15 +37,12 @@ final class HttpExchangeStateGen {
     gen.value("$PARSE_PATH");
     gen.value("$PARSE_PATH_CONTENTS0");
     gen.value("$PARSE_PATH_CONTENTS1");
-    gen.value("$PARSE_PATH_DECODE");
     gen.value("$PARSE_QUERY");
     gen.value("$PARSE_QUERY0");
     gen.value("$PARSE_QUERY1");
-    gen.value("$PARSE_QUERY1_DECODE");
     gen.value("$PARSE_QUERY_VALUE");
     gen.value("$PARSE_QUERY_VALUE0");
     gen.value("$PARSE_QUERY_VALUE1");
-    gen.value("$PARSE_QUERY_VALUE1_DECODE");
     gen.value("$PARSE_VERSION_0_9");
     gen.value("$PARSE_VERSION_1_1");
     gen.value("$PARSE_VERSION_OTHERS");
