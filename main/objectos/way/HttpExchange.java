@@ -1182,6 +1182,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
   private static final byte QUERY_AMPERSAND = 5;
   private static final byte QUERY_SPACE = 6;
   private static final byte QUERY_CRLF = 7;
+  private static final byte QUERY_BAD = 8;
 
   static {
     final byte[] table;
@@ -1226,79 +1227,89 @@ final class HttpExchange implements Http.Exchange, Closeable {
     PARSE_QUERY_TABLE = table;
   }
 
+  private byte parseQueryTable(byte b) {
+    if (b < 0) {
+      return QUERY_BAD;
+    } else {
+      return PARSE_QUERY_TABLE[b];
+    }
+  }
+
   private byte executeParseQuery() {
     // where the current key begins
     mark = bufferIndex;
 
     bitSet(BIT_QUERY_STRING);
 
+    state = $PARSE_QUERY0;
+
     return executeParseQuery0();
   }
 
   private byte executeParseQuery0() {
-    while (bufferIndex < bufferLimit) {
+    if (bufferIndex < bufferLimit) {
       final byte b;
       b = buffer[bufferIndex];
 
-      if (b < 0) {
-        return toBadRequest(InvalidRequestLine.QUERY_CHAR);
-      }
-
       final byte code;
-      code = PARSE_QUERY_TABLE[b];
+      code = parseQueryTable(b);
 
-      switch (code) {
-        case QUERY_VALID -> { bufferIndex += 1; }
+      return switch (code) {
+        case QUERY_VALID -> { bufferIndex += 1; yield $PARSE_QUERY0; }
 
-        case QUERY_PERCENT, QUERY_PLUS -> { appendInit(); return $PARSE_QUERY1; }
+        case QUERY_PERCENT, QUERY_PLUS -> { appendInit(); yield $PARSE_QUERY1; }
 
-        case QUERY_EQUALS -> { object = markToString(); bufferIndex += 1; return $PARSE_QUERY_VALUE; }
+        case QUERY_EQUALS -> { object = markToString(); bufferIndex += 1; yield $PARSE_QUERY_VALUE; }
 
-        case QUERY_AMPERSAND -> { object = markToString(); bufferIndex += 1; makeQueryParam(""); return $PARSE_QUERY; }
+        case QUERY_AMPERSAND -> { object = markToString(); bufferIndex += 1; makeQueryParam(""); yield $PARSE_QUERY; }
 
-        case QUERY_SPACE -> { makeIfNecessary(); bufferIndex += 1; return $PARSE_VERSION_1_1; }
+        case QUERY_SPACE -> { makeIfNecessary(); bufferIndex += 1; yield $PARSE_VERSION_1_1; }
 
-        case QUERY_CRLF -> { makeIfNecessary(); bufferIndex += 1; return $PARSE_VERSION_0_9; }
+        case QUERY_CRLF -> { makeIfNecessary(); bufferIndex += 1; yield $PARSE_VERSION_0_9; }
 
-        default -> { return toBadRequest(InvalidRequestLine.QUERY_CHAR); }
-      }
+        default -> toBadRequest(InvalidRequestLine.QUERY_CHAR);
+      };
+    } else {
+      return toRead($PARSE_QUERY0);
     }
-
-    return toRead($PARSE_QUERY0);
   }
 
   private byte executeParseQuery1() {
-    while (bufferIndex < bufferLimit) {
+    if (bufferIndex < bufferLimit) {
       final byte b;
       b = buffer[bufferIndex];
 
-      if (b < 0) {
-        return toBadRequest(InvalidRequestLine.QUERY_PERCENT);
-      }
-
       final byte code;
-      code = PARSE_QUERY_TABLE[b];
+      code = parseQueryTable(b);
 
-      switch (code) {
-        case QUERY_VALID -> { appendChar(b); bufferIndex += 1; }
+      return switch (code) {
+        case QUERY_VALID -> { appendChar(b); bufferIndex += 1; yield $PARSE_QUERY1; }
 
-        case QUERY_PERCENT -> { byte next = executeParseQuery1Decode(); if (state != next) { return next; } }
+        case QUERY_PERCENT -> {
+          byte next = executeParseQuery1Decode();
 
-        case QUERY_PLUS -> { appendChar(' '); bufferIndex += 1; }
+          if (state != next) {
+            yield next;
+          } else {
+            yield $PARSE_QUERY1;
+          }
+        }
 
-        case QUERY_EQUALS -> { object = appendToString(); bufferIndex += 1; return $PARSE_QUERY_VALUE; }
+        case QUERY_PLUS -> { appendChar(' '); bufferIndex += 1; yield $PARSE_QUERY1; }
 
-        case QUERY_AMPERSAND -> { object = appendToString(); bufferIndex += 1; makeQueryParam(""); return $PARSE_QUERY; }
+        case QUERY_EQUALS -> { object = appendToString(); bufferIndex += 1; yield $PARSE_QUERY_VALUE; }
 
-        case QUERY_SPACE -> { object = appendToString(); bufferIndex += 1; makeQueryParam(""); return $PARSE_VERSION_1_1; }
+        case QUERY_AMPERSAND -> { object = appendToString(); bufferIndex += 1; makeQueryParam(""); yield $PARSE_QUERY; }
 
-        case QUERY_CRLF -> { object = appendToString(); bufferIndex += 1; makeQueryParam(""); return $PARSE_VERSION_0_9; }
+        case QUERY_SPACE -> { object = appendToString(); bufferIndex += 1; makeQueryParam(""); yield $PARSE_VERSION_1_1; }
 
-        default -> { return toBadRequest(InvalidRequestLine.QUERY_PERCENT); }
-      }
+        case QUERY_CRLF -> { object = appendToString(); bufferIndex += 1; makeQueryParam(""); yield $PARSE_VERSION_0_9; }
+
+        default -> toBadRequest(InvalidRequestLine.QUERY_PERCENT);
+      };
+    } else {
+      return toRead($PARSE_QUERY1);
     }
-
-    return toRead($PARSE_QUERY1);
   }
 
   private byte executeParseQuery1Decode() {
@@ -1313,69 +1324,70 @@ final class HttpExchange implements Http.Exchange, Closeable {
     // where the current value begins
     mark = bufferIndex;
 
+    state = $PARSE_QUERY_VALUE0;
+
     return executeParseQueryValue0();
   }
 
   private byte executeParseQueryValue0() {
-    while (bufferIndex < bufferLimit) {
+    if (bufferIndex < bufferLimit) {
       final byte b;
       b = buffer[bufferIndex];
 
-      if (b < 0) {
-        return toBadRequest(InvalidRequestLine.QUERY_CHAR);
-      }
-
       final byte code;
-      code = PARSE_QUERY_TABLE[b];
+      code = parseQueryTable(b);
 
-      switch (code) {
-        case QUERY_VALID, QUERY_EQUALS -> { bufferIndex += 1; }
+      return switch (code) {
+        case QUERY_VALID, QUERY_EQUALS -> { bufferIndex += 1; yield $PARSE_QUERY_VALUE0; }
 
-        case QUERY_PERCENT, QUERY_PLUS -> { appendInit(); return $PARSE_QUERY_VALUE1; }
+        case QUERY_PERCENT, QUERY_PLUS -> { appendInit(); yield $PARSE_QUERY_VALUE1; }
 
-        case QUERY_AMPERSAND -> { final String v = markToString(); bufferIndex += 1; makeQueryParam(v); return $PARSE_QUERY; }
+        case QUERY_AMPERSAND -> { final String v = markToString(); bufferIndex += 1; makeQueryParam(v); yield $PARSE_QUERY; }
 
-        case QUERY_SPACE -> { final String v = markToString(); bufferIndex += 1; makeQueryParam(v); return $PARSE_VERSION_1_1; }
+        case QUERY_SPACE -> { final String v = markToString(); bufferIndex += 1; makeQueryParam(v); yield $PARSE_VERSION_1_1; }
 
-        case QUERY_CRLF -> { final String v = markToString(); bufferIndex += 1; makeQueryParam(v); return $PARSE_VERSION_0_9; }
+        case QUERY_CRLF -> { final String v = markToString(); bufferIndex += 1; makeQueryParam(v); yield $PARSE_VERSION_0_9; }
 
-        default -> { return toBadRequest(InvalidRequestLine.QUERY_CHAR); }
-      }
+        default -> toBadRequest(InvalidRequestLine.QUERY_CHAR);
+      };
+    } else {
+      return toRead($PARSE_QUERY_VALUE0);
     }
-
-    return toRead($PARSE_QUERY_VALUE0);
   }
 
   private byte executeParseQueryValue1() {
-    while (bufferIndex < bufferLimit) {
+    if (bufferIndex < bufferLimit) {
       final byte b;
       b = buffer[bufferIndex];
 
-      if (b < 0) {
-        return toBadRequest(InvalidRequestLine.QUERY_PERCENT);
-      }
-
       final byte code;
-      code = PARSE_QUERY_TABLE[b];
+      code = parseQueryTable(b);
 
-      switch (code) {
-        case QUERY_VALID, QUERY_EQUALS -> { appendChar(b); bufferIndex += 1; }
+      return switch (code) {
+        case QUERY_VALID, QUERY_EQUALS -> { appendChar(b); bufferIndex += 1; yield $PARSE_QUERY_VALUE1; }
 
-        case QUERY_PERCENT -> { byte next = executeParseQueryValue1Decode(); if (state != next) { return next; } }
+        case QUERY_PERCENT -> {
+          byte next = executeParseQueryValue1Decode();
+          if (state != next) {
+            yield next;
+          } else {
+            yield $PARSE_QUERY_VALUE1;
+          }
+        }
 
-        case QUERY_PLUS -> { appendChar(' '); bufferIndex += 1; }
+        case QUERY_PLUS -> { appendChar(' '); bufferIndex += 1; yield $PARSE_QUERY_VALUE1; }
 
-        case QUERY_AMPERSAND -> { final String v = appendToString(); bufferIndex += 1; makeQueryParam(v); return $PARSE_QUERY; }
+        case QUERY_AMPERSAND -> { final String v = appendToString(); bufferIndex += 1; makeQueryParam(v); yield $PARSE_QUERY; }
 
-        case QUERY_SPACE -> { final String v = appendToString(); bufferIndex += 1; makeQueryParam(v); return $PARSE_VERSION_1_1; }
+        case QUERY_SPACE -> { final String v = appendToString(); bufferIndex += 1; makeQueryParam(v); yield $PARSE_VERSION_1_1; }
 
-        case QUERY_CRLF -> { final String v = appendToString(); bufferIndex += 1; makeQueryParam(v); return $PARSE_VERSION_0_9; }
+        case QUERY_CRLF -> { final String v = appendToString(); bufferIndex += 1; makeQueryParam(v); yield $PARSE_VERSION_0_9; }
 
-        default -> { return toBadRequest(InvalidRequestLine.QUERY_PERCENT); }
-      }
+        default -> toBadRequest(InvalidRequestLine.QUERY_PERCENT);
+      };
+    } else {
+      return toRead($PARSE_QUERY_VALUE1);
     }
-
-    return toRead($PARSE_QUERY_VALUE0);
   }
 
   private byte executeParseQueryValue1Decode() {
