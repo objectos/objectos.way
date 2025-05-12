@@ -298,20 +298,44 @@ final class HttpExchange implements Http.Exchange, Closeable {
   static final byte $PARSE_APP_FORM_SUCCESS = 47;
   static final byte $PARSE_APP_FORM_ERROR = 48;
 
-  static final byte $BAD_REQUEST = 49;
-  static final byte $URI_TOO_LONG = 50;
-  static final byte $REQUEST_HEADER_FIELDS_TOO_LARGE = 51;
-  static final byte $NOT_IMPLEMENTED = 52;
-  static final byte $HTTP_VERSION_NOT_SUPPORTED = 53;
+  static final byte $DECODE_PERC = 49;
+  static final byte $DECODE_PERC1_LOW = 50;
+  static final byte $DECODE_PERC2_1_LOW = 51;
+  static final byte $DECODE_PERC2_2 = 52;
+  static final byte $DECODE_PERC2_2_HIGH = 53;
+  static final byte $DECODE_PERC2_2_LOW = 54;
+  static final byte $DECODE_PERC3_1_LOW = 55;
+  static final byte $DECODE_PERC3_2 = 56;
+  static final byte $DECODE_PERC3_2_HIGH = 57;
+  static final byte $DECODE_PERC3_2_LOW = 58;
+  static final byte $DECODE_PERC3_3 = 59;
+  static final byte $DECODE_PERC3_3_HIGH = 60;
+  static final byte $DECODE_PERC3_3_LOW = 61;
+  static final byte $DECODE_PERC4_1_LOW = 62;
+  static final byte $DECODE_PERC4_2 = 63;
+  static final byte $DECODE_PERC4_2_HIGH = 64;
+  static final byte $DECODE_PERC4_2_LOW = 65;
+  static final byte $DECODE_PERC4_3 = 66;
+  static final byte $DECODE_PERC4_3_HIGH = 67;
+  static final byte $DECODE_PERC4_3_LOW = 68;
+  static final byte $DECODE_PERC4_4 = 69;
+  static final byte $DECODE_PERC4_4_HIGH = 70;
+  static final byte $DECODE_PERC4_4_LOW = 71;
 
-  static final byte $COMMIT = 54;
-  static final byte $WRITE = 55;
+  static final byte $BAD_REQUEST = 72;
+  static final byte $URI_TOO_LONG = 73;
+  static final byte $REQUEST_HEADER_FIELDS_TOO_LARGE = 74;
+  static final byte $NOT_IMPLEMENTED = 75;
+  static final byte $HTTP_VERSION_NOT_SUPPORTED = 76;
 
-  static final byte $REQUEST = 56;
+  static final byte $COMMIT = 77;
+  static final byte $WRITE = 78;
 
-  static final byte $RESPONSE_HEADERS = 57;
+  static final byte $REQUEST = 79;
 
-  static final byte $ERROR = 58;
+  static final byte $RESPONSE_HEADERS = 80;
+
+  static final byte $ERROR = 81;
 
   // ##################################################################
   // # END: States
@@ -353,6 +377,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
   private int bufferLimit;
 
   private final Clock clock;
+
+  private byte[] decodePerc;
 
   private Map<String, Object> formParams;
 
@@ -693,6 +719,30 @@ final class HttpExchange implements Http.Exchange, Closeable {
       case $PARSE_APP_FORM_EOF -> executeParseAppFormEof();
       case $PARSE_APP_FORM_SUCCESS -> executeParseAppFormSuccess();
 
+      case $DECODE_PERC -> executeDecodePerc();
+      case $DECODE_PERC1_LOW -> executeDecodePerc1Low();
+      case $DECODE_PERC2_1_LOW -> executeDecodePerc(PERC1_LOW, $DECODE_PERC2_2);
+      case $DECODE_PERC2_2 -> executeDecodePerc($DECODE_PERC2_2_HIGH);
+      case $DECODE_PERC2_2_HIGH -> executeDecodePerc(PERC2_HIGH, $DECODE_PERC2_2_LOW);
+      case $DECODE_PERC2_2_LOW -> executeDecodePerc2_2_Low();
+      case $DECODE_PERC3_1_LOW -> executeDecodePerc(PERC1_LOW, $DECODE_PERC3_2);
+      case $DECODE_PERC3_2 -> executeDecodePerc($DECODE_PERC3_2_HIGH);
+      case $DECODE_PERC3_2_HIGH -> executeDecodePerc(PERC2_HIGH, $DECODE_PERC3_2_LOW);
+      case $DECODE_PERC3_2_LOW -> executeDecodePerc(PERC2_LOW, $DECODE_PERC3_3);
+      case $DECODE_PERC3_3 -> executeDecodePerc($DECODE_PERC3_3_HIGH);
+      case $DECODE_PERC3_3_HIGH -> executeDecodePerc(PERC3_HIGH, $DECODE_PERC3_3_LOW);
+      case $DECODE_PERC3_3_LOW -> executeDecodePerc3_3_Low();
+      case $DECODE_PERC4_1_LOW -> executeDecodePerc(PERC1_LOW, $DECODE_PERC4_2);
+      case $DECODE_PERC4_2 -> executeDecodePerc($DECODE_PERC4_2_HIGH);
+      case $DECODE_PERC4_2_HIGH -> executeDecodePerc(PERC2_HIGH, $DECODE_PERC4_2_LOW);
+      case $DECODE_PERC4_2_LOW -> executeDecodePerc(PERC2_LOW, $DECODE_PERC4_3);
+      case $DECODE_PERC4_3 -> executeDecodePerc($DECODE_PERC4_3_HIGH);
+      case $DECODE_PERC4_3_HIGH -> executeDecodePerc(PERC3_HIGH, $DECODE_PERC4_3_LOW);
+      case $DECODE_PERC4_3_LOW -> executeDecodePerc(PERC3_LOW, $DECODE_PERC4_4);
+      case $DECODE_PERC4_4 -> executeDecodePerc($DECODE_PERC4_4_HIGH);
+      case $DECODE_PERC4_4_HIGH -> executeDecodePerc(PERC4_HIGH, $DECODE_PERC4_4_LOW);
+      case $DECODE_PERC4_4_LOW -> executeDecodePerc4_4_Low();
+
       case $BAD_REQUEST -> executeBadRequest();
       case $URI_TOO_LONG -> executeUriTooLong();
       case $REQUEST_HEADER_FIELDS_TOO_LARGE -> executeRequestHeaderFieldsTooLarge();
@@ -729,6 +779,10 @@ final class HttpExchange implements Http.Exchange, Closeable {
     bufferLimit = 0;
 
     bufferIndex = 0;
+
+    if (decodePerc != null) {
+      Arrays.fill(decodePerc, (byte) 0);
+    }
 
     if (formParams != null) {
       formParams.clear();
@@ -1257,7 +1311,9 @@ final class HttpExchange implements Http.Exchange, Closeable {
       return switch (code) {
         case QUERY_VALID -> { bufferIndex += 1; yield $PARSE_QUERY0; }
 
-        case QUERY_PERCENT, QUERY_PLUS -> { appendInit(); yield $PARSE_QUERY1; }
+        case QUERY_PERCENT -> { appendInit(); bufferIndex += 1; yield toDecodePerc($PARSE_QUERY1); }
+
+        case QUERY_PLUS -> { appendInit(); appendChar(' '); bufferIndex += 1; yield $PARSE_QUERY1; }
 
         case QUERY_EQUALS -> { object = markToString(); bufferIndex += 1; yield $PARSE_QUERY_VALUE; }
 
@@ -1285,15 +1341,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
       return switch (code) {
         case QUERY_VALID -> { appendChar(b); bufferIndex += 1; yield $PARSE_QUERY1; }
 
-        case QUERY_PERCENT -> {
-          byte next = executeParseQuery1Decode();
-
-          if (state != next) {
-            yield next;
-          } else {
-            yield $PARSE_QUERY1;
-          }
-        }
+        case QUERY_PERCENT -> { bufferIndex += 1; yield toDecodePerc($PARSE_QUERY1); }
 
         case QUERY_PLUS -> { appendChar(' '); bufferIndex += 1; yield $PARSE_QUERY1; }
 
@@ -1340,7 +1388,9 @@ final class HttpExchange implements Http.Exchange, Closeable {
       return switch (code) {
         case QUERY_VALID, QUERY_EQUALS -> { bufferIndex += 1; yield $PARSE_QUERY_VALUE0; }
 
-        case QUERY_PERCENT, QUERY_PLUS -> { appendInit(); yield $PARSE_QUERY_VALUE1; }
+        case QUERY_PERCENT -> { appendInit(); bufferIndex += 1; yield toDecodePerc($PARSE_QUERY_VALUE1); }
+
+        case QUERY_PLUS -> { appendInit(); appendChar(' '); bufferIndex += 1; yield $PARSE_QUERY_VALUE1; }
 
         case QUERY_AMPERSAND -> { final String v = markToString(); bufferIndex += 1; makeQueryParam(v); yield $PARSE_QUERY; }
 
@@ -1366,14 +1416,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
       return switch (code) {
         case QUERY_VALID, QUERY_EQUALS -> { appendChar(b); bufferIndex += 1; yield $PARSE_QUERY_VALUE1; }
 
-        case QUERY_PERCENT -> {
-          byte next = executeParseQueryValue1Decode();
-          if (state != next) {
-            yield next;
-          } else {
-            yield $PARSE_QUERY_VALUE1;
-          }
-        }
+        case QUERY_PERCENT -> { bufferIndex += 1; yield toDecodePerc($PARSE_QUERY_VALUE1); }
 
         case QUERY_PLUS -> { appendChar(' '); bufferIndex += 1; yield $PARSE_QUERY_VALUE1; }
 
@@ -1454,6 +1497,266 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
       makeQueryParam("");
     }
+  }
+
+  private byte toDecodePerc(byte next) {
+    stateNext = next;
+
+    return $DECODE_PERC;
+  }
+
+  private static final int PERC1_HIGH = 0;
+  private static final int PERC1_LOW = 1;
+  private static final int PERC2_HIGH = 2;
+  private static final int PERC2_LOW = 3;
+  private static final int PERC3_HIGH = 4;
+  private static final int PERC3_LOW = 5;
+  private static final int PERC4_HIGH = 6;
+  private static final int PERC4_LOW = 7;
+
+  private byte executeDecodePerc() {
+    if (decodePerc == null) {
+      decodePerc = new byte[PERC4_LOW];
+    }
+
+    if (bufferIndex < bufferLimit) {
+      final byte b;
+      b = buffer[bufferIndex++];
+
+      final byte high;
+      high = Bytes.fromHexDigit(b);
+
+      if (high < 0) {
+        return toDecodePercBadRequest();
+      }
+
+      decodePerc[PERC1_HIGH] = high;
+
+      return switch (high) {
+        // 0yyyzzzz
+        case 0b0000, 0b0001,
+             0b0010, 0b0011,
+             0b0100, 0b0101, 0b0110, 0b0111 -> $DECODE_PERC1_LOW;
+
+        // 110xxxyy 10yyzzzz
+        case 0b1100, 0b1101 -> $DECODE_PERC2_1_LOW;
+
+        // 1110wwww 10xxxxyy 10yyzzzz
+        case 0b1110 -> $DECODE_PERC3_1_LOW;
+
+        // 11110uvv 10vvwwww 10xxxxyy 10yyzzzz
+        case 0b1111 -> $DECODE_PERC4_1_LOW;
+
+        default -> toDecodePercBadRequest();
+      };
+    } else {
+      return toDecodePercExhausted();
+    }
+  }
+
+  private byte executeDecodePerc1Low() {
+    if (bufferIndex < bufferLimit) {
+      final byte b;
+      b = buffer[bufferIndex++];
+
+      final byte low;
+      low = Bytes.fromHexDigit(b);
+
+      if (low < 0) {
+        return toDecodePercBadRequest();
+      }
+
+      final byte high;
+      high = decodePerc[PERC1_HIGH];
+
+      final int perc1;
+      perc1 = decodePerc(high, low);
+
+      appendChar(perc1);
+
+      return stateNext;
+    } else {
+      return toDecodePercExhausted();
+    }
+  }
+
+  private byte executeDecodePerc2_2_Low() {
+    if (bufferIndex < bufferLimit) {
+      final byte b;
+      b = buffer[bufferIndex++];
+
+      final byte low;
+      low = Bytes.fromHexDigit(b);
+
+      if (low < 0) {
+        return toDecodePercBadRequest();
+      }
+
+      final int perc1;
+      perc1 = decodePerc(decodePerc[PERC1_HIGH], decodePerc[PERC1_LOW]);
+
+      final int perc2;
+      perc2 = decodePerc(decodePerc[PERC2_HIGH], low);
+
+      final int c;
+      c = (perc1 & 0b1_1111) << 6 | (perc2 & 0b11_1111);
+
+      if (c < 0x80 || c > 0x7FF) {
+        return toDecodePercBadRequest();
+      }
+
+      appendChar(c);
+
+      return stateNext;
+    } else {
+      return toDecodePercExhausted();
+    }
+  }
+
+  private byte executeDecodePerc3_3_Low() {
+    if (bufferIndex < bufferLimit) {
+      final byte b;
+      b = buffer[bufferIndex++];
+
+      final byte low;
+      low = Bytes.fromHexDigit(b);
+
+      if (low < 0) {
+        return toDecodePercBadRequest();
+      }
+
+      final int perc1;
+      perc1 = decodePerc(decodePerc[PERC1_HIGH], decodePerc[PERC1_LOW]);
+
+      final int perc2;
+      perc2 = decodePerc(decodePerc[PERC2_HIGH], decodePerc[PERC2_LOW]);
+
+      if (!utf8Byte(perc2)) {
+        return toDecodePercBadRequest();
+      }
+
+      final int perc3;
+      perc3 = decodePerc(decodePerc[PERC3_HIGH], low);
+
+      if (!utf8Byte(perc3)) {
+        return toDecodePercBadRequest();
+      }
+
+      final int c;
+      c = (perc1 & 0b1111) << 12 | (perc2 & 0b11_1111) << 6 | (perc3 & 0b11_1111);
+
+      if (c < 0x800 || c > 0xFFFF || Character.isSurrogate((char) c)) {
+        return toDecodePercBadRequest();
+      }
+
+      appendChar(c);
+
+      return stateNext;
+    } else {
+      return toDecodePercExhausted();
+    }
+  }
+
+  private byte executeDecodePerc4_4_Low() {
+    if (bufferIndex < bufferLimit) {
+      final byte b;
+      b = buffer[bufferIndex++];
+
+      final byte low;
+      low = Bytes.fromHexDigit(b);
+
+      if (low < 0) {
+        return toDecodePercBadRequest();
+      }
+
+      final int perc1;
+      perc1 = decodePerc(decodePerc[PERC1_HIGH], decodePerc[PERC1_LOW]);
+
+      final int perc2;
+      perc2 = decodePerc(decodePerc[PERC2_HIGH], decodePerc[PERC2_LOW]);
+
+      if (!utf8Byte(perc2)) {
+        return toDecodePercBadRequest();
+      }
+
+      final int perc3;
+      perc3 = decodePerc(decodePerc[PERC3_HIGH], decodePerc[PERC3_LOW]);
+
+      if (!utf8Byte(perc3)) {
+        return toDecodePercBadRequest();
+      }
+
+      final int perc4;
+      perc4 = decodePerc(decodePerc[PERC4_HIGH], low);
+
+      if (!utf8Byte(perc4)) {
+        return toDecodePercBadRequest();
+      }
+
+      final int c;
+      c = (perc1 & 0b111) << 18 | (perc2 & 0b11_1111) << 12 | (perc3 & 0b11_1111) << 6 | (perc4 & 0b11_1111);
+
+      if (c < 0x1_0000 || !Character.isValidCodePoint(c)) {
+        return toDecodePercBadRequest();
+      }
+
+      appendCodePoint(c);
+
+      return stateNext;
+    } else {
+      return toDecodePercExhausted();
+    }
+  }
+
+  private int decodePerc(byte high, byte low) {
+    return (high << 4) | low;
+  }
+
+  private byte executeDecodePerc(byte next) {
+    if (bufferIndex < bufferLimit) {
+      final byte b;
+      b = buffer[bufferIndex++];
+
+      if (b != '%') {
+        return toDecodePercBadRequest();
+      }
+
+      return next;
+    } else {
+      return toDecodePercExhausted();
+    }
+  }
+
+  private byte executeDecodePerc(int index, byte next) {
+    if (bufferIndex < bufferLimit) {
+      final byte b;
+      b = buffer[bufferIndex++];
+
+      final byte value;
+      value = Bytes.fromHexDigit(b);
+
+      if (value < 0) {
+        return toDecodePercBadRequest();
+      }
+
+      decodePerc[index] = value;
+
+      return next;
+    } else {
+      return toDecodePercExhausted();
+    }
+  }
+
+  private byte toDecodePercBadRequest() {
+    return switch (stateNext) {
+      case $PARSE_QUERY1, $PARSE_QUERY_VALUE1 -> toBadRequest(InvalidRequestLine.QUERY_PERCENT);
+
+      default -> throw new AssertionError("Unexpected stateNext=" + stateNext);
+    };
+  }
+
+  private byte toDecodePercExhausted() {
+    return toRead(state);
   }
 
   private byte urlDecodePercent(byte success, byte read, ClientError badRequest) {

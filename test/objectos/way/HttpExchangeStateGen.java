@@ -90,6 +90,32 @@ final class HttpExchangeStateGen {
 
     gen.line();
 
+    gen.value("$DECODE_PERC");
+    gen.value("$DECODE_PERC1_LOW");
+    gen.value("$DECODE_PERC2_1_LOW");
+    gen.value("$DECODE_PERC2_2");
+    gen.value("$DECODE_PERC2_2_HIGH");
+    gen.value("$DECODE_PERC2_2_LOW");
+    gen.value("$DECODE_PERC3_1_LOW");
+    gen.value("$DECODE_PERC3_2");
+    gen.value("$DECODE_PERC3_2_HIGH");
+    gen.value("$DECODE_PERC3_2_LOW");
+    gen.value("$DECODE_PERC3_3");
+    gen.value("$DECODE_PERC3_3_HIGH");
+    gen.value("$DECODE_PERC3_3_LOW");
+    gen.value("$DECODE_PERC4_1_LOW");
+    gen.value("$DECODE_PERC4_2");
+    gen.value("$DECODE_PERC4_2_HIGH");
+    gen.value("$DECODE_PERC4_2_LOW");
+    gen.value("$DECODE_PERC4_3");
+    gen.value("$DECODE_PERC4_3_HIGH");
+    gen.value("$DECODE_PERC4_3_LOW");
+    gen.value("$DECODE_PERC4_4");
+    gen.value("$DECODE_PERC4_4_HIGH");
+    gen.value("$DECODE_PERC4_4_LOW");
+
+    gen.line();
+
     gen.value("$BAD_REQUEST");
     gen.value("$URI_TOO_LONG");
     gen.value("$REQUEST_HEADER_FIELDS_TOO_LARGE");
