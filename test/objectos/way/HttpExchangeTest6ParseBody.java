@@ -512,6 +512,50 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
     formValid(payload, expected);
   }
 
+  @Test(dataProvider = "appFormValidProvider")
+  public void appFormValidWithFile(String payload, Map<String, Object> expected, String description) {
+    exec(test -> {
+      test.bufferSize(128, 128);
+
+      test.xch(xch -> {
+        xch.req(formFileRequest(127, payload));
+
+        final byte[] bytes;
+        bytes = payload.getBytes(StandardCharsets.ISO_8859_1);
+
+        xch.req(bytes);
+
+        xch.handler(http -> {
+          formAssert(http, expected);
+        });
+
+        xch.resp(OK_RESP);
+      });
+    });
+  }
+
+  @Test(dataProvider = "appFormValidProvider")
+  public void appFormValidWithFileSlow(String payload, Map<String, Object> expected, String description) {
+    exec(test -> {
+      test.bufferSize(128, 128);
+
+      test.xch(xch -> {
+        xch.req(formFileRequest(127, payload));
+
+        final byte[] bytes;
+        bytes = payload.getBytes(StandardCharsets.ISO_8859_1);
+
+        xch.req(Y.slowStream(1, bytes));
+
+        xch.handler(http -> {
+          formAssert(http, expected);
+        });
+
+        xch.resp(OK_RESP);
+      });
+    });
+  }
+
   @DataProvider
   public Object[][] appFormInvalidProvider() {
     final List<Object[]> l;
@@ -549,9 +593,76 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
     return arr("key=" + val, "value contains the " + Integer.toHexString(value) + " invalid byte");
   }
 
+  private static final String APP_FORM_BAD_REQUEST = """
+  HTTP/1.1 400 Bad Request\r
+  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+  Content-Type: text/plain; charset=utf-8\r
+  Content-Length: 67\r
+  Connection: close\r
+  \r
+  Invalid application/x-www-form-urlencoded content in request body.
+  """;
+
   @Test(dataProvider = "appFormInvalidProvider")
   public void appFormInvalid(String payload, String description) {
-    formInvalid(payload);
+    exec(test -> {
+      test.bufferSize(128, 256);
+
+      test.xch(xch -> {
+        xch.req("""
+        POST / HTTP/1.1\r
+        Host: Host\r
+        Content-Type: application/x-www-form-urlencoded\r
+        Content-Length: %d\r
+        \r
+        %s\
+        """.formatted(payload.length(), payload).getBytes(StandardCharsets.ISO_8859_1));
+
+        xch.shouldHandle(false);
+
+        xch.resp(APP_FORM_BAD_REQUEST);
+      });
+    });
+  }
+
+  @Test(dataProvider = "appFormInvalidProvider")
+  public void appFormInvalidWithFile(String payload, String description) {
+    exec(test -> {
+      test.bufferSize(128, 128);
+
+      test.xch(xch -> {
+        xch.req(formFileRequest(127, payload));
+
+        final byte[] bytes;
+        bytes = payload.getBytes(StandardCharsets.ISO_8859_1);
+
+        xch.req(bytes);
+
+        xch.shouldHandle(false);
+
+        xch.resp(APP_FORM_BAD_REQUEST);
+      });
+    });
+  }
+
+  @Test(dataProvider = "appFormInvalidProvider")
+  public void appFormInvalidWithFileSlow(String payload, String description) {
+    exec(test -> {
+      test.bufferSize(128, 128);
+
+      test.xch(xch -> {
+        xch.req(formFileRequest(127, payload));
+
+        final byte[] bytes;
+        bytes = payload.getBytes(StandardCharsets.ISO_8859_1);
+
+        xch.req(Y.slowStream(1, bytes));
+
+        xch.shouldHandle(false);
+
+        xch.resp(APP_FORM_BAD_REQUEST);
+      });
+    });
   }
 
   @DataProvider
@@ -581,9 +692,48 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
     formValid(raw, expected);
   }
 
-  @Test
-  public void formValid01() {
-    formValid("k%7D=value", Map.of("k}", "value"));
+  @Test(dataProvider = "appFormPercentValidProvider")
+  public void appFormValidPercentWithFile(String payload, Map<String, Object> expected, String description) {
+    exec(test -> {
+      test.bufferSize(128, 128);
+
+      test.xch(xch -> {
+        xch.req(formFileRequest(127, payload));
+
+        final byte[] bytes;
+        bytes = payload.getBytes(StandardCharsets.ISO_8859_1);
+
+        xch.req(bytes);
+
+        xch.handler(http -> {
+          formAssert(http, expected);
+        });
+
+        xch.resp(OK_RESP);
+      });
+    });
+  }
+
+  @Test(dataProvider = "appFormPercentValidProvider")
+  public void appFormValidPercentWithFileSlow(String payload, Map<String, Object> expected, String description) {
+    exec(test -> {
+      test.bufferSize(128, 128);
+
+      test.xch(xch -> {
+        xch.req(formFileRequest(127, payload));
+
+        final byte[] bytes;
+        bytes = payload.getBytes(StandardCharsets.ISO_8859_1);
+
+        xch.req(Y.slowStream(1, bytes));
+
+        xch.handler(http -> {
+          formAssert(http, expected);
+        });
+
+        xch.resp(OK_RESP);
+      });
+    });
   }
 
   @DataProvider
@@ -643,12 +793,29 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
   }
 
   @Test(dataProvider = "appFormPercentInvalidProvider")
-  public void appFormPercentInvalid(String raw, String description) {
-    formInvalid(raw);
+  public void appFormPercentInvalid(String payload, String description) {
+    exec(test -> {
+      test.bufferSize(128, 256);
+
+      test.xch(xch -> {
+        xch.req("""
+        POST / HTTP/1.1\r
+        Host: Host\r
+        Content-Type: application/x-www-form-urlencoded\r
+        Content-Length: %d\r
+        \r
+        %s\
+        """.formatted(payload.length(), payload).getBytes(StandardCharsets.ISO_8859_1));
+
+        xch.shouldHandle(false);
+
+        xch.resp(APP_FORM_BAD_REQUEST);
+      });
+    });
   }
 
-  @Test(dataProvider = "appFormValidProvider")
-  public void appFormValidWithFile(String payload, Map<String, Object> expected, String description) {
+  @Test(dataProvider = "appFormPercentInvalidProvider")
+  public void appFormPercentInvalidWithFile(String payload, String description) {
     exec(test -> {
       test.bufferSize(128, 128);
 
@@ -660,17 +827,15 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
 
         xch.req(bytes);
 
-        xch.handler(http -> {
-          formAssert(http, expected);
-        });
+        xch.shouldHandle(false);
 
-        xch.resp(OK_RESP);
+        xch.resp(APP_FORM_BAD_REQUEST);
       });
     });
   }
 
-  @Test(dataProvider = "appFormValidProvider")
-  public void appFormValidWithFileSlow(String payload, Map<String, Object> expected, String description) {
+  @Test(dataProvider = "appFormPercentInvalidProvider")
+  public void appFormPercentInvalidWithFileSlow(String payload, String description) {
     exec(test -> {
       test.bufferSize(128, 128);
 
@@ -682,55 +847,9 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
 
         xch.req(Y.slowStream(1, bytes));
 
-        xch.handler(http -> {
-          formAssert(http, expected);
-        });
+        xch.shouldHandle(false);
 
-        xch.resp(OK_RESP);
-      });
-    });
-  }
-
-  @Test(dataProvider = "appFormPercentValidProvider")
-  public void appFormValidPercentWithFile(String payload, Map<String, Object> expected, String description) {
-    exec(test -> {
-      test.bufferSize(128, 128);
-
-      test.xch(xch -> {
-        xch.req(formFileRequest(127, payload));
-
-        final byte[] bytes;
-        bytes = payload.getBytes(StandardCharsets.ISO_8859_1);
-
-        xch.req(bytes);
-
-        xch.handler(http -> {
-          formAssert(http, expected);
-        });
-
-        xch.resp(OK_RESP);
-      });
-    });
-  }
-
-  @Test(dataProvider = "appFormPercentValidProvider")
-  public void appFormValidPercentWithFileSlow(String payload, Map<String, Object> expected, String description) {
-    exec(test -> {
-      test.bufferSize(128, 128);
-
-      test.xch(xch -> {
-        xch.req(formFileRequest(127, payload));
-
-        final byte[] bytes;
-        bytes = payload.getBytes(StandardCharsets.ISO_8859_1);
-
-        xch.req(Y.slowStream(1, bytes));
-
-        xch.handler(http -> {
-          formAssert(http, expected);
-        });
-
-        xch.resp(OK_RESP);
+        xch.resp(APP_FORM_BAD_REQUEST);
       });
     });
   }
@@ -870,35 +989,6 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
     Content-Length: %s\r
     \r
     """.formatted(host, contentLength);
-  }
-
-  private void formInvalid(String payload) {
-    exec(test -> {
-      test.bufferSize(128, 256);
-
-      test.xch(xch -> {
-        xch.req("""
-        POST / HTTP/1.1\r
-        Host: Host\r
-        Content-Type: application/x-www-form-urlencoded\r
-        Content-Length: %d\r
-        \r
-        %s\
-        """.formatted(payload.length(), payload).getBytes(StandardCharsets.ISO_8859_1));
-
-        xch.shouldHandle(false);
-
-        xch.resp("""
-        HTTP/1.1 400 Bad Request\r
-        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-        Content-Type: text/plain; charset=utf-8\r
-        Content-Length: 67\r
-        Connection: close\r
-        \r
-        Invalid application/x-www-form-urlencoded content in request body.
-        """);
-      });
-    });
   }
 
 }

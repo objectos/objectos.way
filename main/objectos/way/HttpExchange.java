@@ -1743,7 +1743,11 @@ final class HttpExchange implements Http.Exchange, Closeable {
       case $PARSE_APP_FORM1, $PARSE_APP_FORM_VALUE1 -> switch (formParams) {
         case AppFormBufferSupport support -> toBadRequest(InvalidApplicationForm.PERCENT);
 
-        case BodyFileSupport support -> toParseAppFormExhausted(support);
+        case BodyFileSupport support -> switch (support.state) {
+          case $PARSE_BODY_FIXED_FILE_CLOSE -> toBadRequest(InvalidApplicationForm.PERCENT);
+
+          default -> toParseAppFormExhausted(support);
+        };
 
         default -> throw new AssertionError("Unexpected formParams=" + formParams);
       };
