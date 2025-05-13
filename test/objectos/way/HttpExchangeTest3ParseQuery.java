@@ -411,26 +411,7 @@ public class HttpExchangeTest3ParseQuery extends HttpExchangeTest {
         """.formatted(queryString));
 
         xch.handler(http -> {
-          assertEquals(http.queryParamNames(), expected.keySet());
-
-          for (var entry : expected.entrySet()) {
-            final String key;
-            key = entry.getKey();
-
-            final Object value;
-            value = entry.getValue();
-
-            if (value instanceof String s) {
-              assertEquals(http.queryParam(key), s, key);
-              assertEquals(http.queryParamAll(key), List.of(s));
-            }
-
-            else {
-              List<?> list = (List<?>) value;
-              assertEquals(http.queryParam(key), list.get(0), key);
-              assertEquals(http.queryParamAll(key), value, key);
-            }
-          }
+          queryAssert(http, expected);
 
           http.ok(Media.Bytes.textPlain("OK"));
         });

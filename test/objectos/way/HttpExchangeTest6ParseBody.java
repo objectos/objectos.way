@@ -556,6 +556,34 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
     });
   }
 
+  @Test
+  public void appFormValidWithFileAndQuery() {
+    String query = "k1=v1&k2=v2";
+    Map<String, Object> queryExpected = Map.of("k1", "v1", "k2", "v2");
+    String payload = "f1=t1&f2=t2";
+    Map<String, Object> formExpected = Map.of("f1", "t1", "f2", "t2");
+
+    exec(test -> {
+      test.bufferSize(128, 128);
+
+      test.xch(xch -> {
+        xch.req(formFileRequestAndQuery(127, query, payload));
+
+        final byte[] bytes;
+        bytes = payload.getBytes(StandardCharsets.ISO_8859_1);
+
+        xch.req(bytes);
+
+        xch.handler(http -> {
+          queryAssert(http, queryExpected);
+          formAssert(http, formExpected);
+        });
+
+        xch.resp(OK_RESP);
+      });
+    });
+  }
+
   @DataProvider
   public Object[][] appFormInvalidProvider() {
     final List<Object[]> l;
@@ -966,6 +994,7 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
     assertEquals(formFileRequest(127, ".".repeat(9)).length(), 127);
     assertEquals(formFileRequest(127, ".".repeat(99)).length(), 127);
     assertEquals(formFileRequest(127, ".".repeat(999)).length(), 127);
+    assertEquals(formFileRequestAndQuery(127, "k1=v1&k2=v2", ".".repeat(999)).length(), 127);
   }
 
   private String formFileRequest(int buffer, String payload) {
@@ -989,6 +1018,29 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
     Content-Length: %s\r
     \r
     """.formatted(host, contentLength);
+  }
+
+  private String formFileRequestAndQuery(int buffer, String query, String payload) {
+    final int length;
+    length = payload.length();
+
+    final String contentLength;
+    contentLength = Integer.toString(length);
+
+    // leave 1-byte for file buffering
+    final int remaining;
+    remaining = buffer - 94 - 1 - query.length() - contentLength.length();
+
+    final String host;
+    host = "X".repeat(remaining);
+
+    return """
+    POST /?%s HTTP/1.1\r
+    Host: %s\r
+    Content-Type: application/x-www-form-urlencoded\r
+    Content-Length: %s\r
+    \r
+    """.formatted(query, host, contentLength);
   }
 
 }

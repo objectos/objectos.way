@@ -1405,6 +1405,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
       copy.putAll(queryParams);
 
+      queryParams.clear();
+
       return copy;
     }
   }

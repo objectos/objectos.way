@@ -22,6 +22,7 @@ import java.io.UncheckedIOException;
 import java.net.Socket;
 import java.time.Clock;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -187,6 +188,29 @@ public abstract class HttpExchangeTest {
     config.accept(tester);
 
     tester.execute();
+  }
+
+  final void queryAssert(HttpExchange http, Map<String, Object> expected) {
+    assertEquals(http.queryParamNames(), expected.keySet());
+
+    for (var entry : expected.entrySet()) {
+      final String key;
+      key = entry.getKey();
+
+      final Object value;
+      value = entry.getValue();
+
+      if (value instanceof String s) {
+        assertEquals(http.queryParam(key), s, key);
+        assertEquals(http.queryParamAll(key), List.of(s));
+      }
+
+      else {
+        List<?> list = (List<?>) value;
+        assertEquals(http.queryParam(key), list.get(0), key);
+        assertEquals(http.queryParamAll(key), value, key);
+      }
+    }
   }
 
   final boolean[] queryValidBytes() {
