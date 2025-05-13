@@ -647,12 +647,12 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
     formInvalid(raw);
   }
 
-  @Test(enabled = false, dataProvider = "appFormValidProvider")
+  @Test(dataProvider = "appFormValidProvider")
   public void appFormValidWithFile(String payload, Map<String, Object> expected, String description) {
     formValidWithFile(payload, expected);
   }
 
-  @Test(enabled = false)
+  @Test
   public void appFormValidWithFile01() {
     formValidWithFile("key=value", Map.of("key", "value"));
   }

@@ -2263,19 +2263,34 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   private static final class BodyFileSupport {
 
+    byte[] buffer;
+
+    int bufferIndex;
+
+    int bufferLimit;
+
     final Path file;
+
+    Object object;
 
     final OutputStream outputStream;
 
-    final byte[] work;
+    Map<String, Object> queryParams;
 
     long remaining;
 
-    BodyFileSupport(Path file, OutputStream outputStream, byte[] work, long remaining) {
+    final boolean shouldParseAppForm;
+
+    byte state;
+
+    final byte[] work;
+
+    BodyFileSupport(Path file, OutputStream outputStream, long remaining, boolean shouldParseAppForm, byte[] work) {
       this.file = file;
       this.outputStream = outputStream;
-      this.work = work;
       this.remaining = remaining;
+      this.shouldParseAppForm = shouldParseAppForm;
+      this.work = work;
     }
 
     final void copy(int length) throws IOException {
@@ -2306,13 +2321,16 @@ final class HttpExchange implements Http.Exchange, Closeable {
       final OutputStream outputStream;
       outputStream = bodyFiles.newOutputStream(file);
 
+      final long remaining;
+      remaining = long0;
+
+      final boolean shouldParseAppForm;
+      shouldParseAppForm = shouldParseAppForm();
+
       final byte[] work;
       work = new byte[maxBufferSize];
 
-      final long contentLength;
-      contentLength = long0;
-
-      support = new BodyFileSupport(file, outputStream, work, contentLength);
+      support = new BodyFileSupport(file, outputStream, remaining, shouldParseAppForm, work);
     } catch (IOException e) {
       return internalServerError(e);
     }
@@ -2338,7 +2356,19 @@ final class HttpExchange implements Http.Exchange, Closeable {
       }
     }
 
-    return $PARSE_BODY_FIXED_FILE_READ;
+    if (support.shouldParseAppForm) {
+      formParams = support;
+
+      support.bufferIndex = bufferIndex;
+
+      support.queryParams = copyQueryParams();
+
+      support.state = state;
+
+      return $PARSE_APP_FORM;
+    } else {
+      return $PARSE_BODY_FIXED_FILE_READ;
+    }
   }
 
   private byte executeParseBodyFixedFileRead() {
@@ -2357,7 +2387,29 @@ final class HttpExchange implements Http.Exchange, Closeable {
     else if (remaining == 0) {
       // all done
 
-      return $PARSE_BODY_FIXED_FILE_CLOSE;
+      if (support.shouldParseAppForm) {
+        // we should go back to the form parsing state
+        final byte nextState;
+        nextState = support.state;
+
+        // let's push all the state we're going to alter
+        support.buffer = buffer;
+        support.bufferIndex = bufferIndex;
+        support.bufferLimit = bufferLimit;
+
+        // let's update the state for the parsing
+        buffer = support.work;
+        bufferIndex = 0;
+        bufferLimit = 0;
+        object = support.object;
+
+        // when parsing ends, we should get back to this state
+        support.state = $PARSE_BODY_FIXED_FILE_CLOSE;
+
+        return nextState;
+      } else {
+        return $PARSE_BODY_FIXED_FILE_CLOSE;
+      }
     }
 
     // work buffer
@@ -2388,7 +2440,29 @@ final class HttpExchange implements Http.Exchange, Closeable {
       return internalServerError(e);
     }
 
-    return $PARSE_BODY_FIXED_FILE_READ;
+    if (support.shouldParseAppForm) {
+      // we should go back to the form parsing state
+      final byte nextState;
+      nextState = support.state;
+
+      // let's push all the state we're going to alter
+      support.buffer = buffer;
+      support.bufferIndex = bufferIndex;
+      support.bufferLimit = bufferLimit;
+
+      // let's update the state for the parsing
+      buffer = work;
+      bufferIndex = 0;
+      bufferLimit = read;
+      object = support.object;
+
+      // when parsing ends, we should get back to this state
+      support.state = state;
+
+      return nextState;
+    } else {
+      return $PARSE_BODY_FIXED_FILE_READ;
+    }
   }
 
   private byte executeParseBodyFixedFileClose() {
@@ -2612,7 +2686,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
     return next;
   }
 
-  @SuppressWarnings("unused")
   private boolean shouldParseAppForm() {
     final HttpHeader contentType;
     contentType = headerUnchecked(HttpHeaderName.CONTENT_TYPE);
@@ -2630,20 +2703,96 @@ final class HttpExchange implements Http.Exchange, Closeable {
   }
 
   private byte toParseAppFormExhausted() {
-    if (formParams instanceof AppFormBufferSupport support) {
-      final byte next;
-      next = toParseAppFormSuccess($PARSE_BODY_FIXED_BUFFER_SUCCESS);
+    return switch (formParams) {
+      case AppFormBufferSupport support -> {
+        final byte next;
+        next = toParseAppFormSuccess($PARSE_BODY_FIXED_BUFFER_SUCCESS);
 
-      bufferIndex = support.bufferIndex;
+        bufferIndex = support.bufferIndex;
 
-      formParams = queryParams;
+        formParams = queryParams;
 
-      queryParams = support.queryParams;
+        queryParams = support.queryParams;
 
-      return next;
-    }
+        yield next;
+      }
 
-    throw new AssertionError("Unexpected formParams=" + formParams);
+      case BodyFileSupport support -> {
+        yield switch (support.state) {
+          case $PARSE_BODY_FIXED_FILE_BUFFER -> {
+            toParseBodyFixedFileReadInit(support);
+
+            // restore previous state
+            bufferIndex = support.bufferIndex;
+
+            yield toParseBodyFixedFileRead(support);
+          }
+
+          case $PARSE_BODY_FIXED_FILE_READ -> {
+            toParseBodyFixedFileReadInit(support);
+
+            // restore previous state
+            buffer = support.buffer;
+            bufferIndex = support.bufferIndex;
+            bufferLimit = support.bufferLimit;
+
+            yield toParseBodyFixedFileRead(support);
+          }
+
+          case $PARSE_BODY_FIXED_FILE_CLOSE -> {
+            // make last param if necessary
+            switch (state) {
+              case $PARSE_APP_FORM1 -> executeParseAppFormName1End($PARSE_BODY_FIXED_FILE_CLOSE);
+
+              case $PARSE_APP_FORM_VALUE1 -> executeParseAppFormValue1End($PARSE_BODY_FIXED_FILE_CLOSE);
+
+              default -> throw new AssertionError("Unexpected state=" + state);
+            }
+
+            formParams = queryParams;
+
+            object = support;
+
+            queryParams = support.queryParams;
+
+            yield $PARSE_BODY_FIXED_FILE_CLOSE;
+          }
+
+          default -> throw new AssertionError("Unexpected support.state=" + support.state);
+        };
+      }
+
+      default -> throw new AssertionError("Unexpected formParams=" + formParams);
+    };
+  }
+
+  private void toParseBodyFixedFileReadInit(BodyFileSupport support) {
+    // we'll return to this state
+    support.state = switch (state) {
+      case $PARSE_APP_FORM0 -> {
+        appendInit();
+
+        yield $PARSE_APP_FORM1;
+      }
+
+      case $PARSE_APP_FORM_VALUE0 -> {
+        appendInit();
+
+        yield $PARSE_APP_FORM_VALUE1;
+      }
+
+      default -> state;
+    };
+  }
+
+  private byte toParseBodyFixedFileRead(BodyFileSupport support) {
+    // store eventual state
+    support.object = object;
+
+    // restore original object
+    object = support;
+
+    return $PARSE_BODY_FIXED_FILE_READ;
   }
 
   private byte toParseAppFormSuccess(byte next) {
