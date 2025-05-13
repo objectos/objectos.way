@@ -649,12 +649,90 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
 
   @Test(dataProvider = "appFormValidProvider")
   public void appFormValidWithFile(String payload, Map<String, Object> expected, String description) {
-    formValidWithFile(payload, expected);
+    exec(test -> {
+      test.bufferSize(128, 128);
+
+      test.xch(xch -> {
+        xch.req(formFileRequest(127, payload));
+
+        final byte[] bytes;
+        bytes = payload.getBytes(StandardCharsets.ISO_8859_1);
+
+        xch.req(bytes);
+
+        xch.handler(http -> {
+          formAssert(http, expected);
+        });
+
+        xch.resp(OK_RESP);
+      });
+    });
   }
 
-  @Test
-  public void appFormValidWithFile01() {
-    formValidWithFile("key=value", Map.of("key", "value"));
+  @Test(dataProvider = "appFormValidProvider")
+  public void appFormValidWithFileSlow(String payload, Map<String, Object> expected, String description) {
+    exec(test -> {
+      test.bufferSize(128, 128);
+
+      test.xch(xch -> {
+        xch.req(formFileRequest(127, payload));
+
+        final byte[] bytes;
+        bytes = payload.getBytes(StandardCharsets.ISO_8859_1);
+
+        xch.req(Y.slowStream(1, bytes));
+
+        xch.handler(http -> {
+          formAssert(http, expected);
+        });
+
+        xch.resp(OK_RESP);
+      });
+    });
+  }
+
+  @Test(dataProvider = "appFormPercentValidProvider")
+  public void appFormValidPercentWithFile(String payload, Map<String, Object> expected, String description) {
+    exec(test -> {
+      test.bufferSize(128, 128);
+
+      test.xch(xch -> {
+        xch.req(formFileRequest(127, payload));
+
+        final byte[] bytes;
+        bytes = payload.getBytes(StandardCharsets.ISO_8859_1);
+
+        xch.req(bytes);
+
+        xch.handler(http -> {
+          formAssert(http, expected);
+        });
+
+        xch.resp(OK_RESP);
+      });
+    });
+  }
+
+  @Test(dataProvider = "appFormPercentValidProvider")
+  public void appFormValidPercentWithFileSlow(String payload, Map<String, Object> expected, String description) {
+    exec(test -> {
+      test.bufferSize(128, 128);
+
+      test.xch(xch -> {
+        xch.req(formFileRequest(127, payload));
+
+        final byte[] bytes;
+        bytes = payload.getBytes(StandardCharsets.ISO_8859_1);
+
+        xch.req(Y.slowStream(1, bytes));
+
+        xch.handler(http -> {
+          formAssert(http, expected);
+        });
+
+        xch.resp(OK_RESP);
+      });
+    });
   }
 
   private byte[] ascii(String s) {
@@ -766,33 +844,12 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
 
   @Test
   public void formFileRequestSize() {
-    assertEquals(formFileRequest(".".repeat(9)).length(), 127);
-    assertEquals(formFileRequest(".".repeat(99)).length(), 127);
-    assertEquals(formFileRequest(".".repeat(999)).length(), 127);
+    assertEquals(formFileRequest(127, ".".repeat(9)).length(), 127);
+    assertEquals(formFileRequest(127, ".".repeat(99)).length(), 127);
+    assertEquals(formFileRequest(127, ".".repeat(999)).length(), 127);
   }
 
-  private void formValidWithFile(String payload, Map<String, Object> expected) {
-    exec(test -> {
-      test.bufferSize(128, 128);
-
-      test.xch(xch -> {
-        xch.req(formFileRequest(payload));
-
-        final byte[] bytes;
-        bytes = payload.getBytes(StandardCharsets.ISO_8859_1);
-
-        xch.req(bytes);
-
-        xch.handler(http -> {
-          formAssert(http, expected);
-        });
-
-        xch.resp(OK_RESP);
-      });
-    });
-  }
-
-  private String formFileRequest(String payload) {
+  private String formFileRequest(int buffer, String payload) {
     final int length;
     length = payload.length();
 
@@ -801,7 +858,7 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
 
     // leave 1-byte for file buffering
     final int remaining;
-    remaining = 127 - 94 - contentLength.length();
+    remaining = buffer - 94 - contentLength.length();
 
     final String host;
     host = "X".repeat(remaining);

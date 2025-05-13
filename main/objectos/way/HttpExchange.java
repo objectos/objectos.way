@@ -1740,7 +1740,13 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
       case $PARSE_QUERY1, $PARSE_QUERY_VALUE1 -> toRead(state);
 
-      case $PARSE_APP_FORM1, $PARSE_APP_FORM_VALUE1 -> toBadRequest(InvalidApplicationForm.PERCENT);
+      case $PARSE_APP_FORM1, $PARSE_APP_FORM_VALUE1 -> switch (formParams) {
+        case AppFormBufferSupport support -> toBadRequest(InvalidApplicationForm.PERCENT);
+
+        case BodyFileSupport support -> toParseAppFormExhausted(support);
+
+        default -> throw new AssertionError("Unexpected formParams=" + formParams);
+      };
 
       default -> throw new AssertionError("Unexpected markEnd=" + markEnd);
     };
@@ -2704,65 +2710,69 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   private byte toParseAppFormExhausted() {
     return switch (formParams) {
-      case AppFormBufferSupport support -> {
-        final byte next;
-        next = toParseAppFormSuccess($PARSE_BODY_FIXED_BUFFER_SUCCESS);
+      case AppFormBufferSupport support -> toParseAppFormExhausted(support);
 
+      case BodyFileSupport support -> toParseAppFormExhausted(support);
+
+      default -> throw new AssertionError("Unexpected formParams=" + formParams);
+    };
+  }
+
+  private byte toParseAppFormExhausted(AppFormBufferSupport support) {
+    final byte next;
+    next = toParseAppFormSuccess($PARSE_BODY_FIXED_BUFFER_SUCCESS);
+
+    bufferIndex = support.bufferIndex;
+
+    formParams = queryParams;
+
+    queryParams = support.queryParams;
+
+    return next;
+  }
+
+  private byte toParseAppFormExhausted(BodyFileSupport support) {
+    return switch (support.state) {
+      case $PARSE_BODY_FIXED_FILE_BUFFER -> {
+        toParseBodyFixedFileReadInit(support);
+
+        // restore previous state
         bufferIndex = support.bufferIndex;
+
+        yield toParseBodyFixedFileRead(support);
+      }
+
+      case $PARSE_BODY_FIXED_FILE_READ -> {
+        toParseBodyFixedFileReadInit(support);
+
+        // restore previous state
+        buffer = support.buffer;
+        bufferIndex = support.bufferIndex;
+        bufferLimit = support.bufferLimit;
+
+        yield toParseBodyFixedFileRead(support);
+      }
+
+      case $PARSE_BODY_FIXED_FILE_CLOSE -> {
+        // make last param if necessary
+        switch (state) {
+          case $PARSE_APP_FORM1 -> executeParseAppFormName1End($PARSE_BODY_FIXED_FILE_CLOSE);
+
+          case $PARSE_APP_FORM_VALUE1 -> executeParseAppFormValue1End($PARSE_BODY_FIXED_FILE_CLOSE);
+
+          default -> throw new AssertionError("Unexpected state=" + state);
+        }
 
         formParams = queryParams;
 
+        object = support;
+
         queryParams = support.queryParams;
 
-        yield next;
+        yield $PARSE_BODY_FIXED_FILE_CLOSE;
       }
 
-      case BodyFileSupport support -> {
-        yield switch (support.state) {
-          case $PARSE_BODY_FIXED_FILE_BUFFER -> {
-            toParseBodyFixedFileReadInit(support);
-
-            // restore previous state
-            bufferIndex = support.bufferIndex;
-
-            yield toParseBodyFixedFileRead(support);
-          }
-
-          case $PARSE_BODY_FIXED_FILE_READ -> {
-            toParseBodyFixedFileReadInit(support);
-
-            // restore previous state
-            buffer = support.buffer;
-            bufferIndex = support.bufferIndex;
-            bufferLimit = support.bufferLimit;
-
-            yield toParseBodyFixedFileRead(support);
-          }
-
-          case $PARSE_BODY_FIXED_FILE_CLOSE -> {
-            // make last param if necessary
-            switch (state) {
-              case $PARSE_APP_FORM1 -> executeParseAppFormName1End($PARSE_BODY_FIXED_FILE_CLOSE);
-
-              case $PARSE_APP_FORM_VALUE1 -> executeParseAppFormValue1End($PARSE_BODY_FIXED_FILE_CLOSE);
-
-              default -> throw new AssertionError("Unexpected state=" + state);
-            }
-
-            formParams = queryParams;
-
-            object = support;
-
-            queryParams = support.queryParams;
-
-            yield $PARSE_BODY_FIXED_FILE_CLOSE;
-          }
-
-          default -> throw new AssertionError("Unexpected support.state=" + support.state);
-        };
-      }
-
-      default -> throw new AssertionError("Unexpected formParams=" + formParams);
+      default -> throw new AssertionError("Unexpected support.state=" + support.state);
     };
   }
 
