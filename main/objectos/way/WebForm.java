@@ -61,9 +61,6 @@ final class WebForm implements Web.Form, Web.FormSpec {
     boolean valid;
     valid = true;
 
-    Web.FormData data;
-    data = Web.FormData.parse(http);
-
     int size;
     size = fields.size();
 
@@ -75,7 +72,7 @@ final class WebForm implements Web.Form, Web.FormSpec {
       field = fields.get(idx);
 
       WebFormField parsed;
-      parsed = field.parse(data);
+      parsed = field.parse(http);
 
       valid = valid && parsed.isValid();
 

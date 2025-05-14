@@ -16,7 +16,6 @@
 package objectos.way;
 
 import java.util.List;
-import objectos.way.Web.FormData;
 
 final class WebFormTextInput extends WebFormField implements Web.Form.TextInput {
 
@@ -62,12 +61,12 @@ final class WebFormTextInput extends WebFormField implements Web.Form.TextInput 
   }
 
   @Override
-  final WebFormField parse(FormData data) {
+  final WebFormField parse(Http.Exchange data) {
     List<WebFormError> errors;
     errors = null;
 
     String value;
-    value = data.get(name);
+    value = data.formParam(name);
 
     if (value == null || value.isBlank()) {
 

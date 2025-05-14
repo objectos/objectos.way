@@ -316,20 +316,7 @@ public final class Http {
      *         {@code defaultValue} if the field is absent or cannot be
      *         converted
      */
-    default int formParamAsInt(String name, int defaultValue) {
-      String maybe;
-      maybe = formParam(name);
-
-      if (maybe == null) {
-        return defaultValue;
-      }
-
-      try {
-        return Integer.parseInt(maybe);
-      } catch (NumberFormatException expected) {
-        return defaultValue;
-      }
-    }
+    int formParamAsInt(String name, int defaultValue);
 
     /**
      * Returns the first value of the form field with the specified
@@ -348,20 +335,7 @@ public final class Http {
      *         {@code defaultValue} if the field is absent or cannot be
      *         converted
      */
-    default long formParamAsLong(String name, long defaultValue) {
-      String maybe;
-      maybe = formParam(name);
-
-      if (maybe == null) {
-        return defaultValue;
-      }
-
-      try {
-        return Long.parseLong(maybe);
-      } catch (NumberFormatException expected) {
-        return defaultValue;
-      }
-    }
+    long formParamAsLong(String name, long defaultValue);
 
     /**
      * Returns a list containing all values associated to the specified form
@@ -395,15 +369,7 @@ public final class Http {
      * @throws IllegalStateException
      *         if the request body did not contain form data
      */
-    default IntStream formParamAllAsInt(String name, int defaultValue) {
-      return formParamAll(name).stream().mapToInt(s -> {
-        try {
-          return Integer.parseInt(s);
-        } catch (NumberFormatException expected) {
-          return defaultValue;
-        }
-      });
-    }
+    IntStream formParamAllAsInt(String name, int defaultValue);
 
     /**
      * Returns a {@code LongStream} of all of the values, converted to
@@ -419,15 +385,7 @@ public final class Http {
      *
      * @return an {@code LongStream} of the values associated to the field name
      */
-    default LongStream formParamAllAsLong(String name, long defaultValue) {
-      return formParamAll(name).stream().mapToLong(s -> {
-        try {
-          return Long.parseLong(s);
-        } catch (NumberFormatException expected) {
-          return defaultValue;
-        }
-      });
-    }
+    LongStream formParamAllAsLong(String name, long defaultValue);
 
     // ##################################################################
     // # END: Request Body

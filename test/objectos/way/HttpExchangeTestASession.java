@@ -24,7 +24,7 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 import org.testng.annotations.Test;
 
-public class HttpExchangeTest9Session {
+public class HttpExchangeTestASession {
 
   @Test
   public void session01() {

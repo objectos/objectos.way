@@ -26,7 +26,7 @@ import java.util.function.Consumer;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class HttpExchangeTest8Response extends HttpExchangeTest {
+public class HttpExchangeTest9Response extends HttpExchangeTest {
 
   // 2xx responses
 

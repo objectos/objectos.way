@@ -40,6 +40,8 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 
 final class HttpExchange implements Http.Exchange, Closeable {
 
@@ -3822,6 +3824,38 @@ final class HttpExchange implements Http.Exchange, Closeable {
   }
 
   @Override
+  public final int formParamAsInt(String name, int defaultValue) {
+    String maybe;
+    maybe = formParam(name);
+
+    if (maybe == null) {
+      return defaultValue;
+    }
+
+    try {
+      return Integer.parseInt(maybe);
+    } catch (NumberFormatException expected) {
+      return defaultValue;
+    }
+  }
+
+  @Override
+  public final long formParamAsLong(String name, long defaultValue) {
+    String maybe;
+    maybe = formParam(name);
+
+    if (maybe == null) {
+      return defaultValue;
+    }
+
+    try {
+      return Long.parseLong(maybe);
+    } catch (NumberFormatException expected) {
+      return defaultValue;
+    }
+  }
+
+  @Override
   public final List<String> formParamAll(String name) {
     checkRequest();
     Objects.requireNonNull(name, "name == null");
@@ -3834,6 +3868,28 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
       return Http.queryParamsGetAll(map, name);
     }
+  }
+
+  @Override
+  public final IntStream formParamAllAsInt(String name, int defaultValue) {
+    return formParamAll(name).stream().mapToInt(s -> {
+      try {
+        return Integer.parseInt(s);
+      } catch (NumberFormatException expected) {
+        return defaultValue;
+      }
+    });
+  }
+
+  @Override
+  public final LongStream formParamAllAsLong(String name, long defaultValue) {
+    return formParamAll(name).stream().mapToLong(s -> {
+      try {
+        return Long.parseLong(s);
+      } catch (NumberFormatException expected) {
+        return defaultValue;
+      }
+    });
   }
 
   @Override

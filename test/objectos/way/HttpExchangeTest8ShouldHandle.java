@@ -24,7 +24,7 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 import org.testng.annotations.Test;
 
-public class HttpExchangeTest7ShouldHandle {
+public class HttpExchangeTest8ShouldHandle {
 
   private record Tuple(String request, boolean should, Consumer<HttpExchange> handler, String expectedResponse) {}
 

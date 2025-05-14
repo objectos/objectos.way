@@ -25,7 +25,7 @@ import objectos.way.Http.ResponseListener;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class HttpExchangeTestACreate {
+public class HttpExchangeTestBCreate {
 
   @Test
   public void formParam01() {
@@ -37,13 +37,10 @@ public class HttpExchangeTestACreate {
       config.formParam("p2", "val2");
     });
 
-    Web.FormData data;
-    data = Web.FormData.parse(http);
-
-    assertEquals(data.get("p1"), "abc");
-    assertEquals(data.getAll("p1"), List.of("abc"));
-    assertEquals(data.get("p2"), "val1");
-    assertEquals(data.getAll("p2"), List.of("val1", "val2"));
+    assertEquals(http.formParam("p1"), "abc");
+    assertEquals(http.formParamAll("p1"), List.of("abc"));
+    assertEquals(http.formParam("p2"), "val1");
+    assertEquals(http.formParamAll("p2"), List.of("val1", "val2"));
   }
 
   @Test
@@ -56,13 +53,10 @@ public class HttpExchangeTestACreate {
       config.formParam("l1", Long.MIN_VALUE);
     });
 
-    Web.FormData data;
-    data = Web.FormData.parse(http);
-
-    assertEquals(data.get("i0"), Integer.toString(Integer.MAX_VALUE));
-    assertEquals(data.get("i1"), Integer.toString(Integer.MIN_VALUE));
-    assertEquals(data.get("l0"), Long.toString(Long.MAX_VALUE));
-    assertEquals(data.get("l1"), Long.toString(Long.MIN_VALUE));
+    assertEquals(http.formParam("i0"), Integer.toString(Integer.MAX_VALUE));
+    assertEquals(http.formParam("i1"), Integer.toString(Integer.MIN_VALUE));
+    assertEquals(http.formParam("l0"), Long.toString(Long.MAX_VALUE));
+    assertEquals(http.formParam("l1"), Long.toString(Long.MIN_VALUE));
   }
 
   @Test
