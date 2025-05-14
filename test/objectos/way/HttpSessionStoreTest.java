@@ -72,6 +72,48 @@ public class HttpSessionStoreTest {
     assertEquals(http.sessionLoaded(), true);
   }
 
+  @Test
+  public void ensureSession01() {
+    final HttpSessionStore store;
+    store = create(options -> {
+      options.randomGenerator(generator(1L, 2L, 3L, 4L));
+    });
+
+    final HttpExchange http;
+    http = HttpExchange.create0(config -> {});
+
+    assertEquals(http.sessionLoaded(), false);
+
+    store.ensureSession(http);
+
+    assertEquals(http.sessionLoaded(), true);
+  }
+
+  @Test
+  public void ensureSession02() {
+    final HttpSessionStore store;
+    store = create(options -> {
+      options.randomGenerator(generator(1L, 2L, 3L, 4L));
+    });
+
+    final HttpExchange http;
+    http = HttpExchange.create0(config -> {});
+
+    assertEquals(http.sessionLoaded(), false);
+
+    store.ensureSession(http);
+
+    assertEquals(http.sessionLoaded(), true);
+
+    http.sessionAttr(String.class, () -> "MARKER");
+
+    store.ensureSession(http);
+
+    assertEquals(http.sessionLoaded(), true);
+
+    assertEquals(http.sessionAttr(String.class), "MARKER");
+  }
+
   private HttpSessionStore create(Consumer<HttpSessionStoreBuilder> options) {
     final HttpSessionStoreBuilder builder;
     builder = new HttpSessionStoreBuilder();
