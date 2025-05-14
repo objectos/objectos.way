@@ -20,10 +20,13 @@ import java.time.InstantSource;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.random.RandomGenerator;
+import objectos.way.Http.CsrfToken;
+import objectos.way.HttpToken.ParseException;
 
 final class HttpSessionStore implements Http.SessionStore {
 
   record Notes(
+      Note.Ref1<Http.Request> invalidCsrf,
       Note.Ref1<Http.Request> invalidSession
   ) {
 
@@ -32,11 +35,14 @@ final class HttpSessionStore implements Http.SessionStore {
       s = Http.SessionStore.class;
 
       return new Notes(
+          Note.Ref1.create(s, "CSR", Note.WARN),
           Note.Ref1.create(s, "SES", Note.WARN)
       );
     }
 
   }
+
+  private static final int CSRF_LENGTH = 32;
 
   private static final int SESSION_LENGTH = 32;
 
@@ -47,6 +53,10 @@ final class HttpSessionStore implements Http.SessionStore {
   private final String cookiePath;
 
   private boolean cookieSecure = true;
+
+  private final Media csrfInvalidResponse = Media.Bytes.textPlain("Invalid or missing CSRF token\n");
+
+  private final String csrfParamName = "way-csrf-token";
 
   @SuppressWarnings("unused")
   private final Duration emptyMaxAge;
@@ -60,6 +70,8 @@ final class HttpSessionStore implements Http.SessionStore {
   private final RandomGenerator randomGenerator;
 
   private final ConcurrentMap<HttpToken, HttpSession> sessions = new ConcurrentHashMap<>();
+
+  private final boolean skipCsrf = false;
 
   HttpSessionStore(HttpSessionStoreBuilder builder) {
     cookieMaxAge = builder.cookieMaxAge;
@@ -117,6 +129,48 @@ final class HttpSessionStore implements Http.SessionStore {
     }
   }
 
+  @Override
+  public final void requireCsrfToken(Http.Exchange http) {
+    final HttpExchange impl;
+    impl = (HttpExchange) http;
+
+    // prefer from the header
+    String encoded;
+    encoded = impl.header(Http.HeaderName.WAY_CSRF_TOKEN);
+
+    if (encoded == null) {
+      // obtain from form param
+      encoded = impl.formParam(csrfParamName);
+    }
+
+    HttpToken csrf;
+    csrf = null;
+
+    if (encoded != null) {
+      try {
+        csrf = HttpToken.parse(encoded, CSRF_LENGTH);
+      } catch (ParseException e) {
+
+      }
+    }
+
+    boolean valid;
+    valid = false;
+
+    if (csrf != null && impl.sessionLoaded()) {
+      final CsrfToken sessionToken;
+      sessionToken = impl.sessionAttr(Http.CsrfToken.class);
+
+      valid = csrf.equals(sessionToken);
+    }
+
+    if (!valid) {
+      noteSink.send(notes.invalidCsrf, http);
+
+      http.forbidden(csrfInvalidResponse);
+    }
+  }
+
   private HttpSession findSession(HttpExchange impl) {
     final String cookieHeaderValue;
     cookieHeaderValue = impl.header(Http.HeaderName.COOKIE); // implicit null-check
@@ -165,6 +219,10 @@ final class HttpSessionStore implements Http.SessionStore {
     } while (maybeExisting != null);
 
     session.touch(instantSource);
+
+    if (!skipCsrf) {
+      session.computeIfAbsent(Http.CsrfToken.class, this::nextId);
+    }
 
     return session;
   }

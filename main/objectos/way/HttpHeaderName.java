@@ -42,6 +42,7 @@ final class HttpHeaderName implements Http.HeaderName {
   static final HttpHeaderName SET_COOKIE = B.std("Set-Cookie", HttpHeaderType.RESPONSE);
   static final HttpHeaderName TRANSFER_ENCODING = B.std("Transfer-Encoding", HttpHeaderType.BOTH);
   static final HttpHeaderName USER_AGENT = B.std("User-Agent", HttpHeaderType.REQUEST);
+  static final HttpHeaderName WAY_CSRF_TOKEN = B.std("Way-CSRF-Token", HttpHeaderType.REQUEST);
   static final HttpHeaderName WAY_REQUEST = B.std("Way-Request", HttpHeaderType.REQUEST);
 
   private static final class Builder {

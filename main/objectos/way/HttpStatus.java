@@ -74,14 +74,10 @@ final class HttpStatus implements Http.Status {
 
   // 4.x.x
 
-  /**
-   * The {@code 400 Bad Request} status.
-   */
   public static final HttpStatus BAD_REQUEST = BUILDER.create(400, "Bad Request");
 
-  /**
-   * The {@code 404 NOT FOUND} status.
-   */
+  public static final HttpStatus FORBIDDEN = BUILDER.create(403, "Forbidden");
+
   public static final HttpStatus NOT_FOUND = BUILDER.create(404, "Not Found");
 
   /**

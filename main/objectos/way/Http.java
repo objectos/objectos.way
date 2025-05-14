@@ -492,6 +492,15 @@ public final class Http {
     void badRequest(Media media);
 
     /**
+     * Respond with a {@code 403 Forbidden} message with the specified media
+     * entity.
+     *
+     * @param media
+     *        the media entity
+     */
+    void forbidden(Media media);
+
+    /**
      * Respond with a {@code 404 Not Found} message with the specified media
      * entity.
      *
@@ -709,7 +718,12 @@ public final class Http {
     HeaderName USER_AGENT = HttpHeaderName.USER_AGENT;
 
     /**
-     * The {@code Way-Requst} header name.
+     * The {@code Way-CSRF-Token} header name.
+     */
+    HeaderName WAY_CSRF_TOKEN = HttpHeaderName.WAY_CSRF_TOKEN;
+
+    /**
+     * The {@code Way-Request} header name.
      */
     HeaderName WAY_REQUEST = HttpHeaderName.WAY_REQUEST;
 
@@ -1373,6 +1387,17 @@ public final class Http {
      */
     void loadSession(Http.Exchange http);
 
+    /**
+     * Requires a POST, PUT, PATCH or DELETE request to contain a valid CSRF
+     * token. If the request does contain a CSRF token, or if the token value
+     * does not match the one from the session associated to the request, then
+     * a {@code 403 Forbidden} response is written to the specified exchange.
+     *
+     * @param http
+     *        the HTTP exchange
+     */
+    void requireCsrfToken(Http.Exchange http);
+
   }
 
   /**
@@ -1560,9 +1585,14 @@ public final class Http {
     // 4.x.x
 
     /**
-     * The {@code 400 BAD REQUEST} status.
+     * The {@code 400 Bad Request} status.
      */
     Status BAD_REQUEST = HttpStatus.BAD_REQUEST;
+
+    /**
+     * The {@code 403 Forbidden} status.
+     */
+    Status FORBIDDEN = HttpStatus.FORBIDDEN;
 
     /**
      * The {@code 404 Not Found} status.
@@ -1570,12 +1600,12 @@ public final class Http {
     Status NOT_FOUND = HttpStatus.NOT_FOUND;
 
     /**
-     * The {@code 405 METHOD NOT ALLOWED} status.
+     * The {@code 405 Method Not Allowed} status.
      */
     Status METHOD_NOT_ALLOWED = HttpStatus.METHOD_NOT_ALLOWED;
 
     /**
-     * The {@code 414 URI TOO LONG} status.
+     * The {@code 414 URI Too Long} status.
      */
     Status URI_TOO_LONG = HttpStatus.URI_TOO_LONG;
 
@@ -1729,6 +1759,8 @@ public final class Http {
     }
 
   }
+
+  interface CsrfToken {}
 
   static final class NoopResponseListener implements ResponseListener {
 

@@ -18,7 +18,7 @@ package objectos.way;
 import java.util.Arrays;
 import java.util.random.RandomGenerator;
 
-final class HttpToken {
+final class HttpToken implements Http.CsrfToken {
 
   static final class ParseException extends Exception {
 
@@ -185,6 +185,11 @@ final class HttpToken {
   public final boolean equals(Object obj) {
     return obj == this || obj instanceof HttpToken that
         && l0 == that.l0 && l1 == that.l1 && l2 == that.l2 && l3 == that.l3;
+  }
+
+  public final boolean equalsConstantTime(HttpToken obj) {
+    // TODO equals constant time
+    throw new UnsupportedOperationException("Implement me");
   }
 
   @Override

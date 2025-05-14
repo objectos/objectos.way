@@ -478,6 +478,22 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
     );
   }
 
+  @Test(description = "forbidden(Media.Bytes)")
+  public void forbidden01() {
+    post(
+        http -> http.forbidden(Media.Bytes.textPlain("403\n")),
+
+        """
+        HTTP/1.1 403 Forbidden\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 4\r
+        \r
+        403
+        """
+    );
+  }
+
   @Test(description = "notFound(Media.Bytes)")
   public void notFound01() {
     post(

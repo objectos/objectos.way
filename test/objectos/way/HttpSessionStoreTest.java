@@ -16,8 +16,10 @@
 package objectos.way;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertSame;
+import static org.testng.Assert.assertTrue;
 
 import java.util.function.Consumer;
 import java.util.random.RandomGenerator;
@@ -112,6 +114,162 @@ public class HttpSessionStoreTest {
     assertEquals(http.sessionLoaded(), true);
 
     assertEquals(http.sessionAttr(String.class), "MARKER");
+  }
+
+  @Test
+  public void requireCsrfToken01() {
+    final HttpSessionStore store;
+    store = create(options -> {
+      options.randomGenerator(
+          generator(
+              /* cookie */1L, 2L, 3L, 4L,
+              /* csrf   */5L, 6L, 7L, 8L
+          )
+      );
+    });
+
+    store.createSession();
+
+    final HttpExchange http;
+    http = HttpExchange.create0(config -> {
+      config.method(Http.Method.POST);
+
+      config.header(Http.HeaderName.COOKIE, cookie("OBJECTOSWAY", 1L, 2L, 3L, 4L));
+
+      final HttpToken token;
+      token = HttpToken.of32(5L, 6L, 7L, 8L);
+
+      config.header(Http.HeaderName.WAY_CSRF_TOKEN, token.toString());
+    });
+
+    store.loadSession(http);
+
+    store.requireCsrfToken(http);
+
+    assertFalse(http.processed());
+  }
+
+  @Test
+  public void requireCsrfToken02() {
+    final HttpSessionStore store;
+    store = create(options -> {
+      options.randomGenerator(
+          generator(
+              /* cookie */1L, 2L, 3L, 4L,
+              /* csrf   */5L, 6L, 7L, 8L
+          )
+      );
+    });
+
+    store.createSession();
+
+    final HttpExchange http;
+    http = HttpExchange.create0(config -> {
+      config.clock(Y.clockFixed());
+
+      config.method(Http.Method.POST);
+
+      config.header(Http.HeaderName.COOKIE, cookie("OBJECTOSWAY", 1L, 2L, 3L, 4L));
+    });
+
+    store.loadSession(http);
+
+    store.requireCsrfToken(http);
+
+    assertTrue(http.processed());
+    assertEquals(http.toString(), """
+    HTTP/1.1 403 Forbidden\r
+    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+    Content-Type: text/plain; charset=utf-8\r
+    Content-Length: 30\r
+    Set-Cookie: OBJECTOSWAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=; HttpOnly; Path=/; Secure\r
+    \r
+    Invalid or missing CSRF token
+    """);
+  }
+
+  @Test
+  public void requireCsrfToken03() {
+    final HttpSessionStore store;
+    store = create(options -> {
+      options.randomGenerator(
+          generator(
+              /* cookie */1L, 2L, 3L, 4L,
+              /* csrf   */5L, 6L, 7L, 8L
+          )
+      );
+    });
+
+    store.createSession();
+
+    final HttpExchange http;
+    http = HttpExchange.create0(config -> {
+      config.clock(Y.clockFixed());
+
+      config.method(Http.Method.POST);
+
+      config.header(Http.HeaderName.COOKIE, cookie("OBJECTOSWAY", 1L, 2L, 3L, 4L));
+
+      final HttpToken token;
+      token = HttpToken.of32(5L, 6L, 9L, 9L);
+
+      config.header(Http.HeaderName.WAY_CSRF_TOKEN, token.toString());
+    });
+
+    store.loadSession(http);
+
+    store.requireCsrfToken(http);
+
+    assertTrue(http.processed());
+    assertEquals(http.toString(), """
+    HTTP/1.1 403 Forbidden\r
+    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+    Content-Type: text/plain; charset=utf-8\r
+    Content-Length: 30\r
+    Set-Cookie: OBJECTOSWAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=; HttpOnly; Path=/; Secure\r
+    \r
+    Invalid or missing CSRF token
+    """);
+  }
+
+  @Test
+  public void requireCsrfToken04() {
+    final HttpSessionStore store;
+    store = create(options -> {
+      options.randomGenerator(
+          generator(1L, 2L, 3L, 4L)
+      );
+    });
+
+    store.createSession();
+
+    final HttpExchange http;
+    http = HttpExchange.create0(config -> {
+      config.clock(Y.clockFixed());
+
+      config.method(Http.Method.POST);
+
+      config.header(Http.HeaderName.COOKIE, cookie("OBJECTOSWAY", 1L, 1L, 1L, 1L));
+
+      final HttpToken token;
+      token = HttpToken.of32(2L, 2L, 2L, 2L);
+
+      config.header(Http.HeaderName.WAY_CSRF_TOKEN, token.toString());
+    });
+
+    store.loadSession(http);
+
+    store.requireCsrfToken(http);
+
+    assertTrue(http.processed());
+    assertEquals(http.toString(), """
+    HTTP/1.1 403 Forbidden\r
+    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+    Content-Type: text/plain; charset=utf-8\r
+    Content-Length: 30\r
+    \r
+    Invalid or missing CSRF token
+    """);
   }
 
   private HttpSessionStore create(Consumer<HttpSessionStoreBuilder> options) {

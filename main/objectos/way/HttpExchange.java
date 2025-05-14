@@ -3996,6 +3996,11 @@ final class HttpExchange implements Http.Exchange, Closeable {
   }
 
   @Override
+  public final void forbidden(Media media) {
+    respond(Http.Status.FORBIDDEN, media);
+  }
+
+  @Override
   public final void notFound(Media media) {
     respond(Http.Status.NOT_FOUND, media);
   }
