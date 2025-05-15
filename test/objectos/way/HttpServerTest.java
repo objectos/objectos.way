@@ -396,6 +396,34 @@ public class HttpServerTest implements Consumer<Http.Routing> {
     );
   }
 
+  @SuppressWarnings("unused")
+  private void testCase06(Http.Exchange http) {
+    throw Y.trimStackTrace(new RuntimeException("Uh-Oh"), 1);
+  }
+
+  @Test
+  public void testCase06() {
+    Y.test(
+        Y.httpClient(
+            "/test/testCase06",
+
+            builder -> builder.headers(
+                "Host", "http.server.test"
+            )
+        ),
+
+        """
+        HTTP/1.1 500
+        connection: close
+        content-length: 82
+        content-type: text/plain; charset=utf-8
+        date: Wed, 28 Jun 2023 12:08:43 GMT
+
+        The server encountered an internal error and was unable to complete your request.
+        """
+    );
+  }
+
   private Socket newSocket() throws IOException {
     return TestingHttpServer.newSocket();
   }

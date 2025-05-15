@@ -561,15 +561,15 @@ final class HttpExchange implements Http.Exchange, Closeable {
     } catch (Http.AbstractHandlerException ex) {
       ex.handle(this);
     } catch (Throwable t) {
-      internalServerError(t);
-
-      state = $ERROR;
+      state = internalServerError(t);
     }
   }
 
   @Override
   public final String toString() {
     return switch (state) {
+      case $REQUEST -> "HttpExchange[id=" + id + ",method=" + method + ",path=" + path + "]";
+
       case $COMMIT -> toStringCommit();
 
       case $ERROR -> toStringOutput("ERROR");
@@ -616,7 +616,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
       return new String(bytes, StandardCharsets.UTF_8);
     } else {
-      return "HttpExchange[" + state + "]";
+      return "HttpExchange[state=" + state + "]";
     }
   }
 
