@@ -31,11 +31,13 @@ final class HttpSessionStoreBuilder implements Http.SessionStore.Options {
 
   boolean cookieSecure = true;
 
+  RandomGenerator csrfGenerator;
+
   Duration emptyMaxAge = Duration.ofMinutes(5);
 
   InstantSource instantSource = InstantSource.system();
 
-  RandomGenerator randomGenerator;
+  RandomGenerator sessionGenerator;
 
   @Override
   public final void cookieName(String name) {
@@ -68,6 +70,15 @@ final class HttpSessionStoreBuilder implements Http.SessionStore.Options {
   }
 
   @Override
+  public final void csrfGenerator(RandomGenerator value) {
+    if (csrfGenerator != null) {
+      throw new IllegalStateException("csrfGenerator was already set");
+    }
+
+    csrfGenerator = Objects.requireNonNull(value, "value == null");
+  }
+
+  @Override
   public final void emptyMaxAge(Duration duration) {
     Objects.requireNonNull(duration, "duration == null");
 
@@ -88,13 +99,31 @@ final class HttpSessionStoreBuilder implements Http.SessionStore.Options {
   }
 
   @Override
-  public final void randomGenerator(RandomGenerator value) {
-    randomGenerator = Objects.requireNonNull(value, "value == null");
+  public final void sessionGenerator(RandomGenerator value) {
+    if (sessionGenerator != null) {
+      throw new IllegalStateException("sessionGenerator was already set");
+    }
+
+    sessionGenerator = Objects.requireNonNull(value, "value == null");
   }
 
   final Http.SessionStore build() {
-    if (randomGenerator == null) {
-      randomGenerator = new SecureRandom();
+    RandomGenerator generator = null;
+
+    if (csrfGenerator == null) {
+      if (generator == null) {
+        generator = new SecureRandom();
+      }
+
+      csrfGenerator = generator;
+    }
+
+    if (sessionGenerator == null) {
+      if (generator == null) {
+        generator = new SecureRandom();
+      }
+
+      sessionGenerator = generator;
     }
 
     return new HttpSessionStore(this);

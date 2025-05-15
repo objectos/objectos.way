@@ -31,7 +31,7 @@ public class HttpSessionStoreTest {
   public void createSession01() {
     final HttpSessionStore store;
     store = create(options -> {
-      options.randomGenerator(generator(1L, 2L, 3L, 4L));
+      options.sessionGenerator(generator(1L, 2L, 3L, 4L));
     });
 
     final HttpSession session;
@@ -54,7 +54,7 @@ public class HttpSessionStoreTest {
   public void loadSession01() {
     final HttpSessionStore store;
     store = create(options -> {
-      options.randomGenerator(generator(1L, 2L, 3L, 4L));
+      options.sessionGenerator(generator(1L, 2L, 3L, 4L));
     });
 
     final HttpSession session;
@@ -78,7 +78,7 @@ public class HttpSessionStoreTest {
   public void ensureSession01() {
     final HttpSessionStore store;
     store = create(options -> {
-      options.randomGenerator(generator(1L, 2L, 3L, 4L));
+      options.sessionGenerator(generator(1L, 2L, 3L, 4L));
     });
 
     final HttpExchange http;
@@ -95,7 +95,7 @@ public class HttpSessionStoreTest {
   public void ensureSession02() {
     final HttpSessionStore store;
     store = create(options -> {
-      options.randomGenerator(generator(1L, 2L, 3L, 4L));
+      options.sessionGenerator(generator(1L, 2L, 3L, 4L));
     });
 
     final HttpExchange http;
@@ -120,12 +120,9 @@ public class HttpSessionStoreTest {
   public void requireCsrfToken01() {
     final HttpSessionStore store;
     store = create(options -> {
-      options.randomGenerator(
-          generator(
-              /* cookie */1L, 2L, 3L, 4L,
-              /* csrf   */5L, 6L, 7L, 8L
-          )
-      );
+      options.csrfGenerator(generator(5L, 6L, 7L, 8L));
+
+      options.sessionGenerator(generator(1L, 2L, 3L, 4L));
     });
 
     store.createSession();
@@ -153,12 +150,9 @@ public class HttpSessionStoreTest {
   public void requireCsrfToken02() {
     final HttpSessionStore store;
     store = create(options -> {
-      options.randomGenerator(
-          generator(
-              /* cookie */1L, 2L, 3L, 4L,
-              /* csrf   */5L, 6L, 7L, 8L
-          )
-      );
+      options.csrfGenerator(generator(5L, 6L, 7L, 8L));
+
+      options.sessionGenerator(generator(1L, 2L, 3L, 4L));
     });
 
     store.createSession();
@@ -192,12 +186,9 @@ public class HttpSessionStoreTest {
   public void requireCsrfToken03() {
     final HttpSessionStore store;
     store = create(options -> {
-      options.randomGenerator(
-          generator(
-              /* cookie */1L, 2L, 3L, 4L,
-              /* csrf   */5L, 6L, 7L, 8L
-          )
-      );
+      options.csrfGenerator(generator(5L, 6L, 7L, 8L));
+
+      options.sessionGenerator(generator(1L, 2L, 3L, 4L));
     });
 
     store.createSession();
@@ -236,9 +227,9 @@ public class HttpSessionStoreTest {
   public void requireCsrfToken04() {
     final HttpSessionStore store;
     store = create(options -> {
-      options.randomGenerator(
-          generator(1L, 2L, 3L, 4L)
-      );
+      options.csrfGenerator(generator(5L, 6L, 7L, 8L));
+
+      options.sessionGenerator(generator(1L, 2L, 3L, 4L));
     });
 
     store.createSession();

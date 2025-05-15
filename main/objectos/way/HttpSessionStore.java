@@ -54,6 +54,8 @@ final class HttpSessionStore implements Http.SessionStore {
 
   private boolean cookieSecure = true;
 
+  private final RandomGenerator csrfGenerator;
+
   private final Media csrfInvalidResponse = Media.Bytes.textPlain("Invalid or missing CSRF token\n");
 
   private final String csrfParamName = "way-csrf-token";
@@ -67,7 +69,7 @@ final class HttpSessionStore implements Http.SessionStore {
 
   private final Note.Sink noteSink = Note.NoOpSink.INSTANCE;
 
-  private final RandomGenerator randomGenerator;
+  private final RandomGenerator sessionGenerator;
 
   private final ConcurrentMap<HttpToken, HttpSession> sessions = new ConcurrentHashMap<>();
 
@@ -82,11 +84,13 @@ final class HttpSessionStore implements Http.SessionStore {
 
     cookieSecure = builder.cookieSecure;
 
+    csrfGenerator = builder.csrfGenerator;
+
     emptyMaxAge = builder.emptyMaxAge;
 
     instantSource = builder.instantSource;
 
-    randomGenerator = builder.randomGenerator;
+    sessionGenerator = builder.sessionGenerator;
   }
 
   @Override
@@ -208,7 +212,7 @@ final class HttpSessionStore implements Http.SessionStore {
 
     do {
       final HttpToken id;
-      id = nextId();
+      id = HttpToken.of(sessionGenerator, SESSION_LENGTH);
 
       final String setCookie;
       setCookie = setCookie(id);
@@ -221,7 +225,7 @@ final class HttpSessionStore implements Http.SessionStore {
     session.touch(instantSource);
 
     if (!skipCsrf) {
-      session.computeIfAbsent(Http.CsrfToken.class, this::nextId);
+      session.computeIfAbsent(Http.CsrfToken.class, () -> HttpToken.of(csrfGenerator, CSRF_LENGTH));
     }
 
     return session;
@@ -297,10 +301,6 @@ final class HttpSessionStore implements Http.SessionStore {
     }
 
     return builder.buildString();
-  }
-
-  private HttpToken nextId() {
-    return HttpToken.of(randomGenerator, SESSION_LENGTH);
   }
 
 }

@@ -1324,6 +1324,15 @@ public final class Http {
       void cookieSecure(boolean value);
 
       /**
+       * Use the specified {@link RandomGenerator} instance for generating
+       * CSRF token values.
+       *
+       * @param value
+       *        the {@link RandomGenerator} instance to use
+       */
+      void csrfGenerator(RandomGenerator value);
+
+      /**
        * Discards empty sessions, during a clean up operation, whose last access
        * time is greater than the specified duration.
        *
@@ -1342,13 +1351,13 @@ public final class Http {
       void instantSource(InstantSource value);
 
       /**
-       * Use the specified {@link RandomGenerator} instance for generating token
-       * values.
+       * Use the specified {@link RandomGenerator} instance for generating
+       * session token values.
        *
        * @param value
        *        the {@link RandomGenerator} instance to use
        */
-      void randomGenerator(RandomGenerator value);
+      void sessionGenerator(RandomGenerator value);
 
     }
 

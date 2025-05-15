@@ -30,7 +30,7 @@ public class HttpExchangeTestASession {
   public void session01() {
     final Http.SessionStore store;
     store = Http.SessionStore.create(options -> {
-      options.randomGenerator(Y.randomGeneratorOfLongs(1L, 2L, 3L, 4L));
+      options.sessionGenerator(Y.randomGeneratorOfLongs(1L, 2L, 3L, 4L));
     });
 
     test(
