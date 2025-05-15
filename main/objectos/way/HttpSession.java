@@ -107,6 +107,16 @@ final class HttpSession {
     this.setCookie = setCookie;
   }
 
+  HttpSession(Map<Object, Object> map) {
+    id = HttpToken.of32(0, 0, 0, 0);
+
+    setCookie = null;
+
+    state = State.MAP;
+
+    store = map;
+  }
+
   public final void computeIfAbsent(Class<?> key, Supplier<?> supplier) {
     lock.lock();
     try {

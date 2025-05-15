@@ -25,7 +25,7 @@ import objectos.way.Http.ResponseListener;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class HttpExchangeTestBCreate {
+public class HttpExchangeTestBCreate extends HttpExchangeTest {
 
   @Test
   public void formParam01() {
@@ -137,6 +137,36 @@ public class HttpExchangeTestBCreate {
         TC01\
         """
     );
+  }
+
+  private record User(String login) {}
+
+  @Test
+  public void sessionAttr01() {
+    Http.Exchange http;
+    http = http(config -> {
+      config.path("/restricted01");
+
+      config.sessionAttr(User.class, new User("foo"));
+    });
+
+    final Http.Handler handler;
+    handler = this::requireUser;
+
+    handler.handle(http);
+
+    assertEquals(http.toString(), OK_RESP);
+  }
+
+  private void requireUser(Http.Exchange http) {
+    final User user;
+    user = http.sessionAttr(User.class);
+
+    if (user == null) {
+      http.found("/login");
+    } else {
+      http.ok(OK);
+    }
   }
 
   @Test

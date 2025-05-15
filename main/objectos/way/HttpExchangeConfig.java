@@ -54,6 +54,8 @@ final class HttpExchangeConfig implements Http.Exchange.Options {
 
   Http.ResponseListener responseListener = Http.NoopResponseListener.INSTANCE;
 
+  private Map<Object, Object> session;
+
   @Override
   public final void clock(Clock value) {
     clock = Objects.requireNonNull(value, "value == null");
@@ -198,6 +200,24 @@ final class HttpExchangeConfig implements Http.Exchange.Options {
   }
 
   @Override
+  public final <T> void sessionAttr(Class<T> key, T value) {
+    final String name;
+    name = key.getName();
+
+    Objects.requireNonNull(value, "value == null");
+
+    if (session == null) {
+      session = Util.createMap();
+    }
+
+    else if (session.containsKey(name)) {
+      throw new IllegalStateException("A value was already associated to name=" + name);
+    }
+
+    session.put(name, value);
+  }
+
+  @Override
   public final void responseListener(Http.ResponseListener value) {
     if (responseListener != Http.NoopResponseListener.INSTANCE) {
       throw new IllegalStateException("Response listener has already been set");
@@ -306,6 +326,17 @@ final class HttpExchangeConfig implements Http.Exchange.Options {
     bytes = out.toByteArray();
 
     return new ByteArrayInputStream(bytes);
+  }
+
+  final HttpSession session() {
+    HttpSession result;
+    result = null;
+
+    if (session != null) {
+      result = new HttpSession(session);
+    }
+
+    return result;
   }
 
   private byte[] body() {

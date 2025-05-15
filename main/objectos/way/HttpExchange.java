@@ -486,6 +486,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
     impl.attributes = builder.attributes;
 
+    impl.session = builder.session();
+
     return impl;
   }
 

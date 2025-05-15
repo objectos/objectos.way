@@ -206,7 +206,7 @@ public final class Http {
       void queryParam(String name, String value);
 
       /**
-       * Stores the provided key-value pair in the testing exchange.
+       * Stores the provided key-value pair in the resulting exchange.
        *
        * @param key
        *        the key to be stored
@@ -224,6 +224,19 @@ public final class Http {
        *        the listener to use
        */
       void responseListener(ResponseListener value);
+
+      /**
+       * Associate a session to the resulting exchange and store the provided
+       * key-value pair in the session.
+       *
+       * @param <T>
+       *        the type of the attribute
+       * @param key
+       *        the class object providing the attribute name
+       * @param value
+       *        the value to be stored
+       */
+      <T> void sessionAttr(Class<T> key, T value);
 
     }
 
