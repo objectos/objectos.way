@@ -1782,7 +1782,11 @@ public final class Http {
 
   }
 
-  interface CsrfToken {}
+  interface CsrfToken {
+
+    boolean checkCsrfToken(CsrfToken other);
+
+  }
 
   static final class NoopResponseListener implements ResponseListener {
 

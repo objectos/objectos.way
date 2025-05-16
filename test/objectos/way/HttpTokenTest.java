@@ -16,6 +16,8 @@
 package objectos.way;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 import java.util.Base64;
 import java.util.HexFormat;
@@ -102,6 +104,44 @@ public class HttpTokenTest {
     token = HttpToken.of32(1L, 2L, 3L, 4L);
 
     assertEquals(token.toString(), "AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=");
+  }
+
+  @Test
+  public void equalsConstantTimeValid() {
+    for (int i = 0; i < 100; i++) {
+      long l0 = random.nextLong();
+      long l1 = random.nextLong();
+      long l2 = random.nextLong();
+      long l3 = random.nextLong();
+
+      final HttpToken a;
+      a = HttpToken.of32(l0, l1, l2, l3);
+
+      final HttpToken b;
+      b = HttpToken.of32(l0, l1, l2, l3);
+
+      assertTrue(a.equalsConstantTime(b));
+    }
+  }
+
+  @Test
+  public void equalsConstantTimeInvalid() {
+    for (int i = 0; i < 100; i++) {
+      long l0 = random.nextLong();
+      long l1 = random.nextLong();
+      long l2 = random.nextLong();
+      long l3 = random.nextLong();
+
+      final HttpToken a;
+      a = HttpToken.of32(l0, l1, l2, l3);
+
+      long l4 = random.nextLong();
+
+      final HttpToken b;
+      b = HttpToken.of32(l0, l1, l2, l4);
+
+      assertFalse(a.equalsConstantTime(b));
+    }
   }
 
   private String hex(HttpToken token) {
