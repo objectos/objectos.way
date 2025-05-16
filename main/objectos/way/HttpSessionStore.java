@@ -17,6 +17,8 @@ package objectos.way;
 
 import java.time.Duration;
 import java.time.InstantSource;
+import java.util.EnumSet;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.random.RandomGenerator;
@@ -133,10 +135,19 @@ final class HttpSessionStore implements Http.SessionStore {
     }
   }
 
+  private static final Set<Http.Method> SAFE_METHODS = EnumSet.of(Http.Method.GET, Http.Method.HEAD);
+
   @Override
   public final void requireCsrfToken(Http.Exchange http) {
     final HttpExchange impl;
     impl = (HttpExchange) http;
+
+    final Http.Method method;
+    method = impl.method();
+
+    if (SAFE_METHODS.contains(method)) {
+      return;
+    }
 
     // prefer from the header
     String encoded;

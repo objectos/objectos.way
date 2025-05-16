@@ -66,11 +66,11 @@ final class HttpToken implements Http.CsrfToken {
     this.l3 = l3;
   }
 
-  public static HttpToken of(RandomGenerator random, int bitLength) {
-    return switch (bitLength) {
+  public static HttpToken of(RandomGenerator random, int bytesLength) {
+    return switch (bytesLength) {
       case 32 -> of32(random);
 
-      default -> throw new IllegalArgumentException("Invalid bitLength=" + bitLength);
+      default -> throw new IllegalArgumentException("Invalid bytesLength=" + bytesLength);
     };
   }
 
@@ -87,11 +87,11 @@ final class HttpToken implements Http.CsrfToken {
     );
   }
 
-  public static HttpToken parse(CharSequence s, int bitLength) throws ParseException {
-    return switch (bitLength) {
+  public static HttpToken parse(CharSequence s, int bytesLength) throws ParseException {
+    return switch (bytesLength) {
       case 32 -> parse32(s);
 
-      default -> throw new IllegalArgumentException("Invalid bitLength=" + bitLength);
+      default -> throw new IllegalArgumentException("Invalid bytesLength=" + bytesLength);
     };
   }
 
