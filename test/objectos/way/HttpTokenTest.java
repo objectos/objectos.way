@@ -120,7 +120,7 @@ public class HttpTokenTest {
       final HttpToken b;
       b = HttpToken.of32(l0, l1, l2, l3);
 
-      assertTrue(a.equalsConstantTime(b));
+      assertTrue(a.equals(b));
     }
   }
 
@@ -140,7 +140,7 @@ public class HttpTokenTest {
       final HttpToken b;
       b = HttpToken.of32(l0, l1, l2, l4);
 
-      assertFalse(a.equalsConstantTime(b));
+      assertFalse(a.equals(b));
     }
   }
 

@@ -176,7 +176,7 @@ final class HttpSessionStore implements Http.SessionStore {
       final CsrfToken sessionToken;
       sessionToken = impl.sessionAttr(Http.CsrfToken.class);
 
-      valid = csrf.checkCsrfToken(sessionToken);
+      valid = csrf.equals(sessionToken);
     }
 
     if (!valid) {

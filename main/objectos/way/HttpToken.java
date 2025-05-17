@@ -17,7 +17,6 @@ package objectos.way;
 
 import java.util.Arrays;
 import java.util.random.RandomGenerator;
-import objectos.way.Http.CsrfToken;
 
 final class HttpToken implements Http.CsrfToken {
 
@@ -183,26 +182,26 @@ final class HttpToken implements Http.CsrfToken {
   }
 
   @Override
-  public final boolean checkCsrfToken(CsrfToken other) {
-    final HttpToken impl;
-    impl = (HttpToken) other;
-
-    return equalsConstantTime(impl);
-  }
-
-  @Override
   public final boolean equals(Object obj) {
     return obj == this || obj instanceof HttpToken that
-        && l0 == that.l0 && l1 == that.l1 && l2 == that.l2 && l3 == that.l3;
+        && equalsConstantTime(that);
   }
 
-  public final boolean equalsConstantTime(HttpToken obj) {
-    final long diff0 = l0 ^ obj.l0;
-    final long diff1 = l1 ^ obj.l1;
-    final long diff2 = l2 ^ obj.l2;
-    final long diff3 = l3 ^ obj.l3;
+  private boolean equalsConstantTime(HttpToken that) {
+    final long diff0;
+    diff0 = l0 ^ that.l0;
 
-    final long diff = diff0 | diff1 | diff2 | diff3;
+    final long diff1;
+    diff1 = l1 ^ that.l1;
+
+    final long diff2;
+    diff2 = l2 ^ that.l2;
+
+    final long diff3;
+    diff3 = l3 ^ that.l3;
+
+    final long diff;
+    diff = diff0 | diff1 | diff2 | diff3;
 
     return diff == 0;
   }

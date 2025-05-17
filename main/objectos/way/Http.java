@@ -89,6 +89,11 @@ public final class Http {
   }
 
   /**
+   * Represents a CSRF token.
+   */
+  public sealed interface CsrfToken permits HttpToken {}
+
+  /**
    * An HTTP request received by the server and its subsequent response to the
    * client.
    *
@@ -1779,12 +1784,6 @@ public final class Http {
         case HTTP_1_1 -> out.append("HTTP/1.1");
       }
     }
-
-  }
-
-  interface CsrfToken {
-
-    boolean checkCsrfToken(CsrfToken other);
 
   }
 
