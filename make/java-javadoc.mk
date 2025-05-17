@@ -67,7 +67,10 @@ JAVADOCX += -version
 JAVADOCX += -windowtitle '$(GROUP_ID):$(ARTIFACT_ID) $(VERSION) API'
 
 ## javadoc jar file
-JAVADOC_JAR_FILE = $(WORK)/$(ARTIFACT_ID)-$(VERSION)-javadoc.jar
+JAVADOC_JAR_FILE_NAME := $(ARTIFACT_ID)-$(VERSION)-javadoc.jar
+
+## javadoc jar file
+JAVADOC_JAR_FILE = $(WORK)/$(JAVADOC_JAR_FILE_NAME)
 
 ## javadoc jar command
 JAVADOC_JARX := $(JAR)

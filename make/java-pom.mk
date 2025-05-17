@@ -50,8 +50,11 @@ endef
 
 mk-pom-dep = $(call POM_DEPENDENCY,$(call word-solidus,$(1),1),$(call word-solidus,$(1),2),$(call word-solidus,$(1),3))
 
+## pom file name
+POM_FILE_NAME := $(ARTIFACT_ID)-$(VERSION).pom
+
 ## pom file
-POM_FILE := $(WORK)/$(ARTIFACT_ID)-$(VERSION).pom
+POM_FILE := $(WORK)/$(POM_FILE_NAME)
 
 ## deps
 pom_gavs = $(COMPILE_DEPS:$(RESOLUTION_DIR)/%=%)

@@ -21,7 +21,7 @@
 ## Coordinates
 GROUP_ID := br.com.objectos
 ARTIFACT_ID := objectos.way
-VERSION := 0.2.1-SNAPSHOT
+VERSION := 0.2.1
 MODULE := $(ARTIFACT_ID)
 
 ## javac --release option
@@ -29,7 +29,6 @@ JAVA_RELEASE := 21
 
 ## Maven interop
 REMOTE_REPOS := https://repo.maven.apache.org/maven2
-OSSRH_SERVER := https://oss.sonatype.org
 
 ## Dependencies
 H2 := com.h2database/h2/2.3.232
@@ -298,26 +297,20 @@ mk-pom = $(call POM_TMPL)
 include make/java-pom.mk
 
 #
-# OSSRH secrets
+# Publisher API secrets
 #
 
-## - OSSRH_GPG_KEY
-## - OSSRH_GPG_PASSPHRASE
-## - OSSRH_USERNAME
-## - OSSRH_PASSWORD
--include $(HOME)/.config/objectos/ossrh-config.mk
+## - PUBLISHER_API_GPG_KEY
+## - PUBLISHER_API_GPG_PASSPHRASE
+## - PUBLISHER_API_USERNAME
+## - PUBLISHER_API_PASSWORD
+-include $(HOME)/.config/objectos/publisher-api-config.mk
 
 #
-# way@ossrh
+# way@publish
 #
 
-include make/java-ossrh.mk
-
-#
-# way@ossrh-snapshots
-#
-
-include make/java-ossrh-snapshots.mk
+include make/java-publisher-api.mk
 
 #
 # GH secrets

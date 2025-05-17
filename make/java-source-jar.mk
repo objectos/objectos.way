@@ -34,8 +34,11 @@ ifndef VERSION
 $(error The required variable VERSION was not defined)
 endif
 
+## source-jar file name
+SOURCE_JAR_FILE_NAME := $(ARTIFACT_ID)-$(VERSION)-sources.jar
+
 ## source-jar file
-SOURCE_JAR_FILE := $(WORK)/$(ARTIFACT_ID)-$(VERSION)-sources.jar
+SOURCE_JAR_FILE := $(WORK)/$(SOURCE_JAR_FILE_NAME)
 
 ## source-jar command
 SOURCE_JARX := $(JAR)

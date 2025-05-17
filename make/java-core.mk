@@ -104,6 +104,7 @@ deps-to-local = $(foreach dep,$(1),$(call gav-to-local,$(dep)))
 ## 
 ## syntax:
 ## $(call dependency,[GROUP_ID],[ARTIFACT_ID],[VERSION])
+mk-maven-layout = $(subst $(dot),$(solidus),$(1))/$(2)/$(3)
 mk-dependency = $(subst $(dot),$(solidus),$(1))/$(2)/$(3)/$(2)-$(3).$(4)
 dependency = $(LOCAL_REPO)/$(subst $(dot),$(solidus),$(1))/$(2)/$(3)/$(2)-$(3).jar
 

@@ -36,8 +36,11 @@ JAR_META_INF := $(CLASS_OUTPUT)/META-INF
 ## license 'artifact'
 JAR_LICENSE := $(JAR_META_INF)/LICENSE
 
+## jar file name
+JAR_FILE_NAME := $(ARTIFACT_ID)-$(VERSION).jar
+
 ## jar file path
-JAR_FILE = $(WORK)/$(ARTIFACT_ID)-$(VERSION).jar
+JAR_FILE := $(WORK)/$(JAR_FILE_NAME)
 
 ## jar command
 JARX := $(JAR)
