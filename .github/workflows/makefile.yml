@@ -21,8 +21,11 @@ jobs:
         java-version: '24.0.1+9'
         distribution: 'temurin'
 
-    - name: Install Runner Deps
-      run: sudo apt-get update && sudo apt-get install -y libaio1t64
+    - name: Install Deps
+      run: |
+        wget https://launchpadlibrarian.net/646633572/libaio1_0.3.113-4_amd64.deb
+        sudo dpkg -i libaio1_0.3.113-4_amd64.deb
+        rm libaio1_0.3.113-4_amd64.deb
 
     - name: Cache MySQL 5.7
       id: cache-mysql7
