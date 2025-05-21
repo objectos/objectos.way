@@ -17,6 +17,7 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import java.sql.BatchUpdateException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -28,6 +29,7 @@ import java.util.function.Consumer;
 import javax.sql.DataSource;
 import objectos.way.Sql.MetaTable;
 import org.mariadb.jdbc.MariaDbPoolDataSource;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class SqlDatabaseTestMySQL {
@@ -68,6 +70,136 @@ public class SqlDatabaseTestMySQL {
 
     MIGRATE01.SCHEMA_HISTORY
     MIGRATE01.T1
+    """);
+  }
+
+  @Test(description = "Two runs: same migration")
+  public void migrate02() {
+    final Sql.Database db;
+    db = createdb();
+
+    assertEquals(report(db), """
+    # History
+
+    N/A
+
+    # Tables
+
+    N/A
+    """);
+
+    db.migrate(v001);
+
+    assertEquals(report(db), """
+    # History
+
+    000 | SCHEMA_HISTORY table created   | MIGRATE02@localhost  | 2025-03-10 10:00:00 | true
+    001 | First Version                  | MIGRATE02@localhost  | 2025-03-10 10:01:00 | true
+
+    # Tables
+
+    MIGRATE02.SCHEMA_HISTORY
+    MIGRATE02.T1
+    """);
+
+    db.migrate(v001);
+
+    assertEquals(report(db), """
+    # History
+
+    000 | SCHEMA_HISTORY table created   | MIGRATE02@localhost  | 2025-03-10 10:00:00 | true
+    001 | First Version                  | MIGRATE02@localhost  | 2025-03-10 10:01:00 | true
+
+    # Tables
+
+    MIGRATE02.SCHEMA_HISTORY
+    MIGRATE02.T1
+    """);
+  }
+
+  @Test(description = "Two runs: additional migration")
+  public void migrate03() {
+    final Sql.Database db;
+    db = createdb();
+
+    assertEquals(report(db), """
+    # History
+
+    N/A
+
+    # Tables
+
+    N/A
+    """);
+
+    db.migrate(v001);
+
+    assertEquals(report(db), """
+    # History
+
+    000 | SCHEMA_HISTORY table created   | MIGRATE03@localhost  | 2025-03-10 10:00:00 | true
+    001 | First Version                  | MIGRATE03@localhost  | 2025-03-10 10:01:00 | true
+
+    # Tables
+
+    MIGRATE03.SCHEMA_HISTORY
+    MIGRATE03.T1
+    """);
+
+    db.migrate(v001.andThen(v002));
+
+    assertEquals(report(db), """
+    # History
+
+    000 | SCHEMA_HISTORY table created   | MIGRATE03@localhost  | 2025-03-10 10:00:00 | true
+    001 | First Version                  | MIGRATE03@localhost  | 2025-03-10 10:01:00 | true
+    002 | Second Version                 | MIGRATE03@localhost  | 2025-03-10 10:02:00 | true
+
+    # Tables
+
+    MIGRATE03.SCHEMA_HISTORY
+    MIGRATE03.T1
+    MIGRATE03.T2
+    """);
+  }
+
+  @Test(description = "Single run: invalid migration")
+  public void migrate04() {
+    final Sql.Database db;
+    db = createdb();
+
+    assertEquals(report(db), """
+    # History
+
+    N/A
+
+    # Tables
+
+    N/A
+    """);
+
+    try {
+      db.migrate(m -> m.add("First Version", """
+      some invalid SQL;
+      """));
+
+      Assert.fail("It should have thrown");
+    } catch (Sql.MigrationFailedException expected) {
+      final Throwable cause;
+      cause = expected.getCause();
+
+      assertEquals(cause instanceof BatchUpdateException, true);
+    }
+
+    assertEquals(report(db), """
+    # History
+
+    000 | SCHEMA_HISTORY table created   | MIGRATE04@localhost  | 2025-03-10 10:00:00 | true
+    001 | First Version                  | MIGRATE04@localhost  | 2025-03-10 10:01:00 | false
+
+    # Tables
+
+    MIGRATE04.SCHEMA_HISTORY
     """);
   }
 
