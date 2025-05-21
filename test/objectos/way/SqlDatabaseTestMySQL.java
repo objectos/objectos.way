@@ -17,32 +17,31 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.Consumer;
+import javax.sql.DataSource;
 import objectos.way.Sql.MetaTable;
-import org.h2.jdbcx.JdbcConnectionPool;
+import org.mariadb.jdbc.MariaDbPoolDataSource;
 import org.testng.annotations.Test;
 
 public class SqlDatabaseTestMySQL {
 
   private final Consumer<Sql.Migrator> v001 = v("First Version", """
-  create schema TEST;
-
-  set schema TEST;
-
   create table T1 (ID int not null, primary key (ID));
   """);
 
   @SuppressWarnings("unused")
   private final Consumer<Sql.Migrator> v002 = v("Second Version", """
-  set schema TEST;
-
   create table T2 (ID int not null, primary key (ID));
   """);
 
-  @Test(enabled = false, description = "Single run")
+  @Test(description = "Single run")
   public void migrate01() {
     final Sql.Database db;
     db = createdb();
@@ -62,13 +61,13 @@ public class SqlDatabaseTestMySQL {
     assertEquals(report(db), """
     # History
 
-    000 | SCHEMA_HISTORY table created   | SA    | 2025-03-10 10:00:00 | true
-    001 | First Version                  | SA    | 2025-03-10 10:01:00 | true
+    000 | SCHEMA_HISTORY table created   | MIGRATE01@localhost  | 2025-03-10 10:00:00 | true
+    001 | First Version                  | MIGRATE01@localhost  | 2025-03-10 10:01:00 | true
 
     # Tables
 
-    PUBLIC.SCHEMA_HISTORY
-    TEST.T1
+    MIGRATE01.SCHEMA_HISTORY
+    MIGRATE01.T1
     """);
   }
 
@@ -92,11 +91,31 @@ public class SqlDatabaseTestMySQL {
     final String dbName;
     dbName = methodName.toUpperCase();
 
-    final String url;
-    url = "jdbc:mariadb://localhost:17003/" + dbName;
+    try (
+        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:17003/", "root", "");
+        Statement stmt = conn.createStatement();
+    ) {
+      stmt.execute("drop database if exists " + dbName);
+      stmt.execute("drop user if exists " + dbName);
 
-    final JdbcConnectionPool ds;
-    ds = JdbcConnectionPool.create(url, "root", "");
+      stmt.execute("create database " + dbName);
+      stmt.execute("create user " + dbName);
+
+      stmt.execute("grant all on " + dbName + ".* to '" + dbName + "'@'localhost'");
+    } catch (SQLException e) {
+      throw new AssertionError("Failed to create DataSource", e);
+    }
+
+    final String url;
+    url = "jdbc:mariadb://localhost:17003/" + dbName + "?user=" + dbName;
+
+    final DataSource ds;
+
+    try {
+      ds = new MariaDbPoolDataSource(url);
+    } catch (SQLException e) {
+      throw new AssertionError("Failed to create DataSource", e);
+    }
 
     return Sql.Database.create(config -> {
       final Clock clock;
@@ -106,7 +125,7 @@ public class SqlDatabaseTestMySQL {
 
       config.dataSource(ds);
 
-      config.noteSink(TestingNoteSink.INSTANCE);
+      config.noteSink(Y.noteSink());
     });
   }
 
@@ -144,7 +163,7 @@ public class SqlDatabaseTestMySQL {
         t.row(
             rank, 3,
             description, 30,
-            installedBy, 5,
+            installedBy, 20,
             installedOn,
             success
         );
@@ -156,8 +175,6 @@ public class SqlDatabaseTestMySQL {
 
     final List<MetaTable> beforeSchemaHistory;
     beforeSchemaHistory = meta.queryTables(filter -> {
-      filter.schemaName("PUBLIC");
-
       filter.tableName("SCHEMA_HISTORY");
     });
 
@@ -171,7 +188,7 @@ public class SqlDatabaseTestMySQL {
         INSTALLED_ON,
         SUCCESS
       from
-        PUBLIC.SCHEMA_HISTORY
+        SCHEMA_HISTORY
       """);
 
       List<History> historyRows;
@@ -196,16 +213,16 @@ public class SqlDatabaseTestMySQL {
 
     for (MetaTable table : tables) {
 
-      final String schema;
-      schema = table.schema();
+      final String cat;
+      cat = table.catalog();
 
-      if ("INFORMATION_SCHEMA".equals(schema)) {
+      if ("information_schema".equals(cat)) {
         continue;
       }
 
       empty = false;
 
-      t.fieldValue(schema + "." + table.name());
+      t.fieldValue(cat + "." + table.name());
 
     }
 

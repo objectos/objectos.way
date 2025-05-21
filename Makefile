@@ -32,6 +32,7 @@ REMOTE_REPOS := https://repo.maven.apache.org/maven2
 
 ## Dependencies
 H2 := com.h2database/h2/2.3.232
+MARIADB := org.mariadb.jdbc/mariadb-java-client/3.5.3
 SLF4J_NOP := org.slf4j/slf4j-nop/2.0.17
 TESTNG := org.testng/testng/7.11.0
 
@@ -92,6 +93,7 @@ $(SCRIPT_GEN): $(SCRIPT_GEN_REQS)
 
 ## test compile deps
 TEST_COMPILE_DEPS := $(H2)
+TEST_COMPILE_DEPS += $(MARIADB)
 TEST_COMPILE_DEPS += $(TESTNG)
 
 include make/java-test-compile.mk
@@ -110,6 +112,7 @@ TEST_RUNTIME_DEPS := $(SLF4J_NOP)
 TEST_ADD_MODULES := org.testng
 TEST_ADD_MODULES += org.slf4j
 TEST_ADD_MODULES += com.h2database
+TEST_ADD_MODULES += org.mariadb.jdbc
 TEST_ADD_MODULES += java.net.http
 
 ## test --add-exports
@@ -119,6 +122,7 @@ TEST_ADD_EXPORTS := objectos.way/objectos.util=org.testng
 TEST_ADD_READS := objectos.way=org.testng
 TEST_ADD_READS += objectos.way=org.slf4j
 TEST_ADD_READS += objectos.way=com.h2database
+TEST_ADD_READS += objectos.way=org.mariadb.jdbc
 TEST_ADD_READS += objectos.way=java.compiler
 TEST_ADD_READS += objectos.way=java.net.http
 

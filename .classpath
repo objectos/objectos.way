@@ -41,5 +41,10 @@
 			<attribute name="test" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="/home/mendo/.cache/objectos/repository/org/mariadb/jdbc/mariadb-java-client/3.5.3/mariadb-java-client-3.5.3.jar" sourcepath="/home/mendo/.cache/objectos/repository/org/mariadb/jdbc/mariadb-java-client/3.5.3/mariadb-java-client-3.5.3-sources.jar">
+		<attributes>
+			<attribute name="test" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="eclipse-bin"/>
 </classpath>
