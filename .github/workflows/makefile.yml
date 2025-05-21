@@ -21,6 +21,9 @@ jobs:
         java-version: '24.0.1+9'
         distribution: 'temurin'
 
+    - name: Install Runner Deps
+      run: sudo apt-get update && sudo apt-get install -y libaio1
+
     - name: Cache MySQL 5.7
       id: cache-mysql7
       uses: actions/cache@v4
