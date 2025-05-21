@@ -343,7 +343,7 @@ final class CssEngine implements Css.StyleSheet, Consumer<String>, FileVisitor<P
     resourceName += ".class";
 
     final ClassLoader loader;
-    loader = ClassLoader.getSystemClassLoader();
+    loader = next.getClassLoader();
 
     final InputStream in;
     in = loader.getResourceAsStream(resourceName);
