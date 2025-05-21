@@ -43,7 +43,7 @@ TESTNG := org.testng/testng/7.11.0
 #
 
 .PHONY: all
-all: test test-js
+all: mysql7-start test test-js mysql7-stop
 
 include make/java-core.mk
 

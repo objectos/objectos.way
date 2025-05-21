@@ -21,6 +21,23 @@ jobs:
         java-version: '24.0.1+9'
         distribution: 'temurin'
 
+    - name: Cache MySQL 5.7
+      id: cache-mysql7
+      uses: actions/cache@v4
+      with:
+        path: /opt/mysql-5.7
+        key: mysql-5.7-${{ runner.os }}
+        restore-keys: |
+          mysql-5.7-${{ runner.os }}
+
+    - name: Install MySQL 5.7
+      if: steps.cache-mysql7.outputs.cache-hit != 'true'
+      run: |
+        sudo mkdir -p /opt/mysql-5.7
+        wget https://downloads.mysql.com/archives/get/p/23/file/mysql-5.7.44-linux-glibc2.12-x86_64.tar.gz -O mysql.tar.gz
+        sudo tar -xzf mysql.tar.gz -C /opt/mysql-5.7 --strip-components=1
+        rm mysql.tar.gz
+
     - name: Cache local repository
       if: success() || failure()
       uses: actions/cache@v4
