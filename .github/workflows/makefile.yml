@@ -15,19 +15,11 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Set up JDK 23
+    - name: Set up JDK
       uses: actions/setup-java@v4
       with:
-        java-version: '23'
+        java-version: '24.0.1+9'
         distribution: 'temurin'
-
-    - name: Cache JDK
-      if: success() || failure()
-      uses: actions/cache@v4
-      with:
-        path: ${{ env.JAVA_HOME_23_X64 }}
-        key: ${{ runner.os }}-jdk-23
-        restore-keys: ${{ runner.os }}-jdk
 
     - name: Cache local repository
       if: success() || failure()

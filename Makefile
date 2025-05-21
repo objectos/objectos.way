@@ -332,6 +332,12 @@ include make/gh-release.mk
 include make/java-eclipse.mk
 
 #
+# way@mysql
+#
+
+include make/mysql7.mk
+
+#
 # www sub-project
 #
 
