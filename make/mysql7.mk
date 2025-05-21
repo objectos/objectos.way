@@ -21,9 +21,6 @@
 ## base dir
 MYSQL7_BASEDIR = /opt/mysql-5.7
 
-## mysql-config-editor command
-MYSQL7_CONFIG_ED := $(MYSQL7_BASEDIR)/bin/mysql_config_editor
-
 ## mysql dir
 MYSQL7 := $(abspath $(WORK)/mysql-5.7)
 
@@ -47,19 +44,6 @@ MYSQL7_SERVER_SOCKET := $(MYSQL7)/mysqld.sock
 
 ## mysqld pid file
 MYSQL7_SERVER_PID := $(abspath $(WORK)/mysql-5.7.pid)
-
-## mysql client cnf file
-MYSQL7_CLIENT_CNF := $(MYSQL7)/conf/client.cnf
-
-## mysql client command
-MYSQL7_CLIENT := $(MYSQL7_BASEDIR)/bin/mysql
-MYSQL7_CLIENT += --defaults-file=$(MYSQL7_CLIENT_CNF)
-
-## mysql login cnf file
-MYSQL7_LOGIN_CNF := $(MYSQL7)/conf/login.cnf
-
-## mysql resources dir
-MYSQL7_RESOURCES := test-mysql
 
 ## mysql server.cnf contents
 define MYSQL7_SERVER_CNF_CONTENTS
