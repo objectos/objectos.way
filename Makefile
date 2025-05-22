@@ -21,7 +21,7 @@
 ## Coordinates
 GROUP_ID := br.com.objectos
 ARTIFACT_ID := objectos.way
-VERSION := 0.2.2
+VERSION := 0.2.3-SNAPSHOT
 MODULE := $(ARTIFACT_ID)
 
 ## javac --release option
