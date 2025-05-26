@@ -56,14 +56,14 @@ final class SqlDatabase implements Sql.Database {
 
     try {
       connection = dataSource.getConnection();
+
+      connection.setTransactionIsolation(transactionIsolation);
     } catch (SQLException e) {
       throw new Sql.DatabaseException(e);
     }
 
     try {
-      connection.setTransactionIsolation(transactionIsolation);
-
-      connection.setAutoCommit(false);
+      onBeginTransaction(connection);
 
       return new SqlTransaction(dialect, connection);
     } catch (SQLException e) {
@@ -80,7 +80,7 @@ final class SqlDatabase implements Sql.Database {
   @Override
   public final void migrate(Consumer<Migrator> config) throws DatabaseException {
     try (
-        Connection connection = dataSource.getConnection();
+        Connection connection = migrateConnection();
         SqlMigrator migrator = new SqlMigrator(clock, noteSink, dialect, connection)
     ) {
 
@@ -91,6 +91,19 @@ final class SqlDatabase implements Sql.Database {
     } catch (SQLException e) {
       throw new Sql.DatabaseException(e);
     }
+  }
+
+  private Connection migrateConnection() throws SQLException {
+    final Connection connection;
+    connection = dataSource.getConnection();
+
+    onBeginTransaction(connection);
+
+    return connection;
+  }
+
+  private void onBeginTransaction(Connection connection) throws SQLException {
+    connection.setAutoCommit(false);
   }
 
 }

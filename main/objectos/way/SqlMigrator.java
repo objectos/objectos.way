@@ -114,6 +114,8 @@ final class SqlMigrator implements Sql.Migrator, AutoCloseable {
     return LocalDateTime.now(clock);
   }
 
-  final SqlTransaction trx() { return trx; }
+  final SqlTransaction trx() {
+    return trx;
+  }
 
 }
