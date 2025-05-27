@@ -18,28 +18,28 @@ package objectos.way;
 import static org.testng.Assert.assertEquals;
 
 import java.sql.BatchUpdateException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.Consumer;
-import javax.sql.DataSource;
 import objectos.way.Sql.MetaTable;
-import org.mariadb.jdbc.MariaDbPoolDataSource;
+import org.h2.jdbcx.JdbcConnectionPool;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class SqlDatabaseTestMySQL {
+public class SqlDialectH2Test0Migrations {
 
   private final Consumer<Sql.Migrator> v001 = v("First Version", """
+  create schema TEST;
+
+  set schema TEST;
+
   create table T1 (ID int not null, primary key (ID));
   """);
 
-  @SuppressWarnings("unused")
   private final Consumer<Sql.Migrator> v002 = v("Second Version", """
+  set schema TEST;
+
   create table T2 (ID int not null, primary key (ID));
   """);
 
@@ -63,13 +63,13 @@ public class SqlDatabaseTestMySQL {
     assertEquals(report(db), """
     # History
 
-    000 | SCHEMA_HISTORY table created   | MIGRATE01@localhost  | 2025-03-10 10:00:00 | true
-    001 | First Version                  | MIGRATE01@localhost  | 2025-03-10 10:01:00 | true
+    000 | SCHEMA_HISTORY table created   | SA    | 2025-03-10 10:00:00 | true
+    001 | First Version                  | SA    | 2025-03-10 10:01:00 | true
 
     # Tables
 
-    MIGRATE01.SCHEMA_HISTORY
-    MIGRATE01.T1
+    PUBLIC.SCHEMA_HISTORY
+    TEST.T1
     """);
   }
 
@@ -88,18 +88,26 @@ public class SqlDatabaseTestMySQL {
     N/A
     """);
 
-    db.migrate(v001);
+    db.migrate(migrator -> {
+      migrator.add("First Version", """
+      create schema TEST;
+
+      set schema TEST;
+
+      create table T1 (ID int not null, primary key (ID));
+      """);
+    });
 
     assertEquals(report(db), """
     # History
 
-    000 | SCHEMA_HISTORY table created   | MIGRATE02@localhost  | 2025-03-10 10:00:00 | true
-    001 | First Version                  | MIGRATE02@localhost  | 2025-03-10 10:01:00 | true
+    000 | SCHEMA_HISTORY table created   | SA    | 2025-03-10 10:00:00 | true
+    001 | First Version                  | SA    | 2025-03-10 10:01:00 | true
 
     # Tables
 
-    MIGRATE02.SCHEMA_HISTORY
-    MIGRATE02.T1
+    PUBLIC.SCHEMA_HISTORY
+    TEST.T1
     """);
 
     db.migrate(v001);
@@ -107,13 +115,13 @@ public class SqlDatabaseTestMySQL {
     assertEquals(report(db), """
     # History
 
-    000 | SCHEMA_HISTORY table created   | MIGRATE02@localhost  | 2025-03-10 10:00:00 | true
-    001 | First Version                  | MIGRATE02@localhost  | 2025-03-10 10:01:00 | true
+    000 | SCHEMA_HISTORY table created   | SA    | 2025-03-10 10:00:00 | true
+    001 | First Version                  | SA    | 2025-03-10 10:01:00 | true
 
     # Tables
 
-    MIGRATE02.SCHEMA_HISTORY
-    MIGRATE02.T1
+    PUBLIC.SCHEMA_HISTORY
+    TEST.T1
     """);
   }
 
@@ -137,13 +145,13 @@ public class SqlDatabaseTestMySQL {
     assertEquals(report(db), """
     # History
 
-    000 | SCHEMA_HISTORY table created   | MIGRATE03@localhost  | 2025-03-10 10:00:00 | true
-    001 | First Version                  | MIGRATE03@localhost  | 2025-03-10 10:01:00 | true
+    000 | SCHEMA_HISTORY table created   | SA    | 2025-03-10 10:00:00 | true
+    001 | First Version                  | SA    | 2025-03-10 10:01:00 | true
 
     # Tables
 
-    MIGRATE03.SCHEMA_HISTORY
-    MIGRATE03.T1
+    PUBLIC.SCHEMA_HISTORY
+    TEST.T1
     """);
 
     db.migrate(v001.andThen(v002));
@@ -151,15 +159,15 @@ public class SqlDatabaseTestMySQL {
     assertEquals(report(db), """
     # History
 
-    000 | SCHEMA_HISTORY table created   | MIGRATE03@localhost  | 2025-03-10 10:00:00 | true
-    001 | First Version                  | MIGRATE03@localhost  | 2025-03-10 10:01:00 | true
-    002 | Second Version                 | MIGRATE03@localhost  | 2025-03-10 10:02:00 | true
+    000 | SCHEMA_HISTORY table created   | SA    | 2025-03-10 10:00:00 | true
+    001 | First Version                  | SA    | 2025-03-10 10:01:00 | true
+    002 | Second Version                 | SA    | 2025-03-10 10:02:00 | true
 
     # Tables
 
-    MIGRATE03.SCHEMA_HISTORY
-    MIGRATE03.T1
-    MIGRATE03.T2
+    PUBLIC.SCHEMA_HISTORY
+    TEST.T1
+    TEST.T2
     """);
   }
 
@@ -180,6 +188,8 @@ public class SqlDatabaseTestMySQL {
 
     try {
       db.migrate(m -> m.add("First Version", """
+      create schema TEST;
+
       some invalid SQL;
       """));
 
@@ -194,12 +204,12 @@ public class SqlDatabaseTestMySQL {
     assertEquals(report(db), """
     # History
 
-    000 | SCHEMA_HISTORY table created   | MIGRATE04@localhost  | 2025-03-10 10:00:00 | true
-    001 | First Version                  | MIGRATE04@localhost  | 2025-03-10 10:01:00 | false
+    000 | SCHEMA_HISTORY table created   | SA    | 2025-03-10 10:00:00 | true
+    001 | First Version                  | SA    | 2025-03-10 10:01:00 | false
 
     # Tables
 
-    MIGRATE04.SCHEMA_HISTORY
+    PUBLIC.SCHEMA_HISTORY
     """);
   }
 
@@ -217,37 +227,14 @@ public class SqlDatabaseTestMySQL {
     final StackTraceElement caller;
     caller = stackTrace[1];
 
-    final String methodName;
-    methodName = caller.getMethodName();
-
     final String dbName;
-    dbName = methodName.toUpperCase();
-
-    try (
-        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:17003/", "root", "");
-        Statement stmt = conn.createStatement();
-    ) {
-      stmt.execute("drop database if exists " + dbName);
-      stmt.execute("drop user if exists " + dbName);
-
-      stmt.execute("create database " + dbName);
-      stmt.execute("create user " + dbName);
-
-      stmt.execute("grant all on " + dbName + ".* to '" + dbName + "'@'localhost'");
-    } catch (SQLException e) {
-      throw new AssertionError("Failed to create DataSource", e);
-    }
+    dbName = caller.getMethodName();
 
     final String url;
-    url = "jdbc:mariadb://localhost:17003/" + dbName + "?user=" + dbName;
+    url = "jdbc:h2:mem:" + dbName;
 
-    final DataSource ds;
-
-    try {
-      ds = new MariaDbPoolDataSource(url);
-    } catch (SQLException e) {
-      throw new AssertionError("Failed to create DataSource", e);
-    }
+    final JdbcConnectionPool ds;
+    ds = JdbcConnectionPool.create(url, "sa", "");
 
     return Sql.Database.create(config -> {
       final Clock clock;
@@ -295,7 +282,7 @@ public class SqlDatabaseTestMySQL {
         t.row(
             rank, 3,
             description, 30,
-            installedBy, 20,
+            installedBy, 5,
             installedOn,
             success
         );
@@ -307,6 +294,8 @@ public class SqlDatabaseTestMySQL {
 
     final List<MetaTable> beforeSchemaHistory;
     beforeSchemaHistory = meta.queryTables(filter -> {
+      filter.schemaName("PUBLIC");
+
       filter.tableName("SCHEMA_HISTORY");
     });
 
@@ -320,7 +309,7 @@ public class SqlDatabaseTestMySQL {
         INSTALLED_ON,
         SUCCESS
       from
-        SCHEMA_HISTORY
+        PUBLIC.SCHEMA_HISTORY
       """);
 
       List<History> historyRows;
@@ -345,16 +334,16 @@ public class SqlDatabaseTestMySQL {
 
     for (MetaTable table : tables) {
 
-      final String cat;
-      cat = table.catalog();
+      final String schema;
+      schema = table.schema();
 
-      if ("information_schema".equals(cat)) {
+      if ("INFORMATION_SCHEMA".equals(schema)) {
         continue;
       }
 
       empty = false;
 
-      t.fieldValue(cat + "." + table.name());
+      t.fieldValue(schema + "." + table.name());
 
     }
 

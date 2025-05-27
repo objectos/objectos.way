@@ -46,5 +46,10 @@
 			<attribute name="test" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="/home/mendo/.cache/objectos/repository/org/slf4j/slf4j-nop/1.7.36/slf4j-nop-1.7.36.jar">
+		<attributes>
+			<attribute name="test" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="eclipse-bin"/>
 </classpath>
