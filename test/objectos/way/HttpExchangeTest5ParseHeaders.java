@@ -158,6 +158,30 @@ public class HttpExchangeTest5ParseHeaders extends HttpExchangeTest {
     }
   }
 
+  @Test(description = "name: slow client")
+  public void name07() {
+    final List<String> headers;
+    headers = List.of(
+        "Accept-Encoding: x",
+        "Referer: x",
+        "User-Agent: x"
+    );
+
+    final String req;
+    req = req(headers);
+
+    test(
+        Y.slowStream(1, req),
+
+        Map.of(
+            Http.HeaderName.ACCEPT_ENCODING, "x",
+            Http.HeaderName.HOST, "x",
+            Http.HeaderName.REFERER, "x",
+            Http.HeaderName.USER_AGENT, "x"
+        )
+    );
+  }
+
   @Test(description = "value: happy path")
   public void value01() {
     test(
@@ -284,6 +308,30 @@ public class HttpExchangeTest5ParseHeaders extends HttpExchangeTest {
     """.formatted(tooLong));
   }
 
+  @Test(description = "value: slow client")
+  public void value07() {
+    final List<String> headers;
+    headers = List.of(
+        "Accept-Encoding: gzip",
+        "Referer: www.google.com",
+        "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
+    );
+
+    final String req;
+    req = req(headers);
+
+    test(
+        Y.slowStream(1, req),
+
+        Map.of(
+            Http.HeaderName.ACCEPT_ENCODING, "gzip",
+            Http.HeaderName.HOST, "x",
+            Http.HeaderName.REFERER, "www.google.com",
+            Http.HeaderName.USER_AGENT, "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
+        )
+    );
+  }
+
   private byte[] ascii(String s) {
     return s.getBytes(StandardCharsets.US_ASCII);
   }
@@ -336,7 +384,7 @@ public class HttpExchangeTest5ParseHeaders extends HttpExchangeTest {
     }
   }
 
-  private void test(List<String> headers, Map<Http.HeaderName, Object> expected) {
+  private String req(List<String> headers) {
     final StringBuilder request;
     request = new StringBuilder();
 
@@ -347,30 +395,53 @@ public class HttpExchangeTest5ParseHeaders extends HttpExchangeTest {
 
     request.append("\r\n");
 
-    final Socket socket;
-    socket = Y.socket(request.toString());
+    return request.toString();
+  }
 
-    try (HttpExchange http = new HttpExchange(socket, 256, 512, Y.clockFixed(), TestingNoteSink.INSTANCE)) {
-      assertEquals(http.shouldHandle(), true);
+  private void test(List<String> headers, Map<Http.HeaderName, Object> expected) {
+    final String req;
+    req = req(headers);
 
-      for (var entry : expected.entrySet()) {
-        final Http.HeaderName name;
-        name = entry.getKey();
+    test(req, expected);
+  }
 
-        final Object value;
-        value = entry.getValue();
+  private void test(Object request, Map<Http.HeaderName, Object> expected) {
+    exec(test -> {
+      test.bufferSize(256, 256);
 
-        if (value instanceof String s) {
-          assertEquals(http.header(name), s);
-        }
+      test.xch(xch -> {
+        xch.req(request);
 
-        else {
-          throw new UnsupportedOperationException("Implement me");
-        }
-      }
-    } catch (IOException e) {
-      throw new UncheckedIOException(e);
-    }
+        xch.handler(http -> {
+          for (var entry : expected.entrySet()) {
+            final Http.HeaderName name;
+            name = entry.getKey();
+
+            final Object value;
+            value = entry.getValue();
+
+            if (value instanceof String s) {
+              assertEquals(http.header(name), s);
+            }
+
+            else {
+              throw new UnsupportedOperationException("Implement me");
+            }
+          }
+
+          http.ok(Media.Bytes.textPlain("OK"));
+        });
+
+        xch.resp("""
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 2\r
+        \r
+        OK\
+        """);
+      });
+    });
   }
 
 }
