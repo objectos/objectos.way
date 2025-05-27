@@ -17,111 +17,35 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class HttpExchangeTest4ParseVersion extends HttpExchangeTest {
 
-  @Test(description = "version: 1.1 + path")
-  public void version01() {
-    test(
-        """
-        GET / HTTP/1.1\r
-        Host: host\r
-        \r
-        """,
-
-        Http.Version.HTTP_1_1
-    );
+  @DataProvider
+  public Object[][] versionValidProvider() {
+    return new Object[][] {
+        {"GET / HTTP/1.1", Http.Version.HTTP_1_1, "1.1 + path"},
+        {"GET /%C3%A1 HTTP/1.1", Http.Version.HTTP_1_1, "1.1 + path + percent"},
+        {"GET /url?key=value HTTP/1.1", Http.Version.HTTP_1_1, "1.1 + query key + value"},
+        {"GET /url?key HTTP/1.1", Http.Version.HTTP_1_1, "1.1 + query key only"},
+        {"GET /url?key=val%C3%A1 HTTP/1.1", Http.Version.HTTP_1_1, "1.1 + query key + value percent-encoded"},
+        {"GET /url?key%C3%A1 HTTP/1.1", Http.Version.HTTP_1_1, "1.1 + query key only percent-encoded"},
+        {"GET /url?key= HTTP/1.1", Http.Version.HTTP_1_1, "1.1 + query key only (equals)"},
+        {"GET /url?key%C3%A1= HTTP/1.1", Http.Version.HTTP_1_1, "1.1 + query key only percent-encoded (equals)"}
+    };
   }
 
-  @Test(description = "version: 1.1 + path + percent")
-  public void version02() {
+  @Test(dataProvider = "versionValidProvider")
+  public void versionValid(String line, Http.Version expected, String description) {
     test(
         """
-        GET /%C3%A1 HTTP/1.1\r
+        %s\r
         Host: host\r
         \r
-        """,
+        """.formatted(line),
 
-        Http.Version.HTTP_1_1
-    );
-  }
-
-  @Test(description = "version: 1.1 + query key + value")
-  public void version03() {
-    test(
-        """
-        GET /url?key=value HTTP/1.1\r
-        Host: host\r
-        \r
-        """,
-
-        Http.Version.HTTP_1_1
-    );
-  }
-
-  @Test(description = "version: 1.1 + query key only")
-  public void version04() {
-    test(
-        """
-        GET /url?key HTTP/1.1\r
-        Host: host\r
-        \r
-        """,
-
-        Http.Version.HTTP_1_1
-    );
-  }
-
-  @Test(description = "version: 1.1 + query key + value percent-encoded")
-  public void version05() {
-    test(
-        """
-        GET /url?key=val%C3%A1 HTTP/1.1\r
-        Host: host\r
-        \r
-        """,
-
-        Http.Version.HTTP_1_1
-    );
-  }
-
-  @Test(description = "version: 1.1 + query key only percent-encoded")
-  public void version06() {
-    test(
-        """
-        GET /url?key%C3%A1 HTTP/1.1\r
-        Host: host\r
-        \r
-        """,
-
-        Http.Version.HTTP_1_1
-    );
-  }
-
-  @Test(description = "version: 1.1 + query key only (equals)")
-  public void version07() {
-    test(
-        """
-        GET /url?key= HTTP/1.1\r
-        Host: host\r
-        \r
-        """,
-
-        Http.Version.HTTP_1_1
-    );
-  }
-
-  @Test(description = "version: 1.1 + query key only percent-encoded (equals)")
-  public void version08() {
-    test(
-        """
-        GET /url?key%C3%A1= HTTP/1.1\r
-        Host: host\r
-        \r
-        """,
-
-        Http.Version.HTTP_1_1
+        expected
     );
   }
 
@@ -146,92 +70,67 @@ public class HttpExchangeTest4ParseVersion extends HttpExchangeTest {
     );
   }
 
-  @Test
-  public void versionNotSupported01() {
+  @DataProvider
+  public Object[][] versionNotSupportedProvider() {
+    return new Object[][] {
+        {"GET / HTTP/1.0", "1.0 is not supported"},
+        {"GET / HTTP/2", "2 is not supported (yet)"},
+        {"GET / HTTP/9.9", "9.9 is not supported (yet)"},
+        {"GET / HTTP/123456789012345678901234567890.123456789012345678901234567890", "Not supported"}
+    };
+  }
+
+  @Test(dataProvider = "versionNotSupportedProvider")
+  public void versionNotSupported(String line, String description) {
     versionNotSupported("""
-    GET / HTTP/1.0\r
+    %s\r
     Host: host\r
     \r
-    """);
+    """.formatted(line));
   }
 
-  @Test
-  public void versionNotSupported02() {
-    versionNotSupported("""
-    GET / HTTP/2\r
-    Host: host\r
-    \r
-    """);
+  @DataProvider
+  public Object[][] version09NotSupportedProvider() {
+    return new Object[][] {
+        {"GET /\r\n\r\n"},
+        {"GET /\n\n"},
+        {"GET /%C3%A1\r\n\r\n"},
+        {"GET /%C3%A1\n\n"},
+        {"GET /?key=val%C3%A1\r\n\r\n"},
+        {"GET /?key=val%C3%A1\n\n"},
+        {"GET /?key%C3%A1=val\r\n\r\n"},
+        {"GET /?key%C3%A1=val\n\n"},
+        {"GET /?key%C3%A1=\r\n\r\n"},
+        {"GET /?key%C3%A1=\n\n"},
+        {"GET /?key%C3%A1\r\n\r\n"},
+        {"GET /?key%C3%A1\n\n"}
+    };
   }
 
-  @Test
-  public void versionNotSupported03() {
-    versionNotSupported("""
-    GET / HTTP/9.9\r
-    Host: host\r
-    \r
-    """);
+  @Test(dataProvider = "version09NotSupportedProvider")
+  public void version09NotSupported(String line) {
+    versionNotSupported(line);
   }
 
-  @Test
-  public void version09NotSupported01() {
-    versionNotSupported("GET /\r\n\r\n");
-    versionNotSupported("GET /\n\n");
+  @DataProvider
+  public Object[][] badRequestProvider() {
+    return new Object[][] {
+        {"GET / HPTP/1.1", "valid chars but just nonsense"},
+        {"GET / ABCD/1.1", "invalid chars"},
+        {"GET / HTTP/1.", "Almost valid"},
+        {"GET / HTTP/.1", "Almost valid"},
+        {"GET / HTTP/", "Almost valid"}
+    };
   }
 
-  @Test
-  public void version09NotSupported02() {
-    versionNotSupported("GET /%C3%A1\r\n\r\n");
-    versionNotSupported("GET /%C3%A1\n\n");
-  }
-
-  @Test
-  public void version09NotSupported03() {
-    versionNotSupported("GET /?key=val%C3%A1\r\n\r\n");
-    versionNotSupported("GET /?key=val%C3%A1\n\n");
-  }
-
-  @Test
-  public void version09NotSupported04() {
-    versionNotSupported("GET /?key%C3%A1=val\r\n\r\n");
-    versionNotSupported("GET /?key%C3%A1=val\n\n");
-  }
-
-  @Test
-  public void version09NotSupported05() {
-    versionNotSupported("GET /?key%C3%A1=\r\n\r\n");
-    versionNotSupported("GET /?key%C3%A1=\n\n");
-  }
-
-  @Test
-  public void version09NotSupported06() {
-    versionNotSupported("GET /?key%C3%A1\r\n\r\n");
-    versionNotSupported("GET /?key%C3%A1\n\n");
-  }
-
-  @Test(description = "bad request: valid chars but just nonsense")
-  public void badRequest01() {
-    badRequest("""
-    GET / HPTP/1.1\r
-    Host: host\r
-    \r
-    """);
-  }
-
-  @Test(description = "bad request: invalid chars")
-  public void badRequest02() {
-    badRequest("""
-    GET / ABCD/1.1\r
-    Host: host\r
-    \r
-    """);
-  }
-
-  public void versionTooLong() {}
-
-  private void badRequest(String request) {
+  @Test(dataProvider = "badRequestProvider")
+  public void badRequest(String line, String description) {
     test(
-        request,
+        """
+        %s\r
+        Host: host\r
+        \r
+        """.formatted(line),
 
         """
         HTTP/1.1 400 Bad Request\r
@@ -242,6 +141,19 @@ public class HttpExchangeTest4ParseVersion extends HttpExchangeTest {
         \r
         Invalid request line.
         """
+    );
+  }
+
+  @Test(dataProvider = "versionValidProvider")
+  public void slowClientValid(String line, Http.Version expected, String description) {
+    test(
+        Y.slowStream(1, """
+        %s\r
+        Host: test\r
+        \r
+        """.formatted(line)),
+
+        expected
     );
   }
 
@@ -263,7 +175,7 @@ public class HttpExchangeTest4ParseVersion extends HttpExchangeTest {
 
   private void test(Object request, Http.Version expected) {
     exec(test -> {
-      test.bufferSize(256, 512);
+      test.bufferSize(256, 256);
 
       test.xch(xch -> {
         xch.req(request);
@@ -288,7 +200,7 @@ public class HttpExchangeTest4ParseVersion extends HttpExchangeTest {
 
   private void test(Object request, String expected) {
     exec(test -> {
-      test.bufferSize(256, 512);
+      test.bufferSize(256, 256);
 
       test.xch(xch -> {
         xch.req(request);
