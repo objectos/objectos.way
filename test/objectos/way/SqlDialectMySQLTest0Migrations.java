@@ -22,7 +22,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.Consumer;
@@ -250,10 +249,7 @@ public class SqlDialectMySQLTest0Migrations {
     }
 
     return Sql.Database.create(config -> {
-      final Clock clock;
-      clock = new IncrementingClock(2025, 3, 10);
-
-      config.clock(clock);
+      config.clock(Y.clockIncMinutes(2025, 3, 10));
 
       config.dataSource(ds);
 

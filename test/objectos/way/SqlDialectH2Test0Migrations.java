@@ -18,7 +18,6 @@ package objectos.way;
 import static org.testng.Assert.assertEquals;
 
 import java.sql.BatchUpdateException;
-import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.Consumer;
@@ -227,20 +226,17 @@ public class SqlDialectH2Test0Migrations {
     final StackTraceElement caller;
     caller = stackTrace[1];
 
-    final String dbName;
-    dbName = caller.getMethodName();
-
-    final String url;
-    url = "jdbc:h2:mem:" + dbName;
-
-    final JdbcConnectionPool ds;
-    ds = JdbcConnectionPool.create(url, "sa", "");
-
     return Sql.Database.create(config -> {
-      final Clock clock;
-      clock = new IncrementingClock(2025, 3, 10);
+      config.clock(Y.clockIncMinutes(2025, 3, 10));
 
-      config.clock(clock);
+      final String dbName;
+      dbName = caller.getMethodName();
+
+      final String url;
+      url = "jdbc:h2:mem:" + dbName;
+
+      final JdbcConnectionPool ds;
+      ds = JdbcConnectionPool.create(url, "sa", "");
 
       config.dataSource(ds);
 

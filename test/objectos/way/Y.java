@@ -144,6 +144,43 @@ final class Y {
 
   }
 
+  private static final class IncrementingClock extends Clock {
+
+    private final ZonedDateTime startTime;
+
+    private int minutes;
+
+    public IncrementingClock(int year, int month, int day) {
+      LocalDateTime dateTime;
+      dateTime = LocalDateTime.of(year, month, day, 10, 0);
+
+      this.startTime = dateTime.atZone(ZoneId.systemDefault());
+    }
+
+    @Override
+    public final Instant instant() {
+      ZonedDateTime instant;
+      instant = startTime.plusMinutes(minutes++);
+
+      return Instant.from(instant);
+    }
+
+    @Override
+    public final ZoneId getZone() {
+      return startTime.getZone();
+    }
+
+    @Override
+    public Clock withZone(ZoneId zone) {
+      throw new UnsupportedOperationException();
+    }
+
+  }
+
+  public static Clock clockIncMinutes(int year, int month, int day) {
+    return new IncrementingClock(year, month, day);
+  }
+
   public static Clock clockFixed() {
     return ClockHolder.FIXED;
   }
