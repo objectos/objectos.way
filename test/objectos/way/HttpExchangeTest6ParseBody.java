@@ -100,7 +100,7 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
     frag = ".".repeat(100);
 
     test(
-        2, 512,
+        2, 512, 400,
 
         arr(
             """
@@ -458,6 +458,37 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
     }
   }
 
+  @Test
+  public void lengthRequired() {
+    exec(test -> {
+      test.bufferSize(128, 128);
+
+      test.requestBodySize(64);
+
+      test.xch(xch -> {
+        xch.req("""
+        POST / HTTP/1.1\r
+        Host: www.example.com\r
+        Content-Type: text/plain\r
+        \r
+        Uh-Oh
+        """);
+
+        xch.shouldHandle(false);
+
+        xch.resp("""
+        HTTP/1.1 411 Length Required\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 39\r
+        Connection: close\r
+        \r
+        The Content-Length header is required.
+        """);
+      });
+    });
+  }
+
   @DataProvider
   public Object[][] contentTooLargeProvider() {
     return new Object[][] {
@@ -467,7 +498,15 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
         Content-Type: text/plain; charset=utf-8\r
         Content-Length: 9223372036854775808\r
         \r
-        """, "Content-Length unsigned long overflow"}
+        """, "Content-Length unsigned long overflow"},
+
+        {"""
+        POST / HTTP/1.1\r
+        Host: host\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 65\r
+        \r
+        """, "Content-Length exceeds configured limit"}
     };
   }
 
@@ -475,6 +514,8 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
   public void contentTooLarge(String request, String description) {
     exec(test -> {
       test.bufferSize(128, 128);
+
+      test.requestBodySize(64);
 
       test.xch(xch -> {
         xch.req(request);
@@ -499,16 +540,18 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
   }
 
   private void test(Object o1, byte[] body) {
-    test(256, 512, arr(o1), body);
+    test(256, 512, 64, arr(o1), body);
   }
 
   private void test(Object o1, Object o2, byte[] body) {
-    test(256, 512, arr(o1, o2), body);
+    test(256, 512, 64, arr(o1, o2), body);
   }
 
-  private void test(int initial, int max, Object[] data, byte[] body) {
+  private void test(int initial, int max, int requestBodySizeMax, Object[] data, byte[] body) {
     exec(test -> {
       test.bufferSize(initial, max);
+
+      test.requestBodySize(requestBodySizeMax);
 
       test.xch(xch -> {
         for (Object o : data) {

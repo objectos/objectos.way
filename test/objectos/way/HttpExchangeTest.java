@@ -52,7 +52,7 @@ public abstract class HttpExchangeTest {
 
     private Note.Sink noteSink = Y.noteSink();
 
-    private final long requestBodySizeMax = 1024;
+    private long requestBodySizeMax = 1024;
 
     private final List<Xch> xchs = Util.createList();
 
@@ -72,6 +72,10 @@ public abstract class HttpExchangeTest {
 
     public final void noteSink(Note.Sink value) {
       noteSink = Objects.requireNonNull(value, "value == null");
+    }
+
+    public final void requestBodySize(long max) {
+      requestBodySizeMax = max;
     }
 
     public final void xch(Consumer<Xch> config) {

@@ -1660,6 +1660,11 @@ public final class Http {
     Status METHOD_NOT_ALLOWED = HttpStatus.METHOD_NOT_ALLOWED;
 
     /**
+     * The {@code 411 Length Required} status.
+     */
+    Status LENGTH_REQUIRED = HttpStatus.LENGTH_REQUIRED;
+
+    /**
      * The {@code 413 Content Too Large} status.
      */
     Status CONTENT_TOO_LARGE = HttpStatus.CONTENT_TOO_LARGE;

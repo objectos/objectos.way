@@ -64,13 +64,14 @@ public class HttpExchangeTestBCreate extends HttpExchangeTest {
     Http.Exchange http;
     http = Http.Exchange.create(config -> {
       config.header(Http.HeaderName.CONTENT_TYPE, "application/x-www-form-urlencoded");
+      config.header(Http.HeaderName.CONTENT_LENGTH, "0");
 
       config.header(Http.HeaderName.USER_AGENT, "first");
       config.header(Http.HeaderName.USER_AGENT, "second");
     });
 
     assertEquals(http.header(Http.HeaderName.CONTENT_TYPE), "application/x-www-form-urlencoded");
-    assertEquals(http.header(Http.HeaderName.CONTENT_LENGTH), null);
+    assertEquals(http.header(Http.HeaderName.CONTENT_LENGTH), "0");
     assertEquals(http.header(Http.HeaderName.USER_AGENT), "first");
   }
 

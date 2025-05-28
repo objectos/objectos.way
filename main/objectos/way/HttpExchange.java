@@ -63,6 +63,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
       Note.Long1Ref1<IOException> writeIOException,
 
       Note.Long1Ref2<ClientError, Http.Exchange> badRequest,
+      Note.Long1Ref1<Http.Exchange> lengthRequired,
       Note.Long1Ref1<Http.Exchange> contentTooLarge,
       Note.Long1Ref1<Http.Exchange> uriTooLong,
       Note.Long1Ref1<Http.Exchange> requestHeaderFieldsTooLarge,
@@ -91,6 +92,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
           Note.Long1Ref1.create(s, "WEX", Note.ERROR),
 
           Note.Long1Ref2.create(s, "400", Note.INFO),
+          Note.Long1Ref1.create(s, "411", Note.INFO),
           Note.Long1Ref1.create(s, "413", Note.INFO),
           Note.Long1Ref1.create(s, "414", Note.INFO),
           Note.Long1Ref1.create(s, "431", Note.INFO),
@@ -315,20 +317,22 @@ final class HttpExchange implements Http.Exchange, Closeable {
   static final byte $DECODE_PERC4_4_LOW = 61;
 
   static final byte $BAD_REQUEST = 62;
-  static final byte $CONTENT_TOO_LARGE = 63;
-  static final byte $URI_TOO_LONG = 64;
-  static final byte $REQUEST_HEADER_FIELDS_TOO_LARGE = 65;
-  static final byte $NOT_IMPLEMENTED = 66;
-  static final byte $HTTP_VERSION_NOT_SUPPORTED = 67;
+  static final byte $LENGTH_REQUIRED = 63;
+  static final byte $CONTENT_TOO_LARGE = 64;
+  static final byte $URI_TOO_LONG = 65;
+  static final byte $REQUEST_HEADER_FIELDS_TOO_LARGE = 66;
+  static final byte $NOT_IMPLEMENTED = 67;
+  static final byte $HTTP_VERSION_NOT_SUPPORTED = 68;
 
-  static final byte $COMMIT = 68;
-  static final byte $WRITE = 69;
+  static final byte $COMMIT = 69;
+  static final byte $WRITE = 70;
 
-  static final byte $REQUEST = 70;
+  static final byte $REQUEST = 71;
 
-  static final byte $RESPONSE_HEADERS = 71;
+  static final byte $RESPONSE_HEADERS = 72;
 
-  static final byte $ERROR = 72;
+  static final byte $ERROR = 73;
+
   // ##################################################################
   // # END: States
   // ##################################################################
@@ -734,6 +738,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
       case $DECODE_PERC4_4_LOW -> executeDecodePerc4_4_Low();
 
       case $BAD_REQUEST -> executeBadRequest();
+      case $LENGTH_REQUIRED -> executeLengthRequired();
       case $CONTENT_TOO_LARGE -> executeContentTooLarge();
       case $URI_TOO_LONG -> executeUriTooLong();
       case $REQUEST_HEADER_FIELDS_TOO_LARGE -> executeRequestHeaderFieldsTooLarge();
@@ -2152,7 +2157,13 @@ final class HttpExchange implements Http.Exchange, Closeable {
       throw new UnsupportedOperationException("Implement me");
     }
 
-    // TODO 411 Length Required
+    final HttpHeader contentType;
+    contentType = headerUnchecked(HttpHeaderName.CONTENT_TYPE);
+
+    if (contentType != null) {
+      return $LENGTH_REQUIRED;
+    }
+
     return $REQUEST;
   }
 
@@ -2912,6 +2923,30 @@ final class HttpExchange implements Http.Exchange, Closeable {
     message = clientError.message();
 
     statusUnchecked(Http.Status.BAD_REQUEST);
+
+    headerUnchecked(Http.HeaderName.DATE, now());
+
+    headerUnchecked(Http.HeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
+
+    headerUnchecked(Http.HeaderName.CONTENT_LENGTH, message.length);
+
+    headerUnchecked(Http.HeaderName.CONNECTION, "close");
+
+    sendUnchecked(message);
+
+    return toWrite($ERROR);
+  }
+
+  private byte executeLengthRequired() {
+    noteSink.send(NOTES.lengthRequired, id, this);
+
+    final String formatted;
+    formatted = "The Content-Length header is required.\n";
+
+    final byte[] message;
+    message = formatted.getBytes(StandardCharsets.US_ASCII);
+
+    statusUnchecked(Http.Status.LENGTH_REQUIRED);
 
     headerUnchecked(Http.HeaderName.DATE, now());
 
