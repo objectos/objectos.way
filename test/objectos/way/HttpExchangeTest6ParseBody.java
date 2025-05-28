@@ -458,6 +458,55 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
     }
   }
 
+  @DataProvider
+  public Object[][] badRequestProvider() {
+    return new Object[][] {
+        {"""
+        POST / HTTP/1.1\r
+        Host: www.example.com\r
+        Content-Type: text/plain\r
+        Content-Length: 5\r
+        Transfer-Encoding: chunked\r
+        \r
+        Uh-Oh
+        """, "request contains both transfer-encoding and content-length"},
+
+        {"""
+        POST / HTTP/1.1\r
+        Host: www.example.com\r
+        Content-Type: text/plain\r
+        Content-Length: five bytes\r
+        \r
+        Uh-Oh
+        """, "request contains an invalid content-length"}
+    };
+  }
+
+  @Test(dataProvider = "badRequestProvider")
+  public void badRequest(String request, String description) {
+    exec(test -> {
+      test.bufferSize(128, 128);
+
+      test.requestBodySize(64);
+
+      test.xch(xch -> {
+        xch.req(request);
+
+        xch.shouldHandle(false);
+
+        xch.resp("""
+        HTTP/1.1 400 Bad Request\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 25\r
+        Connection: close\r
+        \r
+        Invalid request headers.
+        """);
+      });
+    });
+  }
+
   @Test
   public void lengthRequired() {
     exec(test -> {

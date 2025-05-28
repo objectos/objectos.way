@@ -186,7 +186,13 @@ final class HttpExchange implements Http.Exchange, Closeable {
     VALUE_CHAR,
 
     // invalid header terminator, i.e., the last '\r\n'
-    TERMINATOR;
+    TERMINATOR,
+
+    // invalid value, e.g., 'Content-Length: two hundred bytes'
+    INVALID_CONTENT_LENGTH,
+
+    // request include both Content-Length and Transfer-Enconding.
+    BOTH_CL_TE;
 
     private static final byte[] MESSAGE = "Invalid request headers.\n".getBytes(StandardCharsets.US_ASCII);
 
@@ -2173,11 +2179,18 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
     object = null;
 
+    final HttpHeader transferEncoding;
+    transferEncoding = headerUnchecked(HttpHeaderName.TRANSFER_ENCODING);
+
+    if (transferEncoding != null) {
+      return toBadRequest(InvalidRequestHeaders.BOTH_CL_TE);
+    }
+
     final long length;
     length = contentLength.unsignedLongValue(buffer);
 
     if (length == HttpHeader.LONG_INVALID) {
-      throw new UnsupportedOperationException("Implement me");
+      return toBadRequest(InvalidRequestHeaders.INVALID_CONTENT_LENGTH);
     }
 
     else if (length == HttpHeader.LONG_OVERFLOW) {
