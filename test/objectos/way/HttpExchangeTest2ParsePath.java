@@ -452,16 +452,10 @@ public class HttpExchangeTest2ParsePath extends HttpExchangeTest {
         xch.handler(http -> {
           assertEquals(http.path(), expected);
 
-          http.ok(Media.Bytes.textPlain("OK"));
+          http.ok(OK);
         });
 
-        xch.resp("""
-        HTTP/1.1 200 OK\r
-        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-        Content-Type: text/plain; charset=utf-8\r
-        Content-Length: 2\r
-        \r
-        OK""");
+        xch.resp(OK_RESP);
       });
     });
   }

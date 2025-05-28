@@ -22,25 +22,47 @@ import java.io.UncheckedIOException;
 import java.net.Socket;
 import org.testng.annotations.Test;
 
-public class HttpExchangeTest1ParseMethod {
+public class HttpExchangeTest1ParseMethod extends HttpExchangeTest {
 
   @Test(description = "method: valid")
   public void method01() {
     for (Http.Method method : Http.Method.VALUES) {
       if (method.implemented) {
-        final String request;
-        request = method.name() + " /index.html HTTP/1.1\r\nHost: www.example.com\r\n\r\n";
+        exec(test -> {
+          test.bufferSize(256, 512);
 
-        final Socket socket;
-        socket = Y.socket(request);
+          test.xch(xch -> {
+            final String request;
+            request = method.name() + " /index.html HTTP/1.1\r\nHost: www.example.com\r\n\r\n";
 
-        try (HttpExchange http = new HttpExchange(socket, 2, 256, Y.clockFixed(), Y.noteSink(), 0L)) {
-          assertEquals(http.shouldHandle(), true);
+            xch.req(request);
 
-          assertEquals(http.method(), method);
-        } catch (IOException e) {
-          throw new UncheckedIOException(e);
-        }
+            xch.handler(http -> {
+              assertEquals(http.method(), method);
+
+              http.ok(OK);
+            });
+
+            if (method != Http.Method.HEAD) {
+              xch.resp("""
+              HTTP/1.1 200 OK\r
+              Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+              Content-Type: text/plain; charset=utf-8\r
+              Content-Length: 3\r
+              \r
+              OK
+              """);
+            } else {
+              xch.resp("""
+              HTTP/1.1 200 OK\r
+              Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+              Content-Type: text/plain; charset=utf-8\r
+              Content-Length: 3\r
+              \r
+              """);
+            }
+          });
+        });
       }
     }
   }
@@ -60,6 +82,49 @@ public class HttpExchangeTest1ParseMethod {
             \r
             """
         );
+      }
+    }
+  }
+
+  @Test(description = "method: valid + slow client")
+  public void method03() {
+    for (Http.Method method : Http.Method.VALUES) {
+      if (method.implemented) {
+        exec(test -> {
+          test.bufferSize(256, 512);
+
+          test.xch(xch -> {
+            final String request;
+            request = method.name() + " /index.html HTTP/1.1\r\nHost: www.example.com\r\n\r\n";
+
+            xch.req(Y.slowStream(1, request));
+
+            xch.handler(http -> {
+              assertEquals(http.method(), method);
+
+              http.ok(OK);
+            });
+
+            if (method != Http.Method.HEAD) {
+              xch.resp("""
+              HTTP/1.1 200 OK\r
+              Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+              Content-Type: text/plain; charset=utf-8\r
+              Content-Length: 3\r
+              \r
+              OK
+              """);
+            } else {
+              xch.resp("""
+              HTTP/1.1 200 OK\r
+              Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+              Content-Type: text/plain; charset=utf-8\r
+              Content-Length: 3\r
+              \r
+              """);
+            }
+          });
+        });
       }
     }
   }

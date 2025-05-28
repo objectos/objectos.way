@@ -196,6 +196,26 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
     );
   }
 
+  @Test(description = "buffer: slow client")
+  public void buffer07() {
+    final String frag;
+    frag = ".".repeat(100);
+
+    test(
+        2, 512, 400,
+
+        arr(Y.slowStream(1, """
+        POST / HTTP/1.1\r
+        Host: www.example.com\r
+        Content-Type: text/plain\r
+        Content-Length: 100\r
+        \r
+        %s""".formatted(frag))),
+
+        ascii(frag)
+    );
+  }
+
   private static class Tester extends HttpExchangeBodyFiles {
 
     private final Path directory = Y.nextTempDir();
@@ -439,6 +459,47 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
         \r
         The server encountered an internal error and was unable to complete your request.
         """);
+      });
+    });
+
+    assertFalse(tester.fileExists());
+  }
+
+  @Test(description = "file: slow client")
+  public void file06() {
+    final Tester tester;
+    tester = new Tester();
+
+    final String content;
+    content = ".o".repeat(512);
+
+    exec(test -> {
+      test.bodyFiles(tester);
+
+      test.bufferSize(2, 256);
+
+      test.xch(xch -> {
+        xch.req(Y.slowStream(1, """
+        POST / HTTP/1.1\r
+        Host: www.example.com\r
+        Content-Type: text/plain\r
+        Content-Length: 1024\r
+        \r
+        """));
+
+        xch.req(content);
+
+        xch.handler(http -> {
+          try (InputStream in = http.bodyInputStream()) {
+            assertEquals(in.readAllBytes(), ascii(content));
+          } catch (IOException e) {
+            throw new UncheckedIOException(e);
+          }
+
+          http.ok(OK);
+        });
+
+        xch.resp(OK_RESP);
       });
     });
 

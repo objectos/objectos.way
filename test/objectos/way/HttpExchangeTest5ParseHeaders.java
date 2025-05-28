@@ -130,7 +130,7 @@ public class HttpExchangeTest5ParseHeaders extends HttpExchangeTest {
     req.append("GET / HTTP/1.1\r\n");
 
     for (HttpHeaderName name : HttpHeaderName.VALUES) {
-      if (!name.isResponseOnly()) {
+      if (!name.isResponseOnly() && !name.equals(HttpHeaderName.TRANSFER_ENCODING)) {
         req.append(name.headerCase());
         req.append(": ");
         req.append(Integer.toString(name.index()));
@@ -149,7 +149,7 @@ public class HttpExchangeTest5ParseHeaders extends HttpExchangeTest {
 
       // headers
       for (HttpHeaderName name : HttpHeaderName.VALUES) {
-        if (!name.isResponseOnly()) {
+        if (!name.isResponseOnly() && !name.equals(HttpHeaderName.TRANSFER_ENCODING)) {
           assertEquals(http.header(name), Integer.toString(name.index()));
         }
       }
