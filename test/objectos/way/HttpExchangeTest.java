@@ -52,6 +52,8 @@ public abstract class HttpExchangeTest {
 
     private Note.Sink noteSink = Y.noteSink();
 
+    private final long requestBodySizeMax = 1024;
+
     private final List<Xch> xchs = Util.createList();
 
     public final void bodyFiles(HttpExchangeBodyFiles value) {
@@ -104,7 +106,7 @@ public abstract class HttpExchangeTest {
       String previousResponse;
       previousResponse = null;
 
-      try (HttpExchange http = new HttpExchange(socket, bodyFiles(), bufferSizeInitial, bufferSizeMax, clock, noteSink)) {
+      try (HttpExchange http = new HttpExchange(socket, bodyFiles(), bufferSizeInitial, bufferSizeMax, clock, noteSink, requestBodySizeMax)) {
         for (Xch xch : xchs) {
           assertEquals(http.shouldHandle(), xch.shouldHandle);
 

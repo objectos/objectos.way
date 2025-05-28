@@ -107,6 +107,7 @@ final class HttpExchangeStateGen {
     gen.line();
 
     gen.value("$BAD_REQUEST");
+    gen.value("$CONTENT_TOO_LARGE");
     gen.value("$URI_TOO_LONG");
     gen.value("$REQUEST_HEADER_FIELDS_TOO_LARGE");
     gen.value("$NOT_IMPLEMENTED");

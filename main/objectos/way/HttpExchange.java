@@ -63,6 +63,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
       Note.Long1Ref1<IOException> writeIOException,
 
       Note.Long1Ref2<ClientError, Http.Exchange> badRequest,
+      Note.Long1Ref1<Http.Exchange> contentTooLarge,
       Note.Long1Ref1<Http.Exchange> uriTooLong,
       Note.Long1Ref1<Http.Exchange> requestHeaderFieldsTooLarge,
       Note.Long1Ref2<Http.Exchange, Throwable> internalServerError,
@@ -90,6 +91,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
           Note.Long1Ref1.create(s, "WEX", Note.ERROR),
 
           Note.Long1Ref2.create(s, "400", Note.INFO),
+          Note.Long1Ref1.create(s, "413", Note.INFO),
           Note.Long1Ref1.create(s, "414", Note.INFO),
           Note.Long1Ref1.create(s, "431", Note.INFO),
           Note.Long1Ref2.create(s, "500", Note.ERROR),
@@ -313,20 +315,20 @@ final class HttpExchange implements Http.Exchange, Closeable {
   static final byte $DECODE_PERC4_4_LOW = 61;
 
   static final byte $BAD_REQUEST = 62;
-  static final byte $URI_TOO_LONG = 63;
-  static final byte $REQUEST_HEADER_FIELDS_TOO_LARGE = 64;
-  static final byte $NOT_IMPLEMENTED = 65;
-  static final byte $HTTP_VERSION_NOT_SUPPORTED = 66;
+  static final byte $CONTENT_TOO_LARGE = 63;
+  static final byte $URI_TOO_LONG = 64;
+  static final byte $REQUEST_HEADER_FIELDS_TOO_LARGE = 65;
+  static final byte $NOT_IMPLEMENTED = 66;
+  static final byte $HTTP_VERSION_NOT_SUPPORTED = 67;
 
-  static final byte $COMMIT = 67;
-  static final byte $WRITE = 68;
+  static final byte $COMMIT = 68;
+  static final byte $WRITE = 69;
 
-  static final byte $REQUEST = 69;
+  static final byte $REQUEST = 70;
 
-  static final byte $RESPONSE_HEADERS = 70;
+  static final byte $RESPONSE_HEADERS = 71;
 
-  static final byte $ERROR = 71;
-
+  static final byte $ERROR = 72;
   // ##################################################################
   // # END: States
   // ##################################################################
@@ -404,6 +406,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   private InetAddress remoteAddress;
 
+  private final long requestBodySizeMax;
+
   private final Http.ResponseListener responseListener;
 
   private HttpSession session;
@@ -418,11 +422,11 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   private Http.Version version = Http.Version.HTTP_1_1;
 
-  HttpExchange(Socket socket, int bufferSizeInitial, int bufferSizeMax, Clock clock, Note.Sink noteSink) throws IOException {
-    this(socket, HttpExchangeBodyFiles.standard(), bufferSizeInitial, bufferSizeMax, clock, noteSink);
+  HttpExchange(Socket socket, int bufferSizeInitial, int bufferSizeMax, Clock clock, Note.Sink noteSink, long requestBodySizeMax) throws IOException {
+    this(socket, HttpExchangeBodyFiles.standard(), bufferSizeInitial, bufferSizeMax, clock, noteSink, requestBodySizeMax);
   }
 
-  HttpExchange(Socket socket, HttpExchangeBodyFiles bodyFiles, int bufferSizeInitial, int bufferSizeMax, Clock clock, Note.Sink noteSink) throws IOException {
+  HttpExchange(Socket socket, HttpExchangeBodyFiles bodyFiles, int bufferSizeInitial, int bufferSizeMax, Clock clock, Note.Sink noteSink, long requestBodySizeMax) throws IOException {
     this.bodyFiles = bodyFiles;
 
     final int initialSize;
@@ -442,38 +446,42 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
     remoteAddress = socket.getInetAddress();
 
+    this.requestBodySizeMax = requestBodySizeMax;
+
     responseListener = Http.NoopResponseListener.INSTANCE;
 
     this.socket = socket;
   }
 
-  private HttpExchange(HttpExchangeConfig config) {
-    bodyFiles = config.bodyFiles();
+  private HttpExchange(HttpExchangeBuilder builder) {
+    bodyFiles = builder.bodyFiles();
 
     final int initialSize;
-    initialSize = powerOfTwo(config.bufferSizeInitial);
+    initialSize = powerOfTwo(builder.bufferSizeInitial);
 
     buffer = new byte[initialSize];
 
-    clock = config.clock;
+    clock = builder.clock;
 
-    inputStream = config.inputStream();
+    inputStream = builder.inputStream();
 
-    maxBufferSize = config.bufferSizeMax;
+    maxBufferSize = builder.bufferSizeMax;
 
-    noteSink = config.noteSink;
+    noteSink = builder.noteSink;
 
     outputStream = new ByteArrayOutputStream();
 
-    responseListener = config.responseListener;
+    requestBodySizeMax = builder.requestBodySizeMax;
+
+    responseListener = builder.responseListener;
 
     socket = () -> {}; // noop closeable
 
   }
 
   static HttpExchange create0(Consumer<? super Http.Exchange.Options> options) {
-    final HttpExchangeConfig builder;
-    builder = new HttpExchangeConfig();
+    final HttpExchangeBuilder builder;
+    builder = new HttpExchangeBuilder();
 
     options.accept(builder);
 
@@ -726,6 +734,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
       case $DECODE_PERC4_4_LOW -> executeDecodePerc4_4_Low();
 
       case $BAD_REQUEST -> executeBadRequest();
+      case $CONTENT_TOO_LARGE -> executeContentTooLarge();
       case $URI_TOO_LONG -> executeUriTooLong();
       case $REQUEST_HEADER_FIELDS_TOO_LARGE -> executeRequestHeaderFieldsTooLarge();
       case $NOT_IMPLEMENTED -> executeNotImplemented();
@@ -2156,10 +2165,17 @@ final class HttpExchange implements Http.Exchange, Closeable {
     final long length;
     length = contentLength.unsignedLongValue(buffer);
 
-    if (length < 0) {
-      // length overflow: we do not handle
-      // TODO 413 Payload Too Large
+    if (length == HttpHeader.LONG_INVALID) {
       throw new UnsupportedOperationException("Implement me");
+    }
+
+    else if (length == HttpHeader.LONG_OVERFLOW) {
+      // valid length... but too large -> we do not handle
+      return $CONTENT_TOO_LARGE;
+    }
+
+    else if (length > requestBodySizeMax) {
+      return $CONTENT_TOO_LARGE;
     }
 
     else if (length == 0) {
@@ -2896,6 +2912,30 @@ final class HttpExchange implements Http.Exchange, Closeable {
     message = clientError.message();
 
     statusUnchecked(Http.Status.BAD_REQUEST);
+
+    headerUnchecked(Http.HeaderName.DATE, now());
+
+    headerUnchecked(Http.HeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
+
+    headerUnchecked(Http.HeaderName.CONTENT_LENGTH, message.length);
+
+    headerUnchecked(Http.HeaderName.CONNECTION, "close");
+
+    sendUnchecked(message);
+
+    return toWrite($ERROR);
+  }
+
+  private byte executeContentTooLarge() {
+    noteSink.send(NOTES.contentTooLarge, id, this);
+
+    final String formatted;
+    formatted = "The request message body exceeds the server's maximum allowed limit.\n";
+
+    final byte[] message;
+    message = formatted.getBytes(StandardCharsets.US_ASCII);
+
+    statusUnchecked(Http.Status.CONTENT_TOO_LARGE);
 
     headerUnchecked(Http.HeaderName.DATE, now());
 

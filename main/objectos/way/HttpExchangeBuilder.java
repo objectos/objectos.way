@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 
-final class HttpExchangeConfig implements Http.Exchange.Options {
+final class HttpExchangeBuilder implements Http.Exchange.Options {
 
   Map<String, Object> attributes;
 
@@ -51,6 +51,8 @@ final class HttpExchangeConfig implements Http.Exchange.Options {
   private Map<String, Object> formParams;
 
   final Note.Sink noteSink = Note.NoOpSink.INSTANCE;
+
+  final long requestBodySizeMax = 10 * 1024 * 1024;
 
   Http.ResponseListener responseListener = Http.NoopResponseListener.INSTANCE;
 

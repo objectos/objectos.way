@@ -108,7 +108,7 @@ public final class Http {
     /**
      * Configures the creation of a stand-alone exchange instance.
      */
-    sealed interface Options permits HttpExchangeConfig {
+    sealed interface Options permits HttpExchangeBuilder {
 
       /**
        * Use the specified clock instance for generating time related values.
@@ -1221,17 +1221,45 @@ public final class Http {
     /**
      * Configures the creation of an HTTP server.
      */
-    public sealed interface Config permits HttpServerConfig {
+    public sealed interface Options permits HttpServerBuilder {
 
+      /**
+       * Sets the initial and maximum sizes in bytes for the exchange buffer.
+       *
+       * <p>
+       * The exchange will use the buffer to store the whole request as a
+       * best-case scenario. As a minimum, the request line and request headers
+       * must fit entirely in the buffer. As a result, the maximum buffer size
+       * also limits the maximum request size, minus the request body, the
+       * server will accept.
+       *
+       * @param initial
+       *        the initial size (in bytes) of the exchange buffer
+       * @param max
+       *        the maximum size (in bytes) of the exchange buffer
+       */
       void bufferSize(int initial, int max);
 
-      void clock(Clock clock);
+      void clock(Clock value);
 
       void handler(Handler value);
 
-      void noteSink(Note.Sink noteSink);
+      void noteSink(Note.Sink value);
 
       void port(int port);
+
+      /**
+       * Sets the maximum allowed size in bytes for the request body.
+       *
+       * <p>
+       * If the server determines that the request body exceeds the limit, the
+       * request processing ends, the server responds with a `413 Content Too
+       * Large` message, and the server closes the connection.
+       *
+       * @param max
+       *        the maximum size (in bytes) of an allowed request body
+       */
+      void requestBodySize(long max);
 
     }
 
@@ -1259,16 +1287,16 @@ public final class Http {
     /**
      * Creates a new HTTP server instance with the specified configuration.
      *
-     * @param config
-     *        configuration options of this new server instance
+     * @param options
+     *        the HTTP server configuration
      *
      * @return a newly created HTTP server instance
      */
-    static Server create(Consumer<Config> config) {
-      HttpServerConfig builder;
-      builder = new HttpServerConfig();
+    static Server create(Consumer<Options> options) {
+      HttpServerBuilder builder;
+      builder = new HttpServerBuilder();
 
-      config.accept(builder);
+      options.accept(builder);
 
       return builder.build();
     }
@@ -1630,6 +1658,11 @@ public final class Http {
      * The {@code 405 Method Not Allowed} status.
      */
     Status METHOD_NOT_ALLOWED = HttpStatus.METHOD_NOT_ALLOWED;
+
+    /**
+     * The {@code 413 Content Too Large} status.
+     */
+    Status CONTENT_TOO_LARGE = HttpStatus.CONTENT_TOO_LARGE;
 
     /**
      * The {@code 414 URI Too Long} status.

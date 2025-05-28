@@ -18,7 +18,9 @@ package objectos.way;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class HttpHeaderTest {
@@ -72,75 +74,67 @@ public class HttpHeaderTest {
     assertEquals(header.get(bytes), "foo");
   }
 
-  @Test
-  public void unsignedLongValue01() {
+  @DataProvider
+  public Object[][] unsignedLongValueValidProvider() {
+    return new Object[][] {
+        {"0", 0L},
+        {"123", 123L},
+        {Long.toString(Long.MAX_VALUE), Long.MAX_VALUE},
+
+        {"922337203685477580X", HttpHeader.LONG_INVALID},
+        {"-123", HttpHeader.LONG_INVALID},
+        {"+123", HttpHeader.LONG_INVALID},
+
+        {"92233720368547758070", HttpHeader.LONG_OVERFLOW},
+        {"9223372036854775808", HttpHeader.LONG_OVERFLOW},
+        {BigInteger.valueOf(Long.MAX_VALUE)
+            .multiply(BigInteger.TWO)
+            .add(BigInteger.ONE)
+            .toString(), HttpHeader.LONG_OVERFLOW},
+        {BigInteger.valueOf(Long.MAX_VALUE)
+            .multiply(BigInteger.TWO)
+            .add(BigInteger.TWO)
+            .toString(), HttpHeader.LONG_OVERFLOW}
+
+    };
+  }
+
+  @Test(dataProvider = "unsignedLongValueValidProvider")
+  public void unsignedLongValue(String s, long expected) {
     byte[] bytes;
-    bytes = "123".getBytes(StandardCharsets.US_ASCII);
+    bytes = s.getBytes(StandardCharsets.US_ASCII);
 
     HttpHeader header;
     header = HttpHeader.create(0, bytes.length);
 
-    assertEquals(header.unsignedLongValue(bytes), 123L);
+    assertEquals(header.unsignedLongValue(bytes), expected);
+
+    assertEquals(header.get(bytes), s);
+
+    assertEquals(header.unsignedLongValue(bytes), expected);
   }
 
-  @Test
-  public void unsignedLongValue02() {
-    long max;
-    max = Long.MAX_VALUE;
+  @Test(dataProvider = "unsignedLongValueValidProvider")
+  public void unsignedLongValueMany(String s, long expected) {
+    final int length;
+    length = s.length();
 
-    byte[] bytes;
-    bytes = Long.toString(max).getBytes(StandardCharsets.US_ASCII);
+    final String x;
+    x = s + "x";
 
-    HttpHeader header;
-    header = HttpHeader.create(0, bytes.length);
-
-    assertEquals(header.unsignedLongValue(bytes), max);
-  }
-
-  @Test(description = "String length exceeds 19 chars")
-  public void unsignedLongValue03() {
     final byte[] bytes;
-    bytes = "92233720368547758070".getBytes(StandardCharsets.US_ASCII);
+    bytes = x.getBytes(StandardCharsets.US_ASCII);
 
     HttpHeader header;
-    header = HttpHeader.create(0, bytes.length);
+    header = HttpHeader.create(0, length);
 
-    assertEquals(header.unsignedLongValue(bytes), Long.MIN_VALUE);
-  }
+    header.add(HttpHeader.create(length, length + 1));
 
-  @Test(description = "Value will cause long overflow")
-  public void unsignedLongValue04() {
-    final byte[] bytes;
-    bytes = "9223372036854775808".getBytes(StandardCharsets.US_ASCII);
+    assertEquals(header.unsignedLongValue(bytes), expected);
 
-    HttpHeader header;
-    header = HttpHeader.create(0, bytes.length);
+    assertEquals(header.get(bytes), s);
 
-    assertEquals(header.unsignedLongValue(bytes), Long.MIN_VALUE);
-  }
-
-  @Test(description = "Invalid character")
-  public void unsignedLongValue05() {
-    final byte[] bytes;
-    bytes = "922337203685477580X".getBytes(StandardCharsets.US_ASCII);
-
-    HttpHeader header;
-    header = HttpHeader.create(0, bytes.length);
-
-    assertEquals(header.unsignedLongValue(bytes), Long.MIN_VALUE);
-  }
-
-  @Test(description = "Kind.MANY")
-  public void unsignedLongValue06() {
-    final byte[] bytes;
-    bytes = "123987".getBytes(StandardCharsets.US_ASCII);
-
-    HttpHeader header;
-    header = HttpHeader.create(0, 3);
-
-    header.add(HttpHeader.create(3, 6));
-
-    assertEquals(header.unsignedLongValue(bytes), 123L);
+    assertEquals(header.unsignedLongValue(bytes), expected);
   }
 
 }

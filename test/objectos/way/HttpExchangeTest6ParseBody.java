@@ -26,6 +26,8 @@ import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import org.testng.Assert;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
@@ -441,6 +443,55 @@ public class HttpExchangeTest6ParseBody extends HttpExchangeTest {
     });
 
     assertFalse(tester.fileExists());
+  }
+
+  @Test
+  public void longMaxValue() {
+    long parsed1 = Long.parseLong("9223372036854775807");
+    assertEquals(parsed1, 9_223_372_036_854_775_807L);
+
+    try {
+      Long.parseLong("9223372036854775808");
+      Assert.fail();
+    } catch (NumberFormatException expected) {
+
+    }
+  }
+
+  @DataProvider
+  public Object[][] contentTooLargeProvider() {
+    return new Object[][] {
+        {"""
+        POST / HTTP/1.1\r
+        Host: host\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 9223372036854775808\r
+        \r
+        """, "Content-Length unsigned long overflow"}
+    };
+  }
+
+  @Test(dataProvider = "contentTooLargeProvider")
+  public void contentTooLarge(String request, String description) {
+    exec(test -> {
+      test.bufferSize(128, 128);
+
+      test.xch(xch -> {
+        xch.req(request);
+
+        xch.shouldHandle(false);
+
+        xch.resp("""
+        HTTP/1.1 413 Content Too Large\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 69\r
+        Connection: close\r
+        \r
+        The request message body exceeds the server's maximum allowed limit.
+        """);
+      });
+    });
   }
 
   private byte[] ascii(String s) {

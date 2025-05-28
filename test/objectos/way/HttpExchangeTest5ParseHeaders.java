@@ -144,7 +144,7 @@ public class HttpExchangeTest5ParseHeaders extends HttpExchangeTest {
     Socket socket;
     socket = Y.socket(req.toString());
 
-    try (HttpExchange http = new HttpExchange(socket, 128, 256, Clock.systemDefaultZone(), TestingNoteSink.INSTANCE)) {
+    try (HttpExchange http = new HttpExchange(socket, 128, 256, Clock.systemDefaultZone(), Y.noteSink(), Long.MAX_VALUE)) {
       assertEquals(http.shouldHandle(), true);
 
       // headers
@@ -340,7 +340,7 @@ public class HttpExchangeTest5ParseHeaders extends HttpExchangeTest {
     final Socket socket;
     socket = Y.socket(request);
 
-    try (HttpExchange http = new HttpExchange(socket, 256, 512, Y.clockFixed(), TestingNoteSink.INSTANCE)) {
+    try (HttpExchange http = new HttpExchange(socket, 256, 512, Y.clockFixed(), Y.noteSink(), 0L)) {
       assertEquals(http.shouldHandle(), false);
 
       assertEquals(
@@ -365,7 +365,7 @@ public class HttpExchangeTest5ParseHeaders extends HttpExchangeTest {
     final Socket socket;
     socket = Y.socket(request);
 
-    try (HttpExchange http = new HttpExchange(socket, 256, 512, Y.clockFixed(), TestingNoteSink.INSTANCE)) {
+    try (HttpExchange http = new HttpExchange(socket, 256, 512, Y.clockFixed(), Y.noteSink(), 0L)) {
       assertEquals(http.shouldHandle(), false);
 
       assertEquals(

@@ -70,11 +70,13 @@ final class HttpServer implements Http.Server, Runnable {
 
   private final int port;
 
+  private final long requestBodySizeMax;
+
   private ServerSocket serverSocket;
 
   private Thread thread;
 
-  public HttpServer(HttpServerConfig builder) {
+  public HttpServer(HttpServerBuilder builder) {
     bufferSizeInitial = builder.bufferSizeInitial;
 
     bufferSizeMax = builder.bufferSizeMax;
@@ -86,6 +88,8 @@ final class HttpServer implements Http.Server, Runnable {
     noteSink = builder.noteSink;
 
     port = builder.port;
+
+    requestBodySizeMax = builder.requestBodySizeMax;
   }
 
   @Override
@@ -222,7 +226,7 @@ final class HttpServer implements Http.Server, Runnable {
 
     @Override
     public final void run() {
-      try (HttpExchange http = new HttpExchange(socket, bufferSizeInitial, bufferSizeMax, clock, noteSink)) {
+      try (HttpExchange http = new HttpExchange(socket, bufferSizeInitial, bufferSizeMax, clock, noteSink, requestBodySizeMax)) {
         while (http.shouldHandle()) {
           http.handle(handler);
         }

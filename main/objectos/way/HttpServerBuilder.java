@@ -18,15 +18,17 @@ package objectos.way;
 import java.time.Clock;
 import java.util.Objects;
 
-final class HttpServerConfig implements Http.Server.Config {
+final class HttpServerBuilder implements Http.Server.Options {
 
-  int bufferSizeInitial = 16384;
+  int bufferSizeInitial = 16 * 1024;
 
-  int bufferSizeMax = 16384;
+  int bufferSizeMax = 16 * 1024;
 
   Clock clock = Clock.systemUTC();
 
   Http.Handler handler = http -> {};
+
+  long requestBodySizeMax = 10 * 1024 * 1024;
 
   Note.Sink noteSink = Note.NoOpSink.INSTANCE;
 
@@ -48,8 +50,8 @@ final class HttpServerConfig implements Http.Server.Config {
   }
 
   @Override
-  public final void clock(Clock clock) {
-    this.clock = Objects.requireNonNull(clock, "clock == null");
+  public final void clock(Clock value) {
+    clock = Objects.requireNonNull(value, "value == null");
   }
 
   @Override
@@ -58,8 +60,8 @@ final class HttpServerConfig implements Http.Server.Config {
   }
 
   @Override
-  public final void noteSink(Note.Sink noteSink) {
-    this.noteSink = Objects.requireNonNull(noteSink, "noteSink == null");
+  public final void noteSink(Note.Sink value) {
+    noteSink = Objects.requireNonNull(value, "value == null");
   }
 
   @Override
@@ -69,6 +71,13 @@ final class HttpServerConfig implements Http.Server.Config {
     }
 
     this.port = port;
+  }
+
+  @Override
+  public final void requestBodySize(long max) {
+    Check.argument(max >= 0, "max request body size must not be negative");
+
+    requestBodySizeMax = max;
   }
 
 }

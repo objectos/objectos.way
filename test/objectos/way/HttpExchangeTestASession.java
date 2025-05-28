@@ -99,7 +99,7 @@ public class HttpExchangeTestASession {
     String previousResponse;
     previousResponse = null;
 
-    try (HttpExchange http = new HttpExchange(socket, 256, 512, Y.clockFixed(), TestingNoteSink.INSTANCE)) {
+    try (HttpExchange http = new HttpExchange(socket, 256, 512, Y.clockFixed(), Y.noteSink(), 0L)) {
       for (int count = 0, len = tuples.length; count < len; count++) {
         final Tuple t;
         t = tuples[count];

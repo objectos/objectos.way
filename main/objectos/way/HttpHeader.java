@@ -147,6 +147,10 @@ final class HttpHeader {
     };
   }
 
+  static final long LONG_INVALID = -1;
+
+  static final long LONG_OVERFLOW = -2;
+
   public final long unsignedLongValue(byte[] data) {
     return switch (kind) {
       case SINGLE -> {
@@ -192,15 +196,6 @@ final class HttpHeader {
   }
 
   private long unsignedLongValue(byte[] data, Range range) {
-    final int length;
-    length = range.length();
-
-    if (length > 19) {
-      // larger than max long positive value
-
-      return Long.MIN_VALUE;
-    }
-
     final int start;
     start = range.startIndex;
 
@@ -210,35 +205,80 @@ final class HttpHeader {
     long result;
     result = 0;
 
+    final long hardLimit;
+    hardLimit = Long.MAX_VALUE;
+
+    final long multLimit;
+    multLimit = hardLimit / 10;
+
     for (int i = start; i < end; i++) {
       byte d;
       d = data[i];
 
       if (!Http.isDigit(d)) {
-        return Long.MIN_VALUE;
+        return LONG_INVALID;
+      }
+
+      if (result > multLimit) {
+        return LONG_OVERFLOW;
       }
 
       result *= 10;
 
-      long l;
-      l = (long) d & 0xF;
+      long digit;
+      digit = (long) d & 0xF;
 
-      result += l;
-    }
+      if (result > hardLimit - digit) {
+        return LONG_OVERFLOW;
+      }
 
-    if (result < 0) {
-      return Long.MIN_VALUE;
+      result += digit;
     }
 
     return result;
   }
 
   private long unsignedLongValue(String s) {
-    try {
-      return Long.parseLong(s);
-    } catch (NumberFormatException e) {
-      return Long.MIN_VALUE;
+    final int start;
+    start = 0;
+
+    final int end;
+    end = s.length();
+
+    long result;
+    result = 0;
+
+    final long hardLimit;
+    hardLimit = Long.MAX_VALUE;
+
+    final long multLimit;
+    multLimit = hardLimit / 10;
+
+    for (int i = start; i < end; i++) {
+      final char c;
+      c = s.charAt(i);
+
+      int digit;
+      digit = Character.digit(c, 10);
+
+      if (digit < 0) {
+        return LONG_INVALID;
+      }
+
+      if (result > multLimit) {
+        return LONG_OVERFLOW;
+      }
+
+      result *= 10;
+
+      if (result > hardLimit - digit) {
+        return LONG_OVERFLOW;
+      }
+
+      result += digit;
     }
+
+    return result;
   }
 
 }

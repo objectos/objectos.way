@@ -86,6 +86,11 @@ final class HttpStatus implements Http.Status {
   public static final HttpStatus METHOD_NOT_ALLOWED = BUILDER.create(405, "Method Not Allowed");
 
   /**
+   * The {@code 413 Content Too Large} status.
+   */
+  public static final HttpStatus CONTENT_TOO_LARGE = BUILDER.create(413, "Content Too Large");
+
+  /**
    * The {@code 414 URI TOO LONG} status.
    */
   public static final HttpStatus URI_TOO_LONG = BUILDER.create(414, "URI Too Long");
