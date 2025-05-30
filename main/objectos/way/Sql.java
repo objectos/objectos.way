@@ -131,6 +131,16 @@ public final class Sql {
      */
     Transaction beginTransaction(Transaction.Isolation level) throws DatabaseException;
 
+    /**
+     * Returns a session to the underlying database.
+     *
+     * @return a session to the underlying database
+     *
+     * @throws DatabaseException
+     *         if a database access error occurs
+     */
+    Session connect() throws DatabaseException;
+
     void migrate(Consumer<Migrator> config) throws DatabaseException;
 
   }
@@ -329,6 +339,143 @@ public final class Sql {
      *         if the result set throws
      */
     void process(ResultSet rs) throws SQLException;
+
+  }
+
+  /**
+   * A running session to a database.
+   */
+  public sealed interface Session extends AutoCloseable permits SqlSession {
+
+    /**
+     * Returns a newly created {@link Sql.Meta} object.
+     */
+    Meta meta() throws DatabaseException;
+
+    /**
+     * Closes the underlying database connection.
+     */
+    @Override
+    void close() throws DatabaseException;
+
+    /**
+     * Sets the SQL statement to be executed by this transaction instance.
+     *
+     * @param value
+     *        the SQL statement to be executed
+     */
+    void sql(String value);
+
+    void sql(Sql.Kind kind, String value);
+
+    /**
+     * Replaces the current SQL statement with the result of
+     * applying the specified arguments to the SQL statement as if it were a
+     * <em>format string</em>.
+     *
+     * @param args
+     *        arguments referenced by the format specifiers in the format
+     *        string.
+     */
+    void format(Object... args);
+
+    void with(GeneratedKeys<?> value);
+
+    /**
+     * Causes the current SQL statement to be paginated according to the
+     * specified {@code Page} object. In other words, when the query is
+     * executed, only the rows corresponding to the specified page will be
+     * retrieved.
+     *
+     * @param page
+     *        the {@code Page} object defining the page number and the number of
+     *        rows per page
+     */
+    void with(Page page);
+
+    /**
+     * Causes the current SQL statement to be paginated according to the
+     * {@code Page} object provided by the specified provider.
+     * In other words, when the query is executed, only the rows corresponding
+     * to the specified page will be retrieved.
+     *
+     * @param provider
+     *        provider of the {@code Page} object defining the page number and
+     *        the number of rows per page
+     */
+    default void with(PageProvider provider) {
+      Page page;
+      page = provider.page();
+
+      with(page);
+    }
+
+    /**
+     * Adds the specified value to the SQL statement argument list.
+     *
+     * @param value
+     *        the argument value which must not be {@code null}
+     */
+    void add(Object value);
+
+    void addIf(Object value, boolean condition);
+
+    /**
+     * Adds the specified value to the SQL statement argument list.
+     *
+     * @param value
+     *        the argument value which may be {@code null}
+     * @param sqlType
+     *        the SQL type (as defined in java.sql.Types)
+     */
+    void add(Object value, int sqlType);
+
+    void addBatch();
+
+    int[] batchUpdate() throws DatabaseException;
+
+    BatchUpdate batchUpdateWithResult();
+
+    /**
+     * Executes the current SQL statement as a row-retrieving query.
+     */
+    <T> List<T> query(Mapper<T> mapper) throws DatabaseException;
+
+    /**
+     * Executes the current SQL statement as a row-retrieving query and returns
+     * the first result or {@code null} if there were no results.
+     *
+     * @param mapper
+     *        maps rows from the result set to objects
+     *
+     * @return the first result or {@code null} if there were no results
+     */
+    <T> Optional<T> queryOptional(Mapper<T> mapper) throws DatabaseException, TooManyRowsException;
+
+    OptionalInt queryOptionalInt() throws DatabaseException, TooManyRowsException;
+
+    OptionalLong queryOptionalLong() throws DatabaseException, TooManyRowsException;
+
+    /**
+     * Executes the current SQL statement as a row-retrieving query and returns
+     * the first result or throws an exception if there were no results or if
+     * there were more than one result.
+     *
+     * @param mapper
+     *        maps rows from the result set to objects
+     */
+    <T> T querySingle(Mapper<T> mapper) throws DatabaseException;
+
+    int querySingleInt() throws DatabaseException;
+
+    long querySingleLong() throws DatabaseException;
+
+    /**
+     * Executes the current SQL statement as an update operation.
+     */
+    int update() throws DatabaseException;
+
+    Update updateWithResult();
 
   }
 

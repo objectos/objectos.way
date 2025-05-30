@@ -22,6 +22,7 @@ import java.util.function.Consumer;
 import javax.sql.DataSource;
 import objectos.way.Sql.DatabaseException;
 import objectos.way.Sql.Migrator;
+import objectos.way.Sql.Session;
 
 final class SqlDatabase implements Sql.Database {
 
@@ -66,6 +67,31 @@ final class SqlDatabase implements Sql.Database {
       onBeginTransaction(connection);
 
       return new SqlTransaction(dialect, connection);
+    } catch (SQLException e) {
+      try {
+        connection.close();
+      } catch (SQLException suppressed) {
+        e.addSuppressed(suppressed);
+      }
+
+      throw new Sql.DatabaseException(e);
+    }
+  }
+
+  @Override
+  public final Session connect() throws DatabaseException {
+    Connection connection;
+
+    try {
+      connection = dataSource.getConnection();
+    } catch (SQLException e) {
+      throw new Sql.DatabaseException(e);
+    }
+
+    try {
+      onBeginTransaction(connection);
+
+      return new SqlSession(dialect, connection);
     } catch (SQLException e) {
       try {
         connection.close();
