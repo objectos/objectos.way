@@ -20,8 +20,6 @@ import java.sql.SQLException;
 import java.time.Clock;
 import java.util.function.Consumer;
 import javax.sql.DataSource;
-import objectos.way.Sql.DatabaseException;
-import objectos.way.Sql.Migrator;
 
 final class SqlDatabase implements Sql.Database {
 
@@ -78,7 +76,32 @@ final class SqlDatabase implements Sql.Database {
   }
 
   @Override
-  public final void migrate(Consumer<Migrator> config) throws DatabaseException {
+  public final Sql.Transaction connect() throws Sql.DatabaseException {
+    Connection connection;
+
+    try {
+      connection = dataSource.getConnection();
+    } catch (SQLException e) {
+      throw new Sql.DatabaseException(e);
+    }
+
+    try {
+      onBeginTransaction(connection);
+
+      return new SqlTransaction(dialect, connection);
+    } catch (SQLException e) {
+      try {
+        connection.close();
+      } catch (SQLException suppressed) {
+        e.addSuppressed(suppressed);
+      }
+
+      throw new Sql.DatabaseException(e);
+    }
+  }
+
+  @Override
+  public final void migrate(Consumer<Sql.Migrator> config) throws Sql.DatabaseException {
     try (
         Connection connection = migrateConnection();
         SqlMigrator migrator = new SqlMigrator(clock, noteSink, dialect, connection)

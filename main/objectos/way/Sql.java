@@ -131,6 +131,16 @@ public final class Sql {
      */
     Transaction beginTransaction(Transaction.Isolation level) throws DatabaseException;
 
+    /**
+     * Returns a session to the underlying database.
+     *
+     * @return a session to the underlying database
+     *
+     * @throws DatabaseException
+     *         if a database access error occurs
+     */
+    Transaction connect() throws DatabaseException;
+
     void migrate(Consumer<Migrator> config) throws DatabaseException;
 
   }
@@ -333,7 +343,7 @@ public final class Sql {
   }
 
   /**
-   * A connection to a running transaction in a database.
+   * A running session to a database.
    */
   public sealed interface Transaction permits SqlTransaction {
 

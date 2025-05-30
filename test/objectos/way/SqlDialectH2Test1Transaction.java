@@ -15,16 +15,63 @@
  */
 package objectos.way;
 
+import static org.testng.Assert.assertEquals;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import org.h2.jdbcx.JdbcConnectionPool;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class SqlDialectH2Test1Transaction {
 
+  private record TypesString(int id, String char5, String varchar5) {
+    TypesString(ResultSet rs, int idx) throws SQLException {
+      this(
+          rs.getInt(idx++),
+          rs.getString(idx++),
+          rs.getString(idx++)
+      );
+    }
+  }
+
   private final Sql.Database db = createDb();
 
-  @Test(enabled = false)
-  public void param01() {
-    db.beginTransaction(Sql.READ_COMMITED);
+  @DataProvider
+  public Object[][] paramStringValidProvider() {
+    return new Object[][] {
+        {new Object[] {1, "abcde", "ABCDE"},
+            new TypesString(1, "abcde", "ABCDE"),
+            "value length == column length"},
+        {new Object[] {2, "abc", "ABC"},
+            new TypesString(2, "abc  ", "ABC"),
+            "value length < column length"}
+    };
+  }
+
+  @Test(dataProvider = "paramStringValidProvider")
+  public void paramStringValid(Object[] values, Object expected, String description) {
+    final Sql.Transaction trx;
+    trx = db.connect();
+
+    try {
+      trx.sql("insert into TYPES_STRING values (?, ?, ?)");
+
+      for (Object value : values) {
+        trx.add(value);
+      }
+
+      trx.update();
+
+      trx.sql("select * from TYPES_STRING");
+
+      final TypesString result;
+      result = trx.querySingle(TypesString::new);
+
+      assertEquals(result, expected);
+    } finally {
+      Sql.rollbackAndClose(trx);
+    }
   }
 
   private Sql.Database createDb() {
