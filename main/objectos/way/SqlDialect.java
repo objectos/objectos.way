@@ -88,6 +88,11 @@ sealed abstract class SqlDialect
     return builder.toString();
   }
 
+  @Override
+  public final String toString() {
+    return getClass().getName();
+  }
+
   void metaQueryTables(SqlMeta.QueryTablesConfig q) {}
 
   SqlMigrator.Initialized migratorInitialize(SqlMigrator migrator) {

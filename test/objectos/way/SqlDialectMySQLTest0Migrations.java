@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import javax.sql.DataSource;
 import objectos.way.Sql.MetaTable;
-import org.mariadb.jdbc.MariaDbPoolDataSource;
+import org.mariadb.jdbc.MariaDbDataSource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -243,7 +243,7 @@ public class SqlDialectMySQLTest0Migrations {
     final DataSource ds;
 
     try {
-      ds = new MariaDbPoolDataSource(url);
+      ds = new MariaDbDataSource(url);
     } catch (SQLException e) {
       throw new AssertionError("Failed to create DataSource", e);
     }

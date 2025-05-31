@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.Consumer;
 import objectos.way.Sql.MetaTable;
-import org.h2.jdbcx.JdbcConnectionPool;
+import org.h2.jdbcx.JdbcDataSource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -233,10 +233,16 @@ public class SqlDialectH2Test0Migrations {
       dbName = caller.getMethodName();
 
       final String url;
-      url = "jdbc:h2:mem:" + dbName;
+      url = "jdbc:h2:mem:" + dbName + ";DB_CLOSE_DELAY=-1";
 
-      final JdbcConnectionPool ds;
-      ds = JdbcConnectionPool.create(url, "sa", "");
+      final JdbcDataSource ds;
+      ds = new JdbcDataSource();
+
+      ds.setUrl(url);
+
+      ds.setUser("sa");
+
+      ds.setPassword("");
 
       config.dataSource(ds);
 

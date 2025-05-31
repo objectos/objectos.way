@@ -15,13 +15,33 @@
  */
 package objectos.way;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import org.testng.IAnnotationTransformer;
 import org.testng.TestNG;
+import org.testng.annotations.ITestAnnotation;
 import org.testng.xml.XmlPackage;
 import org.testng.xml.XmlSuite;
 import org.testng.xml.XmlTest;
 
 public class RunTests {
+
+  public static final class TimeoutSetter implements IAnnotationTransformer {
+
+    @SuppressWarnings({"exports", "rawtypes"})
+    @Override
+    public void transform(
+        ITestAnnotation annotation, Class testClass, Constructor testConstructor, Method testMethod) {
+      if (testMethod == null) {
+        return;
+      }
+
+      annotation.setTimeOut(TimeUnit.SECONDS.toMillis(10));
+    }
+  }
+
   public static void main(String[] args) {
     XmlSuite suite;
     suite = new XmlSuite();

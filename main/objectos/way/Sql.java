@@ -777,7 +777,7 @@ public final class Sql {
 
       case Null x -> stmt.setNull(index, x.sqlType);
 
-      default -> throw new IllegalArgumentException("Unexpected type: " + value.getClass());
+      default -> stmt.setObject(index, value);
     }
   }
 

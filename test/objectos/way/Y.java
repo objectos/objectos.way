@@ -21,6 +21,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.net.Socket;
@@ -34,6 +35,11 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.sql.Connection;
+import java.sql.ConnectionBuilder;
+import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
+import java.sql.ShardingKeyBuilder;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
@@ -45,8 +51,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.logging.Logger;
 import java.util.random.RandomGenerator;
 import java.util.stream.Collectors;
+import javax.sql.DataSource;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.JavaFileObject;
@@ -187,6 +195,70 @@ final class Y {
 
   // ##################################################################
   // # END: Clock
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: DataSource
+  // ##################################################################
+
+  private static final class DataSourceAutoCloseable implements DataSource, AutoCloseable {
+
+    private final DataSource ds;
+
+    private final AutoCloseable closeOperation;
+
+    public DataSourceAutoCloseable(DataSource ds, AutoCloseable closeOperation) {
+      this.ds = ds;
+
+      this.closeOperation = closeOperation;
+    }
+
+    @Override
+    public final void close() throws Exception {
+      closeOperation.close();
+    }
+
+    @Override
+    public final <T> T unwrap(Class<T> iface) throws SQLException { return ds.unwrap(iface); }
+
+    @Override
+    public final boolean isWrapperFor(Class<?> iface) throws SQLException { return ds.isWrapperFor(iface); }
+
+    @Override
+    public final Connection getConnection() throws SQLException { return ds.getConnection(); }
+
+    @Override
+    public final Connection getConnection(String username, String password) throws SQLException { return ds.getConnection(username, password); }
+
+    @Override
+    public final Logger getParentLogger() throws SQLFeatureNotSupportedException { return ds.getParentLogger(); }
+
+    @Override
+    public final PrintWriter getLogWriter() throws SQLException { return ds.getLogWriter(); }
+
+    @Override
+    public final void setLogWriter(PrintWriter out) throws SQLException { ds.setLogWriter(out); }
+
+    @Override
+    public final void setLoginTimeout(int seconds) throws SQLException { ds.setLoginTimeout(seconds); }
+
+    @Override
+    public final int getLoginTimeout() throws SQLException { return ds.getLoginTimeout(); }
+
+    @Override
+    public final ConnectionBuilder createConnectionBuilder() throws SQLException { return ds.createConnectionBuilder(); }
+
+    @Override
+    public final ShardingKeyBuilder createShardingKeyBuilder() throws SQLException { return ds.createShardingKeyBuilder(); }
+
+  }
+
+  public static DataSource dataSourceAutoCloseable(DataSource ds, AutoCloseable closeOperation) {
+    return new DataSourceAutoCloseable(ds, closeOperation);
+  }
+
+  // ##################################################################
+  // # END: DataSource
   // ##################################################################
 
   // ##################################################################

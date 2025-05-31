@@ -116,6 +116,15 @@ final class SqlDatabase implements Sql.Database {
     }
   }
 
+  @Override
+  public final String toString() {
+    return "SqlDatabase[dataSource=" + dataSource + ",dialect=" + dialect + "]";
+  }
+
+  final SqlDialect dialect() {
+    return dialect;
+  }
+
   private Connection migrateConnection() throws SQLException {
     final Connection connection;
     connection = dataSource.getConnection();
