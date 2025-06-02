@@ -15,9 +15,6 @@
  */
 package objectos.way;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -269,24 +266,15 @@ final class SqlTemplate {
     """);
   }
 
-  final PreparedStatement prepare(Connection connection, int generatedKeys) throws SQLException {
-    final String sql = fragments.stream()
+  final List<Object> arguments() {
+    return arguments;
+  }
+
+  final String sql() {
+    return fragments.stream()
         .filter(frag -> !frag.remove)
         .map(frag -> frag.value)
         .collect(Collectors.joining());
-
-    final PreparedStatement stmt;
-    stmt = connection.prepareStatement(sql, generatedKeys);
-
-    if (arguments != null) {
-      int index = 1;
-
-      for (Object arg : arguments) {
-        Sql.set(stmt, index++, arg);
-      }
-    }
-
-    return stmt;
   }
 
 }

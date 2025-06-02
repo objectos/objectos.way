@@ -686,7 +686,7 @@ final class SqlTransaction implements Sql.Transaction {
           final PreparedStatement stmt;
           stmt = prepared();
 
-          Sql.set(stmt, parameterIndex++, value);
+          set(stmt, parameterIndex++, value);
 
           yield state;
         } catch (SQLException e) {
@@ -705,7 +705,7 @@ final class SqlTransaction implements Sql.Transaction {
       final PreparedStatement stmt;
       stmt = createPrepared(generatedKeys);
 
-      Sql.set(stmt, parameterIndex++, value);
+      set(stmt, parameterIndex++, value);
 
       return next;
     } catch (SQLException e) {
@@ -776,7 +776,7 @@ final class SqlTransaction implements Sql.Transaction {
 
       case SQL_TEMPLATE -> {
         final Object nullable;
-        nullable = Sql.nullable(value, sqlType);
+        nullable = nullable(value, sqlType);
 
         final SqlTemplate tmpl;
         tmpl = sqlTemplate();
@@ -830,7 +830,7 @@ final class SqlTransaction implements Sql.Transaction {
     if (value == null) {
       stmt.setNull(index, sqlType);
     } else {
-      Sql.set(stmt, index, value);
+      set(stmt, index, value);
     }
   }
 
@@ -1645,7 +1645,24 @@ final class SqlTransaction implements Sql.Transaction {
       final SqlTemplate tmpl;
       tmpl = sqlTemplate();
 
-      return tmpl.prepare(connection, generatedKeys);
+      final String sql;
+      sql = tmpl.sql();
+
+      final PreparedStatement stmt;
+      stmt = connection.prepareStatement(sql, generatedKeys);
+
+      final List<Object> arguments;
+      arguments = tmpl.arguments();
+
+      if (arguments != null) {
+        int index = 1;
+
+        for (Object arg : arguments) {
+          set(stmt, index++, arg);
+        }
+      }
+
+      return stmt;
     } catch (SQLException e) {
       throw stateAndWrap(e);
     }
@@ -1655,12 +1672,30 @@ final class SqlTransaction implements Sql.Transaction {
     return (Sql.SqlGeneratedKeys<?>) aux;
   }
 
+  private IllegalStateException illegalState() {
+    return new IllegalStateException(state.name());
+  }
+
+  private record Null(int sqlType) {}
+
+  private Object nullable(Object value, int sqlType) {
+    if (value == null) {
+      return new Null(sqlType);
+    } else {
+      return value;
+    }
+  }
+
   private PreparedStatement prepared() {
     return (PreparedStatement) main;
   }
 
-  private IllegalStateException illegalState() {
-    return new IllegalStateException(state.name());
+  private void set(PreparedStatement stmt, int index, Object value) throws SQLException {
+    switch (value) {
+      case Null x -> stmt.setNull(index, x.sqlType);
+
+      default -> stmt.setObject(index, value);
+    }
   }
 
   private Sql.DatabaseException stateAndWrap(SQLException e) {

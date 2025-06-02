@@ -20,7 +20,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.RecordComponent;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -741,24 +740,6 @@ public final class Sql {
   }
 
   // utils
-
-  private record Null(int sqlType) {}
-
-  static Object nullable(Object value, int sqlType) {
-    if (value == null) {
-      return new Null(sqlType);
-    } else {
-      return value;
-    }
-  }
-
-  static void set(PreparedStatement stmt, int index, Object value) throws SQLException {
-    switch (value) {
-      case Null x -> stmt.setNull(index, x.sqlType);
-
-      default -> stmt.setObject(index, value);
-    }
-  }
 
   // non-public types
 

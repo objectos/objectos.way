@@ -20,9 +20,6 @@ import static org.testng.Assert.assertSame;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -157,36 +154,6 @@ public class SqlTest {
         """
         rollback()
         close()
-        """
-    );
-  }
-
-  @Test
-  public void set() throws SQLException {
-    TestingPreparedStatement stmt;
-    stmt = new TestingPreparedStatement();
-
-    Sql.set(stmt, 1, "ABC");
-    Sql.set(stmt, 2, Boolean.TRUE);
-    Sql.set(stmt, 3, Integer.valueOf(123));
-    Sql.set(stmt, 4, Long.valueOf(567L));
-    Sql.set(stmt, 5, Double.valueOf(4.56));
-    Sql.set(stmt, 6, LocalDate.of(2024, 9, 25));
-    Sql.set(stmt, 7, LocalDateTime.of(2024, 9, 25, 13, 0));
-    Sql.set(stmt, 8, LocalTime.of(14, 0));
-
-    assertEquals(
-        stmt.toString(),
-
-        """
-        setObject(1, ABC)
-        setObject(2, true)
-        setObject(3, 123)
-        setObject(4, 567)
-        setObject(5, 4.56)
-        setObject(6, 2024-09-25)
-        setObject(7, 2024-09-25T13:00)
-        setObject(8, 14:00)
         """
     );
   }
