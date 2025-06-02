@@ -93,7 +93,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setString(1, SOME)
+        setObject(1, SOME)
         executeQuery()
         close()
         """
@@ -212,7 +212,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setString(1, XPTO)
+        setObject(1, XPTO)
         executeQuery()
         close()
         """
@@ -276,7 +276,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setString(1, 2)
+        setObject(1, 2)
         executeQuery()
         close()
         """
@@ -340,7 +340,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setString(1, 1)
+        setObject(1, 1)
         executeQuery()
         close()
         """
@@ -428,7 +428,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setString(1, 2)
+        setObject(1, 2)
         executeQuery()
         close()
         """
@@ -493,8 +493,8 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setString(1, Y)
-        setString(2, Z)
+        setObject(1, Y)
+        setObject(2, Z)
         executeQuery()
         close()
         """
@@ -663,7 +663,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setString(1, ABC)
+        setObject(1, ABC)
         executeQuery()
         close()
         """
@@ -864,7 +864,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setString(1, BAR)
+        setObject(1, BAR)
         executeQuery()
         close()
         """
@@ -922,7 +922,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setString(1, BAR)
+        setObject(1, BAR)
         executeQuery()
         close()
         """
@@ -981,7 +981,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setString(1, BAR)
+        setObject(1, BAR)
         executeQuery()
         close()
         """
@@ -1042,7 +1042,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setString(1, BAR)
+        setObject(1, BAR)
         executeQuery()
         close()
         """
@@ -1098,7 +1098,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setString(1, BAR)
+        setObject(1, BAR)
         executeQuery()
         close()
         """
@@ -1157,7 +1157,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setString(1, BAR)
+        setObject(1, BAR)
         executeQuery()
         close()
         """
@@ -1216,7 +1216,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setString(1, BAR)
+        setObject(1, BAR)
         executeQuery()
         close()
         """
@@ -1272,7 +1272,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setString(1, BAR)
+        setObject(1, BAR)
         executeQuery()
         close()
         """
@@ -1331,7 +1331,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setString(1, BAR)
+        setObject(1, BAR)
         executeQuery()
         close()
         """
@@ -1390,7 +1390,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setString(1, BAR)
+        setObject(1, BAR)
         executeQuery()
         close()
         """
@@ -1450,7 +1450,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setString(1, BAR)
+        setObject(1, BAR)
         executeQuery()
         close()
         """
@@ -1509,7 +1509,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setString(1, BAR)
+        setObject(1, BAR)
         executeQuery()
         close()
         """
@@ -1570,7 +1570,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setString(1, SOME)
+        setObject(1, SOME)
         executeQuery()
         close()
         """
@@ -1628,7 +1628,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setString(1, SOME)
+        setObject(1, SOME)
         executeQuery()
         close()
         """
@@ -1687,7 +1687,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setString(1, SOME)
+        setObject(1, SOME)
         executeQuery()
         close()
         """
@@ -1746,7 +1746,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setString(1, SOME)
+        setObject(1, SOME)
         executeQuery()
         close()
         """
@@ -1804,7 +1804,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setString(1, SOME)
+        setObject(1, SOME)
         executeQuery()
         close()
         """
@@ -1863,7 +1863,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setString(1, SOME)
+        setObject(1, SOME)
         executeQuery()
         close()
         """

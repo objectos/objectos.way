@@ -139,7 +139,7 @@ public class SqlTransactionTestCount extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setInt(1, 123)
+        setObject(1, 123)
         close()
         """
     );
@@ -284,7 +284,7 @@ public class SqlTransactionTestCount extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setInt(1, 123)
+        setObject(1, 123)
         executeQuery()
         close()
         """
@@ -393,7 +393,7 @@ public class SqlTransactionTestCount extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setInt(1, 123)
+        setObject(1, 123)
         executeQuery()
         close()
         """
@@ -518,7 +518,7 @@ public class SqlTransactionTestCount extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setInt(1, 123)
+        setObject(1, 123)
         executeQuery()
         close()
         """
@@ -635,7 +635,7 @@ public class SqlTransactionTestCount extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setInt(1, 123)
+        setObject(1, 123)
         executeQuery()
         close()
         """

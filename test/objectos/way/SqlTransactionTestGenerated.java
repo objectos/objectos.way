@@ -110,7 +110,7 @@ public class SqlTransactionTestGenerated extends SqlTransactionTestSupport {
 
         """
         setNull(1, 91)
-        setString(2, bar)
+        setObject(2, bar)
         addBatch()
         executeBatch()
         getGeneratedKeys()
@@ -185,8 +185,8 @@ public class SqlTransactionTestGenerated extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setInt(1, 123)
-        setString(2, bar)
+        setObject(1, 123)
+        setObject(2, bar)
         addBatch()
         executeBatch()
         getGeneratedKeys()
@@ -264,9 +264,9 @@ public class SqlTransactionTestGenerated extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setInt(1, 1)
+        setObject(1, 1)
         addBatch()
-        setInt(1, 2)
+        setObject(1, 2)
         addBatch()
         executeBatch()
         getGeneratedKeys()
@@ -389,8 +389,8 @@ public class SqlTransactionTestGenerated extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setInt(1, 123)
-        setString(2, bar)
+        setObject(1, 123)
+        setObject(2, bar)
         addBatch()
         executeBatch()
         getGeneratedKeys()
@@ -449,7 +449,7 @@ public class SqlTransactionTestGenerated extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setInt(1, 1)
+        setObject(1, 1)
         addBatch()
         close()
         """
@@ -494,7 +494,7 @@ public class SqlTransactionTestGenerated extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setInt(1, 1)
+        setObject(1, 1)
         close()
         """
     );
@@ -624,8 +624,8 @@ public class SqlTransactionTestGenerated extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setInt(1, 123)
-        setString(2, bar)
+        setObject(1, 123)
+        setObject(2, bar)
         executeUpdate()
         getGeneratedKeys()
         close()

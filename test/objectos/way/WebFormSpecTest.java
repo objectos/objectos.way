@@ -82,7 +82,7 @@ public class WebFormSpecTest {
     """);
 
     testSql(form, """
-    setString(1, First)
+    setObject(1, First)
     executeUpdate()
     close()
     """);

@@ -187,7 +187,7 @@ public class SqlTransactionTestPaginated extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setInt(1, 123)
+        setObject(1, 123)
         close()
         """
     );
@@ -245,7 +245,7 @@ public class SqlTransactionTestPaginated extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setInt(1, 123)
+        setObject(1, 123)
         executeQuery()
         close()
         """
@@ -312,7 +312,7 @@ public class SqlTransactionTestPaginated extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setInt(1, 123)
+        setObject(1, 123)
         executeQuery()
         close()
         """

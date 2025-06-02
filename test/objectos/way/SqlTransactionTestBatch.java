@@ -82,7 +82,7 @@ public class SqlTransactionTestBatch extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setInt(1, 1)
+        setObject(1, 1)
         addBatch()
         setNull(1, 91)
         addBatch()
@@ -138,9 +138,9 @@ public class SqlTransactionTestBatch extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setInt(1, 1)
+        setObject(1, 1)
         addBatch()
-        setInt(1, 2)
+        setObject(1, 2)
         addBatch()
         executeBatch()
         close()
@@ -191,7 +191,7 @@ public class SqlTransactionTestBatch extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setInt(1, 1)
+        setObject(1, 1)
         addBatch()
         executeBatch()
         close()
@@ -245,9 +245,9 @@ public class SqlTransactionTestBatch extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setInt(1, 1)
+        setObject(1, 1)
         addBatch()
-        setInt(1, 2)
+        setObject(1, 2)
         addBatch()
         executeBatch()
         close()
@@ -303,7 +303,7 @@ public class SqlTransactionTestBatch extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setInt(1, 1)
+        setObject(1, 1)
         addBatch()
         executeBatch()
         close()
@@ -363,7 +363,7 @@ public class SqlTransactionTestBatch extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setInt(1, 1)
+        setObject(1, 1)
         addBatch()
         executeBatch()
         close()
@@ -439,7 +439,7 @@ public class SqlTransactionTestBatch extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setInt(1, 1)
+        setObject(1, 1)
         addBatch()
         executeBatch()
         close()
@@ -494,7 +494,7 @@ public class SqlTransactionTestBatch extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setInt(1, 1)
+        setObject(1, 1)
         addBatch()
         close()
         """

@@ -179,11 +179,11 @@ public class SqlTest {
         stmt.toString(),
 
         """
-        setString(1, ABC)
-        setBoolean(2, true)
-        setInt(3, 123)
-        setLong(4, 567)
-        setDouble(5, 4.56)
+        setObject(1, ABC)
+        setObject(2, true)
+        setObject(3, 123)
+        setObject(4, 567)
+        setObject(5, 4.56)
         setObject(6, 2024-09-25)
         setObject(7, 2024-09-25T13:00)
         setObject(8, 14:00)

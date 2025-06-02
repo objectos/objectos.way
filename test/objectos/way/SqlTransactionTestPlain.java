@@ -114,7 +114,7 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setInt(1, 1)
+        setObject(1, 1)
         setNull(2, 91)
         executeUpdate()
         close()
@@ -243,7 +243,7 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setInt(1, 123)
+        setObject(1, 123)
         close()
         """
     );
@@ -302,7 +302,7 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
         stmt.toString(),
 
         """
-        setInt(1, 123)
+        setObject(1, 123)
         executeQuery()
         close()
         """
@@ -461,8 +461,8 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
         stmt0.toString(),
 
         """
-        setInt(1, 456)
-        setString(2, XPTO)
+        setObject(1, 456)
+        setObject(2, XPTO)
         executeQuery()
         close()
         """
@@ -471,8 +471,8 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
         stmt1.toString(),
 
         """
-        setInt(1, 456)
-        setString(2, XPTO)
+        setObject(1, 456)
+        setObject(2, XPTO)
         executeQuery()
         close()
         """
@@ -574,7 +574,7 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
         stmt0.toString(),
 
         """
-        setInt(1, 456)
+        setObject(1, 456)
         executeQuery()
         close()
         """
@@ -583,7 +583,7 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
         stmt1.toString(),
 
         """
-        setString(1, XPTO)
+        setObject(1, XPTO)
         executeQuery()
         close()
         """
@@ -652,7 +652,7 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setInt(1, 123)
+        setObject(1, 123)
         executeQuery()
         close()
         """
@@ -711,7 +711,7 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setInt(1, 123)
+        setObject(1, 123)
         executeQuery()
         close()
         """
@@ -765,7 +765,7 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setInt(1, 123)
+        setObject(1, 123)
         executeQuery()
         close()
         """
@@ -976,7 +976,7 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setInt(1, 123)
+        setObject(1, 123)
         executeQuery()
         close()
         """
@@ -1028,7 +1028,7 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setInt(1, 123)
+        setObject(1, 123)
         executeQuery()
         close()
         """
@@ -1179,7 +1179,7 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setInt(1, 123)
+        setObject(1, 123)
         executeQuery()
         close()
         """
@@ -1234,7 +1234,7 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setInt(1, 123)
+        setObject(1, 123)
         executeQuery()
         close()
         """
@@ -1344,7 +1344,7 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setInt(1, 123)
+        setObject(1, 123)
         executeQuery()
         close()
         """
@@ -1399,7 +1399,7 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setInt(1, 123)
+        setObject(1, 123)
         executeQuery()
         close()
         """
@@ -1496,7 +1496,7 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setInt(1, 1)
+        setObject(1, 1)
         executeUpdate()
         close()
         """
@@ -1543,7 +1543,7 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setInt(1, 1)
+        setObject(1, 1)
         executeUpdate()
         close()
         """
@@ -1590,8 +1590,8 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
         preparedStatement.toString(),
 
         """
-        setInt(1, 123)
-        setString(2, foo)
+        setObject(1, 123)
+        setObject(2, foo)
         executeUpdate()
         close()
         """
