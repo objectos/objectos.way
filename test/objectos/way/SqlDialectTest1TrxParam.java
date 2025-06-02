@@ -206,6 +206,118 @@ public class SqlDialectTest1TrxParam extends SqlDialectTest0Support {
   // ##################################################################
 
   // ##################################################################
+  // # BEGIN: Floating Point Types
+  // ##################################################################
+
+  private record TypesFloating(
+      int id,
+      float floatValue,
+      double doubleValue
+  ) {
+    TypesFloating(ResultSet rs, int idx) throws SQLException {
+      this(
+          rs.getInt(idx++),
+          rs.getFloat(idx++),
+          rs.getDouble(idx++)
+      );
+    }
+  }
+
+  private Sql.Transaction typesFloating(Sql.Database db) {
+    db.migrate(migrations -> {
+      migrations.add("Create test table", """
+      create table TYPES_FLOATING (
+        ID int not null,
+
+        T_FLOAT float not null,
+        T_DOUBLE double precision not null,
+
+        primary key (ID)
+      );
+      """);
+    });
+
+    return db.connect();
+  }
+
+  private TypesFloating typesFloatingTest(
+      Sql.Transaction trx,
+      int id,
+      float floatValue,
+      double doubleValue
+  ) {
+    trx.sql("""
+    insert into TYPES_FLOATING (
+      ID, T_FLOAT, T_DOUBLE
+    ) values (
+      ?, ?, ?
+    )
+    """);
+
+    trx.add(id);
+    trx.add(floatValue);
+    trx.add(doubleValue);
+
+    trx.update();
+
+    trx.sql("select * from TYPES_FLOATING");
+
+    return trx.querySingle(TypesFloating::new);
+  }
+
+  @Test(description = "max value", dataProvider = "dbProvider")
+  public void typesFloating01(Sql.Database db) {
+    final Sql.Transaction trx;
+    trx = typesFloating(db);
+
+    final SqlDialect dialect;
+    dialect = dialect(db);
+
+    try {
+      final float f = switch (dialect) {
+        case H2, TESTING -> Float.MAX_VALUE;
+
+        case MySQL -> Float.valueOf("3.40282e38");
+      };
+
+      final double d = Double.MAX_VALUE;
+
+      final TypesFloating result;
+      result = typesFloatingTest(trx, 1, f, d);
+
+      assertEquals(result.id, 1);
+      assertEquals(Math.abs(result.floatValue - f) < 0.0001, true);
+      assertEquals(Math.abs(result.doubleValue - d) < 0.0000001, true);
+    } finally {
+      Sql.rollbackAndClose(trx);
+    }
+  }
+
+  @Test(description = "min value", dataProvider = "dbProvider")
+  public void typesFloating02(Sql.Database db) {
+    final Sql.Transaction trx;
+    trx = typesFloating(db);
+
+    try {
+      final float f = Float.MIN_VALUE;
+      final double d = Double.MIN_VALUE;
+
+      final TypesFloating result;
+      result = typesFloatingTest(trx, 1, f, d);
+
+      assertEquals(result.id, 1);
+      assertEquals(Math.abs(result.floatValue - f) < 0.0001, true);
+      assertEquals(Math.abs(result.doubleValue - d) < 0.0000001, true);
+    } finally {
+      Sql.rollbackAndClose(trx);
+    }
+  }
+
+  // ##################################################################
+  // # END: Floating Point Types
+  // ##################################################################
+
+  // ##################################################################
   // # BEGIN: Integer Types
   // ##################################################################
 
