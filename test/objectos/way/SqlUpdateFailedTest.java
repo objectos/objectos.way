@@ -28,7 +28,7 @@ public class SqlUpdateFailedTest {
   @Test
   public void testing01() {
     final SqlDialect dialect;
-    dialect = new SqlDialectTesting();
+    dialect = SqlDialect.TESTING;
 
     final SQLIntegrityConstraintViolationException error;
     error = new SQLIntegrityConstraintViolationException();

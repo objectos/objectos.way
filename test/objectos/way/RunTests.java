@@ -18,6 +18,7 @@ package objectos.way;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import org.testng.IAnnotationTransformer;
 import org.testng.TestNG;
@@ -43,6 +44,12 @@ public class RunTests {
   }
 
   public static void main(String[] args) {
+    // Use GMT-3 for all tests
+    final TimeZone gmtMinusThree;
+    gmtMinusThree = TimeZone.getTimeZone("GMT-3");
+
+    TimeZone.setDefault(gmtMinusThree);
+
     XmlSuite suite;
     suite = new XmlSuite();
 

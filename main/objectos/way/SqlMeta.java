@@ -54,6 +54,7 @@ final class SqlMeta implements Sql.Meta {
 
   }
 
+  @SuppressWarnings("unused")
   private final SqlDialect dialect;
 
   private final DatabaseMetaData delegate;
@@ -100,8 +101,6 @@ final class SqlMeta implements Sql.Meta {
     q = new QueryTablesConfig();
 
     config.accept(q);
-
-    dialect.metaQueryTables(q);
 
     try (ResultSet rs = q.execute()) {
       return query(rs, TableRecord::new);

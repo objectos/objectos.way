@@ -207,8 +207,8 @@ public class WebFormSpecTest {
 
     conn.preparedStatements(stmt);
 
-    SqlDialectTesting dialect;
-    dialect = new SqlDialectTesting();
+    SqlDialect dialect;
+    dialect = SqlDialect.TESTING;
 
     SqlTransaction trx;
     trx = new SqlTransaction(dialect, conn);

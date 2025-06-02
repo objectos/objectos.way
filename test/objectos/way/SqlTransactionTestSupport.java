@@ -338,10 +338,7 @@ public abstract class SqlTransactionTestSupport {
   }
 
   final SqlTransaction trx(Connection connection) {
-    SqlDialect dialect;
-    dialect = new SqlDialectTesting();
-
-    return new SqlTransaction(dialect, connection);
+    return new SqlTransaction(SqlDialect.TESTING, connection);
   }
 
 }

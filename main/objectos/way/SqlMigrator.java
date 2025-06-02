@@ -21,7 +21,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Clock;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
+import objectos.way.Sql.MetaTable;
 
 final class SqlMigrator implements Sql.Migrator, AutoCloseable {
 
@@ -65,7 +67,117 @@ final class SqlMigrator implements Sql.Migrator, AutoCloseable {
   }
 
   public final void initialize() {
-    initialized = dialect.migratorInitialize(this);
+    initialized = switch (dialect) {
+      case H2 -> initializeH2();
+
+      case MySQL -> initializeMySQL();
+
+      case TESTING -> throw new UnsupportedOperationException();
+    };
+  }
+
+  private Initialized initializeH2() {
+    trx.sql("set schema PUBLIC");
+
+    trx.update();
+
+    final Sql.Meta meta;
+    meta = trx.meta();
+
+    final List<MetaTable> tables;
+    tables = meta.queryTables(filter -> {
+      filter.schemaName("PUBLIC");
+
+      filter.tableName("SCHEMA_HISTORY");
+    });
+
+    if (tables.isEmpty()) {
+
+      trx.sql(Sql.SCRIPT, """
+      create table if not exists SCHEMA_HISTORY (
+        INSTALLED_RANK int not null,
+        DESCRIPTION varchar(200) not null,
+        INSTALLED_BY varchar(100) not null,
+        INSTALLED_ON timestamp default current_timestamp,
+        EXECUTION_TIME int not null,
+        SUCCESS boolean not null,
+
+        constraint SCHEMA_HISTORY_PK primary key (INSTALLED_RANK)
+      );
+
+      create index SCHEMA_HISTORY_S_IDX on SCHEMA_HISTORY (SUCCESS);
+      """);
+
+      trx.batchUpdate();
+
+      schemaHistory(0, "SCHEMA_HISTORY table created", true);
+
+    }
+
+    trx.sql("""
+    select
+      not exists(select 1 from SCHEMA_HISTORY where SUCCESS = false),
+      max(INSTALLED_RANK),
+      user()
+    from
+      SCHEMA_HISTORY
+    """);
+
+    final SqlMigrator.Initialized result;
+    result = trx.querySingle(SqlMigrator.Initialized::new);
+
+    trx.commit();
+
+    return result;
+  }
+
+  private Initialized initializeMySQL() {
+    final Sql.Meta meta;
+    meta = trx.meta();
+
+    final List<MetaTable> tables;
+    tables = meta.queryTables(filter -> {
+      filter.tableName("SCHEMA_HISTORY");
+    });
+
+    if (tables.isEmpty()) {
+
+      trx.sql(Sql.SCRIPT, """
+      create table if not exists SCHEMA_HISTORY (
+        INSTALLED_RANK int not null,
+        DESCRIPTION varchar(200) not null,
+        INSTALLED_BY varchar(100) not null,
+        INSTALLED_ON timestamp default current_timestamp,
+        EXECUTION_TIME int not null,
+        SUCCESS boolean not null,
+
+        constraint SCHEMA_HISTORY_PK primary key (INSTALLED_RANK)
+      );
+
+      create index SCHEMA_HISTORY_S_IDX on SCHEMA_HISTORY (SUCCESS);
+      """);
+
+      trx.batchUpdate();
+
+      schemaHistory(0, "SCHEMA_HISTORY table created", true);
+
+    }
+
+    trx.sql("""
+    select
+      not exists(select 1 from SCHEMA_HISTORY where SUCCESS = false),
+      max(INSTALLED_RANK),
+      user()
+    from
+      SCHEMA_HISTORY
+    """);
+
+    final SqlMigrator.Initialized result;
+    result = trx.querySingle(SqlMigrator.Initialized::new);
+
+    trx.commit();
+
+    return result;
   }
 
   @Override
@@ -87,7 +199,7 @@ final class SqlMigrator implements Sql.Migrator, AutoCloseable {
 
     switch (result) {
       case Sql.BatchUpdateSuccess ok -> {
-        dialect.migratorHistory(this, currentRank, name, true);
+        schemaHistory(currentRank, name, true);
 
         trx.commit();
       }
@@ -95,7 +207,7 @@ final class SqlMigrator implements Sql.Migrator, AutoCloseable {
       case SqlBatchUpdateFailed error -> {
         trx.rollback();
 
-        dialect.migratorHistory(this, currentRank, name, false);
+        schemaHistory(currentRank, name, false);
 
         trx.commit();
 
@@ -116,6 +228,35 @@ final class SqlMigrator implements Sql.Migrator, AutoCloseable {
 
   final SqlTransaction trx() {
     return trx;
+  }
+
+  private void schemaHistory(int rank, String name, boolean success) {
+    final String sql;
+    sql = switch (dialect) {
+      case H2 -> """
+      insert into PUBLIC.SCHEMA_HISTORY
+      values (?, ?, user(), ?, 0, ?)
+      """;
+
+      case MySQL -> """
+      insert into SCHEMA_HISTORY
+      values (?, ?, user(), ?, 0, ?)
+      """;
+
+      case TESTING -> throw new UnsupportedOperationException();
+    };
+
+    trx.sql(sql);
+
+    trx.add(rank);
+
+    trx.add(name);
+
+    trx.add(now());
+
+    trx.add(success);
+
+    trx.update();
   }
 
 }

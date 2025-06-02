@@ -192,10 +192,7 @@ public class SqlTest {
   }
 
   private SqlTransaction trx(Connection connection) {
-    SqlDialectTesting dialect;
-    dialect = new SqlDialectTesting();
-
-    return new SqlTransaction(dialect, connection);
+    return new SqlTransaction(SqlDialect.TESTING, connection);
   }
 
 }

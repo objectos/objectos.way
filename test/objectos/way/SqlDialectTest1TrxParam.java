@@ -22,6 +22,8 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneOffset;
+import java.time.temporal.Temporal;
 import org.testng.annotations.Test;
 
 public class SqlDialectTest1TrxParam extends SqlDialectTest0Support {
@@ -55,7 +57,7 @@ public class SqlDialectTest1TrxParam extends SqlDialectTest0Support {
     dialect = dialect(db);
 
     final String sql = switch (dialect) {
-      case SqlDialectH2 h2 -> """
+      case H2 -> """
       create table TYPES_DATE_TIME (
         ID int not null,
 
@@ -69,7 +71,7 @@ public class SqlDialectTest1TrxParam extends SqlDialectTest0Support {
       );
       """;
 
-      case SqlDialectMySQL mysql -> """
+      case MySQL -> """
       create table TYPES_DATE_TIME (
         ID int not null,
 
@@ -83,7 +85,7 @@ public class SqlDialectTest1TrxParam extends SqlDialectTest0Support {
       );
       """;
 
-      case SqlDialectTesting testing -> "";
+      case TESTING -> "";
     };
 
     db.migrate(migrations -> {
@@ -98,9 +100,9 @@ public class SqlDialectTest1TrxParam extends SqlDialectTest0Support {
       int id,
       LocalDate date,
       LocalTime time,
-      LocalTime timeWithZone,
+      Temporal timeWithZone,
       LocalDateTime timestamp,
-      LocalDateTime timestampWithZone
+      Temporal timestampWithZone
   ) {
     trx.sql("""
     insert into TYPES_DATE_TIME (
@@ -146,7 +148,54 @@ public class SqlDialectTest1TrxParam extends SqlDialectTest0Support {
       assertEquals(result.time, LocalTime.of(10, 20, 30));
       assertEquals(result.timeWithZone, LocalTime.of(16, 26, 36));
       assertEquals(result.timestamp, LocalDateTime.of(2025, 5, 31, 10, 20, 30));
-      assertEquals(result.timestampWithZone(), LocalDateTime.of(2020, 12, 31, 16, 26, 36));
+      assertEquals(result.timestampWithZone, LocalDateTime.of(2020, 12, 31, 16, 26, 36));
+    } finally {
+      Sql.rollbackAndClose(trx);
+    }
+  }
+
+  @Test(description = "read/write have different TZ", dataProvider = "dbProvider")
+  public void typesDateTime02(Sql.Database db) {
+    final Sql.Transaction trx;
+    trx = typesDateTime(db);
+
+    final SqlDialect dialect;
+    dialect = dialect(db);
+
+    // insert at different TZ / read at default TZ
+    final ZoneOffset minusTwo;
+    minusTwo = ZoneOffset.ofHours(-2);
+
+    try {
+      final TypesDateTime result;
+      result = typesDateTimeTest(
+          trx,
+
+          2,
+
+          LocalDate.of(2025, 5, 31),
+
+          LocalTime.of(10, 20, 30),
+
+          switch (dialect) {
+            case H2 -> LocalTime.of(16, 26, 36).atOffset(minusTwo);
+
+            case MySQL -> LocalTime.of(15, 26, 36);
+
+            case TESTING -> throw new UnsupportedOperationException();
+          },
+
+          LocalDateTime.of(2025, 5, 31, 10, 20, 30),
+
+          LocalDateTime.of(2020, 12, 31, 16, 26, 36).atZone(minusTwo)
+      );
+
+      assertEquals(result.id, 2);
+      assertEquals(result.date, LocalDate.of(2025, 5, 31));
+      assertEquals(result.time, LocalTime.of(10, 20, 30));
+      assertEquals(result.timeWithZone, LocalTime.of(15, 26, 36));
+      assertEquals(result.timestamp, LocalDateTime.of(2025, 5, 31, 10, 20, 30));
+      assertEquals(result.timestampWithZone, LocalDateTime.of(2020, 12, 31, 15, 26, 36));
     } finally {
       Sql.rollbackAndClose(trx);
     }
@@ -376,14 +425,18 @@ public class SqlDialectTest1TrxParam extends SqlDialectTest0Support {
       final SqlDialect dialect;
       dialect = dialect(db);
 
-      if (dialect instanceof SqlDialectMySQL) {
-        assertEquals(result.id, 1);
-        assertEquals(result.char5, "abc");
-        assertEquals(result.varchar5, "ABC");
-      } else {
-        assertEquals(result.id, 1);
-        assertEquals(result.char5, "abc  ");
-        assertEquals(result.varchar5, "ABC");
+      switch (dialect) {
+        case H2 -> {
+          assertEquals(result.id, 1);
+          assertEquals(result.char5, "abc  ");
+          assertEquals(result.varchar5, "ABC");
+        }
+
+        case MySQL, TESTING -> {
+          assertEquals(result.id, 1);
+          assertEquals(result.char5, "abc");
+          assertEquals(result.varchar5, "ABC");
+        }
       }
     } finally {
       Sql.rollbackAndClose(trx);

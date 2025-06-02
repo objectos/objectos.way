@@ -560,7 +560,7 @@ final class SqlTransaction implements Sql.Transaction {
       case SQL -> {
         state = State.SQL_PAGINATED;
 
-        main = dialect.paginate(sql(), page);
+        main = paginate(page);
       }
 
       case START,
@@ -578,6 +578,75 @@ final class SqlTransaction implements Sql.Transaction {
            PREPARED_PAGINATED -> throw illegalState();
 
       case ERROR -> throw illegalState();
+    }
+  }
+
+  private String paginate(Sql.Page page) {
+    final String sql;
+    sql = sql();
+
+    final StringBuilder builder;
+    builder = new StringBuilder(sql);
+
+    if (shouldAppendNewLine(builder)) {
+      builder.append(System.lineSeparator());
+    }
+
+    int offset;
+    offset = 0;
+
+    final int pageNumber;
+    pageNumber = page.number();
+
+    if (pageNumber > 1) {
+      offset = (pageNumber - 1) * page.size();
+    }
+
+    final int size;
+    size = page.size();
+
+    paginate(builder, offset, size);
+
+    return builder.toString();
+  }
+
+  private void paginate(StringBuilder builder, int offset, int size) {
+    switch (dialect) {
+      case H2 -> {
+        if (offset > 0) {
+          builder.append("offset ");
+
+          builder.append(offset);
+
+          builder.append(" rows");
+
+          builder.append(System.lineSeparator());
+        }
+
+        builder.append("fetch first ");
+
+        builder.append(size);
+
+        builder.append(" rows only");
+
+        builder.append(System.lineSeparator());
+      }
+
+      case MySQL, TESTING -> {
+        builder.append("limit ");
+
+        builder.append(size);
+
+        builder.append(System.lineSeparator());
+
+        if (offset > 0) {
+          builder.append("offset ");
+
+          builder.append(offset);
+
+          builder.append(System.lineSeparator());
+        }
+      }
     }
   }
 

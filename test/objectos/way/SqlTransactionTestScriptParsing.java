@@ -174,9 +174,6 @@ public class SqlTransactionTestScriptParsing {
   }
 
   private void test(String script, String expected) {
-    SqlDialectTesting dialect;
-    dialect = new SqlDialectTesting();
-
     TestingConnection connection;
     connection = new TestingConnection();
 
@@ -186,7 +183,7 @@ public class SqlTransactionTestScriptParsing {
     connection.statements(statement);
 
     SqlTransaction trx;
-    trx = new SqlTransaction(dialect, connection);
+    trx = new SqlTransaction(SqlDialect.TESTING, connection);
 
     trx.sql(Sql.SCRIPT, script);
 

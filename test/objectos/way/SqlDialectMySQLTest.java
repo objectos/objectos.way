@@ -31,63 +31,7 @@ public class SqlDialectMySQLTest {
     SqlDialect dialect;
     dialect = SqlDialect.of(data);
 
-    assertEquals(dialect.getClass(), SqlDialectMySQL.class);
-  }
-
-  @Test
-  public void count() {
-    SqlDialect dialect;
-    dialect = TestingSqlDialect.MYSQL_5_7;
-
-    StringBuilder sqlBuilder;
-    sqlBuilder = new StringBuilder("select * from FOO");
-
-    dialect.count(sqlBuilder);
-
-    assertEquals(sqlBuilder.toString(), """
-    select count(*) from (
-    select * from FOO
-    ) x
-    """);
-  }
-
-  @Test
-  public void paginate01() {
-    SqlDialect dialect;
-    dialect = TestingSqlDialect.MYSQL_5_7;
-
-    assertEquals(
-        dialect.paginate(
-            "select * from FOO",
-
-            Sql.Page.of(1, 15)
-        ),
-
-        """
-        select * from FOO
-        limit 15
-        """
-    );
-  }
-
-  @Test
-  public void paginate02() {
-    SqlDialect dialect;
-    dialect = TestingSqlDialect.MYSQL_5_7;
-
-    assertEquals(
-        dialect.paginate(
-            "select * from FOO",
-
-            Sql.Page.of(3, 15)
-        ),
-
-        """
-        select * from FOO
-        limit 15
-        offset 30
-        """
-    );
+    assertEquals(dialect, SqlDialect.MySQL);
   }
 
 }
