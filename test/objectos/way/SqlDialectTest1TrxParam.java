@@ -19,6 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -27,6 +28,121 @@ import java.time.temporal.Temporal;
 import org.testng.annotations.Test;
 
 public class SqlDialectTest1TrxParam extends SqlDialectTest0Support {
+
+  // ##################################################################
+  // # BEGIN: Boolean Type
+  // ##################################################################
+
+  private record TypesBoolean(
+      int id,
+      boolean booleanValue,
+      Boolean booleanNullable
+  ) {
+    TypesBoolean(ResultSet rs, int idx) throws SQLException {
+      this(
+          rs.getInt(idx++),
+          rs.getBoolean(idx++),
+          rs.getObject(idx++, Boolean.class)
+      );
+    }
+  }
+
+  private Sql.Transaction typesBoolean(Sql.Database db) {
+    db.migrate(migrations -> {
+      migrations.add("Create test table", """
+        create table TYPES_BOOLEAN (
+        ID int not null,
+
+        T_BOOLEAN boolean not null,
+        T_BOOLEAN_NULL boolean null,
+
+        primary key (ID)
+      );
+      """);
+    });
+
+    return db.connect();
+  }
+
+  private TypesBoolean typesBooleanTest(
+      Sql.Transaction trx,
+      int id,
+      boolean booleanValue,
+      Boolean booleanNullable
+  ) {
+    trx.sql("""
+    insert into TYPES_BOOLEAN (
+      ID, T_BOOLEAN, T_BOOLEAN_NULL
+    ) values (
+      ?, ?, ?
+    )
+    """);
+
+    trx.add(id);
+    trx.add(booleanValue);
+    trx.add(booleanNullable, Types.BOOLEAN);
+
+    trx.update();
+
+    trx.sql("select * from TYPES_BOOLEAN");
+
+    return trx.querySingle(TypesBoolean::new);
+  }
+
+  @Test(description = "true value", dataProvider = "dbProvider")
+  public void typesBoolean01(Sql.Database db) {
+    final Sql.Transaction trx;
+    trx = typesBoolean(db);
+
+    try {
+      final TypesBoolean result;
+      result = typesBooleanTest(trx, 1, true, true);
+
+      assertEquals(result.id, 1);
+      assertEquals(result.booleanValue, true);
+      assertEquals(result.booleanNullable, Boolean.TRUE);
+    } finally {
+      Sql.rollbackAndClose(trx);
+    }
+  }
+
+  @Test(description = "false value", dataProvider = "dbProvider")
+  public void typesBoolean02(Sql.Database db) {
+    final Sql.Transaction trx;
+    trx = typesBoolean(db);
+
+    try {
+      final TypesBoolean result;
+      result = typesBooleanTest(trx, 2, false, false);
+
+      assertEquals(result.id, 2);
+      assertEquals(result.booleanValue, false);
+      assertEquals(result.booleanNullable, Boolean.FALSE);
+    } finally {
+      Sql.rollbackAndClose(trx);
+    }
+  }
+
+  @Test(description = "null value", dataProvider = "dbProvider")
+  public void typesBoolean03(Sql.Database db) {
+    final Sql.Transaction trx;
+    trx = typesBoolean(db);
+
+    try {
+      final TypesBoolean result;
+      result = typesBooleanTest(trx, 2, false, null);
+
+      assertEquals(result.id, 2);
+      assertEquals(result.booleanValue, false);
+      assertEquals(result.booleanNullable, null);
+    } finally {
+      Sql.rollbackAndClose(trx);
+    }
+  }
+
+  // ##################################################################
+  // # END: Boolean Type
+  // ##################################################################
 
   // ##################################################################
   // # BEGIN: Date/Time Types
