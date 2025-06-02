@@ -63,8 +63,8 @@ final class SqlDatabaseConfig implements Sql.Database.Config {
 
       noteSink.send(metadata, data, data.getDatabaseProductName(), data.getDatabaseProductVersion());
 
-      SqlDialect dialect;
-      dialect = SqlDialect.of(data);
+      Sql.Dialect dialect;
+      dialect = Sql.Dialect.of(data);
 
       return new SqlDatabase(clock, noteSink, dataSource, dialect);
     } catch (SQLException e) {

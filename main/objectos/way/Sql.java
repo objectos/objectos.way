@@ -137,10 +137,36 @@ public final class Sql {
      */
     Transaction connect() throws DatabaseException;
 
-    void migrate(Consumer<Migrator> config) throws DatabaseException;
+    void migrate(Consumer<Migrations> migrations) throws DatabaseException;
 
   }
 
+  enum Dialect {
+
+    H2,
+
+    MYSQL,
+
+    TESTING;
+
+    static Dialect of(DatabaseMetaData data) throws SQLException {
+      String productName;
+      productName = data.getDatabaseProductName();
+
+      return switch (productName) {
+        case "H2" -> H2;
+
+        case "MySQL" -> MYSQL;
+
+        case "ObjectosWay" -> TESTING;
+
+        default -> throw new UnsupportedOperationException(
+            "Unsupported dialect with databaseProductName=" + productName
+        );
+      };
+    }
+
+  }
   public sealed interface GeneratedKeys<T> {
 
     public sealed interface OfInt extends GeneratedKeys<Integer> {
@@ -179,15 +205,15 @@ public final class Sql {
      * insert into City (id, name)
      * values (1, 'São Paulo')
      * ,      (2, 'New York')
-     * ,      (3, 'Tokyo')
+     * ,      (3, 'Tokyo');
      *
      * insert into Country (id, name)
      * values (1, 'Brazil')
      * ,      (2, 'United States of America')
-     * ,      (3, 'Japan')
+     * ,      (3, 'Japan');
      * """);
      *
-     * int[] result = trx.scriptUpdate();
+     * int[] result = trx.batchUpdate();
      *
      * assertEquals(result.length, 2);
      * assertEquals(result[0], 3);
@@ -266,7 +292,11 @@ public final class Sql {
 
   }
 
-  public sealed interface Migrator permits SqlMigrator {
+  /**
+   * A handle to migrate, if necessary, the database schema to the latest
+   * version.
+   */
+  public sealed interface Migrations permits SqlMigrations {
 
     void add(String name, String script);
 
@@ -348,8 +378,8 @@ public final class Sql {
         DatabaseMetaData data;
         data = connection.getMetaData();
 
-        SqlDialect dialect;
-        dialect = SqlDialect.of(data);
+        Sql.Dialect dialect;
+        dialect = Sql.Dialect.of(data);
 
         return new SqlTransaction(dialect, connection);
       } catch (SQLException e) {

@@ -159,7 +159,7 @@ public class SqlTest {
   }
 
   private SqlTransaction trx(Connection connection) {
-    return new SqlTransaction(SqlDialect.TESTING, connection);
+    return new SqlTransaction(Sql.Dialect.TESTING, connection);
   }
 
 }

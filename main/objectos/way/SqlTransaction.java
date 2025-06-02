@@ -65,7 +65,7 @@ final class SqlTransaction implements Sql.Transaction {
 
   }
 
-  private final SqlDialect dialect;
+  private final Sql.Dialect dialect;
 
   private final Connection connection;
 
@@ -77,7 +77,7 @@ final class SqlTransaction implements Sql.Transaction {
 
   private State state = State.START;
 
-  SqlTransaction(SqlDialect dialect, Connection connection) {
+  SqlTransaction(Sql.Dialect dialect, Connection connection) {
     this.dialect = dialect;
 
     this.connection = connection;
@@ -89,7 +89,7 @@ final class SqlTransaction implements Sql.Transaction {
       final DatabaseMetaData metaData;
       metaData = connection.getMetaData();
 
-      return new SqlMeta(dialect, metaData);
+      return new SqlMeta(metaData);
     } catch (SQLException e) {
       throw new Sql.DatabaseException(e);
     }
@@ -632,7 +632,7 @@ final class SqlTransaction implements Sql.Transaction {
         builder.append(System.lineSeparator());
       }
 
-      case MySQL, TESTING -> {
+      case MYSQL, TESTING -> {
         builder.append("limit ");
 
         builder.append(size);

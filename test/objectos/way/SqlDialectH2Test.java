@@ -28,10 +28,10 @@ public class SqlDialectH2Test {
     DatabaseMetaData data;
     data = TestingDatabaseMetaData.H2;
 
-    SqlDialect dialect;
-    dialect = SqlDialect.of(data);
+    Sql.Dialect dialect;
+    dialect = Sql.Dialect.of(data);
 
-    assertEquals(dialect, SqlDialect.H2);
+    assertEquals(dialect, Sql.Dialect.H2);
   }
 
 }

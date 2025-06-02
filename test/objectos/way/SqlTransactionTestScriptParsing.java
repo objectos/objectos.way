@@ -183,7 +183,7 @@ public class SqlTransactionTestScriptParsing {
     connection.statements(statement);
 
     SqlTransaction trx;
-    trx = new SqlTransaction(SqlDialect.TESTING, connection);
+    trx = new SqlTransaction(Sql.Dialect.TESTING, connection);
 
     trx.sql(Sql.SCRIPT, script);
 

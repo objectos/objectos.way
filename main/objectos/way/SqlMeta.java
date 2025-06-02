@@ -54,14 +54,9 @@ final class SqlMeta implements Sql.Meta {
 
   }
 
-  @SuppressWarnings("unused")
-  private final SqlDialect dialect;
-
   private final DatabaseMetaData delegate;
 
-  SqlMeta(SqlDialect dialect, DatabaseMetaData delegate) {
-    this.dialect = dialect;
-
+  SqlMeta(DatabaseMetaData delegate) {
     this.delegate = delegate;
   }
 

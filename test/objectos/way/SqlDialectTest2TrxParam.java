@@ -27,7 +27,7 @@ import java.time.ZoneOffset;
 import java.time.temporal.Temporal;
 import org.testng.annotations.Test;
 
-public class SqlDialectTest1TrxParam extends SqlDialectTest0Support {
+public class SqlDialectTest2TrxParam extends SqlDialectTest0Support {
 
   // ##################################################################
   // # BEGIN: Boolean Type
@@ -169,7 +169,7 @@ public class SqlDialectTest1TrxParam extends SqlDialectTest0Support {
   }
 
   private Sql.Transaction typesDateTime(Sql.Database db) {
-    final SqlDialect dialect;
+    final Sql.Dialect dialect;
     dialect = dialect(db);
 
     final String sql = switch (dialect) {
@@ -187,7 +187,7 @@ public class SqlDialectTest1TrxParam extends SqlDialectTest0Support {
       );
       """;
 
-      case MySQL -> """
+      case MYSQL -> """
       create table TYPES_DATE_TIME (
         ID int not null,
 
@@ -275,7 +275,7 @@ public class SqlDialectTest1TrxParam extends SqlDialectTest0Support {
     final Sql.Transaction trx;
     trx = typesDateTime(db);
 
-    final SqlDialect dialect;
+    final Sql.Dialect dialect;
     dialect = dialect(db);
 
     // insert at different TZ / read at default TZ
@@ -296,7 +296,7 @@ public class SqlDialectTest1TrxParam extends SqlDialectTest0Support {
           switch (dialect) {
             case H2 -> LocalTime.of(16, 26, 36).atOffset(minusTwo);
 
-            case MySQL -> LocalTime.of(15, 26, 36);
+            case MYSQL -> LocalTime.of(15, 26, 36);
 
             case TESTING -> throw new UnsupportedOperationException();
           },
@@ -386,14 +386,14 @@ public class SqlDialectTest1TrxParam extends SqlDialectTest0Support {
     final Sql.Transaction trx;
     trx = typesFloating(db);
 
-    final SqlDialect dialect;
+    final Sql.Dialect dialect;
     dialect = dialect(db);
 
     try {
       final float f = switch (dialect) {
         case H2, TESTING -> Float.MAX_VALUE;
 
-        case MySQL -> Float.valueOf("3.40282e38");
+        case MYSQL -> Float.valueOf("3.40282e38");
       };
 
       final double d = Double.MAX_VALUE;
@@ -650,7 +650,7 @@ public class SqlDialectTest1TrxParam extends SqlDialectTest0Support {
           "ABC"
       );
 
-      final SqlDialect dialect;
+      final Sql.Dialect dialect;
       dialect = dialect(db);
 
       switch (dialect) {
@@ -660,7 +660,7 @@ public class SqlDialectTest1TrxParam extends SqlDialectTest0Support {
           assertEquals(result.varchar5, "ABC");
         }
 
-        case MySQL, TESTING -> {
+        case MYSQL, TESTING -> {
           assertEquals(result.id, 1);
           assertEquals(result.char5, "abc");
           assertEquals(result.varchar5, "ABC");

@@ -25,14 +25,14 @@ import java.util.List;
 import java.util.Objects;
 import objectos.way.Sql.MetaTable;
 
-final class SqlMigrator implements Sql.Migrator, AutoCloseable {
+final class SqlMigrations implements Sql.Migrations, AutoCloseable {
 
   private final Clock clock;
 
   @SuppressWarnings("unused")
   private final Note.Sink noteSink;
 
-  private final SqlDialect dialect;
+  private final Sql.Dialect dialect;
 
   private final SqlTransaction trx;
 
@@ -40,7 +40,7 @@ final class SqlMigrator implements Sql.Migrator, AutoCloseable {
 
   private int rank = 1;
 
-  SqlMigrator(Clock clock, Note.Sink noteSink, SqlDialect dialect, Connection connection) {
+  SqlMigrations(Clock clock, Note.Sink noteSink, Sql.Dialect dialect, Connection connection) {
     this.clock = clock;
 
     this.noteSink = noteSink;
@@ -70,7 +70,7 @@ final class SqlMigrator implements Sql.Migrator, AutoCloseable {
     initialized = switch (dialect) {
       case H2 -> initializeH2();
 
-      case MySQL -> initializeMySQL();
+      case MYSQL -> initializeMySQL();
 
       case TESTING -> throw new UnsupportedOperationException();
     };
@@ -123,8 +123,8 @@ final class SqlMigrator implements Sql.Migrator, AutoCloseable {
       SCHEMA_HISTORY
     """);
 
-    final SqlMigrator.Initialized result;
-    result = trx.querySingle(SqlMigrator.Initialized::new);
+    final SqlMigrations.Initialized result;
+    result = trx.querySingle(SqlMigrations.Initialized::new);
 
     trx.commit();
 
@@ -172,8 +172,8 @@ final class SqlMigrator implements Sql.Migrator, AutoCloseable {
       SCHEMA_HISTORY
     """);
 
-    final SqlMigrator.Initialized result;
-    result = trx.querySingle(SqlMigrator.Initialized::new);
+    final SqlMigrations.Initialized result;
+    result = trx.querySingle(SqlMigrations.Initialized::new);
 
     trx.commit();
 
@@ -238,7 +238,7 @@ final class SqlMigrator implements Sql.Migrator, AutoCloseable {
       values (?, ?, user(), ?, 0, ?)
       """;
 
-      case MySQL -> """
+      case MYSQL -> """
       insert into SCHEMA_HISTORY
       values (?, ?, user(), ?, 0, ?)
       """;

@@ -50,9 +50,9 @@ final class TestingDatabaseMetaData implements DatabaseMetaData {
     this.databaseProductVersion = databaseProductVersion;
   }
 
-  public final SqlDialect toSqlDialect() {
+  public final Sql.Dialect toSqlDialect() {
     try {
-      return SqlDialect.of(this);
+      return Sql.Dialect.of(this);
     } catch (SQLException e) {
       throw new Sql.DatabaseException(e);
     }

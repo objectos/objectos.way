@@ -31,6 +31,17 @@ public abstract class SqlDialectTest0Support {
 
   @DataProvider
   public Iterator<Sql.Database> dbProvider(Method method) {
+    return dbProvider0(method).iterator();
+  }
+
+  @DataProvider
+  public Iterator<Object[]> dbDialectProvider(Method method) {
+    return dbProvider0(method)
+        .map(db -> new Object[] {db, dialect(db)})
+        .iterator();
+  }
+
+  private Stream<Sql.Database> dbProvider0(Method method) {
     final String methodName;
     methodName = method.getName();
 
@@ -45,10 +56,10 @@ public abstract class SqlDialectTest0Support {
 
         config.noteSink(Y.noteSink());
       });
-    }).iterator();
+    });
   }
 
-  final SqlDialect dialect(Sql.Database db) {
+  final Sql.Dialect dialect(Sql.Database db) {
     final SqlDatabase impl;
     impl = (SqlDatabase) db;
 

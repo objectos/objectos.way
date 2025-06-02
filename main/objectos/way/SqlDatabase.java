@@ -27,12 +27,12 @@ final class SqlDatabase implements Sql.Database {
 
   private final DataSource dataSource;
 
-  private final SqlDialect dialect;
+  private final Sql.Dialect dialect;
 
   @SuppressWarnings("unused")
   private final Note.Sink noteSink;
 
-  SqlDatabase(Clock clock, Note.Sink noteSink, DataSource dataSource, SqlDialect dialect) {
+  SqlDatabase(Clock clock, Note.Sink noteSink, DataSource dataSource, Sql.Dialect dialect) {
     this.clock = clock;
 
     this.noteSink = noteSink;
@@ -101,15 +101,15 @@ final class SqlDatabase implements Sql.Database {
   }
 
   @Override
-  public final void migrate(Consumer<Sql.Migrator> config) throws Sql.DatabaseException {
+  public final void migrate(Consumer<Sql.Migrations> migrations) throws Sql.DatabaseException {
     try (
         Connection connection = migrateConnection();
-        SqlMigrator migrator = new SqlMigrator(clock, noteSink, dialect, connection)
+        SqlMigrations impl = new SqlMigrations(clock, noteSink, dialect, connection)
     ) {
 
-      migrator.initialize();
+      impl.initialize();
 
-      config.accept(migrator);
+      migrations.accept(impl);
 
     } catch (SQLException e) {
       throw new Sql.DatabaseException(e);
@@ -121,7 +121,7 @@ final class SqlDatabase implements Sql.Database {
     return "SqlDatabase[dataSource=" + dataSource + ",dialect=" + dialect + "]";
   }
 
-  final SqlDialect dialect() {
+  final Sql.Dialect dialect() {
     return dialect;
   }
 

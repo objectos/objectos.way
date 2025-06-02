@@ -28,10 +28,10 @@ public class SqlDialectMySQLTest {
     DatabaseMetaData data;
     data = TestingDatabaseMetaData.MYSQL_5_7;
 
-    SqlDialect dialect;
-    dialect = SqlDialect.of(data);
+    Sql.Dialect dialect;
+    dialect = Sql.Dialect.of(data);
 
-    assertEquals(dialect, SqlDialect.MySQL);
+    assertEquals(dialect, Sql.Dialect.MYSQL);
   }
 
 }
