@@ -49,7 +49,7 @@ public class SqlDialectTest2TrxParam extends SqlDialectTest0Support {
 
   private Sql.Transaction typesBoolean(Sql.Database db) {
     db.migrate(migrations -> {
-      migrations.add("Create test table", """
+      migrations.apply("Create test table", """
         create table TYPES_BOOLEAN (
         ID int not null,
 
@@ -205,7 +205,7 @@ public class SqlDialectTest2TrxParam extends SqlDialectTest0Support {
     };
 
     db.migrate(migrations -> {
-      migrations.add("Create test table", sql);
+      migrations.apply("Create test table", sql);
     });
 
     return db.connect();
@@ -341,7 +341,7 @@ public class SqlDialectTest2TrxParam extends SqlDialectTest0Support {
 
   private Sql.Transaction typesFloating(Sql.Database db) {
     db.migrate(migrations -> {
-      migrations.add("Create test table", """
+      migrations.apply("Create test table", """
       create table TYPES_FLOATING (
         ID int not null,
 
@@ -457,7 +457,7 @@ public class SqlDialectTest2TrxParam extends SqlDialectTest0Support {
 
   private Sql.Transaction typesInteger(Sql.Database db) {
     db.migrate(migrations -> {
-      migrations.add("Create test table", """
+      migrations.apply("Create test table", """
       create table TYPES_INTEGER (
         ID int not null,
 
@@ -575,7 +575,7 @@ public class SqlDialectTest2TrxParam extends SqlDialectTest0Support {
 
   private Sql.Transaction typesString(Sql.Database db) {
     db.migrate(migrations -> {
-      migrations.add("Create test table", """
+      migrations.apply("Create test table", """
       create table TYPES_STRING (
         ID int not null,
 

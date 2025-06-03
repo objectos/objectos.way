@@ -181,7 +181,7 @@ final class SqlMigrations implements Sql.Migrations, AutoCloseable {
   }
 
   @Override
-  public final void add(String name, String script) {
+  public final void apply(String name, String script) {
     Objects.requireNonNull(name, "name == null");
     Objects.requireNonNull(script, "script == null");
 

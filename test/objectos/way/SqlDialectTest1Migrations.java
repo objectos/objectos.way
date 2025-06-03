@@ -364,7 +364,7 @@ public class SqlDialectTest1Migrations extends SqlDialectTest0Support {
   }
 
   private Consumer<Sql.Migrations> v(String name, String script) {
-    return migrator -> migrator.add(name, script);
+    return migrator -> migrator.apply(name, script);
   }
 
   private record ReportConfig(

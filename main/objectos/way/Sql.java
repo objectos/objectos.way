@@ -140,8 +140,31 @@ public final class Sql {
     /**
      * Applies the specified migrations, in order, to the underlying database.
      *
+     * <p>
+     * A typical usage is:
+     *
+     * <pre>
+     * db.migrate(migrations -> {
+     *   migrations.apply("Version 01", "create table T1 (C1 int, C2 int)");
+     *
+     *   migrations.apply("Second Ver", "create table T2 (S1 varchar(10), S2 varchar(20))");
+     * });</pre>
+     *
+     * <p>
+     * In the first execution, the migration process will:
+     *
+     * <ul>
+     * <li>Create the SCHEMA_HISTORY table for storing migration status.</li>
+     * <li>Apply the {@code Version 01} migration.</li>
+     * <li>Apply the {@code Second Ver} migration.</li>
+     * </ul>
+     *
+     * <p>
+     * In subsequent executions, the migration process will verify that the
+     * schema is up to date, and it will not perform any further operations.
+     *
      * @param migrations
-     *        allows for defining the migrations
+     *        allows for defining and applying schema migrations to the database
      *
      * @throws DatabaseException
      *         if a database access error occurs
@@ -276,14 +299,19 @@ public final class Sql {
   }
 
   /**
-   * A handle to apply schema migrations to the underlying database.
+   * A handle to apply schema migrations to an underlying database.
    */
   public sealed interface Migrations permits SqlMigrations {
 
     /**
+     * Applies, if necessary, a schema migration.
      *
+     * @param name
+     *        uniquely identifies this migration
+     * @param script
+     *        SQL script to be executed by this migration
      */
-    void add(String name, String script);
+    void apply(String name, String script) throws MigrationFailedException, DatabaseException;
 
   }
 
