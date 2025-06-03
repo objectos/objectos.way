@@ -58,7 +58,7 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
         trx -> {
           trx.sql("select T from FOO where X = ?");
 
-          trx.addIf("BAR", true);
+          trx.paramIf("BAR", true);
         },
 
         expectedMessage
@@ -68,9 +68,9 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
         trx -> {
           trx.sql("select T from FOO where X = ?");
 
-          trx.add(123);
+          trx.param(123);
 
-          trx.addIf("BAR", true);
+          trx.paramIf("BAR", true);
         },
 
         expectedMessage
@@ -89,9 +89,9 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
             trx -> {
               trx.sql("insert into BAR (X, Y) values (?, ?)");
 
-              trx.add(1);
+              trx.param(1);
 
-              trx.add(null, Types.DATE);
+              trx.param(null, Types.DATE);
 
               return trx.update();
             }
@@ -146,7 +146,7 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
         trx -> {
           trx.sql("insert into BAR (X) values (?)");
 
-          trx.add(123);
+          trx.param(123);
 
           trx.batchUpdate();
         },
@@ -176,7 +176,7 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
         trx -> {
           trx.sql("insert into BAR (X) values (?)");
 
-          trx.add(123);
+          trx.param(123);
 
           trx.batchUpdateWithResult();
         },
@@ -221,7 +221,7 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
         trx -> {
           trx.sql("select * from FOO where X = ?");
 
-          trx.add(123);
+          trx.param(123);
 
           return 0;
         }
@@ -274,7 +274,7 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
     try {
       trx.sql("select A, B, C from FOO where X = ?");
 
-      trx.add(123);
+      trx.param(123);
 
       List<Foo> result;
       result = trx.query(Foo::new);
@@ -416,9 +416,9 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
     try {
       trx.sql(Sql.Kind.COUNT, "select A from FOO where X = ? and Y = ?");
 
-      trx.add(456);
+      trx.param(456);
 
-      trx.add("XPTO");
+      trx.param("XPTO");
 
       int count;
       count = trx.querySingleInt();
@@ -427,9 +427,9 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
 
       trx.sql("select A from FOO where X = ? and Y = ?");
 
-      trx.add(456);
+      trx.param(456);
 
-      trx.add("XPTO");
+      trx.param("XPTO");
 
       List<Foo> rows;
       rows = trx.query(Foo::new);
@@ -534,7 +534,7 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
     try {
       trx.sql("select A from FOO where X = ?");
 
-      trx.add(456);
+      trx.param(456);
 
       List<Foo> rows;
       rows = trx.query(Foo::new);
@@ -544,7 +544,7 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
 
       trx.sql("select B from FOO where Y = ?");
 
-      trx.add("XPTO");
+      trx.param("XPTO");
 
       rows = trx.query(Foo::new);
 
@@ -620,7 +620,7 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
             trx -> {
               trx.sql("select * from FOO where X = ?");
 
-              trx.add(123);
+              trx.param(123);
 
               return trx.queryOptional(Foo::new);
             }
@@ -678,7 +678,7 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
           trx -> {
             trx.sql("select * from FOO where X = ?");
 
-            trx.add(123);
+            trx.param(123);
 
             return trx.queryOptional(Foo::new);
           }
@@ -733,7 +733,7 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
             trx -> {
               trx.sql("select * from FOO where X = ?");
 
-              trx.add(123);
+              trx.param(123);
 
               return trx.queryOptional(Foo::new);
             }
@@ -940,7 +940,7 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
             trx -> {
               trx.sql("select max(SEQ) from FOO where X = ?");
 
-              trx.add(123);
+              trx.param(123);
 
               return trx.queryOptionalInt();
             }
@@ -991,7 +991,7 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
             trx -> {
               trx.sql("select max(SEQ) from FOO where X = ?");
 
-              trx.add(123);
+              trx.param(123);
 
               return trx.queryOptionalInt();
             }
@@ -1139,7 +1139,7 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
             trx -> {
               trx.sql("select max(SEQ) from FOO where X = ?");
 
-              trx.add(123);
+              trx.param(123);
 
               return trx.queryOptionalLong();
             }
@@ -1193,7 +1193,7 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
             trx -> {
               trx.sql("select A, B, C from FOO where X = ?");
 
-              trx.add(123);
+              trx.param(123);
 
               return trx.querySingle(Foo::new);
             }
@@ -1301,7 +1301,7 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
             trx -> {
               trx.sql("select ID from FOO where X = ?");
 
-              trx.add(123);
+              trx.param(123);
 
               return trx.querySingleInt();
             }
@@ -1355,7 +1355,7 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
             trx -> {
               trx.sql("select ID from FOO where X = ?");
 
-              trx.add(123);
+              trx.param(123);
 
               return trx.querySingleLong();
             }
@@ -1450,7 +1450,7 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
             trx -> {
               trx.sql("insert into BAR (X, Y) values (?, ?)");
 
-              trx.add(1);
+              trx.param(1);
 
               return trx.update();
             }
@@ -1494,7 +1494,7 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
             trx -> {
               trx.sql("insert into BAR (X, Y) values (?, ?)");
 
-              trx.add(1);
+              trx.param(1);
 
               assertEquals(trx.updateWithResult(), new SqlUpdateSuccess(1));
 
@@ -1541,9 +1541,9 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
         trx -> {
           trx.sql("insert into BAR (X, Y) values (?, ?)");
 
-          trx.add(123);
+          trx.param(123);
 
-          trx.add("foo");
+          trx.param("foo");
 
           return trx.updateWithResult();
         }

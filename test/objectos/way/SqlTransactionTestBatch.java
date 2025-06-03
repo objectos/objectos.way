@@ -36,7 +36,7 @@ public class SqlTransactionTestBatch extends SqlTransactionTestSupport {
   @Test
   @Override
   public void addIf01() {
-    invalidOperation("addIf", trx -> trx.addIf("ABC", true));
+    invalidOperation("addIf", trx -> trx.paramIf("ABC", true));
   }
 
   @Test
@@ -53,11 +53,11 @@ public class SqlTransactionTestBatch extends SqlTransactionTestSupport {
             trx -> {
               trx.sql("insert into BAR (X) values (?)");
 
-              trx.add(1);
+              trx.param(1);
 
               trx.addBatch();
 
-              trx.add(null, Types.DATE);
+              trx.param(null, Types.DATE);
 
               trx.addBatch();
 
@@ -108,11 +108,11 @@ public class SqlTransactionTestBatch extends SqlTransactionTestSupport {
             trx -> {
               trx.sql("insert into BAR (X) values (?)");
 
-              trx.add(1);
+              trx.param(1);
 
               trx.addBatch();
 
-              trx.add(2, Types.INTEGER);
+              trx.param(2, Types.INTEGER);
 
               trx.addBatch();
 
@@ -164,7 +164,7 @@ public class SqlTransactionTestBatch extends SqlTransactionTestSupport {
             trx -> {
               trx.sql("insert into BAR (X) values (?)");
 
-              trx.add(1);
+              trx.param(1);
 
               trx.addBatch();
 
@@ -213,11 +213,11 @@ public class SqlTransactionTestBatch extends SqlTransactionTestSupport {
             trx -> {
               trx.sql("insert into BAR (X) values (?)");
 
-              trx.add(1);
+              trx.param(1);
 
               trx.addBatch();
 
-              trx.add(2);
+              trx.param(2);
 
               trx.addBatch();
 
@@ -269,7 +269,7 @@ public class SqlTransactionTestBatch extends SqlTransactionTestSupport {
             trx -> {
               trx.sql("insert into BAR (X) values (?)");
 
-              trx.add(1);
+              trx.param(1);
 
               trx.addBatch();
 
@@ -328,7 +328,7 @@ public class SqlTransactionTestBatch extends SqlTransactionTestSupport {
 
               trx.sql("insert into BAR (X) values (?)");
 
-              trx.add(1);
+              trx.param(1);
 
               trx.addBatch();
 
@@ -397,7 +397,7 @@ public class SqlTransactionTestBatch extends SqlTransactionTestSupport {
 
       trx.sql("insert into BAR (X) values (?)");
 
-      trx.add(1);
+      trx.param(1);
 
       trx.addBatch();
 
@@ -408,7 +408,7 @@ public class SqlTransactionTestBatch extends SqlTransactionTestSupport {
 
       trx.sql("select A, B from X where NAME = ?");
 
-      trx.add("ABC");
+      trx.param("ABC");
 
       final List<String2> rows;
       rows = trx.query(String2::new);
@@ -465,7 +465,7 @@ public class SqlTransactionTestBatch extends SqlTransactionTestSupport {
         trx -> {
           trx.sql("insert into BAR (X) values (?)");
 
-          trx.add(1);
+          trx.param(1);
 
           trx.addBatch();
 
@@ -554,7 +554,7 @@ public class SqlTransactionTestBatch extends SqlTransactionTestSupport {
         trx -> {
           trx.sql("insert into FOO (X) values (?)");
 
-          trx.add(123);
+          trx.param(123);
 
           trx.addBatch();
 

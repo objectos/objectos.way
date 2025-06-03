@@ -78,9 +78,9 @@ public class SqlDialectTest02TrxParam extends SqlDialectTest00Support {
     )
     """);
 
-    trx.add(id);
-    trx.add(booleanValue);
-    trx.add(booleanNullable, Types.BOOLEAN);
+    trx.param(id);
+    trx.param(booleanValue);
+    trx.param(booleanNullable, Types.BOOLEAN);
 
     trx.update();
 
@@ -228,12 +228,12 @@ public class SqlDialectTest02TrxParam extends SqlDialectTest00Support {
     )
     """);
 
-    trx.add(id);
-    trx.add(date);
-    trx.add(time);
-    trx.add(timeWithZone);
-    trx.add(timestamp);
-    trx.add(timestampWithZone);
+    trx.param(id);
+    trx.param(date);
+    trx.param(time);
+    trx.param(timeWithZone);
+    trx.param(timestamp);
+    trx.param(timestampWithZone);
 
     trx.update();
 
@@ -370,9 +370,9 @@ public class SqlDialectTest02TrxParam extends SqlDialectTest00Support {
     )
     """);
 
-    trx.add(id);
-    trx.add(floatValue);
-    trx.add(doubleValue);
+    trx.param(id);
+    trx.param(floatValue);
+    trx.param(doubleValue);
 
     trx.update();
 
@@ -490,11 +490,11 @@ public class SqlDialectTest02TrxParam extends SqlDialectTest00Support {
     )
     """);
 
-    trx.add(id);
-    trx.add(tinyint);
-    trx.add(smallint);
-    trx.add(integer);
-    trx.add(bigint);
+    trx.param(id);
+    trx.param(tinyint);
+    trx.param(smallint);
+    trx.param(integer);
+    trx.param(bigint);
 
     trx.update();
 
@@ -603,9 +603,9 @@ public class SqlDialectTest02TrxParam extends SqlDialectTest00Support {
     )
     """);
 
-    trx.add(id);
-    trx.add(char5);
-    trx.add(varchar5);
+    trx.param(id);
+    trx.param(char5);
+    trx.param(varchar5);
 
     trx.update();
 

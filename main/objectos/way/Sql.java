@@ -535,9 +535,7 @@ public final class Sql {
      * @param value
      *        the argument value which must not be {@code null}
      */
-    void add(Object value);
-
-    void addIf(Object value, boolean condition);
+    void param(Object value);
 
     /**
      * Adds the specified value to the SQL statement argument list.
@@ -547,7 +545,9 @@ public final class Sql {
      * @param sqlType
      *        the SQL type (as defined in java.sql.Types)
      */
-    void add(Object value, int sqlType);
+    void param(Object value, int sqlType);
+
+    void paramIf(Object value, boolean condition);
 
     void addBatch();
 

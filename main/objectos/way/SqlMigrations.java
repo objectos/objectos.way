@@ -23,7 +23,6 @@ import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
-import objectos.way.Sql.MetaTable;
 
 final class SqlMigrations implements Sql.Migrations {
 
@@ -84,7 +83,7 @@ final class SqlMigrations implements Sql.Migrations {
     final Sql.Meta meta;
     meta = trx.meta();
 
-    final List<MetaTable> tables;
+    final List<Sql.MetaTable> tables;
     tables = meta.queryTables(filter -> {
       filter.schemaName("PUBLIC");
 
@@ -135,7 +134,7 @@ final class SqlMigrations implements Sql.Migrations {
     final Sql.Meta meta;
     meta = trx.meta();
 
-    final List<MetaTable> tables;
+    final List<Sql.MetaTable> tables;
     tables = meta.queryTables(filter -> {
       filter.tableName("SCHEMA_HISTORY");
     });
@@ -245,13 +244,13 @@ final class SqlMigrations implements Sql.Migrations {
 
     trx.sql(sql);
 
-    trx.add(rank);
+    trx.param(rank);
 
-    trx.add(name);
+    trx.param(name);
 
-    trx.add(now());
+    trx.param(now());
 
-    trx.add(success);
+    trx.param(success);
 
     trx.update();
   }

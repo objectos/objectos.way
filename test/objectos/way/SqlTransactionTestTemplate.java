@@ -41,7 +41,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
           where X = ?
           """);
 
-          trx.add("ABC");
+          trx.param("ABC");
 
           trx.addBatch();
         },
@@ -70,7 +70,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
               where X = ?
               """);
 
-              trx.addIf("SOME", true);
+              trx.paramIf("SOME", true);
 
               return trx.query(Foo::new);
             }
@@ -127,7 +127,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
               where X = ?
               """);
 
-              trx.addIf("SOME", false);
+              trx.paramIf("SOME", false);
 
               return trx.query(Foo::new);
             }
@@ -185,9 +185,9 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
               and Y = ?
               """);
 
-              trx.add("XPTO");
+              trx.param("XPTO");
 
-              trx.addIf("SOME", false);
+              trx.paramIf("SOME", false);
 
               return trx.query(Foo::new);
             }
@@ -248,9 +248,9 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
               and Y = ?
               """);
 
-              trx.addIf("1", false);
+              trx.paramIf("1", false);
 
-              trx.addIf("2", true);
+              trx.paramIf("2", true);
 
               return trx.query(Foo::new);
             }
@@ -311,9 +311,9 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
               and Y = ?
               """);
 
-              trx.add("1");
+              trx.param("1");
 
-              trx.addIf("2", false);
+              trx.paramIf("2", false);
 
               return trx.query(Foo::new);
             }
@@ -367,9 +367,9 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
           and X = ? and Y = ?
           """);
 
-          trx.add("1");
+          trx.param("1");
 
-          trx.addIf("2", false);
+          trx.paramIf("2", false);
         },
 
         """
@@ -400,7 +400,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
               order by C
               """);
 
-              trx.addIf("2", true);
+              trx.paramIf("2", true);
 
               return trx.query(Foo::new);
             }
@@ -462,9 +462,9 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
               and Z = ?
               """);
 
-              trx.addIf("X", false);
-              trx.add("Y");
-              trx.add("Z");
+              trx.paramIf("X", false);
+              trx.param("Y");
+              trx.param("Z");
 
               return trx.query(Foo::new);
             }
@@ -523,8 +523,8 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
           and Z = ?
           """);
 
-          trx.addIf("X", false);
-          trx.add("Y");
+          trx.paramIf("X", false);
+          trx.param("Y");
           // missing Z
 
           trx.query(Foo::new);
@@ -554,7 +554,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
       and Y = ?
       """);
 
-      trx.addIf("X", true);
+      trx.paramIf("X", true);
       // missing Y
     });
   }
@@ -575,7 +575,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
               where X = ?
               """);
 
-              trx.add(null, Types.DATE);
+              trx.param(null, Types.DATE);
 
               return trx.querySingleLong();
             }
@@ -632,7 +632,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
               where X = ?
               """);
 
-              trx.add("ABC", Types.VARCHAR);
+              trx.param("ABC", Types.VARCHAR);
 
               return trx.querySingleLong();
             }
@@ -688,7 +688,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
           where X = ?
           """);
 
-          trx.add("ABC");
+          trx.param("ABC");
 
           trx.batchUpdate();
         },
@@ -710,7 +710,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
           where X = ?
           """);
 
-          trx.add("ABC");
+          trx.param("ABC");
 
           trx.batchUpdateWithResult();
         },
@@ -828,7 +828,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
               where X = ?
               """);
 
-              trx.add("BAR");
+              trx.param("BAR");
 
               return trx.queryOptional(Foo::new);
             }
@@ -887,7 +887,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
               where X = ?
               """);
 
-              trx.add("BAR");
+              trx.param("BAR");
 
               return trx.queryOptional(Foo::new);
             }
@@ -943,7 +943,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
               where X = ?
               """);
 
-            trx.add("BAR");
+            trx.param("BAR");
 
             return trx.queryOptional(Foo::new);
           }
@@ -1005,7 +1005,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
               where X = ?
               """);
 
-              trx.add("BAR");
+              trx.param("BAR");
 
               return trx.queryOptionalInt();
             }
@@ -1060,7 +1060,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
               where X = ?
               """);
 
-              trx.add("BAR");
+              trx.param("BAR");
 
               return trx.queryOptionalInt();
             }
@@ -1116,7 +1116,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
               where X = ?
               """);
 
-            trx.add("BAR");
+            trx.param("BAR");
 
             return trx.queryOptionalInt();
           }
@@ -1176,7 +1176,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
               where X = ?
               """);
 
-              trx.add("BAR");
+              trx.param("BAR");
 
               return trx.queryOptionalLong();
             }
@@ -1231,7 +1231,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
               where X = ?
               """);
 
-              trx.add("BAR");
+              trx.param("BAR");
 
               return trx.queryOptionalLong();
             }
@@ -1287,7 +1287,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
               where X = ?
               """);
 
-            trx.add("BAR");
+            trx.param("BAR");
 
             return trx.queryOptionalLong();
           }
@@ -1347,7 +1347,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
               where X = ?
               """);
 
-              trx.add("BAR");
+              trx.param("BAR");
 
               return trx.querySingle(Foo::new);
             }
@@ -1404,7 +1404,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
             where X = ?
             """);
 
-            trx.add("BAR");
+            trx.param("BAR");
 
             return trx.querySingle(Foo::new);
           }
@@ -1462,7 +1462,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
             where X = ?
             """);
 
-            trx.add("BAR");
+            trx.param("BAR");
 
             return trx.querySingle(Foo::new);
           }
@@ -1524,7 +1524,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
               where X = ?
               """);
 
-              trx.addIf("SOME", true);
+              trx.paramIf("SOME", true);
 
               return trx.querySingleInt();
             }
@@ -1579,7 +1579,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
             where X = ?
             """);
 
-            trx.addIf("SOME", true);
+            trx.paramIf("SOME", true);
 
             return trx.querySingleInt();
           }
@@ -1637,7 +1637,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
             where X = ?
             """);
 
-            trx.addIf("SOME", true);
+            trx.paramIf("SOME", true);
 
             return trx.querySingleInt();
           }
@@ -1697,7 +1697,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
               where X = ?
               """);
 
-              trx.addIf("SOME", true);
+              trx.paramIf("SOME", true);
 
               return trx.querySingleLong();
             }
@@ -1752,7 +1752,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
             where X = ?
             """);
 
-            trx.addIf("SOME", true);
+            trx.paramIf("SOME", true);
 
             return trx.querySingleLong();
           }
@@ -1810,7 +1810,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
             where X = ?
             """);
 
-            trx.addIf("SOME", true);
+            trx.paramIf("SOME", true);
 
             return trx.querySingleLong();
           }
@@ -1868,7 +1868,7 @@ public class SqlTransactionTestTemplate extends SqlTransactionTestSupport {
           where X = ?
           """);
 
-          trx.add("ABC");
+          trx.param("ABC");
 
           trx.update();
         },

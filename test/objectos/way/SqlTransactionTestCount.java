@@ -36,7 +36,7 @@ public class SqlTransactionTestCount extends SqlTransactionTestSupport {
   @Test
   @Override
   public void addIf01() {
-    invalidOperation("addIf", trx -> trx.addIf("ABC", true));
+    invalidOperation("addIf", trx -> trx.paramIf("ABC", true));
   }
 
   @Test
@@ -53,7 +53,7 @@ public class SqlTransactionTestCount extends SqlTransactionTestSupport {
               where C = ?
               """);
 
-              trx.add(null, Types.DATE);
+              trx.param(null, Types.DATE);
 
               return trx.queryOptionalInt();
             }
@@ -118,7 +118,7 @@ public class SqlTransactionTestCount extends SqlTransactionTestSupport {
           where C = ?
           """);
 
-          trx.add(123);
+          trx.param(123);
 
           return 0;
         }
@@ -257,7 +257,7 @@ public class SqlTransactionTestCount extends SqlTransactionTestSupport {
               where C = ?
               """);
 
-              trx.add(123);
+              trx.param(123);
 
               return trx.queryOptionalInt();
             }
@@ -364,7 +364,7 @@ public class SqlTransactionTestCount extends SqlTransactionTestSupport {
               where C = ?
               """);
 
-              trx.add(123);
+              trx.param(123);
 
               return trx.queryOptionalLong();
             }
@@ -487,7 +487,7 @@ public class SqlTransactionTestCount extends SqlTransactionTestSupport {
               where C = ?
               """);
 
-              trx.add(123);
+              trx.param(123);
 
               return trx.querySingleInt();
             }
@@ -602,7 +602,7 @@ public class SqlTransactionTestCount extends SqlTransactionTestSupport {
               where C = ?
               """);
 
-              trx.add(123);
+              trx.param(123);
 
               return trx.querySingleLong();
             }
@@ -669,7 +669,7 @@ public class SqlTransactionTestCount extends SqlTransactionTestSupport {
         trx -> {
           trx.sql(Sql.COUNT, "select A, B, C from FOO where X = ?");
 
-          trx.add("ABC");
+          trx.param("ABC");
 
           operation.accept(trx);
         },

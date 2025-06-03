@@ -27,7 +27,7 @@ public class SqlTransactionTestScript extends SqlTransactionTestSupport {
 
   @Test
   public void add() {
-    invalidOperation("add", trx -> trx.add("abc"));
+    invalidOperation("add", trx -> trx.param("abc"));
   }
 
   @Test
@@ -39,13 +39,13 @@ public class SqlTransactionTestScript extends SqlTransactionTestSupport {
   @Test
   @Override
   public void addIf01() {
-    invalidOperation("addIf", trx -> trx.addIf("abc", true));
+    invalidOperation("addIf", trx -> trx.paramIf("abc", true));
   }
 
   @Test
   @Override
   public void addNullable01() {
-    invalidOperation("addNullable", trx -> trx.add("abc", Types.VARCHAR));
+    invalidOperation("addNullable", trx -> trx.param("abc", Types.VARCHAR));
   }
 
   @Test(description = """

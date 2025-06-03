@@ -36,7 +36,7 @@ public class SqlDialectTest03TrxClose extends SqlDialectTest00Support {
     try (final Sql.Transaction trx = connect(db, dialect)) {
       trx.sql("insert into T values (?)");
 
-      trx.add(123);
+      trx.param(123);
 
       trx.update();
 
@@ -66,7 +66,7 @@ public class SqlDialectTest03TrxClose extends SqlDialectTest00Support {
     try (final Sql.Transaction trx = connect(db, dialect)) {
       trx.sql("insert into T values (?)");
 
-      trx.add(123);
+      trx.param(123);
 
       trx.update();
 

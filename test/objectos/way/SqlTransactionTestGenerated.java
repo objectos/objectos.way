@@ -58,7 +58,7 @@ public class SqlTransactionTestGenerated extends SqlTransactionTestSupport {
   @Test
   @Override
   public void addIf01() {
-    invalidOperation("addIf", trx -> trx.addIf("abc", true));
+    invalidOperation("addIf", trx -> trx.paramIf("abc", true));
   }
 
   @Test
@@ -79,9 +79,9 @@ public class SqlTransactionTestGenerated extends SqlTransactionTestSupport {
 
               trx.with(generatedKeys);
 
-              trx.add(null, Types.DATE);
+              trx.param(null, Types.DATE);
 
-              trx.add("bar");
+              trx.param("bar");
 
               trx.addBatch();
 
@@ -154,9 +154,9 @@ public class SqlTransactionTestGenerated extends SqlTransactionTestSupport {
 
               trx.with(generatedKeys);
 
-              trx.add(123);
+              trx.param(123);
 
-              trx.add("bar");
+              trx.param("bar");
 
               trx.addBatch();
 
@@ -229,11 +229,11 @@ public class SqlTransactionTestGenerated extends SqlTransactionTestSupport {
 
               trx.with(generatedKeys);
 
-              trx.add(1);
+              trx.param(1);
 
               trx.addBatch();
 
-              trx.add(2);
+              trx.param(2);
 
               trx.addBatch();
 
@@ -300,7 +300,7 @@ public class SqlTransactionTestGenerated extends SqlTransactionTestSupport {
 
           trx.with(generatedKeys);
 
-          trx.add(1);
+          trx.param(1);
 
           trx.batchUpdate();
         },
@@ -351,9 +351,9 @@ public class SqlTransactionTestGenerated extends SqlTransactionTestSupport {
 
               trx.with(generatedKeys);
 
-              trx.add(123);
+              trx.param(123);
 
-              trx.add("bar");
+              trx.param("bar");
 
               trx.addBatch();
 
@@ -421,7 +421,7 @@ public class SqlTransactionTestGenerated extends SqlTransactionTestSupport {
 
           trx.with(generatedKeys);
 
-          trx.add(1);
+          trx.param(1);
 
           trx.addBatch();
 
@@ -467,7 +467,7 @@ public class SqlTransactionTestGenerated extends SqlTransactionTestSupport {
 
           trx.with(generatedKeys);
 
-          trx.add(1);
+          trx.param(1);
 
           return batch();
         }
@@ -589,9 +589,9 @@ public class SqlTransactionTestGenerated extends SqlTransactionTestSupport {
 
               trx.with(generatedKeys);
 
-              trx.add(123);
+              trx.param(123);
 
-              trx.add("bar");
+              trx.param("bar");
 
               return trx.update();
             }
@@ -704,7 +704,7 @@ public class SqlTransactionTestGenerated extends SqlTransactionTestSupport {
 
           trx.with(generatedKeys);
 
-          trx.add(123);
+          trx.param(123);
 
           trx.addBatch();
 
@@ -740,7 +740,7 @@ public class SqlTransactionTestGenerated extends SqlTransactionTestSupport {
 
           trx.with(generatedKeys);
 
-          trx.add(123);
+          trx.param(123);
 
           operation.accept(trx);
         },
@@ -754,7 +754,7 @@ public class SqlTransactionTestGenerated extends SqlTransactionTestSupport {
 
           trx.with(generatedKeys);
 
-          trx.add(123);
+          trx.param(123);
 
           trx.addBatch();
 

@@ -37,7 +37,7 @@ public class SqlTransactionTestPaginated extends SqlTransactionTestSupport {
   @Test
   @Override
   public void addIf01() {
-    invalidOperation("addIf", trx -> trx.addIf("FOO", true));
+    invalidOperation("addIf", trx -> trx.paramIf("FOO", true));
   }
 
   @Test
@@ -58,7 +58,7 @@ public class SqlTransactionTestPaginated extends SqlTransactionTestSupport {
 
               trx.with(page1);
 
-              trx.add(null, Types.DATE);
+              trx.param(null, Types.DATE);
 
               return trx.query(String2::new);
             }
@@ -165,7 +165,7 @@ public class SqlTransactionTestPaginated extends SqlTransactionTestSupport {
 
           trx.with(page1);
 
-          trx.add(123);
+          trx.param(123);
 
           return 0;
         }
@@ -217,7 +217,7 @@ public class SqlTransactionTestPaginated extends SqlTransactionTestSupport {
 
               trx.with(page1);
 
-              trx.add(123);
+              trx.param(123);
 
               return trx.query(String2::new);
             }
@@ -283,7 +283,7 @@ public class SqlTransactionTestPaginated extends SqlTransactionTestSupport {
 
               trx.with(page2);
 
-              trx.add(123);
+              trx.param(123);
 
               return trx.query(String2::new);
             }
@@ -455,7 +455,7 @@ public class SqlTransactionTestPaginated extends SqlTransactionTestSupport {
 
           trx.with(page1);
 
-          trx.add("ABC");
+          trx.param("ABC");
 
           operation.accept(trx);
         },

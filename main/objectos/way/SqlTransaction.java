@@ -26,10 +26,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.OptionalLong;
-import objectos.way.Sql.BatchUpdate;
-import objectos.way.Sql.DatabaseException;
-import objectos.way.Sql.GeneratedKeys;
-import objectos.way.Sql.Update;
 
 final class SqlTransaction implements Sql.Transaction {
 
@@ -93,12 +89,12 @@ final class SqlTransaction implements Sql.Transaction {
 
       return new SqlTransaction(connection, dialect);
     } catch (SQLException e) {
-      throw new DatabaseException(e);
+      throw new Sql.DatabaseException(e);
     }
   }
 
   @Override
-  public final Sql.Meta meta() throws DatabaseException {
+  public final Sql.Meta meta() throws Sql.DatabaseException {
     try {
       final DatabaseMetaData metaData;
       metaData = connection.getMetaData();
@@ -530,7 +526,7 @@ final class SqlTransaction implements Sql.Transaction {
   }
 
   @Override
-  public final void with(GeneratedKeys<?> value) {
+  public final void with(Sql.GeneratedKeys<?> value) {
     Objects.requireNonNull(value, "value == null");
 
     state = switch (state) {
@@ -657,17 +653,17 @@ final class SqlTransaction implements Sql.Transaction {
   }
 
   @Override
-  public final void add(Object value) {
+  public final void param(Object value) {
     Objects.requireNonNull(value, "value == null");
 
     state = switch (state) {
-      case SQL -> add0Create(value, Statement.NO_GENERATED_KEYS, State.PREPARED);
+      case SQL -> param0Create(value, Statement.NO_GENERATED_KEYS, State.PREPARED);
 
-      case SQL_COUNT -> add0Create(value, Statement.NO_GENERATED_KEYS, State.PREPARED_COUNT);
+      case SQL_COUNT -> param0Create(value, Statement.NO_GENERATED_KEYS, State.PREPARED_COUNT);
 
-      case SQL_GENERATED -> add0Create(value, Statement.RETURN_GENERATED_KEYS, State.PREPARED_GENERATED);
+      case SQL_GENERATED -> param0Create(value, Statement.RETURN_GENERATED_KEYS, State.PREPARED_GENERATED);
 
-      case SQL_PAGINATED -> add0Create(value, Statement.NO_GENERATED_KEYS, State.PREPARED_PAGINATED);
+      case SQL_PAGINATED -> param0Create(value, Statement.NO_GENERATED_KEYS, State.PREPARED_PAGINATED);
 
       case SQL_SCRIPT -> throw new Sql.InvalidOperationException("""
       The 'add' operation cannot be executed on a SQL script.
@@ -706,7 +702,7 @@ final class SqlTransaction implements Sql.Transaction {
     };
   }
 
-  private State add0Create(Object value, int generatedKeys, State next) {
+  private State param0Create(Object value, int generatedKeys, State next) {
     try {
       final PreparedStatement stmt;
       stmt = createPrepared(generatedKeys);
@@ -720,7 +716,82 @@ final class SqlTransaction implements Sql.Transaction {
   }
 
   @Override
-  public final void addIf(Object value, boolean condition) {
+  public final void param(Object value, int sqlType) {
+    state = switch (state) {
+      case SQL -> param0Create(value, sqlType, Statement.NO_GENERATED_KEYS, State.PREPARED);
+
+      case SQL_COUNT -> param0Create(value, sqlType, Statement.NO_GENERATED_KEYS, State.PREPARED_COUNT);
+
+      case SQL_GENERATED -> param0Create(value, sqlType, Statement.RETURN_GENERATED_KEYS, State.PREPARED_GENERATED);
+
+      case SQL_PAGINATED -> param0Create(value, sqlType, Statement.NO_GENERATED_KEYS, State.PREPARED_PAGINATED);
+
+      case SQL_SCRIPT -> throw new Sql.InvalidOperationException("""
+      The 'addNullable' operation cannot be executed on a SQL script.
+      """);
+
+      case SQL_TEMPLATE -> {
+        final Object nullable;
+        nullable = nullable(value, sqlType);
+
+        final SqlTemplate tmpl;
+        tmpl = sqlTemplate();
+
+        tmpl.add(nullable);
+
+        yield state;
+      }
+
+      case PREPARED,
+           PREPARED_BATCH,
+           PREPARED_COUNT,
+           PREPARED_GENERATED,
+           PREPARED_GENERATED_BATCH,
+           PREPARED_PAGINATED -> {
+        try {
+          final PreparedStatement stmt;
+          stmt = prepared();
+
+          param0(stmt, value, sqlType);
+
+          yield state;
+        } catch (SQLException e) {
+          throw stateAndWrap(e);
+        }
+      }
+
+      case START -> throw illegalState();
+
+      case ERROR -> throw illegalState();
+    };
+  }
+
+  private State param0Create(Object value, int sqlType, int generatedKeys, State next) {
+    try {
+      final PreparedStatement stmt;
+      stmt = createPrepared(generatedKeys);
+
+      param0(stmt, value, sqlType);
+
+      return next;
+    } catch (SQLException e) {
+      throw stateAndWrap(e);
+    }
+  }
+
+  private void param0(PreparedStatement stmt, Object value, int sqlType) throws SQLException {
+    final int index;
+    index = parameterIndex++;
+
+    if (value == null) {
+      stmt.setNull(index, sqlType);
+    } else {
+      set(stmt, index, value);
+    }
+  }
+
+  @Override
+  public final void paramIf(Object value, boolean condition) {
     state = switch (state) {
       case START -> throw illegalState();
 
@@ -763,81 +834,6 @@ final class SqlTransaction implements Sql.Transaction {
 
   private SqlTemplate sqlTemplate() {
     return (SqlTemplate) main;
-  }
-
-  @Override
-  public final void add(Object value, int sqlType) {
-    state = switch (state) {
-      case SQL -> setNullable0Create(value, sqlType, Statement.NO_GENERATED_KEYS, State.PREPARED);
-
-      case SQL_COUNT -> setNullable0Create(value, sqlType, Statement.NO_GENERATED_KEYS, State.PREPARED_COUNT);
-
-      case SQL_GENERATED -> setNullable0Create(value, sqlType, Statement.RETURN_GENERATED_KEYS, State.PREPARED_GENERATED);
-
-      case SQL_PAGINATED -> setNullable0Create(value, sqlType, Statement.NO_GENERATED_KEYS, State.PREPARED_PAGINATED);
-
-      case SQL_SCRIPT -> throw new Sql.InvalidOperationException("""
-      The 'addNullable' operation cannot be executed on a SQL script.
-      """);
-
-      case SQL_TEMPLATE -> {
-        final Object nullable;
-        nullable = nullable(value, sqlType);
-
-        final SqlTemplate tmpl;
-        tmpl = sqlTemplate();
-
-        tmpl.add(nullable);
-
-        yield state;
-      }
-
-      case PREPARED,
-           PREPARED_BATCH,
-           PREPARED_COUNT,
-           PREPARED_GENERATED,
-           PREPARED_GENERATED_BATCH,
-           PREPARED_PAGINATED -> {
-        try {
-          final PreparedStatement stmt;
-          stmt = prepared();
-
-          setNullable0(stmt, value, sqlType);
-
-          yield state;
-        } catch (SQLException e) {
-          throw stateAndWrap(e);
-        }
-      }
-
-      case START -> throw illegalState();
-
-      case ERROR -> throw illegalState();
-    };
-  }
-
-  private State setNullable0Create(Object value, int sqlType, int generatedKeys, State next) {
-    try {
-      final PreparedStatement stmt;
-      stmt = createPrepared(generatedKeys);
-
-      setNullable0(stmt, value, sqlType);
-
-      return next;
-    } catch (SQLException e) {
-      throw stateAndWrap(e);
-    }
-  }
-
-  private void setNullable0(PreparedStatement stmt, Object value, int sqlType) throws SQLException {
-    final int index;
-    index = parameterIndex++;
-
-    if (value == null) {
-      stmt.setNull(index, sqlType);
-    } else {
-      set(stmt, index, value);
-    }
   }
 
   @Override
@@ -968,7 +964,7 @@ final class SqlTransaction implements Sql.Transaction {
   }
 
   @Override
-  public final BatchUpdate batchUpdateWithResult() {
+  public final Sql.BatchUpdate batchUpdateWithResult() {
     try {
       final int[] result;
       result = batchUpdate0();
@@ -1624,7 +1620,7 @@ final class SqlTransaction implements Sql.Transaction {
   }
 
   @Override
-  public final Update updateWithResult() {
+  public final Sql.Update updateWithResult() {
     try {
       final int count;
       count = update0();
