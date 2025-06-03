@@ -80,7 +80,6 @@ public class SqlTransactionTestScript extends SqlTransactionTestSupport {
 
         """
         createStatement()
-        setAutoCommit(true)
         close()
         """
     );
@@ -133,7 +132,6 @@ public class SqlTransactionTestScript extends SqlTransactionTestSupport {
 
         """
         createStatement()
-        setAutoCommit(true)
         close()
         """
     );
@@ -187,7 +185,6 @@ public class SqlTransactionTestScript extends SqlTransactionTestSupport {
 
         """
         createStatement()
-        setAutoCommit(true)
         close()
         """
     );
@@ -231,7 +228,6 @@ public class SqlTransactionTestScript extends SqlTransactionTestSupport {
 
         """
         createStatement()
-        setAutoCommit(true)
         close()
         """
     );

@@ -100,7 +100,6 @@ public class SqlTransactionTestGenerated extends SqlTransactionTestSupport {
 
         """
         prepareStatement(insert into FOO (A, B) values (?, ?), 1)
-        setAutoCommit(true)
         close()
         """
     );
@@ -176,7 +175,6 @@ public class SqlTransactionTestGenerated extends SqlTransactionTestSupport {
 
         """
         prepareStatement(insert into FOO (A, B) values (?, ?), 1)
-        setAutoCommit(true)
         close()
         """
     );
@@ -255,7 +253,6 @@ public class SqlTransactionTestGenerated extends SqlTransactionTestSupport {
 
         """
         prepareStatement(insert into BAR (X) values (?), 1)
-        setAutoCommit(true)
         close()
         """
     );
@@ -380,7 +377,6 @@ public class SqlTransactionTestGenerated extends SqlTransactionTestSupport {
 
         """
         prepareStatement(insert into FOO (A, B) values (?, ?), 1)
-        setAutoCommit(true)
         close()
         """
     );
@@ -440,7 +436,6 @@ public class SqlTransactionTestGenerated extends SqlTransactionTestSupport {
 
         """
         prepareStatement(insert into BAR (X) values (?), 1)
-        setAutoCommit(true)
         close()
         """
     );
@@ -485,7 +480,6 @@ public class SqlTransactionTestGenerated extends SqlTransactionTestSupport {
 
         """
         prepareStatement(insert into BAR (X) values (?), 1)
-        setAutoCommit(true)
         close()
         """
     );
@@ -526,7 +520,6 @@ public class SqlTransactionTestGenerated extends SqlTransactionTestSupport {
         connection.toString(),
 
         """
-        setAutoCommit(true)
         close()
         """
     );
@@ -615,7 +608,6 @@ public class SqlTransactionTestGenerated extends SqlTransactionTestSupport {
 
         """
         prepareStatement(insert into FOO (A, B) values (?, ?), 1)
-        setAutoCommit(true)
         close()
         """
     );
@@ -676,7 +668,6 @@ public class SqlTransactionTestGenerated extends SqlTransactionTestSupport {
 
         """
         createStatement()
-        setAutoCommit(true)
         close()
         """
     );

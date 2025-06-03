@@ -60,7 +60,6 @@ public class SqlTransactionTest {
 
         """
         createStatement()
-        setAutoCommit(true)
         close()
         """
     );
@@ -94,7 +93,6 @@ public class SqlTransactionTest {
 
         """
         rollback()
-        setAutoCommit(true)
         close()
         """
     );
@@ -133,7 +131,6 @@ public class SqlTransactionTest {
 
         """
         rollback()
-        setAutoCommit(true)
         close()
         """
     );
@@ -175,7 +172,6 @@ public class SqlTransactionTest {
 
         """
         rollback()
-        setAutoCommit(true)
         close()
         """
     );
@@ -223,7 +219,6 @@ public class SqlTransactionTest {
 
         """
         rollback()
-        setAutoCommit(true)
         close()
         """
     );
@@ -265,7 +260,6 @@ public class SqlTransactionTest {
 
         """
         rollback()
-        setAutoCommit(true)
         close()
         """
     );
@@ -313,7 +307,6 @@ public class SqlTransactionTest {
 
         """
         rollback()
-        setAutoCommit(true)
         close()
         """
     );
@@ -322,7 +315,7 @@ public class SqlTransactionTest {
   private SqlTransaction trx(TestingConnection connection) {
     connection.metaData(TestingDatabaseMetaData.TESTING);
 
-    return (SqlTransaction) Sql.Transaction.of(connection);
+    return SqlTransaction.of(connection);
   }
 
 }

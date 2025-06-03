@@ -27,7 +27,7 @@ import java.time.ZoneOffset;
 import java.time.temporal.Temporal;
 import org.testng.annotations.Test;
 
-public class SqlDialectTest2TrxParam extends SqlDialectTest0Support {
+public class SqlDialectTest02TrxParam extends SqlDialectTest00Support {
 
   // ##################################################################
   // # BEGIN: Boolean Type

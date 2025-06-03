@@ -299,7 +299,7 @@ public final class Sql {
   }
 
   /**
-   * A handle to apply schema migrations to an underlying database.
+   * A handle to apply schema migrations to the underlying database.
    */
   public sealed interface Migrations permits SqlMigrations {
 
@@ -384,21 +384,7 @@ public final class Sql {
   /**
    * A running session to a database.
    */
-  public sealed interface Transaction permits SqlTransaction {
-
-    static Transaction of(Connection connection) {
-      try {
-        DatabaseMetaData data;
-        data = connection.getMetaData();
-
-        SqlDialect dialect;
-        dialect = SqlDialect.of(data);
-
-        return new SqlTransaction(dialect, connection);
-      } catch (SQLException e) {
-        throw new DatabaseException(e);
-      }
-    }
+  public sealed interface Transaction extends AutoCloseable permits SqlTransaction {
 
     /**
      * The isolation level of a transaction.
@@ -488,6 +474,7 @@ public final class Sql {
     /**
      * Closes the underlying database connection.
      */
+    @Override
     void close() throws DatabaseException;
 
     /**

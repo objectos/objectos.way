@@ -74,7 +74,6 @@ public class SqlTransactionTestPaginated extends SqlTransactionTestSupport {
 
         """
         prepareStatement(select A, B from FOO where C = ? limit 15, 2)
-        setAutoCommit(true)
         close()
         """
     );
@@ -139,7 +138,6 @@ public class SqlTransactionTestPaginated extends SqlTransactionTestSupport {
         connection.toString(),
 
         """
-        setAutoCommit(true)
         close()
         """
     );
@@ -178,7 +176,6 @@ public class SqlTransactionTestPaginated extends SqlTransactionTestSupport {
 
         """
         prepareStatement(select A, B from FOO where C = ? limit 15, 2)
-        setAutoCommit(true)
         close()
         """
     );
@@ -236,7 +233,6 @@ public class SqlTransactionTestPaginated extends SqlTransactionTestSupport {
 
         """
         prepareStatement(select A, B from FOO where C = ? limit 15, 2)
-        setAutoCommit(true)
         close()
         """
     );
@@ -303,7 +299,6 @@ public class SqlTransactionTestPaginated extends SqlTransactionTestSupport {
 
         """
         prepareStatement(select A, B from FOO where C = ? limit 15 offset 15, 2)
-        setAutoCommit(true)
         close()
         """
     );
@@ -367,7 +362,6 @@ public class SqlTransactionTestPaginated extends SqlTransactionTestSupport {
 
         """
         createStatement()
-        setAutoCommit(true)
         close()
         """
     );

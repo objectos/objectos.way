@@ -105,7 +105,6 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
 
         """
         prepareStatement(insert into BAR (X, Y) values (?, ?), 2)
-        setAutoCommit(true)
         close()
         """
     );
@@ -203,7 +202,6 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
         connection.toString(),
 
         """
-        setAutoCommit(true)
         close()
         """
     );
@@ -234,7 +232,6 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
 
         """
         prepareStatement(select * from FOO where X = ?, 2)
-        setAutoCommit(true)
         close()
         """
     );
@@ -293,7 +290,6 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
 
         """
         prepareStatement(select A, B, C from FOO where X = ?, 2)
-        setAutoCommit(true)
         close()
         """
     );
@@ -359,7 +355,6 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
 
         """
         createStatement()
-        setAutoCommit(true)
         close()
         """
     );
@@ -452,7 +447,6 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
         """
         prepareStatement(select count(*) from ( select A from FOO where X = ? and Y = ? ) x, 2)
         prepareStatement(select A from FOO where X = ? and Y = ?, 2)
-        setAutoCommit(true)
         close()
         """
     );
@@ -565,7 +559,6 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
         """
         prepareStatement(select A from FOO where X = ?, 2)
         prepareStatement(select B from FOO where Y = ?, 2)
-        setAutoCommit(true)
         close()
         """
     );
@@ -643,7 +636,6 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
 
         """
         prepareStatement(select * from FOO where X = ?, 2)
-        setAutoCommit(true)
         close()
         """
     );
@@ -702,7 +694,6 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
 
         """
         prepareStatement(select * from FOO where X = ?, 2)
-        setAutoCommit(true)
         close()
         """
     );
@@ -756,7 +747,6 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
 
         """
         prepareStatement(select * from FOO where X = ?, 2)
-        setAutoCommit(true)
         close()
         """
     );
@@ -808,7 +798,6 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
 
         """
         createStatement()
-        setAutoCommit(true)
         close()
         """
     );
@@ -864,7 +853,6 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
 
         """
         createStatement()
-        setAutoCommit(true)
         close()
         """
     );
@@ -915,7 +903,6 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
 
         """
         createStatement()
-        setAutoCommit(true)
         close()
         """
     );
@@ -967,7 +954,6 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
 
         """
         prepareStatement(select max(SEQ) from FOO where X = ?, 2)
-        setAutoCommit(true)
         close()
         """
     );
@@ -1019,7 +1005,6 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
 
         """
         prepareStatement(select max(SEQ) from FOO where X = ?, 2)
-        setAutoCommit(true)
         close()
         """
     );
@@ -1069,7 +1054,6 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
 
         """
         createStatement()
-        setAutoCommit(true)
         close()
         """
     );
@@ -1118,7 +1102,6 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
 
         """
         createStatement()
-        setAutoCommit(true)
         close()
         """
     );
@@ -1170,7 +1153,6 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
 
         """
         prepareStatement(select max(SEQ) from FOO where X = ?, 2)
-        setAutoCommit(true)
         close()
         """
     );
@@ -1225,7 +1207,6 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
 
         """
         prepareStatement(select A, B, C from FOO where X = ?, 2)
-        setAutoCommit(true)
         close()
         """
     );
@@ -1279,7 +1260,6 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
 
         """
         createStatement()
-        setAutoCommit(true)
         close()
         """
     );
@@ -1335,7 +1315,6 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
 
         """
         prepareStatement(select ID from FOO where X = ?, 2)
-        setAutoCommit(true)
         close()
         """
     );
@@ -1390,7 +1369,6 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
 
         """
         prepareStatement(select ID from FOO where X = ?, 2)
-        setAutoCommit(true)
         close()
         """
     );
@@ -1443,7 +1421,6 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
 
         """
         createStatement()
-        setAutoCommit(true)
         close()
         """
     );
@@ -1487,7 +1464,6 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
 
         """
         prepareStatement(insert into BAR (X, Y) values (?, ?), 2)
-        setAutoCommit(true)
         close()
         """
     );
@@ -1534,7 +1510,6 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
 
         """
         prepareStatement(insert into BAR (X, Y) values (?, ?), 2)
-        setAutoCommit(true)
         close()
         """
     );
@@ -1581,7 +1556,6 @@ public class SqlTransactionTestPlain extends SqlTransactionTestSupport {
 
         """
         prepareStatement(insert into BAR (X, Y) values (?, ?), 2)
-        setAutoCommit(true)
         close()
         """
     );

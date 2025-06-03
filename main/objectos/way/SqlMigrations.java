@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Objects;
 import objectos.way.Sql.MetaTable;
 
-final class SqlMigrations implements Sql.Migrations, AutoCloseable {
+final class SqlMigrations implements Sql.Migrations {
 
   private final Clock clock;
 
@@ -47,7 +47,7 @@ final class SqlMigrations implements Sql.Migrations, AutoCloseable {
 
     this.dialect = dialect;
 
-    trx = new SqlTransaction(dialect, connection);
+    trx = new SqlTransaction(connection, dialect);
   }
 
   record Initialized(
@@ -218,9 +218,6 @@ final class SqlMigrations implements Sql.Migrations, AutoCloseable {
       }
     }
   }
-
-  @Override
-  public final void close() throws SQLException {}
 
   final LocalDateTime now() {
     return LocalDateTime.now(clock);

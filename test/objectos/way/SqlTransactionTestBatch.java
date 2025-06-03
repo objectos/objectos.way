@@ -73,7 +73,6 @@ public class SqlTransactionTestBatch extends SqlTransactionTestSupport {
 
         """
         prepareStatement(insert into BAR (X) values (?), 2)
-        setAutoCommit(true)
         close()
         """
     );
@@ -129,7 +128,6 @@ public class SqlTransactionTestBatch extends SqlTransactionTestSupport {
 
         """
         prepareStatement(insert into BAR (X) values (?), 2)
-        setAutoCommit(true)
         close()
         """
     );
@@ -182,7 +180,6 @@ public class SqlTransactionTestBatch extends SqlTransactionTestSupport {
 
         """
         prepareStatement(insert into BAR (X) values (?), 2)
-        setAutoCommit(true)
         close()
         """
     );
@@ -236,7 +233,6 @@ public class SqlTransactionTestBatch extends SqlTransactionTestSupport {
 
         """
         prepareStatement(insert into BAR (X) values (?), 2)
-        setAutoCommit(true)
         close()
         """
     );
@@ -294,7 +290,6 @@ public class SqlTransactionTestBatch extends SqlTransactionTestSupport {
 
         """
         prepareStatement(insert into BAR (X) values (?), 2)
-        setAutoCommit(true)
         close()
         """
     );
@@ -354,7 +349,6 @@ public class SqlTransactionTestBatch extends SqlTransactionTestSupport {
 
         """
         prepareStatement(insert into BAR (X) values (?), 2)
-        setAutoCommit(true)
         close()
         """
     );
@@ -430,7 +424,6 @@ public class SqlTransactionTestBatch extends SqlTransactionTestSupport {
         """
         prepareStatement(insert into BAR (X) values (?), 2)
         prepareStatement(select A, B from X where NAME = ?, 2)
-        setAutoCommit(true)
         close()
         """
     );
@@ -485,7 +478,6 @@ public class SqlTransactionTestBatch extends SqlTransactionTestSupport {
 
         """
         prepareStatement(insert into BAR (X) values (?), 2)
-        setAutoCommit(true)
         close()
         """
     );

@@ -63,7 +63,7 @@ final class SqlDatabase implements Sql.Database {
     try {
       onBeginTransaction(connection);
 
-      return new SqlTransaction(dialect, connection);
+      return new SqlTransaction(connection, dialect);
     } catch (SQLException e) {
       try {
         connection.close();
@@ -88,7 +88,7 @@ final class SqlDatabase implements Sql.Database {
     try {
       onBeginTransaction(connection);
 
-      return new SqlTransaction(dialect, connection);
+      return new SqlTransaction(connection, dialect);
     } catch (SQLException e) {
       try {
         connection.close();
@@ -102,10 +102,10 @@ final class SqlDatabase implements Sql.Database {
 
   @Override
   public final void migrate(Consumer<Sql.Migrations> migrations) throws Sql.DatabaseException {
-    try (
-        Connection connection = migrateConnection();
-        SqlMigrations impl = new SqlMigrations(clock, noteSink, dialect, connection)
-    ) {
+    try (Connection connection = migrateConnection()) {
+
+      final SqlMigrations impl;
+      impl = new SqlMigrations(clock, noteSink, dialect, connection);
 
       impl.initialize();
 

@@ -41,7 +41,9 @@ final class TestingConnection extends AbstractTestable implements Connection {
 
   private SQLException closeException;
 
-  private DatabaseMetaData metaData;
+  private SQLException commitException;
+
+  private DatabaseMetaData metaData = TestingDatabaseMetaData.TESTING;
 
   private Iterator<PreparedStatement> preparedStatements = Collections.emptyIterator();
 
@@ -51,6 +53,10 @@ final class TestingConnection extends AbstractTestable implements Connection {
 
   public final void closeException(SQLException error) {
     closeException = error;
+  }
+
+  public final void commitException(SQLException error) {
+    commitException = error;
   }
 
   public final void metaData(DatabaseMetaData value) {
@@ -114,7 +120,13 @@ final class TestingConnection extends AbstractTestable implements Connection {
   public boolean getAutoCommit() throws SQLException { throw new UnsupportedOperationException("Implement me"); }
 
   @Override
-  public void commit() throws SQLException { throw new UnsupportedOperationException("Implement me"); }
+  public void commit() throws SQLException {
+    logMethod("commit");
+
+    if (commitException != null) {
+      throw commitException;
+    }
+  }
 
   @Override
   public void rollback() throws SQLException {

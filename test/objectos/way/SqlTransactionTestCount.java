@@ -67,7 +67,6 @@ public class SqlTransactionTestCount extends SqlTransactionTestSupport {
 
         """
         prepareStatement(select count(*) from ( select A, B from FOO where C = ? ) x, 2)
-        setAutoCommit(true)
         close()
         """
     );
@@ -130,7 +129,6 @@ public class SqlTransactionTestCount extends SqlTransactionTestSupport {
 
         """
         prepareStatement(select count(*) from ( select A, B from FOO where C = ? ) x, 2)
-        setAutoCommit(true)
         close()
         """
     );
@@ -169,7 +167,6 @@ public class SqlTransactionTestCount extends SqlTransactionTestSupport {
         connection.toString(),
 
         """
-        setAutoCommit(true)
         close()
         """
     );
@@ -220,7 +217,6 @@ public class SqlTransactionTestCount extends SqlTransactionTestSupport {
 
         """
         createStatement()
-        setAutoCommit(true)
         close()
         """
     );
@@ -275,7 +271,6 @@ public class SqlTransactionTestCount extends SqlTransactionTestSupport {
 
         """
         prepareStatement(select count(*) from ( select A, B from FOO where C = ? ) x, 2)
-        setAutoCommit(true)
         close()
         """
     );
@@ -329,7 +324,6 @@ public class SqlTransactionTestCount extends SqlTransactionTestSupport {
 
         """
         createStatement()
-        setAutoCommit(true)
         close()
         """
     );
@@ -384,7 +378,6 @@ public class SqlTransactionTestCount extends SqlTransactionTestSupport {
 
         """
         prepareStatement(select count(*) from ( select A, B from FOO where C = ? ) x, 2)
-        setAutoCommit(true)
         close()
         """
     );
@@ -448,7 +441,6 @@ public class SqlTransactionTestCount extends SqlTransactionTestSupport {
 
         """
         createStatement()
-        setAutoCommit(true)
         close()
         """
     );
@@ -509,7 +501,6 @@ public class SqlTransactionTestCount extends SqlTransactionTestSupport {
 
         """
         prepareStatement(select count(*) from ( select A, B from FOO where C = ? ) x, 2)
-        setAutoCommit(true)
         close()
         """
     );
@@ -565,7 +556,6 @@ public class SqlTransactionTestCount extends SqlTransactionTestSupport {
 
         """
         createStatement()
-        setAutoCommit(true)
         close()
         """
     );
@@ -626,7 +616,6 @@ public class SqlTransactionTestCount extends SqlTransactionTestSupport {
 
         """
         prepareStatement(select count(*) from ( select A, B from FOO where C = ? ) x, 2)
-        setAutoCommit(true)
         close()
         """
     );

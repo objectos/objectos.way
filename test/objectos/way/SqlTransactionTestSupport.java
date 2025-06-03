@@ -338,7 +338,7 @@ public abstract class SqlTransactionTestSupport {
   }
 
   final SqlTransaction trx(Connection connection) {
-    return new SqlTransaction(SqlDialect.TESTING, connection);
+    return SqlTransaction.of(connection);
   }
 
 }

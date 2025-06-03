@@ -28,7 +28,7 @@ import objectos.way.Sql.Meta.QueryTables;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class SqlDialectTest1Migrations extends SqlDialectTest0Support {
+public class SqlDialectTest01Migrations extends SqlDialectTest00Support {
 
   @SuppressWarnings("exports")
   @Test(description = "Single run", dataProvider = "dbDialectProvider")

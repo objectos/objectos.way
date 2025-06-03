@@ -65,22 +65,36 @@ final class SqlTransaction implements Sql.Transaction {
 
   }
 
-  private final SqlDialect dialect;
+  private Object aux;
 
   private final Connection connection;
 
-  private Object main;
+  private final SqlDialect dialect;
 
-  private Object aux;
+  private Object main;
 
   private int parameterIndex;
 
   private State state = State.START;
 
-  SqlTransaction(SqlDialect dialect, Connection connection) {
-    this.dialect = dialect;
-
+  SqlTransaction(Connection connection, SqlDialect dialect) {
     this.connection = connection;
+
+    this.dialect = dialect;
+  }
+
+  static SqlTransaction of(Connection connection) {
+    try {
+      DatabaseMetaData data;
+      data = connection.getMetaData();
+
+      SqlDialect dialect;
+      dialect = SqlDialect.of(data);
+
+      return new SqlTransaction(connection, dialect);
+    } catch (SQLException e) {
+      throw new DatabaseException(e);
+    }
   }
 
   @Override
@@ -179,23 +193,15 @@ final class SqlTransaction implements Sql.Transaction {
           stmt.close();
         }
       } catch (Throwable e) {
-        rethrow = rethrowOrSuppress(rethrow, e);
+        rethrow = suppressIfNecessary(rethrow, e);
       }
 
     }
 
     try {
-      connection.setAutoCommit(true);
+      connection.close();
     } catch (Throwable e) {
-      rethrow = rethrowOrSuppress(rethrow, e);
-    } finally {
-
-      try {
-        connection.close();
-      } catch (Throwable e) {
-        rethrow = rethrowOrSuppress(rethrow, e);
-      }
-
+      rethrow = suppressIfNecessary(rethrow, e);
     }
 
     if (rethrow == null) {
@@ -213,7 +219,7 @@ final class SqlTransaction implements Sql.Transaction {
     throw new Sql.DatabaseException(rethrow);
   }
 
-  private Throwable rethrowOrSuppress(Throwable rethrow, Throwable e) {
+  private Throwable suppressIfNecessary(Throwable rethrow, Throwable e) {
     if (rethrow != null) {
       rethrow.addSuppressed(e);
     } else {

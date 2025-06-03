@@ -27,7 +27,7 @@ import org.h2.jdbcx.JdbcDataSource;
 import org.mariadb.jdbc.MariaDbDataSource;
 import org.testng.annotations.DataProvider;
 
-public abstract class SqlDialectTest0Support {
+public abstract class SqlDialectTest00Support {
 
   @DataProvider
   public Iterator<Sql.Database> dbProvider(Method method) {
