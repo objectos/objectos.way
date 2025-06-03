@@ -22,7 +22,7 @@ import java.time.Clock;
 import java.util.Objects;
 import javax.sql.DataSource;
 
-final class SqlDatabaseConfig implements Sql.Database.Config {
+final class SqlDatabaseBuilder implements Sql.Database.Options {
 
   Clock clock;
 

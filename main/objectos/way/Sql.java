@@ -69,7 +69,7 @@ public final class Sql {
     /**
      * Configures the creation of a {@code Sql.Database} instance.
      */
-    public sealed interface Config permits SqlDatabaseConfig {
+    public sealed interface Options permits SqlDatabaseBuilder {
 
       /**
        * Sets the clock to the specified value. This clock instance will be used
@@ -80,6 +80,12 @@ public final class Sql {
        */
       void clock(Clock value);
 
+      /**
+       * Sets the {@code DataSource} to the specified value.
+       *
+       * @param value
+       *        a {@code DataSource} instance
+       */
       void dataSource(DataSource value);
 
       /**
@@ -93,22 +99,21 @@ public final class Sql {
     }
 
     /**
-     * Creates a new {@code Sql.Database} instance with the specified
-     * configuration.
+     * Creates a new {@code Sql.Database} instance with the specified options.
      *
-     * @param config
-     *        configuration options of this new instance
+     * @param options
+     *        allows for setting the options
      *
      * @return a newly created database instance
      *
      * @throws DatabaseException
      *         if a database access error occurs
      */
-    static Database create(Consumer<Config> config) throws DatabaseException {
-      SqlDatabaseConfig builder;
-      builder = new SqlDatabaseConfig();
+    static Database create(Consumer<Options> options) throws DatabaseException {
+      SqlDatabaseBuilder builder;
+      builder = new SqlDatabaseBuilder();
 
-      config.accept(builder);
+      options.accept(builder);
 
       return builder.build();
     }
