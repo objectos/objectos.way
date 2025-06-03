@@ -28,8 +28,8 @@ public class SqlBatchUpdateFailedTest {
 
   @Test
   public void testing01() {
-    final Sql.Dialect dialect;
-    dialect = Sql.Dialect.TESTING;
+    final SqlDialect dialect;
+    dialect = SqlDialect.TESTING;
 
     final BatchUpdateException error;
     error = new BatchUpdateException(new int[] {256});

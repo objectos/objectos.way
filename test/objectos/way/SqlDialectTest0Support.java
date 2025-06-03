@@ -59,7 +59,7 @@ public abstract class SqlDialectTest0Support {
     });
   }
 
-  final Sql.Dialect dialect(Sql.Database db) {
+  final SqlDialect dialect(Sql.Database db) {
     final SqlDatabase impl;
     impl = (SqlDatabase) db;
 

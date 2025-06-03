@@ -137,36 +137,19 @@ public final class Sql {
      */
     Transaction connect() throws DatabaseException;
 
+    /**
+     * Applies the specified migrations, in order, to the underlying database.
+     *
+     * @param migrations
+     *        allows for defining the migrations
+     *
+     * @throws DatabaseException
+     *         if a database access error occurs
+     */
     void migrate(Consumer<Migrations> migrations) throws DatabaseException;
 
   }
 
-  enum Dialect {
-
-    H2,
-
-    MYSQL,
-
-    TESTING;
-
-    static Dialect of(DatabaseMetaData data) throws SQLException {
-      String productName;
-      productName = data.getDatabaseProductName();
-
-      return switch (productName) {
-        case "H2" -> H2;
-
-        case "MySQL" -> MYSQL;
-
-        case "ObjectosWay" -> TESTING;
-
-        default -> throw new UnsupportedOperationException(
-            "Unsupported dialect with databaseProductName=" + productName
-        );
-      };
-    }
-
-  }
   public sealed interface GeneratedKeys<T> {
 
     public sealed interface OfInt extends GeneratedKeys<Integer> {
@@ -293,11 +276,13 @@ public final class Sql {
   }
 
   /**
-   * A handle to migrate, if necessary, the database schema to the latest
-   * version.
+   * A handle to apply schema migrations to the underlying database.
    */
   public sealed interface Migrations permits SqlMigrations {
 
+    /**
+     *
+     */
     void add(String name, String script);
 
   }
@@ -378,8 +363,8 @@ public final class Sql {
         DatabaseMetaData data;
         data = connection.getMetaData();
 
-        Sql.Dialect dialect;
-        dialect = Sql.Dialect.of(data);
+        SqlDialect dialect;
+        dialect = SqlDialect.of(data);
 
         return new SqlTransaction(dialect, connection);
       } catch (SQLException e) {

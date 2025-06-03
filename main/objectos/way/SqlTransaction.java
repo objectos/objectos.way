@@ -65,7 +65,7 @@ final class SqlTransaction implements Sql.Transaction {
 
   }
 
-  private final Sql.Dialect dialect;
+  private final SqlDialect dialect;
 
   private final Connection connection;
 
@@ -77,7 +77,7 @@ final class SqlTransaction implements Sql.Transaction {
 
   private State state = State.START;
 
-  SqlTransaction(Sql.Dialect dialect, Connection connection) {
+  SqlTransaction(SqlDialect dialect, Connection connection) {
     this.dialect = dialect;
 
     this.connection = connection;

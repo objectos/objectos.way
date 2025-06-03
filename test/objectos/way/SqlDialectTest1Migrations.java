@@ -32,7 +32,7 @@ public class SqlDialectTest1Migrations extends SqlDialectTest0Support {
 
   @SuppressWarnings("exports")
   @Test(description = "Single run", dataProvider = "dbDialectProvider")
-  public void migrate01(Sql.Database db, Sql.Dialect dialect) {
+  public void migrate01(Sql.Database db, SqlDialect dialect) {
     assertEquals(
         report(db, dialect),
 
@@ -98,7 +98,7 @@ public class SqlDialectTest1Migrations extends SqlDialectTest0Support {
 
   @SuppressWarnings("exports")
   @Test(description = "Two runs: same migration", dataProvider = "dbDialectProvider")
-  public void migrate02(Sql.Database db, Sql.Dialect dialect) {
+  public void migrate02(Sql.Database db, SqlDialect dialect) {
     final Consumer<Migrations> v001;
     v001 = v("First Version", switch (dialect) {
       case H2 -> """
@@ -176,7 +176,7 @@ public class SqlDialectTest1Migrations extends SqlDialectTest0Support {
 
   @SuppressWarnings("exports")
   @Test(description = "Two runs: additional migration", dataProvider = "dbDialectProvider")
-  public void migrate03(Sql.Database db, Sql.Dialect dialect) {
+  public void migrate03(Sql.Database db, SqlDialect dialect) {
     final Consumer<Migrations> v001;
     v001 = v("First Version", switch (dialect) {
       case H2 -> """
@@ -300,7 +300,7 @@ public class SqlDialectTest1Migrations extends SqlDialectTest0Support {
 
   @SuppressWarnings("exports")
   @Test(description = "Single run: invalid migration", dataProvider = "dbDialectProvider")
-  public void migrate04(Sql.Database db, Sql.Dialect dialect) {
+  public void migrate04(Sql.Database db, SqlDialect dialect) {
     final Consumer<Migrations> v001;
     v001 = v("First Version", "some invalid SQL;");
 
@@ -413,7 +413,7 @@ public class SqlDialectTest1Migrations extends SqlDialectTest0Support {
       }
   );
 
-  private String report(Sql.Database db, Sql.Dialect dialect) {
+  private String report(Sql.Database db, SqlDialect dialect) {
     String result;
     result = null;
 

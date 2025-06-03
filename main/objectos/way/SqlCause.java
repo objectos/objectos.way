@@ -39,7 +39,7 @@ sealed abstract class SqlCause implements Sql.Cause {
     this.original = original;
   }
 
-  static List<Sql.Cause> allOf(Sql.Dialect dialect, SQLException e) {
+  static List<Sql.Cause> allOf(SqlDialect dialect, SQLException e) {
     final UtilList<Sql.Cause> causes;
     causes = new UtilList<>();
 
@@ -58,7 +58,7 @@ sealed abstract class SqlCause implements Sql.Cause {
     return causes.toUnmodifiableList();
   }
 
-  private static Sql.Cause of(Sql.Dialect dialect, SQLException e) {
+  private static Sql.Cause of(SqlDialect dialect, SQLException e) {
     return switch (e) {
       case SQLIntegrityConstraintViolationException ex -> new IntegrityConstraintViolation(ex);
 

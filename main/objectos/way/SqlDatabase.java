@@ -27,12 +27,12 @@ final class SqlDatabase implements Sql.Database {
 
   private final DataSource dataSource;
 
-  private final Sql.Dialect dialect;
+  private final SqlDialect dialect;
 
   @SuppressWarnings("unused")
   private final Note.Sink noteSink;
 
-  SqlDatabase(Clock clock, Note.Sink noteSink, DataSource dataSource, Sql.Dialect dialect) {
+  SqlDatabase(Clock clock, Note.Sink noteSink, DataSource dataSource, SqlDialect dialect) {
     this.clock = clock;
 
     this.noteSink = noteSink;
@@ -121,7 +121,7 @@ final class SqlDatabase implements Sql.Database {
     return "SqlDatabase[dataSource=" + dataSource + ",dialect=" + dialect + "]";
   }
 
-  final Sql.Dialect dialect() {
+  final SqlDialect dialect() {
     return dialect;
   }
 

@@ -22,7 +22,7 @@ import objectos.way.Sql.Cause;
 
 record SqlBatchUpdateFailed(BatchUpdateException original, List<Sql.Cause> causes) implements Sql.BatchUpdateFailed {
 
-  SqlBatchUpdateFailed(BatchUpdateException original, Sql.Dialect dialect, SQLException cause) {
+  SqlBatchUpdateFailed(BatchUpdateException original, SqlDialect dialect, SQLException cause) {
     this(
         original,
 
@@ -30,7 +30,7 @@ record SqlBatchUpdateFailed(BatchUpdateException original, List<Sql.Cause> cause
     );
   }
 
-  static SqlBatchUpdateFailed create(Sql.Dialect dialect, SQLException e) {
+  static SqlBatchUpdateFailed create(SqlDialect dialect, SQLException e) {
     return switch (e) {
       case BatchUpdateException original -> new SqlBatchUpdateFailed(
           original,

@@ -20,7 +20,7 @@ import java.util.List;
 
 record SqlUpdateFailed(List<Sql.Cause> causes) implements Sql.UpdateFailed {
 
-  static SqlUpdateFailed create(Sql.Dialect dialect, SQLException e) {
+  static SqlUpdateFailed create(SqlDialect dialect, SQLException e) {
     return new SqlUpdateFailed(
         SqlCause.allOf(dialect, e)
     );

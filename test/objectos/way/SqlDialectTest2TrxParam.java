@@ -169,7 +169,7 @@ public class SqlDialectTest2TrxParam extends SqlDialectTest0Support {
   }
 
   private Sql.Transaction typesDateTime(Sql.Database db) {
-    final Sql.Dialect dialect;
+    final SqlDialect dialect;
     dialect = dialect(db);
 
     final String sql = switch (dialect) {
@@ -275,7 +275,7 @@ public class SqlDialectTest2TrxParam extends SqlDialectTest0Support {
     final Sql.Transaction trx;
     trx = typesDateTime(db);
 
-    final Sql.Dialect dialect;
+    final SqlDialect dialect;
     dialect = dialect(db);
 
     // insert at different TZ / read at default TZ
@@ -386,7 +386,7 @@ public class SqlDialectTest2TrxParam extends SqlDialectTest0Support {
     final Sql.Transaction trx;
     trx = typesFloating(db);
 
-    final Sql.Dialect dialect;
+    final SqlDialect dialect;
     dialect = dialect(db);
 
     try {
@@ -650,7 +650,7 @@ public class SqlDialectTest2TrxParam extends SqlDialectTest0Support {
           "ABC"
       );
 
-      final Sql.Dialect dialect;
+      final SqlDialect dialect;
       dialect = dialect(db);
 
       switch (dialect) {

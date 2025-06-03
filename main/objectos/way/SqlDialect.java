@@ -15,23 +15,32 @@
  */
 package objectos.way;
 
-import static org.testng.Assert.assertEquals;
-
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import org.testng.annotations.Test;
 
-public class SqlDialectH2Test {
+enum SqlDialect {
 
-  @Test
-  public void of() throws SQLException {
-    DatabaseMetaData data;
-    data = TestingDatabaseMetaData.H2;
+  H2,
 
-    SqlDialect dialect;
-    dialect = SqlDialect.of(data);
+  MYSQL,
 
-    assertEquals(dialect, SqlDialect.H2);
+  TESTING;
+
+  static SqlDialect of(DatabaseMetaData data) throws SQLException {
+    String productName;
+    productName = data.getDatabaseProductName();
+
+    return switch (productName) {
+      case "H2" -> H2;
+
+      case "MySQL" -> MYSQL;
+
+      case "ObjectosWay" -> TESTING;
+
+      default -> throw new UnsupportedOperationException(
+          "Unsupported dialect with databaseProductName=" + productName
+      );
+    };
   }
 
 }

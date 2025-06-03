@@ -32,7 +32,7 @@ final class SqlMigrations implements Sql.Migrations, AutoCloseable {
   @SuppressWarnings("unused")
   private final Note.Sink noteSink;
 
-  private final Sql.Dialect dialect;
+  private final SqlDialect dialect;
 
   private final SqlTransaction trx;
 
@@ -40,7 +40,7 @@ final class SqlMigrations implements Sql.Migrations, AutoCloseable {
 
   private int rank = 1;
 
-  SqlMigrations(Clock clock, Note.Sink noteSink, Sql.Dialect dialect, Connection connection) {
+  SqlMigrations(Clock clock, Note.Sink noteSink, SqlDialect dialect, Connection connection) {
     this.clock = clock;
 
     this.noteSink = noteSink;
