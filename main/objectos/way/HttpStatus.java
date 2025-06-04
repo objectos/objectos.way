@@ -45,31 +45,18 @@ final class HttpStatus implements Http.Status {
 
   // 2.x.x
 
-  /**
-   * The {@code 200 OK} status.
-   */
   public static final HttpStatus OK = BUILDER.create(200, "OK");
+
+  public static final HttpStatus NO_CONTENT = BUILDER.create(204, "No Content");
 
   // 3.x.x
 
-  /**
-   * The {@code 301 MOVED PERMANENTLY} status.
-   */
   public static final HttpStatus MOVED_PERMANENTLY = BUILDER.create(301, "Moved Permanently");
 
-  /**
-   * The {@code 302 FOUND} status.
-   */
   public static final HttpStatus FOUND = BUILDER.create(302, "Found");
 
-  /**
-   * The {@code 303 SEE OTHER} status.
-   */
   public static final HttpStatus SEE_OTHER = BUILDER.create(303, "See Other");
 
-  /**
-   * The {@code 304 NOT MODIFIED} status.
-   */
   public static final HttpStatus NOT_MODIFIED = BUILDER.create(304, "Not Modified");
 
   // 4.x.x
@@ -80,56 +67,26 @@ final class HttpStatus implements Http.Status {
 
   public static final HttpStatus NOT_FOUND = BUILDER.create(404, "Not Found");
 
-  /**
-   * The {@code 405 METHOD NOT ALLOWED} status.
-   */
   public static final HttpStatus METHOD_NOT_ALLOWED = BUILDER.create(405, "Method Not Allowed");
 
-  /**
-   * The {@code 411 Length Required} status.
-   */
   public static final HttpStatus LENGTH_REQUIRED = BUILDER.create(411, "Length Required");
 
-  /**
-   * The {@code 413 Content Too Large} status.
-   */
   public static final HttpStatus CONTENT_TOO_LARGE = BUILDER.create(413, "Content Too Large");
 
-  /**
-   * The {@code 414 URI TOO LONG} status.
-   */
   public static final HttpStatus URI_TOO_LONG = BUILDER.create(414, "URI Too Long");
 
-  /**
-   * The {@code 415 UNSUPPORTED MEDIA TYPE} status.
-   */
-  public static final HttpStatus UNSUPPORTED_MEDIA_TYPE = BUILDER.create(415, "UNSUPPORTED MEDIA TYPE");
+  public static final HttpStatus UNSUPPORTED_MEDIA_TYPE = BUILDER.create(415, "Unsupported Media Type");
 
-  /**
-   * The {@code 422 UNPROCESSABLE CONTENT} status.
-   */
-  public static final HttpStatus UNPROCESSABLE_CONTENT = BUILDER.create(422, "UNPROCESSABLE CONTENT");
+  public static final HttpStatus UNPROCESSABLE_CONTENT = BUILDER.create(422, "Unprocessable Content");
 
-  /**
-   * The {@code 431 Request Header Fields Too Large} status.
-   */
   public static final HttpStatus REQUEST_HEADER_FIELDS_TOO_LARGE = BUILDER.create(431, "Request Header Fields Too Large");
 
   // 5.x.x
 
-  /**
-   * The {@code 500 INTERNAL SERVER ERROR} status.
-   */
   public static final HttpStatus INTERNAL_SERVER_ERROR = BUILDER.create(500, "Internal Server Error");
 
-  /**
-   * The {@code 501 NOT IMPLEMENTED} status.
-   */
   public static final HttpStatus NOT_IMPLEMENTED = BUILDER.create(501, "Not Implemented");
 
-  /**
-   * The {@code 505 HTTP VERSION NOT SUPPORTED} status.
-   */
   public static final HttpStatus HTTP_VERSION_NOT_SUPPORTED = BUILDER.create(505, "HTTP Version Not Supported");
 
   private static final HttpStatus[] VALUES;

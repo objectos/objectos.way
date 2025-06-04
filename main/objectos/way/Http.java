@@ -1183,8 +1183,36 @@ public final class Http {
 
     public sealed interface OfPath permits HttpRouting.OfPath {
 
+      /**
+       * For a request with the specified method, use the specified
+       * handler.
+       *
+       * <p>
+       * If the registered handler produces no response, then the server
+       * responds with a `204 No Content` message.
+       *
+       * <p>
+       * If the request does not match any of the registered allowed methods for
+       * this path, then the server responds with a `405 Method Not Allowed`
+       * message.
+       */
       void allow(Method method, Handler handler);
 
+      /**
+       * For a request with the specified method, use the first handler that
+       * produces a response. In other words, the server will iterate over the
+       * specified handlers and, after a handler produces a response, it stops
+       * the processing.
+       *
+       * <p>
+       * If none of the registered handlers produce a response, then the
+       * server responds with a `204 No Content` message.
+       *
+       * <p>
+       * If the request does not match any of the registered allowed methods for
+       * this path, then the server responds with a `405 Method Not Allowed`
+       * message.
+       */
       void allow(Method method, Handler first, Handler... rest);
 
       void filter(Filter value, Consumer<OfPath> routes);
@@ -1615,25 +1643,30 @@ public final class Http {
      */
     Status OK = HttpStatus.OK;
 
+    /**
+     * The {@code 204 No Content} status.
+     */
+    Status NO_CONTENT = HttpStatus.NO_CONTENT;
+
     // 3.x.x
 
     /**
-     * The {@code 301 MOVED PERMANENTLY} status.
+     * The {@code 301 Moved Permanently} status.
      */
     Status MOVED_PERMANENTLY = HttpStatus.MOVED_PERMANENTLY;
 
     /**
-     * The {@code 302 FOUND} status.
+     * The {@code 302 Found} status.
      */
     Status FOUND = HttpStatus.FOUND;
 
     /**
-     * The {@code 303 SEE OTHER} status.
+     * The {@code 303 See Other} status.
      */
     Status SEE_OTHER = HttpStatus.SEE_OTHER;
 
     /**
-     * The {@code 304 NOT MODIFIED} status.
+     * The {@code 304 Not Modified} status.
      */
     Status NOT_MODIFIED = HttpStatus.NOT_MODIFIED;
 

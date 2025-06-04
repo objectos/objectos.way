@@ -206,6 +206,46 @@ public class HttpRoutingTest1OfPath {
     );
   }
 
+  @Test(description = "If the handler produces no response, send 204: single handler case")
+  public void allow04() {
+    test(
+        routing -> {
+          routing.path("/noop", allow -> {
+            allow.allow(GET, http -> {});
+          });
+        },
+
+        http -> http.path("/noop"),
+
+        """
+        HTTP/1.1 204 No Content\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Length: 0\r
+        \r
+        """
+    );
+  }
+
+  @Test(description = "If the handler produces no response, send 204: many handlers case")
+  public void allow05() {
+    test(
+        routing -> {
+          routing.path("/noop", allow -> {
+            allow.allow(GET, http -> {}, http -> {});
+          });
+        },
+
+        http -> http.path("/noop"),
+
+        """
+        HTTP/1.1 204 No Content\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Length: 0\r
+        \r
+        """
+    );
+  }
+
   @Test
   public void subpath01() {
     final HttpRequestMatcher matcher;

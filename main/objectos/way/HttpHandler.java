@@ -37,6 +37,10 @@ final class HttpHandler implements Http.Handler {
 
     FACTORY1,
 
+    METHOD_ALLOWED_SINGLE,
+
+    METHOD_ALLOWED_MANY,
+
     // pre-made responses
 
     OK_MEDIA_BYTES,
@@ -107,7 +111,7 @@ final class HttpHandler implements Http.Handler {
     final HttpRequestMatcher predicate;
     predicate = HttpRequestMatcher.methodAllowed(method);
 
-    return new HttpHandler(Kind.SINGLE, predicate, handler);
+    return new HttpHandler(Kind.METHOD_ALLOWED_SINGLE, predicate, handler);
   }
 
   public static Http.Handler methodAllowed(Http.Method method, Http.Handler first, Http.Handler[] rest) {
@@ -123,7 +127,7 @@ final class HttpHandler implements Http.Handler {
       array[idx + 1] = Check.notNull(rest[idx], "rest[", idx, "] == null");
     }
 
-    return new HttpHandler(Kind.MANY, predicate, array);
+    return new HttpHandler(Kind.METHOD_ALLOWED_MANY, predicate, array);
   }
 
   public static Http.Handler notFound() {
@@ -333,6 +337,64 @@ final class HttpHandler implements Http.Handler {
         }
 
         handler.handle(http);
+      }
+
+      case METHOD_ALLOWED_SINGLE -> {
+        final int pathIndex;
+        pathIndex = http.pathIndex();
+
+        final Http.Handler single;
+        single = (Http.Handler) main;
+
+        single.handle(http);
+
+        if (!http.processed()) {
+          http.pathIndex(pathIndex);
+
+          http.status(Http.Status.NO_CONTENT);
+
+          http.header(Http.HeaderName.DATE, http.now());
+
+          http.header(Http.HeaderName.CONTENT_LENGTH, 0L);
+
+          http.send();
+        }
+      }
+
+      case METHOD_ALLOWED_MANY -> {
+        final int pathIndex;
+        pathIndex = http.pathIndex();
+
+        final Http.Handler[] many;
+        many = (Http.Handler[]) main;
+
+        int index;
+        index = 0;
+
+        while (index < many.length) {
+          final Http.Handler handler;
+          handler = many[index++];
+
+          handler.handle(http);
+
+          if (http.processed()) {
+            break;
+          }
+
+          http.pathIndex(pathIndex);
+        }
+
+        if (!http.processed()) {
+          http.pathIndex(pathIndex);
+
+          http.status(Http.Status.NO_CONTENT);
+
+          http.header(Http.HeaderName.DATE, http.now());
+
+          http.header(Http.HeaderName.CONTENT_LENGTH, 0L);
+
+          http.send();
+        }
       }
 
       case OK_MEDIA_BYTES -> http.ok((Media.Bytes) main);
