@@ -17,7 +17,14 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -26,6 +33,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.time.temporal.Temporal;
+import java.util.Random;
 import org.testng.annotations.Test;
 
 public class SqlDialectTest02TrxParam extends SqlDialectTest00Support {
@@ -37,17 +45,32 @@ public class SqlDialectTest02TrxParam extends SqlDialectTest00Support {
   private record TypesBinary(
       int id,
       String binary,
-      String binaryVarying
+      String binaryVarying,
+      Path blob
   ) {
     TypesBinary(ResultSet rs, int idx) throws SQLException {
       this(
           rs.getInt(idx++),
           toAscii(rs.getBytes(idx++)),
-          toAscii(rs.getBytes(idx++))
+          toAscii(rs.getBytes(idx++)),
+          toPath(rs.getBinaryStream(idx++))
       );
     }
     static String toAscii(byte[] bytes) {
       return new String(bytes, StandardCharsets.US_ASCII);
+    }
+
+    static Path toPath(InputStream in) throws SQLException {
+      final Path file;
+      file = Y.nextTempFile();
+
+      try (in) {
+        Files.copy(in, file, StandardCopyOption.REPLACE_EXISTING);
+      } catch (IOException e) {
+        throw new SQLException(e);
+      }
+
+      return file;
     }
   }
 
@@ -58,7 +81,8 @@ public class SqlDialectTest02TrxParam extends SqlDialectTest00Support {
         ID int not null,
 
         T_BINARY binary(5) not null,
-        T_BINARY_VARYING varbinary(5) null,
+        T_BINARY_VARYING varbinary(5) not null,
+        T_BLOB blob not null,
 
         primary key (ID)
       );
@@ -72,42 +96,78 @@ public class SqlDialectTest02TrxParam extends SqlDialectTest00Support {
       Sql.Transaction trx,
       int id,
       String binary,
-      String binaryVarying
+      String binaryVarying,
+      Path blob
   ) {
+
     trx.sql("""
     insert into TYPES_BINARY (
-      ID, T_BINARY, T_BINARY_VARYING
+      ID, T_BINARY, T_BINARY_VARYING, T_BLOB
     ) values (
-      ?, ?, ?
+      ?, ?, ?, ?
     )
     """);
 
-    trx.param(id);
-    trx.param(binary.getBytes(StandardCharsets.US_ASCII));
-    trx.param(binaryVarying.getBytes(StandardCharsets.US_ASCII));
+    try (InputStream in = Files.newInputStream(blob)) {
 
-    trx.update();
+      trx.param(id);
+      trx.param(binary.getBytes(StandardCharsets.US_ASCII));
+      trx.param(binaryVarying.getBytes(StandardCharsets.US_ASCII));
+      trx.param(in);
+
+      trx.update();
+
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
 
     trx.sql("select * from TYPES_BINARY");
 
     return trx.querySingle(TypesBinary::new);
   }
 
-  @Test(description = "exact size", dataProvider = "dbProvider")
+  @Test(description = "happy path", dataProvider = "dbProvider")
   public void typesBinary01(Sql.Database db) {
     final Sql.Transaction trx;
     trx = typesBinary(db);
 
     try {
+      final Path blob;
+      blob = random4k(15);
+
       final TypesBinary result;
-      result = typesBinaryTest(trx, 1, "{}[]~", "01234");
+      result = typesBinaryTest(trx, 1, "{}[]~", "01234", blob);
 
       assertEquals(result.id, 1);
       assertEquals(result.binary, "{}[]~");
       assertEquals(result.binaryVarying, "01234");
+      assertEquals(Files.mismatch(result.blob, blob), -1L);
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
     } finally {
       Sql.rollbackAndClose(trx);
     }
+  }
+
+  private Path random4k(int count) throws IOException {
+    final Path blob;
+    blob = Y.nextTempFile();
+
+    Random random;
+    random = new Random();
+
+    byte[] buffer;
+    buffer = new byte[4096];
+
+    try (OutputStream out = Files.newOutputStream(blob)) {
+      for (int i = 0; i < count; i++) {
+        random.nextBytes(buffer);
+
+        out.write(buffer);
+      }
+    }
+
+    return blob;
   }
 
   // ##################################################################

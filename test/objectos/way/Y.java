@@ -707,6 +707,10 @@ final class Y {
     return NextPathHolder.INSTANCE.nextTempDir();
   }
 
+  public static Path nextTempFile() {
+    return NextPathHolder.INSTANCE.nextTempFile();
+  }
+
   public static Path nextTempFile(String contents, Charset charset) {
     try {
       final Path file;
