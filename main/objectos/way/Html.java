@@ -733,44 +733,6 @@ public final class Html {
     Html.Instruction.OfElement element(Html.ElementName name, Html.Instruction... contents);
 
     /**
-     * Flattens the specified instructions so that each of the specified
-     * instructions is individually added, in order, to a receiving element.
-     *
-     * @param contents
-     *        the instructions to be flattened
-     *
-     * @return an instruction representing this flatten operation
-     */
-    Html.Instruction.OfElement flatten(Html.Instruction... contents);
-
-    /**
-     * The non-breaking space {@code &nbsp;} HTML character entity.
-     *
-     * @return an instruction representing the non-breaking space character
-     *         entity.
-     */
-    default Html.Instruction.OfElement nbsp() {
-      return raw("&nbsp;");
-    }
-
-    /**
-     * The no-op instruction.
-     *
-     * @return the no-op instruction.
-     */
-    Html.Instruction.NoOp noop();
-
-    /**
-     * Renders the specified value as raw HTML.
-     *
-     * @param value
-     *        the raw HTML value
-     *
-     * @return a raw HTML instruction
-     */
-    Html.Instruction.OfElement raw(String value);
-
-    /**
      * Renders the specified fragment as part of this template.
      *
      * <p>
@@ -809,7 +771,7 @@ public final class Html {
      *
      * @return an instruction representing this fragment
      */
-    Html.Instruction.OfFragment renderFragment(Html.Fragment.Of0 fragment);
+    Html.Instruction.OfFragment f(Html.Fragment.Of0 fragment);
 
     /**
      * Renders the specified fragment as part of this template.
@@ -848,7 +810,7 @@ public final class Html {
      *
      * @return an instruction representing this fragment
      */
-    <T1> Html.Instruction.OfFragment renderFragment(Html.Fragment.Of1<T1> fragment, T1 arg1);
+    <T1> Html.Instruction.OfFragment f(Html.Fragment.Of1<T1> fragment, T1 arg1);
 
     /**
      * Renders the specified fragment as part of this template.
@@ -890,11 +852,49 @@ public final class Html {
      *
      * @return an instruction representing this fragment
      */
-    <T1, T2> Html.Instruction.OfFragment renderFragment(Html.Fragment.Of2<T1, T2> fragment, T1 arg1, T2 arg2);
+    <T1, T2> Html.Instruction.OfFragment f(Html.Fragment.Of2<T1, T2> fragment, T1 arg1, T2 arg2);
 
-    <T1, T2, T3> Html.Instruction.OfFragment renderFragment(Html.Fragment.Of3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3);
+    <T1, T2, T3> Html.Instruction.OfFragment f(Html.Fragment.Of3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3);
 
-    <T1, T2, T3, T4> Html.Instruction.OfFragment renderFragment(Html.Fragment.Of4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
+    <T1, T2, T3, T4> Html.Instruction.OfFragment f(Html.Fragment.Of4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
+
+    /**
+     * Flattens the specified instructions so that each of the specified
+     * instructions is individually added, in order, to a receiving element.
+     *
+     * @param contents
+     *        the instructions to be flattened
+     *
+     * @return an instruction representing this flatten operation
+     */
+    Html.Instruction.OfElement flatten(Html.Instruction... contents);
+
+    /**
+     * The non-breaking space {@code &nbsp;} HTML character entity.
+     *
+     * @return an instruction representing the non-breaking space character
+     *         entity.
+     */
+    default Html.Instruction.OfElement nbsp() {
+      return raw("&nbsp;");
+    }
+
+    /**
+     * The no-op instruction.
+     *
+     * @return the no-op instruction.
+     */
+    Html.Instruction.NoOp noop();
+
+    /**
+     * Renders the specified value as raw HTML.
+     *
+     * @param value
+     *        the raw HTML value
+     *
+     * @return a raw HTML instruction
+     */
+    Html.Instruction.OfElement raw(String value);
 
     /**
      * Renders the specified component as part of this HTML instance.
@@ -4044,6 +4044,142 @@ public final class Html {
     }
 
     /**
+     * Renders the specified fragment as part of this template.
+     *
+     * <p>
+     * The included fragment MUST only invoke methods of this template instance.
+     * It is common (but not required) for a fragment to be a method reference
+     * to a private method of the template instance.
+     *
+     * <p>
+     * The following Objectos HTML template:
+     *
+     * {@snippet file = "objectos/way/HtmlTemplateBaseJavadoc.java" region =
+     * "renderFragment0"}
+     *
+     * <p>
+     * Generates the following HTML:
+     *
+     * <pre>{@code
+     *     <!DOCTYPE html>
+     *     <html>
+     *     <head>
+     *     <title>Include fragment example</title>
+     *     </head>
+     *     <body>
+     *     <h1>Objectos HTML</h1>
+     *     <p>Using the include instruction</p>
+     *     </body>
+     *     </html>
+     * }</pre>
+     *
+     * <p>
+     * Note that the methods of included method references all return
+     * {@code void}.
+     *
+     * @param fragment
+     *        the fragment to include
+     *
+     * @return an instruction representing this fragment
+     */
+    protected final Html.Instruction.OfFragment f(Html.Fragment.Of0 fragment) {
+      return $html().f(fragment);
+    }
+
+    /**
+     * Renders the specified fragment as part of this template.
+     *
+     * <p>
+     * The included fragment MUST only invoke methods of this template instance.
+     * It is common (but not required) for a fragment to be a method reference
+     * to a private method of the template instance.
+     *
+     * <p>
+     * The following Objectos HTML template:
+     *
+     * {@snippet file = "objectos/way/HtmlTemplateBaseJavadoc.java" region =
+     * "renderFragment1"}
+     *
+     * <p>
+     * Generates the following HTML:
+     *
+     * <pre>{@code
+     *     <body>
+     *     <div>Foo</div>
+     *     <div>Bar</div>
+     *     </body>
+     * }</pre>
+     *
+     * <p>
+     * Note that the methods of included method references all return
+     * {@code void}.
+     *
+     * @param <T1> the type of the first argument
+     *
+     * @param fragment
+     *        the fragment to include
+     * @param arg1
+     *        the first argument
+     *
+     * @return an instruction representing this fragment
+     */
+    protected final <T1> Html.Instruction.OfFragment f(Html.Fragment.Of1<T1> fragment, T1 arg1) {
+      return $html().f(fragment, arg1);
+    }
+
+    /**
+     * Renders the specified fragment as part of this template.
+     *
+     * <p>
+     * The included fragment MUST only invoke methods of this template instance.
+     * It is common (but not required) for a fragment to be a method reference
+     * to a private method of the template instance.
+     *
+     * <p>
+     * The following Objectos HTML template:
+     *
+     * {@snippet file = "objectos/way/HtmlTemplateBaseJavadoc.java" region =
+     * "renderFragment2"}
+     *
+     * <p>
+     * Generates the following HTML:
+     *
+     * <pre>{@code
+     *     <body>
+     *     <p>City<span>Tokyo</span></p>
+     *     <p>Country<span>Japan</span></p>
+     *     </body>
+     * }</pre>
+     *
+     * <p>
+     * Note that the methods of included method references all return
+     * {@code void}.
+     *
+     * @param <T1> the type of the first argument
+     * @param <T2> the type of the second argument
+     *
+     * @param fragment
+     *        the fragment to include
+     * @param arg1
+     *        the first argument
+     * @param arg2
+     *        the second argument
+     *
+     * @return an instruction representing this fragment
+     */
+    protected final <T1, T2> Html.Instruction.OfFragment f(Html.Fragment.Of2<T1, T2> fragment, T1 arg1, T2 arg2) {
+      return $html().f(fragment, arg1, arg2);
+    }
+
+    protected final <T1, T2, T3> Html.Instruction.OfFragment f(Html.Fragment.Of3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3) {
+      return $html().f(fragment, arg1, arg2, arg3);
+    }
+
+    protected final <T1, T2, T3, T4> Html.Instruction.OfFragment f(Html.Fragment.Of4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
+      return $html().f(fragment, arg1, arg2, arg3, arg4);
+    }
+
+    /**
      * Flattens the specified instructions so that each of the specified
      * instructions is individually added, in order, to a receiving element.
      *
@@ -4136,142 +4272,6 @@ public final class Html {
      */
     protected final Html.Instruction.OfElement raw(String value) {
       return $html().raw(value);
-    }
-
-    /**
-     * Renders the specified fragment as part of this template.
-     *
-     * <p>
-     * The included fragment MUST only invoke methods of this template instance.
-     * It is common (but not required) for a fragment to be a method reference
-     * to a private method of the template instance.
-     *
-     * <p>
-     * The following Objectos HTML template:
-     *
-     * {@snippet file = "objectos/way/HtmlTemplateBaseJavadoc.java" region =
-     * "renderFragment0"}
-     *
-     * <p>
-     * Generates the following HTML:
-     *
-     * <pre>{@code
-     *     <!DOCTYPE html>
-     *     <html>
-     *     <head>
-     *     <title>Include fragment example</title>
-     *     </head>
-     *     <body>
-     *     <h1>Objectos HTML</h1>
-     *     <p>Using the include instruction</p>
-     *     </body>
-     *     </html>
-     * }</pre>
-     *
-     * <p>
-     * Note that the methods of included method references all return
-     * {@code void}.
-     *
-     * @param fragment
-     *        the fragment to include
-     *
-     * @return an instruction representing this fragment
-     */
-    protected final Html.Instruction.OfFragment renderFragment(Html.Fragment.Of0 fragment) {
-      return $html().renderFragment(fragment);
-    }
-
-    /**
-     * Renders the specified fragment as part of this template.
-     *
-     * <p>
-     * The included fragment MUST only invoke methods of this template instance.
-     * It is common (but not required) for a fragment to be a method reference
-     * to a private method of the template instance.
-     *
-     * <p>
-     * The following Objectos HTML template:
-     *
-     * {@snippet file = "objectos/way/HtmlTemplateBaseJavadoc.java" region =
-     * "renderFragment1"}
-     *
-     * <p>
-     * Generates the following HTML:
-     *
-     * <pre>{@code
-     *     <body>
-     *     <div>Foo</div>
-     *     <div>Bar</div>
-     *     </body>
-     * }</pre>
-     *
-     * <p>
-     * Note that the methods of included method references all return
-     * {@code void}.
-     *
-     * @param <T1> the type of the first argument
-     *
-     * @param fragment
-     *        the fragment to include
-     * @param arg1
-     *        the first argument
-     *
-     * @return an instruction representing this fragment
-     */
-    protected final <T1> Html.Instruction.OfFragment renderFragment(Html.Fragment.Of1<T1> fragment, T1 arg1) {
-      return $html().renderFragment(fragment, arg1);
-    }
-
-    /**
-     * Renders the specified fragment as part of this template.
-     *
-     * <p>
-     * The included fragment MUST only invoke methods of this template instance.
-     * It is common (but not required) for a fragment to be a method reference
-     * to a private method of the template instance.
-     *
-     * <p>
-     * The following Objectos HTML template:
-     *
-     * {@snippet file = "objectos/way/HtmlTemplateBaseJavadoc.java" region =
-     * "renderFragment2"}
-     *
-     * <p>
-     * Generates the following HTML:
-     *
-     * <pre>{@code
-     *     <body>
-     *     <p>City<span>Tokyo</span></p>
-     *     <p>Country<span>Japan</span></p>
-     *     </body>
-     * }</pre>
-     *
-     * <p>
-     * Note that the methods of included method references all return
-     * {@code void}.
-     *
-     * @param <T1> the type of the first argument
-     * @param <T2> the type of the second argument
-     *
-     * @param fragment
-     *        the fragment to include
-     * @param arg1
-     *        the first argument
-     * @param arg2
-     *        the second argument
-     *
-     * @return an instruction representing this fragment
-     */
-    protected final <T1, T2> Html.Instruction.OfFragment renderFragment(Html.Fragment.Of2<T1, T2> fragment, T1 arg1, T2 arg2) {
-      return $html().renderFragment(fragment, arg1, arg2);
-    }
-
-    protected final <T1, T2, T3> Html.Instruction.OfFragment renderFragment(Html.Fragment.Of3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3) {
-      return $html().renderFragment(fragment, arg1, arg2, arg3);
-    }
-
-    protected final <T1, T2, T3, T4> Html.Instruction.OfFragment renderFragment(Html.Fragment.Of4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
-      return $html().renderFragment(fragment, arg1, arg2, arg3, arg4);
     }
 
     /**

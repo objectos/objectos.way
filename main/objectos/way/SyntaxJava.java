@@ -74,7 +74,7 @@ final class SyntaxJava implements Html.Component {
 
         html.attr(Syntax.DATA_LINE, Integer.toString(line++)),
 
-        html.renderFragment(this::parseLine)
+        html.f(this::parseLine)
 
     );
   }

@@ -73,10 +73,10 @@ public class HtmlTemplateBaseJavadoc {
         doctype();
         html(
             head(
-                renderFragment(this::head0)
+                f(this::head0)
             ),
             body(
-                renderFragment(this::body0)
+                f(this::body0)
             )
         );
       }
@@ -120,7 +120,7 @@ public class HtmlTemplateBaseJavadoc {
         List<String> names = List.of("Foo", "Bar");
 
         body(
-            renderFragment(this::frag, names)
+            f(this::frag, names)
         );
       }
 
@@ -151,8 +151,8 @@ public class HtmlTemplateBaseJavadoc {
       @Override
       protected void render() {
         body(
-            renderFragment(this::frag, "City", "Tokyo"),
-            renderFragment(this::frag, "Country", "Japan")
+            f(this::frag, "City", "Tokyo"),
+            f(this::frag, "Country", "Japan")
         );
       }
 

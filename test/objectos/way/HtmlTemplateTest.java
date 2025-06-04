@@ -1117,7 +1117,7 @@ public class HtmlTemplateTest {
           protected final void render() {
             html(
                 body(
-                    renderFragment(this::body0)
+                    f(this::body0)
                 )
             );
           }
@@ -1143,7 +1143,7 @@ public class HtmlTemplateTest {
         new Html.Template() {
           @Override
           protected final void render() {
-            div(renderFragment(this::test));
+            div(f(this::test));
           }
 
           private void test() {
@@ -1191,10 +1191,10 @@ public class HtmlTemplateTest {
           @Override
           protected final void render() {
             div(
-                renderFragment(this::frag1, "a"),
-                renderFragment(this::frag2, "a", "b"),
-                renderFragment(this::frag3, "a", "b", "c"),
-                renderFragment(this::frag4, "a", "b", "c", "d")
+                f(this::frag1, "a"),
+                f(this::frag2, "a", "b"),
+                f(this::frag3, "a", "b", "c"),
+                f(this::frag4, "a", "b", "c", "d")
             );
           }
 
@@ -1288,9 +1288,9 @@ public class HtmlTemplateTest {
                 renderComponent(html -> html.span("as child"))
             );
 
-            div(renderFragment(this::fragment0));
+            div(f(this::fragment0));
 
-            div(renderFragment(this::fragment1));
+            div(f(this::fragment1));
           }
 
           private void fragment0() {
@@ -1371,7 +1371,7 @@ public class HtmlTemplateTest {
         new Html.Template() {
           @Override
           protected final void render() {
-            renderFragment(this::root);
+            f(this::root);
           }
 
           private void root() {
@@ -1393,8 +1393,8 @@ public class HtmlTemplateTest {
         new Html.Template() {
           @Override
           protected final void render() {
-            renderFragment(this::root1);
-            renderFragment(this::root2);
+            f(this::root1);
+            f(this::root2);
           }
 
           private void root1() {
@@ -1419,11 +1419,11 @@ public class HtmlTemplateTest {
         new Html.Template() {
           @Override
           protected final void render() {
-            renderFragment(this::root1);
+            f(this::root1);
           }
 
           private void root1() {
-            renderFragment(this::root2);
+            f(this::root2);
           }
 
           private void root2() {
@@ -1445,7 +1445,7 @@ public class HtmlTemplateTest {
         new Html.Template() {
           @Override
           protected final void render() {
-            renderFragment(this::root1);
+            f(this::root1);
             html();
           }
 
@@ -1467,7 +1467,7 @@ public class HtmlTemplateTest {
         new Html.Template() {
           @Override
           protected final void render() {
-            renderFragment(this::root1);
+            f(this::root1);
           }
 
           private void root1() {}
@@ -1484,11 +1484,11 @@ public class HtmlTemplateTest {
         new Html.Template() {
           @Override
           protected final void render() {
-            renderFragment(this::root1);
+            f(this::root1);
           }
 
           private void root1() {
-            renderFragment(this::root2);
+            f(this::root2);
           }
 
           private void root2() {

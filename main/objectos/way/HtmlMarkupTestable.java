@@ -180,7 +180,7 @@ final class HtmlMarkupTestable extends HtmlMarkupElements implements Html.Markup
   }
 
   @Override
-  public final Html.Instruction.OfFragment renderFragment(Html.Fragment.Of0 fragment) {
+  public final Html.Instruction.OfFragment f(Html.Fragment.Of0 fragment) {
     Objects.requireNonNull(fragment, "fragment == null");
 
     fragment.invoke();
@@ -189,7 +189,7 @@ final class HtmlMarkupTestable extends HtmlMarkupElements implements Html.Markup
   }
 
   @Override
-  public final <T1> Html.Instruction.OfFragment renderFragment(Html.Fragment.Of1<T1> fragment, T1 arg1) {
+  public final <T1> Html.Instruction.OfFragment f(Html.Fragment.Of1<T1> fragment, T1 arg1) {
     Objects.requireNonNull(fragment, "fragment == null");
 
     fragment.invoke(arg1);
@@ -198,7 +198,7 @@ final class HtmlMarkupTestable extends HtmlMarkupElements implements Html.Markup
   }
 
   @Override
-  public final <T1, T2> Html.Instruction.OfFragment renderFragment(Html.Fragment.Of2<T1, T2> fragment, T1 arg1, T2 arg2) {
+  public final <T1, T2> Html.Instruction.OfFragment f(Html.Fragment.Of2<T1, T2> fragment, T1 arg1, T2 arg2) {
     Objects.requireNonNull(fragment, "fragment == null");
 
     fragment.invoke(arg1, arg2);
@@ -207,7 +207,7 @@ final class HtmlMarkupTestable extends HtmlMarkupElements implements Html.Markup
   }
 
   @Override
-  public final <T1, T2, T3> Html.Instruction.OfFragment renderFragment(Html.Fragment.Of3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3) {
+  public final <T1, T2, T3> Html.Instruction.OfFragment f(Html.Fragment.Of3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3) {
     Objects.requireNonNull(fragment, "fragment == null");
 
     fragment.invoke(arg1, arg2, arg3);
@@ -216,7 +216,7 @@ final class HtmlMarkupTestable extends HtmlMarkupElements implements Html.Markup
   }
 
   @Override
-  public final <T1, T2, T3, T4> Html.Instruction.OfFragment renderFragment(Html.Fragment.Of4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
+  public final <T1, T2, T3, T4> Html.Instruction.OfFragment f(Html.Fragment.Of4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
     Objects.requireNonNull(fragment, "fragment == null");
 
     fragment.invoke(arg1, arg2, arg3, arg4);

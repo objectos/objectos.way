@@ -152,7 +152,7 @@ public class HtmlTemplateTestTestable {
         new Html.Template() {
           @Override
           protected final void render() {
-            div(renderFragment(this::fragment));
+            div(f(this::fragment));
           }
 
           private void fragment() {

@@ -66,7 +66,7 @@ public class HtmlTemplateTestAttributes {
           @Override
           protected final void render() {
             div(
-                renderFragment(this::attribute)
+                f(this::attribute)
             );
           }
 

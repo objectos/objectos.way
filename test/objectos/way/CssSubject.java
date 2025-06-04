@@ -19,7 +19,7 @@ abstract class CssSubject extends Html.Template {
   @Override
   protected final void render() {
     div(
-        renderFragment(this::classes)
+        f(this::classes)
     );
   }
 
