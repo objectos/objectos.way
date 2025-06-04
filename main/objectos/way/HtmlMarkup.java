@@ -476,11 +476,37 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
       proto = main[index];
 
       switch (proto) {
-        case HtmlByteProto.DOCTYPE, HtmlByteProto.ELEMENT, HtmlByteProto.TEXT -> {
+        case HtmlByteProto.DOCTYPE,
+             HtmlByteProto.ELEMENT,
+             HtmlByteProto.TEXT -> {
           // next node found
           nextState = _DOCUMENT_NODES_HAS_NEXT;
 
           break loop;
+        }
+
+        case HtmlByteProto.FRAGMENT -> {
+          // mark this fragment, just in case...
+          main[index++] = HtmlByteProto.LENGTH3;
+
+          // decode the length
+          byte len0;
+          len0 = main[index++];
+
+          byte len1;
+          len1 = main[index++];
+
+          byte len2;
+          len2 = main[index++];
+
+          int length;
+          length = HtmlBytes.decodeLength3(len0, len1, len2);
+
+          int maxIndex;
+          maxIndex = index + length;
+
+          // mark fragment end as visited.
+          main[maxIndex - 3] = HtmlByteProto.MARKED3;
         }
 
         case HtmlByteProto.LENGTH2 -> {

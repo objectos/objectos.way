@@ -1365,6 +1365,142 @@ public class HtmlTemplateTest {
     );
   }
 
+  @Test(description = "root fragment 01: one")
+  public void testCase73() {
+    test(
+        new Html.Template() {
+          @Override
+          protected final void render() {
+            renderFragment(this::root);
+          }
+
+          private void root() {
+            doctype();
+            html();
+          }
+        },
+
+        """
+        <!DOCTYPE html>
+        <html></html>
+        """
+    );
+  }
+
+  @Test(description = "root fragment 02: two")
+  public void testCase74() {
+    test(
+        new Html.Template() {
+          @Override
+          protected final void render() {
+            renderFragment(this::root1);
+            renderFragment(this::root2);
+          }
+
+          private void root1() {
+            doctype();
+          }
+
+          private void root2() {
+            html();
+          }
+        },
+
+        """
+        <!DOCTYPE html>
+        <html></html>
+        """
+    );
+  }
+
+  @Test(description = "root fragment 03: nested")
+  public void testCase75() {
+    test(
+        new Html.Template() {
+          @Override
+          protected final void render() {
+            renderFragment(this::root1);
+          }
+
+          private void root1() {
+            renderFragment(this::root2);
+          }
+
+          private void root2() {
+            doctype();
+            html();
+          }
+        },
+
+        """
+        <!DOCTYPE html>
+        <html></html>
+        """
+    );
+  }
+
+  @Test(description = "root fragment 04: one + element")
+  public void testCase76() {
+    test(
+        new Html.Template() {
+          @Override
+          protected final void render() {
+            renderFragment(this::root1);
+            html();
+          }
+
+          private void root1() {
+            doctype();
+          }
+        },
+
+        """
+        <!DOCTYPE html>
+        <html></html>
+        """
+    );
+  }
+
+  @Test(description = "root fragment 05: empty")
+  public void testCase77() {
+    test(
+        new Html.Template() {
+          @Override
+          protected final void render() {
+            renderFragment(this::root1);
+          }
+
+          private void root1() {}
+        },
+
+        """
+        """
+    );
+  }
+
+  @Test(description = "root fragment 05: empty nested")
+  public void testCase78() {
+    test(
+        new Html.Template() {
+          @Override
+          protected final void render() {
+            renderFragment(this::root1);
+          }
+
+          private void root1() {
+            renderFragment(this::root2);
+          }
+
+          private void root2() {
+
+          }
+        },
+
+        """
+        """
+    );
+  }
+
   private void test(Html.Template template, String expected) {
     String result;
     result = template.toString();

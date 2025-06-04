@@ -1201,8 +1201,8 @@ public final class Http {
       /**
        * For a request with the specified method, use the first handler that
        * produces a response. In other words, the server will iterate over the
-       * specified handlers and, after a handler produces a response, it stops
-       * the processing.
+       * specified handlers in order and, after a handler produces a response,
+       * it will stop the processing.
        *
        * <p>
        * If none of the registered handlers produce a response, then the

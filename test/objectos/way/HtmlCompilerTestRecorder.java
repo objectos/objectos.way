@@ -472,11 +472,11 @@ public class HtmlCompilerTestRecorder {
     html.elementBegin(HtmlElementName.NAV);
     html.elementEnd();
     // template end
-
+    
     html.elementBegin(HtmlElementName.BODY);
     html.elementValue(BaseApi.FRAGMENT);
     html.elementEnd();
-
+    
     html.compilationEnd();
     */
 
@@ -790,6 +790,88 @@ public class HtmlCompilerTestRecorder {
         HtmlBytes.encodeInt0(36),
         HtmlByteProto.END,
         HtmlBytes.encodeInt0(75),
+        HtmlByteProto.INTERNAL
+    );
+  }
+
+  @Test(description = """
+  fragment at the root of the document
+  """)
+  public void testCase73() {
+    HtmlMarkup html;
+    html = new HtmlMarkup();
+
+    html.compilationBegin();
+
+    Html.Fragment.Of0 action;
+    action = () -> {
+      html.doctype();
+      html.html();
+    };
+
+    int startIndex;
+    startIndex = html.fragmentBegin();
+
+    action.invoke();
+
+    html.fragmentEnd(startIndex);
+
+    test(
+        html,
+
+        HtmlByteProto.FRAGMENT,
+        HtmlBytes.encodeInt0(12),
+        HtmlBytes.encodeInt1(12),
+        HtmlBytes.encodeInt2(12),
+
+        HtmlByteProto.DOCTYPE,
+
+        HtmlByteProto.ELEMENT,
+        HtmlBytes.encodeInt0(5),
+        HtmlBytes.encodeInt1(5),
+        HtmlByteProto.STANDARD_NAME,
+        (byte) HtmlElementName.HTML.index(),
+        HtmlByteProto.END,
+        HtmlBytes.encodeInt0(5),
+        HtmlByteProto.INTERNAL,
+
+        // fragment end
+        HtmlByteProto.END,
+        HtmlBytes.encodeInt0(13),
+        HtmlByteProto.INTERNAL
+    );
+  }
+
+  @Test(description = """
+  fragment at the root of the document
+  """)
+  public void testCase77() {
+    HtmlMarkup html;
+    html = new HtmlMarkup();
+
+    html.compilationBegin();
+
+    Html.Fragment.Of0 action;
+    action = () -> {};
+
+    int startIndex;
+    startIndex = html.fragmentBegin();
+
+    action.invoke();
+
+    html.fragmentEnd(startIndex);
+
+    test(
+        html,
+
+        HtmlByteProto.FRAGMENT,
+        HtmlBytes.encodeInt0(3),
+        HtmlBytes.encodeInt1(3),
+        HtmlBytes.encodeInt2(3),
+
+        // fragment end
+        HtmlByteProto.END,
+        HtmlBytes.encodeInt0(4),
         HtmlByteProto.INTERNAL
     );
   }
