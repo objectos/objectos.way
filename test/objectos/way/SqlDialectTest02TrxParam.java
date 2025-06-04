@@ -17,6 +17,7 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import java.nio.charset.StandardCharsets;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -28,6 +29,90 @@ import java.time.temporal.Temporal;
 import org.testng.annotations.Test;
 
 public class SqlDialectTest02TrxParam extends SqlDialectTest00Support {
+
+  // ##################################################################
+  // # BEGIN: Binary Types
+  // ##################################################################
+
+  private record TypesBinary(
+      int id,
+      String binary,
+      String binaryVarying
+  ) {
+    TypesBinary(ResultSet rs, int idx) throws SQLException {
+      this(
+          rs.getInt(idx++),
+          toAscii(rs.getBytes(idx++)),
+          toAscii(rs.getBytes(idx++))
+      );
+    }
+    static String toAscii(byte[] bytes) {
+      return new String(bytes, StandardCharsets.US_ASCII);
+    }
+  }
+
+  private Sql.Transaction typesBinary(Sql.Database db) {
+    db.migrate(migrations -> {
+      migrations.apply("Create test table", """
+        create table TYPES_BINARY (
+        ID int not null,
+
+        T_BINARY binary(5) not null,
+        T_BINARY_VARYING varbinary(5) null,
+
+        primary key (ID)
+      );
+      """);
+    });
+
+    return db.connect();
+  }
+
+  private TypesBinary typesBinaryTest(
+      Sql.Transaction trx,
+      int id,
+      String binary,
+      String binaryVarying
+  ) {
+    trx.sql("""
+    insert into TYPES_BINARY (
+      ID, T_BINARY, T_BINARY_VARYING
+    ) values (
+      ?, ?, ?
+    )
+    """);
+
+    trx.param(id);
+    trx.param(binary.getBytes(StandardCharsets.US_ASCII));
+    trx.param(binaryVarying.getBytes(StandardCharsets.US_ASCII));
+
+    trx.update();
+
+    trx.sql("select * from TYPES_BINARY");
+
+    return trx.querySingle(TypesBinary::new);
+  }
+
+  @Test(description = "exact size", dataProvider = "dbProvider")
+  public void typesBinary01(Sql.Database db) {
+    final Sql.Transaction trx;
+    trx = typesBinary(db);
+
+    try {
+      final TypesBinary result;
+      result = typesBinaryTest(trx, 1, "{}[]~", "01234");
+
+      assertEquals(result.id, 1);
+      assertEquals(result.binary, "{}[]~");
+      assertEquals(result.binaryVarying, "01234");
+    } finally {
+      Sql.rollbackAndClose(trx);
+    }
+  }
+
+  // ##################################################################
+  // # END: Binary Types
+  // ##################################################################
 
   // ##################################################################
   // # BEGIN: Boolean Type
