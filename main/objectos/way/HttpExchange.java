@@ -3224,6 +3224,16 @@ final class HttpExchange implements Http.Exchange, Closeable {
       buffer[bufferIndex++] = (byte) b;
     }
 
+    @Override
+    public final void write(byte[] bytes) {
+      write(bytes, 0, bytes.length);
+    }
+
+    @Override
+    public final void write(byte[] bytes, int offset, int length) {
+      writeChunkBytes(bytes, offset, length);
+    }
+
   }
 
   private byte executeWriteStream(Media.Stream stream) {
@@ -3279,45 +3289,9 @@ final class HttpExchange implements Http.Exchange, Closeable {
       final byte[] bytes;
       bytes = s.getBytes(charset);
 
-      writeBytes(bytes);
+      writeChunkBytes(bytes, 0, bytes.length);
 
       return this;
-    }
-
-    private void writeBytes(byte[] bytes) {
-      int bytesIndex;
-      bytesIndex = 0;
-
-      int remaining;
-      remaining = bytes.length;
-
-      while (remaining > 0) {
-        int available;
-        available = writeChunkAvailable();
-
-        if (available <= 0) {
-          writeChunkEnd();
-
-          writeChunkFlush();
-
-          writeChunkReset();
-
-          writeChunkBegin();
-
-          available = writeChunkAvailable();
-        }
-
-        final int bytesToCopy;
-        bytesToCopy = Math.min(remaining, available);
-
-        System.arraycopy(bytes, bytesIndex, buffer, bufferIndex, bytesToCopy);
-
-        bufferIndex += bytesToCopy;
-
-        bytesIndex += bytesToCopy;
-
-        remaining -= bytesToCopy;
-      }
     }
 
   }
@@ -3383,6 +3357,42 @@ final class HttpExchange implements Http.Exchange, Closeable {
     maxDataLength -= 1;
 
     return Http.requiredHexDigits(maxDataLength);
+  }
+
+  private void writeChunkBytes(byte[] bytes, int offset, int length) {
+    int bytesIndex;
+    bytesIndex = offset;
+
+    int remaining;
+    remaining = length;
+
+    while (remaining > 0) {
+      int available;
+      available = writeChunkAvailable();
+
+      if (available <= 0) {
+        writeChunkEnd();
+
+        writeChunkFlush();
+
+        writeChunkReset();
+
+        writeChunkBegin();
+
+        available = writeChunkAvailable();
+      }
+
+      final int bytesToCopy;
+      bytesToCopy = Math.min(remaining, available);
+
+      System.arraycopy(bytes, bytesIndex, buffer, bufferIndex, bytesToCopy);
+
+      bufferIndex += bytesToCopy;
+
+      bytesIndex += bytesToCopy;
+
+      remaining -= bytesToCopy;
+    }
   }
 
   private void writeChunkEnd() {
