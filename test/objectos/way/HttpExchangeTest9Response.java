@@ -24,6 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.function.Consumer;
 import org.testng.Assert;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class HttpExchangeTest9Response extends HttpExchangeTest {
@@ -92,13 +93,23 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
   \r
   """.length();
 
-  @Test(description = "ok(Media.Text): 1 chunk")
-  public void okMediaText01() {
-    final Media.Text text;
-    text = Y.mediaTextOfLength(64);
+  @DataProvider
+  public Media[] okMediaStreamText01Provider() {
+    return new Media[] {
+        // stream
+        Y.mediaStreamOfLength(64, Y.MediaStreamKind.BYTE),
+        Y.mediaStreamOfLength(64, Y.MediaStreamKind.FULL_BYTE_ARRAY),
+        Y.mediaStreamOfLength(64, Y.MediaStreamKind.PARTIAL_BYTE_ARRAY),
 
+        // text
+        Y.mediaTextOfLength(64)
+    };
+  }
+
+  @Test(description = "ok(Media.Stream/Text): 1 chunk", dataProvider = "okMediaStreamText01Provider")
+  public void okMediaStreamText01(Media media) {
     assertEquals(
-        text.toString(),
+        media.toString(),
 
         """
         .................................................
@@ -106,10 +117,20 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
         """
     );
 
+    final Consumer<HttpExchange> handler;
+
+    if (media instanceof Media.Stream stream) {
+      handler = http -> http.ok(stream);
+    } else if (media instanceof Media.Text text) {
+      handler = http -> http.ok(text);
+    } else {
+      throw new UnsupportedOperationException();
+    }
+
     get(
         256, 256,
 
-        http -> http.ok(text),
+        handler,
 
         """
         HTTP/1.1 200 OK\r

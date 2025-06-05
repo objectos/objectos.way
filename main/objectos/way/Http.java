@@ -467,6 +467,14 @@ public final class Http {
      * @param media
      *        the media entity
      */
+    void ok(Media.Stream media);
+
+    /**
+     * Respond with a {@code 200 OK} message with the specified media entity.
+     *
+     * @param media
+     *        the media entity
+     */
     void ok(Media.Text media);
 
     // 3xx responses

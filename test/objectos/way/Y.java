@@ -569,6 +569,89 @@ final class Y {
   // ##################################################################
 
   // ##################################################################
+  // # BEGIN: Media.Stream
+  // ##################################################################
+
+  public enum MediaStreamKind {
+
+    BYTE,
+
+    FULL_BYTE_ARRAY,
+
+    PARTIAL_BYTE_ARRAY;
+
+  }
+
+  private static final class ThisMediaStream implements Media.Stream {
+
+    private final ThisMediaText text;
+
+    private final MediaStreamKind kind;
+
+    ThisMediaStream(int length, MediaStreamKind kind) {
+      text = new ThisMediaText(length);
+
+      this.kind = kind;
+    }
+
+    @Override
+    public final String contentType() {
+      return text.contentType();
+    }
+
+    @Override
+    public final void writeTo(OutputStream out) throws IOException {
+      final String s;
+      s = toString();
+
+      final byte[] bytes;
+      bytes = s.getBytes(StandardCharsets.UTF_8);
+
+      try (out) {
+        switch (kind) {
+          case BYTE -> {
+            for (byte b : bytes) {
+              out.write(b);
+            }
+          }
+
+          case FULL_BYTE_ARRAY -> {
+            out.write(bytes);
+          }
+
+          case PARTIAL_BYTE_ARRAY -> {
+            final int half;
+            half = bytes.length / 2;
+
+            out.write(bytes, 0, half);
+
+            out.flush();
+
+            final int remaining;
+            remaining = bytes.length - half;
+
+            out.write(bytes, half, remaining);
+          }
+        }
+      }
+    }
+
+    @Override
+    public final String toString() {
+      return text.toString();
+    }
+
+  }
+
+  public static Media.Stream mediaStreamOfLength(int length, MediaStreamKind kind) {
+    return new ThisMediaStream(length, kind);
+  }
+
+  // ##################################################################
+  // # END: Media.Stream
+  // ##################################################################
+
+  // ##################################################################
   // # BEGIN: Media.Text
   // ##################################################################
 

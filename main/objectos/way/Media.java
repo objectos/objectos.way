@@ -76,6 +76,23 @@ public sealed interface Media {
   }
 
   /**
+   * A media entity which writes out its data as a sequence of bytes.
+   */
+  public non-sealed interface Stream extends Media {
+
+    /**
+     * Writes the contents of this entity to the specified output stream.
+     *
+     * @param out
+     *        where to write bytes into.
+     *
+     * @throws IOException if an I/O error occurs
+     */
+    void writeTo(OutputStream out) throws IOException;
+
+  }
+
+  /**
    * A media entity which writes out its data as a sequence of characters.
    */
   public non-sealed interface Text extends Media {
@@ -99,23 +116,6 @@ public sealed interface Media {
      * @throws IOException if an I/O error occurs
      */
     void writeTo(Appendable out) throws IOException;
-
-  }
-
-  /**
-   * A media entity which writes out its data as a sequence of bytes.
-   */
-  public non-sealed interface Stream extends Media {
-
-    /**
-     * Writes the contents of this entity to the specified output stream.
-     *
-     * @param out
-     *        where to write bytes into.
-     *
-     * @throws IOException if an I/O error occurs
-     */
-    void writeTo(OutputStream out) throws IOException;
 
   }
 

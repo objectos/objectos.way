@@ -3126,6 +3126,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
       case Path file -> executeWriteFile(file);
 
+      case Media.Stream stream -> executeWriteStream(stream);
+
       case Media.Text text -> executeWriteText(text);
 
       case Object o -> executeWriteUnknown(o);
@@ -3173,8 +3175,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
    * errors.
    */
   @SuppressWarnings("serial")
-  private static final class ThisAppendableIOException extends RuntimeException {
-    public ThisAppendableIOException(IOException cause) {
+  private static final class ThisChunkedIOException extends RuntimeException {
+    public ThisChunkedIOException(IOException cause) {
       super(cause);
     }
 
@@ -3184,34 +3186,75 @@ final class HttpExchange implements Http.Exchange, Closeable {
     }
   }
 
-  private class Chunked implements Appendable, Closeable {
-    private final Charset charset;
+  private class ChunkedOutputStream extends OutputStream {
 
-    public Chunked(Charset charset) {
-      this.charset = charset;
+    private boolean closed;
 
-      beginChunk();
+    public ChunkedOutputStream() {
+      writeChunkBegin();
     }
 
     @Override
     public final void close() {
-      endChunk();
+      if (!closed) {
+        writeChunkClose();
 
-      final int available;
-      available = buffer.length - bufferIndex;
+        closed = true;
+      }
+    }
 
-      final int trailerLength;
-      trailerLength = CHUNKED_TRAILER.length;
+    @Override
+    public final void flush() {
+      // noop
+    }
 
-      if (available < trailerLength) {
-        throw new UnsupportedOperationException("Implement me");
+    @Override
+    public final void write(int b) {
+      int available;
+      available = writeChunkAvailable();
+
+      if (available <= 0) {
+        writeChunkEnd();
+
+        writeChunkFlush();
+
+        writeChunkReset();
+
+        writeChunkBegin();
       }
 
-      System.arraycopy(CHUNKED_TRAILER, 0, buffer, bufferIndex, trailerLength);
+      buffer[bufferIndex++] = (byte) b;
+    }
 
-      bufferIndex += trailerLength;
+  }
 
-      flush();
+  private byte executeWriteStream(Media.Stream stream) {
+    try (ChunkedOutputStream out = new ChunkedOutputStream()) {
+      stream.writeTo(out);
+
+      return stateNext;
+    } catch (ThisChunkedIOException e) {
+      final IOException cause;
+      cause = e.getCause();
+
+      return clientWriteIOException(cause);
+    } catch (Throwable t) {
+      return internalServerError(t);
+    }
+  }
+
+  private class ChunkedAppendable implements Appendable, Closeable {
+    private final Charset charset;
+
+    public ChunkedAppendable(Charset charset) {
+      this.charset = charset;
+
+      writeChunkBegin();
+    }
+
+    @Override
+    public final void close() {
+      writeChunkClose();
     }
 
     @Override
@@ -3276,18 +3319,18 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
       while (remaining > 0) {
         int available;
-        available = available();
+        available = writeChunkAvailable();
 
         if (available <= 0) {
-          endChunk();
+          writeChunkEnd();
 
-          flush();
+          writeChunkFlush();
 
-          resetChunk();
+          writeChunkReset();
 
-          beginChunk();
+          writeChunkBegin();
 
-          available = available();
+          available = writeChunkAvailable();
         }
 
         final int bytesToCopy;
@@ -3303,112 +3346,17 @@ final class HttpExchange implements Http.Exchange, Closeable {
       }
     }
 
-    private int available() {
-      return buffer.length - (bufferIndex + CHUNKED_TRAILER.length + 2);
-    }
-
-    private void flush() {
-      try {
-        outputStream.write(buffer, 0, bufferIndex);
-      } catch (IOException e) {
-        throw new ThisAppendableIOException(e);
-      }
-    }
-
-    private void beginChunk() {
-      // mark where the chunk begins
-      mark = markEnd = bufferIndex;
-
-      // save space for (max) chunk-size
-      markEnd += maxHexDigits();
-
-      // save space for CRLF
-      markEnd += 2;
-
-      // marks where chunk data begins
-      bufferIndex = markEnd;
-
-      final int available;
-      available = buffer.length - markEnd;
-
-      if (available <= 0) {
-        throw new UnsupportedOperationException("Implement me");
-      }
-    }
-
-    private int maxHexDigits() {
-      // buffer may get to this max size
-      int maxDataLength;
-      maxDataLength = maxBufferSize;
-
-      // buffer must hold the last zero chunk
-      maxDataLength -= CHUNKED_TRAILER.length;
-
-      // must hold the CRLF after data
-      maxDataLength -= 2;
-
-      // must hold the CRLF after chunk-size
-      maxDataLength -= 2;
-
-      // must hold at least 1 digit of the chunk-size
-      maxDataLength -= 1;
-
-      return Http.requiredHexDigits(maxDataLength);
-    }
-
-    private void endChunk() {
-      // writes out the chunk size
-      int sizeIndex;
-      sizeIndex = markEnd - 1;
-
-      buffer[sizeIndex--] = Bytes.LF;
-      buffer[sizeIndex--] = Bytes.CR;
-
-      int chunkLength;
-      chunkLength = bufferIndex - markEnd;
-
-      final int hexDigits;
-      hexDigits = Http.requiredHexDigits(chunkLength);
-
-      for (int i = 0; i < hexDigits; i++) {
-        final int nibble;
-        nibble = chunkLength & 0xF;
-
-        final byte digit;
-        digit = Http.hexDigit(nibble);
-
-        buffer[sizeIndex--] = digit;
-
-        chunkLength >>= 4;
-      }
-
-      // left pad the size with '0' digits
-
-      while (sizeIndex >= mark) {
-        buffer[sizeIndex--] = '0';
-      }
-
-      // buffer the data CRLF
-
-      buffer[bufferIndex++] = Bytes.CR;
-      buffer[bufferIndex++] = Bytes.LF;
-    }
-
-    private void resetChunk() {
-      mark = markEnd = bufferIndex = 0;
-    }
-
   }
 
   private byte executeWriteText(Media.Text text) {
     final Charset charset;
     charset = text.charset();
 
-    try (Chunked out = new Chunked(charset)) {
+    try (ChunkedAppendable out = new ChunkedAppendable(charset)) {
       text.writeTo(out);
 
       return stateNext;
-    } catch (ThisAppendableIOException e) {
+    } catch (ThisChunkedIOException e) {
       final IOException cause;
       cause = e.getCause();
 
@@ -3416,6 +3364,121 @@ final class HttpExchange implements Http.Exchange, Closeable {
     } catch (Throwable t) {
       return internalServerError(t);
     }
+  }
+
+  private int writeChunkAvailable() {
+    return buffer.length - (bufferIndex + CHUNKED_TRAILER.length + 2);
+  }
+
+  private void writeChunkBegin() {
+    // mark where the chunk begins
+    mark = markEnd = bufferIndex;
+
+    // save space for (max) chunk-size
+    markEnd += writeChunkMaxHexDigits();
+
+    // save space for CRLF
+    markEnd += 2;
+
+    // marks where chunk data begins
+    bufferIndex = markEnd;
+
+    final int available;
+    available = buffer.length - markEnd;
+
+    if (available <= 0) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+  }
+
+  private int writeChunkMaxHexDigits() {
+    // buffer may get to this max size
+    int maxDataLength;
+    maxDataLength = maxBufferSize;
+
+    // buffer must hold the last zero chunk
+    maxDataLength -= CHUNKED_TRAILER.length;
+
+    // must hold the CRLF after data
+    maxDataLength -= 2;
+
+    // must hold the CRLF after chunk-size
+    maxDataLength -= 2;
+
+    // must hold at least 1 digit of the chunk-size
+    maxDataLength -= 1;
+
+    return Http.requiredHexDigits(maxDataLength);
+  }
+
+  private void writeChunkEnd() {
+    // writes out the chunk size
+    int sizeIndex;
+    sizeIndex = markEnd - 1;
+
+    buffer[sizeIndex--] = Bytes.LF;
+    buffer[sizeIndex--] = Bytes.CR;
+
+    int chunkLength;
+    chunkLength = bufferIndex - markEnd;
+
+    final int hexDigits;
+    hexDigits = Http.requiredHexDigits(chunkLength);
+
+    for (int i = 0; i < hexDigits; i++) {
+      final int nibble;
+      nibble = chunkLength & 0xF;
+
+      final byte digit;
+      digit = Http.hexDigit(nibble);
+
+      buffer[sizeIndex--] = digit;
+
+      chunkLength >>= 4;
+    }
+
+    // left pad the size with '0' digits
+
+    while (sizeIndex >= mark) {
+      buffer[sizeIndex--] = '0';
+    }
+
+    // buffer the data CRLF
+
+    buffer[bufferIndex++] = Bytes.CR;
+    buffer[bufferIndex++] = Bytes.LF;
+  }
+
+  private void writeChunkFlush() {
+    try {
+      outputStream.write(buffer, 0, bufferIndex);
+    } catch (IOException e) {
+      throw new ThisChunkedIOException(e);
+    }
+  }
+
+  private void writeChunkClose() {
+    writeChunkEnd();
+
+    final int available;
+    available = buffer.length - bufferIndex;
+
+    final int trailerLength;
+    trailerLength = CHUNKED_TRAILER.length;
+
+    if (available < trailerLength) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    System.arraycopy(CHUNKED_TRAILER, 0, buffer, bufferIndex, trailerLength);
+
+    bufferIndex += trailerLength;
+
+    writeChunkFlush();
+  }
+
+  private void writeChunkReset() {
+    mark = markEnd = bufferIndex = 0;
   }
 
   private byte executeWriteUnknown(Object o) {
@@ -4029,12 +4092,13 @@ final class HttpExchange implements Http.Exchange, Closeable {
   }
 
   @Override
-  public final void ok(Media.Text media) {
+  public final void ok(Media.Stream media) {
     respond(Http.Status.OK, media);
   }
 
-  public final void ok(Media.Stream media) {
-    throw new UnsupportedOperationException();
+  @Override
+  public final void ok(Media.Text media) {
+    respond(Http.Status.OK, media);
   }
 
   // 3xx responses
@@ -4281,6 +4345,32 @@ final class HttpExchange implements Http.Exchange, Closeable {
     sendUnchecked(bytes);
   }
 
+  private void respond(Http.Status status, Media.Stream media) {
+    checkRequest();
+
+    // early media validation
+    final String contentType;
+    contentType = media.contentType();
+
+    if (contentType == null) {
+      throw new IllegalArgumentException("The specified Media.Text provided a null content-type");
+    }
+
+    statusUnchecked(status);
+
+    sendMediaStream(contentType, media);
+  }
+
+  private void sendMediaStream(String contentType, Media.Stream media) {
+    headerUnchecked(Http.HeaderName.DATE, now());
+
+    headerUnchecked(Http.HeaderName.CONTENT_TYPE, contentType);
+
+    headerUnchecked(Http.HeaderName.TRANSFER_ENCODING, "chunked");
+
+    sendUnchecked(media);
+  }
+
   private void respond(Http.Status status, Media.Text media) {
     checkRequest();
 
@@ -4461,6 +4551,22 @@ final class HttpExchange implements Http.Exchange, Closeable {
       } else {
         body(bytes);
       }
+
+    }
+
+    state = $COMMIT;
+  }
+
+  private void sendUnchecked(Media.Stream stream) {
+    terminate();
+
+    if (method == Http.Method.HEAD) {
+
+      body(null);
+
+    } else {
+
+      body(stream);
 
     }
 
