@@ -20,7 +20,7 @@ import java.time.Clock;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-final class AppNoteSinkOfConsoleConfig implements App.NoteSink.OfConsole.Config {
+final class AppNoteSinkOfConsoleBuilder implements App.NoteSink.OfConsole.Options {
 
   private Clock clock = Clock.systemDefaultZone();
 
@@ -29,18 +29,18 @@ final class AppNoteSinkOfConsoleConfig implements App.NoteSink.OfConsole.Config 
   private PrintStream target = System.out;
 
   @Override
-  public final void clock(Clock clock) {
-    this.clock = Objects.requireNonNull(clock, "clock == null");
+  public final void clock(Clock value) {
+    this.clock = Objects.requireNonNull(value, "value == null");
   }
 
   @Override
-  public final void filter(Predicate<Note> filter) {
-    this.filter = Objects.requireNonNull(filter, "filter == null");
+  public final void filter(Predicate<Note> value) {
+    this.filter = Objects.requireNonNull(value, "value == null");
   }
 
   @Override
-  public final void target(PrintStream target) {
-    this.target = Objects.requireNonNull(target, "target == null");
+  public final void target(PrintStream value) {
+    this.target = Objects.requireNonNull(value, "value == null");
   }
 
   final AppNoteSinkOfConsole build() {

@@ -17,7 +17,7 @@ package objectos.way;
 
 import java.util.Objects;
 
-final class AppShutdownHookConfig implements App.ShutdownHook.Config {
+final class AppShutdownHookBuilder implements App.ShutdownHook.Options {
 
   Note.Sink noteSink = Note.NoOpSink.INSTANCE;
 

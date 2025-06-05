@@ -34,7 +34,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
-final class AppReloaderConfig implements App.Reloader.Config {
+final class AppReloaderBuilder implements App.Reloader.Options {
 
   final List<Path> directories = Util.createList();
 

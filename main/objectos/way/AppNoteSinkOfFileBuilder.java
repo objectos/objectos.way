@@ -27,7 +27,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-final class AppNoteSinkOfFileConfig implements App.NoteSink.OfFile.Config {
+final class AppNoteSinkOfFileBuilder implements App.NoteSink.OfFile.Options {
 
   private final int bufferSize = 4096;
 
@@ -38,8 +38,8 @@ final class AppNoteSinkOfFileConfig implements App.NoteSink.OfFile.Config {
   private Path file;
 
   @Override
-  public final void clock(Clock clock) {
-    this.clock = Objects.requireNonNull(clock, "clock == null");
+  public final void clock(Clock value) {
+    this.clock = Objects.requireNonNull(value, "value == null");
   }
 
   @Override
@@ -48,8 +48,8 @@ final class AppNoteSinkOfFileConfig implements App.NoteSink.OfFile.Config {
   }
 
   @Override
-  public final void filter(Predicate<Note> filter) {
-    this.filter = Objects.requireNonNull(filter, "filter == null");
+  public final void filter(Predicate<Note> value) {
+    this.filter = Objects.requireNonNull(value, "value == null");
   }
 
   final AppNoteSinkOfFile build() throws IOException {

@@ -51,12 +51,12 @@ sealed abstract class AppNoteSink implements App.NoteSink permits AppNoteSinkOfC
   }
 
   @Override
-  public final void filter(Predicate<Note> filter) {
-    Objects.requireNonNull(filter, "filter == null");
+  public final void filter(Predicate<Note> value) {
+    Objects.requireNonNull(value, "value == null");
 
     w.lock();
     try {
-      this.filter = filter;
+      filter = value;
     } finally {
       w.unlock();
     }

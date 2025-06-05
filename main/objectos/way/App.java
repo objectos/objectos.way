@@ -36,8 +36,14 @@ import objectos.way.App.NoteSink.OfFile;
  */
 public final class App {
 
+  /**
+   * Base class for bootstrapping and starting an Objectos Way application.
+   */
   public static abstract class Bootstrap extends AppBootstrap {
 
+    /**
+     * Sole constructor.
+     */
     protected Bootstrap() {
     }
 
@@ -105,12 +111,21 @@ public final class App {
 
   }
 
+  /**
+   * Prevents the annotated class from being reloaded by {@link Reloader}.
+   */
   @Retention(RetentionPolicy.CLASS)
   @Target(ElementType.TYPE)
   public @interface DoNotReload {}
 
+  /**
+   * Allows for registering and obtaining application-level object instances.
+   */
   public sealed interface Injector permits AppInjector, Injector.Builder {
 
+    /**
+     * A builder for {@code Injector} instances.
+     */
     sealed interface Builder extends Injector permits AppInjectorBuilder {
 
       static Builder create() {
@@ -119,18 +134,70 @@ public final class App {
 
       Injector build();
 
+      /**
+       * Registers the specified instance to the specified class.
+       *
+       * @param <T>
+       *        the instance type
+       *
+       * @param type
+       *        the class to which the value is to be associated
+       * @param instance
+       *        the value to be associated with the specified key
+       */
       <T> void putInstance(Class<T> type, T instance);
 
+      /**
+       * Registers the specified instance to the specified key.
+       *
+       * @param <T>
+       *        the instance type
+       *
+       * @param key
+       *        the key to which the value is to be associated
+       * @param instance
+       *        the value to be associated with the specified key
+       */
       <T> void putInstance(Key<T> key, T instance);
 
     }
 
+    /**
+     * Returns the instance associated to the specified class, or throws if no
+     * instance was associated.
+     *
+     * @param <T>
+     *        the instance type
+     *
+     * @param type
+     *        the class object
+     *
+     * @return the instance associated to the specified class
+     */
     <T> T getInstance(Class<T> type);
 
+    /**
+     * Returns the instance associated to the specified key object, or throws if
+     * no instance was associated.
+     *
+     * @param <T>
+     *        the instance type
+     *
+     * @param key
+     *        the key object
+     *
+     * @return the instance associated to the specified key
+     */
     <T> T getInstance(Key<T> key);
 
   }
 
+  /**
+   * A typed key for registering and obtaining instances to and from an
+   * injector.
+   *
+   * @param <T> the type of the object to be registered to an injector
+   */
   public sealed interface Key<T> permits AppKey {
 
     static <T> Key<T> create(Class<T> type, Object value) {
@@ -142,55 +209,116 @@ public final class App {
 
   }
 
-  private sealed interface NoteSinkConfig {
+  private sealed interface NoteSinkOptions {
 
-    void clock(Clock clock);
+    /**
+     * Sets the clock to the specified value.
+     *
+     * @param value
+     *        a clock instance
+     */
+    void clock(Clock value);
 
-    void filter(Predicate<Note> filter);
+    /**
+     * Sets the note filter to the specified value.
+     *
+     * @param value
+     *        a note predicate
+     */
+    void filter(Predicate<Note> value);
 
   }
 
+  /**
+   * Provides note sink implementations.
+   */
   public sealed interface NoteSink extends Note.Sink permits OfConsole, OfFile, AppNoteSink {
 
+    /**
+     * A note sink implementation that sends notes to the console.
+     */
     sealed interface OfConsole extends NoteSink permits AppNoteSinkOfConsole {
 
-      sealed interface Config extends NoteSinkConfig permits AppNoteSinkOfConsoleConfig {
+      /**
+       * Configures the creation of a console note sink.
+       */
+      sealed interface Options extends NoteSinkOptions permits AppNoteSinkOfConsoleBuilder {
 
-        void target(PrintStream target);
+        /**
+         * Sets the note target to the specified value.
+         *
+         * @param value
+         *        a {@code PrintStream} instance
+         */
+        void target(PrintStream value);
 
       }
 
+      /**
+       * Creates a console note sink with the default options.
+       */
       static OfConsole create() {
-        AppNoteSinkOfConsoleConfig builder;
-        builder = new AppNoteSinkOfConsoleConfig();
+        AppNoteSinkOfConsoleBuilder builder;
+        builder = new AppNoteSinkOfConsoleBuilder();
 
         return builder.build();
       }
 
-      static OfConsole create(Consumer<Config> config) {
-        AppNoteSinkOfConsoleConfig builder;
-        builder = new AppNoteSinkOfConsoleConfig();
+      /**
+       * Creates a console note sink with the specified options.
+       *
+       * @param options
+       *        allows for setting the options
+       *
+       * @return a newly created console note sink instance
+       */
+      static OfConsole create(Consumer<Options> options) {
+        AppNoteSinkOfConsoleBuilder builder;
+        builder = new AppNoteSinkOfConsoleBuilder();
 
-        config.accept(builder);
+        options.accept(builder);
 
         return builder.build();
       }
 
     }
 
+    /**
+     * A note sink implementation that writes notes to a regular file.
+     */
     sealed interface OfFile extends NoteSink, Closeable permits AppNoteSinkOfFile {
 
-      sealed interface Config extends NoteSinkConfig permits AppNoteSinkOfFileConfig {
+      /**
+       * Configures the creation of a file note sink.
+       */
+      sealed interface Options extends NoteSinkOptions permits AppNoteSinkOfFileBuilder {
 
+        /**
+         * Sets the target file to the specified value.
+         *
+         * @param value
+         *        the path instance representing the file
+         */
         void file(Path value);
 
       }
 
-      static OfFile create(Consumer<Config> config) throws IOException {
-        AppNoteSinkOfFileConfig builder;
-        builder = new AppNoteSinkOfFileConfig();
+      /**
+       * Creates a file note sink with the specified options.
+       *
+       * @param options
+       *        allows for setting the options
+       *
+       * @return a newly created file note sink instance
+       *
+       * @throws IOException
+       *         if an I/O error occurs
+       */
+      static OfFile create(Consumer<Options> options) throws IOException {
+        AppNoteSinkOfFileBuilder builder;
+        builder = new AppNoteSinkOfFileBuilder();
 
-        config.accept(builder);
+        options.accept(builder);
 
         return builder.build();
       }
@@ -199,7 +327,13 @@ public final class App {
 
     }
 
-    void filter(Predicate<Note> filter);
+    /**
+     * Sets the note filter to the specified value.
+     *
+     * @param value
+     *        a note predicate
+     */
+    void filter(Predicate<Note> value);
 
   }
 
@@ -246,7 +380,7 @@ public final class App {
     /**
      * Configures the creation of an {@code App.Reloader}.
      */
-    public sealed interface Config permits AppReloaderConfig {
+    public sealed interface Options permits AppReloaderBuilder {
 
       /**
        * Reloads the module when changes are observed in the specified
@@ -333,21 +467,21 @@ public final class App {
     }
 
     /**
-     * Creates a new reloader with the specified configuration.
+     * Creates a new reloader with the specified options.
      *
-     * @param config
-     *        configuration options of this new reloader instance
+     * @param options
+     *        allows for setting the options
      *
      * @return a newly created reloader instance
      *
      * @throws IOException
      *         if an I/O error occurs
      */
-    static Reloader create(Consumer<Config> config) throws IOException {
-      AppReloaderConfig builder;
-      builder = new AppReloaderConfig();
+    static Reloader create(Consumer<Options> options) throws IOException {
+      AppReloaderBuilder builder;
+      builder = new AppReloaderBuilder();
 
-      config.accept(builder);
+      options.accept(builder);
 
       return builder.build();
     }
@@ -391,7 +525,7 @@ public final class App {
     /**
      * Configure the creation of a {@code ShutdownHook}.
      */
-    public sealed interface Config permits AppShutdownHookConfig {
+    public sealed interface Options permits AppShutdownHookBuilder {
 
       /**
        * Sets the note sink to the specified value.
@@ -408,6 +542,11 @@ public final class App {
      */
     public sealed interface Notes permits AppShutdownHook.Notes {
 
+      /**
+       * Creates a new {@code Notes} instance.
+       *
+       * @return a newly created {@code Notes} instance
+       */
       static Notes create() {
         return AppShutdownHook.Notes.get();
       }
@@ -425,18 +564,18 @@ public final class App {
     }
 
     /**
-     * Creates a new shutdown hook with the specified configuration.
+     * Creates a new shutdown hook with the specified options.
      *
-     * @param config
-     *        configuration options of the new instance
+     * @param options
+     *        allows for setting the options
      *
      * @return a newly created shutdown hook instance
      */
-    static ShutdownHook create(Consumer<Config> config) {
-      AppShutdownHookConfig builder;
-      builder = new AppShutdownHookConfig();
+    static ShutdownHook create(Consumer<Options> options) {
+      AppShutdownHookBuilder builder;
+      builder = new AppShutdownHookBuilder();
 
-      config.accept(builder);
+      options.accept(builder);
 
       return builder.build();
     }
@@ -475,39 +614,6 @@ public final class App {
      *        the thread instance to be interrupted
      */
     void registerThread(Thread thread);
-
-  }
-
-  @SuppressWarnings("unused")
-  private static class ReloadingHandlerFactory1 {
-
-    private final App.Reloader reloader;
-
-    private final Class<?> type1;
-
-    private final Object value1;
-
-    public ReloadingHandlerFactory1(Reloader reloader, Class<?> type1, Object value1) {
-      this.reloader = reloader;
-      this.type1 = type1;
-      this.value1 = value1;
-    }
-
-    //    public final Http.Handler create() throws Exception {
-    //      Class<?> handlerClass;
-    //      handlerClass = reloader.get();
-    //
-    //      Constructor<?> constructor;
-    //      constructor = handlerClass.getConstructor(type1);
-    //
-    //      Object instance;
-    //      instance = constructor.newInstance(value1);
-    //
-    //      Http.Module module;
-    //      module = (Http.Module) instance;
-    //
-    //      return module.compile();
-    //    }
 
   }
 

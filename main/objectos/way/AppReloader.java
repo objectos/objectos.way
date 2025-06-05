@@ -96,7 +96,7 @@ final class AppReloader implements App.Reloader {
 
   private final boolean serviceClose;
 
-  AppReloader(AppReloaderConfig builder) {
+  AppReloader(AppReloaderBuilder builder) {
     notes = builder.notes;
 
     noteSink = builder.noteSink;

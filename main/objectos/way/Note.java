@@ -182,6 +182,8 @@ public sealed interface Note {
 
   /**
    * A note that takes one {@code long}, and one object reference arguments.
+   *
+   * @param <T1> the type of the object reference argument
    */
   sealed interface Long1Ref1<T1> extends Note permits NoteImpl {
     /**
@@ -226,6 +228,9 @@ public sealed interface Note {
 
   /**
    * A note that takes one {@code long}, and two object references arguments.
+   *
+   * @param <T1> the type of the first object reference argument
+   * @param <T2> the type of the second object reference argument
    */
   sealed interface Long1Ref2<T1, T2> extends Note permits NoteImpl {
     /**
