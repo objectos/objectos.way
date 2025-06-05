@@ -22,6 +22,8 @@ import java.io.UncheckedIOException;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.util.EnumSet;
+import java.util.Iterator;
 import java.util.function.Consumer;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
@@ -93,21 +95,18 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
   \r
   """.length();
 
+  @SuppressWarnings("exports")
   @DataProvider
-  public Media[] okMediaStreamText01Provider() {
-    return new Media[] {
-        // stream
-        Y.mediaStreamOfLength(64, Y.MediaStreamKind.BYTE),
-        Y.mediaStreamOfLength(64, Y.MediaStreamKind.FULL_BYTE_ARRAY),
-        Y.mediaStreamOfLength(64, Y.MediaStreamKind.PARTIAL_BYTE_ARRAY),
-
-        // text
-        Y.mediaTextOfLength(64)
-    };
+  public Iterator<Y.MediaKind> mediaKindProvider() {
+    return EnumSet.allOf(Y.MediaKind.class).iterator();
   }
 
-  @Test(description = "ok(Media.Stream/Text): 1 chunk", dataProvider = "okMediaStreamText01Provider")
-  public void okMediaStreamText01(Media media) {
+  @SuppressWarnings("exports")
+  @Test(description = "ok(Media.Stream/Text): 1 chunk", dataProvider = "mediaKindProvider")
+  public void okMediaStreamText01(Y.MediaKind kind) {
+    final Media media;
+    media = Y.mediaOfLength(64, kind);
+
     assertEquals(
         media.toString(),
 
@@ -117,20 +116,10 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
         """
     );
 
-    final Consumer<HttpExchange> handler;
-
-    if (media instanceof Media.Stream stream) {
-      handler = http -> http.ok(stream);
-    } else if (media instanceof Media.Text text) {
-      handler = http -> http.ok(text);
-    } else {
-      throw new UnsupportedOperationException();
-    }
-
     get(
         256, 256,
 
-        handler,
+        ok(media),
 
         """
         HTTP/1.1 200 OK\r
@@ -147,13 +136,14 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
     );
   }
 
-  @Test(description = "ok(Media.Text): 1 chunk + zero-pad")
-  public void okMediaText02() {
-    final Media.Text text;
-    text = Y.mediaTextOfLength(15);
+  @SuppressWarnings("exports")
+  @Test(description = "ok(Media.Text): 1 chunk + zero-pad", dataProvider = "mediaKindProvider")
+  public void okMediaText02(Y.MediaKind kind) {
+    final Media media;
+    media = Y.mediaOfLength(15, kind);
 
     assertEquals(
-        text.toString(),
+        media.toString(),
 
         """
         123456789012345\
@@ -163,7 +153,7 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
     get(
         256, 256,
 
-        http -> http.ok(text),
+        ok(media),
 
         """
         HTTP/1.1 200 OK\r
@@ -179,16 +169,17 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
     );
   }
 
-  @Test(description = "ok(Media.Text): 1 chunk + exact size")
-  public void okMediaText03() {
+  @SuppressWarnings("exports")
+  @Test(description = "ok(Media.Text): 1 chunk + exact size", dataProvider = "mediaKindProvider")
+  public void okMediaText03(Y.MediaKind kind) {
     // 4 = chunk-size + CR + LF
     // 2 = CR + LF (after data)
     // 5 = 0 + CR + LF + CR + LF
-    final Media.Text text;
-    text = Y.mediaTextOfLength(256 - TEXT_RESP_LEN - 4 - 2 - 5);
+    final Media media;
+    media = Y.mediaOfLength(256 - TEXT_RESP_LEN - 4 - 2 - 5, kind);
 
     final String body;
-    body = text.toString();
+    body = media.toString();
 
     assertEquals(
         body,
@@ -220,7 +211,7 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
     get(
         256, 256,
 
-        http -> http.ok(text),
+        ok(media),
 
         expectedResponse
     );
@@ -228,65 +219,17 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
     assertEquals(expectedResponse.length(), 256);
   }
 
-  @Test(description = "ok(Media.Text): 1 chunk + resize")
-  public void okMediaText04() {
+  @SuppressWarnings("exports")
+  @Test(description = "ok(Media.Text): 2 chunks", dataProvider = "mediaKindProvider")
+  public void okMediaText04(Y.MediaKind kind) {
     // 4 = chunk-size + CR + LF
     // 2 = CR + LF (after data)
     // 5 = 0 + CR + LF + CR + LF
-    final Media.Text text;
-    text = Y.mediaTextOfLength(256 + 1 - TEXT_RESP_LEN - 4 - 2 - 5);
+    final Media media;
+    media = Y.mediaOfLength(256 + 1 - TEXT_RESP_LEN - 4 - 2 - 5, kind);
 
     final String body;
-    body = text.toString();
-
-    assertEquals(
-        body,
-
-        """
-        .................................................
-        .................................................
-        123456789012345678901\
-        """
-    );
-
-    assertEquals(Integer.toHexString(body.length()), "79");
-
-    final String expectedResponse;
-    expectedResponse = """
-    HTTP/1.1 200 OK\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    Content-Type: text/plain; charset=utf-8\r
-    Transfer-Encoding: chunked\r
-    \r
-    079\r
-    .................................................
-    .................................................
-    123456789012345678901\r
-    0\r
-    \r
-    """;
-
-    get(
-        256, 512,
-
-        http -> http.ok(text),
-
-        expectedResponse
-    );
-
-    assertEquals(expectedResponse.length(), 256 + 1 + 1);
-  }
-
-  @Test(description = "ok(Media.Text): 2 chunks")
-  public void okMediaText05() {
-    // 4 = chunk-size + CR + LF
-    // 2 = CR + LF (after data)
-    // 5 = 0 + CR + LF + CR + LF
-    final Media.Text text;
-    text = Y.mediaTextOfLength(256 + 1 - TEXT_RESP_LEN - 4 - 2 - 5);
-
-    final String body;
-    body = text.toString();
+    body = media.toString();
 
     assertEquals(
         body,
@@ -320,10 +263,20 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
     get(
         256, 256,
 
-        http -> http.ok(text),
+        ok(media),
 
         expectedResponse
     );
+  }
+
+  private Consumer<HttpExchange> ok(Media media) {
+    if (media instanceof Media.Stream stream) {
+      return http -> http.ok(stream);
+    } else if (media instanceof Media.Text text) {
+      return http -> http.ok(text);
+    } else {
+      throw new UnsupportedOperationException();
+    }
   }
 
   // 3xx responses

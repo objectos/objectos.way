@@ -59,7 +59,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
       Note.Long1Ref2<Path, Http.Exchange> bodyFile,
 
-      Note.Long2 writeResize,
       Note.Long1Ref1<IOException> writeIOException,
 
       Note.Long1Ref2<ClientError, Http.Exchange> badRequest,
@@ -88,7 +87,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
           Note.Long1Ref2.create(s, "RBF", Note.INFO),
 
-          Note.Long2.create(s, "WSZ", Note.INFO),
           Note.Long1Ref1.create(s, "WEX", Note.ERROR),
 
           Note.Long1Ref2.create(s, "400", Note.INFO),
@@ -3293,30 +3291,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
       int remaining;
       remaining = bytes.length;
 
-      // max index to write all data
-      final int requiredIndex;
-      requiredIndex = bufferIndex + remaining;
-
-      // max index to write all data + CRLF + trailer
-      final int maxRequiredIndex;
-      maxRequiredIndex = requiredIndex + CHUNKED_TRAILER.length + 2;
-
-      if (maxRequiredIndex >= buffer.length && buffer.length < maxBufferSize) {
-
-        // buffer resize
-
-        final int length;
-        length = powerOfTwo(maxRequiredIndex + 1);
-
-        final int newLength;
-        newLength = Math.min(length, maxBufferSize);
-
-        buffer = Arrays.copyOf(buffer, newLength);
-
-        noteSink.send(NOTES.writeResize, id, newLength);
-
-      }
-
       while (remaining > 0) {
         int available;
         available = writeChunkAvailable();
@@ -4759,26 +4733,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
     int remaining;
     remaining = bytes.length;
-
-    // max index to write all data
-    final int requiredIndex;
-    requiredIndex = bufferIndex + remaining;
-
-    if (requiredIndex >= buffer.length && buffer.length < maxBufferSize) {
-
-      // buffer resize
-
-      final int length;
-      length = powerOfTwo(requiredIndex + 1);
-
-      final int newLength;
-      newLength = Math.min(length, maxBufferSize);
-
-      buffer = Arrays.copyOf(buffer, newLength);
-
-      noteSink.send(NOTES.writeResize, id, newLength);
-
-    }
 
     while (remaining > 0) {
       int available;

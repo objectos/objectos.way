@@ -572,6 +572,30 @@ final class Y {
   // # BEGIN: Media.Stream
   // ##################################################################
 
+  public enum MediaKind {
+
+    BYTE,
+
+    FULL_BYTE_ARRAY,
+
+    PARTIAL_BYTE_ARRAY,
+
+    TEXT;
+
+  }
+
+  public static Media mediaOfLength(int length, MediaKind kind) {
+    return switch (kind) {
+      case BYTE -> mediaStreamOfLength(length, MediaStreamKind.BYTE);
+
+      case FULL_BYTE_ARRAY -> mediaStreamOfLength(length, MediaStreamKind.FULL_BYTE_ARRAY);
+
+      case PARTIAL_BYTE_ARRAY -> mediaStreamOfLength(length, MediaStreamKind.PARTIAL_BYTE_ARRAY);
+
+      case TEXT -> mediaTextOfLength(length);
+    };
+  }
+
   public enum MediaStreamKind {
 
     BYTE,
