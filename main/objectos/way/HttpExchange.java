@@ -3315,7 +3315,10 @@ final class HttpExchange implements Http.Exchange, Closeable {
   }
 
   private int writeChunkAvailable() {
-    return buffer.length - (bufferIndex + CHUNKED_TRAILER.length + 2);
+    //return buffer.length - (bufferIndex + CHUNKED_TRAILER.length + 2);
+
+    // it should be large enough to hold the CRLF
+    return buffer.length - (bufferIndex + 2);
   }
 
   private void writeChunkBegin() {
@@ -3352,12 +3355,12 @@ final class HttpExchange implements Http.Exchange, Closeable {
   }
 
   private int writeChunkMaxHexDigits() {
-    // buffer may get to this max size
+    // buffer will not increase its size during writes
     int maxDataLength;
-    maxDataLength = maxBufferSize;
+    maxDataLength = buffer.length;
 
     // buffer must hold the last zero chunk
-    maxDataLength -= CHUNKED_TRAILER.length;
+    // maxDataLength -= CHUNKED_TRAILER.length;
 
     // must hold the CRLF after data
     maxDataLength -= 2;
@@ -3463,7 +3466,12 @@ final class HttpExchange implements Http.Exchange, Closeable {
     trailerLength = CHUNKED_TRAILER.length;
 
     if (available < trailerLength) {
-      throw new UnsupportedOperationException("Implement me");
+      // trailer won't fit in buffer
+      // => flush
+
+      writeChunkFlush();
+
+      writeChunkReset();
     }
 
     System.arraycopy(CHUNKED_TRAILER, 0, buffer, bufferIndex, trailerLength);
@@ -4253,7 +4261,12 @@ final class HttpExchange implements Http.Exchange, Closeable {
         }
 
         case Media.Stream stream -> {
-          throw new UnsupportedOperationException();
+          final String contentType;
+          contentType = stream.contentType();
+
+          checkMediaStream(contentType);
+
+          sendMediaStream(contentType, stream);
         }
       }
     }
@@ -4348,13 +4361,17 @@ final class HttpExchange implements Http.Exchange, Closeable {
     final String contentType;
     contentType = media.contentType();
 
-    if (contentType == null) {
-      throw new IllegalArgumentException("The specified Media.Text provided a null content-type");
-    }
+    checkMediaStream(contentType);
 
     statusUnchecked(status);
 
     sendMediaStream(contentType, media);
+  }
+
+  private void checkMediaStream(String contentType) {
+    if (contentType == null) {
+      throw new IllegalArgumentException("The specified Media.Text provided a null content-type");
+    }
   }
 
   private void sendMediaStream(String contentType, Media.Stream media) {

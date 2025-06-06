@@ -170,7 +170,7 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
   }
 
   @SuppressWarnings("exports")
-  @Test(description = "ok(Media.Stream/Text): 1 chunk + exact size", dataProvider = "mediaKindProvider")
+  @Test(description = "ok(Media.Stream/Text): 1 chunk, headers + body fit in buffer exactly", dataProvider = "mediaKindProvider")
   public void okMediaStreamText03(Y.MediaKind kind) {
     // 4 = chunk-size + CR + LF
     // 2 = CR + LF (after data)
@@ -222,26 +222,24 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
   @SuppressWarnings("exports")
   @Test(description = "ok(Media.Stream/Text): 2 chunks", dataProvider = "mediaKindProvider")
   public void okMediaStreamText04(Y.MediaKind kind) {
+    int mediaLength;
+    mediaLength = 0;
+
+    // buffer length
+    mediaLength += 256;
+    // unencoded data + headers fit in buffer
+    mediaLength -= TEXT_RESP_LEN;
     // 4 = chunk-size + CR + LF
+    mediaLength -= 4;
     // 2 = CR + LF (after data)
+    mediaLength -= 2;
     // 5 = 0 + CR + LF + CR + LF
+    mediaLength -= 5;
+    // 1byte + trailer will cause a flush
+    mediaLength += 1 + 5;
+
     final Media media;
-    media = Y.mediaOf(kind, 256 + 1 - TEXT_RESP_LEN - 4 - 2 - 5);
-
-    final String body;
-    body = media.toString();
-
-    assertEquals(
-        body,
-
-        """
-        .................................................
-        .................................................
-        123456789012345678901\
-        """
-    );
-
-    assertEquals(Integer.toHexString(body.length()), "79");
+    media = Y.mediaOf(kind, mediaLength);
 
     final String expectedResponse;
     expectedResponse = """
@@ -250,12 +248,12 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
     Content-Type: text/plain; charset=utf-8\r
     Transfer-Encoding: chunked\r
     \r
-    78\r
+    7D\r
     .................................................
     .................................................
-    12345678901234567890\r
+    1234567890123456789012345\r
     01\r
-    1\r
+    6\r
     0\r
     \r
     """;
@@ -267,6 +265,21 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
 
         expectedResponse
     );
+
+    final String body;
+    body = media.toString();
+
+    assertEquals(
+        body,
+
+        """
+        .................................................
+        .................................................
+        12345678901234567890123456\
+        """
+    );
+
+    assertEquals(Integer.toHexString(body.length()), "7e");
   }
 
   @SuppressWarnings("exports")
@@ -302,6 +315,84 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
 
         expectedResponse
     );
+
+    final String body;
+    body = media.toString();
+
+    assertEquals(
+        body,
+
+        """
+        .................................................
+        .................................................
+        .................................................
+        .................................................
+        1234567890123456789012345678901234567890\
+        """
+    );
+
+    assertEquals(Integer.toHexString(body.length()), "f0");
+  }
+
+  @SuppressWarnings("exports")
+  @Test(description = "ok(Media.Stream/Text): trailer chunk does not fit in buffer", dataProvider = "mediaKindProvider")
+  public void okMediaStreamText06(Y.MediaKind kind) {
+    int mediaLength;
+    mediaLength = 0;
+
+    // buffer length
+    mediaLength += 256;
+    // unencoded data + headers fit in buffer
+    mediaLength -= TEXT_RESP_LEN;
+    // 4 = chunk-size + CR + LF
+    mediaLength -= 4;
+    // 2 = CR + LF (after data)
+    mediaLength -= 2;
+    // 5 = 0 + CR + LF + CR + LF
+    mediaLength -= 5;
+    // 1 extra byte so trailer won't fit in buffer
+    mediaLength += 1;
+
+    final Media media;
+    media = Y.mediaOf(kind, mediaLength);
+
+    final String expectedResponse;
+    expectedResponse = """
+    HTTP/1.1 200 OK\r
+    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+    Content-Type: text/plain; charset=utf-8\r
+    Transfer-Encoding: chunked\r
+    \r
+    79\r
+    .................................................
+    .................................................
+    123456789012345678901\r
+    0\r
+    \r
+    """;
+
+    get(
+        256, 256,
+
+        ok(media),
+
+        expectedResponse
+    );
+
+    final String body;
+    body = media.toString();
+
+    assertEquals(
+        body,
+
+        """
+        .................................................
+        .................................................
+        123456789012345678901\
+        """
+    );
+
+    assertEquals(Integer.toHexString(body.length()), "79");
   }
 
   private String contentTypeToFillResponseHeaders(int buffer) {
@@ -651,10 +742,11 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
     );
   }
 
-  @Test
-  public void respond04() {
+  @SuppressWarnings("exports")
+  @Test(dataProvider = "mediaKindProvider")
+  public void respond04(Y.MediaKind kind) {
     final Media media;
-    media = Y.mediaTextOf(4);
+    media = Y.mediaOf(kind, 4);
 
     get(
         http -> http.respond(resp -> {
@@ -672,7 +764,7 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
         Content-Type: text/plain; charset=utf-8\r
         Transfer-Encoding: chunked\r
         \r
-        004\r
+        04\r
         1234\r
         0\r
         \r
