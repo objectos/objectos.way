@@ -27,7 +27,7 @@ public class YMediaTextTest {
   """)
   public void testCase01() {
     test(
-        Y.mediaTextOfLength(32),
+        Y.mediaTextOf(32),
 
         """
         12345678901234567890123456789012"""
@@ -39,7 +39,7 @@ public class YMediaTextTest {
   """)
   public void testCase02() {
     test(
-        Y.mediaTextOfLength(82),
+        Y.mediaTextOf(82),
 
         """
         .................................................

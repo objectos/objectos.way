@@ -311,7 +311,7 @@ public class HttpHandlerTest {
   @Test
   public void ok02() {
     final Media.Text text;
-    text = Y.mediaTextOfLength(64);
+    text = Y.mediaTextOf(64);
 
     final Http.Handler handler;
     handler = Http.Handler.ok(text);

@@ -3319,24 +3319,36 @@ final class HttpExchange implements Http.Exchange, Closeable {
   }
 
   private void writeChunkBegin() {
-    // mark where the chunk begins
-    mark = markEnd = bufferIndex;
+    // chunkSizeLength = bytes required to store the chunk-size + CRLF
+    int chunkSizeLength;
+    chunkSizeLength = 0;
 
     // save space for (max) chunk-size
-    markEnd += writeChunkMaxHexDigits();
+    chunkSizeLength += writeChunkMaxHexDigits();
 
     // save space for CRLF
-    markEnd += 2;
-
-    // marks where chunk data begins
-    bufferIndex = markEnd;
+    chunkSizeLength += 2;
 
     final int available;
-    available = buffer.length - markEnd;
+    available = buffer.length - bufferIndex;
 
-    if (available <= 0) {
-      throw new UnsupportedOperationException("Implement me");
+    if (available <= chunkSizeLength) {
+      // remaining buffer is not enough for the chunk size
+      // => flush
+
+      writeChunkFlush();
+
+      writeChunkReset();
     }
+
+    // mark = where the chunk begins
+    // -> the index of the first digit of the chunk size
+    mark = bufferIndex;
+
+    // markEnd = where the chunk data begins
+    markEnd = mark + chunkSizeLength;
+
+    bufferIndex = markEnd;
   }
 
   private int writeChunkMaxHexDigits() {

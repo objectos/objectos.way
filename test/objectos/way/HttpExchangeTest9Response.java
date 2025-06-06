@@ -105,7 +105,7 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
   @Test(description = "ok(Media.Stream/Text): 1 chunk", dataProvider = "mediaKindProvider")
   public void okMediaStreamText01(Y.MediaKind kind) {
     final Media media;
-    media = Y.mediaOfLength(64, kind);
+    media = Y.mediaOf(kind, 64);
 
     assertEquals(
         media.toString(),
@@ -137,10 +137,10 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
   }
 
   @SuppressWarnings("exports")
-  @Test(description = "ok(Media.Text): 1 chunk + zero-pad", dataProvider = "mediaKindProvider")
-  public void okMediaText02(Y.MediaKind kind) {
+  @Test(description = "ok(Media.Stream/Text): 1 chunk + zero-pad", dataProvider = "mediaKindProvider")
+  public void okMediaStreamText02(Y.MediaKind kind) {
     final Media media;
-    media = Y.mediaOfLength(15, kind);
+    media = Y.mediaOf(kind, 15);
 
     assertEquals(
         media.toString(),
@@ -170,13 +170,13 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
   }
 
   @SuppressWarnings("exports")
-  @Test(description = "ok(Media.Text): 1 chunk + exact size", dataProvider = "mediaKindProvider")
-  public void okMediaText03(Y.MediaKind kind) {
+  @Test(description = "ok(Media.Stream/Text): 1 chunk + exact size", dataProvider = "mediaKindProvider")
+  public void okMediaStreamText03(Y.MediaKind kind) {
     // 4 = chunk-size + CR + LF
     // 2 = CR + LF (after data)
     // 5 = 0 + CR + LF + CR + LF
     final Media media;
-    media = Y.mediaOfLength(256 - TEXT_RESP_LEN - 4 - 2 - 5, kind);
+    media = Y.mediaOf(kind, 256 - TEXT_RESP_LEN - 4 - 2 - 5);
 
     final String body;
     body = media.toString();
@@ -220,13 +220,13 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
   }
 
   @SuppressWarnings("exports")
-  @Test(description = "ok(Media.Text): 2 chunks", dataProvider = "mediaKindProvider")
-  public void okMediaText04(Y.MediaKind kind) {
+  @Test(description = "ok(Media.Stream/Text): 2 chunks", dataProvider = "mediaKindProvider")
+  public void okMediaStreamText04(Y.MediaKind kind) {
     // 4 = chunk-size + CR + LF
     // 2 = CR + LF (after data)
     // 5 = 0 + CR + LF + CR + LF
     final Media media;
-    media = Y.mediaOfLength(256 + 1 - TEXT_RESP_LEN - 4 - 2 - 5, kind);
+    media = Y.mediaOf(kind, 256 + 1 - TEXT_RESP_LEN - 4 - 2 - 5);
 
     final String body;
     body = media.toString();
@@ -267,6 +267,61 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
 
         expectedResponse
     );
+  }
+
+  @SuppressWarnings("exports")
+  @Test(description = "ok(Media.Stream/Text): response headers fill up the buffer", dataProvider = "mediaKindProvider")
+  public void okMediaStreamText05(Y.MediaKind kind) {
+    final String contentType;
+    contentType = contentTypeToFillResponseHeaders(256);
+
+    final Media media;
+    media = Y.mediaOf(kind, 240, contentType);
+
+    final String expectedResponse;
+    expectedResponse = """
+    HTTP/1.1 200 OK\r
+    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+    Content-Type: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\r
+    Transfer-Encoding: chunked\r
+    \r
+    F0\r
+    .................................................
+    .................................................
+    .................................................
+    .................................................
+    1234567890123456789012345678901234567890\r
+    0\r
+    \r
+    """;
+
+    get(
+        256, 256,
+
+        ok(media),
+
+        expectedResponse
+    );
+  }
+
+  private String contentTypeToFillResponseHeaders(int buffer) {
+    final String blankContentType;
+    blankContentType = """
+    HTTP/1.1 200 OK\r
+    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+    Content-Type: \r
+    Transfer-Encoding: chunked\r
+    \r
+    """;
+
+    final int contentTypeLength;
+    contentTypeLength = buffer - blankContentType.length();
+
+    if (contentTypeLength <= 0) {
+      throw new IllegalArgumentException("Buffer is too small: buffer=" + buffer);
+    }
+
+    return "X".repeat(contentTypeLength);
   }
 
   private Consumer<HttpExchange> ok(Media media) {
@@ -599,7 +654,7 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
   @Test
   public void respond04() {
     final Media media;
-    media = Y.mediaTextOfLength(4);
+    media = Y.mediaTextOf(4);
 
     get(
         http -> http.respond(resp -> {

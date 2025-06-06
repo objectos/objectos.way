@@ -569,7 +569,7 @@ final class Y {
   // ##################################################################
 
   // ##################################################################
-  // # BEGIN: Media.Stream
+  // # BEGIN: Media
   // ##################################################################
 
   public enum MediaKind {
@@ -584,17 +584,37 @@ final class Y {
 
   }
 
-  public static Media mediaOfLength(int length, MediaKind kind) {
+  public static Media mediaOf(MediaKind kind, int length) {
     return switch (kind) {
-      case BYTE -> mediaStreamOfLength(length, MediaStreamKind.BYTE);
+      case BYTE -> mediaStreamOf(MediaStreamKind.BYTE, length);
 
-      case FULL_BYTE_ARRAY -> mediaStreamOfLength(length, MediaStreamKind.FULL_BYTE_ARRAY);
+      case FULL_BYTE_ARRAY -> mediaStreamOf(MediaStreamKind.FULL_BYTE_ARRAY, length);
 
-      case PARTIAL_BYTE_ARRAY -> mediaStreamOfLength(length, MediaStreamKind.PARTIAL_BYTE_ARRAY);
+      case PARTIAL_BYTE_ARRAY -> mediaStreamOf(MediaStreamKind.PARTIAL_BYTE_ARRAY, length);
 
-      case TEXT -> mediaTextOfLength(length);
+      case TEXT -> mediaTextOf(length);
     };
   }
+
+  public static Media mediaOf(MediaKind kind, int length, String contentType) {
+    return switch (kind) {
+      case BYTE -> mediaStreamOf(MediaStreamKind.BYTE, length, contentType);
+
+      case FULL_BYTE_ARRAY -> mediaStreamOf(MediaStreamKind.FULL_BYTE_ARRAY, length, contentType);
+
+      case PARTIAL_BYTE_ARRAY -> mediaStreamOf(MediaStreamKind.PARTIAL_BYTE_ARRAY, length, contentType);
+
+      case TEXT -> mediaTextOf(length, contentType);
+    };
+  }
+
+  // ##################################################################
+  // # END: Media
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Media.Stream
+  // ##################################################################
 
   public enum MediaStreamKind {
 
@@ -608,14 +628,14 @@ final class Y {
 
   private static final class ThisMediaStream implements Media.Stream {
 
-    private final ThisMediaText text;
-
     private final MediaStreamKind kind;
 
-    ThisMediaStream(int length, MediaStreamKind kind) {
-      text = new ThisMediaText(length);
+    private final ThisMediaText text;
 
+    ThisMediaStream(MediaStreamKind kind, ThisMediaText text) {
       this.kind = kind;
+
+      this.text = text;
     }
 
     @Override
@@ -667,8 +687,12 @@ final class Y {
 
   }
 
-  public static Media.Stream mediaStreamOfLength(int length, MediaStreamKind kind) {
-    return new ThisMediaStream(length, kind);
+  public static Media.Stream mediaStreamOf(MediaStreamKind kind, int length) {
+    return new ThisMediaStream(kind, new ThisMediaText(length));
+  }
+
+  public static Media.Stream mediaStreamOf(MediaStreamKind kind, int length, String contentType) {
+    return new ThisMediaStream(kind, new ThisMediaText(length, contentType));
   }
 
   // ##################################################################
@@ -687,13 +711,23 @@ final class Y {
 
     private final int length;
 
+    private final String contentType;
+
     ThisMediaText(int length) {
       this.length = length;
+
+      contentType = "text/plain; charset=utf-8";
+    }
+
+    ThisMediaText(int length, String contentType) {
+      this.length = length;
+
+      this.contentType = contentType;
     }
 
     @Override
     public final String contentType() {
-      return "text/plain; charset=utf-8";
+      return contentType;
     }
 
     @Override
@@ -745,8 +779,12 @@ final class Y {
 
   }
 
-  public static Media.Text mediaTextOfLength(int length) {
+  public static Media.Text mediaTextOf(int length) {
     return new ThisMediaText(length);
+  }
+
+  public static Media.Text mediaTextOf(int length, String contentType) {
+    return new ThisMediaText(length, contentType);
   }
 
   // ##################################################################
