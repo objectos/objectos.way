@@ -235,6 +235,7 @@ final class TestableFormatter implements Testable.Formatter {
     }
   }
 
+  @Override
   public final void cell(LocalDate value) {
     cellSeparatorIfRequired();
 
@@ -336,7 +337,9 @@ final class TestableFormatter implements Testable.Formatter {
 
         case Integer i -> cell(i.intValue(), intValue(values[idx++]));
 
-        case LocalDateTime dt -> cell(dt);
+        case LocalDate ld -> cell(ld);
+
+        case LocalDateTime ldt -> cell(ldt);
 
         case String s -> cell(s, intValue(values[idx++]));
 

@@ -17,6 +17,8 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import org.testng.annotations.Test;
 
 public class TestableFormatterTest {
@@ -58,6 +60,31 @@ public class TestableFormatterTest {
     abcde | abcd  | abc   | ab    | a
     foo   | bar   | null  | maz   | qux
           | test  | test  | test  | test
+    """);
+  }
+
+  @Test(description = "date cells")
+  public void cell02() {
+    Testable.Formatter w;
+    w = Testable.Formatter.create();
+
+    w.heading1("Date cells");
+
+    // happy path
+    w.cell(LocalDate.of(2025, 1, 1));
+    w.cell(LocalDateTime.of(2025, 1, 1, 13, 0));
+    w.newLine();
+
+    // null value
+    w.cell((LocalDate) null);
+    w.cell((LocalDateTime) null);
+    w.newLine();
+
+    assertEquals(w.toString(), """
+    # Date cells
+
+    2025-01-01 | 2025-01-01 13:00:00
+    ---------- | ---------- --------
     """);
   }
 

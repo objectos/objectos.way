@@ -15,6 +15,7 @@
  */
 package objectos.way;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -46,10 +47,26 @@ public interface Testable {
 
     void cell(int value, int width);
 
+    /**
+     * Formats the specified date as a table cell with the default
+     * {@code yyyy-MM-dd} format.
+     *
+     * @param value
+     *        the date value of the cell; may be {@code null}.
+     */
+    void cell(LocalDate value);
+
+    /**
+     * Formats the specified date-time as a table cell with the default
+     * {@code yyyy-MM-dd HH:mm:ss} format.
+     *
+     * @param value
+     *        the date-time value of the cell; may be {@code null}.
+     */
     void cell(LocalDateTime value);
 
     /**
-     * Formats the specified value as a table cell with the specified fixed
+     * Formats the specified string as a table cell with the specified fixed
      * width.
      *
      * @param value
