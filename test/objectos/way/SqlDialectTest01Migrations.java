@@ -17,6 +17,7 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import java.lang.invoke.MethodHandles;
 import java.sql.BatchUpdateException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -449,7 +450,7 @@ public class SqlDialectTest01Migrations extends SqlDialectTest00Support {
     record History(int rank, String description, String installedBy, LocalDateTime installedOn, boolean success)
         implements Testable {
 
-      static Sql.Mapper<History> MAPPER = Sql.createRecordMapper(History.class);
+      static Sql.Mapper<History> MAPPER = Sql.Mapper.ofRecord(MethodHandles.lookup(), History.class);
 
       @Override
       public void formatTestable(Testable.Formatter t) {

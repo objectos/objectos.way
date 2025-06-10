@@ -15,13 +15,10 @@
  */
 package objectos.way;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.RecordComponent;
+import java.lang.invoke.MethodHandles;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.Clock;
@@ -238,9 +235,33 @@ public final class Sql {
 
   /**
    * Maps a row from a {@code ResultSet} to an object of type {@code T}.
+   *
+   * @param <T>
+   *        the type of the mapped object
    */
   @FunctionalInterface
   public interface Mapper<T> {
+
+    /**
+     * Creates a {@code Mapper} for the specified record type.
+     *
+     * @param <R>
+     *        the record type
+     *
+     * @param lookup
+     *        a lookup object having access to the record's canonical
+     *        constructor
+     * @param recordType
+     *        the record's class object
+     *
+     * @return a newly created {@code Mapper} instance
+     */
+    static <R extends Record> Mapper<R> ofRecord(MethodHandles.Lookup lookup, Class<R> recordType) {
+      Objects.requireNonNull(lookup, "lookup == null");
+      Objects.requireNonNull(recordType, "recordType == null");
+
+      return SqlMapperOfRecord.of(lookup, recordType);
+    }
 
     /**
      * Implementations must not invoke the {@code next()} method on the
@@ -748,14 +769,6 @@ public final class Sql {
   }
 
   /**
-   * Creates a {@link Sql.Mapper} for the specified record type.
-   */
-  public static <R extends Record>
-      Mapper<R> createRecordMapper(Class<R> recordType) {
-    return RecordMapper.of(recordType);
-  }
-
-  /**
    * Undoes all changes made in the specified transaction and closes its
    * underlying database connection.
    *
@@ -839,96 +852,6 @@ public final class Sql {
       keys = Util.growIfNecessary(keys, requiredIndex);
 
       keys[requiredIndex] = value;
-    }
-
-  }
-
-  private static final class RecordMapper<R extends Record> implements Mapper<R> {
-
-    private final Class<?>[] types;
-
-    private final Constructor<R> constructor;
-
-    private final Object[] values;
-
-    RecordMapper(Class<?>[] types, Constructor<R> constructor) {
-      this.types = types;
-
-      this.constructor = constructor;
-
-      this.values = new Object[types.length];
-    }
-
-    static <R extends Record> RecordMapper<R> of(Class<R> recordType) {
-      RecordComponent[] components; // early implicit null-check
-      components = recordType.getRecordComponents();
-
-      Class<?>[] types;
-      types = new Class<?>[components.length];
-
-      for (int idx = 0; idx < components.length; idx++) {
-        RecordComponent component;
-        component = components[idx];
-
-        types[idx] = component.getType();
-      }
-
-      Constructor<R> constructor;
-
-      try {
-        constructor = recordType.getDeclaredConstructor(types);
-
-        if (!constructor.canAccess(null)) {
-          constructor.setAccessible(true);
-        }
-      } catch (NoSuchMethodException | SecurityException e) {
-        throw new Sql.MappingException("Failed to obtain record canonical constructor", e);
-      }
-
-      return new RecordMapper<R>(types, constructor);
-    }
-
-    @Override
-    public final R map(ResultSet rs, int startingIndex) throws SQLException {
-      try {
-        for (int idx = 0, len = types.length; idx < len; idx++) {
-          Class<?> type;
-          type = types[idx];
-
-          Object value;
-
-          if (type == int.class) {
-            value = rs.getInt(idx + 1);
-          }
-
-          else if (type == boolean.class) {
-            value = rs.getBoolean(idx + 1);
-          }
-
-          else {
-            value = rs.getObject(idx + 1, type);
-          }
-
-          values[idx] = value;
-        }
-
-        return constructor.newInstance(values);
-      } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-        throw new Sql.MappingException("Failed to create record instance", e);
-      }
-    }
-
-    @SuppressWarnings("unused")
-    final void checkColumnCount(ResultSet rs) throws SQLException {
-      ResultSetMetaData meta;
-      meta = rs.getMetaData();
-
-      int columnCount;
-      columnCount = meta.getColumnCount();
-
-      if (columnCount != types.length) {
-        throw new Sql.MappingException("Query returned " + columnCount + " columns but record has only " + types.length + " components");
-      }
     }
 
   }
