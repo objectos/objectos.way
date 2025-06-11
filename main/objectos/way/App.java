@@ -49,6 +49,9 @@ public final class App {
 
     /**
      * Starts the application with the specified command line arguments.
+     *
+     * @param args
+     *        the command line arguments
      */
     public final void start(String[] args) {
       parseArgs(args);
@@ -346,12 +349,16 @@ public final class App {
 
     /**
      * An option configuration.
+     *
+     * @param <T> the option type
      */
     public sealed interface Configuration<T> {}
 
     /**
      * Converts the raw command line argument into the an instance of the target
      * option type.
+     *
+     * @param <T> the option type
      */
     @FunctionalInterface
     public interface Converter<T> {
@@ -360,6 +367,11 @@ public final class App {
 
     }
 
+    /**
+     * Returns the option value.
+     *
+     * @return the option value
+     */
     T get();
 
   }

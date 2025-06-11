@@ -19,6 +19,7 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -29,7 +30,7 @@ abstract class AppBootstrap {
   private List<String> messages;
 
   protected final <C extends Collection<? super E>, E> App.Option.Converter<C> ofCollection(Supplier<C> supplier, App.Option.Converter<? extends E> converter) {
-    Check.notNull(converter, "conveter == null");
+    Objects.requireNonNull(converter, "converter == null");
 
     C collection;
     collection = supplier.get();
@@ -51,22 +52,52 @@ abstract class AppBootstrap {
 
   }
 
+  /**
+   * Option converter: from a string to an {@link Integer} object.
+   *
+   * @return an option converter
+   */
   protected final App.Option.Converter<Integer> ofInteger() {
     return Integer::parseInt;
   }
 
+  /**
+   * Option converter: from a string to a {@link Path} object.
+   *
+   * @return an option converter
+   */
   protected final App.Option.Converter<Path> ofPath() {
     return Path::of;
   }
 
+  /**
+   * Option converter: from a string to the string itself. In other words, it is
+   * a no-op; it simply defines the option value type.
+   *
+   * @return an option converter
+   */
   protected final App.Option.Converter<String> ofString() {
     return s -> s;
   }
 
+  /**
+   * Creates a new command line option.
+   *
+   * @param <T> the option type
+   *
+   * @param name
+   *        the option name
+   * @param converter
+   *        converts from a string to an instance of the option type
+   * @param configurations
+   *        configures the created option
+   * 
+   * @return a newly created command line option
+   */
   @SafeVarargs
   protected final <T> App.Option<T> option(String name, App.Option.Converter<T> converter, App.Option.Configuration<T>... configurations) {
-    Check.notNull(name, "name == null");
-    Check.notNull(converter, "converter == null");
+    Objects.requireNonNull(name, "name == null");
+    Objects.requireNonNull(converter, "converter == null");
 
     AppOption<T> option;
     option = new AppOption<>(name, converter);
@@ -88,6 +119,8 @@ abstract class AppBootstrap {
    * Option config: sets the option to be required. In other words, the
    * bootstrap will fail if a valid value for the option is not supplied.
    *
+   * @param <T> the option type
+   *
    * @return an option configuration
    */
   protected final <T> App.Option.Configuration<T> required() {
@@ -99,9 +132,22 @@ abstract class AppBootstrap {
     };
   }
 
+  /**
+   * Option config: validates an option with the specified {@code predicate}.
+   * The specified reason phrase will be used to inform of a failed validation.
+   *
+   * @param <T> the option type
+   * @param predicate
+   *        it should evaluate to {@code true} when the option is valid; and
+   *        {@code false} otherwise
+   * @param reasonPhrase
+   *        the message to inform of a failed validation
+   *
+   * @return an option configuration
+   */
   protected final <T> App.Option.Configuration<T> withValidator(Predicate<T> predicate, String reasonPhrase) {
-    Check.notNull(predicate, "predicate == null");
-    Check.notNull(reasonPhrase, "reasonPhrase == null");
+    Objects.requireNonNull(predicate, "predicate == null");
+    Objects.requireNonNull(reasonPhrase, "reasonPhrase == null");
 
     return new App.OptionConfiguration<T>() {
       @Override
@@ -114,12 +160,13 @@ abstract class AppBootstrap {
   /**
    * Option config: sets the initial value of the option to the specified value.
    *
+   * @param <T> the option type
    * @param value the option initial value
    *
    * @return an option configuration
    */
   protected final <T> App.Option.Configuration<T> withValue(T value) {
-    Check.notNull(value, "value == null");
+    Objects.requireNonNull(value, "value == null");
 
     return new App.OptionConfiguration<T>() {
       @Override
