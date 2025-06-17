@@ -29,6 +29,7 @@ final class HttpHeaderName implements Http.HeaderName {
   static final HttpHeaderName ACCEPT_ENCODING = B.std("Accept-Encoding", HttpHeaderType.REQUEST);
   static final HttpHeaderName ALLOW = B.std("Allow", HttpHeaderType.RESPONSE);
   static final HttpHeaderName CONNECTION = B.std("Connection", HttpHeaderType.BOTH);
+  static final HttpHeaderName CONTENT_DISPOSITION = B.std("Content-Disposition", HttpHeaderType.RESPONSE);
   static final HttpHeaderName CONTENT_LENGTH = B.std("Content-Length", HttpHeaderType.BOTH);
   static final HttpHeaderName CONTENT_TYPE = B.std("Content-Type", HttpHeaderType.BOTH);
   static final HttpHeaderName COOKIE = B.std("Cookie", HttpHeaderType.REQUEST);

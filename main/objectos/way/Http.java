@@ -19,6 +19,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.time.Clock;
 import java.time.Duration;
@@ -679,6 +680,11 @@ public final class Http {
     HeaderName CONNECTION = HttpHeaderName.CONNECTION;
 
     /**
+     * The {@code Content-Disposition} header name.
+     */
+    HeaderName CONTENT_DISPOSITION = HttpHeaderName.CONTENT_DISPOSITION;
+
+    /**
      * The {@code Content-Length} header name.
      */
     HeaderName CONTENT_LENGTH = HttpHeaderName.CONTENT_LENGTH;
@@ -767,6 +773,60 @@ public final class Http {
      * @return this name in lower case.
      */
     String lowerCase();
+
+  }
+
+  /**
+   * Configures the creation of a header value.
+   */
+  public sealed interface HeaderValueBuilder permits HttpExchange.HttpHeaderValueBuilder {
+
+    /**
+     * Begins the next value.
+     *
+     * @param value
+     *        the header value
+     *
+     * @throws IllegalArgumentException
+     *         if the value contains invalid characters
+     */
+    void value(String value);
+
+    /**
+     * Appends a parameter to the current header value with the specified
+     * name and value.
+     *
+     * @param name
+     *        the parameter name
+     * @param value
+     *        the parameter value
+     *
+     * @throws IllegalArgumentException
+     *         if either the name or the value contains invalid characters
+     *
+     * @throws IllegalStateException
+     *         if there's no current value
+     */
+    void param(String name, String value);
+
+    /**
+     * Appends a parameter to the current header value with the specified
+     * name, charset and value.
+     *
+     * @param name
+     *        the parameter name
+     * @param charset
+     *        the charset to use when encoding the value
+     * @param value
+     *        the parameter value
+     *
+     * @throws IllegalArgumentException
+     *         if either the name or the value contains invalid characters
+     *
+     * @throws IllegalStateException
+     *         if there's no current value
+     */
+    void param(String name, Charset charset, String value);
 
   }
 
@@ -1086,7 +1146,7 @@ public final class Http {
   }
 
   /**
-   * Represents a HTTP response message.
+   * Represents an HTTP response message.
    */
   public sealed interface Response permits HttpExchange.ResponseHandle {
 
@@ -1119,6 +1179,35 @@ public final class Http {
      *        the header value
      */
     void header(HeaderName name, String value);
+
+    /**
+     * Writes an HTTP response header field with the specified name and
+     * value.
+     *
+     * <p>
+     * Example usage:
+     * <pre>{@code
+     * response.header(Http.HeaderName.CONTENT_DISPOSITION, builder -> {
+     *   builder.value("attachment");
+     *   builder.param("filename", "document.pdf");
+     *   builder.param("filename*", StandardCharsets.UTF_8, "document.pdf");
+     * });
+     * }</pre>
+     *
+     * <p>
+     * Which would result in the following header field written out to the
+     * response:
+     *
+     * <pre>{@code
+     * Content-Disposition: attachment; filename=document.pdf; filename*=UTF-8''document.pdf
+     * }</pre>
+     *
+     * @param name
+     *        the header name
+     * @param builder
+     *        a handle for creating the header field value
+     */
+    void header(HeaderName name, Consumer<? super HeaderValueBuilder> builder);
 
     /**
      * Returns the server's current time.
@@ -1492,19 +1581,17 @@ public final class Http {
   }
 
   /**
-   * Represents an HTTP Set-Cookie response header as defined in RFC 6265.
-   * Provides a builder pattern through the {@link Config} interface to
-   * construct
-   * cookie instances with various attributes.
+   * Represents an HTTP {@code Set-Cookie} response header as defined in RFC
+   * 6265.
    *
    * <p>
    * Example usage:
    * <pre>{@code
-   * SetCookie cookie = SetCookie.create(config -> {
-   *     config.name("session");
-   *     config.value("abc123");
-   *     config.httpOnly();
-   *     config.sameSite(SetCookie.SameSite.STRICT);
+   * Http.SetCookie cookie = Http.SetCookie.create(opts -> {
+   *     opts.name("session");
+   *     opts.value("abc123");
+   *     opts.httpOnly();
+   *     opts.sameSite(Http.SetCookie.SameSite.STRICT);
    * });
    * }</pre>
    *
@@ -1609,18 +1696,18 @@ public final class Http {
     /**
      * Creates a new {@link SetCookie} instance using a configuration consumer.
      *
-     * @param config a consumer that configures the cookie attributes
+     * @param options a consumer that configures the cookie attributes
      *
      * @return a new SetCookie instance
      *
      * @throws IllegalArgumentException if required attributes (name and value)
      *         are not set
      */
-    static SetCookie create(Consumer<Config> config) {
+    static SetCookie create(Consumer<Config> options) {
       final HttpSetCookieConfig builder;
       builder = new HttpSetCookieConfig();
 
-      config.accept(builder);
+      options.accept(builder);
 
       return builder.build();
     }

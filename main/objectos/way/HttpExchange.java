@@ -4210,6 +4210,11 @@ final class HttpExchange implements Http.Exchange, Closeable {
     }
 
     @Override
+    public final void header(Http.HeaderName name, Consumer<? super Http.HeaderValueBuilder> builder) {
+      HttpExchange.this.header(name, builder);
+    }
+
+    @Override
     public final String now() {
       return HttpExchange.this.now();
     }
@@ -4432,6 +4437,73 @@ final class HttpExchange implements Http.Exchange, Closeable {
     checkResponseHeaders();
     Objects.requireNonNull(name, "name == null");
     Objects.requireNonNull(value, "value == null");
+
+    headerUnchecked(name, value);
+  }
+
+  final class HttpHeaderValueBuilder implements Http.HeaderValueBuilder {
+
+    @Override
+    public final void value(String value) {
+      checkValue(value);
+
+      stringBuilder.append(value);
+    }
+
+    @Override
+    public final void param(String name, String value) {
+      checkName(name);
+      checkValue(value);
+
+      stringBuilder.append(';');
+      stringBuilder.append(' ');
+      stringBuilder.append(name);
+      stringBuilder.append('=');
+      stringBuilder.append(value);
+    }
+
+    @Override
+    public final void param(String name, Charset charset, String value) {
+      checkName(name);
+
+      final String charsetName;
+      charsetName = charset.name();
+
+      checkValue(value);
+
+      stringBuilder.append(';');
+      stringBuilder.append(' ');
+      stringBuilder.append(name);
+      stringBuilder.append('=');
+      stringBuilder.append(charsetName);
+      stringBuilder.append('\'');
+      stringBuilder.append('\'');
+      stringBuilder.append(value);
+    }
+
+    private void checkName(String name) {
+      Objects.requireNonNull(name, "name == null");
+    }
+
+    private void checkValue(String value) {
+      Objects.requireNonNull(value, "value == null");
+    }
+
+  }
+
+  final void header(Http.HeaderName name, Consumer<? super Http.HeaderValueBuilder> builder) {
+    checkResponseHeaders();
+    Objects.requireNonNull(name, "name == null");
+
+    stringBuilder.setLength(0);
+
+    final HttpHeaderValueBuilder valueBuilder;
+    valueBuilder = new HttpHeaderValueBuilder();
+
+    builder.accept(valueBuilder);
+
+    final String value;
+    value = stringBuilder.toString();
 
     headerUnchecked(name, value);
   }

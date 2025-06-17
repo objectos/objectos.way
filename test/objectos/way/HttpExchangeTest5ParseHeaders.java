@@ -139,7 +139,11 @@ public class HttpExchangeTest5ParseHeaders extends HttpExchangeTest {
     }
 
     req.append("\r\n");
-    req.append("123");
+
+    final int contentLength;
+    contentLength = HttpHeaderName.CONTENT_LENGTH.index();
+
+    req.append("x".repeat(contentLength));
 
     Socket socket;
     socket = Y.socket(req.toString());

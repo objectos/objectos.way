@@ -772,6 +772,54 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
     );
   }
 
+  @DataProvider
+  public Object[][] respond05Provider() {
+    return new Object[][] {
+        {
+            Http.HeaderName.CONTENT_DISPOSITION,
+            builder(b -> {
+              b.value("inline");
+            }),
+            "Content-Disposition: inline",
+            "Single value"
+        },
+        {
+            Http.HeaderName.CONTENT_DISPOSITION,
+            builder(b -> {
+              b.value("attachment");
+              b.param("filename", "document.pdf");
+            }),
+            "Content-Disposition: attachment; filename=document.pdf",
+            "Single value + param (unquoted)"
+        }
+    };
+  }
+
+  private Consumer<Http.HeaderValueBuilder> builder(Consumer<Http.HeaderValueBuilder> builder) {
+    return builder;
+  }
+
+  @Test(description = "respond + HeaderValueBuilder: valid", dataProvider = "respond05Provider")
+  public void respond05(Http.HeaderName name, Consumer<? super Http.HeaderValueBuilder> builder, String expected, String description) {
+    get(
+        http -> http.respond(resp -> {
+          resp.status(Http.Status.OK);
+          resp.header(name, builder);
+          resp.media(OK);
+        }),
+
+        """
+        HTTP/1.1 200 OK\r
+        %s\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 3\r
+        \r
+        OK
+        """.formatted(expected)
+    );
+  }
+
   private void empty01(HttpExchange http) {
     http.status(Http.Status.NOT_MODIFIED);
     http.header(Http.HeaderName.DATE, http.now());
