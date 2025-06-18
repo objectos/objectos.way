@@ -66,7 +66,7 @@ public class HttpExchangeTest5ParseHeaders extends HttpExchangeTest {
     );
   }
 
-  private final String tokenChars = "!#$%&'*+-.^`|~ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  private final String tokenChars = Http.tchar();
 
   @Test(description = "name: test all valid characters")
   public void name03() {

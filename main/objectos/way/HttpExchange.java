@@ -4569,14 +4569,18 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
     writeBytes(nameBytes);
 
-    // write out the separator
-    writeBytes(Bytes.COLONSP);
+    if (value.isEmpty()) {
+      writeBytes(Bytes.COLON_BYTES);
+    } else {
+      // write out the separator
+      writeBytes(Bytes.COLONSP);
 
-    // write out the value
-    byte[] valueBytes;
-    valueBytes = value.getBytes(StandardCharsets.US_ASCII);
+      // write out the value
+      byte[] valueBytes;
+      valueBytes = value.getBytes(StandardCharsets.US_ASCII);
 
-    writeBytes(valueBytes);
+      writeBytes(valueBytes);
+    }
 
     writeBytes(Bytes.CRLF);
 

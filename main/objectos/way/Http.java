@@ -2427,6 +2427,10 @@ public final class Http {
     return "!$&'()*+,;=";
   }
 
+  static String tchar() {
+    return "!#$%&'*+-.^`|~ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  }
+
   static String unreserved() {
     return Ascii.alphaUpper() + Ascii.alphaLower() + Ascii.digit() + "-._~";
   }

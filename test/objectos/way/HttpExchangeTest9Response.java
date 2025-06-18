@@ -22,8 +22,10 @@ import java.io.UncheckedIOException;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.function.Consumer;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
@@ -801,6 +803,65 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
 
   @Test(description = "respond + HeaderValueBuilder: valid", dataProvider = "respond05Provider")
   public void respond05(Http.HeaderName name, Consumer<? super Http.HeaderValueBuilder> builder, String expected, String description) {
+    get(
+        http -> http.respond(resp -> {
+          resp.status(Http.Status.OK);
+          resp.header(name, builder);
+          resp.media(OK);
+        }),
+
+        """
+        HTTP/1.1 200 OK\r
+        %s\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 3\r
+        \r
+        OK
+        """.formatted(expected)
+    );
+  }
+
+  public record HeaderValue01(String value, String expected, String description) {}
+
+  @DataProvider
+  public Iterator<HeaderValue01> headerValueBuilder01Provider() {
+    final List<HeaderValue01> list;
+    list = new ArrayList<>();
+
+    list.add(new HeaderValue01("", "ETag:", "Empty string is valid"));
+
+    final String tokenChars;
+    tokenChars = Http.tchar();
+
+    for (int idx = 0, len = tokenChars.length(); idx < len; idx++) {
+      final char c;
+      c = tokenChars.charAt(idx);
+
+      final String s;
+      s = Character.toString(c);
+
+      list.add(new HeaderValue01(s, "ETag: " + s, "Character: " + c));
+    }
+
+    list.add(new HeaderValue01("x y", "ETag: x y", "SPACE allowed if not at the beginning/end"));
+    list.add(new HeaderValue01("x\ty", "ETag: x\ty", "TAB allowed if not at the beginning/end"));
+
+    return list.iterator();
+  }
+
+  @Test(description = "HeaderValueBuilder: 1 value valid", dataProvider = "headerValueBuilder01Provider")
+  public void headerValueBuilder01(HeaderValue01 data) {
+    headerValueBuilder(
+        Http.HeaderName.ETAG,
+
+        builder(builder -> builder.value(data.value)),
+
+        data.expected
+    );
+  }
+
+  private void headerValueBuilder(Http.HeaderName name, Consumer<? super Http.HeaderValueBuilder> builder, String expected) {
     get(
         http -> http.respond(resp -> {
           resp.status(Http.Status.OK);

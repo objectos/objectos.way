@@ -29,6 +29,8 @@ final class Bytes {
 
   public static final byte COLON = ':';
 
+  public static final byte[] COLON_BYTES = {COLON};
+
   public static final byte QUESTION_MARK = '?';
 
   public static final byte SOLIDUS = '/';
