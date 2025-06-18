@@ -920,7 +920,7 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
   }
 
   @DataProvider
-  public Object[][] headerValueBuilderApiProvider() {
+  public Object[][] headerValueBuilderValidProvider() {
     return new Object[][] {
         {
             builder(b -> {
@@ -941,6 +941,49 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
               b.param("filename", "[foo].txt");
             }),
             "Content-Disposition: attachment; filename=\"[foo].txt\""
+        },
+        {
+            builder(b -> {
+              b.value("attachment");
+              b.param("filename", "");
+            }),
+            "Content-Disposition: attachment; filename=\"\""
+        },
+        {
+            builder(b -> {
+              b.value("foo");
+              b.value("bar");
+            }),
+            "Content-Disposition: foo, bar"
+        },
+        {
+            builder(b -> {
+              b.value("foo");
+              b.param("q", "0.9");
+              b.value("bar");
+            }),
+            "Content-Disposition: foo; q=0.9, bar"
+        },
+        {
+            builder(b -> {
+              b.value("attachment");
+              b.paramUtf8("filename*", "document.pdf");
+            }),
+            "Content-Disposition: attachment; filename*=UTF-8''document.pdf"
+        },
+        {
+            builder(b -> {
+              b.value("attachment");
+              b.paramUtf8("filename*", "ação.pdf");
+            }),
+            "Content-Disposition: attachment; filename*=UTF-8''a%C3%A7%C3%A3o.pdf"
+        },
+        {
+            builder(b -> {
+              b.value("attachment");
+              b.paramUtf8("filename*", "");
+            }),
+            "Content-Disposition: attachment; filename*=UTF-8''"
         }
     };
   }
@@ -949,8 +992,8 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
     return builder;
   }
 
-  @Test(dataProvider = "headerValueBuilderApiProvider")
-  public void headerValueBuilderApi(Consumer<? super Http.HeaderValueBuilder> builder, String expected) {
+  @Test(dataProvider = "headerValueBuilderValidProvider")
+  public void headerValueBuilderValid(Consumer<? super Http.HeaderValueBuilder> builder, String expected) {
     get(
         http -> http.respond(resp -> {
           resp.status(Http.Status.OK);
@@ -968,6 +1011,53 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
         OK
         """.formatted(expected)
     );
+  }
+
+  @DataProvider
+  public Object[][] headerValueBuilderInvalidProvider() {
+    return new Object[][] {
+        {builder(builder -> {
+          builder.param("filename", "foo.txt");
+        }), "Cannot add a parameter: there's no current value"},
+
+        {builder(builder -> {
+          builder.paramUtf8("filename*", "foo.txt");
+        }), "Cannot add a parameter: there's no current value"}
+    };
+  }
+
+  @Test(dataProvider = "headerValueBuilderInvalidProvider")
+  public void headerValueBuilderInvalid(Consumer<? super Http.HeaderValueBuilder> builder, String expectedMessage) {
+    exec(test -> {
+      test.bufferSize(256, 512);
+
+      test.xch(xch -> {
+        xch.req("""
+        GET / HTTP/1.1\r
+        Host: Host\r
+        \r
+        """);
+
+        xch.handler(http -> http.respond(resp -> {
+          resp.status(Http.Status.OK);
+
+          try {
+            resp.header(Http.HeaderName.ETAG, builder);
+
+            Assert.fail();
+          } catch (RuntimeException runtime) {
+            final String message;
+            message = runtime.getMessage();
+
+            assertEquals(message, expectedMessage);
+
+            resp.media(OK);
+          }
+        }));
+
+        xch.resp(OK_RESP);
+      });
+    });
   }
 
   private void empty01(HttpExchange http) {

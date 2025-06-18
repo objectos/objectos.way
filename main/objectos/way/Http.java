@@ -19,7 +19,6 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.time.Clock;
 import java.time.Duration;
@@ -811,22 +810,17 @@ public final class Http {
 
     /**
      * Appends a parameter to the current header value with the specified
-     * name, charset and value.
+     * name and value (encoded with UTF-8).
      *
      * @param name
      *        the parameter name
-     * @param charset
-     *        the charset to use when encoding the value
      * @param value
      *        the parameter value
-     *
-     * @throws IllegalArgumentException
-     *         if either the name or the value contains invalid characters
      *
      * @throws IllegalStateException
      *         if there's no current value
      */
-    void param(String name, Charset charset, String value);
+    void paramUtf8(String name, String value);
 
   }
 

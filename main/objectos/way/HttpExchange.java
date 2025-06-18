@@ -4597,6 +4597,10 @@ final class HttpExchange implements Http.Exchange, Closeable {
     public final void value(String value) {
       Objects.requireNonNull(value);
 
+      if (!stringBuilder.isEmpty()) {
+        stringBuilder.append(", ");
+      }
+
       stringBuilder.append(value);
     }
 
@@ -4607,10 +4611,20 @@ final class HttpExchange implements Http.Exchange, Closeable {
       final int len; // early implicit null-check
       len = value.length();
 
+      if (stringBuilder.isEmpty()) {
+        throw new IllegalStateException("Cannot add a parameter: there's no current value");
+      }
+
       stringBuilder.append(';');
       stringBuilder.append(' ');
       stringBuilder.append(name);
       stringBuilder.append('=');
+
+      if (len == 0) {
+        stringBuilder.append("\"\"");
+
+        return;
+      }
 
       // we assume value will be unquoted
 
@@ -4665,30 +4679,27 @@ final class HttpExchange implements Http.Exchange, Closeable {
     }
 
     @Override
-    public final void param(String name, Charset charset, String value) {
+    public final void paramUtf8(String name, String value) {
       checkName(name);
+      Objects.requireNonNull(value, "value == null");
 
-      final String charsetName;
-      charsetName = charset.name();
-
-      checkValue(value);
+      if (stringBuilder.isEmpty()) {
+        throw new IllegalStateException("Cannot add a parameter: there's no current value");
+      }
 
       stringBuilder.append(';');
       stringBuilder.append(' ');
       stringBuilder.append(name);
-      stringBuilder.append('=');
-      stringBuilder.append(charsetName);
-      stringBuilder.append('\'');
-      stringBuilder.append('\'');
-      stringBuilder.append(value);
+      stringBuilder.append("=UTF-8''");
+
+      final String encoded;
+      encoded = Http.raw(value);
+
+      stringBuilder.append(encoded);
     }
 
     private void checkName(String name) {
       Objects.requireNonNull(name, "name == null");
-    }
-
-    private void checkValue(String value) {
-      Objects.requireNonNull(value, "value == null");
     }
 
   }
