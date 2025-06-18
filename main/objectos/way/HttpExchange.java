@@ -4544,6 +4544,53 @@ final class HttpExchange implements Http.Exchange, Closeable {
     return new IllegalArgumentException("Invalid character at index " + idx + ": " + c);
   }
 
+  private static final byte[] HEADER_PARAM_VALUE;
+
+  private static final byte HEADER_PARAM_VALUE_INVALID = 0;
+
+  private static final byte HEADER_PARAM_VALUE_UNQUOTED = 1;
+
+  private static final byte HEADER_PARAM_VALUE_QUOTED = 2;
+
+  private static final byte HEADER_PARAM_VALUE_ESCAPE = 3;
+
+  static {
+    final byte[] table;
+    table = new byte[128];
+
+    // parameter-value = ( token / quoted-string )
+
+    final String tchar;
+    tchar = Http.tchar();
+
+    for (int idx = 0, len = tchar.length(); idx < len; idx++) {
+      final char c;
+      c = tchar.charAt(idx);
+
+      table[c] = HEADER_PARAM_VALUE_UNQUOTED;
+    }
+
+    final String vchar;
+    vchar = Http.vchar();
+
+    for (int idx = 0, len = vchar.length(); idx < len; idx++) {
+      final char c;
+      c = vchar.charAt(idx);
+
+      if (table[c] == HEADER_PARAM_VALUE_INVALID) {
+        table[c] = HEADER_PARAM_VALUE_QUOTED;
+      }
+    }
+
+    table[' '] = HEADER_PARAM_VALUE_QUOTED;
+    table['\t'] = HEADER_PARAM_VALUE_QUOTED;
+
+    table['"'] = HEADER_PARAM_VALUE_ESCAPE;
+    table['\\'] = HEADER_PARAM_VALUE_ESCAPE;
+
+    HEADER_PARAM_VALUE = table;
+  }
+
   final class HttpHeaderValueBuilder implements Http.HeaderValueBuilder {
 
     @Override
@@ -4556,13 +4603,65 @@ final class HttpExchange implements Http.Exchange, Closeable {
     @Override
     public final void param(String name, String value) {
       checkName(name);
-      checkValue(value);
+
+      final int len; // early implicit null-check
+      len = value.length();
 
       stringBuilder.append(';');
       stringBuilder.append(' ');
       stringBuilder.append(name);
       stringBuilder.append('=');
-      stringBuilder.append(value);
+
+      // we assume value will be unquoted
+
+      int quotesIndex;
+      quotesIndex = stringBuilder.length();
+
+      int valueIndex = 0;
+
+      while (valueIndex < len) {
+        final char c;
+        c = value.charAt(valueIndex);
+
+        if (c >= 128) {
+          throw invalidFieldContent(valueIndex, c);
+        }
+
+        final byte flag;
+        flag = HEADER_PARAM_VALUE[c];
+
+        if (flag == HEADER_PARAM_VALUE_INVALID) {
+          throw invalidFieldContent(valueIndex, c);
+        }
+
+        // we're safe so far, char is valid
+
+        valueIndex++;
+
+        if (flag == HEADER_PARAM_VALUE_UNQUOTED) {
+          stringBuilder.append(c);
+
+          continue;
+        }
+
+        // dquotes needed
+
+        if (quotesIndex > 0) {
+          stringBuilder.insert(quotesIndex, '"');
+
+          quotesIndex = -1;
+        }
+
+        if (flag == HEADER_PARAM_VALUE_ESCAPE) {
+          stringBuilder.append('\\');
+        }
+
+        stringBuilder.append(c);
+      }
+
+      if (quotesIndex < 0) {
+        stringBuilder.append('"');
+      }
     }
 
     @Override

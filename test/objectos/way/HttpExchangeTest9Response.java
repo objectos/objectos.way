@@ -920,24 +920,27 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
   }
 
   @DataProvider
-  public Object[][] respond05Provider() {
+  public Object[][] headerValueBuilderApiProvider() {
     return new Object[][] {
         {
-            Http.HeaderName.ETAG,
             builder(b -> {
               b.value("inline");
             }),
-            "ETag: inline",
-            "Single value"
+            "Content-Disposition: inline"
         },
         {
-            Http.HeaderName.CONTENT_DISPOSITION,
             builder(b -> {
               b.value("attachment");
               b.param("filename", "document.pdf");
             }),
-            "Content-Disposition: attachment; filename=document.pdf",
-            "Single value + param (unquoted)"
+            "Content-Disposition: attachment; filename=document.pdf"
+        },
+        {
+            builder(b -> {
+              b.value("attachment");
+              b.param("filename", "[foo].txt");
+            }),
+            "Content-Disposition: attachment; filename=\"[foo].txt\""
         }
     };
   }
@@ -946,12 +949,12 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
     return builder;
   }
 
-  @Test(dataProvider = "respond05Provider")
-  public void respond05(Http.HeaderName name, Consumer<? super Http.HeaderValueBuilder> builder, String expected, String description) {
+  @Test(dataProvider = "headerValueBuilderApiProvider")
+  public void headerValueBuilderApi(Consumer<? super Http.HeaderValueBuilder> builder, String expected) {
     get(
         http -> http.respond(resp -> {
           resp.status(Http.Status.OK);
-          resp.header(name, builder);
+          resp.header(Http.HeaderName.CONTENT_DISPOSITION, builder);
           resp.media(OK);
         }),
 
