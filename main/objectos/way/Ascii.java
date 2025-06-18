@@ -15,12 +15,23 @@
  */
 package objectos.way;
 
+import java.nio.charset.StandardCharsets;
+
 final class Ascii {
 
   public static final char CR = '\r';
   public static final char LF = '\n';
 
   private Ascii() {}
+
+  public static void fill(byte[] array, String ascii, byte value) {
+    final byte[] bytes;
+    bytes = ascii.getBytes(StandardCharsets.US_ASCII);
+
+    for (byte b : bytes) {
+      array[b] = value;
+    }
+  }
 
   public static boolean isDigit(char c) {
     return '0' <= c && c <= '9';
@@ -67,6 +78,10 @@ final class Ascii {
 
   public static String digit() {
     return "0123456789";
+  }
+
+  public static String visible() {
+    return "!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
   }
 
 }

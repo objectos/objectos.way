@@ -2435,6 +2435,10 @@ public final class Http {
     return Ascii.alphaUpper() + Ascii.alphaLower() + Ascii.digit() + "-._~";
   }
 
+  static String vchar() {
+    return Ascii.visible();
+  }
+
   static int requiredHexDigits(int value) {
     final int leadingZeros;
     leadingZeros = Integer.numberOfLeadingZeros(value);

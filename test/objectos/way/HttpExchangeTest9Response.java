@@ -774,15 +774,160 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
     );
   }
 
+  public record HeaderValueData(String value, String expected, String description) {}
+
+  @DataProvider
+  public Iterator<HeaderValueData> respondHeaderValidProvider() {
+    final List<HeaderValueData> list;
+    list = new ArrayList<>();
+
+    list.add(new HeaderValueData("", "ETag:", "Empty string is valid"));
+
+    final String validChars;
+    validChars = Http.vchar();
+
+    for (int idx = 0, len = validChars.length(); idx < len; idx++) {
+      final char c;
+      c = validChars.charAt(idx);
+
+      final String s;
+      s = Character.toString(c);
+
+      list.add(new HeaderValueData(s, "ETag: " + s, "Character: " + c));
+    }
+
+    list.add(new HeaderValueData("x y", "ETag: x y", "SPACE allowed if not at the beginning/end"));
+    list.add(new HeaderValueData("x\ty", "ETag: x\ty", "TAB allowed if not at the beginning/end"));
+
+    return list.iterator();
+  }
+
+  @Test(description = "resp.header(HeaderName, String) w/ a valid string", dataProvider = "respondHeaderValidProvider")
+  public void respondHeaderValid(HeaderValueData data) {
+    exec(test -> {
+      test.bufferSize(256, 512);
+
+      test.xch(xch -> {
+        xch.req("""
+        GET / HTTP/1.1\r
+        Host: Host\r
+        \r
+        """);
+
+        xch.handler(http -> http.respond(resp -> {
+          resp.status(Http.Status.OK);
+
+          resp.header(Http.HeaderName.ETAG, data.value);
+
+          resp.media(OK);
+        }));
+
+        xch.resp(
+            """
+            HTTP/1.1 200 OK\r
+            %s\r
+            Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+            Content-Type: text/plain; charset=utf-8\r
+            Content-Length: 3\r
+            \r
+            OK
+            """.formatted(data.expected)
+        );
+      });
+    });
+  }
+
+  @DataProvider
+  public Iterator<HeaderValueData> respondHeaderInvalidProvider() {
+    final List<HeaderValueData> list;
+    list = new ArrayList<>();
+
+    final boolean[] valid;
+    valid = new boolean[256];
+
+    final String validChars;
+    validChars = Http.vchar();
+
+    for (int idx = 0, len = validChars.length(); idx < len; idx++) {
+      final char validChar;
+      validChar = validChars.charAt(idx);
+
+      valid[validChar] = true;
+    }
+
+    // we'll handle SPACE and HTAB later
+    valid[' '] = true;
+    valid['\t'] = true;
+
+    for (int c = 0; c < 0xFF; c++) {
+      if (!valid[c]) {
+        final String value;
+        value = Character.toString(c);
+
+        final String expected;
+        expected = "Invalid character at index 0: " + value;
+
+        final String description;
+        description = "Invalid character " + value;
+
+        final HeaderValueData data;
+        data = new HeaderValueData(value, expected, description);
+
+        list.add(data);
+      }
+    }
+
+    list.add(new HeaderValueData(" abc", "Leading SPACE or HTAB characters are not allowed", ""));
+    list.add(new HeaderValueData("\tabc", "Leading SPACE or HTAB characters are not allowed", ""));
+    list.add(new HeaderValueData("abc ", "Trailing SPACE or HTAB characters are not allowed", ""));
+    list.add(new HeaderValueData("abc\t", "Trailing SPACE or HTAB characters are not allowed", ""));
+
+    return list.iterator();
+  }
+
+  @Test(description = "resp.header(HeaderName, String) w/ an invalid string", dataProvider = "respondHeaderInvalidProvider")
+  public void respondHeaderInvalid(HeaderValueData data) {
+    exec(test -> {
+      test.bufferSize(256, 512);
+
+      test.xch(xch -> {
+        xch.req("""
+        GET / HTTP/1.1\r
+        Host: Host\r
+        \r
+        """);
+
+        xch.handler(http -> http.respond(resp -> {
+          resp.status(Http.Status.OK);
+
+          try {
+            resp.header(Http.HeaderName.ETAG, data.value);
+
+            Assert.fail();
+          } catch (IllegalArgumentException expected) {
+            final String message;
+            message = expected.getMessage();
+
+            assertEquals(message, data.expected);
+
+            resp.media(OK);
+          }
+        }));
+
+        xch.resp(OK_RESP);
+      });
+    });
+  }
+
   @DataProvider
   public Object[][] respond05Provider() {
     return new Object[][] {
         {
-            Http.HeaderName.CONTENT_DISPOSITION,
+            Http.HeaderName.ETAG,
             builder(b -> {
               b.value("inline");
             }),
-            "Content-Disposition: inline",
+            "ETag: inline",
             "Single value"
         },
         {
@@ -801,67 +946,8 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
     return builder;
   }
 
-  @Test(description = "respond + HeaderValueBuilder: valid", dataProvider = "respond05Provider")
+  @Test(dataProvider = "respond05Provider")
   public void respond05(Http.HeaderName name, Consumer<? super Http.HeaderValueBuilder> builder, String expected, String description) {
-    get(
-        http -> http.respond(resp -> {
-          resp.status(Http.Status.OK);
-          resp.header(name, builder);
-          resp.media(OK);
-        }),
-
-        """
-        HTTP/1.1 200 OK\r
-        %s\r
-        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-        Content-Type: text/plain; charset=utf-8\r
-        Content-Length: 3\r
-        \r
-        OK
-        """.formatted(expected)
-    );
-  }
-
-  public record HeaderValue01(String value, String expected, String description) {}
-
-  @DataProvider
-  public Iterator<HeaderValue01> headerValueBuilder01Provider() {
-    final List<HeaderValue01> list;
-    list = new ArrayList<>();
-
-    list.add(new HeaderValue01("", "ETag:", "Empty string is valid"));
-
-    final String tokenChars;
-    tokenChars = Http.tchar();
-
-    for (int idx = 0, len = tokenChars.length(); idx < len; idx++) {
-      final char c;
-      c = tokenChars.charAt(idx);
-
-      final String s;
-      s = Character.toString(c);
-
-      list.add(new HeaderValue01(s, "ETag: " + s, "Character: " + c));
-    }
-
-    list.add(new HeaderValue01("x y", "ETag: x y", "SPACE allowed if not at the beginning/end"));
-    list.add(new HeaderValue01("x\ty", "ETag: x\ty", "TAB allowed if not at the beginning/end"));
-
-    return list.iterator();
-  }
-
-  @Test(description = "HeaderValueBuilder: 1 value valid", dataProvider = "headerValueBuilder01Provider")
-  public void headerValueBuilder01(HeaderValue01 data) {
-    headerValueBuilder(
-        Http.HeaderName.ETAG,
-
-        builder(builder -> builder.value(data.value)),
-
-        data.expected
-    );
-  }
-
-  private void headerValueBuilder(Http.HeaderName name, Consumer<? super Http.HeaderValueBuilder> builder, String expected) {
     get(
         http -> http.respond(resp -> {
           resp.status(Http.Status.OK);

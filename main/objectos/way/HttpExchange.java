@@ -1985,7 +1985,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
     return toRead($PARSE_HEADER_VALUE);
   }
 
-  private static final byte[] PARSE_HEADER_VALUE_TABLE;
+  private static final byte[] HEADER_VALUE_TABLE;
 
   private static final byte HEADER_VALUE_VALID = 1;
 
@@ -2013,7 +2013,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
     table['\n'] = HEADER_VALUE_LF;
 
-    PARSE_HEADER_VALUE_TABLE = table;
+    HEADER_VALUE_TABLE = table;
   }
 
   private byte executeParseHeaderValueContents() {
@@ -2026,7 +2026,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
       }
 
       final byte test;
-      test = PARSE_HEADER_VALUE_TABLE[b];
+      test = HEADER_VALUE_TABLE[b];
 
       switch (test) {
         default -> { return toBadRequest(InvalidRequestHeaders.VALUE_CHAR); }
@@ -4436,16 +4436,119 @@ final class HttpExchange implements Http.Exchange, Closeable {
   final void header(Http.HeaderName name, String value) {
     checkResponseHeaders();
     Objects.requireNonNull(name, "name == null");
-    Objects.requireNonNull(value, "value == null");
+    checkHeaderValue(value);
 
     headerUnchecked(name, value);
+  }
+
+  final void header(Http.HeaderName name, Consumer<? super Http.HeaderValueBuilder> builder) {
+    checkResponseHeaders();
+    Objects.requireNonNull(name, "name == null");
+
+    stringBuilder.setLength(0);
+
+    final HttpHeaderValueBuilder valueBuilder;
+    valueBuilder = new HttpHeaderValueBuilder();
+
+    builder.accept(valueBuilder);
+
+    final String value;
+    value = stringBuilder.toString();
+
+    checkHeaderValue(value);
+
+    headerUnchecked(name, value);
+  }
+
+  private void checkHeaderValue(String value) {
+    enum Parser {
+
+      START,
+
+      NORMAL,
+
+      WS,
+
+      INVALID;
+
+    }
+
+    final int len;
+    len = value.length(); // early implicit null-check
+
+    Parser parser;
+    parser = Parser.START;
+
+    for (int idx = 0; idx < len; idx++) {
+      final char c;
+      c = value.charAt(idx);
+
+      if (c >= 128) {
+        throw invalidFieldContent(idx, c);
+      }
+
+      final byte flag;
+      flag = HEADER_VALUE_TABLE[c];
+
+      switch (parser) {
+        case START -> {
+          if (flag == HEADER_VALUE_VALID) {
+            parser = Parser.NORMAL;
+          }
+
+          else if (flag == HEADER_VALUE_WS) {
+            throw new IllegalArgumentException("Leading SPACE or HTAB characters are not allowed");
+          }
+
+          else {
+            throw invalidFieldContent(idx, c);
+          }
+        }
+
+        case NORMAL, WS -> {
+          if (flag == HEADER_VALUE_VALID) {
+            parser = Parser.NORMAL;
+          }
+
+          else if (flag == HEADER_VALUE_WS) {
+            parser = Parser.WS;
+          }
+
+          else {
+            throw invalidFieldContent(idx, c);
+          }
+        }
+
+        case INVALID -> {
+          throw invalidFieldContent(idx, c);
+        }
+      }
+    }
+
+    switch (parser) {
+      case START, NORMAL -> {
+        // valid - noop
+      }
+
+      case WS -> {
+        throw new IllegalArgumentException("Trailing SPACE or HTAB characters are not allowed");
+      }
+
+      case INVALID -> {
+        throw new IllegalStateException("Unexpected INVALID state");
+      }
+    }
+  }
+
+  private IllegalArgumentException invalidFieldContent(int idx, char c) {
+    return new IllegalArgumentException("Invalid character at index " + idx + ": " + c);
   }
 
   final class HttpHeaderValueBuilder implements Http.HeaderValueBuilder {
 
     @Override
     public final void value(String value) {
-      checkValue(value);
+      Objects.requireNonNull(value);
 
       stringBuilder.append(value);
     }
@@ -4489,23 +4592,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
       Objects.requireNonNull(value, "value == null");
     }
 
-  }
-
-  final void header(Http.HeaderName name, Consumer<? super Http.HeaderValueBuilder> builder) {
-    checkResponseHeaders();
-    Objects.requireNonNull(name, "name == null");
-
-    stringBuilder.setLength(0);
-
-    final HttpHeaderValueBuilder valueBuilder;
-    valueBuilder = new HttpHeaderValueBuilder();
-
-    builder.accept(valueBuilder);
-
-    final String value;
-    value = stringBuilder.toString();
-
-    headerUnchecked(name, value);
   }
 
   final void status(Http.Status status) {
