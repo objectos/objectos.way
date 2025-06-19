@@ -19,6 +19,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.time.Clock;
 import java.time.Duration;
@@ -785,9 +786,6 @@ public final class Http {
      *
      * @param value
      *        the header value
-     *
-     * @throws IllegalArgumentException
-     *         if the value contains invalid characters
      */
     void value(String value);
 
@@ -802,25 +800,24 @@ public final class Http {
      *
      * @throws IllegalArgumentException
      *         if either the name or the value contains invalid characters
-     *
-     * @throws IllegalStateException
-     *         if there's no current value
      */
     void param(String name, String value);
 
     /**
      * Appends a parameter to the current header value with the specified
-     * name and value (encoded with UTF-8).
+     * name, charset and value.
      *
      * @param name
      *        the parameter name
+     * @param charset
+     *        the charset to use when encoding the value
      * @param value
      *        the parameter value
      *
-     * @throws IllegalStateException
-     *         if there's no current value
+     * @throws IllegalArgumentException
+     *         if the name contains invalid characters
      */
-    void paramUtf8(String name, String value);
+    void param(String name, Charset charset, String value);
 
   }
 
@@ -2411,6 +2408,202 @@ public final class Http {
     bytes[bytesIndex++] = hexDigit(value & 0b1111);
 
     return bytesIndex;
+  }
+
+  private static final class Rfc8187 {
+
+    static final byte[] TABLE = table();
+
+    static final byte INVALID = 0;
+
+    static final byte VALID = 1;
+
+    private static byte[] table() {
+      final byte[] table;
+      table = new byte[128];
+
+      final String attrChars;
+      attrChars = "!#$&+-.^_`|~ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+      for (int idx = 0, len = attrChars.length(); idx < len; idx++) {
+        final char c;
+        c = attrChars.charAt(idx);
+
+        table[c] = VALID;
+      }
+
+      return table;
+    }
+
+  }
+
+  /**
+   * RFC-8187: encodes the UTF-8 value of a parameter of an HTTP header value.
+   */
+  static String rfc8187(String input) {
+    final int len = input.length();
+
+    if (input.isEmpty()) {
+      return "UTF-8''";
+    }
+
+    int firstToEncode;
+    firstToEncode = -1;
+
+    for (int i = 0; i < len; i++) {
+      final char c;
+      c = input.charAt(i);
+
+      if (c >= 128) {
+        firstToEncode = i;
+
+        break;
+      }
+
+      final byte flag;
+      flag = Rfc8187.TABLE[c];
+
+      if (flag == Rfc8187.INVALID) {
+        firstToEncode = i;
+
+        break;
+      }
+    }
+
+    if (firstToEncode == -1) {
+      return "UTF-8''" + input;
+    }
+
+    final int worstCaseBytes;
+    worstCaseBytes = len - firstToEncode;
+
+    final int initialBytesLength;
+    initialBytesLength = (firstToEncode + 1) + (worstCaseBytes * 3);
+
+    byte[] bytes;
+    bytes = new byte[initialBytesLength];
+
+    int bytesIndex;
+    bytesIndex = 0;
+
+    for (int i = 0; i < firstToEncode; i++) {
+      bytes[bytesIndex++] = (byte) input.charAt(i);
+    }
+
+    char highSurrogate;
+    highSurrogate = 0;
+
+    for (int i = firstToEncode; i < input.length(); i++) {
+      final char c;
+      c = input.charAt(i);
+
+      if (c <= 0x7F) {
+        final byte flag;
+        flag = Rfc8187.TABLE[c];
+
+        if (flag == Rfc8187.INVALID) {
+          highSurrogate = ensureZero(highSurrogate);
+
+          bytes = ensureBytes(bytes, bytesIndex, 3);
+
+          bytesIndex = raw(bytes, bytesIndex, c);
+        } else {
+          highSurrogate = ensureZero(highSurrogate);
+
+          bytes = ensureBytes(bytes, bytesIndex, 1);
+
+          bytes[bytesIndex++] = (byte) c;
+        }
+      }
+
+      else if (c <= 0x7FF) {
+        highSurrogate = ensureZero(highSurrogate);
+
+        // 110xxxyy 10yyzzzz
+        bytes = ensureBytes(bytes, bytesIndex, 6);
+
+        final int byte0;
+        byte0 = 0b1100_0000 | (c >> 6); // c <= 0x7FF, no higher bits set.
+
+        final int byte1;
+        byte1 = 0b1000_0000 | (c & 0b0011_1111);
+
+        bytesIndex = raw(bytes, bytesIndex, byte0);
+
+        bytesIndex = raw(bytes, bytesIndex, byte1);
+      }
+
+      else if (Character.isHighSurrogate(c)) {
+        ensureZero(highSurrogate);
+
+        highSurrogate = c;
+      }
+
+      else if (Character.isLowSurrogate(c)) {
+        if (highSurrogate == 0) {
+          throw new IllegalArgumentException("Low surrogate \\u" + Integer.toHexString(c) + " must be preceeded by a high surrogate.");
+        }
+
+        int codePoint;
+        codePoint = Character.toCodePoint(highSurrogate, c);
+
+        highSurrogate = 0;
+
+        // 11110uvv 10vvwwww 10xxxxyy 10yyzzzz
+        bytes = ensureBytes(bytes, bytesIndex, 12);
+
+        final int byte0;
+        byte0 = 0b1111_0000 | (codePoint >> 18);
+
+        final int byte1;
+        byte1 = 0b1000_0000 | ((codePoint >> 12) & 0b0011_1111);
+
+        final int byte2;
+        byte2 = 0b1000_0000 | ((codePoint >> 6) & 0b0011_1111);
+
+        final int byte3;
+        byte3 = 0b1000_0000 | (codePoint & 0b0011_1111);
+
+        bytesIndex = raw(bytes, bytesIndex, byte0);
+
+        bytesIndex = raw(bytes, bytesIndex, byte1);
+
+        bytesIndex = raw(bytes, bytesIndex, byte2);
+
+        bytesIndex = raw(bytes, bytesIndex, byte3);
+      }
+
+      else if (c <= 0xFFFF) {
+        highSurrogate = ensureZero(highSurrogate);
+
+        // 1110wwww 10xxxxyy 10yyzzzz
+        bytes = ensureBytes(bytes, bytesIndex, 9);
+
+        final int byte0;
+        byte0 = 0b1110_0000 | (c >> 12);
+
+        final int byte1;
+        byte1 = 0b1000_0000 | ((c >> 6) & 0b0011_1111);
+
+        final int byte2;
+        byte2 = 0b1000_0000 | (c & 0b0011_1111);
+
+        bytesIndex = raw(bytes, bytesIndex, byte0);
+
+        bytesIndex = raw(bytes, bytesIndex, byte1);
+
+        bytesIndex = raw(bytes, bytesIndex, byte2);
+      }
+    }
+
+    if (highSurrogate != 0) {
+      throw new IllegalArgumentException("Unmatched high surrogate at end of string");
+    }
+
+    final String value;
+    value = new String(bytes, 0, bytesIndex, StandardCharsets.US_ASCII);
+
+    return "UTF-8''" + value;
   }
 
   static byte hexDigit(int nibble) {

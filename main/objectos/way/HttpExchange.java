@@ -4694,21 +4694,22 @@ final class HttpExchange implements Http.Exchange, Closeable {
     }
 
     @Override
-    public final void paramUtf8(String name, String value) {
+    public final void param(String name, Charset charset, String value) {
       checkParameterName(name);
-      Objects.requireNonNull(value, "value == null");
 
-      if (stringBuilder.isEmpty()) {
-        throw new IllegalStateException("Cannot add a parameter: there's no current value");
+      if (charset != StandardCharsets.UTF_8) {
+        throw new IllegalArgumentException("The UTF-8 charset MUST be used.");
       }
+
+      Objects.requireNonNull(value, "value == null");
 
       stringBuilder.append(';');
       stringBuilder.append(' ');
       stringBuilder.append(name);
-      stringBuilder.append("=UTF-8''");
+      stringBuilder.append('=');
 
       final String encoded;
-      encoded = Http.raw(value);
+      encoded = Http.rfc8187(value);
 
       stringBuilder.append(encoded);
     }

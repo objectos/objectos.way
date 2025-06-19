@@ -967,23 +967,29 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
         {
             builder(b -> {
               b.value("attachment");
-              b.paramUtf8("filename*", "document.pdf");
+              b.param("filename*", StandardCharsets.UTF_8, "document.pdf");
             }),
             "Content-Disposition: attachment; filename*=UTF-8''document.pdf"
         },
         {
             builder(b -> {
               b.value("attachment");
-              b.paramUtf8("filename*", "ação.pdf");
+              b.param("filename*", StandardCharsets.UTF_8, "ação.pdf");
             }),
             "Content-Disposition: attachment; filename*=UTF-8''a%C3%A7%C3%A3o.pdf"
         },
         {
             builder(b -> {
               b.value("attachment");
-              b.paramUtf8("filename*", "");
+              b.param("filename*", StandardCharsets.UTF_8, "");
             }),
             "Content-Disposition: attachment; filename*=UTF-8''"
+        },
+        {
+            builder(b -> {
+              b.param("filename*", StandardCharsets.UTF_8, "");
+            }),
+            "Content-Disposition: ; filename*=UTF-8''"
         }
     };
   }
@@ -1017,19 +1023,11 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
   public Object[][] headerValueBuilderInvalidProvider() {
     return new Object[][] {
         {builder(builder -> {
-          builder.param("filename", "foo.txt");
-        }), "Cannot add a parameter: there's no current value"},
-
-        {builder(builder -> {
-          builder.paramUtf8("filename*", "foo.txt");
-        }), "Cannot add a parameter: there's no current value"},
-
-        {builder(builder -> {
           builder.param("inva lid", "foo.txt");
         }), "Parameter name contains an invalid character at index 4: ' '"},
 
         {builder(builder -> {
-          builder.paramUtf8("[]", "foo.txt");
+          builder.param("[]", StandardCharsets.UTF_8, "foo.txt");
         }), "Parameter name contains an invalid character at index 0: '['"}
     };
   }
