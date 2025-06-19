@@ -1022,7 +1022,15 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
 
         {builder(builder -> {
           builder.paramUtf8("filename*", "foo.txt");
-        }), "Cannot add a parameter: there's no current value"}
+        }), "Cannot add a parameter: there's no current value"},
+
+        {builder(builder -> {
+          builder.param("inva lid", "foo.txt");
+        }), "Parameter name contains an invalid character at index 4: ' '"},
+
+        {builder(builder -> {
+          builder.paramUtf8("[]", "foo.txt");
+        }), "Parameter name contains an invalid character at index 0: '['"}
     };
   }
 

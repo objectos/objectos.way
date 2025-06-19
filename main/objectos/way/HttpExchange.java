@@ -4544,6 +4544,21 @@ final class HttpExchange implements Http.Exchange, Closeable {
     return new IllegalArgumentException("Invalid character at index " + idx + ": " + c);
   }
 
+  private static final byte[] HEADER_PARAM_NAME;
+
+  private static final byte HEADER_PARAM_NAME_INVALID = 0;
+
+  private static final byte HEADER_PARAM_NAME_VALID = 1;
+
+  static {
+    final byte[] table;
+    table = new byte[128];
+
+    Http.fillTable(table, Http.tchar(), HEADER_PARAM_NAME_VALID);
+
+    HEADER_PARAM_NAME = table;
+  }
+
   private static final byte[] HEADER_PARAM_VALUE;
 
   private static final byte HEADER_PARAM_VALUE_INVALID = 0;
@@ -4606,7 +4621,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
     @Override
     public final void param(String name, String value) {
-      checkName(name);
+      checkParameterName(name);
 
       final int len; // early implicit null-check
       len = value.length();
@@ -4680,7 +4695,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
     @Override
     public final void paramUtf8(String name, String value) {
-      checkName(name);
+      checkParameterName(name);
       Objects.requireNonNull(value, "value == null");
 
       if (stringBuilder.isEmpty()) {
@@ -4698,8 +4713,31 @@ final class HttpExchange implements Http.Exchange, Closeable {
       stringBuilder.append(encoded);
     }
 
-    private void checkName(String name) {
-      Objects.requireNonNull(name, "name == null");
+    private void checkParameterName(String name) {
+      final int len;
+      len = name.length();
+
+      for (int idx = 0; idx < len; idx++) {
+        final char c;
+        c = name.charAt(idx);
+
+        if (c >= 128) {
+          throw invalidParameterName(idx, c);
+        }
+
+        final byte flag;
+        flag = HEADER_PARAM_NAME[c];
+
+        if (flag == HEADER_PARAM_NAME_INVALID) {
+          throw invalidParameterName(idx, c);
+        }
+      }
+    }
+
+    private IllegalArgumentException invalidParameterName(int idx, char c) {
+      return new IllegalArgumentException(
+          "Parameter name contains an invalid character at index " + idx + ": '" + c + "'"
+      );
     }
 
   }
