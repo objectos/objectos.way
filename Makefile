@@ -68,14 +68,15 @@ include make/java-compile.mk
 #
 
 ## script-gen
-SCRIPT_GEN := $(MAIN)/objectos/way/ScriptSource.java
+SCRIPT_GEN := $(MAIN)/objectos/way/ScriptLibrary.java
 
 ## script-gen java command
 SCRIPT_GEN_JAVAX := $(JAVA)
-SCRIPT_GEN_JAVAX += ScriptSourceGen.java
+SCRIPT_GEN_JAVAX += ScriptLibraryGen.java
 
 ## when to update
-SCRIPT_GEN_REQS := $(wildcard main-js/*.js)
+SCRIPT_GEN_REQS := ScriptLibraryGen.java
+SCRIPT_GEN_REQS += $(wildcard main-js/*.js)
 
 .PHONY: script-gen
 script-gen: $(SCRIPT_GEN)

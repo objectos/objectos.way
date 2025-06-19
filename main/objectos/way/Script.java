@@ -15,6 +15,8 @@
  */
 package objectos.way;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Consumer;
 
@@ -68,15 +70,49 @@ public sealed interface Script permits ScriptWriter {
   }
 
   /**
-   * Returns the source code of the Objectos Way JS library.
-   *
-   * @return the source code
+   * Represents the source code of the Objectos Way JS library.
    */
-  public static String getSource() {
-    return ScriptSource.get();
-  }
+  public sealed interface Library extends Media.Text permits ScriptLibrary {
 
-  // types
+    /**
+     * Returns the sole instance of this interface.
+     *
+     * @return the sole instance of this interface
+     */
+    static Library of() {
+      return ScriptLibrary.INSTANCE;
+    }
+
+    /**
+     * Returns {@code text/javascript; charset=utf-8}.
+     *
+     * @return always {@code text/css; charset=utf-8}
+     */
+    @Override
+    String contentType();
+
+    /**
+     * Returns {@code StandardCharsets.UTF_8}.
+     *
+     * @return always {@code StandardCharsets.UTF_8}
+     */
+    @Override
+    Charset charset();
+
+    /**
+     * Writes the Objectos Way JS library source code to the specified
+     * {@code Appendable}.
+     *
+     * @param out
+     *        where to append the source code
+     *
+     * @throws IOException
+     *         if an I/O error occurs
+     */
+    @Override
+    void writeTo(Appendable out) throws IOException;
+
+  }
 
   @FunctionalInterface
   public interface Callback {
