@@ -410,7 +410,7 @@ public class HttpExchangeTest3ParseQuery extends HttpExchangeTest {
         \r
         """.formatted(queryString));
 
-        xch.handler(http -> {
+        xch.handle(http -> {
           queryAssert(http, expected);
 
           http.ok(Media.Bytes.textPlain("OK"));

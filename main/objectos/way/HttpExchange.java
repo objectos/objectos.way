@@ -430,11 +430,56 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   private Http.Version version = Http.Version.HTTP_1_1;
 
-  HttpExchange(Socket socket, int bufferSizeInitial, int bufferSizeMax, Clock clock, Note.Sink noteSink, long requestBodySizeMax) throws IOException {
-    this(socket, HttpExchangeBodyFiles.standard(), bufferSizeInitial, bufferSizeMax, clock, noteSink, requestBodySizeMax);
+  HttpExchange(
+      Socket socket,
+      int bufferSizeInitial,
+      int bufferSizeMax,
+      Clock clock,
+      Note.Sink noteSink,
+      long requestBodySizeMax
+  ) throws IOException {
+    this(
+        socket,
+        HttpExchangeBodyFiles.standard(),
+        bufferSizeInitial,
+        bufferSizeMax,
+        clock,
+        noteSink,
+        requestBodySizeMax
+    );
   }
 
-  HttpExchange(Socket socket, HttpExchangeBodyFiles bodyFiles, int bufferSizeInitial, int bufferSizeMax, Clock clock, Note.Sink noteSink, long requestBodySizeMax) throws IOException {
+  HttpExchange(
+      Socket socket,
+      HttpExchangeBodyFiles bodyFiles,
+      int bufferSizeInitial,
+      int bufferSizeMax,
+      Clock clock,
+      Note.Sink noteSink,
+      long requestBodySizeMax
+  ) throws IOException {
+    this(
+        socket,
+        bodyFiles,
+        bufferSizeInitial,
+        bufferSizeMax,
+        clock,
+        noteSink,
+        requestBodySizeMax,
+        Http.NoopResponseListener.INSTANCE
+    );
+  }
+
+  HttpExchange(
+      Socket socket,
+      HttpExchangeBodyFiles bodyFiles,
+      int bufferSizeInitial,
+      int bufferSizeMax,
+      Clock clock,
+      Note.Sink noteSink,
+      long requestBodySizeMax,
+      Http.ResponseListener responseListener
+  ) throws IOException {
     this.bodyFiles = bodyFiles;
 
     final int initialSize;
@@ -456,7 +501,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
     this.requestBodySizeMax = requestBodySizeMax;
 
-    responseListener = Http.NoopResponseListener.INSTANCE;
+    this.responseListener = responseListener;
 
     this.socket = socket;
   }
@@ -484,7 +529,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
     responseListener = builder.responseListener;
 
     socket = () -> {}; // noop closeable
-
   }
 
   static HttpExchange create0(Consumer<? super Http.Exchange.Options> options) {

@@ -16,13 +16,14 @@
 package objectos.way;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.function.Consumer;
 
 final class WebResources implements Web.Resources {
 
   record Notes(
+      Note.Ref2<String, String> contentTypeRegistered,
+      Note.Ref3<String, String, String> contentTypeIgnored,
       Note.Ref1<String> traversal
   ) {
 
@@ -31,6 +32,8 @@ final class WebResources implements Web.Resources {
       s = Web.Resources.class;
 
       return new Notes(
+          Note.Ref2.create(s, "CTR", Note.INFO),
+          Note.Ref3.create(s, "CTI", Note.INFO),
           Note.Ref1.create(s, "Traversal detected", Note.ERROR)
       );
     }
@@ -59,9 +62,9 @@ final class WebResources implements Web.Resources {
   }
 
   @Override
-  public final void reconfigure(Consumer<Config> config) throws IOException {
-    final WebResourcesConfig builder;
-    builder = new WebResourcesConfig();
+  public final void reconfigure(Consumer<Options> config) throws IOException {
+    final WebResourcesBuilder builder;
+    builder = new WebResourcesBuilder();
 
     config.accept(builder);
 
@@ -79,18 +82,8 @@ final class WebResources implements Web.Resources {
   }
 
   @Override
-  public final void write(String path, byte[] contents) throws IOException {
-    kernel.write(path, contents);
-  }
-
-  @Override
   public final void writeMedia(String path, Media media) throws IOException {
     kernel.writeMedia(path, media);
-  }
-
-  @Override
-  public final void writeString(String path, CharSequence contents, Charset charset) throws IOException {
-    kernel.writeString(path, contents, charset);
   }
 
   final Path rootDirectory() {

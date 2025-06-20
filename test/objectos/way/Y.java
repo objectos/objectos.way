@@ -54,6 +54,7 @@ import java.util.function.Consumer;
 import java.util.logging.Logger;
 import java.util.random.RandomGenerator;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.sql.DataSource;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
@@ -259,6 +260,187 @@ final class Y {
 
   // ##################################################################
   // # END: DataSource
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: HttpExchange
+  // ##################################################################
+
+  static final class HttpExchangeTester {
+
+    private HttpExchangeBodyFiles bodyFiles;
+
+    private int bufferSizeInitial = 128;
+
+    private int bufferSizeMax = 256;
+
+    private Clock clock = Y.clockFixed();
+
+    private Note.Sink noteSink = Y.noteSink();
+
+    private long requestBodySizeMax = 1024;
+
+    private final List<Xch> xchs = Util.createList();
+
+    private Http.ResponseListener responseListener = Http.NoopResponseListener.INSTANCE;
+
+    public final void bodyFiles(HttpExchangeBodyFiles value) {
+      bodyFiles = Objects.requireNonNull(value, "value == null");
+    }
+
+    public final void bufferSize(int initial, int max) {
+      bufferSizeInitial = initial;
+
+      bufferSizeMax = max;
+    }
+
+    public final void clock(Clock value) {
+      clock = Objects.requireNonNull(value, "value == null");
+    }
+
+    public final void noteSink(Note.Sink value) {
+      noteSink = Objects.requireNonNull(value, "value == null");
+    }
+
+    public final void requestBodySize(long max) {
+      requestBodySizeMax = max;
+    }
+
+    public final void respListener(Http.ResponseListener value) {
+      responseListener = value;
+    }
+
+    public final void xch(Consumer<Xch> config) {
+      final Xch xch;
+      xch = new Xch();
+
+      config.accept(xch);
+
+      xchs.add(xch);
+    }
+
+    private void execute() {
+      final Y.TestingOutputStream outputStream;
+      outputStream = Y.outputStream();
+
+      final Socket socket;
+      socket = Y.socket(config -> {
+        final Object[] data;
+        data = xchs.stream().flatMap(Xch::data).toArray();
+
+        config.inputStream(
+            Y.inputStream(data)
+        );
+
+        config.outputStream(outputStream);
+      });
+
+      String previousResponse;
+      previousResponse = null;
+
+      try (HttpExchange http = newHttpExchange(socket)) {
+        for (Xch xch : xchs) {
+          assertEquals(http.shouldHandle(), xch.shouldHandle);
+
+          if (previousResponse != null) {
+            assertEquals(Y.toString(socket), previousResponse);
+          }
+
+          previousResponse = xch.response;
+
+          outputStream.throwOnWrite(xch.responseException);
+
+          xch.handler.accept(http);
+        }
+
+        assertEquals(http.shouldHandle(), false);
+
+        if (previousResponse != null) {
+          assertEquals(Y.toString(socket), previousResponse);
+        }
+      } catch (IOException e) {
+        throw new UncheckedIOException(e);
+      }
+    }
+
+    private HttpExchange newHttpExchange(Socket socket) throws IOException {
+      return new HttpExchange(
+          socket,
+          bodyFiles != null ? bodyFiles : HttpExchangeBodyFiles.standard(),
+          bufferSizeInitial,
+          bufferSizeMax,
+          clock,
+          noteSink,
+          requestBodySizeMax,
+          responseListener
+      );
+    }
+
+  }
+
+  static final class Xch {
+
+    private final List<Object> request = Util.createList();
+
+    private boolean shouldHandle = true;
+
+    private Consumer<HttpExchange> handler = http -> {};
+
+    private String response = "";
+
+    @SuppressWarnings("unused")
+    private IOException responseException;
+
+    public final void req(Object value) {
+      request.add(value);
+    }
+
+    public final void req(Throwable error, int newLength) {
+      request.add(
+          Y.trimStackTrace(error, newLength)
+      );
+    }
+
+    public final void shouldHandle(boolean value) {
+      shouldHandle = value;
+    }
+
+    public final void handle(Consumer<HttpExchange> value) {
+      handler = Objects.requireNonNull(value, "value == null");
+    }
+
+    public final void handler(Http.Handler value) {
+      final Http.Handler nonNull;
+      nonNull = Objects.requireNonNull(value, "value == null");
+
+      handler = exchange -> nonNull.handle(exchange);
+    }
+
+    public final void resp(String value) {
+      response = Objects.requireNonNull(value, "value == null");
+    }
+
+    public final void resp(IOException writeException, int newLength) {
+      responseException = Y.trimStackTrace(writeException, newLength);
+    }
+
+    private Stream<Object> data() {
+      return request.stream();
+    }
+
+  }
+
+  public static void httpExchange(Consumer<HttpExchangeTester> config) {
+    final HttpExchangeTester tester;
+    tester = new HttpExchangeTester();
+
+    config.accept(tester);
+
+    tester.execute();
+  }
+
+  // ##################################################################
+  // # END: HttpExchange
   // ##################################################################
 
   // ##################################################################
@@ -695,6 +877,23 @@ final class Y {
     return new ThisMediaStream(kind, new ThisMediaText(length, contentType));
   }
 
+  public static Media.Stream mediaStreamOf(String contents) {
+    return new Media.Stream() {
+      @Override
+      public final String contentType() {
+        return "text/plain; charset=utf-8";
+      }
+
+      @Override
+      public final void writeTo(OutputStream out) throws IOException {
+        final byte[] bytes;
+        bytes = contents.getBytes(StandardCharsets.UTF_8);
+
+        out.write(bytes);
+      }
+    };
+  }
+
   // ##################################################################
   // # END: Media.Stream
   // ##################################################################
@@ -785,6 +984,25 @@ final class Y {
 
   public static Media.Text mediaTextOf(int length, String contentType) {
     return new ThisMediaText(length, contentType);
+  }
+
+  public static Media.Text mediaTextOf(String text) {
+    return new Media.Text() {
+      @Override
+      public final String contentType() {
+        return "text/plain; charset=utf-8";
+      }
+
+      @Override
+      public final void writeTo(Appendable out) throws IOException {
+        out.append(text);
+      }
+
+      @Override
+      public final Charset charset() {
+        return StandardCharsets.UTF_8;
+      }
+    };
   }
 
   // ##################################################################

@@ -134,6 +134,7 @@ public class MarketingSiteTest {
       resp(socket, """
           HTTP/1.1 404 Not Found\r
           Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Content-Length: 0\r
           Connection: close\r
           \r
           """);

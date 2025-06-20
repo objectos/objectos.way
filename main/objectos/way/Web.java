@@ -16,7 +16,6 @@
 package objectos.way;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.time.Clock;
 import java.time.Duration;
@@ -240,12 +239,12 @@ public final class Web {
     /**
      * Configures the creation of an Web Resources instance.
      */
-    public sealed interface Config permits WebResourcesConfig {
+    public sealed interface Options permits WebResourcesBuilder {
 
       /**
-       * Adds the specified directory to this configuration. The contents of the
-       * directory will be recursively copied to the root of the web resources
-       * instance during its creation.
+       * Adds the contents of the specified directory to this configuration.
+       * The contents of the directory will be recursively copied to the root of
+       * the web resources instance during its creation.
        *
        * @param directory
        *        the directory whose contents are to be copied
@@ -253,28 +252,15 @@ public final class Web {
       void addDirectory(Path directory);
 
       /**
-       * Adds the specified binary file to this configuration.
+       * Adds the specified media to this configuration.
        *
        * @param pathName
-       *        the absolute path of the text file to be created. It must start
+       *        the absolute path of the file to be created. It must start
        *        with a '/' character.
-       * @param contents
-       *        the file contents
+       * @param media
+       *        the media object whose contents is to be copied
        */
-      void addBinaryFile(String pathName, byte[] contents);
-
-      /**
-       * Adds the specified text file to this configuration.
-       *
-       * @param pathName
-       *        the absolute path of the text file to be created. It must start
-       *        with a '/' character.
-       * @param contents
-       *        the text to be written.
-       * @param charset
-       *        the charset to use for encoding
-       */
-      void addTextFile(String pathName, CharSequence contents, Charset charset);
+      void addMedia(String pathName, Media media);
 
       /**
        * Map file extension names to content type (media type) values as defined
@@ -322,23 +308,22 @@ public final class Web {
     }
 
     /**
-     * Creates a new {@code Resources} instance with the specified
-     * configuration.
+     * Creates a new {@code Resources} instance with the specified options.
      *
-     * @param config
-     *        the configuration
+     * @param options
+     *        allows for setting the options
      *
      * @return a newly created {@code Resources} instance with the specified
-     *         configuration
+     *         options
      *
      * @throws IOException
      *         if an I/O error occurs
      */
-    static Resources create(Consumer<Config> config) throws IOException {
-      final WebResourcesConfig builder;
-      builder = new WebResourcesConfig();
+    static Resources create(Consumer<? super Options> options) throws IOException {
+      final WebResourcesBuilder builder;
+      builder = new WebResourcesBuilder();
 
-      config.accept(builder);
+      options.accept(builder);
 
       final WebResourcesKernel kernel;
       kernel = builder.build();
@@ -359,31 +344,15 @@ public final class Web {
     boolean deleteIfExists(String path) throws IOException;
 
     /**
-     * Reconfigures this {@code Resources} instance with the specified
-     * configuration.
+     * Reconfigures this {@code Resources} instance with the specified options.
      *
-     * @param config
-     *        the configuration
-     *
-     * @throws IOException
-     *         if an I/O error occurs
-     */
-    void reconfigure(Consumer<Config> config) throws IOException;
-
-    /**
-     * Creates a new file at the specified server path with the specified
-     * binary content.
-     *
-     * @param pathName
-     *        the server path of the file to be created. It must start with a
-     *        '/' character.
-     * @param contents
-     *        the contents of the new file
+     * @param options
+     *        allows for setting the options
      *
      * @throws IOException
      *         if an I/O error occurs
      */
-    void write(String pathName, byte[] contents) throws IOException;
+    void reconfigure(Consumer<Options> options) throws IOException;
 
     /**
      * Creates a new file at the specified server path with the contents of the
@@ -399,19 +368,6 @@ public final class Web {
      *         if an I/O error occurs
      */
     void writeMedia(String pathName, Media media) throws IOException;
-
-    /**
-     * Creates a new file at the specified server path with the specified text
-     * content.
-     *
-     * @param pathName
-     *        the server path of the file to be created. It must start with a
-     *        '/' character.
-     *
-     * @throws IOException
-     *         if an I/O error occurs
-     */
-    void writeString(String pathName, CharSequence contents, Charset charset) throws IOException;
 
   }
 

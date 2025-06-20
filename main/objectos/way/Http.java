@@ -1241,7 +1241,7 @@ public final class Http {
      * @param status
      *        the response status
      */
-    void status(Version version, Status status);
+    default void status(Version version, Status status) {}
 
     /**
      * Invoked when a response header is set.
@@ -1251,7 +1251,7 @@ public final class Http {
      * @param value
      *        the header value
      */
-    void header(HeaderName name, String value);
+    default void header(HeaderName name, String value) {}
 
     /**
      * Invoked when a response body is set; if the response has no body this
@@ -1260,7 +1260,7 @@ public final class Http {
      * @param body
      *        the response body; or {@code null} if the response has no body
      */
-    void body(Object body);
+    default void body(Object body) {}
 
   }
 

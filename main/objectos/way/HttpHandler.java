@@ -422,6 +422,8 @@ final class HttpHandler implements Http.Handler {
 
         http.header(Http.HeaderName.DATE, http.now());
 
+        http.header(Http.HeaderName.CONTENT_LENGTH, 0L);
+
         http.header(Http.HeaderName.CONNECTION, "close");
 
         http.send();

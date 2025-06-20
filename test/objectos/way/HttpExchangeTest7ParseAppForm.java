@@ -102,7 +102,7 @@ public class HttpExchangeTest7ParseAppForm extends HttpExchangeTest {
         %s\
         """.formatted(payload.length(), payload));
 
-        xch.handler(http -> {
+        xch.handle(http -> {
           formAssert(http, expected);
         });
 
@@ -124,7 +124,7 @@ public class HttpExchangeTest7ParseAppForm extends HttpExchangeTest {
 
         xch.req(bytes);
 
-        xch.handler(http -> {
+        xch.handle(http -> {
           formAssert(http, expected);
         });
 
@@ -146,7 +146,7 @@ public class HttpExchangeTest7ParseAppForm extends HttpExchangeTest {
 
         xch.req(Y.slowStream(1, bytes));
 
-        xch.handler(http -> {
+        xch.handle(http -> {
           formAssert(http, expected);
         });
 
@@ -173,7 +173,7 @@ public class HttpExchangeTest7ParseAppForm extends HttpExchangeTest {
 
         xch.req(bytes);
 
-        xch.handler(http -> {
+        xch.handle(http -> {
           queryAssert(http, queryExpected);
           formAssert(http, formExpected);
         });
@@ -329,7 +329,7 @@ public class HttpExchangeTest7ParseAppForm extends HttpExchangeTest {
         %s\
         """.formatted(payload.length(), payload));
 
-        xch.handler(http -> {
+        xch.handle(http -> {
           formAssert(http, expected);
         });
 
@@ -351,7 +351,7 @@ public class HttpExchangeTest7ParseAppForm extends HttpExchangeTest {
 
         xch.req(bytes);
 
-        xch.handler(http -> {
+        xch.handle(http -> {
           formAssert(http, expected);
         });
 
@@ -373,7 +373,7 @@ public class HttpExchangeTest7ParseAppForm extends HttpExchangeTest {
 
         xch.req(Y.slowStream(1, bytes));
 
-        xch.handler(http -> {
+        xch.handle(http -> {
           formAssert(http, expected);
         });
 

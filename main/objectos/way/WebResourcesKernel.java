@@ -16,6 +16,7 @@
 package objectos.way;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.file.FileAlreadyExistsException;
@@ -25,11 +26,11 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
-import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentMap;
 
 record WebResourcesKernel(
-    Map<String, String> contentTypes,
+    ConcurrentMap<String, String> contentTypes,
     String defaultContentType,
     WebResources.Notes notes,
     Note.Sink noteSink,
@@ -115,6 +116,8 @@ record WebResourcesKernel(
 
       http.header(Http.HeaderName.DATE, http.now());
 
+      http.header(Http.HeaderName.CONTENT_LENGTH, 0);
+
       http.header(Http.HeaderName.ETAG, etag);
 
       http.send();
@@ -127,16 +130,10 @@ record WebResourcesKernel(
     String contentType;
     contentType = defaultContentType;
 
-    String fileName;
-    fileName = file.getFileName().toString();
+    final String extension;
+    extension = WebResourcesBuilder.extension(file);
 
-    int lastDotIndex;
-    lastDotIndex = fileName.lastIndexOf('.');
-
-    if (lastDotIndex >= 0) {
-      String extension;
-      extension = fileName.substring(lastDotIndex);
-
+    if (!extension.isEmpty()) {
       contentType = contentTypes.getOrDefault(extension, contentType);
     }
 
@@ -167,19 +164,46 @@ record WebResourcesKernel(
     final Path file;
     file = toPath(pathName);
 
+    final String contentType;
+    contentType = media.contentType();
+
+    if (contentType == null) {
+      throw new IllegalArgumentException("Provided media returned a null content type");
+    }
+
+    final String extension;
+    extension = WebResourcesBuilder.extension(file);
+
+    if (!extension.isEmpty()) {
+      final String previous;
+      previous = contentTypes.putIfAbsent(extension, contentType);
+
+      if (previous == null) {
+        noteSink.send(notes.contentTypeRegistered(), extension, contentType);
+      }
+
+      else if (!previous.equals(contentType)) {
+        noteSink.send(notes.contentTypeIgnored(), extension, previous, contentType);
+      }
+    }
+
     final Path tmp;
     tmp = Files.createTempFile(null, null);
 
     switch (media) {
-      case Media.Bytes bytes -> Files.write(tmp, bytes.toByteArray());
+      case Media.Bytes fixed -> Files.write(tmp, fixed.toByteArray());
+
+      case Media.Stream stream -> {
+        try (OutputStream out = Files.newOutputStream(tmp)) {
+          stream.writeTo(out);
+        }
+      }
 
       case Media.Text text -> {
         try (Writer w = Files.newBufferedWriter(tmp, text.charset())) {
           text.writeTo(w);
         }
       }
-
-      default -> throw new UnsupportedOperationException("Implement me");
     }
 
     move(tmp, file);

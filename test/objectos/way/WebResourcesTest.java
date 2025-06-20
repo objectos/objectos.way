@@ -15,493 +15,622 @@
  */
 package objectos.way;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.net.Socket;
-import java.net.http.HttpRequest.BodyPublishers;
-import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
 import java.time.Clock;
 import java.time.Instant;
-import java.util.Optional;
 import java.util.function.Consumer;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class WebResourcesTest implements Consumer<Http.Routing> {
-
-  private Web.Resources resources;
-
-  private int testCase06Count;
-
-  private int testCase08Count;
-
-  @BeforeClass
-  public void beforeClass() throws IOException {
-    resources = Web.Resources.create(config -> {
-      config.noteSink(TestingNoteSink.INSTANCE);
-
-      config.contentTypes("""
-      .txt: text/plain; charset=utf-8
-      """);
-
-      config.addTextFile("/reconfigure.txt", "reconfigure", StandardCharsets.UTF_8);
-    });
-
-    final WebResources impl;
-    impl = (WebResources) resources;
-
-    final Path original;
-    original = impl.rootDirectory();
-
-    assertTrue(Files.exists(original));
-
-    resources.reconfigure(config -> {
-      config.noteSink(TestingNoteSink.INSTANCE);
-
-      config.contentTypes("""
-      .txt: text/plain; charset=utf-8
-      """);
-
-      testCase01Option(config);
-      testCase03Option(config);
-      testCase05Option(config);
-      testCase10Option(config);
-    });
-
-    testCase09Option();
-
-    assertFalse(Files.exists(original));
-
-    TestingShutdownHook.register(resources);
-
-    TestingHttpServer.bindWebResourcesTest(this);
-  }
-
-  @Override
-  public final void accept(Http.Routing routing) {
-    routing.path("/tc01.txt", resources::handlePath);
-    routing.path("/tc02.txt", path -> {
-      path.handler(resources);
-
-      path.handler(this::testCase02);
-    });
-    routing.path("/tc03.txt", resources::handlePath);
-    routing.path("/tc04.txt", resources::handlePath);
-    routing.path("/tc05.txt", resources::handlePath);
-    routing.path("/tc06.txt", path -> {
-      path.handler(resources);
-
-      path.handler(this::testCase06);
-    });
-    routing.path("/tc07.txt", path -> {
-      path.handler(this::testCase07);
-    });
-    routing.path("/tc08.txt", path -> {
-      path.handler(resources);
-
-      path.handler(this::testCase08);
-    });
-    routing.path("/tc09.txt", resources::handlePath);
-    routing.path("/tc10.txt", resources::handlePath);
-    routing.path("/tc11.html", path -> {
-      path.handler(resources);
-
-      path.handler(this::testCase11);
-    });
-
-    routing.handler(Http.Handler.notFound());
-  }
-
-  private void testCase01Option(Web.Resources.Config config) {
-    Path src;
-    src = TestingDir.next();
-
-    Path a;
-    a = Path.of("tc01.txt");
-
-    write(src, a, "AAAA\n");
-
-    config.addDirectory(src);
-  }
+public class WebResourcesTest {
 
   @Test(description = """
-  It should copy directory recursively
+  Options::addDirectory
   """)
   public void testCase01() throws IOException {
-    try (Socket socket = newSocket()) {
-      test(
-          socket,
+    final WebResources resources;
+    resources = create(opts -> {
+      Path src;
+      src = TestingDir.next();
 
-          """
-          GET /tc01.txt HTTP/1.1\r
-          Host: web.resources.test\r
-          Connection: close\r
-          \r
-          """,
+      Path a;
+      a = Path.of("tc01.txt");
 
-          """
-          HTTP/1.1 200 OK\r
-          Content-Type: text/plain; charset=utf-8\r
-          Content-Length: 5\r
-          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-          ETag: 18901e7e8f8-5\r
-          \r
-          AAAA
-          """
-      );
-    }
-  }
+      write(src, a, "AAAA\n");
 
-  private void testCase02(Http.Exchange http) {
-    final String text;
-    text = "BBBB\n";
+      opts.addDirectory(src);
 
-    final Media.Bytes object;
-    object = Media.Bytes.textPlain(text, StandardCharsets.UTF_8);
+      opts.contentTypes(".txt: text/plain; charset=utf-8");
+    });
 
-    http.ok(object);
+    Y.httpExchange(test -> {
+      test.xch(xch -> {
+        xch.req("""
+        GET /tc01.txt HTTP/1.1\r
+        Host: web.resources.test\r
+        Connection: close\r
+        \r
+        """);
+
+        xch.handler(Http.Handler.create(routing -> {
+          routing.handler(resources);
+          routing.handler(Http.Handler.notFound());
+        }));
+
+        xch.resp("""
+        HTTP/1.1 200 OK\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 5\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        ETag: 18901e7e8f8-5\r
+        \r
+        AAAA
+        """);
+      });
+    });
   }
 
   @Test(description = """
   It should not handle if the file does not exist
   """)
   public void testCase02() throws IOException {
-    try (Socket socket = newSocket()) {
-      test(
-          socket,
+    final WebResources resources;
+    resources = create(opts -> {});
 
-          """
-          GET /tc02.txt HTTP/1.1\r
-          Host: web.resources.test\r
-          Connection: close\r
-          \r
-          """,
+    Y.httpExchange(test -> {
+      test.xch(xch -> {
+        xch.req("""
+        GET /tc02.txt HTTP/1.1\r
+        Host: web.resources.test\r
+        Connection: close\r
+        \r
+        """);
 
-          """
-          HTTP/1.1 200 OK\r
-          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-          Content-Type: text/plain; charset=utf-8\r
-          Content-Length: 5\r
-          \r
-          BBBB
-          """
-      );
-    }
-  }
+        xch.handler(Http.Handler.create(routing -> {
+          routing.path("/tc02.txt", path -> {
+            path.allow(Http.Method.GET, resources, http -> {
+              final String text;
+              text = "BBBB\n";
 
-  private void testCase03Option(Web.Resources.Config config) {
-    Path src;
-    src = TestingDir.next();
+              final Media.Bytes object;
+              object = Media.Bytes.textPlain(text, StandardCharsets.UTF_8);
 
-    Path a;
-    a = Path.of("tc03.txt");
+              http.ok(object);
+            });
+          });
+        }));
 
-    write(src, a, "AAAA\n");
-
-    config.addDirectory(src);
+        xch.resp("""
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 5\r
+        \r
+        BBBB
+        """);
+      });
+    });
   }
 
   @Test(description = """
   It should 405 if the method is not GET or HEAD
   """)
   public void testCase03() throws IOException {
-    Y.test(
-        Y.httpClient(
-            "/tc03.txt",
+    final WebResources resources;
+    resources = create(opts -> {
+      Path src;
+      src = TestingDir.next();
 
-            builder -> builder.POST(BodyPublishers.noBody()).headers(
-                "Host", "web.resources.test"
-            )
-        ),
+      Path a;
+      a = Path.of("tc03.txt");
 
-        """
-        HTTP/1.1 405
-        allow: GET, HEAD
-        content-length: 0
-        date: Wed, 28 Jun 2023 12:08:43 GMT
+      write(src, a, "AAAA\n");
 
-        """
-    );
+      opts.addDirectory(src);
+
+      opts.contentTypes(".txt: text/plain; charset=utf-8");
+    });
+
+    Y.httpExchange(test -> {
+      test.xch(xch -> {
+        xch.req("""
+        POST /tc03.txt HTTP/1.1\r
+        Host: web.resources.test\r
+        \r
+        """);
+
+        xch.handler(Http.Handler.create(routing -> {
+          routing.handler(resources);
+          routing.handler(Http.Handler.notFound());
+        }));
+
+        xch.resp("""
+        HTTP/1.1 405 Method Not Allowed\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Length: 0\r
+        Allow: GET, HEAD\r
+        \r
+        """);
+      });
+    });
   }
 
   @Test(description = """
   Web.Resources::reconfigure
   - resources from before reconfigure should 404
   """)
-  public void testCase04() throws IOException, InterruptedException {
-    final HttpResponse<String> resp;
-    resp = Y.httpClient(
-        "/reconfigure.txt",
+  public void testCase04() throws IOException {
+    final WebResources resources;
+    resources = create(opts -> {
+      final Media.Bytes reconfigure;
+      reconfigure = Media.Bytes.textPlain("reconfigure");
 
-        builder -> builder.headers(
-            "Host", "web.resources.test"
-        )
-    );
+      opts.addMedia("/reconfigure.txt", reconfigure);
+    });
 
-    assertEquals(resp.statusCode(), 404);
-  }
+    resources.reconfigure(opts -> {});
 
-  private void testCase05Option(Web.Resources.Config config) {
-    Path src;
-    src = TestingDir.next();
+    Y.httpExchange(test -> {
+      test.xch(xch -> {
+        xch.req("""
+        GET /reconfigure.txt HTTP/1.1\r
+        Host: web.resources.test\r
+        \r
+        """);
 
-    Path a;
-    a = Path.of("tc05.txt");
+        xch.handler(Http.Handler.create(routing -> {
+          routing.handler(resources);
+          routing.handler(Http.Handler.notFound());
+        }));
 
-    write(src, a, "AAAA\n");
-
-    config.addDirectory(src);
+        xch.resp("""
+        HTTP/1.1 404 Not Found\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Length: 0\r
+        Connection: close\r
+        \r
+        """);
+      });
+    });
   }
 
   @Test(description = """
   It should return 304 when if-none-match
   """)
   public void testCase05() throws IOException {
-    try (Socket socket = newSocket()) {
-      test(
-          socket,
+    final WebResources resources;
+    resources = create(opts -> {
+      Path src;
+      src = TestingDir.next();
 
-          """
-          GET /tc05.txt HTTP/1.1\r
-          Host: web.resources.test\r
-          If-None-Match: 18901e7e8f8-5\r
-          Connection: close\r
-          \r
-          """,
+      Path a;
+      a = Path.of("tc05.txt");
 
-          """
-          HTTP/1.1 304 Not Modified\r
-          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-          ETag: 18901e7e8f8-5\r
-          \r
-          """
-      );
-    }
-  }
+      write(src, a, "AAAA\n");
 
-  private void testCase06(Http.Exchange http) {
-    testCase06Count++;
+      opts.addDirectory(src);
 
-    try {
-      String path;
-      path = http.path();
+      opts.contentTypes(".txt: text/plain; charset=utf-8");
+    });
 
-      Media.Bytes contents;
-      contents = Media.Bytes.textPlain("test-case-06");
+    Y.httpExchange(test -> {
+      test.xch(xch -> {
+        xch.req("""
+        GET /tc05.txt HTTP/1.1\r
+        Host: web.resources.test\r
+        If-None-Match: 18901e7e8f8-5\r
+        Connection: close\r
+        \r
+        """);
 
-      resources.writeMedia(path, contents);
+        xch.handler(Http.Handler.create(routing -> {
+          routing.handler(resources);
+          routing.handler(Http.Handler.notFound());
+        }));
 
-      resources.handle(http);
-    } catch (IOException e) {
-      throw new UncheckedIOException(e);
-    }
-  }
-
-  @Test(description = """
-  Web.Resources::writeCharWritable
-  """)
-  public void testCase06() throws IOException, InterruptedException {
-    final HttpResponse<String> resp01;
-    resp01 = Y.httpClient(
-        "/tc06.txt",
-
-        builder -> builder.headers(
-            "Host", "web.resources.test"
-        )
-    );
-
-    assertEquals(resp01.statusCode(), 200);
-    assertEquals(resp01.body(), "test-case-06");
-
-    Optional<String> maybeTag;
-    maybeTag = resp01.headers().firstValue("ETag");
-
-    assertTrue(maybeTag.isPresent());
-
-    final HttpResponse<String> resp02;
-    resp02 = Y.httpClient(
-        "/tc06.txt",
-
-        builder -> builder.headers(
-            "Host", "web.resources.test",
-            "If-None-Match", maybeTag.get(),
-            "Connection", "close"
-        )
-    );
-
-    assertEquals(resp02.statusCode(), 304);
-
-    assertEquals(testCase06Count, 1);
-  }
-
-  private void testCase07(Http.Exchange http) {
-    try {
-      String path;
-      path = http.path();
-
-      Media.Bytes contents;
-      contents = Media.Bytes.textPlain("test-case-07");
-
-      resources.writeMedia(path, contents);
-
-      assertTrue(resources.deleteIfExists(path));
-
-      resources.handle(http);
-    } catch (IOException e) {
-      throw new UncheckedIOException(e);
-    }
+        xch.resp("""
+        HTTP/1.1 304 Not Modified\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Length: 0\r
+        ETag: 18901e7e8f8-5\r
+        \r
+        """);
+      });
+    });
   }
 
   @Test(description = """
-  Web.Resources::delete
+  Resources::writeMedia(Media.Bytes)
   """)
-  public void testCase07() throws IOException, InterruptedException {
-    final HttpResponse<String> resp;
-    resp = Y.httpClient(
-        "/tc07.txt",
+  public void testCase06() throws IOException {
+    final WebResources resources;
+    resources = create(opts -> {});
 
-        builder -> builder.headers(
-            "Host", "web.resources.test"
-        )
-    );
+    Y.httpExchange(test -> {
+      test.xch(xch -> {
+        xch.req("""
+        GET /tc06.txt HTTP/1.1\r
+        Host: web.resources.test\r
+        \r
+        """);
 
-    assertEquals(resp.statusCode(), 404);
-  }
+        xch.handler(http -> {
+          try {
+            String path;
+            path = http.path();
 
-  private void testCase08(Http.Exchange http) {
-    testCase08Count++;
+            Media.Bytes contents;
+            contents = Media.Bytes.textPlain("CCCC\n");
 
-    try {
-      String path;
-      path = http.path();
+            resources.writeMedia(path, contents);
 
-      resources.writeString(path, "test-case-08", StandardCharsets.UTF_8);
+            final Path rootDirectory;
+            rootDirectory = resources.rootDirectory();
 
-      resources.handle(http);
-    } catch (IOException e) {
-      throw new UncheckedIOException(e);
-    }
+            final Path target;
+            target = rootDirectory.resolve("tc06.txt");
+
+            setLastModifiedTime(target);
+
+            resources.handle(http);
+          } catch (IOException e) {
+            throw new UncheckedIOException(e);
+          }
+        });
+
+        xch.resp("""
+        HTTP/1.1 200 OK\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 5\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        ETag: 18901e7e8f8-5\r
+        \r
+        CCCC
+        """);
+      });
+
+      test.xch(xch -> {
+        xch.req("""
+        GET /tc06.txt HTTP/1.1\r
+        Host: web.resources.test\r
+        If-None-Match: 18901e7e8f8-5\r
+        \r
+        """);
+
+        xch.handler(resources);
+
+        xch.resp("""
+        HTTP/1.1 304 Not Modified\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Length: 0\r
+        ETag: 18901e7e8f8-5\r
+        \r
+        """);
+      });
+    });
   }
 
   @Test(description = """
-  Web.Resources::writeString
+  Resources::delete
   """)
-  public void testCase08() throws IOException, InterruptedException {
-    final HttpResponse<String> resp01;
-    resp01 = Y.httpClient(
-        "/tc08.txt",
+  public void testCase07() throws IOException {
+    final WebResources resources;
+    resources = create(opts -> {});
 
-        builder -> builder.headers(
-            "Host", "web.resources.test"
-        )
-    );
+    Y.httpExchange(test -> {
+      test.xch(xch -> {
+        xch.req("""
+        GET /tc07.txt HTTP/1.1\r
+        Host: web.resources.test\r
+        \r
+        """);
 
-    assertEquals(resp01.statusCode(), 200);
-    assertEquals(resp01.body(), "test-case-08");
+        xch.handler(Http.Handler.create(routing -> {
+          routing.handler(http -> {
+            try {
+              String path;
+              path = http.path();
 
-    Optional<String> maybeTag;
-    maybeTag = resp01.headers().firstValue("ETag");
+              Media.Bytes contents;
+              contents = Media.Bytes.textPlain("test-case-07");
 
-    assertTrue(maybeTag.isPresent());
+              resources.writeMedia(path, contents);
 
-    final HttpResponse<String> resp02;
-    resp02 = Y.httpClient(
-        "/tc08.txt",
+              assertTrue(resources.deleteIfExists(path));
 
-        builder -> builder.headers(
-            "Host", "web.resources.test",
-            "If-None-Match", maybeTag.get(),
-            "Connection", "close"
-        )
-    );
+              resources.handle(http);
+            } catch (IOException e) {
+              throw new UncheckedIOException(e);
+            }
+          });
+          routing.handler(Http.Handler.notFound());
+        }));
 
-    assertEquals(resp02.statusCode(), 304);
-
-    assertEquals(testCase08Count, 1);
+        xch.resp("""
+        HTTP/1.1 404 Not Found\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Length: 0\r
+        Connection: close\r
+        \r
+        """);
+      });
+    });
   }
 
-  private void testCase09Option() throws IOException {
-    byte[] bytes;
-    bytes = "TC 09!".getBytes(StandardCharsets.UTF_8);
+  @Test(description = """
+  Resources::writeMedia(Media.Text)
+  """)
+  public void testCase08() throws IOException {
+    final WebResources resources;
+    resources = create(opts -> {});
 
-    resources.write("/tc09.txt", bytes);
+    Y.httpExchange(test -> {
+      test.xch(xch -> {
+        xch.req("""
+        GET /tc08.txt HTTP/1.1\r
+        Host: web.resources.test\r
+        \r
+        """);
+
+        xch.handler(http -> {
+          try {
+            String path;
+            path = http.path();
+
+            Media.Text contents;
+            contents = Y.mediaTextOf("8888\n");
+
+            resources.writeMedia(path, contents);
+
+            final Path rootDirectory;
+            rootDirectory = resources.rootDirectory();
+
+            final Path target;
+            target = rootDirectory.resolve("tc08.txt");
+
+            setLastModifiedTime(target);
+
+            resources.handle(http);
+          } catch (IOException e) {
+            throw new UncheckedIOException(e);
+          }
+        });
+
+        xch.resp("""
+        HTTP/1.1 200 OK\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 5\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        ETag: 18901e7e8f8-5\r
+        \r
+        8888
+        """);
+      });
+
+      test.xch(xch -> {
+        xch.req("""
+        GET /tc08.txt HTTP/1.1\r
+        Host: web.resources.test\r
+        If-None-Match: 18901e7e8f8-5\r
+        \r
+        """);
+
+        xch.handler(resources);
+
+        xch.resp("""
+        HTTP/1.1 304 Not Modified\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Length: 0\r
+        ETag: 18901e7e8f8-5\r
+        \r
+        """);
+      });
+    });
   }
 
-  @Test
+  @Test(description = """
+  Resources::writeMedia(Media.Stream)
+  """)
   public void testCase09() throws IOException, InterruptedException {
-    final HttpResponse<String> resp01;
-    resp01 = Y.httpClient(
-        "/tc09.txt",
+    final WebResources resources;
+    resources = create(opts -> {});
 
-        builder -> builder.headers(
-            "Host", "web.resources.test"
-        )
-    );
+    Y.httpExchange(test -> {
+      test.xch(xch -> {
+        xch.req("""
+        GET /tc09.txt HTTP/1.1\r
+        Host: web.resources.test\r
+        \r
+        """);
 
-    assertEquals(resp01.statusCode(), 200);
-    assertEquals(resp01.body(), "TC 09!");
+        xch.handler(http -> {
+          try {
+            String path;
+            path = http.path();
+
+            Media.Stream contents;
+            contents = Y.mediaStreamOf("9999\n");
+
+            resources.writeMedia(path, contents);
+
+            final Path rootDirectory;
+            rootDirectory = resources.rootDirectory();
+
+            final Path target;
+            target = rootDirectory.resolve("tc09.txt");
+
+            setLastModifiedTime(target);
+
+            resources.handle(http);
+          } catch (IOException e) {
+            throw new UncheckedIOException(e);
+          }
+        });
+
+        xch.resp("""
+        HTTP/1.1 200 OK\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 5\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        ETag: 18901e7e8f8-5\r
+        \r
+        9999
+        """);
+      });
+
+      test.xch(xch -> {
+        xch.req("""
+        GET /tc09.txt HTTP/1.1\r
+        Host: web.resources.test\r
+        If-None-Match: 18901e7e8f8-5\r
+        \r
+        """);
+
+        xch.handler(resources);
+
+        xch.resp("""
+        HTTP/1.1 304 Not Modified\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Length: 0\r
+        ETag: 18901e7e8f8-5\r
+        \r
+        """);
+      });
+    });
   }
 
-  private void testCase10Option(Web.Resources.Config config) {
-    byte[] bytes;
-    bytes = "TC 10!".getBytes(StandardCharsets.UTF_8);
+  @Test(description = """
+  Options::addMedia(Media.Bytes)
+  """)
+  public void testCase10() throws IOException {
+    final WebResources resources;
+    resources = create(opts -> {
+      final Media media;
+      media = Media.Bytes.textPlain("XXXX\n");
 
-    config.addBinaryFile("/tc10.txt", bytes);
+      opts.addMedia("/tc10.txt", media);
+    });
+
+    setLastModifiedTime(resources, "tc10.txt");
+
+    Y.httpExchange(test -> {
+      test.xch(xch -> {
+        xch.req("""
+        GET /tc10.txt HTTP/1.1\r
+        Host: web.resources.test\r
+        \r
+        """);
+
+        xch.handler(resources);
+
+        xch.resp("""
+        HTTP/1.1 200 OK\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 5\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        ETag: 18901e7e8f8-5\r
+        \r
+        XXXX
+        """);
+      });
+    });
   }
 
-  @Test
-  public void testCase10() throws IOException, InterruptedException {
-    final HttpResponse<String> resp01;
-    resp01 = Y.httpClient(
-        "/tc10.txt",
+  @Test(description = """
+  Options::addMedia(Media.Stream)
+  """)
+  public void testCase11() throws IOException {
+    final WebResources resources;
+    resources = create(opts -> {
+      final Media media;
+      media = Y.mediaStreamOf("XXXX\n");
 
-        builder -> builder.headers(
-            "Host", "web.resources.test"
-        )
-    );
+      opts.addMedia("/tc11.txt", media);
+    });
 
-    assertEquals(resp01.statusCode(), 200);
-    assertEquals(resp01.body(), "TC 10!");
+    setLastModifiedTime(resources, "tc11.txt");
+
+    Y.httpExchange(test -> {
+      test.xch(xch -> {
+        xch.req("""
+        GET /tc11.txt HTTP/1.1\r
+        Host: web.resources.test\r
+        \r
+        """);
+
+        xch.handler(resources);
+
+        xch.resp("""
+        HTTP/1.1 200 OK\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 5\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        ETag: 18901e7e8f8-5\r
+        \r
+        XXXX
+        """);
+      });
+    });
   }
 
-  private void testCase11(Http.Exchange http) {
+  @Test(description = """
+  Options::addMedia(Media.Text)
+  """)
+  public void testCase12() throws IOException {
+    final WebResources resources;
+    resources = create(opts -> {
+      final Media media;
+      media = Y.mediaTextOf("XXXX\n");
+
+      opts.addMedia("/tc12.txt", media);
+    });
+
+    setLastModifiedTime(resources, "tc12.txt");
+
+    Y.httpExchange(test -> {
+      test.xch(xch -> {
+        xch.req("""
+        GET /tc12.txt HTTP/1.1\r
+        Host: web.resources.test\r
+        \r
+        """);
+
+        xch.handler(resources);
+
+        xch.resp("""
+        HTTP/1.1 200 OK\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 5\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        ETag: 18901e7e8f8-5\r
+        \r
+        XXXX
+        """);
+      });
+    });
+  }
+
+  private WebResources create(Consumer<? super Web.Resources.Options> options) {
     try {
-      String path;
-      path = http.path();
+      final Web.Resources resources;
+      resources = Web.Resources.create(opt -> {
+        opt.noteSink(Y.noteSink());
 
-      resources.writeMedia(path, new TestingSingleParagraph("TC11"));
+        options.accept(opt);
+      });
 
-      resources.handle(http);
+      Y.shutdownHook(resources);
+
+      return (WebResources) resources;
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     }
-  }
-
-  @Test
-  public void testCase11() throws IOException, InterruptedException {
-    final HttpResponse<String> resp01;
-    resp01 = Y.httpClient(
-        "/tc11.html",
-
-        builder -> builder.headers(
-            "Host", "web.resources.test"
-        )
-    );
-
-    assertEquals(resp01.statusCode(), 200);
-    assertEquals(resp01.body(), """
-    <html>
-    <p>TC11</p>
-    </html>
-    """);
   }
 
   private void write(Path directory, Path file, String text) {
@@ -516,28 +645,34 @@ public class WebResourcesTest implements Consumer<Http.Routing> {
 
       Files.writeString(target, text);
 
-      // set last modified time for etag purposes
-      Clock clock;
-      clock = Y.clockFixed();
-
-      Instant instant;
-      instant = clock.instant();
-
-      FileTime fileTime;
-      fileTime = FileTime.from(instant);
-
-      Files.setLastModifiedTime(target, fileTime);
+      setLastModifiedTime(target);
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     }
   }
 
-  private Socket newSocket() throws IOException {
-    return TestingHttpServer.newSocket();
+  private void setLastModifiedTime(WebResources resources, String name) throws IOException {
+    final Path rootDirectory;
+    rootDirectory = resources.rootDirectory();
+
+    final Path target;
+    target = rootDirectory.resolve(name);
+
+    setLastModifiedTime(target);
   }
 
-  private void test(Socket socket, String request, String expectedResponse) throws IOException {
-    TestingHttpServer.test(socket, request, expectedResponse);
+  private void setLastModifiedTime(Path target) throws IOException {
+    // set last modified time for etag purposes
+    Clock clock;
+    clock = Y.clockFixed();
+
+    Instant instant;
+    instant = clock.instant();
+
+    FileTime fileTime;
+    fileTime = FileTime.from(instant);
+
+    Files.setLastModifiedTime(target, fileTime);
   }
 
 }

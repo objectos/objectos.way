@@ -328,6 +328,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """
           HTTP/1.1 404 Not Found\r
           Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Content-Length: 0\r
           Connection: close\r
           \r
           """
@@ -503,6 +504,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """
           HTTP/1.1 404 Not Found\r
           Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Content-Length: 0\r
           Connection: close\r
           \r
           """
@@ -622,6 +624,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """
           HTTP/1.1 404 Not Found\r
           Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Content-Length: 0\r
           Connection: close\r
           \r
           """
@@ -707,6 +710,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """
           HTTP/1.1 404 Not Found\r
           Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Content-Length: 0\r
           Connection: close\r
           \r
           """
@@ -888,6 +892,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """
           HTTP/1.1 404 Not Found\r
           Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Content-Length: 0\r
           Connection: close\r
           \r
           """
@@ -907,6 +912,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """
           HTTP/1.1 404 Not Found\r
           Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Content-Length: 0\r
           Connection: close\r
           \r
           """
@@ -955,6 +961,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
           """
           HTTP/1.1 404 Not Found\r
           Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Content-Length: 0\r
           Connection: close\r
           \r
           """
@@ -1150,6 +1157,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
         """
         HTTP/1.1 404
         connection: close
+        content-length: 0
         date: Wed, 28 Jun 2023 12:08:43 GMT
 
         """

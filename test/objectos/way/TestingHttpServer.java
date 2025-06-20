@@ -41,10 +41,6 @@ public final class TestingHttpServer {
     ServerHolder.bindHttpServerTest(test);
   }
 
-  public static void bindWebResourcesTest(WebResourcesTest test) {
-    ServerHolder.bindWebResourcesTest(test);
-  }
-
   public static Socket newSocket() throws IOException {
     Http.Server server;
     server = ServerHolder.SERVER;
@@ -122,10 +118,6 @@ public final class TestingHttpServer {
       HANDLER.httpServerTest.delegate = Http.Handler.create(test);
     }
 
-    public static void bindWebResourcesTest(WebResourcesTest test) {
-      HANDLER.webResourcesTest.delegate = Http.Handler.create(test);
-    }
-
     private static Http.Server create() {
       try {
         return create0();
@@ -185,8 +177,6 @@ public final class TestingHttpServer {
 
     private final MarketingSite marketing = new MarketingSite();
 
-    private final DelegatingHandler webResourcesTest = new DelegatingHandler();
-
     public final void configure(Routing r) {
       r.when(req -> host(req, "http.module.test"), matched -> {
         matched.handler(httpModuleTest);
@@ -197,10 +187,6 @@ public final class TestingHttpServer {
       });
 
       r.when(req -> host(req, "marketing"), marketing);
-
-      r.when(req -> host(req, "web.resources.test"), matched -> {
-        matched.handler(webResourcesTest);
-      });
     }
 
     private boolean host(Http.Request req, String hostName) {

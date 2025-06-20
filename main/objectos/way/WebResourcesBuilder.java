@@ -16,6 +16,8 @@
 package objectos.way;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileVisitResult;
@@ -28,9 +30,10 @@ import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
-final class WebResourcesConfig implements Web.Resources.Config {
+final class WebResourcesBuilder implements Web.Resources.Options {
 
   private sealed interface ResourceFile {
 
@@ -38,13 +41,19 @@ final class WebResourcesConfig implements Web.Resources.Config {
 
   }
 
-  private record BinaryFile(Path file, byte[] contents) implements ResourceFile {}
+  private record MediaFixedFile(Path file, Media.Bytes fixed) implements ResourceFile {}
 
-  private record TextFile(Path file, CharSequence contents, Charset charset) implements ResourceFile {}
+  private record MediaTextFile(Path file, Media.Text text) implements ResourceFile {}
 
-  private final Note.Ref1<Path> created = Note.Ref1.create(Web.Resources.Config.class, "ADD", Note.DEBUG);
+  private record MediaStreamFile(Path file, Media.Stream stream) implements ResourceFile {}
 
-  Map<String, String> contentTypes = Map.of();
+  private final Note.Ref1<Path> created = Note.Ref1.create(Web.Resources.Options.class, "ADD", Note.DEBUG);
+
+  private final Note.Ref2<String, String> contentTypeRegistered = Note.Ref2.create(Web.Resources.Options.class, "CTR", Note.DEBUG);
+
+  private final Note.Ref3<String, String, String> contentTypeIgnored = Note.Ref3.create(Web.Resources.Options.class, "CTI", Note.DEBUG);
+
+  Map<String, String> contentTypes = Util.createMap();
 
   final String defaultContentType = "application/octet-stream";
 
@@ -56,8 +65,29 @@ final class WebResourcesConfig implements Web.Resources.Config {
 
   private final Path rootDirectory;
 
-  WebResourcesConfig() throws IOException {
+  WebResourcesBuilder() throws IOException {
     rootDirectory = Files.createTempDirectory("way-web-resources-").normalize();
+  }
+
+  static String extension(Path file) {
+    final Path fileName;
+    fileName = file.getFileName();
+
+    final String actualFileName;
+    actualFileName = fileName.toString();
+
+    final int lastDotIndex;
+    lastDotIndex = actualFileName.lastIndexOf('.');
+
+    final String extension;
+
+    if (lastDotIndex >= 0) {
+      extension = actualFileName.substring(lastDotIndex);
+    } else {
+      extension = "";
+    }
+
+    return extension;
   }
 
   public WebResourcesKernel build() throws IOException {
@@ -81,14 +111,38 @@ final class WebResourcesConfig implements Web.Resources.Config {
       Files.createDirectories(parent);
 
       switch (f) {
-        case BinaryFile binary -> Files.write(file, binary.contents, writeOptions);
+        case MediaFixedFile fixed -> {
+          final Media.Bytes media;
+          media = fixed.fixed;
 
-        case TextFile text -> Files.writeString(file, text.contents, text.charset, writeOptions);
+          Files.write(file, media.toByteArray(), writeOptions);
+        }
+
+        case MediaTextFile text -> {
+          final Media.Text media;
+          media = text.text;
+
+          final Charset charset;
+          charset = media.charset();
+
+          try (Writer w = Files.newBufferedWriter(file, charset, writeOptions)) {
+            media.writeTo(w);
+          }
+        }
+
+        case MediaStreamFile stream -> {
+          final Media.Stream media;
+          media = stream.stream;
+
+          try (OutputStream out = Files.newOutputStream(file, writeOptions)) {
+            media.writeTo(out);
+          }
+        }
       }
     }
 
     return new WebResourcesKernel(
-        contentTypes,
+        contentTypes(),
 
         defaultContentType,
 
@@ -100,6 +154,10 @@ final class WebResourcesConfig implements Web.Resources.Config {
     );
   }
 
+  private ConcurrentMap<String, String> contentTypes() {
+    return new ConcurrentHashMap<>(contentTypes);
+  }
+
   @Override
   public final void addDirectory(Path directory) {
     Check.argument(Files.isDirectory(directory), "Path " + directory + " does not represent a directory");
@@ -108,29 +166,32 @@ final class WebResourcesConfig implements Web.Resources.Config {
   }
 
   @Override
-  public final void addBinaryFile(String pathName, byte[] contents) {
+  public final void addMedia(String pathName, Media media) {
     final Path path;
     path = toPath(pathName);
 
-    final byte[] copy;
-    copy = contents.clone(); // implicit null-check
+    final String contentType;
+    contentType = media.contentType();
+
+    if (contentType == null) {
+      throw new IllegalArgumentException("Provided media returned a null content type");
+    }
+
+    final String extension;
+    extension = extension(path);
+
+    if (!extension.isEmpty()) {
+      register(extension, contentType);
+    }
 
     final ResourceFile file;
-    file = new BinaryFile(path, copy);
+    file = switch (media) {
+      case Media.Bytes fixed -> new MediaFixedFile(path, fixed);
 
-    files.add(file);
-  }
+      case Media.Text text -> new MediaTextFile(path, text);
 
-  @Override
-  public final void addTextFile(String pathName, CharSequence contents, Charset charset) {
-    final Path path;
-    path = toPath(pathName);
-
-    Objects.requireNonNull(contents, "contents == null");
-    Objects.requireNonNull(charset, "charset == null");
-
-    ResourceFile file;
-    file = new TextFile(path, contents, charset);
+      case Media.Stream stream -> new MediaStreamFile(path, stream);
+    };
 
     files.add(file);
   }
@@ -160,15 +221,44 @@ final class WebResourcesConfig implements Web.Resources.Config {
 
   @Override
   public final void contentTypes(String propertiesString) {
-    Map<String, String> map;
+    final Map<String, String> map;
     map = Util.parsePropertiesMap(propertiesString);
 
-    contentTypes = map;
+    for (Map.Entry<String, String> entry : map.entrySet()) {
+      final String extension;
+      extension = entry.getKey();
+
+      final String contentType;
+      contentType = entry.getValue();
+
+      register(extension, contentType);
+    }
   }
 
   @Override
   public final void noteSink(Note.Sink noteSink) {
     this.noteSink = Check.notNull(noteSink, "noteSink == null");
+  }
+
+  private void register(String extension, String contentType) {
+    if (extension.isEmpty()) {
+      throw new IllegalArgumentException("File extension must not be empty");
+    }
+
+    if (contentType.isEmpty()) {
+      throw new IllegalArgumentException("Content type must not be empty");
+    }
+
+    final String previous;
+    previous = contentTypes.putIfAbsent(extension, contentType);
+
+    if (previous == null) {
+      noteSink.send(contentTypeRegistered, extension, contentType);
+    }
+
+    else if (!previous.equals(contentType)) {
+      noteSink.send(contentTypeIgnored, extension, previous, contentType);
+    }
   }
 
   private class CopyRecursively extends SimpleFileVisitor<Path> {
