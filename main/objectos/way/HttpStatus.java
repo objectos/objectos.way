@@ -47,6 +47,8 @@ final class HttpStatus implements Http.Status {
 
   public static final HttpStatus OK = BUILDER.create(200, "OK");
 
+  public static final HttpStatus CREATED = BUILDER.create(201, "Created");
+
   public static final HttpStatus NO_CONTENT = BUILDER.create(204, "No Content");
 
   // 3.x.x
@@ -117,6 +119,10 @@ final class HttpStatus implements Http.Status {
 
   public static int size() {
     return VALUES.length;
+  }
+
+  public static HttpStatus[] values() {
+    return VALUES.clone();
   }
 
   public final int index() {

@@ -27,6 +27,7 @@ import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -772,6 +773,43 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
         \r
         """
     );
+  }
+
+  @DataProvider
+  public Iterator<Http.Status> respondStatusProvider() {
+    final HttpStatus[] values = HttpStatus.values();
+
+    return Stream.of(values).map(Http.Status.class::cast).iterator();
+  }
+
+  @Test(dataProvider = "respondStatusProvider")
+  public void respondStatus(Http.Status status) {
+    exec(test -> {
+      test.xch(xch -> {
+        xch.req("""
+        GET / HTTP/1.1\r
+        Host: Host\r
+        \r
+        """);
+
+        xch.handler(http -> http.respond(resp -> {
+          resp.status(status);
+
+          resp.media(OK);
+        }));
+
+        xch.resp(
+            """
+            HTTP/1.1 %d %s\r
+            Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+            Content-Type: text/plain; charset=utf-8\r
+            Content-Length: 3\r
+            \r
+            OK
+            """.formatted(status.code(), status.reasonPhrase())
+        );
+      });
+    });
   }
 
   public record HeaderValueData(String value, String expected, String description) {}

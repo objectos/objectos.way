@@ -1730,6 +1730,11 @@ public final class Http {
     Status OK = HttpStatus.OK;
 
     /**
+     * The {@code 201 Created} status.
+     */
+    Status CREATED = HttpStatus.CREATED;
+
+    /**
      * The {@code 204 No Content} status.
      */
     Status NO_CONTENT = HttpStatus.NO_CONTENT;
