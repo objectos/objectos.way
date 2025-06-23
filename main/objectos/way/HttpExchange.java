@@ -4797,15 +4797,18 @@ final class HttpExchange implements Http.Exchange, Closeable {
   private static final byte[][] STATUS_LINES;
 
   static {
+    final HttpStatus[] values;
+    values = HttpStatus.values();
+
     final int size;
-    size = HttpStatus.size();
+    size = values.length;
 
     final byte[][] map;
     map = new byte[size][];
 
-    for (int index = 0; index < size; index++) {
-      final HttpStatus status;
-      status = HttpStatus.get(index);
+    for (HttpStatus status : values) {
+      final int index;
+      index = status.ordinal();
 
       final String response;
       response = Integer.toString(status.code()) + " " + status.reasonPhrase() + "\r\n";
@@ -4825,7 +4828,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
     internal = (HttpStatus) value;
 
     byte[] statusBytes;
-    statusBytes = STATUS_LINES[internal.index];
+    statusBytes = STATUS_LINES[internal.ordinal()];
 
     writeBytes(statusBytes);
 

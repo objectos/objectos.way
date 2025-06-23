@@ -15,118 +15,64 @@
  */
 package objectos.way;
 
-import java.util.ArrayList;
-import java.util.List;
-
-final class HttpStatus implements Http.Status {
-
-  private static class Builder {
-
-    private final List<HttpStatus> standardValues = new ArrayList<>();
-
-    private int index;
-
-    public final HttpStatus create(int code, String reasonPhrase) {
-      HttpStatus result;
-      result = new HttpStatus(index++, code, reasonPhrase);
-
-      standardValues.add(result);
-
-      return result;
-    }
-
-    public final HttpStatus[] buildValues() {
-      return standardValues.toArray(HttpStatus[]::new);
-    }
-
-  }
-
-  private static Builder BUILDER = new Builder();
+enum HttpStatus implements Http.Status {
 
   // 2.x.x
 
-  public static final HttpStatus OK = BUILDER.create(200, "OK");
+  OK(200, "OK"),
 
-  public static final HttpStatus CREATED = BUILDER.create(201, "Created");
+  CREATED(201, "Created"),
 
-  public static final HttpStatus NO_CONTENT = BUILDER.create(204, "No Content");
+  NO_CONTENT(204, "No Content"),
 
   // 3.x.x
 
-  public static final HttpStatus MOVED_PERMANENTLY = BUILDER.create(301, "Moved Permanently");
+  MOVED_PERMANENTLY(301, "Moved Permanently"),
 
-  public static final HttpStatus FOUND = BUILDER.create(302, "Found");
+  FOUND(302, "Found"),
 
-  public static final HttpStatus SEE_OTHER = BUILDER.create(303, "See Other");
+  SEE_OTHER(303, "See Other"),
 
-  public static final HttpStatus NOT_MODIFIED = BUILDER.create(304, "Not Modified");
+  NOT_MODIFIED(304, "Not Modified"),
 
   // 4.x.x
 
-  public static final HttpStatus BAD_REQUEST = BUILDER.create(400, "Bad Request");
+  BAD_REQUEST(400, "Bad Request"),
 
-  public static final HttpStatus FORBIDDEN = BUILDER.create(403, "Forbidden");
+  FORBIDDEN(403, "Forbidden"),
 
-  public static final HttpStatus NOT_FOUND = BUILDER.create(404, "Not Found");
+  NOT_FOUND(404, "Not Found"),
 
-  public static final HttpStatus METHOD_NOT_ALLOWED = BUILDER.create(405, "Method Not Allowed");
+  METHOD_NOT_ALLOWED(405, "Method Not Allowed"),
 
-  public static final HttpStatus LENGTH_REQUIRED = BUILDER.create(411, "Length Required");
+  LENGTH_REQUIRED(411, "Length Required"),
 
-  public static final HttpStatus CONTENT_TOO_LARGE = BUILDER.create(413, "Content Too Large");
+  CONTENT_TOO_LARGE(413, "Content Too Large"),
 
-  public static final HttpStatus URI_TOO_LONG = BUILDER.create(414, "URI Too Long");
+  URI_TOO_LONG(414, "URI Too Long"),
 
-  public static final HttpStatus UNSUPPORTED_MEDIA_TYPE = BUILDER.create(415, "Unsupported Media Type");
+  UNSUPPORTED_MEDIA_TYPE(415, "Unsupported Media Type"),
 
-  public static final HttpStatus UNPROCESSABLE_CONTENT = BUILDER.create(422, "Unprocessable Content");
+  UNPROCESSABLE_CONTENT(422, "Unprocessable Content"),
 
-  public static final HttpStatus REQUEST_HEADER_FIELDS_TOO_LARGE = BUILDER.create(431, "Request Header Fields Too Large");
+  REQUEST_HEADER_FIELDS_TOO_LARGE(431, "Request Header Fields Too Large"),
 
   // 5.x.x
 
-  public static final HttpStatus INTERNAL_SERVER_ERROR = BUILDER.create(500, "Internal Server Error");
+  INTERNAL_SERVER_ERROR(500, "Internal Server Error"),
 
-  public static final HttpStatus NOT_IMPLEMENTED = BUILDER.create(501, "Not Implemented");
+  NOT_IMPLEMENTED(501, "Not Implemented"),
 
-  public static final HttpStatus HTTP_VERSION_NOT_SUPPORTED = BUILDER.create(505, "HTTP Version Not Supported");
-
-  private static final HttpStatus[] VALUES;
-
-  static {
-    VALUES = BUILDER.buildValues();
-
-    BUILDER = null;
-  }
-
-  public final int index;
+  HTTP_VERSION_NOT_SUPPORTED(505, "HTTP Version Not Supported");
 
   public final int code;
 
   public final String reasonPhrase;
 
-  public HttpStatus(int index, int code, String reasonPhrase) {
-    this.index = index;
-
+  private HttpStatus(int code, String reasonPhrase) {
     this.code = code;
 
     this.reasonPhrase = reasonPhrase;
-  }
-
-  public static HttpStatus get(int index) {
-    return VALUES[index];
-  }
-
-  public static int size() {
-    return VALUES.length;
-  }
-
-  public static HttpStatus[] values() {
-    return VALUES.clone();
-  }
-
-  public final int index() {
-    return index;
   }
 
   @Override
@@ -137,17 +83,6 @@ final class HttpStatus implements Http.Status {
   @Override
   public final String reasonPhrase() {
     return reasonPhrase;
-  }
-
-  @Override
-  public final int hashCode() {
-    return code;
-  }
-
-  @Override
-  public final boolean equals(Object obj) {
-    return obj == this || obj instanceof HttpStatus that
-        && code == that.code;
   }
 
   @Override
