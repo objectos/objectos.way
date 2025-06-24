@@ -768,11 +768,9 @@ const way = (function() {
   }
 
   function domLoaded() {
-    const body = document.body;
-
-    body.addEventListener("click", listener(clickListener));
-    body.addEventListener("input", listener(inputListener));
-    body.addEventListener("submit", listener(submitListener));
+    document.addEventListener("click", listener(clickListener));
+    document.addEventListener("input", listener(inputListener));
+    document.addEventListener("submit", listener(submitListener));
   }
 
   window.addEventListener("DOMContentLoaded", domLoaded);
