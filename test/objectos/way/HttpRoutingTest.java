@@ -66,7 +66,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
     routing.when(this::notAuthenticated, matched -> {
       // matches: /testCase01/foo
       // but not: /testCase01, /testCase01/, /testCase01/foo/bar
-      matched.path("/testCase01/:text", path -> {
+      matched.path("/testCase01/{text}", path -> {
         path.paramNotEmpty("text");
 
         path.handler(this::$testCase01);
@@ -78,7 +78,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
         path.allow(Http.Method.POST, this::$testCase13);
       });
 
-      matched.path("/testCase14/*", tc14 -> {
+      matched.path("/testCase14/{}", tc14 -> {
         tc14.subpath("a", path -> {
           path.allow(Http.Method.GET, this::$testCase14);
         });
@@ -86,7 +86,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
         tc14.handler(Http.Handler.notFound());
       });
 
-      matched.path("/testCase15/*", tc15 -> {
+      matched.path("/testCase15/{}", tc15 -> {
         tc15.filter(this::$testCase15Filter, filtered -> {
           filtered.subpath("a", a -> {
             a.allow(Http.Method.GET, this::$testCase15);
@@ -103,7 +103,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
       matched.path("/testCase03", path -> {
         path.handler(this::testCase03);
       });
-      matched.path("/testCase03/*", path -> {
+      matched.path("/testCase03/{}", path -> {
         path.handler(this::testCase03);
       });
 
@@ -114,13 +114,13 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
       matched.path("/testCase05/img", path -> {
         path.handler(this::testCase05);
       });
-      matched.path("/testCase05/img/*", path -> {
+      matched.path("/testCase05/img/{}", path -> {
         path.handler(this::testCase05);
       });
 
       // matches: /testCase06/, /testCase06/foo, /testCase06/foo/bar
       // but not: /testCase06
-      matched.path("/testCase06/*", path -> {
+      matched.path("/testCase06/{}", path -> {
         path.handler(this::$testCase06);
       });
 
@@ -140,7 +140,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
       matched.install(new TestCase08());
 
       // tc09: notEmpty, digits
-      matched.path("/testCase09/:notEmpty/:digits", path -> {
+      matched.path("/testCase09/{notEmpty}/{digits}", path -> {
         path.paramNotEmpty("notEmpty");
 
         path.paramDigits("digits");
@@ -149,7 +149,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
       });
 
       // tc10: regex
-      matched.path("/testCase10/:regex", path -> {
+      matched.path("/testCase10/{regex}", path -> {
         path.paramRegex("regex", "[0-9a-z]+");
 
         path.handler(this::$testCase10);

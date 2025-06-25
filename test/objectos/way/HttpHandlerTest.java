@@ -202,7 +202,7 @@ public class HttpHandlerTest {
   public void filter01() {
     final Http.Handler handler;
     handler = HttpHandler.of(
-        HttpRequestMatcher.pathWildcard("/filter/"),
+        pathWildcard("/filter/"),
 
         (http, chain) -> {
           http.set(String.class, "TC01");
@@ -339,7 +339,7 @@ public class HttpHandlerTest {
   public void subpath01() {
     final Http.Handler handler;
     handler = HttpHandler.single(
-        HttpRequestMatcher.pathWildcard("/subpath/"),
+        pathWildcard("/subpath/"),
 
         HttpHandler.of(
             HttpRequestMatcher.subpathExact("test01"),
@@ -372,10 +372,10 @@ public class HttpHandlerTest {
   public void subpath02() {
     final Http.Handler handler;
     handler = HttpHandler.single(
-        HttpRequestMatcher.pathWildcard("/subpath/"),
+        pathWildcard("/subpath/"),
 
         HttpHandler.of(
-            HttpRequestMatcher.subpathWildcard("test02/"),
+            subpathWildcard("test02/"),
             null,
             List.of(
                 decorate("SUB-02"),
@@ -429,7 +429,7 @@ public class HttpHandlerTest {
   public void subpath03() {
     final Http.Handler handler;
     handler = HttpHandler.of(
-        HttpRequestMatcher.pathWildcard("/subpath/"),
+        pathWildcard("/subpath/"),
         null,
         List.of(
             HttpHandler.of(
@@ -489,10 +489,10 @@ public class HttpHandlerTest {
   public void subpath04() {
     final Http.Handler handler;
     handler = HttpHandler.single(
-        HttpRequestMatcher.pathWildcard("/subpath/"),
+        pathWildcard("/subpath/"),
 
         HttpHandler.of(
-            HttpRequestMatcher.subpathWildcard("test04/"),
+            subpathWildcard("test04/"),
             null,
             List.of(
                 HttpHandler.of(
@@ -559,6 +559,20 @@ public class HttpHandlerTest {
 
   private Http.Handler ok(Media.Bytes object) {
     return http -> http.ok(object);
+  }
+
+  private HttpRequestMatcher pathWildcard(String prefix) {
+    return HttpRequestMatcher.pathSegments(List.of(
+        HttpRequestMatcher.segmentRegion(prefix),
+        HttpRequestMatcher.segmentWildcard()
+    ));
+  }
+
+  private HttpRequestMatcher subpathWildcard(String prefix) {
+    return HttpRequestMatcher.subpathSegments(List.of(
+        HttpRequestMatcher.segmentRegion(prefix),
+        HttpRequestMatcher.segmentWildcard()
+    ));
   }
 
   private void test(Http.Handler handler, Http.Exchange http, String expected) {

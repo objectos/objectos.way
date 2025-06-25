@@ -39,7 +39,7 @@ public class HttpServerTest implements Consumer<Http.Routing> {
 
   @Override
   public final void accept(Http.Routing routing) {
-    routing.path("/test/:name", path -> {
+    routing.path("/test/{name}", path -> {
       path.handler(this::handle1);
     });
   }

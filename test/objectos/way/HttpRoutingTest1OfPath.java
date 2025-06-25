@@ -20,6 +20,7 @@ import static objectos.way.Http.Method.GET;
 import static org.testng.Assert.assertEquals;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.function.Consumer;
 import org.testng.annotations.Test;
 
@@ -249,7 +250,10 @@ public class HttpRoutingTest1OfPath {
   @Test
   public void subpath01() {
     final HttpRequestMatcher matcher;
-    matcher = HttpRequestMatcher.pathWildcard("/app/");
+    matcher = HttpRequestMatcher.pathSegments(List.of(
+        HttpRequestMatcher.segmentRegion("/app/"),
+        HttpRequestMatcher.segmentWildcard()
+    ));
 
     final HttpRouting.OfPath routing;
     routing = new HttpRouting.OfPath(matcher);
@@ -292,7 +296,7 @@ public class HttpRoutingTest1OfPath {
     final HttpRouting.Of routing;
     routing = new HttpRouting.Of();
 
-    routing.path("/a/*", a -> {
+    routing.path("/a/{}", a -> {
       a.subpath("b", b -> {
         b.handler(OK);
       });
@@ -329,8 +333,8 @@ public class HttpRoutingTest1OfPath {
     final HttpRouting.Of routing;
     routing = new HttpRouting.Of();
 
-    routing.path("/a/*", a -> {
-      a.subpath("b/:id", b -> {
+    routing.path("/a/{}", a -> {
+      a.subpath("b/{id}", b -> {
         b.paramDigits("id");
 
         b.handler(http -> {
@@ -404,7 +408,7 @@ public class HttpRoutingTest1OfPath {
     final HttpRouting.Of routing;
     routing = new HttpRouting.Of();
 
-    routing.path("/a/*", a -> {
+    routing.path("/a/{}", a -> {
       a.filter(filter, filtered -> {
         filtered.handler(OK);
       });
@@ -466,7 +470,7 @@ public class HttpRoutingTest1OfPath {
     final HttpRouting.Of routing;
     routing = new HttpRouting.Of();
 
-    routing.path("/a/*", a -> {
+    routing.path("/a/{}", a -> {
       a.subpath("b", b -> {
         b.filter(filter, filtered -> {
           filtered.handler(OK);
@@ -510,7 +514,7 @@ public class HttpRoutingTest1OfPath {
     final HttpRouting.Of routing;
     routing = new HttpRouting.Of();
 
-    routing.path("/a/*", a -> {
+    routing.path("/a/{}", a -> {
       a.filter(filter, filtered -> {
         filtered.subpath("b", b -> {
           b.handler(OK);
@@ -552,7 +556,7 @@ public class HttpRoutingTest1OfPath {
     final HttpRouting.Of routing;
     routing = new HttpRouting.Of();
 
-    routing.path("/a/*", a -> {
+    routing.path("/a/{}", a -> {
       a.filter(filter, filtered -> {
         filtered.subpath("b", b -> {
           b.handler(OK);
@@ -592,7 +596,7 @@ public class HttpRoutingTest1OfPath {
   public void when01() {
     test(
         routing -> {
-          routing.path("/prefix/*", prefix -> {
+          routing.path("/prefix/{}", prefix -> {
             prefix.when(req -> req.path().equals("/prefix/a"), matched -> {
               matched.handler(OK);
             });

@@ -120,7 +120,10 @@ public class HttpRequestMatcherTest {
   @Test
   public void pathWildcard01() {
     HttpRequestMatcher matcher;
-    matcher = HttpRequestMatcher.pathWildcard("/foo");
+    matcher = HttpRequestMatcher.pathSegments(List.of(
+        HttpRequestMatcher.segmentRegion("/foo"),
+        HttpRequestMatcher.segmentWildcard()
+    ));
 
     test(matcher, "/foo", true);
     test(matcher, "/fooo", true);
@@ -129,6 +132,19 @@ public class HttpRequestMatcherTest {
     test(matcher, "/foo/bar", true);
     test(matcher, "/bar", false);
     test(matcher, "/", false);
+  }
+
+  @Test
+  public void pathWildcard02() {
+    HttpRequestMatcher matcher;
+    matcher = HttpRequestMatcher.pathSegments(List.of(
+        HttpRequestMatcher.segmentRegion("/prefix/"),
+        HttpRequestMatcher.segmentParam("foo", '/')
+    ));
+
+    test(matcher, "/prefix/foo/", true);
+    test(matcher, "/prefix/foo/wildcard", true);
+    test(matcher, "/prefix/", false);
   }
 
   private void test(HttpRequestMatcher matcher, String target, boolean expected) {

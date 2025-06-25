@@ -17,14 +17,13 @@ package objectos.way;
 
 import static objectos.way.HttpRequestMatcher.pathExact;
 import static objectos.way.HttpRequestMatcher.pathSegments;
-import static objectos.way.HttpRequestMatcher.pathWildcard;
 import static objectos.way.HttpRequestMatcher.segmentExact;
 import static objectos.way.HttpRequestMatcher.segmentParam;
 import static objectos.way.HttpRequestMatcher.segmentParamLast;
 import static objectos.way.HttpRequestMatcher.segmentRegion;
+import static objectos.way.HttpRequestMatcher.segmentWildcard;
 import static objectos.way.HttpRequestMatcher.subpathExact;
 import static objectos.way.HttpRequestMatcher.subpathSegments;
-import static objectos.way.HttpRequestMatcher.subpathWildcard;
 import static org.testng.Assert.assertEquals;
 
 import java.util.List;
@@ -41,20 +40,23 @@ public class HttpRequestMatcherParseTest {
         {"/foo/bar", pathExact("/foo/bar")},
         {"/", pathExact("/")},
 
-        {"/foo/:a",
+        {"/foo/{a}",
             pathSegments(List.of(segmentRegion("/foo/"), segmentParamLast("a")))},
-        {"/foo/:foo",
+        {"/foo/{foo}",
             pathSegments(List.of(segmentRegion("/foo/"), segmentParamLast("foo")))},
-        {"/foo/:foo/",
+        {"/foo/{foo}/",
             pathSegments(List.of(segmentRegion("/foo/"), segmentParam("foo", '/'), segmentExact("")))},
-        {"/foo/:foo/bar/:bar",
+        {"/foo/{foo}/bar/{bar}",
             pathSegments(List.of(segmentRegion("/foo/"), segmentParam("foo", '/'), segmentRegion("bar/"), segmentParamLast("bar")))},
-        {"/foo/:foo/bar",
+        {"/foo/{foo}/bar",
             pathSegments(List.of(segmentRegion("/foo/"), segmentParam("foo", '/'), segmentExact("bar")))},
 
-        {"/*", pathWildcard("/")},
-        {"/foo*", pathWildcard("/foo")},
-        {"/foo/*", pathWildcard("/foo/")}
+        {"/{}", pathSegments(List.of(segmentRegion("/"), segmentWildcard()))},
+        {"/foo{}", pathSegments(List.of(segmentRegion("/foo"), segmentWildcard()))},
+        {"/foo/{}", pathSegments(List.of(segmentRegion("/foo/"), segmentWildcard()))},
+
+        {"/foo/{x}/{}", pathSegments(List.of(segmentRegion("/foo/"), segmentParam("x", '/'), segmentWildcard()))},
+        {"/foo/{x}/bar/{}", pathSegments(List.of(segmentRegion("/foo/"), segmentParam("x", '/'), segmentRegion("bar/"), segmentWildcard()))}
     };
   }
 
@@ -69,14 +71,17 @@ public class HttpRequestMatcherParseTest {
   @DataProvider
   public Object[][] parsePathInvalidProvider() {
     return new Object[][] {
-        {"foo", "Path must start with a '/' character: foo"},
+        {"", "Route path must start with a '/' character: "},
+        {"foo", "Route path must start with a '/' character: foo"},
 
-        {"/foo/:error/bar/:error", "The ':error' path variable was declared more than once"},
-        {"/foo/:bar:baz", "Cannot begin a path parameter immediately after the end of another parameter: /foo/:bar:baz"},
-        {"/foo/:bar/*", "The '*' wildcard character cannot be used when path parameters are declared: /foo/:bar/*"},
+        {"/foo/{error}/bar/{error}", "The '{error}' path variable was declared more than once"},
+        {"/foo/{bar}{baz}", "Route path parameter must not begin immediately after the end of another parameter: /foo/{bar}{baz}"},
+        {"/foo/{", "Route path with an unclosed path parameter definition: /foo/{"},
+        {"/foo/{bar", "Route path with an unclosed path parameter definition: /foo/{bar"},
+        {"/foo/{f{o}", "Route path parameter names must not contain the '{' character: /foo/{f{o}"},
 
-        {"/foo/*/", "The '*' wildcard character can only be used once at the end of the path expression: /foo/*/"},
-        {"/foo**", "The '*' wildcard character can only be used once at the end of the path expression: /foo**"}
+        {"/foo/{}/", "Route path can only declare the '{}' wildcard path parameter once and at the end of the path: /foo/{}/"},
+        {"/foo{}{}", "Route path can only declare the '{}' wildcard path parameter once and at the end of the path: /foo{}{}"}
     };
   }
 
@@ -88,29 +93,38 @@ public class HttpRequestMatcherParseTest {
       Assert.fail();
     } catch (IllegalArgumentException expected) {
       assertEquals(expected.getMessage(), expectedMessage);
+
+      IllegalArgumentException trimmed;
+      trimmed = Y.trimStackTrace(expected, 1);
+
+      Note.Ref1<IllegalArgumentException> note;
+      note = Note.Ref1.create(getClass(), "IAE", Note.INFO);
+
+      Y.noteSink().send(note, trimmed);
     }
   }
 
   @DataProvider
   public Object[][] parseSubpathValidProvider() {
     return new Object[][] {
+        {"", subpathExact("")},
         {"foo", subpathExact("foo")},
         {"foo/bar", subpathExact("foo/bar")},
         {"/", subpathExact("/")},
 
-        {"foo/:a",
+        {"foo/{a}",
             subpathSegments(List.of(segmentRegion("foo/"), segmentParamLast("a")))},
-        {"foo/:foo",
+        {"foo/{foo}",
             subpathSegments(List.of(segmentRegion("foo/"), segmentParamLast("foo")))},
-        {"foo/:foo/",
+        {"foo/{foo}/",
             subpathSegments(List.of(segmentRegion("foo/"), segmentParam("foo", '/'), segmentExact("")))},
-        {"foo/:foo/bar/:bar",
+        {"foo/{foo}/bar/{bar}",
             subpathSegments(List.of(segmentRegion("foo/"), segmentParam("foo", '/'), segmentRegion("bar/"), segmentParamLast("bar")))},
-        {"foo/:foo/bar",
+        {"foo/{foo}/bar",
             subpathSegments(List.of(segmentRegion("foo/"), segmentParam("foo", '/'), segmentExact("bar")))},
 
-        {"*", subpathWildcard("")},
-        {"foo/*", subpathWildcard("foo/")}
+        {"{}", subpathSegments(List.of(segmentWildcard()))},
+        {"foo/{}", subpathSegments(List.of(segmentRegion("foo/"), segmentWildcard()))}
     };
   }
 
