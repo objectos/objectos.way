@@ -65,6 +65,8 @@ JAVADOCX += -encoding 'UTF-8'
 JAVADOCX += -use
 JAVADOCX += -version
 JAVADOCX += -windowtitle '$(GROUP_ID):$(ARTIFACT_ID) $(VERSION) API'
+JAVADOCX += -Xmaxerrs 65536
+JAVADOCX += -Xmaxwarns 65536
 
 ## javadoc jar file
 JAVADOC_JAR_FILE_NAME := $(ARTIFACT_ID)-$(VERSION)-javadoc.jar

@@ -163,10 +163,10 @@ public class HttpRoutingTest0Of {
   }
 
   private void test(
-      Consumer<HttpRouting.Of> options,
+      Consumer<HttpRouing> options,
       Consumer<Http.Exchange.Options> req1, String resp1) {
-    final HttpRouting.Of routing;
-    routing = new HttpRouting.Of();
+    final HttpRouing routing;
+    routing = new HttpRouing();
 
     options.accept(routing);
 
@@ -190,11 +190,11 @@ public class HttpRoutingTest0Of {
   }
 
   private void test(
-      Consumer<HttpRouting.Of> options,
+      Consumer<HttpRouing> options,
       Consumer<Http.Exchange.Options> req1, String resp1,
       Consumer<Http.Exchange.Options> req2, String resp2) {
-    final HttpRouting.Of routing;
-    routing = new HttpRouting.Of();
+    final HttpRouing routing;
+    routing = new HttpRouing();
 
     options.accept(routing);
 

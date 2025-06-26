@@ -596,8 +596,8 @@ public final class Http {
   public interface Handler {
 
     static Handler create(Consumer<? super Routing> config) {
-      final HttpRouting.Of routing;
-      routing = new HttpRouting.Of();
+      final HttpRouing routing;
+      routing = new HttpRouing();
 
       config.accept(routing);
 
@@ -1267,7 +1267,7 @@ public final class Http {
   /**
    * Configures the top-level routing of an HTTP server.
    */
-  public sealed interface Routing permits HttpRouting.Of {
+  public sealed interface Routing permits HttpRouing {
 
     /**
      * An object for configuring top-level routes of an HTTP server.
@@ -1329,9 +1329,9 @@ public final class Http {
   }
 
   /**
-   * Configure a path-specific routing of an HTTP server.
+   * Configures a path-specific routing of an HTTP server.
    */
-  public sealed interface RoutingPath permits HttpRouting.OfPath {
+  public sealed interface RoutingPath permits HttpRoutingPath {
 
     /**
      * An object for configuring path-specific routes of an HTTP server.
@@ -1361,6 +1361,11 @@ public final class Http {
      * If the request does not match any of the registered allowed methods for
      * this path, then the server responds with a `405 Method Not Allowed`
      * message.
+     *
+     * @param method
+     *        the HTTP method to allow
+     * @param handler
+     *        the HTTP handler
      */
     void allow(Method method, Handler handler);
 
@@ -1378,11 +1383,24 @@ public final class Http {
      * If the request does not match any of the registered allowed methods for
      * this path, then the server responds with a `405 Method Not Allowed`
      * message.
+     *
+     * @param method
+     *        the HTTP method to allow
+     * @param first
+     *        the first HTTP handler
+     * @param rest
+     *        the remaining HTTP handlers
      */
     void allow(Method method, Handler first, Handler... rest);
 
-    void filter(Filter value, RoutingPath.Module routes);
+    void filter(Filter value, RoutingPath.Module module);
 
+    /**
+     * Appends to this configuration the specified path-specific handler.
+     *
+     * @param value
+     *        the HTTP handler
+     */
     void handler(Handler value);
 
     void paramDigits(String name);
@@ -1391,9 +1409,33 @@ public final class Http {
 
     void paramRegex(String name, String value);
 
-    void subpath(String path, RoutingPath.Module routes);
+    /**
+     * Appends to this configuration the handlers for the specified subpath
+     * defined by the specified module. Subpaths can only be registered when
+     * this configuration represents a wildcard path.
+     *
+     * @param subpath
+     *        a subpath expression
+     * @param module
+     *        the module defining path-specific routes
+     *
+     * @throws IllegalStateException
+     *         if this configuration does not represent a wildcard path
+     */
+    void subpath(String subpath, RoutingPath.Module module);
 
-    void when(Predicate<? super Exchange> condition, RoutingPath.Module routes);
+    /**
+     * Appends to this configuration the handlers defined by the specified
+     * module to be executed when the specified condition evaluates to
+     * {@code true}.
+     *
+     * @param condition
+     *        delegates to the specified module when this condition evaluates to
+     *        {@code true}
+     * @param module
+     *        the module defining path-specific routes
+     */
+    void when(Predicate<? super Exchange> condition, RoutingPath.Module module);
 
   }
 
@@ -1916,7 +1958,7 @@ public final class Http {
 
   // exception types
 
-  public static abstract class AbstractHandlerException extends RuntimeException implements Handler {
+  static abstract class AbstractHandlerException extends RuntimeException implements Handler {
 
     private static final long serialVersionUID = -8277337261280606415L;
 
