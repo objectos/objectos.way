@@ -58,7 +58,7 @@ public class WebResourcesTest {
         \r
         """);
 
-        xch.handler(Http.Handler.create(routing -> {
+        xch.handler(Http.Handler.of(routing -> {
           routing.handler(resources);
           routing.handler(Http.Handler.notFound());
         }));
@@ -92,7 +92,7 @@ public class WebResourcesTest {
         \r
         """);
 
-        xch.handler(Http.Handler.create(routing -> {
+        xch.handler(Http.Handler.of(routing -> {
           routing.path("/tc02.txt", path -> {
             path.allow(Http.Method.GET, resources, http -> {
               final String text;
@@ -145,7 +145,7 @@ public class WebResourcesTest {
         \r
         """);
 
-        xch.handler(Http.Handler.create(routing -> {
+        xch.handler(Http.Handler.of(routing -> {
           routing.handler(resources);
           routing.handler(Http.Handler.notFound());
         }));
@@ -184,7 +184,7 @@ public class WebResourcesTest {
         \r
         """);
 
-        xch.handler(Http.Handler.create(routing -> {
+        xch.handler(Http.Handler.of(routing -> {
           routing.handler(resources);
           routing.handler(Http.Handler.notFound());
         }));
@@ -229,7 +229,7 @@ public class WebResourcesTest {
         \r
         """);
 
-        xch.handler(Http.Handler.create(routing -> {
+        xch.handler(Http.Handler.of(routing -> {
           routing.handler(resources);
           routing.handler(Http.Handler.notFound());
         }));
@@ -331,7 +331,7 @@ public class WebResourcesTest {
         \r
         """);
 
-        xch.handler(Http.Handler.create(routing -> {
+        xch.handler(Http.Handler.of(routing -> {
           routing.handler(http -> {
             try {
               String path;

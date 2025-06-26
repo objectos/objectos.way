@@ -111,11 +111,11 @@ public final class TestingHttpServer {
     static ThisHandlerFactory HANDLER;
 
     public static void bindHttpRoutingTest(HttpRoutingTest test) {
-      HANDLER.httpModuleTest.delegate = Http.Handler.create(test);
+      HANDLER.httpModuleTest.delegate = Http.Handler.of(test);
     }
 
     public static void bindHttpServerTest(HttpServerTest test) {
-      HANDLER.httpServerTest.delegate = Http.Handler.create(test);
+      HANDLER.httpServerTest.delegate = Http.Handler.of(test);
     }
 
     private static Http.Server create() {
@@ -145,7 +145,7 @@ public final class TestingHttpServer {
       Http.Server wayServer;
       wayServer = Http.Server.create(config -> {
         final Http.Handler serverHandler;
-        serverHandler = Http.Handler.create(HANDLER::configure);
+        serverHandler = Http.Handler.of(HANDLER::configure);
 
         config.handler(serverHandler);
 

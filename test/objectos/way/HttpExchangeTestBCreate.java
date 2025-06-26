@@ -109,7 +109,7 @@ public class HttpExchangeTestBCreate extends HttpExchangeTest {
     assertEquals(http.header(name), "some value");
   }
 
-  private final Http.Handler moduleInterop = Http.Handler.create(routing -> {
+  private final Http.Handler moduleInterop = Http.Handler.of(routing -> {
     routing.path("/tc01", path -> {
       path.handler(Http.Handler.ok(Media.Bytes.textPlain("TC01")));
     });

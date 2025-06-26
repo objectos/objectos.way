@@ -18,15 +18,15 @@ package objectos.way;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-final class HttpRouing extends HttpRoutingSupport implements Http.Routing {
+final class HttpRouting extends HttpRoutingSupport implements Http.Routing {
 
   private final Predicate<? super Http.Exchange> condition;
 
-  public HttpRouing() {
+  public HttpRouting() {
     this(null);
   }
 
-  private HttpRouing(Predicate<? super Http.Exchange> condition) {
+  private HttpRouting(Predicate<? super Http.Exchange> condition) {
     this.condition = condition;
   }
 
@@ -57,8 +57,8 @@ final class HttpRouing extends HttpRoutingSupport implements Http.Routing {
   public final void when(Predicate<? super Http.Exchange> condition, Http.Routing.Module module) {
     Objects.requireNonNull(condition, "condition == null");
 
-    final HttpRouing builder;
-    builder = new HttpRouing(condition);
+    final HttpRouting builder;
+    builder = new HttpRouting(condition);
 
     // implicit null-check
     module.configure(builder);

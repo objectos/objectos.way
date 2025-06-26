@@ -595,11 +595,20 @@ public final class Http {
   @FunctionalInterface
   public interface Handler {
 
-    static Handler create(Consumer<? super Routing> config) {
-      final HttpRouing routing;
-      routing = new HttpRouing();
+    /**
+     * Returns a new handler for processing the routes defined in the specified
+     * routing module.
+     *
+     * @param module
+     *        the module defining top-level routes
+     *
+     * @return a newly created handler for processing the routes
+     */
+    static Handler of(Http.Routing.Module module) {
+      final HttpRouting routing;
+      routing = new HttpRouting();
 
-      config.accept(routing);
+      module.configure(routing);
 
       return routing.build();
     }
@@ -610,6 +619,11 @@ public final class Http {
       return HttpHandler.factory(factory, value);
     }
 
+    /**
+     * Returns a handler that does nothing.
+     *
+     * @return a handler that does nothing
+     */
     static Handler noop() {
       return HttpHandler.NOOP;
     }
@@ -1267,7 +1281,7 @@ public final class Http {
   /**
    * Configures the top-level routing of an HTTP server.
    */
-  public sealed interface Routing permits HttpRouing {
+  public sealed interface Routing permits HttpRouting {
 
     /**
      * An object for configuring top-level routes of an HTTP server.

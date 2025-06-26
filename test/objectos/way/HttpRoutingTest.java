@@ -25,12 +25,11 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class HttpRoutingTest implements Consumer<Http.Routing> {
+public class HttpRoutingTest implements Http.Routing.Module {
 
   private record Box(String value) {}
 
@@ -62,7 +61,7 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
   }
 
   @Override
-  public final void accept(Http.Routing routing) {
+  public final void configure(Http.Routing routing) {
     routing.when(this::notAuthenticated, matched -> {
       // matches: /testCase01/foo
       // but not: /testCase01, /testCase01/, /testCase01/foo/bar
@@ -1243,9 +1242,9 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
 
   @Test
   public void edge01() {
-    Consumer<Http.Routing> empty = routing -> {};
+    Http.Routing.Module empty = routing -> {};
 
-    Http.Handler handler = Http.Handler.create(empty);
+    Http.Handler handler = Http.Handler.of(empty);
 
     assertNotNull(handler);
   }

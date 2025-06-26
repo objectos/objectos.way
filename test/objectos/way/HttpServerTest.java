@@ -25,12 +25,11 @@ import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.function.Consumer;
 import objectos.way.Http.Exchange;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class HttpServerTest implements Consumer<Http.Routing> {
+public class HttpServerTest implements Http.Routing.Module {
 
   @BeforeClass
   public void beforeClass() throws Exception {
@@ -38,7 +37,7 @@ public class HttpServerTest implements Consumer<Http.Routing> {
   }
 
   @Override
-  public final void accept(Http.Routing routing) {
+  public final void configure(Http.Routing routing) {
     routing.path("/test/{name}", path -> {
       path.handler(this::handle1);
     });

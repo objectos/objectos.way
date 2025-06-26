@@ -18,7 +18,7 @@ package objectos.way;
 import java.util.List;
 import java.util.Objects;
 
-sealed abstract class HttpRoutingSupport permits HttpRouing, HttpRoutingPath {
+sealed abstract class HttpRoutingSupport permits HttpRouting, HttpRoutingPath {
 
   List<Http.Handler> many;
 

@@ -293,8 +293,8 @@ public class HttpRoutingTest1OfPath {
 
   @Test
   public void subpath03() {
-    final HttpRouing routing;
-    routing = new HttpRouing();
+    final HttpRouting routing;
+    routing = new HttpRouting();
 
     routing.path("/a/{}", a -> {
       a.subpath("b", b -> {
@@ -330,8 +330,8 @@ public class HttpRoutingTest1OfPath {
 
   @Test
   public void subpath04() {
-    final HttpRouing routing;
-    routing = new HttpRouing();
+    final HttpRouting routing;
+    routing = new HttpRouting();
 
     routing.path("/a/{}", a -> {
       a.subpath("b/{id}", b -> {
@@ -405,8 +405,8 @@ public class HttpRoutingTest1OfPath {
     final ThisFilter filter;
     filter = new ThisFilter();
 
-    final HttpRouing routing;
-    routing = new HttpRouing();
+    final HttpRouting routing;
+    routing = new HttpRouting();
 
     routing.path("/a/{}", a -> {
       a.filter(filter, filtered -> {
@@ -467,8 +467,8 @@ public class HttpRoutingTest1OfPath {
     final ThisFilter filter;
     filter = new ThisFilter();
 
-    final HttpRouing routing;
-    routing = new HttpRouing();
+    final HttpRouting routing;
+    routing = new HttpRouting();
 
     routing.path("/a/{}", a -> {
       a.subpath("b", b -> {
@@ -511,8 +511,8 @@ public class HttpRoutingTest1OfPath {
     final ThisFilter filter;
     filter = new ThisFilter();
 
-    final HttpRouing routing;
-    routing = new HttpRouing();
+    final HttpRouting routing;
+    routing = new HttpRouting();
 
     routing.path("/a/{}", a -> {
       a.filter(filter, filtered -> {
@@ -553,8 +553,8 @@ public class HttpRoutingTest1OfPath {
     final ThisFilter filter;
     filter = new ThisFilter();
 
-    final HttpRouing routing;
-    routing = new HttpRouing();
+    final HttpRouting routing;
+    routing = new HttpRouting();
 
     routing.path("/a/{}", a -> {
       a.filter(filter, filtered -> {
@@ -640,21 +640,21 @@ public class HttpRoutingTest1OfPath {
   private record Round(Consumer<Http.Exchange.Options> req, String resp) {}
 
   private void test(
-      Consumer<HttpRouing> options,
+      Consumer<HttpRouting> options,
       Consumer<Http.Exchange.Options> req1, String resp1) {
     test(options, new Round(req1, resp1));
   }
 
   private void test(
-      Consumer<HttpRouing> options,
+      Consumer<HttpRouting> options,
       Consumer<Http.Exchange.Options> req1, String resp1,
       Consumer<Http.Exchange.Options> req2, String resp2) {
     test(options, new Round(req1, resp1), new Round(req2, resp2));
   }
 
-  private void test(Consumer<HttpRouing> options, Round... rounds) {
-    final HttpRouing routing;
-    routing = new HttpRouing();
+  private void test(Consumer<HttpRouting> options, Round... rounds) {
+    final HttpRouting routing;
+    routing = new HttpRouting();
 
     options.accept(routing);
 
