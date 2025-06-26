@@ -1265,67 +1265,135 @@ public final class Http {
   }
 
   /**
-   * Configures the routing of an HTTP server.
+   * Configures the top-level routing of an HTTP server.
    */
   public sealed interface Routing permits HttpRouting.Of {
 
-    public sealed interface OfPath permits HttpRouting.OfPath {
+    /**
+     * An object for configuring top-level routes of an HTTP server.
+     */
+    @FunctionalInterface
+    interface Module {
 
       /**
-       * For a request with the specified method, use the specified
-       * handler.
+       * Configures top-level routes of an HTTP server.
        *
-       * <p>
-       * If the registered handler produces no response, then the server
-       * responds with a `204 No Content` message.
-       *
-       * <p>
-       * If the request does not match any of the registered allowed methods for
-       * this path, then the server responds with a `405 Method Not Allowed`
-       * message.
+       * @param routing
+       *        allows for configuring the routes
        */
-      void allow(Method method, Handler handler);
-
-      /**
-       * For a request with the specified method, use the first handler that
-       * produces a response. In other words, the server will iterate over the
-       * specified handlers in order and, after a handler produces a response,
-       * it will stop the processing.
-       *
-       * <p>
-       * If none of the registered handlers produce a response, then the
-       * server responds with a `204 No Content` message.
-       *
-       * <p>
-       * If the request does not match any of the registered allowed methods for
-       * this path, then the server responds with a `405 Method Not Allowed`
-       * message.
-       */
-      void allow(Method method, Handler first, Handler... rest);
-
-      void filter(Filter value, Consumer<OfPath> routes);
-
-      void handler(Handler value);
-
-      void paramDigits(String name);
-
-      void paramNotEmpty(String name);
-
-      void paramRegex(String name, String value);
-
-      void subpath(String path, Consumer<OfPath> routes);
-
-      void when(Predicate<? super Exchange> condition, Consumer<OfPath> routes);
+      void configure(Routing routing);
 
     }
 
+    /**
+     * Appends to this configuration the specified top-level handler.
+     *
+     * @param value
+     *        the HTTP handler
+     */
     void handler(Handler value);
 
-    void install(Consumer<Routing> routes);
+    /**
+     * Appends to this configuration the handlers defined by the specified
+     * module.
+     *
+     * @param module
+     *        the module defining top-level routes
+     */
+    void install(Routing.Module module);
 
-    void path(String path, Consumer<OfPath> routes);
+    /**
+     * Appends to this configuration the handlers for the specified path defined
+     * by the specified module.
+     *
+     * @param path
+     *        a path expression
+     * @param module
+     *        the module defining path-specific routes
+     */
+    void path(String path, RoutingPath.Module module);
 
-    void when(Predicate<? super Exchange> condition, Consumer<Routing> routes);
+    /**
+     * Appends to this configuration the handlers defined by the specified
+     * module to be executed when the specified condition evaluates to
+     * {@code true}.
+     *
+     * @param condition
+     *        delegates to the specified module when this condition evaluates to
+     *        {@code true}
+     * @param module
+     *        the module defining top-level routes
+     */
+    void when(Predicate<? super Exchange> condition, Routing.Module module);
+
+  }
+
+  /**
+   * Configure a path-specific routing of an HTTP server.
+   */
+  public sealed interface RoutingPath permits HttpRouting.OfPath {
+
+    /**
+     * An object for configuring path-specific routes of an HTTP server.
+     */
+    @FunctionalInterface
+    interface Module {
+
+      /**
+       * Configures path-specific routes of an HTTP server.
+       *
+       * @param routing
+       *        allows for configuring the routes
+       */
+      void configure(RoutingPath routing);
+
+    }
+
+    /**
+     * For a request with the specified method, use the specified
+     * handler.
+     *
+     * <p>
+     * If the registered handler produces no response, then the server
+     * responds with a `204 No Content` message.
+     *
+     * <p>
+     * If the request does not match any of the registered allowed methods for
+     * this path, then the server responds with a `405 Method Not Allowed`
+     * message.
+     */
+    void allow(Method method, Handler handler);
+
+    /**
+     * For a request with the specified method, use the first handler that
+     * produces a response. In other words, the server will iterate over the
+     * specified handlers in order and, after a handler produces a response,
+     * it will stop the processing.
+     *
+     * <p>
+     * If none of the registered handlers produce a response, then the
+     * server responds with a `204 No Content` message.
+     *
+     * <p>
+     * If the request does not match any of the registered allowed methods for
+     * this path, then the server responds with a `405 Method Not Allowed`
+     * message.
+     */
+    void allow(Method method, Handler first, Handler... rest);
+
+    void filter(Filter value, RoutingPath.Module routes);
+
+    void handler(Handler value);
+
+    void paramDigits(String name);
+
+    void paramNotEmpty(String name);
+
+    void paramRegex(String name, String value);
+
+    void subpath(String path, RoutingPath.Module routes);
+
+    void when(Predicate<? super Exchange> condition, RoutingPath.Module routes);
 
   }
 

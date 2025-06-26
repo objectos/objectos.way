@@ -20,7 +20,6 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
@@ -44,32 +43,32 @@ sealed abstract class HttpRouting {
     }
 
     @Override
-    public final void install(Consumer<Http.Routing> routes) {
-      routes.accept(this);
+    public final void install(Http.Routing.Module module) {
+      module.configure(this);
     }
 
     @Override
-    public final void path(String path, Consumer<Http.Routing.OfPath> routes) {
+    public final void path(String path, Http.RoutingPath.Module module) {
       Objects.requireNonNull(path, "path == null");
 
       final HttpRequestMatcher matcher;
       matcher = HttpRequestMatcher.parsePath(path);
 
       final Http.Handler handler;
-      handler = ofPath(matcher, routes);
+      handler = ofPath(matcher, module);
 
       addMany(handler);
     }
 
     @Override
-    public final void when(Predicate<? super Http.Exchange> condition, Consumer<Http.Routing> routes) {
+    public final void when(Predicate<? super Http.Exchange> condition, Http.Routing.Module module) {
       Objects.requireNonNull(condition, "condition == null");
 
       final HttpRouting.Of builder;
       builder = new HttpRouting.Of(condition);
 
       // implicit null-check
-      routes.accept(builder);
+      module.configure(builder);
 
       final Http.Handler handler;
       handler = builder.build();
@@ -79,7 +78,7 @@ sealed abstract class HttpRouting {
 
   }
 
-  static final class OfPath extends HttpRouting implements Http.Routing.OfPath {
+  static final class OfPath extends HttpRouting implements Http.RoutingPath {
 
     private Set<Http.Method> allowedMethods;
 
@@ -199,13 +198,13 @@ sealed abstract class HttpRouting {
     }
 
     @Override
-    public final void filter(Http.Filter value, Consumer<Http.Routing.OfPath> routes) {
+    public final void filter(Http.Filter value, Http.RoutingPath.Module module) {
       Objects.requireNonNull(value, "value == null");
 
       final OfPath routing;
       routing = new OfPath(allowSubpath, value);
 
-      routes.accept(routing);
+      module.configure(routing);
 
       final Http.Handler handler;
       handler = routing.build();
@@ -266,7 +265,7 @@ sealed abstract class HttpRouting {
     }
 
     @Override
-    public final void subpath(String path, Consumer<Http.Routing.OfPath> routes) {
+    public final void subpath(String path, Http.RoutingPath.Module module) {
       if (!allowSubpath) {
         throw new IllegalStateException("A subpath can only be defined in a wildcard parent path");
       }
@@ -279,7 +278,7 @@ sealed abstract class HttpRouting {
       final OfPath routing;
       routing = new OfPath(subpathMatcher);
 
-      routes.accept(routing);
+      module.configure(routing);
 
       final Http.Handler handler;
       handler = routing.build();
@@ -288,13 +287,13 @@ sealed abstract class HttpRouting {
     }
 
     @Override
-    public final void when(Predicate<? super Http.Exchange> condition, Consumer<Http.Routing.OfPath> routes) {
+    public final void when(Predicate<? super Http.Exchange> condition, Http.RoutingPath.Module module) {
       Objects.requireNonNull(condition, "condition == null");
 
       final OfPath routing;
       routing = new OfPath(allowSubpath, condition);
 
-      routes.accept(routing);
+      module.configure(routing);
 
       final Http.Handler handler;
       handler = routing.build();
@@ -324,11 +323,11 @@ sealed abstract class HttpRouting {
     many.add(handler);
   }
 
-  final Http.Handler ofPath(HttpRequestMatcher matcher, Consumer<Http.Routing.OfPath> routes) {
+  final Http.Handler ofPath(HttpRequestMatcher matcher, Http.RoutingPath.Module module) {
     final HttpRouting.OfPath routing;
     routing = new HttpRouting.OfPath(matcher);
 
-    routes.accept(routing);
+    module.configure(routing);
 
     return routing.build();
   }

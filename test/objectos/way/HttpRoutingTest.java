@@ -422,9 +422,9 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
     }
   }
 
-  private static class TestCase04 implements Consumer<Http.Routing> {
+  private static class TestCase04 implements Http.Routing.Module {
     @Override
-    public final void accept(Http.Routing routing) {
+    public final void configure(Http.Routing routing) {
       routing.path("/testCase04", path -> {
         path.handler(Http.Handler.ok(Media.Bytes.textPlain("ROOT")));
       });
@@ -816,9 +816,9 @@ public class HttpRoutingTest implements Consumer<Http.Routing> {
     }
   }
 
-  private static class TestCase08 implements Consumer<Http.Routing> {
+  private static class TestCase08 implements Http.Routing.Module {
     @Override
-    public final void accept(Http.Routing routing) {
+    public final void configure(Http.Routing routing) {
       routing.path("/testCase08", path -> {
         path.handler(Http.Handler.ok(Media.Bytes.textPlain("TC08")));
       });

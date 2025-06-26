@@ -15,13 +15,12 @@
  */
 package objectos.way;
 
-import java.util.function.Consumer;
 import objectos.way.Http.Routing;
 
-final class MarketingSite implements Consumer<Http.Routing> {
+final class MarketingSite implements Http.Routing.Module {
 
   @Override
-  public final void accept(Routing routing) {
+  public final void configure(Routing routing) {
     routing.path("/", path -> {
       path.handler(Http.Handler.movedPermanently("/index.html"));
     });
