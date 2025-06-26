@@ -43,15 +43,7 @@ final class HttpHandler implements Http.Handler {
 
     // pre-made responses
 
-    OK_MEDIA_BYTES,
-
-    OK_MEDIA_TEXT,
-
-    OK_MEDIA_STREAM,
-
     METHOD_NOT_ALLOWED,
-
-    MOVED_PERMANENTLY,
 
     NOT_FOUND;
 
@@ -103,10 +95,6 @@ final class HttpHandler implements Http.Handler {
     return new HttpHandler(Kind.METHOD_NOT_ALLOWED, null, allow);
   }
 
-  public static Http.Handler movedPermanently(String location) {
-    return new HttpHandler(Kind.MOVED_PERMANENTLY, null, location);
-  }
-
   public static Http.Handler methodAllowed(Http.Method method, Http.Handler handler) {
     final HttpRequestMatcher predicate;
     predicate = HttpRequestMatcher.methodAllowed(method);
@@ -132,18 +120,6 @@ final class HttpHandler implements Http.Handler {
 
   public static Http.Handler notFound() {
     return NOT_FOUND;
-  }
-
-  public static Http.Handler ok(Media.Bytes bytes) {
-    return new HttpHandler(Kind.OK_MEDIA_BYTES, null, bytes);
-  }
-
-  public static Http.Handler ok(Media.Text text) {
-    return new HttpHandler(Kind.OK_MEDIA_TEXT, null, text);
-  }
-
-  public static Http.Handler ok(Media.Stream stream) {
-    return new HttpHandler(Kind.OK_MEDIA_STREAM, null, stream);
   }
 
   public static Http.Handler of(Predicate<? super Http.Exchange> condition, Http.Filter filter, List<Http.Handler> handlers) {
@@ -397,12 +373,6 @@ final class HttpHandler implements Http.Handler {
         }
       }
 
-      case OK_MEDIA_BYTES -> http.ok((Media.Bytes) main);
-
-      case OK_MEDIA_TEXT -> http.ok((Media.Text) main);
-
-      case OK_MEDIA_STREAM -> http.ok((Media.Stream) main);
-
       case METHOD_NOT_ALLOWED -> {
         http.status(Http.Status.METHOD_NOT_ALLOWED);
 
@@ -414,8 +384,6 @@ final class HttpHandler implements Http.Handler {
 
         http.send();
       }
-
-      case MOVED_PERMANENTLY -> http.movedPermanently((String) main);
 
       case NOT_FOUND -> {
         http.status(Http.Status.NOT_FOUND);

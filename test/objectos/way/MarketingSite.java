@@ -22,7 +22,7 @@ final class MarketingSite implements Http.Routing.Module {
   @Override
   public final void configure(Routing routing) {
     routing.path("/", path -> {
-      path.handler(Http.Handler.movedPermanently("/index.html"));
+      path.handler(http -> http.movedPermanently("/index.html"));
     });
 
     routing.path("/index.html", path -> {

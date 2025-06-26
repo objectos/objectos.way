@@ -111,7 +111,7 @@ public class HttpExchangeTestBCreate extends HttpExchangeTest {
 
   private final Http.Handler moduleInterop = Http.Handler.of(routing -> {
     routing.path("/tc01", path -> {
-      path.handler(Http.Handler.ok(Media.Bytes.textPlain("TC01")));
+      path.handler(http -> http.ok(Media.Bytes.textPlain("TC01")));
     });
   });
 

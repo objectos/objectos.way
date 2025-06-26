@@ -160,7 +160,7 @@ public class HttpRoutingTest implements Http.Routing.Module {
 
         path.handler(this::$testCase11);
 
-        path.handler(Http.Handler.ok(Media.Bytes.textPlain("nonono\n")));
+        path.handler(http -> http.ok(Media.Bytes.textPlain("nonono\n")));
       });
 
       // tc12: interceptor
@@ -425,15 +425,15 @@ public class HttpRoutingTest implements Http.Routing.Module {
     @Override
     public final void configure(Http.Routing routing) {
       routing.path("/testCase04", path -> {
-        path.handler(Http.Handler.ok(Media.Bytes.textPlain("ROOT")));
+        path.handler(http -> http.ok(Media.Bytes.textPlain("ROOT")));
       });
 
       routing.path("/testCase04/", path -> {
-        path.handler(Http.Handler.movedPermanently("/testCase04"));
+        path.handler(http -> http.movedPermanently("/testCase04"));
       });
 
       routing.path("/testCase04/foo", path -> {
-        path.handler(Http.Handler.ok(Media.Bytes.textPlain("foo")));
+        path.handler(http -> http.ok(Media.Bytes.textPlain("foo")));
       });
     }
   }
@@ -819,7 +819,7 @@ public class HttpRoutingTest implements Http.Routing.Module {
     @Override
     public final void configure(Http.Routing routing) {
       routing.path("/testCase08", path -> {
-        path.handler(Http.Handler.ok(Media.Bytes.textPlain("TC08")));
+        path.handler(http -> http.ok(Media.Bytes.textPlain("TC08")));
       });
     }
   }

@@ -613,6 +613,34 @@ public final class Http {
       return routing.build();
     }
 
+    /**
+     * Returns a handler which delegates the processing to the handler created
+     * by the specified factory and value.
+     *
+     * <p>
+     * The returned handler is equivalent to the following:
+     *
+     * <pre>{@code
+     * static <T> Handler factory(Function<T, ? extends Handler> factory, T value) {
+     *   return new Handler() {
+     *     &#64;Override
+     *     public void handle(Http.Exchange http) {
+     *       factory.apply(value).handle(http);
+     *     }
+     *   };
+     * }
+     * }</pre>
+     *
+     * <p>
+     * Except it is done in a null-safe way.
+     *
+     * @param factory
+     *        a function that provides a handler based on the specified value
+     * @param value
+     *        the factory's argument
+     *
+     * @return a newly created handler
+     */
     static <T> Handler factory(Function<T, ? extends Handler> factory, T value) {
       Objects.requireNonNull(factory, "factory == null");
 
@@ -626,28 +654,6 @@ public final class Http {
      */
     static Handler noop() {
       return HttpHandler.NOOP;
-    }
-
-    // 2xx responses
-
-    static Handler ok(Media media) {
-      Objects.requireNonNull(media, "media == null");
-
-      return switch (media) {
-        case Media.Bytes bytes -> HttpHandler.ok(bytes);
-
-        case Media.Text text -> HttpHandler.ok(text);
-
-        case Media.Stream stream -> HttpHandler.ok(stream);
-      };
-    }
-
-    // 3xx responses
-
-    static Handler movedPermanently(String location) {
-      Objects.requireNonNull(location, "location == null");
-
-      return HttpHandler.movedPermanently(location);
     }
 
     // 4xx responses
