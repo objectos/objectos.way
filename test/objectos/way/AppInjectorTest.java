@@ -84,9 +84,9 @@ public class AppInjectorTest {
     }
   }
 
-  private static final App.Key<String> STRING_A = App.Key.create(String.class, "A");
+  private static final Lang.Key<String> STRING_A = Lang.Key.of("A");
 
-  private static final App.Key<String> STRING_B = App.Key.create(String.class, "B");
+  private static final Lang.Key<String> STRING_B = Lang.Key.of("B");
 
   @Test
   public void key01() {
@@ -115,7 +115,7 @@ public class AppInjectorTest {
 
       Assert.fail();
     } catch (IllegalArgumentException expected) {
-      assertEquals(expected.getMessage(), "AppKey[type=class java.lang.String, value=A] is already mapped to ABC");
+      assertEquals(expected.getMessage(), "LangKey[unique=A] is already mapped to ABC");
     }
   }
 
@@ -131,7 +131,7 @@ public class AppInjectorTest {
 
       Assert.fail();
     } catch (IllegalArgumentException expected) {
-      assertEquals(expected.getMessage(), "No mappings were found for AppKey[type=class java.lang.String, value=B]");
+      assertEquals(expected.getMessage(), "No mappings were found for LangKey[unique=B]");
     }
   }
 
@@ -150,7 +150,7 @@ public class AppInjectorTest {
 
       Assert.fail();
     } catch (IllegalArgumentException expected) {
-      assertEquals(expected.getMessage(), "No mappings were found for AppKey[type=class java.lang.String, value=B]");
+      assertEquals(expected.getMessage(), "No mappings were found for LangKey[unique=B]");
     }
   }
 

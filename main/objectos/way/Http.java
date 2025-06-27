@@ -1719,13 +1719,13 @@ public final class Http {
    * @see <a href="https://tools.ietf.org/html/rfc6265">RFC 6265 - HTTP State
    *      Management Mechanism</a>
    */
-  public sealed interface SetCookie permits HttpSetCookie {
+  sealed interface SetCookie permits HttpSetCookie {
 
     /**
      * Configuration interface for building a {@link SetCookie} instance.
      * Provides methods to set cookie attributes before creation.
      */
-    public sealed interface Config permits HttpSetCookieConfig {
+    sealed interface Config permits HttpSetCookieConfig {
 
       /**
        * Sets the name of the cookie.
@@ -1792,6 +1792,7 @@ public final class Http {
        * @param value
        *        the SameSite policy to apply
        */
+      @SuppressWarnings("exports")
       void sameSite(SameSite value);
     }
 

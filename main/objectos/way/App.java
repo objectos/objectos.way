@@ -25,7 +25,6 @@ import java.lang.annotation.Target;
 import java.nio.file.Path;
 import java.nio.file.WatchService;
 import java.time.Clock;
-import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import objectos.way.App.NoteSink.OfConsole;
@@ -161,7 +160,7 @@ public final class App {
        * @param instance
        *        the value to be associated with the specified key
        */
-      <T> void putInstance(Key<T> key, T instance);
+      <T> void putInstance(Lang.Key<T> key, T instance);
 
     }
 
@@ -191,24 +190,7 @@ public final class App {
      *
      * @return the instance associated to the specified key
      */
-    <T> T getInstance(Key<T> key);
-
-  }
-
-  /**
-   * A typed key for registering and obtaining instances to and from an
-   * injector.
-   *
-   * @param <T> the type of the object to be registered to an injector
-   */
-  public sealed interface Key<T> permits AppKey {
-
-    static <T> Key<T> create(Class<T> type, Object value) {
-      Objects.requireNonNull(type, "type == null");
-      Objects.requireNonNull(value, "value == null");
-
-      return new AppKey<>(type, value);
-    }
+    <T> T getInstance(Lang.Key<T> key);
 
   }
 

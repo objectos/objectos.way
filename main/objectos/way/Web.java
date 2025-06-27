@@ -374,7 +374,7 @@ public final class Web {
   /**
    * Manages security related information of an web application.
    */
-  public sealed interface Secure permits WebSecure {
+  sealed interface Secure permits WebSecure {
 
     /**
      * Configures the creation of a {@code Web.Secure} instance.

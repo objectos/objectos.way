@@ -21,6 +21,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -46,6 +47,43 @@ public final class Lang {
      */
     @Override
     Iterator<T> iterator();
+
+  }
+
+  /**
+   * A typed key for associating values in map-like data structures.
+   *
+   * @param <T> the type of the objects to be mapped to the key
+   */
+  public sealed interface Key<T> permits LangKey {
+
+    /**
+     * Creates a new key instance whose equality is based on the
+     * specified {@code unique} object. In other words, two key instances are
+     * equal if, and only if, their {@code unique} objects are also equal. As a
+     * consequence, and due to Java's type system nature, the following two key
+     * instances are equal to each other:
+     *
+     * <pre>{@code
+     * Key<String> a = Key.of("KEY");
+     * Key<LocalDate> b = Key.of("KEY");
+     * }</pre>
+     *
+     * <p>
+     * As {@code "KEY".equals("KEY")} evaluates to {@code true}, keys {@code a}
+     * and {@code b} are equal to each other, even though they declare distinct
+     * type arguments.
+     *
+     * @param <T> the type of the objects to be mapped to this key
+     *
+     * @param unique
+     *        an object used to distinguish key instance
+     */
+    static <T> Key<T> of(Object unique) {
+      Objects.requireNonNull(unique, "unique == null");
+
+      return new LangKey<>(unique);
+    }
 
   }
 

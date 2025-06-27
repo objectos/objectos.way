@@ -16,7 +16,6 @@
 package objectos.way;
 
 import java.util.Map;
-import objectos.way.App.Key;
 
 final class AppInjector implements App.Injector {
 
@@ -41,7 +40,7 @@ final class AppInjector implements App.Injector {
 
   @SuppressWarnings("unchecked")
   @Override
-  public final <T> T getInstance(Key<T> key) {
+  public final <T> T getInstance(Lang.Key<T> key) {
     final Object maybeNull;
     maybeNull = map.get(key);
 

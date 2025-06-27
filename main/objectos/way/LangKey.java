@@ -15,4 +15,4 @@
  */
 package objectos.way;
 
-record AppKey<T>(Class<T> type, Object value) implements App.Key<T> {}
+record LangKey<T>(Object unique) implements Lang.Key<T> {}

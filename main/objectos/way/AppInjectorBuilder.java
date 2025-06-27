@@ -17,7 +17,6 @@ package objectos.way;
 
 import java.util.Objects;
 import objectos.way.App.Injector;
-import objectos.way.App.Key;
 
 final class AppInjectorBuilder implements App.Injector.Builder {
 
@@ -45,7 +44,7 @@ final class AppInjectorBuilder implements App.Injector.Builder {
 
   @SuppressWarnings("unchecked")
   @Override
-  public final <T> T getInstance(Key<T> key) {
+  public final <T> T getInstance(Lang.Key<T> key) {
     final Object maybeNull;
     maybeNull = map.get(key);
 
@@ -70,7 +69,7 @@ final class AppInjectorBuilder implements App.Injector.Builder {
   }
 
   @Override
-  public final <T> void putInstance(Key<T> key, T instance) {
+  public final <T> void putInstance(Lang.Key<T> key, T instance) {
     Objects.requireNonNull(key, "key == null");
     Objects.requireNonNull(instance, "instance == null");
 
