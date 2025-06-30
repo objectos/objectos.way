@@ -78,6 +78,8 @@ public final class Lang {
      *
      * @param unique
      *        an object used to distinguish key instance
+     *
+     * @return a newly created key
      */
     static <T> Key<T> of(Object unique) {
       Objects.requireNonNull(unique, "unique == null");

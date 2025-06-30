@@ -87,8 +87,8 @@ final class Y {
   private Y() {}
 
   public static String cookie(String name, long l0, long l1, long l2, long l3) {
-    final WebToken token;
-    token = WebToken.of32(l0, l1, l2, l3);
+    final HttpToken token;
+    token = HttpToken.of32(l0, l1, l2, l3);
 
     return name + "=" + token.toString();
   }

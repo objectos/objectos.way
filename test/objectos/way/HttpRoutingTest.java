@@ -40,22 +40,24 @@ public class HttpRoutingTest implements Http.Routing.Module {
 
   private String cookie;
 
-  private Web.Secure webSecure;
+  private Http.SessionStore sessionStore;
 
   @BeforeClass
   public void beforeClass() {
-    this.webSecure = Web.Secure.create(config -> {
+    this.sessionStore = Http.SessionStore.create(config -> {
       config.cookieName("HTTPMODULETEST");
 
-      config.randomGenerator(Y.randomGeneratorOfLongs(1L, 2L, 3L, 4L));
+      config.sessionGenerator(Y.randomGeneratorOfLongs(1L, 2L, 3L, 4L));
     });
 
     cookie = Y.cookie("HTTPMODULETEST", 1L, 2L, 3L, 4L);
 
-    Web.Session session;
-    session = webSecure.createSession();
+    final Http.Exchange http;
+    http = Http.Exchange.create(opts -> {});
 
-    session.put(User.class, new User("test"));
+    sessionStore.ensureSession(http);
+
+    http.sessionAttr(User.class, () -> new User("test"));
 
     TestingHttpServer.bindHttpRoutingTest(this);
   }
@@ -193,20 +195,19 @@ public class HttpRoutingTest implements Http.Routing.Module {
     routing.handler(Http.Handler.notFound());
   }
 
-  private boolean notAuthenticated(Http.Request req) {
-    return !authenticated(req);
+  private boolean notAuthenticated(Http.Exchange http) {
+    sessionStore.loadSession(http);
+
+    return !authenticated(http);
   }
 
-  private boolean authenticated(Http.Request req) {
-    final Web.Session session;
-    session = webSecure.getSession(req);
-
-    if (session == null) {
+  private boolean authenticated(Http.Exchange http) {
+    if (!http.sessionPresent()) {
       return false;
     }
 
     final User user;
-    user = session.get(User.class);
+    user = http.sessionAttr(User.class);
 
     return user != null;
   }
@@ -285,11 +286,8 @@ public class HttpRoutingTest implements Http.Routing.Module {
     User user;
     user = null;
 
-    Web.Session session;
-    session = http.get(Web.Session.class);
-
-    if (session != null) {
-      user = session.get(User.class);
+    if (http.sessionPresent()) {
+      user = http.sessionAttr(User.class);
     }
 
     if (user == null) {

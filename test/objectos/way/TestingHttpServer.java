@@ -142,29 +142,29 @@ public final class TestingHttpServer {
       ThisNoteSink noteSink;
       noteSink = new ThisNoteSink(serverStarted, noteReceived);
 
-      Http.Server wayServer;
-      wayServer = Http.Server.create(config -> {
+      Http.Server server;
+      server = Http.Server.create(opts -> {
         final Http.Handler serverHandler;
         serverHandler = Http.Handler.of(HANDLER::configure);
 
-        config.handler(serverHandler);
+        opts.handler(serverHandler);
 
-        config.clock(Y.clockFixed());
+        opts.clock(Y.clockFixed());
 
-        config.noteSink(noteSink);
+        opts.noteSink(noteSink);
 
-        config.port(0);
+        opts.port(0);
       });
 
-      TestingShutdownHook.register(wayServer);
+      TestingShutdownHook.register(server);
 
-      wayServer.start();
+      server.start();
 
       serverStarted.countDown();
 
       noteReceived.await();
 
-      return wayServer;
+      return server;
     }
 
   }
