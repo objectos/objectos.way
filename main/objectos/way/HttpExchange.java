@@ -2938,6 +2938,23 @@ final class HttpExchange implements Http.Exchange, Closeable {
     session.computeIfAbsent(key, supplier);
   }
 
+  @Override
+  public final <T> T sessionAttr(Lang.Key<T> key) {
+    checkSession();
+
+    return session.get(key);
+  }
+
+  @Override
+  public final <T> void sessionAttr(Lang.Key<T> key, Supplier<? extends T> supplier) {
+    checkSession();
+
+    Objects.requireNonNull(key, "key == null");
+    Objects.requireNonNull(supplier, "supplier == null");
+
+    session.computeIfAbsent(key, supplier);
+  }
+
   public final void session(HttpSession value) {
     session = value;
   }

@@ -415,8 +415,8 @@ public final class Http {
     // ##################################################################
 
     /**
-     * Returns the session attribute associated to the specified key, or
-     * {@code null} if the attribute is not found.
+     * Returns the session attribute associated to the name of the specified
+     * class, or {@code null} if the attribute is not found.
      *
      * @param <T>
      *        the type of the attribute
@@ -433,7 +433,7 @@ public final class Http {
 
     /**
      * If a value is not mapped to the attribute name provided by
-     * the specified key, associate the one provided by the specified
+     * the specified class, associate the one provided by the specified
      * supplier.
      *
      * @param <T>
@@ -447,6 +447,40 @@ public final class Http {
      *         if no session is associated to this exchange
      */
     <T> void sessionAttr(Class<T> key, Supplier<? extends T> supplier);
+
+    /**
+     * Returns the session attribute associated to the specified key, or
+     * {@code null} if the attribute is not found.
+     *
+     * @param <T>
+     *        the type of the attribute
+     * @param key
+     *        the key object
+     *
+     * @return the attribute value, or {@code null} if the attribute is not
+     *         found
+     *
+     * @throws IllegalStateException
+     *         if no session is associated to this exchange
+     */
+    <T> T sessionAttr(Lang.Key<T> key);
+
+    /**
+     * If a value is not mapped to the attribute name provided by
+     * the specified key, associate the one provided by the specified
+     * supplier.
+     *
+     * @param <T>
+     *        the type of the attribute
+     * @param key
+     *        the key object
+     * @param supplier
+     *        provides the object to be stored
+     *
+     * @throws IllegalStateException
+     *         if no session is associated to this exchange
+     */
+    <T> void sessionAttr(Lang.Key<T> key, Supplier<? extends T> supplier);
 
     // ##################################################################
     // # END: Session Support

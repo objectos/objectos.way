@@ -16,15 +16,19 @@
 package objectos.way;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertSame;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.net.Socket;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 import org.testng.annotations.Test;
 
-public class HttpExchangeTestASession {
+public class HttpExchangeTestASession extends HttpExchangeTest {
 
   @Test
   public void session01() {
@@ -87,6 +91,188 @@ public class HttpExchangeTestASession {
             """
         )
     );
+  }
+
+  public class Subject {}
+
+  @Test(description = "session should be resistant to class reloading (dev mode)")
+  public void session02() throws ClassNotFoundException {
+    final Class<Subject> class1;
+    class1 = Subject.class;
+
+    final Subject subject;
+    subject = new Subject();
+
+    final Class<Subject> class2;
+    class2 = reload(class1);
+
+    assertFalse(class1.equals(class2));
+
+    final Http.SessionStore store;
+    store = Http.SessionStore.create(options -> {
+      options.sessionGenerator(Y.randomGeneratorOfLongs(1L, 2L, 3L, 4L));
+    });
+
+    test(
+        xch(
+            """
+            GET /1 HTTP/1.1\r
+            Host: host\r
+            \r
+            """,
+
+            http -> {
+              store.ensureSession(http);
+
+              http.sessionAttr(class1, () -> subject);
+
+              http.ok(OK);
+            },
+
+            """
+            HTTP/1.1 200 OK\r
+            Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+            Content-Type: text/plain; charset=utf-8\r
+            Content-Length: 3\r
+            Set-Cookie: OBJECTOSWAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=; HttpOnly; Path=/; Secure\r
+            \r
+            OK
+            """
+        ),
+
+        xch(
+            """
+            GET /1 HTTP/1.1\r
+            Host: host\r
+            Cookie: OBJECTOSWAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=\r
+            \r
+            """,
+
+            http -> {
+              store.loadSession(http);
+
+              final Subject attr;
+              attr = http.sessionAttr(class2);
+
+              assertSame(attr, subject);
+
+              http.ok(OK);
+            },
+
+            """
+            HTTP/1.1 200 OK\r
+            Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+            Content-Type: text/plain; charset=utf-8\r
+            Content-Length: 3\r
+            \r
+            OK
+            """
+        )
+    );
+  }
+
+  private final Lang.Key<String> testKey = Lang.Key.of("TEST");
+
+  @Test
+  public void session03() {
+    final Http.SessionStore store;
+    store = Http.SessionStore.create(options -> {
+      options.sessionGenerator(Y.randomGeneratorOfLongs(1L, 2L, 3L, 4L));
+    });
+
+    test(
+        xch(
+            """
+            GET /1 HTTP/1.1\r
+            Host: host\r
+            \r
+            """,
+
+            http -> {
+              store.ensureSession(http);
+
+              http.sessionAttr(testKey, () -> "FOO\n");
+
+              http.ok(Media.Bytes.textPlain("NEW\n"));
+            },
+
+            """
+            HTTP/1.1 200 OK\r
+            Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+            Content-Type: text/plain; charset=utf-8\r
+            Content-Length: 4\r
+            Set-Cookie: OBJECTOSWAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=; HttpOnly; Path=/; Secure\r
+            \r
+            NEW
+            """
+        ),
+
+        xch(
+            """
+            GET /1 HTTP/1.1\r
+            Host: host\r
+            Cookie: OBJECTOSWAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=\r
+            \r
+            """,
+
+            http -> {
+              store.loadSession(http);
+
+              final String attr;
+              attr = http.sessionAttr(testKey);
+
+              http.ok(Media.Bytes.textPlain(attr));
+            },
+
+            """
+            HTTP/1.1 200 OK\r
+            Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+            Content-Type: text/plain; charset=utf-8\r
+            Content-Length: 4\r
+            \r
+            FOO
+            """
+        )
+    );
+  }
+
+  @SuppressWarnings("unchecked")
+  private <T> Class<T> reload(Class<T> original) {
+    final String className;
+    className = original.getName();
+
+    final String pathName;
+    pathName = className.replace('.', '/') + ".class";
+
+    final ClassLoader originalLoader;
+    originalLoader = original.getClassLoader();
+
+    final byte[] bytes;
+
+    try (
+        InputStream in = originalLoader.getResourceAsStream(pathName);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+    ) {
+      in.transferTo(out);
+
+      bytes = out.toByteArray();
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
+
+    final ClassLoader reloader;
+    reloader = new ClassLoader(null) {
+      @Override
+      protected Class<?> findClass(String name) throws ClassNotFoundException {
+        return defineClass(name, bytes, 0, bytes.length);
+      }
+    };
+
+    try {
+      return (Class<T>) reloader.loadClass(className);
+    } catch (ClassNotFoundException e) {
+      throw new AssertionError("Reload failed", e);
+    }
   }
 
   private void test(Tuple... tuples) {

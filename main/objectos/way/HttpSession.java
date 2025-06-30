@@ -36,19 +36,19 @@ final class HttpSession {
 
   }
 
-  private record Store1(String name, Object value) {
+  private record Store1(Object key1, Object value1) {
 
-    final boolean containsKey(String key) {
-      return name.equals(key);
+    final boolean containsKey(Object key) {
+      return key1.equals(key);
     }
 
-    final Store2 add(String name2, Object value2) {
-      return new Store2(name, value, name2, value2);
+    final Store2 add(Object key2, Object value2) {
+      return new Store2(key1, value1, key2, value2);
     }
 
-    final Object get(String key) {
-      if (name.equals(key)) {
-        return value;
+    final Object get(Object key) {
+      if (key1.equals(key)) {
+        return value1;
       }
 
       return null;
@@ -56,29 +56,29 @@ final class HttpSession {
 
   }
 
-  private record Store2(String name1, Object value1, String name2, Object value2) {
+  private record Store2(Object key1, Object value1, Object key2, Object value2) {
 
-    final boolean containsKey(String key) {
-      return name1.equals(key) || name2.equals(key);
+    final boolean containsKey(Object key) {
+      return key1.equals(key) || key2.equals(key);
     }
 
-    final Map<Object, Object> add(String name3, Object value3) {
+    final Map<Object, Object> add(Object key3, Object value3) {
       Map<Object, Object> map;
       map = Util.createMap();
 
-      map.put(name1, value1);
-      map.put(name2, value2);
-      map.put(name3, value3);
+      map.put(key1, value1);
+      map.put(key2, value2);
+      map.put(key3, value3);
 
       return map;
     }
 
-    final Object get(String key) {
-      if (name1.equals(key)) {
+    final Object get(Object key) {
+      if (key1.equals(key)) {
         return value1;
       }
 
-      if (name2.equals(key)) {
+      if (key2.equals(key)) {
         return value2;
       }
 
@@ -117,16 +117,24 @@ final class HttpSession {
     store = map;
   }
 
-  public final void computeIfAbsent(Class<?> key, Supplier<?> supplier) {
+  public final void computeIfAbsent(Class<?> clazz, Supplier<?> supplier) {
+    final String key;
+    key = clazz.getName();
+
+    computeIfAbsent0(key, supplier);
+  }
+
+  public final void computeIfAbsent(Lang.Key<?> key, Supplier<?> supplier) {
+    computeIfAbsent0(key, supplier);
+  }
+
+  private void computeIfAbsent0(Object key, Supplier<?> supplier) {
     lock.lock();
     try {
 
-      final String name;
-      name = key.getName();
-
       switch (state) {
         case EMPTY -> {
-          store = new Store1(name, get(supplier));
+          store = new Store1(key, get(supplier));
 
           state = State.SINGLE;
         }
@@ -135,8 +143,8 @@ final class HttpSession {
           final Store1 single;
           single = single();
 
-          if (!single.containsKey(name)) {
-            store = single.add(name, get(supplier));
+          if (!single.containsKey(key)) {
+            store = single.add(key, get(supplier));
 
             state = State.DUO;
           }
@@ -146,8 +154,8 @@ final class HttpSession {
           final Store2 duo;
           duo = duo();
 
-          if (!duo.containsKey(name)) {
-            store = duo.add(name, get(supplier));
+          if (!duo.containsKey(key)) {
+            store = duo.add(key, get(supplier));
 
             state = State.MAP;
           }
@@ -157,8 +165,8 @@ final class HttpSession {
           final Map<Object, Object> map;
           map = map();
 
-          if (!map.containsKey(name)) {
-            map.put(name, get(supplier));
+          if (!map.containsKey(key)) {
+            map.put(key, get(supplier));
           }
         }
       }
@@ -168,21 +176,29 @@ final class HttpSession {
     }
   }
 
-  @SuppressWarnings("unchecked")
-  public final <T> T get(Class<T> key) {
-    final String name;
-    name = key.getName();
+  public final <T> T get(Class<T> clazz) {
+    final String key;
+    key = clazz.getName();
 
+    return get0(key);
+  }
+
+  public final <T> T get(Lang.Key<T> key) {
+    return get0(key);
+  }
+
+  @SuppressWarnings("unchecked")
+  private <T> T get0(Object key) {
     lock.lock();
     try {
       return (T) switch (state) {
         case EMPTY -> null;
 
-        case SINGLE -> single().get(name);
+        case SINGLE -> single().get(key);
 
-        case DUO -> duo().get(name);
+        case DUO -> duo().get(key);
 
-        case MAP -> map().get(name);
+        case MAP -> map().get(key);
       };
     } finally {
       lock.unlock();
