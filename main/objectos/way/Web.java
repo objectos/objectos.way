@@ -519,7 +519,7 @@ public final class Web {
   /**
    * An web session uniquely identifies the user of an application.
    */
-  public sealed interface Session permits WebSession {
+  sealed interface Session permits WebSession {
 
     /**
      * Creates a new {@code Session} object that is not associated to any

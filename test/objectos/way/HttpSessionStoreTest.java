@@ -68,11 +68,11 @@ public class HttpSessionStoreTest {
       config.header(Http.HeaderName.COOKIE, cookie("OBJECTOSWAY", 1L, 2L, 3L, 4L));
     });
 
-    assertEquals(http.sessionLoaded(), false);
+    assertEquals(http.sessionPresent(), false);
 
     store.loadSession(http);
 
-    assertEquals(http.sessionLoaded(), true);
+    assertEquals(http.sessionPresent(), true);
   }
 
   @Test
@@ -85,11 +85,11 @@ public class HttpSessionStoreTest {
     final HttpExchange http;
     http = HttpExchange.create0(config -> {});
 
-    assertEquals(http.sessionLoaded(), false);
+    assertEquals(http.sessionPresent(), false);
 
     store.ensureSession(http);
 
-    assertEquals(http.sessionLoaded(), true);
+    assertEquals(http.sessionPresent(), true);
   }
 
   @Test
@@ -102,17 +102,17 @@ public class HttpSessionStoreTest {
     final HttpExchange http;
     http = HttpExchange.create0(config -> {});
 
-    assertEquals(http.sessionLoaded(), false);
+    assertEquals(http.sessionPresent(), false);
 
     store.ensureSession(http);
 
-    assertEquals(http.sessionLoaded(), true);
+    assertEquals(http.sessionPresent(), true);
 
     http.sessionAttr(String.class, () -> "MARKER");
 
     store.ensureSession(http);
 
-    assertEquals(http.sessionLoaded(), true);
+    assertEquals(http.sessionPresent(), true);
 
     assertEquals(http.sessionAttr(String.class), "MARKER");
   }

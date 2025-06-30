@@ -492,6 +492,14 @@ public final class Http {
      */
     void sessionInvalidate();
 
+    /**
+     * Checks if a session is associated to this exchange.
+     *
+     * @return {@code true} if a session is associated to this exchange and
+     *         {@code false} otherwise
+     */
+    boolean sessionPresent();
+
     // ##################################################################
     // # END: Session Support
     // ##################################################################

@@ -2959,7 +2959,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
     session.computeIfAbsent(key, supplier);
   }
 
-  public final boolean sessionLoaded() {
+  @Override
+  public final boolean sessionPresent() {
     return session != null;
   }
 

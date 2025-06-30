@@ -100,7 +100,7 @@ final class HttpSessionStore implements Http.SessionStore {
     final HttpExchange impl;
     impl = (HttpExchange) http;
 
-    if (impl.sessionLoaded()) {
+    if (impl.sessionPresent()) {
       return;
     }
 
@@ -123,7 +123,7 @@ final class HttpSessionStore implements Http.SessionStore {
     final HttpExchange impl;
     impl = (HttpExchange) http;
 
-    if (impl.sessionLoaded()) {
+    if (impl.sessionPresent()) {
       return;
     }
 
@@ -172,7 +172,7 @@ final class HttpSessionStore implements Http.SessionStore {
     boolean valid;
     valid = false;
 
-    if (csrf != null && impl.sessionLoaded()) {
+    if (csrf != null && impl.sessionPresent()) {
       final CsrfToken sessionToken;
       sessionToken = impl.sessionAttr(Http.CsrfToken.class);
 
