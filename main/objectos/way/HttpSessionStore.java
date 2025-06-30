@@ -17,6 +17,7 @@ package objectos.way;
 
 import java.time.Duration;
 import java.time.InstantSource;
+import java.time.ZonedDateTime;
 import java.util.EnumSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -48,11 +49,19 @@ final class HttpSessionStore implements Http.SessionStore {
 
   private static final int SESSION_LENGTH = 32;
 
+  private String cookieDomain;
+
+  private ZonedDateTime cookieExpires;
+
+  private final boolean cookieHttpOnly = true;
+
   private final Duration cookieMaxAge;
 
   private final String cookieName;
 
   private final String cookiePath;
+
+  private Http.SameSite cookieSameSite;
 
   private boolean cookieSecure = true;
 
@@ -290,28 +299,54 @@ final class HttpSessionStore implements Http.SessionStore {
   }
 
   private String setCookie(HttpToken id) {
-    final HttpSetCookieConfig builder;
-    builder = new HttpSetCookieConfig();
+    final StringBuilder sb;
+    sb = new StringBuilder();
 
-    builder.name(cookieName);
+    sb.append(cookieName);
 
-    builder.value(id.toString());
+    sb.append("=");
 
-    builder.httpOnly();
+    sb.append(id.toString());
+
+    if (cookieDomain != null) {
+      sb.append("; Domain=");
+
+      sb.append(cookieDomain);
+    }
+
+    if (cookieExpires != null) {
+      sb.append("; Expires=");
+
+      sb.append(Http.formatDate(cookieExpires));
+    }
+
+    if (cookieHttpOnly) {
+      sb.append("; HttpOnly");
+    }
 
     if (cookieMaxAge != null) {
-      builder.maxAge(cookieMaxAge);
+      sb.append("; Max-Age=");
+
+      sb.append(cookieMaxAge.getSeconds());
     }
 
     if (cookiePath != null) {
-      builder.path(cookiePath);
+      sb.append("; Path=");
+
+      sb.append(cookiePath);
+    }
+
+    if (cookieSameSite != null) {
+      sb.append("; SameSite=");
+
+      sb.append(cookieSameSite.text);
     }
 
     if (cookieSecure) {
-      builder.secure();
+      sb.append("; Secure");
     }
 
-    return builder.buildString();
+    return sb.toString();
   }
 
 }
