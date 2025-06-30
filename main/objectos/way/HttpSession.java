@@ -87,19 +87,19 @@ final class HttpSession {
 
   }
 
-  private volatile Instant accessTime;
+  private Instant accessTime;
 
   private final HttpToken id;
 
   private final Lock lock = new ReentrantLock();
 
-  private volatile String setCookie;
+  private String setCookie;
 
   private State state = State.EMPTY;
 
   private Object store;
 
-  private volatile boolean valid = true;
+  private boolean valid = true;
 
   HttpSession(HttpToken id, String setCookie) {
     this.id = id;
@@ -131,6 +131,8 @@ final class HttpSession {
   private void computeIfAbsent0(Object key, Supplier<?> supplier) {
     lock.lock();
     try {
+
+      checkValid();
 
       switch (state) {
         case EMPTY -> {
@@ -191,6 +193,8 @@ final class HttpSession {
   private <T> T get0(Object key) {
     lock.lock();
     try {
+      checkValid();
+
       return (T) switch (state) {
         case EMPTY -> null;
 
@@ -230,7 +234,18 @@ final class HttpSession {
   }
 
   public final void invalidate() {
-    valid = false;
+    lock.lock();
+    try {
+      checkValid();
+
+      valid = false;
+
+      state = State.EMPTY;
+
+      store = null;
+    } finally {
+      lock.unlock();
+    }
   }
 
   @Override
@@ -278,11 +293,22 @@ final class HttpSession {
   }
 
   final void touch(InstantSource source) {
-    accessTime = source.instant();
+    lock.lock();
+    try {
+      accessTime = source.instant();
+    } finally {
+      lock.unlock();
+    }
   }
 
   final boolean valid() {
     return valid;
+  }
+
+  private void checkValid() {
+    if (!valid) {
+      throw new IllegalStateException("This operation can only be performed on a valid and active session");
+    }
   }
 
 }

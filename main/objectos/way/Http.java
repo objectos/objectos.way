@@ -271,6 +271,7 @@ public final class Http {
      * <p>
      * Objects to be stored must not be {@code null}.
      *
+     * @param <T> the type of the object
      * @param key
      *        the object will be associated to the name of this key
      * @param value
@@ -282,6 +283,7 @@ public final class Http {
      * Retrieves the object stored in this request associated to the specified
      * key. Returns {@code null} if no object is found.
      *
+     * @param <T> the type of the object
      * @param key
      *        the key to look for
      *
@@ -481,6 +483,14 @@ public final class Http {
      *         if no session is associated to this exchange
      */
     <T> void sessionAttr(Lang.Key<T> key, Supplier<? extends T> supplier);
+
+    /**
+     * Invalidates the session associated to this exchange.
+     *
+     * @throws IllegalStateException
+     *         if no session is associated to this exchange
+     */
+    void sessionInvalidate();
 
     // ##################################################################
     // # END: Session Support
@@ -712,6 +722,14 @@ public final class Http {
    */
   public sealed interface HeaderName permits HttpHeaderName {
 
+    /**
+     * Creates a new {@code HeaderName} instance with the specified name.
+     *
+     * @param name
+     *        the name of the HTTP header field
+     *
+     * @return a newly created {@code HeaderName} instance
+     */
     static HeaderName of(String name) {
       Objects.requireNonNull(name, "name == null");
 
@@ -1520,13 +1538,38 @@ public final class Http {
        */
       void bufferSize(int initial, int max);
 
+      /**
+       * Sets the clock to the specified value.
+       *
+       * @param value
+       *        a clock instance
+       */
       void clock(Clock value);
 
+      /**
+       * Sets the {@code Handler} to the specified value. All requests
+       * to the server will be handled by this object.
+       *
+       * @param value
+       *        a handler instance
+       */
       void handler(Handler value);
 
+      /**
+       * Sets the note sink to the specified value.
+       *
+       * @param value
+       *        a note sink instance
+       */
       void noteSink(Note.Sink value);
 
-      void port(int port);
+      /**
+       * Sets the server's port to the specified value.
+       *
+       * @param value
+       *        the port to use
+       */
+      void port(int value);
 
       /**
        * Sets the maximum allowed size in bytes for the request body.
@@ -2087,10 +2130,19 @@ public final class Http {
    */
   public enum Version {
 
+    /**
+     * The {@code HTTP/0.9} version.
+     */
     HTTP_0_9("HTTP/0.9"),
 
+    /**
+     * The {@code HTTP/1.0} version.
+     */
     HTTP_1_0("HTTP/1.0"),
 
+    /**
+     * The {@code HTTP/1.1} version.
+     */
     HTTP_1_1("HTTP/1.1");
 
     final byte[] responseBytes;

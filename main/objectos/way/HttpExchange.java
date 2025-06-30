@@ -2921,6 +2921,10 @@ final class HttpExchange implements Http.Exchange, Closeable {
   // # BEGIN: Session Support
   // ##################################################################
 
+  public final void session(HttpSession value) {
+    session = value;
+  }
+
   @Override
   public final <T> T sessionAttr(Class<T> key) {
     checkSession();
@@ -2955,12 +2959,15 @@ final class HttpExchange implements Http.Exchange, Closeable {
     session.computeIfAbsent(key, supplier);
   }
 
-  public final void session(HttpSession value) {
-    session = value;
-  }
-
   public final boolean sessionLoaded() {
     return session != null;
+  }
+
+  @Override
+  public final void sessionInvalidate() {
+    checkSession();
+
+    session.invalidate();
   }
 
   private void checkSession() {

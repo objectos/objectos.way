@@ -26,6 +26,7 @@ import java.io.UncheckedIOException;
 import java.net.Socket;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class HttpExchangeTestASession extends HttpExchangeTest {
@@ -231,6 +232,105 @@ public class HttpExchangeTestASession extends HttpExchangeTest {
             Content-Length: 4\r
             \r
             FOO
+            """
+        )
+    );
+  }
+
+  @Test(description = "support logout")
+  public void session04() {
+    final Http.SessionStore store;
+    store = Http.SessionStore.create(options -> {
+      options.sessionGenerator(Y.randomGeneratorOfLongs(1L, 2L, 3L, 4L));
+    });
+
+    test(
+        xch(
+            """
+            GET /1 HTTP/1.1\r
+            Host: host\r
+            \r
+            """,
+
+            http -> {
+              store.ensureSession(http);
+
+              http.sessionAttr(String.class, () -> "FOO");
+
+              http.ok(OK);
+            },
+
+            """
+            HTTP/1.1 200 OK\r
+            Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+            Content-Type: text/plain; charset=utf-8\r
+            Content-Length: 3\r
+            Set-Cookie: OBJECTOSWAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=; HttpOnly; Path=/; Secure\r
+            \r
+            OK
+            """
+        ),
+
+        xch(
+            """
+            POST /2 HTTP/1.1\r
+            Host: host\r
+            Cookie: OBJECTOSWAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=\r
+            \r
+            """,
+
+            http -> {
+              store.loadSession(http);
+
+              final String attr;
+              attr = http.sessionAttr(String.class);
+
+              assertEquals(attr, "FOO");
+
+              http.sessionInvalidate();
+
+              http.ok(OK);
+            },
+
+            """
+            HTTP/1.1 200 OK\r
+            Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+            Content-Type: text/plain; charset=utf-8\r
+            Content-Length: 3\r
+            \r
+            OK
+            """
+        ),
+
+        xch(
+            """
+            GET /3 HTTP/1.1\r
+            Host: host\r
+            Cookie: OBJECTOSWAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=\r
+            \r
+            """,
+
+            http -> {
+              store.loadSession(http);
+
+              try {
+                http.sessionAttr(String.class);
+
+                Assert.fail();
+              } catch (IllegalStateException expected) {
+
+              }
+
+              http.ok(OK);
+            },
+
+            """
+            HTTP/1.1 200 OK\r
+            Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+            Content-Type: text/plain; charset=utf-8\r
+            Content-Length: 3\r
+            \r
+            OK
             """
         )
     );
