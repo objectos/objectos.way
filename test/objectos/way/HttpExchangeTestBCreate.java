@@ -148,7 +148,7 @@ public class HttpExchangeTestBCreate extends HttpExchangeTest {
     http = http(config -> {
       config.path("/restricted01");
 
-      config.sessionAttr(User.class, new User("foo"));
+      config.sessionSet(User.class, new User("foo"));
     });
 
     final Http.Handler handler;
@@ -161,7 +161,7 @@ public class HttpExchangeTestBCreate extends HttpExchangeTest {
 
   private void requireUser(Http.Exchange http) {
     final User user;
-    user = http.sessionAttr(User.class);
+    user = http.sessionGet(User.class);
 
     if (user == null) {
       http.found("/login");

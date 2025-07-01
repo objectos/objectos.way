@@ -242,7 +242,7 @@ public final class Http {
        * @param value
        *        the value to be stored
        */
-      <T> void sessionAttr(Class<T> key, T value);
+      <T> void sessionSet(Class<T> key, T value);
 
     }
 
@@ -417,72 +417,124 @@ public final class Http {
     // ##################################################################
 
     /**
-     * Returns the session attribute associated to the name of the specified
-     * class, or {@code null} if the attribute is not found.
+     * If a session is not associated to this exchange, returns {@code true},
+     * otherwise {@code false}.
+     *
+     * @return {@code true} if a session is not associated to this
+     *         exchange, otherwise {@code false}
+     */
+    boolean sessionAbsent();
+
+    /**
+     * Returns the session value associated to the specified
+     * class name, or {@code null} if no value is associated.
      *
      * @param <T>
-     *        the type of the attribute
+     *        the type of the session value
      * @param key
-     *        the class object providing the attribute name
+     *        the class whose associated value is to be returned
      *
-     * @return the attribute value, or {@code null} if the attribute is not
-     *         found
+     * @return the session value associated to the specified class name, or
+     *         {@code null} if no value is associated
      *
      * @throws IllegalStateException
      *         if no session is associated to this exchange
      */
-    <T> T sessionAttr(Class<T> key);
+    <T> T sessionGet(Class<T> key);
 
     /**
-     * If a value is not mapped to the attribute name provided by
-     * the specified class, associate the one provided by the specified
-     * supplier.
+     * Returns the session value associated to the specified key, or
+     * {@code null} if no value is associated.
      *
      * @param <T>
-     *        the type of the attribute
+     *        the type of the session value
      * @param key
-     *        the class object providing the attribute name
-     * @param supplier
-     *        provides the object to be stored
+     *        the key object whose associated value is to be returned
+     *
+     * @return the session value, or {@code null} if no value is associated
      *
      * @throws IllegalStateException
      *         if no session is associated to this exchange
      */
-    <T> void sessionAttr(Class<T> key, Supplier<? extends T> supplier);
+    <T> T sessionGet(Lang.Key<T> key);
 
     /**
-     * Returns the session attribute associated to the specified key, or
-     * {@code null} if the attribute is not found.
+     * Using the name of the specified class as the key, associate the
+     * specified value to this exchange's session.
      *
      * @param <T>
-     *        the type of the attribute
+     *        the type of the session value
+     * @param key
+     *        the class object whose name will serve as the key
+     * @param value
+     *        the session value
+     *
+     * @return the previous session value, or {@code null} if no value was
+     *         associated
+     *
+     * @throws IllegalStateException
+     *         if no session is associated to this exchange
+     */
+    <T> T sessionSet(Class<T> key, T value);
+
+    /**
+     * Using the specified key, associates the specified value to this
+     * exchange's session.
+     *
+     * @param <T>
+     *        the type of the session value
      * @param key
      *        the key object
+     * @param value
+     *        the session value
      *
-     * @return the attribute value, or {@code null} if the attribute is not
-     *         found
+     * @return the previous session value, or {@code null} if no value was
+     *         associated
      *
      * @throws IllegalStateException
      *         if no session is associated to this exchange
      */
-    <T> T sessionAttr(Lang.Key<T> key);
+    <T> T sessionSet(Lang.Key<T> key, T value);
 
     /**
-     * If a value is not mapped to the attribute name provided by
-     * the specified key, associate the one provided by the specified
-     * supplier.
+     * If a session value is not already associated to the name of the specified
+     * class, associate the one provided by the specified supplier.
      *
      * @param <T>
-     *        the type of the attribute
+     *        the type of the session value
+     * @param key
+     *        associate the value to the name of this class object
+     * @param supplier
+     *        provides the session value
+     *
+     * @return the session value (existing or computed); never {@code null}
+     *
+     * @throws IllegalStateException
+     *         if no session is associated to this exchange
+     * @throws NullPointerException
+     *         if the supplier provides a {@code null} value
+     */
+    <T> T sessionSetIfAbsent(Class<T> key, Supplier<? extends T> supplier);
+
+    /**
+     * If a session value is not already associated to the specified key,
+     * associate the one provided by the specified supplier.
+     *
+     * @param <T>
+     *        the type of the session value
      * @param key
      *        the key object
      * @param supplier
-     *        provides the object to be stored
+     *        provides the session value
+     *
+     * @return the session value (existing or computed); never {@code null}
      *
      * @throws IllegalStateException
      *         if no session is associated to this exchange
+     * @throws NullPointerException
+     *         if the supplier provides a {@code null} value
      */
-    <T> void sessionAttr(Lang.Key<T> key, Supplier<? extends T> supplier);
+    <T> T sessionSetIfAbsent(Lang.Key<T> key, Supplier<? extends T> supplier);
 
     /**
      * Invalidates the session associated to this exchange.
@@ -493,10 +545,11 @@ public final class Http {
     void sessionInvalidate();
 
     /**
-     * Checks if a session is associated to this exchange.
+     * If a session is associated to this exchange, returns {@code true},
+     * otherwise {@code false}.
      *
-     * @return {@code true} if a session is associated to this exchange and
-     *         {@code false} otherwise
+     * @return {@code true} if a session is associated to this
+     *         exchange, otherwise {@code false}
      */
     boolean sessionPresent();
 

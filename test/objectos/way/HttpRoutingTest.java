@@ -57,7 +57,7 @@ public class HttpRoutingTest implements Http.Routing.Module {
 
     sessionStore.ensureSession(http);
 
-    http.sessionAttr(User.class, () -> new User("test"));
+    http.sessionSet(User.class, new User("test"));
 
     TestingHttpServer.bindHttpRoutingTest(this);
   }
@@ -207,7 +207,7 @@ public class HttpRoutingTest implements Http.Routing.Module {
     }
 
     final User user;
-    user = http.sessionAttr(User.class);
+    user = http.sessionGet(User.class);
 
     return user != null;
   }
@@ -287,7 +287,7 @@ public class HttpRoutingTest implements Http.Routing.Module {
     user = null;
 
     if (http.sessionPresent()) {
-      user = http.sessionAttr(User.class);
+      user = http.sessionGet(User.class);
     }
 
     if (user == null) {

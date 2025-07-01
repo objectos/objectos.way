@@ -183,7 +183,7 @@ final class HttpSessionStore implements Http.SessionStore {
 
     if (csrf != null && impl.sessionPresent()) {
       final CsrfToken sessionToken;
-      sessionToken = impl.sessionAttr(Http.CsrfToken.class);
+      sessionToken = impl.sessionGet(Http.CsrfToken.class);
 
       valid = csrf.equals(sessionToken);
     }
@@ -245,7 +245,13 @@ final class HttpSessionStore implements Http.SessionStore {
     session.touch(instantSource);
 
     if (!skipCsrf) {
-      session.computeIfAbsent(Http.CsrfToken.class, () -> HttpToken.of(csrfGenerator, CSRF_LENGTH));
+      final Class<?> clazz;
+      clazz = Http.CsrfToken.class;
+
+      final String key;
+      key = clazz.getName();
+
+      session.set0(key, HttpToken.of(csrfGenerator, CSRF_LENGTH));
     }
 
     return session;

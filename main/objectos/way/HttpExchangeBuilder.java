@@ -202,7 +202,7 @@ final class HttpExchangeBuilder implements Http.Exchange.Options {
   }
 
   @Override
-  public final <T> void sessionAttr(Class<T> key, T value) {
+  public final <T> void sessionSet(Class<T> key, T value) {
     final String name;
     name = key.getName();
 

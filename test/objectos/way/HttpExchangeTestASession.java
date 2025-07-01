@@ -49,7 +49,7 @@ public class HttpExchangeTestASession extends HttpExchangeTest {
             http -> {
               store.ensureSession(http);
 
-              http.sessionAttr(String.class, () -> "FOO\n");
+              http.sessionSetIfAbsent(String.class, () -> "FOO\n");
 
               http.ok(Media.Bytes.textPlain("NEW\n"));
             },
@@ -77,7 +77,7 @@ public class HttpExchangeTestASession extends HttpExchangeTest {
               store.loadSession(http);
 
               final String attr;
-              attr = http.sessionAttr(String.class);
+              attr = http.sessionGet(String.class);
 
               http.ok(Media.Bytes.textPlain(attr));
             },
@@ -125,7 +125,7 @@ public class HttpExchangeTestASession extends HttpExchangeTest {
             http -> {
               store.ensureSession(http);
 
-              http.sessionAttr(class1, () -> subject);
+              http.sessionSetIfAbsent(class1, () -> subject);
 
               http.ok(OK);
             },
@@ -153,7 +153,7 @@ public class HttpExchangeTestASession extends HttpExchangeTest {
               store.loadSession(http);
 
               final Subject attr;
-              attr = http.sessionAttr(class2);
+              attr = http.sessionGet(class2);
 
               assertSame(attr, subject);
 
@@ -192,7 +192,7 @@ public class HttpExchangeTestASession extends HttpExchangeTest {
             http -> {
               store.ensureSession(http);
 
-              http.sessionAttr(testKey, () -> "FOO\n");
+              http.sessionSetIfAbsent(testKey, () -> "FOO\n");
 
               http.ok(Media.Bytes.textPlain("NEW\n"));
             },
@@ -220,7 +220,7 @@ public class HttpExchangeTestASession extends HttpExchangeTest {
               store.loadSession(http);
 
               final String attr;
-              attr = http.sessionAttr(testKey);
+              attr = http.sessionGet(testKey);
 
               http.ok(Media.Bytes.textPlain(attr));
             },
@@ -255,7 +255,7 @@ public class HttpExchangeTestASession extends HttpExchangeTest {
             http -> {
               store.ensureSession(http);
 
-              http.sessionAttr(String.class, () -> "FOO");
+              http.sessionSetIfAbsent(String.class, () -> "FOO");
 
               http.ok(OK);
             },
@@ -283,7 +283,7 @@ public class HttpExchangeTestASession extends HttpExchangeTest {
               store.loadSession(http);
 
               final String attr;
-              attr = http.sessionAttr(String.class);
+              attr = http.sessionGet(String.class);
 
               assertEquals(attr, "FOO");
 
@@ -314,7 +314,7 @@ public class HttpExchangeTestASession extends HttpExchangeTest {
               store.loadSession(http);
 
               try {
-                http.sessionAttr(String.class);
+                http.sessionGet(String.class);
 
                 Assert.fail();
               } catch (IllegalStateException expected) {

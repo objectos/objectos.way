@@ -108,13 +108,13 @@ public class HttpSessionStoreTest {
 
     assertEquals(http.sessionPresent(), true);
 
-    http.sessionAttr(String.class, () -> "MARKER");
+    http.sessionSet(String.class, "MARKER");
 
     store.ensureSession(http);
 
     assertEquals(http.sessionPresent(), true);
 
-    assertEquals(http.sessionAttr(String.class), "MARKER");
+    assertEquals(http.sessionGet(String.class), "MARKER");
   }
 
   @DataProvider

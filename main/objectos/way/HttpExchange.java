@@ -42,6 +42,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
+import objectos.way.Lang.Key;
 
 final class HttpExchange implements Http.Exchange, Closeable {
 
@@ -2926,37 +2927,77 @@ final class HttpExchange implements Http.Exchange, Closeable {
   }
 
   @Override
-  public final <T> T sessionAttr(Class<T> key) {
-    checkSession();
-
-    return session.get(key);
+  public final boolean sessionAbsent() {
+    return session == null;
   }
 
+  @SuppressWarnings("unchecked")
   @Override
-  public final <T> void sessionAttr(Class<T> key, Supplier<? extends T> supplier) {
+  public final <T> T sessionGet(Class<T> key) {
+    checkSession();
+
+    final String name;
+    name = key.getName();
+
+    return (T) session.get0(name);
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public final <T> T sessionGet(Lang.Key<T> key) {
+    checkSession();
+
+    Objects.requireNonNull(key, "key == null");
+
+    return (T) session.get0(key);
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public final <T> T sessionSet(Class<T> key, T value) {
+    checkSession();
+
+    final String name;
+    name = key.getName();
+
+    Objects.requireNonNull(value, "value == null");
+
+    return (T) session.set0(name, value);
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public final <T> T sessionSet(Key<T> key, T value) {
+    checkSession();
+
+    Objects.requireNonNull(key, "key == null");
+    Objects.requireNonNull(value, "value == null");
+
+    return (T) session.set0(key, value);
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public final <T> T sessionSetIfAbsent(Class<T> key, Supplier<? extends T> supplier) {
+    checkSession();
+
+    final String name;
+    name = key.getName();
+
+    Objects.requireNonNull(supplier, "supplier == null");
+
+    return (T) session.setIfAbsent0(name, supplier);
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public final <T> T sessionSetIfAbsent(Lang.Key<T> key, Supplier<? extends T> supplier) {
     checkSession();
 
     Objects.requireNonNull(key, "key == null");
     Objects.requireNonNull(supplier, "supplier == null");
 
-    session.computeIfAbsent(key, supplier);
-  }
-
-  @Override
-  public final <T> T sessionAttr(Lang.Key<T> key) {
-    checkSession();
-
-    return session.get(key);
-  }
-
-  @Override
-  public final <T> void sessionAttr(Lang.Key<T> key, Supplier<? extends T> supplier) {
-    checkSession();
-
-    Objects.requireNonNull(key, "key == null");
-    Objects.requireNonNull(supplier, "supplier == null");
-
-    session.computeIfAbsent(key, supplier);
+    return (T) session.setIfAbsent0(key, supplier);
   }
 
   @Override

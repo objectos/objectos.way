@@ -24,65 +24,61 @@ import java.util.function.Supplier;
 
 final class HttpSession {
 
-  private enum State {
+  private sealed interface Store {}
 
-    EMPTY,
+  private static final class Store1 implements Store {
 
-    SINGLE,
+    Object key1;
 
-    DUO,
+    Object value1;
 
-    MAP;
+    Store1(Object key1, Object value1) {
+      this.key1 = key1;
 
-  }
-
-  private record Store1(Object key1, Object value1) {
-
-    final boolean containsKey(Object key) {
-      return key1.equals(key);
-    }
-
-    final Store2 add(Object key2, Object value2) {
-      return new Store2(key1, value1, key2, value2);
-    }
-
-    final Object get(Object key) {
-      if (key1.equals(key)) {
-        return value1;
-      }
-
-      return null;
+      this.value1 = value1;
     }
 
   }
 
-  private record Store2(Object key1, Object value1, Object key2, Object value2) {
+  private static final class Store2 implements Store {
 
-    final boolean containsKey(Object key) {
-      return key1.equals(key) || key2.equals(key);
+    Object key1;
+
+    Object value1;
+
+    Object key2;
+
+    Object value2;
+
+    Store2(Store1 store, Object key2, Object value2) {
+      this.key1 = store.key1;
+
+      this.value1 = store.value1;
+
+      this.key2 = key2;
+
+      this.value2 = value2;
     }
 
-    final Map<Object, Object> add(Object key3, Object value3) {
+  }
+
+  private static final class StoreMap implements Store {
+
+    private final Map<Object, Object> map;
+
+    StoreMap(Map<Object, Object> map) {
+      this.map = map;
+    }
+
+    StoreMap(Store2 store, Object key, Object value) {
       Map<Object, Object> map;
       map = Util.createMap();
 
-      map.put(key1, value1);
-      map.put(key2, value2);
-      map.put(key3, value3);
+      map.put(store.key1, store.value1);
+      map.put(store.key2, store.value2);
+      map.put(key, value);
 
-      return map;
-    }
-
-    final Object get(Object key) {
-      if (key1.equals(key)) {
-        return value1;
-      }
-
-      if (key2.equals(key)) {
-        return value2;
-      }
-
-      return null;
+      this.map = map;
     }
 
   }
@@ -95,9 +91,7 @@ final class HttpSession {
 
   private String setCookie;
 
-  private State state = State.EMPTY;
-
-  private Object store;
+  private Store store = null;
 
   private boolean valid = true;
 
@@ -112,97 +106,172 @@ final class HttpSession {
 
     setCookie = null;
 
-    state = State.MAP;
-
-    store = map;
+    store = new StoreMap(map);
   }
 
-  public final void computeIfAbsent(Class<?> clazz, Supplier<?> supplier) {
-    final String key;
-    key = clazz.getName();
-
-    computeIfAbsent0(key, supplier);
-  }
-
-  public final void computeIfAbsent(Lang.Key<?> key, Supplier<?> supplier) {
-    computeIfAbsent0(key, supplier);
-  }
-
-  private void computeIfAbsent0(Object key, Supplier<?> supplier) {
+  public final Object get0(Object key) {
     lock.lock();
     try {
-
       checkValid();
 
-      switch (state) {
-        case EMPTY -> {
-          store = new Store1(key, get(supplier));
+      return switch (store) {
+        case null -> null;
 
-          state = State.SINGLE;
-        }
-
-        case SINGLE -> {
-          final Store1 single;
-          single = single();
-
-          if (!single.containsKey(key)) {
-            store = single.add(key, get(supplier));
-
-            state = State.DUO;
+        case Store1 store -> {
+          if (store.key1.equals(key)) {
+            yield store.value1;
           }
+
+          yield null;
         }
 
-        case DUO -> {
-          final Store2 duo;
-          duo = duo();
-
-          if (!duo.containsKey(key)) {
-            store = duo.add(key, get(supplier));
-
-            state = State.MAP;
+        case Store2 store -> {
+          if (store.key1.equals(key)) {
+            yield store.value1;
           }
-        }
 
-        case MAP -> {
-          final Map<Object, Object> map;
-          map = map();
-
-          if (!map.containsKey(key)) {
-            map.put(key, get(supplier));
+          if (store.key2.equals(key)) {
+            yield store.value2;
           }
-        }
-      }
 
+          yield null;
+        }
+
+        case StoreMap store -> store.map.get(key);
+      };
     } finally {
       lock.unlock();
     }
   }
 
-  public final <T> T get(Class<T> clazz) {
-    final String key;
-    key = clazz.getName();
-
-    return get0(key);
-  }
-
-  public final <T> T get(Lang.Key<T> key) {
-    return get0(key);
-  }
-
-  @SuppressWarnings("unchecked")
-  private <T> T get0(Object key) {
+  public final Object set0(Object key, Object value) {
     lock.lock();
     try {
+
       checkValid();
 
-      return (T) switch (state) {
-        case EMPTY -> null;
+      return switch (store) {
+        case null -> {
+          store = new Store1(key, value);
 
-        case SINGLE -> single().get(key);
+          yield null;
+        }
 
-        case DUO -> duo().get(key);
+        case Store1 impl -> {
+          if (impl.key1.equals(key)) {
+            final Object previous;
+            previous = impl.value1;
 
-        case MAP -> map().get(key);
+            impl.value1 = value;
+
+            yield previous;
+          }
+
+          store = new Store2(impl, key, value);
+
+          yield null;
+        }
+
+        case Store2 impl -> {
+          if (impl.key1.equals(key)) {
+            final Object previous;
+            previous = impl.value1;
+
+            impl.value1 = value;
+
+            yield previous;
+          }
+
+          if (impl.key2.equals(key)) {
+            final Object previous;
+            previous = impl.value2;
+
+            impl.value2 = value;
+
+            yield previous;
+          }
+
+          store = new StoreMap(impl, key, value);
+
+          yield null;
+        }
+
+        case StoreMap impl -> {
+          final Map<Object, Object> delegate;
+          delegate = impl.map;
+
+          yield delegate.put(key, value);
+        }
+      };
+    } finally {
+      lock.unlock();
+    }
+  }
+
+  public final Object setIfAbsent0(Object key, Supplier<?> supplier) {
+    lock.lock();
+    try {
+
+      checkValid();
+
+      return switch (store) {
+        case null -> {
+          final Object value;
+          value = get(supplier);
+
+          store = new Store1(key, value);
+
+          yield value;
+        }
+
+        case Store1 impl -> {
+          if (impl.key1.equals(key)) {
+            yield impl.value1;
+          }
+
+          final Object value;
+          value = get(supplier);
+
+          store = new Store2(impl, key, value);
+
+          yield value;
+        }
+
+        case Store2 impl -> {
+          if (impl.key1.equals(key)) {
+            yield impl.value1;
+          }
+
+          if (impl.key2.equals(key)) {
+            yield impl.value2;
+          }
+
+          final Object value;
+          value = get(supplier);
+
+          store = new StoreMap(impl, key, value);
+
+          yield value;
+        }
+
+        case StoreMap impl -> {
+          final Map<Object, Object> delegate;
+          delegate = impl.map;
+
+          final Object existing;
+          existing = delegate.get(key);
+
+          if (existing != null) {
+            yield existing;
+          }
+
+          final Object value;
+          value = get(supplier);
+
+          delegate.put(key, value);
+
+          yield value;
+        }
       };
     } finally {
       lock.unlock();
@@ -220,29 +289,14 @@ final class HttpSession {
     return value;
   }
 
-  private Store1 single() {
-    return (Store1) store;
-  }
-
-  private Store2 duo() {
-    return (Store2) store;
-  }
-
-  @SuppressWarnings("unchecked")
-  private Map<Object, Object> map() {
-    return (Map<Object, Object>) store;
-  }
-
   public final void invalidate() {
     lock.lock();
     try {
       checkValid();
 
-      valid = false;
-
-      state = State.EMPTY;
-
       store = null;
+
+      valid = false;
     } finally {
       lock.unlock();
     }
