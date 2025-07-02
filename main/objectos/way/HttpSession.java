@@ -101,8 +101,8 @@ final class HttpSession {
     this.setCookie = setCookie;
   }
 
-  HttpSession(Map<Object, Object> map) {
-    id = HttpToken.of32(0, 0, 0, 0);
+  HttpSession(HttpToken id, Map<Object, Object> map) {
+    this.id = id;
 
     setCookie = null;
 

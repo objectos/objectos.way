@@ -20,7 +20,6 @@ import java.time.InstantSource;
 import java.time.ZonedDateTime;
 import java.util.EnumSet;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.random.RandomGenerator;
 import objectos.way.Http.CsrfToken;
@@ -82,7 +81,7 @@ final class HttpSessionStore implements Http.SessionStore {
 
   private final RandomGenerator sessionGenerator;
 
-  private final ConcurrentMap<HttpToken, HttpSession> sessions = new ConcurrentHashMap<>();
+  private final ConcurrentMap<HttpToken, HttpSession> sessions;
 
   private final boolean skipCsrf = false;
 
@@ -102,6 +101,8 @@ final class HttpSessionStore implements Http.SessionStore {
     instantSource = builder.instantSource;
 
     sessionGenerator = builder.sessionGenerator;
+
+    sessions = builder.sessions;
   }
 
   @Override
@@ -116,7 +117,7 @@ final class HttpSessionStore implements Http.SessionStore {
     final HttpSession session;
 
     final HttpSession maybeExisting;
-    maybeExisting = getSession(http);
+    maybeExisting = findSession(impl);
 
     if (maybeExisting != null) {
       session = maybeExisting;
@@ -196,36 +197,170 @@ final class HttpSessionStore implements Http.SessionStore {
   }
 
   private HttpSession findSession(HttpExchange impl) {
-    final String cookieHeaderValue;
-    cookieHeaderValue = impl.header(Http.HeaderName.COOKIE); // implicit null-check
+    final String cookie;
+    cookie = impl.header(Http.HeaderName.COOKIE); // implicit null-check
 
-    if (cookieHeaderValue == null) {
+    if (cookie == null) {
       return null;
     }
 
-    final Http.Cookies cookies;
-    cookies = Http.Cookies.parse(cookieHeaderValue);
+    enum Parser {
+      START,
 
-    final String encoded;
-    encoded = cookies.get(cookieName);
+      TEST_NAME,
 
-    if (encoded == null) {
+      SKIP_NAME,
+
+      MAYBE_VALUE,
+
+      TEST_VALUE,
+
+      SKIP_VALUE;
+    }
+
+    // parser state
+    Parser parser;
+    parser = Parser.START;
+
+    int startIndex = 0;
+
+    final int len;
+    len = cookie.length();
+
+    final int cookieNameLength;
+    cookieNameLength = cookieName.length();
+
+    for (int idx = 0; idx < len; idx++) {
+      final char c;
+      c = cookie.charAt(idx);
+
+      switch (parser) {
+        case START -> {
+          if (c == Ascii.SP || c == Ascii.TAB) {
+            parser = Parser.START;
+          }
+
+          else if (c == '=') {
+            // empty name, skip value
+
+            parser = Parser.SKIP_VALUE;
+          }
+
+          else {
+            // safe as cookie name must not be blank
+            final char firstChar;
+            firstChar = cookieName.charAt(0);
+
+            if (firstChar == c) {
+              // continue from second char
+              startIndex = 1;
+
+              // first char matches name
+              parser = Parser.TEST_NAME;
+            } else {
+              // first char does not match -> skip name
+              parser = Parser.SKIP_NAME;
+            }
+          }
+        }
+
+        case TEST_NAME -> {
+          if (c == '=') {
+            if (startIndex == cookieNameLength) {
+              // marks the equals sign
+              startIndex = idx;
+
+              parser = Parser.MAYBE_VALUE;
+            } else {
+              parser = Parser.SKIP_VALUE;
+            }
+          }
+
+          else if (startIndex >= cookieNameLength) {
+            // this name is longer than cookieName
+            parser = Parser.SKIP_NAME;
+          }
+
+          else {
+            final char currentChar;
+            currentChar = cookieName.charAt(startIndex++);
+
+            if (currentChar != c) {
+              // current char does not match -> skip name
+              parser = Parser.SKIP_NAME;
+            } else {
+              // current char matches
+              parser = Parser.TEST_NAME;
+            }
+          }
+        }
+
+        case SKIP_NAME -> {
+          if (c == '=') {
+            parser = Parser.SKIP_VALUE;
+          } else {
+            parser = Parser.SKIP_NAME;
+          }
+        }
+
+        case MAYBE_VALUE -> {
+          startIndex = idx;
+
+          if (c == ';') {
+            // empty value
+            parser = Parser.START;
+          } else {
+            parser = Parser.TEST_VALUE;
+          }
+        }
+
+        case TEST_VALUE -> {
+          if (c == ';') {
+            final HttpSession maybe;
+            maybe = findSession0(impl, cookie, startIndex, idx);
+
+            if (maybe != null) {
+              return maybe;
+            }
+
+            parser = Parser.START;
+          } else {
+            parser = Parser.TEST_VALUE;
+          }
+        }
+
+        case SKIP_VALUE -> {
+          if (c == ';') {
+            parser = Parser.START;
+          } else {
+            parser = Parser.SKIP_VALUE;
+          }
+        }
+      }
+    }
+
+    if (parser != Parser.TEST_VALUE) {
       return null;
     }
 
+    return findSession0(impl, cookie, startIndex, len);
+  }
+
+  private HttpSession findSession0(HttpExchange impl, String cookie, int startIndex, int endIndex) {
     try {
+      final String encoded;
+      encoded = cookie.substring(startIndex, endIndex);
+
       final HttpToken id;
       id = HttpToken.parse(encoded, SESSION_LENGTH);
 
       return get(id);
-    } catch (HttpToken.ParseException e) {
+    } catch (ParseException e) {
       noteSink.send(notes.invalidSession, impl);
 
       return null;
     }
   }
-
-  // private API
 
   public final HttpSession createSession() {
     HttpSession session, maybeExisting;
@@ -272,36 +407,6 @@ final class HttpSessionStore implements Http.SessionStore {
     session.touch(instantSource);
 
     return session;
-  }
-
-  public final HttpSession getSession(Http.Request http) {
-    final String cookieHeaderValue;
-    cookieHeaderValue = http.header(Http.HeaderName.COOKIE); // implicit null-check
-
-    if (cookieHeaderValue == null) {
-      return null;
-    }
-
-    final Http.Cookies cookies;
-    cookies = Http.Cookies.parse(cookieHeaderValue);
-
-    final String encoded;
-    encoded = cookies.get(cookieName);
-
-    if (encoded == null) {
-      return null;
-    }
-
-    try {
-      final HttpToken id;
-      id = HttpToken.parse(encoded, SESSION_LENGTH);
-
-      return get(id);
-    } catch (HttpToken.ParseException e) {
-      noteSink.send(notes.invalidSession, http);
-
-      return null;
-    }
   }
 
   private String setCookie(HttpToken id) {

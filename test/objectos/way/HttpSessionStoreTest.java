@@ -18,9 +18,9 @@ package objectos.way;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.random.RandomGenerator;
 import org.testng.annotations.DataProvider;
@@ -28,27 +28,45 @@ import org.testng.annotations.Test;
 
 public class HttpSessionStoreTest {
 
-  @Test
-  public void createSession01() {
-    final HttpSessionStore store;
-    store = create(options -> {
-      options.sessionGenerator(generator(1L, 2L, 3L, 4L));
-    });
+  @DataProvider
+  public Object[][] loadSessionValidProvider() {
+    final HttpToken id;
+    id = HttpToken.of32(1, 2, 3, 4);
+
+    return new Object[][] {
+        {id, "WAY=" + id, "1 value"},
+        {id, "WAY=" + id + "; other=foo", "2 values, valid first"},
+        {id, "other=foo; WAY=" + id, "2 values, valid second"},
+        {id, "other=; WAY=" + id, "2 values, valid second, first value empty"},
+        {id, "=; WAY=" + id, "2 values, valid second, first empty"},
+        {id, "WAY=" + id + "; WAY=foo", "2 values, same name, valid first"},
+        {id, "WAY=foo; WAY=" + id, "2 values, same name, valid second"}
+    };
+  }
+
+  @Test(dataProvider = "loadSessionValidProvider")
+  public void loadSessionValid(Object _id, String headerValue, String description) {
+    final HttpToken id;
+    id = (HttpToken) _id;
 
     final HttpSession session;
-    session = store.createSession();
+    session = new HttpSession(id, Map.of());
 
-    assertNotNull(session);
+    final HttpSessionStore store;
+    store = create(opts -> {
+      opts.cookieName("WAY");
 
-    final Http.Exchange http;
-    http = Http.Exchange.create(config -> {
-      config.header(Http.HeaderName.COOKIE, cookie("OBJECTOSWAY", 1L, 2L, 3L, 4L));
+      opts.session(session);
     });
 
-    final HttpSession maybe;
-    maybe = store.getSession(http);
+    final HttpExchange http;
+    http = HttpExchange.create0(opts -> opts.header(Http.HeaderName.COOKIE, headerValue));
 
-    assertSame(maybe, session);
+    assertEquals(http.sessionPresent(), false);
+
+    store.loadSession(http);
+
+    assertEquals(http.sessionPresent(), true);
   }
 
   @Test

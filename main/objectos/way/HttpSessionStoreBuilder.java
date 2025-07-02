@@ -19,6 +19,8 @@ import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.InstantSource;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.random.RandomGenerator;
 
 final class HttpSessionStoreBuilder implements Http.SessionStore.Options {
@@ -39,9 +41,15 @@ final class HttpSessionStoreBuilder implements Http.SessionStore.Options {
 
   RandomGenerator sessionGenerator;
 
+  final ConcurrentMap<HttpToken, HttpSession> sessions = new ConcurrentHashMap<>();
+
   @Override
   public final void cookieName(String name) {
     cookieName = Objects.requireNonNull(name, "name == null");
+
+    if (cookieName.isBlank()) {
+      throw new IllegalArgumentException("Cookie name must not be blank");
+    }
   }
 
   @Override
@@ -54,11 +62,11 @@ final class HttpSessionStoreBuilder implements Http.SessionStore.Options {
     Objects.requireNonNull(duration, "duration == null");
 
     if (duration.isZero()) {
-      throw new IllegalArgumentException("maxAge must not be zero");
+      throw new IllegalArgumentException("Cookie max age must not be zero");
     }
 
     if (duration.isNegative()) {
-      throw new IllegalArgumentException("maxAge must not be negative");
+      throw new IllegalArgumentException("Cookie max age must not be negative");
     }
 
     cookieMaxAge = duration;
@@ -96,6 +104,13 @@ final class HttpSessionStoreBuilder implements Http.SessionStore.Options {
   @Override
   public final void instantSource(InstantSource value) {
     instantSource = Objects.requireNonNull(value, "value == null");
+  }
+
+  public final void session(HttpSession session) {
+    final HttpToken key;
+    key = session.id();
+
+    sessions.put(key, session);
   }
 
   @Override

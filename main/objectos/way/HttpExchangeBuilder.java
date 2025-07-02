@@ -335,7 +335,10 @@ final class HttpExchangeBuilder implements Http.Exchange.Options {
     result = null;
 
     if (session != null) {
-      result = new HttpSession(session);
+      final HttpToken id;
+      id = HttpToken.of32(0, 0, 0, 0);
+
+      result = new HttpSession(id, session);
     }
 
     return result;

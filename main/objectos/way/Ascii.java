@@ -21,6 +21,8 @@ final class Ascii {
 
   public static final char CR = '\r';
   public static final char LF = '\n';
+  public static final char SP = ' ';
+  public static final char TAB = '\t';
 
   private Ascii() {}
 

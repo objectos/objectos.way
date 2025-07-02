@@ -50,46 +50,6 @@ import java.util.stream.LongStream;
 public final class Http {
 
   /**
-   * The cookies of an HTTP request message.
-   */
-  public sealed interface Cookies permits HttpCookies, HttpCookiesEmpty {
-
-    /**
-     * Parses the specified string to a {@code Cookies} instance.
-     *
-     * @param s
-     *        the string to be parsed
-     *
-     * @return a {@code Cookies} instance representation of the cookies string
-     *         value
-     */
-    static Cookies parse(String s) {
-      Objects.requireNonNull(s, "s == null");
-
-      if (s.isBlank()) {
-        return HttpCookiesEmpty.INSTANCE;
-      }
-
-      HttpCookiesParser parser;
-      parser = new HttpCookiesParser(s);
-
-      return parser.parse();
-    }
-
-    /**
-     * Returns the value of the cookie with the specified name; {@code null}
-     * if a cookie with the specified name is not present.
-     *
-     * @param name
-     *        the cookie name
-     *
-     * @return the value or {@code null} if the cookie is not present
-     */
-    String get(String name);
-
-  }
-
-  /**
    * Represents a CSRF token.
    */
   public sealed interface CsrfToken permits HttpToken {}

@@ -23,16 +23,6 @@ import org.testng.annotations.Test;
 
 public class HttpTest {
 
-  @Test(description = """
-  It should parse a single name-value pair
-  """)
-  public void parseCookies01() {
-    Http.Cookies c;
-    c = Http.Cookies.parse("foo=bar");
-
-    assertEquals(c.get("foo"), "bar");
-  }
-
   @Test
   public void parseRequestTarget01() {
     Http.RequestTarget target;
