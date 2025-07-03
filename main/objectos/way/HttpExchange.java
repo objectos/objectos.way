@@ -2933,7 +2933,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   @SuppressWarnings("unchecked")
   @Override
-  public final <T> T sessionGet(Class<T> key) {
+  public final <T> T sessionAttr(Class<T> key) {
     checkSession();
 
     final String name;
@@ -2944,7 +2944,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   @SuppressWarnings("unchecked")
   @Override
-  public final <T> T sessionGet(Lang.Key<T> key) {
+  public final <T> T sessionAttr(Lang.Key<T> key) {
     checkSession();
 
     Objects.requireNonNull(key, "key == null");
@@ -2954,7 +2954,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   @SuppressWarnings("unchecked")
   @Override
-  public final <T> T sessionSet(Class<T> key, T value) {
+  public final <T> T sessionAttr(Class<T> key, T value) {
     checkSession();
 
     final String name;
@@ -2967,7 +2967,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   @SuppressWarnings("unchecked")
   @Override
-  public final <T> T sessionSet(Key<T> key, T value) {
+  public final <T> T sessionAttr(Key<T> key, T value) {
     checkSession();
 
     Objects.requireNonNull(key, "key == null");
@@ -2978,7 +2978,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   @SuppressWarnings("unchecked")
   @Override
-  public final <T> T sessionSetIfAbsent(Class<T> key, Supplier<? extends T> supplier) {
+  public final <T> T sessionAttrIfAbsent(Class<T> key, Supplier<? extends T> supplier) {
     checkSession();
 
     final String name;
@@ -2991,7 +2991,7 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   @SuppressWarnings("unchecked")
   @Override
-  public final <T> T sessionSetIfAbsent(Lang.Key<T> key, Supplier<? extends T> supplier) {
+  public final <T> T sessionAttrIfAbsent(Lang.Key<T> key, Supplier<? extends T> supplier) {
     checkSession();
 
     Objects.requireNonNull(key, "key == null");

@@ -202,7 +202,7 @@ public final class Http {
        * @param value
        *        the value to be stored
        */
-      <T> void sessionSet(Class<T> key, T value);
+      <T> void sessionAttr(Class<T> key, T value);
 
     }
 
@@ -400,7 +400,7 @@ public final class Http {
      * @throws IllegalStateException
      *         if no session is associated to this exchange
      */
-    <T> T sessionGet(Class<T> key);
+    <T> T sessionAttr(Class<T> key);
 
     /**
      * Returns the session value associated to the specified key, or
@@ -416,7 +416,7 @@ public final class Http {
      * @throws IllegalStateException
      *         if no session is associated to this exchange
      */
-    <T> T sessionGet(Lang.Key<T> key);
+    <T> T sessionAttr(Lang.Key<T> key);
 
     /**
      * Using the name of the specified class as the key, associate the
@@ -435,7 +435,7 @@ public final class Http {
      * @throws IllegalStateException
      *         if no session is associated to this exchange
      */
-    <T> T sessionSet(Class<T> key, T value);
+    <T> T sessionAttr(Class<T> key, T value);
 
     /**
      * Using the specified key, associates the specified value to this
@@ -454,7 +454,7 @@ public final class Http {
      * @throws IllegalStateException
      *         if no session is associated to this exchange
      */
-    <T> T sessionSet(Lang.Key<T> key, T value);
+    <T> T sessionAttr(Lang.Key<T> key, T value);
 
     /**
      * If a session value is not already associated to the name of the specified
@@ -474,7 +474,7 @@ public final class Http {
      * @throws NullPointerException
      *         if the supplier provides a {@code null} value
      */
-    <T> T sessionSetIfAbsent(Class<T> key, Supplier<? extends T> supplier);
+    <T> T sessionAttrIfAbsent(Class<T> key, Supplier<? extends T> supplier);
 
     /**
      * If a session value is not already associated to the specified key,
@@ -494,7 +494,7 @@ public final class Http {
      * @throws NullPointerException
      *         if the supplier provides a {@code null} value
      */
-    <T> T sessionSetIfAbsent(Lang.Key<T> key, Supplier<? extends T> supplier);
+    <T> T sessionAttrIfAbsent(Lang.Key<T> key, Supplier<? extends T> supplier);
 
     /**
      * Invalidates the session associated to this exchange.

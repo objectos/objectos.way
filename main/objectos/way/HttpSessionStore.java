@@ -184,7 +184,7 @@ final class HttpSessionStore implements Http.SessionStore {
 
     if (csrf != null && impl.sessionPresent()) {
       final CsrfToken sessionToken;
-      sessionToken = impl.sessionGet(Http.CsrfToken.class);
+      sessionToken = impl.sessionAttr(Http.CsrfToken.class);
 
       valid = csrf.equals(sessionToken);
     }
