@@ -236,7 +236,7 @@ final class HttpSessionStore implements Http.SessionStore {
 
       switch (parser) {
         case START -> {
-          if (c == Ascii.SP || c == Ascii.TAB) {
+          if (c == Ascii.SP || c == Ascii.TAB || c == ';') {
             parser = Parser.START;
           }
 
