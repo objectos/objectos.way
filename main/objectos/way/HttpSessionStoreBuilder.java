@@ -50,6 +50,36 @@ final class HttpSessionStoreBuilder implements Http.SessionStore.Options {
     if (cookieName.isBlank()) {
       throw new IllegalArgumentException("Cookie name must not be blank");
     }
+
+    // we don't store the table in a static field and, instead,
+    // recreate it every time so it can be GCed afterwards
+    final boolean[] validTable;
+    validTable = new boolean[128];
+
+    final String tchar;
+    tchar = Http.tchar();
+
+    for (int idx = 0, len = tchar.length(); idx < len; idx++) {
+      final char c;
+      c = tchar.charAt(idx);
+
+      validTable[c] = true;
+    }
+
+    for (int idx = 0, len = name.length(); idx < len; idx++) {
+      final char c;
+      c = name.charAt(idx);
+
+      if (c < 128 && validTable[c]) {
+        continue;
+      }
+
+      throw new IllegalArgumentException("""
+      Cookie name must only contain the following characters:
+      \t"!" / "#" / "$" / "%" / "&" / "'" / "*" / "+" / "-" / "." / "^" / "_" / "`" / "|" / "~"
+      \tDIGIT (US-ASCII) / ALPHA (US-ASCII)
+      """);
+    }
   }
 
   @Override

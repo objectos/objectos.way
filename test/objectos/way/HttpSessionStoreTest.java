@@ -17,15 +17,67 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.random.RandomGenerator;
+import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class HttpSessionStoreTest {
+
+  @DataProvider
+  public Object[][] createCookieNameProvider() {
+    return new Object[][] {
+        {true, "all valid characters",
+            Http.tchar(), ""},
+
+        {false, "empty",
+            "", "Cookie name must not be blank"},
+        {false, "blank",
+            " \t ", "Cookie name must not be blank"},
+        {false, "Single invalid char",
+            "COOKIE{ID", """
+                    Cookie name must only contain the following characters:
+                    \t"!" / "#" / "$" / "%" / "&" / "'" / "*" / "+" / "-" / "." / "^" / "_" / "`" / "|" / "~"
+                    \tDIGIT (US-ASCII) / ALPHA (US-ASCII)
+                    """},
+        {false, "Multiple invalid chars",
+            "{COOKIE}", """
+                    Cookie name must only contain the following characters:
+                    \t"!" / "#" / "$" / "%" / "&" / "'" / "*" / "+" / "-" / "." / "^" / "_" / "`" / "|" / "~"
+                    \tDIGIT (US-ASCII) / ALPHA (US-ASCII)
+                    """},
+    };
+  }
+
+  @Test(dataProvider = "createCookieNameProvider")
+  public void createCookieName(boolean valid, String description, String cookieName, String expectedMessage) {
+    try {
+      final HttpSessionStore store;
+      store = create(opts -> {
+        opts.cookieName(cookieName);
+      });
+
+      if (!valid) {
+        Assert.fail("It should have thrown");
+      } else {
+        assertNotNull(store);
+      }
+    } catch (IllegalArgumentException expected) {
+      if (valid) {
+        Assert.fail("Unexpected exception", expected);
+      } else {
+        final String message;
+        message = expected.getMessage();
+
+        assertEquals(message, expectedMessage);
+      }
+    }
+  }
 
   @DataProvider
   public Object[][] loadSessionProvider() {
