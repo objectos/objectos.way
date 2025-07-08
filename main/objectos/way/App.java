@@ -123,18 +123,12 @@ public final class App {
   /**
    * Allows for registering and obtaining application-level object instances.
    */
-  public sealed interface Injector permits AppInjector, Injector.Builder {
+  public sealed interface Injector permits AppInjector, Injector.Options {
 
     /**
-     * A builder for {@code Injector} instances.
+     * Configures the creation of an injector.
      */
-    sealed interface Builder extends Injector permits AppInjectorBuilder {
-
-      static Builder create() {
-        return new AppInjectorBuilder();
-      }
-
-      Injector build();
+    sealed interface Options extends Injector permits AppInjectorBuilder {
 
       /**
        * Registers the specified instance to the specified class.
@@ -162,6 +156,21 @@ public final class App {
        */
       <T> void putInstance(Lang.Key<T> key, T instance);
 
+    }
+
+    /// Creates a new injector with the specified options.
+    ///
+    /// @param opts
+    ///        allows for setting the options
+    ///
+    /// @return a newly created injector instance
+    static Injector create(Consumer<? super Options> opts) {
+      final AppInjectorBuilder builder;
+      builder = new AppInjectorBuilder();
+
+      opts.accept(builder);
+
+      return builder.build();
     }
 
     /**
@@ -252,16 +261,16 @@ public final class App {
       /**
        * Creates a console note sink with the specified options.
        *
-       * @param options
+       * @param opts
        *        allows for setting the options
        *
        * @return a newly created console note sink instance
        */
-      static OfConsole create(Consumer<Options> options) {
-        AppNoteSinkOfConsoleBuilder builder;
+      static OfConsole create(Consumer<? super Options> opts) {
+        final AppNoteSinkOfConsoleBuilder builder;
         builder = new AppNoteSinkOfConsoleBuilder();
 
-        options.accept(builder);
+        opts.accept(builder);
 
         return builder.build();
       }
@@ -291,7 +300,7 @@ public final class App {
       /**
        * Creates a file note sink with the specified options.
        *
-       * @param options
+       * @param opts
        *        allows for setting the options
        *
        * @return a newly created file note sink instance
@@ -299,11 +308,11 @@ public final class App {
        * @throws IOException
        *         if an I/O error occurs
        */
-      static OfFile create(Consumer<Options> options) throws IOException {
-        AppNoteSinkOfFileBuilder builder;
+      static OfFile create(Consumer<? super Options> opts) throws IOException {
+        final AppNoteSinkOfFileBuilder builder;
         builder = new AppNoteSinkOfFileBuilder();
 
-        options.accept(builder);
+        opts.accept(builder);
 
         return builder.build();
       }
@@ -463,7 +472,7 @@ public final class App {
     /**
      * Creates a new reloader with the specified options.
      *
-     * @param options
+     * @param opts
      *        allows for setting the options
      *
      * @return a newly created reloader instance
@@ -471,11 +480,11 @@ public final class App {
      * @throws IOException
      *         if an I/O error occurs
      */
-    static Reloader create(Consumer<Options> options) throws IOException {
-      AppReloaderBuilder builder;
+    static Reloader create(Consumer<? super Options> opts) throws IOException {
+      final AppReloaderBuilder builder;
       builder = new AppReloaderBuilder();
 
-      options.accept(builder);
+      opts.accept(builder);
 
       return builder.build();
     }
@@ -565,8 +574,8 @@ public final class App {
      *
      * @return a newly created shutdown hook instance
      */
-    static ShutdownHook create(Consumer<Options> options) {
-      AppShutdownHookBuilder builder;
+    static ShutdownHook create(Consumer<? super Options> options) {
+      final AppShutdownHookBuilder builder;
       builder = new AppShutdownHookBuilder();
 
       options.accept(builder);

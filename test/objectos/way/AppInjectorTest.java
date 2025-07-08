@@ -17,6 +17,7 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.function.Consumer;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -24,28 +25,24 @@ public class AppInjectorTest {
 
   @Test(description = "happy path: register and get")
   public void class01() {
-    final App.Injector.Builder ctx;
-    ctx = App.Injector.Builder.create();
-
-    ctx.putInstance(String.class, "ABC");
-
-    assertEquals(ctx.getInstance(String.class), "ABC");
-
     final App.Injector injector;
-    injector = ctx.build();
+    injector = App.Injector.create(opts -> {
+      opts.putInstance(String.class, "ABC");
+
+      assertEquals(opts.getInstance(String.class), "ABC");
+    });
 
     assertEquals(injector.getInstance(String.class), "ABC");
   }
 
   @Test(description = "disallow mapping overwrite")
   public void class02() {
-    final App.Injector.Builder ctx;
-    ctx = App.Injector.Builder.create();
-
-    ctx.putInstance(String.class, "ABC");
-
     try {
-      ctx.putInstance(String.class, "Must throw");
+      App.Injector.create(opts -> {
+        opts.putInstance(String.class, "ABC");
+
+        opts.putInstance(String.class, "Must throw");
+      });
 
       Assert.fail();
     } catch (IllegalArgumentException expected) {
@@ -55,11 +52,10 @@ public class AppInjectorTest {
 
   @Test(description = "Query for unknown key should throw")
   public void class03() {
-    final App.Injector.Builder ctx;
-    ctx = App.Injector.Builder.create();
-
     try {
-      ctx.getInstance(String.class);
+      App.Injector.create(opts -> {
+        opts.getInstance(String.class);
+      });
 
       Assert.fail();
     } catch (IllegalArgumentException expected) {
@@ -67,15 +63,14 @@ public class AppInjectorTest {
     }
   }
 
+  private final Consumer<Object> noop = o -> {};
+
   @Test(description = "Query for unknown key should throw")
   public void class04() {
-    final App.Injector.Builder ctx;
-    ctx = App.Injector.Builder.create();
-
-    final App.Injector injector;
-    injector = ctx.build();
-
     try {
+      final App.Injector injector;
+      injector = App.Injector.create(noop);
+
       injector.getInstance(String.class);
 
       Assert.fail();
@@ -90,28 +85,24 @@ public class AppInjectorTest {
 
   @Test
   public void key01() {
-    final App.Injector.Builder ctx;
-    ctx = App.Injector.Builder.create();
-
-    ctx.putInstance(STRING_A, "ABC");
-
-    assertEquals(ctx.getInstance(STRING_A), "ABC");
-
     final App.Injector injector;
-    injector = ctx.build();
+    injector = App.Injector.create(opts -> {
+      opts.putInstance(STRING_A, "ABC");
+
+      assertEquals(opts.getInstance(STRING_A), "ABC");
+    });
 
     assertEquals(injector.getInstance(STRING_A), "ABC");
   }
 
   @Test
   public void key02() {
-    final App.Injector.Builder ctx;
-    ctx = App.Injector.Builder.create();
-
-    ctx.putInstance(STRING_A, "ABC");
-
     try {
-      ctx.putInstance(STRING_A, "Must throw");
+      App.Injector.create(opts -> {
+        opts.putInstance(STRING_A, "ABC");
+
+        opts.putInstance(STRING_A, "Must throw");
+      });
 
       Assert.fail();
     } catch (IllegalArgumentException expected) {
@@ -121,13 +112,12 @@ public class AppInjectorTest {
 
   @Test
   public void key03() {
-    final App.Injector.Builder ctx;
-    ctx = App.Injector.Builder.create();
-
-    ctx.putInstance(STRING_A, "ABC");
-
     try {
-      ctx.getInstance(STRING_B);
+      App.Injector.create(opts -> {
+        opts.putInstance(STRING_A, "ABC");
+
+        opts.getInstance(STRING_B);
+      });
 
       Assert.fail();
     } catch (IllegalArgumentException expected) {
@@ -137,15 +127,12 @@ public class AppInjectorTest {
 
   @Test
   public void key04() {
-    final App.Injector.Builder ctx;
-    ctx = App.Injector.Builder.create();
-
-    ctx.putInstance(STRING_A, "ABC");
-
-    final App.Injector injector;
-    injector = ctx.build();
-
     try {
+      final App.Injector injector;
+      injector = App.Injector.create(opts -> {
+        opts.putInstance(STRING_A, "ABC");
+      });
+
       injector.getInstance(STRING_B);
 
       Assert.fail();

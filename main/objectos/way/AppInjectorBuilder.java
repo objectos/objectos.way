@@ -18,16 +18,9 @@ package objectos.way;
 import java.util.Objects;
 import objectos.way.App.Injector;
 
-final class AppInjectorBuilder implements App.Injector.Builder {
+final class AppInjectorBuilder implements App.Injector.Options {
 
   private final UtilMap<Object, Object> map = new UtilMap<>();
-
-  @Override
-  public final Injector build() {
-    return new AppInjector(
-        map.toUnmodifiableMap()
-    );
-  }
 
   @SuppressWarnings("unchecked")
   @Override
@@ -79,6 +72,12 @@ final class AppInjectorBuilder implements App.Injector.Builder {
     if (maybeExisting != null) {
       throw new IllegalArgumentException(key + " is already mapped to " + maybeExisting);
     }
+  }
+
+  final Injector build() {
+    return new AppInjector(
+        map.toUnmodifiableMap()
+    );
   }
 
 }
