@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
+import objectos.way.App.Option.Converter;
 
 abstract class AppBootstrap {
 
@@ -29,16 +29,16 @@ abstract class AppBootstrap {
 
   private List<String> messages;
 
-  protected final <C extends Collection<? super E>, E> App.Option.Converter<C> ofCollection(Supplier<C> supplier, App.Option.Converter<? extends E> converter) {
-    Objects.requireNonNull(converter, "converter == null");
+  private static final class OfCollection<C extends Collection<? super E>, E>
+      implements App.Option.Converter<C> {
 
-    C collection;
-    collection = supplier.get();
+    private final C collection;
+    private final App.Option.Converter<? extends E> converter;
 
-    return new OfCollection<>(collection, converter);
-  }
-
-  private record OfCollection<C extends Collection<? super E>, E>(C collection, App.Option.Converter<? extends E> converter) implements App.Option.Converter<C> {
+    OfCollection(C collection, Converter<? extends E> converter) {
+      this.collection = collection;
+      this.converter = converter;
+    }
 
     @Override
     public final C convert(String value) {
@@ -49,7 +49,28 @@ abstract class AppBootstrap {
 
       return collection;
     }
+  }
 
+  /**
+   * Option converter: command line values are converted with the
+   * specified converter and the resulting options added to specified
+   * {@link Collection}.
+   *
+   * @param <C> the collection type
+   * @param <E> the option type
+   *
+   * @param collection
+   *        converted options will be added to this collection
+   * @param converter
+   *        converts each command line value of this option
+   *
+   * @return an option converter
+   */
+  protected final <C extends Collection<? super E>, E> App.Option.Converter<C> ofCollection(C collection, App.Option.Converter<? extends E> converter) {
+    Objects.requireNonNull(collection, "collection == null");
+    Objects.requireNonNull(converter, "converter == null");
+
+    return new OfCollection<>(collection, converter);
   }
 
   /**
@@ -91,7 +112,7 @@ abstract class AppBootstrap {
    *        converts from a string to an instance of the option type
    * @param configurations
    *        configures the created option
-   * 
+   *
    * @return a newly created command line option
    */
   @SafeVarargs

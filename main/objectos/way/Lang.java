@@ -34,6 +34,8 @@ public final class Lang {
   /**
    * An {@link Iterable} which can be traversed only once. Trying to traverse
    * this object more than once is not defined.
+   *
+   * @param <T> the type of elements returned by the iterator
    */
   public interface IterableOnce<T> extends Iterable<T> {
 

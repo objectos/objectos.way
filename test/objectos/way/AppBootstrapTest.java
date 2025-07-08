@@ -125,7 +125,7 @@ public class AppBootstrapTest {
   """)
   public void testCase07() {
     class Subject extends Args {
-      final App.Option<Set<Path>> option = option("--test07", ofCollection(LinkedHashSet::new, ofPath()));
+      final App.Option<Set<Path>> option = option("--test07", ofCollection(new LinkedHashSet<>(), ofPath()));
     }
 
     var subject = parseArgs(new Subject(), "--test07", "a.txt", "foo", "--test07", "b.txt");

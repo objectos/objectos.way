@@ -250,6 +250,8 @@ public final class App {
 
       /**
        * Creates a console note sink with the default options.
+       *
+       * @return a newly created console note sink instance
        */
       static OfConsole create() {
         AppNoteSinkOfConsoleBuilder builder;
@@ -346,14 +348,20 @@ public final class App {
     public sealed interface Configuration<T> {}
 
     /**
-     * Converts the raw command line argument into the an instance of the target
-     * option type.
+     * Allows for converting command line arguments into instances of the
+     * target option type.
      *
      * @param <T> the option type
      */
     @FunctionalInterface
     public interface Converter<T> {
 
+      /// Converts the raw command line argument into the an instance of the target option type.
+      ///
+      /// @param value
+      /// the raw command line argument value
+      ///
+      /// @return the converted option value
       T convert(String value);
 
     }
@@ -556,11 +564,17 @@ public final class App {
 
       /**
        * A note that informs of a object registration in this shutdown hook.
+       *
+       * @return a note that informs of a object registration in this shutdown
+       *         hook
        */
       Note.Ref1<Object> registered();
 
       /**
        * A note that informs that a specified resource was not registered.
+       *
+       * @return a note that informs that a specified resource was not
+       *         registered
        */
       Note.Ref1<Object> ignored();
 
@@ -622,10 +636,26 @@ public final class App {
 
   private App() {}
 
-  public static ServiceFailedException serviceFailed(String message) {
-    return new ServiceFailedException(message);
+  /// Returns a new [ServiceFailedException] indicating that the service with
+  /// the specified name failed to start.
+  ///
+  /// @param name
+  /// the name of the service which failed to start
+  ///
+  /// @return a newly created `ServiceFailedException` instance
+  public static ServiceFailedException serviceFailed(String name) {
+    return new ServiceFailedException(name);
   }
 
+  /// Returns a new [ServiceFailedException] indicating that the service with
+  /// the specified name failed to start due to the specified cause.
+  ///
+  /// @param name
+  /// the name of the service which failed to start
+  /// @param cause
+  /// the underlying cause
+  ///
+  /// @return a newly created `ServiceFailedException` instance
   public static ServiceFailedException serviceFailed(String name, Throwable cause) {
     return new ServiceFailedException(name, cause);
   }
