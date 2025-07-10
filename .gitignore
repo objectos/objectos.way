@@ -1,5 +1,13 @@
-/node_modules/
-test-output/
-/release.props
-/eclipse-bin/
 /work/
+
+# Eclipse IDE
+/eclipse-bin/
+/.settings/
+/.classpath
+/.project
+
+# TestNG
+test-output/
+
+# JS related
+/node_modules/
