@@ -25,6 +25,8 @@ final class AppBootstrapOptionBuilder<T> implements App.Bootstrap.Option.Options
 
   final Function<String, T> converter;
 
+  String description;
+
   String name;
 
   boolean required;
@@ -39,7 +41,7 @@ final class AppBootstrapOptionBuilder<T> implements App.Bootstrap.Option.Options
 
   @Override
   public final void description(String value) {
-    throw new UnsupportedOperationException("Implement me");
+    description = Objects.requireNonNull(value, "value == null");
   }
 
   @Override
