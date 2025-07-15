@@ -35,7 +35,9 @@ public class AppBootstrapTest {
   """)
   public void testCase01() {
     class Subject extends Args {
-      final App.Option<String> option = option("--test01", ofString());
+      final Option<String> option = optionString(opts -> {
+        opts.name("--test01");
+      });
     }
 
     var subject = parseArgs(new Subject(), "--test01", "foo");
@@ -49,7 +51,11 @@ public class AppBootstrapTest {
   """)
   public void testCase02() {
     class Subject extends Args {
-      final App.Option<String> option = option("--test02", ofString(), required());
+      final Option<String> option = optionString(opts -> {
+        opts.name("--test02");
+
+        opts.required();
+      });
     }
 
     var subject = parseArgs(new Subject(), "--test01", "foo");
@@ -64,7 +70,13 @@ public class AppBootstrapTest {
   """)
   public void testCase03() {
     class Subject extends Args {
-      final App.Option<String> option = option("--test03", ofString(), required(), withValue("default"));
+      final Option<String> option = optionString(opts -> {
+        opts.name("--test03");
+
+        opts.required();
+
+        opts.value("default");
+      });
     }
 
     var subject = parseArgs(new Subject(), "--test01", "foo");
@@ -78,7 +90,11 @@ public class AppBootstrapTest {
   """)
   public void testCase04() {
     class Subject extends Args {
-      final App.Option<String> option = option("--test04", ofString(), withValidator(this::validateName, "name must be at least 10 characters long"));
+      final Option<String> option = optionString(opts -> {
+        opts.name("--test04");
+
+        opts.validator(this::validateName, "name must be at least 10 characters long");
+      });
 
       private boolean validateName(String name) {
         return name.length() > 10;
@@ -97,7 +113,7 @@ public class AppBootstrapTest {
   """)
   public void testCase05() {
     class Subject extends Args {
-      final App.Option<Integer> option = option("--test05", ofInteger());
+      final Option<Integer> option = optionInteger(opts -> opts.name("--test05"));
     }
 
     var subject = parseArgs(new Subject(), "--test05", "123");
@@ -111,7 +127,7 @@ public class AppBootstrapTest {
   """)
   public void testCase06() {
     class Subject extends Args {
-      final App.Option<Path> option = option("--test06", ofPath());
+      final Option<Path> option = optionPath(opts -> opts.name("--test06"));
     }
 
     var subject = parseArgs(new Subject(), "--test06", "a/b/c.txt");
@@ -125,7 +141,9 @@ public class AppBootstrapTest {
   """)
   public void testCase07() {
     class Subject extends Args {
-      final App.Option<Set<Path>> option = option("--test07", ofCollection(new LinkedHashSet<>(), ofPath()));
+      final Option<Set<Path>> option = option(Option.ofCollection(new LinkedHashSet<>(), Path::of), opts -> {
+        opts.name("--test07");
+      });
     }
 
     var subject = parseArgs(new Subject(), "--test07", "a.txt", "foo", "--test07", "b.txt");

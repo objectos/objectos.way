@@ -17,11 +17,12 @@ package objectos.way;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
-final class AppOption<T> implements App.Option<T> {
+final class AppBootstrapOption<T> implements App.Bootstrap.Option<T> {
 
-  private record Validator<T>(Predicate<T> predicate, String reasonPhrase) {
+  record Validator<T>(Predicate<T> predicate, String reasonPhrase) {
     public final void accept(AppBootstrap collector, String name, T value) {
       if (!predicate.test(value)) {
         collector.addMessage("Invalid " + name + " value: " + reasonPhrase);
@@ -29,22 +30,28 @@ final class AppOption<T> implements App.Option<T> {
     }
   }
 
-  private final App.Option.Converter<T> converter;
+  private final Function<String, T> converter;
 
   private RuntimeException error;
 
   private final String name;
 
-  private boolean required;
+  private final boolean required;
 
-  private List<Validator<? super T>> validators;
+  private final List<Validator<? super T>> validators;
 
   private T value;
 
-  AppOption(String name, Converter<T> converter) {
-    this.name = name;
+  AppBootstrapOption(AppBootstrapOptionBuilder<T> builder) {
+    converter = builder.converter;
 
-    this.converter = converter;
+    name = builder.name;
+
+    required = builder.required;
+
+    validators = builder.validators();
+
+    value = builder.value;
   }
 
   @Override
@@ -58,7 +65,7 @@ final class AppOption<T> implements App.Option<T> {
       arg = args[index++];
 
       try {
-        value = converter.convert(arg);
+        value = converter.apply(arg);
       } catch (RuntimeException e) {
         error = e;
       }
@@ -67,27 +74,13 @@ final class AppOption<T> implements App.Option<T> {
     return index;
   }
 
-  final void acceptByName(Map<String, AppOption<?>> map) {
-    AppOption<?> previous;
+  final void acceptByName(Map<String, AppBootstrapOption<?>> map) {
+    AppBootstrapOption<?> previous;
     previous = map.put(name, this);
 
     if (previous != null) {
       throw new IllegalArgumentException("Duplicate option name: " + name);
     }
-  }
-
-  final void addValidator(Predicate<T> predicate, String reasonPhrase) {
-    if (validators == null) {
-      validators = Util.createList();
-    }
-
-    validators.add(
-        new Validator<>(predicate, reasonPhrase)
-    );
-  }
-
-  final void required() {
-    required = true;
   }
 
   final void set(T newValue) {

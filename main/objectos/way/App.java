@@ -25,24 +25,87 @@ import java.lang.annotation.Target;
 import java.nio.file.Path;
 import java.nio.file.WatchService;
 import java.time.Clock;
+import java.util.Collection;
+import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
-import objectos.way.App.NoteSink.OfConsole;
-import objectos.way.App.NoteSink.OfFile;
 
-/**
- * The <strong>Objectos App</strong> main class.
- */
+/// The <strong>Objectos App</strong> main class.
 public final class App {
 
-  /**
-   * Base class for bootstrapping and starting an Objectos Way application.
-   */
+  /// Base class for bootstrapping and starting an Objectos Way application.
   public static abstract class Bootstrap extends AppBootstrap {
 
-    /**
-     * Sole constructor.
-     */
+    /// Represents an application command line option.
+    ///
+    /// @param <T> the type of the option value
+    protected sealed interface Option<T> permits AppBootstrapOption {
+
+      /// Configures the creation of a command line option.
+      ///
+      /// @param <T> the type of the option value
+      sealed interface Options<T> permits AppBootstrapOptionBuilder {
+
+        /// Sets this option description.
+        ///
+        /// @param value
+        ///        the option description
+        void description(String value);
+
+        /// Sets this option name.
+        ///
+        /// @param value
+        ///        the option name
+        void name(String value);
+
+        /// Sets this option as required.
+        void required();
+
+        /// Validates this option with the specified `predicate`.
+        /// The specified `reasonPhrase` will be used to inform of a failed validation.
+        /// Multiple validators may be specified and they will be applied in order.
+        ///
+        /// @param predicate
+        ///        it should evaluate to `true` when the option is valid; `false` otherwise
+        /// @param reasonPhrase
+        ///        the message to inform of a failed validation
+        void validator(Predicate<? super T> predicate, String reasonPhrase);
+
+        /// Sets this option's initial value.
+        ///
+        /// @param value
+        ///        the initial value
+        void value(T value);
+
+      }
+
+      static <C extends Collection<? super E>, E> Function<String, C> ofCollection(C collection, Function<String, E> elementConverter) {
+        return new Function<>() {
+          private final C coll = Objects.requireNonNull(collection, "collection == null");
+
+          private final Function<String, E> converter = Objects.requireNonNull(elementConverter, "elementConverter == null");
+
+          @Override
+          public final C apply(String t) {
+            final E element;
+            element = converter.apply(t);
+
+            coll.add(element);
+
+            return coll;
+          }
+        };
+      }
+
+      /// Returns the option value.
+      ///
+      /// @return the option value
+      T get();
+
+    }
+
+    /// Sole constructor.
     protected Bootstrap() {
     }
 
@@ -106,10 +169,66 @@ public final class App {
       }
     }
 
-    /**
-     * Bootstraps the application.
-     */
+    /// Bootstraps the application.
     protected abstract void bootstrap();
+
+    /// Creates a command line option with the specified converter and options.
+    ///
+    /// @param <T>
+    ///        the type for the option value
+    /// @param converter
+    ///        converts a command line argument into an instance of the target option type
+    /// @param opts
+    ///        allows for setting the options
+    ///
+    /// @return a newly created option
+    protected final <T> Option<T> option(Function<String, T> converter, Consumer<? super Option.Options<T>> opts) {
+      Objects.requireNonNull(converter, "converter == null");
+
+      return option0(converter, opts);
+    }
+
+    /// Creates an `Integer` command line option with the specified options.
+    ///
+    /// @param opts
+    ///        allows for setting the options
+    ///
+    /// @return a newly created option
+    protected final Option<Integer> optionInteger(Consumer<? super Option.Options<Integer>> opts) {
+      return option0(Integer::valueOf, opts);
+    }
+
+    /// Creates a `Path` command line option with the specified options.
+    ///
+    /// @param opts
+    ///        allows for setting the options
+    ///
+    /// @return a newly created option
+    protected final Option<Path> optionPath(Consumer<? super Option.Options<Path>> opts) {
+      return option0(Path::of, opts);
+    }
+
+    /// Creates a `String` command line option with the specified options.
+    ///
+    /// @param opts
+    ///        allows for setting the options
+    ///
+    /// @return a newly created option
+    protected final Option<String> optionString(Consumer<? super Option.Options<String>> opts) {
+      return option0(Function.identity(), opts);
+    }
+
+    private <T> Option<T> option0(Function<String, T> converter, Consumer<? super Option.Options<T>> opts) {
+      final AppBootstrapOptionBuilder<T> builder;
+      builder = new AppBootstrapOptionBuilder<>(converter);
+
+      opts.accept(builder); // implicit options null-check
+
+      final AppBootstrapOption<T> instance;
+      instance = builder.build();
+
+      return register(instance);
+    }
 
   }
 
@@ -188,7 +307,8 @@ public final class App {
     <T> T getInstance(Class<T> type);
 
     /**
-     * Returns the instance associated to the specified key object, or throws if
+     * Returns the instance associated to the specified key object, or throws
+     * if
      * no instance was associated.
      *
      * @param <T>
@@ -226,7 +346,7 @@ public final class App {
   /**
    * Provides note sink implementations.
    */
-  public sealed interface NoteSink extends Note.Sink permits OfConsole, OfFile, AppNoteSink {
+  public sealed interface NoteSink extends Note.Sink permits NoteSink.OfConsole, NoteSink.OfFile, AppNoteSink {
 
     /**
      * A note sink implementation that sends notes to the console.
@@ -334,54 +454,6 @@ public final class App {
   }
 
   /**
-   * Represents an application command line option.
-   *
-   * @param <T> the option type
-   */
-  public sealed interface Option<T> permits AppOption {
-
-    /**
-     * An option configuration.
-     *
-     * @param <T> the option type
-     */
-    public sealed interface Configuration<T> {}
-
-    /**
-     * Allows for converting command line arguments into instances of the
-     * target option type.
-     *
-     * @param <T> the option type
-     */
-    @FunctionalInterface
-    public interface Converter<T> {
-
-      /// Converts the raw command line argument into the an instance of the target option type.
-      ///
-      /// @param value
-      /// the raw command line argument value
-      ///
-      /// @return the converted option value
-      T convert(String value);
-
-    }
-
-    /**
-     * Returns the option value.
-     *
-     * @return the option value
-     */
-    T get();
-
-  }
-
-  non-sealed static abstract class OptionConfiguration<T> implements Option.Configuration<T> {
-
-    abstract void accept(AppOption<T> option);
-
-  }
-
-  /**
    * An HTTP handler which reloads the classes of the configured module if
    * changes are observed in the module's location. It is meant to be used
    * during the development of an application.
@@ -452,14 +524,16 @@ public final class App {
     }
 
     /**
-     * A factory for HTTP handler instances. Implementations MUST create the new
+     * A factory for HTTP handler instances. Implementations MUST create the
+     * new
      * HTTP handler instance using the provided class loader.
      */
     @FunctionalInterface
     public interface HandlerFactory {
 
       /**
-       * Creates a new HTTP handler by loading classes from the specified class
+       * Creates a new HTTP handler by loading classes from the specified
+       * class
        * loader.
        *
        * @param classLoader
@@ -470,7 +544,8 @@ public final class App {
        *
        * @throws Exception
        *         when trying to load a non-existing class, trying to reflect a
-       *         non-existing member or other error preventing the creation of a
+       *         non-existing member or other error preventing the creation of
+       *         a
        *         new HTTP handler instance
        */
       Http.Handler reload(ClassLoader classLoader) throws Exception;
@@ -509,7 +584,8 @@ public final class App {
   }
 
   /**
-   * Thrown to indicate that a particular service failed to start preventing the
+   * Thrown to indicate that a particular service failed to start preventing
+   * the
    * bootstrap of the application.
    */
   public static final class ServiceFailedException extends RuntimeException {
@@ -620,7 +696,8 @@ public final class App {
     void registerIfPossible(Object resource);
 
     /**
-     * Interrupts the specified {@link Thread} instance when this shutdown hook
+     * Interrupts the specified {@link Thread} instance when this shutdown
+     * hook
      * runs.
      *
      * <p>
