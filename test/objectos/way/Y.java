@@ -1180,7 +1180,7 @@ final class Y {
 
   private static final class ShutdownHookHolder {
 
-    static final App.ShutdownHook INSTANCE = App.ShutdownHook.create(config -> config.noteSink(TestingNoteSink.INSTANCE));
+    static final App.ShutdownHook INSTANCE = App.ShutdownHook.create(config -> config.noteSink(noteSink()));
 
   }
 
