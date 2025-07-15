@@ -19,7 +19,6 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 import java.nio.file.Path;
-import java.util.LinkedHashSet;
 import java.util.Set;
 import org.testng.annotations.Test;
 
@@ -137,11 +136,11 @@ public class AppBootstrapTest {
   }
 
   @Test(description = """
-  option("--foo", ofCollection())
+  option(Option.ofSet(), "--foo")
   """)
   public void testCase07() {
     class Subject extends Args {
-      final Option<Set<Path>> option = option(Option.ofCollection(new LinkedHashSet<>(), Path::of), opts -> {
+      final Option<Set<Path>> option = optionSet(Path::of, opts -> {
         opts.name("--test07");
       });
     }

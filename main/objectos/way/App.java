@@ -25,8 +25,9 @@ import java.lang.annotation.Target;
 import java.nio.file.Path;
 import java.nio.file.WatchService;
 import java.time.Clock;
-import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -78,24 +79,6 @@ public final class App {
         ///        the initial value
         void value(T value);
 
-      }
-
-      static <C extends Collection<? super E>, E> Function<String, C> ofCollection(C collection, Function<String, E> elementConverter) {
-        return new Function<>() {
-          private final C coll = Objects.requireNonNull(collection, "collection == null");
-
-          private final Function<String, E> converter = Objects.requireNonNull(elementConverter, "elementConverter == null");
-
-          @Override
-          public final C apply(String t) {
-            final E element;
-            element = converter.apply(t);
-
-            coll.add(element);
-
-            return coll;
-          }
-        };
       }
 
       /// Returns the option value.
@@ -206,6 +189,32 @@ public final class App {
     /// @return a newly created option
     protected final Option<Path> optionPath(Consumer<? super Option.Options<Path>> opts) {
       return option0(Path::of, opts);
+    }
+
+    /// Creates a `Set` command line option with the specified converter and options.
+    ///
+    /// @param <E>
+    ///        the element type
+    /// @param converter
+    ///        converts an option value to an instance of the element type
+    /// @param opts
+    ///        allows for setting the options
+    ///
+    /// @return a newly created option
+    protected final <E> Option<Set<E>> optionSet(Function<String, E> converter, Consumer<? super Option.Options<Set<E>>> opts) {
+      Objects.requireNonNull(converter, "converter == null");
+
+      final Set<E> set;
+      set = new LinkedHashSet<>();
+
+      return option0(s -> {
+        final E element;
+        element = converter.apply(s);
+
+        set.add(element);
+
+        return set;
+      }, opts);
     }
 
     /// Creates a `String` command line option with the specified options.
