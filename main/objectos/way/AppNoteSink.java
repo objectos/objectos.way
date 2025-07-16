@@ -384,14 +384,14 @@ sealed abstract class AppNoteSink implements App.NoteSink permits AppNoteSinkOfC
   }
 
   private int format(StringBuilder out, Marker marker, String source, String key) {
-    LocalDateTime date;
+    final LocalDateTime date;
     date = LocalDateTime.now(clock);
 
-    out.append(dateFormat.format(date));
+    dateFormat.formatTo(date, out);
 
     out.append(' ');
 
-    String markerName;
+    final String markerName;
     markerName = marker.name();
 
     pad(out, markerName, 5);
@@ -400,10 +400,10 @@ sealed abstract class AppNoteSink implements App.NoteSink permits AppNoteSinkOfC
 
     out.append('[');
 
-    Thread thread;
+    final Thread thread;
     thread = Thread.currentThread();
 
-    String threadName;
+    final String threadName;
     threadName = thread.getName();
 
     pad(out, threadName, 15);
@@ -418,7 +418,7 @@ sealed abstract class AppNoteSink implements App.NoteSink permits AppNoteSinkOfC
     out.append(':');
     out.append(' ');
 
-    int length;
+    final int length;
     length = out.length();
 
     out.append(key);
