@@ -16,7 +16,6 @@
 package objectos.way;
 
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -34,7 +33,7 @@ final class AppBootstrapOption<T> implements App.Bootstrap.Option<T> {
 
   private RuntimeException error;
 
-  private final String name;
+  final String name;
 
   private final boolean required;
 
@@ -74,15 +73,6 @@ final class AppBootstrapOption<T> implements App.Bootstrap.Option<T> {
     return index;
   }
 
-  final void acceptByName(Map<String, AppBootstrapOption<?>> map) {
-    AppBootstrapOption<?> previous;
-    previous = map.put(name, this);
-
-    if (previous != null) {
-      throw new IllegalArgumentException("Duplicate option name: " + name);
-    }
-  }
-
   final void set(T newValue) {
     value = newValue;
   }
@@ -105,7 +95,6 @@ final class AppBootstrapOption<T> implements App.Bootstrap.Option<T> {
     }
 
     if (validators != null && value != null) {
-
       int sizeBefore;
       sizeBefore = collector.messagesSize();
 
@@ -119,7 +108,6 @@ final class AppBootstrapOption<T> implements App.Bootstrap.Option<T> {
       if (sizeAfter > sizeBefore) {
         value = null;
       }
-
     }
   }
 

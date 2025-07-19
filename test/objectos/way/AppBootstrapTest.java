@@ -55,13 +55,18 @@ public class AppBootstrapTest {
 
         opts.required();
       });
+
+      final Option<String> other = optionString(opts -> {
+        opts.name("--other");
+      });
     }
 
-    var subject = parseArgs(new Subject(), "--test01", "foo");
+    var subject = parseArgs(new Subject(), "--other", "foo");
 
     assertEquals(subject.messagesSize(), 1);
     assertEquals(subject.message(0), "Missing required option: --test02");
     assertEquals(subject.option.get(), null);
+    assertEquals(subject.other.get(), "foo");
   }
 
   @Test(description = """
@@ -76,12 +81,17 @@ public class AppBootstrapTest {
 
         opts.value("default");
       });
+
+      final Option<String> other = optionString(opts -> {
+        opts.name("--other");
+      });
     }
 
-    var subject = parseArgs(new Subject(), "--test01", "foo");
+    var subject = parseArgs(new Subject(), "--other", "foo");
 
     assertEquals(subject.messagesSize(), 0);
     assertEquals(subject.option.get(), "default");
+    assertEquals(subject.other.get(), "foo");
   }
 
   @Test(description = """
@@ -145,7 +155,7 @@ public class AppBootstrapTest {
       });
     }
 
-    var subject = parseArgs(new Subject(), "--test07", "a.txt", "foo", "--test07", "b.txt");
+    var subject = parseArgs(new Subject(), "--test07", "a.txt", "--test07", "b.txt");
 
     assertEquals(subject.messagesSize(), 0);
 
@@ -154,6 +164,33 @@ public class AppBootstrapTest {
     assertEquals(set.size(), 2);
     assertTrue(set.contains(Path.of("a.txt")));
     assertTrue(set.contains(Path.of("b.txt")));
+  }
+
+  @Test(description = """
+  Disallow unknown options
+  """)
+  public void testCase08() {
+    class Subject extends Args {}
+
+    var subject = parseArgs(new Subject(), "--test08", "foo");
+
+    assertEquals(subject.messagesSize(), 1);
+    assertEquals(subject.message(0), "Unrecognized option '--test08'");
+  }
+
+  @Test(description = """
+  Disallow unknown options
+  """)
+  public void testCase09() {
+    class Subject extends Args {
+      @SuppressWarnings("unused")
+      Option<String> option = optionString(opts -> opts.name("--test09"));
+    }
+
+    var subject = parseArgs(new Subject(), "--test09", "foo", "--unknown", "bar");
+
+    assertEquals(subject.messagesSize(), 1);
+    assertEquals(subject.message(0), "Unrecognized option '--unknown'");
   }
 
   private <T extends Args> T parseArgs(T subject, String... args) {

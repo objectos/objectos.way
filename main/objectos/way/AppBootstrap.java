@@ -41,37 +41,51 @@ abstract class AppBootstrap {
   }
 
   final void parseArgs(String[] args) {
-    if (options == null) {
-      return;
-    }
+    final List<AppBootstrapOption<?>> options;
+    options = this.options != null ? this.options : List.of();
 
     if (messages != null) {
       messages.clear();
     }
 
-    Map<String, AppBootstrapOption<?>> optionsByName;
-    optionsByName = Util.createMap();
+    final Map<String, AppBootstrapOption<?>> byName;
+    byName = Util.createMap();
 
-    for (AppBootstrapOption<?> o : options) {
-      o.acceptByName(optionsByName);
+    for (AppBootstrapOption<?> option : options) {
+      final String name;
+      name = option.name;
+
+      final AppBootstrapOption<?> previous;
+      previous = byName.put(name, option);
+
+      if (previous != null) {
+        throw new IllegalArgumentException("Duplicate option name: " + name);
+      }
     }
 
     int index;
     index = 0;
 
-    int length;
+    final int length;
     length = args.length;
 
     while (index < length) {
-      String arg;
+      final String arg;
       arg = args[index++];
 
-      AppBootstrapOption<?> option;
-      option = optionsByName.get(arg);
+      final AppBootstrapOption<?> option;
+      option = byName.get(arg);
 
-      if (option != null) {
-        index = option.accept(args, index);
+      if (option == null) {
+        final String msg;
+        msg = "Unrecognized option '%s'".formatted(arg);
+
+        addMessage(msg);
+
+        break;
       }
+
+      index = option.accept(args, index);
     }
 
     for (AppBootstrapOption<?> option : options) {
