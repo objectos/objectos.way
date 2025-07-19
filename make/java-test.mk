@@ -110,6 +110,9 @@ endif
 ## test execution requirements
 TEST_RUNTIME_REQS := $(TEST_COMPILE_MARKER)
 TEST_RUNTIME_REQS += $(TEST_RUNTIME_PATH)
+ifdef TEST_RUNTIME_REQS_MORE
+TEST_RUNTIME_REQS += $(TEST_RUNTIME_REQS_MORE)
+endif
 
 #
 # test execution targets
