@@ -23,11 +23,8 @@ import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Predicate;
-import objectos.way.Note.Long1Ref1;
-import objectos.way.Note.Long1Ref2;
-import objectos.way.Note.Marker;
 
 final class AppNoteSink implements App.NoteSink {
 
@@ -76,15 +73,11 @@ final class AppNoteSink implements App.NoteSink {
 
   private final Predicate<? super Note> filter;
 
+  private final Lock lock = new ReentrantLock();
+
   private final Appendable out;
 
   private final PrintWriter printWriter = new ThisPrintWriter();
-
-  private final ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();
-
-  private final Lock r = rwl.readLock();
-
-  private final Lock w = rwl.writeLock();
 
   AppNoteSink(AppNoteSinkBuilder builder, Appendable out) {
     clock = builder.clock;
@@ -115,11 +108,11 @@ final class AppNoteSink implements App.NoteSink {
       return false;
     }
 
-    r.lock();
+    lock.lock();
     try {
       return test(note);
     } finally {
-      r.unlock();
+      lock.unlock();
     }
   }
 
@@ -129,7 +122,7 @@ final class AppNoteSink implements App.NoteSink {
       return;
     }
 
-    w.lock();
+    lock.lock();
     try {
       if (!test(note)) {
         return;
@@ -142,7 +135,7 @@ final class AppNoteSink implements App.NoteSink {
     } catch (IOException e) {
       error(e);
     } finally {
-      w.unlock();
+      lock.unlock();
     }
   }
 
@@ -152,7 +145,7 @@ final class AppNoteSink implements App.NoteSink {
       return;
     }
 
-    w.lock();
+    lock.lock();
     try {
       if (!test(note)) {
         return;
@@ -167,7 +160,7 @@ final class AppNoteSink implements App.NoteSink {
     } catch (IOException e) {
       error(e);
     } finally {
-      w.unlock();
+      lock.unlock();
     }
   }
 
@@ -177,7 +170,7 @@ final class AppNoteSink implements App.NoteSink {
       return;
     }
 
-    w.lock();
+    lock.lock();
     try {
       if (!test(note)) {
         return;
@@ -194,7 +187,7 @@ final class AppNoteSink implements App.NoteSink {
     } catch (IOException e) {
       error(e);
     } finally {
-      w.unlock();
+      lock.unlock();
     }
   }
 
@@ -204,7 +197,7 @@ final class AppNoteSink implements App.NoteSink {
       return;
     }
 
-    w.lock();
+    lock.lock();
     try {
       if (!test(note)) {
         return;
@@ -217,17 +210,17 @@ final class AppNoteSink implements App.NoteSink {
     } catch (IOException e) {
       error(e);
     } finally {
-      w.unlock();
+      lock.unlock();
     }
   }
 
   @Override
-  public final <T1> void send(Long1Ref1<T1> note, long value1, T1 value2) {
+  public final <T1> void send(Note.Long1Ref1<T1> note, long value1, T1 value2) {
     if (note == null) {
       return;
     }
 
-    w.lock();
+    lock.lock();
     try {
       if (!test(note)) {
         return;
@@ -242,17 +235,17 @@ final class AppNoteSink implements App.NoteSink {
     } catch (IOException e) {
       error(e);
     } finally {
-      w.unlock();
+      lock.unlock();
     }
   }
 
   @Override
-  public final <T1, T2> void send(Long1Ref2<T1, T2> note, long value1, T1 value2, T2 value3) {
+  public final <T1, T2> void send(Note.Long1Ref2<T1, T2> note, long value1, T1 value2, T2 value3) {
     if (note == null) {
       return;
     }
 
-    w.lock();
+    lock.lock();
     try {
       if (!test(note)) {
         return;
@@ -269,7 +262,7 @@ final class AppNoteSink implements App.NoteSink {
     } catch (IOException e) {
       error(e);
     } finally {
-      w.unlock();
+      lock.unlock();
     }
   }
 
@@ -279,7 +272,7 @@ final class AppNoteSink implements App.NoteSink {
       return;
     }
 
-    w.lock();
+    lock.lock();
     try {
       if (!test(note)) {
         return;
@@ -294,7 +287,7 @@ final class AppNoteSink implements App.NoteSink {
     } catch (IOException e) {
       error(e);
     } finally {
-      w.unlock();
+      lock.unlock();
     }
   }
 
@@ -304,7 +297,7 @@ final class AppNoteSink implements App.NoteSink {
       return;
     }
 
-    w.lock();
+    lock.lock();
     try {
       if (!test(note)) {
         return;
@@ -316,7 +309,7 @@ final class AppNoteSink implements App.NoteSink {
     } catch (IOException e) {
       error(e);
     } finally {
-      w.unlock();
+      lock.unlock();
     }
   }
 
@@ -326,7 +319,7 @@ final class AppNoteSink implements App.NoteSink {
       return;
     }
 
-    w.lock();
+    lock.lock();
     try {
       if (!test(note)) {
         return;
@@ -339,7 +332,7 @@ final class AppNoteSink implements App.NoteSink {
     } catch (IOException e) {
       error(e);
     } finally {
-      w.unlock();
+      lock.unlock();
     }
   }
 
@@ -349,7 +342,7 @@ final class AppNoteSink implements App.NoteSink {
       return;
     }
 
-    w.lock();
+    lock.lock();
     try {
       if (!test(note)) {
         return;
@@ -364,7 +357,7 @@ final class AppNoteSink implements App.NoteSink {
     } catch (IOException e) {
       error(e);
     } finally {
-      w.unlock();
+      lock.unlock();
     }
   }
 
@@ -374,7 +367,7 @@ final class AppNoteSink implements App.NoteSink {
       return;
     }
 
-    w.lock();
+    lock.lock();
     try {
       if (!test(note)) {
         return;
@@ -391,16 +384,16 @@ final class AppNoteSink implements App.NoteSink {
     } catch (IOException e) {
       error(e);
     } finally {
-      w.unlock();
+      lock.unlock();
     }
   }
 
-  public final void log(String name, Marker level, String message) {
+  public final void log(String name, Note.Marker level, String message) {
     if (level == null) {
       return;
     }
 
-    w.lock();
+    lock.lock();
     try {
       format(
           level,
@@ -414,16 +407,16 @@ final class AppNoteSink implements App.NoteSink {
     } catch (IOException e) {
       error(e);
     } finally {
-      w.unlock();
+      lock.unlock();
     }
   }
 
-  public final void log(String name, Marker level, String message, Throwable t) {
+  public final void log(String name, Note.Marker level, String message, Throwable t) {
     if (level == null) {
       return;
     }
 
-    w.lock();
+    lock.lock();
     try {
       format(
           level,
@@ -439,7 +432,7 @@ final class AppNoteSink implements App.NoteSink {
     } catch (IOException e) {
       error(e);
     } finally {
-      w.unlock();
+      lock.unlock();
     }
   }
 
@@ -457,7 +450,7 @@ final class AppNoteSink implements App.NoteSink {
     );
   }
 
-  private int format(Marker marker, String source, String key) throws IOException {
+  private int format(Note.Marker marker, String source, String key) throws IOException {
     final LocalDateTime date;
     date = LocalDateTime.now(clock);
 
