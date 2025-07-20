@@ -17,7 +17,6 @@ package objectos.way;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -106,7 +105,7 @@ public final class App {
 
       if (messagesSize > 0) {
         App.NoteSink noteSink;
-        noteSink = App.NoteSink.OfConsole.create(config -> {});
+        noteSink = App.NoteSink.syserr();
 
         Note.Ref1<String> note;
         note = Note.Ref1.create(getClass(), "Invalid argument", Note.ERROR);
@@ -125,7 +124,7 @@ public final class App {
         bootstrap();
       } catch (ServiceFailedException e) {
         App.NoteSink noteSink;
-        noteSink = App.NoteSink.OfConsole.create(config -> {});
+        noteSink = App.NoteSink.syserr();
 
         Note.Ref2<String, Throwable> note;
         note = Note.Ref2.create(getClass(), "Bootstrap failed [service]", Note.ERROR);
@@ -141,7 +140,7 @@ public final class App {
         System.exit(2);
       } catch (Throwable e) {
         App.NoteSink noteSink;
-        noteSink = App.NoteSink.OfConsole.create(config -> {});
+        noteSink = App.NoteSink.syserr();
 
         Note.Ref1<Throwable> note;
         note = Note.Ref1.create(getClass(), "Bootstrap failed", Note.ERROR);
@@ -332,133 +331,63 @@ public final class App {
 
   }
 
-  private sealed interface NoteSinkOptions {
+  /// Provides a note sink implementation for an Objectos Way application.
+  public sealed interface NoteSink extends Closeable, Note.Sink permits AppNoteSink {
 
-    /**
-     * Sets the clock to the specified value.
-     *
-     * @param value
-     *        a clock instance
-     */
-    void clock(Clock value);
+    /// Configures the creation of a note sink.
+    sealed interface Options permits AppNoteSinkBuilder {
 
-    /**
-     * Sets the note filter to the specified value.
-     *
-     * @param value
-     *        a note predicate
-     */
-    void filter(Predicate<Note> value);
+      /// Sets the clock to the specified value.
+      ///
+      /// @param value
+      ///        a clock instance
+      void clock(Clock value);
 
-  }
-
-  /**
-   * Provides note sink implementations.
-   */
-  public sealed interface NoteSink extends Note.Sink permits NoteSink.OfConsole, NoteSink.OfFile, AppNoteSink {
-
-    /**
-     * A note sink implementation that sends notes to the console.
-     */
-    sealed interface OfConsole extends NoteSink permits AppNoteSinkOfConsole {
-
-      /**
-       * Configures the creation of a console note sink.
-       */
-      sealed interface Options extends NoteSinkOptions permits AppNoteSinkOfConsoleBuilder {
-
-        /**
-         * Sets the note target to the specified value.
-         *
-         * @param value
-         *        a {@code PrintStream} instance
-         */
-        void target(PrintStream value);
-
-      }
-
-      /**
-       * Creates a console note sink with the default options.
-       *
-       * @return a newly created console note sink instance
-       */
-      static OfConsole create() {
-        AppNoteSinkOfConsoleBuilder builder;
-        builder = new AppNoteSinkOfConsoleBuilder();
-
-        return builder.build();
-      }
-
-      /**
-       * Creates a console note sink with the specified options.
-       *
-       * @param opts
-       *        allows for setting the options
-       *
-       * @return a newly created console note sink instance
-       */
-      static OfConsole create(Consumer<? super Options> opts) {
-        final AppNoteSinkOfConsoleBuilder builder;
-        builder = new AppNoteSinkOfConsoleBuilder();
-
-        opts.accept(builder);
-
-        return builder.build();
-      }
+      /// Sets the note filter to the specified value.
+      ///
+      /// @param value
+      ///        a note predicate
+      void filter(Predicate<? super Note> value);
 
     }
 
-    /**
-     * A note sink implementation that writes notes to a regular file.
-     */
-    sealed interface OfFile extends NoteSink, Closeable permits AppNoteSinkOfFile {
-
-      /**
-       * Configures the creation of a file note sink.
-       */
-      sealed interface Options extends NoteSinkOptions permits AppNoteSinkOfFileBuilder {
-
-        /**
-         * Sets the target file to the specified value.
-         *
-         * @param value
-         *        the path instance representing the file
-         */
-        void file(Path value);
-
-      }
-
-      /**
-       * Creates a file note sink with the specified options.
-       *
-       * @param opts
-       *        allows for setting the options
-       *
-       * @return a newly created file note sink instance
-       *
-       * @throws IOException
-       *         if an I/O error occurs
-       */
-      static OfFile create(Consumer<? super Options> opts) throws IOException {
-        final AppNoteSinkOfFileBuilder builder;
-        builder = new AppNoteSinkOfFileBuilder();
-
-        opts.accept(builder);
-
-        return builder.build();
-      }
-
-      void rotate() throws IOException;
-
+    static NoteSink ofAppendable(Appendable out) {
+      return ofAppendable(out, opts -> {});
     }
 
-    /**
-     * Sets the note filter to the specified value.
-     *
-     * @param value
-     *        a note predicate
-     */
-    void filter(Predicate<Note> value);
+    static NoteSink ofAppendable(Appendable out, Consumer<? super Options> opts) {
+      Objects.requireNonNull(out, "out == null");
+
+      final AppNoteSinkBuilder builder;
+      builder = new AppNoteSinkBuilder();
+
+      opts.accept(builder);
+
+      return builder.ofAppendable(out);
+    }
+
+    static NoteSink ofFile(Path file) throws IOException {
+      return ofFile(file, opts -> {});
+    }
+
+    static NoteSink ofFile(Path file, Consumer<? super Options> opts) throws IOException {
+      Objects.requireNonNull(file, "file == null");
+
+      final AppNoteSinkBuilder builder;
+      builder = new AppNoteSinkBuilder();
+
+      opts.accept(builder);
+
+      return builder.ofFile(file);
+    }
+
+    static NoteSink syserr() {
+      return ofAppendable(System.err);
+    }
+
+    static NoteSink sysout() {
+      return ofAppendable(System.out);
+    }
 
   }
 

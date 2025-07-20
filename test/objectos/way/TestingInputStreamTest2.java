@@ -32,7 +32,7 @@ public class TestingInputStreamTest2 {
   private static final Note.Ref2<String, IOException> IO_ERROR = Note.Ref2.create(TestingInputStreamTest2.class, "I/O error", Note.ERROR);
 
   public static void main(String[] args) {
-    App.NoteSink noteSink = TestingNoteSink.INSTANCE;
+    Note.Sink noteSink = Y.noteSink();
 
     App.ShutdownHook shutdownHook;
     shutdownHook = App.ShutdownHook.create(config -> config.noteSink(noteSink));

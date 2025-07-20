@@ -15,14 +15,13 @@
  */
 package objectos.way;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.nio.charset.StandardCharsets;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Objects;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Predicate;
@@ -30,35 +29,83 @@ import objectos.way.Note.Long1Ref1;
 import objectos.way.Note.Long1Ref2;
 import objectos.way.Note.Marker;
 
-sealed abstract class AppNoteSink implements App.NoteSink permits AppNoteSinkOfConsole, AppNoteSinkOfFile {
+final class AppNoteSink implements App.NoteSink {
+
+  private class ThisPrintWriter extends PrintWriter {
+
+    ThisPrintWriter() {
+      super(new Writer() {
+        @Override
+        public void write(char[] cbuf, int off, int len) throws IOException {/* noop */}
+
+        @Override
+        public void flush() throws IOException {/* noop */}
+
+        @Override
+        public void close() throws IOException {/* noop */}
+      });
+    }
+
+    @Override
+    public final void println(Object x) {
+      // bypass PrintWriter lock as AppNoteSink is already synchronized
+      final String s;
+      s = String.valueOf(x);
+
+      println(s);
+    }
+
+    @Override
+    public final void println(String x) {
+      // bypass PrintWriter lock as AppNoteSink is already synchronized
+      try {
+        AppNoteSink.this.out.append(x);
+        AppNoteSink.this.out.append('\n');
+      } catch (IOException e) {
+        error(e);
+      }
+    }
+
+  }
 
   private final Clock clock;
 
   private final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
-  private Predicate<Note> filter;
+  private IOException error;
+
+  private final Predicate<? super Note> filter;
+
+  private final Appendable out;
+
+  private final PrintWriter printWriter = new ThisPrintWriter();
 
   private final ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();
 
   private final Lock r = rwl.readLock();
 
-  final Lock w = rwl.writeLock();
+  private final Lock w = rwl.writeLock();
 
-  AppNoteSink(Clock clock, Predicate<Note> filter) {
-    this.clock = clock;
+  AppNoteSink(AppNoteSinkBuilder builder, Appendable out) {
+    clock = builder.clock;
 
-    this.filter = filter;
+    filter = builder.filter;
+
+    this.out = out;
+  }
+
+  private void error(IOException e) {
+    // not much we can do here
+
+    e.printStackTrace();
+
+    error = e;
   }
 
   @Override
-  public final void filter(Predicate<Note> value) {
-    Objects.requireNonNull(value, "value == null");
-
-    w.lock();
-    try {
-      filter = value;
-    } finally {
-      w.unlock();
+  public final void close() throws IOException {
+    if (out instanceof Closeable c) {
+      c.close();
     }
   }
 
@@ -68,7 +115,12 @@ sealed abstract class AppNoteSink implements App.NoteSink permits AppNoteSinkOfC
       return false;
     }
 
-    return test(note);
+    r.lock();
+    try {
+      return test(note);
+    } finally {
+      r.unlock();
+    }
   }
 
   @Override
@@ -77,18 +129,21 @@ sealed abstract class AppNoteSink implements App.NoteSink permits AppNoteSinkOfC
       return;
     }
 
-    if (!test(note)) {
-      return;
+    w.lock();
+    try {
+      if (!test(note)) {
+        return;
+      }
+
+      int length;
+      length = format(note);
+
+      formatLastValue(length, value);
+    } catch (IOException e) {
+      error(e);
+    } finally {
+      w.unlock();
     }
-
-    StringBuilder out;
-    out = new StringBuilder();
-
-    format(out, note);
-
-    formatInt(out, value);
-
-    write(out);
   }
 
   @Override
@@ -97,20 +152,23 @@ sealed abstract class AppNoteSink implements App.NoteSink permits AppNoteSinkOfC
       return;
     }
 
-    if (!test(note)) {
-      return;
+    w.lock();
+    try {
+      if (!test(note)) {
+        return;
+      }
+
+      int length;
+      length = format(note);
+
+      length = formatValue(length, value1);
+
+      formatLastValue(length, value2);
+    } catch (IOException e) {
+      error(e);
+    } finally {
+      w.unlock();
     }
-
-    StringBuilder out;
-    out = new StringBuilder();
-
-    format(out, note);
-
-    formatInt(out, value1);
-
-    formatInt(out, value2);
-
-    write(out);
   }
 
   @Override
@@ -119,22 +177,25 @@ sealed abstract class AppNoteSink implements App.NoteSink permits AppNoteSinkOfC
       return;
     }
 
-    if (!test(note)) {
-      return;
+    w.lock();
+    try {
+      if (!test(note)) {
+        return;
+      }
+
+      int length;
+      length = format(note);
+
+      length = formatValue(length, value1);
+
+      length = formatValue(length, value2);
+
+      formatLastValue(length, value3);
+    } catch (IOException e) {
+      error(e);
+    } finally {
+      w.unlock();
     }
-
-    StringBuilder out;
-    out = new StringBuilder();
-
-    format(out, note);
-
-    formatInt(out, value1);
-
-    formatInt(out, value2);
-
-    formatInt(out, value3);
-
-    write(out);
   }
 
   @Override
@@ -143,18 +204,21 @@ sealed abstract class AppNoteSink implements App.NoteSink permits AppNoteSinkOfC
       return;
     }
 
-    if (!test(note)) {
-      return;
+    w.lock();
+    try {
+      if (!test(note)) {
+        return;
+      }
+
+      int length;
+      length = format(note);
+
+      formatLastValue(length, value);
+    } catch (IOException e) {
+      error(e);
+    } finally {
+      w.unlock();
     }
-
-    StringBuilder out;
-    out = new StringBuilder();
-
-    format(out, note);
-
-    formatLong(out, value);
-
-    write(out);
   }
 
   @Override
@@ -163,21 +227,23 @@ sealed abstract class AppNoteSink implements App.NoteSink permits AppNoteSinkOfC
       return;
     }
 
-    if (!test(note)) {
-      return;
+    w.lock();
+    try {
+      if (!test(note)) {
+        return;
+      }
+
+      int length;
+      length = format(note);
+
+      length = formatValue(length, value1);
+
+      formatLastValue(length, value2);
+    } catch (IOException e) {
+      error(e);
+    } finally {
+      w.unlock();
     }
-
-    StringBuilder out;
-    out = new StringBuilder();
-
-    int length;
-    length = format(out, note);
-
-    formatLong(out, value1);
-
-    formatLastValue(out, length, value2);
-
-    write(out);
   }
 
   @Override
@@ -186,23 +252,25 @@ sealed abstract class AppNoteSink implements App.NoteSink permits AppNoteSinkOfC
       return;
     }
 
-    if (!test(note)) {
-      return;
+    w.lock();
+    try {
+      if (!test(note)) {
+        return;
+      }
+
+      int length;
+      length = format(note);
+
+      length = formatValue(length, value1);
+
+      length = formatValue(length, value2);
+
+      formatLastValue(length, value3);
+    } catch (IOException e) {
+      error(e);
+    } finally {
+      w.unlock();
     }
-
-    StringBuilder out;
-    out = new StringBuilder();
-
-    int length;
-    length = format(out, note);
-
-    formatLong(out, value1);
-
-    length = formatValue(out, length, value2);
-
-    formatLastValue(out, length, value3);
-
-    write(out);
   }
 
   @Override
@@ -211,20 +279,23 @@ sealed abstract class AppNoteSink implements App.NoteSink permits AppNoteSinkOfC
       return;
     }
 
-    if (!test(note)) {
-      return;
+    w.lock();
+    try {
+      if (!test(note)) {
+        return;
+      }
+
+      int length;
+      length = format(note);
+
+      length = formatValue(length, value1);
+
+      formatLastValue(length, value2);
+    } catch (IOException e) {
+      error(e);
+    } finally {
+      w.unlock();
     }
-
-    StringBuilder out;
-    out = new StringBuilder();
-
-    format(out, note);
-
-    formatLong(out, value1);
-
-    formatLong(out, value2);
-
-    write(out);
   }
 
   @Override
@@ -233,16 +304,20 @@ sealed abstract class AppNoteSink implements App.NoteSink permits AppNoteSinkOfC
       return;
     }
 
-    if (!test(note)) {
-      return;
+    w.lock();
+    try {
+      if (!test(note)) {
+        return;
+      }
+
+      format(note);
+
+      out.append('\n');
+    } catch (IOException e) {
+      error(e);
+    } finally {
+      w.unlock();
     }
-
-    StringBuilder out;
-    out = new StringBuilder();
-
-    format(out, note);
-
-    write(out);
   }
 
   @Override
@@ -251,19 +326,21 @@ sealed abstract class AppNoteSink implements App.NoteSink permits AppNoteSinkOfC
       return;
     }
 
-    if (!test(note)) {
-      return;
+    w.lock();
+    try {
+      if (!test(note)) {
+        return;
+      }
+
+      int length;
+      length = format(note);
+
+      formatLastValue(length, value);
+    } catch (IOException e) {
+      error(e);
+    } finally {
+      w.unlock();
     }
-
-    StringBuilder out;
-    out = new StringBuilder();
-
-    int length;
-    length = format(out, note);
-
-    formatLastValue(out, length, value);
-
-    write(out);
   }
 
   @Override
@@ -272,21 +349,23 @@ sealed abstract class AppNoteSink implements App.NoteSink permits AppNoteSinkOfC
       return;
     }
 
-    if (!test(note)) {
-      return;
+    w.lock();
+    try {
+      if (!test(note)) {
+        return;
+      }
+
+      int length;
+      length = format(note);
+
+      length = formatValue(length, value1);
+
+      formatLastValue(length, value2);
+    } catch (IOException e) {
+      error(e);
+    } finally {
+      w.unlock();
     }
-
-    StringBuilder out;
-    out = new StringBuilder();
-
-    int length;
-    length = format(out, note);
-
-    length = formatValue(out, length, value1);
-
-    formatLastValue(out, length, value2);
-
-    write(out);
   }
 
   @Override
@@ -295,23 +374,25 @@ sealed abstract class AppNoteSink implements App.NoteSink permits AppNoteSinkOfC
       return;
     }
 
-    if (!test(note)) {
-      return;
+    w.lock();
+    try {
+      if (!test(note)) {
+        return;
+      }
+
+      int length;
+      length = format(note);
+
+      length = formatValue(length, value1);
+
+      length = formatValue(length, value2);
+
+      formatLastValue(length, value3);
+    } catch (IOException e) {
+      error(e);
+    } finally {
+      w.unlock();
     }
-
-    StringBuilder out;
-    out = new StringBuilder();
-
-    int length;
-    length = format(out, note);
-
-    length = formatValue(out, length, value1);
-
-    length = formatValue(out, length, value2);
-
-    formatLastValue(out, length, value3);
-
-    write(out);
   }
 
   public final void log(String name, Marker level, String message) {
@@ -319,20 +400,22 @@ sealed abstract class AppNoteSink implements App.NoteSink permits AppNoteSinkOfC
       return;
     }
 
-    StringBuilder out;
-    out = new StringBuilder();
+    w.lock();
+    try {
+      format(
+          level,
 
-    format(
-        out,
+          String.valueOf(name),
 
-        level,
+          String.valueOf(message)
+      );
 
-        String.valueOf(name),
-
-        String.valueOf(message)
-    );
-
-    write(out);
+      out.append('\n');
+    } catch (IOException e) {
+      error(e);
+    } finally {
+      w.unlock();
+    }
   }
 
   public final void log(String name, Marker level, String message, Throwable t) {
@@ -340,41 +423,32 @@ sealed abstract class AppNoteSink implements App.NoteSink permits AppNoteSinkOfC
       return;
     }
 
-    StringBuilder out;
-    out = new StringBuilder();
+    w.lock();
+    try {
+      format(
+          level,
 
-    format(
-        out,
+          String.valueOf(name),
 
-        level,
+          String.valueOf(message)
+      );
 
-        String.valueOf(name),
-
-        String.valueOf(message)
-    );
-
-    if (t != null) {
-      formatThrowable(out, t);
+      if (t != null) {
+        formatThrowable(t);
+      }
+    } catch (IOException e) {
+      error(e);
+    } finally {
+      w.unlock();
     }
-
-    write(out);
   }
-
-  abstract void writeBytes(byte[] bytes);
 
   private boolean test(Note note) {
-    r.lock();
-    try {
-      return filter.test(note);
-    } finally {
-      r.unlock();
-    }
+    return error == null && filter.test(note);
   }
 
-  private int format(StringBuilder out, Note note) {
+  private int format(Note note) throws IOException {
     return format(
-        out,
-
         note.marker(),
 
         note.source(),
@@ -383,7 +457,7 @@ sealed abstract class AppNoteSink implements App.NoteSink permits AppNoteSinkOfC
     );
   }
 
-  private int format(StringBuilder out, Marker marker, String source, String key) {
+  private int format(Marker marker, String source, String key) throws IOException {
     final LocalDateTime date;
     date = LocalDateTime.now(clock);
 
@@ -394,7 +468,7 @@ sealed abstract class AppNoteSink implements App.NoteSink permits AppNoteSinkOfC
     final String markerName;
     markerName = marker.name();
 
-    pad(out, markerName, 5);
+    pad(markerName, 5);
 
     out.append(' ');
 
@@ -406,72 +480,80 @@ sealed abstract class AppNoteSink implements App.NoteSink permits AppNoteSinkOfC
     final String threadName;
     threadName = thread.getName();
 
-    pad(out, threadName, 15);
+    pad(threadName, 15);
 
     out.append(']');
 
     out.append(' ');
 
-    pad(out, source, 40);
+    pad(source, 40);
 
     out.append(' ');
     out.append(':');
     out.append(' ');
 
     final int length;
-    length = out.length();
+    length = key.length();
 
     out.append(key);
 
     return length;
   }
 
-  private void formatInt(StringBuilder out, int value) {
-    out.append(' ');
-
-    out.append(value);
+  private int formatValue(int length, int value) throws IOException {
+    return formatValue0(length, Integer.toString(value));
   }
 
-  private void formatLong(StringBuilder out, long value) {
-    out.append(' ');
-
-    out.append(value);
+  private int formatValue(int length, long value) throws IOException {
+    return formatValue0(length, Long.toString(value));
   }
 
-  private int formatValue(StringBuilder out, int length, Object value) {
-    if (out.length() != length) {
+  private int formatValue(int length, Object value) throws IOException {
+    return formatValue0(length, String.valueOf(value));
+  }
+
+  private int formatValue0(int length, String value) throws IOException {
+    if (length > 0) {
       out.append(' ');
     }
 
-    int result;
-    result = out.length();
+    final int result;
+    result = value.length();
 
     out.append(value);
 
     return result;
   }
 
-  private void formatLastValue(StringBuilder out, int length, Object value) {
+  private void formatLastValue(int length, int value) throws IOException {
+    formatValue(length, value);
+
+    out.append('\n');
+  }
+
+  private void formatLastValue(int length, long value) throws IOException {
+    formatValue(length, value);
+
+    out.append('\n');
+  }
+
+  private void formatLastValue(int length, Object value) throws IOException {
     if (value instanceof Throwable t) {
-      formatThrowable(out, t);
+      formatThrowable(t);
     } else {
-      formatValue(out, length, value);
+      formatValue(length, value);
+
+      out.append('\n');
     }
   }
 
-  private void formatThrowable(StringBuilder out, Throwable t) {
+  private void formatThrowable(Throwable t) throws IOException {
     out.append('\n');
-
-    StringBuilderWriter writer;
-    writer = new StringBuilderWriter(out);
-
-    PrintWriter printWriter;
-    printWriter = new PrintWriter(writer);
 
     t.printStackTrace(printWriter);
   }
 
-  private void pad(StringBuilder out, String value, int length) {
+  private void pad(String value, int length) throws IOException {
     int valueLength;
     valueLength = value.length();
 
@@ -489,43 +571,6 @@ sealed abstract class AppNoteSink implements App.NoteSink permits AppNoteSinkOfC
         out.append(' ');
       }
     }
-  }
-
-  private void write(StringBuilder out) {
-    out.append('\n');
-
-    String s;
-    s = out.toString();
-
-    byte[] bytes;
-    bytes = s.getBytes(StandardCharsets.UTF_8);
-
-    writeBytes(bytes);
-  }
-
-  private static class StringBuilderWriter extends Writer {
-
-    private final StringBuilder out;
-
-    public StringBuilderWriter(StringBuilder out) {
-      this.out = out;
-    }
-
-    @Override
-    public void write(char[] cbuf, int off, int len) throws IOException {
-      out.append(cbuf, off, len);
-    }
-
-    @Override
-    public void flush() {
-      // noop, not buffered
-    }
-
-    @Override
-    public void close() {
-      // noop, in-memory only
-    }
-
   }
 
 }

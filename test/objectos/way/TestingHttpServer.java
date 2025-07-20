@@ -209,7 +209,7 @@ public final class TestingHttpServer {
 
   }
 
-  private static class ThisNoteSink extends TestingNoteSink {
+  private static class ThisNoteSink extends Note.NoOpSink {
 
     private final Http.Server.Notes notes = Http.Server.Notes.create();
 
@@ -222,7 +222,7 @@ public final class TestingHttpServer {
     }
 
     @Override
-    protected void visitNote(Note note) {
+    public final <T1> void send(Note.Ref1<T1> note, T1 value) {
       if (Objects.equals(note, notes.started())) {
         try {
           serverStarted.await();

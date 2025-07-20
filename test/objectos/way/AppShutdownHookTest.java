@@ -187,7 +187,7 @@ public class AppShutdownHookTest {
     public final void close() throws IOException {}
   }
 
-  private class ThisNoteSink extends TestingNoteSink {
+  private class ThisNoteSink extends Note.NoOpSink {
 
     private final App.ShutdownHook.Notes notes = App.ShutdownHook.Notes.create();
 

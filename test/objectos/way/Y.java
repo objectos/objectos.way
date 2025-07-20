@@ -1095,7 +1095,7 @@ final class Y {
   // # BEGIN: Note.Sink
   // ##################################################################
 
-  private static final App.NoteSink INSTANCE = App.NoteSink.OfConsole.create(config -> {});
+  private static final App.NoteSink INSTANCE = App.NoteSink.sysout();
 
   public static Note.Sink noteSink() {
     return INSTANCE;

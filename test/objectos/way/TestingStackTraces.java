@@ -20,19 +20,19 @@ final class TestingStackTraces {
   private TestingStackTraces() {}
 
   public static Throwable ignore() {
-    return new Throwable();
+    return Y.trimStackTrace(new Throwable(), 2);
   }
 
   public static Throwable throwable1() {
-    return new Throwable();
+    return Y.trimStackTrace(new Throwable(), 2);
   }
 
   public static Throwable throwable2() {
-    return new Throwable();
+    return Y.trimStackTrace(new Throwable(), 2);
   }
 
   public static Throwable throwable3() {
-    return new Throwable();
+    return Y.trimStackTrace(new Throwable(), 2);
   }
 
 }

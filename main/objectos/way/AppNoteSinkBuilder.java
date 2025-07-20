@@ -15,27 +15,36 @@
  */
 package objectos.way;
 
+import static java.nio.file.StandardOpenOption.CREATE;
+import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
+import static java.nio.file.StandardOpenOption.WRITE;
+
+import java.io.BufferedWriter;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.channels.SeekableByteChannel;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-final class AppNoteSinkOfFileBuilder implements App.NoteSink.OfFile.Options {
+final class AppNoteSinkBuilder implements App.NoteSink.Options {
 
-  private final int bufferSize = 4096;
+  private static final class AlwaysTrue implements Predicate<Note> {
+    @Override
+    public final boolean test(Note t) {
+      return true;
+    }
+  }
 
-  private Clock clock = Clock.systemDefaultZone();
+  Clock clock = Clock.systemDefaultZone();
 
-  private Predicate<Note> filter = note -> true;
+  Predicate<? super Note> filter = new AlwaysTrue();
 
-  private Path file;
+  AppNoteSinkBuilder() {}
 
   @Override
   public final void clock(Clock value) {
@@ -43,24 +52,20 @@ final class AppNoteSinkOfFileBuilder implements App.NoteSink.OfFile.Options {
   }
 
   @Override
-  public final void file(Path value) {
-    file = Objects.requireNonNull(value, "value == null");
-  }
-
-  @Override
-  public final void filter(Predicate<Note> value) {
-    this.filter = Objects.requireNonNull(value, "value == null");
-  }
-
-  final AppNoteSinkOfFile build() throws IOException {
-    if (file == null) {
-      throw new IllegalArgumentException("No output file specified. Please set an output file with the config.file(String) method.");
+  public final void filter(Predicate<? super Note> value) {
+    if (filter instanceof AlwaysTrue) {
+      filter = Objects.requireNonNull(value, "value == null");
+    } else {
+      throw new IllegalStateException("A filter has already been defined");
     }
+  }
 
-    ByteBuffer buffer;
-    buffer = ByteBuffer.allocateDirect(bufferSize);
+  final AppNoteSink ofAppendable(Appendable out) {
+    return new AppNoteSink(this, out);
+  }
 
-    Path parent;
+  final AppNoteSink ofFile(Path file) throws IOException {
+    final Path parent;
     parent = file.getParent();
 
     if (!Files.exists(parent)) {
@@ -68,26 +73,25 @@ final class AppNoteSinkOfFileBuilder implements App.NoteSink.OfFile.Options {
     }
 
     if (Files.exists(file)) {
-      LocalDateTime now;
+      final LocalDateTime now;
       now = LocalDateTime.now(clock);
 
-      String suffix;
+      final String suffix;
       suffix = DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(now);
 
-      Path target;
+      final Path target;
       target = file.resolveSibling(file.getFileName().toString() + "." + suffix);
 
       Files.copy(file, target);
     }
 
-    SeekableByteChannel channel;
-    channel = Files.newByteChannel(
-        file,
+    final Charset charset;
+    charset = StandardCharsets.UTF_8;
 
-        StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE
-    );
+    final BufferedWriter writer;
+    writer = Files.newBufferedWriter(file, charset, CREATE, TRUNCATE_EXISTING, WRITE);
 
-    return new AppNoteSinkOfFile(clock, filter, buffer, channel);
+    return new AppNoteSink(this, writer);
   }
 
 }

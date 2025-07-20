@@ -84,6 +84,9 @@ TEST_COMPILE_REQS := $(COMPILE_MARKER)
 TEST_COMPILE_REQS += $(TEST_COMPILE_CLASS_PATH)
 TEST_COMPILE_REQS += $(TEST_CLASSES)
 TEST_COMPILE_REQS += $(TEST_RESOURCES_OUT)
+ifdef TEST_COMPILE_REQS_MORE
+TEST_COMPILE_REQS += $(TEST_COMPILE_REQS_MORE)
+endif
 
 #
 # test compilation targets
@@ -92,12 +95,9 @@ TEST_COMPILE_REQS += $(TEST_RESOURCES_OUT)
 .PHONY: test-compile
 test-compile: $(TEST_COMPILE_MARKER)
 
-.PHONY: test-compile@clean
-test-compile@clean:
+.PHONY: test-compile-clean
+test-compile-clean:
 	rm -rf $(TEST_CLASS_OUTPUT) $(TEST_COMPILE_CLASS_PATH) $(TEST_COMPILE_MARKER)
-
-.PHONY: re-test-compile
-re-test-compile: test-compile@clean test-compile
 
 $(TEST_COMPILE_CLASS_PATH): $(TEST_COMPILE_RESOLUTION_FILES)
 	echo $(CLASS_OUTPUT) > $@.tmp

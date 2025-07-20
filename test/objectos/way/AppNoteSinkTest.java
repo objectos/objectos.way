@@ -18,14 +18,12 @@ package objectos.way;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 
-import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDate;
-import java.util.stream.Collectors;
 import org.testng.annotations.Test;
 
 public class AppNoteSinkTest {
@@ -87,11 +85,9 @@ public class AppNoteSinkTest {
     ThisStream stream;
     stream = new ThisStream();
 
-    App.NoteSink.OfConsole noteSink;
-    noteSink = App.NoteSink.OfConsole.create(config -> {
+    App.NoteSink noteSink;
+    noteSink = App.NoteSink.ofAppendable(stream, config -> {
       config.clock(new IncrementingClock(2023, 10, 31));
-
-      config.target(stream);
     });
 
     sendAll(noteSink);
@@ -123,13 +119,11 @@ public class AppNoteSinkTest {
     ThisStream stream;
     stream = new ThisStream();
 
-    App.NoteSink.OfConsole noteSink;
-    noteSink = App.NoteSink.OfConsole.create(config -> {
+    App.NoteSink noteSink;
+    noteSink = App.NoteSink.ofAppendable(stream, config -> {
       config.clock(new IncrementingClock(2023, 10, 31));
 
       config.filter(note -> note.hasAny(Note.INFO, Note.WARN, Note.ERROR));
-
-      config.target(stream);
     });
 
     sendAll(noteSink);
@@ -157,11 +151,9 @@ public class AppNoteSinkTest {
     ThisStream stream;
     stream = new ThisStream();
 
-    App.NoteSink.OfConsole noteSink;
-    noteSink = App.NoteSink.OfConsole.create(config -> {
+    App.NoteSink noteSink;
+    noteSink = App.NoteSink.ofAppendable(stream, config -> {
       config.clock(new IncrementingClock(2023, 10, 31));
-
-      config.target(stream);
     });
 
     Throwable ignore;
@@ -174,23 +166,7 @@ public class AppNoteSinkTest {
     String string;
     string = stream.toString();
 
-    string = string.lines()
-        .filter(line -> {
-          if (!line.startsWith("\tat")) {
-            return true;
-          }
-
-          return line.startsWith("\tat objectos")
-              && !line.contains("RunTests");
-        })
-        .map(line -> {
-          if (!line.startsWith("\tat objectos")) {
-            return line;
-          }
-
-          return line.replaceFirst("objectos.way(@.*)/", "objectos.way/");
-        })
-        .collect(Collectors.joining("\n"));
+    System.out.println(string);
 
     assertEquals(
         string,
@@ -199,17 +175,15 @@ public class AppNoteSinkTest {
         2023-10-31 10:00:00.000 ERROR [main           ] objectos.way.AppNoteSinkTest             : throw1
         java.lang.Throwable
         \tat objectos.way/objectos.way.TestingStackTraces.throwable1(TestingStackTraces.java:27)
-        \tat objectos.way/objectos.way.AppNoteSinkTest.console03(AppNoteSinkTest.java:170)
-
+        \tat objectos.way/objectos.way.AppNoteSinkTest.console03(AppNoteSinkTest.java:162)
         2023-10-31 10:01:00.000 ERROR [main           ] objectos.way.AppNoteSinkTest             : throw2 java.lang.Throwable
         java.lang.Throwable
         \tat objectos.way/objectos.way.TestingStackTraces.throwable2(TestingStackTraces.java:31)
-        \tat objectos.way/objectos.way.AppNoteSinkTest.console03(AppNoteSinkTest.java:171)
-
+        \tat objectos.way/objectos.way.AppNoteSinkTest.console03(AppNoteSinkTest.java:163)
         2023-10-31 10:02:00.000 ERROR [main           ] objectos.way.AppNoteSinkTest             : throw3 java.lang.Throwable java.lang.Throwable
         java.lang.Throwable
         \tat objectos.way/objectos.way.TestingStackTraces.throwable3(TestingStackTraces.java:35)
-        \tat objectos.way/objectos.way.AppNoteSinkTest.console03(AppNoteSinkTest.java:172)
+        \tat objectos.way/objectos.way.AppNoteSinkTest.console03(AppNoteSinkTest.java:164)
         """
     );
   }
@@ -219,11 +193,9 @@ public class AppNoteSinkTest {
     ThisStream stream;
     stream = new ThisStream();
 
-    App.NoteSink.OfConsole noteSink;
-    noteSink = App.NoteSink.OfConsole.create(config -> {
+    App.NoteSink noteSink;
+    noteSink = App.NoteSink.ofAppendable(stream, config -> {
       config.clock(new IncrementingClock(2023, 10, 31));
-
-      config.target(stream);
     });
 
     noteSink.send(notes.emptyKey, "Hello", "", "World");
@@ -251,11 +223,9 @@ public class AppNoteSinkTest {
     Path logFile;
     logFile = parent.resolve("file.log");
 
-    App.NoteSink.OfFile noteSink;
-    noteSink = App.NoteSink.OfFile.create(config -> {
+    App.NoteSink noteSink;
+    noteSink = App.NoteSink.ofFile(logFile, config -> {
       config.clock(new IncrementingClock(2023, 10, 31));
-
-      config.file(logFile);
     });
 
     try (noteSink) {
@@ -298,11 +268,9 @@ public class AppNoteSinkTest {
     IncrementingClock clock;
     clock = new IncrementingClock(2023, 10, 31);
 
-    App.NoteSink.OfFile noteSink;
-    noteSink = App.NoteSink.OfFile.create(config -> {
+    App.NoteSink noteSink;
+    noteSink = App.NoteSink.ofFile(logFile, config -> {
       config.clock(clock);
-
-      config.file(logFile);
     });
 
     clock.reset();
@@ -348,28 +316,41 @@ public class AppNoteSinkTest {
     sink.send(notes.ref3, "FOO", LocalDate.of(2010, 5, 23), "BAR");
   }
 
-  private static class ThisStream extends PrintStream {
+  private static class ThisStream implements Appendable, Closeable {
 
     boolean closed;
 
-    public ThisStream() {
-      super(new ByteArrayOutputStream());
-    }
+    private final StringBuilder out = new StringBuilder();
+
+    ThisStream() {}
 
     @Override
-    public final void close() {
+    public final void close() throws IOException {
       closed = true;
     }
 
     @Override
+    public final Appendable append(CharSequence csq) throws IOException {
+      out.append(csq);
+
+      return this;
+    }
+
+    @Override
+    public final Appendable append(CharSequence csq, int start, int end) throws IOException {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    @Override
+    public final Appendable append(char c) throws IOException {
+      out.append(c);
+
+      return this;
+    }
+
+    @Override
     public final String toString() {
-      ByteArrayOutputStream byteStream;
-      byteStream = (ByteArrayOutputStream) out;
-
-      byte[] bytes;
-      bytes = byteStream.toByteArray();
-
-      return new String(bytes);
+      return out.toString();
     }
 
   }

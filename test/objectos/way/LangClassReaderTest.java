@@ -29,7 +29,7 @@ import org.testng.annotations.Test;
 
 public class LangClassReaderTest {
 
-  private final Lang.ClassReader reader = Lang.createClassReader(TestingNoteSink.INSTANCE);
+  private final Lang.ClassReader reader = Lang.createClassReader(Y.noteSink());
 
   @Test
   public void annotatedWith01() throws Exception {
