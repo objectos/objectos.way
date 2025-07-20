@@ -166,7 +166,7 @@ public class AppNoteSinkTest {
     String string;
     string = stream.toString();
 
-    System.out.println(string);
+    string = string.replaceAll("objectos.way(@.*)/", "objectos.way/");
 
     assertEquals(
         string,
