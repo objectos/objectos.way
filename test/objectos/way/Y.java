@@ -1074,6 +1074,10 @@ final class Y {
     return NextPathHolder.INSTANCE.nextTempFile();
   }
 
+  public static Path nextTempFile(String contents) {
+    return nextTempFile(contents, StandardCharsets.UTF_8);
+  }
+
   public static Path nextTempFile(String contents, Charset charset) {
     try {
       final Path file;
