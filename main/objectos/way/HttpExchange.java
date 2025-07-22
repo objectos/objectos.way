@@ -1947,13 +1947,11 @@ final class HttpExchange implements Http.Exchange, Closeable {
       return switch (b) {
         case Bytes.CR -> {
           bufferIndex++;
-          yield executeParseHeaderCR();
 
+          yield executeParseHeaderCR();
         }
 
-        case Bytes.LF ->
-
-             toBadRequest(InvalidLineTerminator.INSTANCE);
+        case Bytes.LF -> toBadRequest(InvalidLineTerminator.INSTANCE);
 
         case Bytes.SP -> throw new UnsupportedOperationException("obs-fold not supported");
 
