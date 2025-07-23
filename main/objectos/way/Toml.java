@@ -15,6 +15,12 @@
  */
 package objectos.way;
 
+import java.io.Closeable;
+import java.io.Flushable;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.Objects;
+
 /// The __Objectos TOML__ main class.
 public final class Toml {
 
@@ -34,6 +40,21 @@ public final class Toml {
     RecordException(Throwable cause) {
       super(cause);
     }
+
+  }
+
+  public sealed interface Writer extends Closeable, Flushable permits TomlWriter {
+
+    static Writer ofFile(Path file) throws IOException {
+      Objects.requireNonNull(file, "file == null");
+
+      final TomlWriterBuilder builder;
+      builder = new TomlWriterBuilder();
+
+      return builder.ofFile(file);
+    }
+
+    void writeRecord(Record value) throws IOException;
 
   }
 

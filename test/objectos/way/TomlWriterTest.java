@@ -17,16 +17,24 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import org.testng.annotations.Test;
 
-public class TomlDocumentTest {
+public class TomlWriterTest {
+
+  @FunctionalInterface
+  private interface ThrowingConsumer {
+    void accept(Toml.Writer w) throws IOException;
+  }
 
   @Test
-  public void table01() {
+  public void testCase01() {
     record Coordinates(String group, String artifact, String version) {}
 
-    final Toml.Document toml;
-    toml = Toml.Document.create();
+    record Project(Coordinates coordinates) {}
 
     final Coordinates coordinates;
     coordinates = new Coordinates(
@@ -35,10 +43,11 @@ public class TomlDocumentTest {
         "1.0.0-SNAPSHOT"
     );
 
-    toml.add("coordinates", coordinates);
+    final Project project;
+    project = new Project(coordinates);
 
-    assertEquals(
-        toml.toString(),
+    test(
+        w -> w.writeRecord(project),
 
         """
         [coordinates]
@@ -47,6 +56,23 @@ public class TomlDocumentTest {
         version = "1.0.0-SNAPSHOT"
         """
     );
+  }
+
+  private void test(ThrowingConsumer test, String expected) {
+    final Path file;
+    file = Y.nextTempFile();
+
+    try (Toml.Writer w = Toml.Writer.ofFile(file)) {
+      test.accept(w);
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
+
+    try {
+      assertEquals(Files.readString(file), expected);
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
   }
 
 }
