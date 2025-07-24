@@ -35,7 +35,7 @@ public class TomlReaderTest {
 
   private record Coordinates(String group, String artifact, String version) {}
 
-  @Test(enabled = false)
+  @Test
   public void testCase01() {
     test(
         """

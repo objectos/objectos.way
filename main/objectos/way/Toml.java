@@ -87,4 +87,13 @@ public final class Toml {
 
   private Toml() {}
 
+  static String basicUnescaped() {
+    //basic-unescaped = wschar / %x21 / %x23-5B / %x5D-7E / non-ascii
+    return wschar() + "!" + "#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[" + "]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+  }
+
+  static String wschar() {
+    return " \t";
+  }
+
 }

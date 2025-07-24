@@ -43,6 +43,15 @@ final class TomlReaderStateGen {
 
     gen.line();
 
+    gen.value("$VALUE");
+    gen.value("$VALUE_STRING");
+    gen.value("$VALUE_STRING_DQUOTE2");
+    gen.value("$VALUE_STRING_MULTI_LINE");
+    gen.value("$VALUE_STRING_UNESCAPE");
+    gen.value("$VALUE_STRING_LITERAL");
+
+    gen.line();
+
     gen.value("$READ");
     gen.value("$READ_EOF");
 

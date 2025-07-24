@@ -22,6 +22,7 @@ import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.RecordComponent;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +39,8 @@ final class TomlReader implements Toml.Reader {
 
     EOL_INVALID_CHAR,
 
+    VALUE_INVALID_CHAR,
+
     UNEXPECTED_EOF;
 
   }
@@ -46,9 +49,11 @@ final class TomlReader implements Toml.Reader {
 
     boolean hasNext();
 
+    String property(String name, Object value);
+
     String table(String name, Map<String, Object> ctx);
 
-    Object result();
+    Object result() throws Throwable;
 
   }
 
@@ -79,6 +84,8 @@ final class TomlReader implements Toml.Reader {
 
   private int int0;
 
+  private int int1;
+
   private final MethodHandles.Lookup lookup;
 
   private List<String> names;
@@ -90,6 +97,8 @@ final class TomlReader implements Toml.Reader {
   private byte stateNext;
 
   private Target target;
+
+  private Object value;
 
   TomlReader(TomlReaderBuilder builder) {
     buffer = builder.buffer();
@@ -107,17 +116,21 @@ final class TomlReader implements Toml.Reader {
   @SuppressWarnings("unchecked")
   @Override
   public final <T extends Record> T readRecord(Class<T> type) throws IOException {
-    final RecordReader reader;
-    reader = recordReader(type);
+    try {
+      final RecordReader reader;
+      reader = recordReader(type);
 
-    target = reader.toTarget();
+      target = reader.toTarget();
 
-    parse();
+      parse();
 
-    final Object result;
-    result = target.result();
+      final Object result;
+      result = target.result();
 
-    return (T) result;
+      return (T) result;
+    } catch (Throwable e) {
+      throw new IOException("Failed to create instance", e);
+    }
   }
 
   // ##################################################################
@@ -189,6 +202,29 @@ final class TomlReader implements Toml.Reader {
     }
 
     @Override
+    public final String property(String name, Object value) {
+      if (index == -1) {
+        return "Expected a table " + key + " but got a property " + name;
+      }
+
+      final Target current;
+      current = components[index];
+
+      final String error;
+      error = current.property(name, value);
+
+      if (error != null) {
+        return error;
+      }
+
+      if (!current.hasNext()) {
+        index += 1;
+      }
+
+      return null;
+    }
+
+    @Override
     public final String table(String name, Map<String, Object> ctx) {
       if (index == -1) {
         if (name.equals(key)) {
@@ -218,8 +254,21 @@ final class TomlReader implements Toml.Reader {
     }
 
     @Override
-    public final Object result() {
-      throw new UnsupportedOperationException("Implement me");
+    public final Object result() throws Throwable {
+      final int length;
+      length = components.length;
+
+      final Object[] args;
+      args = new Object[length];
+
+      for (int idx = 0; idx < length; idx++) {
+        final Target c;
+        c = components[idx];
+
+        args[idx] = c.result();
+      }
+
+      return constructor.invokeWithArguments(args);
     }
 
   }
@@ -304,6 +353,17 @@ final class TomlReader implements Toml.Reader {
 
     STRING;
 
+    static PropKind of(Class<?> type) {
+      final String typeName;
+      typeName = type.getName();
+
+      return switch (typeName) {
+        case "java.lang.String" -> PropKind.STRING;
+
+        default -> throw new IllegalArgumentException("Implement me");
+      };
+    }
+
     @Override
     public final Target toTarget(String key) {
       return new PropTarget(this, key);
@@ -317,6 +377,8 @@ final class TomlReader implements Toml.Reader {
 
     private final String key;
 
+    private Object value;
+
     PropTarget(PropKind kind, String key) {
       this.kind = kind;
 
@@ -325,7 +387,28 @@ final class TomlReader implements Toml.Reader {
 
     @Override
     public final boolean hasNext() {
-      throw new UnsupportedOperationException("Implement me");
+      return value == null;
+    }
+
+    @Override
+    public final String property(String name, Object value) {
+      if (!key.equals(name)) {
+        return "Expected a %s '%s' property but got a property %s".formatted(kind, key, name);
+      }
+
+      final Class<? extends Object> type;
+      type = value.getClass();
+
+      final PropKind actual;
+      actual = PropKind.of(type);
+
+      if (!actual.equals(kind)) {
+        return "Expected a %s '%s' property but got a property %s".formatted(kind, key, actual);
+      }
+
+      this.value = value;
+
+      return null;
     }
 
     @Override
@@ -335,7 +418,7 @@ final class TomlReader implements Toml.Reader {
 
     @Override
     public final Object result() {
-      throw new UnsupportedOperationException("Implement me");
+      return value;
     }
 
   }
@@ -349,14 +432,7 @@ final class TomlReader implements Toml.Reader {
     if (type.isRecord()) {
       supplier = recordReader(type);
     } else {
-      final String typeName;
-      typeName = type.getName();
-
-      supplier = switch (typeName) {
-        case "java.lang.String" -> PropKind.STRING;
-
-        default -> throw new IllegalArgumentException("Implement me");
-      };
+      supplier = PropKind.of(type);
     }
 
     final String name;
@@ -397,11 +473,18 @@ final class TomlReader implements Toml.Reader {
   static final byte $NAME_ARRAY_CLOSE = 6;
   static final byte $NAME_WS = 7;
 
-  static final byte $READ = 8;
-  static final byte $READ_EOF = 9;
+  static final byte $VALUE = 8;
+  static final byte $VALUE_STRING = 9;
+  static final byte $VALUE_STRING_DQUOTE2 = 10;
+  static final byte $VALUE_STRING_MULTI_LINE = 11;
+  static final byte $VALUE_STRING_UNESCAPE = 12;
+  static final byte $VALUE_STRING_LITERAL = 13;
 
-  static final byte $PROCESS = 10;
-  static final byte $RESULT = 11;
+  static final byte $READ = 14;
+  static final byte $READ_EOF = 15;
+
+  static final byte $PROCESS = 16;
+  static final byte $RESULT = 17;
 
   final void execute(byte from, byte to) {
     state = from;
@@ -421,6 +504,12 @@ final class TomlReader implements Toml.Reader {
       case $EOL -> executeEol();
 
       case $NAME_BARE -> executeNameBare();
+      case $NAME_WS -> executeNameWs();
+
+      case $VALUE -> executeValue();
+      case $VALUE_STRING -> executeValueString();
+      case $VALUE_STRING_DQUOTE2 -> executeValueStringDquote2();
+      case $VALUE_STRING_UNESCAPE -> executeValueStringUnescape();
 
       case $READ -> executeRead();
       case $READ_EOF -> executeReadEof();
@@ -437,7 +526,7 @@ final class TomlReader implements Toml.Reader {
 
   private byte executeStart() {
     if (names == null) {
-      names = new UtilList<>();
+      names = new ArrayList<>();
     } else {
       names.clear();
     }
@@ -504,7 +593,7 @@ final class TomlReader implements Toml.Reader {
       code = NAME_TABLE[b];
 
       switch (code) {
-        case NAME_WS -> { continue; }
+        case NAME_WS -> { adv(); continue; }
 
         case NAME_BARE -> { ctxKind = KIND_TABLE; ctxPart = PART_BARE; return $NAME_BARE; }
 
@@ -554,8 +643,9 @@ final class TomlReader implements Toml.Reader {
 
   private static final byte NAME_WS = 1;
   private static final byte NAME_BARE = 2;
-  private static final byte NAME_LEFT = 3;
-  private static final byte NAME_RIGHT = 4;
+  private static final byte NAME_EQ = 3;
+  private static final byte NAME_LEFT = 4;
+  private static final byte NAME_RIGHT = 5;
 
   static {
     final byte[] table;
@@ -570,6 +660,8 @@ final class TomlReader implements Toml.Reader {
 
     table['_'] = NAME_BARE;
     table['-'] = NAME_BARE;
+
+    table['='] = NAME_EQ;
 
     table['['] = NAME_LEFT;
 
@@ -587,7 +679,7 @@ final class TomlReader implements Toml.Reader {
       code = NAME_TABLE[b];
 
       switch (code) {
-        case NAME_WS -> { return $NAME_WS; }
+        case NAME_WS -> { int1 = adv(); return $NAME_WS; }
 
         case NAME_BARE -> { adv(); continue; }
 
@@ -615,8 +707,128 @@ final class TomlReader implements Toml.Reader {
     return toRead();
   }
 
+  private byte executeNameWs() {
+    while (bufferIndex < bufferLimit) {
+      final int b;
+      b = peek();
+
+      final byte code;
+      code = NAME_TABLE[b];
+
+      switch (code) {
+        case NAME_WS -> { adv(); continue; }
+
+        case NAME_EQ -> {
+          if (ctxKind == KIND_TABLE || ctxKind == KIND_ARRAY) {
+            throw new UnsupportedOperationException("Implement me");
+          }
+
+          final String value;
+          value = bufferToString(int1);
+
+          names.add(value);
+
+          adv();
+
+          return $VALUE;
+        }
+
+        default -> { return to(ParseError.NAME_BARE_INVALID_CHAR); }
+      }
+    }
+
+    return toRead();
+  }
+
   // ##################################################################
   // # END: Parse: Name
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Parse: Value
+  // ##################################################################
+
+  private byte executeValue() {
+    while (bufferIndex < bufferLimit) {
+      final int b;
+      b = peek();
+
+      switch (b) {
+        case ' ', '\t' -> { adv(); continue; }
+
+        case '"' -> { int0 = advPre(); return $VALUE_STRING; }
+
+        default -> to(ParseError.VALUE_INVALID_CHAR);
+      }
+    }
+
+    return toRead();
+  }
+
+  private static final byte[] STRING_TABLE;
+
+  private static final byte STRING_VALID = 1;
+  private static final byte STRING_DQUOTE = 2;
+  private static final byte STRING_BACKSLASH = 3;
+
+  static {
+    final byte[] table;
+    table = new byte[256];
+
+    Http.fillTable(table, Toml.basicUnescaped(), STRING_VALID);
+
+    table['"'] = STRING_DQUOTE;
+    table['\\'] = STRING_BACKSLASH;
+
+    STRING_TABLE = table;
+  }
+
+  private byte executeValueString() {
+    while (bufferIndex < bufferLimit) {
+      final int b;
+      b = peek();
+
+      final byte code;
+      code = STRING_TABLE[b];
+
+      switch (code) {
+        case STRING_VALID -> { adv(); continue; }
+
+        case STRING_DQUOTE -> {
+          final int quote;
+          quote = adv();
+
+          if (quote == int0) {
+            // empty string or multiline
+            return $VALUE_STRING_DQUOTE2;
+          }
+
+          // end of string
+
+          value = bufferToString(quote);
+
+          return $EOL;
+        }
+
+        case STRING_BACKSLASH -> { adv(); return $VALUE_STRING_UNESCAPE; }
+
+        default -> to(ParseError.VALUE_INVALID_CHAR);
+      }
+    }
+
+    return toRead();
+  }
+
+  private byte executeValueStringDquote2() {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  private byte executeValueStringUnescape() {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  // ##################################################################
+  // # END: Parse: Value
   // ##################################################################
 
   // ##################################################################
@@ -643,7 +855,11 @@ final class TomlReader implements Toml.Reader {
   }
 
   private byte executeReadEof() {
-    throw new UnsupportedOperationException("Implement me");
+    return switch (stateNext) {
+      case $EXP -> $RESULT;
+
+      default -> to(ParseError.UNEXPECTED_EOF);
+    };
   }
 
   private int adv() {
@@ -655,8 +871,12 @@ final class TomlReader implements Toml.Reader {
   }
 
   private String bufferToString() {
+    return bufferToString(bufferIndex);
+  }
+
+  private String bufferToString(int endIndex) {
     final int len;
-    len = bufferIndex - int0;
+    len = endIndex - int0;
 
     return new String(buffer, int0, len, StandardCharsets.UTF_8);
   }
@@ -683,39 +903,58 @@ final class TomlReader implements Toml.Reader {
   // ##################################################################
 
   private byte executeProcess() {
+    final Map<String, Object> parent;
+    parent = findParent();
+
+    if (parent == null) {
+      throw new UnsupportedOperationException("Implement me :: names=" + names);
+    }
+
+    final String name;
+    name = names.removeLast();
+
     switch (ctxKind) {
       case KIND_KEYVL -> {
-        throw new UnsupportedOperationException("Implement me");
-      }
+        assert value != null;
 
-      case KIND_TABLE -> {
-        String name = null;
+        final Object existing;
+        existing = parent.put(name, value);
 
-        Map<String, Object> ctx;
-        ctx = document;
-
-        for (int idx = 0, size = names.size(); idx < size; idx++) {
-          name = names.get(idx);
-
-          final Map<String, Object> table;
-          table = new UtilSequencedMap<>();
-
-          final Object existing;
-          existing = ctx.put(name, table);
-
-          if (existing != null) {
-            throw new UnsupportedOperationException("Implement me");
-          }
-
-          ctx = table;
+        if (existing != null) {
+          throw new UnsupportedOperationException("Implement me");
         }
 
         final String error;
-        error = target.table(name, ctx);
+        error = target.property(name, value);
+
+        if (error != null) {
+          throw new UnsupportedOperationException("Implement me :: error=" + error);
+        }
+
+        return $EXP;
+      }
+
+      case KIND_TABLE -> {
+        assert value == null;
+
+        final Map<String, Object> table;
+        table = new UtilSequencedMap<>();
+
+        final Object existing;
+        existing = parent.put(name, table);
+
+        if (existing != null) {
+          throw new UnsupportedOperationException("Implement me");
+        }
+
+        final String error;
+        error = target.table(name, table);
 
         if (error != null) {
           throw new UnsupportedOperationException("Implement me");
         }
+
+        names.add(name);
 
         return $EXP;
       }
@@ -726,6 +965,49 @@ final class TomlReader implements Toml.Reader {
 
       default -> throw new AssertionError("Unexpected context kind=" + ctxKind);
     }
+  }
+
+  @SuppressWarnings("unchecked")
+  private Map<String, Object> findParent() {
+    assert !names.isEmpty() : names.toString();
+
+    final int size;
+    size = names.size();
+
+    if (size == 1) {
+      return document;
+    }
+
+    Map<String, Object> parent;
+    parent = document;
+
+    for (int idx = 0, max = size - 1; idx < max; idx++) {
+      final String name;
+      name = names.get(idx);
+
+      final Map<String, Object> current;
+
+      final Object candidate;
+      candidate = parent.get(name);
+
+      if (candidate == null) {
+        current = new UtilSequencedMap<>();
+
+        parent.put(name, current);
+      }
+
+      else if (candidate instanceof Map) {
+        current = (Map<String, Object>) candidate;
+      }
+
+      else {
+        return null;
+      }
+
+      parent = current;
+    }
+
+    return parent;
   }
 
   // ##################################################################
