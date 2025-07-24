@@ -30,24 +30,26 @@ public class TomlWriterTest {
     void accept(Toml.Writer w) throws IOException;
   }
 
+  private record Project(Coordinates coordinates) {}
+
+  private record Coordinates(String group, String artifact, String version) {}
+
   @Test
   public void testCase01() {
-    record Coordinates(String group, String artifact, String version) {}
-
-    record Project(Coordinates coordinates) {}
-
-    final Coordinates coordinates;
-    coordinates = new Coordinates(
-        "com.example.test",
-        "some.artifact",
-        "1.0.0-SNAPSHOT"
-    );
-
-    final Project project;
-    project = new Project(coordinates);
-
     test(
-        w -> w.writeRecord(project),
+        w -> {
+          final Coordinates coordinates;
+          coordinates = new Coordinates(
+              "com.example.test",
+              "some.artifact",
+              "1.0.0-SNAPSHOT"
+          );
+
+          final Project project;
+          project = new Project(coordinates);
+
+          w.writeRecord(project);
+        },
 
         """
         [coordinates]

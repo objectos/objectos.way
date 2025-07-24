@@ -18,8 +18,10 @@ package objectos.way;
 import java.io.Closeable;
 import java.io.Flushable;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.nio.file.Path;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 /// The __Objectos TOML__ main class.
 public final class Toml {
@@ -40,6 +42,31 @@ public final class Toml {
     RecordException(Throwable cause) {
       super(cause);
     }
+
+  }
+
+  public sealed interface Reader extends Closeable permits TomlReader {
+
+    sealed interface Options permits TomlReaderBuilder {
+
+      void bufferSize(int value);
+
+      void file(Path value);
+
+      void lookup(MethodHandles.Lookup value);
+
+    }
+
+    static Reader create(Consumer<? super Options> opts) throws IOException {
+      final TomlReaderBuilder builder;
+      builder = new TomlReaderBuilder();
+
+      opts.accept(builder);
+
+      return builder.build();
+    }
+
+    <T extends Record> T readRecord(Class<T> type) throws IOException;
 
   }
 

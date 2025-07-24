@@ -15,11 +15,27 @@
  */
 package objectos.way;
 
+import static org.testng.Assert.assertEquals;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.lang.invoke.MethodHandles;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import org.testng.annotations.Test;
 
 public class TomlReaderTest {
 
-  @Test
+  @FunctionalInterface
+  private interface ThrowingConsumer {
+    void accept(Toml.Reader r) throws IOException;
+  }
+
+  private record Project(Coordinates coordinates) {}
+
+  private record Coordinates(String group, String artifact, String version) {}
+
+  @Test(enabled = false)
   public void testCase01() {
     test(
         """
@@ -29,16 +45,35 @@ public class TomlReaderTest {
         version = "1.0.0-SNAPSHOT"
         """,
 
-        """
-        TableHeader[coordinates]
-        StringProperty[group, com.example.test]
-        StringProperty[artifact, some.artifact]
-        StringProperty[version, 1.0.0-SNAPSHOT]
-        """
+        r -> {
+          assertEquals(
+              r.readRecord(Project.class),
+
+              new Project(
+                  new Coordinates(
+                      "com.example.test",
+                      "some.artifact",
+                      "1.0.0-SNAPSHOT"
+                  )
+              )
+          );
+        }
     );
   }
 
-  private void test(String source, String expected) {
+  private void test(String source, ThrowingConsumer test) {
+    final Path file;
+    file = Y.nextTempFile(source, StandardCharsets.UTF_8);
+
+    try (Toml.Reader reader = Toml.Reader.create(opts -> {
+      opts.file(file);
+
+      opts.lookup(MethodHandles.lookup());
+    })) {
+      test.accept(reader);
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
   }
 
 }

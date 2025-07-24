@@ -15,36 +15,41 @@
  */
 package objectos.way;
 
-final class TomlStateGen {
+final class TomlReaderStateGen {
 
   private int state = 0;
 
   public static void main(String[] args) {
-    final TomlStateGen gen;
-    gen = new TomlStateGen();
+    final TomlReaderStateGen gen;
+    gen = new TomlReaderStateGen();
 
     gen.value("$START");
 
     gen.line();
 
-    gen.value("$READ");
-    gen.value("$READ_LINE");
-    gen.value("$READ_LINE_CR");
+    gen.value("$EXP");
+    gen.value("$EXP_OPEN_BRACKET");
 
     gen.line();
 
-    gen.value("$NAME");
+    gen.value("$EOL");
+    gen.value("$EOL_CR");
+
+    gen.line();
+
     gen.value("$NAME_BARE");
-    gen.value("$NAME_DOUBLE");
-    gen.value("$NAME_SINGLE");
-    gen.value("$NAME_HEADER");
-    gen.value("$NAME_ARRAY");
     gen.value("$NAME_ARRAY_CLOSE");
-    gen.value("$NAME_RESULT");
+    gen.value("$NAME_WS");
 
     gen.line();
 
-    gen.value("$ERROR");
+    gen.value("$READ");
+    gen.value("$READ_EOF");
+
+    gen.line();
+
+    gen.value("$PROCESS");
+    gen.value("$RESULT");
   }
 
   private void line() {
