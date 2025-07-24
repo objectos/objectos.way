@@ -17,11 +17,11 @@ package objectos.way;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
 import java.lang.reflect.RecordComponent;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.Map;
 
 final class TomlWriter implements Toml.Writer {
@@ -34,14 +34,18 @@ final class TomlWriter implements Toml.Writer {
 
   private int bufferIndex;
 
+  private final MethodHandles.Lookup lookup;
+
   private final OutputStream outputStream;
 
   private Map<Class<?>, RecordWriter> recordWriters;
 
-  TomlWriter(TomlWriterBuilder builder, OutputStream outputStream) {
+  TomlWriter(TomlWriterBuilder builder) {
     buffer = builder.buffer();
 
-    this.outputStream = outputStream;
+    lookup = builder.lookup;
+
+    outputStream = builder.outputStream;
   }
 
   // ##################################################################
@@ -73,11 +77,8 @@ final class TomlWriter implements Toml.Writer {
     final Class<? extends Record> key;
     key = value.getClass();
 
-    final Map<Class<?>, RecordWriter> writers;
-    writers = recordWriters();
-
     final RecordWriter writer;
-    writer = writers.computeIfAbsent(key, this::recordWriter);
+    writer = recordWriter(key);
 
     writer.write(value);
   }
@@ -353,15 +354,18 @@ final class TomlWriter implements Toml.Writer {
 
   }
 
-  private Map<Class<?>, RecordWriter> recordWriters() {
+  private RecordWriter recordWriter(Class<?> key) {
     if (recordWriters == null) {
-      recordWriters = new HashMap<>();
+      recordWriters = new UtilMap<>();
     }
 
-    return recordWriters;
-  }
+    final RecordWriter existing;
+    existing = recordWriters.get(key);
 
-  private RecordWriter recordWriter(Class<?> key) {
+    if (existing != null) {
+      return existing;
+    }
+
     final RecordComponent[] components;
     components = key.getRecordComponents();
 
@@ -381,7 +385,15 @@ final class TomlWriter implements Toml.Writer {
       writers[idx] = writer;
     }
 
-    return new RecordWriter(writers);
+    final RecordWriter result;
+    result = new RecordWriter(writers);
+
+    final RecordWriter checkJustInCase;
+    checkJustInCase = recordWriters.put(key, result);
+
+    assert checkJustInCase == null;
+
+    return result;
   }
 
   private class RecordComponentWriter {
@@ -390,9 +402,9 @@ final class TomlWriter implements Toml.Writer {
 
     private final String key;
 
-    private final Method accessor;
+    private final MethodHandle accessor;
 
-    RecordComponentWriter(PropKind kind, String key, Method accessor) {
+    RecordComponentWriter(PropKind kind, String key, MethodHandle accessor) {
       this.kind = kind;
 
       this.key = key;
@@ -410,7 +422,7 @@ final class TomlWriter implements Toml.Writer {
 
           case STRING -> writeProperty(key, (String) value);
         }
-      } catch (IllegalAccessException | InvocationTargetException e) {
+      } catch (Throwable e) {
         throw new IOException("Failed to read a record component value", e);
       }
     }
@@ -421,13 +433,22 @@ final class TomlWriter implements Toml.Writer {
     final Class<?> type;
     type = component.getType();
 
-    final PropKind kind = PropKind.of(type);
+    final PropKind kind;
+    kind = PropKind.of(type);
 
     final String name;
     name = component.getName();
 
-    final Method accessor;
-    accessor = component.getAccessor();
+    final Method method;
+    method = component.getAccessor();
+
+    final MethodHandle accessor;
+
+    try {
+      accessor = lookup.unreflect(method);
+    } catch (IllegalAccessException e) {
+      throw new Toml.RecordException(e);
+    }
 
     return new RecordComponentWriter(kind, name, accessor);
   }

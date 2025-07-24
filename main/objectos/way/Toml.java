@@ -19,22 +19,12 @@ import java.io.Closeable;
 import java.io.Flushable;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
-import java.util.Objects;
 import java.util.function.Consumer;
 
 /// The __Objectos TOML__ main class.
 public final class Toml {
-
-  public sealed interface Document permits TomlDocument {
-
-    static Document create() {
-      return new TomlDocument();
-    }
-
-    void add(String name, Record value);
-
-  }
 
   @SuppressWarnings("serial")
   public static final class RecordException extends RuntimeException {
@@ -51,7 +41,7 @@ public final class Toml {
 
       void bufferSize(int value);
 
-      void file(Path value);
+      void file(Path value, OpenOption... options);
 
       void lookup(MethodHandles.Lookup value);
 
@@ -72,13 +62,23 @@ public final class Toml {
 
   public sealed interface Writer extends Closeable, Flushable permits TomlWriter {
 
-    static Writer ofFile(Path file) throws IOException {
-      Objects.requireNonNull(file, "file == null");
+    sealed interface Options permits TomlWriterBuilder {
 
+      void bufferSize(int value);
+
+      void file(Path value, OpenOption... options);
+
+      void lookup(MethodHandles.Lookup value);
+
+    }
+
+    static Writer create(Consumer<? super Options> opts) throws IOException {
       final TomlWriterBuilder builder;
       builder = new TomlWriterBuilder();
 
-      return builder.ofFile(file);
+      opts.accept(builder);
+
+      return builder.build();
     }
 
     void writeRecord(Record value) throws IOException;

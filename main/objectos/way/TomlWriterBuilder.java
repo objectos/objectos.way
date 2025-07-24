@@ -17,33 +17,62 @@ package objectos.way;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.invoke.MethodHandles;
 import java.nio.file.Files;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
-import java.util.EnumSet;
+import java.util.Objects;
 
-final class TomlWriterBuilder {
+final class TomlWriterBuilder implements Toml.Writer.Options {
 
-  private final int bufferSize = 16 * 1024;
+  private int bufferSize = 16 * 1024;
 
-  private boolean failIfExists;
+  MethodHandles.Lookup lookup;
 
-  final TomlWriter ofFile(Path file) throws IOException {
-    final EnumSet<StandardOpenOption> set;
-    set = EnumSet.noneOf(StandardOpenOption.class);
+  private OpenOption[] openOptions;
 
-    set.add(StandardOpenOption.WRITE);
+  OutputStream outputStream;
 
-    set.add(failIfExists ? StandardOpenOption.CREATE_NEW : StandardOpenOption.CREATE);
+  private Object target;
 
-    final OpenOption[] options;
-    options = set.toArray(OpenOption[]::new);
+  @Override
+  public final void bufferSize(int value) {
+    if (value <= 0) {
+      throw new IllegalArgumentException("Buffer size must be a positive number");
+    }
 
-    final OutputStream out;
-    out = Files.newOutputStream(file, options);
+    bufferSize = value;
+  }
 
-    return new TomlWriter(this, out);
+  @Override
+  public final void file(Path value, OpenOption... options) {
+    target = Objects.requireNonNull(value, "value == null");
+    openOptions = Objects.requireNonNull(options, "options == null").clone();
+  }
+
+  @Override
+  public final void lookup(MethodHandles.Lookup value) {
+    lookup = Objects.requireNonNull(value, "value == null");
+  }
+
+  final TomlWriter build() throws IOException {
+    if (lookup == null) {
+      throw new IllegalStateException("A MethodHandles.Lookup was not defined");
+    }
+
+    if (target == null) {
+      throw new IllegalStateException("A target was not defined");
+    }
+
+    outputStream = switch (target) {
+      case null -> throw new IllegalStateException("A source was not defined");
+
+      case Path file -> Files.newOutputStream(file, openOptions);
+
+      default -> throw new AssertionError("Unexpected value: " + target);
+    };
+
+    return new TomlWriter(this);
   }
 
   final byte[] buffer() {

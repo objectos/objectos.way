@@ -18,8 +18,8 @@ package objectos.way;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodHandles.Lookup;
 import java.nio.file.Files;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.util.Objects;
 
@@ -30,6 +30,8 @@ final class TomlReaderBuilder implements Toml.Reader.Options {
   InputStream inputStream;
 
   MethodHandles.Lookup lookup;
+
+  private OpenOption[] openOptions;
 
   private Object source;
 
@@ -43,12 +45,13 @@ final class TomlReaderBuilder implements Toml.Reader.Options {
   }
 
   @Override
-  public final void file(Path value) {
+  public final void file(Path value, OpenOption... options) {
     source = Objects.requireNonNull(value, "value == null");
+    openOptions = Objects.requireNonNull(options, "options == null").clone();
   }
 
   @Override
-  public void lookup(Lookup value) {
+  public void lookup(MethodHandles.Lookup value) {
     lookup = Objects.requireNonNull(value, "value == null");
   }
 
@@ -68,7 +71,7 @@ final class TomlReaderBuilder implements Toml.Reader.Options {
     inputStream = switch (source) {
       case null -> throw new IllegalStateException("A source was not defined");
 
-      case Path file -> Files.newInputStream(file);
+      case Path file -> Files.newInputStream(file, openOptions);
 
       default -> throw new AssertionError("Unexpected value: " + source);
     };

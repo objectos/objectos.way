@@ -19,6 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.lang.invoke.MethodHandles;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import org.testng.annotations.Test;
@@ -64,7 +65,11 @@ public class TomlWriterTest {
     final Path file;
     file = Y.nextTempFile();
 
-    try (Toml.Writer w = Toml.Writer.ofFile(file)) {
+    try (Toml.Writer w = Toml.Writer.create(opts -> {
+      opts.file(file);
+
+      opts.lookup(MethodHandles.lookup());
+    })) {
       test.accept(w);
     } catch (IOException e) {
       throw new UncheckedIOException(e);
