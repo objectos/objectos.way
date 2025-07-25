@@ -52,6 +52,8 @@ final class AppReloaderBuilder implements App.Reloader.Options {
 
   Note.Sink noteSink = Note.NoOpSink.INSTANCE;
 
+  ModuleLayer parentLayer;
+
   WatchService service;
 
   boolean serviceClose;
@@ -72,7 +74,7 @@ final class AppReloaderBuilder implements App.Reloader.Options {
 
   @Override
   public final void module(String name, Path location) {
-    if (moduleConfiguration != null) {
+    if (parentLayer != null) {
       throw new IllegalStateException("module has already been set");
     }
 
@@ -103,11 +105,13 @@ final class AppReloaderBuilder implements App.Reloader.Options {
     this.moduleLocation = location;
 
     this.moduleName = moduleName;
+
+    parentLayer = ModuleLayer.boot();
   }
 
   @Override
   public final void moduleOf(Class<?> value) {
-    if (moduleConfiguration != null) {
+    if (parentLayer != null) {
       throw new IllegalStateException("module has already been set");
     }
 
@@ -117,11 +121,11 @@ final class AppReloaderBuilder implements App.Reloader.Options {
     String moduleName;
     moduleName = module.getName();
 
-    ModuleLayer boot;
-    boot = ModuleLayer.boot();
+    ModuleLayer layer;
+    layer = module.getLayer();
 
     Configuration configuration;
-    configuration = boot.configuration();
+    configuration = layer.configuration();
 
     Optional<ResolvedModule> maybeResolved;
     maybeResolved = configuration.findModule(moduleName);
@@ -167,6 +171,8 @@ final class AppReloaderBuilder implements App.Reloader.Options {
     this.moduleLocation = location;
 
     this.moduleName = moduleName;
+
+    parentLayer = layer;
   }
 
   @Override
@@ -184,7 +190,7 @@ final class AppReloaderBuilder implements App.Reloader.Options {
       throw new IllegalStateException("No handler factory specified");
     }
 
-    if (moduleConfiguration == null) {
+    if (parentLayer == null) {
       throw new IllegalStateException("No module was specified");
     }
 

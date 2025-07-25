@@ -92,6 +92,8 @@ final class AppReloader implements App.Reloader {
 
   private final String moduleName;
 
+  private final ModuleLayer parentLayer;
+
   private final WatchService service;
 
   private final boolean serviceClose;
@@ -114,6 +116,8 @@ final class AppReloader implements App.Reloader {
     moduleLocation = builder.moduleLocation;
 
     moduleName = builder.moduleName;
+
+    parentLayer = builder.parentLayer;
 
     service = builder.service;
 
@@ -275,13 +279,13 @@ final class AppReloader implements App.Reloader {
     result = Http.Handler.noop();
 
     try {
-      ModuleLayer parent;
-      parent = ModuleLayer.boot();
+      final ThisLoader parentLoader;
+      parentLoader = new ThisLoader();
 
-      ModuleLayer layer;
-      layer = parent.defineModules(moduleConfiguration, this::loaderFunction);
+      final ModuleLayer layer;
+      layer = parentLayer.defineModulesWithOneLoader(moduleConfiguration, parentLoader);
 
-      ClassLoader loader;
+      final ClassLoader loader;
       loader = layer.findLoader(moduleName);
 
       Http.Handler instance;
@@ -300,14 +304,6 @@ final class AppReloader implements App.Reloader {
     }
 
     handler = result;
-  }
-
-  private ClassLoader loaderFunction(String name) {
-    if (name.equals(moduleName)) {
-      return new ThisLoader();
-    } else {
-      return ModuleLayer.boot().findLoader(name);
-    }
   }
 
   private class ThisLoader extends ClassLoader {
@@ -335,7 +331,7 @@ final class AppReloader implements App.Reloader {
         if (classReader.annotatedWith(App.DoNotReload.class)) {
           noteSink.send(notes.skipped, name);
 
-          return load1(name);
+          return null;
         }
 
         Class<?> clazz;
@@ -345,19 +341,12 @@ final class AppReloader implements App.Reloader {
 
         return clazz;
       } catch (NoSuchFileException e) {
-        return load1(name);
+        throw new ClassNotFoundException(name, e);
       } catch (IOException e) {
         throw new ClassNotFoundException(name, e);
       } catch (InvalidClassFileException e) {
         throw new ClassNotFoundException(name, e);
       }
-    }
-
-    private Class<?> load1(String name) throws ClassNotFoundException {
-      ClassLoader systemLoader;
-      systemLoader = ClassLoader.getSystemClassLoader();
-
-      return systemLoader.loadClass(name);
     }
 
   }
