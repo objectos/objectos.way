@@ -424,23 +424,10 @@ public final class App {
        */
       void handlerFactory(HandlerFactory value);
 
-      /**
-       * Sets the module to be reloaded to the one from the specified name and
-       * location.
-       *
-       * @param name
-       *        the module's name
-       * @param location
-       *        the module's location
-       */
-      void module(String name, Path location);
-
-      /**
-       * Sets the module to be reloaded to the one from the specified class.
-       *
-       * @param value
-       *        the class whose module is to be reloaded
-       */
+      /// Sets the module to be reloaded to the one from the specified class.
+      ///
+      /// @param value
+      ///        the class whose module is to be reloaded
       void moduleOf(Class<?> value);
 
       /**

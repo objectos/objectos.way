@@ -17,11 +17,14 @@ package objectos.way;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.lang.module.Configuration;
+import java.lang.module.ModuleFinder;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Set;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.JavaFileObject;
@@ -190,6 +193,38 @@ final class AppReloaderHelper implements AutoCloseable, App.Reloader.HandlerFact
   public final void close() throws IOException {
     try (fileManager) {
       Rmdir.rmdir(root);
+    }
+  }
+
+  public final Class<?> load() {
+    final ModuleLayer parentLayer;
+    parentLayer = ModuleLayer.boot();
+
+    final Configuration parentConfig;
+    parentConfig = parentLayer.configuration();
+
+    final ModuleFinder before;
+    before = ModuleFinder.of(cls);
+
+    final ModuleFinder after;
+    after = ModuleFinder.of();
+
+    final Set<String> roots;
+    roots = Set.of("test.way");
+
+    final Configuration config;
+    config = parentConfig.resolve(before, after, roots);
+
+    final ModuleLayer layer;
+    layer = parentLayer.defineModulesWithOneLoader(config, ClassLoader.getSystemClassLoader());
+
+    final ClassLoader loader;
+    loader = layer.findLoader("test.way");
+
+    try {
+      return loader.loadClass("test.Subject");
+    } catch (ClassNotFoundException e) {
+      throw new RuntimeException("Failed to load class", e);
     }
   }
 

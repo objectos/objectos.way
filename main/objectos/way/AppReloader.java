@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.function.Function;
 import objectos.way.Lang.InvalidClassFileException;
 
 final class AppReloader implements App.Reloader {
@@ -94,6 +95,8 @@ final class AppReloader implements App.Reloader {
 
   private final ModuleLayer parentLayer;
 
+  private final ClassLoader parentLoader;
+
   private final WatchService service;
 
   private final boolean serviceClose;
@@ -118,6 +121,8 @@ final class AppReloader implements App.Reloader {
     moduleName = builder.moduleName;
 
     parentLayer = builder.parentLayer;
+
+    parentLoader = builder.parentLoader;
 
     service = builder.service;
 
@@ -283,7 +288,7 @@ final class AppReloader implements App.Reloader {
       parentLoader = new ThisLoader();
 
       final ModuleLayer layer;
-      layer = parentLayer.defineModulesWithOneLoader(moduleConfiguration, parentLoader);
+      layer = parentLayer.defineModules(moduleConfiguration, parentLoader);
 
       final ClassLoader loader;
       loader = layer.findLoader(moduleName);
@@ -306,10 +311,19 @@ final class AppReloader implements App.Reloader {
     handler = result;
   }
 
-  private class ThisLoader extends ClassLoader {
+  private class ThisLoader extends ClassLoader implements Function<String, ClassLoader> {
 
     public ThisLoader() {
       super(null); // no parent
+    }
+
+    @Override
+    public final ClassLoader apply(String name) {
+      if (moduleName.equals(name)) {
+        return this;
+      } else {
+        return parentLoader;
+      }
     }
 
     @Override
@@ -331,7 +345,7 @@ final class AppReloader implements App.Reloader {
         if (classReader.annotatedWith(App.DoNotReload.class)) {
           noteSink.send(notes.skipped, name);
 
-          return null;
+          return parentLoader.loadClass(name);
         }
 
         Class<?> clazz;
@@ -341,7 +355,7 @@ final class AppReloader implements App.Reloader {
 
         return clazz;
       } catch (NoSuchFileException e) {
-        throw new ClassNotFoundException(name, e);
+        return parentLoader.loadClass(name);
       } catch (IOException e) {
         throw new ClassNotFoundException(name, e);
       } catch (InvalidClassFileException e) {

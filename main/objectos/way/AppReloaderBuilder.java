@@ -54,6 +54,8 @@ final class AppReloaderBuilder implements App.Reloader.Options {
 
   ModuleLayer parentLayer;
 
+  ClassLoader parentLoader;
+
   WatchService service;
 
   boolean serviceClose;
@@ -70,43 +72,6 @@ final class AppReloaderBuilder implements App.Reloader.Options {
   @Override
   public final void handlerFactory(App.Reloader.HandlerFactory value) {
     handlerFactory = Objects.requireNonNull(value, "value == null");
-  }
-
-  @Override
-  public final void module(String name, Path location) {
-    if (parentLayer != null) {
-      throw new IllegalStateException("module has already been set");
-    }
-
-    String moduleName;
-    moduleName = Objects.requireNonNull(name, "name == null");
-
-    if (!Files.isDirectory(location)) {
-      throw new IllegalArgumentException("Module location does not represent a directory: " + location);
-    }
-
-    ModuleLayer boot;
-    boot = ModuleLayer.boot();
-
-    Configuration configuration;
-    configuration = boot.configuration();
-
-    final ModuleFinder finder;
-    finder = ModuleFinder.of(location);
-
-    final ModuleFinder afterFinder;
-    afterFinder = ModuleFinder.of();
-
-    final Set<String> roots;
-    roots = Set.of(moduleName);
-
-    moduleConfiguration = configuration.resolve(finder, afterFinder, roots);
-
-    this.moduleLocation = location;
-
-    this.moduleName = moduleName;
-
-    parentLayer = ModuleLayer.boot();
   }
 
   @Override
@@ -173,6 +138,8 @@ final class AppReloaderBuilder implements App.Reloader.Options {
     this.moduleName = moduleName;
 
     parentLayer = layer;
+
+    parentLoader = value.getClassLoader();
   }
 
   @Override

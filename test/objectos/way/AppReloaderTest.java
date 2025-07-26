@@ -42,7 +42,7 @@ public class AppReloaderTest {
       try (
           App.Reloader reloader = App.Reloader.create(config -> {
             config.handlerFactory(helper);
-            config.module("test.way", helper.classOutput());
+            config.moduleOf(helper.load());
             config.noteSink(Y.noteSink());
           })
       ) {
@@ -75,7 +75,7 @@ public class AppReloaderTest {
       try (
           App.Reloader reloader = App.Reloader.create(config -> {
             config.handlerFactory(helper);
-            config.module("test.way", helper.classOutput());
+            config.moduleOf(helper.load());
             config.noteSink(Y.noteSink());
           })
       ) {
@@ -113,7 +113,7 @@ public class AppReloaderTest {
 
           App.Reloader reloader = App.Reloader.create(config -> {
             config.handlerFactory(helper);
-            config.module("test.way", helper.classOutput());
+            config.moduleOf(helper.load());
             config.noteSink(Y.noteSink());
             config.watchService(watchService);
           })
@@ -168,7 +168,7 @@ public class AppReloaderTest {
           App.Reloader reloader = App.Reloader.create(config -> {
             config.directory(resources);
             config.handlerFactory(helper);
-            config.module("test.way", helper.classOutput());
+            config.moduleOf(helper.load());
             config.noteSink(Y.noteSink());
           })
       ) {
