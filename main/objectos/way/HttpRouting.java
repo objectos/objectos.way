@@ -54,6 +54,13 @@ final class HttpRouting extends HttpRoutingSupport implements Http.Routing {
   }
 
   @Override
+  public final void path(String path, Http.Method method, Http.Handler handler) {
+    path(path, matched -> {
+      matched.allow(method, handler);
+    });
+  }
+
+  @Override
   public final void when(Predicate<? super Http.Exchange> condition, Http.Routing.Module module) {
     Objects.requireNonNull(condition, "condition == null");
 

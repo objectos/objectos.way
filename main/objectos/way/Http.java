@@ -1406,6 +1406,25 @@ public final class Http {
      */
     void path(String path, RoutingPath.Module module);
 
+    /// For a request that matches the specified path expression and method,
+    /// use the specified handler.
+    ///
+    /// This method is a convenience to the following:
+    ///
+    /// ```java
+    /// r.path(path, matched -> {
+    ///   matched.allow(method, handler);
+    /// });
+    /// ```
+    ///
+    /// @param path
+    ///        a path expression
+    /// @param method
+    ///        the only allowed method
+    /// @param handler
+    ///        handles the requests for this path and method
+    void path(String path, Http.Method method, Http.Handler handler);
+
     /**
      * Appends to this configuration the handlers defined by the specified
      * module to be executed when the specified condition evaluates to
