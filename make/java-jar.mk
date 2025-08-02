@@ -42,6 +42,18 @@ JAR_FILE_NAME := $(ARTIFACT_ID)-$(VERSION).jar
 ## jar file path
 JAR_FILE := $(WORK)/$(JAR_FILE_NAME)
 
+ifdef JAR_EXCLUDES
+## where we'll find the classes for our JAR file
+JAR_DIRECTORY := $(WORK)/jar
+
+## jar rsync command
+JAR_RSYNCX := rsync
+JAR_RSYNCX += -a
+JAR_RSYNCX += $(foreach exclude,$(JAR_EXCLUDES),--exclude=$(exclude))
+JAR_RSYNCX += $(CLASS_OUTPUT)/
+JAR_RSYNCX += $(JAR_DIRECTORY)/
+endif
+
 ## jar command
 JARX := $(JAR)
 JARX += --create
@@ -49,12 +61,19 @@ JARX += --file $(JAR_FILE)
 ifneq ($(JAR_MODE),class-path)
 JARX += --module-version $(VERSION)
 endif
+ifndef JAR_EXCLUDES
 JARX += -C $(CLASS_OUTPUT)
+else
+JARX += -C $(JAR_DIRECTORY)
+endif
 JARX += .
 
 ## requirements of the JAR_FILE target
 JAR_FILE_REQS := $(COMPILE_MARKER)
 JAR_FILE_REQS += $(JAR_LICENSE)
+ifdef JAR_EXCLUDES
+JAR_FILE_REQS += $(JAR_DIRECTORY)
+endif
 
 #
 # jar targets
@@ -62,6 +81,19 @@ JAR_FILE_REQS += $(JAR_LICENSE)
 
 .PHONY: jar
 jar: $(JAR_FILE)
+
+.PHONY: jar-clean
+ifndef JAR_EXCLUDES
+jar-clean:
+	rm -rf $(JAR_FILE)
+else
+jar-clean:
+	rm -rf $(JAR_DIRECTORY) $(JAR_FILE)
+
+$(JAR_DIRECTORY): $(CLASSES)
+	@mkdir --parents $@
+	$(JAR_RSYNCX)
+endif
 
 $(JAR_FILE): $(JAR_FILE_REQS)
 	$(JARX)
