@@ -182,7 +182,7 @@ public class HttpExchangeTest1ParseMethod extends HttpExchangeTest {
     Socket socket;
     socket = Y.socket("GE", Y.trimStackTrace(new IOException(), 1));
 
-    try (HttpExchange http = new HttpExchange(socket, 256, 512, Y.clockFixed(), Y.noteSink(), 0L)) {
+    try (HttpExchange http = Y.http(socket, 256, 512)) {
       assertEquals(http.shouldHandle(), false);
 
       assertEquals(Y.toString(socket), "");
@@ -196,7 +196,7 @@ public class HttpExchangeTest1ParseMethod extends HttpExchangeTest {
     Socket socket;
     socket = Y.socket("POS", Y.trimStackTrace(new IOException(), 1));
 
-    try (HttpExchange http = new HttpExchange(socket, 256, 512, Y.clockFixed(), Y.noteSink(), 0L)) {
+    try (HttpExchange http = Y.http(socket, 256, 512)) {
       assertEquals(http.shouldHandle(), false);
 
       assertEquals(Y.toString(socket), "");
@@ -210,7 +210,7 @@ public class HttpExchangeTest1ParseMethod extends HttpExchangeTest {
     Socket socket;
     socket = Y.socket();
 
-    try (HttpExchange http = new HttpExchange(socket, 256, 512, Y.clockFixed(), Y.noteSink(), 0L)) {
+    try (HttpExchange http = Y.http(socket, 256, 512)) {
       assertEquals(http.shouldHandle(), false);
 
       assertEquals(Y.toString(socket), "");
@@ -242,7 +242,7 @@ public class HttpExchangeTest1ParseMethod extends HttpExchangeTest {
     final int bufferInitial; // force many buffer resizes
     bufferInitial = 2;
 
-    try (HttpExchange http = new HttpExchange(socket, bufferInitial, 512, Y.clockFixed(), Y.noteSink(), 0L)) {
+    try (HttpExchange http = Y.http(socket, bufferInitial, 512)) {
       assertEquals(http.shouldHandle(), true);
 
       http.ok(Media.Bytes.textPlain("OK\n"));
@@ -262,7 +262,7 @@ public class HttpExchangeTest1ParseMethod extends HttpExchangeTest {
     final int bufferInitial; // force many buffer resizes
     bufferInitial = 2;
 
-    try (HttpExchange http = new HttpExchange(socket, bufferInitial, 512, Y.clockFixed(), Y.noteSink(), 0L)) {
+    try (HttpExchange http = Y.http(socket, bufferInitial, 512)) {
       assertEquals(http.shouldHandle(), false);
 
       assertEquals(Y.toString(socket), response);

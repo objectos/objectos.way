@@ -365,14 +365,16 @@ final class Y {
 
     private HttpExchange newHttpExchange(Socket socket) throws IOException {
       return new HttpExchange(
-          socket,
           bodyFiles != null ? bodyFiles : HttpExchangeBodyFiles.standard(),
           bufferSizeInitial,
           bufferSizeMax,
           clock,
+          null,
+          0,
           noteSink,
           requestBodySizeMax,
-          responseListener
+          responseListener,
+          socket
       );
     }
 
@@ -428,6 +430,44 @@ final class Y {
       return request.stream();
     }
 
+  }
+
+  public static HttpExchange http(Socket socket, int bufferSizeInitial, int bufferSizeMax) {
+    try {
+      return new HttpExchange(
+          HttpExchangeBodyFiles.standard(),
+          bufferSizeInitial,
+          bufferSizeMax,
+          Y.clockFixed(),
+          null,
+          0,
+          Y.noteSink(),
+          0,
+          Http.NoopResponseListener.INSTANCE,
+          socket
+      );
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
+  }
+
+  public static HttpExchange http(Socket socket, int bufferSizeInitial, int bufferSizeMax, Clock clock, Note.Sink noteSink, long requestBodySizeMax) {
+    try {
+      return new HttpExchange(
+          HttpExchangeBodyFiles.standard(),
+          bufferSizeInitial,
+          bufferSizeMax,
+          clock,
+          null,
+          0,
+          noteSink,
+          requestBodySizeMax,
+          Http.NoopResponseListener.INSTANCE,
+          socket
+      );
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
   }
 
   public static void httpExchange(Consumer<HttpExchangeTester> config) {

@@ -36,7 +36,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -44,14 +43,18 @@ import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 import objectos.way.Lang.Key;
 
-final class HttpExchange implements Http.Exchange, Closeable {
+final class HttpExchange implements Http.Exchange, Runnable, Closeable {
 
   // ##################################################################
   // # BEGIN: Private Types
   // ##################################################################
 
   private record Notes(
-      Note.Long1Ref1<InetAddress> start,
+      Note.Long1Ref1<InetAddress> run,
+      Note.Long1 interrupted,
+      Note.Long2 state,
+      Note.Long1 stop,
+      Note.Long1Ref1<Throwable> closeError,
 
       Note.Long2 readResize,
       Note.Long1Ref1<Http.Exchange> readEof,
@@ -79,7 +82,11 @@ final class HttpExchange implements Http.Exchange, Closeable {
       s = Http.Exchange.class;
 
       return new Notes(
-          Note.Long1Ref1.create(s, "STA", Note.DEBUG),
+          Note.Long1Ref1.create(s, "RUN", Note.TRACE),
+          Note.Long1.create(s, "INT", Note.TRACE),
+          Note.Long2.create(s, "STT", Note.TRACE),
+          Note.Long1.create(s, "STP", Note.TRACE),
+          Note.Long1Ref1.create(s, "CLO", Note.TRACE),
 
           Note.Long2.create(s, "RSZ", Note.INFO),
           Note.Long1Ref1.create(s, "EOF", Note.WARN),
@@ -348,8 +355,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   private static final int HARD_MAX_BUFFER_SIZE = 1 << 14;
 
-  private static final AtomicLong ID_GENERATOR = new AtomicLong(1);
-
   private static final Notes NOTES = Notes.get();
 
   private static final int BIT_KEEP_ALIVE = 1 << 0;
@@ -383,11 +388,13 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   private Object formParams;
 
+  private final Http.Handler handler;
+
   private HttpHeaderName headerName;
 
   private Map<HttpHeaderName, HttpHeader> headers;
 
-  private final long id = ID_GENERATOR.getAndIncrement();
+  private final long id;
 
   private final InputStream inputStream;
 
@@ -432,54 +439,16 @@ final class HttpExchange implements Http.Exchange, Closeable {
   private Http.Version version = Http.Version.HTTP_1_1;
 
   HttpExchange(
-      Socket socket,
-      int bufferSizeInitial,
-      int bufferSizeMax,
-      Clock clock,
-      Note.Sink noteSink,
-      long requestBodySizeMax
-  ) throws IOException {
-    this(
-        socket,
-        HttpExchangeBodyFiles.standard(),
-        bufferSizeInitial,
-        bufferSizeMax,
-        clock,
-        noteSink,
-        requestBodySizeMax
-    );
-  }
-
-  HttpExchange(
-      Socket socket,
       HttpExchangeBodyFiles bodyFiles,
       int bufferSizeInitial,
       int bufferSizeMax,
       Clock clock,
-      Note.Sink noteSink,
-      long requestBodySizeMax
-  ) throws IOException {
-    this(
-        socket,
-        bodyFiles,
-        bufferSizeInitial,
-        bufferSizeMax,
-        clock,
-        noteSink,
-        requestBodySizeMax,
-        Http.NoopResponseListener.INSTANCE
-    );
-  }
-
-  HttpExchange(
-      Socket socket,
-      HttpExchangeBodyFiles bodyFiles,
-      int bufferSizeInitial,
-      int bufferSizeMax,
-      Clock clock,
+      Http.Handler handler,
+      long id,
       Note.Sink noteSink,
       long requestBodySizeMax,
-      Http.ResponseListener responseListener
+      Http.ResponseListener responseListener,
+      Socket socket
   ) throws IOException {
     this.bodyFiles = bodyFiles;
 
@@ -489,6 +458,10 @@ final class HttpExchange implements Http.Exchange, Closeable {
     this.buffer = new byte[initialSize];
 
     this.clock = clock;
+
+    this.handler = handler;
+
+    this.id = id;
 
     this.inputStream = socket.getInputStream();
 
@@ -516,6 +489,10 @@ final class HttpExchange implements Http.Exchange, Closeable {
     buffer = new byte[initialSize];
 
     clock = builder.clock;
+
+    handler = null;
+
+    id = builder.id;
 
     inputStream = builder.inputStream();
 
@@ -573,6 +550,49 @@ final class HttpExchange implements Http.Exchange, Closeable {
     }
 
     return n + 1;
+  }
+
+  @Override
+  public final void run() {
+    noteSink.send(NOTES.run, id, remoteAddress);
+
+    try {
+      while (shouldHandle()) {
+        try {
+          handler.handle(this);
+        } catch (Http.AbstractHandlerException ex) {
+          ex.handle(this);
+        } catch (Throwable t) {
+          state = internalServerError(t);
+        }
+      }
+    } finally {
+      Throwable rethrow = null;
+
+      try {
+        socket.close();
+      } catch (Throwable e) {
+        rethrow = e;
+      }
+
+      if (object instanceof AutoCloseable c) {
+        try {
+          c.close();
+        } catch (Throwable e) {
+          if (rethrow == null) {
+            rethrow = e;
+          } else {
+            rethrow.addSuppressed(e);
+          }
+        }
+      }
+
+      if (rethrow != null) {
+        noteSink.send(NOTES.closeError, id, rethrow);
+      }
+    }
+
+    noteSink.send(NOTES.stop, id);
   }
 
   @Override
@@ -700,6 +720,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
     currentThread = Thread.currentThread();
 
     if (currentThread.isInterrupted()) {
+      noteSink.send(NOTES.interrupted, id);
+
       return false;
     }
 
@@ -714,6 +736,8 @@ final class HttpExchange implements Http.Exchange, Closeable {
 
   @Lang.VisibleForTesting
   final byte execute(byte state) {
+    noteSink.send(NOTES.state, id, state);
+
     return switch (state) {
       case $START -> executeStart();
 
@@ -811,8 +835,6 @@ final class HttpExchange implements Http.Exchange, Closeable {
   // ##################################################################
 
   private byte executeStart() {
-    noteSink.send(NOTES.start, id, remoteAddress);
-
     if (attributes != null) {
       attributes.clear();
     }

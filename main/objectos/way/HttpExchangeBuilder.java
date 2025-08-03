@@ -38,6 +38,8 @@ final class HttpExchangeBuilder implements Http.Exchange.Options {
 
   Clock clock = Clock.systemUTC();
 
+  long id;
+
   private Http.Method method = Http.Method.GET;
 
   private String path = "/";

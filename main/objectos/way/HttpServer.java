@@ -22,9 +22,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.time.Clock;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * The Objectos Way {@link HttpServer} implementation.
@@ -34,6 +32,8 @@ final class HttpServer implements Http.Server, Runnable {
   record Notes(
       Note.Ref1<Http.Server> started,
       Note.Ref0 stopped,
+
+      Note.Ref1<Socket> accepted,
 
       Note.Ref1<IOException> ioError,
       Note.Ref1<Throwable> loopError,
@@ -48,6 +48,8 @@ final class HttpServer implements Http.Server, Runnable {
           Note.Ref1.create(s, "STA", Note.INFO),
           Note.Ref0.create(s, "STO", Note.INFO),
 
+          Note.Ref1.create(s, "ACC", Note.TRACE),
+
           Note.Ref1.create(s, "IOE", Note.ERROR),
           Note.Ref1.create(s, "LOO", Note.ERROR),
           Note.Ref1.create(s, "ISE", Note.ERROR)
@@ -56,7 +58,7 @@ final class HttpServer implements Http.Server, Runnable {
 
   }
 
-  private final Notes notes = Notes.get();
+  private static final AtomicLong ID = new AtomicLong(1);
 
   private final int bufferSizeInitial;
 
@@ -65,6 +67,8 @@ final class HttpServer implements Http.Server, Runnable {
   private final Clock clock;
 
   private final Http.Handler handler;
+
+  private final Notes notes = Notes.get();
 
   private final Note.Sink noteSink;
 
@@ -93,27 +97,6 @@ final class HttpServer implements Http.Server, Runnable {
   }
 
   @Override
-  public final void start() throws IOException {
-    if (thread != null) {
-      throw new IllegalStateException(
-          "The service has already been started."
-      );
-    }
-
-    InetAddress address;
-    address = InetAddress.getLoopbackAddress();
-
-    InetSocketAddress socketAddress;
-    socketAddress = new InetSocketAddress(address, port);
-
-    serverSocket = new ServerSocket();
-
-    serverSocket.bind(socketAddress);
-
-    thread = Thread.ofPlatform().name("HTTP").start(this);
-  }
-
-  @Override
   public final InetAddress address() {
     checkStarted();
 
@@ -133,6 +116,27 @@ final class HttpServer implements Http.Server, Runnable {
           "Cannot query this service: service is not running."
       );
     }
+  }
+
+  @Override
+  public final void start() throws IOException {
+    if (thread != null) {
+      throw new IllegalStateException(
+          "The service has already been started."
+      );
+    }
+
+    InetAddress address;
+    address = InetAddress.getLoopbackAddress();
+
+    InetSocketAddress socketAddress;
+    socketAddress = new InetSocketAddress(address, port);
+
+    serverSocket = new ServerSocket();
+
+    serverSocket.bind(socketAddress);
+
+    thread = Thread.ofPlatform().name("HTTP").start(this);
   }
 
   @Override
@@ -158,20 +162,36 @@ final class HttpServer implements Http.Server, Runnable {
 
   @Override
   public final void run() {
-    ThreadFactory factory;
-    factory = Thread.ofVirtual().name("http-", 1).factory();
-
-    try (ExecutorService executor = Executors.newThreadPerTaskExecutor(factory)) {
+    try {
       noteSink.send(notes.started, this);
 
       while (!Thread.currentThread().isInterrupted()) {
-        Socket socket;
+        final Socket socket;
         socket = serverSocket.accept();
 
-        Runnable task;
-        task = new ExchangeTask(socket);
+        noteSink.send(notes.accepted, socket);
 
-        executor.submit(task);
+        final long id;
+        id = ID.getAndIncrement();
+
+        final HttpExchange http;
+        http = new HttpExchange(
+            HttpExchangeBodyFiles.standard(),
+            bufferSizeInitial,
+            bufferSizeMax,
+            clock,
+            handler,
+            id,
+            noteSink,
+            requestBodySizeMax,
+            Http.NoopResponseListener.INSTANCE,
+            socket
+        );
+
+        final Thread task;
+        task = Thread.ofVirtual().name("http-", id).unstarted(http);
+
+        task.start();
       }
 
       noteSink.send(notes.stopped);
@@ -214,27 +234,6 @@ final class HttpServer implements Http.Server, Runnable {
     sb.append(']');
 
     return sb.toString();
-  }
-
-  private class ExchangeTask implements Runnable {
-
-    private final Socket socket;
-
-    public ExchangeTask(Socket socket) {
-      this.socket = socket;
-    }
-
-    @Override
-    public final void run() {
-      try (HttpExchange http = new HttpExchange(socket, bufferSizeInitial, bufferSizeMax, clock, noteSink, requestBodySizeMax)) {
-        while (http.shouldHandle()) {
-          http.handle(handler);
-        }
-      } catch (IOException e) {
-        noteSink.send(notes.ioError, e);
-      }
-    }
-
   }
 
 }

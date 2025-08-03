@@ -1315,7 +1315,7 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
     \r
     """);
 
-    try (HttpExchange http = new HttpExchange(socket, 256, 512, Y.clockFixed(), Y.noteSink(), 0L)) {
+    try (HttpExchange http = Y.http(socket, 256, 512, Y.clockFixed(), Y.noteSink(), 0L)) {
       assertEquals(http.shouldHandle(), true);
 
       http.ok(Media.Bytes.textPlain("OK"));
@@ -1345,7 +1345,7 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
     final Socket socket;
     socket = Y.socket(request);
 
-    try (HttpExchange http = new HttpExchange(socket, initial, max, Y.clockFixed(), Y.noteSink(), 1024)) {
+    try (HttpExchange http = Y.http(socket, initial, max, Y.clockFixed(), Y.noteSink(), 1024)) {
       assertEquals(http.shouldHandle(), true);
 
       handler.accept(http);

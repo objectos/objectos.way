@@ -335,7 +335,7 @@ public class HttpExchangeTest2ParsePath extends HttpExchangeTest {
     final Socket socket;
     socket = Y.socket("GET /entity" + veryLongId + " HTTP/1.1\r\n\r\n");
 
-    try (HttpExchange http = new HttpExchange(socket, 256, 512, Y.clockFixed(), Y.noteSink(), 0L)) {
+    try (HttpExchange http = Y.http(socket, 256, 512)) {
       assertEquals(http.shouldHandle(), false);
 
       assertEquals(

@@ -145,7 +145,7 @@ public class HttpExchangeTest0Read {
     final Socket socket;
     socket = Y.socket(req1, exception);
 
-    try (HttpExchange http = new HttpExchange(socket, 64, 128, Y.clockFixed(), Y.noteSink(), 0L)) {
+    try (HttpExchange http = Y.http(socket, 64, 128)) {
       byte nextState;
       nextState = HttpExchange.$PARSE_METHOD;
 
@@ -166,7 +166,7 @@ public class HttpExchangeTest0Read {
     Socket socket;
     socket = Y.socket(data);
 
-    return new HttpExchange(socket, initial, max, Y.clockFixed(), Y.noteSink(), 0L);
+    return Y.http(socket, initial, max);
   }
 
   @Test
