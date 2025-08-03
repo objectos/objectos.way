@@ -54,7 +54,9 @@ TEST_JAVACX += --class-path @$(TEST_COMPILE_CLASS_PATH)
 ifeq ($(ENABLE_PREVIEW),1)
 TEST_JAVACX += --enable-preview
 endif
+ifdef JAVA_RELEASE
 TEST_JAVACX += --release $(JAVA_RELEASE)
+endif
 TEST_JAVACX += --source-path $(TEST)
 TEST_JAVACX += @$(TEST_COMPILE_SOURCES)
 

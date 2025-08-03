@@ -16,6 +16,7 @@
 package objectos.way;
 
 import java.io.Closeable;
+import java.io.Flushable;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
@@ -73,6 +74,8 @@ final class AppNoteSink implements App.NoteSink {
 
   private final Predicate<? super Note> filter;
 
+  private final Flushable flushable;
+
   private final Lock lock = new ReentrantLock();
 
   private final Appendable out;
@@ -83,6 +86,12 @@ final class AppNoteSink implements App.NoteSink {
     clock = builder.clock;
 
     filter = builder.filter;
+
+    if (out instanceof Flushable f) {
+      flushable = f;
+    } else {
+      flushable = null;
+    }
 
     this.out = out;
   }
@@ -132,6 +141,8 @@ final class AppNoteSink implements App.NoteSink {
       length = format(note);
 
       formatLastValue(length, value);
+
+      flush();
     } catch (IOException e) {
       error(e);
     } finally {
@@ -157,6 +168,8 @@ final class AppNoteSink implements App.NoteSink {
       length = formatValue(length, value1);
 
       formatLastValue(length, value2);
+
+      flush();
     } catch (IOException e) {
       error(e);
     } finally {
@@ -184,6 +197,8 @@ final class AppNoteSink implements App.NoteSink {
       length = formatValue(length, value2);
 
       formatLastValue(length, value3);
+
+      flush();
     } catch (IOException e) {
       error(e);
     } finally {
@@ -207,6 +222,8 @@ final class AppNoteSink implements App.NoteSink {
       length = format(note);
 
       formatLastValue(length, value);
+
+      flush();
     } catch (IOException e) {
       error(e);
     } finally {
@@ -232,6 +249,8 @@ final class AppNoteSink implements App.NoteSink {
       length = formatValue(length, value1);
 
       formatLastValue(length, value2);
+
+      flush();
     } catch (IOException e) {
       error(e);
     } finally {
@@ -259,6 +278,8 @@ final class AppNoteSink implements App.NoteSink {
       length = formatValue(length, value2);
 
       formatLastValue(length, value3);
+
+      flush();
     } catch (IOException e) {
       error(e);
     } finally {
@@ -284,6 +305,8 @@ final class AppNoteSink implements App.NoteSink {
       length = formatValue(length, value1);
 
       formatLastValue(length, value2);
+
+      flush();
     } catch (IOException e) {
       error(e);
     } finally {
@@ -306,6 +329,8 @@ final class AppNoteSink implements App.NoteSink {
       format(note);
 
       out.append('\n');
+
+      flush();
     } catch (IOException e) {
       error(e);
     } finally {
@@ -329,6 +354,8 @@ final class AppNoteSink implements App.NoteSink {
       length = format(note);
 
       formatLastValue(length, value);
+
+      flush();
     } catch (IOException e) {
       error(e);
     } finally {
@@ -354,6 +381,8 @@ final class AppNoteSink implements App.NoteSink {
       length = formatValue(length, value1);
 
       formatLastValue(length, value2);
+
+      flush();
     } catch (IOException e) {
       error(e);
     } finally {
@@ -381,6 +410,8 @@ final class AppNoteSink implements App.NoteSink {
       length = formatValue(length, value2);
 
       formatLastValue(length, value3);
+
+      flush();
     } catch (IOException e) {
       error(e);
     } finally {
@@ -404,6 +435,8 @@ final class AppNoteSink implements App.NoteSink {
       );
 
       out.append('\n');
+
+      flush();
     } catch (IOException e) {
       error(e);
     } finally {
@@ -429,6 +462,8 @@ final class AppNoteSink implements App.NoteSink {
       if (t != null) {
         formatThrowable(t);
       }
+
+      flush();
     } catch (IOException e) {
       error(e);
     } finally {
@@ -438,6 +473,12 @@ final class AppNoteSink implements App.NoteSink {
 
   private boolean test(Note note) {
     return error == null && filter.test(note);
+  }
+
+  private void flush() throws IOException {
+    if (flushable != null) {
+      flushable.flush();
+    }
   }
 
   private int format(Note note) throws IOException {
