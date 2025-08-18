@@ -22,6 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
 
@@ -81,9 +82,9 @@ public final class Css {
        */
       void scanJarFileOf(Class<?> value);
 
-      void theme(String value);
+      void theme(String selector, String value);
 
-      void theme(String query, String value);
+      void theme(String query, String selector, String value);
 
     }
 
@@ -321,6 +322,19 @@ public final class Css {
     BASE,
     COMPONENTS,
     UTILITIES;
+  }
+
+  //
+  // Q
+  //
+
+  record Query(List<String> names) {
+    static Query of(String name) {
+      return new Query(List.of(name));
+    }
+    static Query of(String n1, String n2) {
+      return new Query(List.of(n1, n2));
+    }
   }
 
   //

@@ -198,7 +198,7 @@ public class CssEngineTest01ParseTheme {
 
     builder.noteSink(Y.noteSink());
 
-    builder.theme(theme);
+    builder.theme(":root", theme);
 
     return builder.testThemeEntries();
   }

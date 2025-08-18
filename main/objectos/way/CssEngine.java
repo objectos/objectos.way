@@ -161,7 +161,7 @@ final class CssEngine implements Css.StyleSheet, Consumer<String>, FileVisitor<P
 
   private final Iterable<? extends Css.ThemeEntry> themeEntries;
 
-  private final Iterable<? extends Map.Entry<String, List<Css.ThemeQueryEntry>>> themeQueryEntries;
+  private final Iterable<? extends Map.Entry<Css.Query, List<Css.ThemeQueryEntry>>> themeQueryEntries;
 
   private final Map<String, Object> tokens = Util.createSequencedMap();
 
@@ -859,21 +859,25 @@ final class CssEngine implements Css.StyleSheet, Consumer<String>, FileVisitor<P
 
     writeln('}');
 
-    for (Map.Entry<String, List<ThemeQueryEntry>> queryEntry : themeQueryEntries) {
-      indent(1);
+    for (Map.Entry<Css.Query, List<ThemeQueryEntry>> queryEntry : themeQueryEntries) {
+      int level;
+      level = 1;
 
-      String query;
+      final Css.Query query;
       query = queryEntry.getKey();
 
-      write(query);
-      writeln(" {");
+      final List<String> names;
+      names = query.names();
 
-      indent(2);
+      for (String name : names) {
+        indent(level++);
 
-      writeln(":root {");
+        write(name);
+        writeln(" {");
+      }
 
       for (ThemeQueryEntry entry : queryEntry.getValue()) {
-        indent(3);
+        indent(level);
 
         write(entry.name());
         write(": ");
@@ -881,13 +885,13 @@ final class CssEngine implements Css.StyleSheet, Consumer<String>, FileVisitor<P
         writeln(';');
       }
 
-      indent(2);
+      level--;
 
-      writeln('}');
+      for (int idx = 0, size = names.size(); idx < size; idx++) {
+        indent(level--);
 
-      indent(1);
-
-      writeln('}');
+        writeln('}');
+      }
     }
 
     writeln('}');

@@ -66,8 +66,11 @@ public class CssEngineTest02ParseThemeQuery {
 
     builder.theme(query, theme);
 
+    final Css.Query key;
+    key = Css.Query.of(query);
+
     List<Css.ThemeQueryEntry> list;
-    list = builder.testThemeQueryEntries(query);
+    list = builder.testThemeQueryEntries(key);
 
     assertEquals(
         list.stream()

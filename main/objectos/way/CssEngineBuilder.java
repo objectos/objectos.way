@@ -73,7 +73,7 @@ final class CssEngineBuilder implements Css.StyleSheet.Options {
 
   private final Map<Namespace, Map<String, Css.ThemeEntry>> themeEntries = new EnumMap<>(Namespace.class);
 
-  private Map<String, List<Css.ThemeQueryEntry>> themeQueryEntries;
+  private Map<Css.Query, List<Css.ThemeQueryEntry>> themeQueryEntries;
 
   CssEngineBuilder() {
     parseTheme(Css.defaultTheme());
@@ -142,27 +142,33 @@ final class CssEngineBuilder implements Css.StyleSheet.Options {
   }
 
   @Override
-  public final void theme(String value) {
-    Check.state(!theme, "Theme was already set");
+  public final void theme(String selector, String value) {
+    if (":root".equals(selector)) {
+      Check.state(!theme, "Theme was already set");
 
-    parseTheme(value);
+      parseTheme(value);
 
-    theme = true;
+      theme = true;
+    } else {
+      Objects.requireNonNull(selector, "selector == null");
+
+      final Css.Query key;
+      key = Css.Query.of(selector);
+
+      parseThemeQueryValue(key, value);
+    }
   }
 
   @Override
-  public final void theme(String query, String value) {
+  public final void theme(String query, String selector, String value) {
     Objects.requireNonNull(query, "query == null");
+    Objects.requireNonNull(selector, "selector == null");
     Objects.requireNonNull(value, "value == null");
 
-    final String key;
-    key = parseThemeQueryKey(query);
+    final Css.Query key;
+    key = Css.Query.of(query, selector);
 
-    if (themeQueryEntries != null && themeQueryEntries.containsKey(key)) {
-      throw new IllegalStateException("Theme was already set for " + key);
-    }
-
-    parseThemeQueryValue(query, value);
+    parseThemeQueryValue(key, value);
   }
 
   // ##################################################################
@@ -519,15 +525,11 @@ final class CssEngineBuilder implements Css.StyleSheet.Options {
   // # BEGIN: Parse :: @theme w/ query {}
   // ##################################################################
 
-  private String parseThemeQueryKey(String key) {
-    if ("@media (prefers-color-scheme: dark)".equals(key)) {
-      return key;
+  private void parseThemeQueryValue(Css.Query query, String text) {
+    if (themeQueryEntries != null && themeQueryEntries.containsKey(query)) {
+      throw new IllegalStateException("Theme was already set for " + query);
     }
 
-    throw new IllegalArgumentException("Only @media (prefers-color-scheme: dark) is currently supported");
-  }
-
-  private void parseThemeQueryValue(String query, String text) {
     enum Parser {
 
       NORMAL,
@@ -664,7 +666,7 @@ final class CssEngineBuilder implements Css.StyleSheet.Options {
     }
   }
 
-  private void parseThemeQueryAdd(String query, String name) {
+  private void parseThemeQueryAdd(Css.Query query, String name) {
     String value;
     value = sb.toString();
 
@@ -713,7 +715,7 @@ final class CssEngineBuilder implements Css.StyleSheet.Options {
     return entries.toUnmodifiableList();
   }
 
-  final List<ThemeQueryEntry> testThemeQueryEntries(String query) {
+  final List<ThemeQueryEntry> testThemeQueryEntries(Css.Query query) {
     return themeQueryEntries.get(query);
   }
 
@@ -800,7 +802,7 @@ final class CssEngineBuilder implements Css.StyleSheet.Options {
     return entries.toUnmodifiableList();
   }
 
-  final Iterable<? extends Entry<String, List<ThemeQueryEntry>>> themeQueryEntries() {
+  final Iterable<? extends Entry<Css.Query, List<ThemeQueryEntry>>> themeQueryEntries() {
     return themeQueryEntries != null ? UtilUnmodifiableList.copyOf(themeQueryEntries.entrySet()) : List.of();
   }
 
