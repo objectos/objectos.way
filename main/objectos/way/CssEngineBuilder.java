@@ -567,7 +567,9 @@ final class CssEngineBuilder implements Css.StyleSheet.Options {
           }
 
           else {
-            parseError(text, idx, "Expected start of --variable declaration");
+            parser = Parser.NAME_N;
+
+            startIndex = idx;
           }
         }
 

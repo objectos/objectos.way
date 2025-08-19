@@ -380,7 +380,7 @@ public class CssEngineTest06GenerateTheme {
     );
   }
 
-  @Test(description = "Full generation + override")
+  @Test
   public void class01() {
     assertEquals(
         CssEngine.generate(config -> {
@@ -415,6 +415,47 @@ public class CssEngineTest06GenerateTheme {
           }
           .theme-g10 {
             --color-background: var(--color-gray-100);
+          }
+        }
+        """
+    );
+  }
+
+  @Test(description = "arbitrary declarations")
+  public void class02() {
+    assertEquals(
+        CssEngine.generate(config -> {
+          config.theme(":root", """
+          --color-*: initial;
+          --breakpoint-*: initial;
+          --font-*: initial;
+          """);
+
+          config.theme(".carbon-g10", """
+          background-color: var(--color-background);
+          """);
+
+          config.skipLayer(Css.Layer.BASE);
+          config.skipLayer(Css.Layer.COMPONENTS);
+          config.skipLayer(Css.Layer.UTILITIES);
+        }),
+
+        """
+        @layer theme {
+          :root {
+            --default-font-sans: ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+            --default-font-serif: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
+            --default-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+            --default-font-family: var(--font-sans);
+            --default-font-feature-settings: var(--font-sans--font-feature-settings);
+            --default-font-variation-settings: var(--font-sans--font-variation-settings);
+            --default-mono-font-family: var(--font-mono);
+            --default-mono-font-feature-settings: var(--font-mono--font-feature-settings);
+            --default-mono-font-variation-settings: var(--font-mono--font-variation-settings);
+            --rx: 16;
+          }
+          .carbon-g10 {
+            background-color: var(--color-background);
           }
         }
         """
