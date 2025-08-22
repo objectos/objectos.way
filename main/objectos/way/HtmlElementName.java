@@ -68,6 +68,7 @@ final class HtmlElementName implements Html.ElementName {
   public static final Html.ElementName DD = BUILDER.createNormal("dd");
   public static final Html.ElementName DEFS = BUILDER.createNormal("defs");
   public static final Html.ElementName DETAILS = BUILDER.createNormal("details");
+  public static final Html.ElementName DIALOG = BUILDER.createNormal("dialog");
   public static final Html.ElementName DIV = BUILDER.createNormal("div");
   public static final Html.ElementName DL = BUILDER.createNormal("dl");
   public static final Html.ElementName DT = BUILDER.createNormal("dt");

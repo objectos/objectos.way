@@ -314,6 +314,32 @@ sealed abstract class HtmlMarkupElements extends HtmlMarkupAttributes implements
   }
 
   /**
+   * Renders the {@code dialog} element with the specified content.
+   *
+   * @param contents
+   *        the attributes and children of this element
+   *
+   * @return an instruction representing this element.
+   */
+  @Override
+  public final Html.Instruction.OfElement dialog(Html.Instruction... contents) {
+    return element(HtmlElementName.DIALOG, contents);
+  }
+
+  /**
+   * Renders the {@code dialog} element with the specified text.
+   *
+   * @param text
+   *        the text value of this element
+   *
+   * @return an instruction representing this element.
+   */
+  @Override
+  public final Html.Instruction.OfElement dialog(String text) {
+    return element(HtmlElementName.DIALOG, text);
+  }
+
+  /**
    * Renders the {@code div} element with the specified content.
    *
    * @param contents

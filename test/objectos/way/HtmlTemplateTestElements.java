@@ -43,6 +43,28 @@ public class HtmlTemplateTestElements {
     );
   }
 
+  @Test
+  public void dialog() {
+    test(
+        new Html.Template() {
+          @Override
+          protected final void render() {
+            dialog();
+            dialog(p("child"));
+            dialog("Text only");
+          }
+        },
+
+        """
+        <dialog></dialog>
+        <dialog>
+        <p>child</p>
+        </dialog>
+        <dialog>Text only</dialog>
+        """
+    );
+  }
+
   private void test(Html.Template template, String expected) {
     String result;
     result = template.toString();

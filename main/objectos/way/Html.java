@@ -2608,6 +2608,26 @@ public final class Html {
     Html.Instruction.OfElement details(String text);
 
     /**
+     * Renders the {@code dialog} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement dialog(Html.Instruction... contents);
+
+    /**
+     * Renders the {@code dialog} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    Html.Instruction.OfElement dialog(String text);
+
+    /**
      * Renders the {@code div} element with the specified content.
      *
      * @param contents
@@ -6448,6 +6468,30 @@ public final class Html {
      */
     protected final Html.Instruction.OfElement details(String text) {
       return $elements().details(text);
+    }
+
+    /**
+     * Generates the {@code dialog} element with the specified content.
+     *
+     * @param contents
+     *        the attributes and children of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final Html.Instruction.OfElement dialog(Instruction... contents) {
+      return $elements().dialog(contents);
+    }
+
+    /**
+     * Generates the {@code dialog} element with the specified text.
+     *
+     * @param text
+     *        the text value of this element
+     *
+     * @return an instruction representing this element.
+     */
+    protected final Html.Instruction.OfElement dialog(String text) {
+      return $elements().dialog(text);
     }
 
     /**
