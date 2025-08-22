@@ -154,6 +154,30 @@ public class CssEngineTest09GenerateUtilities {
   }
 
   @Test
+  public void blockSize() {
+    class Subject extends CssSubject {
+      @Override
+      final void classes() {
+        className("block-size:auto");
+        className("block-size:50%");
+        className("block-size:fit-content");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .block-size\\:auto { block-size: auto }
+          .block-size\\:50\\% { block-size: 50% }
+          .block-size\\:fit-content { block-size: fit-content }
+        }
+        """
+    );
+  }
+
+  @Test
   public void border() {
     class Subject extends CssSubject {
       @Override
@@ -1130,6 +1154,30 @@ public class CssEngineTest09GenerateUtilities {
           .height\\:50\\% { height: 50% }
           .height\\:calc\\(100\\%\\/3\\) { height: calc(100%/3) }
           .height\\:32rx { height: calc(32 / var(--rx) * 1rem) }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void inlineSize() {
+    class Subject extends CssSubject {
+      @Override
+      final void classes() {
+        className("inline-size:auto");
+        className("inline-size:50%");
+        className("inline-size:fit-content");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .inline-size\\:auto { inline-size: auto }
+          .inline-size\\:50\\% { inline-size: 50% }
+          .inline-size\\:fit-content { inline-size: fit-content }
         }
         """
     );

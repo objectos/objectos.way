@@ -165,6 +165,7 @@ public final class Css {
     ASPECT_RATIO,
 
     BACKGROUND_COLOR,
+    BLOCK_SIZE,
     BORDER,
     BORDER_BOTTOM,
     BORDER_BOTTOM_COLOR,
@@ -225,6 +226,7 @@ public final class Css {
 
     HEIGHT,
 
+    INLINE_SIZE,
     INSET,
 
     JUSTIFY_CONTENT,

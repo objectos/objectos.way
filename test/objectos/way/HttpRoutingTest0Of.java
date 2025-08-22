@@ -197,6 +197,26 @@ public class HttpRoutingTest0Of {
     );
   }
 
+  @Test
+  public void path03() {
+    test(
+        routing -> {
+          routing.path("/{}", Http.Method.GET, http -> {});
+        },
+
+        http -> {
+          http.path("/foo");
+        },
+
+        """
+        HTTP/1.1 204 No Content\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Length: 0\r
+        \r
+        """
+    );
+  }
+
   private void test(
       Consumer<HttpRouting> options,
       Consumer<Http.Exchange.Options> req1, String resp1) {

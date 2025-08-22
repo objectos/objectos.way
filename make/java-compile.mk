@@ -77,6 +77,9 @@ JAVACX += -Xpkginfo:always
 ifdef COMPILE_MAXERRS
 JAVACX += -Xmaxerrs $(COMPILE_MAXERRS)
 endif
+ifdef COMPILE_OPTS
+JAVACX += $(COMPILE_OPTS)
+endif
 
 ifeq ($(COMPILE_MODE),class-path)
 
@@ -162,12 +165,9 @@ endif
 .PHONY: compile
 compile: $(COMPILE_MARKER)
 
-.PHONY: compile@clean
-compile@clean:
+.PHONY: compile-clean
+compile-clean:
 	rm -rf $(CLASS_OUTPUT) $(COMPILE_MARKER) $(COMPILE_PATH) $(PROCESSING_OUTPUT)
-
-.PHONY: re-compile
-re-compile: compile@clean compile
 
 $(COMPILE_PATH): $(COMPILE_RESOLUTION_FILES) | $(WORK)
 	$(call uniq-resolution-files,$(COMPILE_RESOLUTION_FILES)) > $@.tmp
