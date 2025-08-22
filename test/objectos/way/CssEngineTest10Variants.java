@@ -82,6 +82,25 @@ public class CssEngineTest10Variants {
   }
 
   @Test
+  public void backdrop() {
+    class Subject extends CssSubject {
+      @Override
+      final void classes() {
+        className("backdrop:background-color:gray-100");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .backdrop\\:background-color\\:gray-100::backdrop { background-color: var(--color-gray-100) }
+        }
+        """
+    );
+  }
+  @Test
   public void breakpoint() {
     class Subject extends CssSubject {
       @Override

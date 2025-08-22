@@ -193,6 +193,7 @@ final class CssEngineBuilder implements Css.StyleSheet.Options {
     variant("visited", CssVariant.suffix(":visited"));
 
     variant("after", CssVariant.suffix("::after"));
+    variant("backdrop", CssVariant.suffix("::backdrop"));
     variant("before", CssVariant.suffix("::before"));
     variant("first-letter", CssVariant.suffix("::first-letter"));
     variant("first-line", CssVariant.suffix("::first-line"));

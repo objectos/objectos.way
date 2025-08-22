@@ -1139,7 +1139,9 @@ final class Y {
   // # BEGIN: Note.Sink
   // ##################################################################
 
-  private static final App.NoteSink INSTANCE = App.NoteSink.sysout();
+  private static final App.NoteSink INSTANCE = App.NoteSink.ofAppendable(System.out, opts -> {
+    opts.filter(note -> note.hasAny(Note.ERROR, Note.WARN, Note.INFO));
+  });
 
   public static Note.Sink noteSink() {
     return INSTANCE;
