@@ -1210,6 +1210,58 @@ public class CssEngineTest09GenerateUtilities {
   }
 
   @Test
+  public void insetBlock() {
+    class Subject extends CssSubject {
+      @Override
+      final void classes() {
+        className("inset-block:10px");
+        className("inset-block:4px_8px");
+        className("inset-block-end:2.4em");
+        className("inset-block-start:10%");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .inset-block\\:10px { inset-block: 10px }
+          .inset-block\\:4px_8px { inset-block: 4px 8px }
+          .inset-block-end\\:2\\.4em { inset-block-end: 2.4em }
+          .inset-block-start\\:10\\% { inset-block-start: 10% }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void insetInline() {
+    class Subject extends CssSubject {
+      @Override
+      final void classes() {
+        className("inset-inline:10px");
+        className("inset-inline:4px_8px");
+        className("inset-inline-end:2.4em");
+        className("inset-inline-start:10%");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .inset-inline\\:10px { inset-inline: 10px }
+          .inset-inline\\:4px_8px { inset-inline: 4px 8px }
+          .inset-inline-end\\:2\\.4em { inset-inline-end: 2.4em }
+          .inset-inline-start\\:10\\% { inset-inline-start: 10% }
+        }
+        """
+    );
+  }
+
+  @Test
   public void justifyContent() {
     class Subject extends CssSubject {
       @Override
