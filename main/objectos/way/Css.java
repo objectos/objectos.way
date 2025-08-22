@@ -251,9 +251,13 @@ public final class Css {
     /**/MARGIN_LEFT,
     /**/MARGIN_BLOCK,
     /**/MARGIN_INLINE,
+    MAX_BLOCK_SIZE,
     MAX_HEIGHT,
+    MAX_INLINE_SIZE,
     MAX_WIDTH,
+    MIN_BLOCK_SIZE,
     MIN_HEIGHT,
+    MIN_INLINE_SIZE,
     MIN_WIDTH,
 
     OPACITY,

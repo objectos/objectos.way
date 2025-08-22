@@ -1585,6 +1585,30 @@ public class CssEngineTest09GenerateUtilities {
   }
 
   @Test
+  public void maxBlockSize() {
+    class Subject extends CssSubject {
+      @Override
+      final void classes() {
+        className("max-block-size:none");
+        className("max-block-size:max-content");
+        className("max-block-size:100%");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .max-block-size\\:none { max-block-size: none }
+          .max-block-size\\:max-content { max-block-size: max-content }
+          .max-block-size\\:100\\% { max-block-size: 100% }
+        }
+        """
+    );
+  }
+
+  @Test
   public void maxHeight() {
     class Subject extends CssSubject {
       @Override
@@ -1603,6 +1627,30 @@ public class CssEngineTest09GenerateUtilities {
           .max-height\\:none { max-height: none }
           .max-height\\:max-content { max-height: max-content }
           .max-height\\:100\\% { max-height: 100% }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void maxInlineSize() {
+    class Subject extends CssSubject {
+      @Override
+      final void classes() {
+        className("max-inline-size:none");
+        className("max-inline-size:max-content");
+        className("max-inline-size:100%");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .max-inline-size\\:none { max-inline-size: none }
+          .max-inline-size\\:max-content { max-inline-size: max-content }
+          .max-inline-size\\:100\\% { max-inline-size: 100% }
         }
         """
     );
@@ -1635,6 +1683,28 @@ public class CssEngineTest09GenerateUtilities {
   }
 
   @Test
+  public void minBlockSize() {
+    class Subject extends CssSubject {
+      @Override
+      final void classes() {
+        className("min-block-size:100%");
+        className("min-block-size:100vh");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .min-block-size\\:100\\% { min-block-size: 100% }
+          .min-block-size\\:100vh { min-block-size: 100vh }
+        }
+        """
+    );
+  }
+
+  @Test
   public void minHeight() {
     class Subject extends CssSubject {
       @Override
@@ -1651,6 +1721,28 @@ public class CssEngineTest09GenerateUtilities {
         @layer utilities {
           .min-height\\:100\\% { min-height: 100% }
           .min-height\\:100vh { min-height: 100vh }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void minInlineSize() {
+    class Subject extends CssSubject {
+      @Override
+      final void classes() {
+        className("min-inline-size:100%");
+        className("min-inline-size:100vh");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .min-inline-size\\:100\\% { min-inline-size: 100% }
+          .min-inline-size\\:100vh { min-inline-size: 100vh }
         }
         """
     );
