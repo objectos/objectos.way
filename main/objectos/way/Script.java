@@ -133,6 +133,7 @@ public sealed interface Script permits ScriptWriter {
 
   // queries
 
+  /// Represents an element in the DOM.
   public sealed interface Element permits ScriptWriter.ElementQuery {
 
     /**
@@ -163,6 +164,9 @@ public sealed interface Script permits ScriptWriter {
      */
     void attr(Html.AttributeName name, StringQuery value);
 
+    /// Closes this `dialog` element.
+    void close();
+
     /**
      * Scrolls the element to the specified {@code x} and {@code y} coordinates.
      *
@@ -175,8 +179,13 @@ public sealed interface Script permits ScriptWriter {
      */
     void scroll(int x, int y);
 
+    /// Displays this `dialog` element as a modal.
+    void showModal();
+
+    /// Submits this `form` element.
     void submit();
 
+    /// Toggles the specified `class` value on this element.
     void toggleClass(String className);
 
   }

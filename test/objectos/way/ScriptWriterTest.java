@@ -29,6 +29,26 @@ public class ScriptWriterTest {
   private final Html.AttributeName dataItem = Html.AttributeName.of("data-item");
 
   @Test
+  public void close01() {
+    test(
+        script -> script.element().close(),
+
+        """
+        [["element-2","close-0"]]"""
+    );
+  }
+
+  @Test
+  public void close02() {
+    test(
+        script -> script.elementById(FOO).close(),
+
+        """
+        [["id-2","foo","close-0"]]"""
+    );
+  }
+
+  @Test
   public void delay() {
     test(
         script -> {
@@ -236,6 +256,26 @@ public class ScriptWriterTest {
 
         """
         [["request-0","POST","/foo",[]]]"""
+    );
+  }
+
+  @Test
+  public void showModal01() {
+    test(
+        script -> script.element().showModal(),
+
+        """
+        [["element-2","show-modal-0"]]"""
+    );
+  }
+
+  @Test
+  public void showModal02() {
+    test(
+        script -> script.elementById(FOO).showModal(),
+
+        """
+        [["id-2","foo","show-modal-0"]]"""
     );
   }
 

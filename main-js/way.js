@@ -223,7 +223,7 @@ const way = (function() {
 
     return count > 0;
   }
-
+  
   function executeDelay0(args, el) {
     if (args.length !== 2) {
       console.error("delay-0: action invoked with the wrong number of args. Expected 2 but got %d", args.length);
@@ -569,6 +569,8 @@ const way = (function() {
 
   const elementActions = {
     "attr-0": elementAttr0,
+    "close-0": elementClose0,
+    "show-modal-0": elementShowModal0,
     "submit-0": elementSubmit0,
     "toggle-class-0": elementToggleClass0
   };
@@ -595,6 +597,26 @@ const way = (function() {
     const value = stringQuery(args.shift());
 
     element.setAttribute(name, value);
+  }
+
+  function elementClose0(_, element) {
+    if (!(element instanceof HTMLDialogElement)) {
+      const actual = element.constructor ? element.constructor.name : "Unknown";
+
+      throw new Error(`Illegal element: show-modal-0 must be executed on an HTMLDialogElement but got ${actual}`);
+    }
+
+	element.close();
+  }
+  
+  function elementShowModal0(_, element) {
+    if (!(element instanceof HTMLDialogElement)) {
+      const actual = element.constructor ? element.constructor.name : "Unknown";
+
+      throw new Error(`Illegal element: show-modal-0 must be executed on an HTMLDialogElement but got ${actual}`);
+    }
+
+	element.showModal();
   }
 
   function elementSubmit0(_, element) {

@@ -122,23 +122,13 @@ final class ScriptWriter implements Script {
     }
 
     @Override
-    public final void toggleClass(String classes) {
-      Check.argument(!classes.isBlank(), "Classes to toggle must not be blank");
-
-      final String[] parts;
-      parts = classes.split(" ");
-
+    public final void close() {
       actionStart();
 
       elementAction();
 
       comma();
-      stringLiteral("toggle-class-0");
-
-      for (var part : parts) {
-        comma();
-        stringLiteral(part);
-      }
+      stringLiteral("close-0");
 
       actionEnd();
     }
@@ -162,6 +152,18 @@ final class ScriptWriter implements Script {
     }
 
     @Override
+    public final void showModal() {
+      actionStart();
+
+      elementAction();
+
+      comma();
+      stringLiteral("show-modal-0");
+
+      actionEnd();
+    }
+
+    @Override
     public final void submit() {
       actionStart();
 
@@ -169,6 +171,28 @@ final class ScriptWriter implements Script {
 
       comma();
       stringLiteral("submit-0");
+
+      actionEnd();
+    }
+
+    @Override
+    public final void toggleClass(String classes) {
+      Check.argument(!classes.isBlank(), "Classes to toggle must not be blank");
+
+      final String[] parts;
+      parts = classes.split(" ");
+
+      actionStart();
+
+      elementAction();
+
+      comma();
+      stringLiteral("toggle-class-0");
+
+      for (var part : parts) {
+        comma();
+        stringLiteral(part);
+      }
 
       actionEnd();
     }
