@@ -256,6 +256,26 @@ public class HtmlTemplateTestAttributes {
     );
   }
 
+  @Test
+  public void open() {
+    test(
+        new Html.Template() {
+          @Override
+          protected final void render() {
+            dialog(open);
+            dialog(id("foo"), open);
+            dialog(id("foo"), open, className("bar"));
+          }
+        },
+
+        """
+        <dialog open></dialog>
+        <dialog id="foo" open></dialog>
+        <dialog id="foo" open class="bar"></dialog>
+        """
+    );
+  }
+
   private void test(Html.Template template, String expected) {
     String result;
     result = template.toString();

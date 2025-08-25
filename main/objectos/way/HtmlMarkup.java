@@ -1081,7 +1081,8 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
           break loop;
         }
 
-        case HtmlByteProto.ATTRIBUTE_EXT1 -> {
+        case HtmlByteProto.ATTRIBUTE_EXT0,
+             HtmlByteProto.ATTRIBUTE_EXT1 -> {
           byte attr;
           attr = main[index++];
 
