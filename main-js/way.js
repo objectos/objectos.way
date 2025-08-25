@@ -81,7 +81,15 @@ const way = (function() {
 
     executeEvent(target, "onInput");
   }
+  
+  function loadHandler(elem) {
+    executeEvent(elem, "onLoad");
 
+	elem.querySelectorAll("[data-on-load]").forEach((el) => {
+      executeEvent(el, "onLoad");
+	});
+  }
+  
   function submitListener(event) {
     const target = event.target;
 
@@ -348,6 +356,8 @@ const way = (function() {
         replaced.add(elem);
 
         elem.replaceWith(newElem);
+		
+		loadHandler(newElem);
       }
     }
   }
@@ -725,6 +735,8 @@ const way = (function() {
     document.addEventListener("click", listener(clickListener));
     document.addEventListener("input", listener(inputListener));
     document.addEventListener("submit", listener(submitListener));
+	
+	loadHandler(document);
   }
 
   window.addEventListener("DOMContentLoaded", domLoaded);
