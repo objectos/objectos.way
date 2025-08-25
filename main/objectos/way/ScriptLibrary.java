@@ -80,6 +80,7 @@ const way = (function() {
   const actionHandlers = {
     "delay-0": executeDelay0,
     "html-0": executeHtml0,
+    "element-2": executeElement2,
     "id-1": executeId1,
     "id-2": executeId2,
     "navigate-0": executeNavigate0,
@@ -418,6 +419,10 @@ const way = (function() {
     const value = args[0];
 
     executeHtml(value);
+  }
+  
+  function executeElement2(args, element) {
+	elementAction(args, element);
   }
 
   function executeId1(args) {

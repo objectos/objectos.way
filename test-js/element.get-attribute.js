@@ -1,4 +1,4 @@
-suite("Action::getProperty test", function() {
+suite("Element::getProperty test", function() {
 
   setup(function() {
     clearWorkArea();

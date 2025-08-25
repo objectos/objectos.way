@@ -1,4 +1,4 @@
-suite("Action::toggleClass test", function() {
+suite("Element::toggleClass test", function() {
 
   setup(function() {
     clearWorkArea();

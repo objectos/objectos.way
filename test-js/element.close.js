@@ -1,4 +1,4 @@
-suite("Action::close test", function() {
+suite("Element::close test", function() {
 
   setup(function() {
     clearWorkArea();
