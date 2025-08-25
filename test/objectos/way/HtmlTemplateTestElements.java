@@ -52,6 +52,8 @@ public class HtmlTemplateTestElements {
             dialog();
             dialog(p("child"));
             dialog("Text only");
+            dialog(open);
+            dialog(closedby("foo"));
           }
         },
 
@@ -61,6 +63,8 @@ public class HtmlTemplateTestElements {
         <p>child</p>
         </dialog>
         <dialog>Text only</dialog>
+        <dialog open></dialog>
+        <dialog closedby="foo"></dialog>
         """
     );
   }

@@ -31,11 +31,13 @@ public class HtmlByteProtoFauxGenerator extends FauxGenerator {
     value("INTERNAL3");
     value("INTERNAL4");
     value("INTERNAL5");
+    value("INTERNAL6");
     value("LENGTH2");
     value("LENGTH3");
     value("MARKED3");
     value("MARKED4");
     value("MARKED5");
+    value("MARKED6");
     value("NULL");
     value("STANDARD_NAME");
 
@@ -53,7 +55,8 @@ public class HtmlByteProtoFauxGenerator extends FauxGenerator {
 
     value("ATTRIBUTE0");
     value("ATTRIBUTE1");
-    value("ATTRIBUTE_CLASS");
-    value("ATTRIBUTE_ID");
+    value("ATTRIBUTE_EXT0");
+    value("ATTRIBUTE_EXT1");
+    value("CUSTOM_ATTR1");
   }
 }

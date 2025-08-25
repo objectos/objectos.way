@@ -89,6 +89,7 @@ final class HtmlAttributeName implements Html.AttributeName {
   public static final Html.AttributeName CLASS = BUILDER.create("class", false);
   public static final Html.AttributeName CLIP_PATH = BUILDER.create("clip-path", false);
   public static final Html.AttributeName CLIP_RULE = BUILDER.create("clip-rule", false);
+  public static final Html.AttributeName CLOSEDBY = BUILDER.create("closedby", false);
   public static final Html.AttributeName COLOR = BUILDER.create("color", false);
   public static final Html.AttributeName COLOR_INTERPOLATION = BUILDER.create("color-interpolation", false);
   public static final Html.AttributeName COLOR_INTERPOLATION_FILTERS = BUILDER.create("color-interpolation-filters", false);

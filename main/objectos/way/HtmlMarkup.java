@@ -761,6 +761,7 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
 
         case HtmlByteProto.ATTRIBUTE0,
              HtmlByteProto.ATTRIBUTE1,
+             HtmlByteProto.ATTRIBUTE_EXT0,
              HtmlByteProto.ATTRIBUTE_EXT1,
              HtmlByteProto.CUSTOM_ATTR1 -> {
           index = rollbackIndex;
@@ -863,6 +864,13 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
         v0 = main[auxStart++];
 
         v1 = main[auxStart++];
+      }
+
+      case HtmlByteProto.ATTRIBUTE_EXT0 -> {
+        byte attr;
+        attr = main[index++];
+
+        attribute.name = attributeName(attr);
       }
 
       case HtmlByteProto.ATTRIBUTE_EXT1 -> {
@@ -1319,6 +1327,8 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
         case HtmlByteProto.ATTRIBUTE0,
              HtmlByteProto.ATTRIBUTE1,
              HtmlByteProto.CUSTOM_ATTR1 -> index = skipVarInt(index);
+
+        case HtmlByteProto.ATTRIBUTE_EXT0 -> index += 1;
 
         case HtmlByteProto.ATTRIBUTE_EXT1 -> index += 3;
 
@@ -1932,6 +1942,25 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
       auxAdd(HtmlByteProto.INTERNAL);
     }
 
+    else if (value instanceof Html.AttributeObject0 ext) {
+      Html.AttributeName name;
+      name = ext.name();
+
+      int nameIndex;
+      nameIndex = name.index();
+
+      if (nameIndex < 0) {
+        throw new UnsupportedOperationException("Custom attribute name");
+      } else {
+        auxAdd(
+            HtmlByteProto.ATTRIBUTE_EXT0,
+
+            // name
+            HtmlBytes.encodeInt0(nameIndex)
+        );
+      }
+    }
+
     else if (value instanceof Html.AttributeObject ext) {
       Html.AttributeName name;
       name = ext.name();
@@ -1941,21 +1970,21 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
 
       if (nameIndex < 0) {
         throw new UnsupportedOperationException("Custom attribute name");
+      } else {
+        int valueIndex;
+        valueIndex = externalValue(ext.value());
+
+        auxAdd(
+            HtmlByteProto.ATTRIBUTE_EXT1,
+
+            // name
+            HtmlBytes.encodeInt0(nameIndex),
+
+            // value
+            HtmlBytes.encodeInt0(valueIndex),
+            HtmlBytes.encodeInt1(valueIndex)
+        );
       }
-
-      int valueIndex;
-      valueIndex = externalValue(ext.value());
-
-      auxAdd(
-          HtmlByteProto.ATTRIBUTE_EXT1,
-
-          // name
-          HtmlBytes.encodeInt0(nameIndex),
-
-          // value
-          HtmlBytes.encodeInt0(valueIndex),
-          HtmlBytes.encodeInt1(valueIndex)
-      );
     }
 
     else if (value == Html.NOOP) {
@@ -1987,6 +2016,10 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
       switch (mark) {
         case HtmlByteProto.TEXT -> {
           mainAdd(mark, aux[index++], aux[index++]);
+        }
+
+        case HtmlByteProto.ATTRIBUTE_EXT0 -> {
+          mainAdd(mark, aux[index++]);
         }
 
         case HtmlByteProto.ATTRIBUTE_EXT1 -> {
@@ -2121,6 +2154,12 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
   private void auxAdd(byte b0) {
     aux = Util.growIfNecessary(aux, auxIndex + 0);
     aux[auxIndex++] = b0;
+  }
+
+  private void auxAdd(byte b0, byte b1) {
+    aux = Util.growIfNecessary(aux, auxIndex + 1);
+    aux[auxIndex++] = b0;
+    aux[auxIndex++] = b1;
   }
 
   private void auxAdd(byte b0, byte b1, byte b2, byte b3) {
@@ -2502,6 +2541,12 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
   private void mainAdd(byte b0) {
     main = Util.growIfNecessary(main, mainIndex + 0);
     main[mainIndex++] = b0;
+  }
+
+  private void mainAdd(byte b0, byte b1) {
+    main = Util.growIfNecessary(main, mainIndex + 1);
+    main[mainIndex++] = b0;
+    main[mainIndex++] = b1;
   }
 
   private void mainAdd(byte b0, byte b1, byte b2) {

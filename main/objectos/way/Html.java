@@ -924,6 +924,19 @@ public final class Html {
    */
   public sealed interface MarkupAttributes permits Markup, HtmlMarkupAttributes {
 
+    /// Renders the `open` boolean attribute.
+    Html.AttributeObject open = AttributeObject.of(HtmlAttributeName.OPEN);
+
+    /**
+     * Renders an attribute with the specified name.
+     *
+     * @param name
+     *        the name of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute attr(Html.AttributeName name);
+
     /**
      * Renders an attribute with the specified name and value.
      *
@@ -1127,6 +1140,16 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     Html.Instruction.OfAttribute clipRule(String value);
+
+    /**
+     * Renders the {@code closedby} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    Html.Instruction.OfAttribute closedby(String value);
 
     /**
      * Renders the {@code color} attribute with the specified value.
@@ -1798,13 +1821,6 @@ public final class Html {
      * @return an instruction representing this attribute.
      */
     Html.Instruction.OfAttribute opacity(String value);
-
-    /**
-     * Renders the {@code open} boolean attribute.
-     *
-     * @return an instruction representing this attribute.
-     */
-    Html.Instruction.OfAttribute open();
 
     /**
      * Renders the {@code overflow} attribute with the specified value.
@@ -4000,7 +4016,7 @@ public final class Html {
     /**
      * The {@code data-execute-default} boolean attribute.
      */
-    protected static final Html.AttributeObject dataExecuteDefault = Html.AttributeObject.create(HtmlAttributeName.DATA_EXECUTE_DEFAULT, "");
+    protected static final Html.AttributeObject dataExecuteDefault = Html.AttributeObject.of(HtmlAttributeName.DATA_EXECUTE_DEFAULT, "");
 
     TemplateBase() {}
 
@@ -4405,40 +4421,51 @@ public final class Html {
     return sb.toString();
   }
 
-  /**
-   * An instruction to render an HTML attribute and its value.
-   */
+  /// An object representing an instruction to render an HTML attribute.
+  /// These instructions may be reused, unlike the instructions represented by methods of the `Template` class.
   public sealed interface AttributeObject extends Instruction.AsObject, Instruction.OfVoid {
 
-    static AttributeObject create(AttributeName name, String value) {
-      return new HtmlAttributeObject(
-          Check.notNull(name, "name == null"),
-          Check.notNull(value, "value == null")
+    static AttributeObject of(AttributeName name) {
+      return new AttributeObject0(
+          Objects.requireNonNull(name, "name == null")
       );
     }
 
-    /**
-     * The HTML attribute name.
-     *
-     * @return the HTML attribute name
-     */
+    static AttributeObject of(AttributeName name, String value) {
+      return new AttributeObject1(
+          Objects.requireNonNull(name, "name == null"),
+          Objects.requireNonNull(value, "value == null")
+      );
+    }
+
+    /// The HTML attribute name.
+    ///
+    /// @return the HTML attribute name
     AttributeName name();
 
-    /**
-     * The HTML attribute value.
-     *
-     * @return the HTML attribute value
-     */
+    /// The HTML attribute value, possibly `null`.
+    ///
+    /// @return the HTML attribute value, possibly `null`
     String value();
 
   }
 
-  private record HtmlAttributeObject(AttributeName name, String value) implements AttributeObject {}
+  record AttributeObject0(AttributeName name) implements AttributeObject {
+    @Override
+    public final String value() {
+      throw new UnsupportedOperationException();
+    }
+  }
+
+  record AttributeObject1(AttributeName name, String value) implements AttributeObject {}
 
   /**
    * Provides the HTML attributes template methods.
    */
   public sealed static abstract class TemplateAttributes {
+
+    /// Generates the `open` boolean attribute.
+    protected static final Html.AttributeObject open = Html.MarkupAttributes.open;
 
     TemplateAttributes() {}
 
@@ -4676,6 +4703,18 @@ public final class Html {
      */
     protected final Instruction.OfAttribute clipRule(String value) {
       return $attributes().clipRule(value);
+    }
+
+    /**
+     * Generates the {@code closedby} attribute with the specified value.
+     *
+     * @param value
+     *        the value of the attribute
+     *
+     * @return an instruction representing this attribute.
+     */
+    protected final Instruction.OfAttribute closedby(String value) {
+      return $attributes().closedby(value);
     }
 
     /**
@@ -5485,15 +5524,6 @@ public final class Html {
      */
     protected final Instruction.OfAttribute opacity(String value) {
       return $attributes().opacity(value);
-    }
-
-    /**
-     * Generates the {@code open} boolean attribute.
-     *
-     * @return an instruction representing this attribute.
-     */
-    protected final Instruction.OfAttribute open() {
-      return $attributes().open();
     }
 
     /**

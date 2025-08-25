@@ -26,6 +26,13 @@ sealed abstract class HtmlMarkupAttributes implements Html.MarkupAttributes perm
   abstract Html.AttributeOrNoOp attribute0(Html.AttributeName name, Object value);
 
   @Override
+  public final Html.Instruction.OfAttribute attr(Html.AttributeName name) {
+    Objects.requireNonNull(name, "name == null");
+
+    return attribute0(name);
+  }
+
+  @Override
   public final Html.Instruction.OfAttribute attr(Html.AttributeName name, String value) {
     Objects.requireNonNull(name, "name == null");
     Objects.requireNonNull(value, "value == null");
@@ -300,6 +307,20 @@ sealed abstract class HtmlMarkupAttributes implements Html.MarkupAttributes perm
   public final Html.Instruction.OfAttribute clipRule(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.CLIP_RULE, value);
+  }
+
+  /**
+   * Renders the {@code closedby} attribute with the specified value.
+   *
+   * @param value
+   *        the value of the attribute
+   *
+   * @return an instruction representing this attribute.
+   */
+  @Override
+  public final Html.Instruction.OfAttribute closedby(String value) {
+    Objects.requireNonNull(value, "value == null");
+    return attribute0(HtmlAttributeName.CLOSEDBY, value);
   }
 
   /**
@@ -1238,16 +1259,6 @@ sealed abstract class HtmlMarkupAttributes implements Html.MarkupAttributes perm
   public final Html.Instruction.OfAttribute opacity(String value) {
     Objects.requireNonNull(value, "value == null");
     return attribute0(HtmlAttributeName.OPACITY, value);
-  }
-
-  /**
-   * Renders the {@code open} boolean attribute.
-   *
-   * @return an instruction representing this attribute.
-   */
-  @Override
-  public final Html.Instruction.OfAttribute open() {
-    return attribute0(HtmlAttributeName.OPEN);
   }
 
   /**
