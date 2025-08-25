@@ -147,6 +147,11 @@ final class HtmlMarkupTestable extends HtmlMarkupElements implements Html.Markup
   }
 
   @Override
+  public final Html.Instruction.OfDataOn dataOnLoad(Consumer<Script> script) {
+    return Html.ATTRIBUTE;
+  }
+
+  @Override
   public final Html.Instruction.OfDataOn dataOnSuccess(Consumer<Script> script) {
     return Html.ATTRIBUTE;
   }

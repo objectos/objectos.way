@@ -208,6 +208,13 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
   }
 
   @Override
+  public final Html.Instruction.OfDataOn dataOnLoad(Consumer<Script> script) {
+    Objects.requireNonNull(script, "script == null");
+
+    return dataOn0(HtmlAttributeName.DATA_ON_LOAD, script);
+  }
+
+  @Override
   public final Html.Instruction.OfDataOn dataOnSuccess(Consumer<Script> script) {
     Objects.requireNonNull(script, "script == null");
 

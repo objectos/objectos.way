@@ -211,6 +211,26 @@ public class HtmlTemplateTestAttributes {
   }
 
   @Test
+  public void dataOnLoad() {
+    test(
+        new Html.Template() {
+          @Override
+          protected final void render() {
+            div(
+                dataOnLoad(s -> {
+                  s.elementById(foo).toggleClass("x");
+                })
+            );
+          }
+        },
+
+        """
+        <div data-on-load='[["id-2","foo","toggle-class-0","x"]]'></div>
+        """
+    );
+  }
+
+  @Test
   public void dataOnSuccess() {
     test(
         new Html.Template() {

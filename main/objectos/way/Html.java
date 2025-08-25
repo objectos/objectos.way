@@ -720,14 +720,47 @@ public final class Html {
      */
     Html.Instruction.OfAttribute css(String value);
 
+    /// Renders the `data-frame` attribute for a frame with the specified name.
+    ///
+    /// @param name the name of the frame
+    ///
+    /// @return an instruction representing this attribute
     Html.Instruction.OfAttribute dataFrame(String name);
 
+    /// Renders the `data-frame` attribute for a frame with the specified name and value.
+    ///
+    /// @param name the name of the frame
+    /// @param value the value of the frame
+    ///
+    /// @return an instruction representing this attribute
     Html.Instruction.OfAttribute dataFrame(String name, String value);
 
+    /// Renders the `data-on-click` attribute with the specified script.
+    ///
+    /// @param script the script to be executed
+    ///
+    /// @return an instruction representing this attribute
     Html.Instruction.OfDataOn dataOnClick(Consumer<Script> script);
 
+    /// Renders the `data-on-input` attribute with the specified script.
+    ///
+    /// @param script the script to be executed
+    ///
+    /// @return an instruction representing this attribute
     Html.Instruction.OfDataOn dataOnInput(Consumer<Script> script);
 
+    /// Renders the `data-on-load` attribute with the specified script.
+    ///
+    /// @param script the script to be executed
+    ///
+    /// @return an instruction representing this attribute
+    Html.Instruction.OfDataOn dataOnLoad(Consumer<Script> script);
+
+    /// Renders the `data-on-success` attribute with the specified script.
+    ///
+    /// @param script the script to be executed
+    ///
+    /// @return an instruction representing this attribute
     Html.Instruction.OfDataOn dataOnSuccess(Consumer<Script> script);
 
     Html.Instruction.OfElement element(Html.ElementName name, Html.Instruction... contents);
@@ -4055,20 +4088,51 @@ public final class Html {
       return $html().css(value);
     }
 
+    /// Renders the `data-frame` attribute for a frame with the specified name.
+    ///
+    /// @param name the name of the frame
+    ///
+    /// @return an instruction representing this attribute
     protected final Instruction.OfAttribute dataFrame(String name) {
       return $html().dataFrame(name);
     }
 
+    /// Renders the `data-frame` attribute for a frame with the specified name and value.
+    ///
+    /// @param name the name of the frame
+    /// @param value the value of the frame
+    ///
+    /// @return an instruction representing this attribute
     protected final Instruction.OfAttribute dataFrame(String name, String value) {
       return $html().dataFrame(name, value);
     }
 
+    /// Executes the specified script when this element is clicked.
+    ///
+    /// @param script the script to execute
+    ///
+    /// @return an instruction representing this attribute.
     protected final Html.Instruction.OfDataOn dataOnClick(Consumer<Script> script) {
       return $html().dataOnClick(script);
     }
 
+    /// Executes the specified script when the `value` attribute
+    /// of this element has been changed as a result of an user action.
+    ///
+    /// @param script the script to execute
+    ///
+    /// @return an instruction representing this attribute.
     protected final Html.Instruction.OfDataOn dataOnInput(Consumer<Script> script) {
       return $html().dataOnInput(script);
+    }
+
+    /// Executes the specified script after this element has been loaded on the DOM.
+    ///
+    /// @param script the script to execute
+    ///
+    /// @return an instruction representing this attribute.
+    protected final Html.Instruction.OfDataOn dataOnLoad(Consumer<Script> script) {
+      return $html().dataOnLoad(script);
     }
 
     protected final Html.Instruction.OfDataOn dataOnSuccess(Consumer<Script> script) {

@@ -59,6 +59,7 @@ final class HtmlAttributeName implements Html.AttributeName {
   public static final Html.AttributeName DATA_FRAME = BUILDER.create("data-frame", false);
   public static final Html.AttributeName DATA_ON_CLICK = BUILDER.action("data-on-click");
   public static final Html.AttributeName DATA_ON_INPUT = BUILDER.action("data-on-input");
+  public static final Html.AttributeName DATA_ON_LOAD = BUILDER.action("data-on-load");
   public static final Html.AttributeName DATA_ON_SUCCESS = BUILDER.action("data-on-success");
 
   // custom (Syntax)
