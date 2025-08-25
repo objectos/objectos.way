@@ -1521,6 +1521,27 @@ public final class Http {
 
     void paramRegex(String name, String value);
 
+    /// Appends to this configuration the handler for the specified subpath and method.
+    /// Subpaths can only be registered when this configuration represents a wildcard path.
+    ///
+    /// This method is a convenience to the following:
+    ///
+    /// ```java
+    /// r.subpath(subpath, matched -> {
+    ///   matched.allow(method, handler);
+    /// });
+    /// ```
+    /// @param subpath
+    ///        a subpath expression
+    /// @param method
+    ///        the only allowed method
+    /// @param handler
+    ///        handles the requests for this subpath and method
+    ///
+    /// @throws IllegalStateException
+    ///         if this configuration does not represent a wildcard path
+    void subpath(String subpath, Http.Method method, Http.Handler handler);
+
     /**
      * Appends to this configuration the handlers for the specified subpath
      * defined by the specified module. Subpaths can only be registered when

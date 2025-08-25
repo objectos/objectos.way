@@ -209,6 +209,13 @@ final class HttpRoutingPath extends HttpRoutingSupport implements Http.RoutingPa
   }
 
   @Override
+  public final void subpath(String subpath, Http.Method method, Http.Handler handler) {
+    subpath(subpath, matched -> {
+      matched.allow(method, handler);
+    });
+  }
+
+  @Override
   public final void subpath(String path, Http.RoutingPath.Module module) {
     if (!allowSubpath) {
       throw new IllegalStateException("A subpath can only be defined in a wildcard parent path");

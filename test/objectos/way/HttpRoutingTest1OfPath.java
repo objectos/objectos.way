@@ -292,6 +292,41 @@ public class HttpRoutingTest1OfPath {
   }
 
   @Test
+  public void subpath02() {
+    final HttpRouting routing;
+    routing = new HttpRouting();
+
+    routing.path("/a/{}", a -> {
+      a.subpath("b", GET, OK);
+
+      a.handler(notFound("a\n"));
+    });
+
+    final Http.Handler handler;
+    handler = routing.build();
+
+    final Http.Exchange http;
+    http = http(config -> {
+      config.path("/a/b");
+    });
+
+    handler.handle(http);
+
+    assertEquals(
+        http.toString(),
+
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 3\r
+        \r
+        OK
+        """
+    );
+  }
+
+  @Test
   public void subpath03() {
     final HttpRouting routing;
     routing = new HttpRouting();
