@@ -147,6 +147,8 @@ public final class TestingHttpServer {
         final Http.Handler serverHandler;
         serverHandler = Http.Handler.of(HANDLER::configure);
 
+        opts.address(InetAddress.getLoopbackAddress());
+
         opts.handler(serverHandler);
 
         opts.clock(Y.clockFixed());

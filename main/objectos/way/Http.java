@@ -1582,6 +1582,12 @@ public final class Http {
      */
     public sealed interface Options permits HttpServerBuilder {
 
+      /// The IP address to which this server will listen to.
+      ///
+      /// @param value
+      ///        the IP address
+      void address(InetAddress value);
+
       /**
        * Sets the initial and maximum sizes in bytes for the exchange buffer.
        *

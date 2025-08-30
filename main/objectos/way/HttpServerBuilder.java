@@ -15,10 +15,14 @@
  */
 package objectos.way;
 
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.time.Clock;
 import java.util.Objects;
 
 final class HttpServerBuilder implements Http.Server.Options {
+
+  private InetAddress address;
 
   int bufferSizeInitial = 16 * 1024;
 
@@ -32,10 +36,15 @@ final class HttpServerBuilder implements Http.Server.Options {
 
   Note.Sink noteSink = Note.NoOpSink.INSTANCE;
 
-  int port = 0;
+  private int port = 0;
 
   public final Http.Server build() {
     return new HttpServer(this);
+  }
+
+  @Override
+  public final void address(InetAddress value) {
+    address = Objects.requireNonNull(value, "value == null");
   }
 
   @Override
@@ -78,6 +87,18 @@ final class HttpServerBuilder implements Http.Server.Options {
     Check.argument(max >= 0, "max request body size must not be negative");
 
     requestBodySizeMax = max;
+  }
+
+  final InetSocketAddress socketAddress() {
+    final InetAddress a;
+
+    if (address == null) {
+      a = InetAddress.getLoopbackAddress();
+    } else {
+      a = address;
+    }
+
+    return new InetSocketAddress(a, port);
   }
 
 }

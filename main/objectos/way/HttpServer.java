@@ -72,11 +72,11 @@ final class HttpServer implements Http.Server, Runnable {
 
   private final Note.Sink noteSink;
 
-  private final int port;
-
   private final long requestBodySizeMax;
 
   private ServerSocket serverSocket;
+
+  private final InetSocketAddress socketAddress;
 
   private Thread thread;
 
@@ -91,16 +91,16 @@ final class HttpServer implements Http.Server, Runnable {
 
     noteSink = builder.noteSink;
 
-    port = builder.port;
-
     requestBodySizeMax = builder.requestBodySizeMax;
+
+    socketAddress = builder.socketAddress();
   }
 
   @Override
   public final InetAddress address() {
     checkStarted();
 
-    return serverSocket.getInetAddress();
+    return socketAddress.getAddress();
   }
 
   @Override
@@ -125,12 +125,6 @@ final class HttpServer implements Http.Server, Runnable {
           "The service has already been started."
       );
     }
-
-    InetAddress address;
-    address = InetAddress.getLoopbackAddress();
-
-    InetSocketAddress socketAddress;
-    socketAddress = new InetSocketAddress(address, port);
 
     serverSocket = new ServerSocket();
 
