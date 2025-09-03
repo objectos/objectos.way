@@ -38,7 +38,6 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 import java.util.random.RandomGenerator;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -455,46 +454,6 @@ public final class Http {
      *         if no session is associated to this exchange
      */
     <T> T sessionAttr(Lang.Key<T> key, T value);
-
-    /**
-     * If a session value is not already associated to the name of the specified
-     * class, associate the one provided by the specified supplier.
-     *
-     * @param <T>
-     *        the type of the session value
-     * @param key
-     *        associate the value to the name of this class object
-     * @param supplier
-     *        provides the session value
-     *
-     * @return the session value (existing or computed); never {@code null}
-     *
-     * @throws IllegalStateException
-     *         if no session is associated to this exchange
-     * @throws NullPointerException
-     *         if the supplier provides a {@code null} value
-     */
-    <T> T sessionAttrIfAbsent(Class<T> key, Supplier<? extends T> supplier);
-
-    /**
-     * If a session value is not already associated to the specified key,
-     * associate the one provided by the specified supplier.
-     *
-     * @param <T>
-     *        the type of the session value
-     * @param key
-     *        the key object
-     * @param supplier
-     *        provides the session value
-     *
-     * @return the session value (existing or computed); never {@code null}
-     *
-     * @throws IllegalStateException
-     *         if no session is associated to this exchange
-     * @throws NullPointerException
-     *         if the supplier provides a {@code null} value
-     */
-    <T> T sessionAttrIfAbsent(Lang.Key<T> key, Supplier<? extends T> supplier);
 
     /**
      * Invalidates the session associated to this exchange.

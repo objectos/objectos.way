@@ -37,7 +37,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
@@ -2980,8 +2979,6 @@ final class HttpExchange implements Http.Exchange, Runnable, Closeable {
     final String name;
     name = key.getName();
 
-    Objects.requireNonNull(value, "value == null");
-
     return (T) session.set0(name, value);
   }
 
@@ -2991,33 +2988,8 @@ final class HttpExchange implements Http.Exchange, Runnable, Closeable {
     checkSession();
 
     Objects.requireNonNull(key, "key == null");
-    Objects.requireNonNull(value, "value == null");
 
     return (T) session.set0(key, value);
-  }
-
-  @SuppressWarnings("unchecked")
-  @Override
-  public final <T> T sessionAttrIfAbsent(Class<T> key, Supplier<? extends T> supplier) {
-    checkSession();
-
-    final String name;
-    name = key.getName();
-
-    Objects.requireNonNull(supplier, "supplier == null");
-
-    return (T) session.setIfAbsent0(name, supplier);
-  }
-
-  @SuppressWarnings("unchecked")
-  @Override
-  public final <T> T sessionAttrIfAbsent(Lang.Key<T> key, Supplier<? extends T> supplier) {
-    checkSession();
-
-    Objects.requireNonNull(key, "key == null");
-    Objects.requireNonNull(supplier, "supplier == null");
-
-    return (T) session.setIfAbsent0(key, supplier);
   }
 
   @Override

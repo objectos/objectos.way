@@ -17,6 +17,7 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertSame;
 
 import java.io.ByteArrayOutputStream;
@@ -30,6 +31,8 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class HttpExchangeTestASession extends HttpExchangeTest {
+
+  private final Lang.Key<String> key = Lang.Key.of("unique");
 
   @Test
   public void session01() {
@@ -49,7 +52,7 @@ public class HttpExchangeTestASession extends HttpExchangeTest {
             http -> {
               store.ensureSession(http);
 
-              http.sessionAttrIfAbsent(String.class, () -> "FOO\n");
+              http.sessionAttr(String.class, "FOO\n");
 
               http.ok(Media.Bytes.textPlain("NEW\n"));
             },
@@ -75,6 +78,8 @@ public class HttpExchangeTestASession extends HttpExchangeTest {
 
             http -> {
               store.loadSession(http);
+
+              assertNull(http.sessionAttr(key));
 
               final String attr;
               attr = http.sessionAttr(String.class);
@@ -125,7 +130,7 @@ public class HttpExchangeTestASession extends HttpExchangeTest {
             http -> {
               store.ensureSession(http);
 
-              http.sessionAttrIfAbsent(class1, () -> subject);
+              http.sessionAttr(class1, subject);
 
               http.ok(OK);
             },
@@ -192,7 +197,7 @@ public class HttpExchangeTestASession extends HttpExchangeTest {
             http -> {
               store.ensureSession(http);
 
-              http.sessionAttrIfAbsent(testKey, () -> "FOO\n");
+              http.sessionAttr(testKey, "FOO\n");
 
               http.ok(Media.Bytes.textPlain("NEW\n"));
             },
@@ -255,7 +260,7 @@ public class HttpExchangeTestASession extends HttpExchangeTest {
             http -> {
               store.ensureSession(http);
 
-              http.sessionAttrIfAbsent(String.class, () -> "FOO");
+              http.sessionAttr(String.class, "FOO");
 
               http.ok(OK);
             },
@@ -320,6 +325,99 @@ public class HttpExchangeTestASession extends HttpExchangeTest {
               } catch (IllegalStateException expected) {
 
               }
+
+              http.ok(OK);
+            },
+
+            """
+            HTTP/1.1 200 OK\r
+            Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+            Content-Type: text/plain; charset=utf-8\r
+            Content-Length: 3\r
+            \r
+            OK
+            """
+        )
+    );
+  }
+
+  @Test(description = "support unsetting a value")
+  public void session05() {
+    final Http.SessionStore store;
+    store = Http.SessionStore.create(options -> {
+      options.sessionGenerator(Y.randomGeneratorOfLongs(1L, 2L, 3L, 4L));
+    });
+
+    test(
+        xch(
+            """
+            GET /1 HTTP/1.1\r
+            Host: host\r
+            \r
+            """,
+
+            http -> {
+              store.ensureSession(http);
+
+              http.sessionAttr(String.class, "FOO");
+
+              http.ok(OK);
+            },
+
+            """
+            HTTP/1.1 200 OK\r
+            Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+            Content-Type: text/plain; charset=utf-8\r
+            Content-Length: 3\r
+            Set-Cookie: OBJECTOSWAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=; HttpOnly; Path=/; Secure\r
+            \r
+            OK
+            """
+        ),
+
+        xch(
+            """
+            POST /2 HTTP/1.1\r
+            Host: host\r
+            Cookie: OBJECTOSWAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=\r
+            \r
+            """,
+
+            http -> {
+              store.loadSession(http);
+
+              final String attr;
+              attr = http.sessionAttr(String.class);
+
+              assertEquals(attr, "FOO");
+
+              http.sessionAttr(String.class, null);
+
+              http.ok(OK);
+            },
+
+            """
+            HTTP/1.1 200 OK\r
+            Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+            Content-Type: text/plain; charset=utf-8\r
+            Content-Length: 3\r
+            \r
+            OK
+            """
+        ),
+
+        xch(
+            """
+            GET /3 HTTP/1.1\r
+            Host: host\r
+            Cookie: OBJECTOSWAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=\r
+            \r
+            """,
+
+            http -> {
+              store.loadSession(http);
+
+              assertNull(http.sessionAttr(String.class));
 
               http.ok(OK);
             },
