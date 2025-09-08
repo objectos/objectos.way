@@ -48,8 +48,11 @@ final class HtmlBytes {
   }
 
   public static byte encodeName(Html.ElementName name) {
-    int ordinal;
-    ordinal = name.index();
+    final HtmlElementName impl;
+    impl = (HtmlElementName) name;
+
+    final int ordinal;
+    ordinal = impl.ordinal();
 
     return encodeInt0(ordinal);
   }

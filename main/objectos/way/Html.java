@@ -354,32 +354,227 @@ public final class Html {
 
   }
 
-  /**
-   * The name of an HTML element.
-   */
-  public sealed interface ElementName extends HtmlElementNameGenerated permits HtmlElementName {
+  /// Represents the name of an HTML element.
+  public sealed interface ElementName permits HtmlElementName {
 
-    /**
-     * Index of this element name.
-     *
-     * @return index of this element name.
-     */
-    int index();
+    /// The `a` element.
+    Html.ElementName A = HtmlElementName.A;
 
-    /**
-     * Name of the element.
-     *
-     * @return name of the element
-     */
-    String name();
+    /// The `abbr` element.
+    Html.ElementName ABBR = HtmlElementName.ABBR;
 
-    /**
-     * Indicates if this is the name of an element that has an end tag.
-     *
-     * @return {@code true} if this is the name of an element that has an end
-     *         tag and {@code false} otherwise
-     */
-    boolean endTag();
+    /// The `article` element.
+    Html.ElementName ARTICLE = HtmlElementName.ARTICLE;
+
+    /// The `b` element.
+    Html.ElementName B = HtmlElementName.B;
+
+    /// The `blockquote` element.
+    Html.ElementName BLOCKQUOTE = HtmlElementName.BLOCKQUOTE;
+
+    /// The `body` element.
+    Html.ElementName BODY = HtmlElementName.BODY;
+
+    /// The `br` element.
+    Html.ElementName BR = HtmlElementName.BR;
+
+    /// The `button` element.
+    Html.ElementName BUTTON = HtmlElementName.BUTTON;
+
+    /// The `clipPath` element.
+    Html.ElementName CLIPPATH = HtmlElementName.CLIPPATH;
+
+    /// The `code` element.
+    Html.ElementName CODE = HtmlElementName.CODE;
+
+    /// The `dd` element.
+    Html.ElementName DD = HtmlElementName.DD;
+
+    /// The `defs` element.
+    Html.ElementName DEFS = HtmlElementName.DEFS;
+
+    /// The `details` element.
+    Html.ElementName DETAILS = HtmlElementName.DETAILS;
+
+    /// The `div` element.
+    Html.ElementName DIV = HtmlElementName.DIV;
+
+    /// The `dl` element.
+    Html.ElementName DL = HtmlElementName.DL;
+
+    /// The `dt` element.
+    Html.ElementName DT = HtmlElementName.DT;
+
+    /// The `em` element.
+    Html.ElementName EM = HtmlElementName.EM;
+
+    /// The `fieldset` element.
+    Html.ElementName FIELDSET = HtmlElementName.FIELDSET;
+
+    /// The `figure` element.
+    Html.ElementName FIGURE = HtmlElementName.FIGURE;
+
+    /// The `footer` element.
+    Html.ElementName FOOTER = HtmlElementName.FOOTER;
+
+    /// The `form` element.
+    Html.ElementName FORM = HtmlElementName.FORM;
+
+    /// The `g` element.
+    Html.ElementName G = HtmlElementName.G;
+
+    /// The `h1` element.
+    Html.ElementName H1 = HtmlElementName.H1;
+
+    /// The `h2` element.
+    Html.ElementName H2 = HtmlElementName.H2;
+
+    /// The `h3` element.
+    Html.ElementName H3 = HtmlElementName.H3;
+
+    /// The `h4` element.
+    Html.ElementName H4 = HtmlElementName.H4;
+
+    /// The `h5` element.
+    Html.ElementName H5 = HtmlElementName.H5;
+
+    /// The `h6` element.
+    Html.ElementName H6 = HtmlElementName.H6;
+
+    /// The `head` element.
+    Html.ElementName HEAD = HtmlElementName.HEAD;
+
+    /// The `header` element.
+    Html.ElementName HEADER = HtmlElementName.HEADER;
+
+    /// The `hgroup` element.
+    Html.ElementName HGROUP = HtmlElementName.HGROUP;
+
+    /// The `hr` element.
+    Html.ElementName HR = HtmlElementName.HR;
+
+    /// The `html` element.
+    Html.ElementName HTML = HtmlElementName.HTML;
+
+    /// The `img` element.
+    Html.ElementName IMG = HtmlElementName.IMG;
+
+    /// The `input` element.
+    Html.ElementName INPUT = HtmlElementName.INPUT;
+
+    /// The `kbd` element.
+    Html.ElementName KBD = HtmlElementName.KBD;
+
+    /// The `label` element.
+    Html.ElementName LABEL = HtmlElementName.LABEL;
+
+    /// The `legend` element.
+    Html.ElementName LEGEND = HtmlElementName.LEGEND;
+
+    /// The `li` element.
+    Html.ElementName LI = HtmlElementName.LI;
+
+    /// The `link` element.
+    Html.ElementName LINK = HtmlElementName.LINK;
+
+    /// The `main` element.
+    Html.ElementName MAIN = HtmlElementName.MAIN;
+
+    /// The `menu` element.
+    Html.ElementName MENU = HtmlElementName.MENU;
+
+    /// The `meta` element.
+    Html.ElementName META = HtmlElementName.META;
+
+    /// The `nav` element.
+    Html.ElementName NAV = HtmlElementName.NAV;
+
+    /// The `ol` element.
+    Html.ElementName OL = HtmlElementName.OL;
+
+    /// The `optgroup` element.
+    Html.ElementName OPTGROUP = HtmlElementName.OPTGROUP;
+
+    /// The `option` element.
+    Html.ElementName OPTION = HtmlElementName.OPTION;
+
+    /// The `p` element.
+    Html.ElementName P = HtmlElementName.P;
+
+    /// The `path` element.
+    Html.ElementName PATH = HtmlElementName.PATH;
+
+    /// The `pre` element.
+    Html.ElementName PRE = HtmlElementName.PRE;
+
+    /// The `progress` element.
+    Html.ElementName PROGRESS = HtmlElementName.PROGRESS;
+
+    /// The `samp` element.
+    Html.ElementName SAMP = HtmlElementName.SAMP;
+
+    /// The `script` element.
+    Html.ElementName SCRIPT = HtmlElementName.SCRIPT;
+
+    /// The `section` element.
+    Html.ElementName SECTION = HtmlElementName.SECTION;
+
+    /// The `select` element.
+    Html.ElementName SELECT = HtmlElementName.SELECT;
+
+    /// The `small` element.
+    Html.ElementName SMALL = HtmlElementName.SMALL;
+
+    /// The `span` element.
+    Html.ElementName SPAN = HtmlElementName.SPAN;
+
+    /// The `strong` element.
+    Html.ElementName STRONG = HtmlElementName.STRONG;
+
+    /// The `style` element.
+    Html.ElementName STYLE = HtmlElementName.STYLE;
+
+    /// The `sub` element.
+    Html.ElementName SUB = HtmlElementName.SUB;
+
+    /// The `summary` element.
+    Html.ElementName SUMMARY = HtmlElementName.SUMMARY;
+
+    /// The `sup` element.
+    Html.ElementName SUP = HtmlElementName.SUP;
+
+    /// The `svg` element.
+    Html.ElementName SVG = HtmlElementName.SVG;
+
+    /// The `table` element.
+    Html.ElementName TABLE = HtmlElementName.TABLE;
+
+    /// The `tbody` element.
+    Html.ElementName TBODY = HtmlElementName.TBODY;
+
+    /// The `td` element.
+    Html.ElementName TD = HtmlElementName.TD;
+
+    /// The `template` element.
+    Html.ElementName TEMPLATE = HtmlElementName.TEMPLATE;
+
+    /// The `textarea` element.
+    Html.ElementName TEXTAREA = HtmlElementName.TEXTAREA;
+
+    /// The `th` element.
+    Html.ElementName TH = HtmlElementName.TH;
+
+    /// The `thead` element.
+    Html.ElementName THEAD = HtmlElementName.THEAD;
+
+    /// The `title` element.
+    Html.ElementName TITLE = HtmlElementName.TITLE;
+
+    /// The `tr` element.
+    Html.ElementName TR = HtmlElementName.TR;
+
+    /// The `ul` element.
+    Html.ElementName UL = HtmlElementName.UL;
 
   }
 
@@ -8282,7 +8477,7 @@ final class HtmlDomElement implements Html.Dom.Element, Lang.IterableOnce<Html.D
 
   @Override
   public final boolean isVoid() {
-    return !name.endTag();
+    return !name.endTag;
   }
 
   @Override
@@ -8294,7 +8489,7 @@ final class HtmlDomElement implements Html.Dom.Element, Lang.IterableOnce<Html.D
 
   @Override
   public final String name() {
-    return name.name();
+    return name.lowerCase;
   }
 
   @Override

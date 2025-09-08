@@ -53,16 +53,16 @@ enum HtmlAmbiguous {
 
   private final int attributeByteCode;
 
-  public final Html.ElementName element;
+  public final HtmlElementName element;
 
   private final int elementByteCode;
 
-  private HtmlAmbiguous(Html.AttributeName attribute, Html.ElementName element) {
+  private HtmlAmbiguous(Html.AttributeName attribute, HtmlElementName element) {
     this.attributeByteCode = attribute.index();
 
     this.element = element;
 
-    this.elementByteCode = element.index();
+    this.elementByteCode = element.ordinal();
   }
 
   public static HtmlAmbiguous decode(byte b0) {
