@@ -1764,10 +1764,6 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
     objectIndex = 0;
   }
 
-  final void compilationEnd() {
-    // TODO remove...
-  }
-
   @Override
   final Html.Instruction.OfAmbiguous ambiguous(HtmlAmbiguous name, String value) {
     int ordinal;

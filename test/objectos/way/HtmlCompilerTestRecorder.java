@@ -472,11 +472,11 @@ public class HtmlCompilerTestRecorder {
     html.elementBegin(HtmlElementName.NAV);
     html.elementEnd();
     // template end
-    
+
     html.elementBegin(HtmlElementName.BODY);
     html.elementValue(BaseApi.FRAGMENT);
     html.elementEnd();
-    
+
     html.compilationEnd();
     */
 
@@ -700,8 +700,6 @@ public class HtmlCompilerTestRecorder {
     html.elementValue(grd);
     html.elementValue(Html.ELEMENT);
     html.elementEnd();
-
-    html.compilationEnd();
 
     test(
         html,

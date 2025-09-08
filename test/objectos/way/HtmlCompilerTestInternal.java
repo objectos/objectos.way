@@ -34,8 +34,6 @@ public class HtmlCompilerTestInternal {
     compiler.elementBegin(HtmlElementName.HTML);
     compiler.elementEnd();
 
-    compiler.compilationEnd();
-
     // document
     compiler.compile();
 
@@ -224,8 +222,6 @@ public class HtmlCompilerTestInternal {
     compiler.elementValue(Html.ATTRIBUTE);
     compiler.elementEnd();
 
-    compiler.compilationEnd();
-
     // document
     compiler.compile();
 
@@ -397,8 +393,6 @@ public class HtmlCompilerTestInternal {
     compiler.elementBegin(HtmlElementName.HTML);
     compiler.elementValue(Html.ELEMENT);
     compiler.elementEnd();
-
-    compiler.compilationEnd();
 
     // document
     compiler.compile();
@@ -594,8 +588,6 @@ public class HtmlCompilerTestInternal {
     compiler.elementValue(Html.ELEMENT);
     compiler.elementEnd();
 
-    compiler.compilationEnd();
-
     // document
     compiler.compile();
     compiler.documentIterable();
@@ -677,8 +669,6 @@ public class HtmlCompilerTestInternal {
     compiler.elementValue(Html.ATTRIBUTE);
     compiler.elementValue(Html.ATTRIBUTE);
     compiler.elementEnd();
-
-    compiler.compilationEnd();
 
     // document
     compiler.compile();

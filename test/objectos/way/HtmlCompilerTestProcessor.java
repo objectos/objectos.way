@@ -34,8 +34,6 @@ public class HtmlCompilerTestProcessor {
     compiler.elementBegin(HtmlElementName.HTML);
     compiler.elementEnd();
 
-    compiler.compilationEnd();
-
     assertEquals(
         test(compiler),
 
@@ -60,8 +58,6 @@ public class HtmlCompilerTestProcessor {
     compiler.elementBegin(HtmlElementName.HTML);
     compiler.elementValue(Html.ATTRIBUTE);
     compiler.elementEnd();
-
-    compiler.compilationEnd();
 
     assertEquals(
         test(compiler),

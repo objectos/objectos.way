@@ -840,8 +840,6 @@ public final class Html {
 
       renderHtml(html);
 
-      html.compilationEnd();
-
       final HtmlDom document;
       document = html.compile();
 
@@ -860,8 +858,6 @@ public final class Html {
       html.compilationBegin();
 
       renderHtml(html);
-
-      html.compilationEnd();
 
       return html.toString();
     }
@@ -4209,8 +4205,6 @@ public final class Html {
       html.compilationBegin();
 
       renderHtml(html);
-
-      html.compilationEnd();
 
       return html.toJsonString();
     }
