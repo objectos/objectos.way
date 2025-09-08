@@ -63,11 +63,7 @@ final class CssEngine implements Css.StyleSheet, Consumer<String>, FileVisitor<P
 
       Note.Long1 scanTime,
       Note.Long1 processTime,
-      Note.Long1 totalTime,
-
-      Note.Ref2<String, String> keyNotFound,
-      Note.Ref3<String, String, Set<Css.Key>> matchNotFound,
-      Note.Ref2<Css.Key, String> negativeNotSupported
+      Note.Long1 totalTime
   ) {
 
     static Notes get() {
@@ -87,13 +83,9 @@ final class CssEngine implements Css.StyleSheet, Consumer<String>, FileVisitor<P
           Note.Ref2.create(s, "JER", Note.WARN),
           Note.Ref2.create(s, "JNV", Note.WARN),
 
-          Note.Long1.create(s, "SCT", Note.INFO),
-          Note.Long1.create(s, "PRT", Note.INFO),
-          Note.Long1.create(s, "TOT", Note.INFO),
-
-          Note.Ref2.create(s, "Css.Key not found", Note.DEBUG),
-          Note.Ref3.create(s, "Match not found", Note.INFO),
-          Note.Ref2.create(s, "Does not allow negative values", Note.WARN)
+          Note.Long1.create(s, "SCT", Note.DEBUG),
+          Note.Long1.create(s, "PRT", Note.DEBUG),
+          Note.Long1.create(s, "TOT", Note.DEBUG)
       );
     }
 
@@ -145,8 +137,6 @@ final class CssEngine implements Css.StyleSheet, Consumer<String>, FileVisitor<P
 
   private Object object1;
 
-  private final Map<String, Css.Key> prefixes;
-
   private final StringBuilder sb = new StringBuilder();
 
   private final Iterable<? extends Class<?>> scanClasses;
@@ -177,8 +167,6 @@ final class CssEngine implements Css.StyleSheet, Consumer<String>, FileVisitor<P
     keywords = builder.keywords();
 
     noteSink = builder.noteSink();
-
-    prefixes = builder.prefixes();
 
     scanClasses = builder.scanClasses();
 
@@ -750,6 +738,12 @@ final class CssEngine implements Css.StyleSheet, Consumer<String>, FileVisitor<P
       colon = className.indexOf(':', beginIndex);
     }
 
+    if (beginIndex == className.length()) {
+      // TODO log empty value
+
+      return $PROCESS_LOOP;
+    }
+
     // last slug = propValue
     final String propValue;
     propValue = className.substring(beginIndex);
@@ -789,15 +783,6 @@ final class CssEngine implements Css.StyleSheet, Consumer<String>, FileVisitor<P
     final String propName;
     propName = classNameSlugs.get(parts - 1);
 
-    final Css.Key key;
-    key = prefixes.get(propName);
-
-    if (key == null) {
-      // TODO log unknown property name
-
-      return $PROCESS_LOOP;
-    }
-
     final String formatted;
     formatted = formatValue(propValue);
 
@@ -810,7 +795,7 @@ final class CssEngine implements Css.StyleSheet, Consumer<String>, FileVisitor<P
     properties.add(propName, formatted);
 
     final CssUtility utility;
-    utility = new CssUtility(key, className, modifier, properties);
+    utility = new CssUtility(propName, className, modifier, properties);
 
     utilities.put(className, utility);
 

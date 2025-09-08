@@ -21,6 +21,26 @@ import org.testng.annotations.Test;
 
 public class CssEngineTest09GenerateUtilities {
 
+  @Test(description = "do not render utility with an empty value")
+
+  public void testCase01() {
+    class Subject extends CssSubject {
+      @Override
+      final void classes() {
+        className("background-color:");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+        }
+        """
+    );
+  }
+
   @Test
   public void alignContent() {
     class Subject extends CssSubject {
@@ -196,6 +216,26 @@ public class CssEngineTest09GenerateUtilities {
           .border\\:1px { border: 1px }
           .border\\:2px_dashed { border: 2px dashed }
           .border\\:4px_solid_red-50 { border: 4px solid var(--color-red-50) }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void borderBlock() {
+    class Subject extends CssSubject {
+      @Override
+      final void classes() {
+        className("border-block:solid");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .border-block\\:solid { border-block: solid }
         }
         """
     );

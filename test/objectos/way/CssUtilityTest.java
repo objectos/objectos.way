@@ -33,22 +33,22 @@ public class CssUtilityTest {
 
     List<CssUtility> utilities = new ArrayList<>();
 
-    CssUtility a1 = utility(Css.Key.APPEARANCE, "a-1", empty);
+    CssUtility a1 = utility("appearance", "a-1", empty);
     utilities.add(a1);
 
-    CssUtility a2 = utility(Css.Key.APPEARANCE, "a-2", empty);
+    CssUtility a2 = utility("appearance", "a-2", empty);
     utilities.add(a2);
 
-    CssUtility a1Active = utility(Css.Key.APPEARANCE, "a-2:active", active);
+    CssUtility a1Active = utility("appearance", "a-2:active", active);
     utilities.add(a1Active);
 
-    CssUtility a1Hover = utility(Css.Key.APPEARANCE, "a-1:hover", hover);
+    CssUtility a1Hover = utility("appearance", "a-1:hover", hover);
     utilities.add(a1Hover);
 
-    CssUtility b1 = utility(Css.Key.DISPLAY, "b-1", empty);
+    CssUtility b1 = utility("display", "b-1", empty);
     utilities.add(b1);
 
-    CssUtility b2 = utility(Css.Key.DISPLAY, "b-2", empty);
+    CssUtility b2 = utility("display", "b-2", empty);
     utilities.add(b2);
 
     Collections.sort(utilities);
@@ -68,7 +68,7 @@ public class CssUtilityTest {
     testClassName("2xl:m-2", ".\\32 xl\\:m-2");
   }
 
-  private CssUtility utility(Css.Key key, String className, List<CssVariant> formats) {
+  private CssUtility utility(String key, String className, List<CssVariant> formats) {
     CssModifier modifier;
     modifier = new CssModifier(List.of(), formats);
 
@@ -80,7 +80,7 @@ public class CssUtilityTest {
     out = new StringBuilder();
 
     CssUtility utility;
-    utility = utility(Css.Key.COLOR, className, List.of());
+    utility = utility("color", className, List.of());
 
     utility.writeClassName(out);
 

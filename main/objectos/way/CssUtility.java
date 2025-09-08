@@ -19,7 +19,7 @@ import java.util.List;
 
 record CssUtility(
 
-    Css.Key key,
+    String key,
 
     String className,
 
@@ -29,7 +29,7 @@ record CssUtility(
 
 ) implements Comparable<CssUtility> {
 
-  CssUtility(Css.Key key, String className, CssModifier modifier, CssProperties.Builder properties) {
+  CssUtility(String key, String className, CssModifier modifier, CssProperties.Builder properties) {
     this(key, className, modifier, properties.build());
   }
 

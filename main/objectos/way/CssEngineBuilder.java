@@ -29,7 +29,6 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
-import objectos.way.Css.Key;
 import objectos.way.Css.Layer;
 import objectos.way.Css.ThemeQueryEntry;
 
@@ -750,27 +749,6 @@ final class CssEngineBuilder implements Css.StyleSheet.Options {
 
   final Note.Sink noteSink() {
     return noteSink;
-  }
-
-  final Map<String, Key> prefixes() {
-    final UtilMap<String, Key> prefixes;
-    prefixes = new UtilMap<>();
-
-    for (Css.Key key : Css.Key.values()) {
-      final String propertyName;
-      propertyName = key.propertyName;
-
-      final Css.Key maybeExisting;
-      maybeExisting = prefixes.put(propertyName, key);
-
-      if (maybeExisting != null) {
-        throw new IllegalArgumentException(
-            "Prefix " + propertyName + " already mapped to " + maybeExisting
-        );
-      }
-    }
-
-    return prefixes.toUnmodifiableMap();
   }
 
   final Iterable<? extends Class<?>> scanClasses() {

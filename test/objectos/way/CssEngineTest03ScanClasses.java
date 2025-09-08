@@ -102,6 +102,23 @@ public class CssEngineTest03ScanClasses {
     );
   }
 
+  @Test(description = "whitespace")
+  public void testCase05() {
+    class Subject extends Html.Template {
+      @Override
+      protected final void render() {
+        div(css("margin: \t display:\t\f"));
+      }
+    }
+
+    test(
+        Subject.class,
+
+        "margin:",
+        "display:"
+    );
+  }
+
   private void test(Class<?> type, String... expected) {
     try {
       CssEngine engine;

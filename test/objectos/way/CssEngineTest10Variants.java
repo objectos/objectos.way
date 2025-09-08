@@ -432,7 +432,7 @@ public class CssEngineTest10Variants {
       @Override
       final void classes() {
         text("::");
-        text("foo:");
+        text("sm:");
       }
     }
 
