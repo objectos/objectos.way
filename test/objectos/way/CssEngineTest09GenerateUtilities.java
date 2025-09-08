@@ -1473,6 +1473,50 @@ public class CssEngineTest09GenerateUtilities {
   }
 
   @Test
+  public void marginBlockEnd() {
+    class Subject extends CssSubject {
+      @Override
+      final void classes() {
+        className("margin-block-end:20px");
+        className("margin-block-end:20%");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .margin-block-end\\:20px { margin-block-end: 20px }
+          .margin-block-end\\:20\\% { margin-block-end: 20% }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void marginBlockStart() {
+    class Subject extends CssSubject {
+      @Override
+      final void classes() {
+        className("margin-block-start:20px");
+        className("margin-block-start:20%");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .margin-block-start\\:20px { margin-block-start: 20px }
+          .margin-block-start\\:20\\% { margin-block-start: 20% }
+        }
+        """
+    );
+  }
+
+  @Test
   public void marginBottom() {
     class Subject extends CssSubject {
       @Override
@@ -1513,6 +1557,50 @@ public class CssEngineTest09GenerateUtilities {
           .margin-inline\\:auto { margin-inline: auto }
           .margin-inline\\:0\\.25rem { margin-inline: 0.25rem }
           .margin-inline\\:1em_2em { margin-inline: 1em 2em }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void marginInlineEnd() {
+    class Subject extends CssSubject {
+      @Override
+      final void classes() {
+        className("margin-inline-end:20px");
+        className("margin-inline-end:20%");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .margin-inline-end\\:20px { margin-inline-end: 20px }
+          .margin-inline-end\\:20\\% { margin-inline-end: 20% }
+        }
+        """
+    );
+  }
+
+  @Test
+  public void marginInlineStart() {
+    class Subject extends CssSubject {
+      @Override
+      final void classes() {
+        className("margin-inline-start:20px");
+        className("margin-inline-start:20%");
+      }
+    }
+
+    test(
+        Subject.class,
+
+        """
+        @layer utilities {
+          .margin-inline-start\\:20px { margin-inline-start: 20px }
+          .margin-inline-start\\:20\\% { margin-inline-start: 20% }
         }
         """
     );
