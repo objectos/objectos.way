@@ -28,8 +28,6 @@ public class HtmlCompilerTestRecorder {
     HtmlMarkup html;
     html = new HtmlMarkup();
 
-    html.compilationBegin();
-
     html.html();
 
     test(
@@ -52,8 +50,6 @@ public class HtmlCompilerTestRecorder {
   public void testCase01() {
     HtmlMarkup html;
     html = new HtmlMarkup();
-
-    html.compilationBegin();
 
     html.html(
         html.lang("pt-BR")
@@ -87,8 +83,6 @@ public class HtmlCompilerTestRecorder {
   public void testCase02() {
     HtmlMarkup html;
     html = new HtmlMarkup();
-
-    html.compilationBegin();
 
     html.html(
         html.className("no-js"),
@@ -132,8 +126,6 @@ public class HtmlCompilerTestRecorder {
     HtmlMarkup html;
     html = new HtmlMarkup();
 
-    html.compilationBegin();
-
     html.html(
         html.head()
     );
@@ -171,8 +163,6 @@ public class HtmlCompilerTestRecorder {
     HtmlMarkup html;
     html = new HtmlMarkup();
 
-    html.compilationBegin();
-
     html.doctype();
     html.html();
 
@@ -198,8 +188,6 @@ public class HtmlCompilerTestRecorder {
   public void testCase10() {
     HtmlMarkup html;
     html = new HtmlMarkup();
-
-    html.compilationBegin();
 
     Html.Fragment.Of0 action;
     action = () -> {
@@ -286,8 +274,6 @@ public class HtmlCompilerTestRecorder {
     HtmlMarkup html;
     html = new HtmlMarkup();
 
-    html.compilationBegin();
-
     html.html(
         foo,
         html.body(bar)
@@ -332,8 +318,6 @@ public class HtmlCompilerTestRecorder {
   public void testCase14() {
     HtmlMarkup html;
     html = new HtmlMarkup();
-
-    html.compilationBegin();
 
     html.html(
         html.body(
@@ -390,8 +374,6 @@ public class HtmlCompilerTestRecorder {
   public void testCase16() {
     HtmlMarkup html;
     html = new HtmlMarkup();
-
-    html.compilationBegin();
 
     html.html(
         html.head(
@@ -461,8 +443,6 @@ public class HtmlCompilerTestRecorder {
     HtmlMarkup html;
     html = new HtmlMarkup();
 
-    html.compilationBegin();
-
     html.body(
         html.nav()
     );
@@ -472,11 +452,11 @@ public class HtmlCompilerTestRecorder {
     html.elementBegin(HtmlElementName.NAV);
     html.elementEnd();
     // template end
-
+    
     html.elementBegin(HtmlElementName.BODY);
     html.elementValue(BaseApi.FRAGMENT);
     html.elementEnd();
-
+    
     html.compilationEnd();
     */
 
@@ -512,8 +492,6 @@ public class HtmlCompilerTestRecorder {
     HtmlMarkup html;
     html = new HtmlMarkup();
 
-    html.compilationBegin();
-
     html.style(
         "@font-face {font-family: 'Foo';}"
     );
@@ -547,8 +525,6 @@ public class HtmlCompilerTestRecorder {
   public void testCase31() {
     HtmlMarkup html;
     html = new HtmlMarkup();
-
-    html.compilationBegin();
 
     html.input(
         html.type("email"),
@@ -591,8 +567,6 @@ public class HtmlCompilerTestRecorder {
   public void testCase46() {
     HtmlMarkup html;
     html = new HtmlMarkup();
-
-    html.compilationBegin();
 
     html.form(
         html.flatten(
@@ -662,12 +636,6 @@ public class HtmlCompilerTestRecorder {
 
     HtmlMarkup html;
     html = new HtmlMarkup();
-
-    html.span("foo");
-    html.text("bar");
-    html.span("zaz");
-
-    html.compilationBegin();
 
     html.textImpl("A");
 
@@ -799,8 +767,6 @@ public class HtmlCompilerTestRecorder {
     HtmlMarkup html;
     html = new HtmlMarkup();
 
-    html.compilationBegin();
-
     Html.Fragment.Of0 action;
     action = () -> {
       html.doctype();
@@ -846,8 +812,6 @@ public class HtmlCompilerTestRecorder {
   public void testCase77() {
     HtmlMarkup html;
     html = new HtmlMarkup();
-
-    html.compilationBegin();
 
     Html.Fragment.Of0 action;
     action = () -> {};

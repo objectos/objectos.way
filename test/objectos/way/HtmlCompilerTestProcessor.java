@@ -29,8 +29,6 @@ public class HtmlCompilerTestProcessor {
     HtmlMarkup compiler;
     compiler = new HtmlMarkup();
 
-    compiler.compilationBegin();
-
     compiler.elementBegin(HtmlElementName.HTML);
     compiler.elementEnd();
 
@@ -50,8 +48,6 @@ public class HtmlCompilerTestProcessor {
   public void testCase01() {
     HtmlMarkup compiler;
     compiler = new HtmlMarkup();
-
-    compiler.compilationBegin();
 
     compiler.attribute0(HtmlAttributeName.LANG, "pt-BR");
 

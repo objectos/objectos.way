@@ -29,8 +29,6 @@ public class HtmlCompilerTestInternal {
     HtmlMarkup compiler;
     compiler = new HtmlMarkup();
 
-    compiler.compilationBegin();
-
     compiler.elementBegin(HtmlElementName.HTML);
     compiler.elementEnd();
 
@@ -214,8 +212,6 @@ public class HtmlCompilerTestInternal {
     HtmlMarkup compiler;
     compiler = new HtmlMarkup();
 
-    compiler.compilationBegin();
-
     compiler.attribute0(HtmlAttributeName.LANG, "pt-BR");
 
     compiler.elementBegin(HtmlElementName.HTML);
@@ -384,8 +380,6 @@ public class HtmlCompilerTestInternal {
   public void testCase03() {
     HtmlMarkup compiler;
     compiler = new HtmlMarkup();
-
-    compiler.compilationBegin();
 
     compiler.elementBegin(HtmlElementName.HEAD);
     compiler.elementEnd();
@@ -569,8 +563,6 @@ public class HtmlCompilerTestInternal {
     HtmlMarkup compiler;
     compiler = new HtmlMarkup();
 
-    compiler.compilationBegin();
-
     compiler.ambiguous(HtmlAmbiguous.TITLE, "element");
 
     compiler.elementBegin(HtmlElementName.HEAD);
@@ -659,8 +651,6 @@ public class HtmlCompilerTestInternal {
   public void testCase31() {
     HtmlMarkup compiler;
     compiler = new HtmlMarkup();
-
-    compiler.compilationBegin();
 
     compiler.attribute0(HtmlAttributeName.TYPE, "email");
     compiler.attribute0(HtmlAttributeName.REQUIRED);
