@@ -859,7 +859,7 @@ public final class Html {
    */
   public sealed interface Markup
       extends MarkupAttributes, MarkupElements, MarkupTestable, MarkupText, MarkupWay
-      permits HtmlMarkup, HtmlMarkupTestable {
+      permits HtmlMarkup, HtmlMarkupOfTestable {
 
   }
 
@@ -2615,8 +2615,8 @@ public final class Html {
 
     @Override
     public final void formatTestable(Testable.Formatter formatter) {
-      final HtmlMarkupTestable html;
-      html = new HtmlMarkupTestable(formatter);
+      final HtmlMarkupOfTestable html;
+      html = new HtmlMarkupOfTestable(formatter);
 
       renderHtml(html);
     }

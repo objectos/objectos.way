@@ -17,7 +17,9 @@ package objectos.way;
 
 import java.util.Objects;
 
-sealed abstract class HtmlMarkupAttributes implements Html.MarkupAttributes permits HtmlMarkupElements {
+sealed abstract class HtmlMarkupAttributes
+    implements Html.MarkupAttributes
+    permits HtmlMarkupElements {
 
   HtmlMarkupAttributes() {}
 

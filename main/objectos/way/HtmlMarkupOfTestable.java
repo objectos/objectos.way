@@ -18,15 +18,15 @@ package objectos.way;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-final class HtmlMarkupTestable extends HtmlMarkupElements implements Html.Markup {
+final class HtmlMarkupOfTestable extends HtmlMarkupElements implements Html.Markup {
 
   private final Testable.Formatter formatter;
 
-  HtmlMarkupTestable() {
+  HtmlMarkupOfTestable() {
     this(Testable.Formatter.create());
   }
 
-  HtmlMarkupTestable(Testable.Formatter formatter) {
+  HtmlMarkupOfTestable(Testable.Formatter formatter) {
     this.formatter = formatter;
   }
 
