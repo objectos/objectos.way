@@ -162,6 +162,11 @@ final class HtmlMarkupTestable extends HtmlMarkupElements implements Html.Markup
   }
 
   @Override
+  public final Html.Instruction.OfElement element(Html.ElementName name, String text) {
+    return Html.ELEMENT;
+  }
+
+  @Override
   public final Html.Instruction.OfElement flatten(Html.Instruction... contents) {
     Objects.requireNonNull(contents, "contents == null");
 
@@ -245,11 +250,6 @@ final class HtmlMarkupTestable extends HtmlMarkupElements implements Html.Markup
 
   @Override
   final Html.Instruction.OfAmbiguous ambiguous(HtmlAmbiguous name, String value) {
-    return Html.ELEMENT;
-  }
-
-  @Override
-  final Html.Instruction.OfElement element(Html.ElementName name, String text) {
     return Html.ELEMENT;
   }
 

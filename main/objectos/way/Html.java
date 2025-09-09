@@ -857,85 +857,1626 @@ public final class Html {
   /**
    * Allow for defining the structure of an HTML document using pure Java.
    */
-  public sealed interface Markup extends MarkupAttributes, MarkupElements, MarkupTestable permits HtmlMarkup, HtmlMarkupTestable {
+  public sealed interface Markup
+      extends MarkupAttributes, MarkupElements, MarkupTestable, MarkupText, MarkupWay
+      permits HtmlMarkup, HtmlMarkupTestable {
 
-    /**
-     * Renders the {@code class} attribute by processing the specified value.
-     *
-     * <p>
-     * This method is designed to work with Java text blocks. It first removes
-     * any leading and trailing whitespace. Additionally, any sequence of
-     * consecutive whitespace characters is replaced by a single space
-     * character.
-     *
-     * <p>
-     * For example, the following invocation:
-     *
-     * <pre>{@code
-     * css("""
-     *     display:inline-flex
-     *     justify-content:center
-     *
-     *     background-color:blue-500
-     *     """);
-     * }</pre>
-     *
-     * <p>
-     * Produces the same result as invoking
-     * {@code className("display:inline-flex justify-content:center background-color:blue-500")}.
-     *
-     * @param value
-     *        the text block containing class names, possibly spread across
-     *        multiple lines
-     *
-     * @return an instruction representing this attribute.
-     */
-    Html.Instruction.OfAttribute css(String value);
+  }
+
+  /// Defines the structure of an HTML document using pure Java (attributes).
+  public sealed interface MarkupAttributes permits Markup, HtmlMarkupAttributes {
+
+    /// Renders an attribute with the specified name.
+    /// @param name the name of the attribute
+    /// @return an instruction representing this attribute.
+    Html.Instruction.OfAttribute attr(Html.AttributeName name);
+
+    /// Renders an attribute with the specified name and value.
+    /// @param name the name of the attribute
+    /// @param value the value of the attribute
+    /// @return an instruction representing this attribute.
+    Html.Instruction.OfAttribute attr(Html.AttributeName name, String value);
+
+    //
+    // Objectos Way attributes
+    //
 
     /// Renders the `data-frame` attribute for a frame with the specified name.
-    ///
     /// @param name the name of the frame
-    ///
-    /// @return an instruction representing this attribute
+    /// @return an instruction representing the attribute
     Html.Instruction.OfAttribute dataFrame(String name);
 
     /// Renders the `data-frame` attribute for a frame with the specified name and value.
-    ///
     /// @param name the name of the frame
     /// @param value the value of the frame
-    ///
-    /// @return an instruction representing this attribute
+    /// @return an instruction representing the attribute
     Html.Instruction.OfAttribute dataFrame(String name, String value);
 
     /// Renders the `data-on-click` attribute with the specified script.
-    ///
     /// @param script the script to be executed
-    ///
-    /// @return an instruction representing this attribute
+    /// @return an instruction representing the attribute
     Html.Instruction.OfDataOn dataOnClick(Consumer<Script> script);
 
     /// Renders the `data-on-input` attribute with the specified script.
-    ///
     /// @param script the script to be executed
-    ///
-    /// @return an instruction representing this attribute
+    /// @return an instruction representing the attribute
     Html.Instruction.OfDataOn dataOnInput(Consumer<Script> script);
 
     /// Renders the `data-on-load` attribute with the specified script.
-    ///
     /// @param script the script to be executed
-    ///
-    /// @return an instruction representing this attribute
+    /// @return an instruction representing the attribute
     Html.Instruction.OfDataOn dataOnLoad(Consumer<Script> script);
 
     /// Renders the `data-on-success` attribute with the specified script.
-    ///
     /// @param script the script to be executed
-    ///
-    /// @return an instruction representing this attribute
+    /// @return an instruction representing the attribute
     Html.Instruction.OfDataOn dataOnSuccess(Consumer<Script> script);
 
+    //
+    // HTML attributes
+    //
+
+    /// Renders the `open` boolean attribute.
+    Html.AttributeObject open = AttributeObject.of(HtmlAttributeName.OPEN);
+
+    /// Renders the `accesskey` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute accesskey(String value);
+
+    /// Renders the `action` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute action(String value);
+
+    /// Renders the `align` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute align(String value);
+
+    /// Renders the `alignment-baseline` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute alignmentBaseline(String value);
+
+    /// Renders the `alt` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute alt(String value);
+
+    /// Renders the `aria-hidden` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute ariaHidden(String value);
+
+    /// Renders the `aria-label` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute ariaLabel(String value);
+
+    /// Renders the `as` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute as(String value);
+
+    /// Renders the `async` boolean attribute.
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute async();
+
+    /// Renders the `autocomplete` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute autocomplete(String value);
+
+    /// Renders the `autofocus` boolean attribute.
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute autofocus();
+
+    /// Renders the `baseline-shift` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute baselineShift(String value);
+
+    /// Renders the `border` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute border(String value);
+
+    /// Renders the `cellpadding` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute cellpadding(String value);
+
+    /// Renders the `cellspacing` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute cellspacing(String value);
+
+    /// Renders the `charset` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute charset(String value);
+
+    /// Renders the `checked` boolean attribute.
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute checked();
+
+    /// Renders the `cite` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute cite(String value);
+
+    /// Renders the `class` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute className(String value);
+
+    /// Renders the `clip-rule` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute clipRule(String value);
+
+    /// Renders the `closedby` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute closedby(String value);
+
+    /// Renders the `color` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute color(String value);
+
+    /// Renders the `color-interpolation` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute colorInterpolation(String value);
+
+    /// Renders the `color-interpolation-filters` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute colorInterpolationFilters(String value);
+
+    /// Renders the `cols` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute cols(String value);
+
+    /// Renders the `content` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute content(String value);
+
+    /// Renders the `contenteditable` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute contenteditable(String value);
+
+    /// Renders the `crossorigin` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute crossorigin(String value);
+
+    /// Renders the `cursor` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute cursor(String value);
+
+    /// Renders the `d` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute d(String value);
+
+    /// Renders the `defer` boolean attribute.
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute defer();
+
+    /// Renders the `dir` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute dir(String value);
+
+    /// Renders the `direction` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute direction(String value);
+
+    /// Renders the `dirname` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute dirname(String value);
+
+    /// Renders the `disabled` boolean attribute.
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute disabled();
+
+    /// Renders the `display` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute display(String value);
+
+    /// Renders the `dominant-baseline` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute dominantBaseline(String value);
+
+    /// Renders the `draggable` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute draggable(String value);
+
+    /// Renders the `enctype` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute enctype(String value);
+
+    /// Renders the `fill` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute fill(String value);
+
+    /// Renders the `fill-opacity` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute fillOpacity(String value);
+
+    /// Renders the `fill-rule` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute fillRule(String value);
+
+    /// Renders the `filter` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute filter(String value);
+
+    /// Renders the `flood-color` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute floodColor(String value);
+
+    /// Renders the `flood-opacity` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute floodOpacity(String value);
+
+    /// Renders the `for` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute forAttr(String value);
+
+    /// Renders the `for` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute forElement(String value);
+
+    /// Renders the `glyph-orientation-horizontal` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute glyphOrientationHorizontal(String value);
+
+    /// Renders the `glyph-orientation-vertical` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute glyphOrientationVertical(String value);
+
+    /// Renders the `height` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute height(String value);
+
+    /// Renders the `hidden` boolean attribute.
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute hidden();
+
+    /// Renders the `href` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute href(String value);
+
+    /// Renders the `http-equiv` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute httpEquiv(String value);
+
+    /// Renders the `id` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute id(String value);
+
+    /// Renders the `image-rendering` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute imageRendering(String value);
+
+    /// Renders the `integrity` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute integrity(String value);
+
+    /// Renders the `lang` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute lang(String value);
+
+    /// Renders the `letter-spacing` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute letterSpacing(String value);
+
+    /// Renders the `lighting-color` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute lightingColor(String value);
+
+    /// Renders the `marker-end` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute markerEnd(String value);
+
+    /// Renders the `marker-mid` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute markerMid(String value);
+
+    /// Renders the `marker-start` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute markerStart(String value);
+
+    /// Renders the `mask` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute mask(String value);
+
+    /// Renders the `mask-type` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute maskType(String value);
+
+    /// Renders the `maxlength` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute maxlength(String value);
+
+    /// Renders the `media` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute media(String value);
+
+    /// Renders the `method` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute method(String value);
+
+    /// Renders the `minlength` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute minlength(String value);
+
+    /// Renders the `multiple` boolean attribute.
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute multiple();
+
+    /// Renders the `name` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute name(String value);
+
+    /// Renders the `nomodule` boolean attribute.
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute nomodule();
+
+    /// Renders the `onafterprint` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute onafterprint(String value);
+
+    /// Renders the `onbeforeprint` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute onbeforeprint(String value);
+
+    /// Renders the `onbeforeunload` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute onbeforeunload(String value);
+
+    /// Renders the `onclick` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute onclick(String value);
+
+    /// Renders the `onhashchange` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute onhashchange(String value);
+
+    /// Renders the `onlanguagechange` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute onlanguagechange(String value);
+
+    /// Renders the `onmessage` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute onmessage(String value);
+
+    /// Renders the `onoffline` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute onoffline(String value);
+
+    /// Renders the `ononline` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute ononline(String value);
+
+    /// Renders the `onpagehide` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute onpagehide(String value);
+
+    /// Renders the `onpageshow` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute onpageshow(String value);
+
+    /// Renders the `onpopstate` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute onpopstate(String value);
+
+    /// Renders the `onrejectionhandled` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute onrejectionhandled(String value);
+
+    /// Renders the `onstorage` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute onstorage(String value);
+
+    /// Renders the `onsubmit` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute onsubmit(String value);
+
+    /// Renders the `onunhandledrejection` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute onunhandledrejection(String value);
+
+    /// Renders the `onunload` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute onunload(String value);
+
+    /// Renders the `opacity` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute opacity(String value);
+
+    /// Renders the `overflow` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute overflow(String value);
+
+    /// Renders the `paint-order` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute paintOrder(String value);
+
+    /// Renders the `placeholder` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute placeholder(String value);
+
+    /// Renders the `pointer-events` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute pointerEvents(String value);
+
+    /// Renders the `property` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute property(String value);
+
+    /// Renders the `readonly` boolean attribute.
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute readonly();
+
+    /// Renders the `referrerpolicy` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute referrerpolicy(String value);
+
+    /// Renders the `rel` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute rel(String value);
+
+    /// Renders the `required` boolean attribute.
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute required();
+
+    /// Renders the `rev` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute rev(String value);
+
+    /// Renders the `reversed` boolean attribute.
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute reversed();
+
+    /// Renders the `role` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute role(String value);
+
+    /// Renders the `rows` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute rows(String value);
+
+    /// Renders the `selected` boolean attribute.
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute selected();
+
+    /// Renders the `shape-rendering` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute shapeRendering(String value);
+
+    /// Renders the `size` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute size(String value);
+
+    /// Renders the `sizes` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute sizes(String value);
+
+    /// Renders the `spellcheck` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute spellcheck(String value);
+
+    /// Renders the `src` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute src(String value);
+
+    /// Renders the `srcset` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute srcset(String value);
+
+    /// Renders the `start` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute start(String value);
+
+    /// Renders the `stop-color` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute stopColor(String value);
+
+    /// Renders the `stop-opacity` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute stopOpacity(String value);
+
+    /// Renders the `stroke` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute stroke(String value);
+
+    /// Renders the `stroke-dasharray` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute strokeDasharray(String value);
+
+    /// Renders the `stroke-dashoffset` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute strokeDashoffset(String value);
+
+    /// Renders the `stroke-linecap` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute strokeLinecap(String value);
+
+    /// Renders the `stroke-linejoin` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute strokeLinejoin(String value);
+
+    /// Renders the `stroke-miterlimit` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute strokeMiterlimit(String value);
+
+    /// Renders the `stroke-opacity` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute strokeOpacity(String value);
+
+    /// Renders the `stroke-width` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute strokeWidth(String value);
+
+    /// Renders the `style` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute inlineStyle(String value);
+
+    /// Renders the `tabindex` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute tabindex(String value);
+
+    /// Renders the `target` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute target(String value);
+
+    /// Renders the `text-anchor` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute textAnchor(String value);
+
+    /// Renders the `text-decoration` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute textDecoration(String value);
+
+    /// Renders the `text-overflow` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute textOverflow(String value);
+
+    /// Renders the `text-rendering` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute textRendering(String value);
+
+    /// Renders the `transform` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute transform(String value);
+
+    /// Renders the `transform-origin` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute transformOrigin(String value);
+
+    /// Renders the `translate` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute translate(String value);
+
+    /// Renders the `type` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute type(String value);
+
+    /// Renders the `unicode-bidi` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute unicodeBidi(String value);
+
+    /// Renders the `value` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute value(String value);
+
+    /// Renders the `vector-effect` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute vectorEffect(String value);
+
+    /// Renders the `viewBox` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute viewBox(String value);
+
+    /// Renders the `visibility` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute visibility(String value);
+
+    /// Renders the `white-space` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute whiteSpace(String value);
+
+    /// Renders the `width` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute width(String value);
+
+    /// Renders the `word-spacing` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute wordSpacing(String value);
+
+    /// Renders the `wrap` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute wrap(String value);
+
+    /// Renders the `writing-mode` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute writingMode(String value);
+
+    /// Renders the `xmlns` attribute with the specified value.
+    /// @param value the value of the attribute
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute xmlns(String value);
+
+  }
+
+  /// Defines the structure of an HTML document using pure Java (elements).
+  public sealed interface MarkupElements permits Markup, HtmlMarkupElements {
+
+    /// Renders an HTML element with the specified name and contents.
+    /// @param name the element name
+    /// @param contents the attributes and children of the element
+    /// @return an instruction representing the element
     Html.Instruction.OfElement element(Html.ElementName name, Html.Instruction... contents);
+
+    /// Renders an HTML element with the specified name and text.
+    /// @param name the element name
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement element(Html.ElementName name, String text);
+
+    /// Renders the `<!DOCTYPE html>` doctype.
+    void doctype();
+
+    /// Renders the `a` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing this element.
+    Html.Instruction.OfElement a(Html.Instruction... contents);
+
+    /// Renders the `a` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing this element.
+    Html.Instruction.OfElement a(String text);
+
+    /// Renders the `abbr` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing this element.
+    Html.Instruction.OfElement abbr(Html.Instruction... contents);
+
+    /// Renders the `abbr` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing this element.
+    Html.Instruction.OfElement abbr(String text);
+
+    /// Renders the `article` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing this element.
+    Html.Instruction.OfElement article(Html.Instruction... contents);
+
+    /// Renders the `article` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing this element.
+    Html.Instruction.OfElement article(String text);
+
+    /// Renders the `aside` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing this element.
+    Html.Instruction.OfElement aside(Html.Instruction... contents);
+
+    /// Renders the `aside` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing this element.
+    Html.Instruction.OfElement aside(String text);
+
+    /// Renders the `b` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement b(Html.Instruction... contents);
+
+    /// Renders the `b` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement b(String text);
+
+    /// Renders the `blockquote` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement blockquote(Html.Instruction... contents);
+
+    /// Renders the `blockquote` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement blockquote(String text);
+
+    /// Renders the `body` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement body(Html.Instruction... contents);
+
+    /// Renders the `body` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement body(String text);
+
+    /// Renders the `br` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement br(Html.Instruction.OfVoid... contents);
+
+    /// Renders the `button` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement button(Html.Instruction... contents);
+
+    /// Renders the `button` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement button(String text);
+
+    /// Renders the `clipPath` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement clipPath(Html.Instruction... contents);
+
+    /// Renders the `clipPath` attribute or element with the specified text.
+    /// @param text the text value of this attribute or element
+    /// @return an instruction representing the element
+    Html.Instruction.OfAmbiguous clipPath(String text);
+
+    /// Renders the `code` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement code(Html.Instruction... contents);
+
+    /// Renders the `code` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement code(String text);
+
+    /// Renders the `dd` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement dd(Html.Instruction... contents);
+
+    /// Renders the `dd` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement dd(String text);
+
+    /// Renders the `defs` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement defs(Html.Instruction... contents);
+
+    /// Renders the `defs` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement defs(String text);
+
+    /// Renders the `details` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement details(Html.Instruction... contents);
+
+    /// Renders the `details` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement details(String text);
+
+    /// Renders the `dialog` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement dialog(Html.Instruction... contents);
+
+    /// Renders the `dialog` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement dialog(String text);
+
+    /// Renders the `div` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement div(Html.Instruction... contents);
+
+    /// Renders the `div` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement div(String text);
+
+    /// Renders the `dl` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement dl(Html.Instruction... contents);
+
+    /// Renders the `dl` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement dl(String text);
+
+    /// Renders the `dt` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement dt(Html.Instruction... contents);
+
+    /// Renders the `dt` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement dt(String text);
+
+    /// Renders the `em` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement em(Html.Instruction... contents);
+
+    /// Renders the `em` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement em(String text);
+
+    /// Renders the `fieldset` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement fieldset(Html.Instruction... contents);
+
+    /// Renders the `fieldset` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement fieldset(String text);
+
+    /// Renders the `figure` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement figure(Html.Instruction... contents);
+
+    /// Renders the `figure` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement figure(String text);
+
+    /// Renders the `footer` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement footer(Html.Instruction... contents);
+
+    /// Renders the `footer` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement footer(String text);
+
+    /// Renders the `form` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement form(Html.Instruction... contents);
+
+    /// Renders the `form` attribute or element with the specified text.
+    /// @param text the text value of this attribute or element
+    /// @return an instruction representing the element
+    Html.Instruction.OfAmbiguous form(String text);
+
+    /// Renders the `g` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement g(Html.Instruction... contents);
+
+    /// Renders the `g` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement g(String text);
+
+    /// Renders the `h1` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement h1(Html.Instruction... contents);
+
+    /// Renders the `h1` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement h1(String text);
+
+    /// Renders the `h2` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement h2(Html.Instruction... contents);
+
+    /// Renders the `h2` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement h2(String text);
+
+    /// Renders the `h3` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement h3(Html.Instruction... contents);
+
+    /// Renders the `h3` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement h3(String text);
+
+    /// Renders the `h4` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement h4(Html.Instruction... contents);
+
+    /// Renders the `h4` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement h4(String text);
+
+    /// Renders the `h5` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement h5(Html.Instruction... contents);
+
+    /// Renders the `h5` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement h5(String text);
+
+    /// Renders the `h6` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement h6(Html.Instruction... contents);
+
+    /// Renders the `h6` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement h6(String text);
+
+    /// Renders the `head` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement head(Html.Instruction... contents);
+
+    /// Renders the `head` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement head(String text);
+
+    /// Renders the `header` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement header(Html.Instruction... contents);
+
+    /// Renders the `header` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement header(String text);
+
+    /// Renders the `hgroup` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement hgroup(Html.Instruction... contents);
+
+    /// Renders the `hgroup` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement hgroup(String text);
+
+    /// Renders the `hr` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement hr(Html.Instruction.OfVoid... contents);
+
+    /// Renders the `html` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement html(Html.Instruction... contents);
+
+    /// Renders the `html` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement html(String text);
+
+    /// Renders the `img` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement img(Html.Instruction.OfVoid... contents);
+
+    /// Renders the `input` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement input(Html.Instruction.OfVoid... contents);
+
+    /// Renders the `kbd` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement kbd(Html.Instruction... contents);
+
+    /// Renders the `kbd` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement kbd(String text);
+
+    /// Renders the `label` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement label(Html.Instruction... contents);
+
+    /// Renders the `label` attribute or element with the specified text.
+    /// @param text the text value of this attribute or element
+    /// @return an instruction representing the element
+    Html.Instruction.OfAmbiguous label(String text);
+
+    /// Renders the `legend` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement legend(Html.Instruction... contents);
+
+    /// Renders the `legend` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement legend(String text);
+
+    /// Renders the `li` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement li(Html.Instruction... contents);
+
+    /// Renders the `li` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement li(String text);
+
+    /// Renders the `link` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement link(Html.Instruction.OfVoid... contents);
+
+    /// Renders the `main` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement main(Html.Instruction... contents);
+
+    /// Renders the `main` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement main(String text);
+
+    /// Renders the `menu` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement menu(Html.Instruction... contents);
+
+    /// Renders the `menu` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement menu(String text);
+
+    /// Renders the `meta` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement meta(Html.Instruction.OfVoid... contents);
+
+    /// Renders the `nav` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement nav(Html.Instruction... contents);
+
+    /// Renders the `nav` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement nav(String text);
+
+    /// Renders the `ol` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement ol(Html.Instruction... contents);
+
+    /// Renders the `ol` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement ol(String text);
+
+    /// Renders the `optgroup` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement optgroup(Html.Instruction... contents);
+
+    /// Renders the `optgroup` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement optgroup(String text);
+
+    /// Renders the `option` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement option(Html.Instruction... contents);
+
+    /// Renders the `option` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement option(String text);
+
+    /// Renders the `p` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement p(Html.Instruction... contents);
+
+    /// Renders the `p` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement p(String text);
+
+    /// Renders the `path` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement path(Html.Instruction... contents);
+
+    /// Renders the `path` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement path(String text);
+
+    /// Renders the `pre` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement pre(Html.Instruction... contents);
+
+    /// Renders the `pre` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement pre(String text);
+
+    /// Renders the `progress` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement progress(Html.Instruction... contents);
+
+    /// Renders the `progress` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement progress(String text);
+
+    /// Renders the `samp` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement samp(Html.Instruction... contents);
+
+    /// Renders the `samp` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement samp(String text);
+
+    /// Renders the `script` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement script(Html.Instruction... contents);
+
+    /// Renders the `script` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement script(String text);
+
+    /// Renders the `section` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement section(Html.Instruction... contents);
+
+    /// Renders the `section` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement section(String text);
+
+    /// Renders the `select` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement select(Html.Instruction... contents);
+
+    /// Renders the `select` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement select(String text);
+
+    /// Renders the `small` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement small(Html.Instruction... contents);
+
+    /// Renders the `small` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement small(String text);
+
+    /// Renders the `span` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement span(Html.Instruction... contents);
+
+    /// Renders the `span` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement span(String text);
+
+    /// Renders the `strong` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement strong(Html.Instruction... contents);
+
+    /// Renders the `strong` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement strong(String text);
+
+    /// Renders the `style` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement style(Html.Instruction... contents);
+
+    /// Renders the `style` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement style(String text);
+
+    /// Renders the `sub` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement sub(Html.Instruction... contents);
+
+    /// Renders the `sub` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement sub(String text);
+
+    /// Renders the `summary` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement summary(Html.Instruction... contents);
+
+    /// Renders the `summary` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement summary(String text);
+
+    /// Renders the `sup` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement sup(Html.Instruction... contents);
+
+    /// Renders the `sup` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement sup(String text);
+
+    /// Renders the `svg` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement svg(Html.Instruction... contents);
+
+    /// Renders the `svg` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement svg(String text);
+
+    /// Renders the `table` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement table(Html.Instruction... contents);
+
+    /// Renders the `table` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement table(String text);
+
+    /// Renders the `tbody` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement tbody(Html.Instruction... contents);
+
+    /// Renders the `tbody` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement tbody(String text);
+
+    /// Renders the `td` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement td(Html.Instruction... contents);
+
+    /// Renders the `td` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement td(String text);
+
+    /// Renders the `template` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement template(Html.Instruction... contents);
+
+    /// Renders the `template` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement template(String text);
+
+    /// Renders the `textarea` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement textarea(Html.Instruction... contents);
+
+    /// Renders the `textarea` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement textarea(String text);
+
+    /// Renders the `th` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement th(Html.Instruction... contents);
+
+    /// Renders the `th` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement th(String text);
+
+    /// Renders the `thead` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement thead(Html.Instruction... contents);
+
+    /// Renders the `thead` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement thead(String text);
+
+    /// Renders the `title` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement title(Html.Instruction... contents);
+
+    /// Renders the `title` attribute or element with the specified text.
+    /// @param text the text value of this attribute or element
+    /// @return an instruction representing the element
+    Html.Instruction.OfAmbiguous title(String text);
+
+    /// Renders the `tr` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement tr(Html.Instruction... contents);
+
+    /// Renders the `tr` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement tr(String text);
+
+    /// Renders the `ul` element with the specified content.
+    /// @param contents the attributes and children of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement ul(Html.Instruction... contents);
+
+    /// Renders the `ul` element with the specified text.
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    Html.Instruction.OfElement ul(String text);
+
+  }
+
+  /// Defines the structure of an HTML document using pure Java (testable nodes).
+  public sealed interface MarkupTestable permits Markup {
+
+    /// Formats the specified value as a testable table cell with the specified
+    /// fixed width.
+    /// @param value the cell value
+    /// @param width the fixed width of the cell
+    /// @return always the cell value
+    String testableCell(String value, int width);
+
+    /// Formats the specified name and value as a testable field (optional
+    /// operation).
+    /// @param name the field name
+    /// @param value the field value
+    /// @return always the field value
+    String testableField(String name, String value);
+
+    /// Formats the specified name as a testable field name (optional operation).
+    /// @param name the field name
+    /// @return the specified field name
+    String testableFieldName(String name);
+
+    /// Formats the specified value as a testable field value (optional
+    /// operation).
+    /// @param value the field value
+    /// @return the specified field value
+    String testableFieldValue(String value);
+
+    /// Formats the specified value as a testable heading level 1 (optional
+    /// operation).
+    /// @param value the heading value
+    /// @return the specified value
+    String testableH1(String value);
+
+    /// Formats the specified value as a testable heading level 2 (optional
+    /// operation).
+    /// @param value the heading value
+    /// @return the specified value
+    String testableH2(String value);
+
+    /// Formats the specified value as a testable heading level 3 (optional
+    /// operation).
+    /// @param value the heading value
+    /// @return the specified value
+    String testableH3(String value);
+
+    /// Formats the specified value as a testable heading level 4 (optional
+    /// operation).
+    /// @param value the heading value
+    /// @return the specified value
+    String testableH4(String value);
+
+    /// Formats the specified value as a testable heading level 5 (optional
+    /// operation).
+    /// @param value the heading value
+    /// @return the specified value
+    String testableH5(String value);
+
+    /// Formats the specified value as a testable heading level 6 (optional
+    /// operation).
+    /// @param value the heading value
+    /// @return the specified value
+    String testableH6(String value);
+
+    /// Formats a line separator at the testable output exclusively.
+    Html.Instruction.NoOp testableNewLine();
+
+  }
+
+  /// Defines the structure of an HTML document using pure Java (text nodes).
+  public sealed interface MarkupText permits Markup {
+
+    /// The non-breaking space `&nbsp;` HTML character entity.
+    /// @return an instruction representing the non-breaking space character entity.
+    default Html.Instruction.OfElement nbsp() {
+      return raw("&nbsp;");
+    }
+
+    /// Renders the specified value as raw HTML.
+    /// @param value the raw HTML value
+    /// @return a raw HTML instruction
+    Html.Instruction.OfElement raw(String value);
+
+    /// Renders a text node with the specified `text` value. The text
+    /// value is escaped before being emitted to the output.
+    /// @param text the text value to be added
+    /// @return an instruction representing the text node
+    Html.Instruction.OfElement text(String text);
+
+  }
+
+  /// Defines the structure of an HTML document using pure Java (Objectos Way nodes).
+  public sealed interface MarkupWay permits Markup {
+
+    /// Renders the `class` attribute by processing the specified value.
+    ///
+    /// This method is designed to work with Java text blocks. It first removes
+    /// any leading and trailing whitespace. Additionally, any sequence of
+    /// consecutive whitespace characters is replaced by a single space
+    /// character.
+    ///
+    /// For example, the following invocation:
+    ///
+    /// ```java
+    /// css("""
+    ///     display:inline-flex
+    ///     justify-content:center
+    ///
+    ///     background-color:blue-500
+    ///     """);
+    /// ```
+    ///
+    /// Produces the same result as invoking
+    /// `className("display:inline-flex justify-content:center background-color:blue-500")`.
+    ///
+    /// @param value the text block containing class names, possibly spread across multiple lines
+    /// @return an instruction representing this attribute.
+    Html.Instruction.OfAttribute css(String value);
 
     /// Renders the `data-frame` attribute for a frame with the specified name and value.
     ///
@@ -1023,1361 +2564,20 @@ public final class Html {
 
     <T1, T2, T3, T4> Html.Instruction.OfFragment f(Html.Fragment.Of4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
 
-    /**
-     * Flattens the specified instructions so that each of the specified
-     * instructions is individually added, in order, to a receiving element.
-     *
-     * @param contents
-     *        the instructions to be flattened
-     *
-     * @return an instruction representing this flatten operation
-     */
+    /// Flattens the specified instructions so that each of the specified
+    /// instructions is individually added, in order, to a receiving element.
+    /// @param contents the instructions to be flattened
+    /// @return an instruction representing this flatten operation
     Html.Instruction.OfElement flatten(Html.Instruction... contents);
 
-    /**
-     * The non-breaking space {@code &nbsp;} HTML character entity.
-     *
-     * @return an instruction representing the non-breaking space character
-     *         entity.
-     */
-    default Html.Instruction.OfElement nbsp() {
-      return raw("&nbsp;");
-    }
-
-    /**
-     * The no-op instruction.
-     *
-     * @return the no-op instruction.
-     */
+    /// The no-op instruction.
+    /// @return the no-op instruction.
     Html.Instruction.NoOp noop();
 
-    /**
-     * Renders the specified value as raw HTML.
-     *
-     * @param value
-     *        the raw HTML value
-     *
-     * @return a raw HTML instruction
-     */
-    Html.Instruction.OfElement raw(String value);
-
-    /**
-     * Renders the specified component as part of this HTML instance.
-     *
-     * @param component
-     *        the component to be rendered as part of this HTML instance
-     *
-     * @return an instruction representing the rendered component.
-     */
+    /// Renders the specified component as part of this instance.
+    /// @param component the component to be rendered as part of this instance
+    /// @return an instruction representing the rendered component.
     Html.Instruction.OfFragment renderComponent(Html.Component component);
-
-    /**
-     * Renders a text node with the specified {@code text} value. The text
-     * value is escaped before being emitted to the output.
-     *
-     * @param text
-     *        the text value to be added
-     *
-     * @return an instruction representing the text node
-     */
-    Html.Instruction.OfElement text(String text);
-
-  }
-
-  /**
-   * Provides methods for defining the attributes of an HTML document.
-   */
-  public sealed interface MarkupAttributes permits Markup, HtmlMarkupAttributes {
-
-    /// Renders the `open` boolean attribute.
-    Html.AttributeObject open = AttributeObject.of(HtmlAttributeName.OPEN);
-
-    /**
-     * Renders an attribute with the specified name.
-     *
-     * @param name
-     *        the name of the attribute
-     *
-     * @return an instruction representing this attribute.
-     */
-    Html.Instruction.OfAttribute attr(Html.AttributeName name);
-
-    /**
-     * Renders an attribute with the specified name and value.
-     *
-     * @param name
-     *        the name of the attribute
-     * @param value
-     *        the value of the attribute
-     *
-     * @return an instruction representing this attribute.
-     */
-    Html.Instruction.OfAttribute attr(Html.AttributeName name, String value);
-
-    /// Renders the `accesskey` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute accesskey(String value);
-
-    /// Renders the `action` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute action(String value);
-
-    /// Renders the `align` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute align(String value);
-
-    /// Renders the `alignment-baseline` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute alignmentBaseline(String value);
-
-    /// Renders the `alt` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute alt(String value);
-
-    /// Renders the `aria-hidden` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute ariaHidden(String value);
-
-    /// Renders the `aria-label` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute ariaLabel(String value);
-
-    /// Renders the `as` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute as(String value);
-
-    /// Renders the `async` boolean attribute.
-    Html.Instruction.OfAttribute async();
-
-    /// Renders the `autocomplete` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute autocomplete(String value);
-
-    /// Renders the `autofocus` boolean attribute.
-    Html.Instruction.OfAttribute autofocus();
-
-    /// Renders the `baseline-shift` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute baselineShift(String value);
-
-    /// Renders the `border` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute border(String value);
-
-    /// Renders the `cellpadding` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute cellpadding(String value);
-
-    /// Renders the `cellspacing` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute cellspacing(String value);
-
-    /// Renders the `charset` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute charset(String value);
-
-    /// Renders the `checked` boolean attribute.
-    Html.Instruction.OfAttribute checked();
-
-    /// Renders the `cite` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute cite(String value);
-
-    /// Renders the `class` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute className(String value);
-
-    /// Renders the `clip-rule` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute clipRule(String value);
-
-    /// Renders the `closedby` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute closedby(String value);
-
-    /// Renders the `color` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute color(String value);
-
-    /// Renders the `color-interpolation` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute colorInterpolation(String value);
-
-    /// Renders the `color-interpolation-filters` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute colorInterpolationFilters(String value);
-
-    /// Renders the `cols` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute cols(String value);
-
-    /// Renders the `content` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute content(String value);
-
-    /// Renders the `contenteditable` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute contenteditable(String value);
-
-    /// Renders the `crossorigin` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute crossorigin(String value);
-
-    /// Renders the `cursor` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute cursor(String value);
-
-    /// Renders the `d` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute d(String value);
-
-    /// Renders the `defer` boolean attribute.
-    Html.Instruction.OfAttribute defer();
-
-    /// Renders the `dir` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute dir(String value);
-
-    /// Renders the `direction` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute direction(String value);
-
-    /// Renders the `dirname` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute dirname(String value);
-
-    /// Renders the `disabled` boolean attribute.
-    Html.Instruction.OfAttribute disabled();
-
-    /// Renders the `display` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute display(String value);
-
-    /// Renders the `dominant-baseline` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute dominantBaseline(String value);
-
-    /// Renders the `draggable` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute draggable(String value);
-
-    /// Renders the `enctype` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute enctype(String value);
-
-    /// Renders the `fill` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute fill(String value);
-
-    /// Renders the `fill-opacity` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute fillOpacity(String value);
-
-    /// Renders the `fill-rule` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute fillRule(String value);
-
-    /// Renders the `filter` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute filter(String value);
-
-    /// Renders the `flood-color` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute floodColor(String value);
-
-    /// Renders the `flood-opacity` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute floodOpacity(String value);
-
-    /// Renders the `for` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute forAttr(String value);
-
-    /// Renders the `for` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute forElement(String value);
-
-    /// Renders the `glyph-orientation-horizontal` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute glyphOrientationHorizontal(String value);
-
-    /// Renders the `glyph-orientation-vertical` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute glyphOrientationVertical(String value);
-
-    /// Renders the `height` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute height(String value);
-
-    /// Renders the `hidden` boolean attribute.
-    Html.Instruction.OfAttribute hidden();
-
-    /// Renders the `href` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute href(String value);
-
-    /// Renders the `http-equiv` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute httpEquiv(String value);
-
-    /// Renders the `id` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute id(String value);
-
-    /// Renders the `image-rendering` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute imageRendering(String value);
-
-    /// Renders the `integrity` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute integrity(String value);
-
-    /// Renders the `lang` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute lang(String value);
-
-    /// Renders the `letter-spacing` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute letterSpacing(String value);
-
-    /// Renders the `lighting-color` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute lightingColor(String value);
-
-    /// Renders the `marker-end` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute markerEnd(String value);
-
-    /// Renders the `marker-mid` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute markerMid(String value);
-
-    /// Renders the `marker-start` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute markerStart(String value);
-
-    /// Renders the `mask` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute mask(String value);
-
-    /// Renders the `mask-type` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute maskType(String value);
-
-    /// Renders the `maxlength` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute maxlength(String value);
-
-    /// Renders the `media` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute media(String value);
-
-    /// Renders the `method` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute method(String value);
-
-    /// Renders the `minlength` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute minlength(String value);
-
-    /// Renders the `multiple` boolean attribute.
-    Html.Instruction.OfAttribute multiple();
-
-    /// Renders the `name` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute name(String value);
-
-    /// Renders the `nomodule` boolean attribute.
-    Html.Instruction.OfAttribute nomodule();
-
-    /// Renders the `onafterprint` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute onafterprint(String value);
-
-    /// Renders the `onbeforeprint` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute onbeforeprint(String value);
-
-    /// Renders the `onbeforeunload` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute onbeforeunload(String value);
-
-    /// Renders the `onclick` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute onclick(String value);
-
-    /// Renders the `onhashchange` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute onhashchange(String value);
-
-    /// Renders the `onlanguagechange` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute onlanguagechange(String value);
-
-    /// Renders the `onmessage` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute onmessage(String value);
-
-    /// Renders the `onoffline` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute onoffline(String value);
-
-    /// Renders the `ononline` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute ononline(String value);
-
-    /// Renders the `onpagehide` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute onpagehide(String value);
-
-    /// Renders the `onpageshow` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute onpageshow(String value);
-
-    /// Renders the `onpopstate` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute onpopstate(String value);
-
-    /// Renders the `onrejectionhandled` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute onrejectionhandled(String value);
-
-    /// Renders the `onstorage` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute onstorage(String value);
-
-    /// Renders the `onsubmit` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute onsubmit(String value);
-
-    /// Renders the `onunhandledrejection` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute onunhandledrejection(String value);
-
-    /// Renders the `onunload` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute onunload(String value);
-
-    /// Renders the `opacity` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute opacity(String value);
-
-    /// Renders the `overflow` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute overflow(String value);
-
-    /// Renders the `paint-order` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute paintOrder(String value);
-
-    /// Renders the `placeholder` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute placeholder(String value);
-
-    /// Renders the `pointer-events` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute pointerEvents(String value);
-
-    /// Renders the `property` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute property(String value);
-
-    /// Renders the `readonly` boolean attribute.
-    Html.Instruction.OfAttribute readonly();
-
-    /// Renders the `referrerpolicy` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute referrerpolicy(String value);
-
-    /// Renders the `rel` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute rel(String value);
-
-    /// Renders the `required` boolean attribute.
-    Html.Instruction.OfAttribute required();
-
-    /// Renders the `rev` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute rev(String value);
-
-    /// Renders the `reversed` boolean attribute.
-    Html.Instruction.OfAttribute reversed();
-
-    /// Renders the `role` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute role(String value);
-
-    /// Renders the `rows` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute rows(String value);
-
-    /// Renders the `selected` boolean attribute.
-    Html.Instruction.OfAttribute selected();
-
-    /// Renders the `shape-rendering` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute shapeRendering(String value);
-
-    /// Renders the `size` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute size(String value);
-
-    /// Renders the `sizes` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute sizes(String value);
-
-    /// Renders the `spellcheck` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute spellcheck(String value);
-
-    /// Renders the `src` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute src(String value);
-
-    /// Renders the `srcset` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute srcset(String value);
-
-    /// Renders the `start` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute start(String value);
-
-    /// Renders the `stop-color` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute stopColor(String value);
-
-    /// Renders the `stop-opacity` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute stopOpacity(String value);
-
-    /// Renders the `stroke` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute stroke(String value);
-
-    /// Renders the `stroke-dasharray` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute strokeDasharray(String value);
-
-    /// Renders the `stroke-dashoffset` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute strokeDashoffset(String value);
-
-    /// Renders the `stroke-linecap` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute strokeLinecap(String value);
-
-    /// Renders the `stroke-linejoin` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute strokeLinejoin(String value);
-
-    /// Renders the `stroke-miterlimit` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute strokeMiterlimit(String value);
-
-    /// Renders the `stroke-opacity` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute strokeOpacity(String value);
-
-    /// Renders the `stroke-width` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute strokeWidth(String value);
-
-    /// Renders the `style` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute inlineStyle(String value);
-
-    /// Renders the `tabindex` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute tabindex(String value);
-
-    /// Renders the `target` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute target(String value);
-
-    /// Renders the `text-anchor` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute textAnchor(String value);
-
-    /// Renders the `text-decoration` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute textDecoration(String value);
-
-    /// Renders the `text-overflow` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute textOverflow(String value);
-
-    /// Renders the `text-rendering` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute textRendering(String value);
-
-    /// Renders the `transform` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute transform(String value);
-
-    /// Renders the `transform-origin` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute transformOrigin(String value);
-
-    /// Renders the `translate` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute translate(String value);
-
-    /// Renders the `type` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute type(String value);
-
-    /// Renders the `unicode-bidi` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute unicodeBidi(String value);
-
-    /// Renders the `value` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute value(String value);
-
-    /// Renders the `vector-effect` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute vectorEffect(String value);
-
-    /// Renders the `viewBox` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute viewBox(String value);
-
-    /// Renders the `visibility` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute visibility(String value);
-
-    /// Renders the `white-space` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute whiteSpace(String value);
-
-    /// Renders the `width` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute width(String value);
-
-    /// Renders the `word-spacing` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute wordSpacing(String value);
-
-    /// Renders the `wrap` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute wrap(String value);
-
-    /// Renders the `writing-mode` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute writingMode(String value);
-
-    /// Renders the `xmlns` attribute with the specified value.
-    /// @param value the value of the attribute
-    Html.Instruction.OfAttribute xmlns(String value);
-
-  }
-
-  /**
-   * Provides methods for defining the elements of an HTML document.
-   */
-  public sealed interface MarkupElements permits Markup, HtmlMarkupElements {
-
-    /**
-     * Renders the {@code <!DOCTYPE html>} doctype.
-     */
-    void doctype();
-
-    /**
-     * Renders the {@code a} element with the specified content.
-     *
-     * @param contents
-     *        the attributes and children of this element
-     *
-     * @return an instruction representing this element.
-     */
-    Html.Instruction.OfElement a(Html.Instruction... contents);
-
-    /**
-     * Renders the {@code a} element with the specified text.
-     *
-     * @param text
-     *        the text value of this element
-     *
-     * @return an instruction representing this element.
-     */
-    Html.Instruction.OfElement a(String text);
-
-    /**
-     * Renders the {@code abbr} element with the specified content.
-     *
-     * @param contents
-     *        the attributes and children of this element
-     *
-     * @return an instruction representing this element.
-     */
-    Html.Instruction.OfElement abbr(Html.Instruction... contents);
-
-    /**
-     * Renders the {@code abbr} element with the specified text.
-     *
-     * @param text
-     *        the text value of this element
-     *
-     * @return an instruction representing this element.
-     */
-    Html.Instruction.OfElement abbr(String text);
-
-    /**
-     * Renders the {@code article} element with the specified content.
-     *
-     * @param contents
-     *        the attributes and children of this element
-     *
-     * @return an instruction representing this element.
-     */
-    Html.Instruction.OfElement article(Html.Instruction... contents);
-
-    /**
-     * Renders the {@code article} element with the specified text.
-     *
-     * @param text
-     *        the text value of this element
-     *
-     * @return an instruction representing this element.
-     */
-    Html.Instruction.OfElement article(String text);
-
-    /**
-     * Renders the {@code aside} element with the specified content.
-     *
-     * @param contents
-     *        the attributes and children of this element
-     *
-     * @return an instruction representing this element.
-     */
-    Html.Instruction.OfElement aside(Html.Instruction... contents);
-
-    /**
-     * Renders the {@code aside} element with the specified text.
-     *
-     * @param text
-     *        the text value of this element
-     *
-     * @return an instruction representing this element.
-     */
-    Html.Instruction.OfElement aside(String text);
-
-    /// Renders the `b` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement b(Html.Instruction... contents);
-
-    /// Renders the `b` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement b(String text);
-
-    /// Renders the `blockquote` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement blockquote(Html.Instruction... contents);
-
-    /// Renders the `blockquote` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement blockquote(String text);
-
-    /// Renders the `body` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement body(Html.Instruction... contents);
-
-    /// Renders the `body` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement body(String text);
-
-    /// Renders the `br` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement br(Html.Instruction.OfVoid... contents);
-
-    /// Renders the `button` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement button(Html.Instruction... contents);
-
-    /// Renders the `button` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement button(String text);
-
-    /// Renders the `clipPath` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement clipPath(Html.Instruction... contents);
-
-    /// Renders the `clipPath` attribute or element with the specified
-    /// text.
-    /// @param text the text value of this attribute or element
-    Html.Instruction.OfAmbiguous clipPath(String text);
-
-    /// Renders the `code` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement code(Html.Instruction... contents);
-
-    /// Renders the `code` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement code(String text);
-
-    /// Renders the `dd` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement dd(Html.Instruction... contents);
-
-    /// Renders the `dd` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement dd(String text);
-
-    /// Renders the `defs` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement defs(Html.Instruction... contents);
-
-    /// Renders the `defs` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement defs(String text);
-
-    /// Renders the `details` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement details(Html.Instruction... contents);
-
-    /// Renders the `details` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement details(String text);
-
-    /// Renders the `dialog` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement dialog(Html.Instruction... contents);
-
-    /// Renders the `dialog` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement dialog(String text);
-
-    /// Renders the `div` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement div(Html.Instruction... contents);
-
-    /// Renders the `div` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement div(String text);
-
-    /// Renders the `dl` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement dl(Html.Instruction... contents);
-
-    /// Renders the `dl` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement dl(String text);
-
-    /// Renders the `dt` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement dt(Html.Instruction... contents);
-
-    /// Renders the `dt` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement dt(String text);
-
-    /// Renders the `em` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement em(Html.Instruction... contents);
-
-    /// Renders the `em` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement em(String text);
-
-    /// Renders the `fieldset` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement fieldset(Html.Instruction... contents);
-
-    /// Renders the `fieldset` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement fieldset(String text);
-
-    /// Renders the `figure` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement figure(Html.Instruction... contents);
-
-    /// Renders the `figure` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement figure(String text);
-
-    /// Renders the `footer` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement footer(Html.Instruction... contents);
-
-    /// Renders the `footer` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement footer(String text);
-
-    /// Renders the `form` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement form(Html.Instruction... contents);
-
-    /// Renders the `form` attribute or element with the specified text.
-    /// @param text the text value of this attribute or element
-    Html.Instruction.OfAmbiguous form(String text);
-
-    /// Renders the `g` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement g(Html.Instruction... contents);
-
-    /// Renders the `g` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement g(String text);
-
-    /// Renders the `h1` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement h1(Html.Instruction... contents);
-
-    /// Renders the `h1` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement h1(String text);
-
-    /// Renders the `h2` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement h2(Html.Instruction... contents);
-
-    /// Renders the `h2` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement h2(String text);
-
-    /// Renders the `h3` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement h3(Html.Instruction... contents);
-
-    /// Renders the `h3` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement h3(String text);
-
-    /// Renders the `h4` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement h4(Html.Instruction... contents);
-
-    /// Renders the `h4` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement h4(String text);
-
-    /// Renders the `h5` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement h5(Html.Instruction... contents);
-
-    /// Renders the `h5` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement h5(String text);
-
-    /// Renders the `h6` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement h6(Html.Instruction... contents);
-
-    /// Renders the `h6` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement h6(String text);
-
-    /// Renders the `head` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement head(Html.Instruction... contents);
-
-    /// Renders the `head` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement head(String text);
-
-    /// Renders the `header` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement header(Html.Instruction... contents);
-
-    /// Renders the `header` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement header(String text);
-
-    /// Renders the `hgroup` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement hgroup(Html.Instruction... contents);
-
-    /// Renders the `hgroup` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement hgroup(String text);
-
-    /// Renders the `hr` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement hr(Html.Instruction.OfVoid... contents);
-
-    /// Renders the `html` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement html(Html.Instruction... contents);
-
-    /// Renders the `html` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement html(String text);
-
-    /// Renders the `img` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement img(Html.Instruction.OfVoid... contents);
-
-    /// Renders the `input` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement input(Html.Instruction.OfVoid... contents);
-
-    /// Renders the `kbd` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement kbd(Html.Instruction... contents);
-
-    /// Renders the `kbd` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement kbd(String text);
-
-    /// Renders the `label` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement label(Html.Instruction... contents);
-
-    /// Renders the `label` attribute or element with the specified text.
-    /// @param text the text value of this attribute or element
-    Html.Instruction.OfAmbiguous label(String text);
-
-    /// Renders the `legend` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement legend(Html.Instruction... contents);
-
-    /// Renders the `legend` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement legend(String text);
-
-    /// Renders the `li` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement li(Html.Instruction... contents);
-
-    /// Renders the `li` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement li(String text);
-
-    /// Renders the `link` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement link(Html.Instruction.OfVoid... contents);
-
-    /// Renders the `main` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement main(Html.Instruction... contents);
-
-    /// Renders the `main` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement main(String text);
-
-    /// Renders the `menu` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement menu(Html.Instruction... contents);
-
-    /// Renders the `menu` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement menu(String text);
-
-    /// Renders the `meta` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement meta(Html.Instruction.OfVoid... contents);
-
-    /// Renders the `nav` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement nav(Html.Instruction... contents);
-
-    /// Renders the `nav` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement nav(String text);
-
-    /// Renders the `ol` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement ol(Html.Instruction... contents);
-
-    /// Renders the `ol` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement ol(String text);
-
-    /// Renders the `optgroup` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement optgroup(Html.Instruction... contents);
-
-    /// Renders the `optgroup` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement optgroup(String text);
-
-    /// Renders the `option` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement option(Html.Instruction... contents);
-
-    /// Renders the `option` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement option(String text);
-
-    /// Renders the `p` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement p(Html.Instruction... contents);
-
-    /// Renders the `p` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement p(String text);
-
-    /// Renders the `path` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement path(Html.Instruction... contents);
-
-    /// Renders the `path` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement path(String text);
-
-    /// Renders the `pre` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement pre(Html.Instruction... contents);
-
-    /// Renders the `pre` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement pre(String text);
-
-    /// Renders the `progress` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement progress(Html.Instruction... contents);
-
-    /// Renders the `progress` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement progress(String text);
-
-    /// Renders the `samp` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement samp(Html.Instruction... contents);
-
-    /// Renders the `samp` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement samp(String text);
-
-    /// Renders the `script` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement script(Html.Instruction... contents);
-
-    /// Renders the `script` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement script(String text);
-
-    /// Renders the `section` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement section(Html.Instruction... contents);
-
-    /// Renders the `section` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement section(String text);
-
-    /// Renders the `select` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement select(Html.Instruction... contents);
-
-    /// Renders the `select` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement select(String text);
-
-    /// Renders the `small` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement small(Html.Instruction... contents);
-
-    /// Renders the `small` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement small(String text);
-
-    /// Renders the `span` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement span(Html.Instruction... contents);
-
-    /// Renders the `span` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement span(String text);
-
-    /// Renders the `strong` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement strong(Html.Instruction... contents);
-
-    /// Renders the `strong` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement strong(String text);
-
-    /// Renders the `style` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement style(Html.Instruction... contents);
-
-    /// Renders the `style` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement style(String text);
-
-    /// Renders the `sub` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement sub(Html.Instruction... contents);
-
-    /// Renders the `sub` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement sub(String text);
-
-    /// Renders the `summary` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement summary(Html.Instruction... contents);
-
-    /// Renders the `summary` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement summary(String text);
-
-    /// Renders the `sup` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement sup(Html.Instruction... contents);
-
-    /// Renders the `sup` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement sup(String text);
-
-    /// Renders the `svg` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement svg(Html.Instruction... contents);
-
-    /// Renders the `svg` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement svg(String text);
-
-    /// Renders the `table` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement table(Html.Instruction... contents);
-
-    /// Renders the `table` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement table(String text);
-
-    /// Renders the `tbody` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement tbody(Html.Instruction... contents);
-
-    /// Renders the `tbody` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement tbody(String text);
-
-    /// Renders the `td` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement td(Html.Instruction... contents);
-
-    /// Renders the `td` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement td(String text);
-
-    /// Renders the `template` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement template(Html.Instruction... contents);
-
-    /// Renders the `template` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement template(String text);
-
-    /// Renders the `textarea` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement textarea(Html.Instruction... contents);
-
-    /// Renders the `textarea` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement textarea(String text);
-
-    /// Renders the `th` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement th(Html.Instruction... contents);
-
-    /// Renders the `th` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement th(String text);
-
-    /// Renders the `thead` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement thead(Html.Instruction... contents);
-
-    /// Renders the `thead` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement thead(String text);
-
-    /// Renders the `title` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement title(Html.Instruction... contents);
-
-    /// Renders the `title` attribute or element with the specified text.
-    /// @param text the text value of this attribute or element
-    Html.Instruction.OfAmbiguous title(String text);
-
-    /// Renders the `tr` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement tr(Html.Instruction... contents);
-
-    /// Renders the `tr` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement tr(String text);
-
-    /// Renders the `ul` element with the specified content.
-    /// @param contents the attributes and children of this element
-    Html.Instruction.OfElement ul(Html.Instruction... contents);
-
-    /// Renders the `ul` element with the specified text.
-    /// @param text the text value of this element
-    Html.Instruction.OfElement ul(String text);
-
-  }
-
-  /**
-   * Provides methods for formatting testable nodes during the rendering of an
-   * HTML document.
-   */
-  public sealed interface MarkupTestable permits Markup {
-
-    /// Formats the specified value as a testable table cell with the specified
-    /// fixed width.
-    /// @param value the cell value
-    /// @param width the fixed width of the cell
-    /// @return always the cell value
-    String testableCell(String value, int width);
-
-    /// Formats the specified name and value as a testable field (optional
-    /// operation).
-    /// @param name the field name
-    /// @param value the field value
-    /// @return always the field value
-    String testableField(String name, String value);
-
-    /// Formats the specified name as a testable field name (optional operation).
-    /// @param name the field name
-    /// @return the specified field name
-    String testableFieldName(String name);
-
-    /// Formats the specified value as a testable field value (optional
-    /// operation).
-    /// @param value the field value
-    /// @return the specified field value
-    String testableFieldValue(String value);
-
-    /// Formats the specified value as a testable heading level 1 (optional
-    /// operation).
-    /// @param value the heading value
-    /// @return the specified value
-    String testableH1(String value);
-
-    /// Formats the specified value as a testable heading level 2 (optional
-    /// operation).
-    /// @param value the heading value
-    /// @return the specified value
-    String testableH2(String value);
-
-    /// Formats the specified value as a testable heading level 3 (optional
-    /// operation).
-    /// @param value the heading value
-    /// @return the specified value
-    String testableH3(String value);
-
-    /// Formats the specified value as a testable heading level 4 (optional
-    /// operation).
-    /// @param value the heading value
-    /// @return the specified value
-    String testableH4(String value);
-
-    /// Formats the specified value as a testable heading level 5 (optional
-    /// operation).
-    /// @param value the heading value
-    /// @return the specified value
-    String testableH5(String value);
-
-    /// Formats the specified value as a testable heading level 6 (optional
-    /// operation).
-    /// @param value the heading value
-    /// @return the specified value
-    String testableH6(String value);
-
-    /// Formats a line separator at the testable output exclusively.
-    Html.Instruction.NoOp testableNewLine();
 
   }
 

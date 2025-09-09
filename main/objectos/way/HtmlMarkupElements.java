@@ -21,10 +21,6 @@ sealed abstract class HtmlMarkupElements extends HtmlMarkupAttributes implements
 
   abstract Html.Instruction.OfAmbiguous ambiguous(HtmlAmbiguous name, String value);
 
-  abstract Html.Instruction.OfElement element(Html.ElementName name, Html.Instruction... contents);
-
-  abstract Html.Instruction.OfElement element(Html.ElementName name, String text);
-
   @Override
   public final Html.Instruction.OfElement a(Html.Instruction... contents) {
     return element(HtmlElementName.A, contents);

@@ -28,7 +28,6 @@ sealed abstract class HtmlMarkupAttributes implements Html.MarkupAttributes perm
   @Override
   public final Html.Instruction.OfAttribute attr(Html.AttributeName name) {
     Objects.requireNonNull(name, "name == null");
-
     return attribute0(name);
   }
 
@@ -36,7 +35,6 @@ sealed abstract class HtmlMarkupAttributes implements Html.MarkupAttributes perm
   public final Html.Instruction.OfAttribute attr(Html.AttributeName name, String value) {
     Objects.requireNonNull(name, "name == null");
     Objects.requireNonNull(value, "value == null");
-
     return attribute0(name, value);
   }
 
