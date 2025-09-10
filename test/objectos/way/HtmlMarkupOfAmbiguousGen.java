@@ -15,11 +15,11 @@
  */
 package objectos.way;
 
-public class HtmlMarkupAmbiguousGen {
+public class HtmlMarkupOfAmbiguousGen {
   private String methods;
 
   public static void main(String[] args) {
-    System.out.println(new HtmlMarkupAmbiguousGen());
+    System.out.println(new HtmlMarkupOfAmbiguousGen());
   }
 
   @Override
@@ -28,8 +28,8 @@ public class HtmlMarkupAmbiguousGen {
 
     return """
     /// Declares the structure of an HTML document using pure Java (ambiguous nodes).
-    public sealed static abstract class MarkupAmbiguous extends MarkupText {
-      MarkupAmbiguous() {}
+    public sealed static abstract class MarkupOfAmbiguous extends MarkupOfText {
+      MarkupOfAmbiguous() {}
 
       abstract Html.Instruction.OfAmbiguous ambiguous(HtmlAmbiguous name, String value);
     %s

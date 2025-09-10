@@ -692,7 +692,7 @@ public final class Html {
      * @return a newly constructed {@code Id} instance
      */
     static Id of(String value) {
-      Check.notNull(value, "value == null");
+      Objects.requireNonNull(value, "value == null");
 
       return new HtmlId(value);
     }
@@ -861,22 +861,6 @@ public final class Html {
       extends MarkupAttributes, MarkupElements, MarkupTestable, MarkupText, MarkupWay
       permits HtmlMarkup, HtmlMarkupOfTestable {
 
-  }
-
-  /// Defines the structure of an HTML document using pure Java (attributes).
-  public sealed interface MarkupAttributes permits Markup, HtmlMarkupAttributes {
-
-    /// Renders an attribute with the specified name.
-    /// @param name the name of the attribute
-    /// @return an instruction representing this attribute.
-    Html.Instruction.OfAttribute attr(Html.AttributeName name);
-
-    /// Renders an attribute with the specified name and value.
-    /// @param name the name of the attribute
-    /// @param value the value of the attribute
-    /// @return an instruction representing this attribute.
-    Html.Instruction.OfAttribute attr(Html.AttributeName name, String value);
-
     //
     // Objectos Way attributes
     //
@@ -911,6 +895,22 @@ public final class Html {
     /// @param script the script to be executed
     /// @return an instruction representing the attribute
     Html.Instruction.OfDataOn dataOnSuccess(Consumer<Script> script);
+
+  }
+
+  /// Defines the structure of an HTML document using pure Java (attributes).
+  public sealed interface MarkupAttributes permits Markup, HtmlMarkupAttributes {
+
+    /// Renders an attribute with the specified name.
+    /// @param name the name of the attribute
+    /// @return an instruction representing this attribute.
+    Html.Instruction.OfAttribute attr(Html.AttributeName name);
+
+    /// Renders an attribute with the specified name and value.
+    /// @param name the name of the attribute
+    /// @param value the value of the attribute
+    /// @return an instruction representing this attribute.
+    Html.Instruction.OfAttribute attr(Html.AttributeName name, String value);
 
     //
     // HTML attributes

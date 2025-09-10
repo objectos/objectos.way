@@ -17,13 +17,13 @@ package objectos.way;
 
 import java.util.Set;
 
-public class HtmlMarkupAttributesGen {
+public class HtmlMarkupOfAttributeGen {
   private String booleanAttrs;
 
   private String regularAttrs;
 
   public static void main(String[] args) {
-    System.out.println(new HtmlMarkupAttributesGen());
+    System.out.println(new HtmlMarkupOfAttributeGen());
   }
 
   @Override
@@ -32,9 +32,9 @@ public class HtmlMarkupAttributesGen {
 
     return """
     /// Declares the structure of an HTML document using pure Java (attributes).
-    public sealed static abstract class MarkupAttributes extends MarkupAmbiguous {
+    public sealed static abstract class MarkupOfAttribute extends MarkupOfAmbiguous {
     %s
-      MarkupAttributes() {}
+      MarkupOfAttribute() {}
 
       abstract Html.Instruction.OfAttribute attribute0(Html.AttributeName name);
 

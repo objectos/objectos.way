@@ -18,11 +18,11 @@ package objectos.way;
 import java.util.Set;
 import objectos.way.HtmlSpec.ElementSpec;
 
-public class HtmlMarkupElementsGen {
+public class HtmlMarkupOfElementGen {
   private String methods;
 
   public static void main(String[] args) {
-    System.out.println(new HtmlMarkupElementsGen());
+    System.out.println(new HtmlMarkupOfElementGen());
   }
 
   @Override
@@ -31,9 +31,9 @@ public class HtmlMarkupElementsGen {
 
     return """
     /// Declares the structure of an HTML document using pure Java (elements).
-    public sealed static abstract class MarkupElements extends MarkupAttributes {
+    public sealed static abstract class MarkupOfElement extends MarkupOfAttribute {
 
-      MarkupElements() {}
+      MarkupOfElement() {}
     %s
     }
     """.formatted(methods);
