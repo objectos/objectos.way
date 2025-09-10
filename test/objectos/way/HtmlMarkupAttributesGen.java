@@ -29,6 +29,7 @@ public class HtmlMarkupAttributesGen {
     prepare();
 
     return """
+    /// Declares the structure of an HTML document using pure Java (attributes).
     public sealed static abstract class MarkupAttributes extends MarkupText {
     %s
       MarkupAttributes() {}
@@ -37,7 +38,7 @@ public class HtmlMarkupAttributesGen {
 
       abstract Html.AttributeOrNoOp attribute0(Html.AttributeName name, Object value);
 
-      /// Defines an attribute with the specified name.
+      /// Declares an attribute with the specified name.
       /// @param name the attribute name
       /// @return an instruction representing the attribute
       public final Html.Instruction.OfAttribute attr(Html.AttributeName name) {
@@ -45,7 +46,7 @@ public class HtmlMarkupAttributesGen {
         return attribute0(name);
       }
 
-      /// Defines an attribute with the specified name and value.
+      /// Declares an attribute with the specified name and value.
       /// @param name the attribute name
       /// @param value the attribute value
       /// @return an instruction representing the attribute
@@ -60,9 +61,11 @@ public class HtmlMarkupAttributesGen {
   }
 
   private void prepare() {
-    final StringBuilder booleanBuilder = new StringBuilder();
+    final StringBuilder booleanBuilder;
+    booleanBuilder = new StringBuilder();
 
-    final StringBuilder regularBuilder = new StringBuilder();
+    final StringBuilder regularBuilder;
+    regularBuilder = new StringBuilder();
 
     for (HtmlSpec.AttributeSpec attr : HtmlSpec.attributes()) {
       if (attr.booleanAttribute()) {
@@ -71,10 +74,12 @@ public class HtmlMarkupAttributesGen {
           /// The `%s` boolean attribute.
           public static final Html.AttributeObject %s = Html.AttributeObject.of(Html.AttributeName.%s);
         """.formatted(attr.htmlName(), attr.methodName(), attr.constantName()));
-      } else {
+      }
+
+      else {
         regularBuilder.append("""
 
-          /// Defines the `%s` attribute with the specified value.
+          /// Declares the `%s` attribute with the specified value.
           /// @param value the attribute value
           /// @return an instruction representing the attribute
           public final Html.Instruction.OfAttribute %s(String value) {

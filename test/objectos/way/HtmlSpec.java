@@ -16,6 +16,7 @@
 package objectos.way;
 
 import java.util.List;
+import java.util.Set;
 
 final class HtmlSpec {
 
@@ -27,7 +28,20 @@ final class HtmlSpec {
     }
   }
 
-  record ElementSpec(String javaName, String htmlName, boolean endTag) {}
+  record ElementSpec(String javaName, String htmlName, boolean endTag)
+      implements Comparable<ElementSpec> {
+    @Override
+    public int compareTo(ElementSpec that) {
+      return javaName.compareTo(that.javaName);
+    }
+  }
+
+  static final Set<String> AMBIGUOUS = Set.of(
+      "clipPath",
+      "form",
+      "label",
+      "title"
+  );
 
   private HtmlSpec() {}
 
@@ -187,6 +201,10 @@ final class HtmlSpec {
   }
 
   static List<ElementSpec> elements() {
+    return elements0().stream().sorted().toList();
+  }
+
+  private static List<ElementSpec> elements0() {
     return List.of(
         new ElementSpec("A", "a", true),
         new ElementSpec("ABBR", "abbr", true),
