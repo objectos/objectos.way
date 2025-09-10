@@ -21,33 +21,20 @@ import java.util.stream.Collectors;
 
 final class HtmlSpec {
 
-  record AmbiguousSpec(String constantName, String methodName, String attributeName, String elementName) {}
-
-  record AttributeSpec(String constantName, String methodName, String htmlName, boolean booleanAttribute)
-      implements Comparable<AttributeSpec> {
-    @Override
-    public int compareTo(AttributeSpec that) {
-      return constantName.compareTo(that.constantName);
-    }
-  }
-
-  record ElementSpec(String javaName, String htmlName, boolean endTag)
-      implements Comparable<ElementSpec> {
-    @Override
-    public int compareTo(ElementSpec that) {
-      return javaName.compareTo(that.javaName);
-    }
-  }
-
-  record TestableSpec(String sig, String javadocs) {}
-
   private HtmlSpec() {}
+
+  // ##################################################################
+  // # BEGIN: Ambiguous
+  // ##################################################################
+
+  record AmbiguousSpec(String constantName, String methodName, String attributeName, String elementName) {}
 
   static List<AmbiguousSpec> ambiguous() {
     return List.of(
         new AmbiguousSpec("CLIPPATH", "clipPath", "clip-path", "clipPath"),
         new AmbiguousSpec("FORM", "form", "form", "form"),
         new AmbiguousSpec("LABEL", "label", "label", "label"),
+        new AmbiguousSpec("STYLE", "style", "style", "style"),
         new AmbiguousSpec("TITLE", "title", "title", "title")
     );
   }
@@ -58,6 +45,22 @@ final class HtmlSpec {
 
   static Set<String> ambiguousElemNames() {
     return ambiguous().stream().map(AmbiguousSpec::elementName).collect(Collectors.toUnmodifiableSet());
+  }
+
+  // ##################################################################
+  // # END: Ambiguous
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Attribute
+  // ##################################################################
+
+  record AttributeSpec(String constantName, String methodName, String htmlName, boolean booleanAttribute)
+      implements Comparable<AttributeSpec> {
+    @Override
+    public int compareTo(AttributeSpec that) {
+      return constantName.compareTo(that.constantName);
+    }
   }
 
   static List<AttributeSpec> attributes() {
@@ -84,7 +87,7 @@ final class HtmlSpec {
         new AttributeSpec("CHARSET", "charset", "charset", false),
         new AttributeSpec("CHECKED", "checked", "checked", true),
         new AttributeSpec("CITE", "cite", "cite", false),
-        new AttributeSpec("CLASS", "class", "class", false),
+        new AttributeSpec("CLASS", "className", "class", false),
         new AttributeSpec("CLIP_PATH", "clipPath", "clip-path", false),
         new AttributeSpec("CLIP_RULE", "clipRule", "clip-rule", false),
         new AttributeSpec("CLOSEDBY", "closedby", "closedby", false),
@@ -112,7 +115,7 @@ final class HtmlSpec {
         new AttributeSpec("FILTER", "filter", "filter", false),
         new AttributeSpec("FLOOD_COLOR", "floodColor", "flood-color", false),
         new AttributeSpec("FLOOD_OPACITY", "floodOpacity", "flood-opacity", false),
-        new AttributeSpec("FOR", "for", "for", false),
+        new AttributeSpec("FOR", "forId", "for", false),
         new AttributeSpec("FORM", "form", "form", false),
         new AttributeSpec("GLYPH_ORIENTATION_HORIZONTAL", "glyphOrientationHorizontal", "glyph-orientation-horizontal", false),
         new AttributeSpec("GLYPH_ORIENTATION_VERTICAL", "glyphOrientationVertical", "glyph-orientation-vertical", false),
@@ -215,6 +218,22 @@ final class HtmlSpec {
     );
   }
 
+  // ##################################################################
+  // # END: Attribute
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Element
+  // ##################################################################
+
+  record ElementSpec(String javaName, String htmlName, boolean endTag)
+      implements Comparable<ElementSpec> {
+    @Override
+    public int compareTo(ElementSpec that) {
+      return javaName.compareTo(that.javaName);
+    }
+  }
+
   static List<ElementSpec> elements() {
     return elements0().stream().sorted().toList();
   }
@@ -299,65 +318,289 @@ final class HtmlSpec {
     );
   }
 
-  static List<TestableSpec> testableNodes() {
+  // ##################################################################
+  // # END: Element
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Testable
+  // ##################################################################
+
+  record MethodSpec(String sig, String javadocs) {}
+
+  static List<MethodSpec> testableNodes() {
     return List.of(
-        new TestableSpec("String testableCell(String value, int width)", """
+        new MethodSpec("String testableCell(String value, int width)", """
         Formats the specified value as a testable table cell with the specified fixed width.
         @param value the cell value
         @param width the fixed width of the cell
         @return always the cell value
         """),
-        new TestableSpec("String testableField(String name, String value)", """
+        new MethodSpec("String testableField(String name, String value)", """
         Formats the specified name and value as a testable field.
         @param name the field name
         @param value the field value
         @return always the field value
         """),
-        new TestableSpec("String testableFieldName(String name)", """
+        new MethodSpec("String testableFieldName(String name)", """
         Formats the specified name as a testable field name.
         @param name the field name
         @return the specified field name
         """),
-        new TestableSpec("String testableFieldValue(String value)", """
+        new MethodSpec("String testableFieldValue(String value)", """
         Formats the specified value as a testable field value.
         @param value the field value
         @return the specified field value
         """),
-        new TestableSpec("String testableH1(String value)", """
+        new MethodSpec("String testableH1(String value)", """
         Formats the specified value as a testable heading level 1.
         @param value the heading value
         @return the specified value
         """),
-        new TestableSpec("String testableH2(String value)", """
+        new MethodSpec("String testableH2(String value)", """
         Formats the specified value as a testable heading level 2.
         @param value the heading value
         @return the specified value
         """),
-        new TestableSpec("String testableH3(String value)", """
+        new MethodSpec("String testableH3(String value)", """
         Formats the specified value as a testable heading level 3.
         @param value the heading value
         @return the specified value
         """),
-        new TestableSpec("String testableH4(String value)", """
+        new MethodSpec("String testableH4(String value)", """
         Formats the specified value as a testable heading level 4.
         @param value the heading value
         @return the specified value
         """),
-        new TestableSpec("String testableH5(String value)", """
+        new MethodSpec("String testableH5(String value)", """
         Formats the specified value as a testable heading level 5.
         @param value the heading value
         @return the specified value
         """),
-        new TestableSpec("String testableH6(String value)", """
+        new MethodSpec("String testableH6(String value)", """
         Formats the specified value as a testable heading level 6.
         @param value the heading value
         @return the specified value
         """),
-        new TestableSpec("Html.Instruction.NoOp testableNewLine()", """
+        new MethodSpec("Html.Instruction.NoOp testableNewLine()", """
         Formats a line separator at the testable output exclusively.
         @return a no-op instruction
         """)
     );
   }
+
+  // ##################################################################
+  // # END: Testable
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Text
+  // ##################################################################
+
+  static List<MethodSpec> textNodes() {
+    return List.of(
+        new MethodSpec("Html.Instruction.OfElement nbsp()", """
+        Renders the non-breaking space `&nbsp;` HTML character entity.
+        @return an instruction representing the non-breaking space character entity.
+        """),
+        new MethodSpec("Html.Instruction.OfElement raw(String value)", """
+        Renders the specified value as raw HTML.
+        @param value the raw HTML value
+        @return a raw HTML instruction
+        """),
+        new MethodSpec("Html.Instruction.OfElement text(String value)", """
+        Renders a text node with the specified value.
+        The text value is escaped before being emitted to the output.
+        @param value the text value
+        @return an instruction representing the text node
+        """)
+    );
+  }
+
+  // ##################################################################
+  // # END: Text
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Way
+  // ##################################################################
+
+  static List<AttributeSpec> dataAttrs() {
+    return List.of(
+        new AttributeSpec("DATA_FRAME", "dataFrame", "data-frame", false),
+        new AttributeSpec("DATA_HIGH", "dataHigh", "data-high", false),
+        new AttributeSpec("DATA_LINE", "dataLine", "data-line", false)
+    );
+  }
+
+  static List<AttributeSpec> dataOn() {
+    return List.of(
+        new AttributeSpec("DATA_ON_CLICK", "dataOnClick", "data-on-click", false),
+        new AttributeSpec("DATA_ON_INPUT", "dataOnInput", "data-on-input", false),
+        new AttributeSpec("DATA_ON_LOAD", "dataOnLoad", "data-on-load", false),
+        new AttributeSpec("DATA_ON_SUCCESS", "dataOnSuccess", "data-on-success", false)
+    );
+  }
+
+  static List<MethodSpec> wayNodes() {
+    return List.of(
+        new MethodSpec("Html.Instruction.OfAttribute dataFrame(String name)", """
+        Renders the `data-frame` attribute for a frame with the specified name.
+        @param name the name of the frame
+        @return an instruction representing the attribute
+        """),
+        new MethodSpec("Html.Instruction.OfAttribute dataFrame(String name, String value)", """
+        Renders the `data-frame` attribute for a frame with the specified name and value.
+        @param name the name of the frame
+        @param value the value of the frame
+        @return an instruction representing the attribute
+        """),
+        new MethodSpec("Html.Instruction.OfAttribute css(String value)", """
+        Renders the `class` attribute by processing the specified value.
+
+        This method is designed to work with Java text blocks. It first removes
+        any leading and trailing whitespace. Additionally, any sequence of
+        consecutive whitespace characters is replaced by a single space
+        character.
+
+        For example, the following invocation:
+
+        ```java
+        css(\"""
+            display:inline-flex
+            justify-content:center
+
+            background-color:blue-500
+            \""");
+        ```
+
+        Produces the same result as invoking
+        `className("display:inline-flex justify-content:center background-color:blue-500")`.
+
+        @param value the text block containing class names, possibly spread across multiple lines
+        @return an instruction representing this attribute.
+        """),
+        new MethodSpec("Html.Instruction.OfFragment f(Html.Fragment.Of0 fragment)", """
+        Renders the specified fragment as part of this document.
+
+        The following Objectos HTML component:
+
+        {@snippet file = "objectos/way/HtmlMarkupJavadoc.java" region = "f0"}
+
+        Generates the following HTML:
+
+        ```html
+        <ul>
+        <li>Mon</li>
+        <li>Wed</li>
+        <li>Fri</li>
+        </ul>
+        ```
+
+        @param fragment the fragment to include
+        @return an instruction representing the fragment
+        """),
+        new MethodSpec("<T1> Html.Instruction.OfFragment f(Html.Fragment.Of1<T1> fragment, T1 arg1)", """
+        Renders the specified fragment as part of this document.
+
+        The following Objectos HTML component:
+
+        {@snippet file = "objectos/way/HtmlMarkupJavadoc.java" region = "f1"}
+
+        Generates the following HTML:
+
+        ```html
+        <ul>
+        <li>Mon</li>
+        <li>Wed</li>
+        <li>Fri</li>
+        </ul>
+        ```
+
+        @param <T1> the type of the first argument
+        @param fragment the fragment to include
+        @param arg1 the first argument
+        @return an instruction representing the fragment
+        """),
+        new MethodSpec("<T1, T2> Html.Instruction.OfFragment f(Html.Fragment.Of2<T1, T2> fragment, T1 arg1, T2 arg2)", """
+        Renders the specified fragment as part of this document.
+
+        The following Objectos HTML component:
+
+        {@snippet file = "objectos/way/HtmlMarkupJavadoc.java" region = "f2"}
+
+        Generates the following HTML:
+
+        ```html
+        <div><button>OK</button><button>Cancel</button></div>
+        ```
+
+        @param <T1> the type of the first argument
+        @param <T2> the type of the second argument
+        @param fragment the fragment to include
+        @param arg1 the first argument
+        @param arg2 the second argument
+        @return an instruction representing the fragment
+        """),
+        new MethodSpec("<T1, T2, T3> Html.Instruction.OfFragment f(Html.Fragment.Of3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3)", """
+        Renders the specified fragment as part of this document.
+
+        The following Objectos HTML component:
+
+        {@snippet file = "objectos/way/HtmlMarkupJavadoc.java" region = "f3"}
+
+        Generates the following HTML:
+
+        ```html
+        <div>
+        <p>City<span>Tokyo</span></p>
+        <p>Country<span>Japan</span></p>
+        </div>
+        ```
+
+        @param <T1> the type of the first argument
+        @param <T2> the type of the second argument
+        @param <T3> the type of the third argument
+        @param fragment the fragment to include
+        @param arg1 the first argument
+        @param arg2 the second argument
+        @param arg3 the third argument
+        @return an instruction representing the fragment
+        """),
+        new MethodSpec("<T1, T2, T3, T4> Html.Instruction.OfFragment f(Html.Fragment.Of4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4)", """
+        Renders the specified fragment as part of this document.
+
+        @param <T1> the type of the first argument
+        @param <T2> the type of the second argument
+        @param <T3> the type of the third argument
+        @param <T4> the type of the fourth argument
+        @param fragment the fragment to include
+        @param arg1 the first argument
+        @param arg2 the second argument
+        @param arg3 the third argument
+        @param arg4 the fourth argument
+        @return an instruction representing the fragment
+        """),
+        new MethodSpec("Html.Instruction.OfElement flatten(Html.Instruction... contents)", """
+        Flattens the specified instructions so that each of the specified
+        instructions is individually added, in order, to a receiving element.
+        @param contents the instructions to be flattened
+        @return an instruction representing this flatten operation
+        """),
+        new MethodSpec("Html.Instruction.NoOp noop()", """
+        The no-op instruction.
+        @return the no-op instruction.
+        """),
+        new MethodSpec("Html.Instruction.OfFragment renderComponent(Html.Component component)", """
+        Renders the specified component as part of this instance.
+        @param component the component to be rendered as part of this instance
+        @return an instruction representing the rendered component.
+        """)
+    );
+  }
+
+  // ##################################################################
+  // # END: Way
+  // ##################################################################
 
 }

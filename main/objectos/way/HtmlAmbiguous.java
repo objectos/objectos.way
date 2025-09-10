@@ -41,6 +41,13 @@ enum HtmlAmbiguous {
     }
   },
 
+  STYLE(HtmlAttributeName.STYLE, HtmlElementName.STYLE) {
+    @Override
+    public final boolean isAttributeOf(Html.ElementName element) {
+      return element != Html.ElementName.HEAD;
+    }
+  },
+
   TITLE(HtmlAttributeName.TITLE, HtmlElementName.TITLE) {
     @Override
     public final boolean isAttributeOf(Html.ElementName element) {
