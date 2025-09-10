@@ -15,6 +15,8 @@
  */
 package objectos.way;
 
+import java.util.Iterator;
+
 public class HtmlMarkupOfTestableGen {
   private String methods;
 
@@ -29,6 +31,7 @@ public class HtmlMarkupOfTestableGen {
     return """
     /// Declares the structure of an HTML document using pure Java (testable nodes).
     public sealed static abstract class MarkupOfTestable extends MarkupOfElement {
+
       MarkupOfTestable() {}
     %s
     }
@@ -39,16 +42,41 @@ public class HtmlMarkupOfTestableGen {
     final StringBuilder methodsBuilder;
     methodsBuilder = new StringBuilder();
 
-    for (HtmlSpec.AmbiguousSpec spec : HtmlSpec.ambiguous()) {
-      methodsBuilder.append("""
+    for (HtmlSpec.TestableSpec spec : HtmlSpec.testableNodes()) {
+      methodsBuilder.append('\n');
 
-        /// Declares the `%s` attribute or the `%s` element with the specified text.
-        /// @param text the attribute value or the text content of the element
-        /// @return an instruction representing the attribute or the element
-        public final Html.Instruction.OfAmbiguous %s(String text) {
-          return ambiguous(HtmlAmbiguous.%s, text);
-        }
-      """.formatted(spec.attributeName(), spec.elementName(), spec.methodName(), spec.constantName()));
+      final String javadocs;
+      javadocs = spec.javadocs();
+
+      final Iterator<String> lines;
+      lines = javadocs.lines().iterator();
+
+      final String first;
+      first = lines.next();
+
+      methodsBuilder.append("  /// ");
+
+      methodsBuilder.append(first.substring(0, first.length() - 1));
+
+      methodsBuilder.append(" (optional operation).");
+
+      while (lines.hasNext()) {
+        methodsBuilder.append('\n');
+
+        methodsBuilder.append("  /// ");
+
+        methodsBuilder.append(lines.next());
+      }
+
+      methodsBuilder.append('\n');
+
+      methodsBuilder.append("  public abstract ");
+
+      methodsBuilder.append(spec.sig());
+
+      methodsBuilder.append(';');
+
+      methodsBuilder.append('\n');
     }
 
     methods = methodsBuilder.toString();

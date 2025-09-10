@@ -39,6 +39,8 @@ final class HtmlSpec {
     }
   }
 
+  record TestableSpec(String sig, String javadocs) {}
+
   private HtmlSpec() {}
 
   static List<AmbiguousSpec> ambiguous() {
@@ -294,6 +296,67 @@ final class HtmlSpec {
         new ElementSpec("TITLE", "title", true),
         new ElementSpec("TR", "tr", true),
         new ElementSpec("UL", "ul", true)
+    );
+  }
+
+  static List<TestableSpec> testableNodes() {
+    return List.of(
+        new TestableSpec("String testableCell(String value, int width)", """
+        Formats the specified value as a testable table cell with the specified fixed width.
+        @param value the cell value
+        @param width the fixed width of the cell
+        @return always the cell value
+        """),
+        new TestableSpec("String testableField(String name, String value)", """
+        Formats the specified name and value as a testable field.
+        @param name the field name
+        @param value the field value
+        @return always the field value
+        """),
+        new TestableSpec("String testableFieldName(String name)", """
+        Formats the specified name as a testable field name.
+        @param name the field name
+        @return the specified field name
+        """),
+        new TestableSpec("String testableFieldValue(String value)", """
+        Formats the specified value as a testable field value.
+        @param value the field value
+        @return the specified field value
+        """),
+        new TestableSpec("String testableH1(String value)", """
+        Formats the specified value as a testable heading level 1.
+        @param value the heading value
+        @return the specified value
+        """),
+        new TestableSpec("String testableH2(String value)", """
+        Formats the specified value as a testable heading level 2.
+        @param value the heading value
+        @return the specified value
+        """),
+        new TestableSpec("String testableH3(String value)", """
+        Formats the specified value as a testable heading level 3.
+        @param value the heading value
+        @return the specified value
+        """),
+        new TestableSpec("String testableH4(String value)", """
+        Formats the specified value as a testable heading level 4.
+        @param value the heading value
+        @return the specified value
+        """),
+        new TestableSpec("String testableH5(String value)", """
+        Formats the specified value as a testable heading level 5.
+        @param value the heading value
+        @return the specified value
+        """),
+        new TestableSpec("String testableH6(String value)", """
+        Formats the specified value as a testable heading level 6.
+        @param value the heading value
+        @return the specified value
+        """),
+        new TestableSpec("Html.Instruction.NoOp testableNewLine()", """
+        Formats a line separator at the testable output exclusively.
+        @return a no-op instruction
+        """)
     );
   }
 
