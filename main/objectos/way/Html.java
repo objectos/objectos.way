@@ -2478,10 +2478,13 @@ public final class Html {
     /// @return an instruction representing this attribute.
     Html.Instruction.OfAttribute css(String value);
 
-    /// Renders the `data-frame` attribute for a frame with the specified name and value.
+    /// Renders the specified fragment as part of this document.
     ///
-    /// @param name the name of the frame
-    /// @param value the value of the frame
+    /// The following Objectos HTML component:
+    ///
+    /// {@snippet file = "objectos/way/HtmlMarkupJavadoc.java" region = "f0"}
+    ///
+    /// Generates the following HTML:
     ///
     /// ```html
     /// <ul>
