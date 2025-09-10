@@ -17,8 +17,11 @@ package objectos.way;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 final class HtmlSpec {
+
+  record AmbiguousSpec(String constantName, String methodName, String attributeName, String elementName) {}
 
   record AttributeSpec(String constantName, String methodName, String htmlName, boolean booleanAttribute)
       implements Comparable<AttributeSpec> {
@@ -36,14 +39,24 @@ final class HtmlSpec {
     }
   }
 
-  static final Set<String> AMBIGUOUS = Set.of(
-      "clipPath",
-      "form",
-      "label",
-      "title"
-  );
-
   private HtmlSpec() {}
+
+  static List<AmbiguousSpec> ambiguous() {
+    return List.of(
+        new AmbiguousSpec("CLIPPATH", "clipPath", "clip-path", "clipPath"),
+        new AmbiguousSpec("FORM", "form", "form", "form"),
+        new AmbiguousSpec("LABEL", "label", "label", "label"),
+        new AmbiguousSpec("TITLE", "title", "title", "title")
+    );
+  }
+
+  static Set<String> ambiguousAttrNames() {
+    return ambiguous().stream().map(AmbiguousSpec::attributeName).collect(Collectors.toUnmodifiableSet());
+  }
+
+  static Set<String> ambiguousElemNames() {
+    return ambiguous().stream().map(AmbiguousSpec::elementName).collect(Collectors.toUnmodifiableSet());
+  }
 
   static List<AttributeSpec> attributes() {
     return attributes0().stream().sorted().toList();

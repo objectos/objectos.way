@@ -15,6 +15,8 @@
  */
 package objectos.way;
 
+import java.util.Set;
+
 public class HtmlMarkupAttributesGen {
   private String booleanAttrs;
 
@@ -30,7 +32,7 @@ public class HtmlMarkupAttributesGen {
 
     return """
     /// Declares the structure of an HTML document using pure Java (attributes).
-    public sealed static abstract class MarkupAttributes extends MarkupText {
+    public sealed static abstract class MarkupAttributes extends MarkupAmbiguous {
     %s
       MarkupAttributes() {}
 
@@ -67,8 +69,15 @@ public class HtmlMarkupAttributesGen {
     final StringBuilder regularBuilder;
     regularBuilder = new StringBuilder();
 
+    final Set<String> ambiguous;
+    ambiguous = HtmlSpec.ambiguousAttrNames();
+
     for (HtmlSpec.AttributeSpec attr : HtmlSpec.attributes()) {
-      if (attr.booleanAttribute()) {
+      if (ambiguous.contains(attr.htmlName())) {
+        continue;
+      }
+
+      else if (attr.booleanAttribute()) {
         booleanBuilder.append("""
 
           /// The `%s` boolean attribute.

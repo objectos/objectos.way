@@ -15,6 +15,7 @@
  */
 package objectos.way;
 
+import java.util.Set;
 import objectos.way.HtmlSpec.ElementSpec;
 
 public class HtmlMarkupElementsGen {
@@ -33,8 +34,6 @@ public class HtmlMarkupElementsGen {
     public sealed static abstract class MarkupElements extends MarkupAttributes {
 
       MarkupElements() {}
-
-      abstract Html.Instruction.OfAmbiguous ambiguous(HtmlAmbiguous name, String value);
     %s
     }
     """.formatted(methods);
@@ -44,11 +43,14 @@ public class HtmlMarkupElementsGen {
     final StringBuilder methodsBuilder;
     methodsBuilder = new StringBuilder();
 
+    final Set<String> ambiguousNames;
+    ambiguousNames = HtmlSpec.ambiguousElemNames();
+
     for (ElementSpec elem : HtmlSpec.elements()) {
       final String htmlName;
       htmlName = elem.htmlName();
 
-      if (HtmlSpec.AMBIGUOUS.contains(htmlName)) {
+      if (ambiguousNames.contains(htmlName)) {
         methodsBuilder.append("""
 
           /// Declares the `%1$s` element with the specified content.
@@ -57,14 +59,6 @@ public class HtmlMarkupElementsGen {
           @Override
           public final Html.Instruction.OfElement %2$s(Html.Instruction... contents) {
             return element(HtmlElementName.%3$s, contents);
-          }
-
-          /// Declares the `%1$s` element with the specified text.
-          /// @param text the text value of the element
-          /// @return an instruction representing the element.
-          @Override
-          public final Html.Instruction.OfAmbiguous %2$s(String text) {
-            return ambiguous(HtmlAmbiguous.%3$s, text);
           }
         """.formatted(elem.htmlName(), elem.htmlName(), elem.javaName()));
       }
