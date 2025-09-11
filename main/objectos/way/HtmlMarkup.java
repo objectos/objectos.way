@@ -141,12 +141,12 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
 
   public final String toJsonString() {
     try {
-      HtmlDom document;
+      Dom.Document document;
       document = compile();
 
       sb.setLength(0);
 
-      HtmlFormatter.JSON.formatTo(document, sb);
+      DomFormatter.JSON.formatTo(document, sb);
 
       return sb.toString();
     } catch (IOException e) {
@@ -157,12 +157,12 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
   @Override
   public final String toString() {
     try {
-      HtmlDom document;
+      Dom.Document document;
       document = compile();
 
       sb.setLength(0);
 
-      HtmlFormatter.STANDARD.formatTo(document, sb);
+      DomFormatter.STANDARD.formatTo(document, sb);
 
       return sb.toString();
     } catch (IOException e) {
@@ -397,7 +397,7 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
   // Section: DOM related methods
   //
 
-  final HtmlDom compile() {
+  final Dom.Document compile() {
     // we will use the aux list to store contexts
     auxIndex = 0;
 
@@ -417,17 +417,17 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
       objectArray = Util.growIfNecessary(objectArray, objectIndex + OFFSET_MAX);
     }
 
-    objectArray[objectIndex + OFFSET_ELEMENT] = new HtmlDomElement(this);
+    objectArray[objectIndex + OFFSET_ELEMENT] = new DomElement(this);
 
-    objectArray[objectIndex + OFFSET_ATTRIBUTE] = new HtmlDomAttribute(this);
+    objectArray[objectIndex + OFFSET_ATTRIBUTE] = new DomAttribute(this);
 
-    objectArray[objectIndex + OFFSET_TEXT] = new HtmlDomText();
+    objectArray[objectIndex + OFFSET_TEXT] = new DomText();
 
-    objectArray[objectIndex + OFFSET_RAW] = new HtmlDomRaw();
+    objectArray[objectIndex + OFFSET_RAW] = new DomRaw();
 
     documentCtx();
 
-    return new HtmlDom(this);
+    return new DomDocument(this);
   }
 
   final void documentIterable() {
@@ -564,7 +564,7 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
     return nextState == _DOCUMENT_NODES_HAS_NEXT;
   }
 
-  final Html.Dom.Node documentNext() {
+  final Dom.Node documentNext() {
     stateCAS(_DOCUMENT_NODES_HAS_NEXT, _DOCUMENT_NODES_NEXT);
 
     // restore main index from the context
@@ -579,7 +579,7 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
       case HtmlByteProto.DOCTYPE -> {
         documentCtxMainIndexStore(index);
 
-        yield HtmlDomDocumentType.INSTANCE;
+        yield DomDocument.Type.INSTANCE;
       }
 
       case HtmlByteProto.ELEMENT -> {
@@ -658,7 +658,7 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
     aux[mainStart + 3] = HtmlBytes.encodeInt2(value);
   }
 
-  final HtmlDomElement element(int startIndex, int parentIndex) {
+  final Dom.Element element(int startIndex, int parentIndex) {
     // our iteration index
     int elementIndex;
     elementIndex = startIndex;
@@ -687,7 +687,7 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
 
     elementCtx(startIndex, parentIndex);
 
-    HtmlDomElement element;
+    DomElement element;
     element = htmlElement();
 
     element.name = name;
@@ -814,7 +814,7 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
     return nextState == _ELEMENT_ATTRS_HAS_NEXT;
   }
 
-  final HtmlDomAttribute elementAttributesNext() {
+  final Dom.Attribute elementAttributesNext() {
     stateCAS(_ELEMENT_ATTRS_HAS_NEXT, _ELEMENT_ATTRS_NEXT);
 
     // restore main index
@@ -822,7 +822,7 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
     index = elementCtxAttrsIndexLoad();
 
     // our return value
-    final HtmlDomAttribute attribute;
+    final DomAttribute attribute;
     attribute = htmlAttribute();
 
     // values to set
@@ -946,8 +946,8 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
     return (HtmlAttributeName) object;
   }
 
-  private HtmlDomAttribute htmlAttribute() {
-    return (HtmlDomAttribute) objectArray[objectIndex + OFFSET_ATTRIBUTE];
+  private DomAttribute htmlAttribute() {
+    return (DomAttribute) objectArray[objectIndex + OFFSET_ATTRIBUTE];
   }
 
   final void attributeValues() {
@@ -971,7 +971,7 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
       );
     }
 
-    HtmlDomAttribute attribute;
+    DomAttribute attribute;
     attribute = htmlAttribute();
 
     if (attribute.value != null) {
@@ -1021,7 +1021,7 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
           ambiguous = HtmlAmbiguous.get(ordinal);
 
           // find out the parent
-          HtmlDomElement element;
+          DomElement element;
           element = htmlElement();
 
           HtmlElementName elementName;
@@ -1275,7 +1275,7 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
         }
 
         // restore name
-        HtmlDomElement element;
+        DomElement element;
         element = htmlElement();
 
         element.name = elementCtxNameLoad();
@@ -1315,7 +1315,7 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
           ambiguous = HtmlAmbiguous.get(ordinal);
 
           // find out parent element
-          HtmlDomElement element;
+          DomElement element;
           element = htmlElement();
 
           HtmlElementName parent;
@@ -1384,7 +1384,7 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
     return nextState == _ELEMENT_NODES_HAS_NEXT;
   }
 
-  final Html.Dom.Node elementNodesNext() {
+  final Dom.Node elementNodesNext() {
     stateCAS(_ELEMENT_NODES_HAS_NEXT, _ELEMENT_NODES_NEXT);
 
     // restore index from context
@@ -1474,8 +1474,8 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
         elementCtxNodesIndexStore(index);
 
         // return value
-        HtmlDomRaw raw;
-        raw = (HtmlDomRaw) objectArray[objectIndex + OFFSET_RAW];
+        DomRaw raw;
+        raw = (DomRaw) objectArray[objectIndex + OFFSET_RAW];
 
         // text value
         raw.value = toObjectString(v0, v1);
@@ -1503,9 +1503,9 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
     };
   }
 
-  private HtmlDomText htmlText(byte v0, byte v1) {
-    HtmlDomText text;
-    text = (HtmlDomText) objectArray[objectIndex + OFFSET_TEXT];
+  private Dom.Text htmlText(byte v0, byte v1) {
+    DomText text;
+    text = (DomText) objectArray[objectIndex + OFFSET_TEXT];
 
     // text value
     text.value = toObjectString(v0, v1);
@@ -1662,8 +1662,8 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
     return parentIndex;
   }
 
-  private HtmlDomElement htmlElement() {
-    return (HtmlDomElement) objectArray[objectIndex + OFFSET_ELEMENT];
+  private DomElement htmlElement() {
+    return (DomElement) objectArray[objectIndex + OFFSET_ELEMENT];
   }
 
   private void stateCheck(byte expected) {

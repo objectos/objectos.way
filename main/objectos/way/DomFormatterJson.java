@@ -17,24 +17,24 @@ package objectos.way;
 
 import java.io.IOException;
 
-final class HtmlFormatterJson extends HtmlFormatter {
+final class DomFormatterJson extends DomFormatter {
 
   @Override
-  final void format(Html.Dom document, Appendable out) throws IOException {
-    for (Html.Dom.Node node : document.nodes()) {
+  final void format(Dom.Document document, Appendable out) throws IOException {
+    for (Dom.Node node : document.nodes()) {
       node(out, node);
     }
   }
 
-  private void node(Appendable out, Html.Dom.Node node) throws IOException {
+  private void node(Appendable out, Dom.Node node) throws IOException {
     switch (node) {
-      case Html.Dom.DocumentType doctype -> out.append("<!DOCTYPE html>");
+      case Dom.Document.Type doctype -> out.append(doctype.value());
 
-      case Html.Dom.Element element -> element(out, element);
+      case Dom.Element element -> element(out, element);
 
-      case Html.Dom.Text text -> text(out, text);
+      case Dom.Text text -> text(out, text);
 
-      case Html.Dom.Raw raw -> raw(out, raw);
+      case Dom.Raw raw -> raw(out, raw);
 
       default -> throw new UnsupportedOperationException(
           "Implement me :: type=" + node.getClass()
@@ -42,21 +42,21 @@ final class HtmlFormatterJson extends HtmlFormatter {
     }
   }
 
-  private void element(Appendable out, Html.Dom.Element element) throws IOException {
+  private void element(Appendable out, Dom.Element element) throws IOException {
     String elementName;
     elementName = element.name();
 
     out.append('<');
     out.append(elementName);
 
-    for (Html.Dom.Attribute attribute : element.attributes()) {
+    for (Dom.Attribute attribute : element.attributes()) {
       attribute(out, attribute);
     }
 
     out.append('>');
 
-    if (!element.isVoid()) {
-      for (Html.Dom.Node node : element.nodes()) {
+    if (!element.voidElement()) {
+      for (Dom.Node node : element.nodes()) {
         node(out, node);
       }
 
@@ -67,7 +67,7 @@ final class HtmlFormatterJson extends HtmlFormatter {
     }
   }
 
-  private void attribute(Appendable out, Html.Dom.Attribute attribute) throws IOException {
+  private void attribute(Appendable out, Dom.Attribute attribute) throws IOException {
     String name;
     name = attribute.name();
 
@@ -82,7 +82,10 @@ final class HtmlFormatterJson extends HtmlFormatter {
 
     out.append('\'');
 
-    attributeValue(out, attribute.value());
+    final String value;
+    value = attribute.value();
+
+    attributeValue(out, value);
 
     out.append('\'');
   }
@@ -102,7 +105,7 @@ final class HtmlFormatterJson extends HtmlFormatter {
     }
   }
 
-  private void text(Appendable out, Html.Dom.Text text) throws IOException {
+  private void text(Appendable out, Dom.Text text) throws IOException {
     String value;
     value = text.value();
 
@@ -122,7 +125,7 @@ final class HtmlFormatterJson extends HtmlFormatter {
     }
   }
 
-  private void raw(Appendable out, Html.Dom.Raw raw) throws IOException {
+  private void raw(Appendable out, Dom.Raw raw) throws IOException {
     String value;
     value = raw.value();
 

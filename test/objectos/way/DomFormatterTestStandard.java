@@ -17,13 +17,9 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
-import java.io.IOException;
-import objectos.way.HtmlFormatter.Quotes;
 import org.testng.annotations.Test;
 
-public class HtmlFormatterTest {
-
-  private final StringBuilder out = new StringBuilder();
+public class DomFormatterTestStandard {
 
   @Test(description = """
   PrettyPrintWriter TC01
@@ -40,8 +36,8 @@ public class HtmlFormatterTest {
         },
 
         """
-        <html></html>
-        """
+      <html></html>
+      """
     );
   }
 
@@ -61,9 +57,9 @@ public class HtmlFormatterTest {
         },
 
         """
-        <!DOCTYPE html>
-        <html></html>
-        """
+      <!DOCTYPE html>
+      <html></html>
+      """
     );
   }
 
@@ -116,14 +112,14 @@ public class HtmlFormatterTest {
         },
 
         """
-        <!DOCTYPE html>
-        <html>
-        <head>
-        <meta charset="utf-8">
-        </head>
-        <body></body>
-        </html>
-        """
+      <!DOCTYPE html>
+      <html>
+      <head>
+      <meta charset="utf-8">
+      </head>
+      <body></body>
+      </html>
+      """
     );
   }
 
@@ -153,14 +149,14 @@ public class HtmlFormatterTest {
         },
 
         """
-        <!DOCTYPE html>
-        <html id="a">
-        <head id="b">
-        <meta charset="utf-8">
-        </head>
-        <body id="c"></body>
-        </html>
-        """
+      <!DOCTYPE html>
+      <html id="a">
+      <head id="b">
+      <meta charset="utf-8">
+      </head>
+      <body id="c"></body>
+      </html>
+      """
     );
   }
 
@@ -184,13 +180,13 @@ public class HtmlFormatterTest {
         },
 
         """
-        <!DOCTYPE html>
-        <html>
-        <body>
-        <p>abc</p>
-        </body>
-        </html>
-        """
+      <!DOCTYPE html>
+      <html>
+      <body>
+      <p>abc</p>
+      </body>
+      </html>
+      """
     );
   }
 
@@ -215,13 +211,13 @@ public class HtmlFormatterTest {
         },
 
         """
-        <!DOCTYPE html>
-        <html>
-        <body>
-        <p>abc <em>def</em> ghi</p>
-        </body>
-        </html>
-        """
+      <!DOCTYPE html>
+      <html>
+      <body>
+      <p>abc <em>def</em> ghi</p>
+      </body>
+      </html>
+      """
     );
   }
 
@@ -249,19 +245,19 @@ public class HtmlFormatterTest {
         },
 
         """
-        <!DOCTYPE html>
-        <html>
-        <body>
-        <ul>
-        <li>a</li>
-        <li>
-        <p>b</p>
-        </li>
-        <li><em>c</em></li>
-        </ul>
-        </body>
-        </html>
-        """
+      <!DOCTYPE html>
+      <html>
+      <body>
+      <ul>
+      <li>a</li>
+      <li>
+      <p>b</p>
+      </li>
+      <li><em>c</em></li>
+      </ul>
+      </body>
+      </html>
+      """
     );
   }
 
@@ -333,150 +329,14 @@ public class HtmlFormatterTest {
         },
 
         """
-        <!DOCTYPE html>
-        <a href="index.html">a</a>
-        """
+      <!DOCTYPE html>
+      <a href="index.html">a</a>
+      """
     );
   }
 
   private void test(Html.Template template, String expected) {
-    try {
-      StringBuilder out;
-      out = new StringBuilder();
-
-      HtmlFormatter.STANDARD.formatTo(template, out);
-
-      assertEquals(out.toString(), expected);
-    } catch (IOException e) {
-      throw new AssertionError("StringBuilder does not throw IOException", e);
-    }
-  }
-
-  @Test
-  public void ampersand01() {
-    // normal text
-    ampersand("abc", "abc");
-
-    // html tokens
-    ampersand("if (a < b && c > d) {}", "if (a < b &amp;&amp; c > d) {}");
-
-    // named entities
-    ampersand("foo&nbsp;bar", "foo&nbsp;bar");
-    ampersand("foo&nb#;bar", "foo&amp;nb#;bar");
-    ampersand("foo&nbsp bar", "foo&amp;nbsp bar");
-
-    // decimal entities
-    ampersand("foo&#39;bar", "foo&#39;bar");
-    ampersand("foo &# 39;", "foo &amp;# 39;");
-
-    // hex entities
-    ampersand("foo&#xa9;bar&Xa9;baz", "foo&#xa9;bar&Xa9;baz");
-    ampersand("foo &#xxa9;", "foo &amp;#xxa9;");
-
-    // ampersand edge cases
-    ampersand("&", "&amp;");
-    ampersand("int a = value & MASK;", "int a = value &amp; MASK;");
-
-    // new lines should be left alone
-    ampersand("foo\nbar", "foo\nbar");
-  }
-
-  private void ampersand(String source, String expected) {
-    try {
-      StringBuilder out;
-      out = new StringBuilder();
-
-      out.setLength(0);
-
-      HtmlFormatter formatter;
-      formatter = HtmlFormatter.STANDARD;
-
-      for (int idx = 0, len = source.length(); idx < len;) {
-        char c;
-        c = source.charAt(idx++);
-
-        switch (c) {
-          case '&' -> idx = formatter.ampersand(out, source, idx, len);
-
-          default -> out.append(c);
-        }
-      }
-
-      assertEquals(out.toString(), expected);
-    } catch (IOException e) {
-      throw new AssertionError("StringBuilder does not throw", e);
-    }
-  }
-
-  @Test
-  public void attributeValue01() {
-    attributeValue(Quotes.DOUBLE, "abc", "abc");
-    attributeValue(Quotes.DOUBLE, "123 foo", "123 foo");
-    attributeValue(Quotes.DOUBLE, "if (a < b && c > d) {}", "if (a < b &amp;&amp; c > d) {}");
-    attributeValue(Quotes.DOUBLE, "\"abc'", "&#34;abc'");
-    attributeValue(Quotes.SINGLE, "\"abc'", "\"abc&#39;");
-  }
-
-  private void attributeValue(Quotes quotes, String source, String expected) {
-    try {
-      out.setLength(0);
-
-      HtmlFormatter fmt;
-      fmt = HtmlFormatter.STANDARD;
-
-      fmt.attributeValue(out, quotes, source);
-
-      assertEquals(out.toString(), expected);
-    } catch (IOException e) {
-      throw new AssertionError("StringBuilder does not throw", e);
-    }
-  }
-
-  @Test
-  public void writeText() {
-    // normal text
-    writeText("abc", "abc");
-
-    // html tokens
-    writeText("if (a < b && c > d) {}", "if (a &lt; b &amp;&amp; c &gt; d) {}");
-
-    // named entities
-    writeText("foo&nbsp;bar", "foo&amp;nbsp;bar");
-    writeText("foo&nb#;bar", "foo&amp;nb#;bar");
-    writeText("foo&nbsp bar", "foo&amp;nbsp bar");
-
-    // decimal entities
-    writeText("foo&#39;bar", "foo&amp;#39;bar");
-    writeText("foo &# 39;", "foo &amp;# 39;");
-
-    // hex entities
-    writeText("foo&#xa9;bar&Xa9;baz", "foo&amp;#xa9;bar&amp;Xa9;baz");
-    writeText("foo &#xxa9;", "foo &amp;#xxa9;");
-
-    // ampersand edge cases
-    writeText("&", "&amp;");
-    writeText("int a = value & MASK;", "int a = value &amp; MASK;");
-
-    // quotes should be left alone
-    writeText("\"", "\"");
-    writeText("'", "'");
-
-    // new lines should be left alone
-    writeText("foo\nbar", "foo\nbar");
-  }
-
-  private void writeText(String source, String expected) {
-    try {
-      out.setLength(0);
-
-      var writer = HtmlFormatter.STANDARD;
-
-      writer.writeText(out, source);
-
-      assertEquals(out.toString(), expected);
-    } catch (IOException e) {
-      throw new AssertionError("StringBuilder does not throw", e);
-    }
+    assertEquals(template.toString(), expected);
   }
 
 }

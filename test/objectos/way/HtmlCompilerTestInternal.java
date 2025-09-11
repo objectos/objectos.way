@@ -73,8 +73,8 @@ public class HtmlCompilerTestInternal {
     );
 
     // document.nodes.next
-    HtmlDomElement elem;
-    elem = (HtmlDomElement) compiler.documentNext();
+    DomElement elem;
+    elem = (DomElement) compiler.documentNext();
 
     assertEquals(elem.name, HtmlElementName.HTML);
 
@@ -264,8 +264,8 @@ public class HtmlCompilerTestInternal {
     );
 
     // html.attrs.iterator.next => lang="pt-BR"
-    HtmlDomAttribute attr;
-    attr = compiler.elementAttributesNext();
+    DomAttribute attr;
+    attr = (DomAttribute) compiler.elementAttributesNext();
 
     assertEquals(attr.name(), "lang");
     assertEquals(attr.value, "pt-BR");
@@ -395,8 +395,8 @@ public class HtmlCompilerTestInternal {
     assertEquals(compiler.documentHasNext(), true);
 
     // html
-    HtmlDomElement html;
-    html = (HtmlDomElement) compiler.documentNext();
+    DomElement html;
+    html = (DomElement) compiler.documentNext();
 
     assertEquals(html.name, HtmlElementName.HTML);
 
@@ -471,8 +471,8 @@ public class HtmlCompilerTestInternal {
     );
 
     // head
-    HtmlDomElement head;
-    head = (HtmlDomElement) compiler.elementNodesNext();
+    DomElement head;
+    head = (DomElement) compiler.elementNodesNext();
 
     assertEquals(head.name(), "head");
 
@@ -587,8 +587,8 @@ public class HtmlCompilerTestInternal {
     assertEquals(compiler.documentHasNext(), true);
 
     // html
-    HtmlDomElement html;
-    html = (HtmlDomElement) compiler.documentNext();
+    DomElement html;
+    html = (DomElement) compiler.documentNext();
     assertEquals(html.name, HtmlElementName.HTML);
 
     // html.attributes
@@ -602,8 +602,8 @@ public class HtmlCompilerTestInternal {
     assertEquals(compiler.elementNodesHasNext(), true);
 
     // head
-    HtmlDomElement head;
-    head = (HtmlDomElement) compiler.elementNodesNext();
+    DomElement head;
+    head = (DomElement) compiler.elementNodesNext();
     assertEquals(head.name, HtmlElementName.HEAD);
 
     // head.attributes
@@ -638,8 +638,8 @@ public class HtmlCompilerTestInternal {
     );
 
     // title
-    HtmlDomElement title;
-    title = (HtmlDomElement) compiler.elementNodesNext();
+    DomElement title;
+    title = (DomElement) compiler.elementNodesNext();
     assertEquals(title.name, HtmlElementName.TITLE);
   }
 
@@ -667,8 +667,8 @@ public class HtmlCompilerTestInternal {
     assertEquals(compiler.documentHasNext(), true);
 
     // input
-    HtmlDomElement input;
-    input = (HtmlDomElement) compiler.documentNext();
+    DomElement input;
+    input = (DomElement) compiler.documentNext();
     assertEquals(input.name(), "input");
 
     testAux(
@@ -691,8 +691,9 @@ public class HtmlCompilerTestInternal {
     assertEquals(compiler.elementAttributesHasNext(HtmlElementName.INPUT), true);
 
     // input[type]
-    HtmlDomAttribute type;
-    type = compiler.elementAttributesNext();
+    DomAttribute type;
+    type = (DomAttribute) compiler.elementAttributesNext();
+
     assertEquals(type.name(), "type");
 
     testAux(
@@ -765,8 +766,9 @@ public class HtmlCompilerTestInternal {
     );
 
     // input[required]
-    HtmlDomAttribute required;
-    required = compiler.elementAttributesNext();
+    DomAttribute required;
+    required = (DomAttribute) compiler.elementAttributesNext();
+
     assertEquals(required.name(), "required");
 
     testAux(

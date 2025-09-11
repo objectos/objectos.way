@@ -17,23 +17,32 @@ package objectos.way;
 
 import java.util.Iterator;
 
-final class HtmlDom implements Html.Dom, Lang.IterableOnce<Html.Dom.Node>, Iterator<Html.Dom.Node> {
+final class DomDocument implements Dom.Document, Lang.IterableOnce<Dom.Node>, Iterator<Dom.Node> {
+
+  enum Type implements Dom.Document.Type {
+    INSTANCE;
+
+    @Override
+    public final String value() {
+      return "<!DOCTYPE html>";
+    }
+  }
 
   private final HtmlMarkup player;
 
-  public HtmlDom(HtmlMarkup ctx) {
+  public DomDocument(HtmlMarkup ctx) {
     this.player = ctx;
   }
 
   @Override
-  public final Lang.IterableOnce<Html.Dom.Node> nodes() {
+  public final Lang.IterableOnce<Dom.Node> nodes() {
     player.documentIterable();
 
     return this;
   }
 
   @Override
-  public final Iterator<Html.Dom.Node> iterator() {
+  public final Iterator<Dom.Node> iterator() {
     player.documentIterator();
 
     return this;
@@ -45,7 +54,7 @@ final class HtmlDom implements Html.Dom, Lang.IterableOnce<Html.Dom.Node>, Itera
   }
 
   @Override
-  public final Html.Dom.Node next() {
+  public final Dom.Node next() {
     return player.documentNext();
   }
 

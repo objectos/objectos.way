@@ -19,7 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 import org.testng.annotations.Test;
 
-public class HtmlFormatterTestJson {
+public class DomFormatterTestJson {
 
   @Test(description = """
   Empty element

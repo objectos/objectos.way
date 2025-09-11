@@ -18,11 +18,11 @@ package objectos.way;
 import java.io.IOException;
 import java.util.Set;
 
-class HtmlFormatter {
+class DomFormatter {
 
-  static final HtmlFormatter JSON = new HtmlFormatterJson();
+  static final DomFormatter JSON = new DomFormatterJson();
 
-  static final HtmlFormatter STANDARD = new HtmlFormatter();
+  static final DomFormatter STANDARD = new DomFormatter();
 
   private static final Set<String> PHRASING = Set.of(
       HtmlElementName.A.lowerCase,
@@ -61,9 +61,9 @@ class HtmlFormatter {
   private static final byte PHRASE = 4;
   private static final byte SCRIPT = 5;
 
-  HtmlFormatter() {}
+  DomFormatter() {}
 
-  public final void formatTo(Html.Dom document, Appendable appendable) throws IOException {
+  public final void formatTo(Dom.Document document, Appendable appendable) throws IOException {
     Check.notNull(document, "document == null");
     Check.notNull(appendable, "appendable == null");
 
@@ -79,17 +79,17 @@ class HtmlFormatter {
 
     template.renderHtml(html);
 
-    HtmlDom document;
+    Dom.Document document;
     document = html.compile();
 
     format(document, appendable);
   }
 
-  void format(Html.Dom document, Appendable out) throws IOException {
+  void format(Dom.Document document, Appendable out) throws IOException {
     byte state;
     state = START;
 
-    for (Html.Dom.Node node : document.nodes()) {
+    for (Dom.Node node : document.nodes()) {
       state = node(out, state, node);
     }
 
@@ -98,15 +98,15 @@ class HtmlFormatter {
     }
   }
 
-  private byte node(Appendable out, byte state, Html.Dom.Node node) throws IOException {
+  private byte node(Appendable out, byte state, Dom.Node node) throws IOException {
     return switch (node) {
-      case HtmlDomDocumentType doctype -> doctype(out, state, doctype);
+      case Dom.Document.Type doctype -> doctype(out, state, doctype);
 
-      case HtmlDomElement element -> element(out, state, element);
+      case Dom.Element element -> element(out, state, element);
 
-      case HtmlDomText text -> text(out, state, text);
+      case Dom.Text text -> text(out, state, text);
 
-      case HtmlDomRaw raw -> raw(out, state, raw);
+      case Dom.Raw raw -> raw(out, state, raw);
 
       default -> throw new UnsupportedOperationException(
           "Implement me :: type=" + node.getClass()
@@ -114,13 +114,13 @@ class HtmlFormatter {
     };
   }
 
-  private byte doctype(Appendable out, byte state, HtmlDomDocumentType doctype) throws IOException {
-    out.append("<!DOCTYPE html>");
+  private byte doctype(Appendable out, byte state, Dom.Document.Type doctype) throws IOException {
+    out.append(doctype.value());
 
     return BLOCK_END;
   }
 
-  private byte element(Appendable out, byte state, HtmlDomElement element) throws IOException {
+  private byte element(Appendable out, byte state, Dom.Element element) throws IOException {
     // start tag
     String elementName;
     elementName = element.name();
@@ -158,17 +158,17 @@ class HtmlFormatter {
     out.append('<');
     out.append(elementName);
 
-    for (Html.Dom.Attribute attribute : element.attributes()) {
+    for (Dom.Attribute attribute : element.attributes()) {
       attribute(out, attribute);
     }
 
     out.append('>');
 
-    if (!element.isVoid()) {
+    if (!element.voidElement()) {
       int childCount;
       childCount = 0;
 
-      for (Html.Dom.Node node : element.nodes()) {
+      for (Dom.Node node : element.nodes()) {
         childState = node(out, childState, node);
 
         childCount++;
@@ -211,7 +211,7 @@ class HtmlFormatter {
     }
   }
 
-  private void attribute(Appendable out, Html.Dom.Attribute attribute) throws IOException {
+  private void attribute(Appendable out, Dom.Attribute attribute) throws IOException {
     String name;
     name = attribute.name();
 
@@ -230,7 +230,10 @@ class HtmlFormatter {
 
     out.append(quotes.symbol);
 
-    attributeValue(out, quotes, attribute.value());
+    final String value;
+    value = attribute.value();
+
+    attributeValue(out, quotes, value);
 
     out.append(quotes.symbol);
   }
@@ -282,7 +285,7 @@ class HtmlFormatter {
     }
   }
 
-  private byte text(Appendable out, byte state, HtmlDomText text) throws IOException {
+  private byte text(Appendable out, byte state, Dom.Text text) throws IOException {
     String value;
     value = text.value();
 
@@ -331,7 +334,7 @@ class HtmlFormatter {
     }
   }
 
-  private byte raw(Appendable out, byte state, HtmlDomRaw raw) throws IOException {
+  private byte raw(Appendable out, byte state, Dom.Raw raw) throws IOException {
     String value;
     value = raw.value();
 
