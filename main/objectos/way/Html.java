@@ -27,11 +27,445 @@ import java.util.function.Consumer;
 public final class Html {
 
   /// The name of an HTML attribute.
-  public sealed interface AttributeName extends HtmlAttributeNameGenerated permits HtmlAttributeName {
+  public sealed interface AttributeName permits HtmlAttributeName {
 
-    //    static AttributeName of(String name) {
-    //      return HtmlAttributeName.custom(name);
-    //    }
+    /// The `accesskey` HTML attribute.
+    Html.AttributeName ACCESSKEY = HtmlAttributeName.ACCESSKEY;
+
+    /// The `action` HTML attribute.
+    Html.AttributeName ACTION = HtmlAttributeName.ACTION;
+
+    /// The `align` HTML attribute.
+    Html.AttributeName ALIGN = HtmlAttributeName.ALIGN;
+
+    /// The `alignment-baseline` HTML attribute.
+    Html.AttributeName ALIGNMENT_BASELINE = HtmlAttributeName.ALIGNMENT_BASELINE;
+
+    /// The `alt` HTML attribute.
+    Html.AttributeName ALT = HtmlAttributeName.ALT;
+
+    /// The `aria-hidden` HTML attribute.
+    Html.AttributeName ARIA_HIDDEN = HtmlAttributeName.ARIA_HIDDEN;
+
+    /// The `aria-label` HTML attribute.
+    Html.AttributeName ARIA_LABEL = HtmlAttributeName.ARIA_LABEL;
+
+    /// The `as` HTML attribute.
+    Html.AttributeName AS = HtmlAttributeName.AS;
+
+    /// The `async` HTML attribute.
+    Html.AttributeName ASYNC = HtmlAttributeName.ASYNC;
+
+    /// The `autocomplete` HTML attribute.
+    Html.AttributeName AUTOCOMPLETE = HtmlAttributeName.AUTOCOMPLETE;
+
+    /// The `autofocus` HTML attribute.
+    Html.AttributeName AUTOFOCUS = HtmlAttributeName.AUTOFOCUS;
+
+    /// The `baseline-shift` HTML attribute.
+    Html.AttributeName BASELINE_SHIFT = HtmlAttributeName.BASELINE_SHIFT;
+
+    /// The `border` HTML attribute.
+    Html.AttributeName BORDER = HtmlAttributeName.BORDER;
+
+    /// The `cellpadding` HTML attribute.
+    Html.AttributeName CELLPADDING = HtmlAttributeName.CELLPADDING;
+
+    /// The `cellspacing` HTML attribute.
+    Html.AttributeName CELLSPACING = HtmlAttributeName.CELLSPACING;
+
+    /// The `charset` HTML attribute.
+    Html.AttributeName CHARSET = HtmlAttributeName.CHARSET;
+
+    /// The `checked` HTML attribute.
+    Html.AttributeName CHECKED = HtmlAttributeName.CHECKED;
+
+    /// The `cite` HTML attribute.
+    Html.AttributeName CITE = HtmlAttributeName.CITE;
+
+    /// The `class` HTML attribute.
+    Html.AttributeName CLASS = HtmlAttributeName.CLASS;
+
+    /// The `clip-path` HTML attribute.
+    Html.AttributeName CLIP_PATH = HtmlAttributeName.CLIP_PATH;
+
+    /// The `clip-rule` HTML attribute.
+    Html.AttributeName CLIP_RULE = HtmlAttributeName.CLIP_RULE;
+
+    /// The `closedby` HTML attribute.
+    Html.AttributeName CLOSEDBY = HtmlAttributeName.CLOSEDBY;
+
+    /// The `color` HTML attribute.
+    Html.AttributeName COLOR = HtmlAttributeName.COLOR;
+
+    /// The `color-interpolation` HTML attribute.
+    Html.AttributeName COLOR_INTERPOLATION = HtmlAttributeName.COLOR_INTERPOLATION;
+
+    /// The `color-interpolation-filters` HTML attribute.
+    Html.AttributeName COLOR_INTERPOLATION_FILTERS = HtmlAttributeName.COLOR_INTERPOLATION_FILTERS;
+
+    /// The `cols` HTML attribute.
+    Html.AttributeName COLS = HtmlAttributeName.COLS;
+
+    /// The `content` HTML attribute.
+    Html.AttributeName CONTENT = HtmlAttributeName.CONTENT;
+
+    /// The `contenteditable` HTML attribute.
+    Html.AttributeName CONTENTEDITABLE = HtmlAttributeName.CONTENTEDITABLE;
+
+    /// The `crossorigin` HTML attribute.
+    Html.AttributeName CROSSORIGIN = HtmlAttributeName.CROSSORIGIN;
+
+    /// The `cursor` HTML attribute.
+    Html.AttributeName CURSOR = HtmlAttributeName.CURSOR;
+
+    /// The `d` HTML attribute.
+    Html.AttributeName D = HtmlAttributeName.D;
+
+    /// The `defer` HTML attribute.
+    Html.AttributeName DEFER = HtmlAttributeName.DEFER;
+
+    /// The `dir` HTML attribute.
+    Html.AttributeName DIR = HtmlAttributeName.DIR;
+
+    /// The `direction` HTML attribute.
+    Html.AttributeName DIRECTION = HtmlAttributeName.DIRECTION;
+
+    /// The `dirname` HTML attribute.
+    Html.AttributeName DIRNAME = HtmlAttributeName.DIRNAME;
+
+    /// The `disabled` HTML attribute.
+    Html.AttributeName DISABLED = HtmlAttributeName.DISABLED;
+
+    /// The `display` HTML attribute.
+    Html.AttributeName DISPLAY = HtmlAttributeName.DISPLAY;
+
+    /// The `dominant-baseline` HTML attribute.
+    Html.AttributeName DOMINANT_BASELINE = HtmlAttributeName.DOMINANT_BASELINE;
+
+    /// The `draggable` HTML attribute.
+    Html.AttributeName DRAGGABLE = HtmlAttributeName.DRAGGABLE;
+
+    /// The `enctype` HTML attribute.
+    Html.AttributeName ENCTYPE = HtmlAttributeName.ENCTYPE;
+
+    /// The `fill` HTML attribute.
+    Html.AttributeName FILL = HtmlAttributeName.FILL;
+
+    /// The `fill-opacity` HTML attribute.
+    Html.AttributeName FILL_OPACITY = HtmlAttributeName.FILL_OPACITY;
+
+    /// The `fill-rule` HTML attribute.
+    Html.AttributeName FILL_RULE = HtmlAttributeName.FILL_RULE;
+
+    /// The `filter` HTML attribute.
+    Html.AttributeName FILTER = HtmlAttributeName.FILTER;
+
+    /// The `flood-color` HTML attribute.
+    Html.AttributeName FLOOD_COLOR = HtmlAttributeName.FLOOD_COLOR;
+
+    /// The `flood-opacity` HTML attribute.
+    Html.AttributeName FLOOD_OPACITY = HtmlAttributeName.FLOOD_OPACITY;
+
+    /// The `for` HTML attribute.
+    Html.AttributeName FOR = HtmlAttributeName.FOR;
+
+    /// The `form` HTML attribute.
+    Html.AttributeName FORM = HtmlAttributeName.FORM;
+
+    /// The `glyph-orientation-horizontal` HTML attribute.
+    Html.AttributeName GLYPH_ORIENTATION_HORIZONTAL = HtmlAttributeName.GLYPH_ORIENTATION_HORIZONTAL;
+
+    /// The `glyph-orientation-vertical` HTML attribute.
+    Html.AttributeName GLYPH_ORIENTATION_VERTICAL = HtmlAttributeName.GLYPH_ORIENTATION_VERTICAL;
+
+    /// The `height` HTML attribute.
+    Html.AttributeName HEIGHT = HtmlAttributeName.HEIGHT;
+
+    /// The `hidden` HTML attribute.
+    Html.AttributeName HIDDEN = HtmlAttributeName.HIDDEN;
+
+    /// The `href` HTML attribute.
+    Html.AttributeName HREF = HtmlAttributeName.HREF;
+
+    /// The `http-equiv` HTML attribute.
+    Html.AttributeName HTTP_EQUIV = HtmlAttributeName.HTTP_EQUIV;
+
+    /// The `id` HTML attribute.
+    Html.AttributeName ID = HtmlAttributeName.ID;
+
+    /// The `image-rendering` HTML attribute.
+    Html.AttributeName IMAGE_RENDERING = HtmlAttributeName.IMAGE_RENDERING;
+
+    /// The `integrity` HTML attribute.
+    Html.AttributeName INTEGRITY = HtmlAttributeName.INTEGRITY;
+
+    /// The `label` HTML attribute.
+    Html.AttributeName LABEL = HtmlAttributeName.LABEL;
+
+    /// The `lang` HTML attribute.
+    Html.AttributeName LANG = HtmlAttributeName.LANG;
+
+    /// The `letter-spacing` HTML attribute.
+    Html.AttributeName LETTER_SPACING = HtmlAttributeName.LETTER_SPACING;
+
+    /// The `lighting-color` HTML attribute.
+    Html.AttributeName LIGHTING_COLOR = HtmlAttributeName.LIGHTING_COLOR;
+
+    /// The `marker-end` HTML attribute.
+    Html.AttributeName MARKER_END = HtmlAttributeName.MARKER_END;
+
+    /// The `marker-mid` HTML attribute.
+    Html.AttributeName MARKER_MID = HtmlAttributeName.MARKER_MID;
+
+    /// The `marker-start` HTML attribute.
+    Html.AttributeName MARKER_START = HtmlAttributeName.MARKER_START;
+
+    /// The `mask` HTML attribute.
+    Html.AttributeName MASK = HtmlAttributeName.MASK;
+
+    /// The `mask-type` HTML attribute.
+    Html.AttributeName MASK_TYPE = HtmlAttributeName.MASK_TYPE;
+
+    /// The `maxlength` HTML attribute.
+    Html.AttributeName MAXLENGTH = HtmlAttributeName.MAXLENGTH;
+
+    /// The `media` HTML attribute.
+    Html.AttributeName MEDIA = HtmlAttributeName.MEDIA;
+
+    /// The `method` HTML attribute.
+    Html.AttributeName METHOD = HtmlAttributeName.METHOD;
+
+    /// The `minlength` HTML attribute.
+    Html.AttributeName MINLENGTH = HtmlAttributeName.MINLENGTH;
+
+    /// The `multiple` HTML attribute.
+    Html.AttributeName MULTIPLE = HtmlAttributeName.MULTIPLE;
+
+    /// The `name` HTML attribute.
+    Html.AttributeName NAME = HtmlAttributeName.NAME;
+
+    /// The `nomodule` HTML attribute.
+    Html.AttributeName NOMODULE = HtmlAttributeName.NOMODULE;
+
+    /// The `onafterprint` HTML attribute.
+    Html.AttributeName ONAFTERPRINT = HtmlAttributeName.ONAFTERPRINT;
+
+    /// The `onbeforeprint` HTML attribute.
+    Html.AttributeName ONBEFOREPRINT = HtmlAttributeName.ONBEFOREPRINT;
+
+    /// The `onbeforeunload` HTML attribute.
+    Html.AttributeName ONBEFOREUNLOAD = HtmlAttributeName.ONBEFOREUNLOAD;
+
+    /// The `onclick` HTML attribute.
+    Html.AttributeName ONCLICK = HtmlAttributeName.ONCLICK;
+
+    /// The `onhashchange` HTML attribute.
+    Html.AttributeName ONHASHCHANGE = HtmlAttributeName.ONHASHCHANGE;
+
+    /// The `onlanguagechange` HTML attribute.
+    Html.AttributeName ONLANGUAGECHANGE = HtmlAttributeName.ONLANGUAGECHANGE;
+
+    /// The `onmessage` HTML attribute.
+    Html.AttributeName ONMESSAGE = HtmlAttributeName.ONMESSAGE;
+
+    /// The `onoffline` HTML attribute.
+    Html.AttributeName ONOFFLINE = HtmlAttributeName.ONOFFLINE;
+
+    /// The `ononline` HTML attribute.
+    Html.AttributeName ONONLINE = HtmlAttributeName.ONONLINE;
+
+    /// The `onpagehide` HTML attribute.
+    Html.AttributeName ONPAGEHIDE = HtmlAttributeName.ONPAGEHIDE;
+
+    /// The `onpageshow` HTML attribute.
+    Html.AttributeName ONPAGESHOW = HtmlAttributeName.ONPAGESHOW;
+
+    /// The `onpopstate` HTML attribute.
+    Html.AttributeName ONPOPSTATE = HtmlAttributeName.ONPOPSTATE;
+
+    /// The `onrejectionhandled` HTML attribute.
+    Html.AttributeName ONREJECTIONHANDLED = HtmlAttributeName.ONREJECTIONHANDLED;
+
+    /// The `onstorage` HTML attribute.
+    Html.AttributeName ONSTORAGE = HtmlAttributeName.ONSTORAGE;
+
+    /// The `onsubmit` HTML attribute.
+    Html.AttributeName ONSUBMIT = HtmlAttributeName.ONSUBMIT;
+
+    /// The `onunhandledrejection` HTML attribute.
+    Html.AttributeName ONUNHANDLEDREJECTION = HtmlAttributeName.ONUNHANDLEDREJECTION;
+
+    /// The `onunload` HTML attribute.
+    Html.AttributeName ONUNLOAD = HtmlAttributeName.ONUNLOAD;
+
+    /// The `opacity` HTML attribute.
+    Html.AttributeName OPACITY = HtmlAttributeName.OPACITY;
+
+    /// The `open` HTML attribute.
+    Html.AttributeName OPEN = HtmlAttributeName.OPEN;
+
+    /// The `overflow` HTML attribute.
+    Html.AttributeName OVERFLOW = HtmlAttributeName.OVERFLOW;
+
+    /// The `paint-order` HTML attribute.
+    Html.AttributeName PAINT_ORDER = HtmlAttributeName.PAINT_ORDER;
+
+    /// The `placeholder` HTML attribute.
+    Html.AttributeName PLACEHOLDER = HtmlAttributeName.PLACEHOLDER;
+
+    /// The `pointer-events` HTML attribute.
+    Html.AttributeName POINTER_EVENTS = HtmlAttributeName.POINTER_EVENTS;
+
+    /// The `property` HTML attribute.
+    Html.AttributeName PROPERTY = HtmlAttributeName.PROPERTY;
+
+    /// The `readonly` HTML attribute.
+    Html.AttributeName READONLY = HtmlAttributeName.READONLY;
+
+    /// The `referrerpolicy` HTML attribute.
+    Html.AttributeName REFERRERPOLICY = HtmlAttributeName.REFERRERPOLICY;
+
+    /// The `rel` HTML attribute.
+    Html.AttributeName REL = HtmlAttributeName.REL;
+
+    /// The `required` HTML attribute.
+    Html.AttributeName REQUIRED = HtmlAttributeName.REQUIRED;
+
+    /// The `rev` HTML attribute.
+    Html.AttributeName REV = HtmlAttributeName.REV;
+
+    /// The `reversed` HTML attribute.
+    Html.AttributeName REVERSED = HtmlAttributeName.REVERSED;
+
+    /// The `role` HTML attribute.
+    Html.AttributeName ROLE = HtmlAttributeName.ROLE;
+
+    /// The `rows` HTML attribute.
+    Html.AttributeName ROWS = HtmlAttributeName.ROWS;
+
+    /// The `selected` HTML attribute.
+    Html.AttributeName SELECTED = HtmlAttributeName.SELECTED;
+
+    /// The `shape-rendering` HTML attribute.
+    Html.AttributeName SHAPE_RENDERING = HtmlAttributeName.SHAPE_RENDERING;
+
+    /// The `size` HTML attribute.
+    Html.AttributeName SIZE = HtmlAttributeName.SIZE;
+
+    /// The `sizes` HTML attribute.
+    Html.AttributeName SIZES = HtmlAttributeName.SIZES;
+
+    /// The `spellcheck` HTML attribute.
+    Html.AttributeName SPELLCHECK = HtmlAttributeName.SPELLCHECK;
+
+    /// The `src` HTML attribute.
+    Html.AttributeName SRC = HtmlAttributeName.SRC;
+
+    /// The `srcset` HTML attribute.
+    Html.AttributeName SRCSET = HtmlAttributeName.SRCSET;
+
+    /// The `start` HTML attribute.
+    Html.AttributeName START = HtmlAttributeName.START;
+
+    /// The `stop-color` HTML attribute.
+    Html.AttributeName STOP_COLOR = HtmlAttributeName.STOP_COLOR;
+
+    /// The `stop-opacity` HTML attribute.
+    Html.AttributeName STOP_OPACITY = HtmlAttributeName.STOP_OPACITY;
+
+    /// The `stroke` HTML attribute.
+    Html.AttributeName STROKE = HtmlAttributeName.STROKE;
+
+    /// The `stroke-dasharray` HTML attribute.
+    Html.AttributeName STROKE_DASHARRAY = HtmlAttributeName.STROKE_DASHARRAY;
+
+    /// The `stroke-dashoffset` HTML attribute.
+    Html.AttributeName STROKE_DASHOFFSET = HtmlAttributeName.STROKE_DASHOFFSET;
+
+    /// The `stroke-linecap` HTML attribute.
+    Html.AttributeName STROKE_LINECAP = HtmlAttributeName.STROKE_LINECAP;
+
+    /// The `stroke-linejoin` HTML attribute.
+    Html.AttributeName STROKE_LINEJOIN = HtmlAttributeName.STROKE_LINEJOIN;
+
+    /// The `stroke-miterlimit` HTML attribute.
+    Html.AttributeName STROKE_MITERLIMIT = HtmlAttributeName.STROKE_MITERLIMIT;
+
+    /// The `stroke-opacity` HTML attribute.
+    Html.AttributeName STROKE_OPACITY = HtmlAttributeName.STROKE_OPACITY;
+
+    /// The `stroke-width` HTML attribute.
+    Html.AttributeName STROKE_WIDTH = HtmlAttributeName.STROKE_WIDTH;
+
+    /// The `style` HTML attribute.
+    Html.AttributeName STYLE = HtmlAttributeName.STYLE;
+
+    /// The `tabindex` HTML attribute.
+    Html.AttributeName TABINDEX = HtmlAttributeName.TABINDEX;
+
+    /// The `target` HTML attribute.
+    Html.AttributeName TARGET = HtmlAttributeName.TARGET;
+
+    /// The `text-anchor` HTML attribute.
+    Html.AttributeName TEXT_ANCHOR = HtmlAttributeName.TEXT_ANCHOR;
+
+    /// The `text-decoration` HTML attribute.
+    Html.AttributeName TEXT_DECORATION = HtmlAttributeName.TEXT_DECORATION;
+
+    /// The `text-overflow` HTML attribute.
+    Html.AttributeName TEXT_OVERFLOW = HtmlAttributeName.TEXT_OVERFLOW;
+
+    /// The `text-rendering` HTML attribute.
+    Html.AttributeName TEXT_RENDERING = HtmlAttributeName.TEXT_RENDERING;
+
+    /// The `title` HTML attribute.
+    Html.AttributeName TITLE = HtmlAttributeName.TITLE;
+
+    /// The `transform` HTML attribute.
+    Html.AttributeName TRANSFORM = HtmlAttributeName.TRANSFORM;
+
+    /// The `transform-origin` HTML attribute.
+    Html.AttributeName TRANSFORM_ORIGIN = HtmlAttributeName.TRANSFORM_ORIGIN;
+
+    /// The `translate` HTML attribute.
+    Html.AttributeName TRANSLATE = HtmlAttributeName.TRANSLATE;
+
+    /// The `type` HTML attribute.
+    Html.AttributeName TYPE = HtmlAttributeName.TYPE;
+
+    /// The `unicode-bidi` HTML attribute.
+    Html.AttributeName UNICODE_BIDI = HtmlAttributeName.UNICODE_BIDI;
+
+    /// The `value` HTML attribute.
+    Html.AttributeName VALUE = HtmlAttributeName.VALUE;
+
+    /// The `vector-effect` HTML attribute.
+    Html.AttributeName VECTOR_EFFECT = HtmlAttributeName.VECTOR_EFFECT;
+
+    /// The `viewBox` HTML attribute.
+    Html.AttributeName VIEWBOX = HtmlAttributeName.VIEWBOX;
+
+    /// The `visibility` HTML attribute.
+    Html.AttributeName VISIBILITY = HtmlAttributeName.VISIBILITY;
+
+    /// The `white-space` HTML attribute.
+    Html.AttributeName WHITE_SPACE = HtmlAttributeName.WHITE_SPACE;
+
+    /// The `width` HTML attribute.
+    Html.AttributeName WIDTH = HtmlAttributeName.WIDTH;
+
+    /// The `word-spacing` HTML attribute.
+    Html.AttributeName WORD_SPACING = HtmlAttributeName.WORD_SPACING;
+
+    /// The `wrap` HTML attribute.
+    Html.AttributeName WRAP = HtmlAttributeName.WRAP;
+
+    /// The `writing-mode` HTML attribute.
+    Html.AttributeName WRITING_MODE = HtmlAttributeName.WRITING_MODE;
+
+    /// The `xmlns` HTML attribute.
+    Html.AttributeName XMLNS = HtmlAttributeName.XMLNS;
 
     /// Index of this attribute.
     /// @return index of this attribute.
@@ -40,23 +474,6 @@ public final class Html {
     /// Name of the attribute.
     /// @return name of the attribute
     String name();
-
-    //    /**
-    //     * Indicates if this is the name of a boolean atttribute.
-    //     *
-    //     * @return {@code true} if this is the name of a boolean atttribute and
-    //     *         {@code false} otherwise
-    //     */
-    //    boolean booleanAttribute();
-    //
-    //    /**
-    //     * Indicates if the value of this attribute must be formatted inside single
-    //     * quotes.
-    //     *
-    //     * @return {@code true} if the value of this attribute must be formatted
-    //     *         inside single quotes.
-    //     */
-    //    boolean singleQuoted();
 
   }
 

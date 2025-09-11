@@ -15,8 +15,8 @@
  */
 package objectos.way;
 
-import static objectos.way.HtmlAttributeNameGenerated.HREF;
-import static objectos.way.HtmlAttributeNameGenerated.VALUE;
+import static objectos.way.Html.AttributeName.HREF;
+import static objectos.way.Html.AttributeName.VALUE;
 import static org.testng.Assert.assertEquals;
 
 import java.util.function.Consumer;
