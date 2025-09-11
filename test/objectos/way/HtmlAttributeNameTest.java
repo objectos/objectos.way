@@ -35,25 +35,24 @@ public class HtmlAttributeNameTest {
 
   @Test
   public void create01() {
-    final Html.AttributeName active;
-    active = Html.AttributeName.of("data-active");
+    final HtmlAttributeName active;
+    active = HtmlAttributeName.custom("data-active");
 
     assertEquals(active.index(), -1);
     assertEquals(active.name(), "data-active");
     assertEquals(active.booleanAttribute(), false);
-    assertEquals(active.singleQuoted(), false);
   }
 
   @Test
   public void create02() {
     final Html.AttributeName active1;
-    active1 = Html.AttributeName.of("data-active");
+    active1 = HtmlAttributeName.custom("data-active");
 
     final Html.AttributeName active2;
-    active2 = Html.AttributeName.of("data-active");
+    active2 = HtmlAttributeName.custom("data-active");
 
     final Html.AttributeName other;
-    other = Html.AttributeName.of("data-other");
+    other = HtmlAttributeName.custom("data-other");
 
     assertEquals(active1, active2);
     assertEquals(active2, active1);

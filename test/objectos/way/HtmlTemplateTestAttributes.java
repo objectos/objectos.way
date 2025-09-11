@@ -23,7 +23,7 @@ public class HtmlTemplateTestAttributes {
 
   private final Html.Id foo = Html.Id.of("foo");
 
-  private final Html.AttributeName dataActive = Html.AttributeName.of("data-active");
+  private final Html.AttributeName dataActive = HtmlAttributeName.custom("data-active");
 
   @Test
   public void as() {

@@ -26,7 +26,7 @@ public class ScriptWriterTest {
 
   private static final Html.Id FOO = Html.Id.of("foo");
 
-  private final Html.AttributeName dataItem = Html.AttributeName.of("data-item");
+  private final Html.AttributeName dataItem = HtmlAttributeName.custom("data-item");
 
   @Test
   public void close01() {

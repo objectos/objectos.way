@@ -15,240 +15,346 @@
  */
 package objectos.way;
 
-import java.util.ArrayList;
-import java.util.List;
-
 final class HtmlAttributeName implements Html.AttributeName {
+  //
+  // DATA ATTRS
+  //
+  static final HtmlAttributeName DATA_FRAME = new HtmlAttributeName(false, 0, "data-frame");
+  static final HtmlAttributeName DATA_HIGH = new HtmlAttributeName(false, 1, "data-high");
+  static final HtmlAttributeName DATA_LINE = new HtmlAttributeName(false, 2, "data-line");
 
-  private static final class Builder {
+  //
+  // DATA ON
+  //
+  static final HtmlAttributeName DATA_ON_CLICK = new HtmlAttributeName(false, 3, "data-on-click");
+  static final HtmlAttributeName DATA_ON_INPUT = new HtmlAttributeName(false, 4, "data-on-input");
+  static final HtmlAttributeName DATA_ON_LOAD = new HtmlAttributeName(false, 5, "data-on-load");
+  static final HtmlAttributeName DATA_ON_SUCCESS = new HtmlAttributeName(false, 6, "data-on-success");
 
-    private final List<HtmlAttributeName> standardValues = new ArrayList<>();
+  //
+  // HTML
+  //
+  static final HtmlAttributeName ACCESSKEY = new HtmlAttributeName(false, 7, "accesskey");
+  static final HtmlAttributeName ACTION = new HtmlAttributeName(false, 8, "action");
+  static final HtmlAttributeName ALIGN = new HtmlAttributeName(false, 9, "align");
+  static final HtmlAttributeName ALIGNMENT_BASELINE = new HtmlAttributeName(false, 10, "alignment-baseline");
+  static final HtmlAttributeName ALT = new HtmlAttributeName(false, 11, "alt");
+  static final HtmlAttributeName ARIA_HIDDEN = new HtmlAttributeName(false, 12, "aria-hidden");
+  static final HtmlAttributeName ARIA_LABEL = new HtmlAttributeName(false, 13, "aria-label");
+  static final HtmlAttributeName AS = new HtmlAttributeName(false, 14, "as");
+  static final HtmlAttributeName ASYNC = new HtmlAttributeName(true, 15, "async");
+  static final HtmlAttributeName AUTOCOMPLETE = new HtmlAttributeName(false, 16, "autocomplete");
+  static final HtmlAttributeName AUTOFOCUS = new HtmlAttributeName(true, 17, "autofocus");
+  static final HtmlAttributeName BASELINE_SHIFT = new HtmlAttributeName(false, 18, "baseline-shift");
+  static final HtmlAttributeName BORDER = new HtmlAttributeName(false, 19, "border");
+  static final HtmlAttributeName CELLPADDING = new HtmlAttributeName(false, 20, "cellpadding");
+  static final HtmlAttributeName CELLSPACING = new HtmlAttributeName(false, 21, "cellspacing");
+  static final HtmlAttributeName CHARSET = new HtmlAttributeName(false, 22, "charset");
+  static final HtmlAttributeName CHECKED = new HtmlAttributeName(true, 23, "checked");
+  static final HtmlAttributeName CITE = new HtmlAttributeName(false, 24, "cite");
+  static final HtmlAttributeName CLASS = new HtmlAttributeName(false, 25, "class");
+  static final HtmlAttributeName CLIP_PATH = new HtmlAttributeName(false, 26, "clip-path");
+  static final HtmlAttributeName CLIP_RULE = new HtmlAttributeName(false, 27, "clip-rule");
+  static final HtmlAttributeName CLOSEDBY = new HtmlAttributeName(false, 28, "closedby");
+  static final HtmlAttributeName COLOR = new HtmlAttributeName(false, 29, "color");
+  static final HtmlAttributeName COLOR_INTERPOLATION = new HtmlAttributeName(false, 30, "color-interpolation");
+  static final HtmlAttributeName COLOR_INTERPOLATION_FILTERS = new HtmlAttributeName(false, 31, "color-interpolation-filters");
+  static final HtmlAttributeName COLS = new HtmlAttributeName(false, 32, "cols");
+  static final HtmlAttributeName CONTENT = new HtmlAttributeName(false, 33, "content");
+  static final HtmlAttributeName CONTENTEDITABLE = new HtmlAttributeName(false, 34, "contenteditable");
+  static final HtmlAttributeName CROSSORIGIN = new HtmlAttributeName(false, 35, "crossorigin");
+  static final HtmlAttributeName CURSOR = new HtmlAttributeName(false, 36, "cursor");
+  static final HtmlAttributeName D = new HtmlAttributeName(false, 37, "d");
+  static final HtmlAttributeName DEFER = new HtmlAttributeName(true, 38, "defer");
+  static final HtmlAttributeName DIR = new HtmlAttributeName(false, 39, "dir");
+  static final HtmlAttributeName DIRECTION = new HtmlAttributeName(false, 40, "direction");
+  static final HtmlAttributeName DIRNAME = new HtmlAttributeName(false, 41, "dirname");
+  static final HtmlAttributeName DISABLED = new HtmlAttributeName(true, 42, "disabled");
+  static final HtmlAttributeName DISPLAY = new HtmlAttributeName(false, 43, "display");
+  static final HtmlAttributeName DOMINANT_BASELINE = new HtmlAttributeName(false, 44, "dominant-baseline");
+  static final HtmlAttributeName DRAGGABLE = new HtmlAttributeName(false, 45, "draggable");
+  static final HtmlAttributeName ENCTYPE = new HtmlAttributeName(false, 46, "enctype");
+  static final HtmlAttributeName FILL = new HtmlAttributeName(false, 47, "fill");
+  static final HtmlAttributeName FILL_OPACITY = new HtmlAttributeName(false, 48, "fill-opacity");
+  static final HtmlAttributeName FILL_RULE = new HtmlAttributeName(false, 49, "fill-rule");
+  static final HtmlAttributeName FILTER = new HtmlAttributeName(false, 50, "filter");
+  static final HtmlAttributeName FLOOD_COLOR = new HtmlAttributeName(false, 51, "flood-color");
+  static final HtmlAttributeName FLOOD_OPACITY = new HtmlAttributeName(false, 52, "flood-opacity");
+  static final HtmlAttributeName FOR = new HtmlAttributeName(false, 53, "for");
+  static final HtmlAttributeName FORM = new HtmlAttributeName(false, 54, "form");
+  static final HtmlAttributeName GLYPH_ORIENTATION_HORIZONTAL = new HtmlAttributeName(false, 55, "glyph-orientation-horizontal");
+  static final HtmlAttributeName GLYPH_ORIENTATION_VERTICAL = new HtmlAttributeName(false, 56, "glyph-orientation-vertical");
+  static final HtmlAttributeName HEIGHT = new HtmlAttributeName(false, 57, "height");
+  static final HtmlAttributeName HIDDEN = new HtmlAttributeName(true, 58, "hidden");
+  static final HtmlAttributeName HREF = new HtmlAttributeName(false, 59, "href");
+  static final HtmlAttributeName HTTP_EQUIV = new HtmlAttributeName(false, 60, "http-equiv");
+  static final HtmlAttributeName ID = new HtmlAttributeName(false, 61, "id");
+  static final HtmlAttributeName IMAGE_RENDERING = new HtmlAttributeName(false, 62, "image-rendering");
+  static final HtmlAttributeName INTEGRITY = new HtmlAttributeName(false, 63, "integrity");
+  static final HtmlAttributeName LABEL = new HtmlAttributeName(false, 64, "label");
+  static final HtmlAttributeName LANG = new HtmlAttributeName(false, 65, "lang");
+  static final HtmlAttributeName LETTER_SPACING = new HtmlAttributeName(false, 66, "letter-spacing");
+  static final HtmlAttributeName LIGHTING_COLOR = new HtmlAttributeName(false, 67, "lighting-color");
+  static final HtmlAttributeName MARKER_END = new HtmlAttributeName(false, 68, "marker-end");
+  static final HtmlAttributeName MARKER_MID = new HtmlAttributeName(false, 69, "marker-mid");
+  static final HtmlAttributeName MARKER_START = new HtmlAttributeName(false, 70, "marker-start");
+  static final HtmlAttributeName MASK = new HtmlAttributeName(false, 71, "mask");
+  static final HtmlAttributeName MASK_TYPE = new HtmlAttributeName(false, 72, "mask-type");
+  static final HtmlAttributeName MAXLENGTH = new HtmlAttributeName(false, 73, "maxlength");
+  static final HtmlAttributeName MEDIA = new HtmlAttributeName(false, 74, "media");
+  static final HtmlAttributeName METHOD = new HtmlAttributeName(false, 75, "method");
+  static final HtmlAttributeName MINLENGTH = new HtmlAttributeName(false, 76, "minlength");
+  static final HtmlAttributeName MULTIPLE = new HtmlAttributeName(true, 77, "multiple");
+  static final HtmlAttributeName NAME = new HtmlAttributeName(false, 78, "name");
+  static final HtmlAttributeName NOMODULE = new HtmlAttributeName(true, 79, "nomodule");
+  static final HtmlAttributeName ONAFTERPRINT = new HtmlAttributeName(false, 80, "onafterprint");
+  static final HtmlAttributeName ONBEFOREPRINT = new HtmlAttributeName(false, 81, "onbeforeprint");
+  static final HtmlAttributeName ONBEFOREUNLOAD = new HtmlAttributeName(false, 82, "onbeforeunload");
+  static final HtmlAttributeName ONCLICK = new HtmlAttributeName(false, 83, "onclick");
+  static final HtmlAttributeName ONHASHCHANGE = new HtmlAttributeName(false, 84, "onhashchange");
+  static final HtmlAttributeName ONLANGUAGECHANGE = new HtmlAttributeName(false, 85, "onlanguagechange");
+  static final HtmlAttributeName ONMESSAGE = new HtmlAttributeName(false, 86, "onmessage");
+  static final HtmlAttributeName ONOFFLINE = new HtmlAttributeName(false, 87, "onoffline");
+  static final HtmlAttributeName ONONLINE = new HtmlAttributeName(false, 88, "ononline");
+  static final HtmlAttributeName ONPAGEHIDE = new HtmlAttributeName(false, 89, "onpagehide");
+  static final HtmlAttributeName ONPAGESHOW = new HtmlAttributeName(false, 90, "onpageshow");
+  static final HtmlAttributeName ONPOPSTATE = new HtmlAttributeName(false, 91, "onpopstate");
+  static final HtmlAttributeName ONREJECTIONHANDLED = new HtmlAttributeName(false, 92, "onrejectionhandled");
+  static final HtmlAttributeName ONSTORAGE = new HtmlAttributeName(false, 93, "onstorage");
+  static final HtmlAttributeName ONSUBMIT = new HtmlAttributeName(false, 94, "onsubmit");
+  static final HtmlAttributeName ONUNHANDLEDREJECTION = new HtmlAttributeName(false, 95, "onunhandledrejection");
+  static final HtmlAttributeName ONUNLOAD = new HtmlAttributeName(false, 96, "onunload");
+  static final HtmlAttributeName OPACITY = new HtmlAttributeName(false, 97, "opacity");
+  static final HtmlAttributeName OPEN = new HtmlAttributeName(true, 98, "open");
+  static final HtmlAttributeName OVERFLOW = new HtmlAttributeName(false, 99, "overflow");
+  static final HtmlAttributeName PAINT_ORDER = new HtmlAttributeName(false, 100, "paint-order");
+  static final HtmlAttributeName PLACEHOLDER = new HtmlAttributeName(false, 101, "placeholder");
+  static final HtmlAttributeName POINTER_EVENTS = new HtmlAttributeName(false, 102, "pointer-events");
+  static final HtmlAttributeName PROPERTY = new HtmlAttributeName(false, 103, "property");
+  static final HtmlAttributeName READONLY = new HtmlAttributeName(true, 104, "readonly");
+  static final HtmlAttributeName REFERRERPOLICY = new HtmlAttributeName(false, 105, "referrerpolicy");
+  static final HtmlAttributeName REL = new HtmlAttributeName(false, 106, "rel");
+  static final HtmlAttributeName REQUIRED = new HtmlAttributeName(true, 107, "required");
+  static final HtmlAttributeName REV = new HtmlAttributeName(false, 108, "rev");
+  static final HtmlAttributeName REVERSED = new HtmlAttributeName(true, 109, "reversed");
+  static final HtmlAttributeName ROLE = new HtmlAttributeName(false, 110, "role");
+  static final HtmlAttributeName ROWS = new HtmlAttributeName(false, 111, "rows");
+  static final HtmlAttributeName SELECTED = new HtmlAttributeName(true, 112, "selected");
+  static final HtmlAttributeName SHAPE_RENDERING = new HtmlAttributeName(false, 113, "shape-rendering");
+  static final HtmlAttributeName SIZE = new HtmlAttributeName(false, 114, "size");
+  static final HtmlAttributeName SIZES = new HtmlAttributeName(false, 115, "sizes");
+  static final HtmlAttributeName SPELLCHECK = new HtmlAttributeName(false, 116, "spellcheck");
+  static final HtmlAttributeName SRC = new HtmlAttributeName(false, 117, "src");
+  static final HtmlAttributeName SRCSET = new HtmlAttributeName(false, 118, "srcset");
+  static final HtmlAttributeName START = new HtmlAttributeName(false, 119, "start");
+  static final HtmlAttributeName STOP_COLOR = new HtmlAttributeName(false, 120, "stop-color");
+  static final HtmlAttributeName STOP_OPACITY = new HtmlAttributeName(false, 121, "stop-opacity");
+  static final HtmlAttributeName STROKE = new HtmlAttributeName(false, 122, "stroke");
+  static final HtmlAttributeName STROKE_DASHARRAY = new HtmlAttributeName(false, 123, "stroke-dasharray");
+  static final HtmlAttributeName STROKE_DASHOFFSET = new HtmlAttributeName(false, 124, "stroke-dashoffset");
+  static final HtmlAttributeName STROKE_LINECAP = new HtmlAttributeName(false, 125, "stroke-linecap");
+  static final HtmlAttributeName STROKE_LINEJOIN = new HtmlAttributeName(false, 126, "stroke-linejoin");
+  static final HtmlAttributeName STROKE_MITERLIMIT = new HtmlAttributeName(false, 127, "stroke-miterlimit");
+  static final HtmlAttributeName STROKE_OPACITY = new HtmlAttributeName(false, 128, "stroke-opacity");
+  static final HtmlAttributeName STROKE_WIDTH = new HtmlAttributeName(false, 129, "stroke-width");
+  static final HtmlAttributeName STYLE = new HtmlAttributeName(false, 130, "style");
+  static final HtmlAttributeName TABINDEX = new HtmlAttributeName(false, 131, "tabindex");
+  static final HtmlAttributeName TARGET = new HtmlAttributeName(false, 132, "target");
+  static final HtmlAttributeName TEXT_ANCHOR = new HtmlAttributeName(false, 133, "text-anchor");
+  static final HtmlAttributeName TEXT_DECORATION = new HtmlAttributeName(false, 134, "text-decoration");
+  static final HtmlAttributeName TEXT_OVERFLOW = new HtmlAttributeName(false, 135, "text-overflow");
+  static final HtmlAttributeName TEXT_RENDERING = new HtmlAttributeName(false, 136, "text-rendering");
+  static final HtmlAttributeName TITLE = new HtmlAttributeName(false, 137, "title");
+  static final HtmlAttributeName TRANSFORM = new HtmlAttributeName(false, 138, "transform");
+  static final HtmlAttributeName TRANSFORM_ORIGIN = new HtmlAttributeName(false, 139, "transform-origin");
+  static final HtmlAttributeName TRANSLATE = new HtmlAttributeName(false, 140, "translate");
+  static final HtmlAttributeName TYPE = new HtmlAttributeName(false, 141, "type");
+  static final HtmlAttributeName UNICODE_BIDI = new HtmlAttributeName(false, 142, "unicode-bidi");
+  static final HtmlAttributeName VALUE = new HtmlAttributeName(false, 143, "value");
+  static final HtmlAttributeName VECTOR_EFFECT = new HtmlAttributeName(false, 144, "vector-effect");
+  static final HtmlAttributeName VIEWBOX = new HtmlAttributeName(false, 145, "viewBox");
+  static final HtmlAttributeName VISIBILITY = new HtmlAttributeName(false, 146, "visibility");
+  static final HtmlAttributeName WHITE_SPACE = new HtmlAttributeName(false, 147, "white-space");
+  static final HtmlAttributeName WIDTH = new HtmlAttributeName(false, 148, "width");
+  static final HtmlAttributeName WORD_SPACING = new HtmlAttributeName(false, 149, "word-spacing");
+  static final HtmlAttributeName WRAP = new HtmlAttributeName(false, 150, "wrap");
+  static final HtmlAttributeName WRITING_MODE = new HtmlAttributeName(false, 151, "writing-mode");
+  static final HtmlAttributeName XMLNS = new HtmlAttributeName(false, 152, "xmlns");
 
-    private int index;
+  private static final HtmlAttributeName[] VALUES = {
+      DATA_FRAME,
+      DATA_HIGH,
+      DATA_LINE,
+      DATA_ON_CLICK,
+      DATA_ON_INPUT,
+      DATA_ON_LOAD,
+      DATA_ON_SUCCESS,
+      ACCESSKEY,
+      ACTION,
+      ALIGN,
+      ALIGNMENT_BASELINE,
+      ALT,
+      ARIA_HIDDEN,
+      ARIA_LABEL,
+      AS,
+      ASYNC,
+      AUTOCOMPLETE,
+      AUTOFOCUS,
+      BASELINE_SHIFT,
+      BORDER,
+      CELLPADDING,
+      CELLSPACING,
+      CHARSET,
+      CHECKED,
+      CITE,
+      CLASS,
+      CLIP_PATH,
+      CLIP_RULE,
+      CLOSEDBY,
+      COLOR,
+      COLOR_INTERPOLATION,
+      COLOR_INTERPOLATION_FILTERS,
+      COLS,
+      CONTENT,
+      CONTENTEDITABLE,
+      CROSSORIGIN,
+      CURSOR,
+      D,
+      DEFER,
+      DIR,
+      DIRECTION,
+      DIRNAME,
+      DISABLED,
+      DISPLAY,
+      DOMINANT_BASELINE,
+      DRAGGABLE,
+      ENCTYPE,
+      FILL,
+      FILL_OPACITY,
+      FILL_RULE,
+      FILTER,
+      FLOOD_COLOR,
+      FLOOD_OPACITY,
+      FOR,
+      FORM,
+      GLYPH_ORIENTATION_HORIZONTAL,
+      GLYPH_ORIENTATION_VERTICAL,
+      HEIGHT,
+      HIDDEN,
+      HREF,
+      HTTP_EQUIV,
+      ID,
+      IMAGE_RENDERING,
+      INTEGRITY,
+      LABEL,
+      LANG,
+      LETTER_SPACING,
+      LIGHTING_COLOR,
+      MARKER_END,
+      MARKER_MID,
+      MARKER_START,
+      MASK,
+      MASK_TYPE,
+      MAXLENGTH,
+      MEDIA,
+      METHOD,
+      MINLENGTH,
+      MULTIPLE,
+      NAME,
+      NOMODULE,
+      ONAFTERPRINT,
+      ONBEFOREPRINT,
+      ONBEFOREUNLOAD,
+      ONCLICK,
+      ONHASHCHANGE,
+      ONLANGUAGECHANGE,
+      ONMESSAGE,
+      ONOFFLINE,
+      ONONLINE,
+      ONPAGEHIDE,
+      ONPAGESHOW,
+      ONPOPSTATE,
+      ONREJECTIONHANDLED,
+      ONSTORAGE,
+      ONSUBMIT,
+      ONUNHANDLEDREJECTION,
+      ONUNLOAD,
+      OPACITY,
+      OPEN,
+      OVERFLOW,
+      PAINT_ORDER,
+      PLACEHOLDER,
+      POINTER_EVENTS,
+      PROPERTY,
+      READONLY,
+      REFERRERPOLICY,
+      REL,
+      REQUIRED,
+      REV,
+      REVERSED,
+      ROLE,
+      ROWS,
+      SELECTED,
+      SHAPE_RENDERING,
+      SIZE,
+      SIZES,
+      SPELLCHECK,
+      SRC,
+      SRCSET,
+      START,
+      STOP_COLOR,
+      STOP_OPACITY,
+      STROKE,
+      STROKE_DASHARRAY,
+      STROKE_DASHOFFSET,
+      STROKE_LINECAP,
+      STROKE_LINEJOIN,
+      STROKE_MITERLIMIT,
+      STROKE_OPACITY,
+      STROKE_WIDTH,
+      STYLE,
+      TABINDEX,
+      TARGET,
+      TEXT_ANCHOR,
+      TEXT_DECORATION,
+      TEXT_OVERFLOW,
+      TEXT_RENDERING,
+      TITLE,
+      TRANSFORM,
+      TRANSFORM_ORIGIN,
+      TRANSLATE,
+      TYPE,
+      UNICODE_BIDI,
+      VALUE,
+      VECTOR_EFFECT,
+      VIEWBOX,
+      VISIBILITY,
+      WHITE_SPACE,
+      WIDTH,
+      WORD_SPACING,
+      WRAP,
+      WRITING_MODE,
+      XMLNS
+  };
 
-    private Builder() {}
-
-    public final HtmlAttributeName action(String name) {
-      return createImpl(name, false, true, Script.Action.class);
-    }
-
-    public final HtmlAttributeName create(String name, boolean booleanAttribute) {
-      return createImpl(name, booleanAttribute, false, String.class);
-    }
-
-    private HtmlAttributeName createImpl(String name, boolean booleanAttribute, boolean singleQuoted, Class<?> type) {
-      HtmlAttributeName result;
-      result = new HtmlAttributeName(index++, name, booleanAttribute, singleQuoted, type);
-
-      standardValues.add(result);
-
-      return result;
-    }
-
-    public HtmlAttributeName[] buildValuesImpl() {
-      return standardValues.toArray(HtmlAttributeName[]::new);
-    }
-
-  }
-
-  private static Builder BUILDER = new Builder();
-
-  // custom
-
-  public static final Html.AttributeName DATA_EXECUTE_DEFAULT = BUILDER.create("data-execute-default", true);
-  public static final Html.AttributeName DATA_FRAME = BUILDER.create("data-frame", false);
-  public static final Html.AttributeName DATA_ON_CLICK = BUILDER.action("data-on-click");
-  public static final Html.AttributeName DATA_ON_INPUT = BUILDER.action("data-on-input");
-  public static final Html.AttributeName DATA_ON_LOAD = BUILDER.action("data-on-load");
-  public static final Html.AttributeName DATA_ON_SUCCESS = BUILDER.action("data-on-success");
-
-  // custom (Syntax)
-
-  public static final Html.AttributeName DATA_LINE = BUILDER.create("data-line", false);
-  public static final Html.AttributeName DATA_HIGH = BUILDER.create("data-high", false);
-
-  // standard
-
-  public static final Html.AttributeName ACCESSKEY = BUILDER.create("accesskey", false);
-  public static final Html.AttributeName ACTION = BUILDER.create("action", false);
-  public static final Html.AttributeName ALIGN = BUILDER.create("align", false);
-  public static final Html.AttributeName ALIGNMENT_BASELINE = BUILDER.create("alignment-baseline", false);
-  public static final Html.AttributeName ALT = BUILDER.create("alt", false);
-  public static final Html.AttributeName ARIA_HIDDEN = BUILDER.create("aria-hidden", false);
-  public static final Html.AttributeName ARIA_LABEL = BUILDER.create("aria-label", false);
-  public static final Html.AttributeName AS = BUILDER.create("as", false);
-  public static final Html.AttributeName ASYNC = BUILDER.create("async", true);
-  public static final Html.AttributeName AUTOCOMPLETE = BUILDER.create("autocomplete", false);
-  public static final Html.AttributeName AUTOFOCUS = BUILDER.create("autofocus", true);
-  public static final Html.AttributeName BASELINE_SHIFT = BUILDER.create("baseline-shift", false);
-  public static final Html.AttributeName BORDER = BUILDER.create("border", false);
-  public static final Html.AttributeName CELLPADDING = BUILDER.create("cellpadding", false);
-  public static final Html.AttributeName CELLSPACING = BUILDER.create("cellspacing", false);
-  public static final Html.AttributeName CHARSET = BUILDER.create("charset", false);
-  public static final Html.AttributeName CHECKED = BUILDER.create("checked", true);
-  public static final Html.AttributeName CITE = BUILDER.create("cite", false);
-  public static final Html.AttributeName CLASS = BUILDER.create("class", false);
-  public static final Html.AttributeName CLIP_PATH = BUILDER.create("clip-path", false);
-  public static final Html.AttributeName CLIP_RULE = BUILDER.create("clip-rule", false);
-  public static final Html.AttributeName CLOSEDBY = BUILDER.create("closedby", false);
-  public static final Html.AttributeName COLOR = BUILDER.create("color", false);
-  public static final Html.AttributeName COLOR_INTERPOLATION = BUILDER.create("color-interpolation", false);
-  public static final Html.AttributeName COLOR_INTERPOLATION_FILTERS = BUILDER.create("color-interpolation-filters", false);
-  public static final Html.AttributeName COLS = BUILDER.create("cols", false);
-  public static final Html.AttributeName CONTENT = BUILDER.create("content", false);
-  public static final Html.AttributeName CONTENTEDITABLE = BUILDER.create("contenteditable", false);
-  public static final Html.AttributeName CROSSORIGIN = BUILDER.create("crossorigin", false);
-  public static final Html.AttributeName CURSOR = BUILDER.create("cursor", false);
-  public static final Html.AttributeName D = BUILDER.create("d", false);
-  public static final Html.AttributeName DEFER = BUILDER.create("defer", true);
-  public static final Html.AttributeName DIR = BUILDER.create("dir", false);
-  public static final Html.AttributeName DIRECTION = BUILDER.create("direction", false);
-  public static final Html.AttributeName DIRNAME = BUILDER.create("dirname", false);
-  public static final Html.AttributeName DISABLED = BUILDER.create("disabled", true);
-  public static final Html.AttributeName DISPLAY = BUILDER.create("display", false);
-  public static final Html.AttributeName DOMINANT_BASELINE = BUILDER.create("dominant-baseline", false);
-  public static final Html.AttributeName DRAGGABLE = BUILDER.create("draggable", false);
-  public static final Html.AttributeName ENCTYPE = BUILDER.create("enctype", false);
-  public static final Html.AttributeName FILL = BUILDER.create("fill", false);
-  public static final Html.AttributeName FILL_OPACITY = BUILDER.create("fill-opacity", false);
-  public static final Html.AttributeName FILL_RULE = BUILDER.create("fill-rule", false);
-  public static final Html.AttributeName FILTER = BUILDER.create("filter", false);
-  public static final Html.AttributeName FLOOD_COLOR = BUILDER.create("flood-color", false);
-  public static final Html.AttributeName FLOOD_OPACITY = BUILDER.create("flood-opacity", false);
-  public static final Html.AttributeName FOR = BUILDER.create("for", false);
-  public static final Html.AttributeName FORM = BUILDER.create("form", false);
-  public static final Html.AttributeName GLYPH_ORIENTATION_HORIZONTAL = BUILDER.create("glyph-orientation-horizontal", false);
-  public static final Html.AttributeName GLYPH_ORIENTATION_VERTICAL = BUILDER.create("glyph-orientation-vertical", false);
-  public static final Html.AttributeName HEIGHT = BUILDER.create("height", false);
-  public static final Html.AttributeName HIDDEN = BUILDER.create("hidden", true);
-  public static final Html.AttributeName HREF = BUILDER.create("href", false);
-  public static final Html.AttributeName HTTP_EQUIV = BUILDER.create("http-equiv", false);
-  public static final Html.AttributeName ID = BUILDER.create("id", false);
-  public static final Html.AttributeName IMAGE_RENDERING = BUILDER.create("image-rendering", false);
-  public static final Html.AttributeName INTEGRITY = BUILDER.create("integrity", false);
-  public static final Html.AttributeName LABEL = BUILDER.create("label", false);
-  public static final Html.AttributeName LANG = BUILDER.create("lang", false);
-  public static final Html.AttributeName LETTER_SPACING = BUILDER.create("letter-spacing", false);
-  public static final Html.AttributeName LIGHTING_COLOR = BUILDER.create("lighting-color", false);
-  public static final Html.AttributeName MARKER_END = BUILDER.create("marker-end", false);
-  public static final Html.AttributeName MARKER_MID = BUILDER.create("marker-mid", false);
-  public static final Html.AttributeName MARKER_START = BUILDER.create("marker-start", false);
-  public static final Html.AttributeName MASK = BUILDER.create("mask", false);
-  public static final Html.AttributeName MASK_TYPE = BUILDER.create("mask-type", false);
-  public static final Html.AttributeName MAXLENGTH = BUILDER.create("maxlength", false);
-  public static final Html.AttributeName MEDIA = BUILDER.create("media", false);
-  public static final Html.AttributeName METHOD = BUILDER.create("method", false);
-  public static final Html.AttributeName MINLENGTH = BUILDER.create("minlength", false);
-  public static final Html.AttributeName MULTIPLE = BUILDER.create("multiple", true);
-  public static final Html.AttributeName NAME = BUILDER.create("name", false);
-  public static final Html.AttributeName NOMODULE = BUILDER.create("nomodule", true);
-  public static final Html.AttributeName ONAFTERPRINT = BUILDER.create("onafterprint", false);
-  public static final Html.AttributeName ONBEFOREPRINT = BUILDER.create("onbeforeprint", false);
-  public static final Html.AttributeName ONBEFOREUNLOAD = BUILDER.create("onbeforeunload", false);
-  public static final Html.AttributeName ONCLICK = BUILDER.create("onclick", false);
-  public static final Html.AttributeName ONHASHCHANGE = BUILDER.create("onhashchange", false);
-  public static final Html.AttributeName ONLANGUAGECHANGE = BUILDER.create("onlanguagechange", false);
-  public static final Html.AttributeName ONMESSAGE = BUILDER.create("onmessage", false);
-  public static final Html.AttributeName ONOFFLINE = BUILDER.create("onoffline", false);
-  public static final Html.AttributeName ONONLINE = BUILDER.create("ononline", false);
-  public static final Html.AttributeName ONPAGEHIDE = BUILDER.create("onpagehide", false);
-  public static final Html.AttributeName ONPAGESHOW = BUILDER.create("onpageshow", false);
-  public static final Html.AttributeName ONPOPSTATE = BUILDER.create("onpopstate", false);
-  public static final Html.AttributeName ONREJECTIONHANDLED = BUILDER.create("onrejectionhandled", false);
-  public static final Html.AttributeName ONSTORAGE = BUILDER.create("onstorage", false);
-  public static final Html.AttributeName ONSUBMIT = BUILDER.create("onsubmit", false);
-  public static final Html.AttributeName ONUNHANDLEDREJECTION = BUILDER.create("onunhandledrejection", false);
-  public static final Html.AttributeName ONUNLOAD = BUILDER.create("onunload", false);
-  public static final Html.AttributeName OPACITY = BUILDER.create("opacity", false);
-  public static final Html.AttributeName OPEN = BUILDER.create("open", true);
-  public static final Html.AttributeName OVERFLOW = BUILDER.create("overflow", false);
-  public static final Html.AttributeName PAINT_ORDER = BUILDER.create("paint-order", false);
-  public static final Html.AttributeName PLACEHOLDER = BUILDER.create("placeholder", false);
-  public static final Html.AttributeName POINTER_EVENTS = BUILDER.create("pointer-events", false);
-  public static final Html.AttributeName PROPERTY = BUILDER.create("property", false);
-  public static final Html.AttributeName READONLY = BUILDER.create("readonly", true);
-  public static final Html.AttributeName REFERRERPOLICY = BUILDER.create("referrerpolicy", false);
-  public static final Html.AttributeName REL = BUILDER.create("rel", false);
-  public static final Html.AttributeName REQUIRED = BUILDER.create("required", true);
-  public static final Html.AttributeName REV = BUILDER.create("rev", false);
-  public static final Html.AttributeName REVERSED = BUILDER.create("reversed", true);
-  public static final Html.AttributeName ROLE = BUILDER.create("role", false);
-  public static final Html.AttributeName ROWS = BUILDER.create("rows", false);
-  public static final Html.AttributeName SELECTED = BUILDER.create("selected", true);
-  public static final Html.AttributeName SHAPE_RENDERING = BUILDER.create("shape-rendering", false);
-  public static final Html.AttributeName SIZE = BUILDER.create("size", false);
-  public static final Html.AttributeName SIZES = BUILDER.create("sizes", false);
-  public static final Html.AttributeName SPELLCHECK = BUILDER.create("spellcheck", false);
-  public static final Html.AttributeName SRC = BUILDER.create("src", false);
-  public static final Html.AttributeName SRCSET = BUILDER.create("srcset", false);
-  public static final Html.AttributeName START = BUILDER.create("start", false);
-  public static final Html.AttributeName STOP_COLOR = BUILDER.create("stop-color", false);
-  public static final Html.AttributeName STOP_OPACITY = BUILDER.create("stop-opacity", false);
-  public static final Html.AttributeName STROKE = BUILDER.create("stroke", false);
-  public static final Html.AttributeName STROKE_DASHARRAY = BUILDER.create("stroke-dasharray", false);
-  public static final Html.AttributeName STROKE_DASHOFFSET = BUILDER.create("stroke-dashoffset", false);
-  public static final Html.AttributeName STROKE_LINECAP = BUILDER.create("stroke-linecap", false);
-  public static final Html.AttributeName STROKE_LINEJOIN = BUILDER.create("stroke-linejoin", false);
-  public static final Html.AttributeName STROKE_MITERLIMIT = BUILDER.create("stroke-miterlimit", false);
-  public static final Html.AttributeName STROKE_OPACITY = BUILDER.create("stroke-opacity", false);
-  public static final Html.AttributeName STROKE_WIDTH = BUILDER.create("stroke-width", false);
-  public static final Html.AttributeName STYLE = BUILDER.create("style", false);
-  public static final Html.AttributeName TABINDEX = BUILDER.create("tabindex", false);
-  public static final Html.AttributeName TARGET = BUILDER.create("target", false);
-  public static final Html.AttributeName TEXT_ANCHOR = BUILDER.create("text-anchor", false);
-  public static final Html.AttributeName TEXT_DECORATION = BUILDER.create("text-decoration", false);
-  public static final Html.AttributeName TEXT_OVERFLOW = BUILDER.create("text-overflow", false);
-  public static final Html.AttributeName TEXT_RENDERING = BUILDER.create("text-rendering", false);
-  public static final Html.AttributeName TITLE = BUILDER.create("title", false);
-  public static final Html.AttributeName TRANSFORM = BUILDER.create("transform", false);
-  public static final Html.AttributeName TRANSFORM_ORIGIN = BUILDER.create("transform-origin", false);
-  public static final Html.AttributeName TRANSLATE = BUILDER.create("translate", false);
-  public static final Html.AttributeName TYPE = BUILDER.create("type", false);
-  public static final Html.AttributeName UNICODE_BIDI = BUILDER.create("unicode-bidi", false);
-  public static final Html.AttributeName VALUE = BUILDER.create("value", false);
-  public static final Html.AttributeName VECTOR_EFFECT = BUILDER.create("vector-effect", false);
-  public static final Html.AttributeName VIEWBOX = BUILDER.create("viewBox", false);
-  public static final Html.AttributeName VISIBILITY = BUILDER.create("visibility", false);
-  public static final Html.AttributeName WHITE_SPACE = BUILDER.create("white-space", false);
-  public static final Html.AttributeName WIDTH = BUILDER.create("width", false);
-  public static final Html.AttributeName WORD_SPACING = BUILDER.create("word-spacing", false);
-  public static final Html.AttributeName WRAP = BUILDER.create("wrap", false);
-  public static final Html.AttributeName WRITING_MODE = BUILDER.create("writing-mode", false);
-  public static final Html.AttributeName XMLNS = BUILDER.create("xmlns", false);
-
-  static HtmlAttributeName[] VALUES = create();
-
-  private static HtmlAttributeName[] create() {
-    HtmlAttributeName[] result;
-    result = BUILDER.buildValuesImpl();
-
-    BUILDER = null;
-
-    return result;
-  }
+  private final boolean booleanAttribute;
 
   private final int index;
 
   private final String name;
 
-  private final boolean booleanAttribute;
-
-  private final boolean singleQuoted;
-
-  private final Class<?> type;
-
-  public HtmlAttributeName(int index, String name, boolean booleanAttribute, boolean singleQuoted, Class<?> type) {
-    this.index = index;
-    this.name = name;
+  private HtmlAttributeName(boolean booleanAttribute, int index, String name) {
     this.booleanAttribute = booleanAttribute;
-    this.singleQuoted = singleQuoted;
-    this.type = type;
+
+    this.index = index;
+
+    this.name = name;
   }
 
   static HtmlAttributeName custom(String name) {
     checkName(name);
 
-    return new HtmlAttributeName(-1, name, false, false, String.class);
+    return new HtmlAttributeName(false, -1, name);
   }
 
   /**
@@ -324,18 +430,8 @@ final class HtmlAttributeName implements Html.AttributeName {
     return name;
   }
 
-  @Override
   public final boolean booleanAttribute() {
     return booleanAttribute;
-  }
-
-  @Override
-  public final boolean singleQuoted() {
-    return singleQuoted;
-  }
-
-  public final Class<?> type() {
-    return type;
   }
 
 }

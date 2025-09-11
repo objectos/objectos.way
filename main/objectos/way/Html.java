@@ -26,45 +26,37 @@ import java.util.function.Consumer;
  */
 public final class Html {
 
-  /**
-   * The name of an HTML attribute.
-   */
+  /// The name of an HTML attribute.
   public sealed interface AttributeName extends HtmlAttributeNameGenerated permits HtmlAttributeName {
 
-    static AttributeName of(String name) {
-      return HtmlAttributeName.custom(name);
-    }
+    //    static AttributeName of(String name) {
+    //      return HtmlAttributeName.custom(name);
+    //    }
 
-    /**
-     * Index of this attribute.
-     *
-     * @return index of this attribute.
-     */
+    /// Index of this attribute.
+    /// @return index of this attribute.
     int index();
 
-    /**
-     * Name of the attribute.
-     *
-     * @return name of the attribute
-     */
+    /// Name of the attribute.
+    /// @return name of the attribute
     String name();
 
-    /**
-     * Indicates if this is the name of a boolean atttribute.
-     *
-     * @return {@code true} if this is the name of a boolean atttribute and
-     *         {@code false} otherwise
-     */
-    boolean booleanAttribute();
-
-    /**
-     * Indicates if the value of this attribute must be formatted inside single
-     * quotes.
-     *
-     * @return {@code true} if the value of this attribute must be formatted
-     *         inside single quotes.
-     */
-    boolean singleQuoted();
+    //    /**
+    //     * Indicates if this is the name of a boolean atttribute.
+    //     *
+    //     * @return {@code true} if this is the name of a boolean atttribute and
+    //     *         {@code false} otherwise
+    //     */
+    //    boolean booleanAttribute();
+    //
+    //    /**
+    //     * Indicates if the value of this attribute must be formatted inside single
+    //     * quotes.
+    //     *
+    //     * @return {@code true} if the value of this attribute must be formatted
+    //     *         inside single quotes.
+    //     */
+    //    boolean singleQuoted();
 
   }
 
@@ -2413,11 +2405,6 @@ public final class Html {
    * code.
    */
   public non-sealed static abstract class Template extends TemplateTestable implements Component, Testable {
-
-    /**
-     * The {@code data-execute-default} boolean attribute.
-     */
-    protected static final Html.AttributeObject dataExecuteDefault = Html.AttributeObject.of(HtmlAttributeName.DATA_EXECUTE_DEFAULT, "");
 
     Html.Markup html;
 

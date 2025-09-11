@@ -32,12 +32,14 @@ final class DomAttribute implements Dom.Attribute {
     return name.name();
   }
 
+  @Override
   public final boolean booleanAttribute() {
     return name.booleanAttribute();
   }
 
+  @Override
   public final boolean singleQuoted() {
-    return name.singleQuoted();
+    return value instanceof Script.Action;
   }
 
   @Override
@@ -57,10 +59,7 @@ final class DomAttribute implements Dom.Attribute {
       return String.valueOf(result);
     }
 
-    Class<?> type;
-    type = name.type();
-
-    if (type == Script.Action.class) {
+    if (result instanceof Script.Action) {
 
       ScriptActionJoiner joiner;
       joiner = new ScriptActionJoiner();
