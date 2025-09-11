@@ -326,63 +326,63 @@ final class HtmlSpec {
   // # BEGIN: Testable
   // ##################################################################
 
-  record MethodSpec(String sig, String javadocs) {}
+  record MethodSpec(String sig, String invocation, String javadocs) {}
 
   static List<MethodSpec> testableNodes() {
     return List.of(
-        new MethodSpec("String testableCell(String value, int width)", """
+        new MethodSpec("String testableCell(String value, int width)", "testableCell(value, width)", """
         Formats the specified value as a testable table cell with the specified fixed width.
         @param value the cell value
         @param width the fixed width of the cell
         @return always the cell value
         """),
-        new MethodSpec("String testableField(String name, String value)", """
+        new MethodSpec("String testableField(String name, String value)", "testableField(name, value)", """
         Formats the specified name and value as a testable field.
         @param name the field name
         @param value the field value
         @return always the field value
         """),
-        new MethodSpec("String testableFieldName(String name)", """
+        new MethodSpec("String testableFieldName(String name)", "testableFieldName(name)", """
         Formats the specified name as a testable field name.
         @param name the field name
         @return the specified field name
         """),
-        new MethodSpec("String testableFieldValue(String value)", """
+        new MethodSpec("String testableFieldValue(String value)", "testableFieldValue(value)", """
         Formats the specified value as a testable field value.
         @param value the field value
         @return the specified field value
         """),
-        new MethodSpec("String testableH1(String value)", """
+        new MethodSpec("String testableH1(String value)", "testableH1(value)", """
         Formats the specified value as a testable heading level 1.
         @param value the heading value
         @return the specified value
         """),
-        new MethodSpec("String testableH2(String value)", """
+        new MethodSpec("String testableH2(String value)", "testableH2(value)", """
         Formats the specified value as a testable heading level 2.
         @param value the heading value
         @return the specified value
         """),
-        new MethodSpec("String testableH3(String value)", """
+        new MethodSpec("String testableH3(String value)", "testableH3(value)", """
         Formats the specified value as a testable heading level 3.
         @param value the heading value
         @return the specified value
         """),
-        new MethodSpec("String testableH4(String value)", """
+        new MethodSpec("String testableH4(String value)", "testableH4(value)", """
         Formats the specified value as a testable heading level 4.
         @param value the heading value
         @return the specified value
         """),
-        new MethodSpec("String testableH5(String value)", """
+        new MethodSpec("String testableH5(String value)", "testableH5(value)", """
         Formats the specified value as a testable heading level 5.
         @param value the heading value
         @return the specified value
         """),
-        new MethodSpec("String testableH6(String value)", """
+        new MethodSpec("String testableH6(String value)", "testableH6(value)", """
         Formats the specified value as a testable heading level 6.
         @param value the heading value
         @return the specified value
         """),
-        new MethodSpec("Html.Instruction.NoOp testableNewLine()", """
+        new MethodSpec("Html.Instruction.NoOp testableNewLine()", "testableNewLine()", """
         Formats a line separator at the testable output exclusively.
         @return a no-op instruction
         """)
@@ -399,16 +399,16 @@ final class HtmlSpec {
 
   static List<MethodSpec> textNodes() {
     return List.of(
-        new MethodSpec("Html.Instruction.OfElement nbsp()", """
+        new MethodSpec("Html.Instruction.OfElement nbsp()", "nbsp()", """
         Renders the non-breaking space `&nbsp;` HTML character entity.
         @return an instruction representing the non-breaking space character entity.
         """),
-        new MethodSpec("Html.Instruction.OfElement raw(String value)", """
+        new MethodSpec("Html.Instruction.OfElement raw(String value)", "raw(value)", """
         Renders the specified value as raw HTML.
         @param value the raw HTML value
         @return a raw HTML instruction
         """),
-        new MethodSpec("Html.Instruction.OfElement text(String value)", """
+        new MethodSpec("Html.Instruction.OfElement text(String value)", "text(value)", """
         Renders a text node with the specified value.
         The text value is escaped before being emitted to the output.
         @param value the text value
@@ -444,18 +444,18 @@ final class HtmlSpec {
 
   static List<MethodSpec> wayNodes() {
     return List.of(
-        new MethodSpec("Html.Instruction.OfAttribute dataFrame(String name)", """
+        new MethodSpec("Html.Instruction.OfAttribute dataFrame(String name)", "dataFrame(name)", """
         Renders the `data-frame` attribute for a frame with the specified name.
         @param name the name of the frame
         @return an instruction representing the attribute
         """),
-        new MethodSpec("Html.Instruction.OfAttribute dataFrame(String name, String value)", """
+        new MethodSpec("Html.Instruction.OfAttribute dataFrame(String name, String value)", "dataFrame(name, value)", """
         Renders the `data-frame` attribute for a frame with the specified name and value.
         @param name the name of the frame
         @param value the value of the frame
         @return an instruction representing the attribute
         """),
-        new MethodSpec("Html.Instruction.OfAttribute css(String value)", """
+        new MethodSpec("Html.Instruction.OfAttribute css(String value)", "css(value)", """
         Renders the `class` attribute by processing the specified value.
 
         This method is designed to work with Java text blocks. It first removes
@@ -480,7 +480,7 @@ final class HtmlSpec {
         @param value the text block containing class names, possibly spread across multiple lines
         @return an instruction representing this attribute.
         """),
-        new MethodSpec("Html.Instruction.OfFragment f(Html.Fragment.Of0 fragment)", """
+        new MethodSpec("Html.Instruction.OfFragment f(Html.Fragment.Of0 fragment)", "f(fragment)", """
         Renders the specified fragment as part of this document.
 
         The following Objectos HTML component:
@@ -500,7 +500,7 @@ final class HtmlSpec {
         @param fragment the fragment to include
         @return an instruction representing the fragment
         """),
-        new MethodSpec("<T1> Html.Instruction.OfFragment f(Html.Fragment.Of1<T1> fragment, T1 arg1)", """
+        new MethodSpec("<T1> Html.Instruction.OfFragment f(Html.Fragment.Of1<T1> fragment, T1 arg1)", "f(fragment, arg1)", """
         Renders the specified fragment as part of this document.
 
         The following Objectos HTML component:
@@ -522,7 +522,7 @@ final class HtmlSpec {
         @param arg1 the first argument
         @return an instruction representing the fragment
         """),
-        new MethodSpec("<T1, T2> Html.Instruction.OfFragment f(Html.Fragment.Of2<T1, T2> fragment, T1 arg1, T2 arg2)", """
+        new MethodSpec("<T1, T2> Html.Instruction.OfFragment f(Html.Fragment.Of2<T1, T2> fragment, T1 arg1, T2 arg2)", "f(fragment, arg1, arg2)", """
         Renders the specified fragment as part of this document.
 
         The following Objectos HTML component:
@@ -542,7 +542,7 @@ final class HtmlSpec {
         @param arg2 the second argument
         @return an instruction representing the fragment
         """),
-        new MethodSpec("<T1, T2, T3> Html.Instruction.OfFragment f(Html.Fragment.Of3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3)", """
+        new MethodSpec("<T1, T2, T3> Html.Instruction.OfFragment f(Html.Fragment.Of3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3)", "f(fragment, arg1, arg2, arg3)", """
         Renders the specified fragment as part of this document.
 
         The following Objectos HTML component:
@@ -567,7 +567,7 @@ final class HtmlSpec {
         @param arg3 the third argument
         @return an instruction representing the fragment
         """),
-        new MethodSpec("<T1, T2, T3, T4> Html.Instruction.OfFragment f(Html.Fragment.Of4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4)", """
+        new MethodSpec("<T1, T2, T3, T4> Html.Instruction.OfFragment f(Html.Fragment.Of4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4)", "f(fragment, arg1, arg2, arg3, arg4)", """
         Renders the specified fragment as part of this document.
 
         @param <T1> the type of the first argument
@@ -581,17 +581,17 @@ final class HtmlSpec {
         @param arg4 the fourth argument
         @return an instruction representing the fragment
         """),
-        new MethodSpec("Html.Instruction.OfElement flatten(Html.Instruction... contents)", """
+        new MethodSpec("Html.Instruction.OfElement flatten(Html.Instruction... contents)", "flatten(contents)", """
         Flattens the specified instructions so that each of the specified
         instructions is individually added, in order, to a receiving element.
         @param contents the instructions to be flattened
         @return an instruction representing this flatten operation
         """),
-        new MethodSpec("Html.Instruction.NoOp noop()", """
+        new MethodSpec("Html.Instruction.NoOp noop()", "noop()", """
         The no-op instruction.
         @return the no-op instruction.
         """),
-        new MethodSpec("Html.Instruction.OfFragment renderComponent(Html.Component component)", """
+        new MethodSpec("Html.Instruction.OfFragment renderComponent(Html.Component component)", "renderComponent(component)", """
         Renders the specified component as part of this instance.
         @param component the component to be rendered as part of this instance
         @return an instruction representing the rendered component.

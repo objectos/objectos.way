@@ -212,7 +212,7 @@ public class HtmlCompilerTestInternal {
     HtmlMarkup compiler;
     compiler = new HtmlMarkup();
 
-    compiler.attribute0(HtmlAttributeName.LANG, "pt-BR");
+    compiler.attr(HtmlAttributeName.LANG, "pt-BR");
 
     compiler.elementBegin(HtmlElementName.HTML);
     compiler.elementValue(Html.ATTRIBUTE);
@@ -652,8 +652,8 @@ public class HtmlCompilerTestInternal {
     HtmlMarkup compiler;
     compiler = new HtmlMarkup();
 
-    compiler.attribute0(HtmlAttributeName.TYPE, "email");
-    compiler.attribute0(HtmlAttributeName.REQUIRED);
+    compiler.attr(HtmlAttributeName.TYPE, "email");
+    compiler.attr(HtmlAttributeName.REQUIRED);
 
     compiler.elementBegin(HtmlElementName.INPUT);
     compiler.elementValue(Html.ATTRIBUTE);

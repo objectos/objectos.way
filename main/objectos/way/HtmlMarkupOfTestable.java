@@ -18,7 +18,7 @@ package objectos.way;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-final class HtmlMarkupOfTestable extends HtmlMarkupElements implements Html.Markup {
+final class HtmlMarkupOfTestable extends HtmlMarkupBase implements Html.Markup {
 
   private final Testable.Formatter formatter;
 
@@ -157,16 +157,6 @@ final class HtmlMarkupOfTestable extends HtmlMarkupElements implements Html.Mark
   }
 
   @Override
-  public final Html.Instruction.OfElement element(Html.ElementName name, Html.Instruction... contents) {
-    return Html.ELEMENT;
-  }
-
-  @Override
-  public final Html.Instruction.OfElement element(Html.ElementName name, String text) {
-    return Html.ELEMENT;
-  }
-
-  @Override
   public final Html.Instruction.OfElement flatten(Html.Instruction... contents) {
     Objects.requireNonNull(contents, "contents == null");
 
@@ -180,13 +170,6 @@ final class HtmlMarkupOfTestable extends HtmlMarkupElements implements Html.Mark
   @Override
   public final Html.Instruction.NoOp noop() {
     return Html.NOOP;
-  }
-
-  @Override
-  public final Html.Instruction.OfElement raw(String text) {
-    Objects.requireNonNull(text, "text == null");
-
-    return Html.ELEMENT;
   }
 
   @Override
@@ -244,6 +227,17 @@ final class HtmlMarkupOfTestable extends HtmlMarkupElements implements Html.Mark
   }
 
   @Override
+  public final Html.Instruction.OfElement nbsp() {
+    return raw("&nbsp;");
+  }
+
+  @Override
+  public final Html.Instruction.OfElement raw(String text) {
+    Objects.requireNonNull(text, "text == null");
+    return Html.ELEMENT;
+  }
+
+  @Override
   public final Html.Instruction.OfElement text(String text) {
     return Html.ELEMENT;
   }
@@ -254,13 +248,23 @@ final class HtmlMarkupOfTestable extends HtmlMarkupElements implements Html.Mark
   }
 
   @Override
-  final Html.Instruction.OfAttribute attribute0(Html.AttributeName name) {
+  final Html.Instruction.OfAttribute attr0(Html.AttributeName name) {
     return Html.ATTRIBUTE;
   }
 
   @Override
-  final Html.AttributeOrNoOp attribute0(Html.AttributeName name, Object value) {
+  final Html.AttributeOrNoOp attr0(Html.AttributeName name, Object value) {
     return Html.ATTRIBUTE;
+  }
+
+  @Override
+  final Html.Instruction.OfElement elem0(Html.ElementName name, Html.Instruction... contents) {
+    return Html.ELEMENT;
+  }
+
+  @Override
+  final Html.Instruction.OfElement elem0(Html.ElementName name, String text) {
+    return Html.ELEMENT;
   }
 
 }

@@ -794,7 +794,7 @@ public class HtmlTemplateTest {
           protected final void render() {
             input(
                 type("email"),
-                required()
+                required
             );
           }
         },
@@ -975,7 +975,7 @@ public class HtmlTemplateTest {
                 flatten(
                     label(),
                     input(),
-                    disabled()
+                    disabled
                 )
             );
           }
@@ -1123,7 +1123,7 @@ public class HtmlTemplateTest {
           }
 
           private void body0() {
-            input(required());
+            input(required);
           }
         },
 
@@ -1147,7 +1147,7 @@ public class HtmlTemplateTest {
           }
 
           private void test() {
-            button(disabled(), text("Foo"));
+            button(disabled, text("Foo"));
           }
         },
 
@@ -1263,7 +1263,7 @@ public class HtmlTemplateTest {
         new Html.Template() {
           @Override
           protected final void render() {
-            element(
+            elem(
                 Html.ElementName.BLOCKQUOTE,
                 className("foo")
             );

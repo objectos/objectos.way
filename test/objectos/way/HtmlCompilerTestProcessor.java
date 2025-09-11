@@ -49,7 +49,7 @@ public class HtmlCompilerTestProcessor {
     HtmlMarkup compiler;
     compiler = new HtmlMarkup();
 
-    compiler.attribute0(HtmlAttributeName.LANG, "pt-BR");
+    compiler.attr(HtmlAttributeName.LANG, "pt-BR");
 
     compiler.elementBegin(HtmlElementName.HTML);
     compiler.elementValue(Html.ATTRIBUTE);

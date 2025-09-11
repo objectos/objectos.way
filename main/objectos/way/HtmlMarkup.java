@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
+final class HtmlMarkup extends HtmlMarkupBase {
 
   static final byte _DOCUMENT_START = -1;
   static final byte _DOCUMENT_NODES_ITERABLE = -2;
@@ -54,6 +54,49 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
   private static final int OFFSET_MAX = OFFSET_RAW;
 
   private final StringBuilder sb = new StringBuilder();
+
+  // ##################################################################
+  // # BEGIN: Public API
+  // ##################################################################
+
+  public final String toJsonString() {
+    try {
+      Dom.Document document;
+      document = compile();
+
+      sb.setLength(0);
+
+      DomFormatter.JSON.formatTo(document, sb);
+
+      return sb.toString();
+    } catch (IOException e) {
+      throw new AssertionError("StringBuilder does not throw IOException", e);
+    }
+  }
+
+  @Override
+  public final String toString() {
+    try {
+      Dom.Document document;
+      document = compile();
+
+      sb.setLength(0);
+
+      DomFormatter.STANDARD.formatTo(document, sb);
+
+      return sb.toString();
+    } catch (IOException e) {
+      throw new AssertionError("StringBuilder does not throw IOException", e);
+    }
+  }
+
+  // ##################################################################
+  // # END: Public API
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Way Support
+  // ##################################################################
 
   @Override
   public final Html.Instruction.OfFragment f(Html.Fragment.Of0 fragment) {
@@ -139,50 +182,19 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
     return Html.FRAGMENT;
   }
 
-  public final String toJsonString() {
-    try {
-      Dom.Document document;
-      document = compile();
-
-      sb.setLength(0);
-
-      DomFormatter.JSON.formatTo(document, sb);
-
-      return sb.toString();
-    } catch (IOException e) {
-      throw new AssertionError("StringBuilder does not throw IOException", e);
-    }
-  }
-
-  @Override
-  public final String toString() {
-    try {
-      Dom.Document document;
-      document = compile();
-
-      sb.setLength(0);
-
-      DomFormatter.STANDARD.formatTo(document, sb);
-
-      return sb.toString();
-    } catch (IOException e) {
-      throw new AssertionError("StringBuilder does not throw IOException", e);
-    }
-  }
-
   @Override
   public final Html.Instruction.OfAttribute css(String value) {
-    String formatted;
+    final String formatted;
     formatted = Html.ofText(value, sb);
 
-    return attribute0(HtmlAttributeName.CLASS, formatted);
+    return attr0(HtmlAttributeName.CLASS, formatted);
   }
 
   @Override
   public final Html.Instruction.OfAttribute dataFrame(String name) {
     Objects.requireNonNull(name, "name == null");
 
-    return attr(HtmlAttributeName.DATA_FRAME, name);
+    return attr0(HtmlAttributeName.DATA_FRAME, name);
   }
 
   @Override
@@ -190,7 +202,7 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
     Objects.requireNonNull(name, "name == null");
     Objects.requireNonNull(value, "value == null");
 
-    return attr(HtmlAttributeName.DATA_FRAME, name + ":" + value);
+    return attr0(HtmlAttributeName.DATA_FRAME, name + ":" + value);
   }
 
   @Override
@@ -225,49 +237,9 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
     final Script.Action action;
     action = Script.Action.create(script);
 
-    return attribute0(name, action);
+    return attr0(name, action);
   }
 
-  /**
-   * Flattens the specified instructions so that each of the specified
-   * instructions is individually added, in order, to a receiving element.
-   *
-   * <p>
-   * This is useful, for example, when creating {@link HtmlComponent}
-   * instances. The following Objectos HTML code:
-   *
-   * {@snippet file = "objectos/html/BaseTemplateDslTest.java" region =
-   * "flatten"}
-   *
-   * <p>
-   * Generates the following HTML:
-   *
-   * <pre>{@code
-   *    <body>
-   *    <div class="my-component">
-   *    <h1>Flatten example</h1>
-   *    <p>First paragraph</p>
-   *    <p>Second paragraph</p>
-   *    </div>
-   *    </body>
-   * }</pre>
-   *
-   * <p>
-   * The {@code div} instruction is rendered as if it was invoked with four
-   * distinct instructions:
-   *
-   * <ul>
-   * <li>the {@code class} attribute;
-   * <li>the {@code h1} element;
-   * <li>the first {@code p} element; and
-   * <li>the second {@code p} element.
-   * </ul>
-   *
-   * @param contents
-   *        the instructions to be flattened
-   *
-   * @return an instruction representing this flatten operation
-   */
   @Override
   public final Html.Instruction.OfElement flatten(Html.Instruction... contents) {
     Objects.requireNonNull(contents, "contents == null");
@@ -286,79 +258,59 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
     return Html.ELEMENT;
   }
 
-  /**
-   * The no-op instruction.
-   *
-   * <p>
-   * It can be used to conditionally add an attribute or element. For example,
-   * the following Objectos HTML template:
-   *
-   * {@snippet file = "objectos/html/BaseTemplateDslTest.java" region = "noop"}
-   *
-   * <p>
-   * Generates the following when {@code error == false}:
-   *
-   * <pre>{@code
-   *     <div class="alert">This is an alert!</div>
-   * }</pre>
-   *
-   * <p>
-   * And generates the following when {@code error == true}:
-   *
-   * <pre>{@code
-   *     <div class="alert alert-error">This is an alert!</div>
-   * }</pre>
-   *
-   * @return the no-op instruction.
-   */
   @Override
   public final Html.Instruction.NoOp noop() {
     return Html.NOOP;
   }
 
+  // ##################################################################
+  // # END: Way Support
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Elements
+  // ##################################################################
+
+  @Override
+  public final void doctype() {
+    mainAdd(HtmlByteProto.DOCTYPE);
+  }
+
+  // ##################################################################
+  // # END: Elements
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Text
+  // ##################################################################
+
+  @Override
+  public final Html.Instruction.OfElement nbsp() {
+    rawImpl("&nbsp;");
+    return Html.ELEMENT;
+  }
+
   @Override
   public final Html.Instruction.OfElement raw(String text) {
     Objects.requireNonNull(text, "text == null");
-
     rawImpl(text);
-
     return Html.ELEMENT;
   }
 
-  /**
-   * Generates a text node with the specified {@code text} value. The text
-   * value is escaped before being emitted to the output.
-   *
-   * <p>
-   * The following Objectos HTML template:
-   *
-   * {@snippet file = "objectos/html/BaseTemplateDslTest.java" region =
-   * "text"}
-   *
-   * <p>
-   * Generates the following HTML:
-   *
-   * <pre>{@code
-   *     <p><strong>This is in bold</strong> &amp; this is not</p>
-   * }</pre>
-   *
-   * @param text
-   *        the text value to be added
-   *
-   * @return an instruction representing the text node
-   */
   @Override
   public final Html.Instruction.OfElement text(String text) {
     Objects.requireNonNull(text, "text == null");
-
     textImpl(text);
-
     return Html.ELEMENT;
   }
 
-  //
-  // Section: testable methods
-  //
+  // ##################################################################
+  // # END: Text
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Testable
+  // ##################################################################
 
   @Override
   public final String testableCell(String value, int width) { return value; }
@@ -392,6 +344,10 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
 
   @Override
   public final Html.Instruction.NoOp testableNewLine() { return Html.NOOP; }
+
+  // ##################################################################
+  // # END: Testable
+  // ##################################################################
 
   //
   // Section: DOM related methods
@@ -1734,9 +1690,9 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
     return index;
   }
 
-  //
-  // Section: recording methods
-  //
+  // ##################################################################
+  // # BEGIN: Recording
+  // ##################################################################
 
   byte[] aux = new byte[128];
 
@@ -1766,6 +1722,8 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
 
   @Override
   final Html.Instruction.OfAmbiguous ambiguous(HtmlAmbiguous name, String value) {
+    Objects.requireNonNull(value, "value == null");
+
     int ordinal;
     ordinal = name.ordinal();
 
@@ -1789,7 +1747,7 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
   }
 
   @Override
-  final Html.Instruction.OfAttribute attribute0(Html.AttributeName name) {
+  final Html.Instruction.OfAttribute attr0(Html.AttributeName name) {
     int index;
     index = name.index();
 
@@ -1810,7 +1768,9 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
   }
 
   @Override
-  final Html.AttributeOrNoOp attribute0(Html.AttributeName name, Object value) {
+  final Html.AttributeOrNoOp attr0(Html.AttributeName name, Object value) {
+    Objects.requireNonNull(value, "value == null");
+
     int index;
     index = name.index();
 
@@ -1856,9 +1816,7 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
   }
 
   @Override
-  public final Html.Instruction.OfElement element(Html.ElementName name, Html.Instruction... contents) {
-    Objects.requireNonNull(name, "name == null");
-
+  final Html.Instruction.OfElement elem0(Html.ElementName name, Html.Instruction... contents) {
     elementBegin(name);
 
     for (int i = 0; i < contents.length; i++) {
@@ -1874,8 +1832,7 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
   }
 
   @Override
-  public final Html.Instruction.OfElement element(Html.ElementName name, String text) {
-    Objects.requireNonNull(name, "name == null");
+  final Html.Instruction.OfElement elem0(Html.ElementName name, String text) {
     Objects.requireNonNull(text, "text == null");
 
     textImpl(text);
@@ -2276,6 +2233,13 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
       proto = main[index++];
 
       switch (proto) {
+        case HtmlByteProto.ATTRIBUTE_EXT0 -> {
+          byte idx0;
+          idx0 = main[index++];
+
+          mainAdd(proto, idx0);
+        }
+
         case HtmlByteProto.ATTRIBUTE_EXT1 -> {
           byte idx0;
           idx0 = main[index++];
@@ -2602,17 +2566,8 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
     return index;
   }
 
-  //
-  // Section: elements methods
-  //
-
-  @Override
-  public final void doctype() {
-    mainAdd(HtmlByteProto.DOCTYPE);
-  }
-
-  //
-  // Section: attribute methods
-  //
+  // ##################################################################
+  // # END: Recording
+  // ##################################################################
 
 }

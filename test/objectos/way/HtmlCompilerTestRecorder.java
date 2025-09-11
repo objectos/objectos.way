@@ -17,6 +17,7 @@ package objectos.way;
 
 import java.util.Arrays;
 import objectos.way.Html.ClassName;
+import objectos.way.Html.HtmlId;
 import org.testng.annotations.Test;
 
 public class HtmlCompilerTestRecorder {
@@ -452,11 +453,11 @@ public class HtmlCompilerTestRecorder {
     html.elementBegin(HtmlElementName.NAV);
     html.elementEnd();
     // template end
-    
+
     html.elementBegin(HtmlElementName.BODY);
     html.elementValue(BaseApi.FRAGMENT);
     html.elementEnd();
-    
+
     html.compilationEnd();
     */
 
@@ -499,21 +500,11 @@ public class HtmlCompilerTestRecorder {
     test(
         html,
 
-        HtmlByteProto.MARKED4,
+        HtmlByteProto.AMBIGUOUS1,
+        (byte) HtmlAmbiguous.STYLE.code(),
         HtmlBytes.encodeInt0(0),
         HtmlBytes.encodeInt1(0),
-        HtmlByteProto.INTERNAL4,
-
-        HtmlByteProto.ELEMENT,
-        HtmlBytes.encodeInt0(7),
-        HtmlBytes.encodeInt1(7),
-        HtmlByteProto.STANDARD_NAME,
-        (byte) HtmlElementName.STYLE.index(),
-        HtmlByteProto.TEXT,
-        HtmlBytes.encodeInt0(10),
-        HtmlByteProto.END,
-        HtmlBytes.encodeInt0(11),
-        HtmlByteProto.INTERNAL
+        HtmlByteProto.INTERNAL5
     );
   }
 
@@ -528,7 +519,7 @@ public class HtmlCompilerTestRecorder {
 
     html.input(
         html.type("email"),
-        html.required()
+        Html.Markup.required
     );
 
     test(
@@ -540,21 +531,17 @@ public class HtmlCompilerTestRecorder {
         HtmlBytes.encodeInt0(0),
         HtmlByteProto.INTERNAL5,
 
-        HtmlByteProto.MARKED3,
-        (byte) HtmlAttributeName.REQUIRED.index(),
-        HtmlByteProto.INTERNAL3,
-
         HtmlByteProto.ELEMENT,
         HtmlBytes.encodeInt0(9),
         HtmlBytes.encodeInt1(9),
         HtmlByteProto.STANDARD_NAME,
         (byte) HtmlElementName.INPUT.index(),
         HtmlByteProto.ATTRIBUTE1,
-        HtmlBytes.encodeInt0(14),
-        HtmlByteProto.ATTRIBUTE0,
         HtmlBytes.encodeInt0(11),
+        HtmlByteProto.ATTRIBUTE_EXT0,
+        (byte) HtmlAttributeName.REQUIRED.index(),
         HtmlByteProto.END,
-        HtmlBytes.encodeInt0(17),
+        HtmlBytes.encodeInt0(14),
         HtmlByteProto.INTERNAL
     );
   }

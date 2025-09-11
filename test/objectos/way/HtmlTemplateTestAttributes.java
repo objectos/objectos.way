@@ -126,7 +126,7 @@ public class HtmlTemplateTestAttributes {
         new Html.Template() {
           @Override
           protected final void render() {
-            input(type("checkbox"), checked());
+            input(type("checkbox"), checked);
           }
         },
 

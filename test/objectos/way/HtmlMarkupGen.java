@@ -184,7 +184,7 @@ public class HtmlMarkupGen {
           /// Renders the `%1$s` element with the specified content.
           /// @param contents the attributes of the element
           /// @return an instruction representing the element.
-          Html.Instruction.OfElement %1$s(Html.Instruction.OfVoid... contents);
+          Html.Instruction.OfElement %2$s(Html.Instruction.OfVoid... contents);
         """.formatted(elem.htmlName(), elem.javaName()));
       }
     }
