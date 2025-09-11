@@ -1430,7 +1430,7 @@ final class HtmlMarkup extends HtmlMarkupElements implements Html.Markup {
         /*06*/main[mainIndex++] = HtmlBytes.encodeInt0(7);
         int elementStartIndex = mainIndex;
         /*07*/main[mainIndex++] = HtmlByteProto.STANDARD_NAME;
-        /*08*/main[mainIndex++] = (byte) element.ordinal();
+        /*08*/main[mainIndex++] = (byte) element.index();
         /*09*/main[mainIndex++] = HtmlByteProto.TEXT;
         /*10*/main[mainIndex++] = HtmlBytes.encodeInt0(10);
         /*11*/main[mainIndex++] = HtmlByteProto.END;

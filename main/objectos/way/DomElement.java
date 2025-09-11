@@ -75,7 +75,7 @@ final class DomElement implements Dom.Element, Lang.IterableOnce<Dom.Node>, Iter
 
   @Override
   public final String name() {
-    return name.lowerCase;
+    return name.name();
   }
 
   @Override
@@ -92,7 +92,7 @@ final class DomElement implements Dom.Element, Lang.IterableOnce<Dom.Node>, Iter
 
   @Override
   public final boolean voidElement() {
-    return !name.endTag;
+    return !name.endTag();
   }
 
 }

@@ -52,7 +52,7 @@ final class HtmlBytes {
     impl = (HtmlElementName) name;
 
     final int ordinal;
-    ordinal = impl.ordinal();
+    ordinal = impl.index();
 
     return encodeInt0(ordinal);
   }

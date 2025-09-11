@@ -69,7 +69,7 @@ enum HtmlAmbiguous {
 
     this.element = element;
 
-    this.elementByteCode = element.ordinal();
+    this.elementByteCode = element.index();
   }
 
   public static HtmlAmbiguous decode(byte b0) {
