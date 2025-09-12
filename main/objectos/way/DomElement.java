@@ -42,11 +42,11 @@ final class DomElement implements Dom.Element, Lang.IterableOnce<Dom.Node>, Iter
 
   private ThisAttributes attributes;
 
-  private final HtmlMarkup player;
+  private final HtmlMarkupOfHtml player;
 
   HtmlElementName name;
 
-  DomElement(HtmlMarkup player) {
+  DomElement(HtmlMarkupOfHtml player) {
     this.player = player;
   }
 

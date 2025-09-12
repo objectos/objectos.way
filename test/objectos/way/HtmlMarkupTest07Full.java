@@ -24,7 +24,7 @@ public class HtmlMarkupTest07Full {
   @Test
   public void testCase01() {
     final Html.Markup m;
-    m = new HtmlMarkup();
+    m = new Html.Markup.OfHtml();
 
     m.doctype();
 
@@ -54,7 +54,7 @@ public class HtmlMarkupTest07Full {
   @Test
   public void testCase02() {
     final Html.Markup m;
-    m = new HtmlMarkup();
+    m = new Html.Markup.OfHtml();
 
     m.p("1");
 

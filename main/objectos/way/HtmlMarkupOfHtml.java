@@ -1,0 +1,2582 @@
+/*
+ * Copyright (C) 2023-2025 Objectos Software LTDA.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package objectos.way;
+
+import java.io.IOException;
+import java.util.Objects;
+import java.util.function.Consumer;
+
+sealed abstract class HtmlMarkupOfHtml extends HtmlMarkup permits Html.Markup.OfHtml {
+
+  static final byte _DOCUMENT_START = -1;
+  static final byte _DOCUMENT_NODES_ITERABLE = -2;
+  static final byte _DOCUMENT_NODES_ITERATOR = -3;
+  static final byte _DOCUMENT_NODES_HAS_NEXT = -4;
+  static final byte _DOCUMENT_NODES_NEXT = -5;
+  static final byte _DOCUMENT_NODES_EXHAUSTED = -6;
+
+  static final byte _ELEMENT_START = -7;
+  static final byte _ELEMENT_ATTRS_ITERABLE = -8;
+  static final byte _ELEMENT_ATTRS_ITERATOR = -9;
+  static final byte _ELEMENT_ATTRS_HAS_NEXT = -10;
+  static final byte _ELEMENT_ATTRS_NEXT = -11;
+  static final byte _ELEMENT_ATTRS_EXHAUSTED = -12;
+  static final byte _ELEMENT_NODES_ITERABLE = -13;
+  static final byte _ELEMENT_NODES_ITERATOR = -14;
+  static final byte _ELEMENT_NODES_HAS_NEXT = -15;
+  static final byte _ELEMENT_NODES_NEXT = -16;
+  static final byte _ELEMENT_NODES_EXHAUSTED = -17;
+
+  static final byte _ATTRIBUTE_VALUES_ITERABLE = -18;
+  static final byte _ATTRIBUTE_VALUES_ITERATOR = -19;
+  static final byte _ATTRIBUTE_VALUES_HAS_NEXT = -20;
+  static final byte _ATTRIBUTE_VALUES_NEXT = -21;
+  static final byte _ATTRIBUTE_VALUES_EXHAUSTED = -22;
+
+  private static final int OFFSET_ELEMENT = 0;
+  private static final int OFFSET_ATTRIBUTE = 1;
+  private static final int OFFSET_TEXT = 2;
+  private static final int OFFSET_RAW = 3;
+
+  private static final int OFFSET_MAX = OFFSET_RAW;
+
+  private final StringBuilder sb = new StringBuilder();
+
+  // ##################################################################
+  // # BEGIN: Public API
+  // ##################################################################
+
+  public final String toHtml() {
+    try {
+      Dom.Document document;
+      document = compile();
+
+      sb.setLength(0);
+
+      DomFormatter.STANDARD.formatTo(document, sb);
+
+      return sb.toString();
+    } catch (IOException e) {
+      throw new AssertionError("StringBuilder does not throw IOException", e);
+    }
+  }
+
+  public final String toJsonString() {
+    try {
+      Dom.Document document;
+      document = compile();
+
+      sb.setLength(0);
+
+      DomFormatter.JSON.formatTo(document, sb);
+
+      return sb.toString();
+    } catch (IOException e) {
+      throw new AssertionError("StringBuilder does not throw IOException", e);
+    }
+  }
+
+  @Override
+  public final String toString() {
+    return toHtml();
+  }
+
+  public final void writeTo(Appendable out) throws IOException {
+    Objects.requireNonNull(out, "out == null");
+
+    Dom.Document document;
+    document = compile();
+
+    DomFormatter.STANDARD.formatTo(document, out);
+  }
+
+  // ##################################################################
+  // # END: Public API
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Way Support
+  // ##################################################################
+
+  public final Html.Instruction.OfFragment f(Html.Fragment.Of0 fragment) {
+    Objects.requireNonNull(fragment, "fragment == null");
+
+    int index;
+    index = fragmentBegin();
+
+    fragment.invoke();
+
+    fragmentEnd(index);
+
+    return Html.FRAGMENT;
+  }
+
+  public final <T1> Html.Instruction.OfFragment f(Html.Fragment.Of1<T1> fragment, T1 arg1) {
+    Objects.requireNonNull(fragment, "fragment == null");
+
+    int index;
+    index = fragmentBegin();
+
+    fragment.invoke(arg1);
+
+    fragmentEnd(index);
+
+    return Html.FRAGMENT;
+  }
+
+  public final <T1, T2> Html.Instruction.OfFragment f(Html.Fragment.Of2<T1, T2> fragment, T1 arg1, T2 arg2) {
+    Objects.requireNonNull(fragment, "fragment == null");
+
+    int index;
+    index = fragmentBegin();
+
+    fragment.invoke(arg1, arg2);
+
+    fragmentEnd(index);
+
+    return Html.FRAGMENT;
+  }
+
+  public final <T1, T2, T3> Html.Instruction.OfFragment f(Html.Fragment.Of3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3) {
+    Objects.requireNonNull(fragment, "fragment == null");
+
+    int index;
+    index = fragmentBegin();
+
+    fragment.invoke(arg1, arg2, arg3);
+
+    fragmentEnd(index);
+
+    return Html.FRAGMENT;
+  }
+
+  public final <T1, T2, T3, T4> Html.Instruction.OfFragment f(Html.Fragment.Of4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
+    Objects.requireNonNull(fragment, "fragment == null");
+
+    int index;
+    index = fragmentBegin();
+
+    fragment.invoke(arg1, arg2, arg3, arg4);
+
+    fragmentEnd(index);
+
+    return Html.FRAGMENT;
+  }
+
+  public final Html.Instruction.OfAttribute css(String value) {
+    final String formatted;
+    formatted = Html.ofText(value, sb);
+
+    return attr0(HtmlAttributeName.CLASS, formatted);
+  }
+
+  public final Html.Instruction.OfAttribute dataFrame(String name) {
+    Objects.requireNonNull(name, "name == null");
+
+    return attr0(HtmlAttributeName.DATA_FRAME, name);
+  }
+
+  public final Html.Instruction.OfAttribute dataFrame(String name, String value) {
+    Objects.requireNonNull(name, "name == null");
+    Objects.requireNonNull(value, "value == null");
+
+    return attr0(HtmlAttributeName.DATA_FRAME, name + ":" + value);
+  }
+
+  public final Html.Instruction.OfDataOn dataOnClick(Consumer<Script> script) {
+    Objects.requireNonNull(script, "script == null");
+
+    return dataOn0(HtmlAttributeName.DATA_ON_CLICK, script);
+  }
+
+  public final Html.Instruction.OfDataOn dataOnInput(Consumer<Script> script) {
+    Objects.requireNonNull(script, "script == null");
+
+    return dataOn0(HtmlAttributeName.DATA_ON_INPUT, script);
+  }
+
+  public final Html.Instruction.OfDataOn dataOnLoad(Consumer<Script> script) {
+    Objects.requireNonNull(script, "script == null");
+
+    return dataOn0(HtmlAttributeName.DATA_ON_LOAD, script);
+  }
+
+  public final Html.Instruction.OfDataOn dataOnSuccess(Consumer<Script> script) {
+    Objects.requireNonNull(script, "script == null");
+
+    return dataOn0(HtmlAttributeName.DATA_ON_SUCCESS, script);
+  }
+
+  private Html.Instruction.OfDataOn dataOn0(Html.AttributeName name, Consumer<Script> script) {
+    final Script.Action action;
+    action = Script.Action.create(script);
+
+    return attr0(name, action);
+  }
+
+  public final Html.Instruction.OfElement flatten(Html.Instruction... contents) {
+    Objects.requireNonNull(contents, "contents == null");
+
+    flattenBegin();
+
+    for (int i = 0; i < contents.length; i++) {
+      Html.Instruction inst;
+      inst = Check.notNull(contents[i], "contents[", i, "] == null");
+
+      elementValue(inst);
+    }
+
+    elementEnd();
+
+    return Html.ELEMENT;
+  }
+
+  public final Html.Instruction.NoOp noop() {
+    return Html.NOOP;
+  }
+
+  // ##################################################################
+  // # END: Way Support
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Elements
+  // ##################################################################
+
+  public final void doctype() {
+    mainAdd(HtmlByteProto.DOCTYPE);
+  }
+
+  // ##################################################################
+  // # END: Elements
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Attributes
+  // ##################################################################
+
+  public final void add(Html.AttributeObject object) {
+    final Html.AttributeName name;
+    name = object.name();
+
+    final String value;
+    value = object.value();
+
+    if (value == null) {
+      attr0(name);
+    } else {
+      attr0(name, value);
+    }
+  }
+
+  // ##################################################################
+  // # END: Attributes
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Text
+  // ##################################################################
+
+  public final Html.Instruction.OfElement nbsp() {
+    rawImpl("&nbsp;");
+    return Html.ELEMENT;
+  }
+
+  public final Html.Instruction.OfElement raw(String text) {
+    Objects.requireNonNull(text, "text == null");
+    rawImpl(text);
+    return Html.ELEMENT;
+  }
+
+  public final Html.Instruction.OfElement text(String text) {
+    Objects.requireNonNull(text, "text == null");
+    textImpl(text);
+    return Html.ELEMENT;
+  }
+
+  // ##################################################################
+  // # END: Text
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Testable
+  // ##################################################################
+
+  public final String testableCell(String value, int width) { return value; }
+
+  public final String testableField(String name, String value) { return value; }
+
+  public final String testableFieldName(String name) { return name; }
+
+  public final String testableFieldValue(String value) { return value; }
+
+  public final String testableH1(String value) { return value; }
+
+  public final String testableH2(String value) { return value; }
+
+  public final String testableH3(String value) { return value; }
+
+  public final String testableH4(String value) { return value; }
+
+  public final String testableH5(String value) { return value; }
+
+  public final String testableH6(String value) { return value; }
+
+  public final Html.Instruction.NoOp testableNewLine() { return Html.NOOP; }
+
+  // ##################################################################
+  // # END: Testable
+  // ##################################################################
+
+  //
+  // Section: DOM related methods
+  //
+
+  final Dom.Document compile() {
+    // we will use the aux list to store contexts
+    auxIndex = 0;
+
+    // holds decoded length
+    auxStart = 0;
+
+    // holds maximum main index. DO NOT TOUCH!!!
+    // mainIndex
+
+    // holds the current context
+    mainStart = 0;
+
+    // we reuse objectArray reference to store our pseudo html objects
+    if (objectArray == null) {
+      objectArray = new Object[10];
+    } else {
+      objectArray = Util.growIfNecessary(objectArray, objectIndex + OFFSET_MAX);
+    }
+
+    objectArray[objectIndex + OFFSET_ELEMENT] = new DomElement(this);
+
+    objectArray[objectIndex + OFFSET_ATTRIBUTE] = new DomAttribute(this);
+
+    objectArray[objectIndex + OFFSET_TEXT] = new DomText();
+
+    objectArray[objectIndex + OFFSET_RAW] = new DomRaw();
+
+    documentCtx();
+
+    return new DomDocument(this);
+  }
+
+  final void documentIterable() {
+    stateCAS(_DOCUMENT_START, _DOCUMENT_NODES_ITERABLE);
+  }
+
+  final void documentIterator() {
+    stateCAS(_DOCUMENT_NODES_ITERABLE, _DOCUMENT_NODES_ITERATOR);
+  }
+
+  final boolean documentHasNext() {
+    // our iteration index
+    int index;
+
+    // state check
+    switch (statePeek()) {
+      case _DOCUMENT_NODES_ITERATOR, _DOCUMENT_NODES_NEXT -> {
+        // valid state
+
+        // restore main index from the context
+        index = documentCtxMainIndexLoad();
+      }
+
+      case _ELEMENT_START, _ELEMENT_ATTRS_EXHAUSTED, _ELEMENT_NODES_EXHAUSTED -> {
+        int parentIndex;
+        parentIndex = elementCtxRemove();
+
+        stateCheck(_DOCUMENT_NODES_NEXT);
+
+        // restore main index from the context
+        index = documentCtxMainIndexLoad();
+
+        if (index != parentIndex) {
+          throw new IllegalStateException(
+              """
+              Last consumed element was not a child of this document
+              """
+          );
+        }
+      }
+
+      default -> throw new UnsupportedOperationException(
+          "Implement me :: state=" + statePeek()
+      );
+    }
+
+    // has next
+    byte nextState;
+    nextState = _DOCUMENT_NODES_EXHAUSTED;
+
+    loop: while (index < mainIndex) {
+      byte proto;
+      proto = main[index];
+
+      switch (proto) {
+        case HtmlByteProto.DOCTYPE,
+             HtmlByteProto.ELEMENT,
+             HtmlByteProto.RAW,
+             HtmlByteProto.TEXT -> {
+          // next node found
+          nextState = _DOCUMENT_NODES_HAS_NEXT;
+
+          break loop;
+        }
+
+        case HtmlByteProto.FRAGMENT -> {
+          // mark this fragment, just in case...
+          main[index++] = HtmlByteProto.LENGTH3;
+
+          // decode the length
+          byte len0;
+          len0 = main[index++];
+
+          byte len1;
+          len1 = main[index++];
+
+          byte len2;
+          len2 = main[index++];
+
+          int length;
+          length = HtmlBytes.decodeLength3(len0, len1, len2);
+
+          int maxIndex;
+          maxIndex = index + length;
+
+          // mark fragment end as visited.
+          main[maxIndex - 3] = HtmlByteProto.MARKED3;
+        }
+
+        case HtmlByteProto.LENGTH2 -> {
+          index++;
+
+          byte b0;
+          b0 = main[index++];
+
+          byte b1;
+          b1 = main[index++];
+
+          index += HtmlBytes.decodeInt(b0, b1);
+        }
+
+        case HtmlByteProto.LENGTH3 -> {
+          index++;
+
+          byte b0;
+          b0 = main[index++];
+
+          byte b1;
+          b1 = main[index++];
+
+          byte b2;
+          b2 = main[index++];
+
+          index += HtmlBytes.decodeLength3(b0, b1, b2);
+        }
+
+        case HtmlByteProto.MARKED3 -> index += 3;
+
+        case HtmlByteProto.MARKED4 -> index += 4;
+
+        case HtmlByteProto.MARKED5 -> index += 5;
+
+        case HtmlByteProto.MARKED6 -> index += 6;
+
+        default -> throw new UnsupportedOperationException(
+            "Implement me :: proto=" + proto
+        );
+      }
+    }
+
+    stateSet(nextState);
+
+    documentCtxMainIndexStore(index);
+
+    return nextState == _DOCUMENT_NODES_HAS_NEXT;
+  }
+
+  final Dom.Node documentNext() {
+    stateCAS(_DOCUMENT_NODES_HAS_NEXT, _DOCUMENT_NODES_NEXT);
+
+    // restore main index from the context
+    int index;
+    index = documentCtxMainIndexLoad();
+
+    // next
+    byte proto;
+    proto = main[index++];
+
+    return switch (proto) {
+      case HtmlByteProto.DOCTYPE -> {
+        documentCtxMainIndexStore(index);
+
+        yield DomDocument.Type.INSTANCE;
+      }
+
+      case HtmlByteProto.ELEMENT -> {
+        byte b0;
+        b0 = main[index++];
+
+        byte b1;
+        b1 = main[index++];
+
+        int length;
+        length = HtmlBytes.decodeInt(b0, b1);
+
+        int elementStartIndex;
+        elementStartIndex = index;
+
+        int parentIndex;
+        parentIndex = index + length;
+
+        documentCtxMainIndexStore(parentIndex);
+
+        yield element(elementStartIndex, parentIndex);
+      }
+
+      case HtmlByteProto.RAW -> {
+        byte b0;
+        b0 = main[index++];
+
+        byte b1;
+        b1 = main[index++];
+
+        // skip ByteProto.INTERNAL4
+        documentCtxMainIndexStore(index + 1);
+
+        yield htmlRaw(b0, b1);
+      }
+
+      case HtmlByteProto.TEXT -> {
+        byte b0;
+        b0 = main[index++];
+
+        byte b1;
+        b1 = main[index++];
+
+        // skip ByteProto.INTERNAL4
+        documentCtxMainIndexStore(index + 1);
+
+        yield htmlText(b0, b1);
+      }
+
+      default -> throw new UnsupportedOperationException(
+          "Implement me :: proto=" + proto
+      );
+    };
+  }
+
+  private void documentCtx() {
+    // set current context
+    mainStart = auxIndex;
+
+    // push document context
+    auxAdd(
+        _DOCUMENT_START,
+
+        // main index @ start iteration from the start = 0
+        HtmlBytes.encodeInt0(0),
+        HtmlBytes.encodeInt1(0),
+        HtmlBytes.encodeInt2(0)
+    );
+  }
+
+  private int documentCtxMainIndexLoad() {
+    byte b0;
+    b0 = aux[mainStart + 1];
+
+    byte b1;
+    b1 = aux[mainStart + 2];
+
+    byte b2;
+    b2 = aux[mainStart + 3];
+
+    return HtmlBytes.decodeLength3(b0, b1, b2);
+  }
+
+  private void documentCtxMainIndexStore(int value) {
+    aux[mainStart + 1] = HtmlBytes.encodeInt0(value);
+
+    aux[mainStart + 2] = HtmlBytes.encodeInt1(value);
+
+    aux[mainStart + 3] = HtmlBytes.encodeInt2(value);
+  }
+
+  final Dom.Element element(int startIndex, int parentIndex) {
+    // our iteration index
+    int elementIndex;
+    elementIndex = startIndex;
+
+    HtmlElementName name;
+
+    // first proto should be the element's name
+    byte proto;
+    proto = main[elementIndex++];
+
+    switch (proto) {
+      case HtmlByteProto.STANDARD_NAME -> {
+        byte nameByte;
+        nameByte = main[elementIndex++];
+
+        int ordinal;
+        ordinal = HtmlBytes.decodeInt(nameByte);
+
+        name = HtmlElementName.get(ordinal);
+      }
+
+      default -> throw new IllegalArgumentException(
+          "Malformed element. Expected name but found=" + proto
+      );
+    }
+
+    elementCtx(startIndex, parentIndex);
+
+    DomElement element;
+    element = htmlElement();
+
+    element.name = name;
+
+    return element;
+  }
+
+  final void elementAttributes() {
+    // state check
+    switch (statePeek()) {
+      case _ELEMENT_START -> {
+        // valid state
+      }
+
+      default -> throw new UnsupportedOperationException(
+          "Implement me :: state=" + statePeek()
+      );
+    }
+
+    stateSet(_ELEMENT_ATTRS_ITERABLE);
+  }
+
+  final void elementAttributesIterator() {
+    stateCAS(_ELEMENT_ATTRS_ITERABLE, _ELEMENT_ATTRS_ITERATOR);
+  }
+
+  final boolean elementAttributesHasNext(Html.ElementName parent) {
+    // state check
+    switch (statePeek()) {
+      case _ELEMENT_ATTRS_ITERATOR,
+           _ELEMENT_ATTRS_NEXT,
+           _ATTRIBUTE_VALUES_EXHAUSTED -> {
+        // valid state
+      }
+
+      default -> throw new UnsupportedOperationException(
+          "Implement me :: state=" + statePeek()
+      );
+    }
+
+    // restore index from context
+    int index;
+    index = elementCtxAttrsIndexLoad();
+
+    // has next
+    byte nextState;
+    nextState = _ELEMENT_ATTRS_EXHAUSTED;
+
+    loop: while (index < mainIndex) {
+      // assume 'worst case'
+      // in the happy path we should rollback the index
+      int rollbackIndex;
+      rollbackIndex = index;
+
+      byte proto;
+      proto = main[index++];
+
+      switch (proto) {
+        case HtmlByteProto.STANDARD_NAME -> index += 1;
+
+        case HtmlByteProto.AMBIGUOUS1 -> {
+          index = jmp2(index);
+
+          byte ordinalByte;
+          ordinalByte = main[auxStart++];
+
+          HtmlAmbiguous ambiguous;
+          ambiguous = HtmlAmbiguous.decode(ordinalByte);
+
+          if (ambiguous.isAttributeOf(parent)) {
+            index = rollbackIndex;
+
+            nextState = _ELEMENT_ATTRS_HAS_NEXT;
+
+            break loop;
+          }
+        }
+
+        case HtmlByteProto.ATTRIBUTE0,
+             HtmlByteProto.ATTRIBUTE1,
+             HtmlByteProto.ATTRIBUTE_EXT0,
+             HtmlByteProto.ATTRIBUTE_EXT1,
+             HtmlByteProto.CUSTOM_ATTR1 -> {
+          index = rollbackIndex;
+
+          nextState = _ELEMENT_ATTRS_HAS_NEXT;
+
+          break loop;
+        }
+
+        case HtmlByteProto.ELEMENT,
+             HtmlByteProto.RAW,
+             HtmlByteProto.TEXT -> index = skipVarInt(index);
+
+        case HtmlByteProto.END -> {
+          index = rollbackIndex;
+
+          break loop;
+        }
+
+        case HtmlByteProto.LENGTH2 -> {
+          byte len0;
+          len0 = main[index++];
+
+          byte len1;
+          len1 = main[index++];
+
+          int length;
+          length = HtmlBytes.decodeInt(len0, len1);
+
+          index += length;
+        }
+
+        default -> throw new UnsupportedOperationException(
+            "Implement me :: proto=" + proto
+        );
+      }
+    }
+
+    elementCtxAttrsIndexStore(index);
+
+    stateSet(nextState);
+
+    return nextState == _ELEMENT_ATTRS_HAS_NEXT;
+  }
+
+  final Dom.Attribute elementAttributesNext() {
+    stateCAS(_ELEMENT_ATTRS_HAS_NEXT, _ELEMENT_ATTRS_NEXT);
+
+    // restore main index
+    int index;
+    index = elementCtxAttrsIndexLoad();
+
+    // our return value
+    final DomAttribute attribute;
+    attribute = htmlAttribute();
+
+    // values to set
+    byte v0 = -1, v1 = -1;
+
+    byte proto;
+    proto = main[index++];
+
+    switch (proto) {
+      case HtmlByteProto.AMBIGUOUS1 -> {
+        index = jmp2(index);
+
+        byte ordinalByte;
+        ordinalByte = main[auxStart++];
+
+        HtmlAmbiguous ambiguous;
+        ambiguous = HtmlAmbiguous.decode(ordinalByte);
+
+        byte attr;
+        attr = ambiguous.encodeAttribute();
+
+        attribute.name = attributeName(attr);
+
+        v0 = main[auxStart++];
+
+        v1 = main[auxStart++];
+      }
+
+      case HtmlByteProto.ATTRIBUTE0 -> {
+        index = jmp2(index);
+
+        byte attr;
+        attr = main[auxStart++];
+
+        attribute.name = attributeName(attr);
+      }
+
+      case HtmlByteProto.ATTRIBUTE1 -> {
+        index = jmp2(index);
+
+        byte attr;
+        attr = main[auxStart++];
+
+        attribute.name = attributeName(attr);
+
+        v0 = main[auxStart++];
+
+        v1 = main[auxStart++];
+      }
+
+      case HtmlByteProto.ATTRIBUTE_EXT0 -> {
+        byte attr;
+        attr = main[index++];
+
+        attribute.name = attributeName(attr);
+      }
+
+      case HtmlByteProto.ATTRIBUTE_EXT1 -> {
+        byte attr;
+        attr = main[index++];
+
+        attribute.name = attributeName(attr);
+
+        v0 = main[index++];
+
+        v1 = main[index++];
+      }
+
+      case HtmlByteProto.CUSTOM_ATTR1 -> {
+        index = jmp2(index);
+
+        byte attr0;
+        attr0 = main[auxStart++];
+
+        byte attr1;
+        attr1 = main[auxStart++];
+
+        attribute.name = attributeName(attr0, attr1);
+
+        v0 = main[auxStart++];
+
+        v1 = main[auxStart++];
+      }
+
+      default -> {
+        // the previous hasNext should have set the index in the right position
+        // if we got to an invalid proto something bad must have happened
+        throw new IllegalStateException();
+      }
+    }
+
+    // attribute value
+    Object value;
+    value = null;
+
+    if (v0 != -1 || v1 != -1) {
+      value = toObject(v0, v1);
+    }
+
+    attribute.value = value;
+
+    // store new state
+    elementCtxAttrsIndexStore(index);
+
+    stateSet(_ELEMENT_ATTRS_NEXT);
+
+    return attribute;
+  }
+
+  private HtmlAttributeName attributeName(byte attr) {
+    int ordinal;
+    ordinal = HtmlBytes.decodeInt(attr);
+
+    return HtmlAttributeName.get(ordinal);
+  }
+
+  private HtmlAttributeName attributeName(byte attr0, byte attr1) {
+    Object object;
+    object = toObject(attr0, attr1);
+
+    return (HtmlAttributeName) object;
+  }
+
+  private DomAttribute htmlAttribute() {
+    return (DomAttribute) objectArray[objectIndex + OFFSET_ATTRIBUTE];
+  }
+
+  final void attributeValues() {
+    stateCAS(_ELEMENT_ATTRS_NEXT, _ATTRIBUTE_VALUES_ITERABLE);
+  }
+
+  final void attributeValuesIterator() {
+    stateCAS(_ATTRIBUTE_VALUES_ITERABLE, _ATTRIBUTE_VALUES_ITERATOR);
+  }
+
+  final boolean attributeValuesHasNext() {
+    // state check
+    switch (statePeek()) {
+      case _ATTRIBUTE_VALUES_ITERATOR,
+           _ATTRIBUTE_VALUES_NEXT -> {
+        // valid state
+      }
+
+      default -> throw new UnsupportedOperationException(
+          "Implement me :: state=" + statePeek()
+      );
+    }
+
+    DomAttribute attribute;
+    attribute = htmlAttribute();
+
+    if (attribute.value != null) {
+      stateSet(_ATTRIBUTE_VALUES_HAS_NEXT);
+
+      return true;
+    }
+
+    // restore index from context
+    int index;
+    index = elementCtxAttrsIndexLoad();
+
+    // current attribute
+    HtmlAttributeName attributeName;
+    attributeName = attribute.name;
+
+    int attributeCode;
+    attributeCode = attributeName.index();
+
+    byte currentAttr;
+    currentAttr = HtmlBytes.encodeInt0(attributeCode);
+
+    // next state
+    byte nextState;
+    nextState = _ATTRIBUTE_VALUES_EXHAUSTED;
+
+    loop: while (index < mainIndex) {
+      // assume 'worst case'
+      // in the happy path we should rollback the index
+      int rollbackIndex;
+      rollbackIndex = index;
+
+      byte proto;
+      proto = main[index++];
+
+      switch (proto) {
+        case HtmlByteProto.AMBIGUOUS1 -> {
+          index = jmp2(index);
+
+          byte ordinalByte;
+          ordinalByte = main[auxStart++];
+
+          int ordinal;
+          ordinal = HtmlBytes.decodeInt(ordinalByte);
+
+          HtmlAmbiguous ambiguous;
+          ambiguous = HtmlAmbiguous.get(ordinal);
+
+          // find out the parent
+          DomElement element;
+          element = htmlElement();
+
+          HtmlElementName elementName;
+          elementName = element.name;
+
+          if (!ambiguous.isAttributeOf(elementName)) {
+            // this is an element
+            continue loop;
+          }
+
+          // find out if this is the same attribute
+          byte attr;
+          attr = ambiguous.encodeAttribute();
+
+          if (currentAttr == attr) {
+            // this is a new value of the same attribute
+            nextState = _ATTRIBUTE_VALUES_HAS_NEXT;
+          }
+
+          index = rollbackIndex;
+
+          break loop;
+        }
+
+        case HtmlByteProto.ATTRIBUTE0 -> {
+          index = rollbackIndex;
+
+          break loop;
+        }
+
+        case HtmlByteProto.ATTRIBUTE1 -> {
+          index = jmp2(index);
+
+          byte attr;
+          attr = main[auxStart++];
+
+          if (attr == currentAttr) {
+            nextState = _ATTRIBUTE_VALUES_HAS_NEXT;
+          }
+
+          index = rollbackIndex;
+
+          break loop;
+        }
+
+        case HtmlByteProto.CUSTOM_ATTR1 -> {
+          index = jmp2(index);
+
+          final byte name0;
+          name0 = main[auxStart++];
+
+          final byte name1;
+          name1 = main[auxStart++];
+
+          final HtmlAttributeName customName;
+          customName = attributeName(name0, name1);
+
+          if (attributeName.equals(customName)) {
+            nextState = _ATTRIBUTE_VALUES_HAS_NEXT;
+          }
+
+          index = rollbackIndex;
+
+          break loop;
+        }
+
+        case HtmlByteProto.ATTRIBUTE_EXT0,
+             HtmlByteProto.ATTRIBUTE_EXT1 -> {
+          byte attr;
+          attr = main[index++];
+
+          if (attr == currentAttr) {
+            nextState = _ATTRIBUTE_VALUES_HAS_NEXT;
+          }
+
+          index = rollbackIndex;
+
+          break loop;
+        }
+
+        case HtmlByteProto.ELEMENT,
+             HtmlByteProto.RAW,
+             HtmlByteProto.TEXT -> index = skipVarInt(index);
+
+        case HtmlByteProto.END -> {
+          index = rollbackIndex;
+
+          break loop;
+        }
+
+        default -> throw new UnsupportedOperationException(
+            "Implement me :: proto=" + proto
+        );
+      }
+    }
+
+    elementCtxAttrsIndexStore(index);
+
+    stateSet(nextState);
+
+    return nextState == _ATTRIBUTE_VALUES_HAS_NEXT;
+  }
+
+  final Object attributeValuesNext(Object maybeNext) {
+    stateCAS(_ATTRIBUTE_VALUES_HAS_NEXT, _ATTRIBUTE_VALUES_NEXT);
+
+    if (maybeNext != null) {
+      return maybeNext;
+    }
+
+    // restore index
+    int index;
+    index = elementCtxAttrsIndexLoad();
+
+    byte proto;
+    proto = main[index++];
+
+    return switch (proto) {
+      case HtmlByteProto.AMBIGUOUS1 -> {
+        index = jmp2(index);
+
+        elementCtxAttrsIndexStore(index);
+
+        // skip ordinal
+        auxStart++;
+
+        byte v0;
+        v0 = main[auxStart++];
+
+        byte v1;
+        v1 = main[auxStart++];
+
+        yield toObject(v0, v1);
+      }
+
+      case HtmlByteProto.ATTRIBUTE1 -> {
+        index = jmp2(index);
+
+        elementCtxAttrsIndexStore(index);
+
+        // skip ordinal
+        auxStart++;
+
+        byte v0;
+        v0 = main[auxStart++];
+
+        byte v1;
+        v1 = main[auxStart++];
+
+        yield toObject(v0, v1);
+      }
+
+      case HtmlByteProto.CUSTOM_ATTR1 -> {
+        index = jmp2(index);
+
+        elementCtxAttrsIndexStore(index);
+
+        // skip attr 0/attr 1
+        auxStart += 2;
+
+        byte v0;
+        v0 = main[auxStart++];
+
+        byte v1;
+        v1 = main[auxStart++];
+
+        yield toObject(v0, v1);
+      }
+
+      case HtmlByteProto.ATTRIBUTE_EXT1 -> {
+        // skip ordinal
+        index++;
+
+        byte v0;
+        v0 = main[index++];
+
+        byte v1;
+        v1 = main[index++];
+
+        elementCtxAttrsIndexStore(index);
+
+        yield toObject(v0, v1);
+      }
+
+      default -> throw new UnsupportedOperationException(
+          "Implement me :: proto=" + proto
+      );
+    };
+  }
+
+  private Object toObject(byte v0, byte v1) {
+    int objectIndex;
+    objectIndex = HtmlBytes.decodeInt(v0, v1);
+
+    return objectArray[objectIndex];
+  }
+
+  private String toObjectString(byte v0, byte v1) {
+    Object o;
+    o = toObject(v0, v1);
+
+    return o.toString();
+  }
+
+  final void elementNodes() {
+    // state check
+    switch (statePeek()) {
+      case _ELEMENT_START, _ELEMENT_ATTRS_EXHAUSTED -> {
+        // valid state
+      }
+
+      default -> throw new UnsupportedOperationException(
+          "Implement me :: state=" + statePeek()
+      );
+    }
+
+    stateSet(_ELEMENT_NODES_ITERABLE);
+  }
+
+  final void elementNodesIterator() {
+    stateCAS(_ELEMENT_NODES_ITERABLE, _ELEMENT_NODES_ITERATOR);
+  }
+
+  final boolean elementNodesHasNext() {
+    // iteration index
+    int index;
+
+    // state check
+    switch (statePeek()) {
+      case _ELEMENT_NODES_ITERATOR, _ELEMENT_NODES_NEXT -> {
+        // valid state
+
+        // restore index from context
+        index = elementCtxNodesIndexLoad();
+      }
+
+      case _ELEMENT_START, _ELEMENT_ATTRS_EXHAUSTED, _ELEMENT_NODES_EXHAUSTED -> {
+        // remove previous element context
+        int parentIndex;
+        parentIndex = elementCtxRemove();
+
+        // restore index from context
+        index = elementCtxNodesIndexLoad();
+
+        if (index != parentIndex) {
+          throw new IllegalStateException(
+              """
+              Last consumed element was not a child of this element
+              """
+          );
+        }
+
+        // restore name
+        DomElement element;
+        element = htmlElement();
+
+        element.name = elementCtxNameLoad();
+      }
+
+      default -> throw new IllegalStateException(
+          """
+          %d state not allowed @ HtmlElement#nodes#hasNext
+          """.formatted(statePeek())
+      );
+    }
+
+    // has next
+    byte nextState;
+    nextState = _ELEMENT_NODES_EXHAUSTED;
+
+    loop: while (index < mainIndex) {
+      // assume 'worst case'
+      // in the happy path we rollback the index
+      int rollbackIndex;
+      rollbackIndex = index;
+
+      byte proto;
+      proto = main[index++];
+
+      switch (proto) {
+        case HtmlByteProto.AMBIGUOUS1 -> {
+          index = jmp2(index);
+
+          byte ordinalByte;
+          ordinalByte = main[auxStart++];
+
+          int ordinal;
+          ordinal = HtmlBytes.decodeInt(ordinalByte);
+
+          HtmlAmbiguous ambiguous;
+          ambiguous = HtmlAmbiguous.get(ordinal);
+
+          // find out parent element
+          DomElement element;
+          element = htmlElement();
+
+          HtmlElementName parent;
+          parent = element.name;
+
+          if (ambiguous.isAttributeOf(parent)) {
+            continue loop;
+          }
+
+          index = rollbackIndex;
+
+          nextState = _ELEMENT_NODES_HAS_NEXT;
+
+          break loop;
+        }
+
+        case HtmlByteProto.ATTRIBUTE0,
+             HtmlByteProto.ATTRIBUTE1,
+             HtmlByteProto.CUSTOM_ATTR1 -> index = skipVarInt(index);
+
+        case HtmlByteProto.ATTRIBUTE_EXT0 -> index += 1;
+
+        case HtmlByteProto.ATTRIBUTE_EXT1 -> index += 3;
+
+        case HtmlByteProto.ELEMENT,
+             HtmlByteProto.RAW,
+             HtmlByteProto.TEXT -> {
+          index = rollbackIndex;
+
+          nextState = _ELEMENT_NODES_HAS_NEXT;
+
+          break loop;
+        }
+
+        case HtmlByteProto.END -> {
+          index = rollbackIndex;
+
+          break loop;
+        }
+
+        case HtmlByteProto.LENGTH2 -> {
+          byte len0;
+          len0 = main[index++];
+
+          byte len1;
+          len1 = main[index++];
+
+          int length;
+          length = HtmlBytes.decodeInt(len0, len1);
+
+          index += length;
+        }
+
+        case HtmlByteProto.STANDARD_NAME -> index += 1;
+
+        default -> throw new UnsupportedOperationException(
+            "Implement me :: proto=" + proto
+        );
+      }
+    }
+
+    elementCtxNodesIndexStore(index);
+
+    stateSet(nextState);
+
+    return nextState == _ELEMENT_NODES_HAS_NEXT;
+  }
+
+  final Dom.Node elementNodesNext() {
+    stateCAS(_ELEMENT_NODES_HAS_NEXT, _ELEMENT_NODES_NEXT);
+
+    // restore index from context
+    int index;
+    index = elementCtxNodesIndexLoad();
+
+    byte proto;
+    proto = main[index++];
+
+    return switch (proto) {
+      case HtmlByteProto.AMBIGUOUS1 -> {
+        index = jmp2(index);
+
+        // load ambiguous name
+
+        byte ordinalByte;
+        ordinalByte = main[auxStart++];
+
+        byte v0;
+        v0 = main[auxStart++];
+
+        byte v1;
+        v1 = main[auxStart++];
+
+        int ordinal;
+        ordinal = HtmlBytes.decodeInt(ordinalByte);
+
+        HtmlAmbiguous ambiguous;
+        ambiguous = HtmlAmbiguous.get(ordinal);
+
+        HtmlElementName element;
+        element = ambiguous.element;
+
+        main = Util.growIfNecessary(main, mainIndex + 13);
+
+        /*00*/main[mainIndex++] = HtmlByteProto.MARKED4;
+        /*01*/main[mainIndex++] = v0;
+        /*02*/main[mainIndex++] = v1;
+        /*03*/main[mainIndex++] = HtmlByteProto.INTERNAL4;
+
+        /*04*/main[mainIndex++] = HtmlByteProto.LENGTH2;
+        /*05*/main[mainIndex++] = HtmlBytes.encodeInt0(7);
+        /*06*/main[mainIndex++] = HtmlBytes.encodeInt0(7);
+        int elementStartIndex = mainIndex;
+        /*07*/main[mainIndex++] = HtmlByteProto.STANDARD_NAME;
+        /*08*/main[mainIndex++] = (byte) element.index();
+        /*09*/main[mainIndex++] = HtmlByteProto.TEXT;
+        /*10*/main[mainIndex++] = HtmlBytes.encodeInt0(10);
+        /*11*/main[mainIndex++] = HtmlByteProto.END;
+        /*12*/main[mainIndex++] = HtmlBytes.encodeInt0(11);
+        /*13*/main[mainIndex++] = HtmlByteProto.INTERNAL;
+
+        int parentIndex;
+        parentIndex = index;
+
+        elementCtxNodesIndexStore(parentIndex);
+
+        yield element(elementStartIndex, parentIndex);
+      }
+
+      case HtmlByteProto.ELEMENT -> {
+        index = jmp2(index);
+
+        // skip fixed length
+        auxStart += 2;
+
+        int elementStartIndex;
+        elementStartIndex = auxStart;
+
+        int parentIndex;
+        parentIndex = index;
+
+        elementCtxNodesIndexStore(parentIndex);
+
+        yield element(elementStartIndex, parentIndex);
+      }
+
+      case HtmlByteProto.RAW -> {
+        index = jmp2(index);
+
+        byte v0;
+        v0 = main[auxStart++];
+
+        byte v1;
+        v1 = main[auxStart++];
+
+        elementCtxNodesIndexStore(index);
+
+        yield htmlRaw(v0, v1);
+      }
+
+      case HtmlByteProto.TEXT -> {
+        index = jmp2(index);
+
+        byte v0;
+        v0 = main[auxStart++];
+
+        byte v1;
+        v1 = main[auxStart++];
+
+        elementCtxNodesIndexStore(index);
+
+        yield htmlText(v0, v1);
+      }
+
+      default -> throw new UnsupportedOperationException(
+          "Implement me :: proto=" + proto
+      );
+    };
+  }
+
+  private Dom.Raw htmlRaw(byte v0, byte v1) {
+    DomRaw raw;
+    raw = (DomRaw) objectArray[objectIndex + OFFSET_RAW];
+
+    // text value
+    raw.value = toObjectString(v0, v1);
+
+    return raw;
+  }
+
+  private Dom.Text htmlText(byte v0, byte v1) {
+    DomText text;
+    text = (DomText) objectArray[objectIndex + OFFSET_TEXT];
+
+    // text value
+    text.value = toObjectString(v0, v1);
+
+    return text;
+  }
+
+  private void elementCtx(int startIndex, int parentIndex) {
+    // current context length
+    int length;
+    length = auxIndex - mainStart;
+
+    // set current context
+    mainStart = auxIndex;
+
+    // ensure aux length
+    aux = Util.growIfNecessary(aux, auxIndex + 13);
+
+    // 0
+    aux[auxIndex++] = _ELEMENT_START;
+
+    // 1-3 attrs iteration index
+    aux[auxIndex++] = HtmlBytes.encodeInt0(startIndex);
+    aux[auxIndex++] = HtmlBytes.encodeInt1(startIndex);
+    aux[auxIndex++] = HtmlBytes.encodeInt2(startIndex);
+
+    // 4-6 nodes iteration index
+    aux[auxIndex++] = HtmlBytes.encodeInt0(startIndex);
+    aux[auxIndex++] = HtmlBytes.encodeInt1(startIndex);
+    aux[auxIndex++] = HtmlBytes.encodeInt2(startIndex);
+
+    // 7-9 start index
+    aux[auxIndex++] = HtmlBytes.encodeInt0(startIndex);
+    aux[auxIndex++] = HtmlBytes.encodeInt1(startIndex);
+    aux[auxIndex++] = HtmlBytes.encodeInt2(startIndex);
+
+    // 10-12 parent index
+    aux[auxIndex++] = HtmlBytes.encodeInt0(parentIndex);
+    aux[auxIndex++] = HtmlBytes.encodeInt1(parentIndex);
+    aux[auxIndex++] = HtmlBytes.encodeInt2(parentIndex);
+
+    // 13 parent context length
+    aux[auxIndex++] = HtmlBytes.encodeInt0(length);
+  }
+
+  private int elementCtxAttrsIndexLoad() {
+    byte b0;
+    b0 = aux[mainStart + 1];
+
+    byte b1;
+    b1 = aux[mainStart + 2];
+
+    byte b2;
+    b2 = aux[mainStart + 3];
+
+    return HtmlBytes.decodeLength3(b0, b1, b2);
+  }
+
+  private void elementCtxAttrsIndexStore(int value) {
+    aux[mainStart + 1] = HtmlBytes.encodeInt0(value);
+
+    aux[mainStart + 2] = HtmlBytes.encodeInt1(value);
+
+    aux[mainStart + 3] = HtmlBytes.encodeInt2(value);
+  }
+
+  private HtmlElementName elementCtxNameLoad() {
+    // restore start index
+    byte b0;
+    b0 = aux[mainStart + 7];
+
+    byte b1;
+    b1 = aux[mainStart + 8];
+
+    byte b2;
+    b2 = aux[mainStart + 9];
+
+    int startIndex;
+    startIndex = HtmlBytes.decodeLength3(b0, b1, b2);
+
+    HtmlElementName name;
+
+    // first proto should be the element's name
+    byte proto;
+    proto = main[startIndex++];
+
+    switch (proto) {
+      case HtmlByteProto.STANDARD_NAME -> {
+        byte nameByte;
+        nameByte = main[startIndex++];
+
+        int ordinal;
+        ordinal = HtmlBytes.decodeInt(nameByte);
+
+        name = HtmlElementName.get(ordinal);
+      }
+
+      default -> throw new IllegalArgumentException(
+          "Malformed element. Expected name but found=" + proto
+      );
+    }
+
+    return name;
+  }
+
+  private int elementCtxNodesIndexLoad() {
+    byte b0;
+    b0 = aux[mainStart + 4];
+
+    byte b1;
+    b1 = aux[mainStart + 5];
+
+    byte b2;
+    b2 = aux[mainStart + 6];
+
+    return HtmlBytes.decodeLength3(b0, b1, b2);
+  }
+
+  private void elementCtxNodesIndexStore(int value) {
+    aux[mainStart + 4] = HtmlBytes.encodeInt0(value);
+
+    aux[mainStart + 5] = HtmlBytes.encodeInt1(value);
+
+    aux[mainStart + 6] = HtmlBytes.encodeInt2(value);
+  }
+
+  private int elementCtxRemove() {
+    // restore parent index
+    byte b0;
+    b0 = aux[mainStart + 10];
+
+    byte b1;
+    b1 = aux[mainStart + 11];
+
+    byte b2;
+    b2 = aux[mainStart + 12];
+
+    int parentIndex;
+    parentIndex = HtmlBytes.decodeLength3(b0, b1, b2);
+
+    // restore parent length
+    byte len;
+    len = aux[mainStart + 13];
+
+    int length;
+    length = HtmlBytes.decodeInt(len);
+
+    // remove this context
+    auxIndex = mainStart;
+
+    // set parent as the current context
+    mainStart = auxIndex - length;
+
+    return parentIndex;
+  }
+
+  private DomElement htmlElement() {
+    return (DomElement) objectArray[objectIndex + OFFSET_ELEMENT];
+  }
+
+  private void stateCheck(byte expected) {
+    byte actual;
+    actual = statePeek();
+
+    if (actual != expected) {
+      throw new IllegalStateException(
+          """
+          Found state '%d' but expected state '%d'
+          """.formatted(actual, expected)
+      );
+    }
+  }
+
+  private void stateCAS(byte expected, byte next) {
+    // not a real CAS
+    // but it does compare and swap
+    stateCheck(expected);
+
+    aux[mainStart] = next;
+  }
+
+  private byte statePeek() {
+    return aux[mainStart];
+  }
+
+  private void stateSet(byte value) {
+    aux[mainStart] = value;
+  }
+
+  private int decodeLength(int index) {
+    int startIndex;
+    startIndex = index;
+
+    byte maybeNeg;
+
+    do {
+      maybeNeg = main[index++];
+    } while (maybeNeg < 0);
+
+    auxStart = HtmlBytes.decodeOffset(main, startIndex, index);
+
+    return index;
+  }
+
+  private int jmp2(int index) {
+    int baseIndex;
+    baseIndex = index;
+
+    index = decodeLength(index);
+
+    auxStart = baseIndex - auxStart;
+
+    // skip ByteProto
+    auxStart++;
+
+    return index;
+  }
+
+  private int skipVarInt(int index) {
+    byte len0;
+
+    do {
+      len0 = main[index++];
+    } while (len0 < 0);
+
+    return index;
+  }
+
+  // ##################################################################
+  // # BEGIN: Recording
+  // ##################################################################
+
+  byte[] aux = new byte[128];
+
+  int auxIndex;
+
+  int auxStart;
+
+  byte[] main = new byte[256];
+
+  int mainContents;
+
+  int mainIndex;
+
+  int mainStart;
+
+  Object[] objectArray;
+
+  int objectIndex;
+
+  final void compilationBegin() {
+    auxIndex = auxStart = 0;
+
+    mainContents = mainIndex = mainStart = 0;
+
+    objectIndex = 0;
+  }
+
+  @Override
+  final Html.Instruction.OfAmbiguous ambiguous(HtmlAmbiguous name, String value) {
+    Objects.requireNonNull(value, "value == null");
+
+    int ordinal;
+    ordinal = name.ordinal();
+
+    int object;
+    object = objectAdd(value);
+
+    mainAdd(
+        HtmlByteProto.AMBIGUOUS1,
+
+        // name
+        HtmlBytes.encodeInt0(ordinal),
+
+        // value
+        HtmlBytes.encodeInt0(object),
+        HtmlBytes.encodeInt1(object),
+
+        HtmlByteProto.INTERNAL5
+    );
+
+    return Html.ELEMENT;
+  }
+
+  @Override
+  final Html.Instruction.OfAttribute attr0(Html.AttributeName name) {
+    int index;
+    index = name.index();
+
+    if (index < 0) {
+      throw new UnsupportedOperationException("Custom attribute name");
+    }
+
+    mainAdd(
+        HtmlByteProto.ATTRIBUTE0,
+
+        // name
+        HtmlBytes.encodeInt0(index),
+
+        HtmlByteProto.INTERNAL3
+    );
+
+    return Html.ATTRIBUTE;
+  }
+
+  @Override
+  final Html.AttributeOrNoOp attr0(Html.AttributeName name, Object value) {
+    Objects.requireNonNull(value, "value == null");
+
+    int index;
+    index = name.index();
+
+    if (index >= 0) {
+      int object;
+      object = objectAdd(value);
+
+      mainAdd(
+          HtmlByteProto.ATTRIBUTE1,
+
+          // name
+          HtmlBytes.encodeInt0(index),
+
+          // value
+          HtmlBytes.encodeInt0(object),
+          HtmlBytes.encodeInt1(object),
+
+          HtmlByteProto.INTERNAL5
+      );
+    } else {
+      int nameIndex;
+      nameIndex = objectAdd(name);
+
+      int valueIndex;
+      valueIndex = objectAdd(value);
+
+      mainAdd(
+          HtmlByteProto.CUSTOM_ATTR1,
+
+          // name
+          HtmlBytes.encodeInt0(nameIndex),
+          HtmlBytes.encodeInt1(nameIndex),
+
+          // value
+          HtmlBytes.encodeInt0(valueIndex),
+          HtmlBytes.encodeInt1(valueIndex),
+
+          HtmlByteProto.INTERNAL6
+      );
+    }
+
+    return Html.ATTRIBUTE;
+  }
+
+  @Override
+  final Html.Instruction.OfElement elem0(Html.ElementName name, Html.Instruction... contents) {
+    elementBegin(name);
+
+    for (int i = 0; i < contents.length; i++) {
+      Html.Instruction inst;
+      inst = Check.notNull(contents[i], "contents[", i, "] == null");
+
+      elementValue(inst);
+    }
+
+    elementEnd();
+
+    return Html.ELEMENT;
+  }
+
+  @Override
+  final Html.Instruction.OfElement elem0(Html.ElementName name, String text) {
+    Objects.requireNonNull(text, "text == null");
+
+    textImpl(text);
+
+    elementBegin(name);
+    elementValue(Html.ELEMENT);
+    elementEnd();
+
+    return Html.ELEMENT;
+  }
+
+  final void elementBegin(Html.ElementName name) {
+    commonBegin();
+
+    mainAdd(
+        HtmlByteProto.ELEMENT,
+
+        // length takes 2 bytes
+        HtmlByteProto.NULL,
+        HtmlByteProto.NULL,
+
+        HtmlByteProto.STANDARD_NAME,
+
+        HtmlBytes.encodeName(name)
+    );
+  }
+
+  final void elementValue(Html.Instruction value) {
+    if (value == Html.ATTRIBUTE ||
+        value == Html.ELEMENT ||
+        value == Html.FRAGMENT) {
+      // @ ByteProto
+      mainContents--;
+
+      byte proto;
+      proto = main[mainContents--];
+
+      switch (proto) {
+        case HtmlByteProto.INTERNAL -> {
+          int endIndex;
+          endIndex = mainContents;
+
+          byte maybeNeg;
+
+          do {
+            maybeNeg = main[mainContents--];
+          } while (maybeNeg < 0);
+
+          int length;
+          length = HtmlBytes.decodeCommonEnd(main, mainContents, endIndex);
+
+          mainContents -= length;
+        }
+
+        case HtmlByteProto.INTERNAL3 -> mainContents -= 3 - 2;
+
+        case HtmlByteProto.INTERNAL4 -> mainContents -= 4 - 2;
+
+        case HtmlByteProto.INTERNAL5 -> mainContents -= 5 - 2;
+
+        case HtmlByteProto.INTERNAL6 -> mainContents -= 6 - 2;
+
+        default -> throw new UnsupportedOperationException(
+            "Implement me :: proto=" + proto
+        );
+      }
+
+      auxAdd(HtmlByteProto.INTERNAL);
+    }
+
+    else if (value instanceof Html.AttributeObject0 ext) {
+      Html.AttributeName name;
+      name = ext.name();
+
+      int nameIndex;
+      nameIndex = name.index();
+
+      if (nameIndex < 0) {
+        throw new UnsupportedOperationException("Custom attribute name");
+      } else {
+        auxAdd(
+            HtmlByteProto.ATTRIBUTE_EXT0,
+
+            // name
+            HtmlBytes.encodeInt0(nameIndex)
+        );
+      }
+    }
+
+    else if (value instanceof Html.AttributeObject ext) {
+      Html.AttributeName name;
+      name = ext.name();
+
+      int nameIndex;
+      nameIndex = name.index();
+
+      if (nameIndex < 0) {
+        throw new UnsupportedOperationException("Custom attribute name");
+      } else {
+        int valueIndex;
+        valueIndex = externalValue(ext.value());
+
+        auxAdd(
+            HtmlByteProto.ATTRIBUTE_EXT1,
+
+            // name
+            HtmlBytes.encodeInt0(nameIndex),
+
+            // value
+            HtmlBytes.encodeInt0(valueIndex),
+            HtmlBytes.encodeInt1(valueIndex)
+        );
+      }
+    }
+
+    else if (value == Html.NOOP) {
+      // no-op
+    }
+
+    else {
+      throw new UnsupportedOperationException(
+          "Implement me :: type=" + value.getClass()
+      );
+    }
+  }
+
+  final void elementEnd() {
+    // we iterate over each value added via elementValue(Instruction)
+    int index;
+    index = auxStart;
+
+    int indexMax;
+    indexMax = auxIndex;
+
+    int contents;
+    contents = mainContents;
+
+    loop: while (index < indexMax) {
+      byte mark;
+      mark = aux[index++];
+
+      switch (mark) {
+        case HtmlByteProto.TEXT -> {
+          mainAdd(mark, aux[index++], aux[index++]);
+        }
+
+        case HtmlByteProto.ATTRIBUTE_EXT0 -> {
+          mainAdd(mark, aux[index++]);
+        }
+
+        case HtmlByteProto.ATTRIBUTE_EXT1 -> {
+          mainAdd(mark, aux[index++], aux[index++], aux[index++]);
+        }
+
+        case HtmlByteProto.INTERNAL -> {
+          while (true) {
+            byte proto;
+            proto = main[contents];
+
+            switch (proto) {
+              case HtmlByteProto.ATTRIBUTE0 -> {
+                contents = encodeInternal3(contents, proto);
+
+                continue loop;
+              }
+
+              case HtmlByteProto.AMBIGUOUS1,
+                   HtmlByteProto.ATTRIBUTE1 -> {
+                contents = encodeInternal5(contents, proto);
+
+                continue loop;
+              }
+
+              case HtmlByteProto.CUSTOM_ATTR1 -> {
+                contents = encodeInternal6(contents, proto);
+
+                continue loop;
+              }
+
+              case HtmlByteProto.ELEMENT -> {
+                contents = encodeElement(contents, proto);
+
+                continue loop;
+              }
+
+              case HtmlByteProto.FLATTEN -> {
+                contents = encodeFlatten(contents);
+
+                continue loop;
+              }
+
+              case HtmlByteProto.FRAGMENT -> {
+                contents = encodeFragment(contents);
+
+                continue loop;
+              }
+
+              case HtmlByteProto.LENGTH2 -> contents = encodeLength2(contents);
+
+              case HtmlByteProto.LENGTH3 -> contents = encodeLength3(contents);
+
+              case HtmlByteProto.MARKED3 -> contents += 3;
+
+              case HtmlByteProto.MARKED4 -> contents += 4;
+
+              case HtmlByteProto.MARKED5 -> contents += 5;
+
+              case HtmlByteProto.MARKED6 -> contents += 6;
+
+              case HtmlByteProto.RAW,
+                   HtmlByteProto.TEXT -> {
+                contents = encodeInternal4(contents, proto);
+
+                continue loop;
+              }
+
+              default -> {
+                throw new UnsupportedOperationException(
+                    "Implement me :: proto=" + proto
+                );
+              }
+            }
+          }
+        }
+
+        default -> throw new UnsupportedOperationException(
+            "Implement me :: mark=" + mark
+        );
+      }
+    }
+
+    commonEnd(mainContents, mainStart);
+
+    // we clear the aux list
+    auxIndex = auxStart;
+  }
+
+  final void flattenBegin() {
+    commonBegin();
+
+    mainAdd(
+        HtmlByteProto.FLATTEN,
+
+        // length takes 2 bytes
+        HtmlByteProto.NULL,
+        HtmlByteProto.NULL
+    );
+  }
+
+  final void rawImpl(String value) {
+    int object;
+    object = objectAdd(value);
+
+    mainAdd(
+        HtmlByteProto.RAW,
+
+        // value
+        HtmlBytes.encodeInt0(object),
+        HtmlBytes.encodeInt1(object),
+
+        HtmlByteProto.INTERNAL4
+    );
+  }
+
+  final void textImpl(String value) {
+    int object;
+    object = objectAdd(value);
+
+    mainAdd(
+        HtmlByteProto.TEXT,
+
+        // value
+        HtmlBytes.encodeInt0(object),
+        HtmlBytes.encodeInt1(object),
+
+        HtmlByteProto.INTERNAL4
+    );
+  }
+
+  private void auxAdd(byte b0) {
+    aux = Util.growIfNecessary(aux, auxIndex + 0);
+    aux[auxIndex++] = b0;
+  }
+
+  private void auxAdd(byte b0, byte b1) {
+    aux = Util.growIfNecessary(aux, auxIndex + 1);
+    aux[auxIndex++] = b0;
+    aux[auxIndex++] = b1;
+  }
+
+  private void auxAdd(byte b0, byte b1, byte b2, byte b3) {
+    aux = Util.growIfNecessary(aux, auxIndex + 3);
+    aux[auxIndex++] = b0;
+    aux[auxIndex++] = b1;
+    aux[auxIndex++] = b2;
+    aux[auxIndex++] = b3;
+  }
+
+  private void commonBegin() {
+    // we mark the start of our aux list
+    auxStart = auxIndex;
+
+    // we mark:
+    // 1) the start of the contents of the current declaration
+    // 2) the start of our main list
+    mainContents = mainStart = mainIndex;
+  }
+
+  private void commonEnd(int contentsIndex, int startIndex) {
+    // ensure main can hold 5 more elements
+    // - ByteProto.END
+    // - length
+    // - length
+    // - length
+    // - ByteProto.INTERNAL
+    main = Util.growIfNecessary(main, mainIndex + 4);
+
+    // mark the end
+    main[mainIndex++] = HtmlByteProto.END;
+
+    // store the distance to the contents (yes, reversed)
+    int length;
+    length = mainIndex - contentsIndex - 1;
+
+    mainIndex = HtmlBytes.encodeCommonEnd(main, mainIndex, length);
+
+    // trailer proto
+    main[mainIndex++] = HtmlByteProto.INTERNAL;
+
+    // set the end index of the declaration
+    length = mainIndex - startIndex;
+
+    // skip ByteProto.FOO + len0 + len1
+    length -= 3;
+
+    // we skip the first byte proto
+    main[startIndex + 1] = HtmlBytes.encodeInt0(length);
+    main[startIndex + 2] = HtmlBytes.encodeInt1(length);
+  }
+
+  private int encodeElement(int contents, byte proto) {
+    // keep the start index handy
+    int startIndex;
+    startIndex = contents;
+
+    // mark this element
+    main[contents++] = HtmlByteProto.LENGTH2;
+
+    // decode the length
+    byte len0;
+    len0 = main[contents++];
+
+    byte len1;
+    len1 = main[contents++];
+
+    // point to next element
+    int offset;
+    offset = HtmlBytes.decodeInt(len0, len1);
+
+    // ensure main can hold least 4 elements
+    // 0   - ByteProto
+    // 1-3 - variable length
+    main = Util.growIfNecessary(main, mainIndex + 3);
+
+    main[mainIndex++] = proto;
+
+    int length;
+    length = mainIndex - startIndex;
+
+    mainIndex = HtmlBytes.encodeOffset(main, mainIndex, length);
+
+    return contents + offset;
+  }
+
+  private int encodeFlatten(int contents) {
+    int index;
+    index = contents;
+
+    // mark this fragment
+    main[index++] = HtmlByteProto.LENGTH2;
+
+    // decode the length
+    byte len0;
+    len0 = main[index++];
+
+    byte len1;
+    len1 = main[index++];
+
+    // point to next element
+    int offset;
+    offset = HtmlBytes.decodeInt(len0, len1);
+
+    int maxIndex;
+    maxIndex = index + offset;
+
+    loop: while (index < maxIndex) {
+      byte proto;
+      proto = main[index++];
+
+      switch (proto) {
+        case HtmlByteProto.ATTRIBUTE_EXT0 -> {
+          byte idx0;
+          idx0 = main[index++];
+
+          mainAdd(proto, idx0);
+        }
+
+        case HtmlByteProto.ATTRIBUTE_EXT1 -> {
+          byte idx0;
+          idx0 = main[index++];
+
+          byte idx1;
+          idx1 = main[index++];
+
+          byte idx2;
+          idx2 = main[index++];
+
+          mainAdd(proto, idx0, idx1, idx2);
+        }
+
+        case HtmlByteProto.AMBIGUOUS1,
+             HtmlByteProto.ATTRIBUTE0,
+             HtmlByteProto.ATTRIBUTE1,
+             HtmlByteProto.ELEMENT,
+             HtmlByteProto.TEXT,
+             HtmlByteProto.RAW -> {
+          int elementIndex;
+          elementIndex = index;
+
+          do {
+            len0 = main[index++];
+          } while (len0 < 0);
+
+          int len;
+          len = HtmlBytes.decodeOffset(main, elementIndex, index);
+
+          elementIndex -= len;
+
+          // ensure main can hold least 4 elements
+          // 0   - ByteProto
+          // 1-3 - variable length
+          main = Util.growIfNecessary(main, mainIndex + 3);
+
+          main[mainIndex++] = proto;
+
+          int length;
+          length = mainIndex - elementIndex;
+
+          mainIndex = HtmlBytes.encodeOffset(main, mainIndex, length);
+        }
+
+        case HtmlByteProto.END -> {
+          break loop;
+        }
+
+        default -> {
+          throw new UnsupportedOperationException(
+              "Implement me :: proto=" + proto
+          );
+        }
+      }
+    }
+
+    return maxIndex;
+  }
+
+  private int encodeFragment(int contents) {
+    int index;
+    index = contents;
+
+    // mark this fragment
+    main[index++] = HtmlByteProto.LENGTH3;
+
+    // decode the length
+    byte len0;
+    len0 = main[index++];
+
+    byte len1;
+    len1 = main[index++];
+
+    byte len2;
+    len2 = main[index++];
+
+    // point to next element
+    int offset;
+    offset = HtmlBytes.decodeLength3(len0, len1, len2);
+
+    int maxIndex;
+    maxIndex = index + offset;
+
+    loop: while (index < maxIndex) {
+      byte proto;
+      proto = main[index];
+
+      switch (proto) {
+        case HtmlByteProto.AMBIGUOUS1 -> index = encodeInternal5(index, proto);
+
+        case HtmlByteProto.ATTRIBUTE0 -> index = encodeInternal3(index, proto);
+
+        case HtmlByteProto.ATTRIBUTE1 -> index = encodeInternal5(index, proto);
+
+        case HtmlByteProto.CUSTOM_ATTR1 -> index = encodeInternal6(index, proto);
+
+        case HtmlByteProto.ELEMENT -> index = encodeElement(index, proto);
+
+        case HtmlByteProto.END -> {
+          break loop;
+        }
+
+        case HtmlByteProto.FRAGMENT -> index = encodeFragment(index);
+
+        case HtmlByteProto.LENGTH2 -> index = encodeLength2(index);
+
+        case HtmlByteProto.LENGTH3 -> index = encodeLength3(index);
+
+        case HtmlByteProto.MARKED3 -> index += 3;
+
+        case HtmlByteProto.MARKED4 -> index += 4;
+
+        case HtmlByteProto.MARKED5 -> index += 5;
+
+        case HtmlByteProto.MARKED6 -> index += 6;
+
+        case HtmlByteProto.RAW,
+             HtmlByteProto.TEXT -> index = encodeInternal4(index, proto);
+
+        default -> {
+          throw new UnsupportedOperationException(
+              "Implement me :: proto=" + proto
+          );
+        }
+      }
+    }
+
+    return maxIndex;
+  }
+
+  private int encodeInternal(int contents, byte proto, int offset, byte marked) {
+    // keep the start index handy
+    int startIndex;
+    startIndex = contents;
+
+    // mark this element
+    main[contents] = marked;
+
+    // ensure main can hold least 4 elements
+    // 0   - ByteProto
+    // 1-3 - variable length
+    main = Util.growIfNecessary(main, mainIndex + 3);
+
+    main[mainIndex++] = proto;
+
+    int length;
+    length = mainIndex - startIndex;
+
+    mainIndex = HtmlBytes.encodeOffset(main, mainIndex, length);
+
+    return contents + offset;
+  }
+
+  private int encodeInternal3(int contents, byte proto) {
+    return encodeInternal(contents, proto, 3, HtmlByteProto.MARKED3);
+  }
+
+  private int encodeInternal4(int contents, byte proto) {
+    return encodeInternal(contents, proto, 4, HtmlByteProto.MARKED4);
+  }
+
+  private int encodeInternal5(int contents, byte proto) {
+    return encodeInternal(contents, proto, 5, HtmlByteProto.MARKED5);
+  }
+
+  private int encodeInternal6(int contents, byte proto) {
+    return encodeInternal(contents, proto, 6, HtmlByteProto.MARKED6);
+  }
+
+  private int encodeLength2(int contents) {
+    contents++;
+
+    // decode the length
+    byte len0;
+    len0 = main[contents++];
+
+    byte len1;
+    len1 = main[contents++];
+
+    int length;
+    length = HtmlBytes.decodeInt(len0, len1);
+
+    // point to next element
+    return contents + length;
+  }
+
+  private int encodeLength3(int contents) {
+    contents++;
+
+    // decode the length
+    byte len0;
+    len0 = main[contents++];
+
+    byte len1;
+    len1 = main[contents++];
+
+    byte len2;
+    len2 = main[contents++];
+
+    int length;
+    length = HtmlBytes.decodeLength3(len0, len1, len2);
+
+    // point to next element
+    return contents + length;
+  }
+
+  private int externalValue(String value) {
+    String result;
+    result = value;
+
+    if (value == null) {
+      result = "null";
+    }
+
+    return objectAdd(result);
+  }
+
+  final int fragmentBegin() {
+    // we mark:
+    // 1) the start of the contents of the current declaration
+    int startIndex;
+    startIndex = mainIndex;
+
+    mainAdd(
+        HtmlByteProto.FRAGMENT,
+
+        // length takes 3 bytes
+        HtmlByteProto.NULL,
+        HtmlByteProto.NULL,
+        HtmlByteProto.NULL
+    );
+
+    return startIndex;
+  }
+
+  final void fragmentEnd(int startIndex) {
+    // ensure main can hold 5 more elements
+    // - ByteProto.END
+    // - length
+    // - length
+    // - length
+    // - ByteProto.INTERNAL
+    main = Util.growIfNecessary(main, mainIndex + 4);
+
+    // mark the end
+    main[mainIndex++] = HtmlByteProto.END;
+
+    // store the distance to the contents (yes, reversed)
+    int length;
+    length = mainIndex - startIndex - 1;
+
+    mainIndex = HtmlBytes.encodeCommonEnd(main, mainIndex, length);
+
+    // trailer proto
+    main[mainIndex++] = HtmlByteProto.INTERNAL;
+
+    // set the end index of the declaration
+    length = mainIndex - startIndex;
+
+    // skip ByteProto.FOO + len0 + len1 + len2
+    length -= 4;
+
+    // we skip the first byte proto
+    HtmlBytes.encodeLength3(main, startIndex + 1, length);
+  }
+
+  private void mainAdd(byte b0) {
+    main = Util.growIfNecessary(main, mainIndex + 0);
+    main[mainIndex++] = b0;
+  }
+
+  private void mainAdd(byte b0, byte b1) {
+    main = Util.growIfNecessary(main, mainIndex + 1);
+    main[mainIndex++] = b0;
+    main[mainIndex++] = b1;
+  }
+
+  private void mainAdd(byte b0, byte b1, byte b2) {
+    main = Util.growIfNecessary(main, mainIndex + 2);
+    main[mainIndex++] = b0;
+    main[mainIndex++] = b1;
+    main[mainIndex++] = b2;
+  }
+
+  private void mainAdd(byte b0, byte b1, byte b2, byte b3) {
+    main = Util.growIfNecessary(main, mainIndex + 3);
+    main[mainIndex++] = b0;
+    main[mainIndex++] = b1;
+    main[mainIndex++] = b2;
+    main[mainIndex++] = b3;
+  }
+
+  private void mainAdd(byte b0, byte b1, byte b2, byte b3, byte b4) {
+    main = Util.growIfNecessary(main, mainIndex + 4);
+    main[mainIndex++] = b0;
+    main[mainIndex++] = b1;
+    main[mainIndex++] = b2;
+    main[mainIndex++] = b3;
+    main[mainIndex++] = b4;
+  }
+
+  private void mainAdd(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5) {
+    main = Util.growIfNecessary(main, mainIndex + 5);
+    main[mainIndex++] = b0;
+    main[mainIndex++] = b1;
+    main[mainIndex++] = b2;
+    main[mainIndex++] = b3;
+    main[mainIndex++] = b4;
+    main[mainIndex++] = b5;
+  }
+
+  private int objectAdd(Object value) {
+    int index;
+    index = objectIndex++;
+
+    if (objectArray == null) {
+      objectArray = new Object[10];
+    }
+
+    objectArray = Util.growIfNecessary(objectArray, objectIndex);
+
+    objectArray[index] = value;
+
+    return index;
+  }
+
+  // ##################################################################
+  // # END: Recording
+  // ##################################################################
+
+}

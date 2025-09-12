@@ -20,6 +20,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.function.Consumer;
+import objectos.way.Testable.Formatter;
 
 /**
  * The <strong>Objectos HTML</strong> main class.
@@ -1090,7 +1091,7 @@ public final class Html {
     /// Returns the markup instance to be used by this component.
     /// @return the markup instance to be used by this component
     default Html.Markup newHtmlMarkup() {
-      return new HtmlMarkup();
+      return new Html.Markup.OfHtml();
     }
 
     /// Renders the HTML of this component.
@@ -1126,7 +1127,80 @@ public final class Html {
   }
 
   /// Declares the structure of an HTML document using pure Java.
-  public interface Markup {
+  public sealed interface Markup {
+
+    /// Markup implementation for generating HTML.
+    non-sealed class OfHtml extends HtmlMarkupOfHtml implements Markup {
+
+      /// Sole constructor.
+      protected OfHtml() {}
+
+      /// {@inheritDoc}
+      @Override
+      public final Html.Instruction.OfFragment c(Html.Component... components) {
+        int index;
+        index = fragmentBegin();
+
+        for (int idx = 0, len = components.length; idx < len; idx++) {
+          final Html.Component c;
+          c = Check.notNull(components[idx], "components[", idx, "] == null");
+
+          c.renderHtml(this);
+        }
+
+        fragmentEnd(index);
+
+        return Html.FRAGMENT;
+      }
+
+      /// {@inheritDoc}
+      @Override
+      public final Html.Instruction.OfFragment c(Iterable<? extends Html.Component> components) {
+        int index;
+        index = fragmentBegin();
+
+        for (Html.Component c : components) {
+          c.renderHtml(this);
+        }
+
+        fragmentEnd(index);
+
+        return Html.FRAGMENT;
+      }
+
+    }
+
+    /// Markup implementation for formatting testable objects.
+    final class OfTestable extends HtmlMarkupOfTestable implements Markup {
+
+      OfTestable(Formatter formatter) {
+        super(formatter);
+      }
+
+      /// {@inheritDoc}
+      @Override
+      public final Html.Instruction.OfFragment c(Component... components) {
+        for (int idx = 0, len = components.length; idx < len; idx++) {
+          final Html.Component c;
+          c = Check.notNull(components[idx], "components[", idx, "] == null");
+
+          c.renderHtml(this);
+        }
+
+        return Html.FRAGMENT;
+      }
+
+      /// {@inheritDoc}
+      @Override
+      public final Html.Instruction.OfFragment c(Iterable<? extends Component> components) {
+        for (Html.Component c : components) {
+          c.renderHtml(this);
+        }
+
+        return Html.FRAGMENT;
+      }
+
+    }
 
     /// Adds the specified attribute at the root of a document or fragment.
     /// @param object the attribute
@@ -1219,26 +1293,26 @@ public final class Html {
     Html.Instruction.OfAttribute dataFrame(String name, String value);
 
     /// Renders the `class` attribute by processing the specified value.
-    /// 
+    ///
     /// This method is designed to work with Java text blocks. It first removes
     /// any leading and trailing whitespace. Additionally, any sequence of
     /// consecutive whitespace characters is replaced by a single space
     /// character.
-    /// 
+    ///
     /// For example, the following invocation:
-    /// 
+    ///
     /// ```java
     /// css("""
     ///     display:inline-flex
     ///     justify-content:center
-    /// 
+    ///
     ///     background-color:blue-500
     ///     """);
     /// ```
-    /// 
+    ///
     /// Produces the same result as invoking
     /// `className("display:inline-flex justify-content:center background-color:blue-500")`.
-    /// 
+    ///
     /// @param value the text block containing class names, possibly spread across multiple lines
     /// @return an instruction representing this attribute.
     Html.Instruction.OfAttribute css(String value);
@@ -1254,13 +1328,13 @@ public final class Html {
     Html.Instruction.OfFragment c(Iterable<? extends Html.Component> components);
 
     /// Renders the specified fragment as part of this document.
-    /// 
+    ///
     /// The following Objectos HTML component:
-    /// 
+    ///
     /// {@snippet file = "objectos/way/HtmlMarkupJavadoc.java" region = "f0"}
-    /// 
+    ///
     /// Generates the following HTML:
-    /// 
+    ///
     /// ```html
     /// <ul>
     /// <li>Mon</li>
@@ -1268,19 +1342,19 @@ public final class Html {
     /// <li>Fri</li>
     /// </ul>
     /// ```
-    /// 
+    ///
     /// @param fragment the fragment to include
     /// @return an instruction representing the fragment
     Html.Instruction.OfFragment f(Html.Fragment.Of0 fragment);
 
     /// Renders the specified fragment as part of this document.
-    /// 
+    ///
     /// The following Objectos HTML component:
-    /// 
+    ///
     /// {@snippet file = "objectos/way/HtmlMarkupJavadoc.java" region = "f1"}
-    /// 
+    ///
     /// Generates the following HTML:
-    /// 
+    ///
     /// ```html
     /// <ul>
     /// <li>Mon</li>
@@ -1288,7 +1362,7 @@ public final class Html {
     /// <li>Fri</li>
     /// </ul>
     /// ```
-    /// 
+    ///
     /// @param <T1> the type of the first argument
     /// @param fragment the fragment to include
     /// @param arg1 the first argument
@@ -1296,17 +1370,17 @@ public final class Html {
     <T1> Html.Instruction.OfFragment f(Html.Fragment.Of1<T1> fragment, T1 arg1);
 
     /// Renders the specified fragment as part of this document.
-    /// 
+    ///
     /// The following Objectos HTML component:
-    /// 
+    ///
     /// {@snippet file = "objectos/way/HtmlMarkupJavadoc.java" region = "f2"}
-    /// 
+    ///
     /// Generates the following HTML:
-    /// 
+    ///
     /// ```html
     /// <div><button>OK</button><button>Cancel</button></div>
     /// ```
-    /// 
+    ///
     /// @param <T1> the type of the first argument
     /// @param <T2> the type of the second argument
     /// @param fragment the fragment to include
@@ -1316,20 +1390,20 @@ public final class Html {
     <T1, T2> Html.Instruction.OfFragment f(Html.Fragment.Of2<T1, T2> fragment, T1 arg1, T2 arg2);
 
     /// Renders the specified fragment as part of this document.
-    /// 
+    ///
     /// The following Objectos HTML component:
-    /// 
+    ///
     /// {@snippet file = "objectos/way/HtmlMarkupJavadoc.java" region = "f3"}
-    /// 
+    ///
     /// Generates the following HTML:
-    /// 
+    ///
     /// ```html
     /// <div>
     /// <p>City<span>Tokyo</span></p>
     /// <p>Country<span>Japan</span></p>
     /// </div>
     /// ```
-    /// 
+    ///
     /// @param <T1> the type of the first argument
     /// @param <T2> the type of the second argument
     /// @param <T3> the type of the third argument
@@ -1341,7 +1415,7 @@ public final class Html {
     <T1, T2, T3> Html.Instruction.OfFragment f(Html.Fragment.Of3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3);
 
     /// Renders the specified fragment as part of this document.
-    /// 
+    ///
     /// @param <T1> the type of the first argument
     /// @param <T2> the type of the second argument
     /// @param <T3> the type of the third argument
@@ -2874,8 +2948,8 @@ public final class Html {
 
     @Override
     public final void formatTestable(Testable.Formatter formatter) {
-      final HtmlMarkupOfTestable html;
-      html = new HtmlMarkupOfTestable(formatter);
+      final Html.Markup html;
+      html = new Html.Markup.OfTestable(formatter);
 
       renderHtml(html);
     }
@@ -2899,12 +2973,15 @@ public final class Html {
      * @return the HTML generated by this template suited to be used in JSON
      */
     public final String toJsonString() {
-      HtmlMarkup html;
-      html = new HtmlMarkup();
+      final Html.Markup html;
+      html = new Html.Markup.OfHtml();
 
       renderHtml(html);
 
-      return html.toJsonString();
+      final HtmlMarkupOfHtml impl;
+      impl = (HtmlMarkupOfHtml) html;
+
+      return impl.toJsonString();
     }
 
     /**

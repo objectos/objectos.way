@@ -28,9 +28,9 @@ final class DomDocument implements Dom.Document, Lang.IterableOnce<Dom.Node>, It
     }
   }
 
-  private final HtmlMarkup player;
+  private final HtmlMarkupOfHtml player;
 
-  public DomDocument(HtmlMarkup ctx) {
+  public DomDocument(HtmlMarkupOfHtml ctx) {
     this.player = ctx;
   }
 

@@ -58,16 +58,23 @@ public final class Dom {
       String value();
     }
 
-    /// Create a `Document` representing the specified HTML template.
+    static Dom.Document of(Html.Markup.OfHtml markup) {
+      final HtmlMarkupOfHtml impl;
+      impl = markup;
+
+      return impl.compile();
+    }
+
+    /// Creates a `Document` representing the specified HTML template.
     /// @param template the HTML template
     /// @return a newly created DOM object
     static Dom.Document of(Html.Template template) {
-      final HtmlMarkup html;
-      html = new HtmlMarkup();
+      final Html.Markup.OfHtml html;
+      html = new Html.Markup.OfHtml();
 
       template.renderHtml(html);
 
-      return html.compile();
+      return of(html);
     }
 
     /// Returns the nodes of this HTML document.

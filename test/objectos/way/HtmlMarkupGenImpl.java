@@ -53,13 +53,11 @@ public class HtmlMarkupGenImpl {
 
       abstract Html.Instruction.OfElement elem0(Html.ElementName name, String text);
 
-      @Override
       public final Html.Instruction.OfElement elem(Html.ElementName name, Html.Instruction... contents) {
         Objects.requireNonNull(name, "name == null");
         return elem0(name, contents);
       }
 
-      @Override
       public final Html.Instruction.OfElement elem(Html.ElementName name, String text) {
         Objects.requireNonNull(name, "name == null");
         return elem0(name, text);
@@ -76,7 +74,6 @@ public class HtmlMarkupGenImpl {
       if (ambiguousNames.contains(htmlName)) {
         methods.append("""
 
-          @Override
           public final Html.Instruction.OfElement %s(Html.Instruction... contents) {
             return elem0(HtmlElementName.%s, contents);
           }
@@ -86,12 +83,10 @@ public class HtmlMarkupGenImpl {
       else if (elem.endTag()) {
         methods.append("""
 
-          @Override
           public final Html.Instruction.OfElement %s(Html.Instruction... contents) {
             return elem0(HtmlElementName.%s, contents);
           }
 
-          @Override
           public final Html.Instruction.OfElement %s(String text) {
             return elem0(HtmlElementName.%s, text);
           }
@@ -104,7 +99,6 @@ public class HtmlMarkupGenImpl {
       else {
         methods.append("""
 
-          @Override
           public final Html.Instruction.OfElement %s(Html.Instruction.OfVoid... contents) {
             return elem0(HtmlElementName.%s, contents);
           }
@@ -125,13 +119,11 @@ public class HtmlMarkupGenImpl {
 
       abstract Html.Instruction.OfAttribute attr0(Html.AttributeName name, Object value);
 
-      @Override
       public final Html.Instruction.OfAttribute attr(Html.AttributeName name) {
         Objects.requireNonNull(name, "name == null");
         return attr0(name);
       }
 
-      @Override
       public final Html.Instruction.OfAttribute attr(Html.AttributeName name, String value) {
         Objects.requireNonNull(name, "name == null");
         return attr0(name, value);
@@ -148,7 +140,6 @@ public class HtmlMarkupGenImpl {
 
       methods.append("""
 
-        @Override
         public final Html.Instruction.OfAttribute %s(String value) {
           return attr0(HtmlAttributeName.%s, value);
         }
@@ -169,7 +160,6 @@ public class HtmlMarkupGenImpl {
     for (HtmlSpec.AmbiguousSpec spec : HtmlSpec.ambiguous()) {
       methods.append("""
 
-        @Override
         public final Html.Instruction.OfAmbiguous %s(String text) {
           return ambiguous(HtmlAmbiguous.%s, text);
         }

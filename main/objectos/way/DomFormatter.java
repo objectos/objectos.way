@@ -16,6 +16,7 @@
 package objectos.way;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Set;
 
 class DomFormatter {
@@ -64,23 +65,23 @@ class DomFormatter {
   DomFormatter() {}
 
   public final void formatTo(Dom.Document document, Appendable appendable) throws IOException {
-    Check.notNull(document, "document == null");
-    Check.notNull(appendable, "appendable == null");
+    Objects.requireNonNull(document, "document == null");
+    Objects.requireNonNull(appendable, "appendable == null");
 
     format(document, appendable);
   }
 
   public final void formatTo(Html.Template template, Appendable appendable) throws IOException {
-    Check.notNull(template, "template == null");
-    Check.notNull(appendable, "appendable == null");
+    Objects.requireNonNull(template, "template == null");
+    Objects.requireNonNull(appendable, "appendable == null");
 
-    HtmlMarkup html;
-    html = new HtmlMarkup();
+    final Html.Markup.OfHtml html;
+    html = new Html.Markup.OfHtml();
 
     template.renderHtml(html);
 
-    Dom.Document document;
-    document = html.compile();
+    final Dom.Document document;
+    document = Dom.Document.of(html);
 
     format(document, appendable);
   }

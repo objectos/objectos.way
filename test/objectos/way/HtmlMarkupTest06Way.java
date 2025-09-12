@@ -70,6 +70,31 @@ public class HtmlMarkupTest06Way {
     );
   }
 
+  @Test
+  public void c3() {
+    test(
+        m -> m.elem(
+            Html.ElementName.UL,
+            m.c()
+        ),
+
+        """
+        <ul></ul>
+        """
+    );
+
+    test(
+        m -> m.elem(
+            Html.ElementName.UL,
+            m.c(List.of())
+        ),
+
+        """
+        <ul></ul>
+        """
+    );
+  }
+
   private void test(Html.Component component, String expected) {
     assertEquals(component.toHtml(), expected);
   }

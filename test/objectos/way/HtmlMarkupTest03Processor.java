@@ -26,8 +26,8 @@ public class HtmlMarkupTest03Processor {
   <html></html>
   """)
   public void testCase00() {
-    HtmlMarkup compiler;
-    compiler = new HtmlMarkup();
+    Html.Markup.OfHtml compiler;
+    compiler = new Html.Markup.OfHtml();
 
     compiler.elementBegin(HtmlElementName.HTML);
     compiler.elementEnd();
@@ -46,8 +46,8 @@ public class HtmlMarkupTest03Processor {
   <html lang="pt-BR"></html>
   """)
   public void testCase01() {
-    HtmlMarkup compiler;
-    compiler = new HtmlMarkup();
+    Html.Markup.OfHtml compiler;
+    compiler = new Html.Markup.OfHtml();
 
     compiler.attr(HtmlAttributeName.LANG, "pt-BR");
 
@@ -65,7 +65,7 @@ public class HtmlMarkupTest03Processor {
     );
   }
 
-  private String test(HtmlMarkup compiler) {
+  private String test(Html.Markup.OfHtml compiler) {
     StringBuilder out;
     out = new StringBuilder();
 

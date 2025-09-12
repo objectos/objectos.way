@@ -19,11 +19,11 @@ final class DomAttribute implements Dom.Attribute {
 
   HtmlAttributeName name;
 
-  private final HtmlMarkup player;
+  private final HtmlMarkupOfHtml player;
 
   Object value;
 
-  DomAttribute(HtmlMarkup player) {
+  DomAttribute(HtmlMarkupOfHtml player) {
     this.player = player;
   }
 

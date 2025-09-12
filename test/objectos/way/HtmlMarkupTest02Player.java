@@ -26,8 +26,8 @@ public class HtmlMarkupTest02Player {
   <html></html>
   """)
   public void testCase00() {
-    HtmlMarkup compiler;
-    compiler = new HtmlMarkup();
+    Html.Markup.OfHtml compiler;
+    compiler = new Html.Markup.OfHtml();
 
     compiler.elementBegin(HtmlElementName.HTML);
     compiler.elementEnd();
@@ -38,7 +38,7 @@ public class HtmlMarkupTest02Player {
     testAux(
         compiler,
 
-        HtmlMarkup._DOCUMENT_START,
+        Html.Markup.OfHtml._DOCUMENT_START,
         HtmlBytes.encodeInt0(0), HtmlBytes.encodeInt1(0), HtmlBytes.encodeInt2(0)
     );
 
@@ -48,7 +48,7 @@ public class HtmlMarkupTest02Player {
     testAux(
         compiler,
 
-        HtmlMarkup._DOCUMENT_NODES_ITERABLE,
+        Html.Markup.OfHtml._DOCUMENT_NODES_ITERABLE,
         HtmlBytes.encodeInt0(0), HtmlBytes.encodeInt1(0), HtmlBytes.encodeInt2(0)
     );
 
@@ -58,7 +58,7 @@ public class HtmlMarkupTest02Player {
     testAux(
         compiler,
 
-        HtmlMarkup._DOCUMENT_NODES_ITERATOR,
+        Html.Markup.OfHtml._DOCUMENT_NODES_ITERATOR,
         HtmlBytes.encodeInt0(0), HtmlBytes.encodeInt1(0), HtmlBytes.encodeInt2(0)
     );
 
@@ -68,7 +68,7 @@ public class HtmlMarkupTest02Player {
     testAux(
         compiler,
 
-        HtmlMarkup._DOCUMENT_NODES_HAS_NEXT,
+        Html.Markup.OfHtml._DOCUMENT_NODES_HAS_NEXT,
         HtmlBytes.encodeInt0(0), HtmlBytes.encodeInt1(0), HtmlBytes.encodeInt2(0)
     );
 
@@ -81,10 +81,10 @@ public class HtmlMarkupTest02Player {
     testAux(
         compiler,
 
-        HtmlMarkup._DOCUMENT_NODES_NEXT,
+        Html.Markup.OfHtml._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
 
-        HtmlMarkup._ELEMENT_START,
+        Html.Markup.OfHtml._ELEMENT_START,
         HtmlBytes.encodeInt0(3), HtmlBytes.encodeInt1(3), HtmlBytes.encodeInt2(3),
         HtmlBytes.encodeInt0(3), HtmlBytes.encodeInt1(3), HtmlBytes.encodeInt2(3),
         HtmlBytes.encodeInt0(3), HtmlBytes.encodeInt1(3), HtmlBytes.encodeInt2(3),
@@ -98,10 +98,10 @@ public class HtmlMarkupTest02Player {
     testAux(
         compiler,
 
-        HtmlMarkup._DOCUMENT_NODES_NEXT,
+        Html.Markup.OfHtml._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
 
-        HtmlMarkup._ELEMENT_ATTRS_ITERABLE,
+        Html.Markup.OfHtml._ELEMENT_ATTRS_ITERABLE,
         HtmlBytes.encodeInt0(3), HtmlBytes.encodeInt1(3), HtmlBytes.encodeInt2(3),
         HtmlBytes.encodeInt0(3), HtmlBytes.encodeInt1(3), HtmlBytes.encodeInt2(3),
         HtmlBytes.encodeInt0(3), HtmlBytes.encodeInt1(3), HtmlBytes.encodeInt2(3),
@@ -115,10 +115,10 @@ public class HtmlMarkupTest02Player {
     testAux(
         compiler,
 
-        HtmlMarkup._DOCUMENT_NODES_NEXT,
+        Html.Markup.OfHtml._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
 
-        HtmlMarkup._ELEMENT_ATTRS_ITERATOR,
+        Html.Markup.OfHtml._ELEMENT_ATTRS_ITERATOR,
         HtmlBytes.encodeInt0(3), HtmlBytes.encodeInt1(3), HtmlBytes.encodeInt2(3),
         HtmlBytes.encodeInt0(3), HtmlBytes.encodeInt1(3), HtmlBytes.encodeInt2(3),
         HtmlBytes.encodeInt0(3), HtmlBytes.encodeInt1(3), HtmlBytes.encodeInt2(3),
@@ -132,10 +132,10 @@ public class HtmlMarkupTest02Player {
     testAux(
         compiler,
 
-        HtmlMarkup._DOCUMENT_NODES_NEXT,
+        Html.Markup.OfHtml._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
 
-        HtmlMarkup._ELEMENT_ATTRS_EXHAUSTED,
+        Html.Markup.OfHtml._ELEMENT_ATTRS_EXHAUSTED,
         HtmlBytes.encodeInt0(5), HtmlBytes.encodeInt1(5), HtmlBytes.encodeInt2(5),
         HtmlBytes.encodeInt0(3), HtmlBytes.encodeInt1(3), HtmlBytes.encodeInt2(3),
         HtmlBytes.encodeInt0(3), HtmlBytes.encodeInt1(3), HtmlBytes.encodeInt2(3),
@@ -149,10 +149,10 @@ public class HtmlMarkupTest02Player {
     testAux(
         compiler,
 
-        HtmlMarkup._DOCUMENT_NODES_NEXT,
+        Html.Markup.OfHtml._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
 
-        HtmlMarkup._ELEMENT_NODES_ITERABLE,
+        Html.Markup.OfHtml._ELEMENT_NODES_ITERABLE,
         HtmlBytes.encodeInt0(5), HtmlBytes.encodeInt1(5), HtmlBytes.encodeInt2(5),
         HtmlBytes.encodeInt0(3), HtmlBytes.encodeInt1(3), HtmlBytes.encodeInt2(3),
         HtmlBytes.encodeInt0(3), HtmlBytes.encodeInt1(3), HtmlBytes.encodeInt2(3),
@@ -166,10 +166,10 @@ public class HtmlMarkupTest02Player {
     testAux(
         compiler,
 
-        HtmlMarkup._DOCUMENT_NODES_NEXT,
+        Html.Markup.OfHtml._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
 
-        HtmlMarkup._ELEMENT_NODES_ITERATOR,
+        Html.Markup.OfHtml._ELEMENT_NODES_ITERATOR,
         HtmlBytes.encodeInt0(5), HtmlBytes.encodeInt1(5), HtmlBytes.encodeInt2(5),
         HtmlBytes.encodeInt0(3), HtmlBytes.encodeInt1(3), HtmlBytes.encodeInt2(3),
         HtmlBytes.encodeInt0(3), HtmlBytes.encodeInt1(3), HtmlBytes.encodeInt2(3),
@@ -183,10 +183,10 @@ public class HtmlMarkupTest02Player {
     testAux(
         compiler,
 
-        HtmlMarkup._DOCUMENT_NODES_NEXT,
+        Html.Markup.OfHtml._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
 
-        HtmlMarkup._ELEMENT_NODES_EXHAUSTED,
+        Html.Markup.OfHtml._ELEMENT_NODES_EXHAUSTED,
         HtmlBytes.encodeInt0(5), HtmlBytes.encodeInt1(5), HtmlBytes.encodeInt2(5),
         HtmlBytes.encodeInt0(5), HtmlBytes.encodeInt1(5), HtmlBytes.encodeInt2(5),
         HtmlBytes.encodeInt0(3), HtmlBytes.encodeInt1(3), HtmlBytes.encodeInt2(3),
@@ -200,7 +200,7 @@ public class HtmlMarkupTest02Player {
     testAux(
         compiler,
 
-        HtmlMarkup._DOCUMENT_NODES_EXHAUSTED,
+        Html.Markup.OfHtml._DOCUMENT_NODES_EXHAUSTED,
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8)
     );
   }
@@ -209,8 +209,8 @@ public class HtmlMarkupTest02Player {
   <html lang="pt-BR"></html>
   """)
   public void testCase01() {
-    HtmlMarkup compiler;
-    compiler = new HtmlMarkup();
+    Html.Markup.OfHtml compiler;
+    compiler = new Html.Markup.OfHtml();
 
     compiler.attr(HtmlAttributeName.LANG, "pt-BR");
 
@@ -235,10 +235,10 @@ public class HtmlMarkupTest02Player {
     testAux(
         compiler,
 
-        HtmlMarkup._DOCUMENT_NODES_NEXT,
+        Html.Markup.OfHtml._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(15), HtmlBytes.encodeInt1(15), HtmlBytes.encodeInt2(15),
 
-        HtmlMarkup._ELEMENT_ATTRS_ITERATOR,
+        Html.Markup.OfHtml._ELEMENT_ATTRS_ITERATOR,
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
@@ -252,10 +252,10 @@ public class HtmlMarkupTest02Player {
     testAux(
         compiler,
 
-        HtmlMarkup._DOCUMENT_NODES_NEXT,
+        Html.Markup.OfHtml._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(15), HtmlBytes.encodeInt1(15), HtmlBytes.encodeInt2(15),
 
-        HtmlMarkup._ELEMENT_ATTRS_HAS_NEXT,
+        Html.Markup.OfHtml._ELEMENT_ATTRS_HAS_NEXT,
         HtmlBytes.encodeInt0(10), HtmlBytes.encodeInt1(10), HtmlBytes.encodeInt2(10),
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
@@ -273,10 +273,10 @@ public class HtmlMarkupTest02Player {
     testAux(
         compiler,
 
-        HtmlMarkup._DOCUMENT_NODES_NEXT,
+        Html.Markup.OfHtml._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(15), HtmlBytes.encodeInt1(15), HtmlBytes.encodeInt2(15),
 
-        HtmlMarkup._ELEMENT_ATTRS_NEXT,
+        Html.Markup.OfHtml._ELEMENT_ATTRS_NEXT,
         HtmlBytes.encodeInt0(12), HtmlBytes.encodeInt1(12), HtmlBytes.encodeInt2(12),
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
@@ -290,10 +290,10 @@ public class HtmlMarkupTest02Player {
     testAux(
         compiler,
 
-        HtmlMarkup._DOCUMENT_NODES_NEXT,
+        Html.Markup.OfHtml._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(15), HtmlBytes.encodeInt1(15), HtmlBytes.encodeInt2(15),
 
-        HtmlMarkup._ATTRIBUTE_VALUES_ITERABLE,
+        Html.Markup.OfHtml._ATTRIBUTE_VALUES_ITERABLE,
         HtmlBytes.encodeInt0(12), HtmlBytes.encodeInt1(12), HtmlBytes.encodeInt2(12),
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
@@ -307,10 +307,10 @@ public class HtmlMarkupTest02Player {
     testAux(
         compiler,
 
-        HtmlMarkup._DOCUMENT_NODES_NEXT,
+        Html.Markup.OfHtml._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(15), HtmlBytes.encodeInt1(15), HtmlBytes.encodeInt2(15),
 
-        HtmlMarkup._ATTRIBUTE_VALUES_ITERATOR,
+        Html.Markup.OfHtml._ATTRIBUTE_VALUES_ITERATOR,
         HtmlBytes.encodeInt0(12), HtmlBytes.encodeInt1(12), HtmlBytes.encodeInt2(12),
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
@@ -324,10 +324,10 @@ public class HtmlMarkupTest02Player {
     testAux(
         compiler,
 
-        HtmlMarkup._DOCUMENT_NODES_NEXT,
+        Html.Markup.OfHtml._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(15), HtmlBytes.encodeInt1(15), HtmlBytes.encodeInt2(15),
 
-        HtmlMarkup._ATTRIBUTE_VALUES_HAS_NEXT,
+        Html.Markup.OfHtml._ATTRIBUTE_VALUES_HAS_NEXT,
         HtmlBytes.encodeInt0(12), HtmlBytes.encodeInt1(12), HtmlBytes.encodeInt2(12),
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
@@ -345,10 +345,10 @@ public class HtmlMarkupTest02Player {
     testAux(
         compiler,
 
-        HtmlMarkup._DOCUMENT_NODES_NEXT,
+        Html.Markup.OfHtml._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(15), HtmlBytes.encodeInt1(15), HtmlBytes.encodeInt2(15),
 
-        HtmlMarkup._ATTRIBUTE_VALUES_EXHAUSTED,
+        Html.Markup.OfHtml._ATTRIBUTE_VALUES_EXHAUSTED,
         HtmlBytes.encodeInt0(12), HtmlBytes.encodeInt1(12), HtmlBytes.encodeInt2(12),
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
@@ -362,10 +362,10 @@ public class HtmlMarkupTest02Player {
     testAux(
         compiler,
 
-        HtmlMarkup._DOCUMENT_NODES_NEXT,
+        Html.Markup.OfHtml._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(15), HtmlBytes.encodeInt1(15), HtmlBytes.encodeInt2(15),
 
-        HtmlMarkup._ELEMENT_ATTRS_EXHAUSTED,
+        Html.Markup.OfHtml._ELEMENT_ATTRS_EXHAUSTED,
         HtmlBytes.encodeInt0(12), HtmlBytes.encodeInt1(12), HtmlBytes.encodeInt2(12),
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
@@ -378,8 +378,8 @@ public class HtmlMarkupTest02Player {
   <html><head></head></html>
   """)
   public void testCase03() {
-    HtmlMarkup compiler;
-    compiler = new HtmlMarkup();
+    Html.Markup.OfHtml compiler;
+    compiler = new Html.Markup.OfHtml();
 
     compiler.elementBegin(HtmlElementName.HEAD);
     compiler.elementEnd();
@@ -403,10 +403,10 @@ public class HtmlMarkupTest02Player {
     testAux(
         compiler,
 
-        HtmlMarkup._DOCUMENT_NODES_NEXT,
+        Html.Markup.OfHtml._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(18), HtmlBytes.encodeInt1(18), HtmlBytes.encodeInt2(18),
 
-        HtmlMarkup._ELEMENT_START,
+        Html.Markup.OfHtml._ELEMENT_START,
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
@@ -425,10 +425,10 @@ public class HtmlMarkupTest02Player {
     testAux(
         compiler,
 
-        HtmlMarkup._DOCUMENT_NODES_NEXT,
+        Html.Markup.OfHtml._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(18), HtmlBytes.encodeInt1(18), HtmlBytes.encodeInt2(18),
 
-        HtmlMarkup._ELEMENT_NODES_ITERABLE,
+        Html.Markup.OfHtml._ELEMENT_NODES_ITERABLE,
         HtmlBytes.encodeInt0(15), HtmlBytes.encodeInt1(15), HtmlBytes.encodeInt2(15),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
@@ -442,10 +442,10 @@ public class HtmlMarkupTest02Player {
     testAux(
         compiler,
 
-        HtmlMarkup._DOCUMENT_NODES_NEXT,
+        Html.Markup.OfHtml._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(18), HtmlBytes.encodeInt1(18), HtmlBytes.encodeInt2(18),
 
-        HtmlMarkup._ELEMENT_NODES_ITERATOR,
+        Html.Markup.OfHtml._ELEMENT_NODES_ITERATOR,
         HtmlBytes.encodeInt0(15), HtmlBytes.encodeInt1(15), HtmlBytes.encodeInt2(15),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
@@ -459,10 +459,10 @@ public class HtmlMarkupTest02Player {
     testAux(
         compiler,
 
-        HtmlMarkup._DOCUMENT_NODES_NEXT,
+        Html.Markup.OfHtml._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(18), HtmlBytes.encodeInt1(18), HtmlBytes.encodeInt2(18),
 
-        HtmlMarkup._ELEMENT_NODES_HAS_NEXT,
+        Html.Markup.OfHtml._ELEMENT_NODES_HAS_NEXT,
         HtmlBytes.encodeInt0(15), HtmlBytes.encodeInt1(15), HtmlBytes.encodeInt2(15),
         HtmlBytes.encodeInt0(13), HtmlBytes.encodeInt1(13), HtmlBytes.encodeInt2(13),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
@@ -479,17 +479,17 @@ public class HtmlMarkupTest02Player {
     testAux(
         compiler,
 
-        HtmlMarkup._DOCUMENT_NODES_NEXT,
+        Html.Markup.OfHtml._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(18), HtmlBytes.encodeInt1(18), HtmlBytes.encodeInt2(18),
 
-        HtmlMarkup._ELEMENT_NODES_NEXT,
+        Html.Markup.OfHtml._ELEMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(15), HtmlBytes.encodeInt1(15), HtmlBytes.encodeInt2(15),
         HtmlBytes.encodeInt0(15), HtmlBytes.encodeInt1(15), HtmlBytes.encodeInt2(15),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
         HtmlBytes.encodeInt0(18), HtmlBytes.encodeInt1(18), HtmlBytes.encodeInt2(18),
         len(4),
 
-        HtmlMarkup._ELEMENT_START,
+        Html.Markup.OfHtml._ELEMENT_START,
         HtmlBytes.encodeInt0(3), HtmlBytes.encodeInt1(3), HtmlBytes.encodeInt2(3),
         HtmlBytes.encodeInt0(3), HtmlBytes.encodeInt1(3), HtmlBytes.encodeInt2(3),
         HtmlBytes.encodeInt0(3), HtmlBytes.encodeInt1(3), HtmlBytes.encodeInt2(3),
@@ -510,17 +510,17 @@ public class HtmlMarkupTest02Player {
     testAux(
         compiler,
 
-        HtmlMarkup._DOCUMENT_NODES_NEXT,
+        Html.Markup.OfHtml._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(18), HtmlBytes.encodeInt1(18), HtmlBytes.encodeInt2(18),
 
-        HtmlMarkup._ELEMENT_NODES_NEXT,
+        Html.Markup.OfHtml._ELEMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(15), HtmlBytes.encodeInt1(15), HtmlBytes.encodeInt2(15),
         HtmlBytes.encodeInt0(15), HtmlBytes.encodeInt1(15), HtmlBytes.encodeInt2(15),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
         HtmlBytes.encodeInt0(18), HtmlBytes.encodeInt1(18), HtmlBytes.encodeInt2(18),
         len(4),
 
-        HtmlMarkup._ELEMENT_NODES_EXHAUSTED,
+        Html.Markup.OfHtml._ELEMENT_NODES_EXHAUSTED,
         HtmlBytes.encodeInt0(5), HtmlBytes.encodeInt1(5), HtmlBytes.encodeInt2(5),
         HtmlBytes.encodeInt0(5), HtmlBytes.encodeInt1(5), HtmlBytes.encodeInt2(5),
         HtmlBytes.encodeInt0(3), HtmlBytes.encodeInt1(3), HtmlBytes.encodeInt2(3),
@@ -534,10 +534,10 @@ public class HtmlMarkupTest02Player {
     testAux(
         compiler,
 
-        HtmlMarkup._DOCUMENT_NODES_NEXT,
+        Html.Markup.OfHtml._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(18), HtmlBytes.encodeInt1(18), HtmlBytes.encodeInt2(18),
 
-        HtmlMarkup._ELEMENT_NODES_EXHAUSTED,
+        Html.Markup.OfHtml._ELEMENT_NODES_EXHAUSTED,
         HtmlBytes.encodeInt0(15), HtmlBytes.encodeInt1(15), HtmlBytes.encodeInt2(15),
         HtmlBytes.encodeInt0(15), HtmlBytes.encodeInt1(15), HtmlBytes.encodeInt2(15),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
@@ -551,7 +551,7 @@ public class HtmlMarkupTest02Player {
     testAux(
         compiler,
 
-        HtmlMarkup._DOCUMENT_NODES_EXHAUSTED,
+        Html.Markup.OfHtml._DOCUMENT_NODES_EXHAUSTED,
         HtmlBytes.encodeInt0(18), HtmlBytes.encodeInt1(18), HtmlBytes.encodeInt2(18)
     );
   }
@@ -560,8 +560,8 @@ public class HtmlMarkupTest02Player {
   Ambiguous
   """)
   public void testCase16() {
-    HtmlMarkup compiler;
-    compiler = new HtmlMarkup();
+    Html.Markup.OfHtml compiler;
+    compiler = new Html.Markup.OfHtml();
 
     compiler.ambiguous(HtmlAmbiguous.TITLE, "element");
 
@@ -619,17 +619,17 @@ public class HtmlMarkupTest02Player {
     testAux(
         compiler,
 
-        HtmlMarkup._DOCUMENT_NODES_NEXT,
+        Html.Markup.OfHtml._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(42), HtmlBytes.encodeInt1(42), HtmlBytes.encodeInt2(42),
 
-        HtmlMarkup._ELEMENT_NODES_NEXT,
+        Html.Markup.OfHtml._ELEMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(39), HtmlBytes.encodeInt1(39), HtmlBytes.encodeInt2(39),
         HtmlBytes.encodeInt0(37), HtmlBytes.encodeInt1(37), HtmlBytes.encodeInt2(37),
         HtmlBytes.encodeInt0(33), HtmlBytes.encodeInt1(33), HtmlBytes.encodeInt2(33),
         HtmlBytes.encodeInt0(42), HtmlBytes.encodeInt1(42), HtmlBytes.encodeInt2(42),
         len(4),
 
-        HtmlMarkup._ELEMENT_NODES_HAS_NEXT,
+        Html.Markup.OfHtml._ELEMENT_NODES_HAS_NEXT,
         HtmlBytes.encodeInt0(12), HtmlBytes.encodeInt1(12), HtmlBytes.encodeInt2(12),
         HtmlBytes.encodeInt0(10), HtmlBytes.encodeInt1(10), HtmlBytes.encodeInt2(10),
         HtmlBytes.encodeInt0(8), HtmlBytes.encodeInt1(8), HtmlBytes.encodeInt2(8),
@@ -649,8 +649,8 @@ public class HtmlMarkupTest02Player {
   - email input
   """)
   public void testCase31() {
-    HtmlMarkup compiler;
-    compiler = new HtmlMarkup();
+    Html.Markup.OfHtml compiler;
+    compiler = new Html.Markup.OfHtml();
 
     compiler.attr(HtmlAttributeName.TYPE, "email");
     compiler.attr(HtmlAttributeName.REQUIRED);
@@ -674,10 +674,10 @@ public class HtmlMarkupTest02Player {
     testAux(
         compiler,
 
-        HtmlMarkup._DOCUMENT_NODES_NEXT,
+        Html.Markup.OfHtml._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(20), HtmlBytes.encodeInt1(20), HtmlBytes.encodeInt2(20),
 
-        HtmlMarkup._ELEMENT_START,
+        Html.Markup.OfHtml._ELEMENT_START,
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
@@ -699,10 +699,10 @@ public class HtmlMarkupTest02Player {
     testAux(
         compiler,
 
-        HtmlMarkup._DOCUMENT_NODES_NEXT,
+        Html.Markup.OfHtml._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(20), HtmlBytes.encodeInt1(20), HtmlBytes.encodeInt2(20),
 
-        HtmlMarkup._ELEMENT_ATTRS_NEXT,
+        Html.Markup.OfHtml._ELEMENT_ATTRS_NEXT,
         HtmlBytes.encodeInt0(15), HtmlBytes.encodeInt1(15), HtmlBytes.encodeInt2(15),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
@@ -719,10 +719,10 @@ public class HtmlMarkupTest02Player {
     testAux(
         compiler,
 
-        HtmlMarkup._DOCUMENT_NODES_NEXT,
+        Html.Markup.OfHtml._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(20), HtmlBytes.encodeInt1(20), HtmlBytes.encodeInt2(20),
 
-        HtmlMarkup._ATTRIBUTE_VALUES_NEXT,
+        Html.Markup.OfHtml._ATTRIBUTE_VALUES_NEXT,
         HtmlBytes.encodeInt0(15), HtmlBytes.encodeInt1(15), HtmlBytes.encodeInt2(15),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
@@ -737,10 +737,10 @@ public class HtmlMarkupTest02Player {
     testAux(
         compiler,
 
-        HtmlMarkup._DOCUMENT_NODES_NEXT,
+        Html.Markup.OfHtml._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(20), HtmlBytes.encodeInt1(20), HtmlBytes.encodeInt2(20),
 
-        HtmlMarkup._ATTRIBUTE_VALUES_EXHAUSTED,
+        Html.Markup.OfHtml._ATTRIBUTE_VALUES_EXHAUSTED,
         HtmlBytes.encodeInt0(15), HtmlBytes.encodeInt1(15), HtmlBytes.encodeInt2(15),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
@@ -754,10 +754,10 @@ public class HtmlMarkupTest02Player {
     testAux(
         compiler,
 
-        HtmlMarkup._DOCUMENT_NODES_NEXT,
+        Html.Markup.OfHtml._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(20), HtmlBytes.encodeInt1(20), HtmlBytes.encodeInt2(20),
 
-        HtmlMarkup._ELEMENT_ATTRS_HAS_NEXT,
+        Html.Markup.OfHtml._ELEMENT_ATTRS_HAS_NEXT,
         HtmlBytes.encodeInt0(15), HtmlBytes.encodeInt1(15), HtmlBytes.encodeInt2(15),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
@@ -774,10 +774,10 @@ public class HtmlMarkupTest02Player {
     testAux(
         compiler,
 
-        HtmlMarkup._DOCUMENT_NODES_NEXT,
+        Html.Markup.OfHtml._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(20), HtmlBytes.encodeInt1(20), HtmlBytes.encodeInt2(20),
 
-        HtmlMarkup._ELEMENT_ATTRS_NEXT,
+        Html.Markup.OfHtml._ELEMENT_ATTRS_NEXT,
         HtmlBytes.encodeInt0(17), HtmlBytes.encodeInt1(17), HtmlBytes.encodeInt2(17),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
@@ -791,10 +791,10 @@ public class HtmlMarkupTest02Player {
     testAux(
         compiler,
 
-        HtmlMarkup._DOCUMENT_NODES_NEXT,
+        Html.Markup.OfHtml._DOCUMENT_NODES_NEXT,
         HtmlBytes.encodeInt0(20), HtmlBytes.encodeInt1(20), HtmlBytes.encodeInt2(20),
 
-        HtmlMarkup._ELEMENT_ATTRS_EXHAUSTED,
+        Html.Markup.OfHtml._ELEMENT_ATTRS_EXHAUSTED,
         HtmlBytes.encodeInt0(17), HtmlBytes.encodeInt1(17), HtmlBytes.encodeInt2(17),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
         HtmlBytes.encodeInt0(11), HtmlBytes.encodeInt1(11), HtmlBytes.encodeInt2(11),
@@ -807,7 +807,7 @@ public class HtmlMarkupTest02Player {
     return (byte) value;
   }
 
-  private void testAux(HtmlMarkup compiler, byte... expected) {
+  private void testAux(Html.Markup.OfHtml compiler, byte... expected) {
     byte[] result;
     result = Arrays.copyOf(compiler.aux, compiler.auxIndex);
 
