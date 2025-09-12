@@ -20,7 +20,7 @@ import static org.testng.Assert.assertEquals;
 import java.util.Arrays;
 import org.testng.annotations.Test;
 
-public class HtmlMarkupTest1Player {
+public class HtmlMarkupTest02Player {
 
   @Test(description = """
   <html></html>

@@ -15,6 +15,7 @@
  */
 package objectos.way;
 
+import java.io.IOException;
 import java.util.Objects;
 import java.util.function.Consumer;
 import objectos.way.Html.AttributeObject;
@@ -29,6 +30,16 @@ final class HtmlMarkupOfTestable extends HtmlMarkupBase implements Html.Markup {
 
   HtmlMarkupOfTestable(Testable.Formatter formatter) {
     this.formatter = formatter;
+  }
+
+  @Override
+  public final String toHtml() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public final void writeTo(Appendable out) throws IOException {
+    throw new UnsupportedOperationException();
   }
 
   @Override

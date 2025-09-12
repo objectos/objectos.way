@@ -75,7 +75,7 @@ final class HtmlMarkup extends HtmlMarkupBase {
   }
 
   @Override
-  public final String toString() {
+  public final String toHtml() {
     try {
       Dom.Document document;
       document = compile();
@@ -88,6 +88,21 @@ final class HtmlMarkup extends HtmlMarkupBase {
     } catch (IOException e) {
       throw new AssertionError("StringBuilder does not throw IOException", e);
     }
+  }
+
+  @Override
+  public final String toString() {
+    return toHtml();
+  }
+
+  @Override
+  public final void writeTo(Appendable out) throws IOException {
+    Objects.requireNonNull(out, "out == null");
+
+    Dom.Document document;
+    document = compile();
+
+    DomFormatter.STANDARD.formatTo(document, out);
   }
 
   // ##################################################################

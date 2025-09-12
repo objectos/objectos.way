@@ -19,31 +19,63 @@ import static org.testng.Assert.assertEquals;
 
 import org.testng.annotations.Test;
 
-public class HtmlMarkupTest4Ambiguous {
+public class HtmlMarkupTest06Full {
 
   @Test
-  public void clipPath() {
-    test(
-        m -> {
-          m.div(
-              m.clipPath("at")
-          );
-          m.svg(
-              m.clipPath("el")
-          );
-        },
+  public void testCase01() {
+    final Html.Markup m;
+    m = new HtmlMarkup();
+
+    m.doctype();
+
+    m.html(
+        m.head(
+            m.title("Test")
+        ),
+        m.body(
+        )
+    );
+
+    assertEquals(
+        m.toHtml(),
 
         """
-        <div clip-path="at"></div>
-        <svg>
-        <clipPath>el</clipPath>
-        </svg>
+        <!DOCTYPE html>
+        <html>
+        <head>
+        <title>Test</title>
+        </head>
+        <body></body>
+        </html>
         """
     );
   }
 
-  private void test(Html.Component component, String expected) {
-    assertEquals(component.toHtml(), expected);
+  @Test
+  public void testCase02() {
+    final Html.Markup m;
+    m = new HtmlMarkup();
+
+    m.p("1");
+
+    assertEquals(
+        m.toHtml(),
+
+        """
+        <p>1</p>
+        """
+    );
+
+    m.p("2");
+
+    assertEquals(
+        m.toHtml(),
+
+        """
+        <p>1</p>
+        <p>2</p>
+        """
+    );
   }
 
 }

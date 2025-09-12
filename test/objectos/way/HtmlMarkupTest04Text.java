@@ -19,7 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 import org.testng.annotations.Test;
 
-public class HtmlMarkupTest3Text {
+public class HtmlMarkupTest04Text {
 
   @Test
   public void raw() {
