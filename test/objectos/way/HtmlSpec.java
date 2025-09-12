@@ -480,6 +480,16 @@ final class HtmlSpec {
         @param value the text block containing class names, possibly spread across multiple lines
         @return an instruction representing this attribute.
         """),
+        new MethodSpec("Html.Instruction.OfFragment c(Html.Component... components)", "c(components)", """
+        Renders the specified components in order as part of this document.
+        @param components the components to be rendered as part of this document
+        @return an instruction representing the rendered components.
+        """),
+        new MethodSpec("Html.Instruction.OfFragment c(Iterable<? extends Html.Component> components)", "c(components)", """
+        Renders the specified components in order as part of this document.
+        @param components the components to be rendered as part of this document
+        @return an instruction representing the rendered components.
+        """),
         new MethodSpec("Html.Instruction.OfFragment f(Html.Fragment.Of0 fragment)", "f(fragment)", """
         Renders the specified fragment as part of this document.
 
@@ -590,11 +600,6 @@ final class HtmlSpec {
         new MethodSpec("Html.Instruction.NoOp noop()", "noop()", """
         The no-op instruction.
         @return the no-op instruction.
-        """),
-        new MethodSpec("Html.Instruction.OfFragment renderComponent(Html.Component component)", "renderComponent(component)", """
-        Renders the specified component as part of this instance.
-        @param component the component to be rendered as part of this instance
-        @return an instruction representing the rendered component.
         """)
     );
   }

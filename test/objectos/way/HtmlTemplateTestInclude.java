@@ -164,8 +164,8 @@ public class HtmlTemplateTestInclude {
           @Override
           protected final void render() {
             body(
-                renderComponent(nav),
-                renderComponent(hero)
+                c(nav),
+                c(hero)
             );
           }
         },
@@ -332,7 +332,7 @@ public class HtmlTemplateTestInclude {
           @Override
           protected final void render() {
             body(
-                renderComponent(component)
+                c(component)
             );
           }
         },
@@ -369,7 +369,7 @@ public class HtmlTemplateTestInclude {
           private void body() {
             h1("Test");
 
-            renderComponent(component);
+            c(component);
           }
         },
 
@@ -411,7 +411,7 @@ public class HtmlTemplateTestInclude {
           private void body() {
             h1("Test");
 
-            renderComponent(new Component("Text"));
+            c(new Component("Text"));
           }
         },
 
@@ -442,7 +442,7 @@ public class HtmlTemplateTestInclude {
           @Override
           protected final void render() {
             html(
-                renderComponent(new Contents())
+                c(new Contents())
             );
           }
         },

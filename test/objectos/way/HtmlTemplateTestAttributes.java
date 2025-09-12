@@ -160,7 +160,7 @@ public class HtmlTemplateTestAttributes {
           @Override
           protected final void render() {
             div(
-                renderComponent(new ThisComponent(NAV))
+                c(new ThisComponent(NAV))
             );
           }
         },

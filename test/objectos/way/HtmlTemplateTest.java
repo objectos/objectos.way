@@ -1285,7 +1285,7 @@ public class HtmlTemplateTest {
           @Override
           protected final void render() {
             div(
-                renderComponent(html -> html.span("as child"))
+                c(html -> html.span("as child"))
             );
 
             div(f(this::fragment0));
@@ -1294,12 +1294,12 @@ public class HtmlTemplateTest {
           }
 
           private void fragment0() {
-            renderComponent(html -> html.span("fragment root"));
+            c(html -> html.span("fragment root"));
           }
 
           private void fragment1() {
             div(
-                renderComponent(html -> html.span("fragment child"))
+                c(html -> html.span("fragment child"))
             );
           }
         },

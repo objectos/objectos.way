@@ -32,11 +32,8 @@ public class HtmlMarkupGen {
     prepare();
 
     return """
-    /// Defines the structure of an HTML document using pure Java.
-    public interface Markup {
     %s
     %s
-    }
     """.formatted(fields, methods);
   }
 
@@ -156,11 +153,11 @@ public class HtmlMarkupGen {
       if (ambiguousNames.contains(htmlName)) {
         methods.append("""
 
-          /// Renders the `%1$s` element with the specified content.
+          /// Renders the `%s` element with the specified content.
           /// @param contents the attributes and children of the element
           /// @return an instruction representing the element.
-          Html.Instruction.OfElement %2$s(Html.Instruction... contents);
-        """.formatted(elem.htmlName(), elem.htmlName(), elem.javaName()));
+          Html.Instruction.OfElement %s(Html.Instruction... contents);
+        """.formatted(elem.htmlName(), elem.htmlName()));
       }
 
       else if (elem.endTag()) {
@@ -181,11 +178,11 @@ public class HtmlMarkupGen {
       else {
         methods.append("""
 
-          /// Renders the `%1$s` element with the specified content.
+          /// Renders the `%s` element with the specified content.
           /// @param contents the attributes of the element
           /// @return an instruction representing the element.
-          Html.Instruction.OfElement %2$s(Html.Instruction.OfVoid... contents);
-        """.formatted(elem.htmlName(), elem.javaName()));
+          Html.Instruction.OfElement %s(Html.Instruction.OfVoid... contents);
+        """.formatted(elem.htmlName(), elem.htmlName()));
       }
     }
 

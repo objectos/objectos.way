@@ -1219,38 +1219,48 @@ public final class Html {
     Html.Instruction.OfAttribute dataFrame(String name, String value);
 
     /// Renders the `class` attribute by processing the specified value.
-    ///
+    /// 
     /// This method is designed to work with Java text blocks. It first removes
     /// any leading and trailing whitespace. Additionally, any sequence of
     /// consecutive whitespace characters is replaced by a single space
     /// character.
-    ///
+    /// 
     /// For example, the following invocation:
-    ///
+    /// 
     /// ```java
     /// css("""
     ///     display:inline-flex
     ///     justify-content:center
-    ///
+    /// 
     ///     background-color:blue-500
     ///     """);
     /// ```
-    ///
+    /// 
     /// Produces the same result as invoking
     /// `className("display:inline-flex justify-content:center background-color:blue-500")`.
-    ///
+    /// 
     /// @param value the text block containing class names, possibly spread across multiple lines
     /// @return an instruction representing this attribute.
     Html.Instruction.OfAttribute css(String value);
 
+    /// Renders the specified components in order as part of this document.
+    /// @param components the components to be rendered as part of this document
+    /// @return an instruction representing the rendered components.
+    Html.Instruction.OfFragment c(Html.Component... components);
+
+    /// Renders the specified components in order as part of this document.
+    /// @param components the components to be rendered as part of this document
+    /// @return an instruction representing the rendered components.
+    Html.Instruction.OfFragment c(Iterable<? extends Html.Component> components);
+
     /// Renders the specified fragment as part of this document.
-    ///
+    /// 
     /// The following Objectos HTML component:
-    ///
+    /// 
     /// {@snippet file = "objectos/way/HtmlMarkupJavadoc.java" region = "f0"}
-    ///
+    /// 
     /// Generates the following HTML:
-    ///
+    /// 
     /// ```html
     /// <ul>
     /// <li>Mon</li>
@@ -1258,19 +1268,19 @@ public final class Html {
     /// <li>Fri</li>
     /// </ul>
     /// ```
-    ///
+    /// 
     /// @param fragment the fragment to include
     /// @return an instruction representing the fragment
     Html.Instruction.OfFragment f(Html.Fragment.Of0 fragment);
 
     /// Renders the specified fragment as part of this document.
-    ///
+    /// 
     /// The following Objectos HTML component:
-    ///
+    /// 
     /// {@snippet file = "objectos/way/HtmlMarkupJavadoc.java" region = "f1"}
-    ///
+    /// 
     /// Generates the following HTML:
-    ///
+    /// 
     /// ```html
     /// <ul>
     /// <li>Mon</li>
@@ -1278,7 +1288,7 @@ public final class Html {
     /// <li>Fri</li>
     /// </ul>
     /// ```
-    ///
+    /// 
     /// @param <T1> the type of the first argument
     /// @param fragment the fragment to include
     /// @param arg1 the first argument
@@ -1286,17 +1296,17 @@ public final class Html {
     <T1> Html.Instruction.OfFragment f(Html.Fragment.Of1<T1> fragment, T1 arg1);
 
     /// Renders the specified fragment as part of this document.
-    ///
+    /// 
     /// The following Objectos HTML component:
-    ///
+    /// 
     /// {@snippet file = "objectos/way/HtmlMarkupJavadoc.java" region = "f2"}
-    ///
+    /// 
     /// Generates the following HTML:
-    ///
+    /// 
     /// ```html
     /// <div><button>OK</button><button>Cancel</button></div>
     /// ```
-    ///
+    /// 
     /// @param <T1> the type of the first argument
     /// @param <T2> the type of the second argument
     /// @param fragment the fragment to include
@@ -1306,20 +1316,20 @@ public final class Html {
     <T1, T2> Html.Instruction.OfFragment f(Html.Fragment.Of2<T1, T2> fragment, T1 arg1, T2 arg2);
 
     /// Renders the specified fragment as part of this document.
-    ///
+    /// 
     /// The following Objectos HTML component:
-    ///
+    /// 
     /// {@snippet file = "objectos/way/HtmlMarkupJavadoc.java" region = "f3"}
-    ///
+    /// 
     /// Generates the following HTML:
-    ///
+    /// 
     /// ```html
     /// <div>
     /// <p>City<span>Tokyo</span></p>
     /// <p>Country<span>Japan</span></p>
     /// </div>
     /// ```
-    ///
+    /// 
     /// @param <T1> the type of the first argument
     /// @param <T2> the type of the second argument
     /// @param <T3> the type of the third argument
@@ -1331,7 +1341,7 @@ public final class Html {
     <T1, T2, T3> Html.Instruction.OfFragment f(Html.Fragment.Of3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3);
 
     /// Renders the specified fragment as part of this document.
-    ///
+    /// 
     /// @param <T1> the type of the first argument
     /// @param <T2> the type of the second argument
     /// @param <T3> the type of the third argument
@@ -1353,11 +1363,6 @@ public final class Html {
     /// The no-op instruction.
     /// @return the no-op instruction.
     Html.Instruction.NoOp noop();
-
-    /// Renders the specified component as part of this instance.
-    /// @param component the component to be rendered as part of this instance
-    /// @return an instruction representing the rendered component.
-    Html.Instruction.OfFragment renderComponent(Html.Component component);
 
     //
     // TESTABLE
@@ -3042,6 +3047,20 @@ public final class Html {
       return $html().css(value);
     }
 
+    /// Renders the specified components in order as part of this document.
+    /// @param components the components to be rendered as part of this document
+    /// @return an instruction representing the rendered components.
+    protected final Html.Instruction.OfFragment c(Html.Component... components) {
+      return $html().c(components);
+    }
+
+    /// Renders the specified components in order as part of this document.
+    /// @param components the components to be rendered as part of this document
+    /// @return an instruction representing the rendered components.
+    protected final Html.Instruction.OfFragment c(Iterable<? extends Html.Component> components) {
+      return $html().c(components);
+    }
+
     /// Renders the specified fragment as part of this document.
     ///
     /// The following Objectos HTML component:
@@ -3165,13 +3184,6 @@ public final class Html {
     /// @return the no-op instruction.
     protected final Html.Instruction.NoOp noop() {
       return $html().noop();
-    }
-
-    /// Renders the specified component as part of this instance.
-    /// @param component the component to be rendered as part of this instance
-    /// @return an instruction representing the rendered component.
-    protected final Html.Instruction.OfFragment renderComponent(Html.Component component) {
-      return $html().renderComponent(component);
     }
 
     //

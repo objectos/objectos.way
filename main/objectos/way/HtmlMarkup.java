@@ -114,6 +114,37 @@ final class HtmlMarkup extends HtmlMarkupBase {
   // ##################################################################
 
   @Override
+  public final Html.Instruction.OfFragment c(Html.Component... components) {
+    int index;
+    index = fragmentBegin();
+
+    for (int idx = 0, len = components.length; idx < len; idx++) {
+      final Html.Component c;
+      c = Check.notNull(components[idx], "components[", idx, "] == null");
+
+      c.renderHtml(this);
+    }
+
+    fragmentEnd(index);
+
+    return Html.FRAGMENT;
+  }
+
+  @Override
+  public final Html.Instruction.OfFragment c(Iterable<? extends Html.Component> components) {
+    int index;
+    index = fragmentBegin();
+
+    for (Html.Component c : components) {
+      c.renderHtml(this);
+    }
+
+    fragmentEnd(index);
+
+    return Html.FRAGMENT;
+  }
+
+  @Override
   public final Html.Instruction.OfFragment f(Html.Fragment.Of0 fragment) {
     Objects.requireNonNull(fragment, "fragment == null");
 
@@ -177,20 +208,6 @@ final class HtmlMarkup extends HtmlMarkupBase {
     index = fragmentBegin();
 
     fragment.invoke(arg1, arg2, arg3, arg4);
-
-    fragmentEnd(index);
-
-    return Html.FRAGMENT;
-  }
-
-  @Override
-  public final Html.Instruction.OfFragment renderComponent(Html.Component component) {
-    Objects.requireNonNull(component, "component == null");
-
-    int index;
-    index = fragmentBegin();
-
-    component.renderHtml(this);
 
     fragmentEnd(index);
 

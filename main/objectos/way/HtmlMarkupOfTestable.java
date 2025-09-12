@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.function.Consumer;
 import objectos.way.Html.AttributeObject;
+import objectos.way.Html.Component;
 
 final class HtmlMarkupOfTestable extends HtmlMarkupBase implements Html.Markup {
 
@@ -190,6 +191,27 @@ final class HtmlMarkupOfTestable extends HtmlMarkupBase implements Html.Markup {
   }
 
   @Override
+  public final Html.Instruction.OfFragment c(Component... components) {
+    for (int idx = 0, len = components.length; idx < len; idx++) {
+      final Html.Component c;
+      c = Check.notNull(components[idx], "components[", idx, "] == null");
+
+      c.renderHtml(this);
+    }
+
+    return Html.FRAGMENT;
+  }
+
+  @Override
+  public final Html.Instruction.OfFragment c(Iterable<? extends Component> components) {
+    for (Html.Component c : components) {
+      c.renderHtml(this);
+    }
+
+    return Html.FRAGMENT;
+  }
+
+  @Override
   public final Html.Instruction.OfFragment f(Html.Fragment.Of0 fragment) {
     Objects.requireNonNull(fragment, "fragment == null");
 
@@ -230,15 +252,6 @@ final class HtmlMarkupOfTestable extends HtmlMarkupBase implements Html.Markup {
     Objects.requireNonNull(fragment, "fragment == null");
 
     fragment.invoke(arg1, arg2, arg3, arg4);
-
-    return Html.FRAGMENT;
-  }
-
-  @Override
-  public final Html.Instruction.OfFragment renderComponent(Html.Component component) {
-    Objects.requireNonNull(component, "component == null");
-
-    component.renderHtml(this);
 
     return Html.FRAGMENT;
   }
