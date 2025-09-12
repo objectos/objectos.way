@@ -20,7 +20,7 @@ import objectos.way.Html.ClassName;
 import objectos.way.Html.HtmlId;
 import org.testng.annotations.Test;
 
-public class HtmlCompilerTestRecorder {
+public class HtmlMarkupTest0Recorder {
 
   @Test(description = """
   <html></html>

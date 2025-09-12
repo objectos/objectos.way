@@ -518,7 +518,7 @@ public class HtmlTemplateTestInclude {
     );
   }
 
-  @Test(enabled = false, description = "it should allow attributes at the root of lambda")
+  @Test(description = "it should allow attributes at the root of lambda")
   public void testCase17() {
     test(
         new Html.Template() {
@@ -530,7 +530,7 @@ public class HtmlTemplateTestInclude {
           private void attributes() {
             id("foo");
 
-            //attr(disabled);
+            add(disabled);
           }
         },
 

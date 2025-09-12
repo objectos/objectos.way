@@ -1125,6 +1125,10 @@ public final class Html {
   /// Defines the structure of an HTML document using pure Java.
   public interface Markup {
 
+    void add(AttributeObject object);
+
+    // START generated code
+
     /// The `async` boolean attribute.
     Html.AttributeObject async = Html.AttributeObject.of(Html.AttributeName.ASYNC);
 
@@ -2817,6 +2821,8 @@ public final class Html {
     /// @return an instruction representing the text node
     Html.Instruction.OfElement text(String value);
 
+    // END generated code
+
   }
 
   /**
@@ -2900,6 +2906,10 @@ public final class Html {
       Check.state(html != null, "html not set");
 
       return html;
+    }
+
+    protected final void add(Html.AttributeObject object) {
+      $html().add(object);
     }
 
     // START generated code
@@ -5269,7 +5279,7 @@ public final class Html {
   record AttributeObject0(AttributeName name) implements AttributeObject {
     @Override
     public final String value() {
-      throw new UnsupportedOperationException();
+      return null;
     }
   }
 

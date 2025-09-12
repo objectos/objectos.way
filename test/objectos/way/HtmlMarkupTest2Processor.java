@@ -20,7 +20,7 @@ import static org.testng.Assert.assertEquals;
 import java.util.Iterator;
 import org.testng.annotations.Test;
 
-public class HtmlCompilerTestProcessor {
+public class HtmlMarkupTest2Processor {
 
   @Test(description = """
   <html></html>

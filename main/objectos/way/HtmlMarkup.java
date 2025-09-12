@@ -281,6 +281,29 @@ final class HtmlMarkup extends HtmlMarkupBase {
   // ##################################################################
 
   // ##################################################################
+  // # BEGIN: Attributes
+  // ##################################################################
+
+  @Override
+  public final void add(Html.AttributeObject object) {
+    final Html.AttributeName name;
+    name = object.name();
+
+    final String value;
+    value = object.value();
+
+    if (value == null) {
+      attr0(name);
+    } else {
+      attr0(name, value);
+    }
+  }
+
+  // ##################################################################
+  // # END: Attributes
+  // ##################################################################
+
+  // ##################################################################
   // # BEGIN: Text
   // ##################################################################
 
@@ -441,6 +464,7 @@ final class HtmlMarkup extends HtmlMarkupBase {
       switch (proto) {
         case HtmlByteProto.DOCTYPE,
              HtmlByteProto.ELEMENT,
+             HtmlByteProto.RAW,
              HtmlByteProto.TEXT -> {
           // next node found
           nextState = _DOCUMENT_NODES_HAS_NEXT;
@@ -557,6 +581,19 @@ final class HtmlMarkup extends HtmlMarkupBase {
         documentCtxMainIndexStore(parentIndex);
 
         yield element(elementStartIndex, parentIndex);
+      }
+
+      case HtmlByteProto.RAW -> {
+        byte b0;
+        b0 = main[index++];
+
+        byte b1;
+        b1 = main[index++];
+
+        // skip ByteProto.INTERNAL4
+        documentCtxMainIndexStore(index + 1);
+
+        yield htmlRaw(b0, b1);
       }
 
       case HtmlByteProto.TEXT -> {
@@ -1429,14 +1466,7 @@ final class HtmlMarkup extends HtmlMarkupBase {
 
         elementCtxNodesIndexStore(index);
 
-        // return value
-        DomRaw raw;
-        raw = (DomRaw) objectArray[objectIndex + OFFSET_RAW];
-
-        // text value
-        raw.value = toObjectString(v0, v1);
-
-        yield raw;
+        yield htmlRaw(v0, v1);
       }
 
       case HtmlByteProto.TEXT -> {
@@ -1457,6 +1487,16 @@ final class HtmlMarkup extends HtmlMarkupBase {
           "Implement me :: proto=" + proto
       );
     };
+  }
+
+  private Dom.Raw htmlRaw(byte v0, byte v1) {
+    DomRaw raw;
+    raw = (DomRaw) objectArray[objectIndex + OFFSET_RAW];
+
+    // text value
+    raw.value = toObjectString(v0, v1);
+
+    return raw;
   }
 
   private Dom.Text htmlText(byte v0, byte v1) {

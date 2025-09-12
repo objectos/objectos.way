@@ -17,6 +17,7 @@ package objectos.way;
 
 import java.util.Objects;
 import java.util.function.Consumer;
+import objectos.way.Html.AttributeObject;
 
 final class HtmlMarkupOfTestable extends HtmlMarkupBase implements Html.Markup {
 
@@ -118,6 +119,11 @@ final class HtmlMarkupOfTestable extends HtmlMarkupBase implements Html.Markup {
 
   @Override
   public final void doctype() {
+    // noop
+  }
+
+  @Override
+  public final void add(AttributeObject object) {
     // noop
   }
 
