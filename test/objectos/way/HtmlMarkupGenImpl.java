@@ -15,6 +15,7 @@
  */
 package objectos.way;
 
+import java.util.Iterator;
 import java.util.Set;
 
 public class HtmlMarkupGenImpl {
@@ -33,13 +34,53 @@ public class HtmlMarkupGenImpl {
   }
 
   private void prepare() {
+    way();
+
+    testable();
+
     elements();
 
     attributes();
 
     ambiguous();
 
-    //text();
+    text();
+  }
+
+  private void way() {
+    methods.append("""
+
+      //
+      // WAY
+      //
+    """);
+
+    for (HtmlSpec.AttributeSpec spec : HtmlSpec.dataOn()) {
+      methods.append("""
+
+        /// Renders the `%s` attribute with the specified script.
+        /// @param script the script to be executed
+        /// @return an instruction representing the attribute
+        public abstract Html.Instruction.OfDataOn %s(Consumer<Script> script);
+      """.formatted(spec.htmlName(), spec.methodName()));
+    }
+
+    for (HtmlSpec.MethodSpec spec : HtmlSpec.wayNodes()) {
+      methodSpec(spec);
+    }
+  }
+
+  private void testable() {
+    methods.append("""
+
+      //
+      // TESTABLE
+      //
+    """);
+
+    for (HtmlSpec.MethodSpec spec : HtmlSpec.testableNodes()) {
+      methodSpec(spec);
+    }
   }
 
   private void elements() {
@@ -53,15 +94,26 @@ public class HtmlMarkupGenImpl {
 
       abstract Html.Instruction.OfElement elem0(Html.ElementName name, String text);
 
+      /// Renders an HTML element with the specified name and contents.
+      /// @param name the element name
+      /// @param contents the attributes and children of the element
+      /// @return an instruction representing the element
       public final Html.Instruction.OfElement elem(Html.ElementName name, Html.Instruction... contents) {
         Objects.requireNonNull(name, "name == null");
         return elem0(name, contents);
       }
 
+      /// Renders an HTML element with the specified name and text.
+      /// @param name the element name
+      /// @param text the text value of this element
+      /// @return an instruction representing the element
       public final Html.Instruction.OfElement elem(Html.ElementName name, String text) {
         Objects.requireNonNull(name, "name == null");
         return elem0(name, text);
       }
+
+      /// Renders the `<!DOCTYPE html>` doctype.
+      public abstract void doctype();
     """);
 
     final Set<String> ambiguousNames;
@@ -74,35 +126,47 @@ public class HtmlMarkupGenImpl {
       if (ambiguousNames.contains(htmlName)) {
         methods.append("""
 
+          /// Renders the `%s` element with the specified content.
+          /// @param contents the attributes and children of the element
+          /// @return an instruction representing the element.
           public final Html.Instruction.OfElement %s(Html.Instruction... contents) {
             return elem0(HtmlElementName.%s, contents);
           }
-        """.formatted(elem.htmlName(), elem.javaName()));
+        """.formatted(elem.htmlName(), elem.htmlName(), elem.javaName()));
       }
 
       else if (elem.endTag()) {
         methods.append("""
 
+          /// Renders the `%s` element with the specified content.
+          /// @param contents the attributes and children of the element
+          /// @return an instruction representing the element.
           public final Html.Instruction.OfElement %s(Html.Instruction... contents) {
             return elem0(HtmlElementName.%s, contents);
           }
 
+          /// Renders the `%s` element with the specified text.
+          /// @param text the text value of the element
+          /// @return an instruction representing the element.
           public final Html.Instruction.OfElement %s(String text) {
             return elem0(HtmlElementName.%s, text);
           }
         """.formatted(
-            elem.htmlName(), elem.javaName(),
-            elem.htmlName(), elem.javaName()
+            elem.htmlName(), elem.htmlName(), elem.javaName(),
+            elem.htmlName(), elem.htmlName(), elem.javaName()
         ));
       }
 
       else {
         methods.append("""
 
+          /// Renders the `%s` element with the specified content.
+          /// @param contents the attributes of the element
+          /// @return an instruction representing the element.
           public final Html.Instruction.OfElement %s(Html.Instruction.OfVoid... contents) {
             return elem0(HtmlElementName.%s, contents);
           }
-        """.formatted(elem.htmlName(), elem.javaName()));
+        """.formatted(elem.htmlName(), elem.htmlName(), elem.javaName()));
       }
     }
 
@@ -119,11 +183,18 @@ public class HtmlMarkupGenImpl {
 
       abstract Html.Instruction.OfAttribute attr0(Html.AttributeName name, Object value);
 
+      /// Renders an attribute with the specified name.
+      /// @param name the attribute name
+      /// @return an instruction representing the attribute
       public final Html.Instruction.OfAttribute attr(Html.AttributeName name) {
         Objects.requireNonNull(name, "name == null");
         return attr0(name);
       }
 
+      /// Renders an attribute with the specified name and value.
+      /// @param name the attribute name
+      /// @param value the attribute value
+      /// @return an instruction representing the attribute
       public final Html.Instruction.OfAttribute attr(Html.AttributeName name, String value) {
         Objects.requireNonNull(name, "name == null");
         return attr0(name, value);
@@ -140,10 +211,13 @@ public class HtmlMarkupGenImpl {
 
       methods.append("""
 
+        /// Renders the `%s` attribute with the specified value.
+        /// @param value the attribute value
+        /// @return an instruction representing the attribute
         public final Html.Instruction.OfAttribute %s(String value) {
           return attr0(HtmlAttributeName.%s, value);
         }
-      """.formatted(attr.methodName(), attr.constantName()));
+      """.formatted(attr.htmlName(), attr.methodName(), attr.constantName()));
     }
   }
 
@@ -160,11 +234,53 @@ public class HtmlMarkupGenImpl {
     for (HtmlSpec.AmbiguousSpec spec : HtmlSpec.ambiguous()) {
       methods.append("""
 
+        /// Renders the `%s` attribute or the `%s` element with the specified text.
+        /// @param text the attribute value or the text content of the element
+        /// @return an instruction representing the attribute or the element
         public final Html.Instruction.OfAmbiguous %s(String text) {
           return ambiguous(HtmlAmbiguous.%s, text);
         }
-      """.formatted(spec.methodName(), spec.constantName()));
+      """.formatted(spec.attributeName(), spec.elementName(), spec.methodName(), spec.constantName()));
     }
+  }
+
+  private void text() {
+    methods.append("""
+
+      //
+      // TEXT
+      //
+    """);
+
+    for (HtmlSpec.MethodSpec spec : HtmlSpec.textNodes()) {
+      methodSpec(spec);
+    }
+  }
+
+  private void methodSpec(HtmlSpec.MethodSpec spec) {
+    final String javadocs;
+    javadocs = spec.javadocs();
+
+    final Iterator<String> lines;
+    lines = javadocs.lines().iterator();
+
+    while (lines.hasNext()) {
+      methods.append('\n');
+
+      methods.append("  /// ");
+
+      methods.append(lines.next());
+    }
+
+    methods.append('\n');
+
+    methods.append("  public abstract ");
+
+    methods.append(spec.sig());
+
+    methods.append(';');
+
+    methods.append('\n');
   }
 
 }

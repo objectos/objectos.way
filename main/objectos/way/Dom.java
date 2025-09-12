@@ -58,6 +58,9 @@ public final class Dom {
       String value();
     }
 
+    /// Creates a `Document` representing the HTML document declared by the specified markup.
+    /// @param markup the markup instance
+    /// @return a newly created document object
     static Dom.Document of(Html.Markup.OfHtml markup) {
       final HtmlMarkupOfHtml impl;
       impl = markup;
@@ -67,7 +70,7 @@ public final class Dom {
 
     /// Creates a `Document` representing the specified HTML template.
     /// @param template the HTML template
-    /// @return a newly created DOM object
+    /// @return a newly created document object
     static Dom.Document of(Html.Template template) {
       final Html.Markup.OfHtml html;
       html = new Html.Markup.OfHtml();
