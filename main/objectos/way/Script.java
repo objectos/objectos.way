@@ -133,7 +133,7 @@ public sealed interface Script permits ScriptWriter {
 
   // queries
 
-  /// Represents an element in the DOM.
+  /// Represents an element in the browser's DOM.
   public sealed interface Element permits ScriptWriter.ElementQuery {
 
     /**
@@ -167,6 +167,9 @@ public sealed interface Script permits ScriptWriter {
     /// Closes this `dialog` element.
     void close();
 
+    /// Sets the focus on this element, if it can be focused.
+    void focus();
+
     /**
      * Scrolls the element to the specified {@code x} and {@code y} coordinates.
      *
@@ -190,10 +193,22 @@ public sealed interface Script permits ScriptWriter {
 
   }
 
+  /// Returns a reference to the element on which the script is declared.
+  /// @return a reference to the element
   Element element();
 
+  /// Returns a reference to the element whose `id` property matches
+  /// the value of the specified `Html.Id` instance.
+  ///
+  /// @param id the id of the element to locate
+  /// @return a reference to the element
   Element elementById(Html.Id id);
 
+  /// Returns a reference to the element whose `id` property matches
+  /// the value of the specified query.
+  ///
+  /// @param id the query to produce the id of the element to locate
+  /// @return a reference to the element
   Element elementById(StringQuery id);
 
   // actions

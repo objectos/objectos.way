@@ -134,6 +134,18 @@ final class ScriptWriter implements Script {
     }
 
     @Override
+    public final void focus() {
+      actionStart();
+
+      elementAction();
+
+      comma();
+      stringLiteral("focus-0");
+
+      actionEnd();
+    }
+
+    @Override
     public final void scroll(int x, int y) {
       actionStart();
 

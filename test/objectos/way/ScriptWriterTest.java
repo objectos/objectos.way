@@ -29,26 +29,6 @@ public class ScriptWriterTest {
   private final Html.AttributeName dataItem = HtmlAttributeName.custom("data-item");
 
   @Test
-  public void close01() {
-    test(
-        script -> script.element().close(),
-
-        """
-        [["element-2","close-0"]]"""
-    );
-  }
-
-  @Test
-  public void close02() {
-    test(
-        script -> script.elementById(FOO).close(),
-
-        """
-        [["id-2","foo","close-0"]]"""
-    );
-  }
-
-  @Test
   public void delay() {
     test(
         script -> {
@@ -95,7 +75,7 @@ public class ScriptWriterTest {
   }
 
   @Test
-  public void elementAttr() {
+  public void elementByIdAttr() {
     test(
         script -> {
           var foo = script.elementById(FOO);
@@ -110,7 +90,30 @@ public class ScriptWriterTest {
   }
 
   @Test
-  public void elementScroll1() {
+  public void elementByIdClose() {
+    test(
+        script -> script.elementById(FOO).close(),
+
+        """
+        [["id-2","foo","close-0"]]"""
+    );
+  }
+
+  @Test
+  public void elementByIdFocus() {
+    test(
+        script -> {
+          var foo = script.elementById(FOO);
+          foo.focus();
+        },
+
+        """
+        [["id-2","foo","focus-0"]]"""
+    );
+  }
+
+  @Test
+  public void elementByIdScroll1() {
     test(
         script -> {
           var foo = script.elementById(FOO);
@@ -123,7 +126,7 @@ public class ScriptWriterTest {
   }
 
   @Test
-  public void elementSubmit() {
+  public void elementByIdSubmit() {
     test(
         script -> {
           var foo = script.elementById(FOO);
@@ -137,7 +140,7 @@ public class ScriptWriterTest {
   }
 
   @Test
-  public void elementToggleClass0() {
+  public void elementByIdToggleClass0() {
     test(
         script -> {
           var foo = script.elementById(FOO);
@@ -147,6 +150,26 @@ public class ScriptWriterTest {
 
         """
         [["id-2","foo","toggle-class-0","x"],["id-2","foo","toggle-class-0","c1","c2"]]"""
+    );
+  }
+
+  @Test
+  public void elementSelfClose() {
+    test(
+        script -> script.element().close(),
+
+        """
+        [["element-2","close-0"]]"""
+    );
+  }
+
+  @Test
+  public void elementSelfFocus() {
+    test(
+        script -> script.element().focus(),
+
+        """
+        [["element-2","focus-0"]]"""
     );
   }
 

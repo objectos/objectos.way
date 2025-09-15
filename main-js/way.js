@@ -575,6 +575,7 @@ const way = (function() {
   const elementActions = {
     "attr-0": elementAttr0,
     "close-0": elementClose0,
+    "focus-0": elementFocus0,
     "show-modal-0": elementShowModal0,
     "submit-0": elementSubmit0,
     "toggle-class-0": elementToggleClass0
@@ -612,6 +613,10 @@ const way = (function() {
     }
 
 	element.close();
+  }
+
+  function elementFocus0(_, element) {
+	element.focus();
   }
   
   function elementShowModal0(_, element) {
