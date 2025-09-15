@@ -29,7 +29,7 @@ final class ScriptWriter implements Script {
     arrayStart();
   }
 
-  public final Action build() {
+  public final ScriptAction build() {
     final String value;
     value = toString();
 
@@ -357,7 +357,7 @@ final class ScriptWriter implements Script {
     actionEnd();
   }
 
-  final class RequestConfig implements Script.RequestConfig {
+  final class RequestOptions implements Script.RequestOptions {
 
     private Script.Method method = Script.GET;
 
@@ -417,13 +417,13 @@ final class ScriptWriter implements Script {
   }
 
   @Override
-  public final void request(Consumer<Script.RequestConfig> config) {
-    Objects.requireNonNull(config, "RequestConfig> config == null");
+  public final void request(Consumer<? super Script.RequestOptions> options) {
+    Objects.requireNonNull(options, "options == null");
 
-    final RequestConfig delegate;
-    delegate = new RequestConfig();
+    final RequestOptions delegate;
+    delegate = new RequestOptions();
 
-    config.accept(delegate);
+    options.accept(delegate);
 
     delegate.write();
   }

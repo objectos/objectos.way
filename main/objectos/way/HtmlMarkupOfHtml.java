@@ -237,8 +237,8 @@ sealed abstract class HtmlMarkupOfHtml extends HtmlMarkup permits Html.Markup.Of
   }
 
   private Html.Instruction.OfDataOn dataOn0(Html.AttributeName name, Consumer<Script> script) {
-    final Script.Action action;
-    action = Script.Action.create(script);
+    final ScriptAction action;
+    action = ScriptAction.create(script);
 
     return attr0(name, action);
   }
