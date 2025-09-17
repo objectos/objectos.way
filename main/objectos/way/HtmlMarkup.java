@@ -21,9 +21,9 @@ import java.util.function.Consumer;
 
 sealed abstract class HtmlMarkup permits HtmlMarkupOfHtml, HtmlMarkupOfTestable {
 
-  /// Adds the specified attribute at the root of a document or fragment.
+  /// Renders the specified attribute at the root of a document or fragment.
   /// @param object the attribute
-  public abstract void add(Html.AttributeObject object);
+  public abstract Html.Instruction.OfAttribute attr(Html.AttributeObject object);
 
   /// Generates and returns the HTML represented by this markup instance.
   /// @return the HTML represented by this markup instance.

@@ -176,8 +176,8 @@ public sealed interface Script permits ScriptWriter {
   /// @param action the action to be executed
   void delay(int ms, Callback action);
 
-  /// Swaps the current document contents with the HTML from the specified template.
-  /// @param template the HTML template
+  /// Swaps the document's `data-frame` contents with the ones from the specified HTML document.
+  /// @param template the HTML document
   void html(Html.Template template);
 
   /// Performs a soft navigation to the URL specified by the `href`

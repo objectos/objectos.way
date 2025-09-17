@@ -32,74 +32,87 @@ sealed abstract class HtmlMarkupOfTestable extends HtmlMarkup permits Html.Marku
     this.formatter = formatter;
   }
 
+  @Override
   public final String toHtml() {
     throw new UnsupportedOperationException();
   }
 
+  @Override
   public final void writeTo(Appendable out) throws IOException {
     throw new UnsupportedOperationException();
   }
 
+  @Override
   public final String testableCell(String value, int width) {
     formatter.cell(value, width);
 
     return value;
   }
 
+  @Override
   public final String testableField(String name, String value) {
     formatter.field(name, value);
 
     return value;
   }
 
+  @Override
   public final String testableFieldName(String name) {
     formatter.fieldName(name);
 
     return name;
   }
 
+  @Override
   public final String testableFieldValue(String value) {
     formatter.fieldValue(value);
 
     return value;
   }
 
+  @Override
   public final String testableH1(String value) {
     formatter.heading1(value);
 
     return value;
   }
 
+  @Override
   public final String testableH2(String value) {
     formatter.heading2(value);
 
     return value;
   }
 
+  @Override
   public final String testableH3(String value) {
     formatter.heading3(value);
 
     return value;
   }
 
+  @Override
   public final String testableH4(String value) {
     formatter.heading4(value);
 
     return value;
   }
 
+  @Override
   public final String testableH5(String value) {
     formatter.heading5(value);
 
     return value;
   }
 
+  @Override
   public final String testableH6(String value) {
     formatter.heading6(value);
 
     return value;
   }
 
+  @Override
   public final Html.Instruction.NoOp testableNewLine() {
     formatter.newLine();
 
@@ -115,42 +128,52 @@ sealed abstract class HtmlMarkupOfTestable extends HtmlMarkup permits Html.Marku
   //
   //
 
+  @Override
   public final void doctype() {
     // noop
   }
 
-  public final void add(AttributeObject object) {
-    // noop
+  @Override
+  public final Html.Instruction.OfAttribute attr(AttributeObject object) {
+    return Html.ATTRIBUTE;
   }
 
+  @Override
   public final Html.Instruction.OfAttribute css(String value) {
     return Html.ATTRIBUTE;
   }
 
+  @Override
   public final Html.Instruction.OfAttribute dataFrame(String name) {
     return Html.ATTRIBUTE;
   }
 
+  @Override
   public final Html.Instruction.OfAttribute dataFrame(String name, String value) {
     return Html.ATTRIBUTE;
   }
 
+  @Override
   public final Html.Instruction.OfDataOn dataOnClick(Consumer<Script> script) {
     return Html.ATTRIBUTE;
   }
 
+  @Override
   public final Html.Instruction.OfDataOn dataOnInput(Consumer<Script> script) {
     return Html.ATTRIBUTE;
   }
 
+  @Override
   public final Html.Instruction.OfDataOn dataOnLoad(Consumer<Script> script) {
     return Html.ATTRIBUTE;
   }
 
+  @Override
   public final Html.Instruction.OfDataOn dataOnSuccess(Consumer<Script> script) {
     return Html.ATTRIBUTE;
   }
 
+  @Override
   public final Html.Instruction.OfElement flatten(Html.Instruction... contents) {
     Objects.requireNonNull(contents, "contents == null");
 
@@ -161,10 +184,12 @@ sealed abstract class HtmlMarkupOfTestable extends HtmlMarkup permits Html.Marku
     return Html.ELEMENT;
   }
 
+  @Override
   public final Html.Instruction.NoOp noop() {
     return Html.NOOP;
   }
 
+  @Override
   public final Html.Instruction.OfFragment f(Html.Fragment.Of0 fragment) {
     Objects.requireNonNull(fragment, "fragment == null");
 
@@ -173,6 +198,7 @@ sealed abstract class HtmlMarkupOfTestable extends HtmlMarkup permits Html.Marku
     return Html.FRAGMENT;
   }
 
+  @Override
   public final <T1> Html.Instruction.OfFragment f(Html.Fragment.Of1<T1> fragment, T1 arg1) {
     Objects.requireNonNull(fragment, "fragment == null");
 
@@ -181,6 +207,7 @@ sealed abstract class HtmlMarkupOfTestable extends HtmlMarkup permits Html.Marku
     return Html.FRAGMENT;
   }
 
+  @Override
   public final <T1, T2> Html.Instruction.OfFragment f(Html.Fragment.Of2<T1, T2> fragment, T1 arg1, T2 arg2) {
     Objects.requireNonNull(fragment, "fragment == null");
 
@@ -189,6 +216,7 @@ sealed abstract class HtmlMarkupOfTestable extends HtmlMarkup permits Html.Marku
     return Html.FRAGMENT;
   }
 
+  @Override
   public final <T1, T2, T3> Html.Instruction.OfFragment f(Html.Fragment.Of3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3) {
     Objects.requireNonNull(fragment, "fragment == null");
 
@@ -197,6 +225,7 @@ sealed abstract class HtmlMarkupOfTestable extends HtmlMarkup permits Html.Marku
     return Html.FRAGMENT;
   }
 
+  @Override
   public final <T1, T2, T3, T4> Html.Instruction.OfFragment f(Html.Fragment.Of4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
     Objects.requireNonNull(fragment, "fragment == null");
 
@@ -205,15 +234,18 @@ sealed abstract class HtmlMarkupOfTestable extends HtmlMarkup permits Html.Marku
     return Html.FRAGMENT;
   }
 
+  @Override
   public final Html.Instruction.OfElement nbsp() {
     return raw("&nbsp;");
   }
 
+  @Override
   public final Html.Instruction.OfElement raw(String text) {
     Objects.requireNonNull(text, "text == null");
     return Html.ELEMENT;
   }
 
+  @Override
   public final Html.Instruction.OfElement text(String text) {
     return Html.ELEMENT;
   }

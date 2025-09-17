@@ -288,7 +288,7 @@ sealed abstract class HtmlMarkupOfHtml extends HtmlMarkup permits Html.Markup.Of
   // ##################################################################
 
   @Override
-  public final void add(Html.AttributeObject object) {
+  public final Html.Instruction.OfAttribute attr(Html.AttributeObject object) {
     final Html.AttributeName name;
     name = object.name();
 
@@ -296,9 +296,9 @@ sealed abstract class HtmlMarkupOfHtml extends HtmlMarkup permits Html.Markup.Of
     value = object.value();
 
     if (value == null) {
-      attr0(name);
+      return attr0(name);
     } else {
-      attr0(name, value);
+      return attr0(name, value);
     }
   }
 

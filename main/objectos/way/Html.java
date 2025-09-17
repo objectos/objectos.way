@@ -1169,9 +1169,9 @@ public final class Html {
 
     }
 
-    /// Adds the specified attribute at the root of a document or fragment.
+    /// Renders the specified attribute at the root of a document or fragment.
     /// @param object the attribute
-    void add(AttributeObject object);
+    Html.Instruction.OfAttribute attr(AttributeObject object);
 
     /// Generates and returns the HTML represented by this markup instance.
     /// @return the HTML represented by this markup instance.
@@ -2969,10 +2969,10 @@ public final class Html {
       return html;
     }
 
-    /// Adds the specified attribute at the root of this template or fragment.
+    /// Renders the specified attribute at the root of this template or fragment.
     /// @param object the attribute
-    protected final void add(Html.AttributeObject object) {
-      $html().add(object);
+    protected final Html.Instruction.OfAttribute attr(Html.AttributeObject object) {
+      return $html().attr(object);
     }
 
     // START generated code

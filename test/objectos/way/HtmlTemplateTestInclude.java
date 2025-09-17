@@ -530,7 +530,7 @@ public class HtmlTemplateTestInclude {
           private void attributes() {
             id("foo");
 
-            add(disabled);
+            attr(disabled);
           }
         },
 
