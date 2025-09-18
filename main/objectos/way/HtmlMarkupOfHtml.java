@@ -188,7 +188,7 @@ sealed abstract class HtmlMarkupOfHtml extends HtmlMarkup permits Html.Markup.Of
   @Override
   public final Html.Instruction.OfAttribute css(String value) {
     final String formatted;
-    formatted = Html.ofText(value, sb);
+    formatted = Html.formatAttrValue(value, sb);
 
     return attr0(HtmlAttributeName.CLASS, formatted);
   }

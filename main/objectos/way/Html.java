@@ -603,7 +603,7 @@ public final class Html {
      */
     static Html.ClassName ofText(String value) {
       String result;
-      result = Html.ofText(value);
+      result = Html.formatAttrValue(value);
 
       return new HtmlClassName(result);
     }
@@ -1174,6 +1174,7 @@ public final class Html {
 
     /// Renders the specified attribute at the root of a document or fragment.
     /// @param object the attribute
+    /// @return an instruction representing the attribute
     Html.Instruction.OfAttribute attr(AttributeObject object);
 
     /// Generates and returns the HTML represented by this markup instance.
@@ -2974,6 +2975,7 @@ public final class Html {
 
     /// Renders the specified attribute at the root of this template or fragment.
     /// @param object the attribute
+    /// @return an instruction representing the attribute
     protected final Html.Instruction.OfAttribute attr(Html.AttributeObject object) {
       return $html().attr(object);
     }
@@ -5297,11 +5299,22 @@ public final class Html {
 
   private Html() {}
 
-  static String ofText(String value) {
-    return ofText(value, new StringBuilder());
+  /// Formats the specified string to be used as an HTML attribute value.
+  /// More specifically, this method returns a string whose value is the specified string:
+  ///
+  /// - With all leading and trailing [white space][Character#isWhitespace(char)] removed.
+  /// - All other [white space][Character#isWhitespace(char)] characters are replaced by the space character (`U+0020`).
+  /// - All sequences of more than one consecutive space characters are normalized to a single space character.
+  ///
+  /// @param value the string to be formatted
+  /// @return the formatted string
+  public static String formatAttrValue(String value) {
+    Objects.requireNonNull(value, "value == null");
+
+    return formatAttrValue(value, new StringBuilder());
   }
 
-  static String ofText(String value, StringBuilder sb) {
+  static String formatAttrValue(String value, StringBuilder sb) {
     enum Parser {
       START,
 
@@ -5316,31 +5329,39 @@ public final class Html {
     sb.setLength(0);
 
     for (int idx = 0, len = value.length(); idx < len; idx++) {
-      char c;
+      final char c;
       c = value.charAt(idx);
 
       switch (parser) {
         case START -> {
-          switch (c) {
-            case ' ', '\t', '\n', '\r', '\f' -> parser = Parser.START;
+          if (Character.isWhitespace(c)) {
+            parser = Parser.START;
+          } else {
+            parser = Parser.TEXT;
 
-            default -> { parser = Parser.TEXT; sb.append(c); }
+            sb.append(c);
           }
         }
 
         case TEXT -> {
-          switch (c) {
-            case ' ', '\t', '\n', '\r', '\f' -> parser = Parser.WS;
+          if (Character.isWhitespace(c)) {
+            parser = Parser.WS;
+          } else {
+            parser = Parser.TEXT;
 
-            default -> { parser = Parser.TEXT; sb.append(c); }
+            sb.append(c);
           }
         }
 
         case WS -> {
-          switch (c) {
-            case ' ', '\t', '\n', '\r', '\f' -> parser = Parser.WS;
+          if (Character.isWhitespace(c)) {
+            parser = Parser.WS;
+          } else {
+            parser = Parser.TEXT;
 
-            default -> { parser = Parser.TEXT; sb.append(' '); sb.append(c); }
+            sb.append(' ');
+
+            sb.append(c);
           }
         }
       }

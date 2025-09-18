@@ -23,6 +23,7 @@ sealed abstract class HtmlMarkup permits HtmlMarkupOfHtml, HtmlMarkupOfTestable 
 
   /// Renders the specified attribute at the root of a document or fragment.
   /// @param object the attribute
+  /// @return an instruction representing the attribute
   public abstract Html.Instruction.OfAttribute attr(Html.AttributeObject object);
 
   /// Generates and returns the HTML represented by this markup instance.
