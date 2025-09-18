@@ -1946,37 +1946,34 @@ sealed abstract class HtmlMarkupOfHtml extends HtmlMarkup permits Html.Markup.Of
       auxAdd(HtmlByteProto.INTERNAL);
     }
 
-    else if (value instanceof Html.AttributeObject0 ext) {
-      Html.AttributeName name;
+    else if (value instanceof Html.AttributeObject ext) {
+      final Html.AttributeName name;
       name = ext.name();
+
+      if (name == null) {
+        throw new IllegalArgumentException("Html.AttributeObject provided a null Html.AttributeName\n\t" + ext);
+      }
 
       int nameIndex;
       nameIndex = name.index();
 
       if (nameIndex < 0) {
         throw new UnsupportedOperationException("Custom attribute name");
-      } else {
+      }
+
+      final String attrValue;
+      attrValue = ext.value();
+
+      if (attrValue == null) {
         auxAdd(
             HtmlByteProto.ATTRIBUTE_EXT0,
 
             // name
             HtmlBytes.encodeInt0(nameIndex)
         );
-      }
-    }
-
-    else if (value instanceof Html.AttributeObject ext) {
-      Html.AttributeName name;
-      name = ext.name();
-
-      int nameIndex;
-      nameIndex = name.index();
-
-      if (nameIndex < 0) {
-        throw new UnsupportedOperationException("Custom attribute name");
       } else {
-        int valueIndex;
-        valueIndex = externalValue(ext.value());
+        final int valueIndex;
+        valueIndex = externalValue(attrValue);
 
         auxAdd(
             HtmlByteProto.ATTRIBUTE_EXT1,

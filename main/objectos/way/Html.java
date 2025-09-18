@@ -30,23 +30,24 @@ public final class Html {
   /// An object representing an instruction to render an HTML attribute.
   /// These instructions may be reused,
   /// unlike the instructions represented by methods of the `Markup` or `Template` classes.
-  public sealed interface AttributeObject extends Instruction.AsObject, Instruction.OfVoid {
+  public non-sealed interface AttributeObject extends Instruction.AsObject, Instruction.OfVoid {
 
-    /// Creates an attribute object with the specified name.
-    /// @param name the attribute name
-    /// @return a newly created attribute object
+    /// Creates an object representing an HTML boolean attribute with the specified name.
+    /// @param name the boolean attribute name
+    /// @return a newly created object representing an HTML boolean attribute
     static AttributeObject of(AttributeName name) {
-      return new AttributeObject0(
-          Objects.requireNonNull(name, "name == null")
+      return new DefaultAttributeObject(
+          Objects.requireNonNull(name, "name == null"),
+          null
       );
     }
 
-    /// Creates an attribute object with the specified name and value.
+    /// Creates an object representing a HTML attribute with the specified name and value.
     /// @param name the attribute name
     /// @param value the attribute value
-    /// @return a newly created attribute object
+    /// @return a newly created object representing an HTML attribute
     static AttributeObject of(AttributeName name, String value) {
-      return new AttributeObject1(
+      return new DefaultAttributeObject(
           Objects.requireNonNull(name, "name == null"),
           Objects.requireNonNull(value, "value == null")
       );
@@ -56,11 +57,13 @@ public final class Html {
     /// @return the HTML attribute name
     AttributeName name();
 
-    /// The HTML attribute value, possibly `null`.
-    /// @return the HTML attribute value, possibly `null`
+    /// The HTML attribute value, or `null` if this object represents a boolean HTML attribute.
+    /// @return the HTML attribute value, or `null`
     String value();
 
   }
+
+  private record DefaultAttributeObject(AttributeName name, String value) implements AttributeObject {}
 
   /// The name of an HTML attribute.
   public sealed interface AttributeName permits HtmlAttributeName {
@@ -5345,15 +5348,6 @@ public final class Html {
 
     return sb.toString();
   }
-
-  record AttributeObject0(AttributeName name) implements AttributeObject {
-    @Override
-    public final String value() {
-      return null;
-    }
-  }
-
-  record AttributeObject1(AttributeName name, String value) implements AttributeObject {}
 
   record HtmlId(String value) implements Html.Id {}
 
