@@ -1032,10 +1032,14 @@ public final class Html {
      */
     sealed interface OfVoid extends Instruction {}
 
-    /**
-     * The no-op instruction.
-     */
+    /// The no-op instruction.
     sealed interface NoOp extends AsMethod, OfVoid {}
+
+    /// Returns the no-op instruction.
+    /// @return the no-op instruction
+    static NoOp noop() {
+      return Html.NOOP;
+    }
 
   }
 

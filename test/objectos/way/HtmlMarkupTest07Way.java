@@ -95,6 +95,25 @@ public class HtmlMarkupTest07Way {
     );
   }
 
+  @Test
+  public void noop() {
+    test(
+        m -> m.div(
+            m.p("one"),
+            m.noop(),
+            m.p("two"),
+            Html.Instruction.noop()
+        ),
+
+        """
+        <div>
+        <p>one</p>
+        <p>two</p>
+        </div>
+        """
+    );
+  }
+
   private void test(Html.Component component, String expected) {
     assertEquals(component.toHtml(), expected);
   }
