@@ -55,15 +55,15 @@ public final class Html {
 
     /// The HTML attribute name.
     /// @return the HTML attribute name
-    AttributeName name();
+    AttributeName attrName();
 
     /// The HTML attribute value, or `null` if this object represents a boolean HTML attribute.
     /// @return the HTML attribute value, or `null`
-    String value();
+    String attrValue();
 
   }
 
-  private record DefaultAttributeObject(AttributeName name, String value) implements AttributeObject {}
+  private record DefaultAttributeObject(AttributeName attrName, String attrValue) implements AttributeObject {}
 
   /// The name of an HTML attribute.
   public sealed interface AttributeName permits HtmlAttributeName {
@@ -516,10 +516,8 @@ public final class Html {
 
   }
 
-  /**
-   * Represents an HTML {@code class} attribute and its value.
-   */
-  public sealed interface ClassName extends AttributeObject permits HtmlClassName {
+  /// Represents an HTML {@code class} attribute and its value.
+  public sealed interface ClassName extends AttributeObject {
 
     /**
      * Creates a new {@code ClassName} instance whose value is the result of
@@ -544,7 +542,7 @@ public final class Html {
         cn = values[i];
 
         String value;
-        value = cn.value();
+        value = cn.attrValue();
 
         sb.append(value);
       }
@@ -552,7 +550,7 @@ public final class Html {
       String value;
       value = sb.toString();
 
-      return new HtmlClassName(value);
+      return new DefaultClassName(value);
     }
 
     /**
@@ -566,7 +564,7 @@ public final class Html {
     static ClassName of(String value) {
       Objects.requireNonNull(value, "value == null");
 
-      return new HtmlClassName(value);
+      return new DefaultClassName(value);
     }
 
     /**
@@ -605,7 +603,7 @@ public final class Html {
       String result;
       result = Html.formatAttrValue(value);
 
-      return new HtmlClassName(result);
+      return new DefaultClassName(result);
     }
 
     /**
@@ -614,7 +612,7 @@ public final class Html {
      * @return the {@code class} attribute name
      */
     @Override
-    default AttributeName name() {
+    default AttributeName attrName() {
       return HtmlAttributeName.CLASS;
     }
 
@@ -624,9 +622,11 @@ public final class Html {
      * @return the {@code class} value
      */
     @Override
-    String value();
+    String attrValue();
 
   }
+
+  private record DefaultClassName(String attrValue) implements ClassName {}
 
   /// Represents the name of an HTML element.
   public sealed interface ElementName permits HtmlElementName {
@@ -941,7 +941,7 @@ public final class Html {
     static Id of(String value) {
       Objects.requireNonNull(value, "value == null");
 
-      return new HtmlId(value);
+      return new DefaultId(value);
     }
 
     /**
@@ -950,7 +950,7 @@ public final class Html {
      * @return the {@code id} attribute name
      */
     @Override
-    default AttributeName name() {
+    default AttributeName attrName() {
       return HtmlAttributeName.ID;
     }
 
@@ -960,9 +960,11 @@ public final class Html {
      * @return the {@code id} value
      */
     @Override
-    String value();
+    String attrValue();
 
   }
+
+  private record DefaultId(String attrValue) implements Id {}
 
   /**
    * Represents an instruction that generates part of the output of an HTML
@@ -5369,7 +5371,5 @@ public final class Html {
 
     return sb.toString();
   }
-
-  record HtmlId(String value) implements Html.Id {}
 
 }

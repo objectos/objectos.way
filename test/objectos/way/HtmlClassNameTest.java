@@ -40,7 +40,7 @@ public class HtmlClassNameTest {
     Html.ClassName cn;
     cn = Html.ClassName.of(value);
 
-    assertEquals(cn.value(), expected);
+    assertEquals(cn.attrValue(), expected);
   }
 
   @Test(description = "ofText: single class name")
@@ -75,7 +75,7 @@ public class HtmlClassNameTest {
     Html.ClassName cn;
     cn = Html.ClassName.ofText(value);
 
-    assertEquals(cn.value(), expected);
+    assertEquals(cn.attrValue(), expected);
   }
 
 }

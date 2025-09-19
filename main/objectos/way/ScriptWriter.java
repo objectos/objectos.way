@@ -290,7 +290,8 @@ final class ScriptWriter implements Script {
 
   @Override
   public final Element elementById(Html.Id id) {
-    final String _id = id.value();
+    final String _id;
+    _id = id.attrValue();
 
     return new ElementQuery(ElementQueryKind.BY_ID, _id);
   }

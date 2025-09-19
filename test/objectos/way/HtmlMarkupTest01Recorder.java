@@ -16,8 +16,6 @@
 package objectos.way;
 
 import java.util.Arrays;
-import objectos.way.Html.ClassName;
-import objectos.way.Html.HtmlId;
 import org.testng.annotations.Test;
 
 public class HtmlMarkupTest01Recorder {
@@ -266,11 +264,11 @@ public class HtmlMarkupTest01Recorder {
   External id attributes
   """)
   public void testCase13() {
-    HtmlId foo;
-    foo = new HtmlId("foo");
+    Html.Id foo;
+    foo = Html.Id.of("foo");
 
-    HtmlId bar;
-    bar = new HtmlId("bar");
+    Html.Id bar;
+    bar = Html.Id.of("bar");
 
     Html.Markup.OfHtml html;
     html = new Html.Markup.OfHtml();
@@ -615,11 +613,11 @@ public class HtmlMarkupTest01Recorder {
   - grid component
   """)
   public void testCase47() {
-    ClassName grd;
-    grd = new HtmlClassName("grd");
+    Html.ClassName grd;
+    grd = Html.ClassName.of("grd");
 
-    ClassName col;
-    col = new HtmlClassName("col");
+    Html.ClassName col;
+    col = Html.ClassName.of("col");
 
     Html.Markup.OfHtml html;
     html = new Html.Markup.OfHtml();

@@ -290,10 +290,10 @@ sealed abstract class HtmlMarkupOfHtml extends HtmlMarkup permits Html.Markup.Of
   @Override
   public final Html.Instruction.OfAttribute attr(Html.AttributeObject object) {
     final Html.AttributeName name;
-    name = object.name();
+    name = object.attrName();
 
     final String value;
-    value = object.value();
+    value = object.attrValue();
 
     if (value == null) {
       return attr0(name);
@@ -1948,7 +1948,7 @@ sealed abstract class HtmlMarkupOfHtml extends HtmlMarkup permits Html.Markup.Of
 
     else if (value instanceof Html.AttributeObject ext) {
       final Html.AttributeName name;
-      name = ext.name();
+      name = ext.attrName();
 
       if (name == null) {
         throw new IllegalArgumentException("Html.AttributeObject provided a null Html.AttributeName\n\t" + ext);
@@ -1962,7 +1962,7 @@ sealed abstract class HtmlMarkupOfHtml extends HtmlMarkup permits Html.Markup.Of
       }
 
       final String attrValue;
-      attrValue = ext.value();
+      attrValue = ext.attrValue();
 
       if (attrValue == null) {
         auxAdd(
