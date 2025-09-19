@@ -337,15 +337,11 @@ final class HtmlAttributeName implements Html.AttributeName {
       XMLNS
   };
 
-  private final boolean booleanAttribute;
-
   private final int index;
 
   private final String name;
 
   private HtmlAttributeName(boolean booleanAttribute, int index, String name) {
-    this.booleanAttribute = booleanAttribute;
-
     this.index = index;
 
     this.name = name;
@@ -428,10 +424,6 @@ final class HtmlAttributeName implements Html.AttributeName {
   @Override
   public final String name() {
     return name;
-  }
-
-  public final boolean booleanAttribute() {
-    return booleanAttribute;
   }
 
 }

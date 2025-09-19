@@ -20,7 +20,7 @@ import static org.testng.Assert.assertEquals;
 import java.util.List;
 import org.testng.annotations.Test;
 
-public class HtmlMarkupTest06Way {
+public class HtmlMarkupTest07Way {
 
   private final Html.Component li1 = m -> m.li("1");
   private final Html.Component li2 = m -> m.li("2");

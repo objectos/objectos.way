@@ -15,9 +15,9 @@
  */
 package objectos.way;
 
-public class HtmlByteProtoFauxGenerator extends FauxGenerator {
+public class HtmlByteProtoGen extends FauxGenerator {
   public static void main(String[] args) {
-    var gen = new HtmlByteProtoFauxGenerator();
+    var gen = new HtmlByteProtoGen();
 
     gen.execute();
   }
@@ -57,6 +57,7 @@ public class HtmlByteProtoFauxGenerator extends FauxGenerator {
     value("ATTRIBUTE1");
     value("ATTRIBUTE_EXT0");
     value("ATTRIBUTE_EXT1");
+    value("CUSTOM_ATTR0");
     value("CUSTOM_ATTR1");
   }
 }

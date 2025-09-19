@@ -766,6 +766,7 @@ sealed abstract class HtmlMarkupOfHtml extends HtmlMarkup permits Html.Markup.Of
              HtmlByteProto.ATTRIBUTE1,
              HtmlByteProto.ATTRIBUTE_EXT0,
              HtmlByteProto.ATTRIBUTE_EXT1,
+             HtmlByteProto.CUSTOM_ATTR0,
              HtmlByteProto.CUSTOM_ATTR1 -> {
           index = rollbackIndex;
 
@@ -885,6 +886,18 @@ sealed abstract class HtmlMarkupOfHtml extends HtmlMarkup permits Html.Markup.Of
         v0 = main[index++];
 
         v1 = main[index++];
+      }
+
+      case HtmlByteProto.CUSTOM_ATTR0 -> {
+        index = jmp2(index);
+
+        byte attr0;
+        attr0 = main[auxStart++];
+
+        byte attr1;
+        attr1 = main[auxStart++];
+
+        attribute.name = attributeName(attr0, attr1);
       }
 
       case HtmlByteProto.CUSTOM_ATTR1 -> {
@@ -1330,6 +1343,7 @@ sealed abstract class HtmlMarkupOfHtml extends HtmlMarkup permits Html.Markup.Of
 
         case HtmlByteProto.ATTRIBUTE0,
              HtmlByteProto.ATTRIBUTE1,
+             HtmlByteProto.CUSTOM_ATTR0,
              HtmlByteProto.CUSTOM_ATTR1 -> index = skipVarInt(index);
 
         case HtmlByteProto.ATTRIBUTE_EXT0 -> index += 1;
@@ -1794,18 +1808,29 @@ sealed abstract class HtmlMarkupOfHtml extends HtmlMarkup permits Html.Markup.Of
     int index;
     index = name.index();
 
-    if (index < 0) {
-      throw new UnsupportedOperationException("Custom attribute name");
+    if (index >= 0) {
+      mainAdd(
+          HtmlByteProto.ATTRIBUTE0,
+
+          // name
+          HtmlBytes.encodeInt0(index),
+
+          HtmlByteProto.INTERNAL3
+      );
+    } else {
+      int nameIndex;
+      nameIndex = objectAdd(name);
+
+      mainAdd(
+          HtmlByteProto.CUSTOM_ATTR0,
+
+          // name
+          HtmlBytes.encodeInt0(nameIndex),
+          HtmlBytes.encodeInt1(nameIndex),
+
+          HtmlByteProto.INTERNAL4
+      );
     }
-
-    mainAdd(
-        HtmlByteProto.ATTRIBUTE0,
-
-        // name
-        HtmlBytes.encodeInt0(index),
-
-        HtmlByteProto.INTERNAL3
-    );
 
     return Html.ATTRIBUTE;
   }
@@ -2035,6 +2060,12 @@ sealed abstract class HtmlMarkupOfHtml extends HtmlMarkup permits Html.Markup.Of
             switch (proto) {
               case HtmlByteProto.ATTRIBUTE0 -> {
                 contents = encodeInternal3(contents, proto);
+
+                continue loop;
+              }
+
+              case HtmlByteProto.CUSTOM_ATTR0 -> {
+                contents = encodeInternal4(contents, proto);
 
                 continue loop;
               }

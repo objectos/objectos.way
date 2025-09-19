@@ -40,7 +40,6 @@ public class HtmlAttributeNameTest {
 
     assertEquals(active.index(), -1);
     assertEquals(active.name(), "data-active");
-    assertEquals(active.booleanAttribute(), false);
   }
 
   @Test

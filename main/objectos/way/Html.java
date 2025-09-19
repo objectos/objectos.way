@@ -68,6 +68,8 @@ public final class Html {
   /// The name of an HTML attribute.
   public sealed interface AttributeName permits HtmlAttributeName {
 
+    // BEGIN generated code
+
     /// The `accesskey` HTML attribute.
     Html.AttributeName ACCESSKEY = HtmlAttributeName.ACCESSKEY;
 
@@ -505,6 +507,15 @@ public final class Html {
 
     /// The `xmlns` HTML attribute.
     Html.AttributeName XMLNS = HtmlAttributeName.XMLNS;
+
+    // END generated code
+
+    /// Creates a new HTML attribute name.
+    /// @param name the name of the attribute
+    /// @return the HTML attribute name instance
+    static AttributeName of(String name) {
+      return HtmlAttributeName.custom(name);
+    }
 
     /// Index of this attribute.
     /// @return index of this attribute.

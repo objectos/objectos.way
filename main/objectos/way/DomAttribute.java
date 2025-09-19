@@ -34,7 +34,7 @@ final class DomAttribute implements Dom.Attribute {
 
   @Override
   public final boolean booleanAttribute() {
-    return name.booleanAttribute();
+    return value == null;
   }
 
   @Override

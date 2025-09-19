@@ -50,7 +50,8 @@ final class HtmlByteProto {
   public static final byte ATTRIBUTE1 = -23;
   public static final byte ATTRIBUTE_EXT0 = -24;
   public static final byte ATTRIBUTE_EXT1 = -25;
-  public static final byte CUSTOM_ATTR1 = -26;
+  public static final byte CUSTOM_ATTR0 = -26;
+  public static final byte CUSTOM_ATTR1 = -27;
 
   private HtmlByteProto() {}
 
