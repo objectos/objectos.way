@@ -65,7 +65,7 @@ public class HtmlTemplateGen {
         /// Renders the `%1$s` attribute with the specified script.
         /// @param script the script to be executed
         /// @return an instruction representing the attribute
-        protected final Html.Instruction.OfDataOn %2$s(Consumer<Script> script) {
+        protected final Html.Instruction.OfDataOn %2$s(Consumer<? super Script> script) {
           return $html().%2$s(script);
         }
       """.formatted(spec.htmlName(), spec.methodName()));

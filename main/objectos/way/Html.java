@@ -1205,7 +1205,6 @@ public final class Html {
     void writeTo(Appendable out) throws IOException;
 
     // START generated code
-
     /// The `async` boolean attribute.
     Html.AttributeObject async = Html.AttributeObject.of(Html.AttributeName.ASYNC);
 
@@ -1252,22 +1251,22 @@ public final class Html {
     /// Renders the `data-on-click` attribute with the specified script.
     /// @param script the script to be executed
     /// @return an instruction representing the attribute
-    Html.Instruction.OfDataOn dataOnClick(Consumer<Script> script);
+    Html.Instruction.OfDataOn dataOnClick(Consumer<? super Script> script);
 
     /// Renders the `data-on-input` attribute with the specified script.
     /// @param script the script to be executed
     /// @return an instruction representing the attribute
-    Html.Instruction.OfDataOn dataOnInput(Consumer<Script> script);
+    Html.Instruction.OfDataOn dataOnInput(Consumer<? super Script> script);
 
     /// Renders the `data-on-load` attribute with the specified script.
     /// @param script the script to be executed
     /// @return an instruction representing the attribute
-    Html.Instruction.OfDataOn dataOnLoad(Consumer<Script> script);
+    Html.Instruction.OfDataOn dataOnLoad(Consumer<? super Script> script);
 
     /// Renders the `data-on-success` attribute with the specified script.
     /// @param script the script to be executed
     /// @return an instruction representing the attribute
-    Html.Instruction.OfDataOn dataOnSuccess(Consumer<Script> script);
+    Html.Instruction.OfDataOn dataOnSuccess(Consumer<? super Script> script);
 
     /// Renders the `data-frame` attribute for a frame with the specified name.
     /// @param name the name of the frame
@@ -3045,28 +3044,28 @@ public final class Html {
     /// Renders the `data-on-click` attribute with the specified script.
     /// @param script the script to be executed
     /// @return an instruction representing the attribute
-    protected final Html.Instruction.OfDataOn dataOnClick(Consumer<Script> script) {
+    protected final Html.Instruction.OfDataOn dataOnClick(Consumer<? super Script> script) {
       return $html().dataOnClick(script);
     }
 
     /// Renders the `data-on-input` attribute with the specified script.
     /// @param script the script to be executed
     /// @return an instruction representing the attribute
-    protected final Html.Instruction.OfDataOn dataOnInput(Consumer<Script> script) {
+    protected final Html.Instruction.OfDataOn dataOnInput(Consumer<? super Script> script) {
       return $html().dataOnInput(script);
     }
 
     /// Renders the `data-on-load` attribute with the specified script.
     /// @param script the script to be executed
     /// @return an instruction representing the attribute
-    protected final Html.Instruction.OfDataOn dataOnLoad(Consumer<Script> script) {
+    protected final Html.Instruction.OfDataOn dataOnLoad(Consumer<? super Script> script) {
       return $html().dataOnLoad(script);
     }
 
     /// Renders the `data-on-success` attribute with the specified script.
     /// @param script the script to be executed
     /// @return an instruction representing the attribute
-    protected final Html.Instruction.OfDataOn dataOnSuccess(Consumer<Script> script) {
+    protected final Html.Instruction.OfDataOn dataOnSuccess(Consumer<? super Script> script) {
       return $html().dataOnSuccess(script);
     }
 
@@ -3086,26 +3085,26 @@ public final class Html {
     }
 
     /// Renders the `class` attribute by processing the specified value.
-    ///
+    /// 
     /// This method is designed to work with Java text blocks. It first removes
     /// any leading and trailing whitespace. Additionally, any sequence of
     /// consecutive whitespace characters is replaced by a single space
     /// character.
-    ///
+    /// 
     /// For example, the following invocation:
-    ///
+    /// 
     /// ```java
     /// css("""
     ///     display:inline-flex
     ///     justify-content:center
-    ///
+    /// 
     ///     background-color:blue-500
     ///     """);
     /// ```
-    ///
+    /// 
     /// Produces the same result as invoking
     /// `className("display:inline-flex justify-content:center background-color:blue-500")`.
-    ///
+    /// 
     /// @param value the text block containing class names, possibly spread across multiple lines
     /// @return an instruction representing this attribute.
     protected final Html.Instruction.OfAttribute css(String value) {
@@ -3127,13 +3126,13 @@ public final class Html {
     }
 
     /// Renders the specified fragment as part of this document.
-    ///
+    /// 
     /// The following Objectos HTML component:
-    ///
+    /// 
     /// {@snippet file = "objectos/way/HtmlMarkupJavadoc.java" region = "f0"}
-    ///
+    /// 
     /// Generates the following HTML:
-    ///
+    /// 
     /// ```html
     /// <ul>
     /// <li>Mon</li>
@@ -3141,7 +3140,7 @@ public final class Html {
     /// <li>Fri</li>
     /// </ul>
     /// ```
-    ///
+    /// 
     /// @param fragment the fragment to include
     /// @return an instruction representing the fragment
     protected final Html.Instruction.OfFragment f(Html.Fragment.Of0 fragment) {
@@ -3149,13 +3148,13 @@ public final class Html {
     }
 
     /// Renders the specified fragment as part of this document.
-    ///
+    /// 
     /// The following Objectos HTML component:
-    ///
+    /// 
     /// {@snippet file = "objectos/way/HtmlMarkupJavadoc.java" region = "f1"}
-    ///
+    /// 
     /// Generates the following HTML:
-    ///
+    /// 
     /// ```html
     /// <ul>
     /// <li>Mon</li>
@@ -3163,7 +3162,7 @@ public final class Html {
     /// <li>Fri</li>
     /// </ul>
     /// ```
-    ///
+    /// 
     /// @param <T1> the type of the first argument
     /// @param fragment the fragment to include
     /// @param arg1 the first argument
@@ -3173,17 +3172,17 @@ public final class Html {
     }
 
     /// Renders the specified fragment as part of this document.
-    ///
+    /// 
     /// The following Objectos HTML component:
-    ///
+    /// 
     /// {@snippet file = "objectos/way/HtmlMarkupJavadoc.java" region = "f2"}
-    ///
+    /// 
     /// Generates the following HTML:
-    ///
+    /// 
     /// ```html
     /// <div><button>OK</button><button>Cancel</button></div>
     /// ```
-    ///
+    /// 
     /// @param <T1> the type of the first argument
     /// @param <T2> the type of the second argument
     /// @param fragment the fragment to include
@@ -3195,20 +3194,20 @@ public final class Html {
     }
 
     /// Renders the specified fragment as part of this document.
-    ///
+    /// 
     /// The following Objectos HTML component:
-    ///
+    /// 
     /// {@snippet file = "objectos/way/HtmlMarkupJavadoc.java" region = "f3"}
-    ///
+    /// 
     /// Generates the following HTML:
-    ///
+    /// 
     /// ```html
     /// <div>
     /// <p>City<span>Tokyo</span></p>
     /// <p>Country<span>Japan</span></p>
     /// </div>
     /// ```
-    ///
+    /// 
     /// @param <T1> the type of the first argument
     /// @param <T2> the type of the second argument
     /// @param <T3> the type of the third argument
@@ -3222,7 +3221,7 @@ public final class Html {
     }
 
     /// Renders the specified fragment as part of this document.
-    ///
+    /// 
     /// @param <T1> the type of the first argument
     /// @param <T2> the type of the second argument
     /// @param <T3> the type of the third argument

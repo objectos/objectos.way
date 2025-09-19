@@ -209,34 +209,34 @@ sealed abstract class HtmlMarkupOfHtml extends HtmlMarkup permits Html.Markup.Of
   }
 
   @Override
-  public final Html.Instruction.OfDataOn dataOnClick(Consumer<Script> script) {
+  public final Html.Instruction.OfDataOn dataOnClick(Consumer<? super Script> script) {
     Objects.requireNonNull(script, "script == null");
 
     return dataOn0(HtmlAttributeName.DATA_ON_CLICK, script);
   }
 
   @Override
-  public final Html.Instruction.OfDataOn dataOnInput(Consumer<Script> script) {
+  public final Html.Instruction.OfDataOn dataOnInput(Consumer<? super Script> script) {
     Objects.requireNonNull(script, "script == null");
 
     return dataOn0(HtmlAttributeName.DATA_ON_INPUT, script);
   }
 
   @Override
-  public final Html.Instruction.OfDataOn dataOnLoad(Consumer<Script> script) {
+  public final Html.Instruction.OfDataOn dataOnLoad(Consumer<? super Script> script) {
     Objects.requireNonNull(script, "script == null");
 
     return dataOn0(HtmlAttributeName.DATA_ON_LOAD, script);
   }
 
   @Override
-  public final Html.Instruction.OfDataOn dataOnSuccess(Consumer<Script> script) {
+  public final Html.Instruction.OfDataOn dataOnSuccess(Consumer<? super Script> script) {
     Objects.requireNonNull(script, "script == null");
 
     return dataOn0(HtmlAttributeName.DATA_ON_SUCCESS, script);
   }
 
-  private Html.Instruction.OfDataOn dataOn0(Html.AttributeName name, Consumer<Script> script) {
+  private Html.Instruction.OfDataOn dataOn0(Html.AttributeName name, Consumer<? super Script> script) {
     final ScriptAction action;
     action = ScriptAction.create(script);
 

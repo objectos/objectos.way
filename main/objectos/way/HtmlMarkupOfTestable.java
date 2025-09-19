@@ -154,22 +154,22 @@ sealed abstract class HtmlMarkupOfTestable extends HtmlMarkup permits Html.Marku
   }
 
   @Override
-  public final Html.Instruction.OfDataOn dataOnClick(Consumer<Script> script) {
+  public final Html.Instruction.OfDataOn dataOnClick(Consumer<? super Script> script) {
     return Html.ATTRIBUTE;
   }
 
   @Override
-  public final Html.Instruction.OfDataOn dataOnInput(Consumer<Script> script) {
+  public final Html.Instruction.OfDataOn dataOnInput(Consumer<? super Script> script) {
     return Html.ATTRIBUTE;
   }
 
   @Override
-  public final Html.Instruction.OfDataOn dataOnLoad(Consumer<Script> script) {
+  public final Html.Instruction.OfDataOn dataOnLoad(Consumer<? super Script> script) {
     return Html.ATTRIBUTE;
   }
 
   @Override
-  public final Html.Instruction.OfDataOn dataOnSuccess(Consumer<Script> script) {
+  public final Html.Instruction.OfDataOn dataOnSuccess(Consumer<? super Script> script) {
     return Html.ATTRIBUTE;
   }
 
