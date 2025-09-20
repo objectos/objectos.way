@@ -28,6 +28,56 @@ import java.util.function.Consumer;
 /// The **Objectos CSS** main class.
 public final class Css {
 
+  /// A convenience [`Module`][Css.Module] base implementation.
+  public static abstract class AbstractModule implements Module {
+
+    /// Sole constructor.
+    protected AbstractModule() {}
+
+    /// {@inheritDoc}
+    @Override
+    public final void configure(Engine engine) {
+
+    }
+
+    /// Configures the generation of a [style sheet][Css.StyleSheet].
+    protected abstract void configure();
+
+  }
+
+  /// A handle for configuring the generation of a [style sheet][Css.StyleSheet].
+  public sealed interface Engine permits CssEngineConfig {
+
+    /// Uses the specified note sink during generation.
+    /// @param value the note sink to use
+    void noteSink(Note.Sink value);
+
+    /// Scans the class file of the specified class (if found) during the CSS generation process.
+    /// @param value the class whose Java class file will be scanned
+    void scanClass(Class<?> value);
+
+    /// Scans the specified directory recursively for [`Source`][Css.Source]
+    /// annotated Java class files during the CSS generation process.
+    /// @param value the directory to be scanned
+    void scanDirectory(Path value);
+
+    /// Scans the JAR file of the specified class (if found) for [`Source`][Css.Source]
+    /// annotated Java class files during the CSS generation process.
+    /// @param value the class whose JAR file will be scanned
+    void scanJarFileOf(Class<?> value);
+
+  }
+
+  /// Encapsulates the configuration of a [style sheet][Css.StyleSheet].
+  @FunctionalInterface
+  public interface Module {
+
+    /// Contributes to the configuration of the specified engine.
+    /// @param engine the engine to configure
+    void configure(Engine engine);
+
+  }
+
   /// A style sheet whose content is generated on demand by scanning Java class
   /// files for CSS utilities.
   public sealed interface StyleSheet extends Media.Text permits CssEngine {
