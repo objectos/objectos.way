@@ -123,6 +123,8 @@ final class CssEngine implements Css.StyleSheet, Consumer<String>, FileVisitor<P
 
   private int entryIndex;
 
+  private final Iterable<? extends CssKeyframes> keyframes;
+
   private final Map<String, String> keywords;
 
   private long long0;
@@ -163,6 +165,8 @@ final class CssEngine implements Css.StyleSheet, Consumer<String>, FileVisitor<P
     base = builder.base();
 
     classReader = builder.classReader();
+
+    keyframes = builder.keyframes();
 
     keywords = builder.keywords();
 
@@ -877,6 +881,35 @@ final class CssEngine implements Css.StyleSheet, Consumer<String>, FileVisitor<P
 
         writeln('}');
       }
+    }
+
+    for (CssKeyframes kf : keyframes) {
+      indent(1);
+
+      write("@keyframes ");
+      write(kf.name);
+      writeln(" {");
+
+      for (CssKeyframes.Frame frame : kf.frames) {
+        indent(2);
+
+        write(frame.selector());
+        writeln(" {");
+
+        for (String line : frame.declarations()) {
+          indent(3);
+
+          writeln(line);
+        }
+
+        indent(2);
+
+        writeln('}');
+      }
+
+      indent(1);
+
+      writeln('}');
     }
 
     writeln('}');

@@ -25,25 +25,33 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Consumer;
 
-/**
- * The <strong>Objectos CSS</strong> main class.
- */
+/// The **Objectos CSS** main class.
 public final class Css {
 
-  //
-  // public API
-  //
-
-  /**
-   * A style sheet whose content is generated on demand by scanning Java class
-   * files for CSS utilities.
-   */
+  /// A style sheet whose content is generated on demand by scanning Java class
+  /// files for CSS utilities.
   public sealed interface StyleSheet extends Media.Text permits CssEngine {
 
-    /**
-     * Options for creating a {@code StyleSheet} instance.
-     */
+    /// Configures the creation of a theme `@keyframes` at-rule.
+    sealed interface Keyframes permits CssKeyframes {
+
+      /// Sets the name of this `@keyframes`.
+      /// @param value the name of this `@keyframes`
+      void name(String value);
+
+      /// Adds a single keyframe declaration to this `@keyframes` at-rule.
+      /// @param selector the keyframe selector
+      /// @param value the declarations of this keyframe
+      void frame(String selector, String value);
+
+    }
+
+    /// Configures the creation of a `StyleSheet` instance.
     sealed interface Options permits CssEngineBuilder {
+
+      /// Adds the specified `@keyframes` declaration to the theme layer.
+      /// @param frames allows for declaring the `@keyframes` definition
+      void keyframes(Consumer<? super Keyframes> frames);
 
       /**
        * Use the specified note sink during generation.
@@ -81,8 +89,17 @@ public final class Css {
        */
       void scanJarFileOf(Class<?> value);
 
+      /// Adds the specified CSS rule to the theme layer.
+      ///
+      /// @param selector the CSS rule selector
+      /// @param value the CSS rule declarations
       void theme(String selector, String value);
 
+      /// Adds the specified CSS media query rule to the theme layer.
+      ///
+      /// @param query the CSS media query
+      /// @param selector the CSS rule selector
+      /// @param value the CSS rule declarations
       void theme(String query, String selector, String value);
 
     }
@@ -143,10 +160,8 @@ public final class Css {
 
   }
 
-  /**
-   * Indicates that the annotated type should be scanned for CSS utilities
-   * during a CSS generation process.
-   */
+  /// Indicates that the annotated type should be scanned for CSS utilities
+  /// during a CSS generation process.
   @Retention(RetentionPolicy.CLASS)
   @Target(ElementType.TYPE)
   public @interface Source {}
@@ -154,8 +169,6 @@ public final class Css {
   //
   // non-public types
   //
-
-  
 
   //
   // L

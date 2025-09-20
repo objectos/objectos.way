@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import objectos.way.Css.Layer;
 import objectos.way.Css.ThemeQueryEntry;
@@ -49,6 +50,8 @@ final class CssEngineBuilder implements Css.StyleSheet.Options {
   private String base = Css.defaultBase();
 
   private int entryIndex;
+
+  private List<CssKeyframes> keyframes = List.of();
 
   private final UtilMap<String, String> keywords = new UtilMap<>();
 
@@ -90,6 +93,20 @@ final class CssEngineBuilder implements Css.StyleSheet.Options {
 
   public final void base(String value) {
     base = Objects.requireNonNull(value, "value == null");
+  }
+
+  @Override
+  public final void keyframes(Consumer<? super Css.StyleSheet.Keyframes> frames) {
+    final CssKeyframes pojo;
+    pojo = new CssKeyframes();
+
+    frames.accept(pojo);
+
+    if (keyframes.isEmpty()) {
+      keyframes = new UtilList<>();
+    }
+
+    keyframes.add(pojo);
   }
 
   @Override
@@ -741,6 +758,10 @@ final class CssEngineBuilder implements Css.StyleSheet.Options {
 
   final Lang.ClassReader classReader() {
     return Lang.createClassReader(noteSink);
+  }
+
+  final Iterable<? extends CssKeyframes> keyframes() {
+    return keyframes;
   }
 
   final Map<String, String> keywords() {
