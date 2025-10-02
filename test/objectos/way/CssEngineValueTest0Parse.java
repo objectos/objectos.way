@@ -15,21 +15,31 @@
  */
 package objectos.way;
 
-import java.nio.file.Path;
-import objectos.way.Note.Sink;
+import static org.testng.Assert.assertEquals;
 
-final class CssEngineConfig implements Css.Engine {
+import java.util.List;
+import org.testng.annotations.Test;
 
-  @Override
-  public void noteSink(Sink value) {}
+public class CssEngineValueTest0Parse {
 
-  @Override
-  public void scanClass(Class<?> value) {}
+  @Test(description = "colors :: just one")
+  public void colors01() {
+    test(
+        """
+        --color-stone-950: oklch(0.147 0.004 49.25);
+        """,
 
-  @Override
-  public void scanDirectory(Path value) {}
+        List.of(
+            CssEngineValue.themeVar("color", "stone-950", "oklch(0.147 0.004 49.25)")
+        )
+    );
+  }
 
-  @Override
-  public void scanJarFileOf(Class<?> value) {}
+  private void test(String value, List<CssEngineValue> expected) {
+    final List<CssEngineValue> result;
+    result = CssEngineValue.parse(value);
+
+    assertEquals(result, expected);
+  }
 
 }

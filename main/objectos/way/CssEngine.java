@@ -45,8 +45,9 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import objectos.way.Css.ThemeQueryEntry;
 import objectos.way.Lang.InvalidClassFileException;
+import objectos.way.Note.Sink;
 
-final class CssEngine implements Css.StyleSheet, Consumer<String>, FileVisitor<Path> {
+final class CssEngine implements Css.Engine, Css.StyleSheet, Consumer<String>, FileVisitor<Path> {
 
   record Notes(
       Note.Ref1<String> classNotFound,
@@ -248,6 +249,44 @@ final class CssEngine implements Css.StyleSheet, Consumer<String>, FileVisitor<P
 
     css = null;
   }
+
+  // ##################################################################
+  // # BEGIN: Css.Engine API
+  // ##################################################################
+
+  @Override
+  public final void noteSink(Sink value) {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  @Override
+  public final void scanClass(Class<?> value) {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  @Override
+  public final void scanDirectory(Path value) {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  @Override
+  public final void scanJarFileOf(Class<?> value) {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  @Override
+  public final void theme(String selector, String value) {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  @Override
+  public final void theme(String query, String selector, String value) {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  // ##################################################################
+  // # END: Css.Engine API
+  // ##################################################################
 
   // ##################################################################
   // # BEGIN: State Machine

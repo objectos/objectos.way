@@ -192,6 +192,19 @@ public class CssEngineTest01ParseTheme {
     }
   }
 
+  @Test
+  public void theme01() {
+    test(
+        x -> x.theme(":root", """
+        --color-layer: var(--color-layer-01, #f4f4f4);
+        """),
+
+        """
+
+        """
+    );
+  }
+
   private List<Css.ThemeEntry> test(String theme) {
     final CssEngineBuilder builder;
     builder = new CssEngineBuilder(true);
@@ -201,6 +214,10 @@ public class CssEngineTest01ParseTheme {
     builder.theme(":root", theme);
 
     return builder.testThemeEntries();
+  }
+
+  private void test(Css.Module module, String expected) {
+
   }
 
 }
