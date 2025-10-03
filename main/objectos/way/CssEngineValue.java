@@ -34,6 +34,17 @@ final class CssEngineValue {
     this.value = value;
   }
 
+  @Override
+  public final boolean equals(Object obj) {
+    return obj == this || obj instanceof CssEngineValue that
+        && Objects.equals(value, that.value);
+  }
+
+  @Override
+  public final String toString() {
+    return "CssEngineValue[value=" + value + "]";
+  }
+
   // ##################################################################
   // # BEGIN: Value
   // ##################################################################
@@ -285,11 +296,5 @@ final class CssEngineValue {
   // ##################################################################
   // # END: Parse
   // ##################################################################
-
-  @Override
-  public final boolean equals(Object obj) {
-    return obj == this || obj instanceof CssEngineValue that
-        && Objects.equals(value, that.value);
-  }
 
 }

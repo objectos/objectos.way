@@ -35,6 +35,53 @@ public class CssEngineValueTest0Parse {
     );
   }
 
+  @Test(description = "colors :: two lines")
+  public void colors02() {
+    test(
+        """
+        --color-stone-950: oklch(0.147 0.004 49.25);
+        --color-red-50: oklch(0.971 0.013 17.38);
+        """,
+
+        List.of(
+            CssEngineValue.themeVar("color", "stone-950", "oklch(0.147 0.004 49.25)"),
+            CssEngineValue.themeVar("color", "red-50", "oklch(0.971 0.013 17.38)")
+        )
+    );
+  }
+
+  @Test(description = "ws :: blank line between lines")
+  public void ws01() {
+    test(
+        """
+        --color-orange-900: oklch(0.408 0.123 38.172);
+        --color-orange-950: oklch(0.266 0.079 36.259);
+
+        --color-amber-50: oklch(0.987 0.022 95.277);
+        """,
+
+        List.of(
+            CssEngineValue.themeVar("color", "orange-900", "oklch(0.408 0.123 38.172)"),
+            CssEngineValue.themeVar("color", "orange-950", "oklch(0.266 0.079 36.259)"),
+            CssEngineValue.themeVar("color", "amber-50", "oklch(0.987 0.022 95.277)")
+        )
+    );
+  }
+
+  @Test(description = "ws :: it should trim the value")
+  public void ws02() {
+    test(
+        """
+        --color-orange-900:
+           oklch(0.408 0.123        38.172)     ;
+        """,
+
+        List.of(
+            CssEngineValue.themeVar("color", "orange-900", "oklch(0.408 0.123 38.172)")
+        )
+    );
+  }
+
   private void test(String value, List<CssEngineValue> expected) {
     final List<CssEngineValue> result;
     result = CssEngineValue.parse(value);
