@@ -50,6 +50,19 @@ public class CssEngineValueTest0Parse {
     );
   }
 
+  @Test(enabled = false, description = "colors :: clear")
+  public void colors03() {
+    test(
+        """
+        --color-*: initial;
+        """,
+
+        List.of(
+          // TODO which value?
+        )
+    );
+  }
+
   @Test(description = "ws :: blank line between lines")
   public void ws01() {
     test(
@@ -68,8 +81,34 @@ public class CssEngineValueTest0Parse {
     );
   }
 
-  @Test(description = "ws :: it should trim the value")
+  @Test(description = "ws :: it should trim the name")
   public void ws02() {
+    test(
+        """
+        \t\f\r\n --color-orange-900: oklch(0.408 0.123 38.172);
+        """,
+
+        List.of(
+            CssEngineValue.themeVar("color", "orange-900", "oklch(0.408 0.123 38.172)")
+        )
+    );
+  }
+
+  @Test(description = "ws :: it should trim the name")
+  public void ws03() {
+    test(
+        """
+        --color-orange-900\t\f\r\n : oklch(0.408 0.123 38.172);
+        """,
+
+        List.of(
+            CssEngineValue.themeVar("color", "orange-900", "oklch(0.408 0.123 38.172)")
+        )
+    );
+  }
+
+  @Test(description = "ws :: it should trim the value")
+  public void ws04() {
     test(
         """
         --color-orange-900:

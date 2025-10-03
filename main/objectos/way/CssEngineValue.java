@@ -67,6 +67,49 @@ final class CssEngineValue {
   // # BEGIN: Parse
   // ##################################################################
 
+  private static final byte[] CSS;
+
+  private static final byte CSS_WS = 1;
+  private static final byte CSS_HYPHEN = 2;
+  private static final byte CSS_COLON = 3;
+  private static final byte CSS_SEMICOLON = 4;
+  private static final byte CSS_REV_SOLIDUS = 5;
+  private static final byte CSS_IDENT_START = 6;
+  private static final byte CSS_IDENT = 7;
+  private static final byte CSS_NON_ASCII = 8;
+
+  static {
+    final byte[] table;
+    table = new byte[128];
+
+    // start with invalid
+
+    // https://www.w3.org/TR/2021/CRD-css-syntax-3-20211224/#whitespace
+    table['\n'] = CSS_WS;
+    table['\t'] = CSS_WS;
+    table[' '] = CSS_WS;
+
+    // https://www.w3.org/TR/2021/CRD-css-syntax-3-20211224/#input-preprocessing
+    table['\f'] = CSS_WS;
+    table['\r'] = CSS_WS;
+
+    // symbols
+    table['-'] = CSS_HYPHEN;
+    table[':'] = CSS_COLON;
+    table[';'] = CSS_SEMICOLON;
+    table['\\'] = CSS_REV_SOLIDUS;
+
+    // ident start
+    Ascii.fill(table, Ascii.alphaLower(), CSS_IDENT_START);
+    Ascii.fill(table, Ascii.alphaUpper(), CSS_IDENT_START);
+    table['_'] = CSS_IDENT_START;
+
+    // ident
+    Ascii.fill(table, Ascii.digit(), CSS_IDENT);
+
+    CSS = table;
+  }
+
   private static final class Parser {
 
     int cursor, idx, mark0, mark1;
@@ -85,59 +128,47 @@ final class CssEngineValue {
 
     final List<CssEngineValue> parse() {
       while (hasNext()) {
-        final char c;
-        c = next();
-
-        if (Ascii.isWhitespace(c)) {
-          // trim leading ws
-          continue;
-        }
-
-        reset();
-
-        parseNormal(c);
+        parseDeclaration(next());
       }
 
       return values;
     }
 
-    private void reset() {
-      mark0 = mark1 = 0;
+    private void parseDeclaration(char c) {
+      switch (test(c)) {
+        case CSS_WS -> {}
 
-      id = ns = varName = null;
-    }
+        case CSS_HYPHEN -> {
+          mark0 = idx; // mark0 = hyphen
 
-    private void parseNormal(char c) {
-      if (c == '-') {
-        mark0 = idx; // mark0 = hyphen
+          parseHyphen1(next());
+        }
 
-        parseHyphen1(next());
-      }
-
-      else {
-        throw error("Expected start of --variable declaration");
+        default -> throw error("Expected start of --variable declaration");
       }
     }
 
     private void parseHyphen1(char c) {
-      if (c == '-') {
-        parseHyphen2(next());
-      }
+      switch (test(c)) {
+        case CSS_HYPHEN -> parseHyphen2(next());
 
-      else {
-        throw error("Expected start of --variable declaration");
+        default -> throw error("Expected start of --variable declaration");
       }
     }
 
     private void parseHyphen2(char c) {
-      if (Ascii.isLetter(c)) {
-        mark1 = idx; // mark1 = var first letter
+      switch (test(c)) {
+        case CSS_IDENT_START -> {
+          mark1 = idx; // mark1 = var first letter
 
-        parseVarName();
-      }
+          parseVarName();
+        }
 
-      else {
-        throw error("--variable name must start with a letter");
+        case CSS_REV_SOLIDUS -> throw error("Escape sequences are currently not supported");
+
+        case CSS_NON_ASCII -> throw error("Non ASCII characters are currently not supported");
+
+        default -> throw error("--variable name must start with a letter");
       }
     }
 
@@ -146,34 +177,38 @@ final class CssEngineValue {
         final char c;
         c = next();
 
-        if (Ascii.isLetterOrDigit(c)) {
-          continue;
-        }
-
-        else if (c == '-') {
-          if (ns == null) {
-            ns = text.substring(mark1, idx);
+        switch (test(c)) {
+          case CSS_IDENT_START, CSS_IDENT -> {
+            continue;
           }
 
-          continue;
-        }
+          case CSS_HYPHEN -> {
+            if (ns == null) {
+              ns = text.substring(mark1, idx);
+            }
 
-        else if (Ascii.isWhitespace(c)) {
-          parseVarName0();
+            continue;
+          }
 
-          throw new UnsupportedOperationException("Implement me");
-        }
+          case CSS_WS -> {
+            parseVarName0();
 
-        else if (c == ':') {
-          parseVarName0();
+            parseColon();
 
-          parseValue();
+            parseValue();
 
-          return;
-        }
+            return;
+          }
 
-        else {
-          throw error("CSS variable name with invalid character=" + c);
+          case CSS_COLON -> {
+            parseVarName0();
+
+            parseValue();
+
+            return;
+          }
+
+          default -> throw error("CSS variable name with invalid character=" + c);
         }
       }
 
@@ -195,28 +230,50 @@ final class CssEngineValue {
       }
     }
 
+    private void parseColon() {
+      while (hasNext()) {
+        final char c;
+        c = next();
+
+        switch (test(c)) {
+          case CSS_WS -> {
+            continue;
+          }
+
+          case CSS_COLON -> {
+            return;
+          }
+
+          default -> {
+            break;
+          }
+        }
+      }
+
+      throw error("Declaration with no ':' colon character");
+    }
+
     private void parseValue() {
       while (hasNext()) {
         final char c;
         c = next();
 
-        if (Ascii.isWhitespace(c)) {
-          // trim leading ws
-          continue;
-        }
+        switch (test(c)) {
+          case CSS_WS -> {
+            continue;
+          }
 
-        else if (c == ';') {
-          throw error("Declaration with an empty value");
-        }
+          case CSS_SEMICOLON -> throw error("Declaration with an empty value");
 
-        else {
-          sb.setLength(0);
+          default -> {
+            sb.setLength(0);
 
-          sb.append(c);
+            sb.append(c);
 
-          parseValue0();
+            parseValue0();
 
-          return;
+            return;
+          }
         }
       }
 
@@ -231,24 +288,24 @@ final class CssEngineValue {
         final char c;
         c = next();
 
-        if (c == ';') {
-          parseValue1();
+        switch (test(c)) {
+          case CSS_SEMICOLON -> {
+            parseValue1();
 
-          return;
-        }
-
-        else if (Ascii.isWhitespace(c)) {
-          ws = true;
-        }
-
-        else {
-          if (ws) {
-            sb.append(' ');
-
-            ws = false;
+            return;
           }
 
-          sb.append(c);
+          case CSS_WS -> ws = true;
+
+          default -> {
+            if (ws) {
+              sb.append(' ');
+
+              ws = false;
+            }
+
+            sb.append(c);
+          }
         }
       }
 
@@ -267,7 +324,7 @@ final class CssEngineValue {
         throw new UnsupportedOperationException("Implement me");
       }
 
-      values.add(result);
+      result(result);
     }
 
     private IllegalArgumentException error(String message) {
@@ -282,6 +339,18 @@ final class CssEngineValue {
       idx = cursor++;
 
       return text.charAt(idx);
+    }
+
+    private byte test(char c) {
+      return c < 128 ? CSS[c] : CSS_NON_ASCII;
+    }
+
+    private void result(CssEngineValue result) {
+      values.add(result);
+
+      mark0 = mark1 = 0;
+
+      id = ns = varName = null;
     }
 
   }

@@ -22,6 +22,11 @@ import org.testng.annotations.Test;
 public class AsciiTest {
 
   @Test
+  public void isWhitespace() {
+
+  }
+
+  @Test
   public void visible() {
     final byte[] table;
     table = new byte[128];
