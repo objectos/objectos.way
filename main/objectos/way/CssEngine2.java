@@ -17,6 +17,7 @@ package objectos.way;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -77,6 +78,8 @@ final class CssEngine2 implements Css.Engine {
       breakpointVariants();
 
       return new Config(
+          keywords(),
+
           noteSink,
 
           Set.copyOf(scanClasses),
@@ -105,7 +108,7 @@ final class CssEngine2 implements Css.Engine {
 
           case CssEngineValue.ThemeVar var -> {
             final String ns;
-            ns = var.ns();
+            ns = var.ns;
 
             final List<CssEngineValue> values;
             values = systemNamespaces.computeIfAbsent(ns, key -> new ArrayList<>());
@@ -157,7 +160,7 @@ final class CssEngine2 implements Css.Engine {
 
           case CssEngineValue.ThemeVar var -> {
             final String ns;
-            ns = var.ns();
+            ns = var.ns;
 
             final List<CssEngineValue> values;
             values = userNamespaces.computeIfAbsent(ns, key -> new ArrayList<>());
@@ -190,17 +193,17 @@ final class CssEngine2 implements Css.Engine {
         var = (CssEngineValue.ThemeVar) breakpoint;
 
         final String id;
-        id = var.id();
+        id = var.id;
 
-        CssVariant variant;
-        variant = CssVariant.atRule("@media (min-width: " + var.value() + ")");
+        final CssVariant variant;
+        variant = CssVariant.atRule("@media (min-width: " + var.value + ")");
 
         variant(id, variant);
       }
     }
 
     private void variant(String name, CssVariant variant) {
-      CssVariant maybeExisting;
+      final CssVariant maybeExisting;
       maybeExisting = variants.put(name, variant);
 
       if (maybeExisting == null) {
@@ -208,6 +211,44 @@ final class CssEngine2 implements Css.Engine {
       }
 
       // TODO restore existing and log?
+    }
+
+    private Map<String, CssEngineValue.ThemeVar> keywords() {
+      final Map<String, CssEngineValue.ThemeVar> keywords;
+      keywords = new HashMap<>();
+
+      keywords0(keywords, systemNamespaces.values());
+
+      keywords0(keywords, userNamespaces.values());
+
+      return Map.copyOf(keywords);
+    }
+
+    private void keywords0(Map<String, CssEngineValue.ThemeVar> keywords, Collection<List<CssEngineValue>> values) {
+      for (List<CssEngineValue> list : values) {
+        for (CssEngineValue value : list) {
+          final CssEngineValue.ThemeVar var;
+          var = (CssEngineValue.ThemeVar) value;
+
+          final String ns;
+          ns = var.ns;
+
+          final String id;
+
+          if ("breakpoint".equals(ns)) {
+            id = "screen-" + var.id;
+          } else {
+            id = var.id;
+          }
+
+          final CssEngineValue.ThemeVar maybeExisting;
+          maybeExisting = keywords.put(id, var);
+
+          if (maybeExisting != null) {
+            throw new IllegalArgumentException("Duplicate mapping for " + id + ": " + maybeExisting.value + ", " + var.value);
+          }
+        }
+      }
     }
 
   }
@@ -301,6 +342,8 @@ final class CssEngine2 implements Css.Engine {
   // ##################################################################
 
   record Config(
+
+      Map<String, CssEngineValue.ThemeVar> keywords,
 
       Note.Sink noteSink,
 

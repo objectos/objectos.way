@@ -17,7 +17,6 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
-import java.util.Map;
 import java.util.function.Consumer;
 import objectos.way.CssEngine2.Config;
 import org.testng.annotations.Test;
@@ -26,6 +25,7 @@ public class CssEngine2Test01Config {
 
   @Test(description = """
   breakpoint
+  - it should create a keyword
   - it should create a variant
   """)
   public void breakpoint01() {
@@ -35,10 +35,8 @@ public class CssEngine2Test01Config {
         """,
 
         c -> {
-          final Map<String, CssVariant> variants;
-          variants = c.variants();
-
-          assertEquals(variants.get("sm"), CssVariant.atRule("@media (min-width: 40rem)"));
+          assertEquals(c.keywords().get("screen-sm"), CssEngineValue.themeVar("breakpoint", "sm", "40rem"));
+          assertEquals(c.variants().get("sm"), CssVariant.atRule("@media (min-width: 40rem)"));
         }
     );
   }

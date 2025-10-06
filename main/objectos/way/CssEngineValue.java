@@ -17,6 +17,7 @@ package objectos.way;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 sealed interface CssEngineValue {
 
@@ -32,7 +33,30 @@ sealed interface CssEngineValue {
     return new ThemeSkip(ns);
   }
 
-  record ThemeVar(String ns, String id, String value) implements CssEngineValue {}
+  static final class ThemeVar implements CssEngineValue {
+    final String ns;
+    final String id;
+    final String value;
+
+    ThemeVar(String ns, String id, String value) {
+      this.ns = ns;
+      this.id = id;
+      this.value = value;
+    }
+
+    @Override
+    public final boolean equals(Object obj) {
+      return obj == this || obj instanceof ThemeVar that
+          && Objects.equals(ns, that.ns)
+          && Objects.equals(id, that.id)
+          && Objects.equals(value, that.value);
+    }
+
+    @Override
+    public final int hashCode() {
+      return Objects.hash(ns, id, value);
+    }
+  }
 
   static CssEngineValue themeVar(String ns, String id, String value) {
     return new ThemeVar(ns, id, value);
