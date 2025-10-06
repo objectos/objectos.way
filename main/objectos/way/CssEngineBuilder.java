@@ -772,16 +772,16 @@ final class CssEngineBuilder implements Css.StyleSheet.Options {
     return noteSink;
   }
 
-  final Iterable<? extends Class<?>> scanClasses() {
-    return UtilUnmodifiableList.copyOf(scanClasses);
+  final Set<Class<?>> scanClasses() {
+    return scanClasses;
   }
 
-  final Iterable<? extends Path> scanDirectories() {
-    return UtilUnmodifiableList.copyOf(scanDirectories);
+  final Set<Path> scanDirectories() {
+    return scanDirectories;
   }
 
-  final Iterable<? extends Class<?>> scanJars() {
-    return UtilUnmodifiableList.copyOf(scanJars);
+  final Set<Class<?>> scanJars() {
+    return scanJars;
   }
 
   final Set<? extends Layer> skipLayers() {

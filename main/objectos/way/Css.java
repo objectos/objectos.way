@@ -46,7 +46,7 @@ public final class Css {
   }
 
   /// A handle for configuring the generation of a [style sheet][Css.StyleSheet].
-  public sealed interface Engine permits CssEngine {
+  public sealed interface Engine permits CssEngine2 {
 
     /// Uses the specified note sink during generation.
     /// @param value the note sink to use
@@ -70,18 +70,10 @@ public final class Css {
     // THEME
     //
 
-    /// Adds the specified CSS rule to the theme layer.
+    /// Adds the specified CSS declarations to the theme layer.
     ///
-    /// @param selector the CSS rule selector
     /// @param value the CSS rule declarations
-    void theme(String selector, String value);
-
-    /// Adds the specified CSS media query rule to the theme layer.
-    ///
-    /// @param query the CSS media query
-    /// @param selector the CSS rule selector
-    /// @param value the CSS rule declarations
-    void theme(String query, String selector, String value);
+    void theme(String value);
 
   }
 

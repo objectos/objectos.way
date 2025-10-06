@@ -18,9 +18,23 @@ package objectos.way;
 import static org.testng.Assert.assertEquals;
 
 import java.util.List;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class CssEngineValueTest0Parse {
+public class CssEngineValueParserTest {
+
+  @Test(description = "breakpoint :: just one")
+  public void breakpoint01() {
+    test(
+        """
+        --breakpoint-sm: 40rem;
+        """,
+
+        List.of(
+            CssEngineValue.themeVar("breakpoint", "sm", "40rem")
+        )
+    );
+  }
 
   @Test(description = "colors :: just one")
   public void colors01() {
@@ -59,6 +73,90 @@ public class CssEngineValueTest0Parse {
 
         List.of(
           // TODO which value?
+        )
+    );
+  }
+
+  @Test(description = "custom :: allow for values without a namespace")
+  public void custom01() {
+    test(
+        """
+        --carbon-grid-columns: 4;
+        """,
+
+        List.of(
+            CssEngineValue.customProp("--carbon-grid-columns", "4")
+        )
+    );
+  }
+
+  @Test(description = "EOF at declaration value")
+  public void errors01() {
+    testIAE(
+        """
+        --color-orange-900: oklch(0.408 0.123 38.172);
+        --color-orange-950:
+        """,
+
+        "Unexpected EOF while parsing a declaration value"
+    );
+  }
+
+  @Test(description = "EOF at declaration value")
+  public void errors02() {
+    testIAE(
+        """
+        --color-orange-900: oklch(0.408 0.123 38.172);
+        --color-orange-950: okl""",
+
+        "Unexpected EOF while parsing a declaration value"
+    );
+  }
+
+  @Test(description = "EOF at declaration name")
+  public void errors03() {
+    testIAE(
+        """
+        --color-orange-900: oklch(0.408 0.123 38.172);
+        --color-orange""",
+
+        "Unexpected EOF while parsing a custom property name"
+    );
+  }
+
+  @Test(description = "EOF before colon")
+  public void errors04() {
+    testIAE(
+        """
+        --color-orange-900: oklch(0.408 0.123 38.172);
+        --color-orange-950\040""",
+
+        "Declaration with no ':' colon character"
+    );
+  }
+
+  @Test(description = "font :: just one")
+  public void font01() {
+    test(
+        """
+        --font-display: Foo, "Foo bar";
+        """,
+
+        List.of(
+            CssEngineValue.themeVar("font", "display", "Foo, \"Foo bar\"")
+        )
+    );
+  }
+
+  @Test
+  public void skip01() {
+    test(
+        """
+        --*: initial;
+        """,
+
+        List.of(
+            CssEngineValue.themeSkip("*")
         )
     );
   }
@@ -126,6 +224,16 @@ public class CssEngineValueTest0Parse {
     result = CssEngineValue.parse(value);
 
     assertEquals(result, expected);
+  }
+
+  private void testIAE(String value, String expectedMsg) {
+    try {
+      CssEngineValue.parse(value);
+
+      Assert.fail("it should have thrown");
+    } catch (IllegalArgumentException expected) {
+      assertEquals(expected.getMessage(), expectedMsg);
+    }
   }
 
 }
