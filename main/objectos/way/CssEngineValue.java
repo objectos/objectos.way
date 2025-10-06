@@ -17,64 +17,26 @@ package objectos.way;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-final class CssEngineValue {
+sealed interface CssEngineValue {
 
-  private final Value value;
-
-  private CssEngineValue(Value value) {
-    this.value = value;
-  }
-
-  @Override
-  public final boolean equals(Object obj) {
-    return obj == this || obj instanceof CssEngineValue that
-        && Objects.equals(value, that.value);
-  }
-
-  @Override
-  public final String toString() {
-    return "CssEngineValue[value=" + value + "]";
-  }
-
-  // ##################################################################
-  // # BEGIN: Value
-  // ##################################################################
-
-  private sealed interface Value {}
-
-  private record CustomProp(String name, String value) implements Value {}
+  record CustomProp(String name, String value) implements CssEngineValue {}
 
   static CssEngineValue customProp(String name, String value) {
-    return new CssEngineValue(
-        new CustomProp(name, value)
-    );
+    return new CustomProp(name, value);
   }
 
-  private record ThemeSkip(String ns) implements Value {}
+  record ThemeSkip(String ns) implements CssEngineValue {}
 
   static CssEngineValue themeSkip(String ns) {
-    return new CssEngineValue(
-        new ThemeSkip(ns)
-    );
+    return new ThemeSkip(ns);
   }
 
-  private record ThemeVar(String ns, String id, String value) implements Value {}
+  record ThemeVar(String ns, String id, String value) implements CssEngineValue {}
 
   static CssEngineValue themeVar(String ns, String id, String value) {
-    return new CssEngineValue(
-        new ThemeVar(ns, id, value)
-    );
+    return new ThemeVar(ns, id, value);
   }
-
-  // ##################################################################
-  // # END: Value
-  // ##################################################################
-
-  // ##################################################################
-  // # BEGIN: Parse
-  // ##################################################################
 
   public static List<CssEngineValue> parse(String text) {
     final List<CssEngineValue> values;
@@ -91,9 +53,5 @@ final class CssEngineValue {
 
     parser.parse();
   }
-
-  // ##################################################################
-  // # END: Parse
-  // ##################################################################
 
 }

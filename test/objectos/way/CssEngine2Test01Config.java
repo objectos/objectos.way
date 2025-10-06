@@ -15,10 +15,14 @@
  */
 package objectos.way;
 
+import static org.testng.Assert.assertEquals;
+
+import java.util.Map;
 import java.util.function.Consumer;
+import objectos.way.CssEngine2.Config;
 import org.testng.annotations.Test;
 
-public class CssEngine2Test01Theme {
+public class CssEngine2Test01Config {
 
   @Test(description = """
   breakpoint
@@ -30,13 +34,16 @@ public class CssEngine2Test01Theme {
         --breakpoint-sm: 40rem;
         """,
 
-        x -> {
-          //          assertNotNull(x.variant("sm"));
+        c -> {
+          final Map<String, CssVariant> variants;
+          variants = c.variants();
+
+          assertEquals(variants.get("sm"), CssVariant.atRule("@media (min-width: 40rem)"));
         }
     );
   }
 
-  private void test(String theme, Consumer<? super CssEngine2> test) {
+  private void test(String theme, Consumer<? super CssEngine2.Config> test) {
     final CssEngine2 engine;
     engine = new CssEngine2();
 
@@ -44,7 +51,10 @@ public class CssEngine2Test01Theme {
 
     engine.theme(theme);
 
-    test.accept(engine);
+    final Config config;
+    config = engine.configure();
+
+    test.accept(config);
   }
 
 }

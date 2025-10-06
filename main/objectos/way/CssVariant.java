@@ -15,11 +15,9 @@
  */
 package objectos.way;
 
-import java.util.Objects;
+record CssVariant(Kind kind, String value) implements Comparable<CssVariant> {
 
-final class CssVariant implements Comparable<CssVariant> {
-
-  private enum Kind {
+  enum Kind {
 
     AT_RULE,
 
@@ -27,15 +25,6 @@ final class CssVariant implements Comparable<CssVariant> {
 
     SUFFIX;
 
-  }
-
-  private final Kind kind;
-
-  private final String value;
-
-  private CssVariant(Kind kind, String value) {
-    this.kind = kind;
-    this.value = Objects.requireNonNull(value, "value == null");
   }
 
   public static CssVariant atRule(String value) {
@@ -60,25 +49,6 @@ final class CssVariant implements Comparable<CssVariant> {
     }
 
     return value.compareTo(o.value);
-  }
-
-  @Override
-  public final boolean equals(Object obj) {
-    return obj == this || obj instanceof CssVariant that
-        && kind.equals(that.kind)
-        && value.equals(that.value);
-  }
-
-  @Override
-  public final int hashCode() {
-    int result;
-    result = 1;
-
-    result = 31 * result + kind.hashCode();
-
-    result = 31 * result + value.hashCode();
-
-    return result;
   }
 
   public final CssVariant generateGroup() {

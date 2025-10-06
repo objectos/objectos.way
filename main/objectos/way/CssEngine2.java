@@ -38,44 +38,198 @@ final class CssEngine2 implements Css.Engine {
 
   }
 
+  private sealed interface Stage {}
+
   @SuppressWarnings("unused")
   private static final Notes NOTES = Notes.get();
 
-  private static final String ROOT = ":root";
-
-  private Note.Sink noteSink;
-
-  private Set<Class<?>> scanClasses = Set.of();
-
-  private Set<Path> scanDirectories = Set.of();
-
-  private Set<Class<?>> scanJars = Set.of();
-
-  private final Map<Object, List<CssEngineValue>> theme = new HashMap<>();
+  private Stage stage = new Configuring();
 
   // ##################################################################
-  // # BEGIN: Init
+  // # BEGIN: Configuring
   // ##################################################################
 
-  public final void init() {
-    theme(Css.defaultTheme());
+  static final class Configuring implements Stage {
+
+    Note.Sink noteSink = Note.NoOpSink.create();
+
+    Set<Class<?>> scanClasses = Set.of();
+
+    Set<Path> scanDirectories = Set.of();
+
+    Set<Class<?>> scanJars = Set.of();
+
+    final Map<String, List<CssEngineValue>> systemNamespaces = new HashMap<>();
+
+    final Map<String, List<CssEngineValue>> userNamespaces = new HashMap<>();
+
+    List<CssEngineValue> userTheme = List.of();
+
+    final Map<String, CssVariant> variants = new HashMap<>();
+
+    final Config configure() {
+      systemTheme();
+
+      systemVariants();
+
+      userNamespaces();
+
+      breakpointVariants();
+
+      return new Config(
+          noteSink,
+
+          Set.copyOf(scanClasses),
+
+          Set.copyOf(scanDirectories),
+
+          Set.copyOf(scanJars),
+
+          Map.copyOf(variants)
+      );
+    }
+
+    private void systemTheme() {
+      // parse system them
+      final List<CssEngineValue> systemTheme;
+      systemTheme = new ArrayList<>();
+
+      CssEngineValue.parse(Css.defaultTheme(), systemTheme);
+
+      // map to namespace
+      for (CssEngineValue value : systemTheme) {
+        switch (value) {
+          case CssEngineValue.CustomProp prop -> {}
+
+          case CssEngineValue.ThemeSkip skip -> throw new IllegalArgumentException();
+
+          case CssEngineValue.ThemeVar var -> {
+            final String ns;
+            ns = var.ns();
+
+            final List<CssEngineValue> values;
+            values = systemNamespaces.computeIfAbsent(ns, key -> new ArrayList<>());
+
+            values.add(value);
+          }
+        }
+      }
+    }
+
+    private void systemVariants() {
+      variant("dark", CssVariant.atRule("@media (prefers-color-scheme: dark)"));
+
+      variant("active", CssVariant.suffix(":active"));
+      variant("checked", CssVariant.suffix(":checked"));
+      variant("disabled", CssVariant.suffix(":disabled"));
+      variant("first-child", CssVariant.suffix(":first-child"));
+      variant("focus", CssVariant.suffix(":focus"));
+      variant("focus-visible", CssVariant.suffix(":focus-visible"));
+      variant("hover", CssVariant.suffix(":hover"));
+      variant("last-child", CssVariant.suffix(":last-child"));
+      variant("visited", CssVariant.suffix(":visited"));
+
+      variant("after", CssVariant.suffix("::after"));
+      variant("backdrop", CssVariant.suffix("::backdrop"));
+      variant("before", CssVariant.suffix("::before"));
+      variant("first-letter", CssVariant.suffix("::first-letter"));
+      variant("first-line", CssVariant.suffix("::first-line"));
+
+      variant("*", CssVariant.suffix(" > *"));
+      variant("**", CssVariant.suffix(" *"));
+    }
+
+    private void userNamespaces() {
+      for (CssEngineValue value : userTheme) {
+        switch (value) {
+          case CssEngineValue.CustomProp prop -> {}
+
+          case CssEngineValue.ThemeSkip skip -> {
+            final String ns;
+            ns = skip.ns();
+
+            if ("*".equals(ns)) {
+              systemNamespaces.clear();
+            } else {
+              systemNamespaces.remove(ns);
+            }
+          }
+
+          case CssEngineValue.ThemeVar var -> {
+            final String ns;
+            ns = var.ns();
+
+            final List<CssEngineValue> values;
+            values = userNamespaces.computeIfAbsent(ns, key -> new ArrayList<>());
+
+            values.add(value);
+          }
+        }
+      }
+    }
+
+    private void breakpointVariants() {
+      final List<CssEngineValue> breakpoints;
+      breakpoints = new ArrayList<>();
+
+      final String ns;
+      ns = "breakpoint";
+
+      final List<CssEngineValue> systemValues;
+      systemValues = systemNamespaces.getOrDefault(ns, List.of());
+
+      breakpoints.addAll(systemValues);
+
+      final List<CssEngineValue> userValues;
+      userValues = userNamespaces.getOrDefault(ns, List.of());
+
+      breakpoints.addAll(userValues);
+
+      for (CssEngineValue breakpoint : breakpoints) {
+        final CssEngineValue.ThemeVar var;
+        var = (CssEngineValue.ThemeVar) breakpoint;
+
+        final String id;
+        id = var.id();
+
+        CssVariant variant;
+        variant = CssVariant.atRule("@media (min-width: " + var.value() + ")");
+
+        variant(id, variant);
+      }
+    }
+
+    private void variant(String name, CssVariant variant) {
+      CssVariant maybeExisting;
+      maybeExisting = variants.put(name, variant);
+
+      if (maybeExisting == null) {
+        return;
+      }
+
+      // TODO restore existing and log?
+    }
+
   }
 
-  // ##################################################################
-  // # END: Init
-  // ##################################################################
-
-  // ##################################################################
-  // # BEGIN: Css.Engine API
-  // ##################################################################
+  private Configuring configuring() {
+    if (stage instanceof Configuring c) {
+      return c;
+    } else {
+      throw new IllegalStateException("Not in configuring stage");
+    }
+  }
 
   @Override
   public final void noteSink(Note.Sink value) {
-    if (noteSink != null) {
+    final Configuring stage;
+    stage = configuring();
+
+    if (stage.noteSink != null) {
       throw new IllegalStateException("A Note.Sink has already been defined");
     }
 
-    noteSink = Objects.requireNonNull(value, "value == null");
+    stage.noteSink = Objects.requireNonNull(value, "value == null");
   }
 
   @Override
@@ -83,11 +237,14 @@ final class CssEngine2 implements Css.Engine {
     final Class<?> c;
     c = Objects.requireNonNull(value, "value");
 
-    if (scanClasses.isEmpty()) {
-      scanClasses = new HashSet<>();
+    final Configuring stage;
+    stage = configuring();
+
+    if (stage.scanClasses.isEmpty()) {
+      stage.scanClasses = new HashSet<>();
     }
 
-    scanClasses.add(c);
+    stage.scanClasses.add(c);
   }
 
   @Override
@@ -95,11 +252,14 @@ final class CssEngine2 implements Css.Engine {
     final Path p;
     p = Objects.requireNonNull(value, "value == null");
 
-    if (scanDirectories.isEmpty()) {
-      scanDirectories = new HashSet<>();
+    final Configuring stage;
+    stage = configuring();
+
+    if (stage.scanDirectories.isEmpty()) {
+      stage.scanDirectories = new HashSet<>();
     }
 
-    scanDirectories.add(p);
+    stage.scanDirectories.add(p);
   }
 
   @Override
@@ -107,11 +267,14 @@ final class CssEngine2 implements Css.Engine {
     final Class<?> c;
     c = Objects.requireNonNull(value, "value == null");
 
-    if (scanJars.isEmpty()) {
-      scanJars = new HashSet<>();
+    final Configuring stage;
+    stage = configuring();
+
+    if (stage.scanJars.isEmpty()) {
+      stage.scanJars = new HashSet<>();
     }
 
-    scanJars.add(c);
+    stage.scanJars.add(c);
   }
 
   @Override
@@ -119,26 +282,71 @@ final class CssEngine2 implements Css.Engine {
     final String text;
     text = Objects.requireNonNull(value, "value == null");
 
-    final List<CssEngineValue> values;
-    values = theme.computeIfAbsent(ROOT, k -> new ArrayList<>());
+    final Configuring stage;
+    stage = configuring();
 
-    CssEngineValue.parse(text, values);
+    if (stage.userTheme.isEmpty()) {
+      stage.userTheme = new ArrayList<>();
+    }
+
+    CssEngineValue.parse(text, stage.userTheme);
   }
 
   // ##################################################################
-  // # END: Css.Engine API
+  // # END: Configuring
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Configured
+  // ##################################################################
+
+  record Config(
+
+      Note.Sink noteSink,
+
+      Set<Class<?>> scanClasses,
+
+      Set<Path> scanDirectories,
+
+      Set<Class<?>> scanJars,
+
+      Map<String, CssVariant> variants
+
+  ) implements Stage {
+
+  }
+
+  final Config configure() {
+    final Configuring configuring;
+    configuring = configuring();
+
+    final Config config;
+    config = configuring.configure();
+
+    stage = config;
+
+    return config;
+  }
+
+  // ##################################################################
+  // # END: Configured
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Execute
+  // ##################################################################
+
+  public final void init() {
+    theme(Css.defaultTheme());
+  }
+
+  // ##################################################################
+  // # END: Execute
   // ##################################################################
 
   // ##################################################################
   // # BEGIN: Test
   // ##################################################################
-
-  final List<CssEngineValue> themeValues() {
-    final List<CssEngineValue> list;
-    list = theme.get(ROOT);
-
-    return list != null ? list : List.of();
-  }
 
   // ##################################################################
   // # END: Test
