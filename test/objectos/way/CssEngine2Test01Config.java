@@ -15,10 +15,12 @@
  */
 package objectos.way;
 
+import static objectos.way.CssEngine2.Configuring.Flag.SKIP_SYSTEM_THEME;
+import static objectos.way.CssEngine2.Configuring.Flag.SKIP_SYSTEM_VARIANTS;
 import static org.testng.Assert.assertEquals;
 
+import java.util.Map;
 import java.util.function.Consumer;
-import objectos.way.CssEngine2.Config;
 import org.testng.annotations.Test;
 
 public class CssEngine2Test01Config {
@@ -34,23 +36,74 @@ public class CssEngine2Test01Config {
         --breakpoint-sm: 40rem;
         """,
 
+        c -> c.flags(SKIP_SYSTEM_THEME, SKIP_SYSTEM_VARIANTS),
+
         c -> {
-          assertEquals(c.keywords().get("screen-sm"), CssEngineValue.themeVar("breakpoint", "sm", "40rem"));
-          assertEquals(c.variants().get("sm"), CssVariant.atRule("@media (min-width: 40rem)"));
+          assertEquals(c.keywords(), Map.of(
+              "screen-sm", CssEngineValue.themeVar("breakpoint", "sm", "40rem")
+          ));
+          assertEquals(c.variants(), Map.of(
+              "sm", CssVariant.atRule("@media (min-width: 40rem)")
+          ));
         }
     );
   }
 
-  private void test(String theme, Consumer<? super CssEngine2.Config> test) {
+  @Test(description = """
+  color
+  - it should create a keyword
+  """)
+  public void colors01() {
+    test(
+        """
+        --color-test: #cafeba;
+        """,
+
+        c -> c.flags(SKIP_SYSTEM_THEME, SKIP_SYSTEM_VARIANTS),
+
+        c -> {
+          assertEquals(c.keywords(), Map.of(
+              "test", CssEngineValue.themeVar("color", "test", "#cafeba")
+          ));
+          assertEquals(c.variants(), Map.of());
+        }
+    );
+  }
+
+  @Test(description = """
+  font
+  - it should create a keyword
+  """)
+  public void font01() {
+    test(
+        """
+        --font-test: 'Comic Sans';
+        """,
+
+        c -> c.flags(SKIP_SYSTEM_THEME, SKIP_SYSTEM_VARIANTS),
+
+        c -> {
+          assertEquals(c.keywords(), Map.of(
+              "test", CssEngineValue.themeVar("font", "test", "'Comic Sans'")
+          ));
+          assertEquals(c.variants(), Map.of());
+        }
+    );
+  }
+
+  private void test(String theme, Consumer<? super CssEngine2.Configuring> flags, Consumer<? super CssEngine2.Config> test) {
     final CssEngine2 engine;
     engine = new CssEngine2();
 
-    engine.theme("--*: initial;");
-
     engine.theme(theme);
 
-    final Config config;
-    config = engine.configure();
+    final CssEngine2.Configuring configuring;
+    configuring = engine.configuring();
+
+    flags.accept(configuring);
+
+    final CssEngine2.Config config;
+    config = configuring.configure();
 
     test.accept(config);
   }

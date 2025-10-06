@@ -18,6 +18,7 @@ package objectos.way;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -52,6 +53,14 @@ final class CssEngine2 implements Css.Engine {
 
   static final class Configuring implements Stage {
 
+    enum Flag {
+      SKIP_SYSTEM_THEME,
+
+      SKIP_SYSTEM_VARIANTS;
+    }
+
+    Set<Flag> flags = Set.of();
+
     Note.Sink noteSink = Note.NoOpSink.create();
 
     Set<Class<?>> scanClasses = Set.of();
@@ -69,9 +78,13 @@ final class CssEngine2 implements Css.Engine {
     final Map<String, CssVariant> variants = new HashMap<>();
 
     final Config configure() {
-      systemTheme();
+      if (!flags.contains(Flag.SKIP_SYSTEM_THEME)) {
+        systemTheme();
+      }
 
-      systemVariants();
+      if (!flags.contains(Flag.SKIP_SYSTEM_VARIANTS)) {
+        systemVariants();
+      }
 
       userNamespaces();
 
@@ -90,6 +103,16 @@ final class CssEngine2 implements Css.Engine {
 
           Map.copyOf(variants)
       );
+    }
+
+    final void flags(Flag... values) {
+      if (flags.isEmpty()) {
+        flags = EnumSet.noneOf(Flag.class);
+      }
+
+      for (Flag flag : values) {
+        flags.add(flag);
+      }
     }
 
     private void systemTheme() {
@@ -253,7 +276,7 @@ final class CssEngine2 implements Css.Engine {
 
   }
 
-  private Configuring configuring() {
+  final Configuring configuring() {
     if (stage instanceof Configuring c) {
       return c;
     } else {
