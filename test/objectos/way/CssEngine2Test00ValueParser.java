@@ -17,11 +17,12 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class CssEngineValueParserTest {
+public class CssEngine2Test00ValueParser {
 
   @Test(description = "breakpoint :: just one")
   public void breakpoint01() {
@@ -31,7 +32,7 @@ public class CssEngineValueParserTest {
         """,
 
         List.of(
-            CssEngineValue.themeVar("breakpoint", "sm", "40rem")
+            CssEngine2.themeProp(0, "breakpoint", "sm", "40rem")
         )
     );
   }
@@ -44,7 +45,7 @@ public class CssEngineValueParserTest {
         """,
 
         List.of(
-            CssEngineValue.themeVar("color", "stone-950", "oklch(0.147 0.004 49.25)")
+            CssEngine2.themeProp(0, "color", "stone-950", "oklch(0.147 0.004 49.25)")
         )
     );
   }
@@ -58,8 +59,8 @@ public class CssEngineValueParserTest {
         """,
 
         List.of(
-            CssEngineValue.themeVar("color", "stone-950", "oklch(0.147 0.004 49.25)"),
-            CssEngineValue.themeVar("color", "red-50", "oklch(0.971 0.013 17.38)")
+            CssEngine2.themeProp(0, "color", "stone-950", "oklch(0.147 0.004 49.25)"),
+            CssEngine2.themeProp(1, "color", "red-50", "oklch(0.971 0.013 17.38)")
         )
     );
   }
@@ -85,7 +86,7 @@ public class CssEngineValueParserTest {
         """,
 
         List.of(
-            CssEngineValue.customProp("--carbon-grid-columns", "4")
+            CssEngine2.customProp(0, "--carbon-grid-columns", "4")
         )
     );
   }
@@ -143,7 +144,20 @@ public class CssEngineValueParserTest {
         """,
 
         List.of(
-            CssEngineValue.themeVar("font", "display", "Foo, \"Foo bar\"")
+            CssEngine2.themeProp(0, "font", "display", "Foo, \"Foo bar\"")
+        )
+    );
+  }
+
+  @Test
+  public void rx01() {
+    test(
+        """
+        --rx: 16;
+        """,
+
+        List.of(
+            CssEngine2.themeProp(0, "rx", "", "16")
         )
     );
   }
@@ -156,7 +170,7 @@ public class CssEngineValueParserTest {
         """,
 
         List.of(
-            CssEngineValue.themeSkip("*")
+            CssEngine2.systemSkip(0, "*")
         )
     );
   }
@@ -172,9 +186,9 @@ public class CssEngineValueParserTest {
         """,
 
         List.of(
-            CssEngineValue.themeVar("color", "orange-900", "oklch(0.408 0.123 38.172)"),
-            CssEngineValue.themeVar("color", "orange-950", "oklch(0.266 0.079 36.259)"),
-            CssEngineValue.themeVar("color", "amber-50", "oklch(0.987 0.022 95.277)")
+            CssEngine2.themeProp(0, "color", "orange-900", "oklch(0.408 0.123 38.172)"),
+            CssEngine2.themeProp(1, "color", "orange-950", "oklch(0.266 0.079 36.259)"),
+            CssEngine2.themeProp(2, "color", "amber-50", "oklch(0.987 0.022 95.277)")
         )
     );
   }
@@ -187,7 +201,7 @@ public class CssEngineValueParserTest {
         """,
 
         List.of(
-            CssEngineValue.themeVar("color", "orange-900", "oklch(0.408 0.123 38.172)")
+            CssEngine2.themeProp(0, "color", "orange-900", "oklch(0.408 0.123 38.172)")
         )
     );
   }
@@ -200,7 +214,7 @@ public class CssEngineValueParserTest {
         """,
 
         List.of(
-            CssEngineValue.themeVar("color", "orange-900", "oklch(0.408 0.123 38.172)")
+            CssEngine2.themeProp(0, "color", "orange-900", "oklch(0.408 0.123 38.172)")
         )
     );
   }
@@ -214,21 +228,32 @@ public class CssEngineValueParserTest {
         """,
 
         List.of(
-            CssEngineValue.themeVar("color", "orange-900", "oklch(0.408 0.123 38.172)")
+            CssEngine2.themeProp(0, "color", "orange-900", "oklch(0.408 0.123 38.172)")
         )
     );
   }
 
-  private void test(String value, List<CssEngineValue> expected) {
-    final List<CssEngineValue> result;
-    result = CssEngineValue.parse(value);
+  private void test(String value, List<CssEngine2.Value> expected) {
+    final List<CssEngine2.Value> result;
+    result = new ArrayList<>();
+
+    final CssEngine2.ValueParser parser;
+    parser = new CssEngine2.ValueParser(0, value, result);
+
+    parser.parse();
 
     assertEquals(result, expected);
   }
 
   private void testIAE(String value, String expectedMsg) {
     try {
-      CssEngineValue.parse(value);
+      final List<CssEngine2.Value> result;
+      result = new ArrayList<>();
+
+      final CssEngine2.ValueParser parser;
+      parser = new CssEngine2.ValueParser(0, value, result);
+
+      parser.parse();
 
       Assert.fail("it should have thrown");
     } catch (IllegalArgumentException expected) {

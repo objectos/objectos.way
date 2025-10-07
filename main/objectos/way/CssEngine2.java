@@ -17,8 +17,6 @@ package objectos.way;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -28,24 +26,441 @@ import java.util.Set;
 
 final class CssEngine2 implements Css.Engine {
 
-  record Notes() {
+  record Notes(
+      Note.Ref2<Value, Value> replaced
+  ) {
 
     static Notes get() {
       @SuppressWarnings("unused")
       Class<?> s;
       s = CssEngine2.class;
 
-      return new Notes();
+      return new Notes(
+          Note.Ref2.create(s, "REP", Note.INFO)
+      );
     }
 
   }
 
   private sealed interface Stage {}
 
-  @SuppressWarnings("unused")
   private static final Notes NOTES = Notes.get();
 
   private Stage stage = new Configuring();
+
+  // ##################################################################
+  // # BEGIN: Value
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Value: Types
+  // ##################################################################
+
+  sealed interface Value extends Comparable<Value> {
+    @Override
+    default int compareTo(Value o) {
+      return Integer.compare(index(), o.index());
+    }
+
+    int index();
+
+    default String name() {
+      throw new UnsupportedOperationException();
+    }
+
+    default String value() {
+      throw new UnsupportedOperationException();
+    }
+  }
+
+  record CustomProp(int index, String name, String value) implements Value {}
+
+  record SystemSkip(int index, String ns) implements Value {}
+
+  record ThemeProp(int index, String name, String ns, String id, String value) implements Value {}
+
+  static Value customProp(int index, String name, String value) {
+    return new CustomProp(index, name, value);
+  }
+
+  static Value systemSkip(int index, String ns) {
+    return new SystemSkip(index, ns);
+  }
+
+  static Value themeProp(int index, String ns, String id, String value) {
+    if (id.isEmpty()) {
+      return new ThemeProp(index, "--" + ns, ns, id, value);
+    } else {
+      return new ThemeProp(index, "--" + ns + "-" + id, ns, id, value);
+    }
+  }
+
+  // ##################################################################
+  // # END: Value: Types
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Value: Parser
+  // ##################################################################
+
+  private static final byte[] CSS;
+
+  private static final byte CSS_WS = 1;
+  private static final byte CSS_ASTERISK = 2;
+  private static final byte CSS_HYPHEN = 3;
+  private static final byte CSS_COLON = 4;
+  private static final byte CSS_SEMICOLON = 5;
+  private static final byte CSS_REV_SOLIDUS = 6;
+  private static final byte CSS_IDENT_START = 7;
+  private static final byte CSS_IDENT = 8;
+  private static final byte CSS_NON_ASCII = 9;
+
+  static {
+    final byte[] table;
+    table = new byte[128];
+
+    // start with invalid
+
+    // https://www.w3.org/TR/2021/CRD-css-syntax-3-20211224/#whitespace
+    table['\n'] = CSS_WS;
+    table['\t'] = CSS_WS;
+    table[' '] = CSS_WS;
+
+    // https://www.w3.org/TR/2021/CRD-css-syntax-3-20211224/#input-preprocessing
+    table['\f'] = CSS_WS;
+    table['\r'] = CSS_WS;
+
+    // symbols
+    table['*'] = CSS_ASTERISK;
+    table['-'] = CSS_HYPHEN;
+    table[':'] = CSS_COLON;
+    table[';'] = CSS_SEMICOLON;
+    table['\\'] = CSS_REV_SOLIDUS;
+
+    // ident start
+    Ascii.fill(table, Ascii.alphaLower(), CSS_IDENT_START);
+    Ascii.fill(table, Ascii.alphaUpper(), CSS_IDENT_START);
+    table['_'] = CSS_IDENT_START;
+
+    // ident
+    Ascii.fill(table, Ascii.digit(), CSS_IDENT);
+
+    CSS = table;
+  }
+
+  private static final Set<String> NAMESPACES = Set.of(
+      "breakpoint",
+      "color",
+      "font"
+  );
+
+  static final class ValueParser {
+    int cursor, idx, mark0, mark1;
+
+    String id, ns, varName;
+
+    final StringBuilder sb = new StringBuilder();
+
+    final String text;
+
+    int valueIndex;
+
+    final List<Value> values;
+
+    ValueParser(int index, String text, List<Value> values) {
+      this.text = text;
+
+      this.valueIndex = index;
+
+      this.values = values;
+    }
+
+    static final byte $DECLARATION = 0;
+
+    static final byte $HYPHEN1 = 1;
+    static final byte $HYPHEN2 = 2;
+
+    static final byte $VAR_NAME = 3;
+
+    static final byte $COLON = 4;
+
+    static final byte $VALUE = 5;
+    static final byte $VALUE_CHAR = 6;
+    static final byte $VALUE_WS = 7;
+
+    static final byte $NS_GLOBAL = 8;
+    static final byte $NS_VALUE = 9;
+    static final byte $NS_VALUE_CHAR = 10;
+    static final byte $NS_VALUE_WS = 11;
+
+    final int parse() {
+      byte state;
+      state = $DECLARATION;
+
+      while (hasNext()) {
+        final char c;
+        c = next();
+
+        state = switch (state) {
+          case $DECLARATION -> parseDeclaration(c);
+
+          case $HYPHEN1 -> parseHyphen1(c);
+          case $HYPHEN2 -> parseHyphen2(c);
+
+          case $VAR_NAME -> parseVarName(c);
+
+          case $COLON -> parseColon(c);
+
+          case $VALUE -> parseValue(c);
+          case $VALUE_CHAR -> parseValueChar(c);
+          case $VALUE_WS -> parseValueWs(c);
+
+          case $NS_GLOBAL -> parseNsGlobal(c);
+          case $NS_VALUE -> parseNsValue(c);
+          case $NS_VALUE_CHAR -> parseNsValueChar(c);
+          case $NS_VALUE_WS -> parseNsValueWs(c);
+
+          default -> throw new AssertionError("Unexpected state=" + state);
+        };
+      }
+
+      switch (state) {
+        case $DECLARATION -> { /* success! */ }
+
+        case $VAR_NAME -> throw error("Unexpected EOF while parsing a custom property name");
+
+        case $COLON -> throw error("Declaration with no ':' colon character");
+
+        case $VALUE, $VALUE_CHAR -> throw error("Unexpected EOF while parsing a declaration value");
+
+        default -> throw error("Unexpected EOF");
+      }
+
+      return valueIndex;
+    }
+
+    private byte parseDeclaration(char c) {
+      return switch (test(c)) {
+        case CSS_WS -> $DECLARATION;
+
+        case CSS_HYPHEN -> { mark0 = idx; yield $HYPHEN1; }
+
+        default -> throw error("Expected start of --variable declaration");
+      };
+    }
+
+    private byte parseHyphen1(char c) {
+      return switch (test(c)) {
+        case CSS_HYPHEN -> $HYPHEN2;
+
+        default -> throw error("Expected start of --variable declaration");
+      };
+    }
+
+    private byte parseHyphen2(char c) {
+      return switch (test(c)) {
+        case CSS_IDENT_START -> { mark1 = idx; yield $VAR_NAME; }
+
+        case CSS_ASTERISK -> { ns = id = "*"; yield $NS_GLOBAL; }
+
+        case CSS_REV_SOLIDUS -> throw error("Escape sequences are currently not supported");
+
+        case CSS_NON_ASCII -> throw error("Non ASCII characters are currently not supported");
+
+        default -> throw error("--variable name must start with a letter");
+      };
+    }
+
+    private byte parseVarName(char c) {
+      return switch (test(c)) {
+        case CSS_IDENT_START, CSS_IDENT -> $VAR_NAME;
+
+        case CSS_HYPHEN -> {
+          if (ns == null) {
+            ns = text.substring(mark1, idx);
+          }
+
+          yield $VAR_NAME;
+        }
+
+        case CSS_WS -> { parseVarName0(); yield $COLON; }
+
+        case CSS_COLON -> { parseVarName0(); yield $VALUE; }
+
+        default -> throw error("CSS variable name with invalid character=" + c);
+      };
+    }
+
+    private void parseVarName0() {
+      if (ns != null && NAMESPACES.contains(ns)) {
+        final int beginIndex;
+        beginIndex = mark1 + ns.length() + 1;
+
+        id = text.substring(beginIndex, idx);
+      } else {
+        varName = text.substring(mark0, idx);
+
+        if ("--rx".equals(varName)) {
+          ns = "rx";
+          id = "";
+        } else {
+          ns = id = null;
+        }
+      }
+    }
+
+    private byte parseColon(char c) {
+      return switch (test(c)) {
+        case CSS_WS -> $COLON;
+
+        case CSS_COLON -> $VALUE;
+
+        default -> throw error("Declaration with no ':' colon character");
+      };
+    }
+
+    private byte parseValue(char c) {
+      return switch (test(c)) {
+        case CSS_WS -> $VALUE;
+
+        case CSS_SEMICOLON -> throw error("Declaration with an empty value");
+
+        default -> { sb.setLength(0); sb.append(c); yield $VALUE_CHAR; }
+      };
+    }
+
+    private byte parseValueChar(char c) {
+      return switch (test(c)) {
+        case CSS_SEMICOLON -> { parseValue1(); yield $DECLARATION; }
+
+        case CSS_WS -> $VALUE_WS;
+
+        default -> { sb.append(c); yield $VALUE_CHAR; }
+      };
+    }
+
+    private byte parseValueWs(char c) {
+      return switch (test(c)) {
+        case CSS_SEMICOLON -> { parseValue1(); yield $DECLARATION; }
+
+        case CSS_WS -> $VALUE_WS;
+
+        default -> { sb.append(' '); sb.append(c); yield $VALUE_CHAR; }
+      };
+    }
+
+    private void parseValue1() {
+      final Value result;
+
+      final String value;
+      value = sb.toString();
+
+      if (ns != null) {
+        result = themeProp(valueIndex++, ns, id, value);
+      } else {
+        result = customProp(valueIndex++, varName, value);
+      }
+
+      result(result);
+    }
+
+    private byte parseNsGlobal(char c) {
+      return switch (test(c)) {
+        case CSS_WS -> $NS_GLOBAL;
+
+        case CSS_COLON -> $NS_VALUE;
+
+        default -> throw error("Expected the global namespace '--*'");
+      };
+    }
+
+    private byte parseNsValue(char c) {
+      return switch (test(c)) {
+        case CSS_WS -> $NS_VALUE;
+
+        case CSS_IDENT_START -> { sb.setLength(0); sb.append(c); yield $NS_VALUE_CHAR; }
+
+        default -> throw error("Expected the keyword 'initial'");
+      };
+    }
+
+    private byte parseNsValueChar(char c) {
+      return switch (test(c)) {
+        case CSS_SEMICOLON -> { parseNsValue1(); yield $DECLARATION; }
+
+        case CSS_WS -> { parseNsValue1(); yield $NS_VALUE_WS; }
+
+        case CSS_IDENT_START -> { sb.append(c); yield $NS_VALUE_CHAR; }
+
+        default -> throw error("Expected the keyword 'initial'");
+      };
+    }
+
+    private byte parseNsValueWs(char c) {
+      return switch (test(c)) {
+        case CSS_SEMICOLON -> $DECLARATION;
+
+        case CSS_WS -> $NS_VALUE_WS;
+
+        default -> throw error("Expected the keyword 'initial'");
+      };
+    }
+
+    private void parseNsValue1() {
+      final String initial;
+      initial = sb.toString();
+
+      if (!"initial".equals(initial)) {
+        throw error("Expected the keyword 'initial' but found '" + initial + "'");
+      }
+
+      final Value result;
+      result = systemSkip(valueIndex++, ns);
+
+      result(result);
+    }
+
+    private IllegalArgumentException error(String message) {
+      return new IllegalArgumentException(message);
+    }
+
+    private boolean hasNext() {
+      return cursor < text.length();
+    }
+
+    private char next() {
+      idx = cursor++;
+
+      return text.charAt(idx);
+    }
+
+    private byte test(char c) {
+      return c < 128 ? CSS[c] : CSS_NON_ASCII;
+    }
+
+    private void result(Value result) {
+      values.add(result);
+
+      mark0 = mark1 = 0;
+
+      id = ns = varName = null;
+    }
+  }
+
+  static int parse(int index, String text, List<Value> values) {
+    final ValueParser parser;
+    parser = new ValueParser(index, text, values);
+
+    return parser.parse();
+  }
+
+  // ##################################################################
+  // # END: Value: Parser
+  // ##################################################################
+
+  // ##################################################################
+  // # END: Value
+  // ##################################################################
 
   // ##################################################################
   // # BEGIN: Configuring
@@ -53,15 +468,9 @@ final class CssEngine2 implements Css.Engine {
 
   static final class Configuring implements Stage {
 
-    enum Flag {
-      SKIP_SYSTEM_THEME,
+    final Map<String, Map<String, Value>> namespaces = new HashMap<>();
 
-      SKIP_SYSTEM_VARIANTS;
-    }
-
-    Set<Flag> flags = Set.of();
-
-    Note.Sink noteSink = Note.NoOpSink.create();
+    Note.Sink noteSink;
 
     Set<Class<?>> scanClasses = Set.of();
 
@@ -69,24 +478,79 @@ final class CssEngine2 implements Css.Engine {
 
     Set<Class<?>> scanJars = Set.of();
 
-    final Map<String, List<CssEngineValue>> systemNamespaces = new HashMap<>();
+    String systemTheme;
 
-    final Map<String, List<CssEngineValue>> userNamespaces = new HashMap<>();
+    Map<String, CssVariant> systemVariants;
 
-    List<CssEngineValue> userTheme = List.of();
+    final Map<Object, List<Value>> themeEntries = new HashMap<>();
+
+    String userTheme = "";
+
+    int valueIndex;
 
     final Map<String, CssVariant> variants = new HashMap<>();
 
-    final Config configure() {
-      if (!flags.contains(Flag.SKIP_SYSTEM_THEME)) {
-        systemTheme();
+    // ##################################################################
+    // # BEGIN: Configuring: Public API
+    // ##################################################################
+
+    public final void noteSink(Note.Sink value) {
+      if (noteSink != null) {
+        throw new IllegalStateException("A Note.Sink has already been defined");
       }
 
-      if (!flags.contains(Flag.SKIP_SYSTEM_VARIANTS)) {
-        systemVariants();
+      noteSink = Objects.requireNonNull(value, "value == null");
+    }
+
+    public final void scanClass(Class<?> value) {
+      final Class<?> c;
+      c = Objects.requireNonNull(value, "value");
+
+      if (scanClasses.isEmpty()) {
+        scanClasses = new HashSet<>();
       }
 
-      userNamespaces();
+      scanClasses.add(c);
+    }
+
+    public final void scanDirectory(Path value) {
+      final Path p;
+      p = Objects.requireNonNull(value, "value == null");
+
+      if (scanDirectories.isEmpty()) {
+        scanDirectories = new HashSet<>();
+      }
+
+      scanDirectories.add(p);
+    }
+
+    public final void scanJarFileOf(Class<?> value) {
+      final Class<?> c;
+      c = Objects.requireNonNull(value, "value == null");
+
+      if (scanJars.isEmpty()) {
+        scanJars = new HashSet<>();
+      }
+
+      scanJars.add(c);
+    }
+
+    public final void theme(String value) {
+      userTheme = Objects.requireNonNull(value, "value == null");
+    }
+
+    public final Config configure() {
+      if (noteSink == null) {
+        noteSink = Note.NoOpSink.create();
+      }
+
+      systemTheme();
+
+      systemVariants();
+
+      systemSkip();
+
+      userTheme();
 
       breakpointVariants();
 
@@ -94,6 +558,8 @@ final class CssEngine2 implements Css.Engine {
           keywords(),
 
           noteSink,
+
+          namespaces.containsKey("rx"),
 
           Set.copyOf(scanClasses),
 
@@ -105,115 +571,129 @@ final class CssEngine2 implements Css.Engine {
       );
     }
 
-    final void flags(Flag... values) {
-      if (flags.isEmpty()) {
-        flags = EnumSet.noneOf(Flag.class);
-      }
-
-      for (Flag flag : values) {
-        flags.add(flag);
-      }
-    }
+    // ##################################################################
+    // # END: Configuring: Public API
+    // ##################################################################
 
     private void systemTheme() {
-      // parse system them
-      final List<CssEngineValue> systemTheme;
-      systemTheme = new ArrayList<>();
+      // parse system theme
+      final List<Value> parsed;
+      parsed = new ArrayList<>();
 
-      CssEngineValue.parse(Css.defaultTheme(), systemTheme);
+      final String source;
+      source = systemTheme != null ? systemTheme : Css.systemTheme();
+
+      valueIndex = parse(valueIndex, source, parsed);
 
       // map to namespace
-      for (CssEngineValue value : systemTheme) {
+      for (Value value : parsed) {
         switch (value) {
-          case CssEngineValue.CustomProp prop -> {}
+          case CustomProp prop -> throw new IllegalArgumentException(
+              "Arbitrary custom props are not allowed in the system theme"
+          );
 
-          case CssEngineValue.ThemeSkip skip -> throw new IllegalArgumentException();
+          case SystemSkip skip -> throw new IllegalArgumentException(
+              "The '--<namespace>: initial;' like syntax is not allowed in the system theme"
+          );
 
-          case CssEngineValue.ThemeVar var -> {
+          case ThemeProp prop -> {
             final String ns;
-            ns = var.ns;
+            ns = prop.ns;
 
-            final List<CssEngineValue> values;
-            values = systemNamespaces.computeIfAbsent(ns, key -> new ArrayList<>());
+            final Map<String, Value> values;
+            values = namespaces.computeIfAbsent(ns, key -> new HashMap<>());
 
-            values.add(value);
+            final Value existing;
+            existing = values.put(prop.name, prop);
+
+            if (existing != null) {
+              noteSink.send(NOTES.replaced, existing, prop);
+            }
           }
         }
       }
+
+      systemTheme = null;
     }
 
     private void systemVariants() {
-      variant("dark", CssVariant.atRule("@media (prefers-color-scheme: dark)"));
+      final Map<String, CssVariant> source;
+      source = systemVariants != null ? systemVariants : Css.systemVariants();
 
-      variant("active", CssVariant.suffix(":active"));
-      variant("checked", CssVariant.suffix(":checked"));
-      variant("disabled", CssVariant.suffix(":disabled"));
-      variant("first-child", CssVariant.suffix(":first-child"));
-      variant("focus", CssVariant.suffix(":focus"));
-      variant("focus-visible", CssVariant.suffix(":focus-visible"));
-      variant("hover", CssVariant.suffix(":hover"));
-      variant("last-child", CssVariant.suffix(":last-child"));
-      variant("visited", CssVariant.suffix(":visited"));
+      variants.putAll(source);
 
-      variant("after", CssVariant.suffix("::after"));
-      variant("backdrop", CssVariant.suffix("::backdrop"));
-      variant("before", CssVariant.suffix("::before"));
-      variant("first-letter", CssVariant.suffix("::first-letter"));
-      variant("first-line", CssVariant.suffix("::first-line"));
-
-      variant("*", CssVariant.suffix(" > *"));
-      variant("**", CssVariant.suffix(" *"));
+      systemVariants = null;
     }
 
-    private void userNamespaces() {
-      for (CssEngineValue value : userTheme) {
+    private void systemSkip() {
+    }
+
+    private void userTheme() {
+      // parse user theme
+      final List<Value> parsed;
+      parsed = new ArrayList<>();
+
+      valueIndex = parse(valueIndex, userTheme, parsed);
+
+      // process any system skip
+      for (Value value : parsed) {
+        if (value instanceof SystemSkip skip) {
+          final String ns;
+          ns = skip.ns();
+
+          if ("*".equals(ns)) {
+            namespaces.clear();
+          } else {
+            namespaces.remove(ns);
+          }
+        }
+      }
+
+      // map to namespace
+      for (Value value : parsed) {
         switch (value) {
-          case CssEngineValue.CustomProp prop -> {}
+          case CustomProp prop -> {
+            final Map<String, Value> values;
+            values = namespaces.computeIfAbsent("custom", key -> new HashMap<>());
 
-          case CssEngineValue.ThemeSkip skip -> {
-            final String ns;
-            ns = skip.ns();
+            final Value existing;
+            existing = values.put(prop.name, prop);
 
-            if ("*".equals(ns)) {
-              systemNamespaces.clear();
-            } else {
-              systemNamespaces.remove(ns);
+            if (existing != null) {
+              noteSink.send(NOTES.replaced, existing, prop);
             }
           }
 
-          case CssEngineValue.ThemeVar var -> {
+          case SystemSkip skip -> {}
+
+          case ThemeProp prop -> {
             final String ns;
-            ns = var.ns;
+            ns = prop.ns;
 
-            final List<CssEngineValue> values;
-            values = userNamespaces.computeIfAbsent(ns, key -> new ArrayList<>());
+            final Map<String, Value> values;
+            values = namespaces.computeIfAbsent(ns, key -> new HashMap<>());
 
-            values.add(value);
+            final Value existing;
+            existing = values.put(prop.name, prop);
+
+            if (existing != null) {
+              noteSink.send(NOTES.replaced, existing, prop);
+            }
           }
         }
       }
     }
 
     private void breakpointVariants() {
-      final List<CssEngineValue> breakpoints;
-      breakpoints = new ArrayList<>();
-
       final String ns;
       ns = "breakpoint";
 
-      final List<CssEngineValue> systemValues;
-      systemValues = systemNamespaces.getOrDefault(ns, List.of());
+      final Map<String, Value> values;
+      values = namespaces.getOrDefault(ns, Map.of());
 
-      breakpoints.addAll(systemValues);
-
-      final List<CssEngineValue> userValues;
-      userValues = userNamespaces.getOrDefault(ns, List.of());
-
-      breakpoints.addAll(userValues);
-
-      for (CssEngineValue breakpoint : breakpoints) {
-        final CssEngineValue.ThemeVar var;
-        var = (CssEngineValue.ThemeVar) breakpoint;
+      for (Value breakpoint : values.values()) {
+        final ThemeProp var;
+        var = (ThemeProp) breakpoint;
 
         final String id;
         id = var.id;
@@ -236,42 +716,42 @@ final class CssEngine2 implements Css.Engine {
       // TODO restore existing and log?
     }
 
-    private Map<String, CssEngineValue.ThemeVar> keywords() {
-      final Map<String, CssEngineValue.ThemeVar> keywords;
+    private Map<String, ThemeProp> keywords() {
+      final Map<String, ThemeProp> keywords;
       keywords = new HashMap<>();
 
-      keywords0(keywords, systemNamespaces.values());
+      for (Map<String, Value> map : namespaces.values()) {
+        for (Value value : map.values()) {
+          if (value instanceof ThemeProp prop) {
+            final String id;
+            id = prop.id;
 
-      keywords0(keywords, userNamespaces.values());
+            if (id.isEmpty()) {
+              continue;
+            }
 
-      return Map.copyOf(keywords);
-    }
+            final String ns;
+            ns = prop.ns;
 
-    private void keywords0(Map<String, CssEngineValue.ThemeVar> keywords, Collection<List<CssEngineValue>> values) {
-      for (List<CssEngineValue> list : values) {
-        for (CssEngineValue value : list) {
-          final CssEngineValue.ThemeVar var;
-          var = (CssEngineValue.ThemeVar) value;
+            final String key;
 
-          final String ns;
-          ns = var.ns;
+            if ("breakpoint".equals(ns)) {
+              key = "screen-" + id;
+            } else {
+              key = id;
+            }
 
-          final String id;
+            final ThemeProp maybeExisting;
+            maybeExisting = keywords.put(key, prop);
 
-          if ("breakpoint".equals(ns)) {
-            id = "screen-" + var.id;
-          } else {
-            id = var.id;
-          }
-
-          final CssEngineValue.ThemeVar maybeExisting;
-          maybeExisting = keywords.put(id, var);
-
-          if (maybeExisting != null) {
-            throw new IllegalArgumentException("Duplicate mapping for " + id + ": " + maybeExisting.value + ", " + var.value);
+            if (maybeExisting != null) {
+              throw new IllegalArgumentException("Duplicate mapping for " + key + ": " + maybeExisting.value + ", " + prop.value);
+            }
           }
         }
       }
+
+      return Map.copyOf(keywords);
     }
 
   }
@@ -286,74 +766,27 @@ final class CssEngine2 implements Css.Engine {
 
   @Override
   public final void noteSink(Note.Sink value) {
-    final Configuring stage;
-    stage = configuring();
-
-    if (stage.noteSink != null) {
-      throw new IllegalStateException("A Note.Sink has already been defined");
-    }
-
-    stage.noteSink = Objects.requireNonNull(value, "value == null");
+    configuring().noteSink(value);
   }
 
   @Override
   public final void scanClass(Class<?> value) {
-    final Class<?> c;
-    c = Objects.requireNonNull(value, "value");
-
-    final Configuring stage;
-    stage = configuring();
-
-    if (stage.scanClasses.isEmpty()) {
-      stage.scanClasses = new HashSet<>();
-    }
-
-    stage.scanClasses.add(c);
+    configuring().scanClass(value);
   }
 
   @Override
   public final void scanDirectory(Path value) {
-    final Path p;
-    p = Objects.requireNonNull(value, "value == null");
-
-    final Configuring stage;
-    stage = configuring();
-
-    if (stage.scanDirectories.isEmpty()) {
-      stage.scanDirectories = new HashSet<>();
-    }
-
-    stage.scanDirectories.add(p);
+    configuring().scanDirectory(value);
   }
 
   @Override
   public final void scanJarFileOf(Class<?> value) {
-    final Class<?> c;
-    c = Objects.requireNonNull(value, "value == null");
-
-    final Configuring stage;
-    stage = configuring();
-
-    if (stage.scanJars.isEmpty()) {
-      stage.scanJars = new HashSet<>();
-    }
-
-    stage.scanJars.add(c);
+    configuring().scanJarFileOf(value);
   }
 
   @Override
   public final void theme(String value) {
-    final String text;
-    text = Objects.requireNonNull(value, "value == null");
-
-    final Configuring stage;
-    stage = configuring();
-
-    if (stage.userTheme.isEmpty()) {
-      stage.userTheme = new ArrayList<>();
-    }
-
-    CssEngineValue.parse(text, stage.userTheme);
+    configuring().theme(value);
   }
 
   // ##################################################################
@@ -366,9 +799,11 @@ final class CssEngine2 implements Css.Engine {
 
   record Config(
 
-      Map<String, CssEngineValue.ThemeVar> keywords,
+      Map<String, ThemeProp> keywords,
 
       Note.Sink noteSink,
+
+      boolean rx,
 
       Set<Class<?>> scanClasses,
 
@@ -402,8 +837,8 @@ final class CssEngine2 implements Css.Engine {
   // # BEGIN: Execute
   // ##################################################################
 
-  public final void init() {
-    theme(Css.defaultTheme());
+  public final void execute() {
+    configure();
   }
 
   // ##################################################################

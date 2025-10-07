@@ -78,7 +78,7 @@ final class CssEngineBuilder implements Css.StyleSheet.Options {
   private Map<Css.Query, List<Css.ThemeQueryEntry>> themeQueryEntries;
 
   CssEngineBuilder() {
-    parseTheme(Css.defaultTheme());
+    parseTheme(Css.systemTheme());
 
     defaultVariants();
   }
