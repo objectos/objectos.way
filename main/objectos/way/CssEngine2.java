@@ -15,6 +15,9 @@
  */
 package objectos.way;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -25,28 +28,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Consumer;
+import objectos.way.Note.Sink;
 
 final class CssEngine2 implements Css.Engine {
 
-  record Notes(
-      Note.Ref2<Value, Value> replaced
-  ) {
-
-    static Notes get() {
-      @SuppressWarnings("unused")
-      Class<?> s;
-      s = CssEngine2.class;
-
-      return new Notes(
-          Note.Ref2.create(s, "REP", Note.INFO)
-      );
-    }
-
-  }
-
   private sealed interface Stage {}
-
-  private static final Notes NOTES = Notes.get();
 
   private Stage stage = new Configuring();
 
@@ -470,6 +457,8 @@ final class CssEngine2 implements Css.Engine {
 
   static final class Configuring implements Stage {
 
+    final Note.Ref2<Value, Value> $replaced = Note.Ref2.create(getClass(), "REP", Note.INFO);
+
     final Map<String, ThemeProp> keywords = new HashMap<>();
 
     final Map<String, Map<String, Value>> namespaces = new HashMap<>();
@@ -613,7 +602,7 @@ final class CssEngine2 implements Css.Engine {
             existing = values.put(prop.name, prop);
 
             if (existing != null) {
-              noteSink.send(NOTES.replaced, existing, prop);
+              noteSink.send($replaced, existing, prop);
             }
           }
         }
@@ -663,7 +652,7 @@ final class CssEngine2 implements Css.Engine {
             existing = values.put(prop.name, prop);
 
             if (existing != null) {
-              noteSink.send(NOTES.replaced, existing, prop);
+              noteSink.send($replaced, existing, prop);
             }
           }
 
@@ -680,7 +669,7 @@ final class CssEngine2 implements Css.Engine {
             existing = values.put(prop.name, prop);
 
             if (existing != null) {
-              noteSink.send(NOTES.replaced, existing, prop);
+              noteSink.send($replaced, existing, prop);
             }
           }
         }
@@ -848,6 +837,95 @@ final class CssEngine2 implements Css.Engine {
 
   // ##################################################################
   // # END: Configured
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Scan Classes
+  // ##################################################################
+
+  static final class ScanClasses {
+
+    final Note.Ref1<String> $classNotFound = Note.Ref1.create(getClass(), "CNF", Note.WARN);
+    final Note.Ref2<String, IOException> $classIoError = Note.Ref2.create(getClass(), "CIX", Note.WARN);
+    final Note.Ref2<String, Lang.InvalidClassFileException> $classInvalid = Note.Ref2.create(getClass(), "CFI", Note.WARN);
+    final Note.Ref1<String> $classLoaded = Note.Ref1.create(getClass(), "CLD", Note.TRACE);
+    final Note.Ref1<String> $classSkipped = Note.Ref1.create(getClass(), "CSK", Note.TRACE);
+
+    final Lang.ClassReader classReader;
+
+    final Set<Class<?>> classes;
+
+    final Note.Sink noteSink;
+
+    final Consumer<String> processor;
+
+    ScanClasses(Set<Class<?>> classes, Sink noteSink, Consumer<String> processor) {
+      classReader = Lang.createClassReader(noteSink);
+
+      this.classes = classes;
+
+      this.noteSink = noteSink;
+
+      this.processor = processor;
+    }
+
+    public final void scan() {
+      for (Class<?> next : classes) {
+        scan(next);
+      }
+    }
+
+    private void scan(Class<?> next) {
+      final String binaryName;
+      binaryName = next.getName();
+
+      String resourceName;
+      resourceName = binaryName.replace('.', '/');
+
+      resourceName += ".class";
+
+      final ClassLoader loader;
+      loader = next.getClassLoader();
+
+      final InputStream in;
+      in = loader.getResourceAsStream(resourceName);
+
+      if (in == null) {
+        noteSink.send($classNotFound, binaryName);
+
+        return;
+      }
+
+      final byte[] bytes;
+
+      try (in) {
+        final ByteArrayOutputStream out;
+        out = new ByteArrayOutputStream();
+
+        in.transferTo(out);
+
+        bytes = out.toByteArray();
+      } catch (IOException e) {
+        noteSink.send($classIoError, binaryName, e);
+
+        return;
+      }
+
+      try {
+        classReader.init(bytes);
+
+        classReader.visitStrings(processor);
+
+        noteSink.send($classLoaded, binaryName);
+      } catch (Lang.InvalidClassFileException e) {
+        noteSink.send($classInvalid, binaryName, e);
+      }
+    }
+
+  }
+
+  // ##################################################################
+  // # END: Scan Classes
   // ##################################################################
 
   // ##################################################################
