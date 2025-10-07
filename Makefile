@@ -21,11 +21,11 @@
 ## Coordinates
 GROUP_ID := br.com.objectos
 ARTIFACT_ID := objectos.way
-VERSION := 0.2.9-SNAPSHOT
+VERSION := 0.3.0-SNAPSHOT
 MODULE := $(ARTIFACT_ID)
 
 ## javac --release option
-JAVA_RELEASE := 21
+JAVA_RELEASE := 25
 
 ## Maven interop
 REMOTE_REPOS := https://repo.maven.apache.org/maven2
