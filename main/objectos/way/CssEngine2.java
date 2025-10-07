@@ -939,7 +939,7 @@ final class CssEngine2 implements Css.Engine {
       this.noteSink = noteSink;
     }
 
-    public final void scan() throws IOException {
+    public final void scan() {
       for (Path dir : dirs) {
         try {
           Files.walkFileTree(dir, this);
@@ -979,7 +979,7 @@ final class CssEngine2 implements Css.Engine {
         final byte[] bytes;
         bytes = Files.readAllBytes(file);
 
-        classFiles.scan(fileName, bytes);
+        classFiles.scanIfAnnotated(fileName, bytes);
       } catch (IOException e) {
         noteSink.send($directoryFileError, file, e);
       }
@@ -1005,6 +1005,8 @@ final class CssEngine2 implements Css.Engine {
   interface ClassFiles {
 
     void scan(String name, byte[] bytes);
+
+    void scanIfAnnotated(String name, byte[] bytes);
 
   }
 

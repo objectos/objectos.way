@@ -17,9 +17,7 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
-import java.util.List;
 import java.util.Set;
-import objectos.way.CssEngine2.Classes;
 import org.testng.annotations.Test;
 
 public class CssEngine2Test02Classes {
@@ -28,22 +26,27 @@ public class CssEngine2Test02Classes {
 
   private static class Subj02 {}
 
-  @Test(enabled = false)
+  @Test
   public void testCase01() {
     test(
         Set.of(Subj01.class),
 
-        Subj01.class.getName()
+        name(Subj01.class)
     );
   }
 
-  @Test(enabled = false)
+  @Test
   public void testCase02() {
     test(
         Set.of(Subj01.class, Subj02.class),
 
-        "I'm Subj01", "Hello Subj02"
+        name(Subj01.class),
+        name(Subj02.class)
     );
+  }
+
+  private String name(Class<?> type) {
+    return type.getName().replace('.', '/');
   }
 
   private void test(Set<Class<?>> classes, String... expected) {
@@ -53,12 +56,14 @@ public class CssEngine2Test02Classes {
     final Note.Sink noteSink;
     noteSink = Y.noteSink();
 
-    final Classes scanner;
+    final CssEngine2.Classes scanner;
     scanner = new CssEngine2.Classes(tester, classes, noteSink);
 
     scanner.scan();
 
-    assertEquals(tester.messages, List.of(expected));
+    assertEquals(tester.scan, Set.of(expected));
+
+    assertEquals(tester.scanIfAnnotated, Set.of());
   }
 
 }

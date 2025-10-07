@@ -15,21 +15,42 @@
  */
 package objectos.way;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
+import java.lang.classfile.ClassFile;
+import java.lang.classfile.ClassModel;
+import java.lang.classfile.constantpool.ClassEntry;
+import java.util.HashSet;
+import java.util.Set;
 
-final class CssEngine2ClassFiles implements CssEngine2.ClassFiles, Consumer<String> {
+final class CssEngine2ClassFiles implements CssEngine2.ClassFiles {
 
-  final List<String> messages = new ArrayList<>();
+  final Set<String> scan = new HashSet<>();
+
+  final Set<String> scanIfAnnotated = new HashSet<>();
 
   @Override
   public final void scan(String name, byte[] bytes) {
+    scan0(scan, bytes);
   }
 
   @Override
-  public final void accept(String t) {
-    messages.add(t);
+  public final void scanIfAnnotated(String name, byte[] bytes) {
+    scan0(scanIfAnnotated, bytes);
+  }
+
+  private void scan0(Set<String> names, byte[] bytes) {
+    final ClassFile classFile;
+    classFile = ClassFile.of();
+
+    final ClassModel model;
+    model = classFile.parse(bytes);
+
+    final ClassEntry thisClass;
+    thisClass = model.thisClass();
+
+    final String iname;
+    iname = thisClass.asInternalName();
+
+    names.add(iname);
   }
 
 }
