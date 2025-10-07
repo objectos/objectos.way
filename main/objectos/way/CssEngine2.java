@@ -18,7 +18,11 @@ package objectos.way;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.FileVisitResult;
+import java.nio.file.FileVisitor;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -28,8 +32,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.Consumer;
-import objectos.way.Note.Sink;
 
 final class CssEngine2 implements Css.Engine {
 
@@ -843,30 +845,24 @@ final class CssEngine2 implements Css.Engine {
   // # BEGIN: Scan Classes
   // ##################################################################
 
-  static final class ScanClasses {
+  static final class Classes {
 
     final Note.Ref1<String> $classNotFound = Note.Ref1.create(getClass(), "CNF", Note.WARN);
     final Note.Ref2<String, IOException> $classIoError = Note.Ref2.create(getClass(), "CIX", Note.WARN);
     final Note.Ref2<String, Lang.InvalidClassFileException> $classInvalid = Note.Ref2.create(getClass(), "CFI", Note.WARN);
-    final Note.Ref1<String> $classLoaded = Note.Ref1.create(getClass(), "CLD", Note.TRACE);
-    final Note.Ref1<String> $classSkipped = Note.Ref1.create(getClass(), "CSK", Note.TRACE);
 
-    final Lang.ClassReader classReader;
+    final ClassFiles classFiles;
 
     final Set<Class<?>> classes;
 
     final Note.Sink noteSink;
 
-    final Consumer<String> processor;
-
-    ScanClasses(Set<Class<?>> classes, Sink noteSink, Consumer<String> processor) {
-      classReader = Lang.createClassReader(noteSink);
+    Classes(ClassFiles classFiles, Set<Class<?>> classes, Note.Sink noteSink) {
+      this.classFiles = classFiles;
 
       this.classes = classes;
 
       this.noteSink = noteSink;
-
-      this.processor = processor;
     }
 
     public final void scan() {
@@ -911,21 +907,109 @@ final class CssEngine2 implements Css.Engine {
         return;
       }
 
-      try {
-        classReader.init(bytes);
-
-        classReader.visitStrings(processor);
-
-        noteSink.send($classLoaded, binaryName);
-      } catch (Lang.InvalidClassFileException e) {
-        noteSink.send($classInvalid, binaryName, e);
-      }
+      classFiles.scan(binaryName, bytes);
     }
 
   }
 
   // ##################################################################
   // # END: Scan Classes
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Scan Dirs
+  // ##################################################################
+
+  static final class Dirs implements FileVisitor<Path> {
+
+    final Note.Ref2<Path, IOException> $directoryDirError = Note.Ref2.create(getClass(), "DDE", Note.WARN);
+    final Note.Ref2<Path, IOException> $directoryFileError = Note.Ref2.create(getClass(), "DFE", Note.WARN);
+
+    final ClassFiles classFiles;
+
+    final Set<Path> dirs;
+
+    final Note.Sink noteSink;
+
+    Dirs(ClassFiles classFiles, Set<Path> dirs, Note.Sink noteSink) {
+      this.classFiles = classFiles;
+
+      this.dirs = dirs;
+
+      this.noteSink = noteSink;
+    }
+
+    public final void scan() throws IOException {
+      for (Path dir : dirs) {
+        try {
+          Files.walkFileTree(dir, this);
+        } catch (IOException e) {
+          noteSink.send($directoryDirError, dir, e);
+        }
+      }
+    }
+
+    @Override
+    public final FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
+      return FileVisitResult.CONTINUE;
+    }
+
+    @Override
+    public final FileVisitResult postVisitDirectory(Path dir, IOException exc) {
+      if (exc != null) {
+        noteSink.send($directoryDirError, dir, exc);
+      }
+
+      return FileVisitResult.CONTINUE;
+    }
+
+    @Override
+    public final FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
+      final Path fileNamePath;
+      fileNamePath = file.getFileName();
+
+      final String fileName;
+      fileName = fileNamePath.toString();
+
+      if (!fileName.endsWith(".class")) {
+        return FileVisitResult.CONTINUE;
+      }
+
+      try {
+        final byte[] bytes;
+        bytes = Files.readAllBytes(file);
+
+        classFiles.scan(fileName, bytes);
+      } catch (IOException e) {
+        noteSink.send($directoryFileError, file, e);
+      }
+
+      return FileVisitResult.CONTINUE;
+    }
+
+    @Override
+    public final FileVisitResult visitFileFailed(Path file, IOException exc) {
+      return FileVisitResult.CONTINUE;
+    }
+
+  }
+
+  // ##################################################################
+  // # END: Scan Dirs
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: ClassFile Scanner
+  // ##################################################################
+
+  interface ClassFiles {
+
+    void scan(String name, byte[] bytes);
+
+  }
+
+  // ##################################################################
+  // # End: ClassFile Scanner
   // ##################################################################
 
   // ##################################################################
