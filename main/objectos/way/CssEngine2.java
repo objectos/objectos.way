@@ -17,8 +17,10 @@ package objectos.way;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -468,6 +470,8 @@ final class CssEngine2 implements Css.Engine {
 
   static final class Configuring implements Stage {
 
+    final Map<String, ThemeProp> keywords = new HashMap<>();
+
     final Map<String, Map<String, Value>> namespaces = new HashMap<>();
 
     Note.Sink noteSink;
@@ -482,7 +486,7 @@ final class CssEngine2 implements Css.Engine {
 
     Map<String, CssVariant> systemVariants;
 
-    final Map<Object, List<Value>> themeEntries = new HashMap<>();
+    final Map<Object, List<Value>> themeValues = new LinkedHashMap<>();
 
     String userTheme = "";
 
@@ -548,14 +552,14 @@ final class CssEngine2 implements Css.Engine {
 
       systemVariants();
 
-      systemSkip();
-
       userTheme();
 
       breakpointVariants();
 
+      themeArtifacts();
+
       return new Config(
-          keywords(),
+          Map.copyOf(keywords),
 
           noteSink,
 
@@ -566,6 +570,8 @@ final class CssEngine2 implements Css.Engine {
           Set.copyOf(scanDirectories),
 
           Set.copyOf(scanJars),
+
+          Map.copyOf(themeValues),
 
           Map.copyOf(variants)
       );
@@ -623,9 +629,6 @@ final class CssEngine2 implements Css.Engine {
       variants.putAll(source);
 
       systemVariants = null;
-    }
-
-    private void systemSkip() {
     }
 
     private void userTheme() {
@@ -716,42 +719,54 @@ final class CssEngine2 implements Css.Engine {
       // TODO restore existing and log?
     }
 
-    private Map<String, ThemeProp> keywords() {
-      final Map<String, ThemeProp> keywords;
-      keywords = new HashMap<>();
+    private void themeArtifacts() {
+      final List<Value> root;
+      root = themeValues.computeIfAbsent(":root", key -> new ArrayList<>());
 
       for (Map<String, Value> map : namespaces.values()) {
         for (Value value : map.values()) {
-          if (value instanceof ThemeProp prop) {
-            final String id;
-            id = prop.id;
+          switch (value) {
+            case CustomProp prop -> root.add(prop);
 
-            if (id.isEmpty()) {
-              continue;
-            }
+            case SystemSkip skip -> {}
 
-            final String ns;
-            ns = prop.ns;
+            case ThemeProp prop -> {
+              root.add(prop);
 
-            final String key;
+              final String id;
+              id = prop.id;
 
-            if ("breakpoint".equals(ns)) {
-              key = "screen-" + id;
-            } else {
-              key = id;
-            }
+              if (id.isEmpty()) {
+                continue;
+              }
 
-            final ThemeProp maybeExisting;
-            maybeExisting = keywords.put(key, prop);
+              final String ns;
+              ns = prop.ns;
 
-            if (maybeExisting != null) {
-              throw new IllegalArgumentException("Duplicate mapping for " + key + ": " + maybeExisting.value + ", " + prop.value);
+              final String key;
+
+              if ("breakpoint".equals(ns)) {
+                key = "screen-" + id;
+              } else {
+                key = id;
+              }
+
+              final ThemeProp maybeExisting;
+              maybeExisting = keywords.put(key, prop);
+
+              if (maybeExisting != null) {
+                throw new IllegalArgumentException("Duplicate mapping for " + key + ": " + maybeExisting.value + ", " + prop.value);
+              }
             }
           }
         }
       }
 
-      return Map.copyOf(keywords);
+      themeValues.replaceAll((k, v) -> {
+        v.sort(Comparator.naturalOrder());
+
+        return List.copyOf(v);
+      });
     }
 
   }
@@ -810,6 +825,8 @@ final class CssEngine2 implements Css.Engine {
       Set<Path> scanDirectories,
 
       Set<Class<?>> scanJars,
+
+      Map<Object, List<Value>> themeValues,
 
       Map<String, CssVariant> variants
 
