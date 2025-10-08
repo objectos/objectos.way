@@ -16,15 +16,22 @@
 package objectos.way;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.FileVisitResult;
 import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.security.CodeSource;
+import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -32,6 +39,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 final class CssEngine2 implements Css.Engine {
 
@@ -996,6 +1005,124 @@ final class CssEngine2 implements Css.Engine {
 
   // ##################################################################
   // # END: Scan Dirs
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Scan JARs
+  // ##################################################################
+
+  static final class Jars {
+
+    final Note.Ref2<Class<?>, Throwable> $jarFileException = Note.Ref2.create(getClass(), "JER", Note.WARN);
+    final Note.Ref2<Class<?>, String> $jarFileNull = Note.Ref2.create(getClass(), "JNV", Note.WARN);
+
+    final ClassFiles classFiles;
+
+    final Set<Class<?>> jars;
+
+    final Note.Sink noteSink;
+
+    Jars(ClassFiles classFiles, Set<Class<?>> jars, Note.Sink noteSink) {
+      this.classFiles = classFiles;
+
+      this.jars = jars;
+
+      this.noteSink = noteSink;
+    }
+
+    public final void scan() {
+      for (Class<?> locator : jars) {
+        scan(locator);
+      }
+    }
+
+    private void scan(Class<?> clazz) {
+      final ProtectionDomain domain;
+
+      try {
+        domain = clazz.getProtectionDomain();
+      } catch (SecurityException e) {
+        noteSink.send($jarFileException, clazz, e);
+
+        return;
+      }
+
+      final CodeSource source;
+      source = domain.getCodeSource();
+
+      if (source == null) {
+        noteSink.send($jarFileNull, clazz, "CodeSource");
+
+        return;
+      }
+
+      final URL location;
+      location = source.getLocation();
+
+      if (location == null) {
+        noteSink.send($jarFileNull, clazz, "Location");
+
+        return;
+      }
+
+      final File file;
+
+      try {
+        final URI uri;
+        uri = location.toURI();
+
+        file = new File(uri);
+      } catch (URISyntaxException e) {
+        noteSink.send($jarFileException, clazz, e);
+
+        return;
+      }
+
+      try (JarFile jar = new JarFile(file)) {
+        final Enumeration<JarEntry> entries;
+        entries = jar.entries();
+
+        while (entries.hasMoreElements()) {
+          final JarEntry entry;
+          entry = entries.nextElement();
+
+          final String entryName;
+          entryName = entry.getName();
+
+          if (!entryName.endsWith(".class")) {
+            continue;
+          }
+
+          final long size;
+          size = entry.getSize();
+
+          final int intSize;
+          intSize = Math.toIntExact(size);
+
+          final byte[] bytes;
+          bytes = new byte[intSize];
+
+          final int bytesRead;
+
+          try (InputStream in = jar.getInputStream(entry)) {
+            bytesRead = in.read(bytes, 0, bytes.length);
+          }
+
+          if (bytesRead != bytes.length) {
+            continue;
+          }
+
+          classFiles.scanIfAnnotated(entryName, bytes);
+        }
+      } catch (ArithmeticException | IOException e) {
+        noteSink.send($jarFileException, clazz, e);
+      }
+    }
+
+  }
+
+  // ##################################################################
+  // # END: Scan JARs
   // ##################################################################
 
   // ##################################################################
