@@ -19,6 +19,15 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.classfile.Annotation;
+import java.lang.classfile.Attributes;
+import java.lang.classfile.ClassFile;
+import java.lang.classfile.ClassModel;
+import java.lang.classfile.attribute.RuntimeInvisibleAnnotationsAttribute;
+import java.lang.classfile.constantpool.ConstantPool;
+import java.lang.classfile.constantpool.PoolEntry;
+import java.lang.classfile.constantpool.StringEntry;
+import java.lang.classfile.constantpool.Utf8Entry;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -38,7 +47,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -1129,11 +1140,86 @@ final class CssEngine2 implements Css.Engine {
   // # BEGIN: ClassFile Scanner
   // ##################################################################
 
+  // scanner abstract for testing
   interface ClassFiles {
 
     void scan(String name, byte[] bytes);
 
     void scanIfAnnotated(String name, byte[] bytes);
+
+  }
+
+  static final class Scanner implements ClassFiles {
+
+    final Note.Sink noteSink;
+
+    final Consumer<String> processor;
+
+    Scanner(Note.Sink noteSink, Consumer<String> processor) {
+      this.noteSink = noteSink;
+
+      this.processor = processor;
+    }
+
+    @Override
+    public final void scan(String name, byte[] bytes) {
+      final ClassFile classFile;
+      classFile = ClassFile.of();
+
+      final ClassModel classModel;
+      classModel = classFile.parse(bytes);
+
+      scan(classModel);
+    }
+
+    @Override
+    public final void scanIfAnnotated(String name, byte[] bytes) {
+      final ClassFile classFile;
+      classFile = ClassFile.of();
+
+      final ClassModel classModel;
+      classModel = classFile.parse(bytes);
+
+      final Optional<RuntimeInvisibleAnnotationsAttribute> maybe;
+      maybe = classModel.findAttribute(Attributes.runtimeInvisibleAnnotations());
+
+      if (maybe.isEmpty()) {
+        return;
+      }
+
+      final RuntimeInvisibleAnnotationsAttribute attribute;
+      attribute = maybe.get();
+
+      final List<Annotation> annotations;
+      annotations = attribute.annotations();
+
+      for (Annotation annotation : annotations) {
+        final Utf8Entry className;
+        className = annotation.className();
+
+        if (className.equalsString("Lobjectos/way/Css$Source;")) {
+          scan(classModel);
+
+          break;
+        }
+      }
+    }
+
+    private void scan(ClassModel classModel) {
+      final ConstantPool constantPool;
+      constantPool = classModel.constantPool();
+
+      for (PoolEntry entry : constantPool) {
+        if (!(entry instanceof StringEntry str)) {
+          continue;
+        }
+
+        final String string;
+        string = str.stringValue();
+
+        processor.accept(string);
+      }
+    }
 
   }
 
