@@ -39,6 +39,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.security.CodeSource;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -49,7 +50,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Consumer;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -1153,12 +1153,12 @@ final class CssEngine2 implements Css.Engine {
 
     final Note.Sink noteSink;
 
-    final Consumer<String> processor;
+    final Strings strings;
 
-    Scanner(Note.Sink noteSink, Consumer<String> processor) {
+    Scanner(Note.Sink noteSink, Strings strings) {
       this.noteSink = noteSink;
 
-      this.processor = processor;
+      this.strings = strings;
     }
 
     @Override
@@ -1217,7 +1217,7 @@ final class CssEngine2 implements Css.Engine {
         final String string;
         string = str.stringValue();
 
-        processor.accept(string);
+        strings.consume(string);
       }
     }
 
@@ -1225,6 +1225,154 @@ final class CssEngine2 implements Css.Engine {
 
   // ##################################################################
   // # End: ClassFile Scanner
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Tokenizer
+  // ##################################################################
+
+  @FunctionalInterface
+  interface Strings {
+    void consume(String s);
+  }
+
+  private static final byte[] TKS;
+
+  private static final byte TKS_WS = 1;
+  private static final byte TKS_COLON = 2;
+  private static final byte TKS_CHAR = 3;
+
+  static {
+    // start with invalid
+    final byte[] table;
+    table = new byte[128];
+
+    // from SP (32) mark as TKS_CHAR
+    Arrays.fill(table, ' ', table.length, TKS_CHAR);
+
+    // WS
+    for (int idx = 0; idx < CSS.length; idx++) {
+      if (CSS[idx] == CSS_WS) {
+        table[idx] = TKS_WS;
+      }
+    }
+
+    // COLON
+    table[':'] = TKS_COLON;
+
+    TKS = table;
+  }
+
+  static final class Tokenizer implements Strings {
+
+    static final byte $NORMAL = 0;
+    static final byte $INVALID = 1;
+    static final byte $WORD = 2;
+    static final byte $WORD_COLON = 3;
+    static final byte $TOKEN = 4;
+    static final byte $TOKEN_COLON = 5;
+
+    private final Processor processor;
+
+    private final StringBuilder sb = new StringBuilder();
+
+    private final List<String> slugs = new ArrayList<>();
+
+    Tokenizer(Processor processor) {
+      this.processor = processor;
+    }
+
+    @Override
+    public final void consume(String s) {
+      byte state;
+      state = $NORMAL;
+
+      for (int idx = 0, len = s.length(); idx < len; idx++) {
+        final char c;
+        c = s.charAt(idx);
+
+        final byte test;
+        test = test(c);
+
+        state = switch (state) {
+          case $NORMAL -> switch (test) {
+            case TKS_WS -> $NORMAL;
+
+            case TKS_COLON -> $INVALID;
+
+            default -> { slugs.clear(); sb.setLength(0); sb.append(c); yield $WORD; }
+          };
+
+          case $INVALID -> switch (test) {
+            case TKS_WS -> $NORMAL;
+
+            default -> $INVALID;
+          };
+
+          case $WORD -> switch (test) {
+            case TKS_WS -> $NORMAL;
+
+            case TKS_COLON -> { slugs.add(sb.toString()); sb.setLength(0); yield $WORD_COLON; }
+
+            default -> { sb.append(c); yield $WORD; }
+          };
+
+          case $WORD_COLON -> switch (test) {
+            case TKS_WS -> $NORMAL;
+
+            case TKS_COLON -> $INVALID;
+
+            default -> { sb.append(c); yield $TOKEN; }
+          };
+
+          case $TOKEN -> switch (test) {
+            case TKS_WS -> { slugs.add(sb.toString()); processor.process(slugs); yield $NORMAL; }
+
+            case TKS_COLON -> { slugs.add(sb.toString()); sb.setLength(0); yield $TOKEN_COLON; }
+
+            default -> { sb.append(c); yield $TOKEN; }
+          };
+
+          case $TOKEN_COLON -> switch (test) {
+            case TKS_WS -> $NORMAL;
+
+            case TKS_COLON -> $INVALID;
+
+            default -> { sb.append(c); yield $TOKEN; }
+          };
+
+          default -> throw new AssertionError("Unexpected state=" + state);
+        };
+      }
+
+      if (state == $TOKEN) {
+        slugs.add(sb.toString());
+
+        processor.process(slugs);
+      }
+    }
+
+    private byte test(char c) {
+      return c < 128 ? TKS[c] : TKS_CHAR;
+    }
+
+  }
+
+  // ##################################################################
+  // # END: Tokenizer
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Processor
+  // ##################################################################
+
+  @FunctionalInterface
+  interface Processor {
+    void process(List<String> slugs);
+  }
+
+  // ##################################################################
+  // # END: Processor
   // ##################################################################
 
   // ##################################################################
