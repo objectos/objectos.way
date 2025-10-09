@@ -23,7 +23,6 @@ import java.lang.annotation.Target;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 
 /// The **Objectos CSS** main class.
@@ -995,31 +994,6 @@ public final class Css {
 
     --rx: 16;
     """;
-  }
-
-  static Map<String, CssVariant> systemVariants() {
-    return Map.ofEntries(
-        Map.entry("dark", CssVariant.atRule("@media (prefers-color-scheme: dark)")),
-
-        Map.entry("active", CssVariant.suffix(":active")),
-        Map.entry("checked", CssVariant.suffix(":checked")),
-        Map.entry("disabled", CssVariant.suffix(":disabled")),
-        Map.entry("first-child", CssVariant.suffix(":first-child")),
-        Map.entry("focus", CssVariant.suffix(":focus")),
-        Map.entry("focus-visible", CssVariant.suffix(":focus-visible")),
-        Map.entry("hover", CssVariant.suffix(":hover")),
-        Map.entry("last-child", CssVariant.suffix(":last-child")),
-        Map.entry("visited", CssVariant.suffix(":visited")),
-
-        Map.entry("after", CssVariant.suffix("::after")),
-        Map.entry("backdrop", CssVariant.suffix("::backdrop")),
-        Map.entry("before", CssVariant.suffix("::before")),
-        Map.entry("first-letter", CssVariant.suffix("::first-letter")),
-        Map.entry("first-line", CssVariant.suffix("::first-line")),
-
-        Map.entry("*", CssVariant.suffix(" > *")),
-        Map.entry("**", CssVariant.suffix(" *"))
-    );
   }
 
   static void escape(StringBuilder out, char c) {

@@ -48,7 +48,7 @@ public class CssEngine2Test01Configuring {
           assertEquals(c.rx(), false);
           assertEquals(c.themeValues(), Map.of(":root", List.of(v)));
           assertEquals(c.variants(), Map.of(
-              "sm", CssVariant.atRule("@media (min-width: 40rem)")
+              "sm", CssEngine2.mediaQuery(1, "@media (min-width: 40rem)")
           ));
         }
     );
@@ -78,7 +78,7 @@ public class CssEngine2Test01Configuring {
           assertEquals(c.rx(), false);
           assertEquals(c.themeValues(), Map.of(":root", List.of(v)));
           assertEquals(c.variants(), Map.of(
-              "sm", CssVariant.atRule("@media (min-width: 30rem)")
+              "sm", CssEngine2.mediaQuery(1, "@media (min-width: 30rem)")
           ));
         }
     );

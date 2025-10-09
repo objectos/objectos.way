@@ -474,6 +474,56 @@ final class CssEngine2 implements Css.Engine {
   // ##################################################################
 
   // ##################################################################
+  // # BEGIN: Variant
+  // ##################################################################
+
+  sealed interface Variant {
+    Variant generateGroup();
+  }
+
+  static final MediaQuery ROOT = mediaQuery(0, ":root");
+
+  record MediaQuery(int idx, String value) implements Variant {
+    @Override
+    public final Variant generateGroup() {
+      // it really returns null...
+      return null;
+    }
+  }
+
+  sealed interface Modifier extends Variant {}
+
+  record Prefix(String value) implements Modifier {
+    @Override
+    public final Variant generateGroup() {
+      return prefix(value + ".group ");
+    }
+  }
+
+  record Suffix(String value) implements Modifier {
+    @Override
+    public final Variant generateGroup() {
+      return prefix(".group" + value + " ");
+    }
+  }
+
+  static MediaQuery mediaQuery(int idx, String value) {
+    return new MediaQuery(idx, value);
+  }
+
+  static Prefix prefix(String value) {
+    return new Prefix(value);
+  }
+
+  static Suffix suffix(String value) {
+    return new Suffix(value);
+  }
+
+  // ##################################################################
+  // # END: Variant
+  // ##################################################################
+
+  // ##################################################################
   // # BEGIN: Configuring
   // ##################################################################
 
@@ -482,6 +532,8 @@ final class CssEngine2 implements Css.Engine {
     final Note.Ref2<Value, Value> $replaced = Note.Ref2.create(getClass(), "REP", Note.INFO);
 
     final Map<String, ThemeProp> keywords = new HashMap<>();
+
+    int mediaQueryIdx = 1;
 
     final Map<String, Map<String, Value>> namespaces = new HashMap<>();
 
@@ -495,7 +547,7 @@ final class CssEngine2 implements Css.Engine {
 
     String systemTheme;
 
-    Map<String, CssVariant> systemVariants;
+    Map<String, Variant> systemVariants;
 
     final Map<Object, List<Value>> themeValues = new LinkedHashMap<>();
 
@@ -503,7 +555,7 @@ final class CssEngine2 implements Css.Engine {
 
     int valueIndex;
 
-    final Map<String, CssVariant> variants = new HashMap<>();
+    final Map<String, Variant> variants = new HashMap<>();
 
     // ##################################################################
     // # BEGIN: Configuring: Public API
@@ -634,12 +686,37 @@ final class CssEngine2 implements Css.Engine {
     }
 
     private void systemVariants() {
-      final Map<String, CssVariant> source;
-      source = systemVariants != null ? systemVariants : Css.systemVariants();
+      final Map<String, Variant> sv;
+      sv = systemVariants;
 
-      variants.putAll(source);
+      if (sv != null) {
+        variants.putAll(sv);
 
-      systemVariants = null;
+        systemVariants = null;
+
+        return;
+      }
+
+      variant("dark", mediaQuery(mediaQueryIdx++, "@media (prefers-color-scheme: dark)"));
+
+      variant("active", suffix(":active"));
+      variant("checked", suffix(":checked"));
+      variant("disabled", suffix(":disabled"));
+      variant("first-child", suffix(":first-child"));
+      variant("focus", suffix(":focus"));
+      variant("focus-visible", suffix(":focus-visible"));
+      variant("hover", suffix(":hover"));
+      variant("last-child", suffix(":last-child"));
+      variant("visited", suffix(":visited"));
+
+      variant("after", suffix("::after"));
+      variant("backdrop", suffix("::backdrop"));
+      variant("before", suffix("::before"));
+      variant("first-letter", suffix("::first-letter"));
+      variant("first-line", suffix("::first-line"));
+
+      variant("*", suffix(" > *"));
+      variant("**", suffix(" *"));
     }
 
     private void userTheme() {
@@ -712,15 +789,15 @@ final class CssEngine2 implements Css.Engine {
         final String id;
         id = var.id;
 
-        final CssVariant variant;
-        variant = CssVariant.atRule("@media (min-width: " + var.value + ")");
+        final Variant variant;
+        variant = mediaQuery(mediaQueryIdx++, "@media (min-width: " + var.value + ")");
 
         variant(id, variant);
       }
     }
 
-    private void variant(String name, CssVariant variant) {
-      final CssVariant maybeExisting;
+    private void variant(String name, Variant variant) {
+      final Variant maybeExisting;
       maybeExisting = variants.put(name, variant);
 
       if (maybeExisting == null) {
@@ -839,7 +916,7 @@ final class CssEngine2 implements Css.Engine {
 
       Map<Object, List<Value>> themeValues,
 
-      Map<String, CssVariant> variants
+      Map<String, Variant> variants
 
   ) implements Stage {
 
@@ -1363,12 +1440,293 @@ final class CssEngine2 implements Css.Engine {
   // ##################################################################
 
   // ##################################################################
+  // # BEGIN: Utility
+  // ##################################################################
+
+  record Utility(List<Modifier> modifiers, String className, String property, String value) {}
+
+  static Utility utility(List<Modifier> modifiers, String className, String property, String value) {
+    return new Utility(modifiers, className, property, value);
+  }
+
+  // ##################################################################
+  // # END: Utility
+  // ##################################################################
+
+  // ##################################################################
   // # BEGIN: Processor
   // ##################################################################
 
   @FunctionalInterface
   interface Processor {
     void process(List<String> slugs);
+  }
+
+  static final class Proc implements Processor {
+
+    final Set<String> distinct = new HashSet<>();
+
+    final List<MediaQuery> mediaQueries = new ArrayList<>();
+
+    final List<Modifier> modifiers = new ArrayList<>();
+
+    final Note.Sink noteSink;
+
+    final StringBuilder sb = new StringBuilder();
+
+    final Map<MediaQuery, Map<MediaQuery, List<Utility>>> utilities = new HashMap<>();
+
+    final Map<String, Variant> variants;
+
+    Proc(Note.Sink noteSink, Map<String, Variant> variants) {
+      this.noteSink = noteSink;
+
+      this.variants = variants;
+    }
+
+    @Override
+    public final void process(List<String> slugs) {
+      final String className;
+      className = reconstruct(slugs);
+
+      if (!distinct.add(className)) {
+        // already seen...
+        return;
+      }
+
+      final String propValue;
+      propValue = slugs.removeLast();
+
+      final String propName;
+      propName = slugs.removeLast();
+
+      // process variants
+      mediaQueries.clear();
+
+      modifiers.clear();
+
+      for (int idx = 0, size = slugs.size(); idx < size; idx++) {
+        final String variantName;
+        variantName = slugs.get(idx);
+
+        final Variant variant;
+        variant = variantByName(variantName);
+
+        switch (variant) {
+          case MediaQuery query -> mediaQueries.add(query);
+
+          case Modifier mod -> modifiers.add(mod);
+
+          case null -> {
+            return;
+          }
+        }
+      }
+
+      final List<Modifier> mods;
+      mods = List.copyOf(modifiers);
+
+      final Utility utility;
+      utility = new Utility(mods, className, propName, propValue);
+
+      switch (mediaQueries.size()) {
+        case 0 -> {
+          final Map<MediaQuery, List<Utility>> root;
+          root = utilities.computeIfAbsent(ROOT, key -> new HashMap<>());
+
+          final List<Utility> list;
+          list = root.computeIfAbsent(ROOT, key -> new ArrayList<>());
+
+          list.add(utility);
+        }
+
+        default -> throw new UnsupportedOperationException("Implement me :: size=" + mediaQueries.size());
+      }
+    }
+
+    private String reconstruct(List<String> slugs) {
+      sb.setLength(0);
+
+      final String first;
+      first = slugs.getFirst();
+
+      sb.append(first);
+
+      for (int idx = 1, size = slugs.size(); idx < size; idx++) {
+        final String s;
+        s = slugs.get(idx);
+
+        sb.append(':');
+
+        sb.append(s);
+      }
+
+      return sb.toString();
+    }
+
+    private Variant variantByName(String name) {
+      Variant result;
+      result = variants.get(name);
+
+      if (result != null) {
+        return result;
+      }
+
+      result = variantByNameOfAttribute(name);
+
+      if (result != null) {
+        return result;
+      }
+
+      result = variantByNameOfElement(name);
+
+      if (result != null) {
+        return result;
+      }
+
+      result = variantByPseudoClass(name);
+
+      if (result != null) {
+        return result;
+      }
+
+      return variantByNameOfGroup(name);
+    }
+
+    private Modifier variantByNameOfAttribute(String name) {
+      final int length;
+      length = name.length();
+
+      if (length == 0) {
+        return null;
+      }
+
+      final char first;
+      first = name.charAt(0);
+
+      if (first != '[') {
+        return null;
+      }
+
+      final char last;
+      last = name.charAt(length - 1);
+
+      if (last != ']') {
+        return null;
+      }
+
+      return suffix(name);
+    }
+
+    private Variant variantByNameOfElement(String name) {
+      if (HtmlElementName.hasName(name)) {
+        final Variant descendant;
+        descendant = suffix(" " + name);
+
+        final Variant maybeExisting;
+        maybeExisting = variants.put(name, descendant);
+
+        if (maybeExisting != null) {
+          // TODO log?
+        }
+
+        return descendant;
+      }
+
+      return null;
+    }
+
+    private Variant variantByPseudoClass(String name) {
+      final int openIndex;
+      openIndex = name.indexOf('(');
+
+      if (openIndex < 0) {
+        return null;
+      }
+
+      final int closeIndex;
+      closeIndex = name.lastIndexOf(')');
+
+      if (closeIndex < 0) {
+        return null;
+      }
+
+      final String maybe;
+      maybe = name.substring(0, openIndex);
+
+      final boolean validName;
+      validName = switch (maybe) {
+        case "nth-child" -> true;
+
+        default -> false;
+      };
+
+      if (!validName) {
+        return null;
+      }
+
+      return suffix(":" + name);
+    }
+
+    private Variant variantByNameOfGroup(String name) {
+      final int dash;
+      dash = name.indexOf('-');
+
+      if (dash < 0) {
+        return null;
+      }
+
+      String maybeGroup;
+      maybeGroup = name.substring(0, dash);
+
+      if (!maybeGroup.equals("group")) {
+        return null;
+      }
+
+      int suffixIndex;
+      suffixIndex = dash + 1;
+
+      if (suffixIndex >= name.length()) {
+        return null;
+      }
+
+      String suffix;
+      suffix = name.substring(suffixIndex);
+
+      Variant groupVariant;
+      groupVariant = variants.get(suffix);
+
+      if (groupVariant != null) {
+        return variantByNameOfGroup(name, groupVariant);
+      }
+
+      groupVariant = variantByNameOfAttribute(suffix);
+
+      if (groupVariant != null) {
+        return variantByNameOfGroup(name, groupVariant);
+      }
+
+      return null;
+    }
+
+    private Variant variantByNameOfGroup(String name, Variant groupVariant) {
+      Variant generatedGroupVariant;
+      generatedGroupVariant = groupVariant.generateGroup();
+
+      if (generatedGroupVariant == null) {
+        return null;
+      }
+
+      final Variant maybeExisting;
+      maybeExisting = variants.put(name, generatedGroupVariant);
+
+      if (maybeExisting != null) {
+        // TODO log existing?
+      }
+
+      return generatedGroupVariant;
+    }
+
   }
 
   // ##################################################################
