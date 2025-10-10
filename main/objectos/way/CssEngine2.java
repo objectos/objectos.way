@@ -47,11 +47,9 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -1354,14 +1352,14 @@ final class CssEngine2 implements Css.Engine {
     static final byte $TOKEN = 4;
     static final byte $TOKEN_COLON = 5;
 
-    private final Processor processor;
+    private final List<String> acc = new ArrayList<>();
 
     private final StringBuilder sb = new StringBuilder();
 
-    private final List<String> slugs = new ArrayList<>();
+    private final Slugs slugs;
 
-    Tokenizer(Processor processor) {
-      this.processor = processor;
+    Tokenizer(Slugs slugs) {
+      this.slugs = slugs;
     }
 
     @Override
@@ -1382,7 +1380,7 @@ final class CssEngine2 implements Css.Engine {
 
             case TKS_COLON -> $INVALID;
 
-            default -> { slugs.clear(); sb.setLength(0); sb.append(c); yield $WORD; }
+            default -> { acc.clear(); sb.setLength(0); sb.append(c); yield $WORD; }
           };
 
           case $INVALID -> switch (test) {
@@ -1394,7 +1392,7 @@ final class CssEngine2 implements Css.Engine {
           case $WORD -> switch (test) {
             case TKS_WS -> $NORMAL;
 
-            case TKS_COLON -> { slugs.add(sb.toString()); sb.setLength(0); yield $WORD_COLON; }
+            case TKS_COLON -> { acc.add(sb.toString()); sb.setLength(0); yield $WORD_COLON; }
 
             default -> { sb.append(c); yield $WORD; }
           };
@@ -1408,9 +1406,9 @@ final class CssEngine2 implements Css.Engine {
           };
 
           case $TOKEN -> switch (test) {
-            case TKS_WS -> { slugs.add(sb.toString()); processor.process(slugs); yield $NORMAL; }
+            case TKS_WS -> { acc.add(sb.toString()); slugs.consume(acc); yield $NORMAL; }
 
-            case TKS_COLON -> { slugs.add(sb.toString()); sb.setLength(0); yield $TOKEN_COLON; }
+            case TKS_COLON -> { acc.add(sb.toString()); sb.setLength(0); yield $TOKEN_COLON; }
 
             default -> { sb.append(c); yield $TOKEN; }
           };
@@ -1428,9 +1426,9 @@ final class CssEngine2 implements Css.Engine {
       }
 
       if (state == $TOKEN) {
-        slugs.add(sb.toString());
+        acc.add(sb.toString());
 
-        processor.process(slugs);
+        slugs.consume(acc);
       }
     }
 
@@ -1448,76 +1446,12 @@ final class CssEngine2 implements Css.Engine {
   // # BEGIN: Utility
   // ##################################################################
 
-  static final class Context {
-
-    final Map<MediaQuery, Context> children = new TreeMap<>();
-
-    final List<Utility> utilities = new ArrayList<>();
-
-    final void put(List<MediaQuery> queries, Utility utility) {
-      final Context ctx;
-
-      if (queries.isEmpty()) {
-        ctx = this;
-      } else {
-        ctx = resolve(children, queries.removeFirst(), queries);
-      }
-
-      final List<Utility> list;
-      list = ctx.utilities;
-
-      list.add(utility);
-    }
-
-    private Context resolve(Map<MediaQuery, Context> map, MediaQuery query, List<MediaQuery> rest) {
-      final Context child;
-      child = map.computeIfAbsent(query, key -> new Context());
-
-      if (rest.isEmpty()) {
-        return child;
-      } else {
-        return resolve(child.children, rest.removeFirst(), rest);
-      }
-    }
-
-    final List<Map.Entry<List<MediaQuery>, List<Utility>>> asList() {
-      final List<Map.Entry<List<MediaQuery>, List<Utility>>> list;
-      list = new ArrayList<>();
-
-      final List<MediaQuery> queries;
-      queries = new ArrayList<>();
-
-      asList(list, queries);
-
-      return list;
-    }
-
-    private void asList(
-        List<Entry<List<MediaQuery>, List<Utility>>> list,
-        List<MediaQuery> queries) {
-      if (!utilities.isEmpty()) {
-        final Entry<List<MediaQuery>, List<Utility>> entry;
-        entry = Map.entry(List.copyOf(queries), utilities);
-
-        list.add(entry);
-      }
-
-      for (Entry<MediaQuery, Context> childEntry : children.entrySet()) {
-        final MediaQuery query;
-        query = childEntry.getKey();
-
-        queries.add(query);
-
-        final Context next;
-        next = childEntry.getValue();
-
-        next.asList(list, queries);
-      }
-    }
-
+  @FunctionalInterface
+  interface Slugs {
+    void consume(List<String> slugs);
   }
 
-  record Utility(List<Modifier> modifiers, String className, String property, String value)
+  record Utility(List<Variant> variants, String className, String property, String value)
       implements Comparable<Utility> {
     @Override
     public final int compareTo(Utility o) {
@@ -1538,47 +1472,32 @@ final class CssEngine2 implements Css.Engine {
     }
   }
 
-  static Utility utility(List<Modifier> modifiers, String className, String property, String value) {
-    return new Utility(modifiers, className, property, value);
+  static Utility utility(List<Variant> variants, String className, String property, String value) {
+    return new Utility(variants, className, property, value);
   }
 
-  // ##################################################################
-  // # END: Utility
-  // ##################################################################
-
-  // ##################################################################
-  // # BEGIN: Processor
-  // ##################################################################
-
-  @FunctionalInterface
-  interface Processor {
-    void process(List<String> slugs);
-  }
-
-  static final class Proc implements Processor {
+  static final class Utilities implements Slugs {
 
     final Set<String> distinct = new HashSet<>();
 
-    final List<MediaQuery> mediaQueries = new ArrayList<>();
-
-    final List<Modifier> modifiers = new ArrayList<>();
-
     final Note.Sink noteSink;
 
-    final Context root = new Context();
+    final List<Variant> parsedVars = new ArrayList<>();
 
     final StringBuilder sb = new StringBuilder();
 
+    final List<Utility> utilities = new ArrayList<>();
+
     final Map<String, Variant> variants;
 
-    Proc(Note.Sink noteSink, Map<String, Variant> variants) {
+    Utilities(Note.Sink noteSink, Map<String, Variant> variants) {
       this.noteSink = noteSink;
 
       this.variants = variants;
     }
 
     @Override
-    public final void process(List<String> slugs) {
+    public final void consume(List<String> slugs) {
       final String className;
       className = reconstruct(slugs);
 
@@ -1594,9 +1513,7 @@ final class CssEngine2 implements Css.Engine {
       propName = slugs.removeLast();
 
       // process variants
-      mediaQueries.clear();
-
-      modifiers.clear();
+      parsedVars.clear();
 
       for (int idx = 0, size = slugs.size(); idx < size; idx++) {
         final String variantName;
@@ -1605,22 +1522,21 @@ final class CssEngine2 implements Css.Engine {
         final Variant variant;
         variant = variantByName(variantName);
 
-        switch (variant) {
-          case MediaQuery query -> mediaQueries.add(query);
-
-          case Modifier mod -> modifiers.add(mod);
-
-          case null -> { return; }
+        if (variant == null) {
+          // TODO log
+          return;
         }
+
+        parsedVars.add(variant);
       }
 
-      final List<Modifier> mods;
-      mods = List.copyOf(modifiers);
+      final List<Variant> vars;
+      vars = List.copyOf(parsedVars);
 
       final Utility utility;
-      utility = new Utility(mods, className, propName, propValue);
+      utility = new Utility(vars, className, propName, propValue);
 
-      root.put(mediaQueries, utility);
+      utilities.add(utility);
     }
 
     private String reconstruct(List<String> slugs) {
@@ -1809,7 +1725,19 @@ final class CssEngine2 implements Css.Engine {
   }
 
   // ##################################################################
-  // # END: Processor
+  // # END: Utility
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Theme
+  // ##################################################################
+
+  static final class Theme {
+
+  }
+
+  // ##################################################################
+  // # END: Theme
   // ##################################################################
 
   // ##################################################################

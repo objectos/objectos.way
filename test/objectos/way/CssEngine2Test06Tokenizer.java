@@ -98,11 +98,11 @@ public class CssEngine2Test06Tokenizer {
 
   @SafeVarargs
   private void test(String string, List<String>... lists) {
-    class ThisProcessor implements CssEngine2.Processor {
+    class ThisProcessor implements CssEngine2.Slugs {
       final List<List<String>> result = new ArrayList<>();
 
       @Override
-      public final void process(List<String> slugs) {
+      public final void consume(List<String> slugs) {
         result.add(
             List.copyOf(slugs)
         );
