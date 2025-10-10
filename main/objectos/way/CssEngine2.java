@@ -47,9 +47,11 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -481,9 +483,12 @@ final class CssEngine2 implements Css.Engine {
     Variant generateGroup();
   }
 
-  static final MediaQuery ROOT = mediaQuery(0, ":root");
+  record MediaQuery(int idx, String value) implements Comparable<MediaQuery>, Variant {
+    @Override
+    public final int compareTo(MediaQuery o) {
+      return Integer.compare(idx, o.idx);
+    }
 
-  record MediaQuery(int idx, String value) implements Variant {
     @Override
     public final Variant generateGroup() {
       // it really returns null...
@@ -1443,7 +1448,95 @@ final class CssEngine2 implements Css.Engine {
   // # BEGIN: Utility
   // ##################################################################
 
-  record Utility(List<Modifier> modifiers, String className, String property, String value) {}
+  static final class Context {
+
+    final Map<MediaQuery, Context> children = new TreeMap<>();
+
+    final List<Utility> utilities = new ArrayList<>();
+
+    final void put(List<MediaQuery> queries, Utility utility) {
+      final Context ctx;
+
+      if (queries.isEmpty()) {
+        ctx = this;
+      } else {
+        ctx = resolve(children, queries.removeFirst(), queries);
+      }
+
+      final List<Utility> list;
+      list = ctx.utilities;
+
+      list.add(utility);
+    }
+
+    private Context resolve(Map<MediaQuery, Context> map, MediaQuery query, List<MediaQuery> rest) {
+      final Context child;
+      child = map.computeIfAbsent(query, key -> new Context());
+
+      if (rest.isEmpty()) {
+        return child;
+      } else {
+        return resolve(child.children, rest.removeFirst(), rest);
+      }
+    }
+
+    final List<Map.Entry<List<MediaQuery>, List<Utility>>> asList() {
+      final List<Map.Entry<List<MediaQuery>, List<Utility>>> list;
+      list = new ArrayList<>();
+
+      final List<MediaQuery> queries;
+      queries = new ArrayList<>();
+
+      asList(list, queries);
+
+      return list;
+    }
+
+    private void asList(
+        List<Entry<List<MediaQuery>, List<Utility>>> list,
+        List<MediaQuery> queries) {
+      if (!utilities.isEmpty()) {
+        final Entry<List<MediaQuery>, List<Utility>> entry;
+        entry = Map.entry(List.copyOf(queries), utilities);
+
+        list.add(entry);
+      }
+
+      for (Entry<MediaQuery, Context> childEntry : children.entrySet()) {
+        final MediaQuery query;
+        query = childEntry.getKey();
+
+        queries.add(query);
+
+        final Context next;
+        next = childEntry.getValue();
+
+        next.asList(list, queries);
+      }
+    }
+
+  }
+
+  record Utility(List<Modifier> modifiers, String className, String property, String value)
+      implements Comparable<Utility> {
+    @Override
+    public final int compareTo(Utility o) {
+      int result;
+      result = property.compareTo(o.property);
+
+      if (result != 0) {
+        return result;
+      }
+
+      result = value.compareTo(o.value);
+
+      if (result != 0) {
+        return result;
+      }
+
+      return className.compareTo(o.className);
+    }
+  }
 
   static Utility utility(List<Modifier> modifiers, String className, String property, String value) {
     return new Utility(modifiers, className, property, value);
@@ -1472,9 +1565,9 @@ final class CssEngine2 implements Css.Engine {
 
     final Note.Sink noteSink;
 
-    final StringBuilder sb = new StringBuilder();
+    final Context root = new Context();
 
-    final Map<MediaQuery, Map<MediaQuery, List<Utility>>> utilities = new HashMap<>();
+    final StringBuilder sb = new StringBuilder();
 
     final Map<String, Variant> variants;
 
@@ -1517,9 +1610,7 @@ final class CssEngine2 implements Css.Engine {
 
           case Modifier mod -> modifiers.add(mod);
 
-          case null -> {
-            return;
-          }
+          case null -> { return; }
         }
       }
 
@@ -1529,19 +1620,7 @@ final class CssEngine2 implements Css.Engine {
       final Utility utility;
       utility = new Utility(mods, className, propName, propValue);
 
-      switch (mediaQueries.size()) {
-        case 0 -> {
-          final Map<MediaQuery, List<Utility>> root;
-          root = utilities.computeIfAbsent(ROOT, key -> new HashMap<>());
-
-          final List<Utility> list;
-          list = root.computeIfAbsent(ROOT, key -> new ArrayList<>());
-
-          list.add(utility);
-        }
-
-        default -> throw new UnsupportedOperationException("Implement me :: size=" + mediaQueries.size());
-      }
+      root.put(mediaQueries, utility);
     }
 
     private String reconstruct(List<String> slugs) {

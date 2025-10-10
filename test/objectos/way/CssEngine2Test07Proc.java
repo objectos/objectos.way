@@ -24,6 +24,8 @@ import org.testng.annotations.Test;
 
 public class CssEngine2Test07Proc {
 
+  private static final Map.Entry<String, CssEngine2.MediaQuery> DARK = Map.entry("dark", CssEngine2.mediaQuery(1, "@media (prefers-color-scheme: dark)"));
+  private static final Map.Entry<String, CssEngine2.MediaQuery> MD = Map.entry("md", CssEngine2.mediaQuery(2, "@media (min-width: 48rem)"));
   private static final Map.Entry<String, CssEngine2.Modifier> HOVER = Map.entry("hover", CssEngine2.suffix(":hover"));
 
   @Test
@@ -35,13 +37,9 @@ public class CssEngine2Test07Proc {
             list("margin", "0")
         ),
 
-        Map.of(
-            CssEngine2.ROOT, Map.of(
-                CssEngine2.ROOT, List.of(
-                    CssEngine2.utility(List.of(), "margin:0", "margin", "0")
-                )
-            )
-        )
+        Map.entry(List.of(), List.of(
+            CssEngine2.utility(List.of(), "margin:0", "margin", "0")
+        ))
     );
   }
 
@@ -56,14 +54,10 @@ public class CssEngine2Test07Proc {
             list("margin", "0")
         ),
 
-        Map.of(
-            CssEngine2.ROOT, Map.of(
-                CssEngine2.ROOT, List.of(
-                    CssEngine2.utility(List.of(), "margin:0", "margin", "0"),
-                    CssEngine2.utility(List.of(), "padding:0", "padding", "0")
-                )
-            )
-        )
+        Map.entry(List.of(), List.of(
+            CssEngine2.utility(List.of(), "margin:0", "margin", "0"),
+            CssEngine2.utility(List.of(), "padding:0", "padding", "0")
+        ))
     );
   }
 
@@ -77,17 +71,13 @@ public class CssEngine2Test07Proc {
             list("padding", "0")
         ),
 
-        Map.of(
-            CssEngine2.ROOT, Map.of(
-                CssEngine2.ROOT, List.of(
-                    CssEngine2.utility(List.of(), "padding:0", "padding", "0")
-                )
-            )
-        )
+        Map.entry(List.of(), List.of(
+            CssEngine2.utility(List.of(), "padding:0", "padding", "0")
+        ))
     );
   }
 
-  @Test
+  @Test(description = "system variant")
   public void testCase04() {
     test(
         Map.ofEntries(HOVER),
@@ -97,14 +87,48 @@ public class CssEngine2Test07Proc {
             list("padding", "0")
         ),
 
-        Map.of(
-            CssEngine2.ROOT, Map.of(
-                CssEngine2.ROOT, List.of(
-                    CssEngine2.utility(List.of(HOVER.getValue()), "hover:margin:0", "margin", "0"),
-                    CssEngine2.utility(List.of(), "padding:0", "padding", "0")
-                )
-            )
-        )
+        Map.entry(List.of(), List.of(
+            CssEngine2.utility(List.of(HOVER.getValue()), "hover:margin:0", "margin", "0"),
+            CssEngine2.utility(List.of(), "padding:0", "padding", "0")
+        ))
+    );
+  }
+
+  @Test(description = "media query (1)")
+  public void testCase05() {
+    test(
+        Map.ofEntries(DARK),
+
+        List.of(
+            list("dark", "color", "gray-100"),
+            list("padding", "0")
+        ),
+
+        Map.entry(List.of(), List.of(
+            CssEngine2.utility(List.of(), "padding:0", "padding", "0")
+        )),
+        Map.entry(List.of(DARK.getValue()), List.of(
+            CssEngine2.utility(List.of(), "dark:color:gray-100", "color", "gray-100")
+        ))
+    );
+  }
+
+  @Test(description = "media query (2)")
+  public void testCase06() {
+    test(
+        Map.ofEntries(DARK, MD),
+
+        List.of(
+            list("dark", "md", "color", "gray-100"),
+            list("padding", "0")
+        ),
+
+        Map.entry(List.of(), List.of(
+            CssEngine2.utility(List.of(), "padding:0", "padding", "0")
+        )),
+        Map.entry(List.of(DARK.getValue(), MD.getValue()), List.of(
+            CssEngine2.utility(List.of(), "dark:md:color:gray-100", "color", "gray-100")
+        ))
     );
   }
 
@@ -119,10 +143,11 @@ public class CssEngine2Test07Proc {
     return l;
   }
 
+  @SafeVarargs
   private void test(
       Map<String, CssEngine2.Variant> variants,
       List<List<String>> input,
-      Map<CssEngine2.MediaQuery, Map<CssEngine2.MediaQuery, List<CssEngine2.Utility>>> expected) {
+      Map.Entry<List<CssEngine2.MediaQuery>, List<CssEngine2.Utility>>... expected) {
     final Note.Sink noteSink;
     noteSink = Y.noteSink();
 
@@ -133,7 +158,9 @@ public class CssEngine2Test07Proc {
       proc.process(list);
     }
 
-    assertEquals(proc.utilities, expected);
+    final CssEngine2.Context root = proc.root;
+
+    assertEquals(root.asList(), List.of(expected));
   }
 
 }
