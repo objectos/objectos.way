@@ -50,6 +50,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -98,7 +99,7 @@ final class CssEngine2 implements Css.Engine {
     return new SystemSkip(index, ns);
   }
 
-  static Value themeProp(int index, String ns, String id, String value) {
+  static ThemeProp themeProp(int index, String ns, String id, String value) {
     if (id.isEmpty()) {
       return new ThemeProp(index, "--" + ns, ns, id, value);
     } else {
@@ -1729,15 +1730,501 @@ final class CssEngine2 implements Css.Engine {
   // ##################################################################
 
   // ##################################################################
-  // # BEGIN: Theme
+  // # BEGIN: Gen
   // ##################################################################
 
-  static final class Theme {
+  record Rule(String className, String property, String value) {}
+
+  static Rule rule(String className, String property, String value) {
+    return new Rule(className, property, value);
+  }
+
+  static final class Rules {
+
+    final Map<MediaQuery, Rules> queries = new TreeMap<>();
+
+    final List<Rule> rules = new ArrayList<>();
+
+    final void add(Rule rule) {
+      rules.add(rule);
+    }
+
+    final Rules resolve(MediaQuery query) {
+      return queries.computeIfAbsent(query, key -> new Rules());
+    }
+
+  }
+
+  static final class Ctx {
+
+    final Set<String> keywords = new HashSet<>();
+
+    final Rules rules = new Rules();
+
+    final void addKeyword(String kw) {
+      keywords.add(kw);
+    }
+
+  }
+
+  static final class Gen {
+
+    final Ctx ctx = new Ctx();
+
+    int entryIndex;
+
+    final Map<String, ThemeProp> keywords;
+
+    final StringBuilder sb = new StringBuilder();
+
+    final List<Utility> utilities;
+
+    Gen(Map<String, ThemeProp> keywords, List<Utility> utilities) {
+      this.keywords = keywords;
+
+      this.utilities = utilities;
+    }
+
+    public final Ctx generate() {
+      for (Utility utility : utilities) {
+        process(utility);
+      }
+
+      return ctx;
+    }
+
+    private void process(Utility utility) {
+      // build class name
+      sb.setLength(0);
+
+      sb.append('.');
+
+      Css.serializeIdentifier(sb, utility.className);
+
+      Rules rules;
+      rules = ctx.rules;
+
+      final List<Variant> variants;
+      variants = utility.variants;
+
+      for (Variant variant : variants) {
+        switch (variant) {
+          case MediaQuery query -> rules = rules.resolve(query);
+
+          case Prefix p -> sb.insert(0, p.value);
+
+          case Suffix s -> sb.append(s.value);
+        }
+      }
+
+      final String className;
+      className = sb.toString();
+
+      final String value;
+      value = formatValue(utility.value);
+
+      final Rule rule;
+      rule = rule(className, utility.property, value);
+
+      rules.add(rule);
+    }
+
+    final String formatValue(String value) {
+      sb.setLength(0);
+
+      entryIndex = 0;
+
+      int index = 0;
+
+      final int length;
+      length = value.length();
+
+      while (index < length) {
+        final char c;
+        c = value.charAt(index);
+
+        if (Ascii.isDigit(c)) {
+          index = formatValueNumeric(value, index);
+        }
+
+        else if (Ascii.isLetter(c)) {
+          index = formatValueKeyword(value, index);
+        }
+
+        else if (c == '-') {
+          index = formatValueNegative(value, index);
+        }
+
+        else if (isWhitespace(c)) {
+          index = formatValueWhitespace(value, index);
+        }
+
+        else {
+          index++;
+        }
+      }
+
+      if (sb.isEmpty()) {
+        return value;
+      }
+
+      formatValueNormal(value, length);
+
+      return sb.toString();
+    }
+
+    private int formatValueKeyword(String value, int index) {
+      final int length;
+      length = value.length();
+
+      // where the (possibly) keyword begins
+      final int beginIndex;
+      beginIndex = index;
+
+      // consume initial char
+      index++;
+
+      enum State {
+
+        KEYWORD,
+
+        SLASH,
+
+        OPACITY,
+
+        INVALID;
+
+      }
+
+      State state;
+      state = State.KEYWORD;
+
+      int slashIndex;
+      slashIndex = length;
+
+      while (index < length) {
+        final char c;
+        c = value.charAt(index);
+
+        if (isBoundary(c)) {
+          break;
+        }
+
+        switch (state) {
+          case KEYWORD -> {
+            if (c == '/') {
+              state = State.SLASH;
+
+              slashIndex = index;
+            } else {
+              state = State.KEYWORD;
+            }
+          }
+
+          case SLASH, OPACITY -> {
+            if (Ascii.isDigit(c)) {
+              state = State.OPACITY;
+            } else {
+              state = State.INVALID;
+            }
+          }
+
+          case INVALID -> {
+            state = State.INVALID;
+          }
+        }
+
+        index++;
+      }
+
+      switch (state) {
+        case KEYWORD -> {
+          // extract keyword
+          final String maybe;
+          maybe = value.substring(beginIndex, index);
+
+          // check for match
+          final ThemeProp kw;
+          kw = keywords.get(maybe);
+
+          if (kw == null) {
+            break;
+          }
+
+          ctx.addKeyword(maybe);
+
+          formatValueNormal(value, beginIndex);
+
+          sb.append(kw.value);
+
+          entryIndex = index;
+        }
+
+        case OPACITY -> {
+          // extract keyword
+          final String maybe;
+          maybe = value.substring(beginIndex, slashIndex);
+
+          // check for match
+          final ThemeProp kw;
+          kw = keywords.get(maybe);
+
+          if (kw == null) {
+            break;
+          }
+
+          ctx.addKeyword(maybe);
+
+          formatValueNormal(value, beginIndex);
+
+          final String opacity;
+          opacity = value.substring(slashIndex + 1, index);
+
+          sb.append("color-mix(in oklab, ");
+
+          sb.append(kw.value);
+
+          sb.append(' ');
+
+          sb.append(opacity);
+
+          sb.append("%, transparent)");
+
+          entryIndex = index;
+        }
+
+        case SLASH, INVALID -> {}
+      }
+
+      return index;
+    }
+
+    private void formatValueNormal(String value, int endIndex) {
+      sb.append(value, entryIndex, endIndex);
+    }
+
+    private int formatValueNegative(String value, int index) {
+      final int length;
+      length = value.length();
+
+      // where the number begins
+      final int beginIndex;
+      beginIndex = index;
+
+      // consume '-'
+      index++;
+
+      if (index >= length) {
+        // there're no more chars
+        return index;
+      }
+
+      final char c;
+      c = value.charAt(index);
+
+      if (!Ascii.isDigit(c)) {
+        return index;
+      }
+
+      return formatValueNumeric(value, beginIndex);
+    }
+
+    private enum FormatValueNumeric {
+
+      INTEGER,
+
+      DOT,
+
+      DECIMAL;
+
+    }
+
+    private int formatValueNumeric(String value, int index) {
+      final int length;
+      length = value.length();
+
+      // where the number begins
+      final int beginIndex;
+      beginIndex = index;
+
+      // consume '-' or initial digit
+      index++;
+
+      // initial state
+      FormatValueNumeric state;
+      state = FormatValueNumeric.INTEGER;
+
+      loop: while (index < length) {
+        final char c;
+        c = value.charAt(index);
+
+        switch (state) {
+          case INTEGER -> {
+            if (Ascii.isDigit(c)) {
+              state = FormatValueNumeric.INTEGER;
+              index++;
+            } else if (c == '.') {
+              state = FormatValueNumeric.DOT;
+              index++;
+            } else {
+              break loop;
+            }
+          }
+
+          case DOT -> {
+            if (Ascii.isDigit(c)) {
+              state = FormatValueNumeric.DECIMAL;
+              index++;
+            } else {
+              break loop;
+            }
+          }
+
+          case DECIMAL -> {
+            if (Ascii.isDigit(c)) {
+              state = FormatValueNumeric.DECIMAL;
+              index++;
+            } else {
+              break loop;
+            }
+          }
+        }
+      }
+
+      // where the (maybe) unit begins
+      final int unitIndex;
+      unitIndex = index;
+
+      while (index < length) {
+        final char c;
+        c = value.charAt(index);
+
+        if (isBoundary(c)) {
+          break;
+        }
+
+        index++;
+      }
+
+      if (state == FormatValueNumeric.DOT) {
+        // invalid state
+        return index;
+      }
+
+      // maybe rx value?
+
+      final int unitLength;
+      unitLength = index - unitIndex;
+
+      if (unitLength != 2) {
+        return index;
+      }
+
+      final char maybeR;
+      maybeR = value.charAt(unitIndex);
+
+      if (maybeR != 'r') {
+        return index;
+      }
+
+      final char maybeX;
+      maybeX = value.charAt(unitIndex + 1);
+
+      if (maybeX != 'x') {
+        return index;
+      }
+
+      // handle rx value
+
+      // 1) emit normal value (if necessary)
+      formatValueNormal(value, beginIndex);
+
+      // 2) extract numeric value
+      String number;
+      number = value.substring(beginIndex, unitIndex);
+
+      // 3) emit value
+      sb.append("calc(");
+
+      sb.append(number);
+
+      sb.append(" / var(--rx) * 1rem)");
+
+      // 4) update normal index
+      entryIndex = index;
+
+      return index;
+    }
+
+    private int formatValueWhitespace(String value, int index) {
+      final int length;
+      length = value.length();
+
+      final int beginIndex;
+      beginIndex = index;
+
+      index++;
+
+      while (index < length) {
+        final char c;
+        c = value.charAt(index);
+
+        if (!isWhitespace(c)) {
+          break;
+        }
+
+        index++;
+      }
+
+      formatValueNormal(value, beginIndex);
+
+      sb.append(' ');
+
+      entryIndex = index;
+
+      return index;
+    }
+
+    private boolean isBoundary(char c) {
+      return isSeparator(c) || isWhitespace(c);
+    }
+
+    private boolean isSeparator(char c) {
+      return switch (c) {
+        case ',', '(', ')' -> true;
+
+        default -> false;
+      };
+    }
+
+    private boolean isWhitespace(char c) {
+      return c == '_';
+    }
+
+    // BEGIN: test-only section
+
+    Gen() {
+      keywords = new HashMap<>();
+
+      utilities = new ArrayList<>();
+    }
+
+    final void keyword(String keyword, String value) {
+      keywords.put(keyword, themeProp(1, "", keyword, value));
+    }
+
+    final void utility(List<Variant> variants, String className, String property, String value) {
+      utilities.add(
+          CssEngine2.utility(variants, className, property, value)
+      );
+    }
+
+    // END: test-only section
 
   }
 
   // ##################################################################
-  // # END: Theme
+  // # END: Gen
   // ##################################################################
 
   // ##################################################################
