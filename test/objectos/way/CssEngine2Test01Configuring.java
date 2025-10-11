@@ -20,7 +20,6 @@ import static org.testng.Assert.assertEquals;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-import objectos.way.CssEngine2.Value;
 import org.testng.annotations.Test;
 
 public class CssEngine2Test01Configuring {
@@ -41,14 +40,14 @@ public class CssEngine2Test01Configuring {
         },
 
         c -> {
-          final Value v;
+          final CssEngine2.Value v;
           v = CssEngine2.themeProp(0, "breakpoint", "sm", "40rem");
 
           assertEquals(c.keywords(), Map.of("screen-sm", v));
           assertEquals(c.rx(), false);
           assertEquals(c.themeValues(), Map.of(":root", List.of(v)));
           assertEquals(c.variants(), Map.of(
-              "sm", CssEngine2.mediaQuery(1, "@media (min-width: 40rem)")
+              "sm", CssEngine2.nest1("@media (min-width: 40rem)")
           ));
         }
     );
@@ -71,14 +70,14 @@ public class CssEngine2Test01Configuring {
         },
 
         c -> {
-          final Value v;
+          final CssEngine2.Value v;
           v = CssEngine2.themeProp(1, "breakpoint", "sm", "30rem");
 
           assertEquals(c.keywords(), Map.of("screen-sm", v));
           assertEquals(c.rx(), false);
           assertEquals(c.themeValues(), Map.of(":root", List.of(v)));
           assertEquals(c.variants(), Map.of(
-              "sm", CssEngine2.mediaQuery(1, "@media (min-width: 30rem)")
+              "sm", CssEngine2.nest1("@media (min-width: 30rem)")
           ));
         }
     );
@@ -99,7 +98,7 @@ public class CssEngine2Test01Configuring {
         },
 
         c -> {
-          final Value v;
+          final CssEngine2.Value v;
           v = CssEngine2.themeProp(0, "color", "test", "#cafeba");
 
           assertEquals(c.keywords(), Map.of("test", v));
@@ -125,7 +124,7 @@ public class CssEngine2Test01Configuring {
         },
 
         c -> {
-          final Value v;
+          final CssEngine2.Value v;
           v = CssEngine2.themeProp(0, "font", "test", "'Comic Sans'");
 
           assertEquals(c.keywords(), Map.of("test", v));
@@ -151,7 +150,7 @@ public class CssEngine2Test01Configuring {
         },
 
         c -> {
-          final Value v;
+          final CssEngine2.Value v;
           v = CssEngine2.themeProp(0, "rx", "", "16");
 
           assertEquals(c.keywords(), Map.of());

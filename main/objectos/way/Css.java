@@ -23,6 +23,7 @@ import java.lang.annotation.Target;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 /// The **Objectos CSS** main class.
@@ -994,6 +995,31 @@ public final class Css {
 
     --rx: 16;
     """;
+  }
+
+  static Map<String, CssEngine2.Variant> systemVariants() {
+    return Map.ofEntries(
+        Map.entry("dark", CssEngine2.nest1("@media (prefers-color-scheme: dark)")),
+
+        Map.entry("active", CssEngine2.nest1("&:active")),
+        Map.entry("checked", CssEngine2.nest1("&:checked")),
+        Map.entry("disabled", CssEngine2.nest1("&:disabled")),
+        Map.entry("first-child", CssEngine2.nest1("&:first-child")),
+        Map.entry("focus", CssEngine2.nest1("&:focus")),
+        Map.entry("focus-visible", CssEngine2.nest1("&:focus-visible")),
+        Map.entry("hover", CssEngine2.nest1("&:hover")),
+        Map.entry("last-child", CssEngine2.nest1("&:last-child")),
+        Map.entry("visited", CssEngine2.nest1("&:visited")),
+
+        Map.entry("after", CssEngine2.nest1("&::after")),
+        Map.entry("backdrop", CssEngine2.nest1("&::backdrop")),
+        Map.entry("before", CssEngine2.nest1("&::before")),
+        Map.entry("first-letter", CssEngine2.nest1("&::first-letter")),
+        Map.entry("first-line", CssEngine2.nest1("&::first-line")),
+
+        Map.entry("*", CssEngine2.nest1(":is(& > *)")),
+        Map.entry("**", CssEngine2.nest1(":is(& *)"))
+    );
   }
 
   static void escape(StringBuilder out, char c) {

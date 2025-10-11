@@ -18,15 +18,17 @@ package objectos.way;
 import static org.testng.Assert.assertEquals;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import objectos.way.CssEngine2.Variant;
 import org.testng.annotations.Test;
 
 public class CssEngine2Test07Utilities {
 
-  private static final Map.Entry<String, CssEngine2.MediaQuery> DARK = Map.entry("dark", CssEngine2.mediaQuery(1, "@media (prefers-color-scheme: dark)"));
-  private static final Map.Entry<String, CssEngine2.MediaQuery> MD = Map.entry("md", CssEngine2.mediaQuery(2, "@media (min-width: 48rem)"));
-  private static final Map.Entry<String, CssEngine2.Modifier> HOVER = Map.entry("hover", CssEngine2.suffix(":hover"));
+  private static final CssEngine2.Variant DARK = CssEngine2.nest1("@media (prefers-color-scheme: dark)");
+  private static final CssEngine2.Variant MD = CssEngine2.nest1("@media (min-width: 48rem)");
+  private static final CssEngine2.Variant HOVER = CssEngine2.nest1("&:hover");
 
   @Test
   public void testCase01() {
@@ -74,14 +76,14 @@ public class CssEngine2Test07Utilities {
   @Test(description = "system variant")
   public void testCase04() {
     test(
-        Map.ofEntries(HOVER),
+        Map.of("hover", HOVER),
 
         List.of(
             list("hover", "margin", "0"),
             list("padding", "0")
         ),
 
-        CssEngine2.utility(List.of(HOVER.getValue()), "hover:margin:0", "margin", "0"),
+        CssEngine2.utility(List.of(HOVER), "hover:margin:0", "margin", "0"),
         CssEngine2.utility(List.of(), "padding:0", "padding", "0")
     );
   }
@@ -89,14 +91,14 @@ public class CssEngine2Test07Utilities {
   @Test(description = "media query (1)")
   public void testCase05() {
     test(
-        Map.ofEntries(DARK),
+        Map.of("dark", DARK),
 
         List.of(
             list("dark", "color", "gray-100"),
             list("padding", "0")
         ),
 
-        CssEngine2.utility(List.of(DARK.getValue()), "dark:color:gray-100", "color", "gray-100"),
+        CssEngine2.utility(List.of(DARK), "dark:color:gray-100", "color", "gray-100"),
         CssEngine2.utility(List.of(), "padding:0", "padding", "0")
     );
   }
@@ -104,15 +106,28 @@ public class CssEngine2Test07Utilities {
   @Test(description = "media query (2)")
   public void testCase06() {
     test(
-        Map.ofEntries(DARK, MD),
+        Map.of("dark", DARK, "md", MD),
 
         List.of(
             list("dark", "md", "color", "gray-100"),
             list("padding", "0")
         ),
 
-        CssEngine2.utility(List.of(DARK.getValue(), MD.getValue()), "dark:md:color:gray-100", "color", "gray-100"),
+        CssEngine2.utility(List.of(DARK, MD), "dark|md|color:gray-100", "color", "gray-100"),
         CssEngine2.utility(List.of(), "padding:0", "padding", "0")
+    );
+  }
+
+  @Test(description = "attr variant")
+  public void testCase07() {
+    test(
+        Map.of(),
+
+        List.of(
+            list("&[data-foo]", "padding", "0")
+        ),
+
+        CssEngine2.utility(List.of(CssEngine2.nest1("&[data-foo]")), "[data-foo]:padding:0", "padding", "0")
     );
   }
 
@@ -134,8 +149,11 @@ public class CssEngine2Test07Utilities {
     final Note.Sink noteSink;
     noteSink = Y.noteSink();
 
+    final Map<String, Variant> mutable;
+    mutable = new HashMap<>(variants);
+
     final CssEngine2.Utilities proc;
-    proc = new CssEngine2.Utilities(noteSink, variants);
+    proc = new CssEngine2.Utilities(noteSink, mutable);
 
     for (List<String> list : input) {
       proc.consume(list);

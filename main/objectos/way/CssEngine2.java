@@ -50,7 +50,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -478,49 +477,12 @@ final class CssEngine2 implements Css.Engine {
   // # BEGIN: Variant
   // ##################################################################
 
-  sealed interface Variant {
-    Variant generateGroup();
-  }
+  sealed interface Variant {}
 
-  record MediaQuery(int idx, String value) implements Comparable<MediaQuery>, Variant {
-    @Override
-    public final int compareTo(MediaQuery o) {
-      return Integer.compare(idx, o.idx);
-    }
+  record Nest1(String value) implements Variant {}
 
-    @Override
-    public final Variant generateGroup() {
-      // it really returns null...
-      return null;
-    }
-  }
-
-  sealed interface Modifier extends Variant {}
-
-  record Prefix(String value) implements Modifier {
-    @Override
-    public final Variant generateGroup() {
-      return prefix(value + ".group ");
-    }
-  }
-
-  record Suffix(String value) implements Modifier {
-    @Override
-    public final Variant generateGroup() {
-      return prefix(".group" + value + " ");
-    }
-  }
-
-  static MediaQuery mediaQuery(int idx, String value) {
-    return new MediaQuery(idx, value);
-  }
-
-  static Prefix prefix(String value) {
-    return new Prefix(value);
-  }
-
-  static Suffix suffix(String value) {
-    return new Suffix(value);
+  static Nest1 nest1(String value) {
+    return new Nest1(value);
   }
 
   // ##################################################################
@@ -536,8 +498,6 @@ final class CssEngine2 implements Css.Engine {
     final Note.Ref2<Value, Value> $replaced = Note.Ref2.create(getClass(), "REP", Note.INFO);
 
     final Map<String, ThemeProp> keywords = new HashMap<>();
-
-    int mediaQueryIdx = 1;
 
     final Map<String, Map<String, Value>> namespaces = new HashMap<>();
 
@@ -690,37 +650,16 @@ final class CssEngine2 implements Css.Engine {
     }
 
     private void systemVariants() {
-      final Map<String, Variant> sv;
+      Map<String, Variant> sv;
       sv = systemVariants;
 
-      if (sv != null) {
-        variants.putAll(sv);
-
+      if (sv == null) {
+        sv = Css.systemVariants();
+      } else {
         systemVariants = null;
-
-        return;
       }
 
-      variant("dark", mediaQuery(mediaQueryIdx++, "@media (prefers-color-scheme: dark)"));
-
-      variant("active", suffix(":active"));
-      variant("checked", suffix(":checked"));
-      variant("disabled", suffix(":disabled"));
-      variant("first-child", suffix(":first-child"));
-      variant("focus", suffix(":focus"));
-      variant("focus-visible", suffix(":focus-visible"));
-      variant("hover", suffix(":hover"));
-      variant("last-child", suffix(":last-child"));
-      variant("visited", suffix(":visited"));
-
-      variant("after", suffix("::after"));
-      variant("backdrop", suffix("::backdrop"));
-      variant("before", suffix("::before"));
-      variant("first-letter", suffix("::first-letter"));
-      variant("first-line", suffix("::first-line"));
-
-      variant("*", suffix(" > *"));
-      variant("**", suffix(" *"));
+      variants.putAll(sv);
     }
 
     private void userTheme() {
@@ -794,7 +733,7 @@ final class CssEngine2 implements Css.Engine {
         id = var.id;
 
         final Variant variant;
-        variant = mediaQuery(mediaQueryIdx++, "@media (min-width: " + var.value + ")");
+        variant = nest1("@media (min-width: " + var.value + ")");
 
         variant(id, variant);
       }
@@ -1320,8 +1259,10 @@ final class CssEngine2 implements Css.Engine {
   private static final byte[] TKS;
 
   private static final byte TKS_WS = 1;
-  private static final byte TKS_COLON = 2;
-  private static final byte TKS_CHAR = 3;
+  private static final byte TKS_CHAR = 2;
+  private static final byte TKS_SLASH = 3;
+  private static final byte TKS_COLON = 4;
+  private static final byte TKS_UNDER = 5;
 
   static {
     // start with invalid
@@ -1338,8 +1279,14 @@ final class CssEngine2 implements Css.Engine {
       }
     }
 
+    // SLASH
+    table['/'] = TKS_SLASH;
+
     // COLON
     table[':'] = TKS_COLON;
+
+    // UNDERSCORE
+    table['_'] = TKS_UNDER;
 
     TKS = table;
   }
@@ -1347,11 +1294,16 @@ final class CssEngine2 implements Css.Engine {
   static final class Tokenizer implements Strings {
 
     static final byte $NORMAL = 0;
-    static final byte $INVALID = 1;
-    static final byte $WORD = 2;
-    static final byte $WORD_COLON = 3;
-    static final byte $TOKEN = 4;
-    static final byte $TOKEN_COLON = 5;
+    static final byte $NORMAL_COLON = 1;
+    static final byte $INVALID = 2;
+    static final byte $VALUE = 3;
+    static final byte $VALUE_COLON = 4;
+    static final byte $PROP = 5;
+    static final byte $PROP_COLON = 6;
+    static final byte $PROP_SLASH = 7;
+    static final byte $VAR = 8;
+    static final byte $VAR_SLASH = 9;
+    static final byte $VAR_UNDER = 10;
 
     private final List<String> acc = new ArrayList<>();
 
@@ -1368,7 +1320,7 @@ final class CssEngine2 implements Css.Engine {
       byte state;
       state = $NORMAL;
 
-      for (int idx = 0, len = s.length(); idx < len; idx++) {
+      for (int idx = s.length() - 1; idx >= 0; idx--) {
         final char c;
         c = s.charAt(idx);
 
@@ -1379,9 +1331,17 @@ final class CssEngine2 implements Css.Engine {
           case $NORMAL -> switch (test) {
             case TKS_WS -> $NORMAL;
 
-            case TKS_COLON -> $INVALID;
+            case TKS_COLON -> { acc.clear(); sb.setLength(0); yield $NORMAL_COLON; }
 
-            default -> { acc.clear(); sb.setLength(0); sb.append(c); yield $WORD; }
+            default -> { acc.clear(); sb.setLength(0); sb.append(c); yield $VALUE; }
+          };
+
+          case $NORMAL_COLON -> switch (test) {
+            case TKS_WS -> $NORMAL;
+
+            case TKS_COLON -> { sb.append(':'); yield $VALUE; }
+
+            default -> $INVALID;
           };
 
           case $INVALID -> switch (test) {
@@ -1390,47 +1350,94 @@ final class CssEngine2 implements Css.Engine {
             default -> $INVALID;
           };
 
-          case $WORD -> switch (test) {
+          case $VALUE -> switch (test) {
             case TKS_WS -> $NORMAL;
 
-            case TKS_COLON -> { acc.add(sb.toString()); sb.setLength(0); yield $WORD_COLON; }
+            case TKS_COLON -> $VALUE_COLON;
 
-            default -> { sb.append(c); yield $WORD; }
+            default -> { sb.append(c); yield $VALUE; }
           };
 
-          case $WORD_COLON -> switch (test) {
+          case $VALUE_COLON -> switch (test) {
             case TKS_WS -> $NORMAL;
+
+            case TKS_COLON -> { sb.append(':'); yield $VALUE; }
+
+            default -> { acc(); sb.append(c); yield $PROP; }
+          };
+
+          case $PROP -> switch (test) {
+            case TKS_WS -> { acc(); cons(); yield $NORMAL; }
 
             case TKS_COLON -> $INVALID;
 
-            default -> { sb.append(c); yield $TOKEN; }
+            case TKS_SLASH -> { acc(); yield $PROP_SLASH; }
+
+            default -> { sb.append(c); yield $PROP; }
           };
 
-          case $TOKEN -> switch (test) {
-            case TKS_WS -> { acc.add(sb.toString()); slugs.consume(acc); yield $NORMAL; }
-
-            case TKS_COLON -> { acc.add(sb.toString()); sb.setLength(0); yield $TOKEN_COLON; }
-
-            default -> { sb.append(c); yield $TOKEN; }
-          };
-
-          case $TOKEN_COLON -> switch (test) {
+          case $PROP_SLASH -> switch (test) {
             case TKS_WS -> $NORMAL;
 
-            case TKS_COLON -> $INVALID;
+            case TKS_SLASH -> $INVALID;
 
-            default -> { sb.append(c); yield $TOKEN; }
+            default -> { sb.append(c); yield $VAR; }
+          };
+
+          case $VAR -> switch (test) {
+            case TKS_WS -> { acc(); cons(); yield $NORMAL; }
+
+            case TKS_SLASH -> $VAR_SLASH;
+
+            case TKS_UNDER -> $VAR_UNDER;
+
+            default -> { sb.append(c); yield $VAR; }
+          };
+
+          case $VAR_SLASH -> switch (test) {
+            case TKS_WS -> $NORMAL;
+
+            case TKS_SLASH -> { sb.append('/'); yield $VAR; }
+
+            case TKS_UNDER -> { acc(); yield $VAR_UNDER; }
+
+            default -> { acc(); sb.append(c); yield $VAR; }
+          };
+
+          case $VAR_UNDER -> switch (test) {
+            case TKS_WS -> $NORMAL;
+
+            case TKS_SLASH -> { /*trim space*/ acc(); yield $VAR; }
+
+            case TKS_UNDER -> { sb.append('_'); yield $VAR; }
+
+            default -> { sb.append(' '); sb.append(c); yield $VAR; }
           };
 
           default -> throw new AssertionError("Unexpected state=" + state);
         };
       }
 
-      if (state == $TOKEN) {
-        acc.add(sb.toString());
+      if (state == $PROP || state == $VAR) {
+        acc();
 
-        slugs.consume(acc);
+        cons();
       }
+    }
+
+    private void acc() {
+      sb.reverse();
+
+      final String s;
+      s = sb.toString();
+
+      sb.setLength(0);
+
+      acc.add(s);
+    }
+
+    private void cons() {
+      slugs.consume(acc);
     }
 
     private byte test(char c) {
@@ -1589,138 +1596,20 @@ final class CssEngine2 implements Css.Engine {
       return variantByNameOfGroup(name);
     }
 
-    private Modifier variantByNameOfAttribute(String name) {
-      final int length;
-      length = name.length();
-
-      if (length == 0) {
-        return null;
-      }
-
-      final char first;
-      first = name.charAt(0);
-
-      if (first != '[') {
-        return null;
-      }
-
-      final char last;
-      last = name.charAt(length - 1);
-
-      if (last != ']') {
-        return null;
-      }
-
-      return suffix(name);
+    private Variant variantByNameOfAttribute(String name) {
+      return null;
     }
 
     private Variant variantByNameOfElement(String name) {
-      if (HtmlElementName.hasName(name)) {
-        final Variant descendant;
-        descendant = suffix(" " + name);
-
-        final Variant maybeExisting;
-        maybeExisting = variants.put(name, descendant);
-
-        if (maybeExisting != null) {
-          // TODO log?
-        }
-
-        return descendant;
-      }
-
       return null;
     }
 
     private Variant variantByPseudoClass(String name) {
-      final int openIndex;
-      openIndex = name.indexOf('(');
-
-      if (openIndex < 0) {
-        return null;
-      }
-
-      final int closeIndex;
-      closeIndex = name.lastIndexOf(')');
-
-      if (closeIndex < 0) {
-        return null;
-      }
-
-      final String maybe;
-      maybe = name.substring(0, openIndex);
-
-      final boolean validName;
-      validName = switch (maybe) {
-        case "nth-child" -> true;
-
-        default -> false;
-      };
-
-      if (!validName) {
-        return null;
-      }
-
-      return suffix(":" + name);
-    }
-
-    private Variant variantByNameOfGroup(String name) {
-      final int dash;
-      dash = name.indexOf('-');
-
-      if (dash < 0) {
-        return null;
-      }
-
-      String maybeGroup;
-      maybeGroup = name.substring(0, dash);
-
-      if (!maybeGroup.equals("group")) {
-        return null;
-      }
-
-      int suffixIndex;
-      suffixIndex = dash + 1;
-
-      if (suffixIndex >= name.length()) {
-        return null;
-      }
-
-      String suffix;
-      suffix = name.substring(suffixIndex);
-
-      Variant groupVariant;
-      groupVariant = variants.get(suffix);
-
-      if (groupVariant != null) {
-        return variantByNameOfGroup(name, groupVariant);
-      }
-
-      groupVariant = variantByNameOfAttribute(suffix);
-
-      if (groupVariant != null) {
-        return variantByNameOfGroup(name, groupVariant);
-      }
-
       return null;
     }
 
-    private Variant variantByNameOfGroup(String name, Variant groupVariant) {
-      Variant generatedGroupVariant;
-      generatedGroupVariant = groupVariant.generateGroup();
-
-      if (generatedGroupVariant == null) {
-        return null;
-      }
-
-      final Variant maybeExisting;
-      maybeExisting = variants.put(name, generatedGroupVariant);
-
-      if (maybeExisting != null) {
-        // TODO log existing?
-      }
-
-      return generatedGroupVariant;
+    private Variant variantByNameOfGroup(String name) {
+      return null;
     }
 
   }
@@ -1741,16 +1630,10 @@ final class CssEngine2 implements Css.Engine {
 
   static final class Rules {
 
-    final Map<MediaQuery, Rules> queries = new TreeMap<>();
-
     final List<Rule> rules = new ArrayList<>();
 
     final void add(Rule rule) {
       rules.add(rule);
-    }
-
-    final Rules resolve(MediaQuery query) {
-      return queries.computeIfAbsent(query, key -> new Rules());
     }
 
   }
@@ -1806,16 +1689,6 @@ final class CssEngine2 implements Css.Engine {
 
       final List<Variant> variants;
       variants = utility.variants;
-
-      for (Variant variant : variants) {
-        switch (variant) {
-          case MediaQuery query -> rules = rules.resolve(query);
-
-          case Prefix p -> sb.insert(0, p.value);
-
-          case Suffix s -> sb.append(s.value);
-        }
-      }
 
       final String className;
       className = sb.toString();

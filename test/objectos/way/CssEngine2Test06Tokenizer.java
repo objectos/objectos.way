@@ -19,85 +19,34 @@ import static org.testng.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class CssEngine2Test06Tokenizer {
 
-  @Test
-  public void testCase01() {
-    test(
-        "margin:0",
-
-        List.of("margin", "0")
-    );
+  @DataProvider
+  public Object[][] testProvider() {
+    return new Object[][] {
+        {"margin:0", l(l("0", "margin")), "single utility"},
+        {"margin:0\n", l(l("0", "margin")), "single utility + ws"},
+        {"display:block\nmargin:0\n", l(l("0", "margin"), l("block", "display")), "multiple utilities"},
+        {"display:\nmargin:0\nfoo\npadding:1rx\n", l(l("1rx", "padding"), l("0", "margin")), "invalid property ignored"},
+        {"display :\nmargin:0\nfoo : bar\npadding:1rx\n", l(l("1rx", "padding"), l("0", "margin")), "invalid property and malformed display ignored"},
+        {"margin:0 padding:1rx", l(l("1rx", "padding"), l("0", "margin")), "single line multiple utilities"},
+        {"md/margin:0", l(l("0", "margin", "md")), "with media query"},
+        {"dark/md/margin:0", l(l("0", "margin", "md", "dark")), "with media query and dark mode"},
+        {"&[data-foo]/margin:0", l(l("0", "margin", "&[data-foo]")), "with data attribute selector"},
+        {"&[attr*='//']/margin:0", l(l("0", "margin", "&[attr*='/']")), "with complex attribute selector"},
+        {":has([data-selected=true])/margin:0", l(l("0", "margin", ":has([data-selected=true])")), "with :has selector"},
+        {"&_li:nth-child(odd)/margin:0", l(l("0", "margin", "& li:nth-child(odd)")), "with nested selector"},
+        {"content:'::'", l(l("content", "':'")), "content with double colon"},
+        {"md/content:'::'", l(l("md", "content", "':'")), "content with media query"},
+        {"content:'__'", l(l("content", "'_'")), "content with underscore"}
+    };
   }
 
-  @Test
-  public void testCase02() {
-    test(
-        """
-        margin:0
-        """,
-
-        List.of("margin", "0")
-    );
-  }
-
-  @Test
-  public void testCase03() {
-    test(
-        """
-        display:block
-        margin:0
-        """,
-
-        List.of("display", "block"),
-        List.of("margin", "0")
-    );
-  }
-
-  @Test
-  public void testCase04() {
-    test(
-        """
-        display:
-        margin:0
-        foo
-        padding:1rx
-        """,
-
-        List.of("margin", "0"),
-        List.of("padding", "1rx")
-    );
-  }
-
-  @Test
-  public void testCase05() {
-    test(
-        """
-        display :
-        margin:0
-        foo : bar
-        padding:1rx
-        """,
-
-        List.of("margin", "0"),
-        List.of("padding", "1rx")
-    );
-  }
-
-  @Test
-  public void testCase06() {
-    test(
-        "margin:0 padding:1rx",
-
-        List.of("margin", "0"),
-        List.of("padding", "1rx")
-    );
-  }
-
-  @SafeVarargs
-  private void test(String string, List<String>... lists) {
+  @Test(dataProvider = "testProvider")
+  public void test(String string, List<List<String>> expected, String description) {
     class ThisProcessor implements CssEngine2.Slugs {
       final List<List<String>> result = new ArrayList<>();
 
@@ -117,10 +66,11 @@ public class CssEngine2Test06Tokenizer {
 
     tokenizer.consume(string);
 
-    final List<List<String>> expected;
-    expected = List.of(lists);
-
     assertEquals(processor.result, expected);
+  }
+
+  private List<Object> l(Object... values) {
+    return List.of(values);
   }
 
 }
