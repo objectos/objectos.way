@@ -1262,7 +1262,8 @@ final class CssEngine2 implements Css.Engine {
   private static final byte TKS_CHAR = 2;
   private static final byte TKS_SLASH = 3;
   private static final byte TKS_COLON = 4;
-  private static final byte TKS_UNDER = 5;
+  private static final byte TKS_ESCAPE = 5;
+  private static final byte TKS_UNDER = 6;
 
   static {
     // start with invalid
@@ -1285,6 +1286,9 @@ final class CssEngine2 implements Css.Engine {
     // COLON
     table[':'] = TKS_COLON;
 
+    // BACKSLASH
+    table['\\'] = TKS_ESCAPE;
+
     // UNDERSCORE
     table['_'] = TKS_UNDER;
 
@@ -1298,12 +1302,13 @@ final class CssEngine2 implements Css.Engine {
     static final byte $INVALID = 2;
     static final byte $VALUE = 3;
     static final byte $VALUE_COLON = 4;
-    static final byte $PROP = 5;
-    static final byte $PROP_COLON = 6;
-    static final byte $PROP_SLASH = 7;
-    static final byte $VAR = 8;
-    static final byte $VAR_SLASH = 9;
-    static final byte $VAR_UNDER = 10;
+    static final byte $VALUE_UNDER = 5;
+    static final byte $PROP = 6;
+    static final byte $PROP_COLON = 7;
+    static final byte $PROP_SLASH = 8;
+    static final byte $VAR = 9;
+    static final byte $VAR_SLASH = 10;
+    static final byte $VAR_UNDER = 11;
 
     private final List<String> acc = new ArrayList<>();
 
@@ -1355,15 +1360,27 @@ final class CssEngine2 implements Css.Engine {
 
             case TKS_COLON -> $VALUE_COLON;
 
+            case TKS_UNDER -> $VALUE_UNDER;
+
             default -> { sb.append(c); yield $VALUE; }
           };
 
           case $VALUE_COLON -> switch (test) {
             case TKS_WS -> $NORMAL;
 
-            case TKS_COLON -> { sb.append(':'); yield $VALUE; }
+            case TKS_ESCAPE -> { sb.append(':'); yield $VALUE; }
 
             default -> { acc(); sb.append(c); yield $PROP; }
+          };
+
+          case $VALUE_UNDER -> switch (test) {
+            case TKS_WS -> $NORMAL;
+
+            case TKS_COLON -> { /*trim sp*/ sb.append(':'); yield $VALUE; }
+
+            case TKS_ESCAPE -> { sb.append('_'); yield $VALUE; }
+
+            default -> { sb.append(' '); sb.append(c); yield $VALUE; }
           };
 
           case $PROP -> switch (test) {
@@ -1397,7 +1414,7 @@ final class CssEngine2 implements Css.Engine {
           case $VAR_SLASH -> switch (test) {
             case TKS_WS -> $NORMAL;
 
-            case TKS_SLASH -> { sb.append('/'); yield $VAR; }
+            case TKS_ESCAPE -> { sb.append('/'); yield $VAR; }
 
             case TKS_UNDER -> { acc(); yield $VAR_UNDER; }
 
@@ -1409,7 +1426,7 @@ final class CssEngine2 implements Css.Engine {
 
             case TKS_SLASH -> { /*trim space*/ acc(); yield $VAR; }
 
-            case TKS_UNDER -> { sb.append('_'); yield $VAR; }
+            case TKS_ESCAPE -> { sb.append('_'); yield $VAR; }
 
             default -> { sb.append(' '); sb.append(c); yield $VAR; }
           };

@@ -29,19 +29,21 @@ public class CssEngine2Test06Tokenizer {
     return new Object[][] {
         {"margin:0", l(l("0", "margin")), "single utility"},
         {"margin:0\n", l(l("0", "margin")), "single utility + ws"},
+        {"margin:0_10rx", l(l("0 10rx", "margin")), "single utility value w/ sp"},
         {"display:block\nmargin:0\n", l(l("0", "margin"), l("block", "display")), "multiple utilities"},
         {"display:\nmargin:0\nfoo\npadding:1rx\n", l(l("1rx", "padding"), l("0", "margin")), "invalid property ignored"},
         {"display :\nmargin:0\nfoo : bar\npadding:1rx\n", l(l("1rx", "padding"), l("0", "margin")), "invalid property and malformed display ignored"},
         {"margin:0 padding:1rx", l(l("1rx", "padding"), l("0", "margin")), "single line multiple utilities"},
-        {"md/margin:0", l(l("0", "margin", "md")), "with media query"},
-        {"dark/md/margin:0", l(l("0", "margin", "md", "dark")), "with media query and dark mode"},
-        {"&[data-foo]/margin:0", l(l("0", "margin", "&[data-foo]")), "with data attribute selector"},
-        {"&[attr*='//']/margin:0", l(l("0", "margin", "&[attr*='/']")), "with complex attribute selector"},
-        {":has([data-selected=true])/margin:0", l(l("0", "margin", ":has([data-selected=true])")), "with :has selector"},
-        {"&_li:nth-child(odd)/margin:0", l(l("0", "margin", "& li:nth-child(odd)")), "with nested selector"},
-        {"content:'::'", l(l("content", "':'")), "content with double colon"},
-        {"md/content:'::'", l(l("md", "content", "':'")), "content with media query"},
-        {"content:'__'", l(l("content", "'_'")), "content with underscore"}
+        {"md/margin:0", l(l("0", "margin", "md")), "single variant"},
+        {"dark/md/margin:0", l(l("0", "margin", "md", "dark")), "two variants"},
+        {"&[data-foo]/margin:0", l(l("0", "margin", "&[data-foo]")), "custom variant"},
+        {"&[attr*='\\/']/margin:0", l(l("0", "margin", "&[attr*='/']")), "custom variant + escape '/'"},
+        {":has([data-selected=true])/margin:0", l(l("0", "margin", ":has([data-selected=true])")), "custom variant with ':'"},
+        {"&_li:nth-child(odd)/margin:0", l(l("0", "margin", "& li:nth-child(odd)")), "custom variant + underscore"},
+        {"&[attr*='\\_']/margin:0", l(l("0", "margin", "&[attr*='_']")), "custom variant + escape underscore"},
+        {"content:'\\:'", l(l("':'", "content")), "value + escape colon"},
+        {"md/content:'\\:'", l(l("':'", "content", "md")), "value + escape colon + variant"},
+        {"content:'\\_'", l(l("'_'", "content")), "value + escape underscore"}
     };
   }
 
