@@ -1702,30 +1702,24 @@ final class CssEngine2 implements Css.Engine {
   // # BEGIN: Gen
   // ##################################################################
 
-  record Rule(String className, String property, String value) {}
+  record Rule(String className, List<Variant> variants, String property, String value) {}
 
-  static Rule rule(String className, String property, String value) {
-    return new Rule(className, property, value);
-  }
-
-  static final class Rules {
-
-    final List<Rule> rules = new ArrayList<>();
-
-    final void add(Rule rule) {
-      rules.add(rule);
-    }
-
+  static Rule rule(String className, List<Variant> variants, String property, String value) {
+    return new Rule(className, variants, property, value);
   }
 
   static final class Ctx {
 
     final Set<String> keywords = new HashSet<>();
 
-    final Rules rules = new Rules();
+    final List<Rule> rules = new ArrayList<>();
 
     final void addKeyword(String kw) {
       keywords.add(kw);
+    }
+
+    final void add(Rule rule) {
+      rules.add(rule);
     }
 
   }
@@ -1764,22 +1758,22 @@ final class CssEngine2 implements Css.Engine {
 
       Css.serializeIdentifier(sb, utility.className);
 
-      Rules rules;
-      rules = ctx.rules;
+      final String className;
+      className = sb.toString();
 
       final List<Variant> variants;
       variants = utility.variants;
 
-      final String className;
-      className = sb.toString();
+      final String property;
+      property = utility.property;
 
       final String value;
       value = formatValue(utility.value);
 
       final Rule rule;
-      rule = rule(className, utility.property, value);
+      rule = rule(className, variants, property, value);
 
-      rules.add(rule);
+      ctx.add(rule);
     }
 
     final String formatValue(String value) {

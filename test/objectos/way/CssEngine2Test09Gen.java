@@ -32,10 +32,9 @@ public class CssEngine2Test09Gen {
         },
 
         ctx -> {
-          final CssEngine2.Rules rules = ctx.rules;
           assertEquals(ctx.keywords, Set.of());
-          assertEquals(rules.rules, List.of(
-              CssEngine2.rule(".margin\\:0", "margin", "0")
+          assertEquals(ctx.rules, List.of(
+              CssEngine2.rule(".margin\\:0", List.of(), "margin", "0")
           ));
         }
     );
@@ -50,12 +49,11 @@ public class CssEngine2Test09Gen {
         },
 
         ctx -> {
-          final CssEngine2.Rules rules = ctx.rules;
           assertEquals(ctx.keywords, Set.of(
               "gray-100"
           ));
-          assertEquals(rules.rules, List.of(
-              CssEngine2.rule(".color\\:gray-100", "color", "var(--color-gray-100)")
+          assertEquals(ctx.rules, List.of(
+              CssEngine2.rule(".color\\:gray-100", List.of(), "color", "var(--color-gray-100)")
           ));
         }
     );
@@ -70,12 +68,11 @@ public class CssEngine2Test09Gen {
         },
 
         ctx -> {
-          final CssEngine2.Rules rules = ctx.rules;
           assertEquals(ctx.keywords, Set.of(
               "gray-100"
           ));
-          assertEquals(rules.rules, List.of(
-              CssEngine2.rule(".color\\:gray-100\\/20", "color", "color-mix(in oklab, var(--color-gray-100) 20%, transparent)")
+          assertEquals(ctx.rules, List.of(
+              CssEngine2.rule(".color\\:gray-100\\/20", List.of(), "color", "color-mix(in oklab, var(--color-gray-100) 20%, transparent)")
           ));
         }
     );
