@@ -26,36 +26,133 @@ public class CssEngine2Test06Tokenizer {
 
   @DataProvider
   public Object[][] testProvider() {
-    return new Object[][] {
-        {"margin:0", l(l("0", "margin")), "single utility"},
-        {"margin:0\n", l(l("0", "margin")), "single utility + ws"},
-        {"margin:0_10rx", l(l("0 10rx", "margin")), "single utility value w/ sp"},
-        {"display:block\nmargin:0\n", l(l("0", "margin"), l("block", "display")), "multiple utilities"},
-        {"display:\nmargin:0\nfoo\npadding:1rx\n", l(l("1rx", "padding"), l("0", "margin")), "invalid property ignored"},
-        {"display :\nmargin:0\nfoo : bar\npadding:1rx\n", l(l("1rx", "padding"), l("0", "margin")), "invalid property and malformed display ignored"},
-        {"margin:0 padding:1rx", l(l("1rx", "padding"), l("0", "margin")), "single line multiple utilities"},
-        {"md/margin:0", l(l("0", "margin", "md")), "single variant"},
-        {"dark/md/margin:0", l(l("0", "margin", "md", "dark")), "two variants"},
-        {"&[data-foo]/margin:0", l(l("0", "margin", "&[data-foo]")), "custom variant"},
-        {"&[attr*='\\/']/margin:0", l(l("0", "margin", "&[attr*='/']")), "custom variant + escape '/'"},
-        {":has([data-selected=true])/margin:0", l(l("0", "margin", ":has([data-selected=true])")), "custom variant with ':'"},
-        {"&_li:nth-child(odd)/margin:0", l(l("0", "margin", "& li:nth-child(odd)")), "custom variant + underscore"},
-        {"&[attr*='\\_']/margin:0", l(l("0", "margin", "&[attr*='_']")), "custom variant + escape underscore"},
-        {"content:'\\:'", l(l("':'", "content")), "value + escape colon"},
-        {"md/content:'\\:'", l(l("':'", "content", "md")), "value + escape colon + variant"},
-        {"content:'\\_'", l(l("'_'", "content")), "value + escape underscore"}
-    };
+    return new Object[][] {{
+        "single utility",
+        "margin:0",
+        l(
+            r("margin:0", l("0", "margin"))
+        )
+    }, {
+        "single utility + ws",
+        "margin:0\n",
+        l(
+            r("margin:0", l("0", "margin"))
+        )
+    }, {
+        "single utility value w/ sp",
+        "margin:0_10rx",
+        l(
+            r("margin:0_10rx", l("0 10rx", "margin"))
+        )
+    }, {
+        "multiple utilities",
+        "display:block\nmargin:0\n",
+        l(
+            r("margin:0", l("0", "margin")),
+            r("display:block", l("block", "display"))
+        )
+    }, {
+        "invalid property ignored",
+        "display:\nmargin:0\nfoo\npadding:1rx\n",
+        l(
+            r("padding:1rx", l("1rx", "padding")),
+            r("margin:0", l("0", "margin"))
+        )
+    }, {
+        "invalid property and malformed display ignored",
+        "display :\nmargin:0\nfoo : bar\npadding:1rx\n",
+        l(
+            r("padding:1rx", l("1rx", "padding")),
+            r("margin:0", l("0", "margin"))
+        )
+    }, {
+        "single line multiple utilities",
+        "margin:0 padding:1rx",
+        l(
+            r("padding:1rx", l("1rx", "padding")),
+            r("margin:0", l("0", "margin"))
+        )
+    }, {
+        "single variant",
+        "md/margin:0",
+        l(
+            r("md/margin:0", l("0", "margin", "md"))
+        )
+    }, {
+        "two variants",
+        "dark/md/margin:0",
+        l(
+            r("dark/md/margin:0", l("0", "margin", "md", "dark"))
+        )
+    }, {
+        "custom variant",
+        "&[data-foo]/margin:0",
+        l(
+            r("&[data-foo]/margin:0", l("0", "margin", "&[data-foo]"))
+        )
+    }, {
+        "custom variant + escape '/'",
+        "&[attr*='\\/']/margin:0",
+        l(
+            r("&[attr*='\\/']/margin:0", l("0", "margin", "&[attr*='/']"))
+        )
+    }, {
+        "custom variant with ':'",
+        ":has([data-selected=true])/margin:0",
+        l(
+            r(":has([data-selected=true])/margin:0", l("0", "margin", ":has([data-selected=true])"))
+        )
+    }, {
+        "custom variant + underscore",
+        "&_li:nth-child(odd)/margin:0",
+        l(
+            r("&_li:nth-child(odd)/margin:0", l("0", "margin", "& li:nth-child(odd)"))
+        )
+    }, {
+        "custom variant + escape underscore",
+        "&[attr*='\\_']/margin:0",
+        l(
+            r("&[attr*='\\_']/margin:0", l("0", "margin", "&[attr*='_']"))
+        )
+    }, {
+        "value + escape colon",
+        "content:'\\:'",
+        l(
+            r("content:'\\:'", l("':'", "content"))
+        )
+    }, {
+        "value + escape colon + variant",
+        "md/content:'\\:'",
+        l(
+            r("md/content:'\\:'", l("':'", "content", "md"))
+        )
+    }, {
+        "value + escape underscore",
+        "content:'\\_'",
+        l(
+            r("content:'\\_'", l("'_'", "content"))
+        )
+    }};
+  }
+
+  private record Result(String className, List<String> slugs) {}
+
+  private Result r(String className, List<String> slugs) {
+    return new Result(className, slugs);
   }
 
   @Test(dataProvider = "testProvider")
-  public void test(String string, List<List<String>> expected, String description) {
+  public void test(
+      String description,
+      String string,
+      @SuppressWarnings("exports") List<Result> expected) {
     class ThisProcessor implements CssEngine2.Slugs {
-      final List<List<String>> result = new ArrayList<>();
+      final List<Result> results = new ArrayList<>();
 
       @Override
-      public final void consume(List<String> slugs) {
-        result.add(
-            List.copyOf(slugs)
+      public final void consume(String className, List<String> slugs) {
+        results.add(
+            r(className, List.copyOf(slugs))
         );
       }
     }
@@ -68,10 +165,11 @@ public class CssEngine2Test06Tokenizer {
 
     tokenizer.consume(string);
 
-    assertEquals(processor.result, expected);
+    assertEquals(processor.results, expected);
   }
 
-  private List<Object> l(Object... values) {
+  @SafeVarargs
+  private <T> List<T> l(T... values) {
     return List.of(values);
   }
 

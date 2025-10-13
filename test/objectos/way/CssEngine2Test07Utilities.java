@@ -22,130 +22,112 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import objectos.way.CssEngine2.Variant;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class CssEngine2Test07Utilities {
 
-  private static final CssEngine2.Variant DARK = CssEngine2.nest1("@media (prefers-color-scheme: dark)");
-  private static final CssEngine2.Variant MD = CssEngine2.nest1("@media (min-width: 48rem)");
-  private static final CssEngine2.Variant HOVER = CssEngine2.nest1("&:hover");
+  private static final CssEngine2.Variant DARK = CssEngine2.simple("@media (prefers-color-scheme: dark)");
+  private static final CssEngine2.Variant MD = CssEngine2.simple("@media (min-width: 48rem)");
+  private static final CssEngine2.Variant HOVER = CssEngine2.simple("&:hover");
 
-  @Test
-  public void testCase01() {
-    test(
+  @DataProvider
+  public Object[][] testProvider() {
+    return new Object[][] {{
+        "single utility",
         Map.of(),
-
-        List.of(
-            list("margin", "0")
+        l(
+            r("margin:0", l("0", "margin"))
         ),
-
-        CssEngine2.utility(List.of(), "margin:0", "margin", "0")
-    );
-  }
-
-  @Test
-  public void testCase02() {
-    test(
+        l(
+            CssEngine2.utility(List.of(), "margin:0", "margin", "0")
+        )
+    }, {
+        "multiple utilities",
         Map.of(),
-
-        List.of(
-            list("margin", "0"),
-            list("padding", "0"),
-            list("margin", "0")
+        l(
+            r("margin:0", l("0", "margin")),
+            r("padding:0", l("0", "padding")),
+            r("border:0", l("0", "border"))
         ),
-
-        CssEngine2.utility(List.of(), "margin:0", "margin", "0"),
-        CssEngine2.utility(List.of(), "padding:0", "padding", "0")
-    );
-  }
-
-  @Test
-  public void testCase03() {
-    test(
+        l(
+            CssEngine2.utility(List.of(), "margin:0", "margin", "0"),
+            CssEngine2.utility(List.of(), "padding:0", "padding", "0"),
+            CssEngine2.utility(List.of(), "border:0", "border", "0")
+        )
+    }, {
+        "multiple utilities (skip already seen)",
         Map.of(),
-
-        List.of(
-            list("hover", "margin", "0"),
-            list("padding", "0")
+        l(
+            r("margin:0", l("0", "margin")),
+            r("padding:0", l("0", "padding")),
+            r("margin:0", l("0", "margin"))
         ),
-
-        CssEngine2.utility(List.of(), "padding:0", "padding", "0")
-    );
-  }
-
-  @Test(description = "system variant")
-  public void testCase04() {
-    test(
+        l(
+            CssEngine2.utility(List.of(), "margin:0", "margin", "0"),
+            CssEngine2.utility(List.of(), "padding:0", "padding", "0")
+        )
+    }, {
+        "variant (skip if not registered)",
+        Map.of(),
+        l(
+            r("margin:0", l("0", "margin", "hover")),
+            r("padding:0", l("0", "padding"))
+        ),
+        l(
+            CssEngine2.utility(List.of(), "padding:0", "padding", "0")
+        )
+    }, {
+        "variant (class name)",
         Map.of("hover", HOVER),
-
-        List.of(
-            list("hover", "margin", "0"),
-            list("padding", "0")
+        l(
+            r("hover/margin:0", l("0", "margin", "hover")),
+            r("padding:0", l("0", "padding"))
         ),
-
-        CssEngine2.utility(List.of(HOVER), "hover:margin:0", "margin", "0"),
-        CssEngine2.utility(List.of(), "padding:0", "padding", "0")
-    );
-  }
-
-  @Test(description = "media query (1)")
-  public void testCase05() {
-    test(
+        l(
+            CssEngine2.utility(List.of(HOVER), "hover/margin:0", "margin", "0"),
+            CssEngine2.utility(List.of(), "padding:0", "padding", "0")
+        )
+    }, {
+        "variant (at rule (1))",
         Map.of("dark", DARK),
-
-        List.of(
-            list("dark", "color", "gray-100"),
-            list("padding", "0")
+        l(
+            r("dark/color:gray-100", l("gray-100", "color", "dark")),
+            r("padding:0", l("0", "padding"))
         ),
-
-        CssEngine2.utility(List.of(DARK), "dark:color:gray-100", "color", "gray-100"),
-        CssEngine2.utility(List.of(), "padding:0", "padding", "0")
-    );
-  }
-
-  @Test(description = "media query (2)")
-  public void testCase06() {
-    test(
+        l(
+            CssEngine2.utility(List.of(DARK), "dark/color:gray-100", "color", "gray-100"),
+            CssEngine2.utility(List.of(), "padding:0", "padding", "0")
+        )
+    }, {
+        "variant (at rule (2))",
         Map.of("dark", DARK, "md", MD),
-
-        List.of(
-            list("dark", "md", "color", "gray-100"),
-            list("padding", "0")
+        l(
+            r("dark/md/color:gray-100", l("gray-100", "color", "md", "dark")),
+            r("padding:0", l("0", "padding"))
         ),
-
-        CssEngine2.utility(List.of(DARK, MD), "dark|md|color:gray-100", "color", "gray-100"),
-        CssEngine2.utility(List.of(), "padding:0", "padding", "0")
-    );
+        l(
+            CssEngine2.utility(List.of(DARK, MD), "dark/md/color:gray-100", "color", "gray-100"),
+            CssEngine2.utility(List.of(), "padding:0", "padding", "0")
+        )
+    }, /*{
+       "variant (custom))",
+       Map.of(),
+       l(
+           r("&[data-foo]/padding:0", l("0", "padding", "&[data-foo]"))
+       ),
+       l(
+           CssEngine2.utility(List.of(CssEngine2.simple("&[data-foo]")), "&[data-foo]/padding:0", "padding", "0")
+       )
+       }*/};
   }
 
-  @Test(description = "attr variant")
-  public void testCase07() {
-    test(
-        Map.of(),
-
-        List.of(
-            list("&[data-foo]", "padding", "0")
-        ),
-
-        CssEngine2.utility(List.of(CssEngine2.nest1("&[data-foo]")), "[data-foo]:padding:0", "padding", "0")
-    );
-  }
-
-  private List<String> list(String... values) {
-    final List<String> l;
-    l = new ArrayList<>();
-
-    for (String v : values) {
-      l.add(v);
-    }
-
-    return l;
-  }
-
-  private void test(
-      Map<String, CssEngine2.Variant> variants,
-      List<List<String>> input,
-      CssEngine2.Utility... expected) {
+  @Test(dataProvider = "testProvider")
+  public void test(
+      String description,
+      @SuppressWarnings("exports") Map<String, CssEngine2.Variant> variants,
+      @SuppressWarnings("exports") List<Input> inputs,
+      @SuppressWarnings("exports") List<CssEngine2.Utility> expected) {
     final Note.Sink noteSink;
     noteSink = Y.noteSink();
 
@@ -155,11 +137,29 @@ public class CssEngine2Test07Utilities {
     final CssEngine2.Utilities proc;
     proc = new CssEngine2.Utilities(noteSink, mutable);
 
-    for (List<String> list : input) {
-      proc.consume(list);
+    for (Input input : inputs) {
+      proc.consume(input.className, input.slugs);
     }
 
-    assertEquals(proc.utilities, List.of(expected));
+    assertEquals(proc.utilities, expected);
+  }
+
+  @SafeVarargs
+  private <T> List<T> l(T... values) {
+    final List<T> l;
+    l = new ArrayList<>();
+
+    for (T v : values) {
+      l.add(v);
+    }
+
+    return l;
+  }
+
+  private record Input(String className, List<String> slugs) {}
+
+  private Input r(String className, List<String> slugs) {
+    return new Input(className, slugs);
   }
 
 }

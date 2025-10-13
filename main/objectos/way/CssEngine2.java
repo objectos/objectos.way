@@ -479,10 +479,10 @@ final class CssEngine2 implements Css.Engine {
 
   sealed interface Variant {}
 
-  record Nest1(String value) implements Variant {}
+  record Simple(String value) implements Variant {}
 
-  static Nest1 nest1(String value) {
-    return new Nest1(value);
+  static Simple simple(String value) {
+    return new Simple(value);
   }
 
   // ##################################################################
@@ -733,7 +733,7 @@ final class CssEngine2 implements Css.Engine {
         id = var.id;
 
         final Variant variant;
-        variant = nest1("@media (min-width: " + var.value + ")");
+        variant = simple("@media (min-width: " + var.value + ")");
 
         variant(id, variant);
       }
@@ -1312,6 +1312,8 @@ final class CssEngine2 implements Css.Engine {
 
     private final List<String> acc = new ArrayList<>();
 
+    private int mark;
+
     private final StringBuilder sb = new StringBuilder();
 
     private final Slugs slugs;
@@ -1336,9 +1338,9 @@ final class CssEngine2 implements Css.Engine {
           case $NORMAL -> switch (test) {
             case TKS_WS -> $NORMAL;
 
-            case TKS_COLON -> { acc.clear(); sb.setLength(0); yield $NORMAL_COLON; }
+            case TKS_COLON -> { acc.clear(); sb.setLength(0); mark = idx; yield $NORMAL_COLON; }
 
-            default -> { acc.clear(); sb.setLength(0); sb.append(c); yield $VALUE; }
+            default -> { acc.clear(); sb.setLength(0); mark = idx; sb.append(c); yield $VALUE; }
           };
 
           case $NORMAL_COLON -> switch (test) {
@@ -1384,7 +1386,7 @@ final class CssEngine2 implements Css.Engine {
           };
 
           case $PROP -> switch (test) {
-            case TKS_WS -> { acc(); cons(); yield $NORMAL; }
+            case TKS_WS -> { acc(); cons(s, idx + 1); yield $NORMAL; }
 
             case TKS_COLON -> $INVALID;
 
@@ -1402,7 +1404,7 @@ final class CssEngine2 implements Css.Engine {
           };
 
           case $VAR -> switch (test) {
-            case TKS_WS -> { acc(); cons(); yield $NORMAL; }
+            case TKS_WS -> { acc(); cons(s, idx + 1); yield $NORMAL; }
 
             case TKS_SLASH -> $VAR_SLASH;
 
@@ -1438,7 +1440,7 @@ final class CssEngine2 implements Css.Engine {
       if (state == $PROP || state == $VAR) {
         acc();
 
-        cons();
+        cons(s, 0);
       }
     }
 
@@ -1453,8 +1455,11 @@ final class CssEngine2 implements Css.Engine {
       acc.add(s);
     }
 
-    private void cons() {
-      slugs.consume(acc);
+    private void cons(String s, int idx) {
+      final String className;
+      className = s.substring(idx, mark + 1);
+
+      slugs.consume(className, acc);
     }
 
     private byte test(char c) {
@@ -1473,7 +1478,7 @@ final class CssEngine2 implements Css.Engine {
 
   @FunctionalInterface
   interface Slugs {
-    void consume(List<String> slugs);
+    void consume(String className, List<String> slugs);
   }
 
   record Utility(List<Variant> variants, String className, String property, String value)
@@ -1522,25 +1527,22 @@ final class CssEngine2 implements Css.Engine {
     }
 
     @Override
-    public final void consume(List<String> slugs) {
-      final String className;
-      className = reconstruct(slugs);
-
+    public final void consume(String className, List<String> slugs) {
       if (!distinct.add(className)) {
         // already seen...
         return;
       }
 
       final String propValue;
-      propValue = slugs.removeLast();
+      propValue = slugs.get(0);
 
       final String propName;
-      propName = slugs.removeLast();
+      propName = slugs.get(1);
 
       // process variants
       parsedVars.clear();
 
-      for (int idx = 0, size = slugs.size(); idx < size; idx++) {
+      for (int idx = slugs.size() - 1; idx > 1; idx--) {
         final String variantName;
         variantName = slugs.get(idx);
 
@@ -1562,26 +1564,6 @@ final class CssEngine2 implements Css.Engine {
       utility = new Utility(vars, className, propName, propValue);
 
       utilities.add(utility);
-    }
-
-    private String reconstruct(List<String> slugs) {
-      sb.setLength(0);
-
-      final String first;
-      first = slugs.getFirst();
-
-      sb.append(first);
-
-      for (int idx = 1, size = slugs.size(); idx < size; idx++) {
-        final String s;
-        s = slugs.get(idx);
-
-        sb.append(':');
-
-        sb.append(s);
-      }
-
-      return sb.toString();
     }
 
     private Variant variantByName(String name) {
