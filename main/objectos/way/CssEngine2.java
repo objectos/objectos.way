@@ -477,12 +477,115 @@ final class CssEngine2 implements Css.Engine {
   // # BEGIN: Variant
   // ##################################################################
 
+  private static final byte[] VAR;
+
+  private static final byte VAR_INVALID = 0;
+  private static final byte VAR_CHAR = 1;
+  private static final byte VAR_WS = 2;
+  private static final byte VAR_SPACED = 3;
+  private static final byte VAR_JOINED = 4;
+
+  static {
+    final byte[] table;
+    table = new byte[128];
+
+    // start with invalid
+
+    // from SP (32) mark as CHAR
+    Arrays.fill(table, ' ', table.length, VAR_CHAR);
+
+    // WS
+    for (int idx = 0; idx < CSS.length; idx++) {
+      if (CSS[idx] == CSS_WS) {
+        table[idx] = VAR_WS;
+      }
+    }
+
+    table['('] = VAR_SPACED;
+
+    table[':'] = VAR_JOINED;
+
+    VAR = table;
+  }
+
   sealed interface Variant {}
 
   record Simple(String value) implements Variant {}
 
   static Simple simple(String value) {
     return new Simple(value);
+  }
+
+  static final class VariantParser {
+
+    static final byte $NORMAL = 0;
+    static final byte $WORD = 1;
+    static final byte $WS = 2;
+
+    final StringBuilder sb = new StringBuilder();
+
+    public final Variant parse(String text) {
+      byte state;
+      state = $NORMAL;
+
+      boolean modified;
+      modified = false;
+
+      for (int idx = 0, len = text.length(); idx < len; idx++) {
+        final char c;
+        c = text.charAt(idx);
+
+        state = switch (state) {
+          case $NORMAL -> switch (test(c)) {
+            case VAR_INVALID -> throw invalid(c);
+
+            case VAR_WS -> $NORMAL;
+
+            default -> { sb.setLength(0); sb.append(c); yield $WORD; }
+          };
+
+          case $WORD -> switch (test(c)) {
+            case VAR_INVALID -> throw invalid(c);
+
+            case VAR_WS -> $WS;
+
+            case VAR_SPACED -> { modified = true; sb.append(' '); sb.append(c); yield $WORD; }
+
+            case VAR_JOINED -> { sb.append(c); yield $WS; }
+
+            default -> { sb.append(c); yield $WORD; }
+          };
+
+          case $WS -> switch (test(c)) {
+            case VAR_INVALID -> throw invalid(c);
+
+            case VAR_WS -> $WS;
+
+            default -> { modified = true; sb.append(' '); sb.append(c); yield $WORD; }
+          };
+
+          default -> throw new AssertionError("Unexpected state=" + state);
+        };
+      }
+
+      if (state == $NORMAL) {
+        throw new IllegalArgumentException("Variant with a blank rule");
+      }
+
+      final String rule;
+      rule = modified ? sb.toString() : text;
+
+      return simple(rule);
+    }
+
+    private IllegalArgumentException invalid(char c) {
+      return new IllegalArgumentException("Variant with an invalid character: " + c);
+    }
+
+    private byte test(char c) {
+      return c < 128 ? VAR[c] : VAR_CHAR;
+    }
+
   }
 
   // ##################################################################
@@ -1518,6 +1621,8 @@ final class CssEngine2 implements Css.Engine {
 
     final List<Utility> utilities = new ArrayList<>();
 
+    final VariantParser variantParser = new VariantParser();
+
     final Map<String, Variant> variants;
 
     Utilities(Note.Sink noteSink, Map<String, Variant> variants) {
@@ -1567,48 +1672,24 @@ final class CssEngine2 implements Css.Engine {
     }
 
     private Variant variantByName(String name) {
-      Variant result;
+      final Variant result;
       result = variants.get(name);
 
       if (result != null) {
         return result;
       }
 
-      result = variantByNameOfAttribute(name);
+      try {
+        final Variant parsed;
+        parsed = variantParser.parse(name);
 
-      if (result != null) {
-        return result;
+        variants.put(name, parsed);
+
+        return parsed;
+      } catch (IllegalArgumentException expected) {
+        // TODO log
+        return null;
       }
-
-      result = variantByNameOfElement(name);
-
-      if (result != null) {
-        return result;
-      }
-
-      result = variantByPseudoClass(name);
-
-      if (result != null) {
-        return result;
-      }
-
-      return variantByNameOfGroup(name);
-    }
-
-    private Variant variantByNameOfAttribute(String name) {
-      return null;
-    }
-
-    private Variant variantByNameOfElement(String name) {
-      return null;
-    }
-
-    private Variant variantByPseudoClass(String name) {
-      return null;
-    }
-
-    private Variant variantByNameOfGroup(String name) {
-      return null;
     }
 
   }

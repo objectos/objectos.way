@@ -22,7 +22,7 @@ import java.nio.file.Path;
 import java.util.Set;
 import org.testng.annotations.Test;
 
-public class CssEngine2Test03Dirs {
+public class CssEngine2Test04Dirs {
 
   @Test
   public void scanDirectory01() {

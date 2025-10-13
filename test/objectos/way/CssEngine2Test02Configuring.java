@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import org.testng.annotations.Test;
 
-public class CssEngine2Test01Configuring {
+public class CssEngine2Test02Configuring {
 
   @Test(description = """
   breakpoint

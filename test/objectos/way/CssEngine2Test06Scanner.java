@@ -27,7 +27,7 @@ import java.util.function.Function;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class CssEngine2Test05Scanner {
+public class CssEngine2Test06Scanner {
 
   @FunctionalInterface
   interface Method {

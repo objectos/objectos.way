@@ -25,7 +25,7 @@ import objectos.way.CssEngine2.Variant;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class CssEngine2Test07Utilities {
+public class CssEngine2Test08Utilities {
 
   private static final CssEngine2.Variant DARK = CssEngine2.simple("@media (prefers-color-scheme: dark)");
   private static final CssEngine2.Variant MD = CssEngine2.simple("@media (min-width: 48rem)");
@@ -67,18 +67,7 @@ public class CssEngine2Test07Utilities {
             CssEngine2.utility(List.of(), "margin:0", "margin", "0"),
             CssEngine2.utility(List.of(), "padding:0", "padding", "0")
         )
-    }, {
-        "variant (skip if not registered)",
-        Map.of(),
-        l(
-            r("margin:0", l("0", "margin", "hover")),
-            r("padding:0", l("0", "padding"))
-        ),
-        l(
-            CssEngine2.utility(List.of(), "padding:0", "padding", "0")
-        )
-    }, {
-        "variant (class name)",
+    }, {"variant (class name)",
         Map.of("hover", HOVER),
         l(
             r("hover/margin:0", l("0", "margin", "hover")),
@@ -110,16 +99,16 @@ public class CssEngine2Test07Utilities {
             CssEngine2.utility(List.of(DARK, MD), "dark/md/color:gray-100", "color", "gray-100"),
             CssEngine2.utility(List.of(), "padding:0", "padding", "0")
         )
-    }, /*{
-       "variant (custom))",
-       Map.of(),
-       l(
-           r("&[data-foo]/padding:0", l("0", "padding", "&[data-foo]"))
-       ),
-       l(
-           CssEngine2.utility(List.of(CssEngine2.simple("&[data-foo]")), "&[data-foo]/padding:0", "padding", "0")
-       )
-       }*/};
+    }, {
+        "variant (custom))",
+        Map.of(),
+        l(
+            r("&[data-foo]/padding:0", l("0", "padding", "&[data-foo]"))
+        ),
+        l(
+            CssEngine2.utility(List.of(CssEngine2.simple("&[data-foo]")), "&[data-foo]/padding:0", "padding", "0")
+        )
+    }};
   }
 
   @Test(dataProvider = "testProvider")

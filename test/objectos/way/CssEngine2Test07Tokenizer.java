@@ -22,7 +22,7 @@ import java.util.List;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class CssEngine2Test06Tokenizer {
+public class CssEngine2Test07Tokenizer {
 
   @DataProvider
   public Object[][] testProvider() {
