@@ -2322,6 +2322,15 @@ final class CssEngine2 implements Css.Engine {
       }
     }
 
+    final void w(char c) throws IOException {
+      out.append(c);
+    }
+
+    final void w(char c0, char c1) throws IOException {
+      out.append(c0);
+      out.append(c1);
+    }
+
     final void w(CharSequence s) throws IOException {
       out.append(s);
     }
@@ -2413,6 +2422,163 @@ final class CssEngine2 implements Css.Engine {
 
   // ##################################################################
   // # END: Theme
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Base
+  // ##################################################################
+
+  static final class Base extends Writer {
+
+    final String source;
+
+    Base(String source) {
+      this.source = source;
+    }
+
+    @Override
+    final void write() throws IOException {
+      enum Parser {
+        NORMAL,
+
+        SLASH,
+
+        COMMENT,
+        COMMENT_STAR,
+
+        TEXT,
+
+        UNKNOWN;
+      }
+
+      Parser parser;
+      parser = Parser.NORMAL;
+
+      wln("@layer base {");
+
+      boolean indent;
+      indent = true;
+
+      level++;
+
+      for (int idx = 0, len = source.length(); idx < len; idx++) {
+        final char c;
+        c = source.charAt(idx);
+
+        switch (parser) {
+          case NORMAL -> {
+            if (Ascii.isWhitespace(c)) {
+              parser = Parser.NORMAL;
+            }
+
+            else if (c == '/') {
+              parser = Parser.SLASH;
+            }
+
+            else if (c == '{') {
+              parser = Parser.NORMAL;
+
+              indent = true;
+
+              level++;
+
+              wln(c);
+            }
+
+            else if (c == '}') {
+              parser = Parser.NORMAL;
+
+              indent = true;
+
+              level--;
+
+              indent();
+
+              wln(c);
+            }
+
+            else {
+              parser = Parser.TEXT;
+
+              if (indent) {
+                indent();
+
+                indent = false;
+              }
+
+              w(c);
+            }
+          }
+
+          case SLASH -> {
+            if (c == '*') {
+              parser = Parser.COMMENT;
+            }
+
+            else {
+              parser = Parser.UNKNOWN;
+
+              w('/', c);
+            }
+          }
+
+          case COMMENT -> {
+            if (c == '*') {
+              parser = Parser.COMMENT_STAR;
+            }
+          }
+
+          case COMMENT_STAR -> {
+            if (c == '*') {
+              parser = Parser.COMMENT_STAR;
+            }
+
+            else if (c == '/') {
+              parser = Parser.NORMAL;
+            }
+
+            else {
+              parser = Parser.COMMENT;
+            }
+          }
+
+          case TEXT -> {
+            if (Ascii.isWhitespace(c)) {
+              parser = Parser.NORMAL;
+
+              w(' ');
+            }
+
+            else if (c == '{') {
+              throw new UnsupportedOperationException("Implement me");
+            }
+
+            else if (c == ';') {
+              parser = Parser.NORMAL;
+
+              indent = true;
+
+              wln(c);
+            }
+
+            else {
+              parser = Parser.TEXT;
+
+              w(c);
+            }
+          }
+
+          case UNKNOWN -> w(c);
+        }
+      }
+
+      wln('}');
+    }
+
+  }
+
+  // ##################################################################
+  // # END: Base
   // ##################################################################
 
   // ##################################################################
