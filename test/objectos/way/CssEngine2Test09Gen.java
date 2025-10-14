@@ -18,8 +18,9 @@ package objectos.way;
 import static org.testng.Assert.assertEquals;
 
 import java.util.List;
-import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import objectos.way.CssEngine2.Value;
 import org.testng.annotations.Test;
 
 public class CssEngine2Test09Gen {
@@ -32,10 +33,10 @@ public class CssEngine2Test09Gen {
         },
 
         ctx -> {
-          assertEquals(ctx.keywords, Set.of());
-          assertEquals(ctx.rules, List.of(
+          assertEquals(ctx.rules(), List.of(
               CssEngine2.rule(".margin\\:0", List.of(), "margin", "0")
           ));
+          assertEquals(ctx.sections(), List.of());
         }
     );
   }
@@ -44,17 +45,21 @@ public class CssEngine2Test09Gen {
   public void testCase02() {
     test(
         gen -> {
-          gen.keyword("gray-100", "var(--color-gray-100)");
           gen.utility(List.of(), "color:gray-100", "color", "gray-100");
+          gen.themeValue(CssEngine2.ROOT, 1, "color", "gray-100", "var(--color-gray-100)");
         },
 
         ctx -> {
-          assertEquals(ctx.keywords, Set.of(
-              "gray-100"
-          ));
-          assertEquals(ctx.rules, List.of(
+          assertEquals(ctx.rules(), List.of(
               CssEngine2.rule(".color\\:gray-100", List.of(), "color", "var(--color-gray-100)")
           ));
+          final List<CssEngine2.ThemeSection> sections = ctx.sections();
+          assertEquals(sections.size(), 1);
+          final CssEngine2.ThemeSection s0 = sections.get(0);
+          assertEquals(s0.selector(), CssEngine2.ROOT);
+          assertEquals(v(s0.values()), """
+          --color-gray-100: var(--color-gray-100)
+          """);
         }
     );
   }
@@ -63,19 +68,29 @@ public class CssEngine2Test09Gen {
   public void testCase03() {
     test(
         gen -> {
-          gen.keyword("gray-100", "var(--color-gray-100)");
           gen.utility(List.of(), "color:gray-100/20", "color", "gray-100/20");
+          gen.themeValue(CssEngine2.ROOT, 1, "color", "gray-100", "var(--color-gray-100)");
         },
 
         ctx -> {
-          assertEquals(ctx.keywords, Set.of(
-              "gray-100"
-          ));
-          assertEquals(ctx.rules, List.of(
+          assertEquals(ctx.rules(), List.of(
               CssEngine2.rule(".color\\:gray-100\\/20", List.of(), "color", "color-mix(in oklab, var(--color-gray-100) 20%, transparent)")
           ));
+          final List<CssEngine2.ThemeSection> sections = ctx.sections();
+          assertEquals(sections.size(), 1);
+          final CssEngine2.ThemeSection s0 = sections.get(0);
+          assertEquals(s0.selector(), CssEngine2.ROOT);
+          assertEquals(v(s0.values()), """
+          --color-gray-100: var(--color-gray-100)
+          """);
         }
     );
+  }
+
+  private String v(List<Value> values) {
+    return values.stream()
+        .map(v -> v.name() + ": " + v.value())
+        .collect(Collectors.joining("\n", "", "\n"));
   }
 
   private void test(Consumer<? super CssEngine2.Gen> config, Consumer<? super CssEngine2.Ctx> test) {

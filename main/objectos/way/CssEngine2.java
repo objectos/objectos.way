@@ -40,7 +40,6 @@ import java.security.CodeSource;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -67,28 +66,119 @@ final class CssEngine2 implements Css.Engine {
   // # BEGIN: Value: Types
   // ##################################################################
 
-  sealed interface Value extends Comparable<Value> {
+  sealed abstract static class Value implements Comparable<Value> {
+    final int index;
+
+    Value(int index) {
+      this.index = index;
+    }
+
     @Override
-    default int compareTo(Value o) {
-      return Integer.compare(index(), o.index());
+    public final int compareTo(Value o) {
+      return Integer.compare(index, o.index);
     }
 
-    int index();
+    @Override
+    public final boolean equals(Object obj) {
+      return obj == this || obj instanceof Value that
+          && index == that.index
+          && equals0(that);
+    }
 
-    default String name() {
+    abstract boolean equals0(Value obj);
+
+    String name() {
       throw new UnsupportedOperationException();
     }
 
-    default String value() {
+    String value() {
       throw new UnsupportedOperationException();
     }
+
+    boolean themeSection() { return false; }
   }
 
-  record CustomProp(int index, String name, String value) implements Value {}
+  static final class CustomProp extends Value {
 
-  record SystemSkip(int index, String ns) implements Value {}
+    final String name;
+    final String value;
 
-  record ThemeProp(int index, String name, String ns, String id, String value) implements Value {}
+    CustomProp(int index, String name, String value) {
+      super(index);
+      this.name = name;
+      this.value = value;
+    }
+
+    @Override
+    final boolean equals0(Value obj) {
+      return obj instanceof CustomProp that
+          && name.equals(that.name)
+          && value.equals(that.value);
+    }
+
+    @Override
+    final String name() { return name; }
+
+    @Override
+    final String value() { return value; }
+
+    @Override
+    final boolean themeSection() { return true; }
+
+  }
+
+  static final class SystemSkip extends Value {
+
+    final String ns;
+
+    SystemSkip(int index, String ns) {
+      super(index);
+
+      this.ns = ns;
+    }
+
+    @Override
+    final boolean equals0(Value obj) {
+      return obj instanceof SystemSkip that
+          && ns.equals(that.ns);
+    }
+
+  }
+
+  static final class ThemeProp extends Value {
+
+    final String name;
+    final String ns;
+    final String id;
+    final String value;
+
+    boolean marked;
+
+    ThemeProp(int index, String name, String ns, String id, String value) {
+      super(index);
+      this.name = name;
+      this.ns = ns;
+      this.id = id;
+      this.value = value;
+    }
+
+    @Override
+    final boolean equals0(Value obj) {
+      return obj instanceof ThemeProp that
+          && name.equals(that.name)
+          && value.equals(that.value);
+    }
+
+    @Override
+    final String name() { return name; }
+
+    @Override
+    final String value() { return value; }
+
+    @Override
+    final boolean themeSection() { return marked; }
+
+  }
 
   static Value customProp(int index, String name, String value) {
     return new CustomProp(index, name, value);
@@ -596,6 +686,8 @@ final class CssEngine2 implements Css.Engine {
   // # BEGIN: Configuring
   // ##################################################################
 
+  static final List<String> ROOT = List.of(":root");
+
   static final class Configuring implements Stage {
 
     final Note.Ref2<Value, Value> $replaced = Note.Ref2.create(getClass(), "REP", Note.INFO);
@@ -616,7 +708,7 @@ final class CssEngine2 implements Css.Engine {
 
     Map<String, Variant> systemVariants;
 
-    final Map<Object, List<Value>> themeValues = new LinkedHashMap<>();
+    final Map<List<String>, List<Value>> themeValues = new LinkedHashMap<>();
 
     String userTheme = "";
 
@@ -776,7 +868,7 @@ final class CssEngine2 implements Css.Engine {
       for (Value value : parsed) {
         if (value instanceof SystemSkip skip) {
           final String ns;
-          ns = skip.ns();
+          ns = skip.ns;
 
           if ("*".equals(ns)) {
             namespaces.clear();
@@ -855,7 +947,7 @@ final class CssEngine2 implements Css.Engine {
 
     private void themeArtifacts() {
       final List<Value> root;
-      root = themeValues.computeIfAbsent(":root", key -> new ArrayList<>());
+      root = themeValues.computeIfAbsent(ROOT, key -> new ArrayList<>());
 
       for (Map<String, Value> map : namespaces.values()) {
         for (Value value : map.values()) {
@@ -895,12 +987,6 @@ final class CssEngine2 implements Css.Engine {
           }
         }
       }
-
-      themeValues.replaceAll((k, v) -> {
-        v.sort(Comparator.naturalOrder());
-
-        return List.copyOf(v);
-      });
     }
 
   }
@@ -960,7 +1046,7 @@ final class CssEngine2 implements Css.Engine {
 
       Set<Class<?>> scanJars,
 
-      Map<Object, List<Value>> themeValues,
+      Map<List<String>, List<Value>> themeValues,
 
       Map<String, Variant> variants
 
@@ -1708,36 +1794,26 @@ final class CssEngine2 implements Css.Engine {
     return new Rule(className, variants, property, value);
   }
 
-  static final class Ctx {
-
-    final Set<String> keywords = new HashSet<>();
-
-    final List<Rule> rules = new ArrayList<>();
-
-    final void addKeyword(String kw) {
-      keywords.add(kw);
-    }
-
-    final void add(Rule rule) {
-      rules.add(rule);
-    }
-
-  }
+  record Ctx(List<Rule> rules, List<ThemeSection> sections) {}
 
   static final class Gen {
-
-    final Ctx ctx = new Ctx();
 
     int entryIndex;
 
     final Map<String, ThemeProp> keywords;
 
+    final List<Rule> rules = new ArrayList<>();
+
     final StringBuilder sb = new StringBuilder();
+
+    final Map<List<String>, List<Value>> themeValues;
 
     final List<Utility> utilities;
 
-    Gen(Map<String, ThemeProp> keywords, List<Utility> utilities) {
+    Gen(Map<String, ThemeProp> keywords, Map<List<String>, List<Value>> themeValues, List<Utility> utilities) {
       this.keywords = keywords;
+
+      this.themeValues = themeValues;
 
       this.utilities = utilities;
     }
@@ -1747,7 +1823,11 @@ final class CssEngine2 implements Css.Engine {
         process(utility);
       }
 
-      return ctx;
+      return new Ctx(
+          List.copyOf(rules),
+
+          themeSections()
+      );
     }
 
     private void process(Utility utility) {
@@ -1773,7 +1853,7 @@ final class CssEngine2 implements Css.Engine {
       final Rule rule;
       rule = rule(className, variants, property, value);
 
-      ctx.add(rule);
+      rules.add(rule);
     }
 
     final String formatValue(String value) {
@@ -1898,7 +1978,7 @@ final class CssEngine2 implements Css.Engine {
             break;
           }
 
-          ctx.addKeyword(maybe);
+          kw.marked = true;
 
           formatValueNormal(value, beginIndex);
 
@@ -1920,7 +2000,7 @@ final class CssEngine2 implements Css.Engine {
             break;
           }
 
-          ctx.addKeyword(maybe);
+          kw.marked = true;
 
           formatValueNormal(value, beginIndex);
 
@@ -2148,16 +2228,56 @@ final class CssEngine2 implements Css.Engine {
       return c == '_';
     }
 
+    private List<ThemeSection> themeSections() {
+      final List<ThemeSection> sections;
+      sections = new ArrayList<>();
+
+      for (Map.Entry<List<String>, List<Value>> entry : themeValues.entrySet()) {
+        final List<Value> original;
+        original = entry.getValue();
+
+        final List<Value> values;
+        values = original.stream()
+            .filter(Value::themeSection)
+            .sorted()
+            .toList();
+
+        if (values.isEmpty()) {
+          continue;
+        }
+
+        final List<String> selector;
+        selector = entry.getKey();
+
+        final ThemeSection section;
+        section = new ThemeSection(selector, values);
+
+        sections.add(section);
+      }
+
+      return List.copyOf(sections);
+    }
+
     // BEGIN: test-only section
 
     Gen() {
       keywords = new HashMap<>();
 
+      themeValues = new LinkedHashMap<>();
+
       utilities = new ArrayList<>();
     }
 
-    final void keyword(String keyword, String value) {
-      keywords.put(keyword, themeProp(1, "", keyword, value));
+    final void themeValue(List<String> sel, int idx, String ns, String keyword, String value) {
+      final ThemeProp prop;
+      prop = themeProp(idx, ns, keyword, value);
+
+      keywords.put(keyword, prop);
+
+      final List<Value> values;
+      values = themeValues.computeIfAbsent(sel, key -> new ArrayList<>());
+
+      values.add(prop);
     }
 
     final void utility(List<Variant> variants, String className, String property, String value) {
@@ -2172,6 +2292,127 @@ final class CssEngine2 implements Css.Engine {
 
   // ##################################################################
   // # END: Gen
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Writer
+  // ##################################################################
+
+  // ##################################################################
+  // # END: Writer
+  // ##################################################################
+
+  private static abstract class Writer {
+
+    private Appendable out;
+
+    int level;
+
+    public final void write(Appendable out) throws IOException {
+      this.out = out;
+      write();
+      this.out = null;
+    }
+
+    abstract void write() throws IOException;
+
+    final void indent() throws IOException {
+      for (int i = 0, count = level * 2; i < count; i++) {
+        out.append(' ');
+      }
+    }
+
+    final void w(CharSequence s) throws IOException {
+      out.append(s);
+    }
+
+    final void wln() throws IOException {
+      out.append('\n');
+    }
+
+    final void wln(char c) throws IOException {
+      out.append(c);
+      out.append('\n');
+    }
+
+    final void wln(String s) throws IOException {
+      out.append(s);
+      out.append('\n');
+    }
+
+  }
+
+  // ##################################################################
+  // # BEGIN: Theme
+  // ##################################################################
+
+  record ThemeSection(List<String> selector, List<Value> values) {}
+
+  static final class Theme extends Writer {
+
+    final List<ThemeSection> sections;
+
+    Theme(List<ThemeSection> sections) {
+      this.sections = sections;
+    }
+
+    @Override
+    final void write() throws IOException {
+      if (sections.isEmpty()) {
+        return;
+      }
+
+      wln("@layer theme {");
+
+      level++;
+
+      for (ThemeSection section : sections) {
+        final List<String> selector;
+        selector = section.selector;
+
+        for (String part : selector) {
+          indent();
+
+          w(part);
+
+          wln(" {");
+
+          level++;
+        }
+
+        final List<Value> values;
+        values = section.values;
+
+        for (Value value : values) {
+          indent();
+
+          w(value.name());
+
+          w(": ");
+
+          w(value.value());
+
+          wln(";");
+        }
+
+        for (int idx = 0, size = selector.size(); idx < size; idx++) {
+          level--;
+
+          indent();
+
+          wln('}');
+        }
+      }
+
+      level--;
+
+      wln('}');
+    }
+
+  }
+
+  // ##################################################################
+  // # END: Theme
   // ##################################################################
 
   // ##################################################################

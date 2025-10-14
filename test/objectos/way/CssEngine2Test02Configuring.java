@@ -45,7 +45,7 @@ public class CssEngine2Test02Configuring {
 
           assertEquals(c.keywords(), Map.of("screen-sm", v));
           assertEquals(c.rx(), false);
-          assertEquals(c.themeValues(), Map.of(":root", List.of(v)));
+          assertEquals(c.themeValues(), Map.of(CssEngine2.ROOT, List.of(v)));
           assertEquals(c.variants(), Map.of(
               "sm", CssEngine2.simple("@media (min-width: 40rem)")
           ));
@@ -75,7 +75,7 @@ public class CssEngine2Test02Configuring {
 
           assertEquals(c.keywords(), Map.of("screen-sm", v));
           assertEquals(c.rx(), false);
-          assertEquals(c.themeValues(), Map.of(":root", List.of(v)));
+          assertEquals(c.themeValues(), Map.of(CssEngine2.ROOT, List.of(v)));
           assertEquals(c.variants(), Map.of(
               "sm", CssEngine2.simple("@media (min-width: 30rem)")
           ));
@@ -103,7 +103,7 @@ public class CssEngine2Test02Configuring {
 
           assertEquals(c.keywords(), Map.of("test", v));
           assertEquals(c.rx(), false);
-          assertEquals(c.themeValues(), Map.of(":root", List.of(v)));
+          assertEquals(c.themeValues(), Map.of(CssEngine2.ROOT, List.of(v)));
           assertEquals(c.variants(), Map.of());
         }
     );
@@ -129,7 +129,7 @@ public class CssEngine2Test02Configuring {
 
           assertEquals(c.keywords(), Map.of("test", v));
           assertEquals(c.rx(), false);
-          assertEquals(c.themeValues(), Map.of(":root", List.of(v)));
+          assertEquals(c.themeValues(), Map.of(CssEngine2.ROOT, List.of(v)));
           assertEquals(c.variants(), Map.of());
         }
     );
@@ -155,7 +155,7 @@ public class CssEngine2Test02Configuring {
 
           assertEquals(c.keywords(), Map.of());
           assertEquals(c.rx(), true);
-          assertEquals(c.themeValues(), Map.of(":root", List.of(v)));
+          assertEquals(c.themeValues(), Map.of(CssEngine2.ROOT, List.of(v)));
           assertEquals(c.variants(), Map.of());
         }
     );
