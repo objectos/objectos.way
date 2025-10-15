@@ -25,7 +25,7 @@ import objectos.way.CssEngine2.Variant;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class CssEngine2Test08Utilities {
+public class CssEngine2Test08Proc {
 
   private static final CssEngine2.Variant DARK = CssEngine2.simple("@media (prefers-color-scheme: dark)");
   private static final CssEngine2.Variant MD = CssEngine2.simple("@media (min-width: 48rem)");
@@ -123,8 +123,8 @@ public class CssEngine2Test08Utilities {
     final Map<String, Variant> mutable;
     mutable = new HashMap<>(variants);
 
-    final CssEngine2.Utilities proc;
-    proc = new CssEngine2.Utilities(noteSink, mutable);
+    final CssEngine2.Proc proc;
+    proc = new CssEngine2.Proc(noteSink, mutable);
 
     for (Input input : inputs) {
       proc.consume(input.className, input.slugs);

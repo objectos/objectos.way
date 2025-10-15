@@ -1695,7 +1695,7 @@ final class CssEngine2 implements Css.Engine {
     return new Utility(variants, className, property, value);
   }
 
-  static final class Utilities implements Slugs {
+  static final class Proc implements Slugs {
 
     final Set<String> distinct = new HashSet<>();
 
@@ -1711,7 +1711,7 @@ final class CssEngine2 implements Css.Engine {
 
     final Map<String, Variant> variants;
 
-    Utilities(Note.Sink noteSink, Map<String, Variant> variants) {
+    Proc(Note.Sink noteSink, Map<String, Variant> variants) {
       this.noteSink = noteSink;
 
       this.variants = variants;
@@ -2579,6 +2579,71 @@ final class CssEngine2 implements Css.Engine {
 
   // ##################################################################
   // # END: Base
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Utilities
+  // ##################################################################
+
+  static final class Utilities extends Writer {
+
+    final List<Rule> rules;
+
+    Utilities(List<Rule> rules) {
+      this.rules = rules;
+    }
+
+    @Override
+    final void write() throws IOException {
+      if (rules.isEmpty()) {
+        return;
+      }
+
+      wln("@layer utilities {");
+
+      level++;
+
+      for (Rule rule : rules) {
+        indent();
+
+        w(rule.className);
+
+        w(" { ");
+
+        final List<Variant> variants;
+        variants = rule.variants;
+
+        for (Variant variant : variants) {
+          switch (variant) {
+            case Simple s -> {
+              w(s.value);
+
+              w(" { ");
+            }
+          }
+        }
+
+        w(rule.property);
+
+        w(": ");
+
+        w(rule.value);
+
+        for (int idx = 0, size = variants.size(); idx < size; idx++) {
+          w(" }");
+        }
+
+        wln(" }");
+      }
+
+      level--;
+
+      wln('}');
+    }
+
+  }
+  // ##################################################################
+  // # END: Utilities
   // ##################################################################
 
   // ##################################################################
