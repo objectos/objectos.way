@@ -54,9 +54,104 @@ import java.util.jar.JarFile;
 
 final class CssEngine2 implements Css.Engine {
 
-  private sealed interface Stage {}
+  // ##################################################################
+  // # BEGIN: Execute
+  // ##################################################################
 
-  private Stage stage = new Configuring();
+  private final Configuring configuring = new Configuring();
+
+  public final void generate(Appendable out) throws IOException {
+    final Config config;
+    config = configuring.configure();
+
+    final Note.Sink noteSink;
+    noteSink = config.noteSink;
+
+    final Map<String, Variant> variants;
+    variants = config.variants;
+
+    final Proc proc;
+    proc = new Proc(noteSink, variants);
+
+    final Tokenizer tokenizer;
+    tokenizer = new Tokenizer(proc);
+
+    final Scanner scanner;
+    scanner = new Scanner(noteSink, tokenizer);
+
+    final Set<Class<?>> scanClasses;
+    scanClasses = config.scanClasses;
+
+    if (!scanClasses.isEmpty()) {
+      final Classes classes;
+      classes = new Classes(scanner, scanClasses, noteSink);
+
+      classes.scan();
+    }
+
+    final Set<Path> scanDirectories;
+    scanDirectories = config.scanDirectories;
+
+    if (!scanDirectories.isEmpty()) {
+      final Dirs dirs;
+      dirs = new Dirs(scanner, scanDirectories, noteSink);
+
+      dirs.scan();
+    }
+
+    final Set<Class<?>> scanJars;
+    scanJars = config.scanJars;
+
+    if (!scanJars.isEmpty()) {
+      final Jars jars;
+      jars = new Jars(scanner, scanJars, noteSink);
+
+      jars.scan();
+    }
+
+    final Map<String, ThemeProp> keywords;
+    keywords = config.keywords;
+
+    final Map<List<String>, List<Value>> themeValues;
+    themeValues = config.themeValues;
+
+    final List<Utility> utils;
+    utils = proc.utilities;
+
+    final Gen gen;
+    gen = new Gen(keywords, themeValues, utils);
+
+    final Ctx ctx;
+    ctx = gen.generate();
+
+    final List<ThemeSection> sections;
+    sections = ctx.sections;
+
+    final Theme theme;
+    theme = new Theme(sections);
+
+    theme.write(out);
+
+    final String baseSource;
+    baseSource = config.base;
+
+    final Base base;
+    base = new Base(baseSource);
+
+    base.write(out);
+
+    final List<Rule> rules;
+    rules = ctx.rules;
+
+    final Utilities utilities;
+    utilities = new Utilities(rules);
+
+    utilities.write(out);
+  }
+
+  // ##################################################################
+  // # END: Execute
+  // ##################################################################
 
   // ##################################################################
   // # BEGIN: Value
@@ -688,7 +783,7 @@ final class CssEngine2 implements Css.Engine {
 
   static final List<String> ROOT = List.of(":root");
 
-  static final class Configuring implements Stage {
+  static final class Configuring {
 
     final Note.Ref2<Value, Value> $replaced = Note.Ref2.create(getClass(), "REP", Note.INFO);
 
@@ -703,6 +798,8 @@ final class CssEngine2 implements Css.Engine {
     Set<Path> scanDirectories = Set.of();
 
     Set<Class<?>> scanJars = Set.of();
+
+    String systemBase;
 
     String systemTheme;
 
@@ -781,6 +878,8 @@ final class CssEngine2 implements Css.Engine {
       themeArtifacts();
 
       return new Config(
+          systemBase == null ? Css.systemBase() : systemBase,
+
           Map.copyOf(keywords),
 
           noteSink,
@@ -991,37 +1090,37 @@ final class CssEngine2 implements Css.Engine {
 
   }
 
-  final Configuring configuring() {
-    if (stage instanceof Configuring c) {
-      return c;
-    } else {
-      throw new IllegalStateException("Not in configuring stage");
-    }
-  }
-
   @Override
   public final void noteSink(Note.Sink value) {
-    configuring().noteSink(value);
+    configuring.noteSink(value);
   }
 
   @Override
   public final void scanClass(Class<?> value) {
-    configuring().scanClass(value);
+    configuring.scanClass(value);
   }
 
   @Override
   public final void scanDirectory(Path value) {
-    configuring().scanDirectory(value);
+    configuring.scanDirectory(value);
   }
 
   @Override
   public final void scanJarFileOf(Class<?> value) {
-    configuring().scanJarFileOf(value);
+    configuring.scanJarFileOf(value);
+  }
+
+  public final void systemBase(String value) {
+    configuring.systemBase = Objects.requireNonNull(value, "value == null");
+  }
+
+  public final void systemTheme(String value) {
+    configuring.systemTheme = Objects.requireNonNull(value, "value == null");
   }
 
   @Override
   public final void theme(String value) {
-    configuring().theme(value);
+    configuring.theme(value);
   }
 
   // ##################################################################
@@ -1033,6 +1132,8 @@ final class CssEngine2 implements Css.Engine {
   // ##################################################################
 
   record Config(
+
+      String base,
 
       Map<String, ThemeProp> keywords,
 
@@ -1050,21 +1151,7 @@ final class CssEngine2 implements Css.Engine {
 
       Map<String, Variant> variants
 
-  ) implements Stage {
-
-  }
-
-  final Config configure() {
-    final Configuring configuring;
-    configuring = configuring();
-
-    final Config config;
-    config = configuring.configure();
-
-    stage = config;
-
-    return config;
-  }
+  ) {}
 
   // ##################################################################
   // # END: Configured
@@ -2438,6 +2525,10 @@ final class CssEngine2 implements Css.Engine {
 
     @Override
     final void write() throws IOException {
+      if (source == null || source.isBlank()) {
+        return;
+      }
+
       enum Parser {
         NORMAL,
 
@@ -2642,28 +2733,9 @@ final class CssEngine2 implements Css.Engine {
     }
 
   }
+
   // ##################################################################
   // # END: Utilities
-  // ##################################################################
-
-  // ##################################################################
-  // # BEGIN: Execute
-  // ##################################################################
-
-  public final void execute() {
-    configure();
-  }
-
-  // ##################################################################
-  // # END: Execute
-  // ##################################################################
-
-  // ##################################################################
-  // # BEGIN: Test
-  // ##################################################################
-
-  // ##################################################################
-  // # END: Test
   // ##################################################################
 
 }

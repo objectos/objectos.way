@@ -47,7 +47,7 @@ final class CssEngineBuilder implements Css.StyleSheet.Options {
 
   }
 
-  private String base = Css.defaultBase();
+  private String base = Css.systemBase();
 
   private int entryIndex;
 

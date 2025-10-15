@@ -311,7 +311,7 @@ public final class Css {
   // current version:
   // https://github.com/tailwindlabs/tailwindcss/blob/961e8da8fd0b2d96c49a5907bd9df70efcacccf7/packages/tailwindcss/preflight.css
   //
-  static String defaultBase() {
+  static String systemBase() {
     return """
     /*
       1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)
