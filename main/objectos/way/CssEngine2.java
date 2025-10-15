@@ -40,6 +40,7 @@ import java.security.CodeSource;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -861,6 +862,10 @@ final class CssEngine2 implements Css.Engine {
     public final void theme(String value) {
       userTheme = Objects.requireNonNull(value, "value == null");
     }
+    
+    public final void theme(String atRule, String value) {
+      
+    }
 
     public final Config configure() {
       if (noteSink == null) {
@@ -1121,6 +1126,11 @@ final class CssEngine2 implements Css.Engine {
   @Override
   public final void theme(String value) {
     configuring.theme(value);
+  }
+
+  @Override
+  public final void theme(String atRule, String value) {
+    configuring.theme(atRule, value);
   }
 
   // ##################################################################
@@ -1875,7 +1885,30 @@ final class CssEngine2 implements Css.Engine {
   // # BEGIN: Gen
   // ##################################################################
 
-  record Rule(String className, List<Variant> variants, String property, String value) {}
+  record Rule(String className, List<Variant> variants, String property, String value)
+      implements
+      Comparable<Rule> {
+
+    @Override
+    public final int compareTo(Rule o) {
+      final int p;
+      p = property.compareTo(o.property);
+
+      if (p != 0) {
+        return p;
+      }
+
+      final int v;
+      v = value.compareTo(o.value);
+
+      if (v != 0) {
+        return v;
+      }
+
+      return className.compareTo(o.className);
+    }
+
+  }
 
   static Rule rule(String className, List<Variant> variants, String property, String value) {
     return new Rule(className, variants, property, value);
@@ -1909,6 +1942,8 @@ final class CssEngine2 implements Css.Engine {
       for (Utility utility : utilities) {
         process(utility);
       }
+
+      rules.sort(Comparator.naturalOrder());
 
       return new Ctx(
           List.copyOf(rules),

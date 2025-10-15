@@ -196,8 +196,8 @@ public class CssEngine2Test14Full {
           }
         }
         @layer utilities {
-          .margin\\:0 { margin: 0 }
           .color\\:red-50 { color: oklch(97.1% 0.013 17.38) }
+          .margin\\:0 { margin: 0 }
         }
         """
     );
@@ -249,8 +249,8 @@ public class CssEngine2Test14Full {
           }
         }
         @layer utilities {
-          .margin\\:0 { margin: 0 }
           .color\\:red-50 { color: oklch(97.1% 0.013 17.38) }
+          .margin\\:0 { margin: 0 }
         }
         """
     );

@@ -71,10 +71,16 @@ public final class Css {
     // THEME
     //
 
-    /// Adds the specified CSS declarations to the theme layer.
+    /// Adds the specified CSS declarations to the root pseudo-class of the theme layer.
     ///
     /// @param value the CSS rule declarations
     void theme(String value);
+
+    /// Adds the specified CSS at-rule to the root pseudo-class of the theme layer.
+    ///
+    /// @param atRule the CSS at-rule
+    /// @param value the CSS rule declarations
+    void theme(String atRule, String value);
 
   }
 
