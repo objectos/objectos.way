@@ -37,9 +37,9 @@ public class CssEngine2Test10Theme {
   public void testCase02() {
     test(
         List.of(s(
-            CssEngine2.ROOT,
+            List.of(),
 
-            CssEngine2.themeProp(1, "color", "red-50", "oklch(97.1% 0.013 17.38)")
+            CssEngine2.decl("--color-red-50", "oklch(97.1% 0.013 17.38)")
         )),
 
         """
@@ -52,14 +52,14 @@ public class CssEngine2Test10Theme {
     );
   }
 
-  private CssEngine2.ThemeSection s(List<String> selector, CssEngine2.Value... values) {
-    return new CssEngine2.ThemeSection(
+  private CssEngine2.Section s(List<String> selector, CssEngine2.Decl... values) {
+    return new CssEngine2.Section(
         selector,
         List.of(values)
     );
   }
 
-  private void test(List<CssEngine2.ThemeSection> sections, String expected) {
+  private void test(List<CssEngine2.Section> sections, String expected) {
     try {
       final CssEngine2.Theme theme;
       theme = new CssEngine2.Theme(sections);

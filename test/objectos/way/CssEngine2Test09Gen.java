@@ -17,10 +17,14 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import objectos.way.CssEngine2.Value;
+import objectos.way.CssEngine2.Ctx;
+import objectos.way.CssEngine2.PDecl;
 import org.testng.annotations.Test;
 
 public class CssEngine2Test09Gen {
@@ -45,20 +49,20 @@ public class CssEngine2Test09Gen {
   public void testCase02() {
     test(
         gen -> {
+          gen.keywords(List.of(), Map.of("gray-100", "var(--color-gray-100)"));
           gen.utility(List.of(), "color:gray-100", "color", "gray-100");
-          gen.themeValue(CssEngine2.ROOT, 1, "color", "gray-100", "var(--color-gray-100)");
         },
 
         ctx -> {
           assertEquals(ctx.rules(), List.of(
               CssEngine2.rule(".color\\:gray-100", List.of(), "color", "var(--color-gray-100)")
           ));
-          final List<CssEngine2.ThemeSection> sections = ctx.sections();
+          final List<CssEngine2.Section> sections = ctx.sections();
           assertEquals(sections.size(), 1);
-          final CssEngine2.ThemeSection s0 = sections.get(0);
-          assertEquals(s0.selector(), CssEngine2.ROOT);
-          assertEquals(v(s0.values()), """
-          --color-gray-100: var(--color-gray-100)
+          final CssEngine2.Section s0 = sections.get(0);
+          assertEquals(s0.selector(), List.of());
+          assertEquals(v(s0.decls()), """
+          gray-100: var(--color-gray-100)
           """);
         }
     );
@@ -68,39 +72,89 @@ public class CssEngine2Test09Gen {
   public void testCase03() {
     test(
         gen -> {
+          gen.keywords(List.of(), Map.of("gray-100", "var(--color-gray-100)"));
           gen.utility(List.of(), "color:gray-100/20", "color", "gray-100/20");
-          gen.themeValue(CssEngine2.ROOT, 1, "color", "gray-100", "var(--color-gray-100)");
         },
 
         ctx -> {
           assertEquals(ctx.rules(), List.of(
               CssEngine2.rule(".color\\:gray-100\\/20", List.of(), "color", "color-mix(in oklab, var(--color-gray-100) 20%, transparent)")
           ));
-          final List<CssEngine2.ThemeSection> sections = ctx.sections();
+          final List<CssEngine2.Section> sections = ctx.sections();
           assertEquals(sections.size(), 1);
-          final CssEngine2.ThemeSection s0 = sections.get(0);
-          assertEquals(s0.selector(), CssEngine2.ROOT);
-          assertEquals(v(s0.values()), """
-          --color-gray-100: var(--color-gray-100)
+          final CssEngine2.Section s0 = sections.get(0);
+          assertEquals(s0.selector(), List.of());
+          assertEquals(v(s0.decls()), """
+          gray-100: var(--color-gray-100)
           """);
         }
     );
   }
 
-  private String v(List<Value> values) {
+  private static final class Builder {
+
+    final Map<String, CssEngine2.PDecl> keywords = new HashMap<>();
+
+    final List<CssEngine2.PSection> sections = new ArrayList<>();
+
+    final List<CssEngine2.Utility> utilities = new ArrayList<>();
+
+    final Ctx build() {
+      final CssEngine2.Gen gen;
+      gen = new CssEngine2.Gen(keywords, sections, utilities);
+
+      return gen.generate();
+    }
+
+    final void keywords(List<String> selector, Map<String, String> kws) {
+      final List<PDecl> decls;
+      decls = new ArrayList<>();
+
+      for (Map.Entry<String, String> entry : kws.entrySet()) {
+        final String keyword;
+        keyword = entry.getKey();
+
+        final String value;
+        value = entry.getValue();
+
+        final PDecl decl;
+        decl = CssEngine2.pdecl(keyword, value);
+
+        keywords.put(keyword, decl);
+
+        decls.add(decl);
+      }
+
+      final CssEngine2.PSection s;
+      s = CssEngine2.psection(selector, decls);
+
+      sections.add(s);
+    }
+
+    final void utility(
+        List<CssEngine2.Variant> variants, String className, String property, String value) {
+      final CssEngine2.Utility utility;
+      utility = new CssEngine2.Utility(variants, className, property, value);
+
+      utilities.add(utility);
+    }
+
+  }
+
+  private String v(List<CssEngine2.Decl> values) {
     return values.stream()
-        .map(v -> v.name() + ": " + v.value())
+        .map(v -> v.property() + ": " + v.value())
         .collect(Collectors.joining("\n", "", "\n"));
   }
 
-  private void test(Consumer<? super CssEngine2.Gen> config, Consumer<? super CssEngine2.Ctx> test) {
-    final CssEngine2.Gen gen;
-    gen = new CssEngine2.Gen();
+  private void test(Consumer<? super Builder> config, Consumer<? super CssEngine2.Ctx> test) {
+    final Builder builder;
+    builder = new Builder();
 
-    config.accept(gen);
+    config.accept(builder);
 
     final CssEngine2.Ctx ctx;
-    ctx = gen.generate();
+    ctx = builder.build();
 
     test.accept(ctx);
   }

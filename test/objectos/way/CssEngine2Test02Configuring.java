@@ -40,12 +40,14 @@ public class CssEngine2Test02Configuring {
         },
 
         c -> {
-          final CssEngine2.Value v;
-          v = CssEngine2.themeProp(0, "breakpoint", "sm", "40rem");
+          final CssEngine2.PDecl v;
+          v = CssEngine2.pdecl("--breakpoint-sm", "40rem");
 
           assertEquals(c.keywords(), Map.of("screen-sm", v));
           assertEquals(c.rx(), false);
-          assertEquals(c.themeValues(), Map.of(CssEngine2.ROOT, List.of(v)));
+          assertEquals(c.sections(), List.of(
+              CssEngine2.psection(List.of(), List.of(v))
+          ));
           assertEquals(c.variants(), Map.of(
               "sm", CssEngine2.simple("@media (min-width: 40rem)")
           ));
@@ -70,12 +72,14 @@ public class CssEngine2Test02Configuring {
         },
 
         c -> {
-          final CssEngine2.Value v;
-          v = CssEngine2.themeProp(1, "breakpoint", "sm", "30rem");
+          final CssEngine2.PDecl v;
+          v = CssEngine2.pdecl("--breakpoint-sm", "30rem");
 
           assertEquals(c.keywords(), Map.of("screen-sm", v));
           assertEquals(c.rx(), false);
-          assertEquals(c.themeValues(), Map.of(CssEngine2.ROOT, List.of(v)));
+          assertEquals(c.sections(), List.of(
+              CssEngine2.psection(List.of(), List.of(v))
+          ));
           assertEquals(c.variants(), Map.of(
               "sm", CssEngine2.simple("@media (min-width: 30rem)")
           ));
@@ -98,12 +102,14 @@ public class CssEngine2Test02Configuring {
         },
 
         c -> {
-          final CssEngine2.Value v;
-          v = CssEngine2.themeProp(0, "color", "test", "#cafeba");
+          final CssEngine2.PDecl v;
+          v = CssEngine2.pdecl("--color-test", "#cafeba");
 
           assertEquals(c.keywords(), Map.of("test", v));
           assertEquals(c.rx(), false);
-          assertEquals(c.themeValues(), Map.of(CssEngine2.ROOT, List.of(v)));
+          assertEquals(c.sections(), List.of(
+              CssEngine2.psection(List.of(), List.of(v))
+          ));
           assertEquals(c.variants(), Map.of());
         }
     );
@@ -124,12 +130,14 @@ public class CssEngine2Test02Configuring {
         },
 
         c -> {
-          final CssEngine2.Value v;
-          v = CssEngine2.themeProp(0, "font", "test", "'Comic Sans'");
+          final CssEngine2.PDecl v;
+          v = CssEngine2.pdecl("--font-test", "'Comic Sans'");
 
           assertEquals(c.keywords(), Map.of("test", v));
           assertEquals(c.rx(), false);
-          assertEquals(c.themeValues(), Map.of(CssEngine2.ROOT, List.of(v)));
+          assertEquals(c.sections(), List.of(
+              CssEngine2.psection(List.of(), List.of(v))
+          ));
           assertEquals(c.variants(), Map.of());
         }
     );
@@ -150,12 +158,14 @@ public class CssEngine2Test02Configuring {
         },
 
         c -> {
-          final CssEngine2.Value v;
-          v = CssEngine2.themeProp(0, "rx", "", "16");
+          final CssEngine2.PDecl v;
+          v = CssEngine2.pdecl("--rx", "16");
 
           assertEquals(c.keywords(), Map.of());
           assertEquals(c.rx(), true);
-          assertEquals(c.themeValues(), Map.of(CssEngine2.ROOT, List.of(v)));
+          assertEquals(c.sections(), List.of(
+              CssEngine2.psection(List.of(), List.of(v))
+          ));
           assertEquals(c.variants(), Map.of());
         }
     );
