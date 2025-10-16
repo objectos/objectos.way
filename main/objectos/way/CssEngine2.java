@@ -44,6 +44,7 @@ import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -54,11 +55,27 @@ import java.util.jar.JarFile;
 
 final class CssEngine2 implements Css.Engine {
 
+  static final class System {
+    String base = Css.systemBase();
+
+    String theme = Css.systemTheme();
+
+    Map<String, Variant> variants = Css.systemVariants();
+  }
+
   // ##################################################################
   // # BEGIN: Execute
   // ##################################################################
 
-  private final Configuring configuring = new Configuring();
+  private final Configuring configuring;
+
+  CssEngine2() {
+    this(new System());
+  }
+
+  CssEngine2(System system) {
+    configuring = new Configuring(system);
+  }
 
   public final void generate(Appendable out) throws IOException {
     final Config config;
@@ -734,43 +751,75 @@ final class CssEngine2 implements Css.Engine {
 
   static final class Configuring {
 
-    final Note.Ref2<Value, Value> $replaced = Note.Ref2.create(getClass(), "REP", Note.INFO);
+    private final Note.Ref2<Value, Value> $replaced = Note.Ref2.create(getClass(), "REP", Note.INFO);
 
-    final Map<String, PDecl> keywords = new HashMap<>();
+    private final Map<List<String>, List<Value>> atRules = new LinkedHashMap<>();
 
-    final Map<String, Map<String, Value>> namespaces = new HashMap<>();
+    private final Map<String, PDecl> keywords = new HashMap<>();
 
-    Note.Sink noteSink;
+    private final Map<String, Map<String, Value>> namespaces = new HashMap<>();
 
-    Set<Class<?>> scanClasses = Set.of();
+    private Note.Sink noteSink = Note.NoOpSink.INSTANCE;
 
-    Set<Path> scanDirectories = Set.of();
+    private Set<Class<?>> scanClasses = Set.of();
 
-    Set<Class<?>> scanJars = Set.of();
+    private Set<Path> scanDirectories = Set.of();
 
-    final List<PSection> sections = new ArrayList<>();
+    private Set<Class<?>> scanJars = Set.of();
 
-    String systemBase;
+    private final List<PSection> sections = new ArrayList<>();
 
-    String systemTheme;
+    private final String systemBase;
 
-    Map<String, Variant> systemVariants;
+    private int valueIndex;
 
-    String userTheme = "";
+    private final Map<String, Variant> variants = new HashMap<>();
 
-    int valueIndex;
+    Configuring(System system) {
+      this.systemBase = system.base;
 
-    final Map<String, Variant> variants = new HashMap<>();
+      // parse system theme
+      final List<Value> parsed;
+      parsed = new ArrayList<>();
+
+      valueIndex = parse(valueIndex, system.theme, parsed);
+
+      // map to namespace
+      for (Value value : parsed) {
+        switch (value) {
+          case CustomProp prop -> throw new IllegalArgumentException(
+              "Arbitrary custom props are not allowed in the system theme"
+          );
+
+          case SystemSkip skip -> throw new IllegalArgumentException(
+              "The '--<namespace>: initial;' syntax is not allowed in the system theme"
+          );
+
+          case ThemeProp prop -> {
+            final String ns;
+            ns = prop.ns;
+
+            final Map<String, Value> values;
+            values = namespaces.computeIfAbsent(ns, key -> new HashMap<>());
+
+            final Value existing;
+            existing = values.put(prop.name, prop);
+
+            if (existing != null) {
+              noteSink.send($replaced, existing, prop);
+            }
+          }
+        }
+      }
+
+      variants.putAll(system.variants);
+    }
 
     // ##################################################################
     // # BEGIN: Configuring: Public API
     // ##################################################################
 
     public final void noteSink(Note.Sink value) {
-      if (noteSink != null) {
-        throw new IllegalStateException("A Note.Sink has already been defined");
-      }
-
       noteSink = Objects.requireNonNull(value, "value == null");
     }
 
@@ -808,117 +857,17 @@ final class CssEngine2 implements Css.Engine {
     }
 
     public final void theme(String value) {
-      userTheme = Objects.requireNonNull(value, "value == null");
-    }
+      final String text;
+      text = Objects.requireNonNull(value, "value == null");
 
-    public final void theme(String atRule, String value) {
-      throw new UnsupportedOperationException("Implement me");
-    }
-
-    public final Config configure() {
-      if (noteSink == null) {
-        noteSink = Note.NoOpSink.create();
-      }
-
-      systemTheme();
-
-      systemVariants();
-
-      userTheme();
-
-      breakpointVariants();
-
-      themeArtifacts();
-
-      return new Config(
-          systemBase == null ? Css.systemBase() : systemBase,
-
-          Map.copyOf(keywords),
-
-          noteSink,
-
-          namespaces.containsKey("rx"),
-
-          Set.copyOf(scanClasses),
-
-          Set.copyOf(scanDirectories),
-
-          Set.copyOf(scanJars),
-
-          List.copyOf(sections),
-
-          Map.copyOf(variants)
-      );
-    }
-
-    // ##################################################################
-    // # END: Configuring: Public API
-    // ##################################################################
-
-    private void systemTheme() {
-      // parse system theme
       final List<Value> parsed;
       parsed = new ArrayList<>();
 
-      final String source;
-      source = systemTheme != null ? systemTheme : Css.systemTheme();
-
-      valueIndex = parse(valueIndex, source, parsed);
-
-      // map to namespace
-      for (Value value : parsed) {
-        switch (value) {
-          case CustomProp prop -> throw new IllegalArgumentException(
-              "Arbitrary custom props are not allowed in the system theme"
-          );
-
-          case SystemSkip skip -> throw new IllegalArgumentException(
-              "The '--<namespace>: initial;' like syntax is not allowed in the system theme"
-          );
-
-          case ThemeProp prop -> {
-            final String ns;
-            ns = prop.ns;
-
-            final Map<String, Value> values;
-            values = namespaces.computeIfAbsent(ns, key -> new HashMap<>());
-
-            final Value existing;
-            existing = values.put(prop.name, prop);
-
-            if (existing != null) {
-              noteSink.send($replaced, existing, prop);
-            }
-          }
-        }
-      }
-
-      systemTheme = null;
-    }
-
-    private void systemVariants() {
-      Map<String, Variant> sv;
-      sv = systemVariants;
-
-      if (sv == null) {
-        sv = Css.systemVariants();
-      } else {
-        systemVariants = null;
-      }
-
-      variants.putAll(sv);
-    }
-
-    private void userTheme() {
-      // parse user theme
-      final List<Value> parsed;
-      parsed = new ArrayList<>();
-
-      valueIndex = parse(valueIndex, userTheme, parsed);
+      valueIndex = parse(valueIndex, text, parsed);
 
       // process any system skip
-      for (Value value : parsed) {
-        if (value instanceof SystemSkip skip) {
+      for (Value v : parsed) {
+        if (v instanceof SystemSkip skip) {
           final String ns;
           ns = skip.ns;
 
@@ -931,8 +880,8 @@ final class CssEngine2 implements Css.Engine {
       }
 
       // map to namespace
-      for (Value value : parsed) {
-        switch (value) {
+      for (Value v : parsed) {
+        switch (v) {
           case CustomProp prop -> {
             final Map<String, Value> values;
             values = namespaces.computeIfAbsent("custom", key -> new HashMap<>());
@@ -964,6 +913,91 @@ final class CssEngine2 implements Css.Engine {
         }
       }
     }
+
+    public final void theme(String atRule, String value) {
+      // validate at-rule
+      final String trimmed;
+      trimmed = atRule.strip();
+
+      if (!trimmed.startsWith("@media")) {
+        throw new IllegalArgumentException("Only @media at-rules are currently supported");
+      }
+
+      // validate and parse declarations
+      final String text;
+      text = Objects.requireNonNull(value, "value == null");
+
+      final List<Value> parsed;
+      parsed = new ArrayList<>();
+
+      valueIndex = parse(valueIndex, text, parsed);
+
+      for (Value v : parsed) {
+        switch (v) {
+          case CustomProp prop -> {
+            for (Map<String, Value> map : namespaces.values()) {
+              if (!map.containsKey(prop.name)) {
+                throw new IllegalArgumentException(
+                    "The " + prop.name + " property was not declared in the theme :root section"
+                );
+              }
+            }
+          }
+
+          case SystemSkip skip -> throw new IllegalArgumentException(
+              "The '--<namespace>: initial;' syntax is not allowed in a theme at-rule"
+          );
+
+          case ThemeProp prop -> {
+            for (Map<String, Value> map : namespaces.values()) {
+              if (!map.containsKey(prop.name)) {
+                throw new IllegalArgumentException(
+                    "The " + prop.name + " property was not declared in the theme :root section"
+                );
+              }
+            }
+          }
+        }
+      }
+
+      final List<String> selector;
+      selector = List.of(trimmed);
+
+      final List<Value> values;
+      values = atRules.computeIfAbsent(selector, key -> new ArrayList<>());
+
+      values.addAll(parsed);
+    }
+
+    public final Config configure() {
+      breakpointVariants();
+
+      themeArtifacts();
+
+      return new Config(
+          systemBase,
+
+          Map.copyOf(keywords),
+
+          noteSink,
+
+          namespaces.containsKey("rx"),
+
+          Set.copyOf(scanClasses),
+
+          Set.copyOf(scanDirectories),
+
+          Set.copyOf(scanJars),
+
+          List.copyOf(sections),
+
+          Map.copyOf(variants)
+      );
+    }
+
+    // ##################################################################
+    // # END: Configuring: Public API
+    // ##################################################################
 
     private void breakpointVariants() {
       final String ns;
@@ -1070,6 +1104,42 @@ final class CssEngine2 implements Css.Engine {
       root = new PSection(rootSel, rootDecls);
 
       sections.add(root);
+
+      // non :root
+      for (Map.Entry<List<String>, List<Value>> entry : atRules.entrySet()) {
+        final List<Value> list;
+        list = entry.getValue();
+
+        decls.clear();
+
+        for (Value value : list) {
+          switch (value) {
+            case CssEngine2.CustomProp prop -> decls.add(
+                new PDecl(prop)
+            );
+
+            case CssEngine2.SystemSkip(int index, String ns) -> {}
+
+            case CssEngine2.ThemeProp prop -> {
+              final PDecl decl;
+              decl = new PDecl(prop);
+
+              decls.add(decl);
+            }
+          }
+        }
+
+        final List<String> sel;
+        sel = entry.getKey();
+
+        final List<PDecl> thisDecls;
+        thisDecls = List.copyOf(decls);
+
+        final PSection section;
+        section = new PSection(sel, thisDecls);
+
+        sections.add(section);
+      }
     }
 
   }
@@ -1092,14 +1162,6 @@ final class CssEngine2 implements Css.Engine {
   @Override
   public final void scanJarFileOf(Class<?> value) {
     configuring.scanJarFileOf(value);
-  }
-
-  public final void systemBase(String value) {
-    configuring.systemBase = Objects.requireNonNull(value, "value == null");
-  }
-
-  public final void systemTheme(String value) {
-    configuring.systemTheme = Objects.requireNonNull(value, "value == null");
   }
 
   @Override

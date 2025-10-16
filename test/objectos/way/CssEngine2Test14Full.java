@@ -27,16 +27,19 @@ public class CssEngine2Test14Full {
   public void testCase01() throws IOException {
     class Subject {}
 
+    final CssEngine2.System system;
+    system = new CssEngine2.System();
+
+    system.base = "";
+
+    system.theme = "";
+
     final CssEngine2 engine;
-    engine = new CssEngine2();
+    engine = new CssEngine2(system);
 
     engine.noteSink(Y.noteSink());
 
     engine.scanClass(Subject.class);
-
-    engine.systemBase("");
-
-    engine.systemTheme("");
 
     final StringBuilder out;
     out = new StringBuilder();
@@ -54,20 +57,23 @@ public class CssEngine2Test14Full {
   public void testCase02() throws IOException {
     class Subject {}
 
+    final CssEngine2.System system;
+    system = new CssEngine2.System();
+
+    system.base = """
+    html {
+      line-height: 1.5;
+    }
+    """;
+
+    system.theme = "";
+
     final CssEngine2 engine;
-    engine = new CssEngine2();
+    engine = new CssEngine2(system);
 
     engine.noteSink(Y.noteSink());
 
     engine.scanClass(Subject.class);
-
-    engine.systemBase("""
-    html {
-      line-height: 1.5;
-    }
-    """);
-
-    engine.systemTheme("");
 
     final StringBuilder out;
     out = new StringBuilder();
@@ -95,16 +101,19 @@ public class CssEngine2Test14Full {
       """;
     }
 
+    final CssEngine2.System system;
+    system = new CssEngine2.System();
+
+    system.base = "";
+
+    system.theme = "";
+
     final CssEngine2 engine;
-    engine = new CssEngine2();
+    engine = new CssEngine2(system);
 
     engine.noteSink(Y.noteSink());
 
     engine.scanClass(Subject.class);
-
-    engine.systemBase("");
-
-    engine.systemTheme("");
 
     final StringBuilder out;
     out = new StringBuilder();
@@ -130,18 +139,21 @@ public class CssEngine2Test14Full {
       """;
     }
 
+    final CssEngine2.System system;
+    system = new CssEngine2.System();
+
+    system.base = "";
+
+    system.theme = """
+    --color-red-50: oklch(97.1% 0.013 17.38);
+    """;
+
     final CssEngine2 engine;
-    engine = new CssEngine2();
+    engine = new CssEngine2(system);
 
     engine.noteSink(Y.noteSink());
 
     engine.scanClass(Subject.class);
-
-    engine.systemBase("");
-
-    engine.systemTheme("""
-    --color-red-50: oklch(97.1% 0.013 17.38);
-    """);
 
     final StringBuilder out;
     out = new StringBuilder();
@@ -168,18 +180,21 @@ public class CssEngine2Test14Full {
       """;
     }
 
+    final CssEngine2.System system;
+    system = new CssEngine2.System();
+
+    system.base = "";
+
+    system.theme = """
+    --color-red-50: oklch(97.1% 0.013 17.38);
+    """;
+
     final CssEngine2 engine;
-    engine = new CssEngine2();
+    engine = new CssEngine2(system);
 
     engine.noteSink(Y.noteSink());
 
     engine.scanClass(Subject.class);
-
-    engine.systemBase("");
-
-    engine.systemTheme("""
-    --color-red-50: oklch(97.1% 0.013 17.38);
-    """);
 
     final StringBuilder out;
     out = new StringBuilder();
@@ -212,22 +227,25 @@ public class CssEngine2Test14Full {
       """;
     }
 
+    final CssEngine2.System system;
+    system = new CssEngine2.System();
+
+    system.base = """
+    html {
+      line-height: 1.5;
+    }
+    """;
+
+    system.theme = """
+    --color-red-50: oklch(97.1% 0.013 17.38);
+    """;
+
     final CssEngine2 engine;
-    engine = new CssEngine2();
+    engine = new CssEngine2(system);
 
     engine.noteSink(Y.noteSink());
 
     engine.scanClass(Subject.class);
-
-    engine.systemBase("""
-    html {
-      line-height: 1.5;
-    }
-    """);
-
-    engine.systemTheme("""
-    --color-red-50: oklch(97.1% 0.013 17.38);
-    """);
 
     final StringBuilder out;
     out = new StringBuilder();

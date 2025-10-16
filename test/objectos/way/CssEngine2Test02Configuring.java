@@ -31,9 +31,13 @@ public class CssEngine2Test02Configuring {
   """)
   public void breakpoint01() {
     test(
+        s -> {
+          s.base = "";
+          s.theme = "";
+          s.variants = Map.of();
+        },
+
         c -> {
-          c.systemTheme = "";
-          c.systemVariants = Map.of();
           c.theme("""
           --breakpoint-sm: 40rem;
           """);
@@ -61,11 +65,15 @@ public class CssEngine2Test02Configuring {
   """)
   public void breakpoint02() {
     test(
-        c -> {
-          c.systemTheme = """
+        s -> {
+          s.base = "";
+          s.theme = """
           --breakpoint-sm: 40rem;
           """;
-          c.systemVariants = Map.of();
+          s.variants = Map.of();
+        },
+
+        c -> {
           c.theme("""
           --breakpoint-sm: 30rem;
           """);
@@ -93,9 +101,13 @@ public class CssEngine2Test02Configuring {
   """)
   public void colors01() {
     test(
+        s -> {
+          s.base = "";
+          s.theme = "";
+          s.variants = Map.of();
+        },
+
         c -> {
-          c.systemTheme = "";
-          c.systemVariants = Map.of();
           c.theme("""
           --color-test: #cafeba;
           """);
@@ -121,9 +133,13 @@ public class CssEngine2Test02Configuring {
   """)
   public void font01() {
     test(
+        s -> {
+          s.base = "";
+          s.theme = "";
+          s.variants = Map.of();
+        },
+
         c -> {
-          c.systemTheme = "";
-          c.systemVariants = Map.of();
           c.theme("""
           --font-test: 'Comic Sans';
           """);
@@ -143,15 +159,57 @@ public class CssEngine2Test02Configuring {
     );
   }
 
+  private static final String DARK = "@media (prefers-color-scheme: dark)";
+
+  @Test
+  public void media01() {
+    test(
+        s -> {
+          s.base = "";
+          s.theme = "";
+          s.variants = Map.of();
+        },
+
+        c -> {
+          c.theme("""
+          --color-primary: #f0f0f0;
+          """);
+          c.theme(DARK, """
+          --color-primary: #1e1e1e;
+          """);
+        },
+
+        c -> {
+          final CssEngine2.PDecl v0;
+          v0 = CssEngine2.pdecl("--color-primary", "#f0f0f0");
+
+          final CssEngine2.PDecl v1;
+          v1 = CssEngine2.pdecl("--color-primary", "#1e1e1e");
+
+          assertEquals(c.keywords(), Map.of("primary", v0));
+          assertEquals(c.rx(), false);
+          assertEquals(c.sections(), List.of(
+              CssEngine2.psection(List.of(), List.of(v0)),
+              CssEngine2.psection(List.of(DARK), List.of(v1))
+          ));
+          assertEquals(c.variants(), Map.of());
+        }
+    );
+  }
+
   @Test(description = """
   rx
   - it should allow rx units
   """)
   public void rx01() {
     test(
+        s -> {
+          s.base = "";
+          s.theme = "";
+          s.variants = Map.of();
+        },
+
         c -> {
-          c.systemTheme = "";
-          c.systemVariants = Map.of();
           c.theme("""
           --rx: 16;
           """);
@@ -172,10 +230,16 @@ public class CssEngine2Test02Configuring {
   }
 
   private void test(
+      Consumer<? super CssEngine2.System> systemConfig,
       Consumer<? super CssEngine2.Configuring> flags,
       Consumer<? super CssEngine2.Config> test) {
+    final CssEngine2.System system;
+    system = new CssEngine2.System();
+
+    systemConfig.accept(system);
+
     final CssEngine2.Configuring pojo;
-    pojo = new CssEngine2.Configuring();
+    pojo = new CssEngine2.Configuring(system);
 
     pojo.noteSink(Y.noteSink());
 
