@@ -172,14 +172,16 @@ final class CssEngine2 implements Css.Engine {
   // ##################################################################
 
   // ##################################################################
-  // # BEGIN: Value
+  // # BEGIN: Syntax
   // ##################################################################
 
   // ##################################################################
-  // # BEGIN: Value: Types
+  // # BEGIN: Syntax: Types
   // ##################################################################
 
-  sealed interface Value {}
+  sealed interface Syntax {}
+
+  sealed interface Value extends Syntax {}
 
   record CustomProp(String name, String value) implements Value {}
 
@@ -204,11 +206,11 @@ final class CssEngine2 implements Css.Engine {
   }
 
   // ##################################################################
-  // # END: Value: Types
+  // # END: Syntax: Types
   // ##################################################################
 
   // ##################################################################
-  // # BEGIN: Value: Parser
+  // # BEGIN: Syntax: Parser
   // ##################################################################
 
   private static final byte[] CSS;
@@ -262,21 +264,21 @@ final class CssEngine2 implements Css.Engine {
       "font"
   );
 
-  static final class ValueParser {
+  static final class SyntaxParser {
     int cursor, idx, mark0, mark1;
 
     String id, ns, varName;
+
+    final List<Syntax> result;
 
     final StringBuilder sb = new StringBuilder();
 
     final String text;
 
-    final List<Value> values;
+    SyntaxParser(List<Syntax> result, String text) {
+      this.result = result;
 
-    ValueParser(String text, List<Value> values) {
       this.text = text;
-
-      this.values = values;
     }
 
     static final byte $DECLARATION = 0;
@@ -540,8 +542,8 @@ final class CssEngine2 implements Css.Engine {
       return c < 128 ? CSS[c] : CSS_NON_ASCII;
     }
 
-    private void result(Value result) {
-      values.add(result);
+    private void result(Syntax s) {
+      result.add(s);
 
       mark0 = mark1 = 0;
 
@@ -549,19 +551,19 @@ final class CssEngine2 implements Css.Engine {
     }
   }
 
-  static void parse(String text, List<Value> values) {
-    final ValueParser parser;
-    parser = new ValueParser(text, values);
+  static void parse(List<Syntax> result, String text) {
+    final SyntaxParser parser;
+    parser = new SyntaxParser(result, text);
 
     parser.parse();
   }
 
   // ##################################################################
-  // # END: Value: Parser
+  // # END: Syntax: Parser
   // ##################################################################
 
   // ##################################################################
-  // # END: Value
+  // # END: Syntax
   // ##################################################################
 
   // ##################################################################
@@ -773,7 +775,7 @@ final class CssEngine2 implements Css.Engine {
 
     private final Note.Ref2<Value, Value> $replaced = Note.Ref2.create(getClass(), "REP", Note.INFO);
 
-    private final Map<List<String>, List<Value>> atRules = new LinkedHashMap<>();
+    private final Map<List<String>, List<Syntax>> atRules = new LinkedHashMap<>();
 
     private final Map<String, PDecl> keywords = new HashMap<>();
 
@@ -797,13 +799,13 @@ final class CssEngine2 implements Css.Engine {
       this.systemBase = system.base;
 
       // parse system theme
-      final List<Value> parsed;
+      final List<Syntax> parsed;
       parsed = new ArrayList<>();
 
-      parse(system.theme, parsed);
+      parse(parsed, system.theme);
 
       // map to namespace
-      for (Value value : parsed) {
+      for (Syntax value : parsed) {
         switch (value) {
           case CustomProp prop -> throw new IllegalArgumentException(
               "Arbitrary custom props are not allowed in the system theme"
@@ -878,13 +880,13 @@ final class CssEngine2 implements Css.Engine {
       final String text;
       text = Objects.requireNonNull(value, "value == null");
 
-      final List<Value> parsed;
+      final List<Syntax> parsed;
       parsed = new ArrayList<>();
 
-      parse(text, parsed);
+      parse(parsed, text);
 
       // process any system skip
-      for (Value v : parsed) {
+      for (Syntax v : parsed) {
         if (v instanceof SystemSkip skip) {
           final String ns;
           ns = skip.ns;
@@ -898,7 +900,7 @@ final class CssEngine2 implements Css.Engine {
       }
 
       // map to namespace
-      for (Value v : parsed) {
+      for (Syntax v : parsed) {
         switch (v) {
           case CustomProp prop -> {
             final Map<String, Value> values;
@@ -945,12 +947,12 @@ final class CssEngine2 implements Css.Engine {
       final String text;
       text = Objects.requireNonNull(value, "value == null");
 
-      final List<Value> parsed;
+      final List<Syntax> parsed;
       parsed = new ArrayList<>();
 
-      parse(text, parsed);
+      parse(parsed, text);
 
-      for (Value v : parsed) {
+      for (Syntax v : parsed) {
         switch (v) {
           case CustomProp prop -> {
             for (Map<String, Value> map : namespaces.values()) {
@@ -981,7 +983,7 @@ final class CssEngine2 implements Css.Engine {
       final List<String> selector;
       selector = List.of(trimmed);
 
-      final List<Value> values;
+      final List<Syntax> values;
       values = atRules.computeIfAbsent(selector, key -> new ArrayList<>());
 
       values.addAll(parsed);
@@ -1126,13 +1128,13 @@ final class CssEngine2 implements Css.Engine {
       sections.add(root);
 
       // non :root
-      for (Map.Entry<List<String>, List<Value>> entry : atRules.entrySet()) {
-        final List<Value> list;
+      for (Map.Entry<List<String>, List<Syntax>> entry : atRules.entrySet()) {
+        final List<Syntax> list;
         list = entry.getValue();
 
         decls.clear();
 
-        for (Value value : list) {
+        for (Syntax value : list) {
           switch (value) {
             case CustomProp prop -> decls.add(
                 new PDecl(prop)

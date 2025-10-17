@@ -233,12 +233,12 @@ public class CssEngine2Test00ValueParser {
     );
   }
 
-  private void test(String value, List<CssEngine2.Value> expected) {
-    final List<CssEngine2.Value> result;
+  private void test(String value, List<CssEngine2.Syntax> expected) {
+    final List<CssEngine2.Syntax> result;
     result = new ArrayList<>();
 
-    final CssEngine2.ValueParser parser;
-    parser = new CssEngine2.ValueParser(value, result);
+    final CssEngine2.SyntaxParser parser;
+    parser = new CssEngine2.SyntaxParser(result, value);
 
     parser.parse();
 
@@ -247,11 +247,11 @@ public class CssEngine2Test00ValueParser {
 
   private void testIAE(String value, String expectedMsg) {
     try {
-      final List<CssEngine2.Value> result;
+      final List<CssEngine2.Syntax> result;
       result = new ArrayList<>();
 
-      final CssEngine2.ValueParser parser;
-      parser = new CssEngine2.ValueParser(value, result);
+      final CssEngine2.SyntaxParser parser;
+      parser = new CssEngine2.SyntaxParser(result, value);
 
       parser.parse();
 
