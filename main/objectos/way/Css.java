@@ -82,26 +82,6 @@ public final class Css {
     /// @param value the CSS rule declarations
     void theme(String atRule, String value);
 
-    //
-    // ANIMATION
-    //
-
-    /// Configures the creation of a `@keyframes` at-rule.
-    sealed interface Frames permits CssEngine2.Frames {
-
-      /// Adds a single keyframe declaration to this `@keyframes` at-rule.
-      /// @param selector the keyframe selector
-      /// @param value the declarations of this keyframe
-      void add(String selector, String value);
-
-    }
-
-    /// Adds the specified `@keyframes` at-rule to the animation layer.
-    ///
-    /// @param name the `@keyframes` at-rule name
-    /// @param frames allows for adding keyframe declarations to this at-rule
-    void keyframes(String name, Consumer<? super Frames> frames);
-
   }
 
   /// Encapsulates the configuration of a [style sheet][Css.StyleSheet].

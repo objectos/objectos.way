@@ -50,7 +50,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Consumer;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -185,17 +184,17 @@ final class CssEngine2 implements Css.Engine {
 
   record CustomProp(String name, String value) implements Value {}
 
-  record SystemSkip(String ns) implements Value {}
-
-  record ThemeProp(String name, String ns, String id, String value) implements Value {}
-
   static Value customProp(String name, String value) {
     return new CustomProp(name, value);
   }
 
+  record SystemSkip(String ns) implements Value {}
+
   static Value systemSkip(String ns) {
     return new SystemSkip(ns);
   }
+
+  record ThemeProp(String name, String ns, String id, String value) implements Value {}
 
   static ThemeProp themeProp(String ns, String id, String value) {
     if (id.isEmpty()) {
@@ -203,6 +202,34 @@ final class CssEngine2 implements Css.Engine {
     } else {
       return new ThemeProp("--" + ns + "-" + id, ns, id, value);
     }
+  }
+
+  record Keyframes(String name, List<ParsedRule> rules) implements Syntax {}
+
+  static Keyframes keyframes(String name, List<ParsedRule> rules) {
+    return new Keyframes(name, rules);
+  }
+
+  record ParsedRule(String selector, List<Decl> decls) {}
+
+  private static final class KeyframesBuilder {
+
+    private final String name;
+
+    private final List<ParsedRule> rules = new ArrayList<>();
+
+    KeyframesBuilder(String name) {
+      this.name = name;
+    }
+
+    final Keyframes build() {
+      return new Keyframes(
+          name,
+
+          List.copyOf(rules)
+      );
+    }
+
   }
 
   // ##################################################################
@@ -220,10 +247,13 @@ final class CssEngine2 implements Css.Engine {
   private static final byte CSS_HYPHEN = 3;
   private static final byte CSS_COLON = 4;
   private static final byte CSS_SEMICOLON = 5;
-  private static final byte CSS_REV_SOLIDUS = 6;
-  private static final byte CSS_IDENT_START = 7;
-  private static final byte CSS_IDENT = 8;
-  private static final byte CSS_NON_ASCII = 9;
+  private static final byte CSS_AT = 6;
+  private static final byte CSS_REV_SOLIDUS = 7;
+  private static final byte CSS_LCURLY = 8;
+  private static final byte CSS_RCURLY = 9;
+  private static final byte CSS_IDENT_START = 10;
+  private static final byte CSS_IDENT = 11;
+  private static final byte CSS_NON_ASCII = 12;
 
   static {
     final byte[] table;
@@ -245,6 +275,9 @@ final class CssEngine2 implements Css.Engine {
     table['-'] = CSS_HYPHEN;
     table[':'] = CSS_COLON;
     table[';'] = CSS_SEMICOLON;
+    table['@'] = CSS_AT;
+    table['{'] = CSS_LCURLY;
+    table['}'] = CSS_RCURLY;
     table['\\'] = CSS_REV_SOLIDUS;
 
     // ident start
@@ -268,6 +301,8 @@ final class CssEngine2 implements Css.Engine {
     int cursor, idx, mark0, mark1;
 
     String id, ns, varName;
+
+    KeyframesBuilder keyframes;
 
     final List<Syntax> result;
 
@@ -299,6 +334,16 @@ final class CssEngine2 implements Css.Engine {
     static final byte $NS_VALUE_CHAR = 10;
     static final byte $NS_VALUE_WS = 11;
 
+    static final byte $AT = 12;
+    static final byte $AT_RULE = 13;
+
+    static final byte $KF = 14;
+    static final byte $KF_ID = 15;
+    static final byte $KF_ID_TRIM = 16;
+    static final byte $KF_BODY = 17;
+    static final byte $KF_KW = 18;
+    static final byte $KF_PERC = 19;
+
     final void parse() {
       byte state;
       state = $DECLARATION;
@@ -307,24 +352,177 @@ final class CssEngine2 implements Css.Engine {
         final char c;
         c = next();
 
+        final byte test;
+        test = test(c);
+
         state = switch (state) {
-          case $DECLARATION -> parseDeclaration(c);
+          case $DECLARATION -> switch (test) {
+            case CSS_WS -> $DECLARATION;
 
-          case $HYPHEN1 -> parseHyphen1(c);
-          case $HYPHEN2 -> parseHyphen2(c);
+            case CSS_HYPHEN -> { mark0 = idx; yield $HYPHEN1; }
 
-          case $VAR_NAME -> parseVarName(c);
+            case CSS_AT -> { mark0 = idx; yield $AT; }
 
-          case $COLON -> parseColon(c);
+            default -> throw error("Expected start of --variable declaration");
+          };
 
-          case $VALUE -> parseValue(c);
-          case $VALUE_CHAR -> parseValueChar(c);
-          case $VALUE_WS -> parseValueWs(c);
+          case $HYPHEN1 -> switch (test) {
+            case CSS_HYPHEN -> $HYPHEN2;
 
-          case $NS_GLOBAL -> parseNsGlobal(c);
-          case $NS_VALUE -> parseNsValue(c);
-          case $NS_VALUE_CHAR -> parseNsValueChar(c);
-          case $NS_VALUE_WS -> parseNsValueWs(c);
+            default -> throw error("Expected start of --variable declaration");
+          };
+
+          case $HYPHEN2 -> switch (test) {
+            case CSS_IDENT_START -> { mark1 = idx; yield $VAR_NAME; }
+
+            case CSS_ASTERISK -> { ns = id = "*"; yield $NS_GLOBAL; }
+
+            case CSS_REV_SOLIDUS -> throw error("Escape sequences are currently not supported");
+
+            case CSS_NON_ASCII -> throw error("Non ASCII characters are currently not supported");
+
+            default -> throw error("--variable name must start with a letter");
+          };
+
+          case $VAR_NAME -> switch (test) {
+            case CSS_IDENT_START, CSS_IDENT -> $VAR_NAME;
+
+            case CSS_HYPHEN -> {
+              if (ns == null) {
+                ns = text.substring(mark1, idx);
+              }
+
+              yield $VAR_NAME;
+            }
+
+            case CSS_WS -> { parseVarName0(); yield $COLON; }
+
+            case CSS_COLON -> { parseVarName0(); yield $VALUE; }
+
+            default -> throw error("CSS variable name with invalid character=" + c);
+          };
+
+          case $COLON -> switch (test) {
+            case CSS_WS -> $COLON;
+
+            case CSS_COLON -> $VALUE;
+
+            default -> throw error("Declaration with no ':' colon character");
+          };
+
+          case $VALUE -> switch (test) {
+            case CSS_WS -> $VALUE;
+
+            case CSS_SEMICOLON -> throw error("Declaration with an empty value");
+
+            default -> { sb.setLength(0); sb.append(c); yield $VALUE_CHAR; }
+          };
+
+          case $VALUE_CHAR -> switch (test) {
+            case CSS_SEMICOLON -> { parseValue1(); yield $DECLARATION; }
+
+            case CSS_WS -> $VALUE_WS;
+
+            default -> { sb.append(c); yield $VALUE_CHAR; }
+          };
+
+          case $VALUE_WS -> switch (test) {
+            case CSS_SEMICOLON -> { parseValue1(); yield $DECLARATION; }
+
+            case CSS_WS -> $VALUE_WS;
+
+            default -> { sb.append(' '); sb.append(c); yield $VALUE_CHAR; }
+          };
+
+          case $NS_GLOBAL -> switch (test) {
+            case CSS_WS -> $NS_GLOBAL;
+
+            case CSS_COLON -> $NS_VALUE;
+
+            default -> throw error("Expected the global namespace '--*'");
+          };
+
+          case $NS_VALUE -> switch (test) {
+            case CSS_WS -> $NS_VALUE;
+
+            case CSS_IDENT_START -> { sb.setLength(0); sb.append(c); yield $NS_VALUE_CHAR; }
+
+            default -> throw error("Expected the keyword 'initial'");
+          };
+
+          case $NS_VALUE_CHAR -> switch (test) {
+            case CSS_SEMICOLON -> { parseNsValue1(); yield $DECLARATION; }
+
+            case CSS_WS -> { parseNsValue1(); yield $NS_VALUE_WS; }
+
+            case CSS_IDENT_START -> { sb.append(c); yield $NS_VALUE_CHAR; }
+
+            default -> throw error("Expected the keyword 'initial'");
+          };
+
+          case $NS_VALUE_WS -> switch (test) {
+            case CSS_SEMICOLON -> $DECLARATION;
+
+            case CSS_WS -> $NS_VALUE_WS;
+
+            default -> throw error("Expected the keyword 'initial'");
+          };
+
+          case $AT -> switch (test) {
+            case CSS_IDENT_START -> $AT_RULE;
+
+            default -> throw error("Expected an @-rule");
+          };
+
+          case $AT_RULE -> switch (test) {
+            case CSS_WS -> {
+              ns = text.substring(mark0, idx);
+
+              yield switch (ns) {
+                case "@keyframes" -> $KF;
+
+                default -> throw error("Currently supported @-rules: @keyframes");
+              };
+            }
+
+            case CSS_IDENT_START, CSS_HYPHEN -> $AT_RULE;
+
+            default -> throw error("Invalid @-rule name");
+          };
+
+          case $KF -> switch (test) {
+            case CSS_WS -> $KF;
+
+            case CSS_IDENT_START -> { mark0 = idx; yield $KF_ID; }
+
+            default -> throw error("Invalid @keyframes name");
+          };
+
+          case $KF_ID -> switch (test) {
+            case CSS_WS -> { keyframes(); yield $KF_ID_TRIM; }
+
+            case CSS_LCURLY -> { keyframes(); yield $KF_BODY; }
+
+            case CSS_IDENT_START, CSS_IDENT, CSS_HYPHEN -> $KF_ID;
+
+            default -> throw error("Invalid @keyframes name");
+          };
+
+          case $KF_ID_TRIM -> switch (test) {
+            case CSS_WS -> $KF_ID_TRIM;
+
+            case CSS_LCURLY -> $KF_BODY;
+
+            default -> throw error("Invalid @keyframes declaration");
+          };
+
+          case $KF_BODY -> switch (test) {
+            case CSS_WS -> $KF_BODY;
+
+            case CSS_RCURLY -> { keyframesResult(); yield $DECLARATION; }
+
+            default -> throw error("Invalid @keyframes declaration");
+          };
 
           default -> throw new AssertionError("Unexpected state=" + state);
         };
@@ -341,58 +539,6 @@ final class CssEngine2 implements Css.Engine {
 
         default -> throw error("Unexpected EOF");
       }
-    }
-
-    private byte parseDeclaration(char c) {
-      return switch (test(c)) {
-        case CSS_WS -> $DECLARATION;
-
-        case CSS_HYPHEN -> { mark0 = idx; yield $HYPHEN1; }
-
-        default -> throw error("Expected start of --variable declaration");
-      };
-    }
-
-    private byte parseHyphen1(char c) {
-      return switch (test(c)) {
-        case CSS_HYPHEN -> $HYPHEN2;
-
-        default -> throw error("Expected start of --variable declaration");
-      };
-    }
-
-    private byte parseHyphen2(char c) {
-      return switch (test(c)) {
-        case CSS_IDENT_START -> { mark1 = idx; yield $VAR_NAME; }
-
-        case CSS_ASTERISK -> { ns = id = "*"; yield $NS_GLOBAL; }
-
-        case CSS_REV_SOLIDUS -> throw error("Escape sequences are currently not supported");
-
-        case CSS_NON_ASCII -> throw error("Non ASCII characters are currently not supported");
-
-        default -> throw error("--variable name must start with a letter");
-      };
-    }
-
-    private byte parseVarName(char c) {
-      return switch (test(c)) {
-        case CSS_IDENT_START, CSS_IDENT -> $VAR_NAME;
-
-        case CSS_HYPHEN -> {
-          if (ns == null) {
-            ns = text.substring(mark1, idx);
-          }
-
-          yield $VAR_NAME;
-        }
-
-        case CSS_WS -> { parseVarName0(); yield $COLON; }
-
-        case CSS_COLON -> { parseVarName0(); yield $VALUE; }
-
-        default -> throw error("CSS variable name with invalid character=" + c);
-      };
     }
 
     private void parseVarName0() {
@@ -413,46 +559,6 @@ final class CssEngine2 implements Css.Engine {
       }
     }
 
-    private byte parseColon(char c) {
-      return switch (test(c)) {
-        case CSS_WS -> $COLON;
-
-        case CSS_COLON -> $VALUE;
-
-        default -> throw error("Declaration with no ':' colon character");
-      };
-    }
-
-    private byte parseValue(char c) {
-      return switch (test(c)) {
-        case CSS_WS -> $VALUE;
-
-        case CSS_SEMICOLON -> throw error("Declaration with an empty value");
-
-        default -> { sb.setLength(0); sb.append(c); yield $VALUE_CHAR; }
-      };
-    }
-
-    private byte parseValueChar(char c) {
-      return switch (test(c)) {
-        case CSS_SEMICOLON -> { parseValue1(); yield $DECLARATION; }
-
-        case CSS_WS -> $VALUE_WS;
-
-        default -> { sb.append(c); yield $VALUE_CHAR; }
-      };
-    }
-
-    private byte parseValueWs(char c) {
-      return switch (test(c)) {
-        case CSS_SEMICOLON -> { parseValue1(); yield $DECLARATION; }
-
-        case CSS_WS -> $VALUE_WS;
-
-        default -> { sb.append(' '); sb.append(c); yield $VALUE_CHAR; }
-      };
-    }
-
     private void parseValue1() {
       final Value result;
 
@@ -468,48 +574,6 @@ final class CssEngine2 implements Css.Engine {
       result(result);
     }
 
-    private byte parseNsGlobal(char c) {
-      return switch (test(c)) {
-        case CSS_WS -> $NS_GLOBAL;
-
-        case CSS_COLON -> $NS_VALUE;
-
-        default -> throw error("Expected the global namespace '--*'");
-      };
-    }
-
-    private byte parseNsValue(char c) {
-      return switch (test(c)) {
-        case CSS_WS -> $NS_VALUE;
-
-        case CSS_IDENT_START -> { sb.setLength(0); sb.append(c); yield $NS_VALUE_CHAR; }
-
-        default -> throw error("Expected the keyword 'initial'");
-      };
-    }
-
-    private byte parseNsValueChar(char c) {
-      return switch (test(c)) {
-        case CSS_SEMICOLON -> { parseNsValue1(); yield $DECLARATION; }
-
-        case CSS_WS -> { parseNsValue1(); yield $NS_VALUE_WS; }
-
-        case CSS_IDENT_START -> { sb.append(c); yield $NS_VALUE_CHAR; }
-
-        default -> throw error("Expected the keyword 'initial'");
-      };
-    }
-
-    private byte parseNsValueWs(char c) {
-      return switch (test(c)) {
-        case CSS_SEMICOLON -> $DECLARATION;
-
-        case CSS_WS -> $NS_VALUE_WS;
-
-        default -> throw error("Expected the keyword 'initial'");
-      };
-    }
-
     private void parseNsValue1() {
       final String initial;
       initial = sb.toString();
@@ -522,6 +586,19 @@ final class CssEngine2 implements Css.Engine {
       result = systemSkip(ns);
 
       result(result);
+    }
+
+    private void keyframes() {
+      final String name;
+      name = text.substring(mark0, idx);
+
+      keyframes = new KeyframesBuilder(name);
+    }
+
+    private void keyframesResult() {
+      result(
+          keyframes.build()
+      );
     }
 
     private IllegalArgumentException error(String message) {
@@ -548,6 +625,8 @@ final class CssEngine2 implements Css.Engine {
       mark0 = mark1 = 0;
 
       id = ns = varName = null;
+
+      keyframes = null;
     }
   }
 
@@ -686,21 +765,6 @@ final class CssEngine2 implements Css.Engine {
   // ##################################################################
 
   // ##################################################################
-  // # BEGIN: Animation
-  // ##################################################################
-
-  static final class Frames implements Css.Engine.Frames {
-
-    @Override
-    public final void add(String selector, String value) {}
-
-  }
-
-  // ##################################################################
-  // # END: Animation
-  // ##################################################################
-
-  // ##################################################################
   // # BEGIN: Theme Section
   // ##################################################################
 
@@ -829,6 +893,8 @@ final class CssEngine2 implements Css.Engine {
               noteSink.send($replaced, existing, prop);
             }
           }
+
+          case Keyframes kf -> throw new UnsupportedOperationException("Implement me");
         }
       }
 
@@ -930,6 +996,8 @@ final class CssEngine2 implements Css.Engine {
               noteSink.send($replaced, existing, prop);
             }
           }
+
+          case Keyframes kf -> throw new UnsupportedOperationException("Implement me");
         }
       }
     }
@@ -977,6 +1045,8 @@ final class CssEngine2 implements Css.Engine {
               }
             }
           }
+
+          case Keyframes kf -> throw new UnsupportedOperationException("Implement me");
         }
       }
 
@@ -987,10 +1057,6 @@ final class CssEngine2 implements Css.Engine {
       values = atRules.computeIfAbsent(selector, key -> new ArrayList<>());
 
       values.addAll(parsed);
-    }
-
-    public final void keyframes(String name, Consumer<? super Css.Engine.Frames> frames) {
-      throw new UnsupportedOperationException("Implement me");
     }
 
     public final Config configure() {
@@ -1158,6 +1224,8 @@ final class CssEngine2 implements Css.Engine {
                 existing.append(decl);
               }
             }
+
+            case Keyframes kf -> throw new UnsupportedOperationException("Implement me");
           }
         }
 
@@ -1204,11 +1272,6 @@ final class CssEngine2 implements Css.Engine {
   @Override
   public final void theme(String atRule, String value) {
     configuring.theme(atRule, value);
-  }
-
-  @Override
-  public final void keyframes(String name, Consumer<? super Css.Engine.Frames> frames) {
-    configuring.keyframes(name, frames);
   }
 
   // ##################################################################

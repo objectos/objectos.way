@@ -20,6 +20,7 @@ import static org.testng.Assert.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 import org.testng.Assert;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class CssEngine2Test00ValueParser {
@@ -147,6 +148,25 @@ public class CssEngine2Test00ValueParser {
             CssEngine2.themeProp("font", "display", "Foo, \"Foo bar\"")
         )
     );
+  }
+
+  @DataProvider
+  public Object[][] keyframesValidProvider() {
+    return new Object[][] {{
+        "empty",
+        "@keyframes fade-in {}",
+        List.of(
+            CssEngine2.keyframes("fade-in", List.of())
+        )
+    }};
+  }
+
+  @Test(dataProvider = "keyframesValidProvider")
+  public void keyframesValid(
+      String description,
+      String src,
+      @SuppressWarnings("exports") List<CssEngine2.Syntax> expected) {
+    test(src, expected);
   }
 
   @Test

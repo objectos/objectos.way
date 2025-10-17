@@ -17,13 +17,13 @@
  */
 package objectos.way;
 
-final class CssEngineValueParserGen {
+final class CssEngineSyntaxParserGen {
 
   private int state = 0;
 
   public static void main(String[] args) {
-    final CssEngineValueParserGen gen;
-    gen = new CssEngineValueParserGen();
+    final CssEngineSyntaxParserGen gen;
+    gen = new CssEngineSyntaxParserGen();
 
     gen.value("$DECLARATION");
 
@@ -52,6 +52,14 @@ final class CssEngineValueParserGen {
     gen.value("$NS_VALUE");
     gen.value("$NS_VALUE_CHAR");
     gen.value("$NS_VALUE_WS");
+
+    gen.line();
+
+    gen.value("$AT_RULE");
+
+    gen.line();
+
+    gen.value("$KEYFRAMES");
   }
 
   private void line() {
