@@ -23,6 +23,8 @@ import org.testng.annotations.Test;
 @SuppressWarnings("unused")
 public class CssEngine2Test14Full {
 
+  private static final String DARK = "@media (prefers-color-scheme: dark)";
+
   @Test
   public void testCase01() throws IOException {
     class Subject {}
@@ -269,6 +271,63 @@ public class CssEngine2Test14Full {
         @layer utilities {
           .color\\:red-50 { color: oklch(97.1% 0.013 17.38) }
           .margin\\:0 { margin: 0 }
+        }
+        """
+    );
+  }
+
+  @Test(description = """
+  theme + @media
+  """)
+  public void testCase07() throws IOException {
+    class Subject {
+      String s = """
+      color:primary
+      """;
+    }
+
+    final CssEngine2.System system;
+    system = new CssEngine2.System();
+
+    system.base = "";
+
+    system.theme = "";
+
+    final CssEngine2 engine;
+    engine = new CssEngine2(system);
+
+    engine.noteSink(Y.noteSink());
+
+    engine.theme("""
+    --color-primary: #f0f0f0;
+    """);
+
+    engine.theme(DARK, """
+    --color-primary: #1e1e1e;
+    """);
+
+    engine.scanClass(Subject.class);
+
+    final StringBuilder out;
+    out = new StringBuilder();
+
+    engine.generate(out);
+
+    assertEquals(
+        out.toString(),
+
+        """
+        @layer theme {
+          :root {
+            --color-primary: #f0f0f0;
+
+            @media (prefers-color-scheme: dark) {
+              --color-primary: #1e1e1e;
+            }
+          }
+        }
+        @layer utilities {
+          .color\\:primary { color: #f0f0f0 }
         }
         """
     );

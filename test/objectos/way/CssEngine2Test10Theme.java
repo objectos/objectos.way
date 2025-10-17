@@ -20,22 +20,22 @@ import static org.testng.Assert.assertEquals;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.List;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class CssEngine2Test10Theme {
 
-  @Test
-  public void testCase01() {
-    test(
+  private static final String DARK = "@media (prefers-color-scheme: dark)";
+
+  @DataProvider
+  public Object[][] writeProvider() {
+    return new Object[][] {{
+        "Empty",
         List.of(),
-
         ""
-    );
-  }
+    }, {
+        ":root + 1 decl",
 
-  @Test
-  public void testCase02() {
-    test(
         List.of(s(
             List.of(),
 
@@ -49,17 +49,38 @@ public class CssEngine2Test10Theme {
           }
         }
         """
-    );
+    }, {
+        ":root + @media",
+
+        List.of(s(
+            List.of(),
+
+            CssEngine2.decl("--color-primary", "#f0f0f0")
+        ), s(
+            List.of(DARK),
+
+            CssEngine2.decl("--color-primary", "#1e1e1e")
+        )),
+
+        """
+        @layer theme {
+          :root {
+            --color-primary: #f0f0f0;
+
+            @media (prefers-color-scheme: dark) {
+              --color-primary: #1e1e1e;
+            }
+          }
+        }
+        """
+    }};
   }
 
-  private CssEngine2.Section s(List<String> selector, CssEngine2.Decl... values) {
-    return new CssEngine2.Section(
-        selector,
-        List.of(values)
-    );
-  }
-
-  private void test(List<CssEngine2.Section> sections, String expected) {
+  @Test(dataProvider = "writeProvider")
+  public void write(
+      String description,
+      @SuppressWarnings("exports") List<CssEngine2.Section> sections,
+      String expected) {
     try {
       final CssEngine2.Theme theme;
       theme = new CssEngine2.Theme(sections);
@@ -73,6 +94,13 @@ public class CssEngine2Test10Theme {
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     }
+  }
+
+  private CssEngine2.Section s(List<String> selector, CssEngine2.Decl... values) {
+    return new CssEngine2.Section(
+        selector,
+        List.of(values)
+    );
   }
 
 }

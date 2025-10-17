@@ -703,6 +703,7 @@ final class CssEngine2 implements Css.Engine {
     final String property;
     final String value;
     boolean marked;
+    PDecl next;
 
     PDecl(String property, String value) {
       this.property = property;
@@ -728,6 +729,22 @@ final class CssEngine2 implements Css.Engine {
       return obj == this || obj instanceof PDecl that
           && property.equals(that.property)
           && value.equals(that.value);
+    }
+
+    final void append(PDecl decl) {
+      if (next == null) {
+        next = decl;
+      } else {
+        next.append(decl);
+      }
+    }
+
+    final void mark() {
+      marked = true;
+
+      if (next != null) {
+        next.mark();
+      }
     }
   }
 
@@ -1125,6 +1142,16 @@ final class CssEngine2 implements Css.Engine {
               decl = new PDecl(prop);
 
               decls.add(decl);
+
+              final String kw;
+              kw = prop.id;
+
+              final PDecl existing;
+              existing = keywords.get(kw);
+
+              if (existing != null) {
+                existing.append(decl);
+              }
             }
           }
         }
@@ -2141,7 +2168,7 @@ final class CssEngine2 implements Css.Engine {
             break;
           }
 
-          kw.marked = true;
+          kw.mark();
 
           formatValueNormal(value, beginIndex);
 
@@ -2163,7 +2190,7 @@ final class CssEngine2 implements Css.Engine {
             break;
           }
 
-          kw.marked = true;
+          kw.mark();
 
           formatValueNormal(value, beginIndex);
 
@@ -2536,6 +2563,10 @@ final class CssEngine2 implements Css.Engine {
       for (Section section : sections) {
         final List<String> selector;
         selector = section.selector;
+
+        if (!selector.isEmpty()) {
+          wln();
+        }
 
         for (String part : selector) {
           indent();
