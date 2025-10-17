@@ -32,7 +32,7 @@ public class CssEngine2Test00ValueParser {
         """,
 
         List.of(
-            CssEngine2.themeProp(0, "breakpoint", "sm", "40rem")
+            CssEngine2.themeProp("breakpoint", "sm", "40rem")
         )
     );
   }
@@ -45,7 +45,7 @@ public class CssEngine2Test00ValueParser {
         """,
 
         List.of(
-            CssEngine2.themeProp(0, "color", "stone-950", "oklch(0.147 0.004 49.25)")
+            CssEngine2.themeProp("color", "stone-950", "oklch(0.147 0.004 49.25)")
         )
     );
   }
@@ -59,8 +59,8 @@ public class CssEngine2Test00ValueParser {
         """,
 
         List.of(
-            CssEngine2.themeProp(0, "color", "stone-950", "oklch(0.147 0.004 49.25)"),
-            CssEngine2.themeProp(1, "color", "red-50", "oklch(0.971 0.013 17.38)")
+            CssEngine2.themeProp("color", "stone-950", "oklch(0.147 0.004 49.25)"),
+            CssEngine2.themeProp("color", "red-50", "oklch(0.971 0.013 17.38)")
         )
     );
   }
@@ -86,7 +86,7 @@ public class CssEngine2Test00ValueParser {
         """,
 
         List.of(
-            CssEngine2.customProp(0, "--carbon-grid-columns", "4")
+            CssEngine2.customProp("--carbon-grid-columns", "4")
         )
     );
   }
@@ -144,7 +144,7 @@ public class CssEngine2Test00ValueParser {
         """,
 
         List.of(
-            CssEngine2.themeProp(0, "font", "display", "Foo, \"Foo bar\"")
+            CssEngine2.themeProp("font", "display", "Foo, \"Foo bar\"")
         )
     );
   }
@@ -157,7 +157,7 @@ public class CssEngine2Test00ValueParser {
         """,
 
         List.of(
-            CssEngine2.themeProp(0, "rx", "", "16")
+            CssEngine2.themeProp("rx", "", "16")
         )
     );
   }
@@ -170,7 +170,7 @@ public class CssEngine2Test00ValueParser {
         """,
 
         List.of(
-            CssEngine2.systemSkip(0, "*")
+            CssEngine2.systemSkip("*")
         )
     );
   }
@@ -186,9 +186,9 @@ public class CssEngine2Test00ValueParser {
         """,
 
         List.of(
-            CssEngine2.themeProp(0, "color", "orange-900", "oklch(0.408 0.123 38.172)"),
-            CssEngine2.themeProp(1, "color", "orange-950", "oklch(0.266 0.079 36.259)"),
-            CssEngine2.themeProp(2, "color", "amber-50", "oklch(0.987 0.022 95.277)")
+            CssEngine2.themeProp("color", "orange-900", "oklch(0.408 0.123 38.172)"),
+            CssEngine2.themeProp("color", "orange-950", "oklch(0.266 0.079 36.259)"),
+            CssEngine2.themeProp("color", "amber-50", "oklch(0.987 0.022 95.277)")
         )
     );
   }
@@ -201,7 +201,7 @@ public class CssEngine2Test00ValueParser {
         """,
 
         List.of(
-            CssEngine2.themeProp(0, "color", "orange-900", "oklch(0.408 0.123 38.172)")
+            CssEngine2.themeProp("color", "orange-900", "oklch(0.408 0.123 38.172)")
         )
     );
   }
@@ -214,7 +214,7 @@ public class CssEngine2Test00ValueParser {
         """,
 
         List.of(
-            CssEngine2.themeProp(0, "color", "orange-900", "oklch(0.408 0.123 38.172)")
+            CssEngine2.themeProp("color", "orange-900", "oklch(0.408 0.123 38.172)")
         )
     );
   }
@@ -228,7 +228,7 @@ public class CssEngine2Test00ValueParser {
         """,
 
         List.of(
-            CssEngine2.themeProp(0, "color", "orange-900", "oklch(0.408 0.123 38.172)")
+            CssEngine2.themeProp("color", "orange-900", "oklch(0.408 0.123 38.172)")
         )
     );
   }
@@ -238,7 +238,7 @@ public class CssEngine2Test00ValueParser {
     result = new ArrayList<>();
 
     final CssEngine2.ValueParser parser;
-    parser = new CssEngine2.ValueParser(0, value, result);
+    parser = new CssEngine2.ValueParser(value, result);
 
     parser.parse();
 
@@ -251,7 +251,7 @@ public class CssEngine2Test00ValueParser {
       result = new ArrayList<>();
 
       final CssEngine2.ValueParser parser;
-      parser = new CssEngine2.ValueParser(0, value, result);
+      parser = new CssEngine2.ValueParser(value, result);
 
       parser.parse();
 

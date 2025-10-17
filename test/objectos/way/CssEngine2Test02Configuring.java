@@ -159,6 +159,42 @@ public class CssEngine2Test02Configuring {
     );
   }
 
+  @Test(enabled = false)
+  public void keyframes01() {
+    test(
+        s -> {
+          s.base = "";
+          s.theme = "";
+          s.variants = Map.of();
+        },
+
+        c -> {
+          c.theme("""
+          @keyframes opacity-fade-in {
+            from {
+              opacity: 0;
+            }
+            to {
+              opacity: 1;
+            }
+          }
+          """);
+        },
+
+        c -> {
+          final CssEngine2.PDecl v;
+          v = CssEngine2.pdecl("--font-test", "'Comic Sans'");
+
+          assertEquals(c.keywords(), Map.of("test", v));
+          assertEquals(c.rx(), false);
+          assertEquals(c.sections(), List.of(
+              CssEngine2.psection(List.of(), List.of(v))
+          ));
+          assertEquals(c.variants(), Map.of());
+        }
+    );
+  }
+
   private static final String DARK = "@media (prefers-color-scheme: dark)";
 
   @Test

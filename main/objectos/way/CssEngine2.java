@@ -50,6 +50,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -178,34 +179,27 @@ final class CssEngine2 implements Css.Engine {
   // # BEGIN: Value: Types
   // ##################################################################
 
-  sealed interface Value extends Comparable<Value> {
-    @Override
-    default int compareTo(Value o) {
-      return Integer.compare(index(), o.index());
-    }
+  sealed interface Value {}
 
-    int index();
+  record CustomProp(String name, String value) implements Value {}
+
+  record SystemSkip(String ns) implements Value {}
+
+  record ThemeProp(String name, String ns, String id, String value) implements Value {}
+
+  static Value customProp(String name, String value) {
+    return new CustomProp(name, value);
   }
 
-  record CustomProp(int index, String name, String value) implements Value {}
-
-  record SystemSkip(int index, String ns) implements Value {}
-
-  record ThemeProp(int index, String name, String ns, String id, String value) implements Value {}
-
-  static Value customProp(int index, String name, String value) {
-    return new CustomProp(index, name, value);
+  static Value systemSkip(String ns) {
+    return new SystemSkip(ns);
   }
 
-  static Value systemSkip(int index, String ns) {
-    return new SystemSkip(index, ns);
-  }
-
-  static ThemeProp themeProp(int index, String ns, String id, String value) {
+  static ThemeProp themeProp(String ns, String id, String value) {
     if (id.isEmpty()) {
-      return new ThemeProp(index, "--" + ns, ns, id, value);
+      return new ThemeProp("--" + ns, ns, id, value);
     } else {
-      return new ThemeProp(index, "--" + ns + "-" + id, ns, id, value);
+      return new ThemeProp("--" + ns + "-" + id, ns, id, value);
     }
   }
 
@@ -277,14 +271,10 @@ final class CssEngine2 implements Css.Engine {
 
     final String text;
 
-    int valueIndex;
-
     final List<Value> values;
 
-    ValueParser(int index, String text, List<Value> values) {
+    ValueParser(String text, List<Value> values) {
       this.text = text;
-
-      this.valueIndex = index;
 
       this.values = values;
     }
@@ -307,7 +297,7 @@ final class CssEngine2 implements Css.Engine {
     static final byte $NS_VALUE_CHAR = 10;
     static final byte $NS_VALUE_WS = 11;
 
-    final int parse() {
+    final void parse() {
       byte state;
       state = $DECLARATION;
 
@@ -349,8 +339,6 @@ final class CssEngine2 implements Css.Engine {
 
         default -> throw error("Unexpected EOF");
       }
-
-      return valueIndex;
     }
 
     private byte parseDeclaration(char c) {
@@ -470,9 +458,9 @@ final class CssEngine2 implements Css.Engine {
       value = sb.toString();
 
       if (ns != null) {
-        result = themeProp(valueIndex++, ns, id, value);
+        result = themeProp(ns, id, value);
       } else {
-        result = customProp(valueIndex++, varName, value);
+        result = customProp(varName, value);
       }
 
       result(result);
@@ -529,7 +517,7 @@ final class CssEngine2 implements Css.Engine {
       }
 
       final Value result;
-      result = systemSkip(valueIndex++, ns);
+      result = systemSkip(ns);
 
       result(result);
     }
@@ -561,11 +549,11 @@ final class CssEngine2 implements Css.Engine {
     }
   }
 
-  static int parse(int index, String text, List<Value> values) {
+  static void parse(String text, List<Value> values) {
     final ValueParser parser;
-    parser = new ValueParser(index, text, values);
+    parser = new ValueParser(text, values);
 
-    return parser.parse();
+    parser.parse();
   }
 
   // ##################################################################
@@ -696,6 +684,21 @@ final class CssEngine2 implements Css.Engine {
   // ##################################################################
 
   // ##################################################################
+  // # BEGIN: Animation
+  // ##################################################################
+
+  static final class Frames implements Css.Engine.Frames {
+
+    @Override
+    public final void add(String selector, String value) {}
+
+  }
+
+  // ##################################################################
+  // # END: Animation
+  // ##################################################################
+
+  // ##################################################################
   // # BEGIN: Theme Section
   // ##################################################################
 
@@ -774,7 +777,7 @@ final class CssEngine2 implements Css.Engine {
 
     private final Map<String, PDecl> keywords = new HashMap<>();
 
-    private final Map<String, Map<String, Value>> namespaces = new HashMap<>();
+    private final Map<String, Map<String, Value>> namespaces = new LinkedHashMap<>();
 
     private Note.Sink noteSink = Note.NoOpSink.INSTANCE;
 
@@ -788,8 +791,6 @@ final class CssEngine2 implements Css.Engine {
 
     private final String systemBase;
 
-    private int valueIndex;
-
     private final Map<String, Variant> variants = new HashMap<>();
 
     Configuring(System system) {
@@ -799,7 +800,7 @@ final class CssEngine2 implements Css.Engine {
       final List<Value> parsed;
       parsed = new ArrayList<>();
 
-      valueIndex = parse(valueIndex, system.theme, parsed);
+      parse(system.theme, parsed);
 
       // map to namespace
       for (Value value : parsed) {
@@ -817,7 +818,7 @@ final class CssEngine2 implements Css.Engine {
             ns = prop.ns;
 
             final Map<String, Value> values;
-            values = namespaces.computeIfAbsent(ns, key -> new HashMap<>());
+            values = namespaces.computeIfAbsent(ns, key -> new LinkedHashMap<>());
 
             final Value existing;
             existing = values.put(prop.name, prop);
@@ -880,7 +881,7 @@ final class CssEngine2 implements Css.Engine {
       final List<Value> parsed;
       parsed = new ArrayList<>();
 
-      valueIndex = parse(valueIndex, text, parsed);
+      parse(text, parsed);
 
       // process any system skip
       for (Value v : parsed) {
@@ -901,7 +902,7 @@ final class CssEngine2 implements Css.Engine {
         switch (v) {
           case CustomProp prop -> {
             final Map<String, Value> values;
-            values = namespaces.computeIfAbsent("custom", key -> new HashMap<>());
+            values = namespaces.computeIfAbsent("custom", key -> new LinkedHashMap<>());
 
             final Value existing;
             existing = values.put(prop.name, prop);
@@ -918,7 +919,7 @@ final class CssEngine2 implements Css.Engine {
             ns = prop.ns;
 
             final Map<String, Value> values;
-            values = namespaces.computeIfAbsent(ns, key -> new HashMap<>());
+            values = namespaces.computeIfAbsent(ns, key -> new LinkedHashMap<>());
 
             final Value existing;
             existing = values.put(prop.name, prop);
@@ -947,7 +948,7 @@ final class CssEngine2 implements Css.Engine {
       final List<Value> parsed;
       parsed = new ArrayList<>();
 
-      valueIndex = parse(valueIndex, text, parsed);
+      parse(text, parsed);
 
       for (Value v : parsed) {
         switch (v) {
@@ -984,6 +985,10 @@ final class CssEngine2 implements Css.Engine {
       values = atRules.computeIfAbsent(selector, key -> new ArrayList<>());
 
       values.addAll(parsed);
+    }
+
+    public final void keyframes(String name, Consumer<? super Css.Engine.Frames> frames) {
+      throw new UnsupportedOperationException("Implement me");
     }
 
     public final Config configure() {
@@ -1063,8 +1068,6 @@ final class CssEngine2 implements Css.Engine {
         }
       }
 
-      values.sort(Comparator.naturalOrder());
-
       // :root
       final List<PDecl> decls;
       decls = new ArrayList<>();
@@ -1131,13 +1134,13 @@ final class CssEngine2 implements Css.Engine {
 
         for (Value value : list) {
           switch (value) {
-            case CssEngine2.CustomProp prop -> decls.add(
+            case CustomProp prop -> decls.add(
                 new PDecl(prop)
             );
 
-            case CssEngine2.SystemSkip(int index, String ns) -> {}
+            case SystemSkip skip -> {}
 
-            case CssEngine2.ThemeProp prop -> {
+            case ThemeProp prop -> {
               final PDecl decl;
               decl = new PDecl(prop);
 
@@ -1199,6 +1202,11 @@ final class CssEngine2 implements Css.Engine {
   @Override
   public final void theme(String atRule, String value) {
     configuring.theme(atRule, value);
+  }
+
+  @Override
+  public final void keyframes(String name, Consumer<? super Css.Engine.Frames> frames) {
+    configuring.keyframes(name, frames);
   }
 
   // ##################################################################
