@@ -159,7 +159,7 @@ public class CssEngine2Test02Configuring {
     );
   }
 
-  @Test(enabled = false)
+  @Test
   public void keyframes01() {
     test(
         s -> {
@@ -170,7 +170,7 @@ public class CssEngine2Test02Configuring {
 
         c -> {
           c.theme("""
-          @keyframes opacity-fade-in {
+          @keyframes fade-in {
             from {
               opacity: 0;
             }
@@ -182,13 +182,18 @@ public class CssEngine2Test02Configuring {
         },
 
         c -> {
-          final CssEngine2.PDecl v;
-          v = CssEngine2.pdecl("--font-test", "'Comic Sans'");
-
-          assertEquals(c.keywords(), Map.of("test", v));
+          assertEquals(c.keyframes(), Map.of("fade-in", CssEngine2.keyframes("fade-in", List.of(
+              CssEngine2.parsedRule("from", List.of(
+                  CssEngine2.decl("opacity", "0")
+              )),
+              CssEngine2.parsedRule("to", List.of(
+                  CssEngine2.decl("opacity", "1")
+              ))
+          ))));
+          assertEquals(c.keywords(), Map.of());
           assertEquals(c.rx(), false);
           assertEquals(c.sections(), List.of(
-              CssEngine2.psection(List.of(), List.of(v))
+              CssEngine2.psection(List.of(), List.of())
           ));
           assertEquals(c.variants(), Map.of());
         }

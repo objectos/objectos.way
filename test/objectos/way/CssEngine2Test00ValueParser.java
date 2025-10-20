@@ -44,7 +44,7 @@ public class CssEngine2Test00ValueParser {
             CssEngine2.keyframes("fade-in", List.of())
         )
     }, {
-        "@keyframes: 1 rule w/ 1 declaration",
+        "@keyframes: 1 rule / keyword",
 
         """
         @keyframes fade-in {
@@ -58,6 +58,30 @@ public class CssEngine2Test00ValueParser {
             CssEngine2.keyframes("fade-in", List.of(
                 CssEngine2.parsedRule("from", List.of(
                     CssEngine2.decl("opacity", "0")
+                ))
+            ))
+        )
+    }, {
+        "@keyframes: 2 rules / keyword + percent",
+
+        """
+        @keyframes fade-in {
+          from {
+            opacity: 0;
+          }
+          100% {
+            opacity: 1;
+          }
+        }
+        """,
+
+        List.of(
+            CssEngine2.keyframes("fade-in", List.of(
+                CssEngine2.parsedRule("from", List.of(
+                    CssEngine2.decl("opacity", "0")
+                )),
+                CssEngine2.parsedRule("100%", List.of(
+                    CssEngine2.decl("opacity", "1")
                 ))
             ))
         )

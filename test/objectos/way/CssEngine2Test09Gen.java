@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import objectos.way.CssEngine2.Ctx;
+import objectos.way.CssEngine2.Keyframes;
 import objectos.way.CssEngine2.PDecl;
 import org.testng.annotations.Test;
 
@@ -37,6 +38,7 @@ public class CssEngine2Test09Gen {
         },
 
         ctx -> {
+          assertEquals(ctx.keyframes(), List.of());
           assertEquals(ctx.rules(), List.of(
               CssEngine2.rule(".margin\\:0", List.of(), "margin", "0")
           ));
@@ -54,6 +56,7 @@ public class CssEngine2Test09Gen {
         },
 
         ctx -> {
+          assertEquals(ctx.keyframes(), List.of());
           assertEquals(ctx.rules(), List.of(
               CssEngine2.rule(".color\\:gray-100", List.of(), "color", "var(--color-gray-100)")
           ));
@@ -77,6 +80,7 @@ public class CssEngine2Test09Gen {
         },
 
         ctx -> {
+          assertEquals(ctx.keyframes(), List.of());
           assertEquals(ctx.rules(), List.of(
               CssEngine2.rule(".color\\:gray-100\\/20", List.of(), "color", "color-mix(in oklab, var(--color-gray-100) 20%, transparent)")
           ));
@@ -91,7 +95,30 @@ public class CssEngine2Test09Gen {
     );
   }
 
+  @Test
+  public void testCase04() {
+    test(
+        gen -> {
+          gen.keyframes("fade-in");
+          gen.utility(List.of(), "animation:3s_linear_1s_fade-in", "animation", "3s linear 1s fade-in");
+        },
+
+        ctx -> {
+          assertEquals(ctx.keyframes(), List.of(
+              CssEngine2.keyframes("fade-in", List.of())
+          ));
+          assertEquals(ctx.rules(), List.of(
+              CssEngine2.rule(".animation\\:3s_linear_1s_fade-in", List.of(), "animation", "3s linear 1s fade-in")
+          ));
+          final List<CssEngine2.Section> sections = ctx.sections();
+          assertEquals(sections.size(), 0);
+        }
+    );
+  }
+
   private static final class Builder {
+
+    final Map<String, CssEngine2.Keyframes> keyframes = new HashMap<>();
 
     final Map<String, CssEngine2.PDecl> keywords = new HashMap<>();
 
@@ -101,9 +128,16 @@ public class CssEngine2Test09Gen {
 
     final Ctx build() {
       final CssEngine2.Gen gen;
-      gen = new CssEngine2.Gen(keywords, sections, utilities);
+      gen = new CssEngine2.Gen(keyframes, keywords, sections, utilities);
 
       return gen.generate();
+    }
+
+    final void keyframes(String name) {
+      final Keyframes kf;
+      kf = CssEngine2.keyframes(name, List.of());
+
+      keyframes.put(name, kf);
     }
 
     final void keywords(List<String> selector, Map<String, String> kws) {

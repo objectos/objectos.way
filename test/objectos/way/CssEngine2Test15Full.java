@@ -21,7 +21,7 @@ import java.io.IOException;
 import org.testng.annotations.Test;
 
 @SuppressWarnings("unused")
-public class CssEngine2Test14Full {
+public class CssEngine2Test15Full {
 
   private static final String DARK = "@media (prefers-color-scheme: dark)";
 
@@ -328,6 +328,63 @@ public class CssEngine2Test14Full {
         }
         @layer utilities {
           .color\\:primary { color: #f0f0f0 }
+        }
+        """
+    );
+  }
+
+  @Test(description = """
+  theme + @keyframes
+  """)
+  public void testCase08() throws IOException {
+    class Subject {
+      String s = """
+      animation-name:fade-in
+      """;
+    }
+
+    final CssEngine2.System system;
+    system = new CssEngine2.System();
+
+    system.base = "";
+
+    system.theme = "";
+
+    final CssEngine2 engine;
+    engine = new CssEngine2(system);
+
+    engine.noteSink(Y.noteSink());
+
+    engine.theme("""
+    --color-primary: #f0f0f0;
+
+    @keyframes fade-in {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+    """);
+
+    engine.scanClass(Subject.class);
+
+    final StringBuilder out;
+    out = new StringBuilder();
+
+    engine.generate(out);
+
+    assertEquals(
+        out.toString(),
+
+        """
+        @layer utilities {
+          .animation-name\\:fade-in { animation-name: fade-in }
+        }
+        @keyframes fade-in {
+          0% {
+            opacity: 0;
+          }
+          100% {
+            opacity: 1;
+          }
         }
         """
     );
