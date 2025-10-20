@@ -25,6 +25,61 @@ import org.testng.annotations.Test;
 
 public class CssEngine2Test00ValueParser {
 
+  @DataProvider
+  public Object[][] validProvider() {
+    return new Object[][] {{
+        "@keyframes: empty",
+
+        "@keyframes fade-in {}",
+
+        List.of(
+            CssEngine2.keyframes("fade-in", List.of())
+        )
+    }, {
+        "@keyframes: empty no space after ID",
+
+        "@keyframes fade-in{}",
+
+        List.of(
+            CssEngine2.keyframes("fade-in", List.of())
+        )
+    }, {
+        "@keyframes: 1 rule w/ 1 declaration",
+
+        """
+        @keyframes fade-in {
+          from {
+            opacity: 0;
+          }
+        }
+        """,
+
+        List.of(
+            CssEngine2.keyframes("fade-in", List.of(
+                CssEngine2.parsedRule("from", List.of(
+                    CssEngine2.decl("opacity", "0")
+                ))
+            ))
+        )
+    }};
+  }
+
+  @Test(dataProvider = "validProvider")
+  public void valid(
+      String description,
+      String src,
+      @SuppressWarnings("exports") List<CssEngine2.Syntax> expected) {
+    final List<CssEngine2.Syntax> result;
+    result = new ArrayList<>();
+
+    final CssEngine2.SyntaxParser parser;
+    parser = new CssEngine2.SyntaxParser(src);
+
+    parser.parseTo(result);
+
+    assertEquals(result, expected);
+  }
+
   @Test(description = "breakpoint :: just one")
   public void breakpoint01() {
     test(
@@ -100,7 +155,7 @@ public class CssEngine2Test00ValueParser {
         --color-orange-950:
         """,
 
-        "Unexpected EOF while parsing a declaration value"
+        "EOF while parsing a --variable value"
     );
   }
 
@@ -111,7 +166,7 @@ public class CssEngine2Test00ValueParser {
         --color-orange-900: oklch(0.408 0.123 38.172);
         --color-orange-950: okl""",
 
-        "Unexpected EOF while parsing a declaration value"
+        "EOF while parsing a --variable value"
     );
   }
 
@@ -122,7 +177,7 @@ public class CssEngine2Test00ValueParser {
         --color-orange-900: oklch(0.408 0.123 38.172);
         --color-orange""",
 
-        "Unexpected EOF while parsing a custom property name"
+        "EOF while parsing a --variable name"
     );
   }
 
@@ -148,25 +203,6 @@ public class CssEngine2Test00ValueParser {
             CssEngine2.themeProp("font", "display", "Foo, \"Foo bar\"")
         )
     );
-  }
-
-  @DataProvider
-  public Object[][] keyframesValidProvider() {
-    return new Object[][] {{
-        "empty",
-        "@keyframes fade-in {}",
-        List.of(
-            CssEngine2.keyframes("fade-in", List.of())
-        )
-    }};
-  }
-
-  @Test(dataProvider = "keyframesValidProvider")
-  public void keyframesValid(
-      String description,
-      String src,
-      @SuppressWarnings("exports") List<CssEngine2.Syntax> expected) {
-    test(src, expected);
   }
 
   @Test
@@ -258,9 +294,9 @@ public class CssEngine2Test00ValueParser {
     result = new ArrayList<>();
 
     final CssEngine2.SyntaxParser parser;
-    parser = new CssEngine2.SyntaxParser(result, value);
+    parser = new CssEngine2.SyntaxParser(value);
 
-    parser.parse();
+    parser.parseTo(result);
 
     assertEquals(result, expected);
   }
@@ -271,9 +307,9 @@ public class CssEngine2Test00ValueParser {
       result = new ArrayList<>();
 
       final CssEngine2.SyntaxParser parser;
-      parser = new CssEngine2.SyntaxParser(result, value);
+      parser = new CssEngine2.SyntaxParser(value);
 
-      parser.parse();
+      parser.parseTo(result);
 
       Assert.fail("it should have thrown");
     } catch (IllegalArgumentException expected) {

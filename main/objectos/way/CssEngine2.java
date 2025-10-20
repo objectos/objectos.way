@@ -212,6 +212,10 @@ final class CssEngine2 implements Css.Engine {
 
   record ParsedRule(String selector, List<Decl> decls) {}
 
+  static ParsedRule parsedRule(String s, List<Decl> d) {
+    return new ParsedRule(s, d);
+  }
+
   private static final class KeyframesBuilder {
 
     private final String name;
@@ -243,17 +247,20 @@ final class CssEngine2 implements Css.Engine {
   private static final byte[] CSS;
 
   private static final byte CSS_WS = 1;
-  private static final byte CSS_ASTERISK = 2;
-  private static final byte CSS_HYPHEN = 3;
-  private static final byte CSS_COLON = 4;
-  private static final byte CSS_SEMICOLON = 5;
-  private static final byte CSS_AT = 6;
-  private static final byte CSS_REV_SOLIDUS = 7;
-  private static final byte CSS_LCURLY = 8;
-  private static final byte CSS_RCURLY = 9;
-  private static final byte CSS_IDENT_START = 10;
-  private static final byte CSS_IDENT = 11;
-  private static final byte CSS_NON_ASCII = 12;
+  private static final byte CSS_PERCENT = 2;
+  private static final byte CSS_ASTERISK = 3;
+  private static final byte CSS_COMMA = 4;
+  private static final byte CSS_HYPHEN = 5;
+  private static final byte CSS_COLON = 6;
+  private static final byte CSS_SEMICOLON = 7;
+  private static final byte CSS_AT = 8;
+  private static final byte CSS_REV_SOLIDUS = 9;
+  private static final byte CSS_LCURLY = 10;
+  private static final byte CSS_RCURLY = 11;
+  private static final byte CSS_IDENT_START = 12;
+  private static final byte CSS_IDENT = 13;
+  private static final byte CSS_NON_ASCII = 14;
+  private static final byte CSS_EOF = 15;
 
   static {
     final byte[] table;
@@ -271,7 +278,9 @@ final class CssEngine2 implements Css.Engine {
     table['\r'] = CSS_WS;
 
     // symbols
+    table['%'] = CSS_PERCENT;
     table['*'] = CSS_ASTERISK;
+    table[','] = CSS_COMMA;
     table['-'] = CSS_HYPHEN;
     table[':'] = CSS_COLON;
     table[';'] = CSS_SEMICOLON;
@@ -298,6 +307,8 @@ final class CssEngine2 implements Css.Engine {
   );
 
   static final class SyntaxParser {
+    char c;
+
     int cursor, idx, mark0, mark1;
 
     String id, ns, varName;
@@ -308,7 +319,15 @@ final class CssEngine2 implements Css.Engine {
 
     final StringBuilder sb = new StringBuilder();
 
+    private byte test;
+
     final String text;
+
+    SyntaxParser(String text) {
+      this.result = null;
+
+      this.text = text;
+    }
 
     SyntaxParser(List<Syntax> result, String text) {
       this.result = result;
@@ -344,13 +363,629 @@ final class CssEngine2 implements Css.Engine {
     static final byte $KF_KW = 18;
     static final byte $KF_PERC = 19;
 
+    private static final String UNSUPPORTED_ESCAPE = "Escape sequences are currently not supported";
+
+    private static final String UNSUPPORTED_NON_ASCII = "Non ASCII characters are currently not supported";
+
+    public final void parseTo(List<Syntax> result) {
+      while (true) {
+        final Syntax next;
+        next = parseNext(CSS_EOF, "Expected start of --variable declaration or @-rule declaration");
+
+        if (next == null) {
+          break;
+        }
+
+        result.add(next);
+      }
+    }
+
+    private Syntax parseNext(byte stop, String errorMsg) {
+      while (true) {
+        switch (nextTest()) {
+          case CSS_WS -> {
+            continue;
+          }
+
+          case CSS_HYPHEN -> {
+            return parseHyphen();
+          }
+
+          case CSS_AT -> {
+            return parseAt();
+          }
+
+          default -> {
+            if (test == stop) {
+              return null;
+            } else {
+              throw error(errorMsg);
+            }
+          }
+        }
+      }
+    }
+
+    private Syntax parseHyphen() {
+      // idx of the first hyphen
+      final int hyphen;
+      hyphen = idx;
+
+      // second hyphen
+      if (!nextTest(CSS_HYPHEN)) {
+        throw error("Expected start of --variable declaration");
+      }
+
+      // first char after '--'
+      return switch (nextTest()) {
+        case CSS_IDENT_START -> parseCustomProp(hyphen);
+
+        case CSS_ASTERISK -> parseNsGlobal(hyphen);
+
+        case CSS_REV_SOLIDUS -> throw error(UNSUPPORTED_ESCAPE);
+
+        case CSS_NON_ASCII -> throw error(UNSUPPORTED_NON_ASCII);
+
+        default -> throw error("--variable name must start with a letter");
+      };
+    }
+
+    private Syntax parseCustomProp(int hyphen) {
+      final int firstChar;
+      firstChar = idx;
+
+      String ns;
+      ns = null;
+
+      while (true) {
+        switch (nextTest()) {
+          case CSS_IDENT_START, CSS_IDENT -> {
+            continue;
+          }
+
+          case CSS_HYPHEN -> {
+            if (ns == null) {
+              ns = text.substring(firstChar, idx);
+            }
+          }
+
+          case CSS_WS -> {
+            final String name;
+            name = text.substring(hyphen, idx);
+
+            return parseCustomPropColon(ns, name);
+          }
+
+          case CSS_COLON -> {
+            final String name;
+            name = text.substring(hyphen, idx);
+
+            return parseCustomPropValue(ns, name);
+          }
+
+          case CSS_REV_SOLIDUS -> throw error(UNSUPPORTED_ESCAPE);
+
+          case CSS_NON_ASCII -> throw error(UNSUPPORTED_NON_ASCII);
+
+          case CSS_EOF -> throw error("EOF while parsing a --variable name");
+
+          default -> throw error("--variable name contains the invalid character " + c);
+        }
+      }
+    }
+
+    private Syntax parseCustomPropColon(String ns, String name) {
+      while (true) {
+        switch (nextTest()) {
+          case CSS_WS -> {
+            continue;
+          }
+
+          case CSS_COLON -> {
+            return parseCustomPropValue(ns, name);
+          }
+
+          default -> throw error("Declaration with no ':' colon character");
+        }
+      }
+    }
+
+    private Syntax parseCustomPropValue(String ns, String name) {
+      sb.setLength(0);
+
+      while (true) {
+        switch (nextTest()) {
+          case CSS_WS -> {
+            continue;
+          }
+
+          case CSS_SEMICOLON -> throw error("--variable with an empty value");
+
+          case CSS_EOF -> throw error("EOF while parsing a --variable value");
+
+          default -> {
+            sb.append(c);
+
+            return parseCustomPropValueChar(ns, name);
+          }
+        }
+      }
+    }
+
+    private Syntax parseCustomPropValueChar(String ns, String name) {
+      int ws;
+      ws = 0;
+
+      while (true) {
+        switch (nextTest()) {
+          case CSS_WS -> ws++;
+
+          case CSS_SEMICOLON -> {
+            final String value;
+            value = sb.toString();
+
+            if ("--rx".equals(name)) {
+              return themeProp("rx", "", value);
+            }
+
+            if (ns != null && NAMESPACES.contains(ns)) {
+              final int beginIndex;
+              beginIndex = 2 + ns.length() + 1;
+
+              final String id;
+              id = name.substring(beginIndex);
+
+              return themeProp(ns, id, value);
+            }
+
+            return customProp(name, value);
+          }
+
+          case CSS_EOF -> throw error("EOF while parsing a --variable value");
+
+          default -> {
+            if (ws > 0) {
+              sb.append(' ');
+
+              ws = 0;
+            }
+
+            sb.append(c);
+          }
+        }
+      }
+    }
+
+    private Syntax parseNsGlobal(int hyphen) {
+      while (true) {
+        switch (nextTest()) {
+          case CSS_WS -> {
+            continue;
+          }
+
+          case CSS_COLON -> {
+            return parseNsInitial("*");
+          }
+
+          default -> throw error("Expected the global namespace '--*'");
+        }
+      }
+    }
+
+    private Syntax parseNsInitial(String ns) {
+      while (true) {
+        switch (nextTest()) {
+          case CSS_WS -> {
+            continue;
+          }
+
+          case CSS_IDENT_START -> {
+            return parseNsInitialChar(ns);
+          }
+
+          default -> throw error("Expected the keyword 'initial'");
+        }
+      }
+    }
+
+    private Syntax parseNsInitialChar(String ns) {
+      final int firstChar;
+      firstChar = idx;
+
+      while (true) {
+        switch (nextTest()) {
+          case CSS_SEMICOLON -> {
+            final String raw;
+            raw = text.substring(firstChar, idx);
+
+            final String kw;
+            kw = raw.strip();
+
+            if (!"initial".equals(kw)) {
+              throw error("Expected the keyword 'initial'");
+            }
+
+            return systemSkip(ns);
+          }
+
+          case CSS_WS, CSS_IDENT_START -> {
+            continue;
+          }
+
+          default -> throw error("Expected the keyword 'initial'");
+        }
+      }
+    }
+
+    private static final String UNSUPPORTED_AT_RULE = "The @keyframes and @media at-rules are currently supported";
+
+    private Syntax parseAt() {
+      final int at;
+      at = idx;
+
+      while (true) {
+        switch (nextTest()) {
+          case CSS_WS -> {
+            final String name;
+            name = text.substring(at, idx);
+
+            if ("@keyframes".equals(name)) {
+              return parseKeyframes();
+            }
+
+            throw error(UNSUPPORTED_AT_RULE);
+          }
+
+          case CSS_IDENT_START, CSS_HYPHEN -> {
+            continue;
+          }
+
+          default -> throw error(UNSUPPORTED_AT_RULE);
+        }
+      }
+    }
+
+    private Syntax parseKeyframes() {
+      while (true) {
+        switch (nextTest()) {
+          case CSS_WS -> {
+            continue;
+          }
+
+          case CSS_IDENT_START -> {
+            return parseKeyframesId();
+          }
+
+          default -> throw error("Expected the start of a @keyframes name");
+        }
+      }
+    }
+
+    private Syntax parseKeyframesId() {
+      final int firstChar;
+      firstChar = idx;
+
+      while (true) {
+        switch (nextTest()) {
+          case CSS_WS -> {
+            final String name;
+            name = text.substring(firstChar, idx);
+
+            return parseKeyframesBodySep(name);
+          }
+
+          case CSS_LCURLY -> {
+            final String name;
+            name = text.substring(firstChar, idx);
+
+            return parseKeyframesBody(name);
+          }
+
+          case CSS_IDENT_START, CSS_IDENT, CSS_HYPHEN -> {
+            continue;
+          }
+
+          case CSS_REV_SOLIDUS -> throw error(UNSUPPORTED_ESCAPE);
+
+          case CSS_NON_ASCII -> throw error(UNSUPPORTED_NON_ASCII);
+
+          case CSS_EOF -> throw error("EOF while parsing a @keyframes name");
+
+          default -> throw error("Invalid @keyframes name");
+        }
+      }
+    }
+
+    private Syntax parseKeyframesBodySep(String name) {
+      while (true) {
+        switch (nextTest()) {
+          case CSS_WS -> {
+            continue;
+          }
+
+          case CSS_LCURLY -> {
+            return parseKeyframesBody(name);
+          }
+
+          default -> throw error("Expected @keyframes '{' separator");
+        }
+      }
+    }
+
+    private static final String EOF_KEYFRAMES = "EOF while parsing a @keyframes declaration";
+
+    private Syntax parseKeyframesBody(String name) {
+      final List<ParsedRule> rules;
+      rules = new ArrayList<>();
+
+      outer: while (true) {
+        switch (nextTest()) {
+          case CSS_WS -> {
+            continue;
+          }
+
+          case CSS_RCURLY -> {
+            break outer;
+          }
+
+          case CSS_IDENT_START -> {
+            final ParsedRule rule;
+            rule = parseKeyframesRule(CSS_IDENT_START);
+
+            rules.add(rule);
+          }
+
+          case CSS_IDENT -> {
+            final ParsedRule rule;
+            rule = parseKeyframesRule(CSS_IDENT);
+
+            rules.add(rule);
+          }
+
+          case CSS_EOF -> throw error(EOF_KEYFRAMES);
+
+          default -> throw error("Expected the start of a @keyframes rule: from, to or <percentage>");
+        }
+      }
+
+      return new Keyframes(
+          name,
+
+          List.copyOf(rules)
+      );
+    }
+
+    private ParsedRule parseKeyframesRule(byte test) {
+      final String selector;
+      selector = parseKeyframesSelector(test);
+
+      final List<Decl> decls;
+      decls = parseDecls();
+
+      return new ParsedRule(selector, decls);
+    }
+
+    private String parseKeyframesSelector(byte test) {
+      sb.setLength(0);
+
+      while (true) {
+        switch (test) {
+          case CSS_IDENT_START -> {
+            test = parseKeyframesKeyword();
+          }
+
+          case CSS_IDENT -> {
+            throw new UnsupportedOperationException("Implement me");
+          }
+
+          case CSS_LCURLY -> {
+            return sb.toString();
+          }
+
+          default -> throw error("Expected valid @keyframes declaration");
+        }
+      }
+    }
+
+    private byte parseKeyframesKeyword() {
+      final int start;
+      start = idx;
+
+      while (true) {
+        switch (nextTest()) {
+          case CSS_WS -> {
+            sb.append(text, start, idx);
+
+            return parseKeyframesSep();
+          }
+
+          case CSS_LCURLY -> {
+            sb.append(text, start, idx);
+
+            return CSS_LCURLY;
+          }
+
+          case CSS_IDENT_START -> {
+            continue;
+          }
+
+          case CSS_REV_SOLIDUS -> throw error(UNSUPPORTED_ESCAPE);
+
+          case CSS_NON_ASCII -> throw error(UNSUPPORTED_NON_ASCII);
+
+          case CSS_EOF -> throw error(EOF_KEYFRAMES);
+
+          default -> throw error("Expected valid @keyframes declaration");
+        }
+      }
+    }
+
+    private byte parseKeyframesSep() {
+      while (true) {
+        switch (nextTest()) {
+          case CSS_WS -> {
+            continue;
+          }
+
+          case CSS_LCURLY -> {
+            return CSS_LCURLY;
+          }
+
+          case CSS_EOF -> throw error(EOF_KEYFRAMES);
+
+          default -> throw error("Expected valid @keyframes declaration");
+        }
+      }
+    }
+
+    private static final String EOF_DECLS = "EOF while parsing rule declarations";
+
+    private List<Decl> parseDecls() {
+      final List<Decl> decls;
+      decls = new ArrayList<>();
+
+      loop: while (true) {
+        switch (nextTest()) {
+          case CSS_WS -> {
+            continue;
+          }
+
+          case CSS_HYPHEN, CSS_IDENT_START -> {
+            final Decl decl;
+            decl = parseDecl();
+
+            decls.add(decl);
+
+            if (test == CSS_RCURLY) {
+              break loop;
+            }
+          }
+
+          case CSS_RCURLY -> {
+            break loop;
+          }
+
+          case CSS_EOF -> throw error(EOF_DECLS);
+
+          default -> throw error("Expected start of a CSS property");
+        }
+      }
+
+      return List.copyOf(decls);
+    }
+
+    private Decl parseDecl() {
+      final String property;
+      property = parseDeclProperty();
+
+      final String value;
+      value = parseDeclValue();
+
+      return new Decl(property, value);
+    }
+
+    private String parseDeclProperty() {
+      final int start;
+      start = idx;
+
+      while (true) {
+        switch (nextTest()) {
+          case CSS_WS -> {
+            final String name;
+            name = text.substring(start, idx);
+
+            final byte colon;
+            colon = nextWhile(CSS_WS);
+
+            if (colon != CSS_COLON) {
+              throw error("Expected ':' after a CSS property name");
+            }
+
+            return name;
+          }
+
+          case CSS_COLON -> {
+            final String name;
+            name = text.substring(start, idx);
+
+            return name;
+          }
+
+          case CSS_HYPHEN, CSS_IDENT_START, CSS_IDENT -> {
+            continue;
+          }
+
+          case CSS_REV_SOLIDUS -> throw error(UNSUPPORTED_ESCAPE);
+
+          case CSS_NON_ASCII -> throw error(UNSUPPORTED_NON_ASCII);
+
+          case CSS_EOF -> throw error(EOF_DECLS);
+
+          default -> throw error("Invalid CSS property name");
+        }
+      }
+    }
+
+    private String parseDeclValue() {
+      while (true) {
+        switch (nextTest()) {
+          case CSS_WS -> {
+            continue;
+          }
+
+          case CSS_SEMICOLON, CSS_RCURLY -> {
+            return "";
+          }
+
+          case CSS_EOF -> throw error(EOF_DECLS);
+
+          default -> {
+            return parseDeclValueChar();
+          }
+        }
+      }
+    }
+
+    private String parseDeclValueChar() {
+      sb.setLength(0);
+
+      sb.append(c);
+
+      int ws;
+      ws = 0;
+
+      while (true) {
+        switch (nextTest()) {
+          case CSS_WS -> {
+            ws++;
+          }
+
+          case CSS_SEMICOLON, CSS_RCURLY -> {
+            return sb.toString();
+          }
+
+          case CSS_EOF -> throw error(EOF_DECLS);
+
+          default -> {
+            if (ws > 0) {
+              sb.append(' ');
+
+              ws = 0;
+            }
+
+            sb.append(c);
+          }
+        }
+      }
+    }
+
     final void parse() {
       byte state;
       state = $DECLARATION;
 
-      while (hasNext()) {
+      while (hasChar()) {
         final char c;
-        c = next();
+        c = nextChar();
 
         final byte test;
         test = test(c);
@@ -521,7 +1156,19 @@ final class CssEngine2 implements Css.Engine {
 
             case CSS_RCURLY -> { keyframesResult(); yield $DECLARATION; }
 
+            case CSS_IDENT_START -> { mark0 = idx; yield $KF_KW; }
+
             default -> throw error("Invalid @keyframes declaration");
+          };
+
+          case $KF_KW -> switch (test) {
+            case CSS_WS -> throw new UnsupportedOperationException("Implement me");
+
+            case CSS_RCURLY -> throw new UnsupportedOperationException("Implement me");
+
+            case CSS_IDENT_START, CSS_IDENT, CSS_HYPHEN -> $KF_KW;
+
+            default -> throw error("Invalid @keyframes selector");
           };
 
           default -> throw new AssertionError("Unexpected state=" + state);
@@ -605,14 +1252,43 @@ final class CssEngine2 implements Css.Engine {
       return new IllegalArgumentException(message);
     }
 
-    private boolean hasNext() {
+    private boolean hasChar() {
       return cursor < text.length();
     }
 
-    private char next() {
+    private char nextChar() {
       idx = cursor++;
 
       return text.charAt(idx);
+    }
+
+    private byte nextTest() {
+      if (cursor < text.length()) {
+        idx = cursor++;
+
+        c = text.charAt(idx);
+
+        return test = c < 128 ? CSS[c] : CSS_NON_ASCII;
+      } else {
+        return test = CSS_EOF;
+      }
+    }
+
+    private boolean nextTest(byte expected) {
+      final byte test;
+      test = nextTest();
+
+      return test == expected;
+    }
+
+    private byte nextWhile(byte condition) {
+      byte test;
+
+      do {
+        test = nextTest();
+      } while (test == condition);
+
+      return test;
     }
 
     private byte test(char c) {
