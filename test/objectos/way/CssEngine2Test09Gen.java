@@ -25,7 +25,6 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import objectos.way.CssEngine2.Ctx;
 import objectos.way.CssEngine2.Keyframes;
-import objectos.way.CssEngine2.PDecl;
 import org.testng.annotations.Test;
 
 public class CssEngine2Test09Gen {
@@ -120,9 +119,9 @@ public class CssEngine2Test09Gen {
 
     final Map<String, CssEngine2.Keyframes> keyframes = new HashMap<>();
 
-    final Map<String, CssEngine2.PDecl> keywords = new HashMap<>();
+    final Map<String, CssEngine2.Decl> keywords = new HashMap<>();
 
-    final List<CssEngine2.PSection> sections = new ArrayList<>();
+    final List<CssEngine2.Section> sections = new ArrayList<>();
 
     final List<CssEngine2.Utility> utilities = new ArrayList<>();
 
@@ -141,7 +140,7 @@ public class CssEngine2Test09Gen {
     }
 
     final void keywords(List<String> selector, Map<String, String> kws) {
-      final List<PDecl> decls;
+      final List<CssEngine2.Decl> decls;
       decls = new ArrayList<>();
 
       for (Map.Entry<String, String> entry : kws.entrySet()) {
@@ -151,16 +150,16 @@ public class CssEngine2Test09Gen {
         final String value;
         value = entry.getValue();
 
-        final PDecl decl;
-        decl = CssEngine2.pdecl(keyword, value);
+        final CssEngine2.Decl decl;
+        decl = CssEngine2.decl(keyword, value);
 
         keywords.put(keyword, decl);
 
         decls.add(decl);
       }
 
-      final CssEngine2.PSection s;
-      s = CssEngine2.psection(selector, decls);
+      final CssEngine2.Section s;
+      s = CssEngine2.section(selector, decls);
 
       sections.add(s);
     }
@@ -177,7 +176,7 @@ public class CssEngine2Test09Gen {
 
   private String v(List<CssEngine2.Decl> values) {
     return values.stream()
-        .map(v -> v.property() + ": " + v.value())
+        .map(v -> v.property + ": " + v.value)
         .collect(Collectors.joining("\n", "", "\n"));
   }
 

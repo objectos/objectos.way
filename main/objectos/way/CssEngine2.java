@@ -40,6 +40,7 @@ import java.security.CodeSource;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -50,6 +51,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -129,10 +131,10 @@ final class CssEngine2 implements Css.Engine {
     final Map<String, Keyframes> keyframes;
     keyframes = config.keyframes;
 
-    final Map<String, PDecl> keywords;
+    final Map<String, Decl> keywords;
     keywords = config.keywords;
 
-    final List<PSection> protoSections;
+    final List<Section> protoSections;
     protoSections = config.sections;
 
     final List<Utility> utils;
@@ -182,64 +184,62 @@ final class CssEngine2 implements Css.Engine {
   // ##################################################################
 
   // ##################################################################
-  // # BEGIN: Syntax
+  // # BEGIN: Declaration
   // ##################################################################
 
-  // ##################################################################
-  // # BEGIN: Syntax: Types
-  // ##################################################################
+  static final class Decl {
+    private boolean marked;
+    private Decl next;
+    final String property;
+    final String value;
 
-  sealed interface Syntax {}
+    Decl(String property, String value) {
+      this.property = property;
 
-  sealed interface Value extends Syntax {}
-
-  record CustomProp(String name, String value) implements Value {}
-
-  static Value customProp(String name, String value) {
-    return new CustomProp(name, value);
-  }
-
-  record SystemSkip(String ns) implements Value {}
-
-  static Value systemSkip(String ns) {
-    return new SystemSkip(ns);
-  }
-
-  record ThemeProp(String name, String ns, String id, String value) implements Value {}
-
-  static ThemeProp themeProp(String ns, String id, String value) {
-    if (id.isEmpty()) {
-      return new ThemeProp("--" + ns, ns, id, value);
-    } else {
-      return new ThemeProp("--" + ns + "-" + id, ns, id, value);
+      this.value = value;
     }
-  }
 
-  record Keyframes(String name, List<ParsedRule> rules)
-      implements Comparable<Keyframes>, Syntax {
     @Override
-    public final int compareTo(Keyframes o) {
-      return name.compareTo(o.name);
+    public final boolean equals(Object obj) {
+      return obj == this || obj instanceof Decl that
+          && property.equals(that.property)
+          && value.equals(that.value);
+    }
+
+    final void append(Decl decl) {
+      next = decl;
+    }
+
+    final IllegalArgumentException invalid(String msg) {
+      return new IllegalArgumentException(msg + "\n\t" + property + ": " + value);
+    }
+
+    final void mark() {
+      marked = true;
+
+      if (next != null) {
+        next.mark();
+      }
+    }
+
+    final String ns() {
+      final int firstChar;
+      firstChar = 2;
+
+      final int hyphen;
+      hyphen = property.indexOf('-', firstChar);
+
+      if (hyphen < 0) {
+        return property.substring(firstChar);
+      } else {
+        return property.substring(firstChar, hyphen);
+      }
     }
   }
 
-  static Keyframes keyframes(String name, List<ParsedRule> rules) {
-    return new Keyframes(name, rules);
+  static Decl decl(String p, String v) {
+    return new Decl(p, v);
   }
-
-  record ParsedRule(String selector, List<Decl> decls) {}
-
-  static ParsedRule parsedRule(String s, List<Decl> d) {
-    return new ParsedRule(s, d);
-  }
-
-  // ##################################################################
-  // # END: Syntax: Types
-  // ##################################################################
-
-  // ##################################################################
-  // # BEGIN: Syntax: Parser
-  // ##################################################################
 
   private static final byte[] CSS;
 
@@ -297,13 +297,11 @@ final class CssEngine2 implements Css.Engine {
     CSS = table;
   }
 
-  private static final Set<String> NAMESPACES = Set.of(
-      "breakpoint",
-      "color",
-      "font"
-  );
+  static final class CssParser {
+    private static final String EOF_DECLS = "EOF while parsing rule declarations";
+    private static final String UNSUPPORTED_ESCAPE = "Escape sequences are currently not supported";
+    private static final String UNSUPPORTED_NON_ASCII = "Non ASCII characters are currently not supported";
 
-  static final class SyntaxParser {
     char c;
 
     int cursor, idx;
@@ -312,517 +310,15 @@ final class CssEngine2 implements Css.Engine {
 
     final StringBuilder sb = new StringBuilder();
 
-    private byte test;
-
     final String text;
 
-    SyntaxParser(String text) {
+    CssParser(String text) {
       this.result = null;
 
       this.text = text;
     }
 
-    private static final String UNSUPPORTED_ESCAPE = "Escape sequences are currently not supported";
-
-    private static final String UNSUPPORTED_NON_ASCII = "Non ASCII characters are currently not supported";
-
-    public final void parseTo(List<Syntax> result) {
-      while (true) {
-        final Syntax next;
-        next = parseNext(CSS_EOF, "Expected start of --variable declaration or @-rule declaration");
-
-        if (next == null) {
-          break;
-        }
-
-        result.add(next);
-      }
-    }
-
-    private Syntax parseNext(byte stop, String errorMsg) {
-      while (true) {
-        switch (nextTest()) {
-          case CSS_WS -> {
-            continue;
-          }
-
-          case CSS_HYPHEN -> {
-            return parseHyphen();
-          }
-
-          case CSS_AT -> {
-            return parseAt();
-          }
-
-          default -> {
-            if (test == stop) {
-              return null;
-            } else {
-              throw error(errorMsg);
-            }
-          }
-        }
-      }
-    }
-
-    private Syntax parseHyphen() {
-      // idx of the first hyphen
-      final int hyphen;
-      hyphen = idx;
-
-      // second hyphen
-      if (!nextTest(CSS_HYPHEN)) {
-        throw error("Expected start of --variable declaration");
-      }
-
-      // first char after '--'
-      return switch (nextTest()) {
-        case CSS_IDENT_START -> parseCustomProp(hyphen);
-
-        case CSS_ASTERISK -> parseNsGlobal(hyphen);
-
-        case CSS_REV_SOLIDUS -> throw error(UNSUPPORTED_ESCAPE);
-
-        case CSS_NON_ASCII -> throw error(UNSUPPORTED_NON_ASCII);
-
-        default -> throw error("--variable name must start with a letter");
-      };
-    }
-
-    private Syntax parseCustomProp(int hyphen) {
-      final int firstChar;
-      firstChar = idx;
-
-      String ns;
-      ns = null;
-
-      while (true) {
-        switch (nextTest()) {
-          case CSS_IDENT_START, CSS_IDENT -> {
-            continue;
-          }
-
-          case CSS_HYPHEN -> {
-            if (ns == null) {
-              ns = text.substring(firstChar, idx);
-            }
-          }
-
-          case CSS_WS -> {
-            final String name;
-            name = text.substring(hyphen, idx);
-
-            return parseCustomPropColon(ns, name);
-          }
-
-          case CSS_COLON -> {
-            final String name;
-            name = text.substring(hyphen, idx);
-
-            return parseCustomPropValue(ns, name);
-          }
-
-          case CSS_REV_SOLIDUS -> throw error(UNSUPPORTED_ESCAPE);
-
-          case CSS_NON_ASCII -> throw error(UNSUPPORTED_NON_ASCII);
-
-          case CSS_EOF -> throw error("EOF while parsing a --variable name");
-
-          default -> throw error("--variable name contains the invalid character " + c);
-        }
-      }
-    }
-
-    private Syntax parseCustomPropColon(String ns, String name) {
-      while (true) {
-        switch (nextTest()) {
-          case CSS_WS -> {
-            continue;
-          }
-
-          case CSS_COLON -> {
-            return parseCustomPropValue(ns, name);
-          }
-
-          default -> throw error("Declaration with no ':' colon character");
-        }
-      }
-    }
-
-    private Syntax parseCustomPropValue(String ns, String name) {
-      sb.setLength(0);
-
-      while (true) {
-        switch (nextTest()) {
-          case CSS_WS -> {
-            continue;
-          }
-
-          case CSS_SEMICOLON -> throw error("--variable with an empty value");
-
-          case CSS_EOF -> throw error("EOF while parsing a --variable value");
-
-          default -> {
-            sb.append(c);
-
-            return parseCustomPropValueChar(ns, name);
-          }
-        }
-      }
-    }
-
-    private Syntax parseCustomPropValueChar(String ns, String name) {
-      int ws;
-      ws = 0;
-
-      while (true) {
-        switch (nextTest()) {
-          case CSS_WS -> ws++;
-
-          case CSS_SEMICOLON -> {
-            final String value;
-            value = sb.toString();
-
-            if ("--rx".equals(name)) {
-              return themeProp("rx", "", value);
-            }
-
-            if (ns != null && NAMESPACES.contains(ns)) {
-              final int beginIndex;
-              beginIndex = 2 + ns.length() + 1;
-
-              final String id;
-              id = name.substring(beginIndex);
-
-              return themeProp(ns, id, value);
-            }
-
-            return customProp(name, value);
-          }
-
-          case CSS_EOF -> throw error("EOF while parsing a --variable value");
-
-          default -> {
-            if (ws > 0) {
-              sb.append(' ');
-
-              ws = 0;
-            }
-
-            sb.append(c);
-          }
-        }
-      }
-    }
-
-    private Syntax parseNsGlobal(int hyphen) {
-      while (true) {
-        switch (nextTest()) {
-          case CSS_WS -> {
-            continue;
-          }
-
-          case CSS_COLON -> {
-            return parseNsInitial("*");
-          }
-
-          default -> throw error("Expected the global namespace '--*'");
-        }
-      }
-    }
-
-    private Syntax parseNsInitial(String ns) {
-      while (true) {
-        switch (nextTest()) {
-          case CSS_WS -> {
-            continue;
-          }
-
-          case CSS_IDENT_START -> {
-            return parseNsInitialChar(ns);
-          }
-
-          default -> throw error("Expected the keyword 'initial'");
-        }
-      }
-    }
-
-    private Syntax parseNsInitialChar(String ns) {
-      final int firstChar;
-      firstChar = idx;
-
-      while (true) {
-        switch (nextTest()) {
-          case CSS_SEMICOLON -> {
-            final String raw;
-            raw = text.substring(firstChar, idx);
-
-            final String kw;
-            kw = raw.strip();
-
-            if (!"initial".equals(kw)) {
-              throw error("Expected the keyword 'initial'");
-            }
-
-            return systemSkip(ns);
-          }
-
-          case CSS_WS, CSS_IDENT_START -> {
-            continue;
-          }
-
-          default -> throw error("Expected the keyword 'initial'");
-        }
-      }
-    }
-
-    private static final String UNSUPPORTED_AT_RULE = "The @keyframes and @media at-rules are currently supported";
-
-    private Syntax parseAt() {
-      final int at;
-      at = idx;
-
-      while (true) {
-        switch (nextTest()) {
-          case CSS_WS -> {
-            final String name;
-            name = text.substring(at, idx);
-
-            if ("@keyframes".equals(name)) {
-              return parseKeyframes();
-            }
-
-            throw error(UNSUPPORTED_AT_RULE);
-          }
-
-          case CSS_IDENT_START, CSS_HYPHEN -> {
-            continue;
-          }
-
-          default -> throw error(UNSUPPORTED_AT_RULE);
-        }
-      }
-    }
-
-    private Syntax parseKeyframes() {
-      while (true) {
-        switch (nextTest()) {
-          case CSS_WS -> {
-            continue;
-          }
-
-          case CSS_IDENT_START -> {
-            return parseKeyframesId();
-          }
-
-          default -> throw error("Expected the start of a @keyframes name");
-        }
-      }
-    }
-
-    private Syntax parseKeyframesId() {
-      final int firstChar;
-      firstChar = idx;
-
-      while (true) {
-        switch (nextTest()) {
-          case CSS_WS -> {
-            final String name;
-            name = text.substring(firstChar, idx);
-
-            return parseKeyframesBodySep(name);
-          }
-
-          case CSS_LCURLY -> {
-            final String name;
-            name = text.substring(firstChar, idx);
-
-            return parseKeyframesBody(name);
-          }
-
-          case CSS_IDENT_START, CSS_IDENT, CSS_HYPHEN -> {
-            continue;
-          }
-
-          case CSS_REV_SOLIDUS -> throw error(UNSUPPORTED_ESCAPE);
-
-          case CSS_NON_ASCII -> throw error(UNSUPPORTED_NON_ASCII);
-
-          case CSS_EOF -> throw error("EOF while parsing a @keyframes name");
-
-          default -> throw error("Invalid @keyframes name");
-        }
-      }
-    }
-
-    private Syntax parseKeyframesBodySep(String name) {
-      while (true) {
-        switch (nextTest()) {
-          case CSS_WS -> {
-            continue;
-          }
-
-          case CSS_LCURLY -> {
-            return parseKeyframesBody(name);
-          }
-
-          default -> throw error("Expected @keyframes '{' separator");
-        }
-      }
-    }
-
-    private static final String EOF_KEYFRAMES = "EOF while parsing a @keyframes declaration";
-
-    private Syntax parseKeyframesBody(String name) {
-      final List<ParsedRule> rules;
-      rules = new ArrayList<>();
-
-      outer: while (true) {
-        switch (nextTest()) {
-          case CSS_WS -> {
-            continue;
-          }
-
-          case CSS_RCURLY -> {
-            break outer;
-          }
-
-          case CSS_IDENT_START -> {
-            final ParsedRule rule;
-            rule = parseKeyframesRule(CSS_IDENT_START);
-
-            rules.add(rule);
-          }
-
-          case CSS_IDENT -> {
-            final ParsedRule rule;
-            rule = parseKeyframesRule(CSS_IDENT);
-
-            rules.add(rule);
-          }
-
-          case CSS_EOF -> throw error(EOF_KEYFRAMES);
-
-          default -> throw error("Expected the start of a @keyframes rule: from, to or <percentage>");
-        }
-      }
-
-      return new Keyframes(
-          name,
-
-          List.copyOf(rules)
-      );
-    }
-
-    private ParsedRule parseKeyframesRule(byte test) {
-      final String selector;
-      selector = parseKeyframesSelector(test);
-
-      final List<Decl> decls;
-      decls = parseDecls();
-
-      return new ParsedRule(selector, decls);
-    }
-
-    private String parseKeyframesSelector(byte test) {
-      sb.setLength(0);
-
-      while (true) {
-        switch (test) {
-          case CSS_IDENT_START -> {
-            test = parseKeyframesKeyword();
-          }
-
-          case CSS_IDENT -> {
-            test = parseKeyframesPercentage();
-          }
-
-          case CSS_LCURLY -> {
-            return sb.toString();
-          }
-
-          default -> throw error("Expected valid @keyframes declaration");
-        }
-      }
-    }
-
-    private byte parseKeyframesKeyword() {
-      final int start;
-      start = idx;
-
-      while (true) {
-        switch (nextTest()) {
-          case CSS_WS -> {
-            sb.append(text, start, idx);
-
-            return parseKeyframesSep();
-          }
-
-          case CSS_LCURLY -> {
-            sb.append(text, start, idx);
-
-            return CSS_LCURLY;
-          }
-
-          case CSS_IDENT_START -> {
-            continue;
-          }
-
-          case CSS_REV_SOLIDUS -> throw error(UNSUPPORTED_ESCAPE);
-
-          case CSS_NON_ASCII -> throw error(UNSUPPORTED_NON_ASCII);
-
-          case CSS_EOF -> throw error(EOF_KEYFRAMES);
-
-          default -> throw error("Expected valid @keyframes declaration");
-        }
-      }
-    }
-
-    private byte parseKeyframesPercentage() {
-      final int start;
-      start = idx;
-
-      while (true) {
-        switch (nextTest()) {
-          case CSS_PERCENT -> {
-            sb.append(text, start, idx + 1);
-
-            return parseKeyframesSep();
-          }
-
-          case CSS_IDENT -> {
-            continue;
-          }
-
-          case CSS_EOF -> throw error(EOF_KEYFRAMES);
-
-          default -> throw error("Expected valid @keyframes declaration");
-        }
-      }
-    }
-
-    private byte parseKeyframesSep() {
-      while (true) {
-        switch (nextTest()) {
-          case CSS_WS -> {
-            continue;
-          }
-
-          case CSS_LCURLY -> {
-            return CSS_LCURLY;
-          }
-
-          case CSS_EOF -> throw error(EOF_KEYFRAMES);
-
-          default -> throw error("Expected valid @keyframes declaration");
-        }
-      }
-    }
-
-    private static final String EOF_DECLS = "EOF while parsing rule declarations";
-
-    private List<Decl> parseDecls() {
+    public final List<Decl> parseDecls() {
       final List<Decl> decls;
       decls = new ArrayList<>();
 
@@ -837,23 +333,17 @@ final class CssEngine2 implements Css.Engine {
             decl = parseDecl();
 
             decls.add(decl);
-
-            if (test == CSS_RCURLY) {
-              break loop;
-            }
           }
 
-          case CSS_RCURLY -> {
+          case CSS_EOF -> {
             break loop;
           }
 
-          case CSS_EOF -> throw error(EOF_DECLS);
-
-          default -> throw error("Expected start of a CSS property");
+          default -> throw error("");
         }
       }
 
-      return List.copyOf(decls);
+      return decls;
     }
 
     private Decl parseDecl() {
@@ -875,6 +365,20 @@ final class CssEngine2 implements Css.Engine {
           case CSS_WS -> {
             final String name;
             name = text.substring(start, idx);
+
+            final byte colon;
+            colon = nextWhile(CSS_WS);
+
+            if (colon != CSS_COLON) {
+              throw error("Expected ':' after a CSS property name");
+            }
+
+            return name;
+          }
+
+          case CSS_ASTERISK -> {
+            final String name;
+            name = text.substring(start, idx + 1);
 
             final byte colon;
             colon = nextWhile(CSS_WS);
@@ -961,6 +465,160 @@ final class CssEngine2 implements Css.Engine {
       }
     }
 
+    public final String parseIden() {
+      sb.setLength(0);
+
+      while (true) {
+        switch (nextTest()) {
+          case CSS_WS -> {
+            continue;
+          }
+
+          case CSS_IDENT_START -> {
+            sb.append(c);
+
+            return parseIdenChar();
+          }
+
+          case CSS_REV_SOLIDUS -> throw error(UNSUPPORTED_ESCAPE);
+
+          case CSS_NON_ASCII -> throw error(UNSUPPORTED_NON_ASCII);
+
+          case CSS_EOF -> throw error("Empty or blank identifier");
+
+          default -> throw error("Invalid CSS identifier");
+        }
+      }
+    }
+
+    private String parseIdenChar() {
+      while (true) {
+        switch (nextTest()) {
+          case CSS_WS -> {
+            return parseIdenTrim();
+          }
+
+          case CSS_IDENT_START, CSS_IDENT, CSS_HYPHEN -> {
+            sb.append(c);
+          }
+
+          case CSS_REV_SOLIDUS -> throw error(UNSUPPORTED_ESCAPE);
+
+          case CSS_NON_ASCII -> throw error(UNSUPPORTED_NON_ASCII);
+
+          case CSS_EOF -> {
+            return sb.toString();
+          }
+
+          default -> throw error("Invalid CSS identifier");
+        }
+      }
+    }
+
+    private String parseIdenTrim() {
+      while (true) {
+        switch (nextTest()) {
+          case CSS_WS -> {
+            continue;
+          }
+
+          case CSS_EOF -> {
+            return sb.toString();
+          }
+
+          default -> throw error("Invalid CSS identifier");
+        }
+      }
+    }
+
+    private static final String INVALID_KF_SEL = "Invalid @keyframes selector";
+
+    public final String parseKfSelector() {
+      sb.setLength(0);
+
+      while (true) {
+        switch (nextTest()) {
+          case CSS_WS -> {
+            continue;
+          }
+
+          case CSS_IDENT -> {
+            sb.append(c);
+
+            return parseKfSelectorPerc();
+          }
+
+          case CSS_IDENT_START -> {
+            sb.append(c);
+
+            return parseKfSelectorKw();
+          }
+
+          case CSS_REV_SOLIDUS -> throw error(UNSUPPORTED_ESCAPE);
+
+          case CSS_NON_ASCII -> throw error(UNSUPPORTED_NON_ASCII);
+
+          case CSS_EOF -> throw error("Empty or blank selector");
+
+          default -> throw error(INVALID_KF_SEL);
+        }
+      }
+    }
+
+    private String parseKfSelectorPerc() {
+      while (true) {
+        switch (nextTest()) {
+          case CSS_IDENT -> {
+            sb.append(c);
+          }
+
+          case CSS_PERCENT -> {
+            sb.append(c);
+
+            return parseKfSelectorTrim();
+          }
+
+          default -> throw error(INVALID_KF_SEL);
+        }
+      }
+    }
+
+    private String parseKfSelectorKw() {
+      while (true) {
+        switch (nextTest()) {
+          case CSS_WS -> {
+            return parseKfSelectorTrim();
+          }
+
+          case CSS_IDENT_START -> {
+            sb.append(c);
+          }
+
+          case CSS_EOF -> {
+            return sb.toString();
+          }
+
+          default -> throw error(INVALID_KF_SEL);
+        }
+      }
+    }
+
+    private String parseKfSelectorTrim() {
+      while (true) {
+        switch (nextTest()) {
+          case CSS_WS -> {
+            continue;
+          }
+
+          case CSS_EOF -> {
+            return sb.toString();
+          }
+
+          default -> throw error("Invalid @keyframes selector");
+        }
+      }
+    }
+
     private IllegalArgumentException error(String message) {
       return new IllegalArgumentException(message);
     }
@@ -971,17 +629,10 @@ final class CssEngine2 implements Css.Engine {
 
         c = text.charAt(idx);
 
-        return test = c < 128 ? CSS[c] : CSS_NON_ASCII;
+        return c < 128 ? CSS[c] : CSS_NON_ASCII;
       } else {
-        return test = CSS_EOF;
+        return CSS_EOF;
       }
-    }
-
-    private boolean nextTest(byte expected) {
-      final byte test;
-      test = nextTest();
-
-      return test == expected;
     }
 
     private byte nextWhile(byte condition) {
@@ -996,19 +647,8 @@ final class CssEngine2 implements Css.Engine {
 
   }
 
-  static void parse(List<Syntax> result, String text) {
-    final SyntaxParser parser;
-    parser = new SyntaxParser(text);
-
-    parser.parseTo(result);
-  }
-
   // ##################################################################
-  // # END: Syntax: Parser
-  // ##################################################################
-
-  // ##################################################################
-  // # END: Syntax
+  // # END: Declaration
   // ##################################################################
 
   // ##################################################################
@@ -1131,70 +771,66 @@ final class CssEngine2 implements Css.Engine {
   // ##################################################################
 
   // ##################################################################
-  // # BEGIN: Theme Section
+  // # BEGIN: Keyframes
   // ##################################################################
 
-  static final class PDecl {
-    final String property;
-    final String value;
-    boolean marked;
-    PDecl next;
-
-    PDecl(String property, String value) {
-      this.property = property;
-      this.value = value;
+  record Keyframes(String name, List<ParsedRule> rules) implements Comparable<Keyframes> {
+    @Override
+    public final int compareTo(Keyframes o) {
+      return name.compareTo(o.name);
     }
+  }
 
-    PDecl(CustomProp prop) {
-      property = prop.name;
+  static Keyframes keyframes(String name, List<ParsedRule> rules) {
+    return new Keyframes(name, rules);
+  }
 
-      value = prop.value;
+  record ParsedRule(String selector, List<Decl> decls) {}
 
-      marked = true;
-    }
+  static ParsedRule parsedRule(String s, List<Decl> d) {
+    return new ParsedRule(s, d);
+  }
 
-    PDecl(ThemeProp prop) {
-      property = prop.name;
+  static final class KeyframesBuilder implements Css.Engine.Keyframes {
 
-      value = prop.value;
+    private final String name;
+
+    private final List<ParsedRule> rules = new ArrayList<>();
+
+    KeyframesBuilder(String name) {
+      this.name = name;
     }
 
     @Override
-    public final boolean equals(Object obj) {
-      return obj == this || obj instanceof PDecl that
-          && property.equals(that.property)
-          && value.equals(that.value);
+    public final void add(String selector, String value) {
+      selector = Objects.requireNonNull(selector, "selector == null");
+      value = Objects.requireNonNull(value, "value == null");
+
+      final CssParser selParser;
+      selParser = new CssParser(selector);
+
+      selector = selParser.parseKfSelector();
+
+      final CssParser declsParser;
+      declsParser = new CssParser(value);
+
+      final List<Decl> decls;
+      decls = declsParser.parseDecls();
+
+      final ParsedRule rule;
+      rule = new ParsedRule(selector, decls);
+
+      rules.add(rule);
     }
 
-    final void append(PDecl decl) {
-      if (next == null) {
-        next = decl;
-      } else {
-        next.append(decl);
-      }
+    final Keyframes build() {
+      return new Keyframes(name, rules);
     }
 
-    final void mark() {
-      marked = true;
-
-      if (next != null) {
-        next.mark();
-      }
-    }
-  }
-
-  static PDecl pdecl(String p, String v) {
-    return new PDecl(p, v);
-  }
-
-  record PSection(List<String> selector, List<PDecl> decls) {}
-
-  static PSection psection(List<String> selector, List<PDecl> decls) {
-    return new PSection(selector, decls);
   }
 
   // ##################################################################
-  // # END: Theme Section
+  // # END: Keyframes
   // ##################################################################
 
   // ##################################################################
@@ -1203,15 +839,17 @@ final class CssEngine2 implements Css.Engine {
 
   static final class Configuring {
 
-    private final Note.Ref2<Value, Value> $replaced = Note.Ref2.create(getClass(), "REP", Note.INFO);
+    private final Note.Ref2<Decl, Decl> $replaced = Note.Ref2.create(getClass(), "REP", Note.INFO);
 
-    private final Map<List<String>, List<Syntax>> atRules = new LinkedHashMap<>();
+    private final Map<List<String>, List<Decl>> atRules = new LinkedHashMap<>();
+
+    private final List<ParsedRule> components = new ArrayList<>();
 
     private final Map<String, Keyframes> keyframes = new HashMap<>();
 
-    private final Map<String, PDecl> keywords = new HashMap<>();
+    private final Map<String, Decl> keywords = new HashMap<>();
 
-    private final Map<String, Map<String, Value>> namespaces = new LinkedHashMap<>();
+    private final Map<String, Map<String, Decl>> namespaces = new LinkedHashMap<>();
 
     private Note.Sink noteSink = Note.NoOpSink.INSTANCE;
 
@@ -1221,7 +859,7 @@ final class CssEngine2 implements Css.Engine {
 
     private Set<Class<?>> scanJars = Set.of();
 
-    private final List<PSection> sections = new ArrayList<>();
+    private final List<Section> sections = new ArrayList<>();
 
     private final String systemBase;
 
@@ -1231,38 +869,36 @@ final class CssEngine2 implements Css.Engine {
       this.systemBase = system.base;
 
       // parse system theme
-      final List<Syntax> parsed;
-      parsed = new ArrayList<>();
+      final CssParser parser;
+      parser = new CssParser(system.theme);
 
-      parse(parsed, system.theme);
+      final List<Decl> parsed;
+      parsed = parser.parseDecls();
 
       // map to namespace
-      for (Syntax value : parsed) {
-        switch (value) {
-          case CustomProp prop -> throw new IllegalArgumentException(
-              "Arbitrary custom props are not allowed in the system theme"
-          );
+      for (Decl decl : parsed) {
+        final String property;
+        property = decl.property;
 
-          case SystemSkip skip -> throw new IllegalArgumentException(
-              "The '--<namespace>: initial;' syntax is not allowed in the system theme"
-          );
+        if (!property.startsWith("--")) {
+          throw decl.invalid("The system theme must only contain custom properties");
+        }
 
-          case ThemeProp prop -> {
-            final String ns;
-            ns = prop.ns;
+        if (property.endsWith("*")) {
+          throw decl.invalid("The '--<namespace>-*: initial;' syntax is not allowed in the system theme");
+        }
 
-            final Map<String, Value> values;
-            values = namespaces.computeIfAbsent(ns, key -> new LinkedHashMap<>());
+        final String ns;
+        ns = decl.ns();
 
-            final Value existing;
-            existing = values.put(prop.name, prop);
+        final Map<String, Decl> values;
+        values = namespaces.computeIfAbsent(ns, key -> new LinkedHashMap<>());
 
-            if (existing != null) {
-              noteSink.send($replaced, existing, prop);
-            }
-          }
+        final Decl existing;
+        existing = values.put(property, decl);
 
-          case Keyframes kf -> throw new UnsupportedOperationException("Implement me");
+        if (existing != null) {
+          noteSink.send($replaced, existing, decl);
         }
       }
 
@@ -1314,68 +950,68 @@ final class CssEngine2 implements Css.Engine {
       final String text;
       text = Objects.requireNonNull(value, "value == null");
 
-      final List<Syntax> parsed;
-      parsed = new ArrayList<>();
+      // parse
+      final CssParser parser;
+      parser = new CssParser(text);
 
-      parse(parsed, text);
+      final List<Decl> parsed;
+      parsed = parser.parseDecls();
 
       // process any system skip
-      for (Syntax v : parsed) {
-        if (v instanceof SystemSkip skip) {
-          final String ns;
-          ns = skip.ns;
+      for (Decl decl : parsed) {
+        final String property;
+        property = decl.property;
 
-          if ("*".equals(ns)) {
-            namespaces.clear();
-          } else {
-            namespaces.remove(ns);
+        if (!property.startsWith("--")) {
+          throw decl.invalid("Expected a custom property");
+        }
+
+        if (!property.endsWith("*")) {
+          continue;
+        }
+
+        if (property.equals("--*")) {
+          namespaces.clear();
+        } else {
+          final int firstChar;
+          firstChar = 2;
+
+          final int hyphen;
+          hyphen = property.indexOf('-', firstChar);
+
+          if (hyphen < 0) {
+            throw decl.invalid(
+                "The '*' special syntax can only be used with the global ns '--*' or with a named ns, e.g., '--color-*"
+            );
           }
+
+          final String ns;
+          ns = property.substring(firstChar, hyphen);
+
+          namespaces.remove(ns);
         }
       }
 
       // map to namespace
-      for (Syntax v : parsed) {
-        switch (v) {
-          case CustomProp prop -> {
-            final Map<String, Value> values;
-            values = namespaces.computeIfAbsent("custom", key -> new LinkedHashMap<>());
+      for (Decl decl : parsed) {
+        final String property;
+        property = decl.property;
 
-            final Value existing;
-            existing = values.put(prop.name, prop);
+        if (property.endsWith("*")) {
+          continue;
+        }
 
-            if (existing != null) {
-              noteSink.send($replaced, existing, prop);
-            }
-          }
+        final String ns;
+        ns = decl.ns();
 
-          case SystemSkip skip -> {}
+        final Map<String, Decl> values;
+        values = namespaces.computeIfAbsent(ns, key -> new LinkedHashMap<>());
 
-          case ThemeProp prop -> {
-            final String ns;
-            ns = prop.ns;
+        final Decl existing;
+        existing = values.put(property, decl);
 
-            final Map<String, Value> values;
-            values = namespaces.computeIfAbsent(ns, key -> new LinkedHashMap<>());
-
-            final Value existing;
-            existing = values.put(prop.name, prop);
-
-            if (existing != null) {
-              noteSink.send($replaced, existing, prop);
-            }
-          }
-
-          case Keyframes kf -> {
-            final String name;
-            name = kf.name;
-
-            final Keyframes existing;
-            existing = keyframes.put(name, kf);
-
-            if (existing != null) {
-              throw new IllegalArgumentException("Duplicate @keyframes named " + name);
-            }
-          }
+        if (existing != null) {
+          noteSink.send($replaced, existing, decl);
         }
       }
     }
@@ -1389,52 +1025,77 @@ final class CssEngine2 implements Css.Engine {
         throw new IllegalArgumentException("Only @media at-rules are currently supported");
       }
 
-      // validate and parse declarations
+      // parse declarations
       final String text;
       text = Objects.requireNonNull(value, "value == null");
 
-      final List<Syntax> parsed;
-      parsed = new ArrayList<>();
+      final CssParser parser;
+      parser = new CssParser(text);
 
-      parse(parsed, text);
+      final List<Decl> parsed;
+      parsed = parser.parseDecls();
 
-      for (Syntax v : parsed) {
-        switch (v) {
-          case CustomProp prop -> {
-            for (Map<String, Value> map : namespaces.values()) {
-              if (!map.containsKey(prop.name)) {
-                throw new IllegalArgumentException(
-                    "The " + prop.name + " property was not declared in the theme :root section"
-                );
-              }
-            }
-          }
+      // validate
+      for (Decl decl : parsed) {
+        final String property;
+        property = decl.property;
 
-          case SystemSkip skip -> throw new IllegalArgumentException(
-              "The '--<namespace>: initial;' syntax is not allowed in a theme at-rule"
-          );
+        if (!property.startsWith("--")) {
+          throw decl.invalid("Expected a custom property");
+        }
 
-          case ThemeProp prop -> {
-            for (Map<String, Value> map : namespaces.values()) {
-              if (!map.containsKey(prop.name)) {
-                throw new IllegalArgumentException(
-                    "The " + prop.name + " property was not declared in the theme :root section"
-                );
-              }
-            }
-          }
+        if (property.endsWith("*")) {
+          throw decl.invalid("The '--<namespace>-*: initial;' syntax is not allowed in a theme at-rule");
+        }
 
-          case Keyframes kf -> throw new UnsupportedOperationException("Implement me");
+        final String ns;
+        ns = decl.ns();
+
+        final Map<String, Decl> map;
+        map = namespaces.get(ns);
+
+        if (map == null || !map.containsKey(property)) {
+          throw decl.invalid("Theme at-rule properties must be declared in the theme :root section");
         }
       }
 
       final List<String> selector;
       selector = List.of(trimmed);
 
-      final List<Syntax> values;
+      final List<Decl> values;
       values = atRules.computeIfAbsent(selector, key -> new ArrayList<>());
 
       values.addAll(parsed);
+    }
+
+    public final void component(String selector, String value) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    public final void keyframes(String name, Consumer<? super Css.Engine.Keyframes> frames) {
+      name = Objects.requireNonNull(name, "name == null");
+
+      final CssParser nameParser;
+      nameParser = new CssParser(name);
+
+      name = nameParser.parseIden();
+
+      final KeyframesBuilder builder;
+      builder = new KeyframesBuilder(name);
+
+      frames.accept(builder);
+
+      final Keyframes kf;
+      kf = builder.build();
+
+      final Keyframes existing;
+      existing = keyframes.put(kf.name, kf);
+
+      if (existing != null) {
+        throw new IllegalArgumentException(
+            "Duplicate @keyframes named " + kf.name
+        );
+      }
     }
 
     public final Config configure() {
@@ -1444,6 +1105,8 @@ final class CssEngine2 implements Css.Engine {
 
       return new Config(
           systemBase,
+
+          List.copyOf(components),
 
           Map.copyOf(keyframes),
 
@@ -1473,18 +1136,28 @@ final class CssEngine2 implements Css.Engine {
       final String ns;
       ns = "breakpoint";
 
-      final Map<String, Value> values;
-      values = namespaces.getOrDefault(ns, Map.of());
+      final Map<String, Decl> namespace;
+      namespace = namespaces.getOrDefault(ns, Map.of());
 
-      for (Value breakpoint : values.values()) {
-        final ThemeProp var;
-        var = (ThemeProp) breakpoint;
+      final Collection<Decl> breakpoints;
+      breakpoints = namespace.values();
+
+      if (breakpoints.isEmpty()) {
+        return;
+      }
+
+      final int len;
+      len = "--breakpoint-".length();
+
+      for (Decl breakpoint : breakpoints) {
+        final String property;
+        property = breakpoint.property;
 
         final String id;
-        id = var.id;
+        id = property.substring(len);
 
         final Variant variant;
-        variant = simple("@media (min-width: " + var.value + ")");
+        variant = simple("@media (min-width: " + breakpoint.value + ")");
 
         variant(id, variant);
       }
@@ -1502,121 +1175,113 @@ final class CssEngine2 implements Css.Engine {
     }
 
     private void themeArtifacts() {
-      // sort values
-      final List<Value> values;
-      values = new ArrayList<>();
+      // :root
+      final List<Decl> decls;
+      decls = new ArrayList<>();
 
-      for (Map<String, Value> map : namespaces.values()) {
-        for (Value value : map.values()) {
-          if (value instanceof SystemSkip) {
+      for (Map.Entry<String, Map<String, Decl>> entry : namespaces.entrySet()) {
+        final String ns;
+        ns = entry.getKey();
+
+        final int beginIndex;
+        beginIndex = 2 + ns.length() + 1; // -- <ns> -
+
+        final Map<String, Decl> map;
+        map = entry.getValue();
+
+        for (Decl decl : map.values()) {
+          decls.add(decl);
+
+          final String property;
+          property = decl.property;
+
+          final int length;
+          length = property.length();
+
+          if (beginIndex >= length) {
             continue;
           }
 
-          values.add(value);
-        }
-      }
+          final String id;
+          id = property.substring(beginIndex);
 
-      // :root
-      final List<PDecl> decls;
-      decls = new ArrayList<>();
+          final String key;
 
-      for (Value value : values) {
-        switch (value) {
-          case CustomProp prop -> decls.add(
-              new PDecl(prop)
-          );
-
-          case ThemeProp prop -> {
-            final PDecl decl;
-            decl = new PDecl(prop);
-
-            decls.add(decl);
-
-            final String id;
-            id = prop.id;
-
-            if (id.isEmpty()) {
-              continue;
-            }
-
-            final String ns;
-            ns = prop.ns;
-
-            final String key;
-
-            if ("breakpoint".equals(ns)) {
-              key = "screen-" + id;
-            } else {
-              key = id;
-            }
-
-            final PDecl maybeExisting;
-            maybeExisting = keywords.put(key, decl);
-
-            if (maybeExisting != null) {
-              throw new IllegalArgumentException("Duplicate mapping for " + key + ": " + maybeExisting.value + ", " + prop.value);
-            }
+          if ("breakpoint".equals(ns)) {
+            key = "screen-" + id;
+          } else {
+            key = id;
           }
 
-          default -> {}
+          final Decl maybeExisting;
+          maybeExisting = keywords.put(key, decl);
+
+          if (maybeExisting != null) {
+            decl.invalid("Duplicate declaration with existing value " + maybeExisting.value);
+          }
         }
       }
 
       final List<String> rootSel;
       rootSel = List.of();
 
-      final List<PDecl> rootDecls;
+      final List<Decl> rootDecls;
       rootDecls = List.copyOf(decls);
 
-      final PSection root;
-      root = new PSection(rootSel, rootDecls);
+      final Section root;
+      root = new Section(rootSel, rootDecls);
 
       sections.add(root);
 
       // non :root
-      for (Map.Entry<List<String>, List<Syntax>> entry : atRules.entrySet()) {
-        final List<Syntax> list;
+      for (Map.Entry<List<String>, List<Decl>> entry : atRules.entrySet()) {
+        final List<Decl> list;
         list = entry.getValue();
 
         decls.clear();
 
-        for (Syntax value : list) {
-          switch (value) {
-            case CustomProp prop -> decls.add(
-                new PDecl(prop)
-            );
+        for (Decl decl : list) {
+          decls.add(decl);
 
-            case SystemSkip skip -> {}
+          final String property;
+          property = decl.property;
 
-            case ThemeProp prop -> {
-              final PDecl decl;
-              decl = new PDecl(prop);
+          final int firstChar;
+          firstChar = 2;
 
-              decls.add(decl);
+          final int hyphen;
+          hyphen = property.indexOf('-', firstChar);
 
-              final String kw;
-              kw = prop.id;
+          if (hyphen < 0) {
+            continue;
+          }
 
-              final PDecl existing;
-              existing = keywords.get(kw);
+          final int beginIndex;
+          beginIndex = hyphen + 1;
 
-              if (existing != null) {
-                existing.append(decl);
-              }
-            }
+          if (beginIndex >= property.length()) {
+            continue;
+          }
 
-            case Keyframes kf -> throw new UnsupportedOperationException("Implement me");
+          final String id;
+          id = property.substring(beginIndex);
+
+          final Decl existing;
+          existing = keywords.get(id);
+
+          if (existing != null) {
+            existing.append(decl);
           }
         }
 
         final List<String> sel;
         sel = entry.getKey();
 
-        final List<PDecl> thisDecls;
+        final List<Decl> thisDecls;
         thisDecls = List.copyOf(decls);
 
-        final PSection section;
-        section = new PSection(sel, thisDecls);
+        final Section section;
+        section = new Section(sel, thisDecls);
 
         sections.add(section);
       }
@@ -1654,6 +1319,16 @@ final class CssEngine2 implements Css.Engine {
     configuring.theme(atRule, value);
   }
 
+  @Override
+  public final void component(String selector, String value) {
+    configuring.component(selector, value);
+  }
+
+  @Override
+  public final void keyframes(String name, Consumer<? super Css.Engine.Keyframes> frames) {
+    configuring.keyframes(name, frames);
+  }
+
   // ##################################################################
   // # END: Configuring
   // ##################################################################
@@ -1666,9 +1341,11 @@ final class CssEngine2 implements Css.Engine {
 
       String base,
 
+      List<ParsedRule> components,
+
       Map<String, Keyframes> keyframes,
 
-      Map<String, PDecl> keywords,
+      Map<String, Decl> keywords,
 
       Note.Sink noteSink,
 
@@ -1680,7 +1357,7 @@ final class CssEngine2 implements Css.Engine {
 
       Set<Class<?>> scanJars,
 
-      List<PSection> sections,
+      List<Section> sections,
 
       Map<String, Variant> variants
 
@@ -2452,17 +2129,17 @@ final class CssEngine2 implements Css.Engine {
 
     final Map<String, Keyframes> keyframesMarked = new HashMap<>();
 
-    final Map<String, PDecl> keywords;
+    final Map<String, Decl> keywords;
 
     final List<Rule> rules = new ArrayList<>();
 
-    final List<PSection> sections;
+    final List<Section> sections;
 
     final StringBuilder sb = new StringBuilder();
 
     final List<Utility> utilities;
 
-    Gen(Map<String, Keyframes> keyframes, Map<String, PDecl> keywords, List<PSection> sections, List<Utility> utilities) {
+    Gen(Map<String, Keyframes> keyframes, Map<String, Decl> keywords, List<Section> sections, List<Utility> utilities) {
       this.keyframes = keyframes;
 
       this.keywords = keywords;
@@ -2649,7 +2326,7 @@ final class CssEngine2 implements Css.Engine {
           maybe = value.substring(beginIndex, index);
 
           // check for match
-          final PDecl kw;
+          final Decl kw;
           kw = keywords.get(maybe);
 
           if (kw == null) {
@@ -2671,7 +2348,7 @@ final class CssEngine2 implements Css.Engine {
           maybe = value.substring(beginIndex, slashIndex);
 
           // check for match
-          final PDecl kw;
+          final Decl kw;
           kw = keywords.get(maybe);
 
           if (kw == null) {
@@ -2910,28 +2587,19 @@ final class CssEngine2 implements Css.Engine {
       final List<Section> result;
       result = new ArrayList<>();
 
-      for (PSection section : sections) {
+      for (Section section : sections) {
         final List<Decl> decls;
         decls = new ArrayList<>();
 
-        final List<PDecl> original;
+        final List<Decl> original;
         original = section.decls;
 
-        for (PDecl proto : original) {
+        for (Decl proto : original) {
           if (!proto.marked) {
             continue;
           }
 
-          final String property;
-          property = proto.property;
-
-          final String value;
-          value = proto.value;
-
-          final Decl decl;
-          decl = new Decl(property, value);
-
-          decls.add(decl);
+          decls.add(proto);
         }
 
         if (decls.isEmpty()) {
@@ -3016,13 +2684,11 @@ final class CssEngine2 implements Css.Engine {
   // # BEGIN: Theme
   // ##################################################################
 
-  record Decl(String property, String value) {}
-
-  static Decl decl(String p, String v) {
-    return new Decl(p, v);
-  }
-
   record Section(List<String> selector, List<Decl> decls) {}
+
+  static Section section(List<String> s, List<Decl> d) {
+    return new Section(s, d);
+  }
 
   static final class Theme extends Writer {
 

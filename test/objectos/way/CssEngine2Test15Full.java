@@ -357,12 +357,12 @@ public class CssEngine2Test15Full {
 
     engine.theme("""
     --color-primary: #f0f0f0;
-
-    @keyframes fade-in {
-      0% { opacity: 0; }
-      100% { opacity: 1; }
-    }
     """);
+
+    engine.keyframes("fade-in", frames -> {
+      frames.add("0%", "opacity:0;");
+      frames.add("100%", "opacity:1;");
+    });
 
     engine.scanClass(Subject.class);
 

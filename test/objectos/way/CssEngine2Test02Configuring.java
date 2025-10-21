@@ -44,13 +44,14 @@ public class CssEngine2Test02Configuring {
         },
 
         c -> {
-          final CssEngine2.PDecl v;
-          v = CssEngine2.pdecl("--breakpoint-sm", "40rem");
+          final CssEngine2.Decl v;
+          v = CssEngine2.decl("--breakpoint-sm", "40rem");
 
+          assertEquals(c.keyframes(), Map.of());
           assertEquals(c.keywords(), Map.of("screen-sm", v));
           assertEquals(c.rx(), false);
           assertEquals(c.sections(), List.of(
-              CssEngine2.psection(List.of(), List.of(v))
+              CssEngine2.section(List.of(), List.of(v))
           ));
           assertEquals(c.variants(), Map.of(
               "sm", CssEngine2.simple("@media (min-width: 40rem)")
@@ -80,13 +81,14 @@ public class CssEngine2Test02Configuring {
         },
 
         c -> {
-          final CssEngine2.PDecl v;
-          v = CssEngine2.pdecl("--breakpoint-sm", "30rem");
+          final CssEngine2.Decl v;
+          v = CssEngine2.decl("--breakpoint-sm", "30rem");
 
+          assertEquals(c.keyframes(), Map.of());
           assertEquals(c.keywords(), Map.of("screen-sm", v));
           assertEquals(c.rx(), false);
           assertEquals(c.sections(), List.of(
-              CssEngine2.psection(List.of(), List.of(v))
+              CssEngine2.section(List.of(), List.of(v))
           ));
           assertEquals(c.variants(), Map.of(
               "sm", CssEngine2.simple("@media (min-width: 30rem)")
@@ -114,13 +116,14 @@ public class CssEngine2Test02Configuring {
         },
 
         c -> {
-          final CssEngine2.PDecl v;
-          v = CssEngine2.pdecl("--color-test", "#cafeba");
+          final CssEngine2.Decl v;
+          v = CssEngine2.decl("--color-test", "#cafeba");
 
+          assertEquals(c.keyframes(), Map.of());
           assertEquals(c.keywords(), Map.of("test", v));
           assertEquals(c.rx(), false);
           assertEquals(c.sections(), List.of(
-              CssEngine2.psection(List.of(), List.of(v))
+              CssEngine2.section(List.of(), List.of(v))
           ));
           assertEquals(c.variants(), Map.of());
         }
@@ -146,13 +149,14 @@ public class CssEngine2Test02Configuring {
         },
 
         c -> {
-          final CssEngine2.PDecl v;
-          v = CssEngine2.pdecl("--font-test", "'Comic Sans'");
+          final CssEngine2.Decl v;
+          v = CssEngine2.decl("--font-test", "'Comic Sans'");
 
+          assertEquals(c.keyframes(), Map.of());
           assertEquals(c.keywords(), Map.of("test", v));
           assertEquals(c.rx(), false);
           assertEquals(c.sections(), List.of(
-              CssEngine2.psection(List.of(), List.of(v))
+              CssEngine2.section(List.of(), List.of(v))
           ));
           assertEquals(c.variants(), Map.of());
         }
@@ -169,16 +173,14 @@ public class CssEngine2Test02Configuring {
         },
 
         c -> {
-          c.theme("""
-          @keyframes fade-in {
-            from {
-              opacity: 0;
-            }
-            to {
-              opacity: 1;
-            }
-          }
-          """);
+          c.keyframes("fade-in", frames -> {
+            frames.add("from", """
+            opacity: 0;
+            """);
+            frames.add("to", """
+            opacity: 1;
+            """);
+          });
         },
 
         c -> {
@@ -193,7 +195,7 @@ public class CssEngine2Test02Configuring {
           assertEquals(c.keywords(), Map.of());
           assertEquals(c.rx(), false);
           assertEquals(c.sections(), List.of(
-              CssEngine2.psection(List.of(), List.of())
+              CssEngine2.section(List.of(), List.of())
           ));
           assertEquals(c.variants(), Map.of());
         }
@@ -221,17 +223,18 @@ public class CssEngine2Test02Configuring {
         },
 
         c -> {
-          final CssEngine2.PDecl v0;
-          v0 = CssEngine2.pdecl("--color-primary", "#f0f0f0");
+          final CssEngine2.Decl v0;
+          v0 = CssEngine2.decl("--color-primary", "#f0f0f0");
 
-          final CssEngine2.PDecl v1;
-          v1 = CssEngine2.pdecl("--color-primary", "#1e1e1e");
+          final CssEngine2.Decl v1;
+          v1 = CssEngine2.decl("--color-primary", "#1e1e1e");
 
+          assertEquals(c.keyframes(), Map.of());
           assertEquals(c.keywords(), Map.of("primary", v0));
           assertEquals(c.rx(), false);
           assertEquals(c.sections(), List.of(
-              CssEngine2.psection(List.of(), List.of(v0)),
-              CssEngine2.psection(List.of(DARK), List.of(v1))
+              CssEngine2.section(List.of(), List.of(v0)),
+              CssEngine2.section(List.of(DARK), List.of(v1))
           ));
           assertEquals(c.variants(), Map.of());
         }
@@ -246,6 +249,37 @@ public class CssEngine2Test02Configuring {
     test(
         s -> {
           s.base = "";
+          s.theme = """
+          --rx: 16;
+          """;
+          s.variants = Map.of();
+        },
+
+        c -> {},
+
+        c -> {
+          final CssEngine2.Decl v;
+          v = CssEngine2.decl("--rx", "16");
+
+          assertEquals(c.keyframes(), Map.of());
+          assertEquals(c.keywords(), Map.of());
+          assertEquals(c.rx(), true);
+          assertEquals(c.sections(), List.of(
+              CssEngine2.section(List.of(), List.of(v))
+          ));
+          assertEquals(c.variants(), Map.of());
+        }
+    );
+  }
+
+  @Test(description = """
+  rx
+  - it should allow rx units
+  """)
+  public void rx02() {
+    test(
+        s -> {
+          s.base = "";
           s.theme = "";
           s.variants = Map.of();
         },
@@ -257,18 +291,53 @@ public class CssEngine2Test02Configuring {
         },
 
         c -> {
-          final CssEngine2.PDecl v;
-          v = CssEngine2.pdecl("--rx", "16");
+          final CssEngine2.Decl v;
+          v = CssEngine2.decl("--rx", "16");
 
+          assertEquals(c.keyframes(), Map.of());
           assertEquals(c.keywords(), Map.of());
           assertEquals(c.rx(), true);
           assertEquals(c.sections(), List.of(
-              CssEngine2.psection(List.of(), List.of(v))
+              CssEngine2.section(List.of(), List.of(v))
           ));
           assertEquals(c.variants(), Map.of());
         }
     );
   }
+
+  /*
+  @Test
+  public void component01() {
+    test(
+        s -> {
+          s.base = "";
+          s.theme = "";
+          s.variants = Map.of();
+        },
+
+        c -> {
+          c.component("[data-theme=g90]", """
+          --color-background: #262626;
+          """);
+        },
+
+        c -> {
+          assertEquals(c.components(), List.of(
+              CssEngine2.parsedRule("[data-theme=g90]", List.of(
+                  CssEngine2.decl("--color-background", "#262626")
+              ))
+          ));
+          assertEquals(c.keyframes(), Map.of());
+          assertEquals(c.keywords(), Map.of());
+          assertEquals(c.rx(), false);
+          assertEquals(c.sections(), List.of(
+              CssEngine2.section(List.of(), List.of())
+          ));
+          assertEquals(c.variants(), Map.of());
+        }
+    );
+  }
+  */
 
   private void test(
       Consumer<? super CssEngine2.System> systemConfig,

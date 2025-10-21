@@ -97,7 +97,7 @@ public class CssEngine2Test10Theme {
   }
 
   private CssEngine2.Section s(List<String> selector, CssEngine2.Decl... values) {
-    return new CssEngine2.Section(
+    return CssEngine2.section(
         selector,
         List.of(values)
     );

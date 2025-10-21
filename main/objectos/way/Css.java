@@ -71,16 +71,46 @@ public final class Css {
     // THEME
     //
 
-    /// Adds the specified CSS declarations to the root pseudo-class of the theme layer.
+    /// Adds the specified CSS declarations to the `:root` pseudo-class of the `theme` layer.
     ///
     /// @param value the CSS rule declarations
     void theme(String value);
 
-    /// Adds the specified CSS at-rule to the root pseudo-class of the theme layer.
+    /// Adds the specified CSS at-rule to the `:root` pseudo-class of the `theme` layer.
     ///
     /// @param atRule the CSS at-rule
     /// @param value the CSS rule declarations
     void theme(String atRule, String value);
+
+    //
+    // COMPONENTS
+    //
+
+    /// Adds the specified CSS rule to the `components` layer.
+    ///
+    /// @param selector the CSS rule selector
+    /// @param value the CSS rule declarations
+    void component(String selector, String value);
+
+    //
+    // KEYFRAMES
+    //
+
+    /// Configures the creation of a `@keyframes` at-rule.
+    sealed interface Keyframes permits CssEngine2.KeyframesBuilder {
+
+      /// Adds a single keyframe declaration to this `@keyframes` at-rule.
+      /// @param selector the keyframe selector
+      /// @param value the declarations of this keyframe
+      void add(String selector, String value);
+
+    }
+
+    /// Adds the specified `@keyframes` declaration to the generated stylesheet.
+    ///
+    /// @param name the name of the `@keyframes` definition
+    /// @param frames allows for configuring the `@keyframes` definition
+    void keyframes(String name, Consumer<? super Keyframes> frames);
 
   }
 
