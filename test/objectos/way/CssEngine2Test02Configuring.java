@@ -48,6 +48,7 @@ public class CssEngine2Test02Configuring {
           v = CssEngine2.decl("--breakpoint-sm", "40rem");
 
           assertEquals(c.components(), List.of());
+          assertEquals(c.fontFaces(), List.of());
           assertEquals(c.keyframes(), Map.of());
           assertEquals(c.keywords(), Map.of("screen-sm", v));
           assertEquals(c.rx(), false);
@@ -86,6 +87,7 @@ public class CssEngine2Test02Configuring {
           v = CssEngine2.decl("--breakpoint-sm", "30rem");
 
           assertEquals(c.components(), List.of());
+          assertEquals(c.fontFaces(), List.of());
           assertEquals(c.keyframes(), Map.of());
           assertEquals(c.keywords(), Map.of("screen-sm", v));
           assertEquals(c.rx(), false);
@@ -122,6 +124,7 @@ public class CssEngine2Test02Configuring {
           v = CssEngine2.decl("--color-test", "#cafeba");
 
           assertEquals(c.components(), List.of());
+          assertEquals(c.fontFaces(), List.of());
           assertEquals(c.keyframes(), Map.of());
           assertEquals(c.keywords(), Map.of("test", v));
           assertEquals(c.rx(), false);
@@ -156,6 +159,7 @@ public class CssEngine2Test02Configuring {
           v = CssEngine2.decl("--font-test", "'Comic Sans'");
 
           assertEquals(c.components(), List.of());
+          assertEquals(c.fontFaces(), List.of());
           assertEquals(c.keyframes(), Map.of());
           assertEquals(c.keywords(), Map.of("test", v));
           assertEquals(c.rx(), false);
@@ -189,6 +193,7 @@ public class CssEngine2Test02Configuring {
 
         c -> {
           assertEquals(c.components(), List.of());
+          assertEquals(c.fontFaces(), List.of());
           assertEquals(c.keyframes(), Map.of("fade-in", CssEngine2.keyframes("fade-in", List.of(
               CssEngine2.parsedRule("from", List.of(
                   CssEngine2.decl("opacity", "0")
@@ -235,6 +240,7 @@ public class CssEngine2Test02Configuring {
           v1 = CssEngine2.decl("--color-primary", "#1e1e1e");
 
           assertEquals(c.components(), List.of());
+          assertEquals(c.fontFaces(), List.of());
           assertEquals(c.keyframes(), Map.of());
           assertEquals(c.keywords(), Map.of("primary", v0));
           assertEquals(c.rx(), false);
@@ -268,6 +274,7 @@ public class CssEngine2Test02Configuring {
           v = CssEngine2.decl("--rx", "16");
 
           assertEquals(c.components(), List.of());
+          assertEquals(c.fontFaces(), List.of());
           assertEquals(c.keyframes(), Map.of());
           assertEquals(c.keywords(), Map.of());
           assertEquals(c.rx(), true);
@@ -302,6 +309,7 @@ public class CssEngine2Test02Configuring {
           v = CssEngine2.decl("--rx", "16");
 
           assertEquals(c.components(), List.of());
+          assertEquals(c.fontFaces(), List.of());
           assertEquals(c.keyframes(), Map.of());
           assertEquals(c.keywords(), Map.of());
           assertEquals(c.rx(), true);
@@ -333,6 +341,46 @@ public class CssEngine2Test02Configuring {
               CssEngine2.parsedRule("[data-theme=g90]", List.of(
                   CssEngine2.decl("--color-background", "#262626")
               ))
+          ));
+          assertEquals(c.fontFaces(), List.of());
+          assertEquals(c.keyframes(), Map.of());
+          assertEquals(c.keywords(), Map.of());
+          assertEquals(c.rx(), false);
+          assertEquals(c.sections(), List.of(
+              CssEngine2.section(List.of(), List.of())
+          ));
+          assertEquals(c.variants(), Map.of());
+        }
+    );
+  }
+
+  @Test
+  public void fontFace01() {
+    test(
+        s -> {
+          s.base = "";
+          s.theme = "";
+          s.variants = Map.of();
+        },
+
+        c -> {
+          c.fontFace("""
+          font-family: "IBM Plex Sans";
+          font-style: normal;
+          font-weight: 700;
+          src: local("IBM Plex Sans Bold");
+          """);
+        },
+
+        c -> {
+          assertEquals(c.components(), List.of());
+          assertEquals(c.fontFaces(), List.of(
+              List.of(
+                  CssEngine2.decl("font-family", "\"IBM Plex Sans\""),
+                  CssEngine2.decl("font-style", "normal"),
+                  CssEngine2.decl("font-weight", "700"),
+                  CssEngine2.decl("src", "local(\"IBM Plex Sans Bold\")")
+              )
           ));
           assertEquals(c.keyframes(), Map.of());
           assertEquals(c.keywords(), Map.of());

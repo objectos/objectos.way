@@ -22,14 +22,17 @@ import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class CssEngine2Test14Trailer {
 
-  @Test
-  public void testCase01() {
-    test(
-        t -> {
+  @DataProvider
+  public Object[][] writeProvider() {
+    return new Object[][] {{
+        "@keyframes",
+
+        tester(t -> {
           t.keyframes(
               "fade-in",
               CssEngine2.parsedRule("from", List.of(
@@ -39,7 +42,7 @@ public class CssEngine2Test14Trailer {
                   CssEngine2.decl("opacity", "1")
               ))
           );
-        },
+        }),
 
         """
         @keyframes fade-in {
@@ -51,12 +54,55 @@ public class CssEngine2Test14Trailer {
           }
         }
         """
-    );
+    }, {
+        "@font-face",
+
+        tester(t -> {
+          t.fontFace(
+              CssEngine2.decl("font-family", "\"IBM Plex Sans\""),
+              CssEngine2.decl("font-style", "normal"),
+              CssEngine2.decl("font-weight", "700"),
+              CssEngine2.decl("src", "local(\"IBM Plex Sans Bold\")")
+          );
+        }),
+
+        """
+        @font-face {
+          font-family: "IBM Plex Sans";
+          font-style: normal;
+          font-weight: 700;
+          src: local("IBM Plex Sans Bold");
+        }
+        """
+    }};
+  }
+
+  @Test(dataProvider = "writeProvider")
+  public void write(
+      String description,
+      @SuppressWarnings("exports") Consumer<? super Tester> test,
+      String expected) {
+    final Tester tester;
+    tester = new Tester();
+
+    test.accept(tester);
+
+    assertEquals(tester.toString(), expected);
+  }
+
+  private Consumer<Tester> tester(Consumer<Tester> tester) {
+    return tester;
   }
 
   static final class Tester {
 
+    final List<List<CssEngine2.Decl>> fontFaces = new ArrayList<>();
+
     final List<CssEngine2.Keyframes> keyframes = new ArrayList<>();
+
+    final void fontFace(CssEngine2.Decl... decls) {
+      fontFaces.add(List.of(decls));
+    }
 
     final void keyframes(String name, CssEngine2.ParsedRule... rules) {
       keyframes.add(
@@ -75,7 +121,7 @@ public class CssEngine2Test14Trailer {
         out = new StringBuilder();
 
         final CssEngine2.Trailer w;
-        w = new CssEngine2.Trailer(keyframes);
+        w = new CssEngine2.Trailer(fontFaces, keyframes);
 
         w.write(out);
 
@@ -85,15 +131,6 @@ public class CssEngine2Test14Trailer {
       }
     }
 
-  }
-
-  private void test(Consumer<? super Tester> test, String expected) {
-    final Tester tester;
-    tester = new Tester();
-
-    test.accept(tester);
-
-    assertEquals(tester.toString(), expected);
   }
 
 }

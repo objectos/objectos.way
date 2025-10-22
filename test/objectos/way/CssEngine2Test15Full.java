@@ -428,4 +428,46 @@ public class CssEngine2Test15Full {
     );
   }
 
+  @Test(description = """
+  font-face
+  """)
+  public void testCase10() throws IOException {
+    final CssEngine2.System system;
+    system = new CssEngine2.System();
+
+    system.base = "";
+
+    system.theme = "";
+
+    final CssEngine2 engine;
+    engine = new CssEngine2(system);
+
+    engine.noteSink(Y.noteSink());
+
+    engine.fontFace("""
+    font-family: "IBM Plex Sans";
+    font-style: normal;
+    font-weight: 700;
+    src: local("IBM Plex Sans Bold");
+    """);
+
+    final StringBuilder out;
+    out = new StringBuilder();
+
+    engine.generate(out);
+
+    assertEquals(
+        out.toString(),
+
+        """
+        @font-face {
+          font-family: "IBM Plex Sans";
+          font-style: normal;
+          font-weight: 700;
+          src: local("IBM Plex Sans Bold");
+        }
+        """
+    );
+  }
+
 }

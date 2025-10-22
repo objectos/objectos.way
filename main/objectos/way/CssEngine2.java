@@ -178,11 +178,14 @@ final class CssEngine2 implements Css.Engine {
 
     utilities.write(out);
 
+    final List<List<Decl>> fontFaces;
+    fontFaces = config.fontFaces;
+
     final List<Keyframes> keyframesToWrite;
     keyframesToWrite = ctx.keyframes;
 
     final Trailer trailer;
-    trailer = new Trailer(keyframesToWrite);
+    trailer = new Trailer(fontFaces, keyframesToWrite);
 
     trailer.write(out);
   }
@@ -212,6 +215,11 @@ final class CssEngine2 implements Css.Engine {
       return obj == this || obj instanceof Decl that
           && property.equals(that.property)
           && value.equals(that.value);
+    }
+
+    @Override
+    public final String toString() {
+      return property + ": " + value + ";";
     }
 
     final void append(Decl decl) {
@@ -777,6 +785,8 @@ final class CssEngine2 implements Css.Engine {
 
     private final List<ParsedRule> components = new ArrayList<>();
 
+    private final List<List<Decl>> fontFaces = new ArrayList<>();
+
     private final Map<String, Keyframes> keyframes = new HashMap<>();
 
     private final Map<String, Decl> keywords = new HashMap<>();
@@ -1044,6 +1054,43 @@ final class CssEngine2 implements Css.Engine {
       }
     }
 
+    private static final Set<String> FONT_FACE_PROPS = Set.of(
+        "ascent-override",
+        "descent-override",
+        "font-display",
+        "font-family",
+        "font-stretch",
+        "font-style",
+        "font-weight",
+        "font-feature-settings",
+        "font-variant-settings",
+        "line-gap-override",
+        "size-adjust",
+        "src",
+        "unicode-range"
+    );
+
+    public final void fontFace(String value) {
+      value = Objects.requireNonNull(value, "value == null");
+
+      final CssParser declsParser;
+      declsParser = new CssParser(value);
+
+      final List<Decl> decls;
+      decls = declsParser.parseDecls();
+
+      for (Decl decl : decls) {
+        final String property;
+        property = decl.property;
+
+        if (!FONT_FACE_PROPS.contains(property)) {
+          decl.invalid("Invalid @font-face property");
+        }
+      }
+
+      fontFaces.add(decls);
+    }
+
     public final Config configure() {
       breakpointVariants();
 
@@ -1053,6 +1100,8 @@ final class CssEngine2 implements Css.Engine {
           systemBase,
 
           List.copyOf(components),
+
+          fontFaces,
 
           Map.copyOf(keyframes),
 
@@ -1275,6 +1324,11 @@ final class CssEngine2 implements Css.Engine {
     configuring.keyframes(name, frames);
   }
 
+  @Override
+  public final void fontFace(String value) {
+    configuring.fontFace(value);
+  }
+
   // ##################################################################
   // # END: Configuring
   // ##################################################################
@@ -1288,6 +1342,8 @@ final class CssEngine2 implements Css.Engine {
       String base,
 
       List<ParsedRule> components,
+
+      List<List<Decl>> fontFaces,
 
       Map<String, Keyframes> keyframes,
 
@@ -3020,9 +3076,11 @@ final class CssEngine2 implements Css.Engine {
 
   static final class Trailer extends Writer {
 
+    private final List<List<Decl>> fontFaces;
     private final List<Keyframes> keyframes;
 
-    Trailer(List<Keyframes> keyframes) {
+    Trailer(List<List<Decl>> fontFaces, List<Keyframes> keyframes) {
+      this.fontFaces = fontFaces;
       this.keyframes = keyframes;
     }
 
@@ -3069,6 +3127,32 @@ final class CssEngine2 implements Css.Engine {
           indent();
 
           wln('}');
+        }
+
+        level--;
+
+        wln('}');
+      }
+
+      for (List<Decl> face : fontFaces) {
+        if (face.isEmpty()) {
+          continue;
+        }
+
+        wln("@font-face {");
+
+        level++;
+
+        for (Decl decl : face) {
+          indent();
+
+          w(decl.property);
+
+          w(": ");
+
+          w(decl.value);
+
+          wln(';');
         }
 
         level--;
