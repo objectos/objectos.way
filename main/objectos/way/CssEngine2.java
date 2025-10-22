@@ -1069,7 +1069,21 @@ final class CssEngine2 implements Css.Engine {
     }
 
     public final void component(String selector, String value) {
-      throw new UnsupportedOperationException("Implement me");
+      selector = Objects.requireNonNull(selector, "selector == null");
+      selector = selector.strip();
+
+      value = Objects.requireNonNull(value, "value == null");
+
+      final CssParser declsParser;
+      declsParser = new CssParser(value);
+
+      final List<Decl> decls;
+      decls = declsParser.parseDecls();
+
+      final ParsedRule rule;
+      rule = new ParsedRule(selector, decls);
+
+      components.add(rule);
     }
 
     public final void keyframes(String name, Consumer<? super Css.Engine.Keyframes> frames) {
@@ -2932,6 +2946,70 @@ final class CssEngine2 implements Css.Engine {
 
   // ##################################################################
   // # END: Base
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Components
+  // ##################################################################
+
+  static final class Components extends Writer {
+
+    final List<ParsedRule> components;
+
+    Components(List<ParsedRule> components) {
+      this.components = components;
+    }
+
+    @Override
+    final void write() throws IOException {
+      if (components.isEmpty()) {
+        return;
+      }
+
+      wln("@layer components {");
+
+      level++;
+
+      for (ParsedRule component : components) {
+        indent();
+
+        w(component.selector);
+
+        wln(" {");
+
+        level++;
+
+        final List<Decl> decls;
+        decls = component.decls;
+
+        for (Decl decl : decls) {
+          indent();
+
+          w(decl.property);
+
+          w(": ");
+
+          w(decl.value);
+
+          wln(';');
+        }
+
+        level--;
+
+        indent();
+
+        wln('}');
+      }
+
+      level--;
+
+      wln('}');
+    }
+
+  }
+
+  // ##################################################################
+  // # END: Components
   // ##################################################################
 
   // ##################################################################

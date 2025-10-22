@@ -15,6 +15,55 @@
  */
 package objectos.way;
 
+import static org.testng.Assert.assertEquals;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.util.List;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+
 public class CssEngine2Test12Components {
+
+  @DataProvider
+  public Object[][] writeProvider() {
+    return new Object[][] {{
+        "1 component",
+
+        List.of(
+            CssEngine2.parsedRule("[data-theme=g90]", List.of(
+                CssEngine2.decl("--color-background", "#262626")
+            ))
+        ),
+
+        """
+        @layer components {
+          [data-theme=g90] {
+            --color-background: #262626;
+          }
+        }
+        """
+    }};
+  }
+
+  @Test(dataProvider = "writeProvider")
+  public void write(
+      String description,
+      @SuppressWarnings("exports") List<CssEngine2.ParsedRule> components,
+      String expected) {
+    try {
+      final CssEngine2.Components writer;
+      writer = new CssEngine2.Components(components);
+
+      final StringBuilder out;
+      out = new StringBuilder();
+
+      writer.write(out);
+
+      assertEquals(out.toString(), expected);
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
+  }
 
 }
