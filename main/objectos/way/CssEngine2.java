@@ -162,6 +162,14 @@ final class CssEngine2 implements Css.Engine {
 
     base.write(out);
 
+    final List<ParsedRule> components;
+    components = config.components;
+
+    final Components compWriter;
+    compWriter = new Components(components);
+
+    compWriter.write(out);
+
     final List<Rule> rules;
     rules = ctx.rules;
 
@@ -2128,7 +2136,11 @@ final class CssEngine2 implements Css.Engine {
     return new Rule(className, variants, property, value);
   }
 
-  record Ctx(List<Keyframes> keyframes, List<Rule> rules, List<Section> sections) {}
+  record Ctx(
+      List<Keyframes> keyframes,
+      List<Rule> rules,
+      List<Section> sections
+  ) {}
 
   static final class Gen {
 
