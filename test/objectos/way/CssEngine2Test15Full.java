@@ -360,8 +360,8 @@ public class CssEngine2Test15Full {
     """);
 
     engine.keyframes("fade-in", frames -> {
-      frames.add("0%", "opacity:0;");
-      frames.add("100%", "opacity:1;");
+      frames.perc(0, "opacity:0;");
+      frames.perc(100, "opacity:1;");
     });
 
     engine.scanClass(Subject.class);

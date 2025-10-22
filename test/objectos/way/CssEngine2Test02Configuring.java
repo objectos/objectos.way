@@ -178,10 +178,10 @@ public class CssEngine2Test02Configuring {
 
         c -> {
           c.keyframes("fade-in", frames -> {
-            frames.add("from", """
+            frames.from("""
             opacity: 0;
             """);
-            frames.add("to", """
+            frames.to("""
             opacity: 1;
             """);
           });

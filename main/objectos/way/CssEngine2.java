@@ -539,94 +539,6 @@ final class CssEngine2 implements Css.Engine {
       }
     }
 
-    private static final String INVALID_KF_SEL = "Invalid @keyframes selector";
-
-    public final String parseKfSelector() {
-      sb.setLength(0);
-
-      while (true) {
-        switch (nextTest()) {
-          case CSS_WS -> {
-            continue;
-          }
-
-          case CSS_IDENT -> {
-            sb.append(c);
-
-            return parseKfSelectorPerc();
-          }
-
-          case CSS_IDENT_START -> {
-            sb.append(c);
-
-            return parseKfSelectorKw();
-          }
-
-          case CSS_REV_SOLIDUS -> throw error(UNSUPPORTED_ESCAPE);
-
-          case CSS_NON_ASCII -> throw error(UNSUPPORTED_NON_ASCII);
-
-          case CSS_EOF -> throw error("Empty or blank selector");
-
-          default -> throw error(INVALID_KF_SEL);
-        }
-      }
-    }
-
-    private String parseKfSelectorPerc() {
-      while (true) {
-        switch (nextTest()) {
-          case CSS_IDENT -> {
-            sb.append(c);
-          }
-
-          case CSS_PERCENT -> {
-            sb.append(c);
-
-            return parseKfSelectorTrim();
-          }
-
-          default -> throw error(INVALID_KF_SEL);
-        }
-      }
-    }
-
-    private String parseKfSelectorKw() {
-      while (true) {
-        switch (nextTest()) {
-          case CSS_WS -> {
-            return parseKfSelectorTrim();
-          }
-
-          case CSS_IDENT_START -> {
-            sb.append(c);
-          }
-
-          case CSS_EOF -> {
-            return sb.toString();
-          }
-
-          default -> throw error(INVALID_KF_SEL);
-        }
-      }
-    }
-
-    private String parseKfSelectorTrim() {
-      while (true) {
-        switch (nextTest()) {
-          case CSS_WS -> {
-            continue;
-          }
-
-          case CSS_EOF -> {
-            return sb.toString();
-          }
-
-          default -> throw error("Invalid @keyframes selector");
-        }
-      }
-    }
-
     private IllegalArgumentException error(String message) {
       return new IllegalArgumentException(message);
     }
@@ -810,14 +722,26 @@ final class CssEngine2 implements Css.Engine {
     }
 
     @Override
-    public final void add(String selector, String value) {
-      selector = Objects.requireNonNull(selector, "selector == null");
+    public final void from(String value) {
+      add("from", value);
+    }
+
+    @Override
+    public final void to(String value) {
+      add("to", value);
+    }
+
+    @Override
+    public final void perc(int offset, String value) {
+      if (offset < 0 || offset > 100) {
+        throw new IllegalArgumentException("Percentage offset value must be 0% <= value <= 100%");
+      }
+
+      add(offset + "%", value);
+    }
+
+    private void add(String selector, String value) {
       value = Objects.requireNonNull(value, "value == null");
-
-      final CssParser selParser;
-      selParser = new CssParser(selector);
-
-      selector = selParser.parseKfSelector();
 
       final CssParser declsParser;
       declsParser = new CssParser(value);

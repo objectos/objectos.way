@@ -99,10 +99,21 @@ public final class Css {
     /// Configures the creation of a `@keyframes` at-rule.
     sealed interface Keyframes permits CssEngine2.KeyframesBuilder {
 
-      /// Adds a single keyframe declaration to this `@keyframes` at-rule.
-      /// @param selector the keyframe selector
-      /// @param value the declarations of this keyframe
-      void add(String selector, String value);
+      /// Adds the specified declarations to a `from` rule.
+      ///
+      /// @param value a text containing one or more CSS declarations
+      void from(String value);
+
+      /// Adds the specified declarations to a `to` rule.
+      ///
+      /// @param value a text containing one or more CSS declarations
+      void to(String value);
+
+      /// Adds the specified declarations to a rule with the specified percentage offset.
+      ///
+      /// @param offset the percentage offset
+      /// @value a text containing one or more CSS declarations
+      void perc(int offset, String value);
 
     }
 

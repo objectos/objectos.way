@@ -198,30 +198,6 @@ public class CssEngine2Test00CssParser {
     assertEquals(parser.parseIden(), expected);
   }
 
-  @DataProvider
-  public Object[][] kfSelectorValidProvider() {
-    return new Object[][] {
-        {"kw1", "from", "from"},
-        {"kw2", "to", "to"},
-        {"kw + ws", "\tto", "to"},
-        {"kw + ws", "to\r", "to"},
-        {"kw + ws", "  to  \f", "to"},
-        {"perc", "0%", "0%"},
-        {"perc", "100%", "100%"}
-    };
-  }
-
-  @Test(dataProvider = "kfSelectorValidProvider")
-  public void kfSelectorValid(
-      String description,
-      String src,
-      String expected) {
-    final CssEngine2.CssParser parser;
-    parser = new CssEngine2.CssParser(src);
-
-    assertEquals(parser.parseKfSelector(), expected);
-  }
-
   @Test(description = "EOF at declaration value")
   public void errors01() {
     testIAE(
