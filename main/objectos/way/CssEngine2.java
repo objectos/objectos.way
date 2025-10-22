@@ -134,6 +134,9 @@ final class CssEngine2 implements Css.Engine {
     final Map<String, Decl> keywords;
     keywords = config.keywords;
 
+    final Decl rx;
+    rx = config.rx;
+
     final List<Section> protoSections;
     protoSections = config.sections;
 
@@ -141,7 +144,7 @@ final class CssEngine2 implements Css.Engine {
     utils = proc.utilities;
 
     final Gen gen;
-    gen = new Gen(keyframes, keywords, protoSections, utils);
+    gen = new Gen(keyframes, keywords, rx, protoSections, utils);
 
     final Ctx ctx;
     ctx = gen.generate();
@@ -1109,7 +1112,7 @@ final class CssEngine2 implements Css.Engine {
 
           noteSink,
 
-          namespaces.containsKey("rx"),
+          rx(),
 
           Set.copyOf(scanClasses),
 
@@ -1282,6 +1285,17 @@ final class CssEngine2 implements Css.Engine {
       }
     }
 
+    private Decl rx() {
+      final Map<String, Decl> map;
+      map = namespaces.get("rx");
+
+      if (map == null) {
+        return null;
+      }
+
+      return map.get("--rx");
+    }
+
   }
 
   @Override
@@ -1351,7 +1365,7 @@ final class CssEngine2 implements Css.Engine {
 
       Note.Sink noteSink,
 
-      boolean rx,
+      Decl rx,
 
       Set<Class<?>> scanClasses,
 
@@ -2139,16 +2153,20 @@ final class CssEngine2 implements Css.Engine {
 
     final List<Rule> rules = new ArrayList<>();
 
+    final Decl rx;
+
     final List<Section> sections;
 
     final StringBuilder sb = new StringBuilder();
 
     final List<Utility> utilities;
 
-    Gen(Map<String, Keyframes> keyframes, Map<String, Decl> keywords, List<Section> sections, List<Utility> utilities) {
+    Gen(Map<String, Keyframes> keyframes, Map<String, Decl> keywords, Decl rx, List<Section> sections, List<Utility> utilities) {
       this.keyframes = keyframes;
 
       this.keywords = keywords;
+
+      this.rx = rx;
 
       this.sections = sections;
 
@@ -2500,6 +2518,10 @@ final class CssEngine2 implements Css.Engine {
       }
 
       // maybe rx value?
+      if (rx == null) {
+        // do not process if --rx was not defined in theme
+        return index;
+      }
 
       final int unitLength;
       unitLength = index - unitIndex;
@@ -2523,6 +2545,7 @@ final class CssEngine2 implements Css.Engine {
       }
 
       // handle rx value
+      rx.mark();
 
       // 1) emit normal value (if necessary)
       formatValueNormal(value, beginIndex);

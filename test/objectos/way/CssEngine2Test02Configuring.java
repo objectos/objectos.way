@@ -51,7 +51,7 @@ public class CssEngine2Test02Configuring {
           assertEquals(c.fontFaces(), List.of());
           assertEquals(c.keyframes(), Map.of());
           assertEquals(c.keywords(), Map.of("screen-sm", v));
-          assertEquals(c.rx(), false);
+          assertEquals(c.rx(), null);
           assertEquals(c.sections(), List.of(
               CssEngine2.section(List.of(), List.of(v))
           ));
@@ -90,7 +90,7 @@ public class CssEngine2Test02Configuring {
           assertEquals(c.fontFaces(), List.of());
           assertEquals(c.keyframes(), Map.of());
           assertEquals(c.keywords(), Map.of("screen-sm", v));
-          assertEquals(c.rx(), false);
+          assertEquals(c.rx(), null);
           assertEquals(c.sections(), List.of(
               CssEngine2.section(List.of(), List.of(v))
           ));
@@ -127,7 +127,7 @@ public class CssEngine2Test02Configuring {
           assertEquals(c.fontFaces(), List.of());
           assertEquals(c.keyframes(), Map.of());
           assertEquals(c.keywords(), Map.of("test", v));
-          assertEquals(c.rx(), false);
+          assertEquals(c.rx(), null);
           assertEquals(c.sections(), List.of(
               CssEngine2.section(List.of(), List.of(v))
           ));
@@ -162,7 +162,7 @@ public class CssEngine2Test02Configuring {
           assertEquals(c.fontFaces(), List.of());
           assertEquals(c.keyframes(), Map.of());
           assertEquals(c.keywords(), Map.of("test", v));
-          assertEquals(c.rx(), false);
+          assertEquals(c.rx(), null);
           assertEquals(c.sections(), List.of(
               CssEngine2.section(List.of(), List.of(v))
           ));
@@ -203,7 +203,7 @@ public class CssEngine2Test02Configuring {
               ))
           ))));
           assertEquals(c.keywords(), Map.of());
-          assertEquals(c.rx(), false);
+          assertEquals(c.rx(), null);
           assertEquals(c.sections(), List.of(
               CssEngine2.section(List.of(), List.of())
           ));
@@ -243,7 +243,7 @@ public class CssEngine2Test02Configuring {
           assertEquals(c.fontFaces(), List.of());
           assertEquals(c.keyframes(), Map.of());
           assertEquals(c.keywords(), Map.of("primary", v0));
-          assertEquals(c.rx(), false);
+          assertEquals(c.rx(), null);
           assertEquals(c.sections(), List.of(
               CssEngine2.section(List.of(), List.of(v0)),
               CssEngine2.section(List.of(DARK), List.of(v1))
@@ -277,7 +277,7 @@ public class CssEngine2Test02Configuring {
           assertEquals(c.fontFaces(), List.of());
           assertEquals(c.keyframes(), Map.of());
           assertEquals(c.keywords(), Map.of());
-          assertEquals(c.rx(), true);
+          assertEquals(c.rx(), v);
           assertEquals(c.sections(), List.of(
               CssEngine2.section(List.of(), List.of(v))
           ));
@@ -312,7 +312,7 @@ public class CssEngine2Test02Configuring {
           assertEquals(c.fontFaces(), List.of());
           assertEquals(c.keyframes(), Map.of());
           assertEquals(c.keywords(), Map.of());
-          assertEquals(c.rx(), true);
+          assertEquals(c.rx(), v);
           assertEquals(c.sections(), List.of(
               CssEngine2.section(List.of(), List.of(v))
           ));
@@ -345,7 +345,7 @@ public class CssEngine2Test02Configuring {
           assertEquals(c.fontFaces(), List.of());
           assertEquals(c.keyframes(), Map.of());
           assertEquals(c.keywords(), Map.of());
-          assertEquals(c.rx(), false);
+          assertEquals(c.rx(), null);
           assertEquals(c.sections(), List.of(
               CssEngine2.section(List.of(), List.of())
           ));
@@ -384,7 +384,7 @@ public class CssEngine2Test02Configuring {
           ));
           assertEquals(c.keyframes(), Map.of());
           assertEquals(c.keywords(), Map.of());
-          assertEquals(c.rx(), false);
+          assertEquals(c.rx(), null);
           assertEquals(c.sections(), List.of(
               CssEngine2.section(List.of(), List.of())
           ));

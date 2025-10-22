@@ -470,4 +470,91 @@ public class CssEngine2Test15Full {
     );
   }
 
+  @Test(description = """
+  --rx: emit
+  """)
+  public void testCase11() throws IOException {
+    class Subject {
+      String s = """
+      gap:16rx
+      """;
+    }
+
+    final CssEngine2.System system;
+    system = new CssEngine2.System();
+
+    system.base = "";
+
+    system.theme = """
+    --rx: 16;
+    """;
+
+    final CssEngine2 engine;
+    engine = new CssEngine2(system);
+
+    engine.noteSink(Y.noteSink());
+
+    engine.scanClass(Subject.class);
+
+    final StringBuilder out;
+    out = new StringBuilder();
+
+    engine.generate(out);
+
+    assertEquals(
+        out.toString(),
+
+        """
+        @layer theme {
+          :root {
+            --rx: 16;
+          }
+        }
+        @layer utilities {
+          .gap\\:16rx { gap: calc(16 / var(--rx) * 1rem) }
+        }
+        """
+    );
+  }
+
+  @Test(description = """
+  --rx: do not emit
+  """)
+  public void testCase12() throws IOException {
+    class Subject {
+      String s = """
+      gap:16rx
+      """;
+    }
+
+    final CssEngine2.System system;
+    system = new CssEngine2.System();
+
+    system.base = "";
+
+    system.theme = "";
+
+    final CssEngine2 engine;
+    engine = new CssEngine2(system);
+
+    engine.noteSink(Y.noteSink());
+
+    engine.scanClass(Subject.class);
+
+    final StringBuilder out;
+    out = new StringBuilder();
+
+    engine.generate(out);
+
+    assertEquals(
+        out.toString(),
+
+        """
+        @layer utilities {
+          .gap\\:16rx { gap: 16rx }
+        }
+        """
+    );
+  }
+
 }

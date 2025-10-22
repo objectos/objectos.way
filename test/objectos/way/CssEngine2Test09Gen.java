@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import objectos.way.CssEngine2.Ctx;
+import objectos.way.CssEngine2.Decl;
 import objectos.way.CssEngine2.Keyframes;
 import org.testng.annotations.Test;
 
@@ -115,11 +116,37 @@ public class CssEngine2Test09Gen {
     );
   }
 
+  @Test
+  public void testCase05() {
+    test(
+        gen -> {
+          gen.rx("16");
+          gen.utility(List.of(), "gap:16rx", "gap", "16rx");
+        },
+
+        ctx -> {
+          assertEquals(ctx.keyframes(), List.of());
+          assertEquals(ctx.rules(), List.of(
+              CssEngine2.rule(".gap\\:16rx", List.of(), "gap", "calc(16 / var(--rx) * 1rem)")
+          ));
+          final List<CssEngine2.Section> sections = ctx.sections();
+          assertEquals(sections.size(), 1);
+          final CssEngine2.Section s0 = sections.get(0);
+          assertEquals(s0.selector(), List.of());
+          assertEquals(v(s0.decls()), """
+          --rx: 16
+          """);
+        }
+    );
+  }
+
   private static final class Builder {
 
     final Map<String, CssEngine2.Keyframes> keyframes = new HashMap<>();
 
     final Map<String, CssEngine2.Decl> keywords = new HashMap<>();
+
+    CssEngine2.Decl rx;
 
     final List<CssEngine2.Section> sections = new ArrayList<>();
 
@@ -127,7 +154,7 @@ public class CssEngine2Test09Gen {
 
     final Ctx build() {
       final CssEngine2.Gen gen;
-      gen = new CssEngine2.Gen(keyframes, keywords, sections, utilities);
+      gen = new CssEngine2.Gen(keyframes, keywords, rx, sections, utilities);
 
       return gen.generate();
     }
@@ -157,6 +184,21 @@ public class CssEngine2Test09Gen {
 
         decls.add(decl);
       }
+
+      final CssEngine2.Section s;
+      s = CssEngine2.section(selector, decls);
+
+      sections.add(s);
+    }
+
+    final void rx(String value) {
+      rx = CssEngine2.decl("--rx", value);
+
+      final List<String> selector;
+      selector = List.of();
+
+      final List<Decl> decls;
+      decls = List.of(rx);
 
       final CssEngine2.Section s;
       s = CssEngine2.section(selector, decls);
