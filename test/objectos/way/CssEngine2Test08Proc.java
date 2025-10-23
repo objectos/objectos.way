@@ -67,7 +67,8 @@ public class CssEngine2Test08Proc {
             CssEngine2.utility(List.of(), "margin:0", "margin", "0"),
             CssEngine2.utility(List.of(), "padding:0", "padding", "0")
         )
-    }, {"variant (class name)",
+    }, {
+        "variant (class name)",
         Map.of("hover", HOVER),
         l(
             r("hover/margin:0", l("0", "margin", "hover")),

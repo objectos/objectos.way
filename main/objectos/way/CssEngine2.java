@@ -1975,6 +1975,151 @@ final class CssEngine2 implements Css.Engine {
   // ##################################################################
 
   // ##################################################################
+  // # BEGIN: ClassNameFormat
+  // ##################################################################
+
+  private static final byte[] CNF;
+
+  private static final byte CNF_ASCII = 0;
+  private static final byte CNF_NULL = 1;
+  private static final byte CNF_CONTROL = 2;
+  private static final byte CNF_HYPHEN = 3;
+  private static final byte CNF_DIGIT = 4;
+  private static final byte CNF_ALPHA = 5;
+  private static final byte CNF_UNDERLINE = 6;
+  private static final byte CNF_NON_ASCII = 7;
+  private static final byte CNF_EOF = 8;
+
+  static {
+    final byte[] table;
+    table = new byte[128];
+
+    // start with ASCII
+
+    table[0] = CNF_NULL;
+
+    for (int idx = '\u0001'; idx <= '\u001F'; idx++) {
+      table[idx] = CNF_CONTROL;
+    }
+
+    table['-'] = CNF_HYPHEN;
+
+    Ascii.fill(table, Ascii.digit(), CNF_DIGIT);
+
+    Ascii.fill(table, Ascii.alphaUpper(), CNF_ALPHA);
+
+    table['_'] = CNF_UNDERLINE;
+
+    Ascii.fill(table, Ascii.alphaLower(), CNF_ALPHA);
+
+    table['\u007F'] = CNF_CONTROL;
+
+    CNF = table;
+  }
+
+  static final class ClassNameFormat {
+
+    private char c;
+
+    private int cursor;
+
+    private final StringBuilder sb = new StringBuilder();
+
+    private String src;
+
+    public final String format(String source) {
+      src = Objects.requireNonNull(source, "source == null");
+
+      cursor = 0;
+
+      sb.setLength(0);
+
+      sb.append('.');
+
+      final byte first;
+      first = nextTest();
+
+      return switch (first) {
+        case CNF_EOF -> throw new IllegalArgumentException("Cannot format an empty string");
+
+        case CNF_DIGIT -> formatStartsWithDigit();
+
+        case CNF_HYPHEN -> formatStartsWithHyphen();
+
+        default -> formatRest(first);
+      };
+    }
+
+    private String formatStartsWithDigit() {
+      escapeAsCodePoint();
+
+      return formatRest(nextTest());
+    }
+
+    private String formatStartsWithHyphen() {
+      final byte test;
+      test = nextTest();
+
+      return switch (test) {
+        case CNF_EOF -> {
+          sb.append('\\');
+
+          sb.append('-');
+
+          yield sb.toString();
+        }
+
+        case CNF_DIGIT -> { sb.append('-'); escapeAsCodePoint(); yield formatRest(nextTest()); }
+
+        default -> { sb.append('-'); yield formatRest(test); }
+      };
+    }
+
+    private String formatRest(byte test) {
+      while (true) {
+        switch (test) {
+          case CNF_EOF -> {
+            return sb.toString();
+          }
+
+          case CNF_NULL -> sb.append('\uFFFD');
+
+          case CNF_CONTROL -> escapeAsCodePoint();
+
+          case CNF_ASCII -> { sb.append('\\'); sb.append(c); }
+
+          default -> sb.append(c);
+        }
+
+        test = nextTest();
+      }
+    }
+
+    private void escapeAsCodePoint() {
+      sb.append("\\");
+
+      sb.append(Integer.toHexString(c));
+
+      sb.append(' ');
+    }
+
+    private byte nextTest() {
+      if (cursor < src.length()) {
+        c = src.charAt(cursor++);
+
+        return c < 128 ? CNF[c] : CNF_NON_ASCII;
+      } else {
+        return CNF_EOF;
+      }
+    }
+
+  }
+
+  // ##################################################################
+  // # END: ClassNameFormat
+  // ##################################################################
+
+  // ##################################################################
   // # BEGIN: Utility
   // ##################################################################
 

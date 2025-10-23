@@ -557,4 +557,53 @@ public class CssEngine2Test15Full {
     );
   }
 
+  @Test(enabled = false, description = """
+  emit theme prop referenced in value
+  """)
+  public void testCase13() throws IOException {
+    class Subject {
+      String s = """
+      gap:var(--custom-gap)
+      """;
+    }
+
+    final CssEngine2.System system;
+    system = new CssEngine2.System();
+
+    system.base = "";
+
+    system.theme = "";
+
+    final CssEngine2 engine;
+    engine = new CssEngine2(system);
+
+    engine.noteSink(Y.noteSink());
+
+    engine.scanClass(Subject.class);
+
+    engine.theme("""
+    --custom-gap: 1rem;
+    """);
+
+    final StringBuilder out;
+    out = new StringBuilder();
+
+    engine.generate(out);
+
+    assertEquals(
+        out.toString(),
+
+        """
+        @layer theme {
+          :root {
+            --custom-gap: 1rem;
+          }
+        }
+        @layer utilities {
+          .gap\\:var\\(--custom-gap\\) { gap: var(--custom-gap) }
+        }
+        """
+    );
+  }
+
 }
