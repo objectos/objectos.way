@@ -2155,6 +2155,8 @@ final class CssEngine2 implements Css.Engine {
 
   static final class Proc implements Slugs {
 
+    final ClassNameFormat classNameFormat = new ClassNameFormat();
+
     final Set<String> distinct = new HashSet<>();
 
     final Note.Sink noteSink;
@@ -2209,8 +2211,11 @@ final class CssEngine2 implements Css.Engine {
       final List<Variant> vars;
       vars = List.copyOf(parsedVars);
 
+      final String classNameFormatted;
+      classNameFormatted = classNameFormat.format(className);
+
       final Utility utility;
-      utility = new Utility(vars, className, propName, propValue);
+      utility = new Utility(vars, classNameFormatted, propName, propValue);
 
       utilities.add(utility);
     }
@@ -2335,15 +2340,8 @@ final class CssEngine2 implements Css.Engine {
     }
 
     private void process(Utility utility) {
-      // build class name
-      sb.setLength(0);
-
-      sb.append('.');
-
-      Css.serializeIdentifier(sb, utility.className);
-
       final String className;
-      className = sb.toString();
+      className = utility.className;
 
       final List<Variant> variants;
       variants = utility.variants;

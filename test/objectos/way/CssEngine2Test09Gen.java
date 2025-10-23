@@ -34,7 +34,7 @@ public class CssEngine2Test09Gen {
   public void testCase01() {
     test(
         gen -> {
-          gen.utility(List.of(), "margin:0", "margin", "0");
+          gen.utility(List.of(), ".margin\\:0", "margin", "0");
         },
 
         ctx -> {
@@ -52,7 +52,7 @@ public class CssEngine2Test09Gen {
     test(
         gen -> {
           gen.keywords(List.of(), Map.of("gray-100", "var(--color-gray-100)"));
-          gen.utility(List.of(), "color:gray-100", "color", "gray-100");
+          gen.utility(List.of(), ".color\\:gray-100", "color", "gray-100");
         },
 
         ctx -> {
@@ -76,7 +76,7 @@ public class CssEngine2Test09Gen {
     test(
         gen -> {
           gen.keywords(List.of(), Map.of("gray-100", "var(--color-gray-100)"));
-          gen.utility(List.of(), "color:gray-100/20", "color", "gray-100/20");
+          gen.utility(List.of(), ".color\\:gray-100\\/20", "color", "gray-100/20");
         },
 
         ctx -> {
@@ -100,7 +100,7 @@ public class CssEngine2Test09Gen {
     test(
         gen -> {
           gen.keyframes("fade-in");
-          gen.utility(List.of(), "animation:3s_linear_1s_fade-in", "animation", "3s linear 1s fade-in");
+          gen.utility(List.of(), ".animation\\:3s_linear_1s_fade-in", "animation", "3s linear 1s fade-in");
         },
 
         ctx -> {
@@ -121,7 +121,7 @@ public class CssEngine2Test09Gen {
     test(
         gen -> {
           gen.rx("16");
-          gen.utility(List.of(), "gap:16rx", "gap", "16rx");
+          gen.utility(List.of(), ".gap\\:16rx", "gap", "16rx");
         },
 
         ctx -> {
