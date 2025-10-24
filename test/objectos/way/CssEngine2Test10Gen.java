@@ -25,7 +25,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import org.testng.annotations.Test;
 
-public class CssEngine2Test11Gen {
+public class CssEngine2Test10Gen {
 
   @Test
   public void testCase01() {

@@ -25,7 +25,7 @@ import objectos.way.CssEngine2.Variant;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class CssEngine2Test10Proc {
+public class CssEngine2Test09Proc {
 
   private static final CssEngine2.Variant DARK = CssEngine2.simple("@media (prefers-color-scheme: dark)");
   private static final CssEngine2.Variant MD = CssEngine2.simple("@media (min-width: 48rem)");

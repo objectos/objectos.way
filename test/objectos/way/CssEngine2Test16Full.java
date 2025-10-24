@@ -21,7 +21,7 @@ import java.io.IOException;
 import org.testng.annotations.Test;
 
 @SuppressWarnings("unused")
-public class CssEngine2Test17Full {
+public class CssEngine2Test16Full {
 
   private static final String DARK = "@media (prefers-color-scheme: dark)";
 

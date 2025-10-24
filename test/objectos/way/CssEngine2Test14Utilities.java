@@ -24,7 +24,7 @@ import java.util.List;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class CssEngine2Test15Utilities {
+public class CssEngine2Test14Utilities {
 
   private static final CssEngine2.Simple AFTER = CssEngine2.simple("&::after");
 

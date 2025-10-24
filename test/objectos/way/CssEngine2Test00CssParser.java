@@ -17,6 +17,7 @@ package objectos.way;
 
 import static objectos.way.CssEngine2.fun;
 import static objectos.way.CssEngine2.tok;
+import static objectos.way.CssEngine2.Sep.COMMA;
 import static org.testng.Assert.assertEquals;
 
 import java.util.List;
@@ -221,23 +222,29 @@ public class CssEngine2Test00CssParser {
             tok("16rem")
         )
     }, {
-        "fun: 1 arg",
+        "fun: 1 number",
         "blur(0)",
         List.of(
             fun("blur", tok("0"))
         )
-        //    }, {
-        //        "1 var",
-        //        "var(--foo)",
-        //        l(id("var"), raw("("), var("--foo"), raw(")"))
-        //    }, {
-        //        "2 vars",
-        //        "var(--foo,var(--bar))",
-        //        l(id("var"), raw("("), var("--foo"), raw(","), id("var"), raw("("), var("--bar"), raw("))"))
-        //    }, {
-        //        "2 vars + ws",
-        //        "var(--foo, var(--bar))",
-        //        l(raw("var("), var("--foo"), raw(", "), id("var"), raw("("), var("--bar"), raw("))"))
+    }, {
+        "fun: 1 var",
+        "var(--foo)",
+        List.of(
+            fun("var", tok("--foo"))
+        )
+    }, {
+        "fun: 2 vars",
+        "var(--foo,var(--bar))",
+        List.of(
+            fun("var", tok("--foo"), COMMA, fun("var", tok("--bar")))
+        )
+    }, {
+        "fun: 2 vars + ws",
+        "var(--foo, var(--bar))",
+        List.of(
+            fun("var", tok("--foo"), COMMA, fun("var", tok("--bar")))
+        )
     }};
   }
 

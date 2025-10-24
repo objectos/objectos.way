@@ -23,23 +23,53 @@ import java.util.List;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class CssEngine2Test14Components {
+public class CssEngine2Test11Theme {
+
+  private static final String DARK = "@media (prefers-color-scheme: dark)";
 
   @DataProvider
   public Object[][] writeProvider() {
     return new Object[][] {{
-        "1 component",
+        "Empty",
+        List.of(),
+        ""
+    }, {
+        ":root + 1 decl",
 
-        List.of(
-            CssEngine2.parsedRule("[data-theme=g90]", List.of(
-                CssEngine2.decl("--color-background", "#262626")
-            ))
-        ),
+        List.of(s(
+            List.of(),
+
+            CssEngine2.decl("--color-red-50", "oklch(97.1% 0.013 17.38)")
+        )),
 
         """
-        @layer components {
-          [data-theme=g90] {
-            --color-background: #262626;
+        @layer theme {
+          :root {
+            --color-red-50: oklch(97.1% 0.013 17.38);
+          }
+        }
+        """
+    }, {
+        ":root + @media",
+
+        List.of(s(
+            List.of(),
+
+            CssEngine2.decl("--color-primary", "#f0f0f0")
+        ), s(
+            List.of(DARK),
+
+            CssEngine2.decl("--color-primary", "#1e1e1e")
+        )),
+
+        """
+        @layer theme {
+          :root {
+            --color-primary: #f0f0f0;
+
+            @media (prefers-color-scheme: dark) {
+              --color-primary: #1e1e1e;
+            }
           }
         }
         """
@@ -49,21 +79,28 @@ public class CssEngine2Test14Components {
   @Test(dataProvider = "writeProvider")
   public void write(
       String description,
-      @SuppressWarnings("exports") List<CssEngine2.ParsedRule> components,
+      @SuppressWarnings("exports") List<CssEngine2.Section> sections,
       String expected) {
     try {
-      final CssEngine2.Components writer;
-      writer = new CssEngine2.Components(components);
+      final CssEngine2.Theme theme;
+      theme = new CssEngine2.Theme(sections);
 
       final StringBuilder out;
       out = new StringBuilder();
 
-      writer.write(out);
+      theme.write(out);
 
       assertEquals(out.toString(), expected);
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     }
+  }
+
+  private CssEngine2.Section s(List<String> selector, CssEngine2.Decl... values) {
+    return CssEngine2.section(
+        selector,
+        List.of(values)
+    );
   }
 
 }

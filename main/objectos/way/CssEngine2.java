@@ -267,6 +267,10 @@ final class CssEngine2 implements Css.Engine {
   static Fun fun(String name, List<Value> args) { return new Fun(name, args); }
   static Fun fun(String name, Value... args) { return new Fun(name, List.of(args)); }
 
+  enum Sep implements Value {
+    COMMA;
+  }
+
   /// arbitrary token
   record Tok(String v) implements Value {}
 
@@ -571,9 +575,16 @@ final class CssEngine2 implements Css.Engine {
             break loop;
           }
 
-          case CSS_ALPHA -> {
+          case CSS_COMMA -> {
             final Value v;
-            v = valueAlpha();
+            v = valueSep(Sep.COMMA);
+
+            values.add(v);
+          }
+
+          case CSS_ALPHA, CSS_HYPHEN, CSS_UNDERLINE -> {
+            final Value v;
+            v = valueIden();
 
             values.add(v);
           }
@@ -592,7 +603,7 @@ final class CssEngine2 implements Css.Engine {
       return values;
     }
 
-    private Value valueAlpha() {
+    private Value valueIden() {
       final int first;
       first = idx;
 
@@ -604,6 +615,10 @@ final class CssEngine2 implements Css.Engine {
 
           case CSS_WS -> {
             return valueKeyword(first, idx);
+          }
+
+          case CSS_COMMA, CSS_RPARENS -> {
+            return valueKeyword(first, --cursor);
           }
 
           case CSS_LPARENS -> {
@@ -639,9 +654,16 @@ final class CssEngine2 implements Css.Engine {
             return new Fun(name, args);
           }
 
-          case CSS_ALPHA -> {
+          case CSS_COMMA -> {
             final Value v;
-            v = valueAlpha();
+            v = valueSep(Sep.COMMA);
+
+            args.add(v);
+          }
+
+          case CSS_ALPHA, CSS_HYPHEN, CSS_UNDERLINE -> {
+            final Value v;
+            v = valueIden();
 
             args.add(v);
           }
@@ -656,6 +678,21 @@ final class CssEngine2 implements Css.Engine {
           default -> throw new UnsupportedOperationException("Implement me");
         }
       }
+    }
+
+    private Value valueSep(Sep v) {
+      while (true) {
+        final byte test;
+        test = nextTest();
+
+        if (test != CSS_WS) {
+          cursor--;
+
+          break;
+        }
+      }
+
+      return v;
     }
 
     private Value valueDigit() {
