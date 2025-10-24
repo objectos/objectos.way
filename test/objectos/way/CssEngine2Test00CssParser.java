@@ -15,6 +15,8 @@
  */
 package objectos.way;
 
+import static objectos.way.CssEngine2.fun;
+import static objectos.way.CssEngine2.tok;
 import static org.testng.Assert.assertEquals;
 
 import java.util.List;
@@ -196,6 +198,61 @@ public class CssEngine2Test00CssParser {
     parser = new CssEngine2.CssParser(src);
 
     assertEquals(parser.parseIden(), expected);
+  }
+
+  @DataProvider
+  public Object[][] valuesValidProvider() {
+    return new Object[][] {{
+        "1 kw",
+        "red-50",
+        List.of(
+            tok("red-50")
+        )
+    }, {
+        "2 kws",
+        "red-50 dashed",
+        List.of(
+            tok("red-50"), tok("dashed")
+        )
+    }, {
+        "length",
+        "16rem",
+        List.of(
+            tok("16rem")
+        )
+    }, {
+        "fun: 1 arg",
+        "blur(0)",
+        List.of(
+            fun("blur", tok("0"))
+        )
+        //    }, {
+        //        "1 var",
+        //        "var(--foo)",
+        //        l(id("var"), raw("("), var("--foo"), raw(")"))
+        //    }, {
+        //        "2 vars",
+        //        "var(--foo,var(--bar))",
+        //        l(id("var"), raw("("), var("--foo"), raw(","), id("var"), raw("("), var("--bar"), raw("))"))
+        //    }, {
+        //        "2 vars + ws",
+        //        "var(--foo, var(--bar))",
+        //        l(raw("var("), var("--foo"), raw(", "), id("var"), raw("("), var("--bar"), raw("))"))
+    }};
+  }
+
+  @Test(dataProvider = "valuesValidProvider")
+  public void valuesValid(
+      String description,
+      String text,
+      @SuppressWarnings("exports") List<CssEngine2.Value> expected) {
+    final CssEngine2.CssParser parser;
+    parser = new CssEngine2.CssParser(text);
+
+    final List<CssEngine2.Value> result;
+    result = parser.parseValues();
+
+    assertEquals(result, expected);
   }
 
   @Test(description = "EOF at declaration value")

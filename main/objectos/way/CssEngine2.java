@@ -198,7 +198,7 @@ final class CssEngine2 implements Css.Engine {
   // ##################################################################
 
   // ##################################################################
-  // # BEGIN: Declaration
+  // # BEGIN: CSS Parser
   // ##################################################################
 
   static final class Decl {
@@ -260,23 +260,38 @@ final class CssEngine2 implements Css.Engine {
     return new Decl(p, v);
   }
 
+  sealed interface Value {}
+
+  record Fun(String name, List<Value> args) implements Value {}
+
+  static Fun fun(String name, List<Value> args) { return new Fun(name, args); }
+  static Fun fun(String name, Value... args) { return new Fun(name, List.of(args)); }
+
+  /// arbitrary token
+  record Tok(String v) implements Value {}
+
+  static Tok tok(String v) { return new Tok(v); }
+
   private static final byte[] CSS;
 
   private static final byte CSS_WS = 1;
   private static final byte CSS_PERCENT = 2;
-  private static final byte CSS_ASTERISK = 3;
-  private static final byte CSS_COMMA = 4;
-  private static final byte CSS_HYPHEN = 5;
-  private static final byte CSS_COLON = 6;
-  private static final byte CSS_SEMICOLON = 7;
-  private static final byte CSS_AT = 8;
-  private static final byte CSS_REV_SOLIDUS = 9;
-  private static final byte CSS_LCURLY = 10;
-  private static final byte CSS_RCURLY = 11;
-  private static final byte CSS_IDENT_START = 12;
-  private static final byte CSS_IDENT = 13;
-  private static final byte CSS_NON_ASCII = 14;
-  private static final byte CSS_EOF = 15;
+  private static final byte CSS_LPARENS = 3;
+  private static final byte CSS_RPARENS = 4;
+  private static final byte CSS_ASTERISK = 5;
+  private static final byte CSS_COMMA = 6;
+  private static final byte CSS_HYPHEN = 7;
+  private static final byte CSS_COLON = 8;
+  private static final byte CSS_SEMICOLON = 9;
+  private static final byte CSS_AT = 10;
+  private static final byte CSS_REV_SOLIDUS = 11;
+  private static final byte CSS_LCURLY = 12;
+  private static final byte CSS_RCURLY = 13;
+  private static final byte CSS_DIGIT = 14;
+  private static final byte CSS_ALPHA = 15;
+  private static final byte CSS_UNDERLINE = 16;
+  private static final byte CSS_NON_ASCII = 17;
+  private static final byte CSS_EOF = 18;
 
   static {
     final byte[] table;
@@ -295,6 +310,8 @@ final class CssEngine2 implements Css.Engine {
 
     // symbols
     table['%'] = CSS_PERCENT;
+    table['('] = CSS_LPARENS;
+    table[')'] = CSS_RPARENS;
     table['*'] = CSS_ASTERISK;
     table[','] = CSS_COMMA;
     table['-'] = CSS_HYPHEN;
@@ -304,14 +321,12 @@ final class CssEngine2 implements Css.Engine {
     table['{'] = CSS_LCURLY;
     table['}'] = CSS_RCURLY;
     table['\\'] = CSS_REV_SOLIDUS;
+    table['_'] = CSS_UNDERLINE;
 
-    // ident start
-    Ascii.fill(table, Ascii.alphaLower(), CSS_IDENT_START);
-    Ascii.fill(table, Ascii.alphaUpper(), CSS_IDENT_START);
-    table['_'] = CSS_IDENT_START;
-
-    // ident
-    Ascii.fill(table, Ascii.digit(), CSS_IDENT);
+    // alphanumeric
+    Ascii.fill(table, Ascii.digit(), CSS_DIGIT);
+    Ascii.fill(table, Ascii.alphaLower(), CSS_ALPHA);
+    Ascii.fill(table, Ascii.alphaUpper(), CSS_ALPHA);
 
     CSS = table;
   }
@@ -325,15 +340,11 @@ final class CssEngine2 implements Css.Engine {
 
     int cursor, idx;
 
-    final List<Syntax> result;
-
     final StringBuilder sb = new StringBuilder();
 
     final String text;
 
     CssParser(String text) {
-      this.result = null;
-
       this.text = text;
     }
 
@@ -347,7 +358,7 @@ final class CssEngine2 implements Css.Engine {
             continue;
           }
 
-          case CSS_HYPHEN, CSS_IDENT_START -> {
+          case CSS_HYPHEN, CSS_UNDERLINE, CSS_ALPHA -> {
             final Decl decl;
             decl = parseDecl();
 
@@ -416,7 +427,7 @@ final class CssEngine2 implements Css.Engine {
             return name;
           }
 
-          case CSS_HYPHEN, CSS_IDENT_START, CSS_IDENT -> {
+          case CSS_HYPHEN, CSS_UNDERLINE, CSS_DIGIT, CSS_ALPHA -> {
             continue;
           }
 
@@ -493,7 +504,7 @@ final class CssEngine2 implements Css.Engine {
             continue;
           }
 
-          case CSS_IDENT_START -> {
+          case CSS_UNDERLINE, CSS_ALPHA -> {
             sb.append(c);
 
             return parseIdenChar();
@@ -517,7 +528,7 @@ final class CssEngine2 implements Css.Engine {
             return parseIdenTrim();
           }
 
-          case CSS_IDENT_START, CSS_IDENT, CSS_HYPHEN -> {
+          case CSS_HYPHEN, CSS_UNDERLINE, CSS_DIGIT, CSS_ALPHA -> {
             sb.append(c);
           }
 
@@ -550,6 +561,171 @@ final class CssEngine2 implements Css.Engine {
       }
     }
 
+    public final List<Value> parseValues() {
+      final List<Value> values;
+      values = new ArrayList<>();
+
+      loop: while (true) {
+        switch (nextTest()) {
+          case CSS_EOF -> {
+            break loop;
+          }
+
+          case CSS_ALPHA -> {
+            final Value v;
+            v = valueAlpha();
+
+            values.add(v);
+          }
+
+          case CSS_DIGIT -> {
+            final Value v;
+            v = valueDigit();
+
+            values.add(v);
+          }
+
+          default -> throw error("Invalid CSS declaration value");
+        }
+      }
+
+      return values;
+    }
+
+    private Value valueAlpha() {
+      final int first;
+      first = idx;
+
+      while (true) {
+        switch (nextTest()) {
+          case CSS_EOF -> {
+            return valueKeyword(first, cursor);
+          }
+
+          case CSS_WS -> {
+            return valueKeyword(first, idx);
+          }
+
+          case CSS_LPARENS -> {
+            final String name;
+            name = text.substring(first, idx);
+
+            return valueFun(name);
+          }
+
+          case CSS_ALPHA, CSS_DIGIT, CSS_HYPHEN, CSS_UNDERLINE -> {
+            continue;
+          }
+
+          default -> throw error("Expected CSS identifier");
+        }
+      }
+    }
+
+    private Value valueKeyword(int idx0, int idx1) {
+      final String s;
+      s = text.substring(idx0, idx1);
+
+      return new Tok(s);
+    }
+
+    private Value valueFun(String name) {
+      final List<Value> args;
+      args = new ArrayList<>();
+
+      while (true) {
+        switch (nextTest()) {
+          case CSS_RPARENS -> {
+            return new Fun(name, args);
+          }
+
+          case CSS_ALPHA -> {
+            final Value v;
+            v = valueAlpha();
+
+            args.add(v);
+          }
+
+          case CSS_DIGIT -> {
+            final Value v;
+            v = valueDigit();
+
+            args.add(v);
+          }
+
+          default -> throw new UnsupportedOperationException("Implement me");
+        }
+      }
+    }
+
+    private Value valueDigit() {
+      final int first;
+      first = idx;
+
+      while (true) {
+        switch (nextTest()) {
+          case CSS_EOF -> {
+            return valueNumber(first, cursor);
+          }
+
+          case CSS_WS -> {
+            return valueNumber(first, idx);
+          }
+
+          case CSS_COMMA, CSS_RPARENS -> {
+            return valueNumber(first, --cursor);
+          }
+
+          case CSS_DIGIT -> {
+            continue;
+          }
+
+          case CSS_ALPHA -> {
+            return valueLength(first);
+          }
+
+          default -> throw error("Expected a CSS numeric value");
+        }
+      }
+    }
+
+    private Value valueNumber(int idx0, int idx1) {
+      final String s;
+      s = text.substring(idx0, idx1);
+
+      return new Tok(s);
+    }
+
+    private Value valueLength(int number) {
+      final int unit;
+      unit = idx;
+
+      while (true) {
+        switch (nextTest()) {
+          case CSS_EOF -> {
+            return valueLength(number, unit, cursor);
+          }
+
+          case CSS_WS -> {
+            return valueLength(number, unit, idx);
+          }
+
+          case CSS_ALPHA -> {
+            continue;
+          }
+
+          default -> throw error("Expected a CSS <length> value");
+        }
+      }
+    }
+
+    private Value valueLength(int number, int unit, int end) {
+      final String s;
+      s = text.substring(number, end);
+
+      return new Tok(s);
+    }
+
     private IllegalArgumentException error(String message) {
       return new IllegalArgumentException(message);
     }
@@ -579,7 +755,7 @@ final class CssEngine2 implements Css.Engine {
   }
 
   // ##################################################################
-  // # END: Declaration
+  // # END: CSS Parser
   // ##################################################################
 
   // ##################################################################

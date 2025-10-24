@@ -15,6 +15,7 @@
  */
 package objectos.way;
 
+import static objectos.way.CssEngine2.rule;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
@@ -23,9 +24,9 @@ import java.util.List;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class CssEngine2Test10Theme {
+public class CssEngine2Test15Utilities {
 
-  private static final String DARK = "@media (prefers-color-scheme: dark)";
+  private static final CssEngine2.Simple AFTER = CssEngine2.simple("&::after");
 
   @DataProvider
   public Object[][] writeProvider() {
@@ -34,43 +35,23 @@ public class CssEngine2Test10Theme {
         List.of(),
         ""
     }, {
-        ":root + 1 decl",
-
-        List.of(s(
-            List.of(),
-
-            CssEngine2.decl("--color-red-50", "oklch(97.1% 0.013 17.38)")
-        )),
-
+        "1 rule",
+        List.of(
+            rule(".margin\\:0", List.of(), "margin", "0")
+        ),
         """
-        @layer theme {
-          :root {
-            --color-red-50: oklch(97.1% 0.013 17.38);
-          }
+        @layer utilities {
+          .margin\\:0 { margin: 0 }
         }
         """
     }, {
-        ":root + @media",
-
-        List.of(s(
-            List.of(),
-
-            CssEngine2.decl("--color-primary", "#f0f0f0")
-        ), s(
-            List.of(DARK),
-
-            CssEngine2.decl("--color-primary", "#1e1e1e")
-        )),
-
+        "1 rule + 1 variant",
+        List.of(
+            rule(".after\\/padding\\:0", List.of(AFTER), "padding", "0")
+        ),
         """
-        @layer theme {
-          :root {
-            --color-primary: #f0f0f0;
-
-            @media (prefers-color-scheme: dark) {
-              --color-primary: #1e1e1e;
-            }
-          }
+        @layer utilities {
+          .after\\/padding\\:0 { &::after { padding: 0 } }
         }
         """
     }};
@@ -79,28 +60,21 @@ public class CssEngine2Test10Theme {
   @Test(dataProvider = "writeProvider")
   public void write(
       String description,
-      @SuppressWarnings("exports") List<CssEngine2.Section> sections,
+      @SuppressWarnings("exports") List<CssEngine2.Rule> rules,
       String expected) {
     try {
-      final CssEngine2.Theme theme;
-      theme = new CssEngine2.Theme(sections);
+      final CssEngine2.Utilities utilities;
+      utilities = new CssEngine2.Utilities(rules);
 
       final StringBuilder out;
       out = new StringBuilder();
 
-      theme.write(out);
+      utilities.write(out);
 
       assertEquals(out.toString(), expected);
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     }
-  }
-
-  private CssEngine2.Section s(List<String> selector, CssEngine2.Decl... values) {
-    return CssEngine2.section(
-        selector,
-        List.of(values)
-    );
   }
 
 }

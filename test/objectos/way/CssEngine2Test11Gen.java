@@ -23,12 +23,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import objectos.way.CssEngine2.Ctx;
-import objectos.way.CssEngine2.Decl;
-import objectos.way.CssEngine2.Keyframes;
 import org.testng.annotations.Test;
 
-public class CssEngine2Test09Gen {
+public class CssEngine2Test11Gen {
 
   @Test
   public void testCase01() {
@@ -152,7 +149,7 @@ public class CssEngine2Test09Gen {
 
     final List<CssEngine2.Utility> utilities = new ArrayList<>();
 
-    final Ctx build() {
+    final CssEngine2.Ctx build() {
       final CssEngine2.Gen gen;
       gen = new CssEngine2.Gen(keyframes, keywords, rx, sections, utilities);
 
@@ -160,7 +157,7 @@ public class CssEngine2Test09Gen {
     }
 
     final void keyframes(String name) {
-      final Keyframes kf;
+      final CssEngine2.Keyframes kf;
       kf = CssEngine2.keyframes(name, List.of());
 
       keyframes.put(name, kf);
@@ -197,7 +194,7 @@ public class CssEngine2Test09Gen {
       final List<String> selector;
       selector = List.of();
 
-      final List<Decl> decls;
+      final List<CssEngine2.Decl> decls;
       decls = List.of(rx);
 
       final CssEngine2.Section s;

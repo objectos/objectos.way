@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import org.testng.annotations.Test;
 
-public class CssEngine2Test11Base {
+public class CssEngine2Test13Base {
 
   @Test(description = "Do not emit comments")
   public void comment01() {
