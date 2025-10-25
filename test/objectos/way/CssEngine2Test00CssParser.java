@@ -216,10 +216,46 @@ public class CssEngine2Test00CssParser {
             tok("red-50"), tok("dashed")
         )
     }, {
-        "length",
+        "hex-color: 3-value",
+        "#f09",
+        List.of(
+            tok("#f09")
+        )
+    }, {
+        "hex-color: 4-value",
+        "#f09a #F09a",
+        List.of(
+            tok("#f09a"), tok("#F09a")
+        )
+    }, {
+        "hex-color: 6-value & 8-value",
+        "#ff0099 #FF0099AA",
+        List.of(
+            tok("#ff0099"), tok("#FF0099AA")
+        )
+    }, {
+        "length: integer",
         "16rem",
         List.of(
             tok("16rem")
+        )
+    }, {
+        "length: double",
+        "14.2pt",
+        List.of(
+            tok("14.2pt")
+        )
+    }, {
+        "percentage: integer",
+        "16%",
+        List.of(
+            tok("16%")
+        )
+    }, {
+        "percentage: double",
+        "16.34%",
+        List.of(
+            tok("16.34%")
         )
     }, {
         "fun: 1 number",
@@ -244,6 +280,12 @@ public class CssEngine2Test00CssParser {
         "var(--foo, var(--bar))",
         List.of(
             fun("var", tok("--foo"), COMMA, fun("var", tok("--bar")))
+        )
+    }, {
+        "fun: --rx",
+        "--rx(16)",
+        List.of(
+            fun("--rx", tok("16"))
         )
     }};
   }

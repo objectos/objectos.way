@@ -45,6 +45,7 @@ import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.HexFormat;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -279,23 +280,25 @@ final class CssEngine2 implements Css.Engine {
   private static final byte[] CSS;
 
   private static final byte CSS_WS = 1;
-  private static final byte CSS_PERCENT = 2;
-  private static final byte CSS_LPARENS = 3;
-  private static final byte CSS_RPARENS = 4;
-  private static final byte CSS_ASTERISK = 5;
-  private static final byte CSS_COMMA = 6;
-  private static final byte CSS_HYPHEN = 7;
-  private static final byte CSS_COLON = 8;
-  private static final byte CSS_SEMICOLON = 9;
-  private static final byte CSS_AT = 10;
-  private static final byte CSS_REV_SOLIDUS = 11;
-  private static final byte CSS_LCURLY = 12;
-  private static final byte CSS_RCURLY = 13;
-  private static final byte CSS_DIGIT = 14;
-  private static final byte CSS_ALPHA = 15;
-  private static final byte CSS_UNDERLINE = 16;
-  private static final byte CSS_NON_ASCII = 17;
-  private static final byte CSS_EOF = 18;
+  private static final byte CSS_HASH = 2;
+  private static final byte CSS_PERCENT = 3;
+  private static final byte CSS_LPARENS = 4;
+  private static final byte CSS_RPARENS = 5;
+  private static final byte CSS_ASTERISK = 6;
+  private static final byte CSS_COMMA = 7;
+  private static final byte CSS_HYPHEN = 8;
+  private static final byte CSS_DOT = 9;
+  private static final byte CSS_COLON = 10;
+  private static final byte CSS_SEMICOLON = 11;
+  private static final byte CSS_AT = 12;
+  private static final byte CSS_REV_SOLIDUS = 13;
+  private static final byte CSS_LCURLY = 14;
+  private static final byte CSS_RCURLY = 15;
+  private static final byte CSS_DIGIT = 16;
+  private static final byte CSS_ALPHA = 17;
+  private static final byte CSS_UNDERLINE = 18;
+  private static final byte CSS_NON_ASCII = 19;
+  private static final byte CSS_EOF = 20;
 
   static {
     final byte[] table;
@@ -313,12 +316,14 @@ final class CssEngine2 implements Css.Engine {
     table['\r'] = CSS_WS;
 
     // symbols
+    table['#'] = CSS_HASH;
     table['%'] = CSS_PERCENT;
     table['('] = CSS_LPARENS;
     table[')'] = CSS_RPARENS;
     table['*'] = CSS_ASTERISK;
     table[','] = CSS_COMMA;
     table['-'] = CSS_HYPHEN;
+    table['.'] = CSS_DOT;
     table[':'] = CSS_COLON;
     table[';'] = CSS_SEMICOLON;
     table['@'] = CSS_AT;
@@ -575,6 +580,13 @@ final class CssEngine2 implements Css.Engine {
             break loop;
           }
 
+          case CSS_HASH -> {
+            final Value v;
+            v = valueHexColor();
+
+            values.add(v);
+          }
+
           case CSS_COMMA -> {
             final Value v;
             v = valueSep(Sep.COMMA);
@@ -601,6 +613,48 @@ final class CssEngine2 implements Css.Engine {
       }
 
       return values;
+    }
+
+    private Value valueHexColor() {
+      final int hash;
+      hash = idx;
+
+      while (true) {
+        switch (nextTest()) {
+          case CSS_EOF -> {
+            return valueHexColor(hash, cursor);
+          }
+
+          case CSS_WS -> {
+            return valueHexColor(hash, idx);
+          }
+
+          case CSS_COMMA, CSS_RPARENS -> {
+            return valueHexColor(hash, --cursor);
+          }
+
+          case CSS_DIGIT -> {
+            continue;
+          }
+
+          case CSS_ALPHA -> {
+            if (!HexFormat.isHexDigit(c)) {
+              throw error("Expected a CSS <hex-color> value");
+            }
+
+            continue;
+          }
+
+          default -> throw error("Expected a CSS <hex-color> value");
+        }
+      }
+    }
+
+    private Value valueHexColor(int idx0, int idx1) {
+      final String v;
+      v = text.substring(idx0, idx1);
+
+      return new Tok(v);
     }
 
     private Value valueIden() {
@@ -654,6 +708,13 @@ final class CssEngine2 implements Css.Engine {
             return new Fun(name, args);
           }
 
+          case CSS_HASH -> {
+            final Value v;
+            v = valueHexColor();
+
+            args.add(v);
+          }
+
           case CSS_COMMA -> {
             final Value v;
             v = valueSep(Sep.COMMA);
@@ -701,20 +762,28 @@ final class CssEngine2 implements Css.Engine {
 
       while (true) {
         switch (nextTest()) {
+          case CSS_DIGIT -> {
+            continue;
+          }
+
           case CSS_EOF -> {
-            return valueNumber(first, cursor);
+            return valueInteger(first, cursor);
           }
 
           case CSS_WS -> {
-            return valueNumber(first, idx);
+            return valueInteger(first, idx);
           }
 
           case CSS_COMMA, CSS_RPARENS -> {
-            return valueNumber(first, --cursor);
+            return valueInteger(first, --cursor);
           }
 
-          case CSS_DIGIT -> {
-            continue;
+          case CSS_PERCENT -> {
+            return valuePerc(first);
+          }
+
+          case CSS_DOT -> {
+            return valueDouble(first);
           }
 
           case CSS_ALPHA -> {
@@ -726,7 +795,65 @@ final class CssEngine2 implements Css.Engine {
       }
     }
 
-    private Value valueNumber(int idx0, int idx1) {
+    private Value valueInteger(int idx0, int idx1) {
+      final String s;
+      s = text.substring(idx0, idx1);
+
+      return new Tok(s);
+    }
+
+    private Value valuePerc(int first) {
+      return switch (nextTest()) {
+        case CSS_EOF -> valuePerc(first, cursor);
+
+        case CSS_WS -> valuePerc(first, idx);
+
+        case CSS_COMMA, CSS_RPARENS -> valuePerc(first, --cursor);
+
+        default -> throw error("Expected a CSS <percentage> value");
+      };
+    }
+
+    private Value valuePerc(int idx0, int idx1) {
+      final String s;
+      s = text.substring(idx0, idx1);
+
+      return new Tok(s);
+    }
+
+    private Value valueDouble(int first) {
+      while (true) {
+        switch (nextTest()) {
+          case CSS_DIGIT -> {
+            continue;
+          }
+
+          case CSS_EOF -> {
+            return valueDouble(first, cursor);
+          }
+
+          case CSS_WS -> {
+            return valueDouble(first, idx);
+          }
+
+          case CSS_COMMA, CSS_RPARENS -> {
+            return valueDouble(first, --cursor);
+          }
+
+          case CSS_PERCENT -> {
+            return valuePerc(first);
+          }
+
+          case CSS_ALPHA -> {
+            return valueLength(first);
+          }
+
+          default -> throw error("Expected a CSS <double> value");
+        }
+      }
+    }
+
+    private Value valueDouble(int idx0, int idx1) {
       final String s;
       s = text.substring(idx0, idx1);
 
