@@ -349,7 +349,7 @@ final class CssEngine2 implements Css.Engine {
 
     int cursor, idx;
 
-    final StringBuilder sb = new StringBuilder();
+    StringBuilder sb;
 
     final String text;
 
@@ -361,118 +361,93 @@ final class CssEngine2 implements Css.Engine {
       final List<Decl> decls;
       decls = new ArrayList<>();
 
-      loop: while (true) {
-        switch (nextTest()) {
-          case CSS_WS -> {
-            continue;
-          }
+      while (true) {
+        final byte next;
+        next = whileNext(CSS_WS);
 
-          case CSS_HYPHEN, CSS_UNDERLINE, CSS_ALPHA -> {
-            final Decl decl;
-            decl = parseDecl();
-
-            decls.add(decl);
-          }
-
-          case CSS_EOF -> {
-            break loop;
-          }
-
-          default -> throw error("");
+        if (next == CSS_EOF) {
+          break;
         }
+
+        final Decl decl;
+        decl = switch (next) {
+          case CSS_HYPHEN, CSS_UNDERLINE, CSS_ALPHA -> decl();
+
+          default -> throw error("Expected a CSS property declaration");
+        };
+
+        decls.add(decl);
       }
 
       return decls;
     }
 
-    private Decl parseDecl() {
-      final String property;
-      property = parseDeclProperty();
-
-      final String value;
-      value = parseDeclValue();
-
-      return new Decl(property, value);
-    }
-
-    private String parseDeclProperty() {
+    private Decl decl() {
       final int start;
       start = idx;
 
-      while (true) {
-        switch (nextTest()) {
-          case CSS_WS -> {
-            final String name;
-            name = text.substring(start, idx);
+      final byte next;
+      next = whileNext(CSS_HYPHEN, CSS_UNDERLINE, CSS_DIGIT, CSS_ALPHA);
 
-            final byte colon;
-            colon = nextWhile(CSS_WS);
+      return switch (next) {
+        case CSS_WS -> {
+          final String name;
+          name = text.substring(start, idx);
 
-            if (colon != CSS_COLON) {
-              throw error("Expected ':' after a CSS property name");
-            }
-
-            return name;
-          }
-
-          case CSS_ASTERISK -> {
-            final String name;
-            name = text.substring(start, idx + 1);
-
-            final byte colon;
-            colon = nextWhile(CSS_WS);
-
-            if (colon != CSS_COLON) {
-              throw error("Expected ':' after a CSS property name");
-            }
-
-            return name;
-          }
-
-          case CSS_COLON -> {
-            final String name;
-            name = text.substring(start, idx);
-
-            return name;
-          }
-
-          case CSS_HYPHEN, CSS_UNDERLINE, CSS_DIGIT, CSS_ALPHA -> {
-            continue;
-          }
-
-          case CSS_REV_SOLIDUS -> throw error(UNSUPPORTED_ESCAPE);
-
-          case CSS_NON_ASCII -> throw error(UNSUPPORTED_NON_ASCII);
-
-          case CSS_EOF -> throw error(EOF_DECLS);
-
-          default -> throw error("Invalid CSS property name");
+          yield declColon(name);
         }
-      }
+
+        case CSS_ASTERISK -> {
+          final String name;
+          name = text.substring(start, cursor);
+
+          yield declColon(name);
+        }
+
+        case CSS_COLON -> {
+          final String name;
+          name = text.substring(start, idx);
+
+          yield declValue(name);
+        }
+
+        case CSS_REV_SOLIDUS -> throw error(UNSUPPORTED_ESCAPE);
+
+        case CSS_NON_ASCII -> throw error(UNSUPPORTED_NON_ASCII);
+
+        case CSS_EOF -> throw error(EOF_DECLS);
+
+        default -> throw error("Invalid CSS property name");
+      };
     }
 
-    private String parseDeclValue() {
-      while (true) {
-        switch (nextTest()) {
-          case CSS_WS -> {
-            continue;
-          }
+    private Decl declColon(String name) {
+      final byte next;
+      next = whileNext(CSS_WS);
 
-          case CSS_SEMICOLON, CSS_RCURLY -> {
-            return "";
-          }
-
-          case CSS_EOF -> throw error(EOF_DECLS);
-
-          default -> {
-            return parseDeclValueChar();
-          }
-        }
+      if (next != CSS_COLON) {
+        throw error("Expected ':' after a CSS property name");
       }
+
+      return declValue(name);
     }
 
-    private String parseDeclValueChar() {
-      sb.setLength(0);
+    private Decl declValue(String name) {
+      final byte next;
+      next = whileNext(CSS_WS);
+
+      return switch (next) {
+        case CSS_SEMICOLON, CSS_RCURLY -> CssEngine2.decl(name, "");
+
+        case CSS_EOF -> throw error(EOF_DECLS);
+
+        default -> declValue0(name);
+      };
+    }
+
+    private Decl declValue0(String name) {
+      final StringBuilder sb;
+      sb = sb();
 
       sb.append(c);
 
@@ -480,13 +455,16 @@ final class CssEngine2 implements Css.Engine {
       ws = 0;
 
       while (true) {
-        switch (nextTest()) {
+        switch (nextEof()) {
           case CSS_WS -> {
             ws++;
           }
 
           case CSS_SEMICOLON, CSS_RCURLY -> {
-            return sb.toString();
+            final String v;
+            v = sb.toString();
+
+            return CssEngine2.decl(name, v);
           }
 
           case CSS_EOF -> throw error(EOF_DECLS);
@@ -505,149 +483,171 @@ final class CssEngine2 implements Css.Engine {
     }
 
     public final String parseIden() {
-      sb.setLength(0);
+      final byte next;
+      next = whileNext(CSS_WS);
 
-      while (true) {
-        switch (nextTest()) {
-          case CSS_WS -> {
-            continue;
-          }
+      return switch (next) {
+        case CSS_UNDERLINE, CSS_ALPHA -> iden();
 
-          case CSS_UNDERLINE, CSS_ALPHA -> {
-            sb.append(c);
+        case CSS_REV_SOLIDUS -> throw error(UNSUPPORTED_ESCAPE);
 
-            return parseIdenChar();
-          }
+        case CSS_NON_ASCII -> throw error(UNSUPPORTED_NON_ASCII);
 
-          case CSS_REV_SOLIDUS -> throw error(UNSUPPORTED_ESCAPE);
+        case CSS_EOF -> throw error("Empty or blank identifier");
 
-          case CSS_NON_ASCII -> throw error(UNSUPPORTED_NON_ASCII);
-
-          case CSS_EOF -> throw error("Empty or blank identifier");
-
-          default -> throw error("Invalid CSS identifier");
-        }
-      }
+        default -> throw error("Invalid CSS identifier");
+      };
     }
 
-    private String parseIdenChar() {
-      while (true) {
-        switch (nextTest()) {
-          case CSS_WS -> {
-            return parseIdenTrim();
-          }
+    private String iden() {
+      final int start;
+      start = idx;
 
-          case CSS_HYPHEN, CSS_UNDERLINE, CSS_DIGIT, CSS_ALPHA -> {
-            sb.append(c);
-          }
+      final byte next;
+      next = whileNext(CSS_HYPHEN, CSS_UNDERLINE, CSS_DIGIT, CSS_ALPHA);
 
-          case CSS_REV_SOLIDUS -> throw error(UNSUPPORTED_ESCAPE);
+      return switch (next) {
+        case CSS_EOF -> iden(start, cursor);
 
-          case CSS_NON_ASCII -> throw error(UNSUPPORTED_NON_ASCII);
+        case CSS_WS -> idenTrim(start);
 
-          case CSS_EOF -> {
-            return sb.toString();
-          }
+        case CSS_REV_SOLIDUS -> throw error(UNSUPPORTED_ESCAPE);
 
-          default -> throw error("Invalid CSS identifier");
-        }
-      }
+        case CSS_NON_ASCII -> throw error(UNSUPPORTED_NON_ASCII);
+
+        default -> throw error("Invalid CSS identifier");
+      };
     }
 
-    private String parseIdenTrim() {
-      while (true) {
-        switch (nextTest()) {
-          case CSS_WS -> {
-            continue;
-          }
+    private String iden(int idx0, int idx1) {
+      return text.substring(idx0, idx1);
+    }
 
-          case CSS_EOF -> {
-            return sb.toString();
-          }
+    private String idenTrim(int start) {
+      final int end;
+      end = idx;
 
-          default -> throw error("Invalid CSS identifier");
-        }
-      }
+      final byte next;
+      next = whileNext(CSS_WS);
+
+      return switch (next) {
+        case CSS_EOF -> iden(start, end);
+
+        default -> throw error("Invalid CSS identifier");
+      };
     }
 
     public final List<Value> parseValues() {
-      final List<Value> values;
-      values = new ArrayList<>();
+      final List<Value> result;
+      result = new ArrayList<>();
 
-      loop: while (true) {
-        switch (nextTest()) {
-          case CSS_EOF -> {
-            break loop;
-          }
+      values(result, CSS_EOF);
 
-          case CSS_HASH -> {
-            final Value v;
-            v = valueHexColor();
+      return result;
+    }
 
-            values.add(v);
-          }
+    private void values(List<Value> result, byte stopIf) {
+      byte next;
+      next = nextEof();
 
-          case CSS_COMMA -> {
-            final Value v;
-            v = valueSep(Sep.COMMA);
+      while (next != stopIf) {
+        result.add(
+            value(next)
+        );
 
-            values.add(v);
-          }
-
-          case CSS_ALPHA, CSS_HYPHEN, CSS_UNDERLINE -> {
-            final Value v;
-            v = valueIden();
-
-            values.add(v);
-          }
-
-          case CSS_DIGIT -> {
-            final Value v;
-            v = valueDigit();
-
-            values.add(v);
-          }
-
-          default -> throw error("Invalid CSS declaration value");
-        }
+        next = nextEof();
       }
+    }
 
-      return values;
+    private Value value(byte next) {
+      return switch (next) {
+        case CSS_HASH -> valueHexColor();
+
+        case CSS_COMMA -> valueSep(Sep.COMMA);
+
+        case CSS_ALPHA, CSS_HYPHEN, CSS_UNDERLINE -> valueIden();
+
+        case CSS_DIGIT -> valueDigit();
+
+        default -> throw error("Invalid CSS declaration value");
+      };
+    }
+
+    private Value valueDigit() {
+      final int start;
+      start = idx;
+
+      final byte next;
+      next = whileNext(CSS_DIGIT);
+
+      return switch (next) {
+        case CSS_EOF -> valueInteger(start, cursor);
+
+        case CSS_WS -> valueInteger(start, idx);
+
+        case CSS_COMMA, CSS_RPARENS -> valueInteger(start, --cursor);
+
+        case CSS_PERCENT -> valuePerc(start);
+
+        case CSS_DOT -> valueDouble(start);
+
+        case CSS_ALPHA -> valueLength(start);
+
+        default -> throw error("Expected a CSS numeric value");
+      };
+    }
+
+    private Value valueDouble(int start) {
+      final byte next;
+      next = whileNext(CSS_DIGIT);
+
+      return switch (next) {
+        case CSS_EOF -> valueDouble(start, cursor);
+
+        case CSS_WS -> valueDouble(start, idx);
+
+        case CSS_COMMA, CSS_RPARENS -> valueDouble(start, --cursor);
+
+        case CSS_PERCENT -> valuePerc(start);
+
+        case CSS_ALPHA -> valueLength(start);
+
+        default -> throw error("Expected a CSS <double> value");
+      };
+    }
+
+    private Value valueDouble(int idx0, int idx1) {
+      final String s;
+      s = text.substring(idx0, idx1);
+
+      return new Tok(s);
     }
 
     private Value valueHexColor() {
-      final int hash;
-      hash = idx;
+      final int start;
+      start = idx;
 
-      while (true) {
-        switch (nextTest()) {
-          case CSS_EOF -> {
-            return valueHexColor(hash, cursor);
-          }
+      final byte next;
+      next = whileHexDigit();
 
-          case CSS_WS -> {
-            return valueHexColor(hash, idx);
-          }
+      return switch (next) {
+        case CSS_EOF -> valueHexColor(start, cursor);
 
-          case CSS_COMMA, CSS_RPARENS -> {
-            return valueHexColor(hash, --cursor);
-          }
+        case CSS_WS -> valueHexColor(start, idx);
 
-          case CSS_DIGIT -> {
-            continue;
-          }
+        case CSS_COMMA, CSS_RPARENS -> valueHexColor(start, --cursor);
 
-          case CSS_ALPHA -> {
-            if (!HexFormat.isHexDigit(c)) {
-              throw error("Expected a CSS <hex-color> value");
-            }
+        default -> throw error("Expected a CSS <hex-color> value");
+      };
+    }
 
-            continue;
-          }
+    private Value valueFun(String name) {
+      final List<Value> args;
+      args = new ArrayList<>();
 
-          default -> throw error("Expected a CSS <hex-color> value");
-        }
-      }
+      values(args, CSS_RPARENS);
+
+      return new Fun(name, args);
     }
 
     private Value valueHexColor(int idx0, int idx1) {
@@ -658,141 +658,29 @@ final class CssEngine2 implements Css.Engine {
     }
 
     private Value valueIden() {
-      final int first;
-      first = idx;
+      final int start;
+      start = idx;
 
-      while (true) {
-        switch (nextTest()) {
-          case CSS_EOF -> {
-            return valueKeyword(first, cursor);
-          }
+      final byte next;
+      next = whileNext(CSS_ALPHA, CSS_DIGIT, CSS_HYPHEN, CSS_UNDERLINE);
 
-          case CSS_WS -> {
-            return valueKeyword(first, idx);
-          }
+      return switch (next) {
+        case CSS_EOF -> valueKeyword(start, cursor);
 
-          case CSS_COMMA, CSS_RPARENS -> {
-            return valueKeyword(first, --cursor);
-          }
+        case CSS_WS -> valueKeyword(start, idx);
 
-          case CSS_LPARENS -> {
-            final String name;
-            name = text.substring(first, idx);
+        case CSS_COMMA, CSS_RPARENS -> valueKeyword(start, --cursor);
 
-            return valueFun(name);
-          }
+        case CSS_LPARENS -> {
+          final String name;
+          name = text.substring(start, idx);
 
-          case CSS_ALPHA, CSS_DIGIT, CSS_HYPHEN, CSS_UNDERLINE -> {
-            continue;
-          }
-
-          default -> throw error("Expected CSS identifier");
+          yield valueFun(name);
         }
-      }
-    }
 
-    private Value valueKeyword(int idx0, int idx1) {
-      final String s;
-      s = text.substring(idx0, idx1);
+        default -> throw error("Expected CSS identifier");
+      };
 
-      return new Tok(s);
-    }
-
-    private Value valueFun(String name) {
-      final List<Value> args;
-      args = new ArrayList<>();
-
-      while (true) {
-        switch (nextTest()) {
-          case CSS_RPARENS -> {
-            return new Fun(name, args);
-          }
-
-          case CSS_HASH -> {
-            final Value v;
-            v = valueHexColor();
-
-            args.add(v);
-          }
-
-          case CSS_COMMA -> {
-            final Value v;
-            v = valueSep(Sep.COMMA);
-
-            args.add(v);
-          }
-
-          case CSS_ALPHA, CSS_HYPHEN, CSS_UNDERLINE -> {
-            final Value v;
-            v = valueIden();
-
-            args.add(v);
-          }
-
-          case CSS_DIGIT -> {
-            final Value v;
-            v = valueDigit();
-
-            args.add(v);
-          }
-
-          default -> throw new UnsupportedOperationException("Implement me");
-        }
-      }
-    }
-
-    private Value valueSep(Sep v) {
-      while (true) {
-        final byte test;
-        test = nextTest();
-
-        if (test != CSS_WS) {
-          cursor--;
-
-          break;
-        }
-      }
-
-      return v;
-    }
-
-    private Value valueDigit() {
-      final int first;
-      first = idx;
-
-      while (true) {
-        switch (nextTest()) {
-          case CSS_DIGIT -> {
-            continue;
-          }
-
-          case CSS_EOF -> {
-            return valueInteger(first, cursor);
-          }
-
-          case CSS_WS -> {
-            return valueInteger(first, idx);
-          }
-
-          case CSS_COMMA, CSS_RPARENS -> {
-            return valueInteger(first, --cursor);
-          }
-
-          case CSS_PERCENT -> {
-            return valuePerc(first);
-          }
-
-          case CSS_DOT -> {
-            return valueDouble(first);
-          }
-
-          case CSS_ALPHA -> {
-            return valueLength(first);
-          }
-
-          default -> throw error("Expected a CSS numeric value");
-        }
-      }
     }
 
     private Value valueInteger(int idx0, int idx1) {
@@ -802,8 +690,40 @@ final class CssEngine2 implements Css.Engine {
       return new Tok(s);
     }
 
+    private Value valueKeyword(int idx0, int idx1) {
+      final String s;
+      s = text.substring(idx0, idx1);
+
+      return new Tok(s);
+    }
+
+    private Value valueLength(int start) {
+      final int unit;
+      unit = idx;
+
+      final byte next;
+      next = whileNext(CSS_ALPHA);
+
+      return switch (next) {
+        case CSS_EOF -> valueLength(start, unit, cursor);
+
+        case CSS_WS -> valueLength(start, unit, idx);
+
+        case CSS_COMMA, CSS_RPARENS -> valueLength(start, unit, --cursor);
+
+        default -> throw error("Expected a CSS <length> value");
+      };
+    }
+
+    private Value valueLength(int number, int unit, int end) {
+      final String s;
+      s = text.substring(number, end);
+
+      return new Tok(s);
+    }
+
     private Value valuePerc(int first) {
-      return switch (nextTest()) {
+      return switch (nextEof()) {
         case CSS_EOF -> valuePerc(first, cursor);
 
         case CSS_WS -> valuePerc(first, idx);
@@ -821,99 +741,103 @@ final class CssEngine2 implements Css.Engine {
       return new Tok(s);
     }
 
-    private Value valueDouble(int first) {
-      while (true) {
-        switch (nextTest()) {
-          case CSS_DIGIT -> {
-            continue;
-          }
+    private Value valueSep(Sep v) {
+      whileNext(CSS_WS);
 
-          case CSS_EOF -> {
-            return valueDouble(first, cursor);
-          }
+      cursor--;
 
-          case CSS_WS -> {
-            return valueDouble(first, idx);
-          }
-
-          case CSS_COMMA, CSS_RPARENS -> {
-            return valueDouble(first, --cursor);
-          }
-
-          case CSS_PERCENT -> {
-            return valuePerc(first);
-          }
-
-          case CSS_ALPHA -> {
-            return valueLength(first);
-          }
-
-          default -> throw error("Expected a CSS <double> value");
-        }
-      }
-    }
-
-    private Value valueDouble(int idx0, int idx1) {
-      final String s;
-      s = text.substring(idx0, idx1);
-
-      return new Tok(s);
-    }
-
-    private Value valueLength(int number) {
-      final int unit;
-      unit = idx;
-
-      while (true) {
-        switch (nextTest()) {
-          case CSS_EOF -> {
-            return valueLength(number, unit, cursor);
-          }
-
-          case CSS_WS -> {
-            return valueLength(number, unit, idx);
-          }
-
-          case CSS_ALPHA -> {
-            continue;
-          }
-
-          default -> throw error("Expected a CSS <length> value");
-        }
-      }
-    }
-
-    private Value valueLength(int number, int unit, int end) {
-      final String s;
-      s = text.substring(number, end);
-
-      return new Tok(s);
+      return v;
     }
 
     private IllegalArgumentException error(String message) {
       return new IllegalArgumentException(message);
     }
 
-    private byte nextTest() {
-      if (cursor < text.length()) {
-        idx = cursor++;
+    private boolean hasNext() {
+      return cursor < text.length();
+    }
 
-        c = text.charAt(idx);
+    private byte next() {
+      idx = cursor++;
 
-        return c < 128 ? CSS[c] : CSS_NON_ASCII;
+      c = text.charAt(idx);
+
+      return c < 128 ? CSS[c] : CSS_NON_ASCII;
+    }
+
+    private byte nextEof() {
+      if (hasNext()) {
+        return next();
       } else {
         return CSS_EOF;
       }
     }
 
-    private byte nextWhile(byte condition) {
-      byte test;
+    private StringBuilder sb() {
+      if (sb != null) {
+        sb.setLength(0);
+      } else {
+        sb = new StringBuilder();
+      }
 
-      do {
-        test = nextTest();
-      } while (test == condition);
+      return sb;
+    }
 
-      return test;
+    private byte whileHexDigit() {
+      while (hasNext()) {
+        final byte next;
+        next = next();
+
+        if (HexFormat.isHexDigit(c)) {
+          continue;
+        }
+
+        return next;
+      }
+
+      return CSS_EOF;
+    }
+
+    private byte whileNext(byte c0) {
+      while (hasNext()) {
+        final byte next;
+        next = next();
+
+        if (next == c0) {
+          continue;
+        }
+
+        return next;
+      }
+
+      return CSS_EOF;
+    }
+
+    private byte whileNext(byte c0, byte c1, byte c2, byte c3) {
+      while (hasNext()) {
+        final byte next;
+        next = next();
+
+        if (next == c0) {
+          continue;
+        }
+
+        if (next == c1) {
+          continue;
+        }
+
+        if (next == c2) {
+          continue;
+        }
+
+        if (next == c3) {
+          continue;
+        }
+
+        return next;
+      }
+
+      return CSS_EOF;
     }
 
   }
@@ -2409,10 +2333,21 @@ final class CssEngine2 implements Css.Engine {
           yield sb.toString();
         }
 
-        case CNF_DIGIT -> { sb.append('-'); escapeAsCodePoint(); yield formatRest(nextTest()); }
+        case CNF_DIGIT -> {
+          sb.append('-');
+          escapeAsCodePoint();
+          yield formatRest(nextTest());
+        }
 
-        default -> { sb.append('-'); yield formatRest(test); }
+        default ->
+
+        {
+          sb.append('-');
+
+          yield formatRest(test);
+        }
       };
+
     }
 
     private String formatRest(byte test) {
@@ -2487,6 +2422,7 @@ final class CssEngine2 implements Css.Engine {
 
       return className.compareTo(o.className);
     }
+
   }
 
   static Utility utility(List<Variant> variants, String className, String property, String value) {
