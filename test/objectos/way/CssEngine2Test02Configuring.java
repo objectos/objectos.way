@@ -16,6 +16,7 @@
 package objectos.way;
 
 import static objectos.way.CssEngine2.fun;
+import static objectos.way.CssEngine2.number;
 import static objectos.way.CssEngine2.tok;
 import static org.testng.Assert.assertEquals;
 
@@ -194,10 +195,10 @@ public class CssEngine2Test02Configuring {
           assertEquals(c.fontFaces(), List.of());
           assertEquals(c.keyframes(), Map.of("fade-in", CssEngine2.keyframes("fade-in", List.of(
               CssEngine2.parsedRule("from", List.of(
-                  CssEngine2.decl("opacity", tok("0"))
+                  CssEngine2.decl("opacity", number("0"))
               )),
               CssEngine2.parsedRule("to", List.of(
-                  CssEngine2.decl("opacity", tok("1"))
+                  CssEngine2.decl("opacity", number("1"))
               ))
           ))));
           assertEquals(c.properties(), Map.of());
@@ -301,7 +302,7 @@ public class CssEngine2Test02Configuring {
               List.of(
                   CssEngine2.decl("font-family", tok("\"IBM Plex Sans\"")),
                   CssEngine2.decl("font-style", tok("normal")),
-                  CssEngine2.decl("font-weight", tok("700")),
+                  CssEngine2.decl("font-weight", number("700")),
                   CssEngine2.decl("src", fun("local", tok("\"IBM Plex Sans Bold\"")))
               )
           ));

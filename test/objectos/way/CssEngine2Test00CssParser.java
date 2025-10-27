@@ -16,6 +16,8 @@
 package objectos.way;
 
 import static objectos.way.CssEngine2.fun;
+import static objectos.way.CssEngine2.number;
+import static objectos.way.CssEngine2.rx;
 import static objectos.way.CssEngine2.tok;
 import static objectos.way.CssEngine2.Sep.COMMA;
 import static org.testng.Assert.assertEquals;
@@ -47,7 +49,7 @@ public class CssEngine2Test00CssParser {
         """,
 
         List.of(
-            CssEngine2.decl("--color-stone-950", fun("oklch", tok("0.147"), tok("0.004"), tok("49.25")))
+            CssEngine2.decl("--color-stone-950", fun("oklch", number("0.147"), number("0.004"), number("49.25")))
         )
     }, {
         "color: two lines",
@@ -58,8 +60,8 @@ public class CssEngine2Test00CssParser {
         """,
 
         List.of(
-            CssEngine2.decl("--color-stone-950", fun("oklch", tok("0.147"), tok("0.004"), tok("49.25"))),
-            CssEngine2.decl("--color-red-50", fun("oklch", tok("0.971"), tok("0.013"), tok("17.38")))
+            CssEngine2.decl("--color-stone-950", fun("oklch", number("0.147"), number("0.004"), number("49.25"))),
+            CssEngine2.decl("--color-red-50", fun("oklch", number("0.971"), number("0.013"), number("17.38")))
         )
     }, {
         "color: clear",
@@ -79,7 +81,7 @@ public class CssEngine2Test00CssParser {
         """,
 
         List.of(
-            CssEngine2.decl("--carbon-grid-columns", tok("4"))
+            CssEngine2.decl("--carbon-grid-columns", number("4"))
         )
     }, {
         "font: just one",
@@ -105,17 +107,7 @@ public class CssEngine2Test00CssParser {
         "regular",
         "opacity:0;",
         List.of(
-            CssEngine2.decl("opacity", tok("0"))
-        )
-    }, {
-        "rx",
-
-        """
-        --rx: 16;
-        """,
-
-        List.of(
-            CssEngine2.decl("--rx", tok("16"))
+            CssEngine2.decl("opacity", number("0"))
         )
     }, {
         "ws: blank line between lines",
@@ -128,9 +120,9 @@ public class CssEngine2Test00CssParser {
         """,
 
         List.of(
-            CssEngine2.decl("--color-orange-900", fun("oklch", tok("0.408"), tok("0.123"), tok("38.172"))),
-            CssEngine2.decl("--color-orange-950", fun("oklch", tok("0.266"), tok("0.079"), tok("36.259"))),
-            CssEngine2.decl("--color-amber-50", fun("oklch", tok("0.987"), tok("0.022"), tok("95.277")))
+            CssEngine2.decl("--color-orange-900", fun("oklch", number("0.408"), number("0.123"), number("38.172"))),
+            CssEngine2.decl("--color-orange-950", fun("oklch", number("0.266"), number("0.079"), number("36.259"))),
+            CssEngine2.decl("--color-amber-50", fun("oklch", number("0.987"), number("0.022"), number("95.277")))
         )
     }, {
         "ws: it should trim the name",
@@ -140,7 +132,7 @@ public class CssEngine2Test00CssParser {
         """,
 
         List.of(
-            CssEngine2.decl("--color-orange-900", fun("oklch", tok("0.408"), tok("0.123"), tok("38.172")))
+            CssEngine2.decl("--color-orange-900", fun("oklch", number("0.408"), number("0.123"), number("38.172")))
         )
     }, {
         "ws: it should trim the name",
@@ -150,7 +142,7 @@ public class CssEngine2Test00CssParser {
         """,
 
         List.of(
-            CssEngine2.decl("--color-orange-900", fun("oklch", tok("0.408"), tok("0.123"), tok("38.172")))
+            CssEngine2.decl("--color-orange-900", fun("oklch", number("0.408"), number("0.123"), number("38.172")))
         )
     }, {
         "ws: it should trim the value",
@@ -161,7 +153,7 @@ public class CssEngine2Test00CssParser {
         """,
 
         List.of(
-            CssEngine2.decl("--color-orange-900", fun("oklch", tok("0.408"), tok("0.123"), tok("38.172")))
+            CssEngine2.decl("--color-orange-900", fun("oklch", number("0.408"), number("0.123"), number("38.172")))
         )
     }};
   }
@@ -279,7 +271,7 @@ public class CssEngine2Test00CssParser {
         "fun: 1 number",
         "blur(0)",
         List.of(
-            fun("blur", tok("0"))
+            fun("blur", number("0"))
         )
     }, {
         "fun: 1 var",
@@ -300,10 +292,10 @@ public class CssEngine2Test00CssParser {
             fun("var", tok("--foo"), COMMA, fun("var", tok("--bar")))
         )
     }, {
-        "fun: --rx",
+        "--rx custom function",
         "--rx(16)",
         List.of(
-            fun("--rx", tok("16"))
+            rx("16")
         )
     }};
   }

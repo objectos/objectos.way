@@ -249,7 +249,7 @@ final class CssEngine2 {
         value = values.get(idx);
 
         switch (value) {
-          case CssEngine2.Fun(String name, List<Value> args) -> {
+          case Fun(String name, List<Value> args) -> {
             if (idx != 0) {
               out.append(' ');
             }
@@ -263,11 +263,31 @@ final class CssEngine2 {
             out.append(')');
           }
 
-          case CssEngine2.Sep.COMMA -> {
+          case Number(String v) -> {
+            if (idx != 0) {
+              out.append(' ');
+            }
+
+            out.append(v);
+          }
+
+          case Rx(String v) -> {
+            if (idx != 0) {
+              out.append(' ');
+            }
+
+            out.append("calc(");
+
+            out.append(v);
+
+            out.append(" / 16 * 1rem)");
+          }
+
+          case Sep.COMMA -> {
             out.append(',');
           }
 
-          case CssEngine2.Tok(String v) -> {
+          case Tok(String v) -> {
             if (idx != 0) {
               out.append(' ');
             }
@@ -291,17 +311,25 @@ final class CssEngine2 {
 
   }
 
-  record Fun(String name, List<Value> args) implements Value {}
+  private record Fun(String name, List<Value> args) implements Value {}
 
   static Fun fun(String name, List<Value> args) { return new Fun(name, args); }
   static Fun fun(String name, Value... args) { return new Fun(name, List.of(args)); }
+
+  private record Number(String v) implements Value {}
+
+  static Number number(String v) { return new Number(v); }
+
+  private record Rx(String v) implements Value {}
+
+  static Rx rx(String v) { return new Rx(v); }
 
   enum Sep implements Value {
     COMMA;
   }
 
   /// arbitrary token
-  record Tok(String v) implements Value {}
+  private record Tok(String v) implements Value {}
 
   static Tok tok(String v) { return new Tok(v); }
 
@@ -634,7 +662,7 @@ final class CssEngine2 {
       final String s;
       s = text.substring(idx0, idx1);
 
-      return new Tok(s);
+      return new Number(s);
     }
 
     private Value valueHexColor() {
@@ -661,7 +689,11 @@ final class CssEngine2 {
 
       values(args, CSS_RPARENS);
 
-      return new Fun(name, args);
+      if ("--rx".equals(name) && args.size() == 1 && args.get(0) instanceof Number(String v)) {
+        return new Rx(v);
+      } else {
+        return new Fun(name, args);
+      }
     }
 
     private Value valueHexColor(int idx0, int idx1) {
@@ -701,7 +733,7 @@ final class CssEngine2 {
       final String s;
       s = text.substring(idx0, idx1);
 
-      return new Tok(s);
+      return new Number(s);
     }
 
     private Value valueKeyword(int idx0, int idx1) {
@@ -2511,7 +2543,7 @@ final class CssEngine2 {
 
     private void processValue(boolean keyframesProp, Value value) {
       switch (value) {
-        case CssEngine2.Fun(String name, List<Value> args) -> {
+        case Fun(String name, List<Value> args) -> {
           if ("var".equals(name) && !args.isEmpty()) {
             final Value first;
             first = args.get(0);
@@ -2531,9 +2563,13 @@ final class CssEngine2 {
           }
         }
 
-        case CssEngine2.Sep sep -> {}
+        case Number n -> {}
 
-        case CssEngine2.Tok(String v) -> {
+        case Rx rx -> {}
+
+        case Sep sep -> {}
+
+        case Tok(String v) -> {
           if (keyframesProp) {
             if (!keyframesMarked.containsKey(v)) {
               final Keyframes kf;

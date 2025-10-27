@@ -16,6 +16,7 @@
 package objectos.way;
 
 import static objectos.way.CssEngine2.fun;
+import static objectos.way.CssEngine2.rx;
 import static objectos.way.CssEngine2.tok;
 import static org.testng.Assert.assertEquals;
 
@@ -127,31 +128,22 @@ public class CssEngine2Test10Gen {
     );
   }
 
-  /*
-  @Test
+  @Test(description = "--rx() function")
   public void testCase06() {
     test(
         gen -> {
-          gen.rx("16");
-          gen.utility(List.of(), ".gap\\:16rx", "gap", "16rx");
+          gen.utility(List.of(), ".gap\\:--rx\\(16\\)", "gap", rx("16"));
         },
 
         ctx -> {
           assertEquals(ctx.keyframes(), List.of());
           assertEquals(ctx.rules(), List.of(
-              CssEngine2.rule(".gap\\:16rx", List.of(), "gap", "calc(16 / var(--rx) * 1rem)")
+              CssEngine2.rule(".gap\\:--rx\\(16\\)", List.of(), "gap", "calc(16 / 16 * 1rem)")
           ));
-          final List<CssEngine2.Section> sections = ctx.sections();
-          assertEquals(sections.size(), 1);
-          final CssEngine2.Section s0 = sections.get(0);
-          assertEquals(s0.selector(), List.of());
-          assertEquals(v(s0.decls()), """
-          --rx: 16
-          """);
+          assertEquals(ctx.sections(), List.of());
         }
     );
   }
-  */
 
   private static final class Builder {
 
