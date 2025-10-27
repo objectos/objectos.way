@@ -607,18 +607,19 @@ final class CssEngine2 {
 
         case CSS_COMMA -> valueSep(Sep.COMMA);
 
-        case CSS_ALPHA, CSS_HYPHEN, CSS_UNDERLINE -> valueIden();
+        case CSS_HYPHEN -> valueHyphen();
 
-        case CSS_DIGIT -> valueDigit();
+        case CSS_DOT -> valueDot();
+
+        case CSS_ALPHA, CSS_UNDERLINE -> valueIden(idx);
+
+        case CSS_DIGIT -> valueDigit(idx);
 
         default -> throw error("Invalid CSS declaration value");
       };
     }
 
-    private Value valueDigit() {
-      final int start;
-      start = idx;
-
+    private Value valueDigit(final int start) {
       final byte next;
       next = whileNext(CSS_DIGIT);
 
@@ -636,6 +637,17 @@ final class CssEngine2 {
         case CSS_ALPHA -> valueLength(start);
 
         default -> throw error("Expected a CSS numeric value");
+      };
+    }
+
+    private Value valueDot() {
+      final int dot;
+      dot = idx;
+
+      return switch (nextEof()) {
+        case CSS_DIGIT -> valueDouble(dot);
+
+        default -> throw error("Expected a CSS fractional value");
       };
     }
 
@@ -703,10 +715,7 @@ final class CssEngine2 {
       return new Tok(v);
     }
 
-    private Value valueIden() {
-      final int start;
-      start = idx;
-
+    private Value valueIden(final int start) {
       final byte next;
       next = whileNext(CSS_ALPHA, CSS_DIGIT, CSS_HYPHEN, CSS_UNDERLINE);
 
@@ -734,6 +743,19 @@ final class CssEngine2 {
       s = text.substring(idx0, idx1);
 
       return new Number(s);
+    }
+
+    private Value valueHyphen() {
+      final int hyphen;
+      hyphen = idx;
+
+      return switch (nextEof()) {
+        case CSS_DIGIT -> valueDigit(hyphen);
+
+        case CSS_ALPHA, CSS_HYPHEN, CSS_UNDERLINE -> valueIden(hyphen);
+
+        default -> throw error("Expected a CSS <iden> or a negative numeric value");
+      };
     }
 
     private Value valueKeyword(int idx0, int idx1) {

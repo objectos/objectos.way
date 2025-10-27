@@ -238,6 +238,36 @@ public class CssEngine2Test00CssParser {
             tok("14.2pt")
         )
     }, {
+        "number: integer",
+        "16",
+        List.of(
+            number("16")
+        )
+    }, {
+        "number: neg integer",
+        "-16",
+        List.of(
+            number("-16")
+        )
+    }, {
+        "number: double",
+        "16.78",
+        List.of(
+            number("16.78")
+        )
+    }, {
+        "number: neg double",
+        "-16.78",
+        List.of(
+            number("-16.78")
+        )
+    }, {
+        "number: double no leading zero",
+        ".78",
+        List.of(
+            number(".78")
+        )
+    }, {
         "percentage: integer",
         "16%",
         List.of(

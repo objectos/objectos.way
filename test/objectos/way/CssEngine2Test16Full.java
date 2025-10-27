@@ -471,60 +471,13 @@ public class CssEngine2Test16Full {
     );
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   --rx: emit
   """)
   public void testCase11() throws IOException {
     class Subject {
       String s = """
-      gap:16rx
-      """;
-    }
-
-    final CssEngine2.System system;
-    system = new CssEngine2.System();
-
-    system.base = "";
-
-    system.theme = """
-    --rx: 16;
-    """;
-
-    final CssEngine2.Configuring engine;
-    engine = new CssEngine2.Configuring(system);
-
-    engine.noteSink(Y.noteSink());
-
-    engine.scanClass(Subject.class);
-
-    final StringBuilder out;
-    out = new StringBuilder();
-
-    engine.generate(out);
-
-    assertEquals(
-        out.toString(),
-
-        """
-        @layer theme {
-          :root {
-            --rx: 16;
-          }
-        }
-        @layer utilities {
-          .gap\\:16rx { gap: calc(16 / var(--rx) * 1rem) }
-        }
-        """
-    );
-  }
-
-  @Test(description = """
-  --rx: do not emit
-  """)
-  public void testCase12() throws IOException {
-    class Subject {
-      String s = """
-      gap:16rx
+      gap:--rx(16)
       """;
     }
 
@@ -552,13 +505,13 @@ public class CssEngine2Test16Full {
 
         """
         @layer utilities {
-          .gap\\:16rx { gap: 16rx }
+          .gap\\:--rx\\(16\\) { gap: calc(16 / 16 * 1rem) }
         }
         """
     );
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   emit theme prop referenced in value
   """)
   public void testCase13() throws IOException {
