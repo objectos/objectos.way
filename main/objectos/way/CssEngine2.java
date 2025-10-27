@@ -127,9 +127,6 @@ final class CssEngine2 {
     final Map<String, Decl> properties;
     properties = config.properties;
 
-    final Decl rx;
-    rx = config.rx;
-
     final List<Section> protoSections;
     protoSections = config.sections;
 
@@ -137,7 +134,7 @@ final class CssEngine2 {
     utils = proc.utilities;
 
     final Gen gen;
-    gen = new Gen(keyframes, properties, rx, protoSections, utils);
+    gen = new Gen(keyframes, properties, protoSections, utils);
 
     final Ctx ctx;
     ctx = gen.generate();
@@ -1460,8 +1457,6 @@ final class CssEngine2 {
 
           properties,
 
-          properties.get("--rx"),
-
           scanClasses,
 
           scanDirectories,
@@ -1512,8 +1507,6 @@ final class CssEngine2 {
       Note.Sink noteSink,
 
       Map<String, Decl> properties,
-
-      Decl rx,
 
       Set<Class<?>> scanClasses,
 
@@ -2451,20 +2444,16 @@ final class CssEngine2 {
 
     final List<Rule> rules = new ArrayList<>();
 
-    final Decl rx;
-
     final List<Section> sections;
 
     private final StringBuilder sb = new StringBuilder();
 
     final List<Utility> utilities;
 
-    Gen(Map<String, Keyframes> keyframes, Map<String, Decl> properties, Decl rx, List<Section> sections, List<Utility> utilities) {
+    Gen(Map<String, Keyframes> keyframes, Map<String, Decl> properties, List<Section> sections, List<Utility> utilities) {
       this.keyframes = keyframes;
 
       this.properties = properties;
-
-      this.rx = rx;
 
       this.sections = sections;
 

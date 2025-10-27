@@ -159,15 +159,13 @@ public class CssEngine2Test10Gen {
 
     final Map<String, CssEngine2.Decl> properties = new HashMap<>();
 
-    CssEngine2.Decl rx;
-
     final List<CssEngine2.Section> sections = new ArrayList<>();
 
     final List<CssEngine2.Utility> utilities = new ArrayList<>();
 
     final CssEngine2.Ctx build() {
       final CssEngine2.Gen gen;
-      gen = new CssEngine2.Gen(keyframes, properties, rx, sections, utilities);
+      gen = new CssEngine2.Gen(keyframes, properties, sections, utilities);
 
       return gen.generate();
     }
