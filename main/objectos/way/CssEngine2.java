@@ -40,7 +40,6 @@ import java.security.CodeSource;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -56,7 +55,7 @@ import java.util.function.Consumer;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-final class CssEngine2 implements Css.Engine {
+final class CssEngine2 {
 
   static final class System {
     String base = Css.systemBase();
@@ -70,20 +69,13 @@ final class CssEngine2 implements Css.Engine {
   // # BEGIN: Execute
   // ##################################################################
 
-  private final Configuring configuring;
+  private final Config config;
 
-  CssEngine2() {
-    this(new System());
-  }
-
-  CssEngine2(System system) {
-    configuring = new Configuring(system);
+  CssEngine2(Config config) {
+    this.config = config;
   }
 
   public final void generate(Appendable out) throws IOException {
-    final Config config;
-    config = configuring.configure();
-
     final Note.Sink noteSink;
     noteSink = config.noteSink;
 
@@ -132,8 +124,8 @@ final class CssEngine2 implements Css.Engine {
     final Map<String, Keyframes> keyframes;
     keyframes = config.keyframes;
 
-    final Map<String, Decl> keywords;
-    keywords = config.keywords;
+    final Map<String, Decl> properties;
+    properties = config.properties;
 
     final Decl rx;
     rx = config.rx;
@@ -145,7 +137,7 @@ final class CssEngine2 implements Css.Engine {
     utils = proc.utilities;
 
     final Gen gen;
-    gen = new Gen(keyframes, keywords, rx, protoSections, utils);
+    gen = new Gen(keyframes, properties, rx, protoSections, utils);
 
     final Ctx ctx;
     ctx = gen.generate();
@@ -206,32 +198,38 @@ final class CssEngine2 implements Css.Engine {
     private boolean marked;
     private Decl next;
     final String property;
-    final String value;
+    final List<Value> values;
 
-    Decl(String property, String value) {
+    Decl(String property, List<Value> values) {
       this.property = property;
 
-      this.value = value;
+      this.values = values;
     }
 
     @Override
     public final boolean equals(Object obj) {
       return obj == this || obj instanceof Decl that
           && property.equals(that.property)
-          && value.equals(that.value);
+          && values.equals(that.values);
     }
 
     @Override
     public final String toString() {
-      return property + ": " + value + ";";
+      return property + ": " + values + ";";
     }
 
-    final void append(Decl decl) {
-      next = decl;
+    final Decl append(Decl decl) {
+      if (next == null) {
+        next = decl;
+      } else {
+        next.append(decl);
+      }
+
+      return this;
     }
 
     final IllegalArgumentException invalid(String msg) {
-      return new IllegalArgumentException(msg + "\n\t" + property + ": " + value);
+      return new IllegalArgumentException(msg + "\n\t" + property + ": " + values);
     }
 
     final void mark() {
@@ -241,27 +239,60 @@ final class CssEngine2 implements Css.Engine {
         next.mark();
       }
     }
+  }
 
-    final String ns() {
-      final int firstChar;
-      firstChar = 2;
+  static Decl decl(String p, List<Value> v) { return new Decl(p, v); }
+  static Decl decl(String p, Value... v) { return new Decl(p, List.of(v)); }
 
-      final int hyphen;
-      hyphen = property.indexOf('-', firstChar);
+  sealed interface Value {
 
-      if (hyphen < 0) {
-        return property.substring(firstChar);
-      } else {
-        return property.substring(firstChar, hyphen);
+    static void formatTo(Appendable out, List<Value> values) throws IOException {
+      for (int idx = 0, size = values.size(); idx < size; idx++) {
+        final Value value;
+        value = values.get(idx);
+
+        switch (value) {
+          case CssEngine2.Fun(String name, List<Value> args) -> {
+            if (idx != 0) {
+              out.append(' ');
+            }
+
+            out.append(name);
+
+            out.append('(');
+
+            formatTo(out, args);
+
+            out.append(')');
+          }
+
+          case CssEngine2.Sep.COMMA -> {
+            out.append(',');
+          }
+
+          case CssEngine2.Tok(String v) -> {
+            if (idx != 0) {
+              out.append(' ');
+            }
+
+            out.append(v);
+          }
+        }
       }
     }
-  }
 
-  static Decl decl(String p, String v) {
-    return new Decl(p, v);
-  }
+    static void formatTo(StringBuilder sb, List<Value> values) {
+      try {
+        final Appendable out;
+        out = sb;
 
-  sealed interface Value {}
+        formatTo(out, values);
+      } catch (IOException e) {
+        throw new AssertionError("StringBuilder does not throw IOException", e);
+      }
+    }
+
+  }
 
   record Fun(String name, List<Value> args) implements Value {}
 
@@ -280,25 +311,27 @@ final class CssEngine2 implements Css.Engine {
   private static final byte[] CSS;
 
   private static final byte CSS_WS = 1;
-  private static final byte CSS_HASH = 2;
-  private static final byte CSS_PERCENT = 3;
-  private static final byte CSS_LPARENS = 4;
-  private static final byte CSS_RPARENS = 5;
-  private static final byte CSS_ASTERISK = 6;
-  private static final byte CSS_COMMA = 7;
-  private static final byte CSS_HYPHEN = 8;
-  private static final byte CSS_DOT = 9;
-  private static final byte CSS_COLON = 10;
-  private static final byte CSS_SEMICOLON = 11;
-  private static final byte CSS_AT = 12;
-  private static final byte CSS_REV_SOLIDUS = 13;
-  private static final byte CSS_LCURLY = 14;
-  private static final byte CSS_RCURLY = 15;
-  private static final byte CSS_DIGIT = 16;
-  private static final byte CSS_ALPHA = 17;
-  private static final byte CSS_UNDERLINE = 18;
-  private static final byte CSS_NON_ASCII = 19;
-  private static final byte CSS_EOF = 20;
+  private static final byte CSS_DQUOTE = 2;
+  private static final byte CSS_HASH = 3;
+  private static final byte CSS_PERCENT = 4;
+  private static final byte CSS_SQUOTE = 5;
+  private static final byte CSS_LPARENS = 6;
+  private static final byte CSS_RPARENS = 7;
+  private static final byte CSS_ASTERISK = 8;
+  private static final byte CSS_COMMA = 9;
+  private static final byte CSS_HYPHEN = 10;
+  private static final byte CSS_DOT = 11;
+  private static final byte CSS_COLON = 12;
+  private static final byte CSS_SEMICOLON = 13;
+  private static final byte CSS_AT = 14;
+  private static final byte CSS_REV_SOLIDUS = 15;
+  private static final byte CSS_LCURLY = 16;
+  private static final byte CSS_RCURLY = 17;
+  private static final byte CSS_DIGIT = 18;
+  private static final byte CSS_ALPHA = 19;
+  private static final byte CSS_UNDERLINE = 20;
+  private static final byte CSS_NON_ASCII = 21;
+  private static final byte CSS_EOF = 22;
 
   static {
     final byte[] table;
@@ -316,8 +349,10 @@ final class CssEngine2 implements Css.Engine {
     table['\r'] = CSS_WS;
 
     // symbols
+    table['"'] = CSS_DQUOTE;
     table['#'] = CSS_HASH;
     table['%'] = CSS_PERCENT;
+    table['\''] = CSS_SQUOTE;
     table['('] = CSS_LPARENS;
     table[')'] = CSS_RPARENS;
     table['*'] = CSS_ASTERISK;
@@ -349,12 +384,18 @@ final class CssEngine2 implements Css.Engine {
 
     int cursor, idx;
 
-    StringBuilder sb;
+    String text;
 
-    final String text;
+    CssParser() {}
 
     CssParser(String text) {
       this.text = text;
+    }
+
+    public final void set(String value) {
+      cursor = idx = 0;
+
+      text = value;
     }
 
     public final List<Decl> parseDecls() {
@@ -437,49 +478,21 @@ final class CssEngine2 implements Css.Engine {
       next = whileNext(CSS_WS);
 
       return switch (next) {
-        case CSS_SEMICOLON, CSS_RCURLY -> CssEngine2.decl(name, "");
+        case CSS_SEMICOLON, CSS_RCURLY -> CssEngine2.decl(name, List.of());
 
         case CSS_EOF -> throw error(EOF_DECLS);
 
-        default -> declValue0(name);
+        default -> { cursor--; yield declValue0(name); }
       };
     }
 
     private Decl declValue0(String name) {
-      final StringBuilder sb;
-      sb = sb();
+      final List<Value> values;
+      values = new ArrayList<>();
 
-      sb.append(c);
+      values(values, CSS_SEMICOLON);
 
-      int ws;
-      ws = 0;
-
-      while (true) {
-        switch (nextEof()) {
-          case CSS_WS -> {
-            ws++;
-          }
-
-          case CSS_SEMICOLON, CSS_RCURLY -> {
-            final String v;
-            v = sb.toString();
-
-            return CssEngine2.decl(name, v);
-          }
-
-          case CSS_EOF -> throw error(EOF_DECLS);
-
-          default -> {
-            if (ws > 0) {
-              sb.append(' ');
-
-              ws = 0;
-            }
-
-            sb.append(c);
-          }
-        }
-      }
+      return CssEngine2.decl(name, values);
     }
 
     public final String parseIden() {
@@ -547,20 +560,24 @@ final class CssEngine2 implements Css.Engine {
     }
 
     private void values(List<Value> result, byte stopIf) {
-      byte next;
-      next = nextEof();
+      while (true) {
+        final byte next;
+        next = whileNext(CSS_WS);
 
-      while (next != stopIf) {
+        if (next == stopIf) {
+          return;
+        }
+
         result.add(
             value(next)
         );
-
-        next = nextEof();
       }
     }
 
     private Value value(byte next) {
       return switch (next) {
+        case CSS_DQUOTE, CSS_SQUOTE -> valueString(next);
+
         case CSS_HASH -> valueHexColor();
 
         case CSS_COMMA -> valueSep(Sep.COMMA);
@@ -585,7 +602,7 @@ final class CssEngine2 implements Css.Engine {
 
         case CSS_WS -> valueInteger(start, idx);
 
-        case CSS_COMMA, CSS_RPARENS -> valueInteger(start, --cursor);
+        case CSS_COMMA, CSS_SEMICOLON, CSS_RPARENS -> valueInteger(start, --cursor);
 
         case CSS_PERCENT -> valuePerc(start);
 
@@ -606,7 +623,7 @@ final class CssEngine2 implements Css.Engine {
 
         case CSS_WS -> valueDouble(start, idx);
 
-        case CSS_COMMA, CSS_RPARENS -> valueDouble(start, --cursor);
+        case CSS_COMMA, CSS_SEMICOLON, CSS_RPARENS -> valueDouble(start, --cursor);
 
         case CSS_PERCENT -> valuePerc(start);
 
@@ -635,7 +652,7 @@ final class CssEngine2 implements Css.Engine {
 
         case CSS_WS -> valueHexColor(start, idx);
 
-        case CSS_COMMA, CSS_RPARENS -> valueHexColor(start, --cursor);
+        case CSS_COMMA, CSS_SEMICOLON, CSS_RPARENS -> valueHexColor(start, --cursor);
 
         default -> throw error("Expected a CSS <hex-color> value");
       };
@@ -669,7 +686,7 @@ final class CssEngine2 implements Css.Engine {
 
         case CSS_WS -> valueKeyword(start, idx);
 
-        case CSS_COMMA, CSS_RPARENS -> valueKeyword(start, --cursor);
+        case CSS_COMMA, CSS_SEMICOLON, CSS_RPARENS -> valueKeyword(start, --cursor);
 
         case CSS_LPARENS -> {
           final String name;
@@ -709,7 +726,7 @@ final class CssEngine2 implements Css.Engine {
 
         case CSS_WS -> valueLength(start, unit, idx);
 
-        case CSS_COMMA, CSS_RPARENS -> valueLength(start, unit, --cursor);
+        case CSS_COMMA, CSS_SEMICOLON, CSS_RPARENS -> valueLength(start, unit, --cursor);
 
         default -> throw error("Expected a CSS <length> value");
       };
@@ -728,7 +745,7 @@ final class CssEngine2 implements Css.Engine {
 
         case CSS_WS -> valuePerc(first, idx);
 
-        case CSS_COMMA, CSS_RPARENS -> valuePerc(first, --cursor);
+        case CSS_COMMA, CSS_SEMICOLON, CSS_RPARENS -> valuePerc(first, --cursor);
 
         default -> throw error("Expected a CSS <percentage> value");
       };
@@ -747,6 +764,38 @@ final class CssEngine2 implements Css.Engine {
       cursor--;
 
       return v;
+    }
+
+    private Value valueString(byte quote) {
+      final int start;
+      start = idx;
+
+      while (hasNext()) {
+        final byte next;
+        next = next();
+
+        if (next != quote) {
+          continue;
+        }
+
+        final char prev;
+        prev = text.charAt(idx - 1);
+
+        if (prev == '\\') {
+          continue;
+        }
+
+        return valueString(start, cursor);
+      }
+
+      throw error("Unclosed string");
+    }
+
+    private Value valueString(int idx0, int idx1) {
+      final String s;
+      s = text.substring(idx0, idx1);
+
+      return new Tok(s);
     }
 
     private IllegalArgumentException error(String message) {
@@ -771,16 +820,6 @@ final class CssEngine2 implements Css.Engine {
       } else {
         return CSS_EOF;
       }
-    }
-
-    private StringBuilder sb() {
-      if (sb != null) {
-        sb.setLength(0);
-      } else {
-        sb = new StringBuilder();
-      }
-
-      return sb;
     }
 
     private byte whileHexDigit() {
@@ -1044,21 +1083,15 @@ final class CssEngine2 implements Css.Engine {
   // # BEGIN: Configuring
   // ##################################################################
 
-  static final class Configuring {
+  static final class Configuring implements Css.Engine {
 
     private final Note.Ref2<Decl, Decl> $replaced = Note.Ref2.create(getClass(), "REP", Note.INFO);
-
-    private final Map<List<String>, List<Decl>> atRules = new LinkedHashMap<>();
 
     private final List<ParsedRule> components = new ArrayList<>();
 
     private final List<List<Decl>> fontFaces = new ArrayList<>();
 
-    private final Map<String, Keyframes> keyframes = new HashMap<>();
-
-    private final Map<String, Decl> keywords = new HashMap<>();
-
-    private final Map<String, Map<String, Decl>> namespaces = new LinkedHashMap<>();
+    private final Map<String, CssEngine2.Keyframes> keyframes = new HashMap<>();
 
     private Note.Sink noteSink = Note.NoOpSink.INSTANCE;
 
@@ -1068,9 +1101,9 @@ final class CssEngine2 implements Css.Engine {
 
     private Set<Class<?>> scanJars = Set.of();
 
-    private final List<Section> sections = new ArrayList<>();
-
     private final String systemBase;
+
+    private final Map<List<String>, Map<String, Decl>> themeProps = new LinkedHashMap<>();
 
     private final Map<String, Variant> variants = new HashMap<>();
 
@@ -1084,7 +1117,10 @@ final class CssEngine2 implements Css.Engine {
       final List<Decl> parsed;
       parsed = parser.parseDecls();
 
-      // map to namespace
+      // map to properties
+      final List<String> root;
+      root = List.of(":root");
+
       for (Decl decl : parsed) {
         final String property;
         property = decl.property;
@@ -1093,35 +1129,40 @@ final class CssEngine2 implements Css.Engine {
           throw decl.invalid("The system theme must only contain custom properties");
         }
 
-        if (property.endsWith("*")) {
-          throw decl.invalid("The '--<namespace>-*: initial;' syntax is not allowed in the system theme");
-        }
-
-        final String ns;
-        ns = decl.ns();
-
         final Map<String, Decl> values;
-        values = namespaces.computeIfAbsent(ns, key -> new LinkedHashMap<>());
+        values = themeProps.computeIfAbsent(root, key -> new LinkedHashMap<>());
 
         final Decl existing;
         existing = values.put(property, decl);
 
         if (existing != null) {
-          noteSink.send($replaced, existing, decl);
+          decl.invalid("Duplicate property definition");
         }
       }
 
       variants.putAll(system.variants);
     }
 
+    public final void generate(Appendable out) throws IOException {
+      final Config config;
+      config = configure();
+
+      final CssEngine2 engine;
+      engine = new CssEngine2(config);
+
+      engine.generate(out);
+    }
+
     // ##################################################################
     // # BEGIN: Configuring: Public API
     // ##################################################################
 
+    @Override
     public final void noteSink(Note.Sink value) {
       noteSink = Objects.requireNonNull(value, "value == null");
     }
 
+    @Override
     public final void scanClass(Class<?> value) {
       final Class<?> c;
       c = Objects.requireNonNull(value, "value");
@@ -1133,6 +1174,7 @@ final class CssEngine2 implements Css.Engine {
       scanClasses.add(c);
     }
 
+    @Override
     public final void scanDirectory(Path value) {
       final Path p;
       p = Objects.requireNonNull(value, "value == null");
@@ -1144,6 +1186,7 @@ final class CssEngine2 implements Css.Engine {
       scanDirectories.add(p);
     }
 
+    @Override
     public final void scanJarFileOf(Class<?> value) {
       final Class<?> c;
       c = Objects.requireNonNull(value, "value == null");
@@ -1155,7 +1198,51 @@ final class CssEngine2 implements Css.Engine {
       scanJars.add(c);
     }
 
-    public final void theme(String value) {
+    @Override
+    public final void theme(String selector, String value) {
+      final String sel;
+      sel = checkSelector(selector);
+
+      final List<String> sectionSelector;
+      sectionSelector = List.of(sel);
+
+      theme(sectionSelector, value);
+    }
+
+    @Override
+    public final void theme(String selector, String nested, String value) {
+      final String sel;
+      sel = checkSelector(selector);
+
+      // validate nested
+      final String trimmed;
+      trimmed = nested.strip();
+
+      if (!trimmed.startsWith("@media")) {
+        throw new IllegalArgumentException("Only nested @media at-rules are currently supported");
+      }
+
+      final List<String> sectionSelector;
+      sectionSelector = List.of(sel, trimmed);
+
+      theme(sectionSelector, value);
+    }
+
+    private String checkSelector(String selector) {
+      final String nonNull;
+      nonNull = Objects.requireNonNull(selector, "selector == null");
+
+      final String stripped;
+      stripped = nonNull.strip();
+
+      if (stripped.isEmpty()) {
+        throw new IllegalArgumentException("Selector may not be blank");
+      }
+
+      return stripped;
+    }
+
+    private void theme(List<String> selector, String value) {
       final String text;
       text = Objects.requireNonNull(value, "value == null");
 
@@ -1166,58 +1253,23 @@ final class CssEngine2 implements Css.Engine {
       final List<Decl> parsed;
       parsed = parser.parseDecls();
 
-      // process any system skip
+      final Map<String, Decl> props;
+      props = themeProps.computeIfAbsent(selector, key -> new LinkedHashMap<>());
+
+      // map to properties
       for (Decl decl : parsed) {
         final String property;
         property = decl.property;
 
         if (!property.startsWith("--")) {
-          throw decl.invalid("Expected a custom property");
-        }
+          // always emit a non-custom-prop
+          decl.mark();
 
-        if (!property.endsWith("*")) {
           continue;
         }
-
-        if (property.equals("--*")) {
-          namespaces.clear();
-        } else {
-          final int firstChar;
-          firstChar = 2;
-
-          final int hyphen;
-          hyphen = property.indexOf('-', firstChar);
-
-          if (hyphen < 0) {
-            throw decl.invalid(
-                "The '*' special syntax can only be used with the global ns '--*' or with a named ns, e.g., '--color-*"
-            );
-          }
-
-          final String ns;
-          ns = property.substring(firstChar, hyphen);
-
-          namespaces.remove(ns);
-        }
-      }
-
-      // map to namespace
-      for (Decl decl : parsed) {
-        final String property;
-        property = decl.property;
-
-        if (property.endsWith("*")) {
-          continue;
-        }
-
-        final String ns;
-        ns = decl.ns();
-
-        final Map<String, Decl> values;
-        values = namespaces.computeIfAbsent(ns, key -> new LinkedHashMap<>());
 
         final Decl existing;
-        existing = values.put(property, decl);
+        existing = props.put(property, decl);
 
         if (existing != null) {
           noteSink.send($replaced, existing, decl);
@@ -1225,58 +1277,7 @@ final class CssEngine2 implements Css.Engine {
       }
     }
 
-    public final void theme(String atRule, String value) {
-      // validate at-rule
-      final String trimmed;
-      trimmed = atRule.strip();
-
-      if (!trimmed.startsWith("@media")) {
-        throw new IllegalArgumentException("Only @media at-rules are currently supported");
-      }
-
-      // parse declarations
-      final String text;
-      text = Objects.requireNonNull(value, "value == null");
-
-      final CssParser parser;
-      parser = new CssParser(text);
-
-      final List<Decl> parsed;
-      parsed = parser.parseDecls();
-
-      // validate
-      for (Decl decl : parsed) {
-        final String property;
-        property = decl.property;
-
-        if (!property.startsWith("--")) {
-          throw decl.invalid("Expected a custom property");
-        }
-
-        if (property.endsWith("*")) {
-          throw decl.invalid("The '--<namespace>-*: initial;' syntax is not allowed in a theme at-rule");
-        }
-
-        final String ns;
-        ns = decl.ns();
-
-        final Map<String, Decl> map;
-        map = namespaces.get(ns);
-
-        if (map == null || !map.containsKey(property)) {
-          throw decl.invalid("Theme at-rule properties must be declared in the theme :root section");
-        }
-      }
-
-      final List<String> selector;
-      selector = List.of(trimmed);
-
-      final List<Decl> values;
-      values = atRules.computeIfAbsent(selector, key -> new ArrayList<>());
-
-      values.addAll(parsed);
-    }
-
+    @Override
     public final void component(String selector, String value) {
       selector = Objects.requireNonNull(selector, "selector == null");
       selector = selector.strip();
@@ -1295,6 +1296,7 @@ final class CssEngine2 implements Css.Engine {
       components.add(rule);
     }
 
+    @Override
     public final void keyframes(String name, Consumer<? super Css.Engine.Keyframes> frames) {
       name = Objects.requireNonNull(name, "name == null");
 
@@ -1308,10 +1310,10 @@ final class CssEngine2 implements Css.Engine {
 
       frames.accept(builder);
 
-      final Keyframes kf;
+      final CssEngine2.Keyframes kf;
       kf = builder.build();
 
-      final Keyframes existing;
+      final CssEngine2.Keyframes existing;
       existing = keyframes.put(kf.name, kf);
 
       if (existing != null) {
@@ -1337,6 +1339,7 @@ final class CssEngine2 implements Css.Engine {
         "unicode-range"
     );
 
+    @Override
     public final void fontFace(String value) {
       value = Objects.requireNonNull(value, "value == null");
 
@@ -1359,71 +1362,121 @@ final class CssEngine2 implements Css.Engine {
     }
 
     public final Config configure() {
-      breakpointVariants();
+      // collect all props
+      final Map<String, Decl> properties;
+      properties = new LinkedHashMap<>();
 
-      themeArtifacts();
+      // ... and sections
+      final List<Section> sections;
+      sections = new ArrayList<>();
+
+      for (Map.Entry<List<String>, Map<String, Decl>> outer : themeProps.entrySet()) {
+        final List<String> selector;
+        selector = outer.getKey();
+
+        final Map<String, Decl> props;
+        props = outer.getValue();
+
+        final List<Decl> decls;
+        decls = new ArrayList<>();
+
+        for (Map.Entry<String, Decl> inner : props.entrySet()) {
+          final String propName;
+          propName = inner.getKey();
+
+          final Decl decl;
+          decl = inner.getValue();
+
+          properties.merge(propName, decl, (oldValue, value) -> oldValue.append(value));
+
+          decls.add(decl);
+        }
+
+        final Section section;
+        section = new Section(selector, decls);
+
+        sections.add(section);
+      }
+
+      // collect breakpoints
+      final List<String> root;
+      root = List.of(":root");
+
+      final Map<String, Decl> rootProps;
+      rootProps = themeProps.getOrDefault(root, Map.of());
+
+      for (Decl decl : rootProps.values()) {
+        final String property;
+        property = decl.property;
+
+        final String prefix;
+        prefix = "--breakpoint-";
+
+        if (!property.startsWith(prefix)) {
+          continue;
+        }
+
+        final int beginIndex;
+        beginIndex = prefix.length();
+
+        final String id;
+        id = property.substring(beginIndex);
+
+        final List<Value> values;
+        values = decl.values;
+
+        final int size;
+        size = values.size();
+
+        if (size != 1) {
+          // TODO log
+          continue;
+        }
+
+        final Value value;
+        value = values.get(0);
+
+        if (!(value instanceof Tok tok)) {
+          // TODO log
+          continue;
+        }
+
+        final Variant variant;
+        variant = simple("@media (min-width: " + tok.v + ")");
+
+        variant(id, variant);
+      }
 
       return new Config(
           systemBase,
 
-          List.copyOf(components),
+          components,
 
           fontFaces,
 
-          Map.copyOf(keyframes),
-
-          Map.copyOf(keywords),
+          keyframes,
 
           noteSink,
 
-          rx(),
+          properties,
 
-          Set.copyOf(scanClasses),
+          properties.get("--rx"),
 
-          Set.copyOf(scanDirectories),
+          scanClasses,
 
-          Set.copyOf(scanJars),
+          scanDirectories,
 
-          List.copyOf(sections),
+          scanJars,
 
-          Map.copyOf(variants)
+          sections,
+
+          variants
       );
     }
 
     // ##################################################################
     // # END: Configuring: Public API
     // ##################################################################
-
-    private void breakpointVariants() {
-      final String ns;
-      ns = "breakpoint";
-
-      final Map<String, Decl> namespace;
-      namespace = namespaces.getOrDefault(ns, Map.of());
-
-      final Collection<Decl> breakpoints;
-      breakpoints = namespace.values();
-
-      if (breakpoints.isEmpty()) {
-        return;
-      }
-
-      final int len;
-      len = "--breakpoint-".length();
-
-      for (Decl breakpoint : breakpoints) {
-        final String property;
-        property = breakpoint.property;
-
-        final String id;
-        id = property.substring(len);
-
-        final Variant variant;
-        variant = simple("@media (min-width: " + breakpoint.value + ")");
-
-        variant(id, variant);
-      }
-    }
 
     private void variant(String name, Variant variant) {
       final Variant maybeExisting;
@@ -1436,175 +1489,6 @@ final class CssEngine2 implements Css.Engine {
       // TODO restore existing and log?
     }
 
-    private void themeArtifacts() {
-      // :root
-      final List<Decl> decls;
-      decls = new ArrayList<>();
-
-      for (Map.Entry<String, Map<String, Decl>> entry : namespaces.entrySet()) {
-        final String ns;
-        ns = entry.getKey();
-
-        final int beginIndex;
-        beginIndex = 2 + ns.length() + 1; // -- <ns> -
-
-        final Map<String, Decl> map;
-        map = entry.getValue();
-
-        for (Decl decl : map.values()) {
-          decls.add(decl);
-
-          final String property;
-          property = decl.property;
-
-          final int length;
-          length = property.length();
-
-          if (beginIndex >= length) {
-            continue;
-          }
-
-          final String id;
-          id = property.substring(beginIndex);
-
-          final String key;
-
-          if ("breakpoint".equals(ns)) {
-            key = "screen-" + id;
-          } else {
-            key = id;
-          }
-
-          final Decl maybeExisting;
-          maybeExisting = keywords.put(key, decl);
-
-          if (maybeExisting != null) {
-            decl.invalid("Duplicate declaration with existing value " + maybeExisting.value);
-          }
-        }
-      }
-
-      final List<String> rootSel;
-      rootSel = List.of();
-
-      final List<Decl> rootDecls;
-      rootDecls = List.copyOf(decls);
-
-      final Section root;
-      root = new Section(rootSel, rootDecls);
-
-      sections.add(root);
-
-      // non :root
-      for (Map.Entry<List<String>, List<Decl>> entry : atRules.entrySet()) {
-        final List<Decl> list;
-        list = entry.getValue();
-
-        decls.clear();
-
-        for (Decl decl : list) {
-          decls.add(decl);
-
-          final String property;
-          property = decl.property;
-
-          final int firstChar;
-          firstChar = 2;
-
-          final int hyphen;
-          hyphen = property.indexOf('-', firstChar);
-
-          if (hyphen < 0) {
-            continue;
-          }
-
-          final int beginIndex;
-          beginIndex = hyphen + 1;
-
-          if (beginIndex >= property.length()) {
-            continue;
-          }
-
-          final String id;
-          id = property.substring(beginIndex);
-
-          final Decl existing;
-          existing = keywords.get(id);
-
-          if (existing != null) {
-            existing.append(decl);
-          }
-        }
-
-        final List<String> sel;
-        sel = entry.getKey();
-
-        final List<Decl> thisDecls;
-        thisDecls = List.copyOf(decls);
-
-        final Section section;
-        section = new Section(sel, thisDecls);
-
-        sections.add(section);
-      }
-    }
-
-    private Decl rx() {
-      final Map<String, Decl> map;
-      map = namespaces.get("rx");
-
-      if (map == null) {
-        return null;
-      }
-
-      return map.get("--rx");
-    }
-
-  }
-
-  @Override
-  public final void noteSink(Note.Sink value) {
-    configuring.noteSink(value);
-  }
-
-  @Override
-  public final void scanClass(Class<?> value) {
-    configuring.scanClass(value);
-  }
-
-  @Override
-  public final void scanDirectory(Path value) {
-    configuring.scanDirectory(value);
-  }
-
-  @Override
-  public final void scanJarFileOf(Class<?> value) {
-    configuring.scanJarFileOf(value);
-  }
-
-  @Override
-  public final void theme(String value) {
-    configuring.theme(value);
-  }
-
-  @Override
-  public final void theme(String atRule, String value) {
-    configuring.theme(atRule, value);
-  }
-
-  @Override
-  public final void component(String selector, String value) {
-    configuring.component(selector, value);
-  }
-
-  @Override
-  public final void keyframes(String name, Consumer<? super Css.Engine.Keyframes> frames) {
-    configuring.keyframes(name, frames);
-  }
-
-  @Override
-  public final void fontFace(String value) {
-    configuring.fontFace(value);
   }
 
   // ##################################################################
@@ -1625,9 +1509,9 @@ final class CssEngine2 implements Css.Engine {
 
       Map<String, Keyframes> keyframes,
 
-      Map<String, Decl> keywords,
-
       Note.Sink noteSink,
+
+      Map<String, Decl> properties,
 
       Decl rx,
 
@@ -2403,35 +2287,20 @@ final class CssEngine2 implements Css.Engine {
     void consume(String className, List<String> slugs);
   }
 
-  record Utility(List<Variant> variants, String className, String property, String value)
-      implements Comparable<Utility> {
-    @Override
-    public final int compareTo(Utility o) {
-      int result;
-      result = property.compareTo(o.property);
+  record Utility(List<Variant> variants, String className, String property, List<Value> values) {}
 
-      if (result != 0) {
-        return result;
-      }
-
-      result = value.compareTo(o.value);
-
-      if (result != 0) {
-        return result;
-      }
-
-      return className.compareTo(o.className);
-    }
-
+  static Utility utility(List<Variant> variants, String className, String property, List<Value> values) {
+    return new Utility(variants, className, property, values);
   }
-
-  static Utility utility(List<Variant> variants, String className, String property, String value) {
-    return new Utility(variants, className, property, value);
+  static Utility utility(List<Variant> variants, String className, String property, Value... values) {
+    return new Utility(variants, className, property, List.of(values));
   }
 
   static final class Proc implements Slugs {
 
     final ClassNameFormat classNameFormat = new ClassNameFormat();
+
+    final CssParser cssParser = new CssParser();
 
     final Set<String> distinct = new HashSet<>();
 
@@ -2490,8 +2359,13 @@ final class CssEngine2 implements Css.Engine {
       final String classNameFormatted;
       classNameFormatted = classNameFormat.format(className);
 
+      cssParser.set(propValue);
+
+      final List<Value> values;
+      values = cssParser.parseValues();
+
       final Utility utility;
-      utility = new Utility(vars, classNameFormatted, propName, propValue);
+      utility = new Utility(vars, classNameFormatted, propName, values);
 
       utilities.add(utility);
     }
@@ -2569,13 +2443,11 @@ final class CssEngine2 implements Css.Engine {
         "animation-name"
     );
 
-    int entryIndex;
-
     final Map<String, Keyframes> keyframes;
 
     final Map<String, Keyframes> keyframesMarked = new HashMap<>();
 
-    final Map<String, Decl> keywords;
+    final Map<String, Decl> properties;
 
     final List<Rule> rules = new ArrayList<>();
 
@@ -2583,14 +2455,14 @@ final class CssEngine2 implements Css.Engine {
 
     final List<Section> sections;
 
-    final StringBuilder sb = new StringBuilder();
+    private final StringBuilder sb = new StringBuilder();
 
     final List<Utility> utilities;
 
-    Gen(Map<String, Keyframes> keyframes, Map<String, Decl> keywords, Decl rx, List<Section> sections, List<Utility> utilities) {
+    Gen(Map<String, Keyframes> keyframes, Map<String, Decl> properties, Decl rx, List<Section> sections, List<Utility> utilities) {
       this.keyframes = keyframes;
 
-      this.keywords = keywords;
+      this.properties = properties;
 
       this.rx = rx;
 
@@ -2625,28 +2497,22 @@ final class CssEngine2 implements Css.Engine {
       final String property;
       property = utility.property;
 
-      String value;
-      value = utility.value;
+      final List<Value> values;
+      values = utility.values;
 
-      if (!KEYFRAMES_PROPERTIES.contains(property)) {
-        value = formatValue(value);
-      } else {
-        final Set<String> all;
-        all = keyframes.keySet();
+      final boolean keyframesProp;
+      keyframesProp = KEYFRAMES_PROPERTIES.contains(property);
 
-        for (String name : all) {
-          if (!keyframesMarked.containsKey(name)) {
-            if (value.contains(name)) {
-              final Keyframes kf;
-              kf = keyframes.get(name);
-
-              keyframesMarked.put(name, kf);
-
-              break;
-            }
-          }
-        }
+      for (Value value : values) {
+        processValue(keyframesProp, value);
       }
+
+      sb.setLength(0);
+
+      Value.formatTo(sb, values);
+
+      final String value;
+      value = sb.toString();
 
       final Rule rule;
       rule = rule(className, variants, property, value);
@@ -2654,381 +2520,43 @@ final class CssEngine2 implements Css.Engine {
       rules.add(rule);
     }
 
-    final String formatValue(String value) {
-      sb.setLength(0);
+    private void processValue(boolean keyframesProp, Value value) {
+      switch (value) {
+        case CssEngine2.Fun(String name, List<Value> args) -> {
+          if ("var".equals(name) && !args.isEmpty()) {
+            final Value first;
+            first = args.get(0);
 
-      entryIndex = 0;
+            if (first instanceof Tok(String v)) {
+              final Decl prop;
+              prop = properties.get(v);
 
-      int index = 0;
-
-      final int length;
-      length = value.length();
-
-      while (index < length) {
-        final char c;
-        c = value.charAt(index);
-
-        if (Ascii.isDigit(c)) {
-          index = formatValueNumeric(value, index);
-        }
-
-        else if (Ascii.isLetter(c)) {
-          index = formatValueKeyword(value, index);
-        }
-
-        else if (c == '-') {
-          index = formatValueNegative(value, index);
-        }
-
-        else if (isWhitespace(c)) {
-          index = formatValueWhitespace(value, index);
-        }
-
-        else {
-          index++;
-        }
-      }
-
-      if (sb.isEmpty()) {
-        return value;
-      }
-
-      formatValueNormal(value, length);
-
-      return sb.toString();
-    }
-
-    private int formatValueKeyword(String value, int index) {
-      final int length;
-      length = value.length();
-
-      // where the (possibly) keyword begins
-      final int beginIndex;
-      beginIndex = index;
-
-      // consume initial char
-      index++;
-
-      enum State {
-
-        KEYWORD,
-
-        SLASH,
-
-        OPACITY,
-
-        INVALID;
-
-      }
-
-      State state;
-      state = State.KEYWORD;
-
-      int slashIndex;
-      slashIndex = length;
-
-      while (index < length) {
-        final char c;
-        c = value.charAt(index);
-
-        if (isBoundary(c)) {
-          break;
-        }
-
-        switch (state) {
-          case KEYWORD -> {
-            if (c == '/') {
-              state = State.SLASH;
-
-              slashIndex = index;
-            } else {
-              state = State.KEYWORD;
+              if (prop != null) {
+                prop.mark();
+              }
             }
           }
 
-          case SLASH, OPACITY -> {
-            if (Ascii.isDigit(c)) {
-              state = State.OPACITY;
-            } else {
-              state = State.INVALID;
-            }
-          }
-
-          case INVALID -> {
-            state = State.INVALID;
+          for (Value arg : args) {
+            processValue(keyframesProp, arg);
           }
         }
 
-        index++;
-      }
+        case CssEngine2.Sep sep -> {}
 
-      switch (state) {
-        case KEYWORD -> {
-          // extract keyword
-          final String maybe;
-          maybe = value.substring(beginIndex, index);
+        case CssEngine2.Tok(String v) -> {
+          if (keyframesProp) {
+            if (!keyframesMarked.containsKey(v)) {
+              final Keyframes kf;
+              kf = keyframes.get(v);
 
-          // check for match
-          final Decl kw;
-          kw = keywords.get(maybe);
-
-          if (kw == null) {
-            break;
-          }
-
-          kw.mark();
-
-          formatValueNormal(value, beginIndex);
-
-          sb.append(kw.value);
-
-          entryIndex = index;
-        }
-
-        case OPACITY -> {
-          // extract keyword
-          final String maybe;
-          maybe = value.substring(beginIndex, slashIndex);
-
-          // check for match
-          final Decl kw;
-          kw = keywords.get(maybe);
-
-          if (kw == null) {
-            break;
-          }
-
-          kw.mark();
-
-          formatValueNormal(value, beginIndex);
-
-          final String opacity;
-          opacity = value.substring(slashIndex + 1, index);
-
-          sb.append("color-mix(in oklab, ");
-
-          sb.append(kw.value);
-
-          sb.append(' ');
-
-          sb.append(opacity);
-
-          sb.append("%, transparent)");
-
-          entryIndex = index;
-        }
-
-        case SLASH, INVALID -> {}
-      }
-
-      return index;
-    }
-
-    private void formatValueNormal(String value, int endIndex) {
-      sb.append(value, entryIndex, endIndex);
-    }
-
-    private int formatValueNegative(String value, int index) {
-      final int length;
-      length = value.length();
-
-      // where the number begins
-      final int beginIndex;
-      beginIndex = index;
-
-      // consume '-'
-      index++;
-
-      if (index >= length) {
-        // there're no more chars
-        return index;
-      }
-
-      final char c;
-      c = value.charAt(index);
-
-      if (!Ascii.isDigit(c)) {
-        return index;
-      }
-
-      return formatValueNumeric(value, beginIndex);
-    }
-
-    private enum FormatValueNumeric {
-
-      INTEGER,
-
-      DOT,
-
-      DECIMAL;
-
-    }
-
-    private int formatValueNumeric(String value, int index) {
-      final int length;
-      length = value.length();
-
-      // where the number begins
-      final int beginIndex;
-      beginIndex = index;
-
-      // consume '-' or initial digit
-      index++;
-
-      // initial state
-      FormatValueNumeric state;
-      state = FormatValueNumeric.INTEGER;
-
-      loop: while (index < length) {
-        final char c;
-        c = value.charAt(index);
-
-        switch (state) {
-          case INTEGER -> {
-            if (Ascii.isDigit(c)) {
-              state = FormatValueNumeric.INTEGER;
-              index++;
-            } else if (c == '.') {
-              state = FormatValueNumeric.DOT;
-              index++;
-            } else {
-              break loop;
-            }
-          }
-
-          case DOT -> {
-            if (Ascii.isDigit(c)) {
-              state = FormatValueNumeric.DECIMAL;
-              index++;
-            } else {
-              break loop;
-            }
-          }
-
-          case DECIMAL -> {
-            if (Ascii.isDigit(c)) {
-              state = FormatValueNumeric.DECIMAL;
-              index++;
-            } else {
-              break loop;
+              if (kf != null) {
+                keyframesMarked.put(v, kf);
+              }
             }
           }
         }
       }
-
-      // where the (maybe) unit begins
-      final int unitIndex;
-      unitIndex = index;
-
-      while (index < length) {
-        final char c;
-        c = value.charAt(index);
-
-        if (isBoundary(c)) {
-          break;
-        }
-
-        index++;
-      }
-
-      if (state == FormatValueNumeric.DOT) {
-        // invalid state
-        return index;
-      }
-
-      // maybe rx value?
-      if (rx == null) {
-        // do not process if --rx was not defined in theme
-        return index;
-      }
-
-      final int unitLength;
-      unitLength = index - unitIndex;
-
-      if (unitLength != 2) {
-        return index;
-      }
-
-      final char maybeR;
-      maybeR = value.charAt(unitIndex);
-
-      if (maybeR != 'r') {
-        return index;
-      }
-
-      final char maybeX;
-      maybeX = value.charAt(unitIndex + 1);
-
-      if (maybeX != 'x') {
-        return index;
-      }
-
-      // handle rx value
-      rx.mark();
-
-      // 1) emit normal value (if necessary)
-      formatValueNormal(value, beginIndex);
-
-      // 2) extract numeric value
-      String number;
-      number = value.substring(beginIndex, unitIndex);
-
-      // 3) emit value
-      sb.append("calc(");
-
-      sb.append(number);
-
-      sb.append(" / var(--rx) * 1rem)");
-
-      // 4) update normal index
-      entryIndex = index;
-
-      return index;
-    }
-
-    private int formatValueWhitespace(String value, int index) {
-      final int length;
-      length = value.length();
-
-      final int beginIndex;
-      beginIndex = index;
-
-      index++;
-
-      while (index < length) {
-        final char c;
-        c = value.charAt(index);
-
-        if (!isWhitespace(c)) {
-          break;
-        }
-
-        index++;
-      }
-
-      formatValueNormal(value, beginIndex);
-
-      sb.append(' ');
-
-      entryIndex = index;
-
-      return index;
-    }
-
-    private boolean isBoundary(char c) {
-      return isSeparator(c) || isWhitespace(c);
-    }
-
-    private boolean isSeparator(char c) {
-      return switch (c) {
-        case ',', '(', ')' -> true;
-
-        default -> false;
-      };
-    }
-
-    private boolean isWhitespace(char c) {
-      return c == '_';
     }
 
     private List<Section> themeSections() {
@@ -3112,6 +2640,10 @@ final class CssEngine2 implements Css.Engine {
       out.append(s);
     }
 
+    final void w(List<Value> values) throws IOException {
+      Value.formatTo(out, values);
+    }
+
     final void wln() throws IOException {
       out.append('\n');
     }
@@ -3156,19 +2688,9 @@ final class CssEngine2 implements Css.Engine {
 
       level++;
 
-      indent();
-
-      wln(":root {");
-
-      level++;
-
       for (Section section : sections) {
         final List<String> selector;
         selector = section.selector;
-
-        if (!selector.isEmpty()) {
-          wln();
-        }
 
         for (String part : selector) {
           indent();
@@ -3190,7 +2712,7 @@ final class CssEngine2 implements Css.Engine {
 
           w(": ");
 
-          w(decl.value);
+          w(decl.values);
 
           wln(";");
         }
@@ -3203,12 +2725,6 @@ final class CssEngine2 implements Css.Engine {
           wln('}');
         }
       }
-
-      level--;
-
-      indent();
-
-      wln('}');
 
       level--;
 
@@ -3423,7 +2939,7 @@ final class CssEngine2 implements Css.Engine {
 
           w(": ");
 
-          w(decl.value);
+          w(decl.values);
 
           wln(';');
         }
@@ -3559,7 +3075,7 @@ final class CssEngine2 implements Css.Engine {
 
             w(": ");
 
-            w(decl.value);
+            w(decl.values);
 
             wln(';');
           }
@@ -3592,7 +3108,7 @@ final class CssEngine2 implements Css.Engine {
 
           w(": ");
 
-          w(decl.value);
+          w(decl.values);
 
           wln(';');
         }

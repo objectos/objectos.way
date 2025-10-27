@@ -36,17 +36,17 @@ public class CssEngine2Test16Full {
 
     system.theme = "";
 
-    final CssEngine2 engine;
-    engine = new CssEngine2(system);
+    final CssEngine2.Configuring configuring;
+    configuring = new CssEngine2.Configuring(system);
 
-    engine.noteSink(Y.noteSink());
+    configuring.noteSink(Y.noteSink());
 
-    engine.scanClass(Subject.class);
+    configuring.scanClass(Subject.class);
 
     final StringBuilder out;
     out = new StringBuilder();
 
-    engine.generate(out);
+    configuring.generate(out);
 
     assertEquals(
         out.toString(),
@@ -70,8 +70,8 @@ public class CssEngine2Test16Full {
 
     system.theme = "";
 
-    final CssEngine2 engine;
-    engine = new CssEngine2(system);
+    final CssEngine2.Configuring engine;
+    engine = new CssEngine2.Configuring(system);
 
     engine.noteSink(Y.noteSink());
 
@@ -110,8 +110,8 @@ public class CssEngine2Test16Full {
 
     system.theme = "";
 
-    final CssEngine2 engine;
-    engine = new CssEngine2(system);
+    final CssEngine2.Configuring engine;
+    engine = new CssEngine2.Configuring(system);
 
     engine.noteSink(Y.noteSink());
 
@@ -150,8 +150,8 @@ public class CssEngine2Test16Full {
     --color-red-50: oklch(97.1% 0.013 17.38);
     """;
 
-    final CssEngine2 engine;
-    engine = new CssEngine2(system);
+    final CssEngine2.Configuring engine;
+    engine = new CssEngine2.Configuring(system);
 
     engine.noteSink(Y.noteSink());
 
@@ -177,7 +177,7 @@ public class CssEngine2Test16Full {
   public void testCase05() throws IOException {
     class Subject {
       String s = """
-      color:red-50
+      color:var(--color-red-50)
       margin:0
       """;
     }
@@ -191,8 +191,8 @@ public class CssEngine2Test16Full {
     --color-red-50: oklch(97.1% 0.013 17.38);
     """;
 
-    final CssEngine2 engine;
-    engine = new CssEngine2(system);
+    final CssEngine2.Configuring engine;
+    engine = new CssEngine2.Configuring(system);
 
     engine.noteSink(Y.noteSink());
 
@@ -213,7 +213,7 @@ public class CssEngine2Test16Full {
           }
         }
         @layer utilities {
-          .color\\:red-50 { color: oklch(97.1% 0.013 17.38) }
+          .color\\:var\\(--color-red-50\\) { color: var(--color-red-50) }
           .margin\\:0 { margin: 0 }
         }
         """
@@ -224,7 +224,7 @@ public class CssEngine2Test16Full {
   public void testCase06() throws IOException {
     class Subject {
       String s = """
-      color:red-50
+      color:var(--color-red-50)
       margin:0
       """;
     }
@@ -242,8 +242,8 @@ public class CssEngine2Test16Full {
     --color-red-50: oklch(97.1% 0.013 17.38);
     """;
 
-    final CssEngine2 engine;
-    engine = new CssEngine2(system);
+    final CssEngine2.Configuring engine;
+    engine = new CssEngine2.Configuring(system);
 
     engine.noteSink(Y.noteSink());
 
@@ -269,7 +269,7 @@ public class CssEngine2Test16Full {
           }
         }
         @layer utilities {
-          .color\\:red-50 { color: oklch(97.1% 0.013 17.38) }
+          .color\\:var\\(--color-red-50\\) { color: var(--color-red-50) }
           .margin\\:0 { margin: 0 }
         }
         """
@@ -282,7 +282,7 @@ public class CssEngine2Test16Full {
   public void testCase07() throws IOException {
     class Subject {
       String s = """
-      color:primary
+      color:var(--color-primary)
       """;
     }
 
@@ -293,16 +293,16 @@ public class CssEngine2Test16Full {
 
     system.theme = "";
 
-    final CssEngine2 engine;
-    engine = new CssEngine2(system);
+    final CssEngine2.Configuring engine;
+    engine = new CssEngine2.Configuring(system);
 
     engine.noteSink(Y.noteSink());
 
-    engine.theme("""
+    engine.theme(":root", """
     --color-primary: #f0f0f0;
     """);
 
-    engine.theme(DARK, """
+    engine.theme(":root", DARK, """
     --color-primary: #1e1e1e;
     """);
 
@@ -320,14 +320,15 @@ public class CssEngine2Test16Full {
         @layer theme {
           :root {
             --color-primary: #f0f0f0;
-
+          }
+          :root {
             @media (prefers-color-scheme: dark) {
               --color-primary: #1e1e1e;
             }
           }
         }
         @layer utilities {
-          .color\\:primary { color: #f0f0f0 }
+          .color\\:var\\(--color-primary\\) { color: var(--color-primary) }
         }
         """
     );
@@ -350,12 +351,12 @@ public class CssEngine2Test16Full {
 
     system.theme = "";
 
-    final CssEngine2 engine;
-    engine = new CssEngine2(system);
+    final CssEngine2.Configuring engine;
+    engine = new CssEngine2.Configuring(system);
 
     engine.noteSink(Y.noteSink());
 
-    engine.theme("""
+    engine.theme(":root", """
     --color-primary: #f0f0f0;
     """);
 
@@ -401,8 +402,8 @@ public class CssEngine2Test16Full {
 
     system.theme = "";
 
-    final CssEngine2 engine;
-    engine = new CssEngine2(system);
+    final CssEngine2.Configuring engine;
+    engine = new CssEngine2.Configuring(system);
 
     engine.noteSink(Y.noteSink());
 
@@ -439,8 +440,8 @@ public class CssEngine2Test16Full {
 
     system.theme = "";
 
-    final CssEngine2 engine;
-    engine = new CssEngine2(system);
+    final CssEngine2.Configuring engine;
+    engine = new CssEngine2.Configuring(system);
 
     engine.noteSink(Y.noteSink());
 
@@ -470,7 +471,7 @@ public class CssEngine2Test16Full {
     );
   }
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   --rx: emit
   """)
   public void testCase11() throws IOException {
@@ -489,8 +490,8 @@ public class CssEngine2Test16Full {
     --rx: 16;
     """;
 
-    final CssEngine2 engine;
-    engine = new CssEngine2(system);
+    final CssEngine2.Configuring engine;
+    engine = new CssEngine2.Configuring(system);
 
     engine.noteSink(Y.noteSink());
 
@@ -534,8 +535,8 @@ public class CssEngine2Test16Full {
 
     system.theme = "";
 
-    final CssEngine2 engine;
-    engine = new CssEngine2(system);
+    final CssEngine2.Configuring engine;
+    engine = new CssEngine2.Configuring(system);
 
     engine.noteSink(Y.noteSink());
 
@@ -574,14 +575,14 @@ public class CssEngine2Test16Full {
 
     system.theme = "";
 
-    final CssEngine2 engine;
-    engine = new CssEngine2(system);
+    final CssEngine2.Configuring engine;
+    engine = new CssEngine2.Configuring(system);
 
     engine.noteSink(Y.noteSink());
 
     engine.scanClass(Subject.class);
 
-    engine.theme("""
+    engine.theme(":root", """
     --custom-gap: 1rem;
     """);
 

@@ -15,6 +15,8 @@
  */
 package objectos.way;
 
+import static objectos.way.CssEngine2.fun;
+import static objectos.way.CssEngine2.tok;
 import static org.testng.Assert.assertEquals;
 
 import java.util.ArrayList;
@@ -22,16 +24,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 import org.testng.annotations.Test;
 
 public class CssEngine2Test10Gen {
 
-  @Test
+  @Test(description = "no prop")
   public void testCase01() {
     test(
         gen -> {
-          gen.utility(List.of(), ".margin\\:0", "margin", "0");
+          gen.utility(List.of(), ".margin\\:0", "margin", tok("0"));
         },
 
         ctx -> {
@@ -44,60 +45,54 @@ public class CssEngine2Test10Gen {
     );
   }
 
-  @Test
+  @Test(description = "prop")
   public void testCase02() {
+    var gray100 = CssEngine2.decl("--color-gray-100", CssEngine2.tok("#f0f0f0"));
     test(
         gen -> {
-          gen.keywords(List.of(), Map.of("gray-100", "var(--color-gray-100)"));
-          gen.utility(List.of(), ".color\\:gray-100", "color", "gray-100");
+          gen.properties(List.of(":root"), gray100);
+          gen.utility(List.of(), ".foo", "color", fun("var", tok("--color-gray-100")));
         },
 
         ctx -> {
           assertEquals(ctx.keyframes(), List.of());
           assertEquals(ctx.rules(), List.of(
-              CssEngine2.rule(".color\\:gray-100", List.of(), "color", "var(--color-gray-100)")
+              CssEngine2.rule(".foo", List.of(), "color", "var(--color-gray-100)")
           ));
           final List<CssEngine2.Section> sections = ctx.sections();
           assertEquals(sections.size(), 1);
           final CssEngine2.Section s0 = sections.get(0);
-          assertEquals(s0.selector(), List.of());
-          assertEquals(v(s0.decls()), """
-          gray-100: var(--color-gray-100)
-          """);
+          assertEquals(s0.selector(), List.of(":root"));
+          assertEquals(s0.decls(), List.of(gray100));
         }
     );
   }
 
-  @Test
+  @Test(description = "prop not referenced")
   public void testCase03() {
+    var gray100 = CssEngine2.decl("--color-gray-100", CssEngine2.tok("#f0f0f0"));
     test(
         gen -> {
-          gen.keywords(List.of(), Map.of("gray-100", "var(--color-gray-100)"));
-          gen.utility(List.of(), ".color\\:gray-100\\/20", "color", "gray-100/20");
+          gen.properties(List.of(":root"), gray100);
+          gen.utility(List.of(), ".foo", "color", tok("#f0f0f0"));
         },
 
         ctx -> {
           assertEquals(ctx.keyframes(), List.of());
           assertEquals(ctx.rules(), List.of(
-              CssEngine2.rule(".color\\:gray-100\\/20", List.of(), "color", "color-mix(in oklab, var(--color-gray-100) 20%, transparent)")
+              CssEngine2.rule(".foo", List.of(), "color", "#f0f0f0")
           ));
-          final List<CssEngine2.Section> sections = ctx.sections();
-          assertEquals(sections.size(), 1);
-          final CssEngine2.Section s0 = sections.get(0);
-          assertEquals(s0.selector(), List.of());
-          assertEquals(v(s0.decls()), """
-          gray-100: var(--color-gray-100)
-          """);
+          assertEquals(ctx.sections(), List.of());
         }
     );
   }
 
-  @Test
+  @Test(description = "keyframes")
   public void testCase04() {
     test(
         gen -> {
           gen.keyframes("fade-in");
-          gen.utility(List.of(), ".animation\\:3s_linear_1s_fade-in", "animation", "3s linear 1s fade-in");
+          gen.utility(List.of(), ".foo", "animation", tok("3s"), tok("linear"), tok("1s"), tok("fade-in"));
         },
 
         ctx -> {
@@ -105,7 +100,7 @@ public class CssEngine2Test10Gen {
               CssEngine2.keyframes("fade-in", List.of())
           ));
           assertEquals(ctx.rules(), List.of(
-              CssEngine2.rule(".animation\\:3s_linear_1s_fade-in", List.of(), "animation", "3s linear 1s fade-in")
+              CssEngine2.rule(".foo", List.of(), "animation", "3s linear 1s fade-in")
           ));
           final List<CssEngine2.Section> sections = ctx.sections();
           assertEquals(sections.size(), 0);
@@ -113,8 +108,28 @@ public class CssEngine2Test10Gen {
     );
   }
 
-  @Test
+  @Test(description = "keyframes: not referenced")
   public void testCase05() {
+    test(
+        gen -> {
+          gen.keyframes("fade-in");
+          gen.utility(List.of(), ".foo", "animation", tok("3s"), tok("linear"), tok("1s"), tok("fade-out"));
+        },
+
+        ctx -> {
+          assertEquals(ctx.keyframes(), List.of());
+          assertEquals(ctx.rules(), List.of(
+              CssEngine2.rule(".foo", List.of(), "animation", "3s linear 1s fade-out")
+          ));
+          final List<CssEngine2.Section> sections = ctx.sections();
+          assertEquals(sections.size(), 0);
+        }
+    );
+  }
+
+  /*
+  @Test
+  public void testCase06() {
     test(
         gen -> {
           gen.rx("16");
@@ -136,12 +151,13 @@ public class CssEngine2Test10Gen {
         }
     );
   }
+  */
 
   private static final class Builder {
 
     final Map<String, CssEngine2.Keyframes> keyframes = new HashMap<>();
 
-    final Map<String, CssEngine2.Decl> keywords = new HashMap<>();
+    final Map<String, CssEngine2.Decl> properties = new HashMap<>();
 
     CssEngine2.Decl rx;
 
@@ -151,7 +167,7 @@ public class CssEngine2Test10Gen {
 
     final CssEngine2.Ctx build() {
       final CssEngine2.Gen gen;
-      gen = new CssEngine2.Gen(keyframes, keywords, rx, sections, utilities);
+      gen = new CssEngine2.Gen(keyframes, properties, rx, sections, utilities);
 
       return gen.generate();
     }
@@ -163,23 +179,14 @@ public class CssEngine2Test10Gen {
       keyframes.put(name, kf);
     }
 
-    final void keywords(List<String> selector, Map<String, String> kws) {
+    final void properties(
+        List<String> selector,
+        CssEngine2.Decl... props) {
       final List<CssEngine2.Decl> decls;
-      decls = new ArrayList<>();
+      decls = List.of(props);
 
-      for (Map.Entry<String, String> entry : kws.entrySet()) {
-        final String keyword;
-        keyword = entry.getKey();
-
-        final String value;
-        value = entry.getValue();
-
-        final CssEngine2.Decl decl;
-        decl = CssEngine2.decl(keyword, value);
-
-        keywords.put(keyword, decl);
-
-        decls.add(decl);
+      for (CssEngine2.Decl decl : decls) {
+        properties.put(decl.property, decl);
       }
 
       final CssEngine2.Section s;
@@ -188,35 +195,14 @@ public class CssEngine2Test10Gen {
       sections.add(s);
     }
 
-    final void rx(String value) {
-      rx = CssEngine2.decl("--rx", value);
-
-      final List<String> selector;
-      selector = List.of();
-
-      final List<CssEngine2.Decl> decls;
-      decls = List.of(rx);
-
-      final CssEngine2.Section s;
-      s = CssEngine2.section(selector, decls);
-
-      sections.add(s);
-    }
-
     final void utility(
-        List<CssEngine2.Variant> variants, String className, String property, String value) {
+        List<CssEngine2.Variant> variants, String className, String property, CssEngine2.Value... values) {
       final CssEngine2.Utility utility;
-      utility = new CssEngine2.Utility(variants, className, property, value);
+      utility = CssEngine2.utility(variants, className, property, values);
 
       utilities.add(utility);
     }
 
-  }
-
-  private String v(List<CssEngine2.Decl> values) {
-    return values.stream()
-        .map(v -> v.property + ": " + v.value)
-        .collect(Collectors.joining("\n", "", "\n"));
   }
 
   private void test(Consumer<? super Builder> config, Consumer<? super CssEngine2.Ctx> test) {

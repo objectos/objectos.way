@@ -37,7 +37,7 @@ public class CssEngine2Test00CssParser {
         """,
 
         List.of(
-            CssEngine2.decl("--breakpoint-sm", "40rem")
+            CssEngine2.decl("--breakpoint-sm", tok("40rem"))
         )
     }, {
         "color: just one",
@@ -47,7 +47,7 @@ public class CssEngine2Test00CssParser {
         """,
 
         List.of(
-            CssEngine2.decl("--color-stone-950", "oklch(0.147 0.004 49.25)")
+            CssEngine2.decl("--color-stone-950", fun("oklch", tok("0.147"), tok("0.004"), tok("49.25")))
         )
     }, {
         "color: two lines",
@@ -58,8 +58,8 @@ public class CssEngine2Test00CssParser {
         """,
 
         List.of(
-            CssEngine2.decl("--color-stone-950", "oklch(0.147 0.004 49.25)"),
-            CssEngine2.decl("--color-red-50", "oklch(0.971 0.013 17.38)")
+            CssEngine2.decl("--color-stone-950", fun("oklch", tok("0.147"), tok("0.004"), tok("49.25"))),
+            CssEngine2.decl("--color-red-50", fun("oklch", tok("0.971"), tok("0.013"), tok("17.38")))
         )
     }, {
         "color: clear",
@@ -69,7 +69,7 @@ public class CssEngine2Test00CssParser {
         """,
 
         List.of(
-            CssEngine2.decl("--color-*", "initial")
+            CssEngine2.decl("--color-*", tok("initial"))
         )
     }, {
         "custom: allow for values without a ns",
@@ -79,7 +79,7 @@ public class CssEngine2Test00CssParser {
         """,
 
         List.of(
-            CssEngine2.decl("--carbon-grid-columns", "4")
+            CssEngine2.decl("--carbon-grid-columns", tok("4"))
         )
     }, {
         "font: just one",
@@ -89,7 +89,7 @@ public class CssEngine2Test00CssParser {
         """,
 
         List.of(
-            CssEngine2.decl("--font-display", "Foo, \"Foo bar\"")
+            CssEngine2.decl("--font-display", tok("Foo"), COMMA, tok("\"Foo bar\""))
         )
     }, {
         "global: valid",
@@ -99,13 +99,13 @@ public class CssEngine2Test00CssParser {
         """,
 
         List.of(
-            CssEngine2.decl("--*", "initial")
+            CssEngine2.decl("--*", tok("initial"))
         )
     }, {
         "regular",
         "opacity:0;",
         List.of(
-            CssEngine2.decl("opacity", "0")
+            CssEngine2.decl("opacity", tok("0"))
         )
     }, {
         "rx",
@@ -115,7 +115,7 @@ public class CssEngine2Test00CssParser {
         """,
 
         List.of(
-            CssEngine2.decl("--rx", "16")
+            CssEngine2.decl("--rx", tok("16"))
         )
     }, {
         "ws: blank line between lines",
@@ -128,9 +128,9 @@ public class CssEngine2Test00CssParser {
         """,
 
         List.of(
-            CssEngine2.decl("--color-orange-900", "oklch(0.408 0.123 38.172)"),
-            CssEngine2.decl("--color-orange-950", "oklch(0.266 0.079 36.259)"),
-            CssEngine2.decl("--color-amber-50", "oklch(0.987 0.022 95.277)")
+            CssEngine2.decl("--color-orange-900", fun("oklch", tok("0.408"), tok("0.123"), tok("38.172"))),
+            CssEngine2.decl("--color-orange-950", fun("oklch", tok("0.266"), tok("0.079"), tok("36.259"))),
+            CssEngine2.decl("--color-amber-50", fun("oklch", tok("0.987"), tok("0.022"), tok("95.277")))
         )
     }, {
         "ws: it should trim the name",
@@ -140,7 +140,7 @@ public class CssEngine2Test00CssParser {
         """,
 
         List.of(
-            CssEngine2.decl("--color-orange-900", "oklch(0.408 0.123 38.172)")
+            CssEngine2.decl("--color-orange-900", fun("oklch", tok("0.408"), tok("0.123"), tok("38.172")))
         )
     }, {
         "ws: it should trim the name",
@@ -150,7 +150,7 @@ public class CssEngine2Test00CssParser {
         """,
 
         List.of(
-            CssEngine2.decl("--color-orange-900", "oklch(0.408 0.123 38.172)")
+            CssEngine2.decl("--color-orange-900", fun("oklch", tok("0.408"), tok("0.123"), tok("38.172")))
         )
     }, {
         "ws: it should trim the value",
@@ -161,7 +161,7 @@ public class CssEngine2Test00CssParser {
         """,
 
         List.of(
-            CssEngine2.decl("--color-orange-900", "oklch(0.408 0.123 38.172)")
+            CssEngine2.decl("--color-orange-900", fun("oklch", tok("0.408"), tok("0.123"), tok("38.172")))
         )
     }};
   }
@@ -258,6 +258,24 @@ public class CssEngine2Test00CssParser {
             tok("16.34%")
         )
     }, {
+        "string: double quote",
+        "\"Foo\"",
+        List.of(
+            tok("\"Foo\"")
+        )
+    }, {
+        "string: double quote w/ escaped double quote",
+        "\"Foo\\\"Bar\"",
+        List.of(
+            tok("\"Foo\\\"Bar\"")
+        )
+    }, {
+        "string: single quote",
+        "'Foo'",
+        List.of(
+            tok("'Foo'")
+        )
+    }, {
         "fun: 1 number",
         "blur(0)",
         List.of(
@@ -323,7 +341,7 @@ public class CssEngine2Test00CssParser {
         --color-orange-900: oklch(0.408 0.123 38.172);
         --color-orange-950: okl""",
 
-        "EOF while parsing rule declarations"
+        "Invalid CSS declaration value"
     );
   }
 

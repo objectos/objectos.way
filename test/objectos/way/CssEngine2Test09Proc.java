@@ -15,6 +15,7 @@
  */
 package objectos.way;
 
+import static objectos.way.CssEngine2.tok;
 import static org.testng.Assert.assertEquals;
 
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public class CssEngine2Test09Proc {
             r("margin:0", l("0", "margin"))
         ),
         l(
-            CssEngine2.utility(List.of(), ".margin\\:0", "margin", "0")
+            CssEngine2.utility(List.of(), ".margin\\:0", "margin", tok("0"))
         )
     }, {
         "multiple utilities",
@@ -51,9 +52,9 @@ public class CssEngine2Test09Proc {
             r("border:0", l("0", "border"))
         ),
         l(
-            CssEngine2.utility(List.of(), ".margin\\:0", "margin", "0"),
-            CssEngine2.utility(List.of(), ".padding\\:0", "padding", "0"),
-            CssEngine2.utility(List.of(), ".border\\:0", "border", "0")
+            CssEngine2.utility(List.of(), ".margin\\:0", "margin", tok("0")),
+            CssEngine2.utility(List.of(), ".padding\\:0", "padding", tok("0")),
+            CssEngine2.utility(List.of(), ".border\\:0", "border", tok("0"))
         )
     }, {
         "multiple utilities (skip already seen)",
@@ -64,8 +65,8 @@ public class CssEngine2Test09Proc {
             r("margin:0", l("0", "margin"))
         ),
         l(
-            CssEngine2.utility(List.of(), ".margin\\:0", "margin", "0"),
-            CssEngine2.utility(List.of(), ".padding\\:0", "padding", "0")
+            CssEngine2.utility(List.of(), ".margin\\:0", "margin", tok("0")),
+            CssEngine2.utility(List.of(), ".padding\\:0", "padding", tok("0"))
         )
     }, {
         "variant (class name)",
@@ -75,8 +76,8 @@ public class CssEngine2Test09Proc {
             r("padding:0", l("0", "padding"))
         ),
         l(
-            CssEngine2.utility(List.of(HOVER), ".hover\\/margin\\:0", "margin", "0"),
-            CssEngine2.utility(List.of(), ".padding\\:0", "padding", "0")
+            CssEngine2.utility(List.of(HOVER), ".hover\\/margin\\:0", "margin", tok("0")),
+            CssEngine2.utility(List.of(), ".padding\\:0", "padding", tok("0"))
         )
     }, {
         "variant (at rule (1))",
@@ -86,8 +87,8 @@ public class CssEngine2Test09Proc {
             r("padding:0", l("0", "padding"))
         ),
         l(
-            CssEngine2.utility(List.of(DARK), ".dark\\/color\\:gray-100", "color", "gray-100"),
-            CssEngine2.utility(List.of(), ".padding\\:0", "padding", "0")
+            CssEngine2.utility(List.of(DARK), ".dark\\/color\\:gray-100", "color", tok("gray-100")),
+            CssEngine2.utility(List.of(), ".padding\\:0", "padding", tok("0"))
         )
     }, {
         "variant (at rule (2))",
@@ -97,8 +98,8 @@ public class CssEngine2Test09Proc {
             r("padding:0", l("0", "padding"))
         ),
         l(
-            CssEngine2.utility(List.of(DARK, MD), ".dark\\/md\\/color\\:gray-100", "color", "gray-100"),
-            CssEngine2.utility(List.of(), ".padding\\:0", "padding", "0")
+            CssEngine2.utility(List.of(DARK, MD), ".dark\\/md\\/color\\:gray-100", "color", tok("gray-100")),
+            CssEngine2.utility(List.of(), ".padding\\:0", "padding", tok("0"))
         )
     }, {
         "variant (custom))",
@@ -107,7 +108,7 @@ public class CssEngine2Test09Proc {
             r("&[data-foo]/padding:0", l("0", "padding", "&[data-foo]"))
         ),
         l(
-            CssEngine2.utility(List.of(CssEngine2.simple("&[data-foo]")), ".\\&\\[data-foo\\]\\/padding\\:0", "padding", "0")
+            CssEngine2.utility(List.of(CssEngine2.simple("&[data-foo]")), ".\\&\\[data-foo\\]\\/padding\\:0", "padding", tok("0"))
         )
     }};
   }

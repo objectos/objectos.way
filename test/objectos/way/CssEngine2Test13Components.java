@@ -32,7 +32,7 @@ public class CssEngine2Test13Components {
 
         List.of(
             CssEngine2.parsedRule("[data-theme=g90]", List.of(
-                CssEngine2.decl("--color-background", "#262626")
+                CssEngine2.decl("--color-background", CssEngine2.tok("#262626"))
             ))
         ),
 

@@ -47,7 +47,7 @@ public final class Css {
   }
 
   /// A handle for configuring the generation of a [style sheet][Css.StyleSheet].
-  public sealed interface Engine permits CssEngine2 {
+  public sealed interface Engine permits CssEngine2.Configuring {
 
     /// Uses the specified note sink during generation.
     /// @param value the note sink to use
@@ -71,16 +71,18 @@ public final class Css {
     // THEME
     //
 
-    /// Adds the specified CSS declarations to the `:root` pseudo-class of the `theme` layer.
+    /// Adds the specified CSS rule to the `theme` layer.
     ///
+    /// @param selector the CSS rule selector
     /// @param value the CSS rule declarations
-    void theme(String value);
+    void theme(String selector, String value);
 
-    /// Adds the specified CSS at-rule to the `:root` pseudo-class of the `theme` layer.
+    /// Adds the specified nested CSS rule to the `theme` layer.
     ///
-    /// @param atRule the CSS at-rule
+    /// @param selector the CSS rule selector
+    /// @param nested the nested CSS rule selector
     /// @param value the CSS rule declarations
-    void theme(String atRule, String value);
+    void theme(String selector, String nested, String value);
 
     //
     // COMPONENTS
