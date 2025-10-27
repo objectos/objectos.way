@@ -16,7 +16,7 @@
 package objectos.way;
 
 import static objectos.way.CssEngine2.fun;
-import static objectos.way.CssEngine2.rx;
+import static objectos.way.CssEngine2.number;
 import static objectos.way.CssEngine2.tok;
 import static org.testng.Assert.assertEquals;
 
@@ -132,7 +132,7 @@ public class CssEngine2Test10Gen {
   public void testCase06() {
     test(
         gen -> {
-          gen.utility(List.of(), ".gap\\:--rx\\(16\\)", "gap", rx("16"));
+          gen.utility(List.of(), ".gap\\:--rx\\(16\\)", "gap", fun("--rx", number("16")));
         },
 
         ctx -> {

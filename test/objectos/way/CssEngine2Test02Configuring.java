@@ -23,6 +23,8 @@ import static org.testng.Assert.assertEquals;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import objectos.way.CssEngine2.Decl;
+import objectos.way.CssEngine2.Section;
 import org.testng.annotations.Test;
 
 public class CssEngine2Test02Configuring {
@@ -309,6 +311,42 @@ public class CssEngine2Test02Configuring {
           assertEquals(c.keyframes(), Map.of());
           assertEquals(c.properties(), Map.of());
           assertEquals(c.sections(), List.of());
+          assertEquals(c.variants(), Map.of());
+        }
+    );
+  }
+
+  @Test
+  public void baseProps01() {
+    test(
+        s -> {
+          s.base = """
+          html, :host {
+            font-family: --theme(
+              --default-font-family,
+              ui-sans-serif
+            ); /* 4 */
+          }
+          """;
+          s.theme = """
+          --font-sans: sans;
+          --default-font-family: var(--font-sans);
+          """;
+          s.variants = Map.of();
+        },
+
+        c -> {},
+
+        c -> {
+          assertEquals(c.components(), List.of());
+          assertEquals(c.fontFaces(), List.of());
+          assertEquals(c.keyframes(), Map.of());
+          final Map<String, Decl> properties = c.properties();
+          assertEquals(properties.size(), 2);
+          assertEquals(properties.get("--default-font-family").marked(), true);
+          assertEquals(properties.get("--font-sans").marked(), true);
+          final List<Section> sections = c.sections();
+          assertEquals(sections.size(), 1);
           assertEquals(c.variants(), Map.of());
         }
     );

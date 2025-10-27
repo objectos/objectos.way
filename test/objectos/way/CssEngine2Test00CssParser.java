@@ -17,17 +17,60 @@ package objectos.way;
 
 import static objectos.way.CssEngine2.fun;
 import static objectos.way.CssEngine2.number;
-import static objectos.way.CssEngine2.rx;
 import static objectos.way.CssEngine2.tok;
 import static objectos.way.CssEngine2.Sep.COMMA;
 import static org.testng.Assert.assertEquals;
 
 import java.util.List;
+import java.util.Set;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class CssEngine2Test00CssParser {
+
+  @DataProvider
+  public Object[][] basePropsProvider() {
+    return new Object[][] {{
+        "empty",
+        "",
+        Set.of()
+    }, {
+        "just one",
+        "--theme(--foo)",
+        Set.of("--foo")
+    }, {
+        "font-feature-settings",
+        "font-feature-settings: --theme(--default-font-feature-settings, normal)",
+        Set.of("--default-font-feature-settings")
+    }, {
+        "ignore if in comment",
+        "/* --theme(--foo) */",
+        Set.of()
+    }, {
+        "font-family",
+        """
+        html, :host {
+          font-family: --theme(
+            --default-font-family,
+            ui-sans-serif
+          ); /* 4 */
+        }
+        """,
+        Set.of("--default-font-family")
+    }};
+  }
+
+  @Test(dataProvider = "basePropsProvider")
+  public void baseProps(
+      String description,
+      String src,
+      Set<String> expected) {
+    final CssEngine2.CssParser parser;
+    parser = new CssEngine2.CssParser(src);
+
+    assertEquals(parser.parseBaseProps(), expected);
+  }
 
   @DataProvider
   public Object[][] declsValidProvider() {
@@ -325,7 +368,7 @@ public class CssEngine2Test00CssParser {
         "--rx custom function",
         "--rx(16)",
         List.of(
-            rx("16")
+            fun("--rx", number("16"))
         )
     }};
   }

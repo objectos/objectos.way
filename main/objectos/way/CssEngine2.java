@@ -236,6 +236,22 @@ final class CssEngine2 {
         next.mark();
       }
     }
+
+    final void mark(Map<String, Decl> properties) {
+      marked = true;
+
+      for (Value value : values) {
+        value.markProperties(properties);
+      }
+
+      if (next != null) {
+        next.mark(properties);
+      }
+    }
+
+    final boolean marked() {
+      return marked;
+    }
   }
 
   static Decl decl(String p, List<Value> v) { return new Decl(p, v); }
@@ -254,13 +270,23 @@ final class CssEngine2 {
               out.append(' ');
             }
 
-            out.append(name);
+            if ("--rx".equals(name) && args.size() == 1 && args.get(0) instanceof Number(String v)) {
+              out.append("calc(");
 
-            out.append('(');
+              out.append(v);
 
-            formatTo(out, args);
+              out.append(" / 16 * 1rem)");
+            }
 
-            out.append(')');
+            else {
+              out.append(name);
+
+              out.append('(');
+
+              formatTo(out, args);
+
+              out.append(')');
+            }
           }
 
           case Number(String v) -> {
@@ -269,18 +295,6 @@ final class CssEngine2 {
             }
 
             out.append(v);
-          }
-
-          case Rx(String v) -> {
-            if (idx != 0) {
-              out.append(' ');
-            }
-
-            out.append("calc(");
-
-            out.append(v);
-
-            out.append(" / 16 * 1rem)");
           }
 
           case Sep.COMMA -> {
@@ -309,9 +323,44 @@ final class CssEngine2 {
       }
     }
 
+    default void markProperties(Map<String, Decl> properties) {
+      // noop by default
+    }
+
   }
 
-  private record Fun(String name, List<Value> args) implements Value {}
+  private record Fun(String name, List<Value> args) implements Value {
+    @Override
+    public final void markProperties(Map<String, Decl> properties) {
+      for (Value arg : args) {
+        arg.markProperties(properties);
+      }
+
+      if (!name.equals("var")) {
+        return;
+      }
+
+      if (args.isEmpty()) {
+        return;
+      }
+
+      final Value first;
+      first = args.get(0);
+
+      if (!(first instanceof Tok(String v))) {
+        return;
+      }
+
+      final Decl decl;
+      decl = properties.get(v);
+
+      if (decl == null) {
+        return;
+      }
+
+      decl.mark(properties);
+    }
+  }
 
   static Fun fun(String name, List<Value> args) { return new Fun(name, args); }
   static Fun fun(String name, Value... args) { return new Fun(name, List.of(args)); }
@@ -319,10 +368,6 @@ final class CssEngine2 {
   private record Number(String v) implements Value {}
 
   static Number number(String v) { return new Number(v); }
-
-  private record Rx(String v) implements Value {}
-
-  static Rx rx(String v) { return new Rx(v); }
 
   enum Sep implements Value {
     COMMA;
@@ -346,17 +391,18 @@ final class CssEngine2 {
   private static final byte CSS_COMMA = 9;
   private static final byte CSS_HYPHEN = 10;
   private static final byte CSS_DOT = 11;
-  private static final byte CSS_COLON = 12;
-  private static final byte CSS_SEMICOLON = 13;
-  private static final byte CSS_AT = 14;
-  private static final byte CSS_REV_SOLIDUS = 15;
-  private static final byte CSS_LCURLY = 16;
-  private static final byte CSS_RCURLY = 17;
-  private static final byte CSS_DIGIT = 18;
-  private static final byte CSS_ALPHA = 19;
-  private static final byte CSS_UNDERLINE = 20;
-  private static final byte CSS_NON_ASCII = 21;
-  private static final byte CSS_EOF = 22;
+  private static final byte CSS_SOLIDUS = 12;
+  private static final byte CSS_COLON = 13;
+  private static final byte CSS_SEMICOLON = 14;
+  private static final byte CSS_AT = 15;
+  private static final byte CSS_REV_SOLIDUS = 16;
+  private static final byte CSS_LCURLY = 17;
+  private static final byte CSS_RCURLY = 18;
+  private static final byte CSS_DIGIT = 19;
+  private static final byte CSS_ALPHA = 20;
+  private static final byte CSS_UNDERLINE = 21;
+  private static final byte CSS_NON_ASCII = 22;
+  private static final byte CSS_EOF = 23;
 
   static {
     final byte[] table;
@@ -384,6 +430,7 @@ final class CssEngine2 {
     table[','] = CSS_COMMA;
     table['-'] = CSS_HYPHEN;
     table['.'] = CSS_DOT;
+    table['/'] = CSS_SOLIDUS;
     table[':'] = CSS_COLON;
     table[';'] = CSS_SEMICOLON;
     table['@'] = CSS_AT;
@@ -701,11 +748,7 @@ final class CssEngine2 {
 
       values(args, CSS_RPARENS);
 
-      if ("--rx".equals(name) && args.size() == 1 && args.get(0) instanceof Number(String v)) {
-        return new Rx(v);
-      } else {
-        return new Fun(name, args);
-      }
+      return new Fun(name, args);
     }
 
     private Value valueHexColor(int idx0, int idx1) {
@@ -847,6 +890,83 @@ final class CssEngine2 {
       s = text.substring(idx0, idx1);
 
       return new Tok(s);
+    }
+
+    public final Set<String> parseBaseProps() {
+      final Set<String> props;
+      props = new HashSet<>();
+
+      while (hasNext()) {
+        switch (next()) {
+          case CSS_SOLIDUS -> baseComment();
+
+          case CSS_LPARENS -> baseFun(props);
+        }
+      }
+
+      return props;
+    }
+
+    private void baseComment() {
+      final byte start;
+      start = nextEof();
+
+      if (start != CSS_ASTERISK) {
+        return;
+      }
+
+      while (hasNext()) {
+        final byte more;
+        more = next();
+
+        if (more != CSS_ASTERISK) {
+          continue;
+        }
+
+        if (!hasNext()) {
+          return;
+        }
+
+        final byte stop;
+        stop = next();
+
+        if (stop != CSS_SOLIDUS) {
+          continue;
+        }
+
+        break;
+      }
+    }
+
+    private void baseFun(Set<String> props) {
+      final byte wsnext;
+      wsnext = whileNext(CSS_WS);
+
+      if (wsnext != CSS_HYPHEN) {
+        return;
+      }
+
+      final int start;
+      start = idx;
+
+      final byte second;
+      second = nextEof();
+
+      if (second != CSS_HYPHEN) {
+        return;
+      }
+
+      final byte sep;
+      sep = whileNext(CSS_DIGIT, CSS_ALPHA, CSS_HYPHEN, CSS_UNDERLINE);
+
+      switch (sep) {
+        case CSS_WS, CSS_COMMA, CSS_RPARENS -> {
+          final String prop;
+          prop = text.substring(start, idx);
+
+          props.add(prop);
+        }
+      }
     }
 
     private IllegalArgumentException error(String message) {
@@ -1496,6 +1616,22 @@ final class CssEngine2 {
         variant = simple("@media (min-width: " + tok.v + ")");
 
         variant(id, variant);
+      }
+
+      // mark all props found in base
+      final CssParser baseParser;
+      baseParser = new CssParser(systemBase);
+
+      final Set<String> baseProps;
+      baseProps = baseParser.parseBaseProps();
+
+      for (String baseProp : baseProps) {
+        final Decl maybe;
+        maybe = properties.get(baseProp);
+
+        if (maybe != null) {
+          maybe.mark(properties);
+        }
       }
 
       return new Config(
@@ -2547,7 +2683,18 @@ final class CssEngine2 {
       keyframesProp = KEYFRAMES_PROPERTIES.contains(property);
 
       for (Value value : values) {
-        processValue(keyframesProp, value);
+        value.markProperties(properties);
+
+        if (keyframesProp &&
+            value instanceof Tok(String v) &&
+            !keyframesMarked.containsKey(v)) {
+          final Keyframes kf;
+          kf = keyframes.get(v);
+
+          if (kf != null) {
+            keyframesMarked.put(v, kf);
+          }
+        }
       }
 
       sb.setLength(0);
@@ -2561,49 +2708,6 @@ final class CssEngine2 {
       rule = rule(className, variants, property, value);
 
       rules.add(rule);
-    }
-
-    private void processValue(boolean keyframesProp, Value value) {
-      switch (value) {
-        case Fun(String name, List<Value> args) -> {
-          if ("var".equals(name) && !args.isEmpty()) {
-            final Value first;
-            first = args.get(0);
-
-            if (first instanceof Tok(String v)) {
-              final Decl prop;
-              prop = properties.get(v);
-
-              if (prop != null) {
-                prop.mark();
-              }
-            }
-          }
-
-          for (Value arg : args) {
-            processValue(keyframesProp, arg);
-          }
-        }
-
-        case Number n -> {}
-
-        case Rx rx -> {}
-
-        case Sep sep -> {}
-
-        case Tok(String v) -> {
-          if (keyframesProp) {
-            if (!keyframesMarked.containsKey(v)) {
-              final Keyframes kf;
-              kf = keyframes.get(v);
-
-              if (kf != null) {
-                keyframesMarked.put(v, kf);
-              }
-            }
-          }
-        }
-      }
     }
 
     private List<Section> themeSections() {
