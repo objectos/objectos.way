@@ -18,7 +18,7 @@ package objectos.way;
 import static objectos.way.CssEngine2.decl;
 import static objectos.way.CssEngine2.fun;
 import static objectos.way.CssEngine2.number;
-import static objectos.way.CssEngine2.styleRule;
+import static objectos.way.CssEngine2.block;
 import static objectos.way.CssEngine2.tok;
 import static objectos.way.CssEngine2.Sep.COMMA;
 import static org.testng.Assert.assertEquals;
@@ -204,7 +204,7 @@ public class CssEngine2Test00CssParser {
         }
         """,
         List.of(
-            styleRule(":root",
+            block(":root",
                 decl("--font-sans", tok("sans"))
             )
         )
@@ -217,9 +217,23 @@ public class CssEngine2Test00CssParser {
         }
         """,
         List.of(
-            styleRule(":root",
+            block(":root",
                 decl("--font-sans", tok("sans")),
                 decl("--font-mono", tok("monospace"))
+            )
+        )
+    }, {
+        "(theme) dark mode",
+        """
+        :root { @media (prefers-color-scheme: dark) {
+          --color-primary: #f0f0f0;
+        }}
+        """,
+        List.of(
+            block(":root",
+                block("@media (prefers-color-scheme: dark)",
+                    decl("--color-primary", tok("#f0f0f0"))
+                )
             )
         )
     }, {
@@ -235,7 +249,7 @@ public class CssEngine2Test00CssParser {
         }
         """,
         List.of(
-            styleRule("hr",
+            block("hr",
                 decl("height", number("0")),
                 decl("color", tok("inherit"))
             )
@@ -249,7 +263,7 @@ public class CssEngine2Test00CssParser {
         }
         """,
         List.of(
-            styleRule("html, :host",
+            block("html, :host",
                 decl("line-height", number("1.5"))
             )
         )

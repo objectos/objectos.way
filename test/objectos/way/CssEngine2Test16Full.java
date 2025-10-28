@@ -298,12 +298,13 @@ public class CssEngine2Test16Full {
 
     engine.noteSink(Y.noteSink());
 
-    engine.theme(":root", """
-    --color-primary: #f0f0f0;
-    """);
-
-    engine.theme(":root", DARK, """
-    --color-primary: #1e1e1e;
+    engine.theme("""
+    :root {
+      --color-primary: #f0f0f0;
+    }
+    :root { @media (prefers-color-scheme:dark) {
+      --color-primary: #1e1e1e;
+    }}
     """);
 
     engine.scanClass(Subject.class);
@@ -356,8 +357,10 @@ public class CssEngine2Test16Full {
 
     engine.noteSink(Y.noteSink());
 
-    engine.theme(":root", """
-    --color-primary: #f0f0f0;
+    engine.theme("""
+    :root {
+      --color-primary: #f0f0f0;
+    }
     """);
 
     engine.keyframes("fade-in", frames -> {
@@ -535,8 +538,10 @@ public class CssEngine2Test16Full {
 
     engine.scanClass(Subject.class);
 
-    engine.theme(":root", """
-    --custom-gap: 1rem;
+    engine.theme("""
+    :root {
+      --custom-gap: 1rem;
+    }
     """);
 
     final StringBuilder out;

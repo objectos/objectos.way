@@ -48,7 +48,6 @@ import java.util.HexFormat;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -281,9 +280,9 @@ final class CssEngine2 {
   /// A top-level CSS statement
   sealed interface Top {}
 
-  private record StyleRule(String selector, List<Stmt> stmts) implements Stmt, Top {}
+  private record Block(String selector, List<Stmt> stmts) implements Stmt, Top {}
 
-  static StyleRule styleRule(String sel, Stmt... stmts) { return new StyleRule(sel, List.of(stmts)); }
+  static Block block(String sel, Stmt... stmts) { return new Block(sel, List.of(stmts)); }
 
   sealed interface Value {
 
@@ -477,6 +476,7 @@ final class CssEngine2 {
   }
 
   static final class CssParser {
+    private static final String EOF_AT = "EOF while parsing a CSS at-rule";
     private static final String EOF_DECLS = "EOF while parsing rule declarations";
     private static final String EOF_SEL = "EOF while parsing a CSS selector";
     private static final String UNSUPPORTED_ESCAPE = "Escape sequences are currently not supported";
@@ -485,6 +485,8 @@ final class CssEngine2 {
     private char c;
 
     private int cursor, idx;
+
+    private StringBuilder sb;
 
     private List<String> selectors;
 
@@ -525,8 +527,61 @@ final class CssEngine2 {
       return result;
     }
 
-    private Top at() {
-      throw new UnsupportedOperationException("Implement me");
+    private Block at() {
+      final int at;
+      at = idx;
+
+      whileNext(CSS_ALPHA, CSS_HYPHEN);
+
+      cursor--;
+
+      final String name;
+      name = text.substring(at, idx);
+
+      return switch (name) {
+        case "@media" -> atBlock(name);
+
+        default -> throw error(name + " at-rule is not supported");
+      };
+    }
+
+    private Block atBlock(String name) {
+      final String query;
+      query = atQuery(name);
+
+      final List<Stmt> stmts;
+      stmts = stmts();
+
+      return new Block(query, stmts);
+    }
+
+    private String atQuery(String name) {
+      final StringBuilder sb;
+      sb = sb();
+
+      sb.append(name);
+
+      int ws;
+      ws = 0;
+
+      while (hasNext()) {
+        switch (next()) {
+          case CSS_LCURLY, CSS_SEMICOLON -> {
+            return sb.toString();
+          }
+          case CSS_WS -> ws++;
+
+          case CSS_COMMA -> { sb.append(c); ws++; }
+
+          case CSS_LPARENS -> { if (ws > 0) { sb.append(' '); } sb.append(c); ws = 0; }
+
+          case CSS_RPARENS -> { sb.append(c); ws = 0; }
+
+          default -> { if (ws > 0) { sb.append(' '); ws = 0; } sb.append(c); }
+        }
+      }
+
+      throw error(EOF_AT);
     }
 
     private void comment() {
@@ -693,6 +748,8 @@ final class CssEngine2 {
       return switch (next) {
         case CSS_HYPHEN -> decl();
 
+        case CSS_AT -> at();
+
         case CSS_ALPHA -> stmtSep();
 
         default -> throw new UnsupportedOperationException("Implement me :: next=" + next);
@@ -726,14 +783,14 @@ final class CssEngine2 {
       throw new UnsupportedOperationException("Implement me");
     }
 
-    private StyleRule styleRule() {
+    private Block styleRule() {
       final String selector;
       selector = selector();
 
       final List<Stmt> stmts;
       stmts = stmts();
 
-      return new StyleRule(selector, stmts);
+      return new Block(selector, stmts);
     }
 
     public final List<Decl> parseDecls() {
@@ -1166,6 +1223,16 @@ final class CssEngine2 {
       return new Tok(s);
     }
 
+    private StringBuilder sb() {
+      if (sb == null) {
+        sb = new StringBuilder();
+      } else {
+        sb.setLength(0);
+      }
+
+      return sb;
+    }
+
     private IllegalArgumentException error(String message) {
       return new IllegalArgumentException(message);
     }
@@ -1219,6 +1286,25 @@ final class CssEngine2 {
         next = next();
 
         if (next == c0) {
+          continue;
+        }
+
+        return next;
+      }
+
+      return CSS_EOF;
+    }
+
+    private byte whileNext(byte c0, byte c1) {
+      while (hasNext()) {
+        final byte next;
+        next = next();
+
+        if (next == c0) {
+          continue;
+        }
+
+        if (next == c1) {
           continue;
         }
 
@@ -1477,7 +1563,7 @@ final class CssEngine2 {
 
     private Set<Class<?>> scanJars = Set.of();
 
-    private final Map<List<String>, List<Stmt>> sections = new LinkedHashMap<>();
+    private final Map<List<String>, List<Decl>> sections = new LinkedHashMap<>();
 
     private final String systemBase;
 
@@ -1497,7 +1583,7 @@ final class CssEngine2 {
 
       for (Top top : parsed) {
         switch (top) {
-          case StyleRule(String selector, List<Stmt> stmts) -> {
+          case Block(String selector, List<Stmt> stmts) -> {
             if (!":root".equals(selector)) {
               throw new IllegalArgumentException(
                   "The system theme must only contain the :root selector"
@@ -1507,14 +1593,14 @@ final class CssEngine2 {
             final List<String> root;
             root = List.of(selector);
 
-            final List<Stmt> section;
+            final List<Decl> section;
             section = sections.computeIfAbsent(root, key -> new ArrayList<>());
 
             for (Stmt stmt : stmts) {
-              section.add(stmt);
-
               switch (stmt) {
                 case Decl decl -> {
+                  section.add(decl);
+
                   final String property;
                   property = decl.property;
 
@@ -1533,7 +1619,7 @@ final class CssEngine2 {
                   }
                 }
 
-                case StyleRule nested -> throw new IllegalArgumentException(
+                case Block nested -> throw new IllegalArgumentException(
                     "The system theme must not contain nested statements"
                 );
               }
@@ -1613,12 +1699,12 @@ final class CssEngine2 {
 
       for (Top top : parsed) {
         switch (top) {
-          case StyleRule rule -> theme(List.of(), rule);
+          case Block rule -> theme(List.of(), rule);
         }
       }
     }
 
-    private void theme(List<String> previous, StyleRule rule) {
+    private void theme(List<String> previous, Block rule) {
       final List<String> list;
       list = new ArrayList<>(previous);
 
@@ -1627,17 +1713,17 @@ final class CssEngine2 {
       final List<String> selector;
       selector = List.copyOf(list);
 
-      final List<Stmt> section;
+      final List<Decl> section;
       section = sections.computeIfAbsent(selector, key -> new ArrayList<>());
 
       final Map<String, Decl> props;
       props = themeProps.computeIfAbsent(selector, key -> new LinkedHashMap<>());
 
       for (Stmt stmt : rule.stmts) {
-        section.add(stmt);
-
         switch (stmt) {
           case Decl decl -> {
+            section.add(decl);
+
             final String property;
             property = decl.property;
 
@@ -1658,7 +1744,7 @@ final class CssEngine2 {
             }
           }
 
-          case StyleRule nested -> theme(selector, nested);
+          case Block nested -> theme(selector, nested);
         }
       }
     }
@@ -1817,15 +1903,15 @@ final class CssEngine2 {
       final List<Section> sections;
       sections = new ArrayList<>();
 
-      for (Map.Entry<List<String>, List<Stmt>> entry : this.sections.entrySet()) {
+      for (Map.Entry<List<String>, List<Decl>> entry : this.sections.entrySet()) {
         final List<String> selector;
         selector = entry.getKey();
 
-        final List<Stmt> stmts;
-        stmts = entry.getValue();
+        final List<Decl> decls;
+        decls = entry.getValue();
 
         final Section section;
-        section = new Section(selector, stmts);
+        section = new Section(selector, decls);
 
         sections.add(section);
       }
@@ -1839,7 +1925,7 @@ final class CssEngine2 {
 
       for (Top top : base) {
         switch (top) {
-          case StyleRule rule -> baseStyleRule(properties, rule);
+          case Block rule -> baseStyleRule(properties, rule);
         }
       }
 
@@ -1868,12 +1954,12 @@ final class CssEngine2 {
       );
     }
 
-    private void baseStyleRule(Map<String, Decl> properties, StyleRule rule) {
+    private void baseStyleRule(Map<String, Decl> properties, Block rule) {
       for (Stmt stmt : rule.stmts) {
         switch (stmt) {
           case Decl decl -> decl.mark(properties);
 
-          case StyleRule nested -> baseStyleRule(properties, nested);
+          case Block nested -> baseStyleRule(properties, nested);
         }
       }
     }
@@ -3012,8 +3098,18 @@ final class CssEngine2 {
       out.append(s);
     }
 
-    final void w(List<Value> values) throws IOException {
-      Value.formatTo(out, values);
+    final void wdecls(List<Decl> decls) throws IOException {
+      for (Decl decl : decls) {
+        indent();
+
+        w(decl.property);
+
+        w(": ");
+
+        Value.formatTo(out, decl.values);
+
+        wln(";");
+      }
     }
 
     final void wln() throws IOException {
@@ -3036,9 +3132,10 @@ final class CssEngine2 {
   // # BEGIN: Theme
   // ##################################################################
 
-  record Section(List<String> selector, List<Stmt> stmts) {}
+  record Section(List<String> selector, List<Decl> decls) {}
 
-  static Section section(List<String> s, Stmt... stmts) { return new Section(s, List.of(stmts)); }
+  static Section section(List<String> s, List<Decl> decls) { return new Section(s, decls); }
+  static Section section(List<String> s, Decl... decls) { return new Section(s, List.of(decls)); }
 
   static final class Theme extends Writer {
 
@@ -3075,17 +3172,7 @@ final class CssEngine2 {
         final List<Decl> decls;
         decls = section.decls;
 
-        for (Decl decl : decls) {
-          indent();
-
-          w(decl.property);
-
-          w(": ");
-
-          w(decl.values);
-
-          wln(";");
-        }
+        wdecls(decls);
 
         for (int idx = 0, size = selector.size(); idx < size; idx++) {
           level--;
@@ -3275,17 +3362,7 @@ final class CssEngine2 {
         final List<Decl> decls;
         decls = component.decls;
 
-        for (Decl decl : decls) {
-          indent();
-
-          w(decl.property);
-
-          w(": ");
-
-          w(decl.values);
-
-          wln(';');
-        }
+        wdecls(decls);
 
         level--;
 
@@ -3411,17 +3488,7 @@ final class CssEngine2 {
           final List<Decl> decls;
           decls = rule.decls;
 
-          for (Decl decl : decls) {
-            indent();
-
-            w(decl.property);
-
-            w(": ");
-
-            w(decl.values);
-
-            wln(';');
-          }
+          wdecls(decls);
 
           level--;
 
@@ -3444,17 +3511,7 @@ final class CssEngine2 {
 
         level++;
 
-        for (Decl decl : face) {
-          indent();
-
-          w(decl.property);
-
-          w(": ");
-
-          w(decl.values);
-
-          wln(';');
-        }
+        wdecls(face);
 
         level--;
 
