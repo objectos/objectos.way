@@ -148,7 +148,7 @@ final class CssEngine2 {
 
     theme.write(out);
 
-    final String baseSource;
+    final List<Top> baseSource;
     baseSource = config.base;
 
     final Base base;
@@ -1951,7 +1951,7 @@ final class CssEngine2 {
       }
 
       return new Config(
-          systemBase,
+          base,
 
           components,
 
@@ -2012,7 +2012,7 @@ final class CssEngine2 {
 
   record Config(
 
-      String base,
+      List<Top> base,
 
       List<ParsedRule> components,
 

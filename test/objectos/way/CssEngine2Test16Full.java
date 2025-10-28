@@ -147,7 +147,9 @@ public class CssEngine2Test16Full {
     system.base = "";
 
     system.theme = """
-    --color-red-50: oklch(97.1% 0.013 17.38);
+    :root {
+      --color-red-50: oklch(97.1% 0.013 17.38);
+    }
     """;
 
     final CssEngine2.Configuring engine;
@@ -188,7 +190,9 @@ public class CssEngine2Test16Full {
     system.base = "";
 
     system.theme = """
-    --color-red-50: oklch(97.1% 0.013 17.38);
+    :root {
+      --color-red-50: oklch(97.1% 0.013 17.38);
+    }
     """;
 
     final CssEngine2.Configuring engine;
@@ -239,7 +243,9 @@ public class CssEngine2Test16Full {
     """;
 
     system.theme = """
-    --color-red-50: oklch(97.1% 0.013 17.38);
+    :root {
+      --color-red-50: oklch(97.1% 0.013 17.38);
+    }
     """;
 
     final CssEngine2.Configuring engine;
@@ -302,7 +308,7 @@ public class CssEngine2Test16Full {
     :root {
       --color-primary: #f0f0f0;
     }
-    :root { @media (prefers-color-scheme:dark) {
+    :root { @media (prefers-color-scheme: dark) {
       --color-primary: #1e1e1e;
     }}
     """);
@@ -582,9 +588,11 @@ public class CssEngine2Test16Full {
     """;
 
     system.theme = """
-    --color-ignore-me: #f0f0f0;
-    --font-sans: sans;
-    --default-font-family: var(--font-sans);
+    :root {
+      --color-ignore-me: #f0f0f0;
+      --font-sans: sans;
+      --default-font-family: var(--font-sans);
+    }
     """;
 
     final CssEngine2.Configuring engine;
