@@ -54,6 +54,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.stream.Collectors;
 
 final class CssEngine2 {
 
@@ -191,7 +192,7 @@ final class CssEngine2 {
   // # BEGIN: CSS Parser
   // ##################################################################
 
-  static final class Decl {
+  static final class Decl implements Stmt {
     private boolean marked;
     private Decl next;
     final String property;
@@ -257,6 +258,15 @@ final class CssEngine2 {
   static Decl decl(String p, List<Value> v) { return new Decl(p, v); }
   static Decl decl(String p, Value... v) { return new Decl(p, List.of(v)); }
 
+  sealed interface Stmt {}
+
+  /// A top-level CSS statement
+  sealed interface Top {}
+
+  private record StyleRule(String selector, List<Stmt> stmts) implements Stmt, Top {}
+
+  static StyleRule styleRule(String sel, Stmt... stmts) { return new StyleRule(sel, List.of(stmts)); }
+
   sealed interface Value {
 
     static void formatTo(Appendable out, List<Value> values) throws IOException {
@@ -265,7 +275,8 @@ final class CssEngine2 {
         value = values.get(idx);
 
         switch (value) {
-          case Fun(String name, List<Value> args) -> {
+          case
+               Fun(String name, List<Value> args) -> {
             if (idx != 0) {
               out.append(' ');
             }
@@ -289,7 +300,8 @@ final class CssEngine2 {
             }
           }
 
-          case Number(String v) -> {
+          case
+               Number(String v) -> {
             if (idx != 0) {
               out.append(' ');
             }
@@ -301,7 +313,8 @@ final class CssEngine2 {
             out.append(',');
           }
 
-          case Tok(String v) -> {
+          case
+               Tok(String v) -> {
             if (idx != 0) {
               out.append(' ');
             }
@@ -310,6 +323,7 @@ final class CssEngine2 {
           }
         }
       }
+
     }
 
     static void formatTo(StringBuilder sb, List<Value> values) {
@@ -360,6 +374,7 @@ final class CssEngine2 {
 
       decl.mark(properties);
     }
+
   }
 
   static Fun fun(String name, List<Value> args) { return new Fun(name, args); }
@@ -449,14 +464,17 @@ final class CssEngine2 {
 
   static final class CssParser {
     private static final String EOF_DECLS = "EOF while parsing rule declarations";
+    private static final String EOF_SEL = "EOF while parsing a CSS selector";
     private static final String UNSUPPORTED_ESCAPE = "Escape sequences are currently not supported";
     private static final String UNSUPPORTED_NON_ASCII = "Non ASCII characters are currently not supported";
 
-    char c;
+    private char c;
 
-    int cursor, idx;
+    private int cursor, idx;
 
-    String text;
+    private List<String> selectors;
+
+    private String text;
 
     CssParser() {}
 
@@ -468,6 +486,201 @@ final class CssEngine2 {
       cursor = idx = 0;
 
       text = value;
+    }
+
+    public final List<Top> parse() {
+      final List<Top> result;
+      result = new ArrayList<>();
+
+      while (hasNext()) {
+        final byte next;
+        next = next();
+
+        switch (next) {
+          case CSS_WS -> {}
+
+          case CSS_SOLIDUS -> comment();
+
+          case CSS_AT -> result.add(
+              at()
+          );
+
+          default -> result.add(
+              styleRule(next)
+          );
+        }
+      }
+
+      return result;
+    }
+
+    private Top at() {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    private void comment() {
+      final int start;
+      start = idx;
+
+      if (next(CSS_ASTERISK)) {
+        comment0(start);
+      } else {
+        malformed(start);
+      }
+    }
+
+    private void comment0(int start) {
+      boolean asterisk;
+      asterisk = false;
+
+      while (hasNext()) {
+        final byte next;
+        next = next();
+
+        if (next == CSS_ASTERISK) {
+          asterisk = true;
+
+          break;
+        }
+      }
+
+      if (asterisk) {
+        comment1(start);
+      } else {
+        malformed(start);
+      }
+    }
+
+    private void comment1(int start) {
+      if (next(CSS_SOLIDUS)) {
+        return;
+      } else {
+        cursor--;
+
+        comment0(start);
+      }
+    }
+
+    private void malformed(int start) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    private String selector(byte next) {
+      if (selectors == null) {
+        selectors = new ArrayList<>();
+      } else {
+        selectors.clear();
+      }
+
+      final String first;
+      first = sel(next);
+
+      selectors.add(first);
+
+      return selector0(first);
+    }
+
+    private String selector0(String first) {
+      final byte next;
+      next = whileNext(CSS_WS);
+
+      return switch (next) {
+        case CSS_EOF -> throw error(EOF_SEL);
+
+        case CSS_LCURLY -> selectors.stream().collect(Collectors.joining(", "));
+
+        default -> throw new UnsupportedOperationException("Implement me");
+      };
+    }
+
+    private String sel(byte next) {
+      final int start;
+      start = idx;
+
+      return switch (next) {
+        case CSS_COLON -> selPseudo(start);
+
+        case CSS_ALPHA -> selElement(start);
+
+        default -> throw new UnsupportedOperationException("Implement me");
+      };
+    }
+
+    private String selElement(int start) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    private String selPseudo(int start) {
+      return switch (nextEof()) {
+        case CSS_HYPHEN, CSS_ALPHA -> selPseudoClass(start);
+
+        case CSS_COLON -> selPseudoElemen(start);
+
+        default -> throw error("Invalid pseudo CSS selector");
+      };
+    }
+
+    private String selPseudoClass(int start) {
+      final byte next;
+      next = whileNext(CSS_HYPHEN, CSS_UNDERLINE, CSS_ALPHA, CSS_DIGIT);
+
+      return switch (next) {
+        case CSS_EOF -> throw error(EOF_SEL);
+
+        case CSS_WS -> text.substring(start, idx);
+
+        case CSS_COMMA, CSS_LCURLY -> text.substring(start, cursor--);
+
+        default -> throw error("Invalid CSS selector");
+      };
+    }
+
+    private String selPseudoElemen(int start) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    private List<Stmt> stmts() {
+      final List<Stmt> stmts;
+      stmts = new ArrayList<>();
+
+      loop: while (hasNext()) {
+        final byte next;
+        next = next();
+
+        switch (next) {
+          case CSS_WS -> {}
+
+          case CSS_SOLIDUS -> comment();
+
+          case CSS_RCURLY -> {
+            break loop;
+          }
+
+          default -> stmts.add(
+              stmt(next)
+          );
+        }
+      }
+
+      return stmts;
+    }
+
+    private Stmt stmt(byte next) {
+      return switch (next) {
+        case CSS_HYPHEN -> decl();
+
+        default -> throw new UnsupportedOperationException("Implement me :: next=" + next);
+      };
+    }
+
+    private StyleRule styleRule(byte next) {
+      final String selector;
+      selector = selector(next);
+
+      final List<Stmt> stmts;
+      stmts = stmts();
+
+      return new StyleRule(selector, stmts);
     }
 
     public final List<Decl> parseDecls() {
@@ -510,14 +723,18 @@ final class CssEngine2 {
           yield declColon(name);
         }
 
-        case CSS_ASTERISK -> {
+        case CSS_ASTERISK ->
+
+        {
           final String name;
           name = text.substring(start, cursor);
 
           yield declColon(name);
         }
 
-        case CSS_COLON -> {
+        case CSS_COLON ->
+
+        {
           final String name;
           name = text.substring(start, idx);
 
@@ -554,7 +771,11 @@ final class CssEngine2 {
 
         case CSS_EOF -> throw error(EOF_DECLS);
 
-        default -> { cursor--; yield declValue0(name); }
+        default -> {
+          cursor--;
+          yield declValue0(name);
+        }
+
       };
     }
 
@@ -892,83 +1113,6 @@ final class CssEngine2 {
       return new Tok(s);
     }
 
-    public final Set<String> parseBaseProps() {
-      final Set<String> props;
-      props = new HashSet<>();
-
-      while (hasNext()) {
-        switch (next()) {
-          case CSS_SOLIDUS -> baseComment();
-
-          case CSS_LPARENS -> baseFun(props);
-        }
-      }
-
-      return props;
-    }
-
-    private void baseComment() {
-      final byte start;
-      start = nextEof();
-
-      if (start != CSS_ASTERISK) {
-        return;
-      }
-
-      while (hasNext()) {
-        final byte more;
-        more = next();
-
-        if (more != CSS_ASTERISK) {
-          continue;
-        }
-
-        if (!hasNext()) {
-          return;
-        }
-
-        final byte stop;
-        stop = next();
-
-        if (stop != CSS_SOLIDUS) {
-          continue;
-        }
-
-        break;
-      }
-    }
-
-    private void baseFun(Set<String> props) {
-      final byte wsnext;
-      wsnext = whileNext(CSS_WS);
-
-      if (wsnext != CSS_HYPHEN) {
-        return;
-      }
-
-      final int start;
-      start = idx;
-
-      final byte second;
-      second = nextEof();
-
-      if (second != CSS_HYPHEN) {
-        return;
-      }
-
-      final byte sep;
-      sep = whileNext(CSS_DIGIT, CSS_ALPHA, CSS_HYPHEN, CSS_UNDERLINE);
-
-      switch (sep) {
-        case CSS_WS, CSS_COMMA, CSS_RPARENS -> {
-          final String prop;
-          prop = text.substring(start, idx);
-
-          props.add(prop);
-        }
-      }
-    }
-
     private IllegalArgumentException error(String message) {
       return new IllegalArgumentException(message);
     }
@@ -983,6 +1127,14 @@ final class CssEngine2 {
       c = text.charAt(idx);
 
       return c < 128 ? CSS[c] : CSS_NON_ASCII;
+    }
+
+    private boolean next(byte test) {
+      if (hasNext()) {
+        return next() == test;
+      } else {
+        return CSS_EOF == test;
+      }
     }
 
     private byte nextEof() {
@@ -2705,7 +2857,9 @@ final class CssEngine2 {
       value = sb.toString();
 
       final Rule rule;
-      rule = rule(className, variants, property, value);
+      rule =
+
+          rule(className, variants, property, value);
 
       rules.add(rule);
     }
@@ -2894,6 +3048,10 @@ final class CssEngine2 {
 
   static final class Base extends Writer {
 
+    int cursor;
+
+    int idx;
+
     final String source;
 
     Base(String source) {
@@ -2906,141 +3064,110 @@ final class CssEngine2 {
         return;
       }
 
-      enum Parser {
-        NORMAL,
-
-        SLASH,
-
-        COMMENT,
-        COMMENT_STAR,
-
-        TEXT,
-
-        UNKNOWN;
-      }
-
-      Parser parser;
-      parser = Parser.NORMAL;
-
       wln("@layer base {");
-
-      boolean indent;
-      indent = true;
 
       level++;
 
-      for (int idx = 0, len = source.length(); idx < len; idx++) {
-        final char c;
-        c = source.charAt(idx);
+      while (hasNext()) {
+        switch (next()) {
+          case CSS_WS -> {}
 
-        switch (parser) {
-          case NORMAL -> {
-            if (Ascii.isWhitespace(c)) {
-              parser = Parser.NORMAL;
-            }
+          case CSS_SOLIDUS -> comment();
 
-            else if (c == '/') {
-              parser = Parser.SLASH;
-            }
-
-            else if (c == '{') {
-              parser = Parser.NORMAL;
-
-              indent = true;
-
-              level++;
-
-              wln(c);
-            }
-
-            else if (c == '}') {
-              parser = Parser.NORMAL;
-
-              indent = true;
-
-              level--;
-
-              indent();
-
-              wln(c);
-            }
-
-            else {
-              parser = Parser.TEXT;
-
-              if (indent) {
-                indent();
-
-                indent = false;
-              }
-
-              w(c);
-            }
-          }
-
-          case SLASH -> {
-            if (c == '*') {
-              parser = Parser.COMMENT;
-            }
-
-            else {
-              parser = Parser.UNKNOWN;
-
-              w('/', c);
-            }
-          }
-
-          case COMMENT -> {
-            if (c == '*') {
-              parser = Parser.COMMENT_STAR;
-            }
-          }
-
-          case COMMENT_STAR -> {
-            if (c == '*') {
-              parser = Parser.COMMENT_STAR;
-            }
-
-            else if (c == '/') {
-              parser = Parser.NORMAL;
-            }
-
-            else {
-              parser = Parser.COMMENT;
-            }
-          }
-
-          case TEXT -> {
-            if (Ascii.isWhitespace(c)) {
-              parser = Parser.NORMAL;
-
-              w(' ');
-            }
-
-            else if (c == '{') {
-              throw new UnsupportedOperationException("Implement me");
-            }
-
-            else if (c == ';') {
-              parser = Parser.NORMAL;
-
-              indent = true;
-
-              wln(c);
-            }
-
-            else {
-              parser = Parser.TEXT;
-
-              w(c);
-            }
-          }
-
-          case UNKNOWN -> w(c);
+          default -> statement();
         }
       }
 
+      level--;
+
       wln('}');
+    }
+
+    private void comment() {
+      final int start;
+      start = idx;
+
+      if (next(CSS_ASTERISK)) {
+        comment0(start);
+      } else {
+        malformed(start);
+      }
+    }
+
+    private void comment0(int start) {
+      boolean asterisk;
+      asterisk = false;
+
+      while (hasNext()) {
+        final byte next;
+        next = next();
+
+        if (next == CSS_ASTERISK) {
+          asterisk = true;
+
+          break;
+        }
+      }
+
+      if (asterisk) {
+        comment1(start);
+      } else {
+        malformed(start);
+      }
+    }
+
+    private void comment1(int start) {
+      if (next(CSS_SOLIDUS)) {
+        return;
+      } else {
+        cursor--;
+
+        comment0(start);
+      }
+    }
+
+    private void malformed(int start) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    private void statement() {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    private boolean hasNext() {
+      return cursor < source.length();
+    }
+
+    private byte next() {
+      idx = cursor++;
+
+      final char c;
+      c = source.charAt(idx);
+
+      return c < 128 ? CSS[c] : CSS_NON_ASCII;
+    }
+
+    private boolean next(byte test) {
+      if (hasNext()) {
+        return next() == test;
+      } else {
+        return false;
+      }
+    }
+
+    private byte whileNext(byte c0) {
+      while (hasNext()) {
+        final byte next;
+        next = next();
+
+        if (next == c0) {
+          continue;
+        }
+
+        return next;
+      }
+
+      return CSS_EOF;
     }
 
   }

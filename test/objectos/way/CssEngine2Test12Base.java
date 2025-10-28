@@ -141,6 +141,26 @@ public class CssEngine2Test12Base {
     );
   }
 
+  @Test(description = "replace --theme() with var()")
+  public void theme01() {
+    base(
+        """
+        html, :host {
+          font-family: --theme(
+            --default-font-family,
+            ui-sans-serif
+          ); /* 4 */
+        }
+        """,
+
+        """
+        @layer base {
+          font-family: var(--default-font-family, ui-sans-serif);
+        }
+        """
+    );
+  }
+
   @Test
   public void fullGeneration() {
     assertEquals(

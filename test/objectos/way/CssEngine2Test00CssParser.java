@@ -15,62 +15,20 @@
  */
 package objectos.way;
 
+import static objectos.way.CssEngine2.decl;
 import static objectos.way.CssEngine2.fun;
 import static objectos.way.CssEngine2.number;
+import static objectos.way.CssEngine2.styleRule;
 import static objectos.way.CssEngine2.tok;
 import static objectos.way.CssEngine2.Sep.COMMA;
 import static org.testng.Assert.assertEquals;
 
 import java.util.List;
-import java.util.Set;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class CssEngine2Test00CssParser {
-
-  @DataProvider
-  public Object[][] basePropsProvider() {
-    return new Object[][] {{
-        "empty",
-        "",
-        Set.of()
-    }, {
-        "just one",
-        "--theme(--foo)",
-        Set.of("--foo")
-    }, {
-        "font-feature-settings",
-        "font-feature-settings: --theme(--default-font-feature-settings, normal)",
-        Set.of("--default-font-feature-settings")
-    }, {
-        "ignore if in comment",
-        "/* --theme(--foo) */",
-        Set.of()
-    }, {
-        "font-family",
-        """
-        html, :host {
-          font-family: --theme(
-            --default-font-family,
-            ui-sans-serif
-          ); /* 4 */
-        }
-        """,
-        Set.of("--default-font-family")
-    }};
-  }
-
-  @Test(dataProvider = "basePropsProvider")
-  public void baseProps(
-      String description,
-      String src,
-      Set<String> expected) {
-    final CssEngine2.CssParser parser;
-    parser = new CssEngine2.CssParser(src);
-
-    assertEquals(parser.parseBaseProps(), expected);
-  }
 
   @DataProvider
   public Object[][] declsValidProvider() {
@@ -234,6 +192,75 @@ public class CssEngine2Test00CssParser {
     parser = new CssEngine2.CssParser(src);
 
     assertEquals(parser.parseIden(), expected);
+  }
+
+  @DataProvider
+  public Object[][] parseValidProvider() {
+    return new Object[][] {{
+        ":root w/ 1 prop",
+        """
+        :root {
+          --font-sans: sans;
+        }
+        """,
+        List.of(
+            styleRule(":root",
+                decl("--font-sans", tok("sans"))
+            )
+        )
+    }, {
+        ":root w/ 2 props",
+        """
+        :root {
+          --font-sans: sans;
+          --font-mono: monospace;
+        }
+        """,
+        List.of(
+            styleRule(":root",
+                decl("--font-sans", tok("sans")),
+                decl("--font-mono", tok("monospace"))
+            )
+        )
+    }, {
+        "empty",
+        "",
+        List.of()
+    }, {
+        "comment",
+        "/* comment */",
+        List.of()
+        //    }, {
+        //        "font-feature-settings",
+        //        "font-feature-settings: --theme(--default-font-feature-settings, normal)",
+        //        Set.of("--default-font-feature-settings")
+        //    }, {
+        //        "ignore if in comment",
+        //        "/* --theme(--foo) */",
+        //        Set.of()
+        //    }, {
+        //        "font-family",
+        //        """
+        //        html, :host {
+        //          font-family: --theme(
+        //            --default-font-family,
+        //            ui-sans-serif
+        //          ); /* 4 */
+        //        }
+        //        """,
+        //        Set.of("--default-font-family")
+    }};
+  }
+
+  @Test(dataProvider = "parseValidProvider")
+  public void parseValid(
+      String description,
+      String src,
+      @SuppressWarnings("exports") List<CssEngine2.Top> expected) {
+    final CssEngine2.CssParser parser;
+    parser = new CssEngine2.CssParser(src);
+
+    assertEquals(parser.parse(), expected);
   }
 
   @DataProvider

@@ -560,4 +560,55 @@ public class CssEngine2Test16Full {
     );
   }
 
+  @Test(description = """
+  emit theme prop referenced in base
+  """)
+  public void testCase14() throws IOException {
+    final CssEngine2.System system;
+    system = new CssEngine2.System();
+
+    system.base = """
+    html, :host {
+      font-family: --theme(
+        --default-font-family,
+        ui-sans-serif
+      ); /* 4 */
+    }
+    """;
+
+    system.theme = """
+    --color-ignore-me: #f0f0f0;
+    --font-sans: sans;
+    --default-font-family: var(--font-sans);
+    """;
+
+    final CssEngine2.Configuring engine;
+    engine = new CssEngine2.Configuring(system);
+
+    engine.noteSink(Y.noteSink());
+
+    final StringBuilder out;
+    out = new StringBuilder();
+
+    engine.generate(out);
+
+    assertEquals(
+        out.toString(),
+
+        """
+        @layer theme {
+          :root {
+            --font-sans: sans;
+            --default-font-family: var(--font-sans);
+          }
+        }
+        @layer base {
+          html, :host {
+            font-family: var(--default-font-family, ui-sans-serif);
+          }
+        }
+        """
+    );
+  }
+
 }
