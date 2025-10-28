@@ -354,15 +354,19 @@ public class CssEngine2Test02Configuring {
         c -> {},
 
         c -> {
+          final CssEngine2.Decl v0;
+          v0 = CssEngine2.decl("--font-sans", tok("sans")).mark();
+
+          final CssEngine2.Decl v1;
+          v1 = CssEngine2.decl("--default-font-family", fun("var", tok("--font-sans"))).mark();
+
           assertEquals(c.components(), List.of());
           assertEquals(c.fontFaces(), List.of());
           assertEquals(c.keyframes(), Map.of());
-          final Map<String, CssEngine2.Decl> properties = c.properties();
-          assertEquals(properties.size(), 2);
-          assertEquals(properties.get("--default-font-family").marked(), true);
-          assertEquals(properties.get("--font-sans").marked(), true);
-          final List<CssEngine2.Section> sections = c.sections();
-          assertEquals(sections.size(), 1);
+          assertEquals(c.properties(), Map.of("--font-sans", v0, "--default-font-family", v1));
+          assertEquals(c.sections(), List.of(
+              CssEngine2.section(List.of(":root"), v0, v1)
+          ));
           assertEquals(c.variants(), Map.of());
         }
     );

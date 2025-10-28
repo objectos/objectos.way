@@ -234,14 +234,18 @@ final class CssEngine2 {
       return new IllegalArgumentException(msg + "\n\t" + property + ": " + values);
     }
 
-    final void mark() {
+    final Decl mark() {
       if (!replaced) {
         marked = true;
+
+        return this;
       }
 
       if (next != null) {
         next.mark();
       }
+
+      return this;
     }
 
     final void mark(Map<String, Decl> properties) {
@@ -362,10 +366,6 @@ final class CssEngine2 {
     public final void markProperties(Map<String, Decl> properties) {
       for (Value arg : args) {
         arg.markProperties(properties);
-      }
-
-      if (!name.equals("var")) {
-        return;
       }
 
       if (args.isEmpty()) {
@@ -507,10 +507,7 @@ final class CssEngine2 {
       result = new ArrayList<>();
 
       while (hasNext()) {
-        final byte next;
-        next = next();
-
-        switch (next) {
+        switch (next()) {
           case CSS_WS -> {}
 
           case CSS_SOLIDUS -> comment();
@@ -520,7 +517,7 @@ final class CssEngine2 {
           );
 
           default -> result.add(
-              styleRule(next)
+              styleRule()
           );
         }
       }
@@ -579,56 +576,67 @@ final class CssEngine2 {
       throw new UnsupportedOperationException("Implement me");
     }
 
-    private String selector(byte next) {
+    private String selector() {
       if (selectors == null) {
         selectors = new ArrayList<>();
       } else {
         selectors.clear();
       }
 
-      final String first;
-      first = sel(next);
+      // re-consume first char
+      cursor--;
 
-      selectors.add(first);
+      while (hasNext()) {
+        switch (next()) {
+          case CSS_LCURLY -> {
+            return selectors.stream().collect(Collectors.joining(", "));
+          }
 
-      return selector0(first);
+          case CSS_COMMA -> {
+            whileNext(CSS_WS);
+
+            cursor--;
+          }
+
+          case CSS_COLON -> selectors.add(
+              selPseudo()
+          );
+
+          case CSS_ALPHA -> selectors.add(
+              selType()
+          );
+
+          default -> throw new UnsupportedOperationException("Implement me");
+        }
+      }
+
+      throw error(EOF_SEL);
     }
 
-    private String selector0(String first) {
-      final byte next;
-      next = whileNext(CSS_WS);
-
+    private String selEnd(int start, byte next) {
       return switch (next) {
         case CSS_EOF -> throw error(EOF_SEL);
 
-        case CSS_LCURLY -> selectors.stream().collect(Collectors.joining(", "));
+        case CSS_WS -> text.substring(start, idx);
 
-        default -> throw new UnsupportedOperationException("Implement me");
+        case CSS_COMMA, CSS_LCURLY -> text.substring(start, --cursor);
+
+        default -> throw error("Invalid CSS selector");
       };
     }
 
-    private String sel(byte next) {
+    private String selPseudo() {
       final int start;
       start = idx;
 
-      return switch (next) {
-        case CSS_COLON -> selPseudo(start);
+      if (!hasNext()) {
+        throw error(EOF_SEL);
+      }
 
-        case CSS_ALPHA -> selElement(start);
-
-        default -> throw new UnsupportedOperationException("Implement me");
-      };
-    }
-
-    private String selElement(int start) {
-      throw new UnsupportedOperationException("Implement me");
-    }
-
-    private String selPseudo(int start) {
-      return switch (nextEof()) {
+      return switch (next()) {
         case CSS_HYPHEN, CSS_ALPHA -> selPseudoClass(start);
 
-        case CSS_COLON -> selPseudoElemen(start);
+        case CSS_COLON -> selPseudoElement(start);
 
         default -> throw error("Invalid pseudo CSS selector");
       };
@@ -638,19 +646,21 @@ final class CssEngine2 {
       final byte next;
       next = whileNext(CSS_HYPHEN, CSS_UNDERLINE, CSS_ALPHA, CSS_DIGIT);
 
-      return switch (next) {
-        case CSS_EOF -> throw error(EOF_SEL);
-
-        case CSS_WS -> text.substring(start, idx);
-
-        case CSS_COMMA, CSS_LCURLY -> text.substring(start, cursor--);
-
-        default -> throw error("Invalid CSS selector");
-      };
+      return selEnd(start, next);
     }
 
-    private String selPseudoElemen(int start) {
+    private String selPseudoElement(int start) {
       throw new UnsupportedOperationException("Implement me");
+    }
+
+    private String selType() {
+      final int start;
+      start = idx;
+
+      final byte next;
+      next = whileNext(CSS_HYPHEN, CSS_UNDERLINE, CSS_ALPHA, CSS_DIGIT);
+
+      return selEnd(start, next);
     }
 
     private List<Stmt> stmts() {
@@ -683,13 +693,42 @@ final class CssEngine2 {
       return switch (next) {
         case CSS_HYPHEN -> decl();
 
+        case CSS_ALPHA -> stmtSep();
+
         default -> throw new UnsupportedOperationException("Implement me :: next=" + next);
       };
     }
 
-    private StyleRule styleRule(byte next) {
+    private Stmt stmtSep() {
+      final int start;
+      start = idx;
+
+      while (hasNext()) {
+        switch (next()) {
+          case CSS_SEMICOLON -> {
+            idx = start;
+
+            cursor = idx + 1;
+
+            return decl();
+          }
+
+          case CSS_LCURLY -> {
+            idx = start;
+
+            cursor = idx + 1;
+
+            return styleRule();
+          }
+        }
+      }
+
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    private StyleRule styleRule() {
       final String selector;
-      selector = selector(next);
+      selector = selector();
 
       final List<Stmt> stmts;
       stmts = stmts();
@@ -1713,17 +1752,8 @@ final class CssEngine2 {
       final Map<String, Decl> properties;
       properties = new LinkedHashMap<>();
 
-      for (Map.Entry<List<String>, Map<String, Decl>> outer : themeProps.entrySet()) {
-        final List<String> selector;
-        selector = outer.getKey();
-
-        final Map<String, Decl> props;
-        props = outer.getValue();
-
-        final List<Decl> decls;
-        decls = new ArrayList<>();
-
-        for (Map.Entry<String, Decl> inner : props.entrySet()) {
+      for (Map<String, Decl> map : themeProps.values()) {
+        for (Map.Entry<String, Decl> inner : map.entrySet()) {
           final String propName;
           propName = inner.getKey();
 
@@ -1731,8 +1761,6 @@ final class CssEngine2 {
           decl = inner.getValue();
 
           properties.merge(propName, decl, (oldValue, value) -> oldValue.append(value));
-
-          decls.add(decl);
         }
       }
 
@@ -1843,17 +1871,7 @@ final class CssEngine2 {
     private void baseStyleRule(Map<String, Decl> properties, StyleRule rule) {
       for (Stmt stmt : rule.stmts) {
         switch (stmt) {
-          case Decl decl -> {
-            final String baseProp;
-            baseProp = decl.property;
-
-            final Decl maybe;
-            maybe = properties.get(baseProp);
-
-            if (maybe != null) {
-              maybe.mark(properties);
-            }
-          }
+          case Decl decl -> decl.mark(properties);
 
           case StyleRule nested -> baseStyleRule(properties, nested);
         }

@@ -241,6 +241,19 @@ public class CssEngine2Test00CssParser {
             )
         )
     }, {
+        "(base) list selector",
+        """
+        html,
+        :host {
+          line-height: 1.5; /* 1 */
+        }
+        """,
+        List.of(
+            styleRule("html, :host",
+                decl("line-height", number("1.5"))
+            )
+        )
+    }, {
         "empty",
         "",
         List.of()
