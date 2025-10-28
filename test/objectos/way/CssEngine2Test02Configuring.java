@@ -17,14 +17,13 @@ package objectos.way;
 
 import static objectos.way.CssEngine2.fun;
 import static objectos.way.CssEngine2.number;
+import static objectos.way.CssEngine2.section;
 import static objectos.way.CssEngine2.tok;
 import static org.testng.Assert.assertEquals;
 
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-import objectos.way.CssEngine2.Decl;
-import objectos.way.CssEngine2.Section;
 import org.testng.annotations.Test;
 
 public class CssEngine2Test02Configuring {
@@ -43,8 +42,10 @@ public class CssEngine2Test02Configuring {
         },
 
         c -> {
-          c.theme(":root", """
-          --breakpoint-sm: 40rem;
+          c.theme("""
+          :root {
+            --breakpoint-sm: 40rem;
+          }
           """);
         },
 
@@ -57,7 +58,7 @@ public class CssEngine2Test02Configuring {
           assertEquals(c.keyframes(), Map.of());
           assertEquals(c.properties(), Map.of("--breakpoint-sm", v));
           assertEquals(c.sections(), List.of(
-              CssEngine2.section(List.of(":root"), List.of(v))
+              section(List.of(":root"), v)
           ));
           assertEquals(c.variants(), Map.of(
               "sm", CssEngine2.simple("@media (min-width: 40rem)")
@@ -75,27 +76,34 @@ public class CssEngine2Test02Configuring {
         s -> {
           s.base = "";
           s.theme = """
+          :root {
           --breakpoint-sm: 40rem;
+
           """;
           s.variants = Map.of();
         },
 
         c -> {
-          c.theme(":root", """
-          --breakpoint-sm: 30rem;
+          c.theme("""
+          :root {
+            --breakpoint-sm: 30rem;
+          }
           """);
         },
 
         c -> {
-          final CssEngine2.Decl v;
-          v = CssEngine2.decl("--breakpoint-sm", tok("30rem"));
+          final CssEngine2.Decl v0;
+          v0 = CssEngine2.decl("--breakpoint-sm", tok("40rem")).replaced();
+
+          final CssEngine2.Decl v1;
+          v1 = CssEngine2.decl("--breakpoint-sm", tok("30rem"));
 
           assertEquals(c.components(), List.of());
           assertEquals(c.fontFaces(), List.of());
           assertEquals(c.keyframes(), Map.of());
-          assertEquals(c.properties(), Map.of("--breakpoint-sm", v));
+          assertEquals(c.properties(), Map.of("--breakpoint-sm", v1));
           assertEquals(c.sections(), List.of(
-              CssEngine2.section(List.of(":root"), List.of(v))
+              section(List.of(":root"), v0, v1)
           ));
           assertEquals(c.variants(), Map.of(
               "sm", CssEngine2.simple("@media (min-width: 30rem)")
@@ -117,8 +125,10 @@ public class CssEngine2Test02Configuring {
         },
 
         c -> {
-          c.theme(":root", """
+          c.theme("""
+          :root {
           --color-test: #cafeba;
+          }
           """);
         },
 
@@ -131,7 +141,7 @@ public class CssEngine2Test02Configuring {
           assertEquals(c.keyframes(), Map.of());
           assertEquals(c.properties(), Map.of("--color-test", v));
           assertEquals(c.sections(), List.of(
-              CssEngine2.section(List.of(":root"), List.of(v))
+              section(List.of(":root"), v)
           ));
           assertEquals(c.variants(), Map.of());
         }
@@ -151,8 +161,10 @@ public class CssEngine2Test02Configuring {
         },
 
         c -> {
-          c.theme(":root", """
+          c.theme("""
+          :root {
           --font-test: 'Comic Sans';
+          }
           """);
         },
 
@@ -165,7 +177,7 @@ public class CssEngine2Test02Configuring {
           assertEquals(c.keyframes(), Map.of());
           assertEquals(c.properties(), Map.of("--font-test", v));
           assertEquals(c.sections(), List.of(
-              CssEngine2.section(List.of(":root"), List.of(v))
+              section(List.of(":root"), v)
           ));
           assertEquals(c.variants(), Map.of());
         }
@@ -222,11 +234,13 @@ public class CssEngine2Test02Configuring {
         },
 
         c -> {
-          c.theme(":root", """
-          --color-primary: #f0f0f0;
-          """);
-          c.theme(":root", DARK, """
-          --color-primary: #1e1e1e;
+          c.theme("""
+          :root {
+            --color-primary: #f0f0f0;
+          }
+          :root { @media (prefers-color-scheme: dark) {
+            --color-primary: #1e1e1e;
+          }}
           """);
         },
 
@@ -242,8 +256,8 @@ public class CssEngine2Test02Configuring {
           assertEquals(c.keyframes(), Map.of());
           assertEquals(c.properties(), Map.of("--color-primary", v0));
           assertEquals(c.sections(), List.of(
-              CssEngine2.section(List.of(":root"), List.of(v0)),
-              CssEngine2.section(List.of(":root", DARK), List.of(v1))
+              section(List.of(":root"), v0),
+              section(List.of(":root", DARK), v1)
           ));
           assertEquals(c.variants(), Map.of());
         }
@@ -329,8 +343,10 @@ public class CssEngine2Test02Configuring {
           }
           """;
           s.theme = """
+          :root {
           --font-sans: sans;
           --default-font-family: var(--font-sans);
+          }
           """;
           s.variants = Map.of();
         },
@@ -341,11 +357,11 @@ public class CssEngine2Test02Configuring {
           assertEquals(c.components(), List.of());
           assertEquals(c.fontFaces(), List.of());
           assertEquals(c.keyframes(), Map.of());
-          final Map<String, Decl> properties = c.properties();
+          final Map<String, CssEngine2.Decl> properties = c.properties();
           assertEquals(properties.size(), 2);
           assertEquals(properties.get("--default-font-family").marked(), true);
           assertEquals(properties.get("--font-sans").marked(), true);
-          final List<Section> sections = c.sections();
+          final List<CssEngine2.Section> sections = c.sections();
           assertEquals(sections.size(), 1);
           assertEquals(c.variants(), Map.of());
         }

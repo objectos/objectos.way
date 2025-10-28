@@ -197,7 +197,7 @@ public class CssEngine2Test00CssParser {
   @DataProvider
   public Object[][] parseValidProvider() {
     return new Object[][] {{
-        ":root w/ 1 prop",
+        "(theme) :root w/ 1 prop",
         """
         :root {
           --font-sans: sans;
@@ -209,7 +209,7 @@ public class CssEngine2Test00CssParser {
             )
         )
     }, {
-        ":root w/ 2 props",
+        "(theme) :root w/ 2 props",
         """
         :root {
           --font-sans: sans;
@@ -220,6 +220,24 @@ public class CssEngine2Test00CssParser {
             styleRule(":root",
                 decl("--font-sans", tok("sans")),
                 decl("--font-mono", tok("monospace"))
+            )
+        )
+    }, {
+        "(base) type selector",
+        """
+        /*
+         bla
+         */
+
+        hr {
+          height: 0; /* 1 */
+          color: inherit; /* 2 */
+        }
+        """,
+        List.of(
+            styleRule("hr",
+                decl("height", number("0")),
+                decl("color", tok("inherit"))
             )
         )
     }, {

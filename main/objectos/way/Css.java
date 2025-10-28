@@ -71,18 +71,10 @@ public final class Css {
     // THEME
     //
 
-    /// Adds the specified CSS rule to the `theme` layer.
+    /// Adds the specified CSS to the `theme` layer.
     ///
-    /// @param selector the CSS rule selector
-    /// @param value the CSS rule declarations
-    void theme(String selector, String value);
-
-    /// Adds the specified nested CSS rule to the `theme` layer.
-    ///
-    /// @param selector the CSS rule selector
-    /// @param nested the nested CSS rule selector
-    /// @param value the CSS rule declarations
-    void theme(String selector, String nested, String value);
+    /// @param value the CSS
+    void theme(String value);
 
     //
     // COMPONENTS

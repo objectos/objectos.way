@@ -48,6 +48,7 @@ import java.util.HexFormat;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -196,6 +197,7 @@ final class CssEngine2 {
     private boolean marked;
     private Decl next;
     final String property;
+    private boolean replaced;
     final List<Value> values;
 
     Decl(String property, List<Value> values) {
@@ -207,7 +209,9 @@ final class CssEngine2 {
     @Override
     public final boolean equals(Object obj) {
       return obj == this || obj instanceof Decl that
+          && marked == that.marked
           && property.equals(that.property)
+          && replaced == that.replaced
           && values.equals(that.values);
     }
 
@@ -231,7 +235,9 @@ final class CssEngine2 {
     }
 
     final void mark() {
-      marked = true;
+      if (!replaced) {
+        marked = true;
+      }
 
       if (next != null) {
         next.mark();
@@ -252,6 +258,14 @@ final class CssEngine2 {
 
     final boolean marked() {
       return marked;
+    }
+
+    final Decl replaced() {
+      marked = false;
+
+      replaced = true;
+
+      return this;
     }
   }
 
@@ -1424,6 +1438,8 @@ final class CssEngine2 {
 
     private Set<Class<?>> scanJars = Set.of();
 
+    private final Map<List<String>, List<Stmt>> sections = new LinkedHashMap<>();
+
     private final String systemBase;
 
     private final Map<List<String>, Map<String, Decl>> themeProps = new LinkedHashMap<>();
@@ -1437,29 +1453,53 @@ final class CssEngine2 {
       final CssParser parser;
       parser = new CssParser(system.theme);
 
-      final List<Decl> parsed;
-      parsed = parser.parseDecls();
+      final List<Top> parsed;
+      parsed = parser.parse();
 
-      // map to properties
-      final List<String> root;
-      root = List.of(":root");
+      for (Top top : parsed) {
+        switch (top) {
+          case StyleRule(String selector, List<Stmt> stmts) -> {
+            if (!":root".equals(selector)) {
+              throw new IllegalArgumentException(
+                  "The system theme must only contain the :root selector"
+              );
+            }
 
-      for (Decl decl : parsed) {
-        final String property;
-        property = decl.property;
+            final List<String> root;
+            root = List.of(selector);
 
-        if (!property.startsWith("--")) {
-          throw decl.invalid("The system theme must only contain custom properties");
-        }
+            final List<Stmt> section;
+            section = sections.computeIfAbsent(root, key -> new ArrayList<>());
 
-        final Map<String, Decl> values;
-        values = themeProps.computeIfAbsent(root, key -> new LinkedHashMap<>());
+            for (Stmt stmt : stmts) {
+              section.add(stmt);
 
-        final Decl existing;
-        existing = values.put(property, decl);
+              switch (stmt) {
+                case Decl decl -> {
+                  final String property;
+                  property = decl.property;
 
-        if (existing != null) {
-          decl.invalid("Duplicate property definition");
+                  if (!property.startsWith("--")) {
+                    throw decl.invalid("The system theme must only contain custom properties");
+                  }
+
+                  final Map<String, Decl> values;
+                  values = themeProps.computeIfAbsent(root, key -> new LinkedHashMap<>());
+
+                  final Decl existing;
+                  existing = values.put(property, decl);
+
+                  if (existing != null) {
+                    decl.invalid("Duplicate property definition");
+                  }
+                }
+
+                case StyleRule nested -> throw new IllegalArgumentException(
+                    "The system theme must not contain nested statements"
+                );
+              }
+            }
+          }
         }
       }
 
@@ -1522,80 +1562,64 @@ final class CssEngine2 {
     }
 
     @Override
-    public final void theme(String selector, String value) {
-      final String sel;
-      sel = checkSelector(selector);
-
-      final List<String> sectionSelector;
-      sectionSelector = List.of(sel);
-
-      theme(sectionSelector, value);
-    }
-
-    @Override
-    public final void theme(String selector, String nested, String value) {
-      final String sel;
-      sel = checkSelector(selector);
-
-      // validate nested
-      final String trimmed;
-      trimmed = nested.strip();
-
-      if (!trimmed.startsWith("@media")) {
-        throw new IllegalArgumentException("Only nested @media at-rules are currently supported");
-      }
-
-      final List<String> sectionSelector;
-      sectionSelector = List.of(sel, trimmed);
-
-      theme(sectionSelector, value);
-    }
-
-    private String checkSelector(String selector) {
-      final String nonNull;
-      nonNull = Objects.requireNonNull(selector, "selector == null");
-
-      final String stripped;
-      stripped = nonNull.strip();
-
-      if (stripped.isEmpty()) {
-        throw new IllegalArgumentException("Selector may not be blank");
-      }
-
-      return stripped;
-    }
-
-    private void theme(List<String> selector, String value) {
+    public final void theme(String value) {
       final String text;
       text = Objects.requireNonNull(value, "value == null");
 
-      // parse
       final CssParser parser;
       parser = new CssParser(text);
 
-      final List<Decl> parsed;
-      parsed = parser.parseDecls();
+      final List<Top> parsed;
+      parsed = parser.parse();
+
+      for (Top top : parsed) {
+        switch (top) {
+          case StyleRule rule -> theme(List.of(), rule);
+        }
+      }
+    }
+
+    private void theme(List<String> previous, StyleRule rule) {
+      final List<String> list;
+      list = new ArrayList<>(previous);
+
+      list.add(rule.selector);
+
+      final List<String> selector;
+      selector = List.copyOf(list);
+
+      final List<Stmt> section;
+      section = sections.computeIfAbsent(selector, key -> new ArrayList<>());
 
       final Map<String, Decl> props;
       props = themeProps.computeIfAbsent(selector, key -> new LinkedHashMap<>());
 
-      // map to properties
-      for (Decl decl : parsed) {
-        final String property;
-        property = decl.property;
+      for (Stmt stmt : rule.stmts) {
+        section.add(stmt);
 
-        if (!property.startsWith("--")) {
-          // always emit a non-custom-prop
-          decl.mark();
+        switch (stmt) {
+          case Decl decl -> {
+            final String property;
+            property = decl.property;
 
-          continue;
-        }
+            if (!property.startsWith("--")) {
+              // always emit a non-custom-prop
+              decl.mark();
 
-        final Decl existing;
-        existing = props.put(property, decl);
+              continue;
+            }
 
-        if (existing != null) {
-          noteSink.send($replaced, existing, decl);
+            final Decl existing;
+            existing = props.put(property, decl);
+
+            if (existing != null) {
+              existing.replaced();
+
+              noteSink.send($replaced, existing, decl);
+            }
+          }
+
+          case StyleRule nested -> theme(selector, nested);
         }
       }
     }
@@ -1689,10 +1713,6 @@ final class CssEngine2 {
       final Map<String, Decl> properties;
       properties = new LinkedHashMap<>();
 
-      // ... and sections
-      final List<Section> sections;
-      sections = new ArrayList<>();
-
       for (Map.Entry<List<String>, Map<String, Decl>> outer : themeProps.entrySet()) {
         final List<String> selector;
         selector = outer.getKey();
@@ -1714,11 +1734,6 @@ final class CssEngine2 {
 
           decls.add(decl);
         }
-
-        final Section section;
-        section = new Section(selector, decls);
-
-        sections.add(section);
       }
 
       // collect breakpoints
@@ -1770,19 +1785,33 @@ final class CssEngine2 {
         variant(id, variant);
       }
 
+      // collect all sections
+      final List<Section> sections;
+      sections = new ArrayList<>();
+
+      for (Map.Entry<List<String>, List<Stmt>> entry : this.sections.entrySet()) {
+        final List<String> selector;
+        selector = entry.getKey();
+
+        final List<Stmt> stmts;
+        stmts = entry.getValue();
+
+        final Section section;
+        section = new Section(selector, stmts);
+
+        sections.add(section);
+      }
+
       // mark all props found in base
       final CssParser baseParser;
       baseParser = new CssParser(systemBase);
 
-      final Set<String> baseProps;
-      baseProps = baseParser.parseBaseProps();
+      final List<Top> base;
+      base = baseParser.parse();
 
-      for (String baseProp : baseProps) {
-        final Decl maybe;
-        maybe = properties.get(baseProp);
-
-        if (maybe != null) {
-          maybe.mark(properties);
+      for (Top top : base) {
+        switch (top) {
+          case StyleRule rule -> baseStyleRule(properties, rule);
         }
       }
 
@@ -1809,6 +1838,26 @@ final class CssEngine2 {
 
           variants
       );
+    }
+
+    private void baseStyleRule(Map<String, Decl> properties, StyleRule rule) {
+      for (Stmt stmt : rule.stmts) {
+        switch (stmt) {
+          case Decl decl -> {
+            final String baseProp;
+            baseProp = decl.property;
+
+            final Decl maybe;
+            maybe = properties.get(baseProp);
+
+            if (maybe != null) {
+              maybe.mark(properties);
+            }
+          }
+
+          case StyleRule nested -> baseStyleRule(properties, nested);
+        }
+      }
     }
 
     // ##################################################################
@@ -2969,11 +3018,9 @@ final class CssEngine2 {
   // # BEGIN: Theme
   // ##################################################################
 
-  record Section(List<String> selector, List<Decl> decls) {}
+  record Section(List<String> selector, List<Stmt> stmts) {}
 
-  static Section section(List<String> s, List<Decl> d) {
-    return new Section(s, d);
-  }
+  static Section section(List<String> s, Stmt... stmts) { return new Section(s, List.of(stmts)); }
 
   static final class Theme extends Writer {
 
