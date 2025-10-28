@@ -19,6 +19,8 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.util.List;
+import objectos.way.CssEngine2.Top;
 import org.testng.annotations.Test;
 
 public class CssEngine2Test12Base {
@@ -30,10 +32,7 @@ public class CssEngine2Test12Base {
         /* some comment */
         """,
 
-        """
-        @layer base {
-        }
-        """
+        ""
     );
   }
 
@@ -155,7 +154,9 @@ public class CssEngine2Test12Base {
 
         """
         @layer base {
-          font-family: var(--default-font-family, ui-sans-serif);
+          html, :host {
+            font-family: var(--default-font-family, ui-sans-serif);
+          }
         }
         """
     );
@@ -318,8 +319,14 @@ public class CssEngine2Test12Base {
 
   private void base(String source, String expected) {
     try {
+      final CssEngine2.CssParser parser;
+      parser = new CssEngine2.CssParser(source);
+
+      final List<Top> topLevel;
+      topLevel = parser.parse();
+
       final CssEngine2.Base base;
-      base = new CssEngine2.Base(source);
+      base = new CssEngine2.Base(topLevel);
 
       final StringBuilder out;
       out = new StringBuilder();

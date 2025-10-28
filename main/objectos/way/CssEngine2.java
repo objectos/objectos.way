@@ -292,8 +292,7 @@ final class CssEngine2 {
         value = values.get(idx);
 
         switch (value) {
-          case
-               Fun(String name, List<Value> args) -> {
+          case Fun(String name, List<Value> args) -> {
             if (idx != 0) {
               out.append(' ');
             }
@@ -304,6 +303,16 @@ final class CssEngine2 {
               out.append(v);
 
               out.append(" / 16 * 1rem)");
+            }
+
+            else if ("--theme".equals(name)) {
+              out.append("var");
+
+              out.append('(');
+
+              formatTo(out, args);
+
+              out.append(')');
             }
 
             else {
@@ -317,8 +326,7 @@ final class CssEngine2 {
             }
           }
 
-          case
-               Number(String v) -> {
+          case Number(String v) -> {
             if (idx != 0) {
               out.append(' ');
             }
@@ -330,8 +338,7 @@ final class CssEngine2 {
             out.append(',');
           }
 
-          case
-               Tok(String v) -> {
+          case Tok(String v) -> {
             if (idx != 0) {
               out.append(' ');
             }
@@ -647,6 +654,10 @@ final class CssEngine2 {
             return selectors.stream().collect(Collectors.joining(", "));
           }
 
+          case CSS_ASTERISK -> selectors.add(
+              selUniversal()
+          );
+
           case CSS_COMMA -> {
             whileNext(CSS_WS);
 
@@ -705,7 +716,10 @@ final class CssEngine2 {
     }
 
     private String selPseudoElement(int start) {
-      throw new UnsupportedOperationException("Implement me");
+      final byte next;
+      next = whileNext(CSS_HYPHEN, CSS_UNDERLINE, CSS_ALPHA, CSS_DIGIT);
+
+      return selEnd(start, next);
     }
 
     private String selType() {
@@ -716,6 +730,13 @@ final class CssEngine2 {
       next = whileNext(CSS_HYPHEN, CSS_UNDERLINE, CSS_ALPHA, CSS_DIGIT);
 
       return selEnd(start, next);
+    }
+
+    private String selUniversal() {
+      final int start;
+      start = idx;
+
+      return selEnd(start, nextEof());
     }
 
     private List<Stmt> stmts() {
@@ -3098,17 +3119,21 @@ final class CssEngine2 {
       out.append(s);
     }
 
+    final void wdecl(Decl decl) throws IOException {
+      indent();
+
+      w(decl.property);
+
+      w(": ");
+
+      Value.formatTo(out, decl.values);
+
+      wln(";");
+    }
+
     final void wdecls(List<Decl> decls) throws IOException {
       for (Decl decl : decls) {
-        indent();
-
-        w(decl.property);
-
-        w(": ");
-
-        Value.formatTo(out, decl.values);
-
-        wln(";");
+        wdecl(decl);
       }
     }
 
@@ -3200,19 +3225,15 @@ final class CssEngine2 {
 
   static final class Base extends Writer {
 
-    int cursor;
+    final List<Top> source;
 
-    int idx;
-
-    final String source;
-
-    Base(String source) {
+    Base(List<Top> source) {
       this.source = source;
     }
 
     @Override
     final void write() throws IOException {
-      if (source == null || source.isBlank()) {
+      if (source.isEmpty()) {
         return;
       }
 
@@ -3220,13 +3241,9 @@ final class CssEngine2 {
 
       level++;
 
-      while (hasNext()) {
-        switch (next()) {
-          case CSS_WS -> {}
-
-          case CSS_SOLIDUS -> comment();
-
-          default -> statement();
+      for (Top top : source) {
+        switch (top) {
+          case Block block -> wblock(block);
         }
       }
 
@@ -3235,91 +3252,28 @@ final class CssEngine2 {
       wln('}');
     }
 
-    private void comment() {
-      final int start;
-      start = idx;
+    private void wblock(Block block) throws IOException {
+      indent();
 
-      if (next(CSS_ASTERISK)) {
-        comment0(start);
-      } else {
-        malformed(start);
-      }
-    }
+      w(block.selector);
 
-    private void comment0(int start) {
-      boolean asterisk;
-      asterisk = false;
+      wln(" {");
 
-      while (hasNext()) {
-        final byte next;
-        next = next();
+      level++;
 
-        if (next == CSS_ASTERISK) {
-          asterisk = true;
+      for (Stmt stmt : block.stmts) {
+        switch (stmt) {
+          case Decl decl -> wdecl(decl);
 
-          break;
+          case Block nested -> wblock(nested);
         }
       }
 
-      if (asterisk) {
-        comment1(start);
-      } else {
-        malformed(start);
-      }
-    }
+      level--;
 
-    private void comment1(int start) {
-      if (next(CSS_SOLIDUS)) {
-        return;
-      } else {
-        cursor--;
+      indent();
 
-        comment0(start);
-      }
-    }
-
-    private void malformed(int start) {
-      throw new UnsupportedOperationException("Implement me");
-    }
-
-    private void statement() {
-      throw new UnsupportedOperationException("Implement me");
-    }
-
-    private boolean hasNext() {
-      return cursor < source.length();
-    }
-
-    private byte next() {
-      idx = cursor++;
-
-      final char c;
-      c = source.charAt(idx);
-
-      return c < 128 ? CSS[c] : CSS_NON_ASCII;
-    }
-
-    private boolean next(byte test) {
-      if (hasNext()) {
-        return next() == test;
-      } else {
-        return false;
-      }
-    }
-
-    private byte whileNext(byte c0) {
-      while (hasNext()) {
-        final byte next;
-        next = next();
-
-        if (next == c0) {
-          continue;
-        }
-
-        return next;
-      }
-
-      return CSS_EOF;
+      wln('}');
     }
 
   }
