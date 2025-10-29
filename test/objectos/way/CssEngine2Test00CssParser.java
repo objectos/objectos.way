@@ -325,6 +325,24 @@ public class CssEngine2Test00CssParser {
             )
         )
     }, {
+        "(components) class selector",
+        """
+        .foo {}
+        """,
+        List.of(
+            block(".foo")
+        )
+    }, {
+        "(components) attr selector",
+        """
+        [foo] {}
+        [foo=bar] {}
+        """,
+        List.of(
+            block("[foo]"),
+            block("[foo=bar]")
+        )
+    }, {
         "empty",
         "",
         List.of()

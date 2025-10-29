@@ -155,7 +155,7 @@ final class CssEngine2 {
 
     base.write(out);
 
-    final List<ParsedRule> components;
+    final List<Block> components;
     components = config.components;
 
     final Components compWriter;
@@ -482,14 +482,16 @@ final class CssEngine2 {
   private static final byte CSS_COLON = 13;
   private static final byte CSS_SEMICOLON = 14;
   private static final byte CSS_AT = 15;
-  private static final byte CSS_REV_SOLIDUS = 16;
-  private static final byte CSS_LCURLY = 17;
-  private static final byte CSS_RCURLY = 18;
-  private static final byte CSS_DIGIT = 19;
-  private static final byte CSS_ALPHA = 20;
-  private static final byte CSS_UNDERLINE = 21;
-  private static final byte CSS_NON_ASCII = 22;
-  private static final byte CSS_EOF = 23;
+  private static final byte CSS_LSQUARE = 16;
+  private static final byte CSS_REV_SOLIDUS = 17;
+  private static final byte CSS_RSQUARE = 18;
+  private static final byte CSS_LCURLY = 19;
+  private static final byte CSS_RCURLY = 20;
+  private static final byte CSS_DIGIT = 21;
+  private static final byte CSS_ALPHA = 22;
+  private static final byte CSS_UNDERLINE = 23;
+  private static final byte CSS_NON_ASCII = 24;
+  private static final byte CSS_EOF = 25;
 
   static {
     final byte[] table;
@@ -523,7 +525,9 @@ final class CssEngine2 {
     table['@'] = CSS_AT;
     table['{'] = CSS_LCURLY;
     table['}'] = CSS_RCURLY;
+    table['['] = CSS_LSQUARE;
     table['\\'] = CSS_REV_SOLIDUS;
+    table[']'] = CSS_RSQUARE;
     table['_'] = CSS_UNDERLINE;
 
     // alphanumeric
@@ -582,31 +586,6 @@ final class CssEngine2 {
       }
 
       return result;
-    }
-
-    private List<Decl> parseDecls() {
-      final List<Decl> decls;
-      decls = new ArrayList<>();
-
-      while (true) {
-        final byte next;
-        next = whileNext(CSS_WS);
-
-        if (next == CSS_EOF) {
-          break;
-        }
-
-        final Decl decl;
-        decl = switch (next) {
-          case CSS_HYPHEN, CSS_UNDERLINE, CSS_ALPHA -> decl();
-
-          default -> throw error("Expected a CSS property declaration");
-        };
-
-        decls.add(decl);
-      }
-
-      return decls;
     }
 
     private At at() {
@@ -1029,8 +1008,16 @@ final class CssEngine2 {
             cursor--;
           }
 
+          case CSS_DOT -> selectors.add(
+              selClass()
+          );
+
           case CSS_COLON -> selectors.add(
               selPseudo()
+          );
+
+          case CSS_LSQUARE -> selectors.add(
+              selAttr()
           );
 
           case CSS_ALPHA -> selectors.add(
@@ -1044,13 +1031,49 @@ final class CssEngine2 {
       throw error(EOF_SEL);
     }
 
+    private String selAttr() {
+      final int start;
+      start = idx;
+
+      while (hasNext()) {
+        final byte next;
+        next = next();
+
+        if (next == CSS_RSQUARE) {
+          final String sel;
+          sel = text.substring(start, cursor);
+
+          return selEnd(sel, nextEof());
+        }
+      }
+
+      throw error(EOF_SEL);
+    }
+
+    private String selClass() {
+      final int start;
+      start = idx;
+
+      final byte next;
+      next = whileNext(CSS_HYPHEN, CSS_UNDERLINE, CSS_ALPHA, CSS_DIGIT);
+
+      return selEnd(start, next);
+    }
+
     private String selEnd(int start, byte next) {
+      final String sel;
+      sel = text.substring(start, idx);
+
+      return selEnd(sel, next);
+    }
+
+    private String selEnd(String sel, byte next) {
       return switch (next) {
         case CSS_EOF -> throw error(EOF_SEL);
 
-        case CSS_WS -> text.substring(start, idx);
+        case CSS_WS -> sel;
 
-        case CSS_COMMA, CSS_LCURLY -> text.substring(start, --cursor);
+        case CSS_COMMA, CSS_LCURLY -> { cursor--; yield sel; }
 
         default -> throw error("Invalid CSS selector");
       };
@@ -1692,12 +1715,6 @@ final class CssEngine2 {
   // # END: Variant
   // ##################################################################
 
-  record ParsedRule(String selector, List<Decl> decls) {}
-
-  static ParsedRule parsedRule(String s, List<Decl> d) {
-    return new ParsedRule(s, d);
-  }
-
   // ##################################################################
   // # BEGIN: Configuring
   // ##################################################################
@@ -1706,7 +1723,7 @@ final class CssEngine2 {
 
     private final Note.Ref2<Decl, Decl> $replaced = Note.Ref2.create(getClass(), "REP", Note.INFO);
 
-    private final List<ParsedRule> components = new ArrayList<>();
+    private final List<Block> components = new ArrayList<>();
 
     private final List<FontFace> fontFaces = new ArrayList<>();
 
@@ -1966,22 +1983,29 @@ final class CssEngine2 {
     }
 
     @Override
-    public final void component(String selector, String value) {
-      selector = Objects.requireNonNull(selector, "selector == null");
-      selector = selector.strip();
+    public final void components(String value) {
+      final String text;
+      text = Objects.requireNonNull(value, "value == null");
 
-      value = Objects.requireNonNull(value, "value == null");
+      final CssParser parser;
+      parser = new CssParser(text);
 
-      final CssParser declsParser;
-      declsParser = new CssParser(value);
+      final List<Top> parsed;
+      parsed = parser.parse();
 
-      final List<Decl> decls;
-      decls = declsParser.parseDecls();
+      for (Top top : parsed) {
+        switch (top) {
+          case Block rule -> components.add(rule);
 
-      final ParsedRule rule;
-      rule = new ParsedRule(selector, decls);
+          case FontFace ff -> throw new IllegalArgumentException(
+              "@font-face declarations are not allowed in the components layer"
+          );
 
-      components.add(rule);
+          case Keyframes kf -> throw new IllegalArgumentException(
+              "@keyframes declarations are not allowed in the components layer"
+          );
+        }
+      }
     }
 
     public final Config configure() {
@@ -2084,6 +2108,11 @@ final class CssEngine2 {
         }
       }
 
+      // mark all props found in compoments
+      for (Block component : components) {
+        baseStyleRule(properties, component);
+      }
+
       return new Config(
           base,
 
@@ -2148,7 +2177,7 @@ final class CssEngine2 {
 
       List<Top> base,
 
-      List<ParsedRule> components,
+      List<Block> components,
 
       List<FontFace> fontFaces,
 
@@ -3463,9 +3492,9 @@ final class CssEngine2 {
 
   static final class Components extends Writer {
 
-    final List<ParsedRule> components;
+    final List<Block> components;
 
-    Components(List<ParsedRule> components) {
+    Components(List<Block> components) {
       this.components = components;
     }
 
@@ -3479,25 +3508,8 @@ final class CssEngine2 {
 
       level++;
 
-      for (ParsedRule component : components) {
-        indent();
-
-        w(component.selector);
-
-        wln(" {");
-
-        level++;
-
-        final List<Decl> decls;
-        decls = component.decls;
-
-        wdecls(decls);
-
-        level--;
-
-        indent();
-
-        wln('}');
+      for (Block component : components) {
+        wblock(component);
       }
 
       level--;

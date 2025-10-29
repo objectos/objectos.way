@@ -408,15 +408,21 @@ public class CssEngine2Test16Full {
 
     system.base = "";
 
-    system.theme = "";
+    system.theme = """
+    :root {
+      --color-theme: #f0f0f0;
+    }
+    """;
 
     final CssEngine2.Configuring engine;
     engine = new CssEngine2.Configuring(system);
 
     engine.noteSink(Y.noteSink());
 
-    engine.component("[data-theme=g90]", """
-    --color-background: #262626;
+    engine.components("""
+    [data-theme=g90] {
+      --color-background: var(--color-theme);
+    }
     """);
 
     final StringBuilder out;
@@ -428,9 +434,14 @@ public class CssEngine2Test16Full {
         out.toString(),
 
         """
+        @layer theme {
+          :root {
+            --color-theme: #f0f0f0;
+          }
+        }
         @layer components {
           [data-theme=g90] {
-            --color-background: #262626;
+            --color-background: var(--color-theme);
           }
         }
         """

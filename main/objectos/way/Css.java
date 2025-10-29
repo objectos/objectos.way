@@ -80,11 +80,10 @@ public final class Css {
     // COMPONENTS
     //
 
-    /// Adds the specified CSS rule to the `components` layer.
+    /// Adds the specified CSS to the `components` layer.
     ///
-    /// @param selector the CSS rule selector
-    /// @param value the CSS rule declarations
-    void component(String selector, String value);
+    /// @param value the CSS
+    void components(String value);
 
   }
 

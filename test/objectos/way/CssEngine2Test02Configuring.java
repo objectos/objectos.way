@@ -15,6 +15,7 @@
  */
 package objectos.way;
 
+import static objectos.way.CssEngine2.block;
 import static objectos.way.CssEngine2.fun;
 import static objectos.way.CssEngine2.keyframes;
 import static objectos.way.CssEngine2.number;
@@ -264,26 +265,40 @@ public class CssEngine2Test02Configuring {
     test(
         s -> {
           s.base = "";
-          s.theme = "";
+          s.theme = """
+          :root {
+            --color-theme: #f0f0f0;
+          }
+          """;
           s.variants = Map.of();
         },
 
         c -> {
-          c.component("[data-theme=g90]", """
-          --color-background: #262626;
+          c.components("""
+          [data-theme=g90] {
+            --color-background: var(--color-theme);
+          }
           """);
         },
 
         c -> {
+          final CssEngine2.Decl v0;
+          v0 = CssEngine2.decl("--color-theme", tok("#f0f0f0")).mark();
+
+          final CssEngine2.Decl v1;
+          v1 = CssEngine2.decl("--color-background", fun("var", tok("--color-theme"))).mark();
+
           assertEquals(c.components(), List.of(
-              CssEngine2.parsedRule("[data-theme=g90]", List.of(
-                  CssEngine2.decl("--color-background", tok("#262626"))
-              ))
+              block("[data-theme=g90]", v1)
           ));
           assertEquals(c.fontFaces(), List.of());
           assertEquals(c.keyframes(), Map.of());
-          assertEquals(c.properties(), Map.of());
-          assertEquals(c.sections(), List.of());
+          assertEquals(c.properties(), Map.of(
+              "--color-theme", v0
+          ));
+          assertEquals(c.sections(), List.of(
+              section(List.of(":root"), v0)
+          ));
           assertEquals(c.variants(), Map.of());
         }
     );

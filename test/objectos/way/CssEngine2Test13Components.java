@@ -15,6 +15,9 @@
  */
 package objectos.way;
 
+import static objectos.way.CssEngine2.block;
+import static objectos.way.CssEngine2.decl;
+import static objectos.way.CssEngine2.tok;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
@@ -31,9 +34,7 @@ public class CssEngine2Test13Components {
         "1 component",
 
         List.of(
-            CssEngine2.parsedRule("[data-theme=g90]", List.of(
-                CssEngine2.decl("--color-background", CssEngine2.tok("#262626"))
-            ))
+            block("[data-theme=g90]", decl("--color-background", tok("#262626")))
         ),
 
         """
@@ -49,7 +50,7 @@ public class CssEngine2Test13Components {
   @Test(dataProvider = "writeProvider")
   public void write(
       String description,
-      @SuppressWarnings("exports") List<CssEngine2.ParsedRule> components,
+      @SuppressWarnings("exports") List<CssEngine2.Block> components,
       String expected) {
     try {
       final CssEngine2.Components writer;
