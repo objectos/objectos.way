@@ -453,11 +453,13 @@ public class CssEngine2Test16Full {
 
     engine.noteSink(Y.noteSink());
 
-    engine.fontFace("""
-    font-family: "IBM Plex Sans";
-    font-style: normal;
-    font-weight: 700;
-    src: local("IBM Plex Sans Bold");
+    engine.theme("""
+    @font-face {
+      font-family: "IBM Plex Sans";
+      font-style: normal;
+      font-weight: 700;
+      src: local("IBM Plex Sans Bold");
+    }
     """);
 
     final StringBuilder out;

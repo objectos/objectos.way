@@ -16,6 +16,7 @@
 package objectos.way;
 
 import static objectos.way.CssEngine2.decl;
+import static objectos.way.CssEngine2.fontFace;
 import static objectos.way.CssEngine2.fun;
 import static objectos.way.CssEngine2.keyframes;
 import static objectos.way.CssEngine2.number;
@@ -165,13 +166,27 @@ public class CssEngine2Test00CssParser {
       String description,
       String src,
       @SuppressWarnings("exports") List<CssEngine2.Decl> expected) {
+    final String source;
+    source = "foo { %s }".formatted(src);
+
     final CssEngine2.CssParser parser;
-    parser = new CssEngine2.CssParser(src);
+    parser = new CssEngine2.CssParser(source);
 
-    final List<CssEngine2.Decl> result;
-    result = parser.parseDecls();
+    final List<CssEngine2.Top> top;
+    top = parser.parse();
 
-    assertEquals(result, expected);
+    assertEquals(top.size(), 1);
+
+    final CssEngine2.Top only;
+    only = top.get(0);
+
+    if (!(only instanceof CssEngine2.Block(String selector, List<CssEngine2.Stmt> stmts))) {
+      throw new AssertionError();
+    }
+
+    assertEquals(selector, "foo");
+
+    assertEquals(stmts, expected);
   }
 
   @DataProvider
@@ -239,7 +254,7 @@ public class CssEngine2Test00CssParser {
             )
         )
     }, {
-        "(theme) keyframes",
+        "(theme) keyframes (percentage)",
         """
         @keyframes fade-in {
           0% {
@@ -258,6 +273,24 @@ public class CssEngine2Test00CssParser {
                 block("100%",
                     decl("opacity", number("1"))
                 )
+            )
+        )
+    }, {
+        "(theme) @font-face",
+        """
+        @font-face {
+          font-family: "IBM Plex Sans";
+          font-style: normal;
+          font-weight: 700;
+          src: local("IBM Plex Sans Bold");
+        }
+        """,
+        List.of(
+            fontFace(
+                decl("font-family", tok("\"IBM Plex Sans\"")),
+                decl("font-style", tok("normal")),
+                decl("font-weight", number("700")),
+                decl("src", fun("local", tok("\"IBM Plex Sans Bold\"")))
             )
         )
     }, {
@@ -299,25 +332,6 @@ public class CssEngine2Test00CssParser {
         "comment",
         "/* comment */",
         List.of()
-        //    }, {
-        //        "font-feature-settings",
-        //        "font-feature-settings: --theme(--default-font-feature-settings, normal)",
-        //        Set.of("--default-font-feature-settings")
-        //    }, {
-        //        "ignore if in comment",
-        //        "/* --theme(--foo) */",
-        //        Set.of()
-        //    }, {
-        //        "font-family",
-        //        """
-        //        html, :host {
-        //          font-family: --theme(
-        //            --default-font-family,
-        //            ui-sans-serif
-        //          ); /* 4 */
-        //        }
-        //        """,
-        //        Set.of("--default-font-family")
     }};
   }
 
@@ -330,6 +344,60 @@ public class CssEngine2Test00CssParser {
     parser = new CssEngine2.CssParser(src);
 
     assertEquals(parser.parse(), expected);
+  }
+
+  @DataProvider
+  public Object[][] parseInvalidProvider() {
+    return new Object[][] {{
+        "EOF at declaration value",
+        """
+        foo {
+          --color-orange-900: oklch(0.408 0.123 38.172);
+          --color-orange-950:
+        """,
+        "EOF while parsing rule declarations"
+    }, {
+        "EOF at declaration value",
+        """
+        foo {
+          --color-orange-900: oklch(0.408 0.123 38.172);
+          --color-orange-950: okl""",
+        "Invalid CSS declaration value"
+    }, {
+        "EOF at declaration name",
+        """
+        foo {
+          --color-orange-900: oklch(0.408 0.123 38.172);
+          --color-orange""",
+        "EOF while parsing rule declarations"
+    }, {
+        "EOF before colon",
+        """
+        foo {
+          --color-orange-900: oklch(0.408 0.123 38.172);
+          --color-orange-950\040""",
+        "Expected ':' after a CSS property name"
+    }};
+  }
+
+  @Test(dataProvider = "parseInvalidProvider")
+  public void parseInvalid(
+      String description,
+      String src,
+      String message) {
+    try {
+      final CssEngine2.CssParser parser;
+      parser = new CssEngine2.CssParser(src);
+
+      parser.parse();
+
+      Assert.fail("It should have thrown");
+    } catch (IllegalArgumentException expected) {
+      final String actual;
+      actual = expected.getMessage();
+
+      assertEquals(actual, message);
+    }
   }
 
   @DataProvider
@@ -481,64 +549,6 @@ public class CssEngine2Test00CssParser {
     result = parser.parseValues();
 
     assertEquals(result, expected);
-  }
-
-  @Test(description = "EOF at declaration value")
-  public void errors01() {
-    testIAE(
-        """
-        --color-orange-900: oklch(0.408 0.123 38.172);
-        --color-orange-950:
-        """,
-
-        "EOF while parsing rule declarations"
-    );
-  }
-
-  @Test(description = "EOF at declaration value")
-  public void errors02() {
-    testIAE(
-        """
-        --color-orange-900: oklch(0.408 0.123 38.172);
-        --color-orange-950: okl""",
-
-        "Invalid CSS declaration value"
-    );
-  }
-
-  @Test(description = "EOF at declaration name")
-  public void errors03() {
-    testIAE(
-        """
-        --color-orange-900: oklch(0.408 0.123 38.172);
-        --color-orange""",
-
-        "EOF while parsing rule declarations"
-    );
-  }
-
-  @Test(description = "EOF before colon")
-  public void errors04() {
-    testIAE(
-        """
-        --color-orange-900: oklch(0.408 0.123 38.172);
-        --color-orange-950\040""",
-
-        "Expected ':' after a CSS property name"
-    );
-  }
-
-  private void testIAE(String value, String expectedMsg) {
-    try {
-      final CssEngine2.CssParser parser;
-      parser = new CssEngine2.CssParser(value);
-
-      parser.parseDecls();
-
-      Assert.fail("it should have thrown");
-    } catch (IllegalArgumentException expected) {
-      assertEquals(expected.getMessage(), expectedMsg);
-    }
   }
 
 }

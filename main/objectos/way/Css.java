@@ -86,16 +86,6 @@ public final class Css {
     /// @param value the CSS rule declarations
     void component(String selector, String value);
 
-    //
-    // FONT-FACE
-    //
-
-    /// Adds the specified CSS declarations to a top-level `@font-face` declaration.
-    /// The `@font-face` will be appended to the end of the generated stylesheet.
-    ///
-    /// @param value the `@font-face` declarations
-    void fontFace(String value);
-
   }
 
   /// Encapsulates the configuration of a [style sheet][Css.StyleSheet].

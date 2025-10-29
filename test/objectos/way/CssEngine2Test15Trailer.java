@@ -93,12 +93,14 @@ public class CssEngine2Test15Trailer {
 
   static final class Tester {
 
-    final List<List<CssEngine2.Decl>> fontFaces = new ArrayList<>();
+    final List<CssEngine2.FontFace> fontFaces = new ArrayList<>();
 
     final List<CssEngine2.Keyframes> keyframes = new ArrayList<>();
 
     final void fontFace(CssEngine2.Decl... decls) {
-      fontFaces.add(List.of(decls));
+      fontFaces.add(
+          CssEngine2.fontFace(decls)
+      );
     }
 
     final void keyframes(String name, CssEngine2.Block... rules) {

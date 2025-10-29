@@ -171,7 +171,7 @@ final class CssEngine2 {
 
     utilities.write(out);
 
-    final List<List<Decl>> fontFaces;
+    final List<FontFace> fontFaces;
     fontFaces = config.fontFaces;
 
     final List<Keyframes> keyframesToWrite;
@@ -299,6 +299,26 @@ final class CssEngine2 {
   }
 
   static Block block(String sel, Stmt... stmts) { return new Block(sel, List.of(stmts)); }
+
+  record FontFace(List<Decl> decls) implements At, Top {
+    @Override
+    public final Stmt asStmt() {
+      throw new IllegalArgumentException(
+          "Cannot nest a @font-face at-rule"
+      );
+    }
+
+    @Override
+    public final void asTop(List<Top> result) {
+      result.add(this);
+    }
+
+    final boolean isEmpty() {
+      return decls.isEmpty();
+    }
+  }
+
+  static FontFace fontFace(Decl... decls) { return new FontFace(List.of(decls)); }
 
   record Keyframes(String name, List<Block> rules) implements At, Top {
     @Override
@@ -564,6 +584,31 @@ final class CssEngine2 {
       return result;
     }
 
+    private List<Decl> parseDecls() {
+      final List<Decl> decls;
+      decls = new ArrayList<>();
+
+      while (true) {
+        final byte next;
+        next = whileNext(CSS_WS);
+
+        if (next == CSS_EOF) {
+          break;
+        }
+
+        final Decl decl;
+        decl = switch (next) {
+          case CSS_HYPHEN, CSS_UNDERLINE, CSS_ALPHA -> decl();
+
+          default -> throw error("Expected a CSS property declaration");
+        };
+
+        decls.add(decl);
+      }
+
+      return decls;
+    }
+
     private At at() {
       final int at;
       at = idx;
@@ -583,6 +628,8 @@ final class CssEngine2 {
       name = text.substring(at, idx);
 
       return switch (name) {
+        case "@font-face" -> atFontFace();
+
         case "@keyframes" -> atKeyframes();
 
         case "@media" -> atBlock(name);
@@ -599,6 +646,20 @@ final class CssEngine2 {
       stmts = stmts();
 
       return new Block(query, stmts);
+    }
+
+    private FontFace atFontFace() {
+      final byte lcurly;
+      lcurly = whileNext(CSS_WS);
+
+      if (lcurly != CSS_LCURLY) {
+        throw error("Invalid @font-face declaration");
+      }
+
+      final List<Decl> decls;
+      decls = decls();
+
+      return new FontFace(decls);
     }
 
     private Keyframes atKeyframes() {
@@ -829,6 +890,115 @@ final class CssEngine2 {
       }
     }
 
+    private List<Decl> decls() {
+      final List<Decl> decls;
+      decls = new ArrayList<>();
+
+      while (hasNext()) {
+        final byte next;
+        next = next();
+
+        if (next == CSS_RCURLY) {
+          break;
+        }
+
+        if (next == CSS_WS) {
+          continue;
+        }
+
+        final Decl decl;
+        decl = switch (next) {
+          case CSS_HYPHEN, CSS_UNDERLINE, CSS_ALPHA -> decl();
+
+          default -> throw error("Expected a CSS property declaration");
+        };
+
+        decls.add(decl);
+      }
+
+      return decls;
+    }
+
+    private Decl decl() {
+      final int start;
+      start = idx;
+
+      final byte next;
+      next = whileNext(CSS_HYPHEN, CSS_UNDERLINE, CSS_DIGIT, CSS_ALPHA);
+
+      return switch (next) {
+        case CSS_WS -> {
+          final String name;
+          name = text.substring(start, idx);
+
+          yield declColon(name);
+        }
+
+        case CSS_ASTERISK ->
+
+        {
+          final String name;
+          name = text.substring(start, cursor);
+
+          yield declColon(name);
+        }
+
+        case CSS_COLON ->
+
+        {
+          final String name;
+          name = text.substring(start, idx);
+
+          yield declValue(name);
+        }
+
+        case CSS_REV_SOLIDUS -> throw error(UNSUPPORTED_ESCAPE);
+
+        case CSS_NON_ASCII -> throw error(UNSUPPORTED_NON_ASCII);
+
+        case CSS_EOF -> throw error(EOF_DECLS);
+
+        default -> throw error("Invalid CSS property name");
+      };
+    }
+
+    private Decl declColon(String name) {
+      final byte next;
+      next = whileNext(CSS_WS);
+
+      if (next != CSS_COLON) {
+        throw error("Expected ':' after a CSS property name");
+      }
+
+      return declValue(name);
+    }
+
+    private Decl declValue(String name) {
+      final byte next;
+      next = whileNext(CSS_WS);
+
+      return switch (next) {
+        case CSS_SEMICOLON, CSS_RCURLY -> CssEngine2.decl(name, List.of());
+
+        case CSS_EOF -> throw error(EOF_DECLS);
+
+        default -> {
+          cursor--;
+          yield declValue0(name);
+        }
+
+      };
+    }
+
+    private Decl declValue0(String name) {
+      final List<Value> values;
+      values = new ArrayList<>();
+
+      values(values, CSS_SEMICOLON);
+
+      return CssEngine2.decl(name, values);
+    }
+
     private void malformed(int start) {
       throw new UnsupportedOperationException("Implement me");
     }
@@ -1007,111 +1177,6 @@ final class CssEngine2 {
       stmts = stmts();
 
       return new Block(selector, stmts);
-    }
-
-    public final List<Decl> parseDecls() {
-      final List<Decl> decls;
-      decls = new ArrayList<>();
-
-      while (true) {
-        final byte next;
-        next = whileNext(CSS_WS);
-
-        if (next == CSS_EOF) {
-          break;
-        }
-
-        final Decl decl;
-        decl = switch (next) {
-          case CSS_HYPHEN, CSS_UNDERLINE, CSS_ALPHA -> decl();
-
-          default -> throw error("Expected a CSS property declaration");
-        };
-
-        decls.add(decl);
-      }
-
-      return decls;
-    }
-
-    private Decl decl() {
-      final int start;
-      start = idx;
-
-      final byte next;
-      next = whileNext(CSS_HYPHEN, CSS_UNDERLINE, CSS_DIGIT, CSS_ALPHA);
-
-      return switch (next) {
-        case CSS_WS -> {
-          final String name;
-          name = text.substring(start, idx);
-
-          yield declColon(name);
-        }
-
-        case CSS_ASTERISK ->
-
-        {
-          final String name;
-          name = text.substring(start, cursor);
-
-          yield declColon(name);
-        }
-
-        case CSS_COLON ->
-
-        {
-          final String name;
-          name = text.substring(start, idx);
-
-          yield declValue(name);
-        }
-
-        case CSS_REV_SOLIDUS -> throw error(UNSUPPORTED_ESCAPE);
-
-        case CSS_NON_ASCII -> throw error(UNSUPPORTED_NON_ASCII);
-
-        case CSS_EOF -> throw error(EOF_DECLS);
-
-        default -> throw error("Invalid CSS property name");
-      };
-    }
-
-    private Decl declColon(String name) {
-      final byte next;
-      next = whileNext(CSS_WS);
-
-      if (next != CSS_COLON) {
-        throw error("Expected ':' after a CSS property name");
-      }
-
-      return declValue(name);
-    }
-
-    private Decl declValue(String name) {
-      final byte next;
-      next = whileNext(CSS_WS);
-
-      return switch (next) {
-        case CSS_SEMICOLON, CSS_RCURLY -> CssEngine2.decl(name, List.of());
-
-        case CSS_EOF -> throw error(EOF_DECLS);
-
-        default -> {
-          cursor--;
-          yield declValue0(name);
-        }
-
-      };
-    }
-
-    private Decl declValue0(String name) {
-      final List<Value> values;
-      values = new ArrayList<>();
-
-      values(values, CSS_SEMICOLON);
-
-      return CssEngine2.decl(name, values);
     }
 
     public final List<Value> parseValues() {
@@ -1643,7 +1708,7 @@ final class CssEngine2 {
 
     private final List<ParsedRule> components = new ArrayList<>();
 
-    private final List<List<Decl>> fontFaces = new ArrayList<>();
+    private final List<FontFace> fontFaces = new ArrayList<>();
 
     private final Map<String, CssEngine2.Keyframes> keyframes = new HashMap<>();
 
@@ -1717,6 +1782,10 @@ final class CssEngine2 {
               }
             }
           }
+
+          case FontFace ff -> throw new IllegalArgumentException(
+              "The system theme must not contain @font-face declarations"
+          );
 
           case Keyframes kf -> {
             final String name;
@@ -1792,6 +1861,22 @@ final class CssEngine2 {
       scanJars.add(c);
     }
 
+    private static final Set<String> FONT_FACE_PROPS = Set.of(
+        "ascent-override",
+        "descent-override",
+        "font-display",
+        "font-family",
+        "font-stretch",
+        "font-style",
+        "font-weight",
+        "font-feature-settings",
+        "font-variant-settings",
+        "line-gap-override",
+        "size-adjust",
+        "src",
+        "unicode-range"
+    );
+
     @Override
     public final void theme(String value) {
       final String text;
@@ -1806,6 +1891,19 @@ final class CssEngine2 {
       for (Top top : parsed) {
         switch (top) {
           case Block rule -> theme(List.of(), rule);
+
+          case FontFace ff -> {
+            for (Decl decl : ff.decls) {
+              final String property;
+              property = decl.property;
+
+              if (!FONT_FACE_PROPS.contains(property)) {
+                decl.invalid("Invalid @font-face property");
+              }
+            }
+
+            fontFaces.add(ff);
+          }
 
           case Keyframes kf -> {
             final String name;
@@ -1884,44 +1982,6 @@ final class CssEngine2 {
       rule = new ParsedRule(selector, decls);
 
       components.add(rule);
-    }
-
-    private static final Set<String> FONT_FACE_PROPS = Set.of(
-        "ascent-override",
-        "descent-override",
-        "font-display",
-        "font-family",
-        "font-stretch",
-        "font-style",
-        "font-weight",
-        "font-feature-settings",
-        "font-variant-settings",
-        "line-gap-override",
-        "size-adjust",
-        "src",
-        "unicode-range"
-    );
-
-    @Override
-    public final void fontFace(String value) {
-      value = Objects.requireNonNull(value, "value == null");
-
-      final CssParser declsParser;
-      declsParser = new CssParser(value);
-
-      final List<Decl> decls;
-      decls = declsParser.parseDecls();
-
-      for (Decl decl : decls) {
-        final String property;
-        property = decl.property;
-
-        if (!FONT_FACE_PROPS.contains(property)) {
-          decl.invalid("Invalid @font-face property");
-        }
-      }
-
-      fontFaces.add(decls);
     }
 
     public final Config configure() {
@@ -2018,6 +2078,8 @@ final class CssEngine2 {
         switch (top) {
           case Block rule -> baseStyleRule(properties, rule);
 
+          case FontFace ff -> {/* leave it as it is */}
+
           case Keyframes kf -> { /* leave it as it is */ }
         }
       }
@@ -2088,7 +2150,7 @@ final class CssEngine2 {
 
       List<ParsedRule> components,
 
-      List<List<Decl>> fontFaces,
+      List<FontFace> fontFaces,
 
       Map<String, Keyframes> keyframes,
 
@@ -3233,6 +3295,22 @@ final class CssEngine2 {
       }
     }
 
+    final void wfontface(FontFace ff) throws IOException {
+      if (ff.isEmpty()) {
+        return;
+      }
+
+      wln("@font-face {");
+
+      level++;
+
+      wdecls(ff.decls);
+
+      level--;
+
+      wln('}');
+    }
+
     final void wkeyframes(Keyframes kf) throws IOException {
       w("@keyframes ");
 
@@ -3361,6 +3439,8 @@ final class CssEngine2 {
       for (Top top : source) {
         switch (top) {
           case Block block -> wblock(block);
+
+          case FontFace ff -> wfontface(ff);
 
           case Keyframes kf -> wkeyframes(kf);
         }
@@ -3503,10 +3583,10 @@ final class CssEngine2 {
 
   static final class Trailer extends Writer {
 
-    private final List<List<Decl>> fontFaces;
+    private final List<FontFace> fontFaces;
     private final List<Keyframes> keyframes;
 
-    Trailer(List<List<Decl>> fontFaces, List<Keyframes> keyframes) {
+    Trailer(List<FontFace> fontFaces, List<Keyframes> keyframes) {
       this.fontFaces = fontFaces;
 
       this.keyframes = keyframes;
@@ -3518,20 +3598,8 @@ final class CssEngine2 {
         wkeyframes(kf);
       }
 
-      for (List<Decl> face : fontFaces) {
-        if (face.isEmpty()) {
-          continue;
-        }
-
-        wln("@font-face {");
-
-        level++;
-
-        wdecls(face);
-
-        level--;
-
-        wln('}');
+      for (FontFace face : fontFaces) {
+        wfontface(face);
       }
     }
 

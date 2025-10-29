@@ -299,18 +299,20 @@ public class CssEngine2Test02Configuring {
         },
 
         c -> {
-          c.fontFace("""
-          font-family: "IBM Plex Sans";
-          font-style: normal;
-          font-weight: 700;
-          src: local("IBM Plex Sans Bold");
+          c.theme("""
+          @font-face {
+            font-family: "IBM Plex Sans";
+            font-style: normal;
+            font-weight: 700;
+            src: local("IBM Plex Sans Bold");
+          }
           """);
         },
 
         c -> {
           assertEquals(c.components(), List.of());
           assertEquals(c.fontFaces(), List.of(
-              List.of(
+              CssEngine2.fontFace(
                   CssEngine2.decl("font-family", tok("\"IBM Plex Sans\"")),
                   CssEngine2.decl("font-style", tok("normal")),
                   CssEngine2.decl("font-weight", number("700")),
