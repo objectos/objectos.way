@@ -98,7 +98,7 @@ public class CssEngine2Test10Gen {
 
         ctx -> {
           assertEquals(ctx.keyframes(), List.of(
-              CssEngine2.keyframes("fade-in", List.of())
+              CssEngine2.keyframes("fade-in")
           ));
           assertEquals(ctx.rules(), List.of(
               CssEngine2.rule(".foo", List.of(), "animation", "3s linear 1s fade-in")
@@ -164,7 +164,7 @@ public class CssEngine2Test10Gen {
 
     final void keyframes(String name) {
       final CssEngine2.Keyframes kf;
-      kf = CssEngine2.keyframes(name, List.of());
+      kf = CssEngine2.keyframes(name);
 
       keyframes.put(name, kf);
     }

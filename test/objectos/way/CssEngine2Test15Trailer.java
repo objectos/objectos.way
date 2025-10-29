@@ -36,12 +36,8 @@ public class CssEngine2Test15Trailer {
         tester(t -> {
           t.keyframes(
               "fade-in",
-              CssEngine2.parsedRule("from", List.of(
-                  CssEngine2.decl("opacity", tok("0"))
-              )),
-              CssEngine2.parsedRule("100%", List.of(
-                  CssEngine2.decl("opacity", tok("1"))
-              ))
+              CssEngine2.block("from", CssEngine2.decl("opacity", tok("0"))),
+              CssEngine2.block("100%", CssEngine2.decl("opacity", tok("1")))
           );
         }),
 
@@ -105,12 +101,12 @@ public class CssEngine2Test15Trailer {
       fontFaces.add(List.of(decls));
     }
 
-    final void keyframes(String name, CssEngine2.ParsedRule... rules) {
+    final void keyframes(String name, CssEngine2.Block... rules) {
       keyframes.add(
           CssEngine2.keyframes(
               name,
 
-              List.of(rules)
+              rules
           )
       );
     }

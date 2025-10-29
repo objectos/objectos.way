@@ -16,6 +16,7 @@
 package objectos.way;
 
 import static objectos.way.CssEngine2.fun;
+import static objectos.way.CssEngine2.keyframes;
 import static objectos.way.CssEngine2.number;
 import static objectos.way.CssEngine2.section;
 import static objectos.way.CssEngine2.tok;
@@ -194,27 +195,21 @@ public class CssEngine2Test02Configuring {
         },
 
         c -> {
-          c.keyframes("fade-in", frames -> {
-            frames.from("""
-            opacity: 0;
-            """);
-            frames.to("""
-            opacity: 1;
-            """);
-          });
+          c.theme("""
+          @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+          }
+          """);
         },
 
         c -> {
           assertEquals(c.components(), List.of());
           assertEquals(c.fontFaces(), List.of());
-          assertEquals(c.keyframes(), Map.of("fade-in", CssEngine2.keyframes("fade-in", List.of(
-              CssEngine2.parsedRule("from", List.of(
-                  CssEngine2.decl("opacity", number("0"))
-              )),
-              CssEngine2.parsedRule("to", List.of(
-                  CssEngine2.decl("opacity", number("1"))
-              ))
-          ))));
+          assertEquals(c.keyframes(), Map.of("fade-in", keyframes("fade-in",
+              CssEngine2.block("from", CssEngine2.decl("opacity", number("0"))),
+              CssEngine2.block("to", CssEngine2.decl("opacity", number("1")))
+          )));
           assertEquals(c.properties(), Map.of());
           assertEquals(c.sections(), List.of());
           assertEquals(c.variants(), Map.of());

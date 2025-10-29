@@ -367,12 +367,11 @@ public class CssEngine2Test16Full {
     :root {
       --color-primary: #f0f0f0;
     }
+    @keyframes fade-in {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
     """);
-
-    engine.keyframes("fade-in", frames -> {
-      frames.perc(0, "opacity:0;");
-      frames.perc(100, "opacity:1;");
-    });
 
     engine.scanClass(Subject.class);
 

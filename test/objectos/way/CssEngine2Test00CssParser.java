@@ -17,6 +17,7 @@ package objectos.way;
 
 import static objectos.way.CssEngine2.decl;
 import static objectos.way.CssEngine2.fun;
+import static objectos.way.CssEngine2.keyframes;
 import static objectos.way.CssEngine2.number;
 import static objectos.way.CssEngine2.block;
 import static objectos.way.CssEngine2.tok;
@@ -174,27 +175,6 @@ public class CssEngine2Test00CssParser {
   }
 
   @DataProvider
-  public Object[][] idenValidProvider() {
-    return new Object[][] {
-        {"same", "fade-in", "fade-in"},
-        {"trim leading", " \tfade-in", "fade-in"},
-        {"trim trailing", "fade-in\f  ", "fade-in"},
-        {"trim both", "  \nfade-in\r  ", "fade-in"}
-    };
-  }
-
-  @Test(dataProvider = "idenValidProvider")
-  public void idenValid(
-      String description,
-      String src,
-      String expected) {
-    final CssEngine2.CssParser parser;
-    parser = new CssEngine2.CssParser(src);
-
-    assertEquals(parser.parseIden(), expected);
-  }
-
-  @DataProvider
   public Object[][] parseValidProvider() {
     return new Object[][] {{
         "(theme) :root w/ 1 prop",
@@ -233,6 +213,50 @@ public class CssEngine2Test00CssParser {
             block(":root",
                 block("@media (prefers-color-scheme: dark)",
                     decl("--color-primary", tok("#f0f0f0"))
+                )
+            )
+        )
+    }, {
+        "(theme) keyframes",
+        """
+        @keyframes fade-in {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+        """,
+        List.of(
+            keyframes("fade-in",
+                block("from",
+                    decl("opacity", number("0"))
+                ),
+                block("to",
+                    decl("opacity", number("1"))
+                )
+            )
+        )
+    }, {
+        "(theme) keyframes",
+        """
+        @keyframes fade-in {
+          0% {
+            opacity: 0;
+          }
+          100% {
+            opacity: 1;
+          }
+        }
+        """,
+        List.of(
+            keyframes("fade-in",
+                block("0%",
+                    decl("opacity", number("0"))
+                ),
+                block("100%",
+                    decl("opacity", number("1"))
                 )
             )
         )

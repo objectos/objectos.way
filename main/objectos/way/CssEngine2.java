@@ -51,7 +51,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Consumer;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
@@ -192,6 +191,13 @@ final class CssEngine2 {
   // # BEGIN: CSS Parser
   // ##################################################################
 
+  /// Represents an at-rule.
+  sealed interface At {
+    Stmt asStmt();
+
+    void asTop(List<Top> result);
+  }
+
   static final class Decl implements Stmt {
     private boolean marked;
     private Decl next;
@@ -280,9 +286,35 @@ final class CssEngine2 {
   /// A top-level CSS statement
   sealed interface Top {}
 
-  private record Block(String selector, List<Stmt> stmts) implements Stmt, Top {}
+  record Block(String selector, List<Stmt> stmts) implements At, Stmt, Top {
+    @Override
+    public final Stmt asStmt() {
+      return this;
+    }
+
+    @Override
+    public final void asTop(List<Top> result) {
+      result.add(this);
+    }
+  }
 
   static Block block(String sel, Stmt... stmts) { return new Block(sel, List.of(stmts)); }
+
+  record Keyframes(String name, List<Block> rules) implements At, Top {
+    @Override
+    public final Stmt asStmt() {
+      throw new IllegalArgumentException(
+          "Cannot nest a @keyframes at-rule"
+      );
+    }
+
+    @Override
+    public final void asTop(List<Top> result) {
+      result.add(this);
+    }
+  }
+
+  static Keyframes keyframes(String n, Block... rules) { return new Keyframes(n, List.of(rules)); }
 
   sealed interface Value {
 
@@ -521,9 +553,7 @@ final class CssEngine2 {
 
           case CSS_SOLIDUS -> comment();
 
-          case CSS_AT -> result.add(
-              at()
-          );
+          case CSS_AT -> at().asTop(result);
 
           default -> result.add(
               styleRule()
@@ -534,18 +564,27 @@ final class CssEngine2 {
       return result;
     }
 
-    private Block at() {
+    private At at() {
       final int at;
       at = idx;
 
-      whileNext(CSS_ALPHA, CSS_HYPHEN);
+      final byte next;
+      next = whileNext(CSS_HYPHEN, CSS_ALPHA);
 
-      cursor--;
+      switch (next) {
+        case CSS_WS -> {}
+
+        case CSS_EOF -> throw error(EOF_AT);
+
+        default -> throw error("Invalid at-rule name");
+      }
 
       final String name;
       name = text.substring(at, idx);
 
       return switch (name) {
+        case "@keyframes" -> atKeyframes();
+
         case "@media" -> atBlock(name);
 
         default -> throw error(name + " at-rule is not supported");
@@ -562,6 +601,158 @@ final class CssEngine2 {
       return new Block(query, stmts);
     }
 
+    private Keyframes atKeyframes() {
+      final String name;
+      name = atKeyframesName();
+
+      final List<Block> rules;
+      rules = atKeyframesRules();
+
+      return new Keyframes(name, rules);
+    }
+
+    private String atKeyframesName() {
+      final byte next;
+      next = whileNext(CSS_WS);
+
+      return switch (next) {
+        case CSS_EOF -> throw error(EOF_AT);
+
+        case CSS_HYPHEN, CSS_UNDERLINE, CSS_ALPHA -> atKeyframesName0();
+
+        default -> throw error("Invalid @keyframes name");
+      };
+    }
+
+    private String atKeyframesName0() {
+      final int start = idx;
+
+      final byte next;
+      next = whileNext(CSS_HYPHEN, CSS_UNDERLINE, CSS_ALPHA, CSS_DIGIT);
+
+      return switch (next) {
+        case CSS_EOF -> throw error(EOF_AT);
+
+        case CSS_WS -> atKeyframesNameTrim(start);
+
+        case CSS_LCURLY -> text.substring(start, idx);
+
+        default -> throw error("Invalid @keyframes name");
+      };
+    }
+
+    private String atKeyframesNameTrim(int start) {
+      final int end;
+      end = idx;
+
+      final byte next;
+      next = whileNext(CSS_WS);
+
+      if (next != CSS_LCURLY) {
+        throw error("Invalid @keyframes name");
+      }
+
+      return text.substring(start, end);
+    }
+
+    private List<Block> atKeyframesRules() {
+      final List<Block> rules;
+      rules = new ArrayList<>();
+
+      while (hasNext()) {
+        final byte next;
+        next = next();
+
+        if (next == CSS_WS) {
+          continue;
+        }
+
+        if (next == CSS_RCURLY) {
+          break;
+        }
+
+        rules.add(
+            atKeyframesRule()
+        );
+      }
+
+      return rules;
+    }
+
+    private Block atKeyframesRule() {
+      final String selector;
+      selector = atKeyframesSelector();
+
+      final List<Stmt> stmts;
+      stmts = stmts();
+
+      return new Block(selector, stmts);
+    }
+
+    private String atKeyframesSelector() {
+      if (selectors == null) {
+        selectors = new ArrayList<>();
+      } else {
+        selectors.clear();
+      }
+
+      // re-consume first char
+      cursor--;
+
+      while (hasNext()) {
+        switch (next()) {
+          case CSS_LCURLY -> {
+            return selectors.stream().collect(Collectors.joining(", "));
+          }
+
+          case CSS_COMMA -> {
+            whileNext(CSS_WS);
+
+            cursor--;
+          }
+
+          case CSS_ALPHA -> selectors.add(
+              atKeyframesSelectorKw()
+          );
+
+          case CSS_DIGIT -> selectors.add(
+              atKeyframesSelectorPerc()
+          );
+
+          default -> throw new UnsupportedOperationException("Implement me");
+        }
+      }
+
+      throw error(EOF_SEL);
+    }
+
+    private String atKeyframesSelectorKw() {
+      final int start;
+      start = idx;
+
+      final byte next;
+      next = whileNext(CSS_ALPHA);
+
+      return selEnd(start, next);
+    }
+
+    private String atKeyframesSelectorPerc() {
+      final int start;
+      start = idx;
+
+      final byte perc;
+      perc = whileNext(CSS_DIGIT);
+
+      if (perc != CSS_PERCENT) {
+        throw error("Invalid @keyframes selector");
+      }
+
+      final byte next;
+      next = nextEof();
+
+      return selEnd(start, next);
+    }
+
     private String atQuery(String name) {
       final StringBuilder sb;
       sb = sb();
@@ -571,11 +762,15 @@ final class CssEngine2 {
       int ws;
       ws = 0;
 
+      // re-consume CSS_WS
+      cursor--;
+
       while (hasNext()) {
         switch (next()) {
           case CSS_LCURLY, CSS_SEMICOLON -> {
             return sb.toString();
           }
+
           case CSS_WS -> ws++;
 
           case CSS_COMMA -> { sb.append(c); ws++; }
@@ -769,7 +964,7 @@ final class CssEngine2 {
       return switch (next) {
         case CSS_HYPHEN -> decl();
 
-        case CSS_AT -> at();
+        case CSS_AT -> at().asStmt();
 
         case CSS_ALPHA -> stmtSep();
 
@@ -917,61 +1112,6 @@ final class CssEngine2 {
       values(values, CSS_SEMICOLON);
 
       return CssEngine2.decl(name, values);
-    }
-
-    public final String parseIden() {
-      final byte next;
-      next = whileNext(CSS_WS);
-
-      return switch (next) {
-        case CSS_UNDERLINE, CSS_ALPHA -> iden();
-
-        case CSS_REV_SOLIDUS -> throw error(UNSUPPORTED_ESCAPE);
-
-        case CSS_NON_ASCII -> throw error(UNSUPPORTED_NON_ASCII);
-
-        case CSS_EOF -> throw error("Empty or blank identifier");
-
-        default -> throw error("Invalid CSS identifier");
-      };
-    }
-
-    private String iden() {
-      final int start;
-      start = idx;
-
-      final byte next;
-      next = whileNext(CSS_HYPHEN, CSS_UNDERLINE, CSS_DIGIT, CSS_ALPHA);
-
-      return switch (next) {
-        case CSS_EOF -> iden(start, cursor);
-
-        case CSS_WS -> idenTrim(start);
-
-        case CSS_REV_SOLIDUS -> throw error(UNSUPPORTED_ESCAPE);
-
-        case CSS_NON_ASCII -> throw error(UNSUPPORTED_NON_ASCII);
-
-        default -> throw error("Invalid CSS identifier");
-      };
-    }
-
-    private String iden(int idx0, int idx1) {
-      return text.substring(idx0, idx1);
-    }
-
-    private String idenTrim(int start) {
-      final int end;
-      end = idx;
-
-      final byte next;
-      next = whileNext(CSS_WS);
-
-      return switch (next) {
-        case CSS_EOF -> iden(start, end);
-
-        default -> throw error("Invalid CSS identifier");
-      };
     }
 
     public final List<Value> parseValues() {
@@ -1487,80 +1627,11 @@ final class CssEngine2 {
   // # END: Variant
   // ##################################################################
 
-  // ##################################################################
-  // # BEGIN: Keyframes
-  // ##################################################################
-
-  record Keyframes(String name, List<ParsedRule> rules) implements Comparable<Keyframes> {
-    @Override
-    public final int compareTo(Keyframes o) {
-      return name.compareTo(o.name);
-    }
-  }
-
-  static Keyframes keyframes(String name, List<ParsedRule> rules) {
-    return new Keyframes(name, rules);
-  }
-
   record ParsedRule(String selector, List<Decl> decls) {}
 
   static ParsedRule parsedRule(String s, List<Decl> d) {
     return new ParsedRule(s, d);
   }
-
-  static final class KeyframesBuilder implements Css.Engine.Keyframes {
-
-    private final String name;
-
-    private final List<ParsedRule> rules = new ArrayList<>();
-
-    KeyframesBuilder(String name) {
-      this.name = name;
-    }
-
-    @Override
-    public final void from(String value) {
-      add("from", value);
-    }
-
-    @Override
-    public final void to(String value) {
-      add("to", value);
-    }
-
-    @Override
-    public final void perc(int offset, String value) {
-      if (offset < 0 || offset > 100) {
-        throw new IllegalArgumentException("Percentage offset value must be 0% <= value <= 100%");
-      }
-
-      add(offset + "%", value);
-    }
-
-    private void add(String selector, String value) {
-      value = Objects.requireNonNull(value, "value == null");
-
-      final CssParser declsParser;
-      declsParser = new CssParser(value);
-
-      final List<Decl> decls;
-      decls = declsParser.parseDecls();
-
-      final ParsedRule rule;
-      rule = new ParsedRule(selector, decls);
-
-      rules.add(rule);
-    }
-
-    final Keyframes build() {
-      return new Keyframes(name, rules);
-    }
-
-  }
-
-  // ##################################################################
-  // # END: Keyframes
-  // ##################################################################
 
   // ##################################################################
   // # BEGIN: Configuring
@@ -1646,6 +1717,20 @@ final class CssEngine2 {
               }
             }
           }
+
+          case Keyframes kf -> {
+            final String name;
+            name = kf.name;
+
+            final Keyframes existing;
+            existing = keyframes.put(name, kf);
+
+            if (existing != null) {
+              throw new IllegalArgumentException(
+                  "Duplicate @keyframes definition: " + name
+              );
+            }
+          }
         }
       }
 
@@ -1721,6 +1806,18 @@ final class CssEngine2 {
       for (Top top : parsed) {
         switch (top) {
           case Block rule -> theme(List.of(), rule);
+
+          case Keyframes kf -> {
+            final String name;
+            name = kf.name;
+
+            final Keyframes existing;
+            existing = keyframes.put(name, kf);
+
+            if (existing != null) {
+              // TODO log replaced
+            }
+          }
         }
       }
     }
@@ -1787,33 +1884,6 @@ final class CssEngine2 {
       rule = new ParsedRule(selector, decls);
 
       components.add(rule);
-    }
-
-    @Override
-    public final void keyframes(String name, Consumer<? super Css.Engine.Keyframes> frames) {
-      name = Objects.requireNonNull(name, "name == null");
-
-      final CssParser nameParser;
-      nameParser = new CssParser(name);
-
-      name = nameParser.parseIden();
-
-      final KeyframesBuilder builder;
-      builder = new KeyframesBuilder(name);
-
-      frames.accept(builder);
-
-      final CssEngine2.Keyframes kf;
-      kf = builder.build();
-
-      final CssEngine2.Keyframes existing;
-      existing = keyframes.put(kf.name, kf);
-
-      if (existing != null) {
-        throw new IllegalArgumentException(
-            "Duplicate @keyframes named " + kf.name
-        );
-      }
     }
 
     private static final Set<String> FONT_FACE_PROPS = Set.of(
@@ -1947,6 +2017,8 @@ final class CssEngine2 {
       for (Top top : base) {
         switch (top) {
           case Block rule -> baseStyleRule(properties, rule);
+
+          case Keyframes kf -> { /* leave it as it is */ }
         }
       }
 
@@ -3119,6 +3191,30 @@ final class CssEngine2 {
       out.append(s);
     }
 
+    final void wblock(Block block) throws IOException {
+      indent();
+
+      w(block.selector);
+
+      wln(" {");
+
+      level++;
+
+      for (Stmt stmt : block.stmts) {
+        switch (stmt) {
+          case Decl decl -> wdecl(decl);
+
+          case Block nested -> wblock(nested);
+        }
+      }
+
+      level--;
+
+      indent();
+
+      wln('}');
+    }
+
     final void wdecl(Decl decl) throws IOException {
       indent();
 
@@ -3135,6 +3231,27 @@ final class CssEngine2 {
       for (Decl decl : decls) {
         wdecl(decl);
       }
+    }
+
+    final void wkeyframes(Keyframes kf) throws IOException {
+      w("@keyframes ");
+
+      w(kf.name);
+
+      wln(" {");
+
+      level++;
+
+      final List<Block> rules;
+      rules = kf.rules();
+
+      for (Block rule : rules) {
+        wblock(rule);
+      }
+
+      level--;
+
+      wln('}');
     }
 
     final void wln() throws IOException {
@@ -3244,34 +3361,12 @@ final class CssEngine2 {
       for (Top top : source) {
         switch (top) {
           case Block block -> wblock(block);
+
+          case Keyframes kf -> wkeyframes(kf);
         }
       }
 
       level--;
-
-      wln('}');
-    }
-
-    private void wblock(Block block) throws IOException {
-      indent();
-
-      w(block.selector);
-
-      wln(" {");
-
-      level++;
-
-      for (Stmt stmt : block.stmts) {
-        switch (stmt) {
-          case Decl decl -> wdecl(decl);
-
-          case Block nested -> wblock(nested);
-        }
-      }
-
-      level--;
-
-      indent();
 
       wln('}');
     }
@@ -3413,47 +3508,14 @@ final class CssEngine2 {
 
     Trailer(List<List<Decl>> fontFaces, List<Keyframes> keyframes) {
       this.fontFaces = fontFaces;
+
       this.keyframes = keyframes;
     }
 
     @Override
     final void write() throws IOException {
       for (Keyframes kf : keyframes) {
-        w("@keyframes ");
-
-        w(kf.name);
-
-        wln(" {");
-
-        level++;
-
-        final List<ParsedRule> rules;
-        rules = kf.rules;
-
-        for (ParsedRule rule : rules) {
-          indent();
-
-          w(rule.selector);
-
-          wln(" {");
-
-          level++;
-
-          final List<Decl> decls;
-          decls = rule.decls;
-
-          wdecls(decls);
-
-          level--;
-
-          indent();
-
-          wln('}');
-        }
-
-        level--;
-
-        wln('}');
+        wkeyframes(kf);
       }
 
       for (List<Decl> face : fontFaces) {
