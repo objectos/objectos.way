@@ -179,7 +179,7 @@ public class CssEngineTest12Base {
             line-height: 1.5;
             -webkit-text-size-adjust: 100%;
             tab-size: 4;
-            font-family: var( --default-font-family, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji' );
+            font-family: var(--default-font-family, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji');
             font-feature-settings: var(--default-font-feature-settings, normal);
             font-variation-settings: var(--default-font-variation-settings, normal);
             -webkit-tap-highlight-color: transparent;
@@ -209,7 +209,7 @@ public class CssEngineTest12Base {
             font-weight: bolder;
           }
           code, kbd, samp, pre {
-            font-family: var( --default-mono-font-family, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace );
+            font-family: var(--default-mono-font-family, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace);
             font-feature-settings: var(--default-mono-font-feature-settings, normal);
             font-variation-settings: var(--default-mono-font-variation-settings, normal);
             font-size: 1em;

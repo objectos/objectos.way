@@ -55,7 +55,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.stream.Collectors;
 import objectos.way.Css.Module;
 import objectos.way.Css.StyleSheet;
 
@@ -531,6 +530,7 @@ final class CssEngine implements Css.StyleSheet {
   private static final byte CSS_UNDERLINE = 23;
   private static final byte CSS_NON_ASCII = 24;
   private static final byte CSS_EOF = 25;
+  private static final byte CSS_EXCLAMATION = 26;
 
   static {
     final byte[] table;
@@ -548,6 +548,7 @@ final class CssEngine implements Css.StyleSheet {
     table['\r'] = CSS_WS;
 
     // symbols
+    table['!'] = CSS_EXCLAMATION;
     table['"'] = CSS_DQUOTE;
     table['#'] = CSS_HASH;
     table['%'] = CSS_PERCENT;
@@ -589,8 +590,6 @@ final class CssEngine implements Css.StyleSheet {
     private int cursor, idx;
 
     private StringBuilder sb;
-
-    private List<String> selectors;
 
     private String text;
 
@@ -769,37 +768,49 @@ final class CssEngine implements Css.StyleSheet {
     }
 
     private String atKeyframesSelector() {
-      if (selectors == null) {
-        selectors = new ArrayList<>();
-      } else {
-        selectors.clear();
-      }
+      final StringBuilder sb;
+      sb = new StringBuilder();
 
       // re-consume first char
       cursor--;
 
+      int ws;
+      ws = 0;
+
       while (hasNext()) {
-        switch (next()) {
-          case CSS_LCURLY -> {
-            return selectors.stream().collect(Collectors.joining(", "));
+        final byte next;
+        next = next();
+
+        if (next == CSS_LCURLY) {
+          if (sb.isEmpty()) {
+            throw error("empty @keyframes selector");
           }
 
-          case CSS_COMMA -> {
-            whileNext(CSS_WS);
-
-            cursor--;
-          }
-
-          case CSS_ALPHA -> selectors.add(
-              atKeyframesSelectorKw()
-          );
-
-          case CSS_DIGIT -> selectors.add(
-              atKeyframesSelectorPerc()
-          );
-
-          default -> throw new UnsupportedOperationException("Implement me");
+          return sb.toString();
         }
+
+        if (next == CSS_WS) {
+          ws++;
+
+          continue;
+        }
+
+        if (ws > 0) {
+          sb.append(' ');
+
+          ws = 0;
+        }
+
+        final String sel;
+        sel = switch (next) {
+          case CSS_ALPHA -> atKeyframesSelectorKw();
+
+          case CSS_DIGIT -> atKeyframesSelectorPerc();
+
+          default -> throw error("Invalid @keyframes selector :: next=" + next);
+        };
+
+        sb.append(sel);
       }
 
       throw error(EOF_SEL);
@@ -952,18 +963,14 @@ final class CssEngine implements Css.StyleSheet {
           yield declColon(name);
         }
 
-        case CSS_ASTERISK ->
-
-        {
+        case CSS_ASTERISK -> {
           final String name;
           name = text.substring(start, cursor);
 
           yield declColon(name);
         }
 
-        case CSS_COLON ->
-
-        {
+        case CSS_COLON -> {
           final String name;
           name = text.substring(start, idx);
 
@@ -1002,9 +1009,9 @@ final class CssEngine implements Css.StyleSheet {
 
         default -> {
           cursor--;
+
           yield declValue0(name);
         }
-
       };
     }
 
@@ -1021,50 +1028,71 @@ final class CssEngine implements Css.StyleSheet {
       throw new UnsupportedOperationException("Implement me");
     }
 
-    private String selector() {
-      if (selectors == null) {
-        selectors = new ArrayList<>();
-      } else {
-        selectors.clear();
-      }
+    private String selector(byte stop) {
+      final StringBuilder sb;
+      sb = new StringBuilder();
 
-      // re-consume first char
-      cursor--;
+      int ws;
+      ws = 0;
 
       while (hasNext()) {
-        switch (next()) {
-          case CSS_LCURLY -> {
-            return selectors.stream().collect(Collectors.joining(", "));
+        final byte next;
+        next = next();
+
+        if (next == CSS_RPARENS) {
+          // end of function
+
+          if (next == stop) {
+            return sb.toString();
+          } else {
+            throw error("Invalid selector");
           }
-
-          case CSS_ASTERISK -> selectors.add(
-              selUniversal()
-          );
-
-          case CSS_COMMA -> {
-            whileNext(CSS_WS);
-
-            cursor--;
-          }
-
-          case CSS_DOT -> selectors.add(
-              selClass()
-          );
-
-          case CSS_COLON -> selectors.add(
-              selPseudo()
-          );
-
-          case CSS_LSQUARE -> selectors.add(
-              selAttr()
-          );
-
-          case CSS_ALPHA -> selectors.add(
-              selType()
-          );
-
-          default -> throw new UnsupportedOperationException("Implement me");
         }
+
+        if (next == CSS_LCURLY) {
+          // start of rule body
+
+          if (next == stop) {
+            return sb.toString();
+          } else {
+            throw error("Invalid selector");
+          }
+        }
+
+        if (next == CSS_WS) {
+          // trim or combinator
+          ws++;
+
+          continue;
+        }
+
+        if (ws > 0) {
+          // combinator
+          sb.append(' ');
+
+          ws = 0;
+        }
+
+        final String sel;
+        sel = switch (next) {
+          case CSS_HASH -> selId();
+
+          case CSS_ASTERISK -> selUniversal();
+
+          case CSS_COMMA -> selList();
+
+          case CSS_DOT -> selClass();
+
+          case CSS_COLON -> selPseudo();
+
+          case CSS_LSQUARE -> selAttr();
+
+          case CSS_ALPHA -> selType();
+
+          default -> throw new UnsupportedOperationException("Implement me :: next=" + next);
+        };
+
+        sb.append(sel);
       }
 
       throw error(EOF_SEL);
@@ -1079,10 +1107,7 @@ final class CssEngine implements Css.StyleSheet {
         next = next();
 
         if (next == CSS_RSQUARE) {
-          final String sel;
-          sel = text.substring(start, cursor);
-
-          return selEnd(sel, nextEof());
+          return text.substring(start, cursor);
         }
       }
 
@@ -1100,21 +1125,44 @@ final class CssEngine implements Css.StyleSheet {
     }
 
     private String selEnd(int start, byte next) {
-      final String sel;
-      sel = text.substring(start, idx);
-
-      return selEnd(sel, next);
-    }
-
-    private String selEnd(String sel, byte next) {
       return switch (next) {
         case CSS_EOF -> throw error(EOF_SEL);
 
-        case CSS_WS -> sel;
+        case CSS_WS, CSS_COMMA, CSS_COLON -> text.substring(start, --cursor);
 
-        case CSS_COMMA, CSS_LCURLY -> { cursor--; yield sel; }
+        default -> throw error("Invalid selector");
+      };
+    }
 
-        default -> throw error("Invalid CSS selector");
+    private String selId() {
+      final int start;
+      start = idx;
+
+      final byte next;
+      next = whileNext(CSS_HYPHEN, CSS_UNDERLINE, CSS_ALPHA, CSS_DIGIT);
+
+      return selEnd(start, next);
+    }
+
+    private String selList() {
+      final byte next;
+      next = whileNext(CSS_WS);
+
+      return switch (next) {
+        // universal
+        case CSS_ASTERISK,
+             // attr
+             CSS_LSQUARE,
+             // class
+             CSS_DOT,
+             // id
+             CSS_HASH,
+             // pseudo
+             CSS_COLON,
+             // type
+             CSS_HYPHEN, CSS_ALPHA -> { cursor--; yield ", "; }
+
+        default -> throw error("Invalid selector");
       };
     }
 
@@ -1127,26 +1175,26 @@ final class CssEngine implements Css.StyleSheet {
       }
 
       return switch (next()) {
-        case CSS_HYPHEN, CSS_ALPHA -> selPseudoClass(start);
+        case CSS_HYPHEN, CSS_ALPHA -> selPseudo0(start);
 
-        case CSS_COLON -> selPseudoElement(start);
+        case CSS_COLON -> selPseudo0(start);
 
         default -> throw error("Invalid pseudo CSS selector");
       };
     }
 
-    private String selPseudoClass(int start) {
+    private String selPseudo0(int start) {
       final byte next;
       next = whileNext(CSS_HYPHEN, CSS_UNDERLINE, CSS_ALPHA, CSS_DIGIT);
 
-      return selEnd(start, next);
-    }
+      if (next == CSS_LPARENS) {
+        final String sel;
+        sel = text.substring(start, cursor);
 
-    private String selPseudoElement(int start) {
-      final byte next;
-      next = whileNext(CSS_HYPHEN, CSS_UNDERLINE, CSS_ALPHA, CSS_DIGIT);
-
-      return selEnd(start, next);
+        return sel + selector(CSS_RPARENS) + ")";
+      } else {
+        return selEnd(start, next);
+      }
     }
 
     private String selType() {
@@ -1232,8 +1280,11 @@ final class CssEngine implements Css.StyleSheet {
     }
 
     private Block styleRule() {
+      // re-consume first char
+      cursor--;
+
       final String selector;
-      selector = selector();
+      selector = selector(CSS_LCURLY);
 
       final List<Stmt> stmts;
       stmts = stmts();
@@ -1277,7 +1328,7 @@ final class CssEngine implements Css.StyleSheet {
 
         case CSS_DOT -> valueDot();
 
-        case CSS_ALPHA, CSS_UNDERLINE -> valueIden(idx);
+        case CSS_ALPHA, CSS_UNDERLINE, CSS_EXCLAMATION -> valueIden(idx);
 
         case CSS_DIGIT -> valueDigit(idx);
 
@@ -1522,7 +1573,26 @@ final class CssEngine implements Css.StyleSheet {
     }
 
     private IllegalArgumentException error(String message) {
-      return new IllegalArgumentException(message);
+      int start;
+      start = text.lastIndexOf('\n', cursor);
+
+      if (start < 0) {
+        start = 0;
+      } else {
+        start += 1;
+      }
+
+      int end;
+      end = text.indexOf('\n', cursor);
+
+      if (end < 0) {
+        end = text.length();
+      }
+
+      final String line;
+      line = text.substring(start, end);
+
+      return new IllegalArgumentException("%s\n\t%s".formatted(message, line));
     }
 
     private boolean hasNext() {

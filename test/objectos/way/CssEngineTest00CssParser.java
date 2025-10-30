@@ -24,6 +24,7 @@ import static objectos.way.CssEngine.block;
 import static objectos.way.CssEngine.tok;
 import static objectos.way.CssEngine.Sep.COMMA;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 import java.util.List;
 import org.testng.Assert;
@@ -325,6 +326,14 @@ public class CssEngineTest00CssParser {
             )
         )
     }, {
+        "(base) selector",
+        """
+        abbr:where([title]) {}
+        """,
+        List.of(
+            block("abbr:where([title])")
+        )
+    }, {
         "(components) class selector",
         """
         .foo {}
@@ -414,7 +423,7 @@ public class CssEngineTest00CssParser {
       final String actual;
       actual = expected.getMessage();
 
-      assertEquals(actual, message);
+      assertTrue(actual.startsWith(message));
     }
   }
 
