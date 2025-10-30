@@ -24,7 +24,6 @@ import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
 /// The **Objectos CSS** main class.
 public final class Css {
@@ -99,95 +98,14 @@ public final class Css {
 
   /// A style sheet whose content is generated on demand by scanning Java class
   /// files for CSS utilities.
-  public sealed interface StyleSheet extends Media.Text permits CssEngine {
+  public sealed interface StyleSheet extends Media.Text permits CssEngine2 {
 
-    /// Configures the creation of a theme `@keyframes` at-rule.
-    sealed interface Keyframes permits CssKeyframes {
-
-      /// Sets the name of this `@keyframes`.
-      /// @param value the name of this `@keyframes`
-      void name(String value);
-
-      /// Adds a single keyframe declaration to this `@keyframes` at-rule.
-      /// @param selector the keyframe selector
-      /// @param value the declarations of this keyframe
-      void frame(String selector, String value);
-
-    }
-
-    /// Configures the creation of a `StyleSheet` instance.
-    sealed interface Options permits CssEngineBuilder {
-
-      /// Adds the specified `@keyframes` declaration to the theme layer.
-      /// @param frames allows for declaring the `@keyframes` definition
-      void keyframes(Consumer<? super Keyframes> frames);
-
-      /**
-       * Use the specified note sink during generation.
-       *
-       * @param value
-       *        the note sink to use
-       */
-      void noteSink(Note.Sink value);
-
-      /**
-       * The Java class file associated to the specified class will be scanned
-       * during the CSS generation process.
-       *
-       * @param value
-       *        the class whose Java class file will be scanned
-       */
-      void scanClass(Class<?> value);
-
-      /**
-       * The specified directory will be recursively scanned for {@link Source}
-       * annotated Java class files during the CSS generation process.
-       *
-       * @param value
-       *        the directory containing Java class files
-       */
-      void scanDirectory(Path value);
-
-      /**
-       * The JAR file (if found) associated to the specified class will be
-       * scanned for {@link Source} annotated Java class files during the CSS
-       * generation process.
-       *
-       * @param value
-       *        the class whose JAR file will be scanned
-       */
-      void scanJarFileOf(Class<?> value);
-
-      /// Adds the specified CSS rule to the theme layer.
-      ///
-      /// @param selector the CSS rule selector
-      /// @param value the CSS rule declarations
-      void theme(String selector, String value);
-
-      /// Adds the specified CSS media query rule to the theme layer.
-      ///
-      /// @param query the CSS media query
-      /// @param selector the CSS rule selector
-      /// @param value the CSS rule declarations
-      void theme(String query, String selector, String value);
-
-    }
-
-    /**
-     * Creates a new {@code StyleSheet} instance with the specified options.
-     *
-     * @param options
-     *        allows for setting the options
-     *
-     * @return a new {@code StyleSheet} instance
-     */
-    static StyleSheet create(Consumer<? super Options> options) {
-      final CssEngineBuilder builder;
-      builder = new CssEngineBuilder();
-
-      options.accept(builder);
-
-      return builder.build();
+    /// Creates a new `StyleSheet` instance with the configuration from the specified modules.
+    ///
+    /// @param modules the objects configuring the creation of the style sheet
+    /// @return a new `StyleSheet` instance
+    static StyleSheet of(Module... modules) {
+      return CssEngine2.of(modules);
     }
 
     /**

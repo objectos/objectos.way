@@ -18,6 +18,7 @@ package objectos.way;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 @SuppressWarnings("unused")
@@ -634,6 +635,37 @@ public class CssEngine2Test16Full {
         }
         """
     );
+  }
+
+  @DataProvider
+  public Object[][] generateProvider() {
+    return new Object[][] {{
+        "full w/ scan classes",
+        cfg(e -> {
+
+        }),
+        """
+
+        """
+    }};
+  }
+
+  @Test(dataProvider = "generateProvider")
+  public void generate(
+      String description,
+      Css.Module module,
+      String expected) {
+    final Css.StyleSheet sheet;
+    sheet = Css.StyleSheet.of(module);
+
+    final String result;
+    result = sheet.generate();
+
+    assertEquals(result, expected);
+  }
+
+  private Css.Module cfg(Css.Module module) {
+    return module;
   }
 
 }

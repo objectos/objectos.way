@@ -31,6 +31,8 @@ import java.lang.classfile.constantpool.Utf8Entry;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileVisitResult;
 import java.nio.file.FileVisitor;
 import java.nio.file.Files;
@@ -54,8 +56,27 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
+import objectos.way.Css.Module;
+import objectos.way.Css.StyleSheet;
 
-final class CssEngine2 {
+final class CssEngine2 implements Css.StyleSheet {
+
+  static StyleSheet of(Module... modules) {
+    final System system;
+    system = new System();
+
+    final Configuring configuring;
+    configuring = new Configuring(system);
+
+    for (Module module : modules) {
+      module.configure(configuring);
+    }
+
+    final Config config;
+    config = configuring.configure();
+
+    return new CssEngine2(config);
+  }
 
   static final class System {
     String base = Css.systemBase();
@@ -63,6 +84,35 @@ final class CssEngine2 {
     String theme = Css.systemTheme();
 
     Map<String, Variant> variants = Css.systemVariants();
+  }
+
+  @Override
+  public final String contentType() {
+    return "text/css; charset=utf-8";
+  }
+
+  @Override
+  public final Charset charset() {
+    return StandardCharsets.UTF_8;
+  }
+
+  @Override
+  public final String generate() {
+    try {
+      final StringBuilder out;
+      out = new StringBuilder();
+
+      generate(out);
+
+      return out.toString();
+    } catch (IOException e) {
+      throw new AssertionError("StringBuilder does not throw IOException", e);
+    }
+  }
+
+  @Override
+  public final void writeTo(Appendable out) throws IOException {
+    generate(out);
   }
 
   // ##################################################################
