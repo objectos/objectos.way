@@ -22,7 +22,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
-import java.util.List;
 
 /// The **Objectos CSS** main class.
 public final class Css {
@@ -165,85 +164,6 @@ public final class Css {
   @Retention(RetentionPolicy.CLASS)
   @Target(ElementType.TYPE)
   public @interface Source {}
-
-  //
-  // non-public types
-  //
-
-  enum Layer {
-    THEME,
-    BASE,
-    COMPONENTS,
-    UTILITIES;
-  }
-
-  record Query(List<String> names) {
-    static Query of(String name) {
-      return new Query(List.of(name));
-    }
-    static Query of(String n1, String n2) {
-      return new Query(List.of(n1, n2));
-    }
-  }
-
-  record ThemeEntry(int index, String name, String value, String id) implements Comparable<ThemeEntry> {
-
-    @Override
-    public final int compareTo(ThemeEntry o) {
-      return Integer.compare(index, o.index);
-    }
-
-    public final Object key() {
-      return name;
-    }
-
-    @Override
-    public final String toString() {
-      StringBuilder out;
-      out = new StringBuilder();
-
-      writeTo(out);
-
-      return out.toString();
-    }
-
-    public final void writeTo(StringBuilder out) {
-      out.append(name);
-      out.append(": ");
-      out.append(value);
-      out.append(';');
-    }
-
-    final boolean shouldClear() {
-      return "*".equals(id) && "initial".equals(value);
-    }
-
-    final ThemeEntry withValue(ThemeEntry newValue) {
-      return new ThemeEntry(index, name, newValue.value, id);
-    }
-
-  }
-
-  record ThemeQueryEntry(String name, String value) {
-
-    @Override
-    public final String toString() {
-      StringBuilder out;
-      out = new StringBuilder();
-
-      writeTo(out);
-
-      return out.toString();
-    }
-
-    public final void writeTo(StringBuilder out) {
-      out.append(name);
-      out.append(": ");
-      out.append(value);
-      out.append(';');
-    }
-
-  }
 
   private Css() {}
 
