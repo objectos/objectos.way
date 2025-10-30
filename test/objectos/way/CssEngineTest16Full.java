@@ -350,6 +350,28 @@ public class CssEngineTest16Full {
           }
         }
         """
+    }, {
+        "scanClasses convenience",
+        cfg(e -> {
+          class Subj1 extends CssSubject {
+            @Override
+            final void classes() { css("margin:0"); }
+          }
+          class Subj2 extends CssSubject {
+            @Override
+            final void classes() { css("padding:0"); }
+          }
+
+          e.systemBase("");
+          e.systemTheme("");
+          e.scanClasses(Subj1.class, Subj2.class);
+        }),
+        """
+        @layer utilities {
+          .margin\\:0 { margin: 0 }
+          .padding\\:0 { padding: 0 }
+        }
+        """
     }};
   }
 

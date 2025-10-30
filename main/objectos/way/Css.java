@@ -35,8 +35,12 @@ public final class Css {
     sealed interface Options {
 
       /// Scans the class file of the specified class (if found) during the CSS generation process.
-      /// @param value the class whose Java class file will be scanned
+      /// @param value the class to scan for CSS utilities
       void scanClass(Class<?> value);
+
+      /// Scans the class files of the specified classes (if found) during the CSS generation process.
+      /// @param value the classes to scan for CSS utilities
+      void scanClasses(Class<?>... values);
 
       //
       // THEME

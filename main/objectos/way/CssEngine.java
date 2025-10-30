@@ -1887,6 +1887,24 @@ final class CssEngine implements Css.StyleSheet {
     }
 
     @Override
+    public final void scanClasses(Class<?>... values) {
+      final Class<?>[] classes;
+      classes = Objects.requireNonNull(values, "values == null");
+
+      if (scanClasses.isEmpty()) {
+        scanClasses = new HashSet<>();
+      }
+
+      for (int idx = 0; idx < classes.length; idx++) {
+        final Class<?> c;
+        c = Check.notNull(classes[idx], "values[", idx, "] == null");
+
+        scanClasses.add(c);
+      }
+
+    }
+
+    @Override
     public final void scanDirectory(Path value) {
       final Path p;
       p = Objects.requireNonNull(value, "value == null");
