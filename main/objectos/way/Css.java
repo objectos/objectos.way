@@ -22,89 +22,46 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
+import java.util.function.Consumer;
 
 /// The **Objectos CSS** main class.
 public final class Css {
 
-  /// A convenience [`Module`][Css.Module] base implementation.
-  public static abstract class AbstractModule implements Module {
+  /// An object that contributes to the configuration of a [style sheet][Css.StyleSheet] generation.
+  @FunctionalInterface
+  public interface Library {
 
-    /// Sole constructor.
-    protected AbstractModule() {}
+    /// Contributes to the configuration of a `StyleSheet` generation.
+    sealed interface Options {
 
-    /// {@inheritDoc}
-    @Override
-    public final void configure(Engine engine) {
-      throw new UnsupportedOperationException("Implement me");
+      /// Scans the class file of the specified class (if found) during the CSS generation process.
+      /// @param value the class whose Java class file will be scanned
+      void scanClass(Class<?> value);
+
+      //
+      // THEME
+      //
+
+      /// Adds the specified CSS to the `theme` layer.
+      ///
+      /// @param value the CSS
+      void theme(String value);
+
+      //
+      // COMPONENTS
+      //
+
+      /// Adds the specified CSS to the `components` layer.
+      ///
+      /// @param value the CSS
+      void components(String value);
+
     }
 
-    /// Configures the generation of a [style sheet][Css.StyleSheet].
-    protected abstract void configure();
-
-  }
-
-  /// A handle for configuring the generation of a [style sheet][Css.StyleSheet].
-  public sealed interface Engine permits CssEngine.Configuring {
-
-    /// Uses the specified note sink during generation.
-    /// @param value the note sink to use
-    void noteSink(Note.Sink value);
-
-    /// Scans the class file of the specified class (if found) during the CSS generation process.
-    /// @param value the class whose Java class file will be scanned
-    void scanClass(Class<?> value);
-
-    /// Scans the specified directory recursively for [`Source`][Css.Source]
-    /// annotated Java class files during the CSS generation process.
-    /// @param value the directory to be scanned
-    void scanDirectory(Path value);
-
-    /// Scans the JAR file of the specified class (if found) for [`Source`][Css.Source]
-    /// annotated Java class files during the CSS generation process.
-    /// @param value the class whose JAR file will be scanned
-    void scanJarFileOf(Class<?> value);
-
-    //
-    // THEME
-    //
-
-    /// Adds the specified CSS to the `theme` layer.
+    /// Sets the configuration of this `Library` instance.
     ///
-    /// @param value the CSS
-    void theme(String value);
-
-    /// Replaces the system `theme` layer contents with the specified CSS.
-    ///
-    /// @param value the CSS
-    void systemTheme(String value);
-
-    //
-    // BASE
-    //
-
-    /// Replaces the system `base` layer contents with the specified CSS.
-    ///
-    /// @param value the CSS
-    void systemBase(String value);
-
-    //
-    // COMPONENTS
-    //
-
-    /// Adds the specified CSS to the `components` layer.
-    ///
-    /// @param value the CSS
-    void components(String value);
-
-  }
-
-  /// Encapsulates the configuration of a [style sheet][Css.StyleSheet].
-  @FunctionalInterface
-  public interface Module {
-
-    /// Contributes to the configuration of the specified engine.
-    /// @param engine the engine to configure
-    void configure(Engine engine);
+    /// @param options allows for setting the options
+    void configure(Options options);
 
   }
 
@@ -112,27 +69,65 @@ public final class Css {
   /// files for CSS utilities.
   public sealed interface StyleSheet extends Media.Text permits CssEngine {
 
-    /// Creates a new `StyleSheet` instance with the configuration from the specified modules.
-    ///
-    /// @param modules the objects configuring the creation of the style sheet
-    /// @return a new `StyleSheet` instance
-    static StyleSheet of(Module... modules) {
-      return CssEngine.of(modules);
+    /// Configures the creation of a `StyleSheet` instance.
+    sealed interface Options extends Library.Options permits CssEngine.Configuring {
+
+      /// Includes the specified library.
+      /// In other words, uses the configuration contributed by the specified library
+      /// in this generation.
+      /// @param value the library whose configuration is to be included
+      void include(Library value);
+
+      /// Uses the specified note sink during generation.
+      /// @param value the note sink to use
+      void noteSink(Note.Sink value);
+
+      /// Scans the specified directory recursively for [`Source`][Css.Source]
+      /// annotated Java class files during the CSS generation process.
+      /// @param value the directory to be scanned
+      void scanDirectory(Path value);
+
+      /// Scans the JAR file of the specified class (if found) for [`Source`][Css.Source]
+      /// annotated Java class files during the CSS generation process.
+      /// @param value the class whose JAR file will be scanned
+      void scanJarFileOf(Class<?> value);
+
+      //
+      // THEME
+      //
+
+      /// Replaces the system `theme` layer contents with the specified CSS.
+      ///
+      /// @param value the CSS
+      void systemTheme(String value);
+
+      //
+      // BASE
+      //
+
+      /// Replaces the system `base` layer contents with the specified CSS.
+      ///
+      /// @param value the CSS
+      void systemBase(String value);
+
     }
 
-    /**
-     * Returns {@code text/css; charset=utf-8}.
-     *
-     * @return {@code text/css; charset=utf-8}
-     */
+    /// Creates a new `StyleSheet` instance with the specified options.
+    ///
+    /// @param options allows for setting the options
+    ///
+    /// @return a new `StyleSheet` instance
+    static StyleSheet create(Consumer<? super Options> options) {
+      return CssEngine.create0(options);
+    }
+
+    /// Returns `text/css; charset=utf-8`.
+    /// @return `@code text/css; charset=utf-8`
     @Override
     String contentType();
 
-    /**
-     * Returns {@code StandardCharsets.UTF_8}.
-     *
-     * @return {@code StandardCharsets.UTF_8}
-     */
+    /// Returns `StandardCharsets.UTF_8`.
+    /// @return `StandardCharsets.UTF_8`
     @Override
     Charset charset();
 

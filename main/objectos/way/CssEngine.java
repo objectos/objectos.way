@@ -53,20 +53,18 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import objectos.way.Css.Module;
-import objectos.way.Css.StyleSheet;
+import objectos.way.Css.Library;
 
 final class CssEngine implements Css.StyleSheet {
 
-  static StyleSheet of(Module... modules) {
+  static Css.StyleSheet create0(Consumer<? super Css.StyleSheet.Options> options) {
     final Configuring configuring;
     configuring = new Configuring();
 
-    for (Module module : modules) {
-      module.configure(configuring);
-    }
+    options.accept(configuring);
 
     final Config config;
     config = configuring.configure();
@@ -1828,7 +1826,7 @@ final class CssEngine implements Css.StyleSheet {
   // # BEGIN: Configuring
   // ##################################################################
 
-  static final class Configuring implements Css.Engine {
+  static final class Configuring implements Css.StyleSheet.Options {
 
     private final Note.Ref2<Decl, Decl> $replaced = Note.Ref2.create(getClass(), "REP", Note.INFO);
 
@@ -1865,6 +1863,11 @@ final class CssEngine implements Css.StyleSheet {
     // ##################################################################
     // # BEGIN: Configuring: Public API
     // ##################################################################
+
+    @Override
+    public final void include(Library value) {
+      value.configure(this);
+    }
 
     @Override
     public final void noteSink(Note.Sink value) {

@@ -17,6 +17,7 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.function.Consumer;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -355,13 +356,14 @@ public class CssEngineTest16Full {
   @Test(dataProvider = "generateProvider")
   public void generate(
       String description,
-      Css.Module module,
+      Consumer<Css.StyleSheet.Options> module,
       String expected) {
-    final Css.Module withNoteSink;
-    withNoteSink = e -> e.noteSink(Y.noteSink());
-
     final Css.StyleSheet sheet;
-    sheet = Css.StyleSheet.of(withNoteSink, module);
+    sheet = Css.StyleSheet.create(o -> {
+      o.noteSink(Y.noteSink());
+
+      module.accept(o);
+    });
 
     final String result;
     result = sheet.generate();
@@ -369,7 +371,7 @@ public class CssEngineTest16Full {
     assertEquals(result, expected);
   }
 
-  private Css.Module cfg(Css.Module module) {
+  private Consumer<Css.StyleSheet.Options> cfg(Consumer<Css.StyleSheet.Options> module) {
     return module;
   }
 
