@@ -59,14 +59,11 @@ import java.util.stream.Collectors;
 import objectos.way.Css.Module;
 import objectos.way.Css.StyleSheet;
 
-final class CssEngine2 implements Css.StyleSheet {
+final class CssEngine implements Css.StyleSheet {
 
   static StyleSheet of(Module... modules) {
-    final System system;
-    system = new System();
-
     final Configuring configuring;
-    configuring = new Configuring(system);
+    configuring = new Configuring();
 
     for (Module module : modules) {
       module.configure(configuring);
@@ -75,15 +72,7 @@ final class CssEngine2 implements Css.StyleSheet {
     final Config config;
     config = configuring.configure();
 
-    return new CssEngine2(config);
-  }
-
-  static final class System {
-    String base = Css.systemBase();
-
-    String theme = Css.systemTheme();
-
-    Map<String, Variant> variants = Css.systemVariants();
+    return new CssEngine(config);
   }
 
   @Override
@@ -121,7 +110,7 @@ final class CssEngine2 implements Css.StyleSheet {
 
   private final Config config;
 
-  CssEngine2(Config config) {
+  CssEngine(Config config) {
     this.config = config;
   }
 
@@ -1007,7 +996,7 @@ final class CssEngine2 implements Css.StyleSheet {
       next = whileNext(CSS_WS);
 
       return switch (next) {
-        case CSS_SEMICOLON, CSS_RCURLY -> CssEngine2.decl(name, List.of());
+        case CSS_SEMICOLON, CSS_RCURLY -> CssEngine.decl(name, List.of());
 
         case CSS_EOF -> throw error(EOF_DECLS);
 
@@ -1025,7 +1014,7 @@ final class CssEngine2 implements Css.StyleSheet {
 
       values(values, CSS_SEMICOLON);
 
-      return CssEngine2.decl(name, values);
+      return CssEngine.decl(name, values);
     }
 
     private void malformed(int start) {
@@ -1775,10 +1764,6 @@ final class CssEngine2 implements Css.StyleSheet {
 
     private final List<Block> components = new ArrayList<>();
 
-    private final List<FontFace> fontFaces = new ArrayList<>();
-
-    private final Map<String, CssEngine2.Keyframes> keyframes = new HashMap<>();
-
     private Note.Sink noteSink = Note.NoOpSink.INSTANCE;
 
     private Set<Class<?>> scanClasses = Set.of();
@@ -1787,98 +1772,22 @@ final class CssEngine2 implements Css.StyleSheet {
 
     private Set<Class<?>> scanJars = Set.of();
 
-    private final Map<List<String>, List<Decl>> sections = new LinkedHashMap<>();
+    private String systemBase = Css.systemBase();
 
-    private final String systemBase;
+    private String systemTheme = Css.systemTheme();
 
-    private final Map<List<String>, Map<String, Decl>> themeProps = new LinkedHashMap<>();
+    private List<String> userTheme = List.of();
 
     private final Map<String, Variant> variants = new HashMap<>();
 
-    Configuring(System system) {
-      this.systemBase = system.base;
-
-      // parse system theme
-      final CssParser parser;
-      parser = new CssParser(system.theme);
-
-      final List<Top> parsed;
-      parsed = parser.parse();
-
-      for (Top top : parsed) {
-        switch (top) {
-          case Block(String selector, List<Stmt> stmts) -> {
-            if (!":root".equals(selector)) {
-              throw new IllegalArgumentException(
-                  "The system theme must only contain the :root selector"
-              );
-            }
-
-            final List<String> root;
-            root = List.of(selector);
-
-            final List<Decl> section;
-            section = sections.computeIfAbsent(root, key -> new ArrayList<>());
-
-            for (Stmt stmt : stmts) {
-              switch (stmt) {
-                case Decl decl -> {
-                  section.add(decl);
-
-                  final String property;
-                  property = decl.property;
-
-                  if (!property.startsWith("--")) {
-                    throw decl.invalid("The system theme must only contain custom properties");
-                  }
-
-                  final Map<String, Decl> values;
-                  values = themeProps.computeIfAbsent(root, key -> new LinkedHashMap<>());
-
-                  final Decl existing;
-                  existing = values.put(property, decl);
-
-                  if (existing != null) {
-                    decl.invalid("Duplicate property definition");
-                  }
-                }
-
-                case Block nested -> throw new IllegalArgumentException(
-                    "The system theme must not contain nested statements"
-                );
-              }
-            }
-          }
-
-          case FontFace ff -> throw new IllegalArgumentException(
-              "The system theme must not contain @font-face declarations"
-          );
-
-          case Keyframes kf -> {
-            final String name;
-            name = kf.name;
-
-            final Keyframes existing;
-            existing = keyframes.put(name, kf);
-
-            if (existing != null) {
-              throw new IllegalArgumentException(
-                  "Duplicate @keyframes definition: " + name
-              );
-            }
-          }
-        }
-      }
-
-      variants.putAll(system.variants);
-    }
+    Configuring() {}
 
     public final void generate(Appendable out) throws IOException {
       final Config config;
       config = configure();
 
-      final CssEngine2 engine;
-      engine = new CssEngine2(config);
+      final CssEngine engine;
+      engine = new CssEngine(config);
 
       engine.generate(out);
     }
@@ -1949,87 +1858,21 @@ final class CssEngine2 implements Css.StyleSheet {
       final String text;
       text = Objects.requireNonNull(value, "value == null");
 
-      final CssParser parser;
-      parser = new CssParser(text);
-
-      final List<Top> parsed;
-      parsed = parser.parse();
-
-      for (Top top : parsed) {
-        switch (top) {
-          case Block rule -> theme(List.of(), rule);
-
-          case FontFace ff -> {
-            for (Decl decl : ff.decls) {
-              final String property;
-              property = decl.property;
-
-              if (!FONT_FACE_PROPS.contains(property)) {
-                decl.invalid("Invalid @font-face property");
-              }
-            }
-
-            fontFaces.add(ff);
-          }
-
-          case Keyframes kf -> {
-            final String name;
-            name = kf.name;
-
-            final Keyframes existing;
-            existing = keyframes.put(name, kf);
-
-            if (existing != null) {
-              // TODO log replaced
-            }
-          }
-        }
+      if (userTheme.isEmpty()) {
+        userTheme = new ArrayList<>();
       }
+
+      userTheme.add(text);
     }
 
-    private void theme(List<String> previous, Block rule) {
-      final List<String> list;
-      list = new ArrayList<>(previous);
+    @Override
+    public final void systemTheme(String value) {
+      systemTheme = Objects.requireNonNull(value, "value == null");
+    }
 
-      list.add(rule.selector);
-
-      final List<String> selector;
-      selector = List.copyOf(list);
-
-      final List<Decl> section;
-      section = sections.computeIfAbsent(selector, key -> new ArrayList<>());
-
-      final Map<String, Decl> props;
-      props = themeProps.computeIfAbsent(selector, key -> new LinkedHashMap<>());
-
-      for (Stmt stmt : rule.stmts) {
-        switch (stmt) {
-          case Decl decl -> {
-            section.add(decl);
-
-            final String property;
-            property = decl.property;
-
-            if (!property.startsWith("--")) {
-              // always emit a non-custom-prop
-              decl.mark();
-
-              continue;
-            }
-
-            final Decl existing;
-            existing = props.put(property, decl);
-
-            if (existing != null) {
-              existing.replaced();
-
-              noteSink.send($replaced, existing, decl);
-            }
-          }
-
-          case Block nested -> theme(selector, nested);
-        }
-      }
+    @Override
+    public final void systemBase(String value) {
+      systemBase = Objects.requireNonNull(value, "value == null");
     }
 
     @Override
@@ -2058,160 +1901,356 @@ final class CssEngine2 implements Css.StyleSheet {
       }
     }
 
-    public final Config configure() {
-      // collect all props
-      final Map<String, Decl> properties;
-      properties = new LinkedHashMap<>();
+    final class Helper {
+      final List<FontFace> fontFaces = new ArrayList<>();
 
-      for (Map<String, Decl> map : themeProps.values()) {
-        for (Map.Entry<String, Decl> inner : map.entrySet()) {
-          final String propName;
-          propName = inner.getKey();
+      final Map<String, CssEngine.Keyframes> keyframes = new HashMap<>();
 
-          final Decl decl;
-          decl = inner.getValue();
+      final CssParser parser = new CssParser();
 
-          properties.merge(propName, decl, (oldValue, value) -> oldValue.append(value));
+      final Map<String, Decl> properties = new LinkedHashMap<>();
+
+      final List<Section> sections = new ArrayList<>();
+
+      final Map<List<String>, List<Decl>> themeSections = new LinkedHashMap<>();
+
+      final Map<List<String>, Map<String, Decl>> themeProps = new LinkedHashMap<>();
+
+      final void systemTheme() {
+        parser.set(systemTheme);
+
+        final List<Top> parsed;
+        parsed = parser.parse();
+
+        for (Top top : parsed) {
+          switch (top) {
+            case Block(String selector, List<Stmt> stmts) -> {
+              if (!":root".equals(selector)) {
+                throw new IllegalArgumentException(
+                    "The system theme must only contain the :root selector"
+                );
+              }
+
+              final List<String> root;
+              root = List.of(selector);
+
+              final List<Decl> section;
+              section = themeSections.computeIfAbsent(root, key -> new ArrayList<>());
+
+              for (Stmt stmt : stmts) {
+                switch (stmt) {
+                  case Decl decl -> {
+                    section.add(decl);
+
+                    final String property;
+                    property = decl.property;
+
+                    if (!property.startsWith("--")) {
+                      throw decl.invalid("The system theme must only contain custom properties");
+                    }
+
+                    final Map<String, Decl> values;
+                    values = themeProps.computeIfAbsent(root, key -> new LinkedHashMap<>());
+
+                    final Decl existing;
+                    existing = values.put(property, decl);
+
+                    if (existing != null) {
+                      decl.invalid("Duplicate property definition");
+                    }
+                  }
+
+                  case Block nested -> throw new IllegalArgumentException(
+                      "The system theme must not contain nested statements"
+                  );
+                }
+              }
+            }
+
+            case FontFace ff -> throw new IllegalArgumentException(
+                "The system theme must not contain @font-face declarations"
+            );
+
+            case Keyframes kf -> {
+              final String name;
+              name = kf.name;
+
+              final Keyframes existing;
+              existing = keyframes.put(name, kf);
+
+              if (existing != null) {
+                throw new IllegalArgumentException(
+                    "Duplicate @keyframes definition: " + name
+                );
+              }
+            }
+          }
         }
       }
 
-      // collect breakpoints
-      final List<String> root;
-      root = List.of(":root");
+      final void userTheme() {
+        for (String user : userTheme) {
+          parser.set(user);
 
-      final Map<String, Decl> rootProps;
-      rootProps = themeProps.getOrDefault(root, Map.of());
+          final List<Top> parsed;
+          parsed = parser.parse();
 
-      for (Decl decl : rootProps.values()) {
-        final String property;
-        property = decl.property;
+          for (Top top : parsed) {
+            switch (top) {
+              case Block rule -> userTheme(List.of(), rule);
 
-        final String prefix;
-        prefix = "--breakpoint-";
+              case FontFace ff -> {
+                for (Decl decl : ff.decls) {
+                  final String property;
+                  property = decl.property;
 
-        if (!property.startsWith(prefix)) {
-          continue;
+                  if (!FONT_FACE_PROPS.contains(property)) {
+                    decl.invalid("Invalid @font-face property");
+                  }
+                }
+
+                fontFaces.add(ff);
+              }
+
+              case Keyframes kf -> {
+                final String name;
+                name = kf.name;
+
+                final Keyframes existing;
+                existing = keyframes.put(name, kf);
+
+                if (existing != null) {
+                  // TODO log replaced
+                }
+              }
+            }
+          }
         }
-
-        final int beginIndex;
-        beginIndex = prefix.length();
-
-        final String id;
-        id = property.substring(beginIndex);
-
-        final List<Value> values;
-        values = decl.values;
-
-        final int size;
-        size = values.size();
-
-        if (size != 1) {
-          // TODO log
-          continue;
-        }
-
-        final Value value;
-        value = values.get(0);
-
-        if (!(value instanceof Tok tok)) {
-          // TODO log
-          continue;
-        }
-
-        final Variant variant;
-        variant = simple("@media (min-width: " + tok.v + ")");
-
-        variant(id, variant);
       }
 
-      // collect all sections
-      final List<Section> sections;
-      sections = new ArrayList<>();
+      private void userTheme(List<String> previous, Block rule) {
+        final List<String> list;
+        list = new ArrayList<>(previous);
 
-      for (Map.Entry<List<String>, List<Decl>> entry : this.sections.entrySet()) {
+        list.add(rule.selector);
+
         final List<String> selector;
-        selector = entry.getKey();
+        selector = List.copyOf(list);
 
-        final List<Decl> decls;
-        decls = entry.getValue();
+        final List<Decl> section;
+        section = themeSections.computeIfAbsent(selector, key -> new ArrayList<>());
 
-        final Section section;
-        section = new Section(selector, decls);
+        final Map<String, Decl> props;
+        props = themeProps.computeIfAbsent(selector, key -> new LinkedHashMap<>());
 
-        sections.add(section);
-      }
+        for (Stmt stmt : rule.stmts) {
+          switch (stmt) {
+            case Decl decl -> {
+              section.add(decl);
 
-      // mark all props found in base
-      final CssParser baseParser;
-      baseParser = new CssParser(systemBase);
+              final String property;
+              property = decl.property;
 
-      final List<Top> base;
-      base = baseParser.parse();
+              if (!property.startsWith("--")) {
+                // always emit a non-custom-prop
+                decl.mark();
 
-      for (Top top : base) {
-        switch (top) {
-          case Block rule -> baseStyleRule(properties, rule);
+                continue;
+              }
 
-          case FontFace ff -> {/* leave it as it is */}
+              final Decl existing;
+              existing = props.put(property, decl);
 
-          case Keyframes kf -> { /* leave it as it is */ }
+              if (existing != null) {
+                existing.replaced();
+
+                noteSink.send($replaced, existing, decl);
+              }
+            }
+
+            case Block nested -> userTheme(selector, nested);
+          }
         }
       }
 
-      // mark all props found in compoments
-      for (Block component : components) {
-        baseStyleRule(properties, component);
+      final void collectProperties() {
+        for (Map<String, Decl> map : themeProps.values()) {
+          for (Map.Entry<String, Decl> inner : map.entrySet()) {
+            final String propName;
+            propName = inner.getKey();
+
+            final Decl decl;
+            decl = inner.getValue();
+
+            properties.merge(propName, decl, (oldValue, value) -> oldValue.append(value));
+          }
+        }
       }
 
-      return new Config(
-          base,
+      final void collectBreakpoints() {
+        final List<String> root;
+        root = List.of(":root");
 
-          components,
+        final Map<String, Decl> rootProps;
+        rootProps = themeProps.getOrDefault(root, Map.of());
 
-          fontFaces,
+        for (Decl decl : rootProps.values()) {
+          final String property;
+          property = decl.property;
 
-          keyframes,
+          final String prefix;
+          prefix = "--breakpoint-";
 
-          noteSink,
+          if (!property.startsWith(prefix)) {
+            continue;
+          }
 
-          properties,
+          final int beginIndex;
+          beginIndex = prefix.length();
 
-          scanClasses,
+          final String id;
+          id = property.substring(beginIndex);
 
-          scanDirectories,
+          final List<Value> values;
+          values = decl.values;
 
-          scanJars,
+          final int size;
+          size = values.size();
 
-          sections,
+          if (size != 1) {
+            // TODO log
+            continue;
+          }
 
-          variants
-      );
+          final Value value;
+          value = values.get(0);
+
+          if (!(value instanceof Tok tok)) {
+            // TODO log
+            continue;
+          }
+
+          final Variant variant;
+          variant = simple("@media (min-width: " + tok.v + ")");
+
+          variant(id, variant);
+        }
+      }
+
+      private void variant(String name, Variant variant) {
+        final Variant maybeExisting;
+        maybeExisting = variants.put(name, variant);
+
+        if (maybeExisting == null) {
+          return;
+        }
+
+        // TODO restore existing and log?
+      }
+
+      final void collectSections() {
+        for (Map.Entry<List<String>, List<Decl>> entry : themeSections.entrySet()) {
+          final List<String> selector;
+          selector = entry.getKey();
+
+          final List<Decl> decls;
+          decls = entry.getValue();
+
+          final Section section;
+          section = new Section(selector, decls);
+
+          sections.add(section);
+        }
+      }
+
+      final List<Top> baseProperties() {
+        parser.set(systemBase);
+
+        final List<Top> base;
+        base = parser.parse();
+
+        for (Top top : base) {
+          switch (top) {
+            case Block rule -> baseStyleRule(properties, rule);
+
+            case FontFace ff -> {/* leave it as it is */}
+
+            case Keyframes kf -> { /* leave it as it is */ }
+          }
+        }
+
+        return base;
+      }
+
+      private void baseStyleRule(Map<String, Decl> properties, Block rule) {
+        for (Stmt stmt : rule.stmts) {
+          switch (stmt) {
+            case Decl decl -> decl.mark(properties);
+
+            case Block nested -> baseStyleRule(properties, nested);
+          }
+        }
+      }
+
+      final void componentsProperties() {
+        for (Block component : components) {
+          baseStyleRule(properties, component);
+        }
+      }
+
+      final Config build(List<Top> base) {
+        return new Config(
+            base,
+
+            components,
+
+            fontFaces,
+
+            keyframes,
+
+            noteSink,
+
+            properties,
+
+            scanClasses,
+
+            scanDirectories,
+
+            scanJars,
+
+            sections,
+
+            variants
+        );
+      }
+
     }
 
-    private void baseStyleRule(Map<String, Decl> properties, Block rule) {
-      for (Stmt stmt : rule.stmts) {
-        switch (stmt) {
-          case Decl decl -> decl.mark(properties);
+    public final Config configure() {
+      final Helper helper;
+      helper = new Helper();
 
-          case Block nested -> baseStyleRule(properties, nested);
-        }
-      }
+      helper.systemTheme();
+
+      helper.userTheme();
+
+      helper.collectProperties();
+
+      helper.collectBreakpoints();
+
+      helper.collectSections();
+
+      final List<Top> base;
+      base = helper.baseProperties();
+
+      helper.componentsProperties();
+
+      return helper.build(base);
     }
 
     // ##################################################################
     // # END: Configuring: Public API
     // ##################################################################
-
-    private void variant(String name, Variant variant) {
-      final Variant maybeExisting;
-      maybeExisting = variants.put(name, variant);
-
-      if (maybeExisting == null) {
-        return;
-      }
-
-      // TODO restore existing and log?
-    }
 
   }
 

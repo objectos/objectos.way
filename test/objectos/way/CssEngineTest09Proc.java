@@ -15,23 +15,23 @@
  */
 package objectos.way;
 
-import static objectos.way.CssEngine2.number;
-import static objectos.way.CssEngine2.tok;
+import static objectos.way.CssEngine.number;
+import static objectos.way.CssEngine.tok;
 import static org.testng.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import objectos.way.CssEngine2.Variant;
+import objectos.way.CssEngine.Variant;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class CssEngine2Test09Proc {
+public class CssEngineTest09Proc {
 
-  private static final CssEngine2.Variant DARK = CssEngine2.simple("@media (prefers-color-scheme: dark)");
-  private static final CssEngine2.Variant MD = CssEngine2.simple("@media (min-width: 48rem)");
-  private static final CssEngine2.Variant HOVER = CssEngine2.simple("&:hover");
+  private static final CssEngine.Variant DARK = CssEngine.simple("@media (prefers-color-scheme: dark)");
+  private static final CssEngine.Variant MD = CssEngine.simple("@media (min-width: 48rem)");
+  private static final CssEngine.Variant HOVER = CssEngine.simple("&:hover");
 
   @DataProvider
   public Object[][] testProvider() {
@@ -42,7 +42,7 @@ public class CssEngine2Test09Proc {
             r("margin:0", l("0", "margin"))
         ),
         l(
-            CssEngine2.utility(List.of(), ".margin\\:0", "margin", number("0"))
+            CssEngine.utility(List.of(), ".margin\\:0", "margin", number("0"))
         )
     }, {
         "multiple utilities",
@@ -53,9 +53,9 @@ public class CssEngine2Test09Proc {
             r("border:0", l("0", "border"))
         ),
         l(
-            CssEngine2.utility(List.of(), ".margin\\:0", "margin", number("0")),
-            CssEngine2.utility(List.of(), ".padding\\:0", "padding", number("0")),
-            CssEngine2.utility(List.of(), ".border\\:0", "border", number("0"))
+            CssEngine.utility(List.of(), ".margin\\:0", "margin", number("0")),
+            CssEngine.utility(List.of(), ".padding\\:0", "padding", number("0")),
+            CssEngine.utility(List.of(), ".border\\:0", "border", number("0"))
         )
     }, {
         "multiple utilities (skip already seen)",
@@ -66,8 +66,8 @@ public class CssEngine2Test09Proc {
             r("margin:0", l("0", "margin"))
         ),
         l(
-            CssEngine2.utility(List.of(), ".margin\\:0", "margin", number("0")),
-            CssEngine2.utility(List.of(), ".padding\\:0", "padding", number("0"))
+            CssEngine.utility(List.of(), ".margin\\:0", "margin", number("0")),
+            CssEngine.utility(List.of(), ".padding\\:0", "padding", number("0"))
         )
     }, {
         "variant (class name)",
@@ -77,8 +77,8 @@ public class CssEngine2Test09Proc {
             r("padding:0", l("0", "padding"))
         ),
         l(
-            CssEngine2.utility(List.of(HOVER), ".hover\\/margin\\:0", "margin", number("0")),
-            CssEngine2.utility(List.of(), ".padding\\:0", "padding", number("0"))
+            CssEngine.utility(List.of(HOVER), ".hover\\/margin\\:0", "margin", number("0")),
+            CssEngine.utility(List.of(), ".padding\\:0", "padding", number("0"))
         )
     }, {
         "variant (at rule (1))",
@@ -88,8 +88,8 @@ public class CssEngine2Test09Proc {
             r("padding:0", l("0", "padding"))
         ),
         l(
-            CssEngine2.utility(List.of(DARK), ".dark\\/color\\:gray-100", "color", tok("gray-100")),
-            CssEngine2.utility(List.of(), ".padding\\:0", "padding", number("0"))
+            CssEngine.utility(List.of(DARK), ".dark\\/color\\:gray-100", "color", tok("gray-100")),
+            CssEngine.utility(List.of(), ".padding\\:0", "padding", number("0"))
         )
     }, {
         "variant (at rule (2))",
@@ -99,8 +99,8 @@ public class CssEngine2Test09Proc {
             r("padding:0", l("0", "padding"))
         ),
         l(
-            CssEngine2.utility(List.of(DARK, MD), ".dark\\/md\\/color\\:gray-100", "color", tok("gray-100")),
-            CssEngine2.utility(List.of(), ".padding\\:0", "padding", number("0"))
+            CssEngine.utility(List.of(DARK, MD), ".dark\\/md\\/color\\:gray-100", "color", tok("gray-100")),
+            CssEngine.utility(List.of(), ".padding\\:0", "padding", number("0"))
         )
     }, {
         "variant (custom))",
@@ -109,7 +109,7 @@ public class CssEngine2Test09Proc {
             r("&[data-foo]/padding:0", l("0", "padding", "&[data-foo]"))
         ),
         l(
-            CssEngine2.utility(List.of(CssEngine2.simple("&[data-foo]")), ".\\&\\[data-foo\\]\\/padding\\:0", "padding", number("0"))
+            CssEngine.utility(List.of(CssEngine.simple("&[data-foo]")), ".\\&\\[data-foo\\]\\/padding\\:0", "padding", number("0"))
         )
     }};
   }
@@ -117,17 +117,17 @@ public class CssEngine2Test09Proc {
   @Test(dataProvider = "testProvider")
   public void test(
       String description,
-      @SuppressWarnings("exports") Map<String, CssEngine2.Variant> variants,
+      @SuppressWarnings("exports") Map<String, CssEngine.Variant> variants,
       @SuppressWarnings("exports") List<Input> inputs,
-      @SuppressWarnings("exports") List<CssEngine2.Utility> expected) {
+      @SuppressWarnings("exports") List<CssEngine.Utility> expected) {
     final Note.Sink noteSink;
     noteSink = Y.noteSink();
 
     final Map<String, Variant> mutable;
     mutable = new HashMap<>(variants);
 
-    final CssEngine2.Proc proc;
-    proc = new CssEngine2.Proc(noteSink, mutable);
+    final CssEngine.Proc proc;
+    proc = new CssEngine.Proc(noteSink, mutable);
 
     for (Input input : inputs) {
       proc.consume(input.className, input.slugs);

@@ -15,12 +15,12 @@
  */
 package objectos.way;
 
-import static objectos.way.CssEngine2.block;
-import static objectos.way.CssEngine2.fun;
-import static objectos.way.CssEngine2.keyframes;
-import static objectos.way.CssEngine2.number;
-import static objectos.way.CssEngine2.section;
-import static objectos.way.CssEngine2.tok;
+import static objectos.way.CssEngine.block;
+import static objectos.way.CssEngine.fun;
+import static objectos.way.CssEngine.keyframes;
+import static objectos.way.CssEngine.number;
+import static objectos.way.CssEngine.section;
+import static objectos.way.CssEngine.tok;
 import static org.testng.Assert.assertEquals;
 
 import java.util.List;
@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import org.testng.annotations.Test;
 
-public class CssEngine2Test02Configuring {
+public class CssEngineTest02Configuring {
 
   @Test(description = """
   breakpoint
@@ -37,13 +37,9 @@ public class CssEngine2Test02Configuring {
   """)
   public void breakpoint01() {
     test(
-        s -> {
-          s.base = "";
-          s.theme = "";
-          s.variants = Map.of();
-        },
-
         c -> {
+          c.systemBase("");
+          c.systemTheme("");
           c.theme("""
           :root {
             --breakpoint-sm: 40rem;
@@ -52,8 +48,8 @@ public class CssEngine2Test02Configuring {
         },
 
         c -> {
-          final CssEngine2.Decl v;
-          v = CssEngine2.decl("--breakpoint-sm", tok("40rem"));
+          final CssEngine.Decl v;
+          v = CssEngine.decl("--breakpoint-sm", tok("40rem"));
 
           assertEquals(c.components(), List.of());
           assertEquals(c.fontFaces(), List.of());
@@ -63,7 +59,7 @@ public class CssEngine2Test02Configuring {
               section(List.of(":root"), v)
           ));
           assertEquals(c.variants(), Map.of(
-              "sm", CssEngine2.simple("@media (min-width: 40rem)")
+              "sm", CssEngine.simple("@media (min-width: 40rem)")
           ));
         }
     );
@@ -75,17 +71,13 @@ public class CssEngine2Test02Configuring {
   """)
   public void breakpoint02() {
     test(
-        s -> {
-          s.base = "";
-          s.theme = """
-          :root {
-          --breakpoint-sm: 40rem;
-
-          """;
-          s.variants = Map.of();
-        },
-
         c -> {
+          c.systemBase("");
+          c.systemTheme("""
+          :root {
+            --breakpoint-sm: 40rem;
+          }
+          """);
           c.theme("""
           :root {
             --breakpoint-sm: 30rem;
@@ -94,11 +86,11 @@ public class CssEngine2Test02Configuring {
         },
 
         c -> {
-          final CssEngine2.Decl v0;
-          v0 = CssEngine2.decl("--breakpoint-sm", tok("40rem")).replaced();
+          final CssEngine.Decl v0;
+          v0 = CssEngine.decl("--breakpoint-sm", tok("40rem")).replaced();
 
-          final CssEngine2.Decl v1;
-          v1 = CssEngine2.decl("--breakpoint-sm", tok("30rem"));
+          final CssEngine.Decl v1;
+          v1 = CssEngine.decl("--breakpoint-sm", tok("30rem"));
 
           assertEquals(c.components(), List.of());
           assertEquals(c.fontFaces(), List.of());
@@ -108,7 +100,7 @@ public class CssEngine2Test02Configuring {
               section(List.of(":root"), v0, v1)
           ));
           assertEquals(c.variants(), Map.of(
-              "sm", CssEngine2.simple("@media (min-width: 30rem)")
+              "sm", CssEngine.simple("@media (min-width: 30rem)")
           ));
         }
     );
@@ -120,13 +112,9 @@ public class CssEngine2Test02Configuring {
   """)
   public void colors01() {
     test(
-        s -> {
-          s.base = "";
-          s.theme = "";
-          s.variants = Map.of();
-        },
-
         c -> {
+          c.systemBase("");
+          c.systemTheme("");
           c.theme("""
           :root {
           --color-test: #cafeba;
@@ -135,8 +123,8 @@ public class CssEngine2Test02Configuring {
         },
 
         c -> {
-          final CssEngine2.Decl v;
-          v = CssEngine2.decl("--color-test", tok("#cafeba"));
+          final CssEngine.Decl v;
+          v = CssEngine.decl("--color-test", tok("#cafeba"));
 
           assertEquals(c.components(), List.of());
           assertEquals(c.fontFaces(), List.of());
@@ -156,13 +144,9 @@ public class CssEngine2Test02Configuring {
   """)
   public void font01() {
     test(
-        s -> {
-          s.base = "";
-          s.theme = "";
-          s.variants = Map.of();
-        },
-
         c -> {
+          c.systemBase("");
+          c.systemTheme("");
           c.theme("""
           :root {
           --font-test: 'Comic Sans';
@@ -171,8 +155,8 @@ public class CssEngine2Test02Configuring {
         },
 
         c -> {
-          final CssEngine2.Decl v;
-          v = CssEngine2.decl("--font-test", tok("'Comic Sans'"));
+          final CssEngine.Decl v;
+          v = CssEngine.decl("--font-test", tok("'Comic Sans'"));
 
           assertEquals(c.components(), List.of());
           assertEquals(c.fontFaces(), List.of());
@@ -189,13 +173,9 @@ public class CssEngine2Test02Configuring {
   @Test
   public void keyframes01() {
     test(
-        s -> {
-          s.base = "";
-          s.theme = "";
-          s.variants = Map.of();
-        },
-
         c -> {
+          c.systemBase("");
+          c.systemTheme("");
           c.theme("""
           @keyframes fade-in {
             from { opacity: 0; }
@@ -208,8 +188,8 @@ public class CssEngine2Test02Configuring {
           assertEquals(c.components(), List.of());
           assertEquals(c.fontFaces(), List.of());
           assertEquals(c.keyframes(), Map.of("fade-in", keyframes("fade-in",
-              CssEngine2.block("from", CssEngine2.decl("opacity", number("0"))),
-              CssEngine2.block("to", CssEngine2.decl("opacity", number("1")))
+              CssEngine.block("from", CssEngine.decl("opacity", number("0"))),
+              CssEngine.block("to", CssEngine.decl("opacity", number("1")))
           )));
           assertEquals(c.properties(), Map.of());
           assertEquals(c.sections(), List.of());
@@ -223,13 +203,9 @@ public class CssEngine2Test02Configuring {
   @Test
   public void media01() {
     test(
-        s -> {
-          s.base = "";
-          s.theme = "";
-          s.variants = Map.of();
-        },
-
         c -> {
+          c.systemBase("");
+          c.systemTheme("");
           c.theme("""
           :root {
             --color-primary: #f0f0f0;
@@ -241,11 +217,11 @@ public class CssEngine2Test02Configuring {
         },
 
         c -> {
-          final CssEngine2.Decl v0;
-          v0 = CssEngine2.decl("--color-primary", tok("#f0f0f0"));
+          final CssEngine.Decl v0;
+          v0 = CssEngine.decl("--color-primary", tok("#f0f0f0"));
 
-          final CssEngine2.Decl v1;
-          v1 = CssEngine2.decl("--color-primary", tok("#1e1e1e"));
+          final CssEngine.Decl v1;
+          v1 = CssEngine.decl("--color-primary", tok("#1e1e1e"));
 
           assertEquals(c.components(), List.of());
           assertEquals(c.fontFaces(), List.of());
@@ -263,17 +239,13 @@ public class CssEngine2Test02Configuring {
   @Test
   public void component01() {
     test(
-        s -> {
-          s.base = "";
-          s.theme = """
+        c -> {
+          c.systemBase("");
+          c.systemTheme("""
           :root {
             --color-theme: #f0f0f0;
           }
-          """;
-          s.variants = Map.of();
-        },
-
-        c -> {
+          """);
           c.components("""
           [data-theme=g90] {
             --color-background: var(--color-theme);
@@ -282,11 +254,11 @@ public class CssEngine2Test02Configuring {
         },
 
         c -> {
-          final CssEngine2.Decl v0;
-          v0 = CssEngine2.decl("--color-theme", tok("#f0f0f0")).mark();
+          final CssEngine.Decl v0;
+          v0 = CssEngine.decl("--color-theme", tok("#f0f0f0")).mark();
 
-          final CssEngine2.Decl v1;
-          v1 = CssEngine2.decl("--color-background", fun("var", tok("--color-theme"))).mark();
+          final CssEngine.Decl v1;
+          v1 = CssEngine.decl("--color-background", fun("var", tok("--color-theme"))).mark();
 
           assertEquals(c.components(), List.of(
               block("[data-theme=g90]", v1)
@@ -307,13 +279,9 @@ public class CssEngine2Test02Configuring {
   @Test
   public void fontFace01() {
     test(
-        s -> {
-          s.base = "";
-          s.theme = "";
-          s.variants = Map.of();
-        },
-
         c -> {
+          c.systemBase("");
+          c.systemTheme("");
           c.theme("""
           @font-face {
             font-family: "IBM Plex Sans";
@@ -327,11 +295,11 @@ public class CssEngine2Test02Configuring {
         c -> {
           assertEquals(c.components(), List.of());
           assertEquals(c.fontFaces(), List.of(
-              CssEngine2.fontFace(
-                  CssEngine2.decl("font-family", tok("\"IBM Plex Sans\"")),
-                  CssEngine2.decl("font-style", tok("normal")),
-                  CssEngine2.decl("font-weight", number("700")),
-                  CssEngine2.decl("src", fun("local", tok("\"IBM Plex Sans Bold\"")))
+              CssEngine.fontFace(
+                  CssEngine.decl("font-family", tok("\"IBM Plex Sans\"")),
+                  CssEngine.decl("font-style", tok("normal")),
+                  CssEngine.decl("font-weight", number("700")),
+                  CssEngine.decl("src", fun("local", tok("\"IBM Plex Sans Bold\"")))
               )
           ));
           assertEquals(c.keyframes(), Map.of());
@@ -345,39 +313,36 @@ public class CssEngine2Test02Configuring {
   @Test
   public void baseProps01() {
     test(
-        s -> {
-          s.base = """
+        c -> {
+          c.systemBase("""
           html, :host {
             font-family: --theme(
               --default-font-family,
               ui-sans-serif
             ); /* 4 */
           }
-          """;
-          s.theme = """
+          """);
+          c.systemTheme("""
           :root {
           --font-sans: sans;
           --default-font-family: var(--font-sans);
           }
-          """;
-          s.variants = Map.of();
+          """);
         },
 
-        c -> {},
-
         c -> {
-          final CssEngine2.Decl v0;
-          v0 = CssEngine2.decl("--font-sans", tok("sans")).mark();
+          final CssEngine.Decl v0;
+          v0 = CssEngine.decl("--font-sans", tok("sans")).mark();
 
-          final CssEngine2.Decl v1;
-          v1 = CssEngine2.decl("--default-font-family", fun("var", tok("--font-sans"))).mark();
+          final CssEngine.Decl v1;
+          v1 = CssEngine.decl("--default-font-family", fun("var", tok("--font-sans"))).mark();
 
           assertEquals(c.components(), List.of());
           assertEquals(c.fontFaces(), List.of());
           assertEquals(c.keyframes(), Map.of());
           assertEquals(c.properties(), Map.of("--font-sans", v0, "--default-font-family", v1));
           assertEquals(c.sections(), List.of(
-              CssEngine2.section(List.of(":root"), v0, v1)
+              CssEngine.section(List.of(":root"), v0, v1)
           ));
           assertEquals(c.variants(), Map.of());
         }
@@ -385,22 +350,16 @@ public class CssEngine2Test02Configuring {
   }
 
   private void test(
-      Consumer<? super CssEngine2.System> systemConfig,
-      Consumer<? super CssEngine2.Configuring> flags,
-      Consumer<? super CssEngine2.Config> test) {
-    final CssEngine2.System system;
-    system = new CssEngine2.System();
-
-    systemConfig.accept(system);
-
-    final CssEngine2.Configuring pojo;
-    pojo = new CssEngine2.Configuring(system);
+      Consumer<? super CssEngine.Configuring> flags,
+      Consumer<? super CssEngine.Config> test) {
+    final CssEngine.Configuring pojo;
+    pojo = new CssEngine.Configuring();
 
     pojo.noteSink(Y.noteSink());
 
     flags.accept(pojo);
 
-    final CssEngine2.Config config;
+    final CssEngine.Config config;
     config = pojo.configure();
 
     test.accept(config);

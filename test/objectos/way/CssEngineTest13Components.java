@@ -15,7 +15,9 @@
  */
 package objectos.way;
 
-import static objectos.way.CssEngine2.rule;
+import static objectos.way.CssEngine.block;
+import static objectos.way.CssEngine.decl;
+import static objectos.way.CssEngine.tok;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
@@ -24,34 +26,22 @@ import java.util.List;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class CssEngine2Test14Utilities {
-
-  private static final CssEngine2.Simple AFTER = CssEngine2.simple("&::after");
+public class CssEngineTest13Components {
 
   @DataProvider
   public Object[][] writeProvider() {
     return new Object[][] {{
-        "Empty",
-        List.of(),
-        ""
-    }, {
-        "1 rule",
+        "1 component",
+
         List.of(
-            rule(".margin\\:0", List.of(), "margin", "0")
+            block("[data-theme=g90]", decl("--color-background", tok("#262626")))
         ),
+
         """
-        @layer utilities {
-          .margin\\:0 { margin: 0 }
-        }
-        """
-    }, {
-        "1 rule + 1 variant",
-        List.of(
-            rule(".after\\/padding\\:0", List.of(AFTER), "padding", "0")
-        ),
-        """
-        @layer utilities {
-          .after\\/padding\\:0 { &::after { padding: 0 } }
+        @layer components {
+          [data-theme=g90] {
+            --color-background: #262626;
+          }
         }
         """
     }};
@@ -60,16 +50,16 @@ public class CssEngine2Test14Utilities {
   @Test(dataProvider = "writeProvider")
   public void write(
       String description,
-      @SuppressWarnings("exports") List<CssEngine2.Rule> rules,
+      @SuppressWarnings("exports") List<CssEngine.Block> components,
       String expected) {
     try {
-      final CssEngine2.Utilities utilities;
-      utilities = new CssEngine2.Utilities(rules);
+      final CssEngine.Components writer;
+      writer = new CssEngine.Components(components);
 
       final StringBuilder out;
       out = new StringBuilder();
 
-      utilities.write(out);
+      writer.write(out);
 
       assertEquals(out.toString(), expected);
     } catch (IOException e) {

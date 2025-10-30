@@ -17,12 +17,12 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.way.CssEngine2.ClassNameFormat;
+import objectos.way.CssEngine.ClassNameFormat;
 import org.testng.annotations.Test;
 
-public class CssEngine2Test08ClassNameFormat {
+public class CssEngineTest08ClassNameFormat {
 
-  private final ClassNameFormat format = new CssEngine2.ClassNameFormat();
+  private final ClassNameFormat format = new CssEngine.ClassNameFormat();
 
   //
   // https://drafts.csswg.org/cssom/#common-serializing-idioms
@@ -95,7 +95,7 @@ public class CssEngine2Test08ClassNameFormat {
 
   private void serializeIdentifier(String source, String expected) {
     final ClassNameFormat format;
-    format = new CssEngine2.ClassNameFormat();
+    format = new CssEngine.ClassNameFormat();
 
     final String result;
     result = format.format(source);

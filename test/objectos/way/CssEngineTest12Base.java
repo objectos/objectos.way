@@ -20,10 +20,10 @@ import static org.testng.Assert.assertEquals;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.List;
-import objectos.way.CssEngine2.Top;
+import objectos.way.CssEngine.Top;
 import org.testng.annotations.Test;
 
-public class CssEngine2Test12Base {
+public class CssEngineTest12Base {
 
   @Test(description = "Do not emit comments")
   public void comment01() {
@@ -164,12 +164,8 @@ public class CssEngine2Test12Base {
 
   @Test
   public void fullGeneration() {
-    assertEquals(
-        CssEngine.generate(config -> {
-          config.skipLayer(Css.Layer.THEME);
-          config.skipLayer(Css.Layer.COMPONENTS);
-          config.skipLayer(Css.Layer.UTILITIES);
-        }),
+    base(
+        Css.systemBase(),
 
         """
         @layer base {
@@ -319,14 +315,14 @@ public class CssEngine2Test12Base {
 
   private void base(String source, String expected) {
     try {
-      final CssEngine2.CssParser parser;
-      parser = new CssEngine2.CssParser(source);
+      final CssEngine.CssParser parser;
+      parser = new CssEngine.CssParser(source);
 
       final List<Top> topLevel;
       topLevel = parser.parse();
 
-      final CssEngine2.Base base;
-      base = new CssEngine2.Base(topLevel);
+      final CssEngine.Base base;
+      base = new CssEngine.Base(topLevel);
 
       final StringBuilder out;
       out = new StringBuilder();

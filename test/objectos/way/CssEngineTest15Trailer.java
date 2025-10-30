@@ -15,7 +15,7 @@
  */
 package objectos.way;
 
-import static objectos.way.CssEngine2.tok;
+import static objectos.way.CssEngine.tok;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
@@ -26,7 +26,7 @@ import java.util.function.Consumer;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class CssEngine2Test15Trailer {
+public class CssEngineTest15Trailer {
 
   @DataProvider
   public Object[][] writeProvider() {
@@ -36,8 +36,8 @@ public class CssEngine2Test15Trailer {
         tester(t -> {
           t.keyframes(
               "fade-in",
-              CssEngine2.block("from", CssEngine2.decl("opacity", tok("0"))),
-              CssEngine2.block("100%", CssEngine2.decl("opacity", tok("1")))
+              CssEngine.block("from", CssEngine.decl("opacity", tok("0"))),
+              CssEngine.block("100%", CssEngine.decl("opacity", tok("1")))
           );
         }),
 
@@ -56,10 +56,10 @@ public class CssEngine2Test15Trailer {
 
         tester(t -> {
           t.fontFace(
-              CssEngine2.decl("font-family", tok("\"IBM Plex Sans\"")),
-              CssEngine2.decl("font-style", tok("normal")),
-              CssEngine2.decl("font-weight", tok("700")),
-              CssEngine2.decl("src", tok("local(\"IBM Plex Sans Bold\")"))
+              CssEngine.decl("font-family", tok("\"IBM Plex Sans\"")),
+              CssEngine.decl("font-style", tok("normal")),
+              CssEngine.decl("font-weight", tok("700")),
+              CssEngine.decl("src", tok("local(\"IBM Plex Sans Bold\")"))
           );
         }),
 
@@ -93,19 +93,19 @@ public class CssEngine2Test15Trailer {
 
   static final class Tester {
 
-    final List<CssEngine2.FontFace> fontFaces = new ArrayList<>();
+    final List<CssEngine.FontFace> fontFaces = new ArrayList<>();
 
-    final List<CssEngine2.Keyframes> keyframes = new ArrayList<>();
+    final List<CssEngine.Keyframes> keyframes = new ArrayList<>();
 
-    final void fontFace(CssEngine2.Decl... decls) {
+    final void fontFace(CssEngine.Decl... decls) {
       fontFaces.add(
-          CssEngine2.fontFace(decls)
+          CssEngine.fontFace(decls)
       );
     }
 
-    final void keyframes(String name, CssEngine2.Block... rules) {
+    final void keyframes(String name, CssEngine.Block... rules) {
       keyframes.add(
-          CssEngine2.keyframes(
+          CssEngine.keyframes(
               name,
 
               rules
@@ -119,8 +119,8 @@ public class CssEngine2Test15Trailer {
         final StringBuilder out;
         out = new StringBuilder();
 
-        final CssEngine2.Trailer w;
-        w = new CssEngine2.Trailer(fontFaces, keyframes);
+        final CssEngine.Trailer w;
+        w = new CssEngine.Trailer(fontFaces, keyframes);
 
         w.write(out);
 

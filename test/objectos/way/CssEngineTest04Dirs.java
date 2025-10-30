@@ -22,7 +22,7 @@ import java.nio.file.Path;
 import java.util.Set;
 import org.testng.annotations.Test;
 
-public class CssEngine2Test04Dirs {
+public class CssEngineTest04Dirs {
 
   @Test
   public void scanDirectory01() {
@@ -112,8 +112,8 @@ public class CssEngine2Test04Dirs {
   }
 
   private void test(Path directory, String... expected) {
-    final CssEngine2ClassFiles tester;
-    tester = new CssEngine2ClassFiles();
+    final CssEngineClassFiles tester;
+    tester = new CssEngineClassFiles();
 
     final Set<Path> dirs;
     dirs = Set.of(directory);
@@ -121,8 +121,8 @@ public class CssEngine2Test04Dirs {
     final Note.Sink noteSink;
     noteSink = Y.noteSink();
 
-    final CssEngine2.Dirs scanner;
-    scanner = new CssEngine2.Dirs(tester, dirs, noteSink);
+    final CssEngine.Dirs scanner;
+    scanner = new CssEngine.Dirs(tester, dirs, noteSink);
 
     scanner.scan();
 

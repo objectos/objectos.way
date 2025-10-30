@@ -15,7 +15,7 @@
  */
 package objectos.way;
 
-import static objectos.way.CssEngine2.tok;
+import static objectos.way.CssEngine.tok;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
@@ -24,7 +24,7 @@ import java.util.List;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class CssEngine2Test11Theme {
+public class CssEngineTest11Theme {
 
   private static final String DARK = "@media (prefers-color-scheme: dark)";
 
@@ -40,7 +40,7 @@ public class CssEngine2Test11Theme {
         List.of(s(
             List.of(":root"),
 
-            CssEngine2.decl("--color-red-50", tok("oklch(97.1% 0.013 17.38)"))
+            CssEngine.decl("--color-red-50", tok("oklch(97.1% 0.013 17.38)"))
         )),
 
         """
@@ -56,11 +56,11 @@ public class CssEngine2Test11Theme {
         List.of(s(
             List.of(":root"),
 
-            CssEngine2.decl("--color-primary", tok("#f0f0f0"))
+            CssEngine.decl("--color-primary", tok("#f0f0f0"))
         ), s(
             List.of(":root", DARK),
 
-            CssEngine2.decl("--color-primary", tok("#1e1e1e"))
+            CssEngine.decl("--color-primary", tok("#1e1e1e"))
         )),
 
         """
@@ -81,11 +81,11 @@ public class CssEngine2Test11Theme {
   @Test(dataProvider = "writeProvider")
   public void write(
       String description,
-      @SuppressWarnings("exports") List<CssEngine2.Section> sections,
+      @SuppressWarnings("exports") List<CssEngine.Section> sections,
       String expected) {
     try {
-      final CssEngine2.Theme theme;
-      theme = new CssEngine2.Theme(sections);
+      final CssEngine.Theme theme;
+      theme = new CssEngine.Theme(sections);
 
       final StringBuilder out;
       out = new StringBuilder();
@@ -98,8 +98,8 @@ public class CssEngine2Test11Theme {
     }
   }
 
-  private CssEngine2.Section s(List<String> selector, CssEngine2.Decl... values) {
-    return CssEngine2.section(
+  private CssEngine.Section s(List<String> selector, CssEngine.Decl... values) {
+    return CssEngine.section(
         selector,
         List.of(values)
     );

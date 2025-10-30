@@ -21,12 +21,12 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.testng.annotations.Test;
 
-public class CssEngine2Test05Jars {
+public class CssEngineTest05Jars {
 
   @Test
   public void scanJarFile01() {
-    final CssEngine2ClassFiles tester;
-    tester = new CssEngine2ClassFiles();
+    final CssEngineClassFiles tester;
+    tester = new CssEngineClassFiles();
 
     final Set<Class<?>> jars;
     jars = Set.of(Logger.class);
@@ -34,8 +34,8 @@ public class CssEngine2Test05Jars {
     final Note.Sink noteSink;
     noteSink = Y.noteSink();
 
-    final CssEngine2.Jars scanner;
-    scanner = new CssEngine2.Jars(tester, jars, noteSink);
+    final CssEngine.Jars scanner;
+    scanner = new CssEngine.Jars(tester, jars, noteSink);
 
     scanner.scan();
 

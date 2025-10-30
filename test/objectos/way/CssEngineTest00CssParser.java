@@ -15,14 +15,14 @@
  */
 package objectos.way;
 
-import static objectos.way.CssEngine2.decl;
-import static objectos.way.CssEngine2.fontFace;
-import static objectos.way.CssEngine2.fun;
-import static objectos.way.CssEngine2.keyframes;
-import static objectos.way.CssEngine2.number;
-import static objectos.way.CssEngine2.block;
-import static objectos.way.CssEngine2.tok;
-import static objectos.way.CssEngine2.Sep.COMMA;
+import static objectos.way.CssEngine.decl;
+import static objectos.way.CssEngine.fontFace;
+import static objectos.way.CssEngine.fun;
+import static objectos.way.CssEngine.keyframes;
+import static objectos.way.CssEngine.number;
+import static objectos.way.CssEngine.block;
+import static objectos.way.CssEngine.tok;
+import static objectos.way.CssEngine.Sep.COMMA;
 import static org.testng.Assert.assertEquals;
 
 import java.util.List;
@@ -30,7 +30,7 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class CssEngine2Test00CssParser {
+public class CssEngineTest00CssParser {
 
   @DataProvider
   public Object[][] declsValidProvider() {
@@ -42,7 +42,7 @@ public class CssEngine2Test00CssParser {
         """,
 
         List.of(
-            CssEngine2.decl("--breakpoint-sm", tok("40rem"))
+            CssEngine.decl("--breakpoint-sm", tok("40rem"))
         )
     }, {
         "color: just one",
@@ -52,7 +52,7 @@ public class CssEngine2Test00CssParser {
         """,
 
         List.of(
-            CssEngine2.decl("--color-stone-950", fun("oklch", number("0.147"), number("0.004"), number("49.25")))
+            CssEngine.decl("--color-stone-950", fun("oklch", number("0.147"), number("0.004"), number("49.25")))
         )
     }, {
         "color: two lines",
@@ -63,8 +63,8 @@ public class CssEngine2Test00CssParser {
         """,
 
         List.of(
-            CssEngine2.decl("--color-stone-950", fun("oklch", number("0.147"), number("0.004"), number("49.25"))),
-            CssEngine2.decl("--color-red-50", fun("oklch", number("0.971"), number("0.013"), number("17.38")))
+            CssEngine.decl("--color-stone-950", fun("oklch", number("0.147"), number("0.004"), number("49.25"))),
+            CssEngine.decl("--color-red-50", fun("oklch", number("0.971"), number("0.013"), number("17.38")))
         )
     }, {
         "color: clear",
@@ -74,7 +74,7 @@ public class CssEngine2Test00CssParser {
         """,
 
         List.of(
-            CssEngine2.decl("--color-*", tok("initial"))
+            CssEngine.decl("--color-*", tok("initial"))
         )
     }, {
         "custom: allow for values without a ns",
@@ -84,7 +84,7 @@ public class CssEngine2Test00CssParser {
         """,
 
         List.of(
-            CssEngine2.decl("--carbon-grid-columns", number("4"))
+            CssEngine.decl("--carbon-grid-columns", number("4"))
         )
     }, {
         "font: just one",
@@ -94,7 +94,7 @@ public class CssEngine2Test00CssParser {
         """,
 
         List.of(
-            CssEngine2.decl("--font-display", tok("Foo"), COMMA, tok("\"Foo bar\""))
+            CssEngine.decl("--font-display", tok("Foo"), COMMA, tok("\"Foo bar\""))
         )
     }, {
         "global: valid",
@@ -104,13 +104,13 @@ public class CssEngine2Test00CssParser {
         """,
 
         List.of(
-            CssEngine2.decl("--*", tok("initial"))
+            CssEngine.decl("--*", tok("initial"))
         )
     }, {
         "regular",
         "opacity:0;",
         List.of(
-            CssEngine2.decl("opacity", number("0"))
+            CssEngine.decl("opacity", number("0"))
         )
     }, {
         "ws: blank line between lines",
@@ -123,9 +123,9 @@ public class CssEngine2Test00CssParser {
         """,
 
         List.of(
-            CssEngine2.decl("--color-orange-900", fun("oklch", number("0.408"), number("0.123"), number("38.172"))),
-            CssEngine2.decl("--color-orange-950", fun("oklch", number("0.266"), number("0.079"), number("36.259"))),
-            CssEngine2.decl("--color-amber-50", fun("oklch", number("0.987"), number("0.022"), number("95.277")))
+            CssEngine.decl("--color-orange-900", fun("oklch", number("0.408"), number("0.123"), number("38.172"))),
+            CssEngine.decl("--color-orange-950", fun("oklch", number("0.266"), number("0.079"), number("36.259"))),
+            CssEngine.decl("--color-amber-50", fun("oklch", number("0.987"), number("0.022"), number("95.277")))
         )
     }, {
         "ws: it should trim the name",
@@ -135,7 +135,7 @@ public class CssEngine2Test00CssParser {
         """,
 
         List.of(
-            CssEngine2.decl("--color-orange-900", fun("oklch", number("0.408"), number("0.123"), number("38.172")))
+            CssEngine.decl("--color-orange-900", fun("oklch", number("0.408"), number("0.123"), number("38.172")))
         )
     }, {
         "ws: it should trim the name",
@@ -145,7 +145,7 @@ public class CssEngine2Test00CssParser {
         """,
 
         List.of(
-            CssEngine2.decl("--color-orange-900", fun("oklch", number("0.408"), number("0.123"), number("38.172")))
+            CssEngine.decl("--color-orange-900", fun("oklch", number("0.408"), number("0.123"), number("38.172")))
         )
     }, {
         "ws: it should trim the value",
@@ -156,7 +156,7 @@ public class CssEngine2Test00CssParser {
         """,
 
         List.of(
-            CssEngine2.decl("--color-orange-900", fun("oklch", number("0.408"), number("0.123"), number("38.172")))
+            CssEngine.decl("--color-orange-900", fun("oklch", number("0.408"), number("0.123"), number("38.172")))
         )
     }};
   }
@@ -165,22 +165,22 @@ public class CssEngine2Test00CssParser {
   public void declsValid(
       String description,
       String src,
-      @SuppressWarnings("exports") List<CssEngine2.Decl> expected) {
+      @SuppressWarnings("exports") List<CssEngine.Decl> expected) {
     final String source;
     source = "foo { %s }".formatted(src);
 
-    final CssEngine2.CssParser parser;
-    parser = new CssEngine2.CssParser(source);
+    final CssEngine.CssParser parser;
+    parser = new CssEngine.CssParser(source);
 
-    final List<CssEngine2.Top> top;
+    final List<CssEngine.Top> top;
     top = parser.parse();
 
     assertEquals(top.size(), 1);
 
-    final CssEngine2.Top only;
+    final CssEngine.Top only;
     only = top.get(0);
 
-    if (!(only instanceof CssEngine2.Block(String selector, List<CssEngine2.Stmt> stmts))) {
+    if (!(only instanceof CssEngine.Block(String selector, List<CssEngine.Stmt> stmts))) {
       throw new AssertionError();
     }
 
@@ -357,9 +357,9 @@ public class CssEngine2Test00CssParser {
   public void parseValid(
       String description,
       String src,
-      @SuppressWarnings("exports") List<CssEngine2.Top> expected) {
-    final CssEngine2.CssParser parser;
-    parser = new CssEngine2.CssParser(src);
+      @SuppressWarnings("exports") List<CssEngine.Top> expected) {
+    final CssEngine.CssParser parser;
+    parser = new CssEngine.CssParser(src);
 
     assertEquals(parser.parse(), expected);
   }
@@ -404,8 +404,8 @@ public class CssEngine2Test00CssParser {
       String src,
       String message) {
     try {
-      final CssEngine2.CssParser parser;
-      parser = new CssEngine2.CssParser(src);
+      final CssEngine.CssParser parser;
+      parser = new CssEngine.CssParser(src);
 
       parser.parse();
 
@@ -559,11 +559,11 @@ public class CssEngine2Test00CssParser {
   public void valuesValid(
       String description,
       String text,
-      @SuppressWarnings("exports") List<CssEngine2.Value> expected) {
-    final CssEngine2.CssParser parser;
-    parser = new CssEngine2.CssParser(text);
+      @SuppressWarnings("exports") List<CssEngine.Value> expected) {
+    final CssEngine.CssParser parser;
+    parser = new CssEngine.CssParser(text);
 
-    final List<CssEngine2.Value> result;
+    final List<CssEngine.Value> result;
     result = parser.parseValues();
 
     assertEquals(result, expected);

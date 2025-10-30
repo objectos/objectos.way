@@ -21,7 +21,7 @@ import java.lang.classfile.constantpool.ClassEntry;
 import java.util.HashSet;
 import java.util.Set;
 
-final class CssEngine2ClassFiles implements CssEngine2.ClassFiles {
+final class CssEngineClassFiles implements CssEngine.ClassFiles {
 
   final Set<String> scan = new HashSet<>();
 

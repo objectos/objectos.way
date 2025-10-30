@@ -22,7 +22,7 @@ import java.util.List;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class CssEngine2Test07Tokenizer {
+public class CssEngineTest07Tokenizer {
 
   @DataProvider
   public Object[][] testProvider() {
@@ -146,7 +146,7 @@ public class CssEngine2Test07Tokenizer {
       String description,
       String string,
       @SuppressWarnings("exports") List<Result> expected) {
-    class ThisProcessor implements CssEngine2.Slugs {
+    class ThisProcessor implements CssEngine.Slugs {
       final List<Result> results = new ArrayList<>();
 
       @Override
@@ -160,8 +160,8 @@ public class CssEngine2Test07Tokenizer {
     final ThisProcessor processor;
     processor = new ThisProcessor();
 
-    final CssEngine2.Tokenizer tokenizer;
-    tokenizer = new CssEngine2.Tokenizer(processor);
+    final CssEngine.Tokenizer tokenizer;
+    tokenizer = new CssEngine.Tokenizer(processor);
 
     tokenizer.consume(string);
 

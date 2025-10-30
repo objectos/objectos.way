@@ -27,7 +27,7 @@ import java.util.function.Function;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class CssEngine2Test06Scanner {
+public class CssEngineTest06Scanner {
 
   @FunctionalInterface
   interface Method {
@@ -84,7 +84,7 @@ public class CssEngine2Test06Scanner {
     );
   }
 
-  private void test(String source, Function<CssEngine2.Scanner, Method> f, String... expected) {
+  private void test(String source, Function<CssEngine.Scanner, Method> f, String... expected) {
     try (Y.JavaProject project = Y.javaProject()) {
       project.writeJavaFile(
           Path.of("module-info.java"),
@@ -115,8 +115,8 @@ public class CssEngine2Test06Scanner {
       final Set<String> strings;
       strings = new HashSet<>();
 
-      final CssEngine2.Scanner scanner;
-      scanner = new CssEngine2.Scanner(noteSink, strings::add);
+      final CssEngine.Scanner scanner;
+      scanner = new CssEngine.Scanner(noteSink, strings::add);
 
       final Method method;
       method = f.apply(scanner);

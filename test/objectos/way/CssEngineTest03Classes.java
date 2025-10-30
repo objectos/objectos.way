@@ -20,7 +20,7 @@ import static org.testng.Assert.assertEquals;
 import java.util.Set;
 import org.testng.annotations.Test;
 
-public class CssEngine2Test03Classes {
+public class CssEngineTest03Classes {
 
   private static class Subj01 {}
 
@@ -50,14 +50,14 @@ public class CssEngine2Test03Classes {
   }
 
   private void test(Set<Class<?>> classes, String... expected) {
-    final CssEngine2ClassFiles tester;
-    tester = new CssEngine2ClassFiles();
+    final CssEngineClassFiles tester;
+    tester = new CssEngineClassFiles();
 
     final Note.Sink noteSink;
     noteSink = Y.noteSink();
 
-    final CssEngine2.Classes scanner;
-    scanner = new CssEngine2.Classes(tester, classes, noteSink);
+    final CssEngine.Classes scanner;
+    scanner = new CssEngine.Classes(tester, classes, noteSink);
 
     scanner.scan();
 

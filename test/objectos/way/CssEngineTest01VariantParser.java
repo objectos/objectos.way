@@ -20,26 +20,26 @@ import static org.testng.Assert.assertEquals;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class CssEngine2Test01VariantParser {
+public class CssEngineTest01VariantParser {
 
   @DataProvider
   public Object[][] validProvider() {
     return new Object[][] {{
         "attr variant",
         "&[data-foo]",
-        CssEngine2.simple("&[data-foo]")
+        CssEngine.simple("&[data-foo]")
     }, {
         "@media variant",
         "@media (prefers-color-scheme: dark)",
-        CssEngine2.simple("@media (prefers-color-scheme: dark)")
+        CssEngine.simple("@media (prefers-color-scheme: dark)")
     }, {
         "@media variant (add ws)",
         "@media(prefers-color-scheme:dark)",
-        CssEngine2.simple("@media (prefers-color-scheme: dark)")
+        CssEngine.simple("@media (prefers-color-scheme: dark)")
     }, {
         "@media variant (normalize ws)",
         "  @media    (prefers-color-scheme:\ndark)\n",
-        CssEngine2.simple("@media (prefers-color-scheme: dark)")
+        CssEngine.simple("@media (prefers-color-scheme: dark)")
     }};
   }
 
@@ -48,11 +48,11 @@ public class CssEngine2Test01VariantParser {
   public void valid(
       String descript,
       String input,
-      CssEngine2.Variant expected) {
-    final CssEngine2.VariantParser parser;
-    parser = new CssEngine2.VariantParser();
+      CssEngine.Variant expected) {
+    final CssEngine.VariantParser parser;
+    parser = new CssEngine.VariantParser();
 
-    final CssEngine2.Variant result;
+    final CssEngine.Variant result;
     result = parser.parse(input);
 
     assertEquals(result, expected);
