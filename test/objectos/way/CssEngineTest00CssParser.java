@@ -22,7 +22,11 @@ import static objectos.way.CssEngine.keyframes;
 import static objectos.way.CssEngine.number;
 import static objectos.way.CssEngine.block;
 import static objectos.way.CssEngine.tok;
-import static objectos.way.CssEngine.Sep.COMMA;
+import static objectos.way.CssEngine.Delim.ADD;
+import static objectos.way.CssEngine.Delim.COMMA;
+import static objectos.way.CssEngine.Delim.DIV;
+import static objectos.way.CssEngine.Delim.MUL;
+import static objectos.way.CssEngine.Delim.SUB;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
@@ -560,6 +564,39 @@ public class CssEngineTest00CssParser {
         "--rx(16)",
         List.of(
             fun("--rx", number("16"))
+        )
+    }, {
+        "ratio w/ no ws",
+        "2/3",
+        List.of(
+            number("2"), DIV, number("3")
+        )
+    }, {
+        "ratio w/ ws",
+        "2 / 3",
+        List.of(
+            number("2"), DIV, number("3")
+        )
+    }, {
+        "calc",
+        "calc(100% / 6) calc(100%/6)",
+        List.of(
+            fun("calc", tok("100%"), DIV, number("6")),
+            fun("calc", tok("100%"), DIV, number("6"))
+        )
+    }, {
+        "calc",
+        "calc(16 * 1rem) calc(16*1rem)",
+        List.of(
+            fun("calc", number("16"), MUL, tok("1rem")),
+            fun("calc", number("16"), MUL, tok("1rem"))
+        )
+    }, {
+        "calc",
+        "calc(100% - 80px) calc(100% + 80px)",
+        List.of(
+            fun("calc", tok("100%"), SUB, tok("80px")),
+            fun("calc", tok("100%"), ADD, tok("80px"))
         )
     }};
   }

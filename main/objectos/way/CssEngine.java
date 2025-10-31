@@ -422,9 +422,14 @@ final class CssEngine implements Css.StyleSheet {
             out.append(v);
           }
 
-          case Sep.COMMA -> {
+          case Delim.COMMA -> {
             out.append(',');
           }
+
+          case Delim.DIV -> { if (idx != 0) { out.append(' '); } out.append('/'); }
+          case Delim.MUL -> { if (idx != 0) { out.append(' '); } out.append('*'); }
+          case Delim.ADD -> { if (idx != 0) { out.append(' '); } out.append('+'); }
+          case Delim.SUB -> { if (idx != 0) { out.append(' '); } out.append('-'); }
 
           case Tok(String v) -> {
             if (idx != 0) {
@@ -485,16 +490,20 @@ final class CssEngine implements Css.StyleSheet {
 
   }
 
+  enum Delim implements Value {
+    COMMA,
+    DIV,
+    MUL,
+    SUB,
+    ADD;
+  }
+
   static Fun fun(String name, List<Value> args) { return new Fun(name, args); }
   static Fun fun(String name, Value... args) { return new Fun(name, List.of(args)); }
 
   private record Number(String v) implements Value {}
 
   static Number number(String v) { return new Number(v); }
-
-  enum Sep implements Value {
-    COMMA;
-  }
 
   /// arbitrary token
   private record Tok(String v) implements Value {}
@@ -529,6 +538,7 @@ final class CssEngine implements Css.StyleSheet {
   private static final byte CSS_NON_ASCII = 24;
   private static final byte CSS_EOF = 25;
   private static final byte CSS_EXCLAMATION = 26;
+  private static final byte CSS_PLUS = 27;
 
   static {
     final byte[] table;
@@ -554,6 +564,7 @@ final class CssEngine implements Css.StyleSheet {
     table['('] = CSS_LPARENS;
     table[')'] = CSS_RPARENS;
     table['*'] = CSS_ASTERISK;
+    table['+'] = CSS_PLUS;
     table[','] = CSS_COMMA;
     table['-'] = CSS_HYPHEN;
     table['.'] = CSS_DOT;
@@ -1320,7 +1331,7 @@ final class CssEngine implements Css.StyleSheet {
 
         case CSS_HASH -> valueHexColor();
 
-        case CSS_COMMA -> valueSep(Sep.COMMA);
+        case CSS_COMMA -> valueDelim(Delim.COMMA);
 
         case CSS_HYPHEN -> valueHyphen();
 
@@ -1330,8 +1341,22 @@ final class CssEngine implements Css.StyleSheet {
 
         case CSS_DIGIT -> valueDigit(idx);
 
+        case CSS_SOLIDUS -> valueDelim(Delim.DIV);
+
+        case CSS_ASTERISK -> valueDelim(Delim.MUL);
+
+        case CSS_PLUS -> valueDelim(Delim.ADD);
+
         default -> throw error("Invalid CSS declaration value");
       };
+    }
+
+    private Value valueDelim(Delim v) {
+      whileNext(CSS_WS);
+
+      cursor--;
+
+      return v;
     }
 
     private Value valueDigit(final int start) {
@@ -1343,7 +1368,8 @@ final class CssEngine implements Css.StyleSheet {
 
         case CSS_WS -> valueInteger(start, idx);
 
-        case CSS_COMMA, CSS_SEMICOLON, CSS_RPARENS -> valueInteger(start, --cursor);
+        case CSS_COMMA, CSS_SEMICOLON, CSS_RPARENS,
+             CSS_SOLIDUS, CSS_ASTERISK -> valueInteger(start, --cursor);
 
         case CSS_PERCENT -> valuePerc(start);
 
@@ -1461,6 +1487,8 @@ final class CssEngine implements Css.StyleSheet {
       hyphen = idx;
 
       return switch (nextEof()) {
+        case CSS_WS -> valueDelim(Delim.SUB);
+
         case CSS_DIGIT -> valueDigit(hyphen);
 
         case CSS_ALPHA, CSS_HYPHEN, CSS_UNDERLINE -> valueIden(hyphen);
@@ -1507,7 +1535,8 @@ final class CssEngine implements Css.StyleSheet {
 
         case CSS_WS -> valuePerc(first, idx);
 
-        case CSS_COMMA, CSS_SEMICOLON, CSS_RPARENS -> valuePerc(first, --cursor);
+        case CSS_COMMA, CSS_SEMICOLON, CSS_RPARENS,
+             CSS_SOLIDUS, CSS_ASTERISK -> valuePerc(first, --cursor);
 
         default -> throw error("Expected a CSS <percentage> value");
       };
@@ -1518,14 +1547,6 @@ final class CssEngine implements Css.StyleSheet {
       s = text.substring(idx0, idx1);
 
       return new Tok(s);
-    }
-
-    private Value valueSep(Sep v) {
-      whileNext(CSS_WS);
-
-      cursor--;
-
-      return v;
     }
 
     private Value valueString(byte quote) {

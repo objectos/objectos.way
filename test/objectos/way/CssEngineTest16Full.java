@@ -73,6 +73,22 @@ public class CssEngineTest16Full {
         }
         """
     }, {
+        "utilities: <ratio>",
+        cfg(e -> {
+          class Subject extends CssSubject {
+            @Override
+            final void classes() { css("aspect-ratio:2/3"); }
+          }
+
+          e.systemBase("");
+          e.scanClass(Subject.class);
+        }),
+        """
+        @layer utilities {
+          .aspect-ratio\\:2\\/3 { aspect-ratio: 2 / 3 }
+        }
+        """
+    }, {
         "theme: do not generate",
         cfg(e -> {
           class Subject extends CssSubject {
