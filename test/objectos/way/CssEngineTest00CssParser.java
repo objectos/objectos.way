@@ -17,16 +17,8 @@ package objectos.way;
 
 import static objectos.way.CssEngine.decl;
 import static objectos.way.CssEngine.fontFace;
-import static objectos.way.CssEngine.fun;
 import static objectos.way.CssEngine.keyframes;
-import static objectos.way.CssEngine.number;
 import static objectos.way.CssEngine.block;
-import static objectos.way.CssEngine.tok;
-import static objectos.way.CssEngine.Delim.ADD;
-import static objectos.way.CssEngine.Delim.COMMA;
-import static objectos.way.CssEngine.Delim.DIV;
-import static objectos.way.CssEngine.Delim.MUL;
-import static objectos.way.CssEngine.Delim.SUB;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
@@ -38,160 +30,24 @@ import org.testng.annotations.Test;
 public class CssEngineTest00CssParser {
 
   @DataProvider
-  public Object[][] declsValidProvider() {
-    return new Object[][] {{
-        "breakpoint: just one",
-
-        """
-        --breakpoint-sm: 40rem;
-        """,
-
-        List.of(
-            CssEngine.decl("--breakpoint-sm", tok("40rem"))
-        )
-    }, {
-        "color: just one",
-
-        """
-        --color-stone-950: oklch(0.147 0.004 49.25);
-        """,
-
-        List.of(
-            CssEngine.decl("--color-stone-950", fun("oklch", number("0.147"), number("0.004"), number("49.25")))
-        )
-    }, {
-        "color: two lines",
-
-        """
-        --color-stone-950: oklch(0.147 0.004 49.25);
-        --color-red-50: oklch(0.971 0.013 17.38);
-        """,
-
-        List.of(
-            CssEngine.decl("--color-stone-950", fun("oklch", number("0.147"), number("0.004"), number("49.25"))),
-            CssEngine.decl("--color-red-50", fun("oklch", number("0.971"), number("0.013"), number("17.38")))
-        )
-    }, {
-        "color: clear",
-
-        """
-        --color-*: initial;
-        """,
-
-        List.of(
-            CssEngine.decl("--color-*", tok("initial"))
-        )
-    }, {
-        "custom: allow for values without a ns",
-
-        """
-        --carbon-grid-columns: 4;
-        """,
-
-        List.of(
-            CssEngine.decl("--carbon-grid-columns", number("4"))
-        )
-    }, {
-        "font: just one",
-
-        """
-        --font-display: Foo, "Foo bar";
-        """,
-
-        List.of(
-            CssEngine.decl("--font-display", tok("Foo"), COMMA, tok("\"Foo bar\""))
-        )
-    }, {
-        "global: valid",
-
-        """
-        --*: initial;
-        """,
-
-        List.of(
-            CssEngine.decl("--*", tok("initial"))
-        )
-    }, {
-        "regular",
-        "opacity:0;",
-        List.of(
-            CssEngine.decl("opacity", number("0"))
-        )
-    }, {
-        "ws: blank line between lines",
-
-        """
-        --color-orange-900: oklch(0.408 0.123 38.172);
-        --color-orange-950: oklch(0.266 0.079 36.259);
-
-        --color-amber-50: oklch(0.987 0.022 95.277);
-        """,
-
-        List.of(
-            CssEngine.decl("--color-orange-900", fun("oklch", number("0.408"), number("0.123"), number("38.172"))),
-            CssEngine.decl("--color-orange-950", fun("oklch", number("0.266"), number("0.079"), number("36.259"))),
-            CssEngine.decl("--color-amber-50", fun("oklch", number("0.987"), number("0.022"), number("95.277")))
-        )
-    }, {
-        "ws: it should trim the name",
-
-        """
-        \t\f\r\n --color-orange-900: oklch(0.408 0.123 38.172);
-        """,
-
-        List.of(
-            CssEngine.decl("--color-orange-900", fun("oklch", number("0.408"), number("0.123"), number("38.172")))
-        )
-    }, {
-        "ws: it should trim the name",
-
-        """
-        --color-orange-900\t\f\r\n : oklch(0.408 0.123 38.172);
-        """,
-
-        List.of(
-            CssEngine.decl("--color-orange-900", fun("oklch", number("0.408"), number("0.123"), number("38.172")))
-        )
-    }, {
-        "ws: it should trim the value",
-
-        """
-        --color-orange-900:
-           oklch(0.408 0.123        38.172)     ;
-        """,
-
-        List.of(
-            CssEngine.decl("--color-orange-900", fun("oklch", number("0.408"), number("0.123"), number("38.172")))
-        )
-    }};
+  public Object[][] dimensionProvider() {
+    return new Object[][] {
+        {"integer dim", "40rem", true},
+        {"double dim", "41.3pt", true},
+        {"int value", "41", false},
+        {"dbl value", "12.3", false}
+    };
   }
 
-  @Test(dataProvider = "declsValidProvider")
-  public void declsValid(
+  @Test(dataProvider = "dimensionProvider")
+  public void dimension(
       String description,
       String src,
-      @SuppressWarnings("exports") List<CssEngine.Decl> expected) {
-    final String source;
-    source = "foo { %s }".formatted(src);
-
+      boolean expected) {
     final CssEngine.CssParser parser;
-    parser = new CssEngine.CssParser(source);
+    parser = new CssEngine.CssParser(src);
 
-    final List<CssEngine.Top> top;
-    top = parser.parse();
-
-    assertEquals(top.size(), 1);
-
-    final CssEngine.Top only;
-    only = top.get(0);
-
-    if (!(only instanceof CssEngine.Block(String selector, List<CssEngine.Stmt> stmts))) {
-      throw new AssertionError();
-    }
-
-    assertEquals(selector, "foo");
-
-    assertEquals(stmts, expected);
+    assertEquals(parser.dimension(), expected);
   }
 
   @DataProvider
@@ -205,7 +61,7 @@ public class CssEngineTest00CssParser {
         """,
         List.of(
             block(":root",
-                decl("--font-sans", tok("sans"))
+                decl("--font-sans", "sans")
             )
         )
     }, {
@@ -218,8 +74,8 @@ public class CssEngineTest00CssParser {
         """,
         List.of(
             block(":root",
-                decl("--font-sans", tok("sans")),
-                decl("--font-mono", tok("monospace"))
+                decl("--font-sans", "sans"),
+                decl("--font-mono", "monospace")
             )
         )
     }, {
@@ -232,8 +88,20 @@ public class CssEngineTest00CssParser {
         List.of(
             block(":root",
                 block("@media (prefers-color-scheme: dark)",
-                    decl("--color-primary", tok("#f0f0f0"))
+                    decl("--color-primary", "#f0f0f0")
                 )
+            )
+        )
+    }, {
+        "(theme) custom property without namespace",
+        """
+        :root {
+          --carbon-grid-columns: 4;
+        }
+        """,
+        List.of(
+            block(":root",
+                decl("--carbon-grid-columns", "4")
             )
         )
     }, {
@@ -251,10 +119,10 @@ public class CssEngineTest00CssParser {
         List.of(
             keyframes("fade-in",
                 block("from",
-                    decl("opacity", number("0"))
+                    decl("opacity", "0")
                 ),
                 block("to",
-                    decl("opacity", number("1"))
+                    decl("opacity", "1")
                 )
             )
         )
@@ -273,10 +141,10 @@ public class CssEngineTest00CssParser {
         List.of(
             keyframes("fade-in",
                 block("0%",
-                    decl("opacity", number("0"))
+                    decl("opacity", "0")
                 ),
                 block("100%",
-                    decl("opacity", number("1"))
+                    decl("opacity", "1")
                 )
             )
         )
@@ -292,10 +160,10 @@ public class CssEngineTest00CssParser {
         """,
         List.of(
             fontFace(
-                decl("font-family", tok("\"IBM Plex Sans\"")),
-                decl("font-style", tok("normal")),
-                decl("font-weight", number("700")),
-                decl("src", fun("local", tok("\"IBM Plex Sans Bold\"")))
+                decl("font-family", "\"IBM Plex Sans\""),
+                decl("font-style", "normal"),
+                decl("font-weight", "700"),
+                decl("src", "local(\"IBM Plex Sans Bold\")")
             )
         )
     }, {
@@ -312,8 +180,8 @@ public class CssEngineTest00CssParser {
         """,
         List.of(
             block("hr",
-                decl("height", number("0")),
-                decl("color", tok("inherit"))
+                decl("height", "0"),
+                decl("color", "inherit")
             )
         )
     }, {
@@ -326,7 +194,23 @@ public class CssEngineTest00CssParser {
         """,
         List.of(
             block("html, :host",
-                decl("line-height", number("1.5"))
+                decl("line-height", "1.5")
+            )
+        )
+    }, {
+        "(base) replace --theme() with var()",
+        """
+        html,
+        :host {
+          font-family: --theme(
+            --default-font-family,
+            ui-sans-serif
+          );
+        }
+        """,
+        List.of(
+            block("html, :host",
+                decl("font-family", "var(--default-font-family, ui-sans-serif)")
             )
         )
     }, {
@@ -354,6 +238,61 @@ public class CssEngineTest00CssParser {
         List.of(
             block("[foo]"),
             block("[foo=bar]")
+        )
+    }, {
+        "(ws) blank line between lines",
+        """
+        :root {
+          --color-orange-900: oklch(0.408 0.123 38.172);
+          --color-orange-950: oklch(0.266 0.079 36.259);
+
+          --color-amber-50: oklch(0.987 0.022 95.277);
+        }
+        """,
+        List.of(
+            block(":root",
+                decl("--color-orange-900", "oklch(0.408 0.123 38.172)"),
+                decl("--color-orange-950", "oklch(0.266 0.079 36.259)"),
+                decl("--color-amber-50", "oklch(0.987 0.022 95.277)")
+            )
+        )
+    }, {
+        "(ws) it should trim the name",
+        """
+        :root {
+          \t\f\r\n --color-orange-900: oklch(0.408 0.123 38.172);
+        }
+        """,
+        List.of(
+            block(":root",
+                decl("--color-orange-900", "oklch(0.408 0.123 38.172)")
+            )
+        )
+    }, {
+        "(ws) it should trim the name",
+        """
+        :root {
+          --color-orange-900\t\f\r\n : oklch(0.408 0.123 38.172);
+        }
+        """,
+        List.of(
+            block(":root",
+                decl("--color-orange-900", "oklch(0.408 0.123 38.172)")
+            )
+        )
+    }, {
+        "(ws) it should trim the value",
+
+        """
+        :root {
+          --color-orange-900:
+             oklch(0.408 0.123 38.172);
+        }
+        """,
+        List.of(
+            block(":root",
+                decl("--color-orange-900", "oklch(0.408 0.123 38.172)")
+            )
         )
     }, {
         "empty",
@@ -429,190 +368,6 @@ public class CssEngineTest00CssParser {
 
       assertTrue(actual.startsWith(message));
     }
-  }
-
-  @DataProvider
-  public Object[][] valuesValidProvider() {
-    return new Object[][] {{
-        "1 kw",
-        "red-50",
-        List.of(
-            tok("red-50")
-        )
-    }, {
-        "2 kws",
-        "red-50 dashed",
-        List.of(
-            tok("red-50"), tok("dashed")
-        )
-    }, {
-        "hex-color: 3-value",
-        "#f09",
-        List.of(
-            tok("#f09")
-        )
-    }, {
-        "hex-color: 4-value",
-        "#f09a #F09a",
-        List.of(
-            tok("#f09a"), tok("#F09a")
-        )
-    }, {
-        "hex-color: 6-value & 8-value",
-        "#ff0099 #FF0099AA",
-        List.of(
-            tok("#ff0099"), tok("#FF0099AA")
-        )
-    }, {
-        "length: integer",
-        "16rem",
-        List.of(
-            tok("16rem")
-        )
-    }, {
-        "length: double",
-        "14.2pt",
-        List.of(
-            tok("14.2pt")
-        )
-    }, {
-        "number: integer",
-        "16",
-        List.of(
-            number("16")
-        )
-    }, {
-        "number: neg integer",
-        "-16",
-        List.of(
-            number("-16")
-        )
-    }, {
-        "number: double",
-        "16.78",
-        List.of(
-            number("16.78")
-        )
-    }, {
-        "number: neg double",
-        "-16.78",
-        List.of(
-            number("-16.78")
-        )
-    }, {
-        "number: double no leading zero",
-        ".78",
-        List.of(
-            number(".78")
-        )
-    }, {
-        "percentage: integer",
-        "16%",
-        List.of(
-            tok("16%")
-        )
-    }, {
-        "percentage: double",
-        "16.34%",
-        List.of(
-            tok("16.34%")
-        )
-    }, {
-        "string: double quote",
-        "\"Foo\"",
-        List.of(
-            tok("\"Foo\"")
-        )
-    }, {
-        "string: double quote w/ escaped double quote",
-        "\"Foo\\\"Bar\"",
-        List.of(
-            tok("\"Foo\\\"Bar\"")
-        )
-    }, {
-        "string: single quote",
-        "'Foo'",
-        List.of(
-            tok("'Foo'")
-        )
-    }, {
-        "fun: 1 number",
-        "blur(0)",
-        List.of(
-            fun("blur", number("0"))
-        )
-    }, {
-        "fun: 1 var",
-        "var(--foo)",
-        List.of(
-            fun("var", tok("--foo"))
-        )
-    }, {
-        "fun: 2 vars",
-        "var(--foo,var(--bar))",
-        List.of(
-            fun("var", tok("--foo"), COMMA, fun("var", tok("--bar")))
-        )
-    }, {
-        "fun: 2 vars + ws",
-        "var(--foo, var(--bar))",
-        List.of(
-            fun("var", tok("--foo"), COMMA, fun("var", tok("--bar")))
-        )
-    }, {
-        "--rx custom function",
-        "--rx(16)",
-        List.of(
-            fun("--rx", number("16"))
-        )
-    }, {
-        "ratio w/ no ws",
-        "2/3",
-        List.of(
-            number("2"), DIV, number("3")
-        )
-    }, {
-        "ratio w/ ws",
-        "2 / 3",
-        List.of(
-            number("2"), DIV, number("3")
-        )
-    }, {
-        "calc",
-        "calc(100% / 6) calc(100%/6)",
-        List.of(
-            fun("calc", tok("100%"), DIV, number("6")),
-            fun("calc", tok("100%"), DIV, number("6"))
-        )
-    }, {
-        "calc",
-        "calc(16 * 1rem) calc(16*1rem)",
-        List.of(
-            fun("calc", number("16"), MUL, tok("1rem")),
-            fun("calc", number("16"), MUL, tok("1rem"))
-        )
-    }, {
-        "calc",
-        "calc(100% - 80px) calc(100% + 80px)",
-        List.of(
-            fun("calc", tok("100%"), SUB, tok("80px")),
-            fun("calc", tok("100%"), ADD, tok("80px"))
-        )
-    }};
-  }
-
-  @Test(dataProvider = "valuesValidProvider")
-  public void valuesValid(
-      String description,
-      String text,
-      @SuppressWarnings("exports") List<CssEngine.Value> expected) {
-    final CssEngine.CssParser parser;
-    parser = new CssEngine.CssParser(text);
-
-    final List<CssEngine.Value> result;
-    result = parser.parseValues();
-
-    assertEquals(result, expected);
   }
 
 }

@@ -56,7 +56,6 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import objectos.way.Css.Library;
 
 final class CssEngine implements Css.StyleSheet {
 
@@ -239,12 +238,12 @@ final class CssEngine implements Css.StyleSheet {
     private Decl next;
     final String property;
     private boolean replaced;
-    final List<Value> values;
+    final String value;
 
-    Decl(String property, List<Value> values) {
+    Decl(String property, String value) {
       this.property = property;
 
-      this.values = values;
+      this.value = value;
     }
 
     @Override
@@ -253,12 +252,12 @@ final class CssEngine implements Css.StyleSheet {
           && marked == that.marked
           && property.equals(that.property)
           && replaced == that.replaced
-          && values.equals(that.values);
+          && value.equals(that.value);
     }
 
     @Override
     public final String toString() {
-      return property + ": " + values + ";";
+      return property + ": " + value + ";";
     }
 
     final Decl append(Decl decl) {
@@ -272,7 +271,7 @@ final class CssEngine implements Css.StyleSheet {
     }
 
     final IllegalArgumentException invalid(String msg) {
-      return new IllegalArgumentException(msg + "\n\t" + property + ": " + values);
+      return new IllegalArgumentException(msg + "\n\t" + property + ": " + value);
     }
 
     final Decl mark() {
@@ -289,6 +288,7 @@ final class CssEngine implements Css.StyleSheet {
       return this;
     }
 
+    /*
     final void mark(Map<String, Decl> properties) {
       marked = true;
 
@@ -300,6 +300,7 @@ final class CssEngine implements Css.StyleSheet {
         next.mark(properties);
       }
     }
+    */
 
     final boolean marked() {
       return marked;
@@ -314,8 +315,7 @@ final class CssEngine implements Css.StyleSheet {
     }
   }
 
-  static Decl decl(String p, List<Value> v) { return new Decl(p, v); }
-  static Decl decl(String p, Value... v) { return new Decl(p, List.of(v)); }
+  static Decl decl(String p, String v) { return new Decl(p, v); }
 
   sealed interface Stmt {}
 
@@ -371,144 +371,6 @@ final class CssEngine implements Css.StyleSheet {
   }
 
   static Keyframes keyframes(String n, Block... rules) { return new Keyframes(n, List.of(rules)); }
-
-  sealed interface Value {
-
-    static void formatTo(Appendable out, List<Value> values) throws IOException {
-      for (int idx = 0, size = values.size(); idx < size; idx++) {
-        final Value value;
-        value = values.get(idx);
-
-        switch (value) {
-          case Fun(String name, List<Value> args) -> {
-            if (idx != 0) {
-              out.append(' ');
-            }
-
-            if ("--rx".equals(name) && args.size() == 1 && args.get(0) instanceof Number(String v)) {
-              out.append("calc(");
-
-              out.append(v);
-
-              out.append(" / 16 * 1rem)");
-            }
-
-            else if ("--theme".equals(name)) {
-              out.append("var");
-
-              out.append('(');
-
-              formatTo(out, args);
-
-              out.append(')');
-            }
-
-            else {
-              out.append(name);
-
-              out.append('(');
-
-              formatTo(out, args);
-
-              out.append(')');
-            }
-          }
-
-          case Number(String v) -> {
-            if (idx != 0) {
-              out.append(' ');
-            }
-
-            out.append(v);
-          }
-
-          case Delim.COMMA -> {
-            out.append(',');
-          }
-
-          case Delim.DIV -> { if (idx != 0) { out.append(' '); } out.append('/'); }
-          case Delim.MUL -> { if (idx != 0) { out.append(' '); } out.append('*'); }
-          case Delim.ADD -> { if (idx != 0) { out.append(' '); } out.append('+'); }
-          case Delim.SUB -> { if (idx != 0) { out.append(' '); } out.append('-'); }
-
-          case Tok(String v) -> {
-            if (idx != 0) {
-              out.append(' ');
-            }
-
-            out.append(v);
-          }
-        }
-      }
-
-    }
-
-    static void formatTo(StringBuilder sb, List<Value> values) {
-      try {
-        final Appendable out;
-        out = sb;
-
-        formatTo(out, values);
-      } catch (IOException e) {
-        throw new AssertionError("StringBuilder does not throw IOException", e);
-      }
-    }
-
-    default void markProperties(Map<String, Decl> properties) {
-      // noop by default
-    }
-
-  }
-
-  private record Fun(String name, List<Value> args) implements Value {
-    @Override
-    public final void markProperties(Map<String, Decl> properties) {
-      for (Value arg : args) {
-        arg.markProperties(properties);
-      }
-
-      if (args.isEmpty()) {
-        return;
-      }
-
-      final Value first;
-      first = args.get(0);
-
-      if (!(first instanceof Tok(String v))) {
-        return;
-      }
-
-      final Decl decl;
-      decl = properties.get(v);
-
-      if (decl == null) {
-        return;
-      }
-
-      decl.mark(properties);
-    }
-
-  }
-
-  enum Delim implements Value {
-    COMMA,
-    DIV,
-    MUL,
-    SUB,
-    ADD;
-  }
-
-  static Fun fun(String name, List<Value> args) { return new Fun(name, args); }
-  static Fun fun(String name, Value... args) { return new Fun(name, List.of(args)); }
-
-  private record Number(String v) implements Value {}
-
-  static Number number(String v) { return new Number(v); }
-
-  /// arbitrary token
-  private record Tok(String v) implements Value {}
-
-  static Tok tok(String v) { return new Tok(v); }
 
   private static final byte[] CSS;
 
@@ -612,6 +474,64 @@ final class CssEngine implements Css.StyleSheet {
       cursor = idx = 0;
 
       text = value;
+    }
+
+    private enum Dim {
+      INT,
+      DOT,
+      DBL,
+      UNIT;
+    }
+
+    public final boolean dimension() {
+      Dim state = Dim.INT;
+
+      while (hasNext()) {
+        final byte next;
+        next = next();
+
+        switch (state) {
+          case INT -> {
+            switch (next) {
+              case CSS_DOT -> state = Dim.DOT;
+
+              case CSS_DIGIT -> state = Dim.INT;
+
+              case CSS_ALPHA -> state = Dim.UNIT;
+
+              default -> { return false; }
+            }
+          }
+
+          case DOT -> {
+            switch (next) {
+              case CSS_DIGIT -> state = Dim.DBL;
+
+              default -> { return false; }
+            }
+          }
+
+          case DBL -> {
+            switch (next) {
+              case CSS_DIGIT -> state = Dim.DBL;
+
+              case CSS_ALPHA -> state = Dim.UNIT;
+
+              default -> { return false; }
+            }
+          }
+
+          case UNIT -> {
+            switch (next) {
+              case CSS_ALPHA -> state = Dim.UNIT;
+
+              default -> { return false; }
+            }
+          }
+        }
+      }
+
+      return state == Dim.UNIT;
     }
 
     public final List<Top> parse() {
@@ -1012,25 +932,19 @@ final class CssEngine implements Css.StyleSheet {
       next = whileNext(CSS_WS);
 
       return switch (next) {
-        case CSS_SEMICOLON, CSS_RCURLY -> CssEngine.decl(name, List.of());
+        case CSS_SEMICOLON, CSS_RCURLY -> CssEngine.decl(name, "");
 
         case CSS_EOF -> throw error(EOF_DECLS);
 
         default -> {
           cursor--;
 
-          yield declValue0(name);
+          final String value;
+          value = value();
+
+          yield CssEngine.decl(name, value);
         }
       };
-    }
-
-    private Decl declValue0(String name) {
-      final List<Value> values;
-      values = new ArrayList<>();
-
-      values(values, CSS_SEMICOLON);
-
-      return CssEngine.decl(name, values);
     }
 
     private void malformed(int start) {
@@ -1301,294 +1215,130 @@ final class CssEngine implements Css.StyleSheet {
       return new Block(selector, stmts);
     }
 
-    public final List<Value> parseValues() {
-      final List<Value> result;
-      result = new ArrayList<>();
+    private enum Value {
+      NORMAL,
+      HYPHEN1,
+      HYPHEN2,
+      CUSTOM,
 
-      values(result, CSS_EOF);
-
-      return result;
+      RX,
+      THEME,
+      THEME_WS,
+      THEME_COMMA;
     }
 
-    private void values(List<Value> result, byte stopIf) {
-      while (true) {
-        final byte next;
-        next = whileNext(CSS_WS);
-
-        if (next == stopIf) {
-          return;
-        }
-
-        result.add(
-            value(next)
-        );
-      }
-    }
-
-    private Value value(byte next) {
-      return switch (next) {
-        case CSS_DQUOTE, CSS_SQUOTE -> valueString(next);
-
-        case CSS_HASH -> valueHexColor();
-
-        case CSS_COMMA -> valueDelim(Delim.COMMA);
-
-        case CSS_HYPHEN -> valueHyphen();
-
-        case CSS_DOT -> valueDot();
-
-        case CSS_ALPHA, CSS_UNDERLINE, CSS_EXCLAMATION -> valueIden(idx);
-
-        case CSS_DIGIT -> valueDigit(idx);
-
-        case CSS_SOLIDUS -> valueDelim(Delim.DIV);
-
-        case CSS_ASTERISK -> valueDelim(Delim.MUL);
-
-        case CSS_PLUS -> valueDelim(Delim.ADD);
-
-        default -> throw error("Invalid CSS declaration value");
-      };
-    }
-
-    private Value valueDelim(Delim v) {
-      whileNext(CSS_WS);
-
-      cursor--;
-
-      return v;
-    }
-
-    private Value valueDigit(final int start) {
-      final byte next;
-      next = whileNext(CSS_DIGIT);
-
-      return switch (next) {
-        case CSS_EOF -> valueInteger(start, cursor);
-
-        case CSS_WS -> valueInteger(start, idx);
-
-        case CSS_COMMA, CSS_SEMICOLON, CSS_RPARENS,
-             CSS_SOLIDUS, CSS_ASTERISK -> valueInteger(start, --cursor);
-
-        case CSS_PERCENT -> valuePerc(start);
-
-        case CSS_DOT -> valueDouble(start);
-
-        case CSS_ALPHA -> valueLength(start);
-
-        default -> throw error("Expected a CSS numeric value");
-      };
-    }
-
-    private Value valueDot() {
-      final int dot;
-      dot = idx;
-
-      return switch (nextEof()) {
-        case CSS_DIGIT -> valueDouble(dot);
-
-        default -> throw error("Expected a CSS fractional value");
-      };
-    }
-
-    private Value valueDouble(int start) {
-      final byte next;
-      next = whileNext(CSS_DIGIT);
-
-      return switch (next) {
-        case CSS_EOF -> valueDouble(start, cursor);
-
-        case CSS_WS -> valueDouble(start, idx);
-
-        case CSS_COMMA, CSS_SEMICOLON, CSS_RPARENS -> valueDouble(start, --cursor);
-
-        case CSS_PERCENT -> valuePerc(start);
-
-        case CSS_ALPHA -> valueLength(start);
-
-        default -> throw error("Expected a CSS <double> value");
-      };
-    }
-
-    private Value valueDouble(int idx0, int idx1) {
-      final String s;
-      s = text.substring(idx0, idx1);
-
-      return new Number(s);
-    }
-
-    private Value valueHexColor() {
-      final int start;
-      start = idx;
-
-      final byte next;
-      next = whileHexDigit();
-
-      return switch (next) {
-        case CSS_EOF -> valueHexColor(start, cursor);
-
-        case CSS_WS -> valueHexColor(start, idx);
-
-        case CSS_COMMA, CSS_SEMICOLON, CSS_RPARENS -> valueHexColor(start, --cursor);
-
-        default -> throw error("Expected a CSS <hex-color> value");
-      };
-    }
-
-    private Value valueFun(String name) {
-      final List<Value> args;
-      args = new ArrayList<>();
-
-      values(args, CSS_RPARENS);
-
-      return new Fun(name, args);
-    }
-
-    private Value valueHexColor(int idx0, int idx1) {
-      final String v;
-      v = text.substring(idx0, idx1);
-
-      return new Tok(v);
-    }
-
-    private Value valueIden(final int start) {
-      final byte next;
-      next = whileNext(CSS_ALPHA, CSS_DIGIT, CSS_HYPHEN, CSS_UNDERLINE);
-
-      return switch (next) {
-        case CSS_EOF -> valueKeyword(start, cursor);
-
-        case CSS_WS -> valueKeyword(start, idx);
-
-        case CSS_COMMA, CSS_SEMICOLON, CSS_RPARENS -> valueKeyword(start, --cursor);
-
-        case CSS_LPARENS -> {
-          final String name;
-          name = text.substring(start, idx);
-
-          yield valueFun(name);
-        }
-
-        default -> throw error("Expected CSS identifier");
-      };
-
-    }
-
-    private Value valueInteger(int idx0, int idx1) {
-      final String s;
-      s = text.substring(idx0, idx1);
-
-      return new Number(s);
-    }
-
-    private Value valueHyphen() {
-      final int hyphen;
-      hyphen = idx;
-
-      return switch (nextEof()) {
-        case CSS_WS -> valueDelim(Delim.SUB);
-
-        case CSS_DIGIT -> valueDigit(hyphen);
-
-        case CSS_ALPHA, CSS_HYPHEN, CSS_UNDERLINE -> valueIden(hyphen);
-
-        default -> throw error("Expected a CSS <iden> or a negative numeric value");
-      };
-    }
-
-    private Value valueKeyword(int idx0, int idx1) {
-      final String s;
-      s = text.substring(idx0, idx1);
-
-      return new Tok(s);
-    }
-
-    private Value valueLength(int start) {
-      final int unit;
-      unit = idx;
-
-      final byte next;
-      next = whileNext(CSS_ALPHA);
-
-      return switch (next) {
-        case CSS_EOF -> valueLength(start, unit, cursor);
-
-        case CSS_WS -> valueLength(start, unit, idx);
-
-        case CSS_COMMA, CSS_SEMICOLON, CSS_RPARENS -> valueLength(start, unit, --cursor);
-
-        default -> throw error("Expected a CSS <length> value");
-      };
-    }
-
-    private Value valueLength(int number, int unit, int end) {
-      final String s;
-      s = text.substring(number, end);
-
-      return new Tok(s);
-    }
-
-    private Value valuePerc(int first) {
-      return switch (nextEof()) {
-        case CSS_EOF -> valuePerc(first, cursor);
-
-        case CSS_WS -> valuePerc(first, idx);
-
-        case CSS_COMMA, CSS_SEMICOLON, CSS_RPARENS,
-             CSS_SOLIDUS, CSS_ASTERISK -> valuePerc(first, --cursor);
-
-        default -> throw error("Expected a CSS <percentage> value");
-      };
-    }
-
-    private Value valuePerc(int idx0, int idx1) {
-      final String s;
-      s = text.substring(idx0, idx1);
-
-      return new Tok(s);
-    }
-
-    private Value valueString(byte quote) {
-      final int start;
-      start = idx;
+    private String value() {
+      int hyphen;
+      hyphen = 0;
+
+      final StringBuilder sb;
+      sb = sb();
+
+      Value state;
+      state = Value.NORMAL;
 
       while (hasNext()) {
         final byte next;
         next = next();
 
-        if (next != quote) {
-          continue;
+        if (next == CSS_SEMICOLON) {
+          break;
         }
 
-        final char prev;
-        prev = text.charAt(idx - 1);
+        switch (state) {
+          case NORMAL -> {
+            switch (next) {
+              case CSS_HYPHEN -> { hyphen = idx; state = Value.HYPHEN1; }
 
-        if (prev == '\\') {
-          continue;
+              default -> state = Value.NORMAL;
+            }
+          }
+
+          case HYPHEN1 -> {
+            switch (next) {
+              case CSS_HYPHEN -> state = Value.HYPHEN2;
+
+              default -> state = Value.NORMAL;
+            }
+          }
+
+          case HYPHEN2 -> {
+            switch (next) {
+              case CSS_ALPHA -> state = Value.CUSTOM;
+
+              default -> state = Value.NORMAL;
+            }
+          }
+
+          case CUSTOM -> {
+            switch (next) {
+              case CSS_ALPHA -> state = Value.CUSTOM;
+
+              case CSS_LPARENS -> {
+                final String name;
+                name = text.substring(hyphen, idx);
+
+                switch (name) {
+                  case "--rx" -> state = Value.RX;
+
+                  case "--theme" -> {
+                    int length;
+                    length = sb.length();
+
+                    sb.setLength(length - "--theme".length());
+
+                    sb.append("var");
+
+                    state = Value.THEME;
+                  }
+
+                  default -> state = Value.NORMAL;
+                }
+              }
+
+              default -> state = Value.NORMAL;
+            }
+          }
+
+          case RX -> throw new UnsupportedOperationException("Implement me");
+
+          case THEME -> {
+            switch (next) {
+              case CSS_RPARENS -> state = Value.NORMAL;
+
+              case CSS_WS -> { state = Value.THEME_WS; continue; }
+
+              case CSS_COMMA -> state = Value.THEME_COMMA;
+
+              default -> state = Value.THEME;
+            }
+          }
+
+          case THEME_WS -> {
+            switch (next) {
+              case CSS_RPARENS -> state = Value.NORMAL;
+
+              case CSS_WS -> { state = Value.THEME_WS; continue; }
+
+              default -> state = Value.THEME;
+            }
+          }
+
+          case THEME_COMMA -> {
+            switch (next) {
+              case CSS_RPARENS -> state = Value.NORMAL;
+
+              case CSS_WS -> { state = Value.THEME_COMMA; continue; }
+
+              default -> { sb.append(' '); state = Value.THEME; }
+            }
+          }
         }
 
-        return valueString(start, cursor);
+        sb.append(c);
       }
 
-      throw error("Unclosed string");
-    }
-
-    private Value valueString(int idx0, int idx1) {
-      final String s;
-      s = text.substring(idx0, idx1);
-
-      return new Tok(s);
-    }
-
-    private StringBuilder sb() {
-      if (sb == null) {
-        sb = new StringBuilder();
-      } else {
-        sb.setLength(0);
-      }
-
-      return sb;
+      return sb.toString();
     }
 
     private IllegalArgumentException error(String message) {
@@ -1642,19 +1392,14 @@ final class CssEngine implements Css.StyleSheet {
       }
     }
 
-    private byte whileHexDigit() {
-      while (hasNext()) {
-        final byte next;
-        next = next();
-
-        if (HexFormat.isHexDigit(c)) {
-          continue;
-        }
-
-        return next;
+    private StringBuilder sb() {
+      if (sb == null) {
+        sb = new StringBuilder();
+      } else {
+        sb.setLength(0);
       }
 
-      return CSS_EOF;
+      return sb;
     }
 
     private byte whileNext(byte c0) {
@@ -1886,7 +1631,7 @@ final class CssEngine implements Css.StyleSheet {
     // ##################################################################
 
     @Override
-    public final void include(Library value) {
+    public final void include(Css.Library value) {
       value.configure(this);
     }
 
@@ -2223,27 +1968,17 @@ final class CssEngine implements Css.StyleSheet {
           final String id;
           id = property.substring(beginIndex);
 
-          final List<Value> values;
-          values = decl.values;
+          final String value;
+          value = decl.value;
 
-          final int size;
-          size = values.size();
+          parser.set(value);
 
-          if (size != 1) {
-            // TODO log
-            continue;
-          }
-
-          final Value value;
-          value = values.get(0);
-
-          if (!(value instanceof Tok tok)) {
-            // TODO log
+          if (!parser.dimension()) {
             continue;
           }
 
           final Variant variant;
-          variant = simple("@media (min-width: " + tok.v + ")");
+          variant = simple("@media (min-width: " + value + ")");
 
           variant(id, variant);
         }
@@ -3395,9 +3130,7 @@ final class CssEngine implements Css.StyleSheet {
       value = sb.toString();
 
       final Rule rule;
-      rule =
-
-          rule(className, variants, property, value);
+      rule = rule(className, variants, property, value);
 
       rules.add(rule);
     }

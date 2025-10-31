@@ -16,11 +16,8 @@
 package objectos.way;
 
 import static objectos.way.CssEngine.block;
-import static objectos.way.CssEngine.fun;
 import static objectos.way.CssEngine.keyframes;
-import static objectos.way.CssEngine.number;
 import static objectos.way.CssEngine.section;
-import static objectos.way.CssEngine.tok;
 import static org.testng.Assert.assertEquals;
 
 import java.util.List;
@@ -49,7 +46,7 @@ public class CssEngineTest02Configuring {
 
         c -> {
           final CssEngine.Decl v;
-          v = CssEngine.decl("--breakpoint-sm", tok("40rem"));
+          v = CssEngine.decl("--breakpoint-sm", "40rem");
 
           assertEquals(c.components(), List.of());
           assertEquals(c.fontFaces(), List.of());
@@ -87,10 +84,10 @@ public class CssEngineTest02Configuring {
 
         c -> {
           final CssEngine.Decl v0;
-          v0 = CssEngine.decl("--breakpoint-sm", tok("40rem")).replaced();
+          v0 = CssEngine.decl("--breakpoint-sm", "40rem").replaced();
 
           final CssEngine.Decl v1;
-          v1 = CssEngine.decl("--breakpoint-sm", tok("30rem"));
+          v1 = CssEngine.decl("--breakpoint-sm", "30rem");
 
           assertEquals(c.components(), List.of());
           assertEquals(c.fontFaces(), List.of());
@@ -124,7 +121,7 @@ public class CssEngineTest02Configuring {
 
         c -> {
           final CssEngine.Decl v;
-          v = CssEngine.decl("--color-test", tok("#cafeba"));
+          v = CssEngine.decl("--color-test", "#cafeba");
 
           assertEquals(c.components(), List.of());
           assertEquals(c.fontFaces(), List.of());
@@ -156,7 +153,7 @@ public class CssEngineTest02Configuring {
 
         c -> {
           final CssEngine.Decl v;
-          v = CssEngine.decl("--font-test", tok("'Comic Sans'"));
+          v = CssEngine.decl("--font-test", "'Comic Sans'");
 
           assertEquals(c.components(), List.of());
           assertEquals(c.fontFaces(), List.of());
@@ -188,8 +185,8 @@ public class CssEngineTest02Configuring {
           assertEquals(c.components(), List.of());
           assertEquals(c.fontFaces(), List.of());
           assertEquals(c.keyframes(), Map.of("fade-in", keyframes("fade-in",
-              CssEngine.block("from", CssEngine.decl("opacity", number("0"))),
-              CssEngine.block("to", CssEngine.decl("opacity", number("1")))
+              CssEngine.block("from", CssEngine.decl("opacity", "0")),
+              CssEngine.block("to", CssEngine.decl("opacity", "1"))
           )));
           assertEquals(c.properties(), Map.of());
           assertEquals(c.sections(), List.of());
@@ -218,10 +215,10 @@ public class CssEngineTest02Configuring {
 
         c -> {
           final CssEngine.Decl v0;
-          v0 = CssEngine.decl("--color-primary", tok("#f0f0f0"));
+          v0 = CssEngine.decl("--color-primary", "#f0f0f0");
 
           final CssEngine.Decl v1;
-          v1 = CssEngine.decl("--color-primary", tok("#1e1e1e"));
+          v1 = CssEngine.decl("--color-primary", "#1e1e1e");
 
           assertEquals(c.components(), List.of());
           assertEquals(c.fontFaces(), List.of());
@@ -255,10 +252,10 @@ public class CssEngineTest02Configuring {
 
         c -> {
           final CssEngine.Decl v0;
-          v0 = CssEngine.decl("--color-theme", tok("#f0f0f0")).mark();
+          v0 = CssEngine.decl("--color-theme", "#f0f0f0").mark();
 
           final CssEngine.Decl v1;
-          v1 = CssEngine.decl("--color-background", fun("var", tok("--color-theme"))).mark();
+          v1 = CssEngine.decl("--color-background", "var(--color-theme").mark();
 
           assertEquals(c.components(), List.of(
               block("[data-theme=g90]", v1)
@@ -296,10 +293,10 @@ public class CssEngineTest02Configuring {
           assertEquals(c.components(), List.of());
           assertEquals(c.fontFaces(), List.of(
               CssEngine.fontFace(
-                  CssEngine.decl("font-family", tok("\"IBM Plex Sans\"")),
-                  CssEngine.decl("font-style", tok("normal")),
-                  CssEngine.decl("font-weight", number("700")),
-                  CssEngine.decl("src", fun("local", tok("\"IBM Plex Sans Bold\"")))
+                  CssEngine.decl("font-family", "\"IBM Plex Sans\""),
+                  CssEngine.decl("font-style", "normal"),
+                  CssEngine.decl("font-weight", "700"),
+                  CssEngine.decl("src", "local(\"IBM Plex Sans Bold\")")
               )
           ));
           assertEquals(c.keyframes(), Map.of());
@@ -332,10 +329,10 @@ public class CssEngineTest02Configuring {
 
         c -> {
           final CssEngine.Decl v0;
-          v0 = CssEngine.decl("--font-sans", tok("sans")).mark();
+          v0 = CssEngine.decl("--font-sans", "sans").mark();
 
           final CssEngine.Decl v1;
-          v1 = CssEngine.decl("--default-font-family", fun("var", tok("--font-sans"))).mark();
+          v1 = CssEngine.decl("--default-font-family", "var(--font-sans)").mark();
 
           assertEquals(c.components(), List.of());
           assertEquals(c.fontFaces(), List.of());
