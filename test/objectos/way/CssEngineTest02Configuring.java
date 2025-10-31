@@ -255,7 +255,7 @@ public class CssEngineTest02Configuring {
           v0 = CssEngine.decl("--color-theme", "#f0f0f0").mark();
 
           final CssEngine.Decl v1;
-          v1 = CssEngine.decl("--color-background", "var(--color-theme").mark();
+          v1 = CssEngine.decl("--color-background", "var(--color-theme)").mark();
 
           assertEquals(c.components(), List.of(
               block("[data-theme=g90]", v1)

@@ -288,22 +288,30 @@ final class CssEngine implements Css.StyleSheet {
       return this;
     }
 
-    /*
-    final void mark(Map<String, Decl> properties) {
+    final boolean marked() {
+      return marked;
+    }
+
+    final void props(CssParser parser, Map<String, Decl> properties) {
       marked = true;
 
-      for (Value value : values) {
-        value.markProperties(properties);
+      parser.set(value);
+
+      final Set<String> props;
+      props = parser.props();
+
+      for (String prop : props) {
+        final Decl maybe;
+        maybe = properties.get(prop);
+
+        if (maybe != null) {
+          maybe.props(parser, properties);
+        }
       }
 
       if (next != null) {
-        next.mark(properties);
+        next.props(parser, properties);
       }
-    }
-    */
-
-    final boolean marked() {
-      return marked;
     }
 
     final Decl replaced() {
@@ -1341,6 +1349,81 @@ final class CssEngine implements Css.StyleSheet {
       return sb.toString();
     }
 
+    private enum Props {
+      NORMAL,
+      LPARENS,
+      HYPHEN1,
+      HYPHEN2,
+      PROP;
+    }
+
+    public final Set<String> props() {
+      final Set<String> result;
+      result = new HashSet<>();
+
+      int hyphen = 0;
+
+      Props state = Props.NORMAL;
+
+      while (hasNext()) {
+        final byte next;
+        next = next();
+
+        switch (state) {
+          case NORMAL -> {
+            switch (next) {
+              case CSS_LPARENS -> state = Props.LPARENS;
+
+              default -> state = Props.NORMAL;
+            }
+          }
+
+          case LPARENS -> {
+            switch (next) {
+              case CSS_HYPHEN -> { hyphen = idx; state = Props.HYPHEN1; }
+
+              default -> state = Props.NORMAL;
+            }
+          }
+
+          case HYPHEN1 -> {
+            switch (next) {
+              case CSS_HYPHEN -> state = Props.HYPHEN2;
+
+              default -> state = Props.NORMAL;
+            }
+          }
+
+          case HYPHEN2 -> {
+            switch (next) {
+              case CSS_HYPHEN, CSS_UNDERLINE, CSS_ALPHA, CSS_DIGIT -> state = Props.PROP;
+
+              default -> state = Props.NORMAL;
+            }
+          }
+
+          case PROP -> {
+            switch (next) {
+              case CSS_HYPHEN, CSS_UNDERLINE, CSS_ALPHA, CSS_DIGIT -> state = Props.PROP;
+
+              case CSS_RPARENS, CSS_COMMA -> {
+                final String name;
+                name = text.substring(hyphen, idx);
+
+                result.add(name);
+
+                state = Props.NORMAL;
+              }
+
+              default -> state = Props.NORMAL;
+            }
+          }
+        }
+      }
+
+      return result;
+    }
+
     private IllegalArgumentException error(String message) {
       int start;
       start = text.lastIndexOf('\n', cursor);
@@ -2032,7 +2115,7 @@ final class CssEngine implements Css.StyleSheet {
       private void baseStyleRule(Map<String, Decl> properties, Block rule) {
         for (Stmt stmt : rule.stmts) {
           switch (stmt) {
-            case Decl decl -> decl.mark(properties);
+            case Decl decl -> decl.props(parser, properties);
 
             case Block nested -> baseStyleRule(properties, nested);
           }
@@ -2895,13 +2978,10 @@ final class CssEngine implements Css.StyleSheet {
     void consume(String className, List<String> slugs);
   }
 
-  record Utility(List<Variant> variants, String className, String property, List<Value> values) {}
+  record Utility(List<Variant> variants, String className, String property, String value) {}
 
-  static Utility utility(List<Variant> variants, String className, String property, List<Value> values) {
-    return new Utility(variants, className, property, values);
-  }
-  static Utility utility(List<Variant> variants, String className, String property, Value... values) {
-    return new Utility(variants, className, property, List.of(values));
+  static Utility utility(List<Variant> variants, String className, String property, String value) {
+    return new Utility(variants, className, property, value);
   }
 
   static final class Proc implements Slugs {
