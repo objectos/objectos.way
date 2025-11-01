@@ -46,7 +46,6 @@ import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.HexFormat;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,7 +55,6 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import objectos.way.ValueFormat.Mode;
 
 final class CssEngine implements Css.StyleSheet {
 
@@ -163,7 +161,7 @@ final class CssEngine implements Css.StyleSheet {
     final Map<String, Keyframes> keyframes;
     keyframes = config.keyframes;
 
-    final Map<String, Decl> properties;
+    final Properties properties;
     properties = config.properties;
 
     final List<Section> protoSections;
@@ -173,10 +171,10 @@ final class CssEngine implements Css.StyleSheet {
     utils = proc.utilities;
 
     final Gen gen;
-    gen = new Gen(keyframes, properties, protoSections, utils);
+    gen = new Gen(keyframes, properties, protoSections);
 
     final Ctx ctx;
-    ctx = gen.generate();
+    ctx = gen.generate(utils);
 
     final List<Section> sections;
     sections = ctx.sections;
@@ -202,8 +200,8 @@ final class CssEngine implements Css.StyleSheet {
 
     compWriter.write(out);
 
-    final List<Rule> rules;
-    rules = ctx.rules;
+    final List<Utility> rules;
+    rules = ctx.utilities;
 
     final Utilities utilities;
     utilities = new Utilities(rules);
@@ -227,7 +225,7 @@ final class CssEngine implements Css.StyleSheet {
   // ##################################################################
 
   // ##################################################################
-  // # BEGIN: CSS Parser
+  // # BEGIN: Syntax
   // ##################################################################
 
   /// Represents an at-rule.
@@ -439,7 +437,7 @@ final class CssEngine implements Css.StyleSheet {
     CSS = table;
   }
 
-  static final class CssParser {
+  static final class Syntax {
     private static final String EOF_AT = "EOF while parsing a CSS at-rule";
     private static final String EOF_DECLS = "EOF while parsing rule declarations";
     private static final String EOF_SEL = "EOF while parsing a CSS selector";
@@ -454,13 +452,7 @@ final class CssEngine implements Css.StyleSheet {
 
     private String text;
 
-    private final ValueFormat valueFormat = new ValueFormat(ValueFormat.Mode.SEMICOLON);
-
-    CssParser() {}
-
-    CssParser(String text) {
-      this.text = text;
-    }
+    Syntax() {}
 
     public final void set(String value) {
       cursor = idx = 0;
@@ -524,6 +516,206 @@ final class CssEngine implements Css.StyleSheet {
       }
 
       return state == Dim.UNIT;
+    }
+
+    public final String formatValue() {
+      return formatValue0(false);
+    }
+
+    private String formatValueSemicolon() {
+      return formatValue0(true);
+    }
+
+    private enum Value {
+      NORMAL,
+      HYPHEN1,
+      HYPHEN2,
+      CUSTOM,
+
+      RX,
+      RX_INT,
+      RX_DOT,
+      RX_DOUBLE,
+
+      THEME,
+      THEME_WS,
+      THEME_COMMA;
+    }
+
+    private String formatValue0(boolean semi) {
+      int hyphen;
+      hyphen = 0;
+
+      final StringBuilder sb;
+      sb = sb();
+
+      Value state;
+      state = Value.NORMAL;
+
+      while (hasNext()) {
+        final byte next;
+        next = next();
+
+        if (next == CSS_SEMICOLON && semi) {
+          break;
+        }
+
+        switch (state) {
+          case NORMAL -> {
+            switch (next) {
+              case CSS_HYPHEN -> { hyphen = idx; state = Value.HYPHEN1; }
+
+              default -> state = Value.NORMAL;
+            }
+          }
+
+          case HYPHEN1 -> {
+            switch (next) {
+              case CSS_HYPHEN -> state = Value.HYPHEN2;
+
+              default -> state = Value.NORMAL;
+            }
+          }
+
+          case HYPHEN2 -> {
+            switch (next) {
+              case CSS_ALPHA -> state = Value.CUSTOM;
+
+              default -> state = Value.NORMAL;
+            }
+          }
+
+          case CUSTOM -> {
+            switch (next) {
+              case CSS_ALPHA -> state = Value.CUSTOM;
+
+              case CSS_LPARENS -> {
+                final String name;
+                name = text.substring(hyphen, idx);
+
+                switch (name) {
+                  case "--rx" -> state = Value.RX;
+
+                  case "--theme" -> {
+                    int length;
+                    length = sb.length();
+
+                    sb.setLength(length - "--theme".length());
+
+                    sb.append("var");
+
+                    state = Value.THEME;
+                  }
+
+                  default -> state = Value.NORMAL;
+                }
+              }
+
+              default -> state = Value.NORMAL;
+            }
+          }
+
+          case RX -> {
+            switch (next) {
+              case CSS_DOT -> state = Value.RX_DOUBLE;
+
+              case CSS_DIGIT -> state = Value.RX_INT;
+
+              default -> state = Value.NORMAL;
+            }
+          }
+
+          case RX_INT -> {
+            switch (next) {
+              case CSS_RPARENS -> { state = formatRx(hyphen); continue; }
+
+              case CSS_DOT -> state = Value.RX_DOT;
+
+              case CSS_DIGIT -> state = Value.RX_INT;
+
+              default -> state = Value.NORMAL;
+            }
+          }
+
+          case RX_DOT -> {
+            switch (next) {
+              case CSS_DIGIT -> state = Value.RX_DOUBLE;
+
+              default -> state = Value.NORMAL;
+            }
+          }
+
+          case RX_DOUBLE -> {
+            switch (next) {
+              case CSS_RPARENS -> { state = formatRx(hyphen); continue; }
+
+              case CSS_DIGIT -> state = Value.RX_DOUBLE;
+
+              default -> state = Value.NORMAL;
+            }
+          }
+
+          case THEME -> {
+            switch (next) {
+              case CSS_RPARENS -> state = Value.NORMAL;
+
+              case CSS_WS -> { state = Value.THEME_WS; continue; }
+
+              case CSS_COMMA -> state = Value.THEME_COMMA;
+
+              default -> state = Value.THEME;
+            }
+          }
+
+          case THEME_WS -> {
+            switch (next) {
+              case CSS_RPARENS -> state = Value.NORMAL;
+
+              case CSS_WS -> { state = Value.THEME_WS; continue; }
+
+              default -> state = Value.THEME;
+            }
+          }
+
+          case THEME_COMMA -> {
+            switch (next) {
+              case CSS_RPARENS -> state = Value.NORMAL;
+
+              case CSS_WS -> { state = Value.THEME_COMMA; continue; }
+
+              default -> { sb.append(' '); state = Value.THEME; }
+            }
+          }
+        }
+
+        sb.append(c);
+      }
+
+      return sb.toString();
+    }
+
+    private Value formatRx(int hyphen) {
+      final int start;
+      start = hyphen + 5; // '--rx('
+
+      final int end;
+      end = idx;
+
+      final String value;
+      value = text.substring(start, end);
+
+      int length;
+      length = sb.length();
+
+      sb.setLength(length - (idx - hyphen));
+
+      sb.append("calc(");
+
+      sb.append(value);
+
+      sb.append(" / 16 * 1rem)");
+
+      return Value.NORMAL;
     }
 
     public final List<Top> parse() {
@@ -932,7 +1124,7 @@ final class CssEngine implements Css.StyleSheet {
           cursor--;
 
           final String value;
-          value = value();
+          value = formatValueSemicolon();
 
           yield CssEngine.decl(name, value);
         }
@@ -1332,155 +1524,7 @@ final class CssEngine implements Css.StyleSheet {
   }
 
   // ##################################################################
-  // # END: CSS Parser
-  // ##################################################################
-
-  // ##################################################################
-  // # BEGIN: ValueFormat
-  // ##################################################################
-
-  static final class ValueFormat {
-
-    enum Mode {
-      SEMICOLON,
-
-      EOF;
-    }
-
-    private final Mode mode;
-
-    ValueFormat(Mode mode) {
-      this.mode = mode;
-    }
-
-    private enum Value {
-      NORMAL,
-      HYPHEN1,
-      HYPHEN2,
-      CUSTOM,
-
-      RX,
-      THEME,
-      THEME_WS,
-      THEME_COMMA;
-    }
-
-    public final void formatTo(String text, StringBuilder sb) {
-      int hyphen;
-      hyphen = 0;
-
-      Value state;
-      state = Value.NORMAL;
-
-      for (int idx = 0, len = text.length(); idx < len; idx++) {
-        final char c;
-        c = text.charAt(idx);
-
-        final byte next;
-        next = c < 128 ? CSS[c] : CSS_NON_ASCII;
-
-        if (next == CSS_SEMICOLON && mode == Mode.SEMICOLON) {
-          break;
-        }
-
-        switch (state) {
-          case NORMAL -> {
-            switch (next) {
-              case CSS_HYPHEN -> { hyphen = idx; state = Value.HYPHEN1; }
-
-              default -> state = Value.NORMAL;
-            }
-          }
-
-          case HYPHEN1 -> {
-            switch (next) {
-              case CSS_HYPHEN -> state = Value.HYPHEN2;
-
-              default -> state = Value.NORMAL;
-            }
-          }
-
-          case HYPHEN2 -> {
-            switch (next) {
-              case CSS_ALPHA -> state = Value.CUSTOM;
-
-              default -> state = Value.NORMAL;
-            }
-          }
-
-          case CUSTOM -> {
-            switch (next) {
-              case CSS_ALPHA -> state = Value.CUSTOM;
-
-              case CSS_LPARENS -> {
-                final String name;
-                name = text.substring(hyphen, idx);
-
-                switch (name) {
-                  case "--rx" -> state = Value.RX;
-
-                  case "--theme" -> {
-                    int length;
-                    length = sb.length();
-
-                    sb.setLength(length - "--theme".length());
-
-                    sb.append("var");
-
-                    state = Value.THEME;
-                  }
-
-                  default -> state = Value.NORMAL;
-                }
-              }
-
-              default -> state = Value.NORMAL;
-            }
-          }
-
-          case RX -> throw new UnsupportedOperationException("Implement me");
-
-          case THEME -> {
-            switch (next) {
-              case CSS_RPARENS -> state = Value.NORMAL;
-
-              case CSS_WS -> { state = Value.THEME_WS; continue; }
-
-              case CSS_COMMA -> state = Value.THEME_COMMA;
-
-              default -> state = Value.THEME;
-            }
-          }
-
-          case THEME_WS -> {
-            switch (next) {
-              case CSS_RPARENS -> state = Value.NORMAL;
-
-              case CSS_WS -> { state = Value.THEME_WS; continue; }
-
-              default -> state = Value.THEME;
-            }
-          }
-
-          case THEME_COMMA -> {
-            switch (next) {
-              case CSS_RPARENS -> state = Value.NORMAL;
-
-              case CSS_WS -> { state = Value.THEME_COMMA; continue; }
-
-              default -> { sb.append(' '); state = Value.THEME; }
-            }
-          }
-        }
-
-        sb.append(c);
-      }
-    }
-
-  }
-
-  // ##################################################################
-  // # END: ValueFormat
+  // # END: Syntax
   // ##################################################################
 
   // ##################################################################
@@ -1603,16 +1647,12 @@ final class CssEngine implements Css.StyleSheet {
   // ##################################################################
 
   // ##################################################################
-  // # BEGIN: Marker
+  // # BEGIN: Properties
   // ##################################################################
 
-  static final class Marker {
+  static final class Properties {
 
-    private final Map<String, Decl> properties;
-
-    Marker(Map<String, Decl> properties) {
-      this.properties = properties;
-    }
+    private final Map<String, Decl> properties = new LinkedHashMap<>();
 
     private enum Props {
       NORMAL,
@@ -1707,6 +1747,10 @@ final class CssEngine implements Css.StyleSheet {
       }
     }
 
+    final void merge(String propName, Decl decl) {
+      properties.merge(propName, decl, (oldValue, value) -> oldValue.append(value));
+    }
+
     private void consume(String name) {
       final Decl decl;
       decl = properties.get(name);
@@ -1746,7 +1790,7 @@ final class CssEngine implements Css.StyleSheet {
 
     private String systemTheme = Css.systemTheme();
 
-    private Set<String> userCssProperties = Set.of();
+    private final Set<String> userCssProperties = Set.of();
 
     private List<String> userTheme = List.of();
 
@@ -1875,11 +1919,13 @@ final class CssEngine implements Css.StyleSheet {
       final String text;
       text = Objects.requireNonNull(value, "value == null");
 
-      final CssParser parser;
-      parser = new CssParser(text);
+      final Syntax syntax;
+      syntax = new Syntax();
+
+      syntax.set(text);
 
       final List<Top> parsed;
-      parsed = parser.parse();
+      parsed = syntax.parse();
 
       for (Top top : parsed) {
         switch (top) {
@@ -1901,9 +1947,9 @@ final class CssEngine implements Css.StyleSheet {
 
       final Map<String, CssEngine.Keyframes> keyframes = new HashMap<>();
 
-      final CssParser parser = new CssParser();
+      final Syntax parser = new Syntax();
 
-      final Map<String, Decl> properties = new LinkedHashMap<>();
+      final Properties properties = new Properties();
 
       final List<Section> sections = new ArrayList<>();
 
@@ -1912,8 +1958,6 @@ final class CssEngine implements Css.StyleSheet {
       final Map<List<String>, Map<String, Decl>> themeProps = new LinkedHashMap<>();
 
       //
-
-      final Marker marker = new Marker(properties);
 
       final void systemTheme() {
         parser.set(systemTheme);
@@ -2081,7 +2125,7 @@ final class CssEngine implements Css.StyleSheet {
             final Decl decl;
             decl = inner.getValue();
 
-            properties.merge(propName, decl, (oldValue, value) -> oldValue.append(value));
+            properties.merge(propName, decl);
           }
         }
       }
@@ -2174,7 +2218,7 @@ final class CssEngine implements Css.StyleSheet {
       private void baseStyleRule(Block rule) {
         for (Stmt stmt : rule.stmts) {
           switch (stmt) {
-            case Decl decl -> marker.accept(decl);
+            case Decl decl -> properties.accept(decl);
 
             case Block nested -> baseStyleRule(nested);
           }
@@ -2280,7 +2324,7 @@ final class CssEngine implements Css.StyleSheet {
 
       Note.Sink noteSink,
 
-      Map<String, Decl> properties,
+      Properties properties,
 
       Set<Class<?>> scanClasses,
 
@@ -3054,7 +3098,29 @@ final class CssEngine implements Css.StyleSheet {
     void consume(String className, List<String> slugs);
   }
 
-  record Utility(List<Variant> variants, String className, String property, String value) {}
+  record Utility(List<Variant> variants, String className, String property, String value)
+      implements Comparable<Utility> {
+
+    @Override
+    public final int compareTo(Utility o) {
+      final int p;
+      p = property.compareTo(o.property);
+
+      if (p != 0) {
+        return p;
+      }
+
+      final int v;
+      v = value.compareTo(o.value);
+
+      if (v != 0) {
+        return v;
+      }
+
+      return className.compareTo(o.className);
+    }
+
+  }
 
   static Utility utility(List<Variant> variants, String className, String property, String value) {
     return new Utility(variants, className, property, value);
@@ -3068,9 +3134,12 @@ final class CssEngine implements Css.StyleSheet {
 
     private final Set<String> distinct = new HashSet<>();
 
+    @SuppressWarnings("unused")
     private final Note.Sink noteSink;
 
     private final List<Variant> parsedVars = new ArrayList<>();
+
+    private final Syntax syntax = new Syntax();
 
     private final List<Utility> utilities = new ArrayList<>();
 
@@ -3100,9 +3169,6 @@ final class CssEngine implements Css.StyleSheet {
         return;
       }
 
-      final String propValue;
-      propValue = slugs.get(0);
-
       // process variants
       parsedVars.clear();
 
@@ -3127,8 +3193,16 @@ final class CssEngine implements Css.StyleSheet {
       final String classNameFormatted;
       classNameFormatted = classNameFormat.format(className);
 
+      final String propValue;
+      propValue = slugs.get(0);
+
+      syntax.set(propValue);
+
+      final String valueFormatted;
+      valueFormatted = syntax.formatValue();
+
       final Utility utility;
-      utility = new Utility(vars, classNameFormatted, propName, propValue);
+      utility = new Utility(vars, classNameFormatted, propName, valueFormatted);
 
       utilities.add(utility);
     }
@@ -3168,39 +3242,10 @@ final class CssEngine implements Css.StyleSheet {
   // # BEGIN: Gen
   // ##################################################################
 
-  record Rule(String className, List<Variant> variants, String property, String value)
-      implements
-      Comparable<Rule> {
-
-    @Override
-    public final int compareTo(Rule o) {
-      final int p;
-      p = property.compareTo(o.property);
-
-      if (p != 0) {
-        return p;
-      }
-
-      final int v;
-      v = value.compareTo(o.value);
-
-      if (v != 0) {
-        return v;
-      }
-
-      return className.compareTo(o.className);
-    }
-
-  }
-
-  static Rule rule(String className, List<Variant> variants, String property, String value) {
-    return new Rule(className, variants, property, value);
-  }
-
   record Ctx(
       List<Keyframes> keyframes,
-      List<Rule> rules,
-      List<Section> sections
+      List<Section> sections,
+      List<Utility> utilities
   ) {}
 
   static final class Gen {
@@ -3214,84 +3259,119 @@ final class CssEngine implements Css.StyleSheet {
 
     private final Map<String, Keyframes> keyframesMarked = new HashMap<>();
 
-    private final Map<String, Decl> properties;
-
-    private final List<Rule> rules = new ArrayList<>();
+    private final Properties properties;
 
     private final List<Section> sections;
 
-    private final StringBuilder sb = new StringBuilder();
-
-    private final List<Utility> utilities;
-
-    Gen(Map<String, Keyframes> keyframes, Map<String, Decl> properties, List<Section> sections, List<Utility> utilities) {
+    Gen(Map<String, Keyframes> keyframes, Properties properties, List<Section> sections) {
       this.keyframes = keyframes;
 
       this.properties = properties;
 
       this.sections = sections;
-
-      this.utilities = utilities;
     }
 
-    public final Ctx generate() {
+    public final Ctx generate(List<Utility> utilities) {
       for (Utility utility : utilities) {
         process(utility);
       }
 
-      rules.sort(Comparator.naturalOrder());
+      utilities.sort(Comparator.naturalOrder());
 
       return new Ctx(
           keyframesMarked.values().stream().sorted().toList(),
 
-          List.copyOf(rules),
+          themeSections(),
 
-          themeSections()
+          utilities
       );
     }
 
-    private void process(Utility utility) {
-      final String className;
-      className = utility.className;
+    private enum Kf {
+      NORMAL,
 
-      final List<Variant> variants;
-      variants = utility.variants;
+      IDEN;
+    }
+
+    private void process(Utility utility) {
+      final String value;
+      value = utility.value;
+
+      properties.accept(value);
 
       final String property;
       property = utility.property;
 
-      final List<Value> values;
-      values = utility.values;
-
       final boolean keyframesProp;
       keyframesProp = KEYFRAMES_PROPERTIES.contains(property);
 
-      for (Value value : values) {
-        value.markProperties(properties);
+      if (!keyframesProp) {
+        return;
+      }
 
-        if (keyframesProp &&
-            value instanceof Tok(String v) &&
-            !keyframesMarked.containsKey(v)) {
-          final Keyframes kf;
-          kf = keyframes.get(v);
+      int iden;
+      iden = 0;
 
-          if (kf != null) {
-            keyframesMarked.put(v, kf);
+      Kf state;
+      state = Kf.NORMAL;
+
+      for (int idx = 0, len = value.length(); idx < len; idx++) {
+        final char c;
+        c = value.charAt(idx);
+
+        final byte next;
+        next = c < 128 ? CSS[c] : CSS_NON_ASCII;
+
+        switch (state) {
+          case NORMAL -> {
+            switch (next) {
+              case CSS_HYPHEN, CSS_UNDERLINE, CSS_ALPHA -> { iden = idx; state = Kf.IDEN; }
+
+              default -> state = Kf.NORMAL;
+            }
+          }
+
+          case IDEN -> {
+            switch (next) {
+              case CSS_HYPHEN, CSS_UNDERLINE, CSS_ALPHA, CSS_DIGIT -> state = Kf.IDEN;
+
+              default -> {
+                final String kf;
+                kf = value.substring(iden, idx);
+
+                kf(kf);
+
+                state = Kf.NORMAL;
+              }
+            }
           }
         }
       }
 
-      sb.setLength(0);
+      if (state == Kf.IDEN) {
+        final int end;
+        end = value.length();
 
-      Value.formatTo(sb, values);
+        final String kf;
+        kf = value.substring(iden, end);
 
-      final String value;
-      value = sb.toString();
+        kf(kf);
+      }
+    }
 
-      final Rule rule;
-      rule = rule(className, variants, property, value);
+    private void kf(String value) {
+      if (keyframesMarked.containsKey(value)) {
+        return;
+      }
 
-      rules.add(rule);
+      final Keyframes kf;
+      kf = keyframes.get(value);
+
+      if (kf == null) {
+        return;
+      }
+
+      keyframesMarked.put(value, kf);
     }
 
     private List<Section> themeSections() {
@@ -3406,7 +3486,7 @@ final class CssEngine implements Css.StyleSheet {
 
       w(": ");
 
-      Value.formatTo(out, decl.values);
+      w(decl.value);
 
       wln(";");
     }
@@ -3622,15 +3702,15 @@ final class CssEngine implements Css.StyleSheet {
 
   static final class Utilities extends Writer {
 
-    final List<Rule> rules;
+    final List<Utility> values;
 
-    Utilities(List<Rule> rules) {
-      this.rules = rules;
+    Utilities(List<Utility> values) {
+      this.values = values;
     }
 
     @Override
     final void write() throws IOException {
-      if (rules.isEmpty()) {
+      if (values.isEmpty()) {
         return;
       }
 
@@ -3638,15 +3718,15 @@ final class CssEngine implements Css.StyleSheet {
 
       level++;
 
-      for (Rule rule : rules) {
+      for (Utility u : values) {
         indent();
 
-        w(rule.className);
+        w(u.className);
 
         w(" { ");
 
         final List<Variant> variants;
-        variants = rule.variants;
+        variants = u.variants;
 
         for (Variant variant : variants) {
           switch (variant) {
@@ -3658,11 +3738,11 @@ final class CssEngine implements Css.StyleSheet {
           }
         }
 
-        w(rule.property);
+        w(u.property);
 
         w(": ");
 
-        w(rule.value);
+        w(u.value);
 
         for (int idx = 0, size = variants.size(); idx < size; idx++) {
           w(" }");

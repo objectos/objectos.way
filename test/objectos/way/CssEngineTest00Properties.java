@@ -16,10 +16,9 @@
 package objectos.way;
 
 import static org.testng.Assert.assertEquals;
-import java.util.Map;
 import org.testng.annotations.Test;
 
-public class CssEngineTest00Marker {
+public class CssEngineTest00Properties {
 
   @Test(description = "value w/ 1 prop")
   public void testCase01() {
@@ -29,13 +28,12 @@ public class CssEngineTest00Marker {
     assertEquals(target.marked(), false);
     assertEquals(decl.marked(), false);
 
-    final Map<String, CssEngine.Decl> properties;
-    properties = Map.of("--target", target);
+    final CssEngine.Properties props;
+    props = new CssEngine.Properties();
 
-    final CssEngine.Marker marker;
-    marker = new CssEngine.Marker(properties);
+    props.merge("--target", target);
 
-    marker.accept(decl);
+    props.accept(decl);
 
     assertEquals(target.marked(), true);
     assertEquals(decl.marked(), true);
@@ -49,13 +47,12 @@ public class CssEngineTest00Marker {
     assertEquals(target.marked(), false);
     assertEquals(decl.marked(), false);
 
-    final Map<String, CssEngine.Decl> properties;
-    properties = Map.of("--target", target);
+    final CssEngine.Properties props;
+    props = new CssEngine.Properties();
 
-    final CssEngine.Marker marker;
-    marker = new CssEngine.Marker(properties);
+    props.merge("--target", target);
 
-    marker.accept(decl);
+    props.accept(decl);
 
     assertEquals(target.marked(), true);
     assertEquals(decl.marked(), true);
@@ -69,13 +66,12 @@ public class CssEngineTest00Marker {
     assertEquals(target.marked(), false);
     assertEquals(decl.marked(), false);
 
-    final Map<String, CssEngine.Decl> properties;
-    properties = Map.of("--target", target);
+    final CssEngine.Properties props;
+    props = new CssEngine.Properties();
 
-    final CssEngine.Marker marker;
-    marker = new CssEngine.Marker(properties);
+    props.merge("--target", target);
 
-    marker.accept(decl);
+    props.accept(decl);
 
     assertEquals(target.marked(), false);
     assertEquals(decl.marked(), true);

@@ -112,6 +112,15 @@ public class CssEngineTest09Proc {
             utility(List.of(CssEngine.simple("&[data-foo]")), ".\\&\\[data-foo\\]\\/padding\\:0", "padding", "0")
         )
     }, {
+        "--rx function",
+        Map.of(),
+        l(
+            r("margin:--rx(16)", l("--rx(16)", "margin"))
+        ),
+        l(
+            utility(List.of(), ".margin\\:--rx\\(16\\)", "margin", "calc(16 / 16 * 1rem)")
+        )
+    }, {
         "skip unknown property",
         Map.of(),
         l(

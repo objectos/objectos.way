@@ -15,7 +15,7 @@
  */
 package objectos.way;
 
-import static objectos.way.CssEngine.rule;
+import static objectos.way.CssEngine.utility;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
@@ -37,7 +37,7 @@ public class CssEngineTest14Utilities {
     }, {
         "1 rule",
         List.of(
-            rule(".margin\\:0", List.of(), "margin", "0")
+            utility(List.of(), ".margin\\:0", "margin", "0")
         ),
         """
         @layer utilities {
@@ -47,7 +47,7 @@ public class CssEngineTest14Utilities {
     }, {
         "1 rule + 1 variant",
         List.of(
-            rule(".after\\/padding\\:0", List.of(AFTER), "padding", "0")
+            utility(List.of(AFTER), ".after\\/padding\\:0", "padding", "0")
         ),
         """
         @layer utilities {
@@ -60,11 +60,11 @@ public class CssEngineTest14Utilities {
   @Test(dataProvider = "writeProvider")
   public void write(
       String description,
-      @SuppressWarnings("exports") List<CssEngine.Rule> rules,
+      @SuppressWarnings("exports") List<CssEngine.Utility> values,
       String expected) {
     try {
       final CssEngine.Utilities utilities;
-      utilities = new CssEngine.Utilities(rules);
+      utilities = new CssEngine.Utilities(values);
 
       final StringBuilder out;
       out = new StringBuilder();

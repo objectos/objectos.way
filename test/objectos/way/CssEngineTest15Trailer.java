@@ -15,7 +15,6 @@
  */
 package objectos.way;
 
-import static objectos.way.CssEngine.tok;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
@@ -36,8 +35,8 @@ public class CssEngineTest15Trailer {
         tester(t -> {
           t.keyframes(
               "fade-in",
-              CssEngine.block("from", CssEngine.decl("opacity", tok("0"))),
-              CssEngine.block("100%", CssEngine.decl("opacity", tok("1")))
+              CssEngine.block("from", CssEngine.decl("opacity", "0")),
+              CssEngine.block("100%", CssEngine.decl("opacity", "1"))
           );
         }),
 
@@ -56,10 +55,10 @@ public class CssEngineTest15Trailer {
 
         tester(t -> {
           t.fontFace(
-              CssEngine.decl("font-family", tok("\"IBM Plex Sans\"")),
-              CssEngine.decl("font-style", tok("normal")),
-              CssEngine.decl("font-weight", tok("700")),
-              CssEngine.decl("src", tok("local(\"IBM Plex Sans Bold\")"))
+              CssEngine.decl("font-family", "\"IBM Plex Sans\""),
+              CssEngine.decl("font-style", "normal"),
+              CssEngine.decl("font-weight", "700"),
+              CssEngine.decl("src", "local(\"IBM Plex Sans Bold\")")
           );
         }),
 

@@ -27,7 +27,7 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class CssEngineTest00CssParser {
+public class CssEngineTest00Syntax {
 
   @DataProvider
   public Object[][] dimensionProvider() {
@@ -44,10 +44,38 @@ public class CssEngineTest00CssParser {
       String description,
       String src,
       boolean expected) {
-    final CssEngine.CssParser parser;
-    parser = new CssEngine.CssParser(src);
+    final CssEngine.Syntax syntax;
+    syntax = new CssEngine.Syntax();
 
-    assertEquals(parser.dimension(), expected);
+    syntax.set(src);
+
+    assertEquals(syntax.dimension(), expected);
+  }
+
+  @DataProvider
+  public Object[][] formatValueProvider() {
+    return new Object[][] {
+        {"keyword", "block", "block"},
+        {"length", "40rem", "40rem"},
+        {"perc", "40%", "40%"},
+        {"--rx() w/ int", "--rx(16)", "calc(16 / 16 * 1rem)"},
+        {"--rx() w/ double", "--rx(16.789)", "calc(16.789 / 16 * 1rem)"},
+        {"--rx() w/ dot", "--rx(.789)", "calc(.789 / 16 * 1rem)"},
+        {"--rx() ignore", "--rx(16%)", "--rx(16%)"}
+    };
+  }
+
+  @Test(dataProvider = "formatValueProvider")
+  public void formatValue(
+      String description,
+      String src,
+      String expected) {
+    final CssEngine.Syntax syntax;
+    syntax = new CssEngine.Syntax();
+
+    syntax.set(src);
+
+    assertEquals(syntax.formatValue(), expected);
   }
 
   @DataProvider
@@ -310,10 +338,12 @@ public class CssEngineTest00CssParser {
       String description,
       String src,
       @SuppressWarnings("exports") List<CssEngine.Top> expected) {
-    final CssEngine.CssParser parser;
-    parser = new CssEngine.CssParser(src);
+    final CssEngine.Syntax syntax;
+    syntax = new CssEngine.Syntax();
 
-    assertEquals(parser.parse(), expected);
+    syntax.set(src);
+
+    assertEquals(syntax.parse(), expected);
   }
 
   @DataProvider
@@ -356,10 +386,12 @@ public class CssEngineTest00CssParser {
       String src,
       String message) {
     try {
-      final CssEngine.CssParser parser;
-      parser = new CssEngine.CssParser(src);
+      final CssEngine.Syntax syntax;
+      syntax = new CssEngine.Syntax();
 
-      parser.parse();
+      syntax.set(src);
+
+      syntax.parse();
 
       Assert.fail("It should have thrown");
     } catch (IllegalArgumentException expected) {

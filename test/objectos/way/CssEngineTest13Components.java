@@ -17,7 +17,6 @@ package objectos.way;
 
 import static objectos.way.CssEngine.block;
 import static objectos.way.CssEngine.decl;
-import static objectos.way.CssEngine.tok;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
@@ -34,7 +33,7 @@ public class CssEngineTest13Components {
         "1 component",
 
         List.of(
-            block("[data-theme=g90]", decl("--color-background", tok("#262626")))
+            block("[data-theme=g90]", decl("--color-background", "#262626"))
         ),
 
         """

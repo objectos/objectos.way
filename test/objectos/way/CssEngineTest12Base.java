@@ -315,11 +315,13 @@ public class CssEngineTest12Base {
 
   private void base(String source, String expected) {
     try {
-      final CssEngine.CssParser parser;
-      parser = new CssEngine.CssParser(source);
+      final CssEngine.Syntax syntax;
+      syntax = new CssEngine.Syntax();
+
+      syntax.set(source);
 
       final List<Top> topLevel;
-      topLevel = parser.parse();
+      topLevel = syntax.parse();
 
       final CssEngine.Base base;
       base = new CssEngine.Base(topLevel);

@@ -15,7 +15,6 @@
  */
 package objectos.way;
 
-import static objectos.way.CssEngine.tok;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
@@ -40,7 +39,7 @@ public class CssEngineTest11Theme {
         List.of(s(
             List.of(":root"),
 
-            CssEngine.decl("--color-red-50", tok("oklch(97.1% 0.013 17.38)"))
+            CssEngine.decl("--color-red-50", "oklch(97.1% 0.013 17.38)")
         )),
 
         """
@@ -56,11 +55,11 @@ public class CssEngineTest11Theme {
         List.of(s(
             List.of(":root"),
 
-            CssEngine.decl("--color-primary", tok("#f0f0f0"))
+            CssEngine.decl("--color-primary", "#f0f0f0")
         ), s(
             List.of(":root", DARK),
 
-            CssEngine.decl("--color-primary", tok("#1e1e1e"))
+            CssEngine.decl("--color-primary", "#1e1e1e")
         )),
 
         """
