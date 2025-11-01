@@ -557,7 +557,7 @@ final class CssEngine implements Css.StyleSheet {
         next = next();
 
         if (next == CSS_SEMICOLON && semi) {
-          break;
+          return sb.toString();
         }
 
         switch (state) {
@@ -689,6 +689,10 @@ final class CssEngine implements Css.StyleSheet {
         }
 
         sb.append(c);
+      }
+
+      if (semi) {
+        throw error("Invalid CSS declaration value");
       }
 
       return sb.toString();
@@ -1790,7 +1794,7 @@ final class CssEngine implements Css.StyleSheet {
 
     private String systemTheme = Css.systemTheme();
 
-    private final Set<String> userCssProperties = Set.of();
+    private Set<String> userCssProperties = Set.of();
 
     private List<String> userTheme = List.of();
 
@@ -1811,6 +1815,20 @@ final class CssEngine implements Css.StyleSheet {
     // ##################################################################
     // # BEGIN: Configuring: Public API
     // ##################################################################
+
+    @Override
+    public final void cssPropertyNames(String... values) {
+      for (int idx = 0; idx < values.length; idx++) {
+        final String name;
+        name = Check.notNull(values[idx], "values[", idx, "] == null");
+
+        if (userCssProperties.isEmpty()) {
+          userCssProperties = new HashSet<>();
+        }
+
+        userCssProperties.add(name);
+      }
+    }
 
     @Override
     public final void include(Css.Library value) {
@@ -2336,7 +2354,13 @@ final class CssEngine implements Css.StyleSheet {
 
       Map<String, Variant> variants
 
-  ) {}
+  ) {
+
+    final Map<String, Decl> propertiesMap() {
+      return properties.properties;
+    }
+
+  }
 
   // ##################################################################
   // # END: Configured

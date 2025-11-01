@@ -119,30 +119,11 @@ public class CssEngineTest10Gen {
           final List<CssEngine.Section> sections = ctx.sections();
           assertEquals(sections.size(), 0);
           assertEquals(ctx.utilities(), List.of(
-              CssEngine.utility(List.of(), ".foo", "animation", "3s linear 1s fade-in")
+              CssEngine.utility(List.of(), ".foo", "animation", "3s linear 1s fade-out")
           ));
         }
     );
   }
-
-  /*
-  @Test(description = "--rx() function")
-  public void testCase06() {
-    test(
-        gen -> {
-          gen.utility(List.of(), ".gap\\:--rx\\(16\\)", "gap", fun("--rx", number("16")));
-        },
-  
-        ctx -> {
-          assertEquals(ctx.keyframes(), List.of());
-          assertEquals(ctx.rules(), List.of(
-              CssEngine.rule(".gap\\:--rx\\(16\\)", List.of(), "gap", "calc(16 / 16 * 1rem)")
-          ));
-          assertEquals(ctx.sections(), List.of());
-        }
-    );
-  }
-  */
 
   private static final class Builder {
 

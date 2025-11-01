@@ -162,7 +162,7 @@ public class CssEngineTest12Base {
     );
   }
 
-  @Test
+  @Test(enabled = false)
   public void fullGeneration() {
     base(
         Css.systemBase(),

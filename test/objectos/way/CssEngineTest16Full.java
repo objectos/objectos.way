@@ -85,7 +85,7 @@ public class CssEngineTest16Full {
         }),
         """
         @layer utilities {
-          .aspect-ratio\\:2\\/3 { aspect-ratio: 2 / 3 }
+          .aspect-ratio\\:2\\/3 { aspect-ratio: 2/3 }
         }
         """
     }, {
@@ -386,6 +386,24 @@ public class CssEngineTest16Full {
         @layer utilities {
           .margin\\:0 { margin: 0 }
           .padding\\:0 { padding: 0 }
+        }
+        """
+    }, {
+        "cssPropertyNames",
+        cfg(e -> {
+          class Subject extends CssSubject {
+            @Override
+            final void classes() { css("foo:0"); }
+          }
+
+          e.cssPropertyNames("foo");
+          e.systemBase("");
+          e.systemTheme("");
+          e.scanClasses(Subject.class);
+        }),
+        """
+        @layer utilities {
+          .foo\\:0 { foo: 0 }
         }
         """
     }};

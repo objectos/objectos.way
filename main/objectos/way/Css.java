@@ -34,6 +34,11 @@ public final class Css {
     /// Contributes to the configuration of a `StyleSheet` generation.
     sealed interface Options {
 
+      /// Accepts the specified values as CSS property names.
+      ///
+      /// @param values the property names
+      void cssPropertyNames(String... values);
+
       /// Scans the class file of the specified class (if found) during the CSS generation process.
       /// @param value the class to scan for CSS utilities
       void scanClass(Class<?> value);

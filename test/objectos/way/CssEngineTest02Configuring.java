@@ -51,7 +51,7 @@ public class CssEngineTest02Configuring {
           assertEquals(c.components(), List.of());
           assertEquals(c.fontFaces(), List.of());
           assertEquals(c.keyframes(), Map.of());
-          assertEquals(c.properties(), Map.of("--breakpoint-sm", v));
+          assertEquals(c.propertiesMap(), Map.of("--breakpoint-sm", v));
           assertEquals(c.sections(), List.of(
               section(List.of(":root"), v)
           ));
@@ -92,7 +92,7 @@ public class CssEngineTest02Configuring {
           assertEquals(c.components(), List.of());
           assertEquals(c.fontFaces(), List.of());
           assertEquals(c.keyframes(), Map.of());
-          assertEquals(c.properties(), Map.of("--breakpoint-sm", v1));
+          assertEquals(c.propertiesMap(), Map.of("--breakpoint-sm", v1));
           assertEquals(c.sections(), List.of(
               section(List.of(":root"), v0, v1)
           ));
@@ -126,7 +126,7 @@ public class CssEngineTest02Configuring {
           assertEquals(c.components(), List.of());
           assertEquals(c.fontFaces(), List.of());
           assertEquals(c.keyframes(), Map.of());
-          assertEquals(c.properties(), Map.of("--color-test", v));
+          assertEquals(c.propertiesMap(), Map.of("--color-test", v));
           assertEquals(c.sections(), List.of(
               section(List.of(":root"), v)
           ));
@@ -158,7 +158,7 @@ public class CssEngineTest02Configuring {
           assertEquals(c.components(), List.of());
           assertEquals(c.fontFaces(), List.of());
           assertEquals(c.keyframes(), Map.of());
-          assertEquals(c.properties(), Map.of("--font-test", v));
+          assertEquals(c.propertiesMap(), Map.of("--font-test", v));
           assertEquals(c.sections(), List.of(
               section(List.of(":root"), v)
           ));
@@ -188,7 +188,7 @@ public class CssEngineTest02Configuring {
               CssEngine.block("from", CssEngine.decl("opacity", "0")),
               CssEngine.block("to", CssEngine.decl("opacity", "1"))
           )));
-          assertEquals(c.properties(), Map.of());
+          assertEquals(c.propertiesMap(), Map.of());
           assertEquals(c.sections(), List.of());
           assertEquals(c.variants(), Map.of());
         }
@@ -223,7 +223,7 @@ public class CssEngineTest02Configuring {
           assertEquals(c.components(), List.of());
           assertEquals(c.fontFaces(), List.of());
           assertEquals(c.keyframes(), Map.of());
-          assertEquals(c.properties(), Map.of("--color-primary", v0));
+          assertEquals(c.propertiesMap(), Map.of("--color-primary", v0));
           assertEquals(c.sections(), List.of(
               section(List.of(":root"), v0),
               section(List.of(":root", DARK), v1)
@@ -262,7 +262,7 @@ public class CssEngineTest02Configuring {
           ));
           assertEquals(c.fontFaces(), List.of());
           assertEquals(c.keyframes(), Map.of());
-          assertEquals(c.properties(), Map.of(
+          assertEquals(c.propertiesMap(), Map.of(
               "--color-theme", v0
           ));
           assertEquals(c.sections(), List.of(
@@ -300,7 +300,7 @@ public class CssEngineTest02Configuring {
               )
           ));
           assertEquals(c.keyframes(), Map.of());
-          assertEquals(c.properties(), Map.of());
+          assertEquals(c.propertiesMap(), Map.of());
           assertEquals(c.sections(), List.of());
           assertEquals(c.variants(), Map.of());
         }
@@ -337,7 +337,7 @@ public class CssEngineTest02Configuring {
           assertEquals(c.components(), List.of());
           assertEquals(c.fontFaces(), List.of());
           assertEquals(c.keyframes(), Map.of());
-          assertEquals(c.properties(), Map.of("--font-sans", v0, "--default-font-family", v1));
+          assertEquals(c.propertiesMap(), Map.of("--font-sans", v0, "--default-font-family", v1));
           assertEquals(c.sections(), List.of(
               CssEngine.section(List.of(":root"), v0, v1)
           ));
