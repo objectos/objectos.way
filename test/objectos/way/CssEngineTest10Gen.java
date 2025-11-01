@@ -33,7 +33,7 @@ public class CssEngineTest10Gen {
   public void testCase01() {
     test(
         gen -> {
-          gen.utility(List.of(), ".margin\\:0", "margin", tok("0"));
+          gen.utility(List.of(), ".margin\\:0", "margin", "0");
         },
 
         ctx -> {
@@ -186,9 +186,9 @@ public class CssEngineTest10Gen {
     }
 
     final void utility(
-        List<CssEngine.Variant> variants, String className, String property, CssEngine.Value... values) {
+        List<CssEngine.Variant> variants, String className, String property, String value) {
       final CssEngine.Utility utility;
-      utility = CssEngine.utility(variants, className, property, values);
+      utility = CssEngine.utility(variants, className, property, value);
 
       utilities.add(utility);
     }

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import objectos.way.CssEngine.Variant;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -110,6 +111,13 @@ public class CssEngineTest09Proc {
         l(
             utility(List.of(CssEngine.simple("&[data-foo]")), ".\\&\\[data-foo\\]\\/padding\\:0", "padding", "0")
         )
+    }, {
+        "skip unknown property",
+        Map.of(),
+        l(
+            r("foo:bar", l("bar", "foo"))
+        ),
+        l()
     }};
   }
 
@@ -119,6 +127,9 @@ public class CssEngineTest09Proc {
       @SuppressWarnings("exports") Map<String, CssEngine.Variant> variants,
       @SuppressWarnings("exports") List<Input> inputs,
       @SuppressWarnings("exports") List<CssEngine.Utility> expected) {
+    final Set<String> cssProperties;
+    cssProperties = CssProps.get();
+
     final Note.Sink noteSink;
     noteSink = Y.noteSink();
 
@@ -126,13 +137,13 @@ public class CssEngineTest09Proc {
     mutable = new HashMap<>(variants);
 
     final CssEngine.Proc proc;
-    proc = new CssEngine.Proc(noteSink, mutable);
+    proc = new CssEngine.Proc(cssProperties, noteSink, mutable);
 
     for (Input input : inputs) {
       proc.consume(input.className, input.slugs);
     }
 
-    assertEquals(proc.utilities, expected);
+    assertEquals(proc.result(), expected);
   }
 
   @SafeVarargs

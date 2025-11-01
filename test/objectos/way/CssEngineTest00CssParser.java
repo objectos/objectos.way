@@ -23,7 +23,6 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 import java.util.List;
-import java.util.Set;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -369,30 +368,6 @@ public class CssEngineTest00CssParser {
 
       assertTrue(actual.startsWith(message));
     }
-  }
-
-  @DataProvider
-  public Object[][] propsProvider() {
-    return new Object[][] {
-        {"1 prop", "var(--foo)", Set.of("--foo")},
-        {"1 prop w/ alt", "var(--default-font-family, ui-sans-serif)", Set.of("--default-font-family")},
-        {"2 props", "var(--foo, var(--bar)", Set.of("--foo", "--bar")},
-        {"no props", "block", Set.of()}
-    };
-  }
-
-  @Test(dataProvider = "propsProvider")
-  public void props(
-      String description,
-      String src,
-      @SuppressWarnings("exports") Set<String> expected) {
-    final CssEngine.CssParser parser;
-    parser = new CssEngine.CssParser(src);
-
-    final Set<String> props;
-    props = parser.props();
-
-    assertEquals(props, expected);
   }
 
 }

@@ -64,6 +64,22 @@ COMPILE_REQS = $(SCRIPT_GEN)
 include make/java-compile.mk
 
 #
+# way@css-props-gen
+#
+
+css_props_json := $(WORK)/css-props.json
+
+css_props_txt := $(WORK)/css-props.txt
+
+.PHONY: css-props-gen
+css-props-gen: $(css_props_json)
+	jq -r 'to_entries | map(.key) | join("\n")' $(<) > $(css_props_txt)
+	$(JAVA) CssPropsGen.java
+
+$(css_props_json): | $(WORK)
+	curl -o $(@) https://raw.githubusercontent.com/mdn/data/refs/heads/main/css/properties.json
+
+#
 # way@script-gen
 #
 

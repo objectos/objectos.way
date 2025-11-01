@@ -56,6 +56,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import objectos.way.ValueFormat.Mode;
 
 final class CssEngine implements Css.StyleSheet {
 
@@ -111,6 +112,9 @@ final class CssEngine implements Css.StyleSheet {
   }
 
   public final void generate(Appendable out) throws IOException {
+    final Set<String> cssProperties;
+    cssProperties = config.cssProperties;
+
     final Note.Sink noteSink;
     noteSink = config.noteSink;
 
@@ -118,7 +122,7 @@ final class CssEngine implements Css.StyleSheet {
     variants = config.variants;
 
     final Proc proc;
-    proc = new Proc(noteSink, variants);
+    proc = new Proc(cssProperties, noteSink, variants);
 
     final Tokenizer tokenizer;
     tokenizer = new Tokenizer(proc);
@@ -292,28 +296,6 @@ final class CssEngine implements Css.StyleSheet {
       return marked;
     }
 
-    final void props(CssParser parser, Map<String, Decl> properties) {
-      marked = true;
-
-      parser.set(value);
-
-      final Set<String> props;
-      props = parser.props();
-
-      for (String prop : props) {
-        final Decl maybe;
-        maybe = properties.get(prop);
-
-        if (maybe != null) {
-          maybe.props(parser, properties);
-        }
-      }
-
-      if (next != null) {
-        next.props(parser, properties);
-      }
-    }
-
     final Decl replaced() {
       marked = false;
 
@@ -471,6 +453,8 @@ final class CssEngine implements Css.StyleSheet {
     private StringBuilder sb;
 
     private String text;
+
+    private final ValueFormat valueFormat = new ValueFormat(ValueFormat.Mode.SEMICOLON);
 
     CssParser() {}
 
@@ -1223,207 +1207,6 @@ final class CssEngine implements Css.StyleSheet {
       return new Block(selector, stmts);
     }
 
-    private enum Value {
-      NORMAL,
-      HYPHEN1,
-      HYPHEN2,
-      CUSTOM,
-
-      RX,
-      THEME,
-      THEME_WS,
-      THEME_COMMA;
-    }
-
-    private String value() {
-      int hyphen;
-      hyphen = 0;
-
-      final StringBuilder sb;
-      sb = sb();
-
-      Value state;
-      state = Value.NORMAL;
-
-      while (hasNext()) {
-        final byte next;
-        next = next();
-
-        if (next == CSS_SEMICOLON) {
-          break;
-        }
-
-        switch (state) {
-          case NORMAL -> {
-            switch (next) {
-              case CSS_HYPHEN -> { hyphen = idx; state = Value.HYPHEN1; }
-
-              default -> state = Value.NORMAL;
-            }
-          }
-
-          case HYPHEN1 -> {
-            switch (next) {
-              case CSS_HYPHEN -> state = Value.HYPHEN2;
-
-              default -> state = Value.NORMAL;
-            }
-          }
-
-          case HYPHEN2 -> {
-            switch (next) {
-              case CSS_ALPHA -> state = Value.CUSTOM;
-
-              default -> state = Value.NORMAL;
-            }
-          }
-
-          case CUSTOM -> {
-            switch (next) {
-              case CSS_ALPHA -> state = Value.CUSTOM;
-
-              case CSS_LPARENS -> {
-                final String name;
-                name = text.substring(hyphen, idx);
-
-                switch (name) {
-                  case "--rx" -> state = Value.RX;
-
-                  case "--theme" -> {
-                    int length;
-                    length = sb.length();
-
-                    sb.setLength(length - "--theme".length());
-
-                    sb.append("var");
-
-                    state = Value.THEME;
-                  }
-
-                  default -> state = Value.NORMAL;
-                }
-              }
-
-              default -> state = Value.NORMAL;
-            }
-          }
-
-          case RX -> throw new UnsupportedOperationException("Implement me");
-
-          case THEME -> {
-            switch (next) {
-              case CSS_RPARENS -> state = Value.NORMAL;
-
-              case CSS_WS -> { state = Value.THEME_WS; continue; }
-
-              case CSS_COMMA -> state = Value.THEME_COMMA;
-
-              default -> state = Value.THEME;
-            }
-          }
-
-          case THEME_WS -> {
-            switch (next) {
-              case CSS_RPARENS -> state = Value.NORMAL;
-
-              case CSS_WS -> { state = Value.THEME_WS; continue; }
-
-              default -> state = Value.THEME;
-            }
-          }
-
-          case THEME_COMMA -> {
-            switch (next) {
-              case CSS_RPARENS -> state = Value.NORMAL;
-
-              case CSS_WS -> { state = Value.THEME_COMMA; continue; }
-
-              default -> { sb.append(' '); state = Value.THEME; }
-            }
-          }
-        }
-
-        sb.append(c);
-      }
-
-      return sb.toString();
-    }
-
-    private enum Props {
-      NORMAL,
-      LPARENS,
-      HYPHEN1,
-      HYPHEN2,
-      PROP;
-    }
-
-    public final Set<String> props() {
-      final Set<String> result;
-      result = new HashSet<>();
-
-      int hyphen = 0;
-
-      Props state = Props.NORMAL;
-
-      while (hasNext()) {
-        final byte next;
-        next = next();
-
-        switch (state) {
-          case NORMAL -> {
-            switch (next) {
-              case CSS_LPARENS -> state = Props.LPARENS;
-
-              default -> state = Props.NORMAL;
-            }
-          }
-
-          case LPARENS -> {
-            switch (next) {
-              case CSS_HYPHEN -> { hyphen = idx; state = Props.HYPHEN1; }
-
-              default -> state = Props.NORMAL;
-            }
-          }
-
-          case HYPHEN1 -> {
-            switch (next) {
-              case CSS_HYPHEN -> state = Props.HYPHEN2;
-
-              default -> state = Props.NORMAL;
-            }
-          }
-
-          case HYPHEN2 -> {
-            switch (next) {
-              case CSS_HYPHEN, CSS_UNDERLINE, CSS_ALPHA, CSS_DIGIT -> state = Props.PROP;
-
-              default -> state = Props.NORMAL;
-            }
-          }
-
-          case PROP -> {
-            switch (next) {
-              case CSS_HYPHEN, CSS_UNDERLINE, CSS_ALPHA, CSS_DIGIT -> state = Props.PROP;
-
-              case CSS_RPARENS, CSS_COMMA -> {
-                final String name;
-                name = text.substring(hyphen, idx);
-
-                result.add(name);
-
-                state = Props.NORMAL;
-              }
-
-              default -> state = Props.NORMAL;
-            }
-          }
-        }
-      }
-
-      return result;
-    }
-
     private IllegalArgumentException error(String message) {
       int start;
       start = text.lastIndexOf('\n', cursor);
@@ -1553,6 +1336,154 @@ final class CssEngine implements Css.StyleSheet {
   // ##################################################################
 
   // ##################################################################
+  // # BEGIN: ValueFormat
+  // ##################################################################
+
+  static final class ValueFormat {
+
+    enum Mode {
+      SEMICOLON,
+
+      EOF;
+    }
+
+    private final Mode mode;
+
+    ValueFormat(Mode mode) {
+      this.mode = mode;
+    }
+
+    private enum Value {
+      NORMAL,
+      HYPHEN1,
+      HYPHEN2,
+      CUSTOM,
+
+      RX,
+      THEME,
+      THEME_WS,
+      THEME_COMMA;
+    }
+
+    public final void formatTo(String text, StringBuilder sb) {
+      int hyphen;
+      hyphen = 0;
+
+      Value state;
+      state = Value.NORMAL;
+
+      for (int idx = 0, len = text.length(); idx < len; idx++) {
+        final char c;
+        c = text.charAt(idx);
+
+        final byte next;
+        next = c < 128 ? CSS[c] : CSS_NON_ASCII;
+
+        if (next == CSS_SEMICOLON && mode == Mode.SEMICOLON) {
+          break;
+        }
+
+        switch (state) {
+          case NORMAL -> {
+            switch (next) {
+              case CSS_HYPHEN -> { hyphen = idx; state = Value.HYPHEN1; }
+
+              default -> state = Value.NORMAL;
+            }
+          }
+
+          case HYPHEN1 -> {
+            switch (next) {
+              case CSS_HYPHEN -> state = Value.HYPHEN2;
+
+              default -> state = Value.NORMAL;
+            }
+          }
+
+          case HYPHEN2 -> {
+            switch (next) {
+              case CSS_ALPHA -> state = Value.CUSTOM;
+
+              default -> state = Value.NORMAL;
+            }
+          }
+
+          case CUSTOM -> {
+            switch (next) {
+              case CSS_ALPHA -> state = Value.CUSTOM;
+
+              case CSS_LPARENS -> {
+                final String name;
+                name = text.substring(hyphen, idx);
+
+                switch (name) {
+                  case "--rx" -> state = Value.RX;
+
+                  case "--theme" -> {
+                    int length;
+                    length = sb.length();
+
+                    sb.setLength(length - "--theme".length());
+
+                    sb.append("var");
+
+                    state = Value.THEME;
+                  }
+
+                  default -> state = Value.NORMAL;
+                }
+              }
+
+              default -> state = Value.NORMAL;
+            }
+          }
+
+          case RX -> throw new UnsupportedOperationException("Implement me");
+
+          case THEME -> {
+            switch (next) {
+              case CSS_RPARENS -> state = Value.NORMAL;
+
+              case CSS_WS -> { state = Value.THEME_WS; continue; }
+
+              case CSS_COMMA -> state = Value.THEME_COMMA;
+
+              default -> state = Value.THEME;
+            }
+          }
+
+          case THEME_WS -> {
+            switch (next) {
+              case CSS_RPARENS -> state = Value.NORMAL;
+
+              case CSS_WS -> { state = Value.THEME_WS; continue; }
+
+              default -> state = Value.THEME;
+            }
+          }
+
+          case THEME_COMMA -> {
+            switch (next) {
+              case CSS_RPARENS -> state = Value.NORMAL;
+
+              case CSS_WS -> { state = Value.THEME_COMMA; continue; }
+
+              default -> { sb.append(' '); state = Value.THEME; }
+            }
+          }
+        }
+
+        sb.append(c);
+      }
+    }
+
+  }
+
+  // ##################################################################
+  // # END: ValueFormat
+  // ##################################################################
+
+  // ##################################################################
   // # BEGIN: Variant
   // ##################################################################
 
@@ -1672,6 +1603,128 @@ final class CssEngine implements Css.StyleSheet {
   // ##################################################################
 
   // ##################################################################
+  // # BEGIN: Marker
+  // ##################################################################
+
+  static final class Marker {
+
+    private final Map<String, Decl> properties;
+
+    Marker(Map<String, Decl> properties) {
+      this.properties = properties;
+    }
+
+    private enum Props {
+      NORMAL,
+      LPARENS,
+      HYPHEN1,
+      HYPHEN2,
+      PROP;
+    }
+
+    public final void accept(Decl decl) {
+      decl.mark();
+
+      final String value;
+      value = decl.value;
+
+      accept(value);
+
+      final Decl next;
+      next = decl.next;
+
+      if (next == null) {
+        return;
+      }
+
+      accept(next);
+    }
+
+    public final void accept(String text) {
+      int hyphen;
+      hyphen = 0;
+
+      Props state;
+      state = Props.NORMAL;
+
+      for (int idx = 0, len = text.length(); idx < len; idx++) {
+        final char c;
+        c = text.charAt(idx);
+
+        final byte next;
+        next = c < 128 ? CSS[c] : CSS_NON_ASCII;
+
+        switch (state) {
+          case NORMAL -> {
+            switch (next) {
+              case CSS_LPARENS -> state = Props.LPARENS;
+
+              default -> state = Props.NORMAL;
+            }
+          }
+
+          case LPARENS -> {
+            switch (next) {
+              case CSS_HYPHEN -> { hyphen = idx; state = Props.HYPHEN1; }
+
+              default -> state = Props.NORMAL;
+            }
+          }
+
+          case HYPHEN1 -> {
+            switch (next) {
+              case CSS_HYPHEN -> state = Props.HYPHEN2;
+
+              default -> state = Props.NORMAL;
+            }
+          }
+
+          case HYPHEN2 -> {
+            switch (next) {
+              case CSS_HYPHEN, CSS_UNDERLINE, CSS_ALPHA, CSS_DIGIT -> state = Props.PROP;
+
+              default -> state = Props.NORMAL;
+            }
+          }
+
+          case PROP -> {
+            switch (next) {
+              case CSS_HYPHEN, CSS_UNDERLINE, CSS_ALPHA, CSS_DIGIT -> state = Props.PROP;
+
+              case CSS_RPARENS, CSS_COMMA -> {
+                final String name;
+                name = text.substring(hyphen, idx);
+
+                consume(name);
+
+                state = Props.NORMAL;
+              }
+
+              default -> state = Props.NORMAL;
+            }
+          }
+        }
+      }
+    }
+
+    private void consume(String name) {
+      final Decl decl;
+      decl = properties.get(name);
+
+      if (decl == null) {
+        return;
+      }
+
+      accept(decl);
+    }
+
+  }
+
+  // ##################################################################
+  // # END: Marker
+  // ##################################################################
+
+  // ##################################################################
   // # BEGIN: Configuring
   // ##################################################################
 
@@ -1692,6 +1745,8 @@ final class CssEngine implements Css.StyleSheet {
     private String systemBase = Css.systemBase();
 
     private String systemTheme = Css.systemTheme();
+
+    private Set<String> userCssProperties = Set.of();
 
     private List<String> userTheme = List.of();
 
@@ -1855,6 +1910,10 @@ final class CssEngine implements Css.StyleSheet {
       final Map<List<String>, List<Decl>> themeSections = new LinkedHashMap<>();
 
       final Map<List<String>, Map<String, Decl>> themeProps = new LinkedHashMap<>();
+
+      //
+
+      final Marker marker = new Marker(properties);
 
       final void systemTheme() {
         parser.set(systemTheme);
@@ -2101,7 +2160,7 @@ final class CssEngine implements Css.StyleSheet {
 
         for (Top top : base) {
           switch (top) {
-            case Block rule -> baseStyleRule(properties, rule);
+            case Block rule -> baseStyleRule(rule);
 
             case FontFace ff -> {/* leave it as it is */}
 
@@ -2112,27 +2171,29 @@ final class CssEngine implements Css.StyleSheet {
         return base;
       }
 
-      private void baseStyleRule(Map<String, Decl> properties, Block rule) {
+      private void baseStyleRule(Block rule) {
         for (Stmt stmt : rule.stmts) {
           switch (stmt) {
-            case Decl decl -> decl.props(parser, properties);
+            case Decl decl -> marker.accept(decl);
 
-            case Block nested -> baseStyleRule(properties, nested);
+            case Block nested -> baseStyleRule(nested);
           }
         }
       }
 
       final void componentsProperties() {
         for (Block component : components) {
-          baseStyleRule(properties, component);
+          baseStyleRule(component);
         }
       }
 
-      final Config build(List<Top> base) {
+      final Config build(List<Top> base, Set<String> cssProperties) {
         return new Config(
             base,
 
             components,
+
+            cssProperties,
 
             fontFaces,
 
@@ -2160,6 +2221,19 @@ final class CssEngine implements Css.StyleSheet {
       final Helper helper;
       helper = new Helper();
 
+      final Set<String> systemCssProperties;
+      systemCssProperties = CssProps.get();
+
+      final Set<String> cssProperties;
+
+      if (userCssProperties.isEmpty()) {
+        cssProperties = systemCssProperties;
+      } else {
+        cssProperties = userCssProperties;
+
+        userCssProperties.addAll(systemCssProperties);
+      }
+
       helper.systemTheme();
 
       helper.userTheme();
@@ -2175,7 +2249,7 @@ final class CssEngine implements Css.StyleSheet {
 
       helper.componentsProperties();
 
-      return helper.build(base);
+      return helper.build(base, cssProperties);
     }
 
     // ##################################################################
@@ -2197,6 +2271,8 @@ final class CssEngine implements Css.StyleSheet {
       List<Top> base,
 
       List<Block> components,
+
+      Set<String> cssProperties,
 
       List<FontFace> fontFaces,
 
@@ -2986,25 +3062,25 @@ final class CssEngine implements Css.StyleSheet {
 
   static final class Proc implements Slugs {
 
-    final ClassNameFormat classNameFormat = new ClassNameFormat();
+    private final ClassNameFormat classNameFormat = new ClassNameFormat();
 
-    final CssParser cssParser = new CssParser();
+    private final Set<String> cssProperties;
 
-    final Set<String> distinct = new HashSet<>();
+    private final Set<String> distinct = new HashSet<>();
 
-    final Note.Sink noteSink;
+    private final Note.Sink noteSink;
 
-    final List<Variant> parsedVars = new ArrayList<>();
+    private final List<Variant> parsedVars = new ArrayList<>();
 
-    final StringBuilder sb = new StringBuilder();
+    private final List<Utility> utilities = new ArrayList<>();
 
-    final List<Utility> utilities = new ArrayList<>();
+    private final VariantParser variantParser = new VariantParser();
 
-    final VariantParser variantParser = new VariantParser();
+    private final Map<String, Variant> variants;
 
-    final Map<String, Variant> variants;
+    Proc(Set<String> cssProperties, Note.Sink noteSink, Map<String, Variant> variants) {
+      this.cssProperties = cssProperties;
 
-    Proc(Note.Sink noteSink, Map<String, Variant> variants) {
       this.noteSink = noteSink;
 
       this.variants = variants;
@@ -3017,11 +3093,15 @@ final class CssEngine implements Css.StyleSheet {
         return;
       }
 
-      final String propValue;
-      propValue = slugs.get(0);
-
       final String propName;
       propName = slugs.get(1);
+
+      if (!cssProperties.contains(propName)) {
+        return;
+      }
+
+      final String propValue;
+      propValue = slugs.get(0);
 
       // process variants
       parsedVars.clear();
@@ -3047,15 +3127,14 @@ final class CssEngine implements Css.StyleSheet {
       final String classNameFormatted;
       classNameFormatted = classNameFormat.format(className);
 
-      cssParser.set(propValue);
-
-      final List<Value> values;
-      values = cssParser.parseValues();
-
       final Utility utility;
-      utility = new Utility(vars, classNameFormatted, propName, values);
+      utility = new Utility(vars, classNameFormatted, propName, propValue);
 
       utilities.add(utility);
+    }
+
+    public final List<Utility> result() {
+      return utilities;
     }
 
     private Variant variantByName(String name) {
@@ -3126,24 +3205,24 @@ final class CssEngine implements Css.StyleSheet {
 
   static final class Gen {
 
-    static final Set<String> KEYFRAMES_PROPERTIES = Set.of(
+    private static final Set<String> KEYFRAMES_PROPERTIES = Set.of(
         "animation",
         "animation-name"
     );
 
-    final Map<String, Keyframes> keyframes;
+    private final Map<String, Keyframes> keyframes;
 
-    final Map<String, Keyframes> keyframesMarked = new HashMap<>();
+    private final Map<String, Keyframes> keyframesMarked = new HashMap<>();
 
-    final Map<String, Decl> properties;
+    private final Map<String, Decl> properties;
 
-    final List<Rule> rules = new ArrayList<>();
+    private final List<Rule> rules = new ArrayList<>();
 
-    final List<Section> sections;
+    private final List<Section> sections;
 
     private final StringBuilder sb = new StringBuilder();
 
-    final List<Utility> utilities;
+    private final List<Utility> utilities;
 
     Gen(Map<String, Keyframes> keyframes, Map<String, Decl> properties, List<Section> sections, List<Utility> utilities) {
       this.keyframes = keyframes;
