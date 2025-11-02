@@ -18,7 +18,7 @@ package objectos.way;
 import static org.testng.Assert.assertEquals;
 import org.testng.annotations.Test;
 
-public class CssEngineTest00Properties {
+public class CssEngineTest01Properties {
 
   @Test(description = "value w/ 1 prop")
   public void testCase01() {

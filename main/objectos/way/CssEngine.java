@@ -389,6 +389,7 @@ final class CssEngine implements Css.StyleSheet {
   private static final byte CSS_EOF = 25;
   private static final byte CSS_EXCLAMATION = 26;
   private static final byte CSS_PLUS = 27;
+  private static final byte CSS_AMPERSAND = 28;
 
   static {
     final byte[] table;
@@ -410,6 +411,7 @@ final class CssEngine implements Css.StyleSheet {
     table['"'] = CSS_DQUOTE;
     table['#'] = CSS_HASH;
     table['%'] = CSS_PERCENT;
+    table['&'] = CSS_AMPERSAND;
     table['\''] = CSS_SQUOTE;
     table['('] = CSS_LPARENS;
     table[')'] = CSS_RPARENS;
@@ -453,12 +455,6 @@ final class CssEngine implements Css.StyleSheet {
     private String text;
 
     Syntax() {}
-
-    public final void set(String value) {
-      cursor = idx = 0;
-
-      text = value;
-    }
 
     private enum Dim {
       INT,
@@ -519,207 +515,11 @@ final class CssEngine implements Css.StyleSheet {
     }
 
     public final String formatValue() {
-      return formatValue0(false);
+      return value(false);
     }
 
     private String formatValueSemicolon() {
-      return formatValue0(true);
-    }
-
-    private enum Value {
-      NORMAL,
-      HYPHEN1,
-      HYPHEN2,
-      CUSTOM,
-
-      RX,
-      RX_INT,
-      RX_DOT,
-      RX_DOUBLE,
-
-      THEME,
-      THEME_WS,
-      THEME_COMMA;
-    }
-
-    private String formatValue0(boolean semi) {
-      int hyphen;
-      hyphen = 0;
-
-      final StringBuilder sb;
-      sb = sb();
-
-      Value state;
-      state = Value.NORMAL;
-
-      while (hasNext()) {
-        final byte next;
-        next = next();
-
-        if (next == CSS_SEMICOLON && semi) {
-          return sb.toString();
-        }
-
-        switch (state) {
-          case NORMAL -> {
-            switch (next) {
-              case CSS_HYPHEN -> { hyphen = idx; state = Value.HYPHEN1; }
-
-              default -> state = Value.NORMAL;
-            }
-          }
-
-          case HYPHEN1 -> {
-            switch (next) {
-              case CSS_HYPHEN -> state = Value.HYPHEN2;
-
-              default -> state = Value.NORMAL;
-            }
-          }
-
-          case HYPHEN2 -> {
-            switch (next) {
-              case CSS_ALPHA -> state = Value.CUSTOM;
-
-              default -> state = Value.NORMAL;
-            }
-          }
-
-          case CUSTOM -> {
-            switch (next) {
-              case CSS_ALPHA -> state = Value.CUSTOM;
-
-              case CSS_LPARENS -> {
-                final String name;
-                name = text.substring(hyphen, idx);
-
-                switch (name) {
-                  case "--rx" -> state = Value.RX;
-
-                  case "--theme" -> {
-                    int length;
-                    length = sb.length();
-
-                    sb.setLength(length - "--theme".length());
-
-                    sb.append("var");
-
-                    state = Value.THEME;
-                  }
-
-                  default -> state = Value.NORMAL;
-                }
-              }
-
-              default -> state = Value.NORMAL;
-            }
-          }
-
-          case RX -> {
-            switch (next) {
-              case CSS_DOT -> state = Value.RX_DOUBLE;
-
-              case CSS_DIGIT -> state = Value.RX_INT;
-
-              default -> state = Value.NORMAL;
-            }
-          }
-
-          case RX_INT -> {
-            switch (next) {
-              case CSS_RPARENS -> { state = formatRx(hyphen); continue; }
-
-              case CSS_DOT -> state = Value.RX_DOT;
-
-              case CSS_DIGIT -> state = Value.RX_INT;
-
-              default -> state = Value.NORMAL;
-            }
-          }
-
-          case RX_DOT -> {
-            switch (next) {
-              case CSS_DIGIT -> state = Value.RX_DOUBLE;
-
-              default -> state = Value.NORMAL;
-            }
-          }
-
-          case RX_DOUBLE -> {
-            switch (next) {
-              case CSS_RPARENS -> { state = formatRx(hyphen); continue; }
-
-              case CSS_DIGIT -> state = Value.RX_DOUBLE;
-
-              default -> state = Value.NORMAL;
-            }
-          }
-
-          case THEME -> {
-            switch (next) {
-              case CSS_RPARENS -> state = Value.NORMAL;
-
-              case CSS_WS -> { state = Value.THEME_WS; continue; }
-
-              case CSS_COMMA -> state = Value.THEME_COMMA;
-
-              default -> state = Value.THEME;
-            }
-          }
-
-          case THEME_WS -> {
-            switch (next) {
-              case CSS_RPARENS -> state = Value.NORMAL;
-
-              case CSS_WS -> { state = Value.THEME_WS; continue; }
-
-              default -> state = Value.THEME;
-            }
-          }
-
-          case THEME_COMMA -> {
-            switch (next) {
-              case CSS_RPARENS -> state = Value.NORMAL;
-
-              case CSS_WS -> { state = Value.THEME_COMMA; continue; }
-
-              default -> { sb.append(' '); state = Value.THEME; }
-            }
-          }
-        }
-
-        sb.append(c);
-      }
-
-      if (semi) {
-        throw error("Invalid CSS declaration value");
-      }
-
-      return sb.toString();
-    }
-
-    private Value formatRx(int hyphen) {
-      final int start;
-      start = hyphen + 5; // '--rx('
-
-      final int end;
-      end = idx;
-
-      final String value;
-      value = text.substring(start, end);
-
-      int length;
-      length = sb.length();
-
-      sb.setLength(length - (idx - hyphen));
-
-      sb.append("calc(");
-
-      sb.append(value);
-
-      sb.append(" / 16 * 1rem)");
-
-      return Value.NORMAL;
+      return value(true);
     }
 
     public final List<Top> parse() {
@@ -741,6 +541,56 @@ final class CssEngine implements Css.StyleSheet {
       }
 
       return result;
+    }
+
+    public final void set(String value) {
+      cursor = idx = 0;
+
+      text = value;
+    }
+
+    public final Variant variant() {
+      final byte next;
+      next = whileNext(CSS_WS);
+
+      return switch (next) {
+        case CSS_AT -> variantAt();
+
+        default -> variantSel();
+      };
+    }
+
+    private Variant variantAt() {
+      final int start;
+      start = idx;
+
+      whileNext(CSS_HYPHEN, CSS_ALPHA);
+
+      final String name;
+      name = text.substring(start, idx);
+
+      return switch (name) {
+        case "@media" -> varianAtQuery(name);
+
+        default -> throw error("Only @media at-rules are currently supported");
+      };
+    }
+
+    private Variant varianAtQuery(String name) {
+      final String query;
+      query = atQuery(true, name);
+
+      return simple(query);
+    }
+
+    private Variant variantSel() {
+      // re-consume first char;
+      cursor--;
+
+      final String selector;
+      selector = selector(CSS_EOF);
+
+      return simple(selector);
     }
 
     private At at() {
@@ -774,7 +624,7 @@ final class CssEngine implements Css.StyleSheet {
 
     private Block atBlock(String name) {
       final String query;
-      query = atQuery(name);
+      query = atQuery(false, name);
 
       final List<Stmt> stmts;
       stmts = stmts();
@@ -940,7 +790,7 @@ final class CssEngine implements Css.StyleSheet {
       final byte next;
       next = whileNext(CSS_ALPHA);
 
-      return selEnd(start, next);
+      return selEnd(false, start, next);
     }
 
     private String atKeyframesSelectorPerc() {
@@ -957,10 +807,10 @@ final class CssEngine implements Css.StyleSheet {
       final byte next;
       next = nextEof();
 
-      return selEnd(start, next);
+      return selEnd(false, start, next);
     }
 
-    private String atQuery(String name) {
+    private String atQuery(boolean eof, String name) {
       final StringBuilder sb;
       sb = sb();
 
@@ -980,9 +830,9 @@ final class CssEngine implements Css.StyleSheet {
 
           case CSS_WS -> ws++;
 
-          case CSS_COMMA -> { sb.append(c); ws++; }
+          case CSS_COMMA, CSS_COLON -> { sb.append(c); ws++; }
 
-          case CSS_LPARENS -> { if (ws > 0) { sb.append(' '); } sb.append(c); ws = 0; }
+          case CSS_LPARENS -> { sb.append(' '); sb.append(c); ws = 0; }
 
           case CSS_RPARENS -> { sb.append(c); ws = 0; }
 
@@ -990,7 +840,11 @@ final class CssEngine implements Css.StyleSheet {
         }
       }
 
-      throw error(EOF_AT);
+      if (eof) {
+        return sb.toString();
+      } else {
+        throw error(EOF_AT);
+      }
     }
 
     private void comment() {
@@ -1146,6 +1000,9 @@ final class CssEngine implements Css.StyleSheet {
       int ws;
       ws = 0;
 
+      final boolean eof;
+      eof = stop == CSS_EOF;
+
       while (hasNext()) {
         final byte next;
         next = next();
@@ -1186,27 +1043,33 @@ final class CssEngine implements Css.StyleSheet {
 
         final String sel;
         sel = switch (next) {
-          case CSS_HASH -> selId();
+          case CSS_HASH -> selId(eof);
 
-          case CSS_ASTERISK -> selUniversal();
+          case CSS_ASTERISK -> selUniversal(eof);
 
           case CSS_COMMA -> selList();
 
-          case CSS_DOT -> selClass();
+          case CSS_DOT -> selClass(eof);
 
-          case CSS_COLON -> selPseudo();
+          case CSS_COLON -> selPseudo(eof);
 
           case CSS_LSQUARE -> selAttr();
 
-          case CSS_ALPHA -> selType();
+          case CSS_ALPHA -> selType(eof);
 
-          default -> throw new UnsupportedOperationException("Implement me :: next=" + next);
+          case CSS_AMPERSAND -> selNesting(eof);
+
+          default -> throw error("Invalid selector");
         };
 
         sb.append(sel);
       }
 
-      throw error(EOF_SEL);
+      if (eof) {
+        return sb.toString();
+      } else {
+        throw error(EOF_SEL);
+      }
     }
 
     private String selAttr() {
@@ -1225,34 +1088,46 @@ final class CssEngine implements Css.StyleSheet {
       throw error(EOF_SEL);
     }
 
-    private String selClass() {
+    private String selClass(boolean eof) {
       final int start;
       start = idx;
 
       final byte next;
       next = whileNext(CSS_HYPHEN, CSS_UNDERLINE, CSS_ALPHA, CSS_DIGIT);
 
-      return selEnd(start, next);
+      return selEnd(eof, start, next);
     }
 
-    private String selEnd(int start, byte next) {
+    private String selEnd(boolean eof, int start, byte next) {
       return switch (next) {
-        case CSS_EOF -> throw error(EOF_SEL);
+        case CSS_EOF -> {
+          if (eof) {
+            yield text.substring(start, cursor);
+          } else {
+            throw error(EOF_SEL);
+          }
+        }
 
-        case CSS_WS, CSS_COMMA, CSS_COLON -> text.substring(start, --cursor);
+        case CSS_WS,
+             // attr
+             CSS_LSQUARE,
+             // list
+             CSS_COMMA,
+             // pseudo
+             CSS_COLON -> text.substring(start, --cursor);
 
         default -> throw error("Invalid selector");
       };
     }
 
-    private String selId() {
+    private String selId(boolean eof) {
       final int start;
       start = idx;
 
       final byte next;
       next = whileNext(CSS_HYPHEN, CSS_UNDERLINE, CSS_ALPHA, CSS_DIGIT);
 
-      return selEnd(start, next);
+      return selEnd(eof, start, next);
     }
 
     private String selList() {
@@ -1262,6 +1137,8 @@ final class CssEngine implements Css.StyleSheet {
       return switch (next) {
         // universal
         case CSS_ASTERISK,
+             // nesting
+             CSS_AMPERSAND,
              // attr
              CSS_LSQUARE,
              // class
@@ -1277,7 +1154,14 @@ final class CssEngine implements Css.StyleSheet {
       };
     }
 
-    private String selPseudo() {
+    private String selNesting(boolean eof) {
+      final int start;
+      start = idx;
+
+      return selEnd(eof, start, nextEof());
+    }
+
+    private String selPseudo(boolean eof) {
       final int start;
       start = idx;
 
@@ -1286,15 +1170,15 @@ final class CssEngine implements Css.StyleSheet {
       }
 
       return switch (next()) {
-        case CSS_HYPHEN, CSS_ALPHA -> selPseudo0(start);
+        case CSS_HYPHEN, CSS_ALPHA -> selPseudo0(eof, start);
 
-        case CSS_COLON -> selPseudo0(start);
+        case CSS_COLON -> selPseudo0(eof, start);
 
         default -> throw error("Invalid pseudo CSS selector");
       };
     }
 
-    private String selPseudo0(int start) {
+    private String selPseudo0(boolean eof, int start) {
       final byte next;
       next = whileNext(CSS_HYPHEN, CSS_UNDERLINE, CSS_ALPHA, CSS_DIGIT);
 
@@ -1304,25 +1188,25 @@ final class CssEngine implements Css.StyleSheet {
 
         return sel + selector(CSS_RPARENS) + ")";
       } else {
-        return selEnd(start, next);
+        return selEnd(eof, start, next);
       }
     }
 
-    private String selType() {
+    private String selType(boolean eof) {
       final int start;
       start = idx;
 
       final byte next;
       next = whileNext(CSS_HYPHEN, CSS_UNDERLINE, CSS_ALPHA, CSS_DIGIT);
 
-      return selEnd(start, next);
+      return selEnd(eof, start, next);
     }
 
-    private String selUniversal() {
+    private String selUniversal(boolean eof) {
       final int start;
       start = idx;
 
-      return selEnd(start, nextEof());
+      return selEnd(eof, start, nextEof());
     }
 
     private List<Stmt> stmts() {
@@ -1402,6 +1286,204 @@ final class CssEngine implements Css.StyleSheet {
 
       return new Block(selector, stmts);
     }
+
+    private enum Value {
+      NORMAL,
+      HYPHEN1,
+      HYPHEN2,
+      CUSTOM,
+
+      RX,
+      RX_INT,
+      RX_DOT,
+      RX_DOUBLE,
+
+      THEME,
+      THEME_WS,
+      THEME_COMMA;
+    }
+
+    private String value(boolean semi) {
+      int hyphen;
+      hyphen = 0;
+
+      final StringBuilder sb;
+      sb = sb();
+
+      Value state;
+      state = Value.NORMAL;
+
+      while (hasNext()) {
+        final byte next;
+        next = next();
+
+        if (next == CSS_SEMICOLON && semi) {
+          return sb.toString();
+        }
+
+        switch (state) {
+          case NORMAL -> {
+            switch (next) {
+              case CSS_HYPHEN -> { hyphen = idx; state = Value.HYPHEN1; }
+
+              default -> state = Value.NORMAL;
+            }
+          }
+
+          case HYPHEN1 -> {
+            switch (next) {
+              case CSS_HYPHEN -> state = Value.HYPHEN2;
+
+              default -> state = Value.NORMAL;
+            }
+          }
+
+          case HYPHEN2 -> {
+            switch (next) {
+              case CSS_ALPHA -> state = Value.CUSTOM;
+
+              default -> state = Value.NORMAL;
+            }
+          }
+
+          case CUSTOM -> {
+            switch (next) {
+              case CSS_ALPHA -> state = Value.CUSTOM;
+
+              case CSS_LPARENS -> {
+                final String name;
+                name = text.substring(hyphen, idx);
+
+                switch (name) {
+                  case "--rx" -> state = Value.RX;
+
+                  case "--theme" -> {
+                    int length;
+                    length = sb.length();
+
+                    sb.setLength(length - "--theme".length());
+
+                    sb.append("var");
+
+                    state = Value.THEME;
+                  }
+
+                  default -> state = Value.NORMAL;
+                }
+              }
+
+              default -> state = Value.NORMAL;
+            }
+          }
+
+          case RX -> {
+            switch (next) {
+              case CSS_DOT -> state = Value.RX_DOUBLE;
+
+              case CSS_DIGIT -> state = Value.RX_INT;
+
+              default -> state = Value.NORMAL;
+            }
+          }
+
+          case RX_INT -> {
+            switch (next) {
+              case CSS_RPARENS -> { state = valueRx(hyphen); continue; }
+
+              case CSS_DOT -> state = Value.RX_DOT;
+
+              case CSS_DIGIT -> state = Value.RX_INT;
+
+              default -> state = Value.NORMAL;
+            }
+          }
+
+          case RX_DOT -> {
+            switch (next) {
+              case CSS_DIGIT -> state = Value.RX_DOUBLE;
+
+              default -> state = Value.NORMAL;
+            }
+          }
+
+          case RX_DOUBLE -> {
+            switch (next) {
+              case CSS_RPARENS -> { state = valueRx(hyphen); continue; }
+
+              case CSS_DIGIT -> state = Value.RX_DOUBLE;
+
+              default -> state = Value.NORMAL;
+            }
+          }
+
+          case THEME -> {
+            switch (next) {
+              case CSS_RPARENS -> state = Value.NORMAL;
+
+              case CSS_WS -> { state = Value.THEME_WS; continue; }
+
+              case CSS_COMMA -> state = Value.THEME_COMMA;
+
+              default -> state = Value.THEME;
+            }
+          }
+
+          case THEME_WS -> {
+            switch (next) {
+              case CSS_RPARENS -> state = Value.NORMAL;
+
+              case CSS_WS -> { state = Value.THEME_WS; continue; }
+
+              default -> state = Value.THEME;
+            }
+          }
+
+          case THEME_COMMA -> {
+            switch (next) {
+              case CSS_RPARENS -> state = Value.NORMAL;
+
+              case CSS_WS -> { state = Value.THEME_COMMA; continue; }
+
+              default -> { sb.append(' '); state = Value.THEME; }
+            }
+          }
+        }
+
+        sb.append(c);
+      }
+
+      if (semi) {
+        throw error("Invalid CSS declaration value");
+      }
+
+      return sb.toString();
+    }
+
+    private Value valueRx(int hyphen) {
+      final int start;
+      start = hyphen + 5; // '--rx('
+
+      final int end;
+      end = idx;
+
+      final String value;
+      value = text.substring(start, end);
+
+      int length;
+      length = sb.length();
+
+      sb.setLength(length - (idx - hyphen));
+
+      sb.append("calc(");
+
+      sb.append(value);
+
+      sb.append(" / 16 * 1rem)");
+
+      return Value.NORMAL;
+    }
+
+    // utils
 
     private IllegalArgumentException error(String message) {
       int start;
@@ -1535,115 +1617,12 @@ final class CssEngine implements Css.StyleSheet {
   // # BEGIN: Variant
   // ##################################################################
 
-  private static final byte[] VAR;
-
-  private static final byte VAR_INVALID = 0;
-  private static final byte VAR_CHAR = 1;
-  private static final byte VAR_WS = 2;
-  private static final byte VAR_SPACED = 3;
-  private static final byte VAR_JOINED = 4;
-
-  static {
-    final byte[] table;
-    table = new byte[128];
-
-    // start with invalid
-
-    // from SP (32) mark as CHAR
-    Arrays.fill(table, ' ', table.length, VAR_CHAR);
-
-    // WS
-    for (int idx = 0; idx < CSS.length; idx++) {
-      if (CSS[idx] == CSS_WS) {
-        table[idx] = VAR_WS;
-      }
-    }
-
-    table['('] = VAR_SPACED;
-
-    table[':'] = VAR_JOINED;
-
-    VAR = table;
-  }
-
   sealed interface Variant {}
 
   record Simple(String value) implements Variant {}
 
   static Simple simple(String value) {
     return new Simple(value);
-  }
-
-  static final class VariantParser {
-
-    static final byte $NORMAL = 0;
-    static final byte $WORD = 1;
-    static final byte $WS = 2;
-
-    final StringBuilder sb = new StringBuilder();
-
-    public final Variant parse(String text) {
-      byte state;
-      state = $NORMAL;
-
-      boolean modified;
-      modified = false;
-
-      for (int idx = 0, len = text.length(); idx < len; idx++) {
-        final char c;
-        c = text.charAt(idx);
-
-        state = switch (state) {
-          case $NORMAL -> switch (test(c)) {
-            case VAR_INVALID -> throw invalid(c);
-
-            case VAR_WS -> $NORMAL;
-
-            default -> { sb.setLength(0); sb.append(c); yield $WORD; }
-          };
-
-          case $WORD -> switch (test(c)) {
-            case VAR_INVALID -> throw invalid(c);
-
-            case VAR_WS -> $WS;
-
-            case VAR_SPACED -> { modified = true; sb.append(' '); sb.append(c); yield $WORD; }
-
-            case VAR_JOINED -> { sb.append(c); yield $WS; }
-
-            default -> { sb.append(c); yield $WORD; }
-          };
-
-          case $WS -> switch (test(c)) {
-            case VAR_INVALID -> throw invalid(c);
-
-            case VAR_WS -> $WS;
-
-            default -> { modified = true; sb.append(' '); sb.append(c); yield $WORD; }
-          };
-
-          default -> throw new AssertionError("Unexpected state=" + state);
-        };
-      }
-
-      if (state == $NORMAL) {
-        throw new IllegalArgumentException("Variant with a blank rule");
-      }
-
-      final String rule;
-      rule = modified ? sb.toString() : text;
-
-      return simple(rule);
-    }
-
-    private IllegalArgumentException invalid(char c) {
-      return new IllegalArgumentException("Variant with an invalid character: " + c);
-    }
-
-    private byte test(char c) {
-      return c < 128 ? VAR[c] : VAR_CHAR;
-    }
-
   }
 
   // ##################################################################
@@ -3167,8 +3146,6 @@ final class CssEngine implements Css.StyleSheet {
 
     private final List<Utility> utilities = new ArrayList<>();
 
-    private final VariantParser variantParser = new VariantParser();
-
     private final Map<String, Variant> variants;
 
     Proc(Set<String> cssProperties, Note.Sink noteSink, Map<String, Variant> variants) {
@@ -3244,8 +3221,10 @@ final class CssEngine implements Css.StyleSheet {
       }
 
       try {
+        syntax.set(name);
+
         final Variant parsed;
-        parsed = variantParser.parse(name);
+        parsed = syntax.variant();
 
         variants.put(name, parsed);
 

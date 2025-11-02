@@ -402,4 +402,45 @@ public class CssEngineTest00Syntax {
     }
   }
 
+  @DataProvider
+  public Object[][] variantProvider() {
+    return new Object[][] {{
+        "attr variant",
+        "&[data-foo]",
+        CssEngine.simple("&[data-foo]")
+    }, {
+        "@media variant",
+        "@media (prefers-color-scheme: dark)",
+        CssEngine.simple("@media (prefers-color-scheme: dark)")
+    }, {
+        "@media variant (add ws)",
+        "@media(prefers-color-scheme:dark)",
+        CssEngine.simple("@media (prefers-color-scheme: dark)")
+    }, {
+        "@media variant (normalize ws)",
+        "  @media    (prefers-color-scheme:\ndark)\n",
+        CssEngine.simple("@media (prefers-color-scheme: dark)")
+    }, {
+        "pseudo-class variant",
+        "&:active",
+        CssEngine.simple("&:active")
+    }};
+  }
+
+  @Test(dataProvider = "variantProvider")
+  public void variant(
+      String description,
+      String input,
+      @SuppressWarnings("exports") CssEngine.Variant expected) {
+    final CssEngine.Syntax syntax;
+    syntax = new CssEngine.Syntax();
+
+    syntax.set(input);
+
+    final CssEngine.Variant result;
+    result = syntax.variant();
+
+    assertEquals(result, expected);
+  }
+
 }
