@@ -30,13 +30,13 @@ public class CssEngineTest02Configuring {
   @Test(description = """
   breakpoint
   - it should create a keyword
-  - it should create a variant
   """)
   public void breakpoint01() {
     test(
         c -> {
           c.systemBase("");
           c.systemTheme("");
+          c.systemVariants("");
           c.theme("""
           :root {
             --breakpoint-sm: 40rem;
@@ -55,9 +55,7 @@ public class CssEngineTest02Configuring {
           assertEquals(c.sections(), List.of(
               section(List.of(":root"), v)
           ));
-          assertEquals(c.variants(), Map.of(
-              "sm", CssEngine.simple("@media (min-width: 40rem)")
-          ));
+          assertEquals(c.variants(), Map.of());
         }
     );
   }
@@ -75,6 +73,7 @@ public class CssEngineTest02Configuring {
             --breakpoint-sm: 40rem;
           }
           """);
+          c.systemVariants("");
           c.theme("""
           :root {
             --breakpoint-sm: 30rem;
@@ -96,9 +95,7 @@ public class CssEngineTest02Configuring {
           assertEquals(c.sections(), List.of(
               section(List.of(":root"), v0, v1)
           ));
-          assertEquals(c.variants(), Map.of(
-              "sm", CssEngine.simple("@media (min-width: 30rem)")
-          ));
+          assertEquals(c.variants(), Map.of());
         }
     );
   }
@@ -112,6 +109,7 @@ public class CssEngineTest02Configuring {
         c -> {
           c.systemBase("");
           c.systemTheme("");
+          c.systemVariants("");
           c.theme("""
           :root {
           --color-test: #cafeba;
@@ -144,6 +142,7 @@ public class CssEngineTest02Configuring {
         c -> {
           c.systemBase("");
           c.systemTheme("");
+          c.systemVariants("");
           c.theme("""
           :root {
           --font-test: 'Comic Sans';
@@ -173,6 +172,7 @@ public class CssEngineTest02Configuring {
         c -> {
           c.systemBase("");
           c.systemTheme("");
+          c.systemVariants("");
           c.theme("""
           @keyframes fade-in {
             from { opacity: 0; }
@@ -203,6 +203,7 @@ public class CssEngineTest02Configuring {
         c -> {
           c.systemBase("");
           c.systemTheme("");
+          c.systemVariants("");
           c.theme("""
           :root {
             --color-primary: #f0f0f0;
@@ -243,6 +244,7 @@ public class CssEngineTest02Configuring {
             --color-theme: #f0f0f0;
           }
           """);
+          c.systemVariants("");
           c.components("""
           [data-theme=g90] {
             --color-background: var(--color-theme);
@@ -279,6 +281,7 @@ public class CssEngineTest02Configuring {
         c -> {
           c.systemBase("");
           c.systemTheme("");
+          c.systemVariants("");
           c.theme("""
           @font-face {
             font-family: "IBM Plex Sans";
@@ -325,6 +328,7 @@ public class CssEngineTest02Configuring {
           --default-font-family: var(--font-sans);
           }
           """);
+          c.systemVariants("");
         },
 
         c -> {
@@ -342,6 +346,61 @@ public class CssEngineTest02Configuring {
               CssEngine.section(List.of(":root"), v0, v1)
           ));
           assertEquals(c.variants(), Map.of());
+        }
+    );
+  }
+
+  @Test
+  public void variants01() {
+    test(
+        c -> {
+          c.systemBase("");
+          c.systemTheme("");
+          c.systemVariants("");
+          c.variants("""
+          hover { &:hover { {} } }
+          """);
+        },
+
+        c -> {
+          assertEquals(c.components(), List.of());
+          assertEquals(c.fontFaces(), List.of());
+          assertEquals(c.keyframes(), Map.of());
+          assertEquals(c.propertiesMap(), Map.of());
+          assertEquals(c.sections(), List.of());
+          assertEquals(c.variants(), Map.of(
+              "hover", CssEngine.variant(0, "hover", "&:hover { ", " }")
+          ));
+        }
+    );
+  }
+
+  @Test(description = """
+  variants:
+  - it should replace system value
+  """)
+  public void variants02() {
+    test(
+        c -> {
+          c.systemBase("");
+          c.systemTheme("");
+          c.systemVariants("""
+          hover { @media (hover: hover) { &:hover { {} } } }
+          """);
+          c.variants("""
+          hover { &:hover { {} } }
+          """);
+        },
+
+        c -> {
+          assertEquals(c.components(), List.of());
+          assertEquals(c.fontFaces(), List.of());
+          assertEquals(c.keyframes(), Map.of());
+          assertEquals(c.propertiesMap(), Map.of());
+          assertEquals(c.sections(), List.of());
+          assertEquals(c.variants(), Map.of(
+              "hover", CssEngine.variant(0, "hover", "&:hover { ", " }")
+          ));
         }
     );
   }

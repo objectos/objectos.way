@@ -407,23 +407,15 @@ public class CssEngineTest00Syntax {
     return new Object[][] {{
         "attr variant",
         "&[data-foo]",
-        CssEngine.simple("&[data-foo]")
-    }, {
-        "@media variant",
-        "@media (prefers-color-scheme: dark)",
-        CssEngine.simple("@media (prefers-color-scheme: dark)")
+        CssEngine.variant(0, "&[data-foo]", "&[data-foo] { ", " }")
     }, {
         "@media variant (add ws)",
         "@media(prefers-color-scheme:dark)",
-        CssEngine.simple("@media (prefers-color-scheme: dark)")
-    }, {
-        "@media variant (normalize ws)",
-        "  @media    (prefers-color-scheme:\ndark)\n",
-        CssEngine.simple("@media (prefers-color-scheme: dark)")
+        CssEngine.variant(0, "@media(prefers-color-scheme:dark)", "@media (prefers-color-scheme: dark) { ", " }")
     }, {
         "pseudo-class variant",
         "&:active",
-        CssEngine.simple("&:active")
+        CssEngine.variant(0, "&:active", "&:active { ", " }")
     }};
   }
 
@@ -438,7 +430,54 @@ public class CssEngineTest00Syntax {
     syntax.set(input);
 
     final CssEngine.Variant result;
-    result = syntax.variant();
+    result = syntax.variant(0);
+
+    assertEquals(result, expected);
+  }
+
+  @DataProvider
+  public Object[][] variantsValidProvider() {
+    return new Object[][] {{
+        "pseudo class: one",
+        """
+        active { &:active { {} } }
+        """,
+        List.of(
+            CssEngine.variant(0, "active", "&:active { ", " }")
+        )
+    }, {
+        "pseudo class: two",
+        """
+        active { &:active { {} } }
+        checked { &:checked { {} } }
+        """,
+        List.of(
+            CssEngine.variant(0, "active", "&:active { ", " }"),
+            CssEngine.variant(1, "checked", "&:checked { ", " }")
+        )
+    }, {
+        "nested",
+        """
+        hover { @media (hover: hover) { &:hover { {} } } }
+        """,
+        List.of(
+            CssEngine.variant(0, "hover", "@media (hover: hover) { &:hover { ", " } }")
+        )
+    }};
+  }
+
+  @Test(dataProvider = "variantsValidProvider")
+  public void variantsValid(
+      String description,
+      String input,
+      @SuppressWarnings("exports") List<CssEngine.Variant> expected) {
+    final CssEngine.Syntax syntax;
+    syntax = new CssEngine.Syntax();
+
+    syntax.set(input);
+
+    final List<CssEngine.Variant> result;
+    result = syntax.variants(0);
 
     assertEquals(result, expected);
   }

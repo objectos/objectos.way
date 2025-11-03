@@ -406,6 +406,30 @@ public class CssEngineTest16Full {
           .foo\\:0 { foo: 0 }
         }
         """
+    }, {
+        "variants + sorting",
+        cfg(e -> {
+          class Subject extends CssSubject {
+            @Override
+            final void classes() {
+              css("sm/width:0 x2/width:0 xl/width:0 lg/width:0 md/width:0 width:0");
+            }
+          }
+
+          e.systemBase("");
+          e.systemTheme("");
+          e.scanClasses(Subject.class);
+        }),
+        """
+        @layer utilities {
+          .width\\:0 { width: 0 }
+          .sm\\/width\\:0 { @media (min-width: 40rem) { width: 0 } }
+          .md\\/width\\:0 { @media (min-width: 48rem) { width: 0 } }
+          .lg\\/width\\:0 { @media (min-width: 64rem) { width: 0 } }
+          .xl\\/width\\:0 { @media (min-width: 80rem) { width: 0 } }
+          .x2\\/width\\:0 { @media (min-width: 96rem) { width: 0 } }
+        }
+        """
     }};
   }
 

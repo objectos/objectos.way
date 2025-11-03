@@ -26,7 +26,12 @@ import org.testng.annotations.Test;
 
 public class CssEngineTest14Utilities {
 
-  private static final CssEngine.Simple AFTER = CssEngine.simple("&::after");
+  private static final CssEngine.Variant AFTER = CssEngine.variant(
+      0, "&::after", "&::after { ", " }"
+  );
+  private static final CssEngine.Variant MD = CssEngine.variant(
+      2, "md", "@media (min-width: 48rem) { ", " }"
+  );
 
   @DataProvider
   public Object[][] writeProvider() {
@@ -52,6 +57,16 @@ public class CssEngineTest14Utilities {
         """
         @layer utilities {
           .after\\/padding\\:0 { &::after { padding: 0 } }
+        }
+        """
+    }, {
+        "1 rule + 2 variants",
+        List.of(
+            utility(List.of(MD, AFTER), ".md\\/after\\/padding\\:0", "padding", "0")
+        ),
+        """
+        @layer utilities {
+          .md\\/after\\/padding\\:0 { @media (min-width: 48rem) { &::after { padding: 0 } } }
         }
         """
     }};

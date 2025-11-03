@@ -65,6 +65,18 @@ public final class Css {
       /// @param value the CSS
       void components(String value);
 
+      //
+      // VARIANT
+      //
+
+      /// Creates the specified custom variants.
+      ///
+      /// Custom variants are sorted in the generated CSS in the same order
+      /// as they are declared in the configuration.
+      ///
+      /// @param value the variants definition
+      void variants(String value);
+
     }
 
     /// Sets the configuration of this `Library` instance.
@@ -118,6 +130,15 @@ public final class Css {
       ///
       /// @param value the CSS
       void systemBase(String value);
+
+      //
+      // VARIANT
+      //
+
+      /// Replaces the system variants definition with the specified value.
+      ///
+      /// @param value the system variants definition
+      void systemVariants(String value);
 
     }
 
@@ -578,6 +599,12 @@ public final class Css {
       --font-serif: var(--default-font-serif);
       --font-mono: var(--default-font-mono);
 
+      --breakpoint-sm: 40rem;
+      --breakpoint-md: 48rem;
+      --breakpoint-lg: 64rem;
+      --breakpoint-xl: 80rem;
+      --breakpoint-x2: 96rem;
+
       --color-red-50: oklch(0.971 0.013 17.38);
       --color-red-100: oklch(0.936 0.032 17.717);
       --color-red-200: oklch(0.885 0.062 18.334);
@@ -845,21 +872,41 @@ public final class Css {
       --color-black: #000;
       --color-white: #fff;
 
-      --breakpoint-sm: 40rem;
-      --breakpoint-md: 48rem;
-      --breakpoint-lg: 64rem;
-      --breakpoint-xl: 80rem;
-      --breakpoint-2xl: 96rem;
-
       --default-font-family: var(--font-sans);
       --default-font-feature-settings: var(--font-sans--font-feature-settings);
       --default-font-variation-settings: var(--font-sans--font-variation-settings);
       --default-mono-font-family: var(--font-mono);
       --default-mono-font-feature-settings: var(--font-mono--font-feature-settings);
       --default-mono-font-variation-settings: var(--font-mono--font-variation-settings);
-
-      --rx: 16;
     }
+    """;
+  }
+
+  static String systemVariants() {
+    return """
+    active { &:active { {} } }
+    checked { &:checked { {} } }
+    disabled { &:disabled { {} } }
+    first-child { &:first-child { {} } }
+    focus { &:focus { {} } }
+    focus-visible { &:focus-visible { {} } }
+    hover { @media (hover: hover) { &:hover { {} } } }
+    last-child { &:last-child { {} } }
+    visited { &:visited { {} } }
+
+    after { &::after { {} } }
+    backdrop { &::backdrop { {} } }
+    before { &::before { {} } }
+    first-letter { &::first-letter { {} } }
+    first-line { &::first-line { {} } }
+
+    sm { @media (min-width: 40rem) { {} } }
+    md { @media (min-width: 48rem) { {} } }
+    lg { @media (min-width: 64rem) { {} } }
+    xl { @media (min-width: 80rem) { {} } }
+    x2 { @media (min-width: 96rem) { {} } }
+
+    dark { @media (prefers-color-scheme: dark) { {} } }
     """;
   }
 

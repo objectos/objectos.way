@@ -29,9 +29,15 @@ import org.testng.annotations.Test;
 
 public class CssEngineTest09Proc {
 
-  private static final CssEngine.Variant DARK = CssEngine.simple("@media (prefers-color-scheme: dark)");
-  private static final CssEngine.Variant MD = CssEngine.simple("@media (min-width: 48rem)");
-  private static final CssEngine.Variant HOVER = CssEngine.simple("&:hover");
+  private static final CssEngine.Variant HOVER = CssEngine.variant(
+      0, "hover", "&:hover { ", " }"
+  );
+  private static final CssEngine.Variant DARK = CssEngine.variant(
+      1, "dark", "@media (prefers-color-scheme: dark) { ", " }"
+  );
+  private static final CssEngine.Variant MD = CssEngine.variant(
+      2, "md", "@media (min-width: 48rem) { ", " }"
+  );
 
   @DataProvider
   public Object[][] testProvider() {
@@ -109,7 +115,10 @@ public class CssEngineTest09Proc {
             r("&[data-foo]/padding:0", l("0", "padding", "&[data-foo]"))
         ),
         l(
-            utility(List.of(CssEngine.simple("&[data-foo]")), ".\\&\\[data-foo\\]\\/padding\\:0", "padding", "0")
+            utility(
+                List.of(CssEngine.variant(0, "&[data-foo]", "&[data-foo] { ", " }")),
+                ".\\&\\[data-foo\\]\\/padding\\:0", "padding", "0"
+            )
         )
     }, {
         "--rx function",
