@@ -27,30 +27,7 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class CssEngineTest00Syntax {
-
-  @DataProvider
-  public Object[][] dimensionProvider() {
-    return new Object[][] {
-        {"integer dim", "40rem", true},
-        {"double dim", "41.3pt", true},
-        {"int value", "41", false},
-        {"dbl value", "12.3", false}
-    };
-  }
-
-  @Test(dataProvider = "dimensionProvider")
-  public void dimension(
-      String description,
-      String src,
-      boolean expected) {
-    final CssEngine.Syntax syntax;
-    syntax = new CssEngine.Syntax();
-
-    syntax.set(src);
-
-    assertEquals(syntax.dimension(), expected);
-  }
+public class CssEngineTest00CssParser {
 
   @DataProvider
   public Object[][] parseValidProvider() {
@@ -312,12 +289,12 @@ public class CssEngineTest00Syntax {
       String description,
       String src,
       @SuppressWarnings("exports") List<CssEngine.Top> expected) {
-    final CssEngine.Syntax syntax;
-    syntax = new CssEngine.Syntax();
+    final CssEngine.CssParser parser;
+    parser = new CssEngine.CssParser();
 
-    syntax.set(src);
+    parser.set(src);
 
-    assertEquals(syntax.parse(), expected);
+    assertEquals(parser.parse(), expected);
   }
 
   @DataProvider
@@ -360,12 +337,12 @@ public class CssEngineTest00Syntax {
       String src,
       String message) {
     try {
-      final CssEngine.Syntax syntax;
-      syntax = new CssEngine.Syntax();
+      final CssEngine.CssParser parser;
+      parser = new CssEngine.CssParser();
 
-      syntax.set(src);
+      parser.set(src);
 
-      syntax.parse();
+      parser.parse();
 
       Assert.fail("It should have thrown");
     } catch (IllegalArgumentException expected) {
@@ -374,86 +351,6 @@ public class CssEngineTest00Syntax {
 
       assertTrue(actual.startsWith(message));
     }
-  }
-
-  @DataProvider
-  public Object[][] variantProvider() {
-    return new Object[][] {{
-        "attr variant",
-        "&[data-foo]",
-        CssEngine.variant(0, "&[data-foo]", "&[data-foo] { ", " }")
-    }, {
-        "@media variant (add ws)",
-        "@media(prefers-color-scheme:dark)",
-        CssEngine.variant(0, "@media(prefers-color-scheme:dark)", "@media (prefers-color-scheme: dark) { ", " }")
-    }, {
-        "pseudo-class variant",
-        "&:active",
-        CssEngine.variant(0, "&:active", "&:active { ", " }")
-    }};
-  }
-
-  @Test(dataProvider = "variantProvider")
-  public void variant(
-      String description,
-      String input,
-      @SuppressWarnings("exports") CssEngine.Variant expected) {
-    final CssEngine.Syntax syntax;
-    syntax = new CssEngine.Syntax();
-
-    syntax.set(input);
-
-    final CssEngine.Variant result;
-    result = syntax.variant(0);
-
-    assertEquals(result, expected);
-  }
-
-  @DataProvider
-  public Object[][] variantsValidProvider() {
-    return new Object[][] {{
-        "pseudo class: one",
-        """
-        active { &:active { {} } }
-        """,
-        List.of(
-            CssEngine.variant(0, "active", "&:active { ", " }")
-        )
-    }, {
-        "pseudo class: two",
-        """
-        active { &:active { {} } }
-        checked { &:checked { {} } }
-        """,
-        List.of(
-            CssEngine.variant(0, "active", "&:active { ", " }"),
-            CssEngine.variant(1, "checked", "&:checked { ", " }")
-        )
-    }, {
-        "nested",
-        """
-        hover { @media (hover: hover) { &:hover { {} } } }
-        """,
-        List.of(
-            CssEngine.variant(0, "hover", "@media (hover: hover) { &:hover { ", " } }")
-        )
-    }};
-  }
-
-  @Test(dataProvider = "variantsValidProvider")
-  public void variantsValid(
-      String description,
-      String input,
-      @SuppressWarnings("exports") List<CssEngine.Variant> expected) {
-    final CssEngine.Syntax syntax;
-    syntax = new CssEngine.Syntax();
-
-    syntax.set(input);
-
-    final List<CssEngine.Variant> result;
-    result = syntax.variants(0);
-
-    assertEquals(result, expected);
   }
 
 }

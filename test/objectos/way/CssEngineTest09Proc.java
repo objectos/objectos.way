@@ -136,6 +136,17 @@ public class CssEngineTest09Proc {
             r("foo:bar", l("bar", "foo"))
         ),
         l()
+    }, {
+        "rx length",
+        Map.of(),
+        l(
+            r("margin:16rx", l("16rx", "margin")),
+            r("margin:-16rx", l("-16rx", "margin"))
+        ),
+        l(
+            utility(List.of(), ".margin\\:16rx", "margin", "calc(16 / 16 * 1rem)"),
+            utility(List.of(), ".margin\\:-16rx", "margin", "calc(-16 / 16 * 1rem)")
+        )
     }};
   }
 
