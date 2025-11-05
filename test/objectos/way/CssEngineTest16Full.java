@@ -85,7 +85,7 @@ public class CssEngineTest16Full {
         }),
         """
         @layer utilities {
-          .aspect-ratio\\:2\\/3 { aspect-ratio: 2/3 }
+          .aspect-ratio\\:2\\/3 { aspect-ratio: 2 / 3 }
         }
         """
     }, {
@@ -291,11 +291,11 @@ public class CssEngineTest16Full {
         }
         """
     }, {
-        "utilities: --rx()",
+        "utilities: rx unit",
         cfg(e -> {
           class Subject extends CssSubject {
             @Override
-            final void classes() { css("gap:--rx(16)"); }
+            final void classes() { css("gap:16rx"); }
           }
 
           e.systemBase("");
@@ -304,7 +304,7 @@ public class CssEngineTest16Full {
         }),
         """
         @layer utilities {
-          .gap\\:--rx\\(16\\) { gap: calc(16 / 16 * 1rem) }
+          .gap\\:16rx { gap: calc(16 / 16 * 1rem) }
         }
         """
     }, {

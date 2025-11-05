@@ -1439,6 +1439,8 @@ final class CssEngine implements Css.StyleSheet {
 
           case CSS_EXCLAMATION -> { ws(); valueExcl(); }
 
+          case CSS_PLUS, CSS_ASTERISK, CSS_SOLIDUS -> valueSep(c);
+
           default -> throw new UnsupportedOperationException("Implement me :: next=" + next);
         }
       }
@@ -1548,6 +1550,8 @@ final class CssEngine implements Css.StyleSheet {
       next = nextEof();
 
       switch (next) {
+        case CSS_WS -> { sb.append('-'); ws = 1; }
+
         case CSS_HYPHEN -> valueCustom(start);
 
         case CSS_DOT -> valueDouble(start);
@@ -1663,6 +1667,14 @@ final class CssEngine implements Css.StyleSheet {
 
         default -> throw error("Invalid CSS value");
       }
+    }
+
+    private void valueSep(char sep) {
+      sb.append(' ');
+
+      sb.append(sep);
+
+      ws = 1;
     }
 
     private void valueStr(int start, byte quote) {
