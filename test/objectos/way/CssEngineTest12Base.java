@@ -315,8 +315,8 @@ public class CssEngineTest12Base {
 
   private void base(String source, String expected) {
     try {
-      final CssEngine.Syntax syntax;
-      syntax = new CssEngine.Syntax();
+      final CssEngine.CssParser syntax;
+      syntax = new CssEngine.CssParser();
 
       syntax.set(source);
 

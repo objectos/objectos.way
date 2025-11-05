@@ -53,6 +53,21 @@ public class CssEngineTest00VariantParser {
     }};
   }
 
+  @Test
+  public void debug() {
+    parseValid(
+        "pseudo class: two",
+        """
+        active { &:active { {} } }
+        checked { &:checked { {} } }
+        """,
+        List.of(
+            CssEngine.variant(0, "active", "&:active { ", " }"),
+            CssEngine.variant(1, "checked", "&:checked { ", " }")
+        )
+    );
+  }
+
   @Test(dataProvider = "parseValidProvider")
   public void parseValid(
       String description,

@@ -1387,6 +1387,8 @@ final class CssEngine implements Css.StyleSheet {
     private int ws;
 
     public final String format() {
+      sb.setLength(0);
+
       return value(CSS_EOF);
     }
 
@@ -1434,6 +1436,8 @@ final class CssEngine implements Css.StyleSheet {
           case CSS_DIGIT -> { ws(); valueInt(idx); }
 
           case CSS_DQUOTE, CSS_SQUOTE -> { ws(); valueStr(idx, next); }
+
+          case CSS_EXCLAMATION -> { ws(); valueExcl(); }
 
           default -> throw new UnsupportedOperationException("Implement me :: next=" + next);
         }
@@ -1488,6 +1492,27 @@ final class CssEngine implements Css.StyleSheet {
       valueNumDispatch(start, next);
     }
 
+    private void valueExcl() {
+      final int start;
+      start = idx;
+
+      final byte next;
+      next = next();
+
+      switch (next) {
+        case CSS_ALPHA -> valueExcl0(start);
+
+        default -> throw error("Invalid CSS value");
+      }
+    }
+
+    private void valueExcl0(int start) {
+      final byte next;
+      next = whileNext(CSS_ALPHA);
+
+      valueIdenEnd(start, next);
+    }
+
     private void valueFun(int start) {
       final String n;
       n = text.substring(start, idx);
@@ -1539,6 +1564,10 @@ final class CssEngine implements Css.StyleSheet {
       final byte next;
       next = whileNext(CSS_HYPHEN, CSS_UNDERLINE, CSS_ALPHA, CSS_DIGIT);
 
+      valueIdenEnd(start, next);
+    }
+
+    private void valueIdenEnd(int start, byte next) {
       switch (next) {
         case CSS_EOF -> sb.append(text, start, cursor);
 
@@ -1682,10 +1711,6 @@ final class CssEngine implements Css.StyleSheet {
 
     private final CssParser cssParser = new CssParser();
 
-    private final List<String> parts = new ArrayList<>();
-
-    private final StringBuilder sb = new StringBuilder();
-
     public final List<Variant> parse(int index) {
       final List<Variant> result;
       result = new ArrayList<>();
@@ -1754,18 +1779,55 @@ final class CssEngine implements Css.StyleSheet {
       return new Variant(index, name, parts);
     }
 
+    private static final class Parts {
+      final List<String> parts = new ArrayList<>();
+
+      final StringBuilder sb = new StringBuilder();
+
+      final void append(String s) {
+        sb.append(s);
+      }
+
+      final List<String> build() {
+        final String part;
+        part = sb.toString();
+
+        parts.add(part);
+
+        return parts;
+      }
+
+      final void nextPart() {
+        final String part;
+        part = sb.toString();
+
+        sb.setLength(0);
+
+        parts.add(part);
+      }
+    }
+
     private List<String> parts() {
-      loop: while (hasNext()) {
+      final Parts parts;
+      parts = new Parts();
+
+      parts0(parts);
+
+      return parts.build();
+    }
+
+    private void parts0(Parts parts) {
+      while (hasNext()) {
         switch (next()) {
           case CSS_WS -> {}
 
-          case CSS_LCURLY -> partsBlock();
+          case CSS_LCURLY -> partsBlock(parts);
 
           case CSS_RCURLY -> {
-            break loop;
+            return;
           }
 
-          case CSS_AT -> partsAt();
+          case CSS_AT -> partsAt(parts);
 
           case CSS_HASH, // id
                CSS_ASTERISK, // universal
@@ -1774,21 +1836,14 @@ final class CssEngine implements Css.StyleSheet {
                CSS_LSQUARE, // attr
                CSS_ALPHA, // type
                CSS_AMPERSAND // nesting
-               -> partsSel();
+               -> partsSel(parts);
 
           default -> throw error("Invalid variant definition");
         }
       }
-
-      final String part;
-      part = sb.toString();
-
-      parts.add(part);
-
-      return parts;
     }
 
-    private void partsAt() {
+    private void partsAt(Parts parts) {
       final int start;
       start = idx;
 
@@ -1798,13 +1853,13 @@ final class CssEngine implements Css.StyleSheet {
       name = text.substring(start, idx);
 
       switch (name) {
-        case "@media" -> partsAtQuery(name);
+        case "@media" -> partsAtQuery(parts, name);
 
         default -> throw error("Only @media at-rules are currently supported");
       }
     }
 
-    private void partsAtQuery(String name) {
+    private void partsAtQuery(Parts parts, String name) {
       cssParser.set(this);
 
       final String query;
@@ -1812,44 +1867,29 @@ final class CssEngine implements Css.StyleSheet {
 
       set(cssParser);
 
-      sb.append(query);
+      parts.append(query);
 
-      sb.append(" { ");
+      parts.append(" { ");
 
-      partsBlock();
+      partsBlock(parts);
 
-      sb.append(" }");
+      parts.append(" }");
     }
 
-    private void partsBlock() {
+    private void partsBlock(Parts parts) {
       final byte next;
       next = nextEof();
 
       switch (next) {
         case CSS_EOF -> throw error("Unclosed {");
 
-        case CSS_RCURLY -> nextPart();
+        case CSS_RCURLY -> parts.nextPart();
 
-        default -> {
-          // re-consume char
-          cursor--;
-
-          final VariantParser nested;
-          nested = new VariantParser();
-
-          nested.set(this);
-
-          final List<String> result;
-          result = nested.parts();
-
-          parts.addAll(result);
-
-          set(nested);
-        }
+        default -> parts0(parts);
       }
     }
 
-    private void partsSel() {
+    private void partsSel(Parts parts) {
       // re-consume first char;
       cursor--;
 
@@ -1860,22 +1900,13 @@ final class CssEngine implements Css.StyleSheet {
 
       set(cssParser);
 
-      sb.append(selector);
+      parts.append(selector);
 
-      sb.append(" { ");
+      parts.append(" { ");
 
-      partsBlock();
+      partsBlock(parts);
 
-      sb.append(" }");
-    }
-
-    private void nextPart() {
-      final String part;
-      part = sb.toString();
-
-      sb.setLength(0);
-
-      parts.add(part);
+      parts.append(" }");
     }
 
   }
@@ -2036,6 +2067,8 @@ final class CssEngine implements Css.StyleSheet {
 
     private final List<Block> components = new ArrayList<>();
 
+    private final CssParser cssParser = new CssParser();
+
     private Note.Sink noteSink = Note.NoOpSink.INSTANCE;
 
     private Set<Class<?>> scanClasses = Set.of();
@@ -2043,8 +2076,6 @@ final class CssEngine implements Css.StyleSheet {
     private Set<Path> scanDirectories = Set.of();
 
     private Set<Class<?>> scanJars = Set.of();
-
-    private final Syntax syntax = new Syntax();
 
     private List<Top> systemBase;
 
@@ -2058,25 +2089,27 @@ final class CssEngine implements Css.StyleSheet {
 
     private List<Variant> userVariants = List.of();
 
+    private final VariantParser variantParser = new VariantParser();
+
     Configuring() {
       // system base
-      syntax.set(Css.systemBase());
+      cssParser.set(Css.systemBase());
 
-      systemBase = syntax.parse();
+      systemBase = cssParser.parse();
 
       // system theme
-      syntax.set(Css.systemTheme());
+      cssParser.set(Css.systemTheme());
 
       final List<Top> _systemTheme;
-      _systemTheme = syntax.parse();
+      _systemTheme = cssParser.parse();
 
       systemTheme = validateSystemTheme(_systemTheme);
 
       // system variants
-      syntax.set(Css.systemVariants());
+      variantParser.set(Css.systemVariants());
 
       final List<Variant> variants;
-      variants = syntax.variants(0);
+      variants = variantParser.parse(0);
 
       systemVariants = validateSystemVariants(variants);
     }
@@ -2181,10 +2214,10 @@ final class CssEngine implements Css.StyleSheet {
         userTheme = new ArrayList<>();
       }
 
-      syntax.set(text);
+      cssParser.set(text);
 
       final List<Top> parsed;
-      parsed = syntax.parse();
+      parsed = cssParser.parse();
 
       final List<Top> validated;
       validated = validateUserTheme(parsed);
@@ -2197,10 +2230,10 @@ final class CssEngine implements Css.StyleSheet {
       final String text;
       text = Objects.requireNonNull(value, "value == null");
 
-      syntax.set(text);
+      cssParser.set(text);
 
       final List<Top> _systemTheme;
-      _systemTheme = syntax.parse();
+      _systemTheme = cssParser.parse();
 
       systemTheme = validateSystemTheme(_systemTheme);
     }
@@ -2210,9 +2243,9 @@ final class CssEngine implements Css.StyleSheet {
       final String text;
       text = Objects.requireNonNull(value, "value == null");
 
-      syntax.set(text);
+      cssParser.set(text);
 
-      systemBase = syntax.parse();
+      systemBase = cssParser.parse();
     }
 
     @Override
@@ -2220,10 +2253,10 @@ final class CssEngine implements Css.StyleSheet {
       final String text;
       text = Objects.requireNonNull(value, "value == null");
 
-      syntax.set(text);
+      variantParser.set(text);
 
       final List<Variant> variants;
-      variants = syntax.variants(0);
+      variants = variantParser.parse(0);
 
       systemVariants = validateSystemVariants(variants);
     }
@@ -2233,7 +2266,7 @@ final class CssEngine implements Css.StyleSheet {
       final String text;
       text = Objects.requireNonNull(value, "value == null");
 
-      syntax.set(text);
+      variantParser.set(text);
 
       if (userVariants.isEmpty()) {
         userVariants = new ArrayList<>();
@@ -2243,7 +2276,7 @@ final class CssEngine implements Css.StyleSheet {
       startIndex = userVariants.size();
 
       final List<Variant> parsed;
-      parsed = syntax.variants(startIndex);
+      parsed = variantParser.parse(startIndex);
 
       userVariants.addAll(parsed);
     }
@@ -2253,13 +2286,10 @@ final class CssEngine implements Css.StyleSheet {
       final String text;
       text = Objects.requireNonNull(value, "value == null");
 
-      final Syntax syntax;
-      syntax = new Syntax();
-
-      syntax.set(text);
+      cssParser.set(text);
 
       final List<Top> parsed;
-      parsed = syntax.parse();
+      parsed = cssParser.parse();
 
       for (Top top : parsed) {
         switch (top) {
@@ -2393,8 +2423,6 @@ final class CssEngine implements Css.StyleSheet {
       final List<FontFace> fontFaces = new ArrayList<>();
 
       final Map<String, CssEngine.Keyframes> keyframes = new HashMap<>();
-
-      final Syntax parser = new Syntax();
 
       final Properties properties = new Properties();
 
@@ -3557,9 +3585,11 @@ final class CssEngine implements Css.StyleSheet {
 
     private final List<Variant> parsedVars = new ArrayList<>();
 
-    private final Syntax syntax = new Syntax();
-
     private final List<Utility> utilities = new ArrayList<>();
+
+    private final ValueFormat valueFormat = new ValueFormat();
+
+    private final VariantParser variantParser = new VariantParser();
 
     private final Map<String, Variant> variants;
 
@@ -3612,10 +3642,10 @@ final class CssEngine implements Css.StyleSheet {
       final String propValue;
       propValue = slugs.get(0);
 
-      syntax.set(propValue);
+      valueFormat.set(propValue);
 
       final String valueFormatted;
-      valueFormatted = syntax.formatValue();
+      valueFormatted = valueFormat.format();
 
       final Utility utility;
       utility = new Utility(vars, classNameFormatted, propName, valueFormatted);
@@ -3636,13 +3666,13 @@ final class CssEngine implements Css.StyleSheet {
       }
 
       try {
-        syntax.set(name);
+        variantParser.set(name);
 
         final int index;
         index = variants.size();
 
         final Variant parsed;
-        parsed = syntax.variant(index);
+        parsed = variantParser.parseOne(index);
 
         variants.put(name, parsed);
 

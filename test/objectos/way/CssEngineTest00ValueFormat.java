@@ -27,6 +27,7 @@ public class CssEngineTest00ValueFormat {
         // single value
         {"color: hex", "#f0f0f0", "#f0f0f0"},
         {"keyword", "block", "block"},
+        {"keyword", "!important", "!important"},
         {"length", "40rem", "40rem"},
         {"num: int", "123", "123"},
         {"num: neg int", "-123", "-123"},
