@@ -1205,7 +1205,9 @@ final class CssEngine implements Css.StyleSheet {
              // list
              CSS_COMMA,
              // pseudo
-             CSS_COLON -> text.substring(start, --cursor);
+             CSS_COLON,
+             // function
+             CSS_RPARENS -> text.substring(start, --cursor);
 
         default -> throw error("Invalid selector");
       };
@@ -1275,12 +1277,89 @@ final class CssEngine implements Css.StyleSheet {
 
       if (next == CSS_LPARENS) {
         final String sel;
-        sel = text.substring(start, cursor);
+        sel = text.substring(start, idx);
 
-        return sel + selector(CSS_RPARENS) + ")";
+        return switch (sel) {
+          case ":nth-child",
+               ":nth-last-child",
+               ":nth-last-of-type",
+               ":nth-of-type" -> selPseudoNth(sel);
+
+          default -> sel + "(" + selector(CSS_RPARENS) + ")";
+        };
       } else {
         return selEnd(start, next);
       }
+    }
+
+    private String selPseudoNth(String name) {
+      // trim initial ws
+      final byte initialTrim;
+      initialTrim = whileNext(CSS_WS);
+
+      // first arg
+      final int arg0Start;
+      arg0Start = idx;
+
+      final byte arg0Next;
+      arg0Next = switch (initialTrim) {
+        case CSS_ALPHA -> whileNext(CSS_ALPHA);
+
+        case CSS_DIGIT,
+             CSS_HYPHEN -> whileNext(CSS_DIGIT);
+
+        default -> throw error("Invalid value for " + name);
+      };
+
+      if (arg0Next == CSS_RPARENS) {
+        // (even) or (123)
+        final String arg0;
+        arg0 = text.substring(arg0Start, idx);
+
+        return name + "(" + arg0 + ")";
+      }
+
+      // from now on, we expect <integer> 'n'
+      if (arg0Next != CSS_ALPHA || c != 'n') {
+        throw error("Invalid value for " + name);
+      }
+
+      final String arg0;
+      arg0 = text.substring(arg0Start, cursor);
+
+      final byte plusTrim;
+      plusTrim = whileNext(CSS_WS);
+
+      if (plusTrim == CSS_RPARENS) {
+        // (2n) or (-3n)
+        return name + "(" + arg0 + ")";
+      }
+
+      if (plusTrim != CSS_PLUS) {
+        throw error("Invalid value for " + name);
+      }
+
+      final byte arg1Trim;
+      arg1Trim = whileNext(CSS_WS);
+
+      if (arg1Trim != CSS_DIGIT) {
+        throw error("Invalid value for " + name);
+      }
+
+      final int arg1Start;
+      arg1Start = idx;
+
+      final byte arg1Next;
+      arg1Next = whileNext(CSS_DIGIT);
+
+      final String arg1;
+      arg1 = text.substring(arg1Start, idx);
+
+      if (arg1Next != CSS_RPARENS) {
+        throw error("Invalid value for " + name);
+      }
+
+      return name + "(" + arg0 + " + " + arg1 + ")";
     }
 
     private String selType() {

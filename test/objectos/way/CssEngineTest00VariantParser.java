@@ -43,6 +43,24 @@ public class CssEngineTest00VariantParser {
             CssEngine.variant(1, "checked", "&:checked { ", " }")
         )
     }, {
+        "pseudo class: nth-child",
+        """
+        test0 { &:nth-child(even) { {} } }
+        test1 { &:nth-child(2n) { {} } }
+        test2 { &:nth-child(2n + 1) { {} } }
+        test3 { &:nth-child(-n + 3) { {} } }
+        test4 { &:nth-child(-2n + 3) { {} } }
+        test5 { &:nth-child(7) { {} } }
+        """,
+        List.of(
+            CssEngine.variant(0, "test0", "&:nth-child(even) { ", " }"),
+            CssEngine.variant(1, "test1", "&:nth-child(2n) { ", " }"),
+            CssEngine.variant(2, "test2", "&:nth-child(2n + 1) { ", " }"),
+            CssEngine.variant(3, "test3", "&:nth-child(-n + 3) { ", " }"),
+            CssEngine.variant(4, "test4", "&:nth-child(-2n + 3) { ", " }"),
+            CssEngine.variant(5, "test5", "&:nth-child(7) { ", " }")
+        )
+    }, {
         "nested",
         """
         hover { @media (hover: hover) { &:hover { {} } } }
@@ -51,21 +69,6 @@ public class CssEngineTest00VariantParser {
             CssEngine.variant(0, "hover", "@media (hover: hover) { &:hover { ", " } }")
         )
     }};
-  }
-
-  @Test
-  public void debug() {
-    parseValid(
-        "pseudo class: two",
-        """
-        active { &:active { {} } }
-        checked { &:checked { {} } }
-        """,
-        List.of(
-            CssEngine.variant(0, "active", "&:active { ", " }"),
-            CssEngine.variant(1, "checked", "&:checked { ", " }")
-        )
-    );
   }
 
   @Test(dataProvider = "parseValidProvider")
@@ -95,9 +98,13 @@ public class CssEngineTest00VariantParser {
         "@media(prefers-color-scheme:dark)",
         CssEngine.variant(0, "@media(prefers-color-scheme:dark)", "@media (prefers-color-scheme: dark) { ", " }")
     }, {
-        "pseudo-class variant",
+        "pseudo-class",
         "&:active",
         CssEngine.variant(0, "&:active", "&:active { ", " }")
+    }, {
+        "pseudo-class: nth-child",
+        "&:nth-child(even)",
+        CssEngine.variant(0, "&:nth-child(even)", "&:nth-child(even) { ", " }")
     }};
   }
 

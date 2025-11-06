@@ -201,6 +201,26 @@ public class CssEngineTest00CssParser {
             block("abbr:where([title])")
         )
     }, {
+        "(base) nth selector",
+        """
+        :nth-child(even) {}
+        :nth-child(7) {}
+        :nth-child(2n) {}
+        :nth-child(2n + 1) {}
+        :nth-child(2n+1) {}
+        :nth-child(-n + 3) {}
+        :nth-child(-n+3) {}
+        """,
+        List.of(
+            block(":nth-child(even)"),
+            block(":nth-child(7)"),
+            block(":nth-child(2n)"),
+            block(":nth-child(2n + 1)"),
+            block(":nth-child(2n + 1)"),
+            block(":nth-child(-n + 3)"),
+            block(":nth-child(-n + 3)")
+        )
+    }, {
         "(components) class selector",
         """
         .foo {}
