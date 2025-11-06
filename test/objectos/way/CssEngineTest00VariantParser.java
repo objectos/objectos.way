@@ -61,6 +61,14 @@ public class CssEngineTest00VariantParser {
             CssEngine.variant(5, "test5", "&:nth-child(7) { ", " }")
         )
     }, {
+        "group",
+        """
+        group-hover { &:is(:where(.group):hover *) { {} } }
+        """,
+        List.of(
+            CssEngine.variant(0, "group-hover", "&:is(:where(.group):hover *) { ", " }")
+        )
+    }, {
         "nested",
         """
         hover { @media (hover: hover) { &:hover { {} } } }

@@ -430,6 +430,25 @@ public class CssEngineTest16Full {
           .x2\\/width\\:0 { @media (min-width: 96rem) { width: 0 } }
         }
         """
+    }, {
+        "variants + group",
+        cfg(e -> {
+          class Subject extends CssSubject {
+            @Override
+            final void classes() {
+              css("group-hover/text-decoration:underline");
+            }
+          }
+
+          e.systemBase("");
+          e.systemTheme("");
+          e.scanClasses(Subject.class);
+        }),
+        """
+        @layer utilities {
+          .group-hover\\/text-decoration\\:underline { &:is(:where(.group):hover *) { @media (hover: hover) { text-decoration: underline } } }
+        }
+        """
     }};
   }
 
