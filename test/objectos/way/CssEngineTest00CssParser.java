@@ -72,6 +72,14 @@ public class CssEngineTest00CssParser {
             )
         )
     }, {
+        "(theme) ",
+        """
+        :root { @media(min-width: 42rem) { }}
+        """,
+        List.of(
+            block(":root", block("@media (min-width: 42rem)"))
+        )
+    }, {
         "(theme) custom property without namespace",
         """
         :root {

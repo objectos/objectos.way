@@ -701,7 +701,7 @@ final class CssEngine implements Css.StyleSheet {
       next = whileNext(CSS_HYPHEN, CSS_ALPHA);
 
       switch (next) {
-        case CSS_WS -> {}
+        case CSS_WS, CSS_LPARENS -> {}
 
         case CSS_EOF -> throw error(EOF_AT);
 
