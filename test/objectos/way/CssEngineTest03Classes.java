@@ -18,6 +18,7 @@ package objectos.way;
 import static org.testng.Assert.assertEquals;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.testng.annotations.Test;
 
 public class CssEngineTest03Classes {
@@ -53,11 +54,14 @@ public class CssEngineTest03Classes {
     final CssEngineClassFiles tester;
     tester = new CssEngineClassFiles();
 
+    final Set<String> names;
+    names = classes.stream().map(Class::getName).collect(Collectors.toSet());
+
     final Note.Sink noteSink;
     noteSink = Y.noteSink();
 
     final CssEngine.Classes scanner;
-    scanner = new CssEngine.Classes(tester, classes, noteSink);
+    scanner = new CssEngine.Classes(tester, names, noteSink);
 
     scanner.scan();
 

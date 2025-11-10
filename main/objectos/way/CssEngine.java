@@ -130,7 +130,7 @@ final class CssEngine implements Css.StyleSheet {
     final Scanner scanner;
     scanner = new Scanner(noteSink, tokenizer);
 
-    final Set<Class<?>> scanClasses;
+    final Set<String> scanClasses;
     scanClasses = config.scanClasses;
 
     if (!scanClasses.isEmpty()) {
@@ -346,7 +346,7 @@ final class CssEngine implements Css.StyleSheet {
 
   static FontFace fontFace(Decl... decls) { return new FontFace(List.of(decls)); }
 
-  record Keyframes(String name, List<Block> rules) implements At, Top {
+  record Keyframes(String name, List<Block> rules) implements At, Top, Comparable<Keyframes> {
     @Override
     public final Stmt asStmt() {
       throw new IllegalArgumentException(
@@ -357,6 +357,11 @@ final class CssEngine implements Css.StyleSheet {
     @Override
     public final void asTop(List<Top> result) {
       result.add(this);
+    }
+
+    @Override
+    public final int compareTo(Keyframes o) {
+      return name.compareTo(o.name);
     }
   }
 
@@ -2162,7 +2167,7 @@ final class CssEngine implements Css.StyleSheet {
 
     private Note.Sink noteSink = Note.NoOpSink.INSTANCE;
 
-    private Set<Class<?>> scanClasses = Set.of();
+    private Set<String> scanClasses = Set.of();
 
     private Set<Path> scanDirectories = Set.of();
 
@@ -2252,7 +2257,10 @@ final class CssEngine implements Css.StyleSheet {
         scanClasses = new HashSet<>();
       }
 
-      scanClasses.add(c);
+      final String name;
+      name = c.getName();
+
+      scanClasses.add(name);
     }
 
     @Override
@@ -2268,7 +2276,10 @@ final class CssEngine implements Css.StyleSheet {
         final Class<?> c;
         c = Check.notNull(classes[idx], "values[", idx, "] == null");
 
-        scanClasses.add(c);
+        final String name;
+        name = c.getName();
+
+        scanClasses.add(name);
       }
     }
 
@@ -2832,7 +2843,7 @@ final class CssEngine implements Css.StyleSheet {
 
       Properties properties,
 
-      Set<Class<?>> scanClasses,
+      Set<String> scanClasses,
 
       Set<Path> scanDirectories,
 
@@ -2866,11 +2877,11 @@ final class CssEngine implements Css.StyleSheet {
 
     final ClassFiles classFiles;
 
-    final Set<Class<?>> classes;
+    final Set<String> classes;
 
     final Note.Sink noteSink;
 
-    Classes(ClassFiles classFiles, Set<Class<?>> classes, Note.Sink noteSink) {
+    Classes(ClassFiles classFiles, Set<String> classes, Note.Sink noteSink) {
       this.classFiles = classFiles;
 
       this.classes = classes;
@@ -2879,14 +2890,14 @@ final class CssEngine implements Css.StyleSheet {
     }
 
     public final void scan() {
-      for (Class<?> next : classes) {
+      for (String next : classes) {
         scan(next);
       }
     }
 
-    private void scan(Class<?> next) {
+    private void scan(String next) {
       final String binaryName;
-      binaryName = next.getName();
+      binaryName = next;
 
       String resourceName;
       resourceName = binaryName.replace('.', '/');
@@ -2894,7 +2905,7 @@ final class CssEngine implements Css.StyleSheet {
       resourceName += ".class";
 
       final ClassLoader loader;
-      loader = next.getClassLoader();
+      loader = ClassLoader.getSystemClassLoader();
 
       final InputStream in;
       in = loader.getResourceAsStream(resourceName);
