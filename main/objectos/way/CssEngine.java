@@ -2536,9 +2536,51 @@ final class CssEngine implements Css.StyleSheet {
 
       final Map<String, Variant> variants = new HashMap<>();
 
-      //
+      final Config build(Set<String> cssProperties) {
+        systemTheme();
 
-      final void systemTheme() {
+        userTheme();
+
+        collectProperties();
+
+        markProperties();
+
+        collectSections();
+
+        collectVariants();
+
+        baseProperties();
+
+        componentsProperties();
+
+        return new Config(
+            systemBase,
+
+            components,
+
+            cssProperties,
+
+            fontFaces,
+
+            keyframes,
+
+            noteSink,
+
+            properties,
+
+            scanClasses,
+
+            scanDirectories,
+
+            scanJars,
+
+            sections,
+
+            variants
+        );
+      }
+
+      private void systemTheme() {
         for (Top top : systemTheme) {
           switch (top) {
             case Block(String selector, List<Stmt> stmts) -> {
@@ -2583,7 +2625,7 @@ final class CssEngine implements Css.StyleSheet {
         }
       }
 
-      final void userTheme() {
+      private void userTheme() {
         for (Top top : userTheme) {
           switch (top) {
             case Block rule -> userTheme(List.of(), rule);
@@ -2650,7 +2692,7 @@ final class CssEngine implements Css.StyleSheet {
         }
       }
 
-      final void collectProperties() {
+      private void collectProperties() {
         for (Map<String, Decl> map : themeProps.values()) {
           for (Map.Entry<String, Decl> inner : map.entrySet()) {
             final String propName;
@@ -2664,7 +2706,36 @@ final class CssEngine implements Css.StyleSheet {
         }
       }
 
-      final void collectSections() {
+      private void markProperties() {
+        for (Top top : userTheme) {
+          switch (top) {
+            case Block rule -> markProperties(rule);
+
+            default -> {}
+          }
+        }
+      }
+
+      private void markProperties(Block rule) {
+        for (Stmt stmt : rule.stmts) {
+          switch (stmt) {
+            case Decl decl -> {
+              final String property;
+              property = decl.property;
+
+              if (property.startsWith("--")) {
+                continue;
+              }
+
+              properties.accept(decl);
+            }
+
+            case Block nested -> markProperties(nested);
+          }
+        }
+      }
+
+      private void collectSections() {
         for (Map.Entry<List<String>, List<Decl>> entry : themeSections.entrySet()) {
           final List<String> selector;
           selector = entry.getKey();
@@ -2679,7 +2750,7 @@ final class CssEngine implements Css.StyleSheet {
         }
       }
 
-      final void collectVariants() {
+      private void collectVariants() {
         final List<Variant> system;
 
         if (!userVariants.isEmpty()) {
@@ -2721,7 +2792,7 @@ final class CssEngine implements Css.StyleSheet {
         }
       }
 
-      final void baseProperties() {
+      private void baseProperties() {
         for (Top top : systemBase) {
           switch (top) {
             case Block rule -> baseStyleRule(rule);
@@ -2743,38 +2814,10 @@ final class CssEngine implements Css.StyleSheet {
         }
       }
 
-      final void componentsProperties() {
+      private void componentsProperties() {
         for (Block component : components) {
           baseStyleRule(component);
         }
-      }
-
-      final Config build(Set<String> cssProperties) {
-        return new Config(
-            systemBase,
-
-            components,
-
-            cssProperties,
-
-            fontFaces,
-
-            keyframes,
-
-            noteSink,
-
-            properties,
-
-            scanClasses,
-
-            scanDirectories,
-
-            scanJars,
-
-            sections,
-
-            variants
-        );
       }
 
     }
@@ -2795,20 +2838,6 @@ final class CssEngine implements Css.StyleSheet {
 
         userCssProperties.addAll(systemCssProperties);
       }
-
-      helper.systemTheme();
-
-      helper.userTheme();
-
-      helper.collectProperties();
-
-      helper.collectSections();
-
-      helper.collectVariants();
-
-      helper.baseProperties();
-
-      helper.componentsProperties();
 
       return helper.build(cssProperties);
     }

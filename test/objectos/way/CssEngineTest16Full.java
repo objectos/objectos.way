@@ -137,6 +137,29 @@ public class CssEngineTest16Full {
         }
         """
     }, {
+        "theme: generate referenced props in theme itself",
+        cfg(e -> {
+          e.systemBase("");
+          e.systemTheme("""
+          :root {
+            --color-text-primary: black;
+          }
+          """);
+          e.theme("""
+          :root {
+            color: var(--color-text-primary);
+          }
+          """);
+        }),
+        """
+        @layer theme {
+          :root {
+            --color-text-primary: black;
+            color: var(--color-text-primary);
+          }
+        }
+        """
+    }, {
         "base: between layer and utilities",
         cfg(e -> {
           class Subject extends CssSubject {

@@ -351,6 +351,43 @@ public class CssEngineTest02Configuring {
   }
 
   @Test
+  public void themeProps01() {
+    test(
+        c -> {
+          c.systemBase("");
+          c.systemTheme("""
+          :root {
+          --color-text-primary: black;
+          }
+          """);
+          c.systemVariants("");
+          c.theme("""
+          :root {
+          color: var(--color-text-primary);
+          }
+          """);
+        },
+
+        c -> {
+          final CssEngine.Decl v0;
+          v0 = CssEngine.decl("--color-text-primary", "black").mark();
+
+          final CssEngine.Decl v1;
+          v1 = CssEngine.decl("color", "var(--color-text-primary)").mark();
+
+          assertEquals(c.components(), List.of());
+          assertEquals(c.fontFaces(), List.of());
+          assertEquals(c.keyframes(), Map.of());
+          assertEquals(c.propertiesMap(), Map.of("--color-text-primary", v0));
+          assertEquals(c.sections(), List.of(
+              CssEngine.section(List.of(":root"), v0, v1)
+          ));
+          assertEquals(c.variants(), Map.of());
+        }
+    );
+  }
+
+  @Test
   public void variants01() {
     test(
         c -> {
