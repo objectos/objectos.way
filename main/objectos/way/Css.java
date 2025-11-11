@@ -884,7 +884,6 @@ public final class Css {
 
   static String systemVariants() {
     return """
-    active { &:active { {} } }
     checked { &:checked { {} } }
     disabled { &:disabled { {} } }
     first-child { &:first-child { {} } }
@@ -893,14 +892,15 @@ public final class Css {
     hover { @media (hover: hover) { &:hover { {} } } }
     last-child { &:last-child { {} } }
     visited { &:visited { {} } }
+    active { &:active { {} } }
 
-    group-active { &:is(:where(.group):active *) { {} } }
     group-checked { &:is(:where(.group):checked *) { {} } }
     group-disabled { &:is(:where(.group):disabled *) { {} } }
     group-focus { &:is(:where(.group):focus *) { {} } }
     group-focus-visible { &:is(:where(.group):focus-visible *) { {} } }
     group-hover { &:is(:where(.group):hover *) { @media (hover: hover) { {} } } }
     group-visited { &:is(:where(.group):visited *) { {} } }
+    group-active { &:is(:where(.group):active *) { {} } }
 
     after { &::after { {} } }
     backdrop { &::backdrop { {} } }

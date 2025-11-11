@@ -454,6 +454,28 @@ public class CssEngineTest16Full {
         }
         """
     }, {
+        "variants + sorting (active after hover)",
+        cfg(e -> {
+          class Subject extends CssSubject {
+            @Override
+            final void classes() {
+              css("color:var(--color) active/color:var(--active) hover/color:var(--hover) focus/color:var(--focus)");
+            }
+          }
+
+          e.systemBase("");
+          e.systemTheme("");
+          e.scanClasses(Subject.class);
+        }),
+        """
+        @layer utilities {
+          .color\\:var\\(--color\\) { color: var(--color) }
+          .focus\\/color\\:var\\(--focus\\) { &:focus { color: var(--focus) } }
+          .hover\\/color\\:var\\(--hover\\) { @media (hover: hover) { &:hover { color: var(--hover) } } }
+          .active\\/color\\:var\\(--active\\) { &:active { color: var(--active) } }
+        }
+        """
+    }, {
         "variants + group",
         cfg(e -> {
           class Subject extends CssSubject {
