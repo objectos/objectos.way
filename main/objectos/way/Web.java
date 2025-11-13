@@ -16,13 +16,13 @@
 package objectos.way;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Consumer;
 
-/**
- * The <strong>Objectos Web</strong> main class.
- */
+/// The **Objectos Web** main class.
 public final class Web {
 
   public sealed interface Form permits WebForm {
@@ -228,99 +228,114 @@ public final class Web {
 
   }
 
-  /**
-   * An HTTP handler for serving the static files of an web application.
-   */
+  /// An HTTP handler for serving the static files of an web application.
   public sealed interface Resources extends AutoCloseable, Http.Handler permits WebResources {
 
-    /**
-     * Configures the creation of an Web Resources instance.
-     */
-    public sealed interface Options permits WebResourcesBuilder {
+    /// An object that contributes to the configuration of a `Resources` instance.
+    @FunctionalInterface
+    interface Library {
 
-      /**
-       * Adds the contents of the specified directory to this configuration.
-       * The contents of the directory will be recursively copied to the root of
-       * the web resources instance during its creation.
-       *
-       * @param directory
-       *        the directory whose contents are to be copied
-       */
-      void addDirectory(Path directory);
+      /// Contributes to the configuration of a `Resources` creation.
+      sealed interface Options {
 
-      /**
-       * Adds the specified media to this configuration.
-       *
-       * @param pathName
-       *        the absolute path of the file to be created. It must start
-       *        with a '/' character.
-       * @param media
-       *        the media object whose contents is to be copied
-       */
-      void addMedia(String pathName, Media media);
+        /// Recursively serves the contents of the specified directory as if it was at the
+        /// root of the web server.
+        ///
+        /// @param directory
+        ///        the directory whose contents are to be served
+        void addDirectory(Path directory);
 
-      /**
-       * Map file extension names to content type (media type) values as defined
-       * by the specified properties string.
-       *
-       * <p>
-       * A typical usage is:
-       *
-       * <pre>
-       * config.contentTypes("""
-       *     .css: text/stylesheet; charset=utf-8
-       *     .js: text/javascript; charset=utf-8
-       *     .jpg: image/jpeg
-       *     .woff: font/woff2
-       *     """);</pre>
-       *
-       * <p>
-       * Which causes:
-       *
-       * <ul>
-       * <li>files ending in {@code .css} to be served with
-       * {@code Content-Type: text/stylesheet; charset=utf-8};</li>
-       * <li>files ending in {@code .js} to be served with
-       * {@code Content-Type: text/javascript; charset=utf-8};</li>
-       * <li>files ending in {@code .jpg} to be served with
-       * {@code Content-Type: image/jpeg};</li>
-       * <li>files ending in {@code .woff} to be served with
-       * {@code Content-Type: font/woff2};</li>
-       * </ul>
-       *
-       * @param propertiesString
-       *        a string with a file extension / content-type mapping in each
-       *        line
-       */
-      void contentTypes(String propertiesString);
+        /// Serves the bytes from the input stream at the specified path.
+        ///
+        /// @param pathName
+        ///        the absolute path of the file to be created. It must start
+        ///        with a '/' character.
+        /// @param in
+        ///        the input stream to read from
+        void addFile(String pathName, InputStream in);
 
-      /**
-       * Set the note sink to the specified instance.
-       *
-       * @param noteSink
-       *        the note sink instance
-       */
-      void noteSink(Note.Sink noteSink);
+        /// Serves the contents of the specified media at the specified path.
+        /// Additionally, the content type of the media is associated to the path's file extension,
+        /// if one is not already associated.
+        ///
+        /// @param pathName
+        ///        the absolute path of the file to be created. It must start
+        ///        with a '/' character.
+        /// @param media
+        ///        the media object whose contents is to be served
+        void addMedia(String pathName, Media media);
+
+        /// Map file extension names to content type (media type) values as defined
+        /// by the specified properties string.
+        ///
+        /// A typical usage is:
+        ///
+        /// ```java
+        /// config.contentTypes("""
+        ///     .css: text/stylesheet; charset=utf-8
+        ///     .js: text/javascript; charset=utf-8
+        ///     .jpg: image/jpeg
+        ///     .woff2: font/woff2
+        ///     """);
+        /// ```
+        ///
+        /// Which causes:
+        ///
+        /// - files ending in `.css` to be served with `Content-Type: text/stylesheet; charset=utf-8`
+        /// - files ending in `.js` to be served with `Content-Type: text/javascript; charset=utf-8`
+        /// - files ending in `.jpg` to be served with `Content-Type: image/jpeg`
+        /// - files ending in `.woff2` to be served with `Content-Type: font/woff2`
+        ///
+        /// @param propertiesString
+        ///        a string with a file extension / content-type mapping in each line
+        void contentTypes(String propertiesString);
+
+      }
+
+      /// Sets the configuration of this `Library` instance.
+      ///
+      /// @param options allows for setting the options
+      void configure(Options options);
 
     }
 
-    /**
-     * Creates a new {@code Resources} instance with the specified options.
-     *
-     * @param options
-     *        allows for setting the options
-     *
-     * @return a newly created {@code Resources} instance with the specified
-     *         options
-     *
-     * @throws IOException
-     *         if an I/O error occurs
-     */
+    /// Configures the creation of a `Resources` instance.
+    sealed interface Options extends Library.Options permits WebResourcesBuilder {
+
+      /// Includes the specified library.
+      /// In other words, uses the configuration contributed by the specified library
+      /// in this `Resources` instance.
+      ///
+      /// @param value the library whose configuration is to be included
+      void include(Library value);
+
+      /// Sets the note sink to the specified instance.
+      ///
+      /// @param value
+      ///        the note sink instance
+      void noteSink(Note.Sink value);
+
+    }
+
+    /// Creates a new `Resources` instance with the specified options.
+    ///
+    /// @param options
+    ///        allows for setting the options
+    ///
+    /// @return a newly created `Resources` instance with the specified
+    ///         options
+    ///
+    /// @throws IOException
+    ///         if an I/O error occurs
     static Resources create(Consumer<? super Options> options) throws IOException {
       final WebResourcesBuilder builder;
       builder = new WebResourcesBuilder();
 
-      options.accept(builder);
+      try {
+        options.accept(builder);
+      } catch (UncheckedIOException e) {
+        throw e.getCause();
+      }
 
       final WebResourcesKernel kernel;
       kernel = builder.build();
@@ -328,42 +343,32 @@ public final class Web {
       return new WebResources(kernel);
     }
 
-    default void handlePath(Http.RoutingPath routing) {
-      routing.handler(this);
-    }
-
-    /**
-     * Deletes the file at the specified path if it exists.
-     *
-     * @throws IOException
-     *         if an I/O error occurs
-     */
+    /// Deletes the file at the specified path if it exists.
+    ///
+    /// @throws IOException
+    ///         if an I/O error occurs
     boolean deleteIfExists(String path) throws IOException;
 
-    /**
-     * Reconfigures this {@code Resources} instance with the specified options.
-     *
-     * @param options
-     *        allows for setting the options
-     *
-     * @throws IOException
-     *         if an I/O error occurs
-     */
+    /// Reconfigures this {@code Resources} instance with the specified options.
+    ///
+    /// @param options
+    ///        allows for setting the options
+    ///
+    /// @throws IOException
+    ///         if an I/O error occurs
     void reconfigure(Consumer<Options> options) throws IOException;
 
-    /**
-     * Creates a new file at the specified server path with the contents of the
-     * specified media object.
-     *
-     * @param pathName
-     *        the server path of the file to be created. It must start with a
-     *        '/' character.
-     * @param media
-     *        the media object whose contents is to be copied
-     *
-     * @throws IOException
-     *         if an I/O error occurs
-     */
+    /// Creates a new file at the specified server path with the contents of the
+    /// specified media object.
+    ///
+    /// @param pathName
+    ///        the server path of the file to be created. It must start with a
+    ///        '/' character.
+    /// @param media
+    ///        the media object whose contents is to be copied
+    ///
+    /// @throws IOException
+    ///         if an I/O error occurs
     void writeMedia(String pathName, Media media) throws IOException;
 
   }

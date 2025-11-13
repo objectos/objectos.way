@@ -16,7 +16,9 @@
 package objectos.way;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.file.FileAlreadyExistsException;
@@ -28,24 +30,12 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 final class WebResourcesBuilder implements Web.Resources.Options {
-
-  private sealed interface ResourceFile {
-
-    Path file();
-
-  }
-
-  private record MediaFixedFile(Path file, Media.Bytes fixed) implements ResourceFile {}
-
-  private record MediaTextFile(Path file, Media.Text text) implements ResourceFile {}
-
-  private record MediaStreamFile(Path file, Media.Stream stream) implements ResourceFile {}
 
   private final Note.Ref1<Path> created = Note.Ref1.create(Web.Resources.Options.class, "ADD", Note.DEBUG);
 
@@ -57,13 +47,11 @@ final class WebResourcesBuilder implements Web.Resources.Options {
 
   final String defaultContentType = "application/octet-stream";
 
-  final List<Path> directories = Util.createList();
-
-  final List<ResourceFile> files = Util.createList();
-
   Note.Sink noteSink = new Note.NoOpSink();
 
   private final Path rootDirectory;
+
+  private final OpenOption[] writeOptions = new OpenOption[] {StandardOpenOption.CREATE_NEW};
 
   WebResourcesBuilder() throws IOException {
     rootDirectory = Files.createTempDirectory("way-web-resources-").normalize();
@@ -91,56 +79,6 @@ final class WebResourcesBuilder implements Web.Resources.Options {
   }
 
   public WebResourcesKernel build() throws IOException {
-    for (Path directory : directories) {
-      CopyRecursively copyRecursively;
-      copyRecursively = new CopyRecursively(rootDirectory, directory);
-
-      Files.walkFileTree(directory, copyRecursively);
-    }
-
-    final OpenOption[] writeOptions;
-    writeOptions = new OpenOption[] {StandardOpenOption.CREATE_NEW};
-
-    for (ResourceFile f : files) {
-      final Path file;
-      file = f.file();
-
-      final Path parent;
-      parent = file.getParent();
-
-      Files.createDirectories(parent);
-
-      switch (f) {
-        case MediaFixedFile fixed -> {
-          final Media.Bytes media;
-          media = fixed.fixed;
-
-          Files.write(file, media.toByteArray(), writeOptions);
-        }
-
-        case MediaTextFile text -> {
-          final Media.Text media;
-          media = text.text;
-
-          final Charset charset;
-          charset = media.charset();
-
-          try (Writer w = Files.newBufferedWriter(file, charset, writeOptions)) {
-            media.writeTo(w);
-          }
-        }
-
-        case MediaStreamFile stream -> {
-          final Media.Stream media;
-          media = stream.stream;
-
-          try (OutputStream out = Files.newOutputStream(file, writeOptions)) {
-            media.writeTo(out);
-          }
-        }
-      }
-    }
-
     return new WebResourcesKernel(
         contentTypes(),
 
@@ -160,9 +98,28 @@ final class WebResourcesBuilder implements Web.Resources.Options {
 
   @Override
   public final void addDirectory(Path directory) {
-    Check.argument(Files.isDirectory(directory), "Path " + directory + " does not represent a directory");
+    try {
+      Check.argument(Files.isDirectory(directory), "Path " + directory + " does not represent a directory");
 
-    directories.add(directory);
+      final CopyRecursively copyRecursively;
+      copyRecursively = new CopyRecursively(rootDirectory, directory);
+
+      Files.walkFileTree(directory, copyRecursively);
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
+  }
+
+  @Override
+  public final void addFile(String pathName, InputStream in) {
+    try {
+      final Path path;
+      path = toPath(pathName);
+
+      Files.copy(in, path);
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
   }
 
   @Override
@@ -184,16 +141,30 @@ final class WebResourcesBuilder implements Web.Resources.Options {
       register(extension, contentType);
     }
 
-    final ResourceFile file;
-    file = switch (media) {
-      case Media.Bytes fixed -> new MediaFixedFile(path, fixed);
+    try {
+      switch (media) {
+        case Media.Bytes b -> {
+          Files.write(path, b.toByteArray(), writeOptions);
+        }
 
-      case Media.Text text -> new MediaTextFile(path, text);
+        case Media.Text text -> {
+          final Charset charset;
+          charset = text.charset();
 
-      case Media.Stream stream -> new MediaStreamFile(path, stream);
-    };
+          try (Writer w = Files.newBufferedWriter(path, charset, writeOptions)) {
+            text.writeTo(w);
+          }
+        }
 
-    files.add(file);
+        case Media.Stream stream -> {
+          try (OutputStream out = Files.newOutputStream(path, writeOptions)) {
+            stream.writeTo(out);
+          }
+        }
+      }
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
   }
 
   private Path toPath(String pathName) {
@@ -236,8 +207,13 @@ final class WebResourcesBuilder implements Web.Resources.Options {
   }
 
   @Override
-  public final void noteSink(Note.Sink noteSink) {
-    this.noteSink = Check.notNull(noteSink, "noteSink == null");
+  public final void include(Web.Resources.Library value) {
+    value.configure(this);
+  }
+
+  @Override
+  public final void noteSink(Note.Sink value) {
+    noteSink = Objects.requireNonNull(value, "value == null");
   }
 
   private void register(String extension, String contentType) {

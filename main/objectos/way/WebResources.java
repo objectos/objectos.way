@@ -71,9 +71,14 @@ final class WebResources implements Web.Resources {
     final WebResourcesKernel newKernel;
     newKernel = builder.build();
 
-    kernel.close();
+    final WebResourcesKernel previous;
+    previous = kernel;
 
-    kernel = newKernel;
+    try {
+      kernel = newKernel;
+    } finally {
+      previous.close();
+    }
   }
 
   @Override
