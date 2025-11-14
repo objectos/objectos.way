@@ -229,6 +229,15 @@ public class CssEngineTest00CssParser {
             block(":nth-child(-n + 3)")
         )
     }, {
+        "(base) @supports at-rule",
+        """
+        @supports (not (-webkit-appearance: -apple-pay-button)) /* Not Safari */ or
+          (contain-intrinsic-size: 1px) /* Safari 17+ */ {}
+        """,
+        List.of(
+            block("@supports (not (-webkit-appearance: -apple-pay-button)) or (contain-intrinsic-size: 1px)")
+        )
+    }, {
         "(components) class selector",
         """
         .foo {}

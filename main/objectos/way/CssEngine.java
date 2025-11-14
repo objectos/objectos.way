@@ -721,7 +721,7 @@ final class CssEngine implements Css.StyleSheet {
 
         case "@keyframes" -> atKeyframes();
 
-        case "@media" -> atBlock(name);
+        case "@media", "@supports" -> atBlock(name);
 
         default -> throw error(name + " at-rule is not supported");
       };
@@ -941,7 +941,32 @@ final class CssEngine implements Css.StyleSheet {
 
           case CSS_RPARENS -> { sb.append(c); ws = 0; }
 
-          default -> { if (ws > 0) { sb.append(' '); ws = 0; } sb.append(c); }
+          case CSS_SOLIDUS -> {
+            final int start;
+            start = idx;
+
+            if (next(CSS_ASTERISK)) {
+              comment0(start);
+            } else {
+              if (ws > 0) {
+                sb.append(' ');
+
+                ws = 0;
+              }
+
+              sb.append(c);
+            }
+          }
+
+          default -> {
+            if (ws > 0) {
+              sb.append(' ');
+
+              ws = 0;
+            }
+
+            sb.append(c);
+          }
         }
       }
 
@@ -1416,7 +1441,20 @@ final class CssEngine implements Css.StyleSheet {
 
         case CSS_AT -> at().asStmt();
 
-        case CSS_ALPHA -> stmtSep();
+        // universal
+        case CSS_ASTERISK,
+             // nesting
+             CSS_AMPERSAND,
+             // attr
+             CSS_LSQUARE,
+             // class
+             CSS_DOT,
+             // id
+             CSS_HASH,
+             // pseudo
+             CSS_COLON,
+             // type
+             CSS_ALPHA -> stmtSep();
 
         default -> throw new UnsupportedOperationException("Implement me :: next=" + next);
       };
