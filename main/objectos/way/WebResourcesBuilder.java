@@ -116,6 +116,8 @@ final class WebResourcesBuilder implements Web.Resources.Options {
       final Path path;
       path = toPath(pathName);
 
+      ensureParent(path);
+
       Files.copy(in, path);
     } catch (IOException e) {
       throw new UncheckedIOException(e);
@@ -142,6 +144,8 @@ final class WebResourcesBuilder implements Web.Resources.Options {
     }
 
     try {
+      ensureParent(path);
+
       switch (media) {
         case Media.Bytes b -> {
           Files.write(path, b.toByteArray(), writeOptions);
@@ -165,6 +169,13 @@ final class WebResourcesBuilder implements Web.Resources.Options {
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     }
+  }
+
+  private void ensureParent(Path path) throws IOException {
+    final Path parent;
+    parent = path.getParent();
+
+    Files.createDirectories(parent);
   }
 
   private Path toPath(String pathName) {

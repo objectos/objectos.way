@@ -658,6 +658,46 @@ public class WebResourcesTest {
     });
   }
 
+  @Test(description = """
+  Options::addFile(InputStream);
+  """)
+  public void testCase14() throws IOException {
+    final byte[] bytes;
+    bytes = "test-case-14\n".getBytes(StandardCharsets.UTF_8);
+
+    final WebResources resources;
+    resources = create(opts -> {
+      final InputStream in;
+      in = new ByteArrayInputStream(bytes);
+
+      opts.addFile("/a/b/c/tc14.txt", in);
+    });
+
+    setLastModifiedTime(resources, "a/b/c/tc14.txt");
+
+    Y.httpExchange(test -> {
+      test.xch(xch -> {
+        xch.req("""
+        GET /a/b/c/tc14.txt HTTP/1.1\r
+        Host: web.resources.test\r
+        \r
+        """);
+
+        xch.handler(resources);
+
+        xch.resp("""
+        HTTP/1.1 200 OK\r
+        Content-Type: application/octet-stream\r
+        Content-Length: 13\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        ETag: 18901e7e8f8-d\r
+        \r
+        test-case-14
+        """);
+      });
+    });
+  }
+
   private WebResources create(Consumer<? super Web.Resources.Options> options) {
     try {
       final Web.Resources resources;
