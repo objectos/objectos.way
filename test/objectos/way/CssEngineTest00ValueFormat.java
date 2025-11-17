@@ -49,6 +49,11 @@ public class CssEngineTest00ValueFormat {
         {"str: sng quote (escape)", "'foo \\' bar'", "'foo \\' bar'"},
         {"str: dbl quote", "\"foo\"", "\"foo\""},
         {"str: dbl quote (escape)", "\"foo \\\" bar\"", "\"foo \\\" bar\""},
+        {"u-range: single", "U+26", "U+26"},
+        {"u-range: range", "U+0-7F", "U+0-7F"},
+        {"u-range: range", "U+0025-00FF", "U+0025-00FF"},
+        {"u-range: wildcard", "U+4??", "U+4??"},
+        {"u-range: list", "U+0025-00FF,  U+4??", "U+0025-00FF, U+4??"},
         // fun
         {"calc: +", "calc(1 + 2)", "calc(1 + 2)"},
         {"calc: -", "calc(1 - 2)", "calc(1 - 2)"},

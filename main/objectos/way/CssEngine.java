@@ -397,6 +397,7 @@ final class CssEngine implements Css.StyleSheet {
   private static final byte CSS_EXCLAMATION = 26;
   private static final byte CSS_PLUS = 27;
   private static final byte CSS_AMPERSAND = 28;
+  private static final byte CSS_QUESTION = 29;
 
   static {
     final byte[] table;
@@ -430,6 +431,7 @@ final class CssEngine implements Css.StyleSheet {
     table['/'] = CSS_SOLIDUS;
     table[':'] = CSS_COLON;
     table[';'] = CSS_SEMICOLON;
+    table['?'] = CSS_QUESTION;
     table['@'] = CSS_AT;
     table['{'] = CSS_LCURLY;
     table['}'] = CSS_RCURLY;
@@ -1553,7 +1555,15 @@ final class CssEngine implements Css.StyleSheet {
 
           case CSS_DOT -> { ws(); valueDouble(idx); }
 
-          case CSS_ALPHA -> { ws(); valueIden(idx); }
+          case CSS_ALPHA -> {
+            ws();
+
+            if (c == 'U') {
+              valueU();
+            } else {
+              valueIden(idx);
+            }
+          }
 
           case CSS_DIGIT -> { ws(); valueInt(idx); }
 
@@ -1821,6 +1831,51 @@ final class CssEngine implements Css.StyleSheet {
       }
 
       throw error("Unclosed CSS string value");
+    }
+
+    private void valueU() {
+      final int start;
+      start = idx;
+
+      final byte next;
+      next = nextEof();
+
+      switch (next) {
+        case CSS_HYPHEN, CSS_UNDERLINE, CSS_ALPHA, CSS_DIGIT -> valueIden(start);
+
+        case CSS_PLUS -> valueUnicodeRange(start);
+
+        default -> throw error("Invalid CSS value");
+      }
+    }
+
+    private void valueUnicodeRange(int start) {
+      byte next;
+      next = valueUnicodeRange0();
+
+      if (next == CSS_HYPHEN) {
+        next = valueUnicodeRange0();
+      }
+
+      switch (next) {
+        case CSS_EOF -> sb.append(text, start, cursor);
+
+        case CSS_COMMA,
+             CSS_SEMICOLON -> sb.append(text, start, --cursor);
+
+        default -> throw error("Invalid CSS value");
+      }
+    }
+
+    private byte valueUnicodeRange0() {
+      final byte next;
+      next = whileHexDigit();
+
+      if (next != CSS_QUESTION) {
+        return next;
+      } else {
+        return whileNext(CSS_QUESTION);
+      }
     }
 
     private void ws() {
