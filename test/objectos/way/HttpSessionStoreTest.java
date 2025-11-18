@@ -158,7 +158,7 @@ public class HttpSessionStoreTest {
 
     assertEquals(http.sessionPresent(), false);
 
-    store.loadSession(http);
+    assertEquals(store.loadSession(http), present);
 
     assertEquals(http.sessionPresent(), present);
   }

@@ -1774,32 +1774,28 @@ public final class Http {
       return builder.build();
     }
 
-    /**
-     * Loads the session associated to the specified exchange, or creates a new
-     * session if one does not exist.
-     *
-     * @param http
-     *        the HTTP exchange
-     */
+    /// Loads the session associated to the specified exchange, or creates a new
+    /// session if one does not exist.
+    ///
+    /// @param http
+    ///        the HTTP exchange
     void ensureSession(Http.Exchange http);
 
-    /**
-     * Loads the session associated to the specified exchange if one exists.
-     *
-     * @param http
-     *        the HTTP exchange
-     */
-    void loadSession(Http.Exchange http);
+    /// Loads the session associated to the specified exchange if one exists.
+    ///
+    /// @param http
+    ///        the HTTP exchange
+    ///
+    /// @return `true` if a session has been loaded; `false` otherwise
+    boolean loadSession(Http.Exchange http);
 
-    /**
-     * Requires a POST, PUT, PATCH or DELETE request to contain a valid CSRF
-     * token. If the request does contain a CSRF token, or if the token value
-     * does not match the one from the session associated to the request, then
-     * a {@code 403 Forbidden} response is written to the specified exchange.
-     *
-     * @param http
-     *        the HTTP exchange
-     */
+    /// Requires a POST, PUT, PATCH or DELETE request to contain a valid CSRF
+    /// token. If the request does contain a CSRF token, or if the token value
+    /// does not match the one from the session associated to the request, then
+    /// a `403 Forbidden` response is written to the specified exchange.
+    ///
+    /// @param http
+    ///        the HTTP exchange
     void requireCsrfToken(Http.Exchange http);
 
   }

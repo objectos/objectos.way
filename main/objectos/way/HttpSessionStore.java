@@ -129,12 +129,12 @@ final class HttpSessionStore implements Http.SessionStore {
   }
 
   @Override
-  public final void loadSession(Http.Exchange http) {
+  public final boolean loadSession(Http.Exchange http) {
     final HttpExchange impl;
     impl = (HttpExchange) http;
 
     if (impl.sessionPresent()) {
-      return;
+      return true;
     }
 
     final HttpSession session;
@@ -142,6 +142,10 @@ final class HttpSessionStore implements Http.SessionStore {
 
     if (session != null) {
       impl.session(session);
+
+      return true;
+    } else {
+      return false;
     }
   }
 
