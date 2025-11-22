@@ -458,64 +458,6 @@ final class CssEngine implements Css.StyleSheet {
 
     Syntax() {}
 
-    private enum Dim {
-      INT,
-      DOT,
-      DBL,
-      UNIT;
-    }
-
-    public final boolean dimension() {
-      Dim state = Dim.INT;
-
-      while (hasNext()) {
-        final byte next;
-        next = next();
-
-        switch (state) {
-          case INT -> {
-            switch (next) {
-              case CSS_DOT -> state = Dim.DOT;
-
-              case CSS_DIGIT -> state = Dim.INT;
-
-              case CSS_ALPHA -> state = Dim.UNIT;
-
-              default -> { return false; }
-            }
-          }
-
-          case DOT -> {
-            switch (next) {
-              case CSS_DIGIT -> state = Dim.DBL;
-
-              default -> { return false; }
-            }
-          }
-
-          case DBL -> {
-            switch (next) {
-              case CSS_DIGIT -> state = Dim.DBL;
-
-              case CSS_ALPHA -> state = Dim.UNIT;
-
-              default -> { return false; }
-            }
-          }
-
-          case UNIT -> {
-            switch (next) {
-              case CSS_ALPHA -> state = Dim.UNIT;
-
-              default -> { return false; }
-            }
-          }
-        }
-      }
-
-      return state == Dim.UNIT;
-    }
-
     // utils
 
     final IllegalArgumentException error(String message) {
@@ -2122,6 +2064,46 @@ final class CssEngine implements Css.StyleSheet {
 
   // ##################################################################
   // # END: Variant
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: CustomProp
+  // ##################################################################
+
+  static final class CustomProp extends Syntax {
+
+    public final boolean test() {
+      final byte first;
+      first = nextEof();
+
+      if (first != CSS_HYPHEN) {
+        return false;
+      }
+
+      final byte second;
+      second = nextEof();
+
+      if (second != CSS_HYPHEN) {
+        return false;
+      }
+
+      final byte third;
+      third = nextEof();
+
+      if (third != CSS_HYPHEN && third != CSS_UNDERLINE && third != CSS_ALPHA) {
+        return false;
+      }
+
+      final byte eof;
+      eof = whileNext(CSS_HYPHEN, CSS_UNDERLINE, CSS_ALPHA, CSS_DIGIT);
+
+      return eof == CSS_EOF;
+    }
+
+  }
+
+  // ##################################################################
+  // # END: CustomProp
   // ##################################################################
 
   // ##################################################################
@@ -3802,6 +3784,8 @@ final class CssEngine implements Css.StyleSheet {
 
     private final Set<String> cssProperties;
 
+    private final CustomProp customProp = new CustomProp();
+
     private final Set<String> distinct = new HashSet<>();
 
     @SuppressWarnings("unused")
@@ -3835,7 +3819,7 @@ final class CssEngine implements Css.StyleSheet {
       final String propName;
       propName = slugs.get(1);
 
-      if (!cssProperties.contains(propName)) {
+      if (!cssProperties.contains(propName) && !customProp(propName)) {
         return;
       }
 
@@ -3875,6 +3859,12 @@ final class CssEngine implements Css.StyleSheet {
       utility = new Utility(vars, classNameFormatted, propName, valueFormatted);
 
       utilities.add(utility);
+    }
+
+    private boolean customProp(String propName) {
+      customProp.set(propName);
+
+      return customProp.test();
     }
 
     public final List<Utility> result() {

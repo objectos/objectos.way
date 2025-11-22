@@ -128,6 +128,15 @@ public class CssEngineTest09Proc {
         ),
         l()
     }, {
+        "allow custom properties",
+        Map.of(),
+        l(
+            r("--foo:1234", l("1234", "--foo"))
+        ),
+        l(
+            utility(List.of(), ".--foo\\:1234", "--foo", "1234")
+        )
+    }, {
         "rx length",
         Map.of(),
         l(

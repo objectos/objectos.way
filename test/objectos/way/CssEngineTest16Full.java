@@ -89,6 +89,40 @@ public class CssEngineTest16Full {
         }
         """
     }, {
+        "utilities: rx unit",
+        cfg(e -> {
+          class Subject extends CssSubject {
+            @Override
+            final void classes() { css("gap:16rx"); }
+          }
+
+          e.systemBase("");
+          e.systemTheme("");
+          e.scanClass(Subject.class);
+        }),
+        """
+        @layer utilities {
+          .gap\\:16rx { gap: calc(16 / 16 * 1rem) }
+        }
+        """
+    }, {
+        "utilities: custom properties",
+        cfg(e -> {
+          class Subject extends CssSubject {
+            @Override
+            final void classes() { css("--foo:calc(var(--bar)_/_2)"); }
+          }
+
+          e.systemBase("");
+          e.systemTheme("");
+          e.scanClass(Subject.class);
+        }),
+        """
+        @layer utilities {
+          .--foo\\:calc\\(var\\(--bar\\)_\\/_2\\) { --foo: calc(var(--bar) / 2) }
+        }
+        """
+    }, {
         "theme: do not generate",
         cfg(e -> {
           class Subject extends CssSubject {
@@ -311,23 +345,6 @@ public class CssEngineTest16Full {
           font-style: normal;
           font-weight: 700;
           src: local("IBM Plex Sans Bold");
-        }
-        """
-    }, {
-        "utilities: rx unit",
-        cfg(e -> {
-          class Subject extends CssSubject {
-            @Override
-            final void classes() { css("gap:16rx"); }
-          }
-
-          e.systemBase("");
-          e.systemTheme("");
-          e.scanClass(Subject.class);
-        }),
-        """
-        @layer utilities {
-          .gap\\:16rx { gap: calc(16 / 16 * 1rem) }
         }
         """
     }, {

@@ -132,6 +132,12 @@ public class CssEngineTest07Tokenizer {
         l(
             r("content:'\\_'", l("'_'", "content"))
         )
+    }, {
+        "custom prop",
+        "--foo:1234",
+        l(
+            r("--foo:1234", l("1234", "--foo"))
+        )
     }};
   }
 
