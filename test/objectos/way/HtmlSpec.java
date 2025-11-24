@@ -597,6 +597,12 @@ final class HtmlSpec {
         @param contents the instructions to be flattened
         @return an instruction representing this flatten operation
         """),
+        new MethodSpec("Html.Instruction.OfElement flatten(Iterable<? extends Html.Instruction> contents)", "flatten(contents)", """
+        Flattens the specified instructions so that each of the specified
+        instructions is individually added, in order, to a receiving element.
+        @param contents the instructions to be flattened
+        @return an instruction representing this flatten operation
+        """),
         new MethodSpec("Html.Instruction.NoOp noop()", "noop()", """
         The no-op instruction.
         @return the no-op instruction.

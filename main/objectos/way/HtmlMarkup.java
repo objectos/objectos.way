@@ -215,6 +215,12 @@ sealed abstract class HtmlMarkup permits HtmlMarkupOfHtml, HtmlMarkupOfTestable 
   /// @return an instruction representing this flatten operation
   public abstract Html.Instruction.OfElement flatten(Html.Instruction... contents);
 
+  /// Flattens the specified instructions so that each of the specified
+  /// instructions is individually added, in order, to a receiving element.
+  /// @param contents the instructions to be flattened
+  /// @return an instruction representing this flatten operation
+  public abstract Html.Instruction.OfElement flatten(Iterable<? extends Html.Instruction> contents);
+
   /// The no-op instruction.
   /// @return the no-op instruction.
   public abstract Html.Instruction.NoOp noop();

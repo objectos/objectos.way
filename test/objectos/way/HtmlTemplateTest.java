@@ -19,6 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import org.testng.annotations.Test;
 
 public class HtmlTemplateTest {
@@ -962,11 +963,11 @@ public class HtmlTemplateTest {
   }
 
   @Test(description = """
-  HtmlTemplate TC46
+  HtmlTemplate TC46 (A)
 
   - flatten instruction
   """)
-  public void testCase46() {
+  public void testCase46a() {
     test(
         new Html.Template() {
           @Override
@@ -983,6 +984,33 @@ public class HtmlTemplateTest {
 
         """
         <form disabled><label></label><input></form>
+        """
+    );
+  }
+
+  @Test(description = """
+  HtmlTemplate TC46 (B)
+
+  - flatten instruction
+  """)
+  public void testCase46b() {
+    test(
+        new Html.Template() {
+          List<Html.ClassName> styles = List.of(
+              Html.ClassName.of("cn1"),
+              Html.ClassName.of("cn2")
+          );
+
+          @Override
+          protected final void render() {
+            div(
+                flatten(styles)
+            );
+          }
+        },
+
+        """
+        <div class="cn1 cn2"></div>
         """
     );
   }

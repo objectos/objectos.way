@@ -1205,6 +1205,7 @@ public final class Html {
     void writeTo(Appendable out) throws IOException;
 
     // START generated code
+
     /// The `async` boolean attribute.
     Html.AttributeObject async = Html.AttributeObject.of(Html.AttributeName.ASYNC);
 
@@ -1420,6 +1421,12 @@ public final class Html {
     /// @param contents the instructions to be flattened
     /// @return an instruction representing this flatten operation
     Html.Instruction.OfElement flatten(Html.Instruction... contents);
+
+    /// Flattens the specified instructions so that each of the specified
+    /// instructions is individually added, in order, to a receiving element.
+    /// @param contents the instructions to be flattened
+    /// @return an instruction representing this flatten operation
+    Html.Instruction.OfElement flatten(Iterable<? extends Html.Instruction> contents);
 
     /// The no-op instruction.
     /// @return the no-op instruction.
@@ -3241,6 +3248,14 @@ public final class Html {
     /// @param contents the instructions to be flattened
     /// @return an instruction representing this flatten operation
     protected final Html.Instruction.OfElement flatten(Html.Instruction... contents) {
+      return $html().flatten(contents);
+    }
+
+    /// Flattens the specified instructions so that each of the specified
+    /// instructions is individually added, in order, to a receiving element.
+    /// @param contents the instructions to be flattened
+    /// @return an instruction representing this flatten operation
+    protected final Html.Instruction.OfElement flatten(Iterable<? extends Html.Instruction> contents) {
       return $html().flatten(contents);
     }
 

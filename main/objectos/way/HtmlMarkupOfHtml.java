@@ -262,6 +262,23 @@ sealed abstract class HtmlMarkupOfHtml extends HtmlMarkup permits Html.Markup.Of
   }
 
   @Override
+  public final Html.Instruction.OfElement flatten(Iterable<? extends Html.Instruction> contents) {
+    Objects.requireNonNull(contents, "contents == null");
+
+    flattenBegin();
+
+    for (Html.Instruction inst : contents) {
+      elementValue(
+          Objects.requireNonNull(inst, "inst == null")
+      );
+    }
+
+    elementEnd();
+
+    return Html.ELEMENT;
+  }
+
+  @Override
   public final Html.Instruction.NoOp noop() {
     return Html.NOOP;
   }

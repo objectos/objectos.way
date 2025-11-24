@@ -185,6 +185,17 @@ sealed abstract class HtmlMarkupOfTestable extends HtmlMarkup permits Html.Marku
   }
 
   @Override
+  public final Html.Instruction.OfElement flatten(Iterable<? extends Html.Instruction> contents) {
+    Objects.requireNonNull(contents, "contents == null");
+
+    for (Html.Instruction inst : contents) {
+      Objects.requireNonNull(inst, "inst == null");
+    }
+
+    return Html.ELEMENT;
+  }
+
+  @Override
   public final Html.Instruction.NoOp noop() {
     return Html.NOOP;
   }
