@@ -59,6 +59,7 @@ public class CssEngineTest00ValueFormat {
         {"calc: -", "calc(1 - 2)", "calc(1 - 2)"},
         {"calc: *", "calc(1 * 2)", "calc(1 * 2)"},
         {"calc: /", "calc(1 / 2)", "calc(1 / 2)"},
+        {"calc: (", "calc((var(--a) - var(--b))/2)", "calc((var(--a) - var(--b)) / 2)"},
         {"oklch", "oklch(0.408 0.123 38.172)", "oklch(0.408 0.123 38.172)"},
         {"var: 1 arg", "var(--foo)", "var(--foo)"},
         {"var: 2 args", "var(--foo, alt)", "var(--foo, alt)"},

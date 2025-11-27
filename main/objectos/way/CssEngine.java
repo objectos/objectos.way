@@ -1515,6 +1515,26 @@ final class CssEngine implements Css.StyleSheet {
 
           case CSS_PLUS, CSS_ASTERISK, CSS_SOLIDUS -> valueSep(c);
 
+          case CSS_LPARENS -> {
+            ws();
+
+            sb.append('(');
+
+            final ValueFormat nested;
+            nested = new ValueFormat();
+
+            nested.set(this);
+
+            final String value;
+            value = nested.formatParens();
+
+            set(nested);
+
+            sb.append(value);
+
+            sb.append(')');
+          }
+
           default -> throw new UnsupportedOperationException("Implement me :: next=" + next);
         }
       }
