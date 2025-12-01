@@ -1536,6 +1536,13 @@ sealed abstract class HtmlMarkup permits HtmlMarkupOfHtml, HtmlMarkupOfTestable 
     return attr0(HtmlAttributeName.DOMINANT_BASELINE, value);
   }
 
+  /// Renders the `download` attribute with the specified value.
+  /// @param value the attribute value
+  /// @return an instruction representing the attribute
+  public final Html.Instruction.OfAttribute download(String value) {
+    return attr0(HtmlAttributeName.DOWNLOAD, value);
+  }
+
   /// Renders the `draggable` attribute with the specified value.
   /// @param value the attribute value
   /// @return an instruction representing the attribute

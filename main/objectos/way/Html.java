@@ -184,6 +184,9 @@ public final class Html {
     /// The `dominant-baseline` HTML attribute.
     Html.AttributeName DOMINANT_BASELINE = HtmlAttributeName.DOMINANT_BASELINE;
 
+    /// The `download` HTML attribute.
+    Html.AttributeName DOWNLOAD = HtmlAttributeName.DOWNLOAD;
+
     /// The `draggable` HTML attribute.
     Html.AttributeName DRAGGABLE = HtmlAttributeName.DRAGGABLE;
 
@@ -2380,6 +2383,11 @@ public final class Html {
     /// @param value the attribute value
     /// @return an instruction representing the attribute
     Html.Instruction.OfAttribute dominantBaseline(String value);
+
+    /// Renders the `download` attribute with the specified value.
+    /// @param value the attribute value
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute download(String value);
 
     /// Renders the `draggable` attribute with the specified value.
     /// @param value the attribute value
@@ -4586,6 +4594,13 @@ public final class Html {
     /// @return an instruction representing the attribute
     protected final Html.Instruction.OfAttribute dominantBaseline(String value) {
       return $html().dominantBaseline(value);
+    }
+
+    /// Renders the `download` attribute with the specified value.
+    /// @param value the attribute value
+    /// @return an instruction representing the attribute
+    protected final Html.Instruction.OfAttribute download(String value) {
+      return $html().download(value);
     }
 
     /// Renders the `draggable` attribute with the specified value.

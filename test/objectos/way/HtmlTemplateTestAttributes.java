@@ -277,6 +277,22 @@ public class HtmlTemplateTestAttributes {
   }
 
   @Test
+  public void download() {
+    test(
+        new Html.Template() {
+          @Override
+          protected final void render() {
+            a(href("https://example.com/document.pdf"), download("hey.pdf"));
+          }
+        },
+
+        """
+        <a href="https://example.com/document.pdf" download="hey.pdf"></a>
+        """
+    );
+  }
+
+  @Test
   public void open() {
     test(
         new Html.Template() {

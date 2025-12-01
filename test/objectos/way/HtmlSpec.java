@@ -107,6 +107,7 @@ final class HtmlSpec {
         new AttributeSpec("DISABLED", "disabled", "disabled", true),
         new AttributeSpec("DISPLAY", "display", "display", false),
         new AttributeSpec("DOMINANT_BASELINE", "dominantBaseline", "dominant-baseline", false),
+        new AttributeSpec("DOWNLOAD", "download", "download", false),
         new AttributeSpec("DRAGGABLE", "draggable", "draggable", false),
         new AttributeSpec("ENCTYPE", "enctype", "enctype", false),
         new AttributeSpec("FILL", "fill", "fill", false),
