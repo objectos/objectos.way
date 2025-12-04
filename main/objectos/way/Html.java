@@ -85,11 +85,38 @@ public final class Html {
     /// The `alt` HTML attribute.
     Html.AttributeName ALT = HtmlAttributeName.ALT;
 
+    /// The `aria-current` HTML attribute.
+    Html.AttributeName ARIA_CURRENT = HtmlAttributeName.ARIA_CURRENT;
+
+    /// The `aria-disabled` HTML attribute.
+    Html.AttributeName ARIA_DISABLED = HtmlAttributeName.ARIA_DISABLED;
+
     /// The `aria-hidden` HTML attribute.
     Html.AttributeName ARIA_HIDDEN = HtmlAttributeName.ARIA_HIDDEN;
 
+    /// The `aria-invalid` HTML attribute.
+    Html.AttributeName ARIA_INVALID = HtmlAttributeName.ARIA_INVALID;
+
     /// The `aria-label` HTML attribute.
     Html.AttributeName ARIA_LABEL = HtmlAttributeName.ARIA_LABEL;
+
+    /// The `aria-labelledby` HTML attribute.
+    Html.AttributeName ARIA_LABELLED_BY = HtmlAttributeName.ARIA_LABELLED_BY;
+
+    /// The `aria-modal` HTML attribute.
+    Html.AttributeName ARIA_MODAL = HtmlAttributeName.ARIA_MODAL;
+
+    /// The `aria-placeholder` HTML attribute.
+    Html.AttributeName ARIA_PLACEHOLDER = HtmlAttributeName.ARIA_PLACEHOLDER;
+
+    /// The `aria-readonly` HTML attribute.
+    Html.AttributeName ARIA_READONLY = HtmlAttributeName.ARIA_READONLY;
+
+    /// The `aria-required` HTML attribute.
+    Html.AttributeName ARIA_REQUIRED = HtmlAttributeName.ARIA_REQUIRED;
+
+    /// The `aria-selected` HTML attribute.
+    Html.AttributeName ARIA_SELECTED = HtmlAttributeName.ARIA_SELECTED;
 
     /// The `as` HTML attribute.
     Html.AttributeName AS = HtmlAttributeName.AS;
@@ -2249,15 +2276,60 @@ public final class Html {
     /// @return an instruction representing the attribute
     Html.Instruction.OfAttribute alt(String value);
 
+    /// Renders the `aria-current` attribute with the specified value.
+    /// @param value the attribute value
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute ariaCurrent(String value);
+
+    /// Renders the `aria-disabled` attribute with the specified value.
+    /// @param value the attribute value
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute ariaDisabled(String value);
+
     /// Renders the `aria-hidden` attribute with the specified value.
     /// @param value the attribute value
     /// @return an instruction representing the attribute
     Html.Instruction.OfAttribute ariaHidden(String value);
 
+    /// Renders the `aria-invalid` attribute with the specified value.
+    /// @param value the attribute value
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute ariaInvalid(String value);
+
     /// Renders the `aria-label` attribute with the specified value.
     /// @param value the attribute value
     /// @return an instruction representing the attribute
     Html.Instruction.OfAttribute ariaLabel(String value);
+
+    /// Renders the `aria-labelledby` attribute with the specified value.
+    /// @param value the attribute value
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute ariaLabelledBy(String value);
+
+    /// Renders the `aria-modal` attribute with the specified value.
+    /// @param value the attribute value
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute ariaModal(String value);
+
+    /// Renders the `aria-placeholder` attribute with the specified value.
+    /// @param value the attribute value
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute ariaPlaceholder(String value);
+
+    /// Renders the `aria-readonly` attribute with the specified value.
+    /// @param value the attribute value
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute ariaReadonly(String value);
+
+    /// Renders the `aria-required` attribute with the specified value.
+    /// @param value the attribute value
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute ariaRequired(String value);
+
+    /// Renders the `aria-selected` attribute with the specified value.
+    /// @param value the attribute value
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute ariaSelected(String value);
 
     /// Renders the `as` attribute with the specified value.
     /// @param value the attribute value
@@ -4407,6 +4479,20 @@ public final class Html {
       return $html().alt(value);
     }
 
+    /// Renders the `aria-current` attribute with the specified value.
+    /// @param value the attribute value
+    /// @return an instruction representing the attribute
+    protected final Html.Instruction.OfAttribute ariaCurrent(String value) {
+      return $html().ariaCurrent(value);
+    }
+
+    /// Renders the `aria-disabled` attribute with the specified value.
+    /// @param value the attribute value
+    /// @return an instruction representing the attribute
+    protected final Html.Instruction.OfAttribute ariaDisabled(String value) {
+      return $html().ariaDisabled(value);
+    }
+
     /// Renders the `aria-hidden` attribute with the specified value.
     /// @param value the attribute value
     /// @return an instruction representing the attribute
@@ -4414,11 +4500,60 @@ public final class Html {
       return $html().ariaHidden(value);
     }
 
+    /// Renders the `aria-invalid` attribute with the specified value.
+    /// @param value the attribute value
+    /// @return an instruction representing the attribute
+    protected final Html.Instruction.OfAttribute ariaInvalid(String value) {
+      return $html().ariaInvalid(value);
+    }
+
     /// Renders the `aria-label` attribute with the specified value.
     /// @param value the attribute value
     /// @return an instruction representing the attribute
     protected final Html.Instruction.OfAttribute ariaLabel(String value) {
       return $html().ariaLabel(value);
+    }
+
+    /// Renders the `aria-labelledby` attribute with the specified value.
+    /// @param value the attribute value
+    /// @return an instruction representing the attribute
+    protected final Html.Instruction.OfAttribute ariaLabelledBy(String value) {
+      return $html().ariaLabelledBy(value);
+    }
+
+    /// Renders the `aria-modal` attribute with the specified value.
+    /// @param value the attribute value
+    /// @return an instruction representing the attribute
+    protected final Html.Instruction.OfAttribute ariaModal(String value) {
+      return $html().ariaModal(value);
+    }
+
+    /// Renders the `aria-placeholder` attribute with the specified value.
+    /// @param value the attribute value
+    /// @return an instruction representing the attribute
+    protected final Html.Instruction.OfAttribute ariaPlaceholder(String value) {
+      return $html().ariaPlaceholder(value);
+    }
+
+    /// Renders the `aria-readonly` attribute with the specified value.
+    /// @param value the attribute value
+    /// @return an instruction representing the attribute
+    protected final Html.Instruction.OfAttribute ariaReadonly(String value) {
+      return $html().ariaReadonly(value);
+    }
+
+    /// Renders the `aria-required` attribute with the specified value.
+    /// @param value the attribute value
+    /// @return an instruction representing the attribute
+    protected final Html.Instruction.OfAttribute ariaRequired(String value) {
+      return $html().ariaRequired(value);
+    }
+
+    /// Renders the `aria-selected` attribute with the specified value.
+    /// @param value the attribute value
+    /// @return an instruction representing the attribute
+    protected final Html.Instruction.OfAttribute ariaSelected(String value) {
+      return $html().ariaSelected(value);
     }
 
     /// Renders the `as` attribute with the specified value.

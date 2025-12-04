@@ -26,6 +26,45 @@ public class HtmlTemplateTestAttributes {
   private final Html.AttributeName dataActive = HtmlAttributeName.custom("data-active");
 
   @Test
+  public void aria() {
+    test(
+        new Html.Template() {
+          @Override
+          protected final void render() {
+            div(
+                ariaCurrent("page"),
+                ariaDisabled("true"),
+                ariaHidden("false"),
+                ariaInvalid("false"),
+                ariaLabel("Hello"),
+                ariaLabelledBy("id-123"),
+                ariaModal("bar"),
+                ariaPlaceholder("abc"),
+                ariaReadonly("false"),
+                ariaRequired("true"),
+                ariaSelected("false")
+            );
+          }
+        },
+
+        """
+        <div \
+        aria-current="page" \
+        aria-disabled="true" \
+        aria-hidden="false" \
+        aria-invalid="false" \
+        aria-label="Hello" \
+        aria-labelledby="id-123" \
+        aria-modal="bar" \
+        aria-placeholder="abc" \
+        aria-readonly="false" \
+        aria-required="true" \
+        aria-selected="false"></div>
+        """
+    );
+  }
+
+  @Test
   public void as() {
     test(
         new Html.Template() {
