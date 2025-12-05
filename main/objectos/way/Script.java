@@ -20,7 +20,7 @@ import java.nio.charset.Charset;
 import java.util.function.Consumer;
 
 /// The **Objectos Script** main interface, part of Objectos HTML.
-public sealed interface Script permits ScriptWriter {
+public sealed interface Script permits ScriptPojo {
 
   // ##################################################################
   // # BEGIN: Callback
@@ -44,7 +44,7 @@ public sealed interface Script permits ScriptWriter {
   // ##################################################################
 
   /// Represents an element in the browser's DOM.
-  public sealed interface Element permits ScriptWriter.ElementQuery {
+  public sealed interface Element permits ScriptElement {
 
     /// Returns the value of the attribute with the specified name.
     /// @param name the attribute name
@@ -148,8 +148,25 @@ public sealed interface Script permits ScriptWriter {
   // # END: Method
   // ##################################################################
 
+  /// Represents a reference to a boolean value in the browser's JS engine.
+  public sealed interface BooleanQuery permits ScriptBooleanQuery {
+
+    /// Executes the specified action if this boolean value is equal to the specified value.
+    /// @param value the boolean value to compare against the value represented by this object
+    /// @param action the action to be executed
+    void when(boolean value, Callback action);
+
+  }
+
   /// Represents a reference to a string value in the browser's JS engine.
-  public sealed interface StringQuery permits ScriptWriter.ElementMethodInvocation {}
+  public sealed interface StringQuery permits ScriptStringQuery {
+
+    /// Tests this JS string value for strict equality against the specified value.
+    /// @param value the string value with which to compare
+    /// @return a boolean query representing either `true` or `false`
+    BooleanQuery test(String value);
+
+  }
 
   /// Returns a reference to the element on which the script is declared.
   /// @return a reference to the element

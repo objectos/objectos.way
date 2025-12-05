@@ -17,78 +17,40 @@ package objectos.way;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Objects;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
-import objectos.way.Script.Callback;
 
-final class ScriptWriter {
+final class ScriptPojo implements Script {
 
-  private final List<String> actions = new ArrayList<>();
+  private final ScriptWriter writer = new ScriptWriter();
 
-  public ScriptWriter() {
-    arrayStart();
+  @Override
+  public final Script.Element element() {
+    return new ScriptElement(writer);
   }
 
-  public final ScriptAction build() {
-    final String value;
-    value = toString();
+  @Override
+  public final Element elementById(Html.Id id) {
+    final String _id;
+    _id = id.attrValue();
 
-    return new ScriptAction(value);
+    return new ScriptElement(writer, _id);
+  }
+
+  @Override
+  public final Element elementById(StringQuery id) {
+    Objects.requireNonNull(id, "id == null");
+
+    return new ScriptElement(writer, id);
   }
 
   // actions
 
+  @Override
   public final void delay(int ms, Callback callback) {
-    final String call;
-    call = toString(callback);
+    Objects.requireNonNull(callback, "callback == null");
 
-    final String action;
-    action = """
-    ["delay-0",%d,%s]""".formatted(ms, call);
-
-    actions.add(action);
-  }
-
-  private String toString(Callback callback) {
-    final int startIndex;
-    startIndex = actions.size();
-
-    callback.execute();
-
-    final int endIndex;
-    endIndex = actions.size();
-
-    if (endIndex > startIndex) {
-      final StringBuilder sb;
-      sb = new StringBuilder();
-
-      sb.append('[');
-
-      final ListIterator<String> iter;
-      iter = actions.listIterator(startIndex);
-
-      if (iter.hasNext()) {
-        sb.append(iter.next());
-
-        iter.remove();
-
-        while (iter.hasNext()) {
-          sb.append(',');
-
-          sb.append(iter.next());
-
-          iter.remove();
-        }
-      }
-
-      sb.append(']');
-
-      return sb.toString();
-    } else {
-      return "[]";
-    }
+    writer.delay(ms, callback);
   }
 
   @Override
@@ -132,71 +94,12 @@ final class ScriptWriter {
     actionEnd();
   }
 
-  final class RequestOptions implements Script.RequestOptions {
-
-    private Script.Method method = Script.GET;
-
-    private Object url;
-
-    private Callback onSuccess = () -> {};
-
-    @Override
-    public final void method(Script.Method method) {
-      this.method = Objects.requireNonNull(method, "method == null");
-    }
-
-    @Override
-    public final void url(String value) {
-      url = Objects.requireNonNull(value, "value == null");
-    }
-
-    @Override
-    public final void url(Script.StringQuery value) {
-      url = Objects.requireNonNull(value, "value == null");
-    }
-
-    @Override
-    public final void onSuccess(Callback callback) {
-      onSuccess = Objects.requireNonNull(callback, "callback == null");
-    }
-
-    final void write() {
-      if (url == null) {
-        throw new IllegalArgumentException("URL was not set");
-      }
-
-      actionStart();
-
-      // action id
-      stringLiteral("request-0");
-
-      // arg[0] = method
-      comma();
-      stringLiteral(method.name());
-
-      // arg[1] = url
-      comma();
-      if (url instanceof ScriptStringQuery q) {
-        q.write();
-      } else {
-        stringLiteral(url.toString());
-      }
-
-      // arg[2] = onSuccess
-      comma();
-      scriptLiteral(onSuccess);
-
-      actionEnd();
-    }
-
-  }
-
   @Override
   public final void request(Consumer<? super Script.RequestOptions> options) {
     Objects.requireNonNull(options, "options == null");
 
-    final RequestOptions delegate;
-    delegate = new RequestOptions();
+    final ScriptRequestOptions delegate;
+    delegate = new ScriptRequestOptions();
 
     options.accept(delegate);
 

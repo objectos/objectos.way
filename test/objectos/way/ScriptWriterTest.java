@@ -29,6 +29,23 @@ public class ScriptWriterTest {
   private final Html.AttributeName dataItem = HtmlAttributeName.custom("data-item");
 
   @Test
+  public void booleanQuery0() {
+    test(
+        script -> {
+          var self = script.element();
+          var attr = self.attr(Html.AttributeName.ARIA_SELECTED);
+          var selected = attr.test("true");
+          selected.when(false, () -> {
+            self.attr(Html.AttributeName.ARIA_SELECTED, "false");
+          });
+        },
+
+        """
+        [["boolean-test",["string-test",["element-1","getAttribute","aria-selected"],"true"],false,[["element-1","setAttribute","aria-selected","false"]]]]"""
+    );
+  }
+
+  @Test
   public void delay() {
     test(
         script -> {
