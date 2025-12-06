@@ -36,10 +36,13 @@ final class ScriptElement implements Script.Element {
 
   @Override
   public final StringQuery attr(Html.AttributeName name) {
-    final String _name;
-    _name = name.name();
+    final String attrName;
+    attrName = name.name();
 
-    return ScriptStringQuery.elementMethodInvocation(this, "getAttribute", _name, writer);
+    final String elem;
+    elem = writer.elementAttr(locator, attrName);
+
+    return new ScriptStringQuery(writer, elem);
   }
 
   @Override
@@ -76,7 +79,7 @@ final class ScriptElement implements Script.Element {
 
   @Override
   public final void scroll(int x, int y) {
-    writer.elementScroll(x, y);
+    writer.elementScroll(locator, x, y);
   }
 
   @Override
@@ -93,22 +96,7 @@ final class ScriptElement implements Script.Element {
   public final void toggleClass(String classes) {
     Check.argument(!classes.isBlank(), "Classes to toggle must not be blank");
 
-    final String[] parts;
-    parts = classes.split(" ");
-
-    writer.actionStart();
-
-    elementAction();
-
-    writer.comma();
-    writer.stringLiteral("toggle-class-0");
-
-    for (var part : parts) {
-      writer.comma();
-      writer.stringLiteral(part);
-    }
-
-    writer.actionEnd();
+    writer.elementToggleClass(locator, classes);
   }
 
 }

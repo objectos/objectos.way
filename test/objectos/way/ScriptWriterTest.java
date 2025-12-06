@@ -330,10 +330,11 @@ public class ScriptWriterTest {
   }
 
   private void test(Consumer<Script> script, String expected) {
-    final ScriptWriter writer;
-    writer = new ScriptWriter();
+    final ScriptPojo pojo;
+    pojo = ScriptPojo.create(script);
 
-    script.accept(writer);
+    final ScriptWriter writer;
+    writer = pojo.unwrap();
 
     final String result;
     result = writer.toString();

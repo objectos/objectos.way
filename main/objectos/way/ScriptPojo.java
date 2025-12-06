@@ -15,14 +15,21 @@
  */
 package objectos.way;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
 final class ScriptPojo implements Script {
 
   private final ScriptWriter writer = new ScriptWriter();
+
+  public static ScriptPojo create(Consumer<? super Script> script) {
+    final ScriptPojo pojo;
+    pojo = new ScriptPojo();
+
+    script.accept(pojo);
+
+    return pojo;
+  }
 
   @Override
   public final Script.Element element() {
@@ -96,87 +103,8 @@ final class ScriptPojo implements Script {
     writer.stopPropagation();
   }
 
-  @Override
-  public final String toString() {
-    arrayEnd();
-
-    return out.toString();
-  }
-
-  final void actionStart() {
-    if (next) {
-      comma();
-    }
-
-    next = true;
-
-    arrayStart();
-  }
-
-  final void actionEnd() {
-    arrayEnd();
-  }
-
-  final void arrayEnd() {
-    out.append(']');
-  }
-
-  final void arrayStart() {
-    out.append('[');
-  }
-
-  final void comma() {
-    out.append(',');
-  }
-
-  final void literal(Object o) {
-    switch (o) {
-      case Integer i -> intLiteral(i.intValue());
-
-      case String s -> stringLiteral(s);
-
-      default -> throw new IllegalArgumentException("Invalid type for literal: " + o.getClass());
-    }
-  }
-
-  final void intLiteral(int value) {
-    out.append(value);
-  }
-
-  final void scriptLiteral(Callback script) {
-    final boolean thisNext;
-    thisNext = next;
-
-    next = false;
-
-    arrayStart();
-    script.execute();
-    arrayEnd();
-
-    next = thisNext;
-  }
-
-  final void stringLiteral(String s) {
-    out.append('"');
-    // TODO escape json string literal
-    out.append(s);
-    out.append('"');
-  }
-
-  final void stringLiteralOrQuery(Object o) {
-    switch (o) {
-      case ScriptStringQuery q -> q.write();
-
-      case String s -> stringLiteral(s);
-
-      default -> throw new IllegalArgumentException("Invalid type: " + o.getClass());
-    }
-  }
-
-  final void stringQuery(StringQuery value) {
-    switch (value) {
-      case ScriptStringQuery q -> q.write();
-    }
+  final ScriptWriter unwrap() {
+    return writer;
   }
 
 }

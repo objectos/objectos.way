@@ -15,68 +15,35 @@
  */
 package objectos.way;
 
-import java.util.List;
+import java.util.Objects;
 import objectos.way.Script.BooleanQuery;
-import objectos.way.Script.StringQuery;
 
-sealed abstract class ScriptStringQuery implements Script.StringQuery {
+final class ScriptStringQuery implements Script.StringQuery {
 
-  private static final class ElementMethodInvocation extends ScriptStringQuery {
+  private final ScriptWriter writer;
 
-    private final ScriptElement element;
+  private final String query;
 
-    private final String methodName;
+  ScriptStringQuery(ScriptWriter writer, String query) {
+    this.writer = writer;
 
-    private final Object argumentOrList;
-
-    private final ScriptWriter writer;
-
-    ElementMethodInvocation(ScriptElement element, String methodName, Object argumentOrList, ScriptWriter writer) {
-      this.element = element;
-
-      this.methodName = methodName;
-
-      this.argumentOrList = argumentOrList;
-
-      this.writer = writer;
-    }
-
-    @Override
-    public final BooleanQuery test(String value) {
-      return ScriptBooleanQuery.stringQueryTest(this, value, writer);
-    }
-
-    @Override
-    final void write() {
-      writer.arrayStart();
-
-      // instruction
-      element.methodInvocation();
-
-      // method name
-      writer.comma();
-      writer.stringLiteral(methodName);
-
-      // args
-      if (argumentOrList instanceof List<?> list) {
-        for (Object o : list) {
-          writer.comma();
-          writer.literal(o);
-        }
-      } else {
-        writer.comma();
-        writer.stringLiteral(argumentOrList.toString());
-      }
-
-      writer.arrayEnd();
-    }
-
+    this.query = query;
   }
 
-  public static StringQuery elementMethodInvocation(ScriptElement element, String methodName, Object args, ScriptWriter writer) {
-    return new ElementMethodInvocation(element, methodName, args, writer);
+  @Override
+  public final BooleanQuery test(String value) {
+    final String v;
+    v = Objects.requireNonNull(value, "value == null");
+
+    final String test;
+    test = writer.stringTest(this, v);
+
+    return new ScriptBooleanQuery(writer, test);
   }
 
-  abstract void write();
+  @Override
+  public final String toString() {
+    return query;
+  }
 
 }

@@ -18,21 +18,24 @@ package objectos.way;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Objects;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import objectos.way.Script.BooleanQuery;
 import objectos.way.Script.Callback;
 import objectos.way.Script.StringQuery;
 
 final class ScriptWriter {
 
-  private final List<Object> actions = new ArrayList<>();
+  private final List<String> actions = new ArrayList<>();
 
-  public final ScriptAction build() {
-    final String value;
-    value = toString();
+  public final void add(Object next) {
+    final ScriptWriter other;
+    other = (ScriptWriter) next;
 
-    return new ScriptAction(value);
+    final List<String> otherActions;
+    otherActions = other.actions;
+
+    actions.addAll(otherActions);
   }
 
   // actions
@@ -59,7 +62,8 @@ final class ScriptWriter {
 
   public final void navigate() {
     actions.add(
-        "[navigate-0]"
+        """
+        ["navigate-0"]"""
     );
   }
 
@@ -87,9 +91,9 @@ final class ScriptWriter {
     final String tmpl;
     tmpl = url instanceof ScriptStringQuery
         ? """
-        ["request-0","%s",%s,%s]"""
+          ["request-0","%s",%s,%s]"""
         : """
-        ["request-0","%s","%s",%s]""";
+          ["request-0","%s","%s",%s]""";
 
     final String onSuccess;
     onSuccess = toString(value.onSuccess);
@@ -101,7 +105,8 @@ final class ScriptWriter {
 
   public final void stopPropagation() {
     actions.add(
-        "[stop-propagation-0]"
+        """
+        ["stop-propagation-0"]"""
     );
   }
 
@@ -115,6 +120,14 @@ final class ScriptWriter {
         """
         [%s,"%s"]""".formatted(elem, action)
     );
+  }
+
+  public final String elementAttr(Object locator, String attrName) {
+    final String elem;
+    elem = elementMethodInvocation(locator);
+
+    return """
+    [%s,"getAttribute","%s"]""".formatted(elem, attrName);
   }
 
   public final void elementAttr(Object locator, String attrName, String value) {
@@ -137,37 +150,63 @@ final class ScriptWriter {
     );
   }
 
-  public final void elementScroll(int x, int y) {
-    writer.actionStart();
+  public final void elementScroll(Object locator, int x, int y) {
+    final String elem;
+    elem = elementMethodInvocation(locator);
 
-    methodInvocation();
+    actions.add(
+        """
+        [%s,"scroll",%d,%d]""".formatted(elem, x, y)
+    );
+  }
 
-    writer.comma();
-    writer.stringLiteral("scroll");
+  public final void elementToggleClass(Object locator, String classes) {
+    final String elem;
+    elem = elementAction(locator);
 
-    writer.comma();
-    writer.intLiteral(x);
+    final String[] parts;
+    parts = classes.split(" ");
 
-    writer.comma();
-    writer.intLiteral(y);
+    final String args;
+    args = join(parts);
 
-    writer.actionEnd();
+    actions.add(
+        """
+        [%s,"toggle-class-0",%s]""".formatted(elem, args)
+    );
+  }
+
+  // boolean
+
+  public final void booleanWhen(BooleanQuery query, boolean value, Callback action) {
+    final String call;
+    call = toString(action);
+
+    actions.add(
+        """
+        ["boolean-when-0",%s,%b,%s]""".formatted(query, value, call)
+    );
+  }
+
+  // string
+
+  public final String stringTest(StringQuery query, String value) {
+    return """
+    ["string-test-0",%s,"%s"]""".formatted(query, value);
   }
 
   @Override
   public final String toString() {
-    arrayEnd();
-
-    return out.toString();
+    return actions.stream().collect(Collectors.joining(",", "[", "]"));
   }
 
   private String elementAction(Object locator) {
     return switch (locator) {
-      case null -> "element-2";
+      case null -> "\"element-2\"";
 
-      case String id -> "id-2,\"" + id + "\"";
+      case String id -> "\"id-2\",\"" + id + "\"";
 
-      case StringQuery q -> "id-2," + q;
+      case StringQuery q -> "\"id-2\"," + q;
 
       default -> throw new IllegalArgumentException("Unknown locator type: " + locator.getClass());
     };
@@ -175,14 +214,18 @@ final class ScriptWriter {
 
   private String elementMethodInvocation(Object locator) {
     return switch (locator) {
-      case null -> "element-1";
+      case null -> "\"element-1\"";
 
-      case String id -> "id-1,\"" + id + "\"";
+      case String id -> "\"id-1\",\"" + id + "\"";
 
-      case StringQuery q -> "id-1," + q;
+      case StringQuery q -> "\"id-1\"," + q;
 
       default -> throw new IllegalArgumentException("Unknown locator type: " + locator.getClass());
     };
+  }
+
+  private String join(String[] parts) {
+    return Stream.of(parts).collect(Collectors.joining(","));
   }
 
   private String toString(Callback callback) {
@@ -200,7 +243,7 @@ final class ScriptWriter {
 
       sb.append('[');
 
-      final ListIterator<Object> iter;
+      final ListIterator<String> iter;
       iter = actions.listIterator(startIndex);
 
       if (iter.hasNext()) {
@@ -225,80 +268,6 @@ final class ScriptWriter {
     }
   }
 
-  final void actionStart() {
-    if (next) {
-      comma();
-    }
-
-    next = true;
-
-    arrayStart();
-  }
-
-  final void actionEnd() {
-    arrayEnd();
-  }
-
-  final void arrayEnd() {
-    out.append(']');
-  }
-
-  final void arrayStart() {
-    out.append('[');
-  }
-
-  final void comma() {
-    out.append(',');
-  }
-
-  final void literal(Object o) {
-    switch (o) {
-      case Integer i -> intLiteral(i.intValue());
-
-      case String s -> stringLiteral(s);
-
-      default -> throw new IllegalArgumentException("Invalid type for literal: " + o.getClass());
-    }
-  }
-
-  final void intLiteral(int value) {
-    out.append(value);
-  }
-
-  final void scriptLiteral(Callback script) {
-    final boolean thisNext;
-    thisNext = next;
-
-    next = false;
-
-    arrayStart();
-    script.execute();
-    arrayEnd();
-
-    next = thisNext;
-  }
-
-  final void stringLiteral(String s) {
-    out.append('"');
-    // TODO escape json string literal
-    out.append(s);
-    out.append('"');
-  }
-
-  final void stringLiteralOrQuery(Object o) {
-    switch (o) {
-      case ScriptStringQuery q -> q.write();
-
-      case String s -> stringLiteral(s);
-
-      default -> throw new IllegalArgumentException("Invalid type: " + o.getClass());
-    }
-  }
-
-  final void stringQuery(StringQuery value) {
-    switch (value) {
-      case ScriptStringQuery q -> q.write();
-    }
-  }
+  // TODO escape json string literal
 
 }

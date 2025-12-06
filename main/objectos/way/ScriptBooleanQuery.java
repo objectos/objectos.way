@@ -15,40 +15,28 @@
  */
 package objectos.way;
 
-import objectos.way.Script.BooleanQuery;
 import objectos.way.Script.Callback;
 
-sealed abstract class ScriptBooleanQuery implements Script.BooleanQuery {
+final class ScriptBooleanQuery implements Script.BooleanQuery {
 
-  private static final class StringQueryTest extends ScriptBooleanQuery {
+  private final ScriptWriter writer;
 
-    private final ScriptStringQuery query;
+  private final String query;
 
-    private final String value;
+  ScriptBooleanQuery(ScriptWriter writer, String query) {
+    this.writer = writer;
 
-    private final ScriptWriter writer;
-
-    StringQueryTest(ScriptStringQuery query, String value, ScriptWriter writer) {
-      this.query = query;
-
-      this.value = value;
-
-      this.writer = writer;
-    }
-
-    @Override
-    public final void when(boolean value, Callback action) {
-      writer.arrayStart();
-
-      writer.stringLiteral("boolean-test");
-
-      writer.arrayEnd();
-    }
-
+    this.query = query;
   }
 
-  public static BooleanQuery stringQueryTest(ScriptStringQuery query, String value, ScriptWriter writer) {
-    return new StringQueryTest(query, value, writer);
+  @Override
+  public final void when(boolean value, Callback action) {
+    writer.booleanWhen(this, value, action);
+  }
+
+  @Override
+  public final String toString() {
+    return query;
   }
 
 }

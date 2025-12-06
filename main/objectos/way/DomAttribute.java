@@ -39,7 +39,7 @@ final class DomAttribute implements Dom.Attribute {
 
   @Override
   public final boolean singleQuoted() {
-    return value instanceof ScriptAction;
+    return value instanceof ScriptWriter;
   }
 
   @Override
@@ -59,20 +59,15 @@ final class DomAttribute implements Dom.Attribute {
       return String.valueOf(result);
     }
 
-    if (result instanceof ScriptAction) {
+    if (result instanceof ScriptWriter writer) {
 
-      ScriptActionJoiner joiner;
-      joiner = new ScriptActionJoiner();
-
-      joiner.add(result);
-
-      joiner.add(next());
+      writer.add(next());
 
       while (hasNext()) {
-        joiner.add(next());
+        writer.add(next());
       }
 
-      return joiner.join();
+      return writer.toString();
 
     } else {
 

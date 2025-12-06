@@ -237,10 +237,13 @@ sealed abstract class HtmlMarkupOfHtml extends HtmlMarkup permits Html.Markup.Of
   }
 
   private Html.Instruction.OfDataOn dataOn0(Html.AttributeName name, Consumer<? super Script> script) {
-    final ScriptAction action;
-    action = ScriptAction.create(script);
+    final ScriptPojo pojo;
+    pojo = ScriptPojo.create(script);
 
-    return attr0(name, action);
+    final ScriptWriter json;
+    json = pojo.unwrap();
+
+    return attr0(name, json);
   }
 
   @Override
