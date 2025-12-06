@@ -22,7 +22,7 @@ final class ScriptElement implements Script.Element {
 
   private final ScriptWriter writer;
 
-  private final Object value;
+  private final Object locator;
 
   ScriptElement(ScriptWriter writer) {
     this(writer, null);
@@ -31,7 +31,7 @@ final class ScriptElement implements Script.Element {
   ScriptElement(ScriptWriter writer, Object value) {
     this.writer = writer;
 
-    this.value = value;
+    this.locator = value;
   }
 
   @Override
@@ -44,110 +44,49 @@ final class ScriptElement implements Script.Element {
 
   @Override
   public final void attr(Html.AttributeName name, StringQuery value) {
-    String _name = name.name();
-    Objects.requireNonNull(value, "value == null");
+    final String attrName;
+    attrName = name.name();
 
-    writer.actionStart();
+    final StringQuery q;
+    q = Objects.requireNonNull(value, "value == null");
 
-    elementAction();
-
-    writer.comma();
-    writer.stringLiteral("attr-0");
-
-    writer.comma();
-    writer.stringLiteral(_name);
-
-    writer.comma();
-    writer.stringQuery(value);
-
-    writer.actionEnd();
+    writer.elementAttr(locator, attrName, q);
   }
 
   @Override
   public final void attr(Html.AttributeName name, String value) {
-    String _name = name.name();
-    Objects.requireNonNull(value, "value == null");
+    final String attrName;
+    attrName = name.name();
 
-    writer.actionStart();
+    final String q;
+    q = Objects.requireNonNull(value, "value == null");
 
-    methodInvocation();
-
-    writer.comma();
-    writer.stringLiteral("setAttribute");
-
-    writer.comma();
-    writer.stringLiteral(_name);
-
-    writer.comma();
-    writer.stringLiteral(value);
-
-    writer.actionEnd();
+    writer.elementAttr(locator, attrName, q);
   }
 
   @Override
   public final void close() {
-    writer.actionStart();
-
-    elementAction();
-
-    writer.comma();
-    writer.stringLiteral("close-0");
-
-    writer.actionEnd();
+    writer.elementAction(locator, "close-0");
   }
 
   @Override
   public final void focus() {
-    writer.actionStart();
-
-    elementAction();
-
-    writer.comma();
-    writer.stringLiteral("focus-0");
-
-    writer.actionEnd();
+    writer.elementAction(locator, "focus-0");
   }
 
   @Override
   public final void scroll(int x, int y) {
-    writer.actionStart();
-
-    methodInvocation();
-
-    writer.comma();
-    writer.stringLiteral("scroll");
-
-    writer.comma();
-    writer.intLiteral(x);
-
-    writer.comma();
-    writer.intLiteral(y);
-
-    writer.actionEnd();
+    writer.elementScroll(x, y);
   }
 
   @Override
   public final void showModal() {
-    writer.actionStart();
-
-    elementAction();
-
-    writer.comma();
-    writer.stringLiteral("show-modal-0");
-
-    writer.actionEnd();
+    writer.elementAction(locator, "show-modal-0");
   }
 
   @Override
   public final void submit() {
-    writer.actionStart();
-
-    elementAction();
-
-    writer.comma();
-    writer.stringLiteral("submit-0");
-
-    writer.actionEnd();
+    writer.elementAction(locator, "submit-0");
   }
 
   @Override
@@ -170,30 +109,6 @@ final class ScriptElement implements Script.Element {
     }
 
     writer.actionEnd();
-  }
-
-  final void elementAction() {
-    switch (kind) {
-      case ELEMENT -> writer.stringLiteral("element-2");
-
-      case BY_ID -> {
-        writer.stringLiteral("id-2");
-        writer.comma();
-        writer.stringLiteralOrQuery(value);
-      }
-    }
-  }
-
-  final void methodInvocation() {
-    switch (kind) {
-      case ELEMENT -> writer.stringLiteral("element-1");
-
-      case BY_ID -> {
-        writer.stringLiteral("id-1");
-        writer.comma();
-        writer.stringLiteralOrQuery(value);
-      }
-    }
   }
 
 }

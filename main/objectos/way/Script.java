@@ -210,7 +210,7 @@ public sealed interface Script permits ScriptPojo {
   void replaceState(String url);
 
   /// Configures the [request][#request(Consumer)] action.
-  public sealed interface RequestOptions permits ScriptWriter.RequestOptions {
+  public sealed interface RequestOptions permits ScriptRequestOptions {
 
     /// Sets the HTTP method of this request.
     /// @param value the HTTP method

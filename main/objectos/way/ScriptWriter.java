@@ -22,14 +22,11 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import objectos.way.Script.Callback;
+import objectos.way.Script.StringQuery;
 
 final class ScriptWriter {
 
-  private final List<String> actions = new ArrayList<>();
-
-  public ScriptWriter() {
-    arrayStart();
-  }
+  private final List<Object> actions = new ArrayList<>();
 
   public final ScriptAction build() {
     final String value;
@@ -44,11 +41,148 @@ final class ScriptWriter {
     final String call;
     call = toString(callback);
 
-    final String action;
-    action = """
-    ["delay-0",%d,%s]""".formatted(ms, call);
+    actions.add(
+        """
+        ["delay-0",%d,%s]""".formatted(ms, call)
+    );
+  }
 
-    actions.add(action);
+  public final void html(Html.Template template) {
+    final String value;
+    value = template.toJsonString();
+
+    actions.add(
+        """
+        ["html-0","%s"]""".formatted(value)
+    );
+  }
+
+  public final void navigate() {
+    actions.add(
+        "[navigate-0]"
+    );
+  }
+
+  public final void pushState(String url) {
+    actions.add(
+        """
+        ["push-state-0","%s"]""".formatted(url)
+    );
+  }
+
+  public final void replaceState(String url) {
+    actions.add(
+        """
+        ["replace-state-0","%s"]""".formatted(url)
+    );
+  }
+
+  public final void request(ScriptRequestOptions value) {
+    final String method;
+    method = value.method.name();
+
+    final Object url;
+    url = value.url;
+
+    final String tmpl;
+    tmpl = url instanceof ScriptStringQuery
+        ? """
+        ["request-0","%s",%s,%s]"""
+        : """
+        ["request-0","%s","%s",%s]""";
+
+    final String onSuccess;
+    onSuccess = toString(value.onSuccess);
+
+    actions.add(
+        tmpl.formatted(method, url, onSuccess)
+    );
+  }
+
+  public final void stopPropagation() {
+    actions.add(
+        "[stop-propagation-0]"
+    );
+  }
+
+  // element
+
+  public final void elementAction(Object locator, String action) {
+    final String elem;
+    elem = elementAction(locator);
+
+    actions.add(
+        """
+        [%s,"%s"]""".formatted(elem, action)
+    );
+  }
+
+  public final void elementAttr(Object locator, String attrName, String value) {
+    final String elem;
+    elem = elementMethodInvocation(locator);
+
+    actions.add(
+        """
+        [%s,"setAttribute","%s","%s"]""".formatted(elem, attrName, value)
+    );
+  }
+
+  public final void elementAttr(Object locator, String attrName, StringQuery value) {
+    final String elem;
+    elem = elementMethodInvocation(locator);
+
+    actions.add(
+        """
+        [%s,"setAttribute","%s",%s]""".formatted(elem, attrName, value)
+    );
+  }
+
+  public final void elementScroll(int x, int y) {
+    writer.actionStart();
+
+    methodInvocation();
+
+    writer.comma();
+    writer.stringLiteral("scroll");
+
+    writer.comma();
+    writer.intLiteral(x);
+
+    writer.comma();
+    writer.intLiteral(y);
+
+    writer.actionEnd();
+  }
+
+  @Override
+  public final String toString() {
+    arrayEnd();
+
+    return out.toString();
+  }
+
+  private String elementAction(Object locator) {
+    return switch (locator) {
+      case null -> "element-2";
+
+      case String id -> "id-2,\"" + id + "\"";
+
+      case StringQuery q -> "id-2," + q;
+
+      default -> throw new IllegalArgumentException("Unknown locator type: " + locator.getClass());
+    };
+  }
+
+  private String elementMethodInvocation(Object locator) {
+    return switch (locator) {
+      case null -> "element-1";
+
+      case String id -> "id-1,\"" + id + "\"";
+
+      case StringQuery q -> "id-1," + q;
+
+      default -> throw new IllegalArgumentException("Unknown locator type: " + locator.getClass());
+    };
   }
 
   private String toString(Callback callback) {
@@ -66,7 +200,7 @@ final class ScriptWriter {
 
       sb.append('[');
 
-      final ListIterator<String> iter;
+      final ListIterator<Object> iter;
       iter = actions.listIterator(startIndex);
 
       if (iter.hasNext()) {
@@ -89,132 +223,6 @@ final class ScriptWriter {
     } else {
       return "[]";
     }
-  }
-
-  @Override
-  public final void html(Html.Template template) {
-    final String value;
-    value = template.toJsonString();
-
-    actionStart();
-    stringLiteral("html-0");
-    comma();
-    stringLiteral(value);
-    actionEnd();
-  }
-
-  @Override
-  public final void navigate() {
-    actionStart();
-    stringLiteral("navigate-0");
-    actionEnd();
-  }
-
-  @Override
-  public final void pushState(String url) {
-    Objects.requireNonNull(url, "url == null");
-
-    actionStart();
-    stringLiteral("push-state-0");
-    comma();
-    stringLiteral(url);
-    actionEnd();
-  }
-
-  @Override
-  public final void replaceState(String url) {
-    Objects.requireNonNull(url, "url == null");
-
-    actionStart();
-    stringLiteral("replace-state-0");
-    comma();
-    stringLiteral(url);
-    actionEnd();
-  }
-
-  final class RequestOptions implements Script.RequestOptions {
-
-    private Script.Method method = Script.GET;
-
-    private Object url;
-
-    private Callback onSuccess = () -> {};
-
-    @Override
-    public final void method(Script.Method method) {
-      this.method = Objects.requireNonNull(method, "method == null");
-    }
-
-    @Override
-    public final void url(String value) {
-      url = Objects.requireNonNull(value, "value == null");
-    }
-
-    @Override
-    public final void url(Script.StringQuery value) {
-      url = Objects.requireNonNull(value, "value == null");
-    }
-
-    @Override
-    public final void onSuccess(Callback callback) {
-      onSuccess = Objects.requireNonNull(callback, "callback == null");
-    }
-
-    final void write() {
-      if (url == null) {
-        throw new IllegalArgumentException("URL was not set");
-      }
-
-      actionStart();
-
-      // action id
-      stringLiteral("request-0");
-
-      // arg[0] = method
-      comma();
-      stringLiteral(method.name());
-
-      // arg[1] = url
-      comma();
-      if (url instanceof ScriptStringQuery q) {
-        q.write();
-      } else {
-        stringLiteral(url.toString());
-      }
-
-      // arg[2] = onSuccess
-      comma();
-      scriptLiteral(onSuccess);
-
-      actionEnd();
-    }
-
-  }
-
-  @Override
-  public final void request(Consumer<? super Script.RequestOptions> options) {
-    Objects.requireNonNull(options, "options == null");
-
-    final RequestOptions delegate;
-    delegate = new RequestOptions();
-
-    options.accept(delegate);
-
-    delegate.write();
-  }
-
-  @Override
-  public final void stopPropagation() {
-    actionStart();
-    stringLiteral("stop-propagation-0");
-    actionEnd();
-  }
-
-  @Override
-  public final String toString() {
-    arrayEnd();
-
-    return out.toString();
   }
 
   final void actionStart() {

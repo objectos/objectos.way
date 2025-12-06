@@ -55,62 +55,45 @@ final class ScriptPojo implements Script {
 
   @Override
   public final void html(Html.Template template) {
-    final String value;
-    value = template.toJsonString();
-
-    actionStart();
-    stringLiteral("html-0");
-    comma();
-    stringLiteral(value);
-    actionEnd();
+    writer.html(template);
   }
 
   @Override
   public final void navigate() {
-    actionStart();
-    stringLiteral("navigate-0");
-    actionEnd();
+    writer.navigate();
   }
 
   @Override
   public final void pushState(String url) {
     Objects.requireNonNull(url, "url == null");
 
-    actionStart();
-    stringLiteral("push-state-0");
-    comma();
-    stringLiteral(url);
-    actionEnd();
+    writer.pushState(url);
   }
 
   @Override
   public final void replaceState(String url) {
     Objects.requireNonNull(url, "url == null");
 
-    actionStart();
-    stringLiteral("replace-state-0");
-    comma();
-    stringLiteral(url);
-    actionEnd();
+    writer.replaceState(url);
   }
 
   @Override
   public final void request(Consumer<? super Script.RequestOptions> options) {
-    Objects.requireNonNull(options, "options == null");
+    final ScriptRequestOptions pojo;
+    pojo = new ScriptRequestOptions();
 
-    final ScriptRequestOptions delegate;
-    delegate = new ScriptRequestOptions();
+    options.accept(pojo);
 
-    options.accept(delegate);
+    if (pojo.url == null) {
+      throw new IllegalArgumentException("URL was not set");
+    }
 
-    delegate.write();
+    writer.request(pojo);
   }
 
   @Override
   public final void stopPropagation() {
-    actionStart();
-    stringLiteral("stop-propagation-0");
-    actionEnd();
+    writer.stopPropagation();
   }
 
   @Override

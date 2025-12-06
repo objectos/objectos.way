@@ -15,16 +15,16 @@
  */
 package objectos.way;
 
-import java.util.Objects;
+import module java.base;
 import objectos.way.Script.Callback;
 
 final class ScriptRequestOptions implements Script.RequestOptions {
 
-  private Script.Method method = Script.GET;
+  Script.Method method = Script.GET;
 
-  private Object url;
+  Object url;
 
-  private Callback onSuccess = () -> {};
+  Callback onSuccess = () -> {};
 
   @Override
   public final void method(Script.Method method) {
@@ -44,35 +44,6 @@ final class ScriptRequestOptions implements Script.RequestOptions {
   @Override
   public final void onSuccess(Callback callback) {
     onSuccess = Objects.requireNonNull(callback, "callback == null");
-  }
-
-  final void write() {
-    if (url == null) {
-      throw new IllegalArgumentException("URL was not set");
-    }
-
-    scriptPojo.actionStart();
-
-    // action id
-    scriptPojo.stringLiteral("request-0");
-
-    // arg[0] = method
-    scriptPojo.comma();
-    scriptPojo.stringLiteral(method.name());
-
-    // arg[1] = url
-    scriptPojo.comma();
-    if (url instanceof ScriptStringQuery q) {
-      q.write();
-    } else {
-      scriptPojo.stringLiteral(url.toString());
-    }
-
-    // arg[2] = onSuccess
-    scriptPojo.comma();
-    scriptPojo.scriptLiteral(onSuccess);
-
-    scriptPojo.actionEnd();
   }
 
 }
