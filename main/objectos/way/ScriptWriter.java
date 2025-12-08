@@ -142,11 +142,11 @@ final class ScriptWriter {
 
   public final void elementAttr(Object locator, String attrName, StringQuery value) {
     final String elem;
-    elem = elementMethodInvocation(locator);
+    elem = elementAction(locator);
 
     actions.add(
         """
-        [%s,"setAttribute","%s",%s]""".formatted(elem, attrName, value)
+        [%s,"attr-0","%s",%s]""".formatted(elem, attrName, value)
     );
   }
 
@@ -225,7 +225,7 @@ final class ScriptWriter {
   }
 
   private String join(String[] parts) {
-    return Stream.of(parts).collect(Collectors.joining(","));
+    return Stream.of(parts).map(x -> "\"" + x + "\"").collect(Collectors.joining(","));
   }
 
   private String toString(Callback callback) {

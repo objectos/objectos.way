@@ -22,9 +22,44 @@ import java.util.function.Consumer;
 /// The **Objectos Script** main interface, part of Objectos HTML.
 public sealed interface Script permits ScriptPojo {
 
-  // ##################################################################
-  // # BEGIN: Callback
-  // ##################################################################
+  /// Represents an action to be executed by the JS runtime.
+  public sealed interface Action permits ScriptJsObject {
+    
+    String toJsonString();
+    
+  }
+  
+  /// Represents a JS runtime `Element` instance.
+  public sealed interface JsElement extends JsObject permits ScriptJsObject {
+    
+    
+  }
+  
+  /// Represents a JS runtime `Object` instance.
+  public sealed interface JsObject {
+    
+    /// Invokes the specified method with the specified arguments,
+    /// in order, if the JS object is an instance of the specified type.
+    /// If the method returns a value it is ignored.
+    /// @param type the name of the JS type that defines the method
+    /// @param method the method name
+    /// @param args the method arguments
+    /// @return an action representing the method invocation
+    Action invoke(String type, String method, Object... args);
+    
+    /// Returns the property of the specified name, if the JS object is an instance of the specified type.
+    /// @param type the name of the JS type that defines the property
+    /// @param name the property name 
+    /// @return the property
+    JsObject prop(String type, String name);
+
+  }
+  
+  /// The element which triggered the Objectos Script.
+  /// @return the element
+  static JsElement target() {
+    return ScriptJsObject.TARGET;
+  }
 
   /// Represents a callback to be executed by the browser's JS engine.
   @FunctionalInterface
@@ -34,14 +69,6 @@ public sealed interface Script permits ScriptPojo {
     void execute();
 
   }
-
-  // ##################################################################
-  // # END: Callback
-  // ##################################################################
-
-  // ##################################################################
-  // # BEGIN: Element
-  // ##################################################################
 
   /// Represents an element in the browser's DOM.
   public sealed interface Element permits ScriptElement {
@@ -84,14 +111,6 @@ public sealed interface Script permits ScriptPojo {
 
   }
 
-  // ##################################################################
-  // # END: Element
-  // ##################################################################
-
-  // ##################################################################
-  // # BEGIN: Library
-  // ##################################################################
-
   /// Represents the source code of the Objectos Way JS library.
   public sealed interface Library extends Media.Text permits ScriptLibrary {
 
@@ -119,14 +138,6 @@ public sealed interface Script permits ScriptPojo {
 
   }
 
-  // ##################################################################
-  // # END: Library
-  // ##################################################################
-
-  // ##################################################################
-  // # BEGIN: Method
-  // ##################################################################
-
   /// The `GET` method.
   Method GET = Method.GET;
 
@@ -143,10 +154,6 @@ public sealed interface Script permits ScriptPojo {
     POST;
 
   }
-
-  // ##################################################################
-  // # END: Method
-  // ##################################################################
 
   /// Represents a reference to a boolean value in the browser's JS engine.
   public sealed interface BooleanQuery permits ScriptBooleanQuery {
@@ -236,5 +243,5 @@ public sealed interface Script permits ScriptPojo {
 
   /// Causes the event handling to stop at the current HTML element.
   void stopPropagation();
-
+  
 }
