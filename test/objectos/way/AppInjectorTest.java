@@ -63,7 +63,7 @@ public class AppInjectorTest {
     }
   }
 
-  private final Consumer<Object> noop = o -> {};
+  private final Consumer<Object> noop = _ -> {};
 
   @Test(description = "Query for unknown key should throw")
   public void class04() {

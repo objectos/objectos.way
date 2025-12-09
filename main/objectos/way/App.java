@@ -352,7 +352,7 @@ public final class App {
     }
 
     static NoteSink ofAppendable(Appendable out) {
-      return ofAppendable(out, opts -> {});
+      return ofAppendable(out, _ -> {});
     }
 
     static NoteSink ofAppendable(Appendable out, Consumer<? super Options> opts) {
@@ -367,7 +367,7 @@ public final class App {
     }
 
     static NoteSink ofFile(Path file) throws IOException {
-      return ofFile(file, opts -> {});
+      return ofFile(file, _ -> {});
     }
 
     static NoteSink ofFile(Path file, Consumer<? super Options> opts) throws IOException {
@@ -391,67 +391,47 @@ public final class App {
 
   }
 
-  /**
-   * An HTTP handler which reloads the classes of the configured module if
-   * changes are observed in the module's location. It is meant to be used
-   * during the development of an application.
-   */
+  /// An HTTP handler which reloads the classes of the configured module if
+  /// changes are observed in the module's location. It is meant to be used
+  /// during the development of an application.
   public sealed interface Reloader extends Closeable, Http.Handler permits AppReloader {
 
-    /**
-     * Configures the creation of an {@code App.Reloader}.
-     */
+    /// Configures the creation of a `Reloader`.
     public sealed interface Options permits AppReloaderBuilder {
 
-      /**
-       * Reloads the module when changes are observed in the specified
-       * directory.
-       *
-       * @param value
-       *        the directory to watch
-       *
-       * @throws IllegalArgumentException
-       *         if the path does not represent a directory
-       */
+      /// Reloads the module when changes are observed in the specified directory.
+      /// @param value the directory to watch
+      /// @throws IllegalArgumentException if the path does not represent a directory
       void directory(Path value);
 
-      /**
-       * Use the specified factory to recreate the HTTP handler instance after
-       * filesystem changes are processed.
-       *
-       * @param value
-       *        an HTTP handler factory instance
-       */
+      /// Uses the specified predicate to decide if a class of a given binary name
+      /// should be reloaded or not. If no predicate is specified, then it tries
+      /// to reload the class of any binary name requested.
+      /// @param value the predicate instance
+      void filerBinaryName(Predicate<? super String> value);
+
+      /// Uses the specified factory to recreate the HTTP handler instance after
+      /// filesystem changes are processed.
+      /// @param value an HTTP handler factory instance
       void handlerFactory(HandlerFactory value);
 
       /// Sets the module to be reloaded to the one from the specified class.
-      ///
-      /// @param value
-      ///        the class whose module is to be reloaded
+      /// @param value the class whose module is to be reloaded
       void moduleOf(Class<?> value);
 
-      /**
-       * Sets the note sink to the specified value.
-       *
-       * @param value
-       *        a note sink instance
-       */
+      /// Sets the note sink to the specified value.
+      /// @param value a note sink instance
       void noteSink(Note.Sink value);
 
-      /**
-       * Use the specified watch service.
-       *
-       * @param value
-       *        the watch service to use
-       */
+      /// Uses the specified watch service.
+      /// @param value the watch service to use
       void watchService(WatchService value);
 
     }
 
     /**
      * A factory for HTTP handler instances. Implementations MUST create the
-     * new
-     * HTTP handler instance using the provided class loader.
+     * new HTTP handler instance using the provided class loader.
      */
     @FunctionalInterface
     public interface HandlerFactory {

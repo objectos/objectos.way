@@ -16,6 +16,12 @@
 package objectos.way;
 
 import java.io.IOException;
+import java.lang.classfile.Annotation;
+import java.lang.classfile.Attributes;
+import java.lang.classfile.ClassFile;
+import java.lang.classfile.ClassModel;
+import java.lang.classfile.attribute.RuntimeInvisibleAnnotationsAttribute;
+import java.lang.classfile.constantpool.Utf8Entry;
 import java.lang.module.Configuration;
 import java.lang.module.ModuleFinder;
 import java.lang.module.ModuleReference;
@@ -33,10 +39,15 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 
 final class AppReloaderBuilder implements App.Reloader.Options {
 
   final List<Path> directories = Util.createList();
+
+  Predicate<? super String> filterBinaryName;
+
+  Predicate<? super byte[]> filterClassFile;
 
   App.Reloader.HandlerFactory handlerFactory;
 
@@ -67,6 +78,11 @@ final class AppReloaderBuilder implements App.Reloader.Options {
     }
 
     directories.add(value);
+  }
+
+  @Override
+  public final void filerBinaryName(Predicate<? super String> value) {
+    filterBinaryName = Objects.requireNonNull(value, "value == null");
   }
 
   @Override
@@ -159,6 +175,44 @@ final class AppReloaderBuilder implements App.Reloader.Options {
 
     if (parentLayer == null) {
       throw new IllegalStateException("No module was specified");
+    }
+
+    if (filterBinaryName == null) {
+      filterBinaryName = _ -> true;
+    }
+
+    if (filterClassFile == null) {
+      filterClassFile = bytes -> {
+        final ClassFile cf;
+        cf = ClassFile.of();
+
+        final ClassModel cm;
+        cm = cf.parse(bytes);
+
+        final Optional<RuntimeInvisibleAnnotationsAttribute> maybe;
+        maybe = cm.findAttribute(Attributes.runtimeInvisibleAnnotations());
+
+        if (maybe.isEmpty()) {
+          return true;
+        }
+
+        final RuntimeInvisibleAnnotationsAttribute attr;
+        attr = maybe.get();
+
+        final List<Annotation> annotations;
+        annotations = attr.annotations();
+
+        for (Annotation annotation : annotations) {
+          final Utf8Entry className;
+          className = annotation.className();
+
+          if (className.equalsString("Lobjectos/way/App$DoNotReload;")) {
+            return false;
+          }
+        }
+
+        return true;
+      };
     }
 
     if (service == null) {

@@ -28,7 +28,7 @@ import org.testng.annotations.Test;
 
 public class AppReloaderTest {
 
-  private final Http.Exchange http = Http.Exchange.create(config -> {});
+  private final Http.Exchange http = Http.Exchange.create(_ -> {});
 
   @Test
   public void testCase01() throws Exception {
@@ -182,6 +182,42 @@ public class AppReloaderTest {
         reloader.handle(http);
 
         assertEquals(helper.get(), "B");
+      }
+    }
+  }
+
+  @Test(description = """
+  Filter by name
+  """)
+  public void testCase05() throws Exception {
+    try (AppReloaderHelper helper = AppReloaderHelper.of()) {
+      helper.writeModuleInfo();
+
+      helper.writeSubject("return \"A\";");
+
+      assertTrue(helper.compile());
+
+      try (
+          App.Reloader reloader = App.Reloader.create(config -> {
+            config.filerBinaryName(name -> {
+              return !name.equals("test.Subject");
+            });
+            config.handlerFactory(helper);
+            config.moduleOf(helper.load());
+            config.noteSink(Y.noteSink());
+          })
+      ) {
+        assertEquals(helper.get(), "A");
+
+        helper.writeSubject("return \"B\";");
+
+        assertTrue(helper.compile());
+
+        TimeUnit.MILLISECONDS.sleep(5);
+
+        reloader.handle(http);
+
+        assertEquals(helper.get(), "A");
       }
     }
   }

@@ -34,7 +34,7 @@ import java.util.Map;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Function;
-import objectos.way.Lang.InvalidClassFileException;
+import java.util.function.Predicate;
 
 final class AppReloader implements App.Reloader {
 
@@ -77,7 +77,9 @@ final class AppReloader implements App.Reloader {
 
   private final Note.Sink noteSink;
 
-  private final Lang.ClassReader classReader;
+  private final Predicate<? super String> filterBinaryName;
+
+  private final Predicate<? super byte[]> filterClassFile;
 
   private volatile Http.Handler handler;
 
@@ -106,7 +108,9 @@ final class AppReloader implements App.Reloader {
 
     noteSink = builder.noteSink;
 
-    classReader = Lang.createClassReader(noteSink);
+    filterBinaryName = builder.filterBinaryName;
+
+    filterClassFile = builder.filterClassFile;
 
     handlerFactory = builder.handlerFactory;
 
@@ -329,36 +333,34 @@ final class AppReloader implements App.Reloader {
     @Override
     protected final Class<?> findClass(String name) throws ClassNotFoundException {
       try {
-        String fileName;
-        fileName = name.replace('.', File.separatorChar);
+        if (filterBinaryName.test(name)) {
+          String fileName;
+          fileName = name.replace('.', File.separatorChar);
 
-        fileName += ".class";
+          fileName += ".class";
 
-        Path file;
-        file = moduleLocation.resolve(fileName);
+          final Path file;
+          file = moduleLocation.resolve(fileName);
 
-        byte[] bytes;
-        bytes = Files.readAllBytes(file);
+          final byte[] bytes;
+          bytes = Files.readAllBytes(file);
 
-        classReader.init(bytes);
+          if (filterClassFile.test(bytes)) {
+            final Class<?> clazz;
+            clazz = defineClass(name, bytes, 0, bytes.length);
 
-        if (classReader.annotatedWith(App.DoNotReload.class)) {
-          noteSink.send(notes.skipped, name);
+            noteSink.send(notes.loaded, clazz);
 
-          return parentLoader.loadClass(name);
+            return clazz;
+          }
         }
 
-        Class<?> clazz;
-        clazz = defineClass(name, bytes, 0, bytes.length);
+        noteSink.send(notes.skipped, name);
 
-        noteSink.send(notes.loaded, clazz);
-
-        return clazz;
+        return parentLoader.loadClass(name);
       } catch (NoSuchFileException e) {
         return parentLoader.loadClass(name);
       } catch (IOException e) {
-        throw new ClassNotFoundException(name, e);
-      } catch (InvalidClassFileException e) {
         throw new ClassNotFoundException(name, e);
       }
     }
