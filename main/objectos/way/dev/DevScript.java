@@ -13,30 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.way;
+package objectos.way.dev;
 
-import static org.testng.Assert.assertEquals;
+import module objectos.way;
 
-import objectos.way.dev.DevScriptProp0;
-import org.testng.annotations.Test;
+/// This class is not part of the Objectos Way JAR file.
+/// It is placed in the main source tree to ease the development.
+final class DevScript implements Http.Routing.Module {
 
-public class ScriptJsObjectTest {
-
-  @Test
-  public void prop0() {
-    test(
-        DevScriptProp0.SCRIPT,
-
-        """
-        [["LO","TT"],["RP","Element","classList"],["IV","DOMTokenList","toggle",["JS","background-color:gray-200"]]]"""
-    );
-  }
-
-  private void test(Script.Action action, String expected) {
-    final String result;
-    result = action.toJsonString();
-
-    assertEquals(result, expected);
+  @Override
+  public final void configure(Http.Routing routing) {
+    routing.handler(new DevScriptProp0());
   }
 
 }

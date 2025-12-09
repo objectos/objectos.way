@@ -13,30 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.way;
-
-import static org.testng.Assert.assertEquals;
-
-import objectos.way.dev.DevScriptProp0;
-import org.testng.annotations.Test;
-
-public class ScriptJsObjectTest {
-
-  @Test
-  public void prop0() {
-    test(
-        DevScriptProp0.SCRIPT,
-
-        """
-        [["LO","TT"],["RP","Element","classList"],["IV","DOMTokenList","toggle",["JS","background-color:gray-200"]]]"""
-    );
-  }
-
-  private void test(Script.Action action, String expected) {
-    final String result;
-    result = action.toJsonString();
-
-    assertEquals(result, expected);
-  }
-
-}
+/// This package is not part of the Objectos Way JAR file.
+/// It is placed in the main source tree to ease the development.
+package objectos.way.dev;

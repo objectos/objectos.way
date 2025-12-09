@@ -386,7 +386,7 @@ final class Y {
 
     private boolean shouldHandle = true;
 
-    private Consumer<HttpExchange> handler = http -> {};
+    private Consumer<HttpExchange> handler = _ -> {};
 
     private String response = "";
 

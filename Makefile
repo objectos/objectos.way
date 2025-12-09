@@ -33,6 +33,7 @@ REMOTE_REPOS := https://repo.maven.apache.org/maven2
 ## Dependencies
 H2 := com.h2database/h2/2.3.232
 MARIADB := org.mariadb.jdbc/mariadb-java-client/3.5.3
+PLAYWRIGHT := com.microsoft.playwright/playwright/1.56.0
 SLF4J_NOP := org.slf4j/slf4j-nop/2.0.17
 TESTNG := org.testng/testng/7.11.0
 
@@ -103,6 +104,19 @@ script-gen@clean:
 
 $(SCRIPT_GEN): $(SCRIPT_GEN_REQS)
 	$(SCRIPT_GEN_JAVAX)
+#
+# way@dev
+#
+
+## dev main class
+DEV_MAIN := objectos.way.dev.DevStart
+
+## dev jvm opts
+ifeq ($(ENABLE_DEBUG),1)
+DEV_JVM_OPTS += -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=localhost:7000
+endif
+
+include make/java-dev.mk
 
 #
 # way@test-compile
@@ -111,6 +125,7 @@ $(SCRIPT_GEN): $(SCRIPT_GEN_REQS)
 ## test compile deps
 TEST_COMPILE_DEPS := $(H2)
 TEST_COMPILE_DEPS += $(MARIADB)
+TEST_COMPILE_DEPS += $(PLAYWRIGHT)
 TEST_COMPILE_DEPS += $(TESTNG)
 
 include make/java-test-compile.mk
@@ -146,54 +161,6 @@ TEST_ADD_READS += objectos.way=java.net.http
 include make/java-test.mk
 
 #
-# way@dev
-#
-
-## dev main class
-DEV_MAIN_CLASS := testing.site.TestingSiteDev
-
-## dev deps
-DEV_DEPS := $(TEST_COMPILE_MARKER)
-
-## dev module-path
-DEV_MODULE_PATH := $(WORK)/dev-module-path
-
-## dev java command
-DEV_JAVAX = $(JAVA)
-DEV_JAVAX += -Xmx64m
-DEV_JAVAX += -XX:+UseSerialGC
-DEV_JAVAX += --module-path @$(DEV_MODULE_PATH)
-ifeq ($(ENABLE_DEBUG), 1)
-DEV_JAVAX += -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=localhost:7000
-endif
-ifeq ($(ENABLE_PREVIEW), 1)
-DEV_JAVAX += --enable-preview
-endif
-DEV_JAVAX += --patch-module $(MODULE)=$(TEST_CLASS_OUTPUT)
-DEV_JAVAX += --add-exports $(MODULE)/objectos.lang.object=ALL-UNNAMED
-DEV_JAVAX += --add-exports $(MODULE)/objectos.util.list=ALL-UNNAMED
-DEV_JAVAX += --add-exports $(MODULE)/objectos.util.set=ALL-UNNAMED
-DEV_JAVAX += --add-exports $(MODULE)/testing.zite=ALL-UNNAMED
-DEV_JAVAX += --module $(MODULE)/$(DEV_MAIN_CLASS)
-## dev app args
-DEV_JAVAX += --class-output $(CLASS_OUTPUT)
-DEV_JAVAX += --test-class-output $(TEST_CLASS_OUTPUT)
-
-.PHONY: dev
-dev: $(DEV_MODULE_PATH)
-	$(DEV_JAVAX)
-	
-$(DEV_MODULE_PATH): $(DEV_DEPS)
-	echo $(CLASS_OUTPUT) > $@.tmp
-ifdef COMPILE_RESOLUTION_FILES
-	cat $(COMPILE_RESOLUTION_FILES) >> $@.tmp
-endif
-ifdef TEST_COMPILE_RESOLUTION_FILES
-	cat $(TEST_COMPILE_RESOLUTION_FILES) >> $@.tmp
-endif
-	$(call uniq-resolution-files,$@.tmp) | paste --delimiter='$(MODULE_PATH_SEPARATOR)' --serial > $@
-
-#
 # way@npm-install
 #
 
@@ -223,6 +190,11 @@ include make/java-javadoc.mk
 #
 # way@jar
 #
+
+## exclude dev
+JAR_EXCLUDES := objectos/way/DevBoot.class
+JAR_EXCLUDES += objectos/way/dev
+JAR_EXCLUDES += objectos/way/dev/*
 
 include make/java-jar.mk
 
