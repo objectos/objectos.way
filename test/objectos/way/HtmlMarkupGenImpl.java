@@ -63,6 +63,14 @@ public class HtmlMarkupGenImpl {
         /// @return an instruction representing the attribute
         public abstract Html.Instruction.OfDataOn %s(Consumer<? super Script> script);
       """.formatted(spec.htmlName(), spec.methodName()));
+
+      methods.append("""
+
+        /// Renders the `%s` attribute with the specified script.
+        /// @param script the script to be executed
+        /// @return an instruction representing the attribute
+        public abstract Html.Instruction.OfDataOn %s(Script.Action script);
+      """.formatted(spec.htmlName(), spec.methodName()));
     }
 
     for (HtmlSpec.MethodSpec spec : HtmlSpec.wayNodes()) {

@@ -174,6 +174,26 @@ sealed abstract class HtmlMarkupOfTestable extends HtmlMarkup permits Html.Marku
   }
 
   @Override
+  public final Html.Instruction.OfDataOn dataOnClick(Script.Action script) {
+    return Html.ATTRIBUTE;
+  }
+
+  @Override
+  public final Html.Instruction.OfDataOn dataOnInput(Script.Action script) {
+    return Html.ATTRIBUTE;
+  }
+
+  @Override
+  public final Html.Instruction.OfDataOn dataOnLoad(Script.Action script) {
+    return Html.ATTRIBUTE;
+  }
+
+  @Override
+  public final Html.Instruction.OfDataOn dataOnSuccess(Script.Action script) {
+    return Html.ATTRIBUTE;
+  }
+
+  @Override
   public final Html.Instruction.OfElement flatten(Html.Instruction... contents) {
     Objects.requireNonNull(contents, "contents == null");
 

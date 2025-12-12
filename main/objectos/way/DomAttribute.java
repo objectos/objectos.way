@@ -39,7 +39,8 @@ final class DomAttribute implements Dom.Attribute {
 
   @Override
   public final boolean singleQuoted() {
-    return value instanceof ScriptWriter;
+    return value instanceof ScriptWriter
+        || value instanceof Script.Action;
   }
 
   @Override

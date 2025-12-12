@@ -51,7 +51,9 @@ abstract class AbstractDevScript extends Html.Template implements Http.Handler {
         head(
             meta(charset("utf-8")),
             meta(httpEquiv("content-type"), content("text/html; charset=utf-8")),
-            meta(name("viewport"), content("width=device-width, initial-scale=1"))
+            meta(name("viewport"), content("width=device-width, initial-scale=1")),
+            link(rel("stylesheet"), type("text/css"), href("/styles.css")),
+            script(src("/script.js"))
         ),
 
         body(f(this::renderBody))

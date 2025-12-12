@@ -34,7 +34,7 @@ public class ScriptJsObjectTest {
 
   private void test(Script.Action action, String expected) {
     final String result;
-    result = action.toJsonString();
+    result = action.toString();
 
     assertEquals(result, expected);
   }

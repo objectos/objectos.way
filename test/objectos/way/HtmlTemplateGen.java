@@ -34,7 +34,7 @@ public class HtmlTemplateGen {
     return """
     %s
     %s
-    """.formatted(fields, methods);
+    """.formatted(fields, methods).indent(2);
   }
 
   private void prepare() {
@@ -66,6 +66,16 @@ public class HtmlTemplateGen {
         /// @param script the script to be executed
         /// @return an instruction representing the attribute
         protected final Html.Instruction.OfDataOn %2$s(Consumer<? super Script> script) {
+          return $html().%2$s(script);
+        }
+      """.formatted(spec.htmlName(), spec.methodName()));
+
+      methods.append("""
+
+        /// Renders the `%1$s` attribute with the specified script.
+        /// @param script the script to be executed
+        /// @return an instruction representing the attribute
+        protected final Html.Instruction.OfDataOn %2$s(Script.Action script) {
           return $html().%2$s(script);
         }
       """.formatted(spec.htmlName(), spec.methodName()));

@@ -15,8 +15,9 @@
  */
 package objectos.way.dev;
 
-import objectos.way.Script;
+import module objectos.way;
 
+@Css.Source
 public final class DevScriptProp0 extends AbstractDevScript {
 
   public static final Script.Action SCRIPT = Script.target()
@@ -38,11 +39,14 @@ public final class DevScriptProp0 extends AbstractDevScript {
         border-color:black
         border-style:solid
         border-width:1px
+        cursor:pointer
         display:flex
         height:100rx
         justify-content:space-between
         width:100rx
         """),
+
+        dataOnClick(SCRIPT),
 
         span("Click me!")
     );

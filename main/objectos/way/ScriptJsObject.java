@@ -63,13 +63,8 @@ final class ScriptJsObject
   }
 
   @Override
-  public final String toJsonString() {
-    return "[" + value + "]";
-  }
-
-  @Override
   public final String toString() {
-    return value;
+    return "[" + value + "]";
   }
 
   private String args(Object[] args) {

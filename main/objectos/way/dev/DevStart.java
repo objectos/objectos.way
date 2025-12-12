@@ -89,7 +89,7 @@ public final class DevStart extends App.Bootstrap {
         final String source;
         source = note.source();
 
-        if (source.startsWith("objectos.way")) {
+        if (source.startsWith("objectos.way.dev")) {
           return true;
         }
 
@@ -122,21 +122,14 @@ public final class DevStart extends App.Bootstrap {
       final Class<?> bootClass;
       bootClass = loader.loadClass("objectos.way.DevBoot");
 
-      final Module reloaded;
-      reloaded = bootClass.getModule();
-
       final Method method;
       method = bootClass.getMethod("boot", App.Injector.class, Module.class);
 
-      final Class<? extends Reloader> self;
+      final Class<?> self;
       self = getClass();
 
       final Module original;
       original = self.getModule();
-
-      original.addReads(reloaded);
-
-      original.addExports("objectos.way.dev", reloaded);
 
       final Object instance;
       instance = method.invoke(null, injector, original);
@@ -150,6 +143,11 @@ public final class DevStart extends App.Bootstrap {
       return App.Reloader.create(opts -> {
         final Reloader reloader;
         reloader = new Reloader(injector);
+
+        opts.filerBinaryName(name -> {
+          return name.startsWith("objectos.way.dev")
+              || name.equals("objectos.way.DevBoot");
+        });
 
         opts.handlerFactory(reloader);
 

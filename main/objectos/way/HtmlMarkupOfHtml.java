@@ -236,6 +236,34 @@ sealed abstract class HtmlMarkupOfHtml extends HtmlMarkup permits Html.Markup.Of
     return dataOn0(HtmlAttributeName.DATA_ON_SUCCESS, script);
   }
 
+  @Override
+  public final Html.Instruction.OfDataOn dataOnClick(Script.Action script) {
+    Objects.requireNonNull(script, "script == null");
+
+    return dataOn0(HtmlAttributeName.DATA_ON_CLICK, script);
+  }
+
+  @Override
+  public final Html.Instruction.OfDataOn dataOnInput(Script.Action script) {
+    Objects.requireNonNull(script, "script == null");
+
+    return dataOn0(HtmlAttributeName.DATA_ON_INPUT, script);
+  }
+
+  @Override
+  public final Html.Instruction.OfDataOn dataOnLoad(Script.Action script) {
+    Objects.requireNonNull(script, "script == null");
+
+    return dataOn0(HtmlAttributeName.DATA_ON_LOAD, script);
+  }
+
+  @Override
+  public final Html.Instruction.OfDataOn dataOnSuccess(Script.Action script) {
+    Objects.requireNonNull(script, "script == null");
+
+    return dataOn0(HtmlAttributeName.DATA_ON_SUCCESS, script);
+  }
+
   private Html.Instruction.OfDataOn dataOn0(Html.AttributeName name, Consumer<? super Script> script) {
     final ScriptPojo pojo;
     pojo = ScriptPojo.create(script);
@@ -244,6 +272,10 @@ sealed abstract class HtmlMarkupOfHtml extends HtmlMarkup permits Html.Markup.Of
     json = pojo.unwrap();
 
     return attr0(name, json);
+  }
+
+  private Html.Instruction.OfDataOn dataOn0(Html.AttributeName name, Script.Action script) {
+    return attr0(name, script);
   }
 
   @Override

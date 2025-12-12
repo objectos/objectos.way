@@ -47,20 +47,40 @@ sealed abstract class HtmlMarkup permits HtmlMarkupOfHtml, HtmlMarkupOfTestable 
   /// @return an instruction representing the attribute
   public abstract Html.Instruction.OfDataOn dataOnClick(Consumer<? super Script> script);
 
+  /// Renders the `data-on-click` attribute with the specified script.
+  /// @param script the script to be executed
+  /// @return an instruction representing the attribute
+  public abstract Html.Instruction.OfDataOn dataOnClick(Script.Action script);
+
   /// Renders the `data-on-input` attribute with the specified script.
   /// @param script the script to be executed
   /// @return an instruction representing the attribute
   public abstract Html.Instruction.OfDataOn dataOnInput(Consumer<? super Script> script);
+
+  /// Renders the `data-on-input` attribute with the specified script.
+  /// @param script the script to be executed
+  /// @return an instruction representing the attribute
+  public abstract Html.Instruction.OfDataOn dataOnInput(Script.Action script);
 
   /// Renders the `data-on-load` attribute with the specified script.
   /// @param script the script to be executed
   /// @return an instruction representing the attribute
   public abstract Html.Instruction.OfDataOn dataOnLoad(Consumer<? super Script> script);
 
+  /// Renders the `data-on-load` attribute with the specified script.
+  /// @param script the script to be executed
+  /// @return an instruction representing the attribute
+  public abstract Html.Instruction.OfDataOn dataOnLoad(Script.Action script);
+
   /// Renders the `data-on-success` attribute with the specified script.
   /// @param script the script to be executed
   /// @return an instruction representing the attribute
   public abstract Html.Instruction.OfDataOn dataOnSuccess(Consumer<? super Script> script);
+
+  /// Renders the `data-on-success` attribute with the specified script.
+  /// @param script the script to be executed
+  /// @return an instruction representing the attribute
+  public abstract Html.Instruction.OfDataOn dataOnSuccess(Script.Action script);
 
   /// Renders the `data-frame` attribute for a frame with the specified name.
   /// @param name the name of the frame

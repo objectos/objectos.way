@@ -26,6 +26,11 @@ public final class DevBoot {
   private DevBoot() {}
 
   public static Http.Handler boot(App.Injector injector, Module original) {
+    final Module reloaded;
+    reloaded = DevBoot.class.getModule();
+
+    reloaded.addReads(original);
+
     final DevModule dev;
     dev = new DevModule(injector);
 

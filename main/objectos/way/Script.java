@@ -25,7 +25,6 @@ public sealed interface Script permits ScriptPojo {
   /// Represents an action to be executed by the JS runtime.
   public sealed interface Action permits ScriptJsObject {
     
-    String toJsonString();
     
   }
   

@@ -83,7 +83,7 @@ public class HtmlMarkupTest03Processor {
       node = nodesIter.next();
 
       switch (node) {
-        case Dom.Document.Type type -> throw new UnsupportedOperationException("Implement me");
+        case Dom.Document.Type _ -> throw new UnsupportedOperationException("Implement me");
 
         case DomElement element -> element(out, element);
 
