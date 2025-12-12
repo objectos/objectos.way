@@ -17,6 +17,11 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import com.microsoft.playwright.Browser;
+import com.microsoft.playwright.BrowserType;
+import com.microsoft.playwright.BrowserType.LaunchOptions;
+import com.microsoft.playwright.Page;
+import com.microsoft.playwright.Playwright;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
@@ -62,8 +67,12 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
+import objectos.way.dev.DevStart;
+import org.testng.ISuite;
+import org.testng.ISuiteListener;
 
-final class Y {
+@SuppressWarnings("exports")
+public final class Y implements ISuiteListener {
 
   static final class HttpClient {
 
@@ -84,7 +93,16 @@ final class Y {
 
   }
 
-  private Y() {}
+  /// Sole constructor. Required by TestNG.
+  public Y() {}
+
+  @Override
+  public final void onStart(ISuite suite) {
+    final App.Bootstrap bootstrap;
+    bootstrap = new DevStart();
+
+    bootstrap.start(new String[0]);
+  }
 
   public static String cookie(String name, long l0, long l1, long l2, long l3) {
     final HttpToken token;
@@ -1218,6 +1236,100 @@ final class Y {
 
   // ##################################################################
   // # END: OutputStream
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Playwright
+  // ##################################################################
+
+  static final class BrowserHolder {
+    static final Browser BROWSER = init();
+
+    private static Browser init() {
+      final Playwright playwright;
+      playwright = Playwright.create();
+
+      shutdownHook(playwright);
+
+      final BrowserType chromium;
+      chromium = playwright.chromium();
+
+      final boolean headless;
+      headless = Boolean.getBoolean("playwright.headless");
+
+      final LaunchOptions launchOptions;
+      launchOptions = new BrowserType.LaunchOptions().setHeadless(headless);
+
+      return chromium.launch(launchOptions);
+    }
+  }
+
+  public static Page page() {
+    final String baseUrl;
+    baseUrl = "http://localhost:" + DevStart.TESTING_HTTP_PORT;
+
+    final Browser.NewPageOptions options;
+    options = new Browser.NewPageOptions().setBaseURL(baseUrl);
+
+    return BrowserHolder.BROWSER.newPage(options);
+  }
+
+  public sealed interface Tab extends AutoCloseable permits YTab {
+
+    @SuppressWarnings("exports")
+    TabElem byId(Html.Id id);
+
+    @SuppressWarnings("exports")
+    TabElem bySelector(String selector);
+
+    @Override
+    void close();
+
+    void dev();
+
+    void keyPress(String key);
+
+    void mouseDown();
+
+    void mouseUp();
+
+    void mouseTo(double x, double y);
+
+    void navigate(String path);
+
+    void press(String key);
+
+    String title();
+
+    void waitForFunction(String expression, Object arg);
+
+  }
+
+  public sealed interface TabElem permits YTab.ThisElem {
+
+    void blur();
+
+    void focus();
+
+    void hover();
+
+  }
+
+  public static Y.Tab tabDev() {
+    final String baseUrl;
+    baseUrl = "http://localhost:" + DevStart.TESTING_HTTP_PORT;
+
+    final Browser.NewPageOptions options;
+    options = new Browser.NewPageOptions().setBaseURL(baseUrl);
+
+    final Page page;
+    page = BrowserHolder.BROWSER.newPage(options);
+
+    return new YTab(baseUrl, page);
+  }
+
+  // ##################################################################
+  // # END: Playwright
   // ##################################################################
 
   // ##################################################################

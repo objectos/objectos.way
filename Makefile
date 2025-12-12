@@ -60,7 +60,7 @@ include make/common-clean.mk
 #
 
 ## compilation requirements 
-COMPILE_REQS = $(SCRIPT_GEN)
+COMPILE_REQS = $(SCRIPT_GEN) $(SCRIPT2_GEN)
 
 include make/java-compile.mk
 
@@ -93,7 +93,7 @@ SCRIPT_GEN_JAVAX += ScriptLibraryGen.java
 
 ## when to update
 SCRIPT_GEN_REQS := ScriptLibraryGen.java
-SCRIPT_GEN_REQS += $(wildcard main-js/*.js)
+SCRIPT_GEN_REQS += main-js/way.js
 
 .PHONY: script-gen
 script-gen: $(SCRIPT_GEN)
@@ -104,6 +104,32 @@ script-gen@clean:
 
 $(SCRIPT_GEN): $(SCRIPT_GEN_REQS)
 	$(SCRIPT_GEN_JAVAX)
+
+#
+# way@script2-gen
+#
+
+## script2-gen
+SCRIPT2_GEN := $(MAIN)/objectos/way/ScriptLibrary2.java
+
+## script2-gen java command
+SCRIPT2_GEN_JAVAX := $(JAVA)
+SCRIPT2_GEN_JAVAX += ScriptLibraryGen2.java
+
+## when to update
+SCRIPT2_GEN_REQS := ScriptLibraryGen2.java
+SCRIPT2_GEN_REQS += main-js/way2.js
+
+.PHONY: script2-gen
+script2-gen: $(SCRIPT2_GEN)
+
+.PHONY: script2-gen@clean
+script2-gen@clean:
+	rm -f $(SCRIPT2_GEN)
+
+$(SCRIPT2_GEN): $(SCRIPT2_GEN_REQS)
+	$(SCRIPT2_GEN_JAVAX)
+
 #
 # way@dev
 #

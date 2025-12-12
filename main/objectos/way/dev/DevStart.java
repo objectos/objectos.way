@@ -18,8 +18,8 @@ package objectos.way.dev;
 import module java.base;
 import module objectos.way;
 
-/// This class is not part of the Objectos Way JAR file.
-/// It is placed in the main source tree to ease the development.
+/// This class is not part of the Objectos Way JAR file. It is placed in the
+/// main source tree to ease the development.
 public final class DevStart extends App.Bootstrap {
 
   public static final int TESTING_HTTP_PORT = 8003;
@@ -114,6 +114,25 @@ public final class DevStart extends App.Bootstrap {
     shutdownHook.registerIfPossible(noteSink);
 
     ctx.putInstance(App.ShutdownHook.class, shutdownHook);
+
+    // Web.Resources
+    final Web.Resources webResources;
+
+    try {
+      webResources = Web.Resources.create(opts -> {
+        opts.contentTypes("""
+        .js: text/javascript; charset=utf-8
+        """);
+
+        opts.addMedia("/script.js", Script.Library2.of());
+      });
+    } catch (IOException e) {
+      throw App.serviceFailed("Web.Resources", e);
+    }
+
+    shutdownHook.register(webResources);
+
+    ctx.putInstance(Web.Resources.class, webResources);
   }
 
   private record Reloader(App.Injector injector) implements App.Reloader.HandlerFactory {

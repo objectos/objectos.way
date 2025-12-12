@@ -56,40 +56,63 @@ final class DomAttribute implements Dom.Attribute {
     Object result;
     result = next();
 
-    if (!hasNext()) {
-      return String.valueOf(result);
-    }
+    if (result instanceof Script.Action action) {
 
-    if (result instanceof ScriptWriter writer) {
+      final StringBuilder sb;
+      sb = new StringBuilder();
 
-      writer.add(next());
+      sb.append('[');
+
+      sb.append(action);
 
       while (hasNext()) {
-        writer.add(next());
+        sb.append(',');
+        sb.append(next());
       }
 
-      return writer.toString();
+      sb.append(']');
+
+      return sb.toString();
 
     } else {
 
-      StringBuilder value;
-      value = new StringBuilder();
+      if (!hasNext()) {
+        return String.valueOf(result);
+      }
 
-      value.append(result);
+      if (result instanceof ScriptWriter writer) {
 
-      value.append(' ');
+        writer.add(next());
 
-      value.append(next());
+        while (hasNext()) {
+          writer.add(next());
+        }
 
-      while (hasNext()) {
+        return writer.toString();
+
+      } else {
+
+        StringBuilder value;
+        value = new StringBuilder();
+
+        value.append(result);
+
         value.append(' ');
 
         value.append(next());
+
+        while (hasNext()) {
+          value.append(' ');
+
+          value.append(next());
+        }
+
+        return value.toString();
+
       }
 
-      return value.toString();
-
     }
+
   }
 
   private boolean hasNext() {

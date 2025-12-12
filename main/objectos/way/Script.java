@@ -137,6 +137,33 @@ public sealed interface Script permits ScriptPojo {
 
   }
 
+  /// Represents the source code of the Objectos Way JS library.
+  public sealed interface Library2 extends Media.Text permits ScriptLibrary2 {
+
+    /// Returns the sole instance of this interface.
+    /// @return the sole instance of this interface
+    static Library2 of() {
+      return ScriptLibrary2.INSTANCE;
+    }
+
+    /// Returns `text/javascript; charset=utf-8`.
+    /// @return always `text/css; charset=utf-8`
+    @Override
+    String contentType();
+
+    /// Returns `StandardCharsets.UTF_8`.
+    /// @return always `StandardCharsets.UTF_8`
+    @Override
+    Charset charset();
+
+    /// Writes the Objectos Way JS library source code to the specified `Appendable`.
+    /// @param out where to append the source code
+    /// @throws IOException if an I/O error occurs
+    @Override
+    void writeTo(Appendable out) throws IOException;
+
+  }
+
   /// The `GET` method.
   Method GET = Method.GET;
 

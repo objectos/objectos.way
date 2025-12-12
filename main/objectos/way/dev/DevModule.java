@@ -20,8 +20,8 @@ import static objectos.way.Http.Method.GET;
 import module java.base;
 import module objectos.way;
 
-/// This class is not part of the Objectos Way JAR file.
-/// It is placed in the main source tree to ease the development.
+/// This class is not part of the Objectos Way JAR file. It is placed in the
+/// main source tree to ease the development.
 public final class DevModule implements Http.Routing.Module {
 
   private final App.Injector injector;
@@ -35,6 +35,11 @@ public final class DevModule implements Http.Routing.Module {
     routing.install(new DevScript());
 
     routing.path("/styles.css", GET, this::styles);
+
+    final Web.Resources webResources;
+    webResources = injector.getInstance(Web.Resources.class);
+
+    routing.handler(webResources);
 
     routing.handler(Http.Handler.notFound());
   }

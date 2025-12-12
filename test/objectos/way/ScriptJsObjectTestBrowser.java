@@ -15,13 +15,38 @@
  */
 package objectos.way;
 
+import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+
+import objectos.way.dev.DevScriptInvoke0;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
+@Listeners(Y.class)
 public class ScriptJsObjectTestBrowser {
 
-  @Test
-  public void prop0() {
+  @Test(description = """
+  IV: invoke virtual
+  - locator = target
+  - args = empty
+  """)
+  public void invoke0() {
+    try (var page = Y.page()) {
+      page.navigate(DevScriptInvoke0.PATH);
 
+      var btn1 = page.locator("#btn-1");
+      var btn2 = page.locator("#btn-2");
+      var btn3 = page.locator("#btn-3");
+
+      assertThat(btn1).hasCount(1);
+      assertThat(btn2).hasCount(1);
+      assertThat(btn3).hasCount(1);
+
+      btn2.click();
+
+      assertThat(btn1).hasCount(1);
+      assertThat(btn2).hasCount(0);
+      assertThat(btn3).hasCount(1);
+    }
   }
 
 }

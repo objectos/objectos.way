@@ -177,35 +177,30 @@ public class HtmlTemplateTestAttributes {
 
   @Test
   public void dataOnClick01() {
+    final Script.Action remove;
+    remove = Script.target().invoke("Element", "remove");
+
     class ThisComponent implements Html.Component {
-      private final Html.Id id;
-
-      public ThisComponent(Html.Id id) {
-        this.id = id;
-      }
-
       @Override
       public void renderHtml(Html.Markup m) {
         m.button(
-            m.dataOnClick(s -> s.elementById(id).toggleClass("hidden block"))
+            m.dataOnClick(remove)
         );
       }
     }
 
     test(
         new Html.Template() {
-          final Html.Id NAV = Html.Id.of("nav");
-
           @Override
           protected final void render() {
             div(
-                c(new ThisComponent(NAV))
+                c(new ThisComponent())
             );
           }
         },
 
         """
-        <div><button data-on-click='[["id-2","nav","toggle-class-0","hidden","block"]]'></button></div>
+        <div><button data-on-click='[[["LO","TT"],["IV","Element","remove",[]]]]'></button></div>
         """
     );
   }

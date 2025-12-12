@@ -69,7 +69,7 @@ final class ScriptJsObject
 
   private String args(Object[] args) {
     return args.length == 0
-        ? ""
+        ? "[]"
         : args0(args);
   }
 
