@@ -1831,7 +1831,7 @@ final class HttpExchange implements Http.Exchange, Runnable, Closeable {
       case $PARSE_QUERY1, $PARSE_QUERY_VALUE1 -> toRead(state);
 
       case $PARSE_APP_FORM1, $PARSE_APP_FORM_VALUE1 -> switch (formParams) {
-        case AppFormBufferSupport support -> toBadRequest(InvalidApplicationForm.PERCENT);
+        case AppFormBufferSupport _ -> toBadRequest(InvalidApplicationForm.PERCENT);
 
         case BodyFileSupport support -> switch (support.state) {
           case $PARSE_BODY_FIXED_FILE_CLOSE -> toBadRequest(InvalidApplicationForm.PERCENT);

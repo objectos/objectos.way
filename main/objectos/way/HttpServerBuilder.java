@@ -30,7 +30,7 @@ final class HttpServerBuilder implements Http.Server.Options {
 
   Clock clock = Clock.systemUTC();
 
-  Http.Handler handler = http -> {};
+  Http.Handler handler = _ -> {};
 
   long requestBodySizeMax = 10 * 1024 * 1024;
 

@@ -647,7 +647,7 @@ public class UtilListTest {
     it.add(t2);
 
     try {
-      it.replaceAll(t -> Thing.next());
+      it.replaceAll(_ -> Thing.next());
 
       Assert.fail("Expected an UnsupportedOperationException");
     } catch (UnsupportedOperationException expected) {
@@ -925,54 +925,54 @@ public class UtilListTest {
   @Test
   public void truncate() {
     /*
-    
+
     // truncate is not public anymore
-    
+
     var t1 = Thing.next();
     var t2 = Thing.next();
     var t3 = Thing.next();
-    
+
     it.add(t1);
     it.add(t2);
     it.add(t3);
-    
+
     assertEquals(it.size(), 3);
-    
+
     it.truncate(4);
-    
+
     assertEquals(it.size(), 3);
     assertEquals(it.get(0), t1);
     assertEquals(it.get(1), t2);
     assertEquals(it.get(2), t3);
-    
+
     it.truncate(3);
-    
+
     assertEquals(it.size(), 3);
     assertEquals(it.get(0), t1);
     assertEquals(it.get(1), t2);
     assertEquals(it.get(2), t3);
-    
+
     it.truncate(2);
-    
+
     assertEquals(it.size(), 2);
     assertEquals(it.get(0), t1);
     assertEquals(it.get(1), t2);
-    
+
     it.truncate(1);
-    
+
     assertEquals(it.size(), 1);
     assertEquals(it.get(0), t1);
-    
+
     it.truncate(0);
-    
+
     assertEquals(it.size(), 0);
-    
+
     try {
       it.truncate(-1);
-    
+
       Assert.fail();
     } catch (IllegalArgumentException expected) {
-    
+
     }
     */
   }

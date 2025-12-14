@@ -78,7 +78,7 @@ public class UtilSequencedMapTest {
     t3.putDec(it);
 
     try {
-      it.compute(t2, (k, v) -> t2.toHexString());
+      it.compute(t2, (_, _) -> t2.toHexString());
 
       Assert.fail("Expected an UnsupportedOperationException");
     } catch (UnsupportedOperationException expected) {
@@ -116,7 +116,7 @@ public class UtilSequencedMapTest {
     t3.putDec(it);
 
     try {
-      it.computeIfPresent(t2, (k, v) -> t2.toHexString());
+      it.computeIfPresent(t2, (_, _) -> t2.toHexString());
 
       Assert.fail("Expected an UnsupportedOperationException");
     } catch (UnsupportedOperationException expected) {
@@ -420,7 +420,7 @@ public class UtilSequencedMapTest {
     t3.putDec(it);
 
     try {
-      it.merge(t2, "foo", (k, v) -> t2.toHexString());
+      it.merge(t2, "foo", (_, _) -> t2.toHexString());
 
       Assert.fail("Expected an UnsupportedOperationException");
     } catch (UnsupportedOperationException expected) {
@@ -586,7 +586,7 @@ public class UtilSequencedMapTest {
     t3.putDec(it);
 
     try {
-      it.replaceAll((k, v) -> k.toHexString());
+      it.replaceAll((k, _) -> k.toHexString());
 
       Assert.fail("Expected an UnsupportedOperationException");
     } catch (UnsupportedOperationException expected) {

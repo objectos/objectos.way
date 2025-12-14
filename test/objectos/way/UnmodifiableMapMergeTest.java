@@ -31,7 +31,7 @@ public final class UnmodifiableMapMergeTest {
       try {
         var t = Thing.next();
 
-        map.merge(t, "foo", (k, v) -> t.toHexString());
+        map.merge(t, "foo", (_, _) -> t.toHexString());
 
         Assert.fail("Expected an UnsupportedOperationException");
       } catch (UnsupportedOperationException expected) {

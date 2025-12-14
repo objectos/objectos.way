@@ -187,7 +187,7 @@ public class HttpSessionStoreTest {
     });
 
     final HttpExchange http;
-    http = HttpExchange.create0(config -> {});
+    http = HttpExchange.create0(_ -> {});
 
     assertEquals(http.sessionPresent(), false);
 
@@ -204,7 +204,7 @@ public class HttpSessionStoreTest {
     });
 
     final HttpExchange http;
-    http = HttpExchange.create0(config -> {});
+    http = HttpExchange.create0(_ -> {});
 
     assertEquals(http.sessionPresent(), false);
 

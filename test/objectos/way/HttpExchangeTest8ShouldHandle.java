@@ -119,7 +119,7 @@ public class HttpExchangeTest8ShouldHandle {
         GET bad HTTP/1.1\r
         Host: host\r
         \r
-        """, http -> {}, """
+        """, _ -> {}, """
         HTTP/1.1 400 Bad Request\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
         Content-Type: text/plain; charset=utf-8\r
@@ -162,7 +162,7 @@ public class HttpExchangeTest8ShouldHandle {
         Referer: x\r
         User-Agent: x\r
         \r
-        """, http -> {}, """
+        """, _ -> {}, """
         HTTP/1.1 400 Bad Request\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
         Content-Type: text/plain; charset=utf-8\r
@@ -183,7 +183,7 @@ public class HttpExchangeTest8ShouldHandle {
         Referer: x\r
         User-Agent: x\r
         \r
-        """, http -> {}, """
+        """, _ -> {}, """
         HTTP/1.1 400 Bad Request\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
         Content-Type: text/plain; charset=utf-8\r

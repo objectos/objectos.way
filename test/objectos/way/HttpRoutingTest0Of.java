@@ -201,7 +201,7 @@ public class HttpRoutingTest0Of {
   public void path03() {
     test(
         routing -> {
-          routing.path("/{}", Http.Method.GET, http -> {});
+          routing.path("/{}", Http.Method.GET, _ -> {});
         },
 
         http -> {

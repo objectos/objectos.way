@@ -83,7 +83,7 @@ public class WebResourcesTest {
   """)
   public void testCase02() throws IOException {
     final WebResources resources;
-    resources = create(opts -> {});
+    resources = create(_ -> {});
 
     Y.httpExchange(test -> {
       test.xch(xch -> {
@@ -176,7 +176,7 @@ public class WebResourcesTest {
       opts.addMedia("/reconfigure.txt", reconfigure);
     });
 
-    resources.reconfigure(opts -> {});
+    resources.reconfigure(_ -> {});
 
     Y.httpExchange(test -> {
       test.xch(xch -> {
@@ -252,7 +252,7 @@ public class WebResourcesTest {
   """)
   public void testCase06() throws IOException {
     final WebResources resources;
-    resources = create(opts -> {});
+    resources = create(_ -> {});
 
     Y.httpExchange(test -> {
       test.xch(xch -> {
@@ -323,7 +323,7 @@ public class WebResourcesTest {
   """)
   public void testCase07() throws IOException {
     final WebResources resources;
-    resources = create(opts -> {});
+    resources = create(_ -> {});
 
     Y.httpExchange(test -> {
       test.xch(xch -> {
@@ -370,7 +370,7 @@ public class WebResourcesTest {
   """)
   public void testCase08() throws IOException {
     final WebResources resources;
-    resources = create(opts -> {});
+    resources = create(_ -> {});
 
     Y.httpExchange(test -> {
       test.xch(xch -> {
@@ -441,7 +441,7 @@ public class WebResourcesTest {
   """)
   public void testCase09() throws IOException, InterruptedException {
     final WebResources resources;
-    resources = create(opts -> {});
+    resources = create(_ -> {});
 
     Y.httpExchange(test -> {
       test.xch(xch -> {

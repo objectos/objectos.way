@@ -413,30 +413,30 @@ public class UtilUnmodifiableListTest {
   }
 
   /*
-  
+
   // getOnly() is not public anymore
-  
+
   @Test
   public void getOnly() {
     try {
       ul0.getOnly();
-  
+
       Assert.fail();
     } catch (IllegalStateException expected) {
       assertEquals(expected.getMessage(), "Could not getOnly: empty.");
     }
-  
+
     assertEquals(ul1.getOnly(), jdk1.get(0));
-  
+
     try {
       ul2.getOnly();
-  
+
       Assert.fail();
     } catch (IllegalStateException expected) {
       assertEquals(expected.getMessage(), "Could not getOnly: more than one element.");
     }
   }
-  
+
   */
 
   @Test
@@ -648,7 +648,7 @@ public class UtilUnmodifiableListTest {
   public void replaceAll() {
     testAll((it, els) -> {
       try {
-        it.replaceAll(t -> Thing.next());
+        it.replaceAll(_ -> Thing.next());
 
         Assert.fail("Expected an UnsupportedOperationException");
       } catch (UnsupportedOperationException expected) {

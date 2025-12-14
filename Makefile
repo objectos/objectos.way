@@ -33,9 +33,11 @@ REMOTE_REPOS := https://repo.maven.apache.org/maven2
 ## Dependencies
 H2 := com.h2database/h2/2.3.232
 MARIADB := org.mariadb.jdbc/mariadb-java-client/3.5.3
-PLAYWRIGHT := com.microsoft.playwright/playwright/1.56.0
 SLF4J_NOP := org.slf4j/slf4j-nop/2.0.17
 TESTNG := org.testng/testng/7.11.0
+
+PLAYWRIGHT := com.microsoft.playwright/playwright/1.56.0
+OPENTEST4J := org.opentest4j/opentest4j/1.3.0
 
 # Delete the default suffixes
 .SUFFIXES:
@@ -165,6 +167,7 @@ TEST_MAIN := objectos.way.RunTests
 
 ## www test runtime dependencies
 TEST_RUNTIME_DEPS := $(SLF4J_NOP)
+TEST_RUNTIME_DEPS += $(OPENTEST4J)
 
 ## test modules
 TEST_ADD_MODULES := org.testng
@@ -172,6 +175,9 @@ TEST_ADD_MODULES += org.slf4j
 TEST_ADD_MODULES += com.h2database
 TEST_ADD_MODULES += org.mariadb.jdbc
 TEST_ADD_MODULES += java.net.http
+TEST_ADD_MODULES += com.google.gson
+TEST_ADD_MODULES += jdk.unsupported
+TEST_ADD_MODULES += org.opentest4j
 
 ## test --add-exports
 TEST_ADD_EXPORTS := objectos.way/objectos.util=org.testng
@@ -183,6 +189,7 @@ TEST_ADD_READS += objectos.way=com.h2database
 TEST_ADD_READS += objectos.way=org.mariadb.jdbc
 TEST_ADD_READS += objectos.way=java.compiler
 TEST_ADD_READS += objectos.way=java.net.http
+TEST_ADD_READS += objectos.way=playwright
 
 include make/java-test.mk
 

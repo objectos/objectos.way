@@ -28,7 +28,7 @@ public final class UnmodifiableMapReplaceAllTest {
   public void execute() {
     adapter.testAll((map, els) -> {
       try {
-        map.replaceAll((k, v) -> k.toDecimalString());
+        map.replaceAll((k, _) -> k.toDecimalString());
 
         Assert.fail("Expected an UnsupportedOperationException");
       } catch (UnsupportedOperationException expected) {

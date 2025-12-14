@@ -230,7 +230,7 @@ public class HttpExchangeTestBCreate extends HttpExchangeTest {
     }
 
     Http.Exchange http;
-    http = http(config -> {});
+    http = http(_ -> {});
 
     http.ok(new Template());
 
@@ -258,7 +258,7 @@ public class HttpExchangeTestBCreate extends HttpExchangeTest {
     }
 
     Http.Exchange http;
-    http = http(config -> {});
+    http = http(_ -> {});
 
     http.badRequest(new Template());
 

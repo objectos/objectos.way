@@ -212,7 +212,7 @@ public class HttpRoutingTest1OfPath {
     test(
         routing -> {
           routing.path("/noop", allow -> {
-            allow.allow(GET, http -> {});
+            allow.allow(GET, _ -> {});
           });
         },
 
@@ -232,7 +232,7 @@ public class HttpRoutingTest1OfPath {
     test(
         routing -> {
           routing.path("/noop", allow -> {
-            allow.allow(GET, http -> {}, http -> {});
+            allow.allow(GET, _ -> {}, _ -> {});
           });
         },
 

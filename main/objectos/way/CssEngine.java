@@ -2492,11 +2492,11 @@ final class CssEngine implements Css.StyleSheet {
         switch (top) {
           case Block rule -> components.add(rule);
 
-          case FontFace ff -> throw new IllegalArgumentException(
+          case FontFace _ -> throw new IllegalArgumentException(
               "@font-face declarations are not allowed in the components layer"
           );
 
-          case Keyframes kf -> throw new IllegalArgumentException(
+          case Keyframes _ -> throw new IllegalArgumentException(
               "@keyframes declarations are not allowed in the components layer"
           );
         }
@@ -2534,14 +2534,14 @@ final class CssEngine implements Css.StyleSheet {
                   }
                 }
 
-                case Block nested -> throw new IllegalArgumentException(
+                case Block _ -> throw new IllegalArgumentException(
                     "The system theme must not contain nested statements"
                 );
               }
             }
           }
 
-          case FontFace ff -> throw new IllegalArgumentException(
+          case FontFace _ -> throw new IllegalArgumentException(
               "The system theme must not contain @font-face declarations"
           );
 
@@ -2683,7 +2683,7 @@ final class CssEngine implements Css.StyleSheet {
               root = List.of(selector);
 
               final List<Decl> section;
-              section = themeSections.computeIfAbsent(root, key -> new ArrayList<>());
+              section = themeSections.computeIfAbsent(root, _ -> new ArrayList<>());
 
               for (Stmt stmt : stmts) {
                 switch (stmt) {
@@ -2694,19 +2694,19 @@ final class CssEngine implements Css.StyleSheet {
                     property = decl.property;
 
                     final Map<String, Decl> values;
-                    values = themeProps.computeIfAbsent(root, key -> new LinkedHashMap<>());
+                    values = themeProps.computeIfAbsent(root, _ -> new LinkedHashMap<>());
 
                     values.put(property, decl);
                   }
 
-                  case Block nested -> throw new IllegalArgumentException(
+                  case Block _ -> throw new IllegalArgumentException(
                       "The system theme must not contain nested statements"
                   );
                 }
               }
             }
 
-            case FontFace ff -> throw new IllegalArgumentException(
+            case FontFace _ -> throw new IllegalArgumentException(
                 "The system theme must not contain @font-face declarations"
             );
 
@@ -2752,10 +2752,10 @@ final class CssEngine implements Css.StyleSheet {
         selector = List.copyOf(list);
 
         final List<Decl> section;
-        section = themeSections.computeIfAbsent(selector, key -> new ArrayList<>());
+        section = themeSections.computeIfAbsent(selector, _ -> new ArrayList<>());
 
         final Map<String, Decl> props;
-        props = themeProps.computeIfAbsent(selector, key -> new LinkedHashMap<>());
+        props = themeProps.computeIfAbsent(selector, _ -> new LinkedHashMap<>());
 
         for (Stmt stmt : rule.stmts) {
           switch (stmt) {
@@ -2892,9 +2892,9 @@ final class CssEngine implements Css.StyleSheet {
           switch (top) {
             case Block rule -> baseStyleRule(rule);
 
-            case FontFace ff -> {/* leave it as it is */}
+            case FontFace _ -> {/* leave it as it is */}
 
-            case Keyframes kf -> { /* leave it as it is */ }
+            case Keyframes _ -> { /* leave it as it is */ }
           }
         }
       }

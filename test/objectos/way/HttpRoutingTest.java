@@ -53,7 +53,7 @@ public class HttpRoutingTest implements Http.Routing.Module {
     cookie = Y.cookie("HTTPMODULETEST", 1L, 2L, 3L, 4L);
 
     final Http.Exchange http;
-    http = Http.Exchange.create(opts -> {});
+    http = Http.Exchange.create(_ -> {});
 
     sessionStore.ensureSession(http);
 
@@ -1240,7 +1240,7 @@ public class HttpRoutingTest implements Http.Routing.Module {
 
   @Test
   public void edge01() {
-    Http.Routing.Module empty = routing -> {};
+    Http.Routing.Module empty = _ -> {};
 
     Http.Handler handler = Http.Handler.of(empty);
 

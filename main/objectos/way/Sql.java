@@ -293,7 +293,7 @@ public final class Sql {
     }
 
     default List<MetaTable> queryTables() {
-      return queryTables(config -> {});
+      return queryTables(_ -> {});
     }
 
     List<MetaTable> queryTables(Consumer<QueryTables> config);

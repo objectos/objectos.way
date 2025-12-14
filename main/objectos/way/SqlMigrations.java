@@ -197,7 +197,7 @@ final class SqlMigrations implements Sql.Migrations {
     result = trx.batchUpdateWithResult();
 
     switch (result) {
-      case Sql.BatchUpdateSuccess ok -> {
+      case Sql.BatchUpdateSuccess _ -> {
         schemaHistory(currentRank, name, true);
 
         trx.commit();

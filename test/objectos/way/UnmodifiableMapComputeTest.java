@@ -31,7 +31,7 @@ public final class UnmodifiableMapComputeTest {
       try {
         var t = Thing.next();
 
-        map.compute(t, (k, v) -> t.toHexString());
+        map.compute(t, (_, _) -> t.toHexString());
 
         Assert.fail("Expected an UnsupportedOperationException");
       } catch (UnsupportedOperationException expected) {

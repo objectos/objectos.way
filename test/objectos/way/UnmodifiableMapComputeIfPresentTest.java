@@ -31,7 +31,7 @@ public final class UnmodifiableMapComputeIfPresentTest {
       try {
         var t = Thing.next();
 
-        map.computeIfPresent(t, (k, v) -> k.toHexString());
+        map.computeIfPresent(t, (k, _) -> k.toHexString());
 
         Assert.fail("Expected an UnsupportedOperationException");
       } catch (UnsupportedOperationException expected) {
