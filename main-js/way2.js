@@ -208,8 +208,6 @@ const way = (function() {
 
       const actualName = constructor.name;
 
-      console.log(`actualName=${actualName}`);
-
       if (actualName === typeName) {
         return maybe;
       }
