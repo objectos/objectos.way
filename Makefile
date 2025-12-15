@@ -21,7 +21,8 @@
 ## Coordinates
 GROUP_ID := br.com.objectos
 ARTIFACT_ID := objectos.way
-VERSION := 0.3.0-SNAPSHOT
+#VERSION := 0.3.0-SNAPSHOT
+VERSION := 0.2.9-20251215
 MODULE := $(ARTIFACT_ID)
 
 ## javac --release option
@@ -168,6 +169,9 @@ TEST_MAIN := objectos.way.RunTests
 ## www test runtime dependencies
 TEST_RUNTIME_DEPS := $(SLF4J_NOP)
 TEST_RUNTIME_DEPS += $(OPENTEST4J)
+
+## test JVM opts
+TEST_JVM_OPTS := -Dplaywright.headless=true
 
 ## test modules
 TEST_ADD_MODULES := org.testng
