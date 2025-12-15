@@ -29,6 +29,11 @@ final class ScriptJsObject
     this.value = value;
   }
 
+  static ScriptJsObject byId(String value) {
+    return new ScriptJsObject("""
+    ["LO","ID","%s"]""".formatted(value));
+  }
+
   @Override
   public final Script.Action invoke(String type, String method, Object... args) {
     final String $type;

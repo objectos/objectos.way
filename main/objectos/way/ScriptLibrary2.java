@@ -218,6 +218,17 @@ const way = (function() {
     const kind = checkString(args.shift(), "kind");
 
     switch (kind) {
+      case "ID":
+        const id = checkString(args.shift(), "id");
+
+        const element = document.getElementById(id);
+
+        if (!element) {
+          throw new Error(`Illegal arg: element not found with ID ${id}`);
+        }
+
+        return element;
+
       case "TT":
         return el;
 

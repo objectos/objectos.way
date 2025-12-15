@@ -17,6 +17,7 @@ package objectos.way;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /// The **Objectos Script** main interface, part of Objectos HTML.
@@ -52,6 +53,15 @@ public sealed interface Script permits ScriptPojo {
     /// @return the property
     JsObject prop(String type, String name);
 
+  }
+  
+  /// Returns a handle for the element with the specified ID attribute.
+  /// @param value the ID value
+  /// @return the element
+  static JsElement byId(String value) {
+    Objects.requireNonNull(value, "value == null");
+    
+    return ScriptJsObject.byId(value);
   }
   
   /// The element which triggered the Objectos Script.
