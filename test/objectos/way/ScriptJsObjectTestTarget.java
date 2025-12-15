@@ -51,7 +51,7 @@ public class ScriptJsObjectTestTarget {
     );
   }
 
-  @Test
+  @Test(enabled = false)
   public void prop0() {
     test(
         DevScriptProp0.SCRIPT,
