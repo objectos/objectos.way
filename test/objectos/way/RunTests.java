@@ -62,9 +62,7 @@ public class RunTests {
 
     test.setXmlPackages(
         List.of(
-            new XmlPackage("objectos.*"),
-            new XmlPackage("objectox.*"),
-            new XmlPackage("testing.*")
+            new XmlPackage("objectos.*")
         )
     );
 

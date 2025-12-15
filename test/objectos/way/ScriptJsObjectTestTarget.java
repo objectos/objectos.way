@@ -17,11 +17,11 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.way.dev.DevScriptInvoke0;
 import objectos.way.dev.DevScriptProp0;
+import objectos.way.dev.DevScriptTarget;
 import org.testng.annotations.Test;
 
-public class ScriptJsObjectTest {
+public class ScriptJsObjectTestTarget {
 
   @Test(description = """
   IV: invoke virtual
@@ -30,10 +30,24 @@ public class ScriptJsObjectTest {
   """)
   public void invoke0() {
     test(
-        DevScriptInvoke0.SCRIPT,
+        DevScriptTarget.INVOKE0,
 
         """
         [["LO","TT"],["IV","Element","remove",[]]]"""
+    );
+  }
+
+  @Test(description = """
+  IV: invoke virtual
+  - locator = target
+  - args = 1
+  """)
+  public void invoke1() {
+    test(
+        DevScriptTarget.INVOKE1,
+
+        """
+        [["LO","TT"],["IV","Element","removeAttribute",[["JS","style"]]]]"""
     );
   }
 

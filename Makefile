@@ -21,8 +21,7 @@
 ## Coordinates
 GROUP_ID := br.com.objectos
 ARTIFACT_ID := objectos.way
-#VERSION := 0.3.0-SNAPSHOT
-VERSION := 0.2.9-20251215
+VERSION := 0.3.0-SNAPSHOT
 MODULE := $(ARTIFACT_ID)
 
 ## javac --release option
@@ -101,8 +100,8 @@ SCRIPT_GEN_REQS += main-js/way.js
 .PHONY: script-gen
 script-gen: $(SCRIPT_GEN)
 
-.PHONY: script-gen@clean
-script-gen@clean:
+.PHONY: script-gen-clean
+script-gen-clean:
 	rm -f $(SCRIPT_GEN)
 
 $(SCRIPT_GEN): $(SCRIPT_GEN_REQS)
@@ -126,8 +125,8 @@ SCRIPT2_GEN_REQS += main-js/way2.js
 .PHONY: script2-gen
 script2-gen: $(SCRIPT2_GEN)
 
-.PHONY: script2-gen@clean
-script2-gen@clean:
+.PHONY: script2-gen-clean
+script2-gen-clean:
 	rm -f $(SCRIPT2_GEN)
 
 $(SCRIPT2_GEN): $(SCRIPT2_GEN_REQS)

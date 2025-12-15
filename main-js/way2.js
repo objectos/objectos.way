@@ -116,8 +116,8 @@ const way = (function() {
     for (const action of actions) {
       recv = executeWay1(recv, el, action);
     }
-	
-	return recv;
+
+    return recv;
   }
 
   function executeWay1(recv, el, action) {
@@ -134,6 +134,20 @@ const way = (function() {
     }
   }
 
+  function arg(_, arg) {
+    checkArray(arg, "arg");
+
+    const kind = checkString(arg.shift(), "kind");
+
+    switch (kind) {
+      case "JS":
+        return arg.shift();
+
+      default:
+        throw new Error(`Illegal arg: unknown arg kind=${kind}`);
+    }
+  }
+
   function invokeVirtual(recv, el, action) {
     const typeName = checkString(action.shift(), "typeName");
 
@@ -146,12 +160,12 @@ const way = (function() {
     if (!method) {
       throw new Error(`Illegal arg: ${typeName} does not declare the ${methodName} method`);
     }
-	
-	const encodedArgs = checkArray(action.shift(), "encodedArgs");
-	
-	const args = encodedArgs.map(arg => executeWay0(el, arg));
 
-	return method.call(recv, args);
+    const encodedArgs = checkArray(action.shift(), "encodedArgs");
+
+    const args = encodedArgs.map(x => arg(el, x));
+
+    return method.call(recv, args);
   }
 
   function locate(_, el, args) {

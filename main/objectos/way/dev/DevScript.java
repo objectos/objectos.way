@@ -15,6 +15,8 @@
  */
 package objectos.way.dev;
 
+import static objectos.way.Http.Method.GET;
+
 import module objectos.way;
 
 /// This class is not part of the Objectos Way JAR file. It is placed in the
@@ -23,7 +25,7 @@ final class DevScript implements Http.Routing.Module {
 
   @Override
   public final void configure(Http.Routing routing) {
-    routing.handler(new DevScriptInvoke0());
+    routing.path("/script/target/{id}", GET, new DevScriptTarget());
     routing.handler(new DevScriptProp0());
   }
 

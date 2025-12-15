@@ -74,14 +74,18 @@ final class ScriptJsObject
   }
 
   private String args0(Object[] args) {
+    final StringBuilder sb;
+    sb = new StringBuilder();
+
+    sb.append('[');
+
     final Object arg0;
     arg0 = args[0];
 
     final String first;
     first = obj(arg0);
 
-    final StringBuilder sb;
-    sb = new StringBuilder(first);
+    sb.append(first);
 
     for (int idx = 1; idx < args.length; idx++) {
       sb.append(',');
@@ -94,6 +98,8 @@ final class ScriptJsObject
 
       sb.append(obj);
     }
+
+    sb.append(']');
 
     return sb.toString();
   }

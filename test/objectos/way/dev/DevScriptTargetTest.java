@@ -13,25 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.way;
+package objectos.way.dev;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
-import objectos.way.dev.DevScriptInvoke0;
+import objectos.way.Y;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 @Listeners(Y.class)
-public class ScriptJsObjectTestBrowser {
+public class DevScriptTargetTest {
 
   @Test(description = """
   IV: invoke virtual
-  - locator = target
   - args = empty
   """)
   public void invoke0() {
     try (var page = Y.page()) {
-      page.navigate(DevScriptInvoke0.PATH);
+      page.navigate("/script/target/invoke0");
 
       var btn1 = page.locator("#btn-1");
       var btn2 = page.locator("#btn-2");
@@ -46,6 +45,30 @@ public class ScriptJsObjectTestBrowser {
       assertThat(btn1).hasCount(1);
       assertThat(btn2).hasCount(0);
       assertThat(btn3).hasCount(1);
+    }
+  }
+
+  @Test(description = """
+  IV: invoke virtual
+  - args = 1
+  """)
+  public void invoke1() {
+    try (var page = Y.page()) {
+      page.navigate("/script/target/invoke1");
+
+      var div1 = page.locator("#div-1");
+      var div2 = page.locator("#div-2");
+      var div3 = page.locator("#div-3");
+
+      assertThat(div1).hasCSS("height", "64px");
+      assertThat(div2).hasCSS("height", "64px");
+      assertThat(div3).hasCSS("height", "64px");
+
+      div2.click();
+
+      assertThat(div1).hasCSS("height", "64px");
+      assertThat(div2).not().hasCSS("height", "64px");
+      assertThat(div3).hasCSS("height", "64px");
     }
   }
 
