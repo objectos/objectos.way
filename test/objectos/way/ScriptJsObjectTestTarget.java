@@ -25,7 +25,6 @@ public class ScriptJsObjectTestTarget {
 
   @Test(description = """
   IV: invoke virtual
-  - locator = target
   - args = empty
   """)
   public void invoke0() {
@@ -39,7 +38,6 @@ public class ScriptJsObjectTestTarget {
 
   @Test(description = """
   IV: invoke virtual
-  - locator = target
   - args = 1
   """)
   public void invoke1() {
@@ -48,6 +46,16 @@ public class ScriptJsObjectTestTarget {
 
         """
         [["LO","TT"],["IV","Element","removeAttribute",[["JS","style"]]]]"""
+    );
+  }
+
+  @Test
+  public void property0() {
+    test(
+        DevScriptTarget.PROPERTY0,
+
+        """
+        [["LO","TT"],["PW","Node","textContent",["WA",[["LO","TT"],["PR","Element","id"]]]]]"""
     );
   }
 

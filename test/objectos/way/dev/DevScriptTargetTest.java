@@ -72,4 +72,21 @@ public class DevScriptTargetTest {
     }
   }
 
+  @Test(description = """
+  PR/PW: property read/write
+  """)
+  public void property0() {
+    try (var page = Y.page()) {
+      page.navigate("/script/target/property0");
+
+      var foo = page.locator("#foo-bar");
+
+      assertThat(foo).hasText("My ID is...");
+
+      foo.click();
+
+      assertThat(foo).hasText("foo-bar");
+    }
+  }
+
 }

@@ -152,6 +152,8 @@ const way = (function() {
   const actionHandlers = {
     "IV": invokeVirtual,
     "LO": locate,
+    "PR": propertyRead,
+    "PW": propertyWrite
   };
 
   function executeWay0(el, actions) {
@@ -180,7 +182,7 @@ const way = (function() {
     }
   }
 
-  function arg(_, arg) {
+  function arg(el, arg) {
     checkArray(arg, "arg");
 
     const kind = checkString(arg.shift(), "kind");
@@ -189,6 +191,11 @@ const way = (function() {
       case "JS":
         return arg.shift();
 
+	  case "WA":
+		const actions = arg.shift();
+		
+		return executeWay0(el, actions);
+		
       default:
         throw new Error(`Illegal arg: unknown arg kind=${kind}`);
     }
@@ -237,16 +244,36 @@ const way = (function() {
     }
   }
 
+  function propertyRead(recv, _, args) {
+    const typeName = checkString(args.shift(), "typeName");
+
+    checkType(recv, "recv", typeName);
+
+    const propName = checkString(args.shift(), "propName");
+
+    const prop = recv[propName];
+
+    if (!prop) {
+      throw new Error(`Illegal arg: ${typeName} does not declare the ${propName} property`);
+    }
+
+    return prop;
+  }
+
+  function propertyWrite(recv, el, args) {
+    const typeName = checkString(args.shift(), "typeName");
+
+    checkType(recv, "recv", typeName);
+
+    const propName = checkString(args.shift(), "propName");
+
+    const val = checkDefined(args.shift(), "value");
+
+	recv[propName] = arg(el, val);
+  }
+
   // ##################################################################
   // # END: Objectos Way Actions
-  // ##################################################################
-
-  // ##################################################################
-  // # BEGIN: Objectos Way Query
-  // ##################################################################
-
-  // ##################################################################
-  // # END: Objectos Way Query
   // ##################################################################
 
   // ##################################################################
@@ -256,6 +283,14 @@ const way = (function() {
   function checkArray(maybe, name) {
     if (!Array.isArray(maybe)) {
       throw new Error(`Illegal arg: ${name} must be an Array value but got ${maybe}`);
+    }
+
+    return maybe;
+  }
+
+  function checkDefined(maybe, name) {
+    if (!maybe) {
+      throw new Error(`Illegal arg: ${name} must be a defined value`);
     }
 
     return maybe;

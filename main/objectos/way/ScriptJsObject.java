@@ -30,8 +30,11 @@ final class ScriptJsObject
   }
 
   static ScriptJsObject byId(String value) {
+    final String $value;
+    $value = escape(value, "value");
+
     return new ScriptJsObject("""
-    ["LO","ID","%s"]""".formatted(value));
+    ["LO","ID","%s"]""".formatted($value));
   }
 
   @Override
@@ -53,18 +56,36 @@ final class ScriptJsObject
   }
 
   @Override
-  public final Script.JsObject prop(String type, String prop) {
+  public final Script.JsObject prop(String type, String name) {
     final String $type;
     $type = escape(type, "type");
 
     final String $prop;
-    $prop = escape(prop, "prop");
+    $prop = escape(name, "name");
 
     final String read;
     read = """
-    %s,["RP","%s","%s"]""".formatted(value, $type, $prop);
+    %s,["PR","%s","%s"]""".formatted(value, $type, $prop);
 
     return new ScriptJsObject(read);
+  }
+
+  @Override
+  public final Script.Action prop(String type, String name, Object value) {
+    final String $type;
+    $type = escape(type, "type");
+
+    final String $prop;
+    $prop = escape(name, "name");
+
+    final String $value;
+    $value = obj(value);
+
+    final String write;
+    write = """
+    %s,["PW","%s","%s",%s]""".formatted(this.value, $type, $prop, $value);
+
+    return new ScriptJsObject(write);
   }
 
   @Override
@@ -109,7 +130,7 @@ final class ScriptJsObject
     return sb.toString();
   }
 
-  private String escape(String value, String name) {
+  private static String escape(String value, String name) {
     if (value == null) {
       throw new NullPointerException(
           name + " == null"
@@ -119,17 +140,20 @@ final class ScriptJsObject
     return escape0(value);
   }
 
-  private String escape0(String value) {
+  private static String escape0(String value) {
     // TODO escape json string literal
     return value;
   }
 
   private String obj(Object o) {
     return switch (o) {
+      case null -> "null";
+
+      case ScriptJsObject jsObj -> """
+                                   ["WA",%s]""".formatted(jsObj);
+
       case String s -> """
                        ["JS","%s"]""".formatted(escape0(s));
-
-      case null -> "null";
 
       default -> {
         final Class<?> type;

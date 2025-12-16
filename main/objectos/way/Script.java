@@ -31,6 +31,7 @@ public sealed interface Script permits ScriptPojo {
   
   /// Represents a JS runtime `Element` instance.
   public sealed interface JsElement extends JsObject permits ScriptJsObject {
+
     
     
   }
@@ -52,6 +53,13 @@ public sealed interface Script permits ScriptPojo {
     /// @param name the property name 
     /// @return the property
     JsObject prop(String type, String name);
+    
+    /// Sets the property of the specified name to the specified value, if the JS object is an instance of the specified type.
+    /// @param type the name of the JS type that defines the property
+    /// @param name the property name 
+    /// @param value the property value 
+    /// @return an action representing the property value definition
+    Action prop(String type, String name, Object value);
 
   }
   

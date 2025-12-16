@@ -20,20 +20,19 @@ import module objectos.way;
 @Css.Source
 public final class DevScriptTarget extends ScriptJsElementHandler {
 
-  public static final Script.Action INVOKE0 = Script.target()
-      .invoke("Element", "remove");
-
-  public static final Script.Action INVOKE1 = Script.target()
-      .invoke("Element", "removeAttribute", "style");
-
   @Override
   public final void handle(Http.Exchange http) {
     switch (http.pathParam("id")) {
       case "invoke0" -> http.ok(invoke0());
 
       case "invoke1" -> http.ok(invoke1());
+
+      case "property0" -> http.ok(property0());
     }
   }
+
+  public static final Script.Action INVOKE0 = Script.target()
+      .invoke("Element", "remove");
 
   private Html.Component invoke0() {
     return page(
@@ -70,6 +69,9 @@ public final class DevScriptTarget extends ScriptJsElementHandler {
     );
   }
 
+  public static final Script.Action INVOKE1 = Script.target()
+      .invoke("Element", "removeAttribute", "style");
+
   private Html.Component invoke1() {
     return page(
         "Script.target.invoke1",
@@ -101,6 +103,30 @@ public final class DevScriptTarget extends ScriptJsElementHandler {
                 m.style("width:64px;height:64px;background-color:red"),
                 m.text("Div 3")
             )
+        )
+    );
+  }
+
+  public static final Script.Action PROPERTY0 = Script.target()
+      .prop("Node", "textContent", Script.target().prop("Element", "id"));
+
+  private Html.Component property0() {
+    return page(
+        "Script.target.property0",
+
+        m -> m.div(
+            m.id("foo-bar"),
+
+            m.css("""
+            border-color:var(--color-gray-200)
+            border-style:solid
+            border-width:1px
+            padding:32rx
+            """),
+
+            m.dataOnClick(PROPERTY0),
+
+            m.text("My ID is...")
         )
     );
   }
