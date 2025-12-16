@@ -62,4 +62,22 @@ public class DevScriptByIdTest {
     }
   }
 
+  @Test(description = """
+  PR/PW: property read/write
+  """)
+  public void property0() {
+    try (var page = Y.page()) {
+      page.navigate("/script/by-id/property0");
+
+      var clickMe = page.locator("#click-me");
+      var subject = page.locator("#subject");
+
+      assertThat(subject).hasText("My ID is...");
+
+      clickMe.click();
+
+      assertThat(subject).hasText("click-me");
+    }
+  }
+
 }

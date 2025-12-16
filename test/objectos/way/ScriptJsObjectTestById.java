@@ -48,6 +48,16 @@ public class ScriptJsObjectTestById {
     );
   }
 
+  @Test
+  public void property0() {
+    test(
+        DevScriptById.PROPERTY0,
+
+        """
+        [["LO","ID","subject"],["PW","Node","textContent",["WA",[["LO","TT"],["PR","Element","id"]]]]]"""
+    );
+  }
+
   private void test(Script.Action action, String expected) {
     final String result;
     result = action.toString();
