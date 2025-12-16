@@ -13,48 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.way.dev;
+package objectos.way;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+import static org.testng.Assert.assertEquals;
 
-import objectos.way.Y;
+import objectos.way.dev.Script001;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 @Listeners(Y.class)
-public class DevScriptTargetTest {
+public class Script001Test {
 
-  @Test(description = """
-  IV: invoke virtual
-  - args = empty
-  """)
-  public void invoke0() {
-    try (var page = Y.page()) {
-      page.navigate("/script/target/invoke0");
+  @Test
+  public void action() {
+    assertEquals(
+        Script001.ACTION.toString(),
 
-      var btn1 = page.locator("#btn-1");
-      var btn2 = page.locator("#btn-2");
-      var btn3 = page.locator("#btn-3");
-
-      assertThat(btn1).hasCount(1);
-      assertThat(btn2).hasCount(1);
-      assertThat(btn3).hasCount(1);
-
-      btn2.click();
-
-      assertThat(btn1).hasCount(1);
-      assertThat(btn2).hasCount(0);
-      assertThat(btn3).hasCount(1);
-    }
+        """
+        [["LO","TT"],["IV","Element","removeAttribute",[["JS","style"]]]]"""
+    );
   }
 
-  @Test(description = """
-  IV: invoke virtual
-  - args = 1
-  """)
-  public void invoke1() {
+  @Test
+  public void live() {
     try (var page = Y.page()) {
-      page.navigate("/script/target/invoke1");
+      page.navigate("/script/001");
 
       var div1 = page.locator("#div-1");
       var div2 = page.locator("#div-2");
@@ -69,23 +53,6 @@ public class DevScriptTargetTest {
       assertThat(div1).hasCSS("height", "64px");
       assertThat(div2).not().hasCSS("height", "64px");
       assertThat(div3).hasCSS("height", "64px");
-    }
-  }
-
-  @Test(description = """
-  PR/PW: property read/write
-  """)
-  public void property0() {
-    try (var page = Y.page()) {
-      page.navigate("/script/target/property0");
-
-      var foo = page.locator("#foo-bar");
-
-      assertThat(foo).hasText("My ID is...");
-
-      foo.click();
-
-      assertThat(foo).hasText("foo-bar");
     }
   }
 

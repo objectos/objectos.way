@@ -15,54 +15,45 @@
  */
 package objectos.way;
 
+import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static org.testng.Assert.assertEquals;
 
-import objectos.way.dev.DevScriptTarget;
+import objectos.way.dev.Script000;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
-public class ScriptJsObjectTestTarget {
+@Listeners(Y.class)
+public class Script000Test {
 
-  @Test(description = """
-  IV: invoke virtual
-  - args = empty
-  """)
-  public void invoke0() {
-    test(
-        DevScriptTarget.INVOKE0,
+  @Test
+  public void action() {
+    assertEquals(
+        Script000.ACTION.toString(),
 
         """
         [["LO","TT"],["IV","Element","remove",[]]]"""
     );
   }
 
-  @Test(description = """
-  IV: invoke virtual
-  - args = 1
-  """)
-  public void invoke1() {
-    test(
-        DevScriptTarget.INVOKE1,
-
-        """
-        [["LO","TT"],["IV","Element","removeAttribute",[["JS","style"]]]]"""
-    );
-  }
-
   @Test
-  public void property0() {
-    test(
-        DevScriptTarget.PROPERTY0,
+  public void live() {
+    try (var page = Y.page()) {
+      page.navigate("/script/000");
 
-        """
-        [["LO","TT"],["PW","Node","textContent",["WA",[["LO","TT"],["PR","Element","id"]]]]]"""
-    );
-  }
+      var btn1 = page.locator("#btn-1");
+      var btn2 = page.locator("#btn-2");
+      var btn3 = page.locator("#btn-3");
 
-  private void test(Script.Action action, String expected) {
-    final String result;
-    result = action.toString();
+      assertThat(btn1).hasCount(1);
+      assertThat(btn2).hasCount(1);
+      assertThat(btn3).hasCount(1);
 
-    assertEquals(result, expected);
+      btn2.click();
+
+      assertThat(btn1).hasCount(1);
+      assertThat(btn2).hasCount(0);
+      assertThat(btn3).hasCount(1);
+    }
   }
 
 }

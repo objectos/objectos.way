@@ -15,54 +15,40 @@
  */
 package objectos.way;
 
+import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static org.testng.Assert.assertEquals;
 
-import objectos.way.dev.DevScriptById;
+import objectos.way.dev.Script003;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
-public class ScriptJsObjectTestById {
+@Listeners(Y.class)
+public class Script003Test {
 
-  @Test(description = """
-  IV: invoke virtual
-  - args = empty
-  """)
-  public void invoke0() {
-    test(
-        DevScriptById.INVOKE0,
+  @Test
+  public void action() {
+    assertEquals(
+        Script003.ACTION.toString(),
 
         """
         [["LO","ID","subject"],["IV","Element","remove",[]]]"""
     );
   }
 
-  @Test(description = """
-  IV: invoke virtual
-  - args = 1
-  """)
-  public void invoke1() {
-    test(
-        DevScriptById.INVOKE1,
-
-        """
-        [["LO","ID","subject"],["IV","Element","removeAttribute",[["JS","style"]]]]"""
-    );
-  }
-
   @Test
-  public void property0() {
-    test(
-        DevScriptById.PROPERTY0,
+  public void live() {
+    try (var page = Y.page()) {
+      page.navigate("/script/003");
 
-        """
-        [["LO","ID","subject"],["PW","Node","textContent",["WA",[["LO","TT"],["PR","Element","id"]]]]]"""
-    );
-  }
+      var clickMe = page.locator("#click-me");
+      var subject = page.locator("#subject");
 
-  private void test(Script.Action action, String expected) {
-    final String result;
-    result = action.toString();
+      assertThat(subject).hasCount(1);
 
-    assertEquals(result, expected);
+      clickMe.click();
+
+      assertThat(subject).hasCount(0);
+    }
   }
 
 }

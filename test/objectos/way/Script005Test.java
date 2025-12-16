@@ -13,61 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.way.dev;
+package objectos.way;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+import static org.testng.Assert.assertEquals;
 
-import objectos.way.Y;
+import objectos.way.dev.Script005;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 @Listeners(Y.class)
-public class DevScriptByIdTest {
+public class Script005Test {
 
-  @Test(description = """
-  IV: invoke virtual
-  - args = empty
-  """)
-  public void invoke0() {
-    try (var page = Y.page()) {
-      page.navigate("/script/by-id/invoke0");
+  @Test
+  public void action() {
+    assertEquals(
+        Script005.ACTION.toString(),
 
-      var clickMe = page.locator("#click-me");
-      var subject = page.locator("#subject");
-
-      assertThat(subject).hasCount(1);
-
-      clickMe.click();
-
-      assertThat(subject).hasCount(0);
-    }
+        """
+        [["LO","ID","subject"],["PW","Node","textContent",["WA",[["LO","TT"],["PR","Element","id"]]]]]"""
+    );
   }
 
-  @Test(description = """
-  IV: invoke virtual
-  - args = 1
-  """)
-  public void invoke1() {
+  @Test
+  public void live() {
     try (var page = Y.page()) {
-      page.navigate("/script/by-id/invoke1");
-
-      var clickMe = page.locator("#click-me");
-      var subject = page.locator("#subject");
-
-      assertThat(subject).hasCSS("width", "64px");
-
-      clickMe.click();
-
-      assertThat(subject).not().hasCSS("width", "64px");
-    }
-  }
-
-  @Test(description = """
-  PR/PW: property read/write
-  """)
-  public void property0() {
-    try (var page = Y.page()) {
-      page.navigate("/script/by-id/property0");
+      page.navigate("/script/005");
 
       var clickMe = page.locator("#click-me");
       var subject = page.locator("#subject");

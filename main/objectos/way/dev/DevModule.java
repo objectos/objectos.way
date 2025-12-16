@@ -32,7 +32,7 @@ public final class DevModule implements Http.Routing.Module {
 
   @Override
   public final void configure(Http.Routing routing) {
-    routing.install(new DevScript());
+    routing.install(new ScriptModule());
 
     routing.path("/styles.css", GET, this::styles);
 

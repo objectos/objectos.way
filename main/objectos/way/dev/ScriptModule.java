@@ -21,13 +21,16 @@ import module objectos.way;
 
 /// This class is not part of the Objectos Way JAR file. It is placed in the
 /// main source tree to ease the development.
-final class DevScript implements Http.Routing.Module {
+final class ScriptModule implements Http.Routing.Module {
 
   @Override
   public final void configure(Http.Routing routing) {
-    routing.path("/script/by-id/{id}", GET, new DevScriptById());
-    routing.path("/script/element/{id}", GET, new DevScriptElement());
-    routing.path("/script/target/{id}", GET, new DevScriptTarget());
+    routing.path("/script/000", GET, new Script000());
+    routing.path("/script/001", GET, new Script001());
+    routing.path("/script/002", GET, new Script002());
+    routing.path("/script/003", GET, new Script003());
+    routing.path("/script/004", GET, new Script004());
+    routing.path("/script/005", GET, new Script005());
   }
 
 }

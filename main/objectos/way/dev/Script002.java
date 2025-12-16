@@ -17,30 +17,33 @@ package objectos.way.dev;
 
 import module objectos.way;
 
-abstract class AbstractDevScript extends Html.Template implements Http.Handler {
+/// Test case 002
+///
+/// - event: click 
+/// - locator: target 
+/// - property read and write
+@Css.Source
+public final class Script002 extends AbstractDevScript {
+
+  public static final Script.Action ACTION = Script.target()
+      .prop("Node", "textContent", Script.target().prop("Element", "id"));
 
   @Override
-  public void handle(Http.Exchange http) {
-    http.ok(this);
-  }
+  final void renderBody() {
+    div(
+        id("foo-bar"),
 
-  @Override
-  protected final void render() {
-    doctype();
+        css("""
+        border-color:var(--color-gray-200)
+        border-style:solid
+        border-width:1px
+        padding:32rx
+        """),
 
-    html(
-        head(
-            meta(charset("utf-8")),
-            meta(httpEquiv("content-type"), content("text/html; charset=utf-8")),
-            meta(name("viewport"), content("width=device-width, initial-scale=1")),
-            link(rel("stylesheet"), type("text/css"), href("/styles.css")),
-            script(src("/script.js"))
-        ),
+        dataOnClick(ACTION),
 
-        body(f(this::renderBody))
+        text("My ID is...")
     );
   }
-
-  abstract void renderBody();
 
 }
