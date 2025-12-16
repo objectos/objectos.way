@@ -92,17 +92,6 @@ const way = (function() {
   // # BEGIN: Objectos Way Actions
   // ##################################################################
 
-
-  function executeWay(el, way) {
-    checkArray(way, "way");
-
-    for (const actions of way) {
-      executeWay0(el, actions);
-    }
-
-    return true;
-  }
-
   const actionHandlers = {
     "IV": invokeVirtual,
     "LO": locate,
@@ -110,19 +99,35 @@ const way = (function() {
     "PW": propertyWrite
   };
 
-  function executeWay0(el, actions) {
+  function executeWay(el, way) {
+    checkArray(way, "way");
+
+    const ctx = {
+      el: el
+    };
+
+    for (const actions of way) {
+      executeWay0(ctx, actions);
+    }
+
+    return true;
+  }
+
+  function executeWay0(ctx, actions) {
     checkArray(actions, "actions");
 
-    let recv;
+    let recv = null;
 
     for (const action of actions) {
-      recv = executeWay1(recv, el, action);
+      ctx.recv = recv;
+
+      recv = executeWay1(ctx, action);
     }
 
     return recv;
   }
 
-  function executeWay1(recv, el, action) {
+  function executeWay1(ctx, action) {
     checkArray(action, "action");
 
     const key = checkString(action.shift(), "key");
@@ -130,13 +135,13 @@ const way = (function() {
     const handler = actionHandlers[key];
 
     if (handler) {
-      return handler(recv, el, action);
+      return handler(ctx, action);
     } else {
       throw new Error(`Illegal arg: no action handler for key=${key}`);
     }
   }
 
-  function arg(el, arg) {
+  function arg(ctx, arg) {
     checkArray(arg, "arg");
 
     const kind = checkString(arg.shift(), "kind");
@@ -145,18 +150,20 @@ const way = (function() {
       case "JS":
         return arg.shift();
 
-	  case "WA":
-		const actions = arg.shift();
-		
-		return executeWay0(el, actions);
-		
+      case "WA":
+        const actions = arg.shift();
+
+        return executeWay0(ctx, actions);
+
       default:
         throw new Error(`Illegal arg: unknown arg kind=${kind}`);
     }
   }
 
-  function invokeVirtual(recv, el, action) {
+  function invokeVirtual(ctx, action) {
     const typeName = checkString(action.shift(), "typeName");
+
+    const recv = ctx.recv;
 
     checkType(recv, "recv", typeName);
 
@@ -170,12 +177,12 @@ const way = (function() {
 
     const encodedArgs = checkArray(action.shift(), "encodedArgs");
 
-    const args = encodedArgs.map(x => arg(el, x));
+    const args = encodedArgs.map(x => arg(ctx, x));
 
     return method.call(recv, args);
   }
 
-  function locate(_, el, args) {
+  function locate(ctx, args) {
     const kind = checkString(args.shift(), "kind");
 
     switch (kind) {
@@ -191,15 +198,17 @@ const way = (function() {
         return element;
 
       case "TT":
-        return el;
+        return ctx.el;
 
       default:
         throw new Error(`Illegal arg: unknown locate kind=${kind}`);
     }
   }
 
-  function propertyRead(recv, _, args) {
+  function propertyRead(ctx, args) {
     const typeName = checkString(args.shift(), "typeName");
+
+    const recv = ctx.recv;
 
     checkType(recv, "recv", typeName);
 
@@ -214,16 +223,20 @@ const way = (function() {
     return prop;
   }
 
-  function propertyWrite(recv, el, args) {
+  function propertyWrite(ctx, args) {
     const typeName = checkString(args.shift(), "typeName");
+
+    const recv = ctx.recv;
 
     checkType(recv, "recv", typeName);
 
     const propName = checkString(args.shift(), "propName");
 
+    const el = ctx.el;
+
     const val = checkDefined(args.shift(), "value");
 
-	recv[propName] = arg(el, val);
+    recv[propName] = arg(ctx, val);
   }
 
   // ##################################################################

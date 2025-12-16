@@ -15,6 +15,8 @@
  */
 package objectos.way;
 
+import objectos.way.Script.Action;
+
 final class ScriptJsObject
     implements
     Script.Action,
@@ -86,6 +88,17 @@ final class ScriptJsObject
     %s,["PW","%s","%s",%s]""".formatted(this.value, $type, $prop, $value);
 
     return new ScriptJsObject(write);
+  }
+
+  @Override
+  public final Action toggleClass(String value) {
+    final String[] parts;
+    parts = value.split(" ");
+
+    final Object[] args;
+    args = parts;
+
+    return prop("Element", "classList").invoke("DOMTokenList", "toggle", args);
   }
 
   @Override

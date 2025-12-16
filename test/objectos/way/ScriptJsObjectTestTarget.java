@@ -17,7 +17,6 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.way.dev.DevScriptProp0;
 import objectos.way.dev.DevScriptTarget;
 import org.testng.annotations.Test;
 
@@ -56,16 +55,6 @@ public class ScriptJsObjectTestTarget {
 
         """
         [["LO","TT"],["PW","Node","textContent",["WA",[["LO","TT"],["PR","Element","id"]]]]]"""
-    );
-  }
-
-  @Test(enabled = false)
-  public void prop0() {
-    test(
-        DevScriptProp0.SCRIPT,
-
-        """
-        [["LO","TT"],["RP","Element","classList"],["IV","DOMTokenList","toggle",["JS","background-color:gray-200"]]]"""
     );
   }
 

@@ -26,8 +26,8 @@ final class DevScript implements Http.Routing.Module {
   @Override
   public final void configure(Http.Routing routing) {
     routing.path("/script/by-id/{id}", GET, new DevScriptById());
+    routing.path("/script/element/{id}", GET, new DevScriptElement());
     routing.path("/script/target/{id}", GET, new DevScriptTarget());
-    routing.handler(new DevScriptProp0());
   }
 
 }
