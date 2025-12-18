@@ -1287,7 +1287,7 @@ public final class Html {
     /// Renders the `data-on-click` attribute with the specified script.
     /// @param script the script to be executed
     /// @return an instruction representing the attribute
-    Html.Instruction.OfDataOn dataOnClick(Script.Action script);
+    Html.Instruction.OfDataOn dataOnClick(Script.JsAction script);
 
     /// Renders the `data-on-input` attribute with the specified script.
     /// @param script the script to be executed
@@ -1297,7 +1297,7 @@ public final class Html {
     /// Renders the `data-on-input` attribute with the specified script.
     /// @param script the script to be executed
     /// @return an instruction representing the attribute
-    Html.Instruction.OfDataOn dataOnInput(Script.Action script);
+    Html.Instruction.OfDataOn dataOnInput(Script.JsAction script);
 
     /// Renders the `data-on-load` attribute with the specified script.
     /// @param script the script to be executed
@@ -1307,7 +1307,7 @@ public final class Html {
     /// Renders the `data-on-load` attribute with the specified script.
     /// @param script the script to be executed
     /// @return an instruction representing the attribute
-    Html.Instruction.OfDataOn dataOnLoad(Script.Action script);
+    Html.Instruction.OfDataOn dataOnLoad(Script.JsAction script);
 
     /// Renders the `data-on-success` attribute with the specified script.
     /// @param script the script to be executed
@@ -1317,7 +1317,7 @@ public final class Html {
     /// Renders the `data-on-success` attribute with the specified script.
     /// @param script the script to be executed
     /// @return an instruction representing the attribute
-    Html.Instruction.OfDataOn dataOnSuccess(Script.Action script);
+    Html.Instruction.OfDataOn dataOnSuccess(Script.JsAction script);
 
     /// Renders the `data-frame` attribute for a frame with the specified name.
     /// @param name the name of the frame
@@ -3158,7 +3158,7 @@ public final class Html {
     /// Renders the `data-on-click` attribute with the specified script.
     /// @param script the script to be executed
     /// @return an instruction representing the attribute
-    protected final Html.Instruction.OfDataOn dataOnClick(Script.Action script) {
+    protected final Html.Instruction.OfDataOn dataOnClick(Script.JsAction script) {
       return $html().dataOnClick(script);
     }
 
@@ -3172,7 +3172,7 @@ public final class Html {
     /// Renders the `data-on-input` attribute with the specified script.
     /// @param script the script to be executed
     /// @return an instruction representing the attribute
-    protected final Html.Instruction.OfDataOn dataOnInput(Script.Action script) {
+    protected final Html.Instruction.OfDataOn dataOnInput(Script.JsAction script) {
       return $html().dataOnInput(script);
     }
 
@@ -3186,7 +3186,7 @@ public final class Html {
     /// Renders the `data-on-load` attribute with the specified script.
     /// @param script the script to be executed
     /// @return an instruction representing the attribute
-    protected final Html.Instruction.OfDataOn dataOnLoad(Script.Action script) {
+    protected final Html.Instruction.OfDataOn dataOnLoad(Script.JsAction script) {
       return $html().dataOnLoad(script);
     }
 
@@ -3200,7 +3200,7 @@ public final class Html {
     /// Renders the `data-on-success` attribute with the specified script.
     /// @param script the script to be executed
     /// @return an instruction representing the attribute
-    protected final Html.Instruction.OfDataOn dataOnSuccess(Script.Action script) {
+    protected final Html.Instruction.OfDataOn dataOnSuccess(Script.JsAction script) {
       return $html().dataOnSuccess(script);
     }
 

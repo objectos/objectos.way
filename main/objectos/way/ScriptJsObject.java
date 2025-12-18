@@ -15,15 +15,7 @@
  */
 package objectos.way;
 
-import objectos.way.Script.Action;
-
-final class ScriptJsObject
-    implements
-    Script.Action,
-    Script.JsElement {
-
-  static final ScriptJsObject TARGET = new ScriptJsObject("""
-  ["LO","TT"]""");
+sealed class ScriptJsObject implements Script.JsObject permits ScriptJsElement {
 
   private final String value;
 
@@ -31,155 +23,51 @@ final class ScriptJsObject
     this.value = value;
   }
 
-  static ScriptJsObject byId(String value) {
-    final String $value;
-    $value = escape(value, "value");
-
-    return new ScriptJsObject("""
-    ["LO","ID","%s"]""".formatted($value));
-  }
-
   @Override
-  public final Script.Action invoke(String type, String method, Object... args) {
-    final String $type;
-    $type = escape(type, "type");
+  public final Script.JsAction invoke(String type, String method, Object... args) {
+    final ScriptJsArray.Builder invoke;
+    invoke = new ScriptJsArray.Builder();
 
-    final String $method;
-    $method = escape(method, "method");
+    invoke.rawString("IV");
+    invoke.jsString(type, "type");
+    invoke.jsString(method, "method");
 
-    final String $args;
-    $args = args(args);
+    final ScriptJsArray $args;
+    $args = ScriptJsArray.of(args, "args");
 
-    final String invoke;
-    invoke = """
-    %s,["IV","%s","%s",%s]""".formatted(value, $type, $method, $args);
+    invoke.raw($args);
 
-    return new ScriptJsObject(invoke);
+    return new ScriptJsAction("[" + value + "," + invoke.buildString() + "]");
   }
 
   @Override
   public final Script.JsObject prop(String type, String name) {
-    final String $type;
-    $type = escape(type, "type");
+    final ScriptJsArray.Builder prop;
+    prop = new ScriptJsArray.Builder();
 
-    final String $prop;
-    $prop = escape(name, "name");
+    prop.rawString("PR");
+    prop.jsString(type, "type");
+    prop.jsString(name, "name");
 
-    final String read;
-    read = """
-    %s,["PR","%s","%s"]""".formatted(value, $type, $prop);
-
-    return new ScriptJsObject(read);
+    return new ScriptJsObject(value + "," + prop.buildString());
   }
 
   @Override
-  public final Script.Action prop(String type, String name, Object value) {
-    final String $type;
-    $type = escape(type, "type");
+  public final Script.JsAction prop(String type, String name, Object value) {
+    final ScriptJsArray.Builder prop;
+    prop = new ScriptJsArray.Builder();
 
-    final String $prop;
-    $prop = escape(name, "name");
+    prop.rawString("IV");
+    prop.jsString(type, "type");
+    prop.jsString(name, "name");
+    prop.wayObject(value, "value");
 
-    final String $value;
-    $value = obj(value);
-
-    final String write;
-    write = """
-    %s,["PW","%s","%s",%s]""".formatted(this.value, $type, $prop, $value);
-
-    return new ScriptJsObject(write);
-  }
-
-  @Override
-  public final Action toggleClass(String value) {
-    final String[] parts;
-    parts = value.split(" ");
-
-    final Object[] args;
-    args = parts;
-
-    return prop("Element", "classList").invoke("DOMTokenList", "toggle", args);
+    return new ScriptJsAction("[" + value + "," + prop.buildString() + "]");
   }
 
   @Override
   public final String toString() {
-    return "[" + value + "]";
-  }
-
-  private String args(Object[] args) {
-    return args.length == 0
-        ? "[]"
-        : args0(args);
-  }
-
-  private String args0(Object[] args) {
-    final StringBuilder sb;
-    sb = new StringBuilder();
-
-    sb.append('[');
-
-    final Object arg0;
-    arg0 = args[0];
-
-    final String first;
-    first = obj(arg0);
-
-    sb.append(first);
-
-    for (int idx = 1; idx < args.length; idx++) {
-      sb.append(',');
-
-      final Object arg;
-      arg = args[idx];
-
-      final String obj;
-      obj = obj(arg);
-
-      sb.append(obj);
-    }
-
-    sb.append(']');
-
-    return sb.toString();
-  }
-
-  private static String escape(String value, String name) {
-    if (value == null) {
-      throw new NullPointerException(
-          name + " == null"
-      );
-    }
-
-    return escape0(value);
-  }
-
-  private static String escape0(String value) {
-    // TODO escape json string literal
     return value;
-  }
-
-  private String obj(Object o) {
-    return switch (o) {
-      case null -> "null";
-
-      case ScriptJsObject jsObj -> """
-                                   ["WA",%s]""".formatted(jsObj);
-
-      case String s -> """
-                       ["JS","%s"]""".formatted(escape0(s));
-
-      default -> {
-        final Class<?> type;
-        type = o.getClass();
-
-        final String typeName;
-        typeName = type.getName();
-
-        throw new IllegalArgumentException("""
-        Cannot convert %s to a JS object
-        """.formatted(typeName));
-      }
-    };
   }
 
 }

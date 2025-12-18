@@ -50,7 +50,7 @@ sealed abstract class HtmlMarkup permits HtmlMarkupOfHtml, HtmlMarkupOfTestable 
   /// Renders the `data-on-click` attribute with the specified script.
   /// @param script the script to be executed
   /// @return an instruction representing the attribute
-  public abstract Html.Instruction.OfDataOn dataOnClick(Script.Action script);
+  public abstract Html.Instruction.OfDataOn dataOnClick(Script.JsAction script);
 
   /// Renders the `data-on-input` attribute with the specified script.
   /// @param script the script to be executed
@@ -60,7 +60,7 @@ sealed abstract class HtmlMarkup permits HtmlMarkupOfHtml, HtmlMarkupOfTestable 
   /// Renders the `data-on-input` attribute with the specified script.
   /// @param script the script to be executed
   /// @return an instruction representing the attribute
-  public abstract Html.Instruction.OfDataOn dataOnInput(Script.Action script);
+  public abstract Html.Instruction.OfDataOn dataOnInput(Script.JsAction script);
 
   /// Renders the `data-on-load` attribute with the specified script.
   /// @param script the script to be executed
@@ -70,7 +70,7 @@ sealed abstract class HtmlMarkup permits HtmlMarkupOfHtml, HtmlMarkupOfTestable 
   /// Renders the `data-on-load` attribute with the specified script.
   /// @param script the script to be executed
   /// @return an instruction representing the attribute
-  public abstract Html.Instruction.OfDataOn dataOnLoad(Script.Action script);
+  public abstract Html.Instruction.OfDataOn dataOnLoad(Script.JsAction script);
 
   /// Renders the `data-on-success` attribute with the specified script.
   /// @param script the script to be executed
@@ -80,7 +80,7 @@ sealed abstract class HtmlMarkup permits HtmlMarkupOfHtml, HtmlMarkupOfTestable 
   /// Renders the `data-on-success` attribute with the specified script.
   /// @param script the script to be executed
   /// @return an instruction representing the attribute
-  public abstract Html.Instruction.OfDataOn dataOnSuccess(Script.Action script);
+  public abstract Html.Instruction.OfDataOn dataOnSuccess(Script.JsAction script);
 
   /// Renders the `data-frame` attribute for a frame with the specified name.
   /// @param name the name of the frame

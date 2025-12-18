@@ -27,7 +27,7 @@ public final class DevScriptElement extends ScriptJsElementHandler {
     }
   }
 
-  public static final Script.Action TOGGLE_CLASS0 = Script
+  public static final Script.JsAction TOGGLE_CLASS0 = Script
       .byId("subject").toggleClass("background-color:var(--color-red-200)");
 
   private Html.Component toggleClass0() {

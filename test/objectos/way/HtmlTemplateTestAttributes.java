@@ -177,7 +177,7 @@ public class HtmlTemplateTestAttributes {
 
   @Test
   public void dataOnClick01() {
-    final Script.Action remove;
+    final Script.JsAction remove;
     remove = Script.target().invoke("Element", "remove");
 
     class ThisComponent implements Html.Component {

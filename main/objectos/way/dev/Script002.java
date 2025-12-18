@@ -25,7 +25,7 @@ import module objectos.way;
 @Css.Source
 public final class Script002 extends AbstractDevScript {
 
-  public static final Script.Action ACTION = Script.target()
+  public static final Script.JsAction ACTION = Script.target()
       .prop("Node", "textContent", Script.target().prop("Element", "id"));
 
   @Override

@@ -237,28 +237,28 @@ sealed abstract class HtmlMarkupOfHtml extends HtmlMarkup permits Html.Markup.Of
   }
 
   @Override
-  public final Html.Instruction.OfDataOn dataOnClick(Script.Action script) {
+  public final Html.Instruction.OfDataOn dataOnClick(Script.JsAction script) {
     Objects.requireNonNull(script, "script == null");
 
     return dataOn0(HtmlAttributeName.DATA_ON_CLICK, script);
   }
 
   @Override
-  public final Html.Instruction.OfDataOn dataOnInput(Script.Action script) {
+  public final Html.Instruction.OfDataOn dataOnInput(Script.JsAction script) {
     Objects.requireNonNull(script, "script == null");
 
     return dataOn0(HtmlAttributeName.DATA_ON_INPUT, script);
   }
 
   @Override
-  public final Html.Instruction.OfDataOn dataOnLoad(Script.Action script) {
+  public final Html.Instruction.OfDataOn dataOnLoad(Script.JsAction script) {
     Objects.requireNonNull(script, "script == null");
 
     return dataOn0(HtmlAttributeName.DATA_ON_LOAD, script);
   }
 
   @Override
-  public final Html.Instruction.OfDataOn dataOnSuccess(Script.Action script) {
+  public final Html.Instruction.OfDataOn dataOnSuccess(Script.JsAction script) {
     Objects.requireNonNull(script, "script == null");
 
     return dataOn0(HtmlAttributeName.DATA_ON_SUCCESS, script);
@@ -274,7 +274,7 @@ sealed abstract class HtmlMarkupOfHtml extends HtmlMarkup permits Html.Markup.Of
     return attr0(name, json);
   }
 
-  private Html.Instruction.OfDataOn dataOn0(Html.AttributeName name, Script.Action script) {
+  private Html.Instruction.OfDataOn dataOn0(Html.AttributeName name, Script.JsAction script) {
     return attr0(name, script);
   }
 

@@ -40,7 +40,7 @@ final class DomAttribute implements Dom.Attribute {
   @Override
   public final boolean singleQuoted() {
     return value instanceof ScriptWriter
-        || value instanceof Script.Action;
+        || value instanceof Script.JsAction;
   }
 
   @Override
@@ -56,7 +56,7 @@ final class DomAttribute implements Dom.Attribute {
     Object result;
     result = next();
 
-    if (result instanceof Script.Action action) {
+    if (result instanceof Script.JsAction action) {
 
       final StringBuilder sb;
       sb = new StringBuilder();

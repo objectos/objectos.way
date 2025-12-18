@@ -15,35 +15,24 @@
  */
 package objectos.way;
 
-import java.util.Objects;
-import objectos.way.Script.BooleanQuery;
+final class ScriptJsString {
 
-final class ScriptStringQuery implements Script.StringQuery {
+  private ScriptJsString() {}
 
-  private final ScriptWriter writer;
+  public static String jsLiteral(String value, String name) {
+    if (value == null) {
+      throw new NullPointerException(name + " == null");
+    }
 
-  private final String query;
-
-  ScriptStringQuery(ScriptWriter writer, String query) {
-    this.writer = writer;
-
-    this.query = query;
+    // TODO escape json string literal
+    return '"' + value + '"';
   }
 
-  @Override
-  public final BooleanQuery test(String value) {
-    final String v;
-    v = Objects.requireNonNull(value, "value == null");
+  public static String wayLiteral(String s, String name) {
+    final String js;
+    js = jsLiteral(s, name);
 
-    final String test;
-    test = writer.stringTest(this, v);
-
-    return new ScriptBooleanQuery(writer, test);
-  }
-
-  @Override
-  public final String toString() {
-    return query;
+    return "[\"JS\"," + js + "]";
   }
 
 }

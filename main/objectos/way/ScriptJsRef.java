@@ -15,28 +15,35 @@
  */
 package objectos.way;
 
-import objectos.way.Script.Callback;
+import objectos.way.Script.JsElement;
+import objectos.way.Script.JsRef;
 
-final class ScriptBooleanQuery implements Script.BooleanQuery {
+final class ScriptJsRef implements Script.JsRef {
 
-  private final ScriptWriter writer;
+  private final String value;
 
-  private final String query;
+  ScriptJsRef(String value) {
+    this.value = value;
+  }
 
-  ScriptBooleanQuery(ScriptWriter writer, String query) {
-    this.writer = writer;
+  public static JsRef var(String name) {
+    final ScriptJsArray.Builder builder;
+    builder = new ScriptJsArray.Builder();
 
-    this.query = query;
+    builder.rawString("CR");
+    builder.jsString(name, "name");
+
+    return builder.build(ScriptJsRef::new);
   }
 
   @Override
-  public final void when(boolean value, Callback action) {
-    writer.booleanWhen(this, value, action);
+  public final JsElement asElem() {
+    return new ScriptJsElement(value);
   }
 
   @Override
   public final String toString() {
-    return query;
+    return value;
   }
 
 }

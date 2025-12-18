@@ -25,7 +25,7 @@ import module objectos.way;
 @Css.Source
 public final class Script004 extends AbstractDevScript {
 
-  public static final Script.Action ACTION = Script
+  public static final Script.JsAction ACTION = Script
       .byId("subject").invoke("Element", "removeAttribute", "style");
 
   @Override

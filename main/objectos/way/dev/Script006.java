@@ -17,16 +17,22 @@ package objectos.way.dev;
 
 import module objectos.way;
 
-/// Test case 005
-///
-/// - event: click 
-/// - locator: id 
-/// - property read and write
-@Css.Source
-public final class Script005 extends AbstractDevScript {
+/*
 
-  public static final Script.JsAction ACTION = Script
-      .byId("subject").prop("Node", "textContent", Script.target().prop("Element", "id"));
+Test case 006
+
+- event: click
+- Script.of
+- Script.var
+
+*/
+@Css.Source
+public final class Script006 extends AbstractDevScript {
+
+  public static final Script.JsAction ACTION = Script.of(
+      Script.var("el", Script.byId("subject")),
+      Script.var("el").asElem().toggleClass("height:32px height:64px")
+  );
 
   @Override
   final void renderBody() {
@@ -51,10 +57,10 @@ public final class Script005 extends AbstractDevScript {
             border-color:var(--color-gray-200)
             border-style:solid
             border-width:1px
-            padding:32rx
+            height:32px
             """),
 
-            text("My ID is...")
+            text("Subject")
         )
     );
   }
