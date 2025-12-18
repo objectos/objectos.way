@@ -124,7 +124,7 @@ public final class DevStart extends App.Bootstrap {
         .js: text/javascript; charset=utf-8
         """);
 
-        opts.addMedia("/script.js", Script.Library2.of());
+        opts.addMedia("/script.js", Script.Library.of());
       });
     } catch (IOException e) {
       throw App.serviceFailed("Web.Resources", e);

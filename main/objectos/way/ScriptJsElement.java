@@ -35,6 +35,11 @@ final class ScriptJsElement extends ScriptJsObject implements Script.JsElement {
   }
 
   @Override
+  public final Script.JsAction remove() {
+    return invoke("Element", "remove");
+  }
+
+  @Override
   public final Script.JsAction toggleClass(String value) {
     final String[] parts;
     parts = value.split(" ");

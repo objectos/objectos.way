@@ -26,6 +26,11 @@ public sealed interface Script permits ScriptPojo {
   /// Represents a JS runtime `Element` instance.
   public sealed interface JsElement extends JsObject permits ScriptJsElement {
 
+    /// Removes this element from its parent node.
+    /// 
+    /// @return an object representing this action
+    JsAction remove();
+
     /// Toggles the specified `class` value on this element.
     ///
     /// @param value the class name
@@ -128,13 +133,13 @@ public sealed interface Script permits ScriptPojo {
   }
 
   /// Represents the source code of the Objectos Way JS library.
-  public sealed interface Library2 extends Media.Text permits ScriptLibrary2 {
+  public sealed interface Library extends Media.Text permits ScriptLibrary {
 
     /// Returns the sole instance of this interface.
     ///
     /// @return the sole instance of this interface
-    static Library2 of() {
-      return ScriptLibrary2.INSTANCE;
+    static Library of() {
+      return ScriptLibrary.INSTANCE;
     }
 
     /// Returns `text/javascript; charset=utf-8`.

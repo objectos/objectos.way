@@ -37,7 +37,7 @@ sealed class ScriptJsObject implements Script.JsObject permits ScriptJsElement {
 
     invoke.raw($args);
 
-    return new ScriptJsAction("[" + value + "," + invoke.buildString() + "]");
+    return ScriptJsAction.of(value, invoke.buildString());
   }
 
   @Override
@@ -60,14 +60,18 @@ sealed class ScriptJsObject implements Script.JsObject permits ScriptJsElement {
     prop.rawString("IV");
     prop.jsString(type, "type");
     prop.jsString(name, "name");
-    prop.wayObject(value, "value");
+    prop.way(value, "value");
 
-    return new ScriptJsAction("[" + value + "," + prop.buildString() + "]");
+    return ScriptJsAction.of(this.value, prop.buildString());
   }
 
   @Override
   public final String toString() {
     return value;
+  }
+
+  public final String wayLiteral() {
+    return "[\"WA\",[" + value + "]]";
   }
 
 }

@@ -31,7 +31,7 @@ public final class Script006 extends AbstractDevScript {
 
   public static final Script.JsAction ACTION = Script.of(
       Script.var("el", Script.byId("subject")),
-      Script.var("el").asElem().toggleClass("height:32px height:64px")
+      Script.var("el").asElem().remove()
   );
 
   @Override

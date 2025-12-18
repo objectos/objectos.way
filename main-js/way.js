@@ -31,35 +31,15 @@ const way = (function() {
 
   };
 
-  const actionHandlers = {
-    "delay-0": executeDelay0,
-    "html-0": executeHtml0,
-    "element-2": executeElement2,
-    "id-1": executeId1,
-    "id-2": executeId2,
-    "navigate-0": executeNavigate0,
-    "push-state-0": executePushState0,
-    "replace-state-0": executeReplaceState0,
-    "request-0": executeRequest0,
-    "scroll-0": executeScroll0,
-    "stop-propagation-0": executeStopPropagation0
-  };
-
-  const defaultScroll = ["scroll-0", 0, 0, "instant"];
-
   // ##################################################################
   // # BEGIN: DOM Event Handlers
   // ##################################################################
 
   function clickListener(event) {
-    let target = event.target;
+    let el = event.target;
 
-    while (target instanceof Node) {
-      const element = target;
-
-      target = target.parentNode;
-
-      const result = executeEvent(element, "onClick");
+    while (el instanceof Node) {
+      const result = executeEvent(el, "onClick");
 
       if (result) {
         event.preventDefault();
@@ -70,105 +50,22 @@ const way = (function() {
       // there was no data-on-click action...
       // but we explicitly stop at these elements
 
-      if (element instanceof HTMLAnchorElement ||
-        element instanceof HTMLButtonElement) {
+      if (el instanceof HTMLAnchorElement) {
         break;
       }
-    }
-  }
 
-  function inputListener(event) {
-    const target = event.target;
-
-    executeEvent(target, "onInput");
-  }
-  
-  function loadHandler(elem) {
-    executeEvent(elem, "onLoad");
-
-	elem.querySelectorAll("[data-on-load]").forEach((el) => {
-      executeEvent(el, "onLoad");
-	});
-  }
-  
-  function submitListener(event) {
-    const target = event.target;
-
-    // verify we have all of the required properties
-    const tagName = target.tagName;
-
-    if (tagName !== "FORM") {
-      return;
-    }
-
-    let action = target.getAttribute("action");
-
-    if (!action) {
-      return;
-    }
-
-    let method = target.getAttribute("method");
-
-    if (!method) {
-      return;
-    }
-
-    method = method.toUpperCase();
-
-    let onSuccess = [];
-
-    const dataset = target.dataset;
-
-    if (dataset) {
-      const data = dataset["onSuccess"];
-
-      if (data) {
-        onSuccess = JSON.parse(data);
+      if (el instanceof HTMLButtonElement) {
+        break;
       }
-    }
 
-    // this is possibly a way form, we shouldn't submit it
-    event.preventDefault();
+      // continue with this element's parent
 
-    const formData = new FormData(target);
-
-    if (method === "GET") {
-      const params = new URLSearchParams(formData);
-
-      action = action + "?" + params;
-
-      const xhr = createXhr({ method: method, url: action, element: target, onSuccess: onSuccess });
-
-      xhr.send();
-    }
-
-    else {
-      const xhr = createXhr({ method: method, url: action, element: target, onSuccess: onSuccess });
-
-      const enctype = target.getAttribute("enctype");
-
-      if (enctype && enctype === "multipart/form-data") {
-        xhr.send(formData);
-      } else {
-        const params = new URLSearchParams(formData);
-
-        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-        xhr.send(params.toString());
-      }
+      el = el.parentNode;
     }
   }
 
-  function popstateListener() {
-    const url = window.location.href;
-
-    const xhr = createXhr({ url: url, history: false, onSuccess: [[...defaultScroll]] });
-
-    xhr.send();
-  }
-
-  function executeEvent(element, name) {
-    const dataset = element.dataset;
+  function executeEvent(el, name) {
+    const dataset = el.dataset;
 
     if (!dataset) {
       return false;
@@ -182,7 +79,9 @@ const way = (function() {
 
     const way = JSON.parse(data);
 
-    return executeActions(way, element);
+    executeWay(el, way);
+
+    return true;
   }
 
   // ##################################################################
@@ -193,466 +92,183 @@ const way = (function() {
   // # BEGIN: Objectos Way Actions
   // ##################################################################
 
-  function executeActions(actions, element) {
-    checkArray(actions);
+  const actionHandlers = {
+    "CR": contextRead,
+    "CW": contextWrite,
+    "IV": invokeVirtual,
+    "LO": locate,
+    "PR": propertyRead,
+    "PW": propertyWrite
+  };
 
-    if (actions.length === 0) {
-      return false;
+  function executeWay(el, way) {
+    checkArray(way, "way");
+
+    const ctx = {
+      el: el
+    };
+
+    for (const actions of way) {
+      executeWay0(ctx, actions);
     }
 
-    let count = 0;
+    return true;
+  }
+
+  function executeWay0(ctx, actions) {
+    checkArray(actions, "actions");
+
+    let recv = null;
 
     for (const action of actions) {
-      checkArray(action);
+      ctx.recv = recv;
 
-      if (action.length === 0) {
-        continue;
-      }
-
-      const key = action.shift();
-
-      const handler = actionHandlers[key];
-
-      if (handler) {
-        count++;
-
-        handler(action, element);
-      } else {
-        console.error("Unknown action %s", key);
-      }
+      recv = executeWay1(ctx, action);
     }
 
-    return count > 0;
-  }
-  
-  function executeDelay0(args, el) {
-    if (args.length !== 2) {
-      console.error("delay-0: action invoked with the wrong number of args. Expected 2 but got %d", args.length);
-
-      return;
-    }
-
-    const ms = args[0];
-
-    if (!ms) {
-      console.error("delay-0: missing 'ms' property");
-
-      return;
-    }
-
-    if (!Number.isInteger(ms)) {
-      console.error("delay-0: invalid 'ms' property. Expected integer but got %s", ms);
-
-      return;
-    }
-
-    const actions = args[1];
-
-    if (!actions) {
-      console.error("delay-0: missing 'actions' array value");
-
-      return;
-    }
-
-    if (!Array.isArray(actions)) {
-      console.error("delay: invalid 'actions' property. Expected Array but got %s", actions);
-
-      return;
-    }
-
-    if (el) {
-
-      const dataset = el.dataset;
-
-      let timer = dataset.timer;
-
-      if (!timer) {
-        timer = 0;
-      }
-
-      const delay = function() {
-        clearTimeout(timer);
-
-        timer = setTimeout(() => executeActions(actions, el), ms);
-
-        dataset.timer = timer;
-      }
-
-      delay();
-
-      return;
-
-    }
-
-    setTimeout(() => executeActions(actions), ms);
+    return recv;
   }
 
-  function executeHtml(value) {
-    if (!value) {
-      return;
+  function executeWay1(ctx, action) {
+    checkArray(action, "action");
+
+    const key = checkString(action.shift(), "key");
+
+    const handler = actionHandlers[key];
+
+    if (handler) {
+      return handler(ctx, action);
+    } else {
+      throw new Error(`Illegal arg: no action handler for key=${key}`);
+    }
+  }
+
+  function arg(ctx, arg) {
+    checkArray(arg, "arg");
+
+    const kind = checkString(arg.shift(), "kind");
+
+    switch (kind) {
+      case "JS":
+        return arg.shift();
+
+      case "WA":
+        const actions = arg.shift();
+
+        return executeWay0(ctx, actions);
+
+      default:
+        throw new Error(`Illegal arg: unknown arg kind=${kind}`);
+    }
+  }
+
+  function contextRead(ctx, args) {
+    const store = ctx.store;
+
+    if (!store) {
+      return undefined;
     }
 
-    const parser = new DOMParser();
+    const name = checkString(args.shift(), "name");
 
-    const newContent = parser.parseFromString(value, "text/html");
+    return store[name];
+  }
 
-    // handle title
+  function contextWrite(ctx, args) {
+    let store = ctx.store;
 
-    const newTitle = newContent.querySelector("title");
+    if (!store) {
+      store = {};
 
-    if (newTitle) {
-      document.title = newTitle.innerText;
+      ctx.store = store;
     }
 
-    // handle frames
-    const newFrames = newContent.querySelectorAll("[data-frame]");
+    const name = checkString(args.shift(), "name");
 
-    const newNameMap = new Map();
+    const val = checkDefined(args.shift(), "value");
 
-    for (const el of newFrames) {
-      const data = frame(el);
+    store[name] = arg(ctx, val);
+  }
 
-      if (data) {
-        newNameMap.set(data.name, el);
-      }
+  function invokeVirtual(ctx, args) {
+    const typeName = checkString(args.shift(), "typeName");
+
+    const recv = ctx.recv;
+
+    checkType(recv, "recv", typeName);
+
+    const methodName = checkString(args.shift(), "methodName");
+
+    const method = recv[methodName];
+
+    if (!method) {
+      throw new Error(`Illegal arg: ${typeName} does not declare the ${methodName} method`);
     }
 
-    const frames = document.querySelectorAll("[data-frame]");
+    const encodedArgs = checkArray(args.shift(), "encodedArgs");
 
-    const replaced = new Set();
+    const methodArgs = encodedArgs.map(x => arg(ctx, x));
 
-    outer: for (const elem of frames) {
-      const data = frame(elem);
+    return method.call(recv, methodArgs);
+  }
 
-      if (!data) {
-        continue;
-      }
+  function locate(ctx, args) {
+    const kind = checkString(args.shift(), "kind");
 
-      for (const parent of replaced) {
-        if (parent.contains(elem)) {
-          continue outer;
+    switch (kind) {
+      case "ID":
+        const id = checkString(args.shift(), "id");
+
+        const element = document.getElementById(id);
+
+        if (!element) {
+          throw new Error(`Illegal arg: element not found with ID ${id}`);
         }
-      }
 
-      const name = data.name;
+        return element;
 
-      const maybe = newNameMap.get(name);
+      case "TT":
+        return ctx.el;
 
-      if (!maybe) {
-        // this frame does not exist in the new data
-        elem.remove();
-
-        continue;
-      }
-
-      const newElem = maybe;
-
-      const oldValue = data.value;
-
-      const newData = frame(newElem);
-
-      const newValue = newData.value;
-
-      if (oldValue !== newValue || oldValue === null && newValue === null) {
-        replaced.add(elem);
-
-        elem.replaceWith(newElem);
-		
-		loadHandler(newElem);
-      }
+      default:
+        throw new Error(`Illegal arg: unknown locate kind=${kind}`);
     }
   }
 
-  function executeHtml0(args) {
-    if (args.length !== 1) {
-      logError("Illegal number of args", { action: "html-0", expected: 1, actual: args });
+  function propertyRead(ctx, args) {
+    const typeName = checkString(args.shift(), "typeName");
 
-      return;
+    const recv = ctx.recv;
+
+    checkType(recv, "recv", typeName);
+
+    const propName = checkString(args.shift(), "propName");
+
+    const prop = recv[propName];
+
+    if (!prop) {
+      throw new Error(`Illegal arg: ${typeName} does not declare the ${propName} property`);
     }
 
-    const value = args[0];
-
-    executeHtml(value);
-  }
-  
-  function executeElement2(args, element) {
-	elementAction(args, element);
+    return prop;
   }
 
-  function executeId1(args) {
-    queryId1(args);
-  }
+  function propertyWrite(ctx, args) {
+    const typeName = checkString(args.shift(), "typeName");
 
-  function executeId2(args) {
-    queryId2(args);
-  }
+    const recv = ctx.recv;
 
-  function executeNavigate0(_, element) {
-    if (!(element instanceof HTMLAnchorElement)) {
-      const actual = element.constructor ? element.constructor.name : "Unknown";
+    checkType(recv, "recv", typeName);
 
-      throw new Error(`Illegal element: navigate-0 must be executed on an HTMLAnchorElement but got ${actual}`);
-    }
+    const propName = checkString(args.shift(), "propName");
 
-    const actions = [
+    const val = checkDefined(args.shift(), "value");
 
-      ["request-0", "GET", ["element-1", "getAttribute", "href"], [[...defaultScroll]]]
-
-    ];
-
-    executeActions(actions, element);
-  }
-
-  function executePushState0(args) {
-    checkArgsLength(args, 1, "push-state-0");
-
-    const url = args[0];
-
-    history.pushState({ way: true }, "", url);
-  }
-
-  function executeReplaceState0(args) {
-    checkArgsLength(args, 1, "replace-state-0");
-
-    const url = args[0];
-
-    history.replaceState({ way: true }, "", url);
-  }
-
-  function executeRequest0(args, element) {
-    checkArgsLength(args, 3, "request-0");
-
-    // delegate validation to createXhr
-    const method = args[0];
-
-    const url = stringQuery(args[1], element);
-
-    // delegate validation to createXhr
-    const onSuccess = args[2];
-
-    const xhr = createXhr({ method: method, url: url, element: element, onSuccess: onSuccess });
-
-    xhr.send();
-  }
-
-  function executeScroll0(args) {
-    if (args.length !== 3) {
-      logError("Illegal number of args", { action: "scroll-0", expected: 3, actual: args });
-
-      return;
-    }
-
-    const value = {
-      top: args[0],
-
-      left: args[1],
-
-      behavior: args[2]
-    }
-
-    window.scroll(value);
-  }
-
-  function executeStopPropagation0() {
-    // noop
-  }
-
-  function checkArgsLength(args, expected, action) {
-    if (args.length !== expected) {
-      throw new Error(`Illegal number of args: ${action} action expected ${expected} args but got ${args.length}`);
-    }
-  }
-
-  function frame(el) {
-    const dataset = el.dataset;
-
-    if (!dataset) {
-      return null;
-    }
-
-    const frame = dataset.frame;
-
-    const colon = frame.indexOf(":");
-
-    if (colon === -1) {
-      return { name: frame, value: null };
-    }
-
-    const name = frame.substring(0, colon);
-
-    const value = frame.substring(colon + 1);
-
-    return { name: name, value: value };
+    recv[propName] = arg(ctx, val);
   }
 
   // ##################################################################
   // # END: Objectos Way Actions
-  // ##################################################################
-
-  // ##################################################################
-  // # BEGIN: Objectos Way Query
-  // ##################################################################
-
-  const queryHandlers = {
-    "element-1": queryElement1,
-    "id-1": queryId1,
-    "id-2": queryId2
-  };
-
-  function stringQuery(value, element) {
-    if (typeof value === "string") {
-      return value;
-    }
-
-    const maybe = query(value, element);
-
-    if (typeof maybe !== "string") {
-      throw new Error(`Invalid type: expected String value but query [${value}] on ${element.cloneNode(false).outerHTML} returned ${maybe}`);
-    }
-
-    return maybe;
-  }
-
-  function query(query, element) {
-    checkArray(query, "query");
-    checkArrayLengthMin(query, 2, "query");
-
-    const key = query.shift();
-
-    const handler = queryHandlers[key];
-
-    if (!handler) {
-      throw new Error(`Illegal arg: unknown query for ${key}`);
-    }
-
-    return handler(query, element);
-  }
-
-  function queryElement1(args, element) {
-    return elementMethod(args, element);
-  }
-
-  function elementMethod(args, element) {
-    checkArrayLengthMin(args, 1, "args");
-
-    const methodName = checkString(args.shift(), "methodName");
-
-    const method = element[methodName];
-
-    if (!method) {
-      throw new Error(`Illegal arg: method ${methodName} not found on ${element}`);
-    }
-
-    return method.apply(element, args);
-  }
-
-  function queryId(args) {
-    checkArrayLengthMin(args, 1, "args");
-
-    const id = stringQuery(args.shift());
-
-    const element = document.getElementById(id);
-
-    if (!element) {
-      throw new Error(`Illegal arg: element not found with ID ${id}`);
-    }
-
-    return element;
-  }
-
-  function queryId1(args) {
-    const element = queryId(args);
-
-    return elementMethod(args, element);
-  }
-
-  function queryId2(args) {
-    const element = queryId(args);
-
-    elementAction(args, element);
-  }
-
-  const elementActions = {
-    "attr-0": elementAttr0,
-    "close-0": elementClose0,
-    "focus-0": elementFocus0,
-    "show-modal-0": elementShowModal0,
-    "submit-0": elementSubmit0,
-    "toggle-class-0": elementToggleClass0
-  };
-
-  function elementAction(args, element) {
-    checkArrayLengthMin(args, 1, "args");
-
-    const key = args.shift();
-
-    const action = elementActions[key];
-
-    if (!action) {
-      throw new Error(`Illegal arg: unknown element action for ${key}`);
-    }
-
-    action(args, element);
-  }
-
-  function elementAttr0(args, element) {
-    checkArgsLength(args, 2, "arg");
-
-    const name = args.shift();
-
-    const value = stringQuery(args.shift());
-
-    element.setAttribute(name, value);
-  }
-
-  function elementClose0(_, element) {
-    if (!(element instanceof HTMLDialogElement)) {
-      const actual = element.constructor ? element.constructor.name : "Unknown";
-
-      throw new Error(`Illegal element: show-modal-0 must be executed on an HTMLDialogElement but got ${actual}`);
-    }
-
-	element.close();
-  }
-
-  function elementFocus0(_, element) {
-	element.focus();
-  }
-  
-  function elementShowModal0(_, element) {
-    if (!(element instanceof HTMLDialogElement)) {
-      const actual = element.constructor ? element.constructor.name : "Unknown";
-
-      throw new Error(`Illegal element: show-modal-0 must be executed on an HTMLDialogElement but got ${actual}`);
-    }
-
-	element.showModal();
-  }
-
-  function elementSubmit0(_, element) {
-    if (!(element instanceof HTMLFormElement)) {
-      const actual = element.constructor ? element.constructor.name : "Unknown";
-
-      throw new Error(`Illegal element: submit-0 must be executed on an HTMLFormElement but got ${actual}`);
-    }
-
-    const event = new Event("submit", { bubbles: true });
-
-    element.dispatchEvent(event);
-  }
-
-  function elementToggleClass0(args, element) {
-    checkArrayLengthMin(args, 1, "args");
-
-    const classList = element.classList;
-
-    for (const className of args) {
-      classList.toggle(className);
-    }
-  }
-
-  // ##################################################################
-  // # END: Objectos Way Query
   // ##################################################################
 
   // ##################################################################
@@ -667,82 +283,50 @@ const way = (function() {
     return maybe;
   }
 
-  function checkArrayLengthMin(array, minLength, name) {
-    if (array.length < minLength) {
-      throw new Error(`Illegal arg: ${name} array length must be >= ${minLength} but got ${array.length}`);
-    }
-  }
-
-  function checkBoolean(maybe, name) {
-    if (typeof maybe !== "boolean") {
-      throw new Error(`Illegal arg: ${name} must be a Boolean value but got ${maybe}`);
+  function checkDefined(maybe, name) {
+    if (!maybe) {
+      throw new Error(`Illegal arg: ${name} must be a defined value`);
     }
 
     return maybe;
+  }
+
+  function checkType(maybe, name, typeName) {
+    const t = typeof maybe;
+
+    if (t !== "object") {
+      throw new Error(`Illegal arg: ${name} must be an Object value but got ${t}`);
+    }
+
+    let prototype = Object.getPrototypeOf(maybe);
+
+    while (prototype) {
+      const constructor = prototype.constructor;
+
+      if (!constructor) {
+        throw new Error(`Illegal arg: expected ${name} to have a constructor, but found ${constructor}`);
+      }
+
+      const actualName = constructor.name;
+
+      if (actualName === typeName) {
+        return maybe;
+      }
+
+      prototype = Object.getPrototypeOf(prototype);
+    }
+
+    throw new Error(`Illegal arg: ${name} does not have ${typeName} in its prototype chain`);
   }
 
   function checkString(maybe, name) {
-    if (typeof maybe !== "string") {
-      throw new Error(`Illegal arg: ${name} must be a String value but got ${maybe}`);
+    const t = typeof maybe;
+
+    if (t !== "string") {
+      throw new Error(`Illegal arg: ${name} must be a String value but got ${t}`);
     }
 
     return maybe;
-  }
-
-  function createXhr({ method = "GET", url, element, history = true, onSuccess = [] } = {}) {
-    checkString(method, "method");
-    checkBoolean(history, "history");
-    checkArray(onSuccess, "onSuccess");
-
-    const xhr = new XMLHttpRequest();
-
-    xhr.open(method, url, true);
-
-    xhr.setRequestHeader("Way-Request", "true");
-
-    xhr.onload = (_) => {
-      if (xhr.status === 200) {
-
-        const contentType = xhr.getResponseHeader("content-type");
-
-        if (!contentType) {
-          return;
-        }
-
-        let data;
-
-        if (contentType.startsWith("application/json")) {
-          data = JSON.parse(xhr.response);
-        }
-
-        else if (contentType.startsWith("text/html")) {
-          data = [];
-
-          data.push(['html-0', xhr.response]);
-
-          if (history && way.config.history) {
-            const pushUrl = xhr.responseURL || url;
-
-            data.push(['push-state-0', pushUrl]);
-          }
-        }
-
-        else {
-          return;
-        }
-
-        const actions = data.concat(onSuccess);
-
-        executeActions(actions, element);
-
-      }
-    }
-
-    return xhr;
-  }
-
-  function logError(...args) {
-    console.error(...args);
   }
 
   // ##################################################################
@@ -765,14 +349,9 @@ const way = (function() {
 
   function domLoaded() {
     document.addEventListener("click", listener(clickListener));
-    document.addEventListener("input", listener(inputListener));
-    document.addEventListener("submit", listener(submitListener));
-	
-	loadHandler(document);
   }
 
   window.addEventListener("DOMContentLoaded", domLoaded);
-  window.addEventListener("popstate", popstateListener);
 
   // ##################################################################
   // # END: Objectos Way Bootstrap

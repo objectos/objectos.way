@@ -65,15 +65,7 @@ public class HtmlMarkupGen {
         /// Renders the `%s` attribute with the specified script.
         /// @param script the script to be executed
         /// @return an instruction representing the attribute
-        Html.Instruction.OfDataOn %s(Consumer<? super Script> script);
-      """.formatted(spec.htmlName(), spec.methodName()));
-
-      methods.append("""
-
-        /// Renders the `%s` attribute with the specified script.
-        /// @param script the script to be executed
-        /// @return an instruction representing the attribute
-        Html.Instruction.OfDataOn %s(Script.Action script);
+        Html.Instruction.OfDataOn %s(Script.JsAction script);
       """.formatted(spec.htmlName(), spec.methodName()));
     }
 

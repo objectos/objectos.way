@@ -17,7 +17,6 @@ package objectos.way;
 
 import java.io.IOException;
 import java.util.Objects;
-import java.util.function.Consumer;
 import objectos.way.Html.AttributeObject;
 
 sealed abstract class HtmlMarkupOfTestable extends HtmlMarkup permits Html.Markup.OfTestable {
@@ -150,26 +149,6 @@ sealed abstract class HtmlMarkupOfTestable extends HtmlMarkup permits Html.Marku
 
   @Override
   public final Html.Instruction.OfAttribute dataFrame(String name, String value) {
-    return Html.ATTRIBUTE;
-  }
-
-  @Override
-  public final Html.Instruction.OfDataOn dataOnClick(Consumer<? super Script> script) {
-    return Html.ATTRIBUTE;
-  }
-
-  @Override
-  public final Html.Instruction.OfDataOn dataOnInput(Consumer<? super Script> script) {
-    return Html.ATTRIBUTE;
-  }
-
-  @Override
-  public final Html.Instruction.OfDataOn dataOnLoad(Consumer<? super Script> script) {
-    return Html.ATTRIBUTE;
-  }
-
-  @Override
-  public final Html.Instruction.OfDataOn dataOnSuccess(Consumer<? super Script> script) {
     return Html.ATTRIBUTE;
   }
 

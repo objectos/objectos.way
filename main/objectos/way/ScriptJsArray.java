@@ -98,11 +98,11 @@ final class ScriptJsArray {
       sb.append('"');
     }
 
-    public final void wayObject(Object o, String name) {
+    public final void way(Object o, String name) {
       switch (o) {
-        case null -> jsNull();
+        case null -> wayNull();
 
-        case ScriptJsObject obj -> raw(obj);
+        case ScriptJsObject obj -> wayObject(obj);
 
         case String s -> wayString(s, name);
 
@@ -118,6 +118,18 @@ final class ScriptJsArray {
           """.formatted(typeName));
         }
       }
+    }
+
+    public final void wayNull() {
+      commaIfNecessary();
+
+      sb.append("[\"JS\",null]");
+    }
+
+    public final void wayObject(ScriptJsObject o) {
+      commaIfNecessary();
+
+      sb.append(o.wayLiteral());
     }
 
     public final void wayString(String s, String name) {
@@ -155,7 +167,7 @@ final class ScriptJsArray {
       final Object o;
       o = values[idx];
 
-      builder.wayObject(o, name + "[" + idx + "]");
+      builder.way(o, name + "[" + idx + "]");
     }
 
     return builder.build();

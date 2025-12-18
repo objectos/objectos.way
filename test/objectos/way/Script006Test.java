@@ -32,9 +32,13 @@ public class Script006Test {
 
         """
         [\
-        ["CW","el",["LO","ID","subject"]],\
-        [["CR","el"],["PR","Element","classList"],["IV","DOMTokenList","toggle",[["JS","height:32px"],["JS","height:64px"]]]]\
-        ]"""
+        ["CW","el",["WA",[["LO","ID","subject"]]]]\
+        ],\
+        [\
+        ["CR","el"],\
+        ["IV","Element","remove",[]]\
+        ]\
+        """
     );
   }
 
@@ -46,11 +50,11 @@ public class Script006Test {
       var clickMe = page.locator("#click-me");
       var subject = page.locator("#subject");
 
-      assertThat(subject).hasCSS("height", "32px");
+      assertThat(subject).hasCount(1);
 
       clickMe.click();
 
-      assertThat(subject).hasCSS("height", "64px");
+      assertThat(subject).hasCount(0);
     }
   }
 

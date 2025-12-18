@@ -17,6 +17,7 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class HtmlTemplateTestAttributes {
@@ -207,6 +208,7 @@ public class HtmlTemplateTestAttributes {
 
   @Test
   public void dataOnClick02() {
+    /*
     test(
         new Html.Template() {
           final Html.Id FOO = Html.Id.of("foo");
@@ -242,10 +244,13 @@ public class HtmlTemplateTestAttributes {
         <div data-on-click='[["id-2","foo","toggle-class-0","a","x"],["id-2","foo","toggle-class-0","b","y"],["id-2","foo","toggle-class-0","c","z"]]'></div>
         """
     );
+    */
+    Assert.fail("Implement me");
   }
 
   @Test
   public void dataOnLoad() {
+    /*
     test(
         new Html.Template() {
           @Override
@@ -257,15 +262,18 @@ public class HtmlTemplateTestAttributes {
             );
           }
         },
-
+    
         """
         <div data-on-load='[["id-2","foo","toggle-class-0","x"]]'></div>
         """
     );
+    */
+    Assert.fail("Implement me");
   }
 
   @Test
   public void dataOnSuccess() {
+    /*
     test(
         new Html.Template() {
           @Override
@@ -275,11 +283,13 @@ public class HtmlTemplateTestAttributes {
             );
           }
         },
-
+    
         """
         <form data-on-success='[["stop-propagation-0"]]'></form>
         """
     );
+    */
+    Assert.fail("Implement me");
   }
 
   @Test

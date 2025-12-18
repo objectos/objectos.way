@@ -15,31 +15,60 @@
  */
 package objectos.way;
 
+import java.util.Objects;
 import objectos.way.Script.JsAction;
 
 final class ScriptJsAction implements Script.JsAction {
 
   private final String value;
 
-  ScriptJsAction(String value) {
+  private ScriptJsAction(String value) {
     this.value = value;
   }
 
-  static ScriptJsAction of(Script.JsAction first, Script.JsAction second, Script.JsAction[] more) {
-    final ScriptJsArray.Builder builder;
-    builder = new ScriptJsArray.Builder();
+  static ScriptJsAction of(String s0) {
+    return new ScriptJsAction(
+        "[" + s0 + "]"
+    );
+  }
 
-    builder.raw(first, "first");
-    builder.raw(second, "second");
+  static ScriptJsAction of(String s0, String s1) {
+    return new ScriptJsAction(
+        "[" + s0 + "," + s1 + "]"
+    );
+  }
+
+  static ScriptJsAction of(Script.JsAction first, Script.JsAction second, Script.JsAction[] more) {
+    final StringBuilder sb;
+    sb = new StringBuilder();
+
+    sb.append(
+        Objects.requireNonNull(first, "first == null")
+    );
+
+    sb.append(',');
+
+    sb.append(
+        Objects.requireNonNull(second, "second == null")
+    );
 
     for (int idx = 0; idx < more.length; idx++) {
       final JsAction o;
       o = more[idx];
 
-      builder.raw(o, "more", idx);
+      if (o == null) {
+        throw new NullPointerException("more[" + idx + "] == null");
+      }
+
+      sb.append(',');
+
+      sb.append(o);
     }
 
-    return builder.build(ScriptJsAction::new);
+    final String value;
+    value = sb.toString();
+
+    return new ScriptJsAction(value);
   }
 
   static ScriptJsAction var(String name, Object value) {
@@ -48,9 +77,9 @@ final class ScriptJsAction implements Script.JsAction {
 
     builder.rawString("CW");
     builder.jsString(name, "name");
-    builder.wayObject(value, "value");
+    builder.way(value, "value");
 
-    return builder.build(ScriptJsAction::new);
+    return builder.build(ScriptJsAction::of);
   }
 
   @Override
