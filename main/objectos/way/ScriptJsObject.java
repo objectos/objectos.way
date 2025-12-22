@@ -15,7 +15,10 @@
  */
 package objectos.way;
 
-sealed class ScriptJsObject implements Script.JsObject permits ScriptJsElement {
+sealed class ScriptJsObject implements Script.JsObject
+    permits
+    ScriptJsElement,
+    ScriptJsString {
 
   private final String value;
 

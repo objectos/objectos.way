@@ -17,6 +17,7 @@ package objectos.way;
 
 import objectos.way.Script.JsElement;
 import objectos.way.Script.JsRef;
+import objectos.way.Script.JsString;
 
 final class ScriptJsRef implements Script.JsRef {
 
@@ -39,6 +40,11 @@ final class ScriptJsRef implements Script.JsRef {
   @Override
   public final JsElement asElem() {
     return new ScriptJsElement(value);
+  }
+
+  @Override
+  public final JsString asString() {
+    return new ScriptJsString(value);
   }
 
   @Override

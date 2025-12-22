@@ -15,9 +15,20 @@
  */
 package objectos.way;
 
-final class ScriptJsString {
+final class ScriptJsString extends ScriptJsObject implements Script.JsString {
 
-  private ScriptJsString() {}
+  ScriptJsString(String value) {
+    super(value);
+  }
+
+  public static ScriptJsString of(String s, String name, int idx) {
+    if (s == null) {
+      throw new NullPointerException(name + "[" + idx + "] == null");
+    }
+
+    // TODO escape json string literal
+    return new ScriptJsString('"' + s + '"');
+  }
 
   public static String jsLiteral(String value, String name) {
     if (value == null) {

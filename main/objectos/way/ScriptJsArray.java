@@ -16,8 +16,9 @@
 package objectos.way;
 
 import java.util.function.Function;
+import objectos.way.Script.JsArray;
 
-final class ScriptJsArray {
+final class ScriptJsArray implements JsArray {
 
   static final class Builder {
 
@@ -60,6 +61,15 @@ final class ScriptJsArray {
       commaIfNecessary();
 
       sb.append(literal);
+    }
+
+    public final void jsString(String s, String name, int idx) {
+      final ScriptJsString v;
+      v = ScriptJsString.of(s, name, idx);
+
+      commaIfNecessary();
+
+      sb.append(v);
     }
 
     public final void raw(Object s) {
@@ -171,6 +181,25 @@ final class ScriptJsArray {
     }
 
     return builder.build();
+  }
+
+  public static ScriptJsArray of(String[] values) {
+    final Builder builder;
+    builder = new Builder();
+
+    for (int idx = 0; idx < values.length; idx++) {
+      final String s;
+      s = values[idx];
+
+      builder.jsString(s, "values", idx);
+    }
+
+    return builder.build();
+  }
+
+  @Override
+  public final Script.JsAction forEach(Script.JsAction value) {
+    throw new UnsupportedOperationException("Implement me");
   }
 
   @Override
