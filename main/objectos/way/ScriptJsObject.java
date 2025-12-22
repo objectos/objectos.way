@@ -60,7 +60,7 @@ sealed class ScriptJsObject implements Script.JsObject
     final ScriptJsArray.Builder prop;
     prop = new ScriptJsArray.Builder();
 
-    prop.rawString("IV");
+    prop.rawString("PW");
     prop.jsString(type, "type");
     prop.jsString(name, "name");
     prop.way(value, "value");

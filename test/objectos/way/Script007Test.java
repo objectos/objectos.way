@@ -33,7 +33,7 @@ public class Script007Test {
         [\
         ["JS",["el-1","el-3"]],\
         ["FE","Array",[\
-        ["ID",["WA",[["AG",0]]]["IV","Element","remove",[]]]\
+        ["EW",["WA",[["AX",0]]]],["IV","Element","remove",[]]\
         ]]\
         ]\
         """

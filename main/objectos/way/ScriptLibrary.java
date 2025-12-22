@@ -138,54 +138,65 @@ const way = (function() {
   // # BEGIN: Objectos Way Actions
   // ##################################################################
 
-  const actionHandlers = {
+  const operations = {
     "CR": contextRead,
     "CW": contextWrite,
+    "EI": elementById,
+    "ET": elementTarget,
+    "FE": forEach,
     "IV": invokeVirtual,
-    "LO": locate,
     "PR": propertyRead,
     "PW": propertyWrite
   };
 
-  function executeWay(el, way) {
-    checkArray(way, "way");
+  function nest(ctx, actions) {
+    checkArray(actions, "actions");
+
+    return (...args) => {
+      const nested = { ...ctx };
+
+      nested.$args = args;
+
+      for (const a of actions) {
+        executeAction(nested, a);
+      }
+    };
+  }
+
+  function executeWay(el, actions) {
+    checkArray(actions, "actions");
 
     const ctx = {
-      el: el
+      $el: el,
+      $recv: undefined
     };
 
-    for (const actions of way) {
-      executeWay0(ctx, actions);
+    for (const a of actions) {
+      executeAction(ctx, a);
     }
 
     return true;
   }
 
-  function executeWay0(ctx, actions) {
-    checkArray(actions, "actions");
-
-    let recv = null;
-
-    for (const action of actions) {
-      ctx.recv = recv;
-
-      recv = executeWay1(ctx, action);
-    }
-
-    return recv;
-  }
-
-  function executeWay1(ctx, action) {
+  function executeAction(ctx, action) {
     checkArray(action, "action");
 
-    const key = checkString(action.shift(), "key");
+    for (const op of action) {
+      ctx.$recv = executeOperation(ctx, op);
+    }
+  }
 
-    const handler = actionHandlers[key];
+  function executeOperation(ctx, op) {
+    checkArray(op, "operation");
+
+    const id = checkString(op.shift(), "id");
+
+    const handler = operations[id];
 
     if (handler) {
-      return handler(ctx, action);
+      return handler(ctx, op);
     } else {
-      throw new Error(`Illegal arg: no action handler for key=${key}`);
+      throw new Error(`Illegal arg: no handler found for operation=${id}`);
     }
   }
 
@@ -199,9 +210,11 @@ const way = (function() {
         return arg.shift();
 
       case "WA":
-        const actions = arg.shift();
+        const action = arg.shift();
 
-        return executeWay0(ctx, actions);
+        executeAction(ctx, action);
+
+        return ctx.$recv;
 
       default:
         throw new Error(`Illegal arg: unknown arg kind=${kind}`);
@@ -209,39 +222,61 @@ const way = (function() {
   }
 
   function contextRead(ctx, args) {
-    const store = ctx.store;
+    const name = contextName(args.shift());
 
-    if (!store) {
-      return undefined;
-    }
-
-    const name = checkString(args.shift(), "name");
-
-    return store[name];
+    return ctx[name];
   }
 
   function contextWrite(ctx, args) {
-    let store = ctx.store;
-
-    if (!store) {
-      store = {};
-
-      ctx.store = store;
-    }
-
-    const name = checkString(args.shift(), "name");
+    const name = contextName(args.shift());
 
     const val = checkDefined(args.shift(), "value");
 
-    store[name] = arg(ctx, val);
+    ctx[name] = arg(ctx, val);
+  }
+
+  function contextName(maybe) {
+    const name = checkString(maybe, "name");
+
+    if (name.length === 0) {
+      throw new Error("Illegal arg: context variable name must not be empty");
+    }
+
+    if (name.startsWith("$")) {
+      throw new Error("Illegal arg: context variable name must not begin with the '$' character");
+    }
+
+    return name;
+  }
+
+  function elementById(_, args) {
+    const id = checkString(args.shift(), "id");
+
+    const element = document.getElementById(id);
+
+    if (!element) {
+      throw new Error(`Illegal arg: element not found with ID ${id}`);
+    }
+
+    return element;
+  }
+
+  function elementTarget(ctx, _) {
+    return ctx.$el;
+  }
+
+  function forEach(ctx, args) {
+    const recv = checkRecv(ctx, args.shift());
+
+    const actions = checkDefined(args.shift(), "actions");
+
+    const fn = nest(ctx, actions);
+
+    recv.forEach(fn);
   }
 
   function invokeVirtual(ctx, args) {
-    const typeName = checkString(args.shift(), "typeName");
-
-    const recv = ctx.recv;
-
-    checkType(recv, "recv", typeName);
+    const recv = checkRecv(ctx, args.shift());
 
     const methodName = checkString(args.shift(), "methodName");
 
@@ -258,35 +293,8 @@ const way = (function() {
     return method.call(recv, methodArgs);
   }
 
-  function locate(ctx, args) {
-    const kind = checkString(args.shift(), "kind");
-
-    switch (kind) {
-      case "ID":
-        const id = checkString(args.shift(), "id");
-
-        const element = document.getElementById(id);
-
-        if (!element) {
-          throw new Error(`Illegal arg: element not found with ID ${id}`);
-        }
-
-        return element;
-
-      case "TT":
-        return ctx.el;
-
-      default:
-        throw new Error(`Illegal arg: unknown locate kind=${kind}`);
-    }
-  }
-
   function propertyRead(ctx, args) {
-    const typeName = checkString(args.shift(), "typeName");
-
-    const recv = ctx.recv;
-
-    checkType(recv, "recv", typeName);
+    const recv = checkRecv(ctx, args.shift());
 
     const propName = checkString(args.shift(), "propName");
 
@@ -300,11 +308,7 @@ const way = (function() {
   }
 
   function propertyWrite(ctx, args) {
-    const typeName = checkString(args.shift(), "typeName");
-
-    const recv = ctx.recv;
-
-    checkType(recv, "recv", typeName);
+    const recv = checkRecv(ctx, args.shift());
 
     const propName = checkString(args.shift(), "propName");
 
@@ -335,6 +339,16 @@ const way = (function() {
     }
 
     return maybe;
+  }
+
+  function checkRecv(ctx, tn) {
+    const typeName = checkString(tn, "typeName");
+
+    const recv = ctx.$recv;
+
+    checkType(recv, "recv", typeName);
+
+    return recv;
   }
 
   function checkType(maybe, name, typeName) {

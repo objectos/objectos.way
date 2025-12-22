@@ -31,7 +31,7 @@ public class Script004Test {
         Script004.ACTION.toString(),
 
         """
-        [["LO","ID","subject"],["IV","Element","removeAttribute",[["JS","style"]]]]"""
+        [["EI","subject"],["IV","Element","removeAttribute",[["JS","style"]]]]"""
     );
   }
 

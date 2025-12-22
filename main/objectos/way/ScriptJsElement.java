@@ -15,20 +15,30 @@
  */
 package objectos.way;
 
+import objectos.way.Script.JsString;
+
 final class ScriptJsElement extends ScriptJsObject implements Script.JsElement {
 
   static final ScriptJsElement TARGET = new ScriptJsElement("""
-  ["LO","TT"]""");
+  ["ET"]""");
 
   ScriptJsElement(String value) {
     super(value);
   }
 
+  static ScriptJsElement byId(JsString value) {
+    var builder = new ScriptJsArray.Builder();
+
+    builder.rawString("EW");
+    builder.wayString(value, "value");
+
+    return builder.build(ScriptJsElement::new);
+  }
+
   static ScriptJsElement byId(String value) {
     var builder = new ScriptJsArray.Builder();
 
-    builder.rawString("LO");
-    builder.rawString("ID");
+    builder.rawString("EI");
     builder.jsString(value, "value");
 
     return builder.build(ScriptJsElement::new);

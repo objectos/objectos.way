@@ -27,6 +27,22 @@ final class ScriptJsRef implements Script.JsRef {
     this.value = value;
   }
 
+  public static JsRef args(int index) {
+    if (index < 0) {
+      throw new IllegalArgumentException(
+          "index must not be negative"
+      );
+    }
+
+    final ScriptJsArray.Builder builder;
+    builder = new ScriptJsArray.Builder();
+
+    builder.rawString("AX");
+    builder.jsNumber(index);
+
+    return builder.build(ScriptJsRef::new);
+  }
+
   public static JsRef var(String name) {
     final ScriptJsArray.Builder builder;
     builder = new ScriptJsArray.Builder();

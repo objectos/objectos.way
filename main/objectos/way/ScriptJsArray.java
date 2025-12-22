@@ -17,6 +17,7 @@ package objectos.way;
 
 import java.util.function.Function;
 import objectos.way.Script.JsArray;
+import objectos.way.Script.JsString;
 
 final class ScriptJsArray implements JsArray {
 
@@ -52,6 +53,12 @@ final class ScriptJsArray implements JsArray {
 
     public final void jsNull() {
       raw("null");
+    }
+
+    public final void jsNumber(int value) {
+      commaIfNecessary();
+
+      sb.append(value);
     }
 
     public final void jsString(String s, String name) {
@@ -142,6 +149,17 @@ final class ScriptJsArray implements JsArray {
       sb.append(o.wayLiteral());
     }
 
+    public final void wayString(JsString s, String name) {
+      if (s == null) {
+        throw new NullPointerException(name + " == null");
+      }
+
+      final ScriptJsString impl;
+      impl = (ScriptJsString) s;
+
+      wayObject(impl);
+    }
+
     public final void wayString(String s, String name) {
       final String literal;
       literal = ScriptJsString.wayLiteral(s, name);
@@ -199,12 +217,23 @@ final class ScriptJsArray implements JsArray {
 
   @Override
   public final Script.JsAction forEach(Script.JsAction value) {
-    throw new UnsupportedOperationException("Implement me");
+    final ScriptJsArray.Builder builder;
+    builder = new ScriptJsArray.Builder();
+
+    builder.rawString("FE");
+    builder.rawString("Array");
+    builder.raw(value);
+
+    return ScriptJsAction.of(wayLiteral(), builder.buildString());
   }
 
   @Override
   public final String toString() {
     return value;
+  }
+
+  public final String wayLiteral() {
+    return "[\"JS\"," + value + "]";
   }
 
 }

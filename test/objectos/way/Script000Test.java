@@ -31,7 +31,7 @@ public class Script000Test {
         Script000.ACTION.toString(),
 
         """
-        [["LO","TT"],["IV","Element","remove",[]]]"""
+        [["ET"],["IV","Element","remove",[]]]"""
     );
   }
 

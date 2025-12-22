@@ -31,7 +31,7 @@ public class Script005Test {
         Script005.ACTION.toString(),
 
         """
-        [["LO","ID","subject"],["PW","Node","textContent",["WA",[["LO","TT"],["PR","Element","id"]]]]]"""
+        [["EI","subject"],["PW","Node","textContent",["WA",[["ET"],["PR","Element","id"]]]]]"""
     );
   }
 

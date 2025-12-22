@@ -100,7 +100,7 @@ public sealed interface Script permits ScriptPojo {
   public sealed interface JsString extends JsObject permits ScriptJsString {}
 
   static JsRef args(int index) {
-    throw new UnsupportedOperationException("Implement me");
+    return ScriptJsRef.args(index);
   }
 
   static JsArray array(String... values) {
@@ -108,7 +108,7 @@ public sealed interface Script permits ScriptPojo {
   }
 
   static JsElement byId(JsString value) {
-    throw new UnsupportedOperationException("Implement me");
+    return ScriptJsElement.byId(value);
   }
 
   /// Returns a handle for the element with the specified ID attribute.

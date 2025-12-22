@@ -79,7 +79,7 @@ const way = (function() {
 
     const way = JSON.parse(data);
 
-    way(el, way);
+    executeWay(el, way);
 
     return true;
   }
@@ -95,9 +95,10 @@ const way = (function() {
   const operations = {
     "CR": contextRead,
     "CW": contextWrite,
+    "EI": elementById,
+    "ET": elementTarget,
     "FE": forEach,
     "IV": invokeVirtual,
-    "LO": locate,
     "PR": propertyRead,
     "PW": propertyWrite
   };
@@ -111,12 +112,12 @@ const way = (function() {
       nested.$args = args;
 
       for (const a of actions) {
-        action(nested, a);
+        executeAction(nested, a);
       }
     };
   }
 
-  function way(el, actions) {
+  function executeWay(el, actions) {
     checkArray(actions, "actions");
 
     const ctx = {
@@ -125,21 +126,21 @@ const way = (function() {
     };
 
     for (const a of actions) {
-      action(ctx, a);
+      executeAction(ctx, a);
     }
 
     return true;
   }
 
-  function action(ctx, action) {
+  function executeAction(ctx, action) {
     checkArray(action, "action");
 
     for (const op of action) {
-      ctx.$recv = actionOperation(ctx, op);
+      ctx.$recv = executeOperation(ctx, op);
     }
   }
 
-  function actionOperation(ctx, op) {
+  function executeOperation(ctx, op) {
     checkArray(op, "operation");
 
     const id = checkString(op.shift(), "id");
@@ -165,7 +166,9 @@ const way = (function() {
       case "WA":
         const action = arg.shift();
 
-        return action(ctx, action);
+        executeAction(ctx, action);
+
+        return ctx.$recv;
 
       default:
         throw new Error(`Illegal arg: unknown arg kind=${kind}`);
@@ -200,6 +203,22 @@ const way = (function() {
     return name;
   }
 
+  function elementById(_, args) {
+    const id = checkString(args.shift(), "id");
+
+    const element = document.getElementById(id);
+
+    if (!element) {
+      throw new Error(`Illegal arg: element not found with ID ${id}`);
+    }
+
+    return element;
+  }
+
+  function elementTarget(ctx, _) {
+    return ctx.$el;
+  }
+
   function forEach(ctx, args) {
     const recv = checkRecv(ctx, args.shift());
 
@@ -226,29 +245,6 @@ const way = (function() {
     const methodArgs = encodedArgs.map(x => arg(ctx, x));
 
     return method.call(recv, methodArgs);
-  }
-
-  function locate(ctx, args) {
-    const kind = checkString(args.shift(), "kind");
-
-    switch (kind) {
-      case "ID":
-        const id = checkString(args.shift(), "id");
-
-        const element = document.getElementById(id);
-
-        if (!element) {
-          throw new Error(`Illegal arg: element not found with ID ${id}`);
-        }
-
-        return element;
-
-      case "TT":
-        return ctx.$el;
-
-      default:
-        throw new Error(`Illegal arg: unknown locate kind=${kind}`);
-    }
   }
 
   function propertyRead(ctx, args) {
