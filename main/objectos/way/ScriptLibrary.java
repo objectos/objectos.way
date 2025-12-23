@@ -139,14 +139,17 @@ const way = (function() {
   // ##################################################################
 
   const operations = {
+    "AX": argsRead,
     "CR": contextRead,
     "CW": contextWrite,
     "EI": elementById,
     "ET": elementTarget,
     "FE": forEach,
     "IV": invokeVirtual,
+    "JS": jsValue,
     "PR": propertyRead,
-    "PW": propertyWrite
+    "PW": propertyWrite,
+    "TY": typeEnsure
   };
 
   function nest(ctx, actions) {
@@ -200,6 +203,18 @@ const way = (function() {
     }
   }
 
+  function nestedAction(ctx, action) {
+    checkArray(action, "action");
+
+    const nested = { ...ctx };
+
+    for (const op of action) {
+      nested.$recv = executeOperation(nested, op);
+    }
+
+    return nested.$recv;
+  }
+
   function arg(ctx, arg) {
     checkArray(arg, "arg");
 
@@ -219,6 +234,22 @@ const way = (function() {
       default:
         throw new Error(`Illegal arg: unknown arg kind=${kind}`);
     }
+  }
+
+  function argsRead(ctx, args) {
+    const index = checkInteger(args.shift(), "index");
+
+    if (index < 0) {
+      throw new Error(`Illegal arg: index must not be negative. index=${index}`);
+    }
+
+    const values = ctx.$args;
+
+    if (!values) {
+      throw new Error(`Illegal arg: context does not define $args`);
+    }
+
+    return values[index];
   }
 
   function contextRead(ctx, args) {
@@ -249,8 +280,12 @@ const way = (function() {
     return name;
   }
 
-  function elementById(_, args) {
-    const id = checkString(args.shift(), "id");
+  function elementById(ctx, args) {
+    const action = checkDefined(args.shift(), "action");
+
+    const id = nestedAction(ctx, action);
+
+    checkString(id, "id");
 
     const element = document.getElementById(id);
 
@@ -293,6 +328,10 @@ const way = (function() {
     return method.call(recv, methodArgs);
   }
 
+  function jsValue(_, args) {
+    return checkDefined(args.shift(), "value");
+  }
+
   function propertyRead(ctx, args) {
     const recv = checkRecv(ctx, args.shift());
 
@@ -317,6 +356,12 @@ const way = (function() {
     recv[propName] = arg(ctx, val);
   }
 
+  function typeEnsure(ctx, args) {
+    const typeName = checkString(args.shift(), "typeName");
+
+    return checkType(ctx.$recv, "recv", typeName);
+  }
+
   // ##################################################################
   // # END: Objectos Way Actions
   // ##################################################################
@@ -336,6 +381,14 @@ const way = (function() {
   function checkDefined(maybe, name) {
     if (!maybe) {
       throw new Error(`Illegal arg: ${name} must be a defined value`);
+    }
+
+    return maybe;
+  }
+
+  function checkInteger(maybe, name) {
+    if (!Number.isInteger(maybe)) {
+      throw new Error(`Illegal arg: ${name} must be an integer value but got ${maybe}`);
     }
 
     return maybe;

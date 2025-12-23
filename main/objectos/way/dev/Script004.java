@@ -19,14 +19,12 @@ import module objectos.way;
 
 /// Test case 004
 ///
-/// - event: click 
-/// - locator: id 
-/// - invoke method w/ 1 args
+/// - event: click - locator: id - invoke method w/ 1 args
 @Css.Source
 public final class Script004 extends AbstractDevScript {
 
   public static final Script.JsAction ACTION = Script
-      .byId("subject").invoke("Element", "removeAttribute", "style");
+      .byId("subject").invoke("Element", "removeAttribute", Script.JsString.of("style"));
 
   @Override
   final void renderBody() {

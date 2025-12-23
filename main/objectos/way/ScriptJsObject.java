@@ -15,10 +15,13 @@
  */
 package objectos.way;
 
+import java.util.Objects;
+
 sealed class ScriptJsObject implements Script.JsObject
     permits
+    ScriptJsArray,
     ScriptJsElement,
-    ScriptJsString {
+    ScriptJsString, ScriptJsNumber {
 
   private final String value;
 
@@ -26,55 +29,80 @@ sealed class ScriptJsObject implements Script.JsObject
     this.value = value;
   }
 
-  @Override
-  public final Script.JsAction invoke(String type, String method, Object... args) {
-    final ScriptJsArray.Builder invoke;
-    invoke = new ScriptJsArray.Builder();
+  private static final Script.JsString IV = ScriptJsString.raw("IV");
 
-    invoke.rawString("IV");
-    invoke.jsString(type, "type");
-    invoke.jsString(method, "method");
-
-    final ScriptJsArray $args;
-    $args = ScriptJsArray.of(args, "args");
-
-    invoke.raw($args);
-
-    return ScriptJsAction.of(value, invoke.buildString());
+  private static ScriptJsObject of(Script.JsObject v0, Script.JsObject v1) {
+    return new ScriptJsObject(
+        v0.toString() + "," + v1.toString()
+    );
   }
+
+  @Override
+  public final Script.JsAction invoke(String type, String method, Script.JsObject... args) {
+    Objects.requireNonNull(type, "type == null");
+    Objects.requireNonNull(method, "method == null");
+    Objects.requireNonNull(args, "args == null");
+
+    final Script.JsString $type;
+    $type = ScriptJsString.raw(type);
+
+    final Script.JsString $method;
+    $method = ScriptJsString.raw(method);
+
+    final Script.JsArray $args;
+    $args = ScriptJsArray.rawArgs(args);
+
+    final Script.JsArray action;
+    action = ScriptJsArray.raw(IV, $type, $method, $args);
+
+    return ScriptJsAction.of(this, action);
+  }
+
+  private static final Script.JsString PR = ScriptJsString.raw("PR");
 
   @Override
   public final Script.JsObject prop(String type, String name) {
-    final ScriptJsArray.Builder prop;
-    prop = new ScriptJsArray.Builder();
+    Objects.requireNonNull(type, "type == null");
+    Objects.requireNonNull(name, "name == null");
 
-    prop.rawString("PR");
-    prop.jsString(type, "type");
-    prop.jsString(name, "name");
+    final Script.JsString $type;
+    $type = ScriptJsString.raw(type);
 
-    return new ScriptJsObject(value + "," + prop.buildString());
+    final Script.JsString $name;
+    $name = ScriptJsString.raw(name);
+
+    final Script.JsArray action;
+    action = ScriptJsArray.raw(PR, $type, $name);
+
+    return of(this, action);
   }
 
+  private static final Script.JsString PW = ScriptJsString.raw("PW");
+
   @Override
-  public final Script.JsAction prop(String type, String name, Object value) {
-    final ScriptJsArray.Builder prop;
-    prop = new ScriptJsArray.Builder();
+  public final Script.JsAction prop(String type, String name, Script.JsObject value) {
+    Objects.requireNonNull(type, "type == null");
+    Objects.requireNonNull(name, "name == null");
+    Objects.requireNonNull(value, "value == null");
 
-    prop.rawString("PW");
-    prop.jsString(type, "type");
-    prop.jsString(name, "name");
-    prop.way(value, "value");
+    final Script.JsString $type;
+    $type = ScriptJsString.raw(type);
 
-    return ScriptJsAction.of(this.value, prop.buildString());
+    final Script.JsString $name;
+    $name = ScriptJsString.raw(name);
+
+    final Script.JsArray $value;
+    $value = ScriptJsArray.raw(value);
+
+    final Script.JsArray action;
+    action = ScriptJsArray.raw(PW, $type, $name, $value);
+
+    return ScriptJsAction.of(this, action);
   }
 
   @Override
   public final String toString() {
     return value;
-  }
-
-  public final String wayLiteral() {
-    return "[\"WA\",[" + value + "]]";
   }
 
 }

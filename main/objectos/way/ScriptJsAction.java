@@ -71,15 +71,34 @@ final class ScriptJsAction implements Script.JsAction {
     return new ScriptJsAction(value);
   }
 
-  static ScriptJsAction var(String name, Object value) {
-    final ScriptJsArray.Builder builder;
-    builder = new ScriptJsArray.Builder();
+  public static ScriptJsAction of(Script.JsObject v0) {
+    return new ScriptJsAction(
+        "[" + v0.toString() + "]"
+    );
+  }
 
-    builder.rawString("CW");
-    builder.jsString(name, "name");
-    builder.way(value, "value");
+  public static ScriptJsAction of(Script.JsObject v0, Script.JsObject v1) {
+    return new ScriptJsAction(
+        "[" + v0.toString() + "," + v1.toString() + "]"
+    );
+  }
 
-    return builder.build(ScriptJsAction::of);
+  private static final Script.JsString CW = ScriptJsString.raw("CW");
+
+  static ScriptJsAction var(String name, Script.JsObject value) {
+    Objects.requireNonNull(name, "name == null");
+    Objects.requireNonNull(value, "value == null");
+
+    final Script.JsString $name;
+    $name = ScriptJsString.raw(name);
+
+    final Script.JsArray $value;
+    $value = ScriptJsArray.raw(value);
+
+    final Script.JsArray action;
+    action = ScriptJsArray.raw(CW, $name, $value);
+
+    return of(action);
   }
 
   @Override

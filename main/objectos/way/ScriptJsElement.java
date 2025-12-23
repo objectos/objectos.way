@@ -15,33 +15,42 @@
  */
 package objectos.way;
 
-import objectos.way.Script.JsString;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 final class ScriptJsElement extends ScriptJsObject implements Script.JsElement {
+
+  private static final Script.JsString Element = ScriptJsString.raw("Element");
 
   static final ScriptJsElement TARGET = new ScriptJsElement("""
   ["ET"]""");
 
-  ScriptJsElement(String value) {
+  private ScriptJsElement(String value) {
     super(value);
   }
 
-  static ScriptJsElement byId(JsString value) {
-    var builder = new ScriptJsArray.Builder();
-
-    builder.rawString("EW");
-    builder.wayString(value, "value");
-
-    return builder.build(ScriptJsElement::new);
+  static ScriptJsElement byId(Script.JsString value) {
+    return byId0(value);
   }
 
-  static ScriptJsElement byId(String value) {
-    var builder = new ScriptJsArray.Builder();
+  private static final Script.JsString EI = ScriptJsString.raw("EI");
 
-    builder.rawString("EI");
-    builder.jsString(value, "value");
+  private static ScriptJsElement byId0(Script.JsObject value) {
+    Objects.requireNonNull(value, "value == null");
 
-    return builder.build(ScriptJsElement::new);
+    final Script.JsArray $value;
+    $value = ScriptJsArray.raw(value);
+
+    final Script.JsArray elem;
+    elem = ScriptJsArray.raw(EI, $value);
+
+    return new ScriptJsElement(
+        elem.toString()
+    );
+  }
+
+  public static ScriptJsElement cast(ScriptJsRef ref) {
+    return ref.cast(ScriptJsElement::new, Element);
   }
 
   @Override
@@ -54,8 +63,8 @@ final class ScriptJsElement extends ScriptJsObject implements Script.JsElement {
     final String[] parts;
     parts = value.split(" ");
 
-    final Object[] args;
-    args = parts;
+    final Script.JsObject[] args;
+    args = Stream.of(parts).map(ScriptJsString::of).toArray(Script.JsObject[]::new);
 
     return prop("Element", "classList").invoke("DOMTokenList", "toggle", args);
   }

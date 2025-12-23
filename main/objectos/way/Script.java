@@ -24,7 +24,7 @@ public sealed interface Script permits ScriptPojo {
   public sealed interface JsAction permits ScriptJsAction {}
 
   /// Represents a JS runtime `Array` instance.
-  public sealed interface JsArray permits ScriptJsArray {
+  public sealed interface JsArray extends JsObject permits ScriptJsArray {
 
     JsAction forEach(JsAction value);
 
@@ -48,7 +48,7 @@ public sealed interface Script permits ScriptPojo {
   }
 
   /// Represents a JS runtime `Object` instance.
-  public sealed interface JsObject permits JsElement, JsString, ScriptJsObject {
+  public sealed interface JsObject permits JsArray, JsElement, JsString, ScriptJsObject {
 
     /// Invokes the specified method with the specified arguments, in order, if
     /// the JS object is an instance of the specified type. If the method returns
@@ -59,7 +59,7 @@ public sealed interface Script permits ScriptPojo {
     /// @param args the method arguments
     ///
     /// @return an object representing this action
-    JsAction invoke(String type, String method, Object... args);
+    JsAction invoke(String type, String method, JsObject... args);
 
     /// Returns the property of the specified name, if the JS object is an
     /// instance of the specified type.
@@ -78,7 +78,7 @@ public sealed interface Script permits ScriptPojo {
     /// @param value the property value
     ///
     /// @return an object representing this action
-    JsAction prop(String type, String name, Object value);
+    JsAction prop(String type, String name, JsObject value);
 
   }
 
@@ -97,14 +97,21 @@ public sealed interface Script permits ScriptPojo {
 
   }
 
-  public sealed interface JsString extends JsObject permits ScriptJsString {}
+  /// Represents a JS runtime `String` instance.
+  public sealed interface JsString extends JsObject permits ScriptJsString {
 
-  static JsRef args(int index) {
-    return ScriptJsRef.args(index);
+    static JsString of(String s) {
+      return ScriptJsString.of(s);
+    }
+
   }
 
   static JsArray array(String... values) {
-    return ScriptJsArray.of(values);
+    return ScriptJsArray.array(values);
+  }
+
+  static JsRef args(int index) {
+    return ScriptJsRef.args(index);
   }
 
   static JsElement byId(JsString value) {
@@ -117,7 +124,13 @@ public sealed interface Script permits ScriptPojo {
   ///
   /// @return the element
   static JsElement byId(String value) {
-    return ScriptJsElement.byId(value);
+    final String v;
+    v = Objects.requireNonNull(value, "value == null");
+
+    final ScriptJsString id;
+    id = ScriptJsString.of(v);
+
+    return ScriptJsElement.byId(id);
   }
 
   /// Creates an action by concatenating all of the specified individual
@@ -154,7 +167,7 @@ public sealed interface Script permits ScriptPojo {
   /// @param value the value to store
   ///
   /// @return an object representing this action
-  static JsAction var(String name, Object value) {
+  static JsAction var(String name, JsObject value) {
     return ScriptJsAction.var(name, value);
   }
 

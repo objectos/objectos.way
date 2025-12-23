@@ -15,225 +15,126 @@
  */
 package objectos.way;
 
-import java.util.function.Function;
-import objectos.way.Script.JsArray;
-import objectos.way.Script.JsString;
+import java.util.Objects;
 
-final class ScriptJsArray implements JsArray {
+final class ScriptJsArray extends ScriptJsObject implements Script.JsArray {
 
-  static final class Builder {
-
-    private final StringBuilder sb;
-
-    public Builder() {
-      sb = new StringBuilder();
-
-      sb.append('[');
-    }
-
-    public final ScriptJsArray build() {
-      final String s;
-      s = buildString();
-
-      return new ScriptJsArray(s);
-    }
-
-    public final <T> T build(Function<String, T> constructor) {
-      final String s;
-      s = buildString();
-
-      return constructor.apply(s);
-    }
-
-    public final String buildString() {
-      sb.append(']');
-
-      return sb.toString();
-    }
-
-    public final void jsNull() {
-      raw("null");
-    }
-
-    public final void jsNumber(int value) {
-      commaIfNecessary();
-
-      sb.append(value);
-    }
-
-    public final void jsString(String s, String name) {
-      final String literal;
-      literal = ScriptJsString.jsLiteral(s, name);
-
-      commaIfNecessary();
-
-      sb.append(literal);
-    }
-
-    public final void jsString(String s, String name, int idx) {
-      final ScriptJsString v;
-      v = ScriptJsString.of(s, name, idx);
-
-      commaIfNecessary();
-
-      sb.append(v);
-    }
-
-    public final void raw(Object s) {
-      commaIfNecessary();
-
-      sb.append(s);
-    }
-
-    public final void raw(Object s, String name) {
-      if (s == null) {
-        throw new NullPointerException(name + " == null");
-      }
-
-      commaIfNecessary();
-
-      sb.append(s);
-    }
-
-    public final void raw(Object s, String name, int idx) {
-      if (s == null) {
-        throw new NullPointerException(name + "[" + idx + "] == null");
-      }
-
-      commaIfNecessary();
-
-      sb.append(s);
-    }
-
-    public final void rawString(String s) {
-      commaIfNecessary();
-
-      sb.append('"');
-
-      sb.append(s);
-
-      sb.append('"');
-    }
-
-    public final void way(Object o, String name) {
-      switch (o) {
-        case null -> wayNull();
-
-        case ScriptJsObject obj -> wayObject(obj);
-
-        case String s -> wayString(s, name);
-
-        default -> {
-          final Class<?> type;
-          type = o.getClass();
-
-          final String typeName;
-          typeName = type.getName();
-
-          throw new IllegalArgumentException("""
-          Cannot convert %s to a JS object
-          """.formatted(typeName));
-        }
-      }
-    }
-
-    public final void wayNull() {
-      commaIfNecessary();
-
-      sb.append("[\"JS\",null]");
-    }
-
-    public final void wayObject(ScriptJsObject o) {
-      commaIfNecessary();
-
-      sb.append(o.wayLiteral());
-    }
-
-    public final void wayString(JsString s, String name) {
-      if (s == null) {
-        throw new NullPointerException(name + " == null");
-      }
-
-      final ScriptJsString impl;
-      impl = (ScriptJsString) s;
-
-      wayObject(impl);
-    }
-
-    public final void wayString(String s, String name) {
-      final String literal;
-      literal = ScriptJsString.wayLiteral(s, name);
-
-      commaIfNecessary();
-
-      sb.append(literal);
-    }
-
-    private void commaIfNecessary() {
-      if (sb.length() > 1) {
-        sb.append(',');
-      }
-    }
-
-  }
-
-  private final String value;
+  private static final Script.JsString Array = ScriptJsString.raw("Array");
 
   private ScriptJsArray(String value) {
-    this.value = value;
+    super(value);
   }
 
-  public static ScriptJsArray of(Object[] values, String name) {
-    if (values == null) {
-      throw new NullPointerException(name + " == null");
+  public static ScriptJsArray array(String[] values) {
+    final StringBuilder sb;
+    sb = new StringBuilder();
+
+    sb.append('[');
+    sb.append('"');
+    sb.append("JS");
+    sb.append('"');
+    sb.append(',');
+    sb.append('[');
+
+    if (values.length > 0) {
+      final String v0;
+      v0 = values[0];
+
+      final ScriptJsString s0;
+      s0 = ScriptJsString.raw(v0);
+
+      sb.append(s0);
+
+      for (int idx = 1; idx < values.length; idx++) {
+        final String v;
+        v = values[idx];
+
+        final ScriptJsString s;
+        s = ScriptJsString.raw(v);
+
+        sb.append(',');
+
+        sb.append(s);
+      }
     }
 
-    final Builder builder;
-    builder = new Builder();
+    sb.append(']');
+    sb.append(']');
 
-    for (int idx = 0; idx < values.length; idx++) {
-      final Object o;
-      o = values[idx];
+    final String value;
+    value = sb.toString();
 
-      builder.way(o, name + "[" + idx + "]");
-    }
-
-    return builder.build();
+    return new ScriptJsArray(value);
   }
 
-  public static ScriptJsArray of(String[] values) {
-    final Builder builder;
-    builder = new Builder();
-
-    for (int idx = 0; idx < values.length; idx++) {
-      final String s;
-      s = values[idx];
-
-      builder.jsString(s, "values", idx);
-    }
-
-    return builder.build();
+  public static ScriptJsArray raw() {
+    return new ScriptJsArray("[]");
   }
+
+  public static ScriptJsArray raw(Object v0) {
+    return new ScriptJsArray("[" + v0 + "]");
+  }
+
+  public static ScriptJsArray raw(Object v0, Object v1) {
+    return new ScriptJsArray("[" + v0 + "," + v1 + "]");
+  }
+
+  public static ScriptJsArray raw(Object v0, Object v1, Object v2) {
+    return new ScriptJsArray("[" + v0 + "," + v1 + "," + v2 + "]");
+  }
+
+  public static ScriptJsArray raw(Object v0, Object v1, Object v2, Object v3) {
+    return new ScriptJsArray("[" + v0 + "," + v1 + "," + v2 + "," + v3 + "]");
+  }
+
+  public static ScriptJsArray rawArgs(Script.JsObject[] args) {
+    return switch (args.length) {
+      case 0 -> raw();
+
+      default -> {
+        final StringBuilder sb;
+        sb = new StringBuilder();
+
+        sb.append('[');
+
+        sb.append(args[0]);
+
+        for (int idx = 1; idx < args.length; idx++) {
+          final Script.JsObject o;
+          o = args[idx];
+
+          if (o == null) {
+            throw new NullPointerException("args[" + idx + "] == null");
+          }
+
+          sb.append(',');
+
+          sb.append(o);
+        }
+
+        sb.append(']');
+
+        final String value;
+        value = sb.toString();
+
+        yield new ScriptJsArray(value);
+      }
+    };
+  }
+
+  private static final Script.JsString FE = ScriptJsString.raw("FE");
 
   @Override
   public final Script.JsAction forEach(Script.JsAction value) {
-    final ScriptJsArray.Builder builder;
-    builder = new ScriptJsArray.Builder();
+    Objects.requireNonNull(value, "value == null");
 
-    builder.rawString("FE");
-    builder.rawString("Array");
-    builder.raw(value);
+    final Script.JsArray $value;
+    $value = ScriptJsArray.raw(value);
 
-    return ScriptJsAction.of(wayLiteral(), builder.buildString());
-  }
+    final Script.JsArray forEach;
+    forEach = ScriptJsArray.raw(FE, Array, $value);
 
-  @Override
-  public final String toString() {
-    return value;
-  }
-
-  public final String wayLiteral() {
-    return "[\"JS\"," + value + "]";
+    return ScriptJsAction.of(this, forEach);
   }
 
 }

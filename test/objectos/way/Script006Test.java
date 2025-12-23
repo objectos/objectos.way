@@ -32,10 +32,10 @@ public class Script006Test {
 
         """
         [\
-        ["CW","el",["WA",[["EI","subject"]]]]\
+        ["CW","el",[["EI",[["JS","subject"]]]]]\
         ],\
         [\
-        ["CR","el"],\
+        ["CR","el"],["TY","Element"],\
         ["IV","Element","remove",[]]\
         ]\
         """

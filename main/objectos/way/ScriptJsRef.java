@@ -15,57 +15,81 @@
  */
 package objectos.way;
 
-import objectos.way.Script.JsElement;
-import objectos.way.Script.JsRef;
+import java.util.Objects;
+import java.util.function.Function;
 import objectos.way.Script.JsString;
 
 final class ScriptJsRef implements Script.JsRef {
 
+  private static final Script.JsString AX = ScriptJsString.raw("AX");
+
+  private static final Script.JsString CR = ScriptJsString.raw("CR");
+
+  private static final Script.JsString TY = ScriptJsString.raw("TY");
+
   private final String value;
 
-  ScriptJsRef(String value) {
+  private ScriptJsRef(String value) {
     this.value = value;
   }
 
-  public static JsRef args(int index) {
+  public static ScriptJsRef args(int index) {
     if (index < 0) {
       throw new IllegalArgumentException(
           "index must not be negative"
       );
     }
 
-    final ScriptJsArray.Builder builder;
-    builder = new ScriptJsArray.Builder();
+    final ScriptJsNumber $index;
+    $index = ScriptJsNumber.raw(index);
 
-    builder.rawString("AX");
-    builder.jsNumber(index);
+    final ScriptJsArray ref;
+    ref = ScriptJsArray.raw(AX, $index);
 
-    return builder.build(ScriptJsRef::new);
+    return of(ref);
   }
 
-  public static JsRef var(String name) {
-    final ScriptJsArray.Builder builder;
-    builder = new ScriptJsArray.Builder();
+  private static ScriptJsRef of(Script.JsArray v0) {
+    return new ScriptJsRef(
+        v0.toString()
+    );
+  }
 
-    builder.rawString("CR");
-    builder.jsString(name, "name");
+  public static ScriptJsRef var(String name) {
+    Objects.requireNonNull(name, "name == null");
 
-    return builder.build(ScriptJsRef::new);
+    final ScriptJsString $name;
+    $name = ScriptJsString.raw(name);
+
+    final ScriptJsArray ref;
+    ref = ScriptJsArray.raw(CR, $name);
+
+    return of(ref);
   }
 
   @Override
-  public final JsElement asElem() {
-    return new ScriptJsElement(value);
+  public final Script.JsElement asElem() {
+    return ScriptJsElement.cast(this);
   }
 
   @Override
-  public final JsString asString() {
-    return new ScriptJsString(value);
+  public final Script.JsString asString() {
+    return ScriptJsString.cast(this);
   }
 
   @Override
   public final String toString() {
     return value;
+  }
+
+  final <T> T cast(Function<String, T> constructor, JsString typeName) {
+    final ScriptJsArray cast;
+    cast = ScriptJsArray.raw(TY, typeName);
+
+    final String computed;
+    computed = value + "," + cast;
+
+    return constructor.apply(computed);
   }
 
 }

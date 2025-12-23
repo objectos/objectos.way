@@ -17,33 +17,37 @@ package objectos.way;
 
 final class ScriptJsString extends ScriptJsObject implements Script.JsString {
 
-  ScriptJsString(String value) {
+  private static final Script.JsString String = ScriptJsString.raw("String");
+
+  private ScriptJsString(String value) {
     super(value);
   }
 
-  public static ScriptJsString of(String s, String name, int idx) {
+  public static ScriptJsString cast(ScriptJsRef ref) {
+    return ref.cast(ScriptJsString::new, String);
+  }
+
+  public static ScriptJsString of(String s) {
+    final String v;
+    v = quote(s);
+
+    return new ScriptJsString("[\"JS\"," + v + "]");
+  }
+
+  public static ScriptJsString raw(String s) {
+    final String v;
+    v = quote(s);
+
+    return new ScriptJsString(v);
+  }
+
+  private static String quote(String s) {
     if (s == null) {
-      throw new NullPointerException(name + "[" + idx + "] == null");
+      throw new NullPointerException("Cannot quote a null string value");
     }
 
     // TODO escape json string literal
-    return new ScriptJsString('"' + s + '"');
-  }
-
-  public static String jsLiteral(String value, String name) {
-    if (value == null) {
-      throw new NullPointerException(name + " == null");
-    }
-
-    // TODO escape json string literal
-    return '"' + value + '"';
-  }
-
-  public static String wayLiteral(String s, String name) {
-    final String js;
-    js = jsLiteral(s, name);
-
-    return "[\"JS\"," + js + "]";
+    return '"' + s + '"';
   }
 
 }
