@@ -17,7 +17,7 @@ package objectos.way;
 
 final class ScriptJsString extends ScriptJsObject implements Script.JsString {
 
-  private static final Script.JsString String = ScriptJsString.raw("String");
+  private static final Script.JsString String = ScriptJsString.raw("string");
 
   private ScriptJsString(String value) {
     super(value);

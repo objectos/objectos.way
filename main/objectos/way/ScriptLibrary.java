@@ -152,6 +152,18 @@ const way = (function() {
     "TY": typeEnsure
   };
 
+  function compute(ctx, action) {
+    checkArray(action, "action");
+
+    const nested = { ...ctx };
+
+    for (const op of action) {
+      nested.$recv = executeOperation(nested, op);
+    }
+
+    return nested.$recv;
+  }
+
   function nest(ctx, actions) {
     checkArray(actions, "actions");
 
@@ -160,7 +172,9 @@ const way = (function() {
 
       nested.$args = args;
 
-      for (const a of actions) {
+      const nestedActions = structuredClone(actions);
+
+      for (const a of nestedActions) {
         executeAction(nested, a);
       }
     };
@@ -203,39 +217,6 @@ const way = (function() {
     }
   }
 
-  function nestedAction(ctx, action) {
-    checkArray(action, "action");
-
-    const nested = { ...ctx };
-
-    for (const op of action) {
-      nested.$recv = executeOperation(nested, op);
-    }
-
-    return nested.$recv;
-  }
-
-  function arg(ctx, arg) {
-    checkArray(arg, "arg");
-
-    const kind = checkString(arg.shift(), "kind");
-
-    switch (kind) {
-      case "JS":
-        return arg.shift();
-
-      case "WA":
-        const action = arg.shift();
-
-        executeAction(ctx, action);
-
-        return ctx.$recv;
-
-      default:
-        throw new Error(`Illegal arg: unknown arg kind=${kind}`);
-    }
-  }
-
   function argsRead(ctx, args) {
     const index = checkInteger(args.shift(), "index");
 
@@ -263,7 +244,7 @@ const way = (function() {
 
     const val = checkDefined(args.shift(), "value");
 
-    ctx[name] = arg(ctx, val);
+    ctx[name] = compute(ctx, val);
   }
 
   function contextName(maybe) {
@@ -283,7 +264,7 @@ const way = (function() {
   function elementById(ctx, args) {
     const action = checkDefined(args.shift(), "action");
 
-    const id = nestedAction(ctx, action);
+    const id = compute(ctx, action);
 
     checkString(id, "id");
 
@@ -323,7 +304,7 @@ const way = (function() {
 
     const encodedArgs = checkArray(args.shift(), "encodedArgs");
 
-    const methodArgs = encodedArgs.map(x => arg(ctx, x));
+    const methodArgs = encodedArgs.map(x => compute(ctx, x));
 
     return method.call(recv, methodArgs);
   }
@@ -353,7 +334,7 @@ const way = (function() {
 
     const val = checkDefined(args.shift(), "value");
 
-    recv[propName] = arg(ctx, val);
+    recv[propName] = compute(ctx, val);
   }
 
   function typeEnsure(ctx, args) {
@@ -405,31 +386,35 @@ const way = (function() {
   }
 
   function checkType(maybe, name, typeName) {
-    const t = typeof maybe;
+    if (typeName === 'string') {
+      return checkString(maybe, name);
+    } else {
+      const t = typeof maybe;
 
-    if (t !== "object") {
-      throw new Error(`Illegal arg: ${name} must be an Object value but got ${t}`);
-    }
-
-    let prototype = Object.getPrototypeOf(maybe);
-
-    while (prototype) {
-      const constructor = prototype.constructor;
-
-      if (!constructor) {
-        throw new Error(`Illegal arg: expected ${name} to have a constructor, but found ${constructor}`);
+      if (t !== "object") {
+        throw new Error(`Illegal arg: ${name} must be an Object value but got ${t}`);
       }
 
-      const actualName = constructor.name;
+      let prototype = Object.getPrototypeOf(maybe);
 
-      if (actualName === typeName) {
-        return maybe;
+      while (prototype) {
+        const constructor = prototype.constructor;
+
+        if (!constructor) {
+          throw new Error(`Illegal arg: expected ${name} to have a constructor, but found ${constructor}`);
+        }
+
+        const actualName = constructor.name;
+
+        if (actualName === typeName) {
+          return maybe;
+        }
+
+        prototype = Object.getPrototypeOf(prototype);
       }
 
-      prototype = Object.getPrototypeOf(prototype);
+      throw new Error(`Illegal arg: ${name} does not have ${typeName} in its prototype chain`);
     }
-
-    throw new Error(`Illegal arg: ${name} does not have ${typeName} in its prototype chain`);
   }
 
   function checkString(maybe, name) {

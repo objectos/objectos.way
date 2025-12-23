@@ -97,7 +97,17 @@ final class ScriptJsArray extends ScriptJsObject implements Script.JsArray {
 
         sb.append('[');
 
-        sb.append(args[0]);
+        final Script.JsObject args0;
+        args0 = args[0];
+
+        if (args0 == null) {
+          throw new NullPointerException("args[0] == null");
+        }
+
+        final ScriptJsAction a0;
+        a0 = ScriptJsAction.of(args0);
+
+        sb.append(a0);
 
         for (int idx = 1; idx < args.length; idx++) {
           final Script.JsObject o;
@@ -109,7 +119,10 @@ final class ScriptJsArray extends ScriptJsObject implements Script.JsArray {
 
           sb.append(',');
 
-          sb.append(o);
+          final ScriptJsAction a;
+          a = ScriptJsAction.of(o);
+
+          sb.append(a);
         }
 
         sb.append(']');
