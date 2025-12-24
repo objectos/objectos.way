@@ -38,12 +38,13 @@ public sealed interface Script permits ScriptPojo {
     /// @return an object representing this action
     JsAction remove();
 
-    /// Toggles the specified `class` value on this element.
+    /// Toggles the specified `class` values on this element.
     ///
-    /// @param value the class name
+    /// @param first the first class name
+    /// @param more additional class names
     ///
     /// @return an object representing this action
-    JsAction toggleClass(String value);
+    JsAction toggleClass(String first, String... more);
 
   }
 
@@ -51,8 +52,7 @@ public sealed interface Script permits ScriptPojo {
   public sealed interface JsObject permits JsArray, JsElement, JsString, ScriptJsObject {
 
     /// Invokes the specified method with the specified arguments, in order, if
-    /// the JS object is an instance of the specified type. If the method returns
-    /// a value it is ignored.
+    /// the JS object is an instance of the specified type.
     ///
     /// @param type the name of the JS type that defines the method
     /// @param method the method name

@@ -17,7 +17,8 @@ package objectos.way;
 
 import java.util.Objects;
 
-sealed class ScriptJsObject implements Script.JsObject
+sealed class ScriptJsObject
+    implements Script.JsObject
     permits
     ScriptJsArray,
     ScriptJsElement,

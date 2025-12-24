@@ -19,9 +19,10 @@ import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertTha
 import static org.testng.Assert.assertEquals;
 
 import objectos.way.dev.Script007;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
-//@Listeners(Y.class)
+@Listeners(Y.class)
 public class Script007Test {
 
   @Test
@@ -33,26 +34,33 @@ public class Script007Test {
         [\
         ["JS",["el-1","el-3"]],\
         ["FE","Array",[\
-        [["EI",[["AX",0],["TY","String"]]],["IV","Element","remove",[]]]\
+        [["EI",[["AX",0],["TY","string"]]],["IV","Element","remove",[]]]\
         ]]\
         ]\
         """
     );
   }
 
-  @Test(enabled = false)
+  @Test
   public void live() {
     try (var page = Y.page()) {
-      page.navigate("/script/006");
+      page.navigate("/script/007");
 
       var clickMe = page.locator("#click-me");
-      var subject = page.locator("#subject");
 
-      assertThat(subject).hasCount(1);
+      var div1 = page.locator("#el-1");
+      var div2 = page.locator("#el-2");
+      var div3 = page.locator("#el-3");
+
+      assertThat(div1).hasCount(1);
+      assertThat(div2).hasCount(1);
+      assertThat(div3).hasCount(1);
 
       clickMe.click();
 
-      assertThat(subject).hasCount(0);
+      assertThat(div1).hasCount(0);
+      assertThat(div2).hasCount(1);
+      assertThat(div3).hasCount(0);
     }
   }
 

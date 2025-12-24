@@ -16,7 +16,6 @@
 package objectos.way;
 
 import java.util.Objects;
-import java.util.stream.Stream;
 
 final class ScriptJsElement extends ScriptJsObject implements Script.JsElement {
 
@@ -59,14 +58,36 @@ final class ScriptJsElement extends ScriptJsObject implements Script.JsElement {
   }
 
   @Override
-  public final Script.JsAction toggleClass(String value) {
-    final String[] parts;
-    parts = value.split(" ");
+  public final Script.JsAction toggleClass(String first, String... more) {
+    Objects.requireNonNull(first, "first == null");
+    Objects.requireNonNull(more, "more == null");
 
-    final Script.JsObject[] args;
-    args = Stream.of(parts).map(ScriptJsString::of).toArray(Script.JsObject[]::new);
+    final Script.JsObject[] strings;
+    strings = new Script.JsObject[more.length + 1];
 
-    return prop("Element", "classList").invoke("DOMTokenList", "toggle", args);
+    strings[0] = ScriptJsString.of(first);
+
+    for (int idx = 0; idx < more.length; idx++) {
+      final String v;
+      v = more[idx];
+
+      if (v == null) {
+        throw new NullPointerException("more[" + idx + "] == null");
+      }
+
+      strings[idx + 1] = ScriptJsString.of(v);
+    }
+
+    final Script.JsArray array;
+    array = ScriptJsArray.of(strings);
+
+    final Script.JsString arg0;
+    arg0 = Script.args(0).asString();
+
+    final Script.JsAction action;
+    action = prop("Element", "classList").invoke("DOMTokenList", "toggle", arg0);
+
+    return array.forEach(action);
   }
 
 }

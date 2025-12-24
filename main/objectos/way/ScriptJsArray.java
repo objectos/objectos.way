@@ -67,6 +67,52 @@ final class ScriptJsArray extends ScriptJsObject implements Script.JsArray {
     return new ScriptJsArray(value);
   }
 
+  public static ScriptJsArray of(Script.JsObject[] values) {
+    final StringBuilder sb;
+    sb = new StringBuilder();
+
+    sb.append('[');
+    sb.append('"');
+    sb.append("JS");
+    sb.append('"');
+    sb.append(',');
+    sb.append('[');
+
+    if (values.length > 0) {
+      final Script.JsObject v0;
+      v0 = values[0];
+
+      if (v0 == null) {
+        throw new NullPointerException("Cannot create JsArray instance: "
+            + "source array contains a null value");
+      }
+
+      sb.append(v0);
+
+      for (int idx = 1; idx < values.length; idx++) {
+        final Script.JsObject v;
+        v = values[idx];
+
+        if (v == null) {
+          throw new NullPointerException("Cannot create JsArray instance: "
+              + "source array contains a null value");
+        }
+
+        sb.append(',');
+
+        sb.append(v);
+      }
+    }
+
+    sb.append(']');
+    sb.append(']');
+
+    final String value;
+    value = sb.toString();
+
+    return new ScriptJsArray(value);
+  }
+
   public static ScriptJsArray raw() {
     return new ScriptJsArray("[]");
   }
