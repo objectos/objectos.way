@@ -59,27 +59,15 @@ final class ScriptJsElement extends ScriptJsObject implements Script.JsElement {
 
   @Override
   public final Script.JsAction toggleClass(String first, String... more) {
-    Objects.requireNonNull(first, "first == null");
-    Objects.requireNonNull(more, "more == null");
+    final ScriptJsArray.Builder arrayBuilder;
+    arrayBuilder = ScriptJsArray.jsBuilder();
 
-    final Script.JsObject[] strings;
-    strings = new Script.JsObject[more.length + 1];
+    arrayBuilder.raw(first, "first");
 
-    strings[0] = ScriptJsString.of(first);
+    arrayBuilder.rawAll(more, "more");
 
-    for (int idx = 0; idx < more.length; idx++) {
-      final String v;
-      v = more[idx];
-
-      if (v == null) {
-        throw new NullPointerException("more[" + idx + "] == null");
-      }
-
-      strings[idx + 1] = ScriptJsString.of(v);
-    }
-
-    final Script.JsArray array;
-    array = ScriptJsArray.of(strings);
+    final ScriptJsArray array;
+    array = arrayBuilder.build();
 
     final Script.JsString arg0;
     arg0 = Script.args(0).asString();

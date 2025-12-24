@@ -19,98 +19,104 @@ import java.util.Objects;
 
 final class ScriptJsArray extends ScriptJsObject implements Script.JsArray {
 
+  private enum Kind {
+
+    JS("""
+    ["JS",[\
+    """, """
+    ]]\
+    """),
+
+    RAW("[", "]");
+
+    final String header;
+
+    final String trailer;
+
+    private Kind(String header, String trailer) {
+      this.header = header;
+
+      this.trailer = trailer;
+    }
+
+  }
+
+  static final class Builder {
+
+    private final Kind kind;
+
+    private final StringBuilder sb = new StringBuilder();
+
+    private Builder(Kind kind) {
+      this.kind = kind;
+
+      sb.append(kind.header);
+    }
+
+    public final ScriptJsArray build() {
+      sb.append(kind.trailer);
+
+      final String value;
+      value = sb.toString();
+
+      return new ScriptJsArray(value);
+    }
+
+    public final void raw(String s, String name) {
+      if (s == null) {
+        throw new NullPointerException(name + " == null");
+      }
+
+      final ScriptJsString raw;
+      raw = ScriptJsString.raw(s);
+
+      add(raw);
+    }
+
+    public final void rawAll(String[] values, String name) {
+      if (values == null) {
+        throw new NullPointerException(name + " == null");
+      }
+
+      for (int idx = 0; idx < values.length; idx++) {
+        final String v;
+        v = values[idx];
+
+        if (v == null) {
+          throw new NullPointerException(name + "[" + idx + "] == null");
+        }
+
+        final ScriptJsString raw;
+        raw = ScriptJsString.raw(v);
+
+        add(raw);
+      }
+    }
+
+    private void add(Object o) {
+      final int len;
+      len = sb.length();
+
+      final int startLen;
+      startLen = kind.header.length();
+
+      if (len > startLen) {
+        sb.append(',');
+      }
+
+      sb.append(o);
+    }
+
+  }
+
   private static final Script.JsString Array = ScriptJsString.raw("Array");
 
   private ScriptJsArray(String value) {
     super(value);
   }
 
-  public static ScriptJsArray array(String[] values) {
-    final StringBuilder sb;
-    sb = new StringBuilder();
-
-    sb.append('[');
-    sb.append('"');
-    sb.append("JS");
-    sb.append('"');
-    sb.append(',');
-    sb.append('[');
-
-    if (values.length > 0) {
-      final String v0;
-      v0 = values[0];
-
-      final ScriptJsString s0;
-      s0 = ScriptJsString.raw(v0);
-
-      sb.append(s0);
-
-      for (int idx = 1; idx < values.length; idx++) {
-        final String v;
-        v = values[idx];
-
-        final ScriptJsString s;
-        s = ScriptJsString.raw(v);
-
-        sb.append(',');
-
-        sb.append(s);
-      }
-    }
-
-    sb.append(']');
-    sb.append(']');
-
-    final String value;
-    value = sb.toString();
-
-    return new ScriptJsArray(value);
-  }
-
-  public static ScriptJsArray of(Script.JsObject[] values) {
-    final StringBuilder sb;
-    sb = new StringBuilder();
-
-    sb.append('[');
-    sb.append('"');
-    sb.append("JS");
-    sb.append('"');
-    sb.append(',');
-    sb.append('[');
-
-    if (values.length > 0) {
-      final Script.JsObject v0;
-      v0 = values[0];
-
-      if (v0 == null) {
-        throw new NullPointerException("Cannot create JsArray instance: "
-            + "source array contains a null value");
-      }
-
-      sb.append(v0);
-
-      for (int idx = 1; idx < values.length; idx++) {
-        final Script.JsObject v;
-        v = values[idx];
-
-        if (v == null) {
-          throw new NullPointerException("Cannot create JsArray instance: "
-              + "source array contains a null value");
-        }
-
-        sb.append(',');
-
-        sb.append(v);
-      }
-    }
-
-    sb.append(']');
-    sb.append(']');
-
-    final String value;
-    value = sb.toString();
-
-    return new ScriptJsArray(value);
+  public static Builder jsBuilder() {
+    return new Builder(Kind.JS);
   }
 
   public static ScriptJsArray raw() {

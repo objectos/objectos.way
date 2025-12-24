@@ -28,31 +28,36 @@ Test case 008
 @Css.Source
 public final class Script008 extends AbstractDevScript {
 
-  public static final Script.JsAction ACTION = Script.array("el-1", "el-3").forEach(
-      Script.byId(Script.args(0).asString()).remove()
-  );
+  public static final Script.JsAction ACTION = Script.byId("subject").toggleClass("opacity:0", "opacity:1");
 
   @Override
   final void renderBody() {
     div(
         css("""
-        display:flex
-        flex-direction:column
-        gap:16rx
+        background-color:black
+        height:256px
+        opacity:1
+        width:256px
+
+        padding:16px
         """),
 
-        button(
-            id("click-me"),
-            dataOnClick(ACTION),
-            type("button"),
-            text("Click me")
-        ),
+        id("subject"),
 
-        div(id("el-1"), text("Div 1")),
+        div(
+            css("""
+            background-color:white
+            height:100%
+            width:100%
+            """),
 
-        div(id("el-2"), text("Div 2")),
-
-        div(id("el-3"), text("Div 3"))
+            button(
+                id("click-me"),
+                dataOnClick(ACTION),
+                type("button"),
+                text("Click me")
+            )
+        )
     );
   }
 
