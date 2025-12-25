@@ -18,7 +18,7 @@ package objectos.way;
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static org.testng.Assert.assertEquals;
 
-import objectos.way.dev.Script007;
+import objectos.way.dev.Script008;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
@@ -28,15 +28,13 @@ public class Script008Test {
   @Test
   public void action() {
     assertEquals(
-        Script007.ACTION.toString(),
+        Script008.ACTION.toString(),
 
         """
         [\
-        ["JS",["el-1","el-3"]],\
-        ["FE","Array",[\
-        [["EI",[["AX",0],["TY","string"]]],["IV","Element","remove",[]]]\
-        ]]\
-        ]\
+        ["JS",["opacity:0","opacity:1"]],\
+        ["FE","Array",\
+        [[["EI",[["JS","subject"]]],["PR","Element","classList"],["IV","DOMTokenList","toggle",[[["AX",0],["TY","string"]]]]]]]]\
         """
     );
   }
@@ -44,23 +42,17 @@ public class Script008Test {
   @Test
   public void live() {
     try (var page = Y.page()) {
-      page.navigate("/script/007");
+      page.navigate("/script/008");
 
       var clickMe = page.locator("#click-me");
 
-      var div1 = page.locator("#el-1");
-      var div2 = page.locator("#el-2");
-      var div3 = page.locator("#el-3");
+      var subject = page.locator("#subject");
 
-      assertThat(div1).hasCount(1);
-      assertThat(div2).hasCount(1);
-      assertThat(div3).hasCount(1);
+      assertThat(subject).hasCSS("opacity", "0");
 
       clickMe.click();
 
-      assertThat(div1).hasCount(0);
-      assertThat(div2).hasCount(1);
-      assertThat(div3).hasCount(0);
+      assertThat(subject).hasCSS("opacity", "1");
     }
   }
 

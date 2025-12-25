@@ -34,29 +34,24 @@ public final class Script008 extends AbstractDevScript {
   final void renderBody() {
     div(
         css("""
-        background-color:black
-        height:256px
-        opacity:1
-        width:256px
-
-        padding:16px
+        display:flex
+        flex-direction:column
+        gap:16rx
         """),
 
-        id("subject"),
+        button(
+            id("click-me"),
+            dataOnClick(ACTION),
+            text("Click me"),
+            type("button")
+        ),
 
         div(
-            css("""
-            background-color:white
-            height:100%
-            width:100%
-            """),
+            id("subject"),
 
-            button(
-                id("click-me"),
-                dataOnClick(ACTION),
-                type("button"),
-                text("Click me")
-            )
+            css("opacity:0"),
+
+            text("Div 1")
         )
     );
   }
