@@ -145,6 +145,7 @@ const way = (function() {
     "EI": elementById,
     "ET": elementTarget,
     "FE": forEach,
+    "GR": globalRead,
     "IV": invokeVirtual,
     "JS": jsValue,
     "PR": propertyRead,
@@ -291,6 +292,10 @@ const way = (function() {
     recv.forEach(fn);
   }
 
+  function globalRead() {
+    return globalThis;
+  }
+
   function invokeVirtual(ctx, args) {
     const recv = checkRecv(ctx, args.shift());
 
@@ -321,7 +326,7 @@ const way = (function() {
     const prop = recv[propName];
 
     if (!prop) {
-      throw new Error(`Illegal arg: ${typeName} does not declare the ${propName} property`);
+      throw new Error(`Illegal arg: ${recv} does not declare the ${propName} property`);
     }
 
     return prop;

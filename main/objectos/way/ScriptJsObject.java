@@ -24,13 +24,19 @@ sealed class ScriptJsObject
     ScriptJsElement,
     ScriptJsString, ScriptJsNumber {
 
+  static final ScriptJsObject GLOBAL = new ScriptJsObject("[\"GR\"]");
+
+  private static final Script.JsString IV = ScriptJsString.raw("IV");
+
+  private static final Script.JsString PR = ScriptJsString.raw("PR");
+
+  private static final Script.JsString PW = ScriptJsString.raw("PW");
+
   private final String value;
 
   ScriptJsObject(String value) {
     this.value = value;
   }
-
-  private static final Script.JsString IV = ScriptJsString.raw("IV");
 
   private static ScriptJsObject of(Script.JsObject v0, Script.JsObject v1) {
     return new ScriptJsObject(
@@ -59,8 +65,6 @@ sealed class ScriptJsObject
     return ScriptJsAction.of(this, action);
   }
 
-  private static final Script.JsString PR = ScriptJsString.raw("PR");
-
   @Override
   public final Script.JsObject prop(String type, String name) {
     Objects.requireNonNull(type, "type == null");
@@ -77,8 +81,6 @@ sealed class ScriptJsObject
 
     return of(this, action);
   }
-
-  private static final Script.JsString PW = ScriptJsString.raw("PW");
 
   @Override
   public final Script.JsAction prop(String type, String name, Script.JsObject value) {

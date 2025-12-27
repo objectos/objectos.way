@@ -34,11 +34,16 @@ abstract class AbstractDevScript extends Html.Template implements Http.Handler {
             meta(httpEquiv("content-type"), content("text/html; charset=utf-8")),
             meta(name("viewport"), content("width=device-width, initial-scale=1")),
             link(rel("stylesheet"), type("text/css"), href("/styles.css")),
-            script(src("/script.js"))
+            script(src("/script.js")),
+            title(documentTitle())
         ),
 
         body(f(this::renderBody))
     );
+  }
+
+  String documentTitle() {
+    return getClass().getSimpleName();
   }
 
   abstract void renderBody();
