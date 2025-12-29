@@ -23,6 +23,10 @@ final class ScriptJsString extends ScriptJsObject implements Script.JsString {
     super(value);
   }
 
+  public static ScriptJsString cast(ScriptJsObject obj) {
+    return obj.cast(ScriptJsString::new, String);
+  }
+
   public static ScriptJsString cast(ScriptJsRef ref) {
     return ref.cast(ScriptJsString::new, String);
   }

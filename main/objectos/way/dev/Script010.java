@@ -19,18 +19,18 @@ import module objectos.way;
 
 /*
 
-Test case 009
+Test case 010
 
 - event: click
-- globalThis
+- single data-frame: same name, different value
 
 */
 @Css.Source
-public final class Script009 extends AbstractDevScript {
+public final class Script010 extends AbstractDevScript {
 
-  public static final Script.JsAction ACTION = Script
-      .byId("subject")
-      .prop("Element", "textContent", Script.global().prop("Window", "document").prop("Document", "title"));
+  public static final Script.JsAction ACTION = Script.byId("subject").morph(
+      Script.byId("src").prop("Element", "innerHTML").asString()
+  );
 
   @Override
   final void renderBody() {
@@ -51,7 +51,21 @@ public final class Script009 extends AbstractDevScript {
         div(
             id("subject"),
 
-            text("Page title is...")
+            div(
+                dataFrame("x", "b"),
+
+                text("Before")
+            )
+        ),
+
+        div(
+            id("src"),
+
+            div(
+                dataFrame("x", "a"),
+
+                text("After")
+            )
         )
     );
   }

@@ -102,6 +102,7 @@ const way = (function() {
     "GR": globalRead,
     "IV": invokeVirtual,
     "JS": jsValue,
+    "MO": morph,
     "PR": propertyRead,
     "PW": propertyWrite,
     "TY": typeEnsure
@@ -272,6 +273,83 @@ const way = (function() {
     return checkDefined(args.shift(), "value");
   }
 
+  function morph(ctx, args) {
+    const recv = ctx.$recv;
+
+    const valid = typeof recv.querySelectorAll === 'function';
+
+    if (!valid) {
+      throw new Error(`Illegal arg: ${recv} does not declare the 'querySelectorAll' method`);
+    }
+
+    const $src = checkDefined(args.shift(), "src");
+
+    const src = checkString(compute(ctx, $src), "src");
+
+    const parser = new DOMParser();
+
+    const newContent = parser.parseFromString(src, "text/html");
+
+    // TODO handle title
+
+    // handle frames
+    const newFrames = newContent.querySelectorAll("[data-frame]");
+
+    const newNameMap = new Map();
+
+    for (const el of newFrames) {
+      const data = frame(el);
+
+      if (data) {
+        newNameMap.set(data.name, el);
+      }
+    }
+
+    const frames = recv.querySelectorAll("[data-frame]");
+
+    const replaced = new Set();
+
+    outer: for (const elem of frames) {
+      const data = frame(elem);
+
+      if (!data) {
+        continue;
+      }
+
+      for (const parent of replaced) {
+        if (parent.contains(elem)) {
+          continue outer;
+        }
+      }
+
+      const name = data.name;
+
+      const maybe = newNameMap.get(name);
+
+      if (!maybe) {
+        // this frame does not exist in the new data
+        elem.remove();
+
+        continue;
+      }
+
+      const newElem = maybe;
+
+      const oldValue = data.value;
+
+      const newData = frame(newElem);
+
+      const newValue = newData.value;
+
+      if (oldValue !== newValue || oldValue === null && newValue === null) {
+        replaced.add(elem);
+
+        elem.replaceWith(newElem);
+        //loadHandler(newElem);
+      }
+    }
+  }
+
   function propertyRead(ctx, args) {
     const recv = checkRecv(ctx, args.shift());
 
@@ -384,6 +462,28 @@ const way = (function() {
     }
 
     return maybe;
+  }
+
+  function frame(el) {
+    const dataset = el.dataset;
+
+    if (!dataset) {
+      return null;
+    }
+
+    const frame = dataset.frame;
+
+    const colon = frame.indexOf(":");
+
+    if (colon === -1) {
+      return { name: frame, value: null };
+    }
+
+    const name = frame.substring(0, colon);
+
+    const value = frame.substring(colon + 1);
+
+    return { name: name, value: value };
   }
 
   // ##################################################################

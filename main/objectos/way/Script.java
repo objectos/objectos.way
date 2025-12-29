@@ -33,6 +33,8 @@ public sealed interface Script permits ScriptPojo {
   /// Represents a JS runtime `Element` instance.
   public sealed interface JsElement extends JsObject permits ScriptJsElement {
 
+    JsAction morph(JsString src);
+
     /// Removes this element from its parent node.
     ///
     /// @return an object representing this action
@@ -50,6 +52,11 @@ public sealed interface Script permits ScriptPojo {
 
   /// Represents a JS runtime `Object` instance.
   public sealed interface JsObject permits JsArray, JsElement, JsString, ScriptJsObject {
+
+    /// Converts this reference to a JS `String` reference.
+    ///
+    /// @return the string
+    JsString asString();
 
     /// Invokes the specified method with the specified arguments, in order, if
     /// the JS object is an instance of the specified type.
@@ -220,6 +227,7 @@ public sealed interface Script permits ScriptPojo {
     void writeTo(Appendable out) throws IOException;
 
   }
+
   /*
 
   /// The `GET` method.

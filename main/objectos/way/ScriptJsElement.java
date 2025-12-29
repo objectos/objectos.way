@@ -16,8 +16,14 @@
 package objectos.way;
 
 import java.util.Objects;
+import objectos.way.Script.JsAction;
+import objectos.way.Script.JsString;
 
 final class ScriptJsElement extends ScriptJsObject implements Script.JsElement {
+
+  private static final Script.JsString EI = ScriptJsString.raw("EI");
+
+  private static final Script.JsString MO = ScriptJsString.raw("MO");
 
   private static final Script.JsString Element = ScriptJsString.raw("Element");
 
@@ -31,8 +37,6 @@ final class ScriptJsElement extends ScriptJsObject implements Script.JsElement {
   static ScriptJsElement byId(Script.JsString value) {
     return byId0(value);
   }
-
-  private static final Script.JsString EI = ScriptJsString.raw("EI");
 
   private static ScriptJsElement byId0(Script.JsObject value) {
     Objects.requireNonNull(value, "value == null");
@@ -50,6 +54,19 @@ final class ScriptJsElement extends ScriptJsObject implements Script.JsElement {
 
   public static ScriptJsElement cast(ScriptJsRef ref) {
     return ref.cast(ScriptJsElement::new, Element);
+  }
+
+  @Override
+  public final JsAction morph(JsString src) {
+    Objects.requireNonNull(src, "src == null");
+
+    final Script.JsArray $src;
+    $src = ScriptJsArray.raw(src);
+
+    final Script.JsArray action;
+    action = ScriptJsArray.raw(MO, $src);
+
+    return ScriptJsAction.of(this, action);
   }
 
   @Override

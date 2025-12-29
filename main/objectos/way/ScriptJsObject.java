@@ -16,6 +16,7 @@
 package objectos.way;
 
 import java.util.Objects;
+import java.util.function.Function;
 
 sealed class ScriptJsObject
     implements Script.JsObject
@@ -32,6 +33,8 @@ sealed class ScriptJsObject
 
   private static final Script.JsString PW = ScriptJsString.raw("PW");
 
+  private static final Script.JsString TY = ScriptJsString.raw("TY");
+
   private final String value;
 
   ScriptJsObject(String value) {
@@ -42,6 +45,11 @@ sealed class ScriptJsObject
     return new ScriptJsObject(
         v0.toString() + "," + v1.toString()
     );
+  }
+
+  @Override
+  public final Script.JsString asString() {
+    return ScriptJsString.cast(this);
   }
 
   @Override
@@ -106,6 +114,16 @@ sealed class ScriptJsObject
   @Override
   public final String toString() {
     return value;
+  }
+
+  final <T> T cast(Function<String, T> constructor, Script.JsString typeName) {
+    final ScriptJsArray cast;
+    cast = ScriptJsArray.raw(TY, typeName);
+
+    final String computed;
+    computed = value + "," + cast;
+
+    return constructor.apply(computed);
   }
 
 }

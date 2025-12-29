@@ -17,7 +17,6 @@ package objectos.way;
 
 import java.util.Objects;
 import java.util.function.Function;
-import objectos.way.Script.JsString;
 
 final class ScriptJsRef implements Script.JsRef {
 
@@ -82,7 +81,7 @@ final class ScriptJsRef implements Script.JsRef {
     return value;
   }
 
-  final <T> T cast(Function<String, T> constructor, JsString typeName) {
+  final <T> T cast(Function<String, T> constructor, Script.JsString typeName) {
     final ScriptJsArray cast;
     cast = ScriptJsArray.raw(TY, typeName);
 

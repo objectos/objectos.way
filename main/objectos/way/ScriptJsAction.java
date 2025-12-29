@@ -16,9 +16,10 @@
 package objectos.way;
 
 import java.util.Objects;
-import objectos.way.Script.JsAction;
 
 final class ScriptJsAction implements Script.JsAction {
+
+  private static final Script.JsString CW = ScriptJsString.raw("CW");
 
   private final String value;
 
@@ -53,7 +54,7 @@ final class ScriptJsAction implements Script.JsAction {
     );
 
     for (int idx = 0; idx < more.length; idx++) {
-      final JsAction o;
+      final Script.JsAction o;
       o = more[idx];
 
       if (o == null) {
@@ -82,8 +83,6 @@ final class ScriptJsAction implements Script.JsAction {
         "[" + v0.toString() + "," + v1.toString() + "]"
     );
   }
-
-  private static final Script.JsString CW = ScriptJsString.raw("CW");
 
   static ScriptJsAction var(String name, Script.JsObject value) {
     Objects.requireNonNull(name, "name == null");
