@@ -19,15 +19,15 @@ import module objectos.way;
 
 /*
 
-Test case 014
+Test case 015
 
 - event: click
 - action: morph
-- descendants: morph two siblings
+- always morph frame with name only
 
 */
 @Css.Source
-public final class Script014 extends AbstractDevScript {
+public final class Script015 extends AbstractDevScript {
 
   public static final Script.JsAction ACTION = Script.byId("subject").morph(
       Script.byId("src").innerHTML()
@@ -55,14 +55,14 @@ public final class Script014 extends AbstractDevScript {
             div(
                 dataFrame("root", "x"),
 
-                span(dataFrame("hd", "1"), className("hd"), text("SUBJECT")),
+                span(className("hd"), text("SUBJECT")),
 
                 span(className("fixed"), text("Fixed")),
 
                 div(
                     className("contents"),
 
-                    dataFrame("x", "1"),
+                    dataFrame("name-only"),
 
                     text("Before")
                 )
@@ -75,12 +75,12 @@ public final class Script014 extends AbstractDevScript {
             div(
                 dataFrame("root", "x"),
 
-                span(dataFrame("hd", "2"), className("hd"), text("SRC")),
+                span(className("hd"), text("SRC")),
 
                 div(
                     className("contents"),
 
-                    dataFrame("x", "2"),
+                    dataFrame("name-only"),
 
                     text("After")
                 )
