@@ -57,6 +57,11 @@ final class ScriptJsElement extends ScriptJsObject implements Script.JsElement {
   }
 
   @Override
+  public final Script.JsString innerHTML() {
+    return prop("Element", "innerHTML").asString();
+  }
+
+  @Override
   public final JsAction morph(JsString src) {
     Objects.requireNonNull(src, "src == null");
 

@@ -29,7 +29,7 @@ Test case 010
 public final class Script010 extends AbstractDevScript {
 
   public static final Script.JsAction ACTION = Script.byId("subject").morph(
-      Script.byId("src").prop("Element", "innerHTML").asString()
+      Script.byId("src").innerHTML()
   );
 
   @Override
