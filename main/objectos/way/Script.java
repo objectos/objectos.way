@@ -38,6 +38,11 @@ public sealed interface Script permits ScriptPojo {
     /// @return a string representing the HTML
     JsString innerHTML();
 
+    /// Morphs the contents of this element with the specified HTML.
+    ///
+    /// @param the source HTML
+    ///
+    /// @return an object representing this action
     JsAction morph(JsString src);
 
     /// Removes this element from its parent node.

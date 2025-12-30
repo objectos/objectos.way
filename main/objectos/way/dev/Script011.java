@@ -22,6 +22,7 @@ import module objectos.way;
 Test case 011
 
 - event: click
+- action: morph
 - single data-frame: same name, same value
 
 */
