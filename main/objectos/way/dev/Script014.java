@@ -19,15 +19,15 @@ import module objectos.way;
 
 /*
 
-Test case 012
+Test case 013
 
 - event: click
 - action: morph
-- descendants: morph inner only
+- descendants: morph two siblings
 
 */
 @Css.Source
-public final class Script012 extends AbstractDevScript {
+public final class Script014 extends AbstractDevScript {
 
   public static final Script.JsAction ACTION = Script.byId("subject").morph(
       Script.byId("src").innerHTML()
@@ -55,7 +55,9 @@ public final class Script012 extends AbstractDevScript {
             div(
                 dataFrame("root", "x"),
 
-                span(className("title"), text("SUBJECT")),
+                span(dataFrame("hd", "1"), className("hd"), text("SUBJECT")),
+
+                span(className("fixed"), text("Fixed")),
 
                 div(
                     className("contents"),
@@ -73,7 +75,7 @@ public final class Script012 extends AbstractDevScript {
             div(
                 dataFrame("root", "x"),
 
-                span(className("title"), text("SRC")),
+                span(dataFrame("hd", "2"), className("hd"), text("SRC")),
 
                 div(
                     className("contents"),
