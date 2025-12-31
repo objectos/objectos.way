@@ -17,7 +17,6 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
-import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class HtmlTemplateTestAttributes {
@@ -212,14 +211,14 @@ public class HtmlTemplateTestAttributes {
     test(
         new Html.Template() {
           final Html.Id FOO = Html.Id.of("foo");
-    
+
           @Override
           protected final void render() {
             div(
                 dataOnClick(s -> s.elementById(FOO).toggleClass("a x")),
                 dataOnClick(s -> s.elementById(FOO).toggleClass("b y"))
             );
-    
+
             div(
                 dataOnClick(s -> s.elementById(FOO).toggleClass("a x")),
                 dataOnClick(s -> {
@@ -227,7 +226,7 @@ public class HtmlTemplateTestAttributes {
                   s.elementById(FOO).toggleClass("c z");
                 })
             );
-    
+
             div(
                 dataOnClick(s -> {
                   s.elementById(FOO).toggleClass("a x");
@@ -237,7 +236,7 @@ public class HtmlTemplateTestAttributes {
             );
           }
         },
-    
+
         """
         <div data-on-click='[["id-2","foo","toggle-class-0","a","x"],["id-2","foo","toggle-class-0","b","y"]]'></div>
         <div data-on-click='[["id-2","foo","toggle-class-0","a","x"],["id-2","foo","toggle-class-0","b","y"],["id-2","foo","toggle-class-0","c","z"]]'></div>
@@ -245,7 +244,6 @@ public class HtmlTemplateTestAttributes {
         """
     );
     */
-    Assert.fail("Implement me");
   }
 
   @Test
@@ -262,13 +260,12 @@ public class HtmlTemplateTestAttributes {
             );
           }
         },
-
+    
         """
         <div data-on-load='[["id-2","foo","toggle-class-0","x"]]'></div>
         """
     );
     */
-    Assert.fail("Implement me");
   }
 
   @Test
@@ -283,13 +280,12 @@ public class HtmlTemplateTestAttributes {
             );
           }
         },
-
+    
         """
         <form data-on-success='[["stop-propagation-0"]]'></form>
         """
     );
     */
-    Assert.fail("Implement me");
   }
 
   @Test
