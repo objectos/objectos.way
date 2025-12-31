@@ -30,9 +30,7 @@ public final class Script016 extends AbstractDevScript {
 
   public static final Script.JsAction ACTION = Script.target().prop(
       "Node", "textContent",
-      Script.target().invoke(
-          Script.JsString.TYPE, "Element", "getAttribute", Script.JsString.of("data-test")
-      )
+      Script.target().attr(DATA_TEST)
   );
 
   @Override

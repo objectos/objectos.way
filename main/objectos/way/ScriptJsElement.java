@@ -58,7 +58,7 @@ final class ScriptJsElement extends ScriptJsObject implements Script.JsElement {
 
   @Override
   public final Script.JsString attr(Script.JsString name) {
-    throw new UnsupportedOperationException("Implement me");
+    return invoke(Script.JsString.TYPE, "Element", "getAttribute", name);
   }
 
   @Override

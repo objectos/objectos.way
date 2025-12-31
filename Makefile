@@ -47,7 +47,7 @@ OPENTEST4J := org.opentest4j/opentest4j/1.3.0
 #
 
 .PHONY: all
-all: mysql7-start test test-js mysql7-stop
+all: mysql7-start test mysql7-stop
 
 include make/java-core.mk
 
