@@ -57,6 +57,11 @@ final class ScriptJsElement extends ScriptJsObject implements Script.JsElement {
   }
 
   @Override
+  public final Script.JsString attr(Script.JsString name) {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  @Override
   public final Script.JsString innerHTML() {
     return prop("Element", "innerHTML").asString();
   }

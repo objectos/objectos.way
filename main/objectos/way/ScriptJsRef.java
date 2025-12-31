@@ -48,9 +48,15 @@ final class ScriptJsRef implements Script.JsRef {
     return of(ref);
   }
 
-  private static ScriptJsRef of(Script.JsArray v0) {
+  private static ScriptJsRef of(Script.JsObject v0) {
     return new ScriptJsRef(
         v0.toString()
+    );
+  }
+
+  static ScriptJsRef of(Script.JsObject v0, Script.JsObject v1) {
+    return new ScriptJsRef(
+        v0.toString() + "," + v1.toString()
     );
   }
 

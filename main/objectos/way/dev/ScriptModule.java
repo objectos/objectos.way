@@ -41,6 +41,7 @@ final class ScriptModule implements Http.Routing.Module {
     routing.path("/script/013", GET, new Script013());
     routing.path("/script/014", GET, new Script014());
     routing.path("/script/015", GET, new Script015());
+    routing.path("/script/016", GET, new Script016());
   }
 
 }

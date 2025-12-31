@@ -19,6 +19,8 @@ import module objectos.way;
 
 abstract class AbstractDevScript extends Html.Template implements Http.Handler {
 
+  static final Html.AttributeName DATA_TEST = Html.AttributeName.of("data-test");
+
   @Override
   public void handle(Http.Exchange http) {
     http.ok(this);

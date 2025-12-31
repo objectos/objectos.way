@@ -54,6 +54,23 @@ sealed class ScriptJsObject
 
   @Override
   public final Script.JsAction invoke(String type, String method, Script.JsObject... args) {
+    final Script.JsArray action;
+    action = invoke0(type, method, args);
+
+    return ScriptJsAction.of(this, action);
+  }
+
+  @Override
+  public final <T> T invoke(Script.JsType<T> returnType, String type, String method, Script.JsObject... args) {
+    Objects.requireNonNull(returnType, "returnType == null");
+
+    final Script.JsArray action;
+    action = invoke0(type, method, args);
+
+    return ScriptJsType.of(returnType, this, action);
+  }
+
+  private Script.JsArray invoke0(String type, String method, Script.JsObject... args) {
     Objects.requireNonNull(type, "type == null");
     Objects.requireNonNull(method, "method == null");
     Objects.requireNonNull(args, "args == null");
@@ -67,10 +84,7 @@ sealed class ScriptJsObject
     final Script.JsArray $args;
     $args = ScriptJsArray.rawArgs(args);
 
-    final Script.JsArray action;
-    action = ScriptJsArray.raw(IV, $type, $method, $args);
-
-    return ScriptJsAction.of(this, action);
+    return ScriptJsArray.raw(IV, $type, $method, $args);
   }
 
   @Override

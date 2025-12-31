@@ -15,9 +15,13 @@
  */
 package objectos.way;
 
+import objectos.way.Script.JsString;
+
 final class ScriptJsString extends ScriptJsObject implements Script.JsString {
 
   private static final Script.JsString String = ScriptJsString.raw("string");
+
+  static final ScriptJsType<JsString> $TYPE = ScriptJsString::new;
 
   private ScriptJsString(String value) {
     super(value);
