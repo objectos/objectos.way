@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023-2025 Objectos Software LTDA.
+ * Copyright (C) 2023-2026 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ enum ScriptLibrary implements Script.Library {
   public final String toString() {
     return """
 /*
- * Copyright (C) 2023-2025 Objectos Software LTDA.
+ * Copyright (C) 2023-2026 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

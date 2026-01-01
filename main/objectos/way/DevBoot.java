@@ -1,6 +1,6 @@
 /*
  * This file is part of Objectos UI.
- * Copyright (C) 2025 Objectos Software LTDA.
+ * Copyright (C) 2026 Objectos Software LTDA.
  *
  * Objectos UI is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
