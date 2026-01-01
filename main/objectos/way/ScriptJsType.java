@@ -15,19 +15,37 @@
  */
 package objectos.way;
 
-@FunctionalInterface
-non-sealed interface ScriptJsType<T> extends Script.JsType<T> {
+import java.util.function.Function;
 
-  static <T> T of(Script.JsType<T> type, Script.JsObject v0, Script.JsObject v1) {
-    final ScriptJsType<T> impl;
-    impl = (ScriptJsType<T>) type;
+final class ScriptJsType<T> implements Script.JsType<T> {
 
+  private static final Script.JsString TY = ScriptJsString.raw("TY");
+
+  private final ScriptJsString typeName;
+
+  private final Function<String, T> constructor;
+
+  ScriptJsType(ScriptJsString typeName, Function<String, T> constructor) {
+    this.typeName = typeName;
+
+    this.constructor = constructor;
+  }
+
+  final T as(String value) {
+    final ScriptJsArray cast;
+    cast = ScriptJsArray.raw(TY, typeName);
+
+    final String computed;
+    computed = value + "," + cast;
+
+    return constructor.apply(computed);
+  }
+
+  T invoke(Script.JsObject v0, Script.JsObject v1) {
     final String value;
     value = v0 + "," + v1;
 
-    return impl.get(value);
+    return constructor.apply(value);
   }
-
-  T get(String value);
 
 }

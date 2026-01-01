@@ -19,20 +19,8 @@ import objectos.way.Script.JsString;
 
 final class ScriptJsString extends ScriptJsObject implements Script.JsString {
 
-  private static final Script.JsString String = ScriptJsString.raw("string");
-
-  static final ScriptJsType<JsString> $TYPE = ScriptJsString::new;
-
   private ScriptJsString(String value) {
     super(value);
-  }
-
-  public static ScriptJsString cast(ScriptJsObject obj) {
-    return obj.cast(ScriptJsString::new, String);
-  }
-
-  public static ScriptJsString cast(ScriptJsRef ref) {
-    return ref.cast(ScriptJsString::new, String);
   }
 
   public static ScriptJsString of(String s) {
@@ -47,6 +35,13 @@ final class ScriptJsString extends ScriptJsObject implements Script.JsString {
     v = quote(s);
 
     return new ScriptJsString(v);
+  }
+
+  static ScriptJsType<JsString> $type() {
+    final ScriptJsString typeName;
+    typeName = ScriptJsString.raw("string");
+
+    return new ScriptJsType<>(typeName, ScriptJsString::new);
   }
 
   private static String quote(String s) {

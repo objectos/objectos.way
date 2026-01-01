@@ -17,15 +17,15 @@ package objectos.way;
 
 import java.util.Objects;
 import objectos.way.Script.JsAction;
+import objectos.way.Script.JsElement;
 import objectos.way.Script.JsString;
+import objectos.way.Script.JsType;
 
 final class ScriptJsElement extends ScriptJsObject implements Script.JsElement {
 
   private static final Script.JsString EI = ScriptJsString.raw("EI");
 
   private static final Script.JsString MO = ScriptJsString.raw("MO");
-
-  private static final Script.JsString Element = ScriptJsString.raw("Element");
 
   static final ScriptJsElement TARGET = new ScriptJsElement("""
   ["ET"]""");
@@ -52,18 +52,21 @@ final class ScriptJsElement extends ScriptJsObject implements Script.JsElement {
     );
   }
 
-  public static ScriptJsElement cast(ScriptJsRef ref) {
-    return ref.cast(ScriptJsElement::new, Element);
+  static JsType<JsElement> $type() {
+    final ScriptJsString typeName;
+    typeName = ScriptJsString.raw("Element");
+
+    return new ScriptJsType<>(typeName, ScriptJsElement::new);
   }
 
   @Override
   public final Script.JsString attr(Script.JsString name) {
-    return invoke(Script.JsString.TYPE, "Element", "getAttribute", name);
+    return invoke(Script.JsString.type, "Element", "getAttribute", name);
   }
 
   @Override
   public final Script.JsString innerHTML() {
-    return prop("Element", "innerHTML").asString();
+    return prop("Element", "innerHTML").as(Script.JsString.type);
   }
 
   @Override
@@ -97,7 +100,7 @@ final class ScriptJsElement extends ScriptJsObject implements Script.JsElement {
     array = arrayBuilder.build();
 
     final Script.JsString arg0;
-    arg0 = Script.args(0).asString();
+    arg0 = Script.args(0).as(Script.JsString.type);
 
     final Script.JsAction action;
     action = prop("Element", "classList").invoke("DOMTokenList", "toggle", arg0);

@@ -30,7 +30,7 @@ Test case 007
 public final class Script007 extends AbstractDevScript {
 
   public static final Script.JsAction ACTION = Script.array("el-1", "el-3").forEach(
-      Script.byId(Script.args(0).asString()).remove()
+      Script.byId(Script.args(0).as(Script.JsString.type)).remove()
   );
 
   @Override

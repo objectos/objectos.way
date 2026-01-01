@@ -16,15 +16,13 @@
 package objectos.way;
 
 import java.util.Objects;
-import java.util.function.Function;
+import objectos.way.Script.JsType;
 
 final class ScriptJsRef implements Script.JsRef {
 
   private static final Script.JsString AX = ScriptJsString.raw("AX");
 
   private static final Script.JsString CR = ScriptJsString.raw("CR");
-
-  private static final Script.JsString TY = ScriptJsString.raw("TY");
 
   private final String value;
 
@@ -73,28 +71,16 @@ final class ScriptJsRef implements Script.JsRef {
   }
 
   @Override
-  public final Script.JsElement asElem() {
-    return ScriptJsElement.cast(this);
-  }
+  public final <T> T as(JsType<T> type) {
+    final ScriptJsType<T> impl;
+    impl = (ScriptJsType<T>) type;
 
-  @Override
-  public final Script.JsString asString() {
-    return ScriptJsString.cast(this);
+    return impl.as(value);
   }
 
   @Override
   public final String toString() {
     return value;
-  }
-
-  final <T> T cast(Function<String, T> constructor, Script.JsString typeName) {
-    final ScriptJsArray cast;
-    cast = ScriptJsArray.raw(TY, typeName);
-
-    final String computed;
-    computed = value + "," + cast;
-
-    return constructor.apply(computed);
   }
 
 }

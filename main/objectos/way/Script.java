@@ -33,6 +33,8 @@ public sealed interface Script permits ScriptPojo {
   /// Represents a JS runtime `Element` instance.
   public sealed interface JsElement extends JsObject permits ScriptJsElement {
 
+    JsType<JsElement> type = ScriptJsElement.$type();
+
     /// Returns the value of the attribute of the specified name.
     ///
     /// @param name the attribute name
@@ -85,10 +87,14 @@ public sealed interface Script permits ScriptPojo {
   /// Represents a JS runtime `Object` instance.
   public sealed interface JsObject permits JsArray, JsElement, JsString, ScriptJsObject {
 
-    /// Converts this reference to a JS `String` reference.
+    /// Converts this reference to a JS reference of the specified type.
     ///
-    /// @return the string
-    JsString asString();
+    /// @param <T> the JS runtime type
+    ///
+    /// @param type the handle representing the JS runtime type
+    ///
+    /// @return the converted reference
+    <T> T as(JsType<T> type);
 
     /// Invokes the specified method with the specified arguments, in order, if
     /// the JS object is an instance of the specified type.
@@ -135,22 +141,21 @@ public sealed interface Script permits ScriptPojo {
   /// Represents a reference to a JS runtime value.
   public sealed interface JsRef permits ScriptJsRef {
 
-    /// Converts this reference to a JS `Element` reference.
+    /// Converts this reference to a JS reference of the specified type.
     ///
-    /// @return the element
-    JsElement asElem();
-
-    /// Converts this reference to a JS `String` reference.
+    /// @param <T> the JS runtime type
     ///
-    /// @return the string
-    JsString asString();
+    /// @param type the handle representing the JS runtime type
+    ///
+    /// @return the converted reference
+    <T> T as(JsType<T> type);
 
   }
 
   /// Represents a JS runtime `String` instance.
   public sealed interface JsString extends JsObject permits ScriptJsString {
 
-    JsType<JsString> TYPE = ScriptJsString.$TYPE;
+    JsType<JsString> type = ScriptJsString.$type();
 
     static JsString of(String s) {
       return ScriptJsString.of(s);
@@ -159,7 +164,9 @@ public sealed interface Script permits ScriptPojo {
   }
 
   /// Represents the type of a JS runtime value.
-  public sealed interface JsType<T> permits ScriptJsType {}
+  public sealed interface JsType<T> permits ScriptJsType {
+
+  }
 
   static JsArray array(String... values) {
     final ScriptJsArray.Builder builder;

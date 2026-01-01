@@ -16,7 +16,6 @@
 package objectos.way;
 
 import java.util.Objects;
-import java.util.function.Function;
 
 sealed class ScriptJsObject
     implements Script.JsObject
@@ -33,8 +32,6 @@ sealed class ScriptJsObject
 
   private static final Script.JsString PW = ScriptJsString.raw("PW");
 
-  private static final Script.JsString TY = ScriptJsString.raw("TY");
-
   private final String value;
 
   ScriptJsObject(String value) {
@@ -48,8 +45,11 @@ sealed class ScriptJsObject
   }
 
   @Override
-  public final Script.JsString asString() {
-    return ScriptJsString.cast(this);
+  public final <T> T as(Script.JsType<T> type) {
+    final ScriptJsType<T> impl;
+    impl = (ScriptJsType<T>) Objects.requireNonNull(type, "type == null");
+
+    return impl.as(value);
   }
 
   @Override
@@ -62,12 +62,13 @@ sealed class ScriptJsObject
 
   @Override
   public final <T> T invoke(Script.JsType<T> returnType, String type, String method, Script.JsObject... args) {
-    Objects.requireNonNull(returnType, "returnType == null");
+    final ScriptJsType<T> impl;
+    impl = (ScriptJsType<T>) Objects.requireNonNull(returnType, "returnType == null");
 
     final Script.JsArray action;
     action = invoke0(type, method, args);
 
-    return ScriptJsType.of(returnType, this, action);
+    return impl.invoke(this, action);
   }
 
   private Script.JsArray invoke0(String type, String method, Script.JsObject... args) {
@@ -128,16 +129,6 @@ sealed class ScriptJsObject
   @Override
   public final String toString() {
     return value;
-  }
-
-  final <T> T cast(Function<String, T> constructor, Script.JsString typeName) {
-    final ScriptJsArray cast;
-    cast = ScriptJsArray.raw(TY, typeName);
-
-    final String computed;
-    computed = value + "," + cast;
-
-    return constructor.apply(computed);
   }
 
 }
