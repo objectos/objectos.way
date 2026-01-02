@@ -15,6 +15,8 @@
  */
 package objectos.way;
 
+import objectos.script.JsAction;
+
 final class DomAttribute implements Dom.Attribute {
 
   HtmlAttributeName name;
@@ -39,7 +41,7 @@ final class DomAttribute implements Dom.Attribute {
 
   @Override
   public final boolean singleQuoted() {
-    return value instanceof Script.JsAction;
+    return value instanceof JsAction;
   }
 
   @Override
@@ -55,7 +57,7 @@ final class DomAttribute implements Dom.Attribute {
     Object result;
     result = next();
 
-    if (result instanceof Script.JsAction action) {
+    if (result instanceof JsAction action) {
 
       final StringBuilder sb;
       sb = new StringBuilder();

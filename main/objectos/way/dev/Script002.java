@@ -16,17 +16,16 @@
 package objectos.way.dev;
 
 import module objectos.way;
+import objectos.script.Js;
 
 /// Test case 002
 ///
-/// - event: click 
-/// - locator: target 
-/// - property read and write
+/// - event: click - locator: target - property read and write
 @Css.Source
 public final class Script002 extends AbstractDevScript {
 
-  public static final Script.JsAction ACTION = Script.target()
-      .prop("Node", "textContent", Script.target().prop("Element", "id"));
+  public static final JsAction ACTION = Js.target()
+      .prop("Node", "textContent", Js.target().prop("Element", "id"));
 
   @Override
   final void renderBody() {

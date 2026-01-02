@@ -16,6 +16,7 @@
 package objectos.way.dev;
 
 import module objectos.way;
+import objectos.script.Js;
 
 @Css.Source
 public final class DevScriptElement extends ScriptJsElementHandler {
@@ -27,7 +28,7 @@ public final class DevScriptElement extends ScriptJsElementHandler {
     }
   }
 
-  public static final Script.JsAction TOGGLE_CLASS0 = Script
+  public static final JsAction TOGGLE_CLASS0 = Js
       .byId("subject").toggleClass("background-color:var(--color-red-200)");
 
   private Html.Component toggleClass0() {

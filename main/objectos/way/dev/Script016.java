@@ -16,6 +16,7 @@
 package objectos.way.dev;
 
 import module objectos.way;
+import objectos.script.Js;
 
 /*
 
@@ -28,9 +29,9 @@ Test case 016
 @Css.Source
 public final class Script016 extends AbstractDevScript {
 
-  public static final Script.JsAction ACTION = Script.target().prop(
+  public static final JsAction ACTION = Js.target().prop(
       "Node", "textContent",
-      Script.target().attr(DATA_TEST)
+      Js.target().attr(DATA_TEST)
   );
 
   @Override

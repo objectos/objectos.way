@@ -17,6 +17,7 @@ package objectos.way;
 
 import java.io.IOException;
 import java.util.Objects;
+import objectos.script.JsAction;
 
 sealed abstract class HtmlMarkup permits HtmlMarkupOfHtml, HtmlMarkupOfTestable {
 
@@ -50,28 +51,28 @@ sealed abstract class HtmlMarkup permits HtmlMarkupOfHtml, HtmlMarkupOfTestable 
   /// @param script the script to be executed
   /// 
   /// @return an instruction representing the attribute
-  public abstract Html.Instruction.OfDataOn dataOnClick(Script.JsAction script);
+  public abstract Html.Instruction.OfDataOn dataOnClick(JsAction script);
 
   /// Renders the `data-on-input` attribute with the specified script.
   /// 
   /// @param script the script to be executed
   /// 
   /// @return an instruction representing the attribute
-  public abstract Html.Instruction.OfDataOn dataOnInput(Script.JsAction script);
+  public abstract Html.Instruction.OfDataOn dataOnInput(JsAction script);
 
   /// Renders the `data-on-load` attribute with the specified script.
   /// 
   /// @param script the script to be executed
   /// 
   /// @return an instruction representing the attribute
-  public abstract Html.Instruction.OfDataOn dataOnLoad(Script.JsAction script);
+  public abstract Html.Instruction.OfDataOn dataOnLoad(JsAction script);
 
   /// Renders the `data-on-success` attribute with the specified script.
   /// 
   /// @param script the script to be executed
   /// 
   /// @return an instruction representing the attribute
-  public abstract Html.Instruction.OfDataOn dataOnSuccess(Script.JsAction script);
+  public abstract Html.Instruction.OfDataOn dataOnSuccess(JsAction script);
 
   /// Renders the `data-frame` attribute for a frame with the specified name.
   /// 

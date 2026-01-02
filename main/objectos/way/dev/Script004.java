@@ -16,6 +16,7 @@
 package objectos.way.dev;
 
 import module objectos.way;
+import objectos.script.Js;
 
 /// Test case 004
 ///
@@ -23,8 +24,8 @@ import module objectos.way;
 @Css.Source
 public final class Script004 extends AbstractDevScript {
 
-  public static final Script.JsAction ACTION = Script
-      .byId("subject").invoke("Element", "removeAttribute", Script.JsString.of("style"));
+  public static final JsAction ACTION = Js
+      .byId("subject").invoke("Element", "removeAttribute", JsString.of("style"));
 
   @Override
   final void renderBody() {

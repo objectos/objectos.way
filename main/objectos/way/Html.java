@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
+import objectos.script.JsAction;
 import objectos.way.Testable.Formatter;
 
 /**
@@ -1318,28 +1319,28 @@ public final class Html {
     /// @param script the script to be executed
     ///
     /// @return an instruction representing the attribute
-    Html.Instruction.OfDataOn dataOnClick(Script.JsAction script);
+    Html.Instruction.OfDataOn dataOnClick(JsAction script);
 
     /// Renders the `data-on-input` attribute with the specified script.
     ///
     /// @param script the script to be executed
     ///
     /// @return an instruction representing the attribute
-    Html.Instruction.OfDataOn dataOnInput(Script.JsAction script);
+    Html.Instruction.OfDataOn dataOnInput(JsAction script);
 
     /// Renders the `data-on-load` attribute with the specified script.
     ///
     /// @param script the script to be executed
     ///
     /// @return an instruction representing the attribute
-    Html.Instruction.OfDataOn dataOnLoad(Script.JsAction script);
+    Html.Instruction.OfDataOn dataOnLoad(JsAction script);
 
     /// Renders the `data-on-success` attribute with the specified script.
     ///
     /// @param script the script to be executed
     ///
     /// @return an instruction representing the attribute
-    Html.Instruction.OfDataOn dataOnSuccess(Script.JsAction script);
+    Html.Instruction.OfDataOn dataOnSuccess(JsAction script);
 
     /// Renders the `data-frame` attribute for a frame with the specified name.
     ///
@@ -3813,7 +3814,7 @@ public final class Html {
     /// @param script the script to be executed
     /// 
     /// @return an instruction representing the attribute
-    protected final Html.Instruction.OfDataOn dataOnClick(Script.JsAction script) {
+    protected final Html.Instruction.OfDataOn dataOnClick(JsAction script) {
       return $html().dataOnClick(script);
     }
 
@@ -3822,7 +3823,7 @@ public final class Html {
     /// @param script the script to be executed
     /// 
     /// @return an instruction representing the attribute
-    protected final Html.Instruction.OfDataOn dataOnInput(Script.JsAction script) {
+    protected final Html.Instruction.OfDataOn dataOnInput(JsAction script) {
       return $html().dataOnInput(script);
     }
 
@@ -3831,7 +3832,7 @@ public final class Html {
     /// @param script the script to be executed
     /// 
     /// @return an instruction representing the attribute
-    protected final Html.Instruction.OfDataOn dataOnLoad(Script.JsAction script) {
+    protected final Html.Instruction.OfDataOn dataOnLoad(JsAction script) {
       return $html().dataOnLoad(script);
     }
 
@@ -3840,7 +3841,7 @@ public final class Html {
     /// @param script the script to be executed
     /// 
     /// @return an instruction representing the attribute
-    protected final Html.Instruction.OfDataOn dataOnSuccess(Script.JsAction script) {
+    protected final Html.Instruction.OfDataOn dataOnSuccess(JsAction script) {
       return $html().dataOnSuccess(script);
     }
 

@@ -17,6 +17,8 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.script.JsAction;
+import objectos.script.Js;
 import org.testng.annotations.Test;
 
 public class HtmlTemplateTestAttributes {
@@ -177,8 +179,8 @@ public class HtmlTemplateTestAttributes {
 
   @Test
   public void dataOnClick01() {
-    final Script.JsAction remove;
-    remove = Script.target().invoke("Element", "remove");
+    final JsAction remove;
+    remove = Js.target().invoke("Element", "remove");
 
     class ThisComponent implements Html.Component {
       @Override

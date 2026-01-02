@@ -16,6 +16,7 @@
 package objectos.way.dev;
 
 import module objectos.way;
+import objectos.script.Js;
 
 /*
 
@@ -29,8 +30,8 @@ Test case 012
 @Css.Source
 public final class Script012 extends AbstractDevScript {
 
-  public static final Script.JsAction ACTION = Script.byId("subject").morph(
-      Script.byId("src").innerHTML()
+  public static final JsAction ACTION = Js.byId("subject").morph(
+      Js.byId("src").innerHTML()
   );
 
   @Override

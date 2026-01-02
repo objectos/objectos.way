@@ -16,6 +16,7 @@
 package objectos.way.dev;
 
 import module objectos.way;
+import objectos.script.Js;
 
 /*
 
@@ -29,8 +30,8 @@ Test case 007
 @Css.Source
 public final class Script007 extends AbstractDevScript {
 
-  public static final Script.JsAction ACTION = Script.array("el-1", "el-3").forEach(
-      Script.byId(Script.args(0).as(Script.JsString.type)).remove()
+  public static final JsAction ACTION = Js.array("el-1", "el-3").forEach(
+      Js.byId(Js.args(0).as(JsString.type)).remove()
   );
 
   @Override

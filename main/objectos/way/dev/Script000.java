@@ -16,17 +16,15 @@
 package objectos.way.dev;
 
 import module objectos.way;
+import objectos.script.Js;
 
 /// Test case 000
-/// 
-/// - event: click
-/// - locator: target
-/// - invoke method w/ 0 args
+///
+/// - event: click - locator: target - invoke method w/ 0 args
 @Css.Source
 public final class Script000 extends AbstractDevScript {
 
-  public static final Script.JsAction ACTION = Script.target()
-      .invoke("Element", "remove");
+  public static final JsAction ACTION = Js.target().remove();
 
   @Override
   final void renderBody() {

@@ -16,6 +16,7 @@
 package objectos.way.dev;
 
 import module objectos.way;
+import objectos.script.Js;
 
 /*
 
@@ -28,7 +29,7 @@ Test case 008
 @Css.Source
 public final class Script008 extends AbstractDevScript {
 
-  public static final Script.JsAction ACTION = Script.byId("subject").toggleClass("opacity:0", "opacity:1");
+  public static final JsAction ACTION = Js.byId("subject").toggleClass("opacity:0", "opacity:1");
 
   @Override
   final void renderBody() {
