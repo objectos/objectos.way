@@ -15,8 +15,34 @@
  */
 package objectos.script;
 
+import java.util.Objects;
+
 /// Represents a JS runtime `Object` instance.
-public sealed interface JsObject permits JsArray, JsElement, JsString, ScriptJsObject {
+public sealed class JsObject
+    permits
+    JsArray,
+    JsNode,
+    JsString, JsNumber {
+
+  static final JsObject GLOBAL = new JsObject("[\"GR\"]");
+
+  private static final JsString IV = JsString.raw("IV");
+
+  private static final JsString PR = JsString.raw("PR");
+
+  private static final JsString PW = JsString.raw("PW");
+
+  private final String value;
+
+  JsObject(String value) {
+    this.value = value;
+  }
+
+  private static JsObject of(JsObject v0, JsObject v1) {
+    return new JsObject(
+        v0.toString() + "," + v1.toString()
+    );
+  }
 
   /// Converts this reference to a JS reference of the specified type.
   ///
@@ -25,7 +51,12 @@ public sealed interface JsObject permits JsArray, JsElement, JsString, ScriptJsO
   /// @param type the handle representing the JS runtime type
   ///
   /// @return the converted reference
-  <T> T as(JsType<T> type);
+  public final <T> T as(JsType<T> type) {
+    final JsType<T> impl;
+    impl = (JsType<T>) Objects.requireNonNull(type, "type == null");
+
+    return impl.as(value);
+  }
 
   /// Invokes the specified method with the specified arguments, in order, if
   /// the JS object is an instance of the specified type.
@@ -35,18 +66,49 @@ public sealed interface JsObject permits JsArray, JsElement, JsString, ScriptJsO
   /// @param args the method arguments
   ///
   /// @return an object representing this action
-  JsAction invoke(String type, String method, JsObject... args);
+  public final JsAction invoke(String type, String method, JsObject... args) {
+    final JsArray action;
+    action = invoke0(type, method, args);
+
+    return JsAction.of(this, action);
+  }
 
   /// Invokes the specified method with the specified arguments, in order, if
   /// the JS object is an instance of the specified type.
   ///
+  /// @param <T> the JS runtime type
   /// @param returnType the return type of the invoked method
   /// @param type the name of the JS type that defines the method
   /// @param method the method name
   /// @param args the method arguments
   ///
   /// @return the result of the method invocation
-  <T> T invoke(JsType<T> returnType, String type, String method, JsObject... args);
+  public final <T> T invoke(JsType<T> returnType, String type, String method, JsObject... args) {
+    final JsType<T> impl;
+    impl = (JsType<T>) Objects.requireNonNull(returnType, "returnType == null");
+
+    final JsArray action;
+    action = invoke0(type, method, args);
+
+    return impl.invoke(this, action);
+  }
+
+  private JsArray invoke0(String type, String method, JsObject... args) {
+    Objects.requireNonNull(type, "type == null");
+    Objects.requireNonNull(method, "method == null");
+    Objects.requireNonNull(args, "args == null");
+
+    final JsString $type;
+    $type = JsString.raw(type);
+
+    final JsString $method;
+    $method = JsString.raw(method);
+
+    final JsArray $args;
+    $args = JsArray.rawArgs(args);
+
+    return JsArray.raw(IV, $type, $method, $args);
+  }
 
   /// Returns the property of the specified name, if the JS object is an
   /// instance of the specified type.
@@ -55,16 +117,53 @@ public sealed interface JsObject permits JsArray, JsElement, JsString, ScriptJsO
   /// @param name the property name
   ///
   /// @return the property
-  JsObject prop(String type, String name);
+  public final JsObject prop(String type, String name) {
+    Objects.requireNonNull(type, "type == null");
+    Objects.requireNonNull(name, "name == null");
 
-  /// Sets the property of the specified name to the specified value, if the
-  /// JS object is an instance of the specified type.
+    final JsString $type;
+    $type = JsString.raw(type);
+
+    final JsString $name;
+    $name = JsString.raw(name);
+
+    final JsArray action;
+    action = JsArray.raw(PR, $type, $name);
+
+    return of(this, action);
+  }
+
+  /// Sets the property of the specified name to the specified value, if the JS
+  /// object is an instance of the specified type.
   ///
   /// @param type the name of the JS type that defines the property
   /// @param name the property name
   /// @param value the property value
   ///
   /// @return an object representing this action
-  JsAction prop(String type, String name, JsObject value);
+  public final JsAction prop(String type, String name, JsObject value) {
+    Objects.requireNonNull(type, "type == null");
+    Objects.requireNonNull(name, "name == null");
+    Objects.requireNonNull(value, "value == null");
+
+    final JsString $type;
+    $type = JsString.raw(type);
+
+    final JsString $name;
+    $name = JsString.raw(name);
+
+    final JsArray $value;
+    $value = JsArray.raw(value);
+
+    final JsArray action;
+    action = JsArray.raw(PW, $type, $name, $value);
+
+    return JsAction.of(this, action);
+  }
+
+  @Override
+  public final String toString() {
+    return value;
+  }
 
 }

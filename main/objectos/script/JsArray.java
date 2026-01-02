@@ -15,9 +15,191 @@
  */
 package objectos.script;
 
-/// Represents a JS runtime `Array` instance.
-public sealed interface JsArray extends JsObject permits ScriptJsArray {
+import java.util.Objects;
 
-  JsAction forEach(JsAction value);
+/// Represents a JS runtime `Array` instance.
+public final class JsArray extends JsObject {
+
+  private enum Kind {
+
+    JS("""
+    ["JS",[\
+    """, """
+    ]]\
+    """),
+
+    RAW("[", "]");
+
+    final String header;
+
+    final String trailer;
+
+    private Kind(String header, String trailer) {
+      this.header = header;
+
+      this.trailer = trailer;
+    }
+
+  }
+
+  static final class Builder {
+
+    private final Kind kind;
+
+    private final StringBuilder sb = new StringBuilder();
+
+    private Builder(Kind kind) {
+      this.kind = kind;
+
+      sb.append(kind.header);
+    }
+
+    public final JsArray build() {
+      sb.append(kind.trailer);
+
+      final String value;
+      value = sb.toString();
+
+      return new JsArray(value);
+    }
+
+    public final void raw(String s, String name) {
+      if (s == null) {
+        throw new NullPointerException(name + " == null");
+      }
+
+      final JsString raw;
+      raw = JsString.raw(s);
+
+      add(raw);
+    }
+
+    public final void rawAll(String[] values, String name) {
+      if (values == null) {
+        throw new NullPointerException(name + " == null");
+      }
+
+      for (int idx = 0; idx < values.length; idx++) {
+        final String v;
+        v = values[idx];
+
+        if (v == null) {
+          throw new NullPointerException(name + "[" + idx + "] == null");
+        }
+
+        final JsString raw;
+        raw = JsString.raw(v);
+
+        add(raw);
+      }
+    }
+
+    private void add(Object o) {
+      final int len;
+      len = sb.length();
+
+      final int startLen;
+      startLen = kind.header.length();
+
+      if (len > startLen) {
+        sb.append(',');
+      }
+
+      sb.append(o);
+    }
+
+  }
+
+  private static final JsString Array = JsString.raw("Array");
+
+  private JsArray(String value) {
+    super(value);
+  }
+
+  static Builder jsBuilder() {
+    return new Builder(Kind.JS);
+  }
+
+  static JsArray raw() {
+    return new JsArray("[]");
+  }
+
+  static JsArray raw(Object v0) {
+    return new JsArray("[" + v0 + "]");
+  }
+
+  static JsArray raw(Object v0, Object v1) {
+    return new JsArray("[" + v0 + "," + v1 + "]");
+  }
+
+  static JsArray raw(Object v0, Object v1, Object v2) {
+    return new JsArray("[" + v0 + "," + v1 + "," + v2 + "]");
+  }
+
+  static JsArray raw(Object v0, Object v1, Object v2, Object v3) {
+    return new JsArray("[" + v0 + "," + v1 + "," + v2 + "," + v3 + "]");
+  }
+
+  static JsArray rawArgs(JsObject[] args) {
+    return switch (args.length) {
+      case 0 -> raw();
+
+      default -> {
+        final StringBuilder sb;
+        sb = new StringBuilder();
+
+        sb.append('[');
+
+        final JsObject args0;
+        args0 = args[0];
+
+        if (args0 == null) {
+          throw new NullPointerException("args[0] == null");
+        }
+
+        final JsAction a0;
+        a0 = JsAction.of(args0);
+
+        sb.append(a0);
+
+        for (int idx = 1; idx < args.length; idx++) {
+          final JsObject o;
+          o = args[idx];
+
+          if (o == null) {
+            throw new NullPointerException("args[" + idx + "] == null");
+          }
+
+          sb.append(',');
+
+          final JsAction a;
+          a = JsAction.of(o);
+
+          sb.append(a);
+        }
+
+        sb.append(']');
+
+        final String value;
+        value = sb.toString();
+
+        yield new JsArray(value);
+      }
+    };
+  }
+
+  private static final JsString FE = JsString.raw("FE");
+
+  public final JsAction forEach(JsAction value) {
+    Objects.requireNonNull(value, "value == null");
+
+    final JsArray $value;
+    $value = JsArray.raw(value);
+
+    final JsArray forEach;
+    forEach = JsArray.raw(FE, Array, $value);
+
+    return JsAction.of(this, forEach);
+  }
 
 }

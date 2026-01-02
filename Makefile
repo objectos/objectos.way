@@ -87,7 +87,7 @@ $(css_props_json): | $(WORK)
 #
 
 ## script-gen
-SCRIPT_GEN := $(MAIN)/objectos/way/ScriptLibrary.java
+SCRIPT_GEN := $(MAIN)/objectos/script/ScriptJsLibrary.java
 
 ## script-gen java command
 SCRIPT_GEN_JAVAX := $(JAVA)

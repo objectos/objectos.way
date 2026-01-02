@@ -15,8 +15,60 @@
  */
 package objectos.script;
 
+import java.util.Objects;
+
 /// Represents a reference to a JS runtime value.
-public sealed interface JsRef permits ScriptJsRef {
+public final class JsRef {
+
+  private static final JsString AX = JsString.raw("AX");
+
+  private static final JsString CR = JsString.raw("CR");
+
+  private final String value;
+
+  private JsRef(String value) {
+    this.value = value;
+  }
+
+  static JsRef args(int index) {
+    if (index < 0) {
+      throw new IllegalArgumentException(
+          "index must not be negative"
+      );
+    }
+
+    final JsNumber $index;
+    $index = JsNumber.raw(index);
+
+    final JsArray ref;
+    ref = JsArray.raw(AX, $index);
+
+    return of(ref);
+  }
+
+  private static JsRef of(JsObject v0) {
+    return new JsRef(
+        v0.toString()
+    );
+  }
+
+  static JsRef of(JsObject v0, JsObject v1) {
+    return new JsRef(
+        v0.toString() + "," + v1.toString()
+    );
+  }
+
+  static JsRef var(String name) {
+    Objects.requireNonNull(name, "name == null");
+
+    final JsString $name;
+    $name = JsString.raw(name);
+
+    final JsArray ref;
+    ref = JsArray.raw(CR, $name);
+
+    return of(ref);
+  }
 
   /// Converts this reference to a JS reference of the specified type.
   ///
@@ -25,6 +77,16 @@ public sealed interface JsRef permits ScriptJsRef {
   /// @param type the handle representing the JS runtime type
   ///
   /// @return the converted reference
-  <T> T as(JsType<T> type);
+  public final <T> T as(JsType<T> type) {
+    final JsType<T> impl;
+    impl = (JsType<T>) type;
+
+    return impl.as(value);
+  }
+
+  @Override
+  public final String toString() {
+    return value;
+  }
 
 }

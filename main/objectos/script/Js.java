@@ -24,8 +24,8 @@ public final class Js {
   private Js() {}
 
   public static JsArray array(String... values) {
-    final ScriptJsArray.Builder builder;
-    builder = ScriptJsArray.jsBuilder();
+    final JsArray.Builder builder;
+    builder = JsArray.jsBuilder();
 
     builder.rawAll(values, "values");
 
@@ -33,7 +33,7 @@ public final class Js {
   }
 
   public static JsRef args(int index) {
-    return ScriptJsRef.args(index);
+    return JsRef.args(index);
   }
 
   /// Returns a handle for the element with the specified ID attribute.
@@ -42,7 +42,7 @@ public final class Js {
   ///
   /// @return the element
   public static JsElement byId(JsString value) {
-    return ScriptJsElement.byId(value);
+    return JsElement.byId(value);
   }
 
   /// Returns a handle for the element with the specified ID attribute.
@@ -54,17 +54,17 @@ public final class Js {
     final String v;
     v = Objects.requireNonNull(value, "value == null");
 
-    final ScriptJsString id;
-    id = ScriptJsString.of(v);
+    final JsString id;
+    id = JsString.of(v);
 
-    return ScriptJsElement.byId(id);
+    return JsElement.byId(id);
   }
 
   /// The object which represents the global scope.
   ///
   /// @return the global scope object
   public static JsObject global() {
-    return ScriptJsObject.GLOBAL;
+    return JsObject.GLOBAL;
   }
 
   /// Creates an action by concatenating all of the specified individual
@@ -76,14 +76,14 @@ public final class Js {
   ///
   /// @return an object representing the concatenated action
   public static JsAction of(JsAction first, JsAction second, JsAction... more) {
-    return ScriptJsAction.of(first, second, more);
+    return JsAction.of(first, second, more);
   }
 
   /// The element which triggered the Objectos Script.
   ///
   /// @return the element
   public static JsElement target() {
-    return ScriptJsElement.TARGET;
+    return JsElement.TARGET;
   }
 
   /// Retrieves the named property from the event context.
@@ -92,7 +92,7 @@ public final class Js {
   ///
   /// @return an object representing a JS reference
   public static JsRef var(String name) {
-    return ScriptJsRef.var(name);
+    return JsRef.var(name);
   }
 
   /// Stores the specified value to a named property in the event context.
@@ -102,7 +102,7 @@ public final class Js {
   ///
   /// @return an object representing this action
   public static JsAction var(String name, JsObject value) {
-    return ScriptJsAction.var(name, value);
+    return JsAction.var(name, value);
   }
 
 }

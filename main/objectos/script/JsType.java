@@ -15,5 +15,38 @@
  */
 package objectos.script;
 
+import java.util.function.Function;
+
 /// Represents the type of a JS runtime value.
-public sealed interface JsType<T> permits ScriptJsType {}
+public final class JsType<T> {
+
+  private static final JsString TY = JsString.raw("TY");
+
+  private final JsString typeName;
+
+  private final Function<String, T> constructor;
+
+  JsType(JsString typeName, Function<String, T> constructor) {
+    this.typeName = typeName;
+
+    this.constructor = constructor;
+  }
+
+  final T as(String value) {
+    final JsArray cast;
+    cast = JsArray.raw(TY, typeName);
+
+    final String computed;
+    computed = value + "," + cast;
+
+    return constructor.apply(computed);
+  }
+
+  T invoke(JsObject v0, JsObject v1) {
+    final String value;
+    value = v0 + "," + v1;
+
+    return constructor.apply(value);
+  }
+
+}

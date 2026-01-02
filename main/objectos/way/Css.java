@@ -27,7 +27,8 @@ import java.util.function.Consumer;
 /// The **Objectos CSS** main class.
 public final class Css {
 
-  /// An object that contributes to the configuration of a [style sheet][Css.StyleSheet] generation.
+  /// An object that contributes to the configuration of a
+  /// [style sheet][Css.StyleSheet] generation.
   @FunctionalInterface
   public interface Library {
 
@@ -39,12 +40,16 @@ public final class Css {
       /// @param values the property names
       void cssPropertyNames(String... values);
 
-      /// Scans the class file of the specified class (if found) during the CSS generation process.
+      /// Scans the class file of the specified class (if found) during the CSS
+      /// generation process.
+      /// 
       /// @param value the class to scan for CSS utilities
       void scanClass(Class<?> value);
 
-      /// Scans the class files of the specified classes (if found) during the CSS generation process.
-      /// @param value the classes to scan for CSS utilities
+      /// Scans the class files of the specified classes (if found) during the
+      /// CSS generation process.
+      /// 
+      /// @param values the classes to scan for CSS utilities
       void scanClasses(Class<?>... values);
 
       //
@@ -71,8 +76,8 @@ public final class Css {
 
       /// Creates the specified custom variants.
       ///
-      /// Custom variants are sorted in the generated CSS in the same order
-      /// as they are declared in the configuration.
+      /// Custom variants are sorted in the generated CSS in the same order as
+      /// they are declared in the configuration.
       ///
       /// @param value the variants definition
       void variants(String value);
@@ -93,23 +98,28 @@ public final class Css {
     /// Configures the creation of a `StyleSheet` instance.
     sealed interface Options extends Library.Options permits CssEngine.Configuring {
 
-      /// Includes the specified library.
-      /// In other words, uses the configuration contributed by the specified library
-      /// in this generation.
+      /// Includes the specified library. In other words, uses the configuration
+      /// contributed by the specified library in this generation.
+      /// 
       /// @param value the library whose configuration is to be included
       void include(Library value);
 
       /// Uses the specified note sink during generation.
+      /// 
       /// @param value the note sink to use
       void noteSink(Note.Sink value);
 
-      /// Scans the specified directory recursively for [`Source`][Css.Source]
-      /// annotated Java class files during the CSS generation process.
+      /// Scans the specified directory recursively for
+      /// [`Source`][Css.Source] annotated Java class files during the CSS
+      /// generation process.
+      /// 
       /// @param value the directory to be scanned
       void scanDirectory(Path value);
 
-      /// Scans the JAR file of the specified class (if found) for [`Source`][Css.Source]
-      /// annotated Java class files during the CSS generation process.
+      /// Scans the JAR file of the specified class (if found) for
+      /// [`Source`][Css.Source] annotated Java class files during the CSS
+      /// generation process.
+      /// 
       /// @param value the class whose JAR file will be scanned
       void scanJarFileOf(Class<?> value);
 
@@ -152,11 +162,13 @@ public final class Css {
     }
 
     /// Returns `text/css; charset=utf-8`.
+    /// 
     /// @return `@code text/css; charset=utf-8`
     @Override
     String contentType();
 
     /// Returns `StandardCharsets.UTF_8`.
+    /// 
     /// @return `StandardCharsets.UTF_8`
     @Override
     Charset charset();

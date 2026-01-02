@@ -16,13 +16,43 @@
 package objectos.script;
 
 /// Represents a JS runtime `String` instance.
-public sealed interface JsString extends JsObject permits ScriptJsString {
+public final class JsString extends JsObject {
 
   /// Represents the `string` JS type.
-  JsType<JsString> type = ScriptJsString.$type();
+  public static final JsType<JsString> type = JsString.$type();
 
-  static JsString of(String s) {
-    return ScriptJsString.of(s);
+  private JsString(String value) {
+    super(value);
+  }
+
+  public static JsString of(String s) {
+    final String v;
+    v = quote(s);
+
+    return new JsString("[\"JS\"," + v + "]");
+  }
+
+  static JsString raw(String s) {
+    final String v;
+    v = quote(s);
+
+    return new JsString(v);
+  }
+
+  static JsType<JsString> $type() {
+    final JsString typeName;
+    typeName = JsString.raw("string");
+
+    return new JsType<>(typeName, JsString::new);
+  }
+
+  private static String quote(String s) {
+    if (s == null) {
+      throw new NullPointerException("Cannot quote a null string value");
+    }
+
+    // TODO escape json string literal
+    return '"' + s + '"';
   }
 
 }

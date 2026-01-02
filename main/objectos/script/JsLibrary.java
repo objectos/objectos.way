@@ -17,37 +17,53 @@ package objectos.script;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import objectos.way.Media;
 
-/// Represents the source code of the Objectos Way JS library.
-public sealed interface JsLibrary extends Media.Text permits ScriptJsLibrary {
+/// Represents the source code of the Objectos Script JS library.
+public final class JsLibrary implements Media.Text {
 
-  /// Returns the sole instance of this interface.
+  private static final JsLibrary INSTANCE = new JsLibrary(
+      JsLibraryGenerated.SOURCE
+  );
+
+  private final String value;
+
+  private JsLibrary(String value) {
+    this.value = value;
+  }
+
+  /// Returns the sole instance of this class.
   ///
-  /// @return the sole instance of this interface
-  static JsLibrary of() {
-    return ScriptJsLibrary.INSTANCE;
+  /// @return the sole instance of this class
+  public static JsLibrary of() {
+    return INSTANCE;
   }
 
   /// Returns `text/javascript; charset=utf-8`.
   ///
   /// @return always `text/css; charset=utf-8`
   @Override
-  String contentType();
+  public final String contentType() {
+    return "text/javascript; charset=utf-8";
+  }
 
   /// Returns `StandardCharsets.UTF_8`.
   ///
   /// @return always `StandardCharsets.UTF_8`
   @Override
-  Charset charset();
+  public final Charset charset() {
+    return StandardCharsets.UTF_8;
+  }
 
-  /// Writes the Objectos Way JS library source code to the specified
-  /// `Appendable`.
+  /// Writes the JS library source code to the specified `Appendable`.
   ///
   /// @param out where to append the source code
   ///
   /// @throws IOException if an I/O error occurs
   @Override
-  void writeTo(Appendable out) throws IOException;
+  public final void writeTo(Appendable out) throws IOException {
+    out.append(value);
+  }
 
 }

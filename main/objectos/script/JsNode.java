@@ -15,16 +15,18 @@
  */
 package objectos.script;
 
-final class ScriptJsNumber extends ScriptJsObject {
+/// A JS runtime `Node` instance.
+public sealed class JsNode extends JsObject permits JsElement {
 
-  private ScriptJsNumber(String value) {
+  JsNode(String value) {
     super(value);
   }
 
-  public static ScriptJsNumber raw(int value) {
-    return new ScriptJsNumber(
-        Integer.toString(value)
-    );
+  /// Returns the text content of this node and its descendants.
+  ///
+  /// @return the text content
+  public final JsString textContent() {
+    return prop("Node", "textContent").as(JsString.type);
   }
 
 }

@@ -18,13 +18,21 @@ package objectos.way.dev;
 import module objectos.way;
 import objectos.script.Js;
 
-/// Test case 003
-///
-/// - event: click - locator: id - invoke method w/ 0 args
-@Css.Source
-public final class Script003 extends AbstractDevScript {
+/*
 
-  public static final JsAction ACTION = Js.byId("subject").remove();
+Test case 017
+
+- event: click
+- Node.textContent read
+
+*/
+@Css.Source
+public final class Script017 extends AbstractDevScript {
+
+  public static final JsAction ACTION = Js.target().prop(
+      "Node", "textContent",
+      Js.byId("src").textContent()
+  );
 
   @Override
   final void renderBody() {
@@ -38,14 +46,12 @@ public final class Script003 extends AbstractDevScript {
         button(
             id("click-me"),
             dataOnClick(ACTION),
-            type("button"),
-            text("Click me")
+            attr(DATA_TEST, "Clicked!"),
+            text("Click me"),
+            type("button")
         ),
 
-        div(
-            id("subject"),
-            text("Subject")
-        )
+        div(id("src"), text("Clicked!"))
     );
   }
 
