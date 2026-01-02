@@ -29,4 +29,13 @@ public sealed class JsNode extends JsObject permits JsElement {
     return prop("Node", "textContent").as(JsString.type);
   }
 
+  /// Sets the text content of this node to the specfied value.
+  ///
+  /// @param value the new text content
+  ///
+  /// @return an object representing this action
+  public final JsAction textContent(JsString value) {
+    return prop("Node", "textContent", value);
+  }
+
 }

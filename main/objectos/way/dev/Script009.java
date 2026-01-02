@@ -31,7 +31,7 @@ public final class Script009 extends AbstractDevScript {
 
   public static final JsAction ACTION = Js
       .byId("subject")
-      .prop("Element", "textContent", Js.global().prop("Window", "document").prop("Document", "title"));
+      .textContent(Js.global().prop("Window", "document").prop("Document", "title").as(JsString.type));
 
   @Override
   final void renderBody() {

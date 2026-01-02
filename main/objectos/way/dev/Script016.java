@@ -29,8 +29,7 @@ Test case 016
 @Css.Source
 public final class Script016 extends AbstractDevScript {
 
-  public static final JsAction ACTION = Js.target().prop(
-      "Node", "textContent",
+  public static final JsAction ACTION = Js.target().textContent(
       Js.target().attr(DATA_TEST)
   );
 

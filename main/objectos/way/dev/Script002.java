@@ -24,8 +24,9 @@ import objectos.script.Js;
 @Css.Source
 public final class Script002 extends AbstractDevScript {
 
-  public static final JsAction ACTION = Js.target()
-      .prop("Node", "textContent", Js.target().prop("Element", "id"));
+  public static final JsAction ACTION = Js.target().textContent(
+      Js.target().prop("Element", "id").as(JsString.type)
+  );
 
   @Override
   final void renderBody() {

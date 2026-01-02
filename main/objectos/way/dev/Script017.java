@@ -29,8 +29,7 @@ Test case 017
 @Css.Source
 public final class Script017 extends AbstractDevScript {
 
-  public static final JsAction ACTION = Js.target().prop(
-      "Node", "textContent",
+  public static final JsAction ACTION = Js.target().textContent(
       Js.byId("src").textContent()
   );
 

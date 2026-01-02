@@ -25,7 +25,7 @@ import objectos.script.Js;
 public final class Script005 extends AbstractDevScript {
 
   public static final JsAction ACTION = Js
-      .byId("subject").prop("Node", "textContent", Js.target().prop("Element", "id"));
+      .byId("subject").textContent(Js.target().prop("Element", "id").as(JsString.type));
 
   @Override
   final void renderBody() {
