@@ -99,7 +99,9 @@ const way = (function() {
     "EI": elementById,
     "ET": elementTarget,
     "FE": forEach,
+    "FN": functionJs,
     "GR": globalRead,
+    "IU": invokeUnchecked,
     "IV": invokeVirtual,
     "JS": jsValue,
     "MO": morph,
@@ -133,6 +135,8 @@ const way = (function() {
       for (const a of nestedActions) {
         executeAction(nested, a);
       }
+
+      return nested.$recv;
     };
   }
 
@@ -247,26 +251,42 @@ const way = (function() {
     recv.forEach(fn);
   }
 
+  function functionJs(ctx, args) {
+    const actions = checkDefined(args.shift(), "actions");
+
+    return nest(ctx, actions);
+  }
+
   function globalRead() {
     return globalThis;
+  }
+
+  function invokeUnchecked(ctx, args) {
+    const recv = ctx.$recv;
+
+    return invoke0(ctx, args, recv);
   }
 
   function invokeVirtual(ctx, args) {
     const recv = checkRecv(ctx, args.shift());
 
+    return invoke0(ctx, args, recv);
+  }
+
+  function invoke0(ctx, args, recv) {
     const methodName = checkString(args.shift(), "methodName");
 
     const method = recv[methodName];
 
     if (!method) {
-      throw new Error(`Illegal arg: ${typeName} does not declare the ${methodName} method`);
+      throw new Error(`Illegal arg: ${recv} does not declare the ${methodName} method`);
     }
 
     const encodedArgs = checkArray(args.shift(), "encodedArgs");
 
     const methodArgs = encodedArgs.map(x => compute(ctx, x));
 
-    return method.call(recv, methodArgs);
+    return method.apply(recv, methodArgs);
   }
 
   function jsValue(_, args) {

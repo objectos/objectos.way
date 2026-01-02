@@ -60,6 +60,10 @@ public final class Js {
     return JsElement.byId(id);
   }
 
+  public static JsPromise fetch(JsString resource) {
+    return global().invokeUnchecked(JsPromise.type, "fetch", resource);
+  }
+
   /// The object which represents the global scope.
   ///
   /// @return the global scope object

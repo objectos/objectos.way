@@ -21,10 +21,16 @@ import java.util.Objects;
 public sealed class JsObject
     permits
     JsArray,
+    JsFunction,
     JsNode,
-    JsString, JsNumber {
+    JsNumber,
+    JsPromise,
+    JsResponse,
+    JsString {
 
   static final JsObject GLOBAL = new JsObject("[\"GR\"]");
+
+  private static final JsString IU = JsString.raw("IU");
 
   private static final JsString IV = JsString.raw("IV");
 
@@ -52,10 +58,7 @@ public sealed class JsObject
   ///
   /// @return the converted reference
   public final <T> T as(JsType<T> type) {
-    final JsType<T> impl;
-    impl = (JsType<T>) Objects.requireNonNull(type, "type == null");
-
-    return impl.as(value);
+    return type.as(value);
   }
 
   /// Invokes the specified method with the specified arguments, in order, if
@@ -84,13 +87,10 @@ public sealed class JsObject
   ///
   /// @return the result of the method invocation
   public final <T> T invoke(JsType<T> returnType, String type, String method, JsObject... args) {
-    final JsType<T> impl;
-    impl = (JsType<T>) Objects.requireNonNull(returnType, "returnType == null");
-
     final JsArray action;
     action = invoke0(type, method, args);
 
-    return impl.invoke(this, action);
+    return returnType.invoke(this, action);
   }
 
   private JsArray invoke0(String type, String method, JsObject... args) {
@@ -108,6 +108,27 @@ public sealed class JsObject
     $args = JsArray.rawArgs(args);
 
     return JsArray.raw(IV, $type, $method, $args);
+  }
+
+  /// Invokes the specified method with the specified arguments in order.
+  ///
+  /// @param <T> the JS runtime type
+  /// @param returnType the return type of the invoked method
+  /// @param method the method name
+  /// @param args the method arguments
+  ///
+  /// @return the result of the method invocation
+  public final <T> T invokeUnchecked(JsType<T> returnType, String method, JsObject... args) {
+    final JsString $method;
+    $method = JsString.raw(method);
+
+    final JsArray $args;
+    $args = JsArray.rawArgs(args);
+
+    final JsArray action;
+    action = JsArray.raw(IU, $method, $args);
+
+    return returnType.invoke(this, action);
   }
 
   /// Returns the property of the specified name, if the JS object is an
