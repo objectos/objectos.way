@@ -83,6 +83,13 @@ public final class Js {
     return JsAction.of(first, second, more);
   }
 
+  /// The no-op JS action.
+  ///
+  /// @return the no-op action
+  public static JsAction noop() {
+    return JsAction.NOOP;
+  }
+
   /// The element which triggered the Objectos Script.
   ///
   /// @return the element

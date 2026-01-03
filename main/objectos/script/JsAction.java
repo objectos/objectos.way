@@ -22,6 +22,8 @@ public final class JsAction {
 
   private static final JsString CW = JsString.raw("CW");
 
+  static final JsAction NOOP = new JsAction("[\"NO\"]");
+
   private final String value;
 
   private JsAction(String value) {

@@ -84,6 +84,32 @@ public final class JsElement extends JsNode {
     return invoke(JsString.type, "Element", "getAttribute", name);
   }
 
+  /// Returns a boolean value indicating whether the element has the attribute
+  /// with the specified name.
+  ///
+  /// @param name the attribute name
+  ///
+  /// @return a boolean
+  public final JsBoolean hasAttribute(Html.AttributeName name) {
+    final String attrName;
+    attrName = name.name();
+
+    final JsString $name;
+    $name = JsString.of(attrName);
+
+    return hasAttribute($name);
+  }
+
+  /// Returns a boolean value indicating whether the element has the attribute
+  /// with the specified name.
+  ///
+  /// @param name the attribute name
+  ///
+  /// @return a boolean
+  public final JsBoolean hasAttribute(JsString name) {
+    return invoke(JsBoolean.type, "Element", "hasAttribute", name);
+  }
+
   /// Returns the HTML of the descendants of this element.
   ///
   /// @return a string representing the HTML

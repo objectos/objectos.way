@@ -21,6 +21,7 @@ import java.util.Objects;
 public sealed class JsObject
     permits
     JsArray,
+    JsBoolean,
     JsFunction,
     JsNode,
     JsNumber,
