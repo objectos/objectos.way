@@ -19,6 +19,7 @@ import java.util.Objects;
 
 /// Represents a JS runtime `Object` instance.
 public sealed class JsObject
+    extends JsBase
     permits
     JsArray,
     JsBoolean,
@@ -29,26 +30,12 @@ public sealed class JsObject
     JsResponse,
     JsString {
 
-  static final JsObject GLOBAL = new JsObject("[\"GR\"]");
-
-  private static final JsString IU = JsString.raw("IU");
-
-  private static final JsString IV = JsString.raw("IV");
-
-  private static final JsString PR = JsString.raw("PR");
-
-  private static final JsString PW = JsString.raw("PW");
-
-  private final String value;
-
-  JsObject(String value) {
-    this.value = value;
+  JsObject(Object value) {
+    super(value);
   }
 
-  private static JsObject of(JsObject v0, JsObject v1) {
-    return new JsObject(
-        v0.toString() + "," + v1.toString()
-    );
+  JsObject(JsBase recv, JsOp op) {
+    super(recv, op);
   }
 
   /// Converts this reference to a JS reference of the specified type.
@@ -59,7 +46,7 @@ public sealed class JsObject
   ///
   /// @return the converted reference
   public final <T> T as(JsType<T> type) {
-    return type.as(value);
+    return type.as(this);
   }
 
   /// Invokes the specified method with the specified arguments, in order, if
@@ -71,10 +58,10 @@ public sealed class JsObject
   ///
   /// @return an object representing this action
   public final JsAction invoke(String type, String method, JsObject... args) {
-    final JsArray action;
-    action = invoke0(type, method, args);
+    final JsOp invoke;
+    invoke = invoke0(type, method, args);
 
-    return JsAction.of(this, action);
+    return JsAction.one(this, invoke);
   }
 
   /// Invokes the specified method with the specified arguments, in order, if
@@ -88,13 +75,13 @@ public sealed class JsObject
   ///
   /// @return the result of the method invocation
   public final <T> T invoke(JsType<T> returnType, String type, String method, JsObject... args) {
-    final JsArray action;
-    action = invoke0(type, method, args);
+    final JsOp op;
+    op = invoke0(type, method, args);
 
-    return returnType.invoke(this, action);
+    return returnType.invoke(this, op);
   }
 
-  private JsArray invoke0(String type, String method, JsObject... args) {
+  private JsOp invoke0(String type, String method, JsObject... args) {
     Objects.requireNonNull(type, "type == null");
     Objects.requireNonNull(method, "method == null");
     Objects.requireNonNull(args, "args == null");
@@ -108,7 +95,7 @@ public sealed class JsObject
     final JsArray $args;
     $args = JsArray.rawArgs(args);
 
-    return JsArray.raw(IV, $type, $method, $args);
+    return JsOp.of(JsString.IV, $type, $method, $args);
   }
 
   /// Invokes the specified method with the specified arguments in order.
@@ -119,15 +106,15 @@ public sealed class JsObject
   /// @param args the method arguments
   ///
   /// @return the result of the method invocation
-  public final <T> T invokeUnchecked(JsType<T> returnType, String method, JsObject... args) {
+  final <T> T invokeUnchecked(JsType<T> returnType, String method, JsObject... args) {
     final JsString $method;
     $method = JsString.raw(method);
 
     final JsArray $args;
     $args = JsArray.rawArgs(args);
 
-    final JsArray action;
-    action = JsArray.raw(IU, $method, $args);
+    final JsOp action;
+    action = JsOp.of(JsString.IU, $method, $args);
 
     return returnType.invoke(this, action);
   }
@@ -149,10 +136,12 @@ public sealed class JsObject
     final JsString $name;
     $name = JsString.raw(name);
 
-    final JsArray action;
-    action = JsArray.raw(PR, $type, $name);
+    final JsOp op;
+    op = JsOp.of(JsString.PR, $type, $name);
 
-    return of(this, action);
+    return new JsObject(
+        with(op)
+    );
   }
 
   /// Sets the property of the specified name to the specified value, if the JS
@@ -174,18 +163,10 @@ public sealed class JsObject
     final JsString $name;
     $name = JsString.raw(name);
 
-    final JsArray $value;
-    $value = JsArray.raw(value);
+    final JsOp op;
+    op = JsOp.of(JsString.PW, $type, $name, value);
 
-    final JsArray action;
-    action = JsArray.raw(PW, $type, $name, $value);
-
-    return JsAction.of(this, action);
-  }
-
-  @Override
-  public final String toString() {
-    return value;
+    return JsAction.one(this, op);
   }
 
 }

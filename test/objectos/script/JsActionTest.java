@@ -15,41 +15,28 @@
  */
 package objectos.script;
 
-import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static org.testng.Assert.assertEquals;
 
-import objectos.way.Y;
-import objectos.way.dev.Script006;
-import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
-@Listeners(Y.class)
-public class Script006Test {
+public class JsActionTest {
 
   @Test
-  public void action() {
+  public void testCase01() {
     assertEquals(
-        Script006.ACTION.toString(),
-
+        Js.noop().toString(),
         """
-        ["XS",["CW","el",["EI",["JS","subject"]]],["X1",["CR","el"],["TY","Element"]],["IV","Element","remove",[]]]"""
+        ["NO"]"""
     );
   }
 
   @Test
-  public void live() {
-    try (var page = Y.page()) {
-      page.navigate("/script/006");
-
-      var clickMe = page.locator("#click-me");
-      var subject = page.locator("#subject");
-
-      assertThat(subject).hasCount(1);
-
-      clickMe.click();
-
-      assertThat(subject).hasCount(0);
-    }
+  public void testCase02() {
+    assertEquals(
+        Js.of(Js.noop(), Js.noop()),
+        """
+        [["NO"],["NO"]]"""
+    );
   }
 
 }

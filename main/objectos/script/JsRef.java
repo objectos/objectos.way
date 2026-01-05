@@ -18,16 +18,10 @@ package objectos.script;
 import java.util.Objects;
 
 /// Represents a reference to a JS runtime value.
-public final class JsRef {
+public final class JsRef extends JsBase {
 
-  private static final JsString AX = JsString.raw("AX");
-
-  private static final JsString CR = JsString.raw("CR");
-
-  private final String value;
-
-  private JsRef(String value) {
-    this.value = value;
+  private JsRef(JsOp value) {
+    super(value);
   }
 
   static JsRef args(int index) {
@@ -40,22 +34,10 @@ public final class JsRef {
     final JsNumber $index;
     $index = JsNumber.raw(index);
 
-    final JsArray ref;
-    ref = JsArray.raw(AX, $index);
+    final JsOp ref;
+    ref = JsOp.of(JsString.AX, $index);
 
-    return of(ref);
-  }
-
-  private static JsRef of(JsObject v0) {
-    return new JsRef(
-        v0.toString()
-    );
-  }
-
-  static JsRef of(JsObject v0, JsObject v1) {
-    return new JsRef(
-        v0.toString() + "," + v1.toString()
-    );
+    return new JsRef(ref);
   }
 
   static JsRef var(String name) {
@@ -64,10 +46,10 @@ public final class JsRef {
     final JsString $name;
     $name = JsString.raw(name);
 
-    final JsArray ref;
-    ref = JsArray.raw(CR, $name);
+    final JsOp ref;
+    ref = JsOp.of(JsString.CR, $name);
 
-    return of(ref);
+    return new JsRef(ref);
   }
 
   /// Converts this reference to a JS reference of the specified type.
@@ -78,15 +60,7 @@ public final class JsRef {
   ///
   /// @return the converted reference
   public final <T> T as(JsType<T> type) {
-    final JsType<T> impl;
-    impl = (JsType<T>) type;
-
-    return impl.as(value);
-  }
-
-  @Override
-  public final String toString() {
-    return value;
+    return type.as(this);
   }
 
 }

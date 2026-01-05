@@ -23,8 +23,8 @@ public final class JsPromise extends JsObject {
       JsString.raw("Promise"), JsPromise::new
   );
 
-  private JsPromise(String value) {
-    super(value);
+  private JsPromise(JsBase recv, JsOp op) {
+    super(recv, op);
   }
 
   /// Executes the specified action when this promise becomes fulfilled.

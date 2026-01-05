@@ -15,38 +15,30 @@
  */
 package objectos.script;
 
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 /// Represents the type of a JS runtime value.
 public final class JsType<T> {
 
-  private static final JsString TY = JsString.raw("TY");
-
   private final JsString typeName;
 
-  private final Function<String, T> constructor;
+  private final BiFunction<JsBase, JsOp, T> constructor;
 
-  JsType(JsString typeName, Function<String, T> constructor) {
+  JsType(JsString typeName, BiFunction<JsBase, JsOp, T> constructor) {
     this.typeName = typeName;
 
     this.constructor = constructor;
   }
 
-  final T as(String value) {
-    final JsArray cast;
-    cast = JsArray.raw(TY, typeName);
+  final T as(JsBase value) {
+    final JsOp cast;
+    cast = JsOp.of(JsString.TY, typeName);
 
-    final String computed;
-    computed = value + "," + cast;
-
-    return constructor.apply(computed);
+    return constructor.apply(value, cast);
   }
 
-  T invoke(JsObject v0, JsObject v1) {
-    final String value;
-    value = v0 + "," + v1;
-
-    return constructor.apply(value);
+  final T invoke(JsObject recv, JsOp op) {
+    return constructor.apply(recv, op);
   }
 
 }

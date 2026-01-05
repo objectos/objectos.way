@@ -18,8 +18,12 @@ package objectos.script;
 /// A JS runtime `Node` instance.
 public sealed class JsNode extends JsObject permits JsElement {
 
-  JsNode(String value) {
-    super(value);
+  JsNode(JsOp op) {
+    super(op);
+  }
+
+  JsNode(JsBase recv, JsOp op) {
+    super(recv, op);
   }
 
   /// Returns the text content of this node and its descendants.

@@ -68,7 +68,7 @@ public final class Js {
   ///
   /// @return the global scope object
   public static JsObject global() {
-    return JsObject.GLOBAL;
+    return new JsObject(JsOp.GR);
   }
 
   /// Creates an action by concatenating all of the specified individual
@@ -80,7 +80,7 @@ public final class Js {
   ///
   /// @return an object representing the concatenated action
   public static JsAction of(JsAction first, JsAction second, JsAction... more) {
-    return JsAction.of(first, second, more);
+    return JsAction.seq(first, second, more);
   }
 
   /// The no-op JS action.

@@ -23,8 +23,8 @@ public final class JsResponse extends JsObject {
       JsString.raw("Response"), JsResponse::new
   );
 
-  private JsResponse(String value) {
-    super(value);
+  private JsResponse(JsBase recv, JsOp op) {
+    super(recv, op);
   }
 
   /// Reads the response stream to its completion.

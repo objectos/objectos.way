@@ -22,17 +22,18 @@ import objectos.way.Html;
 public final class JsElement extends JsNode {
 
   /// Represents the `Element` JS type.
-  public static final JsType<JsElement> type = JsElement.$type();
+  public static final JsType<JsElement> type = new JsType<>(
+      JsString.raw("Element"), JsElement::new
+  );
 
-  private static final JsString EI = JsString.raw("EI");
+  static final JsElement TARGET = new JsElement(JsOp.ET);
 
-  private static final JsString MO = JsString.raw("MO");
+  private JsElement(JsOp op) {
+    super(op);
+  }
 
-  static final JsElement TARGET = new JsElement("""
-  ["ET"]""");
-
-  private JsElement(String value) {
-    super(value);
+  private JsElement(JsBase recv, JsOp op) {
+    super(recv, op);
   }
 
   static JsElement byId(JsString value) {
@@ -42,22 +43,10 @@ public final class JsElement extends JsNode {
   private static JsElement byId0(JsObject value) {
     Objects.requireNonNull(value, "value == null");
 
-    final JsArray $value;
-    $value = JsArray.raw(value);
+    final JsOp op;
+    op = JsOp.of(JsString.EI, value);
 
-    final JsArray elem;
-    elem = JsArray.raw(EI, $value);
-
-    return new JsElement(
-        elem.toString()
-    );
-  }
-
-  static JsType<JsElement> $type() {
-    final JsString typeName;
-    typeName = JsString.raw("Element");
-
-    return new JsType<>(typeName, JsElement::new);
+    return new JsElement(op);
   }
 
   /// Returns the value of the attribute of the specified name.
@@ -125,13 +114,10 @@ public final class JsElement extends JsNode {
   public final JsAction morph(JsString src) {
     Objects.requireNonNull(src, "src == null");
 
-    final JsArray $src;
-    $src = JsArray.raw(src);
+    final JsOp op;
+    op = JsOp.of(JsString.MO, src);
 
-    final JsArray action;
-    action = JsArray.raw(MO, $src);
-
-    return JsAction.of(this, action);
+    return JsAction.one(this, op);
   }
 
   /// Removes this element from its parent node.

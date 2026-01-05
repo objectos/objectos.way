@@ -15,75 +15,87 @@
  */
 package objectos.script;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
-/// Represents an action to be executed by the JS runtime.
-public final class JsAction {
+/// Represents an action or a sequence of actions to be executed by the
+/// JS runtime.
+public sealed abstract class JsAction {
 
-  private static final JsString CW = JsString.raw("CW");
+  private static final class One extends JsAction {
 
-  static final JsAction NOOP = new JsAction("[\"NO\"]");
+    private final String value;
 
-  private final String value;
-
-  private JsAction(String value) {
-    this.value = value;
-  }
-
-  static JsAction of(String s0) {
-    return new JsAction(
-        "[" + s0 + "]"
-    );
-  }
-
-  static JsAction of(String s0, String s1) {
-    return new JsAction(
-        "[" + s0 + "," + s1 + "]"
-    );
-  }
-
-  static JsAction of(JsAction first, JsAction second, JsAction[] more) {
-    final StringBuilder sb;
-    sb = new StringBuilder();
-
-    sb.append(
-        Objects.requireNonNull(first, "first == null")
-    );
-
-    sb.append(',');
-
-    sb.append(
-        Objects.requireNonNull(second, "second == null")
-    );
-
-    for (int idx = 0; idx < more.length; idx++) {
-      final JsAction o;
-      o = more[idx];
-
-      if (o == null) {
-        throw new NullPointerException("more[" + idx + "] == null");
-      }
-
-      sb.append(',');
-
-      sb.append(o);
+    One(String value) {
+      this.value = value;
     }
 
-    final String value;
-    value = sb.toString();
+    @Override
+    public final String toString() {
+      return "[" + JsString.X1 + "," + value + "]";
+    }
 
-    return new JsAction(value);
+    @Override
+    final void addTo(List<One> list) {
+      list.add(this);
+    }
+
   }
 
-  static JsAction of(JsObject v0) {
-    return new JsAction(
-        "[" + v0.toString() + "]"
-    );
+  private static final class Seq extends JsAction {
+
+    private final List<One> values;
+
+    Seq(List<One> values) {
+      this.values = values;
+    }
+
+    @Override
+    public final String toString() {
+      return "[" + JsString.XS + "," + value() + "]";
+    }
+
+    @Override
+    final void addTo(List<One> list) {
+      list.addAll(values);
+    }
+
+    private String value() {
+      return values.stream()
+          .map(v -> v.value)
+          .collect(Collectors.joining(","));
+    }
+
   }
 
-  static JsAction of(JsObject v0, JsObject v1) {
-    return new JsAction(
-        "[" + v0.toString() + "," + v1.toString() + "]"
+  static final JsAction NOOP = new One("[\"NO\"]");
+
+  JsAction() {}
+
+  static JsAction one(JsOp op) {
+    return new One(op.toString());
+  }
+
+  static JsAction one(JsObject recv, JsOp op) {
+    return new One(recv + "," + op);
+  }
+
+  static JsAction seq(JsAction first, JsAction second, JsAction[] more) {
+    final List<One> list;
+    list = new ArrayList<>();
+
+    first.addTo(list);
+
+    second.addTo(list);
+
+    for (int idx = 0; idx < more.length; idx++) {
+      more[idx].addTo(list);
+    }
+
+    return new Seq(
+        List.copyOf(list)
     );
   }
 
@@ -94,18 +106,18 @@ public final class JsAction {
     final JsString $name;
     $name = JsString.raw(name);
 
-    final JsArray $value;
-    $value = JsArray.raw(value);
+    final JsOp op;
+    op = JsOp.of(JsString.CW, $name, value);
 
-    final JsArray action;
-    action = JsArray.raw(CW, $name, $value);
-
-    return of(action);
+    return one(op);
   }
 
+  /// Returns the JSON encoded representation of this JS action.
+  ///
+  /// @return the JSON representation
   @Override
-  public final String toString() {
-    return value;
-  }
+  public abstract String toString();
+
+  abstract void addTo(List<One> list);
 
 }

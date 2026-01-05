@@ -19,17 +19,49 @@ package objectos.script;
 public final class JsString extends JsObject {
 
   /// Represents the `string` JS type.
-  public static final JsType<JsString> type = JsString.$type();
+  public static final JsType<JsString> type = new JsType<>(
+      JsString.raw("string"), JsString::new
+  );
 
-  private JsString(String value) {
+  // operations
+  static final JsString AX = raw("AX"); // argsRead
+  static final JsString CR = raw("CR"); // contextRead
+  static final JsString CW = raw("CW"); // contextWrite
+  static final JsString EI = raw("EI"); // elementById
+  static final JsString ET = raw("ET"); // elementTarget
+  static final JsString FE = raw("FE"); // forEach
+  static final JsString FN = raw("FN"); // functionJs
+  static final JsString GR = raw("GR"); // globalRead
+  static final JsString IF = raw("IF"); // if
+  static final JsString IU = raw("IU"); // invokeUnchecked
+  static final JsString IV = raw("IV"); // invokeVirtual
+  static final JsString JS = raw("JS"); // jsValue
+  static final JsString MO = raw("MO"); // morph
+  static final JsString PR = raw("PR"); // propertyRead
+  static final JsString PW = raw("PW"); // propertyWrite
+  static final JsString TY = raw("TY"); // typeEnsure
+  static final JsString X1 = raw("X1"); // executeOne
+  static final JsString XS = raw("XS"); // executeSeq
+
+  // types
+  static final JsString Array = raw("Array");
+
+  private JsString(Object value) {
     super(value);
+  }
+
+  private JsString(JsBase recv, JsOp op) {
+    super(recv, op);
   }
 
   public static JsString of(String s) {
     final String v;
     v = quote(s);
 
-    return new JsString("[\"JS\"," + v + "]");
+    final JsOp op;
+    op = JsOp.of(JS, v);
+
+    return new JsString(op);
   }
 
   static JsString raw(String s) {
@@ -37,13 +69,6 @@ public final class JsString extends JsObject {
     v = quote(s);
 
     return new JsString(v);
-  }
-
-  static JsType<JsString> $type() {
-    final JsString typeName;
-    typeName = JsString.raw("string");
-
-    return new JsType<>(typeName, JsString::new);
   }
 
   private static String quote(String s) {

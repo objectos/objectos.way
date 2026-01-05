@@ -17,22 +17,22 @@ package objectos.script;
 
 final class JsFunction extends JsObject {
 
-  private JsFunction(String value) {
+  JsFunction(JsOp value) {
     super(value);
   }
 
   static JsFunction of(JsAction value) {
-    final JsArray $value;
-    $value = JsArray.raw(value);
+    final JsOp op;
+    op = JsOp.of(JsString.FN, value);
 
-    return new JsFunction("[\"FN\"," + $value + "]");
+    return new JsFunction(op);
   }
 
   static JsFunction of(JsObject value) {
-    final JsAction action;
-    action = JsAction.of(value);
+    final JsOp op;
+    op = JsOp.of(JsString.FN, value);
 
-    return of(action);
+    return new JsFunction(op);
   }
 
 }

@@ -110,8 +110,6 @@ public final class JsArray extends JsObject {
 
   }
 
-  private static final JsString Array = JsString.raw("Array");
-
   private JsArray(String value) {
     super(value);
   }
@@ -157,10 +155,7 @@ public final class JsArray extends JsObject {
           throw new NullPointerException("args[0] == null");
         }
 
-        final JsAction a0;
-        a0 = JsAction.of(args0);
-
-        sb.append(a0);
+        sb.append(args0);
 
         for (int idx = 1; idx < args.length; idx++) {
           final JsObject o;
@@ -172,10 +167,7 @@ public final class JsArray extends JsObject {
 
           sb.append(',');
 
-          final JsAction a;
-          a = JsAction.of(o);
-
-          sb.append(a);
+          sb.append(o);
         }
 
         sb.append(']');
@@ -188,18 +180,13 @@ public final class JsArray extends JsObject {
     };
   }
 
-  private static final JsString FE = JsString.raw("FE");
-
   public final JsAction forEach(JsAction value) {
     Objects.requireNonNull(value, "value == null");
 
-    final JsArray $value;
-    $value = JsArray.raw(value);
+    final JsOp op;
+    op = JsOp.of(JsString.FE, JsString.Array, value);
 
-    final JsArray forEach;
-    forEach = JsArray.raw(FE, Array, $value);
-
-    return JsAction.of(this, forEach);
+    return JsAction.one(this, op);
   }
 
 }

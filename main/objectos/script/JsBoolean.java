@@ -25,10 +25,8 @@ public final class JsBoolean extends JsObject {
       JsString.raw("boolean"), JsBoolean::new
   );
 
-  private static final JsString IF = JsString.raw("IF");
-
-  private JsBoolean(String value) {
-    super(value);
+  private JsBoolean(JsBase recv, JsOp op) {
+    super(recv, op);
   }
 
   /// Performs an action equivalent to an `if-else` statement on this boolean
@@ -42,10 +40,10 @@ public final class JsBoolean extends JsObject {
     Objects.requireNonNull(onTrue, "onTrue == null");
     Objects.requireNonNull(onFalse, "onFalse == null");
 
-    final JsArray action;
-    action = JsArray.raw(IF, onTrue, onFalse);
+    final JsOp op;
+    op = JsOp.of(JsString.IF, onTrue, onFalse);
 
-    return JsAction.of(this, action);
+    return JsAction.one(this, op);
   }
 
 }
