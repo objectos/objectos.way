@@ -106,10 +106,12 @@ const way = (function() {
     "FE": forEach,
     "FN": functionJs,
     "GR": globalRead,
+    "IF": ifElse,
     "IU": invokeUnchecked,
     "IV": invokeVirtual,
     "JS": jsValue,
     "MO": morph,
+    "NO": noop,
     "PR": propertyRead,
     "PW": propertyWrite,
     "TY": typeEnsure,
@@ -229,6 +231,18 @@ const way = (function() {
     return globalThis;
   }
 
+  function ifElse(ctx, args) {
+    const recv = checkRecv(ctx, "boolean");
+
+    const onTrue = checkDefined(args.shift(), "onTrue");
+
+    const onFalse = checkDefined(args.shift(), "onFalse");
+
+    const action = recv ? onTrue : onFalse;
+
+    return execute(ctx, action);
+  }
+
   function invokeUnchecked(ctx, args) {
     const recv = ctx.$recv;
 
@@ -338,6 +352,8 @@ const way = (function() {
     }
   }
 
+  function noop() {}
+
   function propertyRead(ctx, args) {
     const recv = checkRecv(ctx, args.shift());
 
@@ -439,7 +455,9 @@ const way = (function() {
   }
 
   function checkType(maybe, name, typeName) {
-    if (typeName === 'string') {
+    if (typeName === "boolean") {
+      return checkBoolean(maybe, name);
+    } else if (typeName === "string") {
       return checkString(maybe, name);
     } else {
       const t = typeof maybe;
@@ -468,6 +486,16 @@ const way = (function() {
 
       throw new Error(`Illegal arg: ${name} does not have ${typeName} in its prototype chain`);
     }
+  }
+
+  function checkBoolean(maybe, name) {
+    const t = typeof maybe;
+
+    if (t !== "boolean") {
+      throw new Error(`Illegal arg: ${name} must be a Boolean value but got ${t}`);
+    }
+
+    return maybe;
   }
 
   function checkString(maybe, name) {

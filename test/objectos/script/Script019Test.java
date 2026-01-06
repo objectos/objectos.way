@@ -26,29 +26,36 @@ import org.testng.annotations.Test;
 @Listeners(Y.class)
 public class Script019Test {
 
-  @Test(enabled = false)
+  @Test
   public void action() {
     assertEquals(
         Script019.ACTION.toString(),
 
         """
-        [["ET"],["IV","Element","hasAttribute",[[["JS","data-test"]]]],["IF",[["ET"],["IV","Element","remove",[]]],["NO"]]]"""
+        ["W1",["ET"],["IV","Element","hasAttribute",[["JS","data-test"]]],["IF",["W1",["ET"],["IV","Element","remove",[]]],["NO"]]]"""
     );
   }
 
-  @Test(enabled = false)
+  @Test
   public void live() {
     try (var page = Y.page()) {
-      page.navigate("/script/018");
+      page.navigate("/script/019");
 
-      var clickMe = page.locator("#click-me");
-      var subject = page.locator("#subject");
+      var btn1 = page.locator("#btn-1");
+      var btn2 = page.locator("#btn-2");
+      var btn3 = page.locator("#btn-3");
 
-      assertThat(subject).hasText("Before");
+      assertThat(btn1).hasCount(1);
+      assertThat(btn2).hasCount(1);
+      assertThat(btn3).hasCount(1);
 
-      clickMe.click();
+      btn1.click();
+      btn2.click();
+      btn3.click();
 
-      assertThat(subject).hasText("After");
+      assertThat(btn1).hasCount(1);
+      assertThat(btn2).hasCount(0);
+      assertThat(btn3).hasCount(1);
     }
   }
 
