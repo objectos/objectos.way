@@ -27,6 +27,13 @@ public final class JsDocument extends JsNode {
     super(recv, op);
   }
 
+  /// Returns the root element of this document.
+  ///
+  /// @return the root element of this document
+  public final JsElement documentElement() {
+    return prop("Document", "documentElement").as(JsElement.type);
+  }
+
   /// Returns the title of this document.
   ///
   /// @return the title of this document

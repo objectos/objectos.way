@@ -20,16 +20,19 @@ import objectos.script.Js;
 
 /*
 
-Test case 020
+Test case 022
 
 - event: click
-- action: throwError
+- Document::documentElement
 
 */
 @Css.Source
-public final class Script020 extends AbstractDevScript {
+public final class Script022 extends AbstractDevScript {
 
-  public static final JsAction ACTION = Js.throwError(JsString.of("The TE action"));
+  public static final JsAction ACTION = Js.document()
+      .documentElement()
+      .querySelector(JsString.of("div.subject"))
+      .textContent(JsString.of("After"));
 
   @Override
   final void renderBody() {
@@ -47,6 +50,8 @@ public final class Script020 extends AbstractDevScript {
             text("Click me")
         )
     );
+
+    div(id("subject"), className("subject"), text("Before"));
   }
 
 }

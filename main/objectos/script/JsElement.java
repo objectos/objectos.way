@@ -120,6 +120,16 @@ public final class JsElement extends JsNode {
     return action(op);
   }
 
+  /// Returns the first descendant of this element matching the specified
+  /// selectors.
+  ///
+  /// @param selectors the selectors to match
+  ///
+  /// @return the first descendant matching the selectors
+  public final JsElement querySelector(JsString selectors) {
+    return invoke(JsElement.type, "Element", "querySelector", selectors);
+  }
+
   /// Removes this element from its parent node.
   ///
   /// @return an object representing this action

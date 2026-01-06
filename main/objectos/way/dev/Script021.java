@@ -42,10 +42,10 @@ public final class Script021 extends AbstractDevScript {
   final void renderBody() {
     div(
         css("""
-            display:flex
-            flex-direction:column
-            gap:16rx
-            """),
+        display:flex
+        flex-direction:column
+        gap:16rx
+        """),
 
         button(
             id("click-me"),
