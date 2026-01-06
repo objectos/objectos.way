@@ -60,11 +60,20 @@ public final class Js {
     return JsElement.byId(id);
   }
 
+  /// Returns a reference to the document (provided the global scope is a
+  /// `Window`).
+  ///
+  /// @return the document that the window contains
+  public static JsDocument document() {
+    return global().prop("Window", "document").as(JsDocument.type);
+  }
+
   public static JsPromise fetch(JsString resource) {
     return global().invokeUnchecked(JsPromise.type, "fetch", resource);
   }
 
-  /// The object which represents the global scope.
+  /// Returns the global scope object. More specifically, it returns the value
+  /// of the `globalThis` property.
   ///
   /// @return the global scope object
   public static JsObject global() {

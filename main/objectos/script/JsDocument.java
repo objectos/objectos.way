@@ -15,34 +15,23 @@
  */
 package objectos.script;
 
-/// A JS runtime `Node` instance.
-public sealed class JsNode extends JsObject
-    permits
-    JsDocument,
-    JsElement {
+/// A JS runtime `Document` instance.
+public final class JsDocument extends JsNode {
 
-  JsNode(JsOp op) {
-    super(op);
-  }
+  /// Represents the `Document` JS type.
+  public static final JsType<JsDocument> type = new JsType<>(
+      JsString.raw("Document"), JsDocument::new
+  );
 
-  JsNode(JsBase recv, JsOp op) {
+  private JsDocument(JsBase recv, JsOp op) {
     super(recv, op);
   }
 
-  /// Returns the text content of this node and its descendants.
+  /// Returns the title of this document.
   ///
-  /// @return the text content
-  public final JsString textContent() {
-    return prop("Node", "textContent").as(JsString.type);
-  }
-
-  /// Sets the text content of this node to the specfied value.
-  ///
-  /// @param value the new text content
-  ///
-  /// @return an object representing this action
-  public final JsAction textContent(JsString value) {
-    return prop("Node", "textContent", value);
+  /// @return the title of this document
+  public final JsString title() {
+    return prop("Document", "title").as(JsString.type);
   }
 
 }
