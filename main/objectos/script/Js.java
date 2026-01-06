@@ -97,6 +97,15 @@ public final class Js {
     return JsElement.TARGET;
   }
 
+  /// Throws a new JS `Error` instance with the specified message.
+  ///
+  /// @param msg the description of the error
+  ///
+  /// @return an object representing this action
+  public static JsAction throwError(JsString msg) {
+    return JsAction.throwError(msg);
+  }
+
   /// Retrieves the named property from the event context.
   ///
   /// @param name the property name

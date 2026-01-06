@@ -40,6 +40,7 @@ public final class JsString extends JsObject {
   static final JsString NO = raw("NO"); // no-op
   static final JsString PR = raw("PR"); // propertyRead
   static final JsString PW = raw("PW"); // propertyWrite
+  static final JsString TE = raw("TE"); // throwError
   static final JsString TY = raw("TY"); // typeEnsure
   static final JsString W1 = raw("W1"); // wayOne
   static final JsString WS = raw("WS"); // waySeq

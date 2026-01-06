@@ -114,6 +114,7 @@ const way = (function() {
     "NO": noop,
     "PR": propertyRead,
     "PW": propertyWrite,
+    "TE": throwError,
     "TY": typeEnsure,
     "W1": wayOne,
     "WS": waySeq
@@ -376,6 +377,16 @@ const way = (function() {
     const val = checkDefined(args.shift(), "value");
 
     recv[propName] = execute(ctx, val);
+  }
+
+  function throwError(ctx, args) {
+    const $msg = checkDefined(args.shift(), "msg");
+
+    const msg = execute(ctx, $msg);
+
+    checkString(msg, "msg");
+
+    throw new Error(msg);
   }
 
   function typeEnsure(ctx, args) {

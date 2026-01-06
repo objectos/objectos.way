@@ -107,6 +107,15 @@ public sealed abstract class JsAction {
     );
   }
 
+  static JsAction throwError(JsString msg) {
+    Objects.requireNonNull(msg, "msg == null");
+
+    final JsOp op;
+    op = JsOp.of(JsString.TE, msg);
+
+    return new One(op);
+  }
+
   static JsAction var(String name, JsObject value) {
     Objects.requireNonNull(name, "name == null");
     Objects.requireNonNull(value, "value == null");
