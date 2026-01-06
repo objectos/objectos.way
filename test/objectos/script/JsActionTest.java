@@ -33,9 +33,10 @@ public class JsActionTest {
   @Test
   public void testCase02() {
     assertEquals(
-        Js.of(Js.noop(), Js.noop()),
+        Js.of(Js.noop(), Js.noop()).toString(),
+
         """
-        [["NO"],["NO"]]"""
+        ["WS",["NO"],["NO"]]"""
     );
   }
 

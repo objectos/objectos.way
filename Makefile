@@ -58,15 +58,6 @@ include make/java-core.mk
 include make/common-clean.mk
 
 #
-# way@compile
-#
-
-## compilation requirements 
-COMPILE_REQS = $(SCRIPT_GEN)
-
-include make/java-compile.mk
-
-#
 # way@css-props-gen
 #
 
@@ -106,6 +97,15 @@ script-gen-clean:
 
 $(SCRIPT_GEN): $(SCRIPT_GEN_REQS)
 	$(SCRIPT_GEN_JAVAX)
+
+#
+# way@compile
+#
+
+## compilation requirements 
+COMPILE_REQS := $(SCRIPT_GEN)
+
+include make/java-compile.mk
 
 #
 # way@dev

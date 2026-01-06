@@ -32,7 +32,7 @@ public class Script008Test {
         Script008.ACTION.toString(),
 
         """
-        ["X1",["JS",["opacity:0","opacity:1"]],["FE","Array",["X1",["X1",["EI",["JS","subject"]],["PR","Element","classList"]],["IV","DOMTokenList","toggle",[["X1",["AX",0],["TY","string"]]]]]]]"""
+        ["W1",["JS",["opacity:0","opacity:1"]],["FE","Array",["W1",["EI",["JS","subject"]],["PR","Element","classList"],["IV","DOMTokenList","toggle",[["W1",["AX",0],["TY","string"]]]]]]]"""
     );
   }
 

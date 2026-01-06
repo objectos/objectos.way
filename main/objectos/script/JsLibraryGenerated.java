@@ -100,9 +100,14 @@ const way = (function() {
       return false;
     }
 
-    const way = JSON.parse(data);
+    const ctx = {
+      $el: el,
+      $recv: undefined
+    };
 
-    executeWay(el, way);
+    const action = JSON.parse(data);
+
+    execute(ctx, action);
 
     return true;
   }
@@ -130,74 +135,37 @@ const way = (function() {
     "MO": morph,
     "PR": propertyRead,
     "PW": propertyWrite,
-    "TY": typeEnsure
+    "TY": typeEnsure,
+    "W1": wayOne,
+    "WS": waySeq
   };
 
-  function compute(ctx, action) {
+  function execute(ctx, action) {
     checkArray(action, "action");
 
-    const nested = { ...ctx };
+    const id = checkString(action.shift(), "id");
 
-    for (const op of action) {
-      nested.$recv = executeOperation(nested, op);
+    const handler = operations[id];
+
+    if (handler) {
+      return handler(ctx, action);
+    } else {
+      throw new Error(`Illegal arg: no handler found for operation=${id}`);
     }
-
-    return nested.$recv;
   }
 
-  function nest(ctx, actions) {
-    checkArray(actions, "actions");
+  function nest(ctx, action) {
+    checkArray(action, "action");
 
     return (...args) => {
       const nested = { ...ctx };
 
       nested.$args = args;
 
-      const nestedActions = structuredClone(actions);
+      const nestedAction = structuredClone(action);
 
-      for (const a of nestedActions) {
-        executeAction(nested, a);
-      }
-
-      return nested.$recv;
+      return execute(nested, nestedAction);
     };
-  }
-
-  function executeWay(el, actions) {
-    checkArray(actions, "actions");
-
-    const ctx = {
-      $el: el,
-      $recv: undefined
-    };
-
-    for (const a of actions) {
-      executeAction(ctx, a);
-    }
-
-    return true;
-  }
-
-  function executeAction(ctx, action) {
-    checkArray(action, "action");
-
-    for (const op of action) {
-      ctx.$recv = executeOperation(ctx, op);
-    }
-  }
-
-  function executeOperation(ctx, op) {
-    checkArray(op, "operation");
-
-    const id = checkString(op.shift(), "id");
-
-    const handler = operations[id];
-
-    if (handler) {
-      return handler(ctx, op);
-    } else {
-      throw new Error(`Illegal arg: no handler found for operation=${id}`);
-    }
   }
 
   function argsRead(ctx, args) {
@@ -227,7 +195,7 @@ const way = (function() {
 
     const val = checkDefined(args.shift(), "value");
 
-    ctx[name] = compute(ctx, val);
+    ctx[name] = execute(ctx, val);
   }
 
   function contextName(maybe) {
@@ -247,7 +215,7 @@ const way = (function() {
   function elementById(ctx, args) {
     const action = checkDefined(args.shift(), "action");
 
-    const id = compute(ctx, action);
+    const id = execute(ctx, action);
 
     checkString(id, "id");
 
@@ -267,17 +235,17 @@ const way = (function() {
   function forEach(ctx, args) {
     const recv = checkRecv(ctx, args.shift());
 
-    const actions = checkDefined(args.shift(), "actions");
+    const action = checkDefined(args.shift(), "action");
 
-    const fn = nest(ctx, actions);
+    const fn = nest(ctx, action);
 
     recv.forEach(fn);
   }
 
   function functionJs(ctx, args) {
-    const actions = checkDefined(args.shift(), "actions");
+    const action = checkDefined(args.shift(), "action");
 
-    return nest(ctx, actions);
+    return nest(ctx, action);
   }
 
   function globalRead() {
@@ -307,7 +275,7 @@ const way = (function() {
 
     const encodedArgs = checkArray(args.shift(), "encodedArgs");
 
-    const methodArgs = encodedArgs.map(x => compute(ctx, x));
+    const methodArgs = encodedArgs.map(x => execute(ctx, x));
 
     return method.apply(recv, methodArgs);
   }
@@ -327,7 +295,7 @@ const way = (function() {
 
     const $src = checkDefined(args.shift(), "src");
 
-    const src = checkString(compute(ctx, $src), "src");
+    const src = checkString(execute(ctx, $src), "src");
 
     const parser = new DOMParser();
 
@@ -414,13 +382,41 @@ const way = (function() {
 
     const val = checkDefined(args.shift(), "value");
 
-    recv[propName] = compute(ctx, val);
+    recv[propName] = execute(ctx, val);
   }
 
   function typeEnsure(ctx, args) {
     const typeName = checkString(args.shift(), "typeName");
 
     return checkType(ctx.$recv, "recv", typeName);
+  }
+
+  function wayOne(ctx, action) {
+    checkArray(action, "action");
+
+    const old = ctx.$recv;
+
+    for (const op of action) {
+      ctx.$recv = execute(ctx, op);
+    }
+
+    const res = ctx.$recv;
+
+    ctx.$recv = old;
+
+    return res;
+  }
+
+  function waySeq(ctx, actions) {
+    checkArray(actions, "actions");
+
+    const old = ctx.$recv;
+
+    for (const action of actions) {
+      execute(ctx, action);
+    }
+
+    ctx.$recv = old;
   }
 
   // ##################################################################

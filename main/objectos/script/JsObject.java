@@ -61,7 +61,7 @@ public sealed class JsObject
     final JsOp invoke;
     invoke = invoke0(type, method, args);
 
-    return JsAction.one(this, invoke);
+    return action(invoke);
   }
 
   /// Invokes the specified method with the specified arguments, in order, if
@@ -166,7 +166,7 @@ public sealed class JsObject
     final JsOp op;
     op = JsOp.of(JsString.PW, $type, $name, value);
 
-    return JsAction.one(this, op);
+    return action(op);
   }
 
 }

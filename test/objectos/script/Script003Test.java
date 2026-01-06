@@ -32,7 +32,7 @@ public class Script003Test {
         Script003.ACTION.toString(),
 
         """
-        ["X1",["EI",["JS","subject"]],["IV","Element","remove",[]]]"""
+        ["W1",["EI",["JS","subject"]],["IV","Element","remove",[]]]"""
     );
   }
 

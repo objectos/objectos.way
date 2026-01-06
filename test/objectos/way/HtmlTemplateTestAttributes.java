@@ -202,7 +202,7 @@ public class HtmlTemplateTestAttributes {
         },
 
         """
-        <div><button data-on-click='[[["ET"],["IV","Element","remove",[]]]]'></button></div>
+        <div><button data-on-click='["W1",["ET"],["IV","Element","remove",[]]]'></button></div>
         """
     );
   }
@@ -213,14 +213,14 @@ public class HtmlTemplateTestAttributes {
     test(
         new Html.Template() {
           final Html.Id FOO = Html.Id.of("foo");
-
+    
           @Override
           protected final void render() {
             div(
                 dataOnClick(s -> s.elementById(FOO).toggleClass("a x")),
                 dataOnClick(s -> s.elementById(FOO).toggleClass("b y"))
             );
-
+    
             div(
                 dataOnClick(s -> s.elementById(FOO).toggleClass("a x")),
                 dataOnClick(s -> {
@@ -228,7 +228,7 @@ public class HtmlTemplateTestAttributes {
                   s.elementById(FOO).toggleClass("c z");
                 })
             );
-
+    
             div(
                 dataOnClick(s -> {
                   s.elementById(FOO).toggleClass("a x");
@@ -238,7 +238,7 @@ public class HtmlTemplateTestAttributes {
             );
           }
         },
-
+    
         """
         <div data-on-click='[["id-2","foo","toggle-class-0","a","x"],["id-2","foo","toggle-class-0","b","y"]]'></div>
         <div data-on-click='[["id-2","foo","toggle-class-0","a","x"],["id-2","foo","toggle-class-0","b","y"],["id-2","foo","toggle-class-0","c","z"]]'></div>
@@ -262,7 +262,7 @@ public class HtmlTemplateTestAttributes {
             );
           }
         },
-    
+
         """
         <div data-on-load='[["id-2","foo","toggle-class-0","x"]]'></div>
         """
@@ -282,7 +282,7 @@ public class HtmlTemplateTestAttributes {
             );
           }
         },
-    
+
         """
         <form data-on-success='[["stop-propagation-0"]]'></form>
         """

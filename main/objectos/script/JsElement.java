@@ -117,7 +117,7 @@ public final class JsElement extends JsNode {
     final JsOp op;
     op = JsOp.of(JsString.MO, src);
 
-    return JsAction.one(this, op);
+    return action(op);
   }
 
   /// Removes this element from its parent node.

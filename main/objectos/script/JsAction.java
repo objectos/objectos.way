@@ -26,20 +26,32 @@ public sealed abstract class JsAction {
 
   private static final class One extends JsAction {
 
-    private final String value;
+    private final Object value;
 
-    One(String value) {
+    One(Object value) {
       this.value = value;
     }
 
     @Override
     public final String toString() {
-      return "[" + JsString.X1 + "," + value + "]";
+      if (value instanceof List<?> list) {
+        return list.stream().map(Object::toString).collect(Collectors.joining(",", "[\"W1\",", "]"));
+      } else {
+        return value.toString();
+      }
     }
 
     @Override
     final void addTo(List<One> list) {
       list.add(this);
+    }
+
+    private String seq() {
+      if (value instanceof List<?>) {
+        return toString();
+      } else {
+        return value.toString();
+      }
     }
 
   }
@@ -54,7 +66,7 @@ public sealed abstract class JsAction {
 
     @Override
     public final String toString() {
-      return "[" + JsString.XS + "," + value() + "]";
+      return "[" + JsString.WS + "," + value() + "]";
     }
 
     @Override
@@ -64,22 +76,18 @@ public sealed abstract class JsAction {
 
     private String value() {
       return values.stream()
-          .map(v -> v.value)
+          .map(v -> v.seq())
           .collect(Collectors.joining(","));
     }
 
   }
 
-  static final JsAction NOOP = new One("[\"NO\"]");
+  static final JsAction NOOP = new One(JsOp.of(JsString.NO));
 
   JsAction() {}
 
-  static JsAction one(JsOp op) {
-    return new One(op.toString());
-  }
-
-  static JsAction one(JsObject recv, JsOp op) {
-    return new One(recv + "," + op);
+  static JsAction one(List<?> list) {
+    return new One(list);
   }
 
   static JsAction seq(JsAction first, JsAction second, JsAction[] more) {
@@ -109,7 +117,7 @@ public sealed abstract class JsAction {
     final JsOp op;
     op = JsOp.of(JsString.CW, $name, value);
 
-    return one(op);
+    return new One(op);
   }
 
   /// Returns the JSON encoded representation of this JS action.

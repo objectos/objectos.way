@@ -37,11 +37,12 @@ public final class JsString extends JsObject {
   static final JsString IV = raw("IV"); // invokeVirtual
   static final JsString JS = raw("JS"); // jsValue
   static final JsString MO = raw("MO"); // morph
+  static final JsString NO = raw("NO"); // no-op
   static final JsString PR = raw("PR"); // propertyRead
   static final JsString PW = raw("PW"); // propertyWrite
   static final JsString TY = raw("TY"); // typeEnsure
-  static final JsString X1 = raw("X1"); // executeOne
-  static final JsString XS = raw("XS"); // executeSeq
+  static final JsString W1 = raw("W1"); // wayOne
+  static final JsString WS = raw("WS"); // waySeq
 
   // types
   static final JsString Array = raw("Array");

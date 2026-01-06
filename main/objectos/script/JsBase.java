@@ -37,9 +37,9 @@ sealed abstract class JsBase
     return switch (value) {
       case JsOp single -> single.toString();
 
-      case List<?> list -> list.stream().map(Object::toString).collect(Collectors.joining(",", "[\"X1\",", "]"));
-
       case String s -> s;
+
+      case List<?> list -> list.stream().map(Object::toString).collect(Collectors.joining(",", "[\"W1\",", "]"));
 
       default -> throw new UnsupportedOperationException(
           "JsObject cannot be used as an argument: " + value.getClass()
@@ -47,9 +47,20 @@ sealed abstract class JsBase
     };
   }
 
-  final List<JsOp> with(JsOp op) {
+  final JsAction action(JsOp op) {
+    final List<?> combined;
+    combined = with(op);
+
+    return JsAction.one(
+        combined
+    );
+  }
+
+  final List<?> with(JsOp op) {
     return switch (value) {
       case JsOp single -> List.of(single, op);
+
+      case String single -> List.of(single, op);
 
       case List<?> head -> with0(head, op);
 
@@ -60,14 +71,11 @@ sealed abstract class JsBase
   }
 
   @SuppressWarnings("unchecked")
-  private List<JsOp> with0(List<?> head, JsOp op) {
-    final List<JsOp> list;
+  private List<?> with0(List<?> head, JsOp op) {
+    final List<Object> list;
     list = new ArrayList<>();
 
-    final List<JsOp> $head;
-    $head = (List<JsOp>) head;
-
-    list.addAll($head);
+    list.addAll(head);
 
     list.add(op);
 

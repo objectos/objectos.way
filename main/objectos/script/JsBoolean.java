@@ -43,7 +43,7 @@ public final class JsBoolean extends JsObject {
     final JsOp op;
     op = JsOp.of(JsString.IF, onTrue, onFalse);
 
-    return JsAction.one(this, op);
+    return action(op);
   }
 
 }

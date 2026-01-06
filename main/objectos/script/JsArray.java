@@ -186,7 +186,7 @@ public final class JsArray extends JsObject {
     final JsOp op;
     op = JsOp.of(JsString.FE, JsString.Array, value);
 
-    return JsAction.one(this, op);
+    return action(op);
   }
 
 }

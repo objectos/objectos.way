@@ -32,7 +32,7 @@ public class Script018Test {
         Script018.ACTION.toString(),
 
         """
-        ["X1",["X1",["GR"],["IU","fetch",[["X1",["ET"],["IV","Element","getAttribute",[["JS","href"]]]]]],["IV","Promise","then",[["FN",["X1",["AX",0],["TY","Response"],["IV","Response","text",[]]]]]]],["IV","Promise","then",[["FN",["X1",["EI",["JS","subject"]],["PW","Node","textContent",["X1",["AX",0],["TY","string"]]]]]]]]"""
+        ["W1",["GR"],["IU","fetch",[["W1",["ET"],["IV","Element","getAttribute",[["JS","href"]]]]]],["IV","Promise","then",[["FN",["W1",["AX",0],["TY","Response"],["IV","Response","text",[]]]]]],["IV","Promise","then",[["FN",["W1",["EI",["JS","subject"]],["PW","Node","textContent",["W1",["AX",0],["TY","string"]]]]]]]]"""
     );
   }
 
