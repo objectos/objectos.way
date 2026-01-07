@@ -27,6 +27,14 @@ public final class JsResponse extends JsObject {
     super(recv, op);
   }
 
+  /// Returns the value of the `ok` property stating if the response status was
+  /// in the range `200-299` or not.
+  ///
+  /// @return a boolean value
+  public final JsBoolean ok() {
+    return prop("Response", "ok").as(JsBoolean.type);
+  }
+
   /// Reads the response stream to its completion.
   ///
   /// @return a promise that resolves with a `JsString`
