@@ -81,6 +81,14 @@ public final class Js {
     return new JsObject(JsOp.GR);
   }
 
+  /// Returns a reference to the global `History` instance (provided the global
+  /// scope is a `Window`).
+  ///
+  /// @return a reference to the `History` instance
+  public static JsHistory history() {
+    return global().prop("Window", "history").as(JsHistory.type);
+  }
+
   /// Creates an action by concatenating all of the specified individual
   /// actions.
   ///

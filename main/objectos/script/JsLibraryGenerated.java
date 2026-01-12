@@ -476,7 +476,7 @@ const way = (function() {
   }
 
   function checkDefined(maybe, name) {
-    if (!maybe) {
+    if (maybe === undefined) {
       throw new Error(`Illegal arg: ${name} must be a defined value`);
     }
 
