@@ -33,8 +33,8 @@ public final class Js {
     return builder.build();
   }
 
-  public static JsRef args(int index) {
-    return JsRef.args(index);
+  public static JsObject args(int index) {
+    return JsObject.args(index);
   }
 
   /// Returns a handle for the element with the specified ID attribute.
@@ -119,6 +119,15 @@ public final class Js {
     return JsAction.NOOP;
   }
 
+  /// Creates a JS object literal with the specified name-value pairs.
+  ///
+  /// @param props the name-value pairs
+  ///
+  /// @return an object representing the object literal
+  public static JsObject object(Object... props) {
+    return JsObject.literal(props);
+  }
+
   /// The element which triggered the Objectos Script.
   ///
   /// @return the element
@@ -140,8 +149,8 @@ public final class Js {
   /// @param name the property name
   ///
   /// @return an object representing a JS reference
-  public static JsRef var(String name) {
-    return JsRef.var(name);
+  public static JsObject var(String name) {
+    return JsObject.var(name);
   }
 
   /// Stores the specified value to a named property in the event context.

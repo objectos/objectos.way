@@ -19,8 +19,7 @@ import module java.base;
 
 sealed abstract class JsBase
     permits
-    JsObject,
-    JsRef {
+    JsObject {
 
   private final Object value;
 

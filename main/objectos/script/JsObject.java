@@ -15,7 +15,9 @@
  */
 package objectos.script;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /// Represents a JS runtime `Object` instance.
 public sealed class JsObject
@@ -24,6 +26,7 @@ public sealed class JsObject
     JsArray,
     JsBoolean,
     JsFunction,
+    JsHistory,
     JsNode,
     JsNumber,
     JsPromise,
@@ -36,6 +39,105 @@ public sealed class JsObject
 
   JsObject(JsBase recv, JsOp op) {
     super(recv, op);
+  }
+
+  static JsObject args(int index) {
+    if (index < 0) {
+      throw new IllegalArgumentException(
+          "index must not be negative"
+      );
+    }
+
+    final JsNumber $index;
+    $index = JsNumber.raw(index);
+
+    final JsOp ref;
+    ref = JsOp.of(JsString.AX, $index);
+
+    return new JsObject(ref);
+  }
+
+  static JsObject literal(Object[] props) {
+    final int len;
+    len = props.length;
+
+    if (len == 0) {
+      return new JsObject("[\"JS\",{}]");
+    }
+
+    if (len % 2 != 0) {
+      throw new IllegalArgumentException(
+          "props must be a sequence of name-value pairs, but got an odd number of elements: props.length=" + len
+      );
+    }
+
+    final StringBuilder sb;
+    sb = new StringBuilder("[\"JS\",{");
+
+    final Set<String> names;
+    names = new HashSet<>();
+
+    int idx = 0;
+
+    while (idx < len) {
+      final Object maybeName;
+      maybeName = props[idx++];
+
+      if (!(maybeName instanceof String name)) {
+        throw new IllegalArgumentException(
+            "Property name must be a String value, but got: " + maybeName
+        );
+      }
+
+      if (!names.add(name)) {
+        throw new IllegalArgumentException(
+            "Duplicate property definition with name: " + name
+        );
+      }
+
+      if (idx != 1) {
+        sb.append(',');
+      }
+
+      final JsString $name;
+      $name = JsString.raw(name);
+
+      sb.append($name);
+
+      sb.append(':');
+
+      final Object value;
+      value = props[idx++];
+
+      switch (value) {
+        case Boolean b -> sb.append(b.toString());
+
+        case Number x -> sb.append(x.toString());
+
+        case String s -> sb.append(JsString.raw(s));
+
+        default -> throw new IllegalArgumentException("Unexpected value: " + value);
+      }
+    }
+
+    sb.append("}]");
+
+    final String literal;
+    literal = sb.toString();
+
+    return new JsObject(literal);
+  }
+
+  static JsObject var(String name) {
+    Objects.requireNonNull(name, "name == null");
+
+    final JsString $name;
+    $name = JsString.raw(name);
+
+    final JsOp ref;
+    ref = JsOp.of(JsString.CR, $name);
+
+    return new JsObject(ref);
   }
 
   /// Converts this reference to a JS reference of the specified type.
@@ -144,6 +246,25 @@ public sealed class JsObject
     );
   }
 
+  /// Returns the property of the specified name.
+  ///
+  /// @param name the property name
+  ///
+  /// @return the property
+  public final JsObject propUnchecked(String name) {
+    Objects.requireNonNull(name, "name == null");
+
+    final JsString $name;
+    $name = JsString.raw(name);
+
+    final JsOp op;
+    op = JsOp.of(JsString.pr, $name);
+
+    return new JsObject(
+        with(op)
+    );
+  }
+
   /// Sets the property of the specified name to the specified value, if the JS
   /// object is an instance of the specified type.
   ///
@@ -167,6 +288,13 @@ public sealed class JsObject
     op = JsOp.of(JsString.PW, $type, $name, value);
 
     return action(op);
+  }
+
+  /// Returns the result of the `Object.prototype.toString` method.
+  ///
+  /// @return a string representing this object
+  public final JsString toJsString() {
+    return invokeUnchecked(JsString.type, "toString");
   }
 
 }

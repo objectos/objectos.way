@@ -15,26 +15,11 @@
  */
 package objectos.script;
 
-/// A JS runtime `Number` instance.
-public final class JsNumber extends JsObject {
+/// A JS runtime `History` instance.
+final class JsHistory extends JsObject {
 
-  /// Represents the `number` JS type.
-  public static final JsType<JsNumber> type = new JsType<>(
-      JsString.raw("number"), JsNumber::new
-  );
-
-  private JsNumber(String value) {
-    super(value);
-  }
-
-  private JsNumber(JsBase recv, JsOp op) {
+  private JsHistory(JsBase recv, JsOp op) {
     super(recv, op);
-  }
-
-  public static JsNumber raw(int value) {
-    return new JsNumber(
-        Integer.toString(value)
-    );
   }
 
 }

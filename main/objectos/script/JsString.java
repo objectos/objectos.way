@@ -15,7 +15,7 @@
  */
 package objectos.script;
 
-/// Represents a JS runtime `String` instance.
+/// A JS runtime `String` instance.
 public final class JsString extends JsObject {
 
   /// Represents the `string` JS type.
@@ -39,6 +39,7 @@ public final class JsString extends JsObject {
   static final JsString MO = raw("MO"); // morph
   static final JsString NO = raw("NO"); // no-op
   static final JsString PR = raw("PR"); // propertyRead
+  static final JsString pr = raw("pr"); // propertyReadUnchecked
   static final JsString PW = raw("PW"); // propertyWrite
   static final JsString TE = raw("TE"); // throwError
   static final JsString TY = raw("TY"); // typeEnsure

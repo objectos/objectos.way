@@ -136,6 +136,7 @@ const way = (function() {
     "MO": morph,
     "NO": noop,
     "PR": propertyRead,
+    "pr": propertyReadUnchecked,
     "PW": propertyWrite,
     "TE": throwError,
     "TY": typeEnsure,
@@ -383,6 +384,18 @@ const way = (function() {
 
     const propName = checkString(args.shift(), "propName");
 
+    return propertyRead0(recv, propName);
+  }
+
+  function propertyReadUnchecked(ctx, args) {
+    const recv = ctx.$recv;
+
+    const propName = checkString(args.shift(), "propName");
+
+    return propertyRead0(recv, propName);
+  }
+  
+  function propertyRead0(recv, propName) {
     const prop = recv[propName];
 
     if (!prop) {
@@ -499,7 +512,7 @@ const way = (function() {
       if (t !== "object") {
         throw new Error(`Illegal arg: ${name} must be an Object value but got ${t}`);
       }
-
+	  
       let prototype = Object.getPrototypeOf(maybe);
 
       while (prototype) {
