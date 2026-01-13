@@ -37,6 +37,7 @@ public final class JsString extends JsObject {
   static final JsString IV = raw("IV"); // invokeVirtual
   static final JsString JS = raw("JS"); // jsValue
   static final JsString MO = raw("MO"); // morph
+  static final JsString NA = raw("NA"); // navigate
   static final JsString NO = raw("NO"); // no-op
   static final JsString PR = raw("PR"); // propertyRead
   static final JsString pr = raw("pr"); // propertyReadUnchecked

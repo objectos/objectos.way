@@ -82,6 +82,8 @@ public sealed abstract class JsAction {
 
   }
 
+  static final JsAction NAVIGATE = new One(JsOp.of(JsString.NA));
+
   static final JsAction NOOP = new One(JsOp.of(JsString.NO));
 
   JsAction() {}

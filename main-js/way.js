@@ -111,6 +111,7 @@ const way = (function() {
     "IV": invokeVirtual,
     "JS": jsValue,
     "MO": morph,
+    "NA": navigate,
     "NO": noop,
     "PR": propertyRead,
     "pr": propertyReadUnchecked,
@@ -280,15 +281,19 @@ const way = (function() {
   function morph(ctx, args) {
     const recv = ctx.$recv;
 
+    const $src = checkDefined(args.shift(), "src");
+
+    const src = checkString(execute(ctx, $src), "src");
+
+    morph0(recv, src);
+  }
+
+  function morph0(recv, src) {
     const valid = typeof recv.querySelectorAll === 'function';
 
     if (!valid) {
       throw new Error(`Illegal arg: ${recv} does not declare the 'querySelectorAll' method`);
     }
-
-    const $src = checkDefined(args.shift(), "src");
-
-    const src = checkString(execute(ctx, $src), "src");
 
     const parser = new DOMParser();
 
@@ -354,6 +359,56 @@ const way = (function() {
     }
   }
 
+  function navigate(ctx, _args) {
+    const el = ctx.$el;
+
+    if (!(el instanceof HTMLAnchorElement)) {
+      const actual = element.constructor ? element.constructor.name : "Unknown";
+
+      throw new Error(`Illegal arg: navigate must be executed on an HTMLAnchorElement but got ${actual}`);
+    }
+
+    const href = el.href;
+
+    if (!href) {
+      throw new Error(`Illegal arg: anchor has no href property`);
+    }
+
+    globalThis.fetch(href).then(navigateFetchSuccess);
+  }
+
+  function navigateFetchSuccess(resp) {
+    const headers = resp.headers;
+
+    const contentType = headers.get("Content-Type");
+
+    if (!contentType) {
+      throw new Error("Invalid response: no content-type");
+    }
+
+    else if (contentType.startsWith("text/html")) {
+      resp.text().then(navigateFetchSuccessHtml);
+    }
+
+    else {
+      throw new Error(`Invalid response: unsupported content-type ${contentType}`);
+    }
+  }
+
+  function navigateFetchSuccessHtml(text) {
+    const global = globalThis;
+
+    const doc = global.document;
+
+    if (!doc) {
+      throw new Error("Illegal state: global scope has no document");
+    }
+
+    const element = doc.documentElement;
+
+    morph0(element, text);
+  }
+
   function noop() {}
 
   function propertyRead(ctx, args) {
@@ -371,7 +426,7 @@ const way = (function() {
 
     return propertyRead0(recv, propName);
   }
-  
+
   function propertyRead0(recv, propName) {
     const prop = recv[propName];
 
@@ -489,7 +544,7 @@ const way = (function() {
       if (t !== "object") {
         throw new Error(`Illegal arg: ${name} must be an Object value but got ${t}`);
       }
-	  
+
       let prototype = Object.getPrototypeOf(maybe);
 
       while (prototype) {

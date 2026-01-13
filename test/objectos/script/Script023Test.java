@@ -31,7 +31,7 @@ public class Script023Test {
         Script023.ACTION.toString(),
 
         """
-        ["W1",["GR"],["IU","fetch",[["W1",["ET"],["IV","Element","getAttribute",[["JS","href"]]]]]],["IV","Promise","then",[["FN",["WS",["CW","resp",["W1",["AX",0],["TY","Response"]]],["W1",["CR","resp"],["TY","Response"],["PR","Response","ok"],["TY","boolean"],["IF",["W1",["CR","resp"],["TY","Response"],["IV","Response","text",[]],["IV","Promise","then",[["FN",["W1",["GR"],["PR","Window","document"],["TY","Document"],["PR","Document","documentElement"],["TY","Element"],["MO",["W1",["AX",0],["TY","string"]]]]]]]],["TE",["JS","Resp not OK!"]]]]]]]]]"""
+        ["NA"]"""
     );
   }
 

@@ -16,7 +16,6 @@
 package objectos.script;
 
 import module java.base;
-import objectos.way.Html;
 
 /// The **Objectos Script** main class, part of Objectos HTML.
 public final class Js {
@@ -101,23 +100,11 @@ public final class Js {
     return JsAction.seq(first, second, more);
   }
 
-  private static final JsAction NAVIGATE = Js.fetch(Js.target().attr(Html.AttributeName.HREF)).then(
-      Js.of(
-          Js.var("resp", Js.args(0).as(JsResponse.type)),
-          Js.var("resp").as(JsResponse.type).ok().test(
-              Js.var("resp").as(JsResponse.type).text().then(
-                  Js.document().documentElement().morph(Js.args(0).as(JsString.type))
-              ),
-              Js.throwError(JsString.of("Resp not OK!"))
-          )
-      )
-  );
-
   /// Performs a soft navigation to the linked resource.
   ///
   /// @return an object representing the action
   public static JsAction navigate() {
-    return NAVIGATE;
+    return JsAction.NAVIGATE;
   }
 
   /// The no-op JS action.
