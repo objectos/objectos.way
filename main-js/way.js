@@ -387,6 +387,20 @@ const way = (function() {
     }
 
     else if (contentType.startsWith("text/html")) {
+      const global = globalThis;
+
+      const history = global.history;
+
+      if (history) {
+        const state = { way: true };
+
+        const unused = "";
+
+        const url = resp.url;
+
+        history.pushState(state, unused, url);
+      }
+
       resp.text().then(navigateFetchSuccessHtml);
     }
 

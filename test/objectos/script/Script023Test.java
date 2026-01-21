@@ -47,10 +47,14 @@ public class Script023Test {
       assertThat(keepMe).hasCount(1);
       assertThat(subject).hasText("Before");
 
+      var url = page.url();
+
       clickMe.click();
 
       assertThat(keepMe).hasCount(1);
       assertThat(subject).hasText("After");
+
+      assertEquals(page.url(), url + "?next=true");
     }
   }
 
