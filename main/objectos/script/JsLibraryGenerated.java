@@ -377,6 +377,7 @@ const way = (function() {
         replaced.add(elem);
 
         elem.replaceWith(newElem);
+
         //loadHandler(newElem);
       }
     }
@@ -412,6 +413,18 @@ const way = (function() {
     else if (contentType.startsWith("text/html")) {
       const global = globalThis;
 
+      // scroll to 0,0 
+      if (!(global instanceof Window)) {
+        const actual = global.constructor ? global.constructor.name : "Unknown";
+
+        throw new Error(`Illegal arg: navigate must be executed on a Window but got ${actual}`);
+      }
+
+      global.scrollTo({
+        top: 0, left: 0, behavior: "instant"
+      });
+
+      // update browser location
       const history = global.history;
 
       if (history) {

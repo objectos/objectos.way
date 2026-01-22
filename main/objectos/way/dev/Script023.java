@@ -47,18 +47,9 @@ public final class Script023 extends AbstractDevScript {
         display:flex
         flex-direction:column
         gap:16rx
+        height:200vh
+        justify-content:space-between
         """),
-
-        a(
-            id("click-me"),
-            dataOnClick(ACTION),
-            href("/script/023?next=true"),
-            text("Click me")
-        ),
-
-        initial
-            ? div(id("keep-me"), text("Keep me"))
-            : noop(),
 
         div(
             id("subject"),
@@ -66,6 +57,17 @@ public final class Script023 extends AbstractDevScript {
             dataFrame("root", initial ? "1" : "2"),
 
             text(initial ? "Before" : "After")
+        ),
+
+        initial
+            ? div(id("keep-me"), text("Keep me"))
+            : noop(),
+
+        a(
+            id("click-me"),
+            dataOnClick(ACTION),
+            href("/script/023?next=true"),
+            text("Click me")
         )
     );
   }

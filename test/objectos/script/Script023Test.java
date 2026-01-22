@@ -44,15 +44,21 @@ public class Script023Test {
       var keepMe = page.locator("#keep-me");
       var subject = page.locator("#subject");
 
+      clickMe.scrollIntoViewIfNeeded();
+
+      assertThat(clickMe).isInViewport();
       assertThat(keepMe).hasCount(1);
+      assertThat(subject).not().isInViewport();
       assertThat(subject).hasText("Before");
 
       var url = page.url();
 
       clickMe.click();
 
+      assertThat(clickMe).not().isInViewport();
       assertThat(keepMe).hasCount(1);
       assertThat(subject).hasText("After");
+      assertThat(subject).isInViewport();
 
       assertEquals(page.url(), url + "?next=true");
     }
