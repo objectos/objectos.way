@@ -299,7 +299,7 @@ const way = (function() {
 
     const newContent = parser.parseFromString(src, "text/html");
 
-    // TODO handle title
+    morph1Head(recv, newContent);
 
     // handle frames
     const newFrames = newContent.querySelectorAll("[data-frame]");
@@ -357,6 +357,54 @@ const way = (function() {
 
         //loadHandler(newElem);
       }
+    }
+  }
+
+  function morph1Head(content, newContent) {
+    const newHead = newContent.querySelector("head");
+
+    if (!newHead) {
+      return;
+    }
+
+    const head = content.querySelector("head");
+
+    if (!head) {
+      return;
+    }
+
+    const newEls = new Map();
+
+    for (const newChild of newHead.children) {
+      const newHtml = newChild.outerHTML;
+
+      newEls.set(newHtml, newChild);
+    }
+
+    const remEls = [];
+
+    for (const child of head.children) {
+      const html = child.outerHTML;
+
+      const newChild = newEls.get(html);
+
+      if (newChild) {
+        // current elem exists in new head
+        // => let's keep it
+        newEls.delete(html);
+      } else {
+        // current elem does not exist in new head
+        // => let's remove it
+        remEls.push(child);
+      }
+    }
+
+    for (const newChild of newEls.values()) {
+      head.appendChild(newChild);
+    }
+
+    for (const remChild of remEls) {
+      head.removeChild(remChild);
     }
   }
 

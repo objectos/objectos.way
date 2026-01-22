@@ -31,17 +31,19 @@ abstract class AbstractDevScript extends Html.Template implements Http.Handler {
     doctype();
 
     html(
-        head(
-            meta(charset("utf-8")),
-            meta(httpEquiv("content-type"), content("text/html; charset=utf-8")),
-            meta(name("viewport"), content("width=device-width, initial-scale=1")),
-            link(rel("stylesheet"), type("text/css"), href("/styles.css")),
-            script(src("/script.js")),
-            title(documentTitle())
-        ),
+        head(f(this::renderHead)),
 
         body(f(this::renderBody))
     );
+  }
+
+  void renderHead() {
+    meta(charset("utf-8"));
+    meta(httpEquiv("content-type"), content("text/html; charset=utf-8"));
+    meta(name("viewport"), content("width=device-width, initial-scale=1"));
+    link(rel("stylesheet"), type("text/css"), href("/styles.css"));
+    script(src("/script.js"));
+    title(documentTitle());
   }
 
   String documentTitle() {
