@@ -16,6 +16,7 @@
 package objectos.script;
 
 import module java.base;
+import objectos.way.Html;
 
 /// The **Objectos Script** main class, part of Objectos HTML.
 public final class Js {
@@ -34,6 +35,21 @@ public final class Js {
 
   public static JsObject args(int index) {
     return JsObject.args(index);
+  }
+
+  /// Returns a handle for the element with the specified ID attribute.
+  ///
+  /// @param value the ID value
+  ///
+  /// @return the element
+  public static JsElement byId(Html.Id value) {
+    final String v;
+    v = value.attrValue();
+
+    final JsString id;
+    id = JsString.of(v);
+
+    return JsElement.byId(id);
   }
 
   /// Returns a handle for the element with the specified ID attribute.

@@ -29,7 +29,7 @@ Test case 027
 public final class Script027 extends AbstractDevScript {
 
   public static final JsAction ACTION = Js.setTimeout(
-      Js.byId("subject").textContent(JsString.of("After")), 400
+      Js.byId(SUBJECT).textContent(JsString.of("After")), 400
   );
 
   @Override
@@ -42,7 +42,7 @@ public final class Script027 extends AbstractDevScript {
         """),
 
         div(
-            id("subject"),
+            SUBJECT,
 
             text("Before")
         ),
