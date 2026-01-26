@@ -202,6 +202,25 @@ public sealed class JsObject
 
   /// Invokes the specified method with the specified arguments in order.
   ///
+  /// @param method the method name
+  /// @param args the method arguments
+  ///
+  /// @return an object representing this action
+  final JsAction invokeUnchecked(String method, JsObject... args) {
+    final JsString $method;
+    $method = JsString.raw(method);
+
+    final JsArray $args;
+    $args = JsArray.rawArgs(args);
+
+    final JsOp action;
+    action = JsOp.of(JsString.IU, $method, $args);
+
+    return action(action);
+  }
+
+  /// Invokes the specified method with the specified arguments in order.
+  ///
   /// @param <T> the JS runtime type
   /// @param returnType the return type of the invoked method
   /// @param method the method name

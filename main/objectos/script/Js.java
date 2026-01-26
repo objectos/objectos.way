@@ -123,6 +123,16 @@ public final class Js {
     return JsObject.literal(props);
   }
 
+  /// Invokes the `setTimeout` method with the specified values.
+  ///
+  /// @param func the action to execute once the timer expires
+  /// @param delay the time the timer should wait before the action is executed
+  ///
+  /// @return an object representing the action
+  public static JsAction setTimeout(JsAction func, int delay) {
+    return global().invokeUnchecked("setTimeout", JsFunction.of(func), JsNumber.of(delay));
+  }
+
   /// The element which triggered the Objectos Script.
   ///
   /// @return the element

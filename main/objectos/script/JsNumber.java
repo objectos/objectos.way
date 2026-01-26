@@ -23,7 +23,7 @@ public final class JsNumber extends JsObject {
       JsString.raw("number"), JsNumber::new
   );
 
-  private JsNumber(String value) {
+  private JsNumber(Object value) {
     super(value);
   }
 
@@ -31,7 +31,17 @@ public final class JsNumber extends JsObject {
     super(recv, op);
   }
 
-  public static JsNumber raw(int value) {
+  public static JsNumber of(int value) {
+    final String n;
+    n = Integer.toString(value);
+
+    final JsOp op;
+    op = JsOp.of(JsString.JS, n);
+
+    return new JsNumber(op);
+  }
+
+  static JsNumber raw(int value) {
     return new JsNumber(
         Integer.toString(value)
     );
