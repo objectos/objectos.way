@@ -44,4 +44,19 @@ public final class JsHistory extends JsObject {
     return invoke("History", "pushState", state, unused, url);
   }
 
+  /// Modifies the current entry of the browser's history stack.
+  ///
+  /// @param state object associated with the new history entry
+  /// @param unused unused parameter but cannot be omitted
+  /// @param the history entry's URL
+  ///
+  /// @return an object representing this action
+  public final JsAction replaceState(JsObject state, JsString unused, JsString url) {
+    Objects.requireNonNull(state, "state == null");
+    Objects.requireNonNull(unused, "unused == null");
+    Objects.requireNonNull(url, "url == null");
+
+    return invoke("History", "replaceState", state, unused, url);
+  }
+
 }

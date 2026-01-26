@@ -24,12 +24,15 @@ Test case 025
 
 - event: click
 - JsHistory
+- action: pushState
 
 */
 @Css.Source
-public final class Script025 extends AbstractDevScript {
+public final class ScriptJsHistory00 extends AbstractDevScript {
 
-  public static final JsAction ACTION = Js.history().pushState(Js.object(), JsString.of(""), JsString.of("#history-test"));
+  public static final JsAction ACTION = Js.history().pushState(
+      Js.object(), JsString.of(""), JsString.of("#history-test")
+  );
 
   @Override
   final void renderBody() {

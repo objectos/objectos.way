@@ -17,17 +17,17 @@ package objectos.script;
 
 import static org.testng.Assert.assertEquals;
 import objectos.way.Y;
-import objectos.way.dev.Script025;
+import objectos.way.dev.ScriptJsHistory00;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 @Listeners(Y.class)
-public class Script025Test {
+public class ScriptJsHistory00Test {
 
   @Test
   public void action() {
     assertEquals(
-        Script025.ACTION.toString(),
+        ScriptJsHistory00.ACTION.toString(),
 
         """
         ["W1",["GR"],["PR","Window","history"],["TY","History"],["IV","History","pushState",[["JS",{}],["JS",""],["JS","#history-test"]]]]"""
@@ -37,7 +37,7 @@ public class Script025Test {
   @Test
   public void live() {
     try (var page = Y.page()) {
-      page.navigate("/script/025");
+      page.navigate("/script/history/00");
 
       var before = (String) page.evaluate("() => location.hash");
 
