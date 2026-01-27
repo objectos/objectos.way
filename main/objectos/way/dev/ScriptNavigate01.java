@@ -20,14 +20,14 @@ import objectos.script.Js;
 
 /*
 
-Test case 023
+Test case 026
 
 - event: click
-- action: navigate
+- action: navigate (head element)
 
 */
 @Css.Source
-public final class Script023 extends AbstractDevScript {
+public final class ScriptNavigate01 extends AbstractDevScript {
 
   public static final JsAction ACTION = Js.navigate();
 
@@ -41,14 +41,25 @@ public final class Script023 extends AbstractDevScript {
   }
 
   @Override
+  final void renderHead() {
+    meta(charset("utf-8"));
+    meta(httpEquiv("content-type"), content("text/html; charset=utf-8"));
+    if (initial) {
+      meta(name("initial"), content("true"));
+    }
+    meta(name("viewport"), content("width=device-width, initial-scale=1"));
+    link(rel("stylesheet"), type("text/css"), href("/styles.css"));
+    script(src("/script.js"));
+    title(initial ? "026: initial" : "026: next");
+  }
+
+  @Override
   final void renderBody() {
     div(
         css("""
         display:flex
         flex-direction:column
         gap:16rx
-        height:200vh
-        justify-content:space-between
         """),
 
         div(
@@ -59,14 +70,10 @@ public final class Script023 extends AbstractDevScript {
             text(initial ? "Before" : "After")
         ),
 
-        initial
-            ? div(id("keep-me"), text("Keep me"))
-            : noop(),
-
         a(
             id("click-me"),
             dataOnClick(ACTION),
-            href("/script/023?next=true"),
+            href("/script/navigate/01?next=true"),
             text("Click me")
         )
     );

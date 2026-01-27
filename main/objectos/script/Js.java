@@ -123,6 +123,15 @@ public final class Js {
     return JsAction.NAVIGATE;
   }
 
+  /// Performs a soft navigation to the linked resource.
+  ///
+  /// @param options allows for setting the options
+  ///
+  /// @return an object representing the action
+  public static JsAction navigate(Consumer<? super Navigate> options) {
+    return JsAction.navigate(options);
+  }
+
   /// The no-op JS action.
   ///
   /// @return the no-op action

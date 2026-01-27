@@ -18,27 +18,27 @@ package objectos.script;
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static org.testng.Assert.assertEquals;
 import objectos.way.Y;
-import objectos.way.dev.Script026;
+import objectos.way.dev.ScriptNavigate01;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 @Listeners(Y.class)
-public class Script026Test {
+public class ScriptNavigate01Test {
 
   @Test
   public void action() {
     assertEquals(
-        Script026.ACTION.toString(),
+        ScriptNavigate01.ACTION.toString(),
 
         """
-        ["NA"]"""
+        ["NA",{}]"""
     );
   }
 
   @Test
   public void live() {
     try (var page = Y.page()) {
-      page.navigate("/script/026");
+      page.navigate("/script/navigate/01");
 
       var clickMe = page.locator("#click-me");
       var subject = page.locator("#subject");

@@ -17,19 +17,19 @@ package objectos.way.dev;
 
 import module objectos.way;
 import objectos.script.Js;
+import objectos.script.Navigate.Scroll;
 
 /*
 
-Test case 026
-
 - event: click
-- action: navigate (head element)
+- action: navigate
+- options: scroll.DISABLED
 
 */
 @Css.Source
-public final class Script026 extends AbstractDevScript {
+public final class ScriptNavigate02 extends AbstractDevScript {
 
-  public static final JsAction ACTION = Js.navigate();
+  public static final JsAction ACTION = Js.navigate(opts -> opts.scroll(Scroll.DISABLED));
 
   private boolean initial;
 
@@ -41,25 +41,14 @@ public final class Script026 extends AbstractDevScript {
   }
 
   @Override
-  final void renderHead() {
-    meta(charset("utf-8"));
-    meta(httpEquiv("content-type"), content("text/html; charset=utf-8"));
-    if (initial) {
-      meta(name("initial"), content("true"));
-    }
-    meta(name("viewport"), content("width=device-width, initial-scale=1"));
-    link(rel("stylesheet"), type("text/css"), href("/styles.css"));
-    script(src("/script.js"));
-    title(initial ? "026: initial" : "026: next");
-  }
-
-  @Override
   final void renderBody() {
     div(
         css("""
         display:flex
         flex-direction:column
         gap:16rx
+        height:200vh
+        justify-content:space-between
         """),
 
         div(
@@ -70,10 +59,14 @@ public final class Script026 extends AbstractDevScript {
             text(initial ? "Before" : "After")
         ),
 
+        initial
+            ? div(id("keep-me"), text("Keep me"))
+            : noop(),
+
         a(
             id("click-me"),
             dataOnClick(ACTION),
-            href("/script/026?next=true"),
+            href("/script/navigate/02?next=true"),
             text("Click me")
         )
     );

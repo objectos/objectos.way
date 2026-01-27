@@ -48,12 +48,13 @@ final class ScriptModule implements Http.Routing.Module {
     routing.path("/script/020", GET, new Script020());
     routing.path("/script/021", GET, new Script021());
     routing.path("/script/022", GET, new Script022());
-    routing.path("/script/023", GET, new Script023());
     routing.path("/script/024", GET, new Script024());
-    routing.path("/script/026", GET, new Script026());
     routing.path("/script/027", GET, new Script027());
     routing.path("/script/history/00", GET, new ScriptJsHistory00());
     routing.path("/script/history/01", GET, new ScriptJsHistory01());
+    routing.path("/script/navigate/00", GET, new ScriptNavigate00());
+    routing.path("/script/navigate/01", GET, new ScriptNavigate01());
+    routing.path("/script/navigate/02", GET, new ScriptNavigate02());
   }
 
 }

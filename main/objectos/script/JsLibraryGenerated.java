@@ -431,7 +431,7 @@ const way = (function() {
     }
   }
 
-  function navigate(ctx, _args) {
+  function navigate(ctx, args) {
     const el = ctx.$el;
 
     if (!(el instanceof HTMLAnchorElement)) {
@@ -446,10 +446,12 @@ const way = (function() {
       throw new Error(`Illegal arg: anchor has no href property`);
     }
 
-    globalThis.fetch(href).then(navigateFetchSuccess);
+    const opts = checkDefined(args.shift(), "opts");
+
+    globalThis.fetch(href).then(resp => navigateFetchSuccess(resp, opts));
   }
 
-  function navigateFetchSuccess(resp) {
+  function navigateFetchSuccess(resp, opts) {
     const headers = resp.headers;
 
     const contentType = headers.get("Content-Type");
@@ -458,9 +460,15 @@ const way = (function() {
       throw new Error("Invalid response: no content-type");
     }
 
-    else if (contentType.startsWith("text/html")) {
-      const global = globalThis;
+    if (!contentType.startsWith("text/html")) {
+      throw new Error(`Invalid response: unsupported content-type ${contentType}`);
+    }
 
+    const global = globalThis;
+
+    const scroll = opts.scroll !== undefined ? opts.scroll : "auto";
+
+    if (scroll === "auto") {
       // scroll to 0,0 
       if (!(global instanceof Window)) {
         const actual = global.constructor ? global.constructor.name : "Unknown";
@@ -471,26 +479,22 @@ const way = (function() {
       global.scrollTo({
         top: 0, left: 0, behavior: "instant"
       });
-
-      // update browser location
-      const history = global.history;
-
-      if (history) {
-        const state = { way: true };
-
-        const unused = "";
-
-        const url = resp.url;
-
-        history.pushState(state, unused, url);
-      }
-
-      resp.text().then(navigateFetchSuccessHtml);
     }
 
-    else {
-      throw new Error(`Invalid response: unsupported content-type ${contentType}`);
+    // update browser location
+    const history = global.history;
+
+    if (history) {
+      const state = { way: true };
+
+      const unused = "";
+
+      const url = resp.url;
+
+      history.pushState(state, unused, url);
     }
+
+    resp.text().then(navigateFetchSuccessHtml);
   }
 
   function navigateFetchSuccessHtml(text) {
@@ -605,6 +609,16 @@ const way = (function() {
     return maybe;
   }
 
+  function checkBoolean(maybe, name) {
+    const t = typeof maybe;
+
+    if (t !== "boolean") {
+      throw new Error(`Illegal arg: ${name} must be a Boolean value but got ${t}`);
+    }
+
+    return maybe;
+  }
+
   function checkDefined(maybe, name) {
     if (maybe === undefined) {
       throw new Error(`Illegal arg: ${name} must be a defined value`);
@@ -663,16 +677,6 @@ const way = (function() {
 
       throw new Error(`Illegal arg: ${name} does not have ${typeName} in its prototype chain`);
     }
-  }
-
-  function checkBoolean(maybe, name) {
-    const t = typeof maybe;
-
-    if (t !== "boolean") {
-      throw new Error(`Illegal arg: ${name} must be a Boolean value but got ${t}`);
-    }
-
-    return maybe;
   }
 
   function checkString(maybe, name) {

@@ -18,27 +18,27 @@ package objectos.script;
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static org.testng.Assert.assertEquals;
 import objectos.way.Y;
-import objectos.way.dev.Script023;
+import objectos.way.dev.ScriptNavigate02;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 @Listeners(Y.class)
-public class Script023Test {
+public class ScriptNavigate02Test {
 
   @Test
   public void action() {
     assertEquals(
-        Script023.ACTION.toString(),
+        ScriptNavigate02.ACTION.toString(),
 
         """
-        ["NA"]"""
+        ["NA",{"scroll":false}]"""
     );
   }
 
   @Test
   public void live() {
     try (var page = Y.page()) {
-      page.navigate("/script/023");
+      page.navigate("/script/navigate/02");
 
       var clickMe = page.locator("#click-me");
       var keepMe = page.locator("#keep-me");
@@ -55,10 +55,10 @@ public class Script023Test {
 
       clickMe.click();
 
-      assertThat(clickMe).not().isInViewport();
+      assertThat(clickMe).isInViewport();
       assertThat(keepMe).hasCount(1);
       assertThat(subject).hasText("After");
-      assertThat(subject).isInViewport();
+      assertThat(subject).not().isInViewport();
 
       assertEquals(page.url(), url + "?next=true");
     }

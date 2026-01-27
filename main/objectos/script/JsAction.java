@@ -18,6 +18,7 @@ package objectos.script;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /// Represents an action or a sequence of actions to be executed by the
@@ -82,11 +83,22 @@ public sealed abstract class JsAction {
 
   }
 
-  static final JsAction NAVIGATE = new One(JsOp.of(JsString.NA));
+  static final JsAction NAVIGATE = new One(JsOp.of(JsString.NA, "{}"));
 
   static final JsAction NOOP = new One(JsOp.of(JsString.NO));
 
   JsAction() {}
+
+  static JsAction navigate(Consumer<? super Navigate> options) {
+    final Navigate pojo = new Navigate();
+
+    options.accept(pojo);
+
+    final JsOp op;
+    op = JsOp.of(JsString.NA, pojo);
+
+    return new One(op);
+  }
 
   static JsAction one(List<?> list) {
     return new One(list);
