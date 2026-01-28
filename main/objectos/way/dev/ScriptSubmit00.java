@@ -1,0 +1,99 @@
+/*
+ * Copyright (C) 2023-2026 Objectos Software LTDA.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package objectos.way.dev;
+
+import module objectos.way;
+
+/*
+
+- event: submit
+
+*/
+@Css.Source
+public final class ScriptSubmit00 extends AbstractDevScript {
+
+  private boolean initial;
+
+  private String input0;
+
+  private boolean wayRequest;
+
+  @Override
+  public final void handle(Http.Exchange http) {
+    switch (http.method()) {
+      case GET -> {
+        initial = true;
+      }
+
+      case POST -> {
+        initial = false;
+
+        input0 = http.formParam("input0");
+
+        wayRequest = http.header(Http.HeaderName.WAY_REQUEST) != null;
+      }
+
+      default -> {}
+    }
+
+    super.handle(http);
+  }
+
+  @Override
+  final void renderBody() {
+    div(
+        dataFrame("main", initial ? "get" : "post"),
+
+        initial
+            ? form(
+                css("""
+                display:flex
+                flex-direction:column
+                gap:16rx
+                """),
+
+                action("/script/submit/00"),
+
+                method("post"),
+
+                div(
+                    id("subject"),
+
+                    text("Before")
+                ),
+
+                input(
+                    id("input0"),
+                    name("input0"),
+                    type("text"),
+                    value("Foo")
+                ),
+
+                button(
+                    id("click-me"),
+                    text("Click me"),
+                    type("submit")
+                )
+            )
+            : div(
+                id("subject"),
+
+                text("input0=" + input0 + ":" + wayRequest)
+            )
+    );
+  }
+
+}

@@ -64,6 +64,66 @@ const way = (function() {
     }
   }
 
+  function submitListener(event) {
+    const el = event.target;
+
+    const tagName = el.tagName;
+
+    if (tagName !== "FORM") {
+      return;
+    }
+
+    const action = el.getAttribute("action");
+
+    if (!action) {
+      return;
+    }
+
+    const method = el.getAttribute("method");
+
+    if (!method) {
+      return;
+    }
+
+    // way form, we'll submit it via fetch API
+    event.preventDefault();
+
+    const formData = new FormData(el);
+
+    const ctx = {
+      // ctx
+      $el: el,
+      $recv: undefined,
+
+      // requestInit
+      headers: {
+        "Way-Request": true
+      },
+
+      method: method.toUpperCase()
+    };
+
+    if (ctx.method === "GET") {
+      throw new Error(`Implement me :: method=${ctx.method}`);
+    }
+
+    else {
+      const enctype = el.getAttribute("enctype");
+
+      if (enctype === "multipart/form-data") {
+        throw new Error(`Implement me :: enctype=${enctype}`);
+      }
+
+      else {
+        ctx.body = new URLSearchParams(formData);
+
+        ctx.headers["Content-Type"] = "application/x-www-form-urlencoded";
+      }
+
+      fetch0(ctx, action);
+    }
+  }
+
   function executeEvent(el, name) {
     const dataset = el.dataset;
 
@@ -94,33 +154,45 @@ const way = (function() {
   // ##################################################################
 
   // ##################################################################
-  // # BEGIN: Objectos Way Actions
+  // # BEGIN: Fetch support
   // ##################################################################
 
-  const operations = {
-    "AX": argsRead,
-    "CR": contextRead,
-    "CW": contextWrite,
-    "EI": elementById,
-    "ET": elementTarget,
-    "FE": forEach,
-    "FN": functionJs,
-    "GR": globalRead,
-    "IF": ifElse,
-    "IU": invokeUnchecked,
-    "IV": invokeVirtual,
-    "JS": jsValue,
-    "MO": morph,
-    "NA": navigate,
-    "NO": noop,
-    "PR": propertyRead,
-    "pr": propertyReadUnchecked,
-    "PW": propertyWrite,
-    "TE": throwError,
-    "TY": typeEnsure,
-    "W1": wayOne,
-    "WS": waySeq
-  };
+  function fetch0(ctx, resource) {
+    globalThis.fetch(resource, ctx).then(resp => {
+
+      const headers = resp.headers;
+
+      const contentType = headers.get("Content-Type");
+
+      if (!contentType) {
+        throw new Error("Invalid response: no content-type");
+      }
+
+      else if (contentType.startsWith("text/html")) {
+
+        resp.text().then(html => {
+          const recv = ctx.$recv !== undefined ? ctx.$recv : documentElement();
+
+          morph0(recv, html);
+        });
+
+      }
+
+      else {
+        throw new Error(`Invalid response: unsupported content-type ${contentType}`);
+      }
+
+    });
+  }
+
+
+  // ##################################################################
+  // # END: Fetch support
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Actions support
+  // ##################################################################
 
   function execute(ctx, action) {
     checkArray(action, "action");
@@ -149,6 +221,39 @@ const way = (function() {
       return execute(nested, nestedAction);
     };
   }
+
+  // ##################################################################
+  // # END: Actions support
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Objectos Way Actions
+  // ##################################################################
+
+  const operations = {
+    "AX": argsRead,
+    "CR": contextRead,
+    "CW": contextWrite,
+    "EI": elementById,
+    "ET": elementTarget,
+    "FE": forEach,
+    "FN": functionJs,
+    "GR": globalRead,
+    "IF": ifElse,
+    "IU": invokeUnchecked,
+    "IV": invokeVirtual,
+    "JS": jsValue,
+    "MO": morph,
+    "NA": navigate,
+    "NO": noop,
+    "PR": propertyRead,
+    "pr": propertyReadUnchecked,
+    "PW": propertyWrite,
+    "TE": throwError,
+    "TY": typeEnsure,
+    "W1": wayOne,
+    "WS": waySeq
+  };
 
   function argsRead(ctx, args) {
     const index = checkInteger(args.shift(), "index");
@@ -666,6 +771,18 @@ const way = (function() {
     return maybe;
   }
 
+  function documentElement() {
+    const global = globalThis;
+
+    const doc = global.document;
+
+    if (!doc) {
+      throw new Error("Illegal state: global scope has no document");
+    }
+
+    return doc.documentElement;
+  }
+
   function frame(el) {
     const dataset = el.dataset;
 
@@ -708,6 +825,7 @@ const way = (function() {
 
   function domLoaded() {
     document.addEventListener("click", listener(clickListener));
+    document.addEventListener("submit", listener(submitListener));
   }
 
   window.addEventListener("DOMContentLoaded", domLoaded);
