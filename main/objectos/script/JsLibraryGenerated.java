@@ -90,9 +90,7 @@ const way = (function() {
   function submitListener(event) {
     const el = event.target;
 
-    const tagName = el.tagName;
-
-    if (tagName !== "FORM") {
+    if (!(el instanceof HTMLFormElement)) {
       return;
     }
 

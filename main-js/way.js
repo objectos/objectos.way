@@ -67,9 +67,7 @@ const way = (function() {
   function submitListener(event) {
     const el = event.target;
 
-    const tagName = el.tagName;
-
-    if (tagName !== "FORM") {
+    if (!(el instanceof HTMLFormElement)) {
       return;
     }
 
@@ -85,7 +83,8 @@ const way = (function() {
       return;
     }
 
-    // way form, we'll submit it via fetch API
+    // this is a way form,
+    // we'll submit it via fetch API
     event.preventDefault();
 
     const formData = new FormData(el);

@@ -33,23 +33,36 @@ public final class ScriptSubmit00 extends AbstractDevScript {
 
   @Override
   public final void handle(Http.Exchange http) {
-    switch (http.method()) {
-      case GET -> {
-        initial = true;
+    final String path;
+    path = http.path();
+
+    if (path.endsWith("00")) {
+      initial = true;
+
+      switch (http.method()) {
+        case GET -> http.ok(this);
+
+        case POST -> {
+          var input0 = http.formParam("input0");
+
+          var wayRequest = http.header(Http.HeaderName.WAY_REQUEST) != null;
+
+          http.found(
+              "/script/submit/00/after?input0=" + input0 + "&wayRequest=" + wayRequest
+          );
+        }
+
+        default -> http.allow(Http.Method.GET, Http.Method.POST);
       }
+    } else {
+      initial = false;
 
-      case POST -> {
-        initial = false;
+      input0 = http.queryParam("input0");
 
-        input0 = http.formParam("input0");
+      wayRequest = "true".equals(http.queryParam("wayRequest"));
 
-        wayRequest = http.header(Http.HeaderName.WAY_REQUEST) != null;
-      }
-
-      default -> {}
+      http.ok(this);
     }
-
-    super.handle(http);
   }
 
   @Override
