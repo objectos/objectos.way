@@ -172,6 +172,17 @@ const way = (function() {
         resp.text().then(html => {
           const global = globalThis;
 
+          // handle scrolling
+          if (!(global instanceof Window)) {
+            const actual = global.constructor ? global.constructor.name : "Unknown";
+
+            throw new Error(`Illegal arg: navigate must be executed on a Window but got ${actual}`);
+          }
+
+          global.scrollTo({
+            top: 0, left: 0, behavior: "instant"
+          });
+
           // update browser location
           const history = global.history;
 

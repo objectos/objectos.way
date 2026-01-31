@@ -35,12 +35,18 @@ public class ScriptSubmit00Test {
       var subject = page.locator("#subject");
       var url = page.url();
 
+      clickMe.scrollIntoViewIfNeeded();
+
+      assertThat(clickMe).isInViewport();
+      assertThat(subject).not().isInViewport();
       assertThat(subject).hasText("Before");
 
       input0.fill("text0");
 
       clickMe.click();
 
+      assertThat(clickMe).not().isInViewport();
+      assertThat(subject).isInViewport();
       assertThat(subject).hasText("input0=text0:true");
       assertEquals(page.url(), url + "/after?input0=text0&wayRequest=true");
     }

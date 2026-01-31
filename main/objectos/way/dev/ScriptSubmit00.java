@@ -75,7 +75,9 @@ public final class ScriptSubmit00 extends AbstractDevScript {
                 css("""
                 display:flex
                 flex-direction:column
+                height:200vh
                 gap:16rx
+                justify-content:space-between
                 """),
 
                 action("/script/submit/00"),
@@ -102,9 +104,25 @@ public final class ScriptSubmit00 extends AbstractDevScript {
                 )
             )
             : div(
-                id("subject"),
+                css("""
+                display:flex
+                flex-direction:column
+                height:200vh
+                gap:16rx
+                justify-content:space-between
+                """),
 
-                text("input0=" + input0 + ":" + wayRequest)
+                div(
+                    id("subject"),
+
+                    text("input0=" + input0 + ":" + wayRequest)
+                ),
+
+                button(
+                    id("click-me"),
+                    text("Click me"),
+                    type("button")
+                )
             )
     );
   }
