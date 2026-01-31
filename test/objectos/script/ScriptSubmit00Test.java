@@ -16,6 +16,8 @@
 package objectos.script;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+import static org.testng.Assert.assertEquals;
+
 import objectos.way.Y;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
@@ -31,6 +33,7 @@ public class ScriptSubmit00Test {
       var input0 = page.locator("#input0");
       var clickMe = page.locator("#click-me");
       var subject = page.locator("#subject");
+      var url = page.url();
 
       assertThat(subject).hasText("Before");
 
@@ -39,6 +42,7 @@ public class ScriptSubmit00Test {
       clickMe.click();
 
       assertThat(subject).hasText("input0=text0:true");
+      assertEquals(page.url(), url + "/after?input0=text0&wayRequest=true");
     }
   }
 

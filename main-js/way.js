@@ -170,6 +170,22 @@ const way = (function() {
       else if (contentType.startsWith("text/html")) {
 
         resp.text().then(html => {
+          const global = globalThis;
+
+          // update browser location
+          const history = global.history;
+
+          if (history) {
+            const state = { way: true };
+
+            const unused = "";
+
+            const url = resp.url;
+
+            history.pushState(state, unused, url);
+          }
+
+          // morph
           const recv = ctx.$recv !== undefined ? ctx.$recv : documentElement();
 
           morph0(recv, html);

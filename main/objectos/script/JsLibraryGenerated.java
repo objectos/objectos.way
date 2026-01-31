@@ -106,7 +106,8 @@ const way = (function() {
       return;
     }
 
-    // way form, we'll submit it via fetch API
+    // this is a way form,
+    // we'll submit it via fetch API
     event.preventDefault();
 
     const formData = new FormData(el);
@@ -192,6 +193,22 @@ const way = (function() {
       else if (contentType.startsWith("text/html")) {
 
         resp.text().then(html => {
+          const global = globalThis;
+
+          // update browser location
+          const history = global.history;
+
+          if (history) {
+            const state = { way: true };
+
+            const unused = "";
+
+            const url = resp.url;
+
+            history.pushState(state, unused, url);
+          }
+
+          // morph
           const recv = ctx.$recv !== undefined ? ctx.$recv : documentElement();
 
           morph0(recv, html);
