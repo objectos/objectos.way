@@ -71,13 +71,13 @@ const way = (function() {
       return;
     }
 
-    const action = el.getAttribute("action");
+    const action = el.action;
 
     if (!action) {
       return;
     }
 
-    const method = el.getAttribute("method");
+    const method = el.method;
 
     if (!method) {
       return;
@@ -103,7 +103,15 @@ const way = (function() {
     };
 
     if (ctx.method === "GET") {
-      throw new Error(`Implement me :: method=${ctx.method}`);
+      ctx.body = undefined;
+
+      const url = new URL(action);
+
+      for (const [key, value] of formData.entries()) {
+        url.searchParams.set(key, value);
+      }
+
+      fetch0(ctx, url);
     }
 
     else {

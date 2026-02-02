@@ -20,6 +20,7 @@ import module objectos.way;
 /*
 
 - event: submit
+- method: POST
 
 */
 @Css.Source

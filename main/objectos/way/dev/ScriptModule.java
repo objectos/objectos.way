@@ -60,8 +60,8 @@ final class ScriptModule implements Http.Routing.Module {
       submit00 = new ScriptSubmit00();
 
       path.subpath("00", sub -> sub.handler(submit00));
-
       path.subpath("00/after", GET, submit00);
+      path.subpath("01", GET, new ScriptSubmit01());
     });
   }
 
