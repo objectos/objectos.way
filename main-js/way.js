@@ -87,11 +87,10 @@ const way = (function() {
     // we'll submit it via fetch API
     event.preventDefault();
 
-    const formData = new FormData(el);
-
     const ctx = {
       // ctx
       $el: el,
+      $fetchSuccess: dataOnSuccess(el),
       $recv: undefined,
 
       // requestInit
@@ -101,6 +100,8 @@ const way = (function() {
 
       method: method.toUpperCase()
     };
+
+    const formData = new FormData(el);
 
     if (ctx.method === "GET") {
       ctx.body = undefined;
@@ -208,6 +209,8 @@ const way = (function() {
           const recv = ctx.$recv !== undefined ? ctx.$recv : documentElement();
 
           morph0(recv, html);
+
+          fetch0Success(ctx);
         });
 
       }
@@ -219,6 +222,15 @@ const way = (function() {
     });
   }
 
+  function fetch0Success(ctx) {
+    const success = ctx.$fetchSuccess;
+
+    if (!success) {
+      return;
+    }
+
+    execute(ctx, success);
+  }
 
   // ##################################################################
   // # END: Fetch support
@@ -803,6 +815,22 @@ const way = (function() {
     }
 
     return maybe;
+  }
+
+  function dataOnSuccess(el) {
+    const dataset = el.dataset;
+
+    if (!dataset) {
+      return undefined;
+    }
+
+    const data = dataset["onSuccess"];
+
+    if (!data) {
+      return undefined;
+    }
+
+    return JSON.parse(data);
   }
 
   function documentElement() {
