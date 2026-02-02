@@ -91,6 +91,9 @@ const way = (function() {
       // ctx
       $el: el,
       $fetchSuccess: dataOnSuccess(el),
+      $navigate: {
+        scroll: "auto"
+      },
       $recv: undefined,
 
       // requestInit
@@ -182,15 +185,21 @@ const way = (function() {
           const global = globalThis;
 
           // handle scrolling
-          if (!(global instanceof Window)) {
-            const actual = global.constructor ? global.constructor.name : "Unknown";
+          const navigate = ctx.$navigate;
 
-            throw new Error(`Illegal arg: navigate must be executed on a Window but got ${actual}`);
+          const scroll = navigate.scroll !== undefined ? navigate.scroll : "auto";
+
+          if (scroll === "auto") {
+            if (!(global instanceof Window)) {
+              const actual = global.constructor ? global.constructor.name : "Unknown";
+
+              throw new Error(`Illegal arg: navigate must be executed on a Window but got ${actual}`);
+            }
+
+            global.scrollTo({
+              top: 0, left: 0, behavior: "instant"
+            });
           }
-
-          global.scrollTo({
-            top: 0, left: 0, behavior: "instant"
-          });
 
           // update browser location
           const history = global.history;
@@ -574,69 +583,9 @@ const way = (function() {
       throw new Error(`Illegal arg: anchor has no href property`);
     }
 
-    const opts = checkDefined(args.shift(), "opts");
+    ctx.$navigate = checkDefined(args.shift(), "opts");
 
-    globalThis.fetch(href).then(resp => navigateFetchSuccess(resp, opts));
-  }
-
-  function navigateFetchSuccess(resp, opts) {
-    const headers = resp.headers;
-
-    const contentType = headers.get("Content-Type");
-
-    if (!contentType) {
-      throw new Error("Invalid response: no content-type");
-    }
-
-    if (!contentType.startsWith("text/html")) {
-      throw new Error(`Invalid response: unsupported content-type ${contentType}`);
-    }
-
-    const global = globalThis;
-
-    const scroll = opts.scroll !== undefined ? opts.scroll : "auto";
-
-    if (scroll === "auto") {
-      // scroll to 0,0 
-      if (!(global instanceof Window)) {
-        const actual = global.constructor ? global.constructor.name : "Unknown";
-
-        throw new Error(`Illegal arg: navigate must be executed on a Window but got ${actual}`);
-      }
-
-      global.scrollTo({
-        top: 0, left: 0, behavior: "instant"
-      });
-    }
-
-    // update browser location
-    const history = global.history;
-
-    if (history) {
-      const state = { way: true };
-
-      const unused = "";
-
-      const url = resp.url;
-
-      history.pushState(state, unused, url);
-    }
-
-    resp.text().then(navigateFetchSuccessHtml);
-  }
-
-  function navigateFetchSuccessHtml(text) {
-    const global = globalThis;
-
-    const doc = global.document;
-
-    if (!doc) {
-      throw new Error("Illegal state: global scope has no document");
-    }
-
-    const element = doc.documentElement;
-
-    morph0(element, text);
+    fetch0(ctx, href);
   }
 
   function noop() {}
