@@ -137,6 +137,13 @@ public final class JsElement extends JsNode {
     return invoke("Element", "remove");
   }
 
+  /// Ensures that this element is visible to the user.
+  ///
+  /// @return an object representing this action
+  public final JsAction scrollIntoView() {
+    return invoke("Element", "scrollIntoView");
+  }
+
   /// Toggles the specified `class` values on this element.
   ///
   /// @param first the first class name

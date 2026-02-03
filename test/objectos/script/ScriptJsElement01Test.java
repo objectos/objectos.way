@@ -19,17 +19,17 @@ import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertTha
 import static org.testng.Assert.assertEquals;
 
 import objectos.way.Y;
-import objectos.way.dev.Script016;
+import objectos.way.dev.ScriptJsElement01;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 @Listeners(Y.class)
-public class Script016Test {
+public class ScriptJsElement01Test {
 
   @Test
   public void action() {
     assertEquals(
-        Script016.ACTION.toString(),
+        ScriptJsElement01.ACTION.toString(),
 
         """
         ["W1",["ET"],["PW","Node","textContent",["W1",["ET"],["IV","Element","getAttribute",[["JS","data-test"]]]]]]"""
@@ -39,7 +39,7 @@ public class Script016Test {
   @Test
   public void live() {
     try (var page = Y.page()) {
-      page.navigate("/script/016");
+      page.navigate("/script/element/01");
 
       var clickMe = page.locator("#click-me");
 

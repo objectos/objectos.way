@@ -20,16 +20,14 @@ import objectos.script.Js;
 
 /*
 
-Test case 008
-
-- event: click
-- Element.toggleClass
+- JsElement
+- action: scrollIntoView
 
 */
 @Css.Source
-public final class Script008 extends AbstractDevScript {
+public final class ScriptJsElement02 extends AbstractDevScript {
 
-  public static final JsAction ACTION = Js.byId("subject").toggleClass("opacity:0", "opacity:1");
+  public static final JsAction ACTION = Js.byId("subject").scrollIntoView();
 
   @Override
   final void renderBody() {
@@ -38,6 +36,8 @@ public final class Script008 extends AbstractDevScript {
         display:flex
         flex-direction:column
         gap:16rx
+        height:300vh
+        justify-content:space-between
         """),
 
         button(
@@ -50,10 +50,10 @@ public final class Script008 extends AbstractDevScript {
         div(
             id("subject"),
 
-            css("opacity:0"),
+            text("Subject")
+        ),
 
-            text("Div 1")
-        )
+        div("Bottom")
     );
   }
 

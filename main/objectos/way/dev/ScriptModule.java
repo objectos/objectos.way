@@ -33,7 +33,6 @@ final class ScriptModule implements Http.Routing.Module {
     routing.path("/script/005", GET, new Script005());
     routing.path("/script/006", GET, new Script006());
     routing.path("/script/007", GET, new Script007());
-    routing.path("/script/008", GET, new Script008());
     routing.path("/script/009", GET, new Script009());
     routing.path("/script/010", GET, new Script010());
     routing.path("/script/011", GET, new Script011());
@@ -41,7 +40,6 @@ final class ScriptModule implements Http.Routing.Module {
     routing.path("/script/013", GET, new Script013());
     routing.path("/script/014", GET, new Script014());
     routing.path("/script/015", GET, new Script015());
-    routing.path("/script/016", GET, new Script016());
     routing.path("/script/017", GET, new Script017());
     routing.path("/script/018", GET, new Script018());
     routing.path("/script/019", GET, new Script019());
@@ -52,6 +50,9 @@ final class ScriptModule implements Http.Routing.Module {
     routing.path("/script/027", GET, new Script027());
     routing.path("/script/history/00", GET, new ScriptJsHistory00());
     routing.path("/script/history/01", GET, new ScriptJsHistory01());
+    routing.path("/script/element/00", GET, new ScriptJsElement00());
+    routing.path("/script/element/01", GET, new ScriptJsElement01());
+    routing.path("/script/element/02", GET, new ScriptJsElement02());
     routing.path("/script/navigate/00", GET, new ScriptNavigate00());
     routing.path("/script/navigate/01", GET, new ScriptNavigate01());
     routing.path("/script/navigate/02", GET, new ScriptNavigate02());
