@@ -306,6 +306,7 @@ const way = (function() {
     "PW": propertyWrite,
     "TE": throwError,
     "TY": typeEnsure,
+    "UP": urlPush,
     "W1": wayOne,
     "WS": waySeq
   };
@@ -439,7 +440,7 @@ const way = (function() {
   }
 
   function morph(ctx, args) {
-    const recv = ctx.$recv;
+    const recv = ctx.$recv !== undefined ? ctx.$recv : documentElement();
 
     const $src = checkDefined(args.shift(), "src");
 
@@ -583,9 +584,44 @@ const way = (function() {
       throw new Error(`Illegal arg: anchor has no href property`);
     }
 
-    ctx.$navigate = checkDefined(args.shift(), "opts");
+    const opts = checkDefined(args.shift(), "opts");
 
-    fetch0(ctx, href);
+    globalThis.fetch(href).then(resp => {
+
+      const headers = resp.headers;
+
+      const contentType = headers.get("Content-Type");
+
+      if (!contentType) {
+        throw new Error("Invalid response: no content-type");
+      }
+
+      if (!contentType.startsWith("text/html")) {
+        throw new Error(`Invalid response: unsupported content-type ${contentType}`);
+      }
+
+      resp.text().then(html => {
+
+        const actions = ["WS"];
+
+        // morph
+        actions.push(["MO", ["JS", html]]);
+
+        // scroll
+        const scroll = opts.scrollIntoView !== undefined
+          ? opts.scrollIntoView
+          : ["W1", ["GR"], ["PR", "Window", "document"], ["PR", "Document", "documentElement"]];
+
+        actions.push(["W1", scroll, ["IV", "Element", "scrollIntoView", []]]);
+
+        // urlPush
+        actions.push(["UP", ["JS", resp.url]]);
+
+        execute(ctx, actions);
+
+      });
+
+    });
   }
 
   function noop() {}
@@ -640,6 +676,22 @@ const way = (function() {
     const typeName = checkString(args.shift(), "typeName");
 
     return checkType(ctx.$recv, "recv", typeName);
+  }
+
+  function urlPush(ctx, args) {
+    const $url = checkDefined(args.shift(), "url");
+
+    const url = checkString(execute(ctx, $url), "url");
+
+    const history = globalThis.history;
+
+    if (history) {
+      const state = { way: true };
+
+      const unused = "";
+
+      history.pushState(state, unused, url);
+    }
   }
 
   function wayOne(ctx, action) {

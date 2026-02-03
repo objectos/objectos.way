@@ -31,7 +31,7 @@ public class ScriptNavigate02Test {
         ScriptNavigate02.ACTION.toString(),
 
         """
-        ["NA",{"scroll":false}]"""
+        ["NA",{"scrollIntoView":["EI",["JS","click-me"]]}]"""
     );
   }
 

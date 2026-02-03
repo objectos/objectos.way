@@ -20,37 +20,23 @@ import java.util.Objects;
 /// Configures the `navigate` action.
 public final class Navigate {
 
-  /// Defines how the page is scrolled after a successful navigation.
-  public enum Scroll {
-    /** The default scrolling strategy. */
-    AUTO("\"auto\""),
-
-    /** Disables page scrolling. */
-    DISABLED("false");
-
-    private final String raw;
-
-    private Scroll(String raw) {
-      this.raw = raw;
-    }
-  }
-
   static final Navigate DEFAULT = new Navigate();
 
-  private Scroll scroll = Scroll.AUTO;
+  private JsElement scrollIntoView = Js.document().documentElement();
 
   Navigate() {}
 
-  /// Sets the scroll option.
+  /// Invokes `scrollIntoView` on the specified element after the new content
+  /// has been swapped. Defaults to `document.documentElement` if not specified.
   ///
-  /// @param value the scroll option
-  public final void scroll(Scroll value) {
-    scroll = Objects.requireNonNull(value, "value == null");
+  /// @param value the element to be visible to the user
+  public final void scrollIntoView(JsElement value) {
+    scrollIntoView = Objects.requireNonNull(value, "value == null");
   }
 
   @Override
   public final String toString() {
-    return "{\"scroll\":" + scroll.raw + "}";
+    return "{\"scrollIntoView\":" + scrollIntoView + "}";
   }
 
 }

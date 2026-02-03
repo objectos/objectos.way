@@ -17,7 +17,6 @@ package objectos.way.dev;
 
 import module objectos.way;
 import objectos.script.Js;
-import objectos.script.Navigate.Scroll;
 
 /*
 
@@ -29,7 +28,7 @@ import objectos.script.Navigate.Scroll;
 @Css.Source
 public final class ScriptNavigate02 extends AbstractDevScript {
 
-  public static final JsAction ACTION = Js.navigate(opts -> opts.scroll(Scroll.DISABLED));
+  public static final JsAction ACTION = Js.navigate(opts -> opts.scrollIntoView(Js.byId("click-me")));
 
   private boolean initial;
 
