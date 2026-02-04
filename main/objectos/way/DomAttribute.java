@@ -57,15 +57,32 @@ final class DomAttribute implements Dom.Attribute {
     Object result;
     result = next();
 
-    if (!hasNext()) {
-      return String.valueOf(result);
-    }
-
     if (result instanceof JsAction) {
 
-      throw new UnsupportedOperationException("Implement me");
+      final StringBuilder value;
+      value = new StringBuilder();
+
+      value.append("way.");
+
+      value.append(name.name());
+
+      value.append("(event,");
+
+      value.append(result);
+
+      value.append(')');
+
+      while (hasNext()) {
+        throw new UnsupportedOperationException("Implement me");
+      }
+
+      return value.toString();
 
     } else {
+
+      if (!hasNext()) {
+        return String.valueOf(result);
+      }
 
       StringBuilder value;
       value = new StringBuilder();

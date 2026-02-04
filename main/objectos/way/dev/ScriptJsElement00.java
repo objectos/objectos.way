@@ -42,7 +42,7 @@ public final class ScriptJsElement00 extends AbstractDevScript {
 
         button(
             id("click-me"),
-            dataOnClick(ACTION),
+            onclick(ACTION),
             text("Click me"),
             type("button")
         ),

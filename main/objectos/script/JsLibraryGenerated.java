@@ -50,7 +50,9 @@ const way = (function() {
 
       history: true
 
-    }
+    },
+
+    onclick: onclick
 
   };
 
@@ -58,20 +60,15 @@ const way = (function() {
   // # BEGIN: DOM Event Handlers
   // ##################################################################
 
-  function clickListener(event) {
-    const el = event.target.closest("[data-on-click]");
-
-    if (!el) {
-      return;
-    }
-
-    const executed = executeEvent(el, "onClick");
-
-    if (!executed) {
-      return;
-    }
-
+  function onclick(event, action) {
     event.preventDefault();
+
+    const ctx = {
+      $el: event.target,
+      $recv: undefined
+    };
+
+    execute(ctx, action);
   }
 
   function submitListener(event) {
@@ -143,31 +140,6 @@ const way = (function() {
 
       fetch0(ctx, action);
     }
-  }
-
-  function executeEvent(el, name) {
-    const dataset = el.dataset;
-
-    if (!dataset) {
-      return false;
-    }
-
-    const data = dataset[name];
-
-    if (!data) {
-      return false;
-    }
-
-    const ctx = {
-      $el: el,
-      $recv: undefined
-    };
-
-    const action = JSON.parse(data);
-
-    execute(ctx, action);
-
-    return true;
   }
 
   // ##################################################################
@@ -897,7 +869,6 @@ const way = (function() {
   }
 
   function domLoaded() {
-    document.addEventListener("click", listener(clickListener));
     document.addEventListener("submit", listener(submitListener));
   }
 

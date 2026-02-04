@@ -38,21 +38,21 @@ public final class Script001 extends AbstractDevScript {
 
         div(
             id("div-1"),
-            dataOnClick(ACTION),
+            onclick(ACTION),
             style("width:64px;height:64px;background-color:red"),
             text("Div 1")
         ),
 
         div(
             id("div-2"),
-            dataOnClick(ACTION),
+            onclick(ACTION),
             style("width:64px;height:64px;background-color:red"),
             text("Div 2")
         ),
 
         div(
             id("div-3"),
-            dataOnClick(ACTION),
+            onclick(ACTION),
             style("width:64px;height:64px;background-color:red"),
             text("Div 3")
         )

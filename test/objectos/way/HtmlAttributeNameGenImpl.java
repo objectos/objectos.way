@@ -57,17 +57,6 @@ public class HtmlAttributeNameGenImpl {
     fields.append("""
 
       //
-      // DATA ON
-      //
-    """);
-
-    for (AttributeSpec spec : HtmlSpec.dataOn()) {
-      spec(spec);
-    }
-
-    fields.append("""
-
-      //
       // HTML
       //
     """);

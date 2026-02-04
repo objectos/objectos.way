@@ -59,18 +59,6 @@ public class HtmlTemplateGen {
       //
     """);
 
-    for (HtmlSpec.AttributeSpec spec : HtmlSpec.dataOn()) {
-      methods.append("""
-
-        /// Renders the `%1$s` attribute with the specified script.
-        /// @param script the script to be executed
-        /// @return an instruction representing the attribute
-        protected final Html.Instruction.OfDataOn %2$s(Script.JsAction script) {
-          return $html().%2$s(script);
-        }
-      """.formatted(spec.htmlName(), spec.methodName()));
-    }
-
     for (HtmlSpec.MethodSpec spec : HtmlSpec.wayNodes()) {
       methodSpec(spec);
     }
@@ -220,6 +208,18 @@ public class HtmlTemplateGen {
             return $html().%s(value);
           }
         """.formatted(attr.htmlName(), attr.methodName(), attr.methodName()));
+
+        if (attr.eventAttribute()) {
+          methods.append("""
+
+          /// Renders the `%s` attribute with the specified action.
+          /// @param value the action to execute
+          /// @return an instruction representing the attribute
+          protected final Html.Instruction.OfAttribute %s(JsAction value) {
+            return $html().%s(value);
+          }
+        """.formatted(attr.htmlName(), attr.methodName(), attr.methodName()));
+        }
       }
     }
   }

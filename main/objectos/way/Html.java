@@ -328,56 +328,11 @@ public final class Html {
     /// The `nomodule` HTML attribute.
     Html.AttributeName NOMODULE = HtmlAttributeName.NOMODULE;
 
-    /// The `onafterprint` HTML attribute.
-    Html.AttributeName ONAFTERPRINT = HtmlAttributeName.ONAFTERPRINT;
-
-    /// The `onbeforeprint` HTML attribute.
-    Html.AttributeName ONBEFOREPRINT = HtmlAttributeName.ONBEFOREPRINT;
-
-    /// The `onbeforeunload` HTML attribute.
-    Html.AttributeName ONBEFOREUNLOAD = HtmlAttributeName.ONBEFOREUNLOAD;
-
     /// The `onclick` HTML attribute.
     Html.AttributeName ONCLICK = HtmlAttributeName.ONCLICK;
 
-    /// The `onhashchange` HTML attribute.
-    Html.AttributeName ONHASHCHANGE = HtmlAttributeName.ONHASHCHANGE;
-
-    /// The `onlanguagechange` HTML attribute.
-    Html.AttributeName ONLANGUAGECHANGE = HtmlAttributeName.ONLANGUAGECHANGE;
-
-    /// The `onmessage` HTML attribute.
-    Html.AttributeName ONMESSAGE = HtmlAttributeName.ONMESSAGE;
-
-    /// The `onoffline` HTML attribute.
-    Html.AttributeName ONOFFLINE = HtmlAttributeName.ONOFFLINE;
-
-    /// The `ononline` HTML attribute.
-    Html.AttributeName ONONLINE = HtmlAttributeName.ONONLINE;
-
-    /// The `onpagehide` HTML attribute.
-    Html.AttributeName ONPAGEHIDE = HtmlAttributeName.ONPAGEHIDE;
-
-    /// The `onpageshow` HTML attribute.
-    Html.AttributeName ONPAGESHOW = HtmlAttributeName.ONPAGESHOW;
-
-    /// The `onpopstate` HTML attribute.
-    Html.AttributeName ONPOPSTATE = HtmlAttributeName.ONPOPSTATE;
-
-    /// The `onrejectionhandled` HTML attribute.
-    Html.AttributeName ONREJECTIONHANDLED = HtmlAttributeName.ONREJECTIONHANDLED;
-
-    /// The `onstorage` HTML attribute.
-    Html.AttributeName ONSTORAGE = HtmlAttributeName.ONSTORAGE;
-
     /// The `onsubmit` HTML attribute.
     Html.AttributeName ONSUBMIT = HtmlAttributeName.ONSUBMIT;
-
-    /// The `onunhandledrejection` HTML attribute.
-    Html.AttributeName ONUNHANDLEDREJECTION = HtmlAttributeName.ONUNHANDLEDREJECTION;
-
-    /// The `onunload` HTML attribute.
-    Html.AttributeName ONUNLOAD = HtmlAttributeName.ONUNLOAD;
 
     /// The `opacity` HTML attribute.
     Html.AttributeName OPACITY = HtmlAttributeName.OPACITY;
@@ -1271,6 +1226,7 @@ public final class Html {
     void writeTo(Appendable out) throws IOException;
 
     // START generated code
+
     /// The `async` boolean attribute.
     Html.AttributeObject async = Html.AttributeObject.of(Html.AttributeName.ASYNC);
 
@@ -1313,34 +1269,6 @@ public final class Html {
     //
     // WAY
     //
-
-    /// Renders the `data-on-click` attribute with the specified script.
-    ///
-    /// @param script the script to be executed
-    ///
-    /// @return an instruction representing the attribute
-    Html.Instruction.OfDataOn dataOnClick(JsAction script);
-
-    /// Renders the `data-on-input` attribute with the specified script.
-    ///
-    /// @param script the script to be executed
-    ///
-    /// @return an instruction representing the attribute
-    Html.Instruction.OfDataOn dataOnInput(JsAction script);
-
-    /// Renders the `data-on-load` attribute with the specified script.
-    ///
-    /// @param script the script to be executed
-    ///
-    /// @return an instruction representing the attribute
-    Html.Instruction.OfDataOn dataOnLoad(JsAction script);
-
-    /// Renders the `data-on-success` attribute with the specified script.
-    ///
-    /// @param script the script to be executed
-    ///
-    /// @return an instruction representing the attribute
-    Html.Instruction.OfDataOn dataOnSuccess(JsAction script);
 
     /// Renders the `data-frame` attribute for a frame with the specified name.
     ///
@@ -3135,27 +3063,6 @@ public final class Html {
     /// @return an instruction representing the attribute
     Html.Instruction.OfAttribute name(String value);
 
-    /// Renders the `onafterprint` attribute with the specified value.
-    ///
-    /// @param value the attribute value
-    ///
-    /// @return an instruction representing the attribute
-    Html.Instruction.OfAttribute onafterprint(String value);
-
-    /// Renders the `onbeforeprint` attribute with the specified value.
-    ///
-    /// @param value the attribute value
-    ///
-    /// @return an instruction representing the attribute
-    Html.Instruction.OfAttribute onbeforeprint(String value);
-
-    /// Renders the `onbeforeunload` attribute with the specified value.
-    ///
-    /// @param value the attribute value
-    ///
-    /// @return an instruction representing the attribute
-    Html.Instruction.OfAttribute onbeforeunload(String value);
-
     /// Renders the `onclick` attribute with the specified value.
     ///
     /// @param value the attribute value
@@ -3163,75 +3070,12 @@ public final class Html {
     /// @return an instruction representing the attribute
     Html.Instruction.OfAttribute onclick(String value);
 
-    /// Renders the `onhashchange` attribute with the specified value.
+    /// Renders the `onclick` attribute with the specified action.
     ///
-    /// @param value the attribute value
-    ///
-    /// @return an instruction representing the attribute
-    Html.Instruction.OfAttribute onhashchange(String value);
-
-    /// Renders the `onlanguagechange` attribute with the specified value.
-    ///
-    /// @param value the attribute value
+    /// @param value the action to be executed
     ///
     /// @return an instruction representing the attribute
-    Html.Instruction.OfAttribute onlanguagechange(String value);
-
-    /// Renders the `onmessage` attribute with the specified value.
-    ///
-    /// @param value the attribute value
-    ///
-    /// @return an instruction representing the attribute
-    Html.Instruction.OfAttribute onmessage(String value);
-
-    /// Renders the `onoffline` attribute with the specified value.
-    ///
-    /// @param value the attribute value
-    ///
-    /// @return an instruction representing the attribute
-    Html.Instruction.OfAttribute onoffline(String value);
-
-    /// Renders the `ononline` attribute with the specified value.
-    ///
-    /// @param value the attribute value
-    ///
-    /// @return an instruction representing the attribute
-    Html.Instruction.OfAttribute ononline(String value);
-
-    /// Renders the `onpagehide` attribute with the specified value.
-    ///
-    /// @param value the attribute value
-    ///
-    /// @return an instruction representing the attribute
-    Html.Instruction.OfAttribute onpagehide(String value);
-
-    /// Renders the `onpageshow` attribute with the specified value.
-    ///
-    /// @param value the attribute value
-    ///
-    /// @return an instruction representing the attribute
-    Html.Instruction.OfAttribute onpageshow(String value);
-
-    /// Renders the `onpopstate` attribute with the specified value.
-    ///
-    /// @param value the attribute value
-    ///
-    /// @return an instruction representing the attribute
-    Html.Instruction.OfAttribute onpopstate(String value);
-
-    /// Renders the `onrejectionhandled` attribute with the specified value.
-    ///
-    /// @param value the attribute value
-    ///
-    /// @return an instruction representing the attribute
-    Html.Instruction.OfAttribute onrejectionhandled(String value);
-
-    /// Renders the `onstorage` attribute with the specified value.
-    ///
-    /// @param value the attribute value
-    ///
-    /// @return an instruction representing the attribute
-    Html.Instruction.OfAttribute onstorage(String value);
+    Html.Instruction.OfAttribute onclick(JsAction value);
 
     /// Renders the `onsubmit` attribute with the specified value.
     ///
@@ -3240,19 +3084,12 @@ public final class Html {
     /// @return an instruction representing the attribute
     Html.Instruction.OfAttribute onsubmit(String value);
 
-    /// Renders the `onunhandledrejection` attribute with the specified value.
+    /// Renders the `onsubmit` attribute with the specified action.
     ///
-    /// @param value the attribute value
-    ///
-    /// @return an instruction representing the attribute
-    Html.Instruction.OfAttribute onunhandledrejection(String value);
-
-    /// Renders the `onunload` attribute with the specified value.
-    ///
-    /// @param value the attribute value
+    /// @param value the action to be executed
     ///
     /// @return an instruction representing the attribute
-    Html.Instruction.OfAttribute onunload(String value);
+    Html.Instruction.OfAttribute onsubmit(JsAction value);
 
     /// Renders the `opacity` attribute with the specified value.
     ///
@@ -3808,42 +3645,6 @@ public final class Html {
     //
     // WAY
     //
-
-    /// Renders the `data-on-click` attribute with the specified script.
-    /// 
-    /// @param script the script to be executed
-    /// 
-    /// @return an instruction representing the attribute
-    protected final Html.Instruction.OfDataOn dataOnClick(JsAction script) {
-      return $html().dataOnClick(script);
-    }
-
-    /// Renders the `data-on-input` attribute with the specified script.
-    /// 
-    /// @param script the script to be executed
-    /// 
-    /// @return an instruction representing the attribute
-    protected final Html.Instruction.OfDataOn dataOnInput(JsAction script) {
-      return $html().dataOnInput(script);
-    }
-
-    /// Renders the `data-on-load` attribute with the specified script.
-    /// 
-    /// @param script the script to be executed
-    /// 
-    /// @return an instruction representing the attribute
-    protected final Html.Instruction.OfDataOn dataOnLoad(JsAction script) {
-      return $html().dataOnLoad(script);
-    }
-
-    /// Renders the `data-on-success` attribute with the specified script.
-    /// 
-    /// @param script the script to be executed
-    /// 
-    /// @return an instruction representing the attribute
-    protected final Html.Instruction.OfDataOn dataOnSuccess(JsAction script) {
-      return $html().dataOnSuccess(script);
-    }
 
     /// Renders the `data-frame` attribute for a frame with the specified name.
     /// 
@@ -6108,33 +5909,6 @@ public final class Html {
       return $html().name(value);
     }
 
-    /// Renders the `onafterprint` attribute with the specified value.
-    /// 
-    /// @param value the attribute value
-    /// 
-    /// @return an instruction representing the attribute
-    protected final Html.Instruction.OfAttribute onafterprint(String value) {
-      return $html().onafterprint(value);
-    }
-
-    /// Renders the `onbeforeprint` attribute with the specified value.
-    /// 
-    /// @param value the attribute value
-    /// 
-    /// @return an instruction representing the attribute
-    protected final Html.Instruction.OfAttribute onbeforeprint(String value) {
-      return $html().onbeforeprint(value);
-    }
-
-    /// Renders the `onbeforeunload` attribute with the specified value.
-    /// 
-    /// @param value the attribute value
-    /// 
-    /// @return an instruction representing the attribute
-    protected final Html.Instruction.OfAttribute onbeforeunload(String value) {
-      return $html().onbeforeunload(value);
-    }
-
     /// Renders the `onclick` attribute with the specified value.
     /// 
     /// @param value the attribute value
@@ -6144,94 +5918,13 @@ public final class Html {
       return $html().onclick(value);
     }
 
-    /// Renders the `onhashchange` attribute with the specified value.
+    /// Renders the `onclick` attribute with the specified action.
     /// 
-    /// @param value the attribute value
-    /// 
-    /// @return an instruction representing the attribute
-    protected final Html.Instruction.OfAttribute onhashchange(String value) {
-      return $html().onhashchange(value);
-    }
-
-    /// Renders the `onlanguagechange` attribute with the specified value.
-    /// 
-    /// @param value the attribute value
+    /// @param value the action to execute
     /// 
     /// @return an instruction representing the attribute
-    protected final Html.Instruction.OfAttribute onlanguagechange(String value) {
-      return $html().onlanguagechange(value);
-    }
-
-    /// Renders the `onmessage` attribute with the specified value.
-    /// 
-    /// @param value the attribute value
-    /// 
-    /// @return an instruction representing the attribute
-    protected final Html.Instruction.OfAttribute onmessage(String value) {
-      return $html().onmessage(value);
-    }
-
-    /// Renders the `onoffline` attribute with the specified value.
-    /// 
-    /// @param value the attribute value
-    /// 
-    /// @return an instruction representing the attribute
-    protected final Html.Instruction.OfAttribute onoffline(String value) {
-      return $html().onoffline(value);
-    }
-
-    /// Renders the `ononline` attribute with the specified value.
-    /// 
-    /// @param value the attribute value
-    /// 
-    /// @return an instruction representing the attribute
-    protected final Html.Instruction.OfAttribute ononline(String value) {
-      return $html().ononline(value);
-    }
-
-    /// Renders the `onpagehide` attribute with the specified value.
-    /// 
-    /// @param value the attribute value
-    /// 
-    /// @return an instruction representing the attribute
-    protected final Html.Instruction.OfAttribute onpagehide(String value) {
-      return $html().onpagehide(value);
-    }
-
-    /// Renders the `onpageshow` attribute with the specified value.
-    /// 
-    /// @param value the attribute value
-    /// 
-    /// @return an instruction representing the attribute
-    protected final Html.Instruction.OfAttribute onpageshow(String value) {
-      return $html().onpageshow(value);
-    }
-
-    /// Renders the `onpopstate` attribute with the specified value.
-    /// 
-    /// @param value the attribute value
-    /// 
-    /// @return an instruction representing the attribute
-    protected final Html.Instruction.OfAttribute onpopstate(String value) {
-      return $html().onpopstate(value);
-    }
-
-    /// Renders the `onrejectionhandled` attribute with the specified value.
-    /// 
-    /// @param value the attribute value
-    /// 
-    /// @return an instruction representing the attribute
-    protected final Html.Instruction.OfAttribute onrejectionhandled(String value) {
-      return $html().onrejectionhandled(value);
-    }
-
-    /// Renders the `onstorage` attribute with the specified value.
-    /// 
-    /// @param value the attribute value
-    /// 
-    /// @return an instruction representing the attribute
-    protected final Html.Instruction.OfAttribute onstorage(String value) {
-      return $html().onstorage(value);
+    protected final Html.Instruction.OfAttribute onclick(JsAction value) {
+      return $html().onclick(value);
     }
 
     /// Renders the `onsubmit` attribute with the specified value.
@@ -6243,22 +5936,13 @@ public final class Html {
       return $html().onsubmit(value);
     }
 
-    /// Renders the `onunhandledrejection` attribute with the specified value.
+    /// Renders the `onsubmit` attribute with the specified action.
     /// 
-    /// @param value the attribute value
-    /// 
-    /// @return an instruction representing the attribute
-    protected final Html.Instruction.OfAttribute onunhandledrejection(String value) {
-      return $html().onunhandledrejection(value);
-    }
-
-    /// Renders the `onunload` attribute with the specified value.
-    /// 
-    /// @param value the attribute value
+    /// @param value the action to execute
     /// 
     /// @return an instruction representing the attribute
-    protected final Html.Instruction.OfAttribute onunload(String value) {
-      return $html().onunload(value);
+    protected final Html.Instruction.OfAttribute onsubmit(JsAction value) {
+      return $html().onsubmit(value);
     }
 
     /// Renders the `opacity` attribute with the specified value.

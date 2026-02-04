@@ -17,7 +17,6 @@ package objectos.way;
 
 import java.io.IOException;
 import java.util.Objects;
-import objectos.script.JsAction;
 import objectos.way.Html.AttributeObject;
 
 sealed abstract class HtmlMarkupOfTestable extends HtmlMarkup permits Html.Markup.OfTestable {
@@ -154,26 +153,6 @@ sealed abstract class HtmlMarkupOfTestable extends HtmlMarkup permits Html.Marku
   }
 
   @Override
-  public final Html.Instruction.OfDataOn dataOnClick(JsAction script) {
-    return Html.ATTRIBUTE;
-  }
-
-  @Override
-  public final Html.Instruction.OfDataOn dataOnInput(JsAction script) {
-    return Html.ATTRIBUTE;
-  }
-
-  @Override
-  public final Html.Instruction.OfDataOn dataOnLoad(JsAction script) {
-    return Html.ATTRIBUTE;
-  }
-
-  @Override
-  public final Html.Instruction.OfDataOn dataOnSuccess(JsAction script) {
-    return Html.ATTRIBUTE;
-  }
-
-  @Override
   public final Html.Instruction.OfElement flatten(Html.Instruction... contents) {
     Objects.requireNonNull(contents, "contents == null");
 
@@ -272,7 +251,7 @@ sealed abstract class HtmlMarkupOfTestable extends HtmlMarkup permits Html.Marku
   }
 
   @Override
-  final Html.AttributeOrNoOp attr0(Html.AttributeName name, Object value) {
+  final Html.Instruction.OfAttribute attr0(Html.AttributeName name, Object value) {
     return Html.ATTRIBUTE;
   }
 

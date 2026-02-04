@@ -37,21 +37,21 @@ public final class Script000 extends AbstractDevScript {
 
         button(
             id("btn-1"),
-            dataOnClick(ACTION),
+            onclick(ACTION),
             type("button"),
             text("Button 1")
         ),
 
         button(
             id("btn-2"),
-            dataOnClick(ACTION),
+            onclick(ACTION),
             type("button"),
             text("Button 2")
         ),
 
         button(
             id("btn-3"),
-            dataOnClick(ACTION),
+            onclick(ACTION),
             type("button"),
             text("Button 3")
         )

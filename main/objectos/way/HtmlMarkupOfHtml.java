@@ -17,7 +17,6 @@ package objectos.way;
 
 import java.io.IOException;
 import java.util.Objects;
-import objectos.script.JsAction;
 
 sealed abstract class HtmlMarkupOfHtml extends HtmlMarkup permits Html.Markup.OfHtml {
 
@@ -207,38 +206,6 @@ sealed abstract class HtmlMarkupOfHtml extends HtmlMarkup permits Html.Markup.Of
     Objects.requireNonNull(value, "value == null");
 
     return attr0(HtmlAttributeName.DATA_FRAME, name + ":" + value);
-  }
-
-  @Override
-  public final Html.Instruction.OfDataOn dataOnClick(JsAction script) {
-    Objects.requireNonNull(script, "script == null");
-
-    return dataOn0(HtmlAttributeName.DATA_ON_CLICK, script);
-  }
-
-  @Override
-  public final Html.Instruction.OfDataOn dataOnInput(JsAction script) {
-    Objects.requireNonNull(script, "script == null");
-
-    return dataOn0(HtmlAttributeName.DATA_ON_INPUT, script);
-  }
-
-  @Override
-  public final Html.Instruction.OfDataOn dataOnLoad(JsAction script) {
-    Objects.requireNonNull(script, "script == null");
-
-    return dataOn0(HtmlAttributeName.DATA_ON_LOAD, script);
-  }
-
-  @Override
-  public final Html.Instruction.OfDataOn dataOnSuccess(JsAction script) {
-    Objects.requireNonNull(script, "script == null");
-
-    return dataOn0(HtmlAttributeName.DATA_ON_SUCCESS, script);
-  }
-
-  private Html.Instruction.OfDataOn dataOn0(Html.AttributeName name, JsAction script) {
-    return attr0(name, script);
   }
 
   @Override

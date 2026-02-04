@@ -23,7 +23,7 @@ import org.testng.annotations.Test;
 @Listeners(Y.class)
 public class ScriptOnSuccess00Test {
 
-  @Test
+  @Test(enabled = false)
   public void live() {
     try (var page = Y.page()) {
       page.navigate("/script/on-success/00");

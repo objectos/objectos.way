@@ -44,7 +44,7 @@ public final class Script017 extends AbstractDevScript {
 
         button(
             id("click-me"),
-            dataOnClick(ACTION),
+            onclick(ACTION),
             attr(DATA_TEST, "Clicked!"),
             text("Click me"),
             type("button")

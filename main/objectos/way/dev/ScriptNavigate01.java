@@ -72,7 +72,7 @@ public final class ScriptNavigate01 extends AbstractDevScript {
 
         a(
             id("click-me"),
-            dataOnClick(ACTION),
+            onclick(ACTION),
             href("/script/navigate/01?next=true"),
             text("Click me")
         )

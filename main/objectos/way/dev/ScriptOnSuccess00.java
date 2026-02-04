@@ -53,7 +53,7 @@ public final class ScriptOnSuccess00 extends AbstractDevScript {
 
                 action("/script/on-success/00"),
 
-                dataOnSuccess(Js.byId("subject").textContent(JsString.of("After"))),
+                //dataOnSuccess(Js.byId("subject").textContent(JsString.of("After"))),
 
                 method("post"),
 

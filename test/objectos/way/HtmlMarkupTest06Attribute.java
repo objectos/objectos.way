@@ -17,6 +17,7 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.script.Js;
 import org.testng.annotations.Test;
 
 public class HtmlMarkupTest06Attribute {
@@ -41,6 +42,17 @@ public class HtmlMarkupTest06Attribute {
 
         """
         <div custom="x"></div>
+        """
+    );
+  }
+
+  @Test
+  public void event01() {
+    test(
+        m -> m.a(m.onclick(Js.target().remove())),
+
+        """
+        <a onclick='way.onclick(event,["W1",["ET"],["IV","Element","remove",[]]])'></a>
         """
     );
   }

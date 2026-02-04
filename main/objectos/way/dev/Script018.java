@@ -64,7 +64,7 @@ public final class Script018 extends AbstractDevScript {
 
         button(
             id("click-me"),
-            dataOnClick(ACTION),
+            onclick(ACTION),
             href(path + "?next=After"),
             text("Click me"),
             type("button")

@@ -58,8 +58,12 @@ final class HtmlSpec {
   record AttributeSpec(String constantName, String methodName, String htmlName, boolean booleanAttribute)
       implements Comparable<AttributeSpec> {
     @Override
-    public int compareTo(AttributeSpec that) {
+    public final int compareTo(AttributeSpec that) {
       return constantName.compareTo(that.constantName);
+    }
+
+    public final boolean eventAttribute() {
+      return constantName.startsWith("ON");
     }
   }
 
@@ -152,23 +156,8 @@ final class HtmlSpec {
         new AttributeSpec("MULTIPLE", "multiple", "multiple", true),
         new AttributeSpec("NAME", "name", "name", false),
         new AttributeSpec("NOMODULE", "nomodule", "nomodule", true),
-        new AttributeSpec("ONAFTERPRINT", "onafterprint", "onafterprint", false),
-        new AttributeSpec("ONBEFOREPRINT", "onbeforeprint", "onbeforeprint", false),
-        new AttributeSpec("ONBEFOREUNLOAD", "onbeforeunload", "onbeforeunload", false),
         new AttributeSpec("ONCLICK", "onclick", "onclick", false),
-        new AttributeSpec("ONHASHCHANGE", "onhashchange", "onhashchange", false),
-        new AttributeSpec("ONLANGUAGECHANGE", "onlanguagechange", "onlanguagechange", false),
-        new AttributeSpec("ONMESSAGE", "onmessage", "onmessage", false),
-        new AttributeSpec("ONOFFLINE", "onoffline", "onoffline", false),
-        new AttributeSpec("ONONLINE", "ononline", "ononline", false),
-        new AttributeSpec("ONPAGEHIDE", "onpagehide", "onpagehide", false),
-        new AttributeSpec("ONPAGESHOW", "onpageshow", "onpageshow", false),
-        new AttributeSpec("ONPOPSTATE", "onpopstate", "onpopstate", false),
-        new AttributeSpec("ONREJECTIONHANDLED", "onrejectionhandled", "onrejectionhandled", false),
-        new AttributeSpec("ONSTORAGE", "onstorage", "onstorage", false),
         new AttributeSpec("ONSUBMIT", "onsubmit", "onsubmit", false),
-        new AttributeSpec("ONUNHANDLEDREJECTION", "onunhandledrejection", "onunhandledrejection", false),
-        new AttributeSpec("ONUNLOAD", "onunload", "onunload", false),
         new AttributeSpec("OPACITY", "opacity", "opacity", false),
         new AttributeSpec("OPEN", "open", "open", true),
         new AttributeSpec("OVERFLOW", "overflow", "overflow", false),
@@ -440,15 +429,6 @@ final class HtmlSpec {
         new AttributeSpec("DATA_FRAME", "dataFrame", "data-frame", false),
         new AttributeSpec("DATA_HIGH", "dataHigh", "data-high", false),
         new AttributeSpec("DATA_LINE", "dataLine", "data-line", false)
-    );
-  }
-
-  static List<AttributeSpec> dataOn() {
-    return List.of(
-        new AttributeSpec("DATA_ON_CLICK", "dataOnClick", "data-on-click", false),
-        new AttributeSpec("DATA_ON_INPUT", "dataOnInput", "data-on-input", false),
-        new AttributeSpec("DATA_ON_LOAD", "dataOnLoad", "data-on-load", false),
-        new AttributeSpec("DATA_ON_SUCCESS", "dataOnSuccess", "data-on-success", false)
     );
   }
 

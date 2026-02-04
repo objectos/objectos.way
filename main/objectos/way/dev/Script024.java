@@ -47,7 +47,7 @@ public final class Script024 extends AbstractDevScript {
 
         button(
             id("click-me"),
-            dataOnClick(ACTION),
+            onclick(ACTION),
             text("Click me"),
             type("button")
         ),

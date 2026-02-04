@@ -59,16 +59,6 @@ public class HtmlMarkupGen {
       //
     """);
 
-    for (HtmlSpec.AttributeSpec spec : HtmlSpec.dataOn()) {
-      methods.append("""
-
-        /// Renders the `%s` attribute with the specified script.
-        /// @param script the script to be executed
-        /// @return an instruction representing the attribute
-        Html.Instruction.OfDataOn %s(Script.JsAction script);
-      """.formatted(spec.htmlName(), spec.methodName()));
-    }
-
     for (HtmlSpec.MethodSpec spec : HtmlSpec.wayNodes()) {
       methodSpec(spec);
     }
@@ -231,6 +221,16 @@ public class HtmlMarkupGen {
           /// @return an instruction representing the attribute
           Html.Instruction.OfAttribute %s(String value);
         """.formatted(attr.htmlName(), attr.methodName()));
+
+        if (attr.eventAttribute()) {
+          methods.append("""
+
+          /// Renders the `%s` attribute with the specified action.
+          /// @param value the action to be executed
+          /// @return an instruction representing the attribute
+          Html.Instruction.OfAttribute %s(JsAction value);
+        """.formatted(attr.htmlName(), attr.methodName()));
+        }
       }
     }
   }

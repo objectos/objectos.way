@@ -40,7 +40,7 @@ public final class Script002 extends AbstractDevScript {
         padding:32rx
         """),
 
-        dataOnClick(ACTION),
+        onclick(ACTION),
 
         text("My ID is...")
     );
