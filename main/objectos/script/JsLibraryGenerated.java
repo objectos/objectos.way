@@ -59,32 +59,19 @@ const way = (function() {
   // ##################################################################
 
   function clickListener(event) {
-    let el = event.target;
+    const el = event.target.closest("[data-on-click]");
 
-    while (el instanceof Node) {
-      const result = executeEvent(el, "onClick");
-
-      if (result) {
-        event.preventDefault();
-
-        break;
-      }
-
-      // there was no data-on-click action...
-      // but we explicitly stop at these elements
-
-      if (el instanceof HTMLAnchorElement) {
-        break;
-      }
-
-      if (el instanceof HTMLButtonElement) {
-        break;
-      }
-
-      // continue with this element's parent
-
-      el = el.parentNode;
+    if (!el) {
+      return;
     }
+
+    const executed = executeEvent(el, "onClick");
+
+    if (!executed) {
+      return;
+    }
+
+    event.preventDefault();
   }
 
   function submitListener(event) {
