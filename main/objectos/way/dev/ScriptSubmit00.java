@@ -26,6 +26,8 @@ import module objectos.way;
 @Css.Source
 public final class ScriptSubmit00 extends AbstractDevScript {
 
+  public static final JsAction ACTION = Js.submit();
+
   private boolean initial;
 
   private String input0;
@@ -84,6 +86,8 @@ public final class ScriptSubmit00 extends AbstractDevScript {
                 action("/script/submit/00"),
 
                 method("post"),
+
+                onsubmit(Js.submit()),
 
                 div(
                     id("subject"),

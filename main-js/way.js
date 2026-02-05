@@ -19,194 +19,24 @@ const way = (function() {
 
   const way = {
 
-    config: {
-
-      errorHandler: function(error) {
-        throw error;
-      },
-
-      history: true
-
-    },
-
-    onclick: onclick
+    on: on
 
   };
 
   // ##################################################################
-  // # BEGIN: DOM Event Handlers
+  // # BEGIN: Actions support
   // ##################################################################
 
-  function onclick(event, action) {
-    event.preventDefault();
-
+  function on(event, action) {
     const ctx = {
       $el: event.target,
       $recv: undefined
     };
 
     execute(ctx, action);
-  }
 
-  function submitListener(event) {
-    const el = event.target;
-
-    if (!(el instanceof HTMLFormElement)) {
-      return;
-    }
-
-    const action = el.action;
-
-    if (!action) {
-      return;
-    }
-
-    const method = el.method;
-
-    if (!method) {
-      return;
-    }
-
-    // this is a way form,
-    // we'll submit it via fetch API
     event.preventDefault();
-
-    const ctx = {
-      // ctx
-      $el: el,
-      $fetchSuccess: dataOnSuccess(el),
-      $navigate: {
-        scroll: "auto"
-      },
-      $recv: undefined,
-
-      // requestInit
-      headers: {
-        "Way-Request": true
-      },
-
-      method: method.toUpperCase()
-    };
-
-    const formData = new FormData(el);
-
-    if (ctx.method === "GET") {
-      ctx.body = undefined;
-
-      const url = new URL(action);
-
-      for (const [key, value] of formData.entries()) {
-        url.searchParams.set(key, value);
-      }
-
-      fetch0(ctx, url);
-    }
-
-    else {
-      const enctype = el.getAttribute("enctype");
-
-      if (enctype === "multipart/form-data") {
-        throw new Error(`Implement me :: enctype=${enctype}`);
-      }
-
-      else {
-        ctx.body = new URLSearchParams(formData);
-
-        ctx.headers["Content-Type"] = "application/x-www-form-urlencoded";
-      }
-
-      fetch0(ctx, action);
-    }
   }
-
-  // ##################################################################
-  // # END: DOM Event Handlers
-  // ##################################################################
-
-  // ##################################################################
-  // # BEGIN: Fetch support
-  // ##################################################################
-
-  function fetch0(ctx, resource) {
-    globalThis.fetch(resource, ctx).then(resp => {
-
-      const headers = resp.headers;
-
-      const contentType = headers.get("Content-Type");
-
-      if (!contentType) {
-        throw new Error("Invalid response: no content-type");
-      }
-
-      else if (contentType.startsWith("text/html")) {
-
-        resp.text().then(html => {
-          const global = globalThis;
-
-          // handle scrolling
-          const navigate = ctx.$navigate;
-
-          const scroll = navigate.scroll !== undefined ? navigate.scroll : "auto";
-
-          if (scroll === "auto") {
-            if (!(global instanceof Window)) {
-              const actual = global.constructor ? global.constructor.name : "Unknown";
-
-              throw new Error(`Illegal arg: navigate must be executed on a Window but got ${actual}`);
-            }
-
-            global.scrollTo({
-              top: 0, left: 0, behavior: "instant"
-            });
-          }
-
-          // update browser location
-          const history = global.history;
-
-          if (history) {
-            const state = { way: true };
-
-            const unused = "";
-
-            const url = resp.url;
-
-            history.pushState(state, unused, url);
-          }
-
-          // morph
-          const recv = ctx.$recv !== undefined ? ctx.$recv : documentElement();
-
-          morph0(recv, html);
-
-          fetch0Success(ctx);
-        });
-
-      }
-
-      else {
-        throw new Error(`Invalid response: unsupported content-type ${contentType}`);
-      }
-
-    });
-  }
-
-  function fetch0Success(ctx) {
-    const success = ctx.$fetchSuccess;
-
-    if (!success) {
-      return;
-    }
-
-    execute(ctx, success);
-  }
-
-  // ##################################################################
-  // # END: Fetch support
-  // ##################################################################
-
-  // ##################################################################
-  // # BEGIN: Actions support
-  // ##################################################################
 
   function execute(ctx, action) {
     checkArray(action, "action");
@@ -263,6 +93,7 @@ const way = (function() {
     "PR": propertyRead,
     "pr": propertyReadUnchecked,
     "PW": propertyWrite,
+    "SU": submit,
     "TE": throwError,
     "TY": typeEnsure,
     "UP": urlPush,
@@ -621,6 +452,64 @@ const way = (function() {
     recv[propName] = execute(ctx, val);
   }
 
+  function submit(ctx, _args) {
+    const el = ctx.$el;
+
+    if (!(el instanceof HTMLFormElement)) {
+      const actual = element.constructor ? element.constructor.name : "Unknown";
+
+      throw new Error(`Illegal state: submit must be executed on an HTMLFormElement but got ${actual}`);
+    }
+
+    const action = el.action;
+
+    if (!action) {
+      throw new Error(`Illegal state: form has no action property`);
+    }
+
+    const method = el.method;
+
+    if (!method) {
+      throw new Error(`Illegal state: form has no method property`);
+    }
+
+    let url = action;
+
+    const req = {
+      headers: { "Way-Request": true },
+
+      method: method.toUpperCase()
+    };
+
+    const formData = new FormData(el);
+
+    if (req.method === "GET") {
+      req.body = undefined;
+
+      url = new URL(action);
+
+      for (const [key, value] of formData.entries()) {
+        url.searchParams.set(key, value);
+      }
+    }
+
+    else {
+      const enctype = el.getAttribute("enctype");
+
+      if (enctype === "multipart/form-data") {
+        throw new Error(`Implement me :: enctype=${enctype}`);
+      }
+
+      else {
+        req.body = new URLSearchParams(formData);
+
+        req.headers["Content-Type"] = "application/x-www-form-urlencoded";
+      }
+    }
+
+    globalThis.fetch(url, req).then(resp => fetchResp(ctx, resp));
+  }
+
   function throwError(ctx, args) {
     const $msg = checkDefined(args.shift(), "msg");
 
@@ -683,6 +572,51 @@ const way = (function() {
 
   // ##################################################################
   // # END: Objectos Way Actions
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Fetch support
+  // ##################################################################
+
+  function fetchResp(ctx, resp) {
+    const headers = resp.headers;
+
+    const contentType = headers.get("Content-Type");
+
+    if (!contentType) {
+      throw new Error("Invalid response: no content-type");
+    }
+
+    else if (contentType.startsWith("text/html")) {
+      resp.text().then(html => {
+
+        const actions = ["WS"];
+
+        // morph
+        actions.push(["MO", ["JS", html]]);
+
+        // scroll
+        const scroll = ctx.scrollIntoView !== undefined
+          ? ctx.scrollIntoView
+          : ["W1", ["GR"], ["PR", "Window", "document"], ["PR", "Document", "documentElement"]];
+
+        actions.push(["W1", scroll, ["IV", "Element", "scrollIntoView", []]]);
+
+        // urlPush
+        actions.push(["UP", ["JS", resp.url]]);
+
+        execute(ctx, actions);
+
+      });
+    }
+
+    else {
+      throw new Error(`Invalid response: unsupported content-type ${contentType}`);
+    }
+  }
+
+  // ##################################################################
+  // # END: Fetch support
   // ##################################################################
 
   // ##################################################################
@@ -777,22 +711,6 @@ const way = (function() {
     return maybe;
   }
 
-  function dataOnSuccess(el) {
-    const dataset = el.dataset;
-
-    if (!dataset) {
-      return undefined;
-    }
-
-    const data = dataset["onSuccess"];
-
-    if (!data) {
-      return undefined;
-    }
-
-    return JSON.parse(data);
-  }
-
   function documentElement() {
     const global = globalThis;
 
@@ -829,30 +747,6 @@ const way = (function() {
 
   // ##################################################################
   // # END: private private
-  // ##################################################################
-
-  // ##################################################################
-  // # BEGIN: Objectos Way Bootstrap
-  // ##################################################################
-
-  function listener(actual) {
-    return function(event) {
-      try {
-        actual.call(this, event)
-      } catch (error) {
-        way.config.errorHandler(error);
-      }
-    };
-  }
-
-  function domLoaded() {
-    document.addEventListener("submit", listener(submitListener));
-  }
-
-  window.addEventListener("DOMContentLoaded", domLoaded);
-
-  // ##################################################################
-  // # END: Objectos Way Bootstrap
   // ##################################################################
 
   return way;

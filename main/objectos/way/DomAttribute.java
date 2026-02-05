@@ -62,11 +62,7 @@ final class DomAttribute implements Dom.Attribute {
       final StringBuilder value;
       value = new StringBuilder();
 
-      value.append("way.");
-
-      value.append(name.name());
-
-      value.append("(event,");
+      value.append("way.on(event,");
 
       value.append(result);
 

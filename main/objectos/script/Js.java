@@ -158,7 +158,14 @@ public final class Js {
     return global().invokeUnchecked("setTimeout", JsFunction.of(func), JsNumber.of(delay));
   }
 
-  /// The element which triggered the Objectos Script.
+  /// Submits the form via JavaScript.
+  ///
+  /// @return an object representing the action
+  public static JsAction submit() {
+    return JsAction.SUBMIT;
+  }
+
+  /// The element which triggered the action.
   ///
   /// @return the element
   public static JsElement target() {

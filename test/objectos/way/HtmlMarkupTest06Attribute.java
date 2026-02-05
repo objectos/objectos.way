@@ -52,7 +52,7 @@ public class HtmlMarkupTest06Attribute {
         m -> m.a(m.onclick(Js.target().remove())),
 
         """
-        <a onclick='way.onclick(event,["W1",["ET"],["IV","Element","remove",[]]])'></a>
+        <a onclick='way.on(event,["W1",["ET"],["IV","Element","remove",[]]])'></a>
         """
     );
   }
