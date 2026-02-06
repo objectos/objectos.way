@@ -18,17 +18,17 @@ package objectos.script;
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static org.testng.Assert.assertEquals;
 import objectos.way.Y;
-import objectos.way.dev.ScriptNavigate00;
+import objectos.way.dev.ScriptFollow01;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 @Listeners(Y.class)
-public class ScriptNavigate00Test {
+public class ScriptFollow01Test {
 
   @Test
   public void action() {
     assertEquals(
-        ScriptNavigate00.ACTION.toString(),
+        ScriptFollow01.ACTION.toString(),
 
         """
         ["NA",{}]"""
@@ -38,29 +38,21 @@ public class ScriptNavigate00Test {
   @Test
   public void live() {
     try (var page = Y.page()) {
-      page.navigate("/script/navigate/00");
+      page.navigate("/script/navigate/01");
 
       var clickMe = page.locator("#click-me");
-      var keepMe = page.locator("#keep-me");
       var subject = page.locator("#subject");
+      var remElem = page.locator("meta[name=initial]");
 
-      clickMe.scrollIntoViewIfNeeded();
-
-      assertThat(clickMe).isInViewport();
-      assertThat(keepMe).hasCount(1);
-      assertThat(subject).not().isInViewport();
+      assertThat(page).hasTitle("026: initial");
       assertThat(subject).hasText("Before");
-
-      var url = page.url();
+      assertThat(remElem).hasCount(1);
 
       clickMe.click();
 
-      assertThat(clickMe).not().isInViewport();
-      assertThat(keepMe).hasCount(1);
+      assertThat(page).hasTitle("026: next");
       assertThat(subject).hasText("After");
-      assertThat(subject).isInViewport();
-
-      assertEquals(page.url(), url + "?next=true");
+      assertThat(remElem).hasCount(0);
     }
   }
 

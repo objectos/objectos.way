@@ -16,27 +16,40 @@
 package objectos.script;
 
 import java.util.Objects;
+import objectos.way.Html;
 
-/// Configures the `navigate` action.
-public final class Navigate {
+/// Configures the `follow` action.
+public final class Follow {
 
-  static final Navigate DEFAULT = new Navigate();
+  static final Follow DEFAULT = new Follow();
 
   private JsElement scrollIntoView = Js.document().documentElement();
 
-  Navigate() {}
+  @SuppressWarnings("unused")
+  private JsArray update;
 
-  /// Invokes `scrollIntoView` on the specified element after the new content
-  /// has been swapped. Defaults to `document.documentElement` if not specified.
+  Follow() {}
+
+  /// Invokes `scrollIntoView` on the specified element after the content has
+  /// been updated. Defaults to `document.documentElement` if not specified.
   ///
   /// @param value the element to be visible to the user
   public final void scrollIntoView(JsElement value) {
     scrollIntoView = Objects.requireNonNull(value, "value == null");
   }
 
+  /// The list of elements, given by their `id` attribute values, whose content
+  /// should be updated with the server response.
+  ///
+  /// @param first the `id` of the first element
+  /// @param more the `id` of the additional elements
+  public final void update(Html.Id first, Html.Id... more) {
+
+  }
+
   @Override
   public final String toString() {
-    return "{\"scrollIntoView\":" + scrollIntoView + "}";
+    return "{,\"scrollIntoView\":" + scrollIntoView + "}";
   }
 
 }

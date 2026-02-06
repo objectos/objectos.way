@@ -83,7 +83,7 @@ public sealed abstract class JsAction {
 
   }
 
-  static final JsAction NAVIGATE = new One(JsOp.of(JsString.NA, "{}"));
+  static final JsAction FOLLOW = new One(JsOp.of(JsString.FO, "{}"));
 
   static final JsAction NOOP = new One(JsOp.of(JsString.NO));
 
@@ -91,13 +91,13 @@ public sealed abstract class JsAction {
 
   JsAction() {}
 
-  static JsAction navigate(Consumer<? super Navigate> options) {
-    final Navigate pojo = new Navigate();
+  static JsAction follow(Consumer<? super Follow> options) {
+    final Follow pojo = new Follow();
 
     options.accept(pojo);
 
     final JsOp op;
-    op = JsOp.of(JsString.NA, pojo);
+    op = JsOp.of(JsString.FO, pojo);
 
     return new One(op);
   }

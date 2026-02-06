@@ -81,6 +81,7 @@ const way = (function() {
     "EI": elementById,
     "ET": elementTarget,
     "FE": forEach,
+    "FO": follow,
     "FN": functionJs,
     "GR": globalRead,
     "IF": ifElse,
@@ -163,6 +164,49 @@ const way = (function() {
 
   function elementTarget(ctx, _) {
     return ctx.$el;
+  }
+
+  function follow(ctx, args) {
+    const el = ctx.$el;
+
+    if (!(el instanceof HTMLAnchorElement)) {
+      const actual = el.constructor ? el.constructor.name : "Unknown";
+
+      throw new Error(`Illegal state: follow must be executed on an HTMLAnchorElement but got ${actual}`);
+    }
+
+    const href = el.href;
+
+    if (!href) {
+      throw new Error(`Illegal state: anchor has no href property`);
+    }
+
+    // TODO validate href
+
+    const opts = checkDefined(args.shift(), "opts");
+
+    globalThis.fetch(href).then(resp => {
+      const headers = resp.headers;
+
+      const contentType = headers.get("Content-Type");
+
+      if (!contentType) {
+        throw new Error("Invalid response: no content-type");
+      }
+
+      else if (contentType.startsWith("text/html")) {
+        resp.text().then(html => {
+        });
+      }
+
+      else {
+        throw new Error(`Invalid response: unsupported content-type ${contentType}`);
+      }
+
+      if (!contentType.startsWith("text/html")) {
+        throw new Error(`Invalid response: unsupported content-type ${contentType}`);
+      }
+    });
   }
 
   function forEach(ctx, args) {

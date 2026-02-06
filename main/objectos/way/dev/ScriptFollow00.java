@@ -20,15 +20,16 @@ import objectos.script.Js;
 
 /*
 
+Test case 023
+
 - event: click
 - action: navigate
-- options: scroll.DISABLED
 
 */
 @Css.Source
-public final class ScriptNavigate02 extends AbstractDevScript {
+public final class ScriptFollow00 extends AbstractDevScript {
 
-  public static final JsAction ACTION = Js.navigate(opts -> opts.scrollIntoView(Js.byId("click-me")));
+  public static final JsAction ACTION = Js.follow();
 
   private boolean initial;
 
@@ -53,19 +54,13 @@ public final class ScriptNavigate02 extends AbstractDevScript {
         div(
             id("subject"),
 
-            dataFrame("root", initial ? "1" : "2"),
-
             text(initial ? "Before" : "After")
         ),
-
-        initial
-            ? div(id("keep-me"), text("Keep me"))
-            : noop(),
 
         a(
             id("click-me"),
             onclick(ACTION),
-            href("/script/navigate/02?next=true"),
+            href("/script/follow/00?next=true"),
             text("Click me")
         )
     );

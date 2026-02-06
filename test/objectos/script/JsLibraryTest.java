@@ -41,7 +41,7 @@ public class JsLibraryTest {
     result = out.toString();
 
     assertTrue(result.contains("Objectos Software LTDA"));
-    assertTrue(result.contains("END: Objectos Way Bootstrap"));
+    assertTrue(result.contains("END: private private"));
   }
 
 }

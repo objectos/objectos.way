@@ -27,9 +27,9 @@ Test case 026
 
 */
 @Css.Source
-public final class ScriptNavigate01 extends AbstractDevScript {
+public final class ScriptFollow01 extends AbstractDevScript {
 
-  public static final JsAction ACTION = Js.navigate();
+  public static final JsAction ACTION = Js.follow();
 
   private boolean initial;
 
@@ -73,7 +73,7 @@ public final class ScriptNavigate01 extends AbstractDevScript {
         a(
             id("click-me"),
             onclick(ACTION),
-            href("/script/navigate/01?next=true"),
+            href("/script/follow/01?next=true"),
             text("Click me")
         )
     );

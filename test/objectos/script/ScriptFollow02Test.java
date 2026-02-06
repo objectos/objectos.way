@@ -18,41 +18,49 @@ package objectos.script;
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static org.testng.Assert.assertEquals;
 import objectos.way.Y;
-import objectos.way.dev.ScriptNavigate01;
+import objectos.way.dev.ScriptFollow02;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 @Listeners(Y.class)
-public class ScriptNavigate01Test {
+public class ScriptFollow02Test {
 
   @Test
   public void action() {
     assertEquals(
-        ScriptNavigate01.ACTION.toString(),
+        ScriptFollow02.ACTION.toString(),
 
         """
-        ["NA",{}]"""
+        ["NA",{"scrollIntoView":["EI",["JS","click-me"]]}]"""
     );
   }
 
   @Test
   public void live() {
     try (var page = Y.page()) {
-      page.navigate("/script/navigate/01");
+      page.navigate("/script/navigate/02");
 
       var clickMe = page.locator("#click-me");
+      var keepMe = page.locator("#keep-me");
       var subject = page.locator("#subject");
-      var remElem = page.locator("meta[name=initial]");
 
-      assertThat(page).hasTitle("026: initial");
+      clickMe.scrollIntoViewIfNeeded();
+
+      assertThat(clickMe).isInViewport();
+      assertThat(keepMe).hasCount(1);
+      assertThat(subject).not().isInViewport();
       assertThat(subject).hasText("Before");
-      assertThat(remElem).hasCount(1);
+
+      var url = page.url();
 
       clickMe.click();
 
-      assertThat(page).hasTitle("026: next");
+      assertThat(clickMe).isInViewport();
+      assertThat(keepMe).hasCount(1);
       assertThat(subject).hasText("After");
-      assertThat(remElem).hasCount(0);
+      assertThat(subject).not().isInViewport();
+
+      assertEquals(page.url(), url + "?next=true");
     }
   }
 

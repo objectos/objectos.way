@@ -88,6 +88,22 @@ public final class Js {
     return global().invokeUnchecked(JsPromise.type, "fetch", resource);
   }
 
+  /// Follows a hyperlink with JavaScript.
+  ///
+  /// @return an object representing the action
+  public static JsAction follow() {
+    return JsAction.FOLLOW;
+  }
+
+  /// Follows a hyperlink with JavaScript.
+  ///
+  /// @param options allows for setting the options
+  ///
+  /// @return an object representing the action
+  public static JsAction follow(Consumer<? super Follow> options) {
+    return JsAction.follow(options);
+  }
+
   /// Returns the global scope object. More specifically, it returns the value
   /// of the `globalThis` property.
   ///
@@ -116,22 +132,6 @@ public final class Js {
     return JsAction.seq(first, second, more);
   }
 
-  /// Performs a soft navigation to the linked resource.
-  ///
-  /// @return an object representing the action
-  public static JsAction navigate() {
-    return JsAction.NAVIGATE;
-  }
-
-  /// Performs a soft navigation to the linked resource.
-  ///
-  /// @param options allows for setting the options
-  ///
-  /// @return an object representing the action
-  public static JsAction navigate(Consumer<? super Navigate> options) {
-    return JsAction.navigate(options);
-  }
-
   /// The no-op JS action.
   ///
   /// @return the no-op action
@@ -158,7 +158,7 @@ public final class Js {
     return global().invokeUnchecked("setTimeout", JsFunction.of(func), JsNumber.of(delay));
   }
 
-  /// Submits the form via JavaScript.
+  /// Submits the form via JS.
   ///
   /// @return an object representing the action
   public static JsAction submit() {

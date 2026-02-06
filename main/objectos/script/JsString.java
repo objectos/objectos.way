@@ -31,13 +31,13 @@ public final class JsString extends JsObject {
   static final JsString ET = raw("ET"); // elementTarget
   static final JsString FE = raw("FE"); // forEach
   static final JsString FN = raw("FN"); // functionJs
+  static final JsString FO = raw("FO"); // follow
   static final JsString GR = raw("GR"); // globalRead
   static final JsString IF = raw("IF"); // if
   static final JsString IU = raw("IU"); // invokeUnchecked
   static final JsString IV = raw("IV"); // invokeVirtual
   static final JsString JS = raw("JS"); // jsValue
   static final JsString MO = raw("MO"); // morph
-  static final JsString NA = raw("NA"); // navigate
   static final JsString NO = raw("NO"); // no-op
   static final JsString PR = raw("PR"); // propertyRead
   static final JsString pr = raw("pr"); // propertyReadUnchecked
