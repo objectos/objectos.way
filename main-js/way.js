@@ -84,6 +84,7 @@ const way = (function() {
     "FO": follow,
     "FN": functionJs,
     "GR": globalRead,
+    "HT": html,
     "IF": ifElse,
     "IU": invokeUnchecked,
     "IV": invokeVirtual,
@@ -181,9 +182,11 @@ const way = (function() {
       throw new Error(`Illegal state: anchor has no href property`);
     }
 
-    // TODO validate href
+    // TODO validate href, it must be internal
 
     const opts = checkDefined(args.shift(), "opts");
+
+    const frames = undefined;
 
     globalThis.fetch(href).then(resp => {
       const headers = resp.headers;
@@ -196,14 +199,28 @@ const way = (function() {
 
       else if (contentType.startsWith("text/html")) {
         resp.text().then(html => {
+
+          const actions = ["WS"];
+
+          // html
+          actions.push(["HT", ["JS", html], frames]);
+
+          // scroll
+          const scroll = opts.scrollIntoView !== undefined
+            ? opts.scrollIntoView
+            : ["W1", ["GR"], ["PR", "Window", "document"], ["PR", "Document", "documentElement"]];
+
+          actions.push(["W1", scroll, ["IV", "Element", "scrollIntoView", []]]);
+
+          // urlPush
+          actions.push(["UP", ["JS", resp.url]]);
+
+          execute(ctx, actions);
+
         });
       }
 
       else {
-        throw new Error(`Invalid response: unsupported content-type ${contentType}`);
-      }
-
-      if (!contentType.startsWith("text/html")) {
         throw new Error(`Invalid response: unsupported content-type ${contentType}`);
       }
     });
@@ -227,6 +244,34 @@ const way = (function() {
 
   function globalRead() {
     return globalThis;
+  }
+
+  function html(ctx, args) {
+    const $html = checkDefined(args.shift(), "html");
+
+    const html = checkString(execute(ctx, $html), "html");
+
+    const ids = args.shift();
+
+    if (ids === undefined) {
+      const global = globalThis;
+
+      const doc = global.document;
+
+      if (!doc) {
+        throw new Error("Illegal state: global scope has no document");
+      }
+
+      const parser = new DOMParser();
+
+      const newDoc = parser.parseFromString(html, "text/html");
+
+      morph1Head(doc, newDoc);
+
+      doc.body = newDoc.body;
+    } else {
+      throw new Error(`Implement me :: ids=${ids}`);
+    }
   }
 
   function ifElse(ctx, args) {
