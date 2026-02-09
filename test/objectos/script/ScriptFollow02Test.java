@@ -31,23 +31,21 @@ public class ScriptFollow02Test {
         ScriptFollow02.ACTION.toString(),
 
         """
-        ["NA",{"scrollIntoView":["EI",["JS","click-me"]]}]"""
+        ["FO",["SE",["EI",["JS","click-me"]]]]"""
     );
   }
 
   @Test
   public void live() {
     try (var page = Y.page()) {
-      page.navigate("/script/navigate/02");
+      page.navigate("/script/follow/02");
 
       var clickMe = page.locator("#click-me");
-      var keepMe = page.locator("#keep-me");
       var subject = page.locator("#subject");
 
       clickMe.scrollIntoViewIfNeeded();
 
       assertThat(clickMe).isInViewport();
-      assertThat(keepMe).hasCount(1);
       assertThat(subject).not().isInViewport();
       assertThat(subject).hasText("Before");
 
@@ -56,7 +54,6 @@ public class ScriptFollow02Test {
       clickMe.click();
 
       assertThat(clickMe).isInViewport();
-      assertThat(keepMe).hasCount(1);
       assertThat(subject).hasText("After");
       assertThat(subject).not().isInViewport();
 

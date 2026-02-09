@@ -65,8 +65,6 @@ public final class ScriptFollow01 extends AbstractDevScript {
         div(
             id("subject"),
 
-            dataFrame("root", initial ? "1" : "2"),
-
             text(initial ? "Before" : "After")
         ),
 

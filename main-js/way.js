@@ -29,8 +29,25 @@ const way = (function() {
 
   function on(event, action) {
     const ctx = {
+      $document: undefined,
+
       $el: event.target,
-      $recv: undefined
+
+      $recv: undefined,
+
+      document: function() {
+        if (!this.$document) {
+          const global = globalThis;
+
+          if (!global.document) {
+            throw new Error("Illegal state: global scope has no document");
+          }
+
+          this.$document = global.document;
+        }
+
+        return this.$document;
+      }
     };
 
     execute(ctx, action);
@@ -77,6 +94,7 @@ const way = (function() {
   const operations = {
     "AX": argsRead,
     "CR": contextRead,
+    "cr": contextReadUnchecked,
     "CW": contextWrite,
     "EI": elementById,
     "ET": elementTarget,
@@ -98,6 +116,8 @@ const way = (function() {
     "SU": submit,
     "TE": throwError,
     "TY": typeEnsure,
+    "UB": updateBody,
+    "UH": updateHead,
     "UP": urlPush,
     "W1": wayOne,
     "WS": waySeq
@@ -121,6 +141,16 @@ const way = (function() {
 
   function contextRead(ctx, args) {
     const name = contextName(args.shift());
+
+    return ctx[name];
+  }
+
+  function contextReadUnchecked(ctx, args) {
+    const name = checkString(args.shift(), "name");
+
+    if (name.length === 0) {
+      throw new Error("Illegal arg: context variable name must not be empty");
+    }
 
     return ctx[name];
   }
@@ -167,8 +197,10 @@ const way = (function() {
     return ctx.$el;
   }
 
-  function follow(ctx, args) {
+  async function follow(ctx, args) {
     const el = ctx.$el;
+
+    // validate element
 
     if (!(el instanceof HTMLAnchorElement)) {
       const actual = el.constructor ? el.constructor.name : "Unknown";
@@ -176,54 +208,138 @@ const way = (function() {
       throw new Error(`Illegal state: follow must be executed on an HTMLAnchorElement but got ${actual}`);
     }
 
-    const href = el.href;
+    // validate href
+
+    const href = followHref(el);
+
+    // process opts
+
+    const opts = followOpts(args);
+
+    // assemble actions based on opts
+
+    const actions = followActions(opts);
+
+    // fetch
+
+    const resp = await globalThis.fetch(href);
+
+    const headers = resp.headers;
+
+    const contentType = headers.get("Content-Type");
+
+    if (!contentType) {
+      throw new Error("Invalid response: no content-type");
+    }
+
+    if (!contentType.startsWith("text/html")) {
+      throw new Error(`Invalid response: unsupported content-type ${contentType}`);
+    }
+
+    ctx.$fetchUrl = resp.url;
+
+    const html = await resp.text();
+
+    const parser = new DOMParser();
+
+    ctx.$fetchDoc = parser.parseFromString(html, "text/html");
+
+    return execute(ctx, actions);
+  }
+
+  function followHref(anchor) {
+    const href = anchor.href;
 
     if (!href) {
       throw new Error(`Illegal state: anchor has no href property`);
     }
 
-    // TODO validate href, it must be internal
+    // TODO href must be internal
 
-    const opts = checkDefined(args.shift(), "opts");
+    return href;
+  }
 
-    const frames = undefined;
+  const $followOpts = {
+    // scroll to element
+    "SE": function(opts, args) {
+      opts.scrollElem = args;
+    }
+  };
 
-    globalThis.fetch(href).then(resp => {
-      const headers = resp.headers;
+  function followOpts(args) {
+    // initialize with defaults
+    const opts = {
+      updateHead: true,
+      updateBody: true,
+      updateElems: undefined,
 
-      const contentType = headers.get("Content-Type");
+      scrollElem: undefined,
 
-      if (!contentType) {
-        throw new Error("Invalid response: no content-type");
+      pushUrl: true
+    };
+
+    for (const arg of args) {
+      const opt = checkArray(arg, "opt");
+
+      const id = checkString(opt.shift(), "id");
+
+      const handler = $followOpts[id];
+
+      if (handler) {
+        handler(opts, arg);
+      } else {
+        throw new Error(`Illegal arg: no handler found for option=${id}`);
       }
+    }
 
-      else if (contentType.startsWith("text/html")) {
-        resp.text().then(html => {
+    return opts;
+  }
 
-          const actions = ["WS"];
+  function followActions(opts) {
+    const actions = ["WS"];
 
-          // html
-          actions.push(["HT", ["JS", html], frames]);
+    if (opts.updateHead) {
+      actions.push(["UH"]);
+    }
 
-          // scroll
-          const scroll = opts.scrollIntoView !== undefined
-            ? opts.scrollIntoView
-            : ["W1", ["GR"], ["PR", "Window", "document"], ["PR", "Document", "documentElement"]];
+    if (opts.updateBody) {
+      actions.push(["UB"]);
+    }
 
-          actions.push(["W1", scroll, ["IV", "Element", "scrollIntoView", []]]);
+    if (opts.updateElems) {
+      actions.push(["UE", opts.updateElems]);
+    }
 
-          // urlPush
-          actions.push(["UP", ["JS", resp.url]]);
+    const scroll = ["W1"];
 
-          execute(ctx, actions);
+    if (opts.scrollElem) {
+      scroll.push(...opts.scrollElem);
+    } else {
+      scroll.push(["GR"]);
+      scroll.push(["PR", "Window", "document"]);
+      scroll.push(["PR", "Document", "documentElement"]);
+    }
 
-        });
-      }
+    scroll.push(["IV", "Element", "scrollIntoView", []])
 
-      else {
-        throw new Error(`Invalid response: unsupported content-type ${contentType}`);
-      }
-    });
+    actions.push(scroll);
+
+    if (opts.pushUrl) {
+      const action = ["W1"];
+
+      action.push(["GR"]);
+      action.push(["PR", "Window", "history"]);
+
+      const args = [];
+      args.push(["JS", { way: true }])
+      args.push(["JS", ""]);
+      args.push(["cr", "$fetchUrl"]);
+      action.push(["IV", "History", "pushState", args]);
+
+      actions.push(action);
+    }
+
+    return actions;
   }
 
   function forEach(ctx, args) {
@@ -266,11 +382,59 @@ const way = (function() {
 
       const newDoc = parser.parseFromString(html, "text/html");
 
-      morph1Head(doc, newDoc);
+      htmlHead(doc, newDoc);
 
       doc.body = newDoc.body;
     } else {
       throw new Error(`Implement me :: ids=${ids}`);
+    }
+  }
+
+  function htmlHead(doc, newDoc) {
+    const newHead = newDoc.querySelector("head");
+
+    if (!newHead) {
+      return;
+    }
+
+    const head = doc.querySelector("head");
+
+    if (!head) {
+      return;
+    }
+
+    const newEls = new Map();
+
+    for (const newChild of newHead.children) {
+      const newHtml = newChild.outerHTML;
+
+      newEls.set(newHtml, newChild);
+    }
+
+    const remEls = [];
+
+    for (const child of head.children) {
+      const html = child.outerHTML;
+
+      const newChild = newEls.get(html);
+
+      if (newChild) {
+        // current elem exists in new head
+        // => let's keep it
+        newEls.delete(html);
+      } else {
+        // current elem does not exist in new head
+        // => let's remove it
+        remEls.push(child);
+      }
+    }
+
+    for (const newChild of newEls.values()) {
+      head.appendChild(newChild);
+    }
+
+    for (const remChild of remEls) {
+      head.removeChild(remChild);
     }
   }
 
@@ -615,6 +779,66 @@ const way = (function() {
     return checkType(ctx.$recv, "recv", typeName);
   }
 
+  function updateBody(ctx) {
+    const doc = ctx.document();
+
+    const newDoc = checkDefined(ctx.$fetchDoc, "newDoc");
+
+    doc.body = newDoc.body;
+  }
+
+  function updateHead(ctx) {
+    const doc = ctx.document();
+
+    const head = doc.head;
+
+    if (!head) {
+      return;
+    }
+
+    const newDoc = checkDefined(ctx.$fetchDoc, "newDoc");
+
+    const newHead = newDoc.head;
+
+    if (!newHead) {
+      return;
+    }
+
+    const newEls = new Map();
+
+    for (const newChild of newHead.children) {
+      const newHtml = newChild.outerHTML;
+
+      newEls.set(newHtml, newChild);
+    }
+
+    const remEls = [];
+
+    for (const child of head.children) {
+      const html = child.outerHTML;
+
+      const newChild = newEls.get(html);
+
+      if (newChild) {
+        // current elem exists in new head
+        // => let's keep it
+        newEls.delete(html);
+      } else {
+        // current elem does not exist in new head
+        // => let's remove it
+        remEls.push(child);
+      }
+    }
+
+    for (const newChild of newEls.values()) {
+      head.appendChild(newChild);
+    }
+
+    for (const remChild of remEls) {
+      head.removeChild(remChild);
+    }
+  }
+
   function urlPush(ctx, args) {
     const $url = checkDefined(args.shift(), "url");
 
@@ -801,13 +1025,7 @@ const way = (function() {
   }
 
   function documentElement() {
-    const global = globalThis;
-
-    const doc = global.document;
-
-    if (!doc) {
-      throw new Error("Illegal state: global scope has no document");
-    }
+    const doc = document();
 
     return doc.documentElement;
   }

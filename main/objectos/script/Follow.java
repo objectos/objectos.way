@@ -21,9 +21,10 @@ import objectos.way.Html;
 /// Configures the `follow` action.
 public final class Follow {
 
-  static final Follow DEFAULT = new Follow();
+  // options
+  static final JsString SE = JsString.raw("SE"); // scroll: element (into view)
 
-  private JsElement scrollIntoView = Js.document().documentElement();
+  private JsOp scrollIntoView;
 
   @SuppressWarnings("unused")
   private JsArray update;
@@ -35,11 +36,15 @@ public final class Follow {
   ///
   /// @param value the element to be visible to the user
   public final void scrollIntoView(JsElement value) {
-    scrollIntoView = Objects.requireNonNull(value, "value == null");
+    final JsElement el;
+    el = Objects.requireNonNull(value, "value == null");
+
+    scrollIntoView = JsOp.of(SE, el);
   }
 
   /// The list of elements, given by their `id` attribute values, whose content
-  /// should be updated with the server response.
+  /// should be updated with the server response. Defaults to updating the
+  /// `document.body` if not specified.
   ///
   /// @param first the `id` of the first element
   /// @param more the `id` of the additional elements
@@ -49,7 +54,11 @@ public final class Follow {
 
   @Override
   public final String toString() {
-    return "{,\"scrollIntoView\":" + scrollIntoView + "}";
+    return "[\"FO\"" + addIf(scrollIntoView) + "]";
+  }
+
+  private String addIf(JsOp op) {
+    return op != null ? "," + op : "";
   }
 
 }

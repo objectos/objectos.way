@@ -31,7 +31,7 @@ public class ScriptFollow00Test {
         ScriptFollow00.ACTION.toString(),
 
         """
-        ["FO",{}]"""
+        ["FO"]"""
     );
   }
 

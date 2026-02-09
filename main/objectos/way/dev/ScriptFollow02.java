@@ -53,14 +53,8 @@ public final class ScriptFollow02 extends AbstractDevScript {
         div(
             id("subject"),
 
-            dataFrame("root", initial ? "1" : "2"),
-
             text(initial ? "Before" : "After")
         ),
-
-        initial
-            ? div(id("keep-me"), text("Keep me"))
-            : noop(),
 
         a(
             id("click-me"),

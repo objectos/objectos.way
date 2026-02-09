@@ -31,14 +31,14 @@ public class ScriptFollow01Test {
         ScriptFollow01.ACTION.toString(),
 
         """
-        ["NA",{}]"""
+        ["FO"]"""
     );
   }
 
   @Test
   public void live() {
     try (var page = Y.page()) {
-      page.navigate("/script/navigate/01");
+      page.navigate("/script/follow/01");
 
       var clickMe = page.locator("#click-me");
       var subject = page.locator("#subject");
