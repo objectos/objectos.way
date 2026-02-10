@@ -27,6 +27,8 @@ import module objectos.way;
 @Css.Source
 public final class ScriptSubmit01 extends AbstractDevScript {
 
+  public static final JsAction ACTION = Js.submit();
+
   private final List<String> items = List.of(
       "AAA",
       "BBB",
@@ -54,6 +56,8 @@ public final class ScriptSubmit01 extends AbstractDevScript {
         action("/script/submit/01"),
 
         method("get"),
+
+        onsubmit(ACTION),
 
         label(forId("search"), text("search")),
 

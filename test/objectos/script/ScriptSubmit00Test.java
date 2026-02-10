@@ -19,11 +19,22 @@ import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertTha
 import static org.testng.Assert.assertEquals;
 
 import objectos.way.Y;
+import objectos.way.dev.ScriptSubmit00;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 @Listeners(Y.class)
 public class ScriptSubmit00Test {
+
+  @Test
+  public void action() {
+    assertEquals(
+        ScriptSubmit00.ACTION.toString(),
+
+        """
+        ["SU"]"""
+    );
+  }
 
   @Test
   public void live() {

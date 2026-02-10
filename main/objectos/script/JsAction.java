@@ -121,6 +121,15 @@ public sealed abstract class JsAction {
     );
   }
 
+  static JsAction submit(Consumer<? super Submit> options) {
+    final Submit pojo;
+    pojo = new Submit();
+
+    options.accept(pojo);
+
+    return new One(pojo);
+  }
+
   static JsAction throwError(JsString msg) {
     Objects.requireNonNull(msg, "msg == null");
 

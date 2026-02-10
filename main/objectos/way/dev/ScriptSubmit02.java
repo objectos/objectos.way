@@ -23,7 +23,9 @@ import module objectos.way;
 
 */
 @Css.Source
-public final class ScriptOnSuccess00 extends AbstractDevScript {
+public final class ScriptSubmit02 extends AbstractDevScript {
+
+  public static final JsAction ACTION = Js.submit(opts -> opts.scrollIntoView(Js.byId("bottom")));
 
   private boolean initial;
 
@@ -40,46 +42,38 @@ public final class ScriptOnSuccess00 extends AbstractDevScript {
 
   @Override
   final void renderBody() {
-    div(
-        dataFrame("main", initial ? "get" : "post"),
+    form(
+        css("""
+        display:flex
+        flex-direction:column
+        gap:16rx
+        height:300vh
+        justify-content:space-between
+        """),
 
-        initial
-            ? form(
-                css("""
-                display:flex
-                flex-direction:column
-                gap:16rx
-                """),
+        action("/script/submit/02"),
 
-                action("/script/on-success/00"),
+        method("post"),
 
-                //dataOnSuccess(Js.byId("subject").textContent(JsString.of("After"))),
+        onsubmit(ACTION),
 
-                method("post"),
+        div(
+            id("top"),
 
-                div(
-                    id("subject"),
+            text(initial ? "top:before" : "top:after")
+        ),
 
-                    text("Before")
-                ),
+        button(
+            id("click-me"),
+            text("Click me"),
+            type("submit")
+        ),
 
-                button(
-                    id("click-me"),
-                    text("Click me"),
-                    type("submit")
-                )
-            )
-            : div(
-                css("""
-                display:flex
-                flex-direction:column
-                gap:16rx
-                """),
+        div(
+            id("bottom"),
 
-                div(
-                    id("subject")
-                )
-            )
+            text(initial ? "bottom:before" : "bottom:after")
+        )
     );
   }
 

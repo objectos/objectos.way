@@ -15,14 +15,14 @@
  */
 package objectos.script;
 
-/// Configures the `follow` action.
-public final class Follow extends Navigate {
+/// Configures the `submit` action.
+public final class Submit extends Navigate {
 
-  Follow() {}
+  Submit() {}
 
   @Override
   public final String toString() {
-    return "[\"FO\"" + addIf(scrollIntoView) + "]";
+    return "[\"SU\"" + addIf(scrollIntoView) + "]";
   }
 
 }

@@ -56,7 +56,6 @@ final class ScriptModule implements Http.Routing.Module {
     routing.path("/script/element/00", GET, new ScriptJsElement00());
     routing.path("/script/element/01", GET, new ScriptJsElement01());
     routing.path("/script/element/02", GET, new ScriptJsElement02());
-    routing.path("/script/on-success/00", path -> path.handler(new ScriptOnSuccess00()));
     routing.path("/script/submit/{}", path -> {
       final ScriptSubmit00 submit00;
       submit00 = new ScriptSubmit00();
@@ -64,6 +63,7 @@ final class ScriptModule implements Http.Routing.Module {
       path.subpath("00", sub -> sub.handler(submit00));
       path.subpath("00/after", GET, submit00);
       path.subpath("01", GET, new ScriptSubmit01());
+      path.subpath("02", sub -> sub.handler(new ScriptSubmit02()));
     });
   }
 

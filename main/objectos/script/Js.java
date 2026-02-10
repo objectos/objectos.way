@@ -88,14 +88,14 @@ public final class Js {
     return global().invokeUnchecked(JsPromise.type, "fetch", resource);
   }
 
-  /// Follows a hyperlink with JavaScript.
+  /// Follows the hyperlink with JavaScript.
   ///
   /// @return an object representing the action
   public static JsAction follow() {
     return JsAction.FOLLOW;
   }
 
-  /// Follows a hyperlink with JavaScript.
+  /// Follows the hyperlink with JavaScript.
   ///
   /// @param options allows for setting the options
   ///
@@ -163,6 +163,15 @@ public final class Js {
   /// @return an object representing the action
   public static JsAction submit() {
     return JsAction.SUBMIT;
+  }
+
+  /// Follows the hyperlink with JavaScript.
+  ///
+  /// @param options allows for setting the options
+  ///
+  /// @return an object representing the action
+  public static JsAction submit(Consumer<? super Submit> options) {
+    return JsAction.submit(options);
   }
 
   /// The element which triggered the action.
