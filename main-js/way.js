@@ -107,7 +107,6 @@ const way = (function() {
     "IV": invokeVirtual,
     "JS": jsValue,
     "MO": morph,
-    "NA": navigate_,
     "NO": noop,
     "PR": propertyRead,
     "pr": propertyReadUnchecked,
@@ -117,7 +116,6 @@ const way = (function() {
     "TY": typeEnsure,
     "UB": updateBody,
     "UH": updateHead,
-    "UP": urlPush,
     "W1": wayOne,
     "WS": waySeq
   };
@@ -530,61 +528,6 @@ const way = (function() {
     return actions;
   }
 
-  function navigate_(ctx, args) {
-    const el = ctx.$el;
-
-    if (!(el instanceof HTMLAnchorElement)) {
-      const actual = element.constructor ? element.constructor.name : "Unknown";
-
-      throw new Error(`Illegal arg: navigate must be executed on an HTMLAnchorElement but got ${actual}`);
-    }
-
-    const href = el.href;
-
-    if (!href) {
-      throw new Error(`Illegal arg: anchor has no href property`);
-    }
-
-    const opts = checkDefined(args.shift(), "opts");
-
-    globalThis.fetch(href).then(resp => {
-
-      const headers = resp.headers;
-
-      const contentType = headers.get("Content-Type");
-
-      if (!contentType) {
-        throw new Error("Invalid response: no content-type");
-      }
-
-      if (!contentType.startsWith("text/html")) {
-        throw new Error(`Invalid response: unsupported content-type ${contentType}`);
-      }
-
-      resp.text().then(html => {
-
-        const actions = ["WS"];
-
-        // morph
-        actions.push(["MO", ["JS", html]]);
-
-        // scroll
-        const scroll = opts.scrollIntoView !== undefined
-          ? opts.scrollIntoView
-          : ["W1", ["GR"], ["PR", "Window", "document"], ["PR", "Document", "documentElement"]];
-
-        actions.push(["W1", scroll, ["IV", "Element", "scrollIntoView", []]]);
-
-        // urlPush
-        actions.push(["UP", ["JS", resp.url]]);
-
-        execute(ctx, actions);
-
-      });
-
-    });
-  }
-
   function noop() {}
 
   function propertyRead(ctx, args) {
@@ -752,22 +695,6 @@ const way = (function() {
 
     for (const remChild of remEls) {
       head.removeChild(remChild);
-    }
-  }
-
-  function urlPush(ctx, args) {
-    const $url = checkDefined(args.shift(), "url");
-
-    const url = checkString(execute(ctx, $url), "url");
-
-    const history = globalThis.history;
-
-    if (history) {
-      const state = { way: true };
-
-      const unused = "";
-
-      history.pushState(state, unused, url);
     }
   }
 
