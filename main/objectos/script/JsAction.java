@@ -87,7 +87,7 @@ public sealed abstract class JsAction {
 
   static final JsAction NOOP = new One(JsOp.of(JsString.NO));
 
-  static final JsAction SUBMIT = new One(JsOp.of(JsString.SU, "{}"));
+  static final JsAction SUBMIT = new One(JsOp.of(JsString.SU));
 
   JsAction() {}
 

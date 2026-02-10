@@ -102,13 +102,12 @@ const way = (function() {
     "FO": follow,
     "FN": functionJs,
     "GR": globalRead,
-    "HT": html,
     "IF": ifElse,
     "IU": invokeUnchecked,
     "IV": invokeVirtual,
     "JS": jsValue,
     "MO": morph,
-    "NA": navigate,
+    "NA": navigate_,
     "NO": noop,
     "PR": propertyRead,
     "pr": propertyReadUnchecked,
@@ -197,7 +196,7 @@ const way = (function() {
     return ctx.$el;
   }
 
-  async function follow(ctx, args) {
+  function follow(ctx, args) {
     const el = ctx.$el;
 
     // validate element
@@ -208,138 +207,13 @@ const way = (function() {
       throw new Error(`Illegal state: follow must be executed on an HTMLAnchorElement but got ${actual}`);
     }
 
-    // validate href
-
-    const href = followHref(el);
-
-    // process opts
-
-    const opts = followOpts(args);
-
-    // assemble actions based on opts
-
-    const actions = followActions(opts);
-
-    // fetch
-
-    const resp = await globalThis.fetch(href);
-
-    const headers = resp.headers;
-
-    const contentType = headers.get("Content-Type");
-
-    if (!contentType) {
-      throw new Error("Invalid response: no content-type");
-    }
-
-    if (!contentType.startsWith("text/html")) {
-      throw new Error(`Invalid response: unsupported content-type ${contentType}`);
-    }
-
-    ctx.$fetchUrl = resp.url;
-
-    const html = await resp.text();
-
-    const parser = new DOMParser();
-
-    ctx.$fetchDoc = parser.parseFromString(html, "text/html");
-
-    return execute(ctx, actions);
-  }
-
-  function followHref(anchor) {
-    const href = anchor.href;
+    const href = el.href;
 
     if (!href) {
       throw new Error(`Illegal state: anchor has no href property`);
     }
 
-    // TODO href must be internal
-
-    return href;
-  }
-
-  const $followOpts = {
-    // scroll to element
-    "SE": function(opts, args) {
-      opts.scrollElem = args;
-    }
-  };
-
-  function followOpts(args) {
-    // initialize with defaults
-    const opts = {
-      updateHead: true,
-      updateBody: true,
-      updateElems: undefined,
-
-      scrollElem: undefined,
-
-      pushUrl: true
-    };
-
-    for (const arg of args) {
-      const opt = checkArray(arg, "opt");
-
-      const id = checkString(opt.shift(), "id");
-
-      const handler = $followOpts[id];
-
-      if (handler) {
-        handler(opts, arg);
-      } else {
-        throw new Error(`Illegal arg: no handler found for option=${id}`);
-      }
-    }
-
-    return opts;
-  }
-
-  function followActions(opts) {
-    const actions = ["WS"];
-
-    if (opts.updateHead) {
-      actions.push(["UH"]);
-    }
-
-    if (opts.updateBody) {
-      actions.push(["UB"]);
-    }
-
-    if (opts.updateElems) {
-      actions.push(["UE", opts.updateElems]);
-    }
-
-    const scroll = ["W1"];
-
-    if (opts.scrollElem) {
-      scroll.push(...opts.scrollElem);
-    } else {
-      scroll.push(["GR"]);
-      scroll.push(["PR", "Window", "document"]);
-      scroll.push(["PR", "Document", "documentElement"]);
-    }
-
-    scroll.push(["IV", "Element", "scrollIntoView", []])
-
-    actions.push(scroll);
-
-    if (opts.pushUrl) {
-      const action = ["W1"];
-
-      action.push(["GR"]);
-      action.push(["PR", "Window", "history"]);
-
-      const args = [];
-      args.push(["JS", { way: true }])
-      args.push(["JS", ""]);
-      args.push(["cr", "$fetchUrl"]);
-      action.push(["IV", "History", "pushState", args]);
-
-      actions.push(action);
-    }
-
-    return actions;
+    return navigate(ctx, args, href);
   }
 
   function forEach(ctx, args) {
@@ -360,82 +234,6 @@ const way = (function() {
 
   function globalRead() {
     return globalThis;
-  }
-
-  function html(ctx, args) {
-    const $html = checkDefined(args.shift(), "html");
-
-    const html = checkString(execute(ctx, $html), "html");
-
-    const ids = args.shift();
-
-    if (ids === undefined) {
-      const global = globalThis;
-
-      const doc = global.document;
-
-      if (!doc) {
-        throw new Error("Illegal state: global scope has no document");
-      }
-
-      const parser = new DOMParser();
-
-      const newDoc = parser.parseFromString(html, "text/html");
-
-      htmlHead(doc, newDoc);
-
-      doc.body = newDoc.body;
-    } else {
-      throw new Error(`Implement me :: ids=${ids}`);
-    }
-  }
-
-  function htmlHead(doc, newDoc) {
-    const newHead = newDoc.querySelector("head");
-
-    if (!newHead) {
-      return;
-    }
-
-    const head = doc.querySelector("head");
-
-    if (!head) {
-      return;
-    }
-
-    const newEls = new Map();
-
-    for (const newChild of newHead.children) {
-      const newHtml = newChild.outerHTML;
-
-      newEls.set(newHtml, newChild);
-    }
-
-    const remEls = [];
-
-    for (const child of head.children) {
-      const html = child.outerHTML;
-
-      const newChild = newEls.get(html);
-
-      if (newChild) {
-        // current elem exists in new head
-        // => let's keep it
-        newEls.delete(html);
-      } else {
-        // current elem does not exist in new head
-        // => let's remove it
-        remEls.push(child);
-      }
-    }
-
-    for (const newChild of newEls.values()) {
-      head.appendChild(newChild);
-    }
-
-    for (const remChild of remEls) {
-      head.removeChild(remChild);
-    }
   }
 
   function ifElse(ctx, args) {
@@ -612,7 +410,127 @@ const way = (function() {
     }
   }
 
-  function navigate(ctx, args) {
+  async function navigate(ctx, args, url, reqOpts) {
+    // TODO validate url
+    // - it must be internal
+
+    const opts = navigateOpts(args);
+
+    const actions = navigateActions(opts);
+
+    const req = new Request(url, reqOpts);
+
+    req.headers.set("Way-Request", "true");
+
+    const resp = await globalThis.fetch(req);
+
+    const headers = resp.headers;
+
+    const contentType = headers.get("Content-Type");
+
+    if (!contentType) {
+      throw new Error("Invalid response: no content-type");
+    }
+
+    if (!contentType.startsWith("text/html")) {
+      throw new Error(`Invalid response: unsupported content-type ${contentType}`);
+    }
+
+    ctx.$respUrl = resp.url;
+
+    const html = await resp.text();
+
+    const parser = new DOMParser();
+
+    ctx.$htmlDoc = parser.parseFromString(html, "text/html");
+
+    return execute(ctx, actions);
+  }
+
+  const $navigateOpts = {
+    // scroll to element
+    "SE": function(opts, args) {
+      opts.scrollElem = args;
+    }
+  };
+
+  function navigateOpts(args) {
+    // initialize with defaults
+    const opts = {
+      updateHead: true,
+      updateBody: true,
+      updateElems: undefined,
+
+      scrollElem: undefined,
+
+      pushUrl: true
+    };
+
+    for (const arg of args) {
+      const opt = checkArray(arg, "opt");
+
+      const id = checkString(opt.shift(), "id");
+
+      const handler = $navigateOpts[id];
+
+      if (handler) {
+        handler(opts, arg);
+      } else {
+        throw new Error(`Illegal arg: no handler found for option=${id}`);
+      }
+    }
+
+    return opts;
+  }
+
+  function navigateActions(opts) {
+    const actions = ["WS"];
+
+    if (opts.updateHead) {
+      actions.push(["UH"]);
+    }
+
+    if (opts.updateBody) {
+      actions.push(["UB"]);
+    }
+
+    if (opts.updateElems) {
+      actions.push(["UE", opts.updateElems]);
+    }
+
+    const scroll = ["W1"];
+
+    if (opts.scrollElem) {
+      scroll.push(...opts.scrollElem);
+    } else {
+      scroll.push(["GR"]);
+      scroll.push(["PR", "Window", "document"]);
+      scroll.push(["PR", "Document", "documentElement"]);
+    }
+
+    scroll.push(["IV", "Element", "scrollIntoView", []])
+
+    actions.push(scroll);
+
+    if (opts.pushUrl) {
+      const action = ["W1"];
+
+      action.push(["GR"]);
+      action.push(["PR", "Window", "history"]);
+
+      const args = [];
+      args.push(["JS", { way: true }])
+      args.push(["JS", ""]);
+      args.push(["cr", "$respUrl"]);
+      action.push(["IV", "History", "pushState", args]);
+
+      actions.push(action);
+    }
+
+    return actions;
+  }
+
+  function navigate_(ctx, args) {
     const el = ctx.$el;
 
     if (!(el instanceof HTMLAnchorElement)) {
@@ -705,7 +623,7 @@ const way = (function() {
     recv[propName] = execute(ctx, val);
   }
 
-  function submit(ctx, _args) {
+  function submit(ctx, args) {
     const el = ctx.$el;
 
     if (!(el instanceof HTMLFormElement)) {
@@ -729,16 +647,12 @@ const way = (function() {
     let url = action;
 
     const req = {
-      headers: { "Way-Request": true },
-
       method: method.toUpperCase()
     };
 
     const formData = new FormData(el);
 
     if (req.method === "GET") {
-      req.body = undefined;
-
       url = new URL(action);
 
       for (const [key, value] of formData.entries()) {
@@ -756,11 +670,13 @@ const way = (function() {
       else {
         req.body = new URLSearchParams(formData);
 
-        req.headers["Content-Type"] = "application/x-www-form-urlencoded";
+        req.headers = {
+          "Content-Type": "application/x-www-form-urlencoded"
+        };
       }
     }
 
-    globalThis.fetch(url, req).then(resp => fetchResp(ctx, resp));
+    return navigate(ctx, args, url, req);
   }
 
   function throwError(ctx, args) {
@@ -782,7 +698,7 @@ const way = (function() {
   function updateBody(ctx) {
     const doc = ctx.document();
 
-    const newDoc = checkDefined(ctx.$fetchDoc, "newDoc");
+    const newDoc = checkDefined(ctx.$htmlDoc, "newDoc");
 
     doc.body = newDoc.body;
   }
@@ -796,7 +712,7 @@ const way = (function() {
       return;
     }
 
-    const newDoc = checkDefined(ctx.$fetchDoc, "newDoc");
+    const newDoc = checkDefined(ctx.$htmlDoc, "newDoc");
 
     const newHead = newDoc.head;
 
@@ -885,51 +801,6 @@ const way = (function() {
 
   // ##################################################################
   // # END: Objectos Way Actions
-  // ##################################################################
-
-  // ##################################################################
-  // # BEGIN: Fetch support
-  // ##################################################################
-
-  function fetchResp(ctx, resp) {
-    const headers = resp.headers;
-
-    const contentType = headers.get("Content-Type");
-
-    if (!contentType) {
-      throw new Error("Invalid response: no content-type");
-    }
-
-    else if (contentType.startsWith("text/html")) {
-      resp.text().then(html => {
-
-        const actions = ["WS"];
-
-        // morph
-        actions.push(["MO", ["JS", html]]);
-
-        // scroll
-        const scroll = ctx.scrollIntoView !== undefined
-          ? ctx.scrollIntoView
-          : ["W1", ["GR"], ["PR", "Window", "document"], ["PR", "Document", "documentElement"]];
-
-        actions.push(["W1", scroll, ["IV", "Element", "scrollIntoView", []]]);
-
-        // urlPush
-        actions.push(["UP", ["JS", resp.url]]);
-
-        execute(ctx, actions);
-
-      });
-    }
-
-    else {
-      throw new Error(`Invalid response: unsupported content-type ${contentType}`);
-    }
-  }
-
-  // ##################################################################
-  // # END: Fetch support
   // ##################################################################
 
   // ##################################################################
