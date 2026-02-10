@@ -106,20 +106,6 @@ public final class JsElement extends JsNode {
     return prop("Element", "innerHTML").as(JsString.type);
   }
 
-  /// Morphs the contents of this element with the specified HTML.
-  ///
-  /// @param src the source HTML
-  ///
-  /// @return an object representing this action
-  public final JsAction morph(JsString src) {
-    Objects.requireNonNull(src, "src == null");
-
-    final JsOp op;
-    op = JsOp.of(JsString.MO, src);
-
-    return action(op);
-  }
-
   /// Returns the first descendant of this element matching the specified
   /// selectors.
   ///

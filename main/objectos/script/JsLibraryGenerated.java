@@ -22,7 +22,7 @@ final class JsLibraryGenerated {
 
   static final String SOURCE = """
 /*
- * Copyright (C) 2023-2025 Objectos Software LTDA.
+ * Copyright (C) 2023-2026 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -129,7 +129,6 @@ const way = (function() {
     "IU": invokeUnchecked,
     "IV": invokeVirtual,
     "JS": jsValue,
-    "MO": morph,
     "NO": noop,
     "PR": propertyRead,
     "pr": propertyReadUnchecked,
@@ -299,136 +298,6 @@ const way = (function() {
 
   function jsValue(_, args) {
     return checkDefined(args.shift(), "value");
-  }
-
-  function morph(ctx, args) {
-    const recv = ctx.$recv !== undefined ? ctx.$recv : documentElement();
-
-    const $src = checkDefined(args.shift(), "src");
-
-    const src = checkString(execute(ctx, $src), "src");
-
-    morph0(recv, src);
-  }
-
-  function morph0(recv, src) {
-    const valid = typeof recv.querySelectorAll === 'function';
-
-    if (!valid) {
-      throw new Error(`Illegal arg: ${recv} does not declare the 'querySelectorAll' method`);
-    }
-
-    const parser = new DOMParser();
-
-    const newContent = parser.parseFromString(src, "text/html");
-
-    morph1Head(recv, newContent);
-
-    // handle frames
-    const newFrames = newContent.querySelectorAll("[data-frame]");
-
-    const newNameMap = new Map();
-
-    for (const el of newFrames) {
-      const data = frame(el);
-
-      if (data) {
-        newNameMap.set(data.name, el);
-      }
-    }
-
-    const frames = recv.querySelectorAll("[data-frame]");
-
-    const replaced = new Set();
-
-    outer: for (const elem of frames) {
-      const data = frame(elem);
-
-      if (!data) {
-        continue;
-      }
-
-      for (const parent of replaced) {
-        if (parent.contains(elem)) {
-          continue outer;
-        }
-      }
-
-      const name = data.name;
-
-      const maybe = newNameMap.get(name);
-
-      if (!maybe) {
-        // this frame does not exist in the new data
-        elem.remove();
-
-        continue;
-      }
-
-      const newElem = maybe;
-
-      const oldValue = data.value;
-
-      const newData = frame(newElem);
-
-      const newValue = newData.value;
-
-      if (oldValue !== newValue || oldValue === null && newValue === null) {
-        replaced.add(elem);
-
-        elem.replaceWith(newElem);
-
-        //loadHandler(newElem);
-      }
-    }
-  }
-
-  function morph1Head(content, newContent) {
-    const newHead = newContent.querySelector("head");
-
-    if (!newHead) {
-      return;
-    }
-
-    const head = content.querySelector("head");
-
-    if (!head) {
-      return;
-    }
-
-    const newEls = new Map();
-
-    for (const newChild of newHead.children) {
-      const newHtml = newChild.outerHTML;
-
-      newEls.set(newHtml, newChild);
-    }
-
-    const remEls = [];
-
-    for (const child of head.children) {
-      const html = child.outerHTML;
-
-      const newChild = newEls.get(html);
-
-      if (newChild) {
-        // current elem exists in new head
-        // => let's keep it
-        newEls.delete(html);
-      } else {
-        // current elem does not exist in new head
-        // => let's remove it
-        remEls.push(child);
-      }
-    }
-
-    for (const newChild of newEls.values()) {
-      head.appendChild(newChild);
-    }
-
-    for (const remChild of remEls) {
-      head.removeChild(remChild);
-    }
   }
 
   async function navigate(ctx, args, url, reqOpts) {
@@ -843,34 +712,6 @@ const way = (function() {
     }
 
     return maybe;
-  }
-
-  function documentElement() {
-    const doc = document();
-
-    return doc.documentElement;
-  }
-
-  function frame(el) {
-    const dataset = el.dataset;
-
-    if (!dataset) {
-      return null;
-    }
-
-    const frame = dataset.frame;
-
-    const colon = frame.indexOf(":");
-
-    if (colon === -1) {
-      return { name: frame, value: null };
-    }
-
-    const name = frame.substring(0, colon);
-
-    const value = frame.substring(colon + 1);
-
-    return { name: name, value: value };
   }
 
   // ##################################################################
