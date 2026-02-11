@@ -76,7 +76,6 @@ public final class ScriptSubmit01 extends AbstractDevScript {
 
     ul(
         id("subject"),
-        dataFrame("ul"),
 
         f(this::renderList)
     );

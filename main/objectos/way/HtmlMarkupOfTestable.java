@@ -143,16 +143,6 @@ sealed abstract class HtmlMarkupOfTestable extends HtmlMarkup permits Html.Marku
   }
 
   @Override
-  public final Html.Instruction.OfAttribute dataFrame(String name) {
-    return Html.ATTRIBUTE;
-  }
-
-  @Override
-  public final Html.Instruction.OfAttribute dataFrame(String name, String value) {
-    return Html.ATTRIBUTE;
-  }
-
-  @Override
   public final Html.Instruction.OfElement flatten(Html.Instruction... contents) {
     Objects.requireNonNull(contents, "contents == null");
 

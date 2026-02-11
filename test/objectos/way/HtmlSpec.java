@@ -426,7 +426,6 @@ final class HtmlSpec {
 
   static List<AttributeSpec> dataAttrs() {
     return List.of(
-        new AttributeSpec("DATA_FRAME", "dataFrame", "data-frame", false),
         new AttributeSpec("DATA_HIGH", "dataHigh", "data-high", false),
         new AttributeSpec("DATA_LINE", "dataLine", "data-line", false)
     );
@@ -434,17 +433,6 @@ final class HtmlSpec {
 
   static List<MethodSpec> wayNodes() {
     return List.of(
-        new MethodSpec("Html.Instruction.OfAttribute dataFrame(String name)", "dataFrame(name)", """
-        Renders the `data-frame` attribute for a frame with the specified name.
-        @param name the name of the frame
-        @return an instruction representing the attribute
-        """),
-        new MethodSpec("Html.Instruction.OfAttribute dataFrame(String name, String value)", "dataFrame(name, value)", """
-        Renders the `data-frame` attribute for a frame with the specified name and value.
-        @param name the name of the frame
-        @param value the value of the frame
-        @return an instruction representing the attribute
-        """),
         new MethodSpec("Html.Instruction.OfAttribute css(String value)", "css(value)", """
         Renders the `class` attribute by processing the specified value.
 

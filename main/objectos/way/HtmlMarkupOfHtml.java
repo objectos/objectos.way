@@ -194,21 +194,6 @@ sealed abstract class HtmlMarkupOfHtml extends HtmlMarkup permits Html.Markup.Of
   }
 
   @Override
-  public final Html.Instruction.OfAttribute dataFrame(String name) {
-    Objects.requireNonNull(name, "name == null");
-
-    return attr0(HtmlAttributeName.DATA_FRAME, name);
-  }
-
-  @Override
-  public final Html.Instruction.OfAttribute dataFrame(String name, String value) {
-    Objects.requireNonNull(name, "name == null");
-    Objects.requireNonNull(value, "value == null");
-
-    return attr0(HtmlAttributeName.DATA_FRAME, name + ":" + value);
-  }
-
-  @Override
   public final Html.Instruction.OfElement flatten(Html.Instruction... contents) {
     Objects.requireNonNull(contents, "contents == null");
 

@@ -1270,22 +1270,6 @@ public final class Html {
     // WAY
     //
 
-    /// Renders the `data-frame` attribute for a frame with the specified name.
-    ///
-    /// @param name the name of the frame
-    ///
-    /// @return an instruction representing the attribute
-    Html.Instruction.OfAttribute dataFrame(String name);
-
-    /// Renders the `data-frame` attribute for a frame with the specified name
-    /// and value.
-    ///
-    /// @param name the name of the frame
-    /// @param value the value of the frame
-    ///
-    /// @return an instruction representing the attribute
-    Html.Instruction.OfAttribute dataFrame(String name, String value);
-
     /// Renders the `class` attribute by processing the specified value.
     ///
     /// This method is designed to work with Java text blocks. It first removes
@@ -3645,26 +3629,6 @@ public final class Html {
     //
     // WAY
     //
-
-    /// Renders the `data-frame` attribute for a frame with the specified name.
-    /// 
-    /// @param name the name of the frame
-    /// 
-    /// @return an instruction representing the attribute
-    protected final Html.Instruction.OfAttribute dataFrame(String name) {
-      return $html().dataFrame(name);
-    }
-
-    /// Renders the `data-frame` attribute for a frame with the specified name
-    /// and value.
-    /// 
-    /// @param name the name of the frame
-    /// @param value the value of the frame
-    /// 
-    /// @return an instruction representing the attribute
-    protected final Html.Instruction.OfAttribute dataFrame(String name, String value) {
-      return $html().dataFrame(name, value);
-    }
 
     /// Renders the `class` attribute by processing the specified value.
     ///

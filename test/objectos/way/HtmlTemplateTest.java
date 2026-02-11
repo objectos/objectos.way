@@ -1369,30 +1369,6 @@ public class HtmlTemplateTest {
     """);
   }
 
-  @Test(description = """
-  dataFrame
-  """)
-  public void testCase72() {
-    test(
-        new Html.Template() {
-          @Override
-          protected final void render() {
-            div(
-                dataFrame("foo")
-            );
-            div(
-                dataFrame("foo", "bar")
-            );
-          }
-        },
-
-        """
-        <div data-frame="foo"></div>
-        <div data-frame="foo:bar"></div>
-        """
-    );
-  }
-
   @Test(description = "root fragment 01: one")
   public void testCase73() {
     test(

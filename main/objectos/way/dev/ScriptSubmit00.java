@@ -71,8 +71,6 @@ public final class ScriptSubmit00 extends AbstractDevScript {
   @Override
   final void renderBody() {
     div(
-        dataFrame("main", initial ? "get" : "post"),
-
         initial
             ? form(
                 css("""
