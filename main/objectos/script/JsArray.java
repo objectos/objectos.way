@@ -16,6 +16,7 @@
 package objectos.script;
 
 import java.util.Objects;
+import objectos.way.Html;
 
 /// Represents a JS runtime `Array` instance.
 public final class JsArray extends JsObject {
@@ -94,7 +95,29 @@ public final class JsArray extends JsObject {
       }
     }
 
-    private void add(Object o) {
+    public final void rawString(Html.Id id, String name) {
+      if (id == null) {
+        throw new NullPointerException(name + " == null");
+      }
+
+      final String s;
+      s = id.attrValue();
+
+      raw(s, name);
+    }
+
+    public final void rawString(Html.Id id, String name, int index) {
+      if (id == null) {
+        throw new NullPointerException(name + "[" + index + "] == null");
+      }
+
+      final String s;
+      s = id.attrValue();
+
+      raw(s, name);
+    }
+
+    final void add(Object o) {
       final int len;
       len = sb.length();
 
@@ -178,6 +201,10 @@ public final class JsArray extends JsObject {
         yield new JsArray(value);
       }
     };
+  }
+
+  static Builder rawBuilder() {
+    return new Builder(Kind.RAW);
   }
 
   public final JsAction forEach(JsAction value) {

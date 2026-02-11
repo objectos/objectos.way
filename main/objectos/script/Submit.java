@@ -18,11 +18,8 @@ package objectos.script;
 /// Configures the `submit` action.
 public final class Submit extends Navigate {
 
-  Submit() {}
-
-  @Override
-  public final String toString() {
-    return "[\"SU\"" + addIf(scrollIntoView) + "]";
+  Submit() {
+    super("SU");
   }
 
 }

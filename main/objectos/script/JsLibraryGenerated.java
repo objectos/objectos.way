@@ -137,6 +137,7 @@ const way = (function() {
     "TE": throwError,
     "TY": typeEnsure,
     "UB": updateBody,
+    "UE": updateElements,
     "UH": updateHead,
     "W1": wayOne,
     "WS": waySeq
@@ -341,6 +342,12 @@ const way = (function() {
     // scroll to element
     "SE": function(opts, args) {
       opts.scrollElem = args;
+    },
+
+    // update
+    "UP": function(opts, args) {
+      opts.updateBody = false;
+      opts.updateElems = [...args];
     }
   };
 
@@ -536,6 +543,28 @@ const way = (function() {
     const newDoc = checkDefined(ctx.$htmlDoc, "newDoc");
 
     doc.body = newDoc.body;
+  }
+
+  function updateElements(ctx, args) {
+    const doc = ctx.document();
+
+    const newDoc = checkDefined(ctx.$htmlDoc, "newDoc");
+
+    for (const id of args) {
+      const el = doc.getElementById(id);
+
+      if (!el) {
+        continue;
+      }
+
+      const newEl = newDoc.getElementById(id);
+
+      if (!newEl) {
+        continue;
+      }
+
+      el.replaceWith(newEl);
+    }
   }
 
   function updateHead(ctx) {

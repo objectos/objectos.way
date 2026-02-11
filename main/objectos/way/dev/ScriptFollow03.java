@@ -16,63 +16,53 @@
 package objectos.way.dev;
 
 import module objectos.way;
+import objectos.script.Js;
 
 /*
 
-- option: scrollIntoView
+- event: click
+- action: navigate
+- options: update
 
 */
 @Css.Source
-public final class ScriptSubmit02 extends AbstractDevScript {
+public final class ScriptFollow03 extends AbstractDevScript {
 
-  public static final JsAction ACTION = Js.submit(opts -> opts.scrollIntoView(Js.byId("bottom")));
+  private static final Html.Id TARGET0 = Html.Id.of("tgt0");
+
+  public static final JsAction ACTION = Js.follow(opts -> opts.update(TARGET0));
 
   private boolean initial;
 
   @Override
   public final void handle(Http.Exchange http) {
-    switch (http.method()) {
-      case GET -> { initial = true; super.handle(http); }
+    initial = http.queryParam("next") == null;
 
-      case POST -> { initial = false; super.handle(http); }
-
-      default -> http.allow(Http.Method.GET, Http.Method.POST);
-    }
+    super.handle(http);
   }
 
   @Override
   final void renderBody() {
-    form(
+    div(
         css("""
         display:flex
         flex-direction:column
         gap:16rx
-        height:300vh
-        justify-content:space-between
         """),
 
-        action("/script/submit/02"),
-
-        method("post"),
-
-        onsubmit(ACTION),
-
-        div(
-            id("top"),
-
-            text(initial ? "top:before" : "top:after")
-        ),
-
-        button(
+        a(
             id("click-me"),
-            text("Click me"),
-            type("submit")
+            onclick(ACTION),
+            href("/script/follow/03?next=true"),
+            text("Click me")
         ),
 
-        div(
-            id("bottom"),
+        initial ? div(id("keep-me"), text("keep me")) : noop(),
 
-            text(initial ? "bottom:before" : "bottom:after")
+        div(
+            TARGET0,
+
+            text(initial ? "Before" : "After")
         )
     );
   }

@@ -18,11 +18,8 @@ package objectos.script;
 /// Configures the `follow` action.
 public final class Follow extends Navigate {
 
-  Follow() {}
-
-  @Override
-  public final String toString() {
-    return "[\"FO\"" + addIf(scrollIntoView) + "]";
+  Follow() {
+    super("FO");
   }
 
 }

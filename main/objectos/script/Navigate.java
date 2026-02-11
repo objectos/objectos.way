@@ -22,12 +22,17 @@ sealed abstract class Navigate permits Follow, Submit {
 
   // options
   static final JsString SE = JsString.raw("SE"); // scroll: element (into view)
+  static final JsString UP = JsString.raw("UP"); // update: elements to update
 
-  JsOp scrollIntoView;
+  private final String name;
 
-  JsArray update;
+  private JsOp scrollIntoView;
 
-  Navigate() {}
+  private JsArray update;
+
+  Navigate(String name) {
+    this.name = name;
+  }
 
   /// Invokes `scrollIntoView` on the specified element after the content has
   /// been updated. Defaults to `document.documentElement` if not specified.
@@ -47,10 +52,29 @@ sealed abstract class Navigate permits Follow, Submit {
   /// @param first the `id` of the first element
   /// @param more the `id` of the additional elements
   public final void update(Html.Id first, Html.Id... more) {
+    final JsArray.Builder builder;
+    builder = JsArray.rawBuilder();
 
+    builder.add(UP);
+
+    builder.rawString(first, "first");
+
+    for (int i = 0; i < more.length; i++) {
+      final Html.Id id;
+      id = more[i];
+
+      builder.rawString(id, "more", i);
+    }
+
+    update = builder.build();
   }
 
-  final String addIf(JsOp op) {
+  @Override
+  public final String toString() {
+    return "[\"" + name + "\"" + addIf(scrollIntoView) + addIf(update) + "]";
+  }
+
+  final String addIf(Object op) {
     return op != null ? "," + op : "";
   }
 
