@@ -56,6 +56,10 @@ const way = (function() {
 
       $el: event.target,
 
+      $evt: event,
+
+      $preventDefault: true,
+
       $recv: undefined,
 
       document: function() {
@@ -75,7 +79,9 @@ const way = (function() {
 
     execute(ctx, action);
 
-    event.preventDefault();
+    if (ctx.$preventDefault) {
+      event.preventDefault();
+    }
   }
 
   function execute(ctx, action) {
@@ -130,6 +136,7 @@ const way = (function() {
     "IV": invokeVirtual,
     "JS": jsValue,
     "NO": noop,
+    "PO": popstate,
     "PR": propertyRead,
     "pr": propertyReadUnchecked,
     "PW": propertyWrite,
@@ -348,6 +355,11 @@ const way = (function() {
     "UP": function(opts, args) {
       opts.updateBody = false;
       opts.updateElems = [...args];
+    },
+
+    // skip pushUrl
+    "pu": function(opts) {
+      opts.pushUrl = false;
     }
   };
 
@@ -428,6 +440,28 @@ const way = (function() {
   }
 
   function noop() {}
+
+  function popstate(ctx, args) {
+    const event = ctx.$evt;
+
+    if (!(event instanceof PopStateEvent)) {
+      const actual = event.constructor ? event.constructor.name : "Unknown";
+
+      throw new Error(`Illegal state: expected PopStateEvent but got ${actual}`);
+    }
+
+    const state = event.state;
+
+    if (!state || !state.way) {
+      ctx.$preventDefault = false;
+
+      return;
+    }
+
+    const url = window.location.href;
+
+    return navigate(ctx, [...(args ?? []), ["pu"]], url);
+  }
 
   function propertyRead(ctx, args) {
     const recv = checkRecv(ctx, args.shift());

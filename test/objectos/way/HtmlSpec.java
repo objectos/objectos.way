@@ -157,6 +157,7 @@ final class HtmlSpec {
         new AttributeSpec("NAME", "name", "name", false),
         new AttributeSpec("NOMODULE", "nomodule", "nomodule", true),
         new AttributeSpec("ONCLICK", "onclick", "onclick", false),
+        new AttributeSpec("ONPOPSTATE", "onpopstate", "onpopstate", false),
         new AttributeSpec("ONSUBMIT", "onsubmit", "onsubmit", false),
         new AttributeSpec("OPACITY", "opacity", "opacity", false),
         new AttributeSpec("OPEN", "open", "open", true),

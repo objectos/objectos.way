@@ -2273,6 +2273,24 @@ sealed abstract class HtmlMarkup permits HtmlMarkupOfHtml, HtmlMarkupOfTestable 
     return attr0(HtmlAttributeName.ONCLICK, value);
   }
 
+  /// Renders the `onpopstate` attribute with the specified value.
+  /// 
+  /// @param value the attribute value
+  /// 
+  /// @return an instruction representing the attribute
+  public final Html.Instruction.OfAttribute onpopstate(String value) {
+    return attr0(HtmlAttributeName.ONPOPSTATE, value);
+  }
+
+  /// Renders the `onpopstate` attribute with the specified action.
+  /// 
+  /// @param value the action to be executed
+  /// 
+  /// @return an instruction representing the attribute
+  public final Html.Instruction.OfAttribute onpopstate(JsAction value) {
+    return attr0(HtmlAttributeName.ONPOPSTATE, value);
+  }
+
   /// Renders the `onsubmit` attribute with the specified value.
   /// 
   /// @param value the attribute value

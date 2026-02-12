@@ -148,6 +148,13 @@ public final class Js {
     return JsObject.literal(props);
   }
 
+  /// Handles the `popstate` event.
+  ///
+  /// @return an object representing the action
+  public static JsAction popstate() {
+    return JsAction.POPSTATE;
+  }
+
   /// Invokes the `setTimeout` method with the specified values.
   ///
   /// @param func the action to execute once the timer expires

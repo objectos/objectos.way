@@ -331,6 +331,9 @@ public final class Html {
     /// The `onclick` HTML attribute.
     Html.AttributeName ONCLICK = HtmlAttributeName.ONCLICK;
 
+    /// The `onpopstate` HTML attribute.
+    Html.AttributeName ONPOPSTATE = HtmlAttributeName.ONPOPSTATE;
+
     /// The `onsubmit` HTML attribute.
     Html.AttributeName ONSUBMIT = HtmlAttributeName.ONSUBMIT;
 
@@ -3060,6 +3063,20 @@ public final class Html {
     ///
     /// @return an instruction representing the attribute
     Html.Instruction.OfAttribute onclick(JsAction value);
+
+    /// Renders the `onpopstate` attribute with the specified value.
+    ///
+    /// @param value the attribute value
+    ///
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute onpopstate(String value);
+
+    /// Renders the `onpopstate` attribute with the specified action.
+    ///
+    /// @param value the action to be executed
+    ///
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute onpopstate(JsAction value);
 
     /// Renders the `onsubmit` attribute with the specified value.
     ///
@@ -5889,6 +5906,24 @@ public final class Html {
     /// @return an instruction representing the attribute
     protected final Html.Instruction.OfAttribute onclick(JsAction value) {
       return $html().onclick(value);
+    }
+
+    /// Renders the `onpopstate` attribute with the specified value.
+    /// 
+    /// @param value the attribute value
+    /// 
+    /// @return an instruction representing the attribute
+    protected final Html.Instruction.OfAttribute onpopstate(String value) {
+      return $html().onpopstate(value);
+    }
+
+    /// Renders the `onpopstate` attribute with the specified action.
+    /// 
+    /// @param value the action to execute
+    /// 
+    /// @return an instruction representing the attribute
+    protected final Html.Instruction.OfAttribute onpopstate(JsAction value) {
+      return $html().onpopstate(value);
     }
 
     /// Renders the `onsubmit` attribute with the specified value.
