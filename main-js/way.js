@@ -51,6 +51,16 @@ const way = (function() {
         }
 
         return this.$document;
+      },
+
+      window: function() {
+        const global = globalThis;
+
+        if (!(global instanceof Window)) {
+          throw new Error("Illegal state: global scope is not a Window instance");
+        }
+
+        return global;
       }
     };
 
@@ -435,7 +445,11 @@ const way = (function() {
       return;
     }
 
-    const url = window.location.href;
+    const win = ctx.window();
+
+    const location = win.location;
+
+    const url = location.href;
 
     return navigate(ctx, [...(args ?? []), ["pu"]], url);
   }
