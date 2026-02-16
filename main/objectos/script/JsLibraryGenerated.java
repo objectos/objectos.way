@@ -74,6 +74,16 @@ const way = (function() {
         }
 
         return this.$document;
+      },
+
+      window: function() {
+        const global = globalThis;
+
+        if (!(global instanceof Window)) {
+          throw new Error("Illegal state: global scope is not a Window instance");
+        }
+
+        return global;
       }
     };
 
@@ -139,6 +149,7 @@ const way = (function() {
     "PO": popstate,
     "PR": propertyRead,
     "pr": propertyReadUnchecked,
+    "PU": pushUrl,
     "PW": propertyWrite,
     "SU": submit,
     "TE": throwError,
@@ -422,18 +433,7 @@ const way = (function() {
     actions.push(scroll);
 
     if (opts.pushUrl) {
-      const action = ["W1"];
-
-      action.push(["GR"]);
-      action.push(["PR", "Window", "history"]);
-
-      const args = [];
-      args.push(["JS", { way: true }])
-      args.push(["JS", ""]);
-      args.push(["cr", "$respUrl"]);
-      action.push(["IV", "History", "pushState", args]);
-
-      actions.push(action);
+      actions.push(["PU"]);
     }
 
     return actions;
@@ -458,7 +458,11 @@ const way = (function() {
       return;
     }
 
-    const url = window.location.href;
+    const win = ctx.window();
+
+    const location = win.location;
+
+    const url = location.href;
 
     return navigate(ctx, [...(args ?? []), ["pu"]], url);
   }
@@ -497,6 +501,26 @@ const way = (function() {
     const val = checkDefined(args.shift(), "value");
 
     recv[propName] = execute(ctx, val);
+  }
+
+  let pushCount = 0;
+
+  function pushUrl(ctx, _args) {
+    const global = ctx.window();
+
+    const h = global.history;
+
+    const state = {
+      way: true
+    };
+
+    const unused = "";
+
+    if (pushCount++ === 0) {
+      h.replaceState(state, unused, global.location.href);
+    }
+
+    h.pushState(state, unused, ctx.$respUrl);
   }
 
   function submit(ctx, args) {

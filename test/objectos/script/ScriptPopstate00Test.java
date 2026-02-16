@@ -41,23 +41,31 @@ public class ScriptPopstate00Test {
       page.navigate("/script/popstate/00");
 
       var clickMe = page.locator("#click-me");
-      var subject = page.locator("#subject");
+      var step = page.locator("#step");
+      var way = page.locator("#wayRequest");
 
-      clickMe.scrollIntoViewIfNeeded();
-
-      assertThat(clickMe).isInViewport();
-      assertThat(subject).not().isInViewport();
-      assertThat(subject).hasText("Before");
-
-      var url = page.url();
+      assertThat(step).hasText("0");
+      assertThat(way).hasText("false");
 
       clickMe.click();
 
-      assertThat(clickMe).not().isInViewport();
-      assertThat(subject).hasText("After");
-      assertThat(subject).isInViewport();
+      assertThat(step).hasText("1");
+      assertThat(way).hasText("true");
 
-      assertEquals(page.url(), url + "?next=true");
+      clickMe.click();
+
+      assertThat(step).hasText("2");
+      assertThat(way).hasText("true");
+
+      page.goBack();
+
+      assertThat(step).hasText("1");
+      assertThat(way).hasText("true");
+
+      page.goBack();
+
+      assertThat(step).hasText("0");
+      assertThat(way).hasText("true");
     }
   }
 
