@@ -54,7 +54,7 @@ const way = (function() {
     const ctx = {
       $document: undefined,
 
-      $el: event.target,
+      $el: event.currentTarget,
 
       $evt: event,
 

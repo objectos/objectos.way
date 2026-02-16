@@ -73,6 +73,37 @@ public final class JsElement extends JsNode {
     return invoke(JsString.type, "Element", "getAttribute", name);
   }
 
+  /// Sets the attribute of the specified name to the specified value.
+  ///
+  /// @param name the attribute name
+  /// @param value the attribute value
+  ///
+  /// @return an object representing this action
+  public final JsAction attr(Html.AttributeName name, String value) {
+    Objects.requireNonNull(value, "value == null");
+
+    final String attrName;
+    attrName = name.name();
+
+    final JsString $name;
+    $name = JsString.of(attrName);
+
+    final JsString $value;
+    $value = JsString.of(value);
+
+    return attr($name, $value);
+  }
+
+  /// Sets the attribute of the specified name to the specified value.
+  ///
+  /// @param name the attribute name
+  /// @param value the attribute value
+  ///
+  /// @return an object representing this action
+  public final JsAction attr(JsString name, JsString value) {
+    return invoke("Element", "setAttribute", name, value);
+  }
+
   /// Returns a boolean value indicating whether the element has the attribute
   /// with the specified name.
   ///
