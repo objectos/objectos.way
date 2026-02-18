@@ -141,6 +141,7 @@ const way = (function() {
     "FO": follow,
     "FN": functionJs,
     "GR": globalRead,
+    "HI": historyUpdate,
     "IF": ifElse,
     "IU": invokeUnchecked,
     "IV": invokeVirtual,
@@ -149,7 +150,6 @@ const way = (function() {
     "PO": popstate,
     "PR": propertyRead,
     "pr": propertyReadUnchecked,
-    "PU": pushUrl,
     "PW": propertyWrite,
     "SU": submit,
     "TE": throwError,
@@ -275,6 +275,26 @@ const way = (function() {
     return globalThis;
   }
 
+  let $historyUpdate = 0;
+
+  function historyUpdate(ctx, _args) {
+    const global = ctx.window();
+
+    const h = global.history;
+
+    const state = {
+      way: true
+    };
+
+    const unused = "";
+
+    if ($historyUpdate++ === 0) {
+      h.replaceState(state, unused, global.location.href);
+    }
+
+    h.pushState(state, unused, ctx.$respUrl);
+  }
+
   function ifElse(ctx, args) {
     const recv = checkRecv(ctx, "boolean");
 
@@ -357,6 +377,11 @@ const way = (function() {
   }
 
   const $navigateOpts = {
+    // history
+    "HI": function(opts, args) {
+      opts.history = checkBoolean(args.shift(), "value");
+    },
+
     // scroll to element
     "SE": function(opts, args) {
       opts.scrollElem = args;
@@ -366,24 +391,19 @@ const way = (function() {
     "UP": function(opts, args) {
       opts.updateBody = false;
       opts.updateElems = [...args];
-    },
-
-    // skip pushUrl
-    "pu": function(opts) {
-      opts.pushUrl = false;
     }
   };
 
   function navigateOpts(args) {
     // initialize with defaults
     const opts = {
+      history: true,
+
       updateHead: true,
       updateBody: true,
       updateElems: undefined,
 
       scrollElem: undefined,
-
-      pushUrl: true
     };
 
     for (const arg of args) {
@@ -432,8 +452,8 @@ const way = (function() {
 
     actions.push(scroll);
 
-    if (opts.pushUrl) {
-      actions.push(["PU"]);
+    if (opts.history) {
+      actions.push(["HI"]);
     }
 
     return actions;
@@ -464,7 +484,7 @@ const way = (function() {
 
     const url = location.href;
 
-    return navigate(ctx, [...(args ?? []), ["pu"]], url);
+    return navigate(ctx, [...(args ?? []), ["HI", false]], url);
   }
 
   function propertyRead(ctx, args) {
@@ -503,25 +523,6 @@ const way = (function() {
     recv[propName] = execute(ctx, val);
   }
 
-  let pushCount = 0;
-
-  function pushUrl(ctx, _args) {
-    const global = ctx.window();
-
-    const h = global.history;
-
-    const state = {
-      way: true
-    };
-
-    const unused = "";
-
-    if (pushCount++ === 0) {
-      h.replaceState(state, unused, global.location.href);
-    }
-
-    h.pushState(state, unused, ctx.$respUrl);
-  }
 
   function submit(ctx, args) {
     const el = ctx.$el;

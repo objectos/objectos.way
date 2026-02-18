@@ -21,10 +21,13 @@ import objectos.way.Html;
 sealed abstract class Navigate permits Follow, Submit {
 
   // options
+  static final JsString HI = JsString.raw("HI"); // history
   static final JsString SE = JsString.raw("SE"); // scroll: element (into view)
   static final JsString UP = JsString.raw("UP"); // update: elements to update
 
   private final String name;
+
+  private JsOp history;
 
   private JsOp scrollIntoView;
 
@@ -32,6 +35,19 @@ sealed abstract class Navigate permits Follow, Submit {
 
   Navigate(String name) {
     this.name = name;
+  }
+
+  /// Configures whether the browser's history is updated on a successful
+  /// response.
+  ///
+  /// @param value `true` if the browser's history should be updated;
+  ///        `false` otherwise
+  public final void history(boolean value) {
+    if (value) {
+      history = null;
+    } else {
+      history = JsOp.of(HI, "false");
+    }
   }
 
   /// Invokes `scrollIntoView` on the specified element after the content has
@@ -71,7 +87,7 @@ sealed abstract class Navigate permits Follow, Submit {
 
   @Override
   public final String toString() {
-    return "[\"" + name + "\"" + addIf(scrollIntoView) + addIf(update) + "]";
+    return "[\"" + name + "\"" + addIf(history) + addIf(scrollIntoView) + addIf(update) + "]";
   }
 
   final String addIf(Object op) {
