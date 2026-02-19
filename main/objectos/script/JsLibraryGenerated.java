@@ -151,6 +151,7 @@ const way = (function() {
     "PR": propertyRead,
     "pr": propertyReadUnchecked,
     "PW": propertyWrite,
+    "RE": render,
     "SU": submit,
     "TE": throwError,
     "TY": typeEnsure,
@@ -384,7 +385,14 @@ const way = (function() {
 
     // scroll to element
     "SE": function(opts, args) {
+      opts.scrollBody = false;
       opts.scrollElem = args;
+    },
+
+    // scroll off
+    "SO": function(opts) {
+      opts.scrollBody = false;
+      opts.scrollElem = undefined;
     },
 
     // update
@@ -403,6 +411,7 @@ const way = (function() {
       updateBody: true,
       updateElems: undefined,
 
+      scrollBody: true,
       scrollElem: undefined,
     };
 
@@ -438,19 +447,21 @@ const way = (function() {
       actions.push(["UE", opts.updateElems]);
     }
 
-    const scroll = ["W1"];
-
-    if (opts.scrollElem) {
-      scroll.push(...opts.scrollElem);
-    } else {
+    if (opts.scrollBody) {
+      const scroll = ["W1"];
       scroll.push(["GR"]);
       scroll.push(["PR", "Window", "document"]);
       scroll.push(["PR", "Document", "documentElement"]);
+      scroll.push(["IV", "Element", "scrollIntoView", []])
+      actions.push(scroll);
     }
 
-    scroll.push(["IV", "Element", "scrollIntoView", []])
-
-    actions.push(scroll);
+    if (opts.scrollElem) {
+      const scroll = ["W1"];
+      scroll.push(...opts.scrollElem);
+      scroll.push(["IV", "Element", "scrollIntoView", []])
+      actions.push(scroll);
+    }
 
     if (opts.history) {
       actions.push(["HI"]);
@@ -523,6 +534,32 @@ const way = (function() {
     recv[propName] = execute(ctx, val);
   }
 
+  function render(ctx, args) {
+    const recv = checkRecv(ctx, "Element");
+
+    const id = recv.id;
+
+    if (!id) {
+      throw new Error(`Illegal state: ${recv} does not declare the 'id' property`);
+    }
+
+    const $url = checkDefined(args.shift(), "url")
+
+    const url = checkString(execute(ctx, $url), "url");
+
+    const navArgs = [];
+
+    // disable history
+    navArgs.push(["HI", false]);
+
+    // disable scroll
+    navArgs.push(["SO"]);
+
+    // update only this element
+    navArgs.push(["UP", id]);
+
+    return navigate(ctx, navArgs, url);
+  }
 
   function submit(ctx, args) {
     const el = ctx.$el;

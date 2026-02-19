@@ -154,6 +154,40 @@ public final class JsElement extends JsNode {
     return invoke("Element", "remove");
   }
 
+  /// Replaces this element with the matching element from the response of the
+  /// specified URL.
+  ///
+  /// @param url the resource to be fetched
+  ///
+  /// @return an object representing this action
+  public final JsAction render(String url) {
+    Objects.requireNonNull(url, "url == null");
+
+    final JsString $url;
+    $url = JsString.of(url);
+
+    return render0($url);
+  }
+
+  /// Replaces this element with the matching element from the response of the
+  /// specified URL.
+  ///
+  /// @param url the resource to be fetched
+  ///
+  /// @return an object representing this action
+  public final JsAction render(JsString url) {
+    Objects.requireNonNull(url, "url == null");
+
+    return render0(url);
+  }
+
+  private final JsAction render0(JsString url) {
+    final JsOp op;
+    op = JsOp.of(JsString.RE, url);
+
+    return action(op);
+  }
+
   /// Ensures that this element is visible to the user.
   ///
   /// @return an object representing this action

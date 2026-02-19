@@ -42,6 +42,7 @@ public final class JsString extends JsObject {
   static final JsString PR = raw("PR"); // propertyRead
   static final JsString pr = raw("pr"); // propertyReadUnchecked
   static final JsString PW = raw("PW"); // propertyWrite
+  static final JsString RE = raw("RE"); // render
   static final JsString SU = raw("SU"); // submit
   static final JsString TE = raw("TE"); // throwError
   static final JsString TY = raw("TY"); // typeEnsure
