@@ -40,7 +40,7 @@ The file has the following copyright header:
 
 ## HTMX
 
-Files under the main-js and test-js directories may use code from the HTMX project,
+Files under the main-js directories may use code from the HTMX project,
 which is licensed under the Zero-Clause BSD:
 
   Zero-Clause BSD
@@ -59,7 +59,7 @@ which is licensed under the Zero-Clause BSD:
   
 ## Idiomorph
 
-Files under the main-js and test-js directories may use code from the Idiomorph project,
+Files under the main-js directories may use code from the Idiomorph project,
 which is licensed under the BSD 2-Clause License:
 
   Copyright (c) 2022, Big Sky Software

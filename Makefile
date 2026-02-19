@@ -173,25 +173,6 @@ TEST_ADD_READS += objectos.way=playwright
 include make/java-test.mk
 
 #
-# way@npm-install
-#
-
-.PHONY: npm-install
-npm-install: node_modules/marker
-
-node_modules/marker: package.json
-	npm install
-	touch $@
-	
-#
-# way@test-js
-#
-
-.PHONY: test-js
-test-js: node_modules/marker
-	node_modules/mocha-chrome/cli.js test-js/test.html
-
-#
 # way@javadoc
 #
 

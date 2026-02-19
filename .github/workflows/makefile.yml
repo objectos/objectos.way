@@ -52,14 +52,6 @@ jobs:
         key: ${{ runner.os }}-objectos-${{ hashFiles('Makefile', 'make/*.mk') }}
         restore-keys: ${{ runner.os }}-objectos-
 
-    - name: Cache node_modules
-      if: success() || failure()
-      uses: actions/cache@v4
-      with:
-        path: node_modules
-        key: ${{ runner.os }}-node-modules-${{ hashFiles('package.json', 'package-lock.json') }}
-        restore-keys: ${{ runner.os }}-node-modules-
-
     - name: Build it
       run: make
 
