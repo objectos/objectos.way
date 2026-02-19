@@ -25,7 +25,7 @@ import module objectos.way;
 @Css.Source
 public final class ScriptSubmit02 extends AbstractDevScript {
 
-  public static final JsAction ACTION = Js.submit(opts -> opts.scrollIntoView(Js.byId("bottom")));
+  public static final JsAction ACTION = Js.submit(opts -> opts.scroll(Js.byId("bottom")));
 
   private boolean initial;
 

@@ -26,9 +26,9 @@ import objectos.script.Js;
 
 */
 @Css.Source
-public final class ScriptFollow02 extends AbstractDevScript {
+public final class ScriptFollow05 extends AbstractDevScript {
 
-  public static final JsAction ACTION = Js.follow(opts -> opts.scroll(Js.byId("click-me")));
+  public static final JsAction ACTION = Js.follow(opts -> opts.scroll(false));
 
   private boolean initial;
 
@@ -59,7 +59,7 @@ public final class ScriptFollow02 extends AbstractDevScript {
         a(
             id("click-me"),
             onclick(ACTION),
-            href("/script/follow/02?next=true"),
+            href("/script/follow/05?next=true"),
             text("Click me")
         )
     );

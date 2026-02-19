@@ -23,13 +23,14 @@ sealed abstract class Navigate permits Follow, Submit {
   // options
   static final JsString HI = JsString.raw("HI"); // history
   static final JsString SE = JsString.raw("SE"); // scroll: element (into view)
+  static final JsString SO = JsString.raw("SO"); // scroll: off
   static final JsString UP = JsString.raw("UP"); // update: elements to update
 
   private final String name;
 
   private JsOp history;
 
-  private JsOp scrollIntoView;
+  private JsOp scroll;
 
   private JsArray update;
 
@@ -50,15 +51,26 @@ sealed abstract class Navigate permits Follow, Submit {
     }
   }
 
-  /// Invokes `scrollIntoView` on the specified element after the content has
-  /// been updated. Defaults to `document.documentElement` if not specified.
+  /// Configures whether the window scroll position should be reset on a
+  /// successful response.
   ///
   /// @param value the element to be visible to the user
-  public final void scrollIntoView(JsElement value) {
+  public final void scroll(boolean value) {
+    if (value) {
+      scroll = null;
+    } else {
+      scroll = JsOp.of(SO);
+    }
+  }
+
+  /// Scrolls to the specified element after the content has been updated.
+  ///
+  /// @param value the element to be visible to the user
+  public final void scroll(JsElement value) {
     final JsElement el;
     el = Objects.requireNonNull(value, "value == null");
 
-    scrollIntoView = JsOp.of(SE, el);
+    scroll = JsOp.of(SE, el);
   }
 
   /// The list of elements, given by their `id` attribute values, whose content
@@ -87,7 +99,7 @@ sealed abstract class Navigate permits Follow, Submit {
 
   @Override
   public final String toString() {
-    return "[\"" + name + "\"" + addIf(history) + addIf(scrollIntoView) + addIf(update) + "]";
+    return "[\"" + name + "\"" + addIf(history) + addIf(scroll) + addIf(update) + "]";
   }
 
   final String addIf(Object op) {
