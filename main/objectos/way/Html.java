@@ -331,6 +331,9 @@ public final class Html {
     /// The `onclick` HTML attribute.
     Html.AttributeName ONCLICK = HtmlAttributeName.ONCLICK;
 
+    /// The `onload` HTML attribute.
+    Html.AttributeName ONLOAD = HtmlAttributeName.ONLOAD;
+
     /// The `onpopstate` HTML attribute.
     Html.AttributeName ONPOPSTATE = HtmlAttributeName.ONPOPSTATE;
 
@@ -3063,6 +3066,20 @@ public final class Html {
     ///
     /// @return an instruction representing the attribute
     Html.Instruction.OfAttribute onclick(JsAction value);
+
+    /// Renders the `onload` attribute with the specified value.
+    ///
+    /// @param value the attribute value
+    ///
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute onload(String value);
+
+    /// Renders the `onload` attribute with the specified action.
+    ///
+    /// @param value the action to be executed
+    ///
+    /// @return an instruction representing the attribute
+    Html.Instruction.OfAttribute onload(JsAction value);
 
     /// Renders the `onpopstate` attribute with the specified value.
     ///
@@ -5906,6 +5923,24 @@ public final class Html {
     /// @return an instruction representing the attribute
     protected final Html.Instruction.OfAttribute onclick(JsAction value) {
       return $html().onclick(value);
+    }
+
+    /// Renders the `onload` attribute with the specified value.
+    /// 
+    /// @param value the attribute value
+    /// 
+    /// @return an instruction representing the attribute
+    protected final Html.Instruction.OfAttribute onload(String value) {
+      return $html().onload(value);
+    }
+
+    /// Renders the `onload` attribute with the specified action.
+    /// 
+    /// @param value the action to execute
+    /// 
+    /// @return an instruction representing the attribute
+    protected final Html.Instruction.OfAttribute onload(JsAction value) {
+      return $html().onload(value);
     }
 
     /// Renders the `onpopstate` attribute with the specified value.

@@ -208,86 +208,21 @@ public class HtmlTemplateTestAttributes {
   }
 
   @Test
-  public void dataOnClick02() {
-    /*
-    test(
-        new Html.Template() {
-          final Html.Id FOO = Html.Id.of("foo");
-    
-          @Override
-          protected final void render() {
-            div(
-                dataOnClick(s -> s.elementById(FOO).toggleClass("a x")),
-                dataOnClick(s -> s.elementById(FOO).toggleClass("b y"))
-            );
-    
-            div(
-                dataOnClick(s -> s.elementById(FOO).toggleClass("a x")),
-                dataOnClick(s -> {
-                  s.elementById(FOO).toggleClass("b y");
-                  s.elementById(FOO).toggleClass("c z");
-                })
-            );
-    
-            div(
-                dataOnClick(s -> {
-                  s.elementById(FOO).toggleClass("a x");
-                  s.elementById(FOO).toggleClass("b y");
-                }),
-                dataOnClick(s -> s.elementById(FOO).toggleClass("c z"))
-            );
-          }
-        },
-    
-        """
-        <div data-on-click='[["id-2","foo","toggle-class-0","a","x"],["id-2","foo","toggle-class-0","b","y"]]'></div>
-        <div data-on-click='[["id-2","foo","toggle-class-0","a","x"],["id-2","foo","toggle-class-0","b","y"],["id-2","foo","toggle-class-0","c","z"]]'></div>
-        <div data-on-click='[["id-2","foo","toggle-class-0","a","x"],["id-2","foo","toggle-class-0","b","y"],["id-2","foo","toggle-class-0","c","z"]]'></div>
-        """
-    );
-    */
-  }
-
-  @Test
-  public void dataOnLoad() {
-    /*
+  public void onload() {
     test(
         new Html.Template() {
           @Override
           protected final void render() {
-            div(
-                dataOnLoad(s -> {
-                  s.elementById(foo).toggleClass("x");
-                })
+            body(
+                onload(Js.byId("target").scrollIntoView())
             );
           }
         },
 
         """
-        <div data-on-load='[["id-2","foo","toggle-class-0","x"]]'></div>
+        <body onload='way.on(event,["W1",["EI",["JS","target"]],["IV","Element","scrollIntoView",[]]])'></body>
         """
     );
-    */
-  }
-
-  @Test
-  public void dataOnSuccess() {
-    /*
-    test(
-        new Html.Template() {
-          @Override
-          protected final void render() {
-            form(
-                dataOnSuccess(Script::stopPropagation)
-            );
-          }
-        },
-
-        """
-        <form data-on-success='[["stop-propagation-0"]]'></form>
-        """
-    );
-    */
   }
 
   @Test
