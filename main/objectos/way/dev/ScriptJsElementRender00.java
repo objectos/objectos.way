@@ -29,13 +29,25 @@ public final class ScriptJsElementRender00 extends AbstractDevScript {
 
   public static final JsAction ACTION = Js.byId("subject").render("/script/element/render/00?after=true");
 
-  private boolean after;
+  private boolean before;
 
   @Override
   public final void handle(Http.Exchange http) {
-    after = http.queryParam("after") != null;
+    before = http.queryParam("after") == null;
 
     super.handle(http);
+  }
+
+  @Override
+  final void renderHead() {
+    if (before) {
+      super.renderHead();
+    }
+  }
+
+  @Override
+  final String documentTitle() {
+    return before ? "Before" : "After";
   }
 
   @Override
@@ -57,7 +69,7 @@ public final class ScriptJsElementRender00 extends AbstractDevScript {
         div(
             id("subject"),
 
-            text(after ? "After" : "Before")
+            text(before ? "Before" : "After")
         )
     );
   }

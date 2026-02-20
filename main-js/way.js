@@ -372,11 +372,16 @@ const way = (function() {
       opts.scrollElem = undefined;
     },
 
+    // updateHead
+    "UH": function(opts, args) {
+      opts.updateHead = checkBoolean(args.shift(), "value");
+    },
+
     // update
     "UP": function(opts, args) {
       opts.updateBody = false;
       opts.updateElems = [...args];
-    }
+    },
   };
 
   function navigateOpts(args) {
@@ -532,6 +537,9 @@ const way = (function() {
     // disable scroll
     navArgs.push(["SO"]);
 
+    // disable updateHead
+    navArgs.push(["UH", false]);
+
     // update only this element
     navArgs.push(["UP", id]);
 
@@ -653,7 +661,7 @@ const way = (function() {
 
     const newHead = newDoc.head;
 
-    if (!newHead) {
+    if (!newHead || !newHead.hasChildNodes()) {
       return;
     }
 
