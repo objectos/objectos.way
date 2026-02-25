@@ -23,6 +23,7 @@ import java.io.OutputStreamWriter;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.Clock;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -43,6 +44,8 @@ final class HttpExchangeBuilder implements Http.Exchange.Options {
   private Http.Method method = Http.Method.GET;
 
   private String path = "/";
+
+  Map<String, String> pathParams;
 
   private Map<String, Object> queryParams;
 
@@ -157,6 +160,23 @@ final class HttpExchangeBuilder implements Http.Exchange.Options {
     }
 
     path = value;
+  }
+
+  @Override
+  public final void pathParam(String name, String value) {
+    Objects.requireNonNull(name, "name == null");
+    Objects.requireNonNull(value, "value == null");
+
+    if (pathParams == null) {
+      pathParams = new HashMap<>();
+    }
+
+    final String existing;
+    existing = pathParams.put(name, value);
+
+    if (existing != null) {
+      throw new IllegalArgumentException("Duplicate mapping for path parameter " + name);
+    }
   }
 
   @Override

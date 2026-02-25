@@ -140,6 +140,33 @@ public class HttpExchangeTestBCreate extends HttpExchangeTest {
     );
   }
 
+  @Test
+  public void pathParam01() {
+    Http.Exchange http;
+    http = http(config -> {
+      config.pathParam("id", "123");
+    });
+
+    assertEquals(http.pathParam("id"), "123");
+    assertEquals(http.pathParamAsInt("id", 0), 123);
+    assertEquals(http.pathParamAsInt("it should return default value", 256), 256);
+  }
+
+  @Test
+  public void pathParam02() {
+    try {
+      http(config -> {
+        config.pathParam("id", "123");
+
+        config.pathParam("id", "it should throw");
+      });
+
+      Assert.fail();
+    } catch (IllegalArgumentException expected) {
+      assertEquals(expected.getMessage(), "Duplicate mapping for path parameter id");
+    }
+  }
+
   private record User(String login) {}
 
   @Test

@@ -137,6 +137,13 @@ public final class Http {
        */
       void path(String value);
 
+      /// Sets the path parameter with the specified name to the specified
+      /// value.
+      ///
+      /// @param name the name of the path parameter
+      /// @param value the decoded value of the path parameter
+      void pathParam(String name, String value);
+
       /**
        * Sets the request-target query parameter with the specified name to the
        * specified value.
@@ -1028,16 +1035,39 @@ public final class Http {
      */
     String path();
 
-    /**
-     * Returns the value of the path parameter with the specified name
-     * if it exists or returns {@code null} otherwise.
-     *
-     * @param name
-     *        the name of the path parameter
-     *
-     * @return the value if it exists or {@code null} if it does not
-     */
+    /// Returns the value of the path parameter with the specified name if it
+    /// exists or returns `null` otherwise.
+    ///
+    /// @param name the name of the path parameter
+    ///
+    /// @return the value if it exists or `null` if it does not
     String pathParam(String name);
+
+    /// Returns, as an `int`, the value of the path parameter with the specified
+    /// name. If the path parameter does not exist or if the value cannot be
+    /// converted to an `int` value then the specified default value is returned
+    /// instead.
+    ///
+    /// @param name the name of the path parameter
+    /// @param defaultValue the value to be returned if the parameter does exist
+    ///        of if its value cannot be converted to an `int` value
+    ///
+    /// @return the value converted to an `int` if it exists or the specified
+    ///         default value otherwise
+    default int pathParamAsInt(String name, int defaultValue) {
+      String maybe;
+      maybe = pathParam(name);
+
+      if (maybe == null) {
+        return defaultValue;
+      }
+
+      try {
+        return Integer.parseInt(maybe);
+      } catch (NumberFormatException expected) {
+        return defaultValue;
+      }
+    }
 
     /**
      * Returns the first value of the query parameter with the specified name
@@ -1365,23 +1395,16 @@ public final class Http {
      */
     void path(String path, RoutingPath.Module module);
 
-    /// For a request that matches the specified path expression and method,
-    /// use the specified handler.
+    /// For a request that matches the specified path expression and method, use
+    /// the specified handler.
     ///
     /// This method is a convenience to the following:
     ///
-    /// ```java
-    /// r.path(path, matched -> {
-    ///   matched.allow(method, handler);
-    /// });
-    /// ```
+    /// ```java r.path(path, matched -> { matched.allow(method, handler); }); ```
     ///
-    /// @param path
-    ///        a path expression
-    /// @param method
-    ///        the only allowed method
-    /// @param handler
-    ///        handles the requests for this path and method
+    /// @param path a path expression
+    /// @param method the only allowed method
+    /// @param handler handles the requests for this path and method
     void path(String path, Http.Method method, Http.Handler handler);
 
     /**
@@ -1480,25 +1503,21 @@ public final class Http {
 
     void paramRegex(String name, String value);
 
-    /// Appends to this configuration the handler for the specified subpath and method.
-    /// Subpaths can only be registered when this configuration represents a wildcard path.
+    /// Appends to this configuration the handler for the specified subpath and
+    /// method. Subpaths can only be registered when this configuration
+    /// represents a wildcard path.
     ///
     /// This method is a convenience to the following:
     ///
-    /// ```java
-    /// r.subpath(subpath, matched -> {
-    ///   matched.allow(method, handler);
-    /// });
-    /// ```
-    /// @param subpath
-    ///        a subpath expression
-    /// @param method
-    ///        the only allowed method
-    /// @param handler
-    ///        handles the requests for this subpath and method
+    /// ```java r.subpath(subpath, matched -> { matched.allow(method, handler);
+    /// }); ```
     ///
-    /// @throws IllegalStateException
-    ///         if this configuration does not represent a wildcard path
+    /// @param subpath a subpath expression
+    /// @param method the only allowed method
+    /// @param handler handles the requests for this subpath and method
+    ///
+    /// @throws IllegalStateException if this configuration does not represent a
+    /// wildcard path
     void subpath(String subpath, Http.Method method, Http.Handler handler);
 
     /**
@@ -1543,8 +1562,7 @@ public final class Http {
 
       /// The IP address to which this server will listen to.
       ///
-      /// @param value
-      ///        the IP address
+      /// @param value the IP address
       void address(InetAddress value);
 
       /**
@@ -1777,25 +1795,22 @@ public final class Http {
     /// Loads the session associated to the specified exchange, or creates a new
     /// session if one does not exist.
     ///
-    /// @param http
-    ///        the HTTP exchange
+    /// @param http the HTTP exchange
     void ensureSession(Http.Exchange http);
 
     /// Loads the session associated to the specified exchange if one exists.
     ///
-    /// @param http
-    ///        the HTTP exchange
+    /// @param http the HTTP exchange
     ///
     /// @return `true` if a session has been loaded; `false` otherwise
     boolean loadSession(Http.Exchange http);
 
     /// Requires a POST, PUT, PATCH or DELETE request to contain a valid CSRF
     /// token. If the request does contain a CSRF token, or if the token value
-    /// does not match the one from the session associated to the request, then
-    /// a `403 Forbidden` response is written to the specified exchange.
+    /// does not match the one from the session associated to the request, then a
+    /// `403 Forbidden` response is written to the specified exchange.
     ///
-    /// @param http
-    ///        the HTTP exchange
+    /// @param http the HTTP exchange
     void requireCsrfToken(Http.Exchange http);
 
   }

@@ -523,6 +523,8 @@ final class HttpExchange implements Http.Exchange, Runnable, Closeable {
 
     impl.attributes = builder.attributes;
 
+    impl.pathParams = builder.pathParams;
+
     impl.session = builder.session();
 
     return impl;
