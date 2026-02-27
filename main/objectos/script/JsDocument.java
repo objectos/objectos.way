@@ -19,11 +19,23 @@ package objectos.script;
 public final class JsDocument extends JsNode {
 
   /// Represents the `Document` JS type.
-  public static final JsType<JsDocument> type = new JsType<>(
-      JsString.raw("Document"), JsDocument::new
-  );
+  public static final JsType<JsDocument> type = new JsType<>("Document") {
+    @Override
+    final JsDocument create(Object value) {
+      return new JsDocument(value);
+    }
 
-  private JsDocument(JsBase recv, JsOp op) {
+    @Override
+    final JsDocument create(JsObject recv, JsOp op) {
+      return new JsDocument(recv, op);
+    }
+  };
+
+  private JsDocument(Object value) {
+    super(value);
+  }
+
+  private JsDocument(JsObject recv, JsOp op) {
     super(recv, op);
   }
 

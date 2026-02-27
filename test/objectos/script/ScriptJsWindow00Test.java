@@ -17,37 +17,39 @@ package objectos.script;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static org.testng.Assert.assertEquals;
+
 import objectos.way.Y;
-import objectos.way.dev.Script022;
+import objectos.way.dev.ScriptJsWindow00;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 @Listeners(Y.class)
-public class Script022Test {
+public class ScriptJsWindow00Test {
 
   @Test
   public void action() {
     assertEquals(
-        Script022.ACTION.toString(),
+        ScriptJsWindow00.ACTION.toString(),
 
         """
-        ["W1",["GR"],["TY","Window"],["pr","document"],["PR","Document","documentElement"],["TY","Element"],["IV","Element","querySelector",[["JS","div.subject"]]],["PW","Node","textContent",["JS","After"]]]"""
+        ["W1",["EI",["JS","subject"]],["PW","Node","textContent",["W1",["GR"],["TY","Window"],["pr","document"],["PR","Document","title"],["TY","string"]]]]"""
     );
   }
 
   @Test
   public void live() {
     try (var page = Y.page()) {
-      page.navigate("/script/022");
+      page.navigate("/script/window/00");
 
       var clickMe = page.locator("#click-me");
+
       var subject = page.locator("#subject");
 
-      assertThat(subject).hasText("Before");
+      assertThat(subject).hasText("Page title is...");
 
       clickMe.click();
 
-      assertThat(subject).hasText("After");
+      assertThat(subject).hasText("ScriptJsWindow00");
     }
   }
 

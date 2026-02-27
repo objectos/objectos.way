@@ -22,17 +22,25 @@ import objectos.way.Html;
 public final class JsElement extends JsNode {
 
   /// Represents the `Element` JS type.
-  public static final JsType<JsElement> type = new JsType<>(
-      JsString.raw("Element"), JsElement::new
-  );
+  public static final JsType<JsElement> type = new JsType<>("Element") {
+    @Override
+    final JsElement create(Object value) {
+      return new JsElement(value);
+    }
+
+    @Override
+    final JsElement create(JsObject recv, JsOp op) {
+      return new JsElement(recv, op);
+    }
+  };
 
   static final JsElement TARGET = new JsElement(JsOp.ET);
 
-  private JsElement(JsOp op) {
-    super(op);
+  private JsElement(Object value) {
+    super(value);
   }
 
-  private JsElement(JsBase recv, JsOp op) {
+  private JsElement(JsObject recv, JsOp op) {
     super(recv, op);
   }
 

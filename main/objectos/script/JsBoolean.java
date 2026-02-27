@@ -21,11 +21,23 @@ import java.util.Objects;
 public final class JsBoolean extends JsObject {
 
   /// Represents the `boolean` JS type.
-  public static final JsType<JsBoolean> type = new JsType<>(
-      JsString.raw("boolean"), JsBoolean::new
-  );
+  public static final JsType<JsBoolean> type = new JsType<>("boolean") {
+    @Override
+    final JsBoolean create(Object value) {
+      return new JsBoolean(value);
+    }
 
-  private JsBoolean(JsBase recv, JsOp op) {
+    @Override
+    final JsBoolean create(JsObject recv, JsOp op) {
+      return new JsBoolean(recv, op);
+    }
+  };
+
+  private JsBoolean(Object value) {
+    super(value);
+  }
+
+  private JsBoolean(JsObject recv, JsOp op) {
     super(recv, op);
   }
 

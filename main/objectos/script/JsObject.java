@@ -15,30 +15,24 @@
  */
 package objectos.script;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /// Represents a JS runtime `Object` instance.
-public sealed class JsObject
-    extends JsBase
-    permits
-    JsArray,
-    JsBoolean,
-    JsFunction,
-    JsHistory,
-    JsNode,
-    JsNumber,
-    JsPromise,
-    JsResponse,
-    JsString {
+public class JsObject {
+
+  private final Object value;
 
   JsObject(Object value) {
-    super(value);
+    this.value = value;
   }
 
-  JsObject(JsBase recv, JsOp op) {
-    super(recv, op);
+  JsObject(JsObject recv, JsOp op) {
+    value = recv.with(op);
   }
 
   static JsObject args(int index) {
@@ -140,15 +134,24 @@ public sealed class JsObject
     return new JsObject(ref);
   }
 
-  /// Converts this reference to a JS reference of the specified type.
+  /// Performs a conversion to the specified type.
   ///
   /// @param <T> the JS runtime type
-  ///
   /// @param type the handle representing the JS runtime type
   ///
   /// @return the converted reference
   public final <T> T as(JsType<T> type) {
     return type.as(this);
+  }
+
+  /// Performs an unchecked conversion to the specified type.
+  ///
+  /// @param <T> the JS runtime type
+  /// @param type the handle representing the JS runtime type
+  ///
+  /// @return the converted reference
+  final <T> T asUnchecked(JsType<T> type) {
+    return type.create(value);
   }
 
   /// Invokes the specified method with the specified arguments, in order, if
@@ -314,6 +317,56 @@ public sealed class JsObject
   /// @return a string representing this object
   public final JsString toJsString() {
     return invokeUnchecked(JsString.type, "toString");
+  }
+
+  @Override
+  public final String toString() {
+    return switch (value) {
+      case JsOp single -> single.toString();
+
+      case String s -> s;
+
+      case List<?> list -> list.stream().map(Object::toString).collect(Collectors.joining(",", "[\"W1\",", "]"));
+
+      default -> throw new UnsupportedOperationException(
+          "JsObject cannot be used as an argument: " + value.getClass()
+      );
+    };
+  }
+
+  final JsAction action(JsOp op) {
+    final List<?> combined;
+    combined = with(op);
+
+    return JsAction.one(
+        combined
+    );
+  }
+
+  final List<?> with(JsOp op) {
+    return switch (value) {
+      case JsOp single -> List.of(single, op);
+
+      case String single -> List.of(single, op);
+
+      case List<?> head -> with0(head, op);
+
+      default -> throw new UnsupportedOperationException(
+          "JsObject cannot be used as an argument: " + value.getClass()
+      );
+    };
+  }
+
+  @SuppressWarnings("unchecked")
+  private List<?> with0(List<?> head, JsOp op) {
+    final List<Object> list;
+    list = new ArrayList<>();
+
+    list.addAll(head);
+
+    list.add(op);
+
+    return List.copyOf(list);
   }
 
 }

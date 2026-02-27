@@ -21,11 +21,11 @@ public sealed class JsNode extends JsObject
     JsDocument,
     JsElement {
 
-  JsNode(JsOp op) {
-    super(op);
+  JsNode(Object value) {
+    super(value);
   }
 
-  JsNode(JsBase recv, JsOp op) {
+  JsNode(JsObject recv, JsOp op) {
     super(recv, op);
   }
 

@@ -81,7 +81,7 @@ public final class Js {
   ///
   /// @return the document that the window contains
   public static JsDocument document() {
-    return global().prop("Window", "document").as(JsDocument.type);
+    return window().document();
   }
 
   public static JsPromise fetch(JsString resource) {
@@ -117,7 +117,7 @@ public final class Js {
   ///
   /// @return a reference to the `History` instance
   public static JsHistory history() {
-    return global().prop("Window", "history").as(JsHistory.type);
+    return window().history();
   }
 
   /// Creates an action by concatenating all of the specified individual
@@ -214,6 +214,13 @@ public final class Js {
   /// @return an object representing this action
   public static JsAction var(String name, JsObject value) {
     return JsAction.var(name, value);
+  }
+
+  /// Returns the global `window` object.
+  ///
+  /// @return the global `window` object
+  public static JsWindow window() {
+    return global().as(JsWindow.type);
   }
 
 }

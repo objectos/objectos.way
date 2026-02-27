@@ -30,7 +30,7 @@ public class ScriptJsHistory01Test {
         ScriptJsHistory01.ACTION.toString(),
 
         """
-        ["W1",["GR"],["PR","Window","history"],["TY","History"],["IV","History","replaceState",[["JS",{}],["JS",""],["JS","#history-test"]]]]"""
+        ["W1",["GR"],["TY","Window"],["pr","history"],["IV","History","replaceState",[["JS",{}],["JS",""],["JS","#history-test"]]]]"""
     );
   }
 

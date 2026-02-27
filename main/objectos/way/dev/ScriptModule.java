@@ -33,7 +33,6 @@ final class ScriptModule implements Http.Routing.Module {
     routing.path("/script/005", GET, new Script005());
     routing.path("/script/006", GET, new Script006());
     routing.path("/script/007", GET, new Script007());
-    routing.path("/script/009", GET, new Script009());
     routing.path("/script/017", GET, new Script017());
     routing.path("/script/018", GET, new Script018());
     routing.path("/script/019", GET, new Script019());
@@ -48,13 +47,15 @@ final class ScriptModule implements Http.Routing.Module {
     routing.path("/script/follow/03", GET, new ScriptFollow03());
     routing.path("/script/follow/04", GET, new ScriptFollow04());
     routing.path("/script/follow/05", GET, new ScriptFollow05());
-    routing.path("/script/history/00", GET, new ScriptJsHistory00());
-    routing.path("/script/history/01", GET, new ScriptJsHistory01());
+    routing.path("/script/global/00", GET, new ScriptGlobalThis00());
     routing.path("/script/element/00", GET, new ScriptJsElement00());
     routing.path("/script/element/01", GET, new ScriptJsElement01());
     routing.path("/script/element/02", GET, new ScriptJsElement02());
     routing.path("/script/element/03", GET, new ScriptJsElement03());
     routing.path("/script/element/render/00", GET, new ScriptJsElementRender00());
+    routing.path("/script/history/00", GET, new ScriptJsHistory00());
+    routing.path("/script/history/01", GET, new ScriptJsHistory01());
+    routing.path("/script/window/00", GET, new ScriptJsWindow00());
     routing.path("/script/popstate/index", GET, new ScriptPopstateIndex());
     routing.path("/script/popstate/00", GET, new ScriptPopstate00());
     routing.path("/script/submit/{}", path -> {

@@ -19,11 +19,23 @@ package objectos.script;
 public final class JsPromise extends JsObject {
 
   /// Represents the `Promise` JS type.
-  public static final JsType<JsPromise> type = new JsType<>(
-      JsString.raw("Promise"), JsPromise::new
-  );
+  public static final JsType<JsPromise> type = new JsType<>("Promise") {
+    @Override
+    final JsPromise create(Object value) {
+      return new JsPromise(value);
+    }
 
-  private JsPromise(JsBase recv, JsOp op) {
+    @Override
+    final JsPromise create(JsObject recv, JsOp op) {
+      return new JsPromise(recv, op);
+    }
+  };
+
+  private JsPromise(Object value) {
+    super(value);
+  }
+
+  private JsPromise(JsObject recv, JsOp op) {
     super(recv, op);
   }
 

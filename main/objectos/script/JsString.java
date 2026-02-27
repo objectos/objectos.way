@@ -19,9 +19,17 @@ package objectos.script;
 public final class JsString extends JsObject {
 
   /// Represents the `string` JS type.
-  public static final JsType<JsString> type = new JsType<>(
-      JsString.raw("string"), JsString::new
-  );
+  public static final JsType<JsString> type = new JsType<>("string") {
+    @Override
+    final JsString create(Object value) {
+      return new JsString(value);
+    }
+
+    @Override
+    final JsString create(JsObject recv, JsOp op) {
+      return new JsString(recv, op);
+    }
+  };
 
   // operations
   static final JsString AX = raw("AX"); // argsRead
@@ -56,7 +64,7 @@ public final class JsString extends JsObject {
     super(value);
   }
 
-  private JsString(JsBase recv, JsOp op) {
+  private JsString(JsObject recv, JsOp op) {
     super(recv, op);
   }
 

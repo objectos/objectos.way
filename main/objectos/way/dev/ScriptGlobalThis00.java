@@ -27,7 +27,7 @@ Test case 009
 
 */
 @Css.Source
-public final class Script009 extends AbstractDevScript {
+public final class ScriptGlobalThis00 extends AbstractDevScript {
 
   public static final JsAction ACTION = Js
       .byId("subject")

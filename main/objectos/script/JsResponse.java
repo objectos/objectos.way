@@ -19,11 +19,23 @@ package objectos.script;
 public final class JsResponse extends JsObject {
 
   /// Represents the `Response` JS type.
-  public static final JsType<JsResponse> type = new JsType<>(
-      JsString.raw("Response"), JsResponse::new
-  );
+  public static final JsType<JsResponse> type = new JsType<>("Response") {
+    @Override
+    final JsResponse create(Object value) {
+      return new JsResponse(value);
+    }
 
-  private JsResponse(JsBase recv, JsOp op) {
+    @Override
+    final JsResponse create(JsObject recv, JsOp op) {
+      return new JsResponse(recv, op);
+    }
+  };
+
+  private JsResponse(Object value) {
+    super(value);
+  }
+
+  private JsResponse(JsObject recv, JsOp op) {
     super(recv, op);
   }
 

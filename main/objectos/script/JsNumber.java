@@ -19,15 +19,23 @@ package objectos.script;
 public final class JsNumber extends JsObject {
 
   /// Represents the `number` JS type.
-  public static final JsType<JsNumber> type = new JsType<>(
-      JsString.raw("number"), JsNumber::new
-  );
+  public static final JsType<JsNumber> type = new JsType<>("number") {
+    @Override
+    final JsNumber create(Object value) {
+      return new JsNumber(value);
+    }
+
+    @Override
+    final JsNumber create(JsObject recv, JsOp op) {
+      return new JsNumber(recv, op);
+    }
+  };
 
   private JsNumber(Object value) {
     super(value);
   }
 
-  private JsNumber(JsBase recv, JsOp op) {
+  private JsNumber(JsObject recv, JsOp op) {
     super(recv, op);
   }
 

@@ -21,11 +21,23 @@ import java.util.Objects;
 public final class JsHistory extends JsObject {
 
   /// Represents the `History` JS type.
-  public static final JsType<JsHistory> type = new JsType<>(
-      JsString.raw("History"), JsHistory::new
-  );
+  public static final JsType<JsHistory> type = new JsType<>("History") {
+    @Override
+    final JsHistory create(Object value) {
+      return new JsHistory(value);
+    }
 
-  private JsHistory(JsBase recv, JsOp op) {
+    @Override
+    final JsHistory create(JsObject recv, JsOp op) {
+      return new JsHistory(recv, op);
+    }
+  };
+
+  private JsHistory(Object value) {
+    super(value);
+  }
+
+  private JsHistory(JsObject recv, JsOp op) {
     super(recv, op);
   }
 
