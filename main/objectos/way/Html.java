@@ -778,6 +778,9 @@ public final class Html {
     /// The `nav` element.
     Html.ElementName NAV = HtmlElementName.NAV;
 
+    /// The `noscript` element.
+    Html.ElementName NOSCRIPT = HtmlElementName.NOSCRIPT;
+
     /// The `ol` element.
     Html.ElementName OL = HtmlElementName.OL;
 
@@ -2134,6 +2137,20 @@ public final class Html {
     ///
     /// @return an instruction representing the element.
     Html.Instruction.OfElement nav(String text);
+
+    /// Renders the `noscript` element with the specified content.
+    ///
+    /// @param contents the attributes and children of the element
+    ///
+    /// @return an instruction representing the element.
+    Html.Instruction.OfElement noscript(Html.Instruction... contents);
+
+    /// Renders the `noscript` element with the specified text.
+    ///
+    /// @param text the text value of the element
+    ///
+    /// @return an instruction representing the element.
+    Html.Instruction.OfElement noscript(String text);
 
     /// Renders the `ol` element with the specified content.
     ///
@@ -4727,6 +4744,24 @@ public final class Html {
     /// @return an instruction representing the element.
     protected final Html.Instruction.OfElement nav(String text) {
       return $html().nav(text);
+    }
+
+    /// Renders the `noscript` element with the specified content.
+    /// 
+    /// @param contents the attributes and children of the element
+    /// 
+    /// @return an instruction representing the element.
+    protected final Html.Instruction.OfElement noscript(Html.Instruction... contents) {
+      return $html().noscript(contents);
+    }
+
+    /// Renders the `noscript` element with the specified text.
+    /// 
+    /// @param text the text value of the element
+    /// 
+    /// @return an instruction representing the element.
+    protected final Html.Instruction.OfElement noscript(String text) {
+      return $html().noscript(text);
     }
 
     /// Renders the `ol` element with the specified content.

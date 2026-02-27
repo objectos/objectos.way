@@ -1071,6 +1071,24 @@ sealed abstract class HtmlMarkup permits HtmlMarkupOfHtml, HtmlMarkupOfTestable 
     return elem0(HtmlElementName.NAV, text);
   }
 
+  /// Renders the `noscript` element with the specified content.
+  /// 
+  /// @param contents the attributes and children of the element
+  /// 
+  /// @return an instruction representing the element.
+  public final Html.Instruction.OfElement noscript(Html.Instruction... contents) {
+    return elem0(HtmlElementName.NOSCRIPT, contents);
+  }
+
+  /// Renders the `noscript` element with the specified text.
+  /// 
+  /// @param text the text value of the element
+  /// 
+  /// @return an instruction representing the element.
+  public final Html.Instruction.OfElement noscript(String text) {
+    return elem0(HtmlElementName.NOSCRIPT, text);
+  }
+
   /// Renders the `ol` element with the specified content.
   /// 
   /// @param contents the attributes and children of the element

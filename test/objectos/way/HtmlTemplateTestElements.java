@@ -69,6 +69,28 @@ public class HtmlTemplateTestElements {
     );
   }
 
+  @Test
+  public void noscript() {
+    test(
+        new Html.Template() {
+          @Override
+          protected final void render() {
+            noscript();
+            noscript(p("child"));
+            noscript("Text only");
+          }
+        },
+
+        """
+        <noscript></noscript>
+        <noscript>
+        <p>child</p>
+        </noscript>
+        <noscript>Text only</noscript>
+        """
+    );
+  }
+
   private void test(Html.Template template, String expected) {
     String result;
     result = template.toString();

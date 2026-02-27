@@ -287,6 +287,7 @@ final class HtmlSpec {
         new ElementSpec("MENU", "menu", true),
         new ElementSpec("META", "meta", false),
         new ElementSpec("NAV", "nav", true),
+        new ElementSpec("NOSCRIPT", "noscript", true),
         new ElementSpec("OL", "ol", true),
         new ElementSpec("OPTGROUP", "optgroup", true),
         new ElementSpec("OPTION", "option", true),

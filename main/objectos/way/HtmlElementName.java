@@ -65,35 +65,36 @@ final class HtmlElementName implements Html.ElementName {
   static final HtmlElementName MENU = new HtmlElementName(true, 43, "menu");
   static final HtmlElementName META = new HtmlElementName(false, 44, "meta");
   static final HtmlElementName NAV = new HtmlElementName(true, 45, "nav");
-  static final HtmlElementName OL = new HtmlElementName(true, 46, "ol");
-  static final HtmlElementName OPTGROUP = new HtmlElementName(true, 47, "optgroup");
-  static final HtmlElementName OPTION = new HtmlElementName(true, 48, "option");
-  static final HtmlElementName P = new HtmlElementName(true, 49, "p");
-  static final HtmlElementName PATH = new HtmlElementName(true, 50, "path");
-  static final HtmlElementName PRE = new HtmlElementName(true, 51, "pre");
-  static final HtmlElementName PROGRESS = new HtmlElementName(true, 52, "progress");
-  static final HtmlElementName SAMP = new HtmlElementName(true, 53, "samp");
-  static final HtmlElementName SCRIPT = new HtmlElementName(true, 54, "script");
-  static final HtmlElementName SECTION = new HtmlElementName(true, 55, "section");
-  static final HtmlElementName SELECT = new HtmlElementName(true, 56, "select");
-  static final HtmlElementName SMALL = new HtmlElementName(true, 57, "small");
-  static final HtmlElementName SPAN = new HtmlElementName(true, 58, "span");
-  static final HtmlElementName STRONG = new HtmlElementName(true, 59, "strong");
-  static final HtmlElementName STYLE = new HtmlElementName(true, 60, "style");
-  static final HtmlElementName SUB = new HtmlElementName(true, 61, "sub");
-  static final HtmlElementName SUMMARY = new HtmlElementName(true, 62, "summary");
-  static final HtmlElementName SUP = new HtmlElementName(true, 63, "sup");
-  static final HtmlElementName SVG = new HtmlElementName(true, 64, "svg");
-  static final HtmlElementName TABLE = new HtmlElementName(true, 65, "table");
-  static final HtmlElementName TBODY = new HtmlElementName(true, 66, "tbody");
-  static final HtmlElementName TD = new HtmlElementName(true, 67, "td");
-  static final HtmlElementName TEMPLATE = new HtmlElementName(true, 68, "template");
-  static final HtmlElementName TEXTAREA = new HtmlElementName(true, 69, "textarea");
-  static final HtmlElementName TH = new HtmlElementName(true, 70, "th");
-  static final HtmlElementName THEAD = new HtmlElementName(true, 71, "thead");
-  static final HtmlElementName TITLE = new HtmlElementName(true, 72, "title");
-  static final HtmlElementName TR = new HtmlElementName(true, 73, "tr");
-  static final HtmlElementName UL = new HtmlElementName(true, 74, "ul");
+  static final HtmlElementName NOSCRIPT = new HtmlElementName(true, 46, "noscript");
+  static final HtmlElementName OL = new HtmlElementName(true, 47, "ol");
+  static final HtmlElementName OPTGROUP = new HtmlElementName(true, 48, "optgroup");
+  static final HtmlElementName OPTION = new HtmlElementName(true, 49, "option");
+  static final HtmlElementName P = new HtmlElementName(true, 50, "p");
+  static final HtmlElementName PATH = new HtmlElementName(true, 51, "path");
+  static final HtmlElementName PRE = new HtmlElementName(true, 52, "pre");
+  static final HtmlElementName PROGRESS = new HtmlElementName(true, 53, "progress");
+  static final HtmlElementName SAMP = new HtmlElementName(true, 54, "samp");
+  static final HtmlElementName SCRIPT = new HtmlElementName(true, 55, "script");
+  static final HtmlElementName SECTION = new HtmlElementName(true, 56, "section");
+  static final HtmlElementName SELECT = new HtmlElementName(true, 57, "select");
+  static final HtmlElementName SMALL = new HtmlElementName(true, 58, "small");
+  static final HtmlElementName SPAN = new HtmlElementName(true, 59, "span");
+  static final HtmlElementName STRONG = new HtmlElementName(true, 60, "strong");
+  static final HtmlElementName STYLE = new HtmlElementName(true, 61, "style");
+  static final HtmlElementName SUB = new HtmlElementName(true, 62, "sub");
+  static final HtmlElementName SUMMARY = new HtmlElementName(true, 63, "summary");
+  static final HtmlElementName SUP = new HtmlElementName(true, 64, "sup");
+  static final HtmlElementName SVG = new HtmlElementName(true, 65, "svg");
+  static final HtmlElementName TABLE = new HtmlElementName(true, 66, "table");
+  static final HtmlElementName TBODY = new HtmlElementName(true, 67, "tbody");
+  static final HtmlElementName TD = new HtmlElementName(true, 68, "td");
+  static final HtmlElementName TEMPLATE = new HtmlElementName(true, 69, "template");
+  static final HtmlElementName TEXTAREA = new HtmlElementName(true, 70, "textarea");
+  static final HtmlElementName TH = new HtmlElementName(true, 71, "th");
+  static final HtmlElementName THEAD = new HtmlElementName(true, 72, "thead");
+  static final HtmlElementName TITLE = new HtmlElementName(true, 73, "title");
+  static final HtmlElementName TR = new HtmlElementName(true, 74, "tr");
+  static final HtmlElementName UL = new HtmlElementName(true, 75, "ul");
 
   private static final HtmlElementName[] VALUES = {
       A,
@@ -142,6 +143,7 @@ final class HtmlElementName implements Html.ElementName {
       MENU,
       META,
       NAV,
+      NOSCRIPT,
       OL,
       OPTGROUP,
       OPTION,
