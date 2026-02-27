@@ -344,7 +344,25 @@ const way = (function() {
     // TODO validate url
     // - it must be internal
 
-    const opts = navigateOpts(args);
+    const opts = navigateOpts(ctx, args);
+
+    if (opts.reqHeaders) {
+      if (reqOpts === undefined) {
+        reqOpts = {}
+      }
+
+      if (reqOpts.headers === undefined) {
+        reqOpts.headers = opts.reqHeaders;
+      } else {
+        const h = new Headers(reqOpts.headers);
+
+        for (const [name, value] of opts.reqHeaders) {
+          h.append(name, value);
+        }
+
+        reqOpts.headers = h;
+      }
+    }
 
     const actions = navigateActions(opts);
 
@@ -383,6 +401,21 @@ const way = (function() {
       opts.history = checkBoolean(args.shift(), "value");
     },
 
+    // request header
+    "RH": function(opts, args) {
+      const name = checkString(args.shift(), "name");
+
+      const $value = checkDefined(args.shift(), "value");
+
+      const value = checkString(execute(opts.$ctx, $value), "value");
+
+      const h = opts.reqHeaders !== undefined
+        ? opts.reqHeaders
+        : opts.reqHeaders = new Headers();
+
+      h.append(name, value);
+    },
+
     // scroll to element
     "SE": function(opts, args) {
       opts.scrollBody = false;
@@ -407,10 +440,14 @@ const way = (function() {
     },
   };
 
-  function navigateOpts(args) {
+  function navigateOpts(ctx, args) {
     // initialize with defaults
     const opts = {
+      $ctx: ctx,
+
       history: true,
+
+      reqHeaders: undefined,
 
       updateHead: true,
       updateBody: true,

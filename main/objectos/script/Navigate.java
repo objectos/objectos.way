@@ -15,20 +15,30 @@
  */
 package objectos.script;
 
-import java.util.Objects;
-import objectos.way.Html;
+import module java.base;
+import module objectos.way;
 
 sealed abstract class Navigate permits Follow, Submit {
 
   // options
   static final JsString HI = JsString.raw("HI"); // history
+  static final JsString RH = JsString.raw("RH"); // request header
   static final JsString SE = JsString.raw("SE"); // scroll: element (into view)
   static final JsString SO = JsString.raw("SO"); // scroll: off
   static final JsString UP = JsString.raw("UP"); // update: elements to update
 
+  private record ReqHeader(JsString name, JsString value) {
+    @Override
+    public final String toString() {
+      return "[" + RH + "," + name + "," + value + "]";
+    }
+  }
+
   private final String name;
 
   private JsOp history;
+
+  private List<ReqHeader> reqHeaders;
 
   private JsOp scroll;
 
@@ -36,6 +46,42 @@ sealed abstract class Navigate permits Follow, Submit {
 
   Navigate(String name) {
     this.name = name;
+  }
+
+  /// Adds the specified header field to the HTTP request.
+  ///
+  /// @param name the header name
+  /// @param value the header value
+  public final void header(String name, String value) {
+    Objects.requireNonNull(name, "name == null");
+    Objects.requireNonNull(value, "value == null");
+
+    header0(name, JsString.of(value));
+  }
+
+  /// Adds the specified header field to the HTTP request.
+  ///
+  /// @param name the header name
+  /// @param value the header value
+  public final void header(String name, JsString value) {
+    Objects.requireNonNull(name, "name == null");
+    Objects.requireNonNull(value, "value == null");
+
+    header0(name, value);
+  }
+
+  private void header0(String name, JsString value) {
+    final JsString $name;
+    $name = JsString.raw(name);
+
+    final ReqHeader pojo;
+    pojo = new ReqHeader($name, value);
+
+    if (reqHeaders == null) {
+      reqHeaders = new ArrayList<>();
+    }
+
+    reqHeaders.add(pojo);
   }
 
   /// Configures whether the browser's history is updated on a successful
@@ -99,11 +145,23 @@ sealed abstract class Navigate permits Follow, Submit {
 
   @Override
   public final String toString() {
-    return "[\"" + name + "\"" + addIf(history) + addIf(scroll) + addIf(update) + "]";
+    return "[\"" + name + "\""
+        + addIf(history)
+        + addIf(reqHeaders)
+        + addIf(scroll)
+        + addIf(update) + "]";
   }
 
   final String addIf(Object op) {
     return op != null ? "," + op : "";
+  }
+
+  final String addIf(List<?> list) {
+    if (list != null) {
+      return list.stream().map(Object::toString).collect(Collectors.joining(",", ",", ""));
+    } else {
+      return "";
+    }
   }
 
 }
