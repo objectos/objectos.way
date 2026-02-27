@@ -53,4 +53,11 @@ public final class JsWindow extends JsObject {
     return propUnchecked("history").asUnchecked(JsHistory.type);
   }
 
+  /// Returns the `location` property of this window.
+  ///
+  /// @return the `location` property of this window
+  public final JsLocation location() {
+    return propUnchecked("location").asUnchecked(JsLocation.type);
+  }
+
 }
