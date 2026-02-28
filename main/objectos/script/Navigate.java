@@ -18,70 +18,24 @@ package objectos.script;
 import module java.base;
 import module objectos.way;
 
-sealed abstract class Navigate permits Follow, Submit {
+abstract class Navigate extends Fetch {
 
   // options
   static final JsString HI = JsString.raw("HI"); // history
-  static final JsString RH = JsString.raw("RH"); // request header
   static final JsString SE = JsString.raw("SE"); // scroll: element (into view)
   static final JsString SO = JsString.raw("SO"); // scroll: off
   static final JsString UP = JsString.raw("UP"); // update: elements to update
 
-  private record ReqHeader(JsString name, JsString value) {
-    @Override
-    public final String toString() {
-      return "[" + RH + "," + name + "," + value + "]";
-    }
-  }
-
   private final String name;
 
-  private JsOp history;
+  private JsArray history;
 
-  private List<ReqHeader> reqHeaders;
-
-  private JsOp scroll;
+  private JsArray scroll;
 
   private JsArray update;
 
   Navigate(String name) {
     this.name = name;
-  }
-
-  /// Adds the specified header field to the HTTP request.
-  ///
-  /// @param name the header name
-  /// @param value the header value
-  public final void header(String name, String value) {
-    Objects.requireNonNull(name, "name == null");
-    Objects.requireNonNull(value, "value == null");
-
-    header0(name, JsString.of(value));
-  }
-
-  /// Adds the specified header field to the HTTP request.
-  ///
-  /// @param name the header name
-  /// @param value the header value
-  public final void header(String name, JsString value) {
-    Objects.requireNonNull(name, "name == null");
-    Objects.requireNonNull(value, "value == null");
-
-    header0(name, value);
-  }
-
-  private void header0(String name, JsString value) {
-    final JsString $name;
-    $name = JsString.raw(name);
-
-    final ReqHeader pojo;
-    pojo = new ReqHeader($name, value);
-
-    if (reqHeaders == null) {
-      reqHeaders = new ArrayList<>();
-    }
-
-    reqHeaders.add(pojo);
   }
 
   /// Configures whether the browser's history is updated on a successful
@@ -93,7 +47,7 @@ sealed abstract class Navigate permits Follow, Submit {
     if (value) {
       history = null;
     } else {
-      history = JsOp.of(HI, "false");
+      history = JsArray.raw(HI, "false");
     }
   }
 
@@ -105,7 +59,7 @@ sealed abstract class Navigate permits Follow, Submit {
     if (value) {
       scroll = null;
     } else {
-      scroll = JsOp.of(SO);
+      scroll = JsArray.raw(SO);
     }
   }
 
@@ -116,7 +70,7 @@ sealed abstract class Navigate permits Follow, Submit {
     final JsElement el;
     el = Objects.requireNonNull(value, "value == null");
 
-    scroll = JsOp.of(SE, el);
+    scroll = JsArray.raw(SE, el);
   }
 
   /// The list of elements, given by their `id` attribute values, whose content
@@ -143,6 +97,9 @@ sealed abstract class Navigate permits Follow, Submit {
     update = builder.build();
   }
 
+  /// Returns a JSON representation of this object.
+  ///
+  /// @return a JSON representation of this object
   @Override
   public final String toString() {
     return "[\"" + name + "\""
@@ -154,14 +111,6 @@ sealed abstract class Navigate permits Follow, Submit {
 
   final String addIf(Object op) {
     return op != null ? "," + op : "";
-  }
-
-  final String addIf(List<?> list) {
-    if (list != null) {
-      return list.stream().map(Object::toString).collect(Collectors.joining(",", ",", ""));
-    } else {
-      return "";
-    }
   }
 
 }

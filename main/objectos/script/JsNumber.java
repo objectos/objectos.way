@@ -26,7 +26,7 @@ public final class JsNumber extends JsObject {
     }
 
     @Override
-    final JsNumber create(JsObject recv, JsOp op) {
+    final JsNumber create(JsObject recv, JsArray op) {
       return new JsNumber(recv, op);
     }
   };
@@ -35,7 +35,7 @@ public final class JsNumber extends JsObject {
     super(value);
   }
 
-  private JsNumber(JsObject recv, JsOp op) {
+  private JsNumber(JsObject recv, JsArray op) {
     super(recv, op);
   }
 
@@ -43,8 +43,8 @@ public final class JsNumber extends JsObject {
     final String n;
     n = Integer.toString(value);
 
-    final JsOp op;
-    op = JsOp.of(JsString.JS, n);
+    final JsArray op;
+    op = JsArray.raw(JsString.JS, n);
 
     return new JsNumber(op);
   }

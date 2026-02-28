@@ -26,7 +26,7 @@ public final class JsPromise extends JsObject {
     }
 
     @Override
-    final JsPromise create(JsObject recv, JsOp op) {
+    final JsPromise create(JsObject recv, JsArray op) {
       return new JsPromise(recv, op);
     }
   };
@@ -35,7 +35,7 @@ public final class JsPromise extends JsObject {
     super(value);
   }
 
-  private JsPromise(JsObject recv, JsOp op) {
+  private JsPromise(JsObject recv, JsArray op) {
     super(recv, op);
   }
 

@@ -16,6 +16,7 @@
 package objectos.script;
 
 import java.util.Objects;
+import java.util.function.Consumer;
 import objectos.way.Html;
 
 /// A JS runtime `Element` instance.
@@ -29,18 +30,18 @@ public final class JsElement extends JsNode {
     }
 
     @Override
-    final JsElement create(JsObject recv, JsOp op) {
+    final JsElement create(JsObject recv, JsArray op) {
       return new JsElement(recv, op);
     }
   };
 
-  static final JsElement TARGET = new JsElement(JsOp.ET);
+  static final JsElement TARGET = new JsElement(JsArray.raw(JsString.ET));
 
   private JsElement(Object value) {
     super(value);
   }
 
-  private JsElement(JsObject recv, JsOp op) {
+  private JsElement(JsObject recv, JsArray op) {
     super(recv, op);
   }
 
@@ -51,8 +52,8 @@ public final class JsElement extends JsNode {
   private static JsElement byId0(JsObject value) {
     Objects.requireNonNull(value, "value == null");
 
-    final JsOp op;
-    op = JsOp.of(JsString.EI, value);
+    final JsArray op;
+    op = JsArray.raw(JsString.EI, value);
 
     return new JsElement(op);
   }
@@ -162,6 +163,34 @@ public final class JsElement extends JsNode {
     return invoke("Element", "remove");
   }
 
+  /// Configures the `render` action.
+  public static final class Render extends Fetch {
+
+    private final JsString url;
+
+    private Render(JsString url) {
+      this.url = url;
+    }
+
+    final JsArray build() {
+      final JsArray.Builder builder;
+      builder = JsArray.rawBuilder();
+
+      builder.add(JsString.RE);
+
+      builder.add(url);
+
+      if (reqHeaders != null) {
+        for (Object o : reqHeaders) {
+          builder.add(o);
+        }
+      }
+
+      return builder.build();
+    }
+
+  }
+
   /// Replaces this element with the matching element from the response of the
   /// specified URL.
   ///
@@ -174,7 +203,10 @@ public final class JsElement extends JsNode {
     final JsString $url;
     $url = JsString.of(url);
 
-    return render0($url);
+    final JsArray op;
+    op = JsArray.raw(JsString.RE, $url);
+
+    return action(op);
   }
 
   /// Replaces this element with the matching element from the response of the
@@ -183,15 +215,19 @@ public final class JsElement extends JsNode {
   /// @param url the resource to be fetched
   ///
   /// @return an object representing this action
-  public final JsAction render(JsString url) {
+  public final JsAction render(String url, Consumer<? super Render> opts) {
     Objects.requireNonNull(url, "url == null");
 
-    return render0(url);
-  }
+    final JsString $url;
+    $url = JsString.of(url);
 
-  private final JsAction render0(JsString url) {
-    final JsOp op;
-    op = JsOp.of(JsString.RE, url);
+    final Render pojo;
+    pojo = new Render($url);
+
+    opts.accept(pojo);
+
+    final JsArray op;
+    op = pojo.build();
 
     return action(op);
   }

@@ -26,7 +26,7 @@ public final class JsLocation extends JsObject {
     }
 
     @Override
-    final JsLocation create(JsObject recv, JsOp op) {
+    final JsLocation create(JsObject recv, JsArray op) {
       return new JsLocation(recv, op);
     }
   };
@@ -35,7 +35,7 @@ public final class JsLocation extends JsObject {
     super(value);
   }
 
-  private JsLocation(JsObject recv, JsOp op) {
+  private JsLocation(JsObject recv, JsArray op) {
     super(recv, op);
   }
 

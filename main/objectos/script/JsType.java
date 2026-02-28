@@ -25,18 +25,18 @@ public abstract class JsType<T> {
   }
 
   final T as(JsObject value) {
-    final JsOp cast;
-    cast = JsOp.of(JsString.TY, typeName);
+    final JsArray cast;
+    cast = JsArray.raw(JsString.TY, typeName);
 
     return create(value, cast);
   }
 
-  final T invoke(JsObject recv, JsOp op) {
+  final T invoke(JsObject recv, JsArray op) {
     return create(recv, op);
   }
 
   abstract T create(Object value);
 
-  abstract T create(JsObject recv, JsOp op);
+  abstract T create(JsObject recv, JsArray op);
 
 }

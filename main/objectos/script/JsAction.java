@@ -83,13 +83,13 @@ public sealed abstract class JsAction {
 
   }
 
-  static final JsAction FOLLOW = new One(JsOp.of(JsString.FO));
+  static final JsAction FOLLOW = new One(JsArray.raw(JsString.FO));
 
-  static final JsAction NOOP = new One(JsOp.of(JsString.NO));
+  static final JsAction NOOP = new One(JsArray.raw(JsString.NO));
 
-  static final JsAction POPSTATE = new One(JsOp.of(JsString.PO));
+  static final JsAction POPSTATE = new One(JsArray.raw(JsString.PO));
 
-  static final JsAction SUBMIT = new One(JsOp.of(JsString.SU));
+  static final JsAction SUBMIT = new One(JsArray.raw(JsString.SU));
 
   JsAction() {}
 
@@ -135,8 +135,8 @@ public sealed abstract class JsAction {
   static JsAction throwError(JsString msg) {
     Objects.requireNonNull(msg, "msg == null");
 
-    final JsOp op;
-    op = JsOp.of(JsString.TE, msg);
+    final JsArray op;
+    op = JsArray.raw(JsString.TE, msg);
 
     return new One(op);
   }
@@ -148,8 +148,8 @@ public sealed abstract class JsAction {
     final JsString $name;
     $name = JsString.raw(name);
 
-    final JsOp op;
-    op = JsOp.of(JsString.CW, $name, value);
+    final JsArray op;
+    op = JsArray.raw(JsString.CW, $name, value);
 
     return new One(op);
   }

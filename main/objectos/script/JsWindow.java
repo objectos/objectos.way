@@ -26,7 +26,7 @@ public final class JsWindow extends JsObject {
     }
 
     @Override
-    final JsWindow create(JsObject recv, JsOp op) {
+    final JsWindow create(JsObject recv, JsArray op) {
       return new JsWindow(recv, op);
     }
   };
@@ -35,7 +35,7 @@ public final class JsWindow extends JsObject {
     super(value);
   }
 
-  private JsWindow(JsObject recv, JsOp op) {
+  private JsWindow(JsObject recv, JsArray op) {
     super(recv, op);
   }
 

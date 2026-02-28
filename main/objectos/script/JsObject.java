@@ -31,7 +31,7 @@ public class JsObject {
     this.value = value;
   }
 
-  JsObject(JsObject recv, JsOp op) {
+  JsObject(JsObject recv, JsArray op) {
     value = recv.with(op);
   }
 
@@ -45,8 +45,8 @@ public class JsObject {
     final JsNumber $index;
     $index = JsNumber.raw(index);
 
-    final JsOp ref;
-    ref = JsOp.of(JsString.AX, $index);
+    final JsArray ref;
+    ref = JsArray.raw(JsString.AX, $index);
 
     return new JsObject(ref);
   }
@@ -128,8 +128,8 @@ public class JsObject {
     final JsString $name;
     $name = JsString.raw(name);
 
-    final JsOp ref;
-    ref = JsOp.of(JsString.CR, $name);
+    final JsArray ref;
+    ref = JsArray.raw(JsString.CR, $name);
 
     return new JsObject(ref);
   }
@@ -163,7 +163,7 @@ public class JsObject {
   ///
   /// @return an object representing this action
   public final JsAction invoke(String type, String method, JsObject... args) {
-    final JsOp invoke;
+    final JsArray invoke;
     invoke = invoke0(type, method, args);
 
     return action(invoke);
@@ -180,13 +180,13 @@ public class JsObject {
   ///
   /// @return the result of the method invocation
   public final <T> T invoke(JsType<T> returnType, String type, String method, JsObject... args) {
-    final JsOp op;
+    final JsArray op;
     op = invoke0(type, method, args);
 
     return returnType.invoke(this, op);
   }
 
-  private JsOp invoke0(String type, String method, JsObject... args) {
+  private JsArray invoke0(String type, String method, JsObject... args) {
     Objects.requireNonNull(type, "type == null");
     Objects.requireNonNull(method, "method == null");
     Objects.requireNonNull(args, "args == null");
@@ -200,7 +200,7 @@ public class JsObject {
     final JsArray $args;
     $args = JsArray.rawArgs(args);
 
-    return JsOp.of(JsString.IV, $type, $method, $args);
+    return JsArray.raw(JsString.IV, $type, $method, $args);
   }
 
   /// Invokes the specified method with the specified arguments in order.
@@ -216,8 +216,8 @@ public class JsObject {
     final JsArray $args;
     $args = JsArray.rawArgs(args);
 
-    final JsOp action;
-    action = JsOp.of(JsString.IU, $method, $args);
+    final JsArray action;
+    action = JsArray.raw(JsString.IU, $method, $args);
 
     return action(action);
   }
@@ -237,8 +237,8 @@ public class JsObject {
     final JsArray $args;
     $args = JsArray.rawArgs(args);
 
-    final JsOp action;
-    action = JsOp.of(JsString.IU, $method, $args);
+    final JsArray action;
+    action = JsArray.raw(JsString.IU, $method, $args);
 
     return returnType.invoke(this, action);
   }
@@ -260,8 +260,8 @@ public class JsObject {
     final JsString $name;
     $name = JsString.raw(name);
 
-    final JsOp op;
-    op = JsOp.of(JsString.PR, $type, $name);
+    final JsArray op;
+    op = JsArray.raw(JsString.PR, $type, $name);
 
     return new JsObject(
         with(op)
@@ -279,8 +279,8 @@ public class JsObject {
     final JsString $name;
     $name = JsString.raw(name);
 
-    final JsOp op;
-    op = JsOp.of(JsString.pr, $name);
+    final JsArray op;
+    op = JsArray.raw(JsString.pr, $name);
 
     return new JsObject(
         with(op)
@@ -306,8 +306,8 @@ public class JsObject {
     final JsString $name;
     $name = JsString.raw(name);
 
-    final JsOp op;
-    op = JsOp.of(JsString.PW, $type, $name, value);
+    final JsArray op;
+    op = JsArray.raw(JsString.PW, $type, $name, value);
 
     return action(op);
   }
@@ -322,7 +322,7 @@ public class JsObject {
   @Override
   public final String toString() {
     return switch (value) {
-      case JsOp single -> single.toString();
+      case JsArray single -> single.toString();
 
       case String s -> s;
 
@@ -334,7 +334,7 @@ public class JsObject {
     };
   }
 
-  final JsAction action(JsOp op) {
+  final JsAction action(JsArray op) {
     final List<?> combined;
     combined = with(op);
 
@@ -343,9 +343,9 @@ public class JsObject {
     );
   }
 
-  final List<?> with(JsOp op) {
+  final List<?> with(JsArray op) {
     return switch (value) {
-      case JsOp single -> List.of(single, op);
+      case JsArray single -> List.of(single, op);
 
       case String single -> List.of(single, op);
 
@@ -358,7 +358,7 @@ public class JsObject {
   }
 
   @SuppressWarnings("unchecked")
-  private List<?> with0(List<?> head, JsOp op) {
+  private List<?> with0(List<?> head, JsArray op) {
     final List<Object> list;
     list = new ArrayList<>();
 

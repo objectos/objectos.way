@@ -566,7 +566,7 @@ const way = (function() {
 
     const url = checkString(execute(ctx, $url), "url");
 
-    const navArgs = [];
+    const navArgs = [...args];
 
     // disable history
     navArgs.push(["HI", false]);

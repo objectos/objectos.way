@@ -28,16 +28,22 @@ public final class JsBoolean extends JsObject {
     }
 
     @Override
-    final JsBoolean create(JsObject recv, JsOp op) {
+    final JsBoolean create(JsObject recv, JsArray op) {
       return new JsBoolean(recv, op);
     }
   };
+
+  /// The `false` JS boolean literal
+  public static final JsBoolean FALSE = new JsBoolean(JsArray.raw(JsString.JS, "false"));
+
+  /// The `true` JS boolean literal
+  public static final JsBoolean TRUE = new JsBoolean(JsArray.raw(JsString.JS, "true"));
 
   private JsBoolean(Object value) {
     super(value);
   }
 
-  private JsBoolean(JsObject recv, JsOp op) {
+  private JsBoolean(JsObject recv, JsArray op) {
     super(recv, op);
   }
 
@@ -52,8 +58,8 @@ public final class JsBoolean extends JsObject {
     Objects.requireNonNull(onTrue, "onTrue == null");
     Objects.requireNonNull(onFalse, "onFalse == null");
 
-    final JsOp op;
-    op = JsOp.of(JsString.IF, onTrue, onFalse);
+    final JsArray op;
+    op = JsArray.raw(JsString.IF, onTrue, onFalse);
 
     return action(op);
   }

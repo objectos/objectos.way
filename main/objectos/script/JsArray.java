@@ -210,8 +210,8 @@ public final class JsArray extends JsObject {
   public final JsAction forEach(JsAction value) {
     Objects.requireNonNull(value, "value == null");
 
-    final JsOp op;
-    op = JsOp.of(JsString.FE, JsString.Array, value);
+    final JsArray op;
+    op = JsArray.raw(JsString.FE, JsString.Array, value);
 
     return action(op);
   }

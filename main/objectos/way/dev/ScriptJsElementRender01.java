@@ -16,16 +16,21 @@
 package objectos.way.dev;
 
 import module objectos.way;
+import objectos.script.Js;
 
 /*
 
-- option: scrollIntoView
+- JsElement
+- action: render
+- opts: header
 
 */
 @Css.Source
-public final class ScriptSubmit03 extends AbstractDevScript {
+public final class ScriptJsElementRender01 extends AbstractDevScript {
 
-  public static final JsAction ACTION = Js.submit(opts -> opts.header("Way-Test", "true"));
+  public static final JsAction ACTION = Js.byId("subject").render("/script/element/render/01", opts -> {
+    opts.header(WAY_TEST.headerCase(), "true");
+  });
 
   private boolean test;
 
@@ -33,38 +38,29 @@ public final class ScriptSubmit03 extends AbstractDevScript {
   public final void handle(Http.Exchange http) {
     test = "true".equals(http.header(WAY_TEST));
 
-    switch (http.method()) {
-      case GET, POST -> super.handle(http);
-
-      default -> http.allow(Http.Method.GET, Http.Method.POST);
-    }
+    super.handle(http);
   }
 
   @Override
   final void renderBody() {
-    form(
+    div(
         css("""
         display:flex
         flex-direction:column
         gap:16rx
         """),
 
-        action("/script/submit/03"),
-
-        method("post"),
-
-        onsubmit(ACTION),
+        button(
+            id("click-me"),
+            onclick(ACTION),
+            text("Click me"),
+            type("button")
+        ),
 
         div(
             SUBJECT,
 
             text("Way-Test: " + test)
-        ),
-
-        button(
-            id("click-me"),
-            text("Click me"),
-            type("submit")
         )
     );
   }

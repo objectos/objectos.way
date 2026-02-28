@@ -109,7 +109,7 @@ public final class Js {
   ///
   /// @return the global scope object
   public static JsObject global() {
-    return new JsObject(JsOp.GR);
+    return new JsObject(JsArray.raw(JsString.GR));
   }
 
   /// Returns a reference to the global `History` instance (provided the global

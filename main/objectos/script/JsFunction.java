@@ -17,20 +17,20 @@ package objectos.script;
 
 final class JsFunction extends JsObject {
 
-  JsFunction(JsOp value) {
+  JsFunction(JsArray value) {
     super(value);
   }
 
   static JsFunction of(JsAction value) {
-    final JsOp op;
-    op = JsOp.of(JsString.FN, value);
+    final JsArray op;
+    op = JsArray.raw(JsString.FN, value);
 
     return new JsFunction(op);
   }
 
   static JsFunction of(JsObject value) {
-    final JsOp op;
-    op = JsOp.of(JsString.FN, value);
+    final JsArray op;
+    op = JsArray.raw(JsString.FN, value);
 
     return new JsFunction(op);
   }

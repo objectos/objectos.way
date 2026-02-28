@@ -28,7 +28,7 @@ public final class JsHistory extends JsObject {
     }
 
     @Override
-    final JsHistory create(JsObject recv, JsOp op) {
+    final JsHistory create(JsObject recv, JsArray op) {
       return new JsHistory(recv, op);
     }
   };
@@ -37,7 +37,7 @@ public final class JsHistory extends JsObject {
     super(value);
   }
 
-  private JsHistory(JsObject recv, JsOp op) {
+  private JsHistory(JsObject recv, JsArray op) {
     super(recv, op);
   }
 

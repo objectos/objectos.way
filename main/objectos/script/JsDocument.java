@@ -26,7 +26,7 @@ public final class JsDocument extends JsNode {
     }
 
     @Override
-    final JsDocument create(JsObject recv, JsOp op) {
+    final JsDocument create(JsObject recv, JsArray op) {
       return new JsDocument(recv, op);
     }
   };
@@ -35,7 +35,7 @@ public final class JsDocument extends JsNode {
     super(value);
   }
 
-  private JsDocument(JsObject recv, JsOp op) {
+  private JsDocument(JsObject recv, JsArray op) {
     super(recv, op);
   }
 

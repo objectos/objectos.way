@@ -25,7 +25,7 @@ public sealed class JsNode extends JsObject
     super(value);
   }
 
-  JsNode(JsObject recv, JsOp op) {
+  JsNode(JsObject recv, JsArray op) {
     super(recv, op);
   }
 

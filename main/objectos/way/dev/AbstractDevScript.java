@@ -21,6 +21,8 @@ abstract class AbstractDevScript extends Html.Template implements Http.Handler {
 
   static final Html.AttributeName DATA_TEST = Html.AttributeName.of("data-test");
 
+  static final Http.HeaderName WAY_TEST = Http.HeaderName.of("Way-Test");
+
   static final Html.Id SUBJECT = Html.Id.of("subject");
 
   @Override

@@ -26,7 +26,7 @@ public final class JsResponse extends JsObject {
     }
 
     @Override
-    final JsResponse create(JsObject recv, JsOp op) {
+    final JsResponse create(JsObject recv, JsArray op) {
       return new JsResponse(recv, op);
     }
   };
@@ -35,7 +35,7 @@ public final class JsResponse extends JsObject {
     super(value);
   }
 
-  private JsResponse(JsObject recv, JsOp op) {
+  private JsResponse(JsObject recv, JsArray op) {
     super(recv, op);
   }
 

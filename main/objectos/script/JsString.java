@@ -26,7 +26,7 @@ public final class JsString extends JsObject {
     }
 
     @Override
-    final JsString create(JsObject recv, JsOp op) {
+    final JsString create(JsObject recv, JsArray op) {
       return new JsString(recv, op);
     }
   };
@@ -64,7 +64,7 @@ public final class JsString extends JsObject {
     super(value);
   }
 
-  private JsString(JsObject recv, JsOp op) {
+  private JsString(JsObject recv, JsArray op) {
     super(recv, op);
   }
 
@@ -72,8 +72,8 @@ public final class JsString extends JsObject {
     final String v;
     v = quote(s);
 
-    final JsOp op;
-    op = JsOp.of(JS, v);
+    final JsArray op;
+    op = JsArray.raw(JS, v);
 
     return new JsString(op);
   }
