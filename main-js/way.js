@@ -255,7 +255,9 @@ const way = (function() {
 
   let $historyUpdate = 0;
 
-  function historyUpdate(ctx, _args) {
+  function historyUpdate(ctx, args) {
+    const value = checkDefined(args.shift(), "value");
+
     const global = ctx.window();
 
     const h = global.history;
@@ -270,7 +272,13 @@ const way = (function() {
       h.replaceState(state, unused, global.location.href);
     }
 
-    h.pushState(state, unused, ctx.$respUrl);
+    if (value === true) {
+      h.pushState(state, unused, ctx.$respUrl);
+    } else if (typeof value === 'string') {
+      h.pushState(state, unused, value);
+    } else {
+      throw new Error(`Illegal arg: value=${value}`);
+    }
   }
 
   function ifElse(ctx, args) {
@@ -373,9 +381,16 @@ const way = (function() {
   }
 
   const $navigateOpts = {
-    // history
+    // history (on-off)
     "HI": function(opts, args) {
       opts.history = checkBoolean(args.shift(), "value");
+    },
+
+    // history (push url)
+    "HU": function(opts, args) {
+      const $url = checkDefined(args.shift(), "url");
+
+      opts.history = checkString(execute(opts.$ctx, $url), "url");
     },
 
     // request header
@@ -483,7 +498,7 @@ const way = (function() {
     }
 
     if (opts.history) {
-      actions.push(["HI"]);
+      actions.push(["HI", opts.history]);
     }
 
     return actions;
@@ -566,10 +581,7 @@ const way = (function() {
 
     const url = checkString(execute(ctx, $url), "url");
 
-    const navArgs = [...args];
-
-    // disable history
-    navArgs.push(["HI", false]);
+    const navArgs = [];
 
     // disable scroll
     navArgs.push(["SO"]);
@@ -579,6 +591,8 @@ const way = (function() {
 
     // update only this element
     navArgs.push(["UP", id]);
+
+    navArgs.push(...args);
 
     return navigate(ctx, navArgs, url);
   }

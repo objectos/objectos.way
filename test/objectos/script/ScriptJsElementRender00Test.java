@@ -31,7 +31,7 @@ public class ScriptJsElementRender00Test {
         ScriptJsElementRender00.ACTION.toString(),
 
         """
-        ["W1",["EI",["JS","subject"]],["RE",["JS","/script/element/render/00?after=true"]]]"""
+        ["W1",["EI",["JS","subject"]],["RE",["JS","/script/element/render/00?after=true"],["HI",false]]]"""
     );
   }
 

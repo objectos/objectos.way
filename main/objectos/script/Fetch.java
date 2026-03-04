@@ -22,6 +22,8 @@ import java.util.stream.Collectors;
 
 abstract class Fetch {
 
+  static final JsString HI = JsString.raw("HI"); // history (on-off)
+  static final JsString HU = JsString.raw("HU"); // history (url)
   static final JsString RH = JsString.raw("RH"); // request header
 
   private record ReqHeader(JsString name, JsString value) {
@@ -30,6 +32,8 @@ abstract class Fetch {
       return "[" + RH + "," + name + "," + value + "]";
     }
   }
+
+  JsArray history;
 
   List<ReqHeader> reqHeaders;
 
@@ -70,6 +74,38 @@ abstract class Fetch {
     }
 
     reqHeaders.add(pojo);
+  }
+
+  /// Configures whether the browser's history is updated on a successful
+  /// response.
+  ///
+  /// @param value `true` if the browser's history should be updated;
+  ///        `false` otherwise
+  public final void history(boolean value) {
+    if (value) {
+      history = null;
+    } else {
+      history = JsArray.raw(HI, "false");
+    }
+  }
+
+  /// Adds an entry to the browser's history stack on a successful response.
+  ///
+  /// @param url the new history entry's URL
+  public final void history(String url) {
+    final JsString $url;
+    $url = JsString.of(url);
+
+    history($url);
+  }
+
+  /// Adds an entry to the browser's history stack on a successful response.
+  ///
+  /// @param url the new history entry's URL
+  public final void history(JsString url) {
+    Objects.requireNonNull(url, "url == null");
+
+    history = JsArray.raw(HU, url);
   }
 
   final String addIf(List<?> list) {

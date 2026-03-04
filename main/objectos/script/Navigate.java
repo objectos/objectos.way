@@ -21,14 +21,11 @@ import module objectos.way;
 abstract class Navigate extends Fetch {
 
   // options
-  static final JsString HI = JsString.raw("HI"); // history
   static final JsString SE = JsString.raw("SE"); // scroll: element (into view)
   static final JsString SO = JsString.raw("SO"); // scroll: off
   static final JsString UP = JsString.raw("UP"); // update: elements to update
 
   private final String name;
-
-  private JsArray history;
 
   private JsArray scroll;
 
@@ -36,19 +33,6 @@ abstract class Navigate extends Fetch {
 
   Navigate(String name) {
     this.name = name;
-  }
-
-  /// Configures whether the browser's history is updated on a successful
-  /// response.
-  ///
-  /// @param value `true` if the browser's history should be updated;
-  ///        `false` otherwise
-  public final void history(boolean value) {
-    if (value) {
-      history = null;
-    } else {
-      history = JsArray.raw(HI, "false");
-    }
   }
 
   /// Configures whether the window scroll position should be reset on a

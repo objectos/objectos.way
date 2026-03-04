@@ -170,6 +170,8 @@ public final class JsElement extends JsNode {
 
     private Render(JsString url) {
       this.url = url;
+
+      history(false);
     }
 
     final JsArray build() {
@@ -179,6 +181,10 @@ public final class JsElement extends JsNode {
       builder.add(JsString.RE);
 
       builder.add(url);
+
+      if (history != null) {
+        builder.add(history);
+      }
 
       if (reqHeaders != null) {
         for (Object o : reqHeaders) {
@@ -200,13 +206,7 @@ public final class JsElement extends JsNode {
   public final JsAction render(String url) {
     Objects.requireNonNull(url, "url == null");
 
-    final JsString $url;
-    $url = JsString.of(url);
-
-    final JsArray op;
-    op = JsArray.raw(JsString.RE, $url);
-
-    return action(op);
+    return render(url, _ -> {});
   }
 
   /// Replaces this element with the matching element from the response of the
