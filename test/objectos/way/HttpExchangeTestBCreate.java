@@ -222,12 +222,23 @@ public class HttpExchangeTestBCreate extends HttpExchangeTest {
       config.queryParam("i1", Integer.MIN_VALUE);
       config.queryParam("l0", Long.MAX_VALUE);
       config.queryParam("l1", Long.MIN_VALUE);
+      config.queryParam("s", "i'm a string");
     });
 
     assertEquals(http.queryParamAsInt("i0", 0), Integer.MAX_VALUE);
     assertEquals(http.queryParamAsInt("i1", 0), Integer.MIN_VALUE);
+    assertEquals(http.queryParamAsInt("s", 123), 123);
+    assertEquals(http.queryParamAsInt("x", 123), 123);
+    assertEquals(http.queryParamAsInt("i0", () -> 0), Integer.MAX_VALUE);
+    assertEquals(http.queryParamAsInt("s", () -> 123), 123);
+    assertEquals(http.queryParamAsInt("x", () -> 123), 123);
     assertEquals(http.queryParamAsLong("l0", 0L), Long.MAX_VALUE);
     assertEquals(http.queryParamAsLong("l1", 0L), Long.MIN_VALUE);
+    assertEquals(http.queryParamAsLong("s", 123L), 123L);
+    assertEquals(http.queryParamAsLong("x", 123L), 123L);
+    assertEquals(http.queryParamAsLong("l0", () -> 0L), Long.MAX_VALUE);
+    assertEquals(http.queryParamAsLong("s", () -> 123L), 123L);
+    assertEquals(http.queryParamAsLong("x", () -> 123L), 123L);
   }
 
   @Test

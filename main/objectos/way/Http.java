@@ -37,6 +37,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.IntSupplier;
+import java.util.function.LongSupplier;
 import java.util.function.Predicate;
 import java.util.random.RandomGenerator;
 import java.util.stream.Collectors;
@@ -1093,26 +1095,21 @@ public final class Http {
      */
     List<String> queryParamAll(String name);
 
-    /**
-     * Returns, as an {@code int}, the first value of the query parameter with
-     * the specified name or returns the specified default value.
-     *
-     * <p>
-     * The specified default value will be returned if the query component
-     * does not contain a parameter with the specified name or if the first
-     * value of such parameter does not represent an {@code int} value.
-     *
-     * @param name
-     *        the name of the query parameter
-     * @param defaultValue
-     *        the value to be returned if the parameter does not exist or if
-     *        its first value cannot be converted to an {@code int} value
-     *
-     * @return the first value converted to {@code int} if it exists or the
-     *         specified default value otherwise
-     */
+    /// Returns, as an `int`, the first value of the query parameter with the
+    /// specified name or returns the specified default value.
+    ///
+    /// The specified default value will be returned if the query component does
+    /// not contain a parameter with the specified name or if the first value of
+    /// such parameter does not represent an `int` value.
+    ///
+    /// @param name the name of the query parameter
+    /// @param defaultValue the value to be returned if the parameter does not
+    ///        exist or if its first value cannot be converted to an `int` value
+    ///
+    /// @return the first value converted to `int` if it exists or the specified
+    ///         default value otherwise
     default int queryParamAsInt(String name, int defaultValue) {
-      String maybe;
+      final String maybe;
       maybe = queryParam(name);
 
       if (maybe == null) {
@@ -1126,26 +1123,49 @@ public final class Http {
       }
     }
 
-    /**
-     * Returns, as a {@code long}, the first value of the query parameter with
-     * the specified name or returns the specified default value.
-     *
-     * <p>
-     * The specified default value will be returned if the query component
-     * does not contain a parameter with the specified name or if the first
-     * value of such parameter does not represent a {@code long} value.
-     *
-     * @param name
-     *        the name of the query parameter
-     * @param defaultValue
-     *        the value to be returned if the parameter does not exist or if
-     *        its first value cannot be converted to an {@code long} value
-     *
-     * @return the first value converted to {@code long} if it exists or the
-     *         specified default value otherwise
-     */
+    /// Returns, as a `int`, the first value of the query parameter with the
+    /// specified name or returns the value from the specified supplier.
+    ///
+    /// The value from the specified supplier will be returned if the query
+    /// component does not contain a parameter with the specified name or if the
+    /// first value of such parameter does not represent a `int` value.
+    ///
+    /// @param name the name of the query parameter
+    /// @param defaultSupplier supplies the value if the parameter does not exist
+    ///        or if its first value cannot be converted to an `int` value
+    ///
+    /// @return the first value converted to `int` if it exists or the value from
+    ///         the supplier otherwise
+    default int queryParamAsInt(String name, IntSupplier defaultSupplier) {
+      final String maybe;
+      maybe = queryParam(name);
+
+      if (maybe == null) {
+        return defaultSupplier.getAsInt();
+      }
+
+      try {
+        return Integer.parseInt(maybe);
+      } catch (NumberFormatException expected) {
+        return defaultSupplier.getAsInt();
+      }
+    }
+
+    /// Returns, as a `long`, the first value of the query parameter with the
+    /// specified name or returns the specified default value.
+    ///
+    /// The specified default value will be returned if the query component does
+    /// not contain a parameter with the specified name or if the first value of
+    /// such parameter does not represent a `long` value.
+    ///
+    /// @param name the name of the query parameter
+    /// @param defaultValue the value to be returned if the parameter does not
+    ///        exist or if its first value cannot be converted to an `long` value
+    ///
+    /// @return the first value converted to `long` if it exists or the specified
+    ///         default value otherwise
     default long queryParamAsLong(String name, long defaultValue) {
-      String maybe;
+      final String maybe;
       maybe = queryParam(name);
 
       if (maybe == null) {
@@ -1156,6 +1176,34 @@ public final class Http {
         return Long.parseLong(maybe);
       } catch (NumberFormatException expected) {
         return defaultValue;
+      }
+    }
+
+    /// Returns, as a `long`, the first value of the query parameter with the
+    /// specified name or returns the value from the specified supplier.
+    ///
+    /// The value from the specified supplier will be returned if the query
+    /// component does not contain a parameter with the specified name or if the
+    /// first value of such parameter does not represent a `long` value.
+    ///
+    /// @param name the name of the query parameter
+    /// @param defaultSupplier supplies the value if the parameter does not exist
+    ///        or if its first value cannot be converted to an `long` value
+    ///
+    /// @return the first value converted to `long` if it exists or the value
+    ///         from the supplier otherwise
+    default long queryParamAsLong(String name, LongSupplier defaultSupplier) {
+      final String maybe;
+      maybe = queryParam(name);
+
+      if (maybe == null) {
+        return defaultSupplier.getAsLong();
+      }
+
+      try {
+        return Long.parseLong(maybe);
+      } catch (NumberFormatException expected) {
+        return defaultSupplier.getAsLong();
       }
     }
 
