@@ -24,6 +24,8 @@ final class HttpRequestMatcher implements Predicate<Http.Request> {
   private enum Kind {
     METHOD_ALLOWED,
 
+    METHOD_NOT_ALLOWED,
+
     PATH_EXACT,
 
     PATH_SEGMENTS,
@@ -295,6 +297,10 @@ final class HttpRequestMatcher implements Predicate<Http.Request> {
     return new HttpRequestMatcher(Kind.METHOD_ALLOWED, value);
   }
 
+  static HttpRequestMatcher methodNotAllowed(Set<Http.Method> allowedMethods) {
+    return new HttpRequestMatcher(Kind.METHOD_NOT_ALLOWED, allowedMethods);
+  }
+
   static HttpRequestMatcher pathExact(final String value) {
     return new HttpRequestMatcher(Kind.PATH_EXACT, value);
   }
@@ -397,6 +403,16 @@ final class HttpRequestMatcher implements Predicate<Http.Request> {
         method = target.method();
 
         yield method == state || (method == Http.Method.HEAD && state == Http.Method.GET);
+      }
+
+      case METHOD_NOT_ALLOWED -> {
+        final Http.Method method;
+        method = target.method();
+
+        final Set<?> allowed;
+        allowed = (Set<?>) state;
+
+        yield !(allowed.contains(method) || (method == Http.Method.HEAD && allowed.contains(Http.Method.GET)));
       }
 
       // exact

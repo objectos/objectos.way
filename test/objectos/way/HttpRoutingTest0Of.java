@@ -201,7 +201,9 @@ public class HttpRoutingTest0Of {
   public void path03() {
     test(
         routing -> {
-          routing.path("/{}", Http.Method.GET, _ -> {});
+          routing.path("/foo", Http.Method.GET, _ -> {});
+
+          routing.handler(Http.Handler.notFound());
         },
 
         http -> {
@@ -209,9 +211,10 @@ public class HttpRoutingTest0Of {
         },
 
         """
-        HTTP/1.1 204 No Content\r
+        HTTP/1.1 404 Not Found\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
         Content-Length: 0\r
+        Connection: close\r
         \r
         """
     );

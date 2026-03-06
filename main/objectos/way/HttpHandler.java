@@ -89,10 +89,13 @@ final class HttpHandler implements Http.Handler {
   }
 
   public static Http.Handler methodNotAllowed(Set<Http.Method> allowedMethods) {
+    final HttpRequestMatcher predicate;
+    predicate = HttpRequestMatcher.methodNotAllowed(allowedMethods);
+
     final String allow;
     allow = allowedMethods.stream().map(Http.Method::name).collect(Collectors.joining(", "));
 
-    return new HttpHandler(Kind.METHOD_NOT_ALLOWED, null, allow);
+    return new HttpHandler(Kind.METHOD_NOT_ALLOWED, predicate, allow);
   }
 
   public static Http.Handler methodAllowed(Http.Method method, Http.Handler handler) {
@@ -316,25 +319,10 @@ final class HttpHandler implements Http.Handler {
       }
 
       case METHOD_ALLOWED_SINGLE -> {
-        final int pathIndex;
-        pathIndex = http.pathIndex();
-
         final Http.Handler single;
         single = (Http.Handler) main;
 
         single.handle(http);
-
-        if (!http.processed()) {
-          http.pathIndex(pathIndex);
-
-          http.status(Http.Status.NO_CONTENT);
-
-          http.header(Http.HeaderName.DATE, http.now());
-
-          http.header(Http.HeaderName.CONTENT_LENGTH, 0L);
-
-          http.send();
-        }
       }
 
       case METHOD_ALLOWED_MANY -> {
@@ -358,18 +346,6 @@ final class HttpHandler implements Http.Handler {
           }
 
           http.pathIndex(pathIndex);
-        }
-
-        if (!http.processed()) {
-          http.pathIndex(pathIndex);
-
-          http.status(Http.Status.NO_CONTENT);
-
-          http.header(Http.HeaderName.DATE, http.now());
-
-          http.header(Http.HeaderName.CONTENT_LENGTH, 0L);
-
-          http.send();
         }
       }
 
