@@ -32,7 +32,7 @@ public class ScriptJsLocation01Test {
         ScriptJsLocation01.ACTION.toString(),
 
         """
-        ["W1",["EI",["JS","subject"]],["PW","Node","textContent",["W1",["GR"],["TY","Window"],["pr","location"],["PR","Location","hash"],["TY","string"]]]]"""
+        ["W1",["EI",["JS","subject"]],["PW","Node","textContent",["W1",["GR"],["TY","Window"],["pr","location"],["PR","Location","hash"]]]]"""
     );
   }
 
@@ -41,13 +41,17 @@ public class ScriptJsLocation01Test {
     try (var page = Y.page()) {
       page.navigate("/script/location/01");
 
-      page.evaluate("() => { window.location.hash = 'test-hash'; }");
-
       var clickMe = page.locator("#click-me");
 
       var subject = page.locator("#subject");
 
       assertThat(subject).hasText("window.location.hash is...");
+
+      clickMe.click();
+
+      assertThat(subject).hasText("");
+
+      page.evaluate("() => { window.location.hash = 'test-hash'; }");
 
       clickMe.click();
 

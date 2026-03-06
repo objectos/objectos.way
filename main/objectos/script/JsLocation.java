@@ -43,14 +43,14 @@ public final class JsLocation extends JsObject {
   ///
   /// @return the `hash` property of this location
   public final JsString hash() {
-    return prop("Location", "hash").as(JsString.type);
+    return prop("Location", "hash").asUnchecked(JsString.type);
   }
 
   /// Returns the `href` property of this location.
   ///
   /// @return the `href` property of this location
   public final JsString href() {
-    return prop("Location", "href").as(JsString.type);
+    return prop("Location", "href").asUnchecked(JsString.type);
   }
 
 }

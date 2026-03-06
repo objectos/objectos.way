@@ -19,37 +19,40 @@ import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertTha
 import static org.testng.Assert.assertEquals;
 
 import objectos.way.Y;
-import objectos.way.dev.ScriptJsLocation00;
+import objectos.way.dev.ScriptJsElementRender03;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 @Listeners(Y.class)
-public class ScriptJsLocation00Test {
+public class ScriptJsElementRender03Test {
 
   @Test
   public void action() {
     assertEquals(
-        ScriptJsLocation00.ACTION.toString(),
+        ScriptJsElementRender03.ACTION.toString(),
 
         """
-        ["W1",["EI",["JS","subject"]],["PW","Node","textContent",["W1",["GR"],["TY","Window"],["pr","location"],["PR","Location","href"]]]]"""
+        ["W1",["EI",["JS","subject"]],["RE",["JS","/script/element/render/03"],["HI",false],["RH","Way-Test",["W1",["GR"],["TY","Window"],["pr","location"],["PR","Location","hash"]]]]]"""
     );
   }
 
   @Test
   public void live() {
     try (var page = Y.page()) {
-      page.navigate("/script/location/00");
+      page.navigate("/script/element/render/03");
 
       var clickMe = page.locator("#click-me");
-
       var subject = page.locator("#subject");
-
-      assertThat(subject).hasText("window.location.href is...");
 
       clickMe.click();
 
-      assertThat(subject).hasText(page.url());
+      assertThat(subject).hasText("Way-Test: null");
+
+      page.navigate("/script/element/render/03#abc");
+
+      clickMe.click();
+
+      assertThat(subject).hasText("Way-Test: #abc");
     }
   }
 

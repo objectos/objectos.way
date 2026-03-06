@@ -133,7 +133,6 @@ const way = (function() {
   const operations = {
     "AX": argsRead,
     "CR": contextRead,
-    "cr": contextReadUnchecked,
     "CW": contextWrite,
     "EI": elementById,
     "ET": elementTarget,
@@ -180,16 +179,6 @@ const way = (function() {
 
   function contextRead(ctx, args) {
     const name = contextName(args.shift());
-
-    return ctx[name];
-  }
-
-  function contextReadUnchecked(ctx, args) {
-    const name = checkString(args.shift(), "name");
-
-    if (name.length === 0) {
-      throw new Error("Illegal arg: context variable name must not be empty");
-    }
 
     return ctx[name];
   }
@@ -574,7 +563,7 @@ const way = (function() {
   function propertyRead0(recv, propName) {
     const prop = recv[propName];
 
-    if (!prop) {
+    if (prop === undefined) {
       throw new Error(`Illegal arg: ${recv} does not declare the ${propName} property`);
     }
 
