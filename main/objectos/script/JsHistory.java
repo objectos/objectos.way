@@ -45,7 +45,7 @@ public final class JsHistory extends JsObject {
   ///
   /// @param state object associated with the new history entry
   /// @param unused unused parameter but cannot be omitted
-  /// @param the history entry's URL
+  /// @param url the history entry's URL
   ///
   /// @return an object representing this action
   public final JsAction pushState(JsObject state, JsString unused, JsString url) {
@@ -60,7 +60,7 @@ public final class JsHistory extends JsObject {
   ///
   /// @param state object associated with the new history entry
   /// @param unused unused parameter but cannot be omitted
-  /// @param the history entry's URL
+  /// @param url the history entry's URL
   ///
   /// @return an object representing this action
   public final JsAction replaceState(JsObject state, JsString unused, JsString url) {
