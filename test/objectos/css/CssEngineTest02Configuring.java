@@ -13,16 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.way;
+package objectos.css;
 
-import static objectos.way.CssEngine.block;
-import static objectos.way.CssEngine.keyframes;
-import static objectos.way.CssEngine.section;
+import static objectos.css.CssEngine.block;
+import static objectos.css.CssEngine.keyframes;
+import static objectos.css.CssEngine.section;
 import static org.testng.Assert.assertEquals;
 
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import objectos.way.Y;
 import org.testng.annotations.Test;
 
 public class CssEngineTest02Configuring {

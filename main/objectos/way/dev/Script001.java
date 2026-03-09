@@ -16,12 +16,13 @@
 package objectos.way.dev;
 
 import module objectos.way;
+import objectos.css.CssSource;
 import objectos.script.Js;
 
 /// Test case 001
 ///
 /// - event: click - locator: target - invoke method w/ 1 args
-@Css.Source
+@CssSource
 public final class Script001 extends AbstractDevScript {
 
   public static final JsAction ACTION = Js.target()

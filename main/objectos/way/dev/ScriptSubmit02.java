@@ -16,13 +16,14 @@
 package objectos.way.dev;
 
 import module objectos.way;
+import objectos.css.CssSource;
 
 /*
 
 - option: scrollIntoView
 
 */
-@Css.Source
+@CssSource
 public final class ScriptSubmit02 extends AbstractDevScript {
 
   public static final JsAction ACTION = Js.submit(opts -> opts.scroll(Js.byId("bottom")));

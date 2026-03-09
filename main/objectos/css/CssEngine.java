@@ -13,54 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.way;
+package objectos.css;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.classfile.Annotation;
 import java.lang.classfile.Attributes;
-import java.lang.classfile.ClassFile;
-import java.lang.classfile.ClassModel;
-import java.lang.classfile.attribute.RuntimeInvisibleAnnotationsAttribute;
-import java.lang.classfile.constantpool.ConstantPool;
-import java.lang.classfile.constantpool.PoolEntry;
-import java.lang.classfile.constantpool.StringEntry;
-import java.lang.classfile.constantpool.Utf8Entry;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.FileVisitResult;
-import java.nio.file.FileVisitor;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.security.CodeSource;
-import java.security.ProtectionDomain;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.HexFormat;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.Consumer;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
+import module java.base;
+import module objectos.way;
 
-final class CssEngine implements Css.StyleSheet {
+final class CssEngine implements StyleSheet {
 
-  static Css.StyleSheet create0(Consumer<? super Css.StyleSheet.Options> options) {
+  static StyleSheet create0(Consumer<? super StyleSheet.Options> options) {
     final Configuring configuring;
     configuring = new Configuring();
 
@@ -2252,7 +2214,7 @@ final class CssEngine implements Css.StyleSheet {
   // # BEGIN: Configuring
   // ##################################################################
 
-  static final class Configuring implements Css.StyleSheet.Options {
+  static final class Configuring implements StyleSheet.Options {
 
     private final Note.Ref2<Decl, Decl> $replaced = Note.Ref2.create(getClass(), "REP", Note.INFO);
 
@@ -2260,7 +2222,7 @@ final class CssEngine implements Css.StyleSheet {
 
     private final CssParser cssParser = new CssParser();
 
-    private Note.Sink noteSink = Note.NoOpSink.INSTANCE;
+    private Note.Sink noteSink = Note.NoOpSink.create();
 
     private Set<String> scanClasses = Set.of();
 
@@ -2323,7 +2285,11 @@ final class CssEngine implements Css.StyleSheet {
     public final void cssPropertyNames(String... values) {
       for (int idx = 0; idx < values.length; idx++) {
         final String name;
-        name = Check.notNull(values[idx], "values[", idx, "] == null");
+        name = values[idx];
+
+        if (name == null) {
+          throw new NullPointerException("values[" + idx + "] == null");
+        }
 
         if (userCssProperties.isEmpty()) {
           userCssProperties = new HashSet<>();
@@ -2334,7 +2300,7 @@ final class CssEngine implements Css.StyleSheet {
     }
 
     @Override
-    public final void include(Css.Library value) {
+    public final void include(CssLibrary value) {
       value.configure(this);
     }
 
@@ -2369,7 +2335,11 @@ final class CssEngine implements Css.StyleSheet {
 
       for (int idx = 0; idx < classes.length; idx++) {
         final Class<?> c;
-        c = Check.notNull(classes[idx], "values[", idx, "] == null");
+        c = classes[idx];
+
+        if (c == null) {
+          throw new NullPointerException("values[" + idx + "] == null");
+        }
 
         final String name;
         name = c.getName();
@@ -2997,7 +2967,6 @@ final class CssEngine implements Css.StyleSheet {
 
     final Note.Ref1<String> $classNotFound = Note.Ref1.create(getClass(), "CNF", Note.WARN);
     final Note.Ref2<String, IOException> $classIoError = Note.Ref2.create(getClass(), "CIX", Note.WARN);
-    final Note.Ref2<String, Lang.InvalidClassFileException> $classInvalid = Note.Ref2.create(getClass(), "CFI", Note.WARN);
 
     final ClassFiles classFiles;
 
@@ -3325,7 +3294,7 @@ final class CssEngine implements Css.StyleSheet {
         final Utf8Entry className;
         className = annotation.className();
 
-        if (className.equalsString("Lobjectos/way/Css$Source;")) {
+        if (className.equalsString("Lobjectos/css/CssSource;")) {
           scan(classModel);
 
           break;

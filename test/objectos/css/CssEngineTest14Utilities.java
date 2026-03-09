@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.way;
+package objectos.css;
 
-import static objectos.way.CssEngine.block;
-import static objectos.way.CssEngine.decl;
+import static objectos.css.CssEngine.utility;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
@@ -25,22 +24,49 @@ import java.util.List;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class CssEngineTest13Components {
+public class CssEngineTest14Utilities {
+
+  private static final CssEngine.Variant AFTER = CssEngine.variant(
+      0, "&::after", "&::after { ", " }"
+  );
+  private static final CssEngine.Variant MD = CssEngine.variant(
+      2, "md", "@media (min-width: 48rem) { ", " }"
+  );
 
   @DataProvider
   public Object[][] writeProvider() {
     return new Object[][] {{
-        "1 component",
-
+        "Empty",
+        List.of(),
+        ""
+    }, {
+        "1 rule",
         List.of(
-            block("[data-theme=g90]", decl("--color-background", "#262626"))
+            utility(List.of(), ".margin\\:0", "margin", "0")
         ),
-
         """
-        @layer components {
-          [data-theme=g90] {
-            --color-background: #262626;
-          }
+        @layer utilities {
+          .margin\\:0 { margin: 0 }
+        }
+        """
+    }, {
+        "1 rule + 1 variant",
+        List.of(
+            utility(List.of(AFTER), ".after\\/padding\\:0", "padding", "0")
+        ),
+        """
+        @layer utilities {
+          .after\\/padding\\:0 { &::after { padding: 0 } }
+        }
+        """
+    }, {
+        "1 rule + 2 variants",
+        List.of(
+            utility(List.of(MD, AFTER), ".md\\/after\\/padding\\:0", "padding", "0")
+        ),
+        """
+        @layer utilities {
+          .md\\/after\\/padding\\:0 { @media (min-width: 48rem) { &::after { padding: 0 } } }
         }
         """
     }};
@@ -49,16 +75,16 @@ public class CssEngineTest13Components {
   @Test(dataProvider = "writeProvider")
   public void write(
       String description,
-      @SuppressWarnings("exports") List<CssEngine.Block> components,
+      @SuppressWarnings("exports") List<CssEngine.Utility> values,
       String expected) {
     try {
-      final CssEngine.Components writer;
-      writer = new CssEngine.Components(components);
+      final CssEngine.Utilities utilities;
+      utilities = new CssEngine.Utilities(values);
 
       final StringBuilder out;
       out = new StringBuilder();
 
-      writer.write(out);
+      utilities.write(out);
 
       assertEquals(out.toString(), expected);
     } catch (IOException e) {

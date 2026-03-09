@@ -16,13 +16,14 @@
 package objectos.way.dev;
 
 import module objectos.way;
+import objectos.css.CssSource;
 
 /*
 
 - event: popstate
 
 */
-@Css.Source
+@CssSource
 public final class ScriptPopstate00 extends AbstractDevScript {
 
   public static final JsAction ACTION = Js.popstate();

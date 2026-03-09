@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.way;
+package objectos.css;
 
 import static org.testng.Assert.assertEquals;
 
 import java.util.function.Consumer;
+import objectos.way.Y;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -517,10 +518,10 @@ public class CssEngineTest16Full {
   @Test(dataProvider = "generateProvider")
   public void generate(
       String description,
-      Consumer<Css.StyleSheet.Options> module,
+      Consumer<StyleSheet.Options> module,
       String expected) {
-    final Css.StyleSheet sheet;
-    sheet = Css.StyleSheet.create(o -> {
+    final StyleSheet sheet;
+    sheet = StyleSheet.create(o -> {
       o.noteSink(Y.noteSink());
 
       module.accept(o);
@@ -532,7 +533,7 @@ public class CssEngineTest16Full {
     assertEquals(result, expected);
   }
 
-  private Consumer<Css.StyleSheet.Options> cfg(Consumer<Css.StyleSheet.Options> module) {
+  private Consumer<StyleSheet.Options> cfg(Consumer<StyleSheet.Options> module) {
     return module;
   }
 

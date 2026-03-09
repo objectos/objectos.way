@@ -16,6 +16,7 @@
 package objectos.way.dev;
 
 import module objectos.way;
+import objectos.css.CssSource;
 import objectos.script.Js;
 
 /*
@@ -25,7 +26,7 @@ import objectos.script.Js;
 - options: update
 
 */
-@Css.Source
+@CssSource
 public final class ScriptFollow03 extends AbstractDevScript {
 
   private static final Html.Id TARGET0 = Html.Id.of("tgt0");

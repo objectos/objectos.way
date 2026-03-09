@@ -16,6 +16,7 @@
 package objectos.way.dev;
 
 import module objectos.way;
+import objectos.css.CssSource;
 
 /*
 
@@ -25,7 +26,7 @@ Test case 027
 - action: setTimeout
 
 */
-@Css.Source
+@CssSource
 public final class Script027 extends AbstractDevScript {
 
   public static final JsAction ACTION = Js.setTimeout(

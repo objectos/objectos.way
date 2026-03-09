@@ -17,6 +17,7 @@ package objectos.way.dev;
 
 import java.util.List;
 import module objectos.way;
+import objectos.css.CssSource;
 
 /*
 
@@ -24,7 +25,7 @@ import module objectos.way;
 - method: GET
 
 */
-@Css.Source
+@CssSource
 public final class ScriptSubmit01 extends AbstractDevScript {
 
   public static final JsAction ACTION = Js.submit();

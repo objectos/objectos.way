@@ -29,7 +29,7 @@ public final class CssPropsGen {
     sourceFile = Path.of("work", "css-props.txt");
 
     final Path targetFile;
-    targetFile = Path.of("main", "objectos", "way", "CssProps.java");
+    targetFile = Path.of("main", "objectos", "css", "CssProps.java");
 
     try (
         final BufferedWriter w = Files.newBufferedWriter(

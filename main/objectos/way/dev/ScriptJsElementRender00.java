@@ -16,6 +16,7 @@
 package objectos.way.dev;
 
 import module objectos.way;
+import objectos.css.CssSource;
 import objectos.script.Js;
 
 /*
@@ -24,7 +25,7 @@ import objectos.script.Js;
 - action: render
 
 */
-@Css.Source
+@CssSource
 public final class ScriptJsElementRender00 extends AbstractDevScript {
 
   public static final JsAction ACTION = Js.byId("subject").render("/script/element/render/00?after=true");

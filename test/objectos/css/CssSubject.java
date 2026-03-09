@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022-2026 Objectos Software LTDA.
+ * Copyright (C) 2023-2026 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,11 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/// Defines the Objectos Way API.
-module objectos.way {
-  exports objectos.css;
-  exports objectos.script;
-  exports objectos.way;
+package objectos.css;
 
-  requires transitive java.sql;
+import objectos.way.Html;
+
+abstract class CssSubject extends Html.Template {
+  @Override
+  protected final void render() {
+    div(
+        f(this::classes)
+    );
+  }
+
+  abstract void classes();
 }

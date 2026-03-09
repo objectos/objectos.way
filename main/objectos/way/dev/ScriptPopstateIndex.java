@@ -16,13 +16,14 @@
 package objectos.way.dev;
 
 import module objectos.way;
+import objectos.css.CssSource;
 
 /*
 
 - event: popstate
 
 */
-@Css.Source
+@CssSource
 public final class ScriptPopstateIndex extends Html.Template implements Http.Handler {
 
   @Override

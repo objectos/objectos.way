@@ -16,6 +16,7 @@
 package objectos.way.dev;
 
 import module objectos.way;
+import objectos.css.CssSource;
 import objectos.script.Js;
 
 /*
@@ -27,7 +28,7 @@ Test case 007
 - JsArray.forEach
 
 */
-@Css.Source
+@CssSource
 public final class Script007 extends AbstractDevScript {
 
   public static final JsAction ACTION = Js.array("el-1", "el-3").forEach(

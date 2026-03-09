@@ -13,61 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.way;
+package objectos.css;
 
 import static org.testng.Assert.assertEquals;
 
 import java.util.Set;
-import java.util.stream.Collectors;
+import objectos.way.Note;
+import objectos.way.Y;
+import org.slf4j.Logger;
 import org.testng.annotations.Test;
 
-public class CssEngineTest03Classes {
-
-  private static class Subj01 {}
-
-  private static class Subj02 {}
+public class CssEngineTest05Jars {
 
   @Test
-  public void testCase01() {
-    test(
-        Set.of(Subj01.class),
-
-        name(Subj01.class)
-    );
-  }
-
-  @Test
-  public void testCase02() {
-    test(
-        Set.of(Subj01.class, Subj02.class),
-
-        name(Subj01.class),
-        name(Subj02.class)
-    );
-  }
-
-  private String name(Class<?> type) {
-    return type.getName().replace('.', '/');
-  }
-
-  private void test(Set<Class<?>> classes, String... expected) {
+  public void scanJarFile01() {
     final CssEngineClassFiles tester;
     tester = new CssEngineClassFiles();
 
-    final Set<String> names;
-    names = classes.stream().map(Class::getName).collect(Collectors.toSet());
+    final Set<Class<?>> jars;
+    jars = Set.of(Logger.class);
 
     final Note.Sink noteSink;
     noteSink = Y.noteSink();
 
-    final CssEngine.Classes scanner;
-    scanner = new CssEngine.Classes(tester, names, noteSink);
+    final CssEngine.Jars scanner;
+    scanner = new CssEngine.Jars(tester, jars, noteSink);
 
     scanner.scan();
 
-    assertEquals(tester.scan, Set.of(expected));
+    assertEquals(tester.scan, Set.of());
 
-    assertEquals(tester.scanIfAnnotated, Set.of());
+    assertEquals(tester.scanIfAnnotated.contains("org/slf4j/Logger"), true);
+    assertEquals(tester.scanIfAnnotated.contains("org/slf4j/Marker"), true);
   }
 
 }

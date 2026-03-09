@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.way;
+package objectos.css;
 
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.List;
-import objectos.way.CssEngine.Top;
+import objectos.css.CssEngine.Top;
 import org.testng.annotations.Test;
 
 public class CssEngineTest12Base {

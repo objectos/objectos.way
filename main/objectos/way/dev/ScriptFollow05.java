@@ -16,6 +16,7 @@
 package objectos.way.dev;
 
 import module objectos.way;
+import objectos.css.CssSource;
 import objectos.script.Js;
 
 /*
@@ -25,7 +26,7 @@ import objectos.script.Js;
 - options: scroll(element)
 
 */
-@Css.Source
+@CssSource
 public final class ScriptFollow05 extends AbstractDevScript {
 
   public static final JsAction ACTION = Js.follow(opts -> opts.scroll(false));

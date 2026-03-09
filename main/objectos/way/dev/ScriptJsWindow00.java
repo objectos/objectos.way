@@ -16,12 +16,13 @@
 package objectos.way.dev;
 
 import module objectos.way;
+import objectos.css.CssSource;
 import objectos.script.Js;
 
 /*
 
 */
-@Css.Source
+@CssSource
 public final class ScriptJsWindow00 extends AbstractDevScript {
 
   public static final JsAction ACTION = Js

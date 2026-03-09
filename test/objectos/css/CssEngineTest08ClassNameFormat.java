@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.way;
+package objectos.css;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.way.CssEngine.ClassNameFormat;
+import objectos.css.CssEngine.ClassNameFormat;
 import org.testng.annotations.Test;
 
 public class CssEngineTest08ClassNameFormat {

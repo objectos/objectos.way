@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.way;
+package objectos.css;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -24,6 +24,8 @@ import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
+import objectos.way.Note;
+import objectos.way.Y;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -40,7 +42,7 @@ public class CssEngineTest06Scanner {
         """
         package test;
 
-        @objectos.way.Css.Source
+        @objectos.css.CssSource
         class Subject {
           String s = "margin:0";
         }

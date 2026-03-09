@@ -16,6 +16,7 @@
 package objectos.way.dev;
 
 import module objectos.way;
+import objectos.css.CssSource;
 import objectos.script.Js;
 
 /*
@@ -26,7 +27,7 @@ Test case 023
 - action: navigate
 
 */
-@Css.Source
+@CssSource
 public final class ScriptFollow00 extends AbstractDevScript {
 
   public static final JsAction ACTION = Js.follow();

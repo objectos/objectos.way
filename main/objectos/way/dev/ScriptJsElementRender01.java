@@ -16,6 +16,7 @@
 package objectos.way.dev;
 
 import module objectos.way;
+import objectos.css.CssSource;
 import objectos.script.Js;
 
 /*
@@ -25,7 +26,7 @@ import objectos.script.Js;
 - opts: header
 
 */
-@Css.Source
+@CssSource
 public final class ScriptJsElementRender01 extends AbstractDevScript {
 
   public static final JsAction ACTION = Js.byId("subject").render("/script/element/render/01", opts -> {

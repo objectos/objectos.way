@@ -16,6 +16,7 @@
 package objectos.way.dev;
 
 import module objectos.way;
+import objectos.css.CssSource;
 
 /*
 
@@ -23,7 +24,7 @@ import module objectos.way;
 - method: POST
 
 */
-@Css.Source
+@CssSource
 public final class ScriptSubmit00 extends AbstractDevScript {
 
   public static final JsAction ACTION = Js.submit();

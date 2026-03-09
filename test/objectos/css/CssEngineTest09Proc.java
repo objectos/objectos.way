@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.way;
+package objectos.css;
 
-import static objectos.way.CssEngine.utility;
+import static objectos.css.CssEngine.utility;
 import static org.testng.Assert.assertEquals;
 
 import java.util.ArrayList;
@@ -23,7 +23,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import objectos.way.CssEngine.Variant;
+import objectos.css.CssEngine.Variant;
+import objectos.way.Note;
+import objectos.way.Y;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 

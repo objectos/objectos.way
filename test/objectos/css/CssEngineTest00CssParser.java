@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.way;
+package objectos.css;
 
-import static objectos.way.CssEngine.decl;
-import static objectos.way.CssEngine.fontFace;
-import static objectos.way.CssEngine.keyframes;
-import static objectos.way.CssEngine.block;
+import static objectos.css.CssEngine.block;
+import static objectos.css.CssEngine.decl;
+import static objectos.css.CssEngine.fontFace;
+import static objectos.css.CssEngine.keyframes;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 

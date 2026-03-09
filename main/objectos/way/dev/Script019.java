@@ -16,6 +16,7 @@
 package objectos.way.dev;
 
 import module objectos.way;
+import objectos.css.CssSource;
 import objectos.script.Js;
 
 /*
@@ -27,7 +28,7 @@ Test case 019
 - action: branch
 
 */
-@Css.Source
+@CssSource
 public final class Script019 extends AbstractDevScript {
 
   public static final JsAction ACTION = Js.target().hasAttribute(DATA_TEST).test(

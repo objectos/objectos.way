@@ -13,36 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.way;
+package objectos.css;
 
 import static org.testng.Assert.assertEquals;
 
-import java.util.Set;
-import org.slf4j.Logger;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class CssEngineTest05Jars {
+public class CssEngineTest00CustomProp {
 
-  @Test
-  public void scanJarFile01() {
-    final CssEngineClassFiles tester;
-    tester = new CssEngineClassFiles();
+  @DataProvider
+  public Object[][] testProvider() {
+    return new Object[][] {
+        {"--foo", true},
+        {"--foo-bar", true},
+        {"-foo", false},
+        {"foo", false},
+        {"--123foo", false}
+    };
+  }
 
-    final Set<Class<?>> jars;
-    jars = Set.of(Logger.class);
+  @Test(dataProvider = "testProvider")
+  public void test(
+      String input,
+      boolean expected) {
+    final CssEngine.CustomProp prop;
+    prop = new CssEngine.CustomProp();
 
-    final Note.Sink noteSink;
-    noteSink = Y.noteSink();
+    prop.set(input);
 
-    final CssEngine.Jars scanner;
-    scanner = new CssEngine.Jars(tester, jars, noteSink);
+    final boolean result;
+    result = prop.test();
 
-    scanner.scan();
-
-    assertEquals(tester.scan, Set.of());
-
-    assertEquals(tester.scanIfAnnotated.contains("org/slf4j/Logger"), true);
-    assertEquals(tester.scanIfAnnotated.contains("org/slf4j/Marker"), true);
+    assertEquals(result, expected);
   }
 
 }

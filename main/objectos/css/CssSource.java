@@ -13,15 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.way;
+package objectos.css;
 
-abstract class CssSubject extends Html.Template {
-  @Override
-  protected final void render() {
-    div(
-        f(this::classes)
-    );
-  }
+import module java.base;
 
-  abstract void classes();
-}
+/// Indicates that the annotated type should be scanned for CSS utilities during
+/// a CSS generation process.
+@Retention(RetentionPolicy.CLASS)
+@Target(ElementType.TYPE)
+public @interface CssSource {}

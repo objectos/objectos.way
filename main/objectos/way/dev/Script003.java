@@ -16,12 +16,13 @@
 package objectos.way.dev;
 
 import module objectos.way;
+import objectos.css.CssSource;
 import objectos.script.Js;
 
 /// Test case 003
 ///
 /// - event: click - locator: id - invoke method w/ 0 args
-@Css.Source
+@CssSource
 public final class Script003 extends AbstractDevScript {
 
   public static final JsAction ACTION = Js.byId("subject").remove();

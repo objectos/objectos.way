@@ -16,6 +16,7 @@
 package objectos.way.dev;
 
 import module objectos.way;
+import objectos.css.CssSource;
 import objectos.script.Js;
 
 /*
@@ -24,7 +25,7 @@ import objectos.script.Js;
 - action: setAttribute
 
 */
-@Css.Source
+@CssSource
 public final class ScriptJsElement03 extends AbstractDevScript {
 
   public static final JsAction ACTION = Js.byId("subject").attr(Html.AttributeName.CLASS, "background-color:yellow");

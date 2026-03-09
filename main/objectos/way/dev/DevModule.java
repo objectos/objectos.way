@@ -19,6 +19,7 @@ import static objectos.way.Http.Method.GET;
 
 import module java.base;
 import module objectos.way;
+import objectos.css.StyleSheet;
 
 /// This class is not part of the Objectos Way JAR file. It is placed in the
 /// main source tree to ease the development.
@@ -45,7 +46,7 @@ public final class DevModule implements Http.Routing.Module {
   }
 
   private void styles(Http.Exchange http) {
-    http.ok(Css.StyleSheet.create(opts -> {
+    http.ok(StyleSheet.create(opts -> {
       final Note.Sink noteSink;
       noteSink = injector.getInstance(Note.Sink.class);
 

@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.way;
+package objectos.css;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 import java.nio.file.Path;
 import java.util.Set;
+import objectos.way.Note;
+import objectos.way.Y;
 import org.testng.annotations.Test;
 
 public class CssEngineTest04Dirs {
@@ -44,7 +46,7 @@ public class CssEngineTest04Dirs {
           """
           package test;
 
-          @objectos.way.Css.Source
+          @objectos.css.CssSource
           public class Subject extends objectos.way.Html.Template {
             @Override
             protected final void render() {
@@ -80,7 +82,7 @@ public class CssEngineTest04Dirs {
           """
           package test;
 
-          @objectos.way.Css.Source
+          @objectos.css.CssSource
           public class Subject extends objectos.way.Html.Template {
             @Override
             protected final void render() {

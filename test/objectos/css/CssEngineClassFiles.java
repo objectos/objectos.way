@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.way;
+package objectos.css;
 
 import java.lang.classfile.ClassFile;
 import java.lang.classfile.ClassModel;
