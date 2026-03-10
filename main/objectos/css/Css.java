@@ -428,13 +428,13 @@ final class Css {
   static String systemTheme() {
     return """
     :root {
-      --font-sans:
-        ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-        'Noto Color Emoji';
-      --font-serif: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
-      --font-mono:
-        ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
-        monospace;
+      --default-font-sans: ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+      --default-font-serif: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
+      --default-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+
+      --font-sans: var(--default-font-sans);
+      --font-serif: var(--default-font-serif);
+      --font-mono: var(--default-font-mono);
 
       --default-font-family: var(--font-sans, initial);
       --default-font-feature-settings: var(--font-sans--font-feature-settings, initial);

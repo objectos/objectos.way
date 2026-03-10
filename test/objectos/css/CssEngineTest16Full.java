@@ -512,6 +512,34 @@ public class CssEngineTest16Full {
           .group-hover\\/text-decoration\\:underline { &:is(:where(.group):hover *) { @media (hover: hover) { text-decoration: underline } } }
         }
         """
+    }, {
+        "override font",
+        cfg(e -> {
+          class Subject extends CssSubject {
+            @Override
+            final void classes() {
+              css("font-family:var(--font-sans)");
+            }
+          }
+
+          e.systemBase("");
+          e.systemTheme("""
+          :root {
+            --font-sans: 'Inter', var(--default-font-sans);
+          }
+          """);
+          e.scanClasses(Subject.class);
+        }),
+        """
+        @layer theme {
+          :root {
+            --font-sans: 'Inter', var(--default-font-sans);
+          }
+        }
+        @layer utilities {
+          .font-family\\:var\\(--font-sans\\) { font-family: var(--font-sans) }
+        }
+        """
     }};
   }
 
