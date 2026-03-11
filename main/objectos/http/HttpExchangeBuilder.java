@@ -52,7 +52,7 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
 
   private Map<String, Object> queryParams;
 
-  private final Http.Version version = Http.Version.HTTP_1_1;
+  private final HttpVersion version = HttpVersion.HTTP_1_1;
 
   private Map<HttpHeaderName, Object> headers;
 

@@ -15,12 +15,15 @@
  */
 package objectos.http;
 
-/**
- * Executes tasks around the invocation of an HTTP handler.
- */
+/// Executes tasks around the invocation of an HTTP handler.
 @FunctionalInterface
 public interface HttpFilter {
 
+  /// Allows for executing tasks before and after the handling of the HTTP
+  /// exchange.
+  ///
+  /// @param http the HTTP exchange
+  /// @param handler the HTTP handler
   void filter(HttpExchange http, HttpHandler handler);
 
 }

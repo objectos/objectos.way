@@ -398,7 +398,7 @@ public class HttpExchangeTestBCreate extends HttpExchangeTest {
   @Test
   public void responseListener01() {
     class Subject extends Html.Template implements HttpResponseListener {
-      Http.Version version;
+      HttpVersion version;
       HttpStatus status;
 
       final Map<HttpHeaderName, String> headers = new LinkedHashMap<>();
@@ -411,7 +411,7 @@ public class HttpExchangeTestBCreate extends HttpExchangeTest {
       }
 
       @Override
-      public void status(Http.Version version, HttpStatus status) {
+      public void status(HttpVersion version, HttpStatus status) {
         this.version = version;
         this.status = status;
       }
@@ -437,7 +437,7 @@ public class HttpExchangeTestBCreate extends HttpExchangeTest {
 
     http.ok(subject);
 
-    assertEquals(subject.version, Http.Version.HTTP_1_1);
+    assertEquals(subject.version, HttpVersion.HTTP_1_1);
     assertEquals(subject.status, HttpStatus.OK);
     assertEquals(subject.headers.size(), 3);
     assertEquals(subject.headers.get(HttpHeaderName.CONTENT_TYPE), "text/html; charset=utf-8");

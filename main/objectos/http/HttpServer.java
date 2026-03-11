@@ -116,9 +116,9 @@ public sealed interface HttpServer extends Closeable permits HttpServerImpl {
       return HttpServerImpl.Notes.get();
     }
 
-    /**
-     * This server has started and is ready to accept requests.
-     */
+    /// This server has started and is ready to accept requests.
+    ///
+    /// @return the note instance
     Note.Ref1<HttpServer> started();
 
   }

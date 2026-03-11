@@ -82,37 +82,50 @@ public sealed interface HttpRoutingPath permits HttpRoutingPathImpl {
    */
   void allow(HttpMethod method, HttpHandler first, HttpHandler... rest);
 
+  /// Filters all of the specified routes with the specified filter.
+  ///
+  /// @param value the HTTP filter to use
+  /// @param module the module defining path-specific routes
   void filter(HttpFilter value, HttpRoutingPath.Module module);
 
-  /**
-   * Appends to this configuration the specified path-specific handler.
-   *
-   * @param value
-   *        the HTTP handler
-   */
+  /// Appends to this configuration the specified path-specific handler.
+  ///
+  /// @param value the HTTP handler
   void handler(HttpHandler value);
 
+  /// Match the named path parameter only when it is made of digits.
+  ///
+  /// @param name the path parameter name
   void paramDigits(String name);
 
+  /// Match the named path parameter only when it is not the empty string.
+  ///
+  /// @param name the path parameter name
   void paramNotEmpty(String name);
 
+  /// Match the named path parameter only when it conforms to the regular
+  /// expression.
+  ///
+  /// @param name the path parameter name
+  /// @param value the regular expression
   void paramRegex(String name, String value);
 
   /// Appends to this configuration the handler for the specified subpath and
-  /// method. Subpaths can only be registered when this configuration
-  /// represents a wildcard path.
+  /// method. Subpaths can only be registered when this configuration represents
+  /// a wildcard path.
   ///
   /// This method is a convenience to the following:
   ///
   /// ```java r.subpath(subpath, matched -> { matched.allow(method, handler);
-  /// }); ```
+  /// });
+  /// ```
   ///
   /// @param subpath a subpath expression
   /// @param method the only allowed method
   /// @param handler handles the requests for this subpath and method
   ///
   /// @throws IllegalStateException if this configuration does not represent a
-  /// wildcard path
+  ///         wildcard path
   void subpath(String subpath, HttpMethod method, HttpHandler handler);
 
   /**

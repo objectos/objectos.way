@@ -87,6 +87,9 @@ public interface HttpHandler {
 
   // 4xx responses
 
+  /// A handler that always responds with an empty `404 Not Found` message.
+  ///
+  /// @return the handler instance
   static HttpHandler notFound() {
     return HttpHandlerImpl.notFound();
   }

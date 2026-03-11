@@ -15,8 +15,6 @@
  */
 package objectos.http;
 
-import objectos.http.Http.Version;
-
 /**
  * Listens to the response defined in a HTTP exchange.
  */
@@ -30,7 +28,7 @@ public interface HttpResponseListener {
    * @param status
    *        the response status
    */
-  default void status(Version version, HttpStatus status) {}
+  default void status(HttpVersion version, HttpStatus status) {}
 
   /**
    * Invoked when a response header is set.

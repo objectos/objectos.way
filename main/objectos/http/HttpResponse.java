@@ -90,19 +90,19 @@ public sealed interface HttpResponse permits HttpExchangeImpl.ResponseHandle {
    */
   String now();
 
-  /**
-   * Ends this HTTP response message with an empty body.
-   */
+  /// Ends this HTTP response message with an empty body.
   void body();
 
-  /**
-   * Ends this HTTP response message with the specified body.
-   */
+  /// Ends this HTTP response message with the specified body.
+  ///
+  /// @param bytes the array of bytes with the body contents
+  /// @param offset index where the actual message begins
+  /// @param length the message length in bytes
   void body(byte[] bytes, int offset, int length);
 
-  /**
-   * Ends this HTTP response message with the specified body.
-   */
+  /// Ends this HTTP response message with the specified body.
+  ///
+  /// @param file the path to a regular file containing the body contents
   void body(Path file);
 
   /**

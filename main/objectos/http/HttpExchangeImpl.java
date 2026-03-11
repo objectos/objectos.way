@@ -443,7 +443,7 @@ final class HttpExchangeImpl implements HttpExchange, Runnable, Closeable {
 
   private StringBuilder stringBuilder;
 
-  private Http.Version version = Http.Version.HTTP_1_1;
+  private HttpVersion version = HttpVersion.HTTP_1_1;
 
   HttpExchangeImpl(
       HttpExchangeBodyFiles bodyFiles,
@@ -898,7 +898,7 @@ final class HttpExchangeImpl implements HttpExchange, Runnable, Closeable {
       queryParams.clear();
     }
 
-    version = Http.Version.HTTP_1_1;
+    version = HttpVersion.HTTP_1_1;
 
     return $PARSE_METHOD;
   }
@@ -1883,7 +1883,7 @@ final class HttpExchangeImpl implements HttpExchange, Runnable, Closeable {
     if (canRead(HTTP_1_1_CRLF.length)) {
 
       if (bufferMatches(HTTP_1_1_CRLF)) {
-        version = Http.Version.HTTP_1_1;
+        version = HttpVersion.HTTP_1_1;
 
         return $PARSE_HEADER;
       }
@@ -3784,7 +3784,7 @@ final class HttpExchangeImpl implements HttpExchange, Runnable, Closeable {
   }
 
   @Override
-  public final Http.Version version() {
+  public final HttpVersion version() {
     checkRequest();
 
     return version;

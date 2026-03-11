@@ -16,27 +16,42 @@
 package objectos.http;
 
 /**
- * Provides methods for inspecting the request line of an HTTP request
- * message.
- *
- * <p>
- * Unless otherwise specified the values returned by the methods of this
- * interface are decoded.
+ * The version of the HTTP protocol.
  */
-public sealed interface HttpRequestLine extends HttpRequestTarget permits HttpRequest {
+public enum HttpVersion {
 
   /**
-   * The code of the method of this request message.
-   *
-   * @return the code of the method of this request message
+   * The {@code HTTP/0.9} version.
    */
-  HttpMethod method();
+  HTTP_0_9("HTTP/0.9"),
 
   /**
-   * The version of the HTTP protocol of this request message.
-   *
-   * @return the version of the HTTP protocol of this request message.
+   * The {@code HTTP/1.0} version.
    */
-  HttpVersion version();
+  HTTP_1_0("HTTP/1.0"),
+
+  /**
+   * The {@code HTTP/1.1} version.
+   */
+  HTTP_1_1("HTTP/1.1");
+
+  final byte[] responseBytes;
+
+  private HttpVersion(String signature) {
+    String response;
+    response = signature + " ";
+
+    responseBytes = Http.utf8(response);
+  }
+
+  final void appendTo(StringBuilder out) {
+    switch (this) {
+      case HTTP_0_9 -> out.append("HTTP/0.9");
+
+      case HTTP_1_0 -> out.append("HTTP/1.0");
+
+      case HTTP_1_1 -> out.append("HTTP/1.1");
+    }
+  }
 
 }

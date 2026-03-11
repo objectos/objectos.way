@@ -33,7 +33,7 @@ import objectos.internal.Util;
 /**
  * The <strong>Objectos HTTP</strong> main class.
  */
-public final class Http {
+final class Http {
 
   /**
    * Enum representing possible values for the SameSite attribute.
@@ -125,53 +125,12 @@ public final class Http {
 
   }
 
-  /**
-   * The version of the HTTP protocol.
-   */
-  public enum Version {
-
-    /**
-     * The {@code HTTP/0.9} version.
-     */
-    HTTP_0_9("HTTP/0.9"),
-
-    /**
-     * The {@code HTTP/1.0} version.
-     */
-    HTTP_1_0("HTTP/1.0"),
-
-    /**
-     * The {@code HTTP/1.1} version.
-     */
-    HTTP_1_1("HTTP/1.1");
-
-    final byte[] responseBytes;
-
-    private Version(String signature) {
-      String response;
-      response = signature + " ";
-
-      responseBytes = Http.utf8(response);
-    }
-
-    final void appendTo(StringBuilder out) {
-      switch (this) {
-        case HTTP_0_9 -> out.append("HTTP/0.9");
-
-        case HTTP_1_0 -> out.append("HTTP/1.0");
-
-        case HTTP_1_1 -> out.append("HTTP/1.1");
-      }
-    }
-
-  }
-
   static final class NoopResponseListener implements HttpResponseListener {
 
     static final NoopResponseListener INSTANCE = new NoopResponseListener();
 
     @Override
-    public final void status(Version version, HttpStatus status) { /* noop */ }
+    public final void status(HttpVersion version, HttpStatus status) { /* noop */ }
 
     @Override
     public final void header(HttpHeaderName name, String value) { /* noop */ }

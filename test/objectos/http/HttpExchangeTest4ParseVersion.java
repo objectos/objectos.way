@@ -27,19 +27,19 @@ public class HttpExchangeTest4ParseVersion extends HttpExchangeTest {
   @DataProvider
   public Object[][] versionValidProvider() {
     return new Object[][] {
-        {"GET / HTTP/1.1", Http.Version.HTTP_1_1, "1.1 + path"},
-        {"GET /%C3%A1 HTTP/1.1", Http.Version.HTTP_1_1, "1.1 + path + percent"},
-        {"GET /url?key=value HTTP/1.1", Http.Version.HTTP_1_1, "1.1 + query key + value"},
-        {"GET /url?key HTTP/1.1", Http.Version.HTTP_1_1, "1.1 + query key only"},
-        {"GET /url?key=val%C3%A1 HTTP/1.1", Http.Version.HTTP_1_1, "1.1 + query key + value percent-encoded"},
-        {"GET /url?key%C3%A1 HTTP/1.1", Http.Version.HTTP_1_1, "1.1 + query key only percent-encoded"},
-        {"GET /url?key= HTTP/1.1", Http.Version.HTTP_1_1, "1.1 + query key only (equals)"},
-        {"GET /url?key%C3%A1= HTTP/1.1", Http.Version.HTTP_1_1, "1.1 + query key only percent-encoded (equals)"}
+        {"GET / HTTP/1.1", HttpVersion.HTTP_1_1, "1.1 + path"},
+        {"GET /%C3%A1 HTTP/1.1", HttpVersion.HTTP_1_1, "1.1 + path + percent"},
+        {"GET /url?key=value HTTP/1.1", HttpVersion.HTTP_1_1, "1.1 + query key + value"},
+        {"GET /url?key HTTP/1.1", HttpVersion.HTTP_1_1, "1.1 + query key only"},
+        {"GET /url?key=val%C3%A1 HTTP/1.1", HttpVersion.HTTP_1_1, "1.1 + query key + value percent-encoded"},
+        {"GET /url?key%C3%A1 HTTP/1.1", HttpVersion.HTTP_1_1, "1.1 + query key only percent-encoded"},
+        {"GET /url?key= HTTP/1.1", HttpVersion.HTTP_1_1, "1.1 + query key only (equals)"},
+        {"GET /url?key%C3%A1= HTTP/1.1", HttpVersion.HTTP_1_1, "1.1 + query key only percent-encoded (equals)"}
     };
   }
 
   @Test(dataProvider = "versionValidProvider")
-  public void versionValid(String line, Http.Version expected, String description) {
+  public void versionValid(String line, HttpVersion expected, String description) {
     test(
         """
         %s\r
@@ -147,7 +147,7 @@ public class HttpExchangeTest4ParseVersion extends HttpExchangeTest {
   }
 
   @Test(dataProvider = "versionValidProvider")
-  public void slowClientValid(String line, Http.Version expected, String description) {
+  public void slowClientValid(String line, HttpVersion expected, String description) {
     test(
         Y.slowStream(1, """
         %s\r
@@ -175,7 +175,7 @@ public class HttpExchangeTest4ParseVersion extends HttpExchangeTest {
     );
   }
 
-  private void test(Object request, Http.Version expected) {
+  private void test(Object request, HttpVersion expected) {
     exec(test -> {
       test.bufferSize(256, 256);
 

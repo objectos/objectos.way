@@ -298,7 +298,7 @@ final class HttpHeaderNameImpl implements HttpHeaderName {
     return type;
   }
 
-  final byte[] getBytes(Http.Version version) {
+  final byte[] getBytes(HttpVersion version) {
     return switch (version) {
       case HTTP_0_9, HTTP_1_0, HTTP_1_1 -> headerCaseBytes();
     };
