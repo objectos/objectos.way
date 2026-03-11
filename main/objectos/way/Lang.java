@@ -16,10 +16,6 @@
 package objectos.way;
 
 import java.lang.annotation.Annotation;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -114,10 +110,6 @@ public final class Lang {
       super(message, cause);
     }
   }
-
-  @Retention(RetentionPolicy.SOURCE)
-  @Target({ElementType.TYPE, ElementType.FIELD, ElementType.CONSTRUCTOR, ElementType.METHOD})
-  @interface VisibleForTesting {}
 
   private Lang() {}
 

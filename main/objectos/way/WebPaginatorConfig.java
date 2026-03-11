@@ -16,6 +16,7 @@
 package objectos.way;
 
 import java.util.Objects;
+import objectos.http.HttpRequestTarget;
 
 final class WebPaginatorConfig implements Web.Paginator.Config {
 
@@ -23,7 +24,7 @@ final class WebPaginatorConfig implements Web.Paginator.Config {
 
   String parameterName = "page";
 
-  Http.RequestTarget requestTarget;
+  HttpRequestTarget requestTarget;
 
   int rowCount;
 
@@ -46,7 +47,7 @@ final class WebPaginatorConfig implements Web.Paginator.Config {
   }
 
   @Override
-  public final void requestTarget(Http.RequestTarget value) {
+  public final void requestTarget(HttpRequestTarget value) {
     requestTarget = Objects.requireNonNull(value, "value == null");
   }
 

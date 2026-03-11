@@ -19,6 +19,7 @@ import java.lang.annotation.Annotation;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.function.Consumer;
+import objectos.internal.Util;
 import objectos.way.Lang.InvalidClassFileException;
 
 final class LangClassReader implements Lang.ClassReader {

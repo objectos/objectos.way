@@ -23,6 +23,9 @@ import java.lang.reflect.Method;
 import java.lang.reflect.RecordComponent;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import objectos.internal.Ascii;
+import objectos.internal.Bytes;
+import objectos.internal.UtilMap;
 
 final class TomlWriter implements Toml.Writer {
 
@@ -128,9 +131,9 @@ final class TomlWriter implements Toml.Writer {
     final byte[] table;
     table = new byte[128];
 
-    Http.fillTable(table, Ascii.alphaLower(), NAME_BARE);
-    Http.fillTable(table, Ascii.alphaUpper(), NAME_BARE);
-    Http.fillTable(table, Ascii.digit(), NAME_BARE);
+    Ascii.fill(table, Ascii.alphaLower(), NAME_BARE);
+    Ascii.fill(table, Ascii.alphaUpper(), NAME_BARE);
+    Ascii.fill(table, Ascii.digit(), NAME_BARE);
     table['-'] = NAME_BARE;
     table['_'] = NAME_BARE;
 

@@ -21,6 +21,9 @@ import java.io.UncheckedIOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Consumer;
+import objectos.http.HttpExchange;
+import objectos.http.HttpHandler;
+import objectos.http.HttpRequestTarget;
 
 /// The **Objectos Web** main class.
 public final class Web {
@@ -115,7 +118,7 @@ public final class Web {
       return builder.build();
     }
 
-    Form parse(Http.Exchange http);
+    Form parse(HttpExchange http);
 
   }
 
@@ -157,7 +160,7 @@ public final class Web {
        * @param value
        *        the {@code Http.RequestTarget} instance
        */
-      void requestTarget(Http.RequestTarget value);
+      void requestTarget(HttpRequestTarget value);
 
       /**
        * Sets the total number of rows to be paginated.
@@ -229,7 +232,7 @@ public final class Web {
   }
 
   /// An HTTP handler for serving the static files of an web application.
-  public sealed interface Resources extends AutoCloseable, Http.Handler permits WebResources {
+  public sealed interface Resources extends AutoCloseable, HttpHandler permits WebResources {
 
     /// An object that contributes to the configuration of a `Resources` instance.
     @FunctionalInterface

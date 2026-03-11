@@ -29,6 +29,8 @@ import java.util.OptionalInt;
 import java.util.OptionalLong;
 import java.util.function.Consumer;
 import javax.sql.DataSource;
+import objectos.internal.Check;
+import objectos.internal.Util;
 
 /**
  * The <strong>Objectos SQL</strong> main class.

@@ -15,15 +15,18 @@
  */
 package objectos.way.dev;
 
-import static objectos.way.Http.Method.GET;
+import static objectos.http.HttpMethod.GET;
 
 import module java.base;
 import module objectos.way;
 import objectos.css.StyleSheet;
+import objectos.http.HttpExchange;
+import objectos.http.HttpHandler;
+import objectos.http.HttpRouting;
 
 /// This class is not part of the Objectos Way JAR file. It is placed in the
 /// main source tree to ease the development.
-public final class DevModule implements Http.Routing.Module {
+public final class DevModule implements HttpRouting.Module {
 
   private final App.Injector injector;
 
@@ -32,7 +35,7 @@ public final class DevModule implements Http.Routing.Module {
   }
 
   @Override
-  public final void configure(Http.Routing routing) {
+  public final void configure(HttpRouting routing) {
     routing.install(new ScriptModule());
 
     routing.path("/styles.css", GET, this::styles);
@@ -42,10 +45,10 @@ public final class DevModule implements Http.Routing.Module {
 
     routing.handler(webResources);
 
-    routing.handler(Http.Handler.notFound());
+    routing.handler(HttpHandler.notFound());
   }
 
-  private void styles(Http.Exchange http) {
+  private void styles(HttpExchange http) {
     http.ok(StyleSheet.create(opts -> {
       final Note.Sink noteSink;
       noteSink = injector.getInstance(Note.Sink.class);

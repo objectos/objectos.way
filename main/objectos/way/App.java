@@ -30,6 +30,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import objectos.http.HttpHandler;
 
 /// The <strong>Objectos App</strong> main class.
 public final class App {
@@ -394,7 +395,7 @@ public final class App {
   /// An HTTP handler which reloads the classes of the configured module if
   /// changes are observed in the module's location. It is meant to be used
   /// during the development of an application.
-  public sealed interface Reloader extends Closeable, Http.Handler permits AppReloader {
+  public sealed interface Reloader extends Closeable, HttpHandler permits AppReloader {
 
     /// Configures the creation of a `Reloader`.
     public sealed interface Options permits AppReloaderBuilder {
@@ -453,7 +454,7 @@ public final class App {
        *         a
        *         new HTTP handler instance
        */
-      Http.Handler reload(ClassLoader classLoader) throws Exception;
+      HttpHandler reload(ClassLoader classLoader) throws Exception;
 
     }
 

@@ -17,6 +17,7 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.http.HttpExchange;
 import org.testng.annotations.Test;
 
 public class WebPaginatorTest {
@@ -25,7 +26,7 @@ public class WebPaginatorTest {
   public void testCase01() {
     Web.Paginator paginator;
     paginator = Web.Paginator.create(config -> {
-      config.requestTarget(Http.Exchange.create(cfg -> cfg.path("/foo")));
+      config.requestTarget(HttpExchange.create(cfg -> cfg.path("/foo")));
 
       config.pageSize(15);
 
@@ -46,7 +47,7 @@ public class WebPaginatorTest {
   public void testCase02() {
     Web.Paginator paginator;
     paginator = Web.Paginator.create(config -> {
-      config.requestTarget(Http.Exchange.create(cfg -> cfg.path("/foo")));
+      config.requestTarget(HttpExchange.create(cfg -> cfg.path("/foo")));
 
       config.pageSize(15);
 
@@ -67,7 +68,7 @@ public class WebPaginatorTest {
   public void testCase03() {
     Web.Paginator paginator;
     paginator = Web.Paginator.create(config -> {
-      config.requestTarget(Http.Exchange.create(cfg -> cfg.path("/foo?page=1")));
+      config.requestTarget(HttpExchange.create(cfg -> cfg.path("/foo?page=1")));
 
       config.pageSize(15);
 
@@ -88,7 +89,7 @@ public class WebPaginatorTest {
   public void testCase04() {
     Web.Paginator paginator;
     paginator = Web.Paginator.create(config -> {
-      config.requestTarget(Http.Exchange.create(cfg -> cfg.path("/foo?page=2")));
+      config.requestTarget(HttpExchange.create(cfg -> cfg.path("/foo?page=2")));
 
       config.pageSize(15);
 
@@ -109,7 +110,7 @@ public class WebPaginatorTest {
   public void testCase05() {
     Web.Paginator paginator;
     paginator = Web.Paginator.create(config -> {
-      config.requestTarget(Http.Exchange.create(cfg -> cfg.path("/foo?page=3")));
+      config.requestTarget(HttpExchange.create(cfg -> cfg.path("/foo?page=3")));
 
       config.pageSize(10);
 
@@ -130,7 +131,7 @@ public class WebPaginatorTest {
   public void testCase06() {
     Web.Paginator paginator;
     paginator = Web.Paginator.create(config -> {
-      config.requestTarget(Http.Exchange.create(cfg -> cfg.path("/foo?q=abc&page=3")));
+      config.requestTarget(HttpExchange.create(cfg -> cfg.path("/foo?q=abc&page=3")));
 
       config.pageSize(10);
 
@@ -151,7 +152,7 @@ public class WebPaginatorTest {
   public void testCase07() {
     Web.Paginator paginator;
     paginator = Web.Paginator.create(config -> {
-      config.requestTarget(Http.Exchange.create(cfg -> cfg.path("/foo?page=2")));
+      config.requestTarget(HttpExchange.create(cfg -> cfg.path("/foo?page=2")));
 
       config.pageSize(15);
 
@@ -172,7 +173,7 @@ public class WebPaginatorTest {
   public void testCase08() {
     Web.Paginator paginator;
     paginator = Web.Paginator.create(config -> {
-      config.requestTarget(Http.Exchange.create(cfg -> cfg.path("/foo?page=1")));
+      config.requestTarget(HttpExchange.create(cfg -> cfg.path("/foo?page=1")));
 
       config.pageSize(15);
 

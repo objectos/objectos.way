@@ -17,6 +17,8 @@ package objectos.way.dev;
 
 import module objectos.way;
 import objectos.css.CssSource;
+import objectos.http.HttpExchange;
+import objectos.http.HttpHandler;
 
 /*
 
@@ -24,10 +26,10 @@ import objectos.css.CssSource;
 
 */
 @CssSource
-public final class ScriptPopstateIndex extends Html.Template implements Http.Handler {
+public final class ScriptPopstateIndex extends Html.Template implements HttpHandler {
 
   @Override
-  public void handle(Http.Exchange http) {
+  public void handle(HttpExchange http) {
     http.ok(this);
   }
 

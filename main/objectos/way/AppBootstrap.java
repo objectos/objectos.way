@@ -17,6 +17,7 @@ package objectos.way;
 
 import java.util.List;
 import java.util.Map;
+import objectos.internal.Util;
 
 abstract class AppBootstrap {
 

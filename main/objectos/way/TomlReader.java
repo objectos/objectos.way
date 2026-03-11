@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import objectos.internal.Ascii;
+import objectos.internal.UtilSequencedMap;
 
 final class TomlReader implements Toml.Reader {
 
@@ -551,9 +553,9 @@ final class TomlReader implements Toml.Reader {
     table[' '] = EXPRESSION_WS;
     table['\t'] = EXPRESSION_WS;
 
-    Http.fillTable(table, Ascii.alphaLower(), EXPRESSION_BARE);
-    Http.fillTable(table, Ascii.alphaUpper(), EXPRESSION_BARE);
-    Http.fillTable(table, Ascii.digit(), EXPRESSION_BARE);
+    Ascii.fill(table, Ascii.alphaLower(), EXPRESSION_BARE);
+    Ascii.fill(table, Ascii.alphaUpper(), EXPRESSION_BARE);
+    Ascii.fill(table, Ascii.digit(), EXPRESSION_BARE);
     table['-'] = EXPRESSION_BARE;
     table['_'] = EXPRESSION_BARE;
 
@@ -654,9 +656,9 @@ final class TomlReader implements Toml.Reader {
     table[' '] = NAME_WS;
     table['\t'] = NAME_WS;
 
-    Http.fillTable(table, Ascii.alphaLower(), NAME_BARE);
-    Http.fillTable(table, Ascii.alphaUpper(), NAME_BARE);
-    Http.fillTable(table, Ascii.digit(), NAME_BARE);
+    Ascii.fill(table, Ascii.alphaLower(), NAME_BARE);
+    Ascii.fill(table, Ascii.alphaUpper(), NAME_BARE);
+    Ascii.fill(table, Ascii.digit(), NAME_BARE);
 
     table['_'] = NAME_BARE;
     table['-'] = NAME_BARE;
@@ -775,7 +777,7 @@ final class TomlReader implements Toml.Reader {
     final byte[] table;
     table = new byte[256];
 
-    Http.fillTable(table, Toml.basicUnescaped(), STRING_VALID);
+    Ascii.fill(table, Toml.basicUnescaped(), STRING_VALID);
 
     table['"'] = STRING_DQUOTE;
     table['\\'] = STRING_BACKSLASH;

@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Set;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
+import objectos.http.HttpHandler;
+import objectos.internal.Util;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
@@ -112,8 +114,8 @@ final class AppReloaderHelper implements AutoCloseable, App.Reloader.HandlerFact
         """
         package test;
 
-        public class Subject implements objectos.way.Http.Handler {
-          public void handle(objectos.way.Http.Exchange http) {}
+        public class Subject implements objectos.http.HttpHandler {
+          public void handle(objectos.http.HttpExchange http) {}
           public String get() {
             %s
           }
@@ -229,7 +231,7 @@ final class AppReloaderHelper implements AutoCloseable, App.Reloader.HandlerFact
   }
 
   @Override
-  public final Http.Handler reload(ClassLoader classLoader) throws Exception {
+  public final HttpHandler reload(ClassLoader classLoader) throws Exception {
     Class<?> subject;
     subject = classLoader.loadClass("test.Subject");
 
@@ -244,7 +246,7 @@ final class AppReloaderHelper implements AutoCloseable, App.Reloader.HandlerFact
 
     message = (String) getMethod.invoke(instance);
 
-    return (Http.Handler) instance;
+    return (HttpHandler) instance;
   }
 
 }

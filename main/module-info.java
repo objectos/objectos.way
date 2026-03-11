@@ -16,6 +16,7 @@
 /// Defines the Objectos Way API.
 module objectos.way {
   exports objectos.css;
+  exports objectos.http;
   exports objectos.script;
   exports objectos.way;
 

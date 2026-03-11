@@ -17,6 +17,7 @@ package objectos.way.dev;
 
 import module objectos.way;
 import objectos.css.CssSource;
+import objectos.http.HttpExchange;
 import objectos.script.Js;
 
 /*
@@ -33,7 +34,7 @@ public final class ScriptJsElementRender00 extends AbstractDevScript {
   private boolean before;
 
   @Override
-  public final void handle(Http.Exchange http) {
+  public final void handle(HttpExchange http) {
     before = http.queryParam("after") == null;
 
     super.handle(http);

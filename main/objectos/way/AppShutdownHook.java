@@ -16,6 +16,8 @@
 package objectos.way;
 
 import java.util.List;
+import objectos.internal.Check;
+import objectos.internal.Util;
 
 final class AppShutdownHook implements App.ShutdownHook {
 

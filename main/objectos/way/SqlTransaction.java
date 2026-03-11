@@ -26,6 +26,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.OptionalLong;
+import objectos.internal.Ascii;
+import objectos.internal.Check;
+import objectos.internal.UtilList;
 
 final class SqlTransaction implements Sql.Transaction {
 

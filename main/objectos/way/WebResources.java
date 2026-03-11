@@ -18,6 +18,7 @@ package objectos.way;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.function.Consumer;
+import objectos.http.HttpExchange;
 
 final class WebResources implements Web.Resources {
 
@@ -57,7 +58,7 @@ final class WebResources implements Web.Resources {
   }
 
   @Override
-  public final void handle(Http.Exchange http) {
+  public final void handle(HttpExchange http) {
     kernel.handle(http);
   }
 

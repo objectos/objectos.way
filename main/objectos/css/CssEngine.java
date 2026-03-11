@@ -19,6 +19,8 @@ import java.lang.classfile.Annotation;
 import java.lang.classfile.Attributes;
 import module java.base;
 import module objectos.way;
+import objectos.internal.Ascii;
+import objectos.internal.Check;
 
 final class CssEngine implements StyleSheet {
 
@@ -2285,11 +2287,7 @@ final class CssEngine implements StyleSheet {
     public final void cssPropertyNames(String... values) {
       for (int idx = 0; idx < values.length; idx++) {
         final String name;
-        name = values[idx];
-
-        if (name == null) {
-          throw new NullPointerException("values[" + idx + "] == null");
-        }
+        name = Check.notNull(values[idx], "values[", idx, "] == null");
 
         if (userCssProperties.isEmpty()) {
           userCssProperties = new HashSet<>();
@@ -2335,11 +2333,7 @@ final class CssEngine implements StyleSheet {
 
       for (int idx = 0; idx < classes.length; idx++) {
         final Class<?> c;
-        c = classes[idx];
-
-        if (c == null) {
-          throw new NullPointerException("values[" + idx + "] == null");
-        }
+        c = Check.notNull(classes[idx], "values[", idx, "] == null");
 
         final String name;
         name = c.getName();

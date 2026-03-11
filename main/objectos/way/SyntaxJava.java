@@ -17,6 +17,7 @@ package objectos.way;
 
 import java.util.Objects;
 import java.util.Set;
+import objectos.internal.Ascii;
 
 final class SyntaxJava implements Html.Component {
 

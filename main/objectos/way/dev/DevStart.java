@@ -17,6 +17,8 @@ package objectos.way.dev;
 
 import module java.base;
 import module objectos.way;
+import objectos.http.HttpHandler;
+import objectos.http.HttpServer;
 
 /// This class is not part of the Objectos Way JAR file. It is placed in the
 /// main source tree to ease the development.
@@ -46,15 +48,15 @@ public final class DevStart extends App.Bootstrap {
     shutdownHook = injector.getInstance(App.ShutdownHook.class);
 
     // Http.Handler
-    final Http.Handler serverHandler;
+    final HttpHandler serverHandler;
     serverHandler = serverHandler(injector);
 
     shutdownHook.registerIfPossible(serverHandler);
 
     // Http.Server
     try {
-      final Http.Server httpServer;
-      httpServer = Http.Server.create(opts -> {
+      final HttpServer httpServer;
+      httpServer = HttpServer.create(opts -> {
         opts.bufferSize(8192, 8192);
 
         opts.handler(serverHandler);
@@ -137,7 +139,7 @@ public final class DevStart extends App.Bootstrap {
 
   private record Reloader(App.Injector injector) implements App.Reloader.HandlerFactory {
     @Override
-    public final Http.Handler reload(ClassLoader loader) throws Exception {
+    public final HttpHandler reload(ClassLoader loader) throws Exception {
       final Class<?> bootClass;
       bootClass = loader.loadClass("objectos.way.DevBoot");
 
@@ -153,11 +155,11 @@ public final class DevStart extends App.Bootstrap {
       final Object instance;
       instance = method.invoke(null, injector, original);
 
-      return (Http.Handler) instance;
+      return (HttpHandler) instance;
     }
   }
 
-  private Http.Handler serverHandler(App.Injector injector) {
+  private HttpHandler serverHandler(App.Injector injector) {
     try {
       return App.Reloader.create(opts -> {
         final Reloader reloader;

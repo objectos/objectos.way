@@ -17,6 +17,7 @@ package objectos.way.dev;
 
 import module objectos.way;
 import objectos.css.CssSource;
+import objectos.http.HttpExchange;
 import objectos.script.Js;
 
 /*
@@ -34,7 +35,7 @@ public final class ScriptFollow05 extends AbstractDevScript {
   private boolean initial;
 
   @Override
-  public final void handle(Http.Exchange http) {
+  public final void handle(HttpExchange http) {
     initial = http.queryParam("next") == null;
 
     super.handle(http);

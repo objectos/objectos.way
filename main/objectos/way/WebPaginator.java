@@ -15,7 +15,9 @@
  */
 package objectos.way;
 
-final record WebPaginator(Http.RequestTarget request, Sql.Page page, int firstRow, int lastRow, int rowCount, int previousPage, int nextPage) implements Web.Paginator {
+import objectos.http.HttpRequestTarget;
+
+final record WebPaginator(HttpRequestTarget request, Sql.Page page, int firstRow, int lastRow, int rowCount, int previousPage, int nextPage) implements Web.Paginator {
 
   @Override
   public final boolean hasPrevious() {

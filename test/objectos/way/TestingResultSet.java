@@ -37,6 +37,7 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
+import objectos.internal.Check;
 
 final class TestingResultSet extends AbstractTestable implements ResultSet {
 

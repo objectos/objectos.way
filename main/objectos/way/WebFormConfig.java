@@ -17,6 +17,8 @@ package objectos.way;
 
 import java.util.List;
 import java.util.function.Consumer;
+import objectos.internal.Check;
+import objectos.internal.UtilList;
 
 final class WebFormConfig implements Web.FormSpec.Config {
 

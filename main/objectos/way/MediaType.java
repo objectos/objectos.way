@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import objectos.internal.Ascii;
 
 record MediaType(String type, String subtype, Map<String, String> params) implements Media.Type {
 

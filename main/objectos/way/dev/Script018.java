@@ -17,6 +17,7 @@ package objectos.way.dev;
 
 import module objectos.way;
 import objectos.css.CssSource;
+import objectos.http.HttpExchange;
 import objectos.script.Js;
 
 /*
@@ -39,7 +40,7 @@ public final class Script018 extends AbstractDevScript {
   private String path;
 
   @Override
-  public final void handle(Http.Exchange http) {
+  public final void handle(HttpExchange http) {
     next = http.queryParam("next");
 
     if (next != null) {

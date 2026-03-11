@@ -16,6 +16,7 @@
 package objectos.way;
 
 import java.util.Set;
+import objectos.internal.Util;
 
 final class HtmlElementName implements Html.ElementName {
 

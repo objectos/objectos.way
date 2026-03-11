@@ -27,7 +27,14 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
-import objectos.way.Http.Routing;
+import objectos.http.HttpExchange;
+import objectos.http.HttpHandler;
+import objectos.http.HttpHeaderName;
+import objectos.http.HttpRequest;
+import objectos.http.HttpRouting;
+import objectos.http.HttpRoutingTest;
+import objectos.http.HttpServer;
+import objectos.http.HttpServerTest;
 
 public final class TestingHttpServer {
 
@@ -42,7 +49,7 @@ public final class TestingHttpServer {
   }
 
   public static Socket newSocket() throws IOException {
-    Http.Server server;
+    HttpServer server;
     server = ServerHolder.SERVER;
 
     InetAddress address;
@@ -55,7 +62,7 @@ public final class TestingHttpServer {
   }
 
   public static int port() {
-    Http.Server server;
+    HttpServer server;
     server = ServerHolder.SERVER;
 
     return server.port();
@@ -106,19 +113,19 @@ public final class TestingHttpServer {
 
   private static class ServerHolder {
 
-    static Http.Server SERVER = create();
+    static HttpServer SERVER = create();
 
     static ThisHandlerFactory HANDLER;
 
     public static void bindHttpRoutingTest(HttpRoutingTest test) {
-      HANDLER.httpModuleTest.delegate = Http.Handler.of(test);
+      HANDLER.httpModuleTest.delegate = HttpHandler.of(test);
     }
 
     public static void bindHttpServerTest(HttpServerTest test) {
-      HANDLER.httpServerTest.delegate = Http.Handler.of(test);
+      HANDLER.httpServerTest.delegate = HttpHandler.of(test);
     }
 
-    private static Http.Server create() {
+    private static HttpServer create() {
       try {
         return create0();
       } catch (IOException e) {
@@ -130,7 +137,7 @@ public final class TestingHttpServer {
       }
     }
 
-    private static Http.Server create0() throws IOException, InterruptedException {
+    private static HttpServer create0() throws IOException, InterruptedException {
       HANDLER = new ThisHandlerFactory();
 
       CountDownLatch serverStarted;
@@ -142,10 +149,10 @@ public final class TestingHttpServer {
       ThisNoteSink noteSink;
       noteSink = new ThisNoteSink(serverStarted, noteReceived);
 
-      Http.Server server;
-      server = Http.Server.create(opts -> {
-        final Http.Handler serverHandler;
-        serverHandler = Http.Handler.of(HANDLER::configure);
+      HttpServer server;
+      server = HttpServer.create(opts -> {
+        final HttpHandler serverHandler;
+        serverHandler = HttpHandler.of(HANDLER::configure);
 
         opts.address(InetAddress.getLoopbackAddress());
 
@@ -179,7 +186,7 @@ public final class TestingHttpServer {
 
     private final MarketingSite marketing = new MarketingSite();
 
-    public final void configure(Routing r) {
+    public final void configure(HttpRouting r) {
       r.when(req -> host(req, "http.module.test"), matched -> {
         matched.handler(httpModuleTest);
       });
@@ -191,19 +198,19 @@ public final class TestingHttpServer {
       r.when(req -> host(req, "marketing"), marketing);
     }
 
-    private boolean host(Http.Request req, String hostName) {
+    private boolean host(HttpRequest req, String hostName) {
       final String host;
-      host = req.header(Http.HeaderName.HOST);
+      host = req.header(HttpHeaderName.HOST);
 
       return hostName.equals(host);
     }
 
-    private static final class DelegatingHandler implements Http.Handler {
+    private static final class DelegatingHandler implements HttpHandler {
 
-      Http.Handler delegate;
+      HttpHandler delegate;
 
       @Override
-      public final void handle(Http.Exchange http) {
+      public final void handle(HttpExchange http) {
         delegate.handle(http);
       }
 
@@ -213,7 +220,7 @@ public final class TestingHttpServer {
 
   private static class ThisNoteSink extends Note.NoOpSink {
 
-    private final Http.Server.Notes notes = Http.Server.Notes.create();
+    private final HttpServer.Notes notes = HttpServer.Notes.create();
 
     private final CountDownLatch serverStarted;
     private final CountDownLatch noteReceived;

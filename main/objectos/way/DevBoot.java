@@ -17,6 +17,7 @@
  */
 package objectos.way;
 
+import objectos.http.HttpHandler;
 import objectos.way.dev.DevModule;
 
 /// This class is not part of the Objectos Way JAR file.
@@ -25,7 +26,7 @@ public final class DevBoot {
 
   private DevBoot() {}
 
-  public static Http.Handler boot(App.Injector injector, Module original) {
+  public static HttpHandler boot(App.Injector injector, Module original) {
     final Module reloaded;
     reloaded = DevBoot.class.getModule();
 
@@ -34,7 +35,7 @@ public final class DevBoot {
     final DevModule dev;
     dev = new DevModule(injector);
 
-    return Http.Handler.of(dev);
+    return HttpHandler.of(dev);
   }
 
 }

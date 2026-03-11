@@ -16,6 +16,7 @@
 package objectos.way;
 
 import java.util.List;
+import objectos.internal.Util;
 
 record WebFormError(String message) implements Web.Form.Error {
 

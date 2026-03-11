@@ -25,9 +25,9 @@ import java.util.HexFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import objectos.internal.Util;
 import objectos.way.Next;
 import objectos.way.TestingArrayBackedIterable;
-import objectos.way.Util;
 
 public final class Thing {
 

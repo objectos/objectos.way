@@ -21,6 +21,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
+import objectos.internal.UtilList;
 
 final class SqlMeta implements Sql.Meta {
 

@@ -16,6 +16,7 @@
 package objectos.way;
 
 import java.util.Objects;
+import objectos.internal.UtilMap;
 import objectos.way.App.Injector;
 
 final class AppInjectorBuilder implements App.Injector.Options {

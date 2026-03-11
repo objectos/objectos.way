@@ -16,17 +16,20 @@
 package objectos.way.dev;
 
 import module objectos.way;
+import objectos.http.HttpExchange;
+import objectos.http.HttpHandler;
+import objectos.http.HttpHeaderName;
 
-abstract class AbstractDevScript extends Html.Template implements Http.Handler {
+abstract class AbstractDevScript extends Html.Template implements HttpHandler {
 
   static final Html.AttributeName DATA_TEST = Html.AttributeName.of("data-test");
 
-  static final Http.HeaderName WAY_TEST = Http.HeaderName.of("Way-Test");
+  static final HttpHeaderName WAY_TEST = HttpHeaderName.of("Way-Test");
 
   static final Html.Id SUBJECT = Html.Id.of("subject");
 
   @Override
-  public void handle(Http.Exchange http) {
+  public void handle(HttpExchange http) {
     http.ok(this);
   }
 

@@ -17,6 +17,8 @@ package objectos.way;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import objectos.internal.Util;
+import objectos.internal.UtilList;
 
 final class SqlTemplate {
 

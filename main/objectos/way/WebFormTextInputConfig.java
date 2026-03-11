@@ -17,6 +17,7 @@ package objectos.way;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
+import objectos.internal.Check;
 
 final class WebFormTextInputConfig extends WebFormFieldConfig implements Web.Form.TextInput.Config {
 

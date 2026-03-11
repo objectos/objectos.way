@@ -28,6 +28,10 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentMap;
+import objectos.http.HttpExchange;
+import objectos.http.HttpHeaderName;
+import objectos.http.HttpMethod;
+import objectos.http.HttpStatus;
 
 record WebResourcesKernel(
     ConcurrentMap<String, String> contentTypes,
@@ -52,7 +56,7 @@ record WebResourcesKernel(
     return Files.deleteIfExists(file);
   }
 
-  public final void handle(Http.Exchange http) {
+  public final void handle(HttpExchange http) {
     final String pathName;
     pathName = http.path();
 
@@ -65,10 +69,7 @@ record WebResourcesKernel(
       return;
     }
 
-    final HttpExchange support;
-    support = (HttpExchange) http;
-
-    handle(support, file);
+    handle(http, file);
   }
 
   private void handle(HttpExchange http, Path file) {
@@ -79,7 +80,10 @@ record WebResourcesKernel(
     } catch (NoSuchFileException e) {
       return;
     } catch (IOException e) {
-      http.internalServerError(e);
+      final Media msg;
+      msg = Media.Bytes.textPlain(e.getMessage());
+
+      http.internalServerError(msg, e);
 
       return;
     }
@@ -88,19 +92,21 @@ record WebResourcesKernel(
       return;
     }
 
-    Http.Method method;
+    HttpMethod method;
     method = http.method();
 
-    if (method != Http.Method.GET && method != Http.Method.HEAD) {
-      http.status(Http.Status.METHOD_NOT_ALLOWED);
+    if (method != HttpMethod.GET && method != HttpMethod.HEAD) {
+      http.respond(resp -> {
+        resp.status(HttpStatus.METHOD_NOT_ALLOWED);
 
-      http.header(Http.HeaderName.DATE, http.now());
+        resp.header(HttpHeaderName.DATE, resp.now());
 
-      http.header(Http.HeaderName.CONTENT_LENGTH, 0);
+        resp.header(HttpHeaderName.CONTENT_LENGTH, 0);
 
-      http.header(Http.HeaderName.ALLOW, "GET, HEAD");
+        resp.header(HttpHeaderName.ALLOW, "GET, HEAD");
 
-      http.send();
+        resp.body();
+      });
 
       return;
     }
@@ -109,43 +115,48 @@ record WebResourcesKernel(
     etag = etag(attributes);
 
     String ifNoneMatch;
-    ifNoneMatch = http.header(Http.HeaderName.IF_NONE_MATCH);
+    ifNoneMatch = http.header(HttpHeaderName.IF_NONE_MATCH);
 
     if (etag.equals(ifNoneMatch)) {
-      http.status(Http.Status.NOT_MODIFIED);
+      http.respond(resp -> {
+        resp.status(HttpStatus.NOT_MODIFIED);
 
-      http.header(Http.HeaderName.DATE, http.now());
+        resp.header(HttpHeaderName.DATE, resp.now());
 
-      http.header(Http.HeaderName.CONTENT_LENGTH, 0);
+        resp.header(HttpHeaderName.CONTENT_LENGTH, 0);
 
-      http.header(Http.HeaderName.ETAG, etag);
+        resp.header(HttpHeaderName.ETAG, etag);
 
-      http.send();
+        resp.body();
+      });
 
       return;
     }
 
-    http.status(Http.Status.OK);
-
-    String contentType;
-    contentType = defaultContentType;
-
     final String extension;
     extension = WebResourcesBuilder.extension(file);
 
+    final String contentType;
+
     if (!extension.isEmpty()) {
-      contentType = contentTypes.getOrDefault(extension, contentType);
+      contentType = contentTypes.getOrDefault(extension, defaultContentType);
+    } else {
+      contentType = defaultContentType;
     }
 
-    http.header(Http.HeaderName.CONTENT_TYPE, contentType);
+    http.respond(resp -> {
+      resp.status(HttpStatus.OK);
 
-    http.header(Http.HeaderName.CONTENT_LENGTH, attributes.size());
+      resp.header(HttpHeaderName.CONTENT_TYPE, contentType);
 
-    http.header(Http.HeaderName.DATE, http.now());
+      resp.header(HttpHeaderName.CONTENT_LENGTH, attributes.size());
 
-    http.header(Http.HeaderName.ETAG, etag);
+      resp.header(HttpHeaderName.DATE, resp.now());
 
-    http.send(file);
+      resp.header(HttpHeaderName.ETAG, etag);
+
+      resp.body(file);
+    });
   }
 
   public final void write(String pathName, byte[] contents) throws IOException {

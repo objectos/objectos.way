@@ -18,6 +18,7 @@ package objectos.way.dev;
 import java.util.List;
 import module objectos.way;
 import objectos.css.CssSource;
+import objectos.http.HttpExchange;
 
 /*
 
@@ -39,7 +40,7 @@ public final class ScriptSubmit01 extends AbstractDevScript {
   private String search;
 
   @Override
-  public final void handle(Http.Exchange http) {
+  public final void handle(HttpExchange http) {
     search = http.queryParam("search");
 
     super.handle(http);

@@ -35,6 +35,8 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import objectos.http.HttpExchange;
+import objectos.http.HttpHandler;
 
 final class AppReloader implements App.Reloader {
 
@@ -81,7 +83,7 @@ final class AppReloader implements App.Reloader {
 
   private final Predicate<? super byte[]> filterClassFile;
 
-  private volatile Http.Handler handler;
+  private volatile HttpHandler handler;
 
   private final App.Reloader.HandlerFactory handlerFactory;
 
@@ -141,7 +143,7 @@ final class AppReloader implements App.Reloader {
   }
 
   @Override
-  public final void handle(Http.Exchange http) {
+  public final void handle(HttpExchange http) {
     reloadIfNecessary();
 
     handler.handle(http);
@@ -284,8 +286,8 @@ final class AppReloader implements App.Reloader {
   }
 
   private void reload() {
-    Http.Handler result;
-    result = Http.Handler.noop();
+    HttpHandler result;
+    result = HttpHandler.noop();
 
     try {
       final ThisLoader parentLoader;
@@ -297,7 +299,7 @@ final class AppReloader implements App.Reloader {
       final ClassLoader loader;
       loader = layer.findLoader(moduleName);
 
-      Http.Handler instance;
+      HttpHandler instance;
       instance = handlerFactory.reload(loader);
 
       if (instance == null) {

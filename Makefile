@@ -158,7 +158,8 @@ TEST_ADD_MODULES += jdk.unsupported
 TEST_ADD_MODULES += org.opentest4j
 
 ## test --add-exports
-TEST_ADD_EXPORTS := objectos.way/objectos.util=org.testng
+TEST_ADD_EXPORTS := objectos.way/objectos.internal=org.testng
+TEST_ADD_EXPORTS += objectos.way/objectos.util=org.testng
 TEST_ADD_EXPORTS += objectos.way/objectos.way.dev=org.testng
 
 ## test --add-reads

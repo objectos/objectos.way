@@ -16,6 +16,7 @@
 package objectos.way;
 
 import java.util.concurrent.atomic.AtomicInteger;
+import objectos.internal.Check;
 
 abstract class WebFormFieldConfig {
 

@@ -40,6 +40,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
+import objectos.internal.Util;
 
 final class AppReloaderBuilder implements App.Reloader.Options {
 

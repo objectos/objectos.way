@@ -26,6 +26,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import objectos.http.HttpRequestBody;
 
 public final class ObjectosHttp {
 
@@ -83,7 +84,7 @@ public final class ObjectosHttp {
     }
   }
 
-  public static byte[] readAllBytes(Http.RequestBody body) throws IOException {
+  public static byte[] readAllBytes(HttpRequestBody body) throws IOException {
     try (InputStream in = body.bodyInputStream(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
       in.transferTo(out);
 
@@ -91,7 +92,7 @@ public final class ObjectosHttp {
     }
   }
 
-  public static String readString(Http.RequestBody body) throws IOException {
+  public static String readString(HttpRequestBody body) throws IOException {
     byte[] bytes;
     bytes = readAllBytes(body);
 

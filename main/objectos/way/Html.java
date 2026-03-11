@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
+import objectos.internal.Check;
 import objectos.script.JsAction;
 import objectos.way.Testable.Formatter;
 

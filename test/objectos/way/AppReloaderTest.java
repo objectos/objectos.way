@@ -24,11 +24,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.WatchService;
 import java.util.concurrent.TimeUnit;
+import objectos.http.HttpExchange;
 import org.testng.annotations.Test;
 
 public class AppReloaderTest {
 
-  private final Http.Exchange http = Http.Exchange.create(_ -> {});
+  private final HttpExchange http = HttpExchange.create(_ -> {});
 
   @Test
   public void testCase01() throws Exception {

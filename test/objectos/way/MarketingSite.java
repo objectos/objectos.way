@@ -15,12 +15,15 @@
  */
 package objectos.way;
 
-import objectos.way.Http.Routing;
+import objectos.http.HttpExchange;
+import objectos.http.HttpHandler;
+import objectos.http.HttpMethod;
+import objectos.http.HttpRouting;
 
-final class MarketingSite implements Http.Routing.Module {
+final class MarketingSite implements HttpRouting.Module {
 
   @Override
-  public final void configure(Routing routing) {
+  public final void configure(HttpRouting routing) {
     routing.path("/", path -> {
       path.handler(http -> http.movedPermanently("/index.html"));
     });
@@ -29,14 +32,14 @@ final class MarketingSite implements Http.Routing.Module {
       path.handler(this::indexHtml);
     });
 
-    routing.handler(Http.Handler.notFound());
+    routing.handler(HttpHandler.notFound());
   }
 
-  private void indexHtml(Http.Exchange http) {
+  private void indexHtml(HttpExchange http) {
     switch (http.method()) {
       case GET, HEAD -> http.ok(new MarketingSiteHome());
 
-      default -> http.allow(Http.Method.GET, Http.Method.HEAD);
+      default -> http.allow(HttpMethod.GET, HttpMethod.HEAD);
     }
   }
 

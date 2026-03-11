@@ -17,6 +17,8 @@ package objectos.way;
 
 import java.io.IOException;
 import java.util.Objects;
+import objectos.internal.Check;
+import objectos.internal.Util;
 
 sealed abstract class HtmlMarkupOfHtml extends HtmlMarkup permits Html.Markup.OfHtml {
 

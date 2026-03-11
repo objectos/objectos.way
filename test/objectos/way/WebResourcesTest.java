@@ -28,6 +28,9 @@ import java.nio.file.attribute.FileTime;
 import java.time.Clock;
 import java.time.Instant;
 import java.util.function.Consumer;
+import objectos.http.HttpHandler;
+import objectos.http.HttpMethod;
+import objectos.http.HttpY;
 import org.testng.annotations.Test;
 
 public class WebResourcesTest {
@@ -51,7 +54,7 @@ public class WebResourcesTest {
       opts.contentTypes(".txt: text/plain; charset=utf-8");
     });
 
-    Y.httpExchange(test -> {
+    HttpY.httpExchange(test -> {
       test.xch(xch -> {
         xch.req("""
         GET /tc01.txt HTTP/1.1\r
@@ -60,9 +63,9 @@ public class WebResourcesTest {
         \r
         """);
 
-        xch.handler(Http.Handler.of(routing -> {
+        xch.handler(HttpHandler.of(routing -> {
           routing.handler(resources);
-          routing.handler(Http.Handler.notFound());
+          routing.handler(HttpHandler.notFound());
         }));
 
         xch.resp("""
@@ -85,7 +88,7 @@ public class WebResourcesTest {
     final WebResources resources;
     resources = create(_ -> {});
 
-    Y.httpExchange(test -> {
+    HttpY.httpExchange(test -> {
       test.xch(xch -> {
         xch.req("""
         GET /tc02.txt HTTP/1.1\r
@@ -94,9 +97,9 @@ public class WebResourcesTest {
         \r
         """);
 
-        xch.handler(Http.Handler.of(routing -> {
+        xch.handler(HttpHandler.of(routing -> {
           routing.path("/tc02.txt", path -> {
-            path.allow(Http.Method.GET, resources, http -> {
+            path.allow(HttpMethod.GET, resources, http -> {
               final String text;
               text = "BBBB\n";
 
@@ -139,7 +142,7 @@ public class WebResourcesTest {
       opts.contentTypes(".txt: text/plain; charset=utf-8");
     });
 
-    Y.httpExchange(test -> {
+    HttpY.httpExchange(test -> {
       test.xch(xch -> {
         xch.req("""
         POST /tc03.txt HTTP/1.1\r
@@ -147,9 +150,9 @@ public class WebResourcesTest {
         \r
         """);
 
-        xch.handler(Http.Handler.of(routing -> {
+        xch.handler(HttpHandler.of(routing -> {
           routing.handler(resources);
-          routing.handler(Http.Handler.notFound());
+          routing.handler(HttpHandler.notFound());
         }));
 
         xch.resp("""
@@ -178,7 +181,7 @@ public class WebResourcesTest {
 
     resources.reconfigure(_ -> {});
 
-    Y.httpExchange(test -> {
+    HttpY.httpExchange(test -> {
       test.xch(xch -> {
         xch.req("""
         GET /reconfigure.txt HTTP/1.1\r
@@ -186,9 +189,9 @@ public class WebResourcesTest {
         \r
         """);
 
-        xch.handler(Http.Handler.of(routing -> {
+        xch.handler(HttpHandler.of(routing -> {
           routing.handler(resources);
-          routing.handler(Http.Handler.notFound());
+          routing.handler(HttpHandler.notFound());
         }));
 
         xch.resp("""
@@ -221,7 +224,7 @@ public class WebResourcesTest {
       opts.contentTypes(".txt: text/plain; charset=utf-8");
     });
 
-    Y.httpExchange(test -> {
+    HttpY.httpExchange(test -> {
       test.xch(xch -> {
         xch.req("""
         GET /tc05.txt HTTP/1.1\r
@@ -231,9 +234,9 @@ public class WebResourcesTest {
         \r
         """);
 
-        xch.handler(Http.Handler.of(routing -> {
+        xch.handler(HttpHandler.of(routing -> {
           routing.handler(resources);
-          routing.handler(Http.Handler.notFound());
+          routing.handler(HttpHandler.notFound());
         }));
 
         xch.resp("""
@@ -254,7 +257,7 @@ public class WebResourcesTest {
     final WebResources resources;
     resources = create(_ -> {});
 
-    Y.httpExchange(test -> {
+    HttpY.httpExchange(test -> {
       test.xch(xch -> {
         xch.req("""
         GET /tc06.txt HTTP/1.1\r
@@ -325,7 +328,7 @@ public class WebResourcesTest {
     final WebResources resources;
     resources = create(_ -> {});
 
-    Y.httpExchange(test -> {
+    HttpY.httpExchange(test -> {
       test.xch(xch -> {
         xch.req("""
         GET /tc07.txt HTTP/1.1\r
@@ -333,7 +336,7 @@ public class WebResourcesTest {
         \r
         """);
 
-        xch.handler(Http.Handler.of(routing -> {
+        xch.handler(HttpHandler.of(routing -> {
           routing.handler(http -> {
             try {
               String path;
@@ -351,7 +354,7 @@ public class WebResourcesTest {
               throw new UncheckedIOException(e);
             }
           });
-          routing.handler(Http.Handler.notFound());
+          routing.handler(HttpHandler.notFound());
         }));
 
         xch.resp("""
@@ -372,7 +375,7 @@ public class WebResourcesTest {
     final WebResources resources;
     resources = create(_ -> {});
 
-    Y.httpExchange(test -> {
+    HttpY.httpExchange(test -> {
       test.xch(xch -> {
         xch.req("""
         GET /tc08.txt HTTP/1.1\r
@@ -443,7 +446,7 @@ public class WebResourcesTest {
     final WebResources resources;
     resources = create(_ -> {});
 
-    Y.httpExchange(test -> {
+    HttpY.httpExchange(test -> {
       test.xch(xch -> {
         xch.req("""
         GET /tc09.txt HTTP/1.1\r
@@ -521,7 +524,7 @@ public class WebResourcesTest {
 
     setLastModifiedTime(resources, "tc10.txt");
 
-    Y.httpExchange(test -> {
+    HttpY.httpExchange(test -> {
       test.xch(xch -> {
         xch.req("""
         GET /tc10.txt HTTP/1.1\r
@@ -558,7 +561,7 @@ public class WebResourcesTest {
 
     setLastModifiedTime(resources, "tc11.txt");
 
-    Y.httpExchange(test -> {
+    HttpY.httpExchange(test -> {
       test.xch(xch -> {
         xch.req("""
         GET /tc11.txt HTTP/1.1\r
@@ -595,7 +598,7 @@ public class WebResourcesTest {
 
     setLastModifiedTime(resources, "tc12.txt");
 
-    Y.httpExchange(test -> {
+    HttpY.httpExchange(test -> {
       test.xch(xch -> {
         xch.req("""
         GET /tc12.txt HTTP/1.1\r
@@ -635,7 +638,7 @@ public class WebResourcesTest {
 
     setLastModifiedTime(resources, "tc13.txt");
 
-    Y.httpExchange(test -> {
+    HttpY.httpExchange(test -> {
       test.xch(xch -> {
         xch.req("""
         GET /tc13.txt HTTP/1.1\r
@@ -675,7 +678,7 @@ public class WebResourcesTest {
 
     setLastModifiedTime(resources, "a/b/c/tc14.txt");
 
-    Y.httpExchange(test -> {
+    HttpY.httpExchange(test -> {
       test.xch(xch -> {
         xch.req("""
         GET /a/b/c/tc14.txt HTTP/1.1\r

@@ -18,6 +18,7 @@ package objectos.way;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
+import objectos.internal.UtilList;
 
 sealed abstract class SqlCause implements Sql.Cause {
 
