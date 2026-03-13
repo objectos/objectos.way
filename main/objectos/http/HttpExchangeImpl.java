@@ -4302,115 +4302,11 @@ final class HttpExchangeImpl implements HttpExchange, Runnable, Closeable {
     respond(HttpStatus.INTERNAL_SERVER_ERROR, media);
   }
 
-  // response builder
-
-  final class ResponseHandle implements HttpResponse {
-
-    @Override
-    public final void status(HttpStatus value) {
-      HttpExchangeImpl.this.status(value);
-    }
-
-    @Override
-    public final void header(HttpHeaderName name, long value) {
-      HttpExchangeImpl.this.header(name, value);
-    }
-
-    @Override
-    public final void header(HttpHeaderName name, String value) {
-      HttpExchangeImpl.this.header(name, value);
-    }
-
-    @Override
-    public final void header(HttpHeaderName name, Consumer<? super HttpHeaderValueBuilder> builder) {
-      HttpExchangeImpl.this.header(name, builder);
-    }
-
-    @Override
-    public final String now() {
-      return HttpExchangeImpl.this.now();
-    }
-
-    @Override
-    public final void body() {
-      checkBody();
-
-      HttpExchangeImpl.this.send();
-    }
-
-    @Override
-    public final void body(byte[] bytes, int offset, int length) {
-      checkBody();
-
-      final byte[] copy;
-      copy = new byte[length];
-
-      System.arraycopy(bytes, offset, copy, 0, length);
-
-      HttpExchangeImpl.this.sendUnchecked(copy);
-    }
-
-    @Override
-    public final void body(Path file) {
-      checkBody();
-
-      HttpExchangeImpl.this.send(file);
-    }
-
-    @Override
-    public final void media(Media media) {
-      switch (media) {
-        case Media.Bytes bytes -> {
-          final String contentType;
-          contentType = bytes.contentType();
-
-          final byte[] array;
-          array = bytes.toByteArray();
-
-          checkMediaBytes(contentType, array);
-
-          sendMediaBytes(contentType, array);
-        }
-
-        case Media.Text text -> {
-          final String contentType;
-          contentType = text.contentType();
-
-          final Charset charset;
-          charset = text.charset();
-
-          checkMediaText(contentType, charset);
-
-          sendMediaText(contentType, text);
-        }
-
-        case Media.Stream stream -> {
-          final String contentType;
-          contentType = stream.contentType();
-
-          checkMediaStream(contentType);
-
-          sendMediaStream(contentType, stream);
-        }
-      }
-    }
-
-    private void checkBody() {
-      if (state != $RESPONSE_HEADERS) {
-        throw new IllegalStateException(
-            "Body must be the last part of a response message."
-        );
-      }
-    }
-
-  }
-
   @Override
   public final void respond(Consumer<? super HttpResponse> response) {
-    final ResponseHandle handle;
-    handle = new ResponseHandle();
-
-    response.accept(handle);
+    try (HttpResponseImpl handle = new HttpResponseImpl(this)) {
+      response.accept(handle);
+    }
   }
 
   // ##################################################################
@@ -4981,7 +4877,7 @@ final class HttpExchangeImpl implements HttpExchange, Runnable, Closeable {
     sendUnchecked(file);
   }
 
-  private void sendUnchecked(byte[] bytes) {
+  void sendUnchecked(byte[] bytes) {
     terminate();
 
     if (method == HttpMethod.HEAD) {

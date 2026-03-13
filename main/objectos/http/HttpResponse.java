@@ -15,14 +15,34 @@
  */
 package objectos.http;
 
-import java.nio.file.Path;
-import java.util.function.Consumer;
-import objectos.way.Media;
+import module java.base;
+import module objectos.way;
 
 /**
  * Represents an HTTP response message.
  */
-public sealed interface HttpResponse permits HttpExchangeImpl.ResponseHandle {
+public sealed interface HttpResponse permits HttpResponseImpl {
+
+  // high-level
+
+  // 2xx responses
+
+  /// Respond with a `200 OK` message with the specified media entity.
+  ///
+  /// @param media the media entity
+  void ok(Media.Bytes media);
+
+  /// Respond with a `200 OK` message with the specified media entity.
+  ///
+  /// @param media the media entity
+  void ok(Media.Stream media);
+
+  /// Respond with a `200 OK` message with the specified media entity.
+  ///
+  /// @param media the media entity
+  void ok(Media.Text media);
+
+  // low-level
 
   /**
    * Begins this HTTP response message by writing out the status line.
