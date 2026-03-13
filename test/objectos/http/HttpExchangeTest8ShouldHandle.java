@@ -134,10 +134,12 @@ public class HttpExchangeTest8ShouldHandle {
   }
 
   private void shouldNot02(HttpExchangeImpl http) {
-    http.status(HttpStatus.OK);
-    http.header(HttpHeaderName.CONTENT_LENGTH, "0");
-    http.header(HttpHeaderName.CONNECTION, "close");
-    http.send();
+    http.respond(resp -> {
+      resp.status(HttpStatus.OK);
+      resp.header(HttpHeaderName.CONTENT_LENGTH, 0L);
+      resp.header(HttpHeaderName.CONNECTION, "close");
+      resp.body();
+    });
   }
 
   @Test(description = "should not: explicit close in response")

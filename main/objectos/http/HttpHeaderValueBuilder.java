@@ -20,7 +20,7 @@ import java.nio.charset.Charset;
 /**
  * Configures the creation of a header value.
  */
-public sealed interface HttpHeaderValueBuilder permits HttpExchangeImpl.HttpHeaderValueBuilderImpl {
+public sealed interface HttpHeaderValueBuilder permits HttpHeaderValueBuilderImpl {
 
   /**
    * Begins the next value.

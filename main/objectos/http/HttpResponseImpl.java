@@ -15,25 +15,20 @@
  */
 package objectos.http;
 
-import java.nio.charset.Charset;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.function.Consumer;
-import objectos.way.Media;
+import module java.base;
+import module objectos.way;
 
 final class HttpResponseImpl implements HttpResponse, AutoCloseable {
-
-  private record ResponseHeader(HttpHeaderName name, String value) {}
 
   private final HttpExchangeImpl outer;
 
   private HttpStatus status;
 
-  private final List<ResponseHeader> headers = new ArrayList<>();
+  private final List<HttpResponseHeader> headers = new ArrayList<>();
 
   private Object body;
+
+  private Throwable error;
 
   HttpResponseImpl(HttpExchangeImpl outer) {
     this.outer = outer;
@@ -41,8 +36,18 @@ final class HttpResponseImpl implements HttpResponse, AutoCloseable {
 
   @Override
   public final void close() {
+    if (status == null) {
+      throw new IllegalStateException("A response status was not set");
+    }
 
+    outer.respond(status, headers, body);
+
+    if (error != null) {
+      outer.note(error);
+    }
   }
+
+  // 2xx responses
 
   @Override
   public final void ok(Media.Bytes media) {
@@ -63,6 +68,92 @@ final class HttpResponseImpl implements HttpResponse, AutoCloseable {
     status = HttpStatus.OK;
 
     media(media);
+  }
+
+  // 3xx responses
+
+  @Override
+  public final void movedPermanently(String location) {
+    location0(HttpStatus.MOVED_PERMANENTLY, location);
+  }
+
+  @Override
+  public final void found(String location) {
+    location0(HttpStatus.FOUND, location);
+  }
+
+  @Override
+  public final void seeOther(String location) {
+    location0(HttpStatus.SEE_OTHER, location);
+  }
+
+  private void location0(HttpStatus status, String location) {
+    this.status = status;
+
+    Objects.requireNonNull(location, "location == null");
+
+    final String raw;
+    raw = Http.raw(location);
+
+    header0(HttpHeaderName.DATE, now());
+
+    header0(HttpHeaderName.CONTENT_LENGTH, 0L);
+
+    header0(HttpHeaderName.LOCATION, raw);
+
+    body = null;
+  }
+
+  // 4xx responses
+
+  @Override
+  public final void badRequest(Media media) {
+    status = HttpStatus.BAD_REQUEST;
+
+    media(media);
+  }
+
+  @Override
+  public final void forbidden(Media media) {
+    status = HttpStatus.FORBIDDEN;
+
+    media(media);
+  }
+
+  @Override
+  public final void notFound(Media media) {
+    status = HttpStatus.NOT_FOUND;
+
+    media(media);
+  }
+
+  @Override
+  public final void allow(HttpMethod... methods) {
+    Objects.requireNonNull(methods, "methods == null");
+
+    final String allow;
+    allow = Arrays.stream(methods).map(HttpMethod::name).collect(Collectors.joining(", "));
+
+    status = HttpStatus.METHOD_NOT_ALLOWED;
+
+    header0(HttpHeaderName.DATE, now());
+
+    header0(HttpHeaderName.ALLOW, allow);
+
+    header0(HttpHeaderName.CONTENT_LENGTH, 0L);
+
+    body();
+  }
+
+  // 5xx responses
+
+  @Override
+  public final void internalServerError(Media media, Throwable error) {
+    status = HttpStatus.INTERNAL_SERVER_ERROR;
+
+    media(media);
+
+    this.error = error;
   }
 
   @Override
@@ -87,7 +178,17 @@ final class HttpResponseImpl implements HttpResponse, AutoCloseable {
 
   @Override
   public final void header(HttpHeaderName name, Consumer<? super HttpHeaderValueBuilder> builder) {
-    this.httpExchangeImpl.header(name, builder);
+    Objects.requireNonNull(name, "name == null");
+
+    final HttpHeaderValueBuilderImpl valueBuilder;
+    valueBuilder = new HttpHeaderValueBuilderImpl();
+
+    builder.accept(valueBuilder);
+
+    final String value;
+    value = valueBuilder.build();
+
+    header0(name, value);
   }
 
   @Override
@@ -127,6 +228,7 @@ final class HttpResponseImpl implements HttpResponse, AutoCloseable {
   }
 
   public final void media(Media.Bytes media) {
+    // early media validation
     final String contentType;
     contentType = media.contentType();
 
@@ -193,6 +295,25 @@ final class HttpResponseImpl implements HttpResponse, AutoCloseable {
     body = media;
   }
 
+  private void header0(HttpHeaderName name, long value) {
+    final String $value;
+    $value = Long.toString(value);
+
+    final HttpResponseHeader header;
+    header = new HttpResponseHeader(name, $value);
+
+    headers.add(header);
+  }
+
+  private void header0(HttpHeaderName name, String value) {
+    checkHeaderValue(value);
+
+    final HttpResponseHeader header;
+    header = new HttpResponseHeader(name, value);
+
+    headers.add(header);
+  }
+
   private void checkHeaderValue(String value) {
     enum Parser {
 
@@ -217,43 +338,43 @@ final class HttpResponseImpl implements HttpResponse, AutoCloseable {
       c = value.charAt(idx);
 
       if (c >= 128) {
-        throw invalidFieldContent(idx, c);
+        throw Http.invalidFieldContent(idx, c);
       }
 
       final byte flag;
-      flag = HEADER_VALUE_TABLE[c];
+      flag = Http.HEADER_VALUE_TABLE[c];
 
       switch (parser) {
         case START -> {
-          if (flag == HEADER_VALUE_VALID) {
+          if (flag == Http.HEADER_VALUE_VALID) {
             parser = Parser.NORMAL;
           }
 
-          else if (flag == HEADER_VALUE_WS) {
+          else if (flag == Http.HEADER_VALUE_WS) {
             throw new IllegalArgumentException("Leading SPACE or HTAB characters are not allowed");
           }
 
           else {
-            throw invalidFieldContent(idx, c);
+            throw Http.invalidFieldContent(idx, c);
           }
         }
 
         case NORMAL, WS -> {
-          if (flag == HEADER_VALUE_VALID) {
+          if (flag == Http.HEADER_VALUE_VALID) {
             parser = Parser.NORMAL;
           }
 
-          else if (flag == HEADER_VALUE_WS) {
+          else if (flag == Http.HEADER_VALUE_WS) {
             parser = Parser.WS;
           }
 
           else {
-            throw invalidFieldContent(idx, c);
+            throw Http.invalidFieldContent(idx, c);
           }
         }
 
         case INVALID -> {
-          throw invalidFieldContent(idx, c);
+          throw Http.invalidFieldContent(idx, c);
         }
       }
     }
@@ -271,24 +392,6 @@ final class HttpResponseImpl implements HttpResponse, AutoCloseable {
         throw new IllegalStateException("Unexpected INVALID state");
       }
     }
-  }
-
-  private void header0(HttpHeaderName name, long value) {
-    final String $value;
-    $value = Long.toString(value);
-
-    header0(name, $value);
-  }
-
-  private void header0(HttpHeaderName name, String value) {
-    final ResponseHeader header;
-    header = new ResponseHeader(name, value);
-
-    headers.add(header);
-  }
-
-  private IllegalArgumentException invalidFieldContent(int idx, char c) {
-    return new IllegalArgumentException("Invalid character at index " + idx + ": " + c);
   }
 
 }

@@ -1107,10 +1107,12 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
   }
 
   private void empty01(HttpExchangeImpl http) {
-    http.status(HttpStatus.NOT_MODIFIED);
-    http.header(HttpHeaderName.DATE, http.now());
-    http.header(HttpHeaderName.ETAG, "some%hash");
-    http.send();
+    http.respond(resp -> {
+      resp.status(HttpStatus.NOT_MODIFIED);
+      resp.header(HttpHeaderName.DATE, resp.now());
+      resp.header(HttpHeaderName.ETAG, "some%hash");
+      resp.body();
+    });
   }
 
   @Test(description = "Empty response body: support Web.Resources")
@@ -1138,11 +1140,13 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
   private Path file01;
 
   private void file01(HttpExchangeImpl http) {
-    http.status(HttpStatus.OK);
-    http.header(HttpHeaderName.DATE, http.now());
-    http.header(HttpHeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
-    http.header(HttpHeaderName.CONTENT_LENGTH, 1024);
-    http.send(file01);
+    http.respond(resp -> {
+      resp.status(HttpStatus.OK);
+      resp.header(HttpHeaderName.DATE, resp.now());
+      resp.header(HttpHeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
+      resp.header(HttpHeaderName.CONTENT_LENGTH, 1024);
+      resp.body(file01);
+    });
   }
 
   @Test(description = "file: GET")
@@ -1169,11 +1173,13 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
   private Path file02;
 
   private void file02(HttpExchangeImpl http) {
-    http.status(HttpStatus.OK);
-    http.header(HttpHeaderName.DATE, http.now());
-    http.header(HttpHeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
-    http.header(HttpHeaderName.CONTENT_LENGTH, 1024);
-    http.send(file02);
+    http.respond(resp -> {
+      resp.status(HttpStatus.OK);
+      resp.header(HttpHeaderName.DATE, resp.now());
+      resp.header(HttpHeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
+      resp.header(HttpHeaderName.CONTENT_LENGTH, 1024);
+      resp.body(file02);
+    });
   }
 
   @Test(description = "file: HEAD")

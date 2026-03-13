@@ -263,6 +263,41 @@ final class Http {
     };
   }
 
+  static final byte[] HEADER_VALUE_TABLE;
+
+  static final byte HEADER_VALUE_VALID = 1;
+
+  static final byte HEADER_VALUE_WS = 2;
+
+  static final byte HEADER_VALUE_CR = 3;
+
+  static final byte HEADER_VALUE_LF = 4;
+
+  static {
+    final byte[] table;
+    table = new byte[128];
+
+    for (int b = 0x21; b < 0x7F; b++) {
+      // VCHAR are valid
+      table[b] = HEADER_VALUE_VALID;
+    }
+
+    // valid under certain circustances
+    table[' '] = HEADER_VALUE_WS;
+
+    table['\t'] = HEADER_VALUE_WS;
+
+    table['\r'] = HEADER_VALUE_CR;
+
+    table['\n'] = HEADER_VALUE_LF;
+
+    HEADER_VALUE_TABLE = table;
+  }
+
+  static IllegalArgumentException invalidFieldContent(int idx, char c) {
+    return new IllegalArgumentException("Invalid character at index " + idx + ": " + c);
+  }
+
   @SuppressWarnings("unchecked")
   static void queryParamsAdd(Map<String, Object> map, Function<String, String> decoder, String rawKey, String rawValue) {
     String key;

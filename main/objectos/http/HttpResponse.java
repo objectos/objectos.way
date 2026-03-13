@@ -18,9 +18,7 @@ package objectos.http;
 import module java.base;
 import module objectos.way;
 
-/**
- * Represents an HTTP response message.
- */
+/// Represents an HTTP response message.
 public sealed interface HttpResponse permits HttpResponseImpl {
 
   // high-level
@@ -41,6 +39,56 @@ public sealed interface HttpResponse permits HttpResponseImpl {
   ///
   /// @param media the media entity
   void ok(Media.Text media);
+
+  // 3xx responses
+
+  /// Respond with a `301 Moved Permanently` message with the specified
+  /// `Location` header.
+  ///
+  /// @param location the value of the `Location` header
+  void movedPermanently(String location);
+
+  /// Respond with a `302 Found` message with the specified `Location` header.
+  ///
+  /// @param location the value of the `Location` header
+  void found(String location);
+
+  /// Respond with a `See Other` message with the specified `Location` header.
+  ///
+  /// @param location the value of the `Location` header
+  void seeOther(String location);
+
+  // 4xx responses
+
+  /// Respond with a `400 Bad Request` message with the specified media entity.
+  ///
+  /// @param media the media entity
+  void badRequest(Media media);
+
+  /// Respond with a `403 Forbidden` message with the specified media entity.
+  ///
+  /// @param media the media entity
+  void forbidden(Media media);
+
+  /// Respond with a `404 Not Found` message with the specified media entity.
+  ///
+  /// @param media the media entity
+  void notFound(Media media);
+
+  /// Respond with a `405 Method Not Allowed` message with the specified methods
+  /// in the `Allow` response header.
+  ///
+  /// @param methods the allowed methods
+  void allow(HttpMethod... methods);
+
+  // 5xx responses
+
+  /// Respond with a `500 Internal Server Error` message with the specified
+  /// media entity. The specified `Throwable` will be noted.
+  ///
+  /// @param media the media entity
+  /// @param error the `Throwable` to be noted
+  void internalServerError(Media media, Throwable error);
 
   // low-level
 

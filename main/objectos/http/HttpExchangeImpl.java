@@ -15,40 +15,14 @@
  */
 package objectos.http;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.Closeable;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UncheckedIOException;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.time.Clock;
-import java.time.ZonedDateTime;
-import java.util.Arrays;
-import java.util.HexFormat;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.LongStream;
+import module java.base;
+import module objectos.way;
+
 import objectos.internal.Ascii;
 import objectos.internal.Bytes;
 import objectos.internal.Check;
 import objectos.internal.Util;
 import objectos.internal.VisibleForTesting;
-import objectos.way.Note;
-import objectos.way.Lang;
-import objectos.way.Lang.Key;
-import objectos.way.Media;
 
 final class HttpExchangeImpl implements HttpExchange, Runnable, Closeable {
 
@@ -2059,37 +2033,6 @@ final class HttpExchangeImpl implements HttpExchange, Runnable, Closeable {
     return toRead($PARSE_HEADER_VALUE);
   }
 
-  private static final byte[] HEADER_VALUE_TABLE;
-
-  private static final byte HEADER_VALUE_VALID = 1;
-
-  private static final byte HEADER_VALUE_WS = 2;
-
-  private static final byte HEADER_VALUE_CR = 3;
-
-  private static final byte HEADER_VALUE_LF = 4;
-
-  static {
-    final byte[] table;
-    table = new byte[128];
-
-    for (int b = 0x21; b < 0x7F; b++) {
-      // VCHAR are valid
-      table[b] = HEADER_VALUE_VALID;
-    }
-
-    // valid under certain circustances
-    table[' '] = HEADER_VALUE_WS;
-
-    table['\t'] = HEADER_VALUE_WS;
-
-    table['\r'] = HEADER_VALUE_CR;
-
-    table['\n'] = HEADER_VALUE_LF;
-
-    HEADER_VALUE_TABLE = table;
-  }
-
   private byte executeParseHeaderValueContents() {
     while (bufferIndex < bufferLimit) {
       final byte b;
@@ -2100,18 +2043,18 @@ final class HttpExchangeImpl implements HttpExchange, Runnable, Closeable {
       }
 
       final byte test;
-      test = HEADER_VALUE_TABLE[b];
+      test = Http.HEADER_VALUE_TABLE[b];
 
       switch (test) {
         default -> { return toBadRequest(InvalidRequestHeaders.VALUE_CHAR); }
 
-        case HEADER_VALUE_VALID -> { bufferIndex += 1; markEnd = bufferIndex; }
+        case Http.HEADER_VALUE_VALID -> { bufferIndex += 1; markEnd = bufferIndex; }
 
-        case HEADER_VALUE_WS -> { bufferIndex += 1; }
+        case Http.HEADER_VALUE_WS -> { bufferIndex += 1; }
 
-        case HEADER_VALUE_CR -> { bufferIndex += 1; return executeParseHeaderValueCR(); }
+        case Http.HEADER_VALUE_CR -> { bufferIndex += 1; return executeParseHeaderValueCR(); }
 
-        case HEADER_VALUE_LF -> { return toBadRequest(InvalidLineTerminator.INSTANCE); }
+        case Http.HEADER_VALUE_LF -> { return toBadRequest(InvalidLineTerminator.INSTANCE); }
       }
     }
 
@@ -2994,7 +2937,7 @@ final class HttpExchangeImpl implements HttpExchange, Runnable, Closeable {
 
   @SuppressWarnings("unchecked")
   @Override
-  public final <T> T sessionAttr(Key<T> key, T value) {
+  public final <T> T sessionAttr(Lang.Key<T> key, T value) {
     checkSession();
 
     Objects.requireNonNull(key, "key == null");
@@ -4204,102 +4147,63 @@ final class HttpExchangeImpl implements HttpExchange, Runnable, Closeable {
 
   @Override
   public final void ok(Media.Bytes media) {
-    respond(HttpStatus.OK, media);
+    respond(resp -> resp.ok(media));
   }
 
   @Override
   public final void ok(Media.Stream media) {
-    respond(HttpStatus.OK, media);
+    respond(resp -> resp.ok(media));
   }
 
   @Override
   public final void ok(Media.Text media) {
-    respond(HttpStatus.OK, media);
+    respond(resp -> resp.ok(media));
   }
 
   // 3xx responses
 
   @Override
   public final void movedPermanently(String location) {
-    final String nonNull;
-    nonNull = Objects.requireNonNull(location, "location == null");
-
-    location(HttpStatus.MOVED_PERMANENTLY, nonNull);
+    respond(resp -> resp.movedPermanently(location));
   }
 
   @Override
   public final void found(String location) {
-    final String nonNull;
-    nonNull = Objects.requireNonNull(location, "location == null");
-
-    location(HttpStatus.FOUND, nonNull);
+    respond(resp -> resp.found(location));
   }
 
   @Override
   public final void seeOther(String location) {
-    final String nonNull;
-    nonNull = Objects.requireNonNull(location, "location == null");
-
-    location(HttpStatus.SEE_OTHER, nonNull);
-  }
-
-  private void location(HttpStatus status, String location) {
-    final String raw;
-    raw = Http.raw(location);
-
-    statusUnchecked(status);
-
-    headerUnchecked(HttpHeaderName.DATE, now());
-
-    headerUnchecked(HttpHeaderName.CONTENT_LENGTH, 0L);
-
-    headerUnchecked(HttpHeaderName.LOCATION, raw);
-
-    send();
+    respond(resp -> resp.seeOther(location));
   }
 
   // 4xx responses
 
   @Override
   public final void badRequest(Media media) {
-    respond(HttpStatus.BAD_REQUEST, media);
+    respond(resp -> resp.badRequest(media));
   }
 
   @Override
   public final void forbidden(Media media) {
-    respond(HttpStatus.FORBIDDEN, media);
+    respond(resp -> resp.forbidden(media));
   }
 
   @Override
   public final void notFound(Media media) {
-    respond(HttpStatus.NOT_FOUND, media);
+    respond(resp -> resp.notFound(media));
   }
 
   @Override
   public final void allow(HttpMethod... methods) {
-    Objects.requireNonNull(methods, "methods == null");
-
-    final String allow;
-    allow = Arrays.stream(methods).map(HttpMethod::name).collect(Collectors.joining(", "));
-
-    statusUnchecked(HttpStatus.METHOD_NOT_ALLOWED);
-
-    headerUnchecked(HttpHeaderName.DATE, now());
-
-    headerUnchecked(HttpHeaderName.ALLOW, allow);
-
-    headerUnchecked(HttpHeaderName.CONTENT_LENGTH, 0L);
-
-    send();
+    respond(resp -> resp.allow(methods));
   }
 
   // 5xx responses
 
   @Override
   public final void internalServerError(Media media, Throwable error) {
-    noteSink.send(NOTES.appInternalServerError, id, error);
-
-    respond(HttpStatus.INTERNAL_SERVER_ERROR, media);
+    respond(resp -> resp.internalServerError(media, error));
   }
 
   @Override
@@ -4317,452 +4221,42 @@ final class HttpExchangeImpl implements HttpExchange, Runnable, Closeable {
   // # BEGIN: Internal Response API
   // ##################################################################
 
+  final void respond(HttpStatus status, List<HttpResponseHeader> headers, Object body) {
+    checkRequest();
+
+    statusUnchecked(status);
+
+    checkResponseHeaders();
+
+    for (var header : headers) {
+      headerUnchecked(header.name(), header.value());
+    }
+
+    switch (body) {
+      case null -> send();
+
+      case byte[] bytes -> sendUnchecked(bytes);
+
+      case Path file -> sendUnchecked(file);
+
+      case Media.Text text -> sendUnchecked(text);
+
+      case Media.Stream stream -> sendUnchecked(stream);
+
+      default -> throw new IllegalArgumentException("Invalid response body type: " + body.getClass());
+    }
+  }
+
+  final void note(Throwable error) {
+    noteSink.send(NOTES.appInternalServerError, id, error);
+  }
+
   private void checkResponseHeaders() {
     if (state != $RESPONSE_HEADERS) {
       throw new IllegalStateException(
           "Response header can only be set after the status line and before the response body."
       );
     }
-  }
-
-  private void respond(HttpStatus status, Media media) {
-    Objects.requireNonNull(media, "media == null");
-
-    switch (media) {
-      case Media.Bytes bytes -> respond(status, bytes);
-
-      case Media.Text text -> respond(status, text);
-
-      default -> throw new IllegalArgumentException("Unexpected value: " + media);
-    }
-  }
-
-  private void respond(HttpStatus status, Media.Bytes media) {
-    checkRequest();
-
-    // early media validation
-    final String contentType;
-    contentType = media.contentType();
-
-    final byte[] bytes;
-    bytes = media.toByteArray();
-
-    checkMediaBytes(contentType, bytes);
-
-    statusUnchecked(status);
-
-    sendMediaBytes(contentType, bytes);
-  }
-
-  private void checkMediaBytes(String contentType, byte[] bytes) {
-    if (contentType == null) {
-      throw new IllegalArgumentException("The specified Media.Bytes provided a null content-type");
-    }
-
-    if (bytes == null) {
-      throw new IllegalArgumentException("The specified Media.Bytes provided a null byte array");
-    }
-  }
-
-  private void sendMediaBytes(String contentType, byte[] bytes) {
-    headerUnchecked(HttpHeaderName.DATE, now());
-
-    headerUnchecked(HttpHeaderName.CONTENT_TYPE, contentType);
-
-    headerUnchecked(HttpHeaderName.CONTENT_LENGTH, bytes.length);
-
-    sendUnchecked(bytes);
-  }
-
-  private void respond(HttpStatus status, Media.Stream media) {
-    checkRequest();
-
-    // early media validation
-    final String contentType;
-    contentType = media.contentType();
-
-    checkMediaStream(contentType);
-
-    statusUnchecked(status);
-
-    sendMediaStream(contentType, media);
-  }
-
-  private void checkMediaStream(String contentType) {
-    if (contentType == null) {
-      throw new IllegalArgumentException("The specified Media.Text provided a null content-type");
-    }
-  }
-
-  private void sendMediaStream(String contentType, Media.Stream media) {
-    headerUnchecked(HttpHeaderName.DATE, now());
-
-    headerUnchecked(HttpHeaderName.CONTENT_TYPE, contentType);
-
-    headerUnchecked(HttpHeaderName.TRANSFER_ENCODING, "chunked");
-
-    sendUnchecked(media);
-  }
-
-  private void respond(HttpStatus status, Media.Text media) {
-    checkRequest();
-
-    // early media validation
-    final String contentType;
-    contentType = media.contentType();
-
-    final Charset charset;
-    charset = media.charset();
-
-    checkMediaText(contentType, charset);
-
-    statusUnchecked(status);
-
-    sendMediaText(contentType, media);
-  }
-
-  private void checkMediaText(String contentType, Charset charset) {
-    if (contentType == null) {
-      throw new IllegalArgumentException("The specified Media.Text provided a null content-type");
-    }
-
-    if (charset == null) {
-      throw new IllegalArgumentException("The specified Media.Text provided a null charset");
-    }
-  }
-
-  private void sendMediaText(String contentType, Media.Text media) {
-    headerUnchecked(HttpHeaderName.DATE, now());
-
-    headerUnchecked(HttpHeaderName.CONTENT_TYPE, contentType);
-
-    headerUnchecked(HttpHeaderName.TRANSFER_ENCODING, "chunked");
-
-    sendUnchecked(media);
-  }
-
-  final void header(HttpHeaderName name, long value) {
-    checkResponseHeaders();
-    Objects.requireNonNull(name, "name == null");
-
-    headerUnchecked(name, value);
-  }
-
-  final void header(HttpHeaderName name, String value) {
-    checkResponseHeaders();
-    Objects.requireNonNull(name, "name == null");
-    checkHeaderValue(value);
-
-    headerUnchecked(name, value);
-  }
-
-  final void header(HttpHeaderName name, Consumer<? super HttpHeaderValueBuilder> builder) {
-    checkResponseHeaders();
-    Objects.requireNonNull(name, "name == null");
-
-    stringBuilder.setLength(0);
-
-    final HttpHeaderValueBuilderImpl valueBuilder;
-    valueBuilder = new HttpHeaderValueBuilderImpl();
-
-    builder.accept(valueBuilder);
-
-    final String value;
-    value = stringBuilder.toString();
-
-    checkHeaderValue(value);
-
-    headerUnchecked(name, value);
-  }
-
-  private void checkHeaderValue(String value) {
-    enum Parser {
-
-      START,
-
-      NORMAL,
-
-      WS,
-
-      INVALID;
-
-    }
-
-    final int len;
-    len = value.length(); // early implicit null-check
-
-    Parser parser;
-    parser = Parser.START;
-
-    for (int idx = 0; idx < len; idx++) {
-      final char c;
-      c = value.charAt(idx);
-
-      if (c >= 128) {
-        throw invalidFieldContent(idx, c);
-      }
-
-      final byte flag;
-      flag = HEADER_VALUE_TABLE[c];
-
-      switch (parser) {
-        case START -> {
-          if (flag == HEADER_VALUE_VALID) {
-            parser = Parser.NORMAL;
-          }
-
-          else if (flag == HEADER_VALUE_WS) {
-            throw new IllegalArgumentException("Leading SPACE or HTAB characters are not allowed");
-          }
-
-          else {
-            throw invalidFieldContent(idx, c);
-          }
-        }
-
-        case NORMAL, WS -> {
-          if (flag == HEADER_VALUE_VALID) {
-            parser = Parser.NORMAL;
-          }
-
-          else if (flag == HEADER_VALUE_WS) {
-            parser = Parser.WS;
-          }
-
-          else {
-            throw invalidFieldContent(idx, c);
-          }
-        }
-
-        case INVALID -> {
-          throw invalidFieldContent(idx, c);
-        }
-      }
-    }
-
-    switch (parser) {
-      case START, NORMAL -> {
-        // valid - noop
-      }
-
-      case WS -> {
-        throw new IllegalArgumentException("Trailing SPACE or HTAB characters are not allowed");
-      }
-
-      case INVALID -> {
-        throw new IllegalStateException("Unexpected INVALID state");
-      }
-    }
-  }
-
-  private IllegalArgumentException invalidFieldContent(int idx, char c) {
-    return new IllegalArgumentException("Invalid character at index " + idx + ": " + c);
-  }
-
-  private static final byte[] HEADER_PARAM_NAME;
-
-  private static final byte HEADER_PARAM_NAME_INVALID = 0;
-
-  private static final byte HEADER_PARAM_NAME_VALID = 1;
-
-  static {
-    final byte[] table;
-    table = new byte[128];
-
-    Ascii.fill(table, Http.tchar(), HEADER_PARAM_NAME_VALID);
-
-    HEADER_PARAM_NAME = table;
-  }
-
-  private static final byte[] HEADER_PARAM_VALUE;
-
-  private static final byte HEADER_PARAM_VALUE_INVALID = 0;
-
-  private static final byte HEADER_PARAM_VALUE_UNQUOTED = 1;
-
-  private static final byte HEADER_PARAM_VALUE_QUOTED = 2;
-
-  private static final byte HEADER_PARAM_VALUE_ESCAPE = 3;
-
-  static {
-    final byte[] table;
-    table = new byte[128];
-
-    // parameter-value = ( token / quoted-string )
-
-    final String tchar;
-    tchar = Http.tchar();
-
-    for (int idx = 0, len = tchar.length(); idx < len; idx++) {
-      final char c;
-      c = tchar.charAt(idx);
-
-      table[c] = HEADER_PARAM_VALUE_UNQUOTED;
-    }
-
-    final String vchar;
-    vchar = Http.vchar();
-
-    for (int idx = 0, len = vchar.length(); idx < len; idx++) {
-      final char c;
-      c = vchar.charAt(idx);
-
-      if (table[c] == HEADER_PARAM_VALUE_INVALID) {
-        table[c] = HEADER_PARAM_VALUE_QUOTED;
-      }
-    }
-
-    table[' '] = HEADER_PARAM_VALUE_QUOTED;
-    table['\t'] = HEADER_PARAM_VALUE_QUOTED;
-
-    table['"'] = HEADER_PARAM_VALUE_ESCAPE;
-    table['\\'] = HEADER_PARAM_VALUE_ESCAPE;
-
-    HEADER_PARAM_VALUE = table;
-  }
-
-  final class HttpHeaderValueBuilderImpl implements HttpHeaderValueBuilder {
-
-    @Override
-    public final void value(String value) {
-      Objects.requireNonNull(value);
-
-      if (!stringBuilder.isEmpty()) {
-        stringBuilder.append(", ");
-      }
-
-      stringBuilder.append(value);
-    }
-
-    @Override
-    public final void param(String name, String value) {
-      checkParameterName(name);
-
-      final int len; // early implicit null-check
-      len = value.length();
-
-      if (stringBuilder.isEmpty()) {
-        throw new IllegalStateException("Cannot add a parameter: there's no current value");
-      }
-
-      stringBuilder.append(';');
-      stringBuilder.append(' ');
-      stringBuilder.append(name);
-      stringBuilder.append('=');
-
-      if (len == 0) {
-        stringBuilder.append("\"\"");
-
-        return;
-      }
-
-      // we assume value will be unquoted
-
-      int quotesIndex;
-      quotesIndex = stringBuilder.length();
-
-      int valueIndex = 0;
-
-      while (valueIndex < len) {
-        final char c;
-        c = value.charAt(valueIndex);
-
-        if (c >= 128) {
-          throw invalidFieldContent(valueIndex, c);
-        }
-
-        final byte flag;
-        flag = HEADER_PARAM_VALUE[c];
-
-        if (flag == HEADER_PARAM_VALUE_INVALID) {
-          throw invalidFieldContent(valueIndex, c);
-        }
-
-        // we're safe so far, char is valid
-
-        valueIndex++;
-
-        if (flag == HEADER_PARAM_VALUE_UNQUOTED) {
-          stringBuilder.append(c);
-
-          continue;
-        }
-
-        // dquotes needed
-
-        if (quotesIndex > 0) {
-          stringBuilder.insert(quotesIndex, '"');
-
-          quotesIndex = -1;
-        }
-
-        if (flag == HEADER_PARAM_VALUE_ESCAPE) {
-          stringBuilder.append('\\');
-        }
-
-        stringBuilder.append(c);
-      }
-
-      if (quotesIndex < 0) {
-        stringBuilder.append('"');
-      }
-    }
-
-    @Override
-    public final void param(String name, Charset charset, String value) {
-      checkParameterName(name);
-
-      if (charset != StandardCharsets.UTF_8) {
-        throw new IllegalArgumentException("The UTF-8 charset MUST be used.");
-      }
-
-      Objects.requireNonNull(value, "value == null");
-
-      stringBuilder.append(';');
-      stringBuilder.append(' ');
-      stringBuilder.append(name);
-      stringBuilder.append('=');
-
-      final String encoded;
-      encoded = Http.rfc8187(value);
-
-      stringBuilder.append(encoded);
-    }
-
-    private void checkParameterName(String name) {
-      final int len;
-      len = name.length();
-
-      for (int idx = 0; idx < len; idx++) {
-        final char c;
-        c = name.charAt(idx);
-
-        if (c >= 128) {
-          throw invalidParameterName(idx, c);
-        }
-
-        final byte flag;
-        flag = HEADER_PARAM_NAME[c];
-
-        if (flag == HEADER_PARAM_NAME_INVALID) {
-          throw invalidParameterName(idx, c);
-        }
-      }
-    }
-
-    private IllegalArgumentException invalidParameterName(int idx, char c) {
-      return new IllegalArgumentException(
-          "Parameter name contains an invalid character at index " + idx + ": '" + c + "'"
-      );
-    }
-
-  }
-
-  final void status(HttpStatus status) {
-    checkRequest();
-    Objects.requireNonNull(status, "status == null");
-
-    statusUnchecked(status);
   }
 
   private static final byte[][] STATUS_LINES;
@@ -4857,7 +4351,7 @@ final class HttpExchangeImpl implements HttpExchange, Runnable, Closeable {
     responseListener.header(name, value);
   }
 
-  final void send() {
+  private void send() {
     terminate();
 
     body(null);
@@ -4865,19 +4359,7 @@ final class HttpExchangeImpl implements HttpExchange, Runnable, Closeable {
     state = $COMMIT;
   }
 
-  final void send(byte[] bytes) {
-    Objects.requireNonNull(bytes, "bytes == null");
-
-    sendUnchecked(bytes);
-  }
-
-  final void send(Path file) {
-    Objects.requireNonNull(file, "file == null");
-
-    sendUnchecked(file);
-  }
-
-  void sendUnchecked(byte[] bytes) {
+  private void sendUnchecked(byte[] bytes) {
     terminate();
 
     if (method == HttpMethod.HEAD) {

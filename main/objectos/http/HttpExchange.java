@@ -470,82 +470,52 @@ public sealed interface HttpExchange
 
   // 3xx responses
 
-  /**
-   * Respond with a {@code 301 Moved Permanently} message with the specified
-   * {@code Location} header.
-   *
-   * @param location
-   *        the value of the {@code Location} header
-   */
+  /// Respond with a `301 Moved Permanently` message with the specified
+  /// `Location` header.
+  ///
+  /// @param location the value of the `Location` header
   void movedPermanently(String location);
 
-  /**
-   * Respond with a {@code 302 Found} message with the specified
-   * {@code Location} header.
-   *
-   * @param location
-   *        the value of the {@code Location} header
-   */
+  /// Respond with a `302 Found` message with the specified `Location` header.
+  ///
+  /// @param location the value of the `Location` header
   void found(String location);
 
-  /**
-   * Respond with a {@code 303 See Other} message with the specified
-   * {@code Location} header.
-   *
-   * @param location
-   *        the value of the {@code Location} header
-   */
+  /// Respond with a `See Other` message with the specified `Location` header.
+  ///
+  /// @param location the value of the `Location` header
   void seeOther(String location);
 
   // 4xx responses
 
-  /**
-   * Respond with a {@code 400 Bad Request} message with the specified media
-   * entity.
-   *
-   * @param media
-   *        the media entity
-   */
+  /// Respond with a `400 Bad Request` message with the specified media entity.
+  ///
+  /// @param media the media entity
   void badRequest(Media media);
 
-  /**
-   * Respond with a {@code 403 Forbidden} message with the specified media
-   * entity.
-   *
-   * @param media
-   *        the media entity
-   */
+  /// Respond with a `403 Forbidden` message with the specified media entity.
+  ///
+  /// @param media the media entity
   void forbidden(Media media);
 
-  /**
-   * Respond with a {@code 404 Not Found} message with the specified media
-   * entity.
-   *
-   * @param media
-   *        the media entity
-   */
+  /// Respond with a `404 Not Found` message with the specified media entity.
+  ///
+  /// @param media the media entity
   void notFound(Media media);
 
-  /**
-   * Respond with a {@code 405 Method Not Allowed} message with the specified
-   * methods in the {@code Allow} response header.
-   *
-   * @param methods
-   *        the allowed methods
-   */
+  /// Respond with a `405 Method Not Allowed` message with the specified methods
+  /// in the `Allow` response header.
+  ///
+  /// @param methods the allowed methods
   void allow(HttpMethod... methods);
 
   // 5xx responses
 
-  /**
-   * Respond with a {@code 500 Internal Server Error} message with the
-   * specified media entity. The specified {@code Throwable} will be noted.
-   *
-   * @param media
-   *        the media entity
-   * @param error
-   *        the {@code Throwable} to be noted
-   */
+  /// Respond with a `500 Internal Server Error` message with the specified
+  /// media entity. The specified `Throwable` will be noted.
+  ///
+  /// @param media the media entity
+  /// @param error the `Throwable` to be noted
   void internalServerError(Media media, Throwable error);
 
   // response builder

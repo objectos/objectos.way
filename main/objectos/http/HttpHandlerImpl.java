@@ -351,27 +351,31 @@ final class HttpHandlerImpl implements HttpHandler {
       }
 
       case METHOD_NOT_ALLOWED -> {
-        http.status(HttpStatus.METHOD_NOT_ALLOWED);
+        http.respond(resp -> {
+          resp.status(HttpStatus.METHOD_NOT_ALLOWED);
 
-        http.header(HttpHeaderName.DATE, http.now());
+          resp.header(HttpHeaderName.DATE, resp.now());
 
-        http.header(HttpHeaderName.CONTENT_LENGTH, 0L);
+          resp.header(HttpHeaderName.CONTENT_LENGTH, 0L);
 
-        http.header(HttpHeaderName.ALLOW, (String) main);
+          resp.header(HttpHeaderName.ALLOW, (String) main);
 
-        http.send();
+          resp.body();
+        });
       }
 
       case NOT_FOUND -> {
-        http.status(HttpStatus.NOT_FOUND);
+        http.respond(resp -> {
+          resp.status(HttpStatus.NOT_FOUND);
 
-        http.header(HttpHeaderName.DATE, http.now());
+          resp.header(HttpHeaderName.DATE, resp.now());
 
-        http.header(HttpHeaderName.CONTENT_LENGTH, 0L);
+          resp.header(HttpHeaderName.CONTENT_LENGTH, 0L);
 
-        http.header(HttpHeaderName.CONNECTION, "close");
+          resp.header(HttpHeaderName.CONNECTION, "close");
 
-        http.send();
+          resp.body();
+        });
       }
     }
   }
