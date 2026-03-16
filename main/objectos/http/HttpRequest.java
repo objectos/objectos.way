@@ -23,6 +23,6 @@ public sealed interface HttpRequest
     HttpRequestLine,
     HttpRequestHeaders,
     HttpRequestBody
-    permits HttpExchange {
+    permits HttpExchange, HttpRequestImpl {
 
 }

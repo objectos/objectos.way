@@ -30,7 +30,7 @@ final class HttpRequestParser {
     final HttpMethod method;
     method = parseMethod();
 
-    throw new UnsupportedOperationException("Implement me");
+    return new HttpRequestImpl(method);
   }
 
   // ##################################################################
@@ -69,19 +69,19 @@ final class HttpRequestParser {
     // based on the first char, we select out method candidate
 
     return switch (first) {
-      case 'C' -> parseMethod($Method.CONNECT, -1);
+      case 'C' -> parseMethod($Method.CONNECT, 1);
 
-      case 'D' -> parseMethod($Method.DELETE, -1);
+      case 'D' -> parseMethod($Method.DELETE, 1);
 
-      case 'G' -> parseMethod($Method.GET, -1);
+      case 'G' -> parseMethod($Method.GET, 1);
 
-      case 'H' -> parseMethod($Method.HEAD, -1);
+      case 'H' -> parseMethod($Method.HEAD, 1);
 
-      case 'O' -> parseMethod($Method.OPTIONS, -1);
+      case 'O' -> parseMethod($Method.OPTIONS, 1);
 
       case 'P' -> parseMethodP();
 
-      case 'T' -> parseMethod($Method.TRACE, -1);
+      case 'T' -> parseMethod($Method.TRACE, 1);
 
       default -> throw clientError(InvalidRequestLine.METHOD);
     };
@@ -110,11 +110,11 @@ final class HttpRequestParser {
     second = socket.readByte();
 
     return switch (second) {
-      case 'O' -> parseMethod($Method.POST, -2);
+      case 'O' -> parseMethod($Method.POST, 2);
 
-      case 'U' -> parseMethod($Method.PUT, -2);
+      case 'U' -> parseMethod($Method.PUT, 2);
 
-      case 'A' -> parseMethod($Method.PATCH, -2);
+      case 'A' -> parseMethod($Method.PATCH, 2);
 
       default -> throw clientError(InvalidRequestLine.METHOD);
     };

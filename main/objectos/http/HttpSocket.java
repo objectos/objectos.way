@@ -39,8 +39,11 @@ final class HttpSocket implements Closeable {
       InputStream inputStream,
       Closeable socket) {
     this.buffer = buffer;
+
     this.bufferSizeMax = bufferSizeMax;
+
     this.inputStream = inputStream;
+
     this.socket = socket;
   }
 
@@ -91,7 +94,42 @@ final class HttpSocket implements Closeable {
   }
 
   public final boolean matches(byte[] value, int offset) throws IOException {
-    throw new UnsupportedOperationException("Implement me");
+    final byte[] b;
+    b = value;
+
+    final int bFromIndex;
+    bFromIndex = offset;
+
+    final int bToIndex;
+    bToIndex = value.length;
+
+    final int length;
+    length = bToIndex - bFromIndex;
+
+    ensureBuffer(length);
+
+    final byte[] a;
+    a = buffer;
+
+    final int aFromIndex;
+    aFromIndex = bufferIndex;
+
+    final int aToIndex;
+    aToIndex = bufferIndex + length;
+
+    final boolean matches;
+    matches = Arrays.equals(
+        a, aFromIndex, aToIndex,
+        b, bFromIndex, bToIndex
+    );
+
+    if (matches) {
+      bufferIndex += length;
+
+      return true;
+    } else {
+      return false;
+    }
   }
 
   public final byte readByte() throws IOException {
@@ -128,8 +166,6 @@ final class HttpSocket implements Closeable {
       buffer = Arrays.copyOf(buffer, newLength);
 
       writableLength = buffer.length - bufferLimit;
-
-      //noteSink.send(NOTES.readResize, id, newLength);
     }
 
     final int bytesRead;

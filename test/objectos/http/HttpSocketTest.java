@@ -26,21 +26,36 @@ import org.testng.annotations.Test;
 
 public class HttpSocketTest {
 
+  @Test(description = """
+  - string matches
+  - buffer initially empty
+  - single read
+  """)
+  public void matches0() throws IOException {
+    final String req1 = "abcdefgh";
+
+    final HttpSocket http;
+    http = http(64, 64, req1);
+
+    assertEquals(http.readByte(), 'a');
+    assertEquals(http.matches(ascii("abc"), 1), true);
+  }
+
   @Test(description = "Read into initial buffer")
-  public void read01() throws IOException {
+  public void readByte01() throws IOException {
     final String req1;
     req1 = "1".repeat(64);
 
     final HttpSocket http;
     http = http(64, 64, req1);
 
-    assertEquals(consume(http, 64), req1);
+    assertEquals(readByte0(http, 64), req1);
 
     assertEquals(http.bufferToAscii(), req1);
   }
 
   @Test(description = "Read into initial buffer, subsequent requires resize")
-  public void read02() throws IOException {
+  public void readByte02() throws IOException {
     final String req1;
     req1 = "1".repeat(64);
 
@@ -50,17 +65,17 @@ public class HttpSocketTest {
     final HttpSocket http;
     http = http(64, 128, req1 + req2);
 
-    assertEquals(consume(http, 64), req1);
+    assertEquals(readByte0(http, 64), req1);
 
     assertEquals(http.bufferToAscii(), req1);
 
-    assertEquals(consume(http, 64), req2);
+    assertEquals(readByte0(http, 64), req2);
 
     assertEquals(http.bufferToAscii(), req1 + req2);
   }
 
   @Test(description = "Error: data exceeds max buffer length")
-  public void read03() throws IOException {
+  public void readByte03() throws IOException {
     final String req1;
     req1 = "1".repeat(64);
 
@@ -70,7 +85,7 @@ public class HttpSocketTest {
     final HttpSocket http;
     http = http(64, 64, req1 + req2);
 
-    assertEquals(consume(http, 64), req1);
+    assertEquals(readByte0(http, 64), req1);
 
     assertEquals(http.bufferToAscii(), req1);
 
@@ -84,14 +99,14 @@ public class HttpSocketTest {
   }
 
   @Test(description = "EOF")
-  public void read04() throws IOException {
+  public void readByte04() throws IOException {
     final String req1;
     req1 = "1".repeat(64);
 
     final HttpSocket http;
     http = http(64, 128, req1);
 
-    assertEquals(consume(http, 64), req1);
+    assertEquals(readByte0(http, 64), req1);
 
     assertEquals(http.bufferToAscii(), req1);
 
@@ -105,19 +120,17 @@ public class HttpSocketTest {
   }
 
   @Test(description = "IOException")
-  public void read05() throws IOException {
+  public void readByte05() throws IOException {
     final String req1;
     req1 = "1".repeat(64);
 
     final IOException exception;
     exception = Y.trimStackTrace(new IOException("Read Error"), 1);
 
-    final Socket socket;
-    socket = Y.socket(req1, exception);
+    final HttpSocket http;
+    http = http(64, 128, req1, exception);
 
-    final HttpSocket http = HttpSocket.of(64, 128, socket);
-
-    assertEquals(consume(http, 64), req1);
+    assertEquals(readByte0(http, 64), req1);
 
     assertEquals(http.bufferToAscii(), req1);
 
@@ -130,7 +143,24 @@ public class HttpSocketTest {
     }
   }
 
-  private String consume(HttpSocket socket, int len) throws IOException {
+  @Test
+  public void powerOfTwo() {
+    assertEquals(HttpSocket.powerOfTwo(127), 128);
+    assertEquals(HttpSocket.powerOfTwo(128), 128);
+    assertEquals(HttpSocket.powerOfTwo(129), 256);
+    assertEquals(HttpSocket.powerOfTwo(1023), 1024);
+    assertEquals(HttpSocket.powerOfTwo(1024), 1024);
+    assertEquals(HttpSocket.powerOfTwo(1025), 2048);
+    assertEquals(HttpSocket.powerOfTwo(16383), 16384);
+    assertEquals(HttpSocket.powerOfTwo(16384), 16384);
+    assertEquals(HttpSocket.powerOfTwo(16385), 16384);
+  }
+
+  private byte[] ascii(String s) {
+    return s.getBytes(StandardCharsets.US_ASCII);
+  }
+
+  private String readByte0(HttpSocket socket, int len) throws IOException {
     final byte[] bytes;
     bytes = new byte[len];
 
@@ -142,23 +172,13 @@ public class HttpSocketTest {
   }
 
   private HttpSocket http(int initial, int max, Object... data) throws IOException {
-    final Socket socket;
-    socket = Y.socket(data);
+    return HttpSocket.of(
+        initial,
 
-    return HttpSocket.of(initial, max, socket);
-  }
+        max,
 
-  @Test
-  public void powerOfTwo() {
-    assertEquals(HttpExchangeImpl.powerOfTwo(127), 128);
-    assertEquals(HttpExchangeImpl.powerOfTwo(128), 128);
-    assertEquals(HttpExchangeImpl.powerOfTwo(129), 256);
-    assertEquals(HttpExchangeImpl.powerOfTwo(1023), 1024);
-    assertEquals(HttpExchangeImpl.powerOfTwo(1024), 1024);
-    assertEquals(HttpExchangeImpl.powerOfTwo(1025), 2048);
-    assertEquals(HttpExchangeImpl.powerOfTwo(16383), 16384);
-    assertEquals(HttpExchangeImpl.powerOfTwo(16384), 16384);
-    assertEquals(HttpExchangeImpl.powerOfTwo(16385), 16384);
+        Y.socket(data)
+    );
   }
 
 }
