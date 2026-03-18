@@ -20,15 +20,12 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
 
-record HttpRequestImpl(HttpMethod method) implements HttpRequest {
+record HttpRequestImpl(HttpMethod method, String path) implements HttpRequest {
 
   @Override
   public HttpVersion version() {
     throw new UnsupportedOperationException("Implement me");
   }
-
-  @Override
-  public String path() { throw new UnsupportedOperationException("Implement me"); }
 
   @Override
   public String pathParam(String name) { throw new UnsupportedOperationException("Implement me"); }

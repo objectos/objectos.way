@@ -88,6 +88,10 @@ final class HttpSocket implements Closeable {
     return n + 1;
   }
 
+  public final int bufferIndex() {
+    return bufferIndex;
+  }
+
   @Override
   public final void close() throws IOException {
     socket.close();
@@ -140,6 +144,13 @@ final class HttpSocket implements Closeable {
 
   final String bufferToAscii() {
     return new String(buffer, StandardCharsets.US_ASCII);
+  }
+
+  final String bufferToAscii(int startIndex, int endIndex) {
+    final int length;
+    length = endIndex - startIndex;
+
+    return new String(buffer, startIndex, length, StandardCharsets.US_ASCII);
   }
 
   private void ensureBuffer(int count) throws IOException {

@@ -16,6 +16,7 @@
 package objectos.http;
 
 import module java.base;
+import objectos.internal.Ascii;
 
 final class HttpRequestParser {
 
@@ -30,11 +31,14 @@ final class HttpRequestParser {
     final HttpMethod method;
     method = parseMethod();
 
-    return new HttpRequestImpl(method);
+    final String path;
+    path = parsePath();
+
+    return new HttpRequestImpl(method, path);
   }
 
   // ##################################################################
-  // # BEGIN: Parse: Method
+  // # BEGIN: Method
   // ##################################################################
 
   private HttpMethod parseMethod() throws IOException {
@@ -93,7 +97,126 @@ final class HttpRequestParser {
   }
 
   // ##################################################################
-  // # END: Parse: Method
+  // # END: Method
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Path
+  // ##################################################################
+
+  private static final byte[] PARSE_PATH_TABLE;
+
+  private static final byte SOLIDUS = '/';
+
+  private static final byte PATH_INVALID = -1;
+  private static final byte PATH_VALID = 1;
+  private static final byte PATH_PERCENT = 2;
+  private static final byte PATH_SPACE = 3;
+  private static final byte PATH_QUESTION = 4;
+  private static final byte PATH_CRLF = 5;
+
+  static {
+    final byte[] table;
+    table = new byte[128];
+
+    // 0 = invalid
+    // 1 = valid
+    // 2 = %xx
+    // 3 = ' ' -> version
+    // 4 = '?' -> stop
+    // 5 = '\r' -> 0.9
+    // 5 = '\n' -> 0.9
+
+    Ascii.fill(table, Http.unreserved(), PATH_VALID);
+
+    Ascii.fill(table, Http.subDelims(), PATH_VALID);
+
+    table[':'] = PATH_VALID;
+
+    table['@'] = PATH_VALID;
+
+    // solidus acts as segment separator
+    table[SOLIDUS] = PATH_VALID;
+
+    table['%'] = PATH_PERCENT;
+
+    table[' '] = PATH_SPACE;
+
+    table['?'] = PATH_QUESTION;
+
+    table['\r'] = PATH_CRLF;
+
+    table['\n'] = PATH_CRLF;
+
+    PARSE_PATH_TABLE = table;
+  }
+
+  private String parsePath() throws IOException {
+    final int startIndex;
+    startIndex = socket.bufferIndex();
+
+    loop: while (true) {
+      final byte code;
+      code = readTable(PARSE_PATH_TABLE, PATH_INVALID);
+
+      switch (code) {
+        case PATH_VALID -> {
+          continue loop;
+        }
+
+        case PATH_SPACE -> {
+          final String path;
+          path = makePath(startIndex);
+
+          return validatePath(path);
+        }
+
+        default -> throw HttpClientException.of(InvalidRequestLine.PATH_NEXT_CHAR);
+      }
+    }
+  }
+
+  private String makePath(int startIndex) {
+    final int bufferIndex;
+    bufferIndex = socket.bufferIndex();
+
+    final int endIndex;
+    endIndex = bufferIndex - 1;
+
+    return socket.bufferToAscii(startIndex, endIndex);
+  }
+
+  private String validatePath(String path) throws HttpClientException {
+    final int length;
+    length = path.length();
+
+    if (length == 0) {
+      throw HttpClientException.of(InvalidRequestLine.PATH_FIRST_CHAR);
+    }
+
+    final char first;
+    first = path.charAt(0);
+
+    if (first != '/') {
+      throw HttpClientException.of(InvalidRequestLine.PATH_FIRST_CHAR);
+    }
+
+    if (length == 1) {
+      return path;
+    }
+
+    final char second;
+    second = path.charAt(1);
+
+    if (second == '/') {
+      throw HttpClientException.of(InvalidRequestLine.PATH_SEGMENT_NZ);
+    }
+
+    return path;
+  }
+
+  // ##################################################################
+  // # END: Path
   // ##################################################################
 
   // ##################################################################
@@ -142,6 +265,25 @@ final class HttpRequestParser {
 
   // ##################################################################
   // # END: Errors
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Util
+  // ##################################################################
+
+  private byte readTable(byte[] table, byte invalid) throws IOException {
+    final byte next;
+    next = socket.readByte();
+
+    if (next < 0) {
+      return invalid;
+    } else {
+      return table[next];
+    }
+  }
+
+  // ##################################################################
+  // # END: Util
   // ##################################################################
 
 }
