@@ -37,31 +37,6 @@ final class HttpRequestParser {
   // # BEGIN: Parse: Method
   // ##################################################################
 
-  private enum $Method {
-    CONNECT,
-    DELETE,
-    GET,
-    HEAD,
-    OPTIONS,
-    PATCH,
-    POST,
-    PUT,
-    TRACE;
-
-    final byte[] ascii;
-
-    final HttpMethod external;
-
-    private $Method() {
-      final String name;
-      name = name();
-
-      ascii = (name + ' ').getBytes(StandardCharsets.US_ASCII);
-
-      external = HttpMethod.valueOf(name);
-    }
-  }
-
   private HttpMethod parseMethod() throws IOException {
     final byte first;
     first = socket.readByte();
@@ -69,37 +44,34 @@ final class HttpRequestParser {
     // based on the first char, we select out method candidate
 
     return switch (first) {
-      case 'C' -> parseMethod($Method.CONNECT, 1);
+      case 'C' -> parseMethod(HttpMethod.CONNECT, 1);
 
-      case 'D' -> parseMethod($Method.DELETE, 1);
+      case 'D' -> parseMethod(HttpMethod.DELETE, 1);
 
-      case 'G' -> parseMethod($Method.GET, 1);
+      case 'G' -> parseMethod(HttpMethod.GET, 1);
 
-      case 'H' -> parseMethod($Method.HEAD, 1);
+      case 'H' -> parseMethod(HttpMethod.HEAD, 1);
 
-      case 'O' -> parseMethod($Method.OPTIONS, 1);
+      case 'O' -> parseMethod(HttpMethod.OPTIONS, 1);
 
       case 'P' -> parseMethodP();
 
-      case 'T' -> parseMethod($Method.TRACE, 1);
+      case 'T' -> parseMethod(HttpMethod.TRACE, 1);
 
-      default -> throw clientError(InvalidRequestLine.METHOD);
+      default -> throw HttpClientException.of(InvalidRequestLine.METHOD);
     };
   }
 
-  private HttpMethod parseMethod($Method candidate, int offset) throws IOException {
+  private HttpMethod parseMethod(HttpMethod method, int offset) throws IOException {
     final byte[] ascii;
-    ascii = candidate.ascii;
+    ascii = method.ascii;
 
     if (!socket.matches(ascii, offset)) {
-      throw clientError(InvalidRequestLine.METHOD);
+      throw HttpClientException.of(InvalidRequestLine.METHOD);
     }
 
-    final HttpMethod method;
-    method = candidate.external;
-
     if (!method.implemented) {
-      throw new UnsupportedOperationException("Implement me :: throw MethodNotImplemented");
+      throw HttpServerException.methodNotImplemented();
     }
 
     return method;
@@ -110,13 +82,13 @@ final class HttpRequestParser {
     second = socket.readByte();
 
     return switch (second) {
-      case 'O' -> parseMethod($Method.POST, 2);
+      case 'O' -> parseMethod(HttpMethod.POST, 2);
 
-      case 'U' -> parseMethod($Method.PUT, 2);
+      case 'U' -> parseMethod(HttpMethod.PUT, 2);
 
-      case 'A' -> parseMethod($Method.PATCH, 2);
+      case 'A' -> parseMethod(HttpMethod.PATCH, 2);
 
-      default -> throw clientError(InvalidRequestLine.METHOD);
+      default -> throw HttpClientException.of(InvalidRequestLine.METHOD);
     };
   }
 
@@ -128,13 +100,7 @@ final class HttpRequestParser {
   // # BEGIN: Errors
   // ##################################################################
 
-  private sealed interface ClientError {
-    byte[] message();
-
-    HttpStatus status();
-  }
-
-  private enum InvalidRequestLine implements ClientError {
+  enum InvalidRequestLine implements HttpClientException.Kind {
     // do not reorder, do not rename
 
     // invalid method
@@ -172,10 +138,6 @@ final class HttpRequestParser {
     public final HttpStatus status() {
       return HttpStatus.BAD_REQUEST;
     }
-  }
-
-  private RuntimeException clientError(ClientError value) {
-    throw new UnsupportedOperationException("Implement me");
   }
 
   // ##################################################################

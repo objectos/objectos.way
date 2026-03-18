@@ -15,6 +15,8 @@
  */
 package objectos.http;
 
+import java.nio.charset.StandardCharsets;
+
 /**
  * The method of an HTTP request message.
  */
@@ -66,6 +68,8 @@ public enum HttpMethod {
   TRACE(false);
 
   static final HttpMethod[] VALUES = values();
+
+  final byte[] ascii = (name() + ' ').getBytes(StandardCharsets.US_ASCII);
 
   final boolean implemented;
 

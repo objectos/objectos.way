@@ -38,7 +38,7 @@ final class HttpRequestTester {
     bufferSizeMax = max;
   }
 
-  public static HttpRequest parse(Consumer<? super HttpRequestTester> test, Object... data) {
+  public static HttpRequest parse(Consumer<? super HttpRequestTester> test, Object... data) throws IOException {
     final Socket socket;
     socket = Y.socket(data);
 
@@ -50,18 +50,14 @@ final class HttpRequestTester {
     return tester.parse0();
   }
 
-  private HttpRequest parse0() {
-    try {
-      final HttpSocket httpSocket;
-      httpSocket = HttpSocket.of(bufferSizeInitial, bufferSizeMax, socket);
+  private HttpRequest parse0() throws IOException {
+    final HttpSocket httpSocket;
+    httpSocket = HttpSocket.of(bufferSizeInitial, bufferSizeMax, socket);
 
-      final HttpRequestParser parser;
-      parser = new HttpRequestParser(httpSocket);
+    final HttpRequestParser parser;
+    parser = new HttpRequestParser(httpSocket);
 
-      return parser.parse();
-    } catch (IOException e) {
-      throw new AssertionError(e);
-    }
+    return parser.parse();
   }
 
 }

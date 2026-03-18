@@ -143,41 +143,41 @@ final class HttpSocket implements Closeable {
   }
 
   private void ensureBuffer(int count) throws IOException {
-    final int readable;
+    int readable;
     readable = bufferLimit - bufferIndex;
 
-    if (count <= readable) {
-      return;
-    }
+    while (count > readable) {
+      int writableLength;
+      writableLength = buffer.length - bufferLimit;
 
-    int writableLength;
-    writableLength = buffer.length - bufferLimit;
+      if (writableLength == 0) {
+        // buffer is full, try to increase
 
-    if (writableLength == 0) {
-      // buffer is full, try to increase
+        if (buffer.length == bufferSizeMax) {
+          throw HttpReadException.bufferOverflow();
+        }
 
-      if (buffer.length == bufferSizeMax) {
-        throw HttpReadException.bufferOverflow();
+        final int newLength;
+        newLength = buffer.length << 1;
+
+        buffer = Arrays.copyOf(buffer, newLength);
+
+        writableLength = buffer.length - bufferLimit;
       }
 
-      final int newLength;
-      newLength = buffer.length << 1;
+      final int bytesRead;
+      bytesRead = inputStream.read(buffer, bufferLimit, writableLength);
 
-      buffer = Arrays.copyOf(buffer, newLength);
+      if (bytesRead < 0) {
+        throw HttpReadException.eof();
+      }
 
-      writableLength = buffer.length - bufferLimit;
+      assert bytesRead != 0 : "InputStream.read should not return 0 when writableLength != 0";
+
+      bufferLimit += bytesRead;
+
+      readable = bufferLimit - bufferIndex;
     }
-
-    final int bytesRead;
-    bytesRead = inputStream.read(buffer, bufferLimit, writableLength);
-
-    if (bytesRead < 0) {
-      throw HttpReadException.eof();
-    }
-
-    assert bytesRead != 0 : "InputStream.read should not return 0 when writableLength != 0";
-
-    bufferLimit += bytesRead;
   }
 
 }

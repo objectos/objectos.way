@@ -16,9 +16,11 @@
 package objectos.http;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertSame;
 
 import module java.base;
-
+import objectos.way.Y;
+import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -30,7 +32,7 @@ public class HttpRequestTest0ParseMethod {
   }
 
   @Test(dataProvider = "methodProvider", description = "method: valid")
-  public void method01(HttpMethod method) {
+  public void parse01(HttpMethod method) throws IOException {
     if (!method.implemented) {
       return;
     }
@@ -47,6 +49,124 @@ public class HttpRequestTest0ParseMethod {
     );
 
     assertEquals(req.method(), method);
+  }
+
+  @Test(dataProvider = "methodProvider", description = "method: valid but not implemented")
+  public void parse02(HttpMethod method) throws IOException {
+    if (method.implemented) {
+      return;
+    }
+
+    try {
+      HttpRequestTester.parse(
+          test -> test.bufferSize(256, 512),
+
+          """
+          %s /index.html HTTP/1.1\r
+          Host: www.example.com\r
+          \r
+          """.formatted(method.name())
+      );
+
+      Assert.fail("It should have thrown");
+    } catch (HttpServerException expected) {
+      assertEquals(expected.kind, HttpServerException.Kind.METHOD_NOT_IMPLEMENTED);
+    }
+  }
+
+  @Test(dataProvider = "methodProvider", description = "method: valid + slow client")
+  public void parse03(HttpMethod method) throws IOException {
+    if (!method.implemented) {
+      return;
+    }
+
+    final HttpRequest req;
+    req = HttpRequestTester.parse(
+        test -> test.bufferSize(256, 512),
+
+        Y.slowStream(1, """
+        %s /index.html HTTP/1.1\r
+        Host: www.example.com\r
+        \r
+        """.formatted(method.name())
+        )
+    );
+
+    assertEquals(req.method(), method);
+  }
+
+  @DataProvider
+  public Object[][] badRequestProvider() {
+    return new Object[][] {
+        {"""
+         XYZ /path?key=value HTTP/1.1\r
+         Host: www.example.com\r
+         \r
+         """, "Unknown method"},
+
+        {"""
+         \r
+         \r
+         """, "No method"},
+
+        {"""
+         POS /login HTTP/1.1\r
+         Host: www.example.com\r
+         \r
+         """, "Incomplete method name"}
+    };
+  }
+
+  @Test(dataProvider = "badRequestProvider")
+  public void badRequest(String request, String description) throws IOException {
+    try {
+      HttpRequestTester.parse(
+          test -> test.bufferSize(2 /*force many buffer resizes*/, 512),
+
+          request
+      );
+
+      Assert.fail("It should have thrown");
+    } catch (HttpClientException expected) {
+      assertEquals(expected.kind, HttpRequestParser.InvalidRequestLine.METHOD);
+    }
+  }
+
+  @DataProvider
+  public Object[][] ioExceptionProvider() {
+    return new Object[][] {
+        {"GE", Y.trimStackTrace(new IOException(), 1), ""},
+        {"POS", Y.trimStackTrace(new IOException(), 1), ""}
+    };
+  }
+
+  @Test(dataProvider = "ioExceptionProvider")
+  public void ioException(String request, IOException ex, String description) {
+    try {
+      HttpRequestTester.parse(
+          test -> test.bufferSize(256, 512),
+
+          request,
+          ex
+      );
+
+      Assert.fail("It should have thrown");
+    } catch (IOException expected) {
+      assertSame(expected, ex);
+    }
+  }
+
+  @Test
+  public void eof01() throws IOException {
+    try {
+      HttpRequestTester.parse(
+          test -> test.bufferSize(256, 512)
+      );
+
+      Assert.fail("It should have thrown");
+    } catch (HttpReadException expected) {
+      assertEquals(expected.kind, HttpReadException.Kind.EOF);
+    }
   }
 
 }

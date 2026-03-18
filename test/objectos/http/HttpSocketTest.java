@@ -32,13 +32,30 @@ public class HttpSocketTest {
   - single read
   """)
   public void matches0() throws IOException {
-    final String req1 = "abcdefgh";
+    final String req1;
+    req1 = "DELETE ";
 
     final HttpSocket http;
     http = http(64, 64, req1);
 
-    assertEquals(http.readByte(), 'a');
-    assertEquals(http.matches(ascii("abc"), 1), true);
+    assertEquals(http.readByte(), 'D');
+    assertEquals(http.matches(ascii("DELETE "), 1), true);
+  }
+
+  @Test(description = """
+  - string matches
+  - buffer initially empty
+  - slow client
+  """)
+  public void matches1() throws IOException {
+    final String req1;
+    req1 = "DELETE ";
+
+    final HttpSocket http;
+    http = http(64, 64, Y.slowStream(1, req1));
+
+    assertEquals(http.readByte(), 'D');
+    assertEquals(http.matches(ascii("DELETE "), 1), true);
   }
 
   @Test(description = "Read into initial buffer")
