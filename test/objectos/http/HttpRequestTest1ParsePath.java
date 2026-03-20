@@ -21,9 +21,12 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import objectos.http.HttpRequestParser.InvalidRequestLine;
+import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+@SuppressWarnings("exports")
 public class HttpRequestTest1ParsePath {
 
   private static final boolean[] VALID_BYTES;
@@ -105,6 +108,87 @@ public class HttpRequestTest1ParsePath {
     );
 
     assertEquals(req.path(), path);
+  }
+
+  @DataProvider
+  public Object[][] pathInvalidProvider() {
+    List<Object[]> l = new ArrayList<>();
+
+    l.add(invalid("", InvalidRequestLine.PATH_FIRST_CHAR, "empty path"));
+    l.add(invalid("index.html", InvalidRequestLine.PATH_FIRST_CHAR, "path does not begin with '/'"));
+    l.add(invalid("//index.html", InvalidRequestLine.PATH_SEGMENT_NZ, "path begins with empty segment"));
+    l.add(invalid("/%2Findex.html", InvalidRequestLine.PATH_SEGMENT_NZ, "path begins with empty segment"));
+    l.add(invalid("%2F/index.html", InvalidRequestLine.PATH_SEGMENT_NZ, "path begins with empty segment"));
+    l.add(invalid("%2F%2Findex.html", InvalidRequestLine.PATH_SEGMENT_NZ, "path begins with empty segment"));
+
+    for (int value = 0; value < VALID_BYTES.length; value++) {
+      switch (value) {
+        case ' ', '\n', '\r' -> {/* will trigger 505 not 400 */}
+
+        case '?' -> {/* valid, but tested on parse query */}
+
+        case '%' -> {/* tested on percent-encoded */}
+
+        default -> {
+          if (!VALID_BYTES[value]) {
+            l.add(invalid(value));
+          }
+        }
+      }
+    }
+
+    return l.toArray(Object[][]::new);
+  }
+
+  private Object[] invalid(int value) {
+    final String path;
+    path = "/pa" + (char) value + "th";
+
+    final String description;
+    description = "path contains the " + Integer.toHexString(value) + " invalid byte";
+
+    return invalid(path, InvalidRequestLine.PATH_NEXT_CHAR, description);
+  }
+
+  private Object[] invalid(
+      String path,
+      HttpClientException.Kind kind,
+      String description) {
+    if (!path.isEmpty()) {
+      path = " " + path;
+    }
+
+    String req = """
+    GET%s HTTP/1.1\r
+    \r
+    """.formatted(path);
+
+    return new Object[] {req, kind, description};
+  }
+
+  @Test(dataProvider = "pathInvalidProvider")
+  public void pathInvalid(
+      String request,
+      HttpClientException.Kind kind,
+      String description) throws IOException {
+    try {
+      HttpRequestTester.parse(
+          test -> test.bufferSize(256, 512),
+
+          iso8859(request)
+      );
+
+      Assert.fail("It should have thrown");
+    } catch (HttpClientException expected) {
+      assertEquals(expected.kind, kind);
+    }
+  }
+
+  @Test
+  public void pathInvalid0() throws IOException {
+    Object[] invalid = invalid("/%2Findex.html", InvalidRequestLine.PATH_SEGMENT_NZ, "path begins with empty segment");
+
+    pathInvalid((String) invalid[0], (HttpClientException.Kind) invalid[1], (String) invalid[2]);
   }
 
   private byte[] iso8859(String s) {
