@@ -242,6 +242,64 @@ public class HttpRequestTest1ParsePath {
     assertEquals(req.path(), path);
   }
 
+  @DataProvider
+  public Object[][] percentInvalidProvider() {
+    return new Object[][] {
+        // Existing 1-byte invalid cases
+        {"/pct/%xd", "1-byte + invalid hex digit (first)"},
+        {"/pct/%ax", "1-byte + invalid hex digit (second)"},
+        {"/pct/%FF", "1-byte + invalid range"},
+
+        // Invalid 2-byte cases
+        {"/pct/%C0%80", "2-bytes + overlong encoding (U+0000)"},
+        {"/pct/%C2%FF", "2-bytes + invalid continuation byte (out of range)"},
+        {"/pct/%C2", "2-bytes + incomplete sequence (missing continuation byte)"},
+        {"/pct/%DF%C0", "2-bytes + invalid continuation byte (not 10xxxxxx)"},
+
+        // Invalid 3-byte cases
+        {"/pct/%E0%80%80", "3-bytes + overlong encoding (U+0000)"},
+        {"/pct/%E0%A0%FF", "3-bytes + invalid continuation byte (third byte)"},
+        {"/pct/%ED%A0%80", "3-bytes + surrogate code point (U+D800)"},
+        {"/pct/%E0%A0", "3-bytes + incomplete sequence (missing last byte)"},
+        {"/pct/%EF%FF%80", "3-bytes + invalid continuation byte (second byte)"},
+
+        // Invalid 4-byte cases
+        {"/pct/%F0%80%80%80", "4-bytes + overlong encoding (U+0000)"},
+        {"/pct/%F5%80%80%80", "4-bytes + lead byte exceeds Unicode range (0xF5)"},
+        {"/pct/%F0%FF%80%80", "4-bytes + invalid continuation byte (second byte)"},
+        {"/pct/%F0%80%FF%80", "4-bytes + invalid continuation byte (third byte)"},
+        {"/pct/%F0%80%80%FF", "4-bytes + invalid continuation byte (fourth byte)"},
+        {"/pct/%F0%80%80", "4-bytes + incomplete sequence (missing last byte)"},
+
+        // Other edge cases
+        {"/pct/%", "Incomplete percent-encoding (lone %)"},
+        {"/pct/%G0%80", "Invalid hex digit in percent-encoding (G)"},
+        {"/pct/%C3%A1%FF", "Valid 2-byte followed by invalid 1-byte"},
+        {"/pct/%E0%A0%80%F5%80%80%80", "Valid 3-byte followed by invalid 4-byte"},
+        {"/pct/%%80", "Double percent sign with invalid sequence"},
+        {"/pct/%80%80%80%80", "Invalid lead byte (0x80, continuation byte)"}
+    };
+  }
+
+  @Test(dataProvider = "percentInvalidProvider")
+  public void percentInvalid(String raw, String description) throws IOException {
+    try {
+      HttpRequestTester.parse(
+          test -> test.bufferSize(256, 512),
+
+          iso8859("""
+        GET %s HTTP/1.1\r
+        Host: test\r
+        \r
+        """.formatted(raw))
+      );
+
+      Assert.fail("It should have thrown");
+    } catch (HttpClientException expected) {
+      assertEquals(expected.kind, InvalidRequestLine.PATH_PERCENT);
+    }
+  }
+
   private byte[] iso8859(String s) {
     return s.getBytes(StandardCharsets.ISO_8859_1);
   }

@@ -349,7 +349,7 @@ final class HttpRequestParser {
     };
   }
 
-  private int decodePerc1(byte high1) throws IOException {
+  private int decodePerc1(byte high1) throws IOException, DecodePercException {
     final byte low1;
     low1 = readPerc();
 
@@ -448,7 +448,7 @@ final class HttpRequestParser {
     return perc;
   }
 
-  private byte readPerc() throws IOException {
+  private byte readPerc() throws IOException, DecodePercException {
     final byte b;
     b = socket.readByte();
 
@@ -456,18 +456,18 @@ final class HttpRequestParser {
     perc = Bytes.fromHexDigit(b);
 
     if (perc < 0) {
-      throw new UnsupportedOperationException("Implement me");
+      throw new DecodePercException();
     }
 
     return perc;
   }
 
-  private void readPercSep() throws IOException {
+  private void readPercSep() throws IOException, DecodePercException {
     final byte b;
     b = socket.readByte();
 
     if (b != '%') {
-      throw new UnsupportedOperationException("Implement me");
+      throw new DecodePercException();
     }
   }
 
