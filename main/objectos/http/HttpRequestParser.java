@@ -165,7 +165,7 @@ final class HttpRequestParser {
     final byte first;
     first = socket.readByte();
 
-    final char firstChar;
+    final int firstCodePoint;
 
     final boolean firstPerc;
 
@@ -174,18 +174,18 @@ final class HttpRequestParser {
     }
 
     else if (first != '%') {
-      firstChar = (char) first;
+      firstCodePoint = first;
 
       firstPerc = false;
     }
 
     else {
-      firstChar = decodePerc();
+      firstCodePoint = decodePerc();
 
       firstPerc = true;
     }
 
-    if (firstChar != '/') {
+    if (firstCodePoint != '/') {
       throw HttpClientException.of(InvalidRequestLine.PATH_FIRST_CHAR);
     }
 
@@ -214,10 +214,10 @@ final class HttpRequestParser {
           final StringBuilder path;
           path = makePathBuilder(startIndex);
 
-          final char decoded;
+          final int decoded;
           decoded = decodePerc();
 
-          path.append(decoded);
+          path.appendCodePoint(decoded);
 
           return parsePath1(path);
         }
@@ -252,10 +252,10 @@ final class HttpRequestParser {
         }
 
         case PATH_PERCENT -> {
-          final char decoded;
+          final int decoded;
           decoded = decodePerc();
 
-          path.append(decoded);
+          path.appendCodePoint(decoded);
         }
 
         case PATH_SPACE -> {
@@ -326,7 +326,7 @@ final class HttpRequestParser {
   @SuppressWarnings("serial")
   private final class DecodePercException extends Exception {}
 
-  private char decodePerc() throws IOException, DecodePercException {
+  private int decodePerc() throws IOException, DecodePercException {
     final byte high1;
     high1 = readPerc();
 
@@ -349,34 +349,22 @@ final class HttpRequestParser {
     };
   }
 
-  private char decodePerc1(byte high1) throws IOException {
+  private int decodePerc1(byte high1) throws IOException {
     final byte low1;
     low1 = readPerc();
 
-    return (char) decodePerc(high1, low1);
+    return decodePerc(high1, low1);
   }
 
-  private char decodePerc2(byte high1) throws IOException, DecodePercException {
+  private int decodePerc2(byte high1) throws IOException, DecodePercException {
     final byte low1;
     low1 = readPerc();
 
     final int perc1;
     perc1 = decodePerc(high1, low1);
 
-    readPercSep();
-
-    final byte high2;
-    high2 = readPerc();
-
-    final byte low2;
-    low2 = readPerc();
-
     final int perc2;
-    perc2 = decodePerc(high2, low2);
-
-    if (!utf8Byte(perc2)) {
-      throw new DecodePercException();
-    }
+    perc2 = decodePercNext();
 
     final int c;
     c = (perc1 & 0b1_1111) << 6 | (perc2 & 0b11_1111);
@@ -385,45 +373,21 @@ final class HttpRequestParser {
       throw new DecodePercException();
     }
 
-    return (char) c;
+    return c;
   }
 
-  private char decodePerc3(byte high1) throws IOException, DecodePercException {
+  private int decodePerc3(byte high1) throws IOException, DecodePercException {
     final byte low1;
     low1 = readPerc();
 
     final int perc1;
     perc1 = decodePerc(high1, low1);
 
-    readPercSep();
-
-    final byte high2;
-    high2 = readPerc();
-
-    final byte low2;
-    low2 = readPerc();
-
     final int perc2;
-    perc2 = decodePerc(high2, low2);
-
-    if (!utf8Byte(perc2)) {
-      throw new DecodePercException();
-    }
-
-    readPercSep();
-
-    final byte high3;
-    high3 = readPerc();
-
-    final byte low3;
-    low3 = readPerc();
+    perc2 = decodePercNext();
 
     final int perc3;
-    perc3 = decodePerc(high3, low3);
-
-    if (!utf8Byte(perc3)) {
-      throw new DecodePercException();
-    }
+    perc3 = decodePercNext();
 
     final int c;
     c = (perc1 & 0b1111) << 12 | (perc2 & 0b11_1111) << 6 | (perc3 & 0b11_1111);
@@ -432,58 +396,24 @@ final class HttpRequestParser {
       throw new DecodePercException();
     }
 
-    return (char) c;
+    return c;
   }
 
-  private char decodePerc4(byte high1) throws IOException, DecodePercException {
+  private int decodePerc4(byte high1) throws IOException, DecodePercException {
     final byte low1;
     low1 = readPerc();
 
     final int perc1;
     perc1 = decodePerc(high1, low1);
 
-    readPercSep();
-
-    final byte high2;
-    high2 = readPerc();
-
-    final byte low2;
-    low2 = readPerc();
-
     final int perc2;
-    perc2 = decodePerc(high2, low2);
-
-    if (!utf8Byte(perc2)) {
-      throw new DecodePercException();
-    }
-
-    readPercSep();
-
-    final byte high3;
-    high3 = readPerc();
-
-    final byte low3;
-    low3 = readPerc();
+    perc2 = decodePercNext();
 
     final int perc3;
-    perc3 = decodePerc(high3, low3);
-
-    if (!utf8Byte(perc3)) {
-      throw new DecodePercException();
-    }
-
-    final byte high4;
-    high4 = readPerc();
-
-    final byte low4;
-    low4 = readPerc();
+    perc3 = decodePercNext();
 
     final int perc4;
-    perc4 = decodePerc(high4, low4);
-
-    if (!utf8Byte(perc4)) {
-      throw new DecodePercException();
-    }
+    perc4 = decodePercNext();
 
     final int c;
     c = (perc1 & 0b111) << 18 | (perc2 & 0b11_1111) << 12 | (perc3 & 0b11_1111) << 6 | (perc4 & 0b11_1111);
@@ -492,11 +422,30 @@ final class HttpRequestParser {
       throw new DecodePercException();
     }
 
-    return (char) c;
+    return c;
   }
 
   private int decodePerc(byte high, byte low) {
     return (high << 4) | low;
+  }
+
+  private int decodePercNext() throws IOException, DecodePercException {
+    readPercSep();
+
+    final byte high;
+    high = readPerc();
+
+    final byte low;
+    low = readPerc();
+
+    final int perc;
+    perc = decodePerc(high, low);
+
+    if (!utf8Byte(perc)) {
+      throw new DecodePercException();
+    }
+
+    return perc;
   }
 
   private byte readPerc() throws IOException {

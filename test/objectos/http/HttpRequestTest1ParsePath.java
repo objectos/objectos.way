@@ -184,11 +184,62 @@ public class HttpRequestTest1ParsePath {
     }
   }
 
-  @Test
-  public void pathInvalid0() throws IOException {
-    Object[] invalid = invalid("/%2Findex.html", InvalidRequestLine.PATH_SEGMENT_NZ, "path begins with empty segment");
+  @DataProvider
+  public Object[][] percentValidProvider() {
+    return new Object[][] {
+        // Existing 1-byte cases
+        {"/utf8/%40", "/utf8/@", "1-byte (ASCII @)"},
+        {"/utf8/%00", "/utf8/\u0000", "1-byte (min value, null character)"},
+        {"/utf8/%7F", "/utf8/\u007F", "1-byte (max value, DEL)"},
+        // Additional 1-byte cases
+        {"/utf8/%2F", "/utf8//", "1-byte (reserved character /)"},
+        {"/utf8/%3A", "/utf8/:", "1-byte (reserved character :)"},
 
-    pathInvalid((String) invalid[0], (HttpClientException.Kind) invalid[1], (String) invalid[2]);
+        // Existing 2-byte cases
+        {"/utf8/%C3%A1", "/utf8/á", "2-bytes (Latin small letter a with acute)"},
+        {"/utf8/%C2%80", "/utf8/\u0080", "2-bytes (min value)"},
+        {"/utf8/%DF%BF", "/utf8/\u07FF", "2-bytes (max value)"},
+        // Additional 2-byte cases
+        {"/utf8/%C3%80", "/utf8/À", "2-bytes (Latin capital letter A with grave)"},
+        {"/utf8/%D7%90", "/utf8/א", "2-bytes (Hebrew letter Alef)"},
+
+        // 3-byte cases
+        {"/utf8/%E0%A0%80", "/utf8/\u0800", "3-bytes (min value)"},
+        {"/utf8/%EF%BF%BF", "/utf8/\uFFFF", "3-bytes (max value)"},
+        {"/utf8/%E2%82%AC", "/utf8/€", "3-bytes (Euro sign)"},
+        {"/utf8/%E2%9C%93", "/utf8/✓", "3-bytes (Check mark)"},
+        {"/utf8/%ED%9F%BF", "/utf8/\uD7FF", "3-bytes (max before surrogate range)"},
+        {"/utf8/%EE%80%80", "/utf8/\uE000", "3-bytes (min after surrogate range)"},
+
+        // 4-byte cases
+        {"/utf8/%F0%90%80%80", "/utf8/\uD800\uDC00", "4-bytes (min value, U+10000)"},
+        {"/utf8/%F4%8F%BF%BF", "/utf8/\uDBFF\uDFFF", "4-bytes (max value, U+10FFFF)"},
+        {"/utf8/%F0%9F%98%80", "/utf8/😀", "4-bytes (grinning face emoji)"},
+        {"/utf8/%F0%9F%8C%8D", "/utf8/🌍", "4-bytes (Earth globe Europe-Africa)"},
+
+        // Mixed and complex cases
+        {"/utf8/%C3%A1%E2%82%AC%F0%9F%98%80", "/utf8/á€😀", "Mixed (2-byte, 3-byte, 4-byte)"},
+        {"/utf8/hello%2Fworld%40%23", "/utf8/hello/world@#", "Multiple 1-byte reserved characters"},
+        {"/utf8/%25", "/utf8/%", "1-byte (percent sign itself encoded)"},
+        {"/utf8/%E2%80%8B", "/utf8/\u200B", "3-bytes (zero-width space)"},
+        {"/utf8/%E2%81%B0", "/utf8/⁰", "3-bytes (superscript zero)"}
+    };
+  }
+
+  @Test(dataProvider = "percentValidProvider")
+  public void percentValid(String raw, String path, String description) throws IOException {
+    final HttpRequest req;
+    req = HttpRequestTester.parse(
+        test -> test.bufferSize(256, 512),
+
+        iso8859("""
+        GET %s HTTP/1.1\r
+        Host: test\r
+        \r
+        """.formatted(raw))
+    );
+
+    assertEquals(req.path(), path);
   }
 
   private byte[] iso8859(String s) {
