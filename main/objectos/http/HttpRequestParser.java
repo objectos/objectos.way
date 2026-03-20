@@ -30,14 +30,23 @@ final class HttpRequestParser {
   @SuppressWarnings("unused")
   public final HttpRequest parse() throws IOException {
     final HttpMethod method;
-    method = parseMethod();
+
+    try {
+      method = parseMethod();
+    } catch (HttpSocketException e) {
+      throw HttpClientException.of(InvalidRequestLine.METHOD, e);
+    }
 
     final String path;
 
     try {
       path = parsePath();
     } catch (DecodePercException e) {
-      throw HttpClientException.of(InvalidRequestLine.PATH_PERCENT);
+      throw HttpClientException.of(InvalidRequestLine.PATH_PERCENT, e);
+    } catch (HttpSocketException.Overflow e) {
+      throw HttpClientException.of(InvalidRequestLine.URI_TOO_LONG, e);
+    } catch (HttpSocketException e) {
+      throw HttpClientException.of(InvalidRequestLine.PATH_NEXT_CHAR, e);
     }
 
     return new HttpRequestImpl(method, path);
@@ -47,7 +56,7 @@ final class HttpRequestParser {
   // # BEGIN: Method
   // ##################################################################
 
-  private HttpMethod parseMethod() throws IOException {
+  private HttpMethod parseMethod() throws HttpSocketException, IOException {
     final byte first;
     first = socket.readByte();
 
@@ -72,7 +81,7 @@ final class HttpRequestParser {
     };
   }
 
-  private HttpMethod parseMethod(HttpMethod method, int offset) throws IOException {
+  private HttpMethod parseMethod(HttpMethod method, int offset) throws HttpSocketException, IOException {
     final byte[] ascii;
     ascii = method.ascii;
 
@@ -87,7 +96,7 @@ final class HttpRequestParser {
     return method;
   }
 
-  private HttpMethod parseMethodP() throws IOException {
+  private HttpMethod parseMethodP() throws HttpSocketException, IOException {
     final byte second;
     second = socket.readByte();
 
@@ -156,7 +165,7 @@ final class HttpRequestParser {
     PARSE_PATH_TABLE = table;
   }
 
-  private String parsePath() throws IOException, DecodePercException {
+  private String parsePath() throws DecodePercException, HttpSocketException, IOException {
     // where our path begins
     final int startIndex;
     startIndex = socket.bufferIndex();
@@ -200,7 +209,7 @@ final class HttpRequestParser {
     }
   }
 
-  private String parsePath0(int startIndex) throws IOException, DecodePercException {
+  private String parsePath0(int startIndex) throws DecodePercException, HttpSocketException, IOException {
     while (true) {
       final byte code;
       code = readTable(PARSE_PATH_TABLE, InvalidRequestLine.PATH_NEXT_CHAR);
@@ -234,7 +243,7 @@ final class HttpRequestParser {
     }
   }
 
-  private String parsePath1(StringBuilder path) throws IOException, DecodePercException {
+  private String parsePath1(StringBuilder path) throws DecodePercException, HttpSocketException, IOException {
     while (true) {
       final byte b;
       b = socket.readByte();
@@ -326,7 +335,7 @@ final class HttpRequestParser {
   @SuppressWarnings("serial")
   private final class DecodePercException extends Exception {}
 
-  private int decodePerc() throws IOException, DecodePercException {
+  private int decodePerc() throws DecodePercException, HttpSocketException, IOException {
     final byte high1;
     high1 = readPerc();
 
@@ -349,14 +358,14 @@ final class HttpRequestParser {
     };
   }
 
-  private int decodePerc1(byte high1) throws IOException, DecodePercException {
+  private int decodePerc1(byte high1) throws DecodePercException, HttpSocketException, IOException {
     final byte low1;
     low1 = readPerc();
 
     return decodePerc(high1, low1);
   }
 
-  private int decodePerc2(byte high1) throws IOException, DecodePercException {
+  private int decodePerc2(byte high1) throws DecodePercException, HttpSocketException, IOException {
     final byte low1;
     low1 = readPerc();
 
@@ -376,7 +385,7 @@ final class HttpRequestParser {
     return c;
   }
 
-  private int decodePerc3(byte high1) throws IOException, DecodePercException {
+  private int decodePerc3(byte high1) throws DecodePercException, HttpSocketException, IOException {
     final byte low1;
     low1 = readPerc();
 
@@ -399,7 +408,7 @@ final class HttpRequestParser {
     return c;
   }
 
-  private int decodePerc4(byte high1) throws IOException, DecodePercException {
+  private int decodePerc4(byte high1) throws DecodePercException, HttpSocketException, IOException {
     final byte low1;
     low1 = readPerc();
 
@@ -429,7 +438,7 @@ final class HttpRequestParser {
     return (high << 4) | low;
   }
 
-  private int decodePercNext() throws IOException, DecodePercException {
+  private int decodePercNext() throws DecodePercException, HttpSocketException, IOException {
     readPercSep();
 
     final byte high;
@@ -448,7 +457,7 @@ final class HttpRequestParser {
     return perc;
   }
 
-  private byte readPerc() throws IOException, DecodePercException {
+  private byte readPerc() throws DecodePercException, HttpSocketException, IOException {
     final byte b;
     b = socket.readByte();
 
@@ -462,7 +471,7 @@ final class HttpRequestParser {
     return perc;
   }
 
-  private void readPercSep() throws IOException, DecodePercException {
+  private void readPercSep() throws DecodePercException, HttpSocketException, IOException {
     final byte b;
     b = socket.readByte();
 
@@ -491,6 +500,9 @@ final class HttpRequestParser {
 
     // invalid method
     METHOD,
+
+    // 414 URI Too Long
+    URI_TOO_LONG,
 
     // path does not start with solidus
     PATH_FIRST_CHAR,
@@ -534,7 +546,7 @@ final class HttpRequestParser {
   // # BEGIN: Util
   // ##################################################################
 
-  private byte readTable(byte[] table, HttpClientException.Kind kind) throws IOException {
+  private byte readTable(byte[] table, HttpClientException.Kind kind) throws IOException, HttpSocketException {
     final byte next;
     next = socket.readByte();
 

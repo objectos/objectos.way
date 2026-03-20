@@ -19,6 +19,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 
 import module java.base;
+import objectos.http.HttpRequestParser.InvalidRequestLine;
 import objectos.way.Y;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
@@ -164,8 +165,8 @@ public class HttpRequestTest0ParseMethod {
       );
 
       Assert.fail("It should have thrown");
-    } catch (HttpReadException expected) {
-      assertEquals(expected.kind, HttpReadException.Kind.EOF);
+    } catch (HttpClientException expected) {
+      assertEquals(expected.kind, InvalidRequestLine.METHOD);
     }
   }
 

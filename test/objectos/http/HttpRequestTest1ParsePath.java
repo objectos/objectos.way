@@ -22,6 +22,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import objectos.http.HttpRequestParser.InvalidRequestLine;
+import objectos.way.Y;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -288,15 +289,70 @@ public class HttpRequestTest1ParsePath {
           test -> test.bufferSize(256, 512),
 
           iso8859("""
-        GET %s HTTP/1.1\r
-        Host: test\r
-        \r
-        """.formatted(raw))
+          GET %s HTTP/1.1\r
+          Host: test\r
+          \r
+          """.formatted(raw))
       );
 
       Assert.fail("It should have thrown");
     } catch (HttpClientException expected) {
       assertEquals(expected.kind, InvalidRequestLine.PATH_PERCENT);
+    }
+  }
+
+  @DataProvider
+  public Object[][] slowClientProvider() {
+    final Object[][] a1;
+    a1 = pathValidProvider();
+
+    final Object[][] a2;
+    a2 = percentValidProvider();
+
+    final Object[][] concat;
+    concat = new Object[a1.length + a2.length][];
+
+    System.arraycopy(a1, 0, concat, 0, a1.length);
+    System.arraycopy(a2, 0, concat, a1.length, a2.length);
+
+    return concat;
+  }
+
+  @Test(dataProvider = "slowClientProvider")
+  public void slowClient(String raw, String expected, String description) throws IOException {
+    final HttpRequest req;
+    req = HttpRequestTester.parse(
+        test -> test.bufferSize(256, 512),
+
+        Y.slowStream(1, iso8859("""
+        GET %s HTTP/1.1\r
+        Host: test\r
+        \r
+        """.formatted(raw)))
+    );
+
+    assertEquals(req.path(), expected);
+  }
+
+  @Test
+  public void uriTooLong() throws IOException {
+    final String veryLongId;
+    veryLongId = "/12345/sub/abc7890".repeat(200);
+
+    try {
+      HttpRequestTester.parse(
+          test -> test.bufferSize(256, 512),
+
+          iso8859("""
+          GET /entity/%s HTTP/1.1\r
+          Host: test\r
+          \r
+          """.formatted(veryLongId))
+      );
+
+      Assert.fail("It should have thrown");
+    } catch (HttpClientException expected) {
+      assertEquals(expected.kind, InvalidRequestLine.URI_TOO_LONG);
     }
   }
 

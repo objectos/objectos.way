@@ -97,7 +97,7 @@ final class HttpSocket implements Closeable {
     socket.close();
   }
 
-  public final boolean matches(byte[] value, int offset) throws IOException {
+  public final boolean matches(byte[] value, int offset) throws HttpSocketException, IOException {
     final byte[] b;
     b = value;
 
@@ -136,7 +136,7 @@ final class HttpSocket implements Closeable {
     }
   }
 
-  public final byte readByte() throws IOException {
+  public final byte readByte() throws HttpSocketException, IOException {
     ensureBuffer(1);
 
     return buffer[bufferIndex++];
@@ -153,7 +153,7 @@ final class HttpSocket implements Closeable {
     return new String(buffer, startIndex, length, StandardCharsets.US_ASCII);
   }
 
-  private void ensureBuffer(int count) throws IOException {
+  private void ensureBuffer(int count) throws HttpSocketException, IOException {
     int readable;
     readable = bufferLimit - bufferIndex;
 
@@ -165,7 +165,7 @@ final class HttpSocket implements Closeable {
         // buffer is full, try to increase
 
         if (buffer.length == bufferSizeMax) {
-          throw HttpReadException.bufferOverflow();
+          throw HttpSocketException.overflow();
         }
 
         final int newLength;
@@ -180,7 +180,7 @@ final class HttpSocket implements Closeable {
       bytesRead = inputStream.read(buffer, bufferLimit, writableLength);
 
       if (bytesRead < 0) {
-        throw HttpReadException.eof();
+        throw HttpSocketException.eof();
       }
 
       assert bytesRead != 0 : "InputStream.read should not return 0 when writableLength != 0";

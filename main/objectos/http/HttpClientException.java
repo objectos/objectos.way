@@ -37,8 +37,18 @@ final class HttpClientException extends IOException {
     this.kind = kind;
   }
 
+  private HttpClientException(Kind kind, Throwable cause) {
+    super(cause);
+
+    this.kind = kind;
+  }
+
   public static HttpClientException of(Kind kind) {
     return new HttpClientException(kind);
+  }
+
+  public static HttpClientException of(Kind kind, Throwable cause) {
+    return new HttpClientException(kind, cause);
   }
 
 }

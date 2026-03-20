@@ -15,30 +15,23 @@
  */
 package objectos.http;
 
-import java.io.IOException;
+@SuppressWarnings("serial")
+sealed abstract class HttpSocketException extends Exception {
 
-final class HttpReadException extends IOException {
-
-  private static final long serialVersionUID = -2565909814532921913L;
-
-  enum Kind {
-    BUFFER_OVERFLOW,
-
-    EOF;
+  static final class Eof extends HttpSocketException {
+    private Eof() {}
   }
 
-  final Kind kind;
-
-  private HttpReadException(Kind kind) {
-    this.kind = kind;
+  public static Eof eof() {
+    return new Eof();
   }
 
-  public static HttpReadException bufferOverflow() {
-    return new HttpReadException(Kind.BUFFER_OVERFLOW);
+  static final class Overflow extends HttpSocketException {
+    private Overflow() {}
   }
 
-  public static HttpReadException eof() {
-    return new HttpReadException(Kind.EOF);
+  public static Overflow overflow() {
+    return new Overflow();
   }
 
 }
