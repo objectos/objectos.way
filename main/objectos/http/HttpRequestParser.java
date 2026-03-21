@@ -37,10 +37,10 @@ final class HttpRequestParser {
       throw HttpClientException.of(InvalidRequestLine.METHOD, e);
     }
 
-    final String path;
+    final Target target;
 
     try {
-      path = parsePath();
+      target = parseTarget();
     } catch (DecodePercException e) {
       throw HttpClientException.of(InvalidRequestLine.PATH_PERCENT, e);
     } catch (HttpSocketException.Overflow e) {
@@ -49,7 +49,15 @@ final class HttpRequestParser {
       throw HttpClientException.of(InvalidRequestLine.PATH_NEXT_CHAR, e);
     }
 
-    return new HttpRequestImpl(method, path);
+    target.validate();
+
+    return new HttpRequestImpl(
+        method,
+
+        target.path,
+
+        target.queryParams
+    );
   }
 
   // ##################################################################
@@ -116,7 +124,31 @@ final class HttpRequestParser {
   // ##################################################################
 
   // ##################################################################
-  // # BEGIN: Path
+  // # BEGIN: Target
+  // ##################################################################
+
+  private record Target(String path, Map<String, Object> queryParams) {
+
+    final void validate() throws HttpClientException {
+      final int length;
+      length = path.length();
+
+      if (length < 2) {
+        return;
+      }
+
+      final char second;
+      second = path.charAt(1);
+
+      if (second == '/') {
+        throw HttpClientException.of(InvalidRequestLine.PATH_SEGMENT_NZ);
+      }
+    }
+
+  }
+
+  // ##################################################################
+  // # BEGIN: Target: Path
   // ##################################################################
 
   private static final byte[] PATH_TABLE;
@@ -165,7 +197,7 @@ final class HttpRequestParser {
     PATH_TABLE = table;
   }
 
-  private String parsePath() throws DecodePercException, HttpSocketException, IOException {
+  private Target parseTarget() throws DecodePercException, HttpSocketException, IOException {
     // where our path begins
     final int startIndex;
     startIndex = socket.bufferIndex();
@@ -209,7 +241,7 @@ final class HttpRequestParser {
     }
   }
 
-  private String parsePath0(int startIndex) throws DecodePercException, HttpSocketException, IOException {
+  private Target parsePath0(int startIndex) throws DecodePercException, HttpSocketException, IOException {
     while (true) {
       final byte code;
       code = readTable(PATH_TABLE, InvalidRequestLine.PATH_NEXT_CHAR);
@@ -221,7 +253,7 @@ final class HttpRequestParser {
 
         case PATH_PERCENT -> {
           final StringBuilder path;
-          path = makePathBuilder(startIndex);
+          path = makeStrBuilder(startIndex);
 
           final int decoded;
           decoded = decodePerc();
@@ -232,10 +264,17 @@ final class HttpRequestParser {
         }
 
         case PATH_SPACE -> {
-          final String path;
-          path = makePath(startIndex);
+          final String value;
+          value = makeStr(startIndex);
 
-          return validatePath(path);
+          return new Target(value, null);
+        }
+
+        case PATH_QUESTION -> {
+          final String path;
+          path = makeStr(startIndex);
+
+          return parseQuery(path);
         }
 
         default -> throw HttpClientException.of(InvalidRequestLine.PATH_NEXT_CHAR);
@@ -243,7 +282,7 @@ final class HttpRequestParser {
     }
   }
 
-  private String parsePath1(StringBuilder path) throws DecodePercException, HttpSocketException, IOException {
+  private Target parsePath1(StringBuilder path) throws DecodePercException, HttpSocketException, IOException {
     while (true) {
       final byte b;
       b = socket.readByte();
@@ -268,9 +307,10 @@ final class HttpRequestParser {
         }
 
         case PATH_SPACE -> {
-          return validatePath(
-              path.toString()
-          );
+          final String value;
+          value = path.toString();
+
+          return new Target(value, null);
         }
 
         default -> throw HttpClientException.of(InvalidRequestLine.PATH_NEXT_CHAR);
@@ -278,43 +318,198 @@ final class HttpRequestParser {
     }
   }
 
-  private String makePath(int startIndex) {
-    final int bufferIndex;
-    bufferIndex = socket.bufferIndex();
+  // ##################################################################
+  // # END: Target: Path
+  // ##################################################################
 
-    final int endIndex;
-    endIndex = bufferIndex - 1;
+  // ##################################################################
+  // # BEGIN: Target: Query
+  // ##################################################################
 
-    return socket.bufferToAscii(startIndex, endIndex);
+  private static final byte[] PARSE_QUERY_TABLE;
+
+  private static final byte QUERY_VALID = 1;
+  private static final byte QUERY_PERCENT = 2;
+  private static final byte QUERY_PLUS = 3;
+  private static final byte QUERY_EQUALS = 4;
+  private static final byte QUERY_AMPERSAND = 5;
+  private static final byte QUERY_SPACE = 6;
+  private static final byte QUERY_CRLF = 7;
+
+  static {
+    final byte[] table;
+    table = new byte[128];
+
+    // 0 = invalid
+    // 1 = valid
+    // 2 = %xx
+    // 3 = '+' -> SPACE
+    // 4 = '=' -> key/value separator
+    // 5 = '&' -> next key
+    // 6 = ' ' -> space
+    // 7 = '\r' -> 0.9
+    // 7 = '\n' -> 0.9
+
+    Ascii.fill(table, Http.unreserved(), QUERY_VALID);
+
+    Ascii.fill(table, Http.subDelims(), QUERY_VALID);
+
+    table[':'] = QUERY_VALID;
+
+    table['@'] = QUERY_VALID;
+
+    table['/'] = QUERY_VALID;
+
+    table['?'] = QUERY_VALID;
+
+    table['%'] = QUERY_PERCENT;
+
+    table['+'] = QUERY_PLUS;
+
+    table['='] = QUERY_EQUALS;
+
+    table['&'] = QUERY_AMPERSAND;
+
+    table[' '] = QUERY_SPACE;
+
+    table['\r'] = QUERY_CRLF;
+
+    table['\n'] = QUERY_CRLF;
+
+    PARSE_QUERY_TABLE = table;
   }
 
-  private StringBuilder makePathBuilder(int startIndex) {
-    final String prefix;
-    prefix = makePath(startIndex);
+  private static class Query {
 
-    return new StringBuilder(prefix);
-  }
+    boolean emptyValue;
 
-  private String validatePath(String path) throws HttpClientException {
-    final int length;
-    length = path.length();
+    Map<String, Object> params;
 
-    if (length > 1) {
+    HttpVersion version;
 
-      final char second;
-      second = path.charAt(1);
-
-      if (second == '/') {
-        throw HttpClientException.of(InvalidRequestLine.PATH_SEGMENT_NZ);
+    final void add(String name) {
+      if (!name.isEmpty()) {
+        add(name, "");
       }
-
     }
 
-    return path;
+    final void add(String name, String value) {
+      if (params == null) {
+        params = new HashMap<>();
+      }
+
+      Http.queryParamsAdd(params, Function.identity(), name, value);
+    }
+
+    final boolean done() {
+      return version != null;
+    }
+
+  }
+
+  private Target parseQuery(String path) throws HttpSocketException, IOException {
+    final Query query;
+    query = new Query();
+
+    while (true) {
+      final String name;
+      name = parseQueryName(query);
+
+      if (query.done()) {
+        query.add(name);
+
+        break;
+      }
+
+      if (query.emptyValue) {
+        query.add(name, "");
+
+        query.emptyValue = false;
+
+        continue;
+      }
+
+      final String value;
+      value = parseQueryValue(query);
+
+      query.add(name, value);
+
+      if (query.done()) {
+        break;
+      }
+    }
+
+    return new Target(path, query.params);
+  }
+
+  private String parseQueryName(Query query) throws HttpSocketException, IOException {
+    final int startIndex;
+    startIndex = socket.bufferIndex();
+
+    while (true) {
+      final byte code;
+      code = readTable(PARSE_QUERY_TABLE, InvalidRequestLine.QUERY_CHAR);
+
+      switch (code) {
+        case QUERY_VALID -> {
+          // noop
+        }
+
+        case QUERY_EQUALS -> {
+          return makeStr(startIndex);
+        }
+
+        case QUERY_SPACE -> {
+          query.version = HttpVersion.HTTP_1_1;
+
+          return makeStr(startIndex);
+        }
+
+        case QUERY_AMPERSAND -> {
+          query.emptyValue = true;
+
+          return makeStr(startIndex);
+        }
+
+        default -> throw HttpClientException.of(InvalidRequestLine.QUERY_CHAR);
+      }
+    }
+  }
+
+  private String parseQueryValue(Query query) throws HttpSocketException, IOException {
+    final int startIndex;
+    startIndex = socket.bufferIndex();
+
+    while (true) {
+      final byte code;
+      code = readTable(PARSE_QUERY_TABLE, InvalidRequestLine.QUERY_CHAR);
+
+      switch (code) {
+        case QUERY_VALID -> {
+          // noop
+        }
+
+        case QUERY_AMPERSAND -> {
+          return makeStr(startIndex);
+        }
+
+        case QUERY_SPACE -> {
+          query.version = HttpVersion.HTTP_1_1;
+
+          return makeStr(startIndex);
+        }
+
+        default -> throw HttpClientException.of(InvalidRequestLine.QUERY_CHAR);
+      }
+    }
   }
 
   // ##################################################################
-  // # END: Path
+  // # END: Target: Query
+  // ##################################################################
+
+  // ##################################################################
+  // # END: Target
   // ##################################################################
 
   // ##################################################################
@@ -535,7 +730,24 @@ final class HttpRequestParser {
   // # BEGIN: Util
   // ##################################################################
 
-  private byte readTable(byte[] table, HttpClientException.Kind kind) throws IOException, HttpSocketException {
+  private String makeStr(int startIndex) {
+    final int bufferIndex;
+    bufferIndex = socket.bufferIndex();
+
+    final int endIndex;
+    endIndex = bufferIndex - 1;
+
+    return socket.bufferToAscii(startIndex, endIndex);
+  }
+
+  private StringBuilder makeStrBuilder(int startIndex) {
+    final String prefix;
+    prefix = makeStr(startIndex);
+
+    return new StringBuilder(prefix);
+  }
+
+  private byte readTable(byte[] table, HttpClientException.Kind kind) throws HttpSocketException, IOException {
     final byte next;
     next = socket.readByte();
 

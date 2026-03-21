@@ -18,26 +18,61 @@ package objectos.http;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
-record HttpRequestImpl(HttpMethod method, String path) implements HttpRequest {
+record HttpRequestImpl(
+
+    HttpMethod method,
+
+    String path,
+
+    Map<String, Object> queryParams
+
+) implements HttpRequest {
 
   @Override
-  public HttpVersion version() {
-    throw new UnsupportedOperationException("Implement me");
-  }
+  public String header(HttpHeaderName name) { throw new UnsupportedOperationException("Implement me"); }
 
   @Override
   public String pathParam(String name) { throw new UnsupportedOperationException("Implement me"); }
 
   @Override
-  public String queryParam(String name) { throw new UnsupportedOperationException("Implement me"); }
+  public final String queryParam(String name) {
+    Objects.requireNonNull(name, "name == null");
+
+    if (queryParams == null) {
+      return null;
+    } else {
+      return Http.queryParamsGet(queryParams, name);
+    }
+  }
 
   @Override
-  public List<String> queryParamAll(String name) { throw new UnsupportedOperationException("Implement me"); }
+  public final List<String> queryParamAll(String name) {
+    Objects.requireNonNull(name, "name == null");
+
+    if (queryParams == null) {
+      return List.of();
+    } else {
+      return Http.queryParamsGetAll(queryParams, name);
+    }
+  }
 
   @Override
-  public Set<String> queryParamNames() { throw new UnsupportedOperationException("Implement me"); }
+  public final Set<String> queryParamNames() {
+    if (queryParams == null) {
+      return Set.of();
+    } else {
+      return queryParams.keySet();
+    }
+  }
+
+  @Override
+  public HttpVersion version() {
+    throw new UnsupportedOperationException("Implement me");
+  }
 
   @Override
   public final String rawPath() {
@@ -50,9 +85,6 @@ record HttpRequestImpl(HttpMethod method, String path) implements HttpRequest {
 
   @Override
   public String rawQueryWith(String name, String value) { throw new UnsupportedOperationException("Implement me"); }
-
-  @Override
-  public String header(HttpHeaderName name) { throw new UnsupportedOperationException("Implement me"); }
 
   @Override
   public InputStream bodyInputStream() throws IOException { throw new UnsupportedOperationException("Implement me"); }
