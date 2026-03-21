@@ -16,6 +16,7 @@
 package objectos.http;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertSame;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -354,6 +355,62 @@ public class HttpRequestTest1ParsePath {
     } catch (HttpClientException expected) {
       assertEquals(expected.kind, InvalidRequestLine.URI_TOO_LONG);
     }
+  }
+
+  @Test
+  public void ioException() {
+    final IOException ex;
+    ex = Y.trimStackTrace(new IOException(), 1);
+
+    try {
+      HttpRequestTester.parse(
+          test -> test.bufferSize(256, 512),
+
+          iso8859("GET /index.h"),
+
+          ex
+      );
+
+      Assert.fail("It should have thrown");
+    } catch (IOException expected) {
+      assertSame(expected, ex);
+    }
+  }
+
+  @DataProvider
+  public Object[][] rawPathProvider() {
+    final List<Object[]> l;
+    l = new ArrayList<>();
+
+    for (int value = 0; value < 128; value++) {
+      final String raw;
+      raw = "/raw/%%%02X".formatted(value);
+
+      if (VALID_BYTES[value]) {
+        l.add(new Object[] {raw, "/raw/" + (char) value});
+      } else {
+        l.add(new Object[] {raw, raw});
+      }
+    }
+
+    return l.toArray(Object[][]::new);
+  }
+
+  // TODO remove?
+  @Test(enabled = false, dataProvider = "rawPathProvider")
+  public void rawPath(String raw, String expected) throws IOException {
+    final HttpRequest req;
+    req = HttpRequestTester.parse(
+        test -> test.bufferSize(256, 512),
+
+        iso8859("""
+        GET %s HTTP/1.1\r
+        Host: test\r
+        \r
+        """.formatted(raw))
+    );
+
+    assertEquals(req.rawPath(), expected);
   }
 
   private byte[] iso8859(String s) {

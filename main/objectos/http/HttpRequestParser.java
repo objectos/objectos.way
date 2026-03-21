@@ -119,7 +119,7 @@ final class HttpRequestParser {
   // # BEGIN: Path
   // ##################################################################
 
-  private static final byte[] PARSE_PATH_TABLE;
+  private static final byte[] PATH_TABLE;
 
   private static final byte SOLIDUS = '/';
 
@@ -162,7 +162,7 @@ final class HttpRequestParser {
 
     table['\n'] = PATH_CRLF;
 
-    PARSE_PATH_TABLE = table;
+    PATH_TABLE = table;
   }
 
   private String parsePath() throws DecodePercException, HttpSocketException, IOException {
@@ -212,7 +212,7 @@ final class HttpRequestParser {
   private String parsePath0(int startIndex) throws DecodePercException, HttpSocketException, IOException {
     while (true) {
       final byte code;
-      code = readTable(PARSE_PATH_TABLE, InvalidRequestLine.PATH_NEXT_CHAR);
+      code = readTable(PATH_TABLE, InvalidRequestLine.PATH_NEXT_CHAR);
 
       switch (code) {
         case PATH_VALID -> {
@@ -253,7 +253,7 @@ final class HttpRequestParser {
       }
 
       final byte code;
-      code = PARSE_PATH_TABLE[b];
+      code = PATH_TABLE[b];
 
       switch (code) {
         case PATH_VALID -> {
@@ -299,26 +299,15 @@ final class HttpRequestParser {
     final int length;
     length = path.length();
 
-    if (length == 0) {
-      throw HttpClientException.of(InvalidRequestLine.PATH_FIRST_CHAR);
-    }
+    if (length > 1) {
 
-    final char first;
-    first = path.charAt(0);
+      final char second;
+      second = path.charAt(1);
 
-    if (first != '/') {
-      throw HttpClientException.of(InvalidRequestLine.PATH_FIRST_CHAR);
-    }
+      if (second == '/') {
+        throw HttpClientException.of(InvalidRequestLine.PATH_SEGMENT_NZ);
+      }
 
-    if (length == 1) {
-      return path;
-    }
-
-    final char second;
-    second = path.charAt(1);
-
-    if (second == '/') {
-      throw HttpClientException.of(InvalidRequestLine.PATH_SEGMENT_NZ);
     }
 
     return path;

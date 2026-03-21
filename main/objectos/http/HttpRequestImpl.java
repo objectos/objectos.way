@@ -40,7 +40,10 @@ record HttpRequestImpl(HttpMethod method, String path) implements HttpRequest {
   public Set<String> queryParamNames() { throw new UnsupportedOperationException("Implement me"); }
 
   @Override
-  public String rawPath() { throw new UnsupportedOperationException("Implement me"); }
+  public final String rawPath() {
+    // TODO remove?
+    throw new UnsupportedOperationException();
+  }
 
   @Override
   public String rawQuery() { throw new UnsupportedOperationException("Implement me"); }
