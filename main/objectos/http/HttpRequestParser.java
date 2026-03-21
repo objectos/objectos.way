@@ -455,6 +455,15 @@ final class HttpRequestParser {
           // noop
         }
 
+        case QUERY_PLUS -> {
+          final StringBuilder name;
+          name = makeStrBuilder(startIndex);
+
+          name.append(' ');
+
+          return parseQueryName1(query, name);
+        }
+
         case QUERY_EQUALS -> {
           return makeStr(startIndex);
         }
@@ -476,6 +485,48 @@ final class HttpRequestParser {
     }
   }
 
+  private String parseQueryName1(Query query, StringBuilder name) throws HttpSocketException, IOException {
+    while (true) {
+      final byte b;
+      b = socket.readByte();
+
+      if (b < 0) {
+        throw HttpClientException.of(InvalidRequestLine.QUERY_CHAR);
+      }
+
+      final byte code;
+      code = PARSE_QUERY_TABLE[b];
+
+      switch (code) {
+        case QUERY_VALID -> {
+          name.append((char) b);
+        }
+
+        case QUERY_PLUS -> {
+          name.append(' ');
+        }
+
+        case QUERY_EQUALS -> {
+          return name.toString();
+        }
+
+        case QUERY_SPACE -> {
+          query.version = HttpVersion.HTTP_1_1;
+
+          return name.toString();
+        }
+
+        case QUERY_AMPERSAND -> {
+          query.emptyValue = true;
+
+          return name.toString();
+        }
+
+        default -> throw HttpClientException.of(InvalidRequestLine.QUERY_CHAR);
+      }
+    }
+  }
+
   private String parseQueryValue(Query query) throws HttpSocketException, IOException {
     final int startIndex;
     startIndex = socket.bufferIndex();
@@ -489,6 +540,15 @@ final class HttpRequestParser {
           // noop
         }
 
+        case QUERY_PLUS -> {
+          final StringBuilder value;
+          value = makeStrBuilder(startIndex);
+
+          value.append(' ');
+
+          return parseQueryValue1(query, value);
+        }
+
         case QUERY_AMPERSAND -> {
           return makeStr(startIndex);
         }
@@ -497,6 +557,42 @@ final class HttpRequestParser {
           query.version = HttpVersion.HTTP_1_1;
 
           return makeStr(startIndex);
+        }
+
+        default -> throw HttpClientException.of(InvalidRequestLine.QUERY_CHAR);
+      }
+    }
+  }
+
+  private String parseQueryValue1(Query query, StringBuilder value) throws HttpSocketException, IOException {
+    while (true) {
+      final byte b;
+      b = socket.readByte();
+
+      if (b < 0) {
+        throw HttpClientException.of(InvalidRequestLine.QUERY_CHAR);
+      }
+
+      final byte code;
+      code = PARSE_QUERY_TABLE[b];
+
+      switch (code) {
+        case QUERY_VALID -> {
+          value.append((char) b);
+        }
+
+        case QUERY_PLUS -> {
+          value.append(' ');
+        }
+
+        case QUERY_AMPERSAND -> {
+          return value.toString();
+        }
+
+        case QUERY_SPACE -> {
+          query.version = HttpVersion.HTTP_1_1;
+
+          return value.toString();
         }
 
         default -> throw HttpClientException.of(InvalidRequestLine.QUERY_CHAR);
