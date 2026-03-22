@@ -28,7 +28,9 @@ record HttpRequestImpl(
 
     String path,
 
-    Map<String, Object> queryParams
+    Map<String, Object> queryParams,
+
+    HttpVersion version
 
 ) implements HttpRequest {
 
@@ -67,11 +69,6 @@ record HttpRequestImpl(
     } else {
       return queryParams.keySet();
     }
-  }
-
-  @Override
-  public HttpVersion version() {
-    throw new UnsupportedOperationException("Implement me");
   }
 
   @Override

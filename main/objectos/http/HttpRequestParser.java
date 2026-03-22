@@ -51,12 +51,22 @@ final class HttpRequestParser {
 
     target.validate();
 
+    final HttpVersion version;
+
+    try {
+      version = parseVersion(target.version);
+    } catch (HttpSocketException e) {
+      throw HttpClientException.of(InvalidRequestLine.VERSION_CHAR, e);
+    }
+
     return new HttpRequestImpl(
         method,
 
         target.path,
 
-        target.queryParams
+        target.queryParams,
+
+        version
     );
   }
 
@@ -127,7 +137,7 @@ final class HttpRequestParser {
   // # BEGIN: Target
   // ##################################################################
 
-  private record Target(String path, Map<String, Object> queryParams) {
+  private record Target(String path, Map<String, Object> queryParams, HttpVersion version) {
 
     final void validate() throws HttpClientException {
       final int length;
@@ -267,7 +277,7 @@ final class HttpRequestParser {
           final String value;
           value = makeStr(startIndex);
 
-          return new Target(value, null);
+          return new Target(value, null, HttpVersion.HTTP_1_1);
         }
 
         case PATH_QUESTION -> {
@@ -310,7 +320,7 @@ final class HttpRequestParser {
           final String value;
           value = path.toString();
 
-          return new Target(value, null);
+          return new Target(value, null, HttpVersion.HTTP_1_1);
         }
 
         case PATH_QUESTION -> {
@@ -454,7 +464,7 @@ final class HttpRequestParser {
       }
     }
 
-    return new Target(path, query.params);
+    return new Target(path, query.params, query.version);
   }
 
   private String parseQueryName(Query query) throws DecodePercException, HttpSocketException, IOException {
@@ -662,6 +672,109 @@ final class HttpRequestParser {
   // ##################################################################
 
   // ##################################################################
+  // # BEGIN: Version
+  // ##################################################################
+
+  private static final byte[] HTTP_1_1_CRLF = "HTTP/1.1\r\n".getBytes(StandardCharsets.US_ASCII);
+
+  private static final byte[] HTTP_1_1_LF = "HTTP/1.1\n".getBytes(StandardCharsets.US_ASCII);
+
+  private static final byte[] HTTP_OTHERS = "HTTP/".getBytes(StandardCharsets.US_ASCII);
+
+  private HttpVersion parseVersion(HttpVersion candidate) throws HttpSocketException, IOException {
+    if (!candidate.equals(HttpVersion.HTTP_1_1)) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    if (socket.matches(HTTP_1_1_CRLF, 0)) {
+      return candidate;
+    }
+
+    if (socket.matches(HTTP_1_1_LF, 0)) {
+      throw HttpClientException.of(InvalidLineTerminator.INSTANCE);
+    }
+
+    if (!socket.matches(HTTP_OTHERS, 0)) {
+      throw HttpClientException.of(InvalidRequestLine.VERSION_CHAR);
+    }
+
+    final boolean minor;
+    minor = parseVersionMajor();
+
+    if (minor) {
+      parseVersionMinor();
+    }
+
+    throw HttpClientException.of(InvalidRequestLine.HTTP_VERSION_NOT_SUPPORTED);
+  }
+
+  private boolean parseVersionMajor() throws HttpSocketException, IOException {
+    final byte first;
+    first = socket.readByte();
+
+    if (!Http.isDigit(first)) {
+      throw HttpClientException.of(InvalidRequestLine.VERSION_CHAR);
+    }
+
+    while (true) {
+      final byte b;
+      b = socket.readByte();
+
+      if (Http.isDigit(b)) {
+        continue;
+      }
+
+      if (b == '.') {
+        return true;
+      }
+
+      if (b == '\r') {
+        final byte lf;
+        lf = socket.readByte();
+
+        if (lf == '\n') {
+          return false;
+        }
+      }
+
+      throw HttpClientException.of(InvalidRequestLine.VERSION_CHAR);
+    }
+  }
+
+  private void parseVersionMinor() throws HttpSocketException, IOException {
+    final byte first;
+    first = socket.readByte();
+
+    if (!Http.isDigit(first)) {
+      throw HttpClientException.of(InvalidRequestLine.VERSION_CHAR);
+    }
+
+    while (true) {
+      final byte b;
+      b = socket.readByte();
+
+      if (Http.isDigit(b)) {
+        continue;
+      }
+
+      if (b == '\r') {
+        final byte lf;
+        lf = socket.readByte();
+
+        if (lf == '\n') {
+          return;
+        }
+      }
+
+      throw HttpClientException.of(InvalidRequestLine.VERSION_CHAR);
+    }
+  }
+
+  // ##################################################################
+  // # END: Version
+  // ##################################################################
+
+  // ##################################################################
   // # BEGIN: URL Decode
   // ##################################################################
 
@@ -828,6 +941,22 @@ final class HttpRequestParser {
   // # BEGIN: Errors
   // ##################################################################
 
+  enum InvalidLineTerminator implements HttpClientException.Kind {
+    INSTANCE;
+
+    private static final byte[] MESSAGE = "Invalid line terminator.\n".getBytes(StandardCharsets.US_ASCII);
+
+    @Override
+    public final byte[] message() {
+      return MESSAGE;
+    }
+
+    @Override
+    public final HttpStatus status() {
+      return HttpStatus.BAD_REQUEST;
+    }
+  }
+
   enum InvalidRequestLine implements HttpClientException.Kind {
     // do not reorder, do not rename
 
@@ -835,7 +964,7 @@ final class HttpRequestParser {
     METHOD,
 
     // 414 URI Too Long
-    URI_TOO_LONG,
+    URI_TOO_LONG(HttpStatus.URI_TOO_LONG),
 
     // path does not start with solidus
     PATH_FIRST_CHAR,
@@ -856,9 +985,22 @@ final class HttpRequestParser {
     QUERY_PERCENT,
 
     // invalid version
-    VERSION_CHAR;
+    VERSION_CHAR,
+
+    // 505 HTTP Version Not Supported
+    HTTP_VERSION_NOT_SUPPORTED(HttpStatus.HTTP_VERSION_NOT_SUPPORTED);
 
     private static final byte[] MESSAGE = "Invalid request line.\n".getBytes(StandardCharsets.US_ASCII);
+
+    private final HttpStatus status;
+
+    private InvalidRequestLine() {
+      this(HttpStatus.BAD_REQUEST);
+    }
+
+    private InvalidRequestLine(HttpStatus status) {
+      this.status = status;
+    }
 
     @Override
     public final byte[] message() {
@@ -867,7 +1009,7 @@ final class HttpRequestParser {
 
     @Override
     public final HttpStatus status() {
-      return HttpStatus.BAD_REQUEST;
+      return status;
     }
   }
 
