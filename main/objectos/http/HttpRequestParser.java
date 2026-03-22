@@ -408,6 +408,14 @@ final class HttpRequestParser {
   }
 
   private Target parseQuery(String path) throws HttpSocketException, IOException {
+    try {
+      return parseQuery0(path);
+    } catch (DecodePercException e) {
+      throw HttpClientException.of(InvalidRequestLine.QUERY_PERCENT);
+    }
+  }
+
+  private Target parseQuery0(String path) throws DecodePercException, HttpSocketException, IOException {
     final Query query;
     query = new Query();
 
@@ -442,7 +450,7 @@ final class HttpRequestParser {
     return new Target(path, query.params);
   }
 
-  private String parseQueryName(Query query) throws HttpSocketException, IOException {
+  private String parseQueryName(Query query) throws DecodePercException, HttpSocketException, IOException {
     final int startIndex;
     startIndex = socket.bufferIndex();
 
@@ -453,6 +461,18 @@ final class HttpRequestParser {
       switch (code) {
         case QUERY_VALID -> {
           // noop
+        }
+
+        case QUERY_PERCENT -> {
+          final StringBuilder name;
+          name = makeStrBuilder(startIndex);
+
+          final int decoded;
+          decoded = decodePerc();
+
+          name.appendCodePoint(decoded);
+
+          return parseQueryName1(query, name);
         }
 
         case QUERY_PLUS -> {
@@ -527,7 +547,7 @@ final class HttpRequestParser {
     }
   }
 
-  private String parseQueryValue(Query query) throws HttpSocketException, IOException {
+  private String parseQueryValue(Query query) throws DecodePercException, HttpSocketException, IOException {
     final int startIndex;
     startIndex = socket.bufferIndex();
 
@@ -538,6 +558,18 @@ final class HttpRequestParser {
       switch (code) {
         case QUERY_VALID -> {
           // noop
+        }
+
+        case QUERY_PERCENT -> {
+          final StringBuilder value;
+          value = makeStrBuilder(startIndex);
+
+          final int decoded;
+          decoded = decodePerc();
+
+          value.appendCodePoint(decoded);
+
+          return parseQueryValue1(query, value);
         }
 
         case QUERY_PLUS -> {
