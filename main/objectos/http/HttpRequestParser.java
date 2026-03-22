@@ -313,6 +313,13 @@ final class HttpRequestParser {
           return new Target(value, null);
         }
 
+        case PATH_QUESTION -> {
+          final String value;
+          value = path.toString();
+
+          return parseQuery(value);
+        }
+
         default -> throw HttpClientException.of(InvalidRequestLine.PATH_NEXT_CHAR);
       }
     }
@@ -505,7 +512,7 @@ final class HttpRequestParser {
     }
   }
 
-  private String parseQueryName1(Query query, StringBuilder name) throws HttpSocketException, IOException {
+  private String parseQueryName1(Query query, StringBuilder name) throws DecodePercException, HttpSocketException, IOException {
     while (true) {
       final byte b;
       b = socket.readByte();
@@ -520,6 +527,13 @@ final class HttpRequestParser {
       switch (code) {
         case QUERY_VALID -> {
           name.append((char) b);
+        }
+
+        case QUERY_PERCENT -> {
+          final int decoded;
+          decoded = decodePerc();
+
+          name.appendCodePoint(decoded);
         }
 
         case QUERY_PLUS -> {
@@ -596,7 +610,7 @@ final class HttpRequestParser {
     }
   }
 
-  private String parseQueryValue1(Query query, StringBuilder value) throws HttpSocketException, IOException {
+  private String parseQueryValue1(Query query, StringBuilder value) throws DecodePercException, HttpSocketException, IOException {
     while (true) {
       final byte b;
       b = socket.readByte();
@@ -611,6 +625,13 @@ final class HttpRequestParser {
       switch (code) {
         case QUERY_VALID -> {
           value.append((char) b);
+        }
+
+        case QUERY_PERCENT -> {
+          final int decoded;
+          decoded = decodePerc();
+
+          value.appendCodePoint(decoded);
         }
 
         case QUERY_PLUS -> {
