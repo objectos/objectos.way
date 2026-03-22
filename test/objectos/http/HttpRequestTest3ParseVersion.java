@@ -18,7 +18,9 @@ package objectos.http;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
+import objectos.http.HttpRequestParser.InvalidLineTerminator;
 import objectos.http.HttpRequestParser.InvalidRequestLine;
+import objectos.way.Y;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -53,6 +55,36 @@ public class HttpRequestTest3ParseVersion {
     );
 
     assertEquals(req.version(), expected);
+  }
+
+  @DataProvider
+  public Object[][] versionInvalidProvider() {
+    return new Object[][] {
+        {"GET / HPTP/1.1", "valid chars but just nonsense"},
+        {"GET / ABCD/1.1", "invalid chars"},
+        {"GET / HTTP/1.", "Almost valid"},
+        {"GET / HTTP/.1", "Almost valid"},
+        {"GET / HTTP/", "Almost valid"}
+    };
+  }
+
+  @Test(dataProvider = "versionInvalidProvider")
+  public void versionInvalid(String line, String description) throws IOException {
+    try {
+      HttpRequestTester.parse(
+          test -> test.bufferSize(256, 512),
+
+          """
+          %s\r
+          Host: test\r
+          \r
+          """.formatted(line)
+      );
+
+      Assert.fail("It should have thrown");
+    } catch (HttpClientException expected) {
+      assertEquals(expected.kind, InvalidRequestLine.VERSION_CHAR);
+    }
   }
 
   @DataProvider
@@ -119,6 +151,41 @@ public class HttpRequestTest3ParseVersion {
     } catch (HttpClientException expected) {
       assertEquals(expected.kind, InvalidRequestLine.HTTP_VERSION_NOT_SUPPORTED);
     }
+  }
+
+  @Test
+  public void invalidLineTerminator() throws IOException {
+    try {
+      HttpRequestTester.parse(
+          test -> test.bufferSize(256, 512),
+
+          """
+          GET / HTTP/1.1
+          Host: test\r
+          \r
+          """
+      );
+
+      Assert.fail("It should have thrown");
+    } catch (HttpClientException expected) {
+      assertEquals(expected.kind, InvalidLineTerminator.INSTANCE);
+    }
+  }
+
+  @Test(dataProvider = "versionValidProvider")
+  public void slowClientValid(String line, HttpVersion expected, String description) throws IOException {
+    final HttpRequest req;
+    req = HttpRequestTester.parse(
+        test -> test.bufferSize(256, 512),
+
+        Y.slowStream(1, """
+        %s\r
+        Host: test\r
+        \r
+        """.formatted(line))
+    );
+
+    assertEquals(req.version(), expected);
   }
 
 }
