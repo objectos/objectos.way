@@ -54,7 +54,7 @@ final class HttpRequestParser {
     final HttpVersion version;
 
     try {
-      version = parseVersion(target.version);
+      version = parseVersion();
     } catch (HttpSocketException e) {
       throw HttpClientException.of(InvalidRequestLine.VERSION_CHAR, e);
     }
@@ -137,7 +137,7 @@ final class HttpRequestParser {
   // # BEGIN: Target
   // ##################################################################
 
-  private record Target(String path, Map<String, Object> queryParams, HttpVersion version) {
+  private record Target(String path, Map<String, Object> queryParams) {
 
     final void validate() throws HttpClientException {
       final int length;
@@ -277,7 +277,7 @@ final class HttpRequestParser {
           final String value;
           value = makeStr(startIndex);
 
-          return new Target(value, null, HttpVersion.HTTP_1_1);
+          return new Target(value, null);
         }
 
         case PATH_QUESTION -> {
@@ -285,6 +285,11 @@ final class HttpRequestParser {
           path = makeStr(startIndex);
 
           return parseQuery(path);
+        }
+
+        case PATH_CRLF -> {
+          // assume version 0.9
+          throw HttpClientException.of(InvalidRequestLine.HTTP_VERSION_NOT_SUPPORTED);
         }
 
         default -> throw HttpClientException.of(InvalidRequestLine.PATH_NEXT_CHAR);
@@ -320,7 +325,7 @@ final class HttpRequestParser {
           final String value;
           value = path.toString();
 
-          return new Target(value, null, HttpVersion.HTTP_1_1);
+          return new Target(value, null);
         }
 
         case PATH_QUESTION -> {
@@ -328,6 +333,11 @@ final class HttpRequestParser {
           value = path.toString();
 
           return parseQuery(value);
+        }
+
+        case PATH_CRLF -> {
+          // assume version 0.9
+          throw HttpClientException.of(InvalidRequestLine.HTTP_VERSION_NOT_SUPPORTED);
         }
 
         default -> throw HttpClientException.of(InvalidRequestLine.PATH_NEXT_CHAR);
@@ -464,7 +474,7 @@ final class HttpRequestParser {
       }
     }
 
-    return new Target(path, query.params, query.version);
+    return new Target(path, query.params);
   }
 
   private String parseQueryName(Query query) throws DecodePercException, HttpSocketException, IOException {
@@ -517,6 +527,11 @@ final class HttpRequestParser {
           return makeStr(startIndex);
         }
 
+        case QUERY_CRLF -> {
+          // assume version 0.9
+          throw HttpClientException.of(InvalidRequestLine.HTTP_VERSION_NOT_SUPPORTED);
+        }
+
         default -> throw HttpClientException.of(InvalidRequestLine.QUERY_CHAR);
       }
     }
@@ -564,6 +579,11 @@ final class HttpRequestParser {
           query.emptyValue = true;
 
           return name.toString();
+        }
+
+        case QUERY_CRLF -> {
+          // assume version 0.9
+          throw HttpClientException.of(InvalidRequestLine.HTTP_VERSION_NOT_SUPPORTED);
         }
 
         default -> throw HttpClientException.of(InvalidRequestLine.QUERY_CHAR);
@@ -615,6 +635,11 @@ final class HttpRequestParser {
           return makeStr(startIndex);
         }
 
+        case QUERY_CRLF -> {
+          // assume version 0.9
+          throw HttpClientException.of(InvalidRequestLine.HTTP_VERSION_NOT_SUPPORTED);
+        }
+
         default -> throw HttpClientException.of(InvalidRequestLine.QUERY_CHAR);
       }
     }
@@ -658,6 +683,11 @@ final class HttpRequestParser {
           return value.toString();
         }
 
+        case QUERY_CRLF -> {
+          // assume version 0.9
+          throw HttpClientException.of(InvalidRequestLine.HTTP_VERSION_NOT_SUPPORTED);
+        }
+
         default -> throw HttpClientException.of(InvalidRequestLine.QUERY_CHAR);
       }
     }
@@ -681,13 +711,9 @@ final class HttpRequestParser {
 
   private static final byte[] HTTP_OTHERS = "HTTP/".getBytes(StandardCharsets.US_ASCII);
 
-  private HttpVersion parseVersion(HttpVersion candidate) throws HttpSocketException, IOException {
-    if (!candidate.equals(HttpVersion.HTTP_1_1)) {
-      throw new UnsupportedOperationException("Implement me");
-    }
-
+  private HttpVersion parseVersion() throws HttpSocketException, IOException {
     if (socket.matches(HTTP_1_1_CRLF, 0)) {
-      return candidate;
+      return HttpVersion.HTTP_1_1;
     }
 
     if (socket.matches(HTTP_1_1_LF, 0)) {

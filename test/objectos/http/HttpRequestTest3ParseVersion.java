@@ -84,4 +84,41 @@ public class HttpRequestTest3ParseVersion {
     }
   }
 
+  @DataProvider
+  public Object[][] version09NotSupportedProvider() {
+    return new Object[][] {
+        {"GET /\r\n\r\n"},
+        {"GET /\n\n"},
+        {"GET /%C3%A1\r\n\r\n"},
+        {"GET /%C3%A1\n\n"},
+        {"GET /?key=val%C3%A1\r\n\r\n"},
+        {"GET /?key=val%C3%A1\n\n"},
+        {"GET /?key%C3%A1=val\r\n\r\n"},
+        {"GET /?key%C3%A1=val\n\n"},
+        {"GET /?key%C3%A1=\r\n\r\n"},
+        {"GET /?key%C3%A1=\n\n"},
+        {"GET /?key%C3%A1\r\n\r\n"},
+        {"GET /?key%C3%A1\n\n"}
+    };
+  }
+
+  @Test(dataProvider = "version09NotSupportedProvider")
+  public void version09NotSupported(String line) throws IOException {
+    try {
+      HttpRequestTester.parse(
+          test -> test.bufferSize(256, 512),
+
+          """
+          %s\r
+          Host: test\r
+          \r
+          """.formatted(line)
+      );
+
+      Assert.fail("It should have thrown");
+    } catch (HttpClientException expected) {
+      assertEquals(expected.kind, InvalidRequestLine.HTTP_VERSION_NOT_SUPPORTED);
+    }
+  }
+
 }
