@@ -26,6 +26,8 @@ final class HttpRequestTester {
 
   private int bufferSizeMax = 256;
 
+  private long requestBodyMaxSize = 1024;
+
   private final Socket socket;
 
   private HttpRequestTester(Socket socket) {
@@ -36,6 +38,10 @@ final class HttpRequestTester {
     bufferSizeInitial = initial;
 
     bufferSizeMax = max;
+  }
+
+  public final void requestBodyMaxSize(long value) {
+    requestBodyMaxSize = value;
   }
 
   public static HttpRequest parse(Consumer<? super HttpRequestTester> test, Object... data) throws IOException {
@@ -55,7 +61,7 @@ final class HttpRequestTester {
     httpSocket = HttpSocket.of(bufferSizeInitial, bufferSizeMax, socket);
 
     final HttpRequestParser parser;
-    parser = new HttpRequestParser(httpSocket);
+    parser = new HttpRequestParser(requestBodyMaxSize, httpSocket);
 
     return parser.parse();
   }

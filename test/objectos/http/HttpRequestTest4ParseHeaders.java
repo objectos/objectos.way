@@ -186,7 +186,7 @@ public class HttpRequestTest4ParseHeaders {
     in.append("GET / HTTP/1.1\r\n");
 
     for (HttpHeaderNameImpl name : HttpHeaderNameImpl.VALUES) {
-      if (!name.isResponseOnly()) {
+      if (!name.isResponseOnly() && !name.equals(HttpHeaderNameImpl.TRANSFER_ENCODING)) {
         in.append(name.headerCase());
         in.append(": ");
         in.append(Integer.toString(name.index()));
@@ -210,7 +210,7 @@ public class HttpRequestTest4ParseHeaders {
 
     // headers
     for (HttpHeaderNameImpl name : HttpHeaderNameImpl.VALUES) {
-      if (!name.isResponseOnly()) {
+      if (!name.isResponseOnly() && !name.equals(HttpHeaderNameImpl.TRANSFER_ENCODING)) {
         assertEquals(req.header(name), Integer.toString(name.index()));
       }
     }

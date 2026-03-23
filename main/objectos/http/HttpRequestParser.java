@@ -21,9 +21,13 @@ import objectos.internal.Bytes;
 
 final class HttpRequestParser {
 
+  private final long requestBodySizeMax;
+
   private final HttpSocket socket;
 
-  HttpRequestParser(HttpSocket socket) {
+  HttpRequestParser(long requestBodySizeMax, HttpSocket socket) {
+    this.requestBodySizeMax = requestBodySizeMax;
+
     this.socket = socket;
   }
 
@@ -69,6 +73,14 @@ final class HttpRequestParser {
       throw HttpClientException.of(InvalidRequestHeaders.REQUEST_HEADER_FIELDS_TOO_LARGE, e);
     }
 
+    final InputStream bodyInputStream;
+
+    try {
+      bodyInputStream = parseBody(headers);
+    } catch (HttpSocketEof e) {
+      throw HttpClientException.of(InvalidRequestBody.EOF, e);
+    }
+
     return new HttpRequestImpl(
         method,
 
@@ -78,7 +90,9 @@ final class HttpRequestParser {
 
         version,
 
-        headers
+        headers,
+
+        bodyInputStream
     );
   }
 
@@ -1043,6 +1057,125 @@ final class HttpRequestParser {
   // ##################################################################
 
   // ##################################################################
+  // # BEGIN: Body
+  // ##################################################################
+
+  private InputStream parseBody(Map<HttpHeaderName, Object> headers) throws IOException {
+    final String contentLength;
+    contentLength = Http.queryParamsGet(headers, HttpHeaderName.CONTENT_LENGTH);
+
+    if (contentLength != null) {
+      return parseBodyFixed(headers, contentLength);
+    }
+
+    final String transferEncoding;
+    transferEncoding = Http.queryParamsGet(headers, HttpHeaderName.TRANSFER_ENCODING);
+
+    if (transferEncoding != null) {
+      // TODO 501 Not Implemented
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    final String contentType;
+    contentType = Http.queryParamsGet(headers, HttpHeaderNameImpl.CONTENT_TYPE);
+
+    if (contentType != null) {
+      throw HttpClientException.of(InvalidRequestHeaders.LENGTH_REQUIRED);
+    }
+
+    return InputStream.nullInputStream();
+  }
+
+  private InputStream parseBodyFixed(Map<HttpHeaderName, Object> headers, String contentLength) throws IOException {
+    final String transferEncoding;
+    transferEncoding = Http.queryParamsGet(headers, HttpHeaderNameImpl.TRANSFER_ENCODING);
+
+    if (transferEncoding != null) {
+      throw HttpClientException.of(InvalidRequestHeaders.BOTH_CL_TE);
+    }
+
+    long length;
+    length = 0;
+
+    final long hardLimit;
+    hardLimit = Long.MAX_VALUE;
+
+    final long multLimit;
+    multLimit = hardLimit / 10;
+
+    boolean overflow;
+    overflow = false;
+
+    for (int i = 0, len = contentLength.length(); i < len; i++) {
+      final char d;
+      d = contentLength.charAt(i);
+
+      if (!Ascii.isDigit(d)) {
+        throw HttpClientException.of(InvalidRequestHeaders.INVALID_CONTENT_LENGTH);
+      }
+
+      if (overflow) {
+        // already invalid...
+        // just check if content-length is numeric
+        continue;
+      }
+
+      if (length > multLimit) {
+        overflow = true;
+
+        continue;
+      }
+
+      length *= 10;
+
+      final long digit;
+      digit = (long) d & 0xF;
+
+      if (length > hardLimit - digit) {
+        overflow = true;
+
+        continue;
+      }
+
+      length += digit;
+    }
+
+    if (overflow) {
+      throw HttpClientException.of(InvalidRequestHeaders.CONTENT_TOO_LARGE);
+    }
+
+    else if (length == 0) {
+      return InputStream.nullInputStream();
+    }
+
+    else if (length > requestBodySizeMax) {
+      throw HttpClientException.of(InvalidRequestHeaders.CONTENT_TOO_LARGE);
+    }
+
+    else if (socket.canBuffer(length)) {
+      // fits in buffer
+
+      // length is guaranteed to fit in an int
+      // in any case we throw if length overflows...
+
+      final int bodyLen;
+      bodyLen = Math.toIntExact(length);
+
+      return socket.readStream(bodyLen);
+    }
+
+    else {
+      // does not fit buffer
+
+      throw new UnsupportedOperationException("Implement me");
+    }
+  }
+
+  // ##################################################################
+  // # END: Body
+  // ##################################################################
+
+  // ##################################################################
   // # BEGIN: URL Decode
   // ##################################################################
 
@@ -1302,6 +1435,12 @@ final class HttpRequestParser {
     // Unexpected end of stream
     EOF,
 
+    // 411 Length Required
+    LENGTH_REQUIRED(HttpStatus.LENGTH_REQUIRED),
+
+    // 413 Content Too Large
+    CONTENT_TOO_LARGE(HttpStatus.CONTENT_TOO_LARGE),
+
     // 431 Request Header Fields Too Large
     REQUEST_HEADER_FIELDS_TOO_LARGE(HttpStatus.REQUEST_HEADER_FIELDS_TOO_LARGE);
 
@@ -1314,6 +1453,35 @@ final class HttpRequestParser {
     }
 
     private InvalidRequestHeaders(HttpStatus status) {
+      this.status = status;
+    }
+
+    @Override
+    public final byte[] message() {
+      return MESSAGE;
+    }
+
+    @Override
+    public final HttpStatus status() {
+      return status;
+    }
+  }
+
+  enum InvalidRequestBody implements HttpClientException.Kind {
+    // do not reorder, do not rename
+
+    // Unexpected end of stream
+    EOF;
+
+    private static final byte[] MESSAGE = "Invalid request body.\n".getBytes(StandardCharsets.US_ASCII);
+
+    private final HttpStatus status;
+
+    private InvalidRequestBody() {
+      this(HttpStatus.BAD_REQUEST);
+    }
+
+    private InvalidRequestBody(HttpStatus status) {
       this.status = status;
     }
 

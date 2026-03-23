@@ -92,6 +92,13 @@ final class HttpSocket implements Closeable {
     return bufferIndex;
   }
 
+  public final boolean canBuffer(long contentLength) {
+    int maxAvailable;
+    maxAvailable = bufferSizeMax - bufferIndex;
+
+    return maxAvailable >= contentLength;
+  }
+
   @Override
   public final void close() throws IOException {
     socket.close();
@@ -146,6 +153,12 @@ final class HttpSocket implements Closeable {
     ensureBuffer(1);
 
     return buffer[bufferIndex++];
+  }
+
+  public final InputStream readStream(int length) throws IOException {
+    ensureBuffer(length);
+
+    return new ByteArrayInputStream(buffer, bufferIndex, length);
   }
 
   public final void skipByte() {

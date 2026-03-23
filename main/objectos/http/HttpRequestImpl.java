@@ -15,7 +15,6 @@
  */
 package objectos.http;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +31,9 @@ record HttpRequestImpl(
 
     HttpVersion version,
 
-    Map<HttpHeaderName, Object> headers
+    Map<HttpHeaderName, Object> headers,
+
+    InputStream bodyInputStream
 
 ) implements HttpRequest {
 
@@ -92,8 +93,5 @@ record HttpRequestImpl(
 
   @Override
   public String rawQueryWith(String name, String value) { throw new UnsupportedOperationException("Implement me"); }
-
-  @Override
-  public InputStream bodyInputStream() throws IOException { throw new UnsupportedOperationException("Implement me"); }
 
 }

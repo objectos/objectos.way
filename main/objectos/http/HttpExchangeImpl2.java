@@ -19,18 +19,22 @@ import java.io.IOException;
 
 final class HttpExchangeImpl2 {
 
+  private final long requestBodySizeMax;
+
   private final HttpSocket socket;
 
   @SuppressWarnings("unused")
   private HttpRequest request;
 
-  HttpExchangeImpl2(HttpSocket socket) {
+  HttpExchangeImpl2(long requestBodySizeMax, HttpSocket socket) {
+    this.requestBodySizeMax = requestBodySizeMax;
+
     this.socket = socket;
   }
 
   public final void request() throws IOException {
     final HttpRequestParser requestParser;
-    requestParser = new HttpRequestParser(socket);
+    requestParser = new HttpRequestParser(requestBodySizeMax, socket);
 
     request = requestParser.parse();
   }
