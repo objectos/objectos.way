@@ -336,6 +336,38 @@ final class Http {
     }
   }
 
+  @SuppressWarnings("unchecked")
+  static <K> void mapAdd(Map<K, Object> map, K key, String value) {
+    Object oldValue;
+    oldValue = map.put(key, value);
+
+    if (oldValue == null) {
+      return;
+    }
+
+    if (oldValue instanceof String s) {
+
+      List<String> list;
+      list = Util.createList();
+
+      list.add(s);
+
+      list.add(value);
+
+      map.put(key, list);
+
+    }
+
+    else {
+      List<String> list;
+      list = (List<String>) oldValue;
+
+      list.add(value);
+
+      map.put(key, list);
+    }
+  }
+
   static <K> String queryParamsGet(Map<K, Object> params, K key) {
     Object maybe;
     maybe = params.get(key);

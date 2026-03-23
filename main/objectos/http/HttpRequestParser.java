@@ -33,7 +33,7 @@ final class HttpRequestParser {
 
     try {
       method = parseMethod();
-    } catch (HttpSocketException e) {
+    } catch (HttpSocketEof | HttpSocketOverflow e) {
       throw HttpClientException.of(InvalidRequestLine.METHOD, e);
     }
 
@@ -43,10 +43,10 @@ final class HttpRequestParser {
       target = parseTarget();
     } catch (DecodePercException e) {
       throw HttpClientException.of(InvalidRequestLine.PATH_PERCENT, e);
-    } catch (HttpSocketException.Overflow e) {
-      throw HttpClientException.of(InvalidRequestLine.URI_TOO_LONG, e);
-    } catch (HttpSocketException e) {
+    } catch (HttpSocketEof e) {
       throw HttpClientException.of(InvalidRequestLine.PATH_NEXT_CHAR, e);
+    } catch (HttpSocketOverflow e) {
+      throw HttpClientException.of(InvalidRequestLine.URI_TOO_LONG, e);
     }
 
     target.validate();
@@ -55,8 +55,18 @@ final class HttpRequestParser {
 
     try {
       version = parseVersion();
-    } catch (HttpSocketException e) {
+    } catch (HttpSocketEof | HttpSocketOverflow e) {
       throw HttpClientException.of(InvalidRequestLine.VERSION_CHAR, e);
+    }
+
+    final Map<HttpHeaderName, Object> headers;
+
+    try {
+      headers = parseHeaders();
+    } catch (HttpSocketEof e) {
+      throw HttpClientException.of(InvalidRequestHeaders.EOF, e);
+    } catch (HttpSocketOverflow e) {
+      throw HttpClientException.of(InvalidRequestHeaders.REQUEST_HEADER_FIELDS_TOO_LARGE, e);
     }
 
     return new HttpRequestImpl(
@@ -66,7 +76,9 @@ final class HttpRequestParser {
 
         target.queryParams,
 
-        version
+        version,
+
+        headers
     );
   }
 
@@ -74,7 +86,7 @@ final class HttpRequestParser {
   // # BEGIN: Method
   // ##################################################################
 
-  private HttpMethod parseMethod() throws HttpSocketException, IOException {
+  private HttpMethod parseMethod() throws IOException {
     final byte first;
     first = socket.readByte();
 
@@ -99,7 +111,7 @@ final class HttpRequestParser {
     };
   }
 
-  private HttpMethod parseMethod(HttpMethod method, int offset) throws HttpSocketException, IOException {
+  private HttpMethod parseMethod(HttpMethod method, int offset) throws IOException {
     final byte[] ascii;
     ascii = method.ascii;
 
@@ -114,7 +126,7 @@ final class HttpRequestParser {
     return method;
   }
 
-  private HttpMethod parseMethodP() throws HttpSocketException, IOException {
+  private HttpMethod parseMethodP() throws IOException {
     final byte second;
     second = socket.readByte();
 
@@ -207,7 +219,7 @@ final class HttpRequestParser {
     PATH_TABLE = table;
   }
 
-  private Target parseTarget() throws DecodePercException, HttpSocketException, IOException {
+  private Target parseTarget() throws DecodePercException, IOException {
     // where our path begins
     final int startIndex;
     startIndex = socket.bufferIndex();
@@ -251,7 +263,7 @@ final class HttpRequestParser {
     }
   }
 
-  private Target parsePath0(int startIndex) throws DecodePercException, HttpSocketException, IOException {
+  private Target parsePath0(int startIndex) throws DecodePercException, IOException {
     while (true) {
       final byte code;
       code = readTable(PATH_TABLE, InvalidRequestLine.PATH_NEXT_CHAR);
@@ -297,7 +309,7 @@ final class HttpRequestParser {
     }
   }
 
-  private Target parsePath1(StringBuilder path) throws DecodePercException, HttpSocketException, IOException {
+  private Target parsePath1(StringBuilder path) throws DecodePercException, IOException {
     while (true) {
       final byte b;
       b = socket.readByte();
@@ -434,7 +446,7 @@ final class HttpRequestParser {
 
   }
 
-  private Target parseQuery(String path) throws HttpSocketException, IOException {
+  private Target parseQuery(String path) throws IOException {
     try {
       return parseQuery0(path);
     } catch (DecodePercException e) {
@@ -442,7 +454,7 @@ final class HttpRequestParser {
     }
   }
 
-  private Target parseQuery0(String path) throws DecodePercException, HttpSocketException, IOException {
+  private Target parseQuery0(String path) throws DecodePercException, IOException {
     final Query query;
     query = new Query();
 
@@ -477,7 +489,7 @@ final class HttpRequestParser {
     return new Target(path, query.params);
   }
 
-  private String parseQueryName(Query query) throws DecodePercException, HttpSocketException, IOException {
+  private String parseQueryName(Query query) throws DecodePercException, IOException {
     final int startIndex;
     startIndex = socket.bufferIndex();
 
@@ -537,7 +549,7 @@ final class HttpRequestParser {
     }
   }
 
-  private String parseQueryName1(Query query, StringBuilder name) throws DecodePercException, HttpSocketException, IOException {
+  private String parseQueryName1(Query query, StringBuilder name) throws DecodePercException, IOException {
     while (true) {
       final byte b;
       b = socket.readByte();
@@ -591,7 +603,7 @@ final class HttpRequestParser {
     }
   }
 
-  private String parseQueryValue(Query query) throws DecodePercException, HttpSocketException, IOException {
+  private String parseQueryValue(Query query) throws DecodePercException, IOException {
     final int startIndex;
     startIndex = socket.bufferIndex();
 
@@ -645,7 +657,7 @@ final class HttpRequestParser {
     }
   }
 
-  private String parseQueryValue1(Query query, StringBuilder value) throws DecodePercException, HttpSocketException, IOException {
+  private String parseQueryValue1(Query query, StringBuilder value) throws DecodePercException, IOException {
     while (true) {
       final byte b;
       b = socket.readByte();
@@ -711,7 +723,7 @@ final class HttpRequestParser {
 
   private static final byte[] HTTP_OTHERS = "HTTP/".getBytes(StandardCharsets.US_ASCII);
 
-  private HttpVersion parseVersion() throws HttpSocketException, IOException {
+  private HttpVersion parseVersion() throws IOException {
     if (socket.matches(HTTP_1_1_CRLF, 0)) {
       return HttpVersion.HTTP_1_1;
     }
@@ -734,7 +746,7 @@ final class HttpRequestParser {
     throw HttpClientException.of(InvalidRequestLine.HTTP_VERSION_NOT_SUPPORTED);
   }
 
-  private boolean parseVersionMajor() throws HttpSocketException, IOException {
+  private boolean parseVersionMajor() throws IOException {
     final byte first;
     first = socket.readByte();
 
@@ -767,7 +779,7 @@ final class HttpRequestParser {
     }
   }
 
-  private void parseVersionMinor() throws HttpSocketException, IOException {
+  private void parseVersionMinor() throws IOException {
     final byte first;
     first = socket.readByte();
 
@@ -801,13 +813,234 @@ final class HttpRequestParser {
   // ##################################################################
 
   // ##################################################################
+  // # BEGIN: Headers
+  // ##################################################################
+
+  private static final class Headers {
+
+    Map<HttpHeaderName, Object> map;
+
+    final StringBuilder sb = new StringBuilder();
+
+    final void appendChar(byte b) {
+      sb.append((char) b);
+    }
+
+    final String makeString() {
+      final String res;
+      res = sb.toString();
+
+      sb.setLength(0);
+
+      return res;
+    }
+
+    final void put(HttpHeaderName name, String value) {
+      if (map == null) {
+        map = new HashMap<>();
+      }
+
+      Http.mapAdd(map, name, value);
+    }
+
+  }
+
+  private Map<HttpHeaderName, Object> parseHeaders() throws IOException {
+    final Headers headers;
+    headers = new Headers();
+
+    while (true) {
+      if (parseHeadersTerminator()) {
+        break;
+      }
+
+      final HttpHeaderName name;
+      name = parseHeaderName(headers);
+
+      final String value;
+      value = parseHeaderValue(headers);
+
+      headers.put(name, value);
+    }
+
+    return headers.map;
+  }
+
+  private boolean parseHeadersTerminator() throws IOException {
+    final byte first;
+    first = socket.peekByte();
+
+    return switch (first) {
+      case Bytes.CR -> {
+        socket.skipByte();
+
+        final byte second;
+        second = socket.readByte();
+
+        if (second == Bytes.LF) {
+          yield true;
+        }
+
+        throw HttpClientException.of(InvalidLineTerminator.INSTANCE);
+      }
+
+      case Bytes.LF -> {
+        throw HttpClientException.of(InvalidLineTerminator.INSTANCE);
+      }
+
+      default -> false;
+    };
+  }
+
+  private HttpHeaderName parseHeaderName(Headers headers) throws IOException {
+    while (true) {
+      final byte b;
+      b = socket.readByte();
+
+      final byte mapped;
+      mapped = HttpHeaderNameImpl.map(b);
+
+      switch (mapped) {
+        case HttpHeaderNameImpl.INVALID -> {
+          throw HttpClientException.of(InvalidRequestHeaders.NAME_CHAR);
+        }
+
+        case HttpHeaderNameImpl.COLON -> {
+          final String lowerCase;
+          lowerCase = headers.makeString();
+
+          final HttpHeaderNameImpl standard;
+          standard = HttpHeaderNameImpl.byLowerCase(lowerCase);
+
+          if (standard != null) {
+            return standard;
+          } else {
+            return HttpHeaderNameImpl.ofLowerCase(lowerCase);
+          }
+        }
+
+        default -> {
+          headers.appendChar(mapped);
+        }
+      }
+    }
+  }
+
+  private static final byte[] HEADER_VALUE_TABLE;
+
+  private static final byte HEADER_VALUE_VALID = 1;
+
+  private static final byte HEADER_VALUE_WS = 2;
+
+  private static final byte HEADER_VALUE_CR = 3;
+
+  private static final byte HEADER_VALUE_LF = 4;
+
+  static {
+    final byte[] table;
+    table = new byte[128];
+
+    for (int b = 0x21; b < 0x7F; b++) {
+      // VCHAR are valid
+      table[b] = HEADER_VALUE_VALID;
+    }
+
+    // valid under certain circustances
+    table[' '] = HEADER_VALUE_WS;
+
+    table['\t'] = HEADER_VALUE_WS;
+
+    table['\r'] = HEADER_VALUE_CR;
+
+    table['\n'] = HEADER_VALUE_LF;
+
+    HEADER_VALUE_TABLE = table;
+  }
+
+  private String parseHeaderValue(Headers headers) throws IOException {
+    int startIndex;
+
+    // skip OWS
+    loop: while (true) {
+      startIndex = socket.bufferIndex();
+
+      final byte code;
+      code = readTable(HEADER_VALUE_TABLE, InvalidRequestHeaders.VALUE_CHAR);
+
+      switch (code) {
+        case HEADER_VALUE_WS -> {
+          // noop
+        }
+
+        case HEADER_VALUE_VALID -> {
+          break loop;
+        }
+
+        case HEADER_VALUE_CR -> {
+          return parseHeaderValueCR(startIndex);
+        }
+
+        case HEADER_VALUE_LF -> {
+          throw HttpClientException.of(InvalidLineTerminator.INSTANCE);
+        }
+
+        default -> {
+          throw HttpClientException.of(InvalidRequestHeaders.VALUE_CHAR);
+        }
+      }
+    }
+
+    // value contents
+    while (true) {
+      final byte code;
+      code = readTable(HEADER_VALUE_TABLE, InvalidRequestHeaders.VALUE_CHAR);
+
+      switch (code) {
+        case HEADER_VALUE_WS, HEADER_VALUE_VALID -> {
+          // noop
+        }
+
+        case HEADER_VALUE_CR -> {
+          return parseHeaderValueCR(startIndex);
+        }
+
+        case HEADER_VALUE_LF -> {
+          throw HttpClientException.of(InvalidLineTerminator.INSTANCE);
+        }
+
+        default -> {
+          throw HttpClientException.of(InvalidRequestHeaders.VALUE_CHAR);
+        }
+      }
+    }
+  }
+
+  private String parseHeaderValueCR(int startIndex) throws IOException {
+    final int endIndex;
+    endIndex = socket.bufferIndex();
+
+    final byte lf;
+    lf = socket.readByte();
+
+    if (lf != Bytes.LF) {
+      throw HttpClientException.of(InvalidRequestHeaders.VALUE_CHAR);
+    }
+
+    return makeStr(startIndex, endIndex);
+  }
+
+  // ##################################################################
+  // # END: Headers
+  // ##################################################################
+
+  // ##################################################################
   // # BEGIN: URL Decode
   // ##################################################################
 
   @SuppressWarnings("serial")
   private final class DecodePercException extends Exception {}
 
-  private int decodePerc() throws DecodePercException, HttpSocketException, IOException {
+  private int decodePerc() throws DecodePercException, IOException {
     final byte high1;
     high1 = readPerc();
 
@@ -830,14 +1063,14 @@ final class HttpRequestParser {
     };
   }
 
-  private int decodePerc1(byte high1) throws DecodePercException, HttpSocketException, IOException {
+  private int decodePerc1(byte high1) throws DecodePercException, IOException {
     final byte low1;
     low1 = readPerc();
 
     return decodePerc(high1, low1);
   }
 
-  private int decodePerc2(byte high1) throws DecodePercException, HttpSocketException, IOException {
+  private int decodePerc2(byte high1) throws DecodePercException, IOException {
     final byte low1;
     low1 = readPerc();
 
@@ -857,7 +1090,7 @@ final class HttpRequestParser {
     return c;
   }
 
-  private int decodePerc3(byte high1) throws DecodePercException, HttpSocketException, IOException {
+  private int decodePerc3(byte high1) throws DecodePercException, IOException {
     final byte low1;
     low1 = readPerc();
 
@@ -880,7 +1113,7 @@ final class HttpRequestParser {
     return c;
   }
 
-  private int decodePerc4(byte high1) throws DecodePercException, HttpSocketException, IOException {
+  private int decodePerc4(byte high1) throws DecodePercException, IOException {
     final byte low1;
     low1 = readPerc();
 
@@ -910,7 +1143,7 @@ final class HttpRequestParser {
     return (high << 4) | low;
   }
 
-  private int decodePercNext() throws DecodePercException, HttpSocketException, IOException {
+  private int decodePercNext() throws DecodePercException, IOException {
     readPercSep();
 
     final byte high;
@@ -929,7 +1162,7 @@ final class HttpRequestParser {
     return perc;
   }
 
-  private byte readPerc() throws DecodePercException, HttpSocketException, IOException {
+  private byte readPerc() throws DecodePercException, IOException {
     final byte b;
     b = socket.readByte();
 
@@ -943,7 +1176,7 @@ final class HttpRequestParser {
     return perc;
   }
 
-  private void readPercSep() throws DecodePercException, HttpSocketException, IOException {
+  private void readPercSep() throws DecodePercException, IOException {
     final byte b;
     b = socket.readByte();
 
@@ -1039,6 +1272,53 @@ final class HttpRequestParser {
     }
   }
 
+  enum InvalidRequestHeaders implements HttpClientException.Kind {
+    // do not reorder, do not rename
+
+    // header name has an invalid character
+    NAME_CHAR,
+
+    // header value has an invalid character
+    VALUE_CHAR,
+
+    // invalid header terminator, i.e., the last '\r\n'
+    TERMINATOR,
+
+    // invalid value, e.g., 'Content-Length: two hundred bytes'
+    INVALID_CONTENT_LENGTH,
+
+    // request include both Content-Length and Transfer-Enconding.
+    BOTH_CL_TE,
+
+    // Unexpected end of stream
+    EOF,
+
+    // 431 Request Header Fields Too Large
+    REQUEST_HEADER_FIELDS_TOO_LARGE(HttpStatus.REQUEST_HEADER_FIELDS_TOO_LARGE);
+
+    private static final byte[] MESSAGE = "Invalid request headers.\n".getBytes(StandardCharsets.US_ASCII);
+
+    private final HttpStatus status;
+
+    private InvalidRequestHeaders() {
+      this(HttpStatus.BAD_REQUEST);
+    }
+
+    private InvalidRequestHeaders(HttpStatus status) {
+      this.status = status;
+    }
+
+    @Override
+    public final byte[] message() {
+      return MESSAGE;
+    }
+
+    @Override
+    public final HttpStatus status() {
+      return status;
+    }
+  }
+
   // ##################################################################
   // # END: Errors
   // ##################################################################
@@ -1051,8 +1331,11 @@ final class HttpRequestParser {
     final int bufferIndex;
     bufferIndex = socket.bufferIndex();
 
-    final int endIndex;
-    endIndex = bufferIndex - 1;
+    return makeStr(startIndex, bufferIndex);
+  }
+
+  private String makeStr(int startIndex, int endIndex) {
+    endIndex = endIndex - 1;
 
     return socket.bufferToAscii(startIndex, endIndex);
   }
@@ -1064,7 +1347,7 @@ final class HttpRequestParser {
     return new StringBuilder(prefix);
   }
 
-  private byte readTable(byte[] table, HttpClientException.Kind kind) throws HttpSocketException, IOException {
+  private byte readTable(byte[] table, HttpClientException.Kind kind) throws IOException {
     final byte next;
     next = socket.readByte();
 

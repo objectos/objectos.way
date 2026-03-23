@@ -15,23 +15,10 @@
  */
 package objectos.http;
 
-@SuppressWarnings("serial")
-sealed abstract class HttpSocketException extends Exception {
+import java.io.IOException;
 
-  static final class Eof extends HttpSocketException {
-    private Eof() {}
-  }
+final class HttpSocketOverflow extends IOException {
 
-  public static Eof eof() {
-    return new Eof();
-  }
-
-  static final class Overflow extends HttpSocketException {
-    private Overflow() {}
-  }
-
-  public static Overflow overflow() {
-    return new Overflow();
-  }
+  private static final long serialVersionUID = -1200050181925062901L;
 
 }

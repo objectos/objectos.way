@@ -97,7 +97,7 @@ final class HttpSocket implements Closeable {
     socket.close();
   }
 
-  public final boolean matches(byte[] value, int offset) throws HttpSocketException, IOException {
+  public final boolean matches(byte[] value, int offset) throws IOException {
     final byte[] b;
     b = value;
 
@@ -136,10 +136,20 @@ final class HttpSocket implements Closeable {
     }
   }
 
-  public final byte readByte() throws HttpSocketException, IOException {
+  public final byte peekByte() throws IOException {
+    ensureBuffer(1);
+
+    return buffer[bufferIndex];
+  }
+
+  public final byte readByte() throws IOException {
     ensureBuffer(1);
 
     return buffer[bufferIndex++];
+  }
+
+  public final void skipByte() {
+    bufferIndex += 1;
   }
 
   final String bufferToAscii() {
@@ -153,7 +163,7 @@ final class HttpSocket implements Closeable {
     return new String(buffer, startIndex, length, StandardCharsets.US_ASCII);
   }
 
-  private void ensureBuffer(int count) throws HttpSocketException, IOException {
+  private void ensureBuffer(int count) throws HttpSocketEof, HttpSocketOverflow, IOException {
     int readable;
     readable = bufferLimit - bufferIndex;
 
@@ -165,7 +175,7 @@ final class HttpSocket implements Closeable {
         // buffer is full, try to increase
 
         if (buffer.length == bufferSizeMax) {
-          throw HttpSocketException.overflow();
+          throw new HttpSocketOverflow();
         }
 
         final int newLength;
@@ -180,7 +190,7 @@ final class HttpSocket implements Closeable {
       bytesRead = inputStream.read(buffer, bufferLimit, writableLength);
 
       if (bytesRead < 0) {
-        throw HttpSocketException.eof();
+        throw new HttpSocketEof();
       }
 
       assert bytesRead != 0 : "InputStream.read should not return 0 when writableLength != 0";

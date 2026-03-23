@@ -31,7 +31,7 @@ public class HttpSocketTest {
   - buffer initially empty
   - single read
   """)
-  public void matches0() throws HttpSocketException, IOException {
+  public void matches0() throws IOException {
     final String req1;
     req1 = "DELETE ";
 
@@ -47,7 +47,7 @@ public class HttpSocketTest {
   - buffer initially empty
   - slow client
   """)
-  public void matches1() throws HttpSocketException, IOException {
+  public void matches1() throws IOException {
     final String req1;
     req1 = "DELETE ";
 
@@ -59,7 +59,7 @@ public class HttpSocketTest {
   }
 
   @Test(description = "Read into initial buffer")
-  public void readByte01() throws HttpSocketException, IOException {
+  public void readByte01() throws IOException {
     final String req1;
     req1 = "1".repeat(64);
 
@@ -72,7 +72,7 @@ public class HttpSocketTest {
   }
 
   @Test(description = "Read into initial buffer, subsequent requires resize")
-  public void readByte02() throws HttpSocketException, IOException {
+  public void readByte02() throws IOException {
     final String req1;
     req1 = "1".repeat(64);
 
@@ -92,7 +92,7 @@ public class HttpSocketTest {
   }
 
   @Test(description = "Error: data exceeds max buffer length")
-  public void readByte03() throws HttpSocketException, IOException {
+  public void readByte03() throws IOException {
     final String req1;
     req1 = "1".repeat(64);
 
@@ -110,13 +110,13 @@ public class HttpSocketTest {
       http.readByte();
 
       Assert.fail();
-    } catch (HttpSocketException.Overflow expected) {
+    } catch (HttpSocketOverflow expected) {
       // noop
     }
   }
 
   @Test(description = "EOF")
-  public void readByte04() throws HttpSocketException, IOException {
+  public void readByte04() throws IOException {
     final String req1;
     req1 = "1".repeat(64);
 
@@ -131,13 +131,13 @@ public class HttpSocketTest {
       http.readByte();
 
       Assert.fail();
-    } catch (HttpSocketException.Eof expected) {
+    } catch (HttpSocketEof expected) {
       // noop
     }
   }
 
   @Test(description = "IOException")
-  public void readByte05() throws HttpSocketException, IOException {
+  public void readByte05() throws IOException {
     final String req1;
     req1 = "1".repeat(64);
 
@@ -177,7 +177,7 @@ public class HttpSocketTest {
     return s.getBytes(StandardCharsets.US_ASCII);
   }
 
-  private String readByte0(HttpSocket socket, int len) throws HttpSocketException, IOException {
+  private String readByte0(HttpSocket socket, int len) throws IOException {
     final byte[] bytes;
     bytes = new byte[len];
 
@@ -188,7 +188,7 @@ public class HttpSocketTest {
     return new String(bytes, StandardCharsets.UTF_8);
   }
 
-  private HttpSocket http(int initial, int max, Object... data) throws HttpSocketException, IOException {
+  private HttpSocket http(int initial, int max, Object... data) throws IOException {
     return HttpSocket.of(
         initial,
 

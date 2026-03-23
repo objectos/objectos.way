@@ -30,12 +30,22 @@ record HttpRequestImpl(
 
     Map<String, Object> queryParams,
 
-    HttpVersion version
+    HttpVersion version,
+
+    Map<HttpHeaderName, Object> headers
 
 ) implements HttpRequest {
 
   @Override
-  public String header(HttpHeaderName name) { throw new UnsupportedOperationException("Implement me"); }
+  public final String header(HttpHeaderName name) {
+    Objects.requireNonNull(name, "name == null");
+
+    if (headers == null) {
+      return null;
+    } else {
+      return Http.queryParamsGet(headers, name);
+    }
+  }
 
   @Override
   public String pathParam(String name) { throw new UnsupportedOperationException("Implement me"); }
