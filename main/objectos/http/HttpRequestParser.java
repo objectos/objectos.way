@@ -977,7 +977,10 @@ final class HttpRequestParser {
         }
 
         case HEADER_VALUE_CR -> {
-          return parseHeaderValueCR(startIndex);
+          final int endIndex;
+          endIndex = startIndex + 1;
+
+          return parseHeaderValueCR(startIndex, endIndex);
         }
 
         case HEADER_VALUE_LF -> {
@@ -990,18 +993,27 @@ final class HttpRequestParser {
       }
     }
 
+    int validIndex = socket.bufferIndex();
+
     // value contents
     while (true) {
       final byte code;
       code = readTable(HEADER_VALUE_TABLE, InvalidRequestHeaders.VALUE_CHAR);
 
       switch (code) {
-        case HEADER_VALUE_WS, HEADER_VALUE_VALID -> {
+        case HEADER_VALUE_WS -> {
           // noop
         }
 
+        case HEADER_VALUE_VALID -> {
+          validIndex = socket.bufferIndex();
+        }
+
         case HEADER_VALUE_CR -> {
-          return parseHeaderValueCR(startIndex);
+          final int endIndex;
+          endIndex = validIndex + 1;
+
+          return parseHeaderValueCR(startIndex, endIndex);
         }
 
         case HEADER_VALUE_LF -> {
@@ -1015,10 +1027,7 @@ final class HttpRequestParser {
     }
   }
 
-  private String parseHeaderValueCR(int startIndex) throws IOException {
-    final int endIndex;
-    endIndex = socket.bufferIndex();
-
+  private String parseHeaderValueCR(int startIndex, int endIndex) throws IOException {
     final byte lf;
     lf = socket.readByte();
 
