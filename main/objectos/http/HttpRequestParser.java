@@ -21,12 +21,20 @@ import objectos.internal.Bytes;
 
 final class HttpRequestParser {
 
-  private final long requestBodySizeMax;
+  private final HttpExchangeBodyFiles bodyFiles;
+
+  private final long bodySizeMax;
+
+  private final long id;
 
   private final HttpSocket socket;
 
-  HttpRequestParser(long requestBodySizeMax, HttpSocket socket) {
-    this.requestBodySizeMax = requestBodySizeMax;
+  HttpRequestParser(HttpExchangeBodyFiles bodyFiles, long bodySizeMax, long id, HttpSocket socket) {
+    this.bodyFiles = bodyFiles;
+
+    this.bodySizeMax = bodySizeMax;
+
+    this.id = id;
 
     this.socket = socket;
   }
@@ -1148,7 +1156,7 @@ final class HttpRequestParser {
       return InputStream.nullInputStream();
     }
 
-    else if (length > requestBodySizeMax) {
+    else if (length > bodySizeMax) {
       throw HttpClientException.of(InvalidRequestHeaders.CONTENT_TOO_LARGE);
     }
 
@@ -1167,7 +1175,14 @@ final class HttpRequestParser {
     else {
       // does not fit buffer
 
-      throw new UnsupportedOperationException("Implement me");
+      final Path file;
+      file = bodyFiles.file(id);
+
+      try (OutputStream outputStream = bodyFiles.newOutputStream(file)) {
+        socket.transferTo(outputStream, length);
+      }
+
+      return bodyFiles.newInputStream(file);
     }
   }
 

@@ -165,6 +165,43 @@ final class HttpSocket implements Closeable {
     bufferIndex += 1;
   }
 
+  public final void transferTo(OutputStream outputStream, long length) throws IOException {
+    long remaining;
+    remaining = length;
+
+    // part of the body might be in the buffer
+    final int buffered;
+    buffered = bufferLimit - bufferIndex;
+
+    if (buffered > 0) {
+      outputStream.write(buffer, bufferIndex, buffered);
+
+      remaining -= buffered;
+    }
+
+    // work buffer
+    final byte[] work;
+    work = new byte[bufferSizeMax];
+
+    // transfer from inputStream
+    while (remaining > 0) {
+      // this is guaranteed to be an int value
+      final long iteration;
+      iteration = Math.min(remaining, work.length);
+
+      final int read;
+      read = inputStream.read(work, 0, (int) iteration);
+
+      if (read < 0) {
+        throw new HttpSocketEof();
+      }
+
+      outputStream.write(work, 0, read);
+
+      remaining -= read;
+    }
+  }
+
   final String bufferToAscii() {
     return new String(buffer, StandardCharsets.US_ASCII);
   }

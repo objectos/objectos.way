@@ -22,11 +22,13 @@ import objectos.way.Y;
 
 final class HttpRequestTester {
 
+  private HttpExchangeBodyFiles bodyFiles = HttpExchangeBodyFiles.standard();
+
+  private long bodyMaxSize = 1024;
+
   private int bufferSizeInitial = 128;
 
   private int bufferSizeMax = 256;
-
-  private long requestBodyMaxSize = 1024;
 
   private final Socket socket;
 
@@ -34,14 +36,18 @@ final class HttpRequestTester {
     this.socket = socket;
   }
 
+  public final void bodyFiles(HttpExchangeBodyFiles value) {
+    bodyFiles = value;
+  }
+
+  public final void bodyMaxSize(long value) {
+    bodyMaxSize = value;
+  }
+
   public final void bufferSize(int initial, int max) {
     bufferSizeInitial = initial;
 
     bufferSizeMax = max;
-  }
-
-  public final void requestBodyMaxSize(long value) {
-    requestBodyMaxSize = value;
   }
 
   public static HttpRequest parse(Consumer<? super HttpRequestTester> test, Object... data) throws IOException {
@@ -61,7 +67,7 @@ final class HttpRequestTester {
     httpSocket = HttpSocket.of(bufferSizeInitial, bufferSizeMax, socket);
 
     final HttpRequestParser parser;
-    parser = new HttpRequestParser(requestBodyMaxSize, httpSocket);
+    parser = new HttpRequestParser(bodyFiles, bodyMaxSize, 0, httpSocket);
 
     return parser.parse();
   }

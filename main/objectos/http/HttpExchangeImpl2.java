@@ -19,6 +19,10 @@ import java.io.IOException;
 
 final class HttpExchangeImpl2 {
 
+  private final long id;
+
+  private final HttpExchangeBodyFiles requestBodyFiles;
+
   private final long requestBodySizeMax;
 
   private final HttpSocket socket;
@@ -26,7 +30,11 @@ final class HttpExchangeImpl2 {
   @SuppressWarnings("unused")
   private HttpRequest request;
 
-  HttpExchangeImpl2(long requestBodySizeMax, HttpSocket socket) {
+  HttpExchangeImpl2(long id, HttpExchangeBodyFiles requestBodyFiles, long requestBodySizeMax, HttpSocket socket) {
+    this.id = id;
+
+    this.requestBodyFiles = requestBodyFiles;
+
     this.requestBodySizeMax = requestBodySizeMax;
 
     this.socket = socket;
@@ -34,7 +42,7 @@ final class HttpExchangeImpl2 {
 
   public final void request() throws IOException {
     final HttpRequestParser requestParser;
-    requestParser = new HttpRequestParser(requestBodySizeMax, socket);
+    requestParser = new HttpRequestParser(requestBodyFiles, requestBodySizeMax, id, socket);
 
     request = requestParser.parse();
   }

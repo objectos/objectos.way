@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import objectos.http.HttpRequestParser.InvalidRequestBody;
 import objectos.internal.Util;
 import objectos.way.Y;
@@ -115,7 +116,7 @@ public class HttpRequestTest5ParseBody {
         test -> {
           test.bufferSize(2, 512);
 
-          test.requestBodyMaxSize(400);
+          test.bodyMaxSize(400);
         },
 
         """
@@ -226,7 +227,7 @@ public class HttpRequestTest5ParseBody {
         test -> {
           test.bufferSize(2, 512);
 
-          test.requestBodyMaxSize(400);
+          test.bodyMaxSize(400);
         },
 
         Y.slowStream(1, """
@@ -239,6 +240,47 @@ public class HttpRequestTest5ParseBody {
     );
 
     assertEquals(toByteArray(req), iso8859(frag));
+  }
+
+  private static class Tester extends HttpExchangeBodyFiles {
+
+    private final Path directory = Y.nextTempDir();
+
+    @Override
+    final Path directory() {
+      return directory;
+    }
+
+  }
+
+  @Test(description = "file: happy-path")
+  public void file01() throws IOException {
+    final Tester tester;
+    tester = new Tester();
+
+    final String content;
+    content = ".o".repeat(512);
+
+    final HttpRequest req;
+    req = HttpRequestTester.parse(
+        test -> {
+          test.bodyFiles(tester);
+
+          test.bufferSize(2, 256);
+        },
+
+        """
+        POST / HTTP/1.1\r
+        Host: www.example.com\r
+        Content-Type: text/plain\r
+        Content-Length: 1024\r
+        \r
+        """,
+
+        content
+    );
+
+    assertEquals(toByteArray(req), iso8859(content));
   }
 
   private byte[] toByteArray(HttpRequest req) {
