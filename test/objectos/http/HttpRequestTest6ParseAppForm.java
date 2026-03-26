@@ -15,6 +15,61 @@
  */
 package objectos.http;
 
+import static org.testng.Assert.assertEquals;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+
 public class HttpRequestTest6ParseAppForm {
+
+  @DataProvider
+  public Object[][] appFormValidProvider() {
+    return HttpY.queryValidProvider();
+  }
+
+  @Test(dataProvider = "appFormValidProvider", enabled = false)
+  public void appFormValid(String payload, Map<String, Object> expected, String description) throws IOException {
+    final HttpRequest req;
+    req = HttpRequestTester.parse(
+        test -> test.bufferSize(128, 256),
+
+        """
+        POST / HTTP/1.1\r
+        Host: Host\r
+        Content-Type: application/x-www-form-urlencoded\r
+        Content-Length: %d\r
+        \r
+        %s\
+        """.formatted(payload.length(), payload)
+    );
+
+    formAssert(req, expected);
+  }
+
+  private void formAssert(HttpRequest http, Map<String, Object> expected) {
+    assertEquals(http.formParamNames(), expected.keySet());
+
+    for (var entry : expected.entrySet()) {
+      final String key;
+      key = entry.getKey();
+
+      final Object value;
+      value = entry.getValue();
+
+      if (value instanceof String s) {
+        assertEquals(http.formParam(key), s, key);
+        assertEquals(http.formParamAll(key), List.of(s));
+      }
+
+      else {
+        List<?> list = (List<?>) value;
+        assertEquals(http.formParam(key), list.get(0), key);
+        assertEquals(http.formParamAll(key), value, key);
+      }
+    }
+  }
 
 }

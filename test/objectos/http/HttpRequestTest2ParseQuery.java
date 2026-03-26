@@ -50,81 +50,11 @@ public class HttpRequestTest2ParseQuery {
     assertEquals(req.queryParamNames(), Set.of());
   }
 
-  private final boolean[] validBytes = queryValidBytes();
-
-  private boolean[] queryValidBytes() {
-    final boolean[] valid;
-    valid = new boolean[256];
-
-    final String validString;
-    validString = Http.unreserved() + Http.subDelims() + ":@/?";
-
-    for (int idx = 0, len = validString.length(); idx < len; idx++) {
-      final char c;
-      c = validString.charAt(idx);
-
-      valid[c] = true;
-    }
-
-    return valid;
-  }
+  private final boolean[] validBytes = HttpY.queryValidBytes();
 
   @DataProvider
   public Object[][] queryValidProvider() {
-    final List<Object[]> l;
-    l = new ArrayList<>();
-
-    l.add(arr("", Map.of(), "empty"));
-    l.add(arr("key=value", Map.of("key", "value"), "one"));
-    l.add(arr("=value", Map.of("", "value"), "one + empty key"));
-    l.add(arr("key=", Map.of("key", ""), "one + empty value"));
-    l.add(arr("key", Map.of("key", ""), "one + empty value + no equals"));
-    l.add(arr("key1=value1&key2=value2", Map.of("key1", "value1", "key2", "value2"), "two"));
-    l.add(arr("=value1&key2=value2", Map.of("", "value1", "key2", "value2"), "two + empty key1"));
-    l.add(arr("key1=value1&=value2", Map.of("key1", "value1", "", "value2"), "two + empty key2"));
-    l.add(arr("key1=&key2=value2", Map.of("key1", "", "key2", "value2"), "two + empty value1"));
-    l.add(arr("key1=value1&key2=", Map.of("key1", "value1", "key2", ""), "two + empty value2"));
-    l.add(arr("key1&key2=value2", Map.of("key1", "", "key2", "value2"), "two + empty value1 + no equals"));
-    l.add(arr("key1=value1&key2", Map.of("key1", "value1", "key2", ""), "two + empty value2 + no equals"));
-    l.add(arr("key=value1&key=value2", Map.of("key", List.of("value1", "value2")), "two + duplicate keys"));
-
-    for (int value = 0; value < validBytes.length; value++) {
-      switch (value) {
-        case ' ' -> {/* will cause parsing to move to VERSION */}
-
-        case '\n', '\r' -> {/* will trigger 505 not 400 */}
-
-        case '&', '=' -> {/* valid in query string, but has special meaning*/}
-
-        case '+' -> {
-          l.add(arr("+=value", Map.of(" ", "value"), "key contains the '+' character"));
-          l.add(arr("key=+", Map.of("key", " "), "value contains the '+' character"));
-        }
-
-        default -> {
-          if (validBytes[value]) {
-            l.add(queryValidKey(value));
-            l.add(queryValidValue(value));
-          }
-        }
-      }
-    }
-
-    return l.toArray(Object[][]::new);
-  }
-
-  private Object[] queryValidKey(int value) {
-    final String key;
-    key = Character.toString(value);
-
-    return arr(key + "=value", Map.of(key, "value"), "key contains the " + Integer.toHexString(value) + " valid byte");
-  }
-
-  private Object[] queryValidValue(int value) {
-    final String val;
-    val = Character.toString(value);
-
-    return arr("key=" + val, Map.of("key", val), "value contains the " + Integer.toHexString(value) + " valid byte");
+    return HttpY.queryValidProvider();
   }
 
   @Test(dataProvider = "queryValidProvider")

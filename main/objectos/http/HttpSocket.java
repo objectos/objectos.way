@@ -149,6 +149,10 @@ final class HttpSocket implements Closeable {
     return buffer[bufferIndex];
   }
 
+  public final byte peekPrev() {
+    return buffer[bufferIndex - 1];
+  }
+
   public final byte readByte() throws IOException {
     ensureBuffer(1);
 

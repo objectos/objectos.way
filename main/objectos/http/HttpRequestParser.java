@@ -49,10 +49,10 @@ final class HttpRequestParser {
       throw HttpClientException.of(InvalidRequestLine.METHOD, e);
     }
 
-    final Target target;
+    final String path;
 
     try {
-      target = parseTarget();
+      path = parsePath();
     } catch (DecodePercException e) {
       throw HttpClientException.of(InvalidRequestLine.PATH_PERCENT, e);
     } catch (HttpSocketEof e) {
@@ -61,7 +61,17 @@ final class HttpRequestParser {
       throw HttpClientException.of(InvalidRequestLine.URI_TOO_LONG, e);
     }
 
-    target.validate();
+    final Map<String, Object> queryParams;
+
+    try {
+      queryParams = parseQuery();
+    } catch (DecodePercException e) {
+      throw HttpClientException.of(InvalidRequestLine.QUERY_PERCENT);
+    } catch (HttpSocketEof e) {
+      throw HttpClientException.of(InvalidRequestLine.QUERY_CHAR, e);
+    } catch (HttpSocketOverflow e) {
+      throw HttpClientException.of(InvalidRequestLine.URI_TOO_LONG, e);
+    }
 
     final HttpVersion version;
 
@@ -95,9 +105,9 @@ final class HttpRequestParser {
     return new HttpRequestImpl(
         method,
 
-        target.path,
+        path,
 
-        target.queryParams,
+        queryParams,
 
         version,
 
@@ -173,31 +183,7 @@ final class HttpRequestParser {
   // ##################################################################
 
   // ##################################################################
-  // # BEGIN: Target
-  // ##################################################################
-
-  private record Target(String path, Map<String, Object> queryParams) {
-
-    final void validate() throws HttpClientException {
-      final int length;
-      length = path.length();
-
-      if (length < 2) {
-        return;
-      }
-
-      final char second;
-      second = path.charAt(1);
-
-      if (second == '/') {
-        throw HttpClientException.of(InvalidRequestLine.PATH_SEGMENT_NZ);
-      }
-    }
-
-  }
-
-  // ##################################################################
-  // # BEGIN: Target: Path
+  // # BEGIN: Path
   // ##################################################################
 
   private static final byte[] PATH_TABLE;
@@ -246,7 +232,7 @@ final class HttpRequestParser {
     PATH_TABLE = table;
   }
 
-  private Target parseTarget() throws DecodePercException, IOException {
+  private String parsePath() throws DecodePercException, IOException {
     // where our path begins
     final int startIndex;
     startIndex = socket.bufferIndex();
@@ -279,18 +265,34 @@ final class HttpRequestParser {
       throw HttpClientException.of(InvalidRequestLine.PATH_FIRST_CHAR);
     }
 
+    final String result;
+
     // remaining chars
     if (!firstPerc) {
-      return parsePath0(startIndex);
+      result = parsePath0(startIndex);
     } else {
       final StringBuilder path;
       path = new StringBuilder("/");
 
-      return parsePath1(path);
+      result = parsePath1(path);
     }
+
+    final int length;
+    length = result.length();
+
+    if (length >= 2) {
+      final char second;
+      second = result.charAt(1);
+
+      if (second == '/') {
+        throw HttpClientException.of(InvalidRequestLine.PATH_SEGMENT_NZ);
+      }
+    }
+
+    return result;
   }
 
-  private Target parsePath0(int startIndex) throws DecodePercException, IOException {
+  private String parsePath0(int startIndex) throws DecodePercException, IOException {
     while (true) {
       final byte code;
       code = readTable(PATH_TABLE, InvalidRequestLine.PATH_NEXT_CHAR);
@@ -312,18 +314,8 @@ final class HttpRequestParser {
           return parsePath1(path);
         }
 
-        case PATH_SPACE -> {
-          final String value;
-          value = makeStr(startIndex);
-
-          return new Target(value, null);
-        }
-
-        case PATH_QUESTION -> {
-          final String path;
-          path = makeStr(startIndex);
-
-          return parseQuery(path);
+        case PATH_SPACE, PATH_QUESTION -> {
+          return makeStr(startIndex);
         }
 
         case PATH_CRLF -> {
@@ -336,7 +328,7 @@ final class HttpRequestParser {
     }
   }
 
-  private Target parsePath1(StringBuilder path) throws DecodePercException, IOException {
+  private String parsePath1(StringBuilder path) throws DecodePercException, IOException {
     while (true) {
       final byte b;
       b = socket.readByte();
@@ -360,18 +352,8 @@ final class HttpRequestParser {
           path.appendCodePoint(decoded);
         }
 
-        case PATH_SPACE -> {
-          final String value;
-          value = path.toString();
-
-          return new Target(value, null);
-        }
-
-        case PATH_QUESTION -> {
-          final String value;
-          value = path.toString();
-
-          return parseQuery(value);
+        case PATH_SPACE, PATH_QUESTION -> {
+          return path.toString();
         }
 
         case PATH_CRLF -> {
@@ -385,11 +367,11 @@ final class HttpRequestParser {
   }
 
   // ##################################################################
-  // # END: Target: Path
+  // # END: Path
   // ##################################################################
 
   // ##################################################################
-  // # BEGIN: Target: Query
+  // # BEGIN: Query
   // ##################################################################
 
   private static final byte[] PARSE_QUERY_TABLE;
@@ -473,15 +455,14 @@ final class HttpRequestParser {
 
   }
 
-  private Target parseQuery(String path) throws IOException {
-    try {
-      return parseQuery0(path);
-    } catch (DecodePercException e) {
-      throw HttpClientException.of(InvalidRequestLine.QUERY_PERCENT);
-    }
-  }
+  private Map<String, Object> parseQuery() throws DecodePercException, IOException {
+    final byte prev;
+    prev = socket.peekPrev();
 
-  private Target parseQuery0(String path) throws DecodePercException, IOException {
+    if (prev != '?') {
+      return null;
+    }
+
     final Query query;
     query = new Query();
 
@@ -513,7 +494,7 @@ final class HttpRequestParser {
       }
     }
 
-    return new Target(path, query.params);
+    return query.params;
   }
 
   private String parseQueryName(Query query) throws DecodePercException, IOException {

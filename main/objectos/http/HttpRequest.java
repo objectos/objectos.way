@@ -15,9 +15,7 @@
  */
 package objectos.http;
 
-/**
- * Provides methods for inspecting the request message of an HTTP exchange.
- */
+/// Provides methods for inspecting the request message of an HTTP exchange.
 public sealed interface HttpRequest
     extends
     HttpRequestLine,
