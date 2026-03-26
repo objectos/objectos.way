@@ -89,6 +89,9 @@ final class HttpRequestParser {
       throw HttpClientException.of(InvalidRequestBody.EOF, e);
     }
 
+    final Map<String, Object> formParams;
+    formParams = null;
+
     return new HttpRequestImpl(
         method,
 
@@ -100,7 +103,9 @@ final class HttpRequestParser {
 
         headers,
 
-        bodyInputStream
+        bodyInputStream,
+
+        formParams
     );
   }
 
@@ -1015,7 +1020,8 @@ final class HttpRequestParser {
       }
     }
 
-    int validIndex = socket.bufferIndex();
+    int validIndex;
+    validIndex = socket.bufferIndex();
 
     // value contents
     while (true) {
