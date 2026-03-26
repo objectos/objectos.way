@@ -79,7 +79,6 @@ public class HttpRequestTest5ParseBody {
         POST / HTTP/1.1\r
         Host: www.example.com\r
         Content-Length: 24\r
-        Content-Type: application/x-www-form-urlencoded\r
         \r
         email=user%40example.com\
         """)
@@ -98,7 +97,6 @@ public class HttpRequestTest5ParseBody {
         POST / HTTP/1.1\r
         Host: www.example.com\r
         Content-Length: 24\r
-        Content-Type: application/x-www-form-urlencoded\r
         \r
         email=\
         """),
@@ -119,7 +117,7 @@ public class HttpRequestTest5ParseBody {
         test -> {
           test.bufferSize(2, 512);
 
-          test.bodyMaxSize(400);
+          test.bodySizeMax(400);
         },
 
         """
@@ -230,7 +228,7 @@ public class HttpRequestTest5ParseBody {
         test -> {
           test.bufferSize(2, 512);
 
-          test.bodyMaxSize(400);
+          test.bodySizeMax(400);
         },
 
         Y.slowStream(1, """
@@ -596,7 +594,7 @@ public class HttpRequestTest5ParseBody {
           test -> {
             test.bufferSize(128, 128);
 
-            test.bodyMaxSize(64);
+            test.bodySizeMax(64);
           },
 
           request

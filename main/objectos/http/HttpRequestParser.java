@@ -23,14 +23,18 @@ final class HttpRequestParser {
 
   private final HttpExchangeBodyFiles bodyFiles;
 
+  private final int bodyMemoryMax;
+
   private final long bodySizeMax;
 
   private final long id;
 
   private final HttpSocket socket;
 
-  HttpRequestParser(HttpExchangeBodyFiles bodyFiles, long bodySizeMax, long id, HttpSocket socket) {
+  HttpRequestParser(HttpExchangeBodyFiles bodyFiles, int bodyMemoryMax, long bodySizeMax, long id, HttpSocket socket) {
     this.bodyFiles = bodyFiles;
+
+    this.bodyMemoryMax = bodyMemoryMax;
 
     this.bodySizeMax = bodySizeMax;
 
@@ -91,16 +95,13 @@ final class HttpRequestParser {
       throw HttpClientException.of(InvalidRequestHeaders.REQUEST_HEADER_FIELDS_TOO_LARGE, e);
     }
 
-    final InputStream bodyInputStream;
+    final HttpRequestBody body;
 
     try {
-      bodyInputStream = parseBody(headers);
+      body = parseBody(headers);
     } catch (HttpSocketEof e) {
       throw HttpClientException.of(InvalidRequestBody.EOF, e);
     }
-
-    final Map<String, Object> formParams;
-    formParams = null;
 
     return new HttpRequestImpl(
         method,
@@ -113,9 +114,7 @@ final class HttpRequestParser {
 
         headers,
 
-        bodyInputStream,
-
-        formParams
+        body
     );
   }
 
@@ -374,7 +373,7 @@ final class HttpRequestParser {
   // # BEGIN: Query
   // ##################################################################
 
-  private static final byte[] PARSE_QUERY_TABLE;
+  private static final byte[] QUERY_TABLE;
 
   private static final byte QUERY_VALID = 1;
   private static final byte QUERY_PERCENT = 2;
@@ -424,10 +423,10 @@ final class HttpRequestParser {
 
     table['\n'] = QUERY_CRLF;
 
-    PARSE_QUERY_TABLE = table;
+    QUERY_TABLE = table;
   }
 
-  private static class Query {
+  private class Query {
 
     boolean emptyValue;
 
@@ -503,7 +502,7 @@ final class HttpRequestParser {
 
     while (true) {
       final byte code;
-      code = readTable(PARSE_QUERY_TABLE, InvalidRequestLine.QUERY_CHAR);
+      code = readTable(QUERY_TABLE, InvalidRequestLine.QUERY_CHAR);
 
       switch (code) {
         case QUERY_VALID -> {
@@ -567,7 +566,7 @@ final class HttpRequestParser {
       }
 
       final byte code;
-      code = PARSE_QUERY_TABLE[b];
+      code = QUERY_TABLE[b];
 
       switch (code) {
         case QUERY_VALID -> {
@@ -617,7 +616,7 @@ final class HttpRequestParser {
 
     while (true) {
       final byte code;
-      code = readTable(PARSE_QUERY_TABLE, InvalidRequestLine.QUERY_CHAR);
+      code = readTable(QUERY_TABLE, InvalidRequestLine.QUERY_CHAR);
 
       switch (code) {
         case QUERY_VALID -> {
@@ -675,7 +674,7 @@ final class HttpRequestParser {
       }
 
       final byte code;
-      code = PARSE_QUERY_TABLE[b];
+      code = QUERY_TABLE[b];
 
       switch (code) {
         case QUERY_VALID -> {
@@ -1055,7 +1054,7 @@ final class HttpRequestParser {
   // # BEGIN: Body
   // ##################################################################
 
-  private InputStream parseBody(Map<HttpHeaderName, Object> headers) throws IOException {
+  private HttpRequestBody parseBody(Map<HttpHeaderName, Object> headers) throws IOException {
     final String contentLength;
     contentLength = Http.queryParamsGet(headers, HttpHeaderName.CONTENT_LENGTH);
 
@@ -1078,10 +1077,10 @@ final class HttpRequestParser {
       throw HttpClientException.of(InvalidRequestHeaders.LENGTH_REQUIRED);
     }
 
-    return InputStream.nullInputStream();
+    return HttpRequestBodyImpl.ofNull();
   }
 
-  private InputStream parseBodyFixed(Map<HttpHeaderName, Object> headers, String contentLength) throws IOException {
+  private HttpRequestBody parseBodyFixed(Map<HttpHeaderName, Object> headers, String contentLength) throws IOException {
     final String transferEncoding;
     transferEncoding = Http.queryParamsGet(headers, HttpHeaderNameImpl.TRANSFER_ENCODING);
 
@@ -1089,6 +1088,33 @@ final class HttpRequestParser {
       throw HttpClientException.of(InvalidRequestHeaders.BOTH_CL_TE);
     }
 
+    final long length;
+    length = parseBodyFixedLength(contentLength);
+
+    if (length == 0) {
+      return HttpRequestBodyImpl.ofNull();
+    }
+
+    if (length > bodySizeMax) {
+      throw HttpClientException.of(InvalidRequestHeaders.CONTENT_TOO_LARGE);
+    }
+
+    final String contentType;
+    contentType = Http.queryParamsGet(headers, HttpHeaderNameImpl.CONTENT_TYPE);
+
+    final boolean parseForm;
+    parseForm = contentType != null && contentType.equalsIgnoreCase("application/x-www-form-urlencoded");
+
+    if (length <= bodyMemoryMax) {
+      return parseBodyFixedMemory(length, parseForm);
+    }
+
+    else {
+      return parseBodyFixedFile(length, parseForm);
+    }
+  }
+
+  private long parseBodyFixedLength(String contentLength) throws HttpClientException {
     long length;
     length = 0;
 
@@ -1139,42 +1165,66 @@ final class HttpRequestParser {
       throw HttpClientException.of(InvalidRequestHeaders.CONTENT_TOO_LARGE);
     }
 
-    else if (length == 0) {
-      return InputStream.nullInputStream();
+    return length;
+  }
+
+  private HttpRequestBody parseBodyFixedMemory(long length, boolean parseForm) throws IOException {
+    // length is guaranteed to fit in an int
+    // in any case we throw if length overflows...
+
+    final int len;
+    len = Math.toIntExact(length);
+
+    final ByteArrayOutputStream outputStream;
+    outputStream = new ByteArrayOutputStream(len);
+
+    socket.transferTo(outputStream, len);
+
+    final byte[] bytes;
+    bytes = outputStream.toByteArray();
+
+    final Map<String, Object> formParams;
+    formParams = parseForm ? parseForm(bytes) : null;
+
+    return HttpRequestBodyImpl.of(bytes, formParams);
+  }
+
+  private HttpRequestBody parseBodyFixedFile(long length, boolean parseForm) throws IOException {
+    final Path file;
+    file = bodyFiles.file(id);
+
+    try (OutputStream outputStream = bodyFiles.newOutputStream(file)) {
+      socket.transferTo(outputStream, length);
     }
 
-    else if (length > bodySizeMax) {
-      throw HttpClientException.of(InvalidRequestHeaders.CONTENT_TOO_LARGE);
-    }
+    final Map<String, Object> formParams;
+    formParams = parseForm ? parseForm(file) : null;
 
-    else if (socket.canBuffer(length)) {
-      // fits in buffer
-
-      // length is guaranteed to fit in an int
-      // in any case we throw if length overflows...
-
-      final int bodyLen;
-      bodyLen = Math.toIntExact(length);
-
-      return socket.readStream(bodyLen);
-    }
-
-    else {
-      // does not fit buffer
-
-      final Path file;
-      file = bodyFiles.file(id);
-
-      try (OutputStream outputStream = bodyFiles.newOutputStream(file)) {
-        socket.transferTo(outputStream, length);
-      }
-
-      return bodyFiles.newInputStream(file);
-    }
+    return HttpRequestBodyImpl.of(file, formParams);
   }
 
   // ##################################################################
   // # END: Body
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Form
+  // ##################################################################
+
+  private Map<String, Object> parseForm(byte[] bytes) {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  private Map<String, Object> parseForm(Path file) {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  // ##################################################################
+  // # END: Form
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: URL Decode
   // ##################################################################
 
   // ##################################################################

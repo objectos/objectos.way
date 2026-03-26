@@ -29,95 +29,48 @@ record HttpRequestImpl(
 
     Map<HttpHeaderName, Object> headers,
 
-    InputStream bodyInputStream,
-
-    Map<String, Object> formParams
+    HttpRequestBody body
 
 ) implements HttpRequest {
 
   @Override
+  public final InputStream bodyInputStream() throws IOException {
+    return body.bodyInputStream();
+  }
+
+  @Override
   public final Set<String> formParamNames() {
-    if (formParams == null) {
-      return Set.of();
-    } else {
-      return formParams.keySet();
-    }
+    return body.formParamNames();
   }
 
   @Override
   public final String formParam(String name) {
-    Objects.requireNonNull(name, "name == null");
-
-    if (formParams == null) {
-      return null;
-    } else {
-      return Http.queryParamsGet(formParams, name);
-    }
+    return body.formParam(name);
   }
 
   @Override
   public final int formParamAsInt(String name, int defaultValue) {
-    String maybe;
-    maybe = formParam(name);
-
-    if (maybe == null) {
-      return defaultValue;
-    }
-
-    try {
-      return Integer.parseInt(maybe);
-    } catch (NumberFormatException expected) {
-      return defaultValue;
-    }
+    return body.formParamAsInt(name, defaultValue);
   }
 
   @Override
   public final long formParamAsLong(String name, long defaultValue) {
-    String maybe;
-    maybe = formParam(name);
-
-    if (maybe == null) {
-      return defaultValue;
-    }
-
-    try {
-      return Long.parseLong(maybe);
-    } catch (NumberFormatException expected) {
-      return defaultValue;
-    }
+    return body.formParamAsLong(name, defaultValue);
   }
 
   @Override
   public final List<String> formParamAll(String name) {
-    Objects.requireNonNull(name, "name == null");
-
-    if (formParams == null) {
-      return List.of();
-    } else {
-      return Http.queryParamsGetAll(formParams, name);
-    }
+    return body.formParamAll(name);
   }
 
   @Override
   public final IntStream formParamAllAsInt(String name, int defaultValue) {
-    return formParamAll(name).stream().mapToInt(s -> {
-      try {
-        return Integer.parseInt(s);
-      } catch (NumberFormatException expected) {
-        return defaultValue;
-      }
-    });
+    return body.formParamAllAsInt(name, defaultValue);
   }
 
   @Override
   public final LongStream formParamAllAsLong(String name, long defaultValue) {
-    return formParamAll(name).stream().mapToLong(s -> {
-      try {
-        return Long.parseLong(s);
-      } catch (NumberFormatException expected) {
-        return defaultValue;
-      }
-    });
+    return body.formParamAllAsLong(name, defaultValue);
   }
 
   @Override

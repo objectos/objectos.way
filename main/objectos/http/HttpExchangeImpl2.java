@@ -23,6 +23,8 @@ final class HttpExchangeImpl2 {
 
   private final HttpExchangeBodyFiles requestBodyFiles;
 
+  private final int requestBodyMemoryMax;
+
   private final long requestBodySizeMax;
 
   private final HttpSocket socket;
@@ -30,10 +32,12 @@ final class HttpExchangeImpl2 {
   @SuppressWarnings("unused")
   private HttpRequest request;
 
-  HttpExchangeImpl2(long id, HttpExchangeBodyFiles requestBodyFiles, long requestBodySizeMax, HttpSocket socket) {
+  HttpExchangeImpl2(long id, HttpExchangeBodyFiles requestBodyFiles, int requestBodyMemoryMax, long requestBodySizeMax, HttpSocket socket) {
     this.id = id;
 
     this.requestBodyFiles = requestBodyFiles;
+
+    this.requestBodyMemoryMax = requestBodyMemoryMax;
 
     this.requestBodySizeMax = requestBodySizeMax;
 
@@ -42,7 +46,7 @@ final class HttpExchangeImpl2 {
 
   public final void request() throws IOException {
     final HttpRequestParser requestParser;
-    requestParser = new HttpRequestParser(requestBodyFiles, requestBodySizeMax, id, socket);
+    requestParser = new HttpRequestParser(requestBodyFiles, requestBodyMemoryMax, requestBodySizeMax, id, socket);
 
     request = requestParser.parse();
   }

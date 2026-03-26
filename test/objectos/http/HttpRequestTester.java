@@ -24,7 +24,9 @@ final class HttpRequestTester {
 
   private HttpExchangeBodyFiles bodyFiles = HttpExchangeBodyFiles.standard();
 
-  private long bodyMaxSize = 1024;
+  private int bodyMemoryMax = 256;
+
+  private long bodySizeMax = 1024;
 
   private int bufferSizeInitial = 128;
 
@@ -40,14 +42,14 @@ final class HttpRequestTester {
     bodyFiles = value;
   }
 
-  public final void bodyMaxSize(long value) {
-    bodyMaxSize = value;
+  public final void bodySizeMax(long value) {
+    bodySizeMax = value;
   }
 
   public final void bufferSize(int initial, int max) {
     bufferSizeInitial = initial;
 
-    bufferSizeMax = max;
+    bodyMemoryMax = bufferSizeMax = max;
   }
 
   public static HttpRequest parse(Consumer<? super HttpRequestTester> test, Object... data) throws IOException {
@@ -67,7 +69,7 @@ final class HttpRequestTester {
     httpSocket = HttpSocket.of(bufferSizeInitial, bufferSizeMax, socket);
 
     final HttpRequestParser parser;
-    parser = new HttpRequestParser(bodyFiles, bodyMaxSize, 0, httpSocket);
+    parser = new HttpRequestParser(bodyFiles, bodyMemoryMax, bodySizeMax, 0, httpSocket);
 
     return parser.parse();
   }
