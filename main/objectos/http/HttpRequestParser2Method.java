@@ -17,7 +17,7 @@ package objectos.http;
 
 import module java.base;
 
-final class HttpRequestParser1Method {
+final class HttpRequestParser2Method {
 
   enum Invalid implements HttpClientException.Kind {
 
@@ -39,7 +39,7 @@ final class HttpRequestParser1Method {
 
   private final HttpRequestParser0Input input;
 
-  HttpRequestParser1Method(HttpRequestParser0Input input) {
+  HttpRequestParser2Method(HttpRequestParser0Input input) {
     this.input = input;
   }
 

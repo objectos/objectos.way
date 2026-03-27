@@ -19,37 +19,30 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 
 import java.io.IOException;
+import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import objectos.http.HttpRequestParser.InvalidRequestLine;
+import objectos.http.HttpRequestParser3Path.Invalid;
 import objectos.way.Y;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 @SuppressWarnings("exports")
-public class HttpRequestTest1ParsePath {
+public class HttpRequestParser3PathTest {
 
-  private static final boolean[] VALID_BYTES;
+  private String parse(int initial, int max, Object... data) throws IOException {
+    final Socket socket;
+    socket = Y.socket(data);
 
-  static {
-    final boolean[] valid;
-    valid = new boolean[256];
+    final HttpRequestParser0Input input;
+    input = HttpRequestParser0Input.of(initial, max, socket);
 
-    final String validString;
-    validString = Http.unreserved() + Http.subDelims() + ":@";
+    final HttpRequestParser3Path parser;
+    parser = new HttpRequestParser3Path(input);
 
-    for (int idx = 0, len = validString.length(); idx < len; idx++) {
-      final char c;
-      c = validString.charAt(idx);
-
-      valid[c] = true;
-    }
-
-    valid['/'] = true;
-
-    VALID_BYTES = valid;
+    return parser.parse();
   }
 
   @DataProvider
@@ -60,7 +53,10 @@ public class HttpRequestTest1ParsePath {
     l.add(valid("/", "/", "root"));
     l.add(valid("/index.html", "/index.html", "with segment"));
 
-    for (int value = 0; value < VALID_BYTES.length; value++) {
+    final boolean[] validBytes;
+    validBytes = validBytes();
+
+    for (int value = 0; value < validBytes.length; value++) {
       switch (value) {
         case '\n', '\r' -> {/* will trigger 505 not 400 */}
 
@@ -69,7 +65,7 @@ public class HttpRequestTest1ParsePath {
         case '%' -> {/* tested on percent-encoded */}
 
         default -> {
-          if (VALID_BYTES[value]) {
+          if (validBytes[value]) {
             l.add(valid(value));
           }
         }
@@ -98,32 +94,33 @@ public class HttpRequestTest1ParsePath {
 
   @Test(dataProvider = "pathValidProvider")
   public void pathValid(String raw, String path, String description) throws IOException {
-    final HttpRequest req;
-    req = HttpRequestParserY.parse(
-        test -> test.bufferSize(256, 512),
+    assertEquals(
+        parse(
+            256, 512,
 
-        iso8859("""
-        GET %s HTTP/1.1\r
-        Host: test\r
-        \r
-        """.formatted(raw))
+            iso8859("%s HTTP/1.1".formatted(raw))
+        ),
+
+        path
     );
-
-    assertEquals(req.path(), path);
   }
 
   @DataProvider
   public Object[][] pathInvalidProvider() {
-    List<Object[]> l = new ArrayList<>();
+    final List<Object[]> l;
+    l = new ArrayList<>();
 
-    l.add(invalid("", InvalidRequestLine.PATH_FIRST_CHAR, "empty path"));
-    l.add(invalid("index.html", InvalidRequestLine.PATH_FIRST_CHAR, "path does not begin with '/'"));
-    l.add(invalid("//index.html", InvalidRequestLine.PATH_SEGMENT_NZ, "path begins with empty segment"));
-    l.add(invalid("/%2Findex.html", InvalidRequestLine.PATH_SEGMENT_NZ, "path begins with empty segment"));
-    l.add(invalid("%2F/index.html", InvalidRequestLine.PATH_SEGMENT_NZ, "path begins with empty segment"));
-    l.add(invalid("%2F%2Findex.html", InvalidRequestLine.PATH_SEGMENT_NZ, "path begins with empty segment"));
+    l.add(invalid("", Invalid.PATH_FIRST_CHAR, "empty path"));
+    l.add(invalid("index.html", Invalid.PATH_FIRST_CHAR, "path does not begin with '/'"));
+    l.add(invalid("//index.html", Invalid.PATH_SEGMENT_NZ, "path begins with empty segment"));
+    l.add(invalid("/%2Findex.html", Invalid.PATH_SEGMENT_NZ, "path begins with empty segment"));
+    l.add(invalid("%2F/index.html", Invalid.PATH_SEGMENT_NZ, "path begins with empty segment"));
+    l.add(invalid("%2F%2Findex.html", Invalid.PATH_SEGMENT_NZ, "path begins with empty segment"));
 
-    for (int value = 0; value < VALID_BYTES.length; value++) {
+    final boolean[] validBytes;
+    validBytes = validBytes();
+
+    for (int value = 0; value < validBytes.length; value++) {
       switch (value) {
         case ' ', '\n', '\r' -> {/* will trigger 505 not 400 */}
 
@@ -132,7 +129,7 @@ public class HttpRequestTest1ParsePath {
         case '%' -> {/* tested on percent-encoded */}
 
         default -> {
-          if (!VALID_BYTES[value]) {
+          if (!validBytes[value]) {
             l.add(invalid(value));
           }
         }
@@ -149,21 +146,15 @@ public class HttpRequestTest1ParsePath {
     final String description;
     description = "path contains the " + Integer.toHexString(value) + " invalid byte";
 
-    return invalid(path, InvalidRequestLine.PATH_NEXT_CHAR, description);
+    return invalid(path, Invalid.PATH_NEXT_CHAR, description);
   }
 
   private Object[] invalid(
       String path,
       HttpClientException.Kind kind,
       String description) {
-    if (!path.isEmpty()) {
-      path = " " + path;
-    }
-
-    String req = """
-    GET%s HTTP/1.1\r
-    \r
-    """.formatted(path);
+    final String req;
+    req = "%s HTTP/1.1".formatted(path);
 
     return new Object[] {req, kind, description};
   }
@@ -174,8 +165,8 @@ public class HttpRequestTest1ParsePath {
       HttpClientException.Kind kind,
       String description) throws IOException {
     try {
-      HttpRequestParserY.parse(
-          test -> test.bufferSize(256, 512),
+      parse(
+          256, 512,
 
           iso8859(request)
       );
@@ -230,18 +221,15 @@ public class HttpRequestTest1ParsePath {
 
   @Test(dataProvider = "percentValidProvider")
   public void percentValid(String raw, String path, String description) throws IOException {
-    final HttpRequest req;
-    req = HttpRequestParserY.parse(
-        test -> test.bufferSize(256, 512),
+    assertEquals(
+        parse(
+            256, 512,
 
-        iso8859("""
-        GET %s HTTP/1.1\r
-        Host: test\r
-        \r
-        """.formatted(raw))
+            iso8859("%s HTTP/1.1".formatted(raw))
+        ),
+
+        path
     );
-
-    assertEquals(req.path(), path);
   }
 
   @DataProvider
@@ -286,19 +274,15 @@ public class HttpRequestTest1ParsePath {
   @Test(dataProvider = "percentInvalidProvider")
   public void percentInvalid(String raw, String description) throws IOException {
     try {
-      HttpRequestParserY.parse(
-          test -> test.bufferSize(256, 512),
+      parse(
+          256, 512,
 
-          iso8859("""
-          GET %s HTTP/1.1\r
-          Host: test\r
-          \r
-          """.formatted(raw))
+          iso8859("%s HTTP/1.1".formatted(raw))
       );
 
       Assert.fail("It should have thrown");
     } catch (HttpClientException expected) {
-      assertEquals(expected.kind, InvalidRequestLine.PATH_PERCENT);
+      assertEquals(expected.kind, Invalid.PATH_PERCENT);
     }
   }
 
@@ -321,18 +305,15 @@ public class HttpRequestTest1ParsePath {
 
   @Test(dataProvider = "slowClientProvider")
   public void slowClient(String raw, String expected, String description) throws IOException {
-    final HttpRequest req;
-    req = HttpRequestParserY.parse(
-        test -> test.bufferSize(256, 512),
+    assertEquals(
+        parse(
+            256, 512,
 
-        Y.slowStream(1, iso8859("""
-        GET %s HTTP/1.1\r
-        Host: test\r
-        \r
-        """.formatted(raw)))
+            Y.slowStream(1, iso8859("%s HTTP/1.1".formatted(raw)))
+        ),
+
+        expected
     );
-
-    assertEquals(req.path(), expected);
   }
 
   @Test
@@ -341,19 +322,15 @@ public class HttpRequestTest1ParsePath {
     veryLongId = "/12345/sub/abc7890".repeat(200);
 
     try {
-      HttpRequestParserY.parse(
-          test -> test.bufferSize(256, 512),
+      parse(
+          256, 512,
 
-          iso8859("""
-          GET /entity/%s HTTP/1.1\r
-          Host: test\r
-          \r
-          """.formatted(veryLongId))
+          iso8859("/entity/%s HTTP/1.1".formatted(veryLongId))
       );
 
       Assert.fail("It should have thrown");
     } catch (HttpClientException expected) {
-      assertEquals(expected.kind, InvalidRequestLine.URI_TOO_LONG);
+      assertEquals(expected.kind, Invalid.URI_TOO_LONG);
     }
   }
 
@@ -363,10 +340,10 @@ public class HttpRequestTest1ParsePath {
     ex = Y.trimStackTrace(new IOException(), 1);
 
     try {
-      HttpRequestParserY.parse(
-          test -> test.bufferSize(256, 512),
+      parse(
+          256, 512,
 
-          iso8859("GET /index.h"),
+          iso8859("/index.h"),
 
           ex
       );
@@ -382,11 +359,14 @@ public class HttpRequestTest1ParsePath {
     final List<Object[]> l;
     l = new ArrayList<>();
 
+    final boolean[] validBytes;
+    validBytes = validBytes();
+
     for (int value = 0; value < 128; value++) {
       final String raw;
       raw = "/raw/%%%02X".formatted(value);
 
-      if (VALID_BYTES[value]) {
+      if (validBytes[value]) {
         l.add(new Object[] {raw, "/raw/" + (char) value});
       } else {
         l.add(new Object[] {raw, raw});
@@ -415,6 +395,25 @@ public class HttpRequestTest1ParsePath {
 
   private byte[] iso8859(String s) {
     return s.getBytes(StandardCharsets.ISO_8859_1);
+  }
+
+  private boolean[] validBytes() {
+    final boolean[] valid;
+    valid = new boolean[256];
+
+    final String validString;
+    validString = Http.unreserved() + Http.subDelims() + ":@";
+
+    for (int idx = 0, len = validString.length(); idx < len; idx++) {
+      final char c;
+      c = validString.charAt(idx);
+
+      valid[c] = true;
+    }
+
+    valid['/'] = true;
+
+    return valid;
   }
 
 }

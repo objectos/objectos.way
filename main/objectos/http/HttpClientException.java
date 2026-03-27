@@ -23,7 +23,8 @@ final class HttpClientException extends IOException {
 
   sealed interface Kind
       permits
-      HttpRequestParser1Method.Invalid,
+      HttpRequestParser2Method.Invalid,
+      HttpRequestParser3Path.Invalid,
       HttpRequestParser.InvalidLineTerminator,
       HttpRequestParser.InvalidRequestLine,
       HttpRequestParser.InvalidRequestHeaders,

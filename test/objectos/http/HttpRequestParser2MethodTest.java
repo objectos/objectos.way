@@ -24,7 +24,7 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class HttpRequestParser1MethodTest {
+public class HttpRequestParser2MethodTest {
 
   private HttpMethod parse(int initial, int max, Object... data) throws IOException {
     final Socket socket;
@@ -33,8 +33,8 @@ public class HttpRequestParser1MethodTest {
     final HttpRequestParser0Input input;
     input = HttpRequestParser0Input.of(initial, max, socket);
 
-    final HttpRequestParser1Method parser;
-    parser = new HttpRequestParser1Method(input);
+    final HttpRequestParser2Method parser;
+    parser = new HttpRequestParser2Method(input);
 
     return parser.parse();
   }
@@ -142,7 +142,7 @@ public class HttpRequestParser1MethodTest {
 
       Assert.fail("It should have thrown");
     } catch (HttpClientException expected) {
-      assertEquals(expected.kind, HttpRequestParser1Method.Invalid.METHOD);
+      assertEquals(expected.kind, HttpRequestParser2Method.Invalid.METHOD);
     }
   }
 
@@ -179,7 +179,7 @@ public class HttpRequestParser1MethodTest {
 
       Assert.fail("It should have thrown");
     } catch (HttpClientException expected) {
-      assertEquals(expected.kind, HttpRequestParser1Method.Invalid.METHOD);
+      assertEquals(expected.kind, HttpRequestParser2Method.Invalid.METHOD);
     }
   }
 

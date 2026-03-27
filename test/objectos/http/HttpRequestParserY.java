@@ -52,13 +52,6 @@ final class HttpRequestParserY {
     bodyMemoryMax = bufferSizeMax = max;
   }
 
-  public static HttpRequestParser0Input input(int initial, int max, Object... data) throws IOException {
-    final Socket socket;
-    socket = Y.socket(data);
-
-    return HttpRequestParser0Input.of(initial, max, socket);
-  }
-
   public static HttpRequest parse(Consumer<? super HttpRequestParserY> test, Object... data) throws IOException {
     final Socket socket;
     socket = Y.socket(data);

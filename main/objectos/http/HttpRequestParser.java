@@ -45,8 +45,8 @@ final class HttpRequestParser {
 
   @SuppressWarnings("unused")
   public final HttpRequest parse() throws IOException {
-    final HttpRequestParser1Method methodParser;
-    methodParser = new HttpRequestParser1Method(input);
+    final HttpRequestParser2Method methodParser;
+    methodParser = new HttpRequestParser2Method(input);
 
     final HttpMethod method;
     method = methodParser.parse();

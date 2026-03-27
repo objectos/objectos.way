@@ -37,6 +37,8 @@ final class HttpRequestParser0Input {
 
   private final InputStream inputStream;
 
+  private int mark;
+
   private HttpRequestParser0Input(
       byte[] buffer,
       int bufferSizeMax,
@@ -98,6 +100,27 @@ final class HttpRequestParser0Input {
     return maxAvailable >= contentLength;
   }
 
+  public final String makeStr() {
+    return makeStr(bufferIndex);
+  }
+
+  private String makeStr(int endIndex) {
+    endIndex = endIndex - 1;
+
+    return bufferToAscii(mark, endIndex);
+  }
+
+  public final StringBuilder makeStrBuilder() {
+    final String prefix;
+    prefix = makeStr();
+
+    return new StringBuilder(prefix);
+  }
+
+  public final void mark() {
+    mark = bufferIndex;
+  }
+
   public final boolean matches(byte[] value, int offset) throws IOException {
     final byte[] b;
     b = value;
@@ -157,6 +180,17 @@ final class HttpRequestParser0Input {
     ensureBuffer(length);
 
     return new ByteArrayInputStream(buffer, bufferIndex, length);
+  }
+
+  public final byte readTable(byte[] table, HttpClientException.Kind kind) throws IOException {
+    final byte next;
+    next = readByte();
+
+    if (next < 0) {
+      throw HttpClientException.of(kind);
+    }
+
+    return table[next];
   }
 
   public final void skipByte() {
