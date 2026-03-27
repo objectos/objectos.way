@@ -18,36 +18,39 @@ package objectos.http;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import objectos.http.HttpRequestParser.InvalidRequestLine;
+import module java.base;
+import objectos.http.HttpRequestParser4Query.Invalid;
 import objectos.way.Y;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class HttpRequestTest2ParseQuery {
+public class HttpRequestParser4QueryTest {
+
+  private Map<String, Object> parse(int initial, int max, Object... data) throws IOException {
+    final Socket socket;
+    socket = Y.socket(data);
+
+    final HttpRequestParser0Input input;
+    input = HttpRequestParser0Input.of(initial, max, socket);
+
+    input.readByte(); // '?' or other
+
+    final HttpRequestParser4Query parser;
+    parser = new HttpRequestParser4Query(input);
+
+    return parser.parse();
+  }
 
   @Test
   public void noQuery() throws IOException {
-    final HttpRequest req;
-    req = HttpRequestParserY.parse(
-        test -> test.bufferSize(256, 512),
+    var res = parse(
+        256, 512,
 
-        """
-        GET /path HTTP/1.1\r
-        Host: test\r
-        \r
-        """
+        " HTTP/1.1"
     );
 
-    assertEquals(req.queryParam("foo"), null);
-    assertEquals(req.queryParamAll("foo"), List.of());
-    assertEquals(req.queryParamNames(), Set.of());
+    assertEquals(res, null);
   }
 
   private final boolean[] validBytes = HttpY.queryValidBytes();
@@ -59,34 +62,13 @@ public class HttpRequestTest2ParseQuery {
 
   @Test(dataProvider = "queryValidProvider")
   public void queryValid(String raw, Map<String, Object> expected, String description) throws IOException {
-    final HttpRequest req;
-    req = HttpRequestParserY.parse(
-        test -> test.bufferSize(256, 512),
+    var res = parse(
+        256, 512,
 
-        """
-        GET /path?%s HTTP/1.1\r
-        Host: test\r
-        \r
-        """.formatted(raw)
+        "?%s HTTP/1.1".formatted(raw)
     );
 
-    queryAssert(req, expected);
-  }
-
-  @Test(description = "test the parsePath1 code path")
-  public void queryValid1() throws IOException {
-    final HttpRequest req;
-    req = HttpRequestParserY.parse(
-        test -> test.bufferSize(256, 512),
-
-        """
-        GET /pa%74h?key=value HTTP/1.1\r
-        Host: test\r
-        \r
-        """
-    );
-
-    queryAssert(req, Map.of("key", "value"));
+    assertEquals(res, expected);
   }
 
   @DataProvider
@@ -137,19 +119,15 @@ public class HttpRequestTest2ParseQuery {
   @Test(dataProvider = "queryInvalidProvider")
   public void queryInvalid(String raw, String description) throws IOException {
     try {
-      HttpRequestParserY.parse(
-          test -> test.bufferSize(256, 512),
+      parse(
+          256, 512,
 
-          """
-          GET /path?%s HTTP/1.1\r
-          Host: test\r
-          \r
-          """.formatted(raw).getBytes(StandardCharsets.ISO_8859_1)
+          "?%s HTTP/1.1".formatted(raw).getBytes(StandardCharsets.ISO_8859_1)
       );
 
       Assert.fail("It should have thrown");
     } catch (HttpClientException expected) {
-      assertEquals(expected.kind, InvalidRequestLine.QUERY_CHAR);
+      assertEquals(expected.kind, Invalid.QUERY_CHAR);
     }
   }
 
@@ -177,18 +155,13 @@ public class HttpRequestTest2ParseQuery {
 
   @Test(dataProvider = "percentValidProvider")
   public void percentValid(String raw, Map<String, Object> expected, String description) throws IOException {
-    final HttpRequest req;
-    req = HttpRequestParserY.parse(
-        test -> test.bufferSize(256, 512),
+    var res = parse(
+        256, 512,
 
-        """
-        GET /path?%s HTTP/1.1\r
-        Host: test\r
-        \r
-        """.formatted(raw)
+        "?%s HTTP/1.1".formatted(raw)
     );
 
-    queryAssert(req, expected);
+    assertEquals(res, expected);
   }
 
   @DataProvider
@@ -250,29 +223,25 @@ public class HttpRequestTest2ParseQuery {
   @Test(dataProvider = "percentInvalidProvider")
   public void percentInvalid(String raw, String description) throws IOException {
     try {
-      HttpRequestParserY.parse(
-          test -> test.bufferSize(256, 512),
+      parse(
+          256, 512,
 
-          """
-          GET /path?%s HTTP/1.1\r
-          Host: test\r
-          \r
-          """.formatted(raw).getBytes(StandardCharsets.ISO_8859_1)
+          "?%s HTTP/1.1".formatted(raw).getBytes(StandardCharsets.ISO_8859_1)
       );
 
       Assert.fail("It should have thrown");
     } catch (HttpClientException expected) {
-      assertEquals(expected.kind, InvalidRequestLine.QUERY_PERCENT);
+      assertEquals(expected.kind, Invalid.QUERY_PERCENT);
     }
   }
 
   @DataProvider
   public Object[][] ioExceptionProvider() {
     return new Object[][] {
-        {"GET /path?ke", "Thrown while parsing key"},
-        {"GET /path?k%7", "Thrown while parsing key (encoded)"},
-        {"GET /path?key=v", "Thrown while parsing value"},
-        {"GET /path?key=v%7", "Thrown while parsing value (encoded)"}
+        {"?ke", "Thrown while parsing key"},
+        {"?k%7", "Thrown while parsing key (encoded)"},
+        {"?key=v", "Thrown while parsing value"},
+        {"?key=v%7", "Thrown while parsing value (encoded)"}
     };
   }
 
@@ -282,8 +251,8 @@ public class HttpRequestTest2ParseQuery {
     ex = Y.trimStackTrace(new IOException(), 1);
 
     try {
-      HttpRequestParserY.parse(
-          test -> test.bufferSize(256, 512),
+      parse(
+          256, 512,
 
           req,
 
@@ -302,48 +271,21 @@ public class HttpRequestTest2ParseQuery {
     veryLongValue = "ba7f9045".repeat(200);
 
     try {
-      HttpRequestParserY.parse(
-          test -> test.bufferSize(256, 512),
+      parse(
+          256, 512,
 
-          """
-          GET /entity?hash=%s HTTP/1.1\r
-          Host: test\r
-          \r
-          """.formatted(veryLongValue)
+          "?hash=%s HTTP/1.1".formatted(veryLongValue)
       );
 
       Assert.fail("It should have thrown");
     } catch (HttpClientException expected) {
-      assertEquals(expected.kind, InvalidRequestLine.URI_TOO_LONG);
+      assertEquals(expected.kind, Invalid.URI_TOO_LONG);
     }
   }
 
   private Object[] arr(Object... arr) {
     // not safe, oh well...
     return arr;
-  }
-
-  private void queryAssert(HttpRequest http, Map<String, Object> expected) {
-    assertEquals(http.queryParamNames(), expected.keySet());
-
-    for (var entry : expected.entrySet()) {
-      final String key;
-      key = entry.getKey();
-
-      final Object value;
-      value = entry.getValue();
-
-      if (value instanceof String s) {
-        assertEquals(http.queryParam(key), s, key);
-        assertEquals(http.queryParamAll(key), List.of(s));
-      }
-
-      else {
-        List<?> list = (List<?>) value;
-        assertEquals(http.queryParam(key), list.get(0), key);
-        assertEquals(http.queryParamAll(key), value, key);
-      }
-    }
   }
 
 }

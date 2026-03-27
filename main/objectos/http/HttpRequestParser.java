@@ -45,36 +45,28 @@ final class HttpRequestParser {
 
   @SuppressWarnings("unused")
   public final HttpRequest parse() throws IOException {
+    // method
     final HttpRequestParser2Method methodParser;
     methodParser = new HttpRequestParser2Method(input);
 
     final HttpMethod method;
     method = methodParser.parse();
 
-    final String path;
+    // path
+    final HttpRequestParser3Path pathParser;
+    pathParser = new HttpRequestParser3Path(input);
 
-    try {
-      path = parsePath();
-    } catch (DecodePercException e) {
-      throw HttpClientException.of(InvalidRequestLine.PATH_PERCENT, e);
-    } catch (HttpSocketEof e) {
-      throw HttpClientException.of(InvalidRequestLine.PATH_NEXT_CHAR, e);
-    } catch (HttpSocketOverflow e) {
-      throw HttpClientException.of(InvalidRequestLine.URI_TOO_LONG, e);
-    }
+    final String path;
+    path = pathParser.parse();
+
+    // query
+    final HttpRequestParser4Query queryParser;
+    queryParser = new HttpRequestParser4Query(input);
 
     final Map<String, Object> queryParams;
+    queryParams = queryParser.parse();
 
-    try {
-      queryParams = parseQuery();
-    } catch (DecodePercException e) {
-      throw HttpClientException.of(InvalidRequestLine.QUERY_PERCENT);
-    } catch (HttpSocketEof e) {
-      throw HttpClientException.of(InvalidRequestLine.QUERY_CHAR, e);
-    } catch (HttpSocketOverflow e) {
-      throw HttpClientException.of(InvalidRequestLine.URI_TOO_LONG, e);
-    }
-
+    // version
     final HttpVersion version;
 
     try {
@@ -115,194 +107,6 @@ final class HttpRequestParser {
         body
     );
   }
-
-  // ##################################################################
-  // # BEGIN: Path
-  // ##################################################################
-
-  private static final byte[] PATH_TABLE;
-
-  private static final byte SOLIDUS = '/';
-
-  private static final byte PATH_VALID = 1;
-  private static final byte PATH_PERCENT = 2;
-  private static final byte PATH_SPACE = 3;
-  private static final byte PATH_QUESTION = 4;
-  private static final byte PATH_CRLF = 5;
-
-  static {
-    final byte[] table;
-    table = new byte[128];
-
-    // 0 = invalid
-    // 1 = valid
-    // 2 = %xx
-    // 3 = ' ' -> version
-    // 4 = '?' -> stop
-    // 5 = '\r' -> 0.9
-    // 5 = '\n' -> 0.9
-
-    Ascii.fill(table, Http.unreserved(), PATH_VALID);
-
-    Ascii.fill(table, Http.subDelims(), PATH_VALID);
-
-    table[':'] = PATH_VALID;
-
-    table['@'] = PATH_VALID;
-
-    // solidus acts as segment separator
-    table[SOLIDUS] = PATH_VALID;
-
-    table['%'] = PATH_PERCENT;
-
-    table[' '] = PATH_SPACE;
-
-    table['?'] = PATH_QUESTION;
-
-    table['\r'] = PATH_CRLF;
-
-    table['\n'] = PATH_CRLF;
-
-    PATH_TABLE = table;
-  }
-
-  private String parsePath() throws DecodePercException, IOException {
-    // where our path begins
-    final int startIndex;
-    startIndex = input.bufferIndex();
-
-    // first char must be a '/' (solidus)
-    final byte first;
-    first = input.readByte();
-
-    final int firstCodePoint;
-
-    final boolean firstPerc;
-
-    if (first < 0) {
-      throw HttpClientException.of(InvalidRequestLine.PATH_FIRST_CHAR);
-    }
-
-    else if (first != '%') {
-      firstCodePoint = first;
-
-      firstPerc = false;
-    }
-
-    else {
-      firstCodePoint = decodePerc();
-
-      firstPerc = true;
-    }
-
-    if (firstCodePoint != '/') {
-      throw HttpClientException.of(InvalidRequestLine.PATH_FIRST_CHAR);
-    }
-
-    final String result;
-
-    // remaining chars
-    if (!firstPerc) {
-      result = parsePath0(startIndex);
-    } else {
-      final StringBuilder path;
-      path = new StringBuilder("/");
-
-      result = parsePath1(path);
-    }
-
-    final int length;
-    length = result.length();
-
-    if (length >= 2) {
-      final char second;
-      second = result.charAt(1);
-
-      if (second == '/') {
-        throw HttpClientException.of(InvalidRequestLine.PATH_SEGMENT_NZ);
-      }
-    }
-
-    return result;
-  }
-
-  private String parsePath0(int startIndex) throws DecodePercException, IOException {
-    while (true) {
-      final byte code;
-      code = readTable(PATH_TABLE, InvalidRequestLine.PATH_NEXT_CHAR);
-
-      switch (code) {
-        case PATH_VALID -> {
-          // noop
-        }
-
-        case PATH_PERCENT -> {
-          final StringBuilder path;
-          path = makeStrBuilder(startIndex);
-
-          final int decoded;
-          decoded = decodePerc();
-
-          path.appendCodePoint(decoded);
-
-          return parsePath1(path);
-        }
-
-        case PATH_SPACE, PATH_QUESTION -> {
-          return makeStr(startIndex);
-        }
-
-        case PATH_CRLF -> {
-          // assume version 0.9
-          throw HttpClientException.of(InvalidRequestLine.HTTP_VERSION_NOT_SUPPORTED);
-        }
-
-        default -> throw HttpClientException.of(InvalidRequestLine.PATH_NEXT_CHAR);
-      }
-    }
-  }
-
-  private String parsePath1(StringBuilder path) throws DecodePercException, IOException {
-    while (true) {
-      final byte b;
-      b = input.readByte();
-
-      if (b < 0) {
-        throw HttpClientException.of(InvalidRequestLine.PATH_NEXT_CHAR);
-      }
-
-      final byte code;
-      code = PATH_TABLE[b];
-
-      switch (code) {
-        case PATH_VALID -> {
-          path.append((char) b);
-        }
-
-        case PATH_PERCENT -> {
-          final int decoded;
-          decoded = decodePerc();
-
-          path.appendCodePoint(decoded);
-        }
-
-        case PATH_SPACE, PATH_QUESTION -> {
-          return path.toString();
-        }
-
-        case PATH_CRLF -> {
-          // assume version 0.9
-          throw HttpClientException.of(InvalidRequestLine.HTTP_VERSION_NOT_SUPPORTED);
-        }
-
-        default -> throw HttpClientException.of(InvalidRequestLine.PATH_NEXT_CHAR);
-      }
-    }
-  }
-
-  // ##################################################################
-  // # END: Path
-  // ##################################################################
 
   // ##################################################################
   // # BEGIN: Query

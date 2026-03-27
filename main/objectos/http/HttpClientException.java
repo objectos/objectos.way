@@ -25,6 +25,7 @@ final class HttpClientException extends IOException {
       permits
       HttpRequestParser2Method.Invalid,
       HttpRequestParser3Path.Invalid,
+      HttpRequestParser4Query.Invalid,
       HttpRequestParser.InvalidLineTerminator,
       HttpRequestParser.InvalidRequestLine,
       HttpRequestParser.InvalidRequestHeaders,
