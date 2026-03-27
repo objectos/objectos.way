@@ -44,7 +44,7 @@ public class HttpRequestTest3ParseVersion {
   @Test(dataProvider = "versionValidProvider")
   public void versionValid(String line, HttpVersion expected, String description) throws IOException {
     final HttpRequest req;
-    req = HttpRequestTester.parse(
+    req = HttpRequestParserY.parse(
         test -> test.bufferSize(256, 512),
 
         """
@@ -71,7 +71,7 @@ public class HttpRequestTest3ParseVersion {
   @Test(dataProvider = "versionInvalidProvider")
   public void versionInvalid(String line, String description) throws IOException {
     try {
-      HttpRequestTester.parse(
+      HttpRequestParserY.parse(
           test -> test.bufferSize(256, 512),
 
           """
@@ -100,7 +100,7 @@ public class HttpRequestTest3ParseVersion {
   @Test(dataProvider = "versionNotSupportedProvider")
   public void versionNotSupported(String line, String description) throws IOException {
     try {
-      HttpRequestTester.parse(
+      HttpRequestParserY.parse(
           test -> test.bufferSize(256, 512),
 
           """
@@ -137,7 +137,7 @@ public class HttpRequestTest3ParseVersion {
   @Test(dataProvider = "version09NotSupportedProvider")
   public void version09NotSupported(String line) throws IOException {
     try {
-      HttpRequestTester.parse(
+      HttpRequestParserY.parse(
           test -> test.bufferSize(256, 512),
 
           """
@@ -156,7 +156,7 @@ public class HttpRequestTest3ParseVersion {
   @Test
   public void invalidLineTerminator() throws IOException {
     try {
-      HttpRequestTester.parse(
+      HttpRequestParserY.parse(
           test -> test.bufferSize(256, 512),
 
           """
@@ -175,7 +175,7 @@ public class HttpRequestTest3ParseVersion {
   @Test(dataProvider = "versionValidProvider")
   public void slowClientValid(String line, HttpVersion expected, String description) throws IOException {
     final HttpRequest req;
-    req = HttpRequestTester.parse(
+    req = HttpRequestParserY.parse(
         test -> test.bufferSize(256, 512),
 
         Y.slowStream(1, """

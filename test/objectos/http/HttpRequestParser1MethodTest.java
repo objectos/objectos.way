@@ -19,13 +19,25 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 
 import module java.base;
-import objectos.http.HttpRequestParser.InvalidRequestLine;
 import objectos.way.Y;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class HttpRequestTest0ParseMethod {
+public class HttpRequestParser1MethodTest {
+
+  private HttpMethod parse(int initial, int max, Object... data) throws IOException {
+    final Socket socket;
+    socket = Y.socket(data);
+
+    final HttpRequestParser0Input input;
+    input = HttpRequestParser0Input.of(initial, max, socket);
+
+    final HttpRequestParser1Method parser;
+    parser = new HttpRequestParser1Method(input);
+
+    return parser.parse();
+  }
 
   @DataProvider
   public Iterator<HttpMethod> methodProvider() {
@@ -38,18 +50,19 @@ public class HttpRequestTest0ParseMethod {
       return;
     }
 
-    final HttpRequest req;
-    req = HttpRequestTester.parse(
-        test -> test.bufferSize(256, 512),
+    assertEquals(
+        parse(
+            256, 512,
 
-        """
-        %s /index.html HTTP/1.1\r
-        Host: www.example.com\r
-        \r
-        """.formatted(method.name())
+            """
+            %s /index.html HTTP/1.1\r
+            Host: www.example.com\r
+            \r
+            """.formatted(method.name())
+        ),
+
+        method
     );
-
-    assertEquals(req.method(), method);
   }
 
   @Test(dataProvider = "methodProvider", description = "method: valid but not implemented")
@@ -59,8 +72,8 @@ public class HttpRequestTest0ParseMethod {
     }
 
     try {
-      HttpRequestTester.parse(
-          test -> test.bufferSize(256, 512),
+      parse(
+          256, 512,
 
           """
           %s /index.html HTTP/1.1\r
@@ -81,19 +94,19 @@ public class HttpRequestTest0ParseMethod {
       return;
     }
 
-    final HttpRequest req;
-    req = HttpRequestTester.parse(
-        test -> test.bufferSize(256, 512),
+    assertEquals(
+        parse(
+            256, 512,
 
-        Y.slowStream(1, """
-        %s /index.html HTTP/1.1\r
-        Host: www.example.com\r
-        \r
-        """.formatted(method.name())
-        )
+            Y.slowStream(1, """
+            %s /index.html HTTP/1.1\r
+            Host: www.example.com\r
+            \r
+            """.formatted(method.name()))
+        ),
+
+        method
     );
-
-    assertEquals(req.method(), method);
   }
 
   @DataProvider
@@ -121,15 +134,15 @@ public class HttpRequestTest0ParseMethod {
   @Test(dataProvider = "badRequestProvider")
   public void badRequest(String request, String description) throws IOException {
     try {
-      HttpRequestTester.parse(
-          test -> test.bufferSize(2 /*force many buffer resizes*/, 512),
+      parse(
+          2 /*force many buffer resizes*/, 512,
 
           request
       );
 
       Assert.fail("It should have thrown");
     } catch (HttpClientException expected) {
-      assertEquals(expected.kind, HttpRequestParser.InvalidRequestLine.METHOD);
+      assertEquals(expected.kind, HttpRequestParser1Method.Invalid.METHOD);
     }
   }
 
@@ -144,8 +157,8 @@ public class HttpRequestTest0ParseMethod {
   @Test(dataProvider = "ioExceptionProvider")
   public void ioException(String request, IOException ex, String description) {
     try {
-      HttpRequestTester.parse(
-          test -> test.bufferSize(256, 512),
+      parse(
+          256, 512,
 
           request,
           ex
@@ -160,13 +173,13 @@ public class HttpRequestTest0ParseMethod {
   @Test
   public void eof01() throws IOException {
     try {
-      HttpRequestTester.parse(
-          test -> test.bufferSize(256, 512)
+      parse(
+          256, 512
       );
 
       Assert.fail("It should have thrown");
     } catch (HttpClientException expected) {
-      assertEquals(expected.kind, InvalidRequestLine.METHOD);
+      assertEquals(expected.kind, HttpRequestParser1Method.Invalid.METHOD);
     }
   }
 

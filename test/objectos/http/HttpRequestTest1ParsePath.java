@@ -99,7 +99,7 @@ public class HttpRequestTest1ParsePath {
   @Test(dataProvider = "pathValidProvider")
   public void pathValid(String raw, String path, String description) throws IOException {
     final HttpRequest req;
-    req = HttpRequestTester.parse(
+    req = HttpRequestParserY.parse(
         test -> test.bufferSize(256, 512),
 
         iso8859("""
@@ -174,7 +174,7 @@ public class HttpRequestTest1ParsePath {
       HttpClientException.Kind kind,
       String description) throws IOException {
     try {
-      HttpRequestTester.parse(
+      HttpRequestParserY.parse(
           test -> test.bufferSize(256, 512),
 
           iso8859(request)
@@ -231,7 +231,7 @@ public class HttpRequestTest1ParsePath {
   @Test(dataProvider = "percentValidProvider")
   public void percentValid(String raw, String path, String description) throws IOException {
     final HttpRequest req;
-    req = HttpRequestTester.parse(
+    req = HttpRequestParserY.parse(
         test -> test.bufferSize(256, 512),
 
         iso8859("""
@@ -286,7 +286,7 @@ public class HttpRequestTest1ParsePath {
   @Test(dataProvider = "percentInvalidProvider")
   public void percentInvalid(String raw, String description) throws IOException {
     try {
-      HttpRequestTester.parse(
+      HttpRequestParserY.parse(
           test -> test.bufferSize(256, 512),
 
           iso8859("""
@@ -322,7 +322,7 @@ public class HttpRequestTest1ParsePath {
   @Test(dataProvider = "slowClientProvider")
   public void slowClient(String raw, String expected, String description) throws IOException {
     final HttpRequest req;
-    req = HttpRequestTester.parse(
+    req = HttpRequestParserY.parse(
         test -> test.bufferSize(256, 512),
 
         Y.slowStream(1, iso8859("""
@@ -341,7 +341,7 @@ public class HttpRequestTest1ParsePath {
     veryLongId = "/12345/sub/abc7890".repeat(200);
 
     try {
-      HttpRequestTester.parse(
+      HttpRequestParserY.parse(
           test -> test.bufferSize(256, 512),
 
           iso8859("""
@@ -363,7 +363,7 @@ public class HttpRequestTest1ParsePath {
     ex = Y.trimStackTrace(new IOException(), 1);
 
     try {
-      HttpRequestTester.parse(
+      HttpRequestParserY.parse(
           test -> test.bufferSize(256, 512),
 
           iso8859("GET /index.h"),
@@ -400,7 +400,7 @@ public class HttpRequestTest1ParsePath {
   @Test(enabled = false, dataProvider = "rawPathProvider")
   public void rawPath(String raw, String expected) throws IOException {
     final HttpRequest req;
-    req = HttpRequestTester.parse(
+    req = HttpRequestParserY.parse(
         test -> test.bufferSize(256, 512),
 
         iso8859("""

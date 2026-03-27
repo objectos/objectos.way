@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * input://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,7 +24,7 @@ import objectos.way.Y;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class HttpSocketTest {
+public class HttpRequestParser0InputTest {
 
   @Test(description = """
   - string matches
@@ -35,11 +35,11 @@ public class HttpSocketTest {
     final String req1;
     req1 = "DELETE ";
 
-    final HttpSocket http;
-    http = http(64, 64, req1);
+    final HttpRequestParser0Input input;
+    input = input(64, 64, req1);
 
-    assertEquals(http.readByte(), 'D');
-    assertEquals(http.matches(ascii("DELETE "), 1), true);
+    assertEquals(input.readByte(), 'D');
+    assertEquals(input.matches(ascii("DELETE "), 1), true);
   }
 
   @Test(description = """
@@ -51,11 +51,11 @@ public class HttpSocketTest {
     final String req1;
     req1 = "DELETE ";
 
-    final HttpSocket http;
-    http = http(64, 64, Y.slowStream(1, req1));
+    final HttpRequestParser0Input input;
+    input = input(64, 64, Y.slowStream(1, req1));
 
-    assertEquals(http.readByte(), 'D');
-    assertEquals(http.matches(ascii("DELETE "), 1), true);
+    assertEquals(input.readByte(), 'D');
+    assertEquals(input.matches(ascii("DELETE "), 1), true);
   }
 
   @Test(description = "Read into initial buffer")
@@ -63,12 +63,12 @@ public class HttpSocketTest {
     final String req1;
     req1 = "1".repeat(64);
 
-    final HttpSocket http;
-    http = http(64, 64, req1);
+    final HttpRequestParser0Input input;
+    input = input(64, 64, req1);
 
-    assertEquals(readByte0(http, 64), req1);
+    assertEquals(readByte0(input, 64), req1);
 
-    assertEquals(http.bufferToAscii(), req1);
+    assertEquals(input.bufferToAscii(), req1);
   }
 
   @Test(description = "Read into initial buffer, subsequent requires resize")
@@ -79,16 +79,16 @@ public class HttpSocketTest {
     final String req2;
     req2 = "2".repeat(64);
 
-    final HttpSocket http;
-    http = http(64, 128, req1 + req2);
+    final HttpRequestParser0Input input;
+    input = input(64, 128, req1 + req2);
 
-    assertEquals(readByte0(http, 64), req1);
+    assertEquals(readByte0(input, 64), req1);
 
-    assertEquals(http.bufferToAscii(), req1);
+    assertEquals(input.bufferToAscii(), req1);
 
-    assertEquals(readByte0(http, 64), req2);
+    assertEquals(readByte0(input, 64), req2);
 
-    assertEquals(http.bufferToAscii(), req1 + req2);
+    assertEquals(input.bufferToAscii(), req1 + req2);
   }
 
   @Test(description = "Error: data exceeds max buffer length")
@@ -99,18 +99,18 @@ public class HttpSocketTest {
     final String req2;
     req2 = "2".repeat(64);
 
-    final HttpSocket http;
-    http = http(64, 64, req1 + req2);
+    final HttpRequestParser0Input input;
+    input = input(64, 64, req1 + req2);
 
-    assertEquals(readByte0(http, 64), req1);
+    assertEquals(readByte0(input, 64), req1);
 
-    assertEquals(http.bufferToAscii(), req1);
+    assertEquals(input.bufferToAscii(), req1);
 
     try {
-      http.readByte();
+      input.readByte();
 
       Assert.fail();
-    } catch (HttpSocketOverflow expected) {
+    } catch (HttpRequestParser0Input.Overflow expected) {
       // noop
     }
   }
@@ -120,18 +120,18 @@ public class HttpSocketTest {
     final String req1;
     req1 = "1".repeat(64);
 
-    final HttpSocket http;
-    http = http(64, 128, req1);
+    final HttpRequestParser0Input input;
+    input = input(64, 128, req1);
 
-    assertEquals(readByte0(http, 64), req1);
+    assertEquals(readByte0(input, 64), req1);
 
-    assertEquals(http.bufferToAscii(), req1);
+    assertEquals(input.bufferToAscii(), req1);
 
     try {
-      http.readByte();
+      input.readByte();
 
       Assert.fail();
-    } catch (HttpSocketEof expected) {
+    } catch (HttpRequestParser0Input.Eof expected) {
       // noop
     }
   }
@@ -144,15 +144,15 @@ public class HttpSocketTest {
     final IOException exception;
     exception = Y.trimStackTrace(new IOException("Read Error"), 1);
 
-    final HttpSocket http;
-    http = http(64, 128, req1, exception);
+    final HttpRequestParser0Input input;
+    input = input(64, 128, req1, exception);
 
-    assertEquals(readByte0(http, 64), req1);
+    assertEquals(readByte0(input, 64), req1);
 
-    assertEquals(http.bufferToAscii(), req1);
+    assertEquals(input.bufferToAscii(), req1);
 
     try {
-      http.readByte();
+      input.readByte();
 
       Assert.fail();
     } catch (IOException expected) {
@@ -162,22 +162,22 @@ public class HttpSocketTest {
 
   @Test
   public void powerOfTwo() {
-    assertEquals(HttpSocket.powerOfTwo(127), 128);
-    assertEquals(HttpSocket.powerOfTwo(128), 128);
-    assertEquals(HttpSocket.powerOfTwo(129), 256);
-    assertEquals(HttpSocket.powerOfTwo(1023), 1024);
-    assertEquals(HttpSocket.powerOfTwo(1024), 1024);
-    assertEquals(HttpSocket.powerOfTwo(1025), 2048);
-    assertEquals(HttpSocket.powerOfTwo(16383), 16384);
-    assertEquals(HttpSocket.powerOfTwo(16384), 16384);
-    assertEquals(HttpSocket.powerOfTwo(16385), 16384);
+    assertEquals(HttpRequestParser0Input.powerOfTwo(127), 128);
+    assertEquals(HttpRequestParser0Input.powerOfTwo(128), 128);
+    assertEquals(HttpRequestParser0Input.powerOfTwo(129), 256);
+    assertEquals(HttpRequestParser0Input.powerOfTwo(1023), 1024);
+    assertEquals(HttpRequestParser0Input.powerOfTwo(1024), 1024);
+    assertEquals(HttpRequestParser0Input.powerOfTwo(1025), 2048);
+    assertEquals(HttpRequestParser0Input.powerOfTwo(32767), 32768);
+    assertEquals(HttpRequestParser0Input.powerOfTwo(32768), 32768);
+    assertEquals(HttpRequestParser0Input.powerOfTwo(32769), 32768);
   }
 
   private byte[] ascii(String s) {
     return s.getBytes(StandardCharsets.US_ASCII);
   }
 
-  private String readByte0(HttpSocket socket, int len) throws IOException {
+  private String readByte0(HttpRequestParser0Input socket, int len) throws IOException {
     final byte[] bytes;
     bytes = new byte[len];
 
@@ -188,8 +188,8 @@ public class HttpSocketTest {
     return new String(bytes, StandardCharsets.UTF_8);
   }
 
-  private HttpSocket http(int initial, int max, Object... data) throws IOException {
-    return HttpSocket.of(
+  private HttpRequestParser0Input input(int initial, int max, Object... data) throws IOException {
+    return HttpRequestParser0Input.of(
         initial,
 
         max,

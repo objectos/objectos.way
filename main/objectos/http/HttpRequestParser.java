@@ -29,9 +29,9 @@ final class HttpRequestParser {
 
   private final long id;
 
-  private final HttpSocket socket;
+  private final HttpRequestParser0Input input;
 
-  HttpRequestParser(HttpExchangeBodyFiles bodyFiles, int bodyMemoryMax, long bodySizeMax, long id, HttpSocket socket) {
+  HttpRequestParser(HttpExchangeBodyFiles bodyFiles, int bodyMemoryMax, long bodySizeMax, long id, HttpRequestParser0Input input) {
     this.bodyFiles = bodyFiles;
 
     this.bodyMemoryMax = bodyMemoryMax;
@@ -40,18 +40,16 @@ final class HttpRequestParser {
 
     this.id = id;
 
-    this.socket = socket;
+    this.input = input;
   }
 
   @SuppressWarnings("unused")
   public final HttpRequest parse() throws IOException {
-    final HttpMethod method;
+    final HttpRequestParser1Method methodParser;
+    methodParser = new HttpRequestParser1Method(input);
 
-    try {
-      method = parseMethod();
-    } catch (HttpSocketEof | HttpSocketOverflow e) {
-      throw HttpClientException.of(InvalidRequestLine.METHOD, e);
-    }
+    final HttpMethod method;
+    method = methodParser.parse();
 
     final String path;
 
@@ -119,69 +117,6 @@ final class HttpRequestParser {
   }
 
   // ##################################################################
-  // # BEGIN: Method
-  // ##################################################################
-
-  private HttpMethod parseMethod() throws IOException {
-    final byte first;
-    first = socket.readByte();
-
-    // based on the first char, we select out method candidate
-
-    return switch (first) {
-      case 'C' -> parseMethod(HttpMethod.CONNECT, 1);
-
-      case 'D' -> parseMethod(HttpMethod.DELETE, 1);
-
-      case 'G' -> parseMethod(HttpMethod.GET, 1);
-
-      case 'H' -> parseMethod(HttpMethod.HEAD, 1);
-
-      case 'O' -> parseMethod(HttpMethod.OPTIONS, 1);
-
-      case 'P' -> parseMethodP();
-
-      case 'T' -> parseMethod(HttpMethod.TRACE, 1);
-
-      default -> throw HttpClientException.of(InvalidRequestLine.METHOD);
-    };
-  }
-
-  private HttpMethod parseMethod(HttpMethod method, int offset) throws IOException {
-    final byte[] ascii;
-    ascii = method.ascii;
-
-    if (!socket.matches(ascii, offset)) {
-      throw HttpClientException.of(InvalidRequestLine.METHOD);
-    }
-
-    if (!method.implemented) {
-      throw HttpServerException.methodNotImplemented();
-    }
-
-    return method;
-  }
-
-  private HttpMethod parseMethodP() throws IOException {
-    final byte second;
-    second = socket.readByte();
-
-    return switch (second) {
-      case 'O' -> parseMethod(HttpMethod.POST, 2);
-
-      case 'U' -> parseMethod(HttpMethod.PUT, 2);
-
-      case 'A' -> parseMethod(HttpMethod.PATCH, 2);
-
-      default -> throw HttpClientException.of(InvalidRequestLine.METHOD);
-    };
-  }
-
-  // ##################################################################
-  // # END: Method
-  // ##################################################################
-
-  // ##################################################################
   // # BEGIN: Path
   // ##################################################################
 
@@ -234,11 +169,11 @@ final class HttpRequestParser {
   private String parsePath() throws DecodePercException, IOException {
     // where our path begins
     final int startIndex;
-    startIndex = socket.bufferIndex();
+    startIndex = input.bufferIndex();
 
     // first char must be a '/' (solidus)
     final byte first;
-    first = socket.readByte();
+    first = input.readByte();
 
     final int firstCodePoint;
 
@@ -330,7 +265,7 @@ final class HttpRequestParser {
   private String parsePath1(StringBuilder path) throws DecodePercException, IOException {
     while (true) {
       final byte b;
-      b = socket.readByte();
+      b = input.readByte();
 
       if (b < 0) {
         throw HttpClientException.of(InvalidRequestLine.PATH_NEXT_CHAR);
@@ -456,7 +391,7 @@ final class HttpRequestParser {
 
   private Map<String, Object> parseQuery() throws DecodePercException, IOException {
     final byte prev;
-    prev = socket.peekPrev();
+    prev = input.peekPrev();
 
     if (prev != '?') {
       return null;
@@ -498,7 +433,7 @@ final class HttpRequestParser {
 
   private String parseQueryName(Query query) throws DecodePercException, IOException {
     final int startIndex;
-    startIndex = socket.bufferIndex();
+    startIndex = input.bufferIndex();
 
     while (true) {
       final byte code;
@@ -559,7 +494,7 @@ final class HttpRequestParser {
   private String parseQueryName1(Query query, StringBuilder name) throws DecodePercException, IOException {
     while (true) {
       final byte b;
-      b = socket.readByte();
+      b = input.readByte();
 
       if (b < 0) {
         throw HttpClientException.of(InvalidRequestLine.QUERY_CHAR);
@@ -612,7 +547,7 @@ final class HttpRequestParser {
 
   private String parseQueryValue(Query query) throws DecodePercException, IOException {
     final int startIndex;
-    startIndex = socket.bufferIndex();
+    startIndex = input.bufferIndex();
 
     while (true) {
       final byte code;
@@ -667,7 +602,7 @@ final class HttpRequestParser {
   private String parseQueryValue1(Query query, StringBuilder value) throws DecodePercException, IOException {
     while (true) {
       final byte b;
-      b = socket.readByte();
+      b = input.readByte();
 
       if (b < 0) {
         throw HttpClientException.of(InvalidRequestLine.QUERY_CHAR);
@@ -731,15 +666,15 @@ final class HttpRequestParser {
   private static final byte[] HTTP_OTHERS = "HTTP/".getBytes(StandardCharsets.US_ASCII);
 
   private HttpVersion parseVersion() throws IOException {
-    if (socket.matches(HTTP_1_1_CRLF, 0)) {
+    if (input.matches(HTTP_1_1_CRLF, 0)) {
       return HttpVersion.HTTP_1_1;
     }
 
-    if (socket.matches(HTTP_1_1_LF, 0)) {
+    if (input.matches(HTTP_1_1_LF, 0)) {
       throw HttpClientException.of(InvalidLineTerminator.INSTANCE);
     }
 
-    if (!socket.matches(HTTP_OTHERS, 0)) {
+    if (!input.matches(HTTP_OTHERS, 0)) {
       throw HttpClientException.of(InvalidRequestLine.VERSION_CHAR);
     }
 
@@ -755,7 +690,7 @@ final class HttpRequestParser {
 
   private boolean parseVersionMajor() throws IOException {
     final byte first;
-    first = socket.readByte();
+    first = input.readByte();
 
     if (!Http.isDigit(first)) {
       throw HttpClientException.of(InvalidRequestLine.VERSION_CHAR);
@@ -763,7 +698,7 @@ final class HttpRequestParser {
 
     while (true) {
       final byte b;
-      b = socket.readByte();
+      b = input.readByte();
 
       if (Http.isDigit(b)) {
         continue;
@@ -775,7 +710,7 @@ final class HttpRequestParser {
 
       if (b == '\r') {
         final byte lf;
-        lf = socket.readByte();
+        lf = input.readByte();
 
         if (lf == '\n') {
           return false;
@@ -788,7 +723,7 @@ final class HttpRequestParser {
 
   private void parseVersionMinor() throws IOException {
     final byte first;
-    first = socket.readByte();
+    first = input.readByte();
 
     if (!Http.isDigit(first)) {
       throw HttpClientException.of(InvalidRequestLine.VERSION_CHAR);
@@ -796,7 +731,7 @@ final class HttpRequestParser {
 
     while (true) {
       final byte b;
-      b = socket.readByte();
+      b = input.readByte();
 
       if (Http.isDigit(b)) {
         continue;
@@ -804,7 +739,7 @@ final class HttpRequestParser {
 
       if (b == '\r') {
         final byte lf;
-        lf = socket.readByte();
+        lf = input.readByte();
 
         if (lf == '\n') {
           return;
@@ -875,14 +810,14 @@ final class HttpRequestParser {
 
   private boolean parseHeadersTerminator() throws IOException {
     final byte first;
-    first = socket.peekByte();
+    first = input.peekByte();
 
     return switch (first) {
       case Bytes.CR -> {
-        socket.skipByte();
+        input.skipByte();
 
         final byte second;
-        second = socket.readByte();
+        second = input.readByte();
 
         if (second == Bytes.LF) {
           yield true;
@@ -902,7 +837,7 @@ final class HttpRequestParser {
   private HttpHeaderName parseHeaderName(Headers headers) throws IOException {
     while (true) {
       final byte b;
-      b = socket.readByte();
+      b = input.readByte();
 
       final byte mapped;
       mapped = HttpHeaderNameImpl.map(b);
@@ -969,7 +904,7 @@ final class HttpRequestParser {
 
     // skip OWS
     loop: while (true) {
-      startIndex = socket.bufferIndex();
+      startIndex = input.bufferIndex();
 
       final byte code;
       code = readTable(HEADER_VALUE_TABLE, InvalidRequestHeaders.VALUE_CHAR);
@@ -1001,7 +936,7 @@ final class HttpRequestParser {
     }
 
     int validIndex;
-    validIndex = socket.bufferIndex();
+    validIndex = input.bufferIndex();
 
     // value contents
     while (true) {
@@ -1014,7 +949,7 @@ final class HttpRequestParser {
         }
 
         case HEADER_VALUE_VALID -> {
-          validIndex = socket.bufferIndex();
+          validIndex = input.bufferIndex();
         }
 
         case HEADER_VALUE_CR -> {
@@ -1037,7 +972,7 @@ final class HttpRequestParser {
 
   private String parseHeaderValueCR(int startIndex, int endIndex) throws IOException {
     final byte lf;
-    lf = socket.readByte();
+    lf = input.readByte();
 
     if (lf != Bytes.LF) {
       throw HttpClientException.of(InvalidRequestHeaders.VALUE_CHAR);
@@ -1178,7 +1113,7 @@ final class HttpRequestParser {
     final ByteArrayOutputStream outputStream;
     outputStream = new ByteArrayOutputStream(len);
 
-    socket.transferTo(outputStream, len);
+    input.transferTo(outputStream, len);
 
     final byte[] bytes;
     bytes = outputStream.toByteArray();
@@ -1194,7 +1129,7 @@ final class HttpRequestParser {
     file = bodyFiles.file(id);
 
     try (OutputStream outputStream = bodyFiles.newOutputStream(file)) {
-      socket.transferTo(outputStream, length);
+      input.transferTo(outputStream, length);
     }
 
     final Map<String, Object> formParams;
@@ -1358,7 +1293,7 @@ final class HttpRequestParser {
 
   private byte readPerc() throws DecodePercException, IOException {
     final byte b;
-    b = socket.readByte();
+    b = input.readByte();
 
     final byte perc;
     perc = Bytes.fromHexDigit(b);
@@ -1372,7 +1307,7 @@ final class HttpRequestParser {
 
   private void readPercSep() throws DecodePercException, IOException {
     final byte b;
-    b = socket.readByte();
+    b = input.readByte();
 
     if (b != '%') {
       throw new DecodePercException();
@@ -1412,9 +1347,6 @@ final class HttpRequestParser {
 
   enum InvalidRequestLine implements HttpClientException.Kind {
     // do not reorder, do not rename
-
-    // invalid method
-    METHOD,
 
     // 414 URI Too Long
     URI_TOO_LONG(HttpStatus.URI_TOO_LONG),
@@ -1558,7 +1490,7 @@ final class HttpRequestParser {
 
   private String makeStr(int startIndex) {
     final int bufferIndex;
-    bufferIndex = socket.bufferIndex();
+    bufferIndex = input.bufferIndex();
 
     return makeStr(startIndex, bufferIndex);
   }
@@ -1566,7 +1498,7 @@ final class HttpRequestParser {
   private String makeStr(int startIndex, int endIndex) {
     endIndex = endIndex - 1;
 
-    return socket.bufferToAscii(startIndex, endIndex);
+    return input.bufferToAscii(startIndex, endIndex);
   }
 
   private StringBuilder makeStrBuilder(int startIndex) {
@@ -1578,7 +1510,7 @@ final class HttpRequestParser {
 
   private byte readTable(byte[] table, HttpClientException.Kind kind) throws IOException {
     final byte next;
-    next = socket.readByte();
+    next = input.readByte();
 
     if (next < 0) {
       throw HttpClientException.of(kind);

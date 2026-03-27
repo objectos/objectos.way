@@ -33,7 +33,7 @@ public class HttpRequestTest6ParseAppForm {
   @Test(dataProvider = "appFormValidProvider", enabled = false)
   public void appFormValid(String payload, Map<String, Object> expected, String description) throws IOException {
     final HttpRequest req;
-    req = HttpRequestTester.parse(
+    req = HttpRequestParserY.parse(
         test -> test.bufferSize(128, 256),
 
         """

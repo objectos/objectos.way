@@ -20,7 +20,7 @@ import java.net.Socket;
 import java.util.function.Consumer;
 import objectos.way.Y;
 
-final class HttpRequestTester {
+final class HttpRequestParserY {
 
   private HttpExchangeBodyFiles bodyFiles = HttpExchangeBodyFiles.standard();
 
@@ -34,7 +34,7 @@ final class HttpRequestTester {
 
   private final Socket socket;
 
-  private HttpRequestTester(Socket socket) {
+  private HttpRequestParserY(Socket socket) {
     this.socket = socket;
   }
 
@@ -52,12 +52,19 @@ final class HttpRequestTester {
     bodyMemoryMax = bufferSizeMax = max;
   }
 
-  public static HttpRequest parse(Consumer<? super HttpRequestTester> test, Object... data) throws IOException {
+  public static HttpRequestParser0Input input(int initial, int max, Object... data) throws IOException {
     final Socket socket;
     socket = Y.socket(data);
 
-    final HttpRequestTester tester;
-    tester = new HttpRequestTester(socket);
+    return HttpRequestParser0Input.of(initial, max, socket);
+  }
+
+  public static HttpRequest parse(Consumer<? super HttpRequestParserY> test, Object... data) throws IOException {
+    final Socket socket;
+    socket = Y.socket(data);
+
+    final HttpRequestParserY tester;
+    tester = new HttpRequestParserY(socket);
 
     test.accept(tester);
 
@@ -65,11 +72,11 @@ final class HttpRequestTester {
   }
 
   private HttpRequest parse0() throws IOException {
-    final HttpSocket httpSocket;
-    httpSocket = HttpSocket.of(bufferSizeInitial, bufferSizeMax, socket);
+    final HttpRequestParser0Input input;
+    input = HttpRequestParser0Input.of(bufferSizeInitial, bufferSizeMax, socket);
 
     final HttpRequestParser parser;
-    parser = new HttpRequestParser(bodyFiles, bodyMemoryMax, bodySizeMax, 0, httpSocket);
+    parser = new HttpRequestParser(bodyFiles, bodyMemoryMax, bodySizeMax, 0, input);
 
     return parser.parse();
   }

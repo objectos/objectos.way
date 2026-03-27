@@ -38,7 +38,7 @@ public class HttpRequestTest5ParseBody {
   @Test(description = "empty: no content-length")
   public void empty01() throws IOException {
     final HttpRequest req;
-    req = HttpRequestTester.parse(
+    req = HttpRequestParserY.parse(
         test -> test.bufferSize(256, 512),
 
         iso8859("""
@@ -55,7 +55,7 @@ public class HttpRequestTest5ParseBody {
   @Test(description = "empty: content-length=0")
   public void empty02() throws IOException {
     final HttpRequest req;
-    req = HttpRequestTester.parse(
+    req = HttpRequestParserY.parse(
         test -> test.bufferSize(256, 512),
 
         iso8859("""
@@ -72,7 +72,7 @@ public class HttpRequestTest5ParseBody {
   @Test(description = "buffer: no read")
   public void buffer01() throws IOException {
     final HttpRequest req;
-    req = HttpRequestTester.parse(
+    req = HttpRequestParserY.parse(
         test -> test.bufferSize(256, 512),
 
         iso8859("""
@@ -90,7 +90,7 @@ public class HttpRequestTest5ParseBody {
   @Test(description = "buffer: read")
   public void buffer02() throws IOException {
     final HttpRequest req;
-    req = HttpRequestTester.parse(
+    req = HttpRequestParserY.parse(
         test -> test.bufferSize(256, 512),
 
         iso8859("""
@@ -113,7 +113,7 @@ public class HttpRequestTest5ParseBody {
     frag = ".".repeat(100);
 
     final HttpRequest req;
-    req = HttpRequestTester.parse(
+    req = HttpRequestParserY.parse(
         test -> {
           test.bufferSize(2, 512);
 
@@ -143,7 +143,7 @@ public class HttpRequestTest5ParseBody {
     ioe = Y.trimStackTrace(new IOException(), 1);
 
     try {
-      HttpRequestTester.parse(
+      HttpRequestParserY.parse(
           test -> test.bufferSize(256, 512),
 
           """
@@ -172,7 +172,7 @@ public class HttpRequestTest5ParseBody {
     ioe = Y.trimStackTrace(new IOException(), 1);
 
     try {
-      HttpRequestTester.parse(
+      HttpRequestParserY.parse(
           test -> test.bufferSize(2, 512),
 
           """
@@ -198,7 +198,7 @@ public class HttpRequestTest5ParseBody {
     frag = ".".repeat(32);
 
     try {
-      HttpRequestTester.parse(
+      HttpRequestParserY.parse(
           test -> test.bufferSize(256, 512),
 
           """
@@ -224,7 +224,7 @@ public class HttpRequestTest5ParseBody {
     frag = ".".repeat(100);
 
     final HttpRequest req;
-    req = HttpRequestTester.parse(
+    req = HttpRequestParserY.parse(
         test -> {
           test.bufferSize(2, 512);
 
@@ -263,7 +263,7 @@ public class HttpRequestTest5ParseBody {
     content = ".o".repeat(512);
 
     final HttpRequest req;
-    req = HttpRequestTester.parse(
+    req = HttpRequestParserY.parse(
         test -> {
           test.bodyFiles(tester);
 
@@ -296,7 +296,7 @@ public class HttpRequestTest5ParseBody {
     ioe = Y.trimStackTrace(new IOException(), 1);
 
     try {
-      HttpRequestTester.parse(
+      HttpRequestParserY.parse(
           test -> {
             test.bodyFiles(tester);
 
@@ -337,7 +337,7 @@ public class HttpRequestTest5ParseBody {
     contents = ".".repeat(1024);
 
     try {
-      HttpRequestTester.parse(
+      HttpRequestParserY.parse(
           test -> {
             test.bodyFiles(tester);
 
@@ -388,7 +388,7 @@ public class HttpRequestTest5ParseBody {
     contents = ".".repeat(1024);
 
     try {
-      HttpRequestTester.parse(
+      HttpRequestParserY.parse(
           test -> {
             test.bodyFiles(tester);
 
@@ -440,7 +440,7 @@ public class HttpRequestTest5ParseBody {
     contents = ".".repeat(1024);
 
     try {
-      HttpRequestTester.parse(
+      HttpRequestParserY.parse(
           test -> {
             test.bodyFiles(tester);
 
@@ -473,7 +473,7 @@ public class HttpRequestTest5ParseBody {
     content = ".o".repeat(512);
 
     final HttpRequest req;
-    req = HttpRequestTester.parse(
+    req = HttpRequestParserY.parse(
         test -> {
           test.bodyFiles(tester);
 
@@ -590,7 +590,7 @@ public class HttpRequestTest5ParseBody {
   @Test(dataProvider = "badRequestProvider")
   public void badRequest(String request, HttpClientException.Kind kind, String description) throws IOException {
     try {
-      HttpRequestTester.parse(
+      HttpRequestParserY.parse(
           test -> {
             test.bufferSize(128, 128);
 

@@ -151,7 +151,7 @@ public class HttpRequestTest4ParseHeaders {
   @Test(dataProvider = "validProvider")
   public void valid(String headers, Map<HttpHeaderName, Object> expected, String description) throws IOException {
     final HttpRequest req;
-    req = HttpRequestTester.parse(
+    req = HttpRequestParserY.parse(
         test -> test.bufferSize(256, 512),
 
         iso8859("""
@@ -202,7 +202,7 @@ public class HttpRequestTest4ParseHeaders {
     in.append("x".repeat(contentLength));
 
     final HttpRequest req;
-    req = HttpRequestTester.parse(
+    req = HttpRequestParserY.parse(
         test -> test.bufferSize(256, 512),
 
         iso8859(in.toString())
@@ -324,7 +324,7 @@ public class HttpRequestTest4ParseHeaders {
   @Test(dataProvider = "invalidProvider")
   public void invalid(String headers, HttpClientException.Kind kind, String description) throws IOException {
     try {
-      HttpRequestTester.parse(
+      HttpRequestParserY.parse(
           test -> test.bufferSize(256, 512),
 
           iso8859(headers)
@@ -339,7 +339,7 @@ public class HttpRequestTest4ParseHeaders {
   @Test(dataProvider = "validProvider")
   public void slowClient(String headers, Map<HttpHeaderName, Object> expected, String description) throws IOException {
     final HttpRequest req;
-    req = HttpRequestTester.parse(
+    req = HttpRequestParserY.parse(
         test -> test.bufferSize(256, 512),
 
         Y.slowStream(1, iso8859("""

@@ -17,9 +17,15 @@ package objectos.http;
 
 import module java.base;
 
-final class HttpSocket implements Closeable {
+final class HttpRequestParser0Input {
 
-  private static final int HARD_MAX_BUFFER_SIZE = 1 << 14;
+  @SuppressWarnings("serial")
+  static final class Eof extends IOException {}
+
+  @SuppressWarnings("serial")
+  static final class Overflow extends IOException {}
+
+  private static final int HARD_MAX_BUFFER_SIZE = 1 << 15; // 32k
 
   private byte[] buffer;
 
@@ -31,49 +37,42 @@ final class HttpSocket implements Closeable {
 
   private final InputStream inputStream;
 
-  private final Closeable socket;
-
-  private HttpSocket(
+  private HttpRequestParser0Input(
       byte[] buffer,
       int bufferSizeMax,
-      InputStream inputStream,
-      Closeable socket) {
+      InputStream inputStream) {
     this.buffer = buffer;
 
     this.bufferSizeMax = bufferSizeMax;
 
     this.inputStream = inputStream;
-
-    this.socket = socket;
   }
 
-  static HttpSocket of(
+  static HttpRequestParser0Input of(
       int bufferSizeInitial,
       int bufferSizeMax,
       Socket socket) throws IOException {
     final int initialSize;
     initialSize = powerOfTwo(bufferSizeInitial);
 
-    return new HttpSocket(
+    return new HttpRequestParser0Input(
         new byte[initialSize],
 
         bufferSizeMax,
 
-        socket.getInputStream(),
-
-        socket
+        socket.getInputStream()
     );
   }
 
   static final int powerOfTwo(int size) {
     // maybe size is already power of 2
-    int x;
+    final int x;
     x = size - 1;
 
-    int leading;
+    final int leading;
     leading = Integer.numberOfLeadingZeros(x);
 
-    int n;
+    final int n;
     n = -1 >>> leading;
 
     if (n < 0) {
@@ -97,11 +96,6 @@ final class HttpSocket implements Closeable {
     maxAvailable = bufferSizeMax - bufferIndex;
 
     return maxAvailable >= contentLength;
-  }
-
-  @Override
-  public final void close() throws IOException {
-    socket.close();
   }
 
   public final boolean matches(byte[] value, int offset) throws IOException {
@@ -197,7 +191,7 @@ final class HttpSocket implements Closeable {
       read = inputStream.read(work, 0, (int) iteration);
 
       if (read < 0) {
-        throw new HttpSocketEof();
+        throw new Eof();
       }
 
       outputStream.write(work, 0, read);
@@ -217,7 +211,7 @@ final class HttpSocket implements Closeable {
     return new String(buffer, startIndex, length, StandardCharsets.US_ASCII);
   }
 
-  private void ensureBuffer(int count) throws HttpSocketEof, HttpSocketOverflow, IOException {
+  private void ensureBuffer(int count) throws IOException {
     int readable;
     readable = bufferLimit - bufferIndex;
 
@@ -229,7 +223,7 @@ final class HttpSocket implements Closeable {
         // buffer is full, try to increase
 
         if (buffer.length == bufferSizeMax) {
-          throw new HttpSocketOverflow();
+          throw new Overflow();
         }
 
         final int newLength;
@@ -244,7 +238,7 @@ final class HttpSocket implements Closeable {
       bytesRead = inputStream.read(buffer, bufferLimit, writableLength);
 
       if (bytesRead < 0) {
-        throw new HttpSocketEof();
+        throw new Eof();
       }
 
       assert bytesRead != 0 : "InputStream.read should not return 0 when writableLength != 0";

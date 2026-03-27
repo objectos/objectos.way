@@ -35,7 +35,7 @@ public class HttpRequestTest2ParseQuery {
   @Test
   public void noQuery() throws IOException {
     final HttpRequest req;
-    req = HttpRequestTester.parse(
+    req = HttpRequestParserY.parse(
         test -> test.bufferSize(256, 512),
 
         """
@@ -60,7 +60,7 @@ public class HttpRequestTest2ParseQuery {
   @Test(dataProvider = "queryValidProvider")
   public void queryValid(String raw, Map<String, Object> expected, String description) throws IOException {
     final HttpRequest req;
-    req = HttpRequestTester.parse(
+    req = HttpRequestParserY.parse(
         test -> test.bufferSize(256, 512),
 
         """
@@ -76,7 +76,7 @@ public class HttpRequestTest2ParseQuery {
   @Test(description = "test the parsePath1 code path")
   public void queryValid1() throws IOException {
     final HttpRequest req;
-    req = HttpRequestTester.parse(
+    req = HttpRequestParserY.parse(
         test -> test.bufferSize(256, 512),
 
         """
@@ -137,7 +137,7 @@ public class HttpRequestTest2ParseQuery {
   @Test(dataProvider = "queryInvalidProvider")
   public void queryInvalid(String raw, String description) throws IOException {
     try {
-      HttpRequestTester.parse(
+      HttpRequestParserY.parse(
           test -> test.bufferSize(256, 512),
 
           """
@@ -178,7 +178,7 @@ public class HttpRequestTest2ParseQuery {
   @Test(dataProvider = "percentValidProvider")
   public void percentValid(String raw, Map<String, Object> expected, String description) throws IOException {
     final HttpRequest req;
-    req = HttpRequestTester.parse(
+    req = HttpRequestParserY.parse(
         test -> test.bufferSize(256, 512),
 
         """
@@ -250,7 +250,7 @@ public class HttpRequestTest2ParseQuery {
   @Test(dataProvider = "percentInvalidProvider")
   public void percentInvalid(String raw, String description) throws IOException {
     try {
-      HttpRequestTester.parse(
+      HttpRequestParserY.parse(
           test -> test.bufferSize(256, 512),
 
           """
@@ -282,7 +282,7 @@ public class HttpRequestTest2ParseQuery {
     ex = Y.trimStackTrace(new IOException(), 1);
 
     try {
-      HttpRequestTester.parse(
+      HttpRequestParserY.parse(
           test -> test.bufferSize(256, 512),
 
           req,
@@ -302,7 +302,7 @@ public class HttpRequestTest2ParseQuery {
     veryLongValue = "ba7f9045".repeat(200);
 
     try {
-      HttpRequestTester.parse(
+      HttpRequestParserY.parse(
           test -> test.bufferSize(256, 512),
 
           """
