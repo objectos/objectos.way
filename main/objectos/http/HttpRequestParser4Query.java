@@ -95,7 +95,7 @@ final class HttpRequestParser4Query {
 
     while (true) {
       final String name;
-      name = parseQueryName();
+      name = parseName();
 
       if (done) {
         add(name);
@@ -112,7 +112,7 @@ final class HttpRequestParser4Query {
       }
 
       final String value;
-      value = parseQueryValue();
+      value = parseValue();
 
       add(name, value);
 
@@ -177,7 +177,7 @@ final class HttpRequestParser4Query {
     QUERY_TABLE = table;
   }
 
-  private String parseQueryName() throws DecodeException, IOException {
+  private String parseName() throws DecodeException, IOException {
     input.mark();
 
     while (true) {
@@ -198,7 +198,7 @@ final class HttpRequestParser4Query {
 
           name.appendCodePoint(decoded);
 
-          return parseQueryName1(name);
+          return parseName1(name);
         }
 
         case QUERY_PLUS -> {
@@ -207,7 +207,7 @@ final class HttpRequestParser4Query {
 
           name.append(' ');
 
-          return parseQueryName1(name);
+          return parseName1(name);
         }
 
         case QUERY_EQUALS -> {
@@ -236,7 +236,7 @@ final class HttpRequestParser4Query {
     }
   }
 
-  private String parseQueryName1(StringBuilder name) throws DecodeException, IOException {
+  private String parseName1(StringBuilder name) throws DecodeException, IOException {
     while (true) {
       final byte b;
       b = input.readByte();
@@ -290,7 +290,7 @@ final class HttpRequestParser4Query {
     }
   }
 
-  private String parseQueryValue() throws DecodeException, IOException {
+  private String parseValue() throws DecodeException, IOException {
     input.mark();
 
     while (true) {
@@ -311,7 +311,7 @@ final class HttpRequestParser4Query {
 
           value.appendCodePoint(decoded);
 
-          return parseQueryValue1(value);
+          return parseValue1(value);
         }
 
         case QUERY_PLUS -> {
@@ -320,7 +320,7 @@ final class HttpRequestParser4Query {
 
           value.append(' ');
 
-          return parseQueryValue1(value);
+          return parseValue1(value);
         }
 
         case QUERY_AMPERSAND -> {
@@ -343,7 +343,7 @@ final class HttpRequestParser4Query {
     }
   }
 
-  private String parseQueryValue1(StringBuilder value) throws DecodeException, IOException {
+  private String parseValue1(StringBuilder value) throws DecodeException, IOException {
     while (true) {
       final byte b;
       b = input.readByte();
