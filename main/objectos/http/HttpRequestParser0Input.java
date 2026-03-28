@@ -104,7 +104,7 @@ final class HttpRequestParser0Input {
     return makeStr(bufferIndex);
   }
 
-  private String makeStr(int endIndex) {
+  public final String makeStr(int endIndex) {
     endIndex = endIndex - 1;
 
     return bufferToAscii(mark, endIndex);

@@ -18,17 +18,31 @@ package objectos.http;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
+import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import objectos.http.HttpRequestParser.InvalidRequestHeaders;
+import objectos.http.HttpRequestParser6Headers.Invalid;
 import objectos.way.Y;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class HttpRequestTest4ParseHeaders {
+public class HttpRequestParser6HeadersTest {
+
+  private Map<HttpHeaderName, Object> parse(int initial, int max, Object... data) throws IOException {
+    final Socket socket;
+    socket = Y.socket(data);
+
+    final HttpRequestParser0Input input;
+    input = HttpRequestParser0Input.of(initial, max, socket);
+
+    final HttpRequestParser6Headers parser;
+    parser = new HttpRequestParser6Headers(input);
+
+    return parser.parse();
+  }
 
   @DataProvider
   public Object[][] validProvider() {
@@ -38,6 +52,7 @@ public class HttpRequestTest4ParseHeaders {
             Accept-Encoding: x\r
             Referer: x\r
             User-Agent: x\r
+            \r
             """,
 
             Map.of(
@@ -53,6 +68,7 @@ public class HttpRequestTest4ParseHeaders {
             Host: x\r
             Foo: x\r
             User-Agent: x\r
+            \r
             """,
 
             Map.of(
@@ -66,6 +82,7 @@ public class HttpRequestTest4ParseHeaders {
         {
             """
             %s: x\r
+            \r
             """.formatted(Http.tchar()),
 
             Map.of(
@@ -79,6 +96,7 @@ public class HttpRequestTest4ParseHeaders {
             Accept-Encoding: gzip\r
             Referer: www.google.com\r
             User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36\r
+            \r
             """,
 
             Map.of(
@@ -94,6 +112,7 @@ public class HttpRequestTest4ParseHeaders {
             Accept-Encoding: x \r
             Referer:  x  y \r
             User-Agent:   \t z\t   \r
+            \r
             """,
 
             Map.of(
@@ -109,6 +128,7 @@ public class HttpRequestTest4ParseHeaders {
             Accept-Encoding: \r
             Referer:\r
             User-Agent:   \t\r
+            \r
             """,
 
             Map.of(
@@ -122,6 +142,7 @@ public class HttpRequestTest4ParseHeaders {
         {
             """
             Referer: %s\r
+            \r
             """.formatted(valueAllValidChars()),
 
             Map.of(
@@ -150,40 +171,21 @@ public class HttpRequestTest4ParseHeaders {
 
   @Test(dataProvider = "validProvider")
   public void valid(String headers, Map<HttpHeaderName, Object> expected, String description) throws IOException {
-    final HttpRequest req;
-    req = HttpRequestParserY.parse(
-        test -> test.bufferSize(256, 512),
+    assertEquals(
+        parse(
+            256, 512,
 
-        iso8859("""
-        GET / HTTP/1.1\r
-        %s\
-        \r
-        """.formatted(headers))
+            iso8859(headers)
+        ),
+
+        expected
     );
-
-    for (var entry : expected.entrySet()) {
-      final HttpHeaderName name;
-      name = entry.getKey();
-
-      final Object value;
-      value = entry.getValue();
-
-      if (value instanceof String s) {
-        assertEquals(req.header(name), s);
-      }
-
-      else {
-        throw new UnsupportedOperationException("Implement me");
-      }
-    }
   }
 
   @Test(description = "name: all predefined names")
   public void namePredefined() throws IOException {
     StringBuilder in;
     in = new StringBuilder();
-
-    in.append("GET / HTTP/1.1\r\n");
 
     for (HttpHeaderNameImpl name : HttpHeaderNameImpl.VALUES) {
       if (!name.isResponseOnly() && !name.equals(HttpHeaderNameImpl.TRANSFER_ENCODING)) {
@@ -201,9 +203,8 @@ public class HttpRequestTest4ParseHeaders {
 
     in.append("x".repeat(contentLength));
 
-    final HttpRequest req;
-    req = HttpRequestParserY.parse(
-        test -> test.bufferSize(256, 512),
+    var res = parse(
+        256, 512,
 
         iso8859(in.toString())
     );
@@ -211,7 +212,7 @@ public class HttpRequestTest4ParseHeaders {
     // headers
     for (HttpHeaderNameImpl name : HttpHeaderNameImpl.VALUES) {
       if (!name.isResponseOnly() && !name.equals(HttpHeaderNameImpl.TRANSFER_ENCODING)) {
-        assertEquals(req.header(name), Integer.toString(name.index()));
+        assertEquals(res.get(name), Integer.toString(name.index()));
       }
     }
   }
@@ -242,12 +243,11 @@ public class HttpRequestTest4ParseHeaders {
       if (!nameValid[c]) {
         list.add(new Object[] {
             """
-            GET / HTTP/1.1\r
             Invalid%c: value\r
             \r
             """.formatted(c),
 
-            InvalidRequestHeaders.NAME_CHAR,
+            Invalid.NAME_CHAR,
 
             "Name contains the invalid Ox" + Integer.toHexString(c) + " character"
         });
@@ -260,13 +260,11 @@ public class HttpRequestTest4ParseHeaders {
 
     list.add(new Object[] {
         """
-        GET / HTTP/1.1\r
-        Host: www.example.com\r
         %s: x\r
         \r
         """.formatted(tooLong),
 
-        InvalidRequestHeaders.REQUEST_HEADER_FIELDS_TOO_LARGE,
+        Invalid.REQUEST_HEADER_FIELDS_TOO_LARGE,
 
         "Name is too long"
     });
@@ -291,12 +289,11 @@ public class HttpRequestTest4ParseHeaders {
       if (!valueValid[b]) {
         list.add(new Object[] {
             """
-            GET / HTTP/1.1\r
             Referer: va%clue\r
             \r
             """.formatted(b),
 
-            InvalidRequestHeaders.VALUE_CHAR,
+            Invalid.VALUE_CHAR,
 
             "Name contains the invalid Ox" + Integer.toHexString(b) + " character"
         });
@@ -306,13 +303,11 @@ public class HttpRequestTest4ParseHeaders {
     // value: request fields too large
     list.add(new Object[] {
         """
-        GET / HTTP/1.1\r
-        Host: www.example.com\r
         Referer: %s\r
         \r
         """.formatted(tooLong),
 
-        InvalidRequestHeaders.REQUEST_HEADER_FIELDS_TOO_LARGE,
+        Invalid.REQUEST_HEADER_FIELDS_TOO_LARGE,
 
         "Value is too long"
     });
@@ -324,8 +319,8 @@ public class HttpRequestTest4ParseHeaders {
   @Test(dataProvider = "invalidProvider")
   public void invalid(String headers, HttpClientException.Kind kind, String description) throws IOException {
     try {
-      HttpRequestParserY.parse(
-          test -> test.bufferSize(256, 512),
+      parse(
+          256, 512,
 
           iso8859(headers)
       );
@@ -338,32 +333,18 @@ public class HttpRequestTest4ParseHeaders {
 
   @Test(dataProvider = "validProvider")
   public void slowClient(String headers, Map<HttpHeaderName, Object> expected, String description) throws IOException {
-    final HttpRequest req;
-    req = HttpRequestParserY.parse(
-        test -> test.bufferSize(256, 512),
+    assertEquals(
+        parse(
+            256, 512,
 
-        Y.slowStream(1, iso8859("""
-        GET / HTTP/1.1\r
-        %s\
-        \r
-        """.formatted(headers)))
+            Y.slowStream(1, iso8859("""
+            %s\
+            \r
+            """.formatted(headers)))
+        ),
+
+        expected
     );
-
-    for (var entry : expected.entrySet()) {
-      final HttpHeaderName name;
-      name = entry.getKey();
-
-      final Object value;
-      value = entry.getValue();
-
-      if (value instanceof String s) {
-        assertEquals(req.header(name), s);
-      }
-
-      else {
-        throw new UnsupportedOperationException("Implement me");
-      }
-    }
   }
 
   private byte[] iso8859(String s) {
