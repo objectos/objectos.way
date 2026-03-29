@@ -32,20 +32,8 @@ final class HttpRequestParser6Headers {
     // invalid header terminator, i.e., the last '\r\n'
     TERMINATOR(HttpStatus.BAD_REQUEST),
 
-    // invalid value, e.g., 'Content-Length: two hundred bytes'
-    INVALID_CONTENT_LENGTH(HttpStatus.BAD_REQUEST),
-
-    // request include both Content-Length and Transfer-Enconding.
-    BOTH_CL_TE(HttpStatus.BAD_REQUEST),
-
     // Unexpected end of stream
     EOF(HttpStatus.BAD_REQUEST),
-
-    // 411 Length Required
-    LENGTH_REQUIRED(HttpStatus.LENGTH_REQUIRED),
-
-    // 413 Content Too Large
-    CONTENT_TOO_LARGE(HttpStatus.CONTENT_TOO_LARGE),
 
     // 431 Request Header Fields Too Large
     REQUEST_HEADER_FIELDS_TOO_LARGE(HttpStatus.REQUEST_HEADER_FIELDS_TOO_LARGE);

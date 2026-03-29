@@ -28,10 +28,7 @@ final class HttpClientException extends IOException {
       HttpRequestParser4Query.Invalid,
       HttpRequestParser5Version.Invalid,
       HttpRequestParser6Headers.Invalid,
-      HttpRequestParser.InvalidLineTerminator,
-      HttpRequestParser.InvalidRequestLine,
-      HttpRequestParser.InvalidRequestHeaders,
-      HttpRequestParser.InvalidRequestBody {
+      HttpRequestParser7Body.Invalid {
 
     byte[] message();
 

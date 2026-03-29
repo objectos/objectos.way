@@ -22,7 +22,10 @@ package objectos.http;
  * Unless otherwise specified the values returned by the methods of this
  * interface are decoded.
  */
-public sealed interface HttpRequestHeaders permits HttpRequest {
+public sealed interface HttpRequestHeaders
+    permits
+    HttpRequest,
+    HttpRequestHeadersImpl {
 
   /**
    * Returns the value of the first field line having the specified name;
