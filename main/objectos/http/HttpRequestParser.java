@@ -75,15 +75,26 @@ final class HttpRequestParser {
     final HttpRequestParser6Headers headersParser;
     headersParser = new HttpRequestParser6Headers(input);
 
-    final Map<HttpHeaderName, Object> headers;
-    headers = headersParser.parse();
+    final Map<HttpHeaderName, Object> headersMap;
+    headersMap = headersParser.parse();
 
-    // body
-    final HttpRequestParser7Body bodyParser;
-    bodyParser = new HttpRequestParser7Body(bodyFiles, bodyMemoryMax, bodySizeMax, headers, id, input);
+    final HttpRequestHeadersImpl headers;
+    headers = new HttpRequestHeadersImpl(headersMap);
 
+    // body kind
+    final HttpRequestParser7BodyMeta bodyKindParser;
+    bodyKindParser = new HttpRequestParser7BodyMeta(headers);
+
+    final HttpRequestBodyMeta bodyKind;
+    bodyKind = bodyKindParser.parse();
+
+    // body contents
     final HttpRequestBody body;
-    body = bodyParser.parse();
+    body = switch (bodyKind) {
+      case HttpRequestBodyMeta.Empty _ -> HttpRequestBodyImpl.ofNull();
+
+      case HttpRequestBodyMeta.Fixed fixed -> throw new UnsupportedOperationException("Implement me");
+    };
 
     return new HttpRequestImpl(
         method,
@@ -94,7 +105,7 @@ final class HttpRequestParser {
 
         version,
 
-        headers,
+        headersMap,
 
         body
     );

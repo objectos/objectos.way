@@ -33,7 +33,7 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class HttpRequestTest5ParseBody {
+public class HttpRequestParser8BodyCotentsTest {
 
   @Test(description = "empty: no content-length")
   public void empty01() throws IOException {

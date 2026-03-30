@@ -21,10 +21,9 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Map;
-import objectos.http.HttpRequestParser.Invalid;
 import objectos.internal.Ascii;
 
-final class HttpRequestParser7Body {
+final class HttpRequestParser8BodyContents {
 
   enum Invalid implements HttpClientException.Kind {
     // Unexpected end of stream
@@ -65,7 +64,7 @@ final class HttpRequestParser7Body {
 
   private final HttpRequestParser0Input input;
 
-  HttpRequestParser7Body(HttpExchangeBodyFiles bodyFiles, int bodyMemoryMax, long bodySizeMax, Map<HttpHeaderName, Object> headers, long id, HttpRequestParser0Input input) {
+  HttpRequestParser8BodyContents(HttpExchangeBodyFiles bodyFiles, int bodyMemoryMax, long bodySizeMax, Map<HttpHeaderName, Object> headers, long id, HttpRequestParser0Input input) {
     this.bodyFiles = bodyFiles;
 
     this.bodyMemoryMax = bodyMemoryMax;
@@ -136,7 +135,7 @@ final class HttpRequestParser7Body {
     contentType = Http.queryParamsGet(headers, HttpHeaderNameImpl.CONTENT_TYPE);
 
     final boolean parseForm;
-    parseForm = contentType != null && contentType.equalsIgnoreCase("application/x-www-form-urlencoded");
+    //    parseForm = contentType != null && contentType.equalsIgnoreCase("application/x-www-form-urlencoded");
 
     if (length <= bodyMemoryMax) {
       return parseBodyFixedMemory(length, parseForm);

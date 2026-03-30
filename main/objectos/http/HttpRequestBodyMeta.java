@@ -15,8 +15,26 @@
  */
 package objectos.http;
 
-sealed interface HttpRequestBodyKind {
+sealed interface HttpRequestBodyMeta {
 
-  record Fixed(long length) implements HttpRequestBodyKind {}
+  enum Empty implements HttpRequestBodyMeta {
+    INSTANCE;
+  }
+
+  sealed interface Type {}
+
+  enum Parse implements Type {
+    APPLICATION_FORM_URLENCODED,
+
+    NONE;
+  }
+
+  record Fixed(long length, Type type) implements HttpRequestBodyMeta {
+
+    static Fixed of(long length, Type type) {
+      return new Fixed(length, type);
+    }
+
+  }
 
 }
