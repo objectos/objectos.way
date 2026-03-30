@@ -19,7 +19,6 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 
 import module java.base;
-
 import objectos.way.Y;
 import org.testng.Assert;
 import org.testng.annotations.Test;
