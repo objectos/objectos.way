@@ -27,12 +27,12 @@ import org.testng.annotations.Test;
 
 public class HttpRequestParser5VersionTest {
 
-  private HttpVersion parse(int initial, int max, Object... data) throws IOException {
+  private HttpVersion parse(Object... data) throws IOException {
     final Socket socket;
     socket = Y.socket(data);
 
     final HttpRequestParser0Input input;
-    input = HttpRequestParser0Input.of(initial, max, socket);
+    input = HttpRequestParser0Input.of(512, socket);
 
     final HttpRequestParser5Version parser;
     parser = new HttpRequestParser5Version(input);
@@ -52,8 +52,6 @@ public class HttpRequestParser5VersionTest {
   public void versionValid(String line, HttpVersion expected, String description) throws IOException {
     assertEquals(
         parse(
-            256, 512,
-
             line
         ),
 
@@ -69,7 +67,7 @@ public class HttpRequestParser5VersionTest {
         {"HTTP/1.\r\n", Invalid.VERSION, "Almost valid"},
         {"HTTP/.1\r\n", Invalid.VERSION, "Almost valid"},
         {"HTTP/\r\n", Invalid.VERSION, "Almost valid"},
-        {"HTTP/1.11", Invalid.VERSION, "Almost valid"},
+        {"HTTP/1.x", Invalid.VERSION, "Almost valid"},
         {"HTTP/1.1", Invalid.EOF, "Almost valid... EOF"},
         {"HTTP/1.1\n", Invalid.LINE_TERMINATOR, "Almost valid... line terminator"},
         {"HTTP/1.1\r\t", Invalid.LINE_TERMINATOR, "Almost valid... line terminator"}
@@ -81,8 +79,6 @@ public class HttpRequestParser5VersionTest {
   public void invalid(String line, Invalid kind, String description) throws IOException {
     try {
       parse(
-          256, 512,
-
           line
       );
 
@@ -106,8 +102,6 @@ public class HttpRequestParser5VersionTest {
   public void versionNotSupported(String line, String description) throws IOException {
     try {
       parse(
-          256, 512,
-
           line
       );
 
@@ -121,8 +115,6 @@ public class HttpRequestParser5VersionTest {
   public void slowClientValid(String line, HttpVersion expected, String description) throws IOException {
     assertEquals(
         parse(
-            256, 512,
-
             Y.slowStream(1, line)
         ),
 

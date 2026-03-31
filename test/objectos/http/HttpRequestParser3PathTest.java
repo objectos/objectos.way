@@ -32,12 +32,12 @@ import org.testng.annotations.Test;
 @SuppressWarnings("exports")
 public class HttpRequestParser3PathTest {
 
-  private String parse(int initial, int max, Object... data) throws IOException {
+  private String parse(Object... data) throws IOException {
     final Socket socket;
     socket = Y.socket(data);
 
     final HttpRequestParser0Input input;
-    input = HttpRequestParser0Input.of(initial, max, socket);
+    input = HttpRequestParser0Input.of(512, socket);
 
     final HttpRequestParser3Path parser;
     parser = new HttpRequestParser3Path(input);
@@ -96,8 +96,6 @@ public class HttpRequestParser3PathTest {
   public void pathValid(String raw, String path, String description) throws IOException {
     assertEquals(
         parse(
-            256, 512,
-
             iso8859("%s HTTP/1.1".formatted(raw))
         ),
 
@@ -166,8 +164,6 @@ public class HttpRequestParser3PathTest {
       String description) throws IOException {
     try {
       parse(
-          256, 512,
-
           iso8859(request)
       );
 
@@ -223,8 +219,6 @@ public class HttpRequestParser3PathTest {
   public void percentValid(String raw, String path, String description) throws IOException {
     assertEquals(
         parse(
-            256, 512,
-
             iso8859("%s HTTP/1.1".formatted(raw))
         ),
 
@@ -275,8 +269,6 @@ public class HttpRequestParser3PathTest {
   public void percentInvalid(String raw, String description) throws IOException {
     try {
       parse(
-          256, 512,
-
           iso8859("%s HTTP/1.1".formatted(raw))
       );
 
@@ -307,8 +299,6 @@ public class HttpRequestParser3PathTest {
   public void slowClient(String raw, String expected, String description) throws IOException {
     assertEquals(
         parse(
-            256, 512,
-
             Y.slowStream(1, iso8859("%s HTTP/1.1".formatted(raw)))
         ),
 
@@ -323,8 +313,6 @@ public class HttpRequestParser3PathTest {
 
     try {
       parse(
-          256, 512,
-
           iso8859("/entity/%s HTTP/1.1".formatted(veryLongId))
       );
 
@@ -341,8 +329,6 @@ public class HttpRequestParser3PathTest {
 
     try {
       parse(
-          256, 512,
-
           iso8859("/index.h"),
 
           ex

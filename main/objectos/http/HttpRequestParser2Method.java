@@ -80,7 +80,14 @@ final class HttpRequestParser2Method {
     final byte[] ascii;
     ascii = method.ascii;
 
-    if (!input.matches(ascii, offset)) {
+    for (int idx = offset; idx < ascii.length; idx++) {
+      final byte b;
+      b = input.readByte();
+
+      if (ascii[idx] == b) {
+        continue;
+      }
+
       throw HttpClientException.of(Invalid.METHOD);
     }
 

@@ -26,12 +26,12 @@ import org.testng.annotations.Test;
 
 public class HttpRequestParser2MethodTest {
 
-  private HttpMethod parse(int initial, int max, Object... data) throws IOException {
+  private HttpMethod parse(Object... data) throws IOException {
     final Socket socket;
     socket = Y.socket(data);
 
     final HttpRequestParser0Input input;
-    input = HttpRequestParser0Input.of(initial, max, socket);
+    input = HttpRequestParser0Input.of(512, socket);
 
     final HttpRequestParser2Method parser;
     parser = new HttpRequestParser2Method(input);
@@ -52,8 +52,6 @@ public class HttpRequestParser2MethodTest {
 
     assertEquals(
         parse(
-            256, 512,
-
             """
             %s /index.html HTTP/1.1\r
             Host: www.example.com\r
@@ -73,8 +71,6 @@ public class HttpRequestParser2MethodTest {
 
     try {
       parse(
-          256, 512,
-
           """
           %s /index.html HTTP/1.1\r
           Host: www.example.com\r
@@ -96,8 +92,6 @@ public class HttpRequestParser2MethodTest {
 
     assertEquals(
         parse(
-            256, 512,
-
             Y.slowStream(1, """
             %s /index.html HTTP/1.1\r
             Host: www.example.com\r
@@ -135,8 +129,6 @@ public class HttpRequestParser2MethodTest {
   public void badRequest(String request, String description) throws IOException {
     try {
       parse(
-          2 /*force many buffer resizes*/, 512,
-
           request
       );
 
@@ -158,8 +150,6 @@ public class HttpRequestParser2MethodTest {
   public void ioException(String request, IOException ex, String description) {
     try {
       parse(
-          256, 512,
-
           request,
           ex
       );
@@ -173,9 +163,7 @@ public class HttpRequestParser2MethodTest {
   @Test
   public void eof01() throws IOException {
     try {
-      parse(
-          256, 512
-      );
+      parse();
 
       Assert.fail("It should have thrown");
     } catch (HttpClientException expected) {

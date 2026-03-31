@@ -19,12 +19,16 @@ import module java.base;
 
 final class HttpRequestParser {
 
+  @SuppressWarnings("unused")
   private final HttpExchangeBodyFiles bodyFiles;
 
+  @SuppressWarnings("unused")
   private final int bodyMemoryMax;
 
+  @SuppressWarnings("unused")
   private final long bodySizeMax;
 
+  @SuppressWarnings("unused")
   private final long id;
 
   private final HttpRequestParser0Input input;

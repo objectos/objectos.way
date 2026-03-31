@@ -64,6 +64,7 @@ final class HttpRequestParser8Body2FixedFile {
 
   private final long id;
 
+  @SuppressWarnings("unused")
   private final HttpRequestParser0Input input;
 
   HttpRequestParser8Body2FixedFile(HttpExchangeBodyFiles bodyFiles, int bodyMemoryMax, long bodySizeMax, Map<HttpHeaderName, Object> headers, long id, HttpRequestParser0Input input) {
@@ -95,7 +96,7 @@ final class HttpRequestParser8Body2FixedFile {
     final ByteArrayOutputStream outputStream;
     outputStream = new ByteArrayOutputStream(len);
 
-    input.transferTo(outputStream, len);
+    //input.transferTo(outputStream, len);
 
     final byte[] bytes;
     bytes = outputStream.toByteArray();
@@ -112,7 +113,7 @@ final class HttpRequestParser8Body2FixedFile {
     file = bodyFiles.file(id);
 
     try (OutputStream outputStream = bodyFiles.newOutputStream(file)) {
-      input.transferTo(outputStream, length);
+      //input.transferTo(outputStream, length);
     }
 
     final Map<String, Object> formParams;

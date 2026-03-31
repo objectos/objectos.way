@@ -31,12 +31,12 @@ import org.testng.annotations.Test;
 
 public class HttpRequestParser6HeadersTest {
 
-  private Map<HttpHeaderName, Object> parse(int initial, int max, Object... data) throws IOException {
+  private Map<HttpHeaderName, Object> parse(Object... data) throws IOException {
     final Socket socket;
     socket = Y.socket(data);
 
     final HttpRequestParser0Input input;
-    input = HttpRequestParser0Input.of(initial, max, socket);
+    input = HttpRequestParser0Input.of(256, socket);
 
     final HttpRequestParser6Headers parser;
     parser = new HttpRequestParser6Headers(input);
@@ -173,8 +173,6 @@ public class HttpRequestParser6HeadersTest {
   public void valid(String headers, Map<HttpHeaderName, Object> expected, String description) throws IOException {
     assertEquals(
         parse(
-            256, 512,
-
             iso8859(headers)
         ),
 
@@ -204,8 +202,6 @@ public class HttpRequestParser6HeadersTest {
     in.append("x".repeat(contentLength));
 
     var res = parse(
-        256, 512,
-
         iso8859(in.toString())
     );
 
@@ -320,8 +316,6 @@ public class HttpRequestParser6HeadersTest {
   public void invalid(String headers, HttpClientException.Kind kind, String description) throws IOException {
     try {
       parse(
-          256, 512,
-
           iso8859(headers)
       );
 
@@ -335,8 +329,6 @@ public class HttpRequestParser6HeadersTest {
   public void slowClient(String headers, Map<HttpHeaderName, Object> expected, String description) throws IOException {
     assertEquals(
         parse(
-            256, 512,
-
             Y.slowStream(1, iso8859("""
             %s\
             \r

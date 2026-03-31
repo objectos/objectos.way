@@ -70,12 +70,8 @@ final class HttpRequestParser5Version {
     }
   }
 
-  private static final byte[] HTTP = "HTTP/".getBytes(StandardCharsets.US_ASCII);
-
   private HttpVersion parse0() throws IOException {
-    if (!input.matches(HTTP, 0)) {
-      throw HttpClientException.of(Invalid.VERSION);
-    }
+    parseHttp();
 
     final int major;
     major = parseMajor();
@@ -87,6 +83,21 @@ final class HttpRequestParser5Version {
       return HttpVersion.HTTP_1_1;
     } else {
       throw HttpClientException.of(Invalid.HTTP_VERSION_NOT_SUPPORTED);
+    }
+  }
+
+  private static final byte[] HTTP = "HTTP/".getBytes(StandardCharsets.US_ASCII);
+
+  private void parseHttp() throws IOException {
+    for (int idx = 0; idx < HTTP.length; idx++) {
+      final byte b;
+      b = input.readByte();
+
+      if (HTTP[idx] == b) {
+        continue;
+      }
+
+      throw HttpClientException.of(Invalid.VERSION);
     }
   }
 

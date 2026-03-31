@@ -26,12 +26,12 @@ import org.testng.annotations.Test;
 
 public class HttpRequestParser1UrlDecoderTest {
 
-  private String decode(int initial, int max, int length, Object... data) throws DecodeException, IOException {
+  private String decode(int initial, int length, Object... data) throws DecodeException, IOException {
     final Socket socket;
     socket = Y.socket(data);
 
     final HttpRequestParser0Input input;
-    input = HttpRequestParser0Input.of(initial, max, socket);
+    input = HttpRequestParser0Input.of(initial, socket);
 
     assertEquals(input.readByte(), '%');
 
@@ -65,7 +65,7 @@ public class HttpRequestParser1UrlDecoderTest {
 
   @Test(dataProvider = "validProvider")
   public void valid(String raw, String path, String description) throws DecodeException, IOException {
-    assertEquals(decode(128, 256, path.length(), raw), path);
+    assertEquals(decode(256, path.length(), raw), path);
   }
 
 }

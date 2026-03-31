@@ -27,12 +27,12 @@ import org.testng.annotations.Test;
 
 public class HttpRequestParser4QueryTest {
 
-  private Map<String, Object> parse(int initial, int max, Object... data) throws IOException {
+  private Map<String, Object> parse(Object... data) throws IOException {
     final Socket socket;
     socket = Y.socket(data);
 
     final HttpRequestParser0Input input;
-    input = HttpRequestParser0Input.of(initial, max, socket);
+    input = HttpRequestParser0Input.of(512, socket);
 
     input.readByte(); // '?' or other
 
@@ -45,8 +45,6 @@ public class HttpRequestParser4QueryTest {
   @Test
   public void noQuery() throws IOException {
     var res = parse(
-        256, 512,
-
         " HTTP/1.1"
     );
 
@@ -63,8 +61,6 @@ public class HttpRequestParser4QueryTest {
   @Test(dataProvider = "queryValidProvider")
   public void queryValid(String raw, Map<String, Object> expected, String description) throws IOException {
     var res = parse(
-        256, 512,
-
         "?%s HTTP/1.1".formatted(raw)
     );
 
@@ -120,8 +116,6 @@ public class HttpRequestParser4QueryTest {
   public void queryInvalid(String raw, String description) throws IOException {
     try {
       parse(
-          256, 512,
-
           "?%s HTTP/1.1".formatted(raw).getBytes(StandardCharsets.ISO_8859_1)
       );
 
@@ -156,8 +150,6 @@ public class HttpRequestParser4QueryTest {
   @Test(dataProvider = "percentValidProvider")
   public void percentValid(String raw, Map<String, Object> expected, String description) throws IOException {
     var res = parse(
-        256, 512,
-
         "?%s HTTP/1.1".formatted(raw)
     );
 
@@ -224,8 +216,6 @@ public class HttpRequestParser4QueryTest {
   public void percentInvalid(String raw, String description) throws IOException {
     try {
       parse(
-          256, 512,
-
           "?%s HTTP/1.1".formatted(raw).getBytes(StandardCharsets.ISO_8859_1)
       );
 
@@ -252,8 +242,6 @@ public class HttpRequestParser4QueryTest {
 
     try {
       parse(
-          256, 512,
-
           req,
 
           ex
@@ -272,8 +260,6 @@ public class HttpRequestParser4QueryTest {
 
     try {
       parse(
-          256, 512,
-
           "?hash=%s HTTP/1.1".formatted(veryLongValue)
       );
 

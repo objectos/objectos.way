@@ -28,6 +28,7 @@ final class HttpRequestParserY {
 
   private long bodySizeMax = 1024;
 
+  @SuppressWarnings("unused")
   private int bufferSizeInitial = 128;
 
   private int bufferSizeMax = 256;
@@ -66,7 +67,7 @@ final class HttpRequestParserY {
 
   private HttpRequest parse0() throws IOException {
     final HttpRequestParser0Input input;
-    input = HttpRequestParser0Input.of(bufferSizeInitial, bufferSizeMax, socket);
+    input = HttpRequestParser0Input.of(bufferSizeMax, socket);
 
     final HttpRequestParser parser;
     parser = new HttpRequestParser(bodyFiles, bodyMemoryMax, bodySizeMax, 0, input);
