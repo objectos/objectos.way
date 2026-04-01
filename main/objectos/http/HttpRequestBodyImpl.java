@@ -15,11 +15,8 @@
  */
 package objectos.http;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -27,49 +24,17 @@ import java.util.Set;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 
-record HttpRequestBodyImpl(Kind kind, Object value, Map<String, Object> formParams)
+record HttpRequestBodyImpl(HttpRequestBodyData data, Map<String, Object> formParams)
     implements
     HttpRequestBody {
 
-  enum Kind {
-    NULL,
-
-    BYTE_ARRAY,
-
-    PATH;
-  }
-
-  private static final HttpRequestBody NULL = new HttpRequestBodyImpl(Kind.NULL, null, null);
-
-  public static HttpRequestBody of(byte[] bytes, Map<String, Object> formParams) {
-    return new HttpRequestBodyImpl(Kind.BYTE_ARRAY, bytes, formParams);
-  }
-
-  public static HttpRequestBody of(Path file, Map<String, Object> formParams) {
-    return new HttpRequestBodyImpl(Kind.PATH, file, formParams);
-  }
-
-  public static HttpRequestBody ofNull() {
-    return NULL;
-  }
-
   @Override
   public final InputStream bodyInputStream() throws IOException {
-    return switch (kind) {
-      case NULL -> InputStream.nullInputStream();
-
-      case BYTE_ARRAY -> new ByteArrayInputStream((byte[]) value);
-
-      case PATH -> Files.newInputStream((Path) value);
-    };
+    return data.open();
   }
 
   public final void close() throws IOException {
-    switch (kind) {
-      case PATH -> Files.delete((Path) value);
-
-      default -> {}
-    }
+    data.close();
   }
 
   @Override

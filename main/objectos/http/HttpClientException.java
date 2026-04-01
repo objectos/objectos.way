@@ -29,7 +29,8 @@ final class HttpClientException extends IOException {
       HttpRequestParser5Version.Invalid,
       HttpRequestParser6Headers.Invalid,
       HttpRequestParser7BodyMeta.Invalid,
-      HttpRequestParser8Body2FixedFile.Invalid {
+      HttpRequestParser8BodyData.Invalid,
+      HttpRequestParser9BodyType0Form.Invalid {
 
     byte[] message();
 

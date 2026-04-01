@@ -23,9 +23,9 @@ final class HttpRequestParser1UrlDecoder {
   @SuppressWarnings("serial")
   static final class DecodeException extends Exception {}
 
-  private final HttpRequestParser0Input input;
+  private final InputStream input;
 
-  HttpRequestParser1UrlDecoder(HttpRequestParser0Input input) {
+  HttpRequestParser1UrlDecoder(InputStream input) {
     this.input = input;
   }
 
@@ -152,8 +152,15 @@ final class HttpRequestParser1UrlDecoder {
   }
 
   private byte readPerc() throws DecodeException, IOException {
+    final int c;
+    c = input.read();
+
+    if (c < 0) {
+      throw new DecodeException();
+    }
+
     final byte b;
-    b = input.readByte();
+    b = (byte) c;
 
     final byte perc;
     perc = Bytes.fromHexDigit(b);
@@ -166,10 +173,10 @@ final class HttpRequestParser1UrlDecoder {
   }
 
   private void readPercSep() throws DecodeException, IOException {
-    final byte b;
-    b = input.readByte();
+    final int c;
+    c = input.read();
 
-    if (b != '%') {
+    if (c != '%') {
       throw new DecodeException();
     }
   }

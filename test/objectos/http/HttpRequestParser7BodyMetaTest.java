@@ -40,7 +40,7 @@ public class HttpRequestParser7BodyMetaTest {
         {
             Map.of(),
 
-            HttpRequestBodyMeta.Empty.INSTANCE,
+            HttpRequestBodyMeta.ofEmpty(),
             "empty: no content-length"
         },
         {
@@ -48,7 +48,7 @@ public class HttpRequestParser7BodyMetaTest {
                 HttpHeaderName.HOST, "www.example.com"
             ),
 
-            HttpRequestBodyMeta.Empty.INSTANCE,
+            HttpRequestBodyMeta.ofEmpty(),
             "empty: no content-length"
         },
         {
@@ -57,7 +57,7 @@ public class HttpRequestParser7BodyMetaTest {
                 HttpHeaderName.CONTENT_LENGTH, "0"
             ),
 
-            HttpRequestBodyMeta.Empty.INSTANCE,
+            HttpRequestBodyMeta.ofEmpty(),
             "empty: content-length=0"
         },
         {
@@ -66,7 +66,7 @@ public class HttpRequestParser7BodyMetaTest {
                 HttpHeaderName.CONTENT_LENGTH, "123"
             ),
 
-            HttpRequestBodyMeta.Fixed.of(123, HttpRequestBodyMeta.Parse.NONE),
+            HttpRequestBodyMeta.of(123, HttpRequestBodyMeta.TypeKind.NONE),
             "fixed: no type"
         },
         {
@@ -75,7 +75,7 @@ public class HttpRequestParser7BodyMetaTest {
                 HttpHeaderName.CONTENT_LENGTH, "9223372036854775807"
             ),
 
-            HttpRequestBodyMeta.Fixed.of(Long.MAX_VALUE, HttpRequestBodyMeta.Parse.NONE),
+            HttpRequestBodyMeta.of(Long.MAX_VALUE, HttpRequestBodyMeta.TypeKind.NONE),
             "fixed: long max value"
         },
         {
@@ -85,7 +85,7 @@ public class HttpRequestParser7BodyMetaTest {
                 HttpHeaderName.CONTENT_TYPE, "text/plain"
             ),
 
-            HttpRequestBodyMeta.Fixed.of(47890, HttpRequestBodyMeta.Parse.NONE),
+            HttpRequestBodyMeta.of(47890, HttpRequestBodyMeta.TypeKind.NONE),
             "fixed: with content-type but no parsing"
         },
         {
@@ -95,7 +95,7 @@ public class HttpRequestParser7BodyMetaTest {
                 HttpHeaderName.CONTENT_TYPE, "application/x-www-form-urlencoded"
             ),
 
-            HttpRequestBodyMeta.Fixed.of(1209830, HttpRequestBodyMeta.Parse.APPLICATION_FORM_URLENCODED),
+            HttpRequestBodyMeta.of(1209830, HttpRequestBodyMeta.TypeKind.APPLICATION_FORM_URLENCODED),
             "fixed: form"
         },
         {
@@ -105,7 +105,7 @@ public class HttpRequestParser7BodyMetaTest {
                 HttpHeaderName.CONTENT_TYPE, "application/x-WWW-form-urlencoded"
             ),
 
-            HttpRequestBodyMeta.Fixed.of(1209830, HttpRequestBodyMeta.Parse.APPLICATION_FORM_URLENCODED),
+            HttpRequestBodyMeta.of(1209830, HttpRequestBodyMeta.TypeKind.APPLICATION_FORM_URLENCODED),
             "fixed: form no standard but ok..."
         }
     };

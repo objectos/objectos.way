@@ -86,13 +86,13 @@ final class HttpRequestParser7BodyMeta {
       len = parseContentLength(contentLength);
 
       if (len == 0) {
-        return HttpRequestBodyMeta.Empty.INSTANCE;
+        return HttpRequestBodyMeta.ofEmpty();
       }
 
       final HttpRequestBodyMeta.Type type;
       type = parseContentType(contentType);
 
-      return new HttpRequestBodyMeta.Fixed(len, type);
+      return HttpRequestBodyMeta.of(len, type);
 
     }
 
@@ -104,7 +104,7 @@ final class HttpRequestParser7BodyMeta {
       throw HttpClientException.of(Invalid.NOT_IMPLEMENTED);
     }
 
-    return HttpRequestBodyMeta.Empty.INSTANCE;
+    return HttpRequestBodyMeta.ofEmpty();
   }
 
   private long parseContentLength(String contentLength) throws HttpClientException {
@@ -163,10 +163,10 @@ final class HttpRequestParser7BodyMeta {
 
   private HttpRequestBodyMeta.Type parseContentType(String contentType) {
     if ("application/x-www-form-urlencoded".equalsIgnoreCase(contentType)) {
-      return HttpRequestBodyMeta.Parse.APPLICATION_FORM_URLENCODED;
+      return HttpRequestBodyMeta.TypeKind.APPLICATION_FORM_URLENCODED;
     }
 
-    return HttpRequestBodyMeta.Parse.NONE;
+    return HttpRequestBodyMeta.TypeKind.NONE;
   }
 
 }

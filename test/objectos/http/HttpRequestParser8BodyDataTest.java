@@ -25,45 +25,70 @@ import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import objectos.internal.Util;
+import java.util.function.Consumer;
 import objectos.way.Y;
 import org.testng.Assert;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class HttpRequestParser8BodyCotentsTest {
+public class HttpRequestParser8BodyDataTest {
 
-  @Test(enabled = false, description = "empty: no content-length")
-  public void empty01() throws IOException {
-    final HttpRequest req;
-    req = HttpRequestParserY.parse(
-        test -> test.bufferSize(256, 512),
+  private static final class Cfg {
+    HttpExchangeBodyFiles bodyFiles;
 
-        iso8859("""
-        GET / HTTP/1.1\r
-        Host: www.example.com\r
-        Connection: close\r
-        \r
-        """)
-    );
+    int bodyMemoryMax;
 
-    assertEquals(toByteArray(req), Util.EMPTY_BYTE_ARRAY);
+    long bodySizeMax;
+
+    long id = 0;
+
+    HttpRequestParser0Input input;
+
+    HttpRequestBodyMeta.Data meta;
+
+    static Consumer<? super Cfg> of(Consumer<? super Cfg> config) {
+      return config;
+    }
+
+    final HttpRequestParser8BodyData build() {
+      return new HttpRequestParser8BodyData(bodyFiles, bodyMemoryMax, bodySizeMax, id, input, meta);
+    }
   }
 
-  @Test(enabled = false, description = "empty: content-length=0")
-  public void empty02() throws IOException {
-    final HttpRequest req;
-    req = HttpRequestParserY.parse(
-        test -> test.bufferSize(256, 512),
+  private HttpRequestBodyData parse(Consumer<? super Cfg> config) throws IOException {
+    final Cfg c;
+    c = new Cfg();
 
-        iso8859("""
-        GET / HTTP/1.1\r
-        Host: www.example.com\r
-        Content-Length: 0\r
-        \r
-        """)
+    config.accept(c);
+
+    final HttpRequestParser8BodyData parser;
+    parser = c.build();
+
+    return parser.parse();
+  }
+
+  @DataProvider
+  public Object[][] validProvider() {
+    return new Object[][] {
+        {
+            Cfg.of(cfg -> {
+              cfg.meta = HttpRequestBodyMeta.DataKind.EMPTY;
+            }),
+
+            HttpRequestBodyData.ofNull(),
+            "empty"
+        }
+    };
+  }
+
+  @SuppressWarnings("exports")
+  @Test(dataProvider = "validProvider")
+  public void valid(Consumer<? super Cfg> config, HttpRequestBodyData expected, String description) throws IOException {
+    assertEquals(
+        parse(config),
+
+        expected
     );
-
-    assertEquals(toByteArray(req), Util.EMPTY_BYTE_ARRAY);
   }
 
   @Test(enabled = false, description = "buffer: no read")
@@ -505,7 +530,7 @@ public class HttpRequestParser8BodyCotentsTest {
   }
 
   /*
-  
+
   @DataProvider
   public Object[][] badRequestProvider() {
     return new Object[][] {
@@ -519,12 +544,12 @@ public class HttpRequestParser8BodyCotentsTest {
             \r
             Uh-Oh
             """,
-  
+
             InvalidRequestHeaders.BOTH_CL_TE,
-  
+
             "request contains both transfer-encoding and content-length"
         },
-  
+
         {
             """
             POST / HTTP/1.1\r
@@ -534,12 +559,12 @@ public class HttpRequestParser8BodyCotentsTest {
             \r
             Uh-Oh
             """,
-  
+
             InvalidRequestHeaders.INVALID_CONTENT_LENGTH,
-  
+
             "request contains an invalid content-length"
         },
-  
+
         {
             """
             POST / HTTP/1.1\r
@@ -548,12 +573,12 @@ public class HttpRequestParser8BodyCotentsTest {
             \r
             Uh-Oh
             """,
-  
+
             InvalidRequestHeaders.LENGTH_REQUIRED,
-  
+
             "request requires content-length"
         },
-  
+
         {
             """
             POST / HTTP/1.1\r
@@ -562,12 +587,12 @@ public class HttpRequestParser8BodyCotentsTest {
             Content-Length: 9223372036854775808\r
             \r
             """,
-  
+
             InvalidRequestHeaders.CONTENT_TOO_LARGE,
-  
+
             "Content-Length unsigned long overflow"
         },
-  
+
         {
             """
             POST / HTTP/1.1\r
@@ -576,15 +601,15 @@ public class HttpRequestParser8BodyCotentsTest {
             Content-Length: 65\r
             \r
             """,
-  
+
             InvalidRequestHeaders.CONTENT_TOO_LARGE,
-  
+
             "Content-Length exceeds configured limit"
         }
-  
+
     };
   }
-
+  
   */
 
   @SuppressWarnings("exports")

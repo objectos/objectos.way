@@ -17,7 +17,7 @@ package objectos.http;
 
 import module java.base;
 
-final class HttpRequestParser0Input {
+final class HttpRequestParser0Input extends InputStream {
 
   @SuppressWarnings("serial")
   static final class Eof extends IOException {}
@@ -59,37 +59,17 @@ final class HttpRequestParser0Input {
     return bufferIndex;
   }
 
-  public final void ensureBuffer() throws IOException {
-    final int readable;
-    readable = bufferLimit - bufferIndex;
+  public final void bufferTo(OutputStream out, int len) throws IOException {
+    final int nextIndex;
+    nextIndex = bufferIndex + len;
 
-    if (readable > 0) {
-      return;
+    if (nextIndex > bufferLimit) {
+      throw new IllegalArgumentException("length will overflow bufferIndex");
     }
 
-    if (readable == 0) {
-      int writableLength;
-      writableLength = buffer.length - bufferLimit;
+    out.write(buffer, bufferIndex, len);
 
-      if (writableLength == 0) {
-        throw new Overflow();
-      }
-
-      final int bytesRead;
-      bytesRead = inputStream.read(buffer, bufferLimit, writableLength);
-
-      if (bytesRead < 0) {
-        throw new Eof();
-      }
-
-      assert bytesRead != 0 : "InputStream.read should not return 0 when writableLength != 0";
-
-      bufferLimit += bytesRead;
-
-      return;
-    }
-
-    throw new IllegalStateException("readable bytes < 0");
+    bufferIndex = nextIndex;
   }
 
   public final String makeStr() {
@@ -123,10 +103,46 @@ final class HttpRequestParser0Input {
     return buffer[bufferIndex - 1];
   }
 
+  @Override
+  public final int read() throws IOException {
+    try {
+      final byte b;
+      b = readByte();
+
+      return Byte.toUnsignedInt(b);
+    } catch (Eof _) {
+      return -1;
+    }
+  }
+
   public final byte readByte() throws IOException {
     ensureBuffer();
 
     return buffer[bufferIndex++];
+  }
+
+  public final int readForBody() throws IOException {
+    final int buffered;
+    buffered = bufferLimit - bufferIndex;
+
+    if (buffered > 0) {
+      return buffered;
+    }
+
+    if (buffered == 0) {
+      final int read;
+      read = inputStream.read(buffer, 0, buffer.length);
+
+      if (read < 0) {
+        throw new Eof();
+      }
+
+      bufferIndex = 0;
+
+      return bufferLimit = read;
+    }
+
+    throw new IllegalStateException("buffered bytes < 0");
   }
 
   public final byte readTable(byte[] table, HttpClientException.Kind kind) throws IOException {
@@ -153,6 +169,39 @@ final class HttpRequestParser0Input {
     length = endIndex - startIndex;
 
     return new String(buffer, startIndex, length, StandardCharsets.US_ASCII);
+  }
+
+  private void ensureBuffer() throws IOException {
+    final int readable;
+    readable = bufferLimit - bufferIndex;
+
+    if (readable > 0) {
+      return;
+    }
+
+    if (readable == 0) {
+      final int writableLength;
+      writableLength = buffer.length - bufferLimit;
+
+      if (writableLength == 0) {
+        throw new Overflow();
+      }
+
+      final int bytesRead;
+      bytesRead = inputStream.read(buffer, bufferLimit, writableLength);
+
+      if (bytesRead < 0) {
+        throw new Eof();
+      }
+
+      assert bytesRead != 0 : "InputStream.read should not return 0 when writableLength != 0";
+
+      bufferLimit += bytesRead;
+
+      return;
+    }
+
+    throw new IllegalStateException("readable bytes < 0");
   }
 
 }

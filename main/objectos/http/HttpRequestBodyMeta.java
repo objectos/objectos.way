@@ -15,26 +15,35 @@
  */
 package objectos.http;
 
-sealed interface HttpRequestBodyMeta {
+record HttpRequestBodyMeta(Data data, Type type) {
 
-  enum Empty implements HttpRequestBodyMeta {
-    INSTANCE;
+  sealed interface Data {}
+
+  enum DataKind implements Data {
+    EMPTY;
   }
+
+  record Fixed(long length) implements Data {}
 
   sealed interface Type {}
 
-  enum Parse implements Type {
+  enum TypeKind implements Type {
     APPLICATION_FORM_URLENCODED,
 
     NONE;
   }
 
-  record Fixed(long length, Type type) implements HttpRequestBodyMeta {
+  private static final HttpRequestBodyMeta EMPTY = new HttpRequestBodyMeta(DataKind.EMPTY, TypeKind.NONE);
 
-    static Fixed of(long length, Type type) {
-      return new Fixed(length, type);
-    }
+  public static HttpRequestBodyMeta of(long length, Type type) {
+    final Fixed fixed;
+    fixed = new Fixed(length);
 
+    return new HttpRequestBodyMeta(fixed, type);
+  }
+
+  public static HttpRequestBodyMeta ofEmpty() {
+    return EMPTY;
   }
 
 }

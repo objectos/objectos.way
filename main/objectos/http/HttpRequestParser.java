@@ -19,16 +19,12 @@ import module java.base;
 
 final class HttpRequestParser {
 
-  @SuppressWarnings("unused")
   private final HttpExchangeBodyFiles bodyFiles;
 
-  @SuppressWarnings("unused")
   private final int bodyMemoryMax;
 
-  @SuppressWarnings("unused")
   private final long bodySizeMax;
 
-  @SuppressWarnings("unused")
   private final long id;
 
   private final HttpRequestParser0Input input;
@@ -85,20 +81,50 @@ final class HttpRequestParser {
     final HttpRequestHeadersImpl headers;
     headers = new HttpRequestHeadersImpl(headersMap);
 
-    // body kind
-    final HttpRequestParser7BodyMeta bodyKindParser;
-    bodyKindParser = new HttpRequestParser7BodyMeta(headers);
+    // body meta
+    final HttpRequestParser7BodyMeta bodyMetaParser;
+    bodyMetaParser = new HttpRequestParser7BodyMeta(headers);
 
-    final HttpRequestBodyMeta bodyKind;
-    bodyKind = bodyKindParser.parse();
+    final HttpRequestBodyMeta bodyMeta;
+    bodyMeta = bodyMetaParser.parse();
 
-    // body contents
-    final HttpRequestBody body;
-    body = switch (bodyKind) {
-      case HttpRequestBodyMeta.Empty _ -> HttpRequestBodyImpl.ofNull();
+    // body data
+    final HttpRequestParser8BodyData bodyDataParser;
+    bodyDataParser = new HttpRequestParser8BodyData(
+        bodyFiles,
 
-      case HttpRequestBodyMeta.Fixed fixed -> throw new UnsupportedOperationException("Implement me");
+        bodyMemoryMax,
+
+        bodySizeMax,
+
+        id,
+
+        input,
+
+        bodyMeta.data()
+    );
+
+    final HttpRequestBodyData bodyData;
+    bodyData = bodyDataParser.parse();
+
+    // body form
+    final Map<String, Object> formParams;
+    formParams = switch (bodyMeta.type()) {
+      case HttpRequestBodyMeta.TypeKind.APPLICATION_FORM_URLENCODED -> {
+        try (InputStream in = bodyData.open()) {
+          final HttpRequestParser9BodyType0Form parser;
+          parser = new HttpRequestParser9BodyType0Form(in);
+
+          yield parser.parse();
+        }
+      }
+
+      default -> Map.of();
     };
+
+    // body final
+    final HttpRequestBodyImpl body;
+    body = new HttpRequestBodyImpl(bodyData, formParams);
 
     return new HttpRequestImpl(
         method,
