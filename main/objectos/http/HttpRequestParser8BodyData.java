@@ -26,6 +26,9 @@ final class HttpRequestParser8BodyData {
   private static final byte[] MESSAGE = "Invalid request headers.\n".getBytes(StandardCharsets.US_ASCII);
 
   enum Invalid implements HttpClientException.Kind {
+    // EOF while reading body
+    EOF(HttpStatus.BAD_REQUEST),
+
     // 413 Content Too Large
     CONTENT_TOO_LARGE(HttpStatus.CONTENT_TOO_LARGE);
 
@@ -73,6 +76,14 @@ final class HttpRequestParser8BodyData {
   }
 
   public final HttpRequestBodyData parse() throws IOException {
+    try {
+      return parse0();
+    } catch (HttpRequestParser0Input.Eof e) {
+      throw HttpClientException.of(Invalid.EOF, e);
+    }
+  }
+
+  private HttpRequestBodyData parse0() throws IOException {
     return switch (meta) {
       case HttpRequestBodyMeta.DataKind.EMPTY -> HttpRequestBodyData.ofNull();
 
