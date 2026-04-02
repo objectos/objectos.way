@@ -65,7 +65,7 @@ final class HttpRequestParser4Query {
 
   private final HttpRequestParser0Input input;
 
-  private Map<String, Object> params;
+  private Map<String, Object> params = Map.of();
 
   private HttpRequestParser1UrlDecoder urlDecoder;
 
@@ -398,7 +398,7 @@ final class HttpRequestParser4Query {
   }
 
   private void add(String name, String value) {
-    if (params == null) {
+    if (params.isEmpty()) {
       params = new HashMap<>();
     }
 

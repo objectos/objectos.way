@@ -161,7 +161,7 @@ final class HttpRequestParser9BodyType0Form {
         return name.toString();
       }
 
-      if (c > 0xF) {
+      if (c > 0x7F) {
         throw HttpClientException.of(Invalid.CHAR);
       }
 
@@ -213,7 +213,7 @@ final class HttpRequestParser9BodyType0Form {
         return value.toString();
       }
 
-      if (c > 0xF) {
+      if (c > 0x7F) {
         throw HttpClientException.of(Invalid.CHAR);
       }
 

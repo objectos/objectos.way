@@ -71,7 +71,7 @@ public final class HttpY {
     final List<Object[]> l;
     l = new ArrayList<>();
 
-    l.add(arr("", null, "empty"));
+    l.add(arr("", Map.of(), "empty"));
     l.add(arr("key=value", Map.of("key", "value"), "one"));
     l.add(arr("=value", Map.of("", "value"), "one + empty key"));
     l.add(arr("key=", Map.of("key", ""), "one + empty value"));
