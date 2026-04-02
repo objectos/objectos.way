@@ -124,7 +124,7 @@ public final class HttpY {
     return arr("key=" + val, Map.of("key", val), "value contains the " + Integer.toHexString(value) + " valid byte");
   }
 
-  private static Object[] arr(Object... arr) {
+  static Object[] arr(Object... arr) {
     // not safe, oh well...
     return arr;
   }
