@@ -89,36 +89,36 @@ final class HttpRequestParser4Query {
     final byte prev;
     prev = input.peekPrev();
 
-    if (prev != '?') {
-      return null;
-    }
+    if (prev == '?') {
 
-    while (true) {
-      final String name;
-      name = parseName();
+      while (true) {
+        final String name;
+        name = parseName();
 
-      if (done) {
-        add(name);
+        if (done) {
+          add(name);
 
-        break;
+          break;
+        }
+
+        if (emptyValue) {
+          add(name, "");
+
+          emptyValue = false;
+
+          continue;
+        }
+
+        final String value;
+        value = parseValue();
+
+        add(name, value);
+
+        if (done) {
+          break;
+        }
       }
 
-      if (emptyValue) {
-        add(name, "");
-
-        emptyValue = false;
-
-        continue;
-      }
-
-      final String value;
-      value = parseValue();
-
-      add(name, value);
-
-      if (done) {
-        break;
-      }
     }
 
     return params;
@@ -402,7 +402,7 @@ final class HttpRequestParser4Query {
       params = new HashMap<>();
     }
 
-    Http.queryParamsAdd(params, Function.identity(), name, value);
+    Http.queryParamsAdd(params, name, value);
   }
 
   private int decodePerc() throws DecodeException, IOException {

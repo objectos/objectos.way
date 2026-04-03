@@ -39,22 +39,14 @@ record HttpRequestBodyImpl(HttpRequestBodyData data, Map<String, Object> formPar
 
   @Override
   public final Set<String> formParamNames() {
-    if (formParams == null) {
-      return Set.of();
-    } else {
-      return formParams.keySet();
-    }
+    return formParams.keySet();
   }
 
   @Override
   public final String formParam(String name) {
     Objects.requireNonNull(name, "name == null");
 
-    if (formParams == null) {
-      return null;
-    } else {
-      return Http.queryParamsGet(formParams, name);
-    }
+    return Http.queryParamsGet(formParams, name);
   }
 
   @Override
@@ -93,11 +85,7 @@ record HttpRequestBodyImpl(HttpRequestBodyData data, Map<String, Object> formPar
   public final List<String> formParamAll(String name) {
     Objects.requireNonNull(name, "name == null");
 
-    if (formParams == null) {
-      return List.of();
-    } else {
-      return Http.queryParamsGetAll(formParams, name);
-    }
+    return Http.queryParamsGetAll(formParams, name);
   }
 
   @Override

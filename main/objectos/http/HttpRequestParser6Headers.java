@@ -57,7 +57,7 @@ final class HttpRequestParser6Headers {
 
   private final HttpRequestParser0Input input;
 
-  private Map<HttpHeaderName, Object> map;
+  private Map<HttpHeaderName, Object> map = Map.of();
 
   private final StringBuilder sb = new StringBuilder();
 
@@ -281,7 +281,7 @@ final class HttpRequestParser6Headers {
   }
 
   private void put(HttpHeaderName name, String value) {
-    if (map == null) {
+    if (map.isEmpty()) {
       map = new HashMap<>();
     }
 

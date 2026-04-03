@@ -21,7 +21,7 @@ import objectos.internal.Ascii;
 
 final class HttpRequestParser9BodyType0Form {
 
-  private static final byte[] MESSAGE = "Invalid request body.\n".getBytes(StandardCharsets.US_ASCII);
+  private static final byte[] MESSAGE = "Invalid application/x-www-form-urlencoded content in request body.\n".getBytes(StandardCharsets.US_ASCII);
 
   enum Invalid implements HttpClientException.Kind {
     // invalid URL-encoded character
@@ -256,7 +256,7 @@ final class HttpRequestParser9BodyType0Form {
       params = new HashMap<>();
     }
 
-    Http.queryParamsAdd(params, Function.identity(), name, value);
+    Http.queryParamsAdd(params, name, value);
   }
 
   private int decodePerc() throws DecodeException, IOException {

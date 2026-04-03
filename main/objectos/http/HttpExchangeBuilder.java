@@ -27,7 +27,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Function;
 import objectos.internal.NoOpSinkSingleton;
 import objectos.internal.Util;
 import objectos.way.Note;
@@ -103,7 +102,7 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
       formParams = Util.createSequencedMap();
     }
 
-    Http.queryParamsAdd(formParams, Function.identity(), name, value);
+    Http.queryParamsAdd(formParams, name, value);
   }
 
   @SuppressWarnings("unchecked")
@@ -209,7 +208,7 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
       queryParams = Util.createSequencedMap();
     }
 
-    Http.queryParamsAdd(queryParams, Function.identity(), name, value);
+    Http.queryParamsAdd(queryParams, name, value);
   }
 
   @Override

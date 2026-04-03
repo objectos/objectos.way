@@ -135,7 +135,7 @@ final class HttpRequestParser {
 
         version,
 
-        headersMap,
+        headers,
 
         body
     );

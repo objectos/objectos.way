@@ -303,13 +303,7 @@ final class Http {
   }
 
   @SuppressWarnings("unchecked")
-  static void queryParamsAdd(Map<String, Object> map, Function<String, String> decoder, String rawKey, String rawValue) {
-    String key;
-    key = decoder.apply(rawKey);
-
-    String value;
-    value = decoder.apply(rawValue);
-
+  static void queryParamsAdd(Map<String, Object> map, String key, String value) {
     Object oldValue;
     oldValue = map.put(key, value);
 

@@ -27,7 +27,7 @@ record HttpRequestImpl(
 
     HttpVersion version,
 
-    Map<HttpHeaderName, Object> headers,
+    HttpRequestHeaders headers,
 
     HttpRequestBody body
 
@@ -75,47 +75,31 @@ record HttpRequestImpl(
 
   @Override
   public final String header(HttpHeaderName name) {
-    Objects.requireNonNull(name, "name == null");
-
-    if (headers == null) {
-      return null;
-    } else {
-      return Http.queryParamsGet(headers, name);
-    }
+    return headers.header(name);
   }
 
   @Override
-  public String pathParam(String name) { throw new UnsupportedOperationException("Implement me"); }
+  public String pathParam(String name) {
+    throw new UnsupportedOperationException("Implement me");
+  }
 
   @Override
   public final String queryParam(String name) {
     Objects.requireNonNull(name, "name == null");
 
-    if (queryParams == null) {
-      return null;
-    } else {
-      return Http.queryParamsGet(queryParams, name);
-    }
+    return Http.queryParamsGet(queryParams, name);
   }
 
   @Override
   public final List<String> queryParamAll(String name) {
     Objects.requireNonNull(name, "name == null");
 
-    if (queryParams == null) {
-      return List.of();
-    } else {
-      return Http.queryParamsGetAll(queryParams, name);
-    }
+    return Http.queryParamsGetAll(queryParams, name);
   }
 
   @Override
   public final Set<String> queryParamNames() {
-    if (queryParams == null) {
-      return Set.of();
-    } else {
-      return queryParams.keySet();
-    }
+    return queryParams.keySet();
   }
 
   @Override
