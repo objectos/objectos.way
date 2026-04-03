@@ -19,6 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.nio.file.Path;
 import java.util.Map;
 import java.util.function.Consumer;
 import objectos.way.Y;
@@ -32,8 +33,8 @@ public class HttpRequestParserTest {
       Map.of()
   );
 
-  private static final class Cfg {
-    HttpExchangeBodyFiles bodyFiles;
+  private static final class Cfg extends HttpRequestBodyOptions {
+    Path bodyDirectory;
 
     int bodyMemoryMax = 512;
 
@@ -67,7 +68,7 @@ public class HttpRequestParserTest {
       input = HttpRequestParser0Input.of(bufferSize, socket);
 
       final HttpRequestParser parser;
-      parser = new HttpRequestParser(bodyFiles, bodyMemoryMax, bodySizeMax, id, input);
+      parser = new HttpRequestParser(this, id, input);
 
       return parser.parse();
     }
@@ -87,6 +88,15 @@ public class HttpRequestParserTest {
           body
       );
     }
+
+    @Override
+    final Path directory() { return bodyDirectory; }
+
+    @Override
+    final int memoryMax() { return bodyMemoryMax; }
+
+    @Override
+    final long sizeMax() { return bodySizeMax; }
   }
 
   @DataProvider

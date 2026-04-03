@@ -365,18 +365,6 @@ public class HttpRequestParser3PathTest {
   // TODO remove?
   @Test(enabled = false, dataProvider = "rawPathProvider")
   public void rawPath(String raw, String expected) throws IOException {
-    final HttpRequest req;
-    req = HttpRequestParserY.parse(
-        test -> test.bufferSize(256, 512),
-
-        iso8859("""
-        GET %s HTTP/1.1\r
-        Host: test\r
-        \r
-        """.formatted(raw))
-    );
-
-    assertEquals(req.rawPath(), expected);
   }
 
   private byte[] iso8859(String s) {

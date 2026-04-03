@@ -35,12 +35,18 @@ import org.testng.annotations.Test;
 
 public class HttpRequestParser8BodyDataTest {
 
-  private static final class Cfg {
-    HttpExchangeBodyFiles bodyFiles;
+  private interface ThrowingSupplier<T> {
+    T get() throws IOException;
+  }
+
+  private static final class Cfg extends HttpRequestBodyOptions {
+    Path bodyDirectory;
 
     int bodyMemoryMax = 512;
 
     long bodySizeMax = 1024;
+
+    ThrowingSupplier<? extends OutputStream> bodyOutputStream;
 
     long id = 0;
 
@@ -53,19 +59,22 @@ public class HttpRequestParser8BodyDataTest {
     }
 
     final HttpRequestParser8BodyData build() {
-      return new HttpRequestParser8BodyData(bodyFiles, bodyMemoryMax, bodySizeMax, id, input, meta);
+      return new HttpRequestParser8BodyData(this, id, input, meta);
     }
-  }
-
-  private static class ThisBodyFiles extends HttpExchangeBodyFiles {
-
-    private final Path directory = Y.nextTempDir();
 
     @Override
-    final Path directory() {
-      return directory;
+    public final OutputStream newOutputStream(Path file) throws IOException {
+      return bodyOutputStream != null ? bodyOutputStream.get() : super.newOutputStream(file);
     }
 
+    @Override
+    final Path directory() { return bodyDirectory; }
+
+    @Override
+    final int memoryMax() { return bodyMemoryMax; }
+
+    @Override
+    final long sizeMax() { return bodySizeMax; }
   }
 
   private HttpRequestParser0Input input(Object... data) {
@@ -93,8 +102,8 @@ public class HttpRequestParser8BodyDataTest {
 
   @DataProvider
   public Object[][] validProvider() throws IOException {
-    final ThisBodyFiles bodyFiles;
-    bodyFiles = new ThisBodyFiles();
+    final Path directory;
+    directory = Y.nextTempDir();
 
     final String data1;
     data1 = "1".repeat(64);
@@ -153,7 +162,7 @@ public class HttpRequestParser8BodyDataTest {
         },
         {
             Cfg.of(cfg -> {
-              cfg.bodyFiles = bodyFiles;
+              cfg.bodyDirectory = directory;
 
               cfg.bodyMemoryMax = data1.length() - 1;
 
@@ -164,7 +173,7 @@ public class HttpRequestParser8BodyDataTest {
               cfg.meta = new HttpRequestBodyMeta.Fixed(data1.length());
             }),
 
-            HttpRequestBodyData.of(bodyFiles.file(123L)),
+            HttpRequestBodyData.of(directory.resolve("%019d".formatted(123L))),
             data1,
             "file: happy-path"
         }
@@ -238,7 +247,7 @@ public class HttpRequestParser8BodyDataTest {
         },
         {
             Cfg.of(cfg -> {
-              cfg.bodyFiles = new ThisBodyFiles();
+              cfg.bodyDirectory = Y.nextTempDir();
 
               cfg.bodyMemoryMax = 32;
 
@@ -252,12 +261,9 @@ public class HttpRequestParser8BodyDataTest {
         },
         {
             Cfg.of(cfg -> {
-              cfg.bodyFiles = new ThisBodyFiles() {
-                @Override
-                public final OutputStream newOutputStream(Path file) throws IOException {
-                  throw iex;
-                }
-              };
+              cfg.bodyDirectory = Y.nextTempDir();
+
+              cfg.bodyOutputStream = () -> { throw iex; };
 
               cfg.bodyMemoryMax = 32;
 
@@ -271,21 +277,20 @@ public class HttpRequestParser8BodyDataTest {
         },
         {
             Cfg.of(cfg -> {
-              cfg.bodyFiles = new ThisBodyFiles() {
-                @Override
-                public final OutputStream newOutputStream(Path file) throws IOException {
-                  return new OutputStream() {
-                    @Override
-                    public final void write(int b) throws IOException {
-                      throw new UnsupportedOperationException("Implement me");
-                    }
+              cfg.bodyDirectory = Y.nextTempDir();
 
-                    @Override
-                    public final void write(byte[] b, int off, int len) throws IOException {
-                      throw iex;
-                    }
-                  };
-                }
+              cfg.bodyOutputStream = () -> {
+                return new OutputStream() {
+                  @Override
+                  public final void write(int b) throws IOException {
+                    throw new UnsupportedOperationException("Implement me");
+                  }
+
+                  @Override
+                  public final void write(byte[] b, int off, int len) throws IOException {
+                    throw iex;
+                  }
+                };
               };
 
               cfg.bodyMemoryMax = 32;
@@ -300,22 +305,21 @@ public class HttpRequestParser8BodyDataTest {
         },
         {
             Cfg.of(cfg -> {
-              cfg.bodyFiles = new ThisBodyFiles() {
-                @Override
-                public final OutputStream newOutputStream(Path file) throws IOException {
-                  return new OutputStream() {
-                    @Override
-                    public final void close() throws IOException {
-                      throw iex;
-                    }
+              cfg.bodyDirectory = Y.nextTempDir();
 
-                    @Override
-                    public final void write(int b) throws IOException {}
+              cfg.bodyOutputStream = () -> {
+                return new OutputStream() {
+                  @Override
+                  public final void close() throws IOException {
+                    throw iex;
+                  }
 
-                    @Override
-                    public final void write(byte[] b, int off, int len) throws IOException {}
-                  };
-                }
+                  @Override
+                  public final void write(int b) throws IOException {}
+
+                  @Override
+                  public final void write(byte[] b, int off, int len) throws IOException {}
+                };
               };
 
               cfg.bodyMemoryMax = 32;

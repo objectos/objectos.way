@@ -19,22 +19,14 @@ import module java.base;
 
 final class HttpRequestParser {
 
-  private final HttpExchangeBodyFiles bodyFiles;
-
-  private final int bodyMemoryMax;
-
-  private final long bodySizeMax;
+  private final HttpRequestBodyOptions bodyOptions;
 
   private final long id;
 
   private final HttpRequestParser0Input input;
 
-  HttpRequestParser(HttpExchangeBodyFiles bodyFiles, int bodyMemoryMax, long bodySizeMax, long id, HttpRequestParser0Input input) {
-    this.bodyFiles = bodyFiles;
-
-    this.bodyMemoryMax = bodyMemoryMax;
-
-    this.bodySizeMax = bodySizeMax;
+  HttpRequestParser(HttpRequestBodyOptions bodyOptions, long id, HttpRequestParser0Input input) {
+    this.bodyOptions = bodyOptions;
 
     this.id = id;
 
@@ -91,11 +83,7 @@ final class HttpRequestParser {
     // body data
     final HttpRequestParser8BodyData bodyDataParser;
     bodyDataParser = new HttpRequestParser8BodyData(
-        bodyFiles,
-
-        bodyMemoryMax,
-
-        bodySizeMax,
+        bodyOptions,
 
         id,
 

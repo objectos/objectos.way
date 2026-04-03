@@ -49,11 +49,7 @@ final class HttpRequestParser8BodyData {
     }
   }
 
-  private final HttpExchangeBodyFiles bodyFiles;
-
-  private final int bodyMemoryMax;
-
-  private final long bodySizeMax;
+  private final HttpRequestBodyOptions bodyOptions;
 
   private final long id;
 
@@ -61,12 +57,8 @@ final class HttpRequestParser8BodyData {
 
   private final HttpRequestBodyMeta.Data meta;
 
-  HttpRequestParser8BodyData(HttpExchangeBodyFiles bodyFiles, int bodyMemoryMax, long bodySizeMax, long id, HttpRequestParser0Input input, HttpRequestBodyMeta.Data meta) {
-    this.bodyFiles = bodyFiles;
-
-    this.bodyMemoryMax = bodyMemoryMax;
-
-    this.bodySizeMax = bodySizeMax;
+  HttpRequestParser8BodyData(HttpRequestBodyOptions bodyOptions, long id, HttpRequestParser0Input input, HttpRequestBodyMeta.Data meta) {
+    this.bodyOptions = bodyOptions;
 
     this.id = id;
 
@@ -92,11 +84,11 @@ final class HttpRequestParser8BodyData {
   }
 
   private HttpRequestBodyData parseFixed(long length) throws IOException {
-    if (length > bodySizeMax) {
+    if (length > bodyOptions.sizeMax()) {
       throw HttpClientException.of(Invalid.CONTENT_TOO_LARGE);
     }
 
-    else if (length > bodyMemoryMax) {
+    else if (length > bodyOptions.memoryMax()) {
       return parseFixedFile(length);
     }
 
@@ -107,9 +99,9 @@ final class HttpRequestParser8BodyData {
 
   private HttpRequestBodyData parseFixedFile(long length) throws IOException {
     final Path file;
-    file = bodyFiles.file(id);
+    file = bodyOptions.file(id);
 
-    try (OutputStream output = bodyFiles.newOutputStream(file)) {
+    try (OutputStream output = bodyOptions.newOutputStream(file)) {
       copy(length, output);
     }
 

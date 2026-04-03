@@ -48,7 +48,7 @@ public class HttpRequestParser4QueryTest {
         " HTTP/1.1"
     );
 
-    assertEquals(res, null);
+    assertEquals(res, Map.of());
   }
 
   private final boolean[] validBytes = HttpY.queryValidBytes();
