@@ -17,8 +17,7 @@ package objectos.http;
 
 import module java.base;
 import module objectos.way;
-
-import objectos.way.Lang.Key;
+import objectos.way.Media.Bytes;
 import objectos.way.Media.Stream;
 import objectos.way.Media.Text;
 
@@ -26,8 +25,16 @@ final class HttpExchangeImpl2 implements HttpExchange {
 
   private final HttpRequest request;
 
-  HttpExchangeImpl2(HttpRequest request) {
+  private final HttpResponse0 response;
+
+  private final HttpSession session;
+
+  HttpExchangeImpl2(HttpRequest request, HttpResponse0 response, HttpSession session) {
     this.request = request;
+
+    this.response = response;
+
+    this.session = session;
   }
 
   // ##################################################################
@@ -164,64 +171,198 @@ final class HttpExchangeImpl2 implements HttpExchange {
   @Override
   public <T> T get(Class<T> key) { return null; }
 
-  @Override
-  public boolean sessionAbsent() { return false; }
+  // ##################################################################
+  // # BEGIN: HttpSession
+  // ##################################################################
 
   @Override
-  public <T> T sessionAttr(Class<T> key) { return null; }
+  public final boolean sessionAbsent() {
+    return session == null;
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public final <T> T sessionAttr(Class<T> key) {
+    checkSession();
+
+    final String name;
+    name = key.getName();
+
+    return (T) session.get0(name);
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public final <T> T sessionAttr(Lang.Key<T> key) {
+    checkSession();
+
+    Objects.requireNonNull(key, "key == null");
+
+    return (T) session.get0(key);
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public final <T> T sessionAttr(Class<T> key, T value) {
+    checkSession();
+
+    final String name;
+    name = key.getName();
+
+    return (T) session.set0(name, value);
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public final <T> T sessionAttr(Lang.Key<T> key, T value) {
+    checkSession();
+
+    Objects.requireNonNull(key, "key == null");
+
+    return (T) session.set0(key, value);
+  }
 
   @Override
-  public <T> T sessionAttr(Key<T> key) { return null; }
+  public final boolean sessionPresent() {
+    return session != null;
+  }
 
   @Override
-  public <T> T sessionAttr(Class<T> key, T value) { return null; }
+  public final void sessionInvalidate() {
+    checkSession();
+
+    session.invalidate();
+  }
+
+  private void checkSession() {
+    if (session == null) {
+      throw new IllegalStateException("No session associated to this exchange");
+    }
+  }
+
+  // ##################################################################
+  // # END: HttpSession
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: HttpResponse
+  // ##################################################################
 
   @Override
-  public <T> T sessionAttr(Key<T> key, T value) { return null; }
+  public final void ok(Bytes media) {
+    response.ok(media);
+  }
 
   @Override
-  public void sessionInvalidate() {}
+  public final void ok(Stream media) {
+    response.ok(media);
+  }
 
   @Override
-  public boolean sessionPresent() { return false; }
+  public final void ok(Text media) {
+    response.ok(media);
+  }
 
   @Override
-  public void ok(objectos.way.Media.Bytes media) {}
+  public final void movedPermanently(String location) {
+    response.movedPermanently(location);
+  }
 
   @Override
-  public void ok(Stream media) {}
+  public final void found(String location) {
+    response.found(location);
+  }
 
   @Override
-  public void ok(Text media) {}
+  public final void seeOther(String location) {
+    response.seeOther(location);
+  }
 
   @Override
-  public void movedPermanently(String location) {}
+  public final void badRequest(Media media) {
+    response.badRequest(media);
+  }
 
   @Override
-  public void found(String location) {}
+  public final void forbidden(Media media) {
+    response.forbidden(media);
+  }
 
   @Override
-  public void seeOther(String location) {}
+  public final void notFound(Media media) {
+    response.notFound(media);
+  }
 
   @Override
-  public void badRequest(Media media) {}
+  public final void allow(HttpMethod... methods) {
+    response.allow(methods);
+  }
 
   @Override
-  public void forbidden(Media media) {}
+  public final void internalServerError(Media media, Throwable error) {
+    response.internalServerError(media, error);
+  }
+
+  public final void status(HttpStatus value) {
+    response.status(value);
+  }
+
+  public final void header(HttpHeaderName name, long value) {
+    response.header(name, value);
+  }
+
+  public final void header(HttpHeaderName name, String value) {
+    response.header(name, value);
+  }
+
+  public final void header(HttpHeaderName name, Consumer<? super HttpHeaderValueBuilder> builder) {
+    response.header(name, builder);
+  }
+
+  public final String now() {
+    return response.now();
+  }
+
+  public final void send() {
+    response.send();
+  }
+
+  public final void send(byte[] bytes, int offset, int length) {
+    response.send(bytes, offset, length);
+  }
+
+  public final void send(Path file) {
+    response.send(file);
+  }
+
+  public final void send(Media media) {
+    response.send(media);
+  }
+
+  public final void media(Media.Bytes media) {
+    response.media(media);
+  }
+
+  public final void media(Media.Text media) {
+    response.media(media);
+  }
+
+  public final void media(Media.Stream media) {
+    response.media(media);
+  }
+
+  // ##################################################################
+  // # END: HttpResponse
+  // ##################################################################
 
   @Override
-  public void notFound(Media media) {}
+  public final boolean processed() {
+    throw new UnsupportedOperationException("Implement me");
+  }
 
   @Override
-  public void allow(HttpMethod... methods) {}
-
-  @Override
-  public void internalServerError(Media media, Throwable error) {}
-
-  @Override
-  public void respond(Consumer<? super HttpResponse> response) {}
-
-  @Override
-  public boolean processed() { return false; }
+  public void respond(Consumer<? super HttpResponse> response) {
+    throw new UnsupportedOperationException("Implement me");
+  }
 
 }

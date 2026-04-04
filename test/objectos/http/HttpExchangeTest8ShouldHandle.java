@@ -138,7 +138,7 @@ public class HttpExchangeTest8ShouldHandle {
       resp.status(HttpStatus.OK);
       resp.header(HttpHeaderName.CONTENT_LENGTH, 0L);
       resp.header(HttpHeaderName.CONNECTION, "close");
-      resp.body();
+      resp.send();
     });
   }
 

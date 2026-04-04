@@ -19,7 +19,7 @@ import module java.base;
 import module objectos.way;
 
 /// Represents an HTTP response message.
-public sealed interface HttpResponse permits HttpResponseImpl {
+public sealed interface HttpResponse permits HttpResponseImpl, HttpResponse0 {
 
   // high-level
 
@@ -159,19 +159,19 @@ public sealed interface HttpResponse permits HttpResponseImpl {
   String now();
 
   /// Ends this HTTP response message with an empty body.
-  void body();
+  void send();
 
   /// Ends this HTTP response message with the specified body.
   ///
   /// @param bytes the array of bytes with the body contents
   /// @param offset index where the actual message begins
   /// @param length the message length in bytes
-  void body(byte[] bytes, int offset, int length);
+  void send(byte[] bytes, int offset, int length);
 
   /// Ends this HTTP response message with the specified body.
   ///
   /// @param file the path to a regular file containing the body contents
-  void body(Path file);
+  void send(Path file);
 
   /**
    * Writes the required response headers for the specified media and ends
@@ -180,6 +180,6 @@ public sealed interface HttpResponse permits HttpResponseImpl {
    * @param media
    *        the media entity
    */
-  void media(Media media);
+  void send(Media media);
 
 }

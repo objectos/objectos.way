@@ -35,7 +35,7 @@ final class HttpRequestParser0Input extends InputStream {
 
   private int mark;
 
-  private HttpRequestParser0Input(
+  HttpRequestParser0Input(
       byte[] buffer,
       InputStream inputStream) {
     this.buffer = buffer;

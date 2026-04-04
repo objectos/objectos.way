@@ -680,7 +680,7 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
 
           resp.header(HttpHeaderName.CONTENT_LENGTH, 0L);
 
-          resp.body();
+          resp.send();
         }),
 
         """
@@ -707,7 +707,7 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
 
           resp.header(HttpHeaderName.CONTENT_LENGTH, body.length);
 
-          resp.body(body, 0, body.length);
+          resp.send(body, 0, body.length);
         }),
 
         """
@@ -732,7 +732,7 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
 
           resp.header(HttpHeaderName.CONNECTION, "close");
 
-          resp.media(media);
+          resp.send(media);
         }),
 
         """
@@ -759,7 +759,7 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
 
           resp.header(HttpHeaderName.CONNECTION, "close");
 
-          resp.media(media);
+          resp.send(media);
         }),
 
         """
@@ -797,7 +797,7 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
         xch.handler(http -> http.respond(resp -> {
           resp.status(status);
 
-          resp.media(OK);
+          resp.send(OK);
         }));
 
         xch.resp(
@@ -859,7 +859,7 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
 
           resp.header(HttpHeaderName.ETAG, data.value);
 
-          resp.media(OK);
+          resp.send(OK);
         }));
 
         xch.resp(
@@ -950,7 +950,7 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
 
             assertEquals(message, data.expected);
 
-            resp.media(OK);
+            resp.send(OK);
           }
         }));
 
@@ -1044,7 +1044,7 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
         http -> http.respond(resp -> {
           resp.status(HttpStatus.OK);
           resp.header(HttpHeaderName.CONTENT_DISPOSITION, builder);
-          resp.media(OK);
+          resp.send(OK);
         }),
 
         """
@@ -1097,7 +1097,7 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
 
             assertEquals(message, expectedMessage);
 
-            resp.media(OK);
+            resp.send(OK);
           }
         }));
 
@@ -1111,7 +1111,7 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
       resp.status(HttpStatus.NOT_MODIFIED);
       resp.header(HttpHeaderName.DATE, resp.now());
       resp.header(HttpHeaderName.ETAG, "some%hash");
-      resp.body();
+      resp.send();
     });
   }
 
@@ -1145,7 +1145,7 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
       resp.header(HttpHeaderName.DATE, resp.now());
       resp.header(HttpHeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
       resp.header(HttpHeaderName.CONTENT_LENGTH, 1024);
-      resp.body(file01);
+      resp.send(file01);
     });
   }
 
@@ -1178,7 +1178,7 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
       resp.header(HttpHeaderName.DATE, resp.now());
       resp.header(HttpHeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
       resp.header(HttpHeaderName.CONTENT_LENGTH, 1024);
-      resp.body(file02);
+      resp.send(file02);
     });
   }
 

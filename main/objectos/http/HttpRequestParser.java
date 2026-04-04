@@ -33,6 +33,13 @@ final class HttpRequestParser {
     this.input = input;
   }
 
+  public static HttpRequestParser of(HttpRequestBodyOptions bodyOptions, long id, byte[] buffer, InputStream inputStream) {
+    final HttpRequestParser0Input input;
+    input = new HttpRequestParser0Input(buffer, inputStream);
+
+    return new HttpRequestParser(bodyOptions, id, input);
+  }
+
   @SuppressWarnings("unused")
   public final HttpRequest parse() throws IOException {
     // method

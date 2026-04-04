@@ -105,7 +105,7 @@ record WebResourcesKernel(
 
         resp.header(HttpHeaderName.ALLOW, "GET, HEAD");
 
-        resp.body();
+        resp.send();
       });
 
       return;
@@ -127,7 +127,7 @@ record WebResourcesKernel(
 
         resp.header(HttpHeaderName.ETAG, etag);
 
-        resp.body();
+        resp.send();
       });
 
       return;
@@ -155,7 +155,7 @@ record WebResourcesKernel(
 
       resp.header(HttpHeaderName.ETAG, etag);
 
-      resp.body(file);
+      resp.send(file);
     });
   }
 

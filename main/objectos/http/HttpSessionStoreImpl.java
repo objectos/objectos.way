@@ -131,6 +131,10 @@ final class HttpSessionStoreImpl implements HttpSessionStore {
     impl.session(session);
   }
 
+  public final HttpSession load(HttpRequest request) {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
   @Override
   public final boolean loadSession(HttpExchange http) {
     final HttpExchangeImpl impl;

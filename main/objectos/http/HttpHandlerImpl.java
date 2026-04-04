@@ -360,7 +360,7 @@ final class HttpHandlerImpl implements HttpHandler {
 
           resp.header(HttpHeaderName.ALLOW, (String) main);
 
-          resp.body();
+          resp.send();
         });
       }
 
@@ -374,7 +374,7 @@ final class HttpHandlerImpl implements HttpHandler {
 
           resp.header(HttpHeaderName.CONNECTION, "close");
 
-          resp.body();
+          resp.send();
         });
       }
     }

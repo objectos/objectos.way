@@ -4221,7 +4221,7 @@ final class HttpExchangeImpl implements HttpExchange, Runnable, Closeable {
   // # BEGIN: Internal Response API
   // ##################################################################
 
-  final void respond(HttpStatus status, List<HttpResponseHeader> headers, Object body) {
+  final void respond(HttpStatus status, List<HttpResponse1Header> headers, Object body) {
     checkRequest();
 
     statusUnchecked(status);
