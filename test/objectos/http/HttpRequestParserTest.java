@@ -64,11 +64,11 @@ public class HttpRequestParserTest {
       final Socket socket;
       socket = Y.socket(data);
 
-      final HttpRequestParser0Input input;
-      input = HttpRequestParser0Input.of(bufferSize, socket);
+      final byte[] buffer;
+      buffer = new byte[bufferSize];
 
       final HttpRequestParser parser;
-      parser = new HttpRequestParser(this, id, input);
+      parser = new HttpRequestParser(this, buffer, id, socket.getInputStream());
 
       return parser.parse();
     }

@@ -15,12 +15,27 @@
  */
 package objectos.http;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.Socket;
+import module java.base;
+import module objectos.way;
 
 final class HttpServerTask implements Runnable {
+
+  private record Notes(
+      Note.Long1Ref2<String, IOException> socketError
+  ) {
+
+    static Notes get() {
+      final Class<?> s;
+      s = HttpServerTask.class;
+
+      return new Notes(
+          Note.Long1Ref2.create(s, "SOC", Note.ERROR)
+      );
+    }
+
+  }
+
+  private static final Notes NOTES = Notes.get();
 
   private final HttpRequestBodyOptions bodyOptions;
 
@@ -30,11 +45,20 @@ final class HttpServerTask implements Runnable {
 
   private final long id;
 
+  private final Note.Sink noteSink;
+
   private final HttpSessionStoreImpl sessionStore;
 
   private final Socket socket;
 
-  HttpServerTask(HttpRequestBodyOptions bodyOptions, byte[] buffer, HttpHandler handler, long id, HttpSessionStoreImpl sessionStore, Socket socket) {
+  HttpServerTask(
+      HttpRequestBodyOptions bodyOptions,
+      byte[] buffer,
+      HttpHandler handler,
+      long id,
+      Note.Sink noteSink,
+      HttpSessionStoreImpl sessionStore,
+      Socket socket) {
     this.bodyOptions = bodyOptions;
 
     this.buffer = buffer;
@@ -42,6 +66,8 @@ final class HttpServerTask implements Runnable {
     this.handler = handler;
 
     this.id = id;
+
+    this.noteSink = noteSink;
 
     this.sessionStore = sessionStore;
 
@@ -55,7 +81,9 @@ final class HttpServerTask implements Runnable {
     try {
       inputStream = socket.getInputStream();
     } catch (IOException e) {
-      throw new UnsupportedOperationException("Implement me");
+      noteSink.send(NOTES.socketError, id, "getInputStream", e);
+
+      return;
     }
 
     final OutputStream outputStream;
@@ -63,7 +91,9 @@ final class HttpServerTask implements Runnable {
     try {
       outputStream = socket.getOutputStream();
     } catch (IOException e) {
-      throw new UnsupportedOperationException("Implement me");
+      noteSink.send(NOTES.socketError, id, "getOutputStream", e);
+
+      return;
     }
 
     boolean shouldHandle;
@@ -74,13 +104,15 @@ final class HttpServerTask implements Runnable {
         shouldHandle = run0(inputStream, outputStream);
       }
     } catch (IOException e) {
-      throw new UnsupportedOperationException("Implement me");
+      noteSink.send(NOTES.socketError, id, "close", e);
+
+      return;
     }
   }
 
   private boolean run0(InputStream inputStream, OutputStream outputStream) {
     final HttpRequestParser requestParser;
-    requestParser = HttpRequestParser.of(bodyOptions, id, buffer, inputStream);
+    requestParser = new HttpRequestParser(bodyOptions, buffer, id, inputStream);
 
     final HttpRequest request;
 

@@ -296,8 +296,8 @@ final class HttpResponse0 implements HttpResponse {
   }
 
   private void writeStart() throws IOException {
-    final HttpResponse2StartWriter writer;
-    writer = new HttpResponse2StartWriter(buffer, headers, outputStream, status, version);
+    final HttpResponse2WriteStart writer;
+    writer = new HttpResponse2WriteStart(buffer, headers, outputStream, status, version);
 
     writer.write();
   }

@@ -21,7 +21,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import objectos.internal.Bytes;
 
-final class HttpResponse2StartWriter {
+final class HttpResponse2WriteStart {
 
   private static final byte[][] STATUS_LINES;
 
@@ -60,7 +60,7 @@ final class HttpResponse2StartWriter {
 
   private final HttpVersion version;
 
-  HttpResponse2StartWriter(byte[] buffer, List<HttpResponse1Header> headers, OutputStream outputStream, HttpStatus status, HttpVersion version) {
+  HttpResponse2WriteStart(byte[] buffer, List<HttpResponse1Header> headers, OutputStream outputStream, HttpStatus status, HttpVersion version) {
     this.buffer = buffer;
 
     this.headers = headers;

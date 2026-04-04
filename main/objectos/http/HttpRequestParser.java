@@ -21,27 +21,27 @@ final class HttpRequestParser {
 
   private final HttpRequestBodyOptions bodyOptions;
 
+  private final byte[] buffer;
+
   private final long id;
 
-  private final HttpRequestParser0Input input;
+  private final InputStream inputStream;
 
-  HttpRequestParser(HttpRequestBodyOptions bodyOptions, long id, HttpRequestParser0Input input) {
+  HttpRequestParser(HttpRequestBodyOptions bodyOptions, byte[] buffer, long id, InputStream inputStream) {
     this.bodyOptions = bodyOptions;
+
+    this.buffer = buffer;
 
     this.id = id;
 
-    this.input = input;
+    this.inputStream = inputStream;
   }
 
-  public static HttpRequestParser of(HttpRequestBodyOptions bodyOptions, long id, byte[] buffer, InputStream inputStream) {
+  public final HttpRequest parse() throws IOException {
+    // input
     final HttpRequestParser0Input input;
     input = new HttpRequestParser0Input(buffer, inputStream);
 
-    return new HttpRequestParser(bodyOptions, id, input);
-  }
-
-  @SuppressWarnings("unused")
-  public final HttpRequest parse() throws IOException {
     // method
     final HttpRequestParser2Method methodParser;
     methodParser = new HttpRequestParser2Method(input);
