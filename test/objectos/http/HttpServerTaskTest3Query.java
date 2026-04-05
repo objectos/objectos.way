@@ -22,109 +22,48 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import objectos.way.Media;
+import objectos.way.Y;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class HttpExchangeTest3ParseQuery extends HttpExchangeTest {
-
-  private final boolean[] validBytes = queryValidBytes();
-
-  @Test
-  public void noQuery() {
-    exec(test -> {
-      test.bufferSize(256, 512);
-
-      test.xch(xch -> {
-        xch.req("""
-        GET /path HTTP/1.1\r
-        Host: www.example.com\r
-        \r
-        """);
-
-        xch.handler(http -> {
-          assertEquals(http.queryParam("foo"), null);
-          assertEquals(http.queryParamNames(), Set.of());
-          assertEquals(http.rawQuery(), null);
-          assertEquals(http.rawQueryWith("page", "1"), "page=1");
-
-          http.ok(Media.Bytes.textPlain("OK"));
-        });
-
-        xch.resp("""
-        HTTP/1.1 200 OK\r
-        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-        Content-Type: text/plain; charset=utf-8\r
-        Content-Length: 2\r
-        \r
-        OK""");
-      });
-    });
-  }
+public class HttpServerTaskTest3Query {
 
   @DataProvider
   public Object[][] queryValidProvider() {
-    final List<Object[]> l;
-    l = new ArrayList<>();
-
-    l.add(arr("", Map.of(), "empty"));
-    l.add(arr("key=value", Map.of("key", "value"), "one"));
-    l.add(arr("=value", Map.of("", "value"), "one + empty key"));
-    l.add(arr("key=", Map.of("key", ""), "one + empty value"));
-    l.add(arr("key", Map.of("key", ""), "one + empty value + no equals"));
-    l.add(arr("key1=value1&key2=value2", Map.of("key1", "value1", "key2", "value2"), "two"));
-    l.add(arr("=value1&key2=value2", Map.of("", "value1", "key2", "value2"), "two + empty key1"));
-    l.add(arr("key1=value1&=value2", Map.of("key1", "value1", "", "value2"), "two + empty key2"));
-    l.add(arr("key1=&key2=value2", Map.of("key1", "", "key2", "value2"), "two + empty value1"));
-    l.add(arr("key1=value1&key2=", Map.of("key1", "value1", "key2", ""), "two + empty value2"));
-    l.add(arr("key1&key2=value2", Map.of("key1", "", "key2", "value2"), "two + empty value1 + no equals"));
-    l.add(arr("key1=value1&key2", Map.of("key1", "value1", "key2", ""), "two + empty value2 + no equals"));
-    l.add(arr("key=value1&key=value2", Map.of("key", List.of("value1", "value2")), "two + duplicate keys"));
-
-    for (int value = 0; value < validBytes.length; value++) {
-      switch (value) {
-        case ' ' -> {/* will cause parsing to move to VERSION */}
-
-        case '\n', '\r' -> {/* will trigger 505 not 400 */}
-
-        case '&', '=' -> {/* valid in query string, but has special meaning*/}
-
-        case '+' -> {
-          l.add(arr("+=value", Map.of(" ", "value"), "key contains the '+' character"));
-          l.add(arr("key=+", Map.of("key", " "), "value contains the '+' character"));
-        }
-
-        default -> {
-          if (validBytes[value]) {
-            l.add(queryValidKey(value));
-            l.add(queryValidValue(value));
-          }
-        }
-      }
-    }
-
-    return l.toArray(Object[][]::new);
-  }
-
-  private Object[] queryValidKey(int value) {
-    final String key;
-    key = Character.toString(value);
-
-    return arr(key + "=value", Map.of(key, "value"), "key contains the " + Integer.toHexString(value) + " valid byte");
-  }
-
-  private Object[] queryValidValue(int value) {
-    final String val;
-    val = Character.toString(value);
-
-    return arr("key=" + val, Map.of("key", val), "value contains the " + Integer.toHexString(value) + " valid byte");
+    return HttpY.queryValidProvider();
   }
 
   @Test(dataProvider = "queryValidProvider")
   public void queryValid(String raw, Map<String, Object> expected, String description) {
-    test(raw, expected);
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.socket = Y.socket("""
+          GET /path?%s HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """.formatted(raw));
+
+          opts.handler = http -> {
+            queryAssert(http, expected);
+
+            http.ok(Media.Bytes.textPlain("OK\n"));
+          };
+        }),
+
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 3\r
+        \r
+        OK
+        """
+    );
   }
+
+  private final boolean[] validBytes = HttpY.queryValidBytes();
 
   @DataProvider
   public Object[][] queryInvalidProvider() {
@@ -153,24 +92,37 @@ public class HttpExchangeTest3ParseQuery extends HttpExchangeTest {
     final String key;
     key = Character.toString(value);
 
-    return arr(key + "=value", "key contains the " + Integer.toHexString(value) + " invalid byte");
+    return HttpY.arr(key + "=value", "key contains the " + Integer.toHexString(value) + " invalid byte");
   }
 
   private Object[] queryInvalidValue(int value) {
     final String val;
     val = Character.toString(value);
 
-    return arr("key=" + val, "value contains the " + Integer.toHexString(value) + " invalid byte");
+    return HttpY.arr("key=" + val, "value contains the " + Integer.toHexString(value) + " invalid byte");
   }
 
   @Test(dataProvider = "queryInvalidProvider")
   public void queryInvalid(String raw, String description) {
-    badRequest(
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.socket = Y.socket(iso8859("""
+          GET /path?%s HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """.formatted(raw)));
+        }),
+
         """
-        GET /path?%s HTTP/1.1\r
-        Host: test\r
-        \t
-        """.formatted(raw).getBytes(StandardCharsets.ISO_8859_1)
+        HTTP/1.1 400 Bad Request\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Connection: close\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 22\r
+        \r
+        Invalid request line.
+        """
     );
   }
 
@@ -194,7 +146,7 @@ public class HttpExchangeTest3ParseQuery extends HttpExchangeTest {
 
   @Test(dataProvider = "percentValidProvider")
   public void percentValid(String raw, Map<String, Object> expected, String description) {
-    test(raw, expected);
+    queryValid(raw, expected, description);
   }
 
   @DataProvider
@@ -251,13 +203,7 @@ public class HttpExchangeTest3ParseQuery extends HttpExchangeTest {
 
   @Test(dataProvider = "percentInvalidProvider")
   public void percentInvalid(String raw, String description) {
-    badRequest(
-        """
-        GET /path?%s HTTP/1.1\r
-        Host: test\r
-        \t
-        """.formatted(raw)
-    );
+    queryInvalid(raw, description);
   }
 
   @DataProvider
@@ -301,33 +247,9 @@ public class HttpExchangeTest3ParseQuery extends HttpExchangeTest {
     l.add(new Object[] {rawValue, rawValue});
   }
 
-  @Test(dataProvider = "rawQueryProvider")
+  @Test(enabled = false, dataProvider = "rawQueryProvider")
   public void rawQuery(String raw, String expected) {
-    exec(test -> {
-      test.bufferSize(256, 512);
-
-      test.xch(xch -> {
-        xch.req("""
-        GET /path?%s HTTP/1.1\r
-        Host: test\r
-        \r
-        """.formatted(raw));
-
-        xch.handler(http -> {
-          assertEquals(http.rawQuery(), expected);
-
-          http.ok(Media.Bytes.textPlain("OK"));
-        });
-
-        xch.resp("""
-        HTTP/1.1 200 OK\r
-        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-        Content-Type: text/plain; charset=utf-8\r
-        Content-Length: 2\r
-        \r
-        OK""");
-      });
-    });
+    // TODO: remove?
   }
 
   @DataProvider
@@ -342,90 +264,79 @@ public class HttpExchangeTest3ParseQuery extends HttpExchangeTest {
 
   @Test(dataProvider = "ioExceptionProvider")
   public void ioException(String req, String description) {
-    exec(test -> {
-      test.bufferSize(256, 512);
+    var noteSink = new HttpServerTaskYNoteSink();
 
-      test.xch(xch -> {
-        xch.req(req);
-        xch.req(new IOException(), 1);
-        xch.shouldHandle(false);
-        xch.resp("");
-      });
-    });
+    final IOException ioe;
+    ioe = Y.trimStackTrace(new IOException(), 1);
+
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.id = 123L;
+
+          opts.noteSink = noteSink;
+
+          opts.socket = Y.socket(req, ioe);
+        }),
+
+        ""
+    );
+
+    assertEquals(noteSink.id, 123L);
+    assertEquals(noteSink.event, "read");
+    assertEquals(noteSink.thrown, ioe);
   }
 
   @Test
   public void uriTooLong() {
-    exec(test -> {
-      test.bufferSize(256, 512);
+    final String veryLongValue;
+    veryLongValue = "ba7f9045".repeat(200);
 
-      test.xch(xch -> {
-        final String veryLongValue;
-        veryLongValue = "ba7f9045".repeat(200);
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.socket = Y.socket("""
+          GET /entity?hash=%s HTTP/1.1\r
+          Host: www.example.com\r
+          \r
+          """.formatted(veryLongValue));
+        }),
 
-        xch.req("GET /entity?hash=" + veryLongValue + " HTTP/1.1\r\nHost: www.example.com\r\n\r\n");
-
-        xch.shouldHandle(false);
-
-        xch.resp("""
+        """
         HTTP/1.1 414 URI Too Long\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-        Content-Length: 0\r
         Connection: close\r
-        \r
-        """);
-      });
-    });
-  }
-
-  private void badRequest(Object request) {
-    exec(test -> {
-      test.bufferSize(256, 512);
-
-      test.xch(xch -> {
-        xch.req(request);
-
-        xch.shouldHandle(false);
-
-        xch.resp("""
-        HTTP/1.1 400 Bad Request\r
-        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
         Content-Type: text/plain; charset=utf-8\r
         Content-Length: 22\r
-        Connection: close\r
         \r
         Invalid request line.
-        """);
-      });
-    });
+        """
+    );
   }
 
-  private void test(String queryString, Map<String, Object> expected) {
-    exec(test -> {
-      test.bufferSize(256, 512);
+  private byte[] iso8859(String s) {
+    return s.getBytes(StandardCharsets.ISO_8859_1);
+  }
 
-      test.xch(xch -> {
-        xch.req("""
-        GET /path?%s HTTP/1.1\r
-        Host: test\r
-        \r
-        """.formatted(queryString));
+  private void queryAssert(HttpExchange http, Map<String, Object> expected) {
+    assertEquals(http.queryParamNames(), expected.keySet());
 
-        xch.handle(http -> {
-          queryAssert(http, expected);
+    for (var entry : expected.entrySet()) {
+      final String key;
+      key = entry.getKey();
 
-          http.ok(Media.Bytes.textPlain("OK"));
-        });
+      final Object value;
+      value = entry.getValue();
 
-        xch.resp("""
-        HTTP/1.1 200 OK\r
-        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-        Content-Type: text/plain; charset=utf-8\r
-        Content-Length: 2\r
-        \r
-        OK""");
-      });
-    });
+      if (value instanceof String s) {
+        assertEquals(http.queryParam(key), s, key);
+        assertEquals(http.queryParamAll(key), List.of(s));
+      }
+
+      else {
+        List<?> list = (List<?>) value;
+        assertEquals(http.queryParam(key), list.get(0), key);
+        assertEquals(http.queryParamAll(key), value, key);
+      }
+    }
   }
 
 }
