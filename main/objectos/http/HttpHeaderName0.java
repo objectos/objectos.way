@@ -23,42 +23,42 @@ import java.util.Map;
 import java.util.Set;
 import objectos.internal.Util;
 
-final class HttpHeaderNameImpl implements HttpHeaderName {
+final class HttpHeaderName0 implements HttpHeaderName {
 
   private static Builder B = new Builder();
 
-  static final HttpHeaderNameImpl ACCEPT_ENCODING = B.std("Accept-Encoding", HttpHeaderType.REQUEST);
-  static final HttpHeaderNameImpl ALLOW = B.std("Allow", HttpHeaderType.RESPONSE);
-  static final HttpHeaderNameImpl CONNECTION = B.std("Connection", HttpHeaderType.BOTH);
-  static final HttpHeaderNameImpl CONTENT_DISPOSITION = B.std("Content-Disposition", HttpHeaderType.RESPONSE);
-  static final HttpHeaderNameImpl CONTENT_LENGTH = B.std("Content-Length", HttpHeaderType.BOTH);
-  static final HttpHeaderNameImpl CONTENT_TYPE = B.std("Content-Type", HttpHeaderType.BOTH);
-  static final HttpHeaderNameImpl COOKIE = B.std("Cookie", HttpHeaderType.REQUEST);
-  static final HttpHeaderNameImpl DATE = B.std("Date", HttpHeaderType.BOTH);
-  static final HttpHeaderNameImpl ETAG = B.std("ETag", HttpHeaderType.RESPONSE);
-  static final HttpHeaderNameImpl FROM = B.std("From", HttpHeaderType.REQUEST);
-  static final HttpHeaderNameImpl HOST = B.std("Host", HttpHeaderType.REQUEST);
-  static final HttpHeaderNameImpl IF_NONE_MATCH = B.std("If-None-Match", HttpHeaderType.REQUEST);
-  static final HttpHeaderNameImpl LOCATION = B.std("Location", HttpHeaderType.RESPONSE);
-  static final HttpHeaderNameImpl REFERER = B.std("Referer", HttpHeaderType.REQUEST);
-  static final HttpHeaderNameImpl SET_COOKIE = B.std("Set-Cookie", HttpHeaderType.RESPONSE);
-  static final HttpHeaderNameImpl TRANSFER_ENCODING = B.std("Transfer-Encoding", HttpHeaderType.BOTH);
-  static final HttpHeaderNameImpl USER_AGENT = B.std("User-Agent", HttpHeaderType.REQUEST);
-  static final HttpHeaderNameImpl WAY_CSRF_TOKEN = B.std("Way-CSRF-Token", HttpHeaderType.REQUEST);
-  static final HttpHeaderNameImpl WAY_REQUEST = B.std("Way-Request", HttpHeaderType.REQUEST);
+  static final HttpHeaderName0 ACCEPT_ENCODING = B.std("Accept-Encoding", HttpHeaderType.REQUEST);
+  static final HttpHeaderName0 ALLOW = B.std("Allow", HttpHeaderType.RESPONSE);
+  static final HttpHeaderName0 CONNECTION = B.std("Connection", HttpHeaderType.BOTH);
+  static final HttpHeaderName0 CONTENT_DISPOSITION = B.std("Content-Disposition", HttpHeaderType.RESPONSE);
+  static final HttpHeaderName0 CONTENT_LENGTH = B.std("Content-Length", HttpHeaderType.BOTH);
+  static final HttpHeaderName0 CONTENT_TYPE = B.std("Content-Type", HttpHeaderType.BOTH);
+  static final HttpHeaderName0 COOKIE = B.std("Cookie", HttpHeaderType.REQUEST);
+  static final HttpHeaderName0 DATE = B.std("Date", HttpHeaderType.BOTH);
+  static final HttpHeaderName0 ETAG = B.std("ETag", HttpHeaderType.RESPONSE);
+  static final HttpHeaderName0 FROM = B.std("From", HttpHeaderType.REQUEST);
+  static final HttpHeaderName0 HOST = B.std("Host", HttpHeaderType.REQUEST);
+  static final HttpHeaderName0 IF_NONE_MATCH = B.std("If-None-Match", HttpHeaderType.REQUEST);
+  static final HttpHeaderName0 LOCATION = B.std("Location", HttpHeaderType.RESPONSE);
+  static final HttpHeaderName0 REFERER = B.std("Referer", HttpHeaderType.REQUEST);
+  static final HttpHeaderName0 SET_COOKIE = B.std("Set-Cookie", HttpHeaderType.RESPONSE);
+  static final HttpHeaderName0 TRANSFER_ENCODING = B.std("Transfer-Encoding", HttpHeaderType.BOTH);
+  static final HttpHeaderName0 USER_AGENT = B.std("User-Agent", HttpHeaderType.REQUEST);
+  static final HttpHeaderName0 WAY_CSRF_TOKEN = B.std("Way-CSRF-Token", HttpHeaderType.REQUEST);
+  static final HttpHeaderName0 WAY_REQUEST = B.std("Way-Request", HttpHeaderType.REQUEST);
 
   private static final class Builder {
 
     private int index;
 
-    private final Set<HttpHeaderNameImpl> values = new LinkedHashSet<>();
+    private final Set<HttpHeaderName0> values = new LinkedHashSet<>();
 
-    final HttpHeaderNameImpl std(String headerCase, HttpHeaderType type) {
+    final HttpHeaderName0 std(String headerCase, HttpHeaderType type) {
       final String lowerCase;
       lowerCase = headerCase.toLowerCase(Locale.US);
 
-      final HttpHeaderNameImpl name;
-      name = new HttpHeaderNameImpl(index++, headerCase, lowerCase, type);
+      final HttpHeaderName0 name;
+      name = new HttpHeaderName0(index++, headerCase, lowerCase, type);
 
       if (values.add(name)) {
         return name;
@@ -67,15 +67,15 @@ final class HttpHeaderNameImpl implements HttpHeaderName {
       }
     }
 
-    final HttpHeaderNameImpl[] values() {
-      return values.toArray(HttpHeaderNameImpl[]::new);
+    final HttpHeaderName0[] values() {
+      return values.toArray(HttpHeaderName0[]::new);
     }
 
   }
 
-  static final HttpHeaderNameImpl[] VALUES;
+  static final HttpHeaderName0[] VALUES;
 
-  private static final Map<String, HttpHeaderNameImpl> BY_LOWER_CASE;
+  private static final Map<String, HttpHeaderName0> BY_LOWER_CASE;
 
   private static final byte[] TABLE;
 
@@ -86,10 +86,10 @@ final class HttpHeaderNameImpl implements HttpHeaderName {
   static {
     VALUES = B.values();
 
-    final Map<String, HttpHeaderNameImpl> byLowerCase;
+    final Map<String, HttpHeaderName0> byLowerCase;
     byLowerCase = Util.createMap();
 
-    for (HttpHeaderNameImpl value : VALUES) {
+    for (HttpHeaderName0 value : VALUES) {
       byLowerCase.put(value.lowerCase, value);
     }
 
@@ -133,14 +133,14 @@ final class HttpHeaderNameImpl implements HttpHeaderName {
 
   private final HttpHeaderType type;
 
-  private HttpHeaderNameImpl(int index, String headerCase, String lowerCase, HttpHeaderType type) {
+  private HttpHeaderName0(int index, String headerCase, String lowerCase, HttpHeaderType type) {
     this.index = index;
     this.headerCase = headerCase;
     this.lowerCase = lowerCase;
     this.type = type;
   }
 
-  public static HttpHeaderNameImpl byLowerCase(String name) {
+  public static HttpHeaderName0 byLowerCase(String name) {
     return BY_LOWER_CASE.get(name);
   }
 
@@ -164,9 +164,9 @@ final class HttpHeaderNameImpl implements HttpHeaderName {
     return TABLE[b];
   }
 
-  public static HttpHeaderNameImpl of(String name) {
+  public static HttpHeaderName0 of(String name) {
     // let's be optimistic
-    final HttpHeaderNameImpl first;
+    final HttpHeaderName0 first;
     first = BY_LOWER_CASE.get(name);
 
     if (first != null) {
@@ -176,7 +176,7 @@ final class HttpHeaderNameImpl implements HttpHeaderName {
     final String lowerCase;
     lowerCase = name.toLowerCase(Locale.US);
 
-    final HttpHeaderNameImpl second;
+    final HttpHeaderName0 second;
     second = BY_LOWER_CASE.get(lowerCase);
 
     if (second != null) {
@@ -219,13 +219,13 @@ final class HttpHeaderNameImpl implements HttpHeaderName {
     return ofLowerCase(lowerCaseName);
   }
 
-  static HttpHeaderNameImpl ofLowerCase(String lowerCase) {
-    return new HttpHeaderNameImpl(-1, null, lowerCase, HttpHeaderType.BOTH);
+  static HttpHeaderName0 ofLowerCase(String lowerCase) {
+    return new HttpHeaderName0(-1, null, lowerCase, HttpHeaderType.BOTH);
   }
 
   @Override
   public final boolean equals(Object obj) {
-    return obj == this || obj instanceof HttpHeaderNameImpl that
+    return obj == this || obj instanceof HttpHeaderName0 that
         && lowerCase.contentEquals(that.lowerCase);
   }
 

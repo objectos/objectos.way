@@ -17,7 +17,7 @@ package objectos.http;
 
 import module java.base;
 
-record HttpRequestImpl(
+record HttpRequest0(
 
     HttpMethod method,
 
@@ -27,7 +27,7 @@ record HttpRequestImpl(
 
     HttpVersion version,
 
-    HttpRequestHeaders headers,
+    HttpRequestHeaders0 headers,
 
     HttpRequestBody body
 

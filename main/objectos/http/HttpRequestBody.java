@@ -26,7 +26,7 @@ import java.util.stream.LongStream;
 public sealed interface HttpRequestBody
     permits
     HttpRequest,
-    HttpRequestBodyImpl {
+    HttpRequestBody0 {
 
   /// Returns an input stream that reads the bytes of this request body.
   ///

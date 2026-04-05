@@ -23,11 +23,9 @@ final class HttpRequestParser2Method {
 
     METHOD;
 
-    private static final byte[] MESSAGE = "Invalid request line.\n".getBytes(StandardCharsets.US_ASCII);
-
     @Override
-    public final byte[] message() {
-      return MESSAGE;
+    public final String message() {
+      return "Invalid request line.\n";
     }
 
     @Override
@@ -89,10 +87,6 @@ final class HttpRequestParser2Method {
       }
 
       throw HttpClientException.of(Invalid.METHOD);
-    }
-
-    if (!method.implemented) {
-      throw HttpServerException.methodNotImplemented();
     }
 
     return method;

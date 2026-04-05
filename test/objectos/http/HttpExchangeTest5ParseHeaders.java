@@ -131,8 +131,8 @@ public class HttpExchangeTest5ParseHeaders extends HttpExchangeTest {
 
     req.append("GET / HTTP/1.1\r\n");
 
-    for (HttpHeaderNameImpl name : HttpHeaderNameImpl.VALUES) {
-      if (!name.isResponseOnly() && !name.equals(HttpHeaderNameImpl.TRANSFER_ENCODING)) {
+    for (HttpHeaderName0 name : HttpHeaderName0.VALUES) {
+      if (!name.isResponseOnly() && !name.equals(HttpHeaderName0.TRANSFER_ENCODING)) {
         req.append(name.headerCase());
         req.append(": ");
         req.append(Integer.toString(name.index()));
@@ -143,7 +143,7 @@ public class HttpExchangeTest5ParseHeaders extends HttpExchangeTest {
     req.append("\r\n");
 
     final int contentLength;
-    contentLength = HttpHeaderNameImpl.CONTENT_LENGTH.index();
+    contentLength = HttpHeaderName0.CONTENT_LENGTH.index();
 
     req.append("x".repeat(contentLength));
 
@@ -154,8 +154,8 @@ public class HttpExchangeTest5ParseHeaders extends HttpExchangeTest {
       assertEquals(http.shouldHandle(), true);
 
       // headers
-      for (HttpHeaderNameImpl name : HttpHeaderNameImpl.VALUES) {
-        if (!name.isResponseOnly() && !name.equals(HttpHeaderNameImpl.TRANSFER_ENCODING)) {
+      for (HttpHeaderName0 name : HttpHeaderName0.VALUES) {
+        if (!name.isResponseOnly() && !name.equals(HttpHeaderName0.TRANSFER_ENCODING)) {
           assertEquals(http.header(name), Integer.toString(name.index()));
         }
       }

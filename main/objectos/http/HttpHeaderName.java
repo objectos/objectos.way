@@ -20,7 +20,7 @@ import java.util.Objects;
 /**
  * An HTTP header name.
  */
-public sealed interface HttpHeaderName permits HttpHeaderNameImpl {
+public sealed interface HttpHeaderName permits HttpHeaderName0 {
 
   /**
    * Creates a new {@code HeaderName} instance with the specified name.
@@ -33,103 +33,103 @@ public sealed interface HttpHeaderName permits HttpHeaderNameImpl {
   static HttpHeaderName of(String name) {
     Objects.requireNonNull(name, "name == null");
 
-    return HttpHeaderNameImpl.of(name);
+    return HttpHeaderName0.of(name);
   }
 
   /**
    * The {@code Accept-Encoding} header name.
    */
-  HttpHeaderName ACCEPT_ENCODING = HttpHeaderNameImpl.ACCEPT_ENCODING;
+  HttpHeaderName ACCEPT_ENCODING = HttpHeaderName0.ACCEPT_ENCODING;
 
   /**
    * The {@code Allow} header name.
    */
-  HttpHeaderName ALLOW = HttpHeaderNameImpl.ALLOW;
+  HttpHeaderName ALLOW = HttpHeaderName0.ALLOW;
 
   /**
    * The {@code Connection} header name.
    */
-  HttpHeaderName CONNECTION = HttpHeaderNameImpl.CONNECTION;
+  HttpHeaderName CONNECTION = HttpHeaderName0.CONNECTION;
 
   /**
    * The {@code Content-Disposition} header name.
    */
-  HttpHeaderName CONTENT_DISPOSITION = HttpHeaderNameImpl.CONTENT_DISPOSITION;
+  HttpHeaderName CONTENT_DISPOSITION = HttpHeaderName0.CONTENT_DISPOSITION;
 
   /**
    * The {@code Content-Length} header name.
    */
-  HttpHeaderName CONTENT_LENGTH = HttpHeaderNameImpl.CONTENT_LENGTH;
+  HttpHeaderName CONTENT_LENGTH = HttpHeaderName0.CONTENT_LENGTH;
 
   /**
    * The {@code Content-Type} header name.
    */
-  HttpHeaderName CONTENT_TYPE = HttpHeaderNameImpl.CONTENT_TYPE;
+  HttpHeaderName CONTENT_TYPE = HttpHeaderName0.CONTENT_TYPE;
 
   /**
    * The {@code Cookie} header name.
    */
-  HttpHeaderName COOKIE = HttpHeaderNameImpl.COOKIE;
+  HttpHeaderName COOKIE = HttpHeaderName0.COOKIE;
 
   /**
    * The {@code Date} header name.
    */
-  HttpHeaderName DATE = HttpHeaderNameImpl.DATE;
+  HttpHeaderName DATE = HttpHeaderName0.DATE;
 
   /**
    * The {@code ETag} header name.
    */
-  HttpHeaderName ETAG = HttpHeaderNameImpl.ETAG;
+  HttpHeaderName ETAG = HttpHeaderName0.ETAG;
 
   /**
    * The {@code From} header name.
    */
-  HttpHeaderName FROM = HttpHeaderNameImpl.FROM;
+  HttpHeaderName FROM = HttpHeaderName0.FROM;
 
   /**
    * The {@code Host} header name.
    */
-  HttpHeaderName HOST = HttpHeaderNameImpl.HOST;
+  HttpHeaderName HOST = HttpHeaderName0.HOST;
 
   /**
    * The {@code If-None-Match} header name.
    */
-  HttpHeaderName IF_NONE_MATCH = HttpHeaderNameImpl.IF_NONE_MATCH;
+  HttpHeaderName IF_NONE_MATCH = HttpHeaderName0.IF_NONE_MATCH;
 
   /**
    * The {@code Location} header name.
    */
-  HttpHeaderName LOCATION = HttpHeaderNameImpl.LOCATION;
+  HttpHeaderName LOCATION = HttpHeaderName0.LOCATION;
 
   /**
    * The {@code Referer} header name.
    */
-  HttpHeaderName REFERER = HttpHeaderNameImpl.REFERER;
+  HttpHeaderName REFERER = HttpHeaderName0.REFERER;
 
   /**
    * The {@code Set-Cookie} header name.
    */
-  HttpHeaderName SET_COOKIE = HttpHeaderNameImpl.SET_COOKIE;
+  HttpHeaderName SET_COOKIE = HttpHeaderName0.SET_COOKIE;
 
   /**
    * The {@code Transfer-Encoding} header name.
    */
-  HttpHeaderName TRANSFER_ENCODING = HttpHeaderNameImpl.TRANSFER_ENCODING;
+  HttpHeaderName TRANSFER_ENCODING = HttpHeaderName0.TRANSFER_ENCODING;
 
   /**
    * The {@code User-Agent} header name.
    */
-  HttpHeaderName USER_AGENT = HttpHeaderNameImpl.USER_AGENT;
+  HttpHeaderName USER_AGENT = HttpHeaderName0.USER_AGENT;
 
   /**
    * The {@code Way-CSRF-Token} header name.
    */
-  HttpHeaderName WAY_CSRF_TOKEN = HttpHeaderNameImpl.WAY_CSRF_TOKEN;
+  HttpHeaderName WAY_CSRF_TOKEN = HttpHeaderName0.WAY_CSRF_TOKEN;
 
   /**
    * The {@code Way-Request} header name.
    */
-  HttpHeaderName WAY_REQUEST = HttpHeaderNameImpl.WAY_REQUEST;
+  HttpHeaderName WAY_REQUEST = HttpHeaderName0.WAY_REQUEST;
 
   /**
    * Returns this name in header case, i.e., first letter of each word

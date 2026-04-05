@@ -15,12 +15,23 @@
  */
 package objectos.http;
 
-/// Provides methods for inspecting the request message of an HTTP exchange.
-public sealed interface HttpRequest
-    extends
-    HttpRequestLine,
-    HttpRequestHeaders,
-    HttpRequestBody
-    permits HttpExchange, HttpRequest0 {
+import java.util.Map;
+import java.util.Objects;
+
+record HttpRequestHeaders0(Map<HttpHeaderName, Object> headers) implements HttpRequestHeaders {
+
+  public final boolean closeConnection() {
+    final String connection;
+    connection = Http.queryParamsGet(headers, HttpHeaderName.CONNECTION);
+
+    return "close".equalsIgnoreCase(connection);
+  }
+
+  @Override
+  public final String header(HttpHeaderName name) {
+    Objects.requireNonNull(name, "name == null");
+
+    return Http.queryParamsGet(headers, name);
+  }
 
 }

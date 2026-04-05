@@ -164,22 +164,42 @@ public sealed interface HttpResponse permits HttpResponseImpl, HttpResponse0 {
   /// Ends this HTTP response message with the specified body.
   ///
   /// @param bytes the array of bytes with the body contents
+  void send(byte[] bytes);
+
+  /// Ends this HTTP response message with the specified body.
+  ///
+  /// @param bytes the array of bytes with the body contents
   /// @param offset index where the actual message begins
   /// @param length the message length in bytes
   void send(byte[] bytes, int offset, int length);
+
+  /// Ends this HTTP response message with the contents from the specified
+  /// media.
+  ///
+  /// @param media the media entity
+  void send(Media media);
+
+  /// Ends this HTTP response message with the contents from the specified
+  /// media.
+  ///
+  /// @param media the media entity
+  void send(Media.Bytes media);
+
+  /// Ends this HTTP response message with the contents from the specified
+  /// media.
+  ///
+  /// @param media the media entity
+  void send(Media.Text media);
+
+  /// Ends this HTTP response message with the contents from the specified
+  /// media.
+  ///
+  /// @param media the media entity
+  void send(Media.Stream media);
 
   /// Ends this HTTP response message with the specified body.
   ///
   /// @param file the path to a regular file containing the body contents
   void send(Path file);
-
-  /**
-   * Writes the required response headers for the specified media and ends
-   * this HTTP response message with the contents from the specified media.
-   *
-   * @param media
-   *        the media entity
-   */
-  void send(Media media);
 
 }

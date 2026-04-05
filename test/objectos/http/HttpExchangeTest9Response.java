@@ -723,7 +723,7 @@ public class HttpExchangeTest9Response extends HttpExchangeTest {
 
   @Test
   public void respond03() {
-    final Media media;
+    final Media.Bytes media;
     media = Media.Bytes.textPlain("FOO\n");
 
     get(

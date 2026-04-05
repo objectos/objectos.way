@@ -16,25 +16,47 @@
 package objectos.http;
 
 import java.net.Socket;
+import java.nio.file.Path;
+import java.time.Clock;
 import java.util.function.Consumer;
 import objectos.way.Note;
 import objectos.way.Y;
 
 final class HttpServerTaskY {
 
-  private HttpRequestBodyOptions bodyOptions;
+  Path bodyDirectory;
 
-  int bufferSize = 1024;
+  int bodyMemoryMax = 256;
 
-  private HttpHandler handler;
+  long bodySizeMax = 512;
+
+  int bufferSize = 512;
+
+  Clock clock = Y.clockFixed();
+
+  HttpHandler handler;
 
   long id = Long.MAX_VALUE;
 
   Note.Sink noteSink = Y.noteSink();
 
-  private HttpSessionStoreImpl sessionStore;
+  HttpSessionLoader sessionLoader = _ -> null;
 
   Socket socket;
+
+  public static String resp(Consumer<? super HttpServerTaskY> opts) {
+    final HttpServerTaskY y;
+    y = new HttpServerTaskY();
+
+    opts.accept(y);
+
+    final HttpServerTask task;
+    task = y.build();
+
+    task.run();
+
+    return y.response();
+  }
 
   public static HttpServerTaskY run(Consumer<? super HttpServerTaskY> opts) {
     final HttpServerTaskY y;
@@ -50,11 +72,17 @@ final class HttpServerTaskY {
     return y;
   }
 
+  public final String response() {
+    return Y.toString(socket);
+  }
+
   private HttpServerTask build() {
     return new HttpServerTask(
-        bodyOptions,
+        HttpRequestBodyOptions.of(bodyDirectory, bodyMemoryMax, bodySizeMax),
 
         new byte[bufferSize],
+
+        clock,
 
         handler,
 
@@ -62,7 +90,7 @@ final class HttpServerTaskY {
 
         noteSink,
 
-        sessionStore,
+        sessionLoader,
 
         socket
     );

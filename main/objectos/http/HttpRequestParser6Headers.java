@@ -20,8 +20,6 @@ import objectos.internal.Bytes;
 
 final class HttpRequestParser6Headers {
 
-  private static final byte[] MESSAGE = "Invalid request headers.\n".getBytes(StandardCharsets.US_ASCII);
-
   enum Invalid implements HttpClientException.Kind {
     // header name has an invalid character
     NAME_CHAR(HttpStatus.BAD_REQUEST),
@@ -45,8 +43,8 @@ final class HttpRequestParser6Headers {
     }
 
     @Override
-    public final byte[] message() {
-      return MESSAGE;
+    public final String message() {
+      return "Invalid request headers.\n";
     }
 
     @Override
@@ -125,24 +123,24 @@ final class HttpRequestParser6Headers {
       b = input.readByte();
 
       final byte mapped;
-      mapped = HttpHeaderNameImpl.map(b);
+      mapped = HttpHeaderName0.map(b);
 
       switch (mapped) {
-        case HttpHeaderNameImpl.INVALID -> {
+        case HttpHeaderName0.INVALID -> {
           throw HttpClientException.of(Invalid.NAME_CHAR);
         }
 
-        case HttpHeaderNameImpl.COLON -> {
+        case HttpHeaderName0.COLON -> {
           final String lowerCase;
           lowerCase = makeString();
 
-          final HttpHeaderNameImpl standard;
-          standard = HttpHeaderNameImpl.byLowerCase(lowerCase);
+          final HttpHeaderName0 standard;
+          standard = HttpHeaderName0.byLowerCase(lowerCase);
 
           if (standard != null) {
             return standard;
           } else {
-            return HttpHeaderNameImpl.ofLowerCase(lowerCase);
+            return HttpHeaderName0.ofLowerCase(lowerCase);
           }
         }
 

@@ -46,10 +46,6 @@ public class HttpRequestParser2MethodTest {
 
   @Test(dataProvider = "methodProvider", description = "method: valid")
   public void parse01(HttpMethod method) throws IOException {
-    if (!method.implemented) {
-      return;
-    }
-
     assertEquals(
         parse(
             """
@@ -61,27 +57,6 @@ public class HttpRequestParser2MethodTest {
 
         method
     );
-  }
-
-  @Test(dataProvider = "methodProvider", description = "method: valid but not implemented")
-  public void parse02(HttpMethod method) throws IOException {
-    if (method.implemented) {
-      return;
-    }
-
-    try {
-      parse(
-          """
-          %s /index.html HTTP/1.1\r
-          Host: www.example.com\r
-          \r
-          """.formatted(method.name())
-      );
-
-      Assert.fail("It should have thrown");
-    } catch (HttpServerException expected) {
-      assertEquals(expected.kind, HttpServerException.Kind.METHOD_NOT_IMPLEMENTED);
-    }
   }
 
   @Test(dataProvider = "methodProvider", description = "method: valid + slow client")

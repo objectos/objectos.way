@@ -28,7 +28,7 @@ import org.testng.annotations.Test;
 
 public class HttpRequestParserTest {
 
-  private static final HttpRequestBody EMPTY_BODY = new HttpRequestBodyImpl(
+  private static final HttpRequestBody EMPTY_BODY = new HttpRequestBody0(
       HttpRequestBodyData.ofNull(),
       Map.of()
   );
@@ -74,7 +74,7 @@ public class HttpRequestParserTest {
     }
 
     final HttpRequest build() {
-      return new HttpRequestImpl(
+      return new HttpRequest0(
           method,
 
           path,
@@ -83,7 +83,7 @@ public class HttpRequestParserTest {
 
           version,
 
-          new HttpRequestHeadersImpl(headers),
+          new HttpRequestHeaders0(headers),
 
           body
       );

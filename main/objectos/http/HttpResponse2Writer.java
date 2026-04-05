@@ -15,13 +15,15 @@
  */
 package objectos.http;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
+import java.nio.file.Path;
 import objectos.internal.Bytes;
+import objectos.way.Media;
 
-final class HttpResponse2WriteStart {
+final class HttpResponse2Writer implements Closeable {
 
   private static final byte[][] STATUS_LINES;
 
@@ -52,59 +54,45 @@ final class HttpResponse2WriteStart {
 
   private int bufferIndex;
 
-  private final List<HttpResponse1Header> headers;
+  private boolean chunked;
 
   private final OutputStream outputStream;
 
-  private final HttpStatus status;
+  private final HttpVersion version = HttpVersion.HTTP_1_1;
 
-  private final HttpVersion version;
-
-  HttpResponse2WriteStart(byte[] buffer, List<HttpResponse1Header> headers, OutputStream outputStream, HttpStatus status, HttpVersion version) {
+  HttpResponse2Writer(byte[] buffer, OutputStream outputStream) {
     this.buffer = buffer;
 
-    this.headers = headers;
-
     this.outputStream = outputStream;
-
-    this.status = status;
-
-    this.version = version;
   }
 
-  public final void write() throws IOException {
-    // version
-    writeBytes(version.responseBytes);
-
-    // status
-    HttpStatusImpl internal;
-    internal = (HttpStatusImpl) status;
-
-    byte[] statusBytes;
-    statusBytes = STATUS_LINES[internal.ordinal()];
-
-    writeBytes(statusBytes);
-
-    // headers
-    for (var header : headers) {
-      writeHeader(header);
+  @Override
+  public final void close() throws IOException {
+    if (bufferIndex > 0) {
+      flush();
     }
   }
 
-  private void writeHeader(HttpResponse1Header header) throws IOException {
-    final HttpHeaderName name;
-    name = header.name();
+  public final void status(HttpStatus status) throws IOException {
+    writeBytes(version.responseBytes);
 
-    final HttpHeaderNameImpl nameImpl;
-    nameImpl = (HttpHeaderNameImpl) name;
+    final HttpStatusImpl impl;
+    impl = (HttpStatusImpl) status;
+
+    final byte[] statusBytes;
+    statusBytes = STATUS_LINES[impl.ordinal()];
+
+    writeBytes(statusBytes);
+  }
+
+  public final void header(HttpHeaderName name, String value) throws IOException {
+    final HttpHeaderName0 nameImpl;
+    nameImpl = (HttpHeaderName0) name;
 
     final byte[] nameBytes;
     nameBytes = nameImpl.getBytes(version);
 
     writeBytes(nameBytes);
-
-    final String value;
-    value = header.value();
 
     if (value.isEmpty()) {
       writeBytes(Bytes.COLON_BYTES);
@@ -117,9 +105,47 @@ final class HttpResponse2WriteStart {
       valueBytes = value.getBytes(StandardCharsets.US_ASCII);
 
       writeBytes(valueBytes);
+
+      chunked = name == HttpHeaderName.TRANSFER_ENCODING && "chunked".equalsIgnoreCase(value);
     }
 
     writeBytes(Bytes.CRLF);
+  }
+
+  public final void lineSeparator() throws IOException {
+    writeBytes(Bytes.CRLF);
+  }
+
+  public final void send() {
+    // noop
+  }
+
+  public final void send(byte[] bytes, int off, int len) throws IOException {
+    if (chunked) {
+      throw new UnsupportedOperationException("Implement me");
+    } else {
+      flush();
+
+      outputStream.write(bytes, off, len);
+    }
+  }
+
+  public final void send(Media.Text media) {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  public final void send(Media.Stream media) {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  public final void send(Path file) {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  private void flush() throws IOException {
+    outputStream.write(buffer, 0, bufferIndex);
+
+    bufferIndex = 0;
   }
 
   private void writeBytes(byte[] bytes) throws IOException {
@@ -134,9 +160,7 @@ final class HttpResponse2WriteStart {
       available = buffer.length - bufferIndex;
 
       if (available <= 0) {
-        outputStream.write(buffer, 0, bufferIndex);
-
-        bufferIndex = 0;
+        flush();
 
         available = buffer.length - bufferIndex;
       }

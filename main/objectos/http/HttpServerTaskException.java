@@ -15,16 +15,26 @@
  */
 package objectos.http;
 
-import java.util.Map;
-import java.util.Objects;
+import java.io.IOException;
+import objectos.way.Media;
 
-record HttpRequestHeadersImpl(Map<HttpHeaderName, Object> headers) implements HttpRequestHeaders {
+@SuppressWarnings("serial")
+abstract class HttpServerTaskException extends IOException {
 
-  @Override
-  public final String header(HttpHeaderName name) {
-    Objects.requireNonNull(name, "name == null");
+  public void respond(HttpResponse response) {
+    final HttpStatus status;
+    status = status();
 
-    return Http.queryParamsGet(headers, name);
+    final Media.Bytes message;
+    message = message();
+
+    response.status(status);
+
+    response.send(message);
   }
+
+  abstract HttpStatus status();
+
+  abstract Media.Bytes message();
 
 }

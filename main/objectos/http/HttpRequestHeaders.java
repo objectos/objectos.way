@@ -25,7 +25,7 @@ package objectos.http;
 public sealed interface HttpRequestHeaders
     permits
     HttpRequest,
-    HttpRequestHeadersImpl {
+    HttpRequestHeaders0 {
 
   /**
    * Returns the value of the first field line having the specified name;

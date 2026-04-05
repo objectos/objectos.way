@@ -25,8 +25,8 @@ import org.testng.annotations.Test;
 public class HttpRequestParser7BodyMetaTest {
 
   private HttpRequestBodyMeta parse(Map<HttpHeaderName, Object> map) throws IOException {
-    final HttpRequestHeadersImpl headers;
-    headers = new HttpRequestHeadersImpl(map);
+    final HttpRequestHeaders0 headers;
+    headers = new HttpRequestHeaders0(map);
 
     final HttpRequestParser7BodyMeta parser;
     parser = new HttpRequestParser7BodyMeta(headers);

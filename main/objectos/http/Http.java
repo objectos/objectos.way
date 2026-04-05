@@ -35,9 +35,9 @@ import objectos.internal.Util;
  */
 final class Http {
 
-  static final byte[] LINE_TERM = "Invalid line terminator.\n".getBytes(StandardCharsets.US_ASCII);
+  static final String LINE_TERM = "Invalid line terminator.\n";
 
-  static final byte[] REQ_LINE = "Invalid request line.\n".getBytes(StandardCharsets.US_ASCII);
+  static final String REQ_LINE = "Invalid request line.\n";
 
   /**
    * Enum representing possible values for the SameSite attribute.

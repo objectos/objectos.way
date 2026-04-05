@@ -185,8 +185,8 @@ public class HttpRequestParser6HeadersTest {
     StringBuilder in;
     in = new StringBuilder();
 
-    for (HttpHeaderNameImpl name : HttpHeaderNameImpl.VALUES) {
-      if (!name.isResponseOnly() && !name.equals(HttpHeaderNameImpl.TRANSFER_ENCODING)) {
+    for (HttpHeaderName0 name : HttpHeaderName0.VALUES) {
+      if (!name.isResponseOnly() && !name.equals(HttpHeaderName0.TRANSFER_ENCODING)) {
         in.append(name.headerCase());
         in.append(": ");
         in.append(Integer.toString(name.index()));
@@ -197,7 +197,7 @@ public class HttpRequestParser6HeadersTest {
     in.append("\r\n");
 
     final int contentLength;
-    contentLength = HttpHeaderNameImpl.CONTENT_LENGTH.index();
+    contentLength = HttpHeaderName0.CONTENT_LENGTH.index();
 
     in.append("x".repeat(contentLength));
 
@@ -206,8 +206,8 @@ public class HttpRequestParser6HeadersTest {
     );
 
     // headers
-    for (HttpHeaderNameImpl name : HttpHeaderNameImpl.VALUES) {
-      if (!name.isResponseOnly() && !name.equals(HttpHeaderNameImpl.TRANSFER_ENCODING)) {
+    for (HttpHeaderName0 name : HttpHeaderName0.VALUES) {
+      if (!name.isResponseOnly() && !name.equals(HttpHeaderName0.TRANSFER_ENCODING)) {
         assertEquals(res.get(name), Integer.toString(name.index()));
       }
     }

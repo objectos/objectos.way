@@ -22,20 +22,22 @@ final class HttpResponse0 implements HttpResponse {
 
   private final byte[] buffer;
 
+  private final Clock clock;
+
+  private boolean closeConnection;
+
   private final List<HttpResponse1Header> headers = new ArrayList<>();
 
   private final OutputStream outputStream;
 
   private HttpStatus status = HttpStatus.OK;
 
-  private final HttpVersion version;
-
-  HttpResponse0(byte[] buffer, OutputStream outputStream, HttpVersion version) {
+  HttpResponse0(byte[] buffer, Clock clock, OutputStream outputStream) {
     this.buffer = buffer;
 
-    this.outputStream = outputStream;
+    this.clock = clock;
 
-    this.version = version;
+    this.outputStream = outputStream;
   }
 
   // 2xx responses
@@ -44,21 +46,27 @@ final class HttpResponse0 implements HttpResponse {
   public final void ok(Media.Bytes media) {
     status(HttpStatus.OK);
 
-    media(media);
+    header(HttpHeaderName.DATE, now());
+
+    send(media);
   }
 
   @Override
   public final void ok(Media.Stream media) {
     status(HttpStatus.OK);
 
-    media(media);
+    header(HttpHeaderName.DATE, now());
+
+    send(media);
   }
 
   @Override
   public final void ok(Media.Text media) {
     status(HttpStatus.OK);
 
-    media(media);
+    header(HttpHeaderName.DATE, now());
+
+    send(media);
   }
 
   // 3xx responses
@@ -183,13 +191,25 @@ final class HttpResponse0 implements HttpResponse {
 
   @Override
   public final String now() {
-    throw new UnsupportedOperationException("Implement me");
+    final ZonedDateTime now;
+    now = ZonedDateTime.now(clock);
+
+    return Http.formatDate(now);
   }
 
   @Override
   public final void send() {
-    try {
-      writeStart();
+    try (HttpResponse2Writer w = writer()) {
+      w.send();
+    } catch (IOException e) {
+      clientWriteError(e);
+    }
+  }
+
+  @Override
+  public final void send(byte[] bytes) {
+    try (HttpResponse2Writer w = writer()) {
+      w.send(bytes, 0, bytes.length);
     } catch (IOException e) {
       clientWriteError(e);
     }
@@ -197,11 +217,8 @@ final class HttpResponse0 implements HttpResponse {
 
   @Override
   public final void send(byte[] bytes, int offset, int length) {
-    try {
-      writeStart();
-
-      // FIX writing mode depends on response headers
-      outputStream.write(bytes, offset, length);
+    try (HttpResponse2Writer w = writer()) {
+      w.send(bytes, offset, length);
     } catch (IOException e) {
       clientWriteError(e);
     }
@@ -209,21 +226,26 @@ final class HttpResponse0 implements HttpResponse {
 
   @Override
   public final void send(Path file) {
-    throw new UnsupportedOperationException("Implement me");
+    try (HttpResponse2Writer w = writer()) {
+      w.send(file);
+    } catch (IOException e) {
+      clientWriteError(e);
+    }
   }
 
   @Override
   public final void send(Media media) {
     switch (media) {
-      case Media.Bytes bytes -> media(bytes);
+      case Media.Bytes bytes -> send(bytes);
 
-      case Media.Text text -> media(text);
+      case Media.Text text -> send(text);
 
-      case Media.Stream stream -> media(stream);
+      case Media.Stream stream -> send(stream);
     }
   }
 
-  public final void media(Media.Bytes media) {
+  @Override
+  public final void send(Media.Bytes media) {
     // early media validation
     final String contentType;
     contentType = media.contentType();
@@ -239,16 +261,22 @@ final class HttpResponse0 implements HttpResponse {
       throw new IllegalArgumentException("The specified Media.Bytes provided a null byte array");
     }
 
-    header(HttpHeaderName.DATE, now());
+    final int length;
+    length = bytes.length;
 
     header(HttpHeaderName.CONTENT_TYPE, contentType);
 
-    header(HttpHeaderName.CONTENT_LENGTH, bytes.length);
+    header(HttpHeaderName.CONTENT_LENGTH, length);
 
-    throw new UnsupportedOperationException("Implement me");
+    try (HttpResponse2Writer w = writer()) {
+      w.send(bytes, 0, length);
+    } catch (IOException e) {
+      clientWriteError(e);
+    }
   }
 
-  public final void media(Media.Text media) {
+  @Override
+  public final void send(Media.Text media) {
     // early media validation
     final String contentType;
     contentType = media.contentType();
@@ -264,16 +292,19 @@ final class HttpResponse0 implements HttpResponse {
       throw new IllegalArgumentException("The specified Media.Text provided a null charset");
     }
 
-    header(HttpHeaderName.DATE, now());
-
     header(HttpHeaderName.CONTENT_TYPE, contentType);
 
     header(HttpHeaderName.TRANSFER_ENCODING, "chunked");
 
-    throw new UnsupportedOperationException("Implement me");
+    try (HttpResponse2Writer w = writer()) {
+      w.send(media);
+    } catch (IOException e) {
+      clientWriteError(e);
+    }
   }
 
-  public final void media(Media.Stream media) {
+  @Override
+  public final void send(Media.Stream media) {
     // early media validation
     final String contentType;
     contentType = media.contentType();
@@ -282,24 +313,46 @@ final class HttpResponse0 implements HttpResponse {
       throw new IllegalArgumentException("The specified Media.Stream provided a null content-type");
     }
 
-    header(HttpHeaderName.DATE, now());
-
     header(HttpHeaderName.CONTENT_TYPE, contentType);
 
     header(HttpHeaderName.TRANSFER_ENCODING, "chunked");
 
-    throw new UnsupportedOperationException("Implement me");
+    try (HttpResponse2Writer w = writer()) {
+      w.send(media);
+    } catch (IOException e) {
+      clientWriteError(e);
+    }
+  }
+
+  final boolean closeConnection() {
+    return closeConnection;
   }
 
   private void clientWriteError(IOException e) {
     throw new UnsupportedOperationException("Implement me");
   }
 
-  private void writeStart() throws IOException {
-    final HttpResponse2WriteStart writer;
-    writer = new HttpResponse2WriteStart(buffer, headers, outputStream, status, version);
+  private HttpResponse2Writer writer() throws IOException {
+    final HttpResponse2Writer writer;
+    writer = new HttpResponse2Writer(buffer, outputStream);
 
-    writer.write();
+    writer.status(status);
+
+    for (var header : headers) {
+      final HttpHeaderName name;
+      name = header.name();
+
+      final String value;
+      value = header.value();
+
+      writer.header(name, value);
+
+      closeConnection = name == HttpHeaderName.CONNECTION && "close".equalsIgnoreCase(value);
+    }
+
+    writer.lineSeparator();
+
+    return writer;
   }
 
 }

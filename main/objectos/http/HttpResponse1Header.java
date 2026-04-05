@@ -23,7 +23,7 @@ record HttpResponse1Header(HttpHeaderName name, String value) {
 
     Objects.requireNonNull(name, "name == null");
 
-    checkValue();
+    checkValue(value);
 
   }
 
@@ -45,7 +45,7 @@ record HttpResponse1Header(HttpHeaderName name, String value) {
 
   }
 
-  private void checkValue() {
+  private void checkValue(String value) {
     final int len;
     len = value.length(); // early implicit null-check
 

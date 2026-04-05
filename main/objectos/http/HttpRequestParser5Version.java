@@ -33,18 +33,18 @@ final class HttpRequestParser5Version {
     // 505 HTTP Version Not Supported
     HTTP_VERSION_NOT_SUPPORTED(Http.REQ_LINE, HttpStatus.HTTP_VERSION_NOT_SUPPORTED);
 
-    private final byte[] message;
+    private final String message;
 
     private final HttpStatus status;
 
-    private Invalid(byte[] message, HttpStatus status) {
+    private Invalid(String message, HttpStatus status) {
       this.message = message;
 
       this.status = status;
     }
 
     @Override
-    public final byte[] message() {
+    public final String message() {
       return message;
     }
 

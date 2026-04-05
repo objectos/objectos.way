@@ -24,7 +24,7 @@ import java.util.Set;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 
-record HttpRequestBodyImpl(HttpRequestBodyData data, Map<String, Object> formParams)
+record HttpRequestBody0(HttpRequestBodyData data, Map<String, Object> formParams)
     implements
     HttpRequestBody {
 

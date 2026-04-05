@@ -15,26 +15,9 @@
  */
 package objectos.http;
 
-import java.io.IOException;
+@FunctionalInterface
+interface HttpSessionLoader {
 
-final class HttpServerException extends IOException {
-
-  private static final long serialVersionUID = -2688701078650812352L;
-
-  enum Kind {
-
-    METHOD_NOT_IMPLEMENTED;
-
-  }
-
-  final Kind kind;
-
-  private HttpServerException(Kind kind) {
-    this.kind = kind;
-  }
-
-  static HttpServerException methodNotImplemented() {
-    return new HttpServerException(Kind.METHOD_NOT_IMPLEMENTED);
-  }
+  HttpSession loadSession(HttpRequest request);
 
 }

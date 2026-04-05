@@ -37,7 +37,7 @@ final class HttpRequestParser {
     this.inputStream = inputStream;
   }
 
-  public final HttpRequest parse() throws IOException {
+  public final HttpRequest0 parse() throws IOException {
     // input
     final HttpRequestParser0Input input;
     input = new HttpRequestParser0Input(buffer, inputStream);
@@ -77,8 +77,8 @@ final class HttpRequestParser {
     final Map<HttpHeaderName, Object> headersMap;
     headersMap = headersParser.parse();
 
-    final HttpRequestHeadersImpl headers;
-    headers = new HttpRequestHeadersImpl(headersMap);
+    final HttpRequestHeaders0 headers;
+    headers = new HttpRequestHeaders0(headersMap);
 
     // body meta
     final HttpRequestParser7BodyMeta bodyMetaParser;
@@ -118,10 +118,10 @@ final class HttpRequestParser {
     };
 
     // body final
-    final HttpRequestBodyImpl body;
-    body = new HttpRequestBodyImpl(bodyData, formParams);
+    final HttpRequestBody0 body;
+    body = new HttpRequestBody0(bodyData, formParams);
 
-    return new HttpRequestImpl(
+    return new HttpRequest0(
         method,
 
         path,

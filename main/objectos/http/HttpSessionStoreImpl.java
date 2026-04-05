@@ -28,7 +28,7 @@ import objectos.internal.NoOpSinkSingleton;
 import objectos.way.Media;
 import objectos.way.Note;
 
-final class HttpSessionStoreImpl implements HttpSessionStore {
+final class HttpSessionStoreImpl implements HttpSessionLoader, HttpSessionStore {
 
   record Notes(
       Note.Ref1<HttpRequest> invalidCsrf,
@@ -131,7 +131,8 @@ final class HttpSessionStoreImpl implements HttpSessionStore {
     impl.session(session);
   }
 
-  public final HttpSession load(HttpRequest request) {
+  @Override
+  public final HttpSession loadSession(HttpRequest request) {
     throw new UnsupportedOperationException("Implement me");
   }
 

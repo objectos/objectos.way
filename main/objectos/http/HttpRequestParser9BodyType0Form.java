@@ -21,8 +21,6 @@ import objectos.internal.Ascii;
 
 final class HttpRequestParser9BodyType0Form {
 
-  private static final byte[] MESSAGE = "Invalid application/x-www-form-urlencoded content in request body.\n".getBytes(StandardCharsets.US_ASCII);
-
   enum Invalid implements HttpClientException.Kind {
     // invalid URL-encoded character
     CHAR,
@@ -41,8 +39,8 @@ final class HttpRequestParser9BodyType0Form {
     }
 
     @Override
-    public final byte[] message() {
-      return MESSAGE;
+    public final String message() {
+      return "Invalid application/x-www-form-urlencoded content in request body.\n";
     }
 
     @Override

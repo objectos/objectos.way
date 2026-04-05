@@ -21,7 +21,7 @@ import objectos.way.Media.Bytes;
 import objectos.way.Media.Stream;
 import objectos.way.Media.Text;
 
-final class HttpExchangeImpl2 implements HttpExchange {
+final class HttpExchange0 implements HttpExchange {
 
   private final HttpRequest request;
 
@@ -29,7 +29,7 @@ final class HttpExchangeImpl2 implements HttpExchange {
 
   private final HttpSession session;
 
-  HttpExchangeImpl2(HttpRequest request, HttpResponse0 response, HttpSession session) {
+  HttpExchange0(HttpRequest request, HttpResponse0 response, HttpSession session) {
     this.request = request;
 
     this.response = response;
@@ -340,15 +340,15 @@ final class HttpExchangeImpl2 implements HttpExchange {
   }
 
   public final void media(Media.Bytes media) {
-    response.media(media);
+    response.send(media);
   }
 
   public final void media(Media.Text media) {
-    response.media(media);
+    response.send(media);
   }
 
   public final void media(Media.Stream media) {
-    response.media(media);
+    response.send(media);
   }
 
   // ##################################################################

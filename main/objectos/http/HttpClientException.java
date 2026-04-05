@@ -16,6 +16,7 @@
 package objectos.http;
 
 import java.io.IOException;
+import objectos.way.Media;
 
 final class HttpClientException extends IOException {
 
@@ -32,7 +33,7 @@ final class HttpClientException extends IOException {
       HttpRequestParser8BodyData.Invalid,
       HttpRequestParser9BodyType0Form.Invalid {
 
-    byte[] message();
+    String message();
 
     HttpStatus status();
 
@@ -56,6 +57,24 @@ final class HttpClientException extends IOException {
 
   public static HttpClientException of(Kind kind, Throwable cause) {
     return new HttpClientException(kind, cause);
+  }
+
+  public void respond(HttpResponse response) {
+    final HttpStatus status;
+    status = kind.status();
+
+    final String message;
+    message = kind.message();
+
+    response.status(status);
+
+    response.header(HttpHeaderName.DATE, response.now());
+
+    response.header(HttpHeaderName.CONNECTION, "close");
+
+    response.send(
+        Media.Bytes.textPlain(message)
+    );
   }
 
 }

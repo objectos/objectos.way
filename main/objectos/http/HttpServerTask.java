@@ -41,27 +41,32 @@ final class HttpServerTask implements Runnable {
 
   private final byte[] buffer;
 
+  private final Clock clock;
+
   private final HttpHandler handler;
 
   private final long id;
 
   private final Note.Sink noteSink;
 
-  private final HttpSessionStoreImpl sessionStore;
+  private final HttpSessionLoader sessionLoader;
 
   private final Socket socket;
 
   HttpServerTask(
       HttpRequestBodyOptions bodyOptions,
       byte[] buffer,
+      Clock clock,
       HttpHandler handler,
       long id,
       Note.Sink noteSink,
-      HttpSessionStoreImpl sessionStore,
+      HttpSessionLoader sessionLoader,
       Socket socket) {
     this.bodyOptions = bodyOptions;
 
     this.buffer = buffer;
+
+    this.clock = clock;
 
     this.handler = handler;
 
@@ -69,7 +74,7 @@ final class HttpServerTask implements Runnable {
 
     this.noteSink = noteSink;
 
-    this.sessionStore = sessionStore;
+    this.sessionLoader = sessionLoader;
 
     this.socket = socket;
   }
@@ -96,12 +101,12 @@ final class HttpServerTask implements Runnable {
       return;
     }
 
-    boolean shouldHandle;
-    shouldHandle = true;
+    boolean keepAlive;
+    keepAlive = true;
 
     try (socket) {
-      while (!Thread.currentThread().isInterrupted() && shouldHandle) {
-        shouldHandle = run0(inputStream, outputStream);
+      while (!Thread.currentThread().isInterrupted() && keepAlive) {
+        keepAlive = run0(inputStream, outputStream);
       }
     } catch (IOException e) {
       noteSink.send(NOTES.socketError, id, "close", e);
@@ -114,35 +119,61 @@ final class HttpServerTask implements Runnable {
     final HttpRequestParser requestParser;
     requestParser = new HttpRequestParser(bodyOptions, buffer, id, inputStream);
 
-    final HttpRequest request;
+    final HttpRequest0 request;
+
+    final HttpResponse0 response;
+    response = new HttpResponse0(buffer, clock, outputStream);
 
     try {
       request = requestParser.parse();
     } catch (HttpClientException e) {
-      throw new UnsupportedOperationException("Implement me");
+      e.respond(response);
+
+      return false;
     } catch (IOException e) {
-      throw new UnsupportedOperationException("Implement me");
+      noteSink.send(NOTES.socketError, id, "read", e);
+
+      return false;
     }
 
-    final HttpVersion version;
-    version = request.version();
+    final HttpMethod method;
+    method = request.method();
 
-    final HttpResponse0 response;
-    response = new HttpResponse0(buffer, outputStream, version);
+    if (!method.implemented) {
+      response.status(HttpStatus.NOT_IMPLEMENTED);
+
+      response.header(HttpHeaderName.DATE, response.now());
+
+      final Media.Bytes message;
+      message = Media.Bytes.textPlain("The requested method is not implemented by this server.\n");
+
+      response.send(message);
+
+      return keepAlive(request, response);
+    }
 
     final HttpSession session;
-    session = sessionStore.load(request);
+    session = sessionLoader.loadSession(request);
 
-    final HttpExchangeImpl2 exchange;
-    exchange = new HttpExchangeImpl2(request, response, session);
+    final HttpExchange0 exchange;
+    exchange = new HttpExchange0(request, response, session);
 
     try {
       handler.handle(exchange);
     } catch (Throwable e) {
-      throw new UnsupportedOperationException("Implement me");
+      throw new UnsupportedOperationException("Implement me", e);
     }
 
-    throw new UnsupportedOperationException("Implement me");
+    return keepAlive(request, response);
+  }
+
+  private boolean keepAlive(HttpRequest0 request, HttpResponse0 response) {
+    final HttpRequestHeaders0 requestHeaders;
+    requestHeaders = request.headers();
+
+    return requestHeaders.closeConnection()
+        ? false
+        : !response.closeConnection();
   }
 
 }

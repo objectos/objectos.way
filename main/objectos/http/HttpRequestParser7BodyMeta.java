@@ -16,12 +16,9 @@
 package objectos.http;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import objectos.internal.Ascii;
 
 final class HttpRequestParser7BodyMeta {
-
-  private static final byte[] MESSAGE = "Invalid request headers.\n".getBytes(StandardCharsets.US_ASCII);
 
   enum Invalid implements HttpClientException.Kind {
     // invalid value, e.g., 'Content-Length: two hundred bytes'
@@ -50,8 +47,8 @@ final class HttpRequestParser7BodyMeta {
     }
 
     @Override
-    public final byte[] message() {
-      return MESSAGE;
+    public final String message() {
+      return "Invalid request headers.\n";
     }
 
     @Override
@@ -71,7 +68,7 @@ final class HttpRequestParser7BodyMeta {
     contentLength = headers.header(HttpHeaderName.CONTENT_LENGTH);
 
     final String contentType;
-    contentType = headers.header(HttpHeaderNameImpl.CONTENT_TYPE);
+    contentType = headers.header(HttpHeaderName0.CONTENT_TYPE);
 
     final String transferEncoding;
     transferEncoding = headers.header(HttpHeaderName.TRANSFER_ENCODING);

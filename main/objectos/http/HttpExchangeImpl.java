@@ -371,9 +371,9 @@ final class HttpExchangeImpl implements HttpExchange, Runnable, Closeable {
 
   private final HttpHandler handler;
 
-  private HttpHeaderNameImpl headerName;
+  private HttpHeaderName0 headerName;
 
-  private Map<HttpHeaderNameImpl, HttpHeader> headers;
+  private Map<HttpHeaderName0, HttpHeader> headers;
 
   private final long id;
 
@@ -1980,24 +1980,24 @@ final class HttpExchangeImpl implements HttpExchange, Runnable, Closeable {
       b = buffer[bufferIndex];
 
       final byte mapped;
-      mapped = HttpHeaderNameImpl.map(b);
+      mapped = HttpHeaderName0.map(b);
 
       switch (mapped) {
-        case HttpHeaderNameImpl.INVALID -> {
+        case HttpHeaderName0.INVALID -> {
           return toBadRequest(InvalidRequestHeaders.NAME_CHAR);
         }
 
-        case HttpHeaderNameImpl.COLON -> {
+        case HttpHeaderName0.COLON -> {
           final String lowerCase;
           lowerCase = appendToString();
 
-          final HttpHeaderNameImpl standard;
-          standard = HttpHeaderNameImpl.byLowerCase(lowerCase);
+          final HttpHeaderName0 standard;
+          standard = HttpHeaderName0.byLowerCase(lowerCase);
 
           if (standard != null) {
             headerName = standard;
           } else {
-            headerName = HttpHeaderNameImpl.ofLowerCase(lowerCase);
+            headerName = HttpHeaderName0.ofLowerCase(lowerCase);
           }
 
           bufferIndex += 1;
@@ -2110,7 +2110,7 @@ final class HttpExchangeImpl implements HttpExchange, Runnable, Closeable {
       }
 
       final HttpHeader host;
-      host = headerUnchecked(HttpHeaderNameImpl.HOST);
+      host = headerUnchecked(HttpHeaderName0.HOST);
 
       if (host == null) {
         return toBadRequest(MissingHostHeader.INSTANCE);
@@ -2129,7 +2129,7 @@ final class HttpExchangeImpl implements HttpExchange, Runnable, Closeable {
       keepAlive = true;
 
       final HttpHeader connection;
-      connection = headerUnchecked(HttpHeaderNameImpl.CONNECTION);
+      connection = headerUnchecked(HttpHeaderName0.CONNECTION);
 
       if (connection != null) {
         final String value;
@@ -2162,7 +2162,7 @@ final class HttpExchangeImpl implements HttpExchange, Runnable, Closeable {
 
   private byte executeParseBody() {
     final HttpHeader contentLength;
-    contentLength = headerUnchecked(HttpHeaderNameImpl.CONTENT_LENGTH);
+    contentLength = headerUnchecked(HttpHeaderName0.CONTENT_LENGTH);
 
     if (contentLength != null) {
       object = contentLength;
@@ -2171,7 +2171,7 @@ final class HttpExchangeImpl implements HttpExchange, Runnable, Closeable {
     }
 
     final HttpHeader transferEncoding;
-    transferEncoding = headerUnchecked(HttpHeaderNameImpl.TRANSFER_ENCODING);
+    transferEncoding = headerUnchecked(HttpHeaderName0.TRANSFER_ENCODING);
 
     if (transferEncoding != null) {
       // TODO 501 Not Implemented
@@ -2179,7 +2179,7 @@ final class HttpExchangeImpl implements HttpExchange, Runnable, Closeable {
     }
 
     final HttpHeader contentType;
-    contentType = headerUnchecked(HttpHeaderNameImpl.CONTENT_TYPE);
+    contentType = headerUnchecked(HttpHeaderName0.CONTENT_TYPE);
 
     if (contentType != null) {
       return $LENGTH_REQUIRED;
@@ -2195,7 +2195,7 @@ final class HttpExchangeImpl implements HttpExchange, Runnable, Closeable {
     object = null;
 
     final HttpHeader transferEncoding;
-    transferEncoding = headerUnchecked(HttpHeaderNameImpl.TRANSFER_ENCODING);
+    transferEncoding = headerUnchecked(HttpHeaderName0.TRANSFER_ENCODING);
 
     if (transferEncoding != null) {
       return toBadRequest(InvalidRequestHeaders.BOTH_CL_TE);
@@ -2759,7 +2759,7 @@ final class HttpExchangeImpl implements HttpExchange, Runnable, Closeable {
 
   private boolean shouldParseAppForm() {
     final HttpHeader contentType;
-    contentType = headerUnchecked(HttpHeaderNameImpl.CONTENT_TYPE);
+    contentType = headerUnchecked(HttpHeaderName0.CONTENT_TYPE);
 
     if (contentType != null) {
       final String value;
@@ -4308,8 +4308,8 @@ final class HttpExchangeImpl implements HttpExchange, Runnable, Closeable {
 
   private void headerUnchecked(HttpHeaderName name, String value) {
     // write our the name
-    final HttpHeaderNameImpl impl;
-    impl = (HttpHeaderNameImpl) name;
+    final HttpHeaderName0 impl;
+    impl = (HttpHeaderName0) name;
 
     final byte[] nameBytes;
     nameBytes = impl.getBytes(version);

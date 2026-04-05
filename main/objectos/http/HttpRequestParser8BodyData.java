@@ -18,12 +18,9 @@ package objectos.http;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 
 final class HttpRequestParser8BodyData {
-
-  private static final byte[] MESSAGE = "Invalid request headers.\n".getBytes(StandardCharsets.US_ASCII);
 
   enum Invalid implements HttpClientException.Kind {
     // EOF while reading body
@@ -39,8 +36,8 @@ final class HttpRequestParser8BodyData {
     }
 
     @Override
-    public final byte[] message() {
-      return MESSAGE;
+    public final String message() {
+      return "Invalid request headers.\n";
     }
 
     @Override

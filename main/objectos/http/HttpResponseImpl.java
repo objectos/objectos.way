@@ -53,21 +53,21 @@ final class HttpResponseImpl implements HttpResponse, AutoCloseable {
   public final void ok(Media.Bytes media) {
     status = HttpStatus.OK;
 
-    media(media);
+    send(media);
   }
 
   @Override
   public final void ok(Media.Stream media) {
     status = HttpStatus.OK;
 
-    media(media);
+    send(media);
   }
 
   @Override
   public final void ok(Media.Text media) {
     status = HttpStatus.OK;
 
-    media(media);
+    send(media);
   }
 
   // 3xx responses
@@ -202,6 +202,11 @@ final class HttpResponseImpl implements HttpResponse, AutoCloseable {
   }
 
   @Override
+  public final void send(byte[] bytes) {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  @Override
   public final void send(byte[] bytes, int offset, int length) {
     final byte[] copy;
     copy = new byte[length];
@@ -216,18 +221,18 @@ final class HttpResponseImpl implements HttpResponse, AutoCloseable {
     body = file;
   }
 
-  @Override
   public final void send(Media media) {
     switch (media) {
-      case Media.Bytes bytes -> media(bytes);
+      case Media.Bytes bytes -> send(bytes);
 
-      case Media.Text text -> media(text);
+      case Media.Text text -> send(text);
 
-      case Media.Stream stream -> media(stream);
+      case Media.Stream stream -> send(stream);
     }
   }
 
-  public final void media(Media.Bytes media) {
+  @Override
+  public final void send(Media.Bytes media) {
     // early media validation
     final String contentType;
     contentType = media.contentType();
@@ -252,7 +257,8 @@ final class HttpResponseImpl implements HttpResponse, AutoCloseable {
     body = bytes;
   }
 
-  public final void media(Media.Text media) {
+  @Override
+  public final void send(Media.Text media) {
     // early media validation
     final String contentType;
     contentType = media.contentType();
@@ -277,7 +283,8 @@ final class HttpResponseImpl implements HttpResponse, AutoCloseable {
     body = media;
   }
 
-  public final void media(Media.Stream media) {
+  @Override
+  public final void send(Media.Stream media) {
     // early media validation
     final String contentType;
     contentType = media.contentType();

@@ -34,13 +34,13 @@ public class HttpHeaderNameTest {
     assertEquals(tokenBytes.length, tokenChars.length());
 
     for (byte b : tokenBytes) {
-      assertEquals(HttpHeaderNameImpl.map(b) > 0, true);
+      assertEquals(HttpHeaderName0.map(b) > 0, true);
     }
   }
 
   @Test
   public void of01() {
-    for (HttpHeaderNameImpl name : HttpHeaderNameImpl.VALUES) {
+    for (HttpHeaderName0 name : HttpHeaderName0.VALUES) {
       assertSame(HttpHeaderName.of(name.headerCase()), name);
       assertSame(HttpHeaderName.of(name.lowerCase()), name);
     }
@@ -48,8 +48,8 @@ public class HttpHeaderNameTest {
 
   @Test
   public void of02() {
-    final HttpHeaderNameImpl res;
-    res = HttpHeaderNameImpl.of("Foo-Bar");
+    final HttpHeaderName0 res;
+    res = HttpHeaderName0.of("Foo-Bar");
 
     assertEquals(res.index(), -1);
     assertEquals(res.headerCase(), "Foo-Bar");
@@ -59,9 +59,9 @@ public class HttpHeaderNameTest {
   @SuppressWarnings("unlikely-arg-type")
   @Test(description = "equals() should work fine")
   public void testCase01() {
-    HttpHeaderName foo1 = HttpHeaderNameImpl.of("Foo");
-    HttpHeaderName foo2 = HttpHeaderNameImpl.of("Foo");
-    HttpHeaderName bar = HttpHeaderNameImpl.of("Bar");
+    HttpHeaderName foo1 = HttpHeaderName0.of("Foo");
+    HttpHeaderName foo2 = HttpHeaderName0.of("Foo");
+    HttpHeaderName bar = HttpHeaderName0.of("Bar");
 
     assertEquals(foo1.equals(foo2), true);
     assertEquals(foo2.equals(foo1), true);

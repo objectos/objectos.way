@@ -36,8 +36,6 @@ final class HttpRequestParser4Query {
     // 505 HTTP Version Not Supported
     HTTP_VERSION_NOT_SUPPORTED(HttpStatus.HTTP_VERSION_NOT_SUPPORTED);
 
-    private static final byte[] MESSAGE = "Invalid request line.\n".getBytes(StandardCharsets.US_ASCII);
-
     private final HttpStatus status;
 
     private Invalid() {
@@ -49,8 +47,8 @@ final class HttpRequestParser4Query {
     }
 
     @Override
-    public final byte[] message() {
-      return MESSAGE;
+    public final String message() {
+      return "Invalid request line.\n";
     }
 
     @Override
