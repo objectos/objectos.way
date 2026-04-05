@@ -21,13 +21,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import objectos.way.Note;
-import objectos.way.Note.Long1Ref2;
 import objectos.way.Y;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class HttpServerTask0Socket {
+public class HttpServerTaskTest0Socket {
 
   private static class ThisSocket extends Socket {
 
@@ -92,23 +90,7 @@ public class HttpServerTask0Socket {
 
   @Test(dataProvider = "socketErrorProvider")
   public void socketError(Socket socket, long id, String event, IOException thrown) {
-    class ThisNoteSink extends Note.NoOpSink {
-      long id;
-      String event;
-      IOException thrown;
-
-      @Override
-      public <T1, T2> void send(Long1Ref2<T1, T2> note, long value1, T1 value2, T2 value3) {
-        assertEquals(note.source(), HttpServerTask.class.getName());
-        assertEquals(note.key(), "SOC");
-        id = value1;
-        event = (String) value2;
-        thrown = (IOException) value3;
-      }
-    }
-
-    final ThisNoteSink noteSink;
-    noteSink = new ThisNoteSink();
+    var noteSink = new HttpServerTaskYNoteSink();
 
     HttpServerTaskY.run(opts -> {
       opts.id = id;

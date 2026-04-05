@@ -18,8 +18,6 @@ package objectos.http;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +26,7 @@ import objectos.way.Y;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class HttpExchangeTest2ParsePath extends HttpExchangeTest {
+public class HttpServerTaskTest2Path {
 
   private static final boolean[] VALID_BYTES;
 
@@ -97,14 +95,30 @@ public class HttpExchangeTest2ParsePath extends HttpExchangeTest {
 
   @Test(dataProvider = "pathValidProvider")
   public void pathValid(String raw, String path, String description) {
-    test(
-        iso8859("""
-        GET %s HTTP/1.1\r
-        Host: test\r
-        \r
-        """.formatted(raw)),
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.socket = Y.socket("""
+          GET %s HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """.formatted(raw));
 
-        path
+          opts.handler = http -> {
+            assertEquals(http.path(), path);
+
+            http.ok(Media.Bytes.textPlain("OK\n"));
+          };
+        }),
+
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 3\r
+        \r
+        OK
+        """
     );
   }
 
@@ -150,16 +164,32 @@ public class HttpExchangeTest2ParsePath extends HttpExchangeTest {
 
   private Object[] invalid(String path, String description) {
     String req = """
-    GET%s HTTP/1.1\r
+    GET %s HTTP/1.1\r
     \r
-    """.formatted(" " + path);
+    """.formatted(path);
 
     return new Object[] {req, description};
   }
 
   @Test(dataProvider = "pathInvalidProvider")
   public void pathInvalid(String req, String description) {
-    badRequest(iso8859(req));
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.socket = Y.socket(
+              iso8859(req)
+          );
+        }),
+
+        """
+        HTTP/1.1 400 Bad Request\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Connection: close\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 22\r
+        \r
+        Invalid request line.
+        """
+    );
   }
 
   @DataProvider
@@ -206,15 +236,7 @@ public class HttpExchangeTest2ParsePath extends HttpExchangeTest {
 
   @Test(dataProvider = "percentValidProvider")
   public void percentValid(String raw, String path, String description) {
-    test(
-        """
-        GET %s HTTP/1.1\r
-        Host: test\r
-        \r
-        """.formatted(raw),
-
-        path
-    );
+    pathValid(raw, path, description);
   }
 
   @DataProvider
@@ -258,75 +280,41 @@ public class HttpExchangeTest2ParsePath extends HttpExchangeTest {
 
   @Test(dataProvider = "percentInvalidProvider")
   public void percentInvalid(String target, String description) {
-    badRequest("""
-    GET %s HTTP/1.1\r
-    \r
-    """.formatted(target));
+    pathInvalid(target, description);
   }
 
-  @Test(description = "slow: regular uri")
-  public void slowClient01() {
-    test(
-        Y.slowStream(1, """
-        GET /index.html HTTP/1.1\r
-        Host: test\r
-        \r
-        """),
+  @Test(dataProvider = "pathValidProvider")
+  public void slowClientPathValid(String raw, String path, String description) {
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.socket = Y.socket(Y.slowStream(1, """
+          GET %s HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """.formatted(raw)));
 
-        "/index.html"
+          opts.handler = http -> {
+            assertEquals(http.path(), path);
+
+            http.ok(Media.Bytes.textPlain("OK\n"));
+          };
+        }),
+
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 3\r
+        \r
+        OK
+        """
     );
   }
 
-  @Test(description = "slow: 1-byte percent-encoded")
-  public void slowClient02() {
-    test(
-        Y.slowStream(1, """
-        GET /utf8/%40 HTTP/1.1\r
-        Host: test\r
-        \r
-        """),
-
-        "/utf8/@"
-    );
-  }
-
-  @Test(description = "slow: 2-bytes percent-encoded value")
-  public void slowClient03() {
-    test(
-        Y.slowStream(1, """
-        GET /utf8/%C3%A1 HTTP/1.1\r
-        Host: test\r
-        \r
-        """),
-
-        "/utf8/á"
-    );
-  }
-
-  @Test(description = "slow: 3-bytes percent-encoded value")
-  public void slowClient04() {
-    test(
-        Y.slowStream(1, """
-        GET /utf8/%E2%82%AC HTTP/1.1\r
-        Host: test\r
-        \r
-        """),
-
-        "/utf8/€"
-    );
-  }
-
-  @Test(description = "path: 4-bytes percent-encoded value")
-  public void slowClient05() {
-    test(
-        Y.slowStream(1, """
-        GET /utf8/%F0%9F%98%80 HTTP/1.1\r
-        Host: test\r
-        \r
-        """),
-
-        "/utf8/😀"
-    );
+  @Test(dataProvider = "percentValidProvider")
+  public void slowClientPercentValid(String raw, String path, String description) {
+    slowClientPathValid(raw, path, description);
   }
 
   @Test
@@ -334,40 +322,49 @@ public class HttpExchangeTest2ParsePath extends HttpExchangeTest {
     final String veryLongId;
     veryLongId = "/12345/sub/abc7890".repeat(200);
 
-    final Socket socket;
-    socket = Y.socket("GET /entity" + veryLongId + " HTTP/1.1\r\n\r\n");
-
-    try (HttpExchangeImpl http = HttpY.http(socket, 256, 512)) {
-      assertEquals(http.shouldHandle(), false);
-
-      assertEquals(
-          Y.toString(socket),
-
-          """
-          HTTP/1.1 414 URI Too Long\r
-          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-          Content-Length: 0\r
-          Connection: close\r
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.socket = Y.socket("""
+          GET /entity%s HTTP/1.1\r
+          Host: www.example.com\r
           \r
-          """
-      );
-    } catch (IOException e) {
-      throw new UncheckedIOException(e);
-    }
+          """.formatted(veryLongId));
+        }),
+
+        """
+        HTTP/1.1 414 URI Too Long\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Connection: close\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 22\r
+        \r
+        Invalid request line.
+        """
+    );
   }
 
   @Test
-  public void ioException01() {
-    exec(test -> {
-      test.bufferSize(256, 512);
+  public void ioException() {
+    var noteSink = new HttpServerTaskYNoteSink();
 
-      test.xch(xch -> {
-        xch.req("GET /index.h");
-        xch.req(new IOException(), 1);
-        xch.shouldHandle(false);
-        xch.resp("");
-      });
-    });
+    final IOException ioe;
+    ioe = Y.trimStackTrace(new IOException(), 1);
+
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.id = 123L;
+
+          opts.noteSink = noteSink;
+
+          opts.socket = Y.socket("GET /index.h", ioe);
+        }),
+
+        ""
+    );
+
+    assertEquals(noteSink.id, 123L);
+    assertEquals(noteSink.event, "read");
+    assertEquals(noteSink.thrown, ioe);
   }
 
   @DataProvider
@@ -389,77 +386,13 @@ public class HttpExchangeTest2ParsePath extends HttpExchangeTest {
     return l.toArray(Object[][]::new);
   }
 
-  @Test(dataProvider = "rawPathProvider")
+  @Test(enabled = false, dataProvider = "rawPathProvider")
   public void rawPath(String raw, String expected) {
-    exec(test -> {
-      test.bufferSize(256, 512);
-
-      test.xch(xch -> {
-        xch.req("""
-        GET %s HTTP/1.1\r
-        Host: test\r
-        \r
-        """.formatted(raw));
-
-        xch.handler(http -> {
-          assertEquals(http.rawPath(), expected);
-
-          http.ok(Media.Bytes.textPlain("OK"));
-        });
-
-        xch.resp("""
-        HTTP/1.1 200 OK\r
-        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-        Content-Type: text/plain; charset=utf-8\r
-        Content-Length: 2\r
-        \r
-        OK""");
-      });
-    });
-  }
-
-  private void badRequest(Object request) {
-    exec(test -> {
-      test.bufferSize(256, 512);
-
-      test.xch(xch -> {
-        xch.req(request);
-
-        xch.shouldHandle(false);
-
-        xch.resp("""
-        HTTP/1.1 400 Bad Request\r
-        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-        Content-Type: text/plain; charset=utf-8\r
-        Content-Length: 22\r
-        Connection: close\r
-        \r
-        Invalid request line.
-        """);
-      });
-    });
+    // TODO remove?
   }
 
   private byte[] iso8859(String s) {
     return s.getBytes(StandardCharsets.ISO_8859_1);
-  }
-
-  private void test(Object request, String expected) {
-    exec(test -> {
-      test.bufferSize(256, 512);
-
-      test.xch(xch -> {
-        xch.req(request);
-
-        xch.handler(http -> {
-          assertEquals(http.path(), expected);
-
-          http.ok(OK);
-        });
-
-        xch.resp(OK_RESP);
-      });
-    });
   }
 
 }

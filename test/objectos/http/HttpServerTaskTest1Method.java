@@ -19,9 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 import objectos.way.Media;
-import objectos.way.Note;
 import objectos.way.Y;
-import objectos.way.Note.Long1Ref2;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -170,25 +168,9 @@ public class HttpServerTaskTest1Method {
     );
   }
 
-  private static final class ThisNoteSink extends Note.NoOpSink {
-    long id;
-    String event;
-    IOException thrown;
-
-    @Override
-    public <T1, T2> void send(Long1Ref2<T1, T2> note, long value1, T1 value2, T2 value3) {
-      assertEquals(note.source(), HttpServerTask.class.getName());
-      assertEquals(note.key(), "SOC");
-      id = value1;
-      event = (String) value2;
-      thrown = (IOException) value3;
-    }
-  }
-
   @Test
   public void ioException() {
-    final ThisNoteSink noteSink;
-    noteSink = new ThisNoteSink();
+    var noteSink = new HttpServerTaskYNoteSink();
 
     final IOException ioe;
     ioe = Y.trimStackTrace(new IOException(), 1);
