@@ -23,13 +23,13 @@ import objectos.way.Media.Text;
 
 final class HttpExchange0 implements HttpExchange {
 
-  private final HttpRequest request;
+  private final HttpRequest0 request;
 
   private final HttpResponse0 response;
 
   private final HttpSession session;
 
-  HttpExchange0(HttpRequest request, HttpResponse0 response, HttpSession session) {
+  HttpExchange0(HttpRequest0 request, HttpResponse0 response, HttpSession session) {
     this.request = request;
 
     this.response = response;
@@ -40,6 +40,10 @@ final class HttpExchange0 implements HttpExchange {
   // ##################################################################
   // # BEGIN: HttpRequest
   // ##################################################################
+
+  public final HttpRequest0 request() {
+    return request;
+  }
 
   @Override
   public final HttpMethod method() {

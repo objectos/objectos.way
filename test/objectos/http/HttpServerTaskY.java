@@ -34,7 +34,7 @@ final class HttpServerTaskY {
 
   Clock clock = Y.clockFixed();
 
-  HttpHandler handler;
+  HttpHandler handler = _ -> {};
 
   long id = Long.MAX_VALUE;
 
