@@ -43,8 +43,13 @@ public class HttpRequestParser5VersionTest {
   @DataProvider
   public Object[][] validProvider() {
     return new Object[][] {
-        {"HTTP/1.1\r\n", HttpVersion.HTTP_1_1, "1.1"},
-        {"HTTP/1.1\r\nHost: test\r\n", HttpVersion.HTTP_1_1, "1.1"}
+        {"HTTP/1.1\r\n", HttpVersion0.HTTP_1_1, "1.1"},
+        {"HTTP/1.1\r\nHost: test\r\n", HttpVersion0.HTTP_1_1, "1.1"},
+        {"HTTP/1.0\r\n", HttpVersion0.of(1, 0), "not supported"},
+        {"HTTP/2\r\nHost: foo", HttpVersion0.of(2, 0), "not supported (yet)"},
+        {"HTTP/9.9\r\n", HttpVersion0.of(9, 9), "not supported (yet)"},
+        {"HTTP/21.999\r\n", HttpVersion0.of(21, 999), "not supported (yet)"},
+        {"HTTP/123456789012345678901234567890.123456789012345678901234567890\r\n", HttpVersion0.of(Integer.MAX_VALUE, Integer.MAX_VALUE), "Not supported"}
     };
   }
 
@@ -57,6 +62,11 @@ public class HttpRequestParser5VersionTest {
 
         expected
     );
+  }
+
+  @Test
+  public void versionValid0() throws IOException {
+    versionValid("HTTP/21.999\r\n", HttpVersion0.of(21, 999), "not supported (yet)");
   }
 
   @DataProvider
@@ -85,29 +95,6 @@ public class HttpRequestParser5VersionTest {
       Assert.fail("It should have thrown");
     } catch (HttpClientException expected) {
       assertEquals(expected.kind, kind);
-    }
-  }
-
-  @DataProvider
-  public Object[][] versionNotSupportedProvider() {
-    return new Object[][] {
-        {"HTTP/1.0\r\n", "1.0 is not supported"},
-        {"HTTP/2\r\nHost: foo", "2 is not supported (yet)"},
-        {"HTTP/9.9\r\n", "9.9 is not supported (yet)"},
-        {"HTTP/123456789012345678901234567890.123456789012345678901234567890\r\n", "Not supported"}
-    };
-  }
-
-  @Test(dataProvider = "versionNotSupportedProvider")
-  public void versionNotSupported(String line, String description) throws IOException {
-    try {
-      parse(
-          line
-      );
-
-      Assert.fail("It should have thrown");
-    } catch (HttpClientException expected) {
-      assertEquals(expected.kind, Invalid.HTTP_VERSION_NOT_SUPPORTED);
     }
   }
 

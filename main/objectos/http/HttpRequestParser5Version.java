@@ -17,6 +17,7 @@ package objectos.http;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import objectos.internal.Bytes;
 
 final class HttpRequestParser5Version {
 
@@ -28,10 +29,7 @@ final class HttpRequestParser5Version {
     LINE_TERMINATOR(Http.LINE_TERM, HttpStatus.BAD_REQUEST),
 
     // 400: unexpected end of stream
-    EOF(Http.REQ_LINE, HttpStatus.BAD_REQUEST),
-
-    // 505 HTTP Version Not Supported
-    HTTP_VERSION_NOT_SUPPORTED(Http.REQ_LINE, HttpStatus.HTTP_VERSION_NOT_SUPPORTED);
+    EOF(Http.REQ_LINE, HttpStatus.BAD_REQUEST);
 
     private final String message;
 
@@ -54,13 +52,15 @@ final class HttpRequestParser5Version {
     }
   }
 
+  private boolean done;
+
   private final HttpRequestParser0Input input;
 
   HttpRequestParser5Version(HttpRequestParser0Input input) {
     this.input = input;
   }
 
-  public final HttpVersion parse() throws IOException {
+  public final HttpVersion0 parse() throws IOException {
     try {
       return parse0();
     } catch (HttpRequestParser0Input.Eof e) {
@@ -70,19 +70,19 @@ final class HttpRequestParser5Version {
     }
   }
 
-  private HttpVersion parse0() throws IOException {
+  private HttpVersion0 parse0() throws IOException {
     parseHttp();
 
     final int major;
     major = parseMajor();
 
     final int minor;
-    minor = parseMinor();
+    minor = done ? 0 : parseMinor();
 
     if (major == 1 && minor == 1) {
-      return HttpVersion.HTTP_1_1;
+      return HttpVersion0.HTTP_1_1;
     } else {
-      throw HttpClientException.of(Invalid.HTTP_VERSION_NOT_SUPPORTED);
+      return HttpVersion0.of(major, minor);
     }
   }
 
@@ -112,19 +112,34 @@ final class HttpRequestParser5Version {
     int major;
     major = first & 0xF;
 
+    boolean overflow;
+    overflow = false;
+
     while (true) {
       final byte b;
       b = input.readByte();
 
       if (Http.isDigit(b)) {
-        // absolute value is not important as it is already invalid
-        major = Integer.MAX_VALUE;
+        if (!overflow) {
+          final int digit;
+          digit = b & 0x1;
+
+          major *= 10;
+
+          major += digit;
+
+          if (major < 0) {
+            overflow = true;
+
+            major = Integer.MAX_VALUE;
+          }
+        }
 
         continue;
       }
 
       if (b == '.') {
-        break;
+        return major;
       }
 
       if (b == '\n') {
@@ -138,13 +153,14 @@ final class HttpRequestParser5Version {
       final byte lf;
       lf = input.readByte();
 
-      final Invalid invalid;
-      invalid = lf == '\n' ? Invalid.HTTP_VERSION_NOT_SUPPORTED : Invalid.LINE_TERMINATOR;
+      if (lf != Bytes.LF) {
+        throw HttpClientException.of(Invalid.LINE_TERMINATOR);
+      }
 
-      throw HttpClientException.of(invalid);
+      done = true;
+
+      return major;
     }
-
-    return major;
   }
 
   private int parseMinor() throws IOException {
@@ -158,11 +174,29 @@ final class HttpRequestParser5Version {
     int minor;
     minor = first & 0xF;
 
+    boolean overflow;
+    overflow = false;
+
     while (true) {
       final byte b;
       b = input.readByte();
 
       if (Http.isDigit(b)) {
+        if (!overflow) {
+          final int digit;
+          digit = b & 0xF;
+
+          minor *= 10;
+
+          minor += digit;
+
+          if (minor < 0) {
+            overflow = true;
+
+            minor = Integer.MAX_VALUE;
+          }
+        }
+
         continue;
       }
 
@@ -178,13 +212,11 @@ final class HttpRequestParser5Version {
       lf = input.readByte();
 
       if (lf == '\n') {
-        break;
+        return minor;
       }
 
       throw HttpClientException.of(Invalid.LINE_TERMINATOR);
     }
-
-    return minor;
   }
 
 }

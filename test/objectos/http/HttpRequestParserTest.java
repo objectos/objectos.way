@@ -50,7 +50,7 @@ public class HttpRequestParserTest {
 
     Map<String, Object> queryParams = Map.of();
 
-    HttpVersion version = HttpVersion.HTTP_1_1;
+    HttpVersion0 version = HttpVersion0.HTTP_1_1;
 
     Map<HttpHeaderName, Object> headers = Map.of(HttpHeaderName.HOST, "www.example.com");
 

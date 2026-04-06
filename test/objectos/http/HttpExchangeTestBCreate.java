@@ -437,7 +437,7 @@ public class HttpExchangeTestBCreate extends HttpExchangeTest {
 
     http.ok(subject);
 
-    assertEquals(subject.version, HttpVersion.HTTP_1_1);
+    assertEquals(subject.version, HttpVersion0.HTTP_1_1);
     assertEquals(subject.status, HttpStatus.OK);
     assertEquals(subject.headers.size(), 3);
     assertEquals(subject.headers.get(HttpHeaderName.CONTENT_TYPE), "text/html; charset=utf-8");

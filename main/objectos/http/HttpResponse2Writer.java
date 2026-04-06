@@ -50,6 +50,8 @@ final class HttpResponse2Writer implements Closeable {
     STATUS_LINES = map;
   }
 
+  private static final byte[] HTTP_1_1 = "HTTP/1.1 ".getBytes(StandardCharsets.US_ASCII);
+
   private final byte[] buffer;
 
   private int bufferIndex;
@@ -57,8 +59,6 @@ final class HttpResponse2Writer implements Closeable {
   private boolean chunked;
 
   private final OutputStream outputStream;
-
-  private final HttpVersion version = HttpVersion.HTTP_1_1;
 
   HttpResponse2Writer(byte[] buffer, OutputStream outputStream) {
     this.buffer = buffer;
@@ -74,7 +74,7 @@ final class HttpResponse2Writer implements Closeable {
   }
 
   public final void status(HttpStatus status) throws IOException {
-    writeBytes(version.responseBytes);
+    writeBytes(HTTP_1_1);
 
     final HttpStatusImpl impl;
     impl = (HttpStatusImpl) status;
@@ -90,7 +90,7 @@ final class HttpResponse2Writer implements Closeable {
     nameImpl = (HttpHeaderName0) name;
 
     final byte[] nameBytes;
-    nameBytes = nameImpl.getBytes(version);
+    nameBytes = nameImpl.headerCaseBytes();
 
     writeBytes(nameBytes);
 

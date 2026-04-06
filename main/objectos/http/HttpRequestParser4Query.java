@@ -18,43 +18,53 @@ package objectos.http;
 import module java.base;
 import objectos.http.HttpRequestParser1UrlDecoder.DecodeException;
 import objectos.internal.Ascii;
+import objectos.internal.Bytes;
 
 final class HttpRequestParser4Query {
 
   enum Invalid implements HttpClientException.Kind {
-    // do not reorder, do not rename
-
     // 414 URI Too Long
-    URI_TOO_LONG(HttpStatus.URI_TOO_LONG),
+    URI_TOO_LONG(Http.REQ_LINE, HttpStatus.URI_TOO_LONG),
 
     // query has an invalid character
-    QUERY_CHAR,
+    QUERY_CHAR(Http.REQ_LINE, HttpStatus.BAD_REQUEST),
 
     // query has an invalid percent encoded sequence
-    QUERY_PERCENT,
+    QUERY_PERCENT(Http.REQ_LINE, HttpStatus.BAD_REQUEST),
 
-    // 505 HTTP Version Not Supported
-    HTTP_VERSION_NOT_SUPPORTED(HttpStatus.HTTP_VERSION_NOT_SUPPORTED);
+    // CRLF required
+    LINE_TERMINATOR(Http.LINE_TERM, HttpStatus.BAD_REQUEST);
+
+    private final String message;
 
     private final HttpStatus status;
 
-    private Invalid() {
-      this(HttpStatus.BAD_REQUEST);
-    }
+    Invalid(String message, HttpStatus status) {
+      this.message = message;
 
-    private Invalid(HttpStatus status) {
       this.status = status;
     }
 
     @Override
     public final String message() {
-      return "Invalid request line.\n";
+      return message;
     }
 
     @Override
     public final HttpStatus status() {
       return status;
     }
+  }
+
+  @SuppressWarnings("serial")
+  static final class Http09Exception extends IOException {
+
+    final Map<String, Object> params;
+
+    Http09Exception(Map<String, Object> params) {
+      this.params = params;
+    }
+
   }
 
   private boolean done;
@@ -66,6 +76,8 @@ final class HttpRequestParser4Query {
   private Map<String, Object> params = Map.of();
 
   private HttpRequestParser1UrlDecoder urlDecoder;
+
+  private boolean version09;
 
   HttpRequestParser4Query(HttpRequestParser0Input input) {
     this.input = input;
@@ -119,7 +131,11 @@ final class HttpRequestParser4Query {
 
     }
 
-    return params;
+    if (version09) {
+      throw new Http09Exception(params);
+    } else {
+      return params;
+    }
   }
 
   private static final byte[] QUERY_TABLE;
@@ -130,7 +146,8 @@ final class HttpRequestParser4Query {
   private static final byte QUERY_EQUALS = 4;
   private static final byte QUERY_AMPERSAND = 5;
   private static final byte QUERY_SPACE = 6;
-  private static final byte QUERY_CRLF = 7;
+  private static final byte QUERY_CR = 7;
+  private static final byte QUERY_LF = 8;
 
   static {
     final byte[] table;
@@ -168,9 +185,9 @@ final class HttpRequestParser4Query {
 
     table[' '] = QUERY_SPACE;
 
-    table['\r'] = QUERY_CRLF;
+    table['\r'] = QUERY_CR;
 
-    table['\n'] = QUERY_CRLF;
+    table['\n'] = QUERY_LF;
 
     QUERY_TABLE = table;
   }
@@ -224,9 +241,23 @@ final class HttpRequestParser4Query {
           return input.makeStr();
         }
 
-        case QUERY_CRLF -> {
-          // assume version 0.9
-          throw HttpClientException.of(Invalid.HTTP_VERSION_NOT_SUPPORTED);
+        case QUERY_CR -> {
+          final byte lf;
+          lf = input.readByte();
+
+          if (lf == Bytes.LF) {
+            done = true;
+
+            version09 = true;
+
+            return input.makeStr();
+          } else {
+            throw HttpClientException.of(Invalid.LINE_TERMINATOR);
+          }
+        }
+
+        case QUERY_LF -> {
+          throw HttpClientException.of(Invalid.LINE_TERMINATOR);
         }
 
         default -> throw HttpClientException.of(Invalid.QUERY_CHAR);
@@ -278,9 +309,23 @@ final class HttpRequestParser4Query {
           return name.toString();
         }
 
-        case QUERY_CRLF -> {
-          // assume version 0.9
-          throw HttpClientException.of(Invalid.HTTP_VERSION_NOT_SUPPORTED);
+        case QUERY_CR -> {
+          final byte lf;
+          lf = input.readByte();
+
+          if (lf == Bytes.LF) {
+            done = true;
+
+            version09 = true;
+
+            return name.toString();
+          } else {
+            throw HttpClientException.of(Invalid.LINE_TERMINATOR);
+          }
+        }
+
+        case QUERY_LF -> {
+          throw HttpClientException.of(Invalid.LINE_TERMINATOR);
         }
 
         default -> throw HttpClientException.of(Invalid.QUERY_CHAR);
@@ -331,9 +376,23 @@ final class HttpRequestParser4Query {
           return input.makeStr();
         }
 
-        case QUERY_CRLF -> {
-          // assume version 0.9
-          throw HttpClientException.of(Invalid.HTTP_VERSION_NOT_SUPPORTED);
+        case QUERY_CR -> {
+          final byte lf;
+          lf = input.readByte();
+
+          if (lf == Bytes.LF) {
+            done = true;
+
+            version09 = true;
+
+            return input.makeStr();
+          } else {
+            throw HttpClientException.of(Invalid.LINE_TERMINATOR);
+          }
+        }
+
+        case QUERY_LF -> {
+          throw HttpClientException.of(Invalid.LINE_TERMINATOR);
         }
 
         default -> throw HttpClientException.of(Invalid.QUERY_CHAR);
@@ -379,9 +438,23 @@ final class HttpRequestParser4Query {
           return value.toString();
         }
 
-        case QUERY_CRLF -> {
-          // assume version 0.9
-          throw HttpClientException.of(Invalid.HTTP_VERSION_NOT_SUPPORTED);
+        case QUERY_CR -> {
+          final byte lf;
+          lf = input.readByte();
+
+          if (lf == Bytes.LF) {
+            done = true;
+
+            version09 = true;
+
+            return value.toString();
+          } else {
+            throw HttpClientException.of(Invalid.LINE_TERMINATOR);
+          }
+        }
+
+        case QUERY_LF -> {
+          throw HttpClientException.of(Invalid.LINE_TERMINATOR);
         }
 
         default -> throw HttpClientException.of(Invalid.QUERY_CHAR);

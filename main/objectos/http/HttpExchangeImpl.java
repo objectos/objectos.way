@@ -417,7 +417,7 @@ final class HttpExchangeImpl implements HttpExchange, Runnable, Closeable {
 
   private StringBuilder stringBuilder;
 
-  private HttpVersion version = HttpVersion.HTTP_1_1;
+  private HttpVersion0 version = HttpVersion0.HTTP_1_1;
 
   HttpExchangeImpl(
       HttpExchangeBodyFiles bodyFiles,
@@ -872,7 +872,7 @@ final class HttpExchangeImpl implements HttpExchange, Runnable, Closeable {
       queryParams.clear();
     }
 
-    version = HttpVersion.HTTP_1_1;
+    version = HttpVersion0.HTTP_1_1;
 
     return $PARSE_METHOD;
   }
@@ -1857,7 +1857,7 @@ final class HttpExchangeImpl implements HttpExchange, Runnable, Closeable {
     if (canRead(HTTP_1_1_CRLF.length)) {
 
       if (bufferMatches(HTTP_1_1_CRLF)) {
-        version = HttpVersion.HTTP_1_1;
+        version = HttpVersion0.HTTP_1_1;
 
         return $PARSE_HEADER;
       }
@@ -4287,7 +4287,7 @@ final class HttpExchangeImpl implements HttpExchange, Runnable, Closeable {
   private void statusUnchecked(HttpStatus value) {
     bufferIndex = 0;
 
-    writeBytes(version.responseBytes);
+    writeBytes("HTTP/1.1 ".getBytes(StandardCharsets.US_ASCII));
 
     HttpStatusImpl internal;
     internal = (HttpStatusImpl) value;
@@ -4312,7 +4312,7 @@ final class HttpExchangeImpl implements HttpExchange, Runnable, Closeable {
     impl = (HttpHeaderName0) name;
 
     final byte[] nameBytes;
-    nameBytes = impl.getBytes(version);
+    nameBytes = impl.headerCaseBytes();
 
     writeBytes(nameBytes);
 

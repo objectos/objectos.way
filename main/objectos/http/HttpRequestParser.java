@@ -49,26 +49,41 @@ final class HttpRequestParser {
     final HttpMethod method;
     method = methodParser.parse();
 
-    // path
-    final HttpRequestParser3Path pathParser;
-    pathParser = new HttpRequestParser3Path(input);
+    String path = "";
 
-    final String path;
-    path = pathParser.parse();
+    Map<String, Object> queryParams;
 
-    // query
-    final HttpRequestParser4Query queryParser;
-    queryParser = new HttpRequestParser4Query(input);
+    HttpVersion0 version;
 
-    final Map<String, Object> queryParams;
-    queryParams = queryParser.parse();
+    try {
+      // path
+      final HttpRequestParser3Path pathParser;
+      pathParser = new HttpRequestParser3Path(input);
 
-    // version
-    final HttpRequestParser5Version versionParser;
-    versionParser = new HttpRequestParser5Version(input);
+      path = pathParser.parse();
 
-    final HttpVersion version;
-    version = versionParser.parse();
+      // query
+      final HttpRequestParser4Query queryParser;
+      queryParser = new HttpRequestParser4Query(input);
+
+      queryParams = queryParser.parse();
+
+      // version
+      final HttpRequestParser5Version versionParser;
+      versionParser = new HttpRequestParser5Version(input);
+
+      version = versionParser.parse();
+    } catch (HttpRequestParser3Path.Http09Exception e) {
+      path = e.path;
+
+      queryParams = Map.of();
+
+      version = HttpVersion0.HTTP_0_9;
+    } catch (HttpRequestParser4Query.Http09Exception e) {
+      queryParams = e.params;
+
+      version = HttpVersion0.HTTP_0_9;
+    }
 
     // headers
     final HttpRequestParser6Headers headersParser;

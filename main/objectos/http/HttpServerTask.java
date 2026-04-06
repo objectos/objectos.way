@@ -116,6 +116,7 @@ final class HttpServerTask implements Runnable {
   }
 
   private boolean run0(InputStream inputStream, OutputStream outputStream) {
+    // parse request
     final HttpRequestParser requestParser;
     requestParser = new HttpRequestParser(bodyOptions, buffer, id, inputStream);
 
@@ -136,6 +137,7 @@ final class HttpServerTask implements Runnable {
       return false;
     }
 
+    // validate request method
     final HttpMethod method;
     method = request.method();
 
@@ -146,6 +148,25 @@ final class HttpServerTask implements Runnable {
 
       final Media.Bytes message;
       message = Media.Bytes.textPlain("The requested method is not implemented by this server.\n");
+
+      response.send(message);
+
+      return keepAlive(request, response);
+    }
+
+    // validate request version
+    final HttpVersion0 version;
+    version = request.version();
+
+    if (!version.supported()) {
+      response.status(HttpStatus.HTTP_VERSION_NOT_SUPPORTED);
+
+      response.header(HttpHeaderName.DATE, response.now());
+
+      response.header(HttpHeaderName.CONNECTION, "close");
+
+      final Media.Bytes message;
+      message = Media.Bytes.textPlain("Supported versions: HTTP/1.1\n");
 
       response.send(message);
 

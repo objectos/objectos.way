@@ -18,49 +18,59 @@ package objectos.http;
 import module java.base;
 import objectos.http.HttpRequestParser1UrlDecoder.DecodeException;
 import objectos.internal.Ascii;
+import objectos.internal.Bytes;
 
 final class HttpRequestParser3Path {
 
   enum Invalid implements HttpClientException.Kind {
-    // do not reorder, do not rename
-
     // 414 URI Too Long
-    URI_TOO_LONG(HttpStatus.URI_TOO_LONG),
+    URI_TOO_LONG(Http.REQ_LINE, HttpStatus.URI_TOO_LONG),
 
     // path does not start with solidus
-    PATH_FIRST_CHAR,
+    PATH_FIRST_CHAR(Http.REQ_LINE, HttpStatus.BAD_REQUEST),
 
     // path starts with two consecutive '/'
-    PATH_SEGMENT_NZ,
+    PATH_SEGMENT_NZ(Http.REQ_LINE, HttpStatus.BAD_REQUEST),
 
     // path has an invalid character
-    PATH_NEXT_CHAR,
+    PATH_NEXT_CHAR(Http.REQ_LINE, HttpStatus.BAD_REQUEST),
 
     // path has an invalid percent encoded sequence
-    PATH_PERCENT,
+    PATH_PERCENT(Http.REQ_LINE, HttpStatus.BAD_REQUEST),
 
-    // 505 HTTP Version Not Supported
-    HTTP_VERSION_NOT_SUPPORTED(HttpStatus.HTTP_VERSION_NOT_SUPPORTED);
+    // CRLF required
+    LINE_TERMINATOR(Http.LINE_TERM, HttpStatus.BAD_REQUEST);
+
+    private final String message;
 
     private final HttpStatus status;
 
-    private Invalid() {
-      this(HttpStatus.BAD_REQUEST);
-    }
+    private Invalid(String message, HttpStatus status) {
+      this.message = message;
 
-    private Invalid(HttpStatus status) {
       this.status = status;
     }
 
     @Override
     public final String message() {
-      return "Invalid request line.\n";
+      return message;
     }
 
     @Override
     public final HttpStatus status() {
       return status;
     }
+  }
+
+  @SuppressWarnings("serial")
+  static final class Http09Exception extends IOException {
+
+    final String path;
+
+    Http09Exception(String path) {
+      this.path = path;
+    }
+
   }
 
   private final HttpRequestParser0Input input;
@@ -150,7 +160,8 @@ final class HttpRequestParser3Path {
   private static final byte PATH_PERCENT = 2;
   private static final byte PATH_SPACE = 3;
   private static final byte PATH_QUESTION = 4;
-  private static final byte PATH_CRLF = 5;
+  private static final byte PATH_CR = 5;
+  private static final byte PATH_LF = 6;
 
   static {
     final byte[] table;
@@ -181,9 +192,9 @@ final class HttpRequestParser3Path {
 
     table['?'] = PATH_QUESTION;
 
-    table['\r'] = PATH_CRLF;
+    table['\r'] = PATH_CR;
 
-    table['\n'] = PATH_CRLF;
+    table['\n'] = PATH_LF;
 
     PATH_TABLE = table;
   }
@@ -214,9 +225,22 @@ final class HttpRequestParser3Path {
           return input.makeStr();
         }
 
-        case PATH_CRLF -> {
-          // assume version 0.9
-          throw HttpClientException.of(Invalid.HTTP_VERSION_NOT_SUPPORTED);
+        case PATH_CR -> {
+          final byte lf;
+          lf = input.readByte();
+
+          if (lf == Bytes.LF) {
+            // assume version 0.9
+            throw new Http09Exception(
+                input.makeStr()
+            );
+          } else {
+            throw HttpClientException.of(Invalid.LINE_TERMINATOR);
+          }
+        }
+
+        case PATH_LF -> {
+          throw HttpClientException.of(Invalid.LINE_TERMINATOR);
         }
 
         default -> throw HttpClientException.of(Invalid.PATH_NEXT_CHAR);
@@ -252,9 +276,22 @@ final class HttpRequestParser3Path {
           return path.toString();
         }
 
-        case PATH_CRLF -> {
-          // assume version 0.9
-          throw HttpClientException.of(Invalid.HTTP_VERSION_NOT_SUPPORTED);
+        case PATH_CR -> {
+          final byte lf;
+          lf = input.readByte();
+
+          if (lf == Bytes.LF) {
+            // assume version 0.9
+            throw new Http09Exception(
+                path.toString()
+            );
+          } else {
+            throw HttpClientException.of(Invalid.LINE_TERMINATOR);
+          }
+        }
+
+        case PATH_LF -> {
+          throw HttpClientException.of(Invalid.LINE_TERMINATOR);
         }
 
         default -> throw HttpClientException.of(Invalid.PATH_NEXT_CHAR);

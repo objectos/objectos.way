@@ -25,7 +25,7 @@ record HttpRequest0(
 
     Map<String, Object> queryParams,
 
-    HttpVersion version,
+    HttpVersion0 version,
 
     HttpRequestHeaders0 headers,
 
