@@ -33,10 +33,6 @@ record HttpRequestBody0(HttpRequestBodyData data, Map<String, Object> formParams
     return data.open();
   }
 
-  public final void close() throws IOException {
-    data.close();
-  }
-
   @Override
   public final Set<String> formParamNames() {
     return formParams.keySet();

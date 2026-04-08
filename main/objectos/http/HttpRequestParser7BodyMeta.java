@@ -22,33 +22,33 @@ final class HttpRequestParser7BodyMeta {
 
   enum Invalid implements HttpClientException.Kind {
     // invalid value, e.g., 'Content-Length: two hundred bytes'
-    INVALID_CONTENT_LENGTH,
+    INVALID_CONTENT_LENGTH("Invalid request headers.\n", HttpStatus.BAD_REQUEST),
 
     // request include both Content-Length and Transfer-Enconding.
-    BOTH_CL_TE,
+    BOTH_CL_TE("Invalid request headers.\n", HttpStatus.BAD_REQUEST),
 
     // 411 Length Required
-    LENGTH_REQUIRED(HttpStatus.LENGTH_REQUIRED),
+    LENGTH_REQUIRED("Invalid request headers.\n", HttpStatus.LENGTH_REQUIRED),
 
     // 413 Content Too Large
-    CONTENT_TOO_LARGE(HttpStatus.CONTENT_TOO_LARGE),
+    CONTENT_TOO_LARGE("The request message body exceeds the server's maximum allowed limit.\n", HttpStatus.CONTENT_TOO_LARGE),
 
     // 501 Not Implemented
-    NOT_IMPLEMENTED(HttpStatus.NOT_IMPLEMENTED);
+    NOT_IMPLEMENTED("Invalid request headers.\n", HttpStatus.NOT_IMPLEMENTED);
+
+    private final String message;
 
     private final HttpStatus status;
 
-    private Invalid() {
-      this(HttpStatus.BAD_REQUEST);
-    }
+    private Invalid(String message, HttpStatus status) {
+      this.message = message;
 
-    private Invalid(HttpStatus status) {
       this.status = status;
     }
 
     @Override
     public final String message() {
-      return "Invalid request headers.\n";
+      return message;
     }
 
     @Override

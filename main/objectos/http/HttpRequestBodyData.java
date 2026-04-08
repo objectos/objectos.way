@@ -16,7 +16,6 @@
 package objectos.http;
 
 import java.io.ByteArrayInputStream;
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -24,7 +23,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Objects;
 
-final class HttpRequestBodyData implements Closeable {
+final class HttpRequestBodyData {
 
   private enum Kind {
     NULL,
@@ -56,15 +55,6 @@ final class HttpRequestBodyData implements Closeable {
 
   public static HttpRequestBodyData ofNull() {
     return NULL;
-  }
-
-  @Override
-  public final void close() throws IOException {
-    switch (kind) {
-      case PATH -> Files.delete((Path) value);
-
-      default -> {}
-    }
   }
 
   @Override

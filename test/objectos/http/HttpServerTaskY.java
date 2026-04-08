@@ -26,9 +26,9 @@ final class HttpServerTaskY {
 
   Path bodyDirectory;
 
-  int bodyMemoryMax = 256;
+  int bodyMemoryMax = 1024;
 
-  long bodySizeMax = 512;
+  long bodySizeMax = 2048;
 
   int bufferSize = 512;
 
@@ -78,7 +78,7 @@ final class HttpServerTaskY {
 
   private HttpServerTask build() {
     return new HttpServerTask(
-        HttpRequestBodyOptions.of(bodyDirectory, bodyMemoryMax, bodySizeMax),
+        new HttpRequestBodyOptions(bodyDirectory, bodyMemoryMax, bodySizeMax),
 
         new byte[bufferSize],
 

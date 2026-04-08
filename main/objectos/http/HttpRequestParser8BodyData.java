@@ -18,26 +18,31 @@ package objectos.http;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 final class HttpRequestParser8BodyData {
 
   enum Invalid implements HttpClientException.Kind {
     // EOF while reading body
-    EOF(HttpStatus.BAD_REQUEST),
+    EOF("Incomplete request body.\n", HttpStatus.BAD_REQUEST),
 
     // 413 Content Too Large
-    CONTENT_TOO_LARGE(HttpStatus.CONTENT_TOO_LARGE);
+    CONTENT_TOO_LARGE("The request message body exceeds the server's maximum allowed limit.\n", HttpStatus.CONTENT_TOO_LARGE);
+
+    private final String message;
 
     private final HttpStatus status;
 
-    private Invalid(HttpStatus status) {
+    private Invalid(String message, HttpStatus status) {
+      this.message = message;
+
       this.status = status;
     }
 
     @Override
     public final String message() {
-      return "Invalid request headers.\n";
+      return message;
     }
 
     @Override
@@ -46,18 +51,14 @@ final class HttpRequestParser8BodyData {
     }
   }
 
-  private final HttpRequestBodyOptions bodyOptions;
-
-  private final long id;
+  private final HttpRequestBodySupport bodySupport;
 
   private final HttpRequestParser0Input input;
 
   private final HttpRequestBodyMeta.Data meta;
 
-  HttpRequestParser8BodyData(HttpRequestBodyOptions bodyOptions, long id, HttpRequestParser0Input input, HttpRequestBodyMeta.Data meta) {
-    this.bodyOptions = bodyOptions;
-
-    this.id = id;
+  HttpRequestParser8BodyData(HttpRequestBodySupport bodySupport, HttpRequestParser0Input input, HttpRequestBodyMeta.Data meta) {
+    this.bodySupport = bodySupport;
 
     this.input = input;
 
@@ -81,11 +82,11 @@ final class HttpRequestParser8BodyData {
   }
 
   private HttpRequestBodyData parseFixed(long length) throws IOException {
-    if (length > bodyOptions.sizeMax()) {
+    if (length > bodySupport.sizeMax()) {
       throw HttpClientException.of(Invalid.CONTENT_TOO_LARGE);
     }
 
-    else if (length > bodyOptions.memoryMax()) {
+    else if (length > bodySupport.memoryMax()) {
       return parseFixedFile(length);
     }
 
@@ -96,9 +97,9 @@ final class HttpRequestParser8BodyData {
 
   private HttpRequestBodyData parseFixedFile(long length) throws IOException {
     final Path file;
-    file = bodyOptions.file(id);
+    file = bodySupport.file();
 
-    try (OutputStream output = bodyOptions.newOutputStream(file)) {
+    try (OutputStream output = Files.newOutputStream(file)) {
       copy(length, output);
     }
 

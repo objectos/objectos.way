@@ -29,7 +29,7 @@ record HttpRequest0(
 
     HttpRequestHeaders0 headers,
 
-    HttpRequestBody body
+    HttpRequestBody0 body
 
 ) implements HttpRequest {
 

@@ -21,10 +21,10 @@ import static org.testng.Assert.assertSame;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Consumer;
 import objectos.http.HttpRequestParser8BodyData.Invalid;
@@ -35,18 +35,14 @@ import org.testng.annotations.Test;
 
 public class HttpRequestParser8BodyDataTest {
 
-  private interface ThrowingSupplier<T> {
-    T get() throws IOException;
-  }
-
-  private static final class Cfg extends HttpRequestBodyOptions {
+  private static final class Cfg extends HttpRequestBodySupport {
     Path bodyDirectory;
 
     int bodyMemoryMax = 512;
 
     long bodySizeMax = 1024;
 
-    ThrowingSupplier<? extends OutputStream> bodyOutputStream;
+    private Path file;
 
     long id = 0;
 
@@ -59,16 +55,27 @@ public class HttpRequestParser8BodyDataTest {
     }
 
     final HttpRequestParser8BodyData build() {
-      return new HttpRequestParser8BodyData(this, id, input, meta);
+      return new HttpRequestParser8BodyData(this, input, meta);
     }
 
     @Override
-    public final OutputStream newOutputStream(Path file) throws IOException {
-      return bodyOutputStream != null ? bodyOutputStream.get() : super.newOutputStream(file);
+    public final void close() throws IOException {
+      if (file != null) {
+        Files.delete(file);
+      }
     }
 
     @Override
-    final Path directory() { return bodyDirectory; }
+    final Path file() {
+      if (file == null) {
+        final String fileName;
+        fileName = Long.toString(id);
+
+        file = bodyDirectory.resolve(fileName);
+      }
+
+      return file;
+    }
 
     @Override
     final int memoryMax() { return bodyMemoryMax; }
@@ -173,7 +180,7 @@ public class HttpRequestParser8BodyDataTest {
               cfg.meta = new HttpRequestBodyMeta.Fixed(data1.length());
             }),
 
-            HttpRequestBodyData.of(directory.resolve("%019d".formatted(123L))),
+            HttpRequestBodyData.of(directory.resolve(Long.toString(123L))),
             data1,
             "file: happy-path"
         }
@@ -258,79 +265,6 @@ public class HttpRequestParser8BodyDataTest {
 
             iex,
             "file: IOException during read"
-        },
-        {
-            Cfg.of(cfg -> {
-              cfg.bodyDirectory = Y.nextTempDir();
-
-              cfg.bodyOutputStream = () -> { throw iex; };
-
-              cfg.bodyMemoryMax = 32;
-
-              cfg.input = input(data1);
-
-              cfg.meta = new HttpRequestBodyMeta.Fixed(128);
-            }),
-
-            iex,
-            "file: IOException on getOutputStream"
-        },
-        {
-            Cfg.of(cfg -> {
-              cfg.bodyDirectory = Y.nextTempDir();
-
-              cfg.bodyOutputStream = () -> {
-                return new OutputStream() {
-                  @Override
-                  public final void write(int b) throws IOException {
-                    throw new UnsupportedOperationException("Implement me");
-                  }
-
-                  @Override
-                  public final void write(byte[] b, int off, int len) throws IOException {
-                    throw iex;
-                  }
-                };
-              };
-
-              cfg.bodyMemoryMax = 32;
-
-              cfg.input = input(data1);
-
-              cfg.meta = new HttpRequestBodyMeta.Fixed(128);
-            }),
-
-            iex,
-            "file: IOException on OutputStream.write"
-        },
-        {
-            Cfg.of(cfg -> {
-              cfg.bodyDirectory = Y.nextTempDir();
-
-              cfg.bodyOutputStream = () -> {
-                return new OutputStream() {
-                  @Override
-                  public final void close() throws IOException {
-                    throw iex;
-                  }
-
-                  @Override
-                  public final void write(int b) throws IOException {}
-
-                  @Override
-                  public final void write(byte[] b, int off, int len) throws IOException {}
-                };
-              };
-
-              cfg.bodyMemoryMax = 32;
-
-              cfg.input = input(data1);
-
-              cfg.meta = new HttpRequestBodyMeta.Fixed(64);
-            }),
-
-            iex,
-            "file: IOException on OutputStream.close"
         }
     };
   }

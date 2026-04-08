@@ -28,12 +28,12 @@ import org.testng.annotations.Test;
 
 public class HttpRequestParserTest {
 
-  private static final HttpRequestBody EMPTY_BODY = new HttpRequestBody0(
+  private static final HttpRequestBody0 EMPTY_BODY = new HttpRequestBody0(
       HttpRequestBodyData.ofNull(),
       Map.of()
   );
 
-  private static final class Cfg extends HttpRequestBodyOptions {
+  private static final class Cfg extends HttpRequestBodySupport {
     Path bodyDirectory;
 
     int bodyMemoryMax = 512;
@@ -54,7 +54,7 @@ public class HttpRequestParserTest {
 
     Map<HttpHeaderName, Object> headers = Map.of(HttpHeaderName.HOST, "www.example.com");
 
-    HttpRequestBody body = EMPTY_BODY;
+    HttpRequestBody0 body = EMPTY_BODY;
 
     static Consumer<? super Cfg> of(Consumer<? super Cfg> config) {
       return config;
@@ -68,7 +68,7 @@ public class HttpRequestParserTest {
       buffer = new byte[bufferSize];
 
       final HttpRequestParser parser;
-      parser = new HttpRequestParser(this, buffer, id, socket.getInputStream());
+      parser = new HttpRequestParser(this, buffer, socket.getInputStream());
 
       return parser.parse();
     }
@@ -90,7 +90,14 @@ public class HttpRequestParserTest {
     }
 
     @Override
-    final Path directory() { return bodyDirectory; }
+    public final void close() throws IOException {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    @Override
+    final Path file() {
+      return bodyDirectory.resolve(Long.toString(id));
+    }
 
     @Override
     final int memoryMax() { return bodyMemoryMax; }

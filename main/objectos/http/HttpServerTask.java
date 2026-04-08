@@ -21,7 +21,7 @@ import module objectos.way;
 final class HttpServerTask implements Runnable {
 
   private record Notes(
-      Note.Long1Ref2<String, IOException> socketError
+      Note.Long1Ref2<String, IOException> ioe
   ) {
 
     static Notes get() {
@@ -29,7 +29,7 @@ final class HttpServerTask implements Runnable {
       s = HttpServerTask.class;
 
       return new Notes(
-          Note.Long1Ref2.create(s, "SOC", Note.ERROR)
+          Note.Long1Ref2.create(s, "IOE", Note.ERROR)
       );
     }
 
@@ -86,7 +86,7 @@ final class HttpServerTask implements Runnable {
     try {
       inputStream = socket.getInputStream();
     } catch (IOException e) {
-      noteSink.send(NOTES.socketError, id, "getInputStream", e);
+      noteSink.send(NOTES.ioe, id, "socket.getInputStream", e);
 
       return;
     }
@@ -96,7 +96,7 @@ final class HttpServerTask implements Runnable {
     try {
       outputStream = socket.getOutputStream();
     } catch (IOException e) {
-      noteSink.send(NOTES.socketError, id, "getOutputStream", e);
+      noteSink.send(NOTES.ioe, id, "socket.getOutputStream", e);
 
       return;
     }
@@ -109,21 +109,31 @@ final class HttpServerTask implements Runnable {
         keepAlive = run0(inputStream, outputStream);
       }
     } catch (IOException e) {
-      noteSink.send(NOTES.socketError, id, "close", e);
+      noteSink.send(NOTES.ioe, id, "socket.close", e);
 
       return;
     }
   }
 
   private boolean run0(InputStream inputStream, OutputStream outputStream) {
+    try (HttpRequestBodySupport bodySupport = bodyOptions.supportOf(id)) {
+      final HttpRequestParser requestParser;
+      requestParser = new HttpRequestParser(bodySupport, buffer, inputStream);
+
+      final HttpResponse0 response;
+      response = new HttpResponse0(buffer, clock, outputStream);
+
+      return run1(requestParser, response);
+    } catch (IOException e) {
+      noteSink.send(NOTES.ioe, id, "HttpRequestBodySupport.close", e);
+
+      return false;
+    }
+  }
+
+  private boolean run1(HttpRequestParser requestParser, HttpResponse0 response) {
     // parse request
-    final HttpRequestParser requestParser;
-    requestParser = new HttpRequestParser(bodyOptions, buffer, id, inputStream);
-
     final HttpRequest0 request;
-
-    final HttpResponse0 response;
-    response = new HttpResponse0(buffer, clock, outputStream);
 
     try {
       request = requestParser.parse();
@@ -132,7 +142,7 @@ final class HttpServerTask implements Runnable {
 
       return false;
     } catch (IOException e) {
-      noteSink.send(NOTES.socketError, id, "read", e);
+      noteSink.send(NOTES.ioe, id, "socket.read", e);
 
       return false;
     }

@@ -15,31 +15,17 @@
  */
 package objectos.http;
 
-import static org.testng.Assert.assertEquals;
+import java.io.Closeable;
+import java.nio.file.Path;
 
-import java.io.IOException;
-import objectos.way.Note;
-import objectos.way.Note.Long1Ref2;
+abstract class HttpRequestBodySupport implements Closeable {
 
-final class HttpServerTaskYNoteSink extends Note.NoOpSink {
+  HttpRequestBodySupport() {}
 
-  String event;
+  abstract Path file();
 
-  long id;
+  abstract int memoryMax();
 
-  IOException thrown;
-
-  @Override
-  public final <T1, T2> void send(Long1Ref2<T1, T2> note, long value1, T1 value2, T2 value3) {
-    assertEquals(note.source(), HttpServerTask.class.getName());
-
-    assertEquals(note.key(), "IOE");
-
-    id = value1;
-
-    event = (String) value2;
-
-    thrown = (IOException) value3;
-  }
+  abstract long sizeMax();
 
 }

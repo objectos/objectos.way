@@ -17,45 +17,66 @@ package objectos.http;
 
 import module java.base;
 
-abstract class HttpRequestBodyOptions {
+record HttpRequestBodyOptions(Path directory, int memoryMax, long sizeMax) {
 
-  private static final class Standard extends HttpRequestBodyOptions {
+  private static final class StandardSupport extends HttpRequestBodySupport {
 
-    private final Path directory;
+    private Path file;
 
-    final int memoryMax;
+    private final long id;
 
-    final long sizeMax;
+    private final HttpRequestBodyOptions options;
 
-    Standard(Path directory, int memoryMax, long sizeMax) {
-      this.directory = directory;
+    private StandardSupport(long id, HttpRequestBodyOptions options) {
+      this.id = id;
 
-      this.memoryMax = memoryMax;
-
-      this.sizeMax = sizeMax;
+      this.options = options;
     }
 
     @Override
-    final Path directory() {
-      return directory;
+    public final void close() throws IOException {
+      if (file != null) {
+        Files.delete(file);
+      }
+    }
+
+    @Override
+    final Path file() {
+      if (file == null) {
+        final Path directory;
+        directory = options.directory;
+
+        final String format;
+
+        if (id < 0) {
+          format = "%019d.neg";
+        } else {
+          format = "%019d";
+        }
+
+        final String name;
+        name = String.format(format, id);
+
+        file = directory.resolve(name);
+      }
+
+      return file;
     }
 
     @Override
     final int memoryMax() {
-      return memoryMax;
+      return options.memoryMax;
     }
 
     @Override
     final long sizeMax() {
-      return sizeMax;
+      return options.sizeMax;
     }
 
   }
 
-  HttpRequestBodyOptions() {}
-
-  public static HttpRequestBodyOptions of(Path directory, int memoryMax, long sizeMax) {
-    return new Standard(directory, memoryMax, sizeMax);
+  public final HttpRequestBodySupport supportOf(long id) {
+    return new StandardSupport(id, this);
   }
 
   public Path file(long id) throws IOException {
@@ -80,19 +101,5 @@ abstract class HttpRequestBodyOptions {
       throw e.getCause();
     }
   }
-
-  public InputStream newInputStream(Path file) throws IOException {
-    return Files.newInputStream(file);
-  }
-
-  public OutputStream newOutputStream(Path file) throws IOException {
-    return Files.newOutputStream(file);
-  }
-
-  abstract Path directory();
-
-  abstract int memoryMax();
-
-  abstract long sizeMax();
 
 }
