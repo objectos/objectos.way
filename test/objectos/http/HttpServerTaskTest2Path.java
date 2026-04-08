@@ -363,7 +363,7 @@ public class HttpServerTaskTest2Path {
     );
 
     assertEquals(noteSink.id, 123L);
-    assertEquals(noteSink.event, "read");
+    assertEquals(noteSink.event, "socket.read");
     assertEquals(noteSink.thrown, ioe);
   }
 

@@ -60,7 +60,7 @@ public class HttpServerTaskTest0Socket {
               }
             },
             1001L,
-            "getInputStream",
+            "socket.getInputStream",
             ioe
         },
         {
@@ -71,7 +71,7 @@ public class HttpServerTaskTest0Socket {
               }
             },
             1002L,
-            "getOutputStream",
+            "socket.getOutputStream",
             ioe
         },
         {
@@ -82,7 +82,7 @@ public class HttpServerTaskTest0Socket {
               }
             },
             1003L,
-            "close",
+            "socket.close",
             ioe
         }
     };
