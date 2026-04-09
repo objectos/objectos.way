@@ -87,11 +87,11 @@ final class HttpRequestParser4Query {
     try {
       return parse0();
     } catch (DecodeException e) {
-      throw HttpClientException.of(Invalid.QUERY_PERCENT);
+      throw new HttpClientException(Invalid.QUERY_PERCENT);
     } catch (HttpRequestParser0Input.Eof e) {
-      throw HttpClientException.of(Invalid.QUERY_CHAR, e);
+      throw new HttpClientException(Invalid.QUERY_CHAR, e);
     } catch (HttpRequestParser0Input.Overflow e) {
-      throw HttpClientException.of(Invalid.URI_TOO_LONG, e);
+      throw new HttpClientException(Invalid.URI_TOO_LONG, e);
     }
   }
 
@@ -252,15 +252,15 @@ final class HttpRequestParser4Query {
 
             return input.makeStr();
           } else {
-            throw HttpClientException.of(Invalid.LINE_TERMINATOR);
+            throw new HttpClientException(Invalid.LINE_TERMINATOR);
           }
         }
 
         case QUERY_LF -> {
-          throw HttpClientException.of(Invalid.LINE_TERMINATOR);
+          throw new HttpClientException(Invalid.LINE_TERMINATOR);
         }
 
-        default -> throw HttpClientException.of(Invalid.QUERY_CHAR);
+        default -> throw new HttpClientException(Invalid.QUERY_CHAR);
       }
     }
   }
@@ -271,7 +271,7 @@ final class HttpRequestParser4Query {
       b = input.readByte();
 
       if (b < 0) {
-        throw HttpClientException.of(Invalid.QUERY_CHAR);
+        throw new HttpClientException(Invalid.QUERY_CHAR);
       }
 
       final byte code;
@@ -320,15 +320,15 @@ final class HttpRequestParser4Query {
 
             return name.toString();
           } else {
-            throw HttpClientException.of(Invalid.LINE_TERMINATOR);
+            throw new HttpClientException(Invalid.LINE_TERMINATOR);
           }
         }
 
         case QUERY_LF -> {
-          throw HttpClientException.of(Invalid.LINE_TERMINATOR);
+          throw new HttpClientException(Invalid.LINE_TERMINATOR);
         }
 
-        default -> throw HttpClientException.of(Invalid.QUERY_CHAR);
+        default -> throw new HttpClientException(Invalid.QUERY_CHAR);
       }
     }
   }
@@ -387,15 +387,15 @@ final class HttpRequestParser4Query {
 
             return input.makeStr();
           } else {
-            throw HttpClientException.of(Invalid.LINE_TERMINATOR);
+            throw new HttpClientException(Invalid.LINE_TERMINATOR);
           }
         }
 
         case QUERY_LF -> {
-          throw HttpClientException.of(Invalid.LINE_TERMINATOR);
+          throw new HttpClientException(Invalid.LINE_TERMINATOR);
         }
 
-        default -> throw HttpClientException.of(Invalid.QUERY_CHAR);
+        default -> throw new HttpClientException(Invalid.QUERY_CHAR);
       }
     }
   }
@@ -406,7 +406,7 @@ final class HttpRequestParser4Query {
       b = input.readByte();
 
       if (b < 0) {
-        throw HttpClientException.of(Invalid.QUERY_CHAR);
+        throw new HttpClientException(Invalid.QUERY_CHAR);
       }
 
       final byte code;
@@ -449,15 +449,15 @@ final class HttpRequestParser4Query {
 
             return value.toString();
           } else {
-            throw HttpClientException.of(Invalid.LINE_TERMINATOR);
+            throw new HttpClientException(Invalid.LINE_TERMINATOR);
           }
         }
 
         case QUERY_LF -> {
-          throw HttpClientException.of(Invalid.LINE_TERMINATOR);
+          throw new HttpClientException(Invalid.LINE_TERMINATOR);
         }
 
-        default -> throw HttpClientException.of(Invalid.QUERY_CHAR);
+        default -> throw new HttpClientException(Invalid.QUERY_CHAR);
       }
     }
   }

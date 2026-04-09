@@ -67,9 +67,9 @@ final class HttpRequestParser6Headers {
     try {
       return parse0();
     } catch (HttpRequestParser0Input.Eof e) {
-      throw HttpClientException.of(Invalid.EOF, e);
+      throw new HttpClientException(Invalid.EOF, e);
     } catch (HttpRequestParser0Input.Overflow e) {
-      throw HttpClientException.of(Invalid.REQUEST_HEADER_FIELDS_TOO_LARGE, e);
+      throw new HttpClientException(Invalid.REQUEST_HEADER_FIELDS_TOO_LARGE, e);
     }
   }
 
@@ -106,11 +106,11 @@ final class HttpRequestParser6Headers {
           yield true;
         }
 
-        throw HttpClientException.of(Invalid.TERMINATOR);
+        throw new HttpClientException(Invalid.TERMINATOR);
       }
 
       case Bytes.LF -> {
-        throw HttpClientException.of(Invalid.TERMINATOR);
+        throw new HttpClientException(Invalid.TERMINATOR);
       }
 
       default -> false;
@@ -127,7 +127,7 @@ final class HttpRequestParser6Headers {
 
       switch (mapped) {
         case HttpHeaderName0.INVALID -> {
-          throw HttpClientException.of(Invalid.NAME_CHAR);
+          throw new HttpClientException(Invalid.NAME_CHAR);
         }
 
         case HttpHeaderName0.COLON -> {
@@ -207,11 +207,11 @@ final class HttpRequestParser6Headers {
         }
 
         case HEADER_VALUE_LF -> {
-          throw HttpClientException.of(Invalid.TERMINATOR);
+          throw new HttpClientException(Invalid.TERMINATOR);
         }
 
         default -> {
-          throw HttpClientException.of(Invalid.VALUE_CHAR);
+          throw new HttpClientException(Invalid.VALUE_CHAR);
         }
       }
     }
@@ -241,11 +241,11 @@ final class HttpRequestParser6Headers {
         }
 
         case HEADER_VALUE_LF -> {
-          throw HttpClientException.of(Invalid.TERMINATOR);
+          throw new HttpClientException(Invalid.TERMINATOR);
         }
 
         default -> {
-          throw HttpClientException.of(Invalid.VALUE_CHAR);
+          throw new HttpClientException(Invalid.VALUE_CHAR);
         }
       }
     }
@@ -259,7 +259,7 @@ final class HttpRequestParser6Headers {
     lf = input.readByte();
 
     if (lf != Bytes.LF) {
-      throw HttpClientException.of(Invalid.VALUE_CHAR);
+      throw new HttpClientException(Invalid.VALUE_CHAR);
     } else {
       return value;
     }

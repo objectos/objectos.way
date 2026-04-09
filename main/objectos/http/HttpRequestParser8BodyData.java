@@ -69,7 +69,7 @@ final class HttpRequestParser8BodyData {
     try {
       return parse0();
     } catch (HttpRequestParser0Input.Eof e) {
-      throw HttpClientException.of(Invalid.EOF, e);
+      throw new HttpClientException(Invalid.EOF, e);
     }
   }
 
@@ -83,7 +83,7 @@ final class HttpRequestParser8BodyData {
 
   private HttpRequestBodyData parseFixed(long length) throws IOException {
     if (length > bodySupport.sizeMax()) {
-      throw HttpClientException.of(Invalid.CONTENT_TOO_LARGE);
+      throw new HttpClientException(Invalid.CONTENT_TOO_LARGE);
     }
 
     else if (length > bodySupport.memoryMax()) {

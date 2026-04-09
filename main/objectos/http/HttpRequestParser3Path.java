@@ -85,11 +85,11 @@ final class HttpRequestParser3Path {
     try {
       return parse0();
     } catch (HttpRequestParser1UrlDecoder.DecodeException e) {
-      throw HttpClientException.of(Invalid.PATH_PERCENT, e);
+      throw new HttpClientException(Invalid.PATH_PERCENT, e);
     } catch (HttpRequestParser0Input.Eof e) {
-      throw HttpClientException.of(Invalid.PATH_NEXT_CHAR, e);
+      throw new HttpClientException(Invalid.PATH_NEXT_CHAR, e);
     } catch (HttpRequestParser0Input.Overflow e) {
-      throw HttpClientException.of(Invalid.URI_TOO_LONG, e);
+      throw new HttpClientException(Invalid.URI_TOO_LONG, e);
     }
   }
 
@@ -106,7 +106,7 @@ final class HttpRequestParser3Path {
     final boolean firstPerc;
 
     if (first < 0) {
-      throw HttpClientException.of(Invalid.PATH_FIRST_CHAR);
+      throw new HttpClientException(Invalid.PATH_FIRST_CHAR);
     }
 
     else if (first != '%') {
@@ -122,7 +122,7 @@ final class HttpRequestParser3Path {
     }
 
     if (firstCodePoint != '/') {
-      throw HttpClientException.of(Invalid.PATH_FIRST_CHAR);
+      throw new HttpClientException(Invalid.PATH_FIRST_CHAR);
     }
 
     final String result;
@@ -145,7 +145,7 @@ final class HttpRequestParser3Path {
       second = result.charAt(1);
 
       if (second == '/') {
-        throw HttpClientException.of(Invalid.PATH_SEGMENT_NZ);
+        throw new HttpClientException(Invalid.PATH_SEGMENT_NZ);
       }
     }
 
@@ -235,15 +235,15 @@ final class HttpRequestParser3Path {
                 input.makeStr()
             );
           } else {
-            throw HttpClientException.of(Invalid.LINE_TERMINATOR);
+            throw new HttpClientException(Invalid.LINE_TERMINATOR);
           }
         }
 
         case PATH_LF -> {
-          throw HttpClientException.of(Invalid.LINE_TERMINATOR);
+          throw new HttpClientException(Invalid.LINE_TERMINATOR);
         }
 
-        default -> throw HttpClientException.of(Invalid.PATH_NEXT_CHAR);
+        default -> throw new HttpClientException(Invalid.PATH_NEXT_CHAR);
       }
     }
   }
@@ -254,7 +254,7 @@ final class HttpRequestParser3Path {
       b = input.readByte();
 
       if (b < 0) {
-        throw HttpClientException.of(Invalid.PATH_NEXT_CHAR);
+        throw new HttpClientException(Invalid.PATH_NEXT_CHAR);
       }
 
       final byte code;
@@ -286,15 +286,15 @@ final class HttpRequestParser3Path {
                 path.toString()
             );
           } else {
-            throw HttpClientException.of(Invalid.LINE_TERMINATOR);
+            throw new HttpClientException(Invalid.LINE_TERMINATOR);
           }
         }
 
         case PATH_LF -> {
-          throw HttpClientException.of(Invalid.LINE_TERMINATOR);
+          throw new HttpClientException(Invalid.LINE_TERMINATOR);
         }
 
-        default -> throw HttpClientException.of(Invalid.PATH_NEXT_CHAR);
+        default -> throw new HttpClientException(Invalid.PATH_NEXT_CHAR);
       }
     }
   }

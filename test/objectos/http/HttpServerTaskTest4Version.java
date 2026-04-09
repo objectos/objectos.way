@@ -22,7 +22,7 @@ import objectos.way.Y;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class HttpServerTaskTest4Version extends HttpExchangeTest {
+public class HttpServerTaskTest4Version {
 
   @DataProvider
   public Object[][] versionValidProvider() {

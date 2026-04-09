@@ -4143,75 +4143,74 @@ final class HttpExchangeImpl implements HttpExchange, Runnable, Closeable {
   // # BEGIN: Http.Exchange API || Response
   // ##################################################################
 
-  // 2xx responses
+  @Override
+  public void ok(Media.Bytes media) { throw new UnsupportedOperationException("Implement me"); }
 
   @Override
-  public final void ok(Media.Bytes media) {
-    respond(resp -> resp.ok(media));
-  }
+  public void ok(Media.Stream media) { throw new UnsupportedOperationException("Implement me"); }
 
   @Override
-  public final void ok(Media.Stream media) {
-    respond(resp -> resp.ok(media));
-  }
+  public void ok(Media.Text media) { throw new UnsupportedOperationException("Implement me"); }
 
   @Override
-  public final void ok(Media.Text media) {
-    respond(resp -> resp.ok(media));
-  }
-
-  // 3xx responses
+  public void movedPermanently(String location) { throw new UnsupportedOperationException("Implement me"); }
 
   @Override
-  public final void movedPermanently(String location) {
-    respond(resp -> resp.movedPermanently(location));
-  }
+  public void found(String location) { throw new UnsupportedOperationException("Implement me"); }
 
   @Override
-  public final void found(String location) {
-    respond(resp -> resp.found(location));
-  }
+  public void seeOther(String location) { throw new UnsupportedOperationException("Implement me"); }
 
   @Override
-  public final void seeOther(String location) {
-    respond(resp -> resp.seeOther(location));
-  }
-
-  // 4xx responses
+  public void badRequest(Media media) { throw new UnsupportedOperationException("Implement me"); }
 
   @Override
-  public final void badRequest(Media media) {
-    respond(resp -> resp.badRequest(media));
-  }
+  public void forbidden(Media media) { throw new UnsupportedOperationException("Implement me"); }
 
   @Override
-  public final void forbidden(Media media) {
-    respond(resp -> resp.forbidden(media));
-  }
+  public void notFound(Media media) { throw new UnsupportedOperationException("Implement me"); }
 
   @Override
-  public final void notFound(Media media) {
-    respond(resp -> resp.notFound(media));
-  }
+  public void allow(HttpMethod... methods) { throw new UnsupportedOperationException("Implement me"); }
 
   @Override
-  public final void allow(HttpMethod... methods) {
-    respond(resp -> resp.allow(methods));
-  }
-
-  // 5xx responses
+  public void internalServerError(Media media, Throwable error) { throw new UnsupportedOperationException("Implement me"); }
 
   @Override
-  public final void internalServerError(Media media, Throwable error) {
-    respond(resp -> resp.internalServerError(media, error));
-  }
+  public void status(HttpStatus value) { throw new UnsupportedOperationException("Implement me"); }
 
   @Override
-  public final void respond(Consumer<? super HttpResponse> response) {
-    try (HttpResponseImpl handle = new HttpResponseImpl(this)) {
-      response.accept(handle);
-    }
-  }
+  public void header(HttpHeaderName name, long value) { throw new UnsupportedOperationException("Implement me"); }
+
+  @Override
+  public void header(HttpHeaderName name, String value) { throw new UnsupportedOperationException("Implement me"); }
+
+  @Override
+  public void header(HttpHeaderName name, Consumer<? super HttpHeaderValueBuilder> builder) { throw new UnsupportedOperationException("Implement me"); }
+
+  @Override
+  public void send() { throw new UnsupportedOperationException("Implement me"); }
+
+  @Override
+  public void send(byte[] bytes) { throw new UnsupportedOperationException("Implement me"); }
+
+  @Override
+  public void send(byte[] bytes, int offset, int length) { throw new UnsupportedOperationException("Implement me"); }
+
+  @Override
+  public void send(Media media) { throw new UnsupportedOperationException("Implement me"); }
+
+  @Override
+  public void send(Media.Bytes media) { throw new UnsupportedOperationException("Implement me"); }
+
+  @Override
+  public void send(Media.Text media) { throw new UnsupportedOperationException("Implement me"); }
+
+  @Override
+  public void send(Media.Stream media) { throw new UnsupportedOperationException("Implement me"); }
+
+  @Override
+  public void send(Path file) { throw new UnsupportedOperationException("Implement me"); }
 
   // ##################################################################
   // # END: Http.Exchange API || Response
@@ -4351,7 +4350,8 @@ final class HttpExchangeImpl implements HttpExchange, Runnable, Closeable {
     responseListener.header(name, value);
   }
 
-  private void send() {
+  @SuppressWarnings("unused")
+  private void send0() {
     terminate();
 
     body(null);
@@ -4543,7 +4543,8 @@ final class HttpExchangeImpl implements HttpExchange, Runnable, Closeable {
     noteSink.send(note, id, this);
   }
 
-  final String now() {
+  @Override
+  public final String now() {
     Clock theClock;
     theClock = clock;
 

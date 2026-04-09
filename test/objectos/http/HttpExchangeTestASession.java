@@ -33,7 +33,7 @@ import objectos.way.Y;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class HttpExchangeTestASession extends HttpExchangeTest {
+public class HttpExchangeTestASession {
 
   private final Lang.Key<String> key = Lang.Key.of("unique");
 

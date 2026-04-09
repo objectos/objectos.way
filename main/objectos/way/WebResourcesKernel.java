@@ -96,17 +96,15 @@ record WebResourcesKernel(
     method = http.method();
 
     if (method != HttpMethod.GET && method != HttpMethod.HEAD) {
-      http.respond(resp -> {
-        resp.status(HttpStatus.METHOD_NOT_ALLOWED);
+      http.status(HttpStatus.METHOD_NOT_ALLOWED);
 
-        resp.header(HttpHeaderName.DATE, resp.now());
+      http.header(HttpHeaderName.DATE, http.now());
 
-        resp.header(HttpHeaderName.CONTENT_LENGTH, 0);
+      http.header(HttpHeaderName.CONTENT_LENGTH, 0);
 
-        resp.header(HttpHeaderName.ALLOW, "GET, HEAD");
+      http.header(HttpHeaderName.ALLOW, "GET, HEAD");
 
-        resp.send();
-      });
+      http.send();
 
       return;
     }
@@ -118,17 +116,15 @@ record WebResourcesKernel(
     ifNoneMatch = http.header(HttpHeaderName.IF_NONE_MATCH);
 
     if (etag.equals(ifNoneMatch)) {
-      http.respond(resp -> {
-        resp.status(HttpStatus.NOT_MODIFIED);
+      http.status(HttpStatus.NOT_MODIFIED);
 
-        resp.header(HttpHeaderName.DATE, resp.now());
+      http.header(HttpHeaderName.DATE, http.now());
 
-        resp.header(HttpHeaderName.CONTENT_LENGTH, 0);
+      http.header(HttpHeaderName.CONTENT_LENGTH, 0);
 
-        resp.header(HttpHeaderName.ETAG, etag);
+      http.header(HttpHeaderName.ETAG, etag);
 
-        resp.send();
-      });
+      http.send();
 
       return;
     }
@@ -144,19 +140,17 @@ record WebResourcesKernel(
       contentType = defaultContentType;
     }
 
-    http.respond(resp -> {
-      resp.status(HttpStatus.OK);
+    http.status(HttpStatus.OK);
 
-      resp.header(HttpHeaderName.CONTENT_TYPE, contentType);
+    http.header(HttpHeaderName.CONTENT_TYPE, contentType);
 
-      resp.header(HttpHeaderName.CONTENT_LENGTH, attributes.size());
+    http.header(HttpHeaderName.CONTENT_LENGTH, attributes.size());
 
-      resp.header(HttpHeaderName.DATE, resp.now());
+    http.header(HttpHeaderName.DATE, http.now());
 
-      resp.header(HttpHeaderName.ETAG, etag);
+    http.header(HttpHeaderName.ETAG, etag);
 
-      resp.send(file);
-    });
+    http.send(file);
   }
 
   public final void write(String pathName, byte[] contents) throws IOException {

@@ -27,7 +27,7 @@ import objectos.way.Y;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class HttpExchangeTestBCreate extends HttpExchangeTest {
+public class HttpExchangeTestBCreate {
 
   @Test
   public void formParam01() {

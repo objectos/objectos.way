@@ -384,7 +384,7 @@ final class Http {
   }
 
   @SuppressWarnings("unchecked")
-  static List<String> queryParamsGetAll(Map<String, Object> params, String name) {
+  static <K> List<String> queryParamsGetAll(Map<K, Object> params, K name) {
     Object maybe;
     maybe = params.get(name);
 

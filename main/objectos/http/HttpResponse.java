@@ -92,39 +92,25 @@ public sealed interface HttpResponse permits HttpResponseImpl, HttpResponse0 {
 
   // low-level
 
-  /**
-   * Begins this HTTP response message by writing out the status line.
-   *
-   * @param value
-   *        the response status
-   */
+  /// Sets the status of this HTTP response message.
+  ///
+  /// @param value the response status
   void status(HttpStatus value);
 
-  /**
-   * Writes an HTTP response header field with the specified name and
-   * value.
-   *
-   * @param name
-   *        the header name
-   * @param value
-   *        the header value
-   */
+  /// Adds the specified header field to this HTTP response message.
+  ///
+  /// @param name the header name
+  /// @param value the header value
   void header(HttpHeaderName name, long value);
 
-  /**
-   * Writes an HTTP response header field with the specified name and
-   * value.
-   *
-   * @param name
-   *        the header name
-   * @param value
-   *        the header value
-   */
+  /// Adds the specified header field to this HTTP response message.
+  ///
+  /// @param name the header name
+  /// @param value the header value
   void header(HttpHeaderName name, String value);
 
   /**
-   * Writes an HTTP response header field with the specified name and
-   * value.
+   * Adds the specified header field to this HTTP response message.
    *
    * <p>
    * Example usage:
@@ -151,11 +137,9 @@ public sealed interface HttpResponse permits HttpResponseImpl, HttpResponse0 {
    */
   void header(HttpHeaderName name, Consumer<? super HttpHeaderValueBuilder> builder);
 
-  /**
-   * Returns the server's current time.
-   *
-   * @return the RFC-5322 formatted server time
-   */
+  /// Returns the server's current time.
+  ///
+  /// @return the RFC-5322 formatted server time
   String now();
 
   /// Ends this HTTP response message with an empty body.

@@ -150,7 +150,7 @@ final class HttpRequestParser0Input extends InputStream {
     next = readByte();
 
     if (next < 0) {
-      throw HttpClientException.of(kind);
+      throw new HttpClientException(kind);
     }
 
     return table[next];

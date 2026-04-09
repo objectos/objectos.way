@@ -21,7 +21,7 @@ import module objectos.way;
 final class HttpServerTask implements Runnable {
 
   private record Notes(
-      Note.Long1Ref2<String, IOException> ioe
+      Note.Long1Ref2<String, Exception> ioe
   ) {
 
     static Notes get() {
@@ -117,13 +117,7 @@ final class HttpServerTask implements Runnable {
 
   private boolean run0(InputStream inputStream, OutputStream outputStream) {
     try (HttpRequestBodySupport bodySupport = bodyOptions.supportOf(id)) {
-      final HttpRequestParser requestParser;
-      requestParser = new HttpRequestParser(bodySupport, buffer, inputStream);
-
-      final HttpResponse0 response;
-      response = new HttpResponse0(buffer, clock, outputStream);
-
-      return run1(requestParser, response);
+      return run1(inputStream, outputStream, bodySupport);
     } catch (IOException e) {
       noteSink.send(NOTES.ioe, id, "HttpRequestBodySupport.close", e);
 
@@ -131,8 +125,14 @@ final class HttpServerTask implements Runnable {
     }
   }
 
-  private boolean run1(HttpRequestParser requestParser, HttpResponse0 response) {
+  private boolean run1(InputStream inputStream, OutputStream outputStream, HttpRequestBodySupport bodySupport) {
+    final HttpResponse0 response;
+    response = new HttpResponse0(buffer, clock, outputStream);
+
     // parse request
+    final HttpRequestParser requestParser;
+    requestParser = new HttpRequestParser(bodySupport, buffer, inputStream);
+
     final HttpRequest0 request;
 
     try {
@@ -147,38 +147,10 @@ final class HttpServerTask implements Runnable {
       return false;
     }
 
-    // validate request method
-    final HttpMethod method;
-    method = request.method();
-
-    if (!method.implemented) {
-      response.status(HttpStatus.NOT_IMPLEMENTED);
-
-      response.header(HttpHeaderName.DATE, response.now());
-
-      final Media.Bytes message;
-      message = Media.Bytes.textPlain("The requested method is not implemented by this server.\n");
-
-      response.send(message);
-
-      return keepAlive(request, response);
-    }
-
-    // validate request version
-    final HttpVersion0 version;
-    version = request.version();
-
-    if (!version.supported()) {
-      response.status(HttpStatus.HTTP_VERSION_NOT_SUPPORTED);
-
-      response.header(HttpHeaderName.DATE, response.now());
-
-      response.header(HttpHeaderName.CONNECTION, "close");
-
-      final Media.Bytes message;
-      message = Media.Bytes.textPlain("Supported versions: HTTP/1.1\n");
-
-      response.send(message);
+    try {
+      request.validate();
+    } catch (HttpRequest0InvalidException e) {
+      e.respond(response);
 
       return keepAlive(request, response);
     }

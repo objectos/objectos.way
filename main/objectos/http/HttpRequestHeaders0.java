@@ -15,6 +15,7 @@
  */
 package objectos.http;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -32,6 +33,12 @@ record HttpRequestHeaders0(Map<HttpHeaderName, Object> headers) implements HttpR
     Objects.requireNonNull(name, "name == null");
 
     return Http.queryParamsGet(headers, name);
+  }
+
+  public final List<String> headerAll(HttpHeaderName name) {
+    Objects.requireNonNull(name, "name == null");
+
+    return Http.queryParamsGetAll(headers, name);
   }
 
 }

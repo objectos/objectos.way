@@ -347,7 +347,9 @@ final class HttpResponse0 implements HttpResponse {
 
       writer.header(name, value);
 
-      closeConnection = name == HttpHeaderName.CONNECTION && "close".equalsIgnoreCase(value);
+      if (name == HttpHeaderName.CONNECTION) {
+        closeConnection = "close".equalsIgnoreCase(value);
+      }
     }
 
     writer.lineSeparator();

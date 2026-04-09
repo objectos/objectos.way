@@ -106,7 +106,9 @@ final class HttpResponse2Writer implements Closeable {
 
       writeBytes(valueBytes);
 
-      chunked = name == HttpHeaderName.TRANSFER_ENCODING && "chunked".equalsIgnoreCase(value);
+      if (name == HttpHeaderName.TRANSFER_ENCODING) {
+        chunked = "chunked".equalsIgnoreCase(value);
+      }
     }
 
     writeBytes(Bytes.CRLF);

@@ -15,6 +15,7 @@
  */
 package objectos.http;
 
+import java.nio.file.Path;
 import java.time.Clock;
 import java.util.function.Consumer;
 import objectos.way.Lang;
@@ -396,13 +397,99 @@ public sealed interface HttpExchange
 
   // response builder
 
+  /// Sets the status of this HTTP response message.
+  ///
+  /// @param value the response status
+  void status(HttpStatus value);
+
+  /// Adds the specified header field to this HTTP response message.
+  ///
+  /// @param name the header name
+  /// @param value the header value
+  void header(HttpHeaderName name, long value);
+
+  /// Adds the specified header field to this HTTP response message.
+  ///
+  /// @param name the header name
+  /// @param value the header value
+  void header(HttpHeaderName name, String value);
+
   /**
-   * Respond with the specified response message.
+   * Adds the specified header field to this HTTP response message.
    *
-   * @param response
-   *        a handle to write the response message
+   * <p>
+   * Example usage:
+   * <pre>{@code
+   * response.header(Http.HeaderName.CONTENT_DISPOSITION, builder -> {
+   *   builder.value("attachment");
+   *   builder.param("filename", "document.pdf");
+   *   builder.param("filename*", StandardCharsets.UTF_8, "document.pdf");
+   * });
+   * }</pre>
+   *
+   * <p>
+   * Which would result in the following header field written out to the
+   * response:
+   *
+   * <pre>{@code
+   * Content-Disposition: attachment; filename=document.pdf; filename*=UTF-8''document.pdf
+   * }</pre>
+   *
+   * @param name
+   *        the header name
+   * @param builder
+   *        a handle for creating the header field value
    */
-  void respond(Consumer<? super HttpResponse> response);
+  void header(HttpHeaderName name, Consumer<? super HttpHeaderValueBuilder> builder);
+
+  /// Returns the server's current time.
+  ///
+  /// @return the RFC-5322 formatted server time
+  String now();
+
+  /// Ends this HTTP response message with an empty body.
+  void send();
+
+  /// Ends this HTTP response message with the specified body.
+  ///
+  /// @param bytes the array of bytes with the body contents
+  void send(byte[] bytes);
+
+  /// Ends this HTTP response message with the specified body.
+  ///
+  /// @param bytes the array of bytes with the body contents
+  /// @param offset index where the actual message begins
+  /// @param length the message length in bytes
+  void send(byte[] bytes, int offset, int length);
+
+  /// Ends this HTTP response message with the contents from the specified
+  /// media.
+  ///
+  /// @param media the media entity
+  void send(Media media);
+
+  /// Ends this HTTP response message with the contents from the specified
+  /// media.
+  ///
+  /// @param media the media entity
+  void send(Media.Bytes media);
+
+  /// Ends this HTTP response message with the contents from the specified
+  /// media.
+  ///
+  /// @param media the media entity
+  void send(Media.Text media);
+
+  /// Ends this HTTP response message with the contents from the specified
+  /// media.
+  ///
+  /// @param media the media entity
+  void send(Media.Stream media);
+
+  /// Ends this HTTP response message with the specified body.
+  ///
+  /// @param file the path to a regular file containing the body contents
+  void send(Path file);
 
   /**
    * Return {@code true} if an HTTP response message has been written to this

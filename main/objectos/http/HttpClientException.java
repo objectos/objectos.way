@@ -18,9 +18,8 @@ package objectos.http;
 import java.io.IOException;
 import objectos.way.Media;
 
+@SuppressWarnings("serial")
 final class HttpClientException extends IOException {
-
-  private static final long serialVersionUID = -3212371438120698449L;
 
   sealed interface Kind
       permits
@@ -41,22 +40,14 @@ final class HttpClientException extends IOException {
 
   final Kind kind;
 
-  private HttpClientException(Kind kind) {
+  HttpClientException(Kind kind) {
     this.kind = kind;
   }
 
-  private HttpClientException(Kind kind, Throwable cause) {
+  HttpClientException(Kind kind, Throwable cause) {
     super(cause);
 
     this.kind = kind;
-  }
-
-  public static HttpClientException of(Kind kind) {
-    return new HttpClientException(kind);
-  }
-
-  public static HttpClientException of(Kind kind, Throwable cause) {
-    return new HttpClientException(kind, cause);
   }
 
   public void respond(HttpResponse response) {

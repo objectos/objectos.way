@@ -67,7 +67,7 @@ final class HttpRequestParser9BodyType0Form {
     try {
       return parse0();
     } catch (DecodeException e) {
-      throw HttpClientException.of(Invalid.PERCENT, e);
+      throw new HttpClientException(Invalid.PERCENT, e);
     }
   }
 
@@ -160,7 +160,7 @@ final class HttpRequestParser9BodyType0Form {
       }
 
       if (c > 0x7F) {
-        throw HttpClientException.of(Invalid.CHAR);
+        throw new HttpClientException(Invalid.CHAR);
       }
 
       final byte code;
@@ -192,7 +192,7 @@ final class HttpRequestParser9BodyType0Form {
           return name.toString();
         }
 
-        default -> throw HttpClientException.of(Invalid.CHAR);
+        default -> throw new HttpClientException(Invalid.CHAR);
       }
     }
   }
@@ -212,7 +212,7 @@ final class HttpRequestParser9BodyType0Form {
       }
 
       if (c > 0x7F) {
-        throw HttpClientException.of(Invalid.CHAR);
+        throw new HttpClientException(Invalid.CHAR);
       }
 
       final byte code;
@@ -238,7 +238,7 @@ final class HttpRequestParser9BodyType0Form {
           return value.toString();
         }
 
-        default -> throw HttpClientException.of(Invalid.CHAR);
+        default -> throw new HttpClientException(Invalid.CHAR);
       }
     }
   }

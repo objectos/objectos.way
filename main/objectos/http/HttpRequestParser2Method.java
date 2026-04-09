@@ -45,15 +45,13 @@ final class HttpRequestParser2Method {
     try {
       return parse0();
     } catch (HttpRequestParser0Input.Eof | HttpRequestParser0Input.Overflow e) {
-      throw HttpClientException.of(Invalid.METHOD, e);
+      throw new HttpClientException(Invalid.METHOD, e);
     }
   }
 
   private HttpMethod parse0() throws IOException {
     final byte first;
     first = input.readByte();
-
-    // based on the first char, we select out method candidate
 
     return switch (first) {
       case 'C' -> parseMethod(HttpMethod.CONNECT, 1);
@@ -70,7 +68,7 @@ final class HttpRequestParser2Method {
 
       case 'T' -> parseMethod(HttpMethod.TRACE, 1);
 
-      default -> throw HttpClientException.of(Invalid.METHOD);
+      default -> throw new HttpClientException(Invalid.METHOD);
     };
   }
 
@@ -86,7 +84,7 @@ final class HttpRequestParser2Method {
         continue;
       }
 
-      throw HttpClientException.of(Invalid.METHOD);
+      throw new HttpClientException(Invalid.METHOD);
     }
 
     return method;
@@ -103,7 +101,7 @@ final class HttpRequestParser2Method {
 
       case 'A' -> parseMethod(HttpMethod.PATCH, 2);
 
-      default -> throw HttpClientException.of(Invalid.METHOD);
+      default -> throw new HttpClientException(Invalid.METHOD);
     };
   }
 

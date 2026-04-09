@@ -64,9 +64,9 @@ final class HttpRequestParser5Version {
     try {
       return parse0();
     } catch (HttpRequestParser0Input.Eof e) {
-      throw HttpClientException.of(Invalid.EOF, e);
+      throw new HttpClientException(Invalid.EOF, e);
     } catch (HttpRequestParser0Input.Overflow e) {
-      throw HttpClientException.of(Invalid.VERSION, e);
+      throw new HttpClientException(Invalid.VERSION, e);
     }
   }
 
@@ -97,7 +97,7 @@ final class HttpRequestParser5Version {
         continue;
       }
 
-      throw HttpClientException.of(Invalid.VERSION);
+      throw new HttpClientException(Invalid.VERSION);
     }
   }
 
@@ -106,7 +106,7 @@ final class HttpRequestParser5Version {
     first = input.readByte();
 
     if (!Http.isDigit(first)) {
-      throw HttpClientException.of(Invalid.VERSION);
+      throw new HttpClientException(Invalid.VERSION);
     }
 
     int major;
@@ -143,18 +143,18 @@ final class HttpRequestParser5Version {
       }
 
       if (b == '\n') {
-        throw HttpClientException.of(Invalid.LINE_TERMINATOR);
+        throw new HttpClientException(Invalid.LINE_TERMINATOR);
       }
 
       if (b != '\r') {
-        throw HttpClientException.of(Invalid.VERSION);
+        throw new HttpClientException(Invalid.VERSION);
       }
 
       final byte lf;
       lf = input.readByte();
 
       if (lf != Bytes.LF) {
-        throw HttpClientException.of(Invalid.LINE_TERMINATOR);
+        throw new HttpClientException(Invalid.LINE_TERMINATOR);
       }
 
       done = true;
@@ -168,7 +168,7 @@ final class HttpRequestParser5Version {
     first = input.readByte();
 
     if (!Http.isDigit(first)) {
-      throw HttpClientException.of(Invalid.VERSION);
+      throw new HttpClientException(Invalid.VERSION);
     }
 
     int minor;
@@ -201,11 +201,11 @@ final class HttpRequestParser5Version {
       }
 
       if (b == '\n') {
-        throw HttpClientException.of(Invalid.LINE_TERMINATOR);
+        throw new HttpClientException(Invalid.LINE_TERMINATOR);
       }
 
       if (b != '\r') {
-        throw HttpClientException.of(Invalid.VERSION);
+        throw new HttpClientException(Invalid.VERSION);
       }
 
       final byte lf;
@@ -215,7 +215,7 @@ final class HttpRequestParser5Version {
         return minor;
       }
 
-      throw HttpClientException.of(Invalid.LINE_TERMINATOR);
+      throw new HttpClientException(Invalid.LINE_TERMINATOR);
     }
   }
 

@@ -76,7 +76,7 @@ final class HttpRequestParser7BodyMeta {
     if (contentLength != null) {
 
       if (transferEncoding != null) {
-        throw HttpClientException.of(Invalid.BOTH_CL_TE);
+        throw new HttpClientException(Invalid.BOTH_CL_TE);
       }
 
       final long len;
@@ -94,11 +94,11 @@ final class HttpRequestParser7BodyMeta {
     }
 
     if (contentType != null) {
-      throw HttpClientException.of(Invalid.LENGTH_REQUIRED);
+      throw new HttpClientException(Invalid.LENGTH_REQUIRED);
     }
 
     if (transferEncoding != null) {
-      throw HttpClientException.of(Invalid.NOT_IMPLEMENTED);
+      throw new HttpClientException(Invalid.NOT_IMPLEMENTED);
     }
 
     return HttpRequestBodyMeta.ofEmpty();
@@ -122,7 +122,7 @@ final class HttpRequestParser7BodyMeta {
       d = contentLength.charAt(i);
 
       if (!Ascii.isDigit(d)) {
-        throw HttpClientException.of(Invalid.INVALID_CONTENT_LENGTH);
+        throw new HttpClientException(Invalid.INVALID_CONTENT_LENGTH);
       }
 
       if (overflow) {
@@ -152,7 +152,7 @@ final class HttpRequestParser7BodyMeta {
     }
 
     if (overflow) {
-      throw HttpClientException.of(Invalid.CONTENT_TOO_LARGE);
+      throw new HttpClientException(Invalid.CONTENT_TOO_LARGE);
     }
 
     return length;

@@ -16,6 +16,7 @@
 package objectos.http;
 
 import module java.base;
+import objectos.http.HttpRequest0InvalidException.Kind;
 
 record HttpRequest0(
 
@@ -32,6 +33,33 @@ record HttpRequest0(
     HttpRequestBody0 body
 
 ) implements HttpRequest {
+
+  public final void validate() throws HttpRequest0InvalidException {
+    // validate request method
+    if (!method.implemented) {
+      throw new HttpRequest0InvalidException(Kind.METHOD_NOT_IMPLEMENTED);
+    }
+
+    // validate request version
+    if (!version.supported()) {
+      throw new HttpRequest0InvalidException(Kind.HTTP_VERSION_NOT_SUPPORTED);
+    }
+
+    // validate host headers
+    final List<String> host;
+    host = headers.headerAll(HttpHeaderName.HOST);
+
+    if (host.size() != 1) {
+      throw new HttpRequest0InvalidException(Kind.HOST_HEADER);
+    }
+
+    final String hostValue;
+    hostValue = host.get(0);
+
+    if (hostValue.isEmpty()) {
+      throw new HttpRequest0InvalidException(Kind.HOST_HEADER);
+    }
+  }
 
   @Override
   public final InputStream bodyInputStream() throws IOException {

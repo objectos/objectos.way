@@ -307,51 +307,68 @@ final class HttpExchange0 implements HttpExchange {
     response.internalServerError(media, error);
   }
 
+  @Override
   public final void status(HttpStatus value) {
     response.status(value);
   }
 
+  @Override
   public final void header(HttpHeaderName name, long value) {
     response.header(name, value);
   }
 
+  @Override
   public final void header(HttpHeaderName name, String value) {
     response.header(name, value);
   }
 
+  @Override
   public final void header(HttpHeaderName name, Consumer<? super HttpHeaderValueBuilder> builder) {
     response.header(name, builder);
   }
 
+  @Override
   public final String now() {
     return response.now();
   }
 
+  @Override
   public final void send() {
     response.send();
   }
 
+  @Override
+  public final void send(byte[] bytes) {
+    response.send(bytes);
+  }
+
+  @Override
   public final void send(byte[] bytes, int offset, int length) {
     response.send(bytes, offset, length);
   }
 
+  @Override
   public final void send(Path file) {
     response.send(file);
   }
 
+  @Override
   public final void send(Media media) {
     response.send(media);
   }
 
-  public final void media(Media.Bytes media) {
+  @Override
+  public final void send(Media.Bytes media) {
     response.send(media);
   }
 
-  public final void media(Media.Text media) {
+  @Override
+  public final void send(Media.Text media) {
     response.send(media);
   }
 
-  public final void media(Media.Stream media) {
+  @Override
+  public final void send(Media.Stream media) {
     response.send(media);
   }
 
@@ -361,11 +378,6 @@ final class HttpExchange0 implements HttpExchange {
 
   @Override
   public final boolean processed() {
-    throw new UnsupportedOperationException("Implement me");
-  }
-
-  @Override
-  public void respond(Consumer<? super HttpResponse> response) {
     throw new UnsupportedOperationException("Implement me");
   }
 
