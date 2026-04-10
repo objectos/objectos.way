@@ -19,11 +19,11 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 import java.net.Socket;
-import objectos.http.HttpRequestParser5Version.Invalid;
 import objectos.way.Y;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import objectos.http.HttpRequestParserException.Kind;
 
 public class HttpRequestParser5VersionTest {
 
@@ -72,29 +72,46 @@ public class HttpRequestParser5VersionTest {
   @DataProvider
   public Object[][] invalidProvider() {
     return new Object[][] {
-        {"HPTP/1.1\r\n", Invalid.VERSION, "valid chars but just nonsense"},
-        {"ABCD/1.1\r\n", Invalid.VERSION, "invalid chars"},
-        {"HTTP/1.\r\n", Invalid.VERSION, "Almost valid"},
-        {"HTTP/.1\r\n", Invalid.VERSION, "Almost valid"},
-        {"HTTP/\r\n", Invalid.VERSION, "Almost valid"},
-        {"HTTP/1.x", Invalid.VERSION, "Almost valid"},
-        {"HTTP/1.1", Invalid.EOF, "Almost valid... EOF"},
-        {"HTTP/1.1\n", Invalid.LINE_TERMINATOR, "Almost valid... line terminator"},
-        {"HTTP/1.1\r\t", Invalid.LINE_TERMINATOR, "Almost valid... line terminator"}
+        {"HPTP/1.1\r\n", Kind.INVALID_REQUEST_LINE, "Invalid HTTP version: expected byte 0x54 but got 0x50"},
+        {"ABCD/1.1\r\n", Kind.INVALID_REQUEST_LINE, "Invalid HTTP version: expected byte 0x48 but got 0x41"},
+        {"HTTP/1.\r\n", Kind.INVALID_REQUEST_LINE, "Invalid HTTP version: byte 0x0D is not a valid digit"},
+        {"HTTP/.1\r\n", Kind.INVALID_REQUEST_LINE, "Invalid HTTP version: byte 0x2E is not a valid digit"},
+        {"HTTP/\r\n", Kind.INVALID_REQUEST_LINE, "Invalid HTTP version: byte 0x0D is not a valid digit"},
+        {"HTTP/1.x", Kind.INVALID_REQUEST_LINE, "Invalid HTTP version: byte 0x78 is not a valid digit"},
+        {"HTTP/1.1", Kind.INVALID_REQUEST_LINE, "EOF while parsing HTTP version"},
+        {"HTTP/1.1\n", Kind.LINE_TERMINATOR, "CRLF sequence required as line terminator"},
+        {"HTTP/1.1\r\t", Kind.LINE_TERMINATOR, "CRLF sequence required as line terminator"}
     };
   }
 
   @SuppressWarnings("exports")
   @Test(dataProvider = "invalidProvider")
-  public void invalid(String line, Invalid kind, String description) throws IOException {
+  public void invalid(String line, Kind kind, String msg) throws IOException {
     try {
       parse(
           line
       );
 
       Assert.fail("It should have thrown");
-    } catch (HttpClientException expected) {
+    } catch (HttpRequestParserException expected) {
+      assertEquals(expected.getMessage(), msg);
+
       assertEquals(expected.kind, kind);
+    }
+  }
+
+  @Test
+  public void uriTooLong() throws IOException {
+    try {
+      parse(
+          "HTTP/1." + "1".repeat(3096)
+      );
+
+      Assert.fail("It should have thrown");
+    } catch (HttpRequestParserException expected) {
+      assertEquals(expected.getMessage(), "Buffer overflow while parsing HTTP version");
+
+      assertEquals(expected.kind, Kind.URI_TOO_LONG);
     }
   }
 
