@@ -127,7 +127,7 @@ final class HttpRequestParser0Input extends InputStream {
 
     if (b < 0) {
       final String msg;
-      msg = "Unexpected byte 0x%02x while reading from input: ASCII value expected".formatted(b);
+      msg = "Unexpected byte 0x%02X while reading from input: ASCII value expected".formatted(b);
 
       throw new HttpRequestParserException(msg, kind);
     }

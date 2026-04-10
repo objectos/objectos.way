@@ -124,7 +124,17 @@ public class HttpRequestParser3PathTest {
       path = "/pa" + (char) ascii + "th";
 
       final String msg;
-      msg = "Unexpected byte 0x%02x while parsing path".formatted(ascii);
+      msg = "Unexpected byte 0x%02X while parsing path".formatted(ascii);
+
+      l.add(arr(path, msg));
+    }
+
+    for (int iso = 128; iso < 256; iso++) {
+      final String path;
+      path = "/pa" + (char) iso + "th";
+
+      final String msg;
+      msg = "Unexpected byte 0x%02X while reading from input: ASCII value expected".formatted(iso);
 
       l.add(arr(path, msg));
     }

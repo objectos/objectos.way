@@ -83,7 +83,7 @@ final class HttpRequestParser3Path {
 
     if (firstCodePoint != '/') {
       final String msg;
-      msg = "Unexpected byte 0x%02x while parsing path: path must start with '/'".formatted(first);
+      msg = "Unexpected byte 0x%02X while parsing path: path must start with '/'".formatted(first);
 
       throw new HttpRequestParserException(msg, Kind.INVALID_REQUEST_LINE);
     }
@@ -222,7 +222,7 @@ final class HttpRequestParser3Path {
 
         default -> {
           final String msg;
-          msg = "Unexpected byte 0x%02x while parsing path".formatted(b);
+          msg = "Unexpected byte 0x%02X while parsing path".formatted(b);
 
           throw new HttpRequestParserException(msg, Kind.INVALID_REQUEST_LINE);
         }
@@ -282,7 +282,7 @@ final class HttpRequestParser3Path {
 
         default -> {
           final String msg;
-          msg = "Unexpected byte 0x%02x while parsing path".formatted(b);
+          msg = "Unexpected byte 0x%02X while parsing path".formatted(b);
 
           throw new HttpRequestParserException(msg, Kind.INVALID_REQUEST_LINE);
         }

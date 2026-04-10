@@ -15,17 +15,20 @@
  */
 package objectos.http;
 
+import static objectos.http.HttpY.arr;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 
 import module java.base;
-import objectos.http.HttpRequestParser4Query.Invalid;
+import objectos.http.HttpRequestParserException.Kind;
 import objectos.way.Y;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class HttpRequestParser4QueryTest {
+
+  private final String validString = Http.unreserved() + Http.subDelims() + ":@/?";
 
   private Map<String, Object> parse(Object... data) throws IOException {
     final Socket socket;
@@ -51,8 +54,6 @@ public class HttpRequestParser4QueryTest {
     assertEquals(res, Map.of());
   }
 
-  private final boolean[] validBytes = HttpY.queryValidBytes();
-
   @DataProvider
   public Object[][] queryValidProvider() {
     return HttpY.queryValidProvider();
@@ -72,56 +73,69 @@ public class HttpRequestParser4QueryTest {
     final List<Object[]> l;
     l = new ArrayList<>();
 
-    for (int value = 0; value < validBytes.length; value++) {
-      switch (value) {
-        case ' ' -> {
-          // will cause parsing to move to VERSION
-        }
+    final byte[] validBytes;
+    validBytes = validString.getBytes();
 
-        case '\n', '\r' -> {
-          // will trigger 505 not 400
-        }
+    Arrays.sort(validBytes);
 
-        case '%' -> {
-          // tested in invalid percent
-        }
-
-        default -> {
-          if (!validBytes[value]) {
-            l.add(queryInvalidKey(value));
-            l.add(queryInvalidValue(value));
-          }
-        }
+    for (int ascii = 0; ascii < 128; ascii++) {
+      if (ascii == ' ' || ascii == '\r' || ascii == '\n') {
+        continue;
       }
+
+      if (ascii == '%') {
+        continue;
+      }
+
+      final int idx;
+      idx = Arrays.binarySearch(validBytes, (byte) ascii);
+
+      if (idx >= 0) {
+        continue;
+      }
+
+      final String key;
+      key = "k" + (char) ascii + "y=value";
+
+      final String val;
+      val = "key=va" + (char) ascii + "ue";
+
+      final String msg;
+      msg = "Unexpected byte 0x%02X while parsing URI query".formatted(ascii);
+
+      l.add(arr(key, msg));
+      l.add(arr(val, msg));
+    }
+
+    for (int iso = 128; iso < 256; iso++) {
+      final String key;
+      key = "k" + (char) iso + "y=value";
+
+      final String val;
+      val = "key=va" + (char) iso + "ue";
+
+      final String msg;
+      msg = "Unexpected byte 0x%02X while reading from input: ASCII value expected".formatted(iso);
+
+      l.add(arr(key, msg));
+      l.add(arr(val, msg));
     }
 
     return l.toArray(Object[][]::new);
   }
 
-  private Object[] queryInvalidKey(int value) {
-    final String key;
-    key = Character.toString(value);
-
-    return arr(key + "=value", "key contains the " + Integer.toHexString(value) + " invalid byte");
-  }
-
-  private Object[] queryInvalidValue(int value) {
-    final String val;
-    val = Character.toString(value);
-
-    return arr("key=" + val, "value contains the " + Integer.toHexString(value) + " invalid byte");
-  }
-
   @Test(dataProvider = "queryInvalidProvider")
-  public void queryInvalid(String raw, String description) throws IOException {
+  public void queryInvalid(String raw, String msg) throws IOException {
     try {
       parse(
           "?%s HTTP/1.1".formatted(raw).getBytes(StandardCharsets.ISO_8859_1)
       );
 
       Assert.fail("It should have thrown");
-    } catch (HttpClientException expected) {
-      assertEquals(expected.kind, Invalid.QUERY_CHAR);
+    } catch (HttpRequestParserException expected) {
+      assertEquals(expected.getMessage(), msg);
+
+      assertEquals(expected.kind, Kind.INVALID_REQUEST_LINE);
     }
   }
 
@@ -220,8 +234,8 @@ public class HttpRequestParser4QueryTest {
       );
 
       Assert.fail("It should have thrown");
-    } catch (HttpClientException expected) {
-      assertEquals(expected.kind, Invalid.QUERY_PERCENT);
+    } catch (HttpRequestParserException expected) {
+      assertEquals(expected.kind, Kind.INVALID_REQUEST_LINE);
     }
   }
 
@@ -264,14 +278,11 @@ public class HttpRequestParser4QueryTest {
       );
 
       Assert.fail("It should have thrown");
-    } catch (HttpClientException expected) {
-      assertEquals(expected.kind, Invalid.URI_TOO_LONG);
-    }
-  }
+    } catch (HttpRequestParserException expected) {
+      assertEquals(expected.getMessage(), "Buffer overflow while parsing URI query");
 
-  private Object[] arr(Object... arr) {
-    // not safe, oh well...
-    return arr;
+      assertEquals(expected.kind, Kind.URI_TOO_LONG);
+    }
   }
 
 }
