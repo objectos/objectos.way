@@ -27,7 +27,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Consumer;
-import objectos.http.HttpRequestParser8BodyData.Invalid;
 import objectos.way.Y;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
@@ -225,8 +224,8 @@ public class HttpRequestParser8BodyDataTest {
               cfg.meta = new HttpRequestBodyMeta.Fixed(100 + 1);
             }),
 
-            Invalid.CONTENT_TOO_LARGE,
-            "content-length exceeds bodySizeMax"
+            HttpRequestParserException.Kind.CONTENT_TOO_LARGE,
+            "The request message body exceeds the server's maximum allowed limit: 101 > 100"
         },
         {
             Cfg.of(cfg -> {
@@ -249,8 +248,8 @@ public class HttpRequestParser8BodyDataTest {
               cfg.meta = new HttpRequestBodyMeta.Fixed(128);
             }),
 
-            Invalid.EOF,
-            "memory: EOF"
+            HttpRequestParserException.Kind.INCOMPLETE_REQUEST_BODY,
+            "EOF while reading request body"
         },
         {
             Cfg.of(cfg -> {
@@ -274,12 +273,14 @@ public class HttpRequestParser8BodyDataTest {
   public void invalid(
       Consumer<? super Cfg> config,
       Object foo,
-      String description) throws IOException {
+      String msg) throws IOException {
     try {
       parse(config);
 
       Assert.fail("It should have thrown");
-    } catch (HttpClientException expected) {
+    } catch (HttpRequestParserException expected) {
+      assertEquals(expected.getMessage(), msg);
+
       assertEquals(expected.kind, foo);
     } catch (IOException expected) {
       assertSame(expected, foo);

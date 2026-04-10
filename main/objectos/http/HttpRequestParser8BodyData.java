@@ -20,36 +20,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import objectos.http.HttpRequestParserException.Kind;
 
 final class HttpRequestParser8BodyData {
-
-  enum Invalid implements HttpClientException.Kind {
-    // EOF while reading body
-    EOF("Incomplete request body.\n", HttpStatus.BAD_REQUEST),
-
-    // 413 Content Too Large
-    CONTENT_TOO_LARGE("The request message body exceeds the server's maximum allowed limit.\n", HttpStatus.CONTENT_TOO_LARGE);
-
-    private final String message;
-
-    private final HttpStatus status;
-
-    private Invalid(String message, HttpStatus status) {
-      this.message = message;
-
-      this.status = status;
-    }
-
-    @Override
-    public final String message() {
-      return message;
-    }
-
-    @Override
-    public final HttpStatus status() {
-      return status;
-    }
-  }
 
   private final HttpRequestBodySupport bodySupport;
 
@@ -69,7 +42,10 @@ final class HttpRequestParser8BodyData {
     try {
       return parse0();
     } catch (HttpRequestParser0Input.Eof e) {
-      throw new HttpClientException(Invalid.EOF, e);
+      final String msg;
+      msg = "EOF while reading request body";
+
+      throw new HttpRequestParserException(msg, Kind.INCOMPLETE_REQUEST_BODY);
     }
   }
 
@@ -82,8 +58,14 @@ final class HttpRequestParser8BodyData {
   }
 
   private HttpRequestBodyData parseFixed(long length) throws IOException {
-    if (length > bodySupport.sizeMax()) {
-      throw new HttpClientException(Invalid.CONTENT_TOO_LARGE);
+    final long sizeMax;
+    sizeMax = bodySupport.sizeMax();
+
+    if (length > sizeMax) {
+      final String msg;
+      msg = "The request message body exceeds the server's maximum allowed limit: %d > %d".formatted(length, sizeMax);
+
+      throw new HttpRequestParserException(msg, Kind.CONTENT_TOO_LARGE);
     }
 
     else if (length > bodySupport.memoryMax()) {
