@@ -18,20 +18,8 @@ package objectos.http;
 import module java.base;
 import objectos.http.HttpRequestParserException.Kind;
 import objectos.internal.Ascii;
-import objectos.internal.Bytes;
 
 final class HttpRequestParser4Query {
-
-  @SuppressWarnings("serial")
-  static final class Http09Exception extends IOException {
-
-    final Map<String, Object> params;
-
-    Http09Exception(Map<String, Object> params) {
-      this.params = params;
-    }
-
-  }
 
   private boolean done;
 
@@ -42,8 +30,6 @@ final class HttpRequestParser4Query {
   private Map<String, Object> params = Map.of();
 
   private HttpRequestParser1UrlDecoder urlDecoder;
-
-  private boolean version09;
 
   HttpRequestParser4Query(HttpRequestParser0Input input) {
     this.input = input;
@@ -101,11 +87,7 @@ final class HttpRequestParser4Query {
 
     }
 
-    if (version09) {
-      throw new Http09Exception(params);
-    } else {
-      return params;
-    }
+    return params;
   }
 
   private static final byte[] QUERY_TABLE;
@@ -116,8 +98,6 @@ final class HttpRequestParser4Query {
   private static final byte QUERY_EQUALS = 4;
   private static final byte QUERY_AMPERSAND = 5;
   private static final byte QUERY_SPACE = 6;
-  private static final byte QUERY_CR = 7;
-  private static final byte QUERY_LF = 8;
 
   static {
     final byte[] table;
@@ -130,8 +110,6 @@ final class HttpRequestParser4Query {
     // 4 = '=' -> key/value separator
     // 5 = '&' -> next key
     // 6 = ' ' -> space
-    // 7 = '\r' -> 0.9
-    // 7 = '\n' -> 0.9
 
     Ascii.fill(table, Http.unreserved(), QUERY_VALID);
 
@@ -154,10 +132,6 @@ final class HttpRequestParser4Query {
     table['&'] = QUERY_AMPERSAND;
 
     table[' '] = QUERY_SPACE;
-
-    table['\r'] = QUERY_CR;
-
-    table['\n'] = QUERY_LF;
 
     QUERY_TABLE = table;
   }
@@ -214,33 +188,6 @@ final class HttpRequestParser4Query {
           return input.makeStr();
         }
 
-        case QUERY_CR -> {
-          final byte lf;
-          lf = input.readByte();
-
-          if (lf != Bytes.LF) {
-            final String msg;
-            msg = "CRLF sequence required as line terminator";
-
-            throw new HttpRequestParserException(msg, Kind.LINE_TERMINATOR);
-          }
-
-          else {
-            done = true;
-
-            version09 = true;
-
-            return input.makeStr();
-          }
-        }
-
-        case QUERY_LF -> {
-          final String msg;
-          msg = "CRLF sequence required as line terminator";
-
-          throw new HttpRequestParserException(msg, Kind.LINE_TERMINATOR);
-        }
-
         default -> {
           final String msg;
           msg = "Unexpected byte 0x%02X while parsing URI query".formatted(b);
@@ -289,33 +236,6 @@ final class HttpRequestParser4Query {
           emptyValue = true;
 
           return name.toString();
-        }
-
-        case QUERY_CR -> {
-          final byte lf;
-          lf = input.readByte();
-
-          if (lf != Bytes.LF) {
-            final String msg;
-            msg = "CRLF sequence required as line terminator";
-
-            throw new HttpRequestParserException(msg, Kind.LINE_TERMINATOR);
-          }
-
-          else {
-            done = true;
-
-            version09 = true;
-
-            return name.toString();
-          }
-        }
-
-        case QUERY_LF -> {
-          final String msg;
-          msg = "CRLF sequence required as line terminator";
-
-          throw new HttpRequestParserException(msg, Kind.LINE_TERMINATOR);
         }
 
         default -> {
@@ -374,33 +294,6 @@ final class HttpRequestParser4Query {
           return input.makeStr();
         }
 
-        case QUERY_CR -> {
-          final byte lf;
-          lf = input.readByte();
-
-          if (lf != Bytes.LF) {
-            final String msg;
-            msg = "CRLF sequence required as line terminator";
-
-            throw new HttpRequestParserException(msg, Kind.LINE_TERMINATOR);
-          }
-
-          else {
-            done = true;
-
-            version09 = true;
-
-            return input.makeStr();
-          }
-        }
-
-        case QUERY_LF -> {
-          final String msg;
-          msg = "CRLF sequence required as line terminator";
-
-          throw new HttpRequestParserException(msg, Kind.LINE_TERMINATOR);
-        }
-
         default -> {
           final String msg;
           msg = "Unexpected byte 0x%02X while parsing URI query".formatted(b);
@@ -443,33 +336,6 @@ final class HttpRequestParser4Query {
           done = true;
 
           return value.toString();
-        }
-
-        case QUERY_CR -> {
-          final byte lf;
-          lf = input.readByte();
-
-          if (lf != Bytes.LF) {
-            final String msg;
-            msg = "CRLF sequence required as line terminator";
-
-            throw new HttpRequestParserException(msg, Kind.LINE_TERMINATOR);
-          }
-
-          else {
-            done = true;
-
-            version09 = true;
-
-            return value.toString();
-          }
-        }
-
-        case QUERY_LF -> {
-          final String msg;
-          msg = "CRLF sequence required as line terminator";
-
-          throw new HttpRequestParserException(msg, Kind.LINE_TERMINATOR);
         }
 
         default -> {

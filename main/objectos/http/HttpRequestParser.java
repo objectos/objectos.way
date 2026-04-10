@@ -52,27 +52,19 @@ final class HttpRequestParser {
     final String path;
     path = pathParser.parse();
 
-    Map<String, Object> queryParams;
+    // query
+    final HttpRequestParser4Query queryParser;
+    queryParser = new HttpRequestParser4Query(input);
 
-    HttpVersion0 version;
+    final Map<String, Object> queryParams;
+    queryParams = queryParser.parse();
 
-    try {
-      // query
-      final HttpRequestParser4Query queryParser;
-      queryParser = new HttpRequestParser4Query(input);
+    // version
+    final HttpRequestParser5Version versionParser;
+    versionParser = new HttpRequestParser5Version(input);
 
-      queryParams = queryParser.parse();
-
-      // version
-      final HttpRequestParser5Version versionParser;
-      versionParser = new HttpRequestParser5Version(input);
-
-      version = versionParser.parse();
-    } catch (HttpRequestParser4Query.Http09Exception e) {
-      queryParams = e.params;
-
-      version = HttpVersion0.HTTP_0_9;
-    }
+    final HttpVersion0 version;
+    version = versionParser.parse();
 
     // headers
     final HttpRequestParser6Headers headersParser;
