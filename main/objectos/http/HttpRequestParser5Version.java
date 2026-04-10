@@ -97,64 +97,47 @@ final class HttpRequestParser5Version {
     int major;
     major = first & 0xF;
 
-    boolean overflow;
-    overflow = false;
+    final byte next;
+    next = input.readByte();
 
-    while (true) {
-      final byte b;
-      b = input.readByte();
+    if (Http.isDigit(next)) {
+      final String msg;
+      msg = "Invalid HTTP version: major version should contain a single digit";
 
-      if (Http.isDigit(b)) {
-        if (!overflow) {
-          final int digit;
-          digit = b & 0x1;
+      throw new HttpRequestParserException(msg, Kind.INVALID_REQUEST_LINE);
+    }
 
-          major *= 10;
-
-          major += digit;
-
-          if (major < 0) {
-            overflow = true;
-
-            major = Integer.MAX_VALUE;
-          }
-        }
-
-        continue;
-      }
-
-      if (b == '.') {
-        return major;
-      }
-
-      if (b == '\n') {
-        final String msg;
-        msg = "CRLF sequence required as line terminator";
-
-        throw new HttpRequestParserException(msg, Kind.LINE_TERMINATOR);
-      }
-
-      if (b != '\r') {
-        final String msg;
-        msg = "Invalid HTTP version: unexpected byte 0x%02X while parsing version (major)".formatted(b);
-
-        throw new HttpRequestParserException(msg, Kind.INVALID_REQUEST_LINE);
-      }
-
-      final byte lf;
-      lf = input.readByte();
-
-      if (lf != Bytes.LF) {
-        final String msg;
-        msg = "CRLF sequence required as line terminator";
-
-        throw new HttpRequestParserException(msg, Kind.LINE_TERMINATOR);
-      }
-
-      done = true;
-
+    if (next == '.') {
       return major;
     }
+
+    if (next == '\n') {
+      final String msg;
+      msg = "CRLF sequence required as line terminator";
+
+      throw new HttpRequestParserException(msg, Kind.LINE_TERMINATOR);
+    }
+
+    if (next != '\r') {
+      final String msg;
+      msg = "Invalid HTTP version: unexpected byte 0x%02X while parsing version (major)".formatted(next);
+
+      throw new HttpRequestParserException(msg, Kind.INVALID_REQUEST_LINE);
+    }
+
+    final byte lf;
+    lf = input.readByte();
+
+    if (lf != Bytes.LF) {
+      final String msg;
+      msg = "CRLF sequence required as line terminator";
+
+      throw new HttpRequestParserException(msg, Kind.LINE_TERMINATOR);
+    }
+
+    done = true;
+
+    return major;
   }
 
   private int parseMinor() throws IOException {
@@ -171,58 +154,41 @@ final class HttpRequestParser5Version {
     int minor;
     minor = first & 0xF;
 
-    boolean overflow;
-    overflow = false;
+    final byte b;
+    b = input.readByte();
 
-    while (true) {
-      final byte b;
-      b = input.readByte();
+    if (Http.isDigit(b)) {
+      final String msg;
+      msg = "Invalid HTTP version: minor version should contain a single digit";
 
-      if (Http.isDigit(b)) {
-        if (!overflow) {
-          final int digit;
-          digit = b & 0xF;
-
-          minor *= 10;
-
-          minor += digit;
-
-          if (minor < 0) {
-            overflow = true;
-
-            minor = Integer.MAX_VALUE;
-          }
-        }
-
-        continue;
-      }
-
-      if (b == '\n') {
-        final String msg;
-        msg = "CRLF sequence required as line terminator";
-
-        throw new HttpRequestParserException(msg, Kind.LINE_TERMINATOR);
-      }
-
-      if (b != '\r') {
-        final String msg;
-        msg = "Invalid HTTP version: unexpected byte 0x%02X while parsing version (minor)".formatted(b);
-
-        throw new HttpRequestParserException(msg, Kind.INVALID_REQUEST_LINE);
-      }
-
-      final byte lf;
-      lf = input.readByte();
-
-      if (lf != Bytes.LF) {
-        final String msg;
-        msg = "CRLF sequence required as line terminator";
-
-        throw new HttpRequestParserException(msg, Kind.LINE_TERMINATOR);
-      }
-
-      return minor;
+      throw new HttpRequestParserException(msg, Kind.INVALID_REQUEST_LINE);
     }
+
+    if (b == '\n') {
+      final String msg;
+      msg = "CRLF sequence required as line terminator";
+
+      throw new HttpRequestParserException(msg, Kind.LINE_TERMINATOR);
+    }
+
+    if (b != '\r') {
+      final String msg;
+      msg = "Invalid HTTP version: unexpected byte 0x%02X while parsing version (minor)".formatted(b);
+
+      throw new HttpRequestParserException(msg, Kind.INVALID_REQUEST_LINE);
+    }
+
+    final byte lf;
+    lf = input.readByte();
+
+    if (lf != Bytes.LF) {
+      final String msg;
+      msg = "CRLF sequence required as line terminator";
+
+      throw new HttpRequestParserException(msg, Kind.LINE_TERMINATOR);
+    }
+
+    return minor;
   }
 
 }

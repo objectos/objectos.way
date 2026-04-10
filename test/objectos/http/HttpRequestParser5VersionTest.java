@@ -47,9 +47,7 @@ public class HttpRequestParser5VersionTest {
         {"HTTP/1.1\r\nHost: test\r\n", HttpVersion0.HTTP_1_1, "1.1"},
         {"HTTP/1.0\r\n", HttpVersion0.of(1, 0), "not supported"},
         {"HTTP/2\r\nHost: foo", HttpVersion0.of(2, 0), "not supported (yet)"},
-        {"HTTP/9.9\r\n", HttpVersion0.of(9, 9), "not supported (yet)"},
-        {"HTTP/21.999\r\n", HttpVersion0.of(21, 999), "not supported (yet)"},
-        {"HTTP/123456789012345678901234567890.123456789012345678901234567890\r\n", HttpVersion0.of(Integer.MAX_VALUE, Integer.MAX_VALUE), "Not supported"}
+        {"HTTP/9.9\r\n", HttpVersion0.of(9, 9), "not supported (yet)"}
     };
   }
 
@@ -64,14 +62,11 @@ public class HttpRequestParser5VersionTest {
     );
   }
 
-  @Test
-  public void versionValid0() throws IOException {
-    versionValid("HTTP/21.999\r\n", HttpVersion0.of(21, 999), "not supported (yet)");
-  }
-
   @DataProvider
   public Object[][] invalidProvider() {
     return new Object[][] {
+        {"HTTP/22.3\r\n", Kind.INVALID_REQUEST_LINE, "Invalid HTTP version: major version should contain a single digit"},
+        {"HTTP/9.11\r\n", Kind.INVALID_REQUEST_LINE, "Invalid HTTP version: minor version should contain a single digit"},
         {"HPTP/1.1\r\n", Kind.INVALID_REQUEST_LINE, "Invalid HTTP version: expected byte 0x54 but got 0x50"},
         {"ABCD/1.1\r\n", Kind.INVALID_REQUEST_LINE, "Invalid HTTP version: expected byte 0x48 but got 0x41"},
         {"HTTP/1.\r\n", Kind.INVALID_REQUEST_LINE, "Invalid HTTP version: byte 0x0D is not a valid digit"},
@@ -97,21 +92,6 @@ public class HttpRequestParser5VersionTest {
       assertEquals(expected.getMessage(), msg);
 
       assertEquals(expected.kind, kind);
-    }
-  }
-
-  @Test
-  public void uriTooLong() throws IOException {
-    try {
-      parse(
-          "HTTP/1." + "1".repeat(3096)
-      );
-
-      Assert.fail("It should have thrown");
-    } catch (HttpRequestParserException expected) {
-      assertEquals(expected.getMessage(), "Buffer overflow while parsing HTTP version");
-
-      assertEquals(expected.kind, Kind.URI_TOO_LONG);
     }
   }
 
