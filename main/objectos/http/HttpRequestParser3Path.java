@@ -18,20 +18,8 @@ package objectos.http;
 import module java.base;
 import objectos.http.HttpRequestParserException.Kind;
 import objectos.internal.Ascii;
-import objectos.internal.Bytes;
 
 final class HttpRequestParser3Path {
-
-  @SuppressWarnings("serial")
-  static final class Http09Exception extends IOException {
-
-    final String path;
-
-    Http09Exception(String path) {
-      this.path = path;
-    }
-
-  }
 
   private final HttpRequestParser0Input input;
 
@@ -126,8 +114,6 @@ final class HttpRequestParser3Path {
   private static final byte PATH_PERCENT = 2;
   private static final byte PATH_SPACE = 3;
   private static final byte PATH_QUESTION = 4;
-  private static final byte PATH_CR = 5;
-  private static final byte PATH_LF = 6;
 
   static {
     final byte[] table;
@@ -138,8 +124,6 @@ final class HttpRequestParser3Path {
     // 2 = %xx
     // 3 = ' ' -> version
     // 4 = '?' -> stop
-    // 5 = '\r' -> 0.9
-    // 5 = '\n' -> 0.9
 
     Ascii.fill(table, Http.unreserved(), PATH_VALID);
 
@@ -157,10 +141,6 @@ final class HttpRequestParser3Path {
     table[' '] = PATH_SPACE;
 
     table['?'] = PATH_QUESTION;
-
-    table['\r'] = PATH_CR;
-
-    table['\n'] = PATH_LF;
 
     PATH_TABLE = table;
   }
@@ -192,32 +172,6 @@ final class HttpRequestParser3Path {
 
         case PATH_SPACE, PATH_QUESTION -> {
           return input.makeStr();
-        }
-
-        case PATH_CR -> {
-          final byte lf;
-          lf = input.readByte();
-
-          if (lf != Bytes.LF) {
-            final String msg;
-            msg = "CRLF sequence required as line terminator";
-
-            throw new HttpRequestParserException(msg, Kind.LINE_TERMINATOR);
-          }
-
-          else {
-            final String path;
-            path = input.makeStr();
-
-            throw new Http09Exception(path);
-          }
-        }
-
-        case PATH_LF -> {
-          final String msg;
-          msg = "CRLF sequence required as line terminator";
-
-          throw new HttpRequestParserException(msg, Kind.LINE_TERMINATOR);
         }
 
         default -> {
@@ -252,32 +206,6 @@ final class HttpRequestParser3Path {
 
         case PATH_SPACE, PATH_QUESTION -> {
           return path.toString();
-        }
-
-        case PATH_CR -> {
-          final byte lf;
-          lf = input.readByte();
-
-          if (lf != Bytes.LF) {
-            final String msg;
-            msg = "CRLF sequence required as line terminator";
-
-            throw new HttpRequestParserException(msg, Kind.LINE_TERMINATOR);
-          }
-
-          else {
-            final String res;
-            res = path.toString();
-
-            throw new Http09Exception(res);
-          }
-        }
-
-        case PATH_LF -> {
-          final String msg;
-          msg = "CRLF sequence required as line terminator";
-
-          throw new HttpRequestParserException(msg, Kind.LINE_TERMINATOR);
         }
 
         default -> {

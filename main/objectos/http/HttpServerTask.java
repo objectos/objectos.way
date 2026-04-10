@@ -180,7 +180,12 @@ final class HttpServerTask implements Runnable {
     methodParser = new HttpRequestParser2Method(input);
 
     final HttpMethod method;
-    method = methodParser.parse();
+
+    try {
+      method = methodParser.parse();
+    } catch (HttpRequestParserException e) {
+
+    }
 
     String path = "";
 

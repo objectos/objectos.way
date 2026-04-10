@@ -30,15 +30,15 @@ final class HttpRequestParser2Method {
     try {
       return parse0();
     } catch (HttpRequestParser0Input.Eof e) {
-      throw new HttpRequestParserException(
-          "EOF while parsing method", e,
-          Kind.INVALID_REQUEST_LINE
-      );
+      final String msg;
+      msg = "EOF while parsing method";
+
+      throw new HttpRequestParserException(msg, e, Kind.INVALID_REQUEST_LINE);
     } catch (HttpRequestParser0Input.Overflow e) {
-      throw new HttpRequestParserException(
-          "Buffer overflow while parsing method", e,
-          Kind.INVALID_REQUEST_LINE
-      );
+      final String msg;
+      msg = "Buffer overflow while parsing method";
+
+      throw new HttpRequestParserException(msg, e, Kind.INVALID_REQUEST_LINE);
     }
   }
 
@@ -61,10 +61,12 @@ final class HttpRequestParser2Method {
 
       case 'T' -> parseMethod(HttpMethod.TRACE, 1);
 
-      default -> throw new HttpRequestParserException(
-          "Unexpected byte 0x%02x while parsing method first char".formatted(Byte.toUnsignedInt(first)),
-          Kind.INVALID_REQUEST_LINE
-      );
+      default -> {
+        final String msg;
+        msg = "Unexpected byte 0x%02X while parsing method first char".formatted(first);
+
+        throw new HttpRequestParserException(msg, Kind.INVALID_REQUEST_LINE);
+      }
     };
   }
 
@@ -80,11 +82,8 @@ final class HttpRequestParser2Method {
         continue;
       }
 
-      final int ub;
-      ub = Byte.toUnsignedInt(b);
-
       final String msg;
-      msg = "Unexpected byte 0x%02x while parsing method %s".formatted(ub, method);
+      msg = "Unexpected byte 0x%02X while parsing method %s".formatted(b, method);
 
       throw new HttpRequestParserException(msg, Kind.INVALID_REQUEST_LINE);
     }
@@ -104,11 +103,8 @@ final class HttpRequestParser2Method {
       case 'A' -> parseMethod(HttpMethod.PATCH, 2);
 
       default -> {
-        final int ub;
-        ub = Byte.toUnsignedInt(second);
-
         final String msg;
-        msg = "Unexpected byte 0x%02x while parsing POST/PUT/PATCH".formatted(ub);
+        msg = "Unexpected byte 0x%02X while parsing POST/PUT/PATCH".formatted(second);
 
         throw new HttpRequestParserException(msg, Kind.INVALID_REQUEST_LINE);
       }
