@@ -30,7 +30,13 @@ final class HttpRequestParserException extends IOException {
 
     REQUEST_HEADER_FIELDS_TOO_LARGE,
 
-    LINE_TERMINATOR;
+    LINE_TERMINATOR,
+
+    CONTENT_TOO_LARGE,
+
+    LENGTH_REQUIRED,
+
+    NOT_IMPLEMENTED;
 
   }
 
