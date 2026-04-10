@@ -15,6 +15,7 @@
  */
 package objectos.http;
 
+import static objectos.http.HttpY.arr;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 
@@ -22,8 +23,9 @@ import java.io.IOException;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import objectos.http.HttpRequestParser3Path.Invalid;
+import objectos.http.HttpRequestParserException.Kind;
 import objectos.way.Y;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
@@ -31,6 +33,8 @@ import org.testng.annotations.Test;
 
 @SuppressWarnings("exports")
 public class HttpRequestParser3PathTest {
+
+  private final String validString = Http.unreserved() + Http.subDelims() + ":@" + "/";
 
   private String parse(Object... data) throws IOException {
     final Socket socket;
@@ -50,46 +54,26 @@ public class HttpRequestParser3PathTest {
     final List<Object[]> l;
     l = new ArrayList<>();
 
-    l.add(valid("/", "/", "root"));
-    l.add(valid("/index.html", "/index.html", "with segment"));
+    l.add(arr("/", "/", "root"));
+    l.add(arr("/index.html", "/index.html", "with segment"));
 
-    final boolean[] validBytes;
-    validBytes = validBytes();
+    final byte[] validBytes;
+    validBytes = validString.getBytes(StandardCharsets.US_ASCII);
 
-    for (int value = 0; value < validBytes.length; value++) {
-      switch (value) {
-        case '\n', '\r' -> {/* will trigger 505 not 400 */}
+    for (byte b : validBytes) {
+      final String raw;
+      raw = "/path" + (char) b;
 
-        case '?' -> {/* valid, but tested on parse query */}
+      final String path;
+      path = raw;
 
-        case '%' -> {/* tested on percent-encoded */}
+      final String description;
+      description = "path contains the 0x%02x valid byte".formatted(b);
 
-        default -> {
-          if (validBytes[value]) {
-            l.add(valid(value));
-          }
-        }
-      }
+      l.add(arr(raw, path, description));
     }
 
     return l.toArray(Object[][]::new);
-  }
-
-  private Object[] valid(int value) {
-    final String raw;
-    raw = "/path" + (char) value;
-
-    final String path;
-    path = raw;
-
-    final String description;
-    description = "path contains the " + Integer.toHexString(value) + " valid byte";
-
-    return valid(raw, path, description);
-  }
-
-  private Object[] valid(String raw, String path, String description) {
-    return new Object[] {raw, path, description};
   }
 
   @Test(dataProvider = "pathValidProvider")
@@ -108,68 +92,58 @@ public class HttpRequestParser3PathTest {
     final List<Object[]> l;
     l = new ArrayList<>();
 
-    l.add(invalid("", Invalid.PATH_FIRST_CHAR, "empty path"));
-    l.add(invalid("index.html", Invalid.PATH_FIRST_CHAR, "path does not begin with '/'"));
-    l.add(invalid("//index.html", Invalid.PATH_SEGMENT_NZ, "path begins with empty segment"));
-    l.add(invalid("/%2Findex.html", Invalid.PATH_SEGMENT_NZ, "path begins with empty segment"));
-    l.add(invalid("%2F/index.html", Invalid.PATH_SEGMENT_NZ, "path begins with empty segment"));
-    l.add(invalid("%2F%2Findex.html", Invalid.PATH_SEGMENT_NZ, "path begins with empty segment"));
+    l.add(arr("", "Unexpected byte 0x20 while parsing path: path must start with '/'"));
+    l.add(arr("index.html", "Unexpected byte 0x69 while parsing path: path must start with '/'"));
+    l.add(arr("//index.html", "First path segment must not be empty"));
+    l.add(arr("/%2Findex.html", "First path segment must not be empty"));
+    l.add(arr("%2F/index.html", "First path segment must not be empty"));
+    l.add(arr("%2F%2Findex.html", "First path segment must not be empty"));
 
-    final boolean[] validBytes;
-    validBytes = validBytes();
+    final byte[] validBytes;
+    validBytes = validString.getBytes();
 
-    for (int value = 0; value < validBytes.length; value++) {
-      switch (value) {
-        case ' ', '\n', '\r' -> {/* will trigger 505 not 400 */}
+    Arrays.sort(validBytes);
 
-        case '?' -> {/* valid, but tested on parse query */}
-
-        case '%' -> {/* tested on percent-encoded */}
-
-        default -> {
-          if (!validBytes[value]) {
-            l.add(invalid(value));
-          }
-        }
+    for (int ascii = 0; ascii < 128; ascii++) {
+      if (ascii == ' ' || ascii == '\r' || ascii == '\n') {
+        continue;
       }
+
+      if (ascii == '%' || ascii == '?') {
+        continue;
+      }
+
+      final int idx;
+      idx = Arrays.binarySearch(validBytes, (byte) ascii);
+
+      if (idx >= 0) {
+        continue;
+      }
+
+      final String path;
+      path = "/pa" + (char) ascii + "th";
+
+      final String msg;
+      msg = "Unexpected byte 0x%02x while parsing path".formatted(ascii);
+
+      l.add(arr(path, msg));
     }
 
     return l.toArray(Object[][]::new);
   }
 
-  private Object[] invalid(int value) {
-    final String path;
-    path = "/pa" + (char) value + "th";
-
-    final String description;
-    description = "path contains the " + Integer.toHexString(value) + " invalid byte";
-
-    return invalid(path, Invalid.PATH_NEXT_CHAR, description);
-  }
-
-  private Object[] invalid(
-      String path,
-      HttpClientException.Kind kind,
-      String description) {
-    final String req;
-    req = "%s HTTP/1.1".formatted(path);
-
-    return new Object[] {req, kind, description};
-  }
-
   @Test(dataProvider = "pathInvalidProvider")
-  public void pathInvalid(
-      String request,
-      HttpClientException.Kind kind,
-      String description) throws IOException {
+  public void pathInvalid(String path, String msg) throws IOException {
     try {
       parse(
-          iso8859(request)
+          iso8859("%s HTTP/1.1".formatted(path))
       );
 
       Assert.fail("It should have thrown");
-    } catch (HttpClientException expected) {
-      assertEquals(expected.kind, kind);
+    } catch (HttpRequestParserException expected) {
+      assertEquals(expected.getMessage(), msg);
+
+      assertEquals(expected.kind, Kind.INVALID_REQUEST_LINE);
     }
   }
 
@@ -229,52 +203,49 @@ public class HttpRequestParser3PathTest {
   @DataProvider
   public Object[][] percentInvalidProvider() {
     return new Object[][] {
-        // Existing 1-byte invalid cases
-        {"/pct/%xd", "1-byte + invalid hex digit (first)"},
-        {"/pct/%ax", "1-byte + invalid hex digit (second)"},
-        {"/pct/%FF", "1-byte + invalid range"},
+        {"/pct/%xd", "Invalid percent-encoded value: 0x78 is not an US-ASCII digit char"},
+        {"/pct/%ax", "Invalid percent-encoded value: 0x78 is not an US-ASCII digit char"},
+        {"/pct/%FF", "Invalid percent-encoded value: got 0x20 instead of start of byte 2 of a 4-byte UTF-8 code point"},
 
-        // Invalid 2-byte cases
-        {"/pct/%C0%80", "2-bytes + overlong encoding (U+0000)"},
-        {"/pct/%C2%FF", "2-bytes + invalid continuation byte (out of range)"},
-        {"/pct/%C2", "2-bytes + incomplete sequence (missing continuation byte)"},
-        {"/pct/%DF%C0", "2-bytes + invalid continuation byte (not 10xxxxxx)"},
+        {"/pct/%C0%80", "Invalid percent-encoded value: 0xC0 0x80 is not a valid UTF-8 2-byte sequence"},
+        {"/pct/%C2%FF", "Invalid percent-encoded value: 0xFF is not a valid UTF-8 byte"},
+        {"/pct/%C2", "Invalid percent-encoded value: got 0x20 instead of start of byte 2 of a 2-byte UTF-8 code point"},
 
-        // Invalid 3-byte cases
-        {"/pct/%E0%80%80", "3-bytes + overlong encoding (U+0000)"},
-        {"/pct/%E0%A0%FF", "3-bytes + invalid continuation byte (third byte)"},
-        {"/pct/%ED%A0%80", "3-bytes + surrogate code point (U+D800)"},
-        {"/pct/%E0%A0", "3-bytes + incomplete sequence (missing last byte)"},
-        {"/pct/%EF%FF%80", "3-bytes + invalid continuation byte (second byte)"},
+        {"/pct/%E0%80%80", "Invalid percent-encoded value: 0xE0 0x80 0x80 is not a valid UTF-8 3-byte sequence"},
+        {"/pct/%E0%A0%FF", "Invalid percent-encoded value: 0xFF is not a valid UTF-8 byte"},
+        {"/pct/%ED%A0%80", "Invalid percent-encoded value: 0xED 0xA0 0x80 is not a valid UTF-8 3-byte sequence"},
+        {"/pct/%E0%A0", "Invalid percent-encoded value: got 0x20 instead of start of byte 3 of a 3-byte UTF-8 code point"},
+        {"/pct/%EF%FF%80", "Invalid percent-encoded value: 0xFF is not a valid UTF-8 byte"},
 
-        // Invalid 4-byte cases
-        {"/pct/%F0%80%80%80", "4-bytes + overlong encoding (U+0000)"},
-        {"/pct/%F5%80%80%80", "4-bytes + lead byte exceeds Unicode range (0xF5)"},
-        {"/pct/%F0%FF%80%80", "4-bytes + invalid continuation byte (second byte)"},
-        {"/pct/%F0%80%FF%80", "4-bytes + invalid continuation byte (third byte)"},
-        {"/pct/%F0%80%80%FF", "4-bytes + invalid continuation byte (fourth byte)"},
-        {"/pct/%F0%80%80", "4-bytes + incomplete sequence (missing last byte)"},
+        {"/pct/%F0%80%80%80", "Invalid percent-encoded value: 0xF0 0x80 0x80 0x80 is not a valid UTF-8 4-byte sequence"},
+        {"/pct/%F5%80%80%80", "Invalid percent-encoded value: 0xF5 0x80 0x80 0x80 is not a valid UTF-8 4-byte sequence"},
+        {"/pct/%F0%FF%80%80", "Invalid percent-encoded value: 0xFF is not a valid UTF-8 byte"},
+        {"/pct/%F0%80%FF%80", "Invalid percent-encoded value: 0xFF is not a valid UTF-8 byte"},
+        {"/pct/%F0%80%80%FF", "Invalid percent-encoded value: 0xFF is not a valid UTF-8 byte"},
+        {"/pct/%F0%80%80", "Invalid percent-encoded value: got 0x20 instead of start of byte 4 of a 4-byte UTF-8 code point"},
 
         // Other edge cases
-        {"/pct/%", "Incomplete percent-encoding (lone %)"},
-        {"/pct/%G0%80", "Invalid hex digit in percent-encoding (G)"},
-        {"/pct/%C3%A1%FF", "Valid 2-byte followed by invalid 1-byte"},
-        {"/pct/%E0%A0%80%F5%80%80%80", "Valid 3-byte followed by invalid 4-byte"},
-        {"/pct/%%80", "Double percent sign with invalid sequence"},
-        {"/pct/%80%80%80%80", "Invalid lead byte (0x80, continuation byte)"}
+        {"/pct/%", "Invalid percent-encoded value: 0x20 is not an US-ASCII digit char"},
+        {"/pct/%G0%80", "Invalid percent-encoded value: 0x47 is not an US-ASCII digit char"},
+        {"/pct/%C3%A1%FF", "Invalid percent-encoded value: got 0x20 instead of start of byte 2 of a 4-byte UTF-8 code point"},
+        {"/pct/%E0%A0%80%F5%80%80%80", "Invalid percent-encoded value: 0xF5 0x80 0x80 0x80 is not a valid UTF-8 4-byte sequence"},
+        {"/pct/%%80", "Invalid percent-encoded value: 0x25 is not an US-ASCII digit char"},
+        {"/pct/%80%80%80%80", "Invalid percent-encoded value: 0x80 is not a valid UTF-8 1-byte sequence"}
     };
   }
 
   @Test(dataProvider = "percentInvalidProvider")
-  public void percentInvalid(String raw, String description) throws IOException {
+  public void percentInvalid(String raw, String msg) throws IOException {
     try {
       parse(
           iso8859("%s HTTP/1.1".formatted(raw))
       );
 
       Assert.fail("It should have thrown");
-    } catch (HttpClientException expected) {
-      assertEquals(expected.kind, Invalid.PATH_PERCENT);
+    } catch (HttpRequestParserException expected) {
+      assertEquals(expected.getMessage(), msg);
+
+      assertEquals(expected.kind, Kind.INVALID_REQUEST_LINE);
     }
   }
 
@@ -317,8 +288,10 @@ public class HttpRequestParser3PathTest {
       );
 
       Assert.fail("It should have thrown");
-    } catch (HttpClientException expected) {
-      assertEquals(expected.kind, Invalid.URI_TOO_LONG);
+    } catch (HttpRequestParserException expected) {
+      assertEquals(expected.getMessage(), "Buffer overflow while parsing path");
+
+      assertEquals(expected.kind, Kind.URI_TOO_LONG);
     }
   }
 
@@ -340,54 +313,8 @@ public class HttpRequestParser3PathTest {
     }
   }
 
-  @DataProvider
-  public Object[][] rawPathProvider() {
-    final List<Object[]> l;
-    l = new ArrayList<>();
-
-    final boolean[] validBytes;
-    validBytes = validBytes();
-
-    for (int value = 0; value < 128; value++) {
-      final String raw;
-      raw = "/raw/%%%02X".formatted(value);
-
-      if (validBytes[value]) {
-        l.add(new Object[] {raw, "/raw/" + (char) value});
-      } else {
-        l.add(new Object[] {raw, raw});
-      }
-    }
-
-    return l.toArray(Object[][]::new);
-  }
-
-  // TODO remove?
-  @Test(enabled = false, dataProvider = "rawPathProvider")
-  public void rawPath(String raw, String expected) throws IOException {
-  }
-
   private byte[] iso8859(String s) {
     return s.getBytes(StandardCharsets.ISO_8859_1);
-  }
-
-  private boolean[] validBytes() {
-    final boolean[] valid;
-    valid = new boolean[256];
-
-    final String validString;
-    validString = Http.unreserved() + Http.subDelims() + ":@";
-
-    for (int idx = 0, len = validString.length(); idx < len; idx++) {
-      final char c;
-      c = validString.charAt(idx);
-
-      valid[c] = true;
-    }
-
-    valid['/'] = true;
-
-    return valid;
   }
 
 }

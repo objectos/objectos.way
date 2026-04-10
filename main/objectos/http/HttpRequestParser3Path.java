@@ -16,51 +16,11 @@
 package objectos.http;
 
 import module java.base;
-import objectos.http.HttpRequestParser1UrlDecoder.DecodeException;
+import objectos.http.HttpRequestParserException.Kind;
 import objectos.internal.Ascii;
 import objectos.internal.Bytes;
 
 final class HttpRequestParser3Path {
-
-  enum Invalid implements HttpClientException.Kind {
-    // 414 URI Too Long
-    URI_TOO_LONG(Http.REQ_LINE, HttpStatus.URI_TOO_LONG),
-
-    // path does not start with solidus
-    PATH_FIRST_CHAR(Http.REQ_LINE, HttpStatus.BAD_REQUEST),
-
-    // path starts with two consecutive '/'
-    PATH_SEGMENT_NZ(Http.REQ_LINE, HttpStatus.BAD_REQUEST),
-
-    // path has an invalid character
-    PATH_NEXT_CHAR(Http.REQ_LINE, HttpStatus.BAD_REQUEST),
-
-    // path has an invalid percent encoded sequence
-    PATH_PERCENT(Http.REQ_LINE, HttpStatus.BAD_REQUEST),
-
-    // CRLF required
-    LINE_TERMINATOR(Http.LINE_TERM, HttpStatus.BAD_REQUEST);
-
-    private final String message;
-
-    private final HttpStatus status;
-
-    private Invalid(String message, HttpStatus status) {
-      this.message = message;
-
-      this.status = status;
-    }
-
-    @Override
-    public final String message() {
-      return message;
-    }
-
-    @Override
-    public final HttpStatus status() {
-      return status;
-    }
-  }
 
   @SuppressWarnings("serial")
   static final class Http09Exception extends IOException {
@@ -84,32 +44,32 @@ final class HttpRequestParser3Path {
   public final String parse() throws IOException {
     try {
       return parse0();
-    } catch (HttpRequestParser1UrlDecoder.DecodeException e) {
-      throw new HttpClientException(Invalid.PATH_PERCENT, e);
     } catch (HttpRequestParser0Input.Eof e) {
-      throw new HttpClientException(Invalid.PATH_NEXT_CHAR, e);
+      final String msg;
+      msg = "EOF while parsing path";
+
+      throw new HttpRequestParserException(msg, e, Kind.INVALID_REQUEST_LINE);
     } catch (HttpRequestParser0Input.Overflow e) {
-      throw new HttpClientException(Invalid.URI_TOO_LONG, e);
+      final String msg;
+      msg = "Buffer overflow while parsing path";
+
+      throw new HttpRequestParserException(msg, e, Kind.URI_TOO_LONG);
     }
   }
 
-  private String parse0() throws DecodeException, IOException {
+  private String parse0() throws IOException {
     // where our path begins
     input.mark();
 
     // first char must be a '/' (solidus)
     final byte first;
-    first = input.readByte();
+    first = input.readByte(Kind.INVALID_REQUEST_LINE);
 
     final int firstCodePoint;
 
     final boolean firstPerc;
 
-    if (first < 0) {
-      throw new HttpClientException(Invalid.PATH_FIRST_CHAR);
-    }
-
-    else if (first != '%') {
+    if (first != '%') {
       firstCodePoint = first;
 
       firstPerc = false;
@@ -122,7 +82,10 @@ final class HttpRequestParser3Path {
     }
 
     if (firstCodePoint != '/') {
-      throw new HttpClientException(Invalid.PATH_FIRST_CHAR);
+      final String msg;
+      msg = "Unexpected byte 0x%02x while parsing path: path must start with '/'".formatted(first);
+
+      throw new HttpRequestParserException(msg, Kind.INVALID_REQUEST_LINE);
     }
 
     final String result;
@@ -145,7 +108,10 @@ final class HttpRequestParser3Path {
       second = result.charAt(1);
 
       if (second == '/') {
-        throw new HttpClientException(Invalid.PATH_SEGMENT_NZ);
+        final String msg;
+        msg = "First path segment must not be empty";
+
+        throw new HttpRequestParserException(msg, Kind.INVALID_REQUEST_LINE);
       }
     }
 
@@ -199,10 +165,13 @@ final class HttpRequestParser3Path {
     PATH_TABLE = table;
   }
 
-  private String parse1() throws DecodeException, IOException {
+  private String parse1() throws IOException {
     while (true) {
+      final byte b;
+      b = input.readByte(Kind.INVALID_REQUEST_LINE);
+
       final byte code;
-      code = input.readTable(PATH_TABLE, Invalid.PATH_NEXT_CHAR);
+      code = PATH_TABLE[b];
 
       switch (code) {
         case PATH_VALID -> {
@@ -229,33 +198,42 @@ final class HttpRequestParser3Path {
           final byte lf;
           lf = input.readByte();
 
-          if (lf == Bytes.LF) {
-            // assume version 0.9
-            throw new Http09Exception(
-                input.makeStr()
-            );
-          } else {
-            throw new HttpClientException(Invalid.LINE_TERMINATOR);
+          if (lf != Bytes.LF) {
+            final String msg;
+            msg = "CRLF sequence required as line terminator";
+
+            throw new HttpRequestParserException(msg, Kind.LINE_TERMINATOR);
+          }
+
+          else {
+            final String path;
+            path = input.makeStr();
+
+            throw new Http09Exception(path);
           }
         }
 
         case PATH_LF -> {
-          throw new HttpClientException(Invalid.LINE_TERMINATOR);
+          final String msg;
+          msg = "CRLF sequence required as line terminator";
+
+          throw new HttpRequestParserException(msg, Kind.LINE_TERMINATOR);
         }
 
-        default -> throw new HttpClientException(Invalid.PATH_NEXT_CHAR);
+        default -> {
+          final String msg;
+          msg = "Unexpected byte 0x%02x while parsing path".formatted(b);
+
+          throw new HttpRequestParserException(msg, Kind.INVALID_REQUEST_LINE);
+        }
       }
     }
   }
 
-  private String parse2(StringBuilder path) throws DecodeException, IOException {
+  private String parse2(StringBuilder path) throws IOException {
     while (true) {
       final byte b;
-      b = input.readByte();
-
-      if (b < 0) {
-        throw new HttpClientException(Invalid.PATH_NEXT_CHAR);
-      }
+      b = input.readByte(Kind.INVALID_REQUEST_LINE);
 
       final byte code;
       code = PATH_TABLE[b];
@@ -280,31 +258,44 @@ final class HttpRequestParser3Path {
           final byte lf;
           lf = input.readByte();
 
-          if (lf == Bytes.LF) {
-            // assume version 0.9
-            throw new Http09Exception(
-                path.toString()
-            );
-          } else {
-            throw new HttpClientException(Invalid.LINE_TERMINATOR);
+          if (lf != Bytes.LF) {
+            final String msg;
+            msg = "CRLF sequence required as line terminator";
+
+            throw new HttpRequestParserException(msg, Kind.LINE_TERMINATOR);
+          }
+
+          else {
+            final String res;
+            res = path.toString();
+
+            throw new Http09Exception(res);
           }
         }
 
         case PATH_LF -> {
-          throw new HttpClientException(Invalid.LINE_TERMINATOR);
+          final String msg;
+          msg = "CRLF sequence required as line terminator";
+
+          throw new HttpRequestParserException(msg, Kind.LINE_TERMINATOR);
         }
 
-        default -> throw new HttpClientException(Invalid.PATH_NEXT_CHAR);
+        default -> {
+          final String msg;
+          msg = "Unexpected byte 0x%02x while parsing path".formatted(b);
+
+          throw new HttpRequestParserException(msg, Kind.INVALID_REQUEST_LINE);
+        }
       }
     }
   }
 
-  private int decodePerc() throws DecodeException, IOException {
+  private int decodePerc() throws IOException {
     if (urlDecoder == null) {
       urlDecoder = new HttpRequestParser1UrlDecoder(input);
     }
 
-    return urlDecoder.decode();
+    return urlDecoder.decode(Kind.INVALID_REQUEST_LINE);
   }
 
 }

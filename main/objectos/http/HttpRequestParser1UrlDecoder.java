@@ -20,109 +20,101 @@ import objectos.internal.Bytes;
 
 final class HttpRequestParser1UrlDecoder {
 
-  @SuppressWarnings("serial")
-  static final class DecodeException extends Exception {}
-
   private final InputStream input;
 
   HttpRequestParser1UrlDecoder(InputStream input) {
     this.input = input;
   }
 
-  public final int decode() throws DecodeException, IOException {
+  public final int decode(HttpRequestParserException.Kind kind) throws IOException {
     final byte high1;
-    high1 = readPerc();
+    high1 = readPerc(kind);
+
+    final byte low1;
+    low1 = readPerc(kind);
+
+    final int perc1;
+    perc1 = decodePerc(high1, low1);
 
     return switch (high1) {
       // 0yyyzzzz
       case 0b0000, 0b0001,
            0b0010, 0b0011,
-           0b0100, 0b0101, 0b0110, 0b0111 -> decodePerc1(high1);
+           0b0100, 0b0101, 0b0110, 0b0111 -> perc1;
 
       // 110xxxyy 10yyzzzz
-      case 0b1100, 0b1101 -> decodePerc2(high1);
+      case 0b1100, 0b1101 -> decodePerc2(kind, perc1);
 
       // 1110wwww 10xxxxyy 10yyzzzz
-      case 0b1110 -> decodePerc3(high1);
+      case 0b1110 -> decodePerc3(kind, perc1);
 
       // 11110uvv 10vvwwww 10xxxxyy 10yyzzzz
-      case 0b1111 -> decodePerc4(high1);
+      case 0b1111 -> decodePerc4(kind, perc1);
 
-      default -> throw new DecodeException();
+      default -> {
+        final String msg;
+        msg = "Invalid percent-encoded value: 0x%02X is not a valid UTF-8 1-byte sequence".formatted(perc1);
+
+        throw new HttpRequestParserException(msg, kind);
+      }
     };
   }
 
-  private int decodePerc1(byte high1) throws DecodeException, IOException {
-    final byte low1;
-    low1 = readPerc();
-
-    return decodePerc(high1, low1);
-  }
-
-  private int decodePerc2(byte high1) throws DecodeException, IOException {
-    final byte low1;
-    low1 = readPerc();
-
-    final int perc1;
-    perc1 = decodePerc(high1, low1);
-
+  private int decodePerc2(HttpRequestParserException.Kind kind, int perc1) throws IOException {
     final int perc2;
-    perc2 = decodePercNext();
+    perc2 = decodePercNext(kind, 2, 2);
 
     final int c;
     c = (perc1 & 0b1_1111) << 6 | (perc2 & 0b11_1111);
 
     if (c < 0x80 || c > 0x7FF) {
-      throw new DecodeException();
+      final String msg;
+      msg = "Invalid percent-encoded value: 0x%02X 0x%02X is not a valid UTF-8 2-byte sequence".formatted(perc1, perc2);
+
+      throw new HttpRequestParserException(msg, kind);
     }
 
     return c;
   }
 
-  private int decodePerc3(byte high1) throws DecodeException, IOException {
-    final byte low1;
-    low1 = readPerc();
-
-    final int perc1;
-    perc1 = decodePerc(high1, low1);
-
+  private int decodePerc3(HttpRequestParserException.Kind kind, int perc1) throws IOException {
     final int perc2;
-    perc2 = decodePercNext();
+    perc2 = decodePercNext(kind, 2, 3);
 
     final int perc3;
-    perc3 = decodePercNext();
+    perc3 = decodePercNext(kind, 3, 3);
 
     final int c;
     c = (perc1 & 0b1111) << 12 | (perc2 & 0b11_1111) << 6 | (perc3 & 0b11_1111);
 
     if (c < 0x800 || c > 0xFFFF || Character.isSurrogate((char) c)) {
-      throw new DecodeException();
+      final String msg;
+      msg = "Invalid percent-encoded value: 0x%02X 0x%02X 0x%02X is not a valid UTF-8 3-byte sequence".formatted(perc1, perc2, perc3);
+
+      throw new HttpRequestParserException(msg, kind);
     }
 
     return c;
   }
 
-  private int decodePerc4(byte high1) throws DecodeException, IOException {
-    final byte low1;
-    low1 = readPerc();
-
-    final int perc1;
-    perc1 = decodePerc(high1, low1);
-
+  private int decodePerc4(HttpRequestParserException.Kind kind, int perc1) throws IOException {
     final int perc2;
-    perc2 = decodePercNext();
+    perc2 = decodePercNext(kind, 2, 4);
 
     final int perc3;
-    perc3 = decodePercNext();
+    perc3 = decodePercNext(kind, 3, 4);
 
     final int perc4;
-    perc4 = decodePercNext();
+    perc4 = decodePercNext(kind, 4, 4);
 
     final int c;
     c = (perc1 & 0b111) << 18 | (perc2 & 0b11_1111) << 12 | (perc3 & 0b11_1111) << 6 | (perc4 & 0b11_1111);
 
     if (c < 0x1_0000 || !Character.isValidCodePoint(c)) {
-      throw new DecodeException();
+      final String msg;
+      msg = "Invalid percent-encoded value: 0x%02X 0x%02X 0x%02X 0x%02X is not a valid UTF-8 4-byte sequence".formatted(perc1, perc2, perc3, perc4);
+
+      throw new HttpRequestParserException(msg, kind);
     }
 
     return c;
@@ -132,31 +124,37 @@ final class HttpRequestParser1UrlDecoder {
     return (high << 4) | low;
   }
 
-  private int decodePercNext() throws DecodeException, IOException {
-    readPercSep();
+  private int decodePercNext(HttpRequestParserException.Kind kind, int current, int total) throws IOException {
+    readPercSep(kind, current, total);
 
     final byte high;
-    high = readPerc();
+    high = readPerc(kind);
 
     final byte low;
-    low = readPerc();
+    low = readPerc(kind);
 
     final int perc;
     perc = decodePerc(high, low);
 
     if (!utf8Byte(perc)) {
-      throw new DecodeException();
+      final String msg;
+      msg = "Invalid percent-encoded value: 0x%02X is not a valid UTF-8 byte".formatted(perc);
+
+      throw new HttpRequestParserException(msg, kind);
     }
 
     return perc;
   }
 
-  private byte readPerc() throws DecodeException, IOException {
+  private byte readPerc(HttpRequestParserException.Kind kind) throws IOException {
     final int c;
     c = input.read();
 
     if (c < 0) {
-      throw new DecodeException();
+      final String msg;
+      msg = "Invalid percent-encoded value: 0x%02X is not an US-ASCII char".formatted(c);
+
+      throw new HttpRequestParserException(msg, kind);
     }
 
     final byte b;
@@ -166,18 +164,24 @@ final class HttpRequestParser1UrlDecoder {
     perc = Bytes.fromHexDigit(b);
 
     if (perc < 0) {
-      throw new DecodeException();
+      final String msg;
+      msg = "Invalid percent-encoded value: 0x%02X is not an US-ASCII digit char".formatted(c);
+
+      throw new HttpRequestParserException(msg, kind);
     }
 
     return perc;
   }
 
-  private void readPercSep() throws DecodeException, IOException {
+  private void readPercSep(HttpRequestParserException.Kind kind, int current, int total) throws IOException {
     final int c;
     c = input.read();
 
     if (c != '%') {
-      throw new DecodeException();
+      final String msg;
+      msg = "Invalid percent-encoded value: got 0x%02X instead of start of byte %d of a %d-byte UTF-8 code point".formatted(c, current, total);
+
+      throw new HttpRequestParserException(msg, kind);
     }
   }
 

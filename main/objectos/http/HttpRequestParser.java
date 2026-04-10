@@ -25,8 +25,6 @@ final class HttpRequestParser {
 
   private final InputStream inputStream;
 
-  private HttpMethod method;
-
   HttpRequestParser(HttpRequestBodySupport bodySupport, byte[] buffer, InputStream inputStream) {
     this.bodySupport = bodySupport;
 
@@ -44,6 +42,7 @@ final class HttpRequestParser {
     final HttpRequestParser2Method methodParser;
     methodParser = new HttpRequestParser2Method(input);
 
+    final HttpMethod method;
     method = methodParser.parse();
 
     String path = "";

@@ -19,14 +19,14 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 import java.net.Socket;
-import objectos.http.HttpRequestParser1UrlDecoder.DecodeException;
+import objectos.http.HttpRequestParserException.Kind;
 import objectos.way.Y;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class HttpRequestParser1UrlDecoderTest {
 
-  private String decode(int initial, int length, Object... data) throws DecodeException, IOException {
+  private String decode(int initial, int length, Object... data) throws IOException {
     final Socket socket;
     socket = Y.socket(data);
 
@@ -43,7 +43,7 @@ public class HttpRequestParser1UrlDecoderTest {
 
     for (int i = 0; i < length; i++) {
       final int cp;
-      cp = decoder.decode();
+      cp = decoder.decode(Kind.INVALID_REQUEST_LINE);
 
       out.appendCodePoint(cp);
     }
@@ -64,7 +64,7 @@ public class HttpRequestParser1UrlDecoderTest {
   }
 
   @Test(dataProvider = "validProvider")
-  public void valid(String raw, String path, String description) throws DecodeException, IOException {
+  public void valid(String raw, String path, String description) throws IOException {
     assertEquals(decode(256, path.length(), raw), path);
   }
 

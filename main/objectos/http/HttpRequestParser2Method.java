@@ -16,24 +16,9 @@
 package objectos.http;
 
 import module java.base;
+import objectos.http.HttpRequestParserException.Kind;
 
 final class HttpRequestParser2Method {
-
-  enum Invalid implements HttpClientException.Kind {
-
-    METHOD;
-
-    @Override
-    public final String message() {
-      return "Invalid request line.\n";
-    }
-
-    @Override
-    public final HttpStatus status() {
-      return HttpStatus.BAD_REQUEST;
-    }
-
-  }
 
   private final HttpRequestParser0Input input;
 
@@ -44,8 +29,16 @@ final class HttpRequestParser2Method {
   public final HttpMethod parse() throws IOException {
     try {
       return parse0();
-    } catch (HttpRequestParser0Input.Eof | HttpRequestParser0Input.Overflow e) {
-      throw new HttpClientException(Invalid.METHOD, e);
+    } catch (HttpRequestParser0Input.Eof e) {
+      throw new HttpRequestParserException(
+          "EOF while parsing method", e,
+          Kind.INVALID_REQUEST_LINE
+      );
+    } catch (HttpRequestParser0Input.Overflow e) {
+      throw new HttpRequestParserException(
+          "Buffer overflow while parsing method", e,
+          Kind.INVALID_REQUEST_LINE
+      );
     }
   }
 
@@ -68,7 +61,10 @@ final class HttpRequestParser2Method {
 
       case 'T' -> parseMethod(HttpMethod.TRACE, 1);
 
-      default -> throw new HttpClientException(Invalid.METHOD);
+      default -> throw new HttpRequestParserException(
+          "Unexpected byte 0x%02x while parsing method first char".formatted(Byte.toUnsignedInt(first)),
+          Kind.INVALID_REQUEST_LINE
+      );
     };
   }
 
@@ -84,7 +80,13 @@ final class HttpRequestParser2Method {
         continue;
       }
 
-      throw new HttpClientException(Invalid.METHOD);
+      final int ub;
+      ub = Byte.toUnsignedInt(b);
+
+      final String msg;
+      msg = "Unexpected byte 0x%02x while parsing method %s".formatted(ub, method);
+
+      throw new HttpRequestParserException(msg, Kind.INVALID_REQUEST_LINE);
     }
 
     return method;
@@ -101,7 +103,15 @@ final class HttpRequestParser2Method {
 
       case 'A' -> parseMethod(HttpMethod.PATCH, 2);
 
-      default -> throw new HttpClientException(Invalid.METHOD);
+      default -> {
+        final int ub;
+        ub = Byte.toUnsignedInt(second);
+
+        final String msg;
+        msg = "Unexpected byte 0x%02x while parsing POST/PUT/PATCH".formatted(ub);
+
+        throw new HttpRequestParserException(msg, Kind.INVALID_REQUEST_LINE);
+      }
     };
   }
 

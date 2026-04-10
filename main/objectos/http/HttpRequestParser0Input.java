@@ -121,6 +121,20 @@ final class HttpRequestParser0Input extends InputStream {
     return buffer[bufferIndex++];
   }
 
+  public final byte readByte(HttpRequestParserException.Kind kind) throws IOException {
+    final byte b;
+    b = readByte();
+
+    if (b < 0) {
+      final String msg;
+      msg = "Unexpected byte 0x%02x while reading from input: ASCII value expected".formatted(b);
+
+      throw new HttpRequestParserException(msg, kind);
+    }
+
+    return b;
+  }
+
   public final int readForBody() throws IOException {
     final int buffered;
     buffered = bufferLimit - bufferIndex;
@@ -143,17 +157,6 @@ final class HttpRequestParser0Input extends InputStream {
     }
 
     throw new IllegalStateException("buffered bytes < 0");
-  }
-
-  public final byte readTable(byte[] table, HttpClientException.Kind kind) throws IOException {
-    final byte next;
-    next = readByte();
-
-    if (next < 0) {
-      throw new HttpClientException(kind);
-    }
-
-    return table[next];
   }
 
   public final void skipByte() {

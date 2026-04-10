@@ -81,35 +81,44 @@ public class HttpRequestParser2MethodTest {
   @DataProvider
   public Object[][] badRequestProvider() {
     return new Object[][] {
-        {"""
-         XYZ /path?key=value HTTP/1.1\r
-         Host: www.example.com\r
-         \r
-         """, "Unknown method"},
-
-        {"""
-         \r
-         \r
-         """, "No method"},
-
-        {"""
-         POS /login HTTP/1.1\r
-         Host: www.example.com\r
-         \r
-         """, "Incomplete method name"}
+        {
+            """
+            XYZ /path?key=value HTTP/1.1\r
+            Host: www.example.com\r
+            \r
+            """,
+            "Unexpected byte 0x58 while parsing method first char"
+        },
+        {
+            """
+            \r
+            \r
+            """,
+            "Unexpected byte 0x0d while parsing method first char"
+        },
+        {
+            """
+            POS /login HTTP/1.1\r
+            Host: www.example.com\r
+            \r
+            """,
+            "Unexpected byte 0x20 while parsing method POST"
+        }
     };
   }
 
   @Test(dataProvider = "badRequestProvider")
-  public void badRequest(String request, String description) throws IOException {
+  public void badRequest(String request, String message) throws IOException {
     try {
       parse(
           request
       );
 
       Assert.fail("It should have thrown");
-    } catch (HttpClientException expected) {
-      assertEquals(expected.kind, HttpRequestParser2Method.Invalid.METHOD);
+    } catch (HttpRequestParserException expected) {
+      assertEquals(expected.getMessage(), message);
+
+      assertEquals(expected.kind, HttpRequestParserException.Kind.INVALID_REQUEST_LINE);
     }
   }
 
@@ -141,8 +150,10 @@ public class HttpRequestParser2MethodTest {
       parse();
 
       Assert.fail("It should have thrown");
-    } catch (HttpClientException expected) {
-      assertEquals(expected.kind, HttpRequestParser2Method.Invalid.METHOD);
+    } catch (HttpRequestParserException expected) {
+      assertEquals(expected.getMessage(), "EOF while parsing method");
+
+      assertEquals(expected.kind, HttpRequestParserException.Kind.INVALID_REQUEST_LINE);
     }
   }
 
