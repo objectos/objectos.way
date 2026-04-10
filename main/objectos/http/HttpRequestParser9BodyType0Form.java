@@ -16,38 +16,10 @@
 package objectos.http;
 
 import module java.base;
-import objectos.http.HttpRequestParser1UrlDecoder.DecodeException;
+import objectos.http.HttpRequestParserException.Kind;
 import objectos.internal.Ascii;
 
 final class HttpRequestParser9BodyType0Form {
-
-  enum Invalid implements HttpClientException.Kind {
-    // invalid URL-encoded character
-    CHAR,
-
-    // invalid percent-encoded value
-    PERCENT;
-
-    private final HttpStatus status;
-
-    private Invalid() {
-      this(HttpStatus.BAD_REQUEST);
-    }
-
-    private Invalid(HttpStatus status) {
-      this.status = status;
-    }
-
-    @Override
-    public final String message() {
-      return "Invalid application/x-www-form-urlencoded content in request body.\n";
-    }
-
-    @Override
-    public final HttpStatus status() {
-      return status;
-    }
-  }
 
   private boolean done;
 
@@ -64,14 +36,10 @@ final class HttpRequestParser9BodyType0Form {
   }
 
   public final Map<String, Object> parse() throws IOException {
-    try {
-      return parse0();
-    } catch (DecodeException e) {
-      throw new HttpClientException(Invalid.PERCENT, e);
-    }
+    return parse0();
   }
 
-  private Map<String, Object> parse0() throws DecodeException, IOException {
+  private Map<String, Object> parse0() throws IOException {
     while (true) {
       final String name;
       name = parseName();
@@ -145,7 +113,7 @@ final class HttpRequestParser9BodyType0Form {
     FORM_TABLE = table;
   }
 
-  private String parseName() throws DecodeException, IOException {
+  private String parseName() throws IOException {
     final StringBuilder name;
     name = new StringBuilder();
 
@@ -160,7 +128,10 @@ final class HttpRequestParser9BodyType0Form {
       }
 
       if (c > 0x7F) {
-        throw new HttpClientException(Invalid.CHAR);
+        final String msg;
+        msg = "Invalid form url-encoded content: byte 0x%02X is not an US-ASCII value".formatted(c);
+
+        throw new HttpRequestParserException(msg, Kind.INVALID_FORM);
       }
 
       final byte code;
@@ -192,12 +163,17 @@ final class HttpRequestParser9BodyType0Form {
           return name.toString();
         }
 
-        default -> throw new HttpClientException(Invalid.CHAR);
+        default -> {
+          final String msg;
+          msg = "Invalid form url-encoded content: byte 0x%02X is not an allowed value".formatted(c);
+
+          throw new HttpRequestParserException(msg, Kind.INVALID_FORM);
+        }
       }
     }
   }
 
-  private String parseValue() throws DecodeException, IOException {
+  private String parseValue() throws IOException {
     final StringBuilder value;
     value = new StringBuilder();
 
@@ -212,7 +188,10 @@ final class HttpRequestParser9BodyType0Form {
       }
 
       if (c > 0x7F) {
-        throw new HttpClientException(Invalid.CHAR);
+        final String msg;
+        msg = "Invalid form url-encoded content: byte 0x%02X is not an US-ASCII value".formatted(c);
+
+        throw new HttpRequestParserException(msg, Kind.INVALID_FORM);
       }
 
       final byte code;
@@ -238,7 +217,12 @@ final class HttpRequestParser9BodyType0Form {
           return value.toString();
         }
 
-        default -> throw new HttpClientException(Invalid.CHAR);
+        default -> {
+          final String msg;
+          msg = "Invalid form url-encoded content: byte 0x%02X is not an allowed value".formatted(c);
+
+          throw new HttpRequestParserException(msg, Kind.INVALID_FORM);
+        }
       }
     }
   }
@@ -257,12 +241,12 @@ final class HttpRequestParser9BodyType0Form {
     Http.queryParamsAdd(params, name, value);
   }
 
-  private int decodePerc() throws DecodeException, IOException {
+  private int decodePerc() throws IOException {
     if (urlDecoder == null) {
       urlDecoder = new HttpRequestParser1UrlDecoder(input);
     }
 
-    return urlDecoder.decode();
+    return urlDecoder.decode(Kind.INVALID_FORM);
   }
 
 }

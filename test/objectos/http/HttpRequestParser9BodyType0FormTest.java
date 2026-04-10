@@ -23,7 +23,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import objectos.http.HttpRequestParser9BodyType0Form.Invalid;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -102,8 +101,8 @@ public class HttpRequestParser9BodyType0FormTest {
       parse(payload);
 
       Assert.fail("It should have thrown");
-    } catch (HttpClientException expected) {
-      assertEquals(expected.kind, Invalid.CHAR);
+    } catch (HttpRequestParserException expected) {
+      assertEquals(expected.kind, HttpRequestParserException.Kind.INVALID_FORM);
     }
   }
 
@@ -200,8 +199,8 @@ public class HttpRequestParser9BodyType0FormTest {
       parse(payload);
 
       Assert.fail("It should have thrown");
-    } catch (HttpClientException expected) {
-      assertEquals(expected.kind, Invalid.PERCENT);
+    } catch (HttpRequestParserException expected) {
+      assertEquals(expected.kind, HttpRequestParserException.Kind.INVALID_FORM);
     }
   }
 

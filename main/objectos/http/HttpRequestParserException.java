@@ -38,7 +38,9 @@ final class HttpRequestParserException extends IOException {
 
     INCOMPLETE_REQUEST_BODY,
 
-    NOT_IMPLEMENTED;
+    NOT_IMPLEMENTED,
+
+    INVALID_FORM;
 
   }
 
