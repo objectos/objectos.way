@@ -23,11 +23,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import objectos.http.HttpRequestParser6Headers.Invalid;
 import objectos.way.Y;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import objectos.http.HttpRequestParserException.Kind;
 
 public class HttpRequestParser6HeadersTest {
 
@@ -243,7 +243,7 @@ public class HttpRequestParser6HeadersTest {
             \r
             """.formatted(c),
 
-            Invalid.NAME_CHAR,
+            Kind.INVALID_REQUEST_HEADERS,
 
             "Name contains the invalid Ox" + Integer.toHexString(c) + " character"
         });
@@ -260,7 +260,7 @@ public class HttpRequestParser6HeadersTest {
         \r
         """.formatted(tooLong),
 
-        Invalid.REQUEST_HEADER_FIELDS_TOO_LARGE,
+        Kind.REQUEST_HEADER_FIELDS_TOO_LARGE,
 
         "Name is too long"
     });
@@ -278,7 +278,8 @@ public class HttpRequestParser6HeadersTest {
     valueValid[' '] = true;
     valueValid['\t'] = true;
 
-    // LF is not valid but will trigger line terminator error
+    // CR/LF are not valid but will trigger line terminator error
+    valueValid['\r'] = true;
     valueValid['\n'] = true;
 
     for (int b = 0; b < valueValid.length; b++) {
@@ -289,7 +290,7 @@ public class HttpRequestParser6HeadersTest {
             \r
             """.formatted(b),
 
-            Invalid.VALUE_CHAR,
+            Kind.INVALID_REQUEST_HEADERS,
 
             "Name contains the invalid Ox" + Integer.toHexString(b) + " character"
         });
@@ -303,7 +304,7 @@ public class HttpRequestParser6HeadersTest {
         \r
         """.formatted(tooLong),
 
-        Invalid.REQUEST_HEADER_FIELDS_TOO_LARGE,
+        Kind.REQUEST_HEADER_FIELDS_TOO_LARGE,
 
         "Value is too long"
     });
@@ -313,15 +314,60 @@ public class HttpRequestParser6HeadersTest {
 
   @SuppressWarnings("exports")
   @Test(dataProvider = "invalidProvider")
-  public void invalid(String headers, HttpClientException.Kind kind, String description) throws IOException {
+  public void invalid(String headers, HttpRequestParserException.Kind kind, String description) throws IOException {
     try {
       parse(
           iso8859(headers)
       );
 
       Assert.fail("It should have thrown");
-    } catch (HttpClientException expected) {
+    } catch (HttpRequestParserException expected) {
       assertEquals(expected.kind, kind);
+    }
+  }
+
+  @DataProvider
+  public Object[][] invalidLineTerminatorProvider() {
+    return new Object[][] {
+        {
+            """
+            Referer:\n
+            \r
+            """
+        },
+        {
+            """
+            Referer: val\n
+            \r
+            """
+        },
+        {
+            """
+            Referer:\r\t\
+            \r
+            """
+        },
+        {
+            """
+            Referer: value\r\t\
+            \r
+            """
+        }
+    };
+  }
+
+  @Test(dataProvider = "invalidLineTerminatorProvider")
+  public void invalidLineTerminator(String headers) throws IOException {
+    try {
+      parse(
+          iso8859(headers)
+      );
+
+      Assert.fail("It should have thrown");
+    } catch (HttpRequestParserException expected) {
+      assertEquals(expected.getMessage(), "CRLF sequence required as line terminator");
+
+      assertEquals(expected.kind, Kind.LINE_TERMINATOR);
     }
   }
 

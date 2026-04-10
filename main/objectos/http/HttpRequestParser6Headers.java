@@ -16,42 +16,10 @@
 package objectos.http;
 
 import module java.base;
+import objectos.http.HttpRequestParserException.Kind;
 import objectos.internal.Bytes;
 
 final class HttpRequestParser6Headers {
-
-  enum Invalid implements HttpClientException.Kind {
-    // header name has an invalid character
-    NAME_CHAR(HttpStatus.BAD_REQUEST),
-
-    // header value has an invalid character
-    VALUE_CHAR(HttpStatus.BAD_REQUEST),
-
-    // invalid header terminator, i.e., the last '\r\n'
-    TERMINATOR(HttpStatus.BAD_REQUEST),
-
-    // Unexpected end of stream
-    EOF(HttpStatus.BAD_REQUEST),
-
-    // 431 Request Header Fields Too Large
-    REQUEST_HEADER_FIELDS_TOO_LARGE(HttpStatus.REQUEST_HEADER_FIELDS_TOO_LARGE);
-
-    private final HttpStatus status;
-
-    private Invalid(HttpStatus status) {
-      this.status = status;
-    }
-
-    @Override
-    public final String message() {
-      return "Invalid request headers.\n";
-    }
-
-    @Override
-    public final HttpStatus status() {
-      return status;
-    }
-  }
 
   private final HttpRequestParser0Input input;
 
@@ -67,9 +35,15 @@ final class HttpRequestParser6Headers {
     try {
       return parse0();
     } catch (HttpRequestParser0Input.Eof e) {
-      throw new HttpClientException(Invalid.EOF, e);
+      final String msg;
+      msg = "EOF while parsing HTTP headers";
+
+      throw new HttpRequestParserException(msg, e, Kind.INVALID_REQUEST_HEADERS);
     } catch (HttpRequestParser0Input.Overflow e) {
-      throw new HttpClientException(Invalid.REQUEST_HEADER_FIELDS_TOO_LARGE, e);
+      final String msg;
+      msg = "Buffer overflow while parsing HTTP headers";
+
+      throw new HttpRequestParserException(msg, e, Kind.REQUEST_HEADER_FIELDS_TOO_LARGE);
     }
   }
 
@@ -106,11 +80,17 @@ final class HttpRequestParser6Headers {
           yield true;
         }
 
-        throw new HttpClientException(Invalid.TERMINATOR);
+        final String msg;
+        msg = "CRLF sequence required as line terminator";
+
+        throw new HttpRequestParserException(msg, Kind.LINE_TERMINATOR);
       }
 
       case Bytes.LF -> {
-        throw new HttpClientException(Invalid.TERMINATOR);
+        final String msg;
+        msg = "CRLF sequence required as line terminator";
+
+        throw new HttpRequestParserException(msg, Kind.LINE_TERMINATOR);
       }
 
       default -> false;
@@ -127,7 +107,10 @@ final class HttpRequestParser6Headers {
 
       switch (mapped) {
         case HttpHeaderName0.INVALID -> {
-          throw new HttpClientException(Invalid.NAME_CHAR);
+          final String msg;
+          msg = "Invalid HTTP header field: unexpected byte 0x%02X while parsing name".formatted(b);
+
+          throw new HttpRequestParserException(msg, Kind.INVALID_REQUEST_HEADERS);
         }
 
         case HttpHeaderName0.COLON -> {
@@ -187,8 +170,11 @@ final class HttpRequestParser6Headers {
     loop: while (true) {
       input.mark();
 
+      final byte b;
+      b = input.readByte(Kind.INVALID_REQUEST_HEADERS);
+
       final byte code;
-      code = input.readTable(HEADER_VALUE_TABLE, Invalid.VALUE_CHAR);
+      code = HEADER_VALUE_TABLE[b];
 
       switch (code) {
         case HEADER_VALUE_WS -> {
@@ -207,11 +193,17 @@ final class HttpRequestParser6Headers {
         }
 
         case HEADER_VALUE_LF -> {
-          throw new HttpClientException(Invalid.TERMINATOR);
+          final String msg;
+          msg = "CRLF sequence required as line terminator";
+
+          throw new HttpRequestParserException(msg, Kind.LINE_TERMINATOR);
         }
 
         default -> {
-          throw new HttpClientException(Invalid.VALUE_CHAR);
+          final String msg;
+          msg = "Invalid HTTP header field: unexpected byte 0x%02X while parsing value".formatted(b);
+
+          throw new HttpRequestParserException(msg, Kind.INVALID_REQUEST_HEADERS);
         }
       }
     }
@@ -221,8 +213,11 @@ final class HttpRequestParser6Headers {
 
     // value contents
     while (true) {
+      final byte b;
+      b = input.readByte(Kind.INVALID_REQUEST_HEADERS);
+
       final byte code;
-      code = input.readTable(HEADER_VALUE_TABLE, Invalid.VALUE_CHAR);
+      code = HEADER_VALUE_TABLE[b];
 
       switch (code) {
         case HEADER_VALUE_WS -> {
@@ -241,11 +236,17 @@ final class HttpRequestParser6Headers {
         }
 
         case HEADER_VALUE_LF -> {
-          throw new HttpClientException(Invalid.TERMINATOR);
+          final String msg;
+          msg = "CRLF sequence required as line terminator";
+
+          throw new HttpRequestParserException(msg, Kind.LINE_TERMINATOR);
         }
 
         default -> {
-          throw new HttpClientException(Invalid.VALUE_CHAR);
+          final String msg;
+          msg = "Invalid HTTP header field: unexpected byte 0x%02X while parsing value".formatted(b);
+
+          throw new HttpRequestParserException(msg, Kind.INVALID_REQUEST_HEADERS);
         }
       }
     }
@@ -259,10 +260,13 @@ final class HttpRequestParser6Headers {
     lf = input.readByte();
 
     if (lf != Bytes.LF) {
-      throw new HttpClientException(Invalid.VALUE_CHAR);
-    } else {
-      return value;
+      final String msg;
+      msg = "CRLF sequence required as line terminator";
+
+      throw new HttpRequestParserException(msg, Kind.LINE_TERMINATOR);
     }
+
+    return value;
   }
 
   private void appendChar(byte b) {
