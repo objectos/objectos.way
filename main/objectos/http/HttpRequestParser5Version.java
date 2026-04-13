@@ -17,7 +17,7 @@ package objectos.http;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import objectos.http.HttpRequestParserException.Kind;
+import objectos.http.HttpClientException.Kind;
 import objectos.internal.Bytes;
 
 final class HttpRequestParser5Version {
@@ -37,12 +37,12 @@ final class HttpRequestParser5Version {
       final String msg;
       msg = "EOF while parsing HTTP version";
 
-      throw new HttpRequestParserException(msg, e, Kind.INVALID_REQUEST_LINE);
+      throw new HttpClientException(msg, e, Kind.INVALID_REQUEST_LINE);
     } catch (HttpRequestParser0Input.Overflow e) {
       final String msg;
       msg = "Buffer overflow while parsing HTTP version";
 
-      throw new HttpRequestParserException(msg, e, Kind.URI_TOO_LONG);
+      throw new HttpClientException(msg, e, Kind.URI_TOO_LONG);
     }
   }
 
@@ -79,7 +79,7 @@ final class HttpRequestParser5Version {
       final String msg;
       msg = "Invalid HTTP version: expected byte 0x%02X but got 0x%02X".formatted(expected, b);
 
-      throw new HttpRequestParserException(msg, Kind.INVALID_REQUEST_LINE);
+      throw new HttpClientException(msg, Kind.INVALID_REQUEST_LINE);
     }
   }
 
@@ -91,7 +91,7 @@ final class HttpRequestParser5Version {
       final String msg;
       msg = "Invalid HTTP version: byte 0x%02X is not a valid digit".formatted(first);
 
-      throw new HttpRequestParserException(msg, Kind.INVALID_REQUEST_LINE);
+      throw new HttpClientException(msg, Kind.INVALID_REQUEST_LINE);
     }
 
     int major;
@@ -104,7 +104,7 @@ final class HttpRequestParser5Version {
       final String msg;
       msg = "Invalid HTTP version: major version should contain a single digit";
 
-      throw new HttpRequestParserException(msg, Kind.INVALID_REQUEST_LINE);
+      throw new HttpClientException(msg, Kind.INVALID_REQUEST_LINE);
     }
 
     if (next == '.') {
@@ -115,14 +115,14 @@ final class HttpRequestParser5Version {
       final String msg;
       msg = "CRLF sequence required as line terminator";
 
-      throw new HttpRequestParserException(msg, Kind.LINE_TERMINATOR);
+      throw new HttpClientException(msg, Kind.LINE_TERMINATOR);
     }
 
     if (next != '\r') {
       final String msg;
       msg = "Invalid HTTP version: unexpected byte 0x%02X while parsing version (major)".formatted(next);
 
-      throw new HttpRequestParserException(msg, Kind.INVALID_REQUEST_LINE);
+      throw new HttpClientException(msg, Kind.INVALID_REQUEST_LINE);
     }
 
     final byte lf;
@@ -132,7 +132,7 @@ final class HttpRequestParser5Version {
       final String msg;
       msg = "CRLF sequence required as line terminator";
 
-      throw new HttpRequestParserException(msg, Kind.LINE_TERMINATOR);
+      throw new HttpClientException(msg, Kind.LINE_TERMINATOR);
     }
 
     done = true;
@@ -148,7 +148,7 @@ final class HttpRequestParser5Version {
       final String msg;
       msg = "Invalid HTTP version: byte 0x%02X is not a valid digit".formatted(first);
 
-      throw new HttpRequestParserException(msg, Kind.INVALID_REQUEST_LINE);
+      throw new HttpClientException(msg, Kind.INVALID_REQUEST_LINE);
     }
 
     int minor;
@@ -161,21 +161,21 @@ final class HttpRequestParser5Version {
       final String msg;
       msg = "Invalid HTTP version: minor version should contain a single digit";
 
-      throw new HttpRequestParserException(msg, Kind.INVALID_REQUEST_LINE);
+      throw new HttpClientException(msg, Kind.INVALID_REQUEST_LINE);
     }
 
     if (b == '\n') {
       final String msg;
       msg = "CRLF sequence required as line terminator";
 
-      throw new HttpRequestParserException(msg, Kind.LINE_TERMINATOR);
+      throw new HttpClientException(msg, Kind.LINE_TERMINATOR);
     }
 
     if (b != '\r') {
       final String msg;
       msg = "Invalid HTTP version: unexpected byte 0x%02X while parsing version (minor)".formatted(b);
 
-      throw new HttpRequestParserException(msg, Kind.INVALID_REQUEST_LINE);
+      throw new HttpClientException(msg, Kind.INVALID_REQUEST_LINE);
     }
 
     final byte lf;
@@ -185,7 +185,7 @@ final class HttpRequestParser5Version {
       final String msg;
       msg = "CRLF sequence required as line terminator";
 
-      throw new HttpRequestParserException(msg, Kind.LINE_TERMINATOR);
+      throw new HttpClientException(msg, Kind.LINE_TERMINATOR);
     }
 
     return minor;

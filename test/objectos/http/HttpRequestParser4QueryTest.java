@@ -20,7 +20,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 
 import module java.base;
-import objectos.http.HttpRequestParserException.Kind;
+import objectos.http.HttpClientException.Kind;
 import objectos.way.Y;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
@@ -132,7 +132,7 @@ public class HttpRequestParser4QueryTest {
       );
 
       Assert.fail("It should have thrown");
-    } catch (HttpRequestParserException expected) {
+    } catch (HttpClientException expected) {
       assertEquals(expected.getMessage(), msg);
 
       assertEquals(expected.kind, Kind.INVALID_REQUEST_LINE);
@@ -234,7 +234,7 @@ public class HttpRequestParser4QueryTest {
       );
 
       Assert.fail("It should have thrown");
-    } catch (HttpRequestParserException expected) {
+    } catch (HttpClientException expected) {
       assertEquals(expected.kind, Kind.INVALID_REQUEST_LINE);
     }
   }
@@ -278,7 +278,7 @@ public class HttpRequestParser4QueryTest {
       );
 
       Assert.fail("It should have thrown");
-    } catch (HttpRequestParserException expected) {
+    } catch (HttpClientException expected) {
       assertEquals(expected.getMessage(), "Buffer overflow while parsing URI query");
 
       assertEquals(expected.kind, Kind.URI_TOO_LONG);

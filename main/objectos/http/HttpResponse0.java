@@ -26,16 +26,20 @@ final class HttpResponse0 implements HttpResponse {
 
   private boolean closeConnection;
 
+  private final boolean head;
+
   private final List<HttpResponse1Header> headers = new ArrayList<>();
 
   private final OutputStream outputStream;
 
   private HttpStatus status = HttpStatus.OK;
 
-  HttpResponse0(byte[] buffer, Clock clock, OutputStream outputStream) {
+  HttpResponse0(byte[] buffer, Clock clock, boolean head, OutputStream outputStream) {
     this.buffer = buffer;
 
     this.clock = clock;
+
+    this.head = head;
 
     this.outputStream = outputStream;
   }
@@ -334,7 +338,7 @@ final class HttpResponse0 implements HttpResponse {
 
   private HttpResponse2Writer writer() throws IOException {
     final HttpResponse2Writer writer;
-    writer = new HttpResponse2Writer(buffer, outputStream);
+    writer = new HttpResponse2Writer(buffer, head, outputStream);
 
     writer.status(status);
 

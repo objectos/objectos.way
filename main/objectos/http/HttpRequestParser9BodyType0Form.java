@@ -16,7 +16,7 @@
 package objectos.http;
 
 import module java.base;
-import objectos.http.HttpRequestParserException.Kind;
+import objectos.http.HttpClientException.Kind;
 import objectos.internal.Ascii;
 
 final class HttpRequestParser9BodyType0Form {
@@ -131,7 +131,7 @@ final class HttpRequestParser9BodyType0Form {
         final String msg;
         msg = "Invalid form url-encoded content: byte 0x%02X is not an US-ASCII value".formatted(c);
 
-        throw new HttpRequestParserException(msg, Kind.INVALID_FORM);
+        throw new HttpClientException(msg, Kind.INVALID_FORM);
       }
 
       final byte code;
@@ -167,7 +167,7 @@ final class HttpRequestParser9BodyType0Form {
           final String msg;
           msg = "Invalid form url-encoded content: byte 0x%02X is not an allowed value".formatted(c);
 
-          throw new HttpRequestParserException(msg, Kind.INVALID_FORM);
+          throw new HttpClientException(msg, Kind.INVALID_FORM);
         }
       }
     }
@@ -191,7 +191,7 @@ final class HttpRequestParser9BodyType0Form {
         final String msg;
         msg = "Invalid form url-encoded content: byte 0x%02X is not an US-ASCII value".formatted(c);
 
-        throw new HttpRequestParserException(msg, Kind.INVALID_FORM);
+        throw new HttpClientException(msg, Kind.INVALID_FORM);
       }
 
       final byte code;
@@ -221,7 +221,7 @@ final class HttpRequestParser9BodyType0Form {
           final String msg;
           msg = "Invalid form url-encoded content: byte 0x%02X is not an allowed value".formatted(c);
 
-          throw new HttpRequestParserException(msg, Kind.INVALID_FORM);
+          throw new HttpClientException(msg, Kind.INVALID_FORM);
         }
       }
     }

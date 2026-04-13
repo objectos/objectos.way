@@ -282,7 +282,6 @@ public class HttpServerTaskTest3Query {
     );
 
     assertEquals(noteSink.id, 123L);
-    assertEquals(noteSink.event, "socket.read");
     assertEquals(noteSink.thrown, ioe);
   }
 

@@ -23,7 +23,7 @@ import objectos.way.Y;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import objectos.http.HttpRequestParserException.Kind;
+import objectos.http.HttpClientException.Kind;
 
 public class HttpRequestParser5VersionTest {
 
@@ -88,7 +88,7 @@ public class HttpRequestParser5VersionTest {
       );
 
       Assert.fail("It should have thrown");
-    } catch (HttpRequestParserException expected) {
+    } catch (HttpClientException expected) {
       assertEquals(expected.getMessage(), msg);
 
       assertEquals(expected.kind, kind);

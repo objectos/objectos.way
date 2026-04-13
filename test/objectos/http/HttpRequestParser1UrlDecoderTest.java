@@ -19,7 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 import java.net.Socket;
-import objectos.http.HttpRequestParserException.Kind;
+import objectos.http.HttpClientException.Kind;
 import objectos.way.Y;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;

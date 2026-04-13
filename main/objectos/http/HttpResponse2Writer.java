@@ -58,10 +58,14 @@ final class HttpResponse2Writer implements Closeable {
 
   private boolean chunked;
 
+  private final boolean head;
+
   private final OutputStream outputStream;
 
-  HttpResponse2Writer(byte[] buffer, OutputStream outputStream) {
+  HttpResponse2Writer(byte[] buffer, boolean head, OutputStream outputStream) {
     this.buffer = buffer;
+
+    this.head = head;
 
     this.outputStream = outputStream;
   }
@@ -123,6 +127,10 @@ final class HttpResponse2Writer implements Closeable {
   }
 
   public final void send(byte[] bytes, int off, int len) throws IOException {
+    if (head) {
+      return;
+    }
+
     if (chunked) {
       throw new UnsupportedOperationException("Implement me");
     } else {
@@ -133,14 +141,26 @@ final class HttpResponse2Writer implements Closeable {
   }
 
   public final void send(Media.Text media) {
+    if (head) {
+      return;
+    }
+
     throw new UnsupportedOperationException("Implement me");
   }
 
   public final void send(Media.Stream media) {
+    if (head) {
+      return;
+    }
+
     throw new UnsupportedOperationException("Implement me");
   }
 
   public final void send(Path file) {
+    if (head) {
+      return;
+    }
+
     throw new UnsupportedOperationException("Implement me");
   }
 

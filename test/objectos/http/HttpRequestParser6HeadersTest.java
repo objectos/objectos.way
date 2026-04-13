@@ -27,7 +27,7 @@ import objectos.way.Y;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import objectos.http.HttpRequestParserException.Kind;
+import objectos.http.HttpClientException.Kind;
 
 public class HttpRequestParser6HeadersTest {
 
@@ -314,14 +314,14 @@ public class HttpRequestParser6HeadersTest {
 
   @SuppressWarnings("exports")
   @Test(dataProvider = "invalidProvider")
-  public void invalid(String headers, HttpRequestParserException.Kind kind, String description) throws IOException {
+  public void invalid(String headers, HttpClientException.Kind kind, String description) throws IOException {
     try {
       parse(
           iso8859(headers)
       );
 
       Assert.fail("It should have thrown");
-    } catch (HttpRequestParserException expected) {
+    } catch (HttpClientException expected) {
       assertEquals(expected.kind, kind);
     }
   }
@@ -364,7 +364,7 @@ public class HttpRequestParser6HeadersTest {
       );
 
       Assert.fail("It should have thrown");
-    } catch (HttpRequestParserException expected) {
+    } catch (HttpClientException expected) {
       assertEquals(expected.getMessage(), "CRLF sequence required as line terminator");
 
       assertEquals(expected.kind, Kind.LINE_TERMINATOR);

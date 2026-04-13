@@ -16,7 +16,7 @@
 package objectos.http;
 
 import java.io.IOException;
-import objectos.http.HttpRequestParserException.Kind;
+import objectos.http.HttpClientException.Kind;
 import objectos.internal.Ascii;
 
 final class HttpRequestParser7BodyMeta {
@@ -43,7 +43,7 @@ final class HttpRequestParser7BodyMeta {
         final String msg;
         msg = "Content-Length and Transfer-Encoding in the same request message";
 
-        throw new HttpRequestParserException(msg, Kind.INVALID_REQUEST_HEADERS);
+        throw new HttpClientException(msg, Kind.INVALID_REQUEST_HEADERS);
       }
 
       final long len;
@@ -64,20 +64,17 @@ final class HttpRequestParser7BodyMeta {
       final String msg;
       msg = "Invalid request headers: expected Content-Length";
 
-      throw new HttpRequestParserException(msg, Kind.LENGTH_REQUIRED);
+      throw new HttpClientException(msg, Kind.LENGTH_REQUIRED);
     }
 
     if (transferEncoding != null) {
-      final String msg;
-      msg = "Support for the request Transfer-Encoding header is not implemented";
-
-      throw new HttpRequestParserException(msg, Kind.NOT_IMPLEMENTED);
+      throw new HttpServerException(HttpServerException.Kind.TRANSFER_ENCODING);
     }
 
     return HttpRequestBodyMeta.ofEmpty();
   }
 
-  private long parseContentLength(String contentLength) throws HttpRequestParserException {
+  private long parseContentLength(String contentLength) throws HttpClientException {
     long length;
     length = 0;
 
@@ -98,7 +95,7 @@ final class HttpRequestParser7BodyMeta {
         final String msg;
         msg = "Invalid Content-Length: char '%c' is not a digit".formatted(d);
 
-        throw new HttpRequestParserException(msg, Kind.INVALID_REQUEST_HEADERS);
+        throw new HttpClientException(msg, Kind.INVALID_REQUEST_HEADERS);
       }
 
       if (overflow) {
@@ -131,7 +128,7 @@ final class HttpRequestParser7BodyMeta {
       final String msg;
       msg = "Invalid Content-Length: value is larger than Long.MAX_VALUE";
 
-      throw new HttpRequestParserException(msg, Kind.CONTENT_TOO_LARGE);
+      throw new HttpClientException(msg, Kind.CONTENT_TOO_LARGE);
     }
 
     return length;

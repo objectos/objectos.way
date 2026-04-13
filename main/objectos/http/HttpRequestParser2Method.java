@@ -16,7 +16,7 @@
 package objectos.http;
 
 import module java.base;
-import objectos.http.HttpRequestParserException.Kind;
+import objectos.http.HttpClientException.Kind;
 
 final class HttpRequestParser2Method {
 
@@ -33,12 +33,12 @@ final class HttpRequestParser2Method {
       final String msg;
       msg = "EOF while parsing method";
 
-      throw new HttpRequestParserException(msg, e, Kind.INVALID_REQUEST_LINE);
+      throw new HttpClientException(msg, e, Kind.INVALID_REQUEST_LINE);
     } catch (HttpRequestParser0Input.Overflow e) {
       final String msg;
       msg = "Buffer overflow while parsing method";
 
-      throw new HttpRequestParserException(msg, e, Kind.INVALID_REQUEST_LINE);
+      throw new HttpClientException(msg, e, Kind.INVALID_REQUEST_LINE);
     }
   }
 
@@ -65,7 +65,7 @@ final class HttpRequestParser2Method {
         final String msg;
         msg = "Unexpected byte 0x%02X while parsing method first char".formatted(first);
 
-        throw new HttpRequestParserException(msg, Kind.INVALID_REQUEST_LINE);
+        throw new HttpClientException(msg, Kind.INVALID_REQUEST_LINE);
       }
     };
   }
@@ -85,7 +85,7 @@ final class HttpRequestParser2Method {
       final String msg;
       msg = "Unexpected byte 0x%02X while parsing method %s".formatted(b, method);
 
-      throw new HttpRequestParserException(msg, Kind.INVALID_REQUEST_LINE);
+      throw new HttpClientException(msg, Kind.INVALID_REQUEST_LINE);
     }
 
     return method;
@@ -106,7 +106,7 @@ final class HttpRequestParser2Method {
         final String msg;
         msg = "Unexpected byte 0x%02X while parsing POST/PUT/PATCH".formatted(second);
 
-        throw new HttpRequestParserException(msg, Kind.INVALID_REQUEST_LINE);
+        throw new HttpClientException(msg, Kind.INVALID_REQUEST_LINE);
       }
     };
   }

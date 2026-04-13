@@ -121,7 +121,7 @@ final class HttpRequestParser0Input extends InputStream {
     return buffer[bufferIndex++];
   }
 
-  public final byte readByte(HttpRequestParserException.Kind kind) throws IOException {
+  public final byte readByte(HttpClientException.Kind kind) throws IOException {
     final byte b;
     b = readByte();
 
@@ -129,7 +129,7 @@ final class HttpRequestParser0Input extends InputStream {
       final String msg;
       msg = "Unexpected byte 0x%02X while reading from input: ASCII value expected".formatted(b);
 
-      throw new HttpRequestParserException(msg, kind);
+      throw new HttpClientException(msg, kind);
     }
 
     return b;

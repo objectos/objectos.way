@@ -20,7 +20,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import objectos.http.HttpRequestParserException.Kind;
+import java.nio.file.StandardOpenOption;
+import objectos.http.HttpClientException.Kind;
 
 final class HttpRequestParser8BodyData {
 
@@ -45,7 +46,7 @@ final class HttpRequestParser8BodyData {
       final String msg;
       msg = "EOF while reading request body";
 
-      throw new HttpRequestParserException(msg, Kind.INCOMPLETE_REQUEST_BODY);
+      throw new HttpClientException(msg, Kind.INCOMPLETE_REQUEST_BODY);
     }
   }
 
@@ -65,7 +66,7 @@ final class HttpRequestParser8BodyData {
       final String msg;
       msg = "The request message body exceeds the server's maximum allowed limit: %d > %d".formatted(length, sizeMax);
 
-      throw new HttpRequestParserException(msg, Kind.CONTENT_TOO_LARGE);
+      throw new HttpClientException(msg, Kind.CONTENT_TOO_LARGE);
     }
 
     else if (length > bodySupport.memoryMax()) {
@@ -81,7 +82,7 @@ final class HttpRequestParser8BodyData {
     final Path file;
     file = bodySupport.file();
 
-    try (OutputStream output = Files.newOutputStream(file)) {
+    try (OutputStream output = Files.newOutputStream(file, StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE)) {
       copy(length, output);
     }
 

@@ -115,10 +115,10 @@ public class HttpRequestParser2MethodTest {
       );
 
       Assert.fail("It should have thrown");
-    } catch (HttpRequestParserException expected) {
+    } catch (HttpClientException expected) {
       assertEquals(expected.getMessage(), message);
 
-      assertEquals(expected.kind, HttpRequestParserException.Kind.INVALID_REQUEST_LINE);
+      assertEquals(expected.kind, HttpClientException.Kind.INVALID_REQUEST_LINE);
     }
   }
 
@@ -150,10 +150,10 @@ public class HttpRequestParser2MethodTest {
       parse();
 
       Assert.fail("It should have thrown");
-    } catch (HttpRequestParserException expected) {
+    } catch (HttpClientException expected) {
       assertEquals(expected.getMessage(), "EOF while parsing method");
 
-      assertEquals(expected.kind, HttpRequestParserException.Kind.INVALID_REQUEST_LINE);
+      assertEquals(expected.kind, HttpClientException.Kind.INVALID_REQUEST_LINE);
     }
   }
 

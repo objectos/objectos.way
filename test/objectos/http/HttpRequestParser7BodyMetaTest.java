@@ -130,7 +130,7 @@ public class HttpRequestParser7BodyMetaTest {
                 HttpHeaderName.CONTENT_TYPE, "application/x-www-form-urlencoded"
             ),
 
-            HttpRequestParserException.Kind.INVALID_REQUEST_HEADERS,
+            HttpClientException.Kind.INVALID_REQUEST_HEADERS,
             "Invalid Content-Length: char 't' is not a digit"
         },
         {
@@ -140,7 +140,7 @@ public class HttpRequestParser7BodyMetaTest {
                 HttpHeaderName.TRANSFER_ENCODING, "chunked"
             ),
 
-            HttpRequestParserException.Kind.INVALID_REQUEST_HEADERS,
+            HttpClientException.Kind.INVALID_REQUEST_HEADERS,
             "Content-Length and Transfer-Encoding in the same request message"
         },
         {
@@ -148,7 +148,7 @@ public class HttpRequestParser7BodyMetaTest {
                 HttpHeaderName.CONTENT_LENGTH, "9223372036854775808"
             ),
 
-            HttpRequestParserException.Kind.CONTENT_TOO_LARGE,
+            HttpClientException.Kind.CONTENT_TOO_LARGE,
             "Invalid Content-Length: value is larger than Long.MAX_VALUE"
         },
         {
@@ -156,28 +156,20 @@ public class HttpRequestParser7BodyMetaTest {
                 HttpHeaderName.CONTENT_TYPE, "application/json"
             ),
 
-            HttpRequestParserException.Kind.LENGTH_REQUIRED,
+            HttpClientException.Kind.LENGTH_REQUIRED,
             "Invalid request headers: expected Content-Length"
-        },
-        {
-            Map.of(
-                HttpHeaderName.TRANSFER_ENCODING, "foo"
-            ),
-
-            HttpRequestParserException.Kind.NOT_IMPLEMENTED,
-            "Support for the request Transfer-Encoding header is not implemented"
         }
     };
   }
 
   @SuppressWarnings("exports")
   @Test(dataProvider = "invalidProvider")
-  public void invalid(Map<HttpHeaderName, Object> map, HttpRequestParserException.Kind kind, String msg) throws IOException {
+  public void invalid(Map<HttpHeaderName, Object> map, HttpClientException.Kind kind, String msg) throws IOException {
     try {
       parse(map);
 
       Assert.fail("It should have thrown");
-    } catch (HttpRequestParserException expected) {
+    } catch (HttpClientException expected) {
       assertEquals(expected.getMessage(), msg);
 
       assertEquals(expected.kind, kind);

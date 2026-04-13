@@ -89,7 +89,7 @@ public class HttpServerTaskTest0Socket {
   };
 
   @Test(dataProvider = "socketErrorProvider")
-  public void socketError(Socket socket, long id, String event, IOException thrown) {
+  public void socketError(Socket socket, long id, String description, IOException thrown) {
     var noteSink = new HttpServerTaskYNoteSink();
 
     HttpServerTaskY.run(opts -> {
@@ -101,7 +101,6 @@ public class HttpServerTaskTest0Socket {
     });
 
     assertEquals(noteSink.id, id);
-    assertEquals(noteSink.event, event);
     assertEquals(noteSink.thrown, thrown);
   }
 

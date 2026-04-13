@@ -224,7 +224,7 @@ public class HttpRequestParser8BodyDataTest {
               cfg.meta = new HttpRequestBodyMeta.Fixed(100 + 1);
             }),
 
-            HttpRequestParserException.Kind.CONTENT_TOO_LARGE,
+            HttpClientException.Kind.CONTENT_TOO_LARGE,
             "The request message body exceeds the server's maximum allowed limit: 101 > 100"
         },
         {
@@ -248,7 +248,7 @@ public class HttpRequestParser8BodyDataTest {
               cfg.meta = new HttpRequestBodyMeta.Fixed(128);
             }),
 
-            HttpRequestParserException.Kind.INCOMPLETE_REQUEST_BODY,
+            HttpClientException.Kind.INCOMPLETE_REQUEST_BODY,
             "EOF while reading request body"
         },
         {
@@ -278,7 +278,7 @@ public class HttpRequestParser8BodyDataTest {
       parse(config);
 
       Assert.fail("It should have thrown");
-    } catch (HttpRequestParserException expected) {
+    } catch (HttpClientException expected) {
       assertEquals(expected.getMessage(), msg);
 
       assertEquals(expected.kind, foo);

@@ -36,7 +36,12 @@ record HttpRequestBodyOptions(Path directory, int memoryMax, long sizeMax) {
     @Override
     public final void close() throws IOException {
       if (file != null) {
-        Files.delete(file);
+        final Path deleteMe;
+        deleteMe = file;
+
+        file = null;
+
+        Files.delete(deleteMe);
       }
     }
 
@@ -77,29 +82,6 @@ record HttpRequestBodyOptions(Path directory, int memoryMax, long sizeMax) {
 
   public final HttpRequestBodySupport supportOf(long id) {
     return new StandardSupport(id, this);
-  }
-
-  public Path file(long id) throws IOException {
-    try {
-      // fail early if error
-      final Path directory;
-      directory = directory();
-
-      final String format;
-
-      if (id < 0) {
-        format = "%019d.neg";
-      } else {
-        format = "%019d";
-      }
-
-      final String name;
-      name = String.format(format, id);
-
-      return directory.resolve(name);
-    } catch (UncheckedIOException e) {
-      throw e.getCause();
-    }
   }
 
 }

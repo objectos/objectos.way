@@ -16,7 +16,7 @@
 package objectos.http;
 
 import module java.base;
-import objectos.http.HttpRequestParserException.Kind;
+import objectos.http.HttpClientException.Kind;
 import objectos.internal.Ascii;
 
 final class HttpRequestParser3Path {
@@ -36,12 +36,12 @@ final class HttpRequestParser3Path {
       final String msg;
       msg = "EOF while parsing path";
 
-      throw new HttpRequestParserException(msg, e, Kind.INVALID_REQUEST_LINE);
+      throw new HttpClientException(msg, e, Kind.INVALID_REQUEST_LINE);
     } catch (HttpRequestParser0Input.Overflow e) {
       final String msg;
       msg = "Buffer overflow while parsing path";
 
-      throw new HttpRequestParserException(msg, e, Kind.URI_TOO_LONG);
+      throw new HttpClientException(msg, e, Kind.URI_TOO_LONG);
     }
   }
 
@@ -73,7 +73,7 @@ final class HttpRequestParser3Path {
       final String msg;
       msg = "Unexpected byte 0x%02X while parsing path: path must start with '/'".formatted(first);
 
-      throw new HttpRequestParserException(msg, Kind.INVALID_REQUEST_LINE);
+      throw new HttpClientException(msg, Kind.INVALID_REQUEST_LINE);
     }
 
     final String result;
@@ -99,7 +99,7 @@ final class HttpRequestParser3Path {
         final String msg;
         msg = "First path segment must not be empty";
 
-        throw new HttpRequestParserException(msg, Kind.INVALID_REQUEST_LINE);
+        throw new HttpClientException(msg, Kind.INVALID_REQUEST_LINE);
       }
     }
 
@@ -178,7 +178,7 @@ final class HttpRequestParser3Path {
           final String msg;
           msg = "Unexpected byte 0x%02X while parsing path".formatted(b);
 
-          throw new HttpRequestParserException(msg, Kind.INVALID_REQUEST_LINE);
+          throw new HttpClientException(msg, Kind.INVALID_REQUEST_LINE);
         }
       }
     }
@@ -212,7 +212,7 @@ final class HttpRequestParser3Path {
           final String msg;
           msg = "Unexpected byte 0x%02X while parsing path".formatted(b);
 
-          throw new HttpRequestParserException(msg, Kind.INVALID_REQUEST_LINE);
+          throw new HttpClientException(msg, Kind.INVALID_REQUEST_LINE);
         }
       }
     }

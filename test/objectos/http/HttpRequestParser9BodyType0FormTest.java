@@ -101,8 +101,8 @@ public class HttpRequestParser9BodyType0FormTest {
       parse(payload);
 
       Assert.fail("It should have thrown");
-    } catch (HttpRequestParserException expected) {
-      assertEquals(expected.kind, HttpRequestParserException.Kind.INVALID_FORM);
+    } catch (HttpClientException expected) {
+      assertEquals(expected.kind, HttpClientException.Kind.INVALID_FORM);
     }
   }
 
@@ -199,8 +199,8 @@ public class HttpRequestParser9BodyType0FormTest {
       parse(payload);
 
       Assert.fail("It should have thrown");
-    } catch (HttpRequestParserException expected) {
-      assertEquals(expected.kind, HttpRequestParserException.Kind.INVALID_FORM);
+    } catch (HttpClientException expected) {
+      assertEquals(expected.kind, HttpClientException.Kind.INVALID_FORM);
     }
   }
 

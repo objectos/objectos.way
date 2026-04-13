@@ -25,7 +25,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import objectos.http.HttpRequestParserException.Kind;
+import objectos.http.HttpClientException.Kind;
 import objectos.way.Y;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
@@ -150,7 +150,7 @@ public class HttpRequestParser3PathTest {
       );
 
       Assert.fail("It should have thrown");
-    } catch (HttpRequestParserException expected) {
+    } catch (HttpClientException expected) {
       assertEquals(expected.getMessage(), msg);
 
       assertEquals(expected.kind, Kind.INVALID_REQUEST_LINE);
@@ -252,7 +252,7 @@ public class HttpRequestParser3PathTest {
       );
 
       Assert.fail("It should have thrown");
-    } catch (HttpRequestParserException expected) {
+    } catch (HttpClientException expected) {
       assertEquals(expected.getMessage(), msg);
 
       assertEquals(expected.kind, Kind.INVALID_REQUEST_LINE);
@@ -298,7 +298,7 @@ public class HttpRequestParser3PathTest {
       );
 
       Assert.fail("It should have thrown");
-    } catch (HttpRequestParserException expected) {
+    } catch (HttpClientException expected) {
       assertEquals(expected.getMessage(), "Buffer overflow while parsing path");
 
       assertEquals(expected.kind, Kind.URI_TOO_LONG);

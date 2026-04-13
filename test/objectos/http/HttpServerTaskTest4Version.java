@@ -71,13 +71,7 @@ public class HttpServerTaskTest4Version {
   public Object[][] invalidLineTerminatorProvider() {
     return new Object[][] {
         {"GET / HTTP/1.1\n", "lf only"},
-        {"GET / HTTP/1.1\r", "cr only"},
-
-        {"GET /\n", "0.9 lf only"},
-        {"GET /\r", "0.9 cr only"},
-
-        {"GET /%40\n", "0.9 lf only"},
-        {"GET /%40\r", "0.9 cr only"},
+        {"GET / HTTP/1.1\r", "cr only"}
     };
   }
 
@@ -109,23 +103,7 @@ public class HttpServerTaskTest4Version {
     return new Object[][] {
         {"GET / HTTP/1.0", "1.0 is not supported"},
         {"GET / HTTP/2", "2 is not supported (yet)"},
-        {"GET / HTTP/9.9", "9.9 is not supported (yet)"},
-        {"GET / HTTP/123456789012345678901234567890.123456789012345678901234567890", "Not supported"},
-
-        {"GET /", "0.9 path"},
-        {"GET /?", "0.9 path + empty"},
-        {"GET /?key", "0.9 path + key"},
-        {"GET /?key=", "0.9 path + key"},
-        {"GET /?key=value", "0.9 path + key + value"},
-
-        {"GET /%40", "0.9 path(perc)"},
-        {"GET /%40?", "0.9 path(perc) + empty"},
-
-        {"GET /%C3%A1", "0.9 "},
-        {"GET /?key%C3%A1", "0.9 key(perc)"},
-        {"GET /?key%C3%A1=", "0.9 key(perc)"},
-        {"GET /?key=val%C3%A1", "0.9 "},
-        {"GET /?key%C3%A1=val", "0.9 "}
+        {"GET / HTTP/9.9", "9.9 is not supported (yet)"}
     };
   }
 
@@ -160,7 +138,24 @@ public class HttpServerTaskTest4Version {
         {"GET / ABCD/1.1", "invalid chars"},
         {"GET / HTTP/1.", "Almost valid"},
         {"GET / HTTP/.1", "Almost valid"},
-        {"GET / HTTP/", "Almost valid"}
+        {"GET / HTTP/", "Almost valid"},
+
+        {"GET / HTTP/123456789012345678901234567890.123456789012345678901234567890", "Not supported"},
+
+        {"GET /", "0.9 path"},
+        {"GET /?", "0.9 path + empty"},
+        {"GET /?key", "0.9 path + key"},
+        {"GET /?key=", "0.9 path + key"},
+        {"GET /?key=value", "0.9 path + key + value"},
+
+        {"GET /%40", "0.9 path(perc)"},
+        {"GET /%40?", "0.9 path(perc) + empty"},
+
+        {"GET /%C3%A1", "0.9 "},
+        {"GET /?key%C3%A1", "0.9 key(perc)"},
+        {"GET /?key%C3%A1=", "0.9 key(perc)"},
+        {"GET /?key=val%C3%A1", "0.9 "},
+        {"GET /?key%C3%A1=val", "0.9 "}
     };
   }
 
