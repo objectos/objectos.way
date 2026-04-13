@@ -333,6 +333,11 @@ public sealed interface HttpExchange
   /// Respond with a `200 OK` message with the specified media entity.
   ///
   /// @param media the media entity
+  void ok(Media media);
+
+  /// Respond with a `200 OK` message with the specified media entity.
+  ///
+  /// @param media the media entity
   void ok(Media.Bytes media);
 
   /// Respond with a `200 OK` message with the specified media entity.

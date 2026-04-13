@@ -47,6 +47,17 @@ final class HttpResponse0 implements HttpResponse {
   // 2xx responses
 
   @Override
+  public final void ok(Media media) {
+    switch (media) {
+      case Media.Bytes b -> ok(b);
+
+      case Media.Stream s -> ok(s);
+
+      case Media.Text t -> ok(t);
+    }
+  }
+
+  @Override
   public final void ok(Media.Bytes media) {
     status(HttpStatus.OK);
 
@@ -203,7 +214,10 @@ final class HttpResponse0 implements HttpResponse {
 
   @Override
   public final void send() {
-    try (HttpResponse2Writer w = writer()) {
+    try {
+      final HttpResponse2Writer w;
+      w = writer();
+
       w.send();
     } catch (IOException e) {
       clientWriteError(e);
@@ -212,7 +226,10 @@ final class HttpResponse0 implements HttpResponse {
 
   @Override
   public final void send(byte[] bytes) {
-    try (HttpResponse2Writer w = writer()) {
+    try {
+      final HttpResponse2Writer w;
+      w = writer();
+
       w.send(bytes, 0, bytes.length);
     } catch (IOException e) {
       clientWriteError(e);
@@ -221,7 +238,10 @@ final class HttpResponse0 implements HttpResponse {
 
   @Override
   public final void send(byte[] bytes, int offset, int length) {
-    try (HttpResponse2Writer w = writer()) {
+    try {
+      final HttpResponse2Writer w;
+      w = writer();
+
       w.send(bytes, offset, length);
     } catch (IOException e) {
       clientWriteError(e);
@@ -230,7 +250,10 @@ final class HttpResponse0 implements HttpResponse {
 
   @Override
   public final void send(Path file) {
-    try (HttpResponse2Writer w = writer()) {
+    try {
+      final HttpResponse2Writer w;
+      w = writer();
+
       w.send(file);
     } catch (IOException e) {
       clientWriteError(e);
@@ -272,7 +295,10 @@ final class HttpResponse0 implements HttpResponse {
 
     header(HttpHeaderName.CONTENT_LENGTH, length);
 
-    try (HttpResponse2Writer w = writer()) {
+    try {
+      final HttpResponse2Writer w;
+      w = writer();
+
       w.send(bytes, 0, length);
     } catch (IOException e) {
       clientWriteError(e);
@@ -300,7 +326,10 @@ final class HttpResponse0 implements HttpResponse {
 
     header(HttpHeaderName.TRANSFER_ENCODING, "chunked");
 
-    try (HttpResponse2Writer w = writer()) {
+    try {
+      final HttpResponse2Writer w;
+      w = writer();
+
       w.send(media);
     } catch (IOException e) {
       clientWriteError(e);
@@ -321,7 +350,10 @@ final class HttpResponse0 implements HttpResponse {
 
     header(HttpHeaderName.TRANSFER_ENCODING, "chunked");
 
-    try (HttpResponse2Writer w = writer()) {
+    try {
+      final HttpResponse2Writer w;
+      w = writer();
+
       w.send(media);
     } catch (IOException e) {
       clientWriteError(e);

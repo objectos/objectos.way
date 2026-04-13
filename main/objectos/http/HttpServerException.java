@@ -26,7 +26,7 @@ final class HttpServerException extends IOException implements HttpServerTask.Me
 
     HTTP_VERSION_NOT_SUPPORTED(HttpStatus.HTTP_VERSION_NOT_SUPPORTED, "Supported versions: HTTP/1.1\n"),
 
-    TRANSFER_ENCODING(HttpStatus.NOT_IMPLEMENTED, "The requested HTTP method is not implemented.\n"),
+    TRANSFER_ENCODING(HttpStatus.NOT_IMPLEMENTED, "Support for the request Transfer-Encoding header is not implemented.\n"),
 
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "The requested HTTP method is not implemented.\n");
 

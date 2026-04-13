@@ -4144,6 +4144,9 @@ final class HttpExchangeImpl implements HttpExchange, Runnable, Closeable {
   // ##################################################################
 
   @Override
+  public void ok(Media media) { throw new UnsupportedOperationException("Implement me"); }
+
+  @Override
   public void ok(Media.Bytes media) { throw new UnsupportedOperationException("Implement me"); }
 
   @Override

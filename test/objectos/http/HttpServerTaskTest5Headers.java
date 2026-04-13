@@ -307,7 +307,8 @@ public class HttpServerTaskTest5Headers {
     valueValid[' '] = true;
     valueValid['\t'] = true;
 
-    // LF is not valid but will trigger line terminator error
+    // CRLF are not valid but will trigger line terminator error
+    valueValid['\r'] = true;
     valueValid['\n'] = true;
 
     for (int b = 0; b < valueValid.length; b++) {
@@ -344,6 +345,47 @@ public class HttpServerTaskTest5Headers {
         Content-Length: 25\r
         \r
         Invalid request headers.
+        """
+    );
+  }
+
+  @DataProvider
+  public Object[][] invalidLineTerminatorProvider() {
+    return new Object[][] {
+        {
+            """
+            Referer: foo\r\
+            """,
+            "CR only"
+        },
+        {
+            """
+            Referer: foo
+            """,
+            "LF only"
+        }
+    };
+  }
+
+  @Test(dataProvider = "invalidLineTerminatorProvider")
+  public void invalidLineTerminator(String payload, String description) {
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.socket = Y.socket(iso8859("""
+          GET / HTTP/1.1\r
+          %s\
+          \r
+          """.formatted(payload)));
+        }),
+
+        """
+        HTTP/1.1 400 Bad Request\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Connection: close\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 25\r
+        \r
+        Invalid line terminator.
         """
     );
   }

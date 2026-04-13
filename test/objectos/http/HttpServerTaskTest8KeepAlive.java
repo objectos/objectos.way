@@ -244,4 +244,29 @@ public class HttpServerTaskTest8KeepAlive {
     );
   }
 
+  @Test(description = "Transfer-Encoding not implemented")
+  public void shouldNot06() {
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.socket = Y.socket("""
+          POST /1 HTTP/1.1\r
+          Host: www.example.com\r
+          Transfer-Encoding: chunked\r
+          \r
+          x
+          """);
+        }),
+
+        """
+        HTTP/1.1 501 Not Implemented\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Connection: close\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 69\r
+        \r
+        Support for the request Transfer-Encoding header is not implemented.
+        """
+    );
+  }
+
 }

@@ -17,8 +17,11 @@ package objectos.http;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.EnumSet;
+import java.util.Iterator;
 import objectos.way.Media;
 import objectos.way.Y;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class HttpServerTaskTest9Response {
@@ -105,9 +108,6 @@ public class HttpServerTaskTest9Response {
     );
   }
 
-  /*
-  
-  
   // 125 bytes
   private static final int TEXT_RESP_LEN = """
   HTTP/1.1 200 OK\r
@@ -120,362 +120,408 @@ public class HttpServerTaskTest9Response {
   @SuppressWarnings("exports")
   @DataProvider
   public Iterator<Y.MediaKind> mediaKindProvider() {
-  return EnumSet.allOf(Y.MediaKind.class).iterator();
+    return EnumSet.allOf(Y.MediaKind.class).iterator();
   }
 
   @SuppressWarnings("exports")
   @Test(description = "ok(Media.Stream/Text): 1 chunk", dataProvider = "mediaKindProvider")
   public void okMediaStreamText01(Y.MediaKind kind) {
-  final Media media;
-  media = Y.mediaOf(kind, 64);
+    final Media media;
+    media = Y.mediaOf(kind, 64);
 
-  assertEquals(
-    media.toString(),
-  
-    """
-    .................................................
-    12345678901234\
-    """
-  );
+    assertEquals(
+        media.toString(),
 
-  get(
-    256, 256,
-  
-    ok(media),
-  
-    """
-    HTTP/1.1 200 OK\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    Content-Type: text/plain; charset=utf-8\r
-    Transfer-Encoding: chunked\r
-    \r
-    40\r
-    .................................................
-    12345678901234\r
-    0\r
-    \r
-    """
-  );
+        """
+        .................................................
+        12345678901234\
+        """
+    );
+
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.bufferSize = 256;
+
+          opts.socket = Y.socket("""
+          GET /1 HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """);
+
+          opts.handler = http -> http.ok(media);
+        }),
+
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Transfer-Encoding: chunked\r
+        \r
+        40\r
+        .................................................
+        12345678901234\r
+        0\r
+        \r
+        """
+    );
   }
 
   @SuppressWarnings("exports")
   @Test(description = "ok(Media.Stream/Text): 1 chunk + zero-pad", dataProvider = "mediaKindProvider")
   public void okMediaStreamText02(Y.MediaKind kind) {
-  final Media media;
-  media = Y.mediaOf(kind, 15);
+    final Media media;
+    media = Y.mediaOf(kind, 15);
 
-  assertEquals(
-    media.toString(),
-  
-    """
-    123456789012345\
-    """
-  );
+    assertEquals(
+        media.toString(),
 
-  get(
-    256, 256,
-  
-    ok(media),
-  
-    """
-    HTTP/1.1 200 OK\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    Content-Type: text/plain; charset=utf-8\r
-    Transfer-Encoding: chunked\r
-    \r
-    0F\r
-    123456789012345\r
-    0\r
-    \r
-    """
-  );
+        """
+        123456789012345\
+        """
+    );
+
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.bufferSize = 256;
+
+          opts.socket = Y.socket("""
+          GET /1 HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """);
+
+          opts.handler = http -> http.ok(media);
+        }),
+
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Transfer-Encoding: chunked\r
+        \r
+        0F\r
+        123456789012345\r
+        0\r
+        \r
+        """
+    );
   }
 
   @SuppressWarnings("exports")
   @Test(description = "ok(Media.Stream/Text): 1 chunk, headers + body fit in buffer exactly", dataProvider = "mediaKindProvider")
   public void okMediaStreamText03(Y.MediaKind kind) {
-  // 4 = chunk-size + CR + LF
-  // 2 = CR + LF (after data)
-  // 5 = 0 + CR + LF + CR + LF
-  final Media media;
-  media = Y.mediaOf(kind, 256 - TEXT_RESP_LEN - 4 - 2 - 5);
+    // 4 = chunk-size + CR + LF
+    // 2 = CR + LF (after data)
+    // 5 = 0 + CR + LF + CR + LF
+    final Media media;
+    media = Y.mediaOf(kind, 256 - TEXT_RESP_LEN - 4 - 2 - 5);
 
-  final String body;
-  body = media.toString();
+    final String body;
+    body = media.toString();
 
-  assertEquals(
-    body,
-  
-    """
+    assertEquals(
+        body,
+
+        """
+        .................................................
+        .................................................
+        12345678901234567890\
+        """
+    );
+
+    assertEquals(Integer.toHexString(body.length()), "78");
+
+    final String expectedResponse;
+    expectedResponse = """
+    HTTP/1.1 200 OK\r
+    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+    Content-Type: text/plain; charset=utf-8\r
+    Transfer-Encoding: chunked\r
+    \r
+    78\r
     .................................................
     .................................................
-    12345678901234567890\
-    """
-  );
+    12345678901234567890\r
+    0\r
+    \r
+    """;
 
-  assertEquals(Integer.toHexString(body.length()), "78");
+    assertEquals(expectedResponse.length(), 256);
 
-  final String expectedResponse;
-  expectedResponse = """
-  HTTP/1.1 200 OK\r
-  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-  Content-Type: text/plain; charset=utf-8\r
-  Transfer-Encoding: chunked\r
-  \r
-  78\r
-  .................................................
-  .................................................
-  12345678901234567890\r
-  0\r
-  \r
-  """;
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.bufferSize = 256;
 
-  get(
-    256, 256,
-  
-    ok(media),
-  
-    expectedResponse
-  );
+          opts.socket = Y.socket("""
+          GET /1 HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """);
 
-  assertEquals(expectedResponse.length(), 256);
+          opts.handler = http -> http.ok(media);
+        }),
+
+        expectedResponse
+    );
   }
 
   @SuppressWarnings("exports")
   @Test(description = "ok(Media.Stream/Text): 2 chunks", dataProvider = "mediaKindProvider")
   public void okMediaStreamText04(Y.MediaKind kind) {
-  int mediaLength;
-  mediaLength = 0;
+    int mediaLength;
+    mediaLength = 0;
 
-  // buffer length
-  mediaLength += 256;
-  // unencoded data + headers fit in buffer
-  mediaLength -= TEXT_RESP_LEN;
-  // 4 = chunk-size + CR + LF
-  mediaLength -= 4;
-  // 2 = CR + LF (after data)
-  mediaLength -= 2;
-  // 5 = 0 + CR + LF + CR + LF
-  mediaLength -= 5;
-  // 1byte + trailer will cause a flush
-  mediaLength += 1 + 5;
+    // buffer length
+    mediaLength += 256;
+    // unencoded data + headers fit in buffer
+    mediaLength -= TEXT_RESP_LEN;
+    // 4 = chunk-size + CR + LF
+    mediaLength -= 4;
+    // 2 = CR + LF (after data)
+    mediaLength -= 2;
+    // 5 = 0 + CR + LF + CR + LF
+    mediaLength -= 5;
+    // 1byte + trailer will cause a flush
+    mediaLength += 1 + 5;
 
-  final Media media;
-  media = Y.mediaOf(kind, mediaLength);
+    final Media media;
+    media = Y.mediaOf(kind, mediaLength);
 
-  final String expectedResponse;
-  expectedResponse = """
-  HTTP/1.1 200 OK\r
-  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-  Content-Type: text/plain; charset=utf-8\r
-  Transfer-Encoding: chunked\r
-  \r
-  7D\r
-  .................................................
-  .................................................
-  1234567890123456789012345\r
-  01\r
-  6\r
-  0\r
-  \r
-  """;
-
-  get(
-    256, 256,
-  
-    ok(media),
-  
-    expectedResponse
-  );
-
-  final String body;
-  body = media.toString();
-
-  assertEquals(
-    body,
-  
-    """
+    final String expectedResponse;
+    expectedResponse = """
+    HTTP/1.1 200 OK\r
+    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+    Content-Type: text/plain; charset=utf-8\r
+    Transfer-Encoding: chunked\r
+    \r
+    7D\r
     .................................................
     .................................................
-    12345678901234567890123456\
-    """
-  );
+    1234567890123456789012345\r
+    01\r
+    6\r
+    0\r
+    \r
+    """;
 
-  assertEquals(Integer.toHexString(body.length()), "7e");
+    final String body;
+    body = media.toString();
+
+    assertEquals(
+        body,
+
+        """
+        .................................................
+        .................................................
+        12345678901234567890123456\
+        """
+    );
+
+    assertEquals(Integer.toHexString(body.length()), "7e");
+
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.bufferSize = 256;
+
+          opts.socket = Y.socket("""
+          GET /1 HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """);
+
+          opts.handler = http -> http.ok(media);
+        }),
+
+        expectedResponse
+    );
   }
 
   @SuppressWarnings("exports")
   @Test(description = "ok(Media.Stream/Text): response headers fill up the buffer", dataProvider = "mediaKindProvider")
   public void okMediaStreamText05(Y.MediaKind kind) {
-  final String contentType;
-  contentType = contentTypeToFillResponseHeaders(256);
+    final String contentType;
+    contentType = contentTypeToFillResponseHeaders(256);
 
-  final Media media;
-  media = Y.mediaOf(kind, 240, contentType);
+    final Media media;
+    media = Y.mediaOf(kind, 240, contentType);
 
-  final String expectedResponse;
-  expectedResponse = """
-  HTTP/1.1 200 OK\r
-  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-  Content-Type: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\r
-  Transfer-Encoding: chunked\r
-  \r
-  F0\r
-  .................................................
-  .................................................
-  .................................................
-  .................................................
-  1234567890123456789012345678901234567890\r
-  0\r
-  \r
-  """;
-
-  get(
-    256, 256,
-  
-    ok(media),
-  
-    expectedResponse
-  );
-
-  final String body;
-  body = media.toString();
-
-  assertEquals(
-    body,
-  
-    """
+    final String expectedResponse;
+    expectedResponse = """
+    HTTP/1.1 200 OK\r
+    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+    Content-Type: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\r
+    Transfer-Encoding: chunked\r
+    \r
+    F0\r
     .................................................
     .................................................
     .................................................
     .................................................
-    1234567890123456789012345678901234567890\
-    """
-  );
+    1234567890123456789012345678901234567890\r
+    0\r
+    \r
+    """;
 
-  assertEquals(Integer.toHexString(body.length()), "f0");
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.bufferSize = 256;
+
+          opts.socket = Y.socket("""
+          GET /1 HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """);
+
+          opts.handler = http -> http.ok(media);
+        }),
+
+        expectedResponse
+    );
+
+    final String body;
+    body = media.toString();
+
+    assertEquals(
+        body,
+
+        """
+        .................................................
+        .................................................
+        .................................................
+        .................................................
+        1234567890123456789012345678901234567890\
+        """
+    );
+
+    assertEquals(Integer.toHexString(body.length()), "f0");
   }
 
   @SuppressWarnings("exports")
   @Test(description = "ok(Media.Stream/Text): trailer chunk does not fit in buffer", dataProvider = "mediaKindProvider")
   public void okMediaStreamText06(Y.MediaKind kind) {
-  int mediaLength;
-  mediaLength = 0;
+    int mediaLength;
+    mediaLength = 0;
 
-  // buffer length
-  mediaLength += 256;
-  // unencoded data + headers fit in buffer
-  mediaLength -= TEXT_RESP_LEN;
-  // 4 = chunk-size + CR + LF
-  mediaLength -= 4;
-  // 2 = CR + LF (after data)
-  mediaLength -= 2;
-  // 5 = 0 + CR + LF + CR + LF
-  mediaLength -= 5;
-  // 1 extra byte so trailer won't fit in buffer
-  mediaLength += 1;
+    // buffer length
+    mediaLength += 256;
+    // unencoded data + headers fit in buffer
+    mediaLength -= TEXT_RESP_LEN;
+    // 4 = chunk-size + CR + LF
+    mediaLength -= 4;
+    // 2 = CR + LF (after data)
+    mediaLength -= 2;
+    // 5 = 0 + CR + LF + CR + LF
+    mediaLength -= 5;
+    // 1 extra byte so trailer won't fit in buffer
+    mediaLength += 1;
 
-  final Media media;
-  media = Y.mediaOf(kind, mediaLength);
+    final Media media;
+    media = Y.mediaOf(kind, mediaLength);
 
-  final String expectedResponse;
-  expectedResponse = """
-  HTTP/1.1 200 OK\r
-  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-  Content-Type: text/plain; charset=utf-8\r
-  Transfer-Encoding: chunked\r
-  \r
-  79\r
-  .................................................
-  .................................................
-  123456789012345678901\r
-  0\r
-  \r
-  """;
-
-  get(
-    256, 256,
-  
-    ok(media),
-  
-    expectedResponse
-  );
-
-  final String body;
-  body = media.toString();
-
-  assertEquals(
-    body,
-  
-    """
+    final String expectedResponse;
+    expectedResponse = """
+    HTTP/1.1 200 OK\r
+    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+    Content-Type: text/plain; charset=utf-8\r
+    Transfer-Encoding: chunked\r
+    \r
+    79\r
     .................................................
     .................................................
-    123456789012345678901\
-    """
-  );
+    123456789012345678901\r
+    0\r
+    \r
+    """;
 
-  assertEquals(Integer.toHexString(body.length()), "79");
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.bufferSize = 256;
+
+          opts.socket = Y.socket("""
+          GET /1 HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """);
+
+          opts.handler = http -> http.ok(media);
+        }),
+
+        expectedResponse
+    );
+
+    final String body;
+    body = media.toString();
+
+    assertEquals(
+        body,
+
+        """
+        .................................................
+        .................................................
+        123456789012345678901\
+        """
+    );
+
+    assertEquals(Integer.toHexString(body.length()), "79");
   }
 
   private String contentTypeToFillResponseHeaders(int buffer) {
-  final String blankContentType;
-  blankContentType = """
-  HTTP/1.1 200 OK\r
-  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-  Content-Type: \r
-  Transfer-Encoding: chunked\r
-  \r
-  """;
+    final String blankContentType;
+    blankContentType = """
+    HTTP/1.1 200 OK\r
+    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+    Content-Type: \r
+    Transfer-Encoding: chunked\r
+    \r
+    """;
 
-  final int contentTypeLength;
-  contentTypeLength = buffer - blankContentType.length();
+    final int contentTypeLength;
+    contentTypeLength = buffer - blankContentType.length();
 
-  if (contentTypeLength <= 0) {
-  throw new IllegalArgumentException("Buffer is too small: buffer=" + buffer);
+    if (contentTypeLength <= 0) {
+      throw new IllegalArgumentException("Buffer is too small: buffer=" + buffer);
+    }
+
+    return "X".repeat(contentTypeLength);
   }
 
-  return "X".repeat(contentTypeLength);
-  }
-
-  private Consumer<HttpExchangeImpl> ok(Media media) {
-  if (media instanceof Media.Stream stream) {
-  return http -> http.ok(stream);
-  } else if (media instanceof Media.Text text) {
-  return http -> http.ok(text);
-  } else {
-  throw new UnsupportedOperationException();
-  }
-  }
+  /*
 
   // 3xx responses
 
   @Test
   public void movedPermanently01() {
   get(
-    http -> http.movedPermanently("/login"),
-  
-    """
-    HTTP/1.1 301 Moved Permanently\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    Content-Length: 0\r
-    Location: /login\r
-    \r
-    """
+  http -> http.movedPermanently("/login"),
+
+  """
+  HTTP/1.1 301 Moved Permanently\r
+  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+  Content-Length: 0\r
+  Location: /login\r
+  \r
+  """
   );
   }
 
   @Test
   public void movedPermanently02() {
   get(
-    http -> http.movedPermanently("/product/café/😀"),
-  
-    """
-    HTTP/1.1 301 Moved Permanently\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    Content-Length: 0\r
-    Location: /product/caf%C3%A9/%F0%9F%98%80\r
-    \r
-    """
+  http -> http.movedPermanently("/product/café/😀"),
+
+  """
+  HTTP/1.1 301 Moved Permanently\r
+  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+  Content-Length: 0\r
+  Location: /product/caf%C3%A9/%F0%9F%98%80\r
+  \r
+  """
   );
   }
 
@@ -488,45 +534,45 @@ public class HttpServerTaskTest9Response {
   location = "/foo/" + veryLargeHex;
 
   get(
-    http -> http.movedPermanently(location),
-  
-    """
-    HTTP/1.1 301 Moved Permanently\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    Content-Length: 0\r
-    Location: %s\r
-    \r
-    """.formatted(location)
+  http -> http.movedPermanently(location),
+
+  """
+  HTTP/1.1 301 Moved Permanently\r
+  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+  Content-Length: 0\r
+  Location: %s\r
+  \r
+  """.formatted(location)
   );
   }
 
   @Test
   public void found01() {
   get(
-    http -> http.found("/login"),
-  
-    """
-    HTTP/1.1 302 Found\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    Content-Length: 0\r
-    Location: /login\r
-    \r
-    """
+  http -> http.found("/login"),
+
+  """
+  HTTP/1.1 302 Found\r
+  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+  Content-Length: 0\r
+  Location: /login\r
+  \r
+  """
   );
   }
 
   @Test
   public void found02() {
   get(
-    http -> http.found("/product/café/😀"),
-  
-    """
-    HTTP/1.1 302 Found\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    Content-Length: 0\r
-    Location: /product/caf%C3%A9/%F0%9F%98%80\r
-    \r
-    """
+  http -> http.found("/product/café/😀"),
+
+  """
+  HTTP/1.1 302 Found\r
+  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+  Content-Length: 0\r
+  Location: /product/caf%C3%A9/%F0%9F%98%80\r
+  \r
+  """
   );
   }
 
@@ -539,45 +585,45 @@ public class HttpServerTaskTest9Response {
   location = "/foo/" + veryLargeHex;
 
   get(
-    http -> http.found(location),
-  
-    """
-    HTTP/1.1 302 Found\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    Content-Length: 0\r
-    Location: %s\r
-    \r
-    """.formatted(location)
+  http -> http.found(location),
+
+  """
+  HTTP/1.1 302 Found\r
+  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+  Content-Length: 0\r
+  Location: %s\r
+  \r
+  """.formatted(location)
   );
   }
 
   @Test
   public void seeOther01() {
   get(
-    http -> http.seeOther("/page"),
-  
-    """
-    HTTP/1.1 303 See Other\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    Content-Length: 0\r
-    Location: /page\r
-    \r
-    """
+  http -> http.seeOther("/page"),
+
+  """
+  HTTP/1.1 303 See Other\r
+  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+  Content-Length: 0\r
+  Location: /page\r
+  \r
+  """
   );
   }
 
   @Test
   public void seeOther02() {
   get(
-    http -> http.seeOther("/product/café/😀"),
-  
-    """
-    HTTP/1.1 303 See Other\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    Content-Length: 0\r
-    Location: /product/caf%C3%A9/%F0%9F%98%80\r
-    \r
-    """
+  http -> http.seeOther("/product/café/😀"),
+
+  """
+  HTTP/1.1 303 See Other\r
+  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+  Content-Length: 0\r
+  Location: /product/caf%C3%A9/%F0%9F%98%80\r
+  \r
+  """
   );
   }
 
@@ -590,15 +636,15 @@ public class HttpServerTaskTest9Response {
   location = "/foo/" + veryLargeHex;
 
   get(
-    http -> http.seeOther(location),
-  
-    """
-    HTTP/1.1 303 See Other\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    Content-Length: 0\r
-    Location: %s\r
-    \r
-    """.formatted(location)
+  http -> http.seeOther(location),
+
+  """
+  HTTP/1.1 303 See Other\r
+  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+  Content-Length: 0\r
+  Location: %s\r
+  \r
+  """.formatted(location)
   );
   }
 
@@ -607,63 +653,63 @@ public class HttpServerTaskTest9Response {
   @Test(description = "badRequest(Media.Bytes)")
   public void badRequest01() {
   post(
-    http -> http.badRequest(Media.Bytes.textPlain("BAD\n")),
-  
-    """
-    HTTP/1.1 400 Bad Request\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    Content-Type: text/plain; charset=utf-8\r
-    Content-Length: 4\r
-    \r
-    BAD
-    """
+  http -> http.badRequest(Media.Bytes.textPlain("BAD\n")),
+
+  """
+  HTTP/1.1 400 Bad Request\r
+  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+  Content-Type: text/plain; charset=utf-8\r
+  Content-Length: 4\r
+  \r
+  BAD
+  """
   );
   }
 
   @Test(description = "forbidden(Media.Bytes)")
   public void forbidden01() {
   post(
-    http -> http.forbidden(Media.Bytes.textPlain("403\n")),
-  
-    """
-    HTTP/1.1 403 Forbidden\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    Content-Type: text/plain; charset=utf-8\r
-    Content-Length: 4\r
-    \r
-    403
-    """
+  http -> http.forbidden(Media.Bytes.textPlain("403\n")),
+
+  """
+  HTTP/1.1 403 Forbidden\r
+  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+  Content-Type: text/plain; charset=utf-8\r
+  Content-Length: 4\r
+  \r
+  403
+  """
   );
   }
 
   @Test(description = "notFound(Media.Bytes)")
   public void notFound01() {
   post(
-    http -> http.notFound(Media.Bytes.textPlain("NOT\n")),
-  
-    """
-    HTTP/1.1 404 Not Found\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    Content-Type: text/plain; charset=utf-8\r
-    Content-Length: 4\r
-    \r
-    NOT
-    """
+  http -> http.notFound(Media.Bytes.textPlain("NOT\n")),
+
+  """
+  HTTP/1.1 404 Not Found\r
+  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+  Content-Type: text/plain; charset=utf-8\r
+  Content-Length: 4\r
+  \r
+  NOT
+  """
   );
   }
 
   @Test(description = "allow(Http.Method...)")
   public void allow01() {
   post(
-    http -> http.allow(HttpMethod.GET, HttpMethod.HEAD),
-  
-    """
-    HTTP/1.1 405 Method Not Allowed\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    Allow: GET, HEAD\r
-    Content-Length: 0\r
-    \r
-    """
+  http -> http.allow(HttpMethod.GET, HttpMethod.HEAD),
+
+  """
+  HTTP/1.1 405 Method Not Allowed\r
+  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+  Allow: GET, HEAD\r
+  Content-Length: 0\r
+  \r
+  """
   );
   }
 
@@ -672,16 +718,16 @@ public class HttpServerTaskTest9Response {
   @Test(description = "internalServerError(Media.Bytes, Throwable)")
   public void internalServerError01() {
   post(
-    http -> http.internalServerError(Media.Bytes.textPlain("ISE\n"), Y.trimStackTrace(new IOException(), 1)),
-  
-    """
-    HTTP/1.1 500 Internal Server Error\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    Content-Type: text/plain; charset=utf-8\r
-    Content-Length: 4\r
-    \r
-    ISE
-    """
+  http -> http.internalServerError(Media.Bytes.textPlain("ISE\n"), Y.trimStackTrace(new IOException(), 1)),
+
+  """
+  HTTP/1.1 500 Internal Server Error\r
+  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+  Content-Type: text/plain; charset=utf-8\r
+  Content-Length: 4\r
+  \r
+  ISE
+  """
   );
   }
 
@@ -690,22 +736,22 @@ public class HttpServerTaskTest9Response {
   @Test
   public void respond01() {
   get(
-    resp -> {
-      resp.status(HttpStatus.NOT_FOUND);
-  
-      resp.header(HttpHeaderName.DATE, resp.now());
-  
-      resp.header(HttpHeaderName.CONTENT_LENGTH, 0L);
-  
-      resp.send();
-    },
-  
-    """
-    HTTP/1.1 404 Not Found\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    Content-Length: 0\r
-    \r
-    """
+  resp -> {
+  resp.status(HttpStatus.NOT_FOUND);
+
+  resp.header(HttpHeaderName.DATE, resp.now());
+
+  resp.header(HttpHeaderName.CONTENT_LENGTH, 0L);
+
+  resp.send();
+  },
+
+  """
+  HTTP/1.1 404 Not Found\r
+  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+  Content-Length: 0\r
+  \r
+  """
   );
   }
 
@@ -715,26 +761,26 @@ public class HttpServerTaskTest9Response {
   body = "FOO\n".getBytes(StandardCharsets.US_ASCII);
 
   get(
-    resp -> {
-      resp.status(HttpStatus.OK);
-  
-      resp.header(HttpHeaderName.DATE, resp.now());
-  
-      resp.header(HttpHeaderName.CONTENT_TYPE, "text/plain");
-  
-      resp.header(HttpHeaderName.CONTENT_LENGTH, body.length);
-  
-      resp.send(body, 0, body.length);
-    },
-  
-    """
-    HTTP/1.1 200 OK\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    Content-Type: text/plain\r
-    Content-Length: 4\r
-    \r
-    FOO
-    """
+  resp -> {
+  resp.status(HttpStatus.OK);
+
+  resp.header(HttpHeaderName.DATE, resp.now());
+
+  resp.header(HttpHeaderName.CONTENT_TYPE, "text/plain");
+
+  resp.header(HttpHeaderName.CONTENT_LENGTH, body.length);
+
+  resp.send(body, 0, body.length);
+  },
+
+  """
+  HTTP/1.1 200 OK\r
+  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+  Content-Type: text/plain\r
+  Content-Length: 4\r
+  \r
+  FOO
+  """
   );
   }
 
@@ -744,23 +790,23 @@ public class HttpServerTaskTest9Response {
   media = Media.Bytes.textPlain("FOO\n");
 
   get(
-    resp -> {
-      resp.status(HttpStatus.OK);
-  
-      resp.header(HttpHeaderName.CONNECTION, "close");
-  
-      resp.send(media);
-    },
-  
-    """
-    HTTP/1.1 200 OK\r
-    Connection: close\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    Content-Type: text/plain; charset=utf-8\r
-    Content-Length: 4\r
-    \r
-    FOO
-    """
+  resp -> {
+  resp.status(HttpStatus.OK);
+
+  resp.header(HttpHeaderName.CONNECTION, "close");
+
+  resp.send(media);
+  },
+
+  """
+  HTTP/1.1 200 OK\r
+  Connection: close\r
+  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+  Content-Type: text/plain; charset=utf-8\r
+  Content-Length: 4\r
+  \r
+  FOO
+  """
   );
   }
 
@@ -771,26 +817,26 @@ public class HttpServerTaskTest9Response {
   media = Y.mediaOf(kind, 4);
 
   get(
-    resp -> {
-      resp.status(HttpStatus.OK);
-  
-      resp.header(HttpHeaderName.CONNECTION, "close");
-  
-      resp.send(media);
-    },
-  
-    """
-    HTTP/1.1 200 OK\r
-    Connection: close\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    Content-Type: text/plain; charset=utf-8\r
-    Transfer-Encoding: chunked\r
-    \r
-    04\r
-    1234\r
-    0\r
-    \r
-    """
+  resp -> {
+  resp.status(HttpStatus.OK);
+
+  resp.header(HttpHeaderName.CONNECTION, "close");
+
+  resp.send(media);
+  },
+
+  """
+  HTTP/1.1 200 OK\r
+  Connection: close\r
+  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+  Content-Type: text/plain; charset=utf-8\r
+  Transfer-Encoding: chunked\r
+  \r
+  04\r
+  1234\r
+  0\r
+  \r
+  """
   );
   }
 
@@ -805,28 +851,28 @@ public class HttpServerTaskTest9Response {
   public void respondStatus(HttpStatus status) {
   exec(test -> {
   test.xch(xch -> {
-    xch.req("""
-    GET / HTTP/1.1\r
-    Host: Host\r
-    \r
-    """);
-  
-    xch.handler(http -> http.respond(resp -> {
-      resp.status(status);
-  
-      resp.send(OK);
-    }));
-  
-    xch.resp(
-        """
-        HTTP/1.1 %d %s\r
-        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-        Content-Type: text/plain; charset=utf-8\r
-        Content-Length: 3\r
-        \r
-        OK
-        """.formatted(status.code(), status.reasonPhrase())
-    );
+  xch.req("""
+  GET / HTTP/1.1\r
+  Host: Host\r
+  \r
+  """);
+
+  xch.handler(http -> http.respond(resp -> {
+  resp.status(status);
+
+  resp.send(OK);
+  }));
+
+  xch.resp(
+  """
+  HTTP/1.1 %d %s\r
+  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+  Content-Type: text/plain; charset=utf-8\r
+  Content-Length: 3\r
+  \r
+  OK
+  """.formatted(status.code(), status.reasonPhrase())
+  );
   });
   });
   }
@@ -846,10 +892,10 @@ public class HttpServerTaskTest9Response {
   for (int idx = 0, len = validChars.length(); idx < len; idx++) {
   final char c;
   c = validChars.charAt(idx);
-  
+
   final String s;
   s = Character.toString(c);
-  
+
   list.add(new HeaderValueData(s, "ETag: " + s, "Character: " + c));
   }
 
@@ -863,33 +909,33 @@ public class HttpServerTaskTest9Response {
   public void respondHeaderValid(HeaderValueData data) {
   exec(test -> {
   test.bufferSize(256, 512);
-  
+
   test.xch(xch -> {
-    xch.req("""
-    GET / HTTP/1.1\r
-    Host: Host\r
-    \r
-    """);
-  
-    xch.handler(http -> http.respond(resp -> {
-      resp.status(HttpStatus.OK);
-  
-      resp.header(HttpHeaderName.ETAG, data.value);
-  
-      resp.send(OK);
-    }));
-  
-    xch.resp(
-        """
-        HTTP/1.1 200 OK\r
-        %s\r
-        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-        Content-Type: text/plain; charset=utf-8\r
-        Content-Length: 3\r
-        \r
-        OK
-        """.formatted(data.expected)
-    );
+  xch.req("""
+  GET / HTTP/1.1\r
+  Host: Host\r
+  \r
+  """);
+
+  xch.handler(http -> http.respond(resp -> {
+  resp.status(HttpStatus.OK);
+
+  resp.header(HttpHeaderName.ETAG, data.value);
+
+  resp.send(OK);
+  }));
+
+  xch.resp(
+  """
+  HTTP/1.1 200 OK\r
+  %s\r
+  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+  Content-Type: text/plain; charset=utf-8\r
+  Content-Length: 3\r
+  \r
+  OK
+  """.formatted(data.expected)
+  );
   });
   });
   }
@@ -908,7 +954,7 @@ public class HttpServerTaskTest9Response {
   for (int idx = 0, len = validChars.length(); idx < len; idx++) {
   final char validChar;
   validChar = validChars.charAt(idx);
-  
+
   valid[validChar] = true;
   }
 
@@ -918,19 +964,19 @@ public class HttpServerTaskTest9Response {
 
   for (int c = 0; c < 0xFF; c++) {
   if (!valid[c]) {
-    final String value;
-    value = Character.toString(c);
-  
-    final String expected;
-    expected = "Invalid character at index 0: " + value;
-  
-    final String description;
-    description = "Invalid character " + value;
-  
-    final HeaderValueData data;
-    data = new HeaderValueData(value, expected, description);
-  
-    list.add(data);
+  final String value;
+  value = Character.toString(c);
+
+  final String expected;
+  expected = "Invalid character at index 0: " + value;
+
+  final String description;
+  description = "Invalid character " + value;
+
+  final HeaderValueData data;
+  data = new HeaderValueData(value, expected, description);
+
+  list.add(data);
   }
   }
 
@@ -946,32 +992,32 @@ public class HttpServerTaskTest9Response {
   public void respondHeaderInvalid(HeaderValueData data) {
   exec(test -> {
   test.bufferSize(256, 512);
-  
+
   test.xch(xch -> {
-    xch.req("""
-    GET / HTTP/1.1\r
-    Host: Host\r
-    \r
-    """);
-  
-    xch.handler(http -> http.respond(resp -> {
-      resp.status(HttpStatus.OK);
-  
-      try {
-        resp.header(HttpHeaderName.ETAG, data.value);
-  
-        Assert.fail();
-      } catch (IllegalArgumentException expected) {
-        final String message;
-        message = expected.getMessage();
-  
-        assertEquals(message, data.expected);
-  
-        resp.send(OK);
-      }
-    }));
-  
-    xch.resp(OK_RESP);
+  xch.req("""
+  GET / HTTP/1.1\r
+  Host: Host\r
+  \r
+  """);
+
+  xch.handler(http -> http.respond(resp -> {
+  resp.status(HttpStatus.OK);
+
+  try {
+  resp.header(HttpHeaderName.ETAG, data.value);
+
+  Assert.fail();
+  } catch (IllegalArgumentException expected) {
+  final String message;
+  message = expected.getMessage();
+
+  assertEquals(message, data.expected);
+
+  resp.send(OK);
+  }
+  }));
+
+  xch.resp(OK_RESP);
   });
   });
   }
@@ -979,75 +1025,75 @@ public class HttpServerTaskTest9Response {
   @DataProvider
   public Object[][] headerValueBuilderValidProvider() {
   return new Object[][] {
-    {
-        builder(b -> {
-          b.value("inline");
-        }),
-        "Content-Disposition: inline"
-    },
-    {
-        builder(b -> {
-          b.value("attachment");
-          b.param("filename", "document.pdf");
-        }),
-        "Content-Disposition: attachment; filename=document.pdf"
-    },
-    {
-        builder(b -> {
-          b.value("attachment");
-          b.param("filename", "[foo].txt");
-        }),
-        "Content-Disposition: attachment; filename=\"[foo].txt\""
-    },
-    {
-        builder(b -> {
-          b.value("attachment");
-          b.param("filename", "");
-        }),
-        "Content-Disposition: attachment; filename=\"\""
-    },
-    {
-        builder(b -> {
-          b.value("foo");
-          b.value("bar");
-        }),
-        "Content-Disposition: foo, bar"
-    },
-    {
-        builder(b -> {
-          b.value("foo");
-          b.param("q", "0.9");
-          b.value("bar");
-        }),
-        "Content-Disposition: foo; q=0.9, bar"
-    },
-    {
-        builder(b -> {
-          b.value("attachment");
-          b.param("filename*", StandardCharsets.UTF_8, "document.pdf");
-        }),
-        "Content-Disposition: attachment; filename*=UTF-8''document.pdf"
-    },
-    {
-        builder(b -> {
-          b.value("attachment");
-          b.param("filename*", StandardCharsets.UTF_8, "ação.pdf");
-        }),
-        "Content-Disposition: attachment; filename*=UTF-8''a%C3%A7%C3%A3o.pdf"
-    },
-    {
-        builder(b -> {
-          b.value("attachment");
-          b.param("filename*", StandardCharsets.UTF_8, "");
-        }),
-        "Content-Disposition: attachment; filename*=UTF-8''"
-    },
-    {
-        builder(b -> {
-          b.param("filename*", StandardCharsets.UTF_8, "");
-        }),
-        "Content-Disposition: ; filename*=UTF-8''"
-    }
+  {
+  builder(b -> {
+  b.value("inline");
+  }),
+  "Content-Disposition: inline"
+  },
+  {
+  builder(b -> {
+  b.value("attachment");
+  b.param("filename", "document.pdf");
+  }),
+  "Content-Disposition: attachment; filename=document.pdf"
+  },
+  {
+  builder(b -> {
+  b.value("attachment");
+  b.param("filename", "[foo].txt");
+  }),
+  "Content-Disposition: attachment; filename=\"[foo].txt\""
+  },
+  {
+  builder(b -> {
+  b.value("attachment");
+  b.param("filename", "");
+  }),
+  "Content-Disposition: attachment; filename=\"\""
+  },
+  {
+  builder(b -> {
+  b.value("foo");
+  b.value("bar");
+  }),
+  "Content-Disposition: foo, bar"
+  },
+  {
+  builder(b -> {
+  b.value("foo");
+  b.param("q", "0.9");
+  b.value("bar");
+  }),
+  "Content-Disposition: foo; q=0.9, bar"
+  },
+  {
+  builder(b -> {
+  b.value("attachment");
+  b.param("filename*", StandardCharsets.UTF_8, "document.pdf");
+  }),
+  "Content-Disposition: attachment; filename*=UTF-8''document.pdf"
+  },
+  {
+  builder(b -> {
+  b.value("attachment");
+  b.param("filename*", StandardCharsets.UTF_8, "ação.pdf");
+  }),
+  "Content-Disposition: attachment; filename*=UTF-8''a%C3%A7%C3%A3o.pdf"
+  },
+  {
+  builder(b -> {
+  b.value("attachment");
+  b.param("filename*", StandardCharsets.UTF_8, "");
+  }),
+  "Content-Disposition: attachment; filename*=UTF-8''"
+  },
+  {
+  builder(b -> {
+  b.param("filename*", StandardCharsets.UTF_8, "");
+  }),
+  "Content-Disposition: ; filename*=UTF-8''"
+  }
   };
   }
 
@@ -1058,34 +1104,34 @@ public class HttpServerTaskTest9Response {
   @Test(dataProvider = "headerValueBuilderValidProvider")
   public void headerValueBuilderValid(Consumer<? super HttpHeaderValueBuilder> builder, String expected) {
   get(
-    http -> http.respond(resp -> {
-      resp.status(HttpStatus.OK);
-      resp.header(HttpHeaderName.CONTENT_DISPOSITION, builder);
-      resp.send(OK);
-    }),
-  
-    """
-    HTTP/1.1 200 OK\r
-    %s\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    Content-Type: text/plain; charset=utf-8\r
-    Content-Length: 3\r
-    \r
-    OK
-    """.formatted(expected)
+  http -> http.respond(resp -> {
+  resp.status(HttpStatus.OK);
+  resp.header(HttpHeaderName.CONTENT_DISPOSITION, builder);
+  resp.send(OK);
+  }),
+
+  """
+  HTTP/1.1 200 OK\r
+  %s\r
+  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+  Content-Type: text/plain; charset=utf-8\r
+  Content-Length: 3\r
+  \r
+  OK
+  """.formatted(expected)
   );
   }
 
   @DataProvider
   public Object[][] headerValueBuilderInvalidProvider() {
   return new Object[][] {
-    {builder(builder -> {
-      builder.param("inva lid", "foo.txt");
-    }), "Parameter name contains an invalid character at index 4: ' '"},
-  
-    {builder(builder -> {
-      builder.param("[]", StandardCharsets.UTF_8, "foo.txt");
-    }), "Parameter name contains an invalid character at index 0: '['"}
+  {builder(builder -> {
+  builder.param("inva lid", "foo.txt");
+  }), "Parameter name contains an invalid character at index 4: ' '"},
+
+  {builder(builder -> {
+  builder.param("[]", StandardCharsets.UTF_8, "foo.txt");
+  }), "Parameter name contains an invalid character at index 0: '['"}
   };
   }
 
@@ -1093,32 +1139,32 @@ public class HttpServerTaskTest9Response {
   public void headerValueBuilderInvalid(Consumer<? super HttpHeaderValueBuilder> builder, String expectedMessage) {
   exec(test -> {
   test.bufferSize(256, 512);
-  
+
   test.xch(xch -> {
-    xch.req("""
-    GET / HTTP/1.1\r
-    Host: Host\r
-    \r
-    """);
-  
-    xch.handler(http -> http.respond(resp -> {
-      resp.status(HttpStatus.OK);
-  
-      try {
-        resp.header(HttpHeaderName.ETAG, builder);
-  
-        Assert.fail();
-      } catch (RuntimeException runtime) {
-        final String message;
-        message = runtime.getMessage();
-  
-        assertEquals(message, expectedMessage);
-  
-        resp.send(OK);
-      }
-    }));
-  
-    xch.resp(OK_RESP);
+  xch.req("""
+  GET / HTTP/1.1\r
+  Host: Host\r
+  \r
+  """);
+
+  xch.handler(http -> http.respond(resp -> {
+  resp.status(HttpStatus.OK);
+
+  try {
+  resp.header(HttpHeaderName.ETAG, builder);
+
+  Assert.fail();
+  } catch (RuntimeException runtime) {
+  final String message;
+  message = runtime.getMessage();
+
+  assertEquals(message, expectedMessage);
+
+  resp.send(OK);
+  }
+  }));
+
+  xch.resp(OK_RESP);
   });
   });
   }
@@ -1135,22 +1181,22 @@ public class HttpServerTaskTest9Response {
   @Test(description = "Empty response body: support Web.Resources")
   public void empty01() {
   test(
-    """
-    GET /atom.xml HTTP/1.1\r
-    Host: www.example.com\r
-    If-None-Match: some%hash\r
-    Connection: close\r
-    \r
-    """,
-  
-    this::empty01,
-  
-    """
-    HTTP/1.1 304 Not Modified\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    ETag: some%hash\r
-    \r
-    """
+  """
+  GET /atom.xml HTTP/1.1\r
+  Host: www.example.com\r
+  If-None-Match: some%hash\r
+  Connection: close\r
+  \r
+  """,
+
+  this::empty01,
+
+  """
+  HTTP/1.1 304 Not Modified\r
+  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+  ETag: some%hash\r
+  \r
+  """
   );
   }
 
@@ -1174,16 +1220,16 @@ public class HttpServerTaskTest9Response {
   file01 = Y.nextTempFile(contents, StandardCharsets.UTF_8);
 
   get(
-    this::file01,
-  
-    """
-    HTTP/1.1 200 OK\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    Content-Type: text/plain; charset=utf-8\r
-    Content-Length: 1024\r
-    \r
-    %s\
-    """.formatted(contents)
+  this::file01,
+
+  """
+  HTTP/1.1 200 OK\r
+  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+  Content-Type: text/plain; charset=utf-8\r
+  Content-Length: 1024\r
+  \r
+  %s\
+  """.formatted(contents)
   );
   }
 
@@ -1207,15 +1253,15 @@ public class HttpServerTaskTest9Response {
   file02 = Y.nextTempFile(contents, StandardCharsets.UTF_8);
 
   head(
-    this::file02,
-  
-    """
-    HTTP/1.1 200 OK\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    Content-Type: text/plain; charset=utf-8\r
-    Content-Length: 1024\r
-    \r
-    """
+  this::file02,
+
+  """
+  HTTP/1.1 200 OK\r
+  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+  Content-Type: text/plain; charset=utf-8\r
+  Content-Length: 1024\r
+  \r
+  """
   );
   }
 
@@ -1227,15 +1273,15 @@ public class HttpServerTaskTest9Response {
   public void ioException01() {
   exec(test -> {
   test.xch(xch -> {
-    xch.req("""
-    GET / HTTP/1.1\r
-    Host: test\r
-    \r
-    """);
-  
-    xch.handler(http -> http.ok(Media.Bytes.textPlain("OK")));
-  
-    xch.resp(new IOException(), 1);
+  xch.req("""
+  GET / HTTP/1.1\r
+  Host: test\r
+  \r
+  """);
+
+  xch.handler(http -> http.ok(Media.Bytes.textPlain("OK")));
+
+  xch.resp(new IOException(), 1);
   });
   });
   }
@@ -1244,21 +1290,21 @@ public class HttpServerTaskTest9Response {
   public void ioException02() {
   exec(test -> {
   test.xch(xch -> {
-    xch.req("""
-    GET / HTTP/1.1\r
-    Host: test\r
-    \r
-    """);
-  
-    final String veryLargeHex;
-    veryLargeHex = "f756cd80".repeat(256);
-  
-    final String location;
-    location = "/foo/" + veryLargeHex;
-  
-    xch.handler(http -> http.found(location));
-  
-    xch.resp(new IOException(), 1);
+  xch.req("""
+  GET / HTTP/1.1\r
+  Host: test\r
+  \r
+  """);
+
+  final String veryLargeHex;
+  veryLargeHex = "f756cd80".repeat(256);
+
+  final String location;
+  location = "/foo/" + veryLargeHex;
+
+  xch.handler(http -> http.found(location));
+
+  xch.resp(new IOException(), 1);
   });
   });
   }
@@ -1292,16 +1338,16 @@ public class HttpServerTaskTest9Response {
 
   private void get(int initial, int max, Consumer<HttpExchangeImpl> handler, String expectedResponse) {
   test(
-    initial, max,
-  
-    """
-    GET /test HTTP/1.1\r
-    Host: www.objectos.com.br\r
-    Connection: close\r
-    \r
-    """,
-  
-    handler, expectedResponse
+  initial, max,
+
+  """
+  GET /test HTTP/1.1\r
+  Host: www.objectos.com.br\r
+  Connection: close\r
+  \r
+  """,
+
+  handler, expectedResponse
   );
   }
 
@@ -1342,16 +1388,16 @@ public class HttpServerTaskTest9Response {
 
   try (HttpExchangeImpl http = HttpY.http(socket, 256, 512, Y.clockFixed(), Y.noteSink(), 0L)) {
   assertEquals(http.shouldHandle(), true);
-  
+
   http.ok(Media.Bytes.textPlain("OK"));
-  
+
   handler.accept(http);
-  
+
   Assert.fail("It should have thrown");
   } catch (IllegalStateException expected) {
   final String message;
   message = expected.getMessage();
-  
+
   assertEquals(message, """
   This request method can only be invoked:
   - after a successful shouldHandle() operation; and
@@ -1372,11 +1418,11 @@ public class HttpServerTaskTest9Response {
 
   try (HttpExchangeImpl http = HttpY.http(socket, initial, max, Y.clockFixed(), Y.noteSink(), 1024)) {
   assertEquals(http.shouldHandle(), true);
-  
+
   handler.accept(http);
-  
+
   assertEquals(http.shouldHandle(), false);
-  
+
   assertEquals(Y.toString(socket), expectedResponse);
   } catch (IOException e) {
   throw new UncheckedIOException(e);

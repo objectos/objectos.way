@@ -365,19 +365,6 @@ public class HttpServerTaskTest6Body {
             Host: www.example.com\r
             Connection: close\r
             Content-Type: text/plain\r
-            Content-Length: 5\r
-            Transfer-Encoding: chunked\r
-            \r
-            Uh-Oh
-            """,
-            "request contains both transfer-encoding and content-length"
-        },
-        {
-            """
-            POST / HTTP/1.1\r
-            Host: www.example.com\r
-            Connection: close\r
-            Content-Type: text/plain\r
             Content-Length: five bytes\r
             \r
             Uh-Oh

@@ -15,15 +15,16 @@
  */
 package objectos.http;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import objectos.internal.Bytes;
 import objectos.way.Media;
 
-final class HttpResponse2Writer implements Closeable {
+final class HttpResponse2Writer {
 
   private static final byte[][] STATUS_LINES;
 
@@ -68,13 +69,6 @@ final class HttpResponse2Writer implements Closeable {
     this.head = head;
 
     this.outputStream = outputStream;
-  }
-
-  @Override
-  public final void close() throws IOException {
-    if (bufferIndex > 0) {
-      flush();
-    }
   }
 
   public final void status(HttpStatus status) throws IOException {
@@ -122,42 +116,90 @@ final class HttpResponse2Writer implements Closeable {
     writeBytes(Bytes.CRLF);
   }
 
-  public final void send() {
-    // noop
+  public final void send() throws IOException {
+    flush();
   }
 
   public final void send(byte[] bytes, int off, int len) throws IOException {
     if (head) {
+      flush();
+
       return;
     }
 
-    if (chunked) {
+    else if (chunked) {
       throw new UnsupportedOperationException("Implement me");
-    } else {
+    }
+
+    else {
       flush();
 
       outputStream.write(bytes, off, len);
     }
   }
 
-  public final void send(Media.Text media) {
+  public final void send(Media.Stream media) throws IOException {
     if (head) {
+      flush();
+
       return;
     }
 
-    throw new UnsupportedOperationException("Implement me");
+    if (chunked) {
+      try (HttpResponse3Chunked out = new HttpResponse3Chunked(buffer, bufferIndex, outputStream)) {
+        media.writeTo(out);
+      }
+
+      bufferIndex = 0;
+    }
+
+    else {
+      flush();
+
+      media.writeTo(outputStream);
+
+      outputStream.flush();
+    }
   }
 
-  public final void send(Media.Stream media) {
+  public final void send(Media.Text media) throws IOException {
     if (head) {
+      flush();
+
       return;
     }
 
-    throw new UnsupportedOperationException("Implement me");
+    final Charset charset;
+    charset = media.charset();
+
+    if (chunked) {
+      try (HttpResponse3Chunked output = new HttpResponse3Chunked(buffer, bufferIndex, outputStream)) {
+        final HttpResponse4Appendable out;
+        out = new HttpResponse4Appendable(charset, output);
+
+        media.writeTo(out);
+      }
+
+      bufferIndex = 0;
+    }
+
+    else {
+      flush();
+
+      // do not close the writer!
+      final OutputStreamWriter writer;
+      writer = new OutputStreamWriter(outputStream, charset);
+
+      media.writeTo(writer);
+
+      writer.flush();
+    }
   }
 
-  public final void send(Path file) {
+  public final void send(Path file) throws IOException {
     if (head) {
+      flush();
+
       return;
     }
 

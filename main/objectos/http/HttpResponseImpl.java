@@ -50,6 +50,11 @@ final class HttpResponseImpl implements HttpResponse, AutoCloseable {
   // 2xx responses
 
   @Override
+  public final void ok(Media media) {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  @Override
   public final void ok(Media.Bytes media) {
     status = HttpStatus.OK;
 
@@ -221,6 +226,7 @@ final class HttpResponseImpl implements HttpResponse, AutoCloseable {
     body = file;
   }
 
+  @Override
   public final void send(Media media) {
     switch (media) {
       case Media.Bytes bytes -> send(bytes);

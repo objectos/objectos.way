@@ -253,6 +253,11 @@ final class HttpExchange0 implements HttpExchange {
   // ##################################################################
 
   @Override
+  public final void ok(Media media) {
+    response.ok(media);
+  }
+
+  @Override
   public final void ok(Bytes media) {
     response.ok(media);
   }
