@@ -17,6 +17,8 @@ package objectos.http;
 
 import static org.testng.Assert.assertEquals;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.EnumSet;
 import java.util.Iterator;
 import objectos.way.Media;
@@ -491,354 +493,526 @@ public class HttpServerTaskTest9Response {
     return "X".repeat(contentTypeLength);
   }
 
-  /*
-
   // 3xx responses
 
   @Test
   public void movedPermanently01() {
-  get(
-  http -> http.movedPermanently("/login"),
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.socket = Y.socket("""
+          GET /1 HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """);
 
-  """
-  HTTP/1.1 301 Moved Permanently\r
-  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-  Content-Length: 0\r
-  Location: /login\r
-  \r
-  """
-  );
+          opts.handler = http -> http.movedPermanently("/login");
+        }),
+
+        """
+        HTTP/1.1 301 Moved Permanently\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Length: 0\r
+        Location: /login\r
+        \r
+        """
+    );
   }
 
   @Test
   public void movedPermanently02() {
-  get(
-  http -> http.movedPermanently("/product/café/😀"),
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.socket = Y.socket("""
+          GET /1 HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """);
 
-  """
-  HTTP/1.1 301 Moved Permanently\r
-  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-  Content-Length: 0\r
-  Location: /product/caf%C3%A9/%F0%9F%98%80\r
-  \r
-  """
-  );
+          opts.handler = http -> http.movedPermanently("/product/café/😀");
+        }),
+
+        """
+        HTTP/1.1 301 Moved Permanently\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Length: 0\r
+        Location: /product/caf%C3%A9/%F0%9F%98%80\r
+        \r
+        """
+    );
   }
 
   @Test
   public void movedPermanently03() {
-  final String veryLargeHex;
-  veryLargeHex = "f756cd80".repeat(256);
+    final String veryLargeHex;
+    veryLargeHex = "f756cd80".repeat(256);
 
-  final String location;
-  location = "/foo/" + veryLargeHex;
+    final String location;
+    location = "/foo/" + veryLargeHex;
 
-  get(
-  http -> http.movedPermanently(location),
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.socket = Y.socket("""
+          GET /1 HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """);
 
-  """
-  HTTP/1.1 301 Moved Permanently\r
-  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-  Content-Length: 0\r
-  Location: %s\r
-  \r
-  """.formatted(location)
-  );
+          opts.handler = http -> http.movedPermanently(location);
+        }),
+
+        """
+        HTTP/1.1 301 Moved Permanently\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Length: 0\r
+        Location: %s\r
+        \r
+        """.formatted(location)
+    );
   }
 
   @Test
   public void found01() {
-  get(
-  http -> http.found("/login"),
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.socket = Y.socket("""
+          GET /1 HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """);
 
-  """
-  HTTP/1.1 302 Found\r
-  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-  Content-Length: 0\r
-  Location: /login\r
-  \r
-  """
-  );
+          opts.handler = http -> http.found("/login");
+        }),
+
+        """
+        HTTP/1.1 302 Found\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Length: 0\r
+        Location: /login\r
+        \r
+        """
+    );
   }
 
   @Test
   public void found02() {
-  get(
-  http -> http.found("/product/café/😀"),
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.socket = Y.socket("""
+          GET /1 HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """);
 
-  """
-  HTTP/1.1 302 Found\r
-  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-  Content-Length: 0\r
-  Location: /product/caf%C3%A9/%F0%9F%98%80\r
-  \r
-  """
-  );
+          opts.handler = http -> http.found("/product/café/😀");
+        }),
+
+        """
+        HTTP/1.1 302 Found\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Length: 0\r
+        Location: /product/caf%C3%A9/%F0%9F%98%80\r
+        \r
+        """
+    );
   }
 
   @Test
   public void found03() {
-  final String veryLargeHex;
-  veryLargeHex = "f756cd80".repeat(256);
+    final String veryLargeHex;
+    veryLargeHex = "f756cd80".repeat(256);
 
-  final String location;
-  location = "/foo/" + veryLargeHex;
+    final String location;
+    location = "/foo/" + veryLargeHex;
 
-  get(
-  http -> http.found(location),
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.socket = Y.socket("""
+          GET /1 HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """);
 
-  """
-  HTTP/1.1 302 Found\r
-  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-  Content-Length: 0\r
-  Location: %s\r
-  \r
-  """.formatted(location)
-  );
+          opts.handler = http -> http.found(location);
+        }),
+
+        """
+        HTTP/1.1 302 Found\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Length: 0\r
+        Location: %s\r
+        \r
+        """.formatted(location)
+    );
   }
 
   @Test
   public void seeOther01() {
-  get(
-  http -> http.seeOther("/page"),
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.socket = Y.socket("""
+          GET /1 HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """);
 
-  """
-  HTTP/1.1 303 See Other\r
-  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-  Content-Length: 0\r
-  Location: /page\r
-  \r
-  """
-  );
+          opts.handler = http -> http.seeOther("/page");
+        }),
+
+        """
+        HTTP/1.1 303 See Other\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Length: 0\r
+        Location: /page\r
+        \r
+        """
+    );
   }
 
   @Test
   public void seeOther02() {
-  get(
-  http -> http.seeOther("/product/café/😀"),
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.socket = Y.socket("""
+          GET /1 HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """);
 
-  """
-  HTTP/1.1 303 See Other\r
-  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-  Content-Length: 0\r
-  Location: /product/caf%C3%A9/%F0%9F%98%80\r
-  \r
-  """
-  );
+          opts.handler = http -> http.seeOther("/product/café/😀");
+        }),
+
+        """
+        HTTP/1.1 303 See Other\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Length: 0\r
+        Location: /product/caf%C3%A9/%F0%9F%98%80\r
+        \r
+        """
+    );
   }
 
   @Test
   public void seeOther03() {
-  final String veryLargeHex;
-  veryLargeHex = "f756cd80".repeat(256);
+    final String veryLargeHex;
+    veryLargeHex = "f756cd80".repeat(256);
 
-  final String location;
-  location = "/foo/" + veryLargeHex;
+    final String location;
+    location = "/foo/" + veryLargeHex;
 
-  get(
-  http -> http.seeOther(location),
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.socket = Y.socket("""
+          GET /1 HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """);
 
-  """
-  HTTP/1.1 303 See Other\r
-  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-  Content-Length: 0\r
-  Location: %s\r
-  \r
-  """.formatted(location)
-  );
+          opts.handler = http -> http.seeOther(location);
+        }),
+
+        """
+        HTTP/1.1 303 See Other\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Length: 0\r
+        Location: %s\r
+        \r
+        """.formatted(location)
+    );
   }
 
   // 4xx responses
 
   @Test(description = "badRequest(Media.Bytes)")
   public void badRequest01() {
-  post(
-  http -> http.badRequest(Media.Bytes.textPlain("BAD\n")),
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.socket = Y.socket("""
+          POST /1 HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """);
 
-  """
-  HTTP/1.1 400 Bad Request\r
-  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-  Content-Type: text/plain; charset=utf-8\r
-  Content-Length: 4\r
-  \r
-  BAD
-  """
-  );
+          opts.handler = http -> http.badRequest(Media.Bytes.textPlain("BAD\n"));
+        }),
+
+        """
+        HTTP/1.1 400 Bad Request\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 4\r
+        \r
+        BAD
+        """
+    );
   }
 
   @Test(description = "forbidden(Media.Bytes)")
   public void forbidden01() {
-  post(
-  http -> http.forbidden(Media.Bytes.textPlain("403\n")),
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.socket = Y.socket("""
+          POST /1 HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """);
 
-  """
-  HTTP/1.1 403 Forbidden\r
-  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-  Content-Type: text/plain; charset=utf-8\r
-  Content-Length: 4\r
-  \r
-  403
-  """
-  );
+          opts.handler = http -> http.forbidden(Media.Bytes.textPlain("403\n"));
+        }),
+
+        """
+        HTTP/1.1 403 Forbidden\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 4\r
+        \r
+        403
+        """
+    );
   }
 
   @Test(description = "notFound(Media.Bytes)")
   public void notFound01() {
-  post(
-  http -> http.notFound(Media.Bytes.textPlain("NOT\n")),
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.socket = Y.socket("""
+          POST /1 HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """);
 
-  """
-  HTTP/1.1 404 Not Found\r
-  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-  Content-Type: text/plain; charset=utf-8\r
-  Content-Length: 4\r
-  \r
-  NOT
-  """
-  );
+          opts.handler = http -> http.notFound(Media.Bytes.textPlain("NOT\n"));
+        }),
+
+        """
+        HTTP/1.1 404 Not Found\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 4\r
+        \r
+        NOT
+        """
+    );
   }
 
   @Test(description = "allow(Http.Method...)")
   public void allow01() {
-  post(
-  http -> http.allow(HttpMethod.GET, HttpMethod.HEAD),
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.socket = Y.socket("""
+          POST /1 HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """);
 
-  """
-  HTTP/1.1 405 Method Not Allowed\r
-  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-  Allow: GET, HEAD\r
-  Content-Length: 0\r
-  \r
-  """
-  );
+          opts.handler = http -> http.allow(HttpMethod.GET, HttpMethod.HEAD);
+        }),
+
+        """
+        HTTP/1.1 405 Method Not Allowed\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Allow: GET, HEAD\r
+        Content-Length: 0\r
+        \r
+        """
+    );
   }
 
   // 5xx responses
 
   @Test(description = "internalServerError(Media.Bytes, Throwable)")
   public void internalServerError01() {
-  post(
-  http -> http.internalServerError(Media.Bytes.textPlain("ISE\n"), Y.trimStackTrace(new IOException(), 1)),
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.socket = Y.socket("""
+          POST /1 HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """);
 
-  """
-  HTTP/1.1 500 Internal Server Error\r
-  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-  Content-Type: text/plain; charset=utf-8\r
-  Content-Length: 4\r
-  \r
-  ISE
-  """
-  );
+          opts.handler = http -> http.internalServerError(
+              Media.Bytes.textPlain("ISE\n"),
+              Y.trimStackTrace(new IOException(), 1)
+          );
+        }),
+
+        """
+        HTTP/1.1 500 Internal Server Error\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Connection: close\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 4\r
+        \r
+        ISE
+        """
+    );
   }
 
   // response builder
 
   @Test
   public void respond01() {
-  get(
-  resp -> {
-  resp.status(HttpStatus.NOT_FOUND);
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.socket = Y.socket("""
+          GET /1 HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """);
 
-  resp.header(HttpHeaderName.DATE, resp.now());
+          opts.handler = http -> {
+            http.status(HttpStatus.NOT_FOUND);
 
-  resp.header(HttpHeaderName.CONTENT_LENGTH, 0L);
+            http.header(HttpHeaderName.DATE, http.now());
 
-  resp.send();
-  },
+            http.header(HttpHeaderName.CONTENT_LENGTH, 0L);
 
-  """
-  HTTP/1.1 404 Not Found\r
-  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-  Content-Length: 0\r
-  \r
-  """
-  );
+            http.send();
+          };
+        }),
+
+        """
+        HTTP/1.1 404 Not Found\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Length: 0\r
+        \r
+        """
+    );
   }
 
   @Test
   public void respond02() {
-  final byte[] body;
-  body = "FOO\n".getBytes(StandardCharsets.US_ASCII);
+    final byte[] body;
+    body = "FOO\n".getBytes(StandardCharsets.US_ASCII);
 
-  get(
-  resp -> {
-  resp.status(HttpStatus.OK);
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.socket = Y.socket("""
+          GET /1 HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """);
 
-  resp.header(HttpHeaderName.DATE, resp.now());
+          opts.handler = http -> {
+            http.status(HttpStatus.OK);
 
-  resp.header(HttpHeaderName.CONTENT_TYPE, "text/plain");
+            http.header(HttpHeaderName.DATE, http.now());
 
-  resp.header(HttpHeaderName.CONTENT_LENGTH, body.length);
+            http.header(HttpHeaderName.CONTENT_TYPE, "text/plain");
 
-  resp.send(body, 0, body.length);
-  },
+            http.header(HttpHeaderName.CONTENT_LENGTH, body.length);
 
-  """
-  HTTP/1.1 200 OK\r
-  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-  Content-Type: text/plain\r
-  Content-Length: 4\r
-  \r
-  FOO
-  """
-  );
+            http.send(body, 0, body.length);
+          };
+        }),
+
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain\r
+        Content-Length: 4\r
+        \r
+        FOO
+        """
+    );
   }
 
   @Test
   public void respond03() {
-  final Media.Bytes media;
-  media = Media.Bytes.textPlain("FOO\n");
+    final Media.Bytes media;
+    media = Media.Bytes.textPlain("FOO\n");
 
-  get(
-  resp -> {
-  resp.status(HttpStatus.OK);
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.socket = Y.socket("""
+          GET /1 HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """);
 
-  resp.header(HttpHeaderName.CONNECTION, "close");
+          opts.handler = http -> {
+            http.status(HttpStatus.OK);
 
-  resp.send(media);
-  },
+            http.header(HttpHeaderName.CONNECTION, "close");
 
-  """
-  HTTP/1.1 200 OK\r
-  Connection: close\r
-  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-  Content-Type: text/plain; charset=utf-8\r
-  Content-Length: 4\r
-  \r
-  FOO
-  """
-  );
+            http.header(HttpHeaderName.DATE, http.now());
+
+            http.send(media);
+          };
+        }),
+
+        """
+        HTTP/1.1 200 OK\r
+        Connection: close\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 4\r
+        \r
+        FOO
+        """
+    );
   }
 
   @SuppressWarnings("exports")
   @Test(dataProvider = "mediaKindProvider")
   public void respond04(Y.MediaKind kind) {
-  final Media media;
-  media = Y.mediaOf(kind, 4);
+    final Media media;
+    media = Y.mediaOf(kind, 4);
 
-  get(
-  resp -> {
-  resp.status(HttpStatus.OK);
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.bufferSize = 256;
 
-  resp.header(HttpHeaderName.CONNECTION, "close");
+          opts.socket = Y.socket("""
+          GET /1 HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """);
 
-  resp.send(media);
-  },
+          opts.handler = http -> {
+            http.status(HttpStatus.OK);
 
-  """
-  HTTP/1.1 200 OK\r
-  Connection: close\r
-  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-  Content-Type: text/plain; charset=utf-8\r
-  Transfer-Encoding: chunked\r
-  \r
-  04\r
-  1234\r
-  0\r
-  \r
-  """
-  );
+            http.header(HttpHeaderName.CONNECTION, "close");
+
+            http.header(HttpHeaderName.DATE, http.now());
+
+            http.send(media);
+          };
+        }),
+
+        """
+        HTTP/1.1 200 OK\r
+        Connection: close\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Transfer-Encoding: chunked\r
+        \r
+        04\r
+        1234\r
+        0\r
+        \r
+        """
+    );
   }
+
+  /*
 
   @DataProvider
   public Iterator<HttpStatus> respondStatusProvider() {
@@ -858,9 +1032,9 @@ public class HttpServerTaskTest9Response {
   """);
 
   xch.handler(http -> http.respond(resp -> {
-  resp.status(status);
+  http.status(status);
 
-  resp.send(OK);
+  http.send(OK);
   }));
 
   xch.resp(
@@ -905,7 +1079,7 @@ public class HttpServerTaskTest9Response {
   return list.iterator();
   }
 
-  @Test(description = "resp.header(HeaderName, String) w/ a valid string", dataProvider = "respondHeaderValidProvider")
+  @Test(description = "http.header(HeaderName, String) w/ a valid string", dataProvider = "respondHeaderValidProvider")
   public void respondHeaderValid(HeaderValueData data) {
   exec(test -> {
   test.bufferSize(256, 512);
@@ -918,11 +1092,11 @@ public class HttpServerTaskTest9Response {
   """);
 
   xch.handler(http -> http.respond(resp -> {
-  resp.status(HttpStatus.OK);
+  http.status(HttpStatus.OK);
 
-  resp.header(HttpHeaderName.ETAG, data.value);
+  http.header(HttpHeaderName.ETAG, data.value);
 
-  resp.send(OK);
+  http.send(OK);
   }));
 
   xch.resp(
@@ -988,7 +1162,7 @@ public class HttpServerTaskTest9Response {
   return list.iterator();
   }
 
-  @Test(description = "resp.header(HeaderName, String) w/ an invalid string", dataProvider = "respondHeaderInvalidProvider")
+  @Test(description = "http.header(HeaderName, String) w/ an invalid string", dataProvider = "respondHeaderInvalidProvider")
   public void respondHeaderInvalid(HeaderValueData data) {
   exec(test -> {
   test.bufferSize(256, 512);
@@ -1001,10 +1175,10 @@ public class HttpServerTaskTest9Response {
   """);
 
   xch.handler(http -> http.respond(resp -> {
-  resp.status(HttpStatus.OK);
+  http.status(HttpStatus.OK);
 
   try {
-  resp.header(HttpHeaderName.ETAG, data.value);
+  http.header(HttpHeaderName.ETAG, data.value);
 
   Assert.fail();
   } catch (IllegalArgumentException expected) {
@@ -1013,7 +1187,7 @@ public class HttpServerTaskTest9Response {
 
   assertEquals(message, data.expected);
 
-  resp.send(OK);
+  http.send(OK);
   }
   }));
 
@@ -1105,9 +1279,9 @@ public class HttpServerTaskTest9Response {
   public void headerValueBuilderValid(Consumer<? super HttpHeaderValueBuilder> builder, String expected) {
   get(
   http -> http.respond(resp -> {
-  resp.status(HttpStatus.OK);
-  resp.header(HttpHeaderName.CONTENT_DISPOSITION, builder);
-  resp.send(OK);
+  http.status(HttpStatus.OK);
+  http.header(HttpHeaderName.CONTENT_DISPOSITION, builder);
+  http.send(OK);
   }),
 
   """
@@ -1148,10 +1322,10 @@ public class HttpServerTaskTest9Response {
   """);
 
   xch.handler(http -> http.respond(resp -> {
-  resp.status(HttpStatus.OK);
+  http.status(HttpStatus.OK);
 
   try {
-  resp.header(HttpHeaderName.ETAG, builder);
+  http.header(HttpHeaderName.ETAG, builder);
 
   Assert.fail();
   } catch (RuntimeException runtime) {
@@ -1160,7 +1334,7 @@ public class HttpServerTaskTest9Response {
 
   assertEquals(message, expectedMessage);
 
-  resp.send(OK);
+  http.send(OK);
   }
   }));
 
@@ -1171,10 +1345,10 @@ public class HttpServerTaskTest9Response {
 
   private void empty01(HttpExchangeImpl http) {
   http.respond(resp -> {
-  resp.status(HttpStatus.NOT_MODIFIED);
-  resp.header(HttpHeaderName.DATE, resp.now());
-  resp.header(HttpHeaderName.ETAG, "some%hash");
-  resp.send();
+  http.status(HttpStatus.NOT_MODIFIED);
+  http.header(HttpHeaderName.DATE, http.now());
+  http.header(HttpHeaderName.ETAG, "some%hash");
+  http.send();
   });
   }
 
@@ -1204,11 +1378,11 @@ public class HttpServerTaskTest9Response {
 
   private void file01(HttpExchangeImpl http) {
   http.respond(resp -> {
-  resp.status(HttpStatus.OK);
-  resp.header(HttpHeaderName.DATE, resp.now());
-  resp.header(HttpHeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
-  resp.header(HttpHeaderName.CONTENT_LENGTH, 1024);
-  resp.send(file01);
+  http.status(HttpStatus.OK);
+  http.header(HttpHeaderName.DATE, http.now());
+  http.header(HttpHeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
+  http.header(HttpHeaderName.CONTENT_LENGTH, 1024);
+  http.send(file01);
   });
   }
 
@@ -1237,11 +1411,11 @@ public class HttpServerTaskTest9Response {
 
   private void file02(HttpExchangeImpl http) {
   http.respond(resp -> {
-  resp.status(HttpStatus.OK);
-  resp.header(HttpHeaderName.DATE, resp.now());
-  resp.header(HttpHeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
-  resp.header(HttpHeaderName.CONTENT_LENGTH, 1024);
-  resp.send(file02);
+  http.status(HttpStatus.OK);
+  http.header(HttpHeaderName.DATE, http.now());
+  http.header(HttpHeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
+  http.header(HttpHeaderName.CONTENT_LENGTH, 1024);
+  http.send(file02);
   });
   }
 

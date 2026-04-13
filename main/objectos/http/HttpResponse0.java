@@ -124,6 +124,8 @@ final class HttpResponse0 implements HttpResponse {
   public final void badRequest(Media media) {
     status(HttpStatus.BAD_REQUEST);
 
+    header(HttpHeaderName.DATE, now());
+
     send(media);
   }
 
@@ -131,12 +133,16 @@ final class HttpResponse0 implements HttpResponse {
   public final void forbidden(Media media) {
     status(HttpStatus.FORBIDDEN);
 
+    header(HttpHeaderName.DATE, now());
+
     send(media);
   }
 
   @Override
   public final void notFound(Media media) {
     status(HttpStatus.NOT_FOUND);
+
+    header(HttpHeaderName.DATE, now());
 
     send(media);
   }
@@ -165,9 +171,11 @@ final class HttpResponse0 implements HttpResponse {
   public final void internalServerError(Media media, Throwable error) {
     status(HttpStatus.INTERNAL_SERVER_ERROR);
 
-    send(media);
+    header(HttpHeaderName.DATE, now());
 
-    throw new UnsupportedOperationException("Implement me");
+    header(HttpHeaderName.CONNECTION, "close");
+
+    send(media);
   }
 
   @Override

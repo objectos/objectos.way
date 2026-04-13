@@ -22,18 +22,6 @@ import objectos.internal.Bytes;
 
 final class HttpResponse3Chunked extends OutputStream {
 
-  @SuppressWarnings("serial")
-  static final class ThisIOException extends RuntimeException {
-    ThisIOException(IOException cause) {
-      super(cause);
-    }
-
-    @Override
-    public final IOException getCause() {
-      return (IOException) super.getCause();
-    }
-  }
-
   private static final byte[] CHUNKED_TRAILER = "0\r\n\r\n".getBytes(StandardCharsets.UTF_8);
 
   private final byte[] buffer;
@@ -48,7 +36,7 @@ final class HttpResponse3Chunked extends OutputStream {
 
   private final OutputStream outputStream;
 
-  HttpResponse3Chunked(byte[] buffer, int bufferIndex, OutputStream outputStream) {
+  HttpResponse3Chunked(byte[] buffer, int bufferIndex, OutputStream outputStream) throws IOException {
     this.buffer = buffer;
 
     this.bufferIndex = bufferIndex;
@@ -59,7 +47,7 @@ final class HttpResponse3Chunked extends OutputStream {
   }
 
   @Override
-  public final void close() {
+  public final void close() throws IOException {
     if (!closed) {
       writeChunkEnd();
 
@@ -92,7 +80,7 @@ final class HttpResponse3Chunked extends OutputStream {
   }
 
   @Override
-  public final void write(int b) {
+  public final void write(int b) throws IOException {
     int available;
     available = writeChunkAvailable();
 
@@ -108,12 +96,12 @@ final class HttpResponse3Chunked extends OutputStream {
   }
 
   @Override
-  public final void write(byte[] bytes) {
+  public final void write(byte[] bytes) throws IOException {
     write(bytes, 0, bytes.length);
   }
 
   @Override
-  public final void write(byte[] bytes, int offset, int length) {
+  public final void write(byte[] bytes, int offset, int length) throws IOException {
     int bytesIndex;
     bytesIndex = offset;
 
@@ -154,7 +142,7 @@ final class HttpResponse3Chunked extends OutputStream {
     return buffer.length - (bufferIndex + 2);
   }
 
-  private void writeChunkBegin() {
+  private void writeChunkBegin() throws IOException {
     // chunkSizeLength = bytes required to store the chunk-size + CRLF
     int chunkSizeLength;
     chunkSizeLength = 0;
@@ -243,14 +231,10 @@ final class HttpResponse3Chunked extends OutputStream {
     buffer[bufferIndex++] = Bytes.LF;
   }
 
-  private void writeChunkFlush() {
-    try {
-      outputStream.write(buffer, 0, bufferIndex);
+  private void writeChunkFlush() throws IOException {
+    outputStream.write(buffer, 0, bufferIndex);
 
-      chunkIndex = dataIndex = bufferIndex = 0;
-    } catch (IOException e) {
-      throw new ThisIOException(e);
-    }
+    chunkIndex = dataIndex = bufferIndex = 0;
   }
 
 }

@@ -31,22 +31,7 @@ final class HttpServerTask implements Runnable {
 
   }
 
-  private record Notes(
-      Note.Long1Ref1<IOException> ioe
-  ) {
-
-    static Notes get() {
-      final Class<?> s;
-      s = HttpServerTask.class;
-
-      return new Notes(
-          Note.Long1Ref1.create(s, "IOE", Note.ERROR)
-      );
-    }
-
-  }
-
-  private static final Notes NOTES = Notes.get();
+  static final Note.Long1Ref1<Throwable> THROW = Note.Long1Ref1.create(HttpServerTask.class, "THW", Note.ERROR);
 
   private final HttpRequestBodyOptions bodyOptions;
 
@@ -108,16 +93,16 @@ final class HttpServerTask implements Runnable {
           run0(inputStream, outputStream, bodySupport);
         }
       } catch (HttpClientException e) {
-        noteSink.send(NOTES.ioe, id, e);
+        noteSink.send(THROW, id, e);
 
         handle(outputStream, e);
       } catch (HttpServerException e) {
-        noteSink.send(NOTES.ioe, id, e);
+        noteSink.send(THROW, id, e);
 
         handle(outputStream, e);
       }
     } catch (IOException e) {
-      noteSink.send(NOTES.ioe, id, e);
+      noteSink.send(THROW, id, e);
     }
   }
 
@@ -238,7 +223,7 @@ final class HttpServerTask implements Runnable {
 
     // exchange
     final HttpExchange0 exchange;
-    exchange = new HttpExchange0(request, response, session);
+    exchange = new HttpExchange0(id, noteSink, request, response, session);
 
     try {
       handler.handle(exchange);

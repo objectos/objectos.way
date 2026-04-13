@@ -15,6 +15,7 @@
  */
 package objectos.http;
 
+import java.io.IOException;
 import java.nio.charset.Charset;
 
 final class HttpResponse4Appendable implements Appendable {
@@ -30,7 +31,7 @@ final class HttpResponse4Appendable implements Appendable {
   }
 
   @Override
-  public final Appendable append(char c) {
+  public final Appendable append(char c) throws IOException {
     final String s;
     s = Character.toString(c);
 
@@ -38,7 +39,7 @@ final class HttpResponse4Appendable implements Appendable {
   }
 
   @Override
-  public final Appendable append(CharSequence csq, int start, int end) {
+  public final Appendable append(CharSequence csq, int start, int end) throws IOException {
     final CharSequence sub;
     sub = csq.subSequence(start, end);
 
@@ -46,7 +47,7 @@ final class HttpResponse4Appendable implements Appendable {
   }
 
   @Override
-  public final Appendable append(CharSequence csq) {
+  public final Appendable append(CharSequence csq) throws IOException {
     final String s;
     s = csq.toString();
 
