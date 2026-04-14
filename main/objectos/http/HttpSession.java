@@ -15,145 +15,99 @@
  */
 package objectos.http;
 
-import java.time.Instant;
-import java.time.InstantSource;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import objectos.way.Lang;
 
-final class HttpSession {
+interface HttpSession {
 
-  private Instant accessTime;
+  /**
+   * If a session is not associated to this exchange, returns {@code true},
+   * otherwise {@code false}.
+   *
+   * @return {@code true} if a session is not associated to this
+   *         exchange, otherwise {@code false}
+   */
+  boolean sessionAbsent();
 
-  private final HttpToken id;
+  /**
+   * Returns the session value associated to the specified
+   * class name, or {@code null} if no value is associated.
+   *
+   * @param <T>
+   *        the type of the session value
+   * @param key
+   *        the class whose associated value is to be returned
+   *
+   * @return the session value associated to the specified class name, or
+   *         {@code null} if no value is associated
+   *
+   * @throws IllegalStateException
+   *         if no session is associated to this exchange
+   */
+  <T> T sessionAttr(Class<T> key);
 
-  private final Lock lock = new ReentrantLock();
+  /**
+   * Returns the session value associated to the specified key, or
+   * {@code null} if no value is associated.
+   *
+   * @param <T>
+   *        the type of the session value
+   * @param key
+   *        the key object whose associated value is to be returned
+   *
+   * @return the session value, or {@code null} if no value is associated
+   *
+   * @throws IllegalStateException
+   *         if no session is associated to this exchange
+   */
+  <T> T sessionAttr(Lang.Key<T> key);
 
-  private String setCookie;
+  /**
+   * Using the name of the specified class as the key, associate the
+   * specified value to this exchange's session.
+   *
+   * @param <T>
+   *        the type of the session value
+   * @param key
+   *        the class object whose name will serve as the key
+   * @param value
+   *        the session value
+   *
+   * @return the previous session value, or {@code null} if no value was
+   *         associated
+   */
+  <T> T sessionAttr(Class<T> key, T value);
 
-  private Map<Object, Object> store = null;
+  /**
+   * Using the specified key, associates the specified value to this
+   * exchange's session.
+   *
+   * @param <T>
+   *        the type of the session value
+   * @param key
+   *        the key object
+   * @param value
+   *        the session value
+   *
+   * @return the previous session value, or {@code null} if no value was
+   *         associated
+   */
+  <T> T sessionAttr(Lang.Key<T> key, T value);
 
-  private boolean valid = true;
+  /**
+   * Invalidates the session associated to this exchange.
+   *
+   * @throws IllegalStateException
+   *         if no session is associated to this exchange
+   */
+  void sessionInvalidate();
 
-  HttpSession(HttpToken id, String setCookie) {
-    this.id = id;
-
-    this.setCookie = setCookie;
-  }
-
-  HttpSession(HttpToken id, Map<Object, Object> map) {
-    this.id = id;
-
-    setCookie = null;
-
-    store = map;
-  }
-
-  public final Object get0(Object key) {
-    lock.lock();
-    try {
-      checkValid();
-
-      return store == null ? null : store.get(key);
-    } finally {
-      lock.unlock();
-    }
-  }
-
-  public final Object set0(Object key, Object value) {
-    lock.lock();
-    try {
-      checkValid();
-
-      if (value == null) {
-        return store == null ? null : store.remove(key);
-      } else {
-        if (store == null) {
-          store = new HashMap<>();
-        }
-
-        return store.put(key, value);
-      }
-    } finally {
-      lock.unlock();
-    }
-  }
-
-  public final void invalidate() {
-    lock.lock();
-    try {
-      checkValid();
-
-      store = null;
-
-      valid = false;
-    } finally {
-      lock.unlock();
-    }
-  }
-
-  @Override
-  public final boolean equals(Object obj) {
-    // I think the first test should be enough
-    // but better be safe than sorry I guess
-    return obj == this || obj instanceof HttpSession that
-        && id.equals(that.id);
-  }
-
-  @Override
-  public final int hashCode() {
-    return id.hashCode();
-  }
-
-  @Override
-  public final String toString() {
-    return "HttpSession[accessTime=" + accessTime + ";valid=" + valid + "]";
-  }
-
-  final String consumeSetCookie() {
-    String s;
-    s = setCookie;
-
-    if (s != null) {
-
-      lock.lock();
-      try {
-        s = setCookie;
-
-        if (s != null) {
-          setCookie = null;
-        }
-      } finally {
-        lock.unlock();
-      }
-
-    }
-
-    return s;
-  }
-
-  final HttpToken id() {
-    return id;
-  }
-
-  final void touch(InstantSource source) {
-    lock.lock();
-    try {
-      accessTime = source.instant();
-    } finally {
-      lock.unlock();
-    }
-  }
-
-  final boolean valid() {
-    return valid;
-  }
-
-  private void checkValid() {
-    if (!valid) {
-      throw new IllegalStateException("This operation can only be performed on a valid and active session");
-    }
-  }
+  /**
+   * If a session is associated to this exchange, returns {@code true},
+   * otherwise {@code false}.
+   *
+   * @return {@code true} if a session is associated to this
+   *         exchange, otherwise {@code false}
+   */
+  boolean sessionPresent();
 
 }

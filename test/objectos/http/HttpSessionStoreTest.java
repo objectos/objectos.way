@@ -140,8 +140,8 @@ public class HttpSessionStoreTest {
     final HttpToken id;
     id = HttpToken.of32(1, 2, 3, 4);
 
-    final HttpSession session;
-    session = new HttpSession(id, Map.of());
+    final HttpSession0 session;
+    session = new HttpSession0(id, Map.of());
 
     final HttpSessionStoreImpl store;
     store = create(opts -> {

@@ -356,15 +356,15 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
     return new ByteArrayInputStream(bytes);
   }
 
-  final HttpSession session() {
-    HttpSession result;
+  final HttpSession0 session() {
+    HttpSession0 result;
     result = null;
 
     if (session != null) {
       final HttpToken id;
       id = HttpToken.of32(0, 0, 0, 0);
 
-      result = new HttpSession(id, session);
+      result = new HttpSession0(id, session);
     }
 
     return result;

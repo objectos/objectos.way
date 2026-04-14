@@ -181,67 +181,37 @@ final class HttpExchange0 implements HttpExchange {
 
   @Override
   public final boolean sessionAbsent() {
-    return session == null;
+    return session.sessionAbsent();
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public final <T> T sessionAttr(Class<T> key) {
-    checkSession();
-
-    final String name;
-    name = key.getName();
-
-    return (T) session.get0(name);
+    return session.sessionAttr(key);
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public final <T> T sessionAttr(Lang.Key<T> key) {
-    checkSession();
-
-    Objects.requireNonNull(key, "key == null");
-
-    return (T) session.get0(key);
+    return session.sessionAttr(key);
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public final <T> T sessionAttr(Class<T> key, T value) {
-    checkSession();
-
-    final String name;
-    name = key.getName();
-
-    return (T) session.set0(name, value);
+    return session.sessionAttr(key, value);
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public final <T> T sessionAttr(Lang.Key<T> key, T value) {
-    checkSession();
-
-    Objects.requireNonNull(key, "key == null");
-
-    return (T) session.set0(key, value);
+    return session.sessionAttr(key, value);
   }
 
   @Override
   public final boolean sessionPresent() {
-    return session != null;
+    return session.sessionPresent();
   }
 
   @Override
   public final void sessionInvalidate() {
-    checkSession();
-
-    session.invalidate();
-  }
-
-  private void checkSession() {
-    if (session == null) {
-      throw new IllegalStateException("No session associated to this exchange");
-    }
+    session.sessionInvalidate();
   }
 
   // ##################################################################

@@ -41,7 +41,7 @@ final class HttpSessionStoreBuilder implements HttpSessionStore.Options {
 
   RandomGenerator sessionGenerator;
 
-  final ConcurrentMap<HttpToken, HttpSession> sessions = new ConcurrentHashMap<>();
+  final ConcurrentMap<HttpToken, HttpSession0> sessions = new ConcurrentHashMap<>();
 
   @Override
   public final void cookieName(String name) {
@@ -136,7 +136,7 @@ final class HttpSessionStoreBuilder implements HttpSessionStore.Options {
     instantSource = Objects.requireNonNull(value, "value == null");
   }
 
-  public final void session(HttpSession session) {
+  public final void session(HttpSession0 session) {
     final HttpToken key;
     key = session.id();
 

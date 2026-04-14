@@ -40,7 +40,7 @@ final class HttpServerTaskY {
 
   Note.Sink noteSink = Y.noteSink();
 
-  HttpSessionLoader sessionLoader = _ -> null;
+  HttpSessionLoader sessionLoader = (_, _) -> null;
 
   Socket socket;
 

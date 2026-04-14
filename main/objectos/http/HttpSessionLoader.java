@@ -18,6 +18,6 @@ package objectos.http;
 @FunctionalInterface
 interface HttpSessionLoader {
 
-  HttpSession loadSession(HttpRequest request);
+  HttpSession loadSession(HttpRequest request, HttpResponse response);
 
 }

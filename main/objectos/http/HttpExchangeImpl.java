@@ -407,7 +407,7 @@ final class HttpExchangeImpl implements HttpExchange, Runnable, Closeable {
 
   private final HttpResponseListener responseListener;
 
-  private HttpSession session;
+  private HttpSession0 session;
 
   private final Closeable socket;
 
@@ -2894,7 +2894,7 @@ final class HttpExchangeImpl implements HttpExchange, Runnable, Closeable {
   // # BEGIN: Session Support
   // ##################################################################
 
-  public final void session(HttpSession value) {
+  public final void session(HttpSession0 value) {
     session = value;
   }
 

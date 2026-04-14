@@ -219,7 +219,7 @@ final class HttpServerTask implements Runnable {
 
     // session
     final HttpSession session;
-    session = sessionLoader.loadSession(request);
+    session = sessionLoader.loadSession(request, response);
 
     // exchange
     final HttpExchange0 exchange;

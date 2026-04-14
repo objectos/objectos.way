@@ -84,7 +84,7 @@ final class HttpSessionStoreImpl implements HttpSessionLoader, HttpSessionStore 
 
   private final RandomGenerator sessionGenerator;
 
-  private final ConcurrentMap<HttpToken, HttpSession> sessions;
+  private final ConcurrentMap<HttpToken, HttpSession0> sessions;
 
   private final boolean skipCsrf = false;
 
@@ -117,9 +117,9 @@ final class HttpSessionStoreImpl implements HttpSessionLoader, HttpSessionStore 
       return;
     }
 
-    final HttpSession session;
+    final HttpSession0 session;
 
-    final HttpSession maybeExisting;
+    final HttpSession0 maybeExisting;
     maybeExisting = findSession(impl);
 
     if (maybeExisting != null) {
@@ -132,8 +132,15 @@ final class HttpSessionStoreImpl implements HttpSessionLoader, HttpSessionStore 
   }
 
   @Override
-  public final HttpSession loadSession(HttpRequest request) {
-    throw new UnsupportedOperationException("Implement me");
+  public final HttpSession loadSession(HttpRequest request, HttpResponse response) {
+    final HttpSession maybeExisting;
+    maybeExisting = findSession(request);
+
+    if (maybeExisting != null) {
+      return maybeExisting;
+    } else {
+      return new HttpSession1(response, this);
+    }
   }
 
   @Override
@@ -145,7 +152,7 @@ final class HttpSessionStoreImpl implements HttpSessionLoader, HttpSessionStore 
       return true;
     }
 
-    final HttpSession session;
+    final HttpSession0 session;
     session = findSession(impl);
 
     if (session != null) {
@@ -208,7 +215,7 @@ final class HttpSessionStoreImpl implements HttpSessionLoader, HttpSessionStore 
     }
   }
 
-  private HttpSession findSession(HttpExchangeImpl impl) {
+  private HttpSession0 findSession(HttpRequest impl) {
     final String cookie;
     cookie = impl.header(HttpHeaderName.COOKIE); // implicit null-check
 
@@ -328,7 +335,7 @@ final class HttpSessionStoreImpl implements HttpSessionLoader, HttpSessionStore 
 
         case TEST_VALUE -> {
           if (c == ';') {
-            final HttpSession maybe;
+            final HttpSession0 maybe;
             maybe = findSession0(impl, cookie, startIndex, idx);
 
             if (maybe != null) {
@@ -358,7 +365,7 @@ final class HttpSessionStoreImpl implements HttpSessionLoader, HttpSessionStore 
     return findSession0(impl, cookie, startIndex, len);
   }
 
-  private HttpSession findSession0(HttpExchangeImpl impl, String cookie, int startIndex, int endIndex) {
+  private HttpSession0 findSession0(HttpRequest impl, String cookie, int startIndex, int endIndex) {
     try {
       final String encoded;
       encoded = cookie.substring(startIndex, endIndex);
@@ -374,8 +381,8 @@ final class HttpSessionStoreImpl implements HttpSessionLoader, HttpSessionStore 
     }
   }
 
-  public final HttpSession createSession() {
-    HttpSession session, maybeExisting;
+  public final HttpSession0 createSession() {
+    HttpSession0 session, maybeExisting;
 
     do {
       final HttpToken id;
@@ -384,7 +391,7 @@ final class HttpSessionStoreImpl implements HttpSessionLoader, HttpSessionStore 
       final String setCookie;
       setCookie = setCookie(id);
 
-      session = new HttpSession(id, setCookie);
+      session = new HttpSession0(id, setCookie);
 
       maybeExisting = sessions.putIfAbsent(id, session);
     } while (maybeExisting != null);
@@ -404,8 +411,8 @@ final class HttpSessionStoreImpl implements HttpSessionLoader, HttpSessionStore 
     return session;
   }
 
-  public final HttpSession get(HttpToken id) {
-    HttpSession session;
+  public final HttpSession0 get(HttpToken id) {
+    HttpSession0 session;
     session = sessions.get(id);
 
     if (session == null) {
@@ -419,6 +426,13 @@ final class HttpSessionStoreImpl implements HttpSessionLoader, HttpSessionStore 
     session.touch(instantSource);
 
     return session;
+  }
+
+  public final String setCookie(HttpSession0 session) {
+    final HttpToken id;
+    id = session.id();
+
+    return setCookie(id);
   }
 
   private String setCookie(HttpToken id) {

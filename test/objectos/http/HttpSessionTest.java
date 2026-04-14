@@ -23,8 +23,8 @@ public class HttpSessionTest {
 
   @Test
   public void set0() {
-    final HttpSession session;
-    session = new HttpSession(null, "");
+    final HttpSession0 session;
+    session = new HttpSession0(null, "");
 
     assertEquals(session.get0(String.class), null);
 
