@@ -191,4 +191,9 @@ public sealed interface HttpResponse permits HttpResponseImpl, HttpResponse0 {
   /// @param file the path to a regular file containing the body contents
   void send(Path file);
 
+  /// Returns `true` if a response has been written out; `false` otherwise.
+  ///
+  /// @return `true` if a response has been written out; `false` otherwise
+  boolean processed();
+
 }

@@ -50,6 +50,9 @@ final class HttpResponseImpl implements HttpResponse, AutoCloseable {
   // 2xx responses
 
   @Override
+  public boolean processed() { return false; }
+
+  @Override
   public final void ok(Media media) {
     throw new UnsupportedOperationException("Implement me");
   }

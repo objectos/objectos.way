@@ -16,10 +16,12 @@
 package objectos.http;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import objectos.internal.Bytes;
 import objectos.way.Media;
@@ -203,7 +205,24 @@ final class HttpResponse2Writer {
       return;
     }
 
-    throw new UnsupportedOperationException("Implement me");
+    if (chunked) {
+      try (
+          InputStream input = Files.newInputStream(file);
+          HttpResponse3Chunked output = new HttpResponse3Chunked(buffer, bufferIndex, outputStream);
+      ) {
+        input.transferTo(output);
+      }
+
+      bufferIndex = 0;
+    }
+
+    else {
+      flush();
+
+      try (InputStream input = Files.newInputStream(file)) {
+        input.transferTo(outputStream);
+      }
+    }
   }
 
   private void flush() throws IOException {

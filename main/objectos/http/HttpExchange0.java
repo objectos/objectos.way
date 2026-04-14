@@ -23,21 +23,13 @@ import objectos.way.Media.Text;
 
 final class HttpExchange0 implements HttpExchange {
 
-  private final long id;
-
-  private final Note.Sink noteSink;
-
   private final HttpRequest0 request;
 
   private final HttpResponse0 response;
 
   private final HttpSession session;
 
-  HttpExchange0(long id, Note.Sink noteSink, HttpRequest0 request, HttpResponse0 response, HttpSession session) {
-    this.id = id;
-
-    this.noteSink = noteSink;
-
+  HttpExchange0(HttpRequest0 request, HttpResponse0 response, HttpSession session) {
     this.request = request;
 
     this.response = response;
@@ -318,8 +310,6 @@ final class HttpExchange0 implements HttpExchange {
   @Override
   public final void internalServerError(Media media, Throwable error) {
     response.internalServerError(media, error);
-
-    noteSink.send(HttpServerTask.THROW, id, error);
   }
 
   @Override
@@ -387,13 +377,13 @@ final class HttpExchange0 implements HttpExchange {
     response.send(media);
   }
 
+  @Override
+  public final boolean processed() {
+    return response.processed();
+  }
+
   // ##################################################################
   // # END: HttpResponse
   // ##################################################################
-
-  @Override
-  public final boolean processed() {
-    throw new UnsupportedOperationException("Implement me");
-  }
 
 }

@@ -31,7 +31,7 @@ final class HttpServerTaskYNoteSink extends Note.NoOpSink {
   public final <T1> void send(Long1Ref1<T1> note, long value1, T1 value2) {
     assertEquals(note.source(), HttpServerTask.class.getName());
 
-    assertEquals(note.key(), "IOE");
+    assertEquals(note.key(), "THR");
 
     id = value1;
 

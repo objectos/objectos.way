@@ -30,16 +30,26 @@ final class HttpResponse0 implements HttpResponse {
 
   private final List<HttpResponse1Header> headers = new ArrayList<>();
 
+  private final long id;
+
+  private final Note.Sink noteSink;
+
   private final OutputStream outputStream;
+
+  private boolean processed;
 
   private HttpStatus status = HttpStatus.OK;
 
-  HttpResponse0(byte[] buffer, Clock clock, boolean head, OutputStream outputStream) {
+  HttpResponse0(byte[] buffer, Clock clock, boolean head, long id, Note.Sink noteSink, OutputStream outputStream) {
     this.buffer = buffer;
 
     this.clock = clock;
 
     this.head = head;
+
+    this.id = id;
+
+    this.noteSink = noteSink;
 
     this.outputStream = outputStream;
   }
@@ -176,15 +186,21 @@ final class HttpResponse0 implements HttpResponse {
     header(HttpHeaderName.CONNECTION, "close");
 
     send(media);
+
+    noteSink.send(HttpServerTask.THROW, id, error);
   }
 
   @Override
   public final void status(HttpStatus value) {
+    checkProcessed();
+
     status = Objects.requireNonNull(value, "value == null");
   }
 
   @Override
   public final void header(HttpHeaderName name, long value) {
+    checkProcessed();
+
     headers.add(
         new HttpResponse1Header(name, value)
     );
@@ -192,6 +208,8 @@ final class HttpResponse0 implements HttpResponse {
 
   @Override
   public final void header(HttpHeaderName name, String value) {
+    checkProcessed();
+
     headers.add(
         new HttpResponse1Header(name, value)
     );
@@ -199,6 +217,8 @@ final class HttpResponse0 implements HttpResponse {
 
   @Override
   public final void header(HttpHeaderName name, Consumer<? super HttpHeaderValueBuilder> builder) {
+    checkProcessed();
+
     Objects.requireNonNull(name, "name == null");
 
     final HttpHeaderValueBuilderImpl valueBuilder;
@@ -368,15 +388,32 @@ final class HttpResponse0 implements HttpResponse {
     }
   }
 
+  public final boolean processed() {
+    return processed;
+  }
+
   final boolean closeConnection() {
     return closeConnection;
   }
 
+  private void checkProcessed() {
+    if (processed) {
+      final String msg;
+      msg = "A response has already been written out";
+
+      throw new IllegalStateException(msg);
+    }
+  }
+
   private void clientWriteError(IOException e) {
-    throw new UnsupportedOperationException("Implement me");
+    noteSink.send(HttpServerTask.THROW, id, e);
   }
 
   private HttpResponse2Writer writer() throws IOException {
+    checkProcessed();
+
+    processed = true;
+
     final HttpResponse2Writer writer;
     writer = new HttpResponse2Writer(buffer, head, outputStream);
 

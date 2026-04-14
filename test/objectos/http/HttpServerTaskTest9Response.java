@@ -19,10 +19,16 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 import objectos.way.Media;
 import objectos.way.Y;
+import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -1012,431 +1018,517 @@ public class HttpServerTaskTest9Response {
     );
   }
 
-  /*
-
   @DataProvider
   public Iterator<HttpStatus> respondStatusProvider() {
-  final HttpStatusImpl[] values = HttpStatusImpl.values();
+    final HttpStatusImpl[] values;
+    values = HttpStatusImpl.values();
 
-  return Stream.of(values).map(HttpStatus.class::cast).iterator();
+    return Stream.of(values).map(HttpStatus.class::cast).iterator();
   }
 
   @Test(dataProvider = "respondStatusProvider")
   public void respondStatus(HttpStatus status) {
-  exec(test -> {
-  test.xch(xch -> {
-  xch.req("""
-  GET / HTTP/1.1\r
-  Host: Host\r
-  \r
-  """);
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.bufferSize = 256;
 
-  xch.handler(http -> http.respond(resp -> {
-  http.status(status);
+          opts.socket = Y.socket("""
+          GET /1 HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """);
 
-  http.send(OK);
-  }));
+          opts.handler = http -> {
+            http.status(status);
 
-  xch.resp(
-  """
-  HTTP/1.1 %d %s\r
-  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-  Content-Type: text/plain; charset=utf-8\r
-  Content-Length: 3\r
-  \r
-  OK
-  """.formatted(status.code(), status.reasonPhrase())
-  );
-  });
-  });
+            http.header(HttpHeaderName.DATE, http.now());
+
+            http.header(HttpHeaderName.CONNECTION, "close");
+
+            http.send();
+          };
+        }),
+
+        """
+        HTTP/1.1 %d %s\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Connection: close\r
+        \r
+        """.formatted(status.code(), status.reasonPhrase())
+    );
   }
 
   public record HeaderValueData(String value, String expected, String description) {}
 
   @DataProvider
   public Iterator<HeaderValueData> respondHeaderValidProvider() {
-  final List<HeaderValueData> list;
-  list = new ArrayList<>();
+    final List<HeaderValueData> list;
+    list = new ArrayList<>();
 
-  list.add(new HeaderValueData("", "ETag:", "Empty string is valid"));
+    list.add(new HeaderValueData("", "ETag:", "Empty string is valid"));
 
-  final String validChars;
-  validChars = Http.vchar();
+    final String validChars;
+    validChars = Http.vchar();
 
-  for (int idx = 0, len = validChars.length(); idx < len; idx++) {
-  final char c;
-  c = validChars.charAt(idx);
+    for (int idx = 0, len = validChars.length(); idx < len; idx++) {
+      final char c;
+      c = validChars.charAt(idx);
 
-  final String s;
-  s = Character.toString(c);
+      final String s;
+      s = Character.toString(c);
 
-  list.add(new HeaderValueData(s, "ETag: " + s, "Character: " + c));
-  }
+      list.add(new HeaderValueData(s, "ETag: " + s, "Character: " + c));
+    }
 
-  list.add(new HeaderValueData("x y", "ETag: x y", "SPACE allowed if not at the beginning/end"));
-  list.add(new HeaderValueData("x\ty", "ETag: x\ty", "TAB allowed if not at the beginning/end"));
+    list.add(new HeaderValueData("x y", "ETag: x y", "SPACE allowed if not at the beginning/end"));
+    list.add(new HeaderValueData("x\ty", "ETag: x\ty", "TAB allowed if not at the beginning/end"));
 
-  return list.iterator();
+    return list.iterator();
   }
 
   @Test(description = "http.header(HeaderName, String) w/ a valid string", dataProvider = "respondHeaderValidProvider")
   public void respondHeaderValid(HeaderValueData data) {
-  exec(test -> {
-  test.bufferSize(256, 512);
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.socket = Y.socket("""
+          GET /1 HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """);
 
-  test.xch(xch -> {
-  xch.req("""
-  GET / HTTP/1.1\r
-  Host: Host\r
-  \r
-  """);
+          opts.handler = http -> {
+            http.status(HttpStatus.OK);
 
-  xch.handler(http -> http.respond(resp -> {
-  http.status(HttpStatus.OK);
+            http.header(HttpHeaderName.DATE, http.now());
 
-  http.header(HttpHeaderName.ETAG, data.value);
+            http.header(HttpHeaderName.ETAG, data.value);
 
-  http.send(OK);
-  }));
+            http.send();
+          };
+        }),
 
-  xch.resp(
-  """
-  HTTP/1.1 200 OK\r
-  %s\r
-  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-  Content-Type: text/plain; charset=utf-8\r
-  Content-Length: 3\r
-  \r
-  OK
-  """.formatted(data.expected)
-  );
-  });
-  });
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        %s\r
+        \r
+        """.formatted(data.expected)
+    );
   }
 
   @DataProvider
   public Iterator<HeaderValueData> respondHeaderInvalidProvider() {
-  final List<HeaderValueData> list;
-  list = new ArrayList<>();
+    final List<HeaderValueData> list;
+    list = new ArrayList<>();
 
-  final boolean[] valid;
-  valid = new boolean[256];
+    final boolean[] valid;
+    valid = new boolean[256];
 
-  final String validChars;
-  validChars = Http.vchar();
+    final String validChars;
+    validChars = Http.vchar();
 
-  for (int idx = 0, len = validChars.length(); idx < len; idx++) {
-  final char validChar;
-  validChar = validChars.charAt(idx);
+    for (int idx = 0, len = validChars.length(); idx < len; idx++) {
+      final char validChar;
+      validChar = validChars.charAt(idx);
 
-  valid[validChar] = true;
-  }
+      valid[validChar] = true;
+    }
 
-  // we'll handle SPACE and HTAB later
-  valid[' '] = true;
-  valid['\t'] = true;
+    // we'll handle SPACE and HTAB later
+    valid[' '] = true;
+    valid['\t'] = true;
 
-  for (int c = 0; c < 0xFF; c++) {
-  if (!valid[c]) {
-  final String value;
-  value = Character.toString(c);
+    for (int c = 0; c < 0xFF; c++) {
+      if (!valid[c]) {
+        final String value;
+        value = Character.toString(c);
 
-  final String expected;
-  expected = "Invalid character at index 0: " + value;
+        final String expected;
+        expected = "Invalid character at index 0: " + value;
 
-  final String description;
-  description = "Invalid character " + value;
+        final String description;
+        description = "Invalid character " + value;
 
-  final HeaderValueData data;
-  data = new HeaderValueData(value, expected, description);
+        final HeaderValueData data;
+        data = new HeaderValueData(value, expected, description);
 
-  list.add(data);
-  }
-  }
+        list.add(data);
+      }
+    }
 
-  list.add(new HeaderValueData(" abc", "Leading SPACE or HTAB characters are not allowed", ""));
-  list.add(new HeaderValueData("\tabc", "Leading SPACE or HTAB characters are not allowed", ""));
-  list.add(new HeaderValueData("abc ", "Trailing SPACE or HTAB characters are not allowed", ""));
-  list.add(new HeaderValueData("abc\t", "Trailing SPACE or HTAB characters are not allowed", ""));
+    list.add(new HeaderValueData(" abc", "Leading SPACE or HTAB characters are not allowed", ""));
+    list.add(new HeaderValueData("\tabc", "Leading SPACE or HTAB characters are not allowed", ""));
+    list.add(new HeaderValueData("abc ", "Trailing SPACE or HTAB characters are not allowed", ""));
+    list.add(new HeaderValueData("abc\t", "Trailing SPACE or HTAB characters are not allowed", ""));
 
-  return list.iterator();
+    return list.iterator();
   }
 
   @Test(description = "http.header(HeaderName, String) w/ an invalid string", dataProvider = "respondHeaderInvalidProvider")
   public void respondHeaderInvalid(HeaderValueData data) {
-  exec(test -> {
-  test.bufferSize(256, 512);
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.socket = Y.socket("""
+          GET /1 HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """);
 
-  test.xch(xch -> {
-  xch.req("""
-  GET / HTTP/1.1\r
-  Host: Host\r
-  \r
-  """);
+          opts.handler = http -> {
+            http.status(HttpStatus.OK);
 
-  xch.handler(http -> http.respond(resp -> {
-  http.status(HttpStatus.OK);
+            http.header(HttpHeaderName.DATE, http.now());
 
-  try {
-  http.header(HttpHeaderName.ETAG, data.value);
+            try {
+              http.header(HttpHeaderName.ETAG, data.value);
 
-  Assert.fail();
-  } catch (IllegalArgumentException expected) {
-  final String message;
-  message = expected.getMessage();
+              Assert.fail();
+            } catch (IllegalArgumentException expected) {
+              final String message;
+              message = expected.getMessage();
 
-  assertEquals(message, data.expected);
+              assertEquals(message, data.expected);
 
-  http.send(OK);
-  }
-  }));
+              http.send();
+            }
+          };
+        }),
 
-  xch.resp(OK_RESP);
-  });
-  });
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        \r
+        """
+    );
   }
 
   @DataProvider
   public Object[][] headerValueBuilderValidProvider() {
-  return new Object[][] {
-  {
-  builder(b -> {
-  b.value("inline");
-  }),
-  "Content-Disposition: inline"
-  },
-  {
-  builder(b -> {
-  b.value("attachment");
-  b.param("filename", "document.pdf");
-  }),
-  "Content-Disposition: attachment; filename=document.pdf"
-  },
-  {
-  builder(b -> {
-  b.value("attachment");
-  b.param("filename", "[foo].txt");
-  }),
-  "Content-Disposition: attachment; filename=\"[foo].txt\""
-  },
-  {
-  builder(b -> {
-  b.value("attachment");
-  b.param("filename", "");
-  }),
-  "Content-Disposition: attachment; filename=\"\""
-  },
-  {
-  builder(b -> {
-  b.value("foo");
-  b.value("bar");
-  }),
-  "Content-Disposition: foo, bar"
-  },
-  {
-  builder(b -> {
-  b.value("foo");
-  b.param("q", "0.9");
-  b.value("bar");
-  }),
-  "Content-Disposition: foo; q=0.9, bar"
-  },
-  {
-  builder(b -> {
-  b.value("attachment");
-  b.param("filename*", StandardCharsets.UTF_8, "document.pdf");
-  }),
-  "Content-Disposition: attachment; filename*=UTF-8''document.pdf"
-  },
-  {
-  builder(b -> {
-  b.value("attachment");
-  b.param("filename*", StandardCharsets.UTF_8, "ação.pdf");
-  }),
-  "Content-Disposition: attachment; filename*=UTF-8''a%C3%A7%C3%A3o.pdf"
-  },
-  {
-  builder(b -> {
-  b.value("attachment");
-  b.param("filename*", StandardCharsets.UTF_8, "");
-  }),
-  "Content-Disposition: attachment; filename*=UTF-8''"
-  },
-  {
-  builder(b -> {
-  b.param("filename*", StandardCharsets.UTF_8, "");
-  }),
-  "Content-Disposition: ; filename*=UTF-8''"
-  }
-  };
+    return new Object[][] {
+        {
+            builder(b -> {
+              b.value("inline");
+            }),
+            "Content-Disposition: inline"
+        },
+        {
+            builder(b -> {
+              b.value("attachment");
+              b.param("filename", "document.pdf");
+            }),
+            "Content-Disposition: attachment; filename=document.pdf"
+        },
+        {
+            builder(b -> {
+              b.value("attachment");
+              b.param("filename", "[foo].txt");
+            }),
+            "Content-Disposition: attachment; filename=\"[foo].txt\""
+        },
+        {
+            builder(b -> {
+              b.value("attachment");
+              b.param("filename", "");
+            }),
+            "Content-Disposition: attachment; filename=\"\""
+        },
+        {
+            builder(b -> {
+              b.value("foo");
+              b.value("bar");
+            }),
+            "Content-Disposition: foo, bar"
+        },
+        {
+            builder(b -> {
+              b.value("foo");
+              b.param("q", "0.9");
+              b.value("bar");
+            }),
+            "Content-Disposition: foo; q=0.9, bar"
+        },
+        {
+            builder(b -> {
+              b.value("attachment");
+              b.param("filename*", StandardCharsets.UTF_8, "document.pdf");
+            }),
+            "Content-Disposition: attachment; filename*=UTF-8''document.pdf"
+        },
+        {
+            builder(b -> {
+              b.value("attachment");
+              b.param("filename*", StandardCharsets.UTF_8, "ação.pdf");
+            }),
+            "Content-Disposition: attachment; filename*=UTF-8''a%C3%A7%C3%A3o.pdf"
+        },
+        {
+            builder(b -> {
+              b.value("attachment");
+              b.param("filename*", StandardCharsets.UTF_8, "");
+            }),
+            "Content-Disposition: attachment; filename*=UTF-8''"
+        },
+        {
+            builder(b -> {
+              b.param("filename*", StandardCharsets.UTF_8, "");
+            }),
+            "Content-Disposition: ; filename*=UTF-8''"
+        }
+    };
   }
 
   private Consumer<HttpHeaderValueBuilder> builder(Consumer<HttpHeaderValueBuilder> builder) {
-  return builder;
+    return builder;
   }
 
   @Test(dataProvider = "headerValueBuilderValidProvider")
   public void headerValueBuilderValid(Consumer<? super HttpHeaderValueBuilder> builder, String expected) {
-  get(
-  http -> http.respond(resp -> {
-  http.status(HttpStatus.OK);
-  http.header(HttpHeaderName.CONTENT_DISPOSITION, builder);
-  http.send(OK);
-  }),
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.socket = Y.socket("""
+          GET /1 HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """);
 
-  """
-  HTTP/1.1 200 OK\r
-  %s\r
-  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-  Content-Type: text/plain; charset=utf-8\r
-  Content-Length: 3\r
-  \r
-  OK
-  """.formatted(expected)
-  );
+          opts.handler = http -> {
+            http.status(HttpStatus.OK);
+
+            http.header(HttpHeaderName.DATE, http.now());
+
+            http.header(HttpHeaderName.CONTENT_DISPOSITION, builder);
+
+            http.send();
+          };
+        }),
+
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        %s\r
+        \r
+        """.formatted(expected)
+    );
   }
 
   @DataProvider
   public Object[][] headerValueBuilderInvalidProvider() {
-  return new Object[][] {
-  {builder(builder -> {
-  builder.param("inva lid", "foo.txt");
-  }), "Parameter name contains an invalid character at index 4: ' '"},
-
-  {builder(builder -> {
-  builder.param("[]", StandardCharsets.UTF_8, "foo.txt");
-  }), "Parameter name contains an invalid character at index 0: '['"}
-  };
+    return new Object[][] {
+        {
+            builder(builder -> {
+              builder.param("inva lid", "foo.txt");
+            }),
+            "Parameter name contains an invalid character at index 4: ' '"
+        },
+        {
+            builder(builder -> {
+              builder.param("[]", StandardCharsets.UTF_8, "foo.txt");
+            }),
+            "Parameter name contains an invalid character at index 0: '['"
+        }
+    };
   }
 
   @Test(dataProvider = "headerValueBuilderInvalidProvider")
   public void headerValueBuilderInvalid(Consumer<? super HttpHeaderValueBuilder> builder, String expectedMessage) {
-  exec(test -> {
-  test.bufferSize(256, 512);
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.socket = Y.socket("""
+          GET /1 HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """);
 
-  test.xch(xch -> {
-  xch.req("""
-  GET / HTTP/1.1\r
-  Host: Host\r
-  \r
-  """);
+          opts.handler = http -> {
+            http.status(HttpStatus.OK);
 
-  xch.handler(http -> http.respond(resp -> {
-  http.status(HttpStatus.OK);
+            http.header(HttpHeaderName.DATE, http.now());
 
-  try {
-  http.header(HttpHeaderName.ETAG, builder);
+            try {
+              http.header(HttpHeaderName.ETAG, builder);
 
-  Assert.fail();
-  } catch (RuntimeException runtime) {
-  final String message;
-  message = runtime.getMessage();
+              Assert.fail();
+            } catch (RuntimeException runtime) {
+              final String message;
+              message = runtime.getMessage();
 
-  assertEquals(message, expectedMessage);
+              assertEquals(message, expectedMessage);
 
-  http.send(OK);
-  }
-  }));
+              http.send();
+            }
+          };
+        }),
 
-  xch.resp(OK_RESP);
-  });
-  });
-  }
-
-  private void empty01(HttpExchangeImpl http) {
-  http.respond(resp -> {
-  http.status(HttpStatus.NOT_MODIFIED);
-  http.header(HttpHeaderName.DATE, http.now());
-  http.header(HttpHeaderName.ETAG, "some%hash");
-  http.send();
-  });
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        \r
+        """
+    );
   }
 
   @Test(description = "Empty response body: support Web.Resources")
   public void empty01() {
-  test(
-  """
-  GET /atom.xml HTTP/1.1\r
-  Host: www.example.com\r
-  If-None-Match: some%hash\r
-  Connection: close\r
-  \r
-  """,
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.socket = Y.socket("""
+          GET /1 HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """);
 
-  this::empty01,
+          opts.handler = http -> {
+            http.status(HttpStatus.NOT_MODIFIED);
 
-  """
-  HTTP/1.1 304 Not Modified\r
-  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-  ETag: some%hash\r
-  \r
-  """
-  );
-  }
+            http.header(HttpHeaderName.DATE, http.now());
 
-  private Path file01;
+            http.header(HttpHeaderName.ETAG, "some%hash");
 
-  private void file01(HttpExchangeImpl http) {
-  http.respond(resp -> {
-  http.status(HttpStatus.OK);
-  http.header(HttpHeaderName.DATE, http.now());
-  http.header(HttpHeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
-  http.header(HttpHeaderName.CONTENT_LENGTH, 1024);
-  http.send(file01);
-  });
+            http.send();
+          };
+        }),
+
+        """
+        HTTP/1.1 304 Not Modified\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        ETag: some%hash\r
+        \r
+        """
+    );
   }
 
   @Test(description = "file: GET")
   public void file01() {
-  final String contents;
-  contents = "x".repeat(1024);
+    final String contents;
+    contents = "x".repeat(1024);
 
-  file01 = Y.nextTempFile(contents, StandardCharsets.UTF_8);
+    final Path file01;
+    file01 = Y.nextTempFile(contents, StandardCharsets.UTF_8);
 
-  get(
-  this::file01,
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.socket = Y.socket("""
+          GET /1 HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """);
 
-  """
-  HTTP/1.1 200 OK\r
-  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-  Content-Type: text/plain; charset=utf-8\r
-  Content-Length: 1024\r
-  \r
-  %s\
-  """.formatted(contents)
-  );
-  }
+          opts.handler = http -> {
+            http.status(HttpStatus.OK);
 
-  private Path file02;
+            http.header(HttpHeaderName.DATE, http.now());
 
-  private void file02(HttpExchangeImpl http) {
-  http.respond(resp -> {
-  http.status(HttpStatus.OK);
-  http.header(HttpHeaderName.DATE, http.now());
-  http.header(HttpHeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
-  http.header(HttpHeaderName.CONTENT_LENGTH, 1024);
-  http.send(file02);
-  });
+            http.header(HttpHeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
+
+            http.header(HttpHeaderName.CONTENT_LENGTH, 1024);
+
+            http.send(file01);
+          };
+        }),
+
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 1024\r
+        \r
+        %s\
+        """.formatted(contents)
+    );
   }
 
   @Test(description = "file: HEAD")
   public void file02() {
-  final String contents;
-  contents = "x".repeat(1024);
+    final String contents;
+    contents = "x".repeat(1024);
 
-  file02 = Y.nextTempFile(contents, StandardCharsets.UTF_8);
+    final Path file02;
+    file02 = Y.nextTempFile(contents, StandardCharsets.UTF_8);
 
-  head(
-  this::file02,
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.socket = Y.socket("""
+          HEAD /1 HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """);
 
-  """
-  HTTP/1.1 200 OK\r
-  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-  Content-Type: text/plain; charset=utf-8\r
-  Content-Length: 1024\r
-  \r
-  """
-  );
+          opts.handler = http -> {
+            http.status(HttpStatus.OK);
+
+            http.header(HttpHeaderName.DATE, http.now());
+
+            http.header(HttpHeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
+
+            http.header(HttpHeaderName.CONTENT_LENGTH, 1024);
+
+            http.send(file02);
+          };
+        }),
+
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 1024\r
+        \r
+        """
+    );
+  }
+
+  @Test(description = "file: GET (chunked)")
+  public void file03() {
+    final String contents;
+    contents = "x".repeat(64);
+
+    final Path file01;
+    file01 = Y.nextTempFile(contents, StandardCharsets.UTF_8);
+
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.socket = Y.socket("""
+          GET /1 HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """);
+
+          opts.handler = http -> {
+            http.status(HttpStatus.OK);
+
+            http.header(HttpHeaderName.DATE, http.now());
+
+            http.header(HttpHeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
+
+            http.header(HttpHeaderName.CONTENT_LENGTH, 64);
+
+            http.header(HttpHeaderName.TRANSFER_ENCODING, "chunked");
+
+            http.send(file01);
+          };
+        }),
+
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 64\r
+        Transfer-Encoding: chunked\r
+        \r
+        040\r
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r
+        0\r
+        \r
+        """.formatted(contents)
+    );
   }
 
   // ##################################################################
@@ -1445,164 +1537,112 @@ public class HttpServerTaskTest9Response {
 
   @Test(description = "throws on COMMIT")
   public void ioException01() {
-  exec(test -> {
-  test.xch(xch -> {
-  xch.req("""
-  GET / HTTP/1.1\r
-  Host: test\r
-  \r
-  """);
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.socket = Y.socket(config -> {
+            config.inputStream(
+                Y.inputStream("""
+                GET /1 HTTP/1.1\r
+                Host: www.example.com\r
+                Connection: close\r
+                \r
+                """)
+            );
 
-  xch.handler(http -> http.ok(Media.Bytes.textPlain("OK")));
+            var outputStream = Y.outputStream();
 
-  xch.resp(new IOException(), 1);
-  });
-  });
+            outputStream.throwOnWrite(Y.trimStackTrace(new IOException(), 1));
+
+            config.outputStream(outputStream);
+          });
+
+          opts.handler = http -> http.ok(Media.Bytes.textPlain("OK"));
+        }),
+
+        ""
+    );
   }
 
   @Test(description = "throws on headerUnchecked")
   public void ioException02() {
-  exec(test -> {
-  test.xch(xch -> {
-  xch.req("""
-  GET / HTTP/1.1\r
-  Host: test\r
-  \r
-  """);
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.socket = Y.socket(config -> {
+            config.inputStream(
+                Y.inputStream("""
+                GET /1 HTTP/1.1\r
+                Host: www.example.com\r
+                Connection: close\r
+                \r
+                """)
+            );
 
-  final String veryLargeHex;
-  veryLargeHex = "f756cd80".repeat(256);
+            var outputStream = Y.outputStream();
 
-  final String location;
-  location = "/foo/" + veryLargeHex;
+            outputStream.throwOnWrite(Y.trimStackTrace(new IOException(), 1));
 
-  xch.handler(http -> http.found(location));
+            config.outputStream(outputStream);
+          });
 
-  xch.resp(new IOException(), 1);
-  });
-  });
+          final String veryLargeHex;
+          veryLargeHex = "f756cd80".repeat(256);
+
+          final String location;
+          location = "/foo/" + veryLargeHex;
+
+          opts.handler = http -> http.found(location);
+        }),
+
+        ""
+    );
   }
 
   // ##################################################################
   // # END: IOException while writing
   // ##################################################################
 
-  @Test(description = "Disallow request methods after response is sent")
+  @Test(description = "Disallow response methods after response is sent")
   public void state01() {
-  state(HttpExchange::method);
-  state(HttpExchange::path);
-  state(http -> http.queryParam("x"));
-  state(http -> http.queryParamAll("x"));
-  state(http -> http.queryParamNames());
-  state(HttpExchange::version);
-
-  state(http -> http.header(HttpHeaderName.ACCEPT_ENCODING));
-
-  state(HttpExchange::bodyInputStream);
+    state(http -> http.status(HttpStatus.NOT_FOUND));
+    state(http -> http.header(HttpHeaderName.REFERER, 123L));
+    state(http -> http.header(HttpHeaderName.REFERER, "foo"));
+    state(http -> http.send());
+    state(http -> http.send(new byte[0]));
+    state(http -> http.send(new byte[] {1, 2, 3}, 0, 1));
   }
 
-  private void get(Consumer<HttpExchangeImpl> handler, String expectedResponse) {
-  test("""
-  GET /test HTTP/1.1\r
-  Host: www.objectos.com.br\r
-  Connection: close\r
-  \r
-  """, handler, expectedResponse);
+  private void state(HttpHandler handler) {
+    assertEquals(
+        HttpServerTaskY.resp(opts -> {
+          opts.socket = Y.socket("""
+          GET /1 HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """);
+
+          opts.handler = http -> {
+            http.ok(Media.Bytes.textPlain("1"));
+
+            try {
+              handler.handle(http);
+
+              Assert.fail("It should have thrown");
+            } catch (IllegalStateException expected) {
+              assertEquals(expected.getMessage(), "A response has already been written out");
+            }
+          };
+        }),
+
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 1\r
+        \r
+        1\
+        """
+    );
   }
-
-  private void get(int initial, int max, Consumer<HttpExchangeImpl> handler, String expectedResponse) {
-  test(
-  initial, max,
-
-  """
-  GET /test HTTP/1.1\r
-  Host: www.objectos.com.br\r
-  Connection: close\r
-  \r
-  """,
-
-  handler, expectedResponse
-  );
-  }
-
-  private void head(Consumer<HttpExchangeImpl> handler, String expectedResponse) {
-  test("""
-  HEAD /test HTTP/1.1\r
-  Host: www.objectos.com.br\r
-  Connection: close\r
-  \r
-  """, handler, expectedResponse);
-  }
-
-  private void post(Consumer<HttpExchangeImpl> handler, String expectedResponse) {
-  test("""
-  POST /test HTTP/1.1\r
-  Host: www.objectos.com.br\r
-  Content-Length: 24\r
-  Content-Type: application/x-www-form-urlencoded\r
-  Connection: close\r
-  \r
-  email=user%40example.com\
-  """, handler, expectedResponse);
-  }
-
-  @FunctionalInterface
-  private interface ThrowingConsumer {
-  void accept(HttpExchangeImpl http) throws IOException;
-  }
-
-  private void state(ThrowingConsumer handler) {
-  final Socket socket;
-  socket = Y.socket("""
-  GET /test HTTP/1.1\r
-  Host: www.objectos.com.br\r
-  Connection: close\r
-  \r
-  """);
-
-  try (HttpExchangeImpl http = HttpY.http(socket, 256, 512, Y.clockFixed(), Y.noteSink(), 0L)) {
-  assertEquals(http.shouldHandle(), true);
-
-  http.ok(Media.Bytes.textPlain("OK"));
-
-  handler.accept(http);
-
-  Assert.fail("It should have thrown");
-  } catch (IllegalStateException expected) {
-  final String message;
-  message = expected.getMessage();
-
-  assertEquals(message, """
-  This request method can only be invoked:
-  - after a successful shouldHandle() operation; and
-  - before a response has been sent.
-  """);
-  } catch (IOException e) {
-  throw new UncheckedIOException(e);
-  }
-  }
-
-  private void test(String request, Consumer<HttpExchangeImpl> handler, String expectedResponse) {
-  test(256, 512, request, handler, expectedResponse);
-  }
-
-  private void test(int initial, int max, String request, Consumer<HttpExchangeImpl> handler, String expectedResponse) {
-  final Socket socket;
-  socket = Y.socket(request);
-
-  try (HttpExchangeImpl http = HttpY.http(socket, initial, max, Y.clockFixed(), Y.noteSink(), 1024)) {
-  assertEquals(http.shouldHandle(), true);
-
-  handler.accept(http);
-
-  assertEquals(http.shouldHandle(), false);
-
-  assertEquals(Y.toString(socket), expectedResponse);
-  } catch (IOException e) {
-  throw new UncheckedIOException(e);
-  }
-  }
-
-  */
 
 }

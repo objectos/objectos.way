@@ -496,13 +496,9 @@ public sealed interface HttpExchange
   /// @param file the path to a regular file containing the body contents
   void send(Path file);
 
-  /**
-   * Return {@code true} if an HTTP response message has been written to this
-   * exchange; {@code false} otherwise.
-   *
-   * @return {@code true} if an HTTP response message has been written to this
-   *         exchange; {@code false} otherwise
-   */
+  /// Returns `true` if a response has been written out; `false` otherwise.
+  ///
+  /// @return `true` if a response has been written out; `false` otherwise
   boolean processed();
 
 }
