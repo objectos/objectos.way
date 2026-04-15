@@ -37,40 +37,6 @@ public sealed interface HttpRequestTarget permits HttpRequestLine {
    */
   String path();
 
-  /// Returns the value of the path parameter with the specified name if it
-  /// exists or returns `null` otherwise.
-  ///
-  /// @param name the name of the path parameter
-  ///
-  /// @return the value if it exists or `null` if it does not
-  String pathParam(String name);
-
-  /// Returns, as an `int`, the value of the path parameter with the specified
-  /// name. If the path parameter does not exist or if the value cannot be
-  /// converted to an `int` value then the specified default value is returned
-  /// instead.
-  ///
-  /// @param name the name of the path parameter
-  /// @param defaultValue the value to be returned if the parameter does exist of
-  ///        if its value cannot be converted to an `int` value
-  ///
-  /// @return the value converted to an `int` if it exists or the specified
-  ///         default value otherwise
-  default int pathParamAsInt(String name, int defaultValue) {
-    String maybe;
-    maybe = pathParam(name);
-
-    if (maybe == null) {
-      return defaultValue;
-    }
-
-    try {
-      return Integer.parseInt(maybe);
-    } catch (NumberFormatException expected) {
-      return defaultValue;
-    }
-  }
-
   /**
    * Returns the first value of the query parameter with the specified name
    * or {@code null} if there are no values.

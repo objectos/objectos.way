@@ -54,6 +54,18 @@ final class HttpResponse0 implements HttpResponse {
     this.outputStream = outputStream;
   }
 
+  @Override
+  public final String toString() {
+    if (outputStream instanceof ByteArrayOutputStream impl) {
+      final byte[] bytes;
+      bytes = impl.toByteArray();
+
+      return new String(bytes, StandardCharsets.UTF_8);
+    } else {
+      return "HttpExchange[]";
+    }
+  }
+
   // 2xx responses
 
   @Override
@@ -388,9 +400,12 @@ final class HttpResponse0 implements HttpResponse {
     }
   }
 
+  @Override
   public final boolean processed() {
     return processed;
   }
+
+  final long id() { return id; }
 
   final boolean closeConnection() {
     return closeConnection;

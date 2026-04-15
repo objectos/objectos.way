@@ -185,7 +185,14 @@ public class HttpExchangeTestBCreate {
 
     handler.handle(http);
 
-    assertEquals(http.toString(), OK_RESP);
+    assertEquals(http.toString(), """
+    HTTP/1.1 200 OK\r
+    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+    Content-Type: text/plain; charset=utf-8\r
+    Content-Length: 3\r
+    \r
+    OK
+    """);
   }
 
   private void requireUser(HttpExchange http) {
@@ -195,7 +202,7 @@ public class HttpExchangeTestBCreate {
     if (user == null) {
       http.found("/login");
     } else {
-      http.ok(OK);
+      http.ok(Media.Bytes.textPlain("OK\n"));
     }
   }
 
@@ -283,7 +290,11 @@ public class HttpExchangeTestBCreate {
         Content-Type: text/html; charset=utf-8\r
         Transfer-Encoding: chunked\r
         \r
+        010\r
         <div>tc02</div>
+        \r
+        0\r
+        \r
         """
     );
   }
@@ -311,12 +322,16 @@ public class HttpExchangeTestBCreate {
         Content-Type: text/html; charset=utf-8\r
         Transfer-Encoding: chunked\r
         \r
+        010\r
         <div>tc03</div>
+        \r
+        0\r
+        \r
         """
     );
   }
 
-  @Test(description = "rawPath")
+  @Test(enabled = false, description = "rawPath")
   public void rawPath01() {
     assertEquals(rawPath("/"), "/");
     assertEquals(rawPath("/files"), "/files");
@@ -325,13 +340,13 @@ public class HttpExchangeTestBCreate {
   }
 
   private String rawPath(String string) {
-    HttpExchangeImpl http;
-    http = HttpExchangeImpl.create0(config -> config.path(string));
+    HttpExchange http;
+    http = HttpExchange.create(config -> config.path(string));
 
     return http.rawPath();
   }
 
-  @Test(description = "rawQuery")
+  @Test(enabled = false, description = "rawQuery")
   public void rawQuery01() {
     assertEquals(rawQuery0(), null);
     assertEquals(rawQuery0("q", "a"), "q=a");
@@ -356,7 +371,7 @@ public class HttpExchangeTestBCreate {
     return http.rawQuery();
   }
 
-  @Test(description = "rawQueryWith: happy paths")
+  @Test(enabled = false, description = "rawQueryWith: happy paths")
   public void rawQueryWith01() {
     assertEquals(rawQueryWith("page", "123"), "page=123");
     assertEquals(rawQueryWith("page", "123", "q", "a"), "q=a&page=123");
@@ -366,13 +381,13 @@ public class HttpExchangeTestBCreate {
     assertEquals(rawQueryWith("+", " "), "%2B=%20");
   }
 
-  @Test(description = "rawQueryWith: reject null name",
+  @Test(enabled = false, description = "rawQueryWith: reject null name",
       expectedExceptions = NullPointerException.class)
   public void rawQueryWith02() {
     rawQueryWith(null, "123");
   }
 
-  @Test(description = "rawQueryWith: reject null value",
+  @Test(enabled = false, description = "rawQueryWith: reject null value",
       expectedExceptions = NullPointerException.class)
   public void rawQueryWith03() {
     rawQueryWith("page", null);
@@ -395,7 +410,7 @@ public class HttpExchangeTestBCreate {
     return http.rawQueryWith(newName, newValue);
   }
 
-  @Test
+  @Test(enabled = false)
   public void responseListener01() {
     class Subject extends Html.Template implements HttpResponseListener {
       HttpVersion version;

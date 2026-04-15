@@ -24,6 +24,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.Clock;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -33,37 +34,39 @@ import objectos.way.Note;
 
 final class HttpExchangeBuilder implements HttpExchange.Options {
 
-  Map<String, Object> attributes;
+  private Map<String, Object> attributes = Map.of();
 
-  final int bufferSizeInitial = 1024;
+  @SuppressWarnings("unused")
+  private final int bufferSizeInitial = 1024;
 
-  final int bufferSizeMax = 4096;
+  private final int bufferSizeMax = 4096;
 
-  Clock clock = Clock.systemUTC();
+  private Clock clock = Clock.systemUTC();
 
-  long id;
+  private long id;
 
   private HttpMethod method = HttpMethod.GET;
 
   private String path = "/";
 
-  Map<String, String> pathParams;
+  private Map<String, String> pathParams = Map.of();
 
-  private Map<String, Object> queryParams;
+  private Map<String, Object> queryParams = Map.of();
 
-  private final HttpVersion version = HttpVersion0.HTTP_1_1;
+  private final HttpVersion0 version = HttpVersion0.HTTP_1_1;
 
-  private Map<HttpHeaderName, Object> headers;
+  private Map<HttpHeaderName, Object> headers = Map.of();
 
-  private Map<String, Object> formParams;
+  private Map<String, Object> formParams = Map.of();
 
-  final Note.Sink noteSink = NoOpSinkSingleton.INSTANCE;
+  private final Note.Sink noteSink = NoOpSinkSingleton.INSTANCE;
 
-  final long requestBodySizeMax = 10 * 1024 * 1024;
+  @SuppressWarnings("unused")
+  private final long requestBodySizeMax = 10 * 1024 * 1024;
 
-  HttpResponseListener responseListener = Http.NoopResponseListener.INSTANCE;
+  private HttpResponseListener responseListener = Http.NoopResponseListener.INSTANCE;
 
-  private Map<Object, Object> session;
+  private Map<Object, Object> session = Map.of();
 
   @Override
   public final void clock(Clock value) {
@@ -98,8 +101,8 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
   }
 
   private void formParam0(String name, String value) {
-    if (formParams == null) {
-      formParams = Util.createSequencedMap();
+    if (formParams.isEmpty()) {
+      formParams = new LinkedHashMap<>();
     }
 
     Http.queryParamsAdd(formParams, name, value);
@@ -111,8 +114,8 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
     Objects.requireNonNull(name, "name == null");
     Objects.requireNonNull(value, "value == null");
 
-    if (headers == null) {
-      headers = Util.createSequencedMap();
+    if (headers.isEmpty()) {
+      headers = new LinkedHashMap<>();
     }
 
     Object previous;
@@ -169,7 +172,7 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
     Objects.requireNonNull(name, "name == null");
     Objects.requireNonNull(value, "value == null");
 
-    if (pathParams == null) {
+    if (pathParams.isEmpty()) {
       pathParams = new HashMap<>();
     }
 
@@ -204,8 +207,8 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
   }
 
   private void queryParam0(String name, String value) {
-    if (queryParams == null) {
-      queryParams = Util.createSequencedMap();
+    if (queryParams.isEmpty()) {
+      queryParams = new LinkedHashMap<>();
     }
 
     Http.queryParamsAdd(queryParams, name, value);
@@ -218,8 +221,8 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
 
     Objects.requireNonNull(value, "value == null");
 
-    if (attributes == null) {
-      attributes = Util.createMap();
+    if (attributes.isEmpty()) {
+      attributes = new HashMap<>();
     }
 
     attributes.put(name, value);
@@ -232,8 +235,8 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
 
     Objects.requireNonNull(value, "value == null");
 
-    if (session == null) {
-      session = Util.createMap();
+    if (session.isEmpty()) {
+      session = new HashMap<>();
     }
 
     else if (session.containsKey(name)) {
@@ -250,6 +253,37 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
     }
 
     responseListener = Objects.requireNonNull(value, "value == null");
+  }
+
+  final HttpExchange build() {
+    final HttpRequestHeaders0 $headers;
+    $headers = new HttpRequestHeaders0(headers);
+
+    final HttpRequestBodyData data;
+    data = null;
+
+    final HttpRequestBody0 body;
+    body = new HttpRequestBody0(data, formParams);
+
+    final HttpRequest0 request;
+    request = new HttpRequest0(method, path, queryParams, version, $headers, body);
+
+    final byte[] buffer;
+    buffer = new byte[bufferSizeMax];
+
+    final boolean head;
+    head = method == HttpMethod.HEAD;
+
+    final ByteArrayOutputStream outputStream;
+    outputStream = new ByteArrayOutputStream();
+
+    final HttpResponse0 response;
+    response = new HttpResponse0(buffer, clock, head, id, noteSink, outputStream);
+
+    final HttpSession session;
+    session = session();
+
+    return new HttpExchange0(attributes, pathParams, request, response, session);
   }
 
   final HttpExchangeBodyFiles bodyFiles() {

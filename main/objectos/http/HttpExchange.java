@@ -189,8 +189,55 @@ public sealed interface HttpExchange
    * @return a newly created exchange instance with the configured options
    */
   static HttpExchange create(Consumer<? super Options> options) {
-    return HttpExchangeImpl.create0(options);
+    final HttpExchangeBuilder builder;
+    builder = new HttpExchangeBuilder();
+
+    options.accept(builder);
+
+    return builder.build();
   }
+
+  // ##################################################################
+  // # BEGIN: path parameters
+  // ##################################################################
+
+  /// Returns the value of the path parameter with the specified name if it
+  /// exists or returns `null` otherwise.
+  ///
+  /// @param name the name of the path parameter
+  ///
+  /// @return the value if it exists or `null` if it does not
+  String pathParam(String name);
+
+  /// Returns, as an `int`, the value of the path parameter with the specified
+  /// name. If the path parameter does not exist or if the value cannot be
+  /// converted to an `int` value then the specified default value is returned
+  /// instead.
+  ///
+  /// @param name the name of the path parameter
+  /// @param defaultValue the value to be returned if the parameter does exist of
+  ///        if its value cannot be converted to an `int` value
+  ///
+  /// @return the value converted to an `int` if it exists or the specified
+  ///         default value otherwise
+  default int pathParamAsInt(String name, int defaultValue) {
+    String maybe;
+    maybe = pathParam(name);
+
+    if (maybe == null) {
+      return defaultValue;
+    }
+
+    try {
+      return Integer.parseInt(maybe);
+    } catch (NumberFormatException expected) {
+      return defaultValue;
+    }
+  }
+
+  // ##################################################################
+  // # END: path parameters
+  // ##################################################################
 
   /**
    * Stores an object in this request. The object will be associated to the

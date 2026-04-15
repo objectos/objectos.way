@@ -150,8 +150,8 @@ public class HttpSessionStoreTest {
       opts.session(session);
     });
 
-    final HttpExchangeImpl http;
-    http = HttpExchangeImpl.create0(opts -> {
+    final HttpExchange http;
+    http = HttpExchange.create(opts -> {
       if (headerValue != null) {
         opts.header(HttpHeaderName.COOKIE, headerValue);
       }
@@ -187,8 +187,8 @@ public class HttpSessionStoreTest {
       options.sessionGenerator(generator(1L, 2L, 3L, 4L));
     });
 
-    final HttpExchangeImpl http;
-    http = HttpExchangeImpl.create0(_ -> {});
+    final HttpExchange http;
+    http = HttpExchange.create(_ -> {});
 
     assertEquals(http.sessionPresent(), false);
 
@@ -204,8 +204,8 @@ public class HttpSessionStoreTest {
       options.sessionGenerator(generator(1L, 2L, 3L, 4L));
     });
 
-    final HttpExchangeImpl http;
-    http = HttpExchangeImpl.create0(_ -> {});
+    final HttpExchange http;
+    http = HttpExchange.create(_ -> {});
 
     assertEquals(http.sessionPresent(), false);
 
@@ -251,8 +251,8 @@ public class HttpSessionStoreTest {
 
     store.createSession();
 
-    final HttpExchangeImpl http;
-    http = HttpExchangeImpl.create0(config -> {
+    final HttpExchange http;
+    http = HttpExchange.create(config -> {
       config.method(method);
 
       config.header(HttpHeaderName.COOKIE, cookie("OBJECTOSWAY", 1L, 2L, 3L, 4L));
@@ -281,8 +281,8 @@ public class HttpSessionStoreTest {
 
     store.createSession();
 
-    final HttpExchangeImpl http;
-    http = HttpExchangeImpl.create0(config -> {
+    final HttpExchange http;
+    http = HttpExchange.create(config -> {
       config.clock(Y.clockFixed());
 
       config.method(method);
@@ -320,8 +320,8 @@ public class HttpSessionStoreTest {
 
     store.createSession();
 
-    final HttpExchangeImpl http;
-    http = HttpExchangeImpl.create0(config -> {
+    final HttpExchange http;
+    http = HttpExchange.create(config -> {
       config.clock(Y.clockFixed());
 
       config.method(method);
@@ -363,8 +363,8 @@ public class HttpSessionStoreTest {
 
     store.createSession();
 
-    final HttpExchangeImpl http;
-    http = HttpExchangeImpl.create0(config -> {
+    final HttpExchange http;
+    http = HttpExchange.create(config -> {
       config.clock(Y.clockFixed());
 
       config.method(method);
@@ -405,8 +405,8 @@ public class HttpSessionStoreTest {
 
     store.createSession();
 
-    final HttpExchangeImpl http;
-    http = HttpExchangeImpl.create0(config -> {
+    final HttpExchange http;
+    http = HttpExchange.create(config -> {
       config.clock(Y.clockFixed());
 
       config.method(method);

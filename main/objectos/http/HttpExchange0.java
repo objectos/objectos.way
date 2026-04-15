@@ -17,11 +17,18 @@ package objectos.http;
 
 import module java.base;
 import module objectos.way;
+import objectos.internal.VisibleForTesting;
 import objectos.way.Media.Bytes;
 import objectos.way.Media.Stream;
 import objectos.way.Media.Text;
 
 final class HttpExchange0 implements HttpExchange {
+
+  private Map<String, Object> attributes;
+
+  private int mark;
+
+  private Map<String, String> pathParams;
 
   private final HttpRequest0 request;
 
@@ -30,12 +37,75 @@ final class HttpExchange0 implements HttpExchange {
   private final HttpSession session;
 
   HttpExchange0(HttpRequest0 request, HttpResponse0 response, HttpSession session) {
+    this(Map.of(), Map.of(), request, response, session);
+  }
+
+  HttpExchange0(Map<String, Object> attributes, Map<String, String> pathParams, HttpRequest0 request, HttpResponse0 response, HttpSession session) {
+    this.attributes = attributes;
+
+    this.pathParams = pathParams;
+
     this.request = request;
 
     this.response = response;
 
     this.session = session;
   }
+
+  @Override
+  public final String toString() {
+    if (!response.processed()) {
+      return "HttpExchange[id=" + response.id() + ",method=" + request.method() + ",path=" + request.path() + "]";
+    } else {
+      return response.toString();
+    }
+  }
+
+  // ##################################################################
+  // # BEGIN: path parameters
+  // ##################################################################
+
+  @Override
+  public final String pathParam(String name) {
+    return pathParams.get(name);
+  }
+
+  final int pathIndex() {
+    return mark;
+  }
+
+  final void pathIndex(int value) {
+    mark = value;
+  }
+
+  final void pathIndexAdd(int value) {
+    mark += value;
+  }
+
+  @VisibleForTesting
+  final Map<String, String> pathParams() {
+    return pathParams;
+  }
+
+  final void pathParamsPut(String name, String value) {
+    if (pathParams == Map.<String, String> of()) {
+      pathParams = new HashMap<>();
+    }
+
+    pathParams.put(name, value);
+  }
+
+  final void pathReset() {
+    mark = 0;
+
+    if (pathParams != Map.<String, String> of()) {
+      pathParams.clear();
+    }
+  }
+
+  // ##################################################################
+  // # END: path parameters
+  // ##################################################################
 
   // ##################################################################
   // # BEGIN: HttpRequest
@@ -71,18 +141,8 @@ final class HttpExchange0 implements HttpExchange {
   }
 
   @Override
-  public final String pathParam(String name) {
-    return request.pathParam(name);
-  }
-
-  @Override
   public final Set<String> formParamNames() {
     return request.formParamNames();
-  }
-
-  @Override
-  public final int pathParamAsInt(String name, int defaultValue) {
-    return request.pathParamAsInt(name, defaultValue);
   }
 
   @Override
@@ -170,10 +230,27 @@ final class HttpExchange0 implements HttpExchange {
   // ##################################################################
 
   @Override
-  public <T> void set(Class<T> key, T value) {}
+  public final <T> void set(Class<T> key, T value) {
+    final String name;
+    name = key.getName(); // implicit null check
 
+    Objects.requireNonNull(value, "value == null");
+
+    if (attributes == Map.<String, Object> of()) {
+      attributes = new HashMap<>();
+    }
+
+    attributes.put(name, value);
+  }
+
+  @SuppressWarnings("unchecked")
   @Override
-  public <T> T get(Class<T> key) { return null; }
+  public final <T> T get(Class<T> key) {
+    final String name;
+    name = key.getName(); // implicit null check
+
+    return (T) attributes.get(name);
+  }
 
   // ##################################################################
   // # BEGIN: HttpSession

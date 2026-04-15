@@ -70,7 +70,9 @@ final class HttpHandlerImpl implements HttpHandler {
 
   private HttpHandlerImpl(Kind kind, Predicate<? super HttpExchange> predicate, Object main) {
     this.kind = kind;
+
     this.predicate = predicate;
+
     this.main = main;
   }
 
@@ -244,8 +246,8 @@ final class HttpHandlerImpl implements HttpHandler {
       return;
     }
 
-    final HttpExchangeImpl http;
-    http = (HttpExchangeImpl) xch;
+    final HttpExchange0 http;
+    http = (HttpExchange0) xch;
 
     if (predicate != null && !predicate.test(http)) {
       return;

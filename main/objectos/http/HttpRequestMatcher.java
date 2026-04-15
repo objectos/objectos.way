@@ -396,8 +396,8 @@ final class HttpRequestMatcher implements Predicate<HttpRequest> {
 
   @Override
   public final boolean test(HttpRequest request) {
-    final HttpExchangeImpl target;
-    target = (HttpExchangeImpl) request;
+    final HttpExchange0 target;
+    target = (HttpExchange0) request;
 
     return switch (kind) {
       case METHOD_ALLOWED -> {
@@ -434,12 +434,12 @@ final class HttpRequestMatcher implements Predicate<HttpRequest> {
     };
   }
 
-  private boolean testPathExact(HttpExchangeImpl target, String exact) {
-    final int pathIndex;
-    pathIndex = target.pathIndex();
-
+  private boolean testPathExact(HttpExchange0 req, String exact) {
     final String path;
-    path = target.pathUnchecked();
+    path = req.path();
+
+    final int pathIndex;
+    pathIndex = req.pathIndex();
 
     final int thisLength;
     thisLength = path.length() - pathIndex;
@@ -448,7 +448,7 @@ final class HttpRequestMatcher implements Predicate<HttpRequest> {
     thatLength = exact.length();
 
     if (thisLength == thatLength && path.regionMatches(pathIndex, exact, 0, thatLength)) {
-      target.pathIndexAdd(thatLength);
+      req.pathIndexAdd(thatLength);
 
       return true;
     } else {
@@ -456,12 +456,12 @@ final class HttpRequestMatcher implements Predicate<HttpRequest> {
     }
   }
 
-  private boolean testPathRegion(HttpExchangeImpl target, String region) {
+  private boolean testPathRegion(HttpExchange0 target, String region) {
     final int pathIndex;
     pathIndex = target.pathIndex();
 
     final String path;
-    path = target.pathUnchecked();
+    path = target.path();
 
     if (path.regionMatches(pathIndex, region, 0, region.length())) {
       target.pathIndexAdd(region.length());
@@ -472,7 +472,7 @@ final class HttpRequestMatcher implements Predicate<HttpRequest> {
     }
   }
 
-  private boolean testSegments(HttpExchangeImpl target, List<Segment> segments) {
+  private boolean testSegments(HttpExchange0 target, List<Segment> segments) {
     for (Segment segment : segments) {
       final boolean result;
       result = switch (segment.kind) {
@@ -505,12 +505,12 @@ final class HttpRequestMatcher implements Predicate<HttpRequest> {
     return true;
   }
 
-  private boolean testPathParam(HttpExchangeImpl target, String name, char terminator) {
+  private boolean testPathParam(HttpExchange0 target, String name, char terminator) {
+    final String path;
+    path = target.path();
+
     final int pathIndex;
     pathIndex = target.pathIndex();
-
-    final String path;
-    path = target.pathUnchecked();
 
     final int terminatorIndex;
     terminatorIndex = path.indexOf(terminator, pathIndex);
@@ -530,12 +530,12 @@ final class HttpRequestMatcher implements Predicate<HttpRequest> {
     return true;
   }
 
-  private boolean testPathParamLast(HttpExchangeImpl target, String name) {
+  private boolean testPathParamLast(HttpExchange0 target, String name) {
     final int pathIndex;
     pathIndex = target.pathIndex();
 
     final String path;
-    path = target.pathUnchecked();
+    path = target.path();
 
     final int solidus;
     solidus = path.indexOf('/', pathIndex);
@@ -558,7 +558,7 @@ final class HttpRequestMatcher implements Predicate<HttpRequest> {
     }
   }
 
-  private boolean testPathWithConditions(HttpExchangeImpl target) {
+  private boolean testPathWithConditions(HttpExchange0 target) {
     final WithConditions data;
     data = (WithConditions) state;
 
@@ -571,7 +571,7 @@ final class HttpRequestMatcher implements Predicate<HttpRequest> {
     return testSegments(target, segments) && testConditions(target, conditions);
   }
 
-  private boolean testConditions(HttpExchangeImpl target, HttpPathParam[] conditions) {
+  private boolean testConditions(HttpExchange0 target, HttpPathParam[] conditions) {
     for (HttpPathParam condition : conditions) {
       if (!condition.test(target)) {
         return false;

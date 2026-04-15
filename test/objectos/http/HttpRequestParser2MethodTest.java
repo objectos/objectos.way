@@ -94,7 +94,7 @@ public class HttpRequestParser2MethodTest {
             \r
             \r
             """,
-            "Unexpected byte 0x0d while parsing method first char"
+            "Unexpected byte 0x0D while parsing method first char"
         },
         {
             """

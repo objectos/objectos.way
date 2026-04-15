@@ -401,7 +401,7 @@ final class HttpExchangeImpl implements HttpExchange, Runnable, Closeable {
 
   private Map<String, Object> queryParams;
 
-  private InetAddress remoteAddress;
+  private final InetAddress remoteAddress;
 
   private final long requestBodySizeMax;
 
@@ -459,57 +459,6 @@ final class HttpExchangeImpl implements HttpExchange, Runnable, Closeable {
     this.responseListener = responseListener;
 
     this.socket = socket;
-  }
-
-  private HttpExchangeImpl(HttpExchangeBuilder builder) {
-    bodyFiles = builder.bodyFiles();
-
-    final int initialSize;
-    initialSize = powerOfTwo(builder.bufferSizeInitial);
-
-    buffer = new byte[initialSize];
-
-    clock = builder.clock;
-
-    handler = null;
-
-    id = builder.id;
-
-    inputStream = builder.inputStream();
-
-    maxBufferSize = builder.bufferSizeMax;
-
-    noteSink = builder.noteSink;
-
-    outputStream = new ByteArrayOutputStream();
-
-    requestBodySizeMax = builder.requestBodySizeMax;
-
-    responseListener = builder.responseListener;
-
-    socket = () -> {}; // noop closeable
-  }
-
-  static HttpExchangeImpl create0(Consumer<? super HttpExchange.Options> options) {
-    final HttpExchangeBuilder builder;
-    builder = new HttpExchangeBuilder();
-
-    options.accept(builder);
-
-    final HttpExchangeImpl impl;
-    impl = new HttpExchangeImpl(builder);
-
-    if (!impl.shouldHandle()) {
-      throw new IllegalArgumentException("Invalid request");
-    }
-
-    impl.attributes = builder.attributes;
-
-    impl.pathParams = builder.pathParams;
-
-    impl.session = builder.session();
-
-    return impl;
   }
 
   static final int powerOfTwo(int size) {

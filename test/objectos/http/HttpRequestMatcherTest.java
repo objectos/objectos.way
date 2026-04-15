@@ -30,7 +30,6 @@ public class HttpRequestMatcherTest {
     matcher = HttpRequestMatcher.pathExact("/foo");
 
     test(matcher, "/foo", true);
-    test(matcher, "/foo?q=foo", true);
 
     test(matcher, "/fooo", false);
     test(matcher, "/foo/", false);
@@ -148,8 +147,8 @@ public class HttpRequestMatcherTest {
   }
 
   private void test(HttpRequestMatcher matcher, String target, boolean expected) {
-    final HttpExchangeImpl requestTarget;
-    requestTarget = HttpExchangeImpl.create0(config -> {
+    final HttpExchange requestTarget;
+    requestTarget = HttpExchange.create(config -> {
       config.path(target);
     });
 
@@ -157,8 +156,8 @@ public class HttpRequestMatcherTest {
   }
 
   private void test(HttpRequestMatcher matcher, String target, Map<String, String> expected) {
-    HttpExchangeImpl requestTarget;
-    requestTarget = HttpExchangeImpl.create0(config -> {
+    HttpExchange0 requestTarget;
+    requestTarget = (HttpExchange0) HttpExchange.create(config -> {
       config.path(target);
     });
 

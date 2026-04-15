@@ -56,8 +56,8 @@ public class HttpPathParamTest {
   }
 
   private void test(HttpPathParam condition, String target, boolean expected) {
-    HttpExchangeImpl requestTarget;
-    requestTarget = HttpExchangeImpl.create0(cfg -> cfg.path(target));
+    HttpExchange requestTarget;
+    requestTarget = HttpExchange.create(cfg -> cfg.path(target));
 
     HttpRequestMatcher matcher;
     matcher = HttpRequestMatcher.pathSegments(List.of(
