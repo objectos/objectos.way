@@ -28,7 +28,7 @@ final class HttpServerException extends IOException implements HttpServerTask.Me
 
     TRANSFER_ENCODING(HttpStatus.NOT_IMPLEMENTED, "Support for the request Transfer-Encoding header is not implemented.\n"),
 
-    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "The requested HTTP method is not implemented.\n");
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "The server encountered an internal error and was unable to complete your request.\n");
 
     private final HttpStatus status;
 

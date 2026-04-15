@@ -226,7 +226,11 @@ final class HttpServerTask implements Runnable {
     exchange = new HttpExchange0(request, response, session);
 
     try {
-      handler.handle(exchange);
+      try {
+        handler.handle(exchange);
+      } catch (Http.AbstractHandlerException e) {
+        e.handle(exchange);
+      }
     } catch (Throwable e) {
       throw new HttpServerException(e, HttpServerException.Kind.INTERNAL_SERVER_ERROR);
     }

@@ -44,31 +44,39 @@ public class HttpRoutingTest implements HttpRouting.Module {
 
   private String cookie;
 
-  private HttpSessionStore sessionStore;
-
   @BeforeClass
   public void beforeClass() {
-    this.sessionStore = HttpSessionStore.create(config -> {
-      config.cookieName("HTTPMODULETEST");
-
-      config.sessionGenerator(Y.randomGeneratorOfLongs(1L, 2L, 3L, 4L));
-    });
-
     cookie = HttpY.cookie("HTTPMODULETEST", 1L, 2L, 3L, 4L);
 
-    final HttpExchange http;
-    http = HttpExchange.create(_ -> {});
-
-    sessionStore.ensureSession(http);
-
-    http.sessionAttr(User.class, new User("test"));
-
     TestingHttpServer.bindHttpRoutingTest(this);
+
+    Y.test(
+        Y.httpClient(
+            "/login",
+
+            builder -> builder.GET().headers(
+                "Host", "http.module.test",
+                "Connection", "close"
+            )
+        ),
+
+        """
+        HTTP/1.1 200
+        set-cookie: HTTPMODULETEST=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=; HttpOnly; Path=/; Secure
+
+        """
+    );
   }
 
   @Override
   public final void configure(HttpRouting routing) {
     routing.when(this::notAuthenticated, matched -> {
+      matched.path("/login", HttpMethod.GET, http -> {
+        http.sessionAttr(User.class, new User("test"));
+        http.status(HttpStatus.OK);
+        http.send();
+      });
+
       // matches: /testCase01/foo
       // but not: /testCase01, /testCase01/, /testCase01/foo/bar
       matched.path("/testCase01/{text}", path -> {
@@ -200,8 +208,6 @@ public class HttpRoutingTest implements HttpRouting.Module {
   }
 
   private boolean notAuthenticated(HttpExchange http) {
-    sessionStore.loadSession(http);
-
     return !authenticated(http);
   }
 
@@ -287,15 +293,19 @@ public class HttpRoutingTest implements HttpRouting.Module {
   }
 
   private void testCase02(HttpExchange http) {
-    User user;
-    user = null;
-
-    if (http.sessionPresent()) {
-      user = http.sessionAttr(User.class);
-    }
+    final User user;
+    user = http.sessionAttr(User.class);
 
     if (user == null) {
       http.found("/login");
+    }
+
+    else {
+      http.status(HttpStatus.NOT_FOUND);
+      http.header(HttpHeaderName.DATE, http.now());
+      http.header(HttpHeaderName.CONTENT_LENGTH, "0");
+      http.header(HttpHeaderName.CONNECTION, "close");
+      http.send();
     }
   }
 
@@ -306,6 +316,7 @@ public class HttpRoutingTest implements HttpRouting.Module {
           """
           GET /testCase02/foo HTTP/1.1\r
           Host: http.module.test\r
+          Connection: close\r
           \r
           """,
 
@@ -314,23 +325,6 @@ public class HttpRoutingTest implements HttpRouting.Module {
           Date: Wed, 28 Jun 2023 12:08:43 GMT\r
           Content-Length: 0\r
           Location: /login\r
-          \r
-          """
-      );
-
-      test(socket,
-          """
-          GET /testCase02/foo HTTP/1.1\r
-          Host: http.module.test\r
-          Cookie: HTTPMODULETEST=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=\r
-          \r
-          """,
-
-          """
-          HTTP/1.1 404 Not Found\r
-          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-          Content-Length: 0\r
-          Connection: close\r
           \r
           """
       );
@@ -408,6 +402,7 @@ public class HttpRoutingTest implements HttpRouting.Module {
           """
           GET /testCase03/foo/bar HTTP/1.1\r
           Host: http.module.test\r
+          Connection: close\r
           Cookie: HTTPMODULETEST=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=\r
           \r
           """,
@@ -802,6 +797,7 @@ public class HttpRoutingTest implements HttpRouting.Module {
           """
           GET /testCase07/after?value=throw HTTP/1.1\r
           Host: http.module.test\r
+          Connection: close\r
           Cookie: HTTPMODULETEST=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=\r
           \r
           """,
@@ -979,6 +975,27 @@ public class HttpRoutingTest implements HttpRouting.Module {
 
   @Test
   public void testCase11() throws IOException, InterruptedException {
+    Y.test(
+        Y.httpClient(
+            "/testCase11",
+
+            builder -> builder.GET().headers(
+                "Host", "http.module.test",
+                "Connection", "close",
+                "Cookie", "HTTPMODULETEST=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ="
+            )
+        ),
+
+        """
+        HTTP/1.1 200
+        content-length: 6
+        content-type: text/plain; charset=utf-8
+        date: Wed, 28 Jun 2023 12:08:43 GMT
+
+        SECOND\
+        """
+    );
+
     HttpResponse<String> response;
     response = Y.httpClient(
         "/testCase11",

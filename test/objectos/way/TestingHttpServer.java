@@ -25,8 +25,6 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.Objects;
-import java.util.concurrent.CountDownLatch;
 import objectos.http.HttpExchange;
 import objectos.http.HttpHandler;
 import objectos.http.HttpHeaderName;
@@ -35,6 +33,7 @@ import objectos.http.HttpRouting;
 import objectos.http.HttpRoutingTest;
 import objectos.http.HttpServer;
 import objectos.http.HttpServerTest;
+import objectos.http.HttpSessionStore;
 
 public final class TestingHttpServer {
 
@@ -140,15 +139,6 @@ public final class TestingHttpServer {
     private static HttpServer create0() throws IOException, InterruptedException {
       HANDLER = new ThisHandlerFactory();
 
-      CountDownLatch serverStarted;
-      serverStarted = new CountDownLatch(1);
-
-      CountDownLatch noteReceived;
-      noteReceived = new CountDownLatch(1);
-
-      ThisNoteSink noteSink;
-      noteSink = new ThisNoteSink(serverStarted, noteReceived);
-
       HttpServer server;
       server = HttpServer.create(opts -> {
         final HttpHandler serverHandler;
@@ -160,18 +150,20 @@ public final class TestingHttpServer {
 
         opts.clock(Y.clockFixed());
 
-        opts.noteSink(noteSink);
+        opts.noteSink(Y.noteSink());
 
         opts.port(0);
+
+        opts.sessionStore(HttpSessionStore.create(config -> {
+          config.cookieName("HTTPMODULETEST");
+
+          config.sessionGenerator(Y.randomGeneratorOfLongs(1L, 2L, 3L, 4L));
+        }));
       });
 
       TestingShutdownHook.register(server);
 
       server.start();
-
-      serverStarted.countDown();
-
-      noteReceived.await();
 
       return server;
     }
@@ -214,34 +206,6 @@ public final class TestingHttpServer {
         delegate.handle(http);
       }
 
-    }
-
-  }
-
-  private static class ThisNoteSink extends Note.NoOpSink {
-
-    private final HttpServer.Notes notes = HttpServer.Notes.create();
-
-    private final CountDownLatch serverStarted;
-    private final CountDownLatch noteReceived;
-
-    public ThisNoteSink(CountDownLatch serverStarted, CountDownLatch noteReceived) {
-      this.serverStarted = serverStarted;
-      this.noteReceived = noteReceived;
-    }
-
-    @Override
-    public final <T1> void send(Note.Ref1<T1> note, T1 value) {
-      if (Objects.equals(note, notes.started())) {
-        try {
-          serverStarted.await();
-
-          noteReceived.countDown();
-        } catch (InterruptedException e) {
-          // server interrupted...
-          Thread.currentThread().interrupt();
-        }
-      }
     }
 
   }

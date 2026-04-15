@@ -57,7 +57,7 @@ public final class DevStart extends App.Bootstrap {
     try {
       final HttpServer httpServer;
       httpServer = HttpServer.create(opts -> {
-        opts.bufferSize(8192, 8192);
+        opts.bufferSize(8192);
 
         opts.handler(serverHandler);
 

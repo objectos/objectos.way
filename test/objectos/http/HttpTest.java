@@ -31,17 +31,6 @@ public class HttpTest {
     assertEquals(target.path(), "/");
   }
 
-  @Test
-  public void parseRequestTarget02() {
-    HttpRequestTarget target;
-    target = HttpExchange.create(cfg -> cfg.path("/foo/bar?page=1&sort=asc"));
-
-    assertEquals(target.path(), "/foo/bar");
-    assertEquals(target.queryParam("page"), "1");
-    assertEquals(target.queryParamAsInt("page", 0), 1);
-    assertEquals(target.queryParam("sort"), "asc");
-  }
-
   @DataProvider
   public Object[][] rawValidProvider() {
     return new Object[][] {

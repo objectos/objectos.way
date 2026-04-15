@@ -15,7 +15,9 @@
  */
 package objectos.http;
 
+import java.io.IOException;
 import java.net.Socket;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Clock;
 import java.util.function.Consumer;
@@ -76,9 +78,65 @@ final class HttpServerTaskY {
     return Y.toString(socket);
   }
 
+  private record ThisBodyOptions(Path directory, int memoryMax, long sizeMax)
+      implements HttpRequestBodyOptions {
+
+    @Override
+    public final HttpRequestBodySupport supportOf(long id) {
+      return new HttpRequestBodySupport() {
+
+        private Path file;
+
+        @Override
+        public final void close() throws IOException {
+          if (file != null) {
+            final Path deleteMe;
+            deleteMe = file;
+
+            file = null;
+
+            Files.delete(deleteMe);
+          }
+        }
+
+        @Override
+        final Path file() {
+          if (file == null) {
+            final String format;
+
+            if (id < 0) {
+              format = "%019d.neg";
+            } else {
+              format = "%019d";
+            }
+
+            final String name;
+            name = String.format(format, id);
+
+            file = directory.resolve(name);
+          }
+
+          return file;
+        }
+
+        @Override
+        final int memoryMax() {
+          return memoryMax;
+        }
+
+        @Override
+        final long sizeMax() {
+          return sizeMax;
+        }
+
+      };
+    }
+
+  }
+
   private HttpServerTask build() {
     return new HttpServerTask(
-        new HttpRequestBodyOptions(bodyDirectory, bodyMemoryMax, bodySizeMax),
+        new ThisBodyOptions(bodyDirectory, bodyMemoryMax, bodySizeMax),
 
         new byte[bufferSize],
 

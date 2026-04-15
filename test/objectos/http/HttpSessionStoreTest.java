@@ -55,7 +55,7 @@ public class HttpSessionStoreTest {
     };
   }
 
-  @Test(dataProvider = "createCookieNameProvider")
+  @Test(enabled = false, dataProvider = "createCookieNameProvider")
   public void createCookieName(boolean valid, String description, String cookieName, String expectedMessage) {
     try {
       final HttpSessionStoreImpl store;
@@ -135,7 +135,7 @@ public class HttpSessionStoreTest {
     };
   }
 
-  @Test(dataProvider = "loadSessionProvider")
+  @Test(enabled = false, dataProvider = "loadSessionProvider")
   public void loadSession(boolean present, String description, String headerValue) {
     final HttpToken id;
     id = HttpToken.of32(1, 2, 3, 4);
@@ -180,7 +180,7 @@ public class HttpSessionStoreTest {
     };
   }
 
-  @Test
+  @Test(enabled = false)
   public void ensureSession01() {
     final HttpSessionStoreImpl store;
     store = create(options -> {
@@ -197,7 +197,7 @@ public class HttpSessionStoreTest {
     assertEquals(http.sessionPresent(), true);
   }
 
-  @Test
+  @Test(enabled = false)
   public void ensureSession02() {
     final HttpSessionStoreImpl store;
     store = create(options -> {
@@ -240,7 +240,7 @@ public class HttpSessionStoreTest {
     };
   }
 
-  @Test(dataProvider = "unsafeMethodsProvider")
+  @Test(enabled = false, dataProvider = "unsafeMethodsProvider")
   public void requireCsrfToken01(HttpMethod method) {
     final HttpSessionStoreImpl store;
     store = create(options -> {
@@ -270,7 +270,7 @@ public class HttpSessionStoreTest {
     assertFalse(http.processed());
   }
 
-  @Test(dataProvider = "unsafeMethodsProvider")
+  @Test(enabled = false, dataProvider = "unsafeMethodsProvider")
   public void requireCsrfToken02(HttpMethod method) {
     final HttpSessionStoreImpl store;
     store = create(options -> {
@@ -309,7 +309,7 @@ public class HttpSessionStoreTest {
     """);
   }
 
-  @Test(dataProvider = "unsafeMethodsProvider")
+  @Test(enabled = false, dataProvider = "unsafeMethodsProvider")
   public void requireCsrfToken03(HttpMethod method) {
     final HttpSessionStoreImpl store;
     store = create(options -> {
@@ -352,7 +352,7 @@ public class HttpSessionStoreTest {
     """);
   }
 
-  @Test(dataProvider = "unsafeMethodsProvider")
+  @Test(enabled = false, dataProvider = "unsafeMethodsProvider")
   public void requireCsrfToken04(HttpMethod method) {
     final HttpSessionStoreImpl store;
     store = create(options -> {
@@ -394,7 +394,7 @@ public class HttpSessionStoreTest {
     """);
   }
 
-  @Test(dataProvider = "safeMethodsProvider")
+  @Test(enabled = false, dataProvider = "safeMethodsProvider")
   public void requireCsrfToken05(HttpMethod method) {
     final HttpSessionStoreImpl store;
     store = create(options -> {

@@ -15,18 +15,21 @@
  */
 package objectos.http;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.nio.file.Path;
+final class HttpRequestBodyOptions0 implements HttpRequestBodyOptions {
 
-abstract class HttpRequestBodySupport implements Closeable {
+  private final int memoryMax;
 
-  HttpRequestBodySupport() {}
+  private final long sizeMax;
 
-  abstract Path file() throws IOException;
+  HttpRequestBodyOptions0(int memoryMax, long sizeMax) {
+    this.memoryMax = memoryMax;
 
-  abstract int memoryMax();
+    this.sizeMax = sizeMax;
+  }
 
-  abstract long sizeMax();
+  @Override
+  public final HttpRequestBodySupport supportOf(long id) {
+    return new HttpRequestBodySupport0(id, memoryMax, sizeMax);
+  }
 
 }

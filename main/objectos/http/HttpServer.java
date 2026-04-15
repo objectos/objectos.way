@@ -38,21 +38,19 @@ public sealed interface HttpServer extends Closeable permits HttpServerImpl {
     void address(InetAddress value);
 
     /**
-     * Sets the initial and maximum sizes in bytes for the exchange buffer.
+     * Sets the size in bytes of the exchange buffer.
      *
      * <p>
      * The exchange will use the buffer to store the whole request as a
      * best-case scenario. As a minimum, the request line and request headers
-     * must fit entirely in the buffer. As a result, the maximum buffer size
+     * must fit entirely in the buffer. As a result, the buffer size
      * also limits the maximum request size, minus the request body, the
      * server will accept.
      *
-     * @param initial
-     *        the initial size (in bytes) of the exchange buffer
-     * @param max
-     *        the maximum size (in bytes) of the exchange buffer
+     * @param value
+     *        the size (in bytes) of the exchange buffer
      */
-    void bufferSize(int initial, int max);
+    void bufferSize(int value);
 
     /**
      * Sets the clock to the specified value.
@@ -95,10 +93,15 @@ public sealed interface HttpServer extends Closeable permits HttpServerImpl {
      * request processing ends, the server responds with a `413 Content Too
      * Large` message, and the server closes the connection.
      *
-     * @param max
+     * @param value
      *        the maximum size (in bytes) of an allowed request body
      */
-    void requestBodySize(long max);
+    void requestBodySizeMax(long value);
+
+    /// Uses the specified `HttpSessionStore` for HTTP session handling.
+    ///
+    /// @param value the `HttpSessionStore` instance to use
+    void sessionStore(HttpSessionStore value);
 
   }
 

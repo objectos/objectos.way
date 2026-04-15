@@ -381,8 +381,9 @@ public class HttpServerTest implements HttpRouting.Module {
         Y.httpClient(
             "/test/testCase05",
 
-            builder -> builder.headers(
-                "Host", "http.server.test"
+            builder -> builder.GET().headers(
+                "Host", "http.server.test",
+                "Connection", "close"
             )
         ),
 
@@ -411,7 +412,8 @@ public class HttpServerTest implements HttpRouting.Module {
             "/test/testCase06",
 
             builder -> builder.headers(
-                "Host", "http.server.test"
+                "Host", "http.server.test",
+                "Connection", "close"
             )
         ),
 

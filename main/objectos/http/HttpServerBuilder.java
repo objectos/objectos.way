@@ -27,22 +27,38 @@ final class HttpServerBuilder implements HttpServer.Options {
 
   private InetAddress address;
 
-  int bufferSizeInitial = 16 * 1024;
+  private int bufferSize = 16 * 1024;
 
-  int bufferSizeMax = 16 * 1024;
+  private Clock clock = Clock.systemUTC();
 
-  Clock clock = Clock.systemUTC();
+  private HttpHandler handler = _ -> {};
 
-  HttpHandler handler = _ -> {};
+  private int requestBodyMemoryMax;
 
-  long requestBodySizeMax = 10 * 1024 * 1024;
+  private long requestBodySizeMax = 10 * 1024 * 1024;
 
-  Note.Sink noteSink = NoOpSinkSingleton.INSTANCE;
+  private Note.Sink noteSink = NoOpSinkSingleton.INSTANCE;
 
   private int port = 0;
 
+  private HttpSessionLoader sessionLoader = (_, _) -> null;
+
   public final HttpServer build() {
-    return new HttpServerImpl(this);
+    return new HttpServerImpl(
+        bodyOptions(),
+
+        bufferSize,
+
+        clock,
+
+        handler,
+
+        noteSink,
+
+        sessionLoader,
+
+        socketAddress()
+    );
   }
 
   @Override
@@ -51,14 +67,10 @@ final class HttpServerBuilder implements HttpServer.Options {
   }
 
   @Override
-  public final void bufferSize(int initial, int max) {
-    Check.argument(initial >= 128, "initial size must be >= 128");
-    Check.argument(max >= 128, "max size must be >= 128");
-    Check.argument(max >= initial, "max size must be >= initial size");
+  public final void bufferSize(int value) {
+    Check.argument(value >= 128, "value must be >= 128");
 
-    bufferSizeInitial = initial;
-
-    bufferSizeMax = max;
+    bufferSize = value;
   }
 
   @Override
@@ -86,10 +98,27 @@ final class HttpServerBuilder implements HttpServer.Options {
   }
 
   @Override
-  public final void requestBodySize(long max) {
-    Check.argument(max >= 0, "max request body size must not be negative");
+  public final void requestBodySizeMax(long value) {
+    Check.argument(value >= 0, "max request body size must not be negative");
 
-    requestBodySizeMax = max;
+    requestBodySizeMax = value;
+  }
+
+  @Override
+  public final void sessionStore(HttpSessionStore value) {
+    sessionLoader = (HttpSessionLoader) Objects.requireNonNull(value, "value == null");
+  }
+
+  final HttpRequestBodyOptions bodyOptions() {
+    final int memoryMax;
+
+    if (requestBodyMemoryMax == 0) {
+      memoryMax = bufferSize;
+    } else {
+      memoryMax = requestBodyMemoryMax;
+    }
+
+    return new HttpRequestBodyOptions0(memoryMax, requestBodySizeMax);
   }
 
   final InetSocketAddress socketAddress() {

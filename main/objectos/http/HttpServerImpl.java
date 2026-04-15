@@ -61,9 +61,9 @@ final class HttpServerImpl implements HttpServer, Runnable {
 
   private static final AtomicLong ID = new AtomicLong(1);
 
-  private final int bufferSizeInitial;
+  private final HttpRequestBodyOptions bodyOptions;
 
-  private final int bufferSizeMax;
+  private final int bufferSize;
 
   private final Clock clock;
 
@@ -73,28 +73,44 @@ final class HttpServerImpl implements HttpServer, Runnable {
 
   private final Note.Sink noteSink;
 
-  private final long requestBodySizeMax;
-
   private ServerSocket serverSocket;
+
+  private final HttpSessionLoader sessionLoader;
 
   private final InetSocketAddress socketAddress;
 
+  private volatile boolean started;
+
   private Thread thread;
 
-  public HttpServerImpl(HttpServerBuilder builder) {
-    bufferSizeInitial = builder.bufferSizeInitial;
+  HttpServerImpl(
+      HttpRequestBodyOptions bodyOptions,
 
-    bufferSizeMax = builder.bufferSizeMax;
+      int bufferSize,
 
-    clock = builder.clock;
+      Clock clock,
 
-    handler = builder.handler;
+      HttpHandler handler,
 
-    noteSink = builder.noteSink;
+      Note.Sink noteSink,
 
-    requestBodySizeMax = builder.requestBodySizeMax;
+      HttpSessionLoader sessionLoader,
 
-    socketAddress = builder.socketAddress();
+      InetSocketAddress socketAddress
+  ) {
+    this.bodyOptions = bodyOptions;
+
+    this.bufferSize = bufferSize;
+
+    this.clock = clock;
+
+    this.handler = handler;
+
+    this.noteSink = noteSink;
+
+    this.sessionLoader = sessionLoader;
+
+    this.socketAddress = socketAddress;
   }
 
   @Override
@@ -112,7 +128,7 @@ final class HttpServerImpl implements HttpServer, Runnable {
   }
 
   private void checkStarted() {
-    if (thread == null) {
+    if (!started) {
       throw new IllegalStateException(
           "Cannot query this service: service is not running."
       );
@@ -132,6 +148,16 @@ final class HttpServerImpl implements HttpServer, Runnable {
     serverSocket.bind(socketAddress);
 
     thread = Thread.ofPlatform().name("HTTP").start(this);
+
+    try {
+      synchronized (this) {
+        while (!started) {
+          wait();
+        }
+      }
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+    }
   }
 
   @Override
@@ -158,6 +184,12 @@ final class HttpServerImpl implements HttpServer, Runnable {
   @Override
   public final void run() {
     try {
+      synchronized (this) {
+        started = true;
+
+        notifyAll();
+      }
+
       noteSink.send(notes.started, this);
 
       while (!Thread.currentThread().isInterrupted()) {
@@ -166,22 +198,14 @@ final class HttpServerImpl implements HttpServer, Runnable {
 
         noteSink.send(notes.accepted, socket);
 
+        final byte[] buffer;
+        buffer = new byte[bufferSize];
+
         final long id;
         id = ID.getAndIncrement();
 
-        final HttpExchangeImpl http;
-        http = new HttpExchangeImpl(
-            HttpExchangeBodyFiles.standard(),
-            bufferSizeInitial,
-            bufferSizeMax,
-            clock,
-            handler,
-            id,
-            noteSink,
-            requestBodySizeMax,
-            Http.NoopResponseListener.INSTANCE,
-            socket
-        );
+        final HttpServerTask http;
+        http = new HttpServerTask(bodyOptions, buffer, clock, handler, id, noteSink, sessionLoader, socket);
 
         final Thread task;
         task = Thread.ofVirtual().name("http-", id).unstarted(http);
