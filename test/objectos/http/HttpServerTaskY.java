@@ -24,27 +24,28 @@ import java.util.function.Consumer;
 import objectos.way.Note;
 import objectos.way.Y;
 
-final class HttpServerTaskY {
+public final class HttpServerTaskY {
 
-  Path bodyDirectory;
+  public Path bodyDirectory;
 
-  int bodyMemoryMax = 1024;
+  public int bodyMemoryMax = 1024;
 
-  long bodySizeMax = 2048;
+  public long bodySizeMax = 2048;
 
-  int bufferSize = 512;
+  public int bufferSize = 512;
 
-  Clock clock = Y.clockFixed();
+  public Clock clock = Y.clockFixed();
 
-  HttpHandler handler = _ -> {};
+  public HttpHandler handler = _ -> {};
 
-  long id = Long.MAX_VALUE;
+  public long id = Long.MAX_VALUE;
 
-  Note.Sink noteSink = Y.noteSink();
+  public Note.Sink noteSink = Y.noteSink();
 
-  HttpSessionLoader sessionLoader = (_, _) -> null;
+  @SuppressWarnings("exports")
+  public HttpSessionLoader sessionLoader = (_, _) -> null;
 
-  Socket socket;
+  public Socket socket;
 
   public static String resp(Consumer<? super HttpServerTaskY> opts) {
     final HttpServerTaskY y;

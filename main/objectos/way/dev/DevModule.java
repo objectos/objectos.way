@@ -23,6 +23,7 @@ import objectos.css.StyleSheet;
 import objectos.http.HttpExchange;
 import objectos.http.HttpHandler;
 import objectos.http.HttpRouting;
+import objectos.web.WebResources;
 
 /// This class is not part of the Objectos Way JAR file. It is placed in the
 /// main source tree to ease the development.
@@ -40,8 +41,8 @@ public final class DevModule implements HttpRouting.Module {
 
     routing.path("/styles.css", GET, this::styles);
 
-    final Web.Resources webResources;
-    webResources = injector.getInstance(Web.Resources.class);
+    final WebResources webResources;
+    webResources = injector.getInstance(WebResources.class);
 
     routing.handler(webResources);
 

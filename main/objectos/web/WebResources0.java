@@ -13,14 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.way;
+package objectos.web;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.function.Consumer;
 import objectos.http.HttpExchange;
+import objectos.way.Media;
+import objectos.way.Note;
 
-final class WebResources implements Web.Resources {
+final class WebResources0 implements WebResources {
 
   record Notes(
       Note.Ref2<String, String> contentTypeRegistered,
@@ -30,7 +32,7 @@ final class WebResources implements Web.Resources {
 
     static Notes create() {
       final Class<?> s;
-      s = Web.Resources.class;
+      s = WebResources.class;
 
       return new Notes(
           Note.Ref2.create(s, "CTR", Note.INFO),
@@ -43,7 +45,7 @@ final class WebResources implements Web.Resources {
 
   private volatile WebResourcesKernel kernel;
 
-  WebResources(WebResourcesKernel kernel) {
+  WebResources0(WebResourcesKernel kernel) {
     this.kernel = kernel;
   }
 
@@ -84,7 +86,7 @@ final class WebResources implements Web.Resources {
 
   @Override
   public final String toString() {
-    return "Web.Resources[" + kernel.rootDirectory() + "]";
+    return "WebResources[" + kernel.rootDirectory() + "]";
   }
 
   @Override

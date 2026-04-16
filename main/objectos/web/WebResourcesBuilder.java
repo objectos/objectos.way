@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.way;
+package objectos.web;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,20 +36,22 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import objectos.internal.Check;
 import objectos.internal.Util;
+import objectos.way.Media;
+import objectos.way.Note;
 
-final class WebResourcesBuilder implements Web.Resources.Options {
+final class WebResourcesBuilder implements WebResources.Options {
 
-  private final Note.Ref1<Path> created = Note.Ref1.create(Web.Resources.Options.class, "ADD", Note.DEBUG);
+  private final Note.Ref1<Path> created = Note.Ref1.create(WebResources.Options.class, "ADD", Note.DEBUG);
 
-  private final Note.Ref2<String, String> contentTypeRegistered = Note.Ref2.create(Web.Resources.Options.class, "CTR", Note.DEBUG);
+  private final Note.Ref2<String, String> contentTypeRegistered = Note.Ref2.create(WebResources.Options.class, "CTR", Note.DEBUG);
 
-  private final Note.Ref3<String, String, String> contentTypeIgnored = Note.Ref3.create(Web.Resources.Options.class, "CTI", Note.DEBUG);
+  private final Note.Ref3<String, String, String> contentTypeIgnored = Note.Ref3.create(WebResources.Options.class, "CTI", Note.DEBUG);
 
   Map<String, String> contentTypes = Util.createMap();
 
   final String defaultContentType = "application/octet-stream";
 
-  Note.Sink noteSink = new Note.NoOpSink();
+  Note.Sink noteSink = Note.NoOpSink.create();
 
   private final Path rootDirectory;
 
@@ -86,7 +88,7 @@ final class WebResourcesBuilder implements Web.Resources.Options {
 
         defaultContentType,
 
-        WebResources.Notes.create(),
+        WebResources0.Notes.create(),
 
         noteSink,
 
@@ -220,7 +222,7 @@ final class WebResourcesBuilder implements Web.Resources.Options {
   }
 
   @Override
-  public final void include(Web.Resources.Library value) {
+  public final void include(WebResources.Library value) {
     value.configure(this);
   }
 

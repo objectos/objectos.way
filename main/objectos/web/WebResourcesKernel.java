@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.way;
+package objectos.web;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -32,11 +32,14 @@ import objectos.http.HttpExchange;
 import objectos.http.HttpHeaderName;
 import objectos.http.HttpMethod;
 import objectos.http.HttpStatus;
+import objectos.way.Io;
+import objectos.way.Media;
+import objectos.way.Note;
 
 record WebResourcesKernel(
     ConcurrentMap<String, String> contentTypes,
     String defaultContentType,
-    WebResources.Notes notes,
+    WebResources0.Notes notes,
     Note.Sink noteSink,
     Path rootDirectory
 ) {
