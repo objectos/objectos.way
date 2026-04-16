@@ -16,6 +16,7 @@
 package objectos.http;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertSame;
 
 import module java.base;
@@ -146,15 +147,10 @@ public class HttpRequestParser2MethodTest {
 
   @Test
   public void eof01() throws IOException {
-    try {
-      parse();
+    final HttpMethod method;
+    method = parse();
 
-      Assert.fail("It should have thrown");
-    } catch (HttpClientException expected) {
-      assertEquals(expected.getMessage(), "EOF while parsing method");
-
-      assertEquals(expected.kind, HttpClientException.Kind.INVALID_REQUEST_LINE);
-    }
+    assertNull(method);
   }
 
 }

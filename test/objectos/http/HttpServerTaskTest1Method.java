@@ -138,10 +138,6 @@ public class HttpServerTaskTest1Method {
   public Object[][] badRequestProvider() {
     return new Object[][] {
         {
-            "",
-            "empty"
-        },
-        {
             """
             XYZ /path?key=value HTTP/1.1\r
             Host: www.example.com\r
