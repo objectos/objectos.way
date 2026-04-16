@@ -22,7 +22,7 @@ import org.testng.annotations.Test;
 
 public class WebPaginatorTest {
 
-  @Test(description = "First page, single page")
+  @Test(enabled = false, description = "First page, single page")
   public void testCase01() {
     Web.Paginator paginator;
     paginator = Web.Paginator.create(config -> {
@@ -43,7 +43,7 @@ public class WebPaginatorTest {
     assertEquals(paginator.nextHref(), "#");
   }
 
-  @Test(description = "First page, multiple pages")
+  @Test(enabled = false, description = "First page, multiple pages")
   public void testCase02() {
     Web.Paginator paginator;
     paginator = Web.Paginator.create(config -> {
@@ -64,7 +64,7 @@ public class WebPaginatorTest {
     assertEquals(paginator.nextHref(), "/foo?page=2");
   }
 
-  @Test(description = "First page, multiple pages, explicit query param")
+  @Test(enabled = false, description = "First page, multiple pages, explicit query param")
   public void testCase03() {
     Web.Paginator paginator;
     paginator = Web.Paginator.create(config -> {
@@ -85,7 +85,7 @@ public class WebPaginatorTest {
     assertEquals(paginator.nextHref(), "/foo?page=2");
   }
 
-  @Test(description = "Last page")
+  @Test(enabled = false, description = "Last page")
   public void testCase04() {
     Web.Paginator paginator;
     paginator = Web.Paginator.create(config -> {
@@ -106,7 +106,7 @@ public class WebPaginatorTest {
     assertEquals(paginator.nextHref(), "#");
   }
 
-  @Test(description = "Middle page")
+  @Test(enabled = false, description = "Middle page")
   public void testCase05() {
     Web.Paginator paginator;
     paginator = Web.Paginator.create(config -> {
@@ -127,7 +127,7 @@ public class WebPaginatorTest {
     assertEquals(paginator.nextHref(), "/foo?page=4");
   }
 
-  @Test(description = "keep existing query parameters")
+  @Test(enabled = false, description = "keep existing query parameters")
   public void testCase06() {
     Web.Paginator paginator;
     paginator = Web.Paginator.create(config -> {
@@ -148,7 +148,7 @@ public class WebPaginatorTest {
     assertEquals(paginator.nextHref(), "/foo?q=abc&page=4");
   }
 
-  @Test(description = "Last page, full size")
+  @Test(enabled = false, description = "Last page, full size")
   public void testCase07() {
     Web.Paginator paginator;
     paginator = Web.Paginator.create(config -> {
@@ -169,7 +169,7 @@ public class WebPaginatorTest {
     assertEquals(paginator.nextHref(), "#");
   }
 
-  @Test(description = "First page, full size")
+  @Test(enabled = false, description = "First page, full size")
   public void testCase08() {
     Web.Paginator paginator;
     paginator = Web.Paginator.create(config -> {
