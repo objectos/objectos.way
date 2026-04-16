@@ -120,6 +120,12 @@ final class HttpServerTask implements Runnable {
     final HttpMethod method;
     method = methodParser.parse();
 
+    if (method == null) {
+      keepAlive = false;
+
+      return;
+    }
+
     validate(method);
 
     head = method == HttpMethod.HEAD;

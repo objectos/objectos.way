@@ -44,7 +44,14 @@ final class HttpRequestParser2Method {
 
   private HttpMethod parse0() throws IOException {
     final byte first;
-    first = input.readByte();
+
+    try {
+      // TODO do not use exception as flow control
+
+      first = input.readByte();
+    } catch (HttpRequestParser0Input.Eof expected) {
+      return null;
+    }
 
     return switch (first) {
       case 'C' -> parseMethod(HttpMethod.CONNECT, 1);
