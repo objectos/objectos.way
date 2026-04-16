@@ -4403,12 +4403,12 @@ final class HttpExchangeImpl implements HttpExchange, Runnable, Closeable {
   private void terminate() {
     if (session != null) {
 
-      final String setCookie;
-      setCookie = session.consumeSetCookie();
-
-      if (setCookie != null) {
-        headerUnchecked(HttpHeaderName.SET_COOKIE, setCookie);
-      }
+      //      final String setCookie;
+      //      setCookie = session.consumeSetCookie();
+      //
+      //      if (setCookie != null) {
+      //        headerUnchecked(HttpHeaderName.SET_COOKIE, setCookie);
+      //      }
 
     }
 

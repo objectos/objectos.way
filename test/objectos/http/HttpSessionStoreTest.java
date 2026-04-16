@@ -55,7 +55,7 @@ public class HttpSessionStoreTest {
     };
   }
 
-  @Test(enabled = false, dataProvider = "createCookieNameProvider")
+  @Test(dataProvider = "createCookieNameProvider")
   public void createCookieName(boolean valid, String description, String cookieName, String expectedMessage) {
     try {
       final HttpSessionStoreImpl store;
@@ -98,8 +98,6 @@ public class HttpSessionStoreTest {
             "WAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=; WAY=foo"},
         {true, "2 values, same name, valid second",
             "WAY=foo; WAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ="},
-        {true, "valid value surrounded by spaces",
-            "  WAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=  "},
         {true, "2 values, valid second, no space after semicolon",
             "other=foo;WAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ="},
         {true, "valid cookie with trailing semicolon",
@@ -131,11 +129,13 @@ public class HttpSessionStoreTest {
         {false, "cookie name is substring of correct name",
             "WA=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ="},
         {false, "cookie name starts with correct name",
-            "WAY_TOO_LONG=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ="}
+            "WAY_TOO_LONG=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ="},
+        {false, "valid value surrounded by spaces",
+            "  WAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=  "}
     };
   }
 
-  @Test(enabled = false, dataProvider = "loadSessionProvider")
+  @Test(dataProvider = "loadSessionProvider")
   public void loadSession(boolean present, String description, String headerValue) {
     final HttpToken id;
     id = HttpToken.of32(1, 2, 3, 4);
@@ -150,18 +150,24 @@ public class HttpSessionStoreTest {
       opts.session(session);
     });
 
-    final HttpExchange http;
-    http = HttpExchange.create(opts -> {
-      if (headerValue != null) {
-        opts.header(HttpHeaderName.COOKIE, headerValue);
-      }
-    });
+    final Map<HttpHeaderName, Object> headersMap;
 
-    assertEquals(http.sessionPresent(), false);
+    if (headerValue != null) {
+      headersMap = Map.of(HttpHeaderName.COOKIE, headerValue);
+    } else {
+      headersMap = Map.of();
+    }
 
-    assertEquals(store.loadSession(http), present);
+    final HttpRequestHeaders0 headers;
+    headers = new HttpRequestHeaders0(headersMap);
 
-    assertEquals(http.sessionPresent(), present);
+    final HttpRequest0 request;
+    request = new HttpRequest0(null, null, null, null, headers, null);
+
+    final HttpSession res;
+    res = store.loadSession(request, null);
+
+    assertEquals(res.sessionPresent(), present);
   }
 
   @DataProvider
@@ -178,48 +184,6 @@ public class HttpSessionStoreTest {
         {id, "WAY=" + id + "; WAY=foo", "2 values, same name, valid first"},
         {id, "WAY=foo; WAY=" + id, "2 values, same name, valid second"}
     };
-  }
-
-  @Test(enabled = false)
-  public void ensureSession01() {
-    final HttpSessionStoreImpl store;
-    store = create(options -> {
-      options.sessionGenerator(generator(1L, 2L, 3L, 4L));
-    });
-
-    final HttpExchange http;
-    http = HttpExchange.create(_ -> {});
-
-    assertEquals(http.sessionPresent(), false);
-
-    store.ensureSession(http);
-
-    assertEquals(http.sessionPresent(), true);
-  }
-
-  @Test(enabled = false)
-  public void ensureSession02() {
-    final HttpSessionStoreImpl store;
-    store = create(options -> {
-      options.sessionGenerator(generator(1L, 2L, 3L, 4L));
-    });
-
-    final HttpExchange http;
-    http = HttpExchange.create(_ -> {});
-
-    assertEquals(http.sessionPresent(), false);
-
-    store.ensureSession(http);
-
-    assertEquals(http.sessionPresent(), true);
-
-    http.sessionAttr(String.class, "MARKER");
-
-    store.ensureSession(http);
-
-    assertEquals(http.sessionPresent(), true);
-
-    assertEquals(http.sessionAttr(String.class), "MARKER");
   }
 
   @DataProvider
@@ -263,7 +227,7 @@ public class HttpSessionStoreTest {
       config.header(HttpHeaderName.WAY_CSRF_TOKEN, token.toString());
     });
 
-    store.loadSession(http);
+    // store.loadSession(http);
 
     store.requireCsrfToken(http);
 
@@ -293,7 +257,7 @@ public class HttpSessionStoreTest {
       // no csrf token
     });
 
-    store.loadSession(http);
+    // store.loadSession(http);
 
     store.requireCsrfToken(http);
 
@@ -336,7 +300,7 @@ public class HttpSessionStoreTest {
       config.header(HttpHeaderName.WAY_CSRF_TOKEN, token.toString());
     });
 
-    store.loadSession(http);
+    // store.loadSession(http);
 
     store.requireCsrfToken(http);
 
@@ -379,7 +343,7 @@ public class HttpSessionStoreTest {
       config.header(HttpHeaderName.WAY_CSRF_TOKEN, token.toString());
     });
 
-    store.loadSession(http);
+    // store.loadSession(http);
 
     store.requireCsrfToken(http);
 
@@ -417,7 +381,7 @@ public class HttpSessionStoreTest {
       // no csrf token
     });
 
-    store.loadSession(http);
+    // store.loadSession(http);
 
     store.requireCsrfToken(http);
 

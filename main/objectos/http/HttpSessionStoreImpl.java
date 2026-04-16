@@ -109,29 +109,6 @@ final class HttpSessionStoreImpl implements HttpSessionLoader, HttpSessionStore 
   }
 
   @Override
-  public final void ensureSession(HttpExchange http) {
-    final HttpExchangeImpl impl;
-    impl = (HttpExchangeImpl) http;
-
-    if (impl.sessionPresent()) {
-      return;
-    }
-
-    final HttpSession0 session;
-
-    final HttpSession0 maybeExisting;
-    maybeExisting = findSession(impl);
-
-    if (maybeExisting != null) {
-      session = maybeExisting;
-    } else {
-      session = createSession();
-    }
-
-    impl.session(session);
-  }
-
-  @Override
   public final HttpSession loadSession(HttpRequest request, HttpResponse response) {
     final HttpSession maybeExisting;
     maybeExisting = findSession(request);
@@ -140,27 +117,6 @@ final class HttpSessionStoreImpl implements HttpSessionLoader, HttpSessionStore 
       return maybeExisting;
     } else {
       return new HttpSession1(response, this);
-    }
-  }
-
-  @Override
-  public final boolean loadSession(HttpExchange http) {
-    final HttpExchangeImpl impl;
-    impl = (HttpExchangeImpl) http;
-
-    if (impl.sessionPresent()) {
-      return true;
-    }
-
-    final HttpSession0 session;
-    session = findSession(impl);
-
-    if (session != null) {
-      impl.session(session);
-
-      return true;
-    } else {
-      return false;
     }
   }
 
@@ -388,10 +344,7 @@ final class HttpSessionStoreImpl implements HttpSessionLoader, HttpSessionStore 
       final HttpToken id;
       id = HttpToken.of(sessionGenerator, SESSION_LENGTH);
 
-      final String setCookie;
-      setCookie = setCookie(id);
-
-      session = new HttpSession0(id, setCookie);
+      session = new HttpSession0(id);
 
       maybeExisting = sessions.putIfAbsent(id, session);
     } while (maybeExisting != null);

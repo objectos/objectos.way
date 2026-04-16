@@ -120,19 +120,6 @@ public sealed interface HttpSessionStore permits HttpSessionStoreImpl {
     return builder.build();
   }
 
-  /// Loads the session associated to the specified exchange, or creates a new
-  /// session if one does not exist.
-  ///
-  /// @param http the HTTP exchange
-  void ensureSession(HttpExchange http);
-
-  /// Loads the session associated to the specified exchange if one exists.
-  ///
-  /// @param http the HTTP exchange
-  ///
-  /// @return `true` if a session has been loaded; `false` otherwise
-  boolean loadSession(HttpExchange http);
-
   /// Requires a POST, PUT, PATCH or DELETE request to contain a valid CSRF
   /// token. If the request does contain a CSRF token, or if the token value does
   /// not match the one from the session associated to the request, then a `403

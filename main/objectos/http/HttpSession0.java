@@ -32,22 +32,16 @@ final class HttpSession0 implements HttpSession {
 
   private final Lock lock = new ReentrantLock();
 
-  private String setCookie;
-
   private Map<Object, Object> store = null;
 
   private boolean valid = true;
 
-  HttpSession0(HttpToken id, String setCookie) {
+  HttpSession0(HttpToken id) {
     this.id = id;
-
-    this.setCookie = setCookie;
   }
 
   HttpSession0(HttpToken id, Map<Object, Object> map) {
     this.id = id;
-
-    setCookie = null;
 
     store = map;
   }
@@ -160,28 +154,6 @@ final class HttpSession0 implements HttpSession {
   @Override
   public final String toString() {
     return "HttpSession[accessTime=" + accessTime + ";valid=" + valid + "]";
-  }
-
-  final String consumeSetCookie() {
-    String s;
-    s = setCookie;
-
-    if (s != null) {
-
-      lock.lock();
-      try {
-        s = setCookie;
-
-        if (s != null) {
-          setCookie = null;
-        }
-      } finally {
-        lock.unlock();
-      }
-
-    }
-
-    return s;
   }
 
   final HttpToken id() {
