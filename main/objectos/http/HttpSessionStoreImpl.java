@@ -124,11 +124,8 @@ final class HttpSessionStoreImpl implements HttpSessionLoader, HttpSessionStore 
 
   @Override
   public final void requireCsrfToken(HttpExchange http) {
-    final HttpExchangeImpl impl;
-    impl = (HttpExchangeImpl) http;
-
     final HttpMethod method;
-    method = impl.method();
+    method = http.method();
 
     if (SAFE_METHODS.contains(method)) {
       return;
@@ -136,11 +133,11 @@ final class HttpSessionStoreImpl implements HttpSessionLoader, HttpSessionStore 
 
     // prefer from the header
     String encoded;
-    encoded = impl.header(HttpHeaderName.WAY_CSRF_TOKEN);
+    encoded = http.header(HttpHeaderName.WAY_CSRF_TOKEN);
 
     if (encoded == null) {
       // obtain from form param
-      encoded = impl.formParam(csrfParamName);
+      encoded = http.formParam(csrfParamName);
     }
 
     HttpToken csrf;
@@ -157,9 +154,9 @@ final class HttpSessionStoreImpl implements HttpSessionLoader, HttpSessionStore 
     boolean valid;
     valid = false;
 
-    if (csrf != null && impl.sessionPresent()) {
+    if (csrf != null && http.sessionPresent()) {
       final HttpCsrfToken sessionToken;
-      sessionToken = impl.sessionAttr(HttpCsrfToken.class);
+      sessionToken = http.sessionAttr(HttpCsrfToken.class);
 
       valid = csrf.equals(sessionToken);
     }

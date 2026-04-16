@@ -31,7 +31,7 @@ import objectos.way.Media;
  */
 public sealed interface HttpExchange
     extends HttpRequest
-    permits HttpExchangeImpl, HttpExchange0 {
+    permits HttpExchange0 {
 
   /**
    * Configures the creation of a stand-alone exchange instance.
