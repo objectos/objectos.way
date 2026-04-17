@@ -25,9 +25,6 @@ import java.time.Clock;
 import java.util.concurrent.atomic.AtomicLong;
 import objectos.way.Note;
 
-/**
- * The Objectos Way {@link HttpServerImpl} implementation.
- */
 final class HttpServerImpl implements HttpServer, Runnable {
 
   record Notes(
@@ -67,15 +64,13 @@ final class HttpServerImpl implements HttpServer, Runnable {
 
   private final Clock clock;
 
-  private final HttpHandler handler;
+  private final HttpHosts hosts;
 
   private final Notes notes = Notes.get();
 
   private final Note.Sink noteSink;
 
   private ServerSocket serverSocket;
-
-  private final HttpSessionLoader sessionLoader;
 
   private final InetSocketAddress socketAddress;
 
@@ -90,11 +85,9 @@ final class HttpServerImpl implements HttpServer, Runnable {
 
       Clock clock,
 
-      HttpHandler handler,
+      HttpHosts hosts,
 
       Note.Sink noteSink,
-
-      HttpSessionLoader sessionLoader,
 
       InetSocketAddress socketAddress
   ) {
@@ -104,11 +97,9 @@ final class HttpServerImpl implements HttpServer, Runnable {
 
     this.clock = clock;
 
-    this.handler = handler;
+    this.hosts = hosts;
 
     this.noteSink = noteSink;
-
-    this.sessionLoader = sessionLoader;
 
     this.socketAddress = socketAddress;
   }
@@ -205,7 +196,7 @@ final class HttpServerImpl implements HttpServer, Runnable {
         id = ID.getAndIncrement();
 
         final HttpServerTask http;
-        http = new HttpServerTask(bodyOptions, buffer, clock, handler, id, noteSink, sessionLoader, socket);
+        http = new HttpServerTask(bodyOptions, buffer, clock, hosts, id, noteSink, socket);
 
         final Thread task;
         task = Thread.ofVirtual().name("http-", id).unstarted(http);

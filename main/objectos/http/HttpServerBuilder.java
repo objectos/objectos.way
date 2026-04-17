@@ -18,7 +18,10 @@ package objectos.http;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.time.Clock;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Objects;
+import java.util.function.Consumer;
 import objectos.internal.Check;
 import objectos.internal.NoOpSinkSingleton;
 import objectos.way.Note;
@@ -31,7 +34,7 @@ final class HttpServerBuilder implements HttpServer.Options {
 
   private Clock clock = Clock.systemUTC();
 
-  private HttpHandler handler = _ -> {};
+  private final Map<String, HttpHost0> hosts = new LinkedHashMap<>();
 
   private int requestBodyMemoryMax;
 
@@ -41,8 +44,6 @@ final class HttpServerBuilder implements HttpServer.Options {
 
   private int port = 0;
 
-  private HttpSessionLoader sessionLoader = (_, _) -> null;
-
   public final HttpServer build() {
     return new HttpServerImpl(
         bodyOptions(),
@@ -51,11 +52,9 @@ final class HttpServerBuilder implements HttpServer.Options {
 
         clock,
 
-        handler,
+        hosts(),
 
         noteSink,
-
-        sessionLoader,
 
         socketAddress()
     );
@@ -79,8 +78,21 @@ final class HttpServerBuilder implements HttpServer.Options {
   }
 
   @Override
-  public final void handler(HttpHandler value) {
-    handler = Objects.requireNonNull(value, "value == null");
+  public final void host(Consumer<? super HttpHost> opts) {
+    final HttpHost0 host;
+    host = new HttpHost0();
+
+    opts.accept(host);
+
+    final HttpHost0 existing;
+    existing = hosts.put(host.name, host);
+
+    if (existing != null) {
+      final String msg;
+      msg = "A host with the same name was already registered";
+
+      throw new IllegalArgumentException(msg);
+    }
   }
 
   @Override
@@ -104,12 +116,23 @@ final class HttpServerBuilder implements HttpServer.Options {
     requestBodySizeMax = value;
   }
 
+  /*
+  
   @Override
-  public final void sessionStore(HttpSessionStore value) {
-    sessionLoader = (HttpSessionLoader) Objects.requireNonNull(value, "value == null");
-  }
+  public final void staticFiles(ThrowingConsumer<? super HttpStaticFiles> opts) throws IOException {
+    if (staticFiles == null) {
+      final Path rootDirectory;
+      rootDirectory = Files.createTempDirectory("way-http-static-files-");
 
-  final HttpRequestBodyOptions bodyOptions() {
+      staticFiles = new HttpStaticFiles0(noteSink, rootDirectory);
+    }
+
+    opts.accept(staticFiles);
+  }
+  
+  */
+
+  private HttpRequestBodyOptions bodyOptions() {
     final int memoryMax;
 
     if (requestBodyMemoryMax == 0) {
@@ -121,7 +144,24 @@ final class HttpServerBuilder implements HttpServer.Options {
     return new HttpRequestBodyOptions0(memoryMax, requestBodySizeMax);
   }
 
-  final InetSocketAddress socketAddress() {
+  private HttpHosts hosts() {
+    HttpHosts res;
+    res = HttpHosts.of();
+
+    for (var stage : hosts.values()) {
+      final String name;
+      name = stage.name(port);
+
+      final HttpHost1 host;
+      host = stage.build(noteSink);
+
+      res = res.add(name, host);
+    }
+
+    return res;
+  }
+
+  private InetSocketAddress socketAddress() {
     final InetAddress a;
 
     if (address == null) {

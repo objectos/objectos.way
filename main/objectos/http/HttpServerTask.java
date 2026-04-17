@@ -39,13 +39,11 @@ final class HttpServerTask implements Runnable {
 
   private final Clock clock;
 
-  private final HttpHandler handler;
+  private final HttpHosts hosts;
 
   private final long id;
 
   private final Note.Sink noteSink;
-
-  private final HttpSessionLoader sessionLoader;
 
   private final Socket socket;
 
@@ -53,10 +51,9 @@ final class HttpServerTask implements Runnable {
       HttpRequestBodyOptions bodyOptions,
       byte[] buffer,
       Clock clock,
-      HttpHandler handler,
+      HttpHosts hosts,
       long id,
       Note.Sink noteSink,
-      HttpSessionLoader sessionLoader,
       Socket socket) {
     this.bodyOptions = bodyOptions;
 
@@ -64,13 +61,11 @@ final class HttpServerTask implements Runnable {
 
     this.clock = clock;
 
-    this.handler = handler;
+    this.hosts = hosts;
 
     this.id = id;
 
     this.noteSink = noteSink;
-
-    this.sessionLoader = sessionLoader;
 
     this.socket = socket;
   }
@@ -163,7 +158,8 @@ final class HttpServerTask implements Runnable {
     final HttpRequestHeaders0 headers;
     headers = new HttpRequestHeaders0(headersMap);
 
-    validate(headers);
+    final HttpHost1 host;
+    host = validate(headers);
 
     // body meta
     final HttpRequestParser7BodyMeta bodyMetaParser;
@@ -225,7 +221,7 @@ final class HttpServerTask implements Runnable {
 
     // session
     final HttpSession session;
-    session = sessionLoader.loadSession(request, response);
+    session = host.loadSession(request, response);
 
     // exchange
     final HttpExchange0 exchange;
@@ -233,7 +229,7 @@ final class HttpServerTask implements Runnable {
 
     try {
       try {
-        handler.handle(exchange);
+        host.handle(exchange);
       } catch (Http.AbstractHandlerException e) {
         e.handle(exchange);
       }
@@ -261,11 +257,11 @@ final class HttpServerTask implements Runnable {
     }
   }
 
-  private void validate(HttpRequestHeaders0 headers) throws IOException {
-    final List<String> host;
-    host = headers.headerAll(HttpHeaderName.HOST);
+  private HttpHost1 validate(HttpRequestHeaders0 headers) throws IOException {
+    final List<String> hostHeader;
+    hostHeader = headers.headerAll(HttpHeaderName.HOST);
 
-    if (host.size() != 1) {
+    if (hostHeader.size() != 1) {
       final String msg;
       msg = "Host header field is required";
 
@@ -273,7 +269,7 @@ final class HttpServerTask implements Runnable {
     }
 
     final String hostValue;
-    hostValue = host.get(0);
+    hostValue = hostHeader.get(0);
 
     if (hostValue.isEmpty()) {
       final String msg;
@@ -288,6 +284,18 @@ final class HttpServerTask implements Runnable {
     if (transferEncoding != null) {
       throw new HttpServerException(HttpServerException.Kind.TRANSFER_ENCODING);
     }
+
+    final HttpHost1 host;
+    host = hosts.get(hostValue);
+
+    if (host == null) {
+      final String msg;
+      msg = "Invalid host: %s".formatted(hostValue);
+
+      throw new HttpClientException(msg, HttpClientException.Kind.HOST_NOT_FOUND);
+    }
+
+    return host;
   }
 
   private void handle(OutputStream outputStream, Message exception) {

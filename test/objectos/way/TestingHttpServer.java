@@ -27,9 +27,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import objectos.http.HttpExchange;
 import objectos.http.HttpHandler;
-import objectos.http.HttpHeaderName;
-import objectos.http.HttpRequest;
-import objectos.http.HttpRouting;
 import objectos.http.HttpRoutingTest;
 import objectos.http.HttpServer;
 import objectos.http.HttpServerTest;
@@ -141,24 +138,37 @@ public final class TestingHttpServer {
 
       HttpServer server;
       server = HttpServer.create(opts -> {
-        final HttpHandler serverHandler;
-        serverHandler = HttpHandler.of(HANDLER::configure);
-
         opts.address(InetAddress.getLoopbackAddress());
 
-        opts.handler(serverHandler);
+        opts.host(host -> {
+          host.name("http.module.test");
+
+          host.handler(HANDLER.httpModuleTest);
+
+          host.sessionStore(HttpSessionStore.create(config -> {
+            config.cookieName("HTTPMODULETEST");
+
+            config.sessionGenerator(Y.randomGeneratorOfLongs(1L, 2L, 3L, 4L));
+          }));
+        });
+
+        opts.host(host -> {
+          host.name("http.server.test");
+
+          host.handler(HANDLER.httpServerTest);
+        });
+
+        opts.host(host -> {
+          host.name("marketing");
+
+          host.handler(HttpHandler.of(HANDLER.marketing));
+        });
 
         opts.clock(Y.clockFixed());
 
         opts.noteSink(Y.noteSink());
 
         opts.port(0);
-
-        opts.sessionStore(HttpSessionStore.create(config -> {
-          config.cookieName("HTTPMODULETEST");
-
-          config.sessionGenerator(Y.randomGeneratorOfLongs(1L, 2L, 3L, 4L));
-        }));
       });
 
       TestingShutdownHook.register(server);
@@ -177,25 +187,6 @@ public final class TestingHttpServer {
     private final DelegatingHandler httpServerTest = new DelegatingHandler();
 
     private final MarketingSite marketing = new MarketingSite();
-
-    public final void configure(HttpRouting r) {
-      r.when(req -> host(req, "http.module.test"), matched -> {
-        matched.handler(httpModuleTest);
-      });
-
-      r.when(req -> host(req, "http.server.test"), matched -> {
-        matched.handler(httpServerTest);
-      });
-
-      r.when(req -> host(req, "marketing"), marketing);
-    }
-
-    private boolean host(HttpRequest req, String hostName) {
-      final String host;
-      host = req.header(HttpHeaderName.HOST);
-
-      return hostName.equals(host);
-    }
 
     private static final class DelegatingHandler implements HttpHandler {
 

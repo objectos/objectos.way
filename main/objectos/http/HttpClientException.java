@@ -32,6 +32,8 @@ final class HttpClientException extends IOException implements HttpServerTask.Me
 
     HOST_HEADER(HttpStatus.BAD_REQUEST, "Host header.\n"),
 
+    HOST_NOT_FOUND(HttpStatus.NOT_FOUND, "Host not found.\n"),
+
     LINE_TERMINATOR(HttpStatus.BAD_REQUEST, "Invalid line terminator.\n"),
 
     CONTENT_TOO_LARGE(HttpStatus.CONTENT_TOO_LARGE, "The request message body exceeds the server's maximum allowed limit.\n"),

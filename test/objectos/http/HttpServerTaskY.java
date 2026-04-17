@@ -38,6 +38,8 @@ public final class HttpServerTaskY {
 
   public HttpHandler handler = _ -> {};
 
+  public String hostName = "www.example.com";
+
   public long id = Long.MAX_VALUE;
 
   public Note.Sink noteSink = Y.noteSink();
@@ -136,6 +138,12 @@ public final class HttpServerTaskY {
   }
 
   private HttpServerTask build() {
+    final HttpHost1 host;
+    host = new HttpHost1(handler, noteSink, sessionLoader);
+
+    final HttpHosts hosts;
+    hosts = HttpHosts.of().add(hostName, host);
+
     return new HttpServerTask(
         new ThisBodyOptions(bodyDirectory, bodyMemoryMax, bodySizeMax),
 
@@ -143,13 +151,11 @@ public final class HttpServerTaskY {
 
         clock,
 
-        handler,
+        hosts,
 
         id,
 
         noteSink,
-
-        sessionLoader,
 
         socket
     );

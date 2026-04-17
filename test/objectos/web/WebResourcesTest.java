@@ -61,7 +61,7 @@ public class WebResourcesTest {
         HttpServerTaskY.resp(test -> {
           test.socket = Y.socket("""
           GET /tc01.txt HTTP/1.1\r
-          Host: web.resources.test\r
+          Host: www.example.com\r
           Connection: close\r
           \r
           """);
@@ -95,7 +95,7 @@ public class WebResourcesTest {
         HttpServerTaskY.resp(test -> {
           test.socket = Y.socket("""
           GET /tc02.txt HTTP/1.1\r
-          Host: web.resources.test\r
+          Host: www.example.com\r
           Connection: close\r
           \r
           """);
@@ -149,7 +149,7 @@ public class WebResourcesTest {
         HttpServerTaskY.resp(test -> {
           test.socket = Y.socket("""
           POST /tc03.txt HTTP/1.1\r
-          Host: web.resources.test\r
+          Host: www.example.com\r
           \r
           """);
 
@@ -188,7 +188,7 @@ public class WebResourcesTest {
         HttpServerTaskY.resp(test -> {
           test.socket = Y.socket("""
           GET /reconfigure.txt HTTP/1.1\r
-          Host: web.resources.test\r
+          Host: www.example.com\r
           \r
           """);
 
@@ -231,7 +231,7 @@ public class WebResourcesTest {
         HttpServerTaskY.resp(test -> {
           test.socket = Y.socket("""
           GET /tc05.txt HTTP/1.1\r
-          Host: web.resources.test\r
+          Host: www.example.com\r
           If-None-Match: 18901e7e8f8-5\r
           Connection: close\r
           \r
@@ -264,7 +264,7 @@ public class WebResourcesTest {
         HttpServerTaskY.resp(test -> {
           test.socket = Y.socket("""
           GET /tc06.txt HTTP/1.1\r
-          Host: web.resources.test\r
+          Host: www.example.com\r
           \r
           """);
 
@@ -308,7 +308,7 @@ public class WebResourcesTest {
         HttpServerTaskY.resp(test -> {
           test.socket = Y.socket("""
           GET /tc06.txt HTTP/1.1\r
-          Host: web.resources.test\r
+          Host: www.example.com\r
           If-None-Match: 18901e7e8f8-5\r
           \r
           """);
@@ -337,7 +337,7 @@ public class WebResourcesTest {
         HttpServerTaskY.resp(test -> {
           test.socket = Y.socket("""
           GET /tc07.txt HTTP/1.1\r
-          Host: web.resources.test\r
+          Host: www.example.com\r
           \r
           """);
 
@@ -384,7 +384,7 @@ public class WebResourcesTest {
         HttpServerTaskY.resp(test -> {
           test.socket = Y.socket("""
           GET /tc08.txt HTTP/1.1\r
-          Host: web.resources.test\r
+          Host: www.example.com\r
           \r
           """);
 
@@ -428,7 +428,7 @@ public class WebResourcesTest {
         HttpServerTaskY.resp(test -> {
           test.socket = Y.socket("""
           GET /tc08.txt HTTP/1.1\r
-          Host: web.resources.test\r
+          Host: www.example.com\r
           If-None-Match: 18901e7e8f8-5\r
           \r
           """);
@@ -457,7 +457,7 @@ public class WebResourcesTest {
         HttpServerTaskY.resp(test -> {
           test.socket = Y.socket("""
           GET /tc09.txt HTTP/1.1\r
-          Host: web.resources.test\r
+          Host: www.example.com\r
           \r
           """);
 
@@ -501,7 +501,7 @@ public class WebResourcesTest {
         HttpServerTaskY.resp(test -> {
           test.socket = Y.socket("""
           GET /tc09.txt HTTP/1.1\r
-          Host: web.resources.test\r
+          Host: www.example.com\r
           If-None-Match: 18901e7e8f8-5\r
           \r
           """);
@@ -537,7 +537,7 @@ public class WebResourcesTest {
         HttpServerTaskY.resp(test -> {
           test.socket = Y.socket("""
           GET /tc10.txt HTTP/1.1\r
-          Host: web.resources.test\r
+          Host: www.example.com\r
           \r
           """);
 
@@ -574,7 +574,7 @@ public class WebResourcesTest {
         HttpServerTaskY.resp(test -> {
           test.socket = Y.socket("""
           GET /tc11.txt HTTP/1.1\r
-          Host: web.resources.test\r
+          Host: www.example.com\r
           \r
           """);
 
@@ -611,7 +611,7 @@ public class WebResourcesTest {
         HttpServerTaskY.resp(test -> {
           test.socket = Y.socket("""
           GET /tc12.txt HTTP/1.1\r
-          Host: web.resources.test\r
+          Host: www.example.com\r
           \r
           """);
 
@@ -651,7 +651,7 @@ public class WebResourcesTest {
         HttpServerTaskY.resp(test -> {
           test.socket = Y.socket("""
           GET /tc13.txt HTTP/1.1\r
-          Host: web.resources.test\r
+          Host: www.example.com\r
           \r
           """);
 
@@ -691,7 +691,7 @@ public class WebResourcesTest {
         HttpServerTaskY.resp(test -> {
           test.socket = Y.socket("""
           GET /a/b/c/tc14.txt HTTP/1.1\r
-          Host: web.resources.test\r
+          Host: www.example.com\r
           \r
           """);
 
