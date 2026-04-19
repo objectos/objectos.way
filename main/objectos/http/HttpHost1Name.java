@@ -15,8 +15,28 @@
  */
 package objectos.http;
 
-import java.io.Closeable;
+final class HttpHost1Name {
 
-interface HttpStaticFilesHandler extends Closeable, HttpHandler {
+  private final String name;
+
+  private final int port;
+
+  HttpHost1Name(String name, int port) {
+    this.name = name;
+
+    this.port = port;
+  }
+
+  public final String get() {
+    if (name != null) {
+      return name;
+    }
+
+    if (port == 80) {
+      return "localhost";
+    }
+
+    return "localhost:" + port;
+  }
 
 }

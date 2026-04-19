@@ -15,16 +15,27 @@
  */
 package objectos.http;
 
-import objectos.way.Note;
+final class HttpHost4Handler implements HttpHandler {
 
-record HttpHost1(HttpHandler handler, Note.Sink noteSink, HttpSessionLoader sessionLoader) {
+  private final HttpHandler main;
 
-  public final void handle(HttpExchange0 exchange) {
-    handler.handle(exchange);
+  private final HttpHandler staticFiles;
+
+  HttpHost4Handler(HttpHandler main, HttpHandler staticFiles) {
+    this.main = main;
+
+    this.staticFiles = staticFiles;
   }
 
-  public final HttpSession loadSession(HttpRequest0 request, HttpResponse0 response) {
-    return sessionLoader.loadSession(request, response);
+  @Override
+  public final void handle(HttpExchange http) {
+    staticFiles.handle(http);
+
+    if (http.processed()) {
+      return;
+    }
+
+    main.handle(http);
   }
 
 }

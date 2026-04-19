@@ -28,18 +28,19 @@ sealed abstract class HttpHosts {
     return EMPTY;
   }
 
-  public abstract HttpHost1 get(String hostValue);
+  public abstract HttpHost4Pojo get(String hostValue);
 
-  abstract HttpHosts add(String name, HttpHost1 host);
+  abstract HttpHosts add(String name, HttpHost4Pojo host);
 
   private static final class HttpHosts0 extends HttpHosts {
+
     @Override
-    public final HttpHost1 get(String hostValue) {
+    public final HttpHost4Pojo get(String hostValue) {
       return null;
     }
 
     @Override
-    final HttpHosts add(String name, HttpHost1 host) {
+    final HttpHosts add(String name, HttpHost4Pojo host) {
       return new HttpHosts1(name, host);
     }
 
@@ -49,15 +50,15 @@ sealed abstract class HttpHosts {
 
     private final String name1;
 
-    private final HttpHost1 host1;
+    private final HttpHost4Pojo host1;
 
-    HttpHosts1(String name1, HttpHost1 host1) {
+    HttpHosts1(String name1, HttpHost4Pojo host1) {
       this.name1 = name1;
       this.host1 = host1;
     }
 
     @Override
-    public final HttpHost1 get(String hostValue) {
+    public final HttpHost4Pojo get(String hostValue) {
       if (name1.equals(hostValue)) {
         return host1;
       }
@@ -66,7 +67,7 @@ sealed abstract class HttpHosts {
     }
 
     @Override
-    final HttpHosts add(String name, HttpHost1 host) {
+    final HttpHosts add(String name, HttpHost4Pojo host) {
       return new HttpHosts2(name1, host1, name, host);
     }
 
@@ -76,13 +77,13 @@ sealed abstract class HttpHosts {
 
     private final String name1;
 
-    private final HttpHost1 host1;
+    private final HttpHost4Pojo host1;
 
     private final String name2;
 
-    private final HttpHost1 host2;
+    private final HttpHost4Pojo host2;
 
-    HttpHosts2(String name1, HttpHost1 host1, String name2, HttpHost1 host2) {
+    HttpHosts2(String name1, HttpHost4Pojo host1, String name2, HttpHost4Pojo host2) {
       this.name1 = name1;
 
       this.host1 = host1;
@@ -93,7 +94,7 @@ sealed abstract class HttpHosts {
     }
 
     @Override
-    public final HttpHost1 get(String hostValue) {
+    public final HttpHost4Pojo get(String hostValue) {
       if (name1.equals(hostValue)) {
         return host1;
       }
@@ -106,7 +107,7 @@ sealed abstract class HttpHosts {
     }
 
     @Override
-    final HttpHosts add(String name, HttpHost1 host) {
+    final HttpHosts add(String name, HttpHost4Pojo host) {
       final HttpHostsN hosts;
       hosts = new HttpHostsN();
 
@@ -121,15 +122,15 @@ sealed abstract class HttpHosts {
 
   private static final class HttpHostsN extends HttpHosts {
 
-    private final Map<String, HttpHost1> map = new HashMap<>();
+    private final Map<String, HttpHost4Pojo> map = new HashMap<>();
 
     @Override
-    public final HttpHost1 get(String hostValue) {
+    public final HttpHost4Pojo get(String hostValue) {
       return map.get(hostValue);
     }
 
     @Override
-    final HttpHosts add(String name, HttpHost1 host) {
+    final HttpHosts add(String name, HttpHost4Pojo host) {
       map.put(name, host);
 
       return this;

@@ -19,10 +19,10 @@ import module java.base;
 import module objectos.way;
 
 /// The Objectos Way HTTP server implementation.
-public sealed interface HttpServer extends Closeable permits HttpServerImpl {
+public sealed interface HttpServer extends Closeable permits HttpServer2Pojo {
 
   /// Configures the creation of an HTTP server.
-  sealed interface Options permits HttpServerBuilder {
+  sealed interface Options permits HttpServer0Builder {
 
     /// The IP address to which this server will listen to.
     ///
@@ -70,43 +70,20 @@ public sealed interface HttpServer extends Closeable permits HttpServerImpl {
 
   }
 
-  /// References to the note instances emitted by an web server.
-  sealed interface Notes permits HttpServerImpl.Notes {
-
-    /// Creates a new {@code Notes} instance.
-    ///
-    /// @return a new {@code Notes} instance.
-    static Notes create() {
-      return HttpServerImpl.Notes.get();
-    }
-
-    /// This server has started and is ready to accept requests.
-    ///
-    /// @return the note instance
-    Note.Ref1<HttpServer> started();
-
-  }
-
-  /// Creates a new HTTP server instance with the specified configuration.
+  /// Creates a new HTTP server instance with the specified configuration. The
+  /// server will be ready to accept connections after this method returns.
   ///
   /// @param options the HTTP server configuration
   ///
   /// @return a newly created HTTP server instance
-  static HttpServer create(Consumer<Options> options) {
-    HttpServerBuilder builder;
-    builder = new HttpServerBuilder();
+  static HttpServer create(Consumer<Options> options) throws IOException {
+    HttpServer0Builder builder;
+    builder = new HttpServer0Builder();
 
     options.accept(builder);
 
     return builder.build();
   }
-
-  /// Starts this HTTP server.
-  ///
-  /// The server will be ready to accept connections after this method returns.
-  ///
-  /// @throws IOException if an I/O error occurs
-  void start() throws IOException;
 
   /// Returns the IP address this server is listening to.
   ///

@@ -173,8 +173,6 @@ public final class TestingHttpServer {
 
       TestingShutdownHook.register(server);
 
-      server.start();
-
       return server;
     }
 

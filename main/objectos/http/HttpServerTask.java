@@ -158,7 +158,7 @@ final class HttpServerTask implements Runnable {
     final HttpRequestHeaders0 headers;
     headers = new HttpRequestHeaders0(headersMap);
 
-    final HttpHost1 host;
+    final HttpHost4Pojo host;
     host = validate(headers);
 
     // body meta
@@ -257,7 +257,7 @@ final class HttpServerTask implements Runnable {
     }
   }
 
-  private HttpHost1 validate(HttpRequestHeaders0 headers) throws IOException {
+  private HttpHost4Pojo validate(HttpRequestHeaders0 headers) throws IOException {
     final List<String> hostHeader;
     hostHeader = headers.headerAll(HttpHeaderName.HOST);
 
@@ -285,7 +285,7 @@ final class HttpServerTask implements Runnable {
       throw new HttpServerException(HttpServerException.Kind.TRANSFER_ENCODING);
     }
 
-    final HttpHost1 host;
+    final HttpHost4Pojo host;
     host = hosts.get(hostValue);
 
     if (host == null) {

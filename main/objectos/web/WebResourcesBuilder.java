@@ -16,7 +16,6 @@
 package objectos.web;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.io.Writer;
@@ -109,20 +108,6 @@ final class WebResourcesBuilder implements WebResources.Options {
       copyRecursively = new CopyRecursively(rootDirectory, directory);
 
       Files.walkFileTree(directory, copyRecursively);
-    } catch (IOException e) {
-      throw new UncheckedIOException(e);
-    }
-  }
-
-  @Override
-  public final void addFile(String pathName, InputStream in) {
-    try {
-      final Path path;
-      path = toPath(pathName);
-
-      ensureParent(path);
-
-      Files.copy(in, path);
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     }

@@ -138,8 +138,8 @@ public final class HttpServerTaskY {
   }
 
   private HttpServerTask build() {
-    final HttpHost1 host;
-    host = new HttpHost1(handler, noteSink, sessionLoader);
+    final HttpHost4Pojo host;
+    host = new HttpHost4Pojo(handler, hostName, sessionLoader);
 
     final HttpHosts hosts;
     hosts = HttpHosts.of().add(hostName, host);

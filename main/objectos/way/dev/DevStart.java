@@ -70,8 +70,6 @@ public final class DevStart extends App.Bootstrap {
       });
 
       shutdownHook.register(httpServer);
-
-      httpServer.start();
     } catch (IOException e) {
       throw App.serviceFailed("Http.Server", e);
     }

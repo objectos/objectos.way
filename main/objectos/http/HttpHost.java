@@ -15,10 +15,11 @@
  */
 package objectos.http;
 
-import objectos.way.Note;
+import java.io.IOException;
+import objectos.way.Io.ThrowingConsumer;
 
 /// Configures a name-based web site to be served by a `HttpServer` instance.
-public sealed interface HttpHost permits HttpHost0 {
+public sealed interface HttpHost permits HttpHost0Builder {
 
   /// Sets the name of this host. The specified name will be matched against the
   /// HTTP request `Host` header field value. Defaults to `localhost:port` when
@@ -34,23 +35,16 @@ public sealed interface HttpHost permits HttpHost0 {
   /// @param value a handler instance
   void handler(HttpHandler value);
 
-  /// Sets the note sink to the specified value.
-  ///
-  /// @param value a note sink instance
-  void noteSink(Note.Sink value);
-
   /// Uses the specified `HttpSessionStore` for HTTP session handling.
   ///
   /// @param value the `HttpSessionStore` instance to use
   void sessionStore(HttpSessionStore value);
 
-  /*
-  /// Configures the static files to be served by this HTTP server.
+  /// Configures the static files to be served by this host.
   ///
   /// @param opts allows for setting the options
   ///
   /// @throws IOException if an I/O error occurs
   void staticFiles(ThrowingConsumer<? super HttpStaticFiles> opts) throws IOException;
-  */
 
 }

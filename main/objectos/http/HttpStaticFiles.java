@@ -15,41 +15,16 @@
  */
 package objectos.http;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Path;
-import objectos.way.Media;
 
 /// Configures the static files to be served by a `HttpServer` instance.
-sealed interface HttpStaticFiles permits HttpStaticFiles0 {
+public sealed interface HttpStaticFiles permits HttpHost0Builder {
 
   /// Recursively serves the contents of the specified directory as if it was at
   /// the root of the HTTP server.
   ///
   /// @param directory the directory whose contents are to be served
-  ///
-  /// @throws IOException if an I/O error occurs
-  void addDirectory(Path directory) throws IOException;
-
-  /// Serves the bytes from the input stream at the specified path.
-  ///
-  /// @param pathName the absolute path of the file to be created. It must start
-  ///        with a '/' character.
-  /// @param in the input stream to read from
-  ///
-  /// @throws IOException if an I/O error occurs
-  void addFile(String pathName, InputStream in) throws IOException;
-
-  /// Serves the contents of the specified media at the specified path.
-  /// Additionally, the content type of the media is associated to the path's
-  /// file extension, if one is not already associated.
-  ///
-  /// @param pathName the absolute path of the file to be created. It must start
-  ///        with a '/' character.
-  /// @param media the media object whose contents is to be served
-  ///
-  /// @throws IOException if an I/O error occurs
-  void addMedia(String pathName, Media media) throws IOException;
+  void addDirectory(Path directory);
 
   /// Map file extension names to content type (media type) values as defined by
   /// the specified properties string.

@@ -15,8 +15,13 @@
  */
 package objectos.http;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.SocketAddress;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Clock;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -24,9 +29,10 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import objectos.internal.Check;
 import objectos.internal.NoOpSinkSingleton;
+import objectos.way.Io;
 import objectos.way.Note;
 
-final class HttpServerBuilder implements HttpServer.Options {
+final class HttpServer0Builder implements HttpServer.Options {
 
   private InetAddress address;
 
@@ -34,7 +40,7 @@ final class HttpServerBuilder implements HttpServer.Options {
 
   private Clock clock = Clock.systemUTC();
 
-  private final Map<String, HttpHost0> hosts = new LinkedHashMap<>();
+  private final Map<String, HttpHost0Builder> hostBuilders = new LinkedHashMap<>();
 
   private int requestBodyMemoryMax;
 
@@ -44,20 +50,87 @@ final class HttpServerBuilder implements HttpServer.Options {
 
   private int port = 0;
 
-  public final HttpServer build() {
-    return new HttpServerImpl(
-        bodyOptions(),
+  public final HttpServer build() throws IOException {
+    // bodyOptions
+    final int memoryMax;
 
-        bufferSize,
+    if (requestBodyMemoryMax == 0) {
+      memoryMax = bufferSize;
+    } else {
+      memoryMax = requestBodyMemoryMax;
+    }
 
-        clock,
+    final HttpRequestBodyOptions0 bodyOptions;
+    bodyOptions = new HttpRequestBodyOptions0(memoryMax, requestBodySizeMax);
 
-        hosts(),
+    // hosts root directory
+    final Path root;
+    root = Files.createTempDirectory("objectos-way-http-server-root-");
 
-        noteSink,
+    try {
 
-        socketAddress()
-    );
+      // hosts
+      HttpHosts hosts;
+      hosts = HttpHosts.of();
+
+      for (HttpHost0Builder builder : hostBuilders.values()) {
+        final HttpHost4Pojo host;
+        host = builder.build(port, root);
+
+        hosts = host.addTo(hosts);
+      }
+
+      // socketAddress
+      final InetAddress a;
+
+      if (address == null) {
+        a = InetAddress.getLoopbackAddress();
+      } else {
+        a = address;
+      }
+
+      final SocketAddress socketAddress;
+      socketAddress = new InetSocketAddress(a, port);
+
+      // serverSocket
+      final ServerSocket serverSocket;
+      serverSocket = new ServerSocket();
+
+      serverSocket.bind(socketAddress);
+
+      // serverLoop
+      final Runnable serverLoop;
+      serverLoop = new HttpServer1Loop(bodyOptions, memoryMax, clock, hosts, noteSink, serverSocket);
+
+      // thread
+      final Thread thread;
+      thread = Thread.ofPlatform().name("HTTP").start(serverLoop);
+
+      return new HttpServer2Pojo(root, serverSocket, thread);
+
+    } catch (Throwable t) {
+
+      try {
+        Io.deleteRecursively(root);
+      } catch (IOException e) {
+        t.addSuppressed(e);
+      }
+
+      if (t instanceof Error err) {
+        throw err;
+      }
+
+      if (t instanceof RuntimeException re) {
+        throw re;
+      }
+
+      if (t instanceof IOException ioe) {
+        throw ioe;
+      }
+
+      throw new IOException(t);
+
+    }
   }
 
   @Override
@@ -79,13 +152,16 @@ final class HttpServerBuilder implements HttpServer.Options {
 
   @Override
   public final void host(Consumer<? super HttpHost> opts) {
-    final HttpHost0 host;
-    host = new HttpHost0();
+    final HttpHost0Builder host;
+    host = new HttpHost0Builder();
 
     opts.accept(host);
 
-    final HttpHost0 existing;
-    existing = hosts.put(host.name, host);
+    final String name;
+    name = host.name();
+
+    final HttpHost0Builder existing;
+    existing = hostBuilders.put(name, host);
 
     if (existing != null) {
       final String msg;
@@ -114,63 +190,6 @@ final class HttpServerBuilder implements HttpServer.Options {
     Check.argument(value >= 0, "max request body size must not be negative");
 
     requestBodySizeMax = value;
-  }
-
-  /*
-  
-  @Override
-  public final void staticFiles(ThrowingConsumer<? super HttpStaticFiles> opts) throws IOException {
-    if (staticFiles == null) {
-      final Path rootDirectory;
-      rootDirectory = Files.createTempDirectory("way-http-static-files-");
-
-      staticFiles = new HttpStaticFiles0(noteSink, rootDirectory);
-    }
-
-    opts.accept(staticFiles);
-  }
-  
-  */
-
-  private HttpRequestBodyOptions bodyOptions() {
-    final int memoryMax;
-
-    if (requestBodyMemoryMax == 0) {
-      memoryMax = bufferSize;
-    } else {
-      memoryMax = requestBodyMemoryMax;
-    }
-
-    return new HttpRequestBodyOptions0(memoryMax, requestBodySizeMax);
-  }
-
-  private HttpHosts hosts() {
-    HttpHosts res;
-    res = HttpHosts.of();
-
-    for (var stage : hosts.values()) {
-      final String name;
-      name = stage.name(port);
-
-      final HttpHost1 host;
-      host = stage.build(noteSink);
-
-      res = res.add(name, host);
-    }
-
-    return res;
-  }
-
-  private InetSocketAddress socketAddress() {
-    final InetAddress a;
-
-    if (address == null) {
-      a = InetAddress.getLoopbackAddress();
-    } else {
-      a = address;
-    }
-
-    return new InetSocketAddress(a, port);
   }
 
 }

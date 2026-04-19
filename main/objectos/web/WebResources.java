@@ -16,7 +16,6 @@
 package objectos.web;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.nio.file.Path;
 import java.util.function.Consumer;
@@ -39,13 +38,6 @@ public sealed interface WebResources extends AutoCloseable, HttpHandler permits 
       ///
       /// @param directory the directory whose contents are to be served
       void addDirectory(Path directory);
-
-      /// Serves the bytes from the input stream at the specified path.
-      ///
-      /// @param pathName the absolute path of the file to be created. It must
-      ///        start with a '/' character.
-      /// @param in the input stream to read from
-      void addFile(String pathName, InputStream in);
 
       /// Serves the contents of the specified media at the specified path.
       /// Additionally, the content type of the media is associated to the path's
