@@ -19,7 +19,6 @@ import module java.base;
 import module objectos.way;
 import objectos.http.HttpHandler;
 import objectos.http.HttpServer;
-import objectos.web.WebResources;
 
 /// This class is not part of the Objectos Way JAR file. It is placed in the
 /// main source tree to ease the development.
@@ -62,6 +61,12 @@ public final class DevStart extends App.Bootstrap {
 
         opts.host(host -> {
           host.handler(serverHandler);
+
+          host.staticFiles(files -> {
+            files.contentTypes("""
+            .js: text/javascript; charset=utf-8
+            """);
+          });
         });
 
         opts.noteSink(noteSink);
@@ -117,25 +122,6 @@ public final class DevStart extends App.Bootstrap {
     shutdownHook.registerIfPossible(noteSink);
 
     ctx.putInstance(App.ShutdownHook.class, shutdownHook);
-
-    // Web.Resources
-    final WebResources webResources;
-
-    try {
-      webResources = WebResources.create(opts -> {
-        opts.contentTypes("""
-        .js: text/javascript; charset=utf-8
-        """);
-
-        opts.addMedia("/script.js", JsLibrary.of());
-      });
-    } catch (IOException e) {
-      throw App.serviceFailed("Web.Resources", e);
-    }
-
-    shutdownHook.register(webResources);
-
-    ctx.putInstance(WebResources.class, webResources);
   }
 
   private record Reloader(App.Injector injector) implements App.Reloader.HandlerFactory {

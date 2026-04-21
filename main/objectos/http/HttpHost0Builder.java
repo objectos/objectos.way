@@ -23,7 +23,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import objectos.way.Io.ThrowingConsumer;
+import java.util.function.Consumer;
 import objectos.internal.Util;
 
 final class HttpHost0Builder implements HttpHost, HttpStaticFiles {
@@ -101,7 +101,7 @@ final class HttpHost0Builder implements HttpHost, HttpStaticFiles {
   }
 
   @Override
-  public final void staticFiles(ThrowingConsumer<? super HttpStaticFiles> opts) throws IOException {
+  public final void staticFiles(Consumer<? super HttpStaticFiles> opts) {
     opts.accept(this);
   }
 

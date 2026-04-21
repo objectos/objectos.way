@@ -19,7 +19,6 @@ module objectos.way {
   exports objectos.http;
   exports objectos.script;
   exports objectos.way;
-  exports objectos.web;
 
   requires transitive java.sql;
 }

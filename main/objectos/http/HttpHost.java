@@ -15,8 +15,7 @@
  */
 package objectos.http;
 
-import java.io.IOException;
-import objectos.way.Io.ThrowingConsumer;
+import java.util.function.Consumer;
 
 /// Configures a name-based web site to be served by a `HttpServer` instance.
 public sealed interface HttpHost permits HttpHost0Builder {
@@ -43,8 +42,6 @@ public sealed interface HttpHost permits HttpHost0Builder {
   /// Configures the static files to be served by this host.
   ///
   /// @param opts allows for setting the options
-  ///
-  /// @throws IOException if an I/O error occurs
-  void staticFiles(ThrowingConsumer<? super HttpStaticFiles> opts) throws IOException;
+  void staticFiles(Consumer<? super HttpStaticFiles> opts);
 
 }

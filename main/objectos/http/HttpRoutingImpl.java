@@ -32,7 +32,7 @@ final class HttpRoutingImpl extends HttpRoutingSupport implements HttpRouting {
 
   @Override
   public final HttpHandler build() {
-    return HttpHandlerImpl.of(condition, null, many);
+    return HttpHandler0.of(condition, null, many);
   }
 
   @Override

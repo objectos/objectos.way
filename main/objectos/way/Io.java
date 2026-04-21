@@ -28,13 +28,6 @@ import java.nio.file.attribute.BasicFileAttributes;
  */
 public final class Io {
 
-  @FunctionalInterface
-  public interface ThrowingConsumer<T> {
-
-    void accept(T t) throws IOException;
-
-  }
-
   private Io() {}
 
   static FileVisitor<Path> createDeleteRecursivelyFileVisitor() {

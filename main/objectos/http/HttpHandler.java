@@ -73,7 +73,7 @@ public interface HttpHandler {
   static <T> HttpHandler factory(Function<T, ? extends HttpHandler> factory, T value) {
     Objects.requireNonNull(factory, "factory == null");
 
-    return HttpHandlerImpl.factory(factory, value);
+    return HttpHandler0.factory(factory, value);
   }
 
   /**
@@ -82,7 +82,7 @@ public interface HttpHandler {
    * @return a handler that does nothing
    */
   static HttpHandler noop() {
-    return HttpHandlerImpl.NOOP;
+    return HttpHandler0.NOOP;
   }
 
   // 4xx responses
@@ -91,7 +91,7 @@ public interface HttpHandler {
   ///
   /// @return the handler instance
   static HttpHandler notFound() {
-    return HttpHandlerImpl.notFound();
+    return HttpHandler0.notFound();
   }
 
   /**

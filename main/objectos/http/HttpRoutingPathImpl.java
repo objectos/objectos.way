@@ -95,12 +95,12 @@ final class HttpRoutingPathImpl extends HttpRoutingSupport implements HttpRoutin
       }
 
       final HttpHandler notAllowed;
-      notAllowed = HttpHandlerImpl.methodNotAllowed(allowedMethods);
+      notAllowed = HttpHandler0.methodNotAllowed(allowedMethods);
 
       addMany(notAllowed);
     }
 
-    return HttpHandlerImpl.of(cond, filter, many);
+    return HttpHandler0.of(cond, filter, many);
   }
 
   @Override
@@ -114,7 +114,7 @@ final class HttpRoutingPathImpl extends HttpRoutingSupport implements HttpRoutin
 
     if (allowedMethods.add(method)) {
       final HttpHandler allowed;
-      allowed = HttpHandlerImpl.methodAllowed(method, handler);
+      allowed = HttpHandler0.methodAllowed(method, handler);
 
       addMany(allowed);
     } else {
@@ -134,7 +134,7 @@ final class HttpRoutingPathImpl extends HttpRoutingSupport implements HttpRoutin
 
     if (allowedMethods.add(method)) {
       final HttpHandler allowed;
-      allowed = HttpHandlerImpl.methodAllowed(method, first, rest);
+      allowed = HttpHandler0.methodAllowed(method, first, rest);
 
       addMany(allowed);
     } else {
