@@ -75,7 +75,7 @@ final class HttpServer0Builder implements HttpServer.Options {
 
       for (HttpHost0Builder builder : hostBuilders.values()) {
         final HttpHost6Pojo host;
-        host = builder.build(port, root);
+        host = builder.build(noteSink, port, root);
 
         hosts = host.addTo(hosts);
       }

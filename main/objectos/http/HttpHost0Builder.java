@@ -25,6 +25,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 import objectos.internal.Util;
+import objectos.way.Note;
 
 final class HttpHost0Builder implements HttpHost, HttpStaticFiles {
 
@@ -46,7 +47,7 @@ final class HttpHost0Builder implements HttpHost, HttpStaticFiles {
   // # BEGIN: Build
   // ##################################################################
 
-  public HttpHost6Pojo build(int serverPort, Path serverRoot) throws IOException {
+  public HttpHost6Pojo build(Note.Sink noteSink, int serverPort, Path serverRoot) throws IOException {
     // name
     final HttpHost1Name nameBuilder;
     nameBuilder = new HttpHost1Name(name, serverPort);
@@ -57,7 +58,7 @@ final class HttpHost0Builder implements HttpHost, HttpStaticFiles {
     // rootDirectory
     if (rootDirectory == null) {
       final HttpHost2RootDirectory rootDirectoryBuilder;
-      rootDirectoryBuilder = new HttpHost2RootDirectory(name, serverRoot, directories);
+      rootDirectoryBuilder = new HttpHost2RootDirectory(name, noteSink, serverRoot, directories);
 
       rootDirectory = rootDirectoryBuilder.get();
     }

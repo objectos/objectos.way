@@ -45,7 +45,7 @@ public final class HttpServerTaskY {
 
   public long id = Long.MAX_VALUE;
 
-  public Note.Sink noteSink = Y.noteSink();
+  public Note.Sink noteSink = Note.NoOpSink.create();
 
   public HttpSessionStore sessionStore;
 
@@ -164,7 +164,7 @@ public final class HttpServerTaskY {
     final HttpHost6Pojo host;
 
     try {
-      host = hostBuilder.build(80, SERVER_ROOT);
+      host = hostBuilder.build(noteSink, 80, SERVER_ROOT);
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     }

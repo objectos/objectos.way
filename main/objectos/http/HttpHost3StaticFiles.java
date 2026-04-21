@@ -26,9 +26,6 @@ import objectos.way.Media;
 
 final class HttpHost3StaticFiles implements HttpHandler {
 
-  @SuppressWarnings("serial")
-  static final class TraversalException extends Exception {}
-
   private final Map<String, String> contentTypes;
 
   private final String defaultContentType;
@@ -50,12 +47,12 @@ final class HttpHost3StaticFiles implements HttpHandler {
       file = resolve(http);
 
       handle(http, file);
-    } catch (TraversalException e) {
+    } catch (HttpTraversalException e) {
       http.badRequest(Media.Bytes.textPlain("Traversal detected"));
     }
   }
 
-  public final Path resolve(HttpExchange http) throws TraversalException {
+  public final Path resolve(HttpExchange http) throws HttpTraversalException {
     final String pathName;
     pathName = http.path();
 
@@ -69,7 +66,7 @@ final class HttpHost3StaticFiles implements HttpHandler {
     file = resolved.normalize();
 
     if (!file.startsWith(rootDirectory)) {
-      throw new TraversalException();
+      throw new HttpTraversalException();
     }
 
     return file;

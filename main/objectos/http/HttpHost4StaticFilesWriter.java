@@ -39,7 +39,7 @@ final class HttpHost4StaticFilesWriter implements HttpStaticFilesWriter {
     dst = resolve(path);
 
     final Path tmp;
-    tmp = createTmpFile();
+    tmp = Files.createTempFile(rootDirectory, null, null);
 
     switch (media) {
       case Media.Bytes b -> {
@@ -65,20 +65,12 @@ final class HttpHost4StaticFilesWriter implements HttpStaticFilesWriter {
       }
     }
 
-    atomic(tmp, dst);
+    Files.move(tmp, dst, StandardCopyOption.ATOMIC_MOVE);
 
     final BasicFileAttributes attributes;
     attributes = Files.readAttributes(dst, BasicFileAttributes.class);
 
     return HttpHost3StaticFiles.etag(attributes);
-  }
-
-  private void atomic(Path src, Path dst) throws IOException {
-    Files.move(src, dst, StandardCopyOption.ATOMIC_MOVE);
-  }
-
-  private Path createTmpFile() throws IOException {
-    return Files.createTempFile(rootDirectory, null, null);
   }
 
   private Path resolve(String path) throws HttpTraversalException, IOException {

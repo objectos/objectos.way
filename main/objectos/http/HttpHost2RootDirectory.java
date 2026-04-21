@@ -24,17 +24,24 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Set;
+import objectos.way.Note;
 
 final class HttpHost2RootDirectory {
 
+  private static final Note.Ref1<Path> CREATED = Note.Ref1.create(HttpHost.class, "ADD", Note.DEBUG);
+
   private final String name;
+
+  private final Note.Sink noteSink;
 
   private final Path serverRootDirectory;
 
   private final Set<Path> sources;
 
-  HttpHost2RootDirectory(String name, Path serverRootDirectory, Set<Path> sources) {
+  HttpHost2RootDirectory(String name, Note.Sink noteSink, Path serverRootDirectory, Set<Path> sources) {
     this.name = name;
+
+    this.noteSink = noteSink;
 
     this.serverRootDirectory = serverRootDirectory;
 
@@ -95,6 +102,8 @@ final class HttpHost2RootDirectory {
       dest = target.resolve(path);
 
       Files.copy(file, dest, StandardCopyOption.COPY_ATTRIBUTES);
+
+      noteSink.send(CREATED, dest);
 
       return FileVisitResult.CONTINUE;
     }
