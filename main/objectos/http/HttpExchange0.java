@@ -36,11 +36,13 @@ final class HttpExchange0 implements HttpExchange {
 
   private final HttpSession session;
 
-  HttpExchange0(HttpRequest0 request, HttpResponse0 response, HttpSession session) {
-    this(Map.of(), Map.of(), request, response, session);
+  private final HttpStaticFilesWriter staticFilesWriter;
+
+  HttpExchange0(HttpRequest0 request, HttpResponse0 response, HttpSession session, HttpStaticFilesWriter staticFilesWriter) {
+    this(Map.of(), Map.of(), request, response, session, staticFilesWriter);
   }
 
-  HttpExchange0(Map<String, Object> attributes, Map<String, String> pathParams, HttpRequest0 request, HttpResponse0 response, HttpSession session) {
+  HttpExchange0(Map<String, Object> attributes, Map<String, String> pathParams, HttpRequest0 request, HttpResponse0 response, HttpSession session, HttpStaticFilesWriter staticFilesWriter) {
     this.attributes = attributes;
 
     this.pathParams = pathParams;
@@ -50,6 +52,8 @@ final class HttpExchange0 implements HttpExchange {
     this.response = response;
 
     this.session = session;
+
+    this.staticFilesWriter = staticFilesWriter;
   }
 
   @Override
@@ -431,6 +435,37 @@ final class HttpExchange0 implements HttpExchange {
 
   // ##################################################################
   // # END: HttpResponse
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: HttpStaticFiles
+  // ##################################################################
+
+  @Override
+  public final void serveStatic(Media media) {
+    try {
+      final String path;
+      path = request.path();
+
+      final String etag;
+      etag = staticFilesWriter.writeMedia(path, media);
+
+      if (!etag.isEmpty()) {
+        header(HttpHeaderName.ETAG, etag);
+      }
+
+      ok(media);
+    } catch (HttpTraversalException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
+
+  // ##################################################################
+  // # END: HttpStaticFiles
   // ##################################################################
 
 }

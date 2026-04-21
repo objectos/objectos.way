@@ -38,13 +38,15 @@ final class HttpHost0Builder implements HttpHost, HttpStaticFiles {
 
   private String name;
 
+  private Path rootDirectory;
+
   private HttpSessionLoader sessionLoader = (_, _) -> null;
 
   // ##################################################################
   // # BEGIN: Build
   // ##################################################################
 
-  public HttpHost4Pojo build(int serverPort, Path serverRoot) throws IOException {
+  public HttpHost6Pojo build(int serverPort, Path serverRoot) throws IOException {
     // name
     final HttpHost1Name nameBuilder;
     nameBuilder = new HttpHost1Name(name, serverPort);
@@ -53,33 +55,26 @@ final class HttpHost0Builder implements HttpHost, HttpStaticFiles {
     name = nameBuilder.get();
 
     // rootDirectory
-    final HttpHost2RootDirectory rootDirectoryBuilder;
-    rootDirectoryBuilder = new HttpHost2RootDirectory(name, serverRoot);
+    if (rootDirectory == null) {
+      final HttpHost2RootDirectory rootDirectoryBuilder;
+      rootDirectoryBuilder = new HttpHost2RootDirectory(name, serverRoot, directories);
 
-    final Path rootDirectory;
-    rootDirectory = rootDirectoryBuilder.get();
+      rootDirectory = rootDirectoryBuilder.get();
+    }
 
     // static files
     final HttpHost3StaticFiles staticFiles;
     staticFiles = new HttpHost3StaticFiles(contentTypes, defaultContentType, rootDirectory);
 
+    // static files writer
+    final HttpHost4StaticFilesWriter staticFilesWriter;
+    staticFilesWriter = new HttpHost4StaticFilesWriter(rootDirectory);
+
     // handler
     final HttpHandler hostHandler;
-    hostHandler = new HttpHost4Handler(handler, staticFiles);
+    hostHandler = new HttpHost5Handler(handler, staticFiles);
 
-    return new HttpHost4Pojo(hostHandler, name, sessionLoader);
-  }
-
-  final String name() {
-    return name;
-  }
-
-  final String name(int port) {
-    return name != null
-        ? name
-        : port == 80
-            ? "localhost"
-            : "localhost:" + port;
+    return new HttpHost6Pojo(hostHandler, name, sessionLoader, staticFilesWriter);
   }
 
   // ##################################################################
@@ -108,6 +103,10 @@ final class HttpHost0Builder implements HttpHost, HttpStaticFiles {
   @Override
   public final void staticFiles(ThrowingConsumer<? super HttpStaticFiles> opts) throws IOException {
     opts.accept(this);
+  }
+
+  final String name() {
+    return name;
   }
 
   // ##################################################################
@@ -148,6 +147,17 @@ final class HttpHost0Builder implements HttpHost, HttpStaticFiles {
 
       register(extension, contentType);
     }
+  }
+
+  public final void rootDirectory(Path value) {
+    if (!Files.isDirectory(value)) {
+      final String msg;
+      msg = "Path " + value + " does not represent a directory";
+
+      throw new IllegalArgumentException(msg);
+    }
+
+    rootDirectory = value;
   }
 
   private void register(String extension, String contentType) {

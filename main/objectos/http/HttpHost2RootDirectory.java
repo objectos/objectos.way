@@ -16,8 +16,14 @@
 package objectos.http;
 
 import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Set;
 
 final class HttpHost2RootDirectory {
 
@@ -25,14 +31,74 @@ final class HttpHost2RootDirectory {
 
   private final Path serverRootDirectory;
 
-  HttpHost2RootDirectory(String name, Path serverRootDirectory) {
+  private final Set<Path> sources;
+
+  HttpHost2RootDirectory(String name, Path serverRootDirectory, Set<Path> sources) {
     this.name = name;
 
     this.serverRootDirectory = serverRootDirectory;
+
+    this.sources = sources;
   }
 
   public final Path get() throws IOException {
-    return Files.createTempDirectory(serverRootDirectory, name);
+    final Path target;
+    target = Files.createTempDirectory(serverRootDirectory, name);
+
+    for (Path source : sources) {
+      final CopyRecursively copy;
+      copy = new CopyRecursively(source, target);
+
+      Files.walkFileTree(source, copy);
+    }
+
+    return target;
+  }
+
+  private class CopyRecursively extends SimpleFileVisitor<Path> {
+
+    private final Path source;
+
+    private final Path target;
+
+    CopyRecursively(Path source, Path target) {
+      this.source = source;
+
+      this.target = target;
+    }
+
+    @Override
+    public final FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+      final Path path;
+      path = source.relativize(dir);
+
+      final Path dest;
+      dest = target.resolve(path);
+
+      try {
+        Files.copy(dir, dest);
+      } catch (FileAlreadyExistsException e) {
+        if (!Files.isDirectory(dest)) {
+          throw e;
+        }
+      }
+
+      return FileVisitResult.CONTINUE;
+    }
+
+    @Override
+    public final FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+      final Path path;
+      path = source.relativize(file);
+
+      final Path dest;
+      dest = target.resolve(path);
+
+      Files.copy(file, dest, StandardCopyOption.COPY_ATTRIBUTES);
+
+      return FileVisitResult.CONTINUE;
+    }
+
   }
 
 }

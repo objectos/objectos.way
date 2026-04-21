@@ -548,4 +548,18 @@ public sealed interface HttpExchange
   /// @return `true` if a response has been written out; `false` otherwise
   boolean processed();
 
+  // ##################################################################
+  // # BEGIN: StaticFiles Support
+  // ##################################################################
+
+  /// Saves the specified entity as a static file and responds with a `200 OK`
+  /// message. Subsequent requests to this path are handled as a static file.
+  ///
+  /// @param media the media entity
+  void serveStatic(Media media);
+
+  // ##################################################################
+  // # END: StaticFiles Support
+  // ##################################################################
+
 }

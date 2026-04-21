@@ -16,6 +16,7 @@
 package objectos.http;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -25,6 +26,8 @@ import objectos.way.Note;
 import objectos.way.Y;
 
 public final class HttpServerTaskY {
+
+  private static final Path SERVER_ROOT = Y.nextTempDir();
 
   public Path bodyDirectory;
 
@@ -44,10 +47,13 @@ public final class HttpServerTaskY {
 
   public Note.Sink noteSink = Y.noteSink();
 
-  @SuppressWarnings("exports")
-  public HttpSessionLoader sessionLoader = (_, _) -> null;
+  public HttpSessionStore sessionStore;
 
   public Socket socket;
+
+  public Consumer<? super HttpStaticFiles> staticFiles = _ -> {};
+
+  public Path staticFilesDirectory;
 
   public static String resp(Consumer<? super HttpServerTaskY> opts) {
     final HttpServerTaskY y;
@@ -138,8 +144,30 @@ public final class HttpServerTaskY {
   }
 
   private HttpServerTask build() {
-    final HttpHost4Pojo host;
-    host = new HttpHost4Pojo(handler, hostName, sessionLoader);
+    final HttpHost0Builder hostBuilder;
+    hostBuilder = new HttpHost0Builder();
+
+    hostBuilder.handler(handler);
+
+    hostBuilder.name(hostName);
+
+    if (sessionStore != null) {
+      hostBuilder.sessionStore(sessionStore);
+    }
+
+    staticFiles.accept(hostBuilder);
+
+    if (staticFilesDirectory != null) {
+      hostBuilder.rootDirectory(staticFilesDirectory);
+    }
+
+    final HttpHost6Pojo host;
+
+    try {
+      host = hostBuilder.build(80, SERVER_ROOT);
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
 
     final HttpHosts hosts;
     hosts = HttpHosts.of().add(hostName, host);

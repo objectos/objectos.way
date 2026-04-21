@@ -15,27 +15,16 @@
  */
 package objectos.http;
 
-final class HttpHost4Handler implements HttpHandler {
+import objectos.way.Media;
 
-  private final HttpHandler main;
+enum HttpStaticFilesWriter0Noop implements HttpStaticFilesWriter {
 
-  private final HttpHandler staticFiles;
-
-  HttpHost4Handler(HttpHandler main, HttpHandler staticFiles) {
-    this.main = main;
-
-    this.staticFiles = staticFiles;
-  }
+  INSTANCE;
 
   @Override
-  public final void handle(HttpExchange http) {
-    staticFiles.handle(http);
-
-    if (http.processed()) {
-      return;
-    }
-
-    main.handle(http);
+  public final String writeMedia(String path, Media media) {
+    // noop
+    return "";
   }
 
 }

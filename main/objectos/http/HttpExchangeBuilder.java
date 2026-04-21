@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.time.Clock;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -67,6 +68,8 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
   private HttpResponseListener responseListener = Http.NoopResponseListener.INSTANCE;
 
   private Map<Object, Object> session = Map.of();
+
+  private Path staticFilesDirectory;
 
   @Override
   public final void clock(Clock value) {
@@ -283,7 +286,15 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
     final HttpSession session;
     session = session();
 
-    return new HttpExchange0(attributes, pathParams, request, response, session);
+    final HttpStaticFilesWriter staticFilesWriter;
+
+    if (staticFilesDirectory != null) {
+      throw new UnsupportedOperationException("Implement me");
+    } else {
+      staticFilesWriter = HttpStaticFilesWriter0Noop.INSTANCE;
+    }
+
+    return new HttpExchange0(attributes, pathParams, request, response, session, staticFilesWriter);
   }
 
   final HttpExchangeBodyFiles bodyFiles() {

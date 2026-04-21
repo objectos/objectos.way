@@ -37,7 +37,7 @@ public class HttpServerTaskTestASession {
   public void session01() {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.sessionLoader = (HttpSessionLoader) HttpSessionStore.create(options -> {
+          opts.sessionStore = HttpSessionStore.create(options -> {
             options.sessionGenerator(Y.randomGeneratorOfLongs(1L, 2L, 3L, 4L));
           });
 
@@ -114,7 +114,7 @@ public class HttpServerTaskTestASession {
 
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.sessionLoader = (HttpSessionLoader) HttpSessionStore.create(options -> {
+          opts.sessionStore = HttpSessionStore.create(options -> {
             options.sessionGenerator(Y.randomGeneratorOfLongs(1L, 2L, 3L, 4L));
           });
 
@@ -221,7 +221,7 @@ public class HttpServerTaskTestASession {
   public void session03() {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.sessionLoader = (HttpSessionLoader) HttpSessionStore.create(options -> {
+          opts.sessionStore = HttpSessionStore.create(options -> {
             options.sessionGenerator(Y.randomGeneratorOfLongs(1L, 2L, 3L, 4L));
           });
 
@@ -285,7 +285,7 @@ public class HttpServerTaskTestASession {
   public void session04() {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.sessionLoader = (HttpSessionLoader) HttpSessionStore.create(options -> {
+          opts.sessionStore = HttpSessionStore.create(options -> {
             options.sessionGenerator(Y.randomGeneratorOfLongs(1L, 2L, 3L, 4L));
           });
 
@@ -372,7 +372,7 @@ public class HttpServerTaskTestASession {
   public void session05() {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.sessionLoader = (HttpSessionLoader) HttpSessionStore.create(options -> {
+          opts.sessionStore = HttpSessionStore.create(options -> {
             options.sessionGenerator(Y.randomGeneratorOfLongs(1L, 2L, 3L, 4L));
           });
 

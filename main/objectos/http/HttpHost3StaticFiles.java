@@ -75,7 +75,7 @@ final class HttpHost3StaticFiles implements HttpHandler {
     return file;
   }
 
-  private String etag(BasicFileAttributes attributes) {
+  static String etag(BasicFileAttributes attributes) {
     final FileTime lastModifiedFileTime;
     lastModifiedFileTime = attributes.lastModifiedTime();
 
