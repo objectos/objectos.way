@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import objectos.way.Lang.Key;
+import objectos.lang.Key;
 
 final class HttpSession0 implements HttpSession {
 

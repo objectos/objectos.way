@@ -24,7 +24,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
-import objectos.way.Lang;
+import objectos.lang.Key;
 import objectos.way.Media;
 import objectos.way.Y;
 import org.testng.annotations.Test;
@@ -215,7 +215,7 @@ public class HttpServerTaskTestASession {
     }
   }
 
-  private final Lang.Key<String> testKey = Lang.Key.of("TEST");
+  private final Key<String> testKey = Key.of("TEST");
 
   @Test
   public void session03() {

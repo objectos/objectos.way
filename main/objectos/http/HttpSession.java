@@ -15,7 +15,7 @@
  */
 package objectos.http;
 
-import objectos.way.Lang;
+import objectos.lang.Key;
 
 interface HttpSession {
 
@@ -59,7 +59,7 @@ interface HttpSession {
    * @throws IllegalStateException
    *         if no session is associated to this exchange
    */
-  <T> T sessionAttr(Lang.Key<T> key);
+  <T> T sessionAttr(Key<T> key);
 
   /**
    * Using the name of the specified class as the key, associate the
@@ -91,7 +91,7 @@ interface HttpSession {
    * @return the previous session value, or {@code null} if no value was
    *         associated
    */
-  <T> T sessionAttr(Lang.Key<T> key, T value);
+  <T> T sessionAttr(Key<T> key, T value);
 
   /**
    * Invalidates the session associated to this exchange.

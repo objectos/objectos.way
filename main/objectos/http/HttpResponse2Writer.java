@@ -24,6 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import objectos.internal.Bytes;
+import objectos.lang.Testable;
 import objectos.way.Media;
 
 final class HttpResponse2Writer {
@@ -65,12 +66,16 @@ final class HttpResponse2Writer {
 
   private final OutputStream outputStream;
 
-  HttpResponse2Writer(byte[] buffer, boolean head, OutputStream outputStream) {
+  private final boolean testable;
+
+  HttpResponse2Writer(byte[] buffer, boolean head, OutputStream outputStream, boolean testable) {
     this.buffer = buffer;
 
     this.head = head;
 
     this.outputStream = outputStream;
+
+    this.testable = testable;
   }
 
   public final void status(HttpStatus status) throws IOException {
@@ -129,7 +134,7 @@ final class HttpResponse2Writer {
       return;
     }
 
-    else if (chunked) {
+    if (chunked) {
       throw new UnsupportedOperationException("Implement me");
     }
 
@@ -173,6 +178,20 @@ final class HttpResponse2Writer {
 
     final Charset charset;
     charset = media.charset();
+
+    if (testable && media instanceof Testable t) {
+      final String text;
+      text = t.toTestableText();
+
+      byte[] bytes;
+      bytes = text.getBytes(charset);
+
+      flush();
+
+      outputStream.write(bytes);
+
+      return;
+    }
 
     if (chunked) {
       try (HttpResponse3Chunked output = new HttpResponse3Chunked(buffer, bufferIndex, outputStream)) {

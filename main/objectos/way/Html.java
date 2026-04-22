@@ -1079,7 +1079,7 @@ public final class Html {
   /// An object that renders HTML on its own or as part of a larger
   /// HTML document.
   @FunctionalInterface
-  public interface Component extends Media.Text {
+  public interface Component extends Media.Text, Testable {
 
     /// Returns `text/html; charset=utf-8`.
     ///
@@ -1095,6 +1095,17 @@ public final class Html {
     @Override
     default Charset charset() {
       return StandardCharsets.UTF_8;
+    }
+
+    /// Formats the testable nodes of this component.
+    /// 
+    /// @param formatter the formatter instance
+    @Override
+    default void formatTestable(TestableFormatter formatter) {
+      final Html.Markup html;
+      html = new Html.Markup.OfTestable(formatter);
+
+      renderHtml(html);
     }
 
     /// Returns the markup instance to be used by this component.
@@ -3552,7 +3563,7 @@ public final class Html {
    * instance of the class can then be used to generate the represented HTML
    * code.
    */
-  public static abstract class Template implements Component, Testable {
+  public static abstract class Template implements Component {
 
     Html.Markup html;
 
@@ -3570,15 +3581,7 @@ public final class Html {
     public final String contentType() {
       return "text/html; charset=utf-8";
     }
-
-    @Override
-    public final void formatTestable(TestableFormatter formatter) {
-      final Html.Markup html;
-      html = new Html.Markup.OfTestable(formatter);
-
-      renderHtml(html);
-    }
-
+    
     @Override
     public final void renderHtml(Html.Markup m) {
       Check.state(html == null, "Concurrent evalution of a HtmlTemplate is not supported");

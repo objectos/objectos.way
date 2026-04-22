@@ -18,6 +18,7 @@ package objectos.way;
 import static org.testng.Assert.assertEquals;
 
 import java.util.function.Consumer;
+import objectos.lang.Key;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -79,9 +80,9 @@ public class AppInjectorTest {
     }
   }
 
-  private static final Lang.Key<String> STRING_A = Lang.Key.of("A");
+  private static final Key<String> STRING_A = Key.of("A");
 
-  private static final Lang.Key<String> STRING_B = Lang.Key.of("B");
+  private static final Key<String> STRING_B = Key.of("B");
 
   @Test
   public void key01() {
@@ -106,7 +107,7 @@ public class AppInjectorTest {
 
       Assert.fail();
     } catch (IllegalArgumentException expected) {
-      assertEquals(expected.getMessage(), "LangKey[unique=A] is already mapped to ABC");
+      assertEquals(expected.getMessage(), "Key0[unique=A] is already mapped to ABC");
     }
   }
 
@@ -121,7 +122,7 @@ public class AppInjectorTest {
 
       Assert.fail();
     } catch (IllegalArgumentException expected) {
-      assertEquals(expected.getMessage(), "No mappings were found for LangKey[unique=B]");
+      assertEquals(expected.getMessage(), "No mappings were found for Key0[unique=B]");
     }
   }
 
@@ -137,7 +138,7 @@ public class AppInjectorTest {
 
       Assert.fail();
     } catch (IllegalArgumentException expected) {
-      assertEquals(expected.getMessage(), "No mappings were found for LangKey[unique=B]");
+      assertEquals(expected.getMessage(), "No mappings were found for Key0[unique=B]");
     }
   }
 

@@ -18,10 +18,7 @@ package objectos.http;
 import module java.base;
 import module objectos.way;
 import objectos.internal.VisibleForTesting;
-import objectos.lang.Testable;
-import objectos.way.Media.Bytes;
-import objectos.way.Media.Stream;
-import objectos.way.Media.Text;
+import objectos.lang.Key;
 
 final class HttpExchange0 implements HttpExchange {
 
@@ -272,7 +269,7 @@ final class HttpExchange0 implements HttpExchange {
   }
 
   @Override
-  public final <T> T sessionAttr(Lang.Key<T> key) {
+  public final <T> T sessionAttr(Key<T> key) {
     return session.sessionAttr(key);
   }
 
@@ -282,7 +279,7 @@ final class HttpExchange0 implements HttpExchange {
   }
 
   @Override
-  public final <T> T sessionAttr(Lang.Key<T> key, T value) {
+  public final <T> T sessionAttr(Key<T> key, T value) {
     return session.sessionAttr(key, value);
   }
 
@@ -310,17 +307,17 @@ final class HttpExchange0 implements HttpExchange {
   }
 
   @Override
-  public final void ok(Bytes media) {
+  public final void ok(Media.Bytes media) {
     response.ok(media);
   }
 
   @Override
-  public final void ok(Stream media) {
+  public final void ok(Media.Stream media) {
     response.ok(media);
   }
 
   @Override
-  public final void ok(Text media) {
+  public final void ok(Media.Text media) {
     response.ok(media);
   }
 
@@ -461,19 +458,6 @@ final class HttpExchange0 implements HttpExchange {
     } catch (IOException e) {
       internalServerError(Media.Bytes.textPlain("I/O error"), e);
     }
-  }
-
-  // ##################################################################
-  // # END: HttpStaticFiles
-  // ##################################################################
-
-  // ##################################################################
-  // # BEGIN: HttpStaticFiles
-  // ##################################################################
-
-  @Override
-  public final <T extends Testable & Media> void testable(T value) {
-    throw new UnsupportedOperationException("Implement me");
   }
 
   // ##################################################################

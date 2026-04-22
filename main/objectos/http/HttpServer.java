@@ -76,6 +76,8 @@ public sealed interface HttpServer extends Closeable permits HttpServer2Pojo {
   /// @param options the HTTP server configuration
   ///
   /// @return a newly created HTTP server instance
+  ///
+  /// @throws IOException if an I/O error occurs
   static HttpServer create(Consumer<Options> options) throws IOException {
     HttpServer0Builder builder;
     builder = new HttpServer0Builder();

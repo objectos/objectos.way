@@ -40,7 +40,9 @@ final class HttpResponse0 implements HttpResponse {
 
   private HttpStatus status = HttpStatus.OK;
 
-  HttpResponse0(byte[] buffer, Clock clock, boolean head, long id, Note.Sink noteSink, OutputStream outputStream) {
+  private final boolean testable;
+
+  HttpResponse0(byte[] buffer, Clock clock, boolean head, long id, Note.Sink noteSink, OutputStream outputStream, boolean testable) {
     this.buffer = buffer;
 
     this.clock = clock;
@@ -52,6 +54,8 @@ final class HttpResponse0 implements HttpResponse {
     this.noteSink = noteSink;
 
     this.outputStream = outputStream;
+
+    this.testable = testable;
   }
 
   @Override
@@ -430,7 +434,7 @@ final class HttpResponse0 implements HttpResponse {
     processed = true;
 
     final HttpResponse2Writer writer;
-    writer = new HttpResponse2Writer(buffer, head, outputStream);
+    writer = new HttpResponse2Writer(buffer, head, outputStream, testable);
 
     writer.status(status);
 

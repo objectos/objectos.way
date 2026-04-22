@@ -18,8 +18,7 @@ package objectos.http;
 import java.nio.file.Path;
 import java.time.Clock;
 import java.util.function.Consumer;
-import objectos.lang.Testable;
-import objectos.way.Lang;
+import objectos.lang.Key;
 import objectos.way.Media;
 
 /**
@@ -34,76 +33,49 @@ public sealed interface HttpExchange
     extends HttpRequest
     permits HttpExchange0 {
 
-  /**
-   * Configures the creation of a stand-alone exchange instance.
-   */
+  /// Configures the creation of a stand-alone exchange instance.
   sealed interface Options permits HttpExchangeBuilder {
 
-    /**
-     * Use the specified clock instance for generating time related values.
-     *
-     * @param value
-     *        the clock instance to use
-     */
+    /// Use the specified clock instance for generating time related values.
+    ///
+    /// @param value the clock instance to use
     void clock(Clock value);
 
-    /**
-     * Adds the specified field name and value to the request body as if it
-     * were sent by a HTML form. The name must be decoded.
-     *
-     * @param name
-     *        the field name (decoded)
-     * @param value
-     *        the field value
-     */
+    /// Adds the specified field name and value to the request body as if it
+    /// were sent by a HTML form. The name must be decoded.
+    ///
+    /// @param name the field name (decoded)
+    /// @param value the field value
     void formParam(String name, int value);
 
-    /**
-     * Adds the specified field name and value to the request body as if it
-     * were sent by a HTML form. The name must be decoded.
-     *
-     * @param name
-     *        the field name (decoded)
-     * @param value
-     *        the field value
-     */
+    /// Adds the specified field name and value to the request body as if it
+    /// were sent by a HTML form. The name must be decoded.
+    ///
+    /// @param name the field name (decoded)
+    /// @param value the field value
     void formParam(String name, long value);
 
-    /**
-     * Adds the specified field name and value to the request body as if it
-     * were sent by a HTML form. The name and value must be decoded.
-     *
-     * @param name
-     *        the field name (decoded)
-     * @param value
-     *        the field value (decoded)
-     */
+    /// Adds the specified field name and value to the request body as if it
+    /// were sent by a HTML form. The name and value must be decoded.
+    ///
+    /// @param name the field name (decoded)
+    /// @param value the field value (decoded)
     void formParam(String name, String value);
 
-    /**
-     * Adds the specified request header to the HTTP exchange.
-     *
-     * @param name
-     *        the header field name
-     * @param value
-     *        the header field value
-     */
+    /// Adds the specified request header to the HTTP exchange.
+    ///
+    /// @param name the header field name
+    /// @param value the header field value
     void header(HttpHeaderName name, String value);
 
-    /**
-     * Sets the request method to the specified value.
-     *
-     * @param value
-     *        the HTTP method
-     */
+    /// Sets the request method to the specified value.
+    ///
+    /// @param value the HTTP method
     void method(HttpMethod value);
 
-    /**
-     * Sets the path component of the request-target to the specified value.
-     *
-     * @param value
-     *        the decoded path value
-     */
+    /// Sets the path component of the request-target to the specified value.
+    ///
+    /// @param value the decoded path value
     void path(String value);
 
     /// Sets the path parameter with the specified name to the specified value.
@@ -112,75 +84,53 @@ public sealed interface HttpExchange
     /// @param value the decoded value of the path parameter
     void pathParam(String name, String value);
 
-    /**
-     * Sets the request-target query parameter with the specified name to the
-     * specified value.
-     *
-     * @param name
-     *        the name of the query parameter
-     * @param value
-     *        the value of the query parameter
-     */
+    /// Sets the request-target query parameter with the specified name to the
+    /// specified value.
+    ///
+    /// @param name the name of the query parameter
+    /// @param value the value of the query parameter
     void queryParam(String name, int value);
 
-    /**
-     * Sets the request-target query parameter with the specified name to the
-     * specified value.
-     *
-     * @param name
-     *        the name of the query parameter
-     * @param value
-     *        the value of the query parameter
-     */
+    /// Sets the request-target query parameter with the specified name to the
+    /// specified value.
+    ///
+    /// @param name the name of the query parameter
+    /// @param value the value of the query parameter
     void queryParam(String name, long value);
 
-    /**
-     * Sets the request-target query parameter with the specified name to the
-     * specified value.
-     *
-     * @param name
-     *        the name of the query parameter
-     * @param value
-     *        the decoded value of the query parameter
-     */
+    /// Sets the request-target query parameter with the specified name to the
+    /// specified value.
+    ///
+    /// @param name the name of the query parameter
+    /// @param value the decoded value of the query parameter
     void queryParam(String name, String value);
 
-    /**
-     * Stores the provided key-value pair in the resulting exchange.
-     *
-     * @param key
-     *        the key to be stored
-     * @param value
-     *        the value to be stored
-     * @param <T>
-     *        the type of the value
-     */
+    /// Stores the provided key-value pair in the resulting exchange.
+    ///
+    /// @param key the key to be stored
+    /// @param value the value to be stored
+    /// @param <T> the type of the value
     <T> void set(Class<T> key, T value);
 
-    /**
-     * Associate a session to the resulting exchange and store the provided
-     * key-value pair in the session.
-     *
-     * @param <T>
-     *        the type of the attribute
-     * @param key
-     *        the class object providing the attribute name
-     * @param value
-     *        the value to be stored
-     */
+    /// Associate a session to the resulting exchange and store the provided
+    /// key-value pair in the session.
+    ///
+    /// @param <T> the type of the attribute
+    /// @param key the class object providing the attribute name
+    /// @param value the value to be stored
     <T> void sessionAttr(Class<T> key, T value);
+
+    /// Sets the resulting exchange to be `Testable` aware.
+    void testable();
 
   }
 
-  /**
-   * Creates a stand-alone exchange instance typically to be used in test
-   * cases.
-   *
-   * @param options
-   *        allows for setting the options
-   *
-   * @return a newly created exchange instance with the configured options
-   */
+  /// Creates a stand-alone exchange instance. It is typically used in test
+  /// cases.
+  ///
+  /// @param options allows for setting the options
+  ///
+  /// @return a newly created exchange instance with the configured options
   static HttpExchange create(Consumer<? super Options> options) {
     final HttpExchangeBuilder builder;
     builder = new HttpExchangeBuilder();
@@ -309,7 +259,7 @@ public sealed interface HttpExchange
    * @throws IllegalStateException
    *         if no session is associated to this exchange
    */
-  <T> T sessionAttr(Lang.Key<T> key);
+  <T> T sessionAttr(Key<T> key);
 
   /**
    * Using the name of the specified class as the key, associate the
@@ -347,7 +297,7 @@ public sealed interface HttpExchange
    * @throws IllegalStateException
    *         if no session is associated to this exchange
    */
-  <T> T sessionAttr(Lang.Key<T> key, T value);
+  <T> T sessionAttr(Key<T> key, T value);
 
   /**
    * Invalidates the session associated to this exchange.
@@ -553,20 +503,6 @@ public sealed interface HttpExchange
 
   // ##################################################################
   // # END: StaticFiles Support
-  // ##################################################################
-
-  // ##################################################################
-  // # BEGIN: Testable Support
-  // ##################################################################
-
-  /// Saves the specified entity as a static file and responds with a `200 OK`
-  /// message. Subsequent requests to this path are handled as a static file.
-  ///
-  /// @param media the media entity
-  <T extends Testable & Media> void testable(T value);
-
-  // ##################################################################
-  // # END: Testable Support
   // ##################################################################
 
 }

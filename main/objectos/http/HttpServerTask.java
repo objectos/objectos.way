@@ -217,7 +217,7 @@ final class HttpServerTask implements Runnable {
 
     // response
     final HttpResponse0 response;
-    response = new HttpResponse0(buffer, clock, head, id, noteSink, outputStream);
+    response = new HttpResponse0(buffer, clock, head, id, noteSink, outputStream, false);
 
     // session
     final HttpSession session;
@@ -300,7 +300,7 @@ final class HttpServerTask implements Runnable {
 
   private void handle(OutputStream outputStream, Message exception) {
     final HttpResponse0 response;
-    response = new HttpResponse0(buffer, clock, head, id, noteSink, outputStream);
+    response = new HttpResponse0(buffer, clock, head, id, noteSink, outputStream, false);
 
     response.status(exception.status());
 

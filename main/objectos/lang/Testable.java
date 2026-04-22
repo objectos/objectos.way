@@ -24,7 +24,7 @@ public interface Testable {
   void formatTestable(TestableFormatter formatter);
 
   /// Returns the formatted string representation of this testable instance.
-  /// 
+  ///
   /// @return the formatted string representation of this testable instance
   default String toTestableText() {
     final TestableFormatter f;

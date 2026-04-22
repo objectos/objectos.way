@@ -25,7 +25,7 @@ import objectos.way.Y;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class HttpExchangeTestBCreate {
+public class HttpExchangeTest {
 
   @Test
   public void formParam01() {
@@ -389,6 +389,43 @@ public class HttpExchangeTestBCreate {
       expectedExceptions = NullPointerException.class)
   public void rawQueryWith03() {
     rawQueryWith("page", null);
+  }
+
+  @Test
+  public void testable01() {
+    final Html.Component html = m -> {
+      m.testableH1("Testable");
+      m.div("ignore me!");
+      m.testableH2("Prints only testable");
+    };
+
+    final HttpExchange http;
+    http = HttpExchange.create(config -> {
+      config.clock(Y.clockFixed());
+
+      config.testable();
+    });
+
+    final HttpHandler handler;
+    handler = x -> x.ok(html);
+
+    handler.handle(http);
+
+    assertEquals(
+        http.toString(),
+
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/html; charset=utf-8\r
+        Transfer-Encoding: chunked\r
+        \r
+        # Testable
+
+        ## Prints only testable
+
+        """
+    );
   }
 
   private String rawQueryWith(String newName, String newValue, String... values) {

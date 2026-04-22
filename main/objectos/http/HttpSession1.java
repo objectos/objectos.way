@@ -15,7 +15,7 @@
  */
 package objectos.http;
 
-import objectos.way.Lang.Key;
+import objectos.lang.Key;
 
 final class HttpSession1 implements HttpSession {
 

@@ -13,23 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectos.lang;
 
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
-
-public class HttpContentDispositionTest {
-
-  @DataProvider
-  public Object[][] attachmentValidProvider() {
-    return new Object[][] {
-        {"document.pdf", "attachment; filename*=UTF-8''document.pdf", "us-ascii only"}
-    };
-  }
-
-  @Test(dataProvider = "attachmentValidProvider")
-  public void attachmentValid(String filename, String expected, String description) {
-
-  }
-
-}
+record Key0<T>(Object unique) implements Key<T> {}

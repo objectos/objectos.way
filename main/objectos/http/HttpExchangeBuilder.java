@@ -69,6 +69,8 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
 
   private Path staticFilesDirectory;
 
+  private boolean testable;
+
   @Override
   public final void clock(Clock value) {
     clock = Objects.requireNonNull(value, "value == null");
@@ -247,6 +249,11 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
     session.put(name, value);
   }
 
+  @Override
+  public final void testable() {
+    testable = true;
+  }
+
   final HttpExchange build() {
     final HttpRequestHeaders0 $headers;
     $headers = new HttpRequestHeaders0(headers);
@@ -270,7 +277,7 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
     outputStream = new ByteArrayOutputStream();
 
     final HttpResponse0 response;
-    response = new HttpResponse0(buffer, clock, head, id, noteSink, outputStream);
+    response = new HttpResponse0(buffer, clock, head, id, noteSink, outputStream, testable);
 
     final HttpSession session;
     session = session();

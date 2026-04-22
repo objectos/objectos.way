@@ -13,5 +13,5 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/// Provides a HTTP/1.1 server implementation powered by virtual threads.
+/// A virtual threads HTTP/1.1 server implementation.
 package objectos.http;

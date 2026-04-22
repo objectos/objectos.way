@@ -31,6 +31,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import objectos.http.HttpHandler;
+import objectos.lang.Key;
 
 /// The <strong>Objectos App</strong> main class.
 public final class App {
@@ -282,7 +283,7 @@ public final class App {
        * @param instance
        *        the value to be associated with the specified key
        */
-      <T> void putInstance(Lang.Key<T> key, T instance);
+      <T> void putInstance(Key<T> key, T instance);
 
     }
 
@@ -328,7 +329,7 @@ public final class App {
      *
      * @return the instance associated to the specified key
      */
-    <T> T getInstance(Lang.Key<T> key);
+    <T> T getInstance(Key<T> key);
 
   }
 

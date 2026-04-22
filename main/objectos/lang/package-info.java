@@ -13,6 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/// Provides classes and interfaces foundational for Objectos Way
+/// Foundational classes and interfaces for developing Objectos Way
 /// Java applications.
 package objectos.lang;
