@@ -23,6 +23,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import objectos.lang.Testable;
+import objectos.lang.TestableFormatter;
 import objectos.way.Sql.MetaTable;
 import objectos.way.Sql.Migrations;
 import objectos.way.Sql.Meta.QueryTables;
@@ -442,8 +444,8 @@ public class SqlDialectTest01Migrations extends SqlDialectTest00Support {
   }
 
   private String report(Sql.Transaction trx, ReportConfig config) {
-    Testable.Formatter t;
-    t = Testable.Formatter.create();
+    TestableFormatter t;
+    t = TestableFormatter.create();
 
     t.heading1("History");
 
@@ -453,7 +455,7 @@ public class SqlDialectTest01Migrations extends SqlDialectTest00Support {
       static Sql.Mapper<History> MAPPER = Sql.Mapper.ofRecord(MethodHandles.lookup(), History.class);
 
       @Override
-      public void formatTestable(Testable.Formatter t) {
+      public void formatTestable(TestableFormatter t) {
         t.row(
             rank, 3,
             description, 30,

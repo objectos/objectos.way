@@ -20,8 +20,9 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import objectos.internal.Check;
+import objectos.lang.Testable;
+import objectos.lang.TestableFormatter;
 import objectos.script.JsAction;
-import objectos.way.Testable.Formatter;
 
 /**
  * The <strong>Objectos HTML</strong> main class.
@@ -1186,7 +1187,7 @@ public final class Html {
     /// Markup implementation for formatting testable objects.
     final class OfTestable extends HtmlMarkupOfTestable implements Markup {
 
-      OfTestable(Formatter formatter) {
+      OfTestable(TestableFormatter formatter) {
         super(formatter);
       }
 
@@ -3571,7 +3572,7 @@ public final class Html {
     }
 
     @Override
-    public final void formatTestable(Testable.Formatter formatter) {
+    public final void formatTestable(TestableFormatter formatter) {
       final Html.Markup html;
       html = new Html.Markup.OfTestable(formatter);
 

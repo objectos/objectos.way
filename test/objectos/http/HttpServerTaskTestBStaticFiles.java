@@ -251,7 +251,7 @@ public class HttpServerTaskTestBStaticFiles {
         final Media.Bytes contents;
         contents = Media.Bytes.textPlain("CCCC\n");
 
-        http.serveStatic(contents);
+        http.staticFile(contents);
       };
     });
 
@@ -354,7 +354,7 @@ public class HttpServerTaskTestBStaticFiles {
         final Media.Text contents;
         contents = Y.mediaTextOf("8888\n");
 
-        http.serveStatic(contents);
+        http.staticFile(contents);
       };
     });
 
@@ -406,7 +406,7 @@ public class HttpServerTaskTestBStaticFiles {
         final Media.Stream contents;
         contents = Y.mediaStreamOf("9999\n");
 
-        http.serveStatic(contents);
+        http.staticFile(contents);
       };
     });
 

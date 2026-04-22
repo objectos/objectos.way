@@ -18,6 +18,7 @@ package objectos.http;
 import module java.base;
 import module objectos.way;
 import objectos.internal.VisibleForTesting;
+import objectos.lang.Testable;
 import objectos.way.Media.Bytes;
 import objectos.way.Media.Stream;
 import objectos.way.Media.Text;
@@ -442,7 +443,7 @@ final class HttpExchange0 implements HttpExchange {
   // ##################################################################
 
   @Override
-  public final void serveStatic(Media media) {
+  public final void staticFile(Media media) {
     try {
       final String path;
       path = request.path();
@@ -456,12 +457,23 @@ final class HttpExchange0 implements HttpExchange {
 
       ok(media);
     } catch (HttpTraversalException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      badRequest(Media.Bytes.textPlain("traversal"));
     } catch (IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      internalServerError(Media.Bytes.textPlain("I/O error"), e);
     }
+  }
+
+  // ##################################################################
+  // # END: HttpStaticFiles
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: HttpStaticFiles
+  // ##################################################################
+
+  @Override
+  public final <T extends Testable & Media> void testable(T value) {
+    throw new UnsupportedOperationException("Implement me");
   }
 
   // ##################################################################

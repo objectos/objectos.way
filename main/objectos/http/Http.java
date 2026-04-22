@@ -129,21 +129,6 @@ final class Http {
 
   }
 
-  static final class NoopResponseListener implements HttpResponseListener {
-
-    static final NoopResponseListener INSTANCE = new NoopResponseListener();
-
-    @Override
-    public final void status(HttpVersion version, HttpStatus status) { /* noop */ }
-
-    @Override
-    public final void header(HttpHeaderName name, String value) { /* noop */ }
-
-    @Override
-    public final void body(Object body) { /* noop */ }
-
-  }
-
   private Http() {}
 
   /**

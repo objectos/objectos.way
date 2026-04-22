@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.way;
+package objectos.lang;
 
 import static org.testng.Assert.assertEquals;
 
@@ -25,8 +25,8 @@ public class TestableFormatterTest {
 
   @Test(description = "cell(String, length)")
   public void cell01() {
-    Testable.Formatter w;
-    w = Testable.Formatter.create();
+    TestableFormatter w;
+    w = TestableFormatter.create();
 
     w.heading1("String cells");
 
@@ -65,8 +65,8 @@ public class TestableFormatterTest {
 
   @Test(description = "date cells")
   public void cell02() {
-    Testable.Formatter w;
-    w = Testable.Formatter.create();
+    TestableFormatter w;
+    w = TestableFormatter.create();
 
     w.heading1("Date cells");
 
@@ -90,8 +90,8 @@ public class TestableFormatterTest {
 
   @Test
   public void field01() {
-    Testable.Formatter w;
-    w = Testable.Formatter.create();
+    TestableFormatter w;
+    w = TestableFormatter.create();
 
     w.heading1("Field");
 
@@ -110,8 +110,8 @@ public class TestableFormatterTest {
 
   @Test
   public void field02() {
-    Testable.Formatter w;
-    w = Testable.Formatter.create();
+    TestableFormatter w;
+    w = TestableFormatter.create();
 
     w.heading1("Field");
 
@@ -130,8 +130,8 @@ public class TestableFormatterTest {
 
   @Test
   public void field03() {
-    Testable.Formatter w;
-    w = Testable.Formatter.create();
+    TestableFormatter w;
+    w = TestableFormatter.create();
 
     w.heading1("Field");
 
@@ -146,8 +146,8 @@ public class TestableFormatterTest {
 
   @Test
   public void heading01() {
-    Testable.Formatter w;
-    w = Testable.Formatter.create();
+    TestableFormatter w;
+    w = TestableFormatter.create();
 
     w.heading1("First");
     w.row("test", 5);
@@ -191,8 +191,8 @@ public class TestableFormatterTest {
 
   @Test
   public void row01() {
-    Testable.Formatter w;
-    w = Testable.Formatter.create();
+    TestableFormatter w;
+    w = TestableFormatter.create();
 
     w.row("abcde", 5, "abcd", 5, "abc", 5, "ab", 5, "a", 5);
 

@@ -18,6 +18,7 @@ package objectos.way;
 import static org.testng.Assert.assertEquals;
 
 import objectos.http.HttpExchange;
+import objectos.lang.TestableFormatter;
 import org.testng.annotations.Test;
 
 public class WebFormSpecTest {
@@ -158,8 +159,8 @@ public class WebFormSpecTest {
   }
 
   private void testWebForm(Web.Form form, String expected) {
-    Testable.Formatter w;
-    w = Testable.Formatter.create();
+    TestableFormatter w;
+    w = TestableFormatter.create();
 
     w.heading1("Form");
 

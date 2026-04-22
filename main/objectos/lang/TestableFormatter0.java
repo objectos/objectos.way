@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.way;
+package objectos.lang;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
-final class TestableFormatter implements Testable.Formatter {
+final class TestableFormatter0 implements TestableFormatter {
 
   private final StringBuilder out = new StringBuilder();
 
@@ -34,7 +34,7 @@ final class TestableFormatter implements Testable.Formatter {
 
   private int padding;
 
-  TestableFormatter(String cellSeparator) {
+  TestableFormatter0(String cellSeparator) {
     this.cellSeparator = cellSeparator;
 
     firstCell = true;

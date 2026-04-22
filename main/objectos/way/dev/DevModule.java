@@ -46,7 +46,7 @@ public final class DevModule implements HttpRouting.Module {
     final JsLibrary library;
     library = JsLibrary.of();
 
-    http.serveStatic(library);
+    http.staticFile(library);
   }
 
   private void styles(HttpExchange http) {

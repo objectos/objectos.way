@@ -18,6 +18,7 @@ package objectos.http;
 import java.nio.file.Path;
 import java.time.Clock;
 import java.util.function.Consumer;
+import objectos.lang.Testable;
 import objectos.way.Lang;
 import objectos.way.Media;
 
@@ -155,14 +156,6 @@ public sealed interface HttpExchange
      *        the type of the value
      */
     <T> void set(Class<T> key, T value);
-
-    /**
-     * Listen to the response using the specified listener.
-     *
-     * @param value
-     *        the listener to use
-     */
-    void responseListener(HttpResponseListener value);
 
     /**
      * Associate a session to the resulting exchange and store the provided
@@ -556,10 +549,24 @@ public sealed interface HttpExchange
   /// message. Subsequent requests to this path are handled as a static file.
   ///
   /// @param media the media entity
-  void serveStatic(Media media);
+  void staticFile(Media media);
 
   // ##################################################################
   // # END: StaticFiles Support
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Testable Support
+  // ##################################################################
+
+  /// Saves the specified entity as a static file and responds with a `200 OK`
+  /// message. Subsequent requests to this path are handled as a static file.
+  ///
+  /// @param media the media entity
+  <T extends Testable & Media> void testable(T value);
+
+  // ##################################################################
+  // # END: Testable Support
   // ##################################################################
 
 }

@@ -65,8 +65,6 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
   @SuppressWarnings("unused")
   private final long requestBodySizeMax = 10 * 1024 * 1024;
 
-  private HttpResponseListener responseListener = Http.NoopResponseListener.INSTANCE;
-
   private Map<Object, Object> session = Map.of();
 
   private Path staticFilesDirectory;
@@ -247,15 +245,6 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
     }
 
     session.put(name, value);
-  }
-
-  @Override
-  public final void responseListener(HttpResponseListener value) {
-    if (responseListener != Http.NoopResponseListener.INSTANCE) {
-      throw new IllegalStateException("Response listener has already been set");
-    }
-
-    responseListener = Objects.requireNonNull(value, "value == null");
   }
 
   final HttpExchange build() {
