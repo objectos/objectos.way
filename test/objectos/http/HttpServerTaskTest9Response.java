@@ -737,8 +737,8 @@ public class HttpServerTaskTest9Response {
 
   // 4xx responses
 
-  @Test(description = "badRequest(Media.Bytes)")
-  public void badRequest01() {
+  @Test(description = "error(status)")
+  public void error01() {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
           opts.socket = Y.socket("""
@@ -748,22 +748,23 @@ public class HttpServerTaskTest9Response {
           \r
           """);
 
-          opts.handler = http -> http.badRequest(Media.Bytes.textPlain("BAD\n"));
+          opts.handler = http -> http.error(HttpStatus.BAD_REQUEST);
         }),
 
         """
         HTTP/1.1 400 Bad Request\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Connection: close\r
         Content-Type: text/plain; charset=utf-8\r
-        Content-Length: 4\r
+        Content-Length: 16\r
         \r
-        BAD
+        400 Bad Request
         """
     );
   }
 
-  @Test(description = "forbidden(Media.Bytes)")
-  public void forbidden01() {
+  @Test(description = "erorr(status, msg)")
+  public void error02() {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
           opts.socket = Y.socket("""
@@ -773,22 +774,35 @@ public class HttpServerTaskTest9Response {
           \r
           """);
 
-          opts.handler = http -> http.forbidden(Media.Bytes.textPlain("403\n"));
+          opts.handler = http -> http.error(HttpStatus.FORBIDDEN, "Invalid credentials");
         }),
 
         """
         HTTP/1.1 403 Forbidden\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Connection: close\r
         Content-Type: text/plain; charset=utf-8\r
-        Content-Length: 4\r
+        Content-Length: 35\r
         \r
-        403
+        403 Forbidden
+
+        Invalid credentials
         """
     );
   }
 
-  @Test(description = "notFound(Media.Bytes)")
-  public void notFound01() {
+  @Test(description = "error(status, e)")
+  public void error03() {
+    final IOException e;
+    e = Y.trimStackTrace(new IOException(), 1);
+
+    final StackTraceElement[] copy;
+    copy = new StackTraceElement[1];
+
+    copy[0] = new StackTraceElement("objectos.way.Test", "error", "Test.java", 123);
+
+    e.setStackTrace(copy);
+
     assertEquals(
         HttpServerTaskY.resp(opts -> {
           opts.socket = Y.socket("""
@@ -798,61 +812,7 @@ public class HttpServerTaskTest9Response {
           \r
           """);
 
-          opts.handler = http -> http.notFound(Media.Bytes.textPlain("NOT\n"));
-        }),
-
-        """
-        HTTP/1.1 404 Not Found\r
-        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-        Content-Type: text/plain; charset=utf-8\r
-        Content-Length: 4\r
-        \r
-        NOT
-        """
-    );
-  }
-
-  @Test(description = "allow(Http.Method...)")
-  public void allow01() {
-    assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
-          POST /1 HTTP/1.1\r
-          Host: www.example.com\r
-          Connection: close\r
-          \r
-          """);
-
-          opts.handler = http -> http.allow(HttpMethod.GET, HttpMethod.HEAD);
-        }),
-
-        """
-        HTTP/1.1 405 Method Not Allowed\r
-        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-        Allow: GET, HEAD\r
-        Content-Length: 0\r
-        \r
-        """
-    );
-  }
-
-  // 5xx responses
-
-  @Test(description = "internalServerError(Media.Bytes, Throwable)")
-  public void internalServerError01() {
-    assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
-          POST /1 HTTP/1.1\r
-          Host: www.example.com\r
-          Connection: close\r
-          \r
-          """);
-
-          opts.handler = http -> http.internalServerError(
-              Media.Bytes.textPlain("ISE\n"),
-              Y.trimStackTrace(new IOException(), 1)
-          );
+          opts.handler = http -> http.error(HttpStatus.INTERNAL_SERVER_ERROR, e);
         }),
 
         """
@@ -860,9 +820,12 @@ public class HttpServerTaskTest9Response {
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
         Connection: close\r
         Content-Type: text/plain; charset=utf-8\r
-        Content-Length: 4\r
+        Content-Length: 90\r
         \r
-        ISE
+        500 Internal Server Error
+
+        java.io.IOException
+        	at objectos.way.Test.error(Test.java:123)
         """
     );
   }
@@ -1020,8 +983,8 @@ public class HttpServerTaskTest9Response {
 
   @DataProvider
   public Iterator<HttpStatus> respondStatusProvider() {
-    final HttpStatusImpl[] values;
-    values = HttpStatusImpl.values();
+    final HttpStatus0[] values;
+    values = HttpStatus0.values();
 
     return Stream.of(values).map(HttpStatus.class::cast).iterator();
   }

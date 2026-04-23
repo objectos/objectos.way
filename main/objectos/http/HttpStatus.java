@@ -18,7 +18,7 @@ package objectos.http;
 /**
  * The status of an HTTP response message.
  */
-public sealed interface HttpStatus permits HttpStatusImpl {
+public sealed interface HttpStatus permits HttpStatus0 {
 
   // Response constants
 
@@ -27,108 +27,108 @@ public sealed interface HttpStatus permits HttpStatusImpl {
   /**
    * The {@code 200 OK} status.
    */
-  HttpStatus OK = HttpStatusImpl.OK;
+  HttpStatus OK = HttpStatus0.OK;
 
   /**
    * The {@code 201 Created} status.
    */
-  HttpStatus CREATED = HttpStatusImpl.CREATED;
+  HttpStatus CREATED = HttpStatus0.CREATED;
 
   /**
    * The {@code 204 No Content} status.
    */
-  HttpStatus NO_CONTENT = HttpStatusImpl.NO_CONTENT;
+  HttpStatus NO_CONTENT = HttpStatus0.NO_CONTENT;
 
   // 3.x.x
 
   /**
    * The {@code 301 Moved Permanently} status.
    */
-  HttpStatus MOVED_PERMANENTLY = HttpStatusImpl.MOVED_PERMANENTLY;
+  HttpStatus MOVED_PERMANENTLY = HttpStatus0.MOVED_PERMANENTLY;
 
   /**
    * The {@code 302 Found} status.
    */
-  HttpStatus FOUND = HttpStatusImpl.FOUND;
+  HttpStatus FOUND = HttpStatus0.FOUND;
 
   /**
    * The {@code 303 See Other} status.
    */
-  HttpStatus SEE_OTHER = HttpStatusImpl.SEE_OTHER;
+  HttpStatus SEE_OTHER = HttpStatus0.SEE_OTHER;
 
   /**
    * The {@code 304 Not Modified} status.
    */
-  HttpStatus NOT_MODIFIED = HttpStatusImpl.NOT_MODIFIED;
+  HttpStatus NOT_MODIFIED = HttpStatus0.NOT_MODIFIED;
 
   // 4.x.x
 
   /**
    * The {@code 400 Bad Request} status.
    */
-  HttpStatus BAD_REQUEST = HttpStatusImpl.BAD_REQUEST;
+  HttpStatus BAD_REQUEST = HttpStatus0.BAD_REQUEST;
 
   /**
    * The {@code 403 Forbidden} status.
    */
-  HttpStatus FORBIDDEN = HttpStatusImpl.FORBIDDEN;
+  HttpStatus FORBIDDEN = HttpStatus0.FORBIDDEN;
 
   /**
    * The {@code 404 Not Found} status.
    */
-  HttpStatus NOT_FOUND = HttpStatusImpl.NOT_FOUND;
+  HttpStatus NOT_FOUND = HttpStatus0.NOT_FOUND;
 
   /**
    * The {@code 405 Method Not Allowed} status.
    */
-  HttpStatus METHOD_NOT_ALLOWED = HttpStatusImpl.METHOD_NOT_ALLOWED;
+  HttpStatus METHOD_NOT_ALLOWED = HttpStatus0.METHOD_NOT_ALLOWED;
 
   /**
    * The {@code 411 Length Required} status.
    */
-  HttpStatus LENGTH_REQUIRED = HttpStatusImpl.LENGTH_REQUIRED;
+  HttpStatus LENGTH_REQUIRED = HttpStatus0.LENGTH_REQUIRED;
 
   /**
    * The {@code 413 Content Too Large} status.
    */
-  HttpStatus CONTENT_TOO_LARGE = HttpStatusImpl.CONTENT_TOO_LARGE;
+  HttpStatus CONTENT_TOO_LARGE = HttpStatus0.CONTENT_TOO_LARGE;
 
   /**
    * The {@code 414 URI Too Long} status.
    */
-  HttpStatus URI_TOO_LONG = HttpStatusImpl.URI_TOO_LONG;
+  HttpStatus URI_TOO_LONG = HttpStatus0.URI_TOO_LONG;
 
   /**
    * The {@code 415 UNSUPPORTED MEDIA TYPE} status.
    */
-  HttpStatus UNSUPPORTED_MEDIA_TYPE = HttpStatusImpl.UNSUPPORTED_MEDIA_TYPE;
+  HttpStatus UNSUPPORTED_MEDIA_TYPE = HttpStatus0.UNSUPPORTED_MEDIA_TYPE;
 
   /**
    * The {@code 422 UNPROCESSABLE CONTENT} status.
    */
-  HttpStatus UNPROCESSABLE_CONTENT = HttpStatusImpl.UNPROCESSABLE_CONTENT;
+  HttpStatus UNPROCESSABLE_CONTENT = HttpStatus0.UNPROCESSABLE_CONTENT;
 
   /**
    * The {@code 431 Request Header Fields Too Large} status.
    */
-  HttpStatus REQUEST_HEADER_FIELDS_TOO_LARGE = HttpStatusImpl.REQUEST_HEADER_FIELDS_TOO_LARGE;
+  HttpStatus REQUEST_HEADER_FIELDS_TOO_LARGE = HttpStatus0.REQUEST_HEADER_FIELDS_TOO_LARGE;
 
   // 5.x.x
 
   /**
    * The {@code 500 INTERNAL SERVER ERROR} status.
    */
-  HttpStatus INTERNAL_SERVER_ERROR = HttpStatusImpl.INTERNAL_SERVER_ERROR;
+  HttpStatus INTERNAL_SERVER_ERROR = HttpStatus0.INTERNAL_SERVER_ERROR;
 
   /**
    * The {@code 501 NOT IMPLEMENTED} status.
    */
-  HttpStatus NOT_IMPLEMENTED = HttpStatusImpl.NOT_IMPLEMENTED;
+  HttpStatus NOT_IMPLEMENTED = HttpStatus0.NOT_IMPLEMENTED;
 
   /**
    * The {@code 505 HTTP VERSION NOT SUPPORTED} status.
    */
-  HttpStatus HTTP_VERSION_NOT_SUPPORTED = HttpStatusImpl.HTTP_VERSION_NOT_SUPPORTED;
+  HttpStatus HTTP_VERSION_NOT_SUPPORTED = HttpStatus0.HTTP_VERSION_NOT_SUPPORTED;
 
   /**
    * The code of this status.

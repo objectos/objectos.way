@@ -28,19 +28,13 @@ final class MarketingSite implements HttpRouting.Module {
       path.handler(http -> http.movedPermanently("/index.html"));
     });
 
-    routing.path("/index.html", path -> {
-      path.handler(this::indexHtml);
-    });
+    routing.path("/index.html", HttpMethod.GET, this::indexHtml);
 
     routing.handler(HttpHandler.notFound());
   }
 
   private void indexHtml(HttpExchange http) {
-    switch (http.method()) {
-      case GET, HEAD -> http.ok(new MarketingSiteHome());
-
-      default -> http.allow(HttpMethod.GET, HttpMethod.HEAD);
-    }
+    http.ok(new MarketingSiteHome());
   }
 
   private static class MarketingSiteHome extends Html.Template {

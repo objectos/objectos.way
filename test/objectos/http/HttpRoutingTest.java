@@ -1195,10 +1195,7 @@ public class HttpRoutingTest implements HttpRouting.Module {
     handler.handle(http);
 
     if (!http.processed()) {
-      final Media.Bytes object;
-      object = Media.Bytes.textPlain("Not Found", StandardCharsets.UTF_8);
-
-      http.notFound(object);
+      http.error(HttpStatus.NOT_FOUND);
     }
   }
 
@@ -1250,11 +1247,12 @@ public class HttpRoutingTest implements HttpRouting.Module {
 
         """
         HTTP/1.1 404
-        content-length: 9
+        connection: close
+        content-length: 14
         content-type: text/plain; charset=utf-8
         date: Wed, 28 Jun 2023 12:08:43 GMT
 
-        Not Found\
+        404 Not Found
         """
     );
   }

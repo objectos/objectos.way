@@ -19,7 +19,6 @@ import module objectos.way;
 import objectos.css.CssSource;
 import objectos.http.HttpExchange;
 import objectos.http.HttpHeaderName;
-import objectos.http.HttpMethod;
 
 /*
 
@@ -59,7 +58,7 @@ public final class ScriptSubmit00 extends AbstractDevScript {
           );
         }
 
-        default -> http.allow(HttpMethod.GET, HttpMethod.POST);
+        default -> http.error(HttpStatus.METHOD_NOT_ALLOWED, "Allowed: GET, POST");
       }
     } else {
       initial = false;

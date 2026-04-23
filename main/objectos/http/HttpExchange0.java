@@ -307,21 +307,6 @@ final class HttpExchange0 implements HttpExchange {
   }
 
   @Override
-  public final void ok(Media.Bytes media) {
-    response.ok(media);
-  }
-
-  @Override
-  public final void ok(Media.Stream media) {
-    response.ok(media);
-  }
-
-  @Override
-  public final void ok(Media.Text media) {
-    response.ok(media);
-  }
-
-  @Override
   public final void movedPermanently(String location) {
     response.movedPermanently(location);
   }
@@ -337,28 +322,18 @@ final class HttpExchange0 implements HttpExchange {
   }
 
   @Override
-  public final void badRequest(Media media) {
-    response.badRequest(media);
+  public final void error(HttpStatus status) {
+    response.error(status);
   }
 
   @Override
-  public final void forbidden(Media media) {
-    response.forbidden(media);
+  public final void error(HttpStatus status, String message) {
+    response.error(status, message);
   }
 
   @Override
-  public final void notFound(Media media) {
-    response.notFound(media);
-  }
-
-  @Override
-  public final void allow(HttpMethod... methods) {
-    response.allow(methods);
-  }
-
-  @Override
-  public final void internalServerError(Media media, Throwable error) {
-    response.internalServerError(media, error);
+  public final void error(HttpStatus status, Throwable cause) {
+    response.error(status, cause);
   }
 
   @Override
@@ -412,21 +387,6 @@ final class HttpExchange0 implements HttpExchange {
   }
 
   @Override
-  public final void send(Media.Bytes media) {
-    response.send(media);
-  }
-
-  @Override
-  public final void send(Media.Text media) {
-    response.send(media);
-  }
-
-  @Override
-  public final void send(Media.Stream media) {
-    response.send(media);
-  }
-
-  @Override
   public final boolean processed() {
     return response.processed();
   }
@@ -454,9 +414,9 @@ final class HttpExchange0 implements HttpExchange {
 
       ok(media);
     } catch (HttpTraversalException e) {
-      badRequest(Media.Bytes.textPlain("traversal"));
+      error(HttpStatus.BAD_REQUEST, e);
     } catch (IOException e) {
-      internalServerError(Media.Bytes.textPlain("I/O error"), e);
+      error(HttpStatus.INTERNAL_SERVER_ERROR, e);
     }
   }
 

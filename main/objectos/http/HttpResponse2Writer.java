@@ -32,8 +32,8 @@ final class HttpResponse2Writer {
   private static final byte[][] STATUS_LINES;
 
   static {
-    final HttpStatusImpl[] values;
-    values = HttpStatusImpl.values();
+    final HttpStatus0[] values;
+    values = HttpStatus0.values();
 
     final int size;
     size = values.length;
@@ -41,7 +41,7 @@ final class HttpResponse2Writer {
     final byte[][] map;
     map = new byte[size][];
 
-    for (HttpStatusImpl status : values) {
+    for (HttpStatus0 status : values) {
       final int index;
       index = status.ordinal();
 
@@ -81,8 +81,8 @@ final class HttpResponse2Writer {
   public final void status(HttpStatus status) throws IOException {
     writeBytes(HTTP_1_1);
 
-    final HttpStatusImpl impl;
-    impl = (HttpStatusImpl) status;
+    final HttpStatus0 impl;
+    impl = (HttpStatus0) status;
 
     final byte[] statusBytes;
     statusBytes = STATUS_LINES[impl.ordinal()];

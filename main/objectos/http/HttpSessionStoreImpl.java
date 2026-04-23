@@ -69,6 +69,7 @@ final class HttpSessionStoreImpl implements HttpSessionLoader, HttpSessionStore 
 
   private final RandomGenerator csrfGenerator;
 
+  @SuppressWarnings("unused")
   private final Media csrfInvalidResponse = Media.Bytes.textPlain("Invalid or missing CSRF token\n");
 
   private final String csrfParamName = "way-csrf-token";
@@ -164,7 +165,7 @@ final class HttpSessionStoreImpl implements HttpSessionLoader, HttpSessionStore 
     if (!valid) {
       noteSink.send(notes.invalidCsrf, http);
 
-      http.forbidden(csrfInvalidResponse);
+      http.error(HttpStatus.FORBIDDEN);
     }
   }
 

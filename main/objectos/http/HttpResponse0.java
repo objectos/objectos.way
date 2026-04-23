@@ -26,6 +26,8 @@ final class HttpResponse0 implements HttpResponse {
 
   private boolean closeConnection;
 
+  private final HttpErrorResponses errorResponses;
+
   private final boolean head;
 
   private final List<HttpResponse1Header> headers = new ArrayList<>();
@@ -42,10 +44,12 @@ final class HttpResponse0 implements HttpResponse {
 
   private final boolean testable;
 
-  HttpResponse0(byte[] buffer, Clock clock, boolean head, long id, Note.Sink noteSink, OutputStream outputStream, boolean testable) {
+  HttpResponse0(byte[] buffer, Clock clock, HttpErrorResponses errorResponses, boolean head, long id, Note.Sink noteSink, OutputStream outputStream, boolean testable) {
     this.buffer = buffer;
 
     this.clock = clock;
+
+    this.errorResponses = errorResponses;
 
     this.head = head;
 
@@ -83,8 +87,7 @@ final class HttpResponse0 implements HttpResponse {
     }
   }
 
-  @Override
-  public final void ok(Media.Bytes media) {
+  private void ok(Media.Bytes media) {
     status(HttpStatus.OK);
 
     header(HttpHeaderName.DATE, now());
@@ -92,8 +95,7 @@ final class HttpResponse0 implements HttpResponse {
     send(media);
   }
 
-  @Override
-  public final void ok(Media.Stream media) {
+  private void ok(Media.Stream media) {
     status(HttpStatus.OK);
 
     header(HttpHeaderName.DATE, now());
@@ -101,8 +103,7 @@ final class HttpResponse0 implements HttpResponse {
     send(media);
   }
 
-  @Override
-  public final void ok(Media.Text media) {
+  private void ok(Media.Text media) {
     status(HttpStatus.OK);
 
     header(HttpHeaderName.DATE, now());
@@ -147,33 +148,66 @@ final class HttpResponse0 implements HttpResponse {
   // 4xx responses
 
   @Override
-  public final void badRequest(Media media) {
-    status(HttpStatus.BAD_REQUEST);
+  public final void error(HttpStatus status) {
+    final HttpStatus0 impl;
+    impl = checkStatus(status);
+
+    final Media media;
+    media = errorResponses.get(impl);
+
+    error0(impl, media);
+  }
+
+  @Override
+  public final void error(HttpStatus status, String message) {
+    final HttpStatus0 impl;
+    impl = checkStatus(status);
+
+    Objects.requireNonNull(message, "message == null");
+
+    final Media media;
+    media = errorResponses.get(impl, message);
+
+    error0(impl, media);
+  }
+
+  @Override
+  public final void error(HttpStatus status, Throwable cause) {
+    final HttpStatus0 impl;
+    impl = checkStatus(status);
+
+    Objects.requireNonNull(cause, "cause == null");
+
+    final Media media;
+    media = errorResponses.get(impl, cause);
+
+    error0(impl, media);
+  }
+
+  private HttpStatus0 checkStatus(HttpStatus status) {
+    final HttpStatus0 impl;
+    impl = (HttpStatus0) status;
+
+    if (!impl.isError()) {
+      final String msg;
+      msg = "HTTP status does not represent an error: " + status;
+
+      throw new IllegalArgumentException(msg);
+    }
+
+    return impl;
+  }
+
+  private void error0(HttpStatus0 status, Media media) {
+    status(status);
 
     header(HttpHeaderName.DATE, now());
+
+    header(HttpHeaderName.CONNECTION, "close");
 
     send(media);
   }
 
-  @Override
-  public final void forbidden(Media media) {
-    status(HttpStatus.FORBIDDEN);
-
-    header(HttpHeaderName.DATE, now());
-
-    send(media);
-  }
-
-  @Override
-  public final void notFound(Media media) {
-    status(HttpStatus.NOT_FOUND);
-
-    header(HttpHeaderName.DATE, now());
-
-    send(media);
-  }
-
-  @Override
   public final void allow(HttpMethod... methods) {
     Objects.requireNonNull(methods, "methods == null");
 
@@ -189,21 +223,6 @@ final class HttpResponse0 implements HttpResponse {
     header(HttpHeaderName.CONTENT_LENGTH, 0L);
 
     send();
-  }
-
-  // 5xx responses
-
-  @Override
-  public final void internalServerError(Media media, Throwable error) {
-    status(HttpStatus.INTERNAL_SERVER_ERROR);
-
-    header(HttpHeaderName.DATE, now());
-
-    header(HttpHeaderName.CONNECTION, "close");
-
-    send(media);
-
-    noteSink.send(HttpServerTask.THROW, id, error);
   }
 
   @Override
@@ -315,8 +334,7 @@ final class HttpResponse0 implements HttpResponse {
     }
   }
 
-  @Override
-  public final void send(Media.Bytes media) {
+  private void send(Media.Bytes media) {
     // early media validation
     final String contentType;
     contentType = media.contentType();
@@ -349,8 +367,7 @@ final class HttpResponse0 implements HttpResponse {
     }
   }
 
-  @Override
-  public final void send(Media.Text media) {
+  private void send(Media.Text media) {
     // early media validation
     final String contentType;
     contentType = media.contentType();
@@ -380,8 +397,7 @@ final class HttpResponse0 implements HttpResponse {
     }
   }
 
-  @Override
-  public final void send(Media.Stream media) {
+  private void send(Media.Stream media) {
     // early media validation
     final String contentType;
     contentType = media.contentType();

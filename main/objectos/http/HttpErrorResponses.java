@@ -15,33 +15,14 @@
  */
 package objectos.http;
 
-final class HttpHost5Handler implements HttpHandler {
+import objectos.way.Media;
 
-  private final HttpHandler main;
+interface HttpErrorResponses {
 
-  private final HttpHandler staticFiles;
+  Media get(HttpStatus0 status);
 
-  HttpHost5Handler(HttpHandler main, HttpHandler staticFiles) {
-    this.main = main;
+  Media get(HttpStatus0 status, String message);
 
-    this.staticFiles = staticFiles;
-  }
-
-  @Override
-  public final void handle(HttpExchange http) {
-    main.handle(http);
-
-    if (http.processed()) {
-      return;
-    }
-
-    staticFiles.handle(http);
-
-    if (http.processed()) {
-      return;
-    }
-
-    http.error(HttpStatus.NOT_FOUND);
-  }
+  Media get(HttpStatus0 status, Throwable cause);
 
 }

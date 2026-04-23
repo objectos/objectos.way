@@ -19,7 +19,7 @@ import module java.base;
 import module objectos.way;
 
 /// Represents an HTTP response message.
-public sealed interface HttpResponse permits HttpResponse0 {
+public sealed interface HttpResponse permits HttpExchange, HttpResponse0 {
 
   // high-level
 
@@ -29,21 +29,6 @@ public sealed interface HttpResponse permits HttpResponse0 {
   ///
   /// @param media the media entity
   void ok(Media media);
-
-  /// Respond with a `200 OK` message with the specified media entity.
-  ///
-  /// @param media the media entity
-  void ok(Media.Bytes media);
-
-  /// Respond with a `200 OK` message with the specified media entity.
-  ///
-  /// @param media the media entity
-  void ok(Media.Stream media);
-
-  /// Respond with a `200 OK` message with the specified media entity.
-  ///
-  /// @param media the media entity
-  void ok(Media.Text media);
 
   // 3xx responses
 
@@ -63,37 +48,33 @@ public sealed interface HttpResponse permits HttpResponse0 {
   /// @param location the value of the `Location` header
   void seeOther(String location);
 
-  // 4xx responses
+  // 4xx/5xx responses
 
-  /// Respond with a `400 Bad Request` message with the specified media entity.
+  /// Responds with the standard message of the specified HTTP error status.
   ///
-  /// @param media the media entity
-  void badRequest(Media media);
-
-  /// Respond with a `403 Forbidden` message with the specified media entity.
+  /// @param status the HTTP error status
   ///
-  /// @param media the media entity
-  void forbidden(Media media);
+  /// @throws IllegalArgumentException if the status does not represent a client
+  ///         nor a server error
+  void error(HttpStatus status);
 
-  /// Respond with a `404 Not Found` message with the specified media entity.
+  /// Responds with the standard message of the specified HTTP error status.
   ///
-  /// @param media the media entity
-  void notFound(Media media);
-
-  /// Respond with a `405 Method Not Allowed` message with the specified methods
-  /// in the `Allow` response header.
+  /// @param status the HTTP error status
+  /// @param message additional text message
   ///
-  /// @param methods the allowed methods
-  void allow(HttpMethod... methods);
+  /// @throws IllegalArgumentException if the status does not represent a client
+  ///         nor a server error
+  void error(HttpStatus status, String message);
 
-  // 5xx responses
-
-  /// Respond with a `500 Internal Server Error` message with the specified
-  /// media entity. The specified `Throwable` will be noted.
+  /// Responds with the standard message of the specified HTTP error status.
   ///
-  /// @param media the media entity
-  /// @param error the `Throwable` to be noted
-  void internalServerError(Media media, Throwable error);
+  /// @param status the HTTP error status
+  /// @param cause the cause of the error
+  ///
+  /// @throws IllegalArgumentException if the status does not represent a client
+  ///         nor a server error
+  void error(HttpStatus status, Throwable cause);
 
   // low-level
 
@@ -167,24 +148,6 @@ public sealed interface HttpResponse permits HttpResponse0 {
   ///
   /// @param media the media entity
   void send(Media media);
-
-  /// Ends this HTTP response message with the contents from the specified
-  /// media.
-  ///
-  /// @param media the media entity
-  void send(Media.Bytes media);
-
-  /// Ends this HTTP response message with the contents from the specified
-  /// media.
-  ///
-  /// @param media the media entity
-  void send(Media.Text media);
-
-  /// Ends this HTTP response message with the contents from the specified
-  /// media.
-  ///
-  /// @param media the media entity
-  void send(Media.Stream media);
 
   /// Ends this HTTP response message with the specified body.
   ///

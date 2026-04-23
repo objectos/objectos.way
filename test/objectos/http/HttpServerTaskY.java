@@ -39,6 +39,9 @@ public final class HttpServerTaskY {
 
   public Clock clock = Y.clockFixed();
 
+  @SuppressWarnings("exports")
+  public HttpErrorResponses errorResponses = HttpErrorResponses0.STANDARD;
+
   public HttpHandler handler = _ -> {};
 
   public String hostName = "www.example.com";
@@ -178,6 +181,8 @@ public final class HttpServerTaskY {
         new byte[bufferSize],
 
         clock,
+
+        errorResponses,
 
         hosts,
 

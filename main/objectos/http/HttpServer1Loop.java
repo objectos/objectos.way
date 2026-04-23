@@ -22,7 +22,6 @@ import java.net.SocketException;
 import java.time.Clock;
 import java.util.concurrent.atomic.AtomicLong;
 import objectos.way.Note;
-import objectos.way.Note.Sink;
 
 final class HttpServer1Loop implements Runnable {
 
@@ -49,6 +48,8 @@ final class HttpServer1Loop implements Runnable {
 
   private final Clock clock;
 
+  private final HttpErrorResponses errorResponses;
+
   private final HttpHosts hosts;
 
   private final AtomicLong idSupplier = new AtomicLong(1);
@@ -57,12 +58,22 @@ final class HttpServer1Loop implements Runnable {
 
   private final ServerSocket serverSocket;
 
-  HttpServer1Loop(HttpRequestBodyOptions bodyOptions, int bufferSize, Clock clock, HttpHosts hosts, Sink noteSink, ServerSocket serverSocket) {
+  HttpServer1Loop(
+      HttpRequestBodyOptions bodyOptions,
+      int bufferSize,
+      Clock clock,
+      HttpErrorResponses errorResponses,
+      HttpHosts hosts,
+      Note.Sink noteSink,
+      ServerSocket serverSocket
+  ) {
     this.bodyOptions = bodyOptions;
 
     this.bufferSize = bufferSize;
 
     this.clock = clock;
+
+    this.errorResponses = errorResponses;
 
     this.hosts = hosts;
 
@@ -89,7 +100,7 @@ final class HttpServer1Loop implements Runnable {
         id = idSupplier.getAndIncrement();
 
         final HttpServerTask http;
-        http = new HttpServerTask(bodyOptions, buffer, clock, hosts, id, noteSink, socket);
+        http = new HttpServerTask(bodyOptions, buffer, clock, errorResponses, hosts, id, noteSink, socket);
 
         final Thread task;
         task = Thread.ofVirtual().name("http-", id).unstarted(http);

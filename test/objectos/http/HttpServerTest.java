@@ -92,7 +92,7 @@ public class HttpServerTest implements HttpRouting.Module {
     switch (http.method()) {
       case GET, HEAD -> testCase01Get(http);
 
-      default -> http.allow(HttpMethod.GET, HttpMethod.HEAD);
+      default -> http.error(HttpStatus.METHOD_NOT_ALLOWED);
     }
   }
 
@@ -139,10 +139,12 @@ public class HttpServerTest implements HttpRouting.Module {
 
         """
         HTTP/1.1 405
-        allow: GET, HEAD
-        content-length: 0
+        connection: close
+        content-length: 23
+        content-type: text/plain; charset=utf-8
         date: Wed, 28 Jun 2023 12:08:43 GMT
 
+        405 Method Not Allowed
         """
     );
   }
@@ -152,7 +154,7 @@ public class HttpServerTest implements HttpRouting.Module {
     switch (http.method()) {
       case GET, HEAD -> testCase02Get(http);
 
-      default -> http.allow(HttpMethod.GET, HttpMethod.HEAD);
+      default -> http.error(HttpStatus.METHOD_NOT_ALLOWED);
     }
   }
 
@@ -210,7 +212,7 @@ public class HttpServerTest implements HttpRouting.Module {
 
       case POST -> testCase03Post(http);
 
-      default -> http.allow(HttpMethod.GET, HttpMethod.HEAD, HttpMethod.POST);
+      default -> http.error(HttpStatus.METHOD_NOT_ALLOWED);
     }
   }
 
@@ -303,7 +305,7 @@ public class HttpServerTest implements HttpRouting.Module {
 
       case POST -> testCase04Post(http);
 
-      default -> http.allow(HttpMethod.GET, HttpMethod.HEAD, HttpMethod.POST);
+      default -> http.error(HttpStatus.METHOD_NOT_ALLOWED);
     }
   }
 
@@ -366,7 +368,7 @@ public class HttpServerTest implements HttpRouting.Module {
     class NotFoundException extends Http.AbstractHandlerException {
       @Override
       public void handle(HttpExchange http) {
-        http.notFound(new TestingSingleParagraph("NOT FOUND"));
+        http.error(HttpStatus.NOT_FOUND);
       }
     }
 
@@ -389,13 +391,12 @@ public class HttpServerTest implements HttpRouting.Module {
 
         """
         HTTP/1.1 404
-        content-type: text/html; charset=utf-8
+        connection: close
+        content-length: 14
+        content-type: text/plain; charset=utf-8
         date: Wed, 28 Jun 2023 12:08:43 GMT
-        transfer-encoding: chunked
 
-        <html>
-        <p>NOT FOUND</p>
-        </html>
+        404 Not Found
         """
     );
   }

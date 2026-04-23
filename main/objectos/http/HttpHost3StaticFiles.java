@@ -22,7 +22,6 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.util.Map;
-import objectos.way.Media;
 
 final class HttpHost3StaticFiles implements HttpHandler {
 
@@ -48,7 +47,7 @@ final class HttpHost3StaticFiles implements HttpHandler {
 
       handle(http, file);
     } catch (HttpTraversalException e) {
-      http.badRequest(Media.Bytes.textPlain("Traversal detected"));
+      http.error(HttpStatus.BAD_REQUEST, e);
     }
   }
 
@@ -114,10 +113,7 @@ final class HttpHost3StaticFiles implements HttpHandler {
     } catch (NoSuchFileException e) {
       return;
     } catch (IOException e) {
-      final Media msg;
-      msg = Media.Bytes.textPlain(e.getMessage());
-
-      http.internalServerError(msg, e);
+      http.error(HttpStatus.INTERNAL_SERVER_ERROR, e);
 
       return;
     }

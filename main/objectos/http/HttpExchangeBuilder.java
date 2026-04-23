@@ -46,6 +46,8 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
 
   private long id;
 
+  private final HttpErrorResponses errorResponses = HttpErrorResponses0.STANDARD;
+
   private HttpMethod method = HttpMethod.GET;
 
   private String path = "/";
@@ -277,7 +279,7 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
     outputStream = new ByteArrayOutputStream();
 
     final HttpResponse0 response;
-    response = new HttpResponse0(buffer, clock, head, id, noteSink, outputStream, testable);
+    response = new HttpResponse0(buffer, clock, errorResponses, head, id, noteSink, outputStream, testable);
 
     final HttpSession session;
     session = session();

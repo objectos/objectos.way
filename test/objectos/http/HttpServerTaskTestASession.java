@@ -74,7 +74,7 @@ public class HttpServerTaskTestASession {
                 http.ok(Media.Bytes.textPlain(attr));
               }
 
-              default -> http.notFound(OK);
+              default -> http.error(HttpStatus.NOT_FOUND);
             }
           };
         }),
@@ -153,7 +153,7 @@ public class HttpServerTaskTestASession {
                 http.ok(OK);
               }
 
-              default -> http.notFound(OK);
+              default -> http.error(HttpStatus.NOT_FOUND);
             }
           };
         }),
@@ -258,7 +258,7 @@ public class HttpServerTaskTestASession {
                 http.ok(Media.Bytes.textPlain(attr));
               }
 
-              default -> http.notFound(OK);
+              default -> http.error(HttpStatus.NOT_FOUND);
             }
           };
         }),
@@ -339,7 +339,7 @@ public class HttpServerTaskTestASession {
                 http.ok(OK);
               }
 
-              default -> http.notFound(OK);
+              default -> http.error(HttpStatus.NOT_FOUND);
             }
           };
         }),
@@ -426,7 +426,7 @@ public class HttpServerTaskTestASession {
                 http.ok(OK);
               }
 
-              default -> http.notFound(OK);
+              default -> http.error(HttpStatus.NOT_FOUND);
             }
           };
         }),

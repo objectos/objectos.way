@@ -40,6 +40,8 @@ final class HttpServer0Builder implements HttpServer.Options {
 
   private Clock clock = Clock.systemUTC();
 
+  private final HttpErrorResponses errorResponses = HttpErrorResponses0.STANDARD;
+
   private final Map<String, HttpHost0Builder> hostBuilders = new LinkedHashMap<>();
 
   private int requestBodyMemoryMax;
@@ -100,7 +102,7 @@ final class HttpServer0Builder implements HttpServer.Options {
 
       // serverLoop
       final Runnable serverLoop;
-      serverLoop = new HttpServer1Loop(bodyOptions, memoryMax, clock, hosts, noteSink, serverSocket);
+      serverLoop = new HttpServer1Loop(bodyOptions, memoryMax, clock, errorResponses, hosts, noteSink, serverSocket);
 
       // thread
       final Thread thread;

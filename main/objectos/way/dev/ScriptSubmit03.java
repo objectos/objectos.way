@@ -18,7 +18,6 @@ package objectos.way.dev;
 import module objectos.way;
 import objectos.css.CssSource;
 import objectos.http.HttpExchange;
-import objectos.http.HttpMethod;
 
 /*
 
@@ -39,7 +38,7 @@ public final class ScriptSubmit03 extends AbstractDevScript {
     switch (http.method()) {
       case GET, POST -> super.handle(http);
 
-      default -> http.allow(HttpMethod.GET, HttpMethod.POST);
+      default -> http.error(HttpStatus.METHOD_NOT_ALLOWED, "Allowed: GET, POST");
     }
   }
 

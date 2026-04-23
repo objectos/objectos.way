@@ -299,17 +299,10 @@ public class HttpExchangeTest {
 
   @Test(description = "respond method")
   public void testCase03() {
-    class Template extends Html.Template {
-      @Override
-      protected void render() {
-        div("tc03");
-      }
-    }
-
     HttpExchange http;
     http = http(_ -> {});
 
-    http.badRequest(new Template());
+    http.error(HttpStatus.BAD_REQUEST);
 
     assertEquals(
         http.toString(),
@@ -317,14 +310,11 @@ public class HttpExchangeTest {
         """
         HTTP/1.1 400 Bad Request\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-        Content-Type: text/html; charset=utf-8\r
-        Transfer-Encoding: chunked\r
+        Connection: close\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 16\r
         \r
-        010\r
-        <div>tc03</div>
-        \r
-        0\r
-        \r
+        400 Bad Request
         """
     );
   }

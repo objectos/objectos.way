@@ -39,6 +39,8 @@ final class HttpServerTask implements Runnable {
 
   private final Clock clock;
 
+  private final HttpErrorResponses errorResponses;
+
   private final HttpHosts hosts;
 
   private final long id;
@@ -51,6 +53,7 @@ final class HttpServerTask implements Runnable {
       HttpRequestBodyOptions bodyOptions,
       byte[] buffer,
       Clock clock,
+      HttpErrorResponses errorResponses,
       HttpHosts hosts,
       long id,
       Note.Sink noteSink,
@@ -60,6 +63,8 @@ final class HttpServerTask implements Runnable {
     this.buffer = buffer;
 
     this.clock = clock;
+
+    this.errorResponses = errorResponses;
 
     this.hosts = hosts;
 
@@ -217,7 +222,7 @@ final class HttpServerTask implements Runnable {
 
     // response
     final HttpResponse0 response;
-    response = new HttpResponse0(buffer, clock, head, id, noteSink, outputStream, false);
+    response = new HttpResponse0(buffer, clock, errorResponses, head, id, noteSink, outputStream, false);
 
     // session
     final HttpSession session;
@@ -300,7 +305,7 @@ final class HttpServerTask implements Runnable {
 
   private void handle(OutputStream outputStream, Message exception) {
     final HttpResponse0 response;
-    response = new HttpResponse0(buffer, clock, head, id, noteSink, outputStream, false);
+    response = new HttpResponse0(buffer, clock, errorResponses, head, id, noteSink, outputStream, false);
 
     response.status(exception.status());
 

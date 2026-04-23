@@ -15,7 +15,7 @@
  */
 package objectos.http;
 
-enum HttpStatusImpl implements HttpStatus {
+enum HttpStatus0 implements HttpStatus {
 
   // 2.x.x
 
@@ -69,7 +69,7 @@ enum HttpStatusImpl implements HttpStatus {
 
   public final String reasonPhrase;
 
-  private HttpStatusImpl(int code, String reasonPhrase) {
+  private HttpStatus0(int code, String reasonPhrase) {
     this.code = code;
 
     this.reasonPhrase = reasonPhrase;
@@ -88,6 +88,10 @@ enum HttpStatusImpl implements HttpStatus {
   @Override
   public final String toString() {
     return "HttpStatus[" + code + "=" + reasonPhrase + "]";
+  }
+
+  final boolean isError() {
+    return code >= 400;
   }
 
 }

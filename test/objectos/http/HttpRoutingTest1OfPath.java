@@ -664,10 +664,13 @@ public class HttpRoutingTest1OfPath {
         """
         HTTP/1.1 404 Not Found\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Connection: close\r
         Content-Type: text/plain; charset=utf-8\r
-        Content-Length: 1\r
+        Content-Length: 17\r
         \r
-        x\
+        404 Not Found
+
+        x
         """
     );
   }
@@ -735,7 +738,7 @@ public class HttpRoutingTest1OfPath {
   }
 
   private HttpHandler notFound(String msg) {
-    return http -> http.notFound(Media.Bytes.textPlain(msg));
+    return http -> http.error(HttpStatus.NOT_FOUND, msg);
   }
 
 }
