@@ -21,7 +21,15 @@ import objectos.internal.Ascii;
 
 final class HttpRequestParser3Path {
 
+  private boolean done;
+
+  private int dot;
+
   private final HttpRequestParser0Input input;
+
+  private final StringBuilder path = new StringBuilder();
+
+  private int solidus;
 
   private HttpRequestParser1UrlDecoder urlDecoder;
 
@@ -46,84 +54,67 @@ final class HttpRequestParser3Path {
   }
 
   private String parse0() throws IOException {
-    // where our path begins
-    input.mark();
+    // first char
+    parseChar();
 
-    // first char must be a '/' (solidus)
-    final byte first;
-    first = input.readByte(Kind.INVALID_REQUEST_LINE);
-
-    final int firstCodePoint;
-
-    final boolean firstPerc;
-
-    if (first != '%') {
-      firstCodePoint = first;
-
-      firstPerc = false;
-    }
-
-    else {
-      firstCodePoint = decodePerc();
-
-      firstPerc = true;
-    }
-
-    if (firstCodePoint != '/') {
+    if (path.isEmpty()) {
       final String msg;
-      msg = "Unexpected byte 0x%02X while parsing path: path must start with '/'".formatted(first);
+      msg = "Invalid path: it must not be empty";
 
       throw new HttpClientException(msg, Kind.INVALID_REQUEST_LINE);
     }
 
-    final String result;
+    final char first;
+    first = path.charAt(0);
 
-    // remaining chars
-    if (!firstPerc) {
-      result = parse1();
-    } else {
-      final StringBuilder path;
-      path = new StringBuilder("/");
+    if (first != '/') {
+      final String msg;
+      msg = "Invalid path: only absolute paths are supported";
 
-      result = parse2(path);
+      throw new HttpClientException(msg, Kind.INVALID_REQUEST_LINE);
     }
 
-    final int length;
-    length = result.length();
-
-    if (length >= 2) {
-      final char second;
-      second = result.charAt(1);
-
-      if (second == '/') {
-        final String msg;
-        msg = "First path segment must not be empty";
-
-        throw new HttpClientException(msg, Kind.INVALID_REQUEST_LINE);
-      }
+    if (done) {
+      return path.toString();
     }
 
-    return result;
+    // second char
+    parseChar();
+
+    if (done) {
+      return path.toString();
+    }
+
+    final char second;
+    second = path.charAt(1);
+
+    if (second == '/') {
+      final String msg;
+      msg = "Invalid path: first segment must not be empty";
+
+      throw new HttpClientException(msg, Kind.INVALID_REQUEST_LINE);
+    }
+
+    // remaining
+    do {
+      parseChar();
+    } while (!done);
+
+    return path.toString();
   }
 
   private static final byte[] PATH_TABLE;
 
-  private static final byte SOLIDUS = '/';
-
   private static final byte PATH_VALID = 1;
-  private static final byte PATH_PERCENT = 2;
-  private static final byte PATH_SPACE = 3;
-  private static final byte PATH_QUESTION = 4;
+  private static final byte PATH_SOLIDUS = 2;
+  private static final byte PATH_DOT = 3;
+  private static final byte PATH_PERCENT = 4;
+  private static final byte PATH_SPACE = 5;
+  private static final byte PATH_QUESTION = 6;
 
   static {
     final byte[] table;
     table = new byte[128];
-
-    // 0 = invalid
-    // 1 = valid
-    // 2 = %xx
-    // 3 = ' ' -> version
-    // 4 = '?' -> stop
 
     Ascii.fill(table, Http.unreserved(), PATH_VALID);
 
@@ -133,8 +124,9 @@ final class HttpRequestParser3Path {
 
     table['@'] = PATH_VALID;
 
-    // solidus acts as segment separator
-    table[SOLIDUS] = PATH_VALID;
+    table['/'] = PATH_SOLIDUS;
+
+    table['.'] = PATH_DOT;
 
     table['%'] = PATH_PERCENT;
 
@@ -145,76 +137,84 @@ final class HttpRequestParser3Path {
     PATH_TABLE = table;
   }
 
-  private String parse1() throws IOException {
-    while (true) {
-      final byte b;
-      b = input.readByte(Kind.INVALID_REQUEST_LINE);
+  private void parseChar() throws IOException {
+    final byte b;
+    b = input.readByte(Kind.INVALID_REQUEST_LINE);
 
-      final byte code;
-      code = PATH_TABLE[b];
+    final byte code;
+    code = PATH_TABLE[b];
 
-      switch (code) {
-        case PATH_VALID -> {
-          // noop
-        }
+    switch (code) {
+      case PATH_VALID -> {
+        dot = 0;
 
-        case PATH_PERCENT -> {
-          final StringBuilder path;
-          path = input.makeStrBuilder();
+        final char c;
+        c = (char) b;
 
-          final int decoded;
-          decoded = decodePerc();
+        path.append(c);
+      }
 
+      case PATH_SOLIDUS -> {
+        checkDots();
+
+        dot = 0;
+
+        solidus = path.length();
+
+        path.append('/');
+      }
+
+      case PATH_DOT -> {
+        path.append('.');
+
+        dot += 1;
+      }
+
+      case PATH_PERCENT -> {
+        final int decoded;
+        decoded = decodePerc();
+
+        if (decoded == '/') {
+          checkDots();
+
+          dot = 0;
+
+          solidus = path.length();
+
+          path.append('/');
+        } else {
           path.appendCodePoint(decoded);
-
-          return parse2(path);
         }
+      }
 
-        case PATH_SPACE, PATH_QUESTION -> {
-          return input.makeStr();
-        }
+      case PATH_SPACE, PATH_QUESTION -> {
+        checkDots();
 
-        default -> {
-          final String msg;
-          msg = "Unexpected byte 0x%02X while parsing path".formatted(b);
+        done = true;
+      }
 
-          throw new HttpClientException(msg, Kind.INVALID_REQUEST_LINE);
-        }
+      default -> {
+        final String msg;
+        msg = "Unexpected byte 0x%02X while parsing path".formatted(b);
+
+        throw new HttpClientException(msg, Kind.INVALID_REQUEST_LINE);
       }
     }
   }
 
-  private String parse2(StringBuilder path) throws IOException {
-    while (true) {
-      final byte b;
-      b = input.readByte(Kind.INVALID_REQUEST_LINE);
+  private void checkDots() throws HttpClientException {
+    final int startIndex;
+    startIndex = solidus + 1;
 
-      final byte code;
-      code = PATH_TABLE[b];
+    final int len;
+    len = path.length() - startIndex;
 
-      switch (code) {
-        case PATH_VALID -> {
-          path.append((char) b);
-        }
+    if ((dot == 1 && len == dot) ||
+        (dot == 2 && len == dot)) {
+      final String msg;
+      msg = "Invalid path: dot-segments are not allowed";
 
-        case PATH_PERCENT -> {
-          final int decoded;
-          decoded = decodePerc();
-
-          path.appendCodePoint(decoded);
-        }
-
-        case PATH_SPACE, PATH_QUESTION -> {
-          return path.toString();
-        }
-
-        default -> {
-          final String msg;
-          msg = "Unexpected byte 0x%02X while parsing path".formatted(b);
-
-          throw new HttpClientException(msg, Kind.INVALID_REQUEST_LINE);
-        }
-      }
+      throw new HttpClientException(msg, Kind.INVALID_REQUEST_LINE);
     }
   }
 

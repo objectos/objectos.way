@@ -89,8 +89,8 @@ final class HttpRequestParser0Input extends InputStream {
     return new StringBuilder(prefix);
   }
 
-  public final void mark() {
-    mark = bufferIndex;
+  public final int mark() {
+    return mark = bufferIndex;
   }
 
   public final byte peekByte() throws IOException {

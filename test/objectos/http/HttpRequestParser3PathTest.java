@@ -92,12 +92,26 @@ public class HttpRequestParser3PathTest {
     final List<Object[]> l;
     l = new ArrayList<>();
 
-    l.add(arr("", "Unexpected byte 0x20 while parsing path: path must start with '/'"));
-    l.add(arr("index.html", "Unexpected byte 0x69 while parsing path: path must start with '/'"));
-    l.add(arr("//index.html", "First path segment must not be empty"));
-    l.add(arr("/%2Findex.html", "First path segment must not be empty"));
-    l.add(arr("%2F/index.html", "First path segment must not be empty"));
-    l.add(arr("%2F%2Findex.html", "First path segment must not be empty"));
+    l.add(arr("", "Invalid path: it must not be empty"));
+    l.add(arr("index.html", "Invalid path: only absolute paths are supported"));
+    l.add(arr("//index.html", "Invalid path: first segment must not be empty"));
+    l.add(arr("/%2Findex.html", "Invalid path: first segment must not be empty"));
+    l.add(arr("%2F/index.html", "Invalid path: first segment must not be empty"));
+    l.add(arr("%2F%2Findex.html", "Invalid path: first segment must not be empty"));
+    l.add(arr("/.", "Invalid path: dot-segments are not allowed"));
+    l.add(arr("/./", "Invalid path: dot-segments are not allowed"));
+    l.add(arr("/./bar", "Invalid path: dot-segments are not allowed"));
+    l.add(arr("/foo/.", "Invalid path: dot-segments are not allowed"));
+    l.add(arr("/foo/./", "Invalid path: dot-segments are not allowed"));
+    l.add(arr("/foo/./bar", "Invalid path: dot-segments are not allowed"));
+    l.add(arr("/..", "Invalid path: dot-segments are not allowed"));
+    l.add(arr("/../", "Invalid path: dot-segments are not allowed"));
+    l.add(arr("/../bar", "Invalid path: dot-segments are not allowed"));
+    l.add(arr("/foo/..", "Invalid path: dot-segments are not allowed"));
+    l.add(arr("/foo/../", "Invalid path: dot-segments are not allowed"));
+    l.add(arr("/foo/../bar", "Invalid path: dot-segments are not allowed"));
+    l.add(arr("%2F.", "Invalid path: dot-segments are not allowed"));
+    l.add(arr("/foo/.%2Fbar", "Invalid path: dot-segments are not allowed"));
 
     final byte[] validBytes;
     validBytes = validString.getBytes();
