@@ -15,13 +15,7 @@
  */
 package objectos.http;
 
-final class HttpRequestMatcher3PathRegion implements HttpRequestMatcher {
-
-  private final String value;
-
-  HttpRequestMatcher3PathRegion(String value) {
-    this.value = value;
-  }
+record HttpRequestMatcher3PathRegion(String value) implements HttpRequestMatcher {
 
   @Override
   public final boolean match(HttpExchange0 http) {

@@ -15,13 +15,7 @@
  */
 package objectos.http;
 
-final class HttpRequestMatcher2PathExact implements HttpRequestMatcher {
-
-  private final String exact;
-
-  HttpRequestMatcher2PathExact(String exact) {
-    this.exact = exact;
-  }
+record HttpRequestMatcher2PathExact(String exact) implements HttpRequestMatcher {
 
   @Override
   public final boolean match(HttpExchange0 http) {

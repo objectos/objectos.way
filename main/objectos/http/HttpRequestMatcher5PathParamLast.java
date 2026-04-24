@@ -15,13 +15,7 @@
  */
 package objectos.http;
 
-final class HttpRequestMatcher5PathParamLast implements HttpRequestMatcher {
-
-  private final String paramName;
-
-  HttpRequestMatcher5PathParamLast(String paramName) {
-    this.paramName = paramName;
-  }
+record HttpRequestMatcher5PathParamLast(String paramName) implements HttpRequestMatcher {
 
   @Override
   public final boolean match(HttpExchange0 http) {

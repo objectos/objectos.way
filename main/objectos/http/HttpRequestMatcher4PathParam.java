@@ -15,17 +15,7 @@
  */
 package objectos.http;
 
-final class HttpRequestMatcher4PathParam implements HttpRequestMatcher {
-
-  private final String paramName;
-
-  private final char terminator;
-
-  HttpRequestMatcher4PathParam(String paramName, char terminator) {
-    this.paramName = paramName;
-
-    this.terminator = terminator;
-  }
+record HttpRequestMatcher4PathParam(String paramName, char terminator) implements HttpRequestMatcher {
 
   @Override
   public final boolean match(HttpExchange0 http) {

@@ -23,7 +23,8 @@ sealed interface HttpRequestMatcher
     HttpRequestMatcher3PathRegion,
     HttpRequestMatcher4PathParam,
     HttpRequestMatcher5PathParamLast,
-    HttpRequestMatcher6List {
+    HttpRequestMatcher6Wildcard,
+    HttpRequestMatcher7List {
 
   boolean match(HttpExchange0 http);
 

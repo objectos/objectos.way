@@ -15,24 +15,12 @@
  */
 package objectos.http;
 
-import java.util.List;
+enum HttpRequestMatcher6Wildcard implements HttpRequestMatcher {
 
-final class HttpRequestMatcher6List implements HttpRequestMatcher {
-
-  private final List<HttpRequestMatcher> list;
-
-  HttpRequestMatcher6List(List<HttpRequestMatcher> list) {
-    this.list = list;
-  }
+  INSTANCE;
 
   @Override
   public final boolean match(HttpExchange0 http) {
-    for (HttpRequestMatcher matcher : list) {
-      if (!matcher.match(http)) {
-        return false;
-      }
-    }
-
     return true;
   }
 
