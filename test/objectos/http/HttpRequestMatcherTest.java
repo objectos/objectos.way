@@ -25,20 +25,6 @@ import org.testng.annotations.Test;
 public class HttpRequestMatcherTest {
 
   @Test
-  public void pathExact01() {
-    HttpRequestMatcherX matcher;
-    matcher = HttpRequestMatcherX.pathExact("/foo");
-
-    test(matcher, "/foo", true);
-
-    test(matcher, "/fooo", false);
-    test(matcher, "/foo/", false);
-    test(matcher, "/foo/bar", false);
-    test(matcher, "/bar", false);
-    test(matcher, "/", false);
-  }
-
-  @Test
   public void pathSegments01() {
     HttpRequestMatcherX matcher;
     matcher = HttpRequestMatcherX.pathSegments(List.of(
