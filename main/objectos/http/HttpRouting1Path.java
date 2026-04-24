@@ -15,16 +15,17 @@
  */
 package objectos.http;
 
-sealed interface HttpRequestMatcher
-    permits
-    HttpRequestMatcher0Method,
-    HttpRequestMatcher1MethodNotAllowed,
-    HttpRequestMatcher2PathExact,
-    HttpRequestMatcher3PathRegion,
-    HttpRequestMatcher4PathParam,
-    HttpRequestMatcher5PathParamLast,
-    HttpRequestMatcher6List {
+import objectos.http.HttpRouting2.OfPath;
 
-  boolean match(HttpExchange0 http);
+final class HttpRouting1Path implements OfPath {
+
+  @Override
+  public void GET(HttpHandler value) {}
+
+  @Override
+  public void POST(HttpHandler value) {}
+
+  @Override
+  public void handler(HttpHandler value) {}
 
 }

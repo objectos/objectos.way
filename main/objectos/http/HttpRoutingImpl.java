@@ -44,8 +44,8 @@ final class HttpRoutingImpl extends HttpRoutingSupport implements HttpRouting {
   public final void path(String path, HttpRoutingPath.Module module) {
     Objects.requireNonNull(path, "path == null");
 
-    final HttpRequestMatcher matcher;
-    matcher = HttpRequestMatcher.parsePath(path);
+    final HttpRequestMatcherX matcher;
+    matcher = HttpRequestMatcherX.parsePath(path);
 
     final HttpHandler handler;
     handler = ofPath(matcher, module);

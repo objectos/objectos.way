@@ -62,7 +62,7 @@ public class HttpHandlerTest {
   public void of04() {
     final HttpHandler handler;
     handler = HttpHandler0.of(
-        HttpRequestMatcher.pathExact("/of04"),
+        HttpRequestMatcherX.pathExact("/of04"),
         null,
         List.of(ok(pass))
     );
@@ -99,7 +99,7 @@ public class HttpHandlerTest {
   public void of05() {
     final HttpHandler handler;
     handler = HttpHandler0.of(
-        HttpRequestMatcher.pathExact("/of05"),
+        HttpRequestMatcherX.pathExact("/of05"),
         null,
         List.of(
             decorate("OF-05"),
@@ -218,7 +218,7 @@ public class HttpHandlerTest {
 
         List.of(
             HttpHandler0.of(
-                HttpRequestMatcher.subpathExact("test01"),
+                HttpRequestMatcherX.subpathExact("test01"),
                 null,
                 List.of(
                     ok(pass)
@@ -272,7 +272,7 @@ public class HttpHandlerTest {
         pathWildcard("/subpath/"),
 
         HttpHandler0.of(
-            HttpRequestMatcher.subpathExact("test01"),
+            HttpRequestMatcherX.subpathExact("test01"),
             null,
             List.of(
                 ok(pass)
@@ -311,7 +311,7 @@ public class HttpHandlerTest {
                 decorate("SUB-02"),
 
                 HttpHandler0.of(
-                    HttpRequestMatcher.subpathExact("more"),
+                    HttpRequestMatcherX.subpathExact("more"),
                     null,
                     List.of(ok(pass))
                 )
@@ -363,7 +363,7 @@ public class HttpHandlerTest {
         null,
         List.of(
             HttpHandler0.of(
-                HttpRequestMatcher.subpathExact("skip-me"),
+                HttpRequestMatcherX.subpathExact("skip-me"),
                 null,
                 List.of(
                     ok(skip)
@@ -371,7 +371,7 @@ public class HttpHandlerTest {
             ),
 
             HttpHandler0.of(
-                HttpRequestMatcher.subpathExact("test-03"),
+                HttpRequestMatcherX.subpathExact("test-03"),
                 null,
                 List.of(
                     ok(pass)
@@ -426,13 +426,13 @@ public class HttpHandlerTest {
             null,
             List.of(
                 HttpHandler0.of(
-                    HttpRequestMatcher.subpathExact("skip"),
+                    HttpRequestMatcherX.subpathExact("skip"),
                     null,
                     List.of(ok(skip))
                 ),
 
                 HttpHandler0.of(
-                    HttpRequestMatcher.subpathExact("more"),
+                    HttpRequestMatcherX.subpathExact("more"),
                     null,
                     List.of(ok(pass))
                 )
@@ -491,17 +491,17 @@ public class HttpHandlerTest {
     return http -> http.ok(object);
   }
 
-  private HttpRequestMatcher pathWildcard(String prefix) {
-    return HttpRequestMatcher.pathSegments(List.of(
-        HttpRequestMatcher.segmentRegion(prefix),
-        HttpRequestMatcher.segmentWildcard()
+  private HttpRequestMatcherX pathWildcard(String prefix) {
+    return HttpRequestMatcherX.pathSegments(List.of(
+        HttpRequestMatcherX.segmentRegion(prefix),
+        HttpRequestMatcherX.segmentWildcard()
     ));
   }
 
-  private HttpRequestMatcher subpathWildcard(String prefix) {
-    return HttpRequestMatcher.subpathSegments(List.of(
-        HttpRequestMatcher.segmentRegion(prefix),
-        HttpRequestMatcher.segmentWildcard()
+  private HttpRequestMatcherX subpathWildcard(String prefix) {
+    return HttpRequestMatcherX.subpathSegments(List.of(
+        HttpRequestMatcherX.segmentRegion(prefix),
+        HttpRequestMatcherX.segmentWildcard()
     ));
   }
 

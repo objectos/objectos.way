@@ -59,10 +59,10 @@ public class HttpPathParamTest {
     HttpExchange requestTarget;
     requestTarget = HttpExchange.create(cfg -> cfg.path(target));
 
-    HttpRequestMatcher matcher;
-    matcher = HttpRequestMatcher.pathSegments(List.of(
-        HttpRequestMatcher.segmentRegion("/test/"),
-        HttpRequestMatcher.segmentParamLast("x")
+    HttpRequestMatcherX matcher;
+    matcher = HttpRequestMatcherX.pathSegments(List.of(
+        HttpRequestMatcherX.segmentRegion("/test/"),
+        HttpRequestMatcherX.segmentParamLast("x")
     ));
 
     assertEquals(matcher.test(requestTarget), true);

@@ -41,7 +41,7 @@ sealed abstract class HttpRoutingSupport permits HttpRoutingImpl, HttpRoutingPat
     many.add(handler);
   }
 
-  final HttpHandler ofPath(HttpRequestMatcher matcher, HttpRoutingPath.Module module) {
+  final HttpHandler ofPath(HttpRequestMatcherX matcher, HttpRoutingPath.Module module) {
     final HttpRoutingPathImpl routing;
     routing = new HttpRoutingPathImpl(matcher);
 

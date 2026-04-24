@@ -15,16 +15,25 @@
  */
 package objectos.http;
 
-sealed interface HttpRequestMatcher
-    permits
-    HttpRequestMatcher0Method,
-    HttpRequestMatcher1MethodNotAllowed,
-    HttpRequestMatcher2PathExact,
-    HttpRequestMatcher3PathRegion,
-    HttpRequestMatcher4PathParam,
-    HttpRequestMatcher5PathParamLast,
-    HttpRequestMatcher6List {
+import java.util.List;
 
-  boolean match(HttpExchange0 http);
+final class HttpRequestMatcher6List implements HttpRequestMatcher {
+
+  private final List<HttpRequestMatcher> list;
+
+  HttpRequestMatcher6List(List<HttpRequestMatcher> list) {
+    this.list = list;
+  }
+
+  @Override
+  public final boolean match(HttpExchange0 http) {
+    for (HttpRequestMatcher matcher : list) {
+      if (!matcher.match(http)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
 
 }

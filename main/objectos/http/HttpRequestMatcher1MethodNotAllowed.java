@@ -15,16 +15,22 @@
  */
 package objectos.http;
 
-sealed interface HttpRequestMatcher
-    permits
-    HttpRequestMatcher0Method,
-    HttpRequestMatcher1MethodNotAllowed,
-    HttpRequestMatcher2PathExact,
-    HttpRequestMatcher3PathRegion,
-    HttpRequestMatcher4PathParam,
-    HttpRequestMatcher5PathParamLast,
-    HttpRequestMatcher6List {
+import java.util.Set;
 
-  boolean match(HttpExchange0 http);
+final class HttpRequestMatcher1MethodNotAllowed implements HttpRequestMatcher {
+
+  private final Set<? extends HttpMethod> allowed;
+
+  HttpRequestMatcher1MethodNotAllowed(Set<? extends HttpMethod> allowed) {
+    this.allowed = allowed;
+  }
+
+  @Override
+  public final boolean match(HttpExchange0 http) {
+    final HttpMethod method;
+    method = http.method();
+
+    return !allowed.contains(method);
+  }
 
 }

@@ -26,8 +26,8 @@ public class HttpRequestMatcherTest {
 
   @Test
   public void pathExact01() {
-    HttpRequestMatcher matcher;
-    matcher = HttpRequestMatcher.pathExact("/foo");
+    HttpRequestMatcherX matcher;
+    matcher = HttpRequestMatcherX.pathExact("/foo");
 
     test(matcher, "/foo", true);
 
@@ -40,10 +40,10 @@ public class HttpRequestMatcherTest {
 
   @Test
   public void pathSegments01() {
-    HttpRequestMatcher matcher;
-    matcher = HttpRequestMatcher.pathSegments(List.of(
-        HttpRequestMatcher.segmentRegion("/foo/"),
-        HttpRequestMatcher.segmentParamLast("foo")
+    HttpRequestMatcherX matcher;
+    matcher = HttpRequestMatcherX.pathSegments(List.of(
+        HttpRequestMatcherX.segmentRegion("/foo/"),
+        HttpRequestMatcherX.segmentParamLast("foo")
     ));
 
     test(matcher, "/foo/", Map.of("foo", ""));
@@ -59,11 +59,11 @@ public class HttpRequestMatcherTest {
 
   @Test
   public void pathSegments02() {
-    HttpRequestMatcher matcher;
-    matcher = HttpRequestMatcher.pathSegments(List.of(
-        HttpRequestMatcher.segmentRegion("/foo/"),
-        HttpRequestMatcher.segmentParam("foo", '/'),
-        HttpRequestMatcher.segmentExact("pdf")
+    HttpRequestMatcherX matcher;
+    matcher = HttpRequestMatcherX.pathSegments(List.of(
+        HttpRequestMatcherX.segmentRegion("/foo/"),
+        HttpRequestMatcherX.segmentParam("foo", '/'),
+        HttpRequestMatcherX.segmentExact("pdf")
     ));
 
     test(matcher, "/foo/bar/pdf", Map.of("foo", "bar"));
@@ -81,12 +81,12 @@ public class HttpRequestMatcherTest {
 
   @Test
   public void pathSegments03() {
-    HttpRequestMatcher matcher;
-    matcher = HttpRequestMatcher.pathSegments(List.of(
-        HttpRequestMatcher.segmentRegion("/foo/"),
-        HttpRequestMatcher.segmentParam("foo", '/'),
-        HttpRequestMatcher.segmentRegion("bar/"),
-        HttpRequestMatcher.segmentParamLast("bar")
+    HttpRequestMatcherX matcher;
+    matcher = HttpRequestMatcherX.pathSegments(List.of(
+        HttpRequestMatcherX.segmentRegion("/foo/"),
+        HttpRequestMatcherX.segmentParam("foo", '/'),
+        HttpRequestMatcherX.segmentRegion("bar/"),
+        HttpRequestMatcherX.segmentParamLast("bar")
     ));
 
     test(matcher, "/foo/bar/bar/bar", Map.of("foo", "bar", "bar", "bar"));
@@ -101,13 +101,13 @@ public class HttpRequestMatcherTest {
 
   @Test
   public void pathSegments04() {
-    HttpRequestMatcher matcher;
-    matcher = HttpRequestMatcher.pathSegments(List.of(
-        HttpRequestMatcher.segmentRegion("/foo/"),
-        HttpRequestMatcher.segmentParam("foo", '/'),
-        HttpRequestMatcher.segmentRegion("bar/"),
-        HttpRequestMatcher.segmentParam("bar", '/'),
-        HttpRequestMatcher.segmentExact("pdf")
+    HttpRequestMatcherX matcher;
+    matcher = HttpRequestMatcherX.pathSegments(List.of(
+        HttpRequestMatcherX.segmentRegion("/foo/"),
+        HttpRequestMatcherX.segmentParam("foo", '/'),
+        HttpRequestMatcherX.segmentRegion("bar/"),
+        HttpRequestMatcherX.segmentParam("bar", '/'),
+        HttpRequestMatcherX.segmentExact("pdf")
     ));
 
     test(matcher, "/foo/x/bar/123/pdf", Map.of("foo", "x", "bar", "123"));
@@ -118,10 +118,10 @@ public class HttpRequestMatcherTest {
 
   @Test
   public void pathWildcard01() {
-    HttpRequestMatcher matcher;
-    matcher = HttpRequestMatcher.pathSegments(List.of(
-        HttpRequestMatcher.segmentRegion("/foo"),
-        HttpRequestMatcher.segmentWildcard()
+    HttpRequestMatcherX matcher;
+    matcher = HttpRequestMatcherX.pathSegments(List.of(
+        HttpRequestMatcherX.segmentRegion("/foo"),
+        HttpRequestMatcherX.segmentWildcard()
     ));
 
     test(matcher, "/foo", true);
@@ -135,10 +135,10 @@ public class HttpRequestMatcherTest {
 
   @Test
   public void pathWildcard02() {
-    HttpRequestMatcher matcher;
-    matcher = HttpRequestMatcher.pathSegments(List.of(
-        HttpRequestMatcher.segmentRegion("/prefix/"),
-        HttpRequestMatcher.segmentParam("foo", '/')
+    HttpRequestMatcherX matcher;
+    matcher = HttpRequestMatcherX.pathSegments(List.of(
+        HttpRequestMatcherX.segmentRegion("/prefix/"),
+        HttpRequestMatcherX.segmentParam("foo", '/')
     ));
 
     test(matcher, "/prefix/foo/", true);
@@ -146,7 +146,7 @@ public class HttpRequestMatcherTest {
     test(matcher, "/prefix/", false);
   }
 
-  private void test(HttpRequestMatcher matcher, String target, boolean expected) {
+  private void test(HttpRequestMatcherX matcher, String target, boolean expected) {
     final HttpExchange requestTarget;
     requestTarget = HttpExchange.create(config -> {
       config.path(target);
@@ -155,7 +155,7 @@ public class HttpRequestMatcherTest {
     assertEquals(matcher.test(requestTarget), expected);
   }
 
-  private void test(HttpRequestMatcher matcher, String target, Map<String, String> expected) {
+  private void test(HttpRequestMatcherX matcher, String target, Map<String, String> expected) {
     HttpExchange0 requestTarget;
     requestTarget = (HttpExchange0) HttpExchange.create(config -> {
       config.path(target);

@@ -257,10 +257,10 @@ public class HttpRoutingTest1OfPath {
 
   @Test
   public void subpath01() {
-    final HttpRequestMatcher matcher;
-    matcher = HttpRequestMatcher.pathSegments(List.of(
-        HttpRequestMatcher.segmentRegion("/app/"),
-        HttpRequestMatcher.segmentWildcard()
+    final HttpRequestMatcherX matcher;
+    matcher = HttpRequestMatcherX.pathSegments(List.of(
+        HttpRequestMatcherX.segmentRegion("/app/"),
+        HttpRequestMatcherX.segmentWildcard()
     ));
 
     final HttpRoutingPathImpl routing;

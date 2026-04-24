@@ -33,13 +33,13 @@ final class HttpRoutingPathImpl extends HttpRoutingSupport implements HttpRoutin
 
   private final HttpFilter filter;
 
-  private final HttpRequestMatcher matcher;
+  private final HttpRequestMatcherX matcher;
 
   private HttpPathParam[] pathParams;
 
   private int pathParamsIndex;
 
-  HttpRoutingPathImpl(HttpRequestMatcher matcher) {
+  HttpRoutingPathImpl(HttpRequestMatcherX matcher) {
     allowSubpath = matcher.endsInWildcard();
 
     condition = null;
@@ -224,8 +224,8 @@ final class HttpRoutingPathImpl extends HttpRoutingSupport implements HttpRoutin
 
     Objects.requireNonNull(path, "path == null");
 
-    final HttpRequestMatcher subpathMatcher;
-    subpathMatcher = HttpRequestMatcher.parseSubpath(path);
+    final HttpRequestMatcherX subpathMatcher;
+    subpathMatcher = HttpRequestMatcherX.parseSubpath(path);
 
     final HttpRoutingPathImpl routing;
     routing = new HttpRoutingPathImpl(subpathMatcher);

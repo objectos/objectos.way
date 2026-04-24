@@ -92,8 +92,8 @@ final class HttpHandler0 implements HttpHandler {
   }
 
   public static HttpHandler methodNotAllowed(Set<HttpMethod> allowedMethods) {
-    final HttpRequestMatcher predicate;
-    predicate = HttpRequestMatcher.methodNotAllowed(allowedMethods);
+    final HttpRequestMatcherX predicate;
+    predicate = HttpRequestMatcherX.methodNotAllowed(allowedMethods);
 
     final String allow;
     allow = allowedMethods.stream().map(HttpMethod::name).collect(Collectors.joining(", "));
@@ -102,15 +102,15 @@ final class HttpHandler0 implements HttpHandler {
   }
 
   public static HttpHandler methodAllowed(HttpMethod method, HttpHandler handler) {
-    final HttpRequestMatcher predicate;
-    predicate = HttpRequestMatcher.methodAllowed(method);
+    final HttpRequestMatcherX predicate;
+    predicate = HttpRequestMatcherX.methodAllowed(method);
 
     return new HttpHandler0(Kind.METHOD_ALLOWED_SINGLE, predicate, handler);
   }
 
   public static HttpHandler methodAllowed(HttpMethod method, HttpHandler first, HttpHandler[] rest) {
-    final HttpRequestMatcher predicate;
-    predicate = HttpRequestMatcher.methodAllowed(method);
+    final HttpRequestMatcherX predicate;
+    predicate = HttpRequestMatcherX.methodAllowed(method);
 
     final HttpHandler[] array;
     array = new HttpHandler[rest.length + 1];

@@ -15,15 +15,15 @@
  */
 package objectos.http;
 
-import static objectos.http.HttpRequestMatcher.pathExact;
-import static objectos.http.HttpRequestMatcher.pathSegments;
-import static objectos.http.HttpRequestMatcher.segmentExact;
-import static objectos.http.HttpRequestMatcher.segmentParam;
-import static objectos.http.HttpRequestMatcher.segmentParamLast;
-import static objectos.http.HttpRequestMatcher.segmentRegion;
-import static objectos.http.HttpRequestMatcher.segmentWildcard;
-import static objectos.http.HttpRequestMatcher.subpathExact;
-import static objectos.http.HttpRequestMatcher.subpathSegments;
+import static objectos.http.HttpRequestMatcherX.pathExact;
+import static objectos.http.HttpRequestMatcherX.pathSegments;
+import static objectos.http.HttpRequestMatcherX.segmentExact;
+import static objectos.http.HttpRequestMatcherX.segmentParam;
+import static objectos.http.HttpRequestMatcherX.segmentParamLast;
+import static objectos.http.HttpRequestMatcherX.segmentRegion;
+import static objectos.http.HttpRequestMatcherX.segmentWildcard;
+import static objectos.http.HttpRequestMatcherX.subpathExact;
+import static objectos.http.HttpRequestMatcherX.subpathSegments;
 import static org.testng.Assert.assertEquals;
 
 import java.util.List;
@@ -64,8 +64,8 @@ public class HttpRequestMatcherParseTest {
 
   @Test(dataProvider = "parsePathValidProvider")
   public void parsePathValid(String path, Object expected) {
-    final HttpRequestMatcher result;
-    result = HttpRequestMatcher.parsePath(path);
+    final HttpRequestMatcherX result;
+    result = HttpRequestMatcherX.parsePath(path);
 
     assertEquals(result, expected);
   }
@@ -90,7 +90,7 @@ public class HttpRequestMatcherParseTest {
   @Test(dataProvider = "parsePathInvalidProvider")
   public void parsePathInvalid(String path, String expectedMessage) {
     try {
-      HttpRequestMatcher.parsePath(path);
+      HttpRequestMatcherX.parsePath(path);
 
       Assert.fail();
     } catch (IllegalArgumentException expected) {
@@ -132,8 +132,8 @@ public class HttpRequestMatcherParseTest {
 
   @Test(dataProvider = "parseSubpathValidProvider")
   public void parseSubpathValid(String path, Object expected) {
-    HttpRequestMatcher matcher;
-    matcher = HttpRequestMatcher.parseSubpath(path);
+    HttpRequestMatcherX matcher;
+    matcher = HttpRequestMatcherX.parseSubpath(path);
 
     assertEquals(matcher, expected);
   }

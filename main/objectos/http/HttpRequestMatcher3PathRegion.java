@@ -15,16 +15,32 @@
  */
 package objectos.http;
 
-sealed interface HttpRequestMatcher
-    permits
-    HttpRequestMatcher0Method,
-    HttpRequestMatcher1MethodNotAllowed,
-    HttpRequestMatcher2PathExact,
-    HttpRequestMatcher3PathRegion,
-    HttpRequestMatcher4PathParam,
-    HttpRequestMatcher5PathParamLast,
-    HttpRequestMatcher6List {
+final class HttpRequestMatcher3PathRegion implements HttpRequestMatcher {
 
-  boolean match(HttpExchange0 http);
+  private final String value;
+
+  HttpRequestMatcher3PathRegion(String value) {
+    this.value = value;
+  }
+
+  @Override
+  public final boolean match(HttpExchange0 http) {
+    final int pathIndex;
+    pathIndex = http.pathIndex();
+
+    final String path;
+    path = http.path();
+
+    final int length;
+    length = value.length();
+
+    if (path.regionMatches(pathIndex, value, 0, length)) {
+      http.pathIndexAdd(length);
+
+      return true;
+    } else {
+      return false;
+    }
+  }
 
 }

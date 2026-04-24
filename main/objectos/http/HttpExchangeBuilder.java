@@ -256,7 +256,7 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
     testable = true;
   }
 
-  final HttpExchange build() {
+  final HttpExchange0 build() {
     final HttpRequestHeaders0 $headers;
     $headers = new HttpRequestHeaders0(headers);
 

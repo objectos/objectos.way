@@ -15,16 +15,25 @@
  */
 package objectos.http;
 
-sealed interface HttpRequestMatcher
-    permits
-    HttpRequestMatcher0Method,
-    HttpRequestMatcher1MethodNotAllowed,
-    HttpRequestMatcher2PathExact,
-    HttpRequestMatcher3PathRegion,
-    HttpRequestMatcher4PathParam,
-    HttpRequestMatcher5PathParamLast,
-    HttpRequestMatcher6List {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Consumer;
 
-  boolean match(HttpExchange0 http);
+final class HttpRouting0Builder implements HttpRouting2 {
+
+  private final List<HttpHandler> handlers = new ArrayList<>();
+
+  @Override
+  public final void handler(HttpHandler value) {
+    Objects.requireNonNull(value, "value == null");
+
+    handlers.add(value);
+  }
+
+  @Override
+  public final void path(String path, Consumer<? super OfPath> opts) {
+
+  }
 
 }
