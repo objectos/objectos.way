@@ -15,8 +15,11 @@
  */
 package objectos.http;
 
+import static objectos.http.HttpY.arr;
 import static org.testng.Assert.assertEquals;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import objectos.way.Note;
 import objectos.way.Y;
@@ -26,31 +29,42 @@ import org.testng.annotations.Test;
 
 public class HttpRequestMatcherParserTest {
 
+  private final String validDelims = Http.pathDelim();
+
   @DataProvider
   public Object[][] parsePathValidProvider() {
-    return new Object[][] {
-        {"/foo", pathExact("/foo")},
-        {"/foo/bar", pathExact("/foo/bar")},
-        {"/", pathExact("/")},
+    final List<Object[]> list;
+    list = new ArrayList<>();
 
-        {"/foo/{a}",
-            pathSegments(pathRegion("/foo/"), pathParamLast("a"))},
-        {"/foo/{foo}",
-            pathSegments(pathRegion("/foo/"), pathParamLast("foo"))},
-        {"/foo/{foo}/",
-            pathSegments(pathRegion("/foo/"), pathParam("foo", '/'), pathExact(""))},
-        {"/foo/{foo}/bar/{bar}",
-            pathSegments(pathRegion("/foo/"), pathParam("foo", '/'), pathRegion("bar/"), pathParamLast("bar"))},
-        {"/foo/{foo}/bar",
-            pathSegments(pathRegion("/foo/"), pathParam("foo", '/'), pathExact("bar"))},
+    list.add(arr("/foo", pathExact("/foo")));
+    list.add(arr("/foo/bar", pathExact("/foo/bar")));
+    list.add(arr("/", pathExact("/")));
 
-        {"/{}", pathSegments(pathRegion("/"), segmentWildcard())},
-        {"/foo{}", pathSegments(pathRegion("/foo"), segmentWildcard())},
-        {"/foo/{}", pathSegments(pathRegion("/foo/"), segmentWildcard())},
+    list.add(arr("/foo/{a}",
+        pathList(pathRegion("/foo/"), pathParamLast("a"))));
+    list.add(arr("/foo/{foo}",
+        pathList(pathRegion("/foo/"), pathParamLast("foo"))));
+    list.add(arr("/foo/{foo}/",
+        pathList(pathRegion("/foo/"), pathParam("foo", '/'), pathExact(""))));
+    list.add(arr("/foo/{foo}/bar/{bar}",
+        pathList(pathRegion("/foo/"), pathParam("foo", '/'), pathRegion("bar/"), pathParamLast("bar"))));
+    list.add(arr("/foo/{foo}/bar",
+        pathList(pathRegion("/foo/"), pathParam("foo", '/'), pathExact("bar"))));
 
-        {"/foo/{x}/{}", pathSegments(pathRegion("/foo/"), pathParam("x", '/'), segmentWildcard())},
-        {"/foo/{x}/bar/{}", pathSegments(pathRegion("/foo/"), pathParam("x", '/'), pathRegion("bar/"), segmentWildcard())}
-    };
+    list.add(arr("/{}", pathList(pathRegion("/"), wildcard())));
+    list.add(arr("/foo/{}", pathList(pathRegion("/foo/"), wildcard())));
+
+    list.add(arr("/foo/{x}/{}", pathList(pathRegion("/foo/"), pathParam("x", '/'), wildcard())));
+    list.add(arr("/foo/{x}/bar/{}", pathList(pathRegion("/foo/"), pathParam("x", '/'), pathRegion("bar/"), wildcard())));
+
+    // all valid param delimiters
+    for (char d : validDelims.toCharArray()) {
+      list.add(arr("/foo" + d + "{x}", pathList(pathRegion("/foo" + d), pathParamLast("x"))));
+
+      list.add(arr("/foo/{x}" + d + "bar", pathList(pathRegion("/foo/"), pathParam("x", d), pathExact("bar"))));
+    }
+
+    return list.toArray(Object[][]::new);
   }
 
   @Test(dataProvider = "parsePathValidProvider")
@@ -66,19 +80,40 @@ public class HttpRequestMatcherParserTest {
 
   @DataProvider
   public Object[][] parsePathInvalidProvider() {
-    return new Object[][] {
-        {"", "Route path must start with a '/' character: "},
-        {"foo", "Route path must start with a '/' character: foo"},
+    final List<Object[]> list;
+    list = new ArrayList<>();
 
-        {"/foo/{error}/bar/{error}", "The '{error}' path variable was declared more than once"},
-        {"/foo/{bar}{baz}", "Route path parameter must not begin immediately after the end of another parameter: /foo/{bar}{baz}"},
-        {"/foo/{", "Route path with an unclosed path parameter definition: /foo/{"},
-        {"/foo/{bar", "Route path with an unclosed path parameter definition: /foo/{bar"},
-        {"/foo/{f{o}", "Route path parameter names must not contain the '{' character: /foo/{f{o}"},
+    list.add(arr("", "Invalid path expression: it must not be empty"));
+    list.add(arr("foo", "Invalid path expression: it must begin with the '/' character"));
 
-        {"/foo/{}/", "Route path can only declare the '{}' wildcard path parameter once and at the end of the path: /foo/{}/"},
-        {"/foo{}{}", "Route path can only declare the '{}' wildcard path parameter once and at the end of the path: /foo{}{}"}
-    };
+    list.add(arr("/foo/{error}/bar/{error}", "Invalid path expression: duplicate path parameter name 'error'"));
+    list.add(arr("/foo/{bar}{baz}", "Invalid path expression: path parameter can only be either at the end of the expression or immediately followed by one of /-._~!$&'()*+,;=:@"));
+    list.add(arr("/foo/{", "Invalid path expression: unclosed path parameter"));
+    list.add(arr("/foo/{bar", "Invalid path expression: unclosed path parameter"));
+    list.add(arr("/foo/{f{o}", "Invalid path expression: path parameter name must be a valid Java identifier"));
+
+    list.add(arr("/foo/{}/", "Invalid path expression: the '{}' wildcard path parameter can only be declared at the end of the expression"));
+    list.add(arr("/foo{}{}", "Invalid path expression: path parameter can only be immediately preceeded by one of /-._~!$&'()*+,;=:@"));
+
+    final char[] delims;
+    delims = validDelims.toCharArray();
+
+    Arrays.sort(delims);
+
+    for (char d = 0; d < 128; d++) {
+      final int idx;
+      idx = Arrays.binarySearch(delims, d);
+
+      if (idx >= 0) {
+        continue;
+      }
+
+      list.add(arr("/foo" + d + "{x}", "Invalid path expression: path parameter can only be immediately preceeded by one of " + validDelims));
+
+      list.add(arr("/foo/{x}" + d + "bar", "Invalid path expression: path parameter can only be either at the end of the expression or immediately followed by one of " + validDelims));
+    }
+
+    return list.toArray(Object[][]::new);
   }
 
   @Test(dataProvider = "parsePathInvalidProvider")
@@ -119,11 +154,11 @@ public class HttpRequestMatcherParserTest {
     return new HttpRequestMatcher5PathParamLast(paramName);
   }
 
-  private HttpRequestMatcher segmentWildcard() {
+  private HttpRequestMatcher wildcard() {
     return HttpRequestMatcher6Wildcard.INSTANCE;
   }
 
-  private HttpRequestMatcher pathSegments(HttpRequestMatcher... parts) {
+  private HttpRequestMatcher pathList(HttpRequestMatcher... parts) {
     final List<HttpRequestMatcher> list;
     list = List.of(parts);
 

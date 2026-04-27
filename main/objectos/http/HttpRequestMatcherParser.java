@@ -16,7 +16,10 @@
 package objectos.http;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 final class HttpRequestMatcherParser {
 
@@ -25,20 +28,34 @@ final class HttpRequestMatcherParser {
 
     EXACT,
 
-    PARAM_START,
-
-    PARAM_PART,
-
-    PARAM_END,
+    PARAM,
 
     REGION,
 
-    WILDCARD;
+    RESULT_EXACT,
+
+    RESULT_LIST;
   }
 
-  private String paramName;
+  private static final char[] DELIMS;
+
+  static {
+    final String pathDelim;
+    pathDelim = Http.pathDelim();
+
+    final char[] delims;
+    delims = pathDelim.toCharArray();
+
+    Arrays.sort(delims);
+
+    DELIMS = delims;
+  }
+
+  private Set<String> paramNames;
 
   private final String pathExpression;
+
+  private int pathIndex;
 
   private final List<HttpRequestMatcher> segments = new ArrayList<>();
 
@@ -52,172 +69,211 @@ final class HttpRequestMatcherParser {
     State state;
     state = State.START_PATH;
 
-    final int length;
-    length = pathExpression.length();
+    while (true) {
+      switch (state) {
+        case START_PATH -> state = state0StartPath();
 
-    for (int idx = 0; idx < length; idx++) {
-      final char c;
-      c = pathExpression.charAt(idx);
+        case EXACT -> state = state1Exact();
 
-      state = switch (state) {
-        case START_PATH -> state0StartPath(c);
+        case PARAM -> state = state2Param();
 
-        case EXACT -> state1Exact(c);
+        case REGION -> state = state3Region();
 
-        case PARAM_START -> state2ParamStart(idx, c);
+        case RESULT_EXACT -> {
+          return new HttpRequestMatcher2PathExact(pathExpression);
+        }
 
-        case PARAM_PART -> state3ParamPart(idx, c);
-
-        case PARAM_END -> state4ParamEnd(idx, c);
-
-        case REGION -> state5Region(c);
-
-        case WILDCARD -> state6Wildcard();
-      };
-    }
-
-    return switch (state) {
-      case START_PATH -> throw illegal("Route path must start with a '/' character");
-
-      case EXACT -> new HttpRequestMatcher2PathExact(pathExpression);
-
-      case PARAM_START, PARAM_PART -> throw illegal("Route path with an unclosed path parameter definition");
-
-      case PARAM_END -> {
-        final HttpRequestMatcher param;
-        param = new HttpRequestMatcher5PathParamLast(paramName);
-
-        segments.add(param);
-
-        yield new HttpRequestMatcher7List(segments);
+        case RESULT_LIST -> {
+          return new HttpRequestMatcher7List(segments);
+        }
       }
-
-      case REGION -> {
-        final String value;
-        value = pathExpression.substring(startIndex, length);
-
-        final HttpRequestMatcher segment;
-        segment = new HttpRequestMatcher2PathExact(value);
-
-        segments.add(segment);
-
-        yield new HttpRequestMatcher7List(segments);
-      }
-
-      case WILDCARD -> new HttpRequestMatcher7List(segments);
-    };
-  }
-
-  private State state0StartPath(char c) {
-    if (c == '/') {
-      return State.EXACT;
-    }
-
-    else {
-      throw illegal("Route path must start with a '/' character");
     }
   }
 
-  private State state1Exact(char c) {
-    if (c == '{') {
-      return State.PARAM_START;
+  private State state0StartPath() {
+    if (pathExpression.isEmpty()) {
+      final String msg;
+      msg = "Invalid path expression: it must not be empty";
+
+      throw new IllegalArgumentException(msg);
     }
 
-    else {
-      return State.EXACT;
+    final char first;
+    first = pathExpression.charAt(0);
+
+    if (first != '/') {
+      final String msg;
+      msg = "Invalid path expression: it must begin with the '/' character";
+
+      throw new IllegalArgumentException(msg);
     }
+
+    startIndex = 0;
+
+    pathIndex = 1;
+
+    return State.EXACT;
   }
 
-  private State state2ParamStart(int idx, char c) {
-    if (c == '{') {
-      throw illegal("Route path parameter names must not contain the '{' character");
+  private State state1Exact() {
+    final int bracket;
+    bracket = pathExpression.indexOf('{', pathIndex);
+
+    if (bracket >= 0) {
+      return stateParamStart(bracket);
     }
 
-    else if (c == '}') {
-      final String value;
-      value = pathExpression.substring(startIndex, idx - 1);
+    return State.RESULT_EXACT;
+  }
 
-      if (!value.isEmpty()) {
-        final HttpRequestMatcher segment;
-        segment = new HttpRequestMatcher3PathRegion(value);
+  private State state2Param() {
+    final int bracket;
+    bracket = pathExpression.indexOf('}', pathIndex);
 
-        segments.add(segment);
-      }
+    if (bracket < 0) {
+      final String msg;
+      msg = "Invalid path expression: unclosed path parameter";
 
+      throw new IllegalArgumentException(msg);
+    }
+
+    final String name;
+    name = pathExpression.substring(pathIndex, bracket);
+
+    final int lastIndex;
+    lastIndex = pathExpression.length() - 1;
+
+    final boolean last;
+    last = bracket == lastIndex;
+
+    if (name.isEmpty() && last) {
       segments.add(HttpRequestMatcher6Wildcard.INSTANCE);
 
-      return State.WILDCARD;
+      return State.RESULT_LIST;
     }
 
-    else {
+    else if (name.isEmpty() && !last) {
+      final String msg;
+      msg = "Invalid path expression: the '{}' wildcard path parameter can only be declared at the end of the expression";
+
+      throw new IllegalArgumentException(msg);
+    }
+
+    // validate path parameter name
+    final boolean valid;
+    valid = name.codePoints().skip(1).allMatch(Character::isJavaIdentifierPart);
+
+    if (!valid) {
+      final String msg;
+      msg = "Invalid path expression: path parameter name must be a valid Java identifier";
+
+      throw new IllegalArgumentException(msg);
+    }
+
+    final int first;
+    first = name.codePointAt(0);
+
+    if (!Character.isJavaIdentifierStart(first)) {
+      final String msg;
+      msg = "Invalid path expression: path parameter name must be a valid Java identifier";
+
+      throw new IllegalArgumentException(msg);
+    }
+
+    if (paramNames == null) {
+      paramNames = new HashSet<>();
+    }
+
+    if (!paramNames.add(name)) {
+      final String msg;
+      msg = "Invalid path expression: duplicate path parameter name '%s'".formatted(name);
+
+      throw new IllegalArgumentException(msg);
+    }
+
+    if (last) {
+      final HttpRequestMatcher matcher;
+      matcher = new HttpRequestMatcher5PathParamLast(name);
+
+      segments.add(matcher);
+
+      return State.RESULT_LIST;
+    }
+
+    final int delimIndex;
+    delimIndex = bracket + 1;
+
+    final char delim;
+    delim = pathExpression.charAt(delimIndex);
+
+    final int validDelim;
+    validDelim = Arrays.binarySearch(DELIMS, delim);
+
+    if (validDelim < 0) {
+      final String msg;
+      msg = "Invalid path expression: path parameter can only be either at the end of the expression or immediately followed by one of " + Http.pathDelim();
+
+      throw new IllegalArgumentException(msg);
+    }
+
+    final HttpRequestMatcher matcher;
+    matcher = new HttpRequestMatcher4PathParam(name, delim);
+
+    segments.add(matcher);
+
+    pathIndex = startIndex = delimIndex + 1;
+
+    return State.REGION;
+  }
+
+  private State state3Region() {
+    final int bracket;
+    bracket = pathExpression.indexOf('{', pathIndex);
+
+    if (bracket >= 0) {
+      return stateParamStart(bracket);
+    }
+
+    final String value;
+    value = pathExpression.substring(startIndex);
+
+    final HttpRequestMatcher segment;
+    segment = new HttpRequestMatcher2PathExact(value);
+
+    segments.add(segment);
+
+    return State.RESULT_LIST;
+  }
+
+  private State stateParamStart(int bracket) {
+    final char delim;
+    delim = pathExpression.charAt(bracket - 1);
+
+    final int delimIdx;
+    delimIdx = Arrays.binarySearch(DELIMS, delim);
+
+    if (delimIdx < 0) {
+      final String msg;
+      msg = "Invalid path expression: path parameter can only be immediately preceeded by one of " + Http.pathDelim();
+
+      throw new IllegalArgumentException(msg);
+    }
+
+    if (startIndex < bracket) {
       final String value;
-      value = pathExpression.substring(startIndex, idx - 1);
+      value = pathExpression.substring(startIndex, bracket);
 
       final HttpRequestMatcher segment;
       segment = new HttpRequestMatcher3PathRegion(value);
 
       segments.add(segment);
-
-      startIndex = idx;
-
-      return State.PARAM_PART;
-    }
-  }
-
-  private State state3ParamPart(int idx, char c) {
-    if (c == '{') {
-      throw illegal("Route path parameter names must not contain the '{' character");
     }
 
-    else if (c == '}') {
-      paramName = pathExpression.substring(startIndex, idx);
+    startIndex = bracket;
 
-      return State.PARAM_END;
-    }
+    pathIndex = startIndex + 1;
 
-    else {
-      return State.PARAM_PART;
-    }
-  }
-
-  private State state4ParamEnd(int idx, char c) {
-    if (c == '{') {
-      throw illegal("Route path parameter must not begin immediately after the end of another parameter");
-    }
-
-    else {
-      // skip char terminator
-      startIndex = idx + 1;
-
-      final HttpRequestMatcher segment;
-      segment = new HttpRequestMatcher4PathParam(paramName, c);
-
-      segments.add(segment);
-
-      paramName = null;
-
-      return State.REGION;
-    }
-  }
-
-  private State state5Region(char c) {
-    if (c == '{') {
-      return State.PARAM_START;
-    }
-
-    else {
-      return State.REGION;
-    }
-  }
-
-  private State state6Wildcard() {
-    throw illegal(
-        "Route path can only declare the '{}' wildcard path parameter once and at the end of the path"
-    );
-  }
-
-  private IllegalArgumentException illegal(String prefix) {
-    return new IllegalArgumentException(prefix + ": " + pathExpression);
+    return State.PARAM;
   }
 
 }

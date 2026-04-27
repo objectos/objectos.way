@@ -848,6 +848,10 @@ final class Http {
     return Ascii.visible();
   }
 
+  static String pathDelim() {
+    return "/-._~!$&'()*+,;=:@";
+  }
+
   static int requiredHexDigits(int value) {
     final int leadingZeros;
     leadingZeros = Integer.numberOfLeadingZeros(value);
