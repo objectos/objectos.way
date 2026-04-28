@@ -15,15 +15,10 @@
  */
 package objectos.http;
 
-import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-final class HttpHandlerList implements HttpHandler {
-
-  private final List<HttpHandler> handlers;
-
-  HttpHandlerList(List<HttpHandler> handlers) {
-    this.handlers = handlers;
-  }
+record HttpHandler1MethodNotAllowed(Set<HttpMethod> allowedMethods) implements HttpHandler {
 
   @Override
   public final void handle(HttpExchange http) {
@@ -31,13 +26,27 @@ final class HttpHandlerList implements HttpHandler {
       return;
     }
 
-    for (HttpHandler handler : handlers) {
-      handler.handle(http);
+    final HttpMethod reqMethod;
+    reqMethod = http.method();
 
-      if (http.processed()) {
-        break;
-      }
+    if (allowedMethods.contains(reqMethod)) {
+      return;
     }
+
+    http.status(HttpStatus.METHOD_NOT_ALLOWED);
+
+    http.header(HttpHeaderName.DATE, http.now());
+
+    http.header(HttpHeaderName.CONNECTION, "close");
+
+    http.header(HttpHeaderName.CONTENT_LENGTH, 0L);
+
+    final String allow;
+    allow = allowedMethods.stream().map(HttpMethod::name).collect(Collectors.joining(", "));
+
+    http.header(HttpHeaderName.ALLOW, allow);
+
+    http.send();
   }
 
 }

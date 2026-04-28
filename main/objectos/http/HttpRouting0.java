@@ -34,12 +34,12 @@ final class HttpRouting0 implements HttpRouting {
   public final HttpHandler build() {
     build0Methods();
 
-    handlers.add(HttpHandlerNotFound.INSTANCE);
+    handlers.add(HttpHandler2NotFound.INSTANCE);
 
     return switch (handlers.size()) {
       case 1 -> handlers.get(0);
 
-      default -> new HttpHandlerList(List.copyOf(handlers));
+      default -> new HttpHandler4List(List.copyOf(handlers));
     };
   }
 
@@ -57,7 +57,7 @@ final class HttpRouting0 implements HttpRouting {
     }
 
     final HttpHandler handler;
-    handler = new HttpHandlerMethodNotAllowed(methods);
+    handler = new HttpHandler1MethodNotAllowed(methods);
 
     handlers.add(handler);
   }
@@ -96,7 +96,7 @@ final class HttpRouting0 implements HttpRouting {
     }
 
     final HttpHandler handler;
-    handler = new HttpHandlerMethod(method, h);
+    handler = new HttpHandler0Method(method, h);
 
     handlers.add(handler);
   }
@@ -126,7 +126,7 @@ final class HttpRouting0 implements HttpRouting {
     delegate = HttpHandler.create(routing);
 
     final HttpHandler handler;
-    handler = new HttpHandlerPath(matcher, delegate);
+    handler = new HttpHandler3Path(matcher, delegate);
 
     handlers.add(handler);
   }

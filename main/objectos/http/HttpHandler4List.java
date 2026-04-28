@@ -15,7 +15,15 @@
  */
 package objectos.http;
 
-record HttpHandlerPath(HttpPathMatcher matcher, HttpHandler handler) implements HttpHandler {
+import java.util.List;
+
+final class HttpHandler4List implements HttpHandler {
+
+  private final List<HttpHandler> handlers;
+
+  HttpHandler4List(List<HttpHandler> handlers) {
+    this.handlers = handlers;
+  }
 
   @Override
   public final void handle(HttpExchange http) {
@@ -23,19 +31,13 @@ record HttpHandlerPath(HttpPathMatcher matcher, HttpHandler handler) implements 
       return;
     }
 
-    final String $path;
-    $path = http.path();
+    for (HttpHandler handler : handlers) {
+      handler.handle(http);
 
-    final HttpPath path;
-    path = new HttpPath($path);
-
-    if (!matcher.matches(path)) {
-      return;
+      if (http.processed()) {
+        break;
+      }
     }
-
-    throw new UnsupportedOperationException("Implement me :: http.attr(Key.PATH_PARAMS)");
-
-    //handler.handle(http);
   }
 
 }

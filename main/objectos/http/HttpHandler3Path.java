@@ -15,10 +15,7 @@
  */
 package objectos.http;
 
-import java.util.Set;
-import java.util.stream.Collectors;
-
-record HttpHandlerMethodNotAllowed(Set<HttpMethod> allowedMethods) implements HttpHandler {
+record HttpHandler3Path(HttpPathMatcher matcher, HttpHandler handler) implements HttpHandler {
 
   @Override
   public final void handle(HttpExchange http) {
@@ -26,27 +23,19 @@ record HttpHandlerMethodNotAllowed(Set<HttpMethod> allowedMethods) implements Ht
       return;
     }
 
-    final HttpMethod reqMethod;
-    reqMethod = http.method();
+    final String $path;
+    $path = http.path();
 
-    if (allowedMethods.contains(reqMethod)) {
+    final HttpPath path;
+    path = new HttpPath($path);
+
+    if (!matcher.matches(path)) {
       return;
     }
 
-    http.status(HttpStatus.METHOD_NOT_ALLOWED);
+    throw new UnsupportedOperationException("Implement me :: http.attr(Key.PATH_PARAMS)");
 
-    http.header(HttpHeaderName.DATE, http.now());
-
-    http.header(HttpHeaderName.CONNECTION, "close");
-
-    http.header(HttpHeaderName.CONTENT_LENGTH, 0L);
-
-    final String allow;
-    allow = allowedMethods.stream().map(HttpMethod::name).collect(Collectors.joining(", "));
-
-    http.header(HttpHeaderName.ALLOW, allow);
-
-    http.send();
+    //handler.handle(http);
   }
 
 }

@@ -15,9 +15,7 @@
  */
 package objectos.http;
 
-enum HttpHandlerNotFound implements HttpHandler {
-
-  INSTANCE;
+record HttpHandler0Method(HttpMethod method, HttpHandler handler) implements HttpHandler {
 
   @Override
   public final void handle(HttpExchange http) {
@@ -25,7 +23,14 @@ enum HttpHandlerNotFound implements HttpHandler {
       return;
     }
 
-    http.error(HttpStatus.NOT_FOUND);
+    final HttpMethod reqMethod;
+    reqMethod = http.method();
+
+    if (!reqMethod.equals(method) && (!reqMethod.equals(HttpMethod.HEAD) || !method.equals(HttpMethod.GET))) {
+      return;
+    }
+
+    handler.handle(http);
   }
 
 }
