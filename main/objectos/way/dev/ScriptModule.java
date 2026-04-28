@@ -17,14 +17,14 @@ package objectos.way.dev;
 
 import static objectos.http.HttpMethod.GET;
 
-import objectos.http.HttpRouting;
+import objectos.http.HttpRoutingX;
 
 /// This class is not part of the Objectos Way JAR file. It is placed in the
 /// main source tree to ease the development.
-final class ScriptModule implements HttpRouting.Module {
+final class ScriptModule implements HttpRoutingX.Module {
 
   @Override
-  public final void configure(HttpRouting routing) {
+  public final void configure(HttpRoutingX routing) {
     routing.path("/script/000", GET, new Script000());
     routing.path("/script/001", GET, new Script001());
     routing.path("/script/002", GET, new Script002());

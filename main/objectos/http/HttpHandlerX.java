@@ -22,7 +22,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import objectos.internal.Check;
 
-final class HttpHandler0 implements HttpHandler {
+final class HttpHandlerX implements HttpHandler {
 
   private enum Kind {
 
@@ -58,9 +58,9 @@ final class HttpHandler0 implements HttpHandler {
 
   private record FilterHolder(HttpFilter filter, HttpHandler handler) {}
 
-  static final HttpHandler NOOP = new HttpHandler0(Kind.NOOP, null, null);
+  static final HttpHandler NOOP = new HttpHandlerX(Kind.NOOP, null, null);
 
-  private static final HttpHandler NOT_FOUND = new HttpHandler0(Kind.NOT_FOUND, null, null);
+  private static final HttpHandler NOT_FOUND = new HttpHandlerX(Kind.NOT_FOUND, null, null);
 
   private final Kind kind;
 
@@ -68,7 +68,7 @@ final class HttpHandler0 implements HttpHandler {
 
   private final Object main;
 
-  private HttpHandler0(Kind kind, Predicate<? super HttpExchange> predicate, Object main) {
+  private HttpHandlerX(Kind kind, Predicate<? super HttpExchange> predicate, Object main) {
     this.kind = kind;
 
     this.predicate = predicate;
@@ -77,18 +77,18 @@ final class HttpHandler0 implements HttpHandler {
   }
 
   public static HttpHandler single(Predicate<? super HttpRequest> predicate, HttpHandler handler) {
-    return new HttpHandler0(Kind.SINGLE, predicate, handler);
+    return new HttpHandlerX(Kind.SINGLE, predicate, handler);
   }
 
   public static HttpHandler many(Predicate<? super HttpRequest> predicate, HttpHandler[] handlers) {
-    return new HttpHandler0(Kind.MANY, predicate, handlers);
+    return new HttpHandlerX(Kind.MANY, predicate, handlers);
   }
 
   public static <T> HttpHandler factory(Function<T, ? extends HttpHandler> factory, T value) {
     final Factory1<T> main;
     main = new Factory1<>(factory, value);
 
-    return new HttpHandler0(Kind.FACTORY1, null, main);
+    return new HttpHandlerX(Kind.FACTORY1, null, main);
   }
 
   public static HttpHandler methodNotAllowed(Set<HttpMethod> allowedMethods) {
@@ -98,14 +98,14 @@ final class HttpHandler0 implements HttpHandler {
     final String allow;
     allow = allowedMethods.stream().map(HttpMethod::name).collect(Collectors.joining(", "));
 
-    return new HttpHandler0(Kind.METHOD_NOT_ALLOWED, predicate, allow);
+    return new HttpHandlerX(Kind.METHOD_NOT_ALLOWED, predicate, allow);
   }
 
   public static HttpHandler methodAllowed(HttpMethod method, HttpHandler handler) {
     final HttpRequestMatcherX predicate;
     predicate = HttpRequestMatcherX.methodAllowed(method);
 
-    return new HttpHandler0(Kind.METHOD_ALLOWED_SINGLE, predicate, handler);
+    return new HttpHandlerX(Kind.METHOD_ALLOWED_SINGLE, predicate, handler);
   }
 
   public static HttpHandler methodAllowed(HttpMethod method, HttpHandler first, HttpHandler[] rest) {
@@ -121,7 +121,7 @@ final class HttpHandler0 implements HttpHandler {
       array[idx + 1] = Check.notNull(rest[idx], "rest[", idx, "] == null");
     }
 
-    return new HttpHandler0(Kind.METHOD_ALLOWED_MANY, predicate, array);
+    return new HttpHandlerX(Kind.METHOD_ALLOWED_MANY, predicate, array);
   }
 
   public static HttpHandler notFound() {
@@ -160,20 +160,20 @@ final class HttpHandler0 implements HttpHandler {
       final FilterHolder holder;
       holder = new FilterHolder(filter, NOOP);
 
-      return new HttpHandler0(filterKind, null, holder);
+      return new HttpHandlerX(filterKind, null, holder);
 
     }
 
     else {
 
       if (filter == null) {
-        return new HttpHandler0(singleKind, condition, NOOP);
+        return new HttpHandlerX(singleKind, condition, NOOP);
       }
 
       final FilterHolder holder;
       holder = new FilterHolder(filter, NOOP);
 
-      return new HttpHandler0(filterKind, condition, holder);
+      return new HttpHandlerX(filterKind, condition, holder);
 
     }
   }
@@ -188,20 +188,20 @@ final class HttpHandler0 implements HttpHandler {
       final FilterHolder holder;
       holder = new FilterHolder(filter, single);
 
-      return new HttpHandler0(filterKind, null, holder);
+      return new HttpHandlerX(filterKind, null, holder);
 
     }
 
     else {
 
       if (filter == null) {
-        return new HttpHandler0(singleKind, condition, single);
+        return new HttpHandlerX(singleKind, condition, single);
       }
 
       final FilterHolder holder;
       holder = new FilterHolder(filter, single);
 
-      return new HttpHandler0(filterKind, condition, holder);
+      return new HttpHandlerX(filterKind, condition, holder);
 
     }
   }
@@ -209,8 +209,8 @@ final class HttpHandler0 implements HttpHandler {
   private static HttpHandler ofMany(Predicate<? super HttpExchange> condition, Kind filterKind, HttpFilter filter, Kind manyKind, HttpHandler[] many) {
     if (condition == null) {
 
-      final HttpHandler0 handler;
-      handler = new HttpHandler0(manyKind, null, many);
+      final HttpHandlerX handler;
+      handler = new HttpHandlerX(manyKind, null, many);
 
       if (filter == null) {
         return handler;
@@ -219,23 +219,23 @@ final class HttpHandler0 implements HttpHandler {
       final FilterHolder holder;
       holder = new FilterHolder(filter, handler);
 
-      return new HttpHandler0(filterKind, null, holder);
+      return new HttpHandlerX(filterKind, null, holder);
 
     }
 
     else {
 
       if (filter == null) {
-        return new HttpHandler0(manyKind, condition, many);
+        return new HttpHandlerX(manyKind, condition, many);
       }
 
-      final HttpHandler0 handler;
-      handler = new HttpHandler0(manyKind, null, many);
+      final HttpHandlerX handler;
+      handler = new HttpHandlerX(manyKind, null, many);
 
       final FilterHolder holder;
       holder = new FilterHolder(filter, handler);
 
-      return new HttpHandler0(filterKind, condition, holder);
+      return new HttpHandlerX(filterKind, condition, holder);
 
     }
   }

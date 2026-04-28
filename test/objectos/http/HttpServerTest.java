@@ -33,7 +33,7 @@ import objectos.way.Y;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class HttpServerTest implements HttpRouting.Module {
+public class HttpServerTest implements HttpRoutingX.Module {
 
   @BeforeClass
   public void beforeClass() throws Exception {
@@ -41,7 +41,7 @@ public class HttpServerTest implements HttpRouting.Module {
   }
 
   @Override
-  public final void configure(HttpRouting routing) {
+  public final void configure(HttpRoutingX routing) {
     routing.path("/test/{name}", path -> {
       path.handler(this::handle1);
     });

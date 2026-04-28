@@ -33,7 +33,7 @@ import objectos.way.Y;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class HttpRoutingTest implements HttpRouting.Module {
+public class HttpRoutingTest implements HttpRoutingX.Module {
 
   private record Box(String value) {}
 
@@ -69,7 +69,7 @@ public class HttpRoutingTest implements HttpRouting.Module {
   }
 
   @Override
-  public final void configure(HttpRouting routing) {
+  public final void configure(HttpRoutingX routing) {
     routing.when(this::notAuthenticated, matched -> {
       matched.path("/login", HttpMethod.GET, http -> {
         http.sessionAttr(User.class, new User("test"));
@@ -418,9 +418,9 @@ public class HttpRoutingTest implements HttpRouting.Module {
     }
   }
 
-  private static class TestCase04 implements HttpRouting.Module {
+  private static class TestCase04 implements HttpRoutingX.Module {
     @Override
-    public final void configure(HttpRouting routing) {
+    public final void configure(HttpRoutingX routing) {
       routing.path("/testCase04", path -> {
         path.handler(http -> http.ok(Media.Bytes.textPlain("ROOT")));
       });
@@ -813,9 +813,9 @@ public class HttpRoutingTest implements HttpRouting.Module {
     }
   }
 
-  private static class TestCase08 implements HttpRouting.Module {
+  private static class TestCase08 implements HttpRoutingX.Module {
     @Override
-    public final void configure(HttpRouting routing) {
+    public final void configure(HttpRoutingX routing) {
       routing.path("/testCase08", path -> {
         path.handler(http -> http.ok(Media.Bytes.textPlain("TC08")));
       });
@@ -1259,7 +1259,7 @@ public class HttpRoutingTest implements HttpRouting.Module {
 
   @Test
   public void edge01() {
-    HttpRouting.Module empty = _ -> {};
+    HttpRoutingX.Module empty = _ -> {};
 
     HttpHandler handler = HttpHandler.of(empty);
 

@@ -34,17 +34,17 @@ public class HttpHandlerTest {
   @Test
   public void of01() {
     final HttpHandler handler;
-    handler = HttpHandler0.of(null, null, null);
+    handler = HttpHandlerX.of(null, null, null);
 
-    assertSame(handler, HttpHandler0.NOOP);
+    assertSame(handler, HttpHandlerX.NOOP);
   }
 
   @Test
   public void of02() {
     final HttpHandler handler;
-    handler = HttpHandler0.of(null, null, List.of());
+    handler = HttpHandlerX.of(null, null, List.of());
 
-    assertSame(handler, HttpHandler0.NOOP);
+    assertSame(handler, HttpHandlerX.NOOP);
   }
 
   @Test
@@ -53,7 +53,7 @@ public class HttpHandlerTest {
     single = ok(pass);
 
     final HttpHandler handler;
-    handler = HttpHandler0.of(null, null, List.of(single));
+    handler = HttpHandlerX.of(null, null, List.of(single));
 
     assertSame(handler, single);
   }
@@ -61,7 +61,7 @@ public class HttpHandlerTest {
   @Test
   public void of04() {
     final HttpHandler handler;
-    handler = HttpHandler0.of(
+    handler = HttpHandlerX.of(
         HttpRequestMatcherX.pathExact("/of04"),
         null,
         List.of(ok(pass))
@@ -98,7 +98,7 @@ public class HttpHandlerTest {
   @Test
   public void of05() {
     final HttpHandler handler;
-    handler = HttpHandler0.of(
+    handler = HttpHandlerX.of(
         HttpRequestMatcherX.pathExact("/of05"),
         null,
         List.of(
@@ -147,7 +147,7 @@ public class HttpHandlerTest {
   @Test
   public void of06() {
     final HttpHandler handler;
-    handler = HttpHandler0.of(
+    handler = HttpHandlerX.of(
         null,
         null,
         List.of(
@@ -203,7 +203,7 @@ public class HttpHandlerTest {
   @Test
   public void filter01() {
     final HttpHandler handler;
-    handler = HttpHandler0.of(
+    handler = HttpHandlerX.of(
         pathWildcard("/filter/"),
 
         (http, chain) -> {
@@ -217,7 +217,7 @@ public class HttpHandlerTest {
         },
 
         List.of(
-            HttpHandler0.of(
+            HttpHandlerX.of(
                 HttpRequestMatcherX.subpathExact("test01"),
                 null,
                 List.of(
@@ -268,10 +268,10 @@ public class HttpHandlerTest {
   @Test
   public void subpath01() {
     final HttpHandler handler;
-    handler = HttpHandler0.single(
+    handler = HttpHandlerX.single(
         pathWildcard("/subpath/"),
 
-        HttpHandler0.of(
+        HttpHandlerX.of(
             HttpRequestMatcherX.subpathExact("test01"),
             null,
             List.of(
@@ -301,16 +301,16 @@ public class HttpHandlerTest {
   @Test
   public void subpath02() {
     final HttpHandler handler;
-    handler = HttpHandler0.single(
+    handler = HttpHandlerX.single(
         pathWildcard("/subpath/"),
 
-        HttpHandler0.of(
+        HttpHandlerX.of(
             subpathWildcard("test02/"),
             null,
             List.of(
                 decorate("SUB-02"),
 
-                HttpHandler0.of(
+                HttpHandlerX.of(
                     HttpRequestMatcherX.subpathExact("more"),
                     null,
                     List.of(ok(pass))
@@ -358,11 +358,11 @@ public class HttpHandlerTest {
   @Test
   public void subpath03() {
     final HttpHandler handler;
-    handler = HttpHandler0.of(
+    handler = HttpHandlerX.of(
         pathWildcard("/subpath/"),
         null,
         List.of(
-            HttpHandler0.of(
+            HttpHandlerX.of(
                 HttpRequestMatcherX.subpathExact("skip-me"),
                 null,
                 List.of(
@@ -370,7 +370,7 @@ public class HttpHandlerTest {
                 )
             ),
 
-            HttpHandler0.of(
+            HttpHandlerX.of(
                 HttpRequestMatcherX.subpathExact("test-03"),
                 null,
                 List.of(
@@ -418,20 +418,20 @@ public class HttpHandlerTest {
   @Test
   public void subpath04() {
     final HttpHandler handler;
-    handler = HttpHandler0.single(
+    handler = HttpHandlerX.single(
         pathWildcard("/subpath/"),
 
-        HttpHandler0.of(
+        HttpHandlerX.of(
             subpathWildcard("test04/"),
             null,
             List.of(
-                HttpHandler0.of(
+                HttpHandlerX.of(
                     HttpRequestMatcherX.subpathExact("skip"),
                     null,
                     List.of(ok(skip))
                 ),
 
-                HttpHandler0.of(
+                HttpHandlerX.of(
                     HttpRequestMatcherX.subpathExact("more"),
                     null,
                     List.of(ok(pass))

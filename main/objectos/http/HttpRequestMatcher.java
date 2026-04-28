@@ -26,6 +26,10 @@ sealed interface HttpRequestMatcher
     HttpRequestMatcher6Wildcard,
     HttpRequestMatcher7List {
 
+  default boolean test(HttpExchange http) {
+    return !http.processed() && match((HttpExchange0) http);
+  }
+
   boolean match(HttpExchange0 http);
 
 }

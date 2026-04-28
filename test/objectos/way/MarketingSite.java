@@ -18,12 +18,12 @@ package objectos.way;
 import objectos.http.HttpExchange;
 import objectos.http.HttpHandler;
 import objectos.http.HttpMethod;
-import objectos.http.HttpRouting;
+import objectos.http.HttpRoutingX;
 
-final class MarketingSite implements HttpRouting.Module {
+final class MarketingSite implements HttpRoutingX.Module {
 
   @Override
-  public final void configure(HttpRouting routing) {
+  public final void configure(HttpRoutingX routing) {
     routing.path("/", path -> {
       path.handler(http -> http.movedPermanently("/index.html"));
     });

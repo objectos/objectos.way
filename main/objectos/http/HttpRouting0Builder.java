@@ -16,24 +16,80 @@
 package objectos.http;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Consumer;
 
-final class HttpRouting0Builder implements HttpRouting2 {
+final class HttpRouting0Builder implements HttpRouting {
 
   private final List<HttpHandler> handlers = new ArrayList<>();
 
-  @Override
-  public final void handler(HttpHandler value) {
-    Objects.requireNonNull(value, "value == null");
+  private Set<HttpMethod> methods;
 
-    handlers.add(value);
+  private Set<String> paths;
+
+  public final HttpHandler build() {
+    return switch (handlers.size()) {
+      case 1 -> handlers.get(0);
+
+      default -> throw new UnsupportedOperationException("Implement me");
+    };
   }
 
   @Override
-  public final void path(String path, Consumer<? super OfPath> opts) {
+  public final void GET(HttpHandler value) {
+    method0(HttpMethod.GET, value);
+  }
 
+  @Override
+  public final void POST(HttpHandler value) {
+    method0(HttpMethod.POST, value);
+  }
+
+  private void method0(HttpMethod method, HttpHandler value) {
+    final HttpHandler h;
+    h = Objects.requireNonNull(value, "value == null");
+
+    if (methods == null) {
+      methods = EnumSet.noneOf(HttpMethod.class);
+    }
+
+    if (!methods.add(method)) {
+      final String msg;
+      msg = "A handler for " + method + " was already registered";
+
+      throw new IllegalStateException(msg);
+    }
+
+    final HttpHandler handler;
+    handler = new HttpHandler0Method(method, h);
+
+    add0(handler);
+  }
+
+  @Override
+  public final void path(String path, Consumer<? super HttpRouting> routing) {
+    Objects.requireNonNull(path, "path == null");
+
+    final HttpRequestMatcherParser parser;
+    parser = new HttpRequestMatcherParser(path);
+
+    final HttpRequestMatcher matcher = parser.parse();
+
+    if (paths == null) {
+      paths = new HashSet<>();
+    }
+
+    if (!paths.add(path)) {
+
+    }
+  }
+
+  private void add0(HttpHandler handler) {
+    handlers.add(handler);
   }
 
 }

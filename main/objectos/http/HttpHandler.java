@@ -16,30 +16,25 @@
 package objectos.http;
 
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
-/**
- * Responsible for processing an HTTP {@linkplain HttpExchange exchange}.
- */
+/// Processes a `HttpExchange`.
 @FunctionalInterface
 public interface HttpHandler {
 
-  /**
-   * Returns a new handler for processing the routes defined in the specified
-   * routing module.
-   *
-   * @param module
-   *        the module defining top-level routes
-   *
-   * @return a newly created handler for processing the routes
-   */
-  static HttpHandler of(HttpRouting.Module module) {
-    final HttpRoutingImpl routing;
-    routing = new HttpRoutingImpl();
+  /// Returns a new handler for processing the specified routes.
+  ///
+  /// @param routing allows for defining the top-level routes
+  ///
+  /// @return a newly created handler for processing the routes
+  static HttpHandler create(Consumer<? super HttpRouting> routing) {
+    final HttpRouting0Builder builder;
+    builder = new HttpRouting0Builder();
 
-    module.configure(routing);
+    routing.accept(builder);
 
-    return routing.build();
+    return builder.build();
   }
 
   /**
@@ -73,7 +68,7 @@ public interface HttpHandler {
   static <T> HttpHandler factory(Function<T, ? extends HttpHandler> factory, T value) {
     Objects.requireNonNull(factory, "factory == null");
 
-    return HttpHandler0.factory(factory, value);
+    return HttpHandlerX.factory(factory, value);
   }
 
   /**
@@ -82,7 +77,7 @@ public interface HttpHandler {
    * @return a handler that does nothing
    */
   static HttpHandler noop() {
-    return HttpHandler0.NOOP;
+    return HttpHandlerX.NOOP;
   }
 
   // 4xx responses
@@ -91,16 +86,15 @@ public interface HttpHandler {
   ///
   /// @return the handler instance
   static HttpHandler notFound() {
-    return HttpHandler0.notFound();
+    return HttpHandlerX.notFound();
   }
 
-  /**
-   * Process the specified exchange i.e. consume the request and generate a
-   * response.
-   *
-   * @param http
-   *        the exchange to be processed
-   */
+  /// Process the specified exchange. In other words, the method:
+  ///
+  /// - consumes the request; and
+  /// - generates a response.
+  ///
+  /// @param http the exchange to be processed
   void handle(HttpExchange http);
 
 }

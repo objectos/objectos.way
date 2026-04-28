@@ -15,17 +15,32 @@
  */
 package objectos.http;
 
-import objectos.http.HttpRouting2.OfPath;
+final class HttpHandler0Method implements HttpHandler {
 
-final class HttpRouting1Path implements OfPath {
+  private final HttpMethod method;
+
+  private final HttpHandler handler;
+
+  HttpHandler0Method(HttpMethod method, HttpHandler handler) {
+    this.method = method;
+
+    this.handler = handler;
+  }
 
   @Override
-  public void GET(HttpHandler value) {}
+  public final void handle(HttpExchange http) {
+    if (http.processed()) {
+      return;
+    }
 
-  @Override
-  public void POST(HttpHandler value) {}
+    final HttpMethod reqMethod;
+    reqMethod = http.method();
 
-  @Override
-  public void handler(HttpHandler value) {}
+    if (!reqMethod.equals(method) && (!reqMethod.equals(HttpMethod.HEAD) || !method.equals(HttpMethod.GET))) {
+      return;
+    }
+
+    handler.handle(http);
+  }
 
 }

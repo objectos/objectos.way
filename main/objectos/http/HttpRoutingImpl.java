@@ -18,7 +18,7 @@ package objectos.http;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-final class HttpRoutingImpl extends HttpRoutingSupport implements HttpRouting {
+final class HttpRoutingImpl extends HttpRoutingSupport implements HttpRoutingX {
 
   private final Predicate<? super HttpExchange> condition;
 
@@ -32,11 +32,11 @@ final class HttpRoutingImpl extends HttpRoutingSupport implements HttpRouting {
 
   @Override
   public final HttpHandler build() {
-    return HttpHandler0.of(condition, null, many);
+    return HttpHandlerX.of(condition, null, many);
   }
 
   @Override
-  public final void install(HttpRouting.Module module) {
+  public final void install(HttpRoutingX.Module module) {
     module.configure(this);
   }
 
@@ -61,7 +61,7 @@ final class HttpRoutingImpl extends HttpRoutingSupport implements HttpRouting {
   }
 
   @Override
-  public final void when(Predicate<? super HttpExchange> condition, HttpRouting.Module module) {
+  public final void when(Predicate<? super HttpExchange> condition, HttpRoutingX.Module module) {
     Objects.requireNonNull(condition, "condition == null");
 
     final HttpRoutingImpl builder;

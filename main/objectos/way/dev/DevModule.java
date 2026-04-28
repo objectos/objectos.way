@@ -21,11 +21,10 @@ import module java.base;
 import module objectos.way;
 import objectos.css.StyleSheet;
 import objectos.http.HttpExchange;
-import objectos.http.HttpRouting;
 
 /// This class is not part of the Objectos Way JAR file. It is placed in the
 /// main source tree to ease the development.
-public final class DevModule implements HttpRouting.Module {
+public final class DevModule implements Consumer<HttpRouting> {
 
   private final App.Injector injector;
 
@@ -34,12 +33,12 @@ public final class DevModule implements HttpRouting.Module {
   }
 
   @Override
-  public final void configure(HttpRouting routing) {
+  public final void accept(HttpRouting routing) {
     routing.install(new ScriptModule());
 
-    routing.path("/script.js", GET, this::script);
+    routing.path("/script.js", path -> path.GET(this::script));
 
-    routing.path("/styles.css", GET, this::styles);
+    routing.path("/styles.css", path -> path.GET(this::styles));
   }
 
   private void script(HttpExchange http) {
