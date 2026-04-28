@@ -27,7 +27,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import objectos.http.HttpExchange;
 import objectos.http.HttpHandler;
-import objectos.http.HttpRoutingTest;
+import objectos.http.HttpRoutingXTest;
 import objectos.http.HttpServer;
 import objectos.http.HttpServerTest;
 import objectos.http.HttpSessionStore;
@@ -36,7 +36,7 @@ public final class TestingHttpServer {
 
   private TestingHttpServer() {}
 
-  public static void bindHttpRoutingTest(HttpRoutingTest test) {
+  public static void bindHttpRoutingTest(HttpRoutingXTest test) {
     ServerHolder.bindHttpRoutingTest(test);
   }
 
@@ -113,12 +113,12 @@ public final class TestingHttpServer {
 
     static ThisHandlerFactory HANDLER;
 
-    public static void bindHttpRoutingTest(HttpRoutingTest test) {
-      HANDLER.httpModuleTest.delegate = HttpHandler.of(test);
+    public static void bindHttpRoutingTest(HttpRoutingXTest test) {
+      HANDLER.httpModuleTest.delegate = HttpHandler.create(test);
     }
 
     public static void bindHttpServerTest(HttpServerTest test) {
-      HANDLER.httpServerTest.delegate = HttpHandler.of(test);
+      HANDLER.httpServerTest.delegate = HttpHandler.create(test);
     }
 
     private static HttpServer create() {
@@ -161,7 +161,7 @@ public final class TestingHttpServer {
         opts.host(host -> {
           host.name("marketing");
 
-          host.handler(HttpHandler.of(HANDLER.marketing));
+          host.handler(HttpHandler.create(HANDLER.marketing));
         });
 
         opts.clock(Y.clockFixed());

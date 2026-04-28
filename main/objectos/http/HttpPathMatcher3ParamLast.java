@@ -15,21 +15,13 @@
  */
 package objectos.http;
 
-sealed interface HttpRequestMatcher
-    permits
-    HttpRequestMatcher0Method,
-    HttpRequestMatcher1MethodNotAllowed,
-    HttpRequestMatcher2PathExact,
-    HttpRequestMatcher3PathRegion,
-    HttpRequestMatcher4PathParam,
-    HttpRequestMatcher5PathParamLast,
-    HttpRequestMatcher6Wildcard,
-    HttpRequestMatcher7List {
+record HttpPathMatcher3ParamLast(String paramName) implements HttpPathMatcher {
 
-  default boolean test(HttpExchange http) {
-    return !http.processed() && match((HttpExchange0) http);
+  @Override
+  public final boolean matches(HttpPath path) {
+    path.param(paramName);
+
+    return true;
   }
-
-  boolean match(HttpExchange0 http);
 
 }

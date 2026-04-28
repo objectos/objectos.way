@@ -15,15 +15,9 @@
  */
 package objectos.http;
 
-import java.util.List;
+enum HttpHandlerNotFound implements HttpHandler {
 
-final class HttpHandler2List implements HttpHandler {
-
-  private final List<HttpHandler> handlers;
-
-  HttpHandler2List(List<HttpHandler> handlers) {
-    this.handlers = handlers;
-  }
+  INSTANCE;
 
   @Override
   public final void handle(HttpExchange http) {
@@ -31,21 +25,7 @@ final class HttpHandler2List implements HttpHandler {
       return;
     }
 
-    final HttpExchange0 impl;
-    impl = (HttpExchange0) http;
-
-    final int pathIndex;
-    pathIndex = impl.pathIndex();
-
-    for (HttpHandler handler : handlers) {
-      handler.handle(http);
-
-      if (http.processed()) {
-        break;
-      }
-
-      impl.pathIndex(pathIndex);
-    }
+    http.error(HttpStatus.NOT_FOUND);
   }
 
 }

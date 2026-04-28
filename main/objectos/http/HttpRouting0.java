@@ -23,39 +23,51 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 
-final class HttpRouting0Builder implements HttpRouting {
+final class HttpRouting0 implements HttpRouting {
 
   private final List<HttpHandler> handlers = new ArrayList<>();
 
-  private Set<HttpMethod> methods;
+  private Set<HttpMethod> methods = Set.of();
 
-  private Set<String> paths;
+  private Set<String> paths = Set.of();
 
   public final HttpHandler build() {
     build0Methods();
 
-    return switch (handlers.size()) {
-      case 0 -> throw new UnsupportedOperationException("Implement me");
+    handlers.add(HttpHandlerNotFound.INSTANCE);
 
+    return switch (handlers.size()) {
       case 1 -> handlers.get(0);
 
-      default -> new HttpHandler2List(List.copyOf(handlers));
+      default -> new HttpHandlerList(List.copyOf(handlers));
     };
   }
 
   private void build0Methods() {
-    if (methods == null) {
+    if (methods.isEmpty()) {
       return;
     }
 
-    if (methods.contains(HttpMethod.HEAD)) {
+    if (methods.contains(HttpMethod.GET)) {
+      methods.add(HttpMethod.HEAD);
+    }
+
+    else if (methods.contains(HttpMethod.HEAD)) {
       methods.add(HttpMethod.GET);
     }
 
     final HttpHandler handler;
-    handler = new HttpHandler1MethodNotAllowed(methods);
+    handler = new HttpHandlerMethodNotAllowed(methods);
 
-    add0(handler);
+    handlers.add(handler);
+  }
+
+  @Override
+  public final void handler(HttpHandler value) {
+    final HttpHandler h;
+    h = Objects.requireNonNull(value, "value == null");
+
+    handlers.add(h);
   }
 
   @Override
@@ -72,7 +84,7 @@ final class HttpRouting0Builder implements HttpRouting {
     final HttpHandler h;
     h = Objects.requireNonNull(value, "value == null");
 
-    if (methods == null) {
+    if (methods.isEmpty()) {
       methods = EnumSet.noneOf(HttpMethod.class);
     }
 
@@ -84,30 +96,38 @@ final class HttpRouting0Builder implements HttpRouting {
     }
 
     final HttpHandler handler;
-    handler = new HttpHandler0Method(method, h);
+    handler = new HttpHandlerMethod(method, h);
 
-    add0(handler);
+    handlers.add(handler);
   }
 
   @Override
   public final void path(String path, Consumer<? super HttpRouting> routing) {
     Objects.requireNonNull(path, "path == null");
 
-    final HttpRequestMatcherParser parser;
-    parser = new HttpRequestMatcherParser(path);
-
-    final HttpRequestMatcher matcher = parser.parse();
-
-    if (paths == null) {
+    if (paths.isEmpty()) {
       paths = new HashSet<>();
     }
 
     if (!paths.add(path)) {
+      final String msg;
+      msg = "Duplicate path expression: " + path;
 
+      throw new IllegalArgumentException(msg);
     }
-  }
 
-  private void add0(HttpHandler handler) {
+    final HttpPathMatcherParser parser;
+    parser = new HttpPathMatcherParser(path);
+
+    final HttpPathMatcher matcher;
+    matcher = parser.parse();
+
+    final HttpHandler delegate;
+    delegate = HttpHandler.create(routing);
+
+    final HttpHandler handler;
+    handler = new HttpHandlerPath(matcher, delegate);
+
     handlers.add(handler);
   }
 

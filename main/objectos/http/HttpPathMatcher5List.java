@@ -15,29 +15,19 @@
  */
 package objectos.http;
 
-record HttpRequestMatcher2PathExact(String exact) implements HttpRequestMatcher {
+import java.util.List;
+
+record HttpPathMatcher5List(List<HttpPathMatcher> list) implements HttpPathMatcher {
 
   @Override
-  public final boolean match(HttpExchange0 http) {
-    final String path;
-    path = http.path();
-
-    final int pathIndex;
-    pathIndex = http.pathIndex();
-
-    final int thisLength;
-    thisLength = path.length() - pathIndex;
-
-    final int thatLength;
-    thatLength = exact.length();
-
-    if (thisLength == thatLength && path.regionMatches(pathIndex, exact, 0, thatLength)) {
-      http.pathIndexAdd(thatLength);
-
-      return true;
-    } else {
-      return false;
+  public final boolean matches(HttpPath path) {
+    for (HttpPathMatcher matcher : list) {
+      if (!matcher.matches(path)) {
+        return false;
+      }
     }
+
+    return true;
   }
 
 }

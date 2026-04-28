@@ -23,9 +23,9 @@ import java.util.List;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class HttpRequestMatcher2PathExactTest {
+public class HttpPathMatcher0ExactTest {
 
-  private final HttpRequestMatcher matcher = new HttpRequestMatcher2PathExact("/foo");
+  private final HttpPathMatcher matcher = new HttpPathMatcher0Exact("/foo");
 
   private boolean match(String path) {
     final HttpExchange0 http;

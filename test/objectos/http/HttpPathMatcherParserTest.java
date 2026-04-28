@@ -27,7 +27,7 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class HttpRequestMatcherParserTest {
+public class HttpPathMatcherParserTest {
 
   private final String validDelims = Http.pathDelim();
 
@@ -69,10 +69,10 @@ public class HttpRequestMatcherParserTest {
 
   @Test(dataProvider = "parsePathValidProvider")
   public void parsePathValid(String path, Object expected) {
-    final HttpRequestMatcherParser parser;
-    parser = new HttpRequestMatcherParser(path);
+    final HttpPathMatcherParser parser;
+    parser = new HttpPathMatcherParser(path);
 
-    final HttpRequestMatcher result;
+    final HttpPathMatcher result;
     result = parser.parse();
 
     assertEquals(result, expected);
@@ -119,8 +119,8 @@ public class HttpRequestMatcherParserTest {
   @Test(dataProvider = "parsePathInvalidProvider")
   public void parsePathInvalid(String path, String expectedMessage) {
     try {
-      final HttpRequestMatcherParser parser;
-      parser = new HttpRequestMatcherParser(path);
+      final HttpPathMatcherParser parser;
+      parser = new HttpPathMatcherParser(path);
 
       parser.parse();
 
@@ -138,31 +138,31 @@ public class HttpRequestMatcherParserTest {
     }
   }
 
-  private HttpRequestMatcher pathExact(String value) {
-    return new HttpRequestMatcher2PathExact(value);
+  private HttpPathMatcher pathExact(String value) {
+    return new HttpPathMatcher0Exact(value);
   }
 
-  private HttpRequestMatcher pathRegion(String value) {
-    return new HttpRequestMatcher3PathRegion(value);
+  private HttpPathMatcher pathRegion(String value) {
+    return new HttpPathMatcher1Region(value);
   }
 
-  private HttpRequestMatcher pathParam(String paramName, char terminator) {
-    return new HttpRequestMatcher4PathParam(paramName, terminator);
+  private HttpPathMatcher pathParam(String paramName, char terminator) {
+    return new HttpPathMatcher2Param(paramName, terminator);
   }
 
-  private HttpRequestMatcher pathParamLast(String paramName) {
-    return new HttpRequestMatcher5PathParamLast(paramName);
+  private HttpPathMatcher pathParamLast(String paramName) {
+    return new HttpPathMatcher3ParamLast(paramName);
   }
 
-  private HttpRequestMatcher wildcard() {
-    return HttpRequestMatcher6Wildcard.INSTANCE;
+  private HttpPathMatcher wildcard() {
+    return HttpPathMatcher4Wildcard.INSTANCE;
   }
 
-  private HttpRequestMatcher pathList(HttpRequestMatcher... parts) {
-    final List<HttpRequestMatcher> list;
+  private HttpPathMatcher pathList(HttpPathMatcher... parts) {
+    final List<HttpPathMatcher> list;
     list = List.of(parts);
 
-    return new HttpRequestMatcher7List(list);
+    return new HttpPathMatcher5List(list);
   }
 
 }

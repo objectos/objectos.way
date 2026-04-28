@@ -19,8 +19,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import objectos.internal.Check;
 
 final class HttpHandlerX implements HttpHandler {
 
@@ -92,36 +90,15 @@ final class HttpHandlerX implements HttpHandler {
   }
 
   public static HttpHandler methodNotAllowed(Set<HttpMethod> allowedMethods) {
-    final HttpRequestMatcherX predicate;
-    predicate = HttpRequestMatcherX.methodNotAllowed(allowedMethods);
-
-    final String allow;
-    allow = allowedMethods.stream().map(HttpMethod::name).collect(Collectors.joining(", "));
-
-    return new HttpHandlerX(Kind.METHOD_NOT_ALLOWED, predicate, allow);
+    throw new UnsupportedOperationException("Implement me");
   }
 
   public static HttpHandler methodAllowed(HttpMethod method, HttpHandler handler) {
-    final HttpRequestMatcherX predicate;
-    predicate = HttpRequestMatcherX.methodAllowed(method);
-
-    return new HttpHandlerX(Kind.METHOD_ALLOWED_SINGLE, predicate, handler);
+    throw new UnsupportedOperationException("Implement me");
   }
 
   public static HttpHandler methodAllowed(HttpMethod method, HttpHandler first, HttpHandler[] rest) {
-    final HttpRequestMatcherX predicate;
-    predicate = HttpRequestMatcherX.methodAllowed(method);
-
-    final HttpHandler[] array;
-    array = new HttpHandler[rest.length + 1];
-
-    array[0] = first;
-
-    for (int idx = 0; idx < rest.length; idx++) {
-      array[idx + 1] = Check.notNull(rest[idx], "rest[", idx, "] == null");
-    }
-
-    return new HttpHandlerX(Kind.METHOD_ALLOWED_MANY, predicate, array);
+    throw new UnsupportedOperationException("Implement me");
   }
 
   public static HttpHandler notFound() {

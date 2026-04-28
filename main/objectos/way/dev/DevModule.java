@@ -15,12 +15,8 @@
  */
 package objectos.way.dev;
 
-import static objectos.http.HttpMethod.GET;
-
 import module java.base;
 import module objectos.way;
-import objectos.css.StyleSheet;
-import objectos.http.HttpExchange;
 
 /// This class is not part of the Objectos Way JAR file. It is placed in the
 /// main source tree to ease the development.
@@ -34,7 +30,10 @@ public final class DevModule implements Consumer<HttpRouting> {
 
   @Override
   public final void accept(HttpRouting routing) {
-    routing.install(new ScriptModule());
+    final ScriptModule scripts;
+    scripts = new ScriptModule();
+
+    scripts.accept(routing);
 
     routing.path("/script.js", path -> path.GET(this::script));
 

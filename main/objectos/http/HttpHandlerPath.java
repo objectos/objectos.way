@@ -15,20 +15,27 @@
  */
 package objectos.http;
 
-final class HttpRequestMatcher0Method implements HttpRequestMatcher {
-
-  private final HttpMethod value;
-
-  HttpRequestMatcher0Method(HttpMethod value) {
-    this.value = value;
-  }
+record HttpHandlerPath(HttpPathMatcher matcher, HttpHandler handler) implements HttpHandler {
 
   @Override
-  public final boolean match(HttpExchange0 http) {
-    final HttpMethod method;
-    method = http.method();
+  public final void handle(HttpExchange http) {
+    if (http.processed()) {
+      return;
+    }
 
-    return method == value || (method == HttpMethod.HEAD && value == HttpMethod.GET);
+    final String $path;
+    $path = http.path();
+
+    final HttpPath path;
+    path = new HttpPath($path);
+
+    if (!matcher.matches(path)) {
+      return;
+    }
+
+    throw new UnsupportedOperationException("Implement me :: http.attr(Key.PATH_PARAMS)");
+
+    //handler.handle(http);
   }
 
 }

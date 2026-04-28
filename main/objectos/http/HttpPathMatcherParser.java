@@ -21,7 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-final class HttpRequestMatcherParser {
+final class HttpPathMatcherParser {
 
   private enum State {
     START_PATH,
@@ -57,15 +57,15 @@ final class HttpRequestMatcherParser {
 
   private int pathIndex;
 
-  private final List<HttpRequestMatcher> segments = new ArrayList<>();
+  private final List<HttpPathMatcher> segments = new ArrayList<>();
 
   private int startIndex;
 
-  HttpRequestMatcherParser(String pathExpression) {
+  HttpPathMatcherParser(String pathExpression) {
     this.pathExpression = pathExpression;
   }
 
-  public final HttpRequestMatcher parse() {
+  public final HttpPathMatcher parse() {
     State state;
     state = State.START_PATH;
 
@@ -80,11 +80,11 @@ final class HttpRequestMatcherParser {
         case REGION -> state = state3Region();
 
         case RESULT_EXACT -> {
-          return new HttpRequestMatcher2PathExact(pathExpression);
+          return new HttpPathMatcher0Exact(pathExpression);
         }
 
         case RESULT_LIST -> {
-          return new HttpRequestMatcher7List(segments);
+          return new HttpPathMatcher5List(segments);
         }
       }
     }
@@ -147,7 +147,7 @@ final class HttpRequestMatcherParser {
     last = bracket == lastIndex;
 
     if (name.isEmpty() && last) {
-      segments.add(HttpRequestMatcher6Wildcard.INSTANCE);
+      segments.add(HttpPathMatcher4Wildcard.INSTANCE);
 
       return State.RESULT_LIST;
     }
@@ -192,8 +192,8 @@ final class HttpRequestMatcherParser {
     }
 
     if (last) {
-      final HttpRequestMatcher matcher;
-      matcher = new HttpRequestMatcher5PathParamLast(name);
+      final HttpPathMatcher matcher;
+      matcher = new HttpPathMatcher3ParamLast(name);
 
       segments.add(matcher);
 
@@ -216,8 +216,8 @@ final class HttpRequestMatcherParser {
       throw new IllegalArgumentException(msg);
     }
 
-    final HttpRequestMatcher matcher;
-    matcher = new HttpRequestMatcher4PathParam(name, delim);
+    final HttpPathMatcher matcher;
+    matcher = new HttpPathMatcher2Param(name, delim);
 
     segments.add(matcher);
 
@@ -237,8 +237,8 @@ final class HttpRequestMatcherParser {
     final String value;
     value = pathExpression.substring(startIndex);
 
-    final HttpRequestMatcher segment;
-    segment = new HttpRequestMatcher2PathExact(value);
+    final HttpPathMatcher segment;
+    segment = new HttpPathMatcher0Exact(value);
 
     segments.add(segment);
 
@@ -263,8 +263,8 @@ final class HttpRequestMatcherParser {
       final String value;
       value = pathExpression.substring(startIndex, bracket);
 
-      final HttpRequestMatcher segment;
-      segment = new HttpRequestMatcher3PathRegion(value);
+      final HttpPathMatcher segment;
+      segment = new HttpPathMatcher1Region(value);
 
       segments.add(segment);
     }

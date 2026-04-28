@@ -15,22 +15,15 @@
  */
 package objectos.http;
 
-import java.util.Set;
+sealed interface HttpPathMatcher
+    permits
+    HttpPathMatcher0Exact,
+    HttpPathMatcher1Region,
+    HttpPathMatcher2Param,
+    HttpPathMatcher3ParamLast,
+    HttpPathMatcher4Wildcard,
+    HttpPathMatcher5List {
 
-final class HttpRequestMatcher1MethodNotAllowed implements HttpRequestMatcher {
-
-  private final Set<? extends HttpMethod> allowed;
-
-  HttpRequestMatcher1MethodNotAllowed(Set<? extends HttpMethod> allowed) {
-    this.allowed = allowed;
-  }
-
-  @Override
-  public final boolean match(HttpExchange0 http) {
-    final HttpMethod method;
-    method = http.method();
-
-    return !allowed.contains(method);
-  }
+  boolean matches(HttpPath path);
 
 }

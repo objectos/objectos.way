@@ -29,8 +29,8 @@ public interface HttpHandler {
   ///
   /// @return a newly created handler for processing the routes
   static HttpHandler create(Consumer<? super HttpRouting> routing) {
-    final HttpRouting0Builder builder;
-    builder = new HttpRouting0Builder();
+    final HttpRouting0 builder;
+    builder = new HttpRouting0();
 
     routing.accept(builder);
 
@@ -70,17 +70,6 @@ public interface HttpHandler {
 
     return HttpHandlerX.factory(factory, value);
   }
-
-  /**
-   * Returns a handler that does nothing.
-   *
-   * @return a handler that does nothing
-   */
-  static HttpHandler noop() {
-    return HttpHandlerX.NOOP;
-  }
-
-  // 4xx responses
 
   /// A handler that always responds with an empty `404 Not Found` message.
   ///

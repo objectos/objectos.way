@@ -15,35 +15,11 @@
  */
 package objectos.http;
 
-record HttpRequestMatcher5PathParamLast(String paramName) implements HttpRequestMatcher {
+record HttpPathMatcher1Region(String value) implements HttpPathMatcher {
 
   @Override
-  public final boolean match(HttpExchange0 http) {
-    final int pathIndex;
-    pathIndex = http.pathIndex();
-
-    final String path;
-    path = http.path();
-
-    final int solidus;
-    solidus = path.indexOf('/', pathIndex);
-
-    if (solidus < 0) {
-
-      final String varValue;
-      varValue = path.substring(pathIndex);
-
-      http.pathIndexAdd(varValue.length());
-
-      http.pathParamsPut(paramName, varValue);
-
-      return true;
-
-    } else {
-
-      return false;
-
-    }
+  public final boolean matches(HttpPath path) {
+    return path.matches(value);
   }
 
 }

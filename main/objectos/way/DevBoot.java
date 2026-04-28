@@ -20,8 +20,8 @@ package objectos.way;
 import objectos.http.HttpHandler;
 import objectos.way.dev.DevModule;
 
-/// This class is not part of the Objectos Way JAR file.
-/// It is placed in the main source tree to ease the development.
+/// This class is not part of the Objectos Way JAR file. It is placed in the
+/// main source tree to ease the development.
 public final class DevBoot {
 
   private DevBoot() {}
@@ -35,7 +35,7 @@ public final class DevBoot {
     final DevModule dev;
     dev = new DevModule(injector);
 
-    return HttpHandler.of(dev);
+    return HttpHandler.create(dev);
   }
 
 }

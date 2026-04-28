@@ -15,25 +15,19 @@
  */
 package objectos.http;
 
-record HttpRequestMatcher3PathRegion(String value) implements HttpRequestMatcher {
+record HttpPathMatcher2Param(String paramName, char terminator) implements HttpPathMatcher {
 
   @Override
-  public final boolean match(HttpExchange0 http) {
-    final int pathIndex;
-    pathIndex = http.pathIndex();
+  public final boolean matches(HttpPath path) {
+    final int terminatorIndex;
+    terminatorIndex = path.indexOf(terminator);
 
-    final String path;
-    path = http.path();
-
-    final int length;
-    length = value.length();
-
-    if (path.regionMatches(pathIndex, value, 0, length)) {
-      http.pathIndexAdd(length);
+    if (terminatorIndex < 0) {
+      return false;
+    } else {
+      path.param(paramName, terminatorIndex);
 
       return true;
-    } else {
-      return false;
     }
   }
 

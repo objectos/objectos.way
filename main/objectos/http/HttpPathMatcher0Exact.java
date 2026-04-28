@@ -15,32 +15,18 @@
  */
 package objectos.http;
 
-final class HttpHandler0Method implements HttpHandler {
-
-  private final HttpMethod method;
-
-  private final HttpHandler handler;
-
-  HttpHandler0Method(HttpMethod method, HttpHandler handler) {
-    this.method = method;
-
-    this.handler = handler;
-  }
+record HttpPathMatcher0Exact(String exact) implements HttpPathMatcher {
 
   @Override
-  public final void handle(HttpExchange http) {
-    if (http.processed()) {
-      return;
-    }
+  public final boolean matches(HttpPath path) {
+    final int thisLength;
+    thisLength = path.length();
 
-    final HttpMethod reqMethod;
-    reqMethod = http.method();
+    final int thatLength;
+    thatLength = exact.length();
 
-    if (!reqMethod.equals(method) && (!reqMethod.equals(HttpMethod.HEAD) || !method.equals(HttpMethod.GET))) {
-      return;
-    }
-
-    handler.handle(http);
+    return thisLength == thatLength
+        && path.matches(exact);
   }
 
 }

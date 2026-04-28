@@ -15,13 +15,22 @@
  */
 package objectos.http;
 
-enum HttpRequestMatcher6Wildcard implements HttpRequestMatcher {
-
-  INSTANCE;
+record HttpHandlerMethod(HttpMethod method, HttpHandler handler) implements HttpHandler {
 
   @Override
-  public final boolean match(HttpExchange0 http) {
-    return true;
+  public final void handle(HttpExchange http) {
+    if (http.processed()) {
+      return;
+    }
+
+    final HttpMethod reqMethod;
+    reqMethod = http.method();
+
+    if (!reqMethod.equals(method) && (!reqMethod.equals(HttpMethod.HEAD) || !method.equals(HttpMethod.GET))) {
+      return;
+    }
+
+    handler.handle(http);
   }
 
 }

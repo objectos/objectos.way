@@ -18,13 +18,7 @@ package objectos.http;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-final class HttpHandler1MethodNotAllowed implements HttpHandler {
-
-  private final Set<HttpMethod> allowedMethods;
-
-  HttpHandler1MethodNotAllowed(Set<HttpMethod> allowedMethods) {
-    this.allowedMethods = allowedMethods;
-  }
+record HttpHandlerMethodNotAllowed(Set<HttpMethod> allowedMethods) implements HttpHandler {
 
   @Override
   public final void handle(HttpExchange http) {

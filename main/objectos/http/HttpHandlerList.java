@@ -15,32 +15,29 @@
  */
 package objectos.http;
 
-record HttpRequestMatcher4PathParam(String paramName, char terminator) implements HttpRequestMatcher {
+import java.util.List;
+
+final class HttpHandlerList implements HttpHandler {
+
+  private final List<HttpHandler> handlers;
+
+  HttpHandlerList(List<HttpHandler> handlers) {
+    this.handlers = handlers;
+  }
 
   @Override
-  public final boolean match(HttpExchange0 http) {
-    final String path;
-    path = http.path();
-
-    final int pathIndex;
-    pathIndex = http.pathIndex();
-
-    final int terminatorIndex;
-    terminatorIndex = path.indexOf(terminator, pathIndex);
-
-    if (terminatorIndex < 0) {
-      return false;
+  public final void handle(HttpExchange http) {
+    if (http.processed()) {
+      return;
     }
 
-    final String varValue;
-    varValue = path.substring(pathIndex, terminatorIndex);
+    for (HttpHandler handler : handlers) {
+      handler.handle(http);
 
-    // immediately after the terminator
-    http.pathIndex(terminatorIndex + 1);
-
-    http.pathParamsPut(paramName, varValue);
-
-    return true;
+      if (http.processed()) {
+        break;
+      }
+    }
   }
 
 }

@@ -287,7 +287,7 @@ final class AppReloader implements App.Reloader {
 
   private void reload() {
     HttpHandler result;
-    result = HttpHandler.noop();
+    result = _ -> {};
 
     try {
       final ThisLoader parentLoader;

@@ -21,9 +21,9 @@ import static org.testng.Assert.assertTrue;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class HttpRequestMatcher3PathRegionTest {
+public class HttpPathMatcher1RegionTest {
 
-  private final HttpRequestMatcher matcher = new HttpRequestMatcher3PathRegion("/foo");
+  private final HttpPathMatcher matcher = new HttpPathMatcher1Region("/foo");
 
   private boolean match(String path, int index) {
     final HttpExchange0 http;

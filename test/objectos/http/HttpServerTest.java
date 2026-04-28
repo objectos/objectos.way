@@ -25,6 +25,7 @@ import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.function.Consumer;
 import objectos.way.Html;
 import objectos.way.Media;
 import objectos.way.TestingHttpServer;
@@ -33,7 +34,7 @@ import objectos.way.Y;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class HttpServerTest implements HttpRoutingX.Module {
+public class HttpServerTest implements Consumer<HttpRouting> {
 
   @BeforeClass
   public void beforeClass() throws Exception {
@@ -41,7 +42,7 @@ public class HttpServerTest implements HttpRoutingX.Module {
   }
 
   @Override
-  public final void configure(HttpRoutingX routing) {
+  public final void accept(HttpRouting routing) {
     routing.path("/test/{name}", path -> {
       path.handler(this::handle1);
     });

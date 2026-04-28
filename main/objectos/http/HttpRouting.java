@@ -25,7 +25,12 @@ import java.util.function.Consumer;
 /// If method-specific routes are configured, then the resulting handler responds
 /// with a `405 Method Not Allowed` message when a request does not match any of
 /// the configured methods.
-public sealed interface HttpRouting permits HttpRouting0Builder {
+public sealed interface HttpRouting permits HttpRouting0 {
+
+  /// Adds the specified handler to this configuration.
+  ///
+  /// @param value the handler to add
+  void handler(HttpHandler value);
 
   /// Use the specified handler for `GET` requests.
   ///
@@ -37,7 +42,7 @@ public sealed interface HttpRouting permits HttpRouting0Builder {
   /// @param value the HTTP handler
   void POST(HttpHandler value);
 
-  /// Adds a path-specific route to this handler.
+  /// Adds a route to this handler.
   ///
   /// @param path a path expression
   /// @param routing allows for configuring the path-specific route
