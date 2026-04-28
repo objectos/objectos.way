@@ -32,11 +32,30 @@ final class HttpRouting0Builder implements HttpRouting {
   private Set<String> paths;
 
   public final HttpHandler build() {
+    build0Methods();
+
     return switch (handlers.size()) {
+      case 0 -> throw new UnsupportedOperationException("Implement me");
+
       case 1 -> handlers.get(0);
 
-      default -> throw new UnsupportedOperationException("Implement me");
+      default -> new HttpHandler2List(List.copyOf(handlers));
     };
+  }
+
+  private void build0Methods() {
+    if (methods == null) {
+      return;
+    }
+
+    if (methods.contains(HttpMethod.HEAD)) {
+      methods.add(HttpMethod.GET);
+    }
+
+    final HttpHandler handler;
+    handler = new HttpHandler1MethodNotAllowed(methods);
+
+    add0(handler);
   }
 
   @Override

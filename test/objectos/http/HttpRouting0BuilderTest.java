@@ -67,10 +67,10 @@ public class HttpRouting0BuilderTest {
         """
         HTTP/1.1 405 Method Not Allowed\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-        Content-Type: text/plain; charset=utf-8\r
-        Content-Length: 3\r
+        Connection: close\r
+        Content-Length: 0\r
+        Allow: GET\r
         \r
-        OK
         """
     );
   }
