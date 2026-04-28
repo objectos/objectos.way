@@ -22,5 +22,4 @@ module objectos.way {
   exports objectos.way;
 
   requires transitive java.sql;
-  requires org.testng;
 }

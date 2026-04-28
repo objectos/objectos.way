@@ -19,14 +19,11 @@ import static org.testng.Assert.assertEquals;
 import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.stream.Stream;
-import objectos.way.Media;
 import objectos.way.Y;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class HttpHandler0MethodTest {
-
-  private final HttpHandler ok = http -> http.ok(Media.Bytes.textPlain("OK\n"));
+public class HttpHandler1MethodNotAllowedTest {
 
   @DataProvider
   public Iterator<HttpMethod> methodProvider() {
@@ -35,30 +32,21 @@ public class HttpHandler0MethodTest {
 
   @Test(dataProvider = "methodProvider")
   public void handle(HttpMethod method) {
+    final EnumSet<HttpMethod> single;
+    single = EnumSet.of(method);
+
+    final EnumSet<HttpMethod> allowed;
+    allowed = EnumSet.complementOf(single);
+
+    final HttpHandler handler;
+    handler = new HttpHandler1MethodNotAllowed(allowed);
+
     final HttpExchange http;
     http = HttpExchange.create(opts -> {
       opts.clock(Y.clockFixed());
 
       opts.method(method);
     });
-
-    final HttpHandler0Method handler;
-    handler = new HttpHandler0Method(method, ok);
-
-    assertEquals(http.processed(), false);
-
-    handler.handle(http);
-
-    assertEquals(http.processed(), true);
-  }
-
-  @Test
-  public void handleHead() {
-    final HttpHandler0Method handler;
-    handler = new HttpHandler0Method(HttpMethod.GET, ok);
-
-    final HttpExchange http;
-    http = HttpExchange.create(opts -> opts.method(HttpMethod.HEAD));
 
     assertEquals(http.processed(), false);
 
@@ -69,11 +57,14 @@ public class HttpHandler0MethodTest {
 
   @Test
   public void handleNot() {
-    final HttpHandler0Method handler;
-    handler = new HttpHandler0Method(HttpMethod.GET, ok);
+    final EnumSet<HttpMethod> allowed;
+    allowed = EnumSet.of(HttpMethod.GET);
+
+    final HttpHandler handler;
+    handler = new HttpHandler1MethodNotAllowed(allowed);
 
     final HttpExchange http;
-    http = HttpExchange.create(opts -> opts.method(HttpMethod.GET));
+    http = HttpExchange.create(opts -> opts.method(HttpMethod.POST));
 
     http.send();
 
@@ -91,20 +82,18 @@ public class HttpHandler0MethodTest {
 
   @Test(dataProvider = "methodProvider")
   public void handleNot(HttpMethod method) {
-    final HttpHandler0Method handler;
-    handler = new HttpHandler0Method(method, ok);
+    final EnumSet<HttpMethod> allowed;
+    allowed = EnumSet.of(method);
 
-    final EnumSet<HttpMethod> single;
-    single = EnumSet.of(method);
-
-    final EnumSet<HttpMethod> others;
-    others = EnumSet.complementOf(single);
-
-    final HttpMethod other;
-    other = others.iterator().next();
+    final HttpHandler handler;
+    handler = new HttpHandler1MethodNotAllowed(allowed);
 
     final HttpExchange http;
-    http = HttpExchange.create(opts -> opts.method(other));
+    http = HttpExchange.create(opts -> {
+      opts.clock(Y.clockFixed());
+
+      opts.method(method);
+    });
 
     assertEquals(http.processed(), false);
 
