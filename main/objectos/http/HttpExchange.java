@@ -20,14 +20,11 @@ import java.util.function.Consumer;
 import objectos.lang.Key;
 import objectos.way.Media;
 
-/**
- * An HTTP request received by the server and its subsequent response to the
- * client.
- *
- * <p>
- * Unless otherwise specified, request-target related methods of this
- * interface return decoded values.
- */
+/// The HTTP request received by the server and its subsequent response to the
+/// client.
+///
+/// Unless otherwise specified, request related methods of this interface return
+/// decoded values.
 public sealed interface HttpExchange
     extends HttpRequest, HttpResponse
     permits HttpExchange0 {
@@ -109,7 +106,14 @@ public sealed interface HttpExchange
     /// @param key the key to be stored
     /// @param value the value to be stored
     /// @param <T> the type of the value
-    <T> void set(Class<T> key, T value);
+    <T> void req(Class<T> key, T value);
+
+    /// Stores the provided key-value pair in the resulting exchange.
+    ///
+    /// @param key the key to be stored
+    /// @param value the value to be stored
+    /// @param <T> the type of the value
+    <T> void req(Key<T> key, T value);
 
     /// Associate a session to the resulting exchange and store the provided
     /// key-value pair in the session.
@@ -117,7 +121,7 @@ public sealed interface HttpExchange
     /// @param <T> the type of the attribute
     /// @param key the class object providing the attribute name
     /// @param value the value to be stored
-    <T> void sessionAttr(Class<T> key, T value);
+    <T> void session(Class<T> key, T value);
 
     /// Sets the resulting exchange to be `Testable` aware.
     void testable();
@@ -138,6 +142,56 @@ public sealed interface HttpExchange
 
     return builder.build();
   }
+
+  // ##################################################################
+  // # BEGIN: request attributes
+  // ##################################################################
+
+  /// Returns the request value associated to the name of the specified class,
+  /// or `null` if no value exists.
+  ///
+  /// @param <T> the type of the request value
+  /// @param name the class providing the name
+  ///
+  /// @return the request value or `null`
+  <T> T req(Class<T> name);
+
+  /// Returns the request value associated to the specified key, or `null` if no
+  /// value exists.
+  ///
+  /// @param <T> the type of the request value
+  /// @param key the key to look for
+  ///
+  /// @return the request value or `null`
+  <T> T req(Key<T> key);
+
+  /// Stores, in this request, the specified value by associating it to the name
+  /// of the specified class.
+  ///
+  /// Stored values are reset between requests. If an object is already
+  /// associated to the specified key it is replaced with the specified value.
+  /// Values must not be `null`.
+  ///
+  /// @param <T> the type of the request value
+  /// @param name the class providing the name
+  /// @param value the object to be stored in this request
+  <T> void req(Class<T> name, T value);
+
+  /// Stores, in this request, the specified value by associating it to the
+  /// specified key.
+  ///
+  /// Stored values are reset between requests. If an object is already
+  /// associated to the specified key it is replaced with the specified value.
+  /// Values must not be `null`.
+  ///
+  /// @param <T> the type of the request value
+  /// @param key the object to serve as key
+  /// @param value the object to be stored in this request
+  <T> void req(Key<T> key, T value);
+
+  // ##################################################################
+  // # END: request attributes
+  // ##################################################################
 
   // ##################################################################
   // # BEGIN: path parameters
@@ -181,39 +235,6 @@ public sealed interface HttpExchange
   // # END: path parameters
   // ##################################################################
 
-  /**
-   * Stores an object in this request. The object will be associated to the
-   * name of the specified {@code Class} instance.
-   * Stored objects are reset between requests.
-   *
-   * <p>
-   * If an object is already associated to the specified key it will be
-   * replaced with the specified value.
-   *
-   * <p>
-   * Objects to be stored must not be {@code null}.
-   *
-   * @param <T> the type of the object
-   * @param key
-   *        the object will be associated to the name of this key
-   * @param value
-   *        the object to be stored in this request
-   */
-  <T> void set(Class<T> key, T value);
-
-  /**
-   * Retrieves the object stored in this request associated to the specified
-   * key. Returns {@code null} if no object is found.
-   *
-   * @param <T> the type of the object
-   * @param key
-   *        the key to look for
-   *
-   * @return the object associated to the specified key or {@code null} if no
-   *         object is found
-   */
-  <T> T get(Class<T> key);
-
   // ##################################################################
   // # BEGIN: Session Support
   // ##################################################################
@@ -236,13 +257,13 @@ public sealed interface HttpExchange
    * @param key
    *        the class whose associated value is to be returned
    *
-   * @return the session value associated to the specified class name, or
+   * @return the session value associated to the specified class, or
    *         {@code null} if no value is associated
    *
    * @throws IllegalStateException
    *         if no session is associated to this exchange
    */
-  <T> T sessionAttr(Class<T> key);
+  <T> T session(Class<T> key);
 
   /**
    * Returns the session value associated to the specified key, or
@@ -258,7 +279,7 @@ public sealed interface HttpExchange
    * @throws IllegalStateException
    *         if no session is associated to this exchange
    */
-  <T> T sessionAttr(Key<T> key);
+  <T> T session(Key<T> key);
 
   /**
    * Using the name of the specified class as the key, associate the
@@ -277,7 +298,7 @@ public sealed interface HttpExchange
    * @throws IllegalStateException
    *         if no session is associated to this exchange
    */
-  <T> T sessionAttr(Class<T> key, T value);
+  <T> T session(Class<T> key, T value);
 
   /**
    * Using the specified key, associates the specified value to this
@@ -296,7 +317,7 @@ public sealed interface HttpExchange
    * @throws IllegalStateException
    *         if no session is associated to this exchange
    */
-  <T> T sessionAttr(Key<T> key, T value);
+  <T> T session(Key<T> key, T value);
 
   /**
    * Invalidates the session associated to this exchange.

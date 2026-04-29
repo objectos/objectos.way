@@ -15,9 +15,7 @@
  */
 package objectos.http;
 
-import java.util.Objects;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 /// Processes a `HttpExchange`.
 @FunctionalInterface
@@ -37,45 +35,12 @@ public interface HttpHandler {
     return builder.build();
   }
 
-  /**
-   * Returns a handler which delegates the processing to the handler created
-   * by the specified factory and value.
-   *
-   * <p>
-   * The returned handler is equivalent to the following:
-   *
-   * <pre>{@code
-   * static <T> Handler factory(Function<T, ? extends Handler> factory, T value) {
-   *   return new Handler() {
-   *     &#64;Override
-   *     public void handle(Http.Exchange http) {
-   *       factory.apply(value).handle(http);
-   *     }
-   *   };
-   * }
-   * }</pre>
-   *
-   * <p>
-   * Except it is done in a null-safe way.
-   *
-   * @param factory
-   *        a function that provides a handler based on the specified value
-   * @param value
-   *        the factory's argument
-   *
-   * @return a newly created handler
-   */
-  static <T> HttpHandler factory(Function<T, ? extends HttpHandler> factory, T value) {
-    Objects.requireNonNull(factory, "factory == null");
-
-    return HttpHandlerX.factory(factory, value);
-  }
-
-  /// A handler that always responds with an empty `404 Not Found` message.
+  /// A handler that always responds with the configured `404 Not Found`
+  /// message.
   ///
   /// @return the handler instance
   static HttpHandler notFound() {
-    return HttpHandlerX.notFound();
+    return HttpHandler2NotFound.INSTANCE;
   }
 
   /// Process the specified exchange. In other words, the method:

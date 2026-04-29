@@ -58,13 +58,25 @@ public class HttpHandler0MethodTest {
     handler = new HttpHandler0Method(HttpMethod.GET, ok);
 
     final HttpExchange http;
-    http = HttpExchange.create(opts -> opts.method(HttpMethod.HEAD));
+    http = HttpExchange.create(opts -> {
+      opts.clock(Y.clockFixed());
+
+      opts.method(HttpMethod.HEAD);
+    });
 
     assertEquals(http.processed(), false);
 
     handler.handle(http);
 
     assertEquals(http.processed(), true);
+
+    assertEquals(http.toString(), """
+    HTTP/1.1 200 OK\r
+    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+    Content-Type: text/plain; charset=utf-8\r
+    Content-Length: 3\r
+    \r
+    """);
   }
 
   @Test

@@ -17,6 +17,7 @@ package objectos.http;
 
 import java.util.HashMap;
 import java.util.Map;
+import objectos.internal.VisibleForTesting;
 
 final class HttpPath {
 
@@ -24,10 +25,23 @@ final class HttpPath {
 
   private int index;
 
-  private Map<String, Object> params = Map.of();
+  Map<String, String> params = Map.of();
 
   HttpPath(String path) {
     this.path = path;
+  }
+
+  @VisibleForTesting
+  HttpPath(String path, int index) {
+    this.path = path;
+
+    this.index = index;
+  }
+
+  public final void clear() {
+    if (!params.isEmpty()) {
+      params.clear();
+    }
   }
 
   public final int indexOf(char terminator) {

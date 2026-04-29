@@ -175,7 +175,7 @@ public class HttpExchangeTest {
     http = http(config -> {
       config.path("/restricted01");
 
-      config.sessionAttr(User.class, new User("foo"));
+      config.session(User.class, new User("foo"));
     });
 
     final HttpHandler handler;
@@ -195,7 +195,7 @@ public class HttpExchangeTest {
 
   private void requireUser(HttpExchange http) {
     final User user;
-    user = http.sessionAttr(User.class);
+    user = http.session(User.class);
 
     if (user == null) {
       http.found("/login");
@@ -256,13 +256,13 @@ public class HttpExchangeTest {
 
       config.path("/foo");
 
-      config.set(String.class, "Hello");
+      config.req(String.class, "Hello");
     });
 
     assertEquals(http.method(), HttpMethod.GET);
     assertEquals(http.path(), "/foo");
     assertEquals(http.pathParam("path"), null);
-    assertEquals(http.get(String.class), "Hello");
+    assertEquals(http.req(String.class), "Hello");
   }
 
   @Test(description = "Html.Template response")

@@ -18,6 +18,7 @@ package objectos.http;
 import static org.testng.Assert.assertEquals;
 import java.util.EnumSet;
 import java.util.Iterator;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import objectos.way.Y;
 import org.testng.annotations.DataProvider;
@@ -53,6 +54,15 @@ public class HttpHandler1MethodNotAllowedTest {
     handler.handle(http);
 
     assertEquals(http.processed(), true);
+
+    assertEquals(http.toString(), """
+    HTTP/1.1 405 Method Not Allowed\r
+    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+    Connection: close\r
+    Content-Length: 0\r
+    Allow: %s\r
+    \r
+    """.formatted(allowed.stream().map(Enum::name).collect(Collectors.joining(", "))));
   }
 
   @Test

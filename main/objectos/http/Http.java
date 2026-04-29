@@ -849,7 +849,7 @@ final class Http {
   }
 
   static String pathDelim() {
-    return "/-._~!$&'()*+,;=:@";
+    return "/-.";
   }
 
   static int requiredHexDigits(int value) {

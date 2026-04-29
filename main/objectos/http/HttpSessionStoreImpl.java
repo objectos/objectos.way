@@ -157,7 +157,7 @@ final class HttpSessionStoreImpl implements HttpSessionLoader, HttpSessionStore 
 
     if (csrf != null && http.sessionPresent()) {
       final HttpCsrfToken sessionToken;
-      sessionToken = http.sessionAttr(HttpCsrfToken.class);
+      sessionToken = http.session(HttpCsrfToken.class);
 
       valid = csrf.equals(sessionToken);
     }

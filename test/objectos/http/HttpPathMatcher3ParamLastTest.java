@@ -15,38 +15,33 @@
  */
 package objectos.http;
 
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
-
-import java.util.Iterator;
-import java.util.List;
+import static org.testng.Assert.assertEquals;
+import java.util.Map;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class HttpPathMatcher0ExactTest {
+public class HttpPathMatcher3ParamLastTest {
 
-  private final HttpPathMatcher matcher = new HttpPathMatcher0Exact("/foo");
-
-  private boolean match(String path) {
-    final HttpPath pojo;
-    pojo = new HttpPath(path);
-
-    return matcher.matches(pojo);
-  }
-
-  @Test
-  public void valid() {
-    assertTrue(match("/foo"));
-  }
+  private final HttpPathMatcher matcher = new HttpPathMatcher3ParamLast("test");
 
   @DataProvider
-  public Iterator<String> invalidProvider() {
-    return List.of("/fooo", "/foo/", "/foo/bar", "/bar", "/").iterator();
+  public Object[][] validProvider() {
+    return new Object[][] {
+        {"/foo/", 1, "foo/"},
+        {"/bar/foo/", 5, "foo/"},
+        {"/bar/foo/more", 5, "foo/more"},
+        {"/bar//", 5, "/"}
+    };
   }
 
-  @Test(dataProvider = "invalidProvider")
-  public void invalid(String path) {
-    assertFalse(match(path));
+  @Test(dataProvider = "validProvider")
+  public void valid(String path, int index, String value) {
+    final HttpPath http;
+    http = new HttpPath(path, index);
+
+    assertEquals(matcher.matches(http), true);
+
+    assertEquals(http.params, Map.of("test", value));
   }
 
 }

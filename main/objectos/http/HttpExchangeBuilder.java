@@ -31,11 +31,12 @@ import java.util.Map;
 import java.util.Objects;
 import objectos.internal.NoOpSinkSingleton;
 import objectos.internal.Util;
+import objectos.lang.Key;
 import objectos.way.Note;
 
 final class HttpExchangeBuilder implements HttpExchange.Options {
 
-  private Map<String, Object> attributes = Map.of();
+  private Map<Object, Object> attributes = Map.of();
 
   @SuppressWarnings("unused")
   private final int bufferSizeInitial = 1024;
@@ -179,6 +180,8 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
 
     if (pathParams.isEmpty()) {
       pathParams = new HashMap<>();
+
+      req(HttpExchange0.PATH_PARAMS, pathParams);
     }
 
     final String existing;
@@ -220,7 +223,7 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
   }
 
   @Override
-  public final <T> void set(Class<T> key, T value) {
+  public final <T> void req(Class<T> key, T value) {
     final String name;
     name = key.getName();
 
@@ -234,7 +237,19 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
   }
 
   @Override
-  public final <T> void sessionAttr(Class<T> key, T value) {
+  public final <T> void req(Key<T> key, T value) {
+    Objects.requireNonNull(key, "key == null");
+    Objects.requireNonNull(value, "value == null");
+
+    if (attributes.isEmpty()) {
+      attributes = new HashMap<>();
+    }
+
+    attributes.put(key, value);
+  }
+
+  @Override
+  public final <T> void session(Class<T> key, T value) {
     final String name;
     name = key.getName();
 
@@ -292,7 +307,7 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
       staticFilesWriter = HttpStaticFilesWriter0Noop.INSTANCE;
     }
 
-    return new HttpExchange0(attributes, pathParams, request, response, session, staticFilesWriter);
+    return new HttpExchange0(attributes, request, response, session, staticFilesWriter);
   }
 
   final HttpExchangeBodyFiles bodyFiles() {

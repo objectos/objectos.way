@@ -23,6 +23,8 @@ record HttpPathMatcher5List(List<HttpPathMatcher> list) implements HttpPathMatch
   public final boolean matches(HttpPath path) {
     for (HttpPathMatcher matcher : list) {
       if (!matcher.matches(path)) {
+        path.clear();
+
         return false;
       }
     }

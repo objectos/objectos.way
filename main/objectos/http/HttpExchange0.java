@@ -17,16 +17,13 @@ package objectos.http;
 
 import module java.base;
 import module objectos.way;
-import objectos.internal.VisibleForTesting;
 import objectos.lang.Key;
 
 final class HttpExchange0 implements HttpExchange {
 
-  private Map<String, Object> attributes;
+  static final Key<Map<String, String>> PATH_PARAMS = Key.of("objectos.http.PathParams");
 
-  private int mark;
-
-  private Map<String, String> pathParams;
+  private Map<Object, Object> attributes;
 
   private final HttpRequest0 request;
 
@@ -37,13 +34,11 @@ final class HttpExchange0 implements HttpExchange {
   private final HttpStaticFilesWriter staticFilesWriter;
 
   HttpExchange0(HttpRequest0 request, HttpResponse0 response, HttpSession session, HttpStaticFilesWriter staticFilesWriter) {
-    this(Map.of(), Map.of(), request, response, session, staticFilesWriter);
+    this(Map.of(), request, response, session, staticFilesWriter);
   }
 
-  HttpExchange0(Map<String, Object> attributes, Map<String, String> pathParams, HttpRequest0 request, HttpResponse0 response, HttpSession session, HttpStaticFilesWriter staticFilesWriter) {
+  HttpExchange0(Map<Object, Object> attributes, HttpRequest0 request, HttpResponse0 response, HttpSession session, HttpStaticFilesWriter staticFilesWriter) {
     this.attributes = attributes;
-
-    this.pathParams = pathParams;
 
     this.request = request;
 
@@ -69,39 +64,13 @@ final class HttpExchange0 implements HttpExchange {
 
   @Override
   public final String pathParam(String name) {
-    return pathParams.get(name);
-  }
+    final Map<String, String> pathParams;
+    pathParams = req(PATH_PARAMS);
 
-  final int pathIndex() {
-    return mark;
-  }
-
-  final void pathIndex(int value) {
-    mark = value;
-  }
-
-  final void pathIndexAdd(int value) {
-    mark += value;
-  }
-
-  @VisibleForTesting
-  final Map<String, String> pathParams() {
-    return pathParams;
-  }
-
-  final void pathParamsPut(String name, String value) {
-    if (pathParams == Map.<String, String> of()) {
-      pathParams = new HashMap<>();
-    }
-
-    pathParams.put(name, value);
-  }
-
-  final void pathReset() {
-    mark = 0;
-
-    if (pathParams != Map.<String, String> of()) {
-      pathParams.clear();
+    if (pathParams != null) {
+      return pathParams.get(name);
+    } else {
+      return null;
     }
   }
 
@@ -231,27 +200,47 @@ final class HttpExchange0 implements HttpExchange {
   // # END: HttpRequest
   // ##################################################################
 
+  @SuppressWarnings("unchecked")
   @Override
-  public final <T> void set(Class<T> key, T value) {
+  public final <T> T req(Class<T> key) {
+    final String name;
+    name = key.getName(); // implicit null check
+
+    return (T) attributes.get(name);
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public final <T> T req(Key<T> key) {
+    Objects.requireNonNull(key, "key == null");
+
+    return (T) attributes.get(key);
+  }
+
+  @Override
+  public final <T> void req(Class<T> key, T value) {
     final String name;
     name = key.getName(); // implicit null check
 
     Objects.requireNonNull(value, "value == null");
 
-    if (attributes == Map.<String, Object> of()) {
+    if (attributes == Map.<Object, Object> of()) {
       attributes = new HashMap<>();
     }
 
     attributes.put(name, value);
   }
 
-  @SuppressWarnings("unchecked")
   @Override
-  public final <T> T get(Class<T> key) {
-    final String name;
-    name = key.getName(); // implicit null check
+  public final <T> void req(Key<T> key, T value) {
+    Objects.requireNonNull(key, "key == null");
+    Objects.requireNonNull(value, "value == null");
 
-    return (T) attributes.get(name);
+    if (attributes == Map.<Object, Object> of()) {
+      attributes = new HashMap<>();
+    }
+
+    attributes.put(key, value);
   }
 
   // ##################################################################
@@ -259,28 +248,28 @@ final class HttpExchange0 implements HttpExchange {
   // ##################################################################
 
   @Override
+  public final <T> T session(Class<T> key) {
+    return session.sessionAttr(key);
+  }
+
+  @Override
+  public final <T> T session(Key<T> key) {
+    return session.sessionAttr(key);
+  }
+
+  @Override
+  public final <T> T session(Class<T> key, T value) {
+    return session.sessionAttr(key, value);
+  }
+
+  @Override
+  public final <T> T session(Key<T> key, T value) {
+    return session.sessionAttr(key, value);
+  }
+
+  @Override
   public final boolean sessionAbsent() {
     return session.sessionAbsent();
-  }
-
-  @Override
-  public final <T> T sessionAttr(Class<T> key) {
-    return session.sessionAttr(key);
-  }
-
-  @Override
-  public final <T> T sessionAttr(Key<T> key) {
-    return session.sessionAttr(key);
-  }
-
-  @Override
-  public final <T> T sessionAttr(Class<T> key, T value) {
-    return session.sessionAttr(key, value);
-  }
-
-  @Override
-  public final <T> T sessionAttr(Key<T> key, T value) {
-    return session.sessionAttr(key, value);
   }
 
   @Override

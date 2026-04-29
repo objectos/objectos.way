@@ -15,50 +15,50 @@
  */
 package objectos.http;
 
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
-
+import static org.testng.Assert.assertEquals;
+import java.util.Map;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class HttpPathMatcher1RegionTest {
+public class HttpPathMatcher2ParamTest {
 
-  private final HttpPathMatcher matcher = new HttpPathMatcher1Region("/foo");
-
-  private boolean matches(String path, int index) {
-    final HttpPath http;
-    http = new HttpPath(path, index);
-
-    return matcher.matches(http);
-  }
+  private final HttpPathMatcher matcher = new HttpPathMatcher2Param("test", '/');
 
   @DataProvider
   public Object[][] validProvider() {
     return new Object[][] {
-        {"/foo", 0},
-        {"/fooo", 0},
-        {"/bar/foo", 4},
-        {"/bar/foo/", 4}
+        {"/foo/", 1, "foo"},
+        {"/bar/foo/", 5, "foo"},
+        {"/bar/foo/more", 5, "foo"},
+        {"/bar//", 5, ""}
     };
   }
 
   @Test(dataProvider = "validProvider")
-  public void valid(String path, int index) {
-    assertTrue(matches(path, index));
+  public void valid(String path, int index, String value) {
+    final HttpPath http;
+    http = new HttpPath(path, index);
+
+    assertEquals(matcher.matches(http), true);
+
+    assertEquals(http.params, Map.of("test", value));
   }
 
   @DataProvider
   public Object[][] invalidProvider() {
     return new Object[][] {
         {"/foo", 1},
-        {"/bar/foo", 3},
-        {"/bar/foo/", 5}
+        {"/bar/foo", 5},
+        {"/bar/foo/more", 9}
     };
   }
 
   @Test(dataProvider = "invalidProvider")
   public void invalid(String path, int index) {
-    assertFalse(matches(path, index));
+    final HttpPath http;
+    http = new HttpPath(path, index);
+
+    assertEquals(matcher.matches(http), false);
   }
 
 }
