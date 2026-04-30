@@ -19,9 +19,6 @@ import java.util.function.Consumer;
 
 /// Allows for creating a `HttpHandler` instance by declaring HTTP routes.
 ///
-/// If none of the declared routes produce a response, then the resulting handler
-/// responds with the default `404 Not Found` message.
-///
 /// If method-specific routes are configured, then the resulting handler responds
 /// with a `405 Method Not Allowed` message when a request does not match any of
 /// the configured methods.

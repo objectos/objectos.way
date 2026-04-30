@@ -34,9 +34,9 @@ final class HttpRouting0 implements HttpRouting {
   public final HttpHandler build() {
     build0Methods();
 
-    handlers.add(HttpHandler2NotFound.INSTANCE);
-
     return switch (handlers.size()) {
+      case 0 -> _ -> {};
+
       case 1 -> handlers.get(0);
 
       default -> new HttpHandler4List(List.copyOf(handlers));
