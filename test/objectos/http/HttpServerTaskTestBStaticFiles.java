@@ -31,6 +31,8 @@ import org.testng.annotations.Test;
 
 public class HttpServerTaskTestBStaticFiles {
 
+  private final HttpHandler noop = _ -> {};
+
   @Test(description = """
   Options::addDirectory
   """)
@@ -60,7 +62,7 @@ public class HttpServerTaskTestBStaticFiles {
               """
           );
 
-          opts.handler = HttpHandler.noop();
+          opts.handler = noop;
         }),
 
         """
@@ -96,9 +98,11 @@ public class HttpServerTaskTestBStaticFiles {
         """
         HTTP/1.1 404 Not Found\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-        Content-Length: 0\r
         Connection: close\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 14\r
         \r
+        404 Not Found
         """
     );
   }
@@ -131,7 +135,7 @@ public class HttpServerTaskTestBStaticFiles {
               """
           );
 
-          opts.handler = HttpHandler.noop();
+          opts.handler = noop;
         }),
 
         """
@@ -145,7 +149,7 @@ public class HttpServerTaskTestBStaticFiles {
   }
 
   /*
-  
+
   @Test(description = """
   Web.Resources::reconfigure
   - resources from before reconfigure should 404
@@ -155,12 +159,12 @@ public class HttpServerTaskTestBStaticFiles {
   resources = create(opts -> {
     final Media.Bytes reconfigure;
     reconfigure = Media.Bytes.textPlain("reconfigure");
-
+  
     opts.addMedia("/reconfigure.txt", reconfigure);
   });
-
+  
   resources.reconfigure(_ -> {});
-
+  
   assertEquals(
       HttpServerTaskY.resp(test -> {
         test.socket = Y.socket("""
@@ -168,13 +172,13 @@ public class HttpServerTaskTestBStaticFiles {
         Host: www.example.com\r
         \r
         """);
-
+  
         test.handler = HttpHandler.of(routing -> {
           routing.handler(resources);
           routing.handler(HttpHandler.notFound());
         });
       }),
-
+  
       """
       HTTP/1.1 404 Not Found\r
       Date: Wed, 28 Jun 2023 12:08:43 GMT\r
@@ -184,7 +188,7 @@ public class HttpServerTaskTestBStaticFiles {
       """
   );
   }
-  
+
   */
 
   @Test(description = """
@@ -217,7 +221,7 @@ public class HttpServerTaskTestBStaticFiles {
               """
           );
 
-          opts.handler = HttpHandler.noop();
+          opts.handler = noop;
         }),
 
         """
@@ -269,7 +273,7 @@ public class HttpServerTaskTestBStaticFiles {
           \r
           """.formatted(etag));
 
-          test.handler = HttpHandler.noop();
+          test.handler = noop;
         }),
 
         """
@@ -283,14 +287,14 @@ public class HttpServerTaskTestBStaticFiles {
   }
 
   /*
-  
+
   @Test(description = """
   Resources::delete
   """)
   public void testCase07() throws IOException {
   final WebResources0 resources;
   resources = create(_ -> {});
-
+  
   assertEquals(
       HttpServerTaskY.resp(test -> {
         test.socket = Y.socket("""
@@ -298,20 +302,20 @@ public class HttpServerTaskTestBStaticFiles {
         Host: www.example.com\r
         \r
         """);
-
+  
         test.handler = HttpHandler.of(routing -> {
           routing.handler(http -> {
             try {
               String path;
               path = http.path();
-
+  
               Media.Bytes contents;
               contents = Media.Bytes.textPlain("test-case-07");
-
+  
               resources.writeMedia(path, contents);
-
+  
               assertTrue(resources.deleteIfExists(path));
-
+  
               resources.handle(http);
             } catch (IOException e) {
               throw new UncheckedIOException(e);
@@ -320,7 +324,7 @@ public class HttpServerTaskTestBStaticFiles {
           routing.handler(HttpHandler.notFound());
         });
       }),
-
+  
       """
       HTTP/1.1 404 Not Found\r
       Date: Wed, 28 Jun 2023 12:08:43 GMT\r
@@ -330,7 +334,7 @@ public class HttpServerTaskTestBStaticFiles {
       """
   );
   }
-  
+
   */
 
   @Test(description = """
@@ -372,7 +376,7 @@ public class HttpServerTaskTestBStaticFiles {
           \r
           """.formatted(etag));
 
-          test.handler = HttpHandler.noop();
+          test.handler = noop;
         }),
 
         """
@@ -424,7 +428,7 @@ public class HttpServerTaskTestBStaticFiles {
           \r
           """.formatted(etag));
 
-          test.handler = HttpHandler.noop();
+          test.handler = noop;
         }),
 
         """

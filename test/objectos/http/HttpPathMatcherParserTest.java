@@ -87,13 +87,13 @@ public class HttpPathMatcherParserTest {
     list.add(arr("foo", "Invalid path expression: it must begin with the '/' character"));
 
     list.add(arr("/foo/{error}/bar/{error}", "Invalid path expression: duplicate path parameter name 'error'"));
-    list.add(arr("/foo/{bar}{baz}", "Invalid path expression: path parameter can only be either at the end of the expression or immediately followed by one of /-._~!$&'()*+,;=:@"));
+    list.add(arr("/foo/{bar}{baz}", "Invalid path expression: path parameter can only be either at the end of the expression or immediately followed by one of " + validDelims));
     list.add(arr("/foo/{", "Invalid path expression: unclosed path parameter"));
     list.add(arr("/foo/{bar", "Invalid path expression: unclosed path parameter"));
     list.add(arr("/foo/{f{o}", "Invalid path expression: path parameter name must be a valid Java identifier"));
 
     list.add(arr("/foo/{}/", "Invalid path expression: the '{}' wildcard path parameter can only be declared at the end of the expression"));
-    list.add(arr("/foo{}{}", "Invalid path expression: path parameter can only be immediately preceeded by one of /-._~!$&'()*+,;=:@"));
+    list.add(arr("/foo{}{}", "Invalid path expression: path parameter can only be immediately preceeded by one of " + validDelims));
 
     final char[] delims;
     delims = validDelims.toCharArray();

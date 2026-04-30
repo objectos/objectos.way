@@ -290,7 +290,7 @@ public class HttpServerTest implements Consumer<HttpRouting> {
     @Override
     protected final void render() {
       Object o;
-      o = http.attr(key);
+      o = http.req(key);
 
       String text;
       text = String.valueOf(o);
@@ -311,7 +311,7 @@ public class HttpServerTest implements Consumer<HttpRouting> {
   }
 
   private void testCase04Get(HttpExchange http) {
-    http.attr(String.class, "TC04 GET");
+    http.req(String.class, "TC04 GET");
 
     http.ok(new AttributeTester(http, String.class));
   }

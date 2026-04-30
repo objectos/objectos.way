@@ -15,6 +15,7 @@
  */
 package objectos.http;
 
+import java.util.Iterator;
 import java.util.List;
 
 final class HttpHandler4List implements HttpHandler {
@@ -31,12 +32,14 @@ final class HttpHandler4List implements HttpHandler {
       return;
     }
 
-    for (HttpHandler handler : handlers) {
-      handler.handle(http);
+    final Iterator<HttpHandler> iter;
+    iter = handlers.iterator();
 
-      if (http.processed()) {
-        break;
-      }
+    while (!http.processed() && iter.hasNext()) {
+      final HttpHandler handler;
+      handler = iter.next();
+
+      handler.handle(http);
     }
   }
 

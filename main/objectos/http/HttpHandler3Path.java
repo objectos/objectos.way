@@ -15,6 +15,8 @@
  */
 package objectos.http;
 
+import java.util.Map;
+
 record HttpHandler3Path(HttpPathMatcher matcher, HttpHandler handler) implements HttpHandler {
 
   @Override
@@ -23,19 +25,24 @@ record HttpHandler3Path(HttpPathMatcher matcher, HttpHandler handler) implements
       return;
     }
 
-    final String $path;
-    $path = http.path();
+    final String path;
+    path = http.path();
 
-    final HttpPath path;
-    path = new HttpPath($path);
+    final HttpPath httpPath;
+    httpPath = new HttpPath(path);
 
-    if (!matcher.matches(path)) {
+    if (!matcher.matches(httpPath)) {
       return;
     }
 
-    throw new UnsupportedOperationException("Implement me :: http.attr(Key.PATH_PARAMS)");
+    final Map<String, String> pathParams;
+    pathParams = httpPath.params;
 
-    //handler.handle(http);
+    if (!pathParams.isEmpty()) {
+      http.req(HttpExchange0.PATH_PARAMS, pathParams);
+    }
+
+    handler.handle(http);
   }
 
 }

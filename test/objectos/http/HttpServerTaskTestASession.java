@@ -62,14 +62,14 @@ public class HttpServerTaskTestASession {
 
             switch (path) {
               case "/1" -> {
-                http.sessionAttr(String.class, "FOO\n");
+                http.session(String.class, "FOO\n");
 
                 http.ok(Media.Bytes.textPlain("NEW\n"));
               }
 
               case "/2" -> {
                 final String attr;
-                attr = http.sessionAttr(String.class);
+                attr = http.session(String.class);
 
                 http.ok(Media.Bytes.textPlain(attr));
               }
@@ -139,14 +139,14 @@ public class HttpServerTaskTestASession {
 
             switch (path) {
               case "/1" -> {
-                http.sessionAttr(class1, subject);
+                http.session(class1, subject);
 
                 http.ok(OK);
               }
 
               case "/2" -> {
                 final Subject attr;
-                attr = http.sessionAttr(class2);
+                attr = http.session(class2);
 
                 assertSame(attr, subject);
 
@@ -246,14 +246,14 @@ public class HttpServerTaskTestASession {
 
             switch (path) {
               case "/1" -> {
-                http.sessionAttr(testKey, "FOO\n");
+                http.session(testKey, "FOO\n");
 
                 http.ok(Media.Bytes.textPlain("NEW\n"));
               }
 
               case "/2" -> {
                 final String attr;
-                attr = http.sessionAttr(testKey);
+                attr = http.session(testKey);
 
                 http.ok(Media.Bytes.textPlain(attr));
               }
@@ -316,14 +316,14 @@ public class HttpServerTaskTestASession {
 
             switch (path) {
               case "/1" -> {
-                http.sessionAttr(String.class, "FOO\n");
+                http.session(String.class, "FOO\n");
 
                 http.ok(Media.Bytes.textPlain("NEW\n"));
               }
 
               case "/2" -> {
                 final String attr;
-                attr = http.sessionAttr(String.class);
+                attr = http.session(String.class);
 
                 http.sessionInvalidate();
 
@@ -332,7 +332,7 @@ public class HttpServerTaskTestASession {
 
               case "/3" -> {
                 final String attr;
-                attr = http.sessionAttr(String.class);
+                attr = http.session(String.class);
 
                 assertNull(attr);
 
@@ -403,23 +403,23 @@ public class HttpServerTaskTestASession {
 
             switch (path) {
               case "/1" -> {
-                http.sessionAttr(String.class, "FOO\n");
+                http.session(String.class, "FOO\n");
 
                 http.ok(Media.Bytes.textPlain("NEW\n"));
               }
 
               case "/2" -> {
                 final String attr;
-                attr = http.sessionAttr(String.class);
+                attr = http.session(String.class);
 
-                http.sessionAttr(String.class, null);
+                http.session(String.class, null);
 
                 http.ok(Media.Bytes.textPlain(attr));
               }
 
               case "/3" -> {
                 final String attr;
-                attr = http.sessionAttr(String.class);
+                attr = http.session(String.class);
 
                 assertNull(attr);
 

@@ -112,6 +112,7 @@ public class MarketingSiteTest {
         """
         HTTP/1.1 405
         allow: GET, HEAD
+        connection: close
         content-length: 0
         date: Wed, 28 Jun 2023 12:08:43 GMT
 
@@ -134,9 +135,11 @@ public class MarketingSiteTest {
       resp(socket, """
           HTTP/1.1 404 Not Found\r
           Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-          Content-Length: 0\r
           Connection: close\r
+          Content-Type: text/plain; charset=utf-8\r
+          Content-Length: 14\r
           \r
+          404 Not Found
           """);
     }
   }
