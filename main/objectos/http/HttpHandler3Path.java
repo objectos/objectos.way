@@ -16,8 +16,9 @@
 package objectos.http;
 
 import java.util.Map;
+import java.util.function.Predicate;
 
-record HttpHandler3Path(HttpPathMatcher matcher, HttpHandler handler) implements HttpHandler {
+record HttpHandler3Path(HttpPathMatcher matcher, Map<String, Predicate<String>> predicates, HttpHandler handler) implements HttpHandler {
 
   @Override
   public final void handle(HttpExchange http) {
@@ -37,6 +38,27 @@ record HttpHandler3Path(HttpPathMatcher matcher, HttpHandler handler) implements
 
     final Map<String, String> pathParams;
     pathParams = httpPath.params;
+
+    for (var entry : pathParams.entrySet()) {
+      final String paramName;
+      paramName = entry.getKey();
+
+      final Predicate<String> predicate;
+      predicate = predicates.get(paramName);
+
+      if (predicate == null) {
+        continue;
+      }
+
+      final String value;
+      value = entry.getValue();
+
+      if (predicate.test(value)) {
+        continue;
+      }
+
+      return;
+    }
 
     if (!pathParams.isEmpty()) {
       http.req(HttpExchange0.PATH_PARAMS, pathParams);

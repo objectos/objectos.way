@@ -17,11 +17,14 @@ package objectos.http;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 final class HttpRouting0 implements HttpRouting {
 
@@ -29,7 +32,19 @@ final class HttpRouting0 implements HttpRouting {
 
   private Set<HttpMethod> methods = Set.of();
 
+  private final Set<String> paramNames;
+
   private Set<String> paths = Set.of();
+
+  private Map<String, Predicate<String>> predicates = Map.of();
+
+  HttpRouting0() {
+    this(Set.of());
+  }
+
+  HttpRouting0(Set<String> paramNames) {
+    this.paramNames = paramNames;
+  }
 
   public final HttpHandler build() {
     build0Methods();
@@ -122,13 +137,54 @@ final class HttpRouting0 implements HttpRouting {
     final HttpPathMatcher matcher;
     matcher = parser.parse();
 
+    final Set<String> pathNames;
+    pathNames = parser.names();
+
+    final HttpRouting0 pathRoutes;
+    pathRoutes = new HttpRouting0(pathNames);
+
+    routing.accept(pathRoutes);
+
     final HttpHandler delegate;
-    delegate = HttpHandler.create(routing);
+    delegate = pathRoutes.build();
+
+    final Map<String, Predicate<String>> predicatesCopy;
+    predicatesCopy = Map.copyOf(predicates);
 
     final HttpHandler handler;
-    handler = new HttpHandler3Path(matcher, delegate);
+    handler = new HttpHandler3Path(matcher, predicatesCopy, delegate);
 
     handlers.add(handler);
+  }
+
+  @Override
+  public final void pathParam(String name, Predicate<String> predicate) {
+    final String key;
+    key = Objects.requireNonNull(name, "name == null");
+
+    if (!paramNames.contains(key)) {
+      final String msg;
+      msg = "Path expression does not declare a path parameter named '%s'".formatted(key);
+
+      throw new IllegalArgumentException(msg);
+    }
+
+    final Predicate<String> value;
+    value = Objects.requireNonNull(predicate, "predicate == null");
+
+    if (predicates.isEmpty()) {
+      predicates = new HashMap<>();
+    }
+
+    final Predicate<String> existing;
+    existing = predicates.put(key, value);
+
+    if (existing != null) {
+      final String msg;
+      msg = "A predicate for the path parameter '%s' was already defined".formatted(key);
+
+      throw new IllegalArgumentException(msg);
+    }
   }
 
 }

@@ -51,7 +51,7 @@ final class HttpPathMatcherParser {
     DELIMS = delims;
   }
 
-  private Set<String> paramNames;
+  private Set<String> paramNames = Set.of();
 
   private final String pathExpression;
 
@@ -88,6 +88,10 @@ final class HttpPathMatcherParser {
         }
       }
     }
+  }
+
+  public final Set<String> names() {
+    return paramNames;
   }
 
   private State state0StartPath() {
@@ -180,7 +184,7 @@ final class HttpPathMatcherParser {
       throw new IllegalArgumentException(msg);
     }
 
-    if (paramNames == null) {
+    if (paramNames.isEmpty()) {
       paramNames = new HashSet<>();
     }
 

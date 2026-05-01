@@ -16,6 +16,7 @@
 package objectos.http;
 
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /// Allows for creating a `HttpHandler` instance by declaring HTTP routes.
 ///
@@ -44,5 +45,20 @@ public sealed interface HttpRouting permits HttpRouting0 {
   /// @param path a path expression
   /// @param routing allows for configuring the path-specific route
   void path(String path, Consumer<? super HttpRouting> routing);
+
+  /// Restricts the value of specified path parameter to the specified
+  /// predicate.
+  ///
+  /// In other words, the route will be matched when:
+  ///
+  /// - it declares a path parameter with the same name; and
+  /// - the predicate evaluates to `true` with the path parameter value.
+  ///
+  /// @param name the path parameter name
+  /// @param predicate evaluates whether the path parameter value is valid or not
+  ///
+  /// @throws IllegalArgumentException if there's no path expression or if the
+  ///         path expression does not declare the specified path parameter
+  void pathParam(String name, Predicate<String> predicate);
 
 }

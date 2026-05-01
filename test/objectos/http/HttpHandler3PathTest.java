@@ -18,6 +18,8 @@ package objectos.http;
 import static org.testng.Assert.assertEquals;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Predicate;
 import objectos.way.Y;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -46,17 +48,33 @@ public class HttpHandler3PathTest {
   @DataProvider
   public Object[][] handleProvider() {
     return new Object[][] {
-        {new HttpPathMatcher0Exact("/foo"), "/foo", null},
-        {new HttpPathMatcher5List(List.of(
-            new HttpPathMatcher1Region("/foo/"),
-            new HttpPathMatcher3ParamLast("test")
-        )), "/foo/123", "123"}
+        {
+            new HttpPathMatcher0Exact("/foo"),
+            Map.of(),
+            "/foo", null
+        },
+        {
+            new HttpPathMatcher5List(List.of(
+                new HttpPathMatcher1Region("/foo/"),
+                new HttpPathMatcher3ParamLast("test")
+            )),
+            Map.of(),
+            "/foo/123", "123"
+        },
+        {
+            new HttpPathMatcher5List(List.of(
+                new HttpPathMatcher1Region("/foo/"),
+                new HttpPathMatcher3ParamLast("test")
+            )),
+            Map.of("test", PathParams.digits()),
+            "/foo/123", "123"
+        }
     };
   }
 
   @SuppressWarnings("exports")
   @Test(dataProvider = "handleProvider")
-  public void handle(HttpPathMatcher matcher, String path, String test) {
+  public void handle(HttpPathMatcher matcher, Map<String, Predicate<String>> predicates, String path, String test) {
     final HttpExchange http;
     http = HttpExchange.create(opts -> {
       opts.clock(Y.clockFixed());
@@ -65,7 +83,7 @@ public class HttpHandler3PathTest {
     });
 
     final HttpHandler handler;
-    handler = new HttpHandler3Path(matcher, delegate);
+    handler = new HttpHandler3Path(matcher, predicates, delegate);
 
     assertEquals(http.processed(), false);
 
@@ -79,6 +97,45 @@ public class HttpHandler3PathTest {
     Connection: close\r
     \r
     """.formatted(test));
+  }
+
+  @DataProvider
+  public Object[][] handleNotProvider() {
+    return new Object[][] {
+        {
+            new HttpPathMatcher0Exact("/foo"),
+            Map.of(),
+            "/"
+        },
+        {
+            new HttpPathMatcher5List(List.of(
+                new HttpPathMatcher1Region("/foo/"),
+                new HttpPathMatcher3ParamLast("test")
+            )),
+            Map.of("test", PathParams.digits()),
+            "/foo/xpto"
+        }
+    };
+  }
+
+  @SuppressWarnings("exports")
+  @Test(dataProvider = "handleNotProvider")
+  public void handleNot(HttpPathMatcher matcher, Map<String, Predicate<String>> predicates, String path) {
+    final HttpExchange http;
+    http = HttpExchange.create(opts -> {
+      opts.clock(Y.clockFixed());
+
+      opts.path(path);
+    });
+
+    final HttpHandler handler;
+    handler = new HttpHandler3Path(matcher, predicates, delegate);
+
+    assertEquals(http.processed(), false);
+
+    handler.handle(http);
+
+    assertEquals(http.processed(), false);
   }
 
 }
