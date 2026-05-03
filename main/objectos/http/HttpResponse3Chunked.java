@@ -232,9 +232,15 @@ final class HttpResponse3Chunked extends OutputStream {
   }
 
   private void writeChunkFlush() throws IOException {
-    outputStream.write(buffer, 0, bufferIndex);
+    try {
+      outputStream.write(buffer, 0, bufferIndex);
 
-    chunkIndex = dataIndex = bufferIndex = 0;
+      chunkIndex = dataIndex = bufferIndex = 0;
+    } catch (IOException e) {
+      closed = true;
+
+      throw e;
+    }
   }
 
 }
