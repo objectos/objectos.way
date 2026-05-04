@@ -15,6 +15,7 @@
  */
 package objectos.http;
 
+import java.nio.file.Path;
 import java.time.Clock;
 import java.util.function.Consumer;
 import objectos.lang.Key;
@@ -115,13 +116,18 @@ public sealed interface HttpExchange
     /// @param <T> the type of the value
     <T> void req(Key<T> key, T value);
 
-    /// Associate a session to the resulting exchange and store the provided
+    /// Associates a session to the resulting exchange and store the provided
     /// key-value pair in the session.
     ///
     /// @param <T> the type of the attribute
     /// @param key the class object providing the attribute name
     /// @param value the value to be stored
     <T> void session(Class<T> key, T value);
+
+    /// Defines the root directory where static files will be saved.
+    ///
+    /// @param value the static files root directory
+    void staticFilesDirectory(Path value);
 
     /// Sets the resulting exchange to be `Testable` aware.
     void testable();

@@ -22,7 +22,6 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.nio.file.attribute.BasicFileAttributes;
 import objectos.way.Media;
 
 final class HttpHost4StaticFilesWriter implements HttpStaticFilesWriter {
@@ -34,7 +33,10 @@ final class HttpHost4StaticFilesWriter implements HttpStaticFilesWriter {
   }
 
   @Override
-  public final String writeMedia(String path, Media media) throws HttpTraversalException, IOException {
+  public final void writeMedia(HttpExchange http, Media media) throws HttpTraversalException, IOException {
+    final String path;
+    path = http.path();
+
     final Path dst;
     dst = resolve(path);
 
@@ -66,11 +68,6 @@ final class HttpHost4StaticFilesWriter implements HttpStaticFilesWriter {
     }
 
     Files.move(tmp, dst, StandardCopyOption.ATOMIC_MOVE);
-
-    final BasicFileAttributes attributes;
-    attributes = Files.readAttributes(dst, BasicFileAttributes.class);
-
-    return HttpHost3StaticFiles.etag(attributes);
   }
 
   private Path resolve(String path) throws HttpTraversalException, IOException {

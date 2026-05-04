@@ -391,17 +391,7 @@ final class HttpExchange0 implements HttpExchange {
   @Override
   public final void staticFile(Media media) {
     try {
-      final String path;
-      path = request.path();
-
-      final String etag;
-      etag = staticFilesWriter.writeMedia(path, media);
-
-      if (!etag.isEmpty()) {
-        header(HttpHeaderName.ETAG, etag);
-      }
-
-      ok(media);
+      staticFilesWriter.writeMedia(this, media);
     } catch (HttpTraversalException e) {
       error(HttpStatus.BAD_REQUEST, e);
     } catch (IOException e) {

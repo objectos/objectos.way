@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Clock;
 import java.util.HashMap;
@@ -267,6 +268,18 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
   }
 
   @Override
+  public final void staticFilesDirectory(Path value) {
+    if (!Files.isDirectory(value)) {
+      final String msg;
+      msg = "Path does not represent a directory: %s".formatted(value);
+
+      throw new IllegalArgumentException(msg);
+    }
+
+    staticFilesDirectory = value;
+  }
+
+  @Override
   public final void testable() {
     testable = true;
   }
@@ -302,7 +315,7 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
     final HttpStaticFilesWriter staticFilesWriter;
 
     if (staticFilesDirectory != null) {
-      throw new UnsupportedOperationException("Implement me");
+      staticFilesWriter = new HttpHost4StaticFilesWriter(staticFilesDirectory);
     } else {
       staticFilesWriter = HttpStaticFilesWriter0Noop.INSTANCE;
     }

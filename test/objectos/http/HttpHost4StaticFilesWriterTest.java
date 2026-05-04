@@ -37,7 +37,10 @@ public class HttpHost4StaticFilesWriterTest {
     final HttpStaticFilesWriter writer;
     writer = create();
 
-    writer.writeMedia("/bytes/01", Media.Bytes.textPlain("AAAA"));
+    final HttpExchange http;
+    http = HttpExchange.create(opts -> opts.path("/bytes/01"));
+
+    writer.writeMedia(http, Media.Bytes.textPlain("AAAA"));
 
     assertEquals(
         Files.readString(rootDirectory.resolve("bytes/01")),
@@ -50,8 +53,11 @@ public class HttpHost4StaticFilesWriterTest {
     final HttpStaticFilesWriter writer;
     writer = create();
 
+    final HttpExchange http;
+    http = HttpExchange.create(opts -> opts.path("/bytes/../../01"));
+
     try {
-      writer.writeMedia("/bytes/../../01", Media.Bytes.textPlain("AAAA"));
+      writer.writeMedia(http, Media.Bytes.textPlain("AAAA"));
 
       Assert.fail("It should have thrown");
     } catch (HttpTraversalException expected) {

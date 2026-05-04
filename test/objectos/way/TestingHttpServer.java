@@ -136,7 +136,7 @@ public final class TestingHttpServer {
     private static HttpServer create0() throws IOException, InterruptedException {
       HANDLER = new ThisHandlerFactory();
 
-      HttpServer server;
+      final HttpServer server;
       server = HttpServer.create(opts -> {
         opts.address(InetAddress.getLoopbackAddress());
 

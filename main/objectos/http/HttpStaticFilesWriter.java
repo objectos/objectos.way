@@ -20,6 +20,6 @@ import objectos.way.Media;
 
 interface HttpStaticFilesWriter {
 
-  String writeMedia(String path, Media media) throws HttpTraversalException, IOException;
+  void writeMedia(HttpExchange http, Media media) throws HttpTraversalException, IOException;
 
 }

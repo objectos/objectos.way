@@ -15,6 +15,7 @@
  */
 package objectos.http;
 
+import java.io.IOException;
 import objectos.way.Media;
 
 enum HttpStaticFilesWriter0Noop implements HttpStaticFilesWriter {
@@ -22,9 +23,8 @@ enum HttpStaticFilesWriter0Noop implements HttpStaticFilesWriter {
   INSTANCE;
 
   @Override
-  public final String writeMedia(String path, Media media) {
+  public final void writeMedia(HttpExchange http, Media media) throws HttpTraversalException, IOException {
     // noop
-    return "";
   }
 
 }

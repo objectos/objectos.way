@@ -49,16 +49,16 @@ public class HttpServerTest implements Consumer<HttpRouting> {
   }
 
   private void handle1(HttpExchange http) {
-    String methodName;
+    final String methodName;
     methodName = http.pathParam("name");
 
     Throwable rethrow = null;
 
     try {
-      Class<? extends HttpServerTest> testClass;
+      final Class<? extends HttpServerTest> testClass;
       testClass = getClass();
 
-      Method handlingMethod;
+      final Method handlingMethod;
       handlingMethod = testClass.getDeclaredMethod(methodName, HttpExchange.class);
 
       handlingMethod.invoke(this, http);

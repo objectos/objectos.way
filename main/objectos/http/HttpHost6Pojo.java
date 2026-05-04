@@ -52,8 +52,8 @@ final class HttpHost6Pojo implements HttpHandler, HttpStaticFilesWriter {
   }
 
   @Override
-  public final String writeMedia(String path, Media media) throws HttpTraversalException, IOException {
-    return staticFilesWriter.writeMedia(path, media);
+  public final void writeMedia(HttpExchange http, Media media) throws HttpTraversalException, IOException {
+    staticFilesWriter.writeMedia(http, media);
   }
 
 }
