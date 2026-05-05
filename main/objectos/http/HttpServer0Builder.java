@@ -56,6 +56,24 @@ final class HttpServer0Builder implements HttpServer.Options {
   private Stage stage = Stage.PROD;
 
   public final HttpServer build() throws IOException {
+    // socketAddress
+    final InetAddress a;
+
+    if (address == null) {
+      a = InetAddress.getLoopbackAddress();
+    } else {
+      a = address;
+    }
+
+    final SocketAddress socketAddress;
+    socketAddress = new InetSocketAddress(a, port);
+
+    // serverSocket
+    final ServerSocket serverSocket;
+    serverSocket = new ServerSocket();
+
+    serverSocket.bind(socketAddress);
+
     // bodyOptions
     final int memoryMax;
 
@@ -81,7 +99,7 @@ final class HttpServer0Builder implements HttpServer.Options {
       for (HttpHost0Builder builder : hostBuilders.values()) {
         builder.noteSink = noteSink;
 
-        builder.serverPort = port;
+        builder.serverPort = serverSocket.getLocalPort();
 
         builder.serverRoot = root;
 
@@ -92,24 +110,6 @@ final class HttpServer0Builder implements HttpServer.Options {
 
         hosts = host.addTo(hosts);
       }
-
-      // socketAddress
-      final InetAddress a;
-
-      if (address == null) {
-        a = InetAddress.getLoopbackAddress();
-      } else {
-        a = address;
-      }
-
-      final SocketAddress socketAddress;
-      socketAddress = new InetSocketAddress(a, port);
-
-      // serverSocket
-      final ServerSocket serverSocket;
-      serverSocket = new ServerSocket();
-
-      serverSocket.bind(socketAddress);
 
       // serverLoop
       final Runnable serverLoop;

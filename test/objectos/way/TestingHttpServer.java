@@ -29,7 +29,6 @@ import objectos.http.HttpExchange;
 import objectos.http.HttpHandler;
 import objectos.http.HttpRoutingXTest;
 import objectos.http.HttpServer;
-import objectos.http.HttpServerTest;
 import objectos.http.HttpSessionStore;
 
 public final class TestingHttpServer {
@@ -38,10 +37,6 @@ public final class TestingHttpServer {
 
   public static void bindHttpRoutingTest(HttpRoutingXTest test) {
     ServerHolder.bindHttpRoutingTest(test);
-  }
-
-  public static void bindHttpServerTest(HttpServerTest test) {
-    ServerHolder.bindHttpServerTest(test);
   }
 
   public static Socket newSocket() throws IOException {
@@ -117,10 +112,6 @@ public final class TestingHttpServer {
       HANDLER.httpModuleTest.delegate = HttpHandler.create(test);
     }
 
-    public static void bindHttpServerTest(HttpServerTest test) {
-      HANDLER.httpServerTest.delegate = HttpHandler.create(test);
-    }
-
     private static HttpServer create() {
       try {
         return create0();
@@ -153,12 +144,6 @@ public final class TestingHttpServer {
         });
 
         opts.host(host -> {
-          host.name("http.server.test");
-
-          host.handler(HANDLER.httpServerTest);
-        });
-
-        opts.host(host -> {
           host.name("marketing");
 
           host.handler(HttpHandler.create(HANDLER.marketing));
@@ -181,8 +166,6 @@ public final class TestingHttpServer {
   private static class ThisHandlerFactory {
 
     private final DelegatingHandler httpModuleTest = new DelegatingHandler();
-
-    private final DelegatingHandler httpServerTest = new DelegatingHandler();
 
     private final MarketingSite marketing = new MarketingSite();
 

@@ -77,8 +77,10 @@ final class HttpHost0Builder implements HttpHost, HttpStaticFiles {
     staticFiles = new HttpHost3StaticFiles(contentTypes, defaultContentType, rootDirectory);
 
     // static files writer
-    final HttpStaticFilesWriter0RootDirectory staticFilesWriter;
+    final HttpStaticFilesWriter staticFilesWriter;
     staticFilesWriter = switch (stage) {
+      case DEV -> new HttpStaticFilesWriter1Dev();
+
       default -> new HttpStaticFilesWriter0RootDirectory(rootDirectory);
     };
 

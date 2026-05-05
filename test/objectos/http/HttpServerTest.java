@@ -15,20 +15,15 @@
  */
 package objectos.http;
 
-import static org.testng.Assert.assertEquals;
-
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.Socket;
-import java.net.http.HttpRequest.BodyPublishers;
-import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.function.Consumer;
+import objectos.lang.Stage;
 import objectos.way.Html;
 import objectos.way.Media;
-import objectos.way.TestingHttpServer;
 import objectos.way.TestingSingleParagraph;
 import objectos.way.Y;
 import org.testng.annotations.BeforeClass;
@@ -36,9 +31,26 @@ import org.testng.annotations.Test;
 
 public class HttpServerTest implements Consumer<HttpRouting> {
 
+  private HttpServer server;
+
   @BeforeClass
   public void beforeClass() throws Exception {
-    TestingHttpServer.bindHttpServerTest(this);
+    server = HttpServer.create(opts -> {
+      opts.clock(Y.clockFixed());
+
+      opts.noteSink(Y.noteSink());
+
+      opts.stage(Stage.PROD);
+
+      opts.host(host -> {
+        host.name("server.test.localhost");
+
+        final HttpHandler handler;
+        handler = HttpHandler.create(this);
+
+        host.handler(handler);
+      });
+    });
   }
 
   @Override
@@ -110,44 +122,46 @@ public class HttpServerTest implements Consumer<HttpRouting> {
   - reject other methods
   """)
   public void testCase01() throws IOException {
-    Y.test(
-        Y.httpClient(
-            "/test/testCase01",
+    try (Socket socket = HttpY.socket(server)) {
+      HttpY.test(
+          socket,
 
-            builder -> builder.headers(
-                "Host", "http.server.test"
-            )
-        ),
+          """
+          GET /test/testCase01 HTTP/1.1\r
+          Host: server.test.localhost:%d\r
+          \r
+          """.formatted(server.port()),
 
-        """
-        HTTP/1.1 200
-        content-length: 5
-        content-type: text/plain; charset=utf-8
-        date: Wed, 28 Jun 2023 12:08:43 GMT
+          """
+          HTTP/1.1 200 OK\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Content-Type: text/plain; charset=utf-8\r
+          Content-Length: 5\r
+          \r
+          TC01
+          """
+      );
 
-        TC01
-        """
-    );
+      HttpY.test(
+          socket,
 
-    Y.test(
-        Y.httpClient(
-            "/test/testCase01",
+          """
+          POST /test/testCase01 HTTP/1.1\r
+          Host: server.test.localhost:%d\r
+          \r
+          """.formatted(server.port()),
 
-            builder -> builder.POST(BodyPublishers.noBody()).headers(
-                "Host", "http.server.test"
-            )
-        ),
-
-        """
-        HTTP/1.1 405
-        connection: close
-        content-length: 23
-        content-type: text/plain; charset=utf-8
-        date: Wed, 28 Jun 2023 12:08:43 GMT
-
-        405 Method Not Allowed
-        """
-    );
+          """
+          HTTP/1.1 405 Method Not Allowed\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Connection: close\r
+          Content-Type: text/plain; charset=utf-8\r
+          Content-Length: 23\r
+          \r
+          405 Method Not Allowed
+          """
+      );
+    }
   }
 
   @SuppressWarnings("unused")
@@ -170,13 +184,15 @@ public class HttpServerTest implements Consumer<HttpRouting> {
   GET handler should be used for HEAD requests as well
   """)
   public void testCase02() throws IOException {
-    try (Socket socket = newSocket()) {
-      test(socket,
+    try (Socket socket = HttpY.socket(server)) {
+      HttpY.test(
+          socket,
+
           """
           HEAD /test/testCase02 HTTP/1.1\r
-          Host: http.server.test\r
+          Host: server.test.localhost:%d\r
           \r
-          """,
+          """.formatted(server.port()),
 
           """
           HTTP/1.1 200 OK\r
@@ -187,12 +203,15 @@ public class HttpServerTest implements Consumer<HttpRouting> {
           """
       );
 
-      test(socket,
+      HttpY.test(
+          socket,
+
           """
           GET /test/testCase02 HTTP/1.1\r
-          Host: http.server.test\r
+          Host: server.test.localhost:%d\r
+          Connection: close\r
           \r
-          """,
+          """.formatted(server.port()),
 
           """
           HTTP/1.1 200 OK\r
@@ -229,53 +248,68 @@ public class HttpServerTest implements Consumer<HttpRouting> {
   It should be possible to send pre-made 200 OK responses
   """)
   public void testCase03() throws IOException, InterruptedException {
-    HttpResponse<String> response;
-    response = Y.httpClient(
-        "/test/testCase03",
+    try (Socket socket = HttpY.socket(server)) {
+      HttpY.test(
+          socket,
 
-        builder -> builder.HEAD().headers(
-            "Host", "http.server.test"
-        )
-    );
+          """
+          HEAD /test/testCase03 HTTP/1.1\r
+          Host: server.test.localhost:%d\r
+          \r
+          """.formatted(server.port()),
 
-    assertEquals(response.statusCode(), 200);
-    assertEquals(response.headers().allValues("Content-Type"), List.of("text/html; charset=utf-8"));
-    assertEquals(response.headers().allValues("Date"), List.of("Wed, 28 Jun 2023 12:08:43 GMT"));
-    assertEquals(response.body(), "");
+          """
+          HTTP/1.1 200 OK\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Content-Type: text/html; charset=utf-8\r
+          Transfer-Encoding: chunked\r
+          \r
+          """
+      );
 
-    response = Y.httpClient(
-        "/test/testCase03",
+      HttpY.test(
+          socket,
 
-        builder -> builder.headers(
-            "Host", "http.server.test"
-        )
-    );
+          """
+          GET /test/testCase03 HTTP/1.1\r
+          Host: server.test.localhost:%d\r
+          \r
+          """.formatted(server.port()),
 
-    assertEquals(response.statusCode(), 200);
-    assertEquals(response.headers().allValues("Content-Type"), List.of("text/html; charset=utf-8"));
-    assertEquals(response.headers().allValues("Date"), List.of("Wed, 28 Jun 2023 12:08:43 GMT"));
-    assertEquals(response.body(), """
-    <html>
-    <p>TC03 GET</p>
-    </html>
-    """);
+          """
+          HTTP/1.1 200 OK\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Content-Type: text/html; charset=utf-8\r
+          Transfer-Encoding: chunked\r
+          \r
+          <html>
+          <p>TC03 GET</p>
+          </html>
+          """
+      );
 
-    response = Y.httpClient(
-        "/test/testCase03",
+      HttpY.test(
+          socket,
 
-        builder -> builder.POST(BodyPublishers.noBody()).headers(
-            "Host", "http.server.test"
-        )
-    );
+          """
+          POST /test/testCase03 HTTP/1.1\r
+          Host: server.test.localhost:%d\r
+          Connection: close\r
+          \r
+          """.formatted(server.port()),
 
-    assertEquals(response.statusCode(), 200);
-    assertEquals(response.headers().allValues("Content-Type"), List.of("text/html; charset=utf-8"));
-    assertEquals(response.headers().allValues("Date"), List.of("Wed, 28 Jun 2023 12:08:43 GMT"));
-    assertEquals(response.body(), """
-    <html>
-    <p>TC03 POST</p>
-    </html>
-    """);
+          """
+          HTTP/1.1 200 OK\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Content-Type: text/html; charset=utf-8\r
+          Transfer-Encoding: chunked\r
+          \r
+          <html>
+          <p>TC03 POST</p>
+          </html>
+          """
+      );
+    }
   }
 
   private static final class AttributeTester extends Html.Template {
@@ -324,43 +358,46 @@ public class HttpServerTest implements Consumer<HttpRouting> {
   Request attributes should be reset between requests
   """)
   public void testCase04() throws IOException, InterruptedException {
-    Y.test(
-        Y.httpClient(
-            "/test/testCase04",
+    try (Socket socket = HttpY.socket(server)) {
+      HttpY.test(
+          socket,
 
-            builder -> builder.headers(
-                "Host", "http.server.test"
-            )
-        ),
+          """
+          GET /test/testCase04 HTTP/1.1\r
+          Host: server.test.localhost:%d\r
+          \r
+          """.formatted(server.port()),
 
-        """
-        HTTP/1.1 200
-        content-type: text/html; charset=utf-8
-        date: Wed, 28 Jun 2023 12:08:43 GMT
-        transfer-encoding: chunked
+          """
+          HTTP/1.1 200 OK\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Content-Type: text/html; charset=utf-8\r
+          Transfer-Encoding: chunked\r
+          \r
+          <p>TC04 GET</p>
+          """
+      );
 
-        <p>TC04 GET</p>
-        """
-    );
+      HttpY.test(
+          socket,
 
-    Y.test(
-        Y.httpClient(
-            "/test/testCase04",
+          """
+          POST /test/testCase04 HTTP/1.1\r
+          Host: server.test.localhost:%d\r
+          Connection: close\r
+          \r
+          """.formatted(server.port()),
 
-            builder -> builder.POST(BodyPublishers.noBody()).headers(
-                "Host", "http.server.test"
-            )
-        ),
-
-        """
-        HTTP/1.1 200
-        content-type: text/html; charset=utf-8
-        date: Wed, 28 Jun 2023 12:08:43 GMT
-        transfer-encoding: chunked
-
-        <p>null</p>
-        """
-    );
+          """
+          HTTP/1.1 200 OK\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Content-Type: text/html; charset=utf-8\r
+          Transfer-Encoding: chunked\r
+          \r
+          <p>null</p>
+          """
+      );
+    }
   }
 
   @SuppressWarnings("unused")
@@ -379,27 +416,29 @@ public class HttpServerTest implements Consumer<HttpRouting> {
   @Test(description = """
   An Http.AbstractHandlerException caught by the loop should call its handle method
   """)
-  public void testCase05() {
-    Y.test(
-        Y.httpClient(
-            "/test/testCase05",
+  public void testCase05() throws IOException {
+    try (Socket socket = HttpY.socket(server)) {
+      HttpY.test(
+          socket,
 
-            builder -> builder.GET().headers(
-                "Host", "http.server.test",
-                "Connection", "close"
-            )
-        ),
+          """
+          GET /test/testCase05 HTTP/1.1\r
+          Host: server.test.localhost:%d\r
+          Connection: close\r
+          \r
+          """.formatted(server.port()),
 
-        """
-        HTTP/1.1 404
-        connection: close
-        content-length: 14
-        content-type: text/plain; charset=utf-8
-        date: Wed, 28 Jun 2023 12:08:43 GMT
-
-        404 Not Found
-        """
-    );
+          """
+          HTTP/1.1 404 Not Found\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Connection: close\r
+          Content-Type: text/plain; charset=utf-8\r
+          Content-Length: 14\r
+          \r
+          404 Not Found
+          """
+      );
+    }
   }
 
   @SuppressWarnings("unused")
@@ -408,35 +447,29 @@ public class HttpServerTest implements Consumer<HttpRouting> {
   }
 
   @Test
-  public void testCase06() {
-    Y.test(
-        Y.httpClient(
-            "/test/testCase06",
+  public void testCase06() throws IOException {
+    try (Socket socket = HttpY.socket(server)) {
+      HttpY.test(
+          socket,
 
-            builder -> builder.headers(
-                "Host", "http.server.test",
-                "Connection", "close"
-            )
-        ),
+          """
+          GET /test/testCase06 HTTP/1.1\r
+          Host: server.test.localhost:%d\r
+          Connection: close\r
+          \r
+          """.formatted(server.port()),
 
-        """
-        HTTP/1.1 500
-        connection: close
-        content-length: 82
-        content-type: text/plain; charset=utf-8
-        date: Wed, 28 Jun 2023 12:08:43 GMT
-
-        The server encountered an internal error and was unable to complete your request.
-        """
-    );
-  }
-
-  private Socket newSocket() throws IOException {
-    return TestingHttpServer.newSocket();
-  }
-
-  private void test(Socket socket, String request, String expectedResponse) throws IOException {
-    TestingHttpServer.test(socket, request, expectedResponse);
+          """
+          HTTP/1.1 500 Internal Server Error\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Connection: close\r
+          Content-Type: text/plain; charset=utf-8\r
+          Content-Length: 82\r
+          \r
+          The server encountered an internal error and was unable to complete your request.
+          """
+      );
+    }
   }
 
 }

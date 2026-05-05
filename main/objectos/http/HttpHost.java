@@ -20,10 +20,7 @@ import java.util.function.Consumer;
 /// Configures a name-based web site to be served by a `HttpServer` instance.
 public sealed interface HttpHost permits HttpHost0Builder {
 
-  /// Sets the name of this host. The specified name will be matched against the
-  /// HTTP request `Host` header field value. Defaults to `localhost:port` when
-  /// not specified, where `port` is the port number to which the server is
-  /// listening to.
+  /// Sets the name of this host.
   ///
   /// @param value the host name
   void name(String value);

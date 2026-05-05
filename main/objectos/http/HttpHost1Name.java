@@ -28,15 +28,19 @@ final class HttpHost1Name {
   }
 
   public final String get() {
-    if (name != null) {
-      return name;
+    final String hostName;
+
+    if (name == null) {
+      hostName = "localhost";
+    } else {
+      hostName = name;
     }
 
     if (port == 80) {
-      return "localhost";
+      return hostName;
+    } else {
+      return hostName + ":" + port;
     }
-
-    return "localhost:" + port;
   }
 
 }

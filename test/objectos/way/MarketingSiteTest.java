@@ -36,10 +36,10 @@ public class MarketingSiteTest {
     try (Socket socket = newSocket()) {
       req(socket, """
           GET / HTTP/1.1\r
-          Host: marketing\r
+          Host: marketing:%d\r
           Connection: close\r
           \r
-          """);
+          """.formatted(TestingHttpServer.port()));
 
       resp(socket, """
           HTTP/1.1 301 Moved Permanently\r
@@ -60,7 +60,7 @@ public class MarketingSiteTest {
         "/index.html",
 
         builder -> builder.headers(
-            "Host", "marketing",
+            "Host", "marketing:" + TestingHttpServer.port(),
             "Connection", "close"
         )
     );
@@ -84,7 +84,7 @@ public class MarketingSiteTest {
         "/index.html",
 
         builder -> builder.HEAD().headers(
-            "Host", "marketing",
+            "Host", "marketing:" + TestingHttpServer.port(),
             "Connection", "close"
         )
     );
@@ -105,7 +105,7 @@ public class MarketingSiteTest {
             "/index.html",
 
             builder -> builder.method("POST", BodyPublishers.noBody()).headers(
-                "Host", "marketing"
+                "Host", "marketing:" + TestingHttpServer.port()
             )
         ),
 
@@ -127,10 +127,10 @@ public class MarketingSiteTest {
     try (Socket socket = newSocket()) {
       req(socket, """
           GET /i-do-not-exist HTTP/1.1\r
-          Host: marketing\r
+          Host: marketing:%d\r
           Connection: close\r
           \r
-          """);
+          """.formatted(TestingHttpServer.port()));
 
       resp(socket, """
           HTTP/1.1 404 Not Found\r
