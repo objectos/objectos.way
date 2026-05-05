@@ -24,12 +24,12 @@ import objectos.way.Y;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class HttpHost4StaticFilesWriterTest {
+public class HttpStaticFilesWriter0RootDirectoryTest {
 
   private final Path rootDirectory = Y.nextTempDir();
 
   private HttpStaticFilesWriter create() {
-    return new HttpHost4StaticFilesWriter(rootDirectory);
+    return new HttpStaticFilesWriter0RootDirectory(rootDirectory);
   }
 
   @Test

@@ -68,6 +68,11 @@ public sealed interface HttpServer extends Closeable permits HttpServer2Pojo {
     /// @param value the maximum size (in bytes) of an allowed request body
     void requestBodySizeMax(long value);
 
+    /// Sets the server's stage to the specified value.
+    ///
+    /// @param value the stage
+    void stage(Stage value);
+
   }
 
   /// Creates a new HTTP server instance with the specified configuration. The

@@ -15,10 +15,7 @@
  */
 package objectos.http;
 
-import java.io.IOException;
-import objectos.way.Media;
-
-final class HttpHost6Pojo implements HttpHandler, HttpStaticFilesWriter {
+final class HttpHost5Pojo implements HttpHandler {
 
   private final HttpHandler handler;
 
@@ -28,7 +25,7 @@ final class HttpHost6Pojo implements HttpHandler, HttpStaticFilesWriter {
 
   private final HttpStaticFilesWriter staticFilesWriter;
 
-  HttpHost6Pojo(HttpHandler handler, String name, HttpSessionLoader sessionLoader, HttpStaticFilesWriter staticFilesWriter) {
+  HttpHost5Pojo(HttpHandler handler, String name, HttpSessionLoader sessionLoader, HttpStaticFilesWriter staticFilesWriter) {
     this.handler = handler;
 
     this.name = name;
@@ -51,9 +48,8 @@ final class HttpHost6Pojo implements HttpHandler, HttpStaticFilesWriter {
     return sessionLoader.loadSession(request, response);
   }
 
-  @Override
-  public final void writeMedia(HttpExchange http, Media media) throws HttpTraversalException, IOException {
-    staticFilesWriter.writeMedia(http, media);
+  public final HttpStaticFilesWriter staticFilesWriter() {
+    return staticFilesWriter;
   }
 
 }

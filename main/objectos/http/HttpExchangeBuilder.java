@@ -315,9 +315,9 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
     final HttpStaticFilesWriter staticFilesWriter;
 
     if (staticFilesDirectory != null) {
-      staticFilesWriter = new HttpHost4StaticFilesWriter(staticFilesDirectory);
+      staticFilesWriter = new HttpStaticFilesWriter0RootDirectory(staticFilesDirectory);
     } else {
-      staticFilesWriter = HttpStaticFilesWriter0Noop.INSTANCE;
+      staticFilesWriter = HttpStaticFilesWriter2Noop.INSTANCE;
     }
 
     return new HttpExchange0(attributes, request, response, session, staticFilesWriter);

@@ -25,6 +25,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 import objectos.internal.Util;
+import objectos.lang.Stage;
 import objectos.way.Note;
 
 final class HttpHost0Builder implements HttpHost, HttpStaticFiles {
@@ -39,15 +40,23 @@ final class HttpHost0Builder implements HttpHost, HttpStaticFiles {
 
   private String name;
 
+  Note.Sink noteSink;
+
   private Path rootDirectory;
 
+  int serverPort;
+
+  Path serverRoot;
+
   private HttpSessionLoader sessionLoader = (_, _) -> null;
+
+  Stage stage = Stage.PROD;
 
   // ##################################################################
   // # BEGIN: Build
   // ##################################################################
 
-  public HttpHost6Pojo build(Note.Sink noteSink, int serverPort, Path serverRoot) throws IOException {
+  public HttpHost5Pojo build() throws IOException {
     // name
     final HttpHost1Name nameBuilder;
     nameBuilder = new HttpHost1Name(name, serverPort);
@@ -68,14 +77,16 @@ final class HttpHost0Builder implements HttpHost, HttpStaticFiles {
     staticFiles = new HttpHost3StaticFiles(contentTypes, defaultContentType, rootDirectory);
 
     // static files writer
-    final HttpHost4StaticFilesWriter staticFilesWriter;
-    staticFilesWriter = new HttpHost4StaticFilesWriter(rootDirectory);
+    final HttpStaticFilesWriter0RootDirectory staticFilesWriter;
+    staticFilesWriter = switch (stage) {
+      default -> new HttpStaticFilesWriter0RootDirectory(rootDirectory);
+    };
 
     // handler
     final HttpHandler hostHandler;
-    hostHandler = new HttpHost5Handler(handler, staticFiles);
+    hostHandler = new HttpHost4Handler(handler, staticFiles);
 
-    return new HttpHost6Pojo(hostHandler, name, sessionLoader, staticFilesWriter);
+    return new HttpHost5Pojo(hostHandler, name, sessionLoader, staticFilesWriter);
   }
 
   // ##################################################################

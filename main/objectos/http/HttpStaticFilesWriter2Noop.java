@@ -18,12 +18,13 @@ package objectos.http;
 import java.io.IOException;
 import objectos.way.Media;
 
-sealed interface HttpStaticFilesWriter
-    permits
-    HttpStaticFilesWriter0RootDirectory,
-    HttpStaticFilesWriter1Dev,
-    HttpStaticFilesWriter2Noop {
+enum HttpStaticFilesWriter2Noop implements HttpStaticFilesWriter {
 
-  void writeMedia(HttpExchange http, Media media) throws HttpTraversalException, IOException;
+  INSTANCE;
+
+  @Override
+  public final void writeMedia(HttpExchange http, Media media) throws HttpTraversalException, IOException {
+    // noop
+  }
 
 }

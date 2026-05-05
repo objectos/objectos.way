@@ -15,15 +15,33 @@
  */
 package objectos.http;
 
-import java.io.IOException;
-import objectos.way.Media;
+final class HttpHost4Handler implements HttpHandler {
 
-sealed interface HttpStaticFilesWriter
-    permits
-    HttpStaticFilesWriter0RootDirectory,
-    HttpStaticFilesWriter1Dev,
-    HttpStaticFilesWriter2Noop {
+  private final HttpHandler main;
 
-  void writeMedia(HttpExchange http, Media media) throws HttpTraversalException, IOException;
+  private final HttpHandler staticFiles;
+
+  HttpHost4Handler(HttpHandler main, HttpHandler staticFiles) {
+    this.main = main;
+
+    this.staticFiles = staticFiles;
+  }
+
+  @Override
+  public final void handle(HttpExchange http) {
+    main.handle(http);
+
+    if (http.processed()) {
+      return;
+    }
+
+    staticFiles.handle(http);
+
+    if (http.processed()) {
+      return;
+    }
+
+    http.error(HttpStatus.NOT_FOUND);
+  }
 
 }

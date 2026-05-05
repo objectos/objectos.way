@@ -163,7 +163,7 @@ final class HttpServerTask implements Runnable {
     final HttpRequestHeaders0 headers;
     headers = new HttpRequestHeaders0(headersMap);
 
-    final HttpHost6Pojo host;
+    final HttpHost5Pojo host;
     host = validate(headers);
 
     // body meta
@@ -228,9 +228,13 @@ final class HttpServerTask implements Runnable {
     final HttpSession session;
     session = host.loadSession(request, response);
 
+    // static files
+    final HttpStaticFilesWriter staticFilesWriter;
+    staticFilesWriter = host.staticFilesWriter();
+
     // exchange
     final HttpExchange0 exchange;
-    exchange = new HttpExchange0(request, response, session, host);
+    exchange = new HttpExchange0(request, response, session, staticFilesWriter);
 
     try {
       try {
@@ -262,7 +266,7 @@ final class HttpServerTask implements Runnable {
     }
   }
 
-  private HttpHost6Pojo validate(HttpRequestHeaders0 headers) throws IOException {
+  private HttpHost5Pojo validate(HttpRequestHeaders0 headers) throws IOException {
     final List<String> hostHeader;
     hostHeader = headers.headerAll(HttpHeaderName.HOST);
 
@@ -290,7 +294,7 @@ final class HttpServerTask implements Runnable {
       throw new HttpServerException(HttpServerException.Kind.TRANSFER_ENCODING);
     }
 
-    final HttpHost6Pojo host;
+    final HttpHost5Pojo host;
     host = hosts.get(hostValue);
 
     if (host == null) {

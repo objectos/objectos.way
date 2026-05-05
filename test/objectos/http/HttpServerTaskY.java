@@ -154,6 +154,12 @@ public final class HttpServerTaskY {
 
     hostBuilder.name(hostName);
 
+    hostBuilder.noteSink = noteSink;
+
+    hostBuilder.serverPort = 80;
+
+    hostBuilder.serverRoot = SERVER_ROOT;
+
     if (sessionStore != null) {
       hostBuilder.sessionStore(sessionStore);
     }
@@ -164,10 +170,10 @@ public final class HttpServerTaskY {
       hostBuilder.rootDirectory(staticFilesDirectory);
     }
 
-    final HttpHost6Pojo host;
+    final HttpHost5Pojo host;
 
     try {
-      host = hostBuilder.build(noteSink, 80, SERVER_ROOT);
+      host = hostBuilder.build();
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     }

@@ -15,33 +15,14 @@
  */
 package objectos.http;
 
-final class HttpHost5Handler implements HttpHandler {
+import java.io.IOException;
+import objectos.way.Media;
 
-  private final HttpHandler main;
-
-  private final HttpHandler staticFiles;
-
-  HttpHost5Handler(HttpHandler main, HttpHandler staticFiles) {
-    this.main = main;
-
-    this.staticFiles = staticFiles;
-  }
+final class HttpStaticFilesWriter1Dev implements HttpStaticFilesWriter {
 
   @Override
-  public final void handle(HttpExchange http) {
-    main.handle(http);
-
-    if (http.processed()) {
-      return;
-    }
-
-    staticFiles.handle(http);
-
-    if (http.processed()) {
-      return;
-    }
-
-    http.error(HttpStatus.NOT_FOUND);
+  public final void writeMedia(HttpExchange http, Media media) throws HttpTraversalException, IOException {
+    http.ok(media);
   }
 
 }

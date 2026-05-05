@@ -24,11 +24,11 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import objectos.way.Media;
 
-final class HttpHost4StaticFilesWriter implements HttpStaticFilesWriter {
+final class HttpStaticFilesWriter0RootDirectory implements HttpStaticFilesWriter {
 
   private final Path rootDirectory;
 
-  HttpHost4StaticFilesWriter(Path rootDirectory) {
+  HttpStaticFilesWriter0RootDirectory(Path rootDirectory) {
     this.rootDirectory = rootDirectory;
   }
 

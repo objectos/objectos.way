@@ -29,6 +29,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import objectos.internal.Check;
 import objectos.internal.NoOpSinkSingleton;
+import objectos.lang.Stage;
 import objectos.way.Io;
 import objectos.way.Note;
 
@@ -51,6 +52,8 @@ final class HttpServer0Builder implements HttpServer.Options {
   private Note.Sink noteSink = NoOpSinkSingleton.INSTANCE;
 
   private int port = 0;
+
+  private Stage stage = Stage.PROD;
 
   public final HttpServer build() throws IOException {
     // bodyOptions
@@ -76,8 +79,16 @@ final class HttpServer0Builder implements HttpServer.Options {
       hosts = HttpHosts.of();
 
       for (HttpHost0Builder builder : hostBuilders.values()) {
-        final HttpHost6Pojo host;
-        host = builder.build(noteSink, port, root);
+        builder.noteSink = noteSink;
+
+        builder.serverPort = port;
+
+        builder.serverRoot = root;
+
+        builder.stage = stage;
+
+        final HttpHost5Pojo host;
+        host = builder.build();
 
         hosts = host.addTo(hosts);
       }
@@ -192,6 +203,11 @@ final class HttpServer0Builder implements HttpServer.Options {
     Check.argument(value >= 0, "max request body size must not be negative");
 
     requestBodySizeMax = value;
+  }
+
+  @Override
+  public final void stage(Stage value) {
+    stage = Objects.requireNonNull(value, "value == null");
   }
 
 }

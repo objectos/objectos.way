@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectos.lang;
 
-import java.io.IOException;
-import objectos.way.Media;
+/// The stage the application is running on.
+public enum Stage {
 
-enum HttpStaticFilesWriter0Noop implements HttpStaticFilesWriter {
+  /// Testing
+  TEST,
 
-  INSTANCE;
+  /// Development
+  DEV,
 
-  @Override
-  public final void writeMedia(HttpExchange http, Media media) throws HttpTraversalException, IOException {
-    // noop
-  }
+  /// Production
+  PROD;
 
 }
