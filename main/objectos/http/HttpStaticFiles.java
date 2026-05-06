@@ -53,4 +53,14 @@ public sealed interface HttpStaticFiles permits HttpHost0Builder {
   ///        mapping in each line
   void contentTypes(String propertiesString);
 
+  /// Sets the static files root directory to the specified value. All static
+  /// files are saved relative to the root directory. The directory must exist
+  /// and be accessible to the JVM process prior to invoking this method.
+  ///
+  /// @param value the root directory path
+  ///
+  /// @throws IllegalArgumentException if the path does not represent a directory
+  ///         or is not accessible to the JVM process
+  void rootDirectory(Path value);
+
 }

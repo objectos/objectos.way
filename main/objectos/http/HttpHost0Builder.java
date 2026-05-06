@@ -50,7 +50,7 @@ final class HttpHost0Builder implements HttpHost, HttpStaticFiles {
 
   private HttpSessionLoader sessionLoader = (_, _) -> null;
 
-  Stage stage = Stage.PROD;
+  Stage stage;
 
   // ##################################################################
   // # BEGIN: Build
@@ -66,10 +66,14 @@ final class HttpHost0Builder implements HttpHost, HttpStaticFiles {
 
     // rootDirectory
     if (rootDirectory == null) {
-      final HttpHost2RootDirectory rootDirectoryBuilder;
-      rootDirectoryBuilder = new HttpHost2RootDirectory(name, noteSink, serverRoot, directories);
+      rootDirectory = Files.createTempDirectory(serverRoot, name);
+    }
 
-      rootDirectory = rootDirectoryBuilder.get();
+    for (Path source : directories) {
+      final HttpHost2CopyDirectory copy;
+      copy = new HttpHost2CopyDirectory(noteSink, source, rootDirectory);
+
+      Files.walkFileTree(source, copy);
     }
 
     // static files
@@ -81,7 +85,7 @@ final class HttpHost0Builder implements HttpHost, HttpStaticFiles {
     staticFilesWriter = switch (stage) {
       case DEV -> new HttpStaticFilesWriter1Dev();
 
-      default -> new HttpStaticFilesWriter0RootDirectory(rootDirectory);
+      case null, default -> new HttpStaticFilesWriter0RootDirectory(rootDirectory);
     };
 
     // handler
@@ -112,6 +116,11 @@ final class HttpHost0Builder implements HttpHost, HttpStaticFiles {
   @Override
   public final void sessionStore(HttpSessionStore value) {
     sessionLoader = (HttpSessionLoader) Objects.requireNonNull(value, "value == null");
+  }
+
+  @Override
+  public final void stage(Stage value) {
+    stage = Objects.requireNonNull(value, "value == null");
   }
 
   @Override
@@ -163,6 +172,7 @@ final class HttpHost0Builder implements HttpHost, HttpStaticFiles {
     }
   }
 
+  @Override
   public final void rootDirectory(Path value) {
     if (!Files.isDirectory(value)) {
       final String msg;
@@ -172,6 +182,12 @@ final class HttpHost0Builder implements HttpHost, HttpStaticFiles {
     }
 
     rootDirectory = value;
+  }
+
+  final void serverStage(Stage value) {
+    if (stage == null) {
+      stage = value;
+    }
   }
 
   private void register(String extension, String contentType) {

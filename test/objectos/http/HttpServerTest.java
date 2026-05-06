@@ -16,10 +16,16 @@
 package objectos.http;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.FileTime;
+import java.time.Clock;
+import java.time.Instant;
 import java.util.function.Consumer;
 import objectos.lang.Stage;
 import objectos.way.Html;
@@ -29,12 +35,98 @@ import objectos.way.Y;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class HttpServerTest implements Consumer<HttpRouting> {
+public class HttpServerTest {
+
+  private final Path root = Y.nextTempDir();
 
   private HttpServer server;
 
+  private static final class Host1 implements Consumer<HttpRouting> {
+    private final HttpServerTest instance;
+
+    Host1(HttpServerTest instance) {
+      this.instance = instance;
+    }
+
+    @Override
+    public final void accept(HttpRouting routing) {
+      routing.path("/test/{name}", path -> {
+        path.handler(this::handle);
+      });
+    }
+
+    private void handle(HttpExchange http) {
+      final String methodName;
+      methodName = http.pathParam("name");
+
+      Throwable rethrow = null;
+
+      try {
+        final Class<? extends HttpServerTest> testClass;
+        testClass = HttpServerTest.class;
+
+        final Method handlingMethod;
+        handlingMethod = testClass.getDeclaredMethod(methodName, HttpExchange.class);
+
+        handlingMethod.invoke(instance, http);
+      } catch (InvocationTargetException e) {
+        Throwable cause;
+        cause = e.getCause();
+
+        if (cause instanceof RuntimeException re) {
+          throw re;
+        }
+
+        rethrow = e;
+      } catch (Exception e) {
+        rethrow = e;
+      }
+
+      if (rethrow instanceof Error err) {
+        throw err;
+      }
+
+      if (rethrow instanceof RuntimeException re) {
+        throw re;
+      }
+
+      if (rethrow != null) {
+        throw new RuntimeException(rethrow);
+      }
+    }
+  }
+
+  private static final class Host2 implements Consumer<HttpRouting> {
+    @Override
+    public void accept(HttpRouting routing) {
+      routing.path("/host01", path -> path.GET(this::host01));
+
+      routing.path("/staticFiles03", path -> path.GET(this::staticFiles03));
+    }
+
+    private void host01(HttpExchange http) {
+      http.ok(Media.Bytes.textPlain("HOST01"));
+    }
+
+    private void staticFiles03(HttpExchange http) {
+      http.staticFile(Media.Bytes.textPlain("SF03\n"));
+    }
+  }
+
   @BeforeClass
   public void beforeClass() throws Exception {
+    final Path dir;
+    dir = Y.nextTempDir();
+
+    final Path sub;
+    sub = dir.resolve("files");
+
+    Files.createDirectory(sub);
+
+    Files.writeString(dir.resolve("staticFiles01"), "default\n");
+
+    Files.writeString(sub.resolve("staticFiles01.txt"), "text\n");
+
     server = HttpServer.create(opts -> {
       opts.clock(Y.clockFixed());
 
@@ -45,58 +137,75 @@ public class HttpServerTest implements Consumer<HttpRouting> {
       opts.host(host -> {
         host.name("server.test.localhost");
 
+        final Host1 host1;
+        host1 = new Host1(this);
+
         final HttpHandler handler;
-        handler = HttpHandler.create(this);
+        handler = HttpHandler.create(host1);
 
         host.handler(handler);
+
+        host.staticFiles(files -> {
+          files.addDirectory(dir);
+
+          files.contentTypes("""
+          .txt: text/plain; charset=utf8
+          """);
+
+          files.rootDirectory(root);
+        });
+      });
+
+      opts.host(host -> {
+        host.name("server2.test.localhost");
+
+        final Host2 host2;
+        host2 = new Host2();
+
+        final HttpHandler handler;
+        handler = HttpHandler.create(host2);
+
+        host.handler(handler);
+
+        host.stage(Stage.DEV);
       });
     });
+
+    setLastModifiedTime(root, "staticFiles01");
+    setLastModifiedTime(root, "files/staticFiles01.txt");
+
+    Y.shutdownHook(server);
   }
 
-  @Override
-  public final void accept(HttpRouting routing) {
-    routing.path("/test/{name}", path -> {
-      path.handler(this::handle1);
-    });
+  private void setLastModifiedTime(Path root, String path) throws IOException {
+    final Path target;
+    target = root.resolve(path);
+
+    final Clock clock;
+    clock = Y.clockFixed();
+
+    final Instant instant;
+    instant = clock.instant();
+
+    final FileTime fileTime;
+    fileTime = FileTime.from(instant);
+
+    Files.setLastModifiedTime(target, fileTime);
   }
 
-  private void handle1(HttpExchange http) {
-    final String methodName;
-    methodName = http.pathParam("name");
+  private void test(String... xchs) throws IOException {
+    try (Socket socket = HttpY.socket(server)) {
+      for (int idx = 0, len = xchs.length; idx < len;) {
+        String req;
+        req = xchs[idx++];
 
-    Throwable rethrow = null;
+        req = req.formatted(server.port());
 
-    try {
-      final Class<? extends HttpServerTest> testClass;
-      testClass = getClass();
+        final String resp;
+        resp = xchs[idx++];
 
-      final Method handlingMethod;
-      handlingMethod = testClass.getDeclaredMethod(methodName, HttpExchange.class);
-
-      handlingMethod.invoke(this, http);
-    } catch (InvocationTargetException e) {
-      Throwable cause;
-      cause = e.getCause();
-
-      if (cause instanceof RuntimeException re) {
-        throw re;
+        HttpY.test(socket, req, resp);
       }
-
-      rethrow = e;
-    } catch (Exception e) {
-      rethrow = e;
-    }
-
-    if (rethrow instanceof Error err) {
-      throw err;
-    }
-
-    if (rethrow instanceof RuntimeException re) {
-      throw re;
-    }
-
-    if (rethrow != null) {
-      throw new RuntimeException(rethrow);
     }
   }
 
@@ -122,46 +231,38 @@ public class HttpServerTest implements Consumer<HttpRouting> {
   - reject other methods
   """)
   public void testCase01() throws IOException {
-    try (Socket socket = HttpY.socket(server)) {
-      HttpY.test(
-          socket,
+    test(
+        """
+        GET /test/testCase01 HTTP/1.1\r
+        Host: server.test.localhost:%d\r
+        \r
+        """,
 
-          """
-          GET /test/testCase01 HTTP/1.1\r
-          Host: server.test.localhost:%d\r
-          \r
-          """.formatted(server.port()),
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 5\r
+        \r
+        TC01
+        """,
 
-          """
-          HTTP/1.1 200 OK\r
-          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-          Content-Type: text/plain; charset=utf-8\r
-          Content-Length: 5\r
-          \r
-          TC01
-          """
-      );
+        """
+        POST /test/testCase01 HTTP/1.1\r
+        Host: server.test.localhost:%d\r
+        \r
+        """,
 
-      HttpY.test(
-          socket,
-
-          """
-          POST /test/testCase01 HTTP/1.1\r
-          Host: server.test.localhost:%d\r
-          \r
-          """.formatted(server.port()),
-
-          """
-          HTTP/1.1 405 Method Not Allowed\r
-          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-          Connection: close\r
-          Content-Type: text/plain; charset=utf-8\r
-          Content-Length: 23\r
-          \r
-          405 Method Not Allowed
-          """
-      );
-    }
+        """
+        HTTP/1.1 405 Method Not Allowed\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Connection: close\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 23\r
+        \r
+        405 Method Not Allowed
+        """
+    );
   }
 
   @SuppressWarnings("unused")
@@ -184,45 +285,37 @@ public class HttpServerTest implements Consumer<HttpRouting> {
   GET handler should be used for HEAD requests as well
   """)
   public void testCase02() throws IOException {
-    try (Socket socket = HttpY.socket(server)) {
-      HttpY.test(
-          socket,
+    test(
+        """
+        HEAD /test/testCase02 HTTP/1.1\r
+        Host: server.test.localhost:%d\r
+        \r
+        """,
 
-          """
-          HEAD /test/testCase02 HTTP/1.1\r
-          Host: server.test.localhost:%d\r
-          \r
-          """.formatted(server.port()),
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 5\r
+        \r
+        """,
 
-          """
-          HTTP/1.1 200 OK\r
-          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-          Content-Type: text/plain; charset=utf-8\r
-          Content-Length: 5\r
-          \r
-          """
-      );
+        """
+        GET /test/testCase02 HTTP/1.1\r
+        Host: server.test.localhost:%d\r
+        Connection: close\r
+        \r
+        """,
 
-      HttpY.test(
-          socket,
-
-          """
-          GET /test/testCase02 HTTP/1.1\r
-          Host: server.test.localhost:%d\r
-          Connection: close\r
-          \r
-          """.formatted(server.port()),
-
-          """
-          HTTP/1.1 200 OK\r
-          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-          Content-Type: text/plain; charset=utf-8\r
-          Content-Length: 5\r
-          \r
-          TC02
-          """
-      );
-    }
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 5\r
+        \r
+        TC02
+        """
+    );
   }
 
   @SuppressWarnings("unused")
@@ -248,68 +341,56 @@ public class HttpServerTest implements Consumer<HttpRouting> {
   It should be possible to send pre-made 200 OK responses
   """)
   public void testCase03() throws IOException, InterruptedException {
-    try (Socket socket = HttpY.socket(server)) {
-      HttpY.test(
-          socket,
+    test(
+        """
+        HEAD /test/testCase03 HTTP/1.1\r
+        Host: server.test.localhost:%d\r
+        \r
+        """,
 
-          """
-          HEAD /test/testCase03 HTTP/1.1\r
-          Host: server.test.localhost:%d\r
-          \r
-          """.formatted(server.port()),
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/html; charset=utf-8\r
+        Transfer-Encoding: chunked\r
+        \r
+        """,
 
-          """
-          HTTP/1.1 200 OK\r
-          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-          Content-Type: text/html; charset=utf-8\r
-          Transfer-Encoding: chunked\r
-          \r
-          """
-      );
+        """
+        GET /test/testCase03 HTTP/1.1\r
+        Host: server.test.localhost:%d\r
+        \r
+        """,
 
-      HttpY.test(
-          socket,
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/html; charset=utf-8\r
+        Transfer-Encoding: chunked\r
+        \r
+        <html>
+        <p>TC03 GET</p>
+        </html>
+        """,
 
-          """
-          GET /test/testCase03 HTTP/1.1\r
-          Host: server.test.localhost:%d\r
-          \r
-          """.formatted(server.port()),
+        """
+        POST /test/testCase03 HTTP/1.1\r
+        Host: server.test.localhost:%d\r
+        Connection: close\r
+        \r
+        """,
 
-          """
-          HTTP/1.1 200 OK\r
-          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-          Content-Type: text/html; charset=utf-8\r
-          Transfer-Encoding: chunked\r
-          \r
-          <html>
-          <p>TC03 GET</p>
-          </html>
-          """
-      );
-
-      HttpY.test(
-          socket,
-
-          """
-          POST /test/testCase03 HTTP/1.1\r
-          Host: server.test.localhost:%d\r
-          Connection: close\r
-          \r
-          """.formatted(server.port()),
-
-          """
-          HTTP/1.1 200 OK\r
-          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-          Content-Type: text/html; charset=utf-8\r
-          Transfer-Encoding: chunked\r
-          \r
-          <html>
-          <p>TC03 POST</p>
-          </html>
-          """
-      );
-    }
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/html; charset=utf-8\r
+        Transfer-Encoding: chunked\r
+        \r
+        <html>
+        <p>TC03 POST</p>
+        </html>
+        """
+    );
   }
 
   private static final class AttributeTester extends Html.Template {
@@ -358,46 +439,38 @@ public class HttpServerTest implements Consumer<HttpRouting> {
   Request attributes should be reset between requests
   """)
   public void testCase04() throws IOException, InterruptedException {
-    try (Socket socket = HttpY.socket(server)) {
-      HttpY.test(
-          socket,
+    test(
+        """
+        GET /test/testCase04 HTTP/1.1\r
+        Host: server.test.localhost:%d\r
+        \r
+        """,
 
-          """
-          GET /test/testCase04 HTTP/1.1\r
-          Host: server.test.localhost:%d\r
-          \r
-          """.formatted(server.port()),
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/html; charset=utf-8\r
+        Transfer-Encoding: chunked\r
+        \r
+        <p>TC04 GET</p>
+        """,
 
-          """
-          HTTP/1.1 200 OK\r
-          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-          Content-Type: text/html; charset=utf-8\r
-          Transfer-Encoding: chunked\r
-          \r
-          <p>TC04 GET</p>
-          """
-      );
+        """
+        POST /test/testCase04 HTTP/1.1\r
+        Host: server.test.localhost:%d\r
+        Connection: close\r
+        \r
+        """,
 
-      HttpY.test(
-          socket,
-
-          """
-          POST /test/testCase04 HTTP/1.1\r
-          Host: server.test.localhost:%d\r
-          Connection: close\r
-          \r
-          """.formatted(server.port()),
-
-          """
-          HTTP/1.1 200 OK\r
-          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-          Content-Type: text/html; charset=utf-8\r
-          Transfer-Encoding: chunked\r
-          \r
-          <p>null</p>
-          """
-      );
-    }
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/html; charset=utf-8\r
+        Transfer-Encoding: chunked\r
+        \r
+        <p>null</p>
+        """
+    );
   }
 
   @SuppressWarnings("unused")
@@ -417,28 +490,24 @@ public class HttpServerTest implements Consumer<HttpRouting> {
   An Http.AbstractHandlerException caught by the loop should call its handle method
   """)
   public void testCase05() throws IOException {
-    try (Socket socket = HttpY.socket(server)) {
-      HttpY.test(
-          socket,
+    test(
+        """
+        GET /test/testCase05 HTTP/1.1\r
+        Host: server.test.localhost:%d\r
+        Connection: close\r
+        \r
+        """,
 
-          """
-          GET /test/testCase05 HTTP/1.1\r
-          Host: server.test.localhost:%d\r
-          Connection: close\r
-          \r
-          """.formatted(server.port()),
-
-          """
-          HTTP/1.1 404 Not Found\r
-          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-          Connection: close\r
-          Content-Type: text/plain; charset=utf-8\r
-          Content-Length: 14\r
-          \r
-          404 Not Found
-          """
-      );
-    }
+        """
+        HTTP/1.1 404 Not Found\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Connection: close\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 14\r
+        \r
+        404 Not Found
+        """
+    );
   }
 
   @SuppressWarnings("unused")
@@ -448,28 +517,134 @@ public class HttpServerTest implements Consumer<HttpRouting> {
 
   @Test
   public void testCase06() throws IOException {
-    try (Socket socket = HttpY.socket(server)) {
-      HttpY.test(
-          socket,
+    test(
+        """
+        GET /test/testCase06 HTTP/1.1\r
+        Host: server.test.localhost:%d\r
+        Connection: close\r
+        \r
+        """,
 
-          """
-          GET /test/testCase06 HTTP/1.1\r
-          Host: server.test.localhost:%d\r
-          Connection: close\r
-          \r
-          """.formatted(server.port()),
+        """
+        HTTP/1.1 500 Internal Server Error\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Connection: close\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 82\r
+        \r
+        The server encountered an internal error and was unable to complete your request.
+        """
+    );
+  }
 
-          """
-          HTTP/1.1 500 Internal Server Error\r
-          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-          Connection: close\r
-          Content-Type: text/plain; charset=utf-8\r
-          Content-Length: 82\r
-          \r
-          The server encountered an internal error and was unable to complete your request.
-          """
-      );
+  @Test
+  public void host01() throws IOException {
+    test(
+        """
+        GET /host01 HTTP/1.1\r
+        Host: server2.test.localhost:%d\r
+        Connection: close\r
+        \r
+        """,
+
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 6\r
+        \r
+        HOST01\
+        """
+    );
+  }
+
+  @Test(description = "staticFiles::addDirectory")
+  public void staticFiles01() throws IOException {
+    test(
+        """
+        GET /staticFiles01 HTTP/1.1\r
+        Host: server.test.localhost:%d\r
+        \r
+        """,
+
+        """
+        HTTP/1.1 200 OK\r
+        Content-Type: application/octet-stream\r
+        Content-Length: 8\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        ETag: 18901e7e8f8-8\r
+        \r
+        default
+        """,
+
+        """
+        GET /files/staticFiles01.txt HTTP/1.1\r
+        Host: server.test.localhost:%d\r
+        \r
+        """,
+
+        """
+        HTTP/1.1 200 OK\r
+        Content-Type: text/plain; charset=utf8\r
+        Content-Length: 5\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        ETag: 18901e7e8f8-5\r
+        \r
+        text
+        """
+    );
+  }
+
+  @SuppressWarnings("unused")
+  private void staticFiles02(HttpExchange http) {
+    http.staticFile(Media.Bytes.textPlain("TC08\n"));
+
+    try {
+      setLastModifiedTime(root, "test/staticFiles02");
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
     }
+  }
+
+  @Test(description = "HttpExchange::staticFile")
+  public void staticFiles02() throws IOException {
+    test(
+        """
+        GET /test/staticFiles02 HTTP/1.1\r
+        Host: server.test.localhost:%d\r
+        \r
+        """,
+
+        """
+        HTTP/1.1 200 OK\r
+        Content-Type: application/octet-stream\r
+        Content-Length: 5\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        ETag: 18901e7e8f8-5\r
+        \r
+        TC08
+        """
+    );
+  }
+
+  @Test(description = "static files + dev mode")
+  public void staticFiles03() throws IOException {
+    test(
+        """
+        GET /staticFiles03 HTTP/1.1\r
+        Host: server2.test.localhost:%d\r
+        \r
+        """,
+
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 5\r
+        \r
+        SF03
+        """
+    );
   }
 
 }

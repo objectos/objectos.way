@@ -16,6 +16,7 @@
 package objectos.http;
 
 import java.util.function.Consumer;
+import objectos.lang.Stage;
 
 /// Configures a name-based web site to be served by a `HttpServer` instance.
 public sealed interface HttpHost permits HttpHost0Builder {
@@ -35,6 +36,11 @@ public sealed interface HttpHost permits HttpHost0Builder {
   ///
   /// @param value the `HttpSessionStore` instance to use
   void sessionStore(HttpSessionStore value);
+
+  /// Sets the host's stage to the specified value.
+  ///
+  /// @param value the stage
+  void stage(Stage value);
 
   /// Configures the static files to be served by this host.
   ///

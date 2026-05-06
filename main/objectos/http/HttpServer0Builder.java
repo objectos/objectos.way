@@ -103,7 +103,7 @@ final class HttpServer0Builder implements HttpServer.Options {
 
         builder.serverRoot = root;
 
-        builder.stage = stage;
+        builder.serverStage(stage);
 
         final HttpHost5Pojo host;
         host = builder.build();
