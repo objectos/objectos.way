@@ -19,7 +19,7 @@ import java.util.function.Consumer;
 
 /// Processes a `HttpExchange`.
 @FunctionalInterface
-public interface HttpHandler {
+public non-sealed interface HttpHandler extends HttpRoutes.Option {
 
   /// Returns a new handler for processing the specified routes.
   ///
@@ -31,6 +31,15 @@ public interface HttpHandler {
     builder = new HttpRouting0();
 
     routing.accept(builder);
+
+    return builder.build();
+  }
+
+  static HttpHandler of(Consumer<? super HttpRoutes> routes) {
+    final HttpRoutes0 builder;
+    builder = new HttpRoutes0();
+
+    routes.accept(builder);
 
     return builder.build();
   }
