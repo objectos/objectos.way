@@ -35,7 +35,7 @@ public final class DevBoot {
     final DevModule dev;
     dev = new DevModule(injector);
 
-    return HttpHandler.create(dev);
+    return HttpHandler.create(dev::configure);
   }
 
 }

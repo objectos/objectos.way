@@ -20,7 +20,7 @@ import module objectos.way;
 
 /// This class is not part of the Objectos Way JAR file. It is placed in the
 /// main source tree to ease the development.
-public final class DevModule implements Consumer<HttpRouting> {
+public final class DevModule {
 
   private final App.Injector injector;
 
@@ -28,16 +28,15 @@ public final class DevModule implements Consumer<HttpRouting> {
     this.injector = injector;
   }
 
-  @Override
-  public final void accept(HttpRouting routing) {
+  public final void configure(HttpRoutes r) {
     final ScriptModule scripts;
     scripts = new ScriptModule();
 
-    scripts.accept(routing);
+    scripts.configure(r);
 
-    routing.path("/script.js", path -> path.GET(this::script));
+    r.at("/script.js", Http.GET, Http.handler(this::script));
 
-    routing.path("/styles.css", path -> path.GET(this::styles));
+    r.at("/styles.css", Http.GET, Http.handler(this::styles));
   }
 
   private void script(HttpExchange http) {

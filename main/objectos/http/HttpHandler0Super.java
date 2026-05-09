@@ -22,7 +22,9 @@ sealed abstract class HttpHandler0Super implements HttpHandler
     permits
     HttpHandler1Path,
     HttpHandler2Method,
-    HttpHandler3MethodNotAllowed {
+    HttpHandler3MethodNotAllowed,
+    HttpHandler4NotFound,
+    HttpHandler5List {
 
   @Override
   public final void handle(HttpExchange http) {

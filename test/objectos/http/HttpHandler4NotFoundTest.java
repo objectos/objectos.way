@@ -20,7 +20,7 @@ import static org.testng.Assert.assertEquals;
 import objectos.way.Y;
 import org.testng.annotations.Test;
 
-public class HttpHandler2NotFoundTest {
+public class HttpHandler4NotFoundTest {
 
   @Test
   public void handle() {
@@ -30,7 +30,7 @@ public class HttpHandler2NotFoundTest {
     });
 
     final HttpHandler handler;
-    handler = HttpHandler2NotFound.INSTANCE;
+    handler = HttpHandler4NotFound.INSTANCE;
 
     assertEquals(http.processed(), false);
 
@@ -52,7 +52,7 @@ public class HttpHandler2NotFoundTest {
   @Test
   public void handleNot() {
     final HttpHandler handler;
-    handler = HttpHandler2NotFound.INSTANCE;
+    handler = HttpHandler4NotFound.INSTANCE;
 
     final HttpExchange http;
     http = HttpExchange.create(_ -> {});

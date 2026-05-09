@@ -17,10 +17,10 @@ package objectos.http;
 
 import java.util.function.Consumer;
 
-public class HttpRoutingXTest implements Consumer<HttpRouting> {
+public class HttpRoutingXTest implements Consumer<HttpRoutes> {
 
   @Override
-  public final void accept(HttpRouting t) {}
+  public final void accept(HttpRoutes t) {}
 
   /*
   private record Box(String value) {}

@@ -109,10 +109,8 @@ public class HttpExchangeTest {
     assertEquals(http.header(name), "some value");
   }
 
-  private final HttpHandler moduleInterop = HttpHandler.create(routing -> {
-    routing.path("/tc01", path -> {
-      path.handler(http -> http.ok(Media.Bytes.textPlain("TC01")));
-    });
+  private final HttpHandler moduleInterop = HttpHandler.create(r -> {
+    r.at("/tc01", Http.handler(http -> http.ok(Media.Bytes.textPlain("TC01"))));
   });
 
   @Test

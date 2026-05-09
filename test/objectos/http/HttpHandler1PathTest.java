@@ -24,7 +24,7 @@ import objectos.way.Y;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class HttpHandler3PathTest {
+public class HttpHandler1PathTest {
 
   private final HttpHandler delegate = http -> {
     final String test;
@@ -83,7 +83,7 @@ public class HttpHandler3PathTest {
     });
 
     final HttpHandler handler;
-    handler = new HttpHandler3Path(matcher, predicates, delegate);
+    handler = new HttpHandler1Path(matcher, predicates, List.of(delegate));
 
     assertEquals(http.processed(), false);
 
@@ -129,7 +129,7 @@ public class HttpHandler3PathTest {
     });
 
     final HttpHandler handler;
-    handler = new HttpHandler3Path(matcher, predicates, delegate);
+    handler = new HttpHandler1Path(matcher, predicates, List.of(delegate));
 
     assertEquals(http.processed(), false);
 

@@ -41,7 +41,7 @@ public class HttpServerTest {
 
   private HttpServer server;
 
-  private static final class Host1 implements Consumer<HttpRouting> {
+  private static final class Host1 implements Consumer<HttpRoutes> {
     private final HttpServerTest instance;
 
     Host1(HttpServerTest instance) {
@@ -49,10 +49,8 @@ public class HttpServerTest {
     }
 
     @Override
-    public final void accept(HttpRouting routing) {
-      routing.path("/test/{name}", path -> {
-        path.handler(this::handle);
-      });
+    public final void accept(HttpRoutes r) {
+      r.at("/test/{name}", Http.handler(this::handle));
     }
 
     private void handle(HttpExchange http) {
@@ -96,12 +94,12 @@ public class HttpServerTest {
     }
   }
 
-  private static final class Host2 implements Consumer<HttpRouting> {
+  private static final class Host2 implements Consumer<HttpRoutes> {
     @Override
-    public void accept(HttpRouting routing) {
-      routing.path("/host01", path -> path.GET(this::host01));
+    public void accept(HttpRoutes r) {
+      r.at("/host01", Http.GET, Http.handler(this::host01));
 
-      routing.path("/staticFiles03", path -> path.GET(this::staticFiles03));
+      r.at("/staticFiles03", Http.GET, Http.handler(this::staticFiles03));
     }
 
     private void host01(HttpExchange http) {

@@ -15,32 +15,15 @@
  */
 package objectos.http;
 
-import java.util.Iterator;
-import java.util.List;
+final class HttpHandler4NotFound extends HttpHandler0Super {
 
-final class HttpHandler4List implements HttpHandler {
+  static final HttpHandler INSTANCE = new HttpHandler4NotFound();
 
-  private final List<HttpHandler> handlers;
-
-  HttpHandler4List(List<HttpHandler> handlers) {
-    this.handlers = handlers;
-  }
+  private HttpHandler4NotFound() {}
 
   @Override
-  public final void handle(HttpExchange http) {
-    if (http.processed()) {
-      return;
-    }
-
-    final Iterator<HttpHandler> iter;
-    iter = handlers.iterator();
-
-    while (!http.processed() && iter.hasNext()) {
-      final HttpHandler handler;
-      handler = iter.next();
-
-      handler.handle(http);
-    }
+  final void handleImpl(HttpExchange http) {
+    http.error(HttpStatus.NOT_FOUND);
   }
 
 }

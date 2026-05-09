@@ -16,21 +16,20 @@
 package objectos.way;
 
 import java.util.function.Consumer;
+import objectos.http.Http;
 import objectos.http.HttpExchange;
 import objectos.http.HttpHandler;
-import objectos.http.HttpRouting;
+import objectos.http.HttpRoutes;
 
-final class MarketingSite implements Consumer<HttpRouting> {
+final class MarketingSite implements Consumer<HttpRoutes> {
 
   @Override
-  public final void accept(HttpRouting routing) {
-    routing.path("/", path -> {
-      path.handler(http -> http.movedPermanently("/index.html"));
-    });
+  public final void accept(HttpRoutes r) {
+    r.at("/", Http.handler(http -> http.movedPermanently("/index.html")));
 
-    routing.path("/index.html", path -> path.GET(this::indexHtml));
+    r.at("/index.html", Http.GET, Http.handler(this::indexHtml));
 
-    routing.handler(HttpHandler.notFound());
+    r.at("/{}", HttpHandler.notFound());
   }
 
   private void indexHtml(HttpExchange http) {

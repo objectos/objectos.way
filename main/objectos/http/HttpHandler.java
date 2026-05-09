@@ -23,19 +23,10 @@ public non-sealed interface HttpHandler extends HttpRoutes.Option {
 
   /// Returns a new handler for processing the specified routes.
   ///
-  /// @param routing allows for defining the top-level routes
+  /// @param routes allows for defining the top-level routes
   ///
   /// @return a newly created handler for processing the routes
-  static HttpHandler create(Consumer<? super HttpRouting> routing) {
-    final HttpRouting0 builder;
-    builder = new HttpRouting0();
-
-    routing.accept(builder);
-
-    return builder.build();
-  }
-
-  static HttpHandler of(Consumer<? super HttpRoutes> routes) {
+  static HttpHandler create(Consumer<? super HttpRoutes> routes) {
     final HttpRoutes0 builder;
     builder = new HttpRoutes0();
 
@@ -49,7 +40,7 @@ public non-sealed interface HttpHandler extends HttpRoutes.Option {
   ///
   /// @return the handler instance
   static HttpHandler notFound() {
-    return HttpHandler2NotFound.INSTANCE;
+    return HttpHandler4NotFound.INSTANCE;
   }
 
   /// Process the specified exchange. In other words, the method:

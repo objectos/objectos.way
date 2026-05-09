@@ -15,17 +15,19 @@
  */
 package objectos.http;
 
-enum HttpHandler2NotFound implements HttpHandler {
+import java.util.List;
 
-  INSTANCE;
+final class HttpHandler5List extends HttpHandler0Super {
+
+  private final List<HttpHandler> handlers;
+
+  HttpHandler5List(List<HttpHandler> handlers) {
+    this.handlers = handlers;
+  }
 
   @Override
-  public final void handle(HttpExchange http) {
-    if (http.processed()) {
-      return;
-    }
-
-    http.error(HttpStatus.NOT_FOUND);
+  final void handleImpl(HttpExchange http) {
+    handleFirst(http, handlers);
   }
 
 }

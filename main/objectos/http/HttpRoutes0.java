@@ -33,7 +33,7 @@ final class HttpRoutes0 implements HttpRoutes {
 
       case 1 -> handlers.get(0);
 
-      default -> new HttpHandler4List(List.copyOf(handlers));
+      default -> new HttpHandler5List(List.copyOf(handlers));
     };
   }
 

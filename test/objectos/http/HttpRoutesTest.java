@@ -466,7 +466,7 @@ public class HttpRoutesTest {
         HttpServerTaskY.resp(opts -> {
           opts.socket = Y.socket(req);
 
-          opts.handler = HttpHandler.of(routes);
+          opts.handler = HttpHandler.create(routes);
         }),
 
         resp
