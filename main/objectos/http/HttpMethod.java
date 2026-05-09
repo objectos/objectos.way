@@ -17,54 +17,34 @@ package objectos.http;
 
 import java.nio.charset.StandardCharsets;
 
-/**
- * The method of an HTTP request message.
- */
-public enum HttpMethod {
+/// The method of an HTTP request message.
+public enum HttpMethod implements HttpRoutes.Option {
 
-  /**
-   * The CONNECT method.
-   */
+  /// The CONNECT method.
   CONNECT(false),
 
-  /**
-   * The DELETE method.
-   */
+  /// The DELETE method.
   DELETE(true),
 
-  /**
-   * The GET method.
-   */
+  /// The GET method.
   GET(true),
 
-  /**
-   * The HEAD method.
-   */
+  /// The HEAD method.
   HEAD(true),
 
-  /**
-   * The OPTIONS method.
-   */
+  /// The OPTIONS method.
   OPTIONS(false),
 
-  /**
-   * The PATCH method.
-   */
+  /// The PATCH method.
   PATCH(true),
 
-  /**
-   * The POST method.
-   */
+  /// The POST method.
   POST(true),
 
-  /**
-   * The PUT method.
-   */
+  /// The PUT method.
   PUT(true),
 
-  /**
-   * The TRACE method.
-   */
+  /// The TRACE method.
   TRACE(false);
 
   static final HttpMethod[] VALUES = values();

@@ -25,7 +25,9 @@ public sealed interface HttpRoutes permits HttpRoutes0 {
   /// An object that can be used as an option to declaring a route.
   sealed interface Option
       permits
-      HttpHandler {}
+      HttpHandler,
+      HttpMethod,
+      PathParam {}
 
   /// Adds a route for the specified path with the specified options.
   ///

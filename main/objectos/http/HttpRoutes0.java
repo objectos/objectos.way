@@ -58,8 +58,11 @@ final class HttpRoutes0 implements HttpRoutes {
     final HttpPathMatcher matcher;
     matcher = parser.parse();
 
+    final Set<String> paramNames;
+    paramNames = parser.paramNames();
+
     final HttpRoutes1Path builder;
-    builder = new HttpRoutes1Path(matcher);
+    builder = new HttpRoutes1Path(matcher, paramNames);
 
     builder.add(first, "first");
 
@@ -70,7 +73,8 @@ final class HttpRoutes0 implements HttpRoutes {
       builder.add(o, "rest", idx);
     }
 
-    final HttpHandler handler = builder.build();
+    final HttpHandler handler;
+    handler = builder.build();
 
     handlers.add(handler);
   }

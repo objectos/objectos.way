@@ -90,7 +90,7 @@ final class HttpPathMatcherParser {
     }
   }
 
-  public final Set<String> names() {
+  public final Set<String> paramNames() {
     return paramNames;
   }
 

@@ -25,15 +25,59 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import objectos.internal.Ascii;
 import objectos.internal.Util;
 
-/**
- * The <strong>Objectos HTTP</strong> main class.
- */
-final class Http {
+/// Provides helpers to declaring routes.
+public final class Http {
+
+  // methods
+
+  /// The DELETE method.
+  public static final HttpMethod DELETE = HttpMethod.DELETE;
+
+  /// The GET method.
+  public static final HttpMethod GET = HttpMethod.GET;
+
+  /// The PATCH method.
+  public static final HttpMethod PATCH = HttpMethod.PATCH;
+
+  /// The POST method.
+  public static final HttpMethod POST = HttpMethod.POST;
+
+  /// The PUT method.
+  public static final HttpMethod PUT = HttpMethod.PUT;
+
+  /// Helper method for specifying a handler in a route declaration. The method
+  /// returns the specified handler as it is.
+  ///
+  /// @param h the handler instance to be returned
+  ///
+  /// @return always the specified handler
+  public static HttpHandler handler(HttpHandler h) {
+    return h;
+  }
+
+  /// Restricts the value of the specified named path parameter with the
+  /// specified predicate. The route will only be matched if the value of the
+  /// path parameter conforms to the predicate.
+  ///
+  /// @param name the path parameter name
+  /// @param predicate the path parameter value should evaluate to `true` for the
+  ///        route to be matched
+  ///
+  /// @return a newly created route declaration option
+  public static HttpRoutes.Option pathParam(String name, Predicate<String> predicate) {
+    var n = Objects.requireNonNull(name, "name == null");
+
+    var p = Objects.requireNonNull(predicate, "predicate == null");
+
+    return new PathParam(n, p);
+  }
 
   static final String LINE_TERM = "Invalid line terminator.\n";
 
@@ -69,7 +113,7 @@ final class Http {
   /**
    * Thrown to indicate that a content type is not supported.
    */
-  public static final class UnsupportedMediaTypeException extends RuntimeException {
+  static final class UnsupportedMediaTypeException extends RuntimeException {
 
     private static final long serialVersionUID = -6412173093510319276L;
 
@@ -140,7 +184,7 @@ final class Http {
    *
    * @return the formatted date
    */
-  public static String formatDate(ZonedDateTime date) {
+  static String formatDate(ZonedDateTime date) {
     ZonedDateTime normalized;
     normalized = date.withZoneSameInstant(ZoneOffset.UTC);
 

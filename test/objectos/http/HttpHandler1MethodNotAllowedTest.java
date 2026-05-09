@@ -40,7 +40,7 @@ public class HttpHandler1MethodNotAllowedTest {
     allowed = EnumSet.complementOf(single);
 
     final HttpHandler handler;
-    handler = new HttpHandler1MethodNotAllowed(allowed);
+    handler = new HttpHandler3MethodNotAllowed(allowed);
 
     final HttpExchange http;
     http = HttpExchange.create(opts -> {
@@ -71,7 +71,7 @@ public class HttpHandler1MethodNotAllowedTest {
     allowed = EnumSet.of(HttpMethod.GET);
 
     final HttpHandler handler;
-    handler = new HttpHandler1MethodNotAllowed(allowed);
+    handler = new HttpHandler3MethodNotAllowed(allowed);
 
     final HttpExchange http;
     http = HttpExchange.create(opts -> opts.method(HttpMethod.POST));
@@ -96,7 +96,7 @@ public class HttpHandler1MethodNotAllowedTest {
     allowed = EnumSet.of(method);
 
     final HttpHandler handler;
-    handler = new HttpHandler1MethodNotAllowed(allowed);
+    handler = new HttpHandler3MethodNotAllowed(allowed);
 
     final HttpExchange http;
     http = HttpExchange.create(opts -> {

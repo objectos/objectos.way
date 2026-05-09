@@ -18,6 +18,7 @@ package objectos.http;
 import static org.testng.Assert.assertEquals;
 
 import java.util.Iterator;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 import objectos.way.Y;
@@ -26,55 +27,8 @@ import org.testng.annotations.Test;
 
 public class HttpRoutesTest {
 
-  @DataProvider
-  public Object[][] handleProvider() {
-    final HttpHandler ok;
-    ok = http -> { http.status(HttpStatus.OK); http.send(); };
-
-    return new Object[][] {
-        {
-            "Empty configuration",
-
-            HttpHandler.of(_ -> {}),
-
-            """
-            GET /test HTTP/1.1\r
-            Host: www.example.com\r
-            \r
-            """,
-
-            """
-            HTTP/1.1 404 Not Found\r
-            Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-            Connection: close\r
-            Content-Type: text/plain; charset=utf-8\r
-            Content-Length: 14\r
-            \r
-            404 Not Found
-            """
-        },
-        {
-            "Option:Handler",
-
-            HttpHandler.of(r -> {
-              r.at("/test", ok);
-            }),
-
-            """
-            GET /test HTTP/1.1\r
-            Host: www.example.com\r
-            \r
-            """,
-
-            """
-            HTTP/1.1 200 OK\r
-            \r
-            """
-        }
-    };
-  }
-
   private final HttpHandler ok = http -> { http.status(HttpStatus.OK); http.send(); };
+  private final HttpHandler notFound = http -> { http.status(HttpStatus.NOT_FOUND); http.send(); };
 
   @Test(description = "Empty configuration")
   public void empty() {
@@ -104,7 +58,10 @@ public class HttpRoutesTest {
     return Stream.of(HttpMethod.VALUES).filter(m -> m.implemented).iterator();
   }
 
-  @Test(description = "Option:handler", dataProvider = "methodProvider")
+  @Test(
+      description = "Non-method HttpHandler should accept all methods",
+      dataProvider = "methodProvider"
+  )
   public void handler01(HttpMethod method) {
     test(
         r -> {
@@ -119,6 +76,386 @@ public class HttpRoutesTest {
 
         """
         HTTP/1.1 200 OK\r
+        \r
+        """
+    );
+  }
+
+  @Test(description = "Handlers should be applied in declaration order")
+  public void handler02() {
+    final AtomicInteger counter;
+    counter = new AtomicInteger(1);
+
+    class ThisHandler implements HttpHandler {
+      int id;
+
+      @Override
+      public final void handle(HttpExchange http) {
+        id = counter.getAndIncrement();
+      }
+    }
+
+    var h1 = new ThisHandler();
+    var h2 = new ThisHandler();
+    var h3 = new ThisHandler();
+
+    test(
+        r -> {
+          r.at("/test", h1, h2, h3);
+        },
+
+        """
+        GET /test HTTP/1.1\r
+        Host: www.example.com\r
+        \r
+        """,
+
+        """
+        HTTP/1.1 404 Not Found\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Connection: close\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 14\r
+        \r
+        404 Not Found
+        """
+    );
+
+    assertEquals(h1.id, 1);
+    assertEquals(h2.id, 2);
+    assertEquals(h3.id, 3);
+  }
+
+  @Test(description = "Handler should not be applied on a processed exchange")
+  public void handler03() {
+    final AtomicInteger counter;
+    counter = new AtomicInteger(1);
+
+    class ThisHandler implements HttpHandler {
+      int id;
+
+      @Override
+      public final void handle(HttpExchange http) {
+        id = counter.getAndIncrement();
+
+        if (id == 2) {
+          http.status(HttpStatus.OK);
+          http.send();
+        }
+      }
+    }
+
+    var h1 = new ThisHandler();
+    var h2 = new ThisHandler();
+    var h3 = new ThisHandler();
+
+    test(
+        r -> {
+          r.at("/test", h1, h2, h3);
+        },
+
+        """
+        GET /test HTTP/1.1\r
+        Host: www.example.com\r
+        \r
+        """,
+
+        """
+        HTTP/1.1 200 OK\r
+        \r
+        """
+    );
+
+    assertEquals(h1.id, 1);
+    assertEquals(h2.id, 2);
+    assertEquals(h3.id, 0);
+  }
+
+  @Test(
+      description = "Method HttpHandler should reject other methods",
+      dataProvider = "methodProvider"
+  )
+  public void method01(HttpMethod method) {
+    test(
+        r -> {
+          r.at("/test", Http.POST, ok);
+        },
+
+        """
+        %s /test HTTP/1.1\r
+        Host: www.example.com\r
+        \r
+        """.formatted(method.name()),
+
+        switch (method) {
+          case POST -> """
+              HTTP/1.1 200 OK\r
+              \r
+              """;
+
+          default -> """
+              HTTP/1.1 405 Method Not Allowed\r
+              Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+              Connection: close\r
+              Content-Length: 0\r
+              Allow: POST\r
+              \r
+              """;
+        }
+    );
+  }
+
+  private static final HttpHeaderName TEST = HttpHeaderName.of("Way-Test");
+
+  @Test(
+      description = "Method HttpHandler: allow declaring multiple methods",
+      dataProvider = "methodProvider"
+  )
+  public void method02(HttpMethod method) {
+    record ThisHandler(String value) implements HttpHandler {
+      @Override
+      public void handle(HttpExchange http) {
+        http.status(HttpStatus.OK);
+        http.header(TEST, value);
+        http.send();
+      }
+    }
+
+    var get = new ThisHandler("get");
+    var post = new ThisHandler("post");
+
+    test(
+        r -> {
+          r.at("/test", Http.GET, get, Http.POST, post);
+        },
+
+        """
+        %s /test HTTP/1.1\r
+        Host: www.example.com\r
+        \r
+        """.formatted(method.name()),
+
+        switch (method) {
+          case GET, HEAD -> """
+              HTTP/1.1 200 OK\r
+              Way-Test: get\r
+              \r
+              """;
+
+          case POST -> """
+              HTTP/1.1 200 OK\r
+              Way-Test: post\r
+              \r
+              """;
+
+          default -> """
+              HTTP/1.1 405 Method Not Allowed\r
+              Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+              Connection: close\r
+              Content-Length: 0\r
+              Allow: GET, POST\r
+              \r
+              """;
+        }
+    );
+  }
+
+  @Test(description = "Method HttpHandler: allow multiple handlers for each method")
+  public void method03() {
+    final AtomicInteger counter;
+    counter = new AtomicInteger(1);
+
+    class ThisHandler implements HttpHandler {
+      int id;
+      final String value;
+
+      ThisHandler(String value) {
+        this.value = value;
+      }
+
+      @Override
+      public void handle(HttpExchange http) {
+        id = counter.getAndIncrement();
+
+        if (id == 3) {
+          http.status(HttpStatus.OK);
+          http.header(TEST, value);
+          http.send();
+        }
+      }
+    }
+
+    var get1 = new ThisHandler("get");
+    var get2 = new ThisHandler("get");
+    var get3 = new ThisHandler("get");
+    var post = new ThisHandler("post");
+
+    test(
+        r -> {
+          r.at("/test", Http.GET, get1, get2, get3, Http.POST, post);
+        },
+
+        """
+        GET /test HTTP/1.1\r
+        Host: www.example.com\r
+        \r
+        """,
+
+        """
+        HTTP/1.1 200 OK\r
+        Way-Test: get\r
+        \r
+        """
+    );
+
+    assertEquals(get1.id, 1);
+    assertEquals(get2.id, 2);
+    assertEquals(get3.id, 3);
+  }
+
+  @DataProvider
+  public Object[][] pathExactProvider() {
+    return new Object[][] {
+        {"/test", true},
+        {"/t%65st", true},
+
+        {"/tes", false},
+        {"/test/", false},
+        {"/testt", false}
+    };
+  }
+
+  @Test(dataProvider = "pathExactProvider")
+  public void path01(String path, boolean resp200) {
+    test(
+        r -> {
+          r.at("/test", Http.GET, ok);
+        },
+
+        """
+        GET %s HTTP/1.1\r
+        Host: www.example.com\r
+        \r
+        """.formatted(path),
+
+        resp200
+            ? """
+              HTTP/1.1 200 OK\r
+              \r
+              """
+            : """
+              HTTP/1.1 404 Not Found\r
+              Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+              Connection: close\r
+              Content-Type: text/plain; charset=utf-8\r
+              Content-Length: 14\r
+              \r
+              404 Not Found
+              """
+    );
+  }
+
+  @DataProvider
+  public Object[][] pathParamProvider() {
+    return new Object[][] {
+        {
+            "/test/{p1}", "/test/",
+            """
+            Way-Test: p1=\r
+            Way-Test: p2=null\r
+            """
+        },
+        {
+            "/test/{p1}", "/test/foo",
+            """
+            Way-Test: p1=foo\r
+            Way-Test: p2=null\r
+            """
+        },
+        {
+            "/test/{p1}", "/test/foo/bar",
+            """
+            Way-Test: p1=foo/bar\r
+            Way-Test: p2=null\r
+            """
+        },
+        {
+            "/test/{p1}/", "/test/foo/",
+            """
+            Way-Test: p1=foo\r
+            Way-Test: p2=null\r
+            """
+        },
+        {
+            "/test/{p1}/more/{p2}", "/test/foo/more/bar",
+            """
+            Way-Test: p1=foo\r
+            Way-Test: p2=bar\r
+            """
+        }
+    };
+  }
+
+  @Test(dataProvider = "pathParamProvider")
+  public void pathParam01(String expression, String actual, String expected) {
+    test(
+        r -> {
+          r.at(expression, Http.GET, Http.handler(http -> {
+            http.status(HttpStatus.OK);
+
+            http.header(TEST, "p1=" + http.pathParam("p1"));
+            http.header(TEST, "p2=" + http.pathParam("p2"));
+
+            http.send();
+          }));
+        },
+
+        """
+        GET %s HTTP/1.1\r
+        Host: www.example.com\r
+        \r
+        """.formatted(actual),
+
+        """
+        HTTP/1.1 200 OK\r
+        %s\
+        \r
+        """.formatted(expected)
+    );
+  }
+
+  @DataProvider
+  public Object[][] pathParam02Provider() {
+    return new Object[][] {
+        {"/test/{id}", opts(Http.pathParam("id", PathParams.digits()), ok), "/test/123", true},
+        {"/test/{id}", opts(Http.pathParam("id", PathParams.digits()), ok), "/test/", false},
+        {"/test/{id}", opts(Http.pathParam("id", PathParams.digits()), ok), "/test/abc", false}
+    };
+  }
+
+  private HttpRoutes.Option[] opts(HttpRoutes.Option... arr) {
+    return arr;
+  }
+
+  @Test(dataProvider = "pathParam02Provider")
+  public void pathParam02(String expression, HttpRoutes.Option[] options, String path, boolean resp200) {
+    test(
+        r -> {
+          r.at(expression, Http.GET, options);
+          r.at("/test/{}", Http.GET, notFound);
+        },
+
+        """
+        GET %s HTTP/1.1\r
+        Host: www.example.com\r
+        \r
+        """.formatted(path),
+
+        resp200 ? """
+        HTTP/1.1 200 OK\r
+        \r
+        """ : """
+        HTTP/1.1 404 Not Found\r
         \r
         """
     );

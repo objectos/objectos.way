@@ -72,7 +72,7 @@ final class HttpRouting0 implements HttpRouting {
     }
 
     final HttpHandler handler;
-    handler = new HttpHandler1MethodNotAllowed(methods);
+    handler = new HttpHandler3MethodNotAllowed(methods);
 
     handlers.add(handler);
   }
@@ -138,7 +138,7 @@ final class HttpRouting0 implements HttpRouting {
     matcher = parser.parse();
 
     final Set<String> pathNames;
-    pathNames = parser.names();
+    pathNames = parser.paramNames();
 
     final HttpRouting0 pathRoutes;
     pathRoutes = new HttpRouting0(pathNames);

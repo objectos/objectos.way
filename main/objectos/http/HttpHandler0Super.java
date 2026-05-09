@@ -18,7 +18,11 @@ package objectos.http;
 import java.util.Iterator;
 import java.util.List;
 
-record HttpHandler3Path2(HttpPathMatcher matcher, List<HttpHandler> handlers) implements HttpHandler {
+sealed abstract class HttpHandler0Super implements HttpHandler
+    permits
+    HttpHandler1Path,
+    HttpHandler2Method,
+    HttpHandler3MethodNotAllowed {
 
   @Override
   public final void handle(HttpExchange http) {
@@ -26,18 +30,14 @@ record HttpHandler3Path2(HttpPathMatcher matcher, List<HttpHandler> handlers) im
       return;
     }
 
-    final String path;
-    path = http.path();
+    handleImpl(http);
+  }
 
-    final HttpPath httpPath;
-    httpPath = new HttpPath(path);
+  abstract void handleImpl(HttpExchange http);
 
-    if (!matcher.matches(httpPath)) {
-      return;
-    }
-
+  final void handleFirst(HttpExchange http, List<HttpHandler> list) {
     final Iterator<HttpHandler> iter;
-    iter = handlers.iterator();
+    iter = list.iterator();
 
     while (!http.processed() && iter.hasNext()) {
       final HttpHandler handler;
