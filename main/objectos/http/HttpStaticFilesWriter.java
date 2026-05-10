@@ -21,8 +21,7 @@ import objectos.way.Media;
 sealed interface HttpStaticFilesWriter
     permits
     HttpStaticFilesWriter0RootDirectory,
-    HttpStaticFilesWriter1Dev,
-    HttpStaticFilesWriter2Noop {
+    HttpStaticFilesWriter1Dev {
 
   void writeMedia(HttpExchange http, Media media) throws HttpTraversalException, IOException;
 

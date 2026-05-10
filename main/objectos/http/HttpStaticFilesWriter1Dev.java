@@ -18,7 +18,9 @@ package objectos.http;
 import java.io.IOException;
 import objectos.way.Media;
 
-final class HttpStaticFilesWriter1Dev implements HttpStaticFilesWriter {
+enum HttpStaticFilesWriter1Dev implements HttpStaticFilesWriter {
+
+  INSTANCE;
 
   @Override
   public final void writeMedia(HttpExchange http, Media media) throws HttpTraversalException, IOException {

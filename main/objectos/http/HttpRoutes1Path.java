@@ -16,6 +16,7 @@
 package objectos.http;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -57,7 +58,17 @@ final class HttpRoutes1Path {
       original = methods.keySet();
 
       final Set<HttpMethod> allowed;
-      allowed = Set.copyOf(original);
+
+      if (original.contains(HttpMethod.GET) && !original.contains(HttpMethod.HEAD)) {
+        final Set<HttpMethod> withHead;
+        withHead = EnumSet.copyOf(original);
+
+        withHead.add(HttpMethod.HEAD);
+
+        allowed = Set.copyOf(withHead);
+      } else {
+        allowed = Set.copyOf(original);
+      }
 
       final HttpHandler3MethodNotAllowed notAllowed;
       notAllowed = new HttpHandler3MethodNotAllowed(allowed);
