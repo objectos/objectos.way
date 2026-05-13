@@ -62,7 +62,7 @@ public class HttpHandler3MethodNotAllowedTest {
     Content-Length: 0\r
     Allow: %s\r
     \r
-    """.formatted(allowed.stream().map(Enum::name).collect(Collectors.joining(", "))));
+    """.formatted(allowed.stream().sorted().map(Enum::name).collect(Collectors.joining(", "))));
   }
 
   @Test

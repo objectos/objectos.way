@@ -15,28 +15,20 @@
  */
 package objectos.http;
 
-/**
- * Provides methods for inspecting the request line of an HTTP request
- * message.
- *
- * <p>
- * Unless otherwise specified the values returned by the methods of this
- * interface are decoded.
- */
+/// Provides methods for inspecting the request line of an HTTP request message.
+///
+/// Unless otherwise specified the values returned by the methods of this
+/// interface are decoded.
 public sealed interface HttpRequestLine extends HttpRequestTarget permits HttpRequest {
 
-  /**
-   * The code of the method of this request message.
-   *
-   * @return the code of the method of this request message
-   */
+  /// Returns the method of this request message.
+  ///
+  /// @return the method of this request message
   HttpMethod method();
 
-  /**
-   * The version of the HTTP protocol of this request message.
-   *
-   * @return the version of the HTTP protocol of this request message.
-   */
+  /// Returns the version of the HTTP protocol of this request message.
+  ///
+  /// @return the version of the HTTP protocol of this request message.
   HttpVersion version();
 
 }

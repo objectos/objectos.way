@@ -20,45 +20,34 @@ import java.util.Set;
 import java.util.function.IntSupplier;
 import java.util.function.LongSupplier;
 
-/**
- * Provides methods for inspecting the request-target of an HTTP request
- * message.
- *
- * <p>
- * Unless otherwise specified the values returned by the methods of this
- * interface are decoded.
- */
-public sealed interface HttpRequestTarget permits HttpRequestLine {
+/// Provides methods for inspecting the request-target of an HTTP request
+/// message.
+///
+/// Unless otherwise specified the values returned by the methods of this
+/// interface are decoded.
+sealed interface HttpRequestTarget permits HttpRequestLine {
 
-  /**
-   * The value of the path component.
-   *
-   * @return the value of the path component
-   */
+  /// Returns the value of the path component.
+  ///
+  /// @return the value of the path component
   String path();
 
-  /**
-   * Returns the first value of the query parameter with the specified name
-   * or {@code null} if there are no values.
-   *
-   * @param name
-   *        the name of the query parameter
-   *
-   * @return the first value if it exists or {@code null} if it does not
-   */
+  /// Returns the first value of the query parameter with the specified name or
+  /// `null` if there are no values.
+  ///
+  /// @param name the name of the query parameter
+  ///
+  /// @return the first value if it exists or `null` if it does not
   String queryParam(String name);
 
-  /**
-   * Returns all values of the query parameter with the specified name
-   * or an empty list if there are no values. The list contains the values in
-   * encounter order.
-   *
-   * @param name
-   *        the name of the query parameter
-   *
-   * @return a list containing all values in encounter order; or an empty list
-   *         if the parameter was not present in the request query
-   */
+  /// Returns all values of the query parameter with the specified name or an
+  /// empty list if there are no values. The list contains the values in
+  /// encounter order.
+  ///
+  /// @param name the name of the query parameter
+  ///
+  /// @return a list containing all values in encounter order; or an empty list
+  ///         if the parameter was not present in the request query
   List<String> queryParamAll(String name);
 
   /// Returns, as an `int`, the first value of the query parameter with the
@@ -173,61 +162,48 @@ public sealed interface HttpRequestTarget permits HttpRequestLine {
     }
   }
 
-  /**
-   * The names of all of the query parameters in this request-target.
-   *
-   * @return the names of all of the query parameters
-   */
+  /// The names of all of the query parameters in this request-target.
+  ///
+  /// @return the names of all of the query parameters
   Set<String> queryParamNames();
 
-  /**
-   * The raw (encoded) value of the path component.
-   *
-   * @return the raw (encoded) value of the path component
-   */
+  /// The raw (encoded) value of the path component.
+  ///
+  /// @return the raw (encoded) value of the path component
   String rawPath();
 
-  /**
-   * The raw (encoded) value of the query component. This method returns
-   * {@code null} if this request-target does not have a query component.
-   *
-   * @return the raw (encoded) value of the query component or {@code null}
-   */
+  /// The raw (encoded) value of the query component. This method returns `null`
+  /// if this request-target does not have a query component.
+  ///
+  /// @return the raw (encoded) value of the query component or `null`
   String rawQuery();
 
-  /**
-   * Returns the raw (encoded) value of the query component with the specified
-   * parameter added or replaced if it exists.
-   *
-   * <p>
-   * If a parameter with the same name already exists in the query, its value
-   * is replaced with the specified value. If no such parameter exists, a new
-   * parameter is added.
-   *
-   * <p>
-   * Usage example:
-   *
-   * <pre>{@code
-   * // original query is "search=java&sort=asc";
-   * Http.RequestTarget target = ...
-   *
-   * // returns "search=java&sort=desc"
-   * target.rawQueryWith("sort", "desc");
-   *
-   * // returns "search=java&sort=asc&page=2"
-   * target.rawQueryWith("page", "2");
-   * }</pre>
-   *
-   * @param name
-   *        the name of the parameter to be added or replaced
-   * @param value
-   *        the value of the parameter to be added or set
-   *
-   * @return the raw query string with the updated parameter
-   *
-   * @throws IllegalArgumentException
-   *         if {@code name} is blank
-   */
+  /// Returns the raw (encoded) value of the query component with the specified
+  /// parameter added or replaced if it exists.
+  ///
+  /// If a parameter with the same name already exists in the query, its value is
+  /// replaced with the specified value. If no such parameter exists, a new
+  /// parameter is added.
+  ///
+  /// Usage example:
+  ///
+  /// ```java
+  /// // original query is "search=java&sort=asc";
+  /// Http.RequestTarget target = ...
+  ///
+  /// // returns "search=java&sort=desc"
+  /// target.rawQueryWith("sort", "desc");
+  ///
+  /// // returns "search=java&sort=asc&page=2"
+  /// target.rawQueryWith("page", "2");
+  /// ```
+  ///
+  /// @param name the name of the parameter to be added or replaced
+  /// @param value the value of the parameter to be added or set
+  ///
+  /// @return the raw query string with the updated parameter
+  ///
+  /// @throws IllegalArgumentException if `name` is blank
   String rawQueryWith(String name, String value);
 
 }

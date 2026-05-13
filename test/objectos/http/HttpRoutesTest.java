@@ -253,7 +253,7 @@ public class HttpRoutesTest {
               Date: Wed, 28 Jun 2023 12:08:43 GMT\r
               Connection: close\r
               Content-Length: 0\r
-              Allow: GET, POST\r
+              Allow: GET, HEAD, POST\r
               \r
               """;
         }

@@ -18,7 +18,6 @@ package objectos.way;
 import java.util.List;
 import java.util.function.Consumer;
 import objectos.http.HttpExchange;
-import objectos.http.HttpRequestTarget;
 
 /// The **Objectos Web** main class.
 public final class Web {
@@ -155,7 +154,7 @@ public final class Web {
        * @param value
        *        the {@code Http.RequestTarget} instance
        */
-      void requestTarget(HttpRequestTarget value);
+      void requestTarget(HttpExchange value);
 
       /**
        * Sets the total number of rows to be paginated.

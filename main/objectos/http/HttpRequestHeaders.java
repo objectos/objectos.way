@@ -15,28 +15,22 @@
  */
 package objectos.http;
 
-/**
- * Provides methods for inspecting the headers of an HTTP request message.
- *
- * <p>
- * Unless otherwise specified the values returned by the methods of this
- * interface are decoded.
- */
+/// Provides methods for inspecting the headers of an HTTP request message.
+///
+/// Unless otherwise specified the values returned by the methods of this
+/// interface are decoded.
 public sealed interface HttpRequestHeaders
     permits
     HttpRequest,
     HttpRequestHeaders0 {
 
-  /**
-   * Returns the value of the first field line having the specified name;
-   * returns {@code null} if the field line is not present.
-   *
-   * @param name
-   *        the name of the header field line
-   *
-   * @return the value of first field line or {@code null} if a field line
-   *         with the specified name is not present.
-   */
+  /// Returns the value of the first field line having the specified name;
+  /// returns `null` if the field line is not present.
+  ///
+  /// @param name the name of the header field line
+  ///
+  /// @return the value of first field line or `null` if a field line with the
+  ///         specified name is not present.
   String header(HttpHeaderName name);
 
 }

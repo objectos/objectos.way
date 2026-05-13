@@ -22,8 +22,12 @@ final class HttpHandler3MethodNotAllowed extends HttpHandler0Super {
 
   private final Set<HttpMethod> allowedMethods;
 
+  private final String allowValue;
+
   HttpHandler3MethodNotAllowed(Set<HttpMethod> allowedMethods) {
     this.allowedMethods = allowedMethods;
+
+    allowValue = allowedMethods.stream().map(HttpMethod::name).sorted().collect(Collectors.joining(", "));
   }
 
   @Override
@@ -43,10 +47,7 @@ final class HttpHandler3MethodNotAllowed extends HttpHandler0Super {
 
     http.header(HttpHeaderName.CONTENT_LENGTH, 0L);
 
-    final String allow;
-    allow = allowedMethods.stream().map(HttpMethod::name).collect(Collectors.joining(", "));
-
-    http.header(HttpHeaderName.ALLOW, allow);
+    http.header(HttpHeaderName.ALLOW, allowValue);
 
     http.send();
   }

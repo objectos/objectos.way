@@ -17,6 +17,7 @@ package objectos.http;
 
 import module java.base;
 
+/// Provides methods for inspecting the request message of an HTTP exchange.
 record HttpRequest0(
 
     HttpMethod method,

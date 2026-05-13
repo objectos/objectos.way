@@ -19,7 +19,7 @@ import module java.base;
 import module objectos.way;
 
 /// Represents an HTTP response message.
-public sealed interface HttpResponse permits HttpExchange, HttpResponse0 {
+sealed interface HttpResponse permits HttpExchange, HttpResponse0 {
 
   // high-level
 
