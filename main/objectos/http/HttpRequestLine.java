@@ -19,7 +19,7 @@ package objectos.http;
 ///
 /// Unless otherwise specified the values returned by the methods of this
 /// interface are decoded.
-public sealed interface HttpRequestLine extends HttpRequestTarget permits HttpRequest {
+sealed interface HttpRequestLine extends HttpRequestTarget permits HttpRequest {
 
   /// Returns the method of this request message.
   ///

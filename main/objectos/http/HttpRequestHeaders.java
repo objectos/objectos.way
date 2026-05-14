@@ -19,7 +19,7 @@ package objectos.http;
 ///
 /// Unless otherwise specified the values returned by the methods of this
 /// interface are decoded.
-public sealed interface HttpRequestHeaders
+sealed interface HttpRequestHeaders
     permits
     HttpRequest,
     HttpRequestHeaders0 {

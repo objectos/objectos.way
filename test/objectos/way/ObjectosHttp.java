@@ -15,18 +15,14 @@
  */
 package objectos.way;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UncheckedIOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.FileVisitResult;
 import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import objectos.http.HttpRequestBody;
 
 public final class ObjectosHttp {
 
@@ -82,21 +78,6 @@ public final class ObjectosHttp {
         throw new UncheckedIOException(e);
       }
     }
-  }
-
-  public static byte[] readAllBytes(HttpRequestBody body) throws IOException {
-    try (InputStream in = body.bodyInputStream(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-      in.transferTo(out);
-
-      return out.toByteArray();
-    }
-  }
-
-  public static String readString(HttpRequestBody body) throws IOException {
-    byte[] bytes;
-    bytes = readAllBytes(body);
-
-    return new String(bytes, StandardCharsets.UTF_8);
   }
 
 }

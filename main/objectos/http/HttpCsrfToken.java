@@ -18,4 +18,4 @@ package objectos.http;
 /**
  * Represents a CSRF token.
  */
-public sealed interface HttpCsrfToken permits HttpToken {}
+sealed interface HttpCsrfToken permits HttpToken {}

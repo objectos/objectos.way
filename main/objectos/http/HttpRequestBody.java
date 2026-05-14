@@ -23,7 +23,7 @@ import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 
 /// Provides methods for reading the body of an HTTP request message.
-public sealed interface HttpRequestBody
+sealed interface HttpRequestBody
     permits
     HttpRequest,
     HttpRequestBody0 {
