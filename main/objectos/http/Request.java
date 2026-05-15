@@ -20,12 +20,20 @@ import java.util.Set;
 import java.util.function.IntSupplier;
 import java.util.function.LongSupplier;
 
-/// Provides methods for inspecting the request-target of an HTTP request
-/// message.
+/// An HTTP request message.
 ///
 /// Unless otherwise specified the values returned by the methods of this
 /// interface are decoded.
-sealed interface HttpRequestTarget permits HttpRequestLine {
+public sealed interface Request
+    extends
+    HttpRequestHeaders,
+    HttpRequestBody
+    permits HttpExchange, HttpRequest0 {
+
+  /// Returns the method of this request message.
+  ///
+  /// @return the method of this request message
+  HttpMethod method();
 
   /// Returns the value of the path component.
   ///
@@ -205,5 +213,10 @@ sealed interface HttpRequestTarget permits HttpRequestLine {
   ///
   /// @throws IllegalArgumentException if `name` is blank
   String rawQueryWith(String name, String value);
+
+  /// Returns the version of the HTTP protocol of this request message.
+  ///
+  /// @return the version of the HTTP protocol of this request message.
+  HttpVersion version();
 
 }

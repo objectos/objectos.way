@@ -17,7 +17,11 @@ package objectos.http;
 
 import java.nio.file.Path;
 import java.time.Clock;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.IntSupplier;
+import java.util.function.LongSupplier;
 import objectos.lang.Key;
 import objectos.way.Media;
 
@@ -27,7 +31,7 @@ import objectos.way.Media;
 /// Unless otherwise specified, request related methods of this interface return
 /// decoded values.
 public sealed interface HttpExchange
-    extends HttpRequest, HttpResponse
+    extends Request, HttpResponse
     permits HttpExchange0 {
 
   /// Configures the creation of a stand-alone exchange instance.
@@ -148,6 +152,208 @@ public sealed interface HttpExchange
 
     return builder.build();
   }
+
+  /// Returns the method of this request message.
+  ///
+  /// @return the method of this request message
+  @Override
+  HttpMethod method();
+
+  /// Returns the value of the path component.
+  ///
+  /// @return the value of the path component
+  @Override
+  String path();
+
+  /// Returns the first value of the query parameter with the specified name or
+  /// `null` if there are no values.
+  ///
+  /// @param name the name of the query parameter
+  ///
+  /// @return the first value if it exists or `null` if it does not
+  @Override
+  String queryParam(String name);
+
+  /// Returns all values of the query parameter with the specified name or an
+  /// empty list if there are no values. The list contains the values in
+  /// encounter order.
+  ///
+  /// @param name the name of the query parameter
+  ///
+  /// @return a list containing all values in encounter order; or an empty list
+  ///         if the parameter was not present in the request query
+  @Override
+  List<String> queryParamAll(String name);
+
+  /// Returns, as an `int`, the first value of the query parameter with the
+  /// specified name or returns the specified default value.
+  ///
+  /// The specified default value will be returned if the query component does
+  /// not contain a parameter with the specified name or if the first value of
+  /// such parameter does not represent an `int` value.
+  ///
+  /// @param name the name of the query parameter
+  /// @param defaultValue the value to be returned if the parameter does not
+  ///        exist or if its first value cannot be converted to an `int` value
+  ///
+  /// @return the first value converted to `int` if it exists or the specified
+  ///         default value otherwise
+  @Override
+  default int queryParamAsInt(String name, int defaultValue) {
+    final String maybe;
+    maybe = queryParam(name);
+
+    if (maybe == null) {
+      return defaultValue;
+    }
+
+    try {
+      return Integer.parseInt(maybe);
+    } catch (NumberFormatException expected) {
+      return defaultValue;
+    }
+  }
+
+  /// Returns, as a `int`, the first value of the query parameter with the
+  /// specified name or returns the value from the specified supplier.
+  ///
+  /// The value from the specified supplier will be returned if the query
+  /// component does not contain a parameter with the specified name or if the
+  /// first value of such parameter does not represent a `int` value.
+  ///
+  /// @param name the name of the query parameter
+  /// @param defaultSupplier supplies the value if the parameter does not exist
+  ///        or if its first value cannot be converted to an `int` value
+  ///
+  /// @return the first value converted to `int` if it exists or the value from
+  ///         the supplier otherwise
+  @Override
+  default int queryParamAsInt(String name, IntSupplier defaultSupplier) {
+    final String maybe;
+    maybe = queryParam(name);
+
+    if (maybe == null) {
+      return defaultSupplier.getAsInt();
+    }
+
+    try {
+      return Integer.parseInt(maybe);
+    } catch (NumberFormatException expected) {
+      return defaultSupplier.getAsInt();
+    }
+  }
+
+  /// Returns, as a `long`, the first value of the query parameter with the
+  /// specified name or returns the specified default value.
+  ///
+  /// The specified default value will be returned if the query component does
+  /// not contain a parameter with the specified name or if the first value of
+  /// such parameter does not represent a `long` value.
+  ///
+  /// @param name the name of the query parameter
+  /// @param defaultValue the value to be returned if the parameter does not
+  ///        exist or if its first value cannot be converted to an `long` value
+  ///
+  /// @return the first value converted to `long` if it exists or the specified
+  ///         default value otherwise
+  @Override
+  default long queryParamAsLong(String name, long defaultValue) {
+    final String maybe;
+    maybe = queryParam(name);
+
+    if (maybe == null) {
+      return defaultValue;
+    }
+
+    try {
+      return Long.parseLong(maybe);
+    } catch (NumberFormatException expected) {
+      return defaultValue;
+    }
+  }
+
+  /// Returns, as a `long`, the first value of the query parameter with the
+  /// specified name or returns the value from the specified supplier.
+  ///
+  /// The value from the specified supplier will be returned if the query
+  /// component does not contain a parameter with the specified name or if the
+  /// first value of such parameter does not represent a `long` value.
+  ///
+  /// @param name the name of the query parameter
+  /// @param defaultSupplier supplies the value if the parameter does not exist
+  ///        or if its first value cannot be converted to an `long` value
+  ///
+  /// @return the first value converted to `long` if it exists or the value from
+  ///         the supplier otherwise
+  @Override
+  default long queryParamAsLong(String name, LongSupplier defaultSupplier) {
+    final String maybe;
+    maybe = queryParam(name);
+
+    if (maybe == null) {
+      return defaultSupplier.getAsLong();
+    }
+
+    try {
+      return Long.parseLong(maybe);
+    } catch (NumberFormatException expected) {
+      return defaultSupplier.getAsLong();
+    }
+  }
+
+  /// The names of all of the query parameters in this request-target.
+  ///
+  /// @return the names of all of the query parameters
+  @Override
+  Set<String> queryParamNames();
+
+  /// The raw (encoded) value of the path component.
+  ///
+  /// @return the raw (encoded) value of the path component
+  @Override
+  String rawPath();
+
+  /// The raw (encoded) value of the query component. This method returns `null`
+  /// if this request-target does not have a query component.
+  ///
+  /// @return the raw (encoded) value of the query component or `null`
+  @Override
+  String rawQuery();
+
+  /// Returns the raw (encoded) value of the query component with the specified
+  /// parameter added or replaced if it exists.
+  ///
+  /// If a parameter with the same name already exists in the query, its value is
+  /// replaced with the specified value. If no such parameter exists, a new
+  /// parameter is added.
+  ///
+  /// Usage example:
+  ///
+  /// ```java
+  /// // original query is "search=java&sort=asc";
+  /// Http.RequestTarget target = ...
+  ///
+  /// // returns "search=java&sort=desc"
+  /// target.rawQueryWith("sort", "desc");
+  ///
+  /// // returns "search=java&sort=asc&page=2"
+  /// target.rawQueryWith("page", "2");
+  /// ```
+  ///
+  /// @param name the name of the parameter to be added or replaced
+  /// @param value the value of the parameter to be added or set
+  ///
+  /// @return the raw query string with the updated parameter
+  ///
+  /// @throws IllegalArgumentException if `name` is blank
+  @Override
+  String rawQueryWith(String name, String value);
+
+  /// Returns the version of the HTTP protocol of this request message.
+  ///
+  /// @return the version of the HTTP protocol of this request message.
+  @Override
+  HttpVersion version();
 
   // ##################################################################
   // # BEGIN: request attributes

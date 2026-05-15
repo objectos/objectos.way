@@ -31,8 +31,8 @@ import objectos.way.Note;
 final class HttpSessionStoreImpl implements HttpSessionLoader, HttpSessionStore {
 
   record Notes(
-      Note.Ref1<HttpRequest> invalidCsrf,
-      Note.Ref1<HttpRequest> invalidSession
+      Note.Ref1<Request> invalidCsrf,
+      Note.Ref1<Request> invalidSession
   ) {
 
     static Notes create() {
@@ -110,7 +110,7 @@ final class HttpSessionStoreImpl implements HttpSessionLoader, HttpSessionStore 
   }
 
   @Override
-  public final HttpSession loadSession(HttpRequest request, HttpResponse response) {
+  public final HttpSession loadSession(Request request, HttpResponse response) {
     final HttpSession maybeExisting;
     maybeExisting = findSession(request);
 
@@ -169,7 +169,7 @@ final class HttpSessionStoreImpl implements HttpSessionLoader, HttpSessionStore 
     }
   }
 
-  private HttpSession0 findSession(HttpRequest impl) {
+  private HttpSession0 findSession(Request impl) {
     final String cookie;
     cookie = impl.header(HttpHeaderName.COOKIE); // implicit null-check
 
@@ -319,7 +319,7 @@ final class HttpSessionStoreImpl implements HttpSessionLoader, HttpSessionStore 
     return findSession0(impl, cookie, startIndex, len);
   }
 
-  private HttpSession0 findSession0(HttpRequest impl, String cookie, int startIndex, int endIndex) {
+  private HttpSession0 findSession0(Request impl, String cookie, int startIndex, int endIndex) {
     try {
       final String encoded;
       encoded = cookie.substring(startIndex, endIndex);

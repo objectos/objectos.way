@@ -21,7 +21,7 @@ package objectos.http;
 /// interface are decoded.
 sealed interface HttpRequestHeaders
     permits
-    HttpRequest,
+    Request,
     HttpRequestHeaders0 {
 
   /// Returns the value of the first field line having the specified name;

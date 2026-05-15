@@ -289,7 +289,7 @@ public class HttpRequestParser4QueryTest {
   UriQuery: empty
   """)
   public void testCase01() {
-    HttpRequestTarget q;
+    Request q;
     q = queryOf("");
 
     assertEquals(q.queryParam("foo"), null);
@@ -301,7 +301,7 @@ public class HttpRequestParser4QueryTest {
   UriQuery: single value
   """)
   public void testCase02() {
-    HttpRequestTarget q;
+    Request q;
     q = queryOf("foo=bar");
 
     assertEquals(q.queryParam("foo"), "bar");
@@ -313,7 +313,7 @@ public class HttpRequestParser4QueryTest {
   UriQuery: name only
   """)
   public void testCase03() {
-    HttpRequestTarget q;
+    Request q;
     q = queryOf("foo");
 
     assertEquals(q.queryParam("foo"), "");
@@ -325,7 +325,7 @@ public class HttpRequestParser4QueryTest {
   UriQuery: empty value
   """)
   public void testCase04() {
-    HttpRequestTarget q;
+    Request q;
     q = queryOf("foo=");
 
     assertEquals(q.queryParam("foo"), "");
@@ -337,7 +337,7 @@ public class HttpRequestParser4QueryTest {
   UriQuery: corner cases
   """)
   public void testCase05() {
-    HttpRequestTarget q;
+    Request q;
     q = queryOf("a&foo=");
 
     assertEquals(q.queryParam("a"), "");
@@ -350,7 +350,7 @@ public class HttpRequestParser4QueryTest {
   UriQuery: corner cases
   """)
   public void testCase06() {
-    HttpRequestTarget q;
+    Request q;
     q = queryOf("a=1+2+3&b=foo");
 
     assertEquals(q.queryParam("a"), "1 2 3");
@@ -363,7 +363,7 @@ public class HttpRequestParser4QueryTest {
   UriQuery: getAsInt()
   """)
   public void testCase07() {
-    HttpRequestTarget q;
+    Request q;
     q = queryOf("a=123&b=-456&c=foo&d=&e&f=123.45");
 
     assertEquals(q.queryParamAsInt("a", -1), 123);
@@ -379,7 +379,7 @@ public class HttpRequestParser4QueryTest {
   UriQuery: set
   """)
   public void testCase08() {
-    HttpRequestTarget q;
+    Request q;
     q = queryOf("a=1&b=2&c=3&d");
 
     assertEquals(q.queryParam("a"), "1");
@@ -393,7 +393,7 @@ public class HttpRequestParser4QueryTest {
   UriQuery: duplicate name should return first value
   """)
   public void testCase09() {
-    HttpRequestTarget q;
+    Request q;
     q = queryOf("a=123&b=xpto&c&b=");
 
     assertEquals(q.queryParam("a"), "123");
@@ -404,7 +404,7 @@ public class HttpRequestParser4QueryTest {
 
   @Test
   public void testCase10() {
-    HttpRequestTarget q;
+    Request q;
     q = queryOf("%26=the%20%26%20char&foo=bar");
 
     assertEquals(q.queryParam("&"), "the & char");
@@ -413,7 +413,7 @@ public class HttpRequestParser4QueryTest {
     assertEquals(q.queryParamNames(), Set.of("&", "foo"));
   }
 
-  private HttpRequestTarget queryOf(String q) {
+  private Request queryOf(String q) {
     try {
       final Map<String, Object> map;
       map = parse("?" + q + " HTTP/1.1");

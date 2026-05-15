@@ -32,7 +32,7 @@ record HttpRequest0(
 
     HttpRequestBody0 body
 
-) implements HttpRequest {
+) implements Request {
 
   @Override
   public final InputStream bodyInputStream() throws IOException {

@@ -25,7 +25,7 @@ public class HttpTest {
 
   @Test
   public void parseRequestTarget01() {
-    HttpRequestTarget target;
+    HttpExchange target;
     target = HttpExchange.create(cfg -> cfg.path("/"));
 
     assertEquals(target.path(), "/");
