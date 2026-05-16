@@ -30,7 +30,7 @@ final class RequestParser5Version {
     this.input = input;
   }
 
-  public final HttpVersion0 parse() throws IOException {
+  public final Version0 parse() throws IOException {
     try {
       return parse0();
     } catch (RequestParser0Input.Eof e) {
@@ -46,7 +46,7 @@ final class RequestParser5Version {
     }
   }
 
-  private HttpVersion0 parse0() throws IOException {
+  private Version0 parse0() throws IOException {
     parseHttp();
 
     final int major;
@@ -56,9 +56,9 @@ final class RequestParser5Version {
     minor = done ? 0 : parseMinor();
 
     if (major == 1 && minor == 1) {
-      return HttpVersion0.HTTP_1_1;
+      return Version0.HTTP_1_1;
     } else {
-      return HttpVersion0.of(major, minor);
+      return Version0.of(major, minor);
     }
   }
 

@@ -25,9 +25,10 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import objectos.http.HttpClientException.Kind;
 
+@SuppressWarnings("exports")
 public class RequestParser5VersionTest {
 
-  private HttpVersion parse(Object... data) throws IOException {
+  private Version parse(Object... data) throws IOException {
     final Socket socket;
     socket = Y.socket(data);
 
@@ -43,16 +44,16 @@ public class RequestParser5VersionTest {
   @DataProvider
   public Object[][] validProvider() {
     return new Object[][] {
-        {"HTTP/1.1\r\n", HttpVersion0.HTTP_1_1, "1.1"},
-        {"HTTP/1.1\r\nHost: test\r\n", HttpVersion0.HTTP_1_1, "1.1"},
-        {"HTTP/1.0\r\n", HttpVersion0.of(1, 0), "not supported"},
-        {"HTTP/2\r\nHost: foo", HttpVersion0.of(2, 0), "not supported (yet)"},
-        {"HTTP/9.9\r\n", HttpVersion0.of(9, 9), "not supported (yet)"}
+        {"HTTP/1.1\r\n", Version0.HTTP_1_1, "1.1"},
+        {"HTTP/1.1\r\nHost: test\r\n", Version0.HTTP_1_1, "1.1"},
+        {"HTTP/1.0\r\n", Version0.of(1, 0), "not supported"},
+        {"HTTP/2\r\nHost: foo", Version0.of(2, 0), "not supported (yet)"},
+        {"HTTP/9.9\r\n", Version0.of(9, 9), "not supported (yet)"}
     };
   }
 
   @Test(dataProvider = "validProvider")
-  public void versionValid(String line, HttpVersion expected, String description) throws IOException {
+  public void versionValid(String line, Version expected, String description) throws IOException {
     assertEquals(
         parse(
             line
@@ -96,7 +97,7 @@ public class RequestParser5VersionTest {
   }
 
   @Test(dataProvider = "validProvider")
-  public void slowClientValid(String line, HttpVersion expected, String description) throws IOException {
+  public void slowClientValid(String line, Version expected, String description) throws IOException {
     assertEquals(
         parse(
             Y.slowStream(1, line)

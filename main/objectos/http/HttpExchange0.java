@@ -106,8 +106,7 @@ final class HttpExchange0 implements HttpExchange {
     return request.path();
   }
 
-  @Override
-  public final HttpVersion version() {
+  public final Version version() {
     return request.version();
   }
 

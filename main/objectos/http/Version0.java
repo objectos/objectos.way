@@ -15,14 +15,14 @@
  */
 package objectos.http;
 
-record HttpVersion0(int major, int minor, boolean supported) implements HttpVersion {
+record Version0(int major, int minor, boolean supported) implements Version {
 
-  static final HttpVersion0 HTTP_0_9 = of(0, 9);
+  static final Version0 HTTP_0_9 = of(0, 9);
 
-  static final HttpVersion0 HTTP_1_1 = new HttpVersion0(1, 1, true);
+  static final Version0 HTTP_1_1 = new Version0(1, 1, true);
 
-  public static HttpVersion0 of(int major, int minor) {
-    return new HttpVersion0(major, minor, false);
+  public static Version0 of(int major, int minor) {
+    return new Version0(major, minor, false);
   }
 
 }

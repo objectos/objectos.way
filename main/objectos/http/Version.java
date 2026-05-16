@@ -16,7 +16,7 @@
 package objectos.http;
 
 /// The version of the HTTP protocol.
-public sealed interface HttpVersion permits HttpVersion0 {
+sealed interface Version permits Version0 {
 
   /// Returns the major value of this version.
   ///

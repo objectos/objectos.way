@@ -30,6 +30,10 @@ import java.util.stream.LongStream;
 /// interface are decoded.
 public sealed interface Request permits Request0 {
 
+  // ##################################################################
+  // # BEGIN: Request line
+  // ##################################################################
+
   /// Returns the method of this request message.
   ///
   /// @return the method of this request message
@@ -214,10 +218,9 @@ public sealed interface Request permits Request0 {
   /// @throws IllegalArgumentException if `name` is blank
   String rawQueryWith(String name, String value);
 
-  /// Returns the version of the HTTP protocol of this request message.
-  ///
-  /// @return the version of the HTTP protocol of this request message.
-  HttpVersion version();
+  // ##################################################################
+  // # End: Request line
+  // ##################################################################
 
   /// Returns the value of the first field line having the specified name;
   /// returns `null` if the field line is not present.

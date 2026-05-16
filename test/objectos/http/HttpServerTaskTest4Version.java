@@ -22,24 +22,25 @@ import objectos.way.Y;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+@SuppressWarnings("exports")
 public class HttpServerTaskTest4Version {
 
   @DataProvider
   public Object[][] versionValidProvider() {
     return new Object[][] {
-        {"GET / HTTP/1.1", HttpVersion0.HTTP_1_1, "1.1 + path"},
-        {"GET /%C3%A1 HTTP/1.1", HttpVersion0.HTTP_1_1, "1.1 + path + percent"},
-        {"GET /url?key=value HTTP/1.1", HttpVersion0.HTTP_1_1, "1.1 + query key + value"},
-        {"GET /url?key HTTP/1.1", HttpVersion0.HTTP_1_1, "1.1 + query key only"},
-        {"GET /url?key=val%C3%A1 HTTP/1.1", HttpVersion0.HTTP_1_1, "1.1 + query key + value percent-encoded"},
-        {"GET /url?key%C3%A1 HTTP/1.1", HttpVersion0.HTTP_1_1, "1.1 + query key only percent-encoded"},
-        {"GET /url?key= HTTP/1.1", HttpVersion0.HTTP_1_1, "1.1 + query key only (equals)"},
-        {"GET /url?key%C3%A1= HTTP/1.1", HttpVersion0.HTTP_1_1, "1.1 + query key only percent-encoded (equals)"}
+        {"GET / HTTP/1.1", Version0.HTTP_1_1, "1.1 + path"},
+        {"GET /%C3%A1 HTTP/1.1", Version0.HTTP_1_1, "1.1 + path + percent"},
+        {"GET /url?key=value HTTP/1.1", Version0.HTTP_1_1, "1.1 + query key + value"},
+        {"GET /url?key HTTP/1.1", Version0.HTTP_1_1, "1.1 + query key only"},
+        {"GET /url?key=val%C3%A1 HTTP/1.1", Version0.HTTP_1_1, "1.1 + query key + value percent-encoded"},
+        {"GET /url?key%C3%A1 HTTP/1.1", Version0.HTTP_1_1, "1.1 + query key only percent-encoded"},
+        {"GET /url?key= HTTP/1.1", Version0.HTTP_1_1, "1.1 + query key only (equals)"},
+        {"GET /url?key%C3%A1= HTTP/1.1", Version0.HTTP_1_1, "1.1 + query key only percent-encoded (equals)"}
     };
   }
 
   @Test(dataProvider = "versionValidProvider")
-  public void versionValid(String line, HttpVersion expected, String description) {
+  public void versionValid(String line, Version expected, String description) {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
           opts.socket = Y.socket("""
@@ -50,7 +51,9 @@ public class HttpServerTaskTest4Version {
           """.formatted(line));
 
           opts.handler = http -> {
-            assertEquals(http.version(), expected);
+            var impl = (HttpExchange0) http;
+
+            assertEquals(impl.version(), expected);
 
             http.ok(Media.Bytes.textPlain("OK\n"));
           };
@@ -183,7 +186,7 @@ public class HttpServerTaskTest4Version {
   }
 
   @Test(dataProvider = "versionValidProvider")
-  public void slowClientValid(String line, HttpVersion expected, String description) {
+  public void slowClientValid(String line, Version expected, String description) {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
           opts.socket = Y.socket(Y.slowStream(1, """
@@ -194,7 +197,9 @@ public class HttpServerTaskTest4Version {
           """.formatted(line)));
 
           opts.handler = http -> {
-            assertEquals(http.version(), expected);
+            var impl = (HttpExchange0) http;
+
+            assertEquals(impl.version(), expected);
 
             http.ok(Media.Bytes.textPlain("OK\n"));
           };

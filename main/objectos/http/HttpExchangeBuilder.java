@@ -58,7 +58,7 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
 
   private Map<String, Object> queryParams = Map.of();
 
-  private final HttpVersion0 version = HttpVersion0.HTTP_1_1;
+  private final Version0 version = Version0.HTTP_1_1;
 
   private Map<HttpHeaderName, Object> headers = Map.of();
 
@@ -353,9 +353,9 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
         w.write(query);
       }
 
-      if (version == HttpVersion0.HTTP_1_1) {
+      if (version == Version0.HTTP_1_1) {
         w.write(" HTTP/1.1\r\n");
-      } else if (version == HttpVersion0.HTTP_0_9) {
+      } else if (version == Version0.HTTP_0_9) {
         w.write("\r\n");
       } else if (version.minor() == 0) {
         w.write(" HTTP/" + version.major() + "\r\n");

@@ -75,7 +75,7 @@ final class RequestParser {
     final RequestParser5Version versionParser;
     versionParser = new RequestParser5Version(input);
 
-    final HttpVersion0 version;
+    final Version0 version;
     version = versionParser.parse();
 
     validate(version);
@@ -154,7 +154,7 @@ final class RequestParser {
     }
   }
 
-  private void validate(HttpVersion0 version) throws HttpServerException {
+  private void validate(Version0 version) throws HttpServerException {
     if (!version.supported()) {
       throw new HttpServerException(HttpServerException.Kind.HTTP_VERSION_NOT_SUPPORTED);
     }
