@@ -33,7 +33,7 @@ final class HttpServerTask implements Runnable {
 
   static final Note.Long1Ref1<Throwable> THROW = Note.Long1Ref1.create(HttpServerTask.class, "THR", Note.ERROR);
 
-  private final HttpRequestBodyOptions bodyOptions;
+  private final RequestBodyOptions bodyOptions;
 
   private final byte[] buffer;
 
@@ -50,7 +50,7 @@ final class HttpServerTask implements Runnable {
   private final Socket socket;
 
   HttpServerTask(
-      HttpRequestBodyOptions bodyOptions,
+      RequestBodyOptions bodyOptions,
       byte[] buffer,
       Clock clock,
       HttpErrorResponses errorResponses,

@@ -31,7 +31,7 @@ import objectos.way.Note;
 final class HttpSessionStoreImpl implements HttpSessionLoader, HttpSessionStore {
 
   record Notes(
-      Note.Ref1<Request> invalidCsrf,
+      Note.Ref1<HttpExchange> invalidCsrf,
       Note.Ref1<Request> invalidSession
   ) {
 

@@ -28,7 +28,7 @@ import java.util.stream.LongStream;
 ///
 /// Unless otherwise specified the values returned by the methods of this
 /// interface are decoded.
-public sealed interface Request permits HttpExchange, Request0 {
+public sealed interface Request permits Request0 {
 
   /// Returns the method of this request message.
   ///

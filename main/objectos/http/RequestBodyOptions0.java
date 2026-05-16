@@ -15,8 +15,21 @@
  */
 package objectos.http;
 
-interface HttpRequestBodyOptions {
+final class RequestBodyOptions0 implements RequestBodyOptions {
 
-  RequestBodySupport supportOf(long id);
+  private final int memoryMax;
+
+  private final long sizeMax;
+
+  RequestBodyOptions0(int memoryMax, long sizeMax) {
+    this.memoryMax = memoryMax;
+
+    this.sizeMax = sizeMax;
+  }
+
+  @Override
+  public final RequestBodySupport supportOf(long id) {
+    return new RequestBodySupport0(id, memoryMax, sizeMax);
+  }
 
 }

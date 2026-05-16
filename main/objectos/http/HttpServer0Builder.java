@@ -83,8 +83,8 @@ final class HttpServer0Builder implements HttpServer.Options {
       memoryMax = requestBodyMemoryMax;
     }
 
-    final HttpRequestBodyOptions0 bodyOptions;
-    bodyOptions = new HttpRequestBodyOptions0(memoryMax, requestBodySizeMax);
+    final RequestBodyOptions0 bodyOptions;
+    bodyOptions = new RequestBodyOptions0(memoryMax, requestBodySizeMax);
 
     // hosts root directory
     final Path root;

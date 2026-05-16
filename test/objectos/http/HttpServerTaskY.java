@@ -91,7 +91,7 @@ public final class HttpServerTaskY {
   }
 
   private record ThisBodyOptions(Path directory, int memoryMax, long sizeMax)
-      implements HttpRequestBodyOptions {
+      implements RequestBodyOptions {
 
     @Override
     public final RequestBodySupport supportOf(long id) {

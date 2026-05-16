@@ -42,7 +42,7 @@ final class HttpServer1Loop implements Runnable {
     THROW = Note.Ref1.create(s, "THR", Note.ERROR);
   }
 
-  private final HttpRequestBodyOptions bodyOptions;
+  private final RequestBodyOptions bodyOptions;
 
   private final int bufferSize;
 
@@ -59,7 +59,7 @@ final class HttpServer1Loop implements Runnable {
   private final ServerSocket serverSocket;
 
   HttpServer1Loop(
-      HttpRequestBodyOptions bodyOptions,
+      RequestBodyOptions bodyOptions,
       int bufferSize,
       Clock clock,
       HttpErrorResponses errorResponses,
