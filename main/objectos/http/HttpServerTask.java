@@ -107,119 +107,35 @@ final class HttpServerTask implements Runnable {
   }
 
   private void run0(InputStream inputStream, OutputStream outputStream, RequestBodySupport bodySupport) throws IOException {
-    // input
-    final RequestParser0Input input;
-    input = new RequestParser0Input(buffer, inputStream);
+    final RequestParser requestParser;
+    requestParser = new RequestParser(buffer, inputStream, bodySupport);
 
-    // method
-    head = false;
+    final Request0 request;
+    request = requestParser.parse();
 
-    final RequestParser2Method methodParser;
-    methodParser = new RequestParser2Method(input);
-
-    final HttpMethod method;
-    method = methodParser.parse();
-
-    if (method == null) {
+    if (request == null) {
       keepAlive = false;
 
       return;
     }
 
-    validate(method);
+    final HttpMethod method;
+    method = request.method();
 
     head = method == HttpMethod.HEAD;
 
-    // path
-    final RequestParser3Path pathParser;
-    pathParser = new RequestParser3Path(input);
-
-    final String path;
-    path = pathParser.parse();
-
-    // query
-    final RequestParser4Query queryParser;
-    queryParser = new RequestParser4Query(input);
-
-    final Map<String, Object> queryParams;
-    queryParams = queryParser.parse();
-
-    // version
-    final RequestParser5Version versionParser;
-    versionParser = new RequestParser5Version(input);
-
-    final HttpVersion0 version;
-    version = versionParser.parse();
-
-    validate(version);
-
-    // headers
-    final RequestParser6Headers headersParser;
-    headersParser = new RequestParser6Headers(input);
-
-    final Map<HttpHeaderName, Object> headersMap;
-    headersMap = headersParser.parse();
-
-    final RequestHeaders headers;
-    headers = new RequestHeaders(headersMap);
+    final String hostValue;
+    hostValue = request.header(HttpHeaderName.HOST);
 
     final HttpHost5Pojo host;
-    host = validate(headers);
+    host = hosts.get(hostValue);
 
-    // body meta
-    final RequestParser7BodyMeta bodyMetaParser;
-    bodyMetaParser = new RequestParser7BodyMeta(headers);
+    if (host == null) {
+      final String msg;
+      msg = "Invalid host: %s".formatted(hostValue);
 
-    final RequestBodyMeta bodyMeta;
-    bodyMeta = bodyMetaParser.parse();
-
-    // body data
-    final RequestParser8BodyData bodyDataParser;
-    bodyDataParser = new RequestParser8BodyData(
-        bodySupport,
-
-        input,
-
-        bodyMeta.data()
-    );
-
-    final RequestBodyData bodyData;
-    bodyData = bodyDataParser.parse();
-
-    // body form
-    final Map<String, Object> formParams;
-    formParams = switch (bodyMeta.type()) {
-      case RequestBodyMeta.TypeKind.APPLICATION_FORM_URLENCODED -> {
-        try (InputStream in = bodyData.open()) {
-          final RequestParser9BodyType0Form parser;
-          parser = new RequestParser9BodyType0Form(in);
-
-          yield parser.parse();
-        }
-      }
-
-      default -> Map.of();
-    };
-
-    final RequestBodyForm bodyForm;
-    bodyForm = new RequestBodyForm(formParams);
-
-    final Request0 request;
-    request = new Request0(
-        method,
-
-        path,
-
-        queryParams,
-
-        version,
-
-        headers,
-
-        bodyData,
-
-        bodyForm
-    );
+      throw new HttpClientException(msg, HttpClientException.Kind.HOST_NOT_FOUND);
+    }
 
     // response
     final HttpResponse0 response;
@@ -253,59 +169,6 @@ final class HttpServerTask implements Runnable {
     keepAlive = requestHeaders.closeConnection()
         ? false
         : !response.closeConnection();
-  }
-
-  private void validate(HttpMethod method) throws HttpServerException {
-    if (!method.implemented) {
-      throw new HttpServerException(HttpServerException.Kind.METHOD_NOT_IMPLEMENTED);
-    }
-  }
-
-  private void validate(HttpVersion0 version) throws HttpServerException {
-    if (!version.supported()) {
-      throw new HttpServerException(HttpServerException.Kind.HTTP_VERSION_NOT_SUPPORTED);
-    }
-  }
-
-  private HttpHost5Pojo validate(RequestHeaders headers) throws IOException {
-    final List<String> hostHeader;
-    hostHeader = headers.headerAll(HttpHeaderName.HOST);
-
-    if (hostHeader.size() != 1) {
-      final String msg;
-      msg = "Host header field is required";
-
-      throw new HttpClientException(msg, HttpClientException.Kind.HOST_HEADER);
-    }
-
-    final String hostValue;
-    hostValue = hostHeader.get(0);
-
-    if (hostValue.isEmpty()) {
-      final String msg;
-      msg = "Host header field is required";
-
-      throw new HttpClientException(msg, HttpClientException.Kind.HOST_HEADER);
-    }
-
-    final String transferEncoding;
-    transferEncoding = headers.header(HttpHeaderName.TRANSFER_ENCODING);
-
-    if (transferEncoding != null) {
-      throw new HttpServerException(HttpServerException.Kind.TRANSFER_ENCODING);
-    }
-
-    final HttpHost5Pojo host;
-    host = hosts.get(hostValue);
-
-    if (host == null) {
-      final String msg;
-      msg = "Invalid host: %s".formatted(hostValue);
-
-      throw new HttpClientException(msg, HttpClientException.Kind.HOST_NOT_FOUND);
-    }
-
-    return host;
   }
 
   private void handle(OutputStream outputStream, Message exception) {

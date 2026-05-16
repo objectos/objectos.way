@@ -157,6 +157,26 @@ final class RequestParser0Input extends InputStream {
     throw new IllegalStateException("buffered bytes < 0");
   }
 
+  public final int readToBuffer() throws IOException {
+    final int writableLength;
+    writableLength = buffer.length - bufferLimit;
+
+    if (writableLength == 0) {
+      throw new Overflow();
+    }
+
+    final int bytesRead;
+    bytesRead = inputStream.read(buffer, bufferLimit, writableLength);
+
+    assert bytesRead != 0 : "InputStream.read should not return 0 when writableLength != 0";
+
+    if (bytesRead > 0) {
+      bufferLimit += bytesRead;
+    }
+
+    return bytesRead;
+  }
+
   public final void skipByte() {
     bufferIndex += 1;
   }
@@ -181,23 +201,12 @@ final class RequestParser0Input extends InputStream {
     }
 
     if (readable == 0) {
-      final int writableLength;
-      writableLength = buffer.length - bufferLimit;
-
-      if (writableLength == 0) {
-        throw new Overflow();
-      }
-
       final int bytesRead;
-      bytesRead = inputStream.read(buffer, bufferLimit, writableLength);
+      bytesRead = readToBuffer();
 
       if (bytesRead < 0) {
         throw new Eof();
       }
-
-      assert bytesRead != 0 : "InputStream.read should not return 0 when writableLength != 0";
-
-      bufferLimit += bytesRead;
 
       return;
     }

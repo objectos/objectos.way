@@ -36,10 +36,17 @@ final class RequestParser {
     this.requestBodySupport = requestBodySupport;
   }
 
-  public final Request parse() throws IOException {
+  public final Request0 parse() throws IOException {
     // input
     final RequestParser0Input input;
     input = new RequestParser0Input(buffer, inputStream);
+
+    final int bytesRead;
+    bytesRead = input.readToBuffer();
+
+    if (bytesRead < 0) {
+      return null;
+    }
 
     // method
     final RequestParser2Method methodParser;
@@ -47,10 +54,6 @@ final class RequestParser {
 
     final HttpMethod method;
     method = methodParser.parse();
-
-    if (method == null) {
-      return null;
-    }
 
     validate(method);
 

@@ -16,7 +16,6 @@
 package objectos.http;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertSame;
 
 import module java.base;
@@ -83,6 +82,10 @@ public class RequestParser2MethodTest {
   public Object[][] badRequestProvider() {
     return new Object[][] {
         {
+            "",
+            "EOF while parsing method"
+        },
+        {
             """
             XYZ /path?key=value HTTP/1.1\r
             Host: www.example.com\r
@@ -143,14 +146,6 @@ public class RequestParser2MethodTest {
     } catch (IOException expected) {
       assertSame(expected, ex);
     }
-  }
-
-  @Test
-  public void eof01() throws IOException {
-    final HttpMethod method;
-    method = parse();
-
-    assertNull(method);
   }
 
 }
