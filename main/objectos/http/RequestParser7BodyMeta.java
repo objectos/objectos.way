@@ -19,15 +19,15 @@ import java.io.IOException;
 import objectos.http.HttpClientException.Kind;
 import objectos.internal.Ascii;
 
-final class HttpRequestParser7BodyMeta {
+final class RequestParser7BodyMeta {
 
-  private final HttpRequestHeaders headers;
+  private final RequestHeaders headers;
 
-  HttpRequestParser7BodyMeta(HttpRequestHeaders headers) {
+  RequestParser7BodyMeta(RequestHeaders headers) {
     this.headers = headers;
   }
 
-  public final HttpRequestBodyMeta parse() throws IOException {
+  public final RequestBodyMeta parse() throws IOException {
     final String contentLength;
     contentLength = headers.header(HttpHeaderName.CONTENT_LENGTH);
 
@@ -50,13 +50,13 @@ final class HttpRequestParser7BodyMeta {
       len = parseContentLength(contentLength);
 
       if (len == 0) {
-        return HttpRequestBodyMeta.ofEmpty();
+        return RequestBodyMeta.ofEmpty();
       }
 
-      final HttpRequestBodyMeta.Type type;
+      final RequestBodyMeta.Type type;
       type = parseContentType(contentType);
 
-      return HttpRequestBodyMeta.of(len, type);
+      return RequestBodyMeta.of(len, type);
 
     }
 
@@ -71,7 +71,7 @@ final class HttpRequestParser7BodyMeta {
       throw new HttpServerException(HttpServerException.Kind.TRANSFER_ENCODING);
     }
 
-    return HttpRequestBodyMeta.ofEmpty();
+    return RequestBodyMeta.ofEmpty();
   }
 
   private long parseContentLength(String contentLength) throws HttpClientException {
@@ -134,12 +134,12 @@ final class HttpRequestParser7BodyMeta {
     return length;
   }
 
-  private HttpRequestBodyMeta.Type parseContentType(String contentType) {
+  private RequestBodyMeta.Type parseContentType(String contentType) {
     if ("application/x-www-form-urlencoded".equalsIgnoreCase(contentType)) {
-      return HttpRequestBodyMeta.TypeKind.APPLICATION_FORM_URLENCODED;
+      return RequestBodyMeta.TypeKind.APPLICATION_FORM_URLENCODED;
     }
 
-    return HttpRequestBodyMeta.TypeKind.NONE;
+    return RequestBodyMeta.TypeKind.NONE;
   }
 
 }

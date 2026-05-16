@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-record HttpRequestHeaders0(Map<HttpHeaderName, Object> headers) implements HttpRequestHeaders {
+record RequestHeaders(Map<HttpHeaderName, Object> headers) {
 
   public final boolean closeConnection() {
     final String connection;
@@ -28,7 +28,6 @@ record HttpRequestHeaders0(Map<HttpHeaderName, Object> headers) implements HttpR
     return "close".equalsIgnoreCase(connection);
   }
 
-  @Override
   public final String header(HttpHeaderName name) {
     Objects.requireNonNull(name, "name == null");
 

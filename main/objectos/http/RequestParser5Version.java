@@ -20,25 +20,25 @@ import java.nio.charset.StandardCharsets;
 import objectos.http.HttpClientException.Kind;
 import objectos.internal.Bytes;
 
-final class HttpRequestParser5Version {
+final class RequestParser5Version {
 
   private boolean done;
 
-  private final HttpRequestParser0Input input;
+  private final RequestParser0Input input;
 
-  HttpRequestParser5Version(HttpRequestParser0Input input) {
+  RequestParser5Version(RequestParser0Input input) {
     this.input = input;
   }
 
   public final HttpVersion0 parse() throws IOException {
     try {
       return parse0();
-    } catch (HttpRequestParser0Input.Eof e) {
+    } catch (RequestParser0Input.Eof e) {
       final String msg;
       msg = "EOF while parsing HTTP version";
 
       throw new HttpClientException(msg, e, Kind.INVALID_REQUEST_LINE);
-    } catch (HttpRequestParser0Input.Overflow e) {
+    } catch (RequestParser0Input.Overflow e) {
       final String msg;
       msg = "Buffer overflow while parsing HTTP version";
 

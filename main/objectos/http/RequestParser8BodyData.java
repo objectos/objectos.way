@@ -23,15 +23,15 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import objectos.http.HttpClientException.Kind;
 
-final class HttpRequestParser8BodyData {
+final class RequestParser8BodyData {
 
-  private final HttpRequestBodySupport bodySupport;
+  private final RequestBodySupport bodySupport;
 
-  private final HttpRequestParser0Input input;
+  private final RequestParser0Input input;
 
-  private final HttpRequestBodyMeta.Data meta;
+  private final RequestBodyMeta.Data meta;
 
-  HttpRequestParser8BodyData(HttpRequestBodySupport bodySupport, HttpRequestParser0Input input, HttpRequestBodyMeta.Data meta) {
+  RequestParser8BodyData(RequestBodySupport bodySupport, RequestParser0Input input, RequestBodyMeta.Data meta) {
     this.bodySupport = bodySupport;
 
     this.input = input;
@@ -39,10 +39,10 @@ final class HttpRequestParser8BodyData {
     this.meta = meta;
   }
 
-  public final HttpRequestBodyData parse() throws IOException {
+  public final RequestBodyData parse() throws IOException {
     try {
       return parse0();
-    } catch (HttpRequestParser0Input.Eof e) {
+    } catch (RequestParser0Input.Eof e) {
       final String msg;
       msg = "EOF while reading request body";
 
@@ -50,15 +50,15 @@ final class HttpRequestParser8BodyData {
     }
   }
 
-  private HttpRequestBodyData parse0() throws IOException {
+  private RequestBodyData parse0() throws IOException {
     return switch (meta) {
-      case HttpRequestBodyMeta.DataKind.EMPTY -> HttpRequestBodyData.ofNull();
+      case RequestBodyMeta.DataKind.EMPTY -> RequestBodyData.ofNull();
 
-      case HttpRequestBodyMeta.Fixed(long length) -> parseFixed(length);
+      case RequestBodyMeta.Fixed(long length) -> parseFixed(length);
     };
   }
 
-  private HttpRequestBodyData parseFixed(long length) throws IOException {
+  private RequestBodyData parseFixed(long length) throws IOException {
     final long sizeMax;
     sizeMax = bodySupport.sizeMax();
 
@@ -78,7 +78,7 @@ final class HttpRequestParser8BodyData {
     }
   }
 
-  private HttpRequestBodyData parseFixedFile(long length) throws IOException {
+  private RequestBodyData parseFixedFile(long length) throws IOException {
     final Path file;
     file = bodySupport.file();
 
@@ -86,10 +86,10 @@ final class HttpRequestParser8BodyData {
       copy(length, output);
     }
 
-    return HttpRequestBodyData.of(file);
+    return RequestBodyData.of(file);
   }
 
-  private HttpRequestBodyData parseFixedMemory(long length) throws IOException {
+  private RequestBodyData parseFixedMemory(long length) throws IOException {
     final ByteArrayOutputStream output;
     output = new ByteArrayOutputStream();
 
@@ -98,7 +98,7 @@ final class HttpRequestParser8BodyData {
     final byte[] bytes;
     bytes = output.toByteArray();
 
-    return HttpRequestBodyData.of(bytes);
+    return RequestBodyData.of(bytes);
   }
 
   private void copy(long length, OutputStream output) throws IOException {

@@ -209,7 +209,9 @@ public class HttpServerTest {
 
   @SuppressWarnings("unused")
   private void testCase01(HttpExchange http) {
-    switch (http.method()) {
+    var method = http.method();
+
+    switch (method) {
       case GET, HEAD -> testCase01Get(http);
 
       default -> http.error(HttpStatus.METHOD_NOT_ALLOWED);

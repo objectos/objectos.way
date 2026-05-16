@@ -111,13 +111,57 @@ public final class HttpY {
     final String response;
 
     if (length > 0) {
-      final byte[] bodyBuf;
-      bodyBuf = in.readNBytes(length);
+      final StringBuilder res;
+      res = new StringBuilder();
 
-      final String body;
-      body = new String(bodyBuf, ASCII);
+      int idx = 0;
 
-      response = headers + body;
+      boolean trailer = false;
+
+      while (idx < headerLines.length) {
+        final String line;
+        line = headerLines[idx++];
+
+        res.append(line);
+
+        res.append("\r\n");
+
+        if (line.equals("")) {
+          trailer = true;
+
+          break;
+        }
+      }
+
+      if (!trailer) {
+        res.append("\r\n");
+      }
+
+      int body = 0;
+
+      while (idx < headerLines.length) {
+        final String line;
+        line = headerLines[idx++];
+
+        body += line.length();
+
+        res.append(line);
+      }
+
+      if (body < length) {
+        final int remaining;
+        remaining = length - body;
+
+        final byte[] bodyBuf;
+        bodyBuf = in.readNBytes(remaining);
+
+        final String b;
+        b = new String(bodyBuf, ASCII);
+
+        res.append(b);
+      }
+
+      response = res.toString();
     }
 
     else if (length == Integer.MIN_VALUE) {

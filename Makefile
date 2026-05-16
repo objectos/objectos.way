@@ -146,6 +146,9 @@ TEST_RUNTIME_DEPS += $(OPENTEST4J)
 
 ## test JVM opts
 TEST_JVM_OPTS := -Dplaywright.headless=true
+ifeq ($(ENABLE_DEBUG),1)
+TEST_JVM_OPTS += -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=localhost:7000
+endif
 
 ## test modules
 TEST_ADD_MODULES := org.testng

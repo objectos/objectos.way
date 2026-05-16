@@ -18,23 +18,23 @@ package objectos.http;
 import module java.base;
 import objectos.http.HttpClientException.Kind;
 
-final class HttpRequestParser2Method {
+final class RequestParser2Method {
 
-  private final HttpRequestParser0Input input;
+  private final RequestParser0Input input;
 
-  HttpRequestParser2Method(HttpRequestParser0Input input) {
+  RequestParser2Method(RequestParser0Input input) {
     this.input = input;
   }
 
   public final HttpMethod parse() throws IOException {
     try {
       return parse0();
-    } catch (HttpRequestParser0Input.Eof e) {
+    } catch (RequestParser0Input.Eof e) {
       final String msg;
       msg = "EOF while parsing method";
 
       throw new HttpClientException(msg, e, Kind.INVALID_REQUEST_LINE);
-    } catch (HttpRequestParser0Input.Overflow e) {
+    } catch (RequestParser0Input.Overflow e) {
       final String msg;
       msg = "Buffer overflow while parsing method";
 
@@ -49,7 +49,7 @@ final class HttpRequestParser2Method {
       // TODO do not use exception as flow control
 
       first = input.readByte();
-    } catch (HttpRequestParser0Input.Eof expected) {
+    } catch (RequestParser0Input.Eof expected) {
       return null;
     }
 

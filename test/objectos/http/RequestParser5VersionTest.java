@@ -25,17 +25,17 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import objectos.http.HttpClientException.Kind;
 
-public class HttpRequestParser5VersionTest {
+public class RequestParser5VersionTest {
 
   private HttpVersion parse(Object... data) throws IOException {
     final Socket socket;
     socket = Y.socket(data);
 
-    final HttpRequestParser0Input input;
-    input = HttpRequestParser0Input.of(512, socket);
+    final RequestParser0Input input;
+    input = RequestParser0Input.of(512, socket);
 
-    final HttpRequestParser5Version parser;
-    parser = new HttpRequestParser5Version(input);
+    final RequestParser5Version parser;
+    parser = new RequestParser5Version(input);
 
     return parser.parse();
   }

@@ -19,27 +19,27 @@ import module java.base;
 import objectos.http.HttpClientException.Kind;
 import objectos.internal.Bytes;
 
-final class HttpRequestParser6Headers {
+final class RequestParser6Headers {
 
-  private final HttpRequestParser0Input input;
+  private final RequestParser0Input input;
 
   private Map<HttpHeaderName, Object> map = Map.of();
 
   private final StringBuilder sb = new StringBuilder();
 
-  HttpRequestParser6Headers(HttpRequestParser0Input input) {
+  RequestParser6Headers(RequestParser0Input input) {
     this.input = input;
   }
 
   public final Map<HttpHeaderName, Object> parse() throws IOException {
     try {
       return parse0();
-    } catch (HttpRequestParser0Input.Eof e) {
+    } catch (RequestParser0Input.Eof e) {
       final String msg;
       msg = "EOF while parsing HTTP headers";
 
       throw new HttpClientException(msg, e, Kind.INVALID_REQUEST_HEADERS);
-    } catch (HttpRequestParser0Input.Overflow e) {
+    } catch (RequestParser0Input.Overflow e) {
       final String msg;
       msg = "Buffer overflow while parsing HTTP headers";
 

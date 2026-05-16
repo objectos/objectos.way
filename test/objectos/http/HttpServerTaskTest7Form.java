@@ -57,13 +57,13 @@ public class HttpServerTaskTest7Form {
             final HttpExchange0 exchange;
             exchange = (HttpExchange0) http;
 
-            final HttpRequest0 request;
+            final Request0 request;
             request = exchange.request();
 
-            final HttpRequestBody0 body;
-            body = request.body();
+            final RequestBodyForm body;
+            body = request.bodyForm();
 
-            assertEquals(body.formParams(), expected);
+            assertEquals(body.params(), expected);
 
             http.ok(Media.Bytes.textPlain("OK\n"));
           };
@@ -115,13 +115,13 @@ public class HttpServerTaskTest7Form {
             final HttpExchange0 exchange;
             exchange = (HttpExchange0) http;
 
-            final HttpRequest0 request;
+            final Request0 request;
             request = exchange.request();
 
-            final HttpRequestBody0 body;
-            body = request.body();
+            final RequestBodyForm body;
+            body = request.bodyForm();
 
-            assertEquals(body.formParams(), Map.of("key", value));
+            assertEquals(body.params(), Map.of("key", value));
 
             http.ok(Media.Bytes.textPlain("OK\n"));
           };
@@ -175,13 +175,13 @@ public class HttpServerTaskTest7Form {
             final HttpExchange0 exchange;
             exchange = (HttpExchange0) http;
 
-            final HttpRequest0 request;
+            final Request0 request;
             request = exchange.request();
 
-            final HttpRequestBody0 body;
-            body = request.body();
+            final RequestBodyForm body;
+            body = request.bodyForm();
 
-            assertEquals(body.formParams(), Map.of("key", value));
+            assertEquals(body.params(), Map.of("key", value));
 
             http.ok(Media.Bytes.textPlain("OK\n"));
           };
@@ -306,13 +306,13 @@ public class HttpServerTaskTest7Form {
             final HttpExchange0 exchange;
             exchange = (HttpExchange0) http;
 
-            final HttpRequest0 request;
+            final Request0 request;
             request = exchange.request();
 
-            final HttpRequestBody0 body;
-            body = request.body();
+            final RequestBodyForm body;
+            body = request.bodyForm();
 
-            assertEquals(body.formParams(), expected);
+            assertEquals(body.params(), expected);
 
             http.ok(Media.Bytes.textPlain("OK\n"));
           };
@@ -351,13 +351,13 @@ public class HttpServerTaskTest7Form {
             final HttpExchange0 exchange;
             exchange = (HttpExchange0) http;
 
-            final HttpRequest0 request;
+            final Request0 request;
             request = exchange.request();
 
-            final HttpRequestBody0 body;
-            body = request.body();
+            final RequestBodyForm body;
+            body = request.bodyForm();
 
-            assertEquals(body.formParams(), expected);
+            assertEquals(body.params(), expected);
 
             http.ok(Media.Bytes.textPlain("OK\n"));
           };
@@ -396,13 +396,13 @@ public class HttpServerTaskTest7Form {
             final HttpExchange0 exchange;
             exchange = (HttpExchange0) http;
 
-            final HttpRequest0 request;
+            final Request0 request;
             request = exchange.request();
 
-            final HttpRequestBody0 body;
-            body = request.body();
+            final RequestBodyForm body;
+            body = request.bodyForm();
 
-            assertEquals(body.formParams(), expected);
+            assertEquals(body.params(), expected);
 
             http.ok(Media.Bytes.textPlain("OK\n"));
           };

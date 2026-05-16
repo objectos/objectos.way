@@ -28,8 +28,8 @@ final class HttpRequestBodyOptions0 implements HttpRequestBodyOptions {
   }
 
   @Override
-  public final HttpRequestBodySupport supportOf(long id) {
-    return new HttpRequestBodySupport0(id, memoryMax, sizeMax);
+  public final RequestBodySupport supportOf(long id) {
+    return new RequestBodySupport0(id, memoryMax, sizeMax);
   }
 
 }

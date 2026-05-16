@@ -158,11 +158,11 @@ public class HttpSessionStoreTest {
       headersMap = Map.of();
     }
 
-    final HttpRequestHeaders0 headers;
-    headers = new HttpRequestHeaders0(headersMap);
+    final RequestHeaders headers;
+    headers = new RequestHeaders(headersMap);
 
-    final HttpRequest0 request;
-    request = new HttpRequest0(null, null, null, null, headers, null);
+    final Request0 request;
+    request = new Request0(null, null, null, null, headers, null, null);
 
     final HttpSession res;
     res = store.loadSession(request, null);

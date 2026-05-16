@@ -15,18 +15,35 @@
  */
 package objectos.http;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.nio.file.Path;
+record RequestBodyMeta(Data data, Type type) {
 
-abstract class HttpRequestBodySupport implements Closeable {
+  sealed interface Data {}
 
-  HttpRequestBodySupport() {}
+  enum DataKind implements Data {
+    EMPTY;
+  }
 
-  abstract Path file() throws IOException;
+  record Fixed(long length) implements Data {}
 
-  abstract int memoryMax();
+  sealed interface Type {}
 
-  abstract long sizeMax();
+  enum TypeKind implements Type {
+    APPLICATION_FORM_URLENCODED,
+
+    NONE;
+  }
+
+  private static final RequestBodyMeta EMPTY = new RequestBodyMeta(DataKind.EMPTY, TypeKind.NONE);
+
+  public static RequestBodyMeta of(long length, Type type) {
+    final Fixed fixed;
+    fixed = new Fixed(length);
+
+    return new RequestBodyMeta(fixed, type);
+  }
+
+  public static RequestBodyMeta ofEmpty() {
+    return EMPTY;
+  }
 
 }

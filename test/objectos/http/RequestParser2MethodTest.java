@@ -25,17 +25,17 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class HttpRequestParser2MethodTest {
+public class RequestParser2MethodTest {
 
   private HttpMethod parse(Object... data) throws IOException {
     final Socket socket;
     socket = Y.socket(data);
 
-    final HttpRequestParser0Input input;
-    input = HttpRequestParser0Input.of(512, socket);
+    final RequestParser0Input input;
+    input = RequestParser0Input.of(512, socket);
 
-    final HttpRequestParser2Method parser;
-    parser = new HttpRequestParser2Method(input);
+    final RequestParser2Method parser;
+    parser = new RequestParser2Method(input);
 
     return parser.parse();
   }

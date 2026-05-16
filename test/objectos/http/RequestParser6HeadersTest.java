@@ -29,17 +29,17 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import objectos.http.HttpClientException.Kind;
 
-public class HttpRequestParser6HeadersTest {
+public class RequestParser6HeadersTest {
 
   private Map<HttpHeaderName, Object> parse(Object... data) throws IOException {
     final Socket socket;
     socket = Y.socket(data);
 
-    final HttpRequestParser0Input input;
-    input = HttpRequestParser0Input.of(256, socket);
+    final RequestParser0Input input;
+    input = RequestParser0Input.of(256, socket);
 
-    final HttpRequestParser6Headers parser;
-    parser = new HttpRequestParser6Headers(input);
+    final RequestParser6Headers parser;
+    parser = new RequestParser6Headers(input);
 
     return parser.parse();
   }

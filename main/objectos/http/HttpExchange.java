@@ -15,6 +15,8 @@
  */
 package objectos.http;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.time.Clock;
 import java.util.List;
@@ -354,6 +356,24 @@ public sealed interface HttpExchange
   /// @return the version of the HTTP protocol of this request message.
   @Override
   HttpVersion version();
+
+  /// Returns the value of the first field line having the specified name;
+  /// returns `null` if the field line is not present.
+  ///
+  /// @param name the name of the header field line
+  ///
+  /// @return the value of first field line or `null` if a field line with the
+  ///         specified name is not present.
+  @Override
+  String header(HttpHeaderName name);
+
+  /// Returns an input stream that reads the bytes of this request body.
+  ///
+  /// @return an input stream that reads the bytes of this request body.
+  ///
+  /// @throws IOException if an I/O error occurs
+  @Override
+  InputStream bodyInputStream() throws IOException;
 
   // ##################################################################
   // # BEGIN: request attributes

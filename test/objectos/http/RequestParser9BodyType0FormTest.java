@@ -27,15 +27,15 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class HttpRequestParser9BodyType0FormTest {
+public class RequestParser9BodyType0FormTest {
 
   private Map<String, Object> parse(String payload) throws IOException {
     final byte[] bytes;
     bytes = payload.getBytes(StandardCharsets.ISO_8859_1);
 
     try (ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes)) {
-      final HttpRequestParser9BodyType0Form parser;
-      parser = new HttpRequestParser9BodyType0Form(inputStream);
+      final RequestParser9BodyType0Form parser;
+      parser = new RequestParser9BodyType0Form(inputStream);
 
       return parser.parse();
     }

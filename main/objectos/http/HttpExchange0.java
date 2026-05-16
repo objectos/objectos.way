@@ -25,7 +25,7 @@ final class HttpExchange0 implements HttpExchange {
 
   private Map<Object, Object> attributes;
 
-  private final HttpRequest0 request;
+  private final Request0 request;
 
   private final HttpResponse0 response;
 
@@ -33,11 +33,11 @@ final class HttpExchange0 implements HttpExchange {
 
   private final HttpStaticFilesWriter staticFilesWriter;
 
-  HttpExchange0(HttpRequest0 request, HttpResponse0 response, HttpSession session, HttpStaticFilesWriter staticFilesWriter) {
+  HttpExchange0(Request0 request, HttpResponse0 response, HttpSession session, HttpStaticFilesWriter staticFilesWriter) {
     this(Map.of(), request, response, session, staticFilesWriter);
   }
 
-  HttpExchange0(Map<Object, Object> attributes, HttpRequest0 request, HttpResponse0 response, HttpSession session, HttpStaticFilesWriter staticFilesWriter) {
+  HttpExchange0(Map<Object, Object> attributes, Request0 request, HttpResponse0 response, HttpSession session, HttpStaticFilesWriter staticFilesWriter) {
     this.attributes = attributes;
 
     this.request = request;
@@ -82,7 +82,7 @@ final class HttpExchange0 implements HttpExchange {
   // # BEGIN: HttpRequest
   // ##################################################################
 
-  public final HttpRequest0 request() {
+  public final Request0 request() {
     return request;
   }
 

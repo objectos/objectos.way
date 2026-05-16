@@ -19,7 +19,7 @@ import module java.base;
 import objectos.http.HttpClientException.Kind;
 import objectos.internal.Ascii;
 
-final class HttpRequestParser9BodyType0Form {
+final class RequestParser9BodyType0Form {
 
   private boolean done;
 
@@ -29,9 +29,9 @@ final class HttpRequestParser9BodyType0Form {
 
   private Map<String, Object> params = Map.of();
 
-  private HttpRequestParser1UrlDecoder urlDecoder;
+  private RequestParser1UrlDecoder urlDecoder;
 
-  HttpRequestParser9BodyType0Form(InputStream input) {
+  RequestParser9BodyType0Form(InputStream input) {
     this.input = input;
   }
 
@@ -243,7 +243,7 @@ final class HttpRequestParser9BodyType0Form {
 
   private int decodePerc() throws IOException {
     if (urlDecoder == null) {
-      urlDecoder = new HttpRequestParser1UrlDecoder(input);
+      urlDecoder = new RequestParser1UrlDecoder(input);
     }
 
     return urlDecoder.decode(Kind.INVALID_FORM);

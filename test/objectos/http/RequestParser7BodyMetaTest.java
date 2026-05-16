@@ -22,14 +22,14 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class HttpRequestParser7BodyMetaTest {
+public class RequestParser7BodyMetaTest {
 
-  private HttpRequestBodyMeta parse(Map<HttpHeaderName, Object> map) throws IOException {
-    final HttpRequestHeaders0 headers;
-    headers = new HttpRequestHeaders0(map);
+  private RequestBodyMeta parse(Map<HttpHeaderName, Object> map) throws IOException {
+    final RequestHeaders headers;
+    headers = new RequestHeaders(map);
 
-    final HttpRequestParser7BodyMeta parser;
-    parser = new HttpRequestParser7BodyMeta(headers);
+    final RequestParser7BodyMeta parser;
+    parser = new RequestParser7BodyMeta(headers);
 
     return parser.parse();
   }
@@ -40,7 +40,7 @@ public class HttpRequestParser7BodyMetaTest {
         {
             Map.of(),
 
-            HttpRequestBodyMeta.ofEmpty(),
+            RequestBodyMeta.ofEmpty(),
             "empty: no content-length"
         },
         {
@@ -48,7 +48,7 @@ public class HttpRequestParser7BodyMetaTest {
                 HttpHeaderName.HOST, "www.example.com"
             ),
 
-            HttpRequestBodyMeta.ofEmpty(),
+            RequestBodyMeta.ofEmpty(),
             "empty: no content-length"
         },
         {
@@ -57,7 +57,7 @@ public class HttpRequestParser7BodyMetaTest {
                 HttpHeaderName.CONTENT_LENGTH, "0"
             ),
 
-            HttpRequestBodyMeta.ofEmpty(),
+            RequestBodyMeta.ofEmpty(),
             "empty: content-length=0"
         },
         {
@@ -66,7 +66,7 @@ public class HttpRequestParser7BodyMetaTest {
                 HttpHeaderName.CONTENT_LENGTH, "123"
             ),
 
-            HttpRequestBodyMeta.of(123, HttpRequestBodyMeta.TypeKind.NONE),
+            RequestBodyMeta.of(123, RequestBodyMeta.TypeKind.NONE),
             "fixed: no type"
         },
         {
@@ -75,7 +75,7 @@ public class HttpRequestParser7BodyMetaTest {
                 HttpHeaderName.CONTENT_LENGTH, "9223372036854775807"
             ),
 
-            HttpRequestBodyMeta.of(Long.MAX_VALUE, HttpRequestBodyMeta.TypeKind.NONE),
+            RequestBodyMeta.of(Long.MAX_VALUE, RequestBodyMeta.TypeKind.NONE),
             "fixed: long max value"
         },
         {
@@ -85,7 +85,7 @@ public class HttpRequestParser7BodyMetaTest {
                 HttpHeaderName.CONTENT_TYPE, "text/plain"
             ),
 
-            HttpRequestBodyMeta.of(47890, HttpRequestBodyMeta.TypeKind.NONE),
+            RequestBodyMeta.of(47890, RequestBodyMeta.TypeKind.NONE),
             "fixed: with content-type but no parsing"
         },
         {
@@ -95,7 +95,7 @@ public class HttpRequestParser7BodyMetaTest {
                 HttpHeaderName.CONTENT_TYPE, "application/x-www-form-urlencoded"
             ),
 
-            HttpRequestBodyMeta.of(1209830, HttpRequestBodyMeta.TypeKind.APPLICATION_FORM_URLENCODED),
+            RequestBodyMeta.of(1209830, RequestBodyMeta.TypeKind.APPLICATION_FORM_URLENCODED),
             "fixed: form"
         },
         {
@@ -105,7 +105,7 @@ public class HttpRequestParser7BodyMetaTest {
                 HttpHeaderName.CONTENT_TYPE, "application/x-WWW-form-urlencoded"
             ),
 
-            HttpRequestBodyMeta.of(1209830, HttpRequestBodyMeta.TypeKind.APPLICATION_FORM_URLENCODED),
+            RequestBodyMeta.of(1209830, RequestBodyMeta.TypeKind.APPLICATION_FORM_URLENCODED),
             "fixed: form no standard but ok..."
         }
     };
@@ -113,7 +113,7 @@ public class HttpRequestParser7BodyMetaTest {
 
   @SuppressWarnings("exports")
   @Test(dataProvider = "validProvider")
-  public void valid(Map<HttpHeaderName, Object> map, HttpRequestBodyMeta expected, String description) throws IOException {
+  public void valid(Map<HttpHeaderName, Object> map, RequestBodyMeta expected, String description) throws IOException {
     assertEquals(
         parse(map),
 

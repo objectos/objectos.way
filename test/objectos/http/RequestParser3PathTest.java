@@ -32,7 +32,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 @SuppressWarnings("exports")
-public class HttpRequestParser3PathTest {
+public class RequestParser3PathTest {
 
   private final String validString = Http.unreserved() + Http.subDelims() + ":@" + "/";
 
@@ -40,11 +40,11 @@ public class HttpRequestParser3PathTest {
     final Socket socket;
     socket = Y.socket(data);
 
-    final HttpRequestParser0Input input;
-    input = HttpRequestParser0Input.of(512, socket);
+    final RequestParser0Input input;
+    input = RequestParser0Input.of(512, socket);
 
-    final HttpRequestParser3Path parser;
-    parser = new HttpRequestParser3Path(input);
+    final RequestParser3Path parser;
+    parser = new RequestParser3Path(input);
 
     return parser.parse();
   }

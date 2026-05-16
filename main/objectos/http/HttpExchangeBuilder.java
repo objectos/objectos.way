@@ -285,17 +285,17 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
   }
 
   final HttpExchange0 build() {
-    final HttpRequestHeaders0 $headers;
-    $headers = new HttpRequestHeaders0(headers);
+    final RequestHeaders $headers;
+    $headers = new RequestHeaders(headers);
 
-    final HttpRequestBodyData data;
+    final RequestBodyData data;
     data = null;
 
-    final HttpRequestBody0 body;
-    body = new HttpRequestBody0(data, formParams);
+    final RequestBodyForm bodyForm;
+    bodyForm = new RequestBodyForm(formParams);
 
-    final HttpRequest0 request;
-    request = new HttpRequest0(method, path, queryParams, version, $headers, body);
+    final Request0 request;
+    request = new Request0(method, path, queryParams, version, $headers, data, bodyForm);
 
     final byte[] buffer;
     buffer = new byte[bufferSizeMax];

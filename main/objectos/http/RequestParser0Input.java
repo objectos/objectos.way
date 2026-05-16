@@ -17,7 +17,7 @@ package objectos.http;
 
 import module java.base;
 
-final class HttpRequestParser0Input extends InputStream {
+final class RequestParser0Input extends InputStream {
 
   @SuppressWarnings("serial")
   static final class Eof extends IOException {}
@@ -35,20 +35,18 @@ final class HttpRequestParser0Input extends InputStream {
 
   private int mark;
 
-  HttpRequestParser0Input(
-      byte[] buffer,
-      InputStream inputStream) {
+  RequestParser0Input(byte[] buffer, InputStream inputStream) {
     this.buffer = buffer;
 
     this.inputStream = inputStream;
   }
 
-  static HttpRequestParser0Input of(int bufferSize, Socket socket) throws IOException {
+  static RequestParser0Input of(int bufferSize, Socket socket) throws IOException {
     if (bufferSize < 128) {
       throw new IllegalArgumentException("Buffer size is too small");
     }
 
-    return new HttpRequestParser0Input(
+    return new RequestParser0Input(
         new byte[bufferSize],
 
         socket.getInputStream()

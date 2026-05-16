@@ -19,31 +19,31 @@ import module java.base;
 import objectos.http.HttpClientException.Kind;
 import objectos.internal.Ascii;
 
-final class HttpRequestParser4Query {
+final class RequestParser4Query {
 
   private boolean done;
 
   private boolean emptyValue;
 
-  private final HttpRequestParser0Input input;
+  private final RequestParser0Input input;
 
   private Map<String, Object> params = Map.of();
 
-  private HttpRequestParser1UrlDecoder urlDecoder;
+  private RequestParser1UrlDecoder urlDecoder;
 
-  HttpRequestParser4Query(HttpRequestParser0Input input) {
+  RequestParser4Query(RequestParser0Input input) {
     this.input = input;
   }
 
   public final Map<String, Object> parse() throws IOException {
     try {
       return parse0();
-    } catch (HttpRequestParser0Input.Eof e) {
+    } catch (RequestParser0Input.Eof e) {
       final String msg;
       msg = "EOF while parsing URI query";
 
       throw new HttpClientException(msg, e, Kind.INVALID_REQUEST_LINE);
-    } catch (HttpRequestParser0Input.Overflow e) {
+    } catch (RequestParser0Input.Overflow e) {
       final String msg;
       msg = "Buffer overflow while parsing URI query";
 
@@ -364,7 +364,7 @@ final class HttpRequestParser4Query {
 
   private int decodePerc() throws IOException {
     if (urlDecoder == null) {
-      urlDecoder = new HttpRequestParser1UrlDecoder(input);
+      urlDecoder = new RequestParser1UrlDecoder(input);
     }
 
     return urlDecoder.decode(Kind.INVALID_REQUEST_LINE);

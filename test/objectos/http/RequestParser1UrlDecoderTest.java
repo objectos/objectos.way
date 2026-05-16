@@ -24,19 +24,19 @@ import objectos.way.Y;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class HttpRequestParser1UrlDecoderTest {
+public class RequestParser1UrlDecoderTest {
 
   private String decode(int initial, int length, Object... data) throws IOException {
     final Socket socket;
     socket = Y.socket(data);
 
-    final HttpRequestParser0Input input;
-    input = HttpRequestParser0Input.of(initial, socket);
+    final RequestParser0Input input;
+    input = RequestParser0Input.of(initial, socket);
 
     assertEquals(input.readByte(), '%');
 
-    final HttpRequestParser1UrlDecoder decoder;
-    decoder = new HttpRequestParser1UrlDecoder(input);
+    final RequestParser1UrlDecoder decoder;
+    decoder = new RequestParser1UrlDecoder(input);
 
     final StringBuilder out;
     out = new StringBuilder(length);

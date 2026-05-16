@@ -32,9 +32,9 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class HttpRequestParser8BodyDataTest {
+public class RequestParser8BodyDataTest {
 
-  private static final class Cfg extends HttpRequestBodySupport {
+  private static final class Cfg extends RequestBodySupport {
     Path bodyDirectory;
 
     int bodyMemoryMax = 512;
@@ -45,16 +45,16 @@ public class HttpRequestParser8BodyDataTest {
 
     long id = 0;
 
-    HttpRequestParser0Input input;
+    RequestParser0Input input;
 
-    HttpRequestBodyMeta.Data meta;
+    RequestBodyMeta.Data meta;
 
     static Consumer<? super Cfg> of(Consumer<? super Cfg> config) {
       return config;
     }
 
-    final HttpRequestParser8BodyData build() {
-      return new HttpRequestParser8BodyData(this, input, meta);
+    final RequestParser8BodyData build() {
+      return new RequestParser8BodyData(this, input, meta);
     }
 
     @Override
@@ -83,24 +83,24 @@ public class HttpRequestParser8BodyDataTest {
     final long sizeMax() { return bodySizeMax; }
   }
 
-  private HttpRequestParser0Input input(Object... data) {
+  private RequestParser0Input input(Object... data) {
     try {
       final Socket socket;
       socket = Y.socket(data);
 
-      return HttpRequestParser0Input.of(512, socket);
+      return RequestParser0Input.of(512, socket);
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     }
   }
 
-  private HttpRequestBodyData parse(Consumer<? super Cfg> config) throws IOException {
+  private RequestBodyData parse(Consumer<? super Cfg> config) throws IOException {
     final Cfg c;
     c = new Cfg();
 
     config.accept(c);
 
-    final HttpRequestParser8BodyData parser;
+    final RequestParser8BodyData parser;
     parser = c.build();
 
     return parser.parse();
@@ -120,10 +120,10 @@ public class HttpRequestParser8BodyDataTest {
     return new Object[][] {
         {
             Cfg.of(cfg -> {
-              cfg.meta = HttpRequestBodyMeta.DataKind.EMPTY;
+              cfg.meta = RequestBodyMeta.DataKind.EMPTY;
             }),
 
-            HttpRequestBodyData.ofNull(),
+            RequestBodyData.ofNull(),
             "",
             "empty"
         },
@@ -133,10 +133,10 @@ public class HttpRequestParser8BodyDataTest {
 
               cfg.input = input(data1 + data2);
 
-              cfg.meta = new HttpRequestBodyMeta.Fixed(data1.length());
+              cfg.meta = new RequestBodyMeta.Fixed(data1.length());
             }),
 
-            HttpRequestBodyData.of(iso8859(data1)),
+            RequestBodyData.of(iso8859(data1)),
             data1,
             "memory: happy-path"
         },
@@ -146,10 +146,10 @@ public class HttpRequestParser8BodyDataTest {
 
               cfg.input = input(data1.substring(0, 32), data1.substring(32, 64));
 
-              cfg.meta = new HttpRequestBodyMeta.Fixed(data1.length());
+              cfg.meta = new RequestBodyMeta.Fixed(data1.length());
             }),
 
-            HttpRequestBodyData.of(iso8859(data1)),
+            RequestBodyData.of(iso8859(data1)),
             data1,
             "memory: split input"
         },
@@ -159,10 +159,10 @@ public class HttpRequestParser8BodyDataTest {
 
               cfg.input = input(Y.slowStream(1, data1 + data2));
 
-              cfg.meta = new HttpRequestBodyMeta.Fixed(data1.length());
+              cfg.meta = new RequestBodyMeta.Fixed(data1.length());
             }),
 
-            HttpRequestBodyData.of(iso8859(data1)),
+            RequestBodyData.of(iso8859(data1)),
             data1,
             "memory: slow stream"
         },
@@ -176,10 +176,10 @@ public class HttpRequestParser8BodyDataTest {
 
               cfg.input = input(data1 + data2);
 
-              cfg.meta = new HttpRequestBodyMeta.Fixed(data1.length());
+              cfg.meta = new RequestBodyMeta.Fixed(data1.length());
             }),
 
-            HttpRequestBodyData.of(directory.resolve(Long.toString(123L))),
+            RequestBodyData.of(directory.resolve(Long.toString(123L))),
             data1,
             "file: happy-path"
         }
@@ -190,10 +190,10 @@ public class HttpRequestParser8BodyDataTest {
   @Test(dataProvider = "validProvider")
   public void valid(
       Consumer<? super Cfg> config,
-      HttpRequestBodyData expected,
+      RequestBodyData expected,
       String contents,
       String description) throws IOException {
-    final HttpRequestBodyData res;
+    final RequestBodyData res;
     res = parse(config);
 
     assertEquals(res, expected);
@@ -221,7 +221,7 @@ public class HttpRequestParser8BodyDataTest {
             Cfg.of(cfg -> {
               cfg.bodySizeMax = 100;
 
-              cfg.meta = new HttpRequestBodyMeta.Fixed(100 + 1);
+              cfg.meta = new RequestBodyMeta.Fixed(100 + 1);
             }),
 
             HttpClientException.Kind.CONTENT_TOO_LARGE,
@@ -233,7 +233,7 @@ public class HttpRequestParser8BodyDataTest {
 
               cfg.input = input(data1, iex);
 
-              cfg.meta = new HttpRequestBodyMeta.Fixed(128);
+              cfg.meta = new RequestBodyMeta.Fixed(128);
             }),
 
             iex,
@@ -245,7 +245,7 @@ public class HttpRequestParser8BodyDataTest {
 
               cfg.input = input(data1);
 
-              cfg.meta = new HttpRequestBodyMeta.Fixed(128);
+              cfg.meta = new RequestBodyMeta.Fixed(128);
             }),
 
             HttpClientException.Kind.INCOMPLETE_REQUEST_BODY,
@@ -259,7 +259,7 @@ public class HttpRequestParser8BodyDataTest {
 
               cfg.input = input(data1, iex);
 
-              cfg.meta = new HttpRequestBodyMeta.Fixed(128);
+              cfg.meta = new RequestBodyMeta.Fixed(128);
             }),
 
             iex,

@@ -15,105 +15,33 @@
  */
 package objectos.http;
 
-import module java.base;
-import module objectos.way;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
 
-final class HttpServerTask implements Runnable {
-
-  sealed interface Message
-      permits
-      HttpClientException,
-      HttpServerException {
-
-    HttpStatus status();
-
-    String message();
-
-  }
-
-  static final Note.Long1Ref1<Throwable> THROW = Note.Long1Ref1.create(HttpServerTask.class, "THR", Note.ERROR);
-
-  private final HttpRequestBodyOptions bodyOptions;
+final class RequestParser {
 
   private final byte[] buffer;
 
-  private final Clock clock;
+  private final InputStream inputStream;
 
-  private final HttpErrorResponses errorResponses;
+  private final RequestBodySupport requestBodySupport;
 
-  private final HttpHosts hosts;
-
-  private final long id;
-
-  private final Note.Sink noteSink;
-
-  private final Socket socket;
-
-  HttpServerTask(
-      HttpRequestBodyOptions bodyOptions,
-      byte[] buffer,
-      Clock clock,
-      HttpErrorResponses errorResponses,
-      HttpHosts hosts,
-      long id,
-      Note.Sink noteSink,
-      Socket socket) {
-    this.bodyOptions = bodyOptions;
-
+  RequestParser(byte[] buffer, InputStream inputStream, RequestBodySupport requestBodySupport) {
     this.buffer = buffer;
 
-    this.clock = clock;
+    this.inputStream = inputStream;
 
-    this.errorResponses = errorResponses;
-
-    this.hosts = hosts;
-
-    this.id = id;
-
-    this.noteSink = noteSink;
-
-    this.socket = socket;
+    this.requestBodySupport = requestBodySupport;
   }
 
-  private boolean head = false;
-
-  private boolean keepAlive = true;
-
-  @Override
-  public final void run() {
-    try (socket) {
-      final InputStream inputStream;
-      inputStream = socket.getInputStream();
-
-      final OutputStream outputStream;
-      outputStream = socket.getOutputStream();
-
-      try (RequestBodySupport bodySupport = bodyOptions.supportOf(id)) {
-        while (keepAlive) {
-          run0(inputStream, outputStream, bodySupport);
-        }
-      } catch (HttpClientException e) {
-        noteSink.send(THROW, id, e);
-
-        handle(outputStream, e);
-      } catch (HttpServerException e) {
-        noteSink.send(THROW, id, e);
-
-        handle(outputStream, e);
-      }
-    } catch (IOException e) {
-      noteSink.send(THROW, id, e);
-    }
-  }
-
-  private void run0(InputStream inputStream, OutputStream outputStream, RequestBodySupport bodySupport) throws IOException {
+  public final Request parse() throws IOException {
     // input
     final RequestParser0Input input;
     input = new RequestParser0Input(buffer, inputStream);
 
     // method
-    head = false;
-
     final RequestParser2Method methodParser;
     methodParser = new RequestParser2Method(input);
 
@@ -121,14 +49,10 @@ final class HttpServerTask implements Runnable {
     method = methodParser.parse();
 
     if (method == null) {
-      keepAlive = false;
-
-      return;
+      return null;
     }
 
     validate(method);
-
-    head = method == HttpMethod.HEAD;
 
     // path
     final RequestParser3Path pathParser;
@@ -163,8 +87,7 @@ final class HttpServerTask implements Runnable {
     final RequestHeaders headers;
     headers = new RequestHeaders(headersMap);
 
-    final HttpHost5Pojo host;
-    host = validate(headers);
+    validate(headers);
 
     // body meta
     final RequestParser7BodyMeta bodyMetaParser;
@@ -176,7 +99,7 @@ final class HttpServerTask implements Runnable {
     // body data
     final RequestParser8BodyData bodyDataParser;
     bodyDataParser = new RequestParser8BodyData(
-        bodySupport,
+        requestBodySupport,
 
         input,
 
@@ -204,8 +127,8 @@ final class HttpServerTask implements Runnable {
     final RequestBodyForm bodyForm;
     bodyForm = new RequestBodyForm(formParams);
 
-    final Request0 request;
-    request = new Request0(
+    // body final
+    return new Request0(
         method,
 
         path,
@@ -220,39 +143,6 @@ final class HttpServerTask implements Runnable {
 
         bodyForm
     );
-
-    // response
-    final HttpResponse0 response;
-    response = new HttpResponse0(buffer, clock, errorResponses, head, id, noteSink, outputStream, false);
-
-    // session
-    final HttpSession session;
-    session = host.loadSession(request, response);
-
-    // static files
-    final HttpStaticFilesWriter staticFilesWriter;
-    staticFilesWriter = host.staticFilesWriter();
-
-    // exchange
-    final HttpExchange0 exchange;
-    exchange = new HttpExchange0(request, response, session, staticFilesWriter);
-
-    try {
-      try {
-        host.handle(exchange);
-      } catch (Http.AbstractHandlerException e) {
-        e.handle(exchange);
-      }
-    } catch (Throwable e) {
-      throw new HttpServerException(e, HttpServerException.Kind.INTERNAL_SERVER_ERROR);
-    }
-
-    final RequestHeaders requestHeaders;
-    requestHeaders = request.headers();
-
-    keepAlive = requestHeaders.closeConnection()
-        ? false
-        : !response.closeConnection();
   }
 
   private void validate(HttpMethod method) throws HttpServerException {
@@ -267,7 +157,7 @@ final class HttpServerTask implements Runnable {
     }
   }
 
-  private HttpHost5Pojo validate(RequestHeaders headers) throws IOException {
+  private void validate(RequestHeaders headers) throws IOException {
     final List<String> hostHeader;
     hostHeader = headers.headerAll(HttpHeaderName.HOST);
 
@@ -294,37 +184,6 @@ final class HttpServerTask implements Runnable {
     if (transferEncoding != null) {
       throw new HttpServerException(HttpServerException.Kind.TRANSFER_ENCODING);
     }
-
-    final HttpHost5Pojo host;
-    host = hosts.get(hostValue);
-
-    if (host == null) {
-      final String msg;
-      msg = "Invalid host: %s".formatted(hostValue);
-
-      throw new HttpClientException(msg, HttpClientException.Kind.HOST_NOT_FOUND);
-    }
-
-    return host;
-  }
-
-  private void handle(OutputStream outputStream, Message exception) {
-    final HttpResponse0 response;
-    response = new HttpResponse0(buffer, clock, errorResponses, head, id, noteSink, outputStream, false);
-
-    response.status(exception.status());
-
-    response.header(HttpHeaderName.DATE, response.now());
-
-    response.header(HttpHeaderName.CONNECTION, "close");
-
-    final String msg;
-    msg = exception.message();
-
-    final Media.Bytes body;
-    body = Media.Bytes.textPlain(msg);
-
-    response.send(body);
   }
 
 }

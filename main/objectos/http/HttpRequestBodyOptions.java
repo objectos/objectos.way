@@ -17,6 +17,6 @@ package objectos.http;
 
 interface HttpRequestBodyOptions {
 
-  HttpRequestBodySupport supportOf(long id);
+  RequestBodySupport supportOf(long id);
 
 }

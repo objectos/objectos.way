@@ -26,7 +26,7 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class HttpRequestParser4QueryTest {
+public class RequestParser4QueryTest {
 
   private final String validString = Http.unreserved() + Http.subDelims() + ":@/?";
 
@@ -34,13 +34,13 @@ public class HttpRequestParser4QueryTest {
     final Socket socket;
     socket = Y.socket(data);
 
-    final HttpRequestParser0Input input;
-    input = HttpRequestParser0Input.of(512, socket);
+    final RequestParser0Input input;
+    input = RequestParser0Input.of(512, socket);
 
     input.readByte(); // '?' or other
 
-    final HttpRequestParser4Query parser;
-    parser = new HttpRequestParser4Query(input);
+    final RequestParser4Query parser;
+    parser = new RequestParser4Query(input);
 
     return parser.parse();
   }
@@ -418,7 +418,7 @@ public class HttpRequestParser4QueryTest {
       final Map<String, Object> map;
       map = parse("?" + q + " HTTP/1.1");
 
-      return new HttpRequest0(null, null, map, null, null, null);
+      return new Request0(null, null, map, null, null, null, null);
     } catch (IOException e) {
       throw new AssertionError("failed", e);
     }

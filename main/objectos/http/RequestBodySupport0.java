@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-final class HttpRequestBodySupport0 extends HttpRequestBodySupport {
+final class RequestBodySupport0 extends RequestBodySupport {
 
   private Path file;
 
@@ -29,7 +29,7 @@ final class HttpRequestBodySupport0 extends HttpRequestBodySupport {
 
   private final long sizeMax;
 
-  HttpRequestBodySupport0(long id, int memoryMax, long sizeMax) {
+  RequestBodySupport0(long id, int memoryMax, long sizeMax) {
     this.id = id;
 
     this.memoryMax = memoryMax;

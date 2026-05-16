@@ -15,8 +15,6 @@
  */
 package objectos.http;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -24,28 +22,18 @@ import java.util.Set;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 
-record HttpRequestBody0(HttpRequestBodyData data, Map<String, Object> formParams)
-    implements
-    HttpRequestBody {
+record RequestBodyForm(Map<String, Object> params) {
 
-  @Override
-  public final InputStream bodyInputStream() throws IOException {
-    return data.open();
-  }
-
-  @Override
   public final Set<String> formParamNames() {
-    return formParams.keySet();
+    return params.keySet();
   }
 
-  @Override
   public final String formParam(String name) {
     Objects.requireNonNull(name, "name == null");
 
-    return Http.queryParamsGet(formParams, name);
+    return Http.queryParamsGet(params, name);
   }
 
-  @Override
   public final int formParamAsInt(String name, int defaultValue) {
     String maybe;
     maybe = formParam(name);
@@ -61,7 +49,6 @@ record HttpRequestBody0(HttpRequestBodyData data, Map<String, Object> formParams
     }
   }
 
-  @Override
   public final long formParamAsLong(String name, long defaultValue) {
     String maybe;
     maybe = formParam(name);
@@ -77,14 +64,12 @@ record HttpRequestBody0(HttpRequestBodyData data, Map<String, Object> formParams
     }
   }
 
-  @Override
   public final List<String> formParamAll(String name) {
     Objects.requireNonNull(name, "name == null");
 
-    return Http.queryParamsGetAll(formParams, name);
+    return Http.queryParamsGetAll(params, name);
   }
 
-  @Override
   public final IntStream formParamAllAsInt(String name, int defaultValue) {
     return formParamAll(name).stream().mapToInt(s -> {
       try {
@@ -95,7 +80,6 @@ record HttpRequestBody0(HttpRequestBodyData data, Map<String, Object> formParams
     });
   }
 
-  @Override
   public final LongStream formParamAllAsLong(String name, long defaultValue) {
     return formParamAll(name).stream().mapToLong(s -> {
       try {

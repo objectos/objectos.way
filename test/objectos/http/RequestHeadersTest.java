@@ -21,7 +21,7 @@ import java.util.Map;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class HttpRequestHeaders0Test {
+public class RequestHeadersTest {
 
   @DataProvider
   public Object[][] closeConnectionProvider() {
@@ -36,8 +36,8 @@ public class HttpRequestHeaders0Test {
 
   @Test(dataProvider = "closeConnectionProvider")
   public void closeConnection(Map<HttpHeaderName, Object> map, boolean expected) {
-    final HttpRequestHeaders0 headers;
-    headers = new HttpRequestHeaders0(map);
+    final RequestHeaders headers;
+    headers = new RequestHeaders(map);
 
     assertEquals(headers.closeConnection(), expected);
   }

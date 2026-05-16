@@ -94,8 +94,8 @@ public final class HttpServerTaskY {
       implements HttpRequestBodyOptions {
 
     @Override
-    public final HttpRequestBodySupport supportOf(long id) {
-      return new HttpRequestBodySupport() {
+    public final RequestBodySupport supportOf(long id) {
+      return new RequestBodySupport() {
 
         private Path file;
 

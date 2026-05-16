@@ -15,22 +15,18 @@
  */
 package objectos.http;
 
-/// Provides methods for inspecting the headers of an HTTP request message.
-///
-/// Unless otherwise specified the values returned by the methods of this
-/// interface are decoded.
-sealed interface HttpRequestHeaders
-    permits
-    Request,
-    HttpRequestHeaders0 {
+import java.io.Closeable;
+import java.io.IOException;
+import java.nio.file.Path;
 
-  /// Returns the value of the first field line having the specified name;
-  /// returns `null` if the field line is not present.
-  ///
-  /// @param name the name of the header field line
-  ///
-  /// @return the value of first field line or `null` if a field line with the
-  ///         specified name is not present.
-  String header(HttpHeaderName name);
+abstract class RequestBodySupport implements Closeable {
+
+  RequestBodySupport() {}
+
+  abstract Path file() throws IOException;
+
+  abstract int memoryMax();
+
+  abstract long sizeMax();
 
 }

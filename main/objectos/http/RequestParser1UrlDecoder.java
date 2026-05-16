@@ -18,11 +18,11 @@ package objectos.http;
 import module java.base;
 import objectos.internal.Bytes;
 
-final class HttpRequestParser1UrlDecoder {
+final class RequestParser1UrlDecoder {
 
   private final InputStream input;
 
-  HttpRequestParser1UrlDecoder(InputStream input) {
+  RequestParser1UrlDecoder(InputStream input) {
     this.input = input;
   }
 

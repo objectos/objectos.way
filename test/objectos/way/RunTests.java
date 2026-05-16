@@ -30,7 +30,6 @@ import org.testng.xml.XmlTest;
 public class RunTests {
 
   public static final class TimeoutSetter implements IAnnotationTransformer {
-
     @SuppressWarnings({"exports", "rawtypes"})
     @Override
     public void transform(
@@ -39,7 +38,7 @@ public class RunTests {
         return;
       }
 
-      annotation.setTimeOut(TimeUnit.SECONDS.toMillis(10));
+      annotation.setTimeOut(TimeUnit.SECONDS.toMillis(5));
     }
   }
 

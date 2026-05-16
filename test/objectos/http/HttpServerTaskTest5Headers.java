@@ -182,10 +182,10 @@ public class HttpServerTaskTest5Headers {
             final HttpExchange0 impl;
             impl = (HttpExchange0) http;
 
-            final HttpRequest0 request;
+            final Request0 request;
             request = impl.request();
 
-            final HttpRequestHeaders0 headers;
+            final RequestHeaders headers;
             headers = request.headers();
 
             assertEquals(headers.headers(), expected);
@@ -452,10 +452,10 @@ public class HttpServerTaskTest5Headers {
             final HttpExchange0 impl;
             impl = (HttpExchange0) http;
 
-            final HttpRequest0 request;
+            final Request0 request;
             request = impl.request();
 
-            final HttpRequestHeaders0 headers;
+            final RequestHeaders headers;
             headers = request.headers();
 
             assertEquals(headers.headers(), expected);

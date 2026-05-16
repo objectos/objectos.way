@@ -23,7 +23,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Objects;
 
-final class HttpRequestBodyData {
+final class RequestBodyData {
 
   private enum Kind {
     NULL,
@@ -33,38 +33,38 @@ final class HttpRequestBodyData {
     PATH;
   }
 
-  private static final HttpRequestBodyData NULL = new HttpRequestBodyData(Kind.NULL, null);
+  private static final RequestBodyData NULL = new RequestBodyData(Kind.NULL, null);
 
   private final Kind kind;
 
   private final Object value;
 
-  private HttpRequestBodyData(Kind kind, Object value) {
+  private RequestBodyData(Kind kind, Object value) {
     this.kind = kind;
 
     this.value = value;
   }
 
-  public static HttpRequestBodyData of(byte[] bytes) {
-    return new HttpRequestBodyData(Kind.BYTE_ARRAY, bytes);
+  public static RequestBodyData of(byte[] bytes) {
+    return new RequestBodyData(Kind.BYTE_ARRAY, bytes);
   }
 
-  public static HttpRequestBodyData of(Path file) {
-    return new HttpRequestBodyData(Kind.PATH, file);
+  public static RequestBodyData of(Path file) {
+    return new RequestBodyData(Kind.PATH, file);
   }
 
-  public static HttpRequestBodyData ofNull() {
+  public static RequestBodyData ofNull() {
     return NULL;
   }
 
   @Override
   public final boolean equals(Object obj) {
-    return obj == this || obj instanceof HttpRequestBodyData that
+    return obj == this || obj instanceof RequestBodyData that
         && kind == that.kind
         && equalsValue0(that);
   }
 
-  private boolean equalsValue0(HttpRequestBodyData that) {
+  private boolean equalsValue0(RequestBodyData that) {
     return kind != Kind.BYTE_ARRAY
         ? Objects.equals(value, that.value)
         : Arrays.equals((byte[]) value, (byte[]) that.value);

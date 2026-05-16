@@ -23,14 +23,14 @@ import objectos.way.Y;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class HttpRequestParser0InputTest {
+public class RequestParser0InputTest {
 
   @Test(description = "Read into initial buffer")
   public void readByte01() throws IOException {
     final String req1;
     req1 = "1".repeat(64);
 
-    final HttpRequestParser0Input input;
+    final RequestParser0Input input;
     input = input(128, req1);
 
     assertEquals(readByte0(input, 64), req1);
@@ -47,7 +47,7 @@ public class HttpRequestParser0InputTest {
     final String req3;
     req3 = "3".repeat(64);
 
-    final HttpRequestParser0Input input;
+    final RequestParser0Input input;
     input = input(256, req1, req2, req3);
 
     assertEquals(readByte0(input, 64 + 64 + 64), req1 + req2 + req3);
@@ -61,7 +61,7 @@ public class HttpRequestParser0InputTest {
     final String req2;
     req2 = "2".repeat(64);
 
-    final HttpRequestParser0Input input;
+    final RequestParser0Input input;
     input = input(128, req1, req2);
 
     assertEquals(readByte0(input, 128), req1);
@@ -70,7 +70,7 @@ public class HttpRequestParser0InputTest {
       input.readByte();
 
       Assert.fail();
-    } catch (HttpRequestParser0Input.Overflow expected) {
+    } catch (RequestParser0Input.Overflow expected) {
       // noop
     }
   }
@@ -80,7 +80,7 @@ public class HttpRequestParser0InputTest {
     final String req1;
     req1 = "1".repeat(64);
 
-    final HttpRequestParser0Input input;
+    final RequestParser0Input input;
     input = input(128, req1);
 
     assertEquals(readByte0(input, 64), req1);
@@ -89,7 +89,7 @@ public class HttpRequestParser0InputTest {
       input.readByte();
 
       Assert.fail();
-    } catch (HttpRequestParser0Input.Eof expected) {
+    } catch (RequestParser0Input.Eof expected) {
       // noop
     }
   }
@@ -102,7 +102,7 @@ public class HttpRequestParser0InputTest {
     final IOException exception;
     exception = Y.trimStackTrace(new IOException("Read Error"), 1);
 
-    final HttpRequestParser0Input input;
+    final RequestParser0Input input;
     input = input(128, req1, exception);
 
     assertEquals(readByte0(input, 64), req1);
@@ -116,7 +116,7 @@ public class HttpRequestParser0InputTest {
     }
   }
 
-  private String readByte0(HttpRequestParser0Input socket, int len) throws IOException {
+  private String readByte0(RequestParser0Input socket, int len) throws IOException {
     final byte[] bytes;
     bytes = new byte[len];
 
@@ -127,8 +127,8 @@ public class HttpRequestParser0InputTest {
     return new String(bytes, StandardCharsets.UTF_8);
   }
 
-  private HttpRequestParser0Input input(int initial, Object... data) throws IOException {
-    return HttpRequestParser0Input.of(
+  private RequestParser0Input input(int initial, Object... data) throws IOException {
+    return RequestParser0Input.of(
         initial,
 
         Y.socket(data)
