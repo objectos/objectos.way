@@ -95,32 +95,27 @@ sealed interface HttpResponse permits HttpExchange, HttpResponse0 {
   /// @param value the header value
   void header(HttpHeaderName name, String value);
 
-  /**
-   * Adds the specified header field to this HTTP response message.
-   *
-   * <p>
-   * Example usage:
-   * <pre>{@code
-   * response.header(Http.HeaderName.CONTENT_DISPOSITION, builder -> {
-   *   builder.value("attachment");
-   *   builder.param("filename", "document.pdf");
-   *   builder.param("filename*", StandardCharsets.UTF_8, "document.pdf");
-   * });
-   * }</pre>
-   *
-   * <p>
-   * Which would result in the following header field written out to the
-   * response:
-   *
-   * <pre>{@code
-   * Content-Disposition: attachment; filename=document.pdf; filename*=UTF-8''document.pdf
-   * }</pre>
-   *
-   * @param name
-   *        the header name
-   * @param builder
-   *        a handle for creating the header field value
-   */
+  /// Adds the specified header field to this HTTP response message.
+  ///
+  /// Example usage:
+  ///
+  /// ```java
+  /// response.header(Http.HeaderName.CONTENT_DISPOSITION, builder -> {
+  ///   builder.value("attachment");
+  ///   builder.param("filename", "document.pdf");
+  ///   builder.param("filename*", StandardCharsets.UTF_8, "document.pdf");
+  /// });
+  /// ```
+  ///
+  /// Which would result in the following header field written out to the
+  /// response:
+  ///
+  /// ```
+  /// Content-Disposition: attachment; filename=document.pdf; filename*=UTF-8''document.pdf
+  /// ```
+  ///
+  /// @param name the header name
+  /// @param builder a handle for creating the header field value
   void header(HttpHeaderName name, Consumer<? super HttpHeaderValueBuilder> builder);
 
   /// Returns the server's current time.

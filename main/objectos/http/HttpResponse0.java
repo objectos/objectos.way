@@ -30,7 +30,7 @@ final class HttpResponse0 implements HttpResponse {
 
   private final boolean head;
 
-  private final List<HttpResponse1Header> headers = new ArrayList<>();
+  private final List<Header> headers = new ArrayList<>();
 
   private final long id;
 
@@ -237,7 +237,7 @@ final class HttpResponse0 implements HttpResponse {
     checkProcessed();
 
     headers.add(
-        new HttpResponse1Header(name, value)
+        Header.of(name, value)
     );
   }
 
@@ -246,7 +246,7 @@ final class HttpResponse0 implements HttpResponse {
     checkProcessed();
 
     headers.add(
-        new HttpResponse1Header(name, value)
+        Header.of(name, value)
     );
   }
 

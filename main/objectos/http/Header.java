@@ -16,22 +16,11 @@
 package objectos.http;
 
 import java.util.Objects;
+import java.util.function.Consumer;
 
-record HttpResponse1Header(HttpHeaderName name, String value) {
+record Header(HttpHeaderName name, String value) {
 
-  public HttpResponse1Header {
-
-    Objects.requireNonNull(name, "name == null");
-
-    checkValue(value);
-
-  }
-
-  public HttpResponse1Header(HttpHeaderName name, long value) {
-
-    this(name, Long.toString(value));
-
-  }
+  public static final Header DATE = new Header(HttpHeaderName.DATE, null);
 
   private enum ValueParser {
 
@@ -45,7 +34,45 @@ record HttpResponse1Header(HttpHeaderName name, String value) {
 
   }
 
-  private void checkValue(String value) {
+  public static Header of(HttpHeaderName name, long value) {
+    final HttpHeaderName n;
+    n = Objects.requireNonNull(name, "name = null");
+
+    final String v;
+    v = Long.toString(value);
+
+    return new Header(n, v);
+  }
+
+  public static Header of(HttpHeaderName name, String value) {
+    final HttpHeaderName n;
+    n = Objects.requireNonNull(name, "name = null");
+
+    final String v;
+    v = checkValue(value);
+
+    return new Header(n, v);
+  }
+
+  public static Header of(HttpHeaderName name, Consumer<? super HttpHeaderValueBuilder> builder) {
+    final HttpHeaderName n;
+    n = Objects.requireNonNull(name, "name == null");
+
+    final HttpHeaderValueBuilderImpl valueBuilder;
+    valueBuilder = new HttpHeaderValueBuilderImpl();
+
+    builder.accept(valueBuilder);
+
+    final String value;
+    value = valueBuilder.build();
+
+    final String v;
+    v = checkValue(value);
+
+    return new Header(n, v);
+  }
+
+  private static String checkValue(String value) {
     final int len;
     len = value.length(); // early implicit null-check
 
@@ -98,10 +125,8 @@ record HttpResponse1Header(HttpHeaderName name, String value) {
       }
     }
 
-    switch (parser) {
-      case START, NORMAL -> {
-        // valid - noop
-      }
+    return switch (parser) {
+      case START, NORMAL -> value;
 
       case WS -> {
         throw new IllegalArgumentException("Trailing SPACE or HTAB characters are not allowed");
@@ -110,7 +135,7 @@ record HttpResponse1Header(HttpHeaderName name, String value) {
       case INVALID -> {
         throw new IllegalStateException("Unexpected INVALID state");
       }
-    }
+    };
   }
 
 }
