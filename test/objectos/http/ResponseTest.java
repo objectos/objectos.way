@@ -57,25 +57,34 @@ public class ResponseTest {
     assertEquals(s, expected);
   }
 
+  private final Html.Component html = (Html.Markup m) -> {
+    m.html(
+        m.body("Html.Component")
+    );
+  };
+
   @Test
   public void ok01() throws IOException {
     test(
         HttpMethod.GET,
 
-        Response.ok(html(m -> {
-          m.html(
-              m.body("Response.ok 01")
-          );
-        })),
+        Response.ok(html),
 
         """
-
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/html; charset=utf-8\r
+        Transfer-Encoding: chunked\r
+        \r
+        2B\r
+        <html>
+        <body>Html.Component</body>
+        </html>
+        \r
+        0\r
+        \r
         """
     );
-  }
-
-  private Html.Component html(Html.Component c) {
-    return c;
   }
 
 }

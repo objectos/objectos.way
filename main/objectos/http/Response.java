@@ -15,8 +15,6 @@
  */
 package objectos.http;
 
-import java.io.OutputStream;
-import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.function.Consumer;
 import objectos.way.Media;
@@ -89,16 +87,15 @@ public sealed interface Response permits Response0 {
     /// @param file the path to a regular file containing the body contents
     void body(Path file);
 
-    /// Sets the response body to the contents of the specified source of bytes.
+    /// Sets the response body to the contents of the specified media entity.
     ///
-    /// @param source an object providing the body contents
-    void body(Media.Stream source);
+    /// @param entity an object providing the body contents
+    void body(Media.Stream entity);
 
-    /// Sets the response body to the contents of the specified source of
-    /// characters.
+    /// Sets the response body to the contents of the specified media entity.
     ///
-    /// @param source an object providing the body contents
-    void body(Media.Text source);
+    /// @param entity an object providing the body contents
+    void body(Media.Text entity);
 
   }
 
@@ -153,28 +150,9 @@ public sealed interface Response permits Response0 {
           opts.body(bytes);
         }
 
-        case Media.Stream s -> {
-          opts.body((OutputStream out) -> {
-            s.writeTo(out);
+        case Media.Stream s -> opts.body(s);
 
-            return 0;
-          });
-        }
-
-        case Media.Text t -> {
-          final Charset charset;
-          charset = t.charset();
-
-          if (charset == null) {
-            throw new IllegalArgumentException("The specified Media.Text provided a null charset");
-          }
-
-          opts.body((Appendable out) -> {
-            t.writeTo(out);
-
-            return 0;
-          });
-        }
+        case Media.Text t -> opts.body(t);
       }
     });
   }

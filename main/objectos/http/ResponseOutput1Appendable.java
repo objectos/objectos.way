@@ -16,15 +16,16 @@
 package objectos.http;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.charset.Charset;
 
 final class ResponseOutput1Appendable implements Appendable {
 
   private final Charset charset;
 
-  private final HttpResponse3Chunked chunked;
+  private final OutputStream chunked;
 
-  ResponseOutput1Appendable(Charset charset, HttpResponse3Chunked chunked) {
+  ResponseOutput1Appendable(Charset charset, OutputStream chunked) {
     this.charset = charset;
 
     this.chunked = chunked;

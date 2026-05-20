@@ -17,13 +17,15 @@ package objectos.http;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.time.Clock;
+import java.time.ZonedDateTime;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import objectos.internal.Bytes;
-import objectos.lang.CharSource;
+import objectos.way.Media;
 
 final class ResponseOutput {
 
@@ -82,10 +84,21 @@ final class ResponseOutput {
 
     for (Header header : headers) {
       final HttpHeaderName name;
-      name = header.name();
 
       final String value;
-      value = header.value();
+
+      if (header == Header.DATE) {
+        name = HttpHeaderName.DATE;
+
+        final ZonedDateTime now;
+        now = ZonedDateTime.now(clock);
+
+        value = Http.formatDate(now);
+      } else {
+        name = header.name();
+
+        value = header.value();
+      }
 
       write(name, value);
     }
@@ -94,26 +107,31 @@ final class ResponseOutput {
     final ResponseBody body;
     body = response.body();
 
-    switch (body.kind()) {
-      case EMPTY -> write(Bytes.CRLF);
+    switch (body) {
+      case ResponseBody.OfEmpty.INSTANCE -> write(Bytes.CRLF);
 
-      case BYTES -> throw new UnsupportedOperationException("Implement me");
+      case ResponseBody.OfBytes _ -> throw new UnsupportedOperationException("Implement me");
 
-      case FILE -> throw new UnsupportedOperationException("Implement me");
+      case ResponseBody.OfFile _ -> throw new UnsupportedOperationException("Implement me");
 
-      case BYTE_SOURCE -> throw new UnsupportedOperationException("Implement me");
+      case ResponseBody.OfMediaStream _ -> throw new UnsupportedOperationException("Implement me");
 
-      case CHAR_SOURCE -> {
+      case ResponseBody.OfMediaText t -> {
         write(HttpHeaderName.TRANSFER_ENCODING, "chunked");
 
         write(Bytes.CRLF);
 
-        final Object value = body.value();
+        final Media.Text entity;
+        entity = t.entity();
 
-        final CharSource source = (CharSource) value;
+        final Charset charset;
+        charset = entity.charset();
 
-        try (OutputStream out = new ResponseOutput0Chunked(buffer, bufferIndex, outputStream)) {
-          source.transferTo(out);
+        try (OutputStream chunked = new ResponseOutput0Chunked(buffer, bufferIndex, outputStream)) {
+          final Appendable out;
+          out = new ResponseOutput1Appendable(charset, chunked);
+
+          entity.writeTo(out);
         }
       }
     }
@@ -160,7 +178,9 @@ final class ResponseOutput {
 
     if (value.isEmpty()) {
       write(COLONCRLF);
-    } else {
+    }
+
+    else {
       final byte[] valueBytes;
       valueBytes = value.getBytes(StandardCharsets.US_ASCII);
 

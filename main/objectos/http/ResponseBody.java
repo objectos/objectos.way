@@ -16,41 +16,20 @@
 package objectos.http;
 
 import java.nio.file.Path;
-import objectos.lang.ByteSource;
-import objectos.lang.CharSource;
+import objectos.way.Media;
 
-record ResponseBody(Kind kind, Object value) {
+sealed interface ResponseBody {
 
-  enum Kind {
-
-    EMPTY,
-
-    BYTES,
-
-    FILE,
-
-    BYTE_SOURCE,
-
-    CHAR_SOURCE;
-
+  enum OfEmpty implements ResponseBody {
+    INSTANCE;
   }
 
-  static final ResponseBody EMPTY = new ResponseBody(Kind.EMPTY, null);
+  record OfBytes(byte[] bytes, int offset, int length) implements ResponseBody {}
 
-  public static ResponseBody of(byte[] bytes, int offset, int length) {
-    throw new UnsupportedOperationException("Implement me");
-  }
+  record OfFile(Path file) implements ResponseBody {}
 
-  public static ResponseBody of(Path file) {
-    throw new UnsupportedOperationException("Implement me");
-  }
+  record OfMediaStream(Media.Stream entity) implements ResponseBody {}
 
-  public static ResponseBody of(ByteSource source) {
-    throw new UnsupportedOperationException("Implement me");
-  }
-
-  public static ResponseBody of(CharSource source) {
-    return new ResponseBody(Kind.CHAR_SOURCE, source);
-  }
+  record OfMediaText(Media.Text entity) implements ResponseBody {}
 
 }

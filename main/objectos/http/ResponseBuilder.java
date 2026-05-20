@@ -20,12 +20,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
-import objectos.lang.ByteSource;
-import objectos.lang.CharSource;
+import objectos.way.Media;
 
 final class ResponseBuilder implements Response.Options {
 
-  private ResponseBody body = ResponseBody.EMPTY;
+  private ResponseBody body = ResponseBody.OfEmpty.INSTANCE;
 
   private final List<Header> headers = new ArrayList<>();
 
@@ -76,32 +75,48 @@ final class ResponseBuilder implements Response.Options {
 
   @Override
   public final void body() {
-    body = ResponseBody.EMPTY;
+    body = ResponseBody.OfEmpty.INSTANCE;
   }
 
   @Override
   public final void body(byte[] bytes) {
-    body(bytes, 0, bytes.length);
+    body = new ResponseBody.OfBytes(bytes, 0, bytes.length);
   }
 
   @Override
   public final void body(byte[] bytes, int offset, int length) {
-    body = ResponseBody.of(bytes, offset, length);
+    if (length < 0) {
+      throw new IllegalArgumentException("length < 0");
+    }
+
+    if (offset < 0) {
+      throw new IllegalArgumentException("offset < 0");
+    }
+
+    if (offset + length < bytes.length) {
+      throw new IllegalArgumentException("offset + length < bytes.length");
+    }
+
+    body = new ResponseBody.OfBytes(bytes, 0, bytes.length);
   }
 
   @Override
   public final void body(Path file) {
-    body = ResponseBody.of(file);
+    body = new ResponseBody.OfFile(file);
   }
 
   @Override
-  public final void body(ByteSource source) {
-    body = ResponseBody.of(source);
+  public final void body(Media.Stream entity) {
+    Objects.requireNonNull(entity, "entity == null");
+
+    body = new ResponseBody.OfMediaStream(entity);
   }
 
   @Override
-  public final void body(CharSource source) {
-    body = ResponseBody.of(source);
+  public final void body(Media.Text entity) {
+    Objects.requireNonNull(entity, "entity == null");
+
+    body = new ResponseBody.OfMediaText(entity);
   }
 
 }
