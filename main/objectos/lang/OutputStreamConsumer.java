@@ -13,22 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectos.lang;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import objectos.lang.OutputStreamConsumer;
 
-sealed interface ResponseBody {
+@FunctionalInterface
+public interface OutputStreamConsumer {
 
-  enum OfEmpty implements ResponseBody {
-    INSTANCE;
-  }
-
-  record OfEntity(OutputStreamConsumer entity) implements ResponseBody {
-    final void writeTo(OutputStream chunked) throws IOException {
-      entity.accept(chunked);
-    }
-  }
+  void accept(OutputStream out) throws IOException;
 
 }

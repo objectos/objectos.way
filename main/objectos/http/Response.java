@@ -15,13 +15,14 @@
  */
 package objectos.http;
 
-import java.nio.file.Path;
 import java.util.function.Consumer;
+import objectos.lang.OutputStreamConsumer;
 import objectos.way.Media;
 
 /// An HTTP response message.
 public sealed interface Response permits Response0 {
 
+  /// Configures the creation of a `Response` object.
   sealed interface Options permits ResponseBuilder {
 
     /// Sets the status of the response message.
@@ -67,6 +68,8 @@ public sealed interface Response permits Response0 {
     /// Adds the `Date` header field with the server's current time.
     void date();
 
+    /*
+    
     /// Sets the response body to the empty value.
     void body();
 
@@ -87,15 +90,12 @@ public sealed interface Response permits Response0 {
     /// @param file the path to a regular file containing the body contents
     void body(Path file);
 
-    /// Sets the response body to the contents of the specified media entity.
-    ///
-    /// @param entity an object providing the body contents
-    void body(Media.Stream entity);
+    */
 
-    /// Sets the response body to the contents of the specified media entity.
+    /// Sets the response body to the contents provided by the specified entity.
     ///
-    /// @param entity an object providing the body contents
-    void body(Media.Text entity);
+    /// @param entity the object providing the body contents
+    void body(OutputStreamConsumer entity);
 
   }
 
@@ -133,27 +133,7 @@ public sealed interface Response permits Response0 {
 
       opts.header(HttpHeaderName.CONTENT_TYPE, contentType);
 
-      switch (media) {
-        case Media.Bytes b -> {
-          final byte[] bytes;
-          bytes = b.toByteArray();
-
-          if (bytes == null) {
-            throw new IllegalArgumentException("The specified Media.Bytes provided a null byte array");
-          }
-
-          final int length;
-          length = bytes.length;
-
-          opts.header(HttpHeaderName.CONTENT_LENGTH, length);
-
-          opts.body(bytes);
-        }
-
-        case Media.Stream s -> opts.body(s);
-
-        case Media.Text t -> opts.body(t);
-      }
+      opts.body(media::writeTo);
     });
   }
 

@@ -17,7 +17,6 @@ package objectos.http;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.time.Clock;
 import java.time.ZonedDateTime;
@@ -25,7 +24,6 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import objectos.internal.Bytes;
-import objectos.way.Media;
 
 final class ResponseOutput {
 
@@ -108,30 +106,21 @@ final class ResponseOutput {
     body = response.body();
 
     switch (body) {
-      case ResponseBody.OfEmpty.INSTANCE -> write(Bytes.CRLF);
+      case ResponseBody.OfEmpty.INSTANCE -> { write(Bytes.CRLF); flush(); }
 
-      case ResponseBody.OfBytes _ -> throw new UnsupportedOperationException("Implement me");
-
-      case ResponseBody.OfFile _ -> throw new UnsupportedOperationException("Implement me");
-
-      case ResponseBody.OfMediaStream _ -> throw new UnsupportedOperationException("Implement me");
-
-      case ResponseBody.OfMediaText t -> {
+      case ResponseBody.OfEntity t -> {
         write(HttpHeaderName.TRANSFER_ENCODING, "chunked");
 
         write(Bytes.CRLF);
 
-        final Media.Text entity;
-        entity = t.entity();
+        if (head) {
+          flush();
+        }
 
-        final Charset charset;
-        charset = entity.charset();
-
-        try (OutputStream chunked = new ResponseOutput0Chunked(buffer, bufferIndex, outputStream)) {
-          final Appendable out;
-          out = new ResponseOutput1Appendable(charset, chunked);
-
-          entity.writeTo(out);
+        else {
+          try (OutputStream chunked = new ResponseOutput0Chunked(buffer, bufferIndex, outputStream)) {
+            t.writeTo(chunked);
+          }
         }
       }
     }

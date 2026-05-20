@@ -87,4 +87,21 @@ public class ResponseTest {
     );
   }
 
+  @Test
+  public void ok02() throws IOException {
+    test(
+        HttpMethod.HEAD,
+
+        Response.ok(html),
+
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/html; charset=utf-8\r
+        Transfer-Encoding: chunked\r
+        \r
+        """
+    );
+  }
+
 }

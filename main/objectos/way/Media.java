@@ -17,6 +17,7 @@ package objectos.way;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
@@ -73,6 +74,11 @@ public sealed interface Media {
      */
     byte[] toByteArray();
 
+    @Override
+    default void writeTo(OutputStream out) throws IOException {
+      out.write(toByteArray());
+    }
+
   }
 
   /**
@@ -88,6 +94,7 @@ public sealed interface Media {
      *
      * @throws IOException if an I/O error occurs
      */
+    @Override
     void writeTo(OutputStream out) throws IOException;
 
   }
@@ -116,6 +123,15 @@ public sealed interface Media {
      * @throws IOException if an I/O error occurs
      */
     void writeTo(Appendable out) throws IOException;
+
+    @Override
+    default void writeTo(OutputStream out) throws IOException {
+      OutputStreamWriter w = new OutputStreamWriter(out, charset());
+
+      writeTo(w);
+
+      w.flush();
+    }
 
   }
 
@@ -148,5 +164,12 @@ public sealed interface Media {
    * @return the content type of this media
    */
   String contentType();
+
+  /// Writes the content of this entity to the specified output stream.
+  ///
+  /// @param out where to write bytes into.
+  ///
+  /// @throws IOException if an I/O error occurs
+  void writeTo(OutputStream out) throws IOException;
 
 }

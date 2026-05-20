@@ -15,12 +15,11 @@
  */
 package objectos.http;
 
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
-import objectos.way.Media;
+import objectos.lang.OutputStreamConsumer;
 
 final class ResponseBuilder implements Response.Options {
 
@@ -74,49 +73,10 @@ final class ResponseBuilder implements Response.Options {
   }
 
   @Override
-  public final void body() {
-    body = ResponseBody.OfEmpty.INSTANCE;
-  }
-
-  @Override
-  public final void body(byte[] bytes) {
-    body = new ResponseBody.OfBytes(bytes, 0, bytes.length);
-  }
-
-  @Override
-  public final void body(byte[] bytes, int offset, int length) {
-    if (length < 0) {
-      throw new IllegalArgumentException("length < 0");
-    }
-
-    if (offset < 0) {
-      throw new IllegalArgumentException("offset < 0");
-    }
-
-    if (offset + length < bytes.length) {
-      throw new IllegalArgumentException("offset + length < bytes.length");
-    }
-
-    body = new ResponseBody.OfBytes(bytes, 0, bytes.length);
-  }
-
-  @Override
-  public final void body(Path file) {
-    body = new ResponseBody.OfFile(file);
-  }
-
-  @Override
-  public final void body(Media.Stream entity) {
+  public final void body(OutputStreamConsumer entity) {
     Objects.requireNonNull(entity, "entity == null");
 
-    body = new ResponseBody.OfMediaStream(entity);
-  }
-
-  @Override
-  public final void body(Media.Text entity) {
-    Objects.requireNonNull(entity, "entity == null");
-
-    body = new ResponseBody.OfMediaText(entity);
+    body = new ResponseBody.OfEntity(entity);
   }
 
 }
