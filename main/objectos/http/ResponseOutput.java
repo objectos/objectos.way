@@ -118,7 +118,7 @@ final class ResponseOutput {
         }
 
         else {
-          try (OutputStream chunked = new ResponseOutput0Chunked(buffer, bufferIndex, outputStream)) {
+          try (OutputStream chunked = ResponseChunked.of(buffer, bufferIndex, outputStream)) {
             t.writeTo(chunked);
           }
         }

@@ -20,7 +20,7 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import objectos.internal.Bytes;
 
-final class ResponseOutput0Chunked extends OutputStream {
+final class ResponseChunked extends OutputStream {
 
   private static final byte[] CHUNKED_TRAILER = "0\r\n\r\n".getBytes(StandardCharsets.UTF_8);
 
@@ -36,14 +36,22 @@ final class ResponseOutput0Chunked extends OutputStream {
 
   private final OutputStream outputStream;
 
-  ResponseOutput0Chunked(byte[] buffer, int bufferIndex, OutputStream outputStream) throws IOException {
+  private ResponseChunked(byte[] buffer, int bufferIndex, OutputStream outputStream) throws IOException {
     this.buffer = buffer;
 
     this.bufferIndex = bufferIndex;
 
     this.outputStream = outputStream;
+  }
 
-    writeChunkBegin();
+  public static OutputStream of(
+      byte[] buffer, int bufferIndex, OutputStream outputStream) throws IOException {
+    final ResponseChunked chunked;
+    chunked = new ResponseChunked(buffer, bufferIndex, outputStream);
+
+    chunked.writeChunkBegin();
+
+    return chunked;
   }
 
   @Override
