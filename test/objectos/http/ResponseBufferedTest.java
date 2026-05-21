@@ -23,7 +23,7 @@ import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import org.testng.annotations.Test;
 
-public class Response1BufferedTest {
+public class ResponseBufferedTest {
 
   private void write(int len, String s) {
     final byte[] buffer;
@@ -35,7 +35,7 @@ public class Response1BufferedTest {
     ByteArrayOutputStream baos;
     baos = new ByteArrayOutputStream();
 
-    try (var out = new Response1Buffered(buffer, baos)) {
+    try (var out = new ResponseBuffered(buffer, baos)) {
       out.write(bytes);
     } catch (IOException e) {
       throw new UncheckedIOException(e);

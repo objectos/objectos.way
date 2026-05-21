@@ -19,7 +19,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.OutputStream;
 
-final class Response1Buffered implements Closeable {
+final class ResponseBuffered implements Closeable {
 
   private final byte[] buffer;
 
@@ -27,7 +27,7 @@ final class Response1Buffered implements Closeable {
 
   private final OutputStream outputStream;
 
-  Response1Buffered(byte[] buffer, OutputStream outputStream) {
+  ResponseBuffered(byte[] buffer, OutputStream outputStream) {
     this.buffer = buffer;
 
     this.outputStream = outputStream;
