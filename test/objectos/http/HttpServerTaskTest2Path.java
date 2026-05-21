@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import objectos.lang.Throwables;
 import objectos.way.Media;
 import objectos.way.Y;
 import org.testng.annotations.DataProvider;
@@ -348,7 +349,7 @@ public class HttpServerTaskTest2Path {
     var noteSink = new HttpServerTaskYNoteSink();
 
     final IOException ioe;
-    ioe = Y.trimStackTrace(new IOException(), 1);
+    ioe = Throwables.trimStackTrace(new IOException(), 1);
 
     assertEquals(
         HttpServerTaskY.resp(opts -> {

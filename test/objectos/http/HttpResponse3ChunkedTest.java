@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
-import objectos.way.Y;
+import objectos.lang.Throwables;
 import org.testng.annotations.Test;
 
 public class HttpResponse3ChunkedTest {
@@ -127,7 +127,7 @@ public class HttpResponse3ChunkedTest {
 
       @Override
       public final void write(byte[] b, int off, int len) throws IOException {
-        throw Y.trimStackTrace(new IOException(), 1);
+        throw Throwables.trimStackTrace(new IOException(), 1);
       }
     };
 

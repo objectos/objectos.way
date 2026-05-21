@@ -26,6 +26,7 @@ import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import objectos.lang.Throwables;
 import objectos.way.Media;
 import objectos.way.Y;
 import org.testng.annotations.DataProvider;
@@ -290,7 +291,7 @@ public class HttpServerTaskTest6Body {
     var noteSink = new HttpServerTaskYNoteSink();
 
     final IOException ioe;
-    ioe = Y.trimStackTrace(new IOException(), 1);
+    ioe = Throwables.trimStackTrace(new IOException(), 1);
 
     assertEquals(
         HttpServerTaskY.resp(opts -> {

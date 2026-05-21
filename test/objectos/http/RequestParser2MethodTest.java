@@ -19,6 +19,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 
 import module java.base;
+import objectos.lang.Throwables;
 import objectos.way.Y;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
@@ -129,8 +130,8 @@ public class RequestParser2MethodTest {
   @DataProvider
   public Object[][] ioExceptionProvider() {
     return new Object[][] {
-        {"GE", Y.trimStackTrace(new IOException(), 1), ""},
-        {"POS", Y.trimStackTrace(new IOException(), 1), ""}
+        {"GE", Throwables.trimStackTrace(new IOException(), 1), ""},
+        {"POS", Throwables.trimStackTrace(new IOException(), 1), ""}
     };
   }
 

@@ -51,7 +51,6 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -1278,26 +1277,6 @@ public final class Y implements ISuiteListener {
 
   // ##################################################################
   // # END: Socket
-  // ##################################################################
-
-  // ##################################################################
-  // # BEGIN: Throwable
-  // ##################################################################
-
-  public static <T extends Throwable> T trimStackTrace(T t, int newLength) {
-    final StackTraceElement[] stackTrace;
-    stackTrace = t.getStackTrace();
-
-    final StackTraceElement[] copy;
-    copy = Arrays.copyOf(stackTrace, newLength);
-
-    t.setStackTrace(copy);
-
-    return t;
-  }
-
-  // ##################################################################
-  // # END: Throwable
   // ##################################################################
 
   public static void test(HttpResponse<String> response, String expected) {

@@ -28,6 +28,7 @@ import java.time.Clock;
 import java.time.Instant;
 import java.util.function.Consumer;
 import objectos.lang.Stage;
+import objectos.lang.Throwables;
 import objectos.way.Html;
 import objectos.way.Media;
 import objectos.way.TestingSingleParagraph;
@@ -512,7 +513,7 @@ public class HttpServerTest {
 
   @SuppressWarnings("unused")
   private void testCase06(HttpExchange http) {
-    throw Y.trimStackTrace(new RuntimeException("Uh-Oh"), 1);
+    throw Throwables.trimStackTrace(new RuntimeException("Uh-Oh"), 1);
   }
 
   @Test

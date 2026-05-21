@@ -25,7 +25,7 @@ import objectos.lang.Throwables;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class HttpServerTaskTest0Socket {
+public class ServerTaskTest0Socket {
 
   private static class ThisSocket extends Socket {
 
@@ -90,17 +90,14 @@ public class HttpServerTaskTest0Socket {
 
   @Test(dataProvider = "socketErrorProvider")
   public void socketError(Socket socket, long id, String description, IOException thrown) {
-    var noteSink = new HttpServerTaskYNoteSink();
+    var noteSink = new ServerTaskYNoteSink();
 
-    HttpServerTaskY.run(opts -> {
-      opts.id = id;
-
+    ServerTaskY.run(opts -> {
       opts.noteSink = noteSink;
 
       opts.socket = socket;
     });
 
-    assertEquals(noteSink.id, id);
     assertEquals(noteSink.thrown, thrown);
   }
 

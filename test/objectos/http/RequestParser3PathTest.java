@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import objectos.http.HttpClientException.Kind;
+import objectos.lang.Throwables;
 import objectos.way.Y;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
@@ -322,7 +323,7 @@ public class RequestParser3PathTest {
   @Test
   public void ioException() {
     final IOException ex;
-    ex = Y.trimStackTrace(new IOException(), 1);
+    ex = Throwables.trimStackTrace(new IOException(), 1);
 
     try {
       parse(

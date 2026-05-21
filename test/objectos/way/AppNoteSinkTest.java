@@ -174,15 +174,15 @@ public class AppNoteSinkTest {
         """
         2023-10-31 10:00:00.000 ERROR [main           ] objectos.way.AppNoteSinkTest             : throw1
         java.lang.Throwable
-        \tat objectos.way/objectos.way.TestingStackTraces.throwable1(TestingStackTraces.java:27)
+        \tat objectos.way/objectos.way.TestingStackTraces.throwable1(TestingStackTraces.java:29)
         \tat objectos.way/objectos.way.AppNoteSinkTest.console03(AppNoteSinkTest.java:162)
         2023-10-31 10:01:00.000 ERROR [main           ] objectos.way.AppNoteSinkTest             : throw2 java.lang.Throwable
         java.lang.Throwable
-        \tat objectos.way/objectos.way.TestingStackTraces.throwable2(TestingStackTraces.java:31)
+        \tat objectos.way/objectos.way.TestingStackTraces.throwable2(TestingStackTraces.java:33)
         \tat objectos.way/objectos.way.AppNoteSinkTest.console03(AppNoteSinkTest.java:163)
         2023-10-31 10:02:00.000 ERROR [main           ] objectos.way.AppNoteSinkTest             : throw3 java.lang.Throwable java.lang.Throwable
         java.lang.Throwable
-        \tat objectos.way/objectos.way.TestingStackTraces.throwable3(TestingStackTraces.java:35)
+        \tat objectos.way/objectos.way.TestingStackTraces.throwable3(TestingStackTraces.java:37)
         \tat objectos.way/objectos.way.AppNoteSinkTest.console03(AppNoteSinkTest.java:164)
         """
     );

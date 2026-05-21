@@ -68,30 +68,6 @@ public sealed interface Response permits Response0 {
     /// Adds the `Date` header field with the server's current time.
     void date();
 
-    /*
-    
-    /// Sets the response body to the empty value.
-    void body();
-
-    /// Sets the response body to the specified bytes.
-    ///
-    /// @param bytes the array of bytes with the body contents
-    void body(byte[] bytes);
-
-    /// Sets the response body to the specified bytes.
-    ///
-    /// @param bytes the array of bytes with the body contents
-    /// @param offset index where the actual body begins
-    /// @param length the body length in bytes
-    void body(byte[] bytes, int offset, int length);
-
-    /// Sets the response body to the contents of specified file.
-    ///
-    /// @param file the path to a regular file containing the body contents
-    void body(Path file);
-
-    */
-
     /// Sets the response body to the contents provided by the specified entity.
     ///
     /// @param entity the object providing the body contents
@@ -135,16 +111,6 @@ public sealed interface Response permits Response0 {
 
       opts.body(media::writeTo);
     });
-  }
-
-  /// Returns a `301 Moved Permanently` response message with the specified
-  /// `Location` header.
-  ///
-  /// @param location the value of the `Location` header
-  ///
-  /// @return a newly created response message
-  static Response movedPermanently(String location) {
-    throw new UnsupportedOperationException("Implement me");
   }
 
 }

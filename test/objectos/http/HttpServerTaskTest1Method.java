@@ -18,6 +18,7 @@ package objectos.http;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
+import objectos.lang.Throwables;
 import objectos.way.Media;
 import objectos.way.Y;
 import org.testng.annotations.DataProvider;
@@ -187,7 +188,7 @@ public class HttpServerTaskTest1Method {
     var noteSink = new HttpServerTaskYNoteSink();
 
     final IOException ioe;
-    ioe = Y.trimStackTrace(new IOException(), 1);
+    ioe = Throwables.trimStackTrace(new IOException(), 1);
 
     assertEquals(
         HttpServerTaskY.resp(opts -> {

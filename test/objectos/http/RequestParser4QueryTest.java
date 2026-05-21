@@ -21,6 +21,7 @@ import static org.testng.Assert.assertSame;
 
 import module java.base;
 import objectos.http.HttpClientException.Kind;
+import objectos.lang.Throwables;
 import objectos.way.Y;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
@@ -252,7 +253,7 @@ public class RequestParser4QueryTest {
   @Test(dataProvider = "ioExceptionProvider")
   public void ioException(String req, String description) {
     final IOException ex;
-    ex = Y.trimStackTrace(new IOException(), 1);
+    ex = Throwables.trimStackTrace(new IOException(), 1);
 
     try {
       parse(

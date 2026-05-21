@@ -27,6 +27,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Consumer;
+import objectos.lang.Throwables;
 import objectos.way.Y;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
@@ -214,7 +215,7 @@ public class RequestParser8BodyDataTest {
     data1 = "1".repeat(64);
 
     final IOException iex;
-    iex = Y.trimStackTrace(new IOException(), 1);
+    iex = Throwables.trimStackTrace(new IOException(), 1);
 
     return new Object[][] {
         {

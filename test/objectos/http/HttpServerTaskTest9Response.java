@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
+import objectos.lang.Throwables;
 import objectos.way.Media;
 import objectos.way.Y;
 import org.testng.Assert;
@@ -794,7 +795,7 @@ public class HttpServerTaskTest9Response {
   @Test(description = "error(status, e)")
   public void error03() {
     final IOException e;
-    e = Y.trimStackTrace(new IOException(), 1);
+    e = Throwables.trimStackTrace(new IOException(), 1);
 
     final StackTraceElement[] copy;
     copy = new StackTraceElement[1];
@@ -1514,7 +1515,7 @@ public class HttpServerTaskTest9Response {
 
             var outputStream = Y.outputStream();
 
-            outputStream.throwOnWrite(Y.trimStackTrace(new IOException(), 1));
+            outputStream.throwOnWrite(Throwables.trimStackTrace(new IOException(), 1));
 
             config.outputStream(outputStream);
           });
@@ -1542,7 +1543,7 @@ public class HttpServerTaskTest9Response {
 
             var outputStream = Y.outputStream();
 
-            outputStream.throwOnWrite(Y.trimStackTrace(new IOException(), 1));
+            outputStream.throwOnWrite(Throwables.trimStackTrace(new IOException(), 1));
 
             config.outputStream(outputStream);
           });

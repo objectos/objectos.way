@@ -19,6 +19,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 
 import module java.base;
+import objectos.lang.Throwables;
 import objectos.way.Y;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -100,7 +101,7 @@ public class RequestParser0InputTest {
     req1 = "1".repeat(64);
 
     final IOException exception;
-    exception = Y.trimStackTrace(new IOException("Read Error"), 1);
+    exception = Throwables.trimStackTrace(new IOException("Read Error"), 1);
 
     final RequestParser0Input input;
     input = input(128, req1, exception);

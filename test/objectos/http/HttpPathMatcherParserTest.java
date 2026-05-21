@@ -21,6 +21,7 @@ import static org.testng.Assert.assertEquals;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import objectos.lang.Throwables;
 import objectos.way.Note;
 import objectos.way.Y;
 import org.testng.Assert;
@@ -129,7 +130,7 @@ public class HttpPathMatcherParserTest {
       assertEquals(expected.getMessage(), expectedMessage);
 
       IllegalArgumentException trimmed;
-      trimmed = Y.trimStackTrace(expected, 1);
+      trimmed = Throwables.trimStackTrace(expected, 1);
 
       Note.Ref1<IllegalArgumentException> note;
       note = Note.Ref1.create(getClass(), "IAE", Note.INFO);

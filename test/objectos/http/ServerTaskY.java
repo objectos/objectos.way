@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025-2026 Objectos Software LTDA.
+ * Copyright (C) 2023-2026 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,28 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.way;
+package objectos.http;
 
-import objectos.lang.Throwables;
+import java.net.Socket;
+import java.util.function.Consumer;
+import objectos.way.Note;
+import objectos.way.Y;
 
-final class TestingStackTraces {
+final class ServerTaskY {
 
-  private TestingStackTraces() {}
+  Note.Sink noteSink = Y.noteSink();
 
-  public static Throwable ignore() {
-    return Throwables.trimStackTrace(new Throwable(), 2);
+  Socket socket;
+
+  private ServerTaskY() {}
+
+  public static void run(Consumer<? super ServerTaskY> opts) {
+    final ServerTaskY y;
+    y = new ServerTaskY();
+
+    opts.accept(y);
+
+    final ServerTask task;
+    task = y.build();
+
+    task.run();
   }
 
-  public static Throwable throwable1() {
-    return Throwables.trimStackTrace(new Throwable(), 2);
-  }
-
-  public static Throwable throwable2() {
-    return Throwables.trimStackTrace(new Throwable(), 2);
-  }
-
-  public static Throwable throwable3() {
-    return Throwables.trimStackTrace(new Throwable(), 2);
+  private ServerTask build() {
+    return new ServerTask(noteSink, socket);
   }
 
 }
