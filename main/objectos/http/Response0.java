@@ -25,4 +25,6 @@ record Response0(
 
     ResponseBody body
 
-) implements Response {}
+) implements Response {
+
+}
