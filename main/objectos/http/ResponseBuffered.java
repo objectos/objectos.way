@@ -18,6 +18,7 @@ package objectos.http;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.OutputStream;
+import objectos.lang.OutputStreamConsumer;
 
 final class ResponseBuffered implements Closeable {
 
@@ -35,11 +36,21 @@ final class ResponseBuffered implements Closeable {
 
   @Override
   public final void close() throws IOException {
-    flush();
+    if (bufferIndex > 0) {
+      flush();
+    }
   }
 
   public final void write(byte[] bytes) throws IOException {
     write0(bytes, 0, bytes.length);
+  }
+
+  public final void write(OutputStreamConsumer entity) throws IOException {
+    try (var out = ResponseChunked.of(buffer, bufferIndex, outputStream)) {
+      entity.accept(out);
+    }
+
+    bufferIndex = 0;
   }
 
   private void write0(byte[] bytes, int offset, int length) throws IOException {

@@ -39,7 +39,7 @@ public class ResponseChunkedTest {
     final byte[] bytes;
     bytes = s.getBytes(StandardCharsets.US_ASCII);
 
-    ByteArrayOutputStream baos;
+    final ByteArrayOutputStream baos;
     baos = new ByteArrayOutputStream();
 
     try (var out = ResponseChunked.of(buffer, bufferIndex, baos)) {

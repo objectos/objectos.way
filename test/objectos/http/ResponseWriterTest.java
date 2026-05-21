@@ -25,28 +25,33 @@ import objectos.way.Html;
 import objectos.way.Y;
 import org.testng.annotations.Test;
 
-public class ResponseTest {
+public class ResponseWriterTest {
 
   private void test(HttpMethod method, Response r, String expected) throws IOException {
     final byte[] buffer;
     buffer = new byte[64];
 
-    final Clock clock;
-    clock = Y.clockFixed();
-
-    final boolean head;
-    head = method == HttpMethod.HEAD;
-
     final ByteArrayOutputStream outputStream;
     outputStream = new ByteArrayOutputStream();
 
-    final ResponseOutput output;
-    output = new ResponseOutput(buffer, clock, head, outputStream);
+    try (ResponseBuffered buffered = new ResponseBuffered(buffer, outputStream)) {
+      final Clock clock;
+      clock = Y.clockFixed();
 
-    final Response0 impl;
-    impl = (Response0) r;
+      final ResponseDate date;
+      date = new ResponseDate(clock);
 
-    output.send(impl);
+      final boolean head;
+      head = method == HttpMethod.HEAD;
+
+      final Response0 impl;
+      impl = (Response0) r;
+
+      final ResponseWriter output;
+      output = new ResponseWriter(buffered, date, head, impl);
+
+      output.write();
+    }
 
     final byte[] bytes;
     bytes = outputStream.toByteArray();

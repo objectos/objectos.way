@@ -32,7 +32,7 @@ public class ResponseBufferedTest {
     final byte[] bytes;
     bytes = s.getBytes(StandardCharsets.US_ASCII);
 
-    ByteArrayOutputStream baos;
+    final ByteArrayOutputStream baos;
     baos = new ByteArrayOutputStream();
 
     try (var out = new ResponseBuffered(buffer, baos)) {

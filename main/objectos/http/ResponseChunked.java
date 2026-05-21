@@ -144,8 +144,6 @@ final class ResponseChunked extends OutputStream {
   }
 
   private int writeChunkAvailable() {
-    //return buffer.length - (bufferIndex + CHUNKED_TRAILER.length + 2);
-
     // it should be large enough to hold the CRLF
     return buffer.length - (bufferIndex + 2);
   }

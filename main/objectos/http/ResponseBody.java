@@ -15,8 +15,6 @@
  */
 package objectos.http;
 
-import java.io.IOException;
-import java.io.OutputStream;
 import objectos.lang.OutputStreamConsumer;
 
 sealed interface ResponseBody {
@@ -25,10 +23,6 @@ sealed interface ResponseBody {
     INSTANCE;
   }
 
-  record OfEntity(OutputStreamConsumer entity) implements ResponseBody {
-    final void writeTo(OutputStream chunked) throws IOException {
-      entity.accept(chunked);
-    }
-  }
+  record OfEntity(OutputStreamConsumer entity) implements ResponseBody {}
 
 }
