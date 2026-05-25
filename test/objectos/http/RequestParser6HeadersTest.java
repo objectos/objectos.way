@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import objectos.way.Y;
+import objectos.y.SocketY;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -33,7 +34,7 @@ public class RequestParser6HeadersTest {
 
   private Map<HttpHeaderName, Object> parse(Object... data) throws IOException {
     final Socket socket;
-    socket = Y.socket(data);
+    socket = SocketY.of(data);
 
     final RequestParser0Input input;
     input = RequestParser0Input.of(256, socket);

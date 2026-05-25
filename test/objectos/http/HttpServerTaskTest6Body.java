@@ -29,6 +29,7 @@ import java.nio.file.Path;
 import objectos.lang.Throwables;
 import objectos.way.Media;
 import objectos.way.Y;
+import objectos.y.SocketY;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -96,7 +97,7 @@ public class HttpServerTaskTest6Body {
   public void valid(String payload, byte[] result, String description) {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           POST / HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -125,7 +126,7 @@ public class HttpServerTaskTest6Body {
   public void validSlowClient(String payload, byte[] result, String description) {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket(Y.slowStream(1, """
+          opts.socket = SocketY.of(Y.slowStream(1, """
           POST / HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -166,7 +167,7 @@ public class HttpServerTaskTest6Body {
 
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           GET / HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -217,7 +218,7 @@ public class HttpServerTaskTest6Body {
 
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket(Y.slowStream(1, """
+          opts.socket = SocketY.of(Y.slowStream(1, """
           GET / HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -299,7 +300,7 @@ public class HttpServerTaskTest6Body {
 
           opts.noteSink = noteSink;
 
-          opts.socket = Y.socket(
+          opts.socket = SocketY.of(
               """
               POST / HTTP/1.1\r
               Host: www.example.com\r
@@ -322,7 +323,7 @@ public class HttpServerTaskTest6Body {
   public void eof(String payload, String description) {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket(
+          opts.socket = SocketY.of(
               """
               POST / HTTP/1.1\r
               Host: www.example.com\r
@@ -379,7 +380,7 @@ public class HttpServerTaskTest6Body {
   public void badRequest(String request, String description) {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket(request);
+          opts.socket = SocketY.of(request);
         }),
 
         """
@@ -398,7 +399,7 @@ public class HttpServerTaskTest6Body {
   public void lengthRequired() {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           POST / HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -454,7 +455,7 @@ public class HttpServerTaskTest6Body {
   public void contentTooLarge(String request, String description) {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket(request);
+          opts.socket = SocketY.of(request);
         }),
 
         """

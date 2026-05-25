@@ -29,7 +29,6 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.UncheckedIOException;
 import java.io.Writer;
-import java.net.Socket;
 import java.net.URI;
 import java.net.http.HttpClient.Version;
 import java.net.http.HttpHeaders;
@@ -67,8 +66,6 @@ import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
 import objectos.internal.Util;
 import objectos.way.dev.DevStart;
-import objectos.y.InputStreamY;
-import objectos.y.OutputStreamY;
 import org.testng.ISuite;
 import org.testng.ISuiteListener;
 
@@ -943,99 +940,6 @@ public final class Y implements ISuiteListener {
 
   // ##################################################################
   // # END: SlowStream
-  // ##################################################################
-
-  // ##################################################################
-  // # BEGIN: Socket
-  // ##################################################################
-
-  public static final class SocketBuilder {
-    private InputStream inputStream;
-
-    private OutputStream outputStream;
-
-    private SocketBuilder() {}
-
-    public final void inputStream(InputStream value) {
-      inputStream = Objects.requireNonNull(value, "value == null");
-    }
-
-    public final void outputStream(OutputStream value) {
-      outputStream = Objects.requireNonNull(value, "value == null");
-    }
-
-    final Socket build() {
-      if (inputStream == null) {
-        inputStream = InputStream.nullInputStream();
-      }
-
-      if (outputStream == null) {
-        outputStream = OutputStreamY.create();
-      }
-
-      return new SocketImpl(this);
-    }
-
-  }
-
-  private static final class SocketImpl extends Socket {
-    private final InputStream inputStream;
-    private final OutputStream outputStream;
-
-    SocketImpl(SocketBuilder builder) {
-      inputStream = builder.inputStream;
-
-      outputStream = builder.outputStream;
-    }
-
-    @Override
-    public final InputStream getInputStream() throws IOException {
-      return inputStream;
-    }
-
-    @Override
-    public final OutputStream getOutputStream() throws IOException {
-      return outputStream;
-    }
-  }
-
-  public static Socket socket(Consumer<SocketBuilder> config) {
-    final SocketBuilder builder;
-    builder = new SocketBuilder();
-
-    config.accept(builder);
-
-    return builder.build();
-  }
-
-  public static Socket socket(Object... data) {
-    return socket(socket -> {
-      socket.inputStream(InputStreamY.of(data));
-    });
-  }
-
-  public static String toString(Socket socket) {
-    try {
-      final OutputStream outputStream;
-      outputStream = socket.getOutputStream();
-
-      if (outputStream instanceof OutputStreamY os) {
-        final String result;
-        result = os.toString(StandardCharsets.UTF_8);
-
-        os.reset();
-
-        return result;
-      } else {
-        throw new IllegalArgumentException("OutputStream is not an instanceof TestingOutputStream");
-      }
-    } catch (IOException e) {
-      throw new AssertionError(e);
-    }
-  }
-
-  // ##################################################################
-  // # END: Socket
   // ##################################################################
 
   public static void test(HttpResponse<String> response, String expected) {

@@ -28,6 +28,7 @@ import java.util.List;
 import objectos.http.HttpClientException.Kind;
 import objectos.lang.Throwables;
 import objectos.way.Y;
+import objectos.y.SocketY;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -39,7 +40,7 @@ public class RequestParser3PathTest {
 
   private String parse(Object... data) throws IOException {
     final Socket socket;
-    socket = Y.socket(data);
+    socket = SocketY.of(data);
 
     final RequestParser0Input input;
     input = RequestParser0Input.of(512, socket);

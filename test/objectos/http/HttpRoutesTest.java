@@ -21,7 +21,7 @@ import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
-import objectos.way.Y;
+import objectos.y.SocketY;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -464,7 +464,7 @@ public class HttpRoutesTest {
   private void test(Consumer<? super HttpRoutes> routes, String req, String resp) {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket(req);
+          opts.socket = SocketY.of(req);
 
           opts.handler = HttpHandler.create(routes);
         }),

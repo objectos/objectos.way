@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Set;
 import objectos.way.Media;
 import objectos.way.Y;
+import objectos.y.SocketY;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -43,7 +44,7 @@ public class HttpServerTaskTest7Form {
   public void appFormValid(String payload, Map<String, Object> expected, String description) {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           POST / HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -99,7 +100,7 @@ public class HttpServerTaskTest7Form {
 
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           POST / HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -159,7 +160,7 @@ public class HttpServerTaskTest7Form {
 
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket(Y.slowStream(1, """
+          opts.socket = SocketY.of(Y.slowStream(1, """
           POST / HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -241,7 +242,7 @@ public class HttpServerTaskTest7Form {
   public void appFormInvalid(String payload, String description) {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket(
+          opts.socket = SocketY.of(
               """
               POST / HTTP/1.1\r
               Host: www.example.com\r
@@ -292,7 +293,7 @@ public class HttpServerTaskTest7Form {
   public void appFormPercentValid(String payload, Map<String, Object> expected, String description) {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           POST / HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -333,7 +334,7 @@ public class HttpServerTaskTest7Form {
   public void appFormValidPercentWithFile(String payload, Map<String, Object> expected, String description) {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           POST / HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -378,7 +379,7 @@ public class HttpServerTaskTest7Form {
   public void appFormValidPercentWithFileSlow(String payload, Map<String, Object> expected, String description) {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket(Y.slowStream(1, """
+          opts.socket = SocketY.of(Y.slowStream(1, """
           POST / HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -479,7 +480,7 @@ public class HttpServerTaskTest7Form {
   public void appFormPercentInvalid(String payload, String description) {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket(
+          opts.socket = SocketY.of(
               """
               POST / HTTP/1.1\r
               Host: www.example.com\r
@@ -508,7 +509,7 @@ public class HttpServerTaskTest7Form {
   public void appFormPercentInvalidWithFile(String payload, String description) {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket(
+          opts.socket = SocketY.of(
               """
               POST / HTTP/1.1\r
               Host: www.example.com\r
@@ -544,7 +545,7 @@ public class HttpServerTaskTest7Form {
 
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           POST / HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -583,7 +584,7 @@ public class HttpServerTaskTest7Form {
 
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           POST / HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -627,7 +628,7 @@ public class HttpServerTaskTest7Form {
   public void getAllAsInt(String payload, int[] expected) {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           POST / HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -668,7 +669,7 @@ public class HttpServerTaskTest7Form {
   public void getAllAsLong(String payload, long[] expected) {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           POST / HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r

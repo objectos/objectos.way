@@ -21,6 +21,7 @@ import static org.testng.Assert.assertSame;
 import module java.base;
 import objectos.lang.Throwables;
 import objectos.way.Y;
+import objectos.y.SocketY;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -29,7 +30,7 @@ public class RequestParser2MethodTest {
 
   private HttpMethod parse(Object... data) throws IOException {
     final Socket socket;
-    socket = Y.socket(data);
+    socket = SocketY.of(data);
 
     final RequestParser0Input input;
     input = RequestParser0Input.of(512, socket);

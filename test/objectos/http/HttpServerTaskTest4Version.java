@@ -19,6 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 import objectos.way.Media;
 import objectos.way.Y;
+import objectos.y.SocketY;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -43,7 +44,7 @@ public class HttpServerTaskTest4Version {
   public void versionValid(String line, Version expected, String description) {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           %s\r
           Host: www.example.com\r
           Connection: close\r
@@ -82,7 +83,7 @@ public class HttpServerTaskTest4Version {
   public void invalidLineTerminator(String line, String description) {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           %s\
           Host: www.example.com\r
           \r
@@ -114,7 +115,7 @@ public class HttpServerTaskTest4Version {
   public void versionNotSupported(String line, String description) {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           %s\r
           Host: www.example.com\r
           Connection: close\r
@@ -166,7 +167,7 @@ public class HttpServerTaskTest4Version {
   public void badRequest(String line, String description) {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           %s\r
           Host: www.example.com\r
           \r
@@ -189,7 +190,7 @@ public class HttpServerTaskTest4Version {
   public void slowClientValid(String line, Version expected, String description) {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket(Y.slowStream(1, """
+          opts.socket = SocketY.of(Y.slowStream(1, """
           %s\r
           Host: www.example.com\r
           Connection: close\r

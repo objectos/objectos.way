@@ -27,6 +27,7 @@ import java.time.Clock;
 import java.time.Instant;
 import objectos.way.Media;
 import objectos.way.Y;
+import objectos.y.SocketY;
 import org.testng.annotations.Test;
 
 public class HttpServerTaskTestBStaticFiles {
@@ -53,7 +54,7 @@ public class HttpServerTaskTestBStaticFiles {
             files.contentTypes(".txt: text/plain; charset=utf-8");
           };
 
-          opts.socket = Y.socket(
+          opts.socket = SocketY.of(
               """
               GET /tc01.txt HTTP/1.1\r
               Host: www.example.com\r
@@ -83,7 +84,7 @@ public class HttpServerTaskTestBStaticFiles {
   public void testCase02() throws IOException {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket(
+          opts.socket = SocketY.of(
               """
               GET /tc02.txt HTTP/1.1\r
               Host: www.example.com\r
@@ -127,7 +128,7 @@ public class HttpServerTaskTestBStaticFiles {
             files.contentTypes(".txt: text/plain; charset=utf-8");
           };
 
-          opts.socket = Y.socket(
+          opts.socket = SocketY.of(
               """
               POST /tc03.txt HTTP/1.1\r
               Host: www.example.com\r
@@ -167,7 +168,7 @@ public class HttpServerTaskTestBStaticFiles {
 
   assertEquals(
       HttpServerTaskY.resp(test -> {
-        test.socket = Y.socket("""
+        test.socket = SocketY.of("""
         GET /reconfigure.txt HTTP/1.1\r
         Host: www.example.com\r
         \r
@@ -211,7 +212,7 @@ public class HttpServerTaskTestBStaticFiles {
             files.contentTypes(".txt: text/plain; charset=utf-8");
           };
 
-          opts.socket = Y.socket(
+          opts.socket = SocketY.of(
               """
               GET /tc05.txt HTTP/1.1\r
               Host: www.example.com\r
@@ -245,7 +246,7 @@ public class HttpServerTaskTestBStaticFiles {
     resp = HttpServerTaskY.resp(test -> {
       test.staticFilesDirectory = root;
 
-      test.socket = Y.socket("""
+      test.socket = SocketY.of("""
           GET /tc06.txt HTTP/1.1\r
           Host: www.example.com\r
           \r
@@ -266,7 +267,7 @@ public class HttpServerTaskTestBStaticFiles {
         HttpServerTaskY.resp(test -> {
           test.staticFilesDirectory = root;
 
-          test.socket = Y.socket("""
+          test.socket = SocketY.of("""
           GET /tc06.txt HTTP/1.1\r
           Host: www.example.com\r
           If-None-Match: %s\r
@@ -297,7 +298,7 @@ public class HttpServerTaskTestBStaticFiles {
 
   assertEquals(
       HttpServerTaskY.resp(test -> {
-        test.socket = Y.socket("""
+        test.socket = SocketY.of("""
         GET /tc07.txt HTTP/1.1\r
         Host: www.example.com\r
         \r
@@ -348,7 +349,7 @@ public class HttpServerTaskTestBStaticFiles {
     resp = HttpServerTaskY.resp(test -> {
       test.staticFilesDirectory = root;
 
-      test.socket = Y.socket("""
+      test.socket = SocketY.of("""
           GET /tc08.txt HTTP/1.1\r
           Host: www.example.com\r
           \r
@@ -369,7 +370,7 @@ public class HttpServerTaskTestBStaticFiles {
         HttpServerTaskY.resp(test -> {
           test.staticFilesDirectory = root;
 
-          test.socket = Y.socket("""
+          test.socket = SocketY.of("""
           GET /tc08.txt HTTP/1.1\r
           Host: www.example.com\r
           If-None-Match: %s\r
@@ -400,7 +401,7 @@ public class HttpServerTaskTestBStaticFiles {
     resp = HttpServerTaskY.resp(test -> {
       test.staticFilesDirectory = root;
 
-      test.socket = Y.socket("""
+      test.socket = SocketY.of("""
           GET /tc09.txt HTTP/1.1\r
           Host: www.example.com\r
           \r
@@ -421,7 +422,7 @@ public class HttpServerTaskTestBStaticFiles {
         HttpServerTaskY.resp(test -> {
           test.staticFilesDirectory = root;
 
-          test.socket = Y.socket("""
+          test.socket = SocketY.of("""
           GET /tc09.txt HTTP/1.1\r
           Host: www.example.com\r
           If-None-Match: %s\r

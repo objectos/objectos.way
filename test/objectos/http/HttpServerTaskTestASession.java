@@ -27,6 +27,7 @@ import java.io.UncheckedIOException;
 import objectos.lang.Key;
 import objectos.way.Media;
 import objectos.way.Y;
+import objectos.y.SocketY;
 import org.testng.annotations.Test;
 
 public class HttpServerTaskTestASession {
@@ -41,7 +42,7 @@ public class HttpServerTaskTestASession {
             options.sessionGenerator(Y.randomGeneratorOfLongs(1L, 2L, 3L, 4L));
           });
 
-          opts.socket = Y.socket(
+          opts.socket = SocketY.of(
               """
               GET /1 HTTP/1.1\r
               Host: www.example.com\r
@@ -118,7 +119,7 @@ public class HttpServerTaskTestASession {
             options.sessionGenerator(Y.randomGeneratorOfLongs(1L, 2L, 3L, 4L));
           });
 
-          opts.socket = Y.socket(
+          opts.socket = SocketY.of(
               """
               GET /1 HTTP/1.1\r
               Host: www.example.com\r
@@ -225,7 +226,7 @@ public class HttpServerTaskTestASession {
             options.sessionGenerator(Y.randomGeneratorOfLongs(1L, 2L, 3L, 4L));
           });
 
-          opts.socket = Y.socket(
+          opts.socket = SocketY.of(
               """
               GET /1 HTTP/1.1\r
               Host: www.example.com\r
@@ -289,7 +290,7 @@ public class HttpServerTaskTestASession {
             options.sessionGenerator(Y.randomGeneratorOfLongs(1L, 2L, 3L, 4L));
           });
 
-          opts.socket = Y.socket(
+          opts.socket = SocketY.of(
               """
               GET /1 HTTP/1.1\r
               Host: www.example.com\r
@@ -376,7 +377,7 @@ public class HttpServerTaskTestASession {
             options.sessionGenerator(Y.randomGeneratorOfLongs(1L, 2L, 3L, 4L));
           });
 
-          opts.socket = Y.socket(
+          opts.socket = SocketY.of(
               """
               GET /1 HTTP/1.1\r
               Host: www.example.com\r

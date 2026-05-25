@@ -87,7 +87,7 @@ public final class HttpServerTaskY {
   }
 
   public final String response() {
-    return Y.toString(socket);
+    return socket.toString();
   }
 
   private record ThisBodyOptions(Path directory, int memoryMax, long sizeMax)

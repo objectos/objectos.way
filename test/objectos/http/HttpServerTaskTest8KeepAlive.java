@@ -18,7 +18,7 @@ package objectos.http;
 import static org.testng.Assert.assertEquals;
 
 import objectos.way.Media;
-import objectos.way.Y;
+import objectos.y.SocketY;
 import org.testng.annotations.Test;
 
 public class HttpServerTaskTest8KeepAlive {
@@ -27,7 +27,7 @@ public class HttpServerTaskTest8KeepAlive {
   public void shouldHandle01() {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           GET /1 HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -52,7 +52,7 @@ public class HttpServerTaskTest8KeepAlive {
   public void shouldHandle02() {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           GET /1 HTTP/1.1\r
           Host: www.example.com\r
           \r
@@ -87,7 +87,7 @@ public class HttpServerTaskTest8KeepAlive {
   public void shouldHandle03() {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           GET /1 HTTP/1.1\r
           Connection: keep-alive\r
           Host: www.example.com\r
@@ -123,7 +123,7 @@ public class HttpServerTaskTest8KeepAlive {
   public void shouldNot01() {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           GET bad HTTP/1.1\r
           Host: www.example.com\r
           \r
@@ -146,7 +146,7 @@ public class HttpServerTaskTest8KeepAlive {
   public void shouldNot02() {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           GET /1 HTTP/1.1\r
           Host: www.example.com\r
           \r
@@ -173,7 +173,7 @@ public class HttpServerTaskTest8KeepAlive {
   public void shouldNot03() {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           GET /1 HTTP/1.1\r
           Referer: x\r
           User-Agent: x\r
@@ -197,7 +197,7 @@ public class HttpServerTaskTest8KeepAlive {
   public void shouldNot04() {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           GET /1 HTTP/1.1\r
           Host: \r
           Referer: x\r
@@ -222,7 +222,7 @@ public class HttpServerTaskTest8KeepAlive {
   public void shouldNot05() {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           GET /1 HTTP/1.1\r
           Host: www.example.com\r
           Host: example.com\r
@@ -248,7 +248,7 @@ public class HttpServerTaskTest8KeepAlive {
   public void shouldNot06() {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           POST /1 HTTP/1.1\r
           Host: www.example.com\r
           Transfer-Encoding: chunked\r

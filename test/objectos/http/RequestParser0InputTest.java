@@ -20,7 +20,7 @@ import static org.testng.Assert.assertSame;
 
 import module java.base;
 import objectos.lang.Throwables;
-import objectos.way.Y;
+import objectos.y.SocketY;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -132,7 +132,7 @@ public class RequestParser0InputTest {
     return RequestParser0Input.of(
         initial,
 
-        Y.socket(data)
+        SocketY.of(data)
     );
   }
 

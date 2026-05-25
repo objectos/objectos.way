@@ -24,6 +24,7 @@ import java.util.List;
 import objectos.lang.Throwables;
 import objectos.way.Media;
 import objectos.way.Y;
+import objectos.y.SocketY;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -98,7 +99,7 @@ public class HttpServerTaskTest2Path {
   public void pathValid(String raw, String path, String description) {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           GET %s HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -176,7 +177,7 @@ public class HttpServerTaskTest2Path {
   public void pathInvalid(String req, String description) {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket(
+          opts.socket = SocketY.of(
               iso8859(req)
           );
         }),
@@ -288,7 +289,7 @@ public class HttpServerTaskTest2Path {
   public void slowClientPathValid(String raw, String path, String description) {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket(Y.slowStream(1, """
+          opts.socket = SocketY.of(Y.slowStream(1, """
           GET %s HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -325,7 +326,7 @@ public class HttpServerTaskTest2Path {
 
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           GET /entity%s HTTP/1.1\r
           Host: www.example.com\r
           \r
@@ -357,7 +358,7 @@ public class HttpServerTaskTest2Path {
 
           opts.noteSink = noteSink;
 
-          opts.socket = Y.socket("GET /index.h", ioe);
+          opts.socket = SocketY.of("GET /index.h", ioe);
         }),
 
         ""

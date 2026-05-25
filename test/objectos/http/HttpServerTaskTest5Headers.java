@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import objectos.way.Media;
 import objectos.way.Y;
+import objectos.y.SocketY;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -172,7 +173,7 @@ public class HttpServerTaskTest5Headers {
   public void valid(String payload, Map<HttpHeaderName, Object> expected, String description) throws IOException {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket(iso8859("""
+          opts.socket = SocketY.of(iso8859("""
           GET / HTTP/1.1\r
           %s\
           \r
@@ -330,7 +331,7 @@ public class HttpServerTaskTest5Headers {
   public void invalid(String payload, String description) {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket(iso8859("""
+          opts.socket = SocketY.of(iso8859("""
           GET / HTTP/1.1\r
           %s\
           \r
@@ -371,7 +372,7 @@ public class HttpServerTaskTest5Headers {
   public void invalidLineTerminator(String payload, String description) {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket(iso8859("""
+          opts.socket = SocketY.of(iso8859("""
           GET / HTTP/1.1\r
           %s\
           \r
@@ -417,7 +418,7 @@ public class HttpServerTaskTest5Headers {
   public void fieldsTooLarge(String payload, String description) {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket(iso8859("""
+          opts.socket = SocketY.of(iso8859("""
           GET / HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -442,7 +443,7 @@ public class HttpServerTaskTest5Headers {
   public void slowClient(String payload, Map<HttpHeaderName, Object> expected, String description) throws IOException {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket(Y.slowStream(1, iso8859("""
+          opts.socket = SocketY.of(Y.slowStream(1, iso8859("""
           GET / HTTP/1.1\r
           %s\
           \r

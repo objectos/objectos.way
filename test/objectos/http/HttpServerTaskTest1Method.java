@@ -21,6 +21,7 @@ import java.io.IOException;
 import objectos.lang.Throwables;
 import objectos.way.Media;
 import objectos.way.Y;
+import objectos.y.SocketY;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -45,7 +46,7 @@ public class HttpServerTaskTest1Method {
   public void valid(HttpMethod method) {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           %s /index.html HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -92,7 +93,7 @@ public class HttpServerTaskTest1Method {
   public void validSlowClient(HttpMethod method) {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket(Y.slowStream(1, """
+          opts.socket = SocketY.of(Y.slowStream(1, """
           %s /index.html HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -168,7 +169,7 @@ public class HttpServerTaskTest1Method {
   public void badRequest(String data, String description) {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket(data);
+          opts.socket = SocketY.of(data);
         }),
 
         """
@@ -196,7 +197,7 @@ public class HttpServerTaskTest1Method {
 
           opts.noteSink = noteSink;
 
-          opts.socket = Y.socket("GE", ioe);
+          opts.socket = SocketY.of("GE", ioe);
         }),
 
         ""

@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 import objectos.lang.Throwables;
 import objectos.way.Media;
-import objectos.way.Y;
+import objectos.y.SocketY;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -39,7 +39,7 @@ public class HttpServerTaskTest3Query {
   public void queryValid(String raw, Map<String, Object> expected, String description) {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           GET /path?%s HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -107,7 +107,7 @@ public class HttpServerTaskTest3Query {
   public void queryInvalid(String raw, String description) {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket(iso8859("""
+          opts.socket = SocketY.of(iso8859("""
           GET /path?%s HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -276,7 +276,7 @@ public class HttpServerTaskTest3Query {
 
           opts.noteSink = noteSink;
 
-          opts.socket = Y.socket(req, ioe);
+          opts.socket = SocketY.of(req, ioe);
         }),
 
         ""
@@ -293,7 +293,7 @@ public class HttpServerTaskTest3Query {
 
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           GET /entity?hash=%s HTTP/1.1\r
           Host: www.example.com\r
           \r

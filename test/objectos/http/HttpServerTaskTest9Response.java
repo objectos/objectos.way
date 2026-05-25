@@ -31,6 +31,7 @@ import objectos.way.Media;
 import objectos.way.Y;
 import objectos.y.InputStreamY;
 import objectos.y.OutputStreamY;
+import objectos.y.SocketY;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -43,7 +44,7 @@ public class HttpServerTaskTest9Response {
   public void okMediaBytes01() {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           GET /1 HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -71,7 +72,7 @@ public class HttpServerTaskTest9Response {
 
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           GET /1 HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -99,7 +100,7 @@ public class HttpServerTaskTest9Response {
 
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           HEAD /1 HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -153,7 +154,7 @@ public class HttpServerTaskTest9Response {
         HttpServerTaskY.resp(opts -> {
           opts.bufferSize = 256;
 
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           GET /1 HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -196,7 +197,7 @@ public class HttpServerTaskTest9Response {
         HttpServerTaskY.resp(opts -> {
           opts.bufferSize = 256;
 
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           GET /1 HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -265,7 +266,7 @@ public class HttpServerTaskTest9Response {
         HttpServerTaskY.resp(opts -> {
           opts.bufferSize = 256;
 
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           GET /1 HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -337,7 +338,7 @@ public class HttpServerTaskTest9Response {
         HttpServerTaskY.resp(opts -> {
           opts.bufferSize = 256;
 
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           GET /1 HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -381,7 +382,7 @@ public class HttpServerTaskTest9Response {
         HttpServerTaskY.resp(opts -> {
           opts.bufferSize = 256;
 
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           GET /1 HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -453,7 +454,7 @@ public class HttpServerTaskTest9Response {
         HttpServerTaskY.resp(opts -> {
           opts.bufferSize = 256;
 
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           GET /1 HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -508,7 +509,7 @@ public class HttpServerTaskTest9Response {
   public void movedPermanently01() {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           GET /1 HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -532,7 +533,7 @@ public class HttpServerTaskTest9Response {
   public void movedPermanently02() {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           GET /1 HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -562,7 +563,7 @@ public class HttpServerTaskTest9Response {
 
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           GET /1 HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -586,7 +587,7 @@ public class HttpServerTaskTest9Response {
   public void found01() {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           GET /1 HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -610,7 +611,7 @@ public class HttpServerTaskTest9Response {
   public void found02() {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           GET /1 HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -640,7 +641,7 @@ public class HttpServerTaskTest9Response {
 
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           GET /1 HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -664,7 +665,7 @@ public class HttpServerTaskTest9Response {
   public void seeOther01() {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           GET /1 HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -688,7 +689,7 @@ public class HttpServerTaskTest9Response {
   public void seeOther02() {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           GET /1 HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -718,7 +719,7 @@ public class HttpServerTaskTest9Response {
 
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           GET /1 HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -744,7 +745,7 @@ public class HttpServerTaskTest9Response {
   public void error01() {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           POST /1 HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -770,7 +771,7 @@ public class HttpServerTaskTest9Response {
   public void error02() {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           POST /1 HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -808,7 +809,7 @@ public class HttpServerTaskTest9Response {
 
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           POST /1 HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -839,7 +840,7 @@ public class HttpServerTaskTest9Response {
   public void respond01() {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           GET /1 HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -873,7 +874,7 @@ public class HttpServerTaskTest9Response {
 
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           GET /1 HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -911,7 +912,7 @@ public class HttpServerTaskTest9Response {
 
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           GET /1 HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -951,7 +952,7 @@ public class HttpServerTaskTest9Response {
         HttpServerTaskY.resp(opts -> {
           opts.bufferSize = 256;
 
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           GET /1 HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -998,7 +999,7 @@ public class HttpServerTaskTest9Response {
         HttpServerTaskY.resp(opts -> {
           opts.bufferSize = 256;
 
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           GET /1 HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -1057,7 +1058,7 @@ public class HttpServerTaskTest9Response {
   public void respondHeaderValid(HeaderValueData data) {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           GET /1 HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -1136,7 +1137,7 @@ public class HttpServerTaskTest9Response {
   public void respondHeaderInvalid(HeaderValueData data) {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           GET /1 HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -1254,7 +1255,7 @@ public class HttpServerTaskTest9Response {
   public void headerValueBuilderValid(Consumer<? super HttpHeaderValueBuilder> builder, String expected) {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           GET /1 HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -1303,7 +1304,7 @@ public class HttpServerTaskTest9Response {
   public void headerValueBuilderInvalid(Consumer<? super HttpHeaderValueBuilder> builder, String expectedMessage) {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           GET /1 HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -1342,7 +1343,7 @@ public class HttpServerTaskTest9Response {
   public void empty01() {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           GET /1 HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -1379,7 +1380,7 @@ public class HttpServerTaskTest9Response {
 
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           GET /1 HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -1420,7 +1421,7 @@ public class HttpServerTaskTest9Response {
 
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           HEAD /1 HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -1460,7 +1461,7 @@ public class HttpServerTaskTest9Response {
 
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           GET /1 HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -1505,21 +1506,17 @@ public class HttpServerTaskTest9Response {
   public void ioException01() {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket(config -> {
-            config.inputStream(
-                InputStreamY.of("""
+          opts.socket = SocketY.create(config -> {
+            config.inputStream = InputStreamY.of("""
                 GET /1 HTTP/1.1\r
                 Host: www.example.com\r
                 Connection: close\r
                 \r
-                """)
-            );
+                """);
 
-            var outputStream = OutputStreamY.create(os -> {
+            config.outputStream = OutputStreamY.create(os -> {
               os.throwOnWrite = Throwables.trimStackTrace(new IOException(), 1);
             });
-
-            config.outputStream(outputStream);
           });
 
           opts.handler = http -> http.ok(Media.Bytes.textPlain("OK"));
@@ -1533,21 +1530,17 @@ public class HttpServerTaskTest9Response {
   public void ioException02() {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket(config -> {
-            config.inputStream(
-                InputStreamY.of("""
+          opts.socket = SocketY.create(config -> {
+            config.inputStream = InputStreamY.of("""
                 GET /1 HTTP/1.1\r
                 Host: www.example.com\r
                 Connection: close\r
                 \r
-                """)
-            );
+                """);
 
-            var outputStream = OutputStreamY.create(os -> {
+            config.outputStream = OutputStreamY.create(os -> {
               os.throwOnWrite = Throwables.trimStackTrace(new IOException(), 1);
             });
-
-            config.outputStream(outputStream);
           });
 
           final String veryLargeHex;
@@ -1580,7 +1573,7 @@ public class HttpServerTaskTest9Response {
   private void state(HttpHandler handler) {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
-          opts.socket = Y.socket("""
+          opts.socket = SocketY.of("""
           GET /1 HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r

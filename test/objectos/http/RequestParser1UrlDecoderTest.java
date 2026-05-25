@@ -20,7 +20,7 @@ import static org.testng.Assert.assertEquals;
 import java.io.IOException;
 import java.net.Socket;
 import objectos.http.HttpClientException.Kind;
-import objectos.way.Y;
+import objectos.y.SocketY;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -28,7 +28,7 @@ public class RequestParser1UrlDecoderTest {
 
   private String decode(int initial, int length, Object... data) throws IOException {
     final Socket socket;
-    socket = Y.socket(data);
+    socket = SocketY.of(data);
 
     final RequestParser0Input input;
     input = RequestParser0Input.of(initial, socket);

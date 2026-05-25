@@ -29,6 +29,7 @@ import java.nio.file.Path;
 import java.util.function.Consumer;
 import objectos.lang.Throwables;
 import objectos.way.Y;
+import objectos.y.SocketY;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -87,7 +88,7 @@ public class RequestParser8BodyDataTest {
   private RequestParser0Input input(Object... data) {
     try {
       final Socket socket;
-      socket = Y.socket(data);
+      socket = SocketY.of(data);
 
       return RequestParser0Input.of(512, socket);
     } catch (IOException e) {
