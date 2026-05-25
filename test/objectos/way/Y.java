@@ -66,8 +66,8 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
 import objectos.internal.Util;
-import objectos.internal.UtilList;
 import objectos.way.dev.DevStart;
+import objectos.y.InputStreamY;
 import objectos.y.OutputStreamY;
 import org.testng.ISuite;
 import org.testng.ISuiteListener;
@@ -272,180 +272,6 @@ public final class Y implements ISuiteListener {
 
   // ##################################################################
   // # END: DataSource
-  // ##################################################################
-
-  // ##################################################################
-  // # BEGIN: InputStream
-  // ##################################################################
-
-  public static final class InputStreamBuilder {
-
-    private final UtilList<Object> data = new UtilList<>();
-
-    private IOException onClose;
-
-    private InputStreamBuilder() {}
-
-    public final void add(byte[] value) {
-      final byte[] copy;
-      copy = value.clone();
-
-      add0(copy);
-    }
-
-    public final void add(InputStream value) {
-      data.add(value);
-    }
-
-    public final void add(IOException value) {
-      data.add(value);
-    }
-
-    public final void add(String s) {
-      add(s, StandardCharsets.US_ASCII);
-    }
-
-    public final void add(String s, Charset charset) {
-      final byte[] bytes;
-      bytes = s.getBytes(charset);
-
-      add0(bytes);
-    }
-
-    public final void onClose(IOException value) {
-      onClose = value;
-    }
-
-    private void add0(final byte[] bytes) {
-      final InputStreamBytes wrapper;
-      wrapper = new InputStreamBytes(bytes);
-
-      data.add(wrapper);
-    }
-
-  }
-
-  private static final class InputStreamBytes extends InputStream {
-    private final byte[] bytes;
-    private int bytesIndex;
-
-    InputStreamBytes(byte[] bytes) { this.bytes = bytes; }
-
-    @Override
-    public final int read() throws IOException {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public final int read(byte[] b, int off, int len) {
-      final int remaining;
-      remaining = bytes.length - bytesIndex;
-
-      if (remaining <= 0) {
-        return -1;
-      }
-
-      final int length;
-      length = Math.min(remaining, len);
-
-      System.arraycopy(bytes, bytesIndex, b, off, length);
-
-      bytesIndex += length;
-
-      return length;
-    }
-  }
-
-  private static final class InputStreamImpl extends InputStream {
-
-    private final List<Object> data;
-
-    private int dataIndex;
-
-    private final IOException onClose;
-
-    private InputStreamImpl(InputStreamBuilder builder) {
-      data = builder.data.toUnmodifiableList();
-
-      onClose = builder.onClose;
-    }
-
-    @Override
-    public final void close() throws IOException {
-      if (onClose != null) {
-        throw onClose;
-      }
-    }
-
-    @Override
-    public final int read() throws IOException {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public final int read(byte[] b, int off, int len) throws IOException {
-      int result;
-      result = -1;
-
-      outer: while (dataIndex < data.size()) {
-        final Object next;
-        next = data.get(dataIndex); // do not advance yet
-
-        switch (next) {
-          case InputStream stream -> {
-            result = stream.read(b, off, len);
-
-            if (result < 0) {
-              dataIndex++;
-
-              continue;
-            } else {
-              break outer;
-            }
-          }
-
-          case IOException ioe -> { dataIndex++; throw ioe; }
-
-          default -> throw new UnsupportedOperationException("Unsupported type: " + next.getClass());
-        }
-      }
-
-      return result;
-    }
-
-  }
-
-  public static InputStream inputStream(Object... data) {
-    return inputStream(config -> {
-      for (Object o : data) {
-        switch (o) {
-          case byte[] bytes -> config.add(bytes);
-
-          case InputStream is -> config.add(is);
-
-          case IOException e -> config.add(e);
-
-          case String s -> config.add(s);
-
-          default -> throw new IllegalArgumentException(
-              "Only byte[], InputStream, String and IOException are currently supported"
-          );
-        }
-      }
-    });
-  }
-
-  public static InputStream inputStream(Consumer<InputStreamBuilder> config) {
-    final InputStreamBuilder builder;
-    builder = new InputStreamBuilder();
-
-    config.accept(builder);
-
-    return new InputStreamImpl(builder);
-  }
-
-  // ##################################################################
-  // # END: InputStream
   // ##################################################################
 
   // ##################################################################
@@ -1140,7 +966,7 @@ public final class Y implements ISuiteListener {
 
     final Socket build() {
       if (inputStream == null) {
-        inputStream = Y.inputStream();
+        inputStream = InputStream.nullInputStream();
       }
 
       if (outputStream == null) {
@@ -1184,7 +1010,7 @@ public final class Y implements ISuiteListener {
 
   public static Socket socket(Object... data) {
     return socket(socket -> {
-      socket.inputStream(Y.inputStream(data));
+      socket.inputStream(InputStreamY.of(data));
     });
   }
 

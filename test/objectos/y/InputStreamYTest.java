@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.way;
+package objectos.y;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
@@ -23,14 +23,15 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class YInputStreamTest {
+public class InputStreamYTest {
 
   @Test
   public void testCase01() {
-    try (InputStream input = Y.inputStream("abc")) {
+    try (InputStream input = InputStreamY.of("abc")) {
       byte[] buf;
       buf = new byte[3];
 
@@ -44,7 +45,7 @@ public class YInputStreamTest {
 
   @Test
   public void testCase02() {
-    try (InputStream input = Y.inputStream("abc")) {
+    try (InputStream input = InputStreamY.of("abc")) {
       byte[] buf;
       buf = new byte[10];
 
@@ -58,7 +59,7 @@ public class YInputStreamTest {
 
   @Test
   public void testCase04() {
-    try (InputStream input = Y.inputStream("abc123")) {
+    try (InputStream input = InputStreamY.of("abc123")) {
       byte[] buf;
       buf = new byte[3];
 
@@ -74,7 +75,7 @@ public class YInputStreamTest {
 
   @Test
   public void testCase03() {
-    try (InputStream input = Y.inputStream("abc", "123")) {
+    try (InputStream input = InputStreamY.of("abc", "123")) {
       byte[] buf;
       buf = new byte[10];
 
@@ -93,7 +94,7 @@ public class YInputStreamTest {
     IOException readError;
     readError = new IOException("On read");
 
-    try (InputStream input = Y.inputStream("abc", readError)) {
+    try (InputStream input = InputStreamY.of("abc", readError)) {
       byte[] buf;
       buf = new byte[3];
 
@@ -111,12 +112,10 @@ public class YInputStreamTest {
     IOException closeError;
     closeError = new IOException("On close");
 
-    try (InputStream input = Y.inputStream(config -> {
-      config.add("abc");
+    try (InputStream input = InputStreamY.create(config -> {
+      config.data = List.of("abc", "123");
 
-      config.add("123");
-
-      config.onClose(closeError);
+      config.throwOnClose = closeError;
     })) {
 
       byte[] buf;
@@ -134,10 +133,7 @@ public class YInputStreamTest {
 
   @Test
   public void testCase07() {
-    byte[] hello = "Hello".getBytes(StandardCharsets.UTF_8);
-    byte[] world = "World".getBytes(StandardCharsets.UTF_8);
-
-    try (InputStream input = Y.inputStream(hello, world)) {
+    try (InputStream input = InputStreamY.of("Hello", "World")) {
       byte[] buf;
       buf = new byte[5];
 
@@ -153,7 +149,7 @@ public class YInputStreamTest {
 
   @Test
   public void testCase08() {
-    try (InputStream src = Y.inputStream("Hello World!");
+    try (InputStream src = InputStreamY.of("Hello World!");
         InputStream input = new BufferedInputStream(src);
         ByteArrayOutputStream out = new ByteArrayOutputStream()) {
       int c;

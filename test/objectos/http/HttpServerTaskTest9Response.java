@@ -29,6 +29,7 @@ import java.util.stream.Stream;
 import objectos.lang.Throwables;
 import objectos.way.Media;
 import objectos.way.Y;
+import objectos.y.InputStreamY;
 import objectos.y.OutputStreamY;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
@@ -1506,7 +1507,7 @@ public class HttpServerTaskTest9Response {
         HttpServerTaskY.resp(opts -> {
           opts.socket = Y.socket(config -> {
             config.inputStream(
-                Y.inputStream("""
+                InputStreamY.of("""
                 GET /1 HTTP/1.1\r
                 Host: www.example.com\r
                 Connection: close\r
@@ -1534,7 +1535,7 @@ public class HttpServerTaskTest9Response {
         HttpServerTaskY.resp(opts -> {
           opts.socket = Y.socket(config -> {
             config.inputStream(
-                Y.inputStream("""
+                InputStreamY.of("""
                 GET /1 HTTP/1.1\r
                 Host: www.example.com\r
                 Connection: close\r
