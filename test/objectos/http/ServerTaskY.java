@@ -28,7 +28,14 @@ final class ServerTaskY {
 
   private ServerTaskY() {}
 
-  public static void run(Consumer<? super ServerTaskY> opts) {
+  public static String resp(Consumer<? super ServerTaskY> opts) {
+    final ServerTaskY y;
+    y = run(opts);
+
+    return y.response();
+  }
+
+  public static ServerTaskY run(Consumer<? super ServerTaskY> opts) {
     final ServerTaskY y;
     y = new ServerTaskY();
 
@@ -38,10 +45,16 @@ final class ServerTaskY {
     task = y.build();
 
     task.run();
+
+    return y;
   }
 
   private ServerTask build() {
     return new ServerTask(noteSink, socket);
+  }
+
+  private String response() {
+    return null;
   }
 
 }

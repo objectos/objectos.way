@@ -68,6 +68,7 @@ import javax.tools.ToolProvider;
 import objectos.internal.Util;
 import objectos.internal.UtilList;
 import objectos.way.dev.DevStart;
+import objectos.y.OutputStreamY;
 import org.testng.ISuite;
 import org.testng.ISuiteListener;
 
@@ -942,75 +943,6 @@ public final class Y implements ISuiteListener {
   // ##################################################################
 
   // ##################################################################
-  // # BEGIN: OutputStream
-  // ##################################################################
-
-  public static final class TestingOutputStream extends OutputStream {
-
-    private byte[] bytes = new byte[32];
-
-    private int bytesIndex;
-
-    private IOException onClose;
-
-    private IOException onWrite;
-
-    private TestingOutputStream() {}
-
-    @Override
-    public final void close() throws IOException {
-      if (onClose != null) {
-        throw onClose;
-      }
-    }
-
-    public final void reset() {
-      bytesIndex = 0;
-    }
-
-    public final void throwOnClose(IOException value) {
-      onClose = value;
-    }
-
-    public final void throwOnWrite(IOException value) {
-      onWrite = value;
-    }
-
-    public final String toString(Charset charset) {
-      return new String(bytes, 0, bytesIndex, charset);
-    }
-
-    @Override
-    public final void write(int b) throws IOException {
-      throw new UnsupportedOperationException("Implement me");
-    }
-
-    @Override
-    public final void write(byte[] b, int off, int len) throws IOException {
-      Objects.checkFromIndexSize(off, len, b.length);
-
-      if (onWrite != null) {
-        throw onWrite;
-      }
-
-      bytes = Util.growIfNecessary(bytes, bytesIndex + len);
-
-      System.arraycopy(b, off, bytes, bytesIndex, len);
-
-      bytesIndex += len;
-    }
-
-  }
-
-  public static TestingOutputStream outputStream() {
-    return new TestingOutputStream();
-  }
-
-  // ##################################################################
-  // # END: OutputStream
-  // ##################################################################
-
-  // ##################################################################
   // # BEGIN: Playwright
   // ##################################################################
 
@@ -1034,6 +966,7 @@ public final class Y implements ISuiteListener {
 
       return chromium.launch(launchOptions);
     }
+
   }
 
   public static Page page() {
@@ -1211,7 +1144,7 @@ public final class Y implements ISuiteListener {
       }
 
       if (outputStream == null) {
-        outputStream = new TestingOutputStream();
+        outputStream = OutputStreamY.create();
       }
 
       return new SocketImpl(this);
@@ -1260,7 +1193,7 @@ public final class Y implements ISuiteListener {
       final OutputStream outputStream;
       outputStream = socket.getOutputStream();
 
-      if (outputStream instanceof TestingOutputStream os) {
+      if (outputStream instanceof OutputStreamY os) {
         final String result;
         result = os.toString(StandardCharsets.UTF_8);
 

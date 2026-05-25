@@ -29,6 +29,7 @@ import java.util.stream.Stream;
 import objectos.lang.Throwables;
 import objectos.way.Media;
 import objectos.way.Y;
+import objectos.y.OutputStreamY;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -1513,9 +1514,9 @@ public class HttpServerTaskTest9Response {
                 """)
             );
 
-            var outputStream = Y.outputStream();
-
-            outputStream.throwOnWrite(Throwables.trimStackTrace(new IOException(), 1));
+            var outputStream = OutputStreamY.create(os -> {
+              os.throwOnWrite = Throwables.trimStackTrace(new IOException(), 1);
+            });
 
             config.outputStream(outputStream);
           });
@@ -1541,9 +1542,9 @@ public class HttpServerTaskTest9Response {
                 """)
             );
 
-            var outputStream = Y.outputStream();
-
-            outputStream.throwOnWrite(Throwables.trimStackTrace(new IOException(), 1));
+            var outputStream = OutputStreamY.create(os -> {
+              os.throwOnWrite = Throwables.trimStackTrace(new IOException(), 1);
+            });
 
             config.outputStream(outputStream);
           });
