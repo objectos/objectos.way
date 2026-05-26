@@ -42,7 +42,7 @@ final class HttpServer1Loop implements Runnable {
     THROW = Note.Ref1.create(s, "THR", Note.ERROR);
   }
 
-  private final RequestBodyOptions bodyOptions;
+  private final RequestBodySupportFactory bodySupportFactory;
 
   private final int bufferSize;
 
@@ -59,7 +59,7 @@ final class HttpServer1Loop implements Runnable {
   private final ServerSocket serverSocket;
 
   HttpServer1Loop(
-      RequestBodyOptions bodyOptions,
+      RequestBodySupportFactory bodySupportFactory,
       int bufferSize,
       Clock clock,
       HttpErrorResponses errorResponses,
@@ -67,7 +67,7 @@ final class HttpServer1Loop implements Runnable {
       Note.Sink noteSink,
       ServerSocket serverSocket
   ) {
-    this.bodyOptions = bodyOptions;
+    this.bodySupportFactory = bodySupportFactory;
 
     this.bufferSize = bufferSize;
 
@@ -100,7 +100,7 @@ final class HttpServer1Loop implements Runnable {
         id = idSupplier.getAndIncrement();
 
         final HttpServerTask http;
-        http = new HttpServerTask(bodyOptions, buffer, clock, errorResponses, hosts, id, noteSink, socket);
+        http = new HttpServerTask(bodySupportFactory, buffer, clock, errorResponses, hosts, id, noteSink, socket);
 
         final Thread task;
         task = Thread.ofVirtual().name("http-", id).unstarted(http);

@@ -17,16 +17,63 @@ package objectos.http;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
-abstract class RequestBodySupport implements Closeable {
+final class RequestBodySupport implements Closeable {
 
-  RequestBodySupport() {}
+  private final Path directory;
 
-  abstract Path file() throws IOException;
+  private final long id;
 
-  abstract int memoryMax();
+  private final int memoryMax;
 
-  abstract long sizeMax();
+  private final long sizeMax;
+
+  private Path file;
+
+  RequestBodySupport(Path directory, long id, int memoryMax, long sizeMax) {
+    this.directory = directory;
+
+    this.id = id;
+
+    this.memoryMax = memoryMax;
+
+    this.sizeMax = sizeMax;
+  }
+
+  @Override
+  public final void close() throws IOException {
+    if (file != null) {
+      final Path deleteMe;
+      deleteMe = file;
+
+      file = null;
+
+      Files.delete(deleteMe);
+    }
+  }
+
+  public final Path file() throws IOException {
+    if (file == null) {
+      final String format;
+      format = id >= 0 ? "%019d.body" : "%019d.ydob";
+
+      final String fileName;
+      fileName = String.format(format, id);
+
+      file = directory.resolve(fileName);
+    }
+
+    return file;
+  }
+
+  public final int memoryMax() {
+    return memoryMax;
+  }
+
+  public final long sizeMax() {
+    return sizeMax;
+  }
 
 }

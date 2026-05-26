@@ -17,10 +17,15 @@ package objectos.http;
 
 import java.net.Socket;
 import java.util.function.Consumer;
+import objectos.way.Media;
 import objectos.way.Note;
 import objectos.way.Y;
 
 final class ServerTaskY {
+
+  static final Response OK = Response.ok(Media.Bytes.textPlain("OK\n"));
+
+  Handler handler;
 
   Note.Sink noteSink = Y.noteSink();
 
@@ -32,7 +37,10 @@ final class ServerTaskY {
     final ServerTaskY y;
     y = run(opts);
 
-    return y.response();
+    final Socket socket;
+    socket = y.socket;
+
+    return socket.toString();
   }
 
   public static ServerTaskY run(Consumer<? super ServerTaskY> opts) {
@@ -51,10 +59,6 @@ final class ServerTaskY {
 
   private ServerTask build() {
     return new ServerTask(noteSink, socket);
-  }
-
-  private String response() {
-    return null;
   }
 
 }

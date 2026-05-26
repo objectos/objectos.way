@@ -157,7 +157,7 @@ public class HttpServerTaskTest6Body {
     directory = Y.nextTempDir();
 
     final String filename;
-    filename = "%019d".formatted(123L);
+    filename = "%019d.body".formatted(123L);
 
     final Path file;
     file = directory.resolve(filename);
@@ -208,7 +208,7 @@ public class HttpServerTaskTest6Body {
     directory = Y.nextTempDir();
 
     final String filename;
-    filename = "%019d".formatted(123L);
+    filename = "%019d.body".formatted(123L);
 
     final Path file;
     file = directory.resolve(filename);

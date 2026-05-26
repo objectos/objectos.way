@@ -59,14 +59,10 @@ public sealed interface HttpServer extends Closeable permits HttpServer2Pojo {
     /// @param value the port to use
     void port(int value);
 
-    /// Sets the maximum allowed size in bytes for the request body.
+    /// Sets the request body options.
     ///
-    /// If the server determines that the request body exceeds the limit, the
-    /// request processing ends, the server responds with a `413 Content Too
-    /// Large` message, and the server closes the connection.
-    ///
-    /// @param value the maximum size (in bytes) of an allowed request body
-    void requestBodySizeMax(long value);
+    /// @param opts allows for setting the options
+    void requestBody(Consumer<? super RequestBodyOptions> opts);
 
     /// Sets the server's stage to the specified value.
     ///

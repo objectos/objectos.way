@@ -15,21 +15,18 @@
  */
 package objectos.http;
 
-final class RequestBodyOptions0 implements RequestBodyOptions {
+import java.nio.file.Path;
+import java.util.function.Consumer;
 
-  private final int memoryMax;
+record RequestBodyOptionsPojo(Path directory, int memoryMax, long sizeMax) {
 
-  private final long sizeMax;
+  public static RequestBodyOptionsPojo create(Consumer<? super RequestBodyOptions> opts) {
+    final RequestBodyOptionsBuilder builder;
+    builder = new RequestBodyOptionsBuilder();
 
-  RequestBodyOptions0(int memoryMax, long sizeMax) {
-    this.memoryMax = memoryMax;
+    opts.accept(builder);
 
-    this.sizeMax = sizeMax;
-  }
-
-  @Override
-  public final RequestBodySupport supportOf(long id) {
-    return new RequestBodySupport0(id, memoryMax, sizeMax);
+    return builder.build();
   }
 
 }

@@ -15,8 +15,22 @@
  */
 package objectos.http;
 
-interface RequestBodyOptions {
+/// Configures the request body options of a `Server` instance.
+public sealed interface RequestBodyOptions permits RequestBodyOptionsBuilder {
 
-  RequestBodySupport supportOf(long id);
+  /// Sets the maximum request body size in bytes that will be stored in memory.
+  /// A request body larger than this limit is serialized to a local file.
+  ///
+  /// @param value the maximum size (in bytes) for a memory request body
+  void memoryMax(int value);
+
+  /// Sets the maximum allowed size in bytes for the request body.
+  ///
+  /// If the server determines that the request body exceeds the limit, the
+  /// request processing ends, the server responds with a `413 Content Too Large`
+  /// message, and the server closes the connection.
+  ///
+  /// @param value the maximum size (in bytes) of an allowed request body
+  void sizeMax(long value);
 
 }

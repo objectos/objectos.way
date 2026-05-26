@@ -18,7 +18,6 @@ package objectos.http;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.Socket;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Clock;
 import java.util.function.Consumer;
@@ -90,62 +89,6 @@ public final class HttpServerTaskY {
     return socket.toString();
   }
 
-  private record ThisBodyOptions(Path directory, int memoryMax, long sizeMax)
-      implements RequestBodyOptions {
-
-    @Override
-    public final RequestBodySupport supportOf(long id) {
-      return new RequestBodySupport() {
-
-        private Path file;
-
-        @Override
-        public final void close() throws IOException {
-          if (file != null) {
-            final Path deleteMe;
-            deleteMe = file;
-
-            file = null;
-
-            Files.delete(deleteMe);
-          }
-        }
-
-        @Override
-        final Path file() {
-          if (file == null) {
-            final String format;
-
-            if (id < 0) {
-              format = "%019d.neg";
-            } else {
-              format = "%019d";
-            }
-
-            final String name;
-            name = String.format(format, id);
-
-            file = directory.resolve(name);
-          }
-
-          return file;
-        }
-
-        @Override
-        final int memoryMax() {
-          return memoryMax;
-        }
-
-        @Override
-        final long sizeMax() {
-          return sizeMax;
-        }
-
-      };
-    }
-
-  }
-
   private HttpServerTask build() {
     final HttpHost0Builder hostBuilder;
     hostBuilder = new HttpHost0Builder();
@@ -182,7 +125,7 @@ public final class HttpServerTaskY {
     hosts = HttpHosts.of().add(hostName, host);
 
     return new HttpServerTask(
-        new ThisBodyOptions(bodyDirectory, bodyMemoryMax, bodySizeMax),
+        new RequestBodySupportFactory(bodyDirectory, bodyMemoryMax, bodySizeMax),
 
         new byte[bufferSize],
 

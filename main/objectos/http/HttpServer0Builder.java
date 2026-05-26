@@ -45,9 +45,7 @@ final class HttpServer0Builder implements HttpServer.Options {
 
   private final Map<String, HttpHost0Builder> hostBuilders = new LinkedHashMap<>();
 
-  private int requestBodyMemoryMax;
-
-  private long requestBodySizeMax = 10 * 1024 * 1024;
+  private RequestBodyOptionsPojo requestBody;
 
   private Note.Sink noteSink = NoOpSinkSingleton.INSTANCE;
 
@@ -74,23 +72,18 @@ final class HttpServer0Builder implements HttpServer.Options {
 
     serverSocket.bind(socketAddress);
 
-    // bodyOptions
-    final int memoryMax;
-
-    if (requestBodyMemoryMax == 0) {
-      memoryMax = bufferSize;
-    } else {
-      memoryMax = requestBodyMemoryMax;
-    }
-
-    final RequestBodyOptions0 bodyOptions;
-    bodyOptions = new RequestBodyOptions0(memoryMax, requestBodySizeMax);
-
-    // hosts root directory
+    // server root directory
     final Path root;
-    root = Files.createTempDirectory("objectos-way-http-server-root-");
+    root = Files.createTempDirectory("http-root-");
 
     try {
+
+      // bodySupport
+      final RequestBodyOptionsPojo bodyOptions;
+      bodyOptions = requestBody != null ? requestBody : RequestBodyOptionsPojo.create(_ -> {});
+
+      final RequestBodySupportFactory bodySupportFactory;
+      bodySupportFactory = RequestBodySupportFactory.of(root, bodyOptions);
 
       // hosts
       HttpHosts hosts;
@@ -113,7 +106,7 @@ final class HttpServer0Builder implements HttpServer.Options {
 
       // serverLoop
       final Runnable serverLoop;
-      serverLoop = new HttpServer1Loop(bodyOptions, memoryMax, clock, errorResponses, hosts, noteSink, serverSocket);
+      serverLoop = new HttpServer1Loop(bodySupportFactory, bufferSize, clock, errorResponses, hosts, noteSink, serverSocket);
 
       // thread
       final Thread thread;
@@ -199,10 +192,8 @@ final class HttpServer0Builder implements HttpServer.Options {
   }
 
   @Override
-  public final void requestBodySizeMax(long value) {
-    Check.argument(value >= 0, "max request body size must not be negative");
-
-    requestBodySizeMax = value;
+  public final void requestBody(Consumer<? super RequestBodyOptions> opts) {
+    requestBody = RequestBodyOptionsPojo.create(opts);
   }
 
   @Override

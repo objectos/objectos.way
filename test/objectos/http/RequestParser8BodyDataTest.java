@@ -24,7 +24,6 @@ import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Consumer;
 import objectos.lang.Throwables;
@@ -36,14 +35,12 @@ import org.testng.annotations.Test;
 
 public class RequestParser8BodyDataTest {
 
-  private static final class Cfg extends RequestBodySupport {
+  private static final class Cfg {
     Path bodyDirectory;
 
     int bodyMemoryMax = 512;
 
     long bodySizeMax = 1024;
-
-    private Path file;
 
     long id = 0;
 
@@ -56,33 +53,11 @@ public class RequestParser8BodyDataTest {
     }
 
     final RequestParser8BodyData build() {
-      return new RequestParser8BodyData(this, input, meta);
+      final RequestBodySupport support;
+      support = new RequestBodySupport(bodyDirectory, id, bodyMemoryMax, bodySizeMax);
+
+      return new RequestParser8BodyData(support, input, meta);
     }
-
-    @Override
-    public final void close() throws IOException {
-      if (file != null) {
-        Files.delete(file);
-      }
-    }
-
-    @Override
-    final Path file() {
-      if (file == null) {
-        final String fileName;
-        fileName = Long.toString(id);
-
-        file = bodyDirectory.resolve(fileName);
-      }
-
-      return file;
-    }
-
-    @Override
-    final int memoryMax() { return bodyMemoryMax; }
-
-    @Override
-    final long sizeMax() { return bodySizeMax; }
   }
 
   private RequestParser0Input input(Object... data) {
@@ -181,7 +156,7 @@ public class RequestParser8BodyDataTest {
               cfg.meta = new RequestBodyMeta.Fixed(data1.length());
             }),
 
-            RequestBodyData.of(directory.resolve(Long.toString(123L))),
+            RequestBodyData.of(directory.resolve("%019d.body".formatted(123L))),
             data1,
             "file: happy-path"
         }

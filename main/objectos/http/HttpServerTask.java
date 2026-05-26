@@ -33,7 +33,7 @@ final class HttpServerTask implements Runnable {
 
   static final Note.Long1Ref1<Throwable> THROW = Note.Long1Ref1.create(HttpServerTask.class, "THR", Note.ERROR);
 
-  private final RequestBodyOptions bodyOptions;
+  private final RequestBodySupportFactory bodySupportFactory;
 
   private final byte[] buffer;
 
@@ -50,7 +50,7 @@ final class HttpServerTask implements Runnable {
   private final Socket socket;
 
   HttpServerTask(
-      RequestBodyOptions bodyOptions,
+      RequestBodySupportFactory bodySupportFactory,
       byte[] buffer,
       Clock clock,
       HttpErrorResponses errorResponses,
@@ -58,7 +58,7 @@ final class HttpServerTask implements Runnable {
       long id,
       Note.Sink noteSink,
       Socket socket) {
-    this.bodyOptions = bodyOptions;
+    this.bodySupportFactory = bodySupportFactory;
 
     this.buffer = buffer;
 
@@ -88,7 +88,7 @@ final class HttpServerTask implements Runnable {
       final OutputStream outputStream;
       outputStream = socket.getOutputStream();
 
-      try (RequestBodySupport bodySupport = bodyOptions.supportOf(id)) {
+      try (RequestBodySupport bodySupport = bodySupportFactory.create(id)) {
         while (keepAlive) {
           run0(inputStream, outputStream, bodySupport);
         }
