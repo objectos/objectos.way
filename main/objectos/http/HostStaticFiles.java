@@ -23,7 +23,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.util.Map;
 
-final class HttpHost3StaticFiles implements HttpHandler {
+final class HostStaticFiles implements HttpHandler {
 
   private final Map<String, String> contentTypes;
 
@@ -31,7 +31,7 @@ final class HttpHost3StaticFiles implements HttpHandler {
 
   private final Path rootDirectory;
 
-  HttpHost3StaticFiles(Map<String, String> contentTypes, String defaultContentType, Path rootDirectory) {
+  HostStaticFiles(Map<String, String> contentTypes, String defaultContentType, Path rootDirectory) {
     this.contentTypes = contentTypes;
 
     this.defaultContentType = defaultContentType;

@@ -15,7 +15,7 @@
  */
 package objectos.http;
 
-final class HttpHost5Pojo implements HttpHandler {
+final class Host implements HttpHandler {
 
   private final HttpHandler handler;
 
@@ -25,7 +25,7 @@ final class HttpHost5Pojo implements HttpHandler {
 
   private final HttpStaticFilesWriter staticFilesWriter;
 
-  HttpHost5Pojo(HttpHandler handler, String name, HttpSessionLoader sessionLoader, HttpStaticFilesWriter staticFilesWriter) {
+  Host(HttpHandler handler, String name, HttpSessionLoader sessionLoader, HttpStaticFilesWriter staticFilesWriter) {
     this.handler = handler;
 
     this.name = name;
@@ -35,7 +35,7 @@ final class HttpHost5Pojo implements HttpHandler {
     this.staticFilesWriter = staticFilesWriter;
   }
 
-  public final HttpHosts addTo(HttpHosts hosts) {
+  public final Hosts addTo(Hosts hosts) {
     return hosts.add(name, this);
   }
 

@@ -28,7 +28,7 @@ import objectos.internal.Util;
 import objectos.lang.Stage;
 import objectos.way.Note;
 
-final class HttpHost0Builder implements HttpHost, HttpStaticFiles {
+final class HostOptionsBuilder implements HostOptions, HttpStaticFiles {
 
   private Map<String, String> contentTypes = Map.of();
 
@@ -56,10 +56,10 @@ final class HttpHost0Builder implements HttpHost, HttpStaticFiles {
   // # BEGIN: Build
   // ##################################################################
 
-  public HttpHost5Pojo build() throws IOException {
+  public Host build() throws IOException {
     // name
-    final HttpHost1Name nameBuilder;
-    nameBuilder = new HttpHost1Name(name, serverPort);
+    final HostName nameBuilder;
+    nameBuilder = new HostName(name, serverPort);
 
     final String name;
     name = nameBuilder.get();
@@ -70,15 +70,15 @@ final class HttpHost0Builder implements HttpHost, HttpStaticFiles {
     }
 
     for (Path source : directories) {
-      final HttpHost2CopyDirectory copy;
-      copy = new HttpHost2CopyDirectory(noteSink, source, rootDirectory);
+      final HostCopyDirectory copy;
+      copy = new HostCopyDirectory(noteSink, source, rootDirectory);
 
       Files.walkFileTree(source, copy);
     }
 
     // static files
-    final HttpHost3StaticFiles staticFiles;
-    staticFiles = new HttpHost3StaticFiles(contentTypes, defaultContentType, rootDirectory);
+    final HostStaticFiles staticFiles;
+    staticFiles = new HostStaticFiles(contentTypes, defaultContentType, rootDirectory);
 
     // static files writer
     final HttpStaticFilesWriter staticFilesWriter;
@@ -90,9 +90,9 @@ final class HttpHost0Builder implements HttpHost, HttpStaticFiles {
 
     // handler
     final HttpHandler hostHandler;
-    hostHandler = new HttpHost4Handler(handler, staticFiles);
+    hostHandler = new HostHandler(handler, staticFiles);
 
-    return new HttpHost5Pojo(hostHandler, name, sessionLoader, staticFilesWriter);
+    return new Host(hostHandler, name, sessionLoader, staticFilesWriter);
   }
 
   // ##################################################################

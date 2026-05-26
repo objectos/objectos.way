@@ -15,13 +15,13 @@
  */
 package objectos.http;
 
-final class HttpHost4Handler implements HttpHandler {
+final class HostHandler implements HttpHandler {
 
   private final HttpHandler main;
 
   private final HttpHandler staticFiles;
 
-  HttpHost4Handler(HttpHandler main, HttpHandler staticFiles) {
+  HostHandler(HttpHandler main, HttpHandler staticFiles) {
     this.main = main;
 
     this.staticFiles = staticFiles;

@@ -25,9 +25,9 @@ import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import objectos.way.Note;
 
-final class HttpHost2CopyDirectory extends SimpleFileVisitor<Path> {
+final class HostCopyDirectory extends SimpleFileVisitor<Path> {
 
-  private static final Note.Ref1<Path> CREATED = Note.Ref1.create(HttpHost.class, "ADD", Note.DEBUG);
+  private static final Note.Ref1<Path> CREATED = Note.Ref1.create(HostOptions.class, "ADD", Note.DEBUG);
 
   private final Note.Sink noteSink;
 
@@ -35,7 +35,7 @@ final class HttpHost2CopyDirectory extends SimpleFileVisitor<Path> {
 
   private final Path target;
 
-  HttpHost2CopyDirectory(Note.Sink noteSink, Path source, Path target) {
+  HostCopyDirectory(Note.Sink noteSink, Path source, Path target) {
     this.noteSink = noteSink;
 
     this.source = source;

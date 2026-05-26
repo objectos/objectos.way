@@ -41,7 +41,7 @@ final class HttpServerTask implements Runnable {
 
   private final HttpErrorResponses errorResponses;
 
-  private final HttpHosts hosts;
+  private final Hosts hosts;
 
   private final long id;
 
@@ -54,7 +54,7 @@ final class HttpServerTask implements Runnable {
       byte[] buffer,
       Clock clock,
       HttpErrorResponses errorResponses,
-      HttpHosts hosts,
+      Hosts hosts,
       long id,
       Note.Sink noteSink,
       Socket socket) {
@@ -127,7 +127,7 @@ final class HttpServerTask implements Runnable {
     final String hostValue;
     hostValue = request.header(HttpHeaderName.HOST);
 
-    final HttpHost5Pojo host;
+    final Host host;
     host = hosts.get(hostValue);
 
     if (host == null) {

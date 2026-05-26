@@ -15,13 +15,13 @@
  */
 package objectos.http;
 
-final class HttpHost1Name {
+final class HostName {
 
   private final String name;
 
   private final int port;
 
-  HttpHost1Name(String name, int port) {
+  HostName(String name, int port) {
     this.name = name;
 
     this.port = port;

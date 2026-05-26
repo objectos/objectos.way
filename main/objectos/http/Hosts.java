@@ -18,47 +18,47 @@ package objectos.http;
 import java.util.HashMap;
 import java.util.Map;
 
-sealed abstract class HttpHosts {
+sealed abstract class Hosts {
 
   private static final HttpHosts0 EMPTY = new HttpHosts0();
 
-  HttpHosts() {}
+  Hosts() {}
 
-  static HttpHosts of() {
+  static Hosts of() {
     return EMPTY;
   }
 
-  public abstract HttpHost5Pojo get(String hostValue);
+  public abstract Host get(String hostValue);
 
-  abstract HttpHosts add(String name, HttpHost5Pojo host);
+  abstract Hosts add(String name, Host host);
 
-  private static final class HttpHosts0 extends HttpHosts {
+  private static final class HttpHosts0 extends Hosts {
 
     @Override
-    public final HttpHost5Pojo get(String hostValue) {
+    public final Host get(String hostValue) {
       return null;
     }
 
     @Override
-    final HttpHosts add(String name, HttpHost5Pojo host) {
+    final Hosts add(String name, Host host) {
       return new HttpHosts1(name, host);
     }
 
   }
 
-  private static final class HttpHosts1 extends HttpHosts {
+  private static final class HttpHosts1 extends Hosts {
 
     private final String name1;
 
-    private final HttpHost5Pojo host1;
+    private final Host host1;
 
-    HttpHosts1(String name1, HttpHost5Pojo host1) {
+    HttpHosts1(String name1, Host host1) {
       this.name1 = name1;
       this.host1 = host1;
     }
 
     @Override
-    public final HttpHost5Pojo get(String hostValue) {
+    public final Host get(String hostValue) {
       if (name1.equals(hostValue)) {
         return host1;
       }
@@ -67,23 +67,23 @@ sealed abstract class HttpHosts {
     }
 
     @Override
-    final HttpHosts add(String name, HttpHost5Pojo host) {
+    final Hosts add(String name, Host host) {
       return new HttpHosts2(name1, host1, name, host);
     }
 
   }
 
-  private static final class HttpHosts2 extends HttpHosts {
+  private static final class HttpHosts2 extends Hosts {
 
     private final String name1;
 
-    private final HttpHost5Pojo host1;
+    private final Host host1;
 
     private final String name2;
 
-    private final HttpHost5Pojo host2;
+    private final Host host2;
 
-    HttpHosts2(String name1, HttpHost5Pojo host1, String name2, HttpHost5Pojo host2) {
+    HttpHosts2(String name1, Host host1, String name2, Host host2) {
       this.name1 = name1;
 
       this.host1 = host1;
@@ -94,7 +94,7 @@ sealed abstract class HttpHosts {
     }
 
     @Override
-    public final HttpHost5Pojo get(String hostValue) {
+    public final Host get(String hostValue) {
       if (name1.equals(hostValue)) {
         return host1;
       }
@@ -107,7 +107,7 @@ sealed abstract class HttpHosts {
     }
 
     @Override
-    final HttpHosts add(String name, HttpHost5Pojo host) {
+    final Hosts add(String name, Host host) {
       final HttpHostsN hosts;
       hosts = new HttpHostsN();
 
@@ -120,17 +120,17 @@ sealed abstract class HttpHosts {
 
   }
 
-  private static final class HttpHostsN extends HttpHosts {
+  private static final class HttpHostsN extends Hosts {
 
-    private final Map<String, HttpHost5Pojo> map = new HashMap<>();
+    private final Map<String, Host> map = new HashMap<>();
 
     @Override
-    public final HttpHost5Pojo get(String hostValue) {
+    public final Host get(String hostValue) {
       return map.get(hostValue);
     }
 
     @Override
-    final HttpHosts add(String name, HttpHost5Pojo host) {
+    final Hosts add(String name, Host host) {
       map.put(name, host);
 
       return this;

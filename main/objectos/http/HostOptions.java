@@ -18,8 +18,8 @@ package objectos.http;
 import java.util.function.Consumer;
 import objectos.lang.Stage;
 
-/// Configures a name-based web site to be served by a `HttpServer` instance.
-public sealed interface HttpHost permits HttpHost0Builder {
+/// Configures a name-based web site to be served by a `Server` instance.
+public sealed interface HostOptions permits HostOptionsBuilder {
 
   /// Sets the name of this host.
   ///

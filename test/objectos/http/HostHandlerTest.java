@@ -25,7 +25,7 @@ import objectos.way.Media;
 import objectos.way.Y;
 import org.testng.annotations.Test;
 
-public class HttpHost4HandlerTest {
+public class HostHandlerTest {
 
   @Test
   public void testCase01() {
@@ -60,7 +60,7 @@ public class HttpHost4HandlerTest {
     };
 
     final HttpHandler handler;
-    handler = new HttpHost4Handler(main, staticFiles);
+    handler = new HostHandler(main, staticFiles);
 
     assertEquals(http.processed(), false);
 
@@ -94,7 +94,7 @@ public class HttpHost4HandlerTest {
     staticFiles = x -> x.ok(Media.Bytes.textPlain("FILES\n"));
 
     final HttpHandler handler;
-    handler = new HttpHost4Handler(main, staticFiles);
+    handler = new HostHandler(main, staticFiles);
 
     assertEquals(http.processed(), false);
 
@@ -128,7 +128,7 @@ public class HttpHost4HandlerTest {
     staticFiles = x -> x.ok(Media.Bytes.textPlain("FILES\n"));
 
     final HttpHandler handler;
-    handler = new HttpHost4Handler(main, staticFiles);
+    handler = new HostHandler(main, staticFiles);
 
     assertEquals(http.processed(), false);
 
@@ -162,7 +162,7 @@ public class HttpHost4HandlerTest {
     staticFiles = _ -> {};
 
     final HttpHandler handler;
-    handler = new HttpHost4Handler(main, staticFiles);
+    handler = new HostHandler(main, staticFiles);
 
     assertEquals(http.processed(), false);
 

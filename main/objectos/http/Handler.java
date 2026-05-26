@@ -21,10 +21,10 @@ public interface Handler {
 
   /// Handles the given request and returns a response.
   ///
-  /// @param req the incoming HTTP request
+  /// @param r the incoming HTTP request
   ///
   /// @return the HTTP response to be sent back to the client, it must not
   ///         be `null`
-  Response handle(Request req);
+  Response handle(Request r);
 
 }
