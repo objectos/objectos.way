@@ -15,27 +15,33 @@
  */
 package objectos.http;
 
-final class HostHandler implements Handler {
+final class HttpHost4Handler implements HttpHandler {
 
-  private final Handler main;
+  private final HttpHandler main;
 
-  private final Handler staticFiles;
+  private final HttpHandler staticFiles;
 
-  HostHandler(Handler main, Handler staticFiles) {
+  HttpHost4Handler(HttpHandler main, HttpHandler staticFiles) {
     this.main = main;
 
     this.staticFiles = staticFiles;
   }
 
   @Override
-  public final Result handle(Request request) {
-    final Result maybeMain;
-    maybeMain = main.handle(request);
+  public final void handle(HttpExchange http) {
+    main.handle(http);
 
-    final Result maybeFiles;
-    maybeFiles = maybeMain.or(staticFiles);
+    if (http.processed()) {
+      return;
+    }
 
-    return maybeFiles.or(HttpStatus.NOT_FOUND);
+    staticFiles.handle(http);
+
+    if (http.processed()) {
+      return;
+    }
+
+    http.error(HttpStatus.NOT_FOUND);
   }
 
 }

@@ -31,9 +31,9 @@ final class ResponseWriter {
 
   private final boolean head;
 
-  private final Response0 response;
+  private final ResponsePojo response;
 
-  ResponseWriter(ResponseBuffered buffered, ResponseDate date, boolean head, Response0 response) {
+  ResponseWriter(ResponseBuffered buffered, ResponseDate date, boolean head, ResponsePojo response) {
     this.buffered = buffered;
 
     this.date = date;

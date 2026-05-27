@@ -43,7 +43,7 @@ final class HttpServer0Builder implements HttpServer.Options {
 
   private final HttpErrorResponses errorResponses = HttpErrorResponses0.STANDARD;
 
-  private final Map<String, HostOptionsBuilder> hostBuilders = new LinkedHashMap<>();
+  private final Map<String, HttpHost0Builder> hostBuilders = new LinkedHashMap<>();
 
   private RequestBodyOptionsPojo requestBody;
 
@@ -86,10 +86,10 @@ final class HttpServer0Builder implements HttpServer.Options {
       bodySupportFactory = RequestBodySupportFactory.of(root, bodyOptions);
 
       // hosts
-      Hosts hosts;
-      hosts = Hosts.of();
+      HttpHosts hosts;
+      hosts = HttpHosts.of();
 
-      for (HostOptionsBuilder builder : hostBuilders.values()) {
+      for (HttpHost0Builder builder : hostBuilders.values()) {
         builder.noteSink = noteSink;
 
         builder.serverPort = serverSocket.getLocalPort();
@@ -98,7 +98,7 @@ final class HttpServer0Builder implements HttpServer.Options {
 
         builder.serverStage(stage);
 
-        final Host host;
+        final HttpHost5Pojo host;
         host = builder.build();
 
         hosts = host.addTo(hosts);
@@ -157,16 +157,16 @@ final class HttpServer0Builder implements HttpServer.Options {
   }
 
   @Override
-  public final void host(Consumer<? super HostOptions> opts) {
-    final HostOptionsBuilder host;
-    host = new HostOptionsBuilder();
+  public final void host(Consumer<? super HttpHost> opts) {
+    final HttpHost0Builder host;
+    host = new HttpHost0Builder();
 
     opts.accept(host);
 
     final String name;
     name = host.name();
 
-    final HostOptionsBuilder existing;
+    final HttpHost0Builder existing;
     existing = hostBuilders.put(name, host);
 
     if (existing != null) {

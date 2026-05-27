@@ -36,7 +36,7 @@ final class ResponseBuilder implements Response.Options {
     final List<Header> $headers;
     $headers = List.copyOf(headers);
 
-    return new Response0($status, $headers, body);
+    return new ResponsePojo($status, $headers, body);
   }
 
   @Override

@@ -20,7 +20,7 @@ import objectos.lang.OutputStreamConsumer;
 import objectos.way.Media;
 
 /// An HTTP response message.
-public sealed interface Response permits Response0 {
+public sealed interface Response extends Result permits ResponsePojo {
 
   /// Configures the creation of a `Response` object.
   sealed interface Options permits ResponseBuilder {
@@ -89,7 +89,7 @@ public sealed interface Response permits Response0 {
     return builder.build();
   }
 
-  /// Returns a `200 OK` response message with the specified media entity.
+  /// Returns a `200 OK` response with the specified media entity.
   ///
   /// @param media the media entity
   ///

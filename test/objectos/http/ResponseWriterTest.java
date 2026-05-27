@@ -44,8 +44,8 @@ public class ResponseWriterTest {
       final boolean head;
       head = method == HttpMethod.HEAD;
 
-      final Response0 impl;
-      impl = (Response0) r;
+      final ResponsePojo impl;
+      impl = (ResponsePojo) r;
 
       final ResponseWriter output;
       output = new ResponseWriter(buffered, date, head, impl);

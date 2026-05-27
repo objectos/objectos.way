@@ -50,7 +50,7 @@ final class HttpServer1Loop implements Runnable {
 
   private final HttpErrorResponses errorResponses;
 
-  private final Hosts hosts;
+  private final HttpHosts hosts;
 
   private final AtomicLong idSupplier = new AtomicLong(1);
 
@@ -63,7 +63,7 @@ final class HttpServer1Loop implements Runnable {
       int bufferSize,
       Clock clock,
       HttpErrorResponses errorResponses,
-      Hosts hosts,
+      HttpHosts hosts,
       Note.Sink noteSink,
       ServerSocket serverSocket
   ) {

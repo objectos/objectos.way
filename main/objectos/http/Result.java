@@ -15,27 +15,23 @@
  */
 package objectos.http;
 
-final class HostHandler implements Handler {
+/// The outcome of processing a `Request` instance by a `Handler`.
+public sealed interface Result permits Request, Response, HttpStatus {
 
-  private final Handler main;
+  default Result or(Handler another) {
+    return switch (this) {
+      case Request request -> another.handle(request);
 
-  private final Handler staticFiles;
-
-  HostHandler(Handler main, Handler staticFiles) {
-    this.main = main;
-
-    this.staticFiles = staticFiles;
+      default -> this;
+    };
   }
 
-  @Override
-  public final Result handle(Request request) {
-    final Result maybeMain;
-    maybeMain = main.handle(request);
+  default Result or(Result another) {
+    return switch (this) {
+      case Request _ -> another;
 
-    final Result maybeFiles;
-    maybeFiles = maybeMain.or(staticFiles);
-
-    return maybeFiles.or(HttpStatus.NOT_FOUND);
+      default -> this;
+    };
   }
 
 }

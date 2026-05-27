@@ -90,8 +90,8 @@ public final class HttpServerTaskY {
   }
 
   private HttpServerTask build() {
-    final HostOptionsBuilder hostBuilder;
-    hostBuilder = new HostOptionsBuilder();
+    final HttpHost0Builder hostBuilder;
+    hostBuilder = new HttpHost0Builder();
 
     hostBuilder.handler(handler);
 
@@ -113,7 +113,7 @@ public final class HttpServerTaskY {
       hostBuilder.rootDirectory(staticFilesDirectory);
     }
 
-    final Host host;
+    final HttpHost5Pojo host;
 
     try {
       host = hostBuilder.build();
@@ -121,8 +121,8 @@ public final class HttpServerTaskY {
       throw new UncheckedIOException(e);
     }
 
-    final Hosts hosts;
-    hosts = Hosts.of().add(hostName, host);
+    final HttpHosts hosts;
+    hosts = HttpHosts.of().add(hostName, host);
 
     return new HttpServerTask(
         new RequestBodySupportFactory(bodyDirectory, bodyMemoryMax, bodySizeMax),

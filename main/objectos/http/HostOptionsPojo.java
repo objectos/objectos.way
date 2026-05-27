@@ -15,27 +15,10 @@
  */
 package objectos.http;
 
-final class HostHandler implements Handler {
+record HostOptionsPojo(
+    Handler handler,
 
-  private final Handler main;
-
-  private final Handler staticFiles;
-
-  HostHandler(Handler main, Handler staticFiles) {
-    this.main = main;
-
-    this.staticFiles = staticFiles;
-  }
-
-  @Override
-  public final Result handle(Request request) {
-    final Result maybeMain;
-    maybeMain = main.handle(request);
-
-    final Result maybeFiles;
-    maybeFiles = maybeMain.or(staticFiles);
-
-    return maybeFiles.or(HttpStatus.NOT_FOUND);
-  }
+    String name
+) {
 
 }

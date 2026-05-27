@@ -15,16 +15,16 @@
  */
 package objectos.http;
 
-/// Handles a `Request` to produce a `Response`.
+/// Processes an HTTP request to produce a result, e.g., an HTTP response.
 @FunctionalInterface
 public interface Handler {
 
-  /// Handles the given request and returns a response.
+  /// Handles the specified HTTP request and produces a `Result`.
   ///
-  /// @param r the incoming HTTP request
+  /// @param request the incoming HTTP request
   ///
-  /// @return the HTTP response to be sent back to the client, it must not
-  ///         be `null`
-  Response handle(Request r);
+  /// @return a `Result` instance representing the outcome of the processing; it
+  ///         must never be `null`
+  Result handle(Request request);
 
 }

@@ -18,7 +18,7 @@ package objectos.http;
 import java.nio.file.Path;
 
 /// Configures the static files to be served by a `HttpServer` instance.
-public sealed interface HttpStaticFiles permits HostOptionsBuilder {
+public sealed interface HttpStaticFiles permits HttpHost0Builder {
 
   /// Recursively serves the contents of the specified directory as if it was at
   /// the root of the HTTP server.

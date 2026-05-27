@@ -18,7 +18,7 @@ package objectos.http;
 /**
  * The status of an HTTP response message.
  */
-public sealed interface HttpStatus permits HttpStatus0 {
+public sealed interface HttpStatus extends Result permits HttpStatus0 {
 
   // Response constants
 

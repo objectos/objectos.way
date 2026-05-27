@@ -18,21 +18,21 @@ package objectos.http;
 import java.util.HashMap;
 import java.util.Map;
 
-sealed abstract class Hosts {
+sealed abstract class HostMap {
 
-  private static final HttpHosts0 EMPTY = new HttpHosts0();
+  private static final HostMap0 EMPTY = new HostMap0();
 
-  Hosts() {}
+  HostMap() {}
 
-  static Hosts of() {
+  static HostMap of() {
     return EMPTY;
   }
 
   public abstract Host get(String hostValue);
 
-  abstract Hosts add(String name, Host host);
+  abstract HostMap add(String name, Host host);
 
-  private static final class HttpHosts0 extends Hosts {
+  private static final class HostMap0 extends HostMap {
 
     @Override
     public final Host get(String hostValue) {
@@ -40,19 +40,19 @@ sealed abstract class Hosts {
     }
 
     @Override
-    final Hosts add(String name, Host host) {
-      return new HttpHosts1(name, host);
+    final HostMap add(String name, Host host) {
+      return new HostMap1(name, host);
     }
 
   }
 
-  private static final class HttpHosts1 extends Hosts {
+  private static final class HostMap1 extends HostMap {
 
     private final String name1;
 
     private final Host host1;
 
-    HttpHosts1(String name1, Host host1) {
+    HostMap1(String name1, Host host1) {
       this.name1 = name1;
       this.host1 = host1;
     }
@@ -67,13 +67,13 @@ sealed abstract class Hosts {
     }
 
     @Override
-    final Hosts add(String name, Host host) {
-      return new HttpHosts2(name1, host1, name, host);
+    final HostMap add(String name, Host host) {
+      return new HostMap2(name1, host1, name, host);
     }
 
   }
 
-  private static final class HttpHosts2 extends Hosts {
+  private static final class HostMap2 extends HostMap {
 
     private final String name1;
 
@@ -83,7 +83,7 @@ sealed abstract class Hosts {
 
     private final Host host2;
 
-    HttpHosts2(String name1, Host host1, String name2, Host host2) {
+    HostMap2(String name1, Host host1, String name2, Host host2) {
       this.name1 = name1;
 
       this.host1 = host1;
@@ -107,9 +107,9 @@ sealed abstract class Hosts {
     }
 
     @Override
-    final Hosts add(String name, Host host) {
-      final HttpHostsN hosts;
-      hosts = new HttpHostsN();
+    final HostMap add(String name, Host host) {
+      final HostMapN hosts;
+      hosts = new HostMapN();
 
       hosts.add(name1, host1);
       hosts.add(name2, host2);
@@ -120,7 +120,7 @@ sealed abstract class Hosts {
 
   }
 
-  private static final class HttpHostsN extends Hosts {
+  private static final class HostMapN extends HostMap {
 
     private final Map<String, Host> map = new HashMap<>();
 
@@ -130,7 +130,7 @@ sealed abstract class Hosts {
     }
 
     @Override
-    final Hosts add(String name, Host host) {
+    final HostMap add(String name, Host host) {
       map.put(name, host);
 
       return this;

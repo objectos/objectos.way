@@ -15,8 +15,11 @@
  */
 package objectos.http;
 
-/// Configures a name-based web site to be served by a `Server` instance.
-public sealed interface HostOptions permits HostOptionsBuilder {
+import java.util.function.Consumer;
+import objectos.lang.Stage;
+
+/// Configures a name-based web site to be served by a `HttpServer` instance.
+public sealed interface HttpHost permits HttpHost0Builder {
 
   /// Sets the name of this host.
   ///
@@ -27,6 +30,21 @@ public sealed interface HostOptions permits HostOptionsBuilder {
   /// be handled by this object.
   ///
   /// @param value a handler instance
-  void handler(Handler value);
+  void handler(HttpHandler value);
+
+  /// Uses the specified `HttpSessionStore` for HTTP session handling.
+  ///
+  /// @param value the `HttpSessionStore` instance to use
+  void sessionStore(HttpSessionStore value);
+
+  /// Sets the host's stage to the specified value.
+  ///
+  /// @param value the stage
+  void stage(Stage value);
+
+  /// Configures the static files to be served by this host.
+  ///
+  /// @param opts allows for setting the options
+  void staticFiles(Consumer<? super HttpStaticFiles> opts);
 
 }

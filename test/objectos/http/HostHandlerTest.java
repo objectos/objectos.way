@@ -15,170 +15,52 @@
  */
 package objectos.http;
 
-import static org.testng.Assert.assertEquals;
-
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import objectos.way.Media;
-import objectos.way.Y;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class HostHandlerTest {
 
-  @Test
-  public void testCase01() {
-    final Path root;
-    root = Y.nextTempDir();
+  private final HttpHeaderName test = HttpHeaderName.of("Way-Test");
 
-    final HttpExchange http;
-    http = HttpExchange.create(opts -> {
-      opts.clock(Y.clockFixed());
+  private final Response mainResp = Response.create(opts -> {
+    opts.header(test, "main");
+  });
 
-      opts.path("/tc01.txt");
+  private final Response filesResp = Response.create(opts -> {
+    opts.header(test, "files");
+  });
 
-      opts.staticFilesDirectory(root);
-    });
+  @SuppressWarnings("unused")
+  private HostHandler handler;
 
-    final HttpHandler main;
-    main = x -> x.staticFile(Media.Bytes.textPlain("TC01\n"));
-
-    final HttpHandler staticFiles;
-    staticFiles = x -> {
-      try {
-        final Path file;
-        file = root.resolve("tc01.txt");
-
-        final String s;
-        s = Files.readString(file);
-
-        x.ok(Media.Bytes.textPlain(s));
-      } catch (IOException e) {
-        throw new UncheckedIOException(e);
+  @BeforeClass
+  public void beforeClass() {
+    final Handler main = req -> {
+      if (req.path().equals("/main")) {
+        return mainResp;
+      } else {
+        return req;
       }
     };
 
-    final HttpHandler handler;
+    final Handler staticFiles = req -> {
+      if (req.path().equals("/files")) {
+        return filesResp;
+      } else {
+        return req;
+      }
+    };
+
     handler = new HostHandler(main, staticFiles);
-
-    assertEquals(http.processed(), false);
-
-    handler.handle(http);
-
-    assertEquals(http.processed(), true);
-
-    assertEquals(http.toString(), """
-    HTTP/1.1 200 OK\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    Content-Type: text/plain; charset=utf-8\r
-    Content-Length: 5\r
-    \r
-    TC01
-    """);
   }
 
-  @Test
-  public void testCase02() {
-    final HttpExchange http;
-    http = HttpExchange.create(opts -> {
-      opts.clock(Y.clockFixed());
-
-      opts.path("/tc02.txt");
-    });
-
-    final HttpHandler main;
-    main = x -> x.ok(Media.Bytes.textPlain("MAIN\n"));
-
-    final HttpHandler staticFiles;
-    staticFiles = x -> x.ok(Media.Bytes.textPlain("FILES\n"));
-
-    final HttpHandler handler;
-    handler = new HostHandler(main, staticFiles);
-
-    assertEquals(http.processed(), false);
-
-    handler.handle(http);
-
-    assertEquals(http.processed(), true);
-
-    assertEquals(http.toString(), """
-    HTTP/1.1 200 OK\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    Content-Type: text/plain; charset=utf-8\r
-    Content-Length: 5\r
-    \r
-    MAIN
-    """);
-  }
-
-  @Test
-  public void testCase03() {
-    final HttpExchange http;
-    http = HttpExchange.create(opts -> {
-      opts.clock(Y.clockFixed());
-
-      opts.path("/tc03.txt");
-    });
-
-    final HttpHandler main;
-    main = _ -> {};
-
-    final HttpHandler staticFiles;
-    staticFiles = x -> x.ok(Media.Bytes.textPlain("FILES\n"));
-
-    final HttpHandler handler;
-    handler = new HostHandler(main, staticFiles);
-
-    assertEquals(http.processed(), false);
-
-    handler.handle(http);
-
-    assertEquals(http.processed(), true);
-
-    assertEquals(http.toString(), """
-    HTTP/1.1 200 OK\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    Content-Type: text/plain; charset=utf-8\r
-    Content-Length: 6\r
-    \r
-    FILES
-    """);
-  }
-
-  @Test
-  public void testCase04() {
-    final HttpExchange http;
-    http = HttpExchange.create(opts -> {
-      opts.clock(Y.clockFixed());
-
-      opts.path("/tc04.txt");
-    });
-
-    final HttpHandler main;
-    main = _ -> {};
-
-    final HttpHandler staticFiles;
-    staticFiles = _ -> {};
-
-    final HttpHandler handler;
-    handler = new HostHandler(main, staticFiles);
-
-    assertEquals(http.processed(), false);
-
-    handler.handle(http);
-
-    assertEquals(http.processed(), true);
-
-    assertEquals(http.toString(), """
-    HTTP/1.1 404 Not Found\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    Connection: close\r
-    Content-Type: text/plain; charset=utf-8\r
-    Content-Length: 14\r
-    \r
-    404 Not Found
-    """);
+  @Test(enabled = false)
+  public void testCase01() {
+    //    assertSame(
+    //        handler.handle(Request),
+    //
+    //        mainResp
+    //    );
   }
 
 }

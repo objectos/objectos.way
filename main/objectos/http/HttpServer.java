@@ -47,7 +47,7 @@ public sealed interface HttpServer extends Closeable permits HttpServer2Pojo {
     /// Adds the specified name-based host to this server.
     ///
     /// @param opts allows for setting the options
-    void host(Consumer<? super HostOptions> opts);
+    void host(Consumer<? super HttpHost> opts);
 
     /// Sets the note sink to the specified value.
     ///

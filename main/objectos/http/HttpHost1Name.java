@@ -15,16 +15,32 @@
  */
 package objectos.http;
 
-import java.util.List;
+final class HttpHost1Name {
 
-record Response0(
+  private final String name;
 
-    HttpStatus0 status,
+  private final int port;
 
-    List<Header> headers,
+  HttpHost1Name(String name, int port) {
+    this.name = name;
 
-    ResponseBody body
+    this.port = port;
+  }
 
-) implements Response {
+  public final String get() {
+    final String hostName;
+
+    if (name == null) {
+      hostName = "localhost";
+    } else {
+      hostName = name;
+    }
+
+    if (port == 80) {
+      return hostName;
+    } else {
+      return hostName + ":" + port;
+    }
+  }
 
 }
