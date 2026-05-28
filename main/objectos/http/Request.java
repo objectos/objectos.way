@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.IntSupplier;
 import java.util.function.LongSupplier;
 import java.util.stream.IntStream;
@@ -29,6 +30,43 @@ import java.util.stream.LongStream;
 /// Unless otherwise specified the values returned by the methods of this
 /// interface are decoded.
 public sealed interface Request extends Result permits Request0 {
+
+  /// Configures the creation of a stand-alone request instance.
+  sealed interface Options permits RequestBuilder {
+
+    /// Adds the specified header field to this request.
+    ///
+    /// @param name the header field name
+    /// @param value the header field value
+    void header(HttpHeaderName name, String value);
+
+    /// Sets the request method to the specified value. Defaults to the `GET`
+    /// method when not specified.
+    ///
+    /// @param value the HTTP method
+    void method(HttpMethod value);
+
+    /// Sets the request-target path component to the specified value. Defaults
+    /// to `/` when not specified.
+    ///
+    /// @param value the decoded path value
+    void path(String value);
+
+  }
+
+  /// Creates a stand-alone request instance; typically used in test cases.
+  ///
+  /// @param opts allows for setting the options
+  ///
+  /// @return a newly created request instance with the configured options
+  static Request create(Consumer<? super Options> opts) {
+    final RequestBuilder builder;
+    builder = new RequestBuilder();
+
+    opts.accept(builder);
+
+    return builder.build();
+  }
 
   // ##################################################################
   // # BEGIN: Request line
