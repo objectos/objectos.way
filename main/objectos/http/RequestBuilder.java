@@ -16,13 +16,17 @@
 package objectos.http;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import objectos.http.Request.Options;
+import objectos.lang.Key;
 
 final class RequestBuilder implements Options {
+
+  private Map<Object, Object> attributes = Map.of();
 
   private RequestBodyData bodyData;
 
@@ -104,6 +108,30 @@ final class RequestBuilder implements Options {
   @Override
   public final void path(String value) {
     path = Objects.requireNonNull(value, "value == null");
+  }
+
+  public final <T> void req(Class<T> key, T value) {
+    final String name;
+    name = key.getName();
+
+    Objects.requireNonNull(value, "value == null");
+
+    if (attributes.isEmpty()) {
+      attributes = new HashMap<>();
+    }
+
+    attributes.put(name, value);
+  }
+
+  public final <T> void req(Key<T> key, T value) {
+    Objects.requireNonNull(key, "key == null");
+    Objects.requireNonNull(value, "value == null");
+
+    if (attributes.isEmpty()) {
+      attributes = new HashMap<>();
+    }
+
+    attributes.put(key, value);
   }
 
 }

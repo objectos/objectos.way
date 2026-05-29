@@ -15,6 +15,7 @@
  */
 package objectos.http;
 
+import java.nio.file.Path;
 import java.util.function.Consumer;
 import objectos.lang.OutputStreamConsumer;
 import objectos.way.Media;
@@ -72,6 +73,11 @@ public sealed interface Response extends Result permits ResponsePojo {
     ///
     /// @param entity the object providing the body contents
     void body(OutputStreamConsumer entity);
+
+    /// Sets the response body to the contents of the specified file.
+    ///
+    /// @param file the path to a regular file containing the body contents
+    void body(Path file);
 
   }
 

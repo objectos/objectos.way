@@ -28,6 +28,7 @@ import java.nio.file.Path;
 import java.util.function.Consumer;
 import objectos.lang.Throwables;
 import objectos.way.Y;
+import objectos.y.PathY;
 import objectos.y.SocketY;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
@@ -86,7 +87,7 @@ public class RequestParser8BodyDataTest {
   @DataProvider
   public Object[][] validProvider() throws IOException {
     final Path directory;
-    directory = Y.nextTempDir();
+    directory = PathY.nextDir();
 
     final String data1;
     data1 = "1".repeat(64);
@@ -230,7 +231,7 @@ public class RequestParser8BodyDataTest {
         },
         {
             Cfg.of(cfg -> {
-              cfg.bodyDirectory = Y.nextTempDir();
+              cfg.bodyDirectory = PathY.nextDir();
 
               cfg.bodyMemoryMax = 32;
 

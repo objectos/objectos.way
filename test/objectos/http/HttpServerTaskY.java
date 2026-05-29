@@ -23,10 +23,11 @@ import java.time.Clock;
 import java.util.function.Consumer;
 import objectos.way.Note;
 import objectos.way.Y;
+import objectos.y.PathY;
 
 public final class HttpServerTaskY {
 
-  private static final Path SERVER_ROOT = Y.nextTempDir();
+  private static final Path SERVER_ROOT = PathY.nextDir();
 
   public Path bodyDirectory;
 

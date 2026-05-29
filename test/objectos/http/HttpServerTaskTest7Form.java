@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Set;
 import objectos.way.Media;
 import objectos.way.Y;
+import objectos.y.PathY;
 import objectos.y.SocketY;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -84,7 +85,7 @@ public class HttpServerTaskTest7Form {
   @Test
   public void appFormValidWithFile() {
     final Path directory;
-    directory = Y.nextTempDir();
+    directory = PathY.nextDir();
 
     final String filename;
     filename = "%019d".formatted(123L);
@@ -144,7 +145,7 @@ public class HttpServerTaskTest7Form {
   @Test
   public void appFormValidWithFileSlow() {
     final Path directory;
-    directory = Y.nextTempDir();
+    directory = PathY.nextDir();
 
     final String filename;
     filename = "%019d".formatted(123L);
@@ -344,7 +345,7 @@ public class HttpServerTaskTest7Form {
           %s\
           """.formatted(payload.length(), payload));
 
-          opts.bodyDirectory = Y.nextTempDir();
+          opts.bodyDirectory = PathY.nextDir();
 
           opts.bodyMemoryMax = 1;
 
@@ -389,7 +390,7 @@ public class HttpServerTaskTest7Form {
           %s\
           """.formatted(payload.length(), payload)));
 
-          opts.bodyDirectory = Y.nextTempDir();
+          opts.bodyDirectory = PathY.nextDir();
 
           opts.bodyMemoryMax = 1;
 
@@ -521,7 +522,7 @@ public class HttpServerTaskTest7Form {
               """.formatted(payload.length(), payload).getBytes(StandardCharsets.ISO_8859_1)
           );
 
-          opts.bodyDirectory = Y.nextTempDir();
+          opts.bodyDirectory = PathY.nextDir();
 
           opts.bodyMemoryMax = 1;
         }),

@@ -31,6 +31,7 @@ import objectos.way.Media;
 import objectos.way.Y;
 import objectos.y.InputStreamY;
 import objectos.y.OutputStreamY;
+import objectos.y.PathY;
 import objectos.y.SocketY;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
@@ -1376,7 +1377,7 @@ public class HttpServerTaskTest9Response {
     contents = "x".repeat(1024);
 
     final Path file01;
-    file01 = Y.nextTempFile(contents, StandardCharsets.UTF_8);
+    file01 = PathY.nextFile(contents, StandardCharsets.UTF_8);
 
     assertEquals(
         HttpServerTaskY.resp(opts -> {
@@ -1417,7 +1418,7 @@ public class HttpServerTaskTest9Response {
     contents = "x".repeat(1024);
 
     final Path file02;
-    file02 = Y.nextTempFile(contents, StandardCharsets.UTF_8);
+    file02 = PathY.nextFile(contents, StandardCharsets.UTF_8);
 
     assertEquals(
         HttpServerTaskY.resp(opts -> {
@@ -1457,7 +1458,7 @@ public class HttpServerTaskTest9Response {
     contents = "x".repeat(64);
 
     final Path file01;
-    file01 = Y.nextTempFile(contents, StandardCharsets.UTF_8);
+    file01 = PathY.nextFile(contents, StandardCharsets.UTF_8);
 
     assertEquals(
         HttpServerTaskY.resp(opts -> {

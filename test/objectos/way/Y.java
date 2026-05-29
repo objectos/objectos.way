@@ -22,7 +22,6 @@ import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.BrowserType.LaunchOptions;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -66,6 +65,7 @@ import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
 import objectos.internal.Util;
 import objectos.way.dev.DevStart;
+import objectos.y.PathY;
 import org.testng.ISuite;
 import org.testng.ISuiteListener;
 
@@ -368,7 +368,7 @@ public final class Y implements ISuiteListener {
   public static JavaProject javaProject() {
     try {
       final Path root;
-      root = nextTempDir();
+      root = PathY.nextDir();
 
       final JavaCompiler javaCompiler;
       javaCompiler = ToolProvider.getSystemJavaCompiler();
@@ -664,92 +664,6 @@ public final class Y implements ISuiteListener {
   // ##################################################################
 
   // ##################################################################
-  // # BEGIN: Next
-  // ##################################################################
-
-  private static final class NextPath implements Closeable {
-
-    private final Path root;
-
-    private NextPath(Path root) {
-      this.root = root;
-    }
-
-    private static NextPath create() {
-      try {
-        final Path root;
-        root = Files.createTempDirectory("objectos-way-testing-");
-
-        final NextPath nextPath;
-        nextPath = new NextPath(root);
-
-        shutdownHook(nextPath);
-
-        return nextPath;
-      } catch (IOException e) {
-        throw new UncheckedIOException(e);
-      }
-    }
-
-    @Override
-    public final void close() throws IOException {
-      Io.deleteRecursively(root);
-    }
-
-    final Path nextTempDir() {
-      try {
-        return Files.createTempDirectory(root, "next-temp-dir");
-      } catch (IOException e) {
-        throw new UncheckedIOException(e);
-      }
-    }
-
-    final Path nextTempFile() {
-      try {
-        return Files.createTempFile(root, "next-temp-file", ".tmp");
-      } catch (IOException e) {
-        throw new UncheckedIOException(e);
-      }
-    }
-
-  }
-
-  private static final class NextPathHolder {
-
-    static final NextPath INSTANCE = NextPath.create();
-
-  }
-
-  public static Path nextTempDir() {
-    return NextPathHolder.INSTANCE.nextTempDir();
-  }
-
-  public static Path nextTempFile() {
-    return NextPathHolder.INSTANCE.nextTempFile();
-  }
-
-  public static Path nextTempFile(String contents) {
-    return nextTempFile(contents, StandardCharsets.UTF_8);
-  }
-
-  public static Path nextTempFile(String contents, Charset charset) {
-    try {
-      final Path file;
-      file = NextPathHolder.INSTANCE.nextTempFile();
-
-      Files.writeString(file, contents, charset);
-
-      return file;
-    } catch (IOException e) {
-      throw new UncheckedIOException(e);
-    }
-  }
-
-  // ##################################################################
-  // # END: Next
-  // ##################################################################
-
-  // ##################################################################
   // # BEGIN: Note.Sink
   // ##################################################################
 
@@ -950,6 +864,8 @@ public final class Y implements ISuiteListener {
       case HTTP_1_1 -> sb.append("1.1");
 
       case HTTP_2 -> sb.append("2");
+
+      default -> throw new IllegalArgumentException("Unexpected value: " + response.version());
     }
 
     sb.append(' ');

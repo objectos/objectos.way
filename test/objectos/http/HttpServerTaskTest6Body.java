@@ -29,6 +29,7 @@ import java.nio.file.Path;
 import objectos.lang.Throwables;
 import objectos.way.Media;
 import objectos.way.Y;
+import objectos.y.PathY;
 import objectos.y.SocketY;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -154,7 +155,7 @@ public class HttpServerTaskTest6Body {
   @Test
   public void file() {
     final Path directory;
-    directory = Y.nextTempDir();
+    directory = PathY.nextDir();
 
     final String filename;
     filename = "%019d.body".formatted(123L);
@@ -205,7 +206,7 @@ public class HttpServerTaskTest6Body {
   @Test
   public void fileSlowClient() {
     final Path directory;
-    directory = Y.nextTempDir();
+    directory = PathY.nextDir();
 
     final String filename;
     filename = "%019d.body".formatted(123L);

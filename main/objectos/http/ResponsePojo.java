@@ -15,6 +15,10 @@
  */
 package objectos.http;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.time.Clock;
 import java.util.List;
 
 record ResponsePojo(
@@ -26,5 +30,37 @@ record ResponsePojo(
     ResponseBody body
 
 ) implements Response {
+
+  @Override
+  public final String toString() {
+    return toString(Clock.systemUTC(), false);
+  }
+
+  public final String toString(Clock clock, boolean head) {
+    try {
+      final byte[] buffer;
+      buffer = new byte[1024];
+
+      final ByteArrayOutputStream outputStream;
+      outputStream = new ByteArrayOutputStream();
+
+      final ResponseBuffered buffered;
+      buffered = new ResponseBuffered(buffer, outputStream);
+
+      final ResponseDate date;
+      date = new ResponseDate(clock);
+
+      final ResponseWriter writer;
+      writer = new ResponseWriter(buffered, date, head, this);
+
+      writer.write();
+
+      final byte[] bytes = outputStream.toByteArray();
+
+      return new String(bytes);
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
+  }
 
 }

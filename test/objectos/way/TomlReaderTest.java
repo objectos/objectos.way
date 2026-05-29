@@ -22,6 +22,7 @@ import java.io.UncheckedIOException;
 import java.lang.invoke.MethodHandles;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import objectos.y.PathY;
 import org.testng.annotations.Test;
 
 public class TomlReaderTest {
@@ -63,7 +64,7 @@ public class TomlReaderTest {
 
   private void test(String source, ThrowingConsumer test) {
     final Path file;
-    file = Y.nextTempFile(source, StandardCharsets.UTF_8);
+    file = PathY.nextFile(source, StandardCharsets.UTF_8);
 
     try (Toml.Reader reader = Toml.Reader.create(opts -> {
       opts.file(file);

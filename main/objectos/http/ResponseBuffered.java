@@ -17,7 +17,10 @@ package objectos.http;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import objectos.lang.OutputStreamConsumer;
 
 final class ResponseBuffered implements Closeable {
@@ -51,6 +54,14 @@ final class ResponseBuffered implements Closeable {
     }
 
     bufferIndex = 0;
+  }
+
+  public final void write(Path file) throws IOException {
+    flush();
+
+    try (InputStream is = Files.newInputStream(file)) {
+      is.transferTo(outputStream);
+    }
   }
 
   private void write0(byte[] bytes, int offset, int length) throws IOException {

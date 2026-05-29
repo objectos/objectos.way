@@ -33,12 +33,13 @@ import objectos.way.Html;
 import objectos.way.Media;
 import objectos.way.TestingSingleParagraph;
 import objectos.way.Y;
+import objectos.y.PathY;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class HttpServerTest {
 
-  private final Path root = Y.nextTempDir();
+  private final Path root = PathY.nextDir();
 
   private HttpServer server;
 
@@ -115,7 +116,7 @@ public class HttpServerTest {
   @BeforeClass
   public void beforeClass() throws Exception {
     final Path dir;
-    dir = Y.nextTempDir();
+    dir = PathY.nextDir();
 
     final Path sub;
     sub = dir.resolve("files");

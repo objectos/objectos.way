@@ -149,6 +149,14 @@ final class ResponseWriter {
           buffered.write(entity);
         }
       }
+
+      case ResponseBody.OfFile f -> {
+        buffered.write(Bytes.CRLF);
+
+        if (!head) {
+          buffered.write(f.file());
+        }
+      }
     }
   }
 

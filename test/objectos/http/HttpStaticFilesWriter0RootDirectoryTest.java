@@ -20,13 +20,13 @@ import static org.testng.Assert.assertEquals;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import objectos.way.Media;
-import objectos.way.Y;
+import objectos.y.PathY;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class HttpStaticFilesWriter0RootDirectoryTest {
 
-  private final Path rootDirectory = Y.nextTempDir();
+  private final Path rootDirectory = PathY.nextDir();
 
   private HttpStaticFilesWriter create() {
     return new HttpStaticFilesWriter0RootDirectory(rootDirectory);

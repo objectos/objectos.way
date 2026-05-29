@@ -15,6 +15,8 @@
  */
 package objectos.http;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -77,6 +79,15 @@ final class ResponseBuilder implements Response.Options {
     Objects.requireNonNull(entity, "entity == null");
 
     body = new ResponseBody.OfEntity(entity);
+  }
+
+  @Override
+  public final void body(Path file) {
+    if (!Files.isRegularFile(file)) {
+      throw new IllegalArgumentException(file + " does not represent a regular file");
+    }
+
+    body = new ResponseBody.OfFile(file);
   }
 
 }

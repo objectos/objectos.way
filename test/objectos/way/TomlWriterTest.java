@@ -22,6 +22,7 @@ import java.io.UncheckedIOException;
 import java.lang.invoke.MethodHandles;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import objectos.y.PathY;
 import org.testng.annotations.Test;
 
 public class TomlWriterTest {
@@ -63,7 +64,7 @@ public class TomlWriterTest {
 
   private void test(ThrowingConsumer test, String expected) {
     final Path file;
-    file = Y.nextTempFile();
+    file = PathY.nextFile();
 
     try (Toml.Writer w = Toml.Writer.create(opts -> {
       opts.file(file);

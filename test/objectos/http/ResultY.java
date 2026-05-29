@@ -15,17 +15,18 @@
  */
 package objectos.http;
 
-import java.nio.file.Path;
-import objectos.lang.OutputStreamConsumer;
+import objectos.way.Y;
 
-sealed interface ResponseBody {
+public final class ResultY {
 
-  enum OfEmpty implements ResponseBody {
-    INSTANCE;
+  private ResultY() {}
+
+  public static String toString(Result result) {
+    return switch (result) {
+      case ResponsePojo resp -> resp.toString(Y.clockFixed(), false);
+
+      default -> throw new UnsupportedOperationException("Implement me");
+    };
   }
-
-  record OfEntity(OutputStreamConsumer entity) implements ResponseBody {}
-
-  record OfFile(Path file) implements ResponseBody {}
 
 }

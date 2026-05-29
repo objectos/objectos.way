@@ -15,6 +15,8 @@
  */
 package objectos.http;
 
+import static org.testng.Assert.assertSame;
+
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -30,7 +32,6 @@ public class HostHandlerTest {
     opts.header(test, "files");
   });
 
-  @SuppressWarnings("unused")
   private HostHandler handler;
 
   @BeforeClass
@@ -54,13 +55,37 @@ public class HostHandlerTest {
     handler = new HostHandler(main, staticFiles);
   }
 
-  @Test(enabled = false)
+  @Test
   public void testCase01() {
-    //    assertSame(
-    //        handler.handle(Request),
-    //
-    //        mainResp
-    //    );
+    assertSame(
+        handler.handle(Request.create(opts -> {
+          opts.path("/main");
+        })),
+
+        mainResp
+    );
+  }
+
+  @Test
+  public void testCase02() {
+    assertSame(
+        handler.handle(Request.create(opts -> {
+          opts.path("/files");
+        })),
+
+        filesResp
+    );
+  }
+
+  @Test
+  public void testCase03() {
+    assertSame(
+        handler.handle(Request.create(opts -> {
+          opts.path("/other");
+        })),
+
+        HttpStatus.NOT_FOUND
+    );
   }
 
 }

@@ -27,6 +27,7 @@ import java.time.Clock;
 import java.time.Instant;
 import objectos.way.Media;
 import objectos.way.Y;
+import objectos.y.PathY;
 import objectos.y.SocketY;
 import org.testng.annotations.Test;
 
@@ -42,7 +43,7 @@ public class HttpServerTaskTestBStaticFiles {
         HttpServerTaskY.resp(opts -> {
           opts.staticFiles = files -> {
             final Path src;
-            src = Y.nextTempDir();
+            src = PathY.nextDir();
 
             final Path a;
             a = Path.of("tc01.txt");
@@ -116,7 +117,7 @@ public class HttpServerTaskTestBStaticFiles {
         HttpServerTaskY.resp(opts -> {
           opts.staticFiles = files -> {
             final Path src;
-            src = Y.nextTempDir();
+            src = PathY.nextDir();
 
             final Path a;
             a = Path.of("tc03.txt");
@@ -150,7 +151,7 @@ public class HttpServerTaskTestBStaticFiles {
   }
 
   /*
-  
+
   @Test(description = """
   Web.Resources::reconfigure
   - resources from before reconfigure should 404
@@ -160,12 +161,12 @@ public class HttpServerTaskTestBStaticFiles {
   resources = create(opts -> {
     final Media.Bytes reconfigure;
     reconfigure = Media.Bytes.textPlain("reconfigure");
-
+  
     opts.addMedia("/reconfigure.txt", reconfigure);
   });
-
+  
   resources.reconfigure(_ -> {});
-
+  
   assertEquals(
       HttpServerTaskY.resp(test -> {
         test.socket = SocketY.of("""
@@ -173,13 +174,13 @@ public class HttpServerTaskTestBStaticFiles {
         Host: www.example.com\r
         \r
         """);
-
+  
         test.handler = HttpHandler.of(routing -> {
           routing.handler(resources);
           routing.handler(HttpHandler.notFound());
         });
       }),
-
+  
       """
       HTTP/1.1 404 Not Found\r
       Date: Wed, 28 Jun 2023 12:08:43 GMT\r
@@ -189,7 +190,7 @@ public class HttpServerTaskTestBStaticFiles {
       """
   );
   }
-  
+
   */
 
   @Test(description = """
@@ -200,7 +201,7 @@ public class HttpServerTaskTestBStaticFiles {
         HttpServerTaskY.resp(opts -> {
           opts.staticFiles = files -> {
             final Path src;
-            src = Y.nextTempDir();
+            src = PathY.nextDir();
 
             final Path a;
             a = Path.of("tc05.txt");
@@ -240,7 +241,7 @@ public class HttpServerTaskTestBStaticFiles {
   """)
   public void testCase06() throws IOException {
     final Path root;
-    root = Y.nextTempDir();
+    root = PathY.nextDir();
 
     final String resp;
     resp = HttpServerTaskY.resp(test -> {
@@ -288,14 +289,14 @@ public class HttpServerTaskTestBStaticFiles {
   }
 
   /*
-  
+
   @Test(description = """
   Resources::delete
   """)
   public void testCase07() throws IOException {
   final WebResources0 resources;
   resources = create(_ -> {});
-
+  
   assertEquals(
       HttpServerTaskY.resp(test -> {
         test.socket = SocketY.of("""
@@ -303,20 +304,20 @@ public class HttpServerTaskTestBStaticFiles {
         Host: www.example.com\r
         \r
         """);
-
+  
         test.handler = HttpHandler.of(routing -> {
           routing.handler(http -> {
             try {
               String path;
               path = http.path();
-
+  
               Media.Bytes contents;
               contents = Media.Bytes.textPlain("test-case-07");
-
+  
               resources.writeMedia(path, contents);
-
+  
               assertTrue(resources.deleteIfExists(path));
-
+  
               resources.handle(http);
             } catch (IOException e) {
               throw new UncheckedIOException(e);
@@ -325,7 +326,7 @@ public class HttpServerTaskTestBStaticFiles {
           routing.handler(HttpHandler.notFound());
         });
       }),
-
+  
       """
       HTTP/1.1 404 Not Found\r
       Date: Wed, 28 Jun 2023 12:08:43 GMT\r
@@ -335,7 +336,7 @@ public class HttpServerTaskTestBStaticFiles {
       """
   );
   }
-  
+
   */
 
   @Test(description = """
@@ -343,7 +344,7 @@ public class HttpServerTaskTestBStaticFiles {
   """)
   public void testCase08() throws IOException {
     final Path root;
-    root = Y.nextTempDir();
+    root = PathY.nextDir();
 
     final String resp;
     resp = HttpServerTaskY.resp(test -> {
@@ -395,7 +396,7 @@ public class HttpServerTaskTestBStaticFiles {
   """)
   public void testCase09() throws IOException, InterruptedException {
     final Path root;
-    root = Y.nextTempDir();
+    root = PathY.nextDir();
 
     final String resp;
     resp = HttpServerTaskY.resp(test -> {

@@ -34,6 +34,7 @@ import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.time.temporal.Temporal;
 import java.util.Random;
+import objectos.y.PathY;
 import org.testng.annotations.Test;
 
 public class SqlDialectTest02TrxParam extends SqlDialectTest00Support {
@@ -62,7 +63,7 @@ public class SqlDialectTest02TrxParam extends SqlDialectTest00Support {
 
     static Path toPath(InputStream in) throws SQLException {
       final Path file;
-      file = Y.nextTempFile();
+      file = PathY.nextFile();
 
       try (in) {
         Files.copy(in, file, StandardCopyOption.REPLACE_EXISTING);
@@ -151,7 +152,7 @@ public class SqlDialectTest02TrxParam extends SqlDialectTest00Support {
 
   private Path random4k(int count) throws IOException {
     final Path blob;
-    blob = Y.nextTempFile();
+    blob = PathY.nextFile();
 
     Random random;
     random = new Random();

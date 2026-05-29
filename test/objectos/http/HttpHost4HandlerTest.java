@@ -23,6 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import objectos.way.Media;
 import objectos.way.Y;
+import objectos.y.PathY;
 import org.testng.annotations.Test;
 
 public class HttpHost4HandlerTest {
@@ -30,7 +31,7 @@ public class HttpHost4HandlerTest {
   @Test
   public void testCase01() {
     final Path root;
-    root = Y.nextTempDir();
+    root = PathY.nextDir();
 
     final HttpExchange http;
     http = HttpExchange.create(opts -> {
