@@ -34,22 +34,22 @@ public class ResponseWriterTest {
     final ByteArrayOutputStream outputStream;
     outputStream = new ByteArrayOutputStream();
 
-    try (ResponseBuffered buffered = new ResponseBuffered(buffer, outputStream)) {
-      final Clock clock;
-      clock = Y.clockFixed();
+    final ResponseBuffered buffered;
+    buffered = new ResponseBuffered(buffer, outputStream);
 
-      final ResponseDate date;
-      date = new ResponseDate(clock);
+    final Clock clock;
+    clock = Y.clockFixed();
 
-      final boolean head;
-      head = method == HttpMethod.HEAD;
+    final ResponseDate date;
+    date = new ResponseDate(clock);
 
-      final ResponsePojo impl;
-      impl = (ResponsePojo) r;
+    final boolean head;
+    head = method == HttpMethod.HEAD;
 
-      final ResponseWriter output;
-      output = new ResponseWriter(buffered, date, head, impl);
+    final ResponsePojo impl;
+    impl = (ResponsePojo) r;
 
+    try (var output = new ResponseWriter(buffered, date, head, impl)) {
       output.write();
     }
 

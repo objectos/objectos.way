@@ -15,6 +15,7 @@
  */
 package objectos.http;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.EnumMap;
@@ -23,7 +24,7 @@ import java.util.Map;
 import objectos.internal.Bytes;
 import objectos.lang.OutputStreamConsumer;
 
-final class ResponseWriter {
+final class ResponseWriter implements Closeable {
 
   private final ResponseBuffered buffered;
 
@@ -44,6 +45,11 @@ final class ResponseWriter {
   }
 
   private static final byte[] COLONCRLF = ":\r\n".getBytes(StandardCharsets.US_ASCII);
+
+  @Override
+  public final void close() throws IOException {
+    buffered.close();
+  }
 
   public final void write() throws IOException {
     statusLine();

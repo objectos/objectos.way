@@ -37,30 +37,28 @@ record ResponsePojo(
   }
 
   public final String toString(Clock clock, boolean head) {
-    try {
-      final byte[] buffer;
-      buffer = new byte[1024];
+    final byte[] buffer;
+    buffer = new byte[1024];
 
-      final ByteArrayOutputStream outputStream;
-      outputStream = new ByteArrayOutputStream();
+    final ByteArrayOutputStream outputStream;
+    outputStream = new ByteArrayOutputStream();
 
-      final ResponseBuffered buffered;
-      buffered = new ResponseBuffered(buffer, outputStream);
+    final ResponseBuffered buffered;
+    buffered = new ResponseBuffered(buffer, outputStream);
 
-      final ResponseDate date;
-      date = new ResponseDate(clock);
+    final ResponseDate date;
+    date = new ResponseDate(clock);
 
-      final ResponseWriter writer;
-      writer = new ResponseWriter(buffered, date, head, this);
-
+    try (var writer = new ResponseWriter(buffered, date, head, this)) {
       writer.write();
-
-      final byte[] bytes = outputStream.toByteArray();
-
-      return new String(bytes);
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     }
+
+    final byte[] bytes;
+    bytes = outputStream.toByteArray();
+
+    return new String(bytes);
   }
 
 }

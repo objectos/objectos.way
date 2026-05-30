@@ -17,15 +17,19 @@ package objectos.http;
 
 import objectos.way.Y;
 
-public final class ResultY {
+public final class ResponseY {
 
-  private ResultY() {}
+  private ResponseY() {}
 
   public static String toString(Result result) {
-    return switch (result) {
-      case ResponsePojo resp -> resp.toString(Y.clockFixed(), false);
+    return toString(result, false);
+  }
 
-      default -> throw new UnsupportedOperationException("Implement me");
+  public static String toString(Result result, boolean head) {
+    return switch (result) {
+      case ResponsePojo resp -> resp.toString(Y.clockFixed(), head);
+
+      default -> throw new IllegalArgumentException("Not a Response instance. Found " + result.getClass());
     };
   }
 
