@@ -17,8 +17,6 @@ package objectos.http;
 
 import java.nio.file.Path;
 import java.util.function.Consumer;
-import objectos.lang.OutputStreamConsumer;
-import objectos.way.Media;
 
 /// An HTTP response message.
 public sealed interface Response extends Result permits ResponsePojo {
@@ -69,11 +67,6 @@ public sealed interface Response extends Result permits ResponsePojo {
     /// Adds the `Date` header field with the server's current time.
     void date();
 
-    /// Sets the response body to the contents provided by the specified entity.
-    ///
-    /// @param entity the object providing the body contents
-    void body(OutputStreamConsumer entity);
-
     /// Sets the response body to the contents of the specified file.
     ///
     /// @param file the path to a regular file containing the body contents
@@ -93,30 +86,6 @@ public sealed interface Response extends Result permits ResponsePojo {
     opts.accept(builder);
 
     return builder.build();
-  }
-
-  /// Returns a `200 OK` response with the specified media entity.
-  ///
-  /// @param media the media entity
-  ///
-  /// @return a newly created response message
-  static Response ok(Media media) {
-    return create(opts -> {
-      opts.status(HttpStatus.OK);
-
-      opts.date();
-
-      final String contentType;
-      contentType = media.contentType();
-
-      if (contentType == null) {
-        throw new IllegalArgumentException("The specified Media provided a null content-type");
-      }
-
-      opts.header(HttpHeaderName.CONTENT_TYPE, contentType);
-
-      opts.body(media::writeTo);
-    });
   }
 
 }

@@ -16,15 +16,12 @@
 package objectos.http;
 
 import java.nio.file.Path;
-import objectos.lang.OutputStreamConsumer;
 
 sealed interface ResponseBody {
 
   enum OfEmpty implements ResponseBody {
     INSTANCE;
   }
-
-  record OfEntity(OutputStreamConsumer entity) implements ResponseBody {}
 
   record OfFile(Path file) implements ResponseBody {}
 

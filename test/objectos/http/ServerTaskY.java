@@ -17,13 +17,10 @@ package objectos.http;
 
 import java.net.Socket;
 import java.util.function.Consumer;
-import objectos.way.Media;
 import objectos.way.Note;
 import objectos.way.Y;
 
 final class ServerTaskY {
-
-  static final Response OK = Response.ok(Media.Bytes.textPlain("OK\n"));
 
   Handler handler;
 

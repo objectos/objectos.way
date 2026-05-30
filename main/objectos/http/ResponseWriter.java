@@ -22,7 +22,6 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import objectos.internal.Bytes;
-import objectos.lang.OutputStreamConsumer;
 
 final class ResponseWriter implements Closeable {
 
@@ -141,19 +140,6 @@ final class ResponseWriter implements Closeable {
     switch (body) {
       case ResponseBody.OfEmpty.INSTANCE -> {
         buffered.write(Bytes.CRLF);
-      }
-
-      case ResponseBody.OfEntity t -> {
-        headerFields0(HttpHeaderName.TRANSFER_ENCODING, "chunked");
-
-        buffered.write(Bytes.CRLF);
-
-        if (!head) {
-          final OutputStreamConsumer entity;
-          entity = t.entity();
-
-          buffered.write(entity);
-        }
       }
 
       case ResponseBody.OfFile f -> {

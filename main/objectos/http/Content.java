@@ -15,28 +15,23 @@
  */
 package objectos.http;
 
-/// The outcome of processing a `Request` instance by a `Handler`.
-public sealed interface Result
-    permits
-    Content,
-    Request,
-    Response,
-    HttpStatus {
+import java.io.IOException;
+import java.io.OutputStream;
 
-  default Result or(Handler another) {
-    return switch (this) {
-      case Request request -> another.handle(request);
+/// Represents content to be transmitted over the HTTP protocol.
+public non-sealed interface Content extends Result {
 
-      default -> this;
-    };
-  }
+  /// Writes the contents to the specified output stream.
+  ///
+  /// @param out where to write bytes into.
+  ///
+  /// @throws IOException if an I/O error occurs
+  void contentBytes(OutputStream out) throws IOException;
 
-  default Result or(Result another) {
-    return switch (this) {
-      case Request _ -> another;
-
-      default -> this;
-    };
-  }
+  /// Returns the type of the transmitted content, e.g., `text/html;
+  /// charset=utf-8` or `application/json`.
+  ///
+  /// @return the content type of this media
+  String contentType();
 
 }

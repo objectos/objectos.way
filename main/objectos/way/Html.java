@@ -16,9 +16,12 @@
 package objectos.way;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
+import objectos.http.Content;
 import objectos.internal.Check;
 import objectos.lang.Testable;
 import objectos.lang.TestableFormatter;
@@ -1079,8 +1082,22 @@ public final class Html {
   /// An object that renders HTML on its own or as part of a larger
   /// HTML document.
   @FunctionalInterface
-  public interface Component extends Media.Text, Testable {
+  public interface Component extends Content, Media.Text, Testable {
 
+    /// Writes the generated HTML to the specified output stream using the
+    /// `UTF-8` charset.
+    /// 
+    /// @param out the destination output stream
+    @Override
+    default void contentBytes(OutputStream out) throws IOException {
+      final OutputStreamWriter w;
+      w = new OutputStreamWriter(out, StandardCharsets.UTF_8);
+
+      writeTo(w);
+
+      w.flush();
+    }
+    
     /// Returns `text/html; charset=utf-8`.
     ///
     /// @return `text/html; charset=utf-8`

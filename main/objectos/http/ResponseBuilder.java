@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
-import objectos.lang.OutputStreamConsumer;
 
 final class ResponseBuilder implements Response.Options {
 
@@ -72,13 +71,6 @@ final class ResponseBuilder implements Response.Options {
     headers.add(
         Header.DATE
     );
-  }
-
-  @Override
-  public final void body(OutputStreamConsumer entity) {
-    Objects.requireNonNull(entity, "entity == null");
-
-    body = new ResponseBody.OfEntity(entity);
   }
 
   @Override
