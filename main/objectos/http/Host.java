@@ -22,4 +22,8 @@ record Host(Handler handler, String name) implements Handler {
     return handler.handle(request);
   }
 
+  public final boolean test(String hostValue) {
+    return name.equals(hostValue);
+  }
+
 }
