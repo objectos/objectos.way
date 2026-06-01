@@ -15,10 +15,13 @@
  */
 package objectos.http;
 
-record HostOptionsPojo(
-    Handler handler,
+enum HandlerNoop implements Handler {
 
-    String name
-) {
+  INSTANCE;
+
+  @Override
+  public final Result handle(Request request) {
+    return request;
+  }
 
 }

@@ -16,7 +16,7 @@
 package objectos.http;
 
 /// Configures a name-based web site to be served by a `Server` instance.
-public sealed interface HostOptions permits HostOptionsBuilder {
+public sealed interface HostOptions permits HostBuilder {
 
   /// Sets the name of this host.
   ///

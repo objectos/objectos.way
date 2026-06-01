@@ -15,11 +15,8 @@
  */
 package objectos.http;
 
-record Host(Handler handler, String name) implements Handler {
+interface HostGlobals {
 
-  @Override
-  public final Result handle(Request request) {
-    return handler.handle(request);
-  }
+  int port();
 
 }

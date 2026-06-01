@@ -17,13 +17,17 @@ package objectos.http;
 
 import java.util.Objects;
 
-final class HostOptionsBuilder implements HostOptions {
+final class HostBuilder implements HostOptions {
 
-  @SuppressWarnings("unused")
-  private Handler handler;
+  private final HostGlobals globals;
 
-  @SuppressWarnings("unused")
-  private String name;
+  private Handler handler = HandlerNoop.INSTANCE;
+
+  private String name = "localhost";
+
+  HostBuilder(HostGlobals globals) {
+    this.globals = globals;
+  }
 
   @Override
   public final void name(String value) {
@@ -33,6 +37,28 @@ final class HostOptionsBuilder implements HostOptions {
   @Override
   public final void handler(Handler value) {
     handler = Objects.requireNonNull(value, "value == null");
+  }
+
+  public final Host build() {
+    return new Host(
+        $handler(),
+
+        $name()
+    );
+  }
+
+  private HostHandler $handler() {
+    return new HostHandler(handler, HandlerNoop.INSTANCE);
+  }
+
+  private String $name() {
+    final int port;
+    port = globals.port();
+
+    final HostName hostName;
+    hostName = new HostName(name, port);
+
+    return hostName.get();
   }
 
 }
