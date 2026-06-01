@@ -15,14 +15,21 @@
  */
 package objectos.http;
 
-/// Represents content of an specific format to be transmitted over the
-/// HTTP protocol.
-public non-sealed interface Content extends Result {
+import objectos.lang.OutputStreamConsumer;
 
-  /// Sends the contents of this entity using the specified sender.
+/// Sends the actual contents of a `Content` object.
+public interface ContentSender {
+
+  /// Sends the entity with the specified content type and contents.
   ///
-  /// @param sender the object responsible for sending the contents of
-  ///        this entity
-  void sendContent(ContentSender sender);
+  /// @param contentType the content type
+  /// @param contents the contents to be sent as an array of bytes
+  void send(MediaType contentType, byte[] contents);
+
+  /// Sends the entity with the specified content type and contents.
+  ///
+  /// @param contentType the content type
+  /// @param contents the contents to be sent as an output stream consumer
+  void send(MediaType contentType, OutputStreamConsumer contents);
 
 }

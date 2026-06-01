@@ -15,14 +15,36 @@
  */
 package objectos.http;
 
-/// Represents content of an specific format to be transmitted over the
-/// HTTP protocol.
-public non-sealed interface Content extends Result {
+import java.net.Socket;
+import objectos.internal.VisibleForTesting;
+import objectos.way.Note;
 
-  /// Sends the contents of this entity using the specified sender.
-  ///
-  /// @param sender the object responsible for sending the contents of
-  ///        this entity
-  void sendContent(ContentSender sender);
+final class ServerCore {
+
+  private final Note.Sink noteSink;
+
+  private final Thread.Builder threadBuilder;
+
+  ServerCore(Note.Sink noteSink, Thread.Builder threadBuilder) {
+    this.noteSink = noteSink;
+
+    this.threadBuilder = threadBuilder;
+  }
+
+  public final void accept(Socket socket) {
+    final Runnable task;
+    task = createTask(socket);
+
+    threadBuilder.start(task);
+  }
+
+  @VisibleForTesting
+  final Runnable createTask(Socket socket) {
+    return new ServerTask(
+        noteSink,
+
+        socket
+    );
+  }
 
 }

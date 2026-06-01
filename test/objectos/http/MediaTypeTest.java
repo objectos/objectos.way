@@ -13,14 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.lang;
+package objectos.http;
 
-import java.io.IOException;
-import java.io.OutputStream;
+import static org.testng.Assert.assertEquals;
 
-@FunctionalInterface
-public interface OutputStreamConsumer {
+import org.testng.annotations.Test;
 
-  void acceptOutputStream(OutputStream out) throws IOException;
+public class MediaTypeTest {
+
+  @Test
+  public void fullType() {
+    assertEquals(MediaType.APPLICATION_OCTET_STREAM.fullType(), "application/octet-stream");
+    assertEquals(MediaType.TEXT_CSS.fullType(), "text/css");
+    assertEquals(MediaType.TEXT_HTML.fullType(), "text/html");
+    assertEquals(MediaType.TEXT_JAVASCRIPT.fullType(), "text/javascript");
+    assertEquals(MediaType.TEXT_PLAIN.fullType(), "text/plain");
+  }
 
 }

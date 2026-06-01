@@ -15,27 +15,10 @@
  */
 package objectos.http;
 
-import static org.testng.Assert.assertEquals;
+record MediaTypePojo(String fullType) implements MediaType {
 
-import java.io.IOException;
-import objectos.way.Note;
-import objectos.way.Note.Long1Ref1;
-
-final class ServerTaskYNoteSink extends Note.NoOpSink {
-
-  long id;
-
-  IOException thrown;
-
-  @Override
-  public final <T1> void send(Long1Ref1<T1> note, long value1, T1 value2) {
-    assertEquals(note.source(), ServerTask.class.getName());
-
-    assertEquals(note.key(), "THR");
-
-    id = value1;
-
-    thrown = (IOException) value2;
+  static MediaTypePojo of0(String fullType) {
+    return new MediaTypePojo(fullType);
   }
 
 }

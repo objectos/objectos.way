@@ -50,7 +50,7 @@ final class ResponseBuffered implements Closeable {
 
   public final void write(OutputStreamConsumer entity) throws IOException {
     try (var out = ResponseChunked.of(buffer, bufferIndex, outputStream)) {
-      entity.accept(out);
+      entity.acceptOutputStream(out);
     }
 
     bufferIndex = 0;

@@ -13,14 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.lang;
+package objectos.http;
+
+import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
-import java.io.OutputStream;
+import objectos.way.Note;
+import objectos.way.Note.Long1Ref1;
 
-@FunctionalInterface
-public interface OutputStreamConsumer {
+final class ServerCoreYNoteSink extends Note.NoOpSink {
 
-  void acceptOutputStream(OutputStream out) throws IOException;
+  long id;
+
+  IOException thrown;
+
+  @Override
+  public final <T1> void send(Long1Ref1<T1> note, long value1, T1 value2) {
+    assertEquals(note.source(), ServerTask.class.getName());
+
+    assertEquals(note.key(), "THR");
+
+    id = value1;
+
+    thrown = (IOException) value2;
+  }
 
 }

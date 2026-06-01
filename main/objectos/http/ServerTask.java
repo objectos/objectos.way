@@ -25,8 +25,6 @@ final class ServerTask implements Runnable {
 
   static final Note.Long1Ref1<Throwable> THROW = Note.Long1Ref1.create(ServerTask.class, "THR", Note.ERROR);
 
-  private long id;
-
   private final Note.Sink noteSink;
 
   private final Socket socket;
@@ -43,6 +41,7 @@ final class ServerTask implements Runnable {
     final Thread currentThread;
     currentThread = Thread.currentThread();
 
+    final long id;
     id = currentThread.threadId();
 
     try (socket) {

@@ -20,7 +20,7 @@ import java.util.function.Consumer;
 import objectos.way.Note;
 import objectos.way.Y;
 
-final class ServerTaskY {
+final class ServerCoreY {
 
   Handler handler;
 
@@ -28,10 +28,12 @@ final class ServerTaskY {
 
   Socket socket;
 
-  private ServerTaskY() {}
+  Thread.Builder threadBuilder;
 
-  public static String resp(Consumer<? super ServerTaskY> opts) {
-    final ServerTaskY y;
+  private ServerCoreY() {}
+
+  public static String resp(Consumer<? super ServerCoreY> opts) {
+    final ServerCoreY y;
     y = run(opts);
 
     final Socket socket;
@@ -40,13 +42,13 @@ final class ServerTaskY {
     return socket.toString();
   }
 
-  public static ServerTaskY run(Consumer<? super ServerTaskY> opts) {
-    final ServerTaskY y;
-    y = new ServerTaskY();
+  public static ServerCoreY run(Consumer<? super ServerCoreY> opts) {
+    final ServerCoreY y;
+    y = new ServerCoreY();
 
     opts.accept(y);
 
-    final ServerTask task;
+    final Runnable task;
     task = y.build();
 
     task.run();
@@ -54,8 +56,11 @@ final class ServerTaskY {
     return y;
   }
 
-  private ServerTask build() {
-    return new ServerTask(noteSink, socket);
+  private Runnable build() {
+    final ServerCore core;
+    core = new ServerCore(noteSink, threadBuilder);
+
+    return core.createTask(socket);
   }
 
 }
