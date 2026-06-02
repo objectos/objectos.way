@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.time.Clock;
 import java.util.List;
+import java.util.function.Consumer;
 
 record ResponsePojo(
 
@@ -27,9 +28,20 @@ record ResponsePojo(
 
     List<Header> headers,
 
-    ResponseBody body
+    ResponseBody body,
+
+    boolean closeConnection
 
 ) implements Response {
+
+  static ResponsePojo create0(Consumer<? super Options> opts) {
+    final ResponseBuilder builder;
+    builder = new ResponseBuilder();
+
+    opts.accept(builder);
+
+    return builder.build();
+  }
 
   @Override
   public final String toString() {

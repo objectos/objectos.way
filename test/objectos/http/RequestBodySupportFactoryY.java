@@ -15,36 +15,8 @@
  */
 package objectos.http;
 
-import java.net.Socket;
-import objectos.internal.VisibleForTesting;
-import objectos.way.Note;
+final class RequestBodySupportFactoryY {
 
-final class ServerCore {
-
-  private final Note.Sink noteSink;
-
-  private final Thread.Builder threadBuilder;
-
-  ServerCore(Note.Sink noteSink, Thread.Builder threadBuilder) {
-    this.noteSink = noteSink;
-
-    this.threadBuilder = threadBuilder;
-  }
-
-  public final void accept(Socket socket) {
-    final Runnable task;
-    task = createTask(socket);
-
-    threadBuilder.start(task);
-  }
-
-  @VisibleForTesting
-  final Runnable createTask(Socket socket) {
-    return new ServerTask(
-        noteSink,
-
-        socket
-    );
-  }
+  private RequestBodySupportFactoryY() {}
 
 }

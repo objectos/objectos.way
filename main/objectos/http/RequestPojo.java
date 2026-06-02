@@ -18,7 +18,7 @@ package objectos.http;
 import module java.base;
 
 /// Provides methods for inspecting the request message of an HTTP exchange.
-record Request0(
+record RequestPojo(
 
     HttpMethod method,
 
@@ -35,6 +35,10 @@ record Request0(
     RequestBodyForm bodyForm
 
 ) implements Request {
+
+  public final boolean closeConnection() {
+    return headers.closeConnection();
+  }
 
   @Override
   public final String queryParam(String name) {

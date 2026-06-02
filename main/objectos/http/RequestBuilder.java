@@ -43,7 +43,7 @@ final class RequestBuilder implements Options {
   private final Version0 version = Version0.HTTP_1_1;
 
   public final Request build() {
-    return new Request0(
+    return new RequestPojo(
         method,
 
         path,

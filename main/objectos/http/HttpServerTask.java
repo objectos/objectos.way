@@ -110,7 +110,7 @@ final class HttpServerTask implements Runnable {
     final RequestParser requestParser;
     requestParser = new RequestParser(buffer, inputStream, bodySupport);
 
-    final Request0 request;
+    final RequestPojo request;
     request = requestParser.parse();
 
     if (request == null) {

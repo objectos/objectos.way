@@ -15,11 +15,30 @@
  */
 package objectos.http;
 
-record Host(Handler handler, String name) implements Handler {
+record Host(Handler handler, String name) {
 
-  @Override
-  public final Result handle(Request request) {
-    return handler.handle(request);
+  public final ResponsePojo handle(Request request) {
+    final Result result;
+    result = handler.handle(request);
+
+    return switch (result) {
+      case Content content -> {
+        final ResponseBuilder builder;
+        builder = new ResponseBuilder();
+
+        builder.status(HttpStatus.OK);
+
+        builder.date();
+
+        builder.send(content);
+
+        yield builder.build();
+      }
+
+      case ResponsePojo response -> response;
+
+      default -> throw new UnsupportedOperationException("Implement me :: " + result);
+    };
   }
 
   public final boolean test(String hostValue) {

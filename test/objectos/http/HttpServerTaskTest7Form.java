@@ -59,7 +59,7 @@ public class HttpServerTaskTest7Form {
             final HttpExchange0 exchange;
             exchange = (HttpExchange0) http;
 
-            final Request0 request;
+            final RequestPojo request;
             request = exchange.request();
 
             final RequestBodyForm body;
@@ -117,7 +117,7 @@ public class HttpServerTaskTest7Form {
             final HttpExchange0 exchange;
             exchange = (HttpExchange0) http;
 
-            final Request0 request;
+            final RequestPojo request;
             request = exchange.request();
 
             final RequestBodyForm body;
@@ -177,7 +177,7 @@ public class HttpServerTaskTest7Form {
             final HttpExchange0 exchange;
             exchange = (HttpExchange0) http;
 
-            final Request0 request;
+            final RequestPojo request;
             request = exchange.request();
 
             final RequestBodyForm body;
@@ -308,7 +308,7 @@ public class HttpServerTaskTest7Form {
             final HttpExchange0 exchange;
             exchange = (HttpExchange0) http;
 
-            final Request0 request;
+            final RequestPojo request;
             request = exchange.request();
 
             final RequestBodyForm body;
@@ -353,7 +353,7 @@ public class HttpServerTaskTest7Form {
             final HttpExchange0 exchange;
             exchange = (HttpExchange0) http;
 
-            final Request0 request;
+            final RequestPojo request;
             request = exchange.request();
 
             final RequestBodyForm body;
@@ -398,7 +398,7 @@ public class HttpServerTaskTest7Form {
             final HttpExchange0 exchange;
             exchange = (HttpExchange0) http;
 
-            final Request0 request;
+            final RequestPojo request;
             request = exchange.request();
 
             final RequestBodyForm body;

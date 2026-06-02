@@ -30,14 +30,16 @@ final class ResponseBuilder implements Response.Options {
 
   private HttpStatus status = HttpStatus.OK;
 
-  public final Response build() {
+  private boolean closeConnection;
+
+  public final ResponsePojo build() {
     final HttpStatus0 $status;
     $status = (HttpStatus0) status;
 
     final List<Header> $headers;
     $headers = List.copyOf(headers);
 
-    return new ResponsePojo($status, $headers, body);
+    return new ResponsePojo($status, $headers, body, closeConnection);
   }
 
   @Override
@@ -47,23 +49,48 @@ final class ResponseBuilder implements Response.Options {
 
   @Override
   public final void header(HttpHeaderName name, long value) {
-    headers.add(
-        Header.of(name, value)
-    );
+    final HttpHeaderName n;
+    n = Objects.requireNonNull(name, "name == null");
+
+    final String v;
+    v = Long.toString(value);
+
+    header0(n, v);
   }
 
   @Override
   public final void header(HttpHeaderName name, String value) {
-    headers.add(
-        Header.of(name, value)
-    );
+    final HttpHeaderName n;
+    n = Objects.requireNonNull(name, "name == null");
+
+    header0(n, value);
   }
 
   @Override
   public final void header(HttpHeaderName name, Consumer<? super HttpHeaderValueBuilder> builder) {
-    headers.add(
-        Header.of(name, builder)
-    );
+    final HttpHeaderName n;
+    n = Objects.requireNonNull(name, "name == null");
+
+    final HttpHeaderValueBuilderImpl valueBuilder;
+    valueBuilder = new HttpHeaderValueBuilderImpl();
+
+    builder.accept(valueBuilder);
+
+    final String value;
+    value = valueBuilder.build();
+
+    header0(n, value);
+  }
+
+  private void header0(HttpHeaderName name, String value) {
+    if (name == HttpHeaderName.CONNECTION) {
+      closeConnection = "close".equalsIgnoreCase(value);
+    }
+
+    final Header h;
+    h = Header.of(name, value);
+
+    headers.add(h);
   }
 
   @Override
@@ -80,6 +107,12 @@ final class ResponseBuilder implements Response.Options {
     }
 
     body = new ResponseBody.OfFile(file);
+  }
+
+  public final void send(Content content) {
+    Objects.requireNonNull(content, "content == null");
+
+    body = new ResponseBody.OfContent(content);
   }
 
 }

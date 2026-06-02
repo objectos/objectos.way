@@ -15,6 +15,7 @@
  */
 package objectos.http;
 
+import java.io.IOException;
 import objectos.lang.OutputStreamConsumer;
 
 /// Sends the actual contents of a `Content` object.
@@ -23,13 +24,17 @@ public interface ContentSender {
   /// Sends the entity with the specified content type and contents.
   ///
   /// @param contentType the content type
-  /// @param contents the contents to be sent as an array of bytes
-  void send(MediaType contentType, byte[] contents);
+  /// @param contents the contents to be sent as an array of bytes ///
+  ///
+  /// @throws IOException if an I/O error occurs
+  void send(MediaType contentType, byte[] contents) throws IOException;
 
   /// Sends the entity with the specified content type and contents.
   ///
   /// @param contentType the content type
   /// @param contents the contents to be sent as an output stream consumer
-  void send(MediaType contentType, OutputStreamConsumer contents);
+  ///
+  /// @throws IOException if an I/O error occurs
+  void send(MediaType contentType, OutputStreamConsumer contents) throws IOException;
 
 }

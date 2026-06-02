@@ -79,12 +79,15 @@ public class HostHandlerTest {
 
   @Test
   public void testCase03() {
-    assertSame(
-        handler.handle(Request.create(opts -> {
-          opts.path("/other");
-        })),
+    final Request req;
+    req = Request.create(opts -> {
+      opts.path("/other");
+    });
 
-        HttpStatus.NOT_FOUND
+    assertSame(
+        handler.handle(req),
+
+        req
     );
   }
 

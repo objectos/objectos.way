@@ -19,6 +19,8 @@ import java.nio.file.Path;
 
 sealed interface ResponseBody {
 
+  record OfContent(Content content) implements ResponseBody {}
+
   enum OfEmpty implements ResponseBody {
     INSTANCE;
   }

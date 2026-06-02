@@ -183,7 +183,7 @@ public class HttpServerTaskTest5Headers {
             final HttpExchange0 impl;
             impl = (HttpExchange0) http;
 
-            final Request0 request;
+            final RequestPojo request;
             request = impl.request();
 
             final RequestHeaders headers;
@@ -453,7 +453,7 @@ public class HttpServerTaskTest5Headers {
             final HttpExchange0 impl;
             impl = (HttpExchange0) http;
 
-            final Request0 request;
+            final RequestPojo request;
             request = impl.request();
 
             final RequestHeaders headers;

@@ -25,7 +25,7 @@ import objectos.lang.Throwables;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class ServerCoreTest0Socket {
+public class ServerTaskTest0Socket {
 
   private static class ThisSocket extends Socket {
 
@@ -90,9 +90,9 @@ public class ServerCoreTest0Socket {
 
   @Test(dataProvider = "socketErrorProvider")
   public void socketError(Socket socket, long id, String description, IOException thrown) {
-    var noteSink = new ServerCoreYNoteSink();
+    var noteSink = new ServerTaskYNoteSink();
 
-    ServerCoreY.run(opts -> {
+    ServerTaskY.run(opts -> {
       opts.noteSink = noteSink;
 
       opts.socket = socket;

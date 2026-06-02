@@ -1108,7 +1108,7 @@ public final class Html {
     ///
     /// @param out the destination output stream
     @Override
-    default void sendContent(ContentSender sender) {
+    default void sendContent(ContentSender sender) throws IOException {
       sender.send(MediaType.TEXT_HTML, this);
     }
 

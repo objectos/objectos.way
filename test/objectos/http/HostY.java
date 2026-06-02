@@ -15,27 +15,37 @@
  */
 package objectos.http;
 
-import static org.testng.Assert.assertEquals;
+import java.util.function.Consumer;
 
-import java.io.IOException;
-import objectos.way.Note;
-import objectos.way.Note.Long1Ref1;
+final class HostY implements HostGlobals {
 
-final class ServerCoreYNoteSink extends Note.NoOpSink {
+  Handler handler;
 
-  long id;
+  String name;
 
-  IOException thrown;
+  public static Host create(Consumer<? super HostY> opts) {
+    final HostY y;
+    y = new HostY();
+
+    opts.accept(y);
+
+    return y.build();
+  }
+
+  private Host build() {
+    final HostBuilder builder;
+    builder = new HostBuilder(this);
+
+    builder.handler(handler);
+
+    builder.name(name);
+
+    return builder.build();
+  }
 
   @Override
-  public final <T1> void send(Long1Ref1<T1> note, long value1, T1 value2) {
-    assertEquals(note.source(), ServerTask.class.getName());
-
-    assertEquals(note.key(), "THR");
-
-    id = value1;
-
-    thrown = (IOException) value2;
+  public final int port() {
+    return 80;
   }
 
 }

@@ -15,9 +15,6 @@
  */
 package objectos.http;
 
-import java.util.Objects;
-import java.util.function.Consumer;
-
 record Header(HttpHeaderName name, String value) {
 
   public static final Header DATE = new Header(HttpHeaderName.DATE, null);
@@ -34,42 +31,11 @@ record Header(HttpHeaderName name, String value) {
 
   }
 
-  public static Header of(HttpHeaderName name, long value) {
-    final HttpHeaderName n;
-    n = Objects.requireNonNull(name, "name = null");
-
-    final String v;
-    v = Long.toString(value);
-
-    return new Header(n, v);
-  }
-
   public static Header of(HttpHeaderName name, String value) {
-    final HttpHeaderName n;
-    n = Objects.requireNonNull(name, "name = null");
-
     final String v;
     v = checkValue(value);
 
-    return new Header(n, v);
-  }
-
-  public static Header of(HttpHeaderName name, Consumer<? super HttpHeaderValueBuilder> builder) {
-    final HttpHeaderName n;
-    n = Objects.requireNonNull(name, "name == null");
-
-    final HttpHeaderValueBuilderImpl valueBuilder;
-    valueBuilder = new HttpHeaderValueBuilderImpl();
-
-    builder.accept(valueBuilder);
-
-    final String value;
-    value = valueBuilder.build();
-
-    final String v;
-    v = checkValue(value);
-
-    return new Header(n, v);
+    return new Header(name, v);
   }
 
   private static String checkValue(String value) {

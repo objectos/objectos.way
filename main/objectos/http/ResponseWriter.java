@@ -21,9 +21,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import objectos.internal.Bytes;
+import objectos.lang.OutputStreamConsumer;
 
-final class ResponseWriter implements Closeable {
+final class ResponseWriter implements Closeable, ContentSender {
 
   private final ResponseBuffered buffered;
 
@@ -138,6 +140,13 @@ final class ResponseWriter implements Closeable {
     body = response.body();
 
     switch (body) {
+      case ResponseBody.OfContent c -> {
+        final Content content;
+        content = c.content();
+
+        content.sendContent(this);
+      }
+
       case ResponseBody.OfEmpty.INSTANCE -> {
         buffered.write(Bytes.CRLF);
       }
@@ -150,6 +159,51 @@ final class ResponseWriter implements Closeable {
         }
       }
     }
+  }
+
+  @Override
+  public final void send(MediaType contentType, byte[] contents) throws IOException {
+    contentType(contentType);
+
+    final int length;
+    length = contents.length;
+
+    final String value;
+    value = Integer.toString(length);
+
+    headerFields0(HttpHeaderName.CONTENT_LENGTH, value);
+
+    buffered.write(Bytes.CRLF);
+
+    if (!head) {
+      buffered.write(contents);
+    }
+  }
+
+  @Override
+  public final void send(MediaType contentType, OutputStreamConsumer contents) throws IOException {
+    contentType(contentType);
+
+    final OutputStreamConsumer c;
+    c = Objects.requireNonNull(contents, "contents == null");
+
+    headerFields0(HttpHeaderName.TRANSFER_ENCODING, "chunked");
+
+    buffered.write(Bytes.CRLF);
+
+    if (!head) {
+      buffered.write(c);
+    }
+  }
+
+  private void contentType(MediaType contentType) throws IOException {
+    final String fullType;
+    fullType = contentType.fullType();
+
+    final String value;
+    value = Objects.requireNonNull(fullType, "fullType == null");
+
+    headerFields0(HttpHeaderName.CONTENT_TYPE, value);
   }
 
 }

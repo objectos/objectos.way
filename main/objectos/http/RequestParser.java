@@ -36,7 +36,7 @@ final class RequestParser {
     this.requestBodySupport = requestBodySupport;
   }
 
-  public final Request0 parse() throws IOException {
+  public final RequestPojo parse() throws IOException {
     // input
     final RequestParser0Input input;
     input = new RequestParser0Input(buffer, inputStream);
@@ -131,7 +131,7 @@ final class RequestParser {
     bodyForm = new RequestBodyForm(formParams);
 
     // body final
-    return new Request0(
+    return new RequestPojo(
         method,
 
         path,

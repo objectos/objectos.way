@@ -294,8 +294,8 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
     final RequestBodyForm bodyForm;
     bodyForm = new RequestBodyForm(formParams);
 
-    final Request0 request;
-    request = new Request0(method, path, queryParams, version, $headers, data, bodyForm);
+    final RequestPojo request;
+    request = new RequestPojo(method, path, queryParams, version, $headers, data, bodyForm);
 
     final byte[] buffer;
     buffer = new byte[bufferSizeMax];

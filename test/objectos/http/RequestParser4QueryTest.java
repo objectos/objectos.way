@@ -419,7 +419,7 @@ public class RequestParser4QueryTest {
       final Map<String, Object> map;
       map = parse("?" + q + " HTTP/1.1");
 
-      return new Request0(null, null, map, null, null, null, null);
+      return new RequestPojo(null, null, map, null, null, null, null);
     } catch (IOException e) {
       throw new AssertionError("failed", e);
     }

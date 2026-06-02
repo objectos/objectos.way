@@ -19,24 +19,40 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.time.Clock;
 import objectos.way.Note;
 
 final class ServerTask implements Runnable {
 
   static final Note.Long1Ref1<Throwable> THROW = Note.Long1Ref1.create(ServerTask.class, "THR", Note.ERROR);
 
+  private final byte[] buffer;
+
+  private final Clock clock;
+
+  private final HostMap hostMap;
+
   private final Note.Sink noteSink;
+
+  private final RequestBodySupportFactory requestBodySupportFactory;
 
   private final Socket socket;
 
-  ServerTask(Note.Sink noteSink, Socket socket) {
+  ServerTask(byte[] buffer, Clock clock, HostMap hostMap, Note.Sink noteSink, RequestBodySupportFactory requestBodySupportFactory, Socket socket) {
+    this.buffer = buffer;
+
+    this.clock = clock;
+
+    this.hostMap = hostMap;
+
     this.noteSink = noteSink;
+
+    this.requestBodySupportFactory = requestBodySupportFactory;
 
     this.socket = socket;
   }
 
   @Override
-  @SuppressWarnings("unused")
   public final void run() {
     final Thread currentThread;
     currentThread = Thread.currentThread();
@@ -50,8 +66,99 @@ final class ServerTask implements Runnable {
 
       final OutputStream outputStream;
       outputStream = socket.getOutputStream();
+
+      try (RequestBodySupport requestBodySupport = requestBodySupportFactory.create(id)) {
+        while (!currentThread.isInterrupted()) {
+          final RequestParser requestParser;
+          requestParser = new RequestParser(buffer, inputStream, requestBodySupport);
+
+          final RequestPojo request;
+          request = requestParser.parse();
+
+          if (request == null) {
+            break;
+          }
+
+          final String hostValue;
+          hostValue = request.header(HttpHeaderName.HOST);
+
+          final Host host;
+          host = hostMap.get(hostValue);
+
+          final ResponsePojo response;
+
+          if (host == null) {
+            final String msg;
+            msg = "Invalid host: %s".formatted(hostValue);
+
+            response = error(HttpStatus.BAD_REQUEST, msg);
+          }
+
+          else {
+            try {
+
+              response = host.handle(request);
+
+            } catch (Throwable e) {
+
+              throw new UnsupportedOperationException("Implement me", e);
+
+            }
+          }
+
+          final HttpMethod method;
+          method = request.method();
+
+          final boolean head;
+          head = method == HttpMethod.HEAD;
+
+          write(outputStream, response, head);
+
+          if (request.closeConnection() || response.closeConnection()) {
+            break;
+          }
+        }
+      } catch (HttpClientException e) {
+        noteSink.send(THROW, id, e);
+
+        final ResponsePojo response;
+        response = error(e.status(), e.message());
+
+        write(outputStream, response, false);
+      } catch (HttpServerException e) {
+        noteSink.send(THROW, id, e);
+
+        final ResponsePojo response;
+        response = error(e.status(), e.message());
+
+        write(outputStream, response, false);
+      }
     } catch (IOException e) {
       noteSink.send(THROW, id, e);
+    }
+  }
+
+  private ResponsePojo error(HttpStatus status, String message) {
+    return ResponsePojo.create0(opts -> {
+      opts.status(status);
+
+      opts.date();
+
+      opts.header(HttpHeaderName.CONNECTION, "close");
+
+      opts.send(Content.of(MediaType.TEXT_PLAIN, message));
+    });
+  }
+
+  private void write(OutputStream outputStream, ResponsePojo response, boolean head) throws IOException {
+    final ResponseBuffered buffered;
+    buffered = new ResponseBuffered(buffer, outputStream);
+
+    final ResponseDate date;
+    date = new ResponseDate(clock);
+
+    try (ResponseWriter writer = new ResponseWriter(buffered, date, head, response)) {
+      writer.write();
     }
   }
 

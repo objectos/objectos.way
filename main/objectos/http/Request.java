@@ -29,7 +29,7 @@ import java.util.stream.LongStream;
 ///
 /// Unless otherwise specified the values returned by the methods of this
 /// interface are decoded.
-public sealed interface Request extends Result permits Request0 {
+public sealed interface Request extends Result permits RequestPojo {
 
   /// Configures the creation of a stand-alone request instance.
   sealed interface Options permits RequestBuilder {

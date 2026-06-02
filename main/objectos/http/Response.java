@@ -72,6 +72,13 @@ public sealed interface Response extends Result permits ResponsePojo {
     /// @param file the path to a regular file containing the body contents
     void body(Path file);
 
+    /// Sends the specified `Content` object as part of this response message.
+    /// As a minimum, the `Content-Type` header field will be appended to the
+    /// response and the response body
+    ///
+    /// @param content the object to be sent as part of this response message
+    void send(Content content);
+
   }
 
   /// Creates a new response with the specified options.
@@ -80,12 +87,7 @@ public sealed interface Response extends Result permits ResponsePojo {
   ///
   /// @return a newly created response message
   static Response create(Consumer<? super Options> opts) {
-    final ResponseBuilder builder;
-    builder = new ResponseBuilder();
-
-    opts.accept(builder);
-
-    return builder.build();
+    return ResponsePojo.create0(opts);
   }
 
 }

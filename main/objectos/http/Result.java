@@ -23,20 +23,4 @@ public sealed interface Result
     Response,
     HttpStatus {
 
-  default Result or(Handler another) {
-    return switch (this) {
-      case Request request -> another.handle(request);
-
-      default -> this;
-    };
-  }
-
-  default Result or(Result another) {
-    return switch (this) {
-      case Request _ -> another;
-
-      default -> this;
-    };
-  }
-
 }

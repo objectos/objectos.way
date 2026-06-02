@@ -25,7 +25,9 @@ import objectos.y.SocketY;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class HttpServerTaskTest1Method {
+public class ServerTaskTest1Method {
+
+  private final Content ok = Content.of(MediaType.TEXT_PLAIN, "OK\n");
 
   @DataProvider
   public Object[][] methodProvider() {
@@ -45,19 +47,19 @@ public class HttpServerTaskTest1Method {
   @Test(dataProvider = "methodProvider")
   public void valid(HttpMethod method) {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.socket = SocketY.of("""
+        ServerTaskY.resp(opts -> {
+          opts.host("www.example.com", req -> {
+            assertEquals(req.method(), method);
+
+            return ok;
+          });
+
+          opts.socket("""
           %s /index.html HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
           \r
           """.formatted(method));
-
-          opts.handler = http -> {
-            assertEquals(http.method(), method);
-
-            http.ok(Media.Bytes.textPlain("OK\n"));
-          };
         }),
 
         method.implemented
@@ -65,7 +67,7 @@ public class HttpServerTaskTest1Method {
                 ? """
                   HTTP/1.1 200 OK\r
                   Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-                  Content-Type: text/plain; charset=utf-8\r
+                  Content-Type: text/plain\r
                   Content-Length: 3\r
                   \r
                   OK
@@ -73,7 +75,7 @@ public class HttpServerTaskTest1Method {
                 : """
                   HTTP/1.1 200 OK\r
                   Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-                  Content-Type: text/plain; charset=utf-8\r
+                  Content-Type: text/plain\r
                   Content-Length: 3\r
                   \r
                   """
@@ -81,7 +83,7 @@ public class HttpServerTaskTest1Method {
               HTTP/1.1 501 Not Implemented\r
               Date: Wed, 28 Jun 2023 12:08:43 GMT\r
               Connection: close\r
-              Content-Type: text/plain; charset=utf-8\r
+              Content-Type: text/plain\r
               Content-Length: 56\r
               \r
               The requested method is not implemented by this server.

@@ -44,7 +44,7 @@ final class HttpHost5Pojo implements HttpHandler {
     handler.handle(http);
   }
 
-  public final HttpSession loadSession(Request0 request, HttpResponse0 response) {
+  public final HttpSession loadSession(RequestPojo request, HttpResponse0 response) {
     return sessionLoader.loadSession(request, response);
   }
 

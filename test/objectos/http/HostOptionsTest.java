@@ -41,30 +41,6 @@ public class HostOptionsTest {
     host = create(_ -> {});
 
     assertEquals(host.name(), "localhost:8080");
-
-    final Request request;
-    request = Request.create(_ -> {});
-
-    final Result res;
-    res = host.handle(request);
-
-    assertEquals(res, HttpStatus.NOT_FOUND);
-  }
-
-  @Test
-  public void handler() {
-    final Handler handler;
-    handler = _ -> HttpStatus.OK;
-
-    final Host host;
-    host = create(opts -> {
-      opts.handler(handler);
-    });
-
-    final Result res;
-    res = host.handle(Request.create(_ -> {}));
-
-    assertEquals(res, HttpStatus.OK);
   }
 
   @Test

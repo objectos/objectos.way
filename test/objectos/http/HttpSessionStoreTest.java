@@ -161,8 +161,8 @@ public class HttpSessionStoreTest {
     final RequestHeaders headers;
     headers = new RequestHeaders(headersMap);
 
-    final Request0 request;
-    request = new Request0(null, null, null, null, headers, null, null);
+    final RequestPojo request;
+    request = new RequestPojo(null, null, null, null, headers, null, null);
 
     final HttpSession res;
     res = store.loadSession(request, null);

@@ -16,17 +16,9 @@
 package objectos.http;
 
 import static org.testng.Assert.assertEquals;
-import java.util.List;
 import org.testng.annotations.Test;
 
 public class HostMapTest {
-
-  private HostMap create(Host... hosts) {
-    final List<Host> list;
-    list = List.of(hosts);
-
-    return HostMap.of(list);
-  }
 
   private Host named(String name) {
     return new Host(null, name);
@@ -35,7 +27,7 @@ public class HostMapTest {
   @Test
   public void testCase00() {
     final HostMap map;
-    map = create();
+    map = HostMapY.of();
 
     assertEquals(map.get("main.localhost"), null);
     assertEquals(map.get("local.localhost"), null);
@@ -48,7 +40,7 @@ public class HostMapTest {
     main = named("main.localhost");
 
     final HostMap map;
-    map = create(main);
+    map = HostMapY.of(main);
 
     assertEquals(map.get("main.localhost"), main);
     assertEquals(map.get("local.localhost"), null);
@@ -64,7 +56,7 @@ public class HostMapTest {
     local = named("local.localhost");
 
     final HostMap map;
-    map = create(main, local);
+    map = HostMapY.of(main, local);
 
     assertEquals(map.get("main.localhost"), main);
     assertEquals(map.get("local.localhost"), local);
@@ -83,7 +75,7 @@ public class HostMapTest {
     other = named("other.localhost");
 
     final HostMap map;
-    map = create(main, local, other);
+    map = HostMapY.of(main, local, other);
 
     assertEquals(map.get("main.localhost"), main);
     assertEquals(map.get("local.localhost"), local);

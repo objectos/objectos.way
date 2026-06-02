@@ -15,28 +15,27 @@
  */
 package objectos.http;
 
-final class HostHandler implements Handler {
+import static org.testng.Assert.assertEquals;
 
-  private final Handler main;
+import java.io.IOException;
+import objectos.way.Note;
+import objectos.way.Note.Long1Ref1;
 
-  private final Handler staticFiles;
+final class ServerTaskYNoteSink extends Note.NoOpSink {
 
-  HostHandler(Handler main, Handler staticFiles) {
-    this.main = main;
+  long id;
 
-    this.staticFiles = staticFiles;
-  }
+  IOException thrown;
 
   @Override
-  public final Result handle(Request request) {
-    final Result maybeMain;
-    maybeMain = main.handle(request);
+  public final <T1> void send(Long1Ref1<T1> note, long value1, T1 value2) {
+    assertEquals(note.source(), ServerTask.class.getName());
 
-    if (!(maybeMain instanceof Request)) {
-      return maybeMain;
-    }
+    assertEquals(note.key(), "THR");
 
-    return staticFiles.handle(request);
+    id = value1;
+
+    thrown = (IOException) value2;
   }
 
 }

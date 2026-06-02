@@ -26,7 +26,8 @@ record RequestBodySupportFactory(Path directory, int memoryMax, long sizeMax) {
   }
 
   public static RequestBodySupportFactory of(Path root, RequestBodyOptionsPojo bodyOptions) throws IOException {
-    Path directory = bodyOptions.directory();
+    Path directory;
+    directory = bodyOptions.directory();
 
     if (directory == null) {
       directory = Files.createTempDirectory(root, "request-body-");

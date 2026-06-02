@@ -15,28 +15,17 @@
  */
 package objectos.http;
 
-final class HostHandler implements Handler {
+import java.util.List;
 
-  private final Handler main;
+final class HostMapY {
 
-  private final Handler staticFiles;
+  private HostMapY() {}
 
-  HostHandler(Handler main, Handler staticFiles) {
-    this.main = main;
+  public static HostMap of(Host... hosts) {
+    final List<Host> list;
+    list = List.of(hosts);
 
-    this.staticFiles = staticFiles;
-  }
-
-  @Override
-  public final Result handle(Request request) {
-    final Result maybeMain;
-    maybeMain = main.handle(request);
-
-    if (!(maybeMain instanceof Request)) {
-      return maybeMain;
-    }
-
-    return staticFiles.handle(request);
+    return HostMap.of(list);
   }
 
 }
