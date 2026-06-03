@@ -17,24 +17,23 @@ package objectos.http;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.way.Media;
 import objectos.y.SocketY;
 import org.testng.annotations.Test;
 
-public class HttpServerTaskTest8KeepAlive {
+public class ServerTaskTest8KeepAlive {
 
   @Test
   public void shouldHandle01() {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.socket = SocketY.of("""
+        ServerTaskY.resp(opts -> {
+          opts.host("www.example.com", _ -> Content.of(MediaType.TEXT_PLAIN, "1"));
+
+          opts.socket("""
           GET /1 HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
           \r
           """);
-
-          opts.handler = http -> http.ok(Media.Bytes.textPlain("1"));
         }),
 
         """
@@ -51,8 +50,10 @@ public class HttpServerTaskTest8KeepAlive {
   @Test
   public void shouldHandle02() {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.socket = SocketY.of("""
+        ServerTaskY.resp(opts -> {
+          opts.host("www.example.com", http -> Content.of(MediaType.TEXT_PLAIN, http.path().substring(1)));
+
+          opts.socket("""
           GET /1 HTTP/1.1\r
           Host: www.example.com\r
           \r
@@ -62,8 +63,6 @@ public class HttpServerTaskTest8KeepAlive {
           Connection: close\r
           \r
           """);
-
-          opts.handler = http -> http.ok(Media.Bytes.textPlain(http.path().substring(1)));
         }),
 
         """
@@ -86,8 +85,10 @@ public class HttpServerTaskTest8KeepAlive {
   @Test
   public void shouldHandle03() {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.socket = SocketY.of("""
+        ServerTaskY.resp(opts -> {
+          opts.host("www.example.com", http -> Content.of(MediaType.TEXT_PLAIN, http.path().substring(1)));
+
+          opts.socket("""
           GET /1 HTTP/1.1\r
           Connection: keep-alive\r
           Host: www.example.com\r
@@ -98,8 +99,6 @@ public class HttpServerTaskTest8KeepAlive {
           Connection: close\r
           \r
           """);
-
-          opts.handler = http -> http.ok(Media.Bytes.textPlain(http.path().substring(1)));
         }),
 
         """
@@ -122,8 +121,8 @@ public class HttpServerTaskTest8KeepAlive {
   @Test(description = "should not: bad request")
   public void shouldNot01() {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.socket = SocketY.of("""
+        ServerTaskY.resp(opts -> {
+          opts.socket("""
           GET bad HTTP/1.1\r
           Host: www.example.com\r
           \r
@@ -145,19 +144,18 @@ public class HttpServerTaskTest8KeepAlive {
   @Test(description = "explicit close in response")
   public void shouldNot02() {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.socket = SocketY.of("""
+        ServerTaskY.resp(opts -> {
+          opts.host("www.example.com", _ -> Response.create(resp -> {
+            resp.status(HttpStatus.OK);
+            resp.header(HttpHeaderName.CONTENT_LENGTH, 0L);
+            resp.header(HttpHeaderName.CONNECTION, "close");
+          }));
+
+          opts.socket("""
           GET /1 HTTP/1.1\r
           Host: www.example.com\r
           \r
           """);
-
-          opts.handler = http -> {
-            http.status(HttpStatus.OK);
-            http.header(HttpHeaderName.CONTENT_LENGTH, 0L);
-            http.header(HttpHeaderName.CONNECTION, "close");
-            http.send();
-          };
         }),
 
         """
@@ -172,7 +170,7 @@ public class HttpServerTaskTest8KeepAlive {
   @Test(description = "should not: no host header")
   public void shouldNot03() {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
+        ServerTaskY.resp(opts -> {
           opts.socket = SocketY.of("""
           GET /1 HTTP/1.1\r
           Referer: x\r
@@ -196,7 +194,7 @@ public class HttpServerTaskTest8KeepAlive {
   @Test(description = "should not: empty host header")
   public void shouldNot04() {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
+        ServerTaskY.resp(opts -> {
           opts.socket = SocketY.of("""
           GET /1 HTTP/1.1\r
           Host: \r
@@ -221,7 +219,7 @@ public class HttpServerTaskTest8KeepAlive {
   @Test(description = "should not: multiple host headers")
   public void shouldNot05() {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
+        ServerTaskY.resp(opts -> {
           opts.socket = SocketY.of("""
           GET /1 HTTP/1.1\r
           Host: www.example.com\r
@@ -247,7 +245,7 @@ public class HttpServerTaskTest8KeepAlive {
   @Test(description = "Transfer-Encoding not implemented")
   public void shouldNot06() {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
+        ServerTaskY.resp(opts -> {
           opts.socket = SocketY.of("""
           POST /1 HTTP/1.1\r
           Host: www.example.com\r

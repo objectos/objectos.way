@@ -25,14 +25,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import objectos.way.Media;
 import objectos.way.Y;
 import objectos.y.PathY;
 import objectos.y.SocketY;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class HttpServerTaskTest7Form {
+public class ServerTaskTest7Form {
+
+  private final Content ok = Content.of(MediaType.TEXT_PLAIN, "OK\n");
 
   private final boolean[] validBytes = HttpY.queryValidBytes();
 
@@ -44,8 +45,20 @@ public class HttpServerTaskTest7Form {
   @Test(dataProvider = "appFormValidProvider")
   public void appFormValid(String payload, Map<String, Object> expected, String description) {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.socket = SocketY.of("""
+        ServerTaskY.resp(opts -> {
+          opts.host("www.example.com", req -> {
+            final RequestPojo request;
+            request = (RequestPojo) req;
+
+            final RequestBodyForm body;
+            body = request.bodyForm();
+
+            assertEquals(body.params(), expected);
+
+            return ok;
+          });
+
+          opts.socket("""
           POST / HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -54,21 +67,6 @@ public class HttpServerTaskTest7Form {
           \r
           %s\
           """.formatted(payload.length(), payload));
-
-          opts.handler = http -> {
-            final HttpExchange0 exchange;
-            exchange = (HttpExchange0) http;
-
-            final RequestPojo request;
-            request = exchange.request();
-
-            final RequestBodyForm body;
-            body = request.bodyForm();
-
-            assertEquals(body.params(), expected);
-
-            http.ok(Media.Bytes.textPlain("OK\n"));
-          };
         }),
 
         """
@@ -87,8 +85,11 @@ public class HttpServerTaskTest7Form {
     final Path directory;
     directory = PathY.nextDir();
 
+    final long id;
+    id = Thread.currentThread().threadId();
+
     final String filename;
-    filename = "%019d".formatted(123L);
+    filename = "%019d.body".formatted(id);
 
     final Path file;
     file = directory.resolve(filename);
@@ -100,8 +101,22 @@ public class HttpServerTaskTest7Form {
     payload = "key=" + value;
 
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.socket = SocketY.of("""
+        ServerTaskY.resp(opts -> {
+          opts.host("www.example.com", req -> {
+            final RequestPojo request;
+            request = (RequestPojo) req;
+
+            final RequestBodyForm body;
+            body = request.bodyForm();
+
+            assertEquals(body.params(), Map.of("key", value));
+
+            return ok;
+          });
+
+          opts.requestBodySupportFactory(directory);
+
+          opts.socket("""
           POST / HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -110,23 +125,6 @@ public class HttpServerTaskTest7Form {
           \r
           %s\
           """.formatted(payload.length(), payload));
-
-          opts.bodyDirectory = directory;
-
-          opts.handler = http -> {
-            final HttpExchange0 exchange;
-            exchange = (HttpExchange0) http;
-
-            final RequestPojo request;
-            request = exchange.request();
-
-            final RequestBodyForm body;
-            body = request.bodyForm();
-
-            assertEquals(body.params(), Map.of("key", value));
-
-            http.ok(Media.Bytes.textPlain("OK\n"));
-          };
         }),
 
         """
@@ -147,8 +145,11 @@ public class HttpServerTaskTest7Form {
     final Path directory;
     directory = PathY.nextDir();
 
+    final long id;
+    id = Thread.currentThread().threadId();
+
     final String filename;
-    filename = "%019d".formatted(123L);
+    filename = "%019d.body".formatted(id);
 
     final Path file;
     file = directory.resolve(filename);
@@ -160,8 +161,22 @@ public class HttpServerTaskTest7Form {
     payload = "key=" + value;
 
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.socket = SocketY.of(Y.slowStream(1, """
+        ServerTaskY.resp(opts -> {
+          opts.host("www.example.com", req -> {
+            final RequestPojo request;
+            request = (RequestPojo) req;
+
+            final RequestBodyForm body;
+            body = request.bodyForm();
+
+            assertEquals(body.params(), Map.of("key", value));
+
+            return ok;
+          });
+
+          opts.requestBodySupportFactory(directory);
+
+          opts.socket(Y.slowStream(1, """
           POST / HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -170,23 +185,6 @@ public class HttpServerTaskTest7Form {
           \r
           %s\
           """.formatted(payload.length(), payload)));
-
-          opts.bodyDirectory = directory;
-
-          opts.handler = http -> {
-            final HttpExchange0 exchange;
-            exchange = (HttpExchange0) http;
-
-            final RequestPojo request;
-            request = exchange.request();
-
-            final RequestBodyForm body;
-            body = request.bodyForm();
-
-            assertEquals(body.params(), Map.of("key", value));
-
-            http.ok(Media.Bytes.textPlain("OK\n"));
-          };
         }),
 
         """
@@ -242,8 +240,8 @@ public class HttpServerTaskTest7Form {
   @Test(dataProvider = "appFormInvalidProvider")
   public void appFormInvalid(String payload, String description) {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.socket = SocketY.of(
+        ServerTaskY.resp(opts -> {
+          opts.socket(
               """
               POST / HTTP/1.1\r
               Host: www.example.com\r
@@ -293,8 +291,20 @@ public class HttpServerTaskTest7Form {
   @Test(dataProvider = "appFormPercentValidProvider")
   public void appFormPercentValid(String payload, Map<String, Object> expected, String description) {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.socket = SocketY.of("""
+        ServerTaskY.resp(opts -> {
+          opts.host("www.example.com", req -> {
+            final RequestPojo request;
+            request = (RequestPojo) req;
+
+            final RequestBodyForm body;
+            body = request.bodyForm();
+
+            assertEquals(body.params(), expected);
+
+            return ok;
+          });
+
+          opts.socket("""
           POST / HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -303,21 +313,6 @@ public class HttpServerTaskTest7Form {
           \r
           %s\
           """.formatted(payload.length(), payload));
-
-          opts.handler = http -> {
-            final HttpExchange0 exchange;
-            exchange = (HttpExchange0) http;
-
-            final RequestPojo request;
-            request = exchange.request();
-
-            final RequestBodyForm body;
-            body = request.bodyForm();
-
-            assertEquals(body.params(), expected);
-
-            http.ok(Media.Bytes.textPlain("OK\n"));
-          };
         }),
 
         """
@@ -334,8 +329,22 @@ public class HttpServerTaskTest7Form {
   @Test(dataProvider = "appFormPercentValidProvider")
   public void appFormValidPercentWithFile(String payload, Map<String, Object> expected, String description) {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.socket = SocketY.of("""
+        ServerTaskY.resp(opts -> {
+          opts.host("www.example.com", req -> {
+            final RequestPojo request;
+            request = (RequestPojo) req;
+
+            final RequestBodyForm body;
+            body = request.bodyForm();
+
+            assertEquals(body.params(), expected);
+
+            return ok;
+          });
+
+          opts.requestBodySupportFactory(PathY.nextDir(), 1);
+
+          opts.socket("""
           POST / HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -344,25 +353,6 @@ public class HttpServerTaskTest7Form {
           \r
           %s\
           """.formatted(payload.length(), payload));
-
-          opts.bodyDirectory = PathY.nextDir();
-
-          opts.bodyMemoryMax = 1;
-
-          opts.handler = http -> {
-            final HttpExchange0 exchange;
-            exchange = (HttpExchange0) http;
-
-            final RequestPojo request;
-            request = exchange.request();
-
-            final RequestBodyForm body;
-            body = request.bodyForm();
-
-            assertEquals(body.params(), expected);
-
-            http.ok(Media.Bytes.textPlain("OK\n"));
-          };
         }),
 
         """
@@ -379,8 +369,22 @@ public class HttpServerTaskTest7Form {
   @Test(dataProvider = "appFormPercentValidProvider")
   public void appFormValidPercentWithFileSlow(String payload, Map<String, Object> expected, String description) {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.socket = SocketY.of(Y.slowStream(1, """
+        ServerTaskY.resp(opts -> {
+          opts.host("www.example.com", req -> {
+            final RequestPojo request;
+            request = (RequestPojo) req;
+
+            final RequestBodyForm body;
+            body = request.bodyForm();
+
+            assertEquals(body.params(), expected);
+
+            return ok;
+          });
+
+          opts.requestBodySupportFactory(PathY.nextDir(), 1);
+
+          opts.socket(Y.slowStream(1, """
           POST / HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -389,25 +393,6 @@ public class HttpServerTaskTest7Form {
           \r
           %s\
           """.formatted(payload.length(), payload)));
-
-          opts.bodyDirectory = PathY.nextDir();
-
-          opts.bodyMemoryMax = 1;
-
-          opts.handler = http -> {
-            final HttpExchange0 exchange;
-            exchange = (HttpExchange0) http;
-
-            final RequestPojo request;
-            request = exchange.request();
-
-            final RequestBodyForm body;
-            body = request.bodyForm();
-
-            assertEquals(body.params(), expected);
-
-            http.ok(Media.Bytes.textPlain("OK\n"));
-          };
         }),
 
         """
@@ -480,8 +465,8 @@ public class HttpServerTaskTest7Form {
   @Test(dataProvider = "appFormPercentInvalidProvider")
   public void appFormPercentInvalid(String payload, String description) {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.socket = SocketY.of(
+        ServerTaskY.resp(opts -> {
+          opts.socket(
               """
               POST / HTTP/1.1\r
               Host: www.example.com\r
@@ -509,22 +494,20 @@ public class HttpServerTaskTest7Form {
   @Test(dataProvider = "appFormPercentInvalidProvider")
   public void appFormPercentInvalidWithFile(String payload, String description) {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
+        ServerTaskY.resp(opts -> {
+          opts.requestBodySupportFactory(PathY.nextDir(), 1);
+
           opts.socket = SocketY.of(
               """
-              POST / HTTP/1.1\r
-              Host: www.example.com\r
-              Connection: close\r
-              Content-Type: application/x-www-form-urlencoded\r
-              Content-Length: %d\r
-              \r
-              %s\
-              """.formatted(payload.length(), payload).getBytes(StandardCharsets.ISO_8859_1)
+            POST / HTTP/1.1\r
+            Host: www.example.com\r
+            Connection: close\r
+            Content-Type: application/x-www-form-urlencoded\r
+            Content-Length: %d\r
+            \r
+            %s\
+            """.formatted(payload.length(), payload).getBytes(StandardCharsets.ISO_8859_1)
           );
-
-          opts.bodyDirectory = PathY.nextDir();
-
-          opts.bodyMemoryMax = 1;
         }),
 
         """
@@ -545,7 +528,17 @@ public class HttpServerTaskTest7Form {
     payload = "vmax=" + Integer.MAX_VALUE + "&vmin=" + Integer.MIN_VALUE + "&text=abc";
 
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
+        ServerTaskY.resp(opts -> {
+          opts.host("www.example.com", req -> {
+            assertEquals(req.formParamNames().size(), 3);
+            assertEquals(req.formParamAsInt("vmax", 0), Integer.MAX_VALUE);
+            assertEquals(req.formParamAsInt("vmin", 0), Integer.MIN_VALUE);
+            assertEquals(req.formParamAsInt("x", 1), 1);
+            assertEquals(req.formParamAsInt("text", 1), 1);
+
+            return ok;
+          });
+
           opts.socket = SocketY.of("""
           POST / HTTP/1.1\r
           Host: www.example.com\r
@@ -555,16 +548,6 @@ public class HttpServerTaskTest7Form {
           \r
           %s\
           """.formatted(payload.length(), payload));
-
-          opts.handler = http -> {
-            assertEquals(http.formParamNames().size(), 3);
-            assertEquals(http.formParamAsInt("vmax", 0), Integer.MAX_VALUE);
-            assertEquals(http.formParamAsInt("vmin", 0), Integer.MIN_VALUE);
-            assertEquals(http.formParamAsInt("x", 1), 1);
-            assertEquals(http.formParamAsInt("text", 1), 1);
-
-            http.ok(Media.Bytes.textPlain("OK\n"));
-          };
         }),
 
         """
@@ -584,8 +567,18 @@ public class HttpServerTaskTest7Form {
     payload = "vmax=" + Long.MAX_VALUE + "&vmin=" + Long.MIN_VALUE + "&text=abc";
 
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.socket = SocketY.of("""
+        ServerTaskY.resp(opts -> {
+          opts.host("www.example.com", req -> {
+            assertEquals(req.formParamNames().size(), 3);
+            assertEquals(req.formParamAsLong("vmax", 0L), Long.MAX_VALUE);
+            assertEquals(req.formParamAsLong("vmin", 0L), Long.MIN_VALUE);
+            assertEquals(req.formParamAsLong("x", 1L), 1L);
+            assertEquals(req.formParamAsLong("text", 1L), 1L);
+
+            return ok;
+          });
+
+          opts.socket("""
           POST / HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -594,16 +587,6 @@ public class HttpServerTaskTest7Form {
           \r
           %s\
           """.formatted(payload.length(), payload));
-
-          opts.handler = http -> {
-            assertEquals(http.formParamNames().size(), 3);
-            assertEquals(http.formParamAsLong("vmax", 0L), Long.MAX_VALUE);
-            assertEquals(http.formParamAsLong("vmin", 0L), Long.MIN_VALUE);
-            assertEquals(http.formParamAsLong("x", 1L), 1L);
-            assertEquals(http.formParamAsLong("text", 1L), 1L);
-
-            http.ok(Media.Bytes.textPlain("OK\n"));
-          };
         }),
 
         """
@@ -628,8 +611,15 @@ public class HttpServerTaskTest7Form {
   @Test(dataProvider = "getAllAsIntProvider")
   public void getAllAsInt(String payload, int[] expected) {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.socket = SocketY.of("""
+        ServerTaskY.resp(opts -> {
+          opts.host("www.example.com", req -> {
+            assertEquals(req.formParamNames(), Set.of("v"));
+            assertEquals(req.formParamAllAsInt("v", -1).toArray(), expected);
+
+            return ok;
+          });
+
+          opts.socket("""
           POST / HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -638,13 +628,6 @@ public class HttpServerTaskTest7Form {
           \r
           %s\
           """.formatted(payload.length(), payload));
-
-          opts.handler = http -> {
-            assertEquals(http.formParamNames(), Set.of("v"));
-            assertEquals(http.formParamAllAsInt("v", -1).toArray(), expected);
-
-            http.ok(Media.Bytes.textPlain("OK\n"));
-          };
         }),
 
         """
@@ -669,8 +652,15 @@ public class HttpServerTaskTest7Form {
   @Test(dataProvider = "getAllAsLongProvider")
   public void getAllAsLong(String payload, long[] expected) {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.socket = SocketY.of("""
+        ServerTaskY.resp(opts -> {
+          opts.host("www.example.com", req -> {
+            assertEquals(req.formParamNames(), Set.of("v"));
+            assertEquals(req.formParamAllAsLong("v", -1).toArray(), expected);
+
+            return ok;
+          });
+
+          opts.socket("""
           POST / HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -679,13 +669,6 @@ public class HttpServerTaskTest7Form {
           \r
           %s\
           """.formatted(payload.length(), payload));
-
-          opts.handler = http -> {
-            assertEquals(http.formParamNames(), Set.of("v"));
-            assertEquals(http.formParamAllAsLong("v", -1).toArray(), expected);
-
-            http.ok(Media.Bytes.textPlain("OK\n"));
-          };
         }),
 
         """

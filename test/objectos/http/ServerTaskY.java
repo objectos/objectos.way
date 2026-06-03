@@ -84,6 +84,16 @@ final class ServerTaskY {
     );
   }
 
+  public final void requestBodySupportFactory(Path directory, int memoryMax) {
+    requestBodySupportFactory = new RequestBodySupportFactory(
+        directory,
+
+        memoryMax,
+
+        4096
+    );
+  }
+
   public final void socket(Object... data) {
     socket = SocketY.of(data);
   }
