@@ -19,7 +19,6 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 import objectos.lang.Throwables;
-import objectos.way.Media;
 import objectos.way.Y;
 import objectos.y.SocketY;
 import org.testng.annotations.DataProvider;
@@ -67,7 +66,7 @@ public class ServerTaskTest1Method {
                 ? """
                   HTTP/1.1 200 OK\r
                   Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-                  Content-Type: text/plain\r
+                  Content-Type: text/plain; charset=utf-8\r
                   Content-Length: 3\r
                   \r
                   OK
@@ -75,7 +74,7 @@ public class ServerTaskTest1Method {
                 : """
                   HTTP/1.1 200 OK\r
                   Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-                  Content-Type: text/plain\r
+                  Content-Type: text/plain; charset=utf-8\r
                   Content-Length: 3\r
                   \r
                   """
@@ -83,7 +82,7 @@ public class ServerTaskTest1Method {
               HTTP/1.1 501 Not Implemented\r
               Date: Wed, 28 Jun 2023 12:08:43 GMT\r
               Connection: close\r
-              Content-Type: text/plain\r
+              Content-Type: text/plain; charset=utf-8\r
               Content-Length: 56\r
               \r
               The requested method is not implemented by this server.
@@ -94,19 +93,19 @@ public class ServerTaskTest1Method {
   @Test(dataProvider = "methodProvider", description = "valid + slow client")
   public void validSlowClient(HttpMethod method) {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.socket = SocketY.of(Y.slowStream(1, """
+        ServerTaskY.resp(opts -> {
+          opts.host("www.example.com", req -> {
+            assertEquals(req.method(), method);
+
+            return ok;
+          });
+
+          opts.socket(Y.slowStream(1, """
           %s /index.html HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
           \r
           """.formatted(method)));
-
-          opts.handler = http -> {
-            assertEquals(http.method(), method);
-
-            http.ok(Media.Bytes.textPlain("OK\n"));
-          };
         }),
 
         method.implemented
@@ -170,8 +169,8 @@ public class ServerTaskTest1Method {
   @Test(dataProvider = "badRequestProvider")
   public void badRequest(String data, String description) {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.socket = SocketY.of(data);
+        ServerTaskY.resp(opts -> {
+          opts.socket(data);
         }),
 
         """
@@ -188,15 +187,13 @@ public class ServerTaskTest1Method {
 
   @Test
   public void ioException() {
-    var noteSink = new HttpServerTaskYNoteSink();
+    var noteSink = new ServerTaskYNoteSink();
 
     final IOException ioe;
     ioe = Throwables.trimStackTrace(new IOException(), 1);
 
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.id = 123L;
-
+        ServerTaskY.resp(opts -> {
           opts.noteSink = noteSink;
 
           opts.socket = SocketY.of("GE", ioe);
@@ -205,7 +202,6 @@ public class ServerTaskTest1Method {
         ""
     );
 
-    assertEquals(noteSink.id, 123L);
     assertEquals(noteSink.thrown, ioe);
   }
 

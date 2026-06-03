@@ -16,6 +16,7 @@
 package objectos.http;
 
 import java.net.Socket;
+import java.nio.file.Path;
 import java.time.Clock;
 import java.util.ArrayList;
 import java.util.List;
@@ -71,6 +72,16 @@ final class ServerTaskY {
 
       opts.handler = handler;
     }));
+  }
+
+  public final void requestBodySupportFactory(Path directory) {
+    requestBodySupportFactory = new RequestBodySupportFactory(
+        directory,
+
+        1024,
+
+        4096
+    );
   }
 
   public final void socket(Object... data) {

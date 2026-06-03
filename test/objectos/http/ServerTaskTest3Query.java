@@ -23,34 +23,35 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import objectos.lang.Throwables;
-import objectos.way.Media;
 import objectos.y.SocketY;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class HttpServerTaskTest3Query {
+public class ServerTaskTest3Query {
 
   @DataProvider
   public Object[][] queryValidProvider() {
     return HttpY.queryValidProvider();
   }
 
+  private final Content ok = Content.of(MediaType.TEXT_PLAIN, "OK\n");
+
   @Test(dataProvider = "queryValidProvider")
   public void queryValid(String raw, Map<String, Object> expected, String description) {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.socket = SocketY.of("""
+        ServerTaskY.resp(opts -> {
+          opts.host("www.example.com", http -> {
+            queryAssert(http, expected);
+
+            return ok;
+          });
+
+          opts.socket("""
           GET /path?%s HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
           \r
           """.formatted(raw));
-
-          opts.handler = http -> {
-            queryAssert(http, expected);
-
-            http.ok(Media.Bytes.textPlain("OK\n"));
-          };
         }),
 
         """
@@ -106,8 +107,8 @@ public class HttpServerTaskTest3Query {
   @Test(dataProvider = "queryInvalidProvider")
   public void queryInvalid(String raw, String description) {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.socket = SocketY.of(iso8859("""
+        ServerTaskY.resp(opts -> {
+          opts.socket(iso8859("""
           GET /path?%s HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -265,15 +266,13 @@ public class HttpServerTaskTest3Query {
 
   @Test(dataProvider = "ioExceptionProvider")
   public void ioException(String req, String description) {
-    var noteSink = new HttpServerTaskYNoteSink();
+    var noteSink = new ServerTaskYNoteSink();
 
     final IOException ioe;
     ioe = Throwables.trimStackTrace(new IOException(), 1);
 
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.id = 123L;
-
+        ServerTaskY.resp(opts -> {
           opts.noteSink = noteSink;
 
           opts.socket = SocketY.of(req, ioe);
@@ -282,7 +281,6 @@ public class HttpServerTaskTest3Query {
         ""
     );
 
-    assertEquals(noteSink.id, 123L);
     assertEquals(noteSink.thrown, ioe);
   }
 
@@ -292,8 +290,8 @@ public class HttpServerTaskTest3Query {
     veryLongValue = "ba7f9045".repeat(200);
 
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.socket = SocketY.of("""
+        ServerTaskY.resp(opts -> {
+          opts.socket("""
           GET /entity?hash=%s HTTP/1.1\r
           Host: www.example.com\r
           \r
@@ -316,8 +314,8 @@ public class HttpServerTaskTest3Query {
     return s.getBytes(StandardCharsets.ISO_8859_1);
   }
 
-  private void queryAssert(HttpExchange http, Map<String, Object> expected) {
-    assertEquals(http.queryParamNames(), expected.keySet());
+  private void queryAssert(Request req, Map<String, Object> expected) {
+    assertEquals(req.queryParamNames(), expected.keySet());
 
     for (var entry : expected.entrySet()) {
       final String key;
@@ -327,14 +325,14 @@ public class HttpServerTaskTest3Query {
       value = entry.getValue();
 
       if (value instanceof String s) {
-        assertEquals(http.queryParam(key), s, key);
-        assertEquals(http.queryParamAll(key), List.of(s));
+        assertEquals(req.queryParam(key), s, key);
+        assertEquals(req.queryParamAll(key), List.of(s));
       }
 
       else {
         List<?> list = (List<?>) value;
-        assertEquals(http.queryParam(key), list.get(0), key);
-        assertEquals(http.queryParamAll(key), value, key);
+        assertEquals(req.queryParam(key), list.get(0), key);
+        assertEquals(req.queryParamAll(key), value, key);
       }
     }
   }

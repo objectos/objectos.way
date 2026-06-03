@@ -66,7 +66,7 @@ public class HostTest {
         """
         HTTP/1.1 200 OK\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-        Content-Type: text/plain\r
+        Content-Type: text/plain; charset=utf-8\r
         Content-Length: 3\r
         \r
         OK

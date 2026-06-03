@@ -23,13 +23,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import objectos.way.Media;
 import objectos.way.Y;
 import objectos.y.SocketY;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class HttpServerTaskTest5Headers {
+public class ServerTaskTest5Headers {
+
+  private final Content ok = Content.of(MediaType.TEXT_PLAIN, "OK\n");
 
   @DataProvider
   public Object[][] validProvider() {
@@ -172,27 +173,24 @@ public class HttpServerTaskTest5Headers {
   @Test(dataProvider = "validProvider")
   public void valid(String payload, Map<HttpHeaderName, Object> expected, String description) throws IOException {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.socket = SocketY.of(iso8859("""
-          GET / HTTP/1.1\r
-          %s\
-          \r
-          """.formatted(payload)));
-
-          opts.handler = http -> {
-            final HttpExchange0 impl;
-            impl = (HttpExchange0) http;
-
+        ServerTaskY.resp(opts -> {
+          opts.host("www.example.com", req -> {
             final RequestPojo request;
-            request = impl.request();
+            request = (RequestPojo) req;
 
             final RequestHeaders headers;
             headers = request.headers();
 
             assertEquals(headers.headers(), expected);
 
-            http.ok(Media.Bytes.textPlain("OK\n"));
-          };
+            return ok;
+          });
+
+          opts.socket(iso8859("""
+          GET / HTTP/1.1\r
+          %s\
+          \r
+          """.formatted(payload)));
         }),
 
         """
@@ -330,7 +328,7 @@ public class HttpServerTaskTest5Headers {
   @Test(dataProvider = "invalidProvider")
   public void invalid(String payload, String description) {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
+        ServerTaskY.resp(opts -> {
           opts.socket = SocketY.of(iso8859("""
           GET / HTTP/1.1\r
           %s\
@@ -371,7 +369,7 @@ public class HttpServerTaskTest5Headers {
   @Test(dataProvider = "invalidLineTerminatorProvider")
   public void invalidLineTerminator(String payload, String description) {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
+        ServerTaskY.resp(opts -> {
           opts.socket = SocketY.of(iso8859("""
           GET / HTTP/1.1\r
           %s\
@@ -417,8 +415,12 @@ public class HttpServerTaskTest5Headers {
   @Test(dataProvider = "fieldsTooLargeProvider")
   public void fieldsTooLarge(String payload, String description) {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.socket = SocketY.of(iso8859("""
+        ServerTaskY.resp(opts -> {
+          opts.bufferSize = 512;
+
+          opts.host("www.example.com", HandlerNoop.INSTANCE);
+
+          opts.socket(iso8859("""
           GET / HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -442,27 +444,24 @@ public class HttpServerTaskTest5Headers {
   @Test(dataProvider = "validProvider")
   public void slowClient(String payload, Map<HttpHeaderName, Object> expected, String description) throws IOException {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.socket = SocketY.of(Y.slowStream(1, iso8859("""
-          GET / HTTP/1.1\r
-          %s\
-          \r
-          """.formatted(payload))));
-
-          opts.handler = http -> {
-            final HttpExchange0 impl;
-            impl = (HttpExchange0) http;
-
+        ServerTaskY.resp(opts -> {
+          opts.host("www.example.com", req -> {
             final RequestPojo request;
-            request = impl.request();
+            request = (RequestPojo) req;
 
             final RequestHeaders headers;
             headers = request.headers();
 
             assertEquals(headers.headers(), expected);
 
-            http.ok(Media.Bytes.textPlain("OK\n"));
-          };
+            return ok;
+          });
+
+          opts.socket(Y.slowStream(1, iso8859("""
+          GET / HTTP/1.1\r
+          %s\
+          \r
+          """.formatted(payload))));
         }),
 
         """

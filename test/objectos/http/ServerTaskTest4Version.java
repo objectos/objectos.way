@@ -17,14 +17,14 @@ package objectos.http;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.way.Media;
 import objectos.way.Y;
 import objectos.y.SocketY;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-@SuppressWarnings("exports")
-public class HttpServerTaskTest4Version {
+public class ServerTaskTest4Version {
+
+  private final Content ok = Content.of(MediaType.TEXT_PLAIN, "OK\n");
 
   @DataProvider
   public Object[][] versionValidProvider() {
@@ -40,24 +40,21 @@ public class HttpServerTaskTest4Version {
     };
   }
 
+  @SuppressWarnings("exports")
   @Test(dataProvider = "versionValidProvider")
   public void versionValid(String line, Version expected, String description) {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.socket = SocketY.of("""
+        ServerTaskY.resp(opts -> {
+          opts.host("www.example.com", _ -> {
+            return ok;
+          });
+
+          opts.socket("""
           %s\r
           Host: www.example.com\r
           Connection: close\r
           \r
           """.formatted(line));
-
-          opts.handler = http -> {
-            var impl = (HttpExchange0) http;
-
-            assertEquals(impl.version(), expected);
-
-            http.ok(Media.Bytes.textPlain("OK\n"));
-          };
         }),
 
         """
@@ -82,8 +79,8 @@ public class HttpServerTaskTest4Version {
   @Test(dataProvider = "invalidLineTerminatorProvider")
   public void invalidLineTerminator(String line, String description) {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.socket = SocketY.of("""
+        ServerTaskY.resp(opts -> {
+          opts.socket("""
           %s\
           Host: www.example.com\r
           \r
@@ -114,8 +111,8 @@ public class HttpServerTaskTest4Version {
   @Test(dataProvider = "versionNotSupportedProvider")
   public void versionNotSupported(String line, String description) {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.socket = SocketY.of("""
+        ServerTaskY.resp(opts -> {
+          opts.socket("""
           %s\r
           Host: www.example.com\r
           Connection: close\r
@@ -166,8 +163,8 @@ public class HttpServerTaskTest4Version {
   @Test(dataProvider = "badRequestProvider")
   public void badRequest(String line, String description) {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.socket = SocketY.of("""
+        ServerTaskY.resp(opts -> {
+          opts.socket("""
           %s\r
           Host: www.example.com\r
           \r
@@ -186,24 +183,21 @@ public class HttpServerTaskTest4Version {
     );
   }
 
+  @SuppressWarnings("exports")
   @Test(dataProvider = "versionValidProvider")
   public void slowClientValid(String line, Version expected, String description) {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
+        ServerTaskY.resp(opts -> {
+          opts.host("www.example.com", _ -> {
+            return ok;
+          });
+
           opts.socket = SocketY.of(Y.slowStream(1, """
           %s\r
           Host: www.example.com\r
           Connection: close\r
           \r
           """.formatted(line)));
-
-          opts.handler = http -> {
-            var impl = (HttpExchange0) http;
-
-            assertEquals(impl.version(), expected);
-
-            http.ok(Media.Bytes.textPlain("OK\n"));
-          };
         }),
 
         """

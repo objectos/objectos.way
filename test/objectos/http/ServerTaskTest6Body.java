@@ -27,16 +27,17 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import objectos.lang.Throwables;
-import objectos.way.Media;
 import objectos.way.Y;
 import objectos.y.PathY;
 import objectos.y.SocketY;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class HttpServerTaskTest6Body {
+public class ServerTaskTest6Body {
 
   private static final byte[] EMPTY_BYTE_ARRAY = new byte[0];
+
+  private final Content ok = Content.of(MediaType.TEXT_PLAIN, "OK\n");
 
   @DataProvider
   public Object[][] validProvider() {
@@ -97,19 +98,19 @@ public class HttpServerTaskTest6Body {
   @Test(dataProvider = "validProvider")
   public void valid(String payload, byte[] result, String description) {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.socket = SocketY.of("""
+        ServerTaskY.resp(opts -> {
+          opts.host("www.example.com", req -> {
+            assertEquals(bytes(req), result);
+
+            return ok;
+          });
+
+          opts.socket("""
           POST / HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
           %s\
           """.formatted(payload));
-
-          opts.handler = http -> {
-            assertEquals(bytes(http), result);
-
-            http.ok(Media.Bytes.textPlain("OK\n"));
-          };
         }),
 
         """
@@ -126,19 +127,19 @@ public class HttpServerTaskTest6Body {
   @Test(dataProvider = "validProvider")
   public void validSlowClient(String payload, byte[] result, String description) {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.socket = SocketY.of(Y.slowStream(1, """
+        ServerTaskY.resp(opts -> {
+          opts.host("www.example.com", req -> {
+            assertEquals(bytes(req), result);
+
+            return ok;
+          });
+
+          opts.socket(Y.slowStream(1, """
           POST / HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
           %s\
           """.formatted(payload)));
-
-          opts.handler = http -> {
-            assertEquals(bytes(http), result);
-
-            http.ok(Media.Bytes.textPlain("OK\n"));
-          };
         }),
 
         """
@@ -157,8 +158,11 @@ public class HttpServerTaskTest6Body {
     final Path directory;
     directory = PathY.nextDir();
 
+    final long id;
+    id = Thread.currentThread().threadId();
+
     final String filename;
-    filename = "%019d.body".formatted(123L);
+    filename = "%019d.body".formatted(id);
 
     final Path file;
     file = directory.resolve(filename);
@@ -167,8 +171,18 @@ public class HttpServerTaskTest6Body {
     content = ".".repeat(1536);
 
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.socket = SocketY.of("""
+        ServerTaskY.resp(opts -> {
+          opts.host("www.example.com", req -> {
+            assertEquals(bytes(req), ascii(content));
+
+            assertTrue(Files.exists(file));
+
+            return ok;
+          });
+
+          opts.requestBodySupportFactory(directory);
+
+          opts.socket("""
           GET / HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -176,18 +190,6 @@ public class HttpServerTaskTest6Body {
           \r
           %s\
           """.formatted(content));
-
-          opts.bodyDirectory = directory;
-
-          opts.id = 123L;
-
-          opts.handler = http -> {
-            assertEquals(bytes(http), ascii(content));
-
-            assertTrue(Files.exists(file));
-
-            http.ok(Media.Bytes.textPlain("OK\n"));
-          };
         }),
 
         """
@@ -208,8 +210,11 @@ public class HttpServerTaskTest6Body {
     final Path directory;
     directory = PathY.nextDir();
 
+    final long id;
+    id = Thread.currentThread().threadId();
+
     final String filename;
-    filename = "%019d.body".formatted(123L);
+    filename = "%019d.body".formatted(id);
 
     final Path file;
     file = directory.resolve(filename);
@@ -218,8 +223,18 @@ public class HttpServerTaskTest6Body {
     content = ".".repeat(1536);
 
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.socket = SocketY.of(Y.slowStream(1, """
+        ServerTaskY.resp(opts -> {
+          opts.host("www.example.com", req -> {
+            assertEquals(bytes(req), ascii(content));
+
+            assertTrue(Files.exists(file));
+
+            return ok;
+          });
+
+          opts.requestBodySupportFactory(directory);
+
+          opts.socket(Y.slowStream(1, """
           GET / HTTP/1.1\r
           Host: www.example.com\r
           Connection: close\r
@@ -227,18 +242,6 @@ public class HttpServerTaskTest6Body {
           \r
           %s\
           """.formatted(content)));
-
-          opts.bodyDirectory = directory;
-
-          opts.id = 123L;
-
-          opts.handler = http -> {
-            assertEquals(bytes(http), ascii(content));
-
-            assertTrue(Files.exists(file));
-
-            http.ok(Media.Bytes.textPlain("OK\n"));
-          };
         }),
 
         """
@@ -290,18 +293,16 @@ public class HttpServerTaskTest6Body {
 
   @Test(dataProvider = "ioExceptionProvider")
   public void ioException(String payload, String description) {
-    var noteSink = new HttpServerTaskYNoteSink();
+    var noteSink = new ServerTaskYNoteSink();
 
     final IOException ioe;
     ioe = Throwables.trimStackTrace(new IOException(), 1);
 
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.id = 123L;
-
+        ServerTaskY.resp(opts -> {
           opts.noteSink = noteSink;
 
-          opts.socket = SocketY.of(
+          opts.socket(
               """
               POST / HTTP/1.1\r
               Host: www.example.com\r
@@ -316,14 +317,14 @@ public class HttpServerTaskTest6Body {
         ""
     );
 
-    assertEquals(noteSink.id, 123L);
+    assertEquals(noteSink.id, Thread.currentThread().threadId());
     assertEquals(noteSink.thrown, ioe);
   }
 
   @Test(dataProvider = "ioExceptionProvider")
   public void eof(String payload, String description) {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
+        ServerTaskY.resp(opts -> {
           opts.socket = SocketY.of(
               """
               POST / HTTP/1.1\r
@@ -346,9 +347,9 @@ public class HttpServerTaskTest6Body {
     );
   }
 
-  private byte[] bytes(HttpExchange http) {
+  private byte[] bytes(Request req) {
     try (
-        InputStream is = http.bodyInputStream();
+        InputStream is = req.bodyInputStream();
         ByteArrayOutputStream out = new ByteArrayOutputStream();
     ) {
       is.transferTo(out);
@@ -380,7 +381,7 @@ public class HttpServerTaskTest6Body {
   @Test(dataProvider = "badRequestProvider")
   public void badRequest(String request, String description) {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
+        ServerTaskY.resp(opts -> {
           opts.socket = SocketY.of(request);
         }),
 
@@ -399,7 +400,7 @@ public class HttpServerTaskTest6Body {
   @Test
   public void lengthRequired() {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
+        ServerTaskY.resp(opts -> {
           opts.socket = SocketY.of("""
           POST / HTTP/1.1\r
           Host: www.example.com\r
@@ -455,7 +456,7 @@ public class HttpServerTaskTest6Body {
   @Test(dataProvider = "contentTooLargeProvider")
   public void contentTooLarge(String request, String description) {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
+        ServerTaskY.resp(opts -> {
           opts.socket = SocketY.of(request);
         }),
 

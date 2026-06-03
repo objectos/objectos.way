@@ -15,26 +15,27 @@
  */
 package objectos.http;
 
-/// Represents a media type such as `application/json` or
-/// `text/html; charset=utf-8`.
+/// Represents a media type such as `text/html; charset=utf-8`
+/// or `application/json`.
 public sealed interface MediaType permits MediaTypePojo {
 
   /// The `application/octet-stream` media type.
   MediaType APPLICATION_OCTET_STREAM = MediaTypePojo.of0("application/octet-stream");
 
-  /// The `text/css` media type.
-  MediaType TEXT_CSS = MediaTypePojo.of0("text/css");
+  /// The `text/css; charset=utf-8` media type.
+  MediaType TEXT_CSS = MediaTypePojo.of0("text/css; charset=utf-8");
 
-  /// The `text/html` media type.
-  MediaType TEXT_HTML = MediaTypePojo.of0("text/html");
+  /// The `text/html; charset=utf-8` media type.
+  MediaType TEXT_HTML = MediaTypePojo.of0("text/html; charset=utf-8");
 
-  /// The `text/javascript` media type.
-  MediaType TEXT_JAVASCRIPT = MediaTypePojo.of0("text/javascript");
+  /// The `text/javascript; charset=utf-8` media type.
+  MediaType TEXT_JAVASCRIPT = MediaTypePojo.of0("text/javascript; charset=utf-8");
 
-  /// The `text/plain` media type.
-  MediaType TEXT_PLAIN = MediaTypePojo.of0("text/plain");
+  /// The `text/plain; charset=utf-8` media type.
+  MediaType TEXT_PLAIN = MediaTypePojo.of0("text/plain; charset=utf-8");
 
-  /// Returns the full name of this media type, such as `text/html`.
+  /// Returns the full name of this media type, such as `text/html;
+  /// charset=utf-8` or `application/json`.
   ///
   /// @return the full name of this media type
   String fullType();

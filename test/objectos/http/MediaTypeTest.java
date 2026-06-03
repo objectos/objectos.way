@@ -24,10 +24,10 @@ public class MediaTypeTest {
   @Test
   public void fullType() {
     assertEquals(MediaType.APPLICATION_OCTET_STREAM.fullType(), "application/octet-stream");
-    assertEquals(MediaType.TEXT_CSS.fullType(), "text/css");
-    assertEquals(MediaType.TEXT_HTML.fullType(), "text/html");
-    assertEquals(MediaType.TEXT_JAVASCRIPT.fullType(), "text/javascript");
-    assertEquals(MediaType.TEXT_PLAIN.fullType(), "text/plain");
+    assertEquals(MediaType.TEXT_CSS.fullType(), "text/css; charset=utf-8");
+    assertEquals(MediaType.TEXT_HTML.fullType(), "text/html; charset=utf-8");
+    assertEquals(MediaType.TEXT_JAVASCRIPT.fullType(), "text/javascript; charset=utf-8");
+    assertEquals(MediaType.TEXT_PLAIN.fullType(), "text/plain; charset=utf-8");
   }
 
 }
