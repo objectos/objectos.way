@@ -22,6 +22,8 @@ import java.util.concurrent.locks.ReentrantLock;
 
 final class SessionPojo implements Session {
 
+  static final int SESSION_LENGTH = 32;
+
   private Instant accessTime;
 
   private final HttpToken id;

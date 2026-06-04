@@ -17,39 +17,43 @@ package objectos.http;
 
 import java.time.InstantSource;
 import java.util.Map;
-import java.util.random.RandomGenerator;
+import java.util.function.Supplier;
+import objectos.http.HttpToken.ParseException;
 
-final class SessionFactory {
+final class SessionFinder {
 
   private final InstantSource instantSource;
 
-  private final RandomGenerator randomGenerator;
-
   private final Map<HttpToken, SessionPojo> sessions;
 
-  SessionFactory(InstantSource instantSource, RandomGenerator randomGenerator, Map<HttpToken, SessionPojo> sessions) {
+  SessionFinder(InstantSource instantSource, Map<HttpToken, SessionPojo> sessions) {
     this.instantSource = instantSource;
-
-    this.randomGenerator = randomGenerator;
 
     this.sessions = sessions;
   }
 
-  public final Session next() {
-    SessionPojo session, maybeExisting;
+  public final Session findOr(String id, Supplier<Session> supplier) {
+    try {
+      final HttpToken key;
+      key = HttpToken.parse(id, SessionPojo.SESSION_LENGTH);
 
-    do {
-      final HttpToken id;
-      id = HttpToken.of(randomGenerator, SessionPojo.SESSION_LENGTH);
+      if (key == null) {
+        return supplier.get();
+      }
 
-      session = new SessionPojo(id);
+      final SessionPojo existing;
+      existing = sessions.get(key);
 
-      maybeExisting = sessions.putIfAbsent(id, session);
-    } while (maybeExisting != null);
+      if (existing == null) {
+        return supplier.get();
+      }
 
-    session.touch(instantSource);
+      existing.touch(instantSource);
 
-    return session;
+      return existing;
+    } catch (ParseException e) {
+      return supplier.get();
+    }
   }
 
 }
