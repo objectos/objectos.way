@@ -35,6 +35,21 @@ record Host(Handler handler, String name) {
         yield of(content);
       }
 
+      case RedirectPojo(HttpStatus0 status, String location) -> {
+        final ResponseBuilder builder;
+        builder = new ResponseBuilder();
+
+        builder.status(status);
+
+        builder.date();
+
+        builder.header(HttpHeaderName.CONTENT_LENGTH, "0");
+
+        builder.header(HttpHeaderName.LOCATION, location);
+
+        yield builder.build();
+      }
+
       case ResponsePojo response -> response;
 
       default -> throw new UnsupportedOperationException("Implement me :: " + result);

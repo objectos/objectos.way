@@ -15,14 +15,18 @@
  */
 package objectos.http;
 
-/// The outcome of processing a `Request` instance by a `Handler`.
-public sealed interface Result
-    permits
-    Content,
-    ContentProvider,
-    Redirect,
-    Request,
-    Response,
-    HttpStatus {
+import java.util.Objects;
+
+record RedirectPojo(HttpStatus0 status, String location) implements Redirect {
+
+  static Redirect of(HttpStatus0 status, String location) {
+    final String l;
+    l = Objects.requireNonNull(location, "location == null");
+
+    final String raw;
+    raw = Http.raw(l);
+
+    return new RedirectPojo(status, raw);
+  }
 
 }

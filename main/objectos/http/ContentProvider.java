@@ -15,7 +15,7 @@
  */
 package objectos.http;
 
-/// Represents an object which can provide `Content` instances.
+/// An object which can provide `Content` instances.
 @FunctionalInterface
 public non-sealed interface ContentProvider extends Result {
 

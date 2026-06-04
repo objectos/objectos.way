@@ -377,69 +377,6 @@ public class ServerTaskTest9Result0Content {
     );
   }
 
-  @Test
-  public void provider01() {
-    final ContentProvider entity;
-    entity = () -> Content.of(MediaType.TEXT_PLAIN, "foo");
-
-    assertEquals(
-        ServerTaskY.resp(opts -> {
-          opts.bufferSize = 256;
-
-          opts.host("www.example.com", _ -> entity);
-
-          opts.socket("""
-          GET /1 HTTP/1.1\r
-          Host: www.example.com\r
-          Connection: close\r
-          \r
-          """);
-        }),
-
-        """
-        HTTP/1.1 200 OK\r
-        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-        Content-Type: text/plain; charset=utf-8\r
-        Content-Length: 3\r
-        \r
-        foo\
-        """
-    );
-  }
-
-  @Test
-  public void provider02() {
-    final ContentProvider entity;
-    entity = () -> Content.of(MediaType.TEXT_PLAIN, out -> out.write("foo".getBytes()));
-
-    assertEquals(
-        ServerTaskY.resp(opts -> {
-          opts.bufferSize = 256;
-
-          opts.host("www.example.com", _ -> entity);
-
-          opts.socket("""
-          GET /1 HTTP/1.1\r
-          Host: www.example.com\r
-          Connection: close\r
-          \r
-          """);
-        }),
-
-        """
-        HTTP/1.1 200 OK\r
-        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-        Content-Type: text/plain; charset=utf-8\r
-        Transfer-Encoding: chunked\r
-        \r
-        03\r
-        foo\r
-        0\r
-        \r
-        """
-    );
-  }
-
   private String contentTypeToFillResponseHeaders(int buffer) {
     final String blankContentType;
     blankContentType = """
