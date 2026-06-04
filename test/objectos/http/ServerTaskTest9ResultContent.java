@@ -19,7 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 import org.testng.annotations.Test;
 
-public class ServerTaskTest9Result0Content {
+public class ServerTaskTest9ResultContent {
 
   @Test
   public void fixedLength01() {

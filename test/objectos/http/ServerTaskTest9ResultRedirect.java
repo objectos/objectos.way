@@ -19,7 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 import org.testng.annotations.Test;
 
-public class ServerTaskTest9Result2Redirect {
+public class ServerTaskTest9ResultRedirect {
 
   @Test
   public void movedPermanently01() {
