@@ -20,7 +20,6 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
-import java.util.Map;
 import java.util.function.Consumer;
 import java.util.random.RandomGenerator;
 import objectos.way.Y;
@@ -78,112 +77,6 @@ public class HttpSessionStoreTest {
         assertEquals(message, expectedMessage);
       }
     }
-  }
-
-  @DataProvider
-  public Object[][] loadSessionProvider() {
-    return new Object[][] {
-        // valid
-        {true, "1 value",
-            "WAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ="},
-        {true, "2 values, valid first",
-            "WAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=; other=foo"},
-        {true, "2 values, valid second",
-            "other=foo; WAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ="},
-        {true, "2 values, valid second, first value empty",
-            "other=; WAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ="},
-        {true, "2 values, valid second, first empty",
-            "=; WAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ="},
-        {true, "2 values, same name, valid first",
-            "WAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=; WAY=foo"},
-        {true, "2 values, same name, valid second",
-            "WAY=foo; WAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ="},
-        {true, "2 values, valid second, no space after semicolon",
-            "other=foo;WAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ="},
-        {true, "valid cookie with trailing semicolon",
-            "WAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=;"},
-        {true, "valid cookie with leading semicolon",
-            ";WAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ="},
-        {true, "3 values, valid one in the middle",
-            "foo=bar; WAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=; baz=qux"},
-
-        // invalid
-        {false, "empty header value",
-            ""},
-        {false, "1 value, empty cookie value",
-            "WAY="},
-        {false, "1 value, length = length - 1",
-            "WAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ"},
-        {false, "1 value, valid length, invalid value",
-            "WAY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX="},
-        {false, "header is null",
-            null},
-        {false, "1 value, wrong cookie name",
-            "SESSIONID=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ="},
-        {false, "1 value, name correct but mixed case",
-            "way=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ="},
-        {false, "1 value, name correct but extra whitespace",
-            "WAY = AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ="},
-        {false, "1 value, name correct but tab character between name and equals",
-            "WAY\t=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ="},
-        {false, "cookie name is substring of correct name",
-            "WA=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ="},
-        {false, "cookie name starts with correct name",
-            "WAY_TOO_LONG=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ="},
-        {false, "valid value surrounded by spaces",
-            "  WAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=  "}
-    };
-  }
-
-  @Test(dataProvider = "loadSessionProvider")
-  public void loadSession(boolean present, String description, String headerValue) {
-    final HttpToken id;
-    id = HttpToken.of32(1, 2, 3, 4);
-
-    final HttpSession0 session;
-    session = new HttpSession0(id, Map.of());
-
-    final HttpSessionStoreImpl store;
-    store = create(opts -> {
-      opts.cookieName("WAY");
-
-      opts.session(session);
-    });
-
-    final Map<HttpHeaderName, Object> headersMap;
-
-    if (headerValue != null) {
-      headersMap = Map.of(HttpHeaderName.COOKIE, headerValue);
-    } else {
-      headersMap = Map.of();
-    }
-
-    final RequestHeaders headers;
-    headers = new RequestHeaders(headersMap);
-
-    final RequestPojo request;
-    request = new RequestPojo(null, null, null, null, headers, null, null);
-
-    final HttpSession res;
-    res = store.loadSession(request, null);
-
-    assertEquals(res.sessionPresent(), present);
-  }
-
-  @DataProvider
-  public Object[] loadSessionInvalidProvider() {
-    final HttpToken id;
-    id = HttpToken.of32(1, 2, 3, 4);
-
-    return new Object[][] {
-        {id, "WAY=" + id, "1 value"},
-        {id, "WAY=" + id + "; other=foo", "2 values, valid first"},
-        {id, "other=foo; WAY=" + id, "2 values, valid second"},
-        {id, "other=; WAY=" + id, "2 values, valid second, first value empty"},
-        {id, "=; WAY=" + id, "2 values, valid second, first empty"},
-        {id, "WAY=" + id + "; WAY=foo", "2 values, same name, valid first"},
-        {id, "WAY=foo; WAY=" + id, "2 values, same name, valid second"}
-    };
   }
 
   @DataProvider

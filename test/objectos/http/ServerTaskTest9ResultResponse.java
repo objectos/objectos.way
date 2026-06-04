@@ -17,6 +17,7 @@ package objectos.http;
 
 import static org.testng.Assert.assertEquals;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -24,7 +25,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
+import objectos.lang.Throwables;
+import objectos.y.InputStreamY;
+import objectos.y.OutputStreamY;
 import objectos.y.PathY;
+import objectos.y.SocketY;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -549,114 +554,58 @@ public class ServerTaskTest9ResultResponse {
     );
   }
 
-  /*
-
-  // ##################################################################
-  // # BEGIN: IOException while writing
-  // ##################################################################
-
   @Test(description = "throws on COMMIT")
   public void ioException01() {
-  assertEquals(
-  ServerTaskY.resp(opts -> {
-  opts.socket = SocketY.create(config -> {
-  config.inputStream = InputStreamY.of("""
-    GET /1 HTTP/1.1\r
-    Host: www.example.com\r
-    Connection: close\r
-    \r
-    """);
+    assertEquals(
+        ServerTaskY.resp(opts -> {
+          opts.host("www.example.com", _ -> Content.of(MediaType.TEXT_PLAIN, "OK"));
 
-  config.outputStream = OutputStreamY.create(os -> {
-  os.throwOnWrite = Throwables.trimStackTrace(new IOException(), 1);
-  });
-  });
+          opts.socket = SocketY.create(config -> {
+            config.inputStream = InputStreamY.of("""
+            GET /1 HTTP/1.1\r
+            Host: www.example.com\r
+            Connection: close\r
+            \r
+            """);
 
-  opts.handler = http -> http.ok(Media.Bytes.textPlain("OK"));
-  }),
+            config.outputStream = OutputStreamY.create(os -> {
+              os.throwOnWrite = Throwables.trimStackTrace(new IOException(), 1);
+            });
+          });
+        }),
 
-  ""
-  );
+        ""
+    );
   }
 
   @Test(description = "throws on headerUnchecked")
   public void ioException02() {
-  assertEquals(
-  ServerTaskY.resp(opts -> {
-  opts.socket = SocketY.create(config -> {
-  config.inputStream = InputStreamY.of("""
-    GET /1 HTTP/1.1\r
-    Host: www.example.com\r
-    Connection: close\r
-    \r
-    """);
+    assertEquals(
+        ServerTaskY.resp(opts -> {
+          final String veryLargeHex;
+          veryLargeHex = "f756cd80".repeat(256);
 
-  config.outputStream = OutputStreamY.create(os -> {
-  os.throwOnWrite = Throwables.trimStackTrace(new IOException(), 1);
-  });
-  });
+          final String location;
+          location = "/foo/" + veryLargeHex;
 
-  final String veryLargeHex;
-  veryLargeHex = "f756cd80".repeat(256);
+          opts.host("www.example.com", _ -> Redirect.found(location));
 
-  final String location;
-  location = "/foo/" + veryLargeHex;
+          opts.socket = SocketY.create(config -> {
+            config.inputStream = InputStreamY.of("""
+            GET /1 HTTP/1.1\r
+            Host: www.example.com\r
+            Connection: close\r
+            \r
+            """);
 
-  opts.handler = http -> http.found(location);
-  }),
+            config.outputStream = OutputStreamY.create(os -> {
+              os.throwOnWrite = Throwables.trimStackTrace(new IOException(), 1);
+            });
+          });
+        }),
 
-  ""
-  );
+        ""
+    );
   }
-
-  // ##################################################################
-  // # END: IOException while writing
-  // ##################################################################
-
-  @Test(description = "Disallow response methods after response is sent")
-  public void state01() {
-  state(http -> http.status(HttpStatus.NOT_FOUND));
-  state(http -> http.header(HttpHeaderName.REFERER, 123L));
-  state(http -> http.header(HttpHeaderName.REFERER, "foo"));
-  state(http -> http.send());
-  state(http -> http.send(new byte[0]));
-  state(http -> http.send(new byte[] {1, 2, 3}, 0, 1));
-  }
-
-  private void state(HttpHandler handler) {
-  assertEquals(
-  ServerTaskY.resp(opts -> {
-  opts.socket("""
-  GET /1 HTTP/1.1\r
-  Host: www.example.com\r
-  Connection: close\r
-  \r
-  """);
-
-  opts.handler = http -> {
-  http.ok(Media.Bytes.textPlain("1"));
-
-  try {
-  handler.handle(http);
-
-  Assert.fail("It should have thrown");
-  } catch (IllegalStateException expected) {
-  assertEquals(expected.getMessage(), "A response has already been written out");
-  }
-  };
-  }),
-
-  """
-  HTTP/1.1 200 OK\r
-  Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-  Content-Type: text/plain; charset=utf-8\r
-  Content-Length: 1\r
-  \r
-  1\
-  """
-  );
-  }
-
-  */
 
 }

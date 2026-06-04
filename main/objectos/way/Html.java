@@ -1142,12 +1142,10 @@ public final class Html {
     /// @param m the markup object to use
     void renderHtml(Html.Markup m);
 
-    /// Writes the generated HTML to the specified output stream using the
-    /// `UTF-8` charset.
+    /// Returns a new `Content` object with the `text/html; charset=utf-8` type
+    /// and capable of writing the generated HTML.
     ///
-    /// @param out the destination output stream
-    ///
-    /// @throws IOException if an I/O error occurs
+    /// @return a newly created `Content` object
     @Override
     default Content toContent() {
       return Content.of(MediaType.TEXT_HTML, this);
