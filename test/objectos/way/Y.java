@@ -54,7 +54,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
-import java.util.random.RandomGenerator;
 import java.util.stream.Collectors;
 import javax.sql.DataSource;
 import javax.tools.JavaCompiler;
@@ -902,26 +901,6 @@ public final class Y implements ISuiteListener {
     result = sb.toString();
 
     assertEquals(result, expected);
-  }
-
-  public static RandomGenerator randomGeneratorOfLongs(long... longs) {
-    return new RandomGenerator() {
-      private final long[] values = longs.clone();
-
-      private int index;
-
-      @Override
-      public final long nextLong() {
-        final int currentIndex;
-        currentIndex = index++;
-
-        if (index == values.length) {
-          index = 0;
-        }
-
-        return values[currentIndex];
-      }
-    };
   }
 
 }

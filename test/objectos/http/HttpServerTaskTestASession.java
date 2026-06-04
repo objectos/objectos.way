@@ -26,7 +26,7 @@ import java.io.InputStream;
 import java.io.UncheckedIOException;
 import objectos.lang.Key;
 import objectos.way.Media;
-import objectos.way.Y;
+import objectos.y.RandomGeneratorY;
 import objectos.y.SocketY;
 import org.testng.annotations.Test;
 
@@ -39,7 +39,7 @@ public class HttpServerTaskTestASession {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
           opts.sessionStore = HttpSessionStore.create(options -> {
-            options.sessionGenerator(Y.randomGeneratorOfLongs(1L, 2L, 3L, 4L));
+            options.sessionGenerator(RandomGeneratorY.ofLongs(1L, 2L, 3L, 4L));
           });
 
           opts.socket = SocketY.of(
@@ -116,7 +116,7 @@ public class HttpServerTaskTestASession {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
           opts.sessionStore = HttpSessionStore.create(options -> {
-            options.sessionGenerator(Y.randomGeneratorOfLongs(1L, 2L, 3L, 4L));
+            options.sessionGenerator(RandomGeneratorY.ofLongs(1L, 2L, 3L, 4L));
           });
 
           opts.socket = SocketY.of(
@@ -223,7 +223,7 @@ public class HttpServerTaskTestASession {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
           opts.sessionStore = HttpSessionStore.create(options -> {
-            options.sessionGenerator(Y.randomGeneratorOfLongs(1L, 2L, 3L, 4L));
+            options.sessionGenerator(RandomGeneratorY.ofLongs(1L, 2L, 3L, 4L));
           });
 
           opts.socket = SocketY.of(
@@ -287,7 +287,7 @@ public class HttpServerTaskTestASession {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
           opts.sessionStore = HttpSessionStore.create(options -> {
-            options.sessionGenerator(Y.randomGeneratorOfLongs(1L, 2L, 3L, 4L));
+            options.sessionGenerator(RandomGeneratorY.ofLongs(1L, 2L, 3L, 4L));
           });
 
           opts.socket = SocketY.of(
@@ -374,7 +374,7 @@ public class HttpServerTaskTestASession {
     assertEquals(
         HttpServerTaskY.resp(opts -> {
           opts.sessionStore = HttpSessionStore.create(options -> {
-            options.sessionGenerator(Y.randomGeneratorOfLongs(1L, 2L, 3L, 4L));
+            options.sessionGenerator(RandomGeneratorY.ofLongs(1L, 2L, 3L, 4L));
           });
 
           opts.socket = SocketY.of(

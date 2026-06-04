@@ -30,6 +30,7 @@ import objectos.http.HttpHandler;
 import objectos.http.HttpRoutingXTest;
 import objectos.http.HttpServer;
 import objectos.http.HttpSessionStore;
+import objectos.y.RandomGeneratorY;
 
 public final class TestingHttpServer {
 
@@ -139,7 +140,7 @@ public final class TestingHttpServer {
           host.sessionStore(HttpSessionStore.create(config -> {
             config.cookieName("HTTPMODULETEST");
 
-            config.sessionGenerator(Y.randomGeneratorOfLongs(1L, 2L, 3L, 4L));
+            config.sessionGenerator(RandomGeneratorY.ofLongs(1L, 2L, 3L, 4L));
           }));
         });
 

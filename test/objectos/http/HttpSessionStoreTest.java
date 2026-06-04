@@ -23,6 +23,7 @@ import static org.testng.Assert.assertTrue;
 import java.util.function.Consumer;
 import java.util.random.RandomGenerator;
 import objectos.way.Y;
+import objectos.y.RandomGeneratorY;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -295,7 +296,7 @@ public class HttpSessionStoreTest {
   }
 
   private RandomGenerator generator(long... values) {
-    return Y.randomGeneratorOfLongs(values);
+    return RandomGeneratorY.ofLongs(values);
   }
 
 }
