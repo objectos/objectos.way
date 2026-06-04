@@ -15,13 +15,34 @@
  */
 package objectos.http;
 
-/// The outcome of processing a `Request` instance by a `Handler`.
-public sealed interface Result
-    permits
-    Content,
-    ContentProvider,
-    Request,
-    Response,
-    HttpStatus {
+import static org.testng.Assert.assertEquals;
+
+import java.io.IOException;
+import objectos.y.OutputStreamY;
+import org.testng.annotations.Test;
+
+public class ResponseSenderTest {
+
+  @Test
+  public void get01() throws IOException {
+    assertEquals(
+        ResponseSenderY.send(
+            opts -> {
+              opts.bufferSize = 64;
+
+              opts.outputStream = OutputStreamY.create();
+            },
+
+            opts -> {
+              opts.status(HttpStatus.OK);
+            }
+        ),
+
+        """
+        HTTP/1.1 200 OK\r
+        \r
+        """
+    );
+  }
 
 }

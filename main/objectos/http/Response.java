@@ -67,14 +67,16 @@ public sealed interface Response extends Result permits ResponsePojo {
     /// Adds the `Date` header field with the server's current time.
     void date();
 
-    /// Sets the response body to the contents of the specified file.
+    /// Sends the specified file as part of this response message.
     ///
-    /// @param file the path to a regular file containing the body contents
-    void body(Path file);
+    /// @param file the path to a regular file to be sent as part of this
+    ///        response message
+    void send(Path file);
 
     /// Sends the specified `Content` object as part of this response message.
     /// As a minimum, the `Content-Type` header field will be appended to the
-    /// response and the response body
+    /// response, and the response body will be provided by the specified content
+    /// object.
     ///
     /// @param content the object to be sent as part of this response message
     void send(Content content);

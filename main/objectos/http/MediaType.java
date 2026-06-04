@@ -16,7 +16,7 @@
 package objectos.http;
 
 /// Represents a media type such as `text/html; charset=utf-8`
-/// or `application/json`.
+/// and `application/json`.
 public sealed interface MediaType permits MediaTypePojo {
 
   /// The `application/octet-stream` media type.

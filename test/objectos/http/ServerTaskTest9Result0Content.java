@@ -107,15 +107,6 @@ public class ServerTaskTest9Result0Content {
     media = ContentY.chunked(MediaType.TEXT_PLAIN, 64);
 
     assertEquals(
-        media.toString(),
-
-        """
-        .................................................
-        12345678901234\
-        """
-    );
-
-    assertEquals(
         ServerTaskY.resp(opts -> {
           opts.bufferSize = 256;
 
@@ -148,14 +139,6 @@ public class ServerTaskTest9Result0Content {
   public void chunked02() {
     final Content media;
     media = ContentY.chunked(MediaType.TEXT_PLAIN, 15);
-
-    assertEquals(
-        media.toString(),
-
-        """
-        123456789012345\
-        """
-    );
 
     assertEquals(
         ServerTaskY.resp(opts -> {
@@ -202,21 +185,6 @@ public class ServerTaskTest9Result0Content {
     final Content media;
     media = ContentY.chunked(MediaType.TEXT_PLAIN, 256 - TEXT_RESP_LEN - 4 - 2 - 5);
 
-    final String body;
-    body = media.toString();
-
-    assertEquals(
-        body,
-
-        """
-        .................................................
-        .................................................
-        12345678901234567890\
-        """
-    );
-
-    assertEquals(Integer.toHexString(body.length()), "78");
-
     final String expectedResponse;
     expectedResponse = """
     HTTP/1.1 200 OK\r
@@ -259,8 +227,6 @@ public class ServerTaskTest9Result0Content {
 
     // buffer length
     mediaLength += 256;
-    // unencoded data + headers fit in buffer
-    mediaLength -= TEXT_RESP_LEN;
     // 4 = chunk-size + CR + LF
     mediaLength -= 4;
     // 2 = CR + LF (after data)
@@ -280,30 +246,18 @@ public class ServerTaskTest9Result0Content {
     Content-Type: text/plain; charset=utf-8\r
     Transfer-Encoding: chunked\r
     \r
-    7D\r
+    FA\r
     .................................................
     .................................................
-    1234567890123456789012345\r
+    .................................................
+    .................................................
+    .................................................
+    \r
     01\r
-    6\r
+    1\r
     0\r
     \r
     """;
-
-    final String body;
-    body = media.toString();
-
-    assertEquals(
-        body,
-
-        """
-        .................................................
-        .................................................
-        12345678901234567890123456\
-        """
-    );
-
-    assertEquals(Integer.toHexString(body.length()), "7e");
 
     assertEquals(
         ServerTaskY.resp(opts -> {
@@ -367,23 +321,6 @@ public class ServerTaskTest9Result0Content {
 
         expectedResponse
     );
-
-    final String body;
-    body = media.toString();
-
-    assertEquals(
-        body,
-
-        """
-        .................................................
-        .................................................
-        .................................................
-        .................................................
-        1234567890123456789012345678901234567890\
-        """
-    );
-
-    assertEquals(Integer.toHexString(body.length()), "f0");
   }
 
   @Test(description = "trailer chunk does not fit in buffer")
@@ -438,21 +375,69 @@ public class ServerTaskTest9Result0Content {
 
         expectedResponse
     );
+  }
 
-    final String body;
-    body = media.toString();
+  @Test
+  public void provider01() {
+    final ContentProvider entity;
+    entity = () -> Content.of(MediaType.TEXT_PLAIN, "foo");
 
     assertEquals(
-        body,
+        ServerTaskY.resp(opts -> {
+          opts.bufferSize = 256;
+
+          opts.host("www.example.com", _ -> entity);
+
+          opts.socket("""
+          GET /1 HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """);
+        }),
 
         """
-        .................................................
-        .................................................
-        123456789012345678901\
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 3\r
+        \r
+        foo\
         """
     );
+  }
 
-    assertEquals(Integer.toHexString(body.length()), "79");
+  @Test
+  public void provider02() {
+    final ContentProvider entity;
+    entity = () -> Content.of(MediaType.TEXT_PLAIN, out -> out.write("foo".getBytes()));
+
+    assertEquals(
+        ServerTaskY.resp(opts -> {
+          opts.bufferSize = 256;
+
+          opts.host("www.example.com", _ -> entity);
+
+          opts.socket("""
+          GET /1 HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """);
+        }),
+
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Transfer-Encoding: chunked\r
+        \r
+        03\r
+        foo\r
+        0\r
+        \r
+        """
+    );
   }
 
   private String contentTypeToFillResponseHeaders(int buffer) {

@@ -15,16 +15,8 @@
  */
 package objectos.http;
 
-import java.nio.file.Path;
+import objectos.lang.BinaryObject;
 
-sealed interface ResponseBody {
-
-  record OfContent(Content content) implements ResponseBody {}
-
-  enum OfEmpty implements ResponseBody {
-    INSTANCE;
-  }
-
-  record OfFile(Path file) implements ResponseBody {}
+record ContentBinaryObject(MediaType contentType, BinaryObject contents) implements Content {
 
 }

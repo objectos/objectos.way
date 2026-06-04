@@ -22,23 +22,36 @@ record Host(Handler handler, String name) {
     result = handler.handle(request);
 
     return switch (result) {
-      case Content content -> {
-        final ResponseBuilder builder;
-        builder = new ResponseBuilder();
+      case Content content -> of(content);
 
-        builder.status(HttpStatus.OK);
+      case ContentProvider provider -> {
+        final Content content;
+        content = provider.toContent();
 
-        builder.date();
+        if (content == null) {
+          throw new IllegalArgumentException("%s provided a null `Content` instance".formatted(provider));
+        }
 
-        builder.send(content);
-
-        yield builder.build();
+        yield of(content);
       }
 
       case ResponsePojo response -> response;
 
       default -> throw new UnsupportedOperationException("Implement me :: " + result);
     };
+  }
+
+  private ResponsePojo of(Content content) {
+    final ResponseBuilder builder;
+    builder = new ResponseBuilder();
+
+    builder.status(HttpStatus.OK);
+
+    builder.date();
+
+    builder.send(content);
+
+    return builder.build();
   }
 
   public final boolean test(String hostValue) {

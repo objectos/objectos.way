@@ -15,13 +15,16 @@
  */
 package objectos.http;
 
-/// The outcome of processing a `Request` instance by a `Handler`.
-public sealed interface Result
-    permits
-    Content,
-    ContentProvider,
-    Request,
-    Response,
-    HttpStatus {
+import java.nio.file.Path;
+
+sealed interface ResponseEntity {
+
+  record OfContent(Content content) implements ResponseEntity {}
+
+  enum OfEmpty implements ResponseEntity {
+    INSTANCE;
+  }
+
+  record OfFile(Path file) implements ResponseEntity {}
 
 }

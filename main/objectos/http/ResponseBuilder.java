@@ -24,7 +24,7 @@ import java.util.function.Consumer;
 
 final class ResponseBuilder implements Response.Options {
 
-  private ResponseBody body = ResponseBody.OfEmpty.INSTANCE;
+  private ResponseEntity entity = ResponseEntity.OfEmpty.INSTANCE;
 
   private final List<Header> headers = new ArrayList<>();
 
@@ -39,7 +39,7 @@ final class ResponseBuilder implements Response.Options {
     final List<Header> $headers;
     $headers = List.copyOf(headers);
 
-    return new ResponsePojo($status, $headers, body, closeConnection);
+    return new ResponsePojo($status, $headers, entity, closeConnection);
   }
 
   @Override
@@ -101,18 +101,20 @@ final class ResponseBuilder implements Response.Options {
   }
 
   @Override
-  public final void body(Path file) {
+  public final void send(Path file) {
     if (!Files.isRegularFile(file)) {
       throw new IllegalArgumentException(file + " does not represent a regular file");
     }
 
-    body = new ResponseBody.OfFile(file);
+    entity = new ResponseEntity.OfFile(file);
   }
 
+  @Override
   public final void send(Content content) {
-    Objects.requireNonNull(content, "content == null");
+    final Content c;
+    c = Objects.requireNonNull(content, "content == null");
 
-    body = new ResponseBody.OfContent(content);
+    entity = new ResponseEntity.OfContent(c);
   }
 
 }

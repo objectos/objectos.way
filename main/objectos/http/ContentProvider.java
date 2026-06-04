@@ -15,13 +15,13 @@
  */
 package objectos.http;
 
-/// The outcome of processing a `Request` instance by a `Handler`.
-public sealed interface Result
-    permits
-    Content,
-    ContentProvider,
-    Request,
-    Response,
-    HttpStatus {
+/// Represents an object which can provide `Content` instances.
+@FunctionalInterface
+public non-sealed interface ContentProvider extends Result {
+
+  /// Returns a representation of this object as a 'Content' instance.
+  ///
+  /// @return a `Content` instance representing this object
+  Content toContent();
 
 }

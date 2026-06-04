@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
-import objectos.lang.OutputStreamConsumer;
+import objectos.lang.BinaryObject;
 
 final class ContentY {
 
@@ -30,9 +30,9 @@ final class ContentY {
 
   private ContentY() {}
 
-  private record Chunked(MediaType type, int length) implements Content, OutputStreamConsumer {
+  private record Chunked(int length) implements BinaryObject {
     @Override
-    public final void acceptOutputStream(OutputStream out) throws IOException {
+    public final void binaryTo(OutputStream out) throws IOException {
       if (length == 0) {
         return;
       }
@@ -70,17 +70,12 @@ final class ContentY {
     }
 
     @Override
-    public final void sendContent(ContentSender sender) throws IOException {
-      sender.send(type, this);
-    }
-
-    @Override
     public final String toString() {
       try {
         final ByteArrayOutputStream out;
         out = new ByteArrayOutputStream();
 
-        acceptOutputStream(out);
+        binaryTo(out);
 
         final byte[] bytes;
         bytes = out.toByteArray();
@@ -93,7 +88,10 @@ final class ContentY {
   }
 
   public static Content chunked(MediaType contentType, int length) {
-    return new Chunked(contentType, length);
+    final Chunked chunked;
+    chunked = new Chunked(length);
+
+    return Content.of(contentType, chunked);
   }
 
 }

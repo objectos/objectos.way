@@ -15,42 +15,44 @@
  */
 package objectos.http;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
+import objectos.lang.BinaryObject;
 
-/// Represents content of an specific format to be transmitted over the
+/// Represents content associated to a `MediaType` to be transmitted over the
 /// HTTP protocol.
-public non-sealed interface Content extends Result {
+public sealed interface Content
+    extends Result
+    permits
+    ContentBinaryObject,
+    ContentBytes {
 
-  /// Returns a new `Content` object with the specified content type and the
-  /// `UTF-8` bytes of the specified string.
+  /// Returns a new `Content` object whose contents are provided by the
+  /// specified `BinaryObject`.
   ///
   /// @param contentType the type of the content
-  /// @param contents the textual content which will be `UTF-8` encoded
-  static Content of(MediaType contentType, String contents) {
-    record ContentPojo(MediaType type, byte[] value) implements Content {
-      @Override
-      public final void sendContent(ContentSender sender) throws IOException {
-        sender.send(type, value);
-      }
-    }
+  /// @param contents the string providing the `UTF-8` bytes
+  static Content of(MediaType contentType, BinaryObject contents) {
+    return new ContentBinaryObject(
+        Objects.requireNonNull(contentType, "contentType == null"),
 
+        Objects.requireNonNull(contents, "contents == null")
+    );
+  }
+
+  /// Returns a new `Content` object whose contents are the `UTF-8` bytes of the
+  /// specified string.
+  ///
+  /// @param contentType the type of the content
+  /// @param contents the string providing the `UTF-8` bytes
+  static Content of(MediaType contentType, String contents) {
     final MediaType type;
     type = Objects.requireNonNull(contentType, "contentType == null");
 
     final byte[] value;
     value = contents.getBytes(StandardCharsets.UTF_8);
 
-    return new ContentPojo(type, value);
+    return new ContentBytes(type, value);
   }
-
-  /// Sends the contents of this entity using the specified sender.
-  ///
-  /// @param sender the object responsible for sending the contents of this
-  ///        entity
-  ///
-  /// @throws IOException if an I/O error occurs
-  void sendContent(ContentSender sender) throws IOException;
 
 }

@@ -67,11 +67,17 @@ final class ServerTask implements Runnable {
       final OutputStream outputStream;
       outputStream = socket.getOutputStream();
 
-      try (RequestBodySupport requestBodySupport = requestBodySupportFactory.create(id)) {
-        while (!currentThread.isInterrupted()) {
-          final RequestParser requestParser;
-          requestParser = new RequestParser(buffer, inputStream, requestBodySupport);
+      final ResponseDate date;
+      date = new ResponseDate(clock);
 
+      final ResponseSender sender;
+      sender = new ResponseSender(buffer, date, outputStream);
+
+      try (RequestBodySupport requestBodySupport = requestBodySupportFactory.create(id)) {
+        final RequestParser requestParser;
+        requestParser = new RequestParser(buffer, inputStream, requestBodySupport);
+
+        while (!currentThread.isInterrupted()) {
           final RequestPojo request;
           request = requestParser.parse();
 
@@ -109,10 +115,11 @@ final class ServerTask implements Runnable {
           final HttpMethod method;
           method = request.method();
 
-          final boolean head;
-          head = method == HttpMethod.HEAD;
-
-          write(outputStream, response, head);
+          if (method == HttpMethod.HEAD) {
+            sender.head(response);
+          } else {
+            sender.send(response);
+          }
 
           if (request.closeConnection() || response.closeConnection()) {
             break;
@@ -124,14 +131,14 @@ final class ServerTask implements Runnable {
         final ResponsePojo response;
         response = error(e.status(), e.message());
 
-        write(outputStream, response, false);
+        sender.send(response);
       } catch (HttpServerException e) {
         noteSink.send(THROW, id, e);
 
         final ResponsePojo response;
         response = error(e.status(), e.message());
 
-        write(outputStream, response, false);
+        sender.send(response);
       }
     } catch (IOException e) {
       noteSink.send(THROW, id, e);
@@ -148,18 +155,6 @@ final class ServerTask implements Runnable {
 
       opts.send(Content.of(MediaType.TEXT_PLAIN, message));
     });
-  }
-
-  private void write(OutputStream outputStream, ResponsePojo response, boolean head) throws IOException {
-    final ResponseBuffered buffered;
-    buffered = new ResponseBuffered(buffer, outputStream);
-
-    final ResponseDate date;
-    date = new ResponseDate(clock);
-
-    try (ResponseWriter writer = new ResponseWriter(buffered, date, head, response)) {
-      writer.write();
-    }
   }
 
 }

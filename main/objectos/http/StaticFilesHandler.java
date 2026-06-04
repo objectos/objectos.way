@@ -121,15 +121,13 @@ final class StaticFilesHandler implements Handler {
     return Response.create(opts -> {
       opts.status(HttpStatus.OK);
 
-      opts.header(HttpHeaderName.CONTENT_TYPE, contentType);
-
-      opts.header(HttpHeaderName.CONTENT_LENGTH, attributes.size());
-
       opts.date();
 
       opts.header(HttpHeaderName.ETAG, etag);
 
-      opts.body(file);
+      opts.header(HttpHeaderName.CONTENT_TYPE, contentType);
+
+      opts.send(file);
     });
   }
 

@@ -90,10 +90,10 @@ public class StaticFilesHandlerTest {
 
         """
         HTTP/1.1 200 OK\r
-        Content-Type: text/plain\r
-        Content-Length: 4\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
         ETag: 18901e7e8f8-4\r
+        Content-Type: text/plain\r
+        Content-Length: 4\r
         \r
         TC01\
         """
@@ -129,10 +129,10 @@ public class StaticFilesHandlerTest {
 
         """
         HTTP/1.1 200 OK\r
-        Content-Type: application/json\r
-        Content-Length: 8\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
         ETag: 18901e7e8f8-8\r
+        Content-Type: application/json\r
+        Content-Length: 8\r
         \r
         ["TC02"]\
         """
@@ -168,10 +168,10 @@ public class StaticFilesHandlerTest {
 
         """
         HTTP/1.1 200 OK\r
-        Content-Type: application/octet-stream\r
-        Content-Length: 4\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
         ETag: 18901e7e8f8-4\r
+        Content-Type: application/octet-stream\r
+        Content-Length: 4\r
         \r
         TC03\
         """
@@ -209,10 +209,10 @@ public class StaticFilesHandlerTest {
 
         """
         HTTP/1.1 200 OK\r
-        Content-Type: text/plain\r
-        Content-Length: 4\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
         ETag: 18901e7e8f8-4\r
+        Content-Type: text/plain\r
+        Content-Length: 4\r
         \r
         """
     );

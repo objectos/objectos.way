@@ -28,7 +28,7 @@ record ResponsePojo(
 
     List<Header> headers,
 
-    ResponseBody body,
+    ResponseEntity entity,
 
     boolean closeConnection
 
@@ -52,17 +52,21 @@ record ResponsePojo(
     final byte[] buffer;
     buffer = new byte[1024];
 
-    final ByteArrayOutputStream outputStream;
-    outputStream = new ByteArrayOutputStream();
-
-    final ResponseBuffered buffered;
-    buffered = new ResponseBuffered(buffer, outputStream);
-
     final ResponseDate date;
     date = new ResponseDate(clock);
 
-    try (var writer = new ResponseWriter(buffered, date, head, this)) {
-      writer.write();
+    final ByteArrayOutputStream outputStream;
+    outputStream = new ByteArrayOutputStream();
+
+    final ResponseSender sender;
+    sender = new ResponseSender(buffer, date, outputStream);
+
+    try {
+      if (head) {
+        sender.head(this);
+      } else {
+        sender.send(this);
+      }
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     }
