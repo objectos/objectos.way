@@ -21,7 +21,8 @@ record Host(Handler handler, String name) {
     final Result result;
     result = handler.handle(request);
 
-    return switch (result) {
+    final ResponsePojo response;
+    response = switch (result) {
       case Content content -> of(content);
 
       case ContentProvider provider -> {
@@ -50,10 +51,12 @@ record Host(Handler handler, String name) {
         yield builder.build();
       }
 
-      case ResponsePojo response -> response;
+      case ResponsePojo r -> r;
 
       default -> throw new UnsupportedOperationException("Implement me :: " + result);
     };
+
+    return response;
   }
 
   private ResponsePojo of(Content content) {
