@@ -17,8 +17,12 @@ package objectos.http;
 
 import java.time.Instant;
 import java.time.InstantSource;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import objectos.lang.Key;
 
 final class SessionPojo implements Session {
 
@@ -30,12 +34,50 @@ final class SessionPojo implements Session {
 
   private final Lock lock = new ReentrantLock();
 
+  private Map<Object, Object> store = null;
+
+  private final boolean valid = true;
+
   SessionPojo(HttpToken id) {
     this.id = id;
   }
 
   public final Instant accessTime() {
     return accessTime;
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public final <T> T attr(Class<T> key) {
+    final String name;
+    name = key.getName();
+
+    return (T) get0(name);
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public final <T> T attr(Key<T> key) {
+    Objects.requireNonNull(key, "key == null");
+
+    return (T) get0(key);
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public final <T> T attr(Class<T> key, T value) {
+    final String name;
+    name = key.getName();
+
+    return (T) set0(name, value);
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public final <T> T attr(Key<T> key, T value) {
+    Objects.requireNonNull(key, "key == null");
+
+    return (T) set0(key, value);
   }
 
   public final HttpToken id() {
@@ -53,6 +95,42 @@ final class SessionPojo implements Session {
       accessTime = source.instant();
     } finally {
       lock.unlock();
+    }
+  }
+
+  private Object get0(Object key) {
+    lock.lock();
+    try {
+      validCheck();
+
+      return store == null ? null : store.get(key);
+    } finally {
+      lock.unlock();
+    }
+  }
+
+  private Object set0(Object key, Object value) {
+    lock.lock();
+    try {
+      validCheck();
+
+      if (value == null) {
+        return store == null ? null : store.remove(key);
+      } else {
+        if (store == null) {
+          store = new HashMap<>();
+        }
+
+        return store.put(key, value);
+      }
+    } finally {
+      lock.unlock();
+    }
+  }
+
+  private void validCheck() {
+    if (!valid) {
+      throw new IllegalStateException("This operation can only be performed on a valid and active session");
     }
   }
 

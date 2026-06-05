@@ -16,26 +16,24 @@
 package objectos.http;
 
 import java.time.InstantSource;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.random.RandomGenerator;
 import objectos.way.Y;
-import objectos.y.RandomGeneratorY;
 
-final class SessionFactoryY {
+final class SessionRequestY {
+
+  String cookieName = "OBJECTOS_WAY";
 
   InstantSource instantSource = Y.clockFixed();
 
-  RandomGenerator randomGenerator = RandomGeneratorY.ofLongs(1, 2, 3, 4);
+  RandomGenerator randomGenerator;
 
-  Map<HttpToken, SessionPojo> sessions = new HashMap<>();
+  private final ConcurrentHashMap<HttpToken, SessionPojo> sessions = new ConcurrentHashMap<>();
 
-  private SessionFactoryY() {}
-
-  public static SessionFactory create(Consumer<? super SessionFactoryY> opts) {
-    final SessionFactoryY y;
-    y = new SessionFactoryY();
+  public static SessionRequest create(Consumer<? super SessionRequestY> opts) {
+    final SessionRequestY y;
+    y = new SessionRequestY();
 
     opts.accept(y);
 
@@ -46,13 +44,13 @@ final class SessionFactoryY {
     sessions.put(id, new SessionPojo(id));
   }
 
-  private SessionFactory build() {
-    return new SessionFactory(
-        instantSource,
+  private SessionRequest build() {
+    return new SessionRequest(
+        new SessionCookieParser(cookieName),
 
-        randomGenerator,
+        new SessionFactory(instantSource, randomGenerator, sessions),
 
-        sessions
+        new SessionFinder(instantSource, sessions)
     );
   }
 

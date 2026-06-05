@@ -17,7 +17,6 @@ package objectos.http;
 
 import java.time.InstantSource;
 import java.util.Map;
-import java.util.function.Supplier;
 import objectos.http.HttpToken.ParseException;
 
 final class SessionFinder {
@@ -32,27 +31,27 @@ final class SessionFinder {
     this.sessions = sessions;
   }
 
-  public final Session findOr(String id, Supplier<Session> supplier) {
+  public final Session find(String id) {
     try {
       final HttpToken key;
       key = HttpToken.parse(id, SessionPojo.SESSION_LENGTH);
 
       if (key == null) {
-        return supplier.get();
+        return null;
       }
 
       final SessionPojo existing;
       existing = sessions.get(key);
 
       if (existing == null) {
-        return supplier.get();
+        return null;
       }
 
       existing.touch(instantSource);
 
       return existing;
     } catch (ParseException e) {
-      return supplier.get();
+      return null;
     }
   }
 

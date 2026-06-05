@@ -23,8 +23,6 @@ final class HttpExchange0 implements HttpExchange {
 
   static final Key<Map<String, String>> PATH_PARAMS = Key.of("objectos.http.PathParams");
 
-  private Map<Object, Object> attributes;
-
   private final RequestPojo request;
 
   private final HttpResponse0 response;
@@ -34,12 +32,6 @@ final class HttpExchange0 implements HttpExchange {
   private final HttpStaticFilesWriter staticFilesWriter;
 
   HttpExchange0(RequestPojo request, HttpResponse0 response, HttpSession session, HttpStaticFilesWriter staticFilesWriter) {
-    this(Map.of(), request, response, session, staticFilesWriter);
-  }
-
-  HttpExchange0(Map<Object, Object> attributes, RequestPojo request, HttpResponse0 response, HttpSession session, HttpStaticFilesWriter staticFilesWriter) {
-    this.attributes = attributes;
-
     this.request = request;
 
     this.response = response;
@@ -202,44 +194,23 @@ final class HttpExchange0 implements HttpExchange {
   @SuppressWarnings("unchecked")
   @Override
   public final <T> T req(Class<T> key) {
-    final String name;
-    name = key.getName(); // implicit null check
-
-    return (T) attributes.get(name);
+    return request.attr(key);
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public final <T> T req(Key<T> key) {
-    Objects.requireNonNull(key, "key == null");
-
-    return (T) attributes.get(key);
+    return request.attr(key);
   }
 
   @Override
   public final <T> void req(Class<T> key, T value) {
-    final String name;
-    name = key.getName(); // implicit null check
-
-    Objects.requireNonNull(value, "value == null");
-
-    if (attributes == Map.<Object, Object> of()) {
-      attributes = new HashMap<>();
-    }
-
-    attributes.put(name, value);
+    request.attr(key, value);
   }
 
   @Override
   public final <T> void req(Key<T> key, T value) {
-    Objects.requireNonNull(key, "key == null");
-    Objects.requireNonNull(value, "value == null");
-
-    if (attributes == Map.<Object, Object> of()) {
-      attributes = new HashMap<>();
-    }
-
-    attributes.put(key, value);
+    request.attr(key, value);
   }
 
   // ##################################################################

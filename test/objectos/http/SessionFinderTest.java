@@ -18,17 +18,12 @@ package objectos.http;
 import static org.testng.Assert.assertEquals;
 
 import java.time.InstantSource;
-import java.util.function.Supplier;
 import objectos.way.Y;
 import org.testng.annotations.Test;
 
 public class SessionFinderTest {
 
   private final InstantSource instantSource = Y.clockFixed();
-
-  private final Supplier<Session> thrower = () -> {
-    throw new IllegalStateException("I should have not been called");
-  };
 
   @Test(description = "return existing")
   public void find01() {
@@ -46,13 +41,14 @@ public class SessionFinderTest {
     cookie = id.toString();
 
     final Session res;
-    res = finder.findOr(cookie, thrower);
+    res = finder.find(cookie);
 
     assertEquals(res instanceof SessionPojo, true);
 
     final SessionPojo pojo;
     pojo = (SessionPojo) res;
 
+    assertEquals(pojo.accessTime(), instantSource.instant());
     assertEquals(pojo.id(), id);
   }
 
@@ -70,21 +66,13 @@ public class SessionFinderTest {
     cookie = id.toString();
 
     final Session res;
-    res = finder.findOr(cookie, () -> new SessionPojo(id));
+    res = finder.find(cookie);
 
-    assertEquals(res instanceof SessionPojo, true);
-
-    final SessionPojo pojo;
-    pojo = (SessionPojo) res;
-
-    assertEquals(pojo.id(), id);
+    assertEquals(res, null);
   }
 
   @Test(description = "return from supplier")
   public void find03() {
-    final HttpToken id;
-    id = HttpToken.of32(5, 6, 7, 8);
-
     final SessionFinder finder;
     finder = SessionFinderY.create(opts -> {
       opts.instantSource = instantSource;
@@ -94,14 +82,9 @@ public class SessionFinderTest {
     cookie = "not parsable";
 
     final Session res;
-    res = finder.findOr(cookie, () -> new SessionPojo(id));
+    res = finder.find(cookie);
 
-    assertEquals(res instanceof SessionPojo, true);
-
-    final SessionPojo pojo;
-    pojo = (SessionPojo) res;
-
-    assertEquals(pojo.id(), id);
+    assertEquals(res, null);
   }
 
 }

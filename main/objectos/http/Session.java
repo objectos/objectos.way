@@ -15,7 +15,19 @@
  */
 package objectos.http;
 
-sealed interface Session permits SessionPojo {
+import objectos.lang.Key;
+
+sealed interface Session permits SessionPojo, SessionLazy {
+
+  static final Key<Session> KEY = Key.of("objectos.http.Session");
+
+  <T> T attr(Class<T> name);
+
+  <T> T attr(Key<T> key);
+
+  <T> T attr(Class<T> name, T value);
+
+  <T> T attr(Key<T> key, T value);
 
   boolean isPresent();
 

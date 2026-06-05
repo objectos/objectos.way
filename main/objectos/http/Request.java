@@ -24,6 +24,7 @@ import java.util.function.IntSupplier;
 import java.util.function.LongSupplier;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
+import objectos.lang.Key;
 
 /// An HTTP request message.
 ///
@@ -67,6 +68,71 @@ public sealed interface Request extends Result permits RequestPojo {
 
     return builder.build();
   }
+
+  // ##################################################################
+  // # BEGIN: request attributes
+  // ##################################################################
+
+  /// Returns the request value associated to the name of the specified class,
+  /// or `null` if no value exists.
+  ///
+  /// @param <T> the type of the request value
+  /// @param name the class providing the name
+  ///
+  /// @return the request value or `null`
+  <T> T attr(Class<T> name);
+
+  /// Returns the request value associated to the specified key, or `null` if no
+  /// value exists.
+  ///
+  /// @param <T> the type of the request value
+  /// @param key the key to look for
+  ///
+  /// @return the request value or `null`
+  <T> T attr(Key<T> key);
+
+  /// Stores, in this request, the specified value by associating it to the name
+  /// of the specified class.
+  ///
+  /// Stored values are reset between requests. If an object is already
+  /// associated to the specified key it is replaced with the specified value.
+  /// Values must not be `null`.
+  ///
+  /// @param <T> the type of the request value
+  /// @param name the class providing the name
+  /// @param value the object to be stored in this request
+  <T> void attr(Class<T> name, T value);
+
+  /// Stores, in this request, the specified value by associating it to the
+  /// specified key.
+  ///
+  /// Stored values are reset between requests. If an object is already
+  /// associated to the specified key it is replaced with the specified value.
+  /// Values must not be `null`.
+  ///
+  /// @param <T> the type of the request value
+  /// @param key the object to serve as key
+  /// @param value the object to be stored in this request
+  <T> void attr(Key<T> key, T value);
+
+  // ##################################################################
+  // # END: request attributes
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: Session Support
+  // ##################################################################
+
+  /// Returns `true` if a session is associated to this request, returns `false`
+  /// otherwise.
+  ///
+  /// @return {@code true} if a session is associated to this request,
+  ///         otherwise {@code false}
+  boolean sessionPresent();
+
+  // ##################################################################
+  // # END: Session Support
+  // ##################################################################
 
   // ##################################################################
   // # BEGIN: Request line

@@ -23,7 +23,7 @@ import java.util.random.RandomGenerator;
 import objectos.way.Y;
 import objectos.y.RandomGeneratorY;
 
-final class SessionFactoryY {
+final class SessionLazyY {
 
   InstantSource instantSource = Y.clockFixed();
 
@@ -31,28 +31,24 @@ final class SessionFactoryY {
 
   Map<HttpToken, SessionPojo> sessions = new HashMap<>();
 
-  private SessionFactoryY() {}
-
-  public static SessionFactory create(Consumer<? super SessionFactoryY> opts) {
-    final SessionFactoryY y;
-    y = new SessionFactoryY();
+  public static SessionLazy create(Consumer<? super SessionLazyY> opts) {
+    final SessionLazyY y;
+    y = new SessionLazyY();
 
     opts.accept(y);
 
     return y.build();
   }
 
-  public final void sessionPut(HttpToken id) {
-    sessions.put(id, new SessionPojo(id));
-  }
+  private SessionLazy build() {
+    return new SessionLazy(
+        SessionFactoryY.create(opts -> {
+          opts.instantSource = instantSource;
 
-  private SessionFactory build() {
-    return new SessionFactory(
-        instantSource,
+          opts.randomGenerator = randomGenerator;
 
-        randomGenerator,
-
-        sessions
+          opts.sessions = sessions;
+        })
     );
   }
 

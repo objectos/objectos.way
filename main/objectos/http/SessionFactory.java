@@ -35,7 +35,7 @@ final class SessionFactory {
     this.sessions = sessions;
   }
 
-  public final Session next() {
+  public final SessionPojo next() {
     SessionPojo session, maybeExisting;
 
     do {

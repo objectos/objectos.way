@@ -16,9 +16,12 @@
 package objectos.http;
 
 import module java.base;
+import objectos.lang.Key;
 
 /// Provides methods for inspecting the request message of an HTTP exchange.
 record RequestPojo(
+
+    RequestAttributes attributes,
 
     HttpMethod method,
 
@@ -38,6 +41,36 @@ record RequestPojo(
 
   public final boolean closeConnection() {
     return headers.closeConnection();
+  }
+
+  @Override
+  public final <T> T attr(Class<T> name) {
+    return attributes.get(name);
+  }
+
+  @Override
+  public final <T> T attr(Key<T> key) {
+    return attributes.get(key);
+  }
+
+  @Override
+  public final <T> void attr(Class<T> name, T value) {
+    attributes.set(name, value);
+  }
+
+  @Override
+  public final <T> void attr(Key<T> key, T value) {
+    attributes.set(key, value);
+  }
+
+  @Override
+  public final boolean sessionPresent() {
+    final Session session;
+    session = attributes.get(Session.KEY);
+
+    return session != null
+        ? session.isPresent()
+        : false;
   }
 
   @Override

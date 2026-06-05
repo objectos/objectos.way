@@ -37,7 +37,7 @@ import objectos.way.Note;
 
 final class HttpExchangeBuilder implements HttpExchange.Options {
 
-  private Map<Object, Object> attributes = Map.of();
+  private final RequestAttributes attributes = new RequestAttributes();
 
   @SuppressWarnings("unused")
   private final int bufferSizeInitial = 1024;
@@ -225,28 +225,12 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
 
   @Override
   public final <T> void req(Class<T> key, T value) {
-    final String name;
-    name = key.getName();
-
-    Objects.requireNonNull(value, "value == null");
-
-    if (attributes.isEmpty()) {
-      attributes = new HashMap<>();
-    }
-
-    attributes.put(name, value);
+    attributes.set(key, value);
   }
 
   @Override
   public final <T> void req(Key<T> key, T value) {
-    Objects.requireNonNull(key, "key == null");
-    Objects.requireNonNull(value, "value == null");
-
-    if (attributes.isEmpty()) {
-      attributes = new HashMap<>();
-    }
-
-    attributes.put(key, value);
+    attributes.set(key, value);
   }
 
   @Override
@@ -295,7 +279,7 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
     bodyForm = new RequestBodyForm(formParams);
 
     final RequestPojo request;
-    request = new RequestPojo(method, path, queryParams, version, $headers, data, bodyForm);
+    request = new RequestPojo(attributes, method, path, queryParams, version, $headers, data, bodyForm);
 
     final byte[] buffer;
     buffer = new byte[bufferSizeMax];
@@ -320,7 +304,7 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
       staticFilesWriter = HttpStaticFilesWriter1Dev.INSTANCE;
     }
 
-    return new HttpExchange0(attributes, request, response, session, staticFilesWriter);
+    return new HttpExchange0(request, response, session, staticFilesWriter);
   }
 
   final HttpExchangeBodyFiles bodyFiles() {
