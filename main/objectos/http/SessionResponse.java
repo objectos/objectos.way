@@ -15,19 +15,46 @@
  */
 package objectos.http;
 
-final class SessionResponse {
+import java.util.function.BiConsumer;
 
-  public final ResponsePojo apply(Request request, ResponsePojo response) {
+final class SessionResponse implements BiConsumer<Request, ResponsePojo> {
+
+  private final SessionSetCookie sessionSetCookie;
+
+  SessionResponse(SessionSetCookie sessionSetCookie) {
+    this.sessionSetCookie = sessionSetCookie;
+  }
+
+  @Override
+  public final void accept(Request request, ResponsePojo response) {
     final Session session;
     session = request.attr(Session.KEY);
 
-    return switch (session) {
-      case SessionLazy lazy -> apply0(lazy, response);
+    if (!(session instanceof SessionLazy lazy)) {
+      return;
+    }
 
-      default -> response;
-    };
+    final HttpStatus0 status;
+    status = response.status();
+
+    if (status.isError()) {
+      return;
+    }
+
+    final HttpToken id;
+    id = lazy.id();
+
+    if (id == null) {
+      return;
+    }
+
+    final String token;
+    token = id.toString();
+
+    final String setCookie;
+    setCookie = sessionSetCookie.forString(token);
+
+    response.setCookie(setCookie);
   }
-
-  private ResponsePojo apply0(SessionLazy lazy, ResponsePojo response) { return null; }
 
 }

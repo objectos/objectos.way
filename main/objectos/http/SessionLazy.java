@@ -27,6 +27,10 @@ final class SessionLazy implements Session {
     this.sessionFactory = sessionFactory;
   }
 
+  public final HttpToken id() {
+    return session != null ? session.id() : null;
+  }
+
   @Override
   public final <T> T attr(Class<T> key) {
     final SessionPojo s;

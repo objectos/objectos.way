@@ -36,10 +36,7 @@ final class ResponseBuilder implements Response.Options {
     final HttpStatus0 $status;
     $status = (HttpStatus0) status;
 
-    final List<Header> $headers;
-    $headers = List.copyOf(headers);
-
-    return new ResponsePojo($status, $headers, entity, closeConnection);
+    return new ResponsePojo($status, headers, entity, closeConnection);
   }
 
   @Override

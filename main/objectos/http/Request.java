@@ -53,6 +53,16 @@ public sealed interface Request extends Result permits RequestPojo {
     /// @param value the decoded path value
     void path(String value);
 
+    /// Associates a session to this request and store the provided key-value
+    /// pair in the former.
+    ///
+    /// @param <T> the type of the attribute
+    /// @param key the class object providing the attribute name
+    /// @param value the value to be stored
+    ///
+    /// @return the previously associated value or `null`
+    <T> T sessionAttr(Class<T> key, T value);
+
   }
 
   /// Creates a stand-alone request instance; typically used in test cases.
@@ -129,6 +139,43 @@ public sealed interface Request extends Result permits RequestPojo {
   /// @return {@code true} if a session is associated to this request,
   ///         otherwise {@code false}
   boolean sessionPresent();
+
+  /// Returns the session value associated to the specified class name, or
+  /// `null` if no value is associated.
+  ///
+  /// @param <T> the type of the session value
+  /// @param key the class object whose name serves as the key
+  ///
+  /// @return the session value, or `null` if no value is associated
+  <T> T sessionAttr(Class<T> key);
+
+  /// Returns the session value associated to the specified key, or `null` if no
+  /// value is associated.
+  ///
+  /// @param <T> the type of the session value
+  /// @param key the key object whose associated value is to be returned
+  ///
+  /// @return the session value, or `null` if no value is associated
+  <T> T sessionAttr(Key<T> key);
+
+  /// Using the name of the specified class as the key, associate the specified
+  /// value to this session.
+  ///
+  /// @param <T> the type of the session value
+  /// @param key the class object whose name will serve as the key
+  /// @param value the session value
+  ///
+  /// @return the previous session value, or `null` if no value was associated
+  <T> T sessionAttr(Class<T> key, T value);
+
+  /// Using the specified key, associates the specified value to this session.
+  ///
+  /// @param <T> the type of the session value
+  /// @param key the key object
+  /// @param value the session value
+  ///
+  /// @return the previous session value, or `null` if no value was associated
+  <T> T sessionAttr(Key<T> key, T value);
 
   // ##################################################################
   // # END: Session Support

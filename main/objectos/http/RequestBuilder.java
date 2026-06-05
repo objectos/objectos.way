@@ -38,6 +38,8 @@ final class RequestBuilder implements Options {
 
   private final Map<String, Object> queryParams = Map.of();
 
+  private SessionPojo session;
+
   private final Version0 version = Version0.HTTP_1_1;
 
   public final Request build() {
@@ -108,6 +110,20 @@ final class RequestBuilder implements Options {
   @Override
   public final void path(String value) {
     path = Objects.requireNonNull(value, "value == null");
+  }
+
+  @Override
+  public final <T> T sessionAttr(Class<T> key, T value) {
+    if (session == null) {
+      final HttpToken id;
+      id = HttpToken.of32(0, 0, 0, 0);
+
+      session = new SessionPojo(id);
+
+      attributes.set(Session.KEY, session);
+    }
+
+    return session.attr(key, value);
   }
 
 }

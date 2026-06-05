@@ -74,6 +74,54 @@ record RequestPojo(
   }
 
   @Override
+  public final <T> T sessionAttr(Class<T> key) {
+    final Session session;
+    session = attributes.get(Session.KEY);
+
+    if (session == null) {
+      return null;
+    } else {
+      return session.attr(key);
+    }
+  }
+
+  @Override
+  public final <T> T sessionAttr(Key<T> key) {
+    final Session session;
+    session = attributes.get(Session.KEY);
+
+    if (session == null) {
+      return null;
+    } else {
+      return session.attr(key);
+    }
+  }
+
+  @Override
+  public final <T> T sessionAttr(Class<T> key, T value) {
+    final Session session;
+    session = attributes.get(Session.KEY);
+
+    if (session == null) {
+      return null;
+    } else {
+      return session.attr(key, value);
+    }
+  }
+
+  @Override
+  public final <T> T sessionAttr(Key<T> key, T value) {
+    final Session session;
+    session = attributes.get(Session.KEY);
+
+    if (session == null) {
+      return null;
+    } else {
+      return session.attr(key, value);
+    }
+  }
+
+  @Override
   public final String queryParam(String name) {
     Objects.requireNonNull(name, "name == null");
 

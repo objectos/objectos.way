@@ -43,6 +43,16 @@ record ResponsePojo(
     return builder.build();
   }
 
+  public final void setCookie(String value) {
+    final HttpHeaderName name;
+    name = HttpHeaderName.SET_COOKIE;
+
+    final Header h;
+    h = new Header(name, value);
+
+    headers.add(h);
+  }
+
   @Override
   public final String toString() {
     return toString(Clock.systemUTC(), false);
