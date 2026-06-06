@@ -101,9 +101,9 @@ final class StaticFilesHandler implements Handler {
 
         opts.date();
 
-        opts.header(HttpHeaderName.CONTENT_LENGTH, 0);
-
         opts.header(HttpHeaderName.ETAG, etag);
+
+        opts.header(HttpHeaderName.CONTENT_LENGTH, 0);
       });
     }
 

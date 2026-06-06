@@ -286,8 +286,8 @@ public class StaticFilesHandlerTest {
         """
         HTTP/1.1 304 Not Modified\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-        Content-Length: 0\r
         ETag: 18901e7e8f8-4\r
+        Content-Length: 0\r
         \r
         """
     );
