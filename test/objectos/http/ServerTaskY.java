@@ -66,6 +66,10 @@ final class ServerTaskY {
     return y;
   }
 
+  public final void host(Consumer<? super HostY> opts) {
+    hosts.add(HostY.create(opts));
+  }
+
   public final void host(String name, Handler handler) {
     hosts.add(HostY.create(opts -> {
       opts.name = name;

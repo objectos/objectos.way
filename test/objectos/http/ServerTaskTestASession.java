@@ -25,24 +25,49 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
 import objectos.lang.Key;
-import objectos.way.Media;
 import objectos.y.RandomGeneratorY;
 import objectos.y.SocketY;
 import org.testng.annotations.Test;
 
-public class HttpServerTaskTestASession {
+public class ServerTaskTestASession {
 
-  private final Media OK = Media.Bytes.textPlain("OK\n");
+  private final Content ok = Content.of(MediaType.TEXT_PLAIN, "OK\n");
 
   @Test
   public void session01() {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.sessionStore = HttpSessionStore.create(options -> {
-            options.sessionGenerator(RandomGeneratorY.ofLongs(1L, 2L, 3L, 4L));
+        ServerTaskY.resp(opts -> {
+          opts.host(host -> {
+            host.name = "www.example.com";
+
+            host.handler = req -> {
+              final String path;
+              path = req.path();
+
+              return switch (path) {
+                case "/1" -> {
+                  req.sessionAttr(String.class, "FOO\n");
+
+                  yield Content.of(MediaType.TEXT_PLAIN, "NEW\n");
+                }
+
+                case "/2" -> {
+                  final String attr;
+                  attr = req.sessionAttr(String.class);
+
+                  yield Content.of(MediaType.TEXT_PLAIN, attr);
+                }
+
+                default -> HttpStatus.NOT_FOUND;
+              };
+            };
+
+            host.session = session -> {
+              session.randomGenerator(RandomGeneratorY.ofLongs(1L, 2L, 3L, 4L));
+            };
           });
 
-          opts.socket = SocketY.of(
+          opts.socket(
               """
               GET /1 HTTP/1.1\r
               Host: www.example.com\r
@@ -52,38 +77,16 @@ public class HttpServerTaskTestASession {
               GET /2 HTTP/1.1\r
               Host: www.example.com\r
               Connection: close\r
-              Cookie: OBJECTOSWAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=\r
+              Cookie: WAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=\r
               \r
               """
           );
-
-          opts.handler = http -> {
-            final String path;
-            path = http.path();
-
-            switch (path) {
-              case "/1" -> {
-                http.session(String.class, "FOO\n");
-
-                http.ok(Media.Bytes.textPlain("NEW\n"));
-              }
-
-              case "/2" -> {
-                final String attr;
-                attr = http.session(String.class);
-
-                http.ok(Media.Bytes.textPlain(attr));
-              }
-
-              default -> http.error(HttpStatus.NOT_FOUND);
-            }
-          };
         }),
 
         """
         HTTP/1.1 200 OK\r
-        Set-Cookie: OBJECTOSWAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=; HttpOnly; Path=/; Secure\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Set-Cookie: WAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=; HttpOnly; Path=/; Secure\r
         Content-Type: text/plain; charset=utf-8\r
         Content-Length: 4\r
         \r
@@ -114,12 +117,40 @@ public class HttpServerTaskTestASession {
     assertFalse(class1.equals(class2));
 
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.sessionStore = HttpSessionStore.create(options -> {
-            options.sessionGenerator(RandomGeneratorY.ofLongs(1L, 2L, 3L, 4L));
+        ServerTaskY.resp(opts -> {
+          opts.host(host -> {
+            host.name = "www.example.com";
+
+            host.handler = req -> {
+              final String path;
+              path = req.path();
+
+              return switch (path) {
+                case "/1" -> {
+                  req.sessionAttr(class1, subject);
+
+                  yield ok;
+                }
+
+                case "/2" -> {
+                  final Subject attr;
+                  attr = req.sessionAttr(class2);
+
+                  assertSame(attr, subject);
+
+                  yield ok;
+                }
+
+                default -> HttpStatus.NOT_FOUND;
+              };
+            };
+
+            host.session = session -> {
+              session.randomGenerator(RandomGeneratorY.ofLongs(1L, 2L, 3L, 4L));
+            };
           });
 
-          opts.socket = SocketY.of(
+          opts.socket(
               """
               GET /1 HTTP/1.1\r
               Host: www.example.com\r
@@ -129,40 +160,16 @@ public class HttpServerTaskTestASession {
               GET /2 HTTP/1.1\r
               Host: www.example.com\r
               Connection: close\r
-              Cookie: OBJECTOSWAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=\r
+              Cookie: WAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=\r
               \r
               """
           );
-
-          opts.handler = http -> {
-            final String path;
-            path = http.path();
-
-            switch (path) {
-              case "/1" -> {
-                http.session(class1, subject);
-
-                http.ok(OK);
-              }
-
-              case "/2" -> {
-                final Subject attr;
-                attr = http.session(class2);
-
-                assertSame(attr, subject);
-
-                http.ok(OK);
-              }
-
-              default -> http.error(HttpStatus.NOT_FOUND);
-            }
-          };
         }),
 
         """
         HTTP/1.1 200 OK\r
-        Set-Cookie: OBJECTOSWAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=; HttpOnly; Path=/; Secure\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Set-Cookie: WAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=; HttpOnly; Path=/; Secure\r
         Content-Type: text/plain; charset=utf-8\r
         Content-Length: 3\r
         \r
@@ -221,9 +228,35 @@ public class HttpServerTaskTestASession {
   @Test
   public void session03() {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.sessionStore = HttpSessionStore.create(options -> {
-            options.sessionGenerator(RandomGeneratorY.ofLongs(1L, 2L, 3L, 4L));
+        ServerTaskY.resp(opts -> {
+          opts.host(host -> {
+            host.name = "www.example.com";
+
+            host.handler = req -> {
+              final String path;
+              path = req.path();
+
+              return switch (path) {
+                case "/1" -> {
+                  req.sessionAttr(testKey, "FOO\n");
+
+                  yield Content.of(MediaType.TEXT_PLAIN, "NEW\n");
+                }
+
+                case "/2" -> {
+                  final String attr;
+                  attr = req.sessionAttr(testKey);
+
+                  yield Content.of(MediaType.TEXT_PLAIN, attr);
+                }
+
+                default -> HttpStatus.NOT_FOUND;
+              };
+            };
+
+            host.session = session -> {
+              session.randomGenerator(RandomGeneratorY.ofLongs(1L, 2L, 3L, 4L));
+            };
           });
 
           opts.socket = SocketY.of(
@@ -236,38 +269,16 @@ public class HttpServerTaskTestASession {
               GET /2 HTTP/1.1\r
               Host: www.example.com\r
               Connection: close\r
-              Cookie: OBJECTOSWAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=\r
+              Cookie: WAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=\r
               \r
               """
           );
-
-          opts.handler = http -> {
-            final String path;
-            path = http.path();
-
-            switch (path) {
-              case "/1" -> {
-                http.session(testKey, "FOO\n");
-
-                http.ok(Media.Bytes.textPlain("NEW\n"));
-              }
-
-              case "/2" -> {
-                final String attr;
-                attr = http.session(testKey);
-
-                http.ok(Media.Bytes.textPlain(attr));
-              }
-
-              default -> http.error(HttpStatus.NOT_FOUND);
-            }
-          };
         }),
 
         """
         HTTP/1.1 200 OK\r
-        Set-Cookie: OBJECTOSWAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=; HttpOnly; Path=/; Secure\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Set-Cookie: WAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=; HttpOnly; Path=/; Secure\r
         Content-Type: text/plain; charset=utf-8\r
         Content-Length: 4\r
         \r
@@ -285,12 +296,49 @@ public class HttpServerTaskTestASession {
   @Test(description = "support logout")
   public void session04() {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.sessionStore = HttpSessionStore.create(options -> {
-            options.sessionGenerator(RandomGeneratorY.ofLongs(1L, 2L, 3L, 4L));
+        ServerTaskY.resp(opts -> {
+          opts.host(host -> {
+            host.name = "www.example.com";
+
+            host.handler = req -> {
+              final String path;
+              path = req.path();
+
+              return switch (path) {
+                case "/1" -> {
+                  req.sessionAttr(String.class, "FOO\n");
+
+                  yield Content.of(MediaType.TEXT_PLAIN, "NEW\n");
+                }
+
+                case "/2" -> {
+                  final String attr;
+                  attr = req.sessionAttr(String.class);
+
+                  req.sessionInvalidate();
+
+                  yield Content.of(MediaType.TEXT_PLAIN, attr);
+                }
+
+                case "/3" -> {
+                  final String attr;
+                  attr = req.sessionAttr(String.class);
+
+                  assertNull(attr);
+
+                  yield ok;
+                }
+
+                default -> HttpStatus.NOT_FOUND;
+              };
+            };
+
+            host.session = session -> {
+              session.randomGenerator(RandomGeneratorY.ofLongs(1L, 2L, 3L, 4L));
+            };
           });
 
-          opts.socket = SocketY.of(
+          opts.socket(
               """
               GET /1 HTTP/1.1\r
               Host: www.example.com\r
@@ -299,62 +347,30 @@ public class HttpServerTaskTestASession {
               """
               GET /2 HTTP/1.1\r
               Host: www.example.com\r
-              Cookie: OBJECTOSWAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=\r
+              Cookie: WAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=\r
               \r
               """,
               """
               GET /3 HTTP/1.1\r
               Host: www.example.com\r
               Connection: close\r
-              Cookie: OBJECTOSWAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=\r
+              Cookie: WAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=\r
               \r
               """
           );
-
-          opts.handler = http -> {
-            final String path;
-            path = http.path();
-
-            switch (path) {
-              case "/1" -> {
-                http.session(String.class, "FOO\n");
-
-                http.ok(Media.Bytes.textPlain("NEW\n"));
-              }
-
-              case "/2" -> {
-                final String attr;
-                attr = http.session(String.class);
-
-                http.sessionInvalidate();
-
-                http.ok(Media.Bytes.textPlain(attr));
-              }
-
-              case "/3" -> {
-                final String attr;
-                attr = http.session(String.class);
-
-                assertNull(attr);
-
-                http.ok(OK);
-              }
-
-              default -> http.error(HttpStatus.NOT_FOUND);
-            }
-          };
         }),
 
         """
         HTTP/1.1 200 OK\r
-        Set-Cookie: OBJECTOSWAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=; HttpOnly; Path=/; Secure\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Set-Cookie: WAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=; HttpOnly; Path=/; Secure\r
         Content-Type: text/plain; charset=utf-8\r
         Content-Length: 4\r
         \r
         NEW
         HTTP/1.1 200 OK\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Set-Cookie: WAY=; HttpOnly; Max-Age=0; Path=/; Secure\r
         Content-Type: text/plain; charset=utf-8\r
         Content-Length: 4\r
         \r
@@ -372,9 +388,46 @@ public class HttpServerTaskTestASession {
   @Test(description = "support unsetting a value")
   public void session05() {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.sessionStore = HttpSessionStore.create(options -> {
-            options.sessionGenerator(RandomGeneratorY.ofLongs(1L, 2L, 3L, 4L));
+        ServerTaskY.resp(opts -> {
+          opts.host(host -> {
+            host.name = "www.example.com";
+
+            host.handler = req -> {
+              final String path;
+              path = req.path();
+
+              return switch (path) {
+                case "/1" -> {
+                  req.sessionAttr(String.class, "FOO\n");
+
+                  yield Content.of(MediaType.TEXT_PLAIN, "NEW\n");
+                }
+
+                case "/2" -> {
+                  final String attr;
+                  attr = req.sessionAttr(String.class);
+
+                  req.sessionAttr(String.class, null);
+
+                  yield Content.of(MediaType.TEXT_PLAIN, attr);
+                }
+
+                case "/3" -> {
+                  final String attr;
+                  attr = req.sessionAttr(String.class);
+
+                  assertNull(attr);
+
+                  yield ok;
+                }
+
+                default -> HttpStatus.NOT_FOUND;
+              };
+            };
+
+            host.session = session -> {
+              session.randomGenerator(RandomGeneratorY.ofLongs(1L, 2L, 3L, 4L));
+            };
           });
 
           opts.socket = SocketY.of(
@@ -386,56 +439,23 @@ public class HttpServerTaskTestASession {
               """
               GET /2 HTTP/1.1\r
               Host: www.example.com\r
-              Cookie: OBJECTOSWAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=\r
+              Cookie: WAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=\r
               \r
               """,
               """
               GET /3 HTTP/1.1\r
               Host: www.example.com\r
               Connection: close\r
-              Cookie: OBJECTOSWAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=\r
+              Cookie: WAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=\r
               \r
               """
           );
-
-          opts.handler = http -> {
-            final String path;
-            path = http.path();
-
-            switch (path) {
-              case "/1" -> {
-                http.session(String.class, "FOO\n");
-
-                http.ok(Media.Bytes.textPlain("NEW\n"));
-              }
-
-              case "/2" -> {
-                final String attr;
-                attr = http.session(String.class);
-
-                http.session(String.class, null);
-
-                http.ok(Media.Bytes.textPlain(attr));
-              }
-
-              case "/3" -> {
-                final String attr;
-                attr = http.session(String.class);
-
-                assertNull(attr);
-
-                http.ok(OK);
-              }
-
-              default -> http.error(HttpStatus.NOT_FOUND);
-            }
-          };
         }),
 
         """
         HTTP/1.1 200 OK\r
-        Set-Cookie: OBJECTOSWAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=; HttpOnly; Path=/; Secure\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Set-Cookie: WAY=AAAAAAAAAAEAAAAAAAAAAgAAAAAAAAADAAAAAAAAAAQ=; HttpOnly; Path=/; Secure\r
         Content-Type: text/plain; charset=utf-8\r
         Content-Length: 4\r
         \r

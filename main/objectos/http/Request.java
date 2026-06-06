@@ -177,6 +177,10 @@ public sealed interface Request extends Result permits RequestPojo {
   /// @return the previous session value, or `null` if no value was associated
   <T> T sessionAttr(Key<T> key, T value);
 
+  /// Invalidates the session associated to this request. This method performs
+  /// no operation if no session is associated to the request.
+  void sessionInvalidate();
+
   // ##################################################################
   // # END: Session Support
   // ##################################################################

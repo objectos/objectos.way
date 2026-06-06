@@ -17,7 +17,6 @@ package objectos.http;
 
 import java.time.Instant;
 import java.time.InstantSource;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.locks.Lock;
@@ -26,20 +25,22 @@ import objectos.lang.Key;
 
 final class SessionPojo implements Session {
 
+  private enum Private {
+
+    UNSET_COOKIE;
+
+  }
+
   static final int SESSION_LENGTH = 32;
 
   private Instant accessTime;
 
-  private final HttpToken id;
+  private final Map<Object, Object> attributes;
 
   private final Lock lock = new ReentrantLock();
 
-  private Map<Object, Object> store = null;
-
-  private final boolean valid = true;
-
-  SessionPojo(HttpToken id) {
-    this.id = id;
+  SessionPojo(Map<Object, Object> attributes) {
+    this.attributes = attributes;
   }
 
   public final Instant accessTime() {
@@ -80,13 +81,27 @@ final class SessionPojo implements Session {
     return (T) set0(key, value);
   }
 
-  public final HttpToken id() {
-    return id;
+  @Override
+  public final void invalidate() {
+    lock.lock();
+    try {
+      accessTime = null;
+
+      attributes.clear();
+
+      attributes.put(Private.UNSET_COOKIE, Private.UNSET_COOKIE);
+    } finally {
+      lock.unlock();
+    }
   }
 
   @Override
   public final boolean isPresent() {
     return true;
+  }
+
+  public final boolean shouldUnset() {
+    return attributes.remove(Private.UNSET_COOKIE) == Private.UNSET_COOKIE;
   }
 
   public final void touch(InstantSource source) {
@@ -98,12 +113,19 @@ final class SessionPojo implements Session {
     }
   }
 
+  public final boolean valid() {
+    lock.lock();
+    try {
+      return accessTime != null;
+    } finally {
+      lock.unlock();
+    }
+  }
+
   private Object get0(Object key) {
     lock.lock();
     try {
-      validCheck();
-
-      return store == null ? null : store.get(key);
+      return attributes.get(key);
     } finally {
       lock.unlock();
     }
@@ -112,25 +134,9 @@ final class SessionPojo implements Session {
   private Object set0(Object key, Object value) {
     lock.lock();
     try {
-      validCheck();
-
-      if (value == null) {
-        return store == null ? null : store.remove(key);
-      } else {
-        if (store == null) {
-          store = new HashMap<>();
-        }
-
-        return store.put(key, value);
-      }
+      return attributes.put(key, value);
     } finally {
       lock.unlock();
-    }
-  }
-
-  private void validCheck() {
-    if (!valid) {
-      throw new IllegalStateException("This operation can only be performed on a valid and active session");
     }
   }
 

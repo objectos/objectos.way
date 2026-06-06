@@ -24,7 +24,7 @@ final class SessionFinderY {
 
   InstantSource instantSource;
 
-  private final Map<HttpToken, SessionPojo> sessions = new HashMap<>();
+  Map<HttpToken, SessionPojo> sessions;
 
   public static SessionFinder create(Consumer<? super SessionFinderY> opts) {
     final SessionFinderY y;
@@ -35,8 +35,12 @@ final class SessionFinderY {
     return y.build();
   }
 
-  public final void sessionPut(HttpToken id) {
-    sessions.put(id, new SessionPojo(id));
+  public final void session(HttpToken id, SessionPojo pojo) {
+    if (sessions == null) {
+      sessions = new HashMap<>();
+    }
+
+    sessions.put(id, pojo);
   }
 
   private SessionFinder build() {

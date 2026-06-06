@@ -16,20 +16,17 @@
 package objectos.http;
 
 import java.time.InstantSource;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.random.RandomGenerator;
-import objectos.way.Y;
-import objectos.y.RandomGeneratorY;
 
 final class SessionFactoryY {
 
-  InstantSource instantSource = Y.clockFixed();
+  InstantSource instantSource;
 
-  RandomGenerator randomGenerator = RandomGeneratorY.ofLongs(1, 2, 3, 4);
+  RandomGenerator randomGenerator;
 
-  Map<HttpToken, SessionPojo> sessions = new HashMap<>();
+  Map<HttpToken, SessionPojo> sessions;
 
   private SessionFactoryY() {}
 
@@ -40,10 +37,6 @@ final class SessionFactoryY {
     opts.accept(y);
 
     return y.build();
-  }
-
-  public final void sessionPut(HttpToken id) {
-    sessions.put(id, new SessionPojo(id));
   }
 
   private SessionFactory build() {

@@ -65,60 +65,36 @@ record RequestPojo(
 
   @Override
   public final boolean sessionPresent() {
-    final Session session;
-    session = attributes.get(Session.KEY);
-
-    return session != null
-        ? session.isPresent()
-        : false;
+    return session().isPresent();
   }
 
   @Override
   public final <T> T sessionAttr(Class<T> key) {
-    final Session session;
-    session = attributes.get(Session.KEY);
-
-    if (session == null) {
-      return null;
-    } else {
-      return session.attr(key);
-    }
+    return session().attr(key);
   }
 
   @Override
   public final <T> T sessionAttr(Key<T> key) {
-    final Session session;
-    session = attributes.get(Session.KEY);
-
-    if (session == null) {
-      return null;
-    } else {
-      return session.attr(key);
-    }
+    return session().attr(key);
   }
 
   @Override
   public final <T> T sessionAttr(Class<T> key, T value) {
-    final Session session;
-    session = attributes.get(Session.KEY);
-
-    if (session == null) {
-      return null;
-    } else {
-      return session.attr(key, value);
-    }
+    return session().attr(key, value);
   }
 
   @Override
   public final <T> T sessionAttr(Key<T> key, T value) {
-    final Session session;
-    session = attributes.get(Session.KEY);
+    return session().attr(key, value);
+  }
 
-    if (session == null) {
-      return null;
-    } else {
-      return session.attr(key, value);
-    }
+  @Override
+  public final void sessionInvalidate() {
+    session().invalidate();
+  }
+
+  private Session session() {
+    return attributes.getOrDefault(Session.KEY, SessionAbsent.INSTANCE);
   }
 
   @Override

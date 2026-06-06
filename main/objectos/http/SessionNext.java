@@ -15,43 +15,4 @@
  */
 package objectos.http;
 
-import java.util.function.Consumer;
-
-final class HostY implements HostGlobals {
-
-  Handler handler;
-
-  String name;
-
-  Consumer<? super SessionOptions> session;
-
-  public static Host create(Consumer<? super HostY> opts) {
-    final HostY y;
-    y = new HostY();
-
-    opts.accept(y);
-
-    return y.build();
-  }
-
-  private Host build() {
-    final HostBuilder builder;
-    builder = new HostBuilder(this);
-
-    builder.handler(handler);
-
-    builder.name(name);
-
-    if (session != null) {
-      builder.session(session);
-    }
-
-    return builder.build();
-  }
-
-  @Override
-  public final int port() {
-    return 80;
-  }
-
-}
+record SessionNext(HttpToken id, SessionPojo pojo) {}

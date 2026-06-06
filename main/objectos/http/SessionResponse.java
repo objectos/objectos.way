@@ -19,10 +19,18 @@ import java.util.function.BiConsumer;
 
 final class SessionResponse implements BiConsumer<Request, ResponsePojo> {
 
+  private final SessionFactory sessionFactory;
+
   private final SessionSetCookie sessionSetCookie;
 
-  SessionResponse(SessionSetCookie sessionSetCookie) {
+  private final String sessionUnsetCookie;
+
+  SessionResponse(SessionFactory sessionFactory, SessionSetCookie sessionSetCookie) {
+    this.sessionFactory = sessionFactory;
+
     this.sessionSetCookie = sessionSetCookie;
+
+    sessionUnsetCookie = sessionSetCookie.forInvalid();
   }
 
   @Override
@@ -30,10 +38,16 @@ final class SessionResponse implements BiConsumer<Request, ResponsePojo> {
     final Session session;
     session = request.attr(Session.KEY);
 
-    if (!(session instanceof SessionLazy lazy)) {
-      return;
-    }
+    switch (session) {
+      case SessionLazy lazy -> acceptLazy(response, lazy);
 
+      case SessionPojo pojo -> acceptPojo(response, pojo);
+
+      case null, default -> {}
+    }
+  }
+
+  private void acceptLazy(ResponsePojo response, SessionLazy lazy) {
     final HttpStatus0 status;
     status = response.status();
 
@@ -41,20 +55,26 @@ final class SessionResponse implements BiConsumer<Request, ResponsePojo> {
       return;
     }
 
-    final HttpToken id;
-    id = lazy.id();
-
-    if (id == null) {
+    if (!lazy.isPresent()) {
       return;
     }
 
+    final HttpToken next;
+    next = sessionFactory.next(lazy);
+
     final String token;
-    token = id.toString();
+    token = next.toString();
 
     final String setCookie;
-    setCookie = sessionSetCookie.forString(token);
+    setCookie = sessionSetCookie.forValid(token);
 
     response.setCookie(setCookie);
+  }
+
+  private void acceptPojo(ResponsePojo response, SessionPojo pojo) {
+    if (pojo.shouldUnset()) {
+      response.setCookie(sessionUnsetCookie);
+    }
   }
 
 }

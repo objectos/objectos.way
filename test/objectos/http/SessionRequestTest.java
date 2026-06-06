@@ -16,6 +16,8 @@
 package objectos.http;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertSame;
+
 import org.testng.annotations.Test;
 
 public class SessionRequestTest {
@@ -25,11 +27,14 @@ public class SessionRequestTest {
     final HttpToken id;
     id = HttpToken.of32(3, 3, 3, 3);
 
+    final SessionPojo pojo;
+    pojo = SessionPojoY.of();
+
     final SessionRequest sr;
     sr = SessionRequestY.create(opts -> {
       opts.cookieName = "WAY";
 
-      opts.sessionPut(id);
+      opts.session(id, pojo);
     });
 
     final Request req;
@@ -43,10 +48,10 @@ public class SessionRequestTest {
 
     assertEquals(req.sessionPresent(), true);
 
-    final SessionPojo pojo;
-    pojo = (SessionPojo) req.attr(Session.KEY);
+    final SessionPojo session;
+    session = (SessionPojo) req.attr(Session.KEY);
 
-    assertEquals(pojo.id(), id);
+    assertSame(session, pojo);
   }
 
   @Test(description = "return lazy session")

@@ -26,7 +26,7 @@ final class SessionSetCookieY {
 
   Duration maxAge;
 
-  String name = "WAY";
+  String name;
 
   String path;
 

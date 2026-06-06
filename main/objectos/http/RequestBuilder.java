@@ -16,6 +16,7 @@
 package objectos.http;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -115,10 +116,10 @@ final class RequestBuilder implements Options {
   @Override
   public final <T> T sessionAttr(Class<T> key, T value) {
     if (session == null) {
-      final HttpToken id;
-      id = HttpToken.of32(0, 0, 0, 0);
+      final Map<Object, Object> s;
+      s = new HashMap<>();
 
-      session = new SessionPojo(id);
+      session = new SessionPojo(s);
 
       attributes.set(Session.KEY, session);
     }

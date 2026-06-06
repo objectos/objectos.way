@@ -31,7 +31,7 @@ final class SessionFinder {
     this.sessions = sessions;
   }
 
-  public final Session find(String id) {
+  public final SessionPojo find(String id) {
     try {
       final HttpToken key;
       key = HttpToken.parse(id, SessionPojo.SESSION_LENGTH);
@@ -44,6 +44,10 @@ final class SessionFinder {
       existing = sessions.get(key);
 
       if (existing == null) {
+        return null;
+      }
+
+      if (!existing.valid()) {
         return null;
       }
 

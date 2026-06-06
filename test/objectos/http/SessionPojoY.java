@@ -15,43 +15,27 @@
  */
 package objectos.http;
 
-import java.util.function.Consumer;
+import java.time.Instant;
+import java.time.InstantSource;
+import java.util.HashMap;
+import java.util.Map;
 
-final class HostY implements HostGlobals {
+final class SessionPojoY {
 
-  Handler handler;
+  private static final InstantSource EPOCH = InstantSource.fixed(Instant.EPOCH);
 
-  String name;
+  private SessionPojoY() {}
 
-  Consumer<? super SessionOptions> session;
+  public static SessionPojo of() {
+    final Map<Object, Object> attributes;
+    attributes = new HashMap<>();
 
-  public static Host create(Consumer<? super HostY> opts) {
-    final HostY y;
-    y = new HostY();
+    final SessionPojo pojo;
+    pojo = new SessionPojo(attributes);
 
-    opts.accept(y);
+    pojo.touch(EPOCH);
 
-    return y.build();
-  }
-
-  private Host build() {
-    final HostBuilder builder;
-    builder = new HostBuilder(this);
-
-    builder.handler(handler);
-
-    builder.name(name);
-
-    if (session != null) {
-      builder.session(session);
-    }
-
-    return builder.build();
-  }
-
-  @Override
-  public final int port() {
-    return 80;
+    return pojo;
   }
 
 }

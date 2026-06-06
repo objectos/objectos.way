@@ -15,76 +15,49 @@
  */
 package objectos.http;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 import objectos.lang.Key;
 
-final class SessionLazy implements Session {
+enum SessionAbsent implements Session {
 
-  private Map<Object, Object> attributes = Map.of();
+  INSTANCE;
 
-  SessionLazy() {
-  }
-
-  @SuppressWarnings("unchecked")
   @Override
   public final <T> T attr(Class<T> key) {
-    final String name;
-    name = key.getName();
+    Objects.requireNonNull(key, "key == null");
 
-    return (T) attributes.get(name);
+    return null;
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public final <T> T attr(Key<T> key) {
-    final Key<T> k;
-    k = Objects.requireNonNull(key, "key == null");
+    Objects.requireNonNull(key, "key == null");
 
-    return (T) attributes.get(k);
+    return null;
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public final <T> T attr(Class<T> key, T value) {
-    final String name;
-    name = key.getName();
+    Objects.requireNonNull(key, "key == null");
 
-    if (attributes.isEmpty()) {
-      attributes = new HashMap<>();
-    }
-
-    return (T) attributes.put(name, value);
+    return null;
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public final <T> T attr(Key<T> key, T value) {
-    final Key<T> k;
-    k = Objects.requireNonNull(key, "key == null");
+    Objects.requireNonNull(key, "key == null");
 
-    if (attributes.isEmpty()) {
-      attributes = new HashMap<>();
-    }
-
-    return (T) attributes.put(k, value);
-  }
-
-  public final Map<Object, Object> attributes() {
-    return attributes;
+    return null;
   }
 
   @Override
   public final void invalidate() {
-    if (!attributes.isEmpty()) {
-      attributes.clear();
-    }
+
   }
 
   @Override
   public final boolean isPresent() {
-    return !attributes.isEmpty();
+    return false;
   }
 
 }

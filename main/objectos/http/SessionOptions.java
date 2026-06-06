@@ -20,7 +20,7 @@ import java.time.InstantSource;
 import java.util.random.RandomGenerator;
 
 /// Configures the HTTP session related options of a `Server` instance.
-public sealed interface SessionOptions permits SessionStoreBuilder {
+public sealed interface SessionOptions permits SessionSupportBuilder {
 
   /// Sets the session cookie `Max-Age` attribute to the specified value.
   ///

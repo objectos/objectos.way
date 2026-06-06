@@ -15,26 +15,60 @@
  */
 package objectos.http;
 
+import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.InstantSource;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.random.RandomGenerator;
 
-final class SessionStoreBuilder implements SessionOptions {
+final class SessionSupportBuilder implements SessionOptions {
 
-  Duration cookieMaxAge;
+  private String cookieDomain;
 
-  String cookieName = "OBJECTOS_WAY";
+  private final boolean cookieHttpOnly = true;
 
-  String cookiePath = "/";
+  private Duration cookieMaxAge;
 
-  boolean cookieSecure = true;
+  private String cookieName = "WAY";
+
+  private String cookiePath = "/";
+
+  private Http.SameSite cookieSameSite;
+
+  private boolean cookieSecure = true;
 
   Duration emptyMaxAge = Duration.ofMinutes(5);
 
-  InstantSource instantSource = InstantSource.system();
+  private InstantSource instantSource = InstantSource.system();
 
-  RandomGenerator randomGenerator;
+  private RandomGenerator randomGenerator;
+
+  public final SessionSupport build() {
+    final SessionCookieParser sessionCookieParser;
+    sessionCookieParser = new SessionCookieParser(cookieName);
+
+    final ConcurrentHashMap<HttpToken, SessionPojo> sessions;
+    sessions = new ConcurrentHashMap<>();
+
+    final SessionFinder sessionFinder;
+    sessionFinder = new SessionFinder(instantSource, sessions);
+
+    final RandomGenerator _randomGenerator;
+    _randomGenerator = randomGenerator != null ? randomGenerator : new SecureRandom();
+
+    final SessionFactory sessionFactory;
+    sessionFactory = new SessionFactory(instantSource, _randomGenerator, sessions);
+
+    final SessionSetCookie sessionSetCookie;
+    sessionSetCookie = new SessionSetCookie(cookieDomain, cookieHttpOnly, cookieMaxAge, cookieName, cookiePath, cookieSameSite, cookieSecure);
+
+    return new SessionSupport(
+        new SessionRequest(sessionCookieParser, sessionFinder),
+
+        new SessionResponse(sessionFactory, sessionSetCookie)
+    );
+  }
 
   @Override
   public final void cookieName(String name) {

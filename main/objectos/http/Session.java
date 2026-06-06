@@ -17,17 +17,23 @@ package objectos.http;
 
 import objectos.lang.Key;
 
-sealed interface Session permits SessionPojo, SessionLazy {
+sealed interface Session
+    permits
+    SessionAbsent,
+    SessionPojo,
+    SessionLazy {
 
   static final Key<Session> KEY = Key.of("objectos.http.Session");
 
-  <T> T attr(Class<T> name);
+  <T> T attr(Class<T> key);
 
   <T> T attr(Key<T> key);
 
-  <T> T attr(Class<T> name, T value);
+  <T> T attr(Class<T> key, T value);
 
   <T> T attr(Key<T> key, T value);
+
+  void invalidate();
 
   boolean isPresent();
 

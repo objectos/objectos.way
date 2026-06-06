@@ -47,6 +47,11 @@ final class RequestAttributes {
     return (T) map.get(key);
   }
 
+  @SuppressWarnings("unchecked")
+  public final <T> T getOrDefault(Key<T> key, T defaultValue) {
+    return (T) map.getOrDefault(key, defaultValue);
+  }
+
   public final <T> void set(Class<T> key, T value) {
     final String name;
     name = key.getName(); // implicit null check

@@ -16,6 +16,7 @@
 package objectos.http;
 
 import java.util.Objects;
+import java.util.function.Consumer;
 
 final class HostBuilder implements HostOptions {
 
@@ -24,6 +25,8 @@ final class HostBuilder implements HostOptions {
   private Handler handler = HandlerNoop.INSTANCE;
 
   private String name = "localhost";
+
+  private SessionSupport sessionSupport;
 
   HostBuilder(HostGlobals globals) {
     this.globals = globals;
@@ -39,11 +42,29 @@ final class HostBuilder implements HostOptions {
     handler = Objects.requireNonNull(value, "value == null");
   }
 
+  @Override
+  public final void session(Consumer<? super SessionOptions> opts) {
+    if (sessionSupport != null) {
+      throw new IllegalStateException("Session support has already been configured");
+    }
+
+    final SessionSupportBuilder builder;
+    builder = new SessionSupportBuilder();
+
+    opts.accept(builder);
+
+    sessionSupport = builder.build();
+  }
+
   public final Host build() {
     return new Host(
         $handler(),
 
-        $name()
+        $name(),
+
+        sessionSupport != null ? sessionSupport.request() : _ -> {},
+
+        sessionSupport != null ? sessionSupport.response() : (_, _) -> {}
     );
   }
 

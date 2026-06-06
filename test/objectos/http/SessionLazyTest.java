@@ -17,76 +17,58 @@ package objectos.http;
 
 import static org.testng.Assert.assertEquals;
 
-import java.util.HashMap;
-import java.util.Map;
 import objectos.lang.Key;
-import objectos.y.RandomGeneratorY;
 import org.testng.annotations.Test;
 
 public class SessionLazyTest {
 
   @Test
   public void testCase01() {
-    final Map<HttpToken, SessionPojo> sessions;
-    sessions = new HashMap<>();
-
     final SessionLazy lazy;
-    lazy = SessionLazyY.create(opts -> {
-      opts.randomGenerator = RandomGeneratorY.ofLongs(3, 4, 5, 6);
-
-      opts.sessions = sessions;
-    });
+    lazy = new SessionLazy();
 
     assertEquals(lazy.isPresent(), false);
     assertEquals(lazy.attr(String.class), null);
-    assertEquals(sessions.size(), 0);
 
     lazy.attr(String.class, "foo");
 
     assertEquals(lazy.isPresent(), true);
     assertEquals(lazy.attr(String.class), "foo");
-    assertEquals(sessions.size(), 1);
-
-    final HttpToken id;
-    id = HttpToken.of32(3, 4, 5, 6);
-
-    final SessionPojo pojo;
-    pojo = sessions.get(id);
-
-    assertEquals(pojo.id(), id);
   }
 
   private final Key<String> test = Key.of("TEST");
 
   @Test
   public void testCase02() {
-    final Map<HttpToken, SessionPojo> sessions;
-    sessions = new HashMap<>();
-
     final SessionLazy lazy;
-    lazy = SessionLazyY.create(opts -> {
-      opts.randomGenerator = RandomGeneratorY.ofLongs(1, 2, 3, 4);
-
-      opts.sessions = sessions;
-    });
+    lazy = new SessionLazy();
 
     assertEquals(lazy.isPresent(), false);
     assertEquals(lazy.attr(test), null);
-    assertEquals(sessions.size(), 0);
 
     lazy.attr(test, "foo");
 
     assertEquals(lazy.isPresent(), true);
     assertEquals(lazy.attr(test), "foo");
-    assertEquals(sessions.size(), 1);
+  }
 
-    final HttpToken id;
-    id = HttpToken.of32(1, 2, 3, 4);
+  @Test
+  public void testCase03() {
+    final SessionLazy lazy;
+    lazy = new SessionLazy();
 
-    final SessionPojo pojo;
-    pojo = sessions.get(id);
+    assertEquals(lazy.isPresent(), false);
+    assertEquals(lazy.attr(test), null);
 
-    assertEquals(pojo.id(), id);
+    lazy.attr(test, "foo");
+
+    assertEquals(lazy.isPresent(), true);
+    assertEquals(lazy.attr(test), "foo");
+
+    lazy.invalidate();
+
+    assertEquals(lazy.isPresent(), false);
+    assertEquals(lazy.attr(test), null);
   }
 
 }

@@ -18,7 +18,6 @@ package objectos.http;
 import java.time.InstantSource;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
-import java.util.random.RandomGenerator;
 import objectos.way.Y;
 
 final class SessionRequestY {
@@ -26,8 +25,6 @@ final class SessionRequestY {
   String cookieName = "OBJECTOS_WAY";
 
   InstantSource instantSource = Y.clockFixed();
-
-  RandomGenerator randomGenerator;
 
   private final ConcurrentHashMap<HttpToken, SessionPojo> sessions = new ConcurrentHashMap<>();
 
@@ -40,15 +37,13 @@ final class SessionRequestY {
     return y.build();
   }
 
-  public final void sessionPut(HttpToken id) {
-    sessions.put(id, new SessionPojo(id));
+  public final void session(HttpToken id, SessionPojo pojo) {
+    sessions.put(id, pojo);
   }
 
   private SessionRequest build() {
     return new SessionRequest(
         new SessionCookieParser(cookieName),
-
-        new SessionFactory(instantSource, randomGenerator, sessions),
 
         new SessionFinder(instantSource, sessions)
     );

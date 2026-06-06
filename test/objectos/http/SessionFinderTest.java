@@ -16,8 +16,10 @@
 package objectos.http;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertSame;
 
 import java.time.InstantSource;
+import java.util.Map;
 import objectos.way.Y;
 import org.testng.annotations.Test;
 
@@ -25,54 +27,8 @@ public class SessionFinderTest {
 
   private final InstantSource instantSource = Y.clockFixed();
 
-  @Test(description = "return existing")
+  @Test(description = "ignore unparsable")
   public void find01() {
-    final HttpToken id;
-    id = HttpToken.of32(1, 2, 3, 4);
-
-    final SessionFinder finder;
-    finder = SessionFinderY.create(opts -> {
-      opts.instantSource = instantSource;
-
-      opts.sessionPut(id);
-    });
-
-    final String cookie;
-    cookie = id.toString();
-
-    final Session res;
-    res = finder.find(cookie);
-
-    assertEquals(res instanceof SessionPojo, true);
-
-    final SessionPojo pojo;
-    pojo = (SessionPojo) res;
-
-    assertEquals(pojo.accessTime(), instantSource.instant());
-    assertEquals(pojo.id(), id);
-  }
-
-  @Test(description = "return from supplier")
-  public void find02() {
-    final HttpToken id;
-    id = HttpToken.of32(5, 6, 7, 8);
-
-    final SessionFinder finder;
-    finder = SessionFinderY.create(opts -> {
-      opts.instantSource = instantSource;
-    });
-
-    final String cookie;
-    cookie = id.toString();
-
-    final Session res;
-    res = finder.find(cookie);
-
-    assertEquals(res, null);
-  }
-
-  @Test(description = "return from supplier")
-  public void find03() {
     final SessionFinder finder;
     finder = SessionFinderY.create(opts -> {
       opts.instantSource = instantSource;
@@ -85,6 +41,79 @@ public class SessionFinderTest {
     res = finder.find(cookie);
 
     assertEquals(res, null);
+  }
+
+  @Test(description = "ignore non-existing token")
+  public void find02() {
+    final HttpToken id;
+    id = HttpToken.of32(5, 6, 7, 8);
+
+    final SessionFinder finder;
+    finder = SessionFinderY.create(opts -> {
+      opts.instantSource = instantSource;
+
+      opts.sessions = Map.of();
+    });
+
+    final String cookie;
+    cookie = id.toString();
+
+    final Session res;
+    res = finder.find(cookie);
+
+    assertEquals(res, null);
+  }
+
+  @Test(description = "ignore existing invalid")
+  public void find03() {
+    final HttpToken id;
+    id = HttpToken.of32(1, 2, 3, 4);
+
+    final SessionPojo pojo;
+    pojo = SessionPojoY.of();
+
+    pojo.invalidate();
+
+    final SessionFinder finder;
+    finder = SessionFinderY.create(opts -> {
+      opts.instantSource = instantSource;
+
+      opts.session(id, pojo);
+    });
+
+    final String cookie;
+    cookie = id.toString();
+
+    final Session res;
+    res = finder.find(cookie);
+
+    assertEquals(res, null);
+  }
+
+  @Test(description = "return existing")
+  public void find04() {
+    final HttpToken id;
+    id = HttpToken.of32(1, 2, 3, 4);
+
+    final SessionPojo pojo;
+    pojo = SessionPojoY.of();
+
+    final SessionFinder finder;
+    finder = SessionFinderY.create(opts -> {
+      opts.instantSource = instantSource;
+
+      opts.session(id, pojo);
+    });
+
+    final String cookie;
+    cookie = id.toString();
+
+    final Session res;
+    res = finder.find(cookie);
+
+    assertSame(res, pojo);
+
+    assertEquals(pojo.accessTime(), instantSource.instant());
   }
 
 }

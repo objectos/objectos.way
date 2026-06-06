@@ -21,14 +21,10 @@ final class SessionRequest implements Consumer<Request> {
 
   private final SessionCookieParser sessionCookieParser;
 
-  private final SessionFactory sessionFactory;
-
   private final SessionFinder sessionFinder;
 
-  SessionRequest(SessionCookieParser sessionCookieParser, SessionFactory sessionFactory, SessionFinder sessionFinder) {
+  SessionRequest(SessionCookieParser sessionCookieParser, SessionFinder sessionFinder) {
     this.sessionCookieParser = sessionCookieParser;
-
-    this.sessionFactory = sessionFactory;
 
     this.sessionFinder = sessionFinder;
   }
@@ -42,7 +38,7 @@ final class SessionRequest implements Consumer<Request> {
     session = sessionCookieParser.parse(cookieValue, sessionFinder::find);
 
     if (session == null) {
-      session = new SessionLazy(sessionFactory);
+      session = new SessionLazy();
     }
 
     request.attr(Session.KEY, session);

@@ -34,7 +34,7 @@ record SessionSetCookie(
     boolean secure
 ) {
 
-  public final String forString(String value) {
+  public final String forValid(String value) {
     final StringBuilder sb;
     sb = new StringBuilder();
 
@@ -78,6 +78,39 @@ record SessionSetCookie(
       sb.append("; SameSite=");
 
       sb.append(sameSite.text);
+    }
+
+    if (secure) {
+      sb.append("; Secure");
+    }
+
+    return sb.toString();
+  }
+
+  public final String forInvalid() {
+    final StringBuilder sb;
+    sb = new StringBuilder();
+
+    sb.append(name);
+
+    sb.append("=");
+
+    if (domain != null) {
+      sb.append("; Domain=");
+
+      sb.append(domain);
+    }
+
+    if (httpOnly) {
+      sb.append("; HttpOnly");
+    }
+
+    sb.append("; Max-Age=0");
+
+    if (path != null) {
+      sb.append("; Path=");
+
+      sb.append(path);
     }
 
     if (secure) {

@@ -15,9 +15,22 @@
  */
 package objectos.http;
 
-record Host(Handler handler, String name) {
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+
+record Host(
+    Handler handler,
+
+    String name,
+
+    Consumer<Request> sessionRequest,
+
+    BiConsumer<Request, ResponsePojo> sessionResponse
+) {
 
   public final ResponsePojo handle(Request request) {
+    sessionRequest.accept(request);
+
     final Result result;
     result = handler.handle(request);
 
@@ -55,6 +68,8 @@ record Host(Handler handler, String name) {
 
       default -> throw new UnsupportedOperationException("Implement me :: " + result);
     };
+
+    sessionResponse.accept(request, response);
 
     return response;
   }

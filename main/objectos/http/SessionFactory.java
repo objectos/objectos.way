@@ -35,21 +35,25 @@ final class SessionFactory {
     this.sessions = sessions;
   }
 
-  public final SessionPojo next() {
-    SessionPojo session, maybeExisting;
+  public final HttpToken next(SessionLazy lazy) {
+    HttpToken id;
+
+    SessionPojo pojo, existing;
+
+    final Map<Object, Object> attributes;
+    attributes = lazy.attributes();
 
     do {
-      final HttpToken id;
       id = HttpToken.of(randomGenerator, SessionPojo.SESSION_LENGTH);
 
-      session = new SessionPojo(id);
+      pojo = new SessionPojo(attributes);
 
-      maybeExisting = sessions.putIfAbsent(id, session);
-    } while (maybeExisting != null);
+      existing = sessions.putIfAbsent(id, pojo);
+    } while (existing != null);
 
-    session.touch(instantSource);
+    pojo.touch(instantSource);
 
-    return session;
+    return id;
   }
 
 }

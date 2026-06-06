@@ -15,43 +15,24 @@
  */
 package objectos.http;
 
-import java.util.function.Consumer;
+final class SessionSupport {
 
-final class HostY implements HostGlobals {
+  private final SessionRequest request;
 
-  Handler handler;
+  private final SessionResponse response;
 
-  String name;
+  SessionSupport(SessionRequest request, SessionResponse response) {
+    this.request = request;
 
-  Consumer<? super SessionOptions> session;
-
-  public static Host create(Consumer<? super HostY> opts) {
-    final HostY y;
-    y = new HostY();
-
-    opts.accept(y);
-
-    return y.build();
+    this.response = response;
   }
 
-  private Host build() {
-    final HostBuilder builder;
-    builder = new HostBuilder(this);
-
-    builder.handler(handler);
-
-    builder.name(name);
-
-    if (session != null) {
-      builder.session(session);
-    }
-
-    return builder.build();
+  public final SessionRequest request() {
+    return request;
   }
 
-  @Override
-  public final int port() {
-    return 80;
+  public final SessionResponse response() {
+    return response;
   }
 
 }

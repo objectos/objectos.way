@@ -17,6 +17,7 @@ package objectos.http;
 
 import static org.testng.Assert.assertEquals;
 
+import java.time.Duration;
 import java.util.function.Consumer;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -24,7 +25,7 @@ import org.testng.annotations.Test;
 public class SessionSetCookieTest {
 
   @DataProvider
-  public Object[][] validProvider() {
+  public Object[][] forValidProvider() {
     return new Object[][] {
         {
             c(opts -> {
@@ -68,19 +69,40 @@ public class SessionSetCookieTest {
             }),
 
             "WAY=abc; HttpOnly; Path=/; SameSite=Strict; Secure"
-        }
+        },
+        {
+            c(opts -> {
+              opts.name = "foo";
 
+              opts.path = "/bar";
+
+              opts.maxAge = Duration.ZERO;
+            }),
+
+            "foo=abc; Max-Age=0; Path=/bar"
+        },
+        {
+            c(opts -> {
+              opts.name = "foo";
+
+              opts.path = "/bar";
+
+              opts.maxAge = Duration.ofMinutes(1);
+            }),
+
+            "foo=abc; Max-Age=60; Path=/bar"
+        }
     };
   }
 
   @SuppressWarnings("exports")
-  @Test(dataProvider = "validProvider")
-  public void valid(Consumer<? super SessionSetCookieY> opts, String expected) {
+  @Test(dataProvider = "forValidProvider")
+  public void forValid(Consumer<? super SessionSetCookieY> opts, String expected) {
     final SessionSetCookie setCookie;
     setCookie = SessionSetCookieY.create(opts);
 
     assertEquals(
-        setCookie.forString("abc"),
+        setCookie.forValid("abc"),
 
         expected
     );

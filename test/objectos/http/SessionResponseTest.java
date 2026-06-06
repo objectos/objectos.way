@@ -17,15 +17,13 @@ package objectos.http;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.HashMap;
 import java.util.List;
+import objectos.way.Y;
 import objectos.y.RandomGeneratorY;
 import org.testng.annotations.Test;
 
 public class SessionResponseTest {
-
-  private final SessionSetCookie sessionSetCookie = SessionSetCookieY.create(opts -> {
-    opts.name = "WAY";
-  });
 
   @Test(description = "request has no session -> noop")
   public void accept01() {
@@ -45,7 +43,11 @@ public class SessionResponseTest {
     assertEquals(headers.size(), 0);
 
     final SessionResponse sr;
-    sr = new SessionResponse(sessionSetCookie);
+    sr = SessionResponseY.create(opts -> {
+      opts.sessionSetCookie = SessionSetCookieY.create(set -> {
+        set.name = "WAY";
+      });
+    });
 
     sr.accept(request, response);
 
@@ -72,7 +74,11 @@ public class SessionResponseTest {
     assertEquals(headers.size(), 0);
 
     final SessionResponse sr;
-    sr = new SessionResponse(sessionSetCookie);
+    sr = SessionResponseY.create(opts -> {
+      opts.sessionSetCookie = SessionSetCookieY.create(set -> {
+        set.name = "WAY";
+      });
+    });
 
     sr.accept(request, response);
 
@@ -84,7 +90,7 @@ public class SessionResponseTest {
     final Request request;
     request = Request.create(_ -> {});
 
-    request.attr(Session.KEY, SessionLazyY.create(_ -> {}));
+    request.attr(Session.KEY, new SessionLazy());
 
     assertEquals(request.sessionPresent(), false);
 
@@ -99,7 +105,11 @@ public class SessionResponseTest {
     assertEquals(headers.size(), 0);
 
     final SessionResponse sr;
-    sr = new SessionResponse(sessionSetCookie);
+    sr = SessionResponseY.create(opts -> {
+      opts.sessionSetCookie = SessionSetCookieY.create(set -> {
+        set.name = "WAY";
+      });
+    });
 
     sr.accept(request, response);
 
@@ -112,9 +122,7 @@ public class SessionResponseTest {
     request = Request.create(_ -> {});
 
     final SessionLazy lazy;
-    lazy = SessionLazyY.create(opts -> {
-      opts.randomGenerator = RandomGeneratorY.ofLongs(4, 5, 5, 6);
-    });
+    lazy = new SessionLazy();
 
     lazy.attr(String.class, "foo");
 
@@ -134,7 +142,19 @@ public class SessionResponseTest {
     assertEquals(headers.size(), 0);
 
     final SessionResponse sr;
-    sr = new SessionResponse(sessionSetCookie);
+    sr = SessionResponseY.create(opts -> {
+      opts.sessionFactory = SessionFactoryY.create(y -> {
+        y.instantSource = Y.clockFixed();
+
+        y.randomGenerator = RandomGeneratorY.ofLongs(4, 5, 5, 6);
+
+        y.sessions = new HashMap<>();
+      });
+
+      opts.sessionSetCookie = SessionSetCookieY.create(set -> {
+        set.name = "WAY";
+      });
+    });
 
     sr.accept(request, response);
 

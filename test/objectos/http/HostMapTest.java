@@ -21,7 +21,7 @@ import org.testng.annotations.Test;
 public class HostMapTest {
 
   private Host named(String name) {
-    return new Host(null, name);
+    return new Host(null, name, _ -> {}, (_, _) -> {});
   }
 
   @Test

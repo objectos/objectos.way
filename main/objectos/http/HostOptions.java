@@ -15,6 +15,8 @@
  */
 package objectos.http;
 
+import java.util.function.Consumer;
+
 /// Configures a name-based web site to be served by a `Server` instance.
 public sealed interface HostOptions permits HostBuilder {
 
@@ -28,5 +30,10 @@ public sealed interface HostOptions permits HostBuilder {
   ///
   /// @param value a handler instance
   void handler(Handler value);
+
+  /// Enables session support for this host with the specified options.
+  ///
+  /// @param opts allows for setting the session options
+  void session(Consumer<? super SessionOptions> opts);
 
 }
