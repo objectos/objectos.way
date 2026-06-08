@@ -18,6 +18,7 @@ package objectos.http;
 import static org.testng.Assert.assertEquals;
 
 import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
 import objectos.y.BasicFileAttributesY;
 import org.testng.annotations.Test;
 
@@ -26,17 +27,19 @@ public class StaticFilesETagTest {
   @Test
   public void apply01() {
     final StaticFilesETag subject;
-    subject = new StaticFilesETag(0b1111_1111_1111);
+    subject = new StaticFilesETag(0L);
 
     final BasicFileAttributes attributes;
     attributes = BasicFileAttributesY.create(opts -> {
-      opts.fileKey = Integer.valueOf(0b1111_1111_1111);
+      opts.lastModifiedTime = FileTime.fromMillis(0b1111_1111_1111);
+
+      opts.size = 0b1111L;
     });
 
     assertEquals(
         subject.apply(attributes),
 
-        "fff00000fff"
+        "fff-f"
     );
   }
 

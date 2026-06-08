@@ -16,30 +16,29 @@
 package objectos.http;
 
 import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
 import java.util.function.Function;
 
 final class StaticFilesETag implements Function<BasicFileAttributes, String> {
 
-  private final long highBits;
+  private final long mask;
 
-  StaticFilesETag(int highBits) {
-    this.highBits = highBits;
+  StaticFilesETag(long mask) {
+    this.mask = mask;
   }
 
   @Override
   public final String apply(BasicFileAttributes attributes) {
-    final Object fileKey;
-    fileKey = attributes.fileKey();
+    final FileTime lastModifiedFileTime;
+    lastModifiedFileTime = attributes.lastModifiedTime();
 
-    final int lowBits;
-    lowBits = fileKey.hashCode();
+    final long lastModifiedMillis;
+    lastModifiedMillis = lastModifiedFileTime.toMillis() ^ mask;
 
-    long etag;
-    etag = highBits << 32L;
+    final long size;
+    size = attributes.size() ^ mask;
 
-    etag |= lowBits;
-
-    return Long.toHexString(etag);
+    return Long.toHexString(lastModifiedMillis) + "-" + Long.toHexString(size);
   }
 
 }

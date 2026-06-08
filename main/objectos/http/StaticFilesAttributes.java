@@ -30,14 +30,6 @@ final class StaticFilesAttributes {
   }
 
   public final BasicFileAttributes read(Path path) throws IOException {
-    if (path != null) {
-      return read0(path);
-    } else {
-      return null;
-    }
-  }
-
-  private BasicFileAttributes read0(Path path) throws IOException {
     try {
       final BasicFileAttributes attrs;
       attrs = reader.apply(path);

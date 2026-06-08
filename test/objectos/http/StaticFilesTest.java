@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.time.Clock;
 import java.time.Instant;
@@ -34,7 +35,7 @@ import objectos.y.PathY;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class StaticFilesHandlerTest {
+public class StaticFilesTest {
 
   private static final class Options {
 
@@ -46,18 +47,22 @@ public class StaticFilesHandlerTest {
 
   }
 
-  private StaticFilesHandler create(Consumer<? super Options> opts) {
+  private StaticFiles create(Consumer<? super Options> opts) {
     final Options builder;
     builder = new Options();
 
     opts.accept(builder);
 
-    return new StaticFilesHandler(
-        builder.contentTypes,
+    return new StaticFiles(
+        new StaticFilesAttributes(file -> Files.readAttributes(file, BasicFileAttributes.class)),
 
-        builder.defaultContentType,
+        new StaticFilesETag(0L),
 
-        builder.rootDirectory
+        new StaticFilesExtension("*"),
+
+        new StaticFilesRoot(builder.rootDirectory),
+
+        new StaticFilesTypes(builder.defaultContentType, builder.contentTypes)
     );
   }
 
