@@ -21,7 +21,13 @@ import java.util.function.Consumer;
 
 public final class BasicFileAttributesY {
 
+  public Object fileKey;
+
+  public FileTime lastModifiedTime;
+
   public boolean regularFile;
+
+  public long size;
 
   private BasicFileAttributesY() {}
 
@@ -44,10 +50,10 @@ public final class BasicFileAttributesY {
   private BasicFileAttributes build() {
     return new BasicFileAttributes() {
       @Override
-      public long size() { return 0; }
+      public final long size() { return size; }
 
       @Override
-      public FileTime lastModifiedTime() { return null; }
+      public final FileTime lastModifiedTime() { return lastModifiedTime; }
 
       @Override
       public FileTime lastAccessTime() { return null; }
@@ -56,7 +62,7 @@ public final class BasicFileAttributesY {
       public boolean isSymbolicLink() { return false; }
 
       @Override
-      public boolean isRegularFile() { return regularFile; }
+      public final boolean isRegularFile() { return regularFile; }
 
       @Override
       public boolean isOther() { return false; }
@@ -65,7 +71,7 @@ public final class BasicFileAttributesY {
       public boolean isDirectory() { return false; }
 
       @Override
-      public Object fileKey() { return null; }
+      public final Object fileKey() { return fileKey; }
 
       @Override
       public FileTime creationTime() { return null; }

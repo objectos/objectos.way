@@ -18,6 +18,7 @@ package objectos.y;
 import static org.testng.Assert.assertEquals;
 
 import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
 import java.util.function.Consumer;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -48,6 +49,50 @@ public class BasicFileAttributesYTest {
         },
 
         {
+            "file key",
+
+            options(opts -> {
+              opts.fileKey = Long.MAX_VALUE;
+            }),
+
+            assertions(attr -> {
+              assertEquals(attr.creationTime(), null);
+              assertEquals(attr.fileKey(), Long.MAX_VALUE);
+              assertEquals(attr.lastAccessTime(), null);
+              assertEquals(attr.lastModifiedTime(), null);
+
+              assertEquals(attr.isDirectory(), false);
+              assertEquals(attr.isOther(), false);
+              assertEquals(attr.isRegularFile(), false);
+              assertEquals(attr.isSymbolicLink(), false);
+
+              assertEquals(attr.size(), 0);
+            })
+        },
+
+        {
+            "last modified time",
+
+            options(opts -> {
+              opts.lastModifiedTime = FileTime.fromMillis(123L);
+            }),
+
+            assertions(attr -> {
+              assertEquals(attr.creationTime(), null);
+              assertEquals(attr.fileKey(), null);
+              assertEquals(attr.lastAccessTime(), null);
+              assertEquals(attr.lastModifiedTime(), FileTime.fromMillis(123L));
+
+              assertEquals(attr.isDirectory(), false);
+              assertEquals(attr.isOther(), false);
+              assertEquals(attr.isRegularFile(), false);
+              assertEquals(attr.isSymbolicLink(), false);
+
+              assertEquals(attr.size(), 0);
+            })
+        },
+
+        {
             "Regular file",
 
             options(opts -> {
@@ -66,6 +111,28 @@ public class BasicFileAttributesYTest {
               assertEquals(attr.isSymbolicLink(), false);
 
               assertEquals(attr.size(), 0);
+            })
+        },
+
+        {
+            "size",
+
+            options(opts -> {
+              opts.size = 123L;
+            }),
+
+            assertions(attr -> {
+              assertEquals(attr.creationTime(), null);
+              assertEquals(attr.fileKey(), null);
+              assertEquals(attr.lastAccessTime(), null);
+              assertEquals(attr.lastModifiedTime(), null);
+
+              assertEquals(attr.isDirectory(), false);
+              assertEquals(attr.isOther(), false);
+              assertEquals(attr.isRegularFile(), false);
+              assertEquals(attr.isSymbolicLink(), false);
+
+              assertEquals(attr.size(), 123L);
             })
         }
     };
