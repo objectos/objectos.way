@@ -15,12 +15,15 @@
  */
 package objectos.http;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 import objectos.internal.Util;
 
 final class StaticFilesBuilder implements StaticFilesOptions {
@@ -31,6 +34,40 @@ final class StaticFilesBuilder implements StaticFilesOptions {
   private String defaultContentType = "application/octet-stream";
 
   private Set<Path> directories = Set.of();
+
+  public final StaticFiles build() throws IOException {
+    final Path directory = null;
+
+    final StaticFilesAttributes staticFilesAttributes;
+    staticFilesAttributes = new StaticFilesAttributes(file -> Files.readAttributes(file, BasicFileAttributes.class));
+
+    final long mask;
+    mask = ThreadLocalRandom.current().nextLong();
+
+    final StaticFilesETag staticFilesETag;
+    staticFilesETag = new StaticFilesETag(mask);
+
+    final StaticFilesExtension staticFilesExtension;
+    staticFilesExtension = new StaticFilesExtension("*");
+
+    final StaticFilesRoot staticFilesRoot;
+    staticFilesRoot = new StaticFilesRoot(directory);
+
+    final StaticFilesTypes staticFilesTypes;
+    staticFilesTypes = new StaticFilesTypes(defaultContentType, contentTypes);
+
+    return new StaticFiles(
+        staticFilesAttributes,
+
+        staticFilesETag,
+
+        staticFilesExtension,
+
+        staticFilesRoot,
+
+        staticFilesTypes
+    );
+  }
 
   @Override
   public final void addDirectory(Path directory) {

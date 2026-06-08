@@ -27,8 +27,13 @@ public sealed interface StaticFilesOptions permits StaticFilesBuilder {
   .java: text/plain; charset=utf-8
   .html: text/html; charset=utf-8
   .txt: text/plain; charset=utf-8
+  .xml: text/xml; charset=utf-8
 
+  .ico: image/vnd.microsoft.icon
   .jpg: image/jpeg
+  .png: image/png
+
+  .mp4: video/mp4
 
   .woff2: font/woff2
   """;

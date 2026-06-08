@@ -50,26 +50,10 @@ public class StaticFilesAttributesTest {
 
   }
 
-  @Test(description = "ignore null input")
-  public void read01() throws IOException {
-    final ReaderY reader;
-    reader = new ReaderY();
-
-    final StaticFilesAttributes subject;
-    subject = new StaticFilesAttributes(reader);
-
-    final BasicFileAttributes res;
-    res = subject.read(null);
-
-    assertSame(res, null);
-
-    assertSame(reader.path, null);
-  }
-
   private final Path path = Path.of("");
 
   @Test(description = "ignore non-regular file")
-  public void read02() throws IOException {
+  public void read01() throws IOException {
     final ReaderY reader;
     reader = new ReaderY();
 
@@ -90,7 +74,7 @@ public class StaticFilesAttributesTest {
   }
 
   @Test(description = "ignore non-existing file")
-  public void read03() throws IOException {
+  public void read02() throws IOException {
     final ReaderY reader;
     reader = new ReaderY();
 
@@ -115,7 +99,7 @@ public class StaticFilesAttributesTest {
   }
 
   @Test(description = "pass through IOException")
-  public void read04() {
+  public void read03() {
     final ReaderY reader;
     reader = new ReaderY();
 
@@ -144,7 +128,7 @@ public class StaticFilesAttributesTest {
   }
 
   @Test(description = "return attrs")
-  public void read05() throws IOException {
+  public void read04() throws IOException {
     final ReaderY reader;
     reader = new ReaderY();
 

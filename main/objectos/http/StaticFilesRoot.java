@@ -15,7 +15,9 @@
  */
 package objectos.http;
 
+import java.io.IOException;
 import java.nio.file.Path;
+import objectos.way.Io;
 
 final class StaticFilesRoot {
 
@@ -23,6 +25,10 @@ final class StaticFilesRoot {
 
   StaticFilesRoot(Path directory) {
     this.directory = directory;
+  }
+
+  public final void delete() throws IOException {
+    Io.deleteRecursively(directory);
   }
 
   public final Path resolve(Request request) {

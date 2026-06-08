@@ -15,11 +15,13 @@
  */
 package objectos.http;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.function.Consumer;
 
-final class StaticFiles implements Handler {
+final class StaticFiles implements Closeable, Handler {
 
   private final StaticFilesAttributes staticFilesAttributes;
 
@@ -51,6 +53,20 @@ final class StaticFiles implements Handler {
     this.staticFilesRoot = staticFilesRoot;
 
     this.staticFilesTypes = staticFilesTypes;
+  }
+
+  public static StaticFiles create(Consumer<? super StaticFilesBuilder> opts) throws IOException {
+    final StaticFilesBuilder builder;
+    builder = new StaticFilesBuilder();
+
+    opts.accept(builder);
+
+    return builder.build();
+  }
+
+  @Override
+  public final void close() throws IOException {
+    staticFilesRoot.delete();
   }
 
   @Override
