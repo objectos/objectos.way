@@ -15,13 +15,155 @@
  */
 package objectos.http;
 
+import static org.testng.Assert.assertSame;
+
 import java.io.IOException;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
+import objectos.internal.IOFunction;
+import objectos.lang.Throwables;
+import objectos.y.BasicFileAttributesY;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class StaticFilesAttributesTest {
 
-  @Test(enabled = false, description = "ignore null input")
+  private static final class ReaderY implements IOFunction<Path, BasicFileAttributes> {
+
+    BasicFileAttributes attributes;
+
+    IOException exception;
+
+    Path path;
+
+    @Override
+    public final BasicFileAttributes apply(Path path) throws IOException {
+      this.path = path;
+
+      if (exception != null) {
+        throw exception;
+      }
+
+      return attributes;
+    }
+
+  }
+
+  @Test(description = "ignore null input")
   public void read01() throws IOException {
+    final ReaderY reader;
+    reader = new ReaderY();
+
+    final StaticFilesAttributes subject;
+    subject = new StaticFilesAttributes(reader);
+
+    final BasicFileAttributes res;
+    res = subject.read(null);
+
+    assertSame(res, null);
+
+    assertSame(reader.path, null);
+  }
+
+  private final Path path = Path.of("");
+
+  @Test(description = "ignore non-regular file")
+  public void read02() throws IOException {
+    final ReaderY reader;
+    reader = new ReaderY();
+
+    final BasicFileAttributes attributes;
+    attributes = BasicFileAttributesY.create();
+
+    reader.attributes = attributes;
+
+    final StaticFilesAttributes subject;
+    subject = new StaticFilesAttributes(reader);
+
+    final BasicFileAttributes res;
+    res = subject.read(path);
+
+    assertSame(res, null);
+
+    assertSame(reader.path, path);
+  }
+
+  @Test(description = "ignore non-existing file")
+  public void read03() throws IOException {
+    final ReaderY reader;
+    reader = new ReaderY();
+
+    final BasicFileAttributes attributes;
+    attributes = BasicFileAttributesY.create(opts -> {
+      opts.regularFile = true;
+    });
+
+    reader.attributes = attributes;
+
+    reader.exception = new NoSuchFileException("");
+
+    final StaticFilesAttributes subject;
+    subject = new StaticFilesAttributes(reader);
+
+    final BasicFileAttributes res;
+    res = subject.read(path);
+
+    assertSame(res, null);
+
+    assertSame(reader.path, path);
+  }
+
+  @Test(description = "pass through IOException")
+  public void read04() {
+    final ReaderY reader;
+    reader = new ReaderY();
+
+    final BasicFileAttributes attributes;
+    attributes = BasicFileAttributesY.create(opts -> {
+      opts.regularFile = true;
+    });
+
+    reader.attributes = attributes;
+
+    final IOException exception;
+    exception = Throwables.trimStackTrace(new IOException(), 1);
+
+    reader.exception = exception;
+
+    final StaticFilesAttributes subject;
+    subject = new StaticFilesAttributes(reader);
+
+    try {
+      subject.read(path);
+
+      Assert.fail("It should have thrown");
+    } catch (IOException e) {
+      assertSame(e, exception);
+    }
+  }
+
+  @Test(description = "return attrs")
+  public void read05() throws IOException {
+    final ReaderY reader;
+    reader = new ReaderY();
+
+    final BasicFileAttributes attributes;
+    attributes = BasicFileAttributesY.create(opts -> {
+      opts.regularFile = true;
+    });
+
+    reader.attributes = attributes;
+
+    final StaticFilesAttributes subject;
+    subject = new StaticFilesAttributes(reader);
+
+    final BasicFileAttributes res;
+    res = subject.read(path);
+
+    assertSame(res, attributes);
+
+    assertSame(reader.path, path);
   }
 
 }

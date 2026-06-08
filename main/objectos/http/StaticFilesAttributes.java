@@ -19,19 +19,13 @@ import java.io.IOException;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
+import objectos.internal.IOFunction;
 
 final class StaticFilesAttributes {
 
-  @FunctionalInterface
-  interface Reader {
+  private final IOFunction<Path, BasicFileAttributes> reader;
 
-    BasicFileAttributes read(Path path) throws IOException;
-
-  }
-
-  private final Reader reader;
-
-  StaticFilesAttributes(Reader reader) {
+  StaticFilesAttributes(IOFunction<Path, BasicFileAttributes> reader) {
     this.reader = reader;
   }
 
@@ -46,7 +40,7 @@ final class StaticFilesAttributes {
   private BasicFileAttributes read0(Path path) throws IOException {
     try {
       final BasicFileAttributes attrs;
-      attrs = reader.read(path);
+      attrs = reader.apply(path);
 
       if (attrs.isRegularFile()) {
         return attrs;
