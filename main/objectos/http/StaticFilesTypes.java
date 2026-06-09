@@ -19,9 +19,9 @@ import java.util.Map;
 
 final class StaticFilesTypes {
 
-  private final String defaultType;
+  final String defaultType;
 
-  private final Map<String, String> types;
+  final Map<String, String> types;
 
   StaticFilesTypes(String defaultType, Map<String, String> types) {
     this.defaultType = defaultType;

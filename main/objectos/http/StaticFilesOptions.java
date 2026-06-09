@@ -36,6 +36,8 @@ public sealed interface StaticFilesOptions permits StaticFilesBuilder {
   .mp4: video/mp4
 
   .woff2: font/woff2
+
+  *: application/octet-stream
   """;
 
   /// Serves the contents of the specified directory as if it were at the root

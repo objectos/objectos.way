@@ -28,7 +28,7 @@ import java.util.stream.Stream;
 import objectos.y.PathY;
 import org.testng.annotations.Test;
 
-public class StaticFilesBuilderRootTest {
+public class StaticFilesRootBuilderTest {
 
   @Test
   public void create01() throws IOException {

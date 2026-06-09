@@ -34,6 +34,12 @@ final class StaticFilesBuilderRoot {
     this.directories = directories;
   }
 
+  public final StaticFilesRoot build() throws IOException {
+    return new StaticFilesRoot(
+        create()
+    );
+  }
+
   public final Path create() throws IOException {
     final Path root;
     root = Files.createTempDirectory(null);
