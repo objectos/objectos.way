@@ -19,42 +19,30 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.HashMap;
 import java.util.LinkedHashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
-import objectos.internal.Util;
 
 final class StaticFilesBuilder implements StaticFilesOptions {
 
-  private Map<String, String> contentTypes = Map.of();
-
-  @SuppressWarnings("unused")
-  private String defaultContentType = "application/octet-stream";
-
   private Set<Path> directories = Set.of();
 
-  public final StaticFiles build() throws IOException {
-    final Path directory = null;
+  private long etagMask = ThreadLocalRandom.current().nextLong();
 
+  private final StaticFilesTypesBuilder typesBuilder = new StaticFilesTypesBuilder("application/octet-stream");
+
+  public final StaticFiles build() throws IOException {
     final StaticFilesAttributes staticFilesAttributes;
     staticFilesAttributes = new StaticFilesAttributes(file -> Files.readAttributes(file, BasicFileAttributes.class));
 
-    final long mask;
-    mask = ThreadLocalRandom.current().nextLong();
-
     final StaticFilesETag staticFilesETag;
-    staticFilesETag = new StaticFilesETag(mask);
+    staticFilesETag = new StaticFilesETag(etagMask);
 
     final StaticFilesExtension staticFilesExtension;
     staticFilesExtension = new StaticFilesExtension("*");
 
-    final StaticFilesRoot staticFilesRoot;
-    staticFilesRoot = new StaticFilesRoot(directory);
-
-    final StaticFilesTypes staticFilesTypes;
-    staticFilesTypes = new StaticFilesTypes(defaultContentType, contentTypes);
+    final StaticFilesRootBuilder staticFilesRootBuilder;
+    staticFilesRootBuilder = new StaticFilesRootBuilder(directories);
 
     return new StaticFiles(
         staticFilesAttributes,
@@ -63,9 +51,9 @@ final class StaticFilesBuilder implements StaticFilesOptions {
 
         staticFilesExtension,
 
-        staticFilesRoot,
+        staticFilesRootBuilder.build(),
 
-        staticFilesTypes
+        typesBuilder.build()
     );
   }
 
@@ -87,50 +75,11 @@ final class StaticFilesBuilder implements StaticFilesOptions {
 
   @Override
   public final void contentTypes(String propertiesString) {
-    final Map<String, String> map;
-    map = Util.parsePropertiesMap(propertiesString);
-
-    for (Map.Entry<String, String> entry : map.entrySet()) {
-      final String extension;
-      extension = entry.getKey();
-
-      final String contentType;
-      contentType = entry.getValue();
-
-      register(extension, contentType);
-    }
+    typesBuilder.contentTypes(propertiesString);
   }
 
-  private void register(String extension, String contentType) {
-    if (extension.isEmpty()) {
-      throw new IllegalArgumentException("File extension must not be empty");
-    }
-
-    if (contentType.isEmpty()) {
-      throw new IllegalArgumentException("Content type must not be empty");
-    }
-
-    if (extension.equals("*")) {
-
-      defaultContentType = contentType;
-
-    } else {
-
-      if (contentTypes.isEmpty()) {
-        contentTypes = new HashMap<>();
-      }
-
-      final String previous;
-      previous = contentTypes.putIfAbsent(extension, contentType);
-
-      if (previous != null) {
-        final String msg;
-        msg = "Duplicate mapping for extension %s: %s, %s".formatted(extension, previous, contentType);
-
-        throw new IllegalArgumentException(msg);
-      }
-
-    }
+  public final void etagMask(long value) {
+    etagMask = value;
   }
 
 }

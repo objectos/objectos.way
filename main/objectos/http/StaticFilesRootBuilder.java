@@ -26,11 +26,11 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Set;
 import objectos.way.Io;
 
-final class StaticFilesBuilderRoot {
+final class StaticFilesRootBuilder {
 
   private final Set<Path> directories;
 
-  StaticFilesBuilderRoot(Set<Path> directories) {
+  StaticFilesRootBuilder(Set<Path> directories) {
     this.directories = directories;
   }
 

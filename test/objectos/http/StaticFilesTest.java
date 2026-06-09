@@ -22,12 +22,10 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.time.Clock;
 import java.time.Instant;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 import objectos.way.Y;
@@ -37,33 +35,12 @@ import org.testng.annotations.Test;
 
 public class StaticFilesTest {
 
-  private static final class Options {
+  private StaticFiles create(Consumer<? super StaticFilesBuilder> more) throws IOException {
+    return StaticFiles.create(opts -> {
+      opts.etagMask(0L);
 
-    Map<String, String> contentTypes = Map.of();
-
-    String defaultContentType;
-
-    Path rootDirectory;
-
-  }
-
-  private StaticFiles create(Consumer<? super Options> opts) {
-    final Options builder;
-    builder = new Options();
-
-    opts.accept(builder);
-
-    return new StaticFiles(
-        new StaticFilesAttributes(file -> Files.readAttributes(file, BasicFileAttributes.class)),
-
-        new StaticFilesETag(0L),
-
-        new StaticFilesExtension("*"),
-
-        new StaticFilesRoot(builder.rootDirectory),
-
-        new StaticFilesTypes(builder.defaultContentType, builder.contentTypes)
-    );
+      more.accept(opts);
+    });
   }
 
   @Test(description = """
@@ -72,17 +49,17 @@ public class StaticFilesTest {
   - file @ root
   - mapped content-type
   """)
-  public void handle01() {
+  public void handle01() throws IOException {
     final Handler handler;
     handler = create(opts -> {
-      opts.contentTypes = Map.of(".txt", "text/plain");
+      opts.contentTypes(".txt: text/plain");
 
       final Path root;
       root = PathY.nextDir();
 
       write(root, "tc01.txt", "TC01");
 
-      opts.rootDirectory = root;
+      opts.addDirectory(root);
     });
 
     final Result res;
@@ -111,17 +88,17 @@ public class StaticFilesTest {
   - file @ subdir
   - mapped content-type
   """)
-  public void handle02() {
+  public void handle02() throws IOException {
     final Handler handler;
     handler = create(opts -> {
-      opts.contentTypes = Map.of(".json", "application/json");
+      opts.contentTypes(".json: application/json");
 
       final Path root;
       root = PathY.nextDir();
 
       write(root, "sub/tc02.json", "[\"TC02\"]");
 
-      opts.rootDirectory = root;
+      opts.addDirectory(root);
     });
 
     final Result res;
@@ -150,17 +127,17 @@ public class StaticFilesTest {
   - file @ root
   - default content-type
   """)
-  public void handle03() {
+  public void handle03() throws IOException {
     final Handler handler;
     handler = create(opts -> {
-      opts.defaultContentType = "application/octet-stream";
+      opts.contentTypes("*: application/octet-stream");
 
       final Path root;
       root = PathY.nextDir();
 
       write(root, "tc03.foo", "TC03");
 
-      opts.rootDirectory = root;
+      opts.addDirectory(root);
     });
 
     final Result res;
@@ -189,17 +166,17 @@ public class StaticFilesTest {
   - file @ root
   - HEAD method
   """)
-  public void handle04() {
+  public void handle04() throws IOException {
     final Handler handler;
     handler = create(opts -> {
-      opts.contentTypes = Map.of(".txt", "text/plain");
+      opts.contentTypes(".txt: text/plain");
 
       final Path root;
       root = PathY.nextDir();
 
       write(root, "tc04.txt", "TC04");
 
-      opts.rootDirectory = root;
+      opts.addDirectory(root);
     });
 
     final Result res;
@@ -231,17 +208,17 @@ public class StaticFilesTest {
   }
 
   @Test(dataProvider = "methodProvider")
-  public void methodNotAllowed01(HttpMethod method) {
+  public void methodNotAllowed01(HttpMethod method) throws IOException {
     final Handler handler;
     handler = create(opts -> {
-      opts.contentTypes = Map.of(".txt", "text/plain");
+      opts.contentTypes(".txt: text/plain");
 
       final Path root;
       root = PathY.nextDir();
 
       write(root, "not-allowed.txt", method.name());
 
-      opts.rootDirectory = root;
+      opts.addDirectory(root);
     });
 
     final Result res;
@@ -265,17 +242,17 @@ public class StaticFilesTest {
   }
 
   @Test
-  public void notModified01() {
+  public void notModified01() throws IOException {
     final Handler handler;
     handler = create(opts -> {
-      opts.contentTypes = Map.of(".txt", "text/plain");
+      opts.contentTypes(".txt: text/plain");
 
       final Path root;
       root = PathY.nextDir();
 
       write(root, "tc01.txt", "TC01");
 
-      opts.rootDirectory = root;
+      opts.addDirectory(root);
     });
 
     final Result res;
@@ -302,10 +279,9 @@ public class StaticFilesTest {
   skip:
   - non-existing file
   """)
-  public void skip01() {
+  public void skip01() throws IOException {
     final Handler handler;
-    handler = create(opts -> {
-      opts.rootDirectory = PathY.nextDir();
+    handler = create(_ -> {
     });
 
     final Request request;
@@ -323,10 +299,9 @@ public class StaticFilesTest {
   skip:
   - existing path is a directory
   """)
-  public void skip02() {
+  public void skip02() throws IOException {
     final Handler handler;
-    handler = create(opts -> {
-      opts.rootDirectory = PathY.nextDir();
+    handler = create(_ -> {
     });
 
     final Request request;

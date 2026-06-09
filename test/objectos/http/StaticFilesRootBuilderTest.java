@@ -35,8 +35,8 @@ public class StaticFilesRootBuilderTest {
     final Set<Path> directories;
     directories = Set.of();
 
-    final StaticFilesBuilderRoot subject;
-    subject = new StaticFilesBuilderRoot(directories);
+    final StaticFilesRootBuilder subject;
+    subject = new StaticFilesRootBuilder(directories);
 
     final Path res;
     res = subject.create();
@@ -65,8 +65,8 @@ public class StaticFilesRootBuilderTest {
     final Set<Path> directories;
     directories = Set.of(fileAtRoot, fileAtSub);
 
-    final StaticFilesBuilderRoot subject;
-    subject = new StaticFilesBuilderRoot(directories);
+    final StaticFilesRootBuilder subject;
+    subject = new StaticFilesRootBuilder(directories);
 
     final Path res;
     res = subject.create();
