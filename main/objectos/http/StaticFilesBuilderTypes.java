@@ -15,15 +15,6 @@
  */
 package objectos.http;
 
-record MediaTypePojo(String fullType) implements MediaType {
-
-  static MediaTypePojo of0(String fullType) {
-    final MediaTypeValidator validator;
-    validator = new MediaTypeValidator(fullType);
-
-    validator.validate();
-
-    return new MediaTypePojo(fullType);
-  }
+final class StaticFilesBuilderTypes {
 
 }
