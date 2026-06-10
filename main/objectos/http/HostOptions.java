@@ -31,9 +31,15 @@ public sealed interface HostOptions permits HostBuilder {
   /// @param value a handler instance
   void handler(Handler value);
 
-  /// Enables session support for this host with the specified options.
+  /// Enables for this host support for HTTP sessions with the specified
+  /// options.
   ///
   /// @param opts allows for setting the session options
   void session(Consumer<? super SessionOptions> opts);
+
+  /// Enables for this host support for static files with the specified options.
+  ///
+  /// @param opts allows for setting the static files options
+  void staticFiles(Consumer<? super StaticFilesOptions> opts);
 
 }

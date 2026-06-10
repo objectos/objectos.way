@@ -56,6 +56,11 @@ final class HostBuilder implements HostOptions {
     sessionSupport = builder.build();
   }
 
+  @Override
+  public final void staticFiles(Consumer<? super StaticFilesOptions> opts) {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
   public final Host build() {
     return new Host(
         $handler(),

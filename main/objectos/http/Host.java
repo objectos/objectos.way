@@ -64,9 +64,11 @@ record Host(
         yield builder.build();
       }
 
+      case RequestPojo r -> throw new UnsupportedOperationException("Implement me :: " + r);
+
       case ResponsePojo r -> r;
 
-      default -> throw new UnsupportedOperationException("Implement me :: " + result);
+      case HttpStatus s -> throw new UnsupportedOperationException("Implement me :: " + s);
     };
 
     sessionResponse.accept(request, response);
