@@ -29,6 +29,10 @@ final class StaticFilesAttributes {
     this.reader = reader;
   }
 
+  public final BasicFileAttributes delegate(Path path) throws IOException {
+    return reader.apply(path);
+  }
+
   public final BasicFileAttributes read(Path path) throws IOException {
     try {
       final BasicFileAttributes attrs;

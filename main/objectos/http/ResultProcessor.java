@@ -46,6 +46,8 @@ class ResultProcessor {
 
       case Response r -> r;
 
+      case StaticFileContent(Content content) -> processContent(content);
+
       case HttpStatus s -> processStatus(s);
     };
   }

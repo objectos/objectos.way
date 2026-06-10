@@ -22,7 +22,9 @@ import objectos.lang.BinaryObject;
 /// Represents content associated to a `MediaType` to be transmitted over the
 /// HTTP protocol.
 public sealed interface Content
-    extends Result
+    extends
+    Result,
+    BinaryObject
     permits
     ContentBinaryObject,
     ContentBytes {

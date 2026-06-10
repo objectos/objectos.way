@@ -43,6 +43,97 @@ public class StaticFilesTest {
     });
   }
 
+  @Test(description = "Result < Request should behave as handle")
+  public void apply01() throws IOException {
+    final StaticFiles subject;
+    subject = create(opts -> {
+      opts.contentTypes(".txt: text/plain");
+
+      final Path root;
+      root = PathY.nextDir();
+
+      write(root, "tc01.txt", "TC01");
+
+      opts.addDirectory(root);
+    });
+
+    final Result res;
+    res = subject.apply(null, Request.create(opts -> { opts.path("/tc01.txt"); }));
+
+    assertEquals(
+        ResponseY.toString(res),
+
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        ETag: 18901e7e8f8-4\r
+        Content-Type: text/plain\r
+        Content-Length: 4\r
+        \r
+        TC01\
+        """
+    );
+  }
+
+  @DataProvider
+  public Object[][] passThroughProvider() {
+    return new Object[][] {
+        {Content.of(MediaType.TEXT_PLAIN, "ok\n")},
+        {(ContentProvider) () -> Content.of(MediaType.TEXT_PLAIN, "ok\n")},
+        {Response.create(_ -> {})},
+        {HttpStatus.NOT_FOUND}
+    };
+  }
+
+  @Test(dataProvider = "passThroughProvider", description = "Result not Request nor StaticFile -> pass through")
+  public void apply02(Result initial) throws IOException {
+    final StaticFiles subject;
+    subject = create(_ -> {});
+
+    final Result res;
+    res = subject.apply(null, initial);
+
+    assertSame(res, initial);
+  }
+
+  @Test
+  public void apply03() throws IOException {
+    final StaticFiles subject;
+    subject = create(opts -> {
+      opts.contentTypes(".txt: text/plain");
+
+      opts.etag(_ -> "foo-bar");
+    });
+
+    final Request request;
+    request = Request.create(opts -> {
+      opts.path("/tc01.txt");
+    });
+
+    final Content content;
+    content = Content.of(MediaType.TEXT_PLAIN, "CONTENT\n");
+
+    final StaticFile file;
+    file = StaticFile.of(content);
+
+    final Result res;
+    res = subject.apply(request, file);
+
+    assertEquals(
+        ResponseY.toString(res),
+
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        ETag: foo-bar\r
+        Content-Type: text/plain\r
+        Content-Length: 8\r
+        \r
+        CONTENT
+        """
+    );
+  }
+
   @Test(description = """
   handle:
   - existing file

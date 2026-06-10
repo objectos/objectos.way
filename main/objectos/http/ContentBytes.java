@@ -15,6 +15,14 @@
  */
 package objectos.http;
 
+import java.io.IOException;
+import java.io.OutputStream;
+
 record ContentBytes(MediaType contentType, byte[] bytes) implements Content {
+
+  @Override
+  public final void binaryTo(OutputStream out) throws IOException {
+    out.write(bytes);
+  }
 
 }

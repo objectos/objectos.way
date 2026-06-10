@@ -16,6 +16,7 @@
 package objectos.http;
 
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 record Host(
@@ -23,70 +24,33 @@ record Host(
 
     String name,
 
+    ResultProcessor resultProcessor,
+
     Consumer<Request> sessionRequest,
 
-    BiConsumer<Request, ResponsePojo> sessionResponse
+    BiConsumer<Request, ResponsePojo> sessionResponse,
+
+    BiFunction<Request, Result, Result> staticFiles
 ) {
 
   public final ResponsePojo handle(Request request) {
     sessionRequest.accept(request);
 
+    final Result initial;
+    initial = handler.handle(request);
+
     final Result result;
-    result = handler.handle(request);
+    result = staticFiles.apply(request, initial);
+
+    final Response res;
+    res = resultProcessor.process(result);
 
     final ResponsePojo response;
-    response = switch (result) {
-      case Content content -> of(content);
-
-      case ContentProvider provider -> {
-        final Content content;
-        content = provider.toContent();
-
-        if (content == null) {
-          throw new IllegalArgumentException("%s provided a null `Content` instance".formatted(provider));
-        }
-
-        yield of(content);
-      }
-
-      case RedirectPojo(HttpStatus0 status, String location) -> {
-        final ResponseBuilder builder;
-        builder = new ResponseBuilder();
-
-        builder.status(status);
-
-        builder.date();
-
-        builder.header(HttpHeaderName.CONTENT_LENGTH, "0");
-
-        builder.header(HttpHeaderName.LOCATION, location);
-
-        yield builder.build();
-      }
-
-      case RequestPojo r -> throw new UnsupportedOperationException("Implement me :: " + r);
-
-      case ResponsePojo r -> r;
-
-      case HttpStatus s -> throw new UnsupportedOperationException("Implement me :: " + s);
-    };
+    response = (ResponsePojo) res;
 
     sessionResponse.accept(request, response);
 
     return response;
-  }
-
-  private ResponsePojo of(Content content) {
-    final ResponseBuilder builder;
-    builder = new ResponseBuilder();
-
-    builder.status(HttpStatus.OK);
-
-    builder.date();
-
-    builder.send(content);
-
-    return builder.build();
   }
 
   public final boolean test(String hostValue) {

@@ -22,10 +22,13 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Function;
 
 final class StaticFilesBuilder implements StaticFilesOptions {
 
   private Set<Path> directories = Set.of();
+
+  private Function<BasicFileAttributes, String> staticFilesETag;
 
   private long etagMask = ThreadLocalRandom.current().nextLong();
 
@@ -34,9 +37,6 @@ final class StaticFilesBuilder implements StaticFilesOptions {
   public final StaticFiles build() throws IOException {
     final StaticFilesAttributes staticFilesAttributes;
     staticFilesAttributes = new StaticFilesAttributes(file -> Files.readAttributes(file, BasicFileAttributes.class));
-
-    final StaticFilesETag staticFilesETag;
-    staticFilesETag = new StaticFilesETag(etagMask);
 
     final StaticFilesExtension staticFilesExtension;
     staticFilesExtension = new StaticFilesExtension("*");
@@ -47,7 +47,7 @@ final class StaticFilesBuilder implements StaticFilesOptions {
     return new StaticFiles(
         staticFilesAttributes,
 
-        staticFilesETag,
+        staticFilesETag != null ? staticFilesETag : new StaticFilesETag(etagMask),
 
         staticFilesExtension,
 
@@ -76,6 +76,10 @@ final class StaticFilesBuilder implements StaticFilesOptions {
   @Override
   public final void contentTypes(String propertiesString) {
     typesBuilder.contentTypes(propertiesString);
+  }
+
+  public final void etag(Function<BasicFileAttributes, String> value) {
+    staticFilesETag = value;
   }
 
   public final void etagMask(long value) {

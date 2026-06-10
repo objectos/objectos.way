@@ -15,15 +15,6 @@
  */
 package objectos.http;
 
-/// The outcome of processing a `Request` instance by a `Handler`.
-public sealed interface Result
-    permits
-    Content,
-    ContentProvider,
-    Redirect,
-    Request,
-    Response,
-    StaticFile,
-    HttpStatus {
-
-}
+record StaticFileContent(Content content)
+    implements
+    StaticFile {}

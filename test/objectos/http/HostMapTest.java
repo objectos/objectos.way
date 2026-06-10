@@ -21,7 +21,11 @@ import org.testng.annotations.Test;
 public class HostMapTest {
 
   private Host named(String name) {
-    return new Host(null, name, _ -> {}, (_, _) -> {});
+    return HostY.create(opts -> {
+      opts.handler = HandlerNoop.INSTANCE;
+
+      opts.name = name;
+    });
   }
 
   @Test

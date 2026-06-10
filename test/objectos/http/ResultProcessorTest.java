@@ -104,6 +104,31 @@ public class ResultProcessorTest {
   }
 
   @Test
+  public void staticFile() {
+    final Content content;
+    content = Content.of(MediaType.TEXT_PLAIN, "OK\n");
+
+    final StaticFile file;
+    file = StaticFile.of(content);
+
+    final Response res;
+    res = subject.process(file);
+
+    assertEquals(
+        ResponseY.toString(res),
+
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 3\r
+        \r
+        OK
+        """
+    );
+  }
+
+  @Test
   public void status() {
     final Response res;
     res = subject.process(HttpStatus.BAD_REQUEST);

@@ -28,6 +28,8 @@ final class HostBuilder implements HostOptions {
 
   private SessionSupport sessionSupport;
 
+  private StaticFiles staticFiles;
+
   HostBuilder(HostGlobals globals) {
     this.globals = globals;
   }
@@ -63,18 +65,18 @@ final class HostBuilder implements HostOptions {
 
   public final Host build() {
     return new Host(
-        $handler(),
+        handler,
 
         $name(),
 
+        new ResultProcessor(),
+
         sessionSupport != null ? sessionSupport.request() : _ -> {},
 
-        sessionSupport != null ? sessionSupport.response() : (_, _) -> {}
-    );
-  }
+        sessionSupport != null ? sessionSupport.response() : (_, _) -> {},
 
-  private HostHandler $handler() {
-    return new HostHandler(handler, HandlerNoop.INSTANCE);
+        staticFiles != null ? staticFiles : (_, result) -> result
+    );
   }
 
   private String $name() {

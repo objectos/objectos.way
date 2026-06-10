@@ -17,15 +17,20 @@ package objectos.http;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
-final class StaticFiles implements Closeable, Handler {
+final class StaticFiles implements Closeable, Handler, BiFunction<Request, Result, Result> {
 
   private final StaticFilesAttributes staticFilesAttributes;
 
-  private final StaticFilesETag staticFilesETag;
+  private final Function<BasicFileAttributes, String> staticFilesETag;
 
   private final StaticFilesExtension staticFilesExtension;
 
@@ -36,7 +41,7 @@ final class StaticFiles implements Closeable, Handler {
   StaticFiles(
       StaticFilesAttributes staticFilesAttributes,
 
-      StaticFilesETag staticFilesETag,
+      Function<BasicFileAttributes, String> staticFilesETag,
 
       StaticFilesExtension staticFilesExtension,
 
@@ -65,6 +70,54 @@ final class StaticFiles implements Closeable, Handler {
   }
 
   @Override
+  public final Result apply(Request request, Result initial) {
+    return switch (initial) {
+      case Request r -> handle(r);
+
+      case StaticFileContent(Content c) -> process(request, c);
+
+      default -> initial;
+    };
+  }
+
+  private Result process(Request request, Content content) {
+    try {
+      return process0(request, content);
+    } catch (IOException e) {
+      //return InternalServerError.of(e);
+      throw new UnsupportedOperationException("Implement me", e);
+    }
+  }
+
+  private Result process0(Request request, Content content) throws IOException {
+    final Path file;
+    file = staticFilesRoot.resolve(request);
+
+    if (file == null) {
+      return HttpStatus.BAD_REQUEST;
+    }
+
+    final HttpMethod method;
+    method = request.method();
+
+    if (method != HttpMethod.GET && method != HttpMethod.HEAD) {
+      return methodNotAllowed();
+    }
+
+    try (OutputStream out = Files.newOutputStream(file, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
+      content.binaryTo(out);
+    }
+
+    final BasicFileAttributes attributes;
+    attributes = staticFilesAttributes.delegate(file);
+
+    final String etag;
+    etag = staticFilesETag.apply(attributes);
+
+    return ok(file, etag);
+  }
+
+  @Override
   public final void close() throws IOException {
     staticFilesRoot.delete();
   }
@@ -75,7 +128,7 @@ final class StaticFiles implements Closeable, Handler {
       return handle0(request);
     } catch (IOException e) {
       //return InternalServerError.of(e);
-      throw new UnsupportedOperationException("Implement me");
+      throw new UnsupportedOperationException("Implement me", e);
     }
   }
 
