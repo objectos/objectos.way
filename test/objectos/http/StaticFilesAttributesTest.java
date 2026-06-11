@@ -124,8 +124,11 @@ public class StaticFilesAttributesTest {
       subject.read(path);
 
       Assert.fail("It should have thrown");
-    } catch (IOException e) {
-      assertSame(e, exception);
+    } catch (StaticFilesErrNonRegular expected) {
+      final Throwable cause;
+      cause = expected.getCause();
+
+      assertSame(cause, exception);
     }
   }
 

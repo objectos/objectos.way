@@ -17,20 +17,24 @@ package objectos.http;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Function;
+import objectos.internal.IOFunction;
 import objectos.internal.NoOpSinkSingleton;
 import objectos.way.Note;
 
 final class StaticFilesBuilder implements StaticFilesOptions {
 
+  private static final LinkOption[] LINK = {LinkOption.NOFOLLOW_LINKS};
+
   private Set<Path> directories = Set.of();
 
-  private Function<BasicFileAttributes, String> etag;
+  Function<BasicFileAttributes, String> etag;
 
   private long etagMask = ThreadLocalRandom.current().nextLong();
 
@@ -39,8 +43,11 @@ final class StaticFilesBuilder implements StaticFilesOptions {
   private final StaticFilesTypesBuilder typesBuilder = new StaticFilesTypesBuilder("application/octet-stream");
 
   public final StaticFiles build() throws IOException {
+    final IOFunction<Path, BasicFileAttributes> reader;
+    reader = file -> Files.readAttributes(file, BasicFileAttributes.class, LINK);
+
     final StaticFilesAttributes staticFilesAttributes;
-    staticFilesAttributes = new StaticFilesAttributes(file -> Files.readAttributes(file, BasicFileAttributes.class));
+    staticFilesAttributes = new StaticFilesAttributes(reader);
 
     final Function<BasicFileAttributes, String> staticFilesETag;
     staticFilesETag = etag != null ? etag : new StaticFilesETag(etagMask);
@@ -64,31 +71,17 @@ final class StaticFilesBuilder implements StaticFilesOptions {
     staticFilesRoot = staticFilesRootBuilder.build();
 
     return new StaticFiles(
-        new StaticFilesHandler(
-            noteSink,
+        noteSink,
 
-            staticFilesAttributes,
+        staticFilesAttributes,
 
-            staticFilesETag,
+        staticFilesETag,
 
-            staticFilesMethod,
+        staticFilesMethod,
 
-            staticFilesResponses,
+        staticFilesResponses,
 
-            staticFilesRoot
-        ),
-
-        new StaticFilesWriter(
-            staticFilesAttributes,
-
-            staticFilesETag,
-
-            staticFilesMethod,
-
-            staticFilesResponses,
-
-            staticFilesRoot
-        )
+        staticFilesRoot
     );
   }
 
@@ -111,10 +104,6 @@ final class StaticFilesBuilder implements StaticFilesOptions {
   @Override
   public final void contentTypes(String propertiesString) {
     typesBuilder.contentTypes(propertiesString);
-  }
-
-  public final void etag(Function<BasicFileAttributes, String> value) {
-    etag = value;
   }
 
   public final void etagMask(long value) {

@@ -19,14 +19,15 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 
 import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.attribute.FileTime;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.time.Clock;
 import java.time.Instant;
+import java.util.Iterator;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 import objectos.way.Y;
+import objectos.y.BasicFileAttributesY;
 import objectos.y.PathY;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -35,7 +36,21 @@ public class StaticFilesTest {
 
   private StaticFiles create(Consumer<? super StaticFilesBuilder> more) throws IOException {
     return StaticFiles.create(opts -> {
-      opts.etagMask(0L);
+      opts.etag = attrs -> {
+        final Clock clock;
+        clock = Y.clockFixed();
+
+        final Instant instant;
+        instant = clock.instant();
+
+        final BasicFileAttributes modified;
+        modified = BasicFileAttributesY.lastModifiedTime(attrs, instant);
+
+        final StaticFilesETag etag;
+        etag = new StaticFilesETag(0L);
+
+        return etag.apply(modified);
+      };
 
       more.accept(opts);
     });
@@ -50,7 +65,7 @@ public class StaticFilesTest {
       final Path root;
       root = PathY.nextDir();
 
-      write(root, "tc01.txt", "TC01");
+      PathY.write(root, "tc01.txt", "TC01");
 
       opts.addDirectory(root);
     });
@@ -100,7 +115,7 @@ public class StaticFilesTest {
     subject = create(opts -> {
       opts.contentTypes(".txt: text/plain");
 
-      opts.etag(_ -> "foo-bar");
+      opts.etag = _ -> "foo-bar";
     });
 
     final Request request;
@@ -132,38 +147,276 @@ public class StaticFilesTest {
     );
   }
 
-  private void setLastModifiedTime(Path target) throws IOException {
-    // set last modified time for etag purposes
-    final Clock clock;
-    clock = Y.clockFixed();
+  @Test(description = """
+  handle:
+  - existing file
+  - file @ root
+  - mapped content-type
+  """)
+  public void handle01() throws IOException {
+    final Handler handler;
+    handler = create(opts -> {
+      opts.contentTypes(".txt: text/plain");
 
-    final Instant instant;
-    instant = clock.instant();
+      final Path root;
+      root = PathY.nextDir();
 
-    final FileTime fileTime;
-    fileTime = FileTime.from(instant);
+      PathY.write(root, "tc01.txt", "TC01");
 
-    Files.setLastModifiedTime(target, fileTime);
+      opts.addDirectory(root);
+    });
+
+    final Result res;
+    res = handler.handle(Request.create(opts -> {
+      opts.path("/tc01.txt");
+    }));
+
+    assertEquals(
+        ResponseY.toString(res),
+
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        ETag: 18901e7e8f8-4\r
+        Content-Type: text/plain\r
+        Content-Length: 4\r
+        \r
+        TC01\
+        """
+    );
   }
 
-  private Path write(Path directory, String fileName, String text) {
-    try {
-      final Path target;
-      target = directory.resolve(fileName);
+  @Test(description = """
+  handle:
+  - existing file
+  - file @ subdir
+  - mapped content-type
+  """)
+  public void handle02() throws IOException {
+    final Handler handler;
+    handler = create(opts -> {
+      opts.contentTypes(".json: application/json");
 
-      final Path parent;
-      parent = target.getParent();
+      final Path root;
+      root = PathY.nextDir();
 
-      Files.createDirectories(parent);
+      PathY.write(root, "sub/tc02.json", "[\"TC02\"]");
 
-      Files.writeString(target, text);
+      opts.addDirectory(root);
+    });
 
-      setLastModifiedTime(target);
+    final Result res;
+    res = handler.handle(Request.create(opts -> {
+      opts.path("/sub/tc02.json");
+    }));
 
-      return target;
-    } catch (IOException e) {
-      throw new UncheckedIOException(e);
-    }
+    assertEquals(
+        ResponseY.toString(res),
+
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        ETag: 18901e7e8f8-8\r
+        Content-Type: application/json\r
+        Content-Length: 8\r
+        \r
+        ["TC02"]\
+        """
+    );
+  }
+
+  @Test(description = """
+  handle:
+  - existing file
+  - file @ root
+  - default content-type
+  """)
+  public void handle03() throws IOException {
+    final Handler handler;
+    handler = create(opts -> {
+      opts.contentTypes("*: application/octet-stream");
+
+      final Path root;
+      root = PathY.nextDir();
+
+      PathY.write(root, "tc03.foo", "TC03");
+
+      opts.addDirectory(root);
+    });
+
+    final Result res;
+    res = handler.handle(Request.create(opts -> {
+      opts.path("/tc03.foo");
+    }));
+
+    assertEquals(
+        ResponseY.toString(res),
+
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        ETag: 18901e7e8f8-4\r
+        Content-Type: application/octet-stream\r
+        Content-Length: 4\r
+        \r
+        TC03\
+        """
+    );
+  }
+
+  @Test(description = """
+  handle:
+  - existing file
+  - file @ root
+  - HEAD method
+  """)
+  public void handle04() throws IOException {
+    final Handler handler;
+    handler = create(opts -> {
+      opts.contentTypes(".txt: text/plain");
+
+      final Path root;
+      root = PathY.nextDir();
+
+      PathY.write(root, "tc04.txt", "TC04");
+
+      opts.addDirectory(root);
+    });
+
+    final Result res;
+    res = handler.handle(Request.create(opts -> {
+      opts.method(HttpMethod.HEAD);
+
+      opts.path("/tc04.txt");
+    }));
+
+    assertEquals(
+        ResponseY.toString(res, true),
+
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        ETag: 18901e7e8f8-4\r
+        Content-Type: text/plain\r
+        Content-Length: 4\r
+        \r
+        """
+    );
+  }
+
+  @DataProvider
+  public Iterator<HttpMethod> methodProvider() {
+    return Stream.of(HttpMethod.VALUES)
+        .filter(m -> !m.equals(HttpMethod.GET) && !m.equals(HttpMethod.HEAD))
+        .iterator();
+  }
+
+  @Test(dataProvider = "methodProvider")
+  public void methodNotAllowed01(HttpMethod method) throws IOException {
+    final Handler handler;
+    handler = create(opts -> {
+      opts.contentTypes(".txt: text/plain");
+
+      final Path root;
+      root = PathY.nextDir();
+
+      PathY.write(root, "not-allowed.txt", method.name());
+
+      opts.addDirectory(root);
+    });
+
+    final Result res;
+    res = handler.handle(Request.create(opts -> {
+      opts.method(method);
+
+      opts.path("/not-allowed.txt");
+    }));
+
+    assertEquals(
+        ResponseY.toString(res),
+
+        """
+        HTTP/1.1 405 Method Not Allowed\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Length: 0\r
+        Allow: GET, HEAD\r
+        \r
+        """
+    );
+  }
+
+  @Test
+  public void notModified01() throws IOException {
+    final Handler handler;
+    handler = create(opts -> {
+      opts.contentTypes(".txt: text/plain");
+
+      final Path root;
+      root = PathY.nextDir();
+
+      PathY.write(root, "tc01.txt", "TC01");
+
+      opts.addDirectory(root);
+    });
+
+    final Result res;
+    res = handler.handle(Request.create(opts -> {
+      opts.path("/tc01.txt");
+
+      opts.header(HttpHeaderName.IF_NONE_MATCH, "18901e7e8f8-4");
+    }));
+
+    assertEquals(
+        ResponseY.toString(res),
+
+        """
+        HTTP/1.1 304 Not Modified\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        ETag: 18901e7e8f8-4\r
+        Content-Length: 0\r
+        \r
+        """
+    );
+  }
+
+  @Test(description = """
+  skip:
+  - non-existing file
+  """)
+  public void skip01() throws IOException {
+    final Handler handler;
+    handler = create(_ -> {
+    });
+
+    final Request request;
+    request = Request.create(opts -> {
+      opts.path("/i-do-not-exist.txt");
+    });
+
+    final Result res;
+    res = handler.handle(request);
+
+    assertSame(res, request);
+  }
+
+  @Test(description = """
+  skip:
+  - existing path is a directory
+  """)
+  public void skip02() throws IOException {
+    final Handler handler;
+    handler = create(_ -> {
+    });
+
+    final Request request;
+    request = Request.create(opts -> {
+      opts.path("/");
+    });
+
+    final Result res;
+    res = handler.handle(request);
+
+    assertSame(res, request);
   }
 
 }

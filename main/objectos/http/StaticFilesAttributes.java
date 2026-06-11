@@ -16,7 +16,6 @@
 package objectos.http;
 
 import java.io.IOException;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import objectos.internal.IOFunction;
@@ -29,11 +28,7 @@ final class StaticFilesAttributes {
     this.reader = reader;
   }
 
-  public final BasicFileAttributes delegate(Path path) throws IOException {
-    return reader.apply(path);
-  }
-
-  public final BasicFileAttributes read(Path path) throws IOException, StaticFilesErrNonRegular {
+  public final BasicFileAttributes read(Path path) throws StaticFilesErrNonRegular {
     try {
       final BasicFileAttributes attrs;
       attrs = reader.apply(path);
@@ -43,9 +38,13 @@ final class StaticFilesAttributes {
       }
 
       return attrs;
-    } catch (NoSuchFileException e) {
+    } catch (IOException e) {
       throw new StaticFilesErrNonRegular(path, e);
     }
+  }
+
+  public final BasicFileAttributes readDirect(Path file) throws IOException {
+    return reader.apply(file);
   }
 
 }

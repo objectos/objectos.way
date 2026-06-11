@@ -17,6 +17,7 @@ package objectos.y;
 
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
+import java.time.Instant;
 import java.util.function.Consumer;
 
 public final class BasicFileAttributesY {
@@ -45,6 +46,15 @@ public final class BasicFileAttributesY {
     opts.accept(y);
 
     return y.build();
+  }
+
+  public static BasicFileAttributes lastModifiedTime(BasicFileAttributes original, Instant value) {
+    return new ForwardingBasicFileAttributes(original) {
+      @Override
+      public final FileTime lastModifiedTime() {
+        return FileTime.from(value);
+      }
+    };
   }
 
   private BasicFileAttributes build() {
@@ -76,6 +86,39 @@ public final class BasicFileAttributesY {
       @Override
       public FileTime creationTime() { return null; }
     };
+  }
+
+  private static class ForwardingBasicFileAttributes implements BasicFileAttributes {
+    private final BasicFileAttributes original;
+
+    ForwardingBasicFileAttributes(BasicFileAttributes original) { this.original = original; }
+
+    @Override
+    public FileTime lastModifiedTime() { return original.lastModifiedTime(); }
+
+    @Override
+    public FileTime lastAccessTime() { return original.lastAccessTime(); }
+
+    @Override
+    public FileTime creationTime() { return original.creationTime(); }
+
+    @Override
+    public boolean isRegularFile() { return original.isRegularFile(); }
+
+    @Override
+    public boolean isDirectory() { return original.isDirectory(); }
+
+    @Override
+    public boolean isSymbolicLink() { return original.isSymbolicLink(); }
+
+    @Override
+    public boolean isOther() { return original.isOther(); }
+
+    @Override
+    public long size() { return original.size(); }
+
+    @Override
+    public Object fileKey() { return original.fileKey(); }
   }
 
 }
