@@ -23,14 +23,18 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Function;
+import objectos.internal.NoOpSinkSingleton;
+import objectos.way.Note;
 
 final class StaticFilesBuilder implements StaticFilesOptions {
 
   private Set<Path> directories = Set.of();
 
-  private Function<BasicFileAttributes, String> staticFilesETag;
+  private Function<BasicFileAttributes, String> etag;
 
   private long etagMask = ThreadLocalRandom.current().nextLong();
+
+  private final Note.Sink noteSink = NoOpSinkSingleton.INSTANCE;
 
   private final StaticFilesTypesBuilder typesBuilder = new StaticFilesTypesBuilder("application/octet-stream");
 
@@ -38,22 +42,53 @@ final class StaticFilesBuilder implements StaticFilesOptions {
     final StaticFilesAttributes staticFilesAttributes;
     staticFilesAttributes = new StaticFilesAttributes(file -> Files.readAttributes(file, BasicFileAttributes.class));
 
+    final Function<BasicFileAttributes, String> staticFilesETag;
+    staticFilesETag = etag != null ? etag : new StaticFilesETag(etagMask);
+
     final StaticFilesExtension staticFilesExtension;
     staticFilesExtension = new StaticFilesExtension("*");
+
+    final StaticFilesMethod staticFilesMethod;
+    staticFilesMethod = new StaticFilesMethod();
+
+    final StaticFilesTypes staticFilesTypes;
+    staticFilesTypes = typesBuilder.build();
+
+    final StaticFilesResponses staticFilesResponses;
+    staticFilesResponses = new StaticFilesResponses(staticFilesExtension, staticFilesTypes);
 
     final StaticFilesRootBuilder staticFilesRootBuilder;
     staticFilesRootBuilder = new StaticFilesRootBuilder(directories);
 
+    final StaticFilesRoot staticFilesRoot;
+    staticFilesRoot = staticFilesRootBuilder.build();
+
     return new StaticFiles(
-        staticFilesAttributes,
+        new StaticFilesHandler(
+            noteSink,
 
-        staticFilesETag != null ? staticFilesETag : new StaticFilesETag(etagMask),
+            staticFilesAttributes,
 
-        staticFilesExtension,
+            staticFilesETag,
 
-        staticFilesRootBuilder.build(),
+            staticFilesMethod,
 
-        typesBuilder.build()
+            staticFilesResponses,
+
+            staticFilesRoot
+        ),
+
+        new StaticFilesWriter(
+            staticFilesAttributes,
+
+            staticFilesETag,
+
+            staticFilesMethod,
+
+            staticFilesResponses,
+
+            staticFilesRoot
+        )
     );
   }
 
@@ -79,7 +114,7 @@ final class StaticFilesBuilder implements StaticFilesOptions {
   }
 
   public final void etag(Function<BasicFileAttributes, String> value) {
-    staticFilesETag = value;
+    etag = value;
   }
 
   public final void etagMask(long value) {

@@ -19,6 +19,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import objectos.way.Io;
@@ -59,7 +60,27 @@ public final class PathY implements Closeable {
   }
 
   public static Path nextFile(String source, Charset charset) {
-    return INSTANCE.$nextFile(source, charset);
+    return INSTANCE.$nextFile("next-file-", ".tmp", source, charset);
+  }
+
+  public static Path nextFile(String prefix, String suffix, String source, Charset charset) {
+    return INSTANCE.$nextFile(prefix, suffix, source, charset);
+  }
+
+  public static void write(Path directory, String other, String contents) {
+    try {
+      final Path file;
+      file = directory.resolve(other);
+
+      final Path parent;
+      parent = file.getParent();
+
+      Files.createDirectories(parent);
+
+      Files.writeString(file, contents, StandardCharsets.UTF_8);
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
   }
 
   @Override
@@ -83,10 +104,10 @@ public final class PathY implements Closeable {
     }
   }
 
-  private Path $nextFile(String source, Charset charset) {
+  private Path $nextFile(String prefix, String suffix, String source, Charset charset) {
     try {
       final Path file;
-      file = Files.createTempFile(root, "next-file-", ".tmp");
+      file = Files.createTempFile(root, prefix, suffix);
 
       Files.writeString(file, source, charset);
 

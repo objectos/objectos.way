@@ -31,12 +31,12 @@ final class StaticFilesRoot {
     Io.deleteRecursively(directory);
   }
 
-  public final Path resolve(Request request) {
-    final String pathName;
-    pathName = request.path();
+  public final Path resolve(Request request) throws StaticFilesErrTraversal {
+    final String path;
+    path = request.path();
 
     final String relative;
-    relative = pathName.substring(1);
+    relative = path.substring(1);
 
     final Path resolved;
     resolved = directory.resolve(relative);
@@ -44,11 +44,11 @@ final class StaticFilesRoot {
     final Path file;
     file = resolved.normalize();
 
-    if (file.startsWith(directory)) {
-      return file;
-    } else {
-      return null;
+    if (!file.startsWith(directory)) {
+      throw new StaticFilesErrTraversal(path);
     }
+
+    return file;
   }
 
 }

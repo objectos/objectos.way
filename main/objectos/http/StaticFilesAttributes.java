@@ -33,18 +33,18 @@ final class StaticFilesAttributes {
     return reader.apply(path);
   }
 
-  public final BasicFileAttributes read(Path path) throws IOException {
+  public final BasicFileAttributes read(Path path) throws IOException, StaticFilesErrNonRegular {
     try {
       final BasicFileAttributes attrs;
       attrs = reader.apply(path);
 
-      if (attrs.isRegularFile()) {
-        return attrs;
-      } else {
-        return null;
+      if (!attrs.isRegularFile()) {
+        throw new StaticFilesErrNonRegular(path);
       }
+
+      return attrs;
     } catch (NoSuchFileException e) {
-      return null;
+      throw new StaticFilesErrNonRegular(path, e);
     }
   }
 

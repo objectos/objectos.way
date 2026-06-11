@@ -15,6 +15,8 @@
  */
 package objectos.http;
 
+import java.util.Objects;
+
 /// The outcome of processing a `Request` instance by a `Handler`.
 public sealed interface Result
     permits
@@ -25,5 +27,18 @@ public sealed interface Result
     Response,
     StaticFile,
     HttpStatus {
+
+  /// Wraps the specified result in a runtime exception. If caught by the `Host`
+  /// top-level handler, then the wrapped result is processed normally.
+  ///
+  /// @param value the result to be wrapped
+  ///
+  /// @return a newly created runtime exception wrapping the result
+  static RuntimeException exception(Result value) {
+    final Result r;
+    r = Objects.requireNonNull(value, "value == null");
+
+    return new ResultException(r);
+  }
 
 }

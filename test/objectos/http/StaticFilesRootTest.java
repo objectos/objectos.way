@@ -20,6 +20,7 @@ import static org.testng.Assert.assertEquals;
 import java.io.IOException;
 import java.nio.file.Path;
 import objectos.y.PathY;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class StaticFilesRootTest {
@@ -27,7 +28,7 @@ public class StaticFilesRootTest {
   private final Path directory = PathY.nextDir();
 
   @Test(description = "root is resolvable")
-  public void resolve01() throws IOException {
+  public void resolve01() throws IOException, StaticFilesErrTraversal {
     final StaticFilesRoot root;
     root = new StaticFilesRoot(directory);
 
@@ -43,7 +44,7 @@ public class StaticFilesRootTest {
   }
 
   @Test(description = "file @ root is resolvable")
-  public void resolve02() throws IOException {
+  public void resolve02() throws IOException, StaticFilesErrTraversal {
     final StaticFilesRoot root;
     root = new StaticFilesRoot(directory);
 
@@ -59,7 +60,7 @@ public class StaticFilesRootTest {
   }
 
   @Test(description = "dir @ root is resolvable")
-  public void resolve03() throws IOException {
+  public void resolve03() throws IOException, StaticFilesErrTraversal {
     final StaticFilesRoot root;
     root = new StaticFilesRoot(directory);
 
@@ -84,14 +85,17 @@ public class StaticFilesRootTest {
       opts.path("/subdir/../../forbidden.txt");
     });
 
-    final Path res;
-    res = root.resolve(req);
+    try {
+      root.resolve(req);
 
-    assertEquals(res, null);
+      Assert.fail("It should have thrown");
+    } catch (StaticFilesErrTraversal expected) {
+      assertEquals(expected.getMessage(), "/subdir/../../forbidden.txt");
+    }
   }
 
   @Test(description = "file @ root is resolvable, even if /.. are used")
-  public void resolve05() throws IOException {
+  public void resolve05() throws IOException, StaticFilesErrTraversal {
     final StaticFilesRoot root;
     root = new StaticFilesRoot(directory);
 

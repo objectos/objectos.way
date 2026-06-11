@@ -65,12 +65,13 @@ public class StaticFilesAttributesTest {
     final StaticFilesAttributes subject;
     subject = new StaticFilesAttributes(reader);
 
-    final BasicFileAttributes res;
-    res = subject.read(path);
+    try {
+      subject.read(path);
 
-    assertSame(res, null);
-
-    assertSame(reader.path, path);
+      Assert.fail("It should have thrown");
+    } catch (StaticFilesErrNonRegular expected) {
+      assertSame(expected.path, path);
+    }
   }
 
   @Test(description = "ignore non-existing file")
@@ -90,16 +91,17 @@ public class StaticFilesAttributesTest {
     final StaticFilesAttributes subject;
     subject = new StaticFilesAttributes(reader);
 
-    final BasicFileAttributes res;
-    res = subject.read(path);
+    try {
+      subject.read(path);
 
-    assertSame(res, null);
-
-    assertSame(reader.path, path);
+      Assert.fail("It should have thrown");
+    } catch (StaticFilesErrNonRegular expected) {
+      assertSame(expected.path, path);
+    }
   }
 
   @Test(description = "pass through IOException")
-  public void read03() {
+  public void read03() throws StaticFilesErrNonRegular {
     final ReaderY reader;
     reader = new ReaderY();
 
@@ -128,7 +130,7 @@ public class StaticFilesAttributesTest {
   }
 
   @Test(description = "return attrs")
-  public void read04() throws IOException {
+  public void read04() throws IOException, StaticFilesErrNonRegular {
     final ReaderY reader;
     reader = new ReaderY();
 
