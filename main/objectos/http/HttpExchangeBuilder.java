@@ -34,6 +34,7 @@ import objectos.internal.NoOpSinkSingleton;
 import objectos.internal.Util;
 import objectos.lang.Key;
 import objectos.way.Note;
+import objectox.http.RequestMethodEnum;
 
 final class HttpExchangeBuilder implements HttpExchange.Options {
 
@@ -50,7 +51,7 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
 
   private final HttpErrorResponses errorResponses = HttpErrorResponses0.STANDARD;
 
-  private HttpMethod method = HttpMethod.GET;
+  private RequestMethod method = RequestMethodEnum.GET;
 
   private String path = "/";
 
@@ -81,7 +82,7 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
   }
 
   @Override
-  public final void method(HttpMethod value) {
+  public final void method(RequestMethod value) {
     method = Objects.requireNonNull(value, "value == null");
   }
 
@@ -285,7 +286,7 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
     buffer = new byte[bufferSizeMax];
 
     final boolean head;
-    head = method == HttpMethod.HEAD;
+    head = method == RequestMethodEnum.HEAD;
 
     final ByteArrayOutputStream outputStream;
     outputStream = new ByteArrayOutputStream();

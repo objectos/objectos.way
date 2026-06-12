@@ -79,7 +79,7 @@ final class HttpExchange0 implements HttpExchange {
   }
 
   @Override
-  public final HttpMethod method() {
+  public final RequestMethod method() {
     return request.method();
   }
 

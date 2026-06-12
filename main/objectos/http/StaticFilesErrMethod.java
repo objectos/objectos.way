@@ -18,9 +18,9 @@ package objectos.http;
 @SuppressWarnings("serial")
 final class StaticFilesErrMethod extends Exception {
 
-  final HttpMethod method;
+  final RequestMethod method;
 
-  StaticFilesErrMethod(HttpMethod method) {
+  StaticFilesErrMethod(RequestMethod method) {
     this.method = method;
   }
 

@@ -17,6 +17,7 @@ package objectos.http;
 
 import static org.testng.Assert.assertEquals;
 import objectos.way.Y;
+import objectox.http.RequestMethodEnum;
 import org.testng.annotations.Test;
 
 public class HostTest {
@@ -31,7 +32,7 @@ public class HostTest {
 
     final Request request;
     request = Request.create(opts -> {
-      opts.method(HttpMethod.GET);
+      opts.method(RequestMethodEnum.GET);
 
       opts.header(HttpHeaderName.HOST, "test.localhost");
     });

@@ -17,6 +17,7 @@ package objectos.http;
 
 import module java.base;
 import module objectos.way;
+import objectox.http.RequestMethodEnum;
 
 final class HttpResponse0 implements HttpResponse {
 
@@ -208,11 +209,11 @@ final class HttpResponse0 implements HttpResponse {
     send(media);
   }
 
-  public final void allow(HttpMethod... methods) {
+  public final void allow(RequestMethodEnum... methods) {
     Objects.requireNonNull(methods, "methods == null");
 
     final String allow;
-    allow = Arrays.stream(methods).map(HttpMethod::name).collect(Collectors.joining(", "));
+    allow = Arrays.stream(methods).map(RequestMethodEnum::name).collect(Collectors.joining(", "));
 
     status(HttpStatus.METHOD_NOT_ALLOWED);
 

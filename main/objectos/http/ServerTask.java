@@ -21,6 +21,7 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.time.Clock;
 import objectos.way.Note;
+import objectox.http.RequestMethodEnum;
 
 final class ServerTask implements Runnable {
 
@@ -112,10 +113,10 @@ final class ServerTask implements Runnable {
             }
           }
 
-          final HttpMethod method;
+          final RequestMethod method;
           method = request.method();
 
-          if (method == HttpMethod.HEAD) {
+          if (method == RequestMethodEnum.HEAD) {
             sender.head(response);
           } else {
             sender.send(response);

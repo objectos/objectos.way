@@ -35,8 +35,8 @@ public final class ScriptSubmit03 extends AbstractDevScript {
   public final void handle(HttpExchange http) {
     test = "true".equals(http.header(WAY_TEST));
 
-    switch (http.method()) {
-      case GET, POST -> super.handle(http);
+    switch (http.method().name()) {
+      case "GET", "POST" -> super.handle(http);
 
       default -> http.error(HttpStatus.METHOD_NOT_ALLOWED, "Allowed: GET, POST");
     }

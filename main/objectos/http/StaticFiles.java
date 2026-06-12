@@ -30,7 +30,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import objectos.way.Note;
 
-final class StaticFiles implements Handler, BiFunction<Request, Result, Result> {
+final class StaticFiles implements BiFunction<Request, Result, Result> {
 
   static final Note.Ref2<String, String> THROW = Note.Ref2.create(StaticFiles.class, "THR", Note.ERROR);
 
@@ -92,7 +92,6 @@ final class StaticFiles implements Handler, BiFunction<Request, Result, Result> 
     };
   }
 
-  @Override
   public final Result handle(Request request) {
     try {
       return handle0(request);

@@ -22,6 +22,7 @@ import java.util.function.Consumer;
 import objectos.way.Html;
 import objectos.way.Media;
 import objectos.way.Y;
+import objectox.http.RequestMethodEnum;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -117,7 +118,7 @@ public class HttpExchangeTest {
   public void moduleInterop01() {
     HttpExchange http;
     http = http(config -> {
-      config.method(HttpMethod.GET);
+      config.method(RequestMethodEnum.GET);
 
       config.path("/tc01");
     });
@@ -250,14 +251,14 @@ public class HttpExchangeTest {
   public void testCase01() {
     HttpExchange http;
     http = HttpExchange.create(config -> {
-      config.method(HttpMethod.GET);
+      config.method(RequestMethodEnum.GET);
 
       config.path("/foo");
 
       config.req(String.class, "Hello");
     });
 
-    assertEquals(http.method(), HttpMethod.GET);
+    assertEquals(http.method(), RequestMethodEnum.GET);
     assertEquals(http.path(), "/foo");
     assertEquals(http.pathParam("path"), null);
     assertEquals(http.req(String.class), "Hello");

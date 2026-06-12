@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 import objectos.http.HttpRoutes.Option;
+import objectox.http.RequestMethodEnum;
 
 final class HttpRoutes1Path {
 
@@ -33,7 +34,7 @@ final class HttpRoutes1Path {
 
   private final HttpPathMatcher matcher;
 
-  private Map<HttpMethod, HttpRoutes2Method> methods = Map.of();
+  private Map<RequestMethodEnum, HttpRoutes2Method> methods = Map.of();
 
   private final Set<String> paramNames;
 
@@ -54,16 +55,16 @@ final class HttpRoutes1Path {
     }
 
     if (!methods.isEmpty()) {
-      final Set<HttpMethod> original;
+      final Set<RequestMethodEnum> original;
       original = methods.keySet();
 
-      final Set<HttpMethod> allowed;
+      final Set<RequestMethodEnum> allowed;
 
-      if (original.contains(HttpMethod.GET) && !original.contains(HttpMethod.HEAD)) {
-        final Set<HttpMethod> withHead;
+      if (original.contains(RequestMethodEnum.GET) && !original.contains(RequestMethodEnum.HEAD)) {
+        final Set<RequestMethodEnum> withHead;
         withHead = EnumSet.copyOf(original);
 
-        withHead.add(HttpMethod.HEAD);
+        withHead.add(RequestMethodEnum.HEAD);
 
         allowed = Set.copyOf(withHead);
       } else {
@@ -105,7 +106,7 @@ final class HttpRoutes1Path {
     switch (o) {
       case HttpHandler handler -> addHandler(handler);
 
-      case HttpMethod method -> addMethod(method);
+      case RequestMethodEnum method -> addMethod(method);
 
       case PathParam param -> addPathParam(param);
     }
@@ -119,7 +120,7 @@ final class HttpRoutes1Path {
     }
   }
 
-  private void addMethod(HttpMethod method) {
+  private void addMethod(RequestMethodEnum method) {
     if (methods.isEmpty()) {
       // we use LinkedHashMap instead of EnumMap
       // as declaration order is important

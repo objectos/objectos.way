@@ -22,64 +22,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 import objectos.y.SocketY;
+import objectox.http.RequestMethodEnum;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+@SuppressWarnings("exports")
 public class HttpRoutesTest {
 
   private final HttpHandler ok = http -> { http.status(HttpStatus.OK); http.send(); };
   private final HttpHandler notFound = http -> { http.status(HttpStatus.NOT_FOUND); http.send(); };
-
-  @Test(description = "Empty configuration")
-  public void empty() {
-    test(
-        _ -> {},
-
-        """
-        GET /test HTTP/1.1\r
-        Host: www.example.com\r
-        \r
-        """,
-
-        """
-        HTTP/1.1 404 Not Found\r
-        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-        Connection: close\r
-        Content-Type: text/plain; charset=utf-8\r
-        Content-Length: 14\r
-        \r
-        404 Not Found
-        """
-    );
-  }
-
-  @DataProvider
-  public Iterator<HttpMethod> methodProvider() {
-    return Stream.of(HttpMethod.VALUES).filter(m -> m.implemented).iterator();
-  }
-
-  @Test(
-      description = "Non-method HttpHandler should accept all methods",
-      dataProvider = "methodProvider"
-  )
-  public void handler01(HttpMethod method) {
-    test(
-        r -> {
-          r.at("/test", ok);
-        },
-
-        """
-        %s /test HTTP/1.1\r
-        Host: www.example.com\r
-        \r
-        """.formatted(method.name()),
-
-        """
-        HTTP/1.1 200 OK\r
-        \r
-        """
-    );
-  }
 
   @Test(description = "Handlers should be applied in declaration order")
   public void handler02() {
@@ -171,11 +122,16 @@ public class HttpRoutesTest {
     assertEquals(h3.id, 0);
   }
 
+  @DataProvider
+  public Iterator<RequestMethodEnum> methodProvider() {
+    return Stream.of(RequestMethodEnum.VALUES).filter(m -> m.implemented).iterator();
+  }
+
   @Test(
       description = "Method HttpHandler should reject other methods",
       dataProvider = "methodProvider"
   )
-  public void method01(HttpMethod method) {
+  public void method01(RequestMethodEnum method) {
     test(
         r -> {
           r.at("/test", Http.POST, ok);
@@ -211,7 +167,7 @@ public class HttpRoutesTest {
       description = "Method HttpHandler: allow declaring multiple methods",
       dataProvider = "methodProvider"
   )
-  public void method02(HttpMethod method) {
+  public void method02(RequestMethodEnum method) {
     record ThisHandler(String value) implements HttpHandler {
       @Override
       public void handle(HttpExchange http) {

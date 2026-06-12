@@ -22,13 +22,15 @@ import module java.base;
 import objectos.lang.Throwables;
 import objectos.way.Y;
 import objectos.y.SocketY;
+import objectox.http.RequestMethodEnum;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+@SuppressWarnings("exports")
 public class RequestParser2MethodTest {
 
-  private HttpMethod parse(Object... data) throws IOException {
+  private RequestMethodEnum parse(Object... data) throws IOException {
     final Socket socket;
     socket = SocketY.of(data);
 
@@ -42,12 +44,12 @@ public class RequestParser2MethodTest {
   }
 
   @DataProvider
-  public Iterator<HttpMethod> methodProvider() {
-    return Stream.of(HttpMethod.VALUES).iterator();
+  public Iterator<RequestMethodEnum> methodProvider() {
+    return Stream.of(RequestMethodEnum.VALUES).iterator();
   }
 
   @Test(dataProvider = "methodProvider", description = "method: valid")
-  public void parse01(HttpMethod method) throws IOException {
+  public void parse01(RequestMethodEnum method) throws IOException {
     assertEquals(
         parse(
             """
@@ -62,7 +64,7 @@ public class RequestParser2MethodTest {
   }
 
   @Test(dataProvider = "methodProvider", description = "method: valid + slow client")
-  public void parse03(HttpMethod method) throws IOException {
+  public void parse03(RequestMethodEnum method) throws IOException {
     if (!method.implemented) {
       return;
     }

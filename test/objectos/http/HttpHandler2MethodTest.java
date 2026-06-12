@@ -22,20 +22,22 @@ import java.util.List;
 import java.util.stream.Stream;
 import objectos.way.Media;
 import objectos.way.Y;
+import objectox.http.RequestMethodEnum;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+@SuppressWarnings("exports")
 public class HttpHandler2MethodTest {
 
   private final HttpHandler ok = http -> http.ok(Media.Bytes.textPlain("OK\n"));
 
   @DataProvider
-  public Iterator<HttpMethod> methodProvider() {
-    return Stream.of(HttpMethod.VALUES).iterator();
+  public Iterator<RequestMethodEnum> methodProvider() {
+    return Stream.of(RequestMethodEnum.VALUES).iterator();
   }
 
   @Test(dataProvider = "methodProvider")
-  public void handle(HttpMethod method) {
+  public void handle(RequestMethodEnum method) {
     final HttpExchange http;
     http = HttpExchange.create(opts -> {
       opts.clock(Y.clockFixed());
@@ -56,13 +58,13 @@ public class HttpHandler2MethodTest {
   @Test
   public void handleHead() {
     final HttpHandler2Method handler;
-    handler = of(HttpMethod.GET, ok);
+    handler = of(RequestMethodEnum.GET, ok);
 
     final HttpExchange http;
     http = HttpExchange.create(opts -> {
       opts.clock(Y.clockFixed());
 
-      opts.method(HttpMethod.HEAD);
+      opts.method(RequestMethodEnum.HEAD);
     });
 
     assertEquals(http.processed(), false);
@@ -83,10 +85,10 @@ public class HttpHandler2MethodTest {
   @Test
   public void handleNot() {
     final HttpHandler2Method handler;
-    handler = of(HttpMethod.GET, ok);
+    handler = of(RequestMethodEnum.GET, ok);
 
     final HttpExchange http;
-    http = HttpExchange.create(opts -> opts.method(HttpMethod.GET));
+    http = HttpExchange.create(opts -> opts.method(RequestMethodEnum.GET));
 
     http.send();
 
@@ -103,17 +105,17 @@ public class HttpHandler2MethodTest {
   }
 
   @Test(dataProvider = "methodProvider")
-  public void handleNot(HttpMethod method) {
+  public void handleNot(RequestMethodEnum method) {
     final HttpHandler2Method handler;
     handler = of(method, ok);
 
-    final EnumSet<HttpMethod> single;
+    final EnumSet<RequestMethodEnum> single;
     single = EnumSet.of(method);
 
-    final EnumSet<HttpMethod> others;
+    final EnumSet<RequestMethodEnum> others;
     others = EnumSet.complementOf(single);
 
-    final HttpMethod other;
+    final RequestMethodEnum other;
     other = others.iterator().next();
 
     final HttpExchange http;
@@ -126,7 +128,7 @@ public class HttpHandler2MethodTest {
     assertEquals(http.processed(), false);
   }
 
-  private HttpHandler2Method of(HttpMethod method, HttpHandler handler) {
+  private HttpHandler2Method of(RequestMethodEnum method, HttpHandler handler) {
     return new HttpHandler2Method(method, List.of(handler));
   }
 

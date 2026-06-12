@@ -27,6 +27,7 @@ import objectos.internal.Ascii;
 import objectos.internal.NoOpSinkSingleton;
 import objectos.way.Media;
 import objectos.way.Note;
+import objectox.http.RequestMethodEnum;
 
 final class HttpSessionStoreImpl implements HttpSessionLoader, HttpSessionStore {
 
@@ -121,11 +122,11 @@ final class HttpSessionStoreImpl implements HttpSessionLoader, HttpSessionStore 
     }
   }
 
-  private static final Set<HttpMethod> SAFE_METHODS = EnumSet.of(HttpMethod.GET, HttpMethod.HEAD);
+  private static final Set<RequestMethodEnum> SAFE_METHODS = EnumSet.of(RequestMethodEnum.GET, RequestMethodEnum.HEAD);
 
   @Override
   public final void requireCsrfToken(HttpExchange http) {
-    final HttpMethod method;
+    final RequestMethod method;
     method = http.method();
 
     if (SAFE_METHODS.contains(method)) {

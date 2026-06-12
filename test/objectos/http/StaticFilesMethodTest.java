@@ -19,21 +19,23 @@ import static org.testng.Assert.assertSame;
 
 import java.util.EnumSet;
 import java.util.Iterator;
+import objectox.http.RequestMethodEnum;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+@SuppressWarnings("exports")
 public class StaticFilesMethodTest {
 
   private final StaticFilesMethod subject = new StaticFilesMethod();
 
   @DataProvider
-  public Iterator<HttpMethod> validProvider() {
-    return EnumSet.of(HttpMethod.GET, HttpMethod.HEAD).iterator();
+  public Iterator<RequestMethodEnum> validProvider() {
+    return EnumSet.of(RequestMethodEnum.GET, RequestMethodEnum.HEAD).iterator();
   }
 
   @Test(dataProvider = "validProvider")
-  public void valid(HttpMethod method) throws StaticFilesErrMethod {
+  public void valid(RequestMethodEnum method) throws StaticFilesErrMethod {
     final Request request;
     request = Request.create(opts -> {
       opts.method(method);
@@ -43,12 +45,12 @@ public class StaticFilesMethodTest {
   }
 
   @DataProvider
-  public Iterator<HttpMethod> invalidProvider() {
-    return EnumSet.complementOf(EnumSet.of(HttpMethod.GET, HttpMethod.HEAD)).iterator();
+  public Iterator<RequestMethodEnum> invalidProvider() {
+    return EnumSet.complementOf(EnumSet.of(RequestMethodEnum.GET, RequestMethodEnum.HEAD)).iterator();
   }
 
   @Test(dataProvider = "invalidProvider")
-  public void invalid(HttpMethod method) {
+  public void invalid(RequestMethodEnum method) {
     final Request request;
     request = Request.create(opts -> {
       opts.method(method);

@@ -31,6 +31,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import objectos.internal.Ascii;
 import objectos.internal.Util;
+import objectox.http.RequestMethodEnum;
 
 /// Provides helpers to declaring routes.
 public final class Http {
@@ -38,19 +39,19 @@ public final class Http {
   // methods
 
   /// The DELETE method.
-  public static final HttpMethod DELETE = HttpMethod.DELETE;
+  public static final RequestMethod DELETE = RequestMethodEnum.DELETE;
 
   /// The GET method.
-  public static final HttpMethod GET = HttpMethod.GET;
+  public static final RequestMethod GET = RequestMethodEnum.GET;
 
   /// The PATCH method.
-  public static final HttpMethod PATCH = HttpMethod.PATCH;
+  public static final RequestMethod PATCH = RequestMethodEnum.PATCH;
 
   /// The POST method.
-  public static final HttpMethod POST = HttpMethod.POST;
+  public static final RequestMethod POST = RequestMethodEnum.POST;
 
   /// The PUT method.
-  public static final HttpMethod PUT = HttpMethod.PUT;
+  public static final RequestMethod PUT = RequestMethodEnum.PUT;
 
   /// Helper method for specifying a handler in a route declaration. The method
   /// returns the specified handler as it is.

@@ -17,6 +17,7 @@ package objectos.http;
 
 import module java.base;
 import objectos.http.HttpClientException.Kind;
+import objectox.http.RequestMethodEnum;
 
 final class RequestParser2Method {
 
@@ -26,7 +27,7 @@ final class RequestParser2Method {
     this.input = input;
   }
 
-  public final HttpMethod parse() throws IOException {
+  public final RequestMethodEnum parse() throws IOException {
     try {
       return parse0();
     } catch (RequestParser0Input.Eof e) {
@@ -42,24 +43,24 @@ final class RequestParser2Method {
     }
   }
 
-  private HttpMethod parse0() throws IOException {
+  private RequestMethodEnum parse0() throws IOException {
     final byte first;
     first = input.readByte();
 
     return switch (first) {
-      case 'C' -> parseMethod(HttpMethod.CONNECT, 1);
+      case 'C' -> parseMethod(RequestMethodEnum.CONNECT, 1);
 
-      case 'D' -> parseMethod(HttpMethod.DELETE, 1);
+      case 'D' -> parseMethod(RequestMethodEnum.DELETE, 1);
 
-      case 'G' -> parseMethod(HttpMethod.GET, 1);
+      case 'G' -> parseMethod(RequestMethodEnum.GET, 1);
 
-      case 'H' -> parseMethod(HttpMethod.HEAD, 1);
+      case 'H' -> parseMethod(RequestMethodEnum.HEAD, 1);
 
-      case 'O' -> parseMethod(HttpMethod.OPTIONS, 1);
+      case 'O' -> parseMethod(RequestMethodEnum.OPTIONS, 1);
 
       case 'P' -> parseMethodP();
 
-      case 'T' -> parseMethod(HttpMethod.TRACE, 1);
+      case 'T' -> parseMethod(RequestMethodEnum.TRACE, 1);
 
       default -> {
         final String msg;
@@ -70,7 +71,7 @@ final class RequestParser2Method {
     };
   }
 
-  private HttpMethod parseMethod(HttpMethod method, int offset) throws IOException {
+  private RequestMethodEnum parseMethod(RequestMethodEnum method, int offset) throws IOException {
     final byte[] ascii;
     ascii = method.ascii;
 
@@ -91,16 +92,16 @@ final class RequestParser2Method {
     return method;
   }
 
-  private HttpMethod parseMethodP() throws IOException {
+  private RequestMethodEnum parseMethodP() throws IOException {
     final byte second;
     second = input.readByte();
 
     return switch (second) {
-      case 'O' -> parseMethod(HttpMethod.POST, 2);
+      case 'O' -> parseMethod(RequestMethodEnum.POST, 2);
 
-      case 'U' -> parseMethod(HttpMethod.PUT, 2);
+      case 'U' -> parseMethod(RequestMethodEnum.PUT, 2);
 
-      case 'A' -> parseMethod(HttpMethod.PATCH, 2);
+      case 'A' -> parseMethod(RequestMethodEnum.PATCH, 2);
 
       default -> {
         final String msg;

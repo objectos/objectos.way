@@ -18,7 +18,6 @@ package objectos.http;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -34,6 +33,7 @@ import objectos.way.Media;
 import objectos.way.TestingSingleParagraph;
 import objectos.way.Y;
 import objectos.y.PathY;
+import objectox.http.RequestMethodEnum;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -65,7 +65,7 @@ public class HttpServerTest {
         final Class<? extends HttpServerTest> testClass;
         testClass = HttpServerTest.class;
 
-        final Method handlingMethod;
+        final java.lang.reflect.Method handlingMethod;
         handlingMethod = testClass.getDeclaredMethod(methodName, HttpExchange.class);
 
         handlingMethod.invoke(instance, http);
@@ -213,7 +213,9 @@ public class HttpServerTest {
   private void testCase01(HttpExchange http) {
     var method = http.method();
 
-    switch (method) {
+    var impl = (RequestMethodEnum) method;
+
+    switch (impl) {
       case GET, HEAD -> testCase01Get(http);
 
       default -> http.error(HttpStatus.METHOD_NOT_ALLOWED);
@@ -269,7 +271,11 @@ public class HttpServerTest {
 
   @SuppressWarnings("unused")
   private void testCase02(HttpExchange http) {
-    switch (http.method()) {
+    var method = http.method();
+
+    var impl = (RequestMethodEnum) method;
+
+    switch (impl) {
       case GET, HEAD -> testCase02Get(http);
 
       default -> http.error(HttpStatus.METHOD_NOT_ALLOWED);
@@ -322,7 +328,11 @@ public class HttpServerTest {
 
   @SuppressWarnings("unused")
   private void testCase03(HttpExchange http) {
-    switch (http.method()) {
+    objectos.http.RequestMethod method = http.method();
+
+    RequestMethodEnum impl = (RequestMethodEnum) method;
+
+    switch (impl) {
       case GET, HEAD -> testCase03Get(http);
 
       case POST -> testCase03Post(http);
@@ -418,7 +428,11 @@ public class HttpServerTest {
 
   @SuppressWarnings("unused")
   private void testCase04(HttpExchange http) {
-    switch (http.method()) {
+    var method = http.method();
+
+    var impl = (RequestMethodEnum) method;
+
+    switch (impl) {
       case GET, HEAD -> testCase04Get(http);
 
       case POST -> testCase04Post(http);

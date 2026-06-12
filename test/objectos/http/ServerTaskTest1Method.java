@@ -21,17 +21,19 @@ import java.io.IOException;
 import objectos.lang.Throwables;
 import objectos.way.Y;
 import objectos.y.SocketY;
+import objectox.http.RequestMethodEnum;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+@SuppressWarnings("exports")
 public class ServerTaskTest1Method {
 
   private final Content ok = Content.of(MediaType.TEXT_PLAIN, "OK\n");
 
   @DataProvider
   public Object[][] methodProvider() {
-    final HttpMethod[] values;
-    values = HttpMethod.VALUES;
+    final RequestMethodEnum[] values;
+    values = RequestMethodEnum.VALUES;
 
     final Object[][] methods;
     methods = new Object[values.length][];
@@ -44,7 +46,7 @@ public class ServerTaskTest1Method {
   }
 
   @Test(dataProvider = "methodProvider")
-  public void valid(HttpMethod method) {
+  public void valid(RequestMethodEnum method) {
     assertEquals(
         ServerTaskY.resp(opts -> {
           opts.host("www.example.com", req -> {
@@ -62,7 +64,7 @@ public class ServerTaskTest1Method {
         }),
 
         method.implemented
-            ? method != HttpMethod.HEAD
+            ? method != RequestMethodEnum.HEAD
                 ? """
                   HTTP/1.1 200 OK\r
                   Date: Wed, 28 Jun 2023 12:08:43 GMT\r
@@ -91,7 +93,7 @@ public class ServerTaskTest1Method {
   }
 
   @Test(dataProvider = "methodProvider", description = "valid + slow client")
-  public void validSlowClient(HttpMethod method) {
+  public void validSlowClient(RequestMethodEnum method) {
     assertEquals(
         ServerTaskY.resp(opts -> {
           opts.host("www.example.com", req -> {
@@ -109,7 +111,7 @@ public class ServerTaskTest1Method {
         }),
 
         method.implemented
-            ? method != HttpMethod.HEAD
+            ? method != RequestMethodEnum.HEAD
                 ? """
                   HTTP/1.1 200 OK\r
                   Date: Wed, 28 Jun 2023 12:08:43 GMT\r

@@ -15,23 +15,16 @@
  */
 package objectos.http;
 
+import java.util.Iterator;
+import java.util.stream.Stream;
 import objectox.http.RequestMethodEnum;
 
-final class StaticFilesMethod {
+public final class RequestMethodY {
 
-  public final void validate(Request request) throws StaticFilesErrMethod {
-    final RequestMethod method;
-    method = request.method();
+  private RequestMethodY() {}
 
-    if (method == RequestMethodEnum.GET) {
-      return;
-    }
-
-    if (method == RequestMethodEnum.HEAD) {
-      return;
-    }
-
-    throw new StaticFilesErrMethod(method);
+  public static Iterator<RequestMethod> iterator() {
+    return Stream.of(RequestMethodEnum.VALUES).filter(v -> v.implemented).map(RequestMethod.class::cast).iterator();
   }
 
 }

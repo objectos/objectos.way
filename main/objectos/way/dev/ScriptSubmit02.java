@@ -33,10 +33,10 @@ public final class ScriptSubmit02 extends AbstractDevScript {
 
   @Override
   public final void handle(HttpExchange http) {
-    switch (http.method()) {
-      case GET -> { initial = true; super.handle(http); }
+    switch (http.method().name()) {
+      case "GET" -> { initial = true; super.handle(http); }
 
-      case POST -> { initial = false; super.handle(http); }
+      case "POST" -> { initial = false; super.handle(http); }
 
       default -> http.error(HttpStatus.METHOD_NOT_ALLOWED, "Allowed: GET, POST");
     }

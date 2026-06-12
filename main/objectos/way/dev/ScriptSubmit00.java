@@ -45,10 +45,10 @@ public final class ScriptSubmit00 extends AbstractDevScript {
     if (path.endsWith("00")) {
       initial = true;
 
-      switch (http.method()) {
-        case GET -> http.ok(this);
+      switch (http.method().name()) {
+        case "GET" -> http.ok(this);
 
-        case POST -> {
+        case "POST" -> {
           var input0 = http.formParam("input0");
 
           var wayRequest = http.header(HttpHeaderName.WAY_REQUEST) != null;

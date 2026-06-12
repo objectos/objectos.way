@@ -15,8 +15,10 @@
  */
 package objectos.http;
 
+import java.io.IOException;
 import java.util.Objects;
 import java.util.function.Consumer;
+import objectox.http.HandlerNoop;
 
 final class HostBuilder implements HostOptions {
 
@@ -47,7 +49,10 @@ final class HostBuilder implements HostOptions {
   @Override
   public final void session(Consumer<? super SessionOptions> opts) {
     if (sessionSupport != null) {
-      throw new IllegalStateException("Session support has already been configured");
+      final String msg;
+      msg = "Session support has already been configured";
+
+      throw new IllegalStateException(msg);
     }
 
     final SessionSupportBuilder builder;
@@ -59,8 +64,20 @@ final class HostBuilder implements HostOptions {
   }
 
   @Override
-  public final void staticFiles(Consumer<? super StaticFilesOptions> opts) {
-    throw new UnsupportedOperationException("Implement me");
+  public final void staticFiles(Consumer<? super StaticFilesOptions> opts) throws IOException {
+    if (staticFiles != null) {
+      final String msg;
+      msg = "Static files support has already been configured";
+
+      throw new IllegalStateException(msg);
+    }
+
+    final StaticFilesBuilder builder;
+    builder = new StaticFilesBuilder();
+
+    opts.accept(builder);
+
+    staticFiles = builder.build();
   }
 
   public final Host build() {

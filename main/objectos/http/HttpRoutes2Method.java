@@ -17,14 +17,15 @@ package objectos.http;
 
 import java.util.ArrayList;
 import java.util.List;
+import objectox.http.RequestMethodEnum;
 
 final class HttpRoutes2Method {
 
-  private final HttpMethod method;
+  private final RequestMethodEnum method;
 
   private final List<HttpHandler> handlers = new ArrayList<>();
 
-  HttpRoutes2Method(HttpMethod method) {
+  HttpRoutes2Method(RequestMethodEnum method) {
     this.method = method;
   }
 

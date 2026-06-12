@@ -17,22 +17,23 @@ package objectos.http;
 
 import java.util.Set;
 import java.util.stream.Collectors;
+import objectox.http.RequestMethodEnum;
 
 final class HttpHandler3MethodNotAllowed extends HttpHandler0Super {
 
-  private final Set<HttpMethod> allowedMethods;
+  private final Set<RequestMethodEnum> allowedMethods;
 
   private final String allowValue;
 
-  HttpHandler3MethodNotAllowed(Set<HttpMethod> allowedMethods) {
+  HttpHandler3MethodNotAllowed(Set<RequestMethodEnum> allowedMethods) {
     this.allowedMethods = allowedMethods;
 
-    allowValue = allowedMethods.stream().map(HttpMethod::name).sorted().collect(Collectors.joining(", "));
+    allowValue = allowedMethods.stream().map(RequestMethodEnum::name).sorted().collect(Collectors.joining(", "));
   }
 
   @Override
   final void handleImpl(HttpExchange http) {
-    final HttpMethod reqMethod;
+    final RequestMethod reqMethod;
     reqMethod = http.method();
 
     if (allowedMethods.contains(reqMethod)) {

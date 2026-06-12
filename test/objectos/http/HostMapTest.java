@@ -16,6 +16,8 @@
 package objectos.http;
 
 import static org.testng.Assert.assertEquals;
+
+import objectox.http.HandlerNoop;
 import org.testng.annotations.Test;
 
 public class HostMapTest {

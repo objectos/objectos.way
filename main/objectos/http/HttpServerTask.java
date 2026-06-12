@@ -17,6 +17,7 @@ package objectos.http;
 
 import module java.base;
 import module objectos.way;
+import objectox.http.RequestMethodEnum;
 
 final class HttpServerTask implements Runnable {
 
@@ -119,10 +120,10 @@ final class HttpServerTask implements Runnable {
       return;
     }
 
-    final HttpMethod method;
+    final RequestMethod method;
     method = request.method();
 
-    head = method == HttpMethod.HEAD;
+    head = method == RequestMethodEnum.HEAD;
 
     final String hostValue;
     hostValue = request.header(HttpHeaderName.HOST);

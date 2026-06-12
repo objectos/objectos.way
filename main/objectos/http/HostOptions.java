@@ -15,6 +15,7 @@
  */
 package objectos.http;
 
+import java.io.IOException;
 import java.util.function.Consumer;
 
 /// Configures a name-based web site to be served by a `Server` instance.
@@ -40,6 +41,8 @@ public sealed interface HostOptions permits HostBuilder {
   /// Enables for this host support for static files with the specified options.
   ///
   /// @param opts allows for setting the static files options
-  void staticFiles(Consumer<? super StaticFilesOptions> opts);
+  ///
+  /// @throws IOException if an I/O error occurs
+  void staticFiles(Consumer<? super StaticFilesOptions> opts) throws IOException;
 
 }

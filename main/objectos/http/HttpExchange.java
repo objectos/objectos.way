@@ -76,7 +76,7 @@ public sealed interface HttpExchange
     /// Sets the request method to the specified value.
     ///
     /// @param value the HTTP method
-    void method(HttpMethod value);
+    void method(RequestMethod value);
 
     /// Sets the path component of the request-target to the specified value.
     ///
@@ -160,7 +160,7 @@ public sealed interface HttpExchange
   /// Returns the method of this request message.
   ///
   /// @return the method of this request message
-  HttpMethod method();
+  RequestMethod method();
 
   /// Returns the value of the path component.
   ///

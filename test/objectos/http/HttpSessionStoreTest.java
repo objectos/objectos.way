@@ -24,10 +24,12 @@ import java.util.function.Consumer;
 import java.util.random.RandomGenerator;
 import objectos.way.Y;
 import objectos.y.RandomGeneratorY;
+import objectox.http.RequestMethodEnum;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+@SuppressWarnings("exports")
 public class HttpSessionStoreTest {
 
   @DataProvider
@@ -83,23 +85,23 @@ public class HttpSessionStoreTest {
   @DataProvider
   public Object[][] safeMethodsProvider() {
     return new Object[][] {
-        {HttpMethod.GET},
-        {HttpMethod.HEAD}
+        {RequestMethodEnum.GET},
+        {RequestMethodEnum.HEAD}
     };
   }
 
   @DataProvider
   public Object[][] unsafeMethodsProvider() {
     return new Object[][] {
-        {HttpMethod.POST},
-        {HttpMethod.PUT},
-        {HttpMethod.PATCH},
-        {HttpMethod.DELETE}
+        {RequestMethodEnum.POST},
+        {RequestMethodEnum.PUT},
+        {RequestMethodEnum.PATCH},
+        {RequestMethodEnum.DELETE}
     };
   }
 
   @Test(enabled = false, dataProvider = "unsafeMethodsProvider")
-  public void requireCsrfToken01(HttpMethod method) {
+  public void requireCsrfToken01(RequestMethodEnum method) {
     final HttpSessionStoreImpl store;
     store = create(options -> {
       options.csrfGenerator(generator(5L, 6L, 7L, 8L));
@@ -129,7 +131,7 @@ public class HttpSessionStoreTest {
   }
 
   @Test(enabled = false, dataProvider = "unsafeMethodsProvider")
-  public void requireCsrfToken02(HttpMethod method) {
+  public void requireCsrfToken02(RequestMethodEnum method) {
     final HttpSessionStoreImpl store;
     store = create(options -> {
       options.csrfGenerator(generator(5L, 6L, 7L, 8L));
@@ -168,7 +170,7 @@ public class HttpSessionStoreTest {
   }
 
   @Test(enabled = false, dataProvider = "unsafeMethodsProvider")
-  public void requireCsrfToken03(HttpMethod method) {
+  public void requireCsrfToken03(RequestMethodEnum method) {
     final HttpSessionStoreImpl store;
     store = create(options -> {
       options.csrfGenerator(generator(5L, 6L, 7L, 8L));
@@ -211,7 +213,7 @@ public class HttpSessionStoreTest {
   }
 
   @Test(enabled = false, dataProvider = "unsafeMethodsProvider")
-  public void requireCsrfToken04(HttpMethod method) {
+  public void requireCsrfToken04(RequestMethodEnum method) {
     final HttpSessionStoreImpl store;
     store = create(options -> {
       options.csrfGenerator(generator(5L, 6L, 7L, 8L));
@@ -253,7 +255,7 @@ public class HttpSessionStoreTest {
   }
 
   @Test(enabled = false, dataProvider = "safeMethodsProvider")
-  public void requireCsrfToken05(HttpMethod method) {
+  public void requireCsrfToken05(RequestMethodEnum method) {
     final HttpSessionStoreImpl store;
     store = create(options -> {
       options.csrfGenerator(generator(5L, 6L, 7L, 8L));

@@ -21,22 +21,24 @@ import java.util.Iterator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import objectos.way.Y;
+import objectox.http.RequestMethodEnum;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+@SuppressWarnings("exports")
 public class HttpHandler3MethodNotAllowedTest {
 
   @DataProvider
-  public Iterator<HttpMethod> methodProvider() {
-    return Stream.of(HttpMethod.VALUES).iterator();
+  public Iterator<RequestMethodEnum> methodProvider() {
+    return Stream.of(RequestMethodEnum.VALUES).iterator();
   }
 
   @Test(dataProvider = "methodProvider")
-  public void handle(HttpMethod method) {
-    final EnumSet<HttpMethod> single;
+  public void handle(RequestMethodEnum method) {
+    final EnumSet<RequestMethodEnum> single;
     single = EnumSet.of(method);
 
-    final EnumSet<HttpMethod> allowed;
+    final EnumSet<RequestMethodEnum> allowed;
     allowed = EnumSet.complementOf(single);
 
     final HttpHandler handler;
@@ -67,14 +69,14 @@ public class HttpHandler3MethodNotAllowedTest {
 
   @Test
   public void handleNot() {
-    final EnumSet<HttpMethod> allowed;
-    allowed = EnumSet.of(HttpMethod.GET);
+    final EnumSet<RequestMethodEnum> allowed;
+    allowed = EnumSet.of(RequestMethodEnum.GET);
 
     final HttpHandler handler;
     handler = new HttpHandler3MethodNotAllowed(allowed);
 
     final HttpExchange http;
-    http = HttpExchange.create(opts -> opts.method(HttpMethod.POST));
+    http = HttpExchange.create(opts -> opts.method(RequestMethodEnum.POST));
 
     http.send();
 
@@ -91,8 +93,8 @@ public class HttpHandler3MethodNotAllowedTest {
   }
 
   @Test(dataProvider = "methodProvider")
-  public void handleNot(HttpMethod method) {
-    final EnumSet<HttpMethod> allowed;
+  public void handleNot(RequestMethodEnum method) {
+    final EnumSet<RequestMethodEnum> allowed;
     allowed = EnumSet.of(method);
 
     final HttpHandler handler;

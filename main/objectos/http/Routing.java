@@ -15,25 +15,20 @@
  */
 package objectos.http;
 
-/// Allows for creating a `HttpHandler` instance by declaring HTTP routes.
+import objectox.http.RoutingPojo;
+
+/// Allows for creating a `Handler` instance by declaring HTTP routes.
 ///
 /// If method-specific routes are configured, then the resulting handler responds
 /// with a `405 Method Not Allowed` message when a request does not match any of
 /// the configured methods.
-public sealed interface HttpRoutes permits HttpRoutes0 {
-
-  /// An object that can be used as an option to declaring a route.
-  sealed interface Option
-      permits
-      HttpHandler,
-      RequestMethod,
-      PathParam {}
+public sealed interface Routing permits RoutingPojo {
 
   /// Adds a route for the specified path with the specified options.
   ///
   /// @param path a path expression
   /// @param first the first option
   /// @param rest the remaining options
-  void at(String path, Option first, Option... rest);
+  void at(String path, RoutingOption first, RoutingOption... rest);
 
 }

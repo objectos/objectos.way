@@ -15,46 +15,37 @@
  */
 package objectos.http;
 
-import java.nio.charset.StandardCharsets;
+import objectox.http.RequestMethodEnum;
 
 /// The method of an HTTP request message.
-public enum HttpMethod implements HttpRoutes.Option {
-
-  /// The CONNECT method.
-  CONNECT(false),
+public sealed interface RequestMethod
+    extends
+    HttpRoutes.Option,
+    RoutingOption
+    permits
+    RequestMethodEnum {
 
   /// The DELETE method.
-  DELETE(true),
+  RequestMethod DELETE = RequestMethodEnum.DELETE;
 
   /// The GET method.
-  GET(true),
+  RequestMethod GET = RequestMethodEnum.GET;
 
   /// The HEAD method.
-  HEAD(true),
-
-  /// The OPTIONS method.
-  OPTIONS(false),
+  RequestMethod HEAD = RequestMethodEnum.HEAD;
 
   /// The PATCH method.
-  PATCH(true),
+  RequestMethod PATCH = RequestMethodEnum.PATCH;
 
   /// The POST method.
-  POST(true),
+  RequestMethod POST = RequestMethodEnum.POST;
 
   /// The PUT method.
-  PUT(true),
+  RequestMethod PUT = RequestMethodEnum.PUT;
 
-  /// The TRACE method.
-  TRACE(false);
-
-  static final HttpMethod[] VALUES = values();
-
-  final byte[] ascii = (name() + ' ').getBytes(StandardCharsets.US_ASCII);
-
-  final boolean implemented;
-
-  private HttpMethod(boolean implemented) {
-    this.implemented = implemented;
-  }
+  /// Returns the method name, such as `GET` or `PATCH`.
+  ///
+  /// @return the method name
+  String name();
 
 }

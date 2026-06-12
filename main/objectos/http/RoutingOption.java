@@ -15,23 +15,8 @@
  */
 package objectos.http;
 
-import objectox.http.RequestMethodEnum;
-
-final class StaticFilesMethod {
-
-  public final void validate(Request request) throws StaticFilesErrMethod {
-    final RequestMethod method;
-    method = request.method();
-
-    if (method == RequestMethodEnum.GET) {
-      return;
-    }
-
-    if (method == RequestMethodEnum.HEAD) {
-      return;
-    }
-
-    throw new StaticFilesErrMethod(method);
-  }
-
-}
+/// An object that can be used as an option for a route declaration.
+public sealed interface RoutingOption
+    permits
+    RequestMethod,
+    Response {}

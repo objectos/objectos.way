@@ -22,6 +22,7 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.util.Map;
+import objectox.http.RequestMethodEnum;
 
 final class HttpHost3StaticFiles implements HttpHandler {
 
@@ -122,10 +123,10 @@ final class HttpHost3StaticFiles implements HttpHandler {
       return;
     }
 
-    final HttpMethod method;
+    final RequestMethod method;
     method = http.method();
 
-    if (method != HttpMethod.GET && method != HttpMethod.HEAD) {
+    if (method != RequestMethodEnum.GET && method != RequestMethodEnum.HEAD) {
       http.status(HttpStatus.METHOD_NOT_ALLOWED);
 
       http.header(HttpHeaderName.DATE, http.now());

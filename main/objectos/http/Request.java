@@ -45,7 +45,7 @@ public sealed interface Request extends Result permits RequestPojo {
     /// method when not specified.
     ///
     /// @param value the HTTP method
-    void method(HttpMethod value);
+    void method(RequestMethod value);
 
     /// Sets the request-target path component to the specified value. Defaults
     /// to `/` when not specified.
@@ -192,7 +192,7 @@ public sealed interface Request extends Result permits RequestPojo {
   /// Returns the method of this request message.
   ///
   /// @return the method of this request message
-  HttpMethod method();
+  RequestMethod method();
 
   /// Returns the value of the path component.
   ///

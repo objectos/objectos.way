@@ -19,7 +19,11 @@ import java.nio.file.Path;
 import java.util.function.Consumer;
 
 /// An HTTP response message.
-public sealed interface Response extends Result permits ResponsePojo {
+public sealed interface Response
+    extends
+    Result,
+    RoutingOption
+    permits ResponsePojo {
 
   /// Configures the creation of a `Response` object.
   sealed interface Options permits ResponseBuilder {

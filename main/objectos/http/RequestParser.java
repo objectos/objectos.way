@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import objectox.http.RequestMethodEnum;
 
 final class RequestParser {
 
@@ -52,7 +53,7 @@ final class RequestParser {
     final RequestParser2Method methodParser;
     methodParser = new RequestParser2Method(input);
 
-    final HttpMethod method;
+    final RequestMethodEnum method;
     method = methodParser.parse();
 
     validate(method);
@@ -150,7 +151,7 @@ final class RequestParser {
     );
   }
 
-  private void validate(HttpMethod method) throws HttpServerException {
+  private void validate(RequestMethodEnum method) throws HttpServerException {
     if (!method.implemented) {
       throw new HttpServerException(HttpServerException.Kind.METHOD_NOT_IMPLEMENTED);
     }

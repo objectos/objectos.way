@@ -17,35 +17,24 @@ package objectos.http;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.Iterator;
 import objectox.http.RequestMethodEnum;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class RequestTest {
+public class RequestMethodTest {
 
-  @Test
-  public void create01() {
-    final Request r;
-    r = Request.create(_ -> {});
-
-    assertEquals(r.header(HttpHeaderName.WAY_REQUEST), null);
-    assertEquals(r.method(), RequestMethodEnum.GET);
-    assertEquals(r.path(), "/");
+  @DataProvider
+  public Iterator<RequestMethod> methodProvider() {
+    return RequestMethodY.iterator();
   }
 
-  @Test
-  public void create02() {
-    final Request r;
-    r = Request.create(opts -> {
-      opts.header(HttpHeaderName.WAY_REQUEST, "foo");
+  @Test(dataProvider = "methodProvider")
+  public void name(RequestMethod m) {
+    final RequestMethodEnum impl;
+    impl = (RequestMethodEnum) m;
 
-      opts.method(RequestMethodEnum.PATCH);
-
-      opts.path("/test/123");
-    });
-
-    assertEquals(r.header(HttpHeaderName.WAY_REQUEST), "foo");
-    assertEquals(r.method(), RequestMethodEnum.PATCH);
-    assertEquals(r.path(), "/test/123");
+    assertEquals(m.name(), impl.name());
   }
 
 }

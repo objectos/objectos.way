@@ -16,14 +16,15 @@
 package objectos.http;
 
 import java.util.List;
+import objectox.http.RequestMethodEnum;
 
 final class HttpHandler2Method extends HttpHandler0Super {
 
-  private final HttpMethod method;
+  private final RequestMethodEnum method;
 
   private final List<HttpHandler> handlers;
 
-  HttpHandler2Method(HttpMethod method, List<HttpHandler> handlers) {
+  HttpHandler2Method(RequestMethodEnum method, List<HttpHandler> handlers) {
     this.method = method;
 
     this.handlers = handlers;
@@ -31,10 +32,10 @@ final class HttpHandler2Method extends HttpHandler0Super {
 
   @Override
   final void handleImpl(HttpExchange http) {
-    final HttpMethod reqMethod;
+    final RequestMethod reqMethod;
     reqMethod = http.method();
 
-    if (!reqMethod.equals(method) && (!reqMethod.equals(HttpMethod.HEAD) || !method.equals(HttpMethod.GET))) {
+    if (!reqMethod.equals(method) && (!reqMethod.equals(RequestMethodEnum.HEAD) || !method.equals(RequestMethodEnum.GET))) {
       return;
     }
 

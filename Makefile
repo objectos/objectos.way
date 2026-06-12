@@ -165,6 +165,7 @@ TEST_ADD_EXPORTS := objectos.way/objectos.internal=org.testng
 TEST_ADD_EXPORTS += objectos.way/objectos.util=org.testng
 TEST_ADD_EXPORTS += objectos.way/objectos.way.dev=org.testng
 TEST_ADD_EXPORTS += objectos.way/objectos.y=org.testng
+TEST_ADD_EXPORTS += objectos.way/objectox.http=org.testng
 
 ## test --add-reads
 TEST_ADD_READS := objectos.way=org.testng

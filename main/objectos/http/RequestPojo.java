@@ -23,7 +23,7 @@ record RequestPojo(
 
     RequestAttributes attributes,
 
-    HttpMethod method,
+    RequestMethod method,
 
     String path,
 

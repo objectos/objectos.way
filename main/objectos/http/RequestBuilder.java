@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import objectos.http.Request.Options;
+import objectox.http.RequestMethodEnum;
 
 final class RequestBuilder implements Options {
 
@@ -33,7 +34,7 @@ final class RequestBuilder implements Options {
 
   private Map<HttpHeaderName, Object> headers = Map.of();
 
-  private HttpMethod method = HttpMethod.GET;
+  private RequestMethod method = RequestMethodEnum.GET;
 
   private String path = "/";
 
@@ -104,7 +105,7 @@ final class RequestBuilder implements Options {
   }
 
   @Override
-  public final void method(HttpMethod value) {
+  public final void method(RequestMethod value) {
     method = Objects.requireNonNull(value, "value == null");
   }
 

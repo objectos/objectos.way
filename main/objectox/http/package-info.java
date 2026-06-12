@@ -13,15 +13,5 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
-
-enum HandlerNoop implements Handler {
-
-  INSTANCE;
-
-  @Override
-  public final Result handle(Request request) {
-    return request;
-  }
-
-}
+/// Provides the implementation for the `objectos.http` API.
+package objectox.http;

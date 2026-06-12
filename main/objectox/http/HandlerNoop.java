@@ -13,25 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectox.http;
 
-import objectox.http.RequestMethodEnum;
+import objectos.http.Handler;
+import objectos.http.Request;
+import objectos.http.Result;
 
-final class StaticFilesMethod {
+public enum HandlerNoop implements Handler {
 
-  public final void validate(Request request) throws StaticFilesErrMethod {
-    final RequestMethod method;
-    method = request.method();
+  INSTANCE;
 
-    if (method == RequestMethodEnum.GET) {
-      return;
-    }
-
-    if (method == RequestMethodEnum.HEAD) {
-      return;
-    }
-
-    throw new StaticFilesErrMethod(method);
+  @Override
+  public final Result handle(Request request) {
+    return request;
   }
 
 }

@@ -29,9 +29,11 @@ import java.util.stream.Stream;
 import objectos.way.Y;
 import objectos.y.BasicFileAttributesY;
 import objectos.y.PathY;
+import objectox.http.RequestMethodEnum;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+@SuppressWarnings("exports")
 public class StaticFilesTest {
 
   private StaticFiles create(Consumer<? super StaticFilesBuilder> more) throws IOException {
@@ -154,7 +156,7 @@ public class StaticFilesTest {
   - mapped content-type
   """)
   public void handle01() throws IOException {
-    final Handler handler;
+    final StaticFiles handler;
     handler = create(opts -> {
       opts.contentTypes(".txt: text/plain");
 
@@ -193,7 +195,7 @@ public class StaticFilesTest {
   - mapped content-type
   """)
   public void handle02() throws IOException {
-    final Handler handler;
+    final StaticFiles handler;
     handler = create(opts -> {
       opts.contentTypes(".json: application/json");
 
@@ -232,7 +234,7 @@ public class StaticFilesTest {
   - default content-type
   """)
   public void handle03() throws IOException {
-    final Handler handler;
+    final StaticFiles handler;
     handler = create(opts -> {
       opts.contentTypes("*: application/octet-stream");
 
@@ -271,7 +273,7 @@ public class StaticFilesTest {
   - HEAD method
   """)
   public void handle04() throws IOException {
-    final Handler handler;
+    final StaticFiles handler;
     handler = create(opts -> {
       opts.contentTypes(".txt: text/plain");
 
@@ -285,7 +287,7 @@ public class StaticFilesTest {
 
     final Result res;
     res = handler.handle(Request.create(opts -> {
-      opts.method(HttpMethod.HEAD);
+      opts.method(RequestMethodEnum.HEAD);
 
       opts.path("/tc04.txt");
     }));
@@ -305,15 +307,15 @@ public class StaticFilesTest {
   }
 
   @DataProvider
-  public Iterator<HttpMethod> methodProvider() {
-    return Stream.of(HttpMethod.VALUES)
-        .filter(m -> !m.equals(HttpMethod.GET) && !m.equals(HttpMethod.HEAD))
+  public Iterator<RequestMethodEnum> methodProvider() {
+    return Stream.of(RequestMethodEnum.VALUES)
+        .filter(m -> !m.equals(RequestMethodEnum.GET) && !m.equals(RequestMethodEnum.HEAD))
         .iterator();
   }
 
   @Test(dataProvider = "methodProvider")
-  public void methodNotAllowed01(HttpMethod method) throws IOException {
-    final Handler handler;
+  public void methodNotAllowed01(RequestMethodEnum method) throws IOException {
+    final StaticFiles handler;
     handler = create(opts -> {
       opts.contentTypes(".txt: text/plain");
 
@@ -347,7 +349,7 @@ public class StaticFilesTest {
 
   @Test
   public void notModified01() throws IOException {
-    final Handler handler;
+    final StaticFiles handler;
     handler = create(opts -> {
       opts.contentTypes(".txt: text/plain");
 
@@ -384,7 +386,7 @@ public class StaticFilesTest {
   - non-existing file
   """)
   public void skip01() throws IOException {
-    final Handler handler;
+    final StaticFiles handler;
     handler = create(_ -> {
     });
 
@@ -404,7 +406,7 @@ public class StaticFilesTest {
   - existing path is a directory
   """)
   public void skip02() throws IOException {
-    final Handler handler;
+    final StaticFiles handler;
     handler = create(_ -> {
     });
 
