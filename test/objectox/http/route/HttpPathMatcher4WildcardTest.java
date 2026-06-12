@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectox.http.route;
 
 import static org.testng.Assert.assertEquals;
+
 import java.util.List;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -38,14 +39,14 @@ public class HttpPathMatcher4WildcardTest {
 
   @Test(dataProvider = "testCase01Provider")
   public void testCase01(String path, boolean matched) {
-    final HttpPathMatcher matcher;
-    matcher = new HttpPathMatcher5List(List.of(
-        new HttpPathMatcher1Region("/foo"),
-        HttpPathMatcher4Wildcard.INSTANCE
+    final RouteMatcher matcher;
+    matcher = new RouteMatcherList(List.of(
+        new RouteMatcherRegion("/foo"),
+        RouteMatcherWildcard.INSTANCE
     ));
 
-    final HttpPath http;
-    http = new HttpPath(path);
+    final RoutePath http;
+    http = new RoutePath(path);
 
     assertEquals(matcher.matches(http), matched);
   }

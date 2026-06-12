@@ -21,6 +21,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 import objectos.way.Y;
+import objectox.http.route.RouteMatcher;
+import objectox.http.route.RouteMatcherExact;
+import objectox.http.route.RouteMatcherRegion;
+import objectox.http.route.RouteMatcherParamLast;
+import objectox.http.route.RouteMatcherList;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -49,22 +54,22 @@ public class HttpHandler1PathTest {
   public Object[][] handleProvider() {
     return new Object[][] {
         {
-            new HttpPathMatcher0Exact("/foo"),
+            new RouteMatcherExact("/foo"),
             Map.of(),
             "/foo", null
         },
         {
-            new HttpPathMatcher5List(List.of(
-                new HttpPathMatcher1Region("/foo/"),
-                new HttpPathMatcher3ParamLast("test")
+            new RouteMatcherList(List.of(
+                new RouteMatcherRegion("/foo/"),
+                new RouteMatcherParamLast("test")
             )),
             Map.of(),
             "/foo/123", "123"
         },
         {
-            new HttpPathMatcher5List(List.of(
-                new HttpPathMatcher1Region("/foo/"),
-                new HttpPathMatcher3ParamLast("test")
+            new RouteMatcherList(List.of(
+                new RouteMatcherRegion("/foo/"),
+                new RouteMatcherParamLast("test")
             )),
             Map.of("test", PathParams.digits()),
             "/foo/123", "123"
@@ -74,7 +79,7 @@ public class HttpHandler1PathTest {
 
   @SuppressWarnings("exports")
   @Test(dataProvider = "handleProvider")
-  public void handle(HttpPathMatcher matcher, Map<String, Predicate<String>> predicates, String path, String test) {
+  public void handle(RouteMatcher matcher, Map<String, Predicate<String>> predicates, String path, String test) {
     final HttpExchange http;
     http = HttpExchange.create(opts -> {
       opts.clock(Y.clockFixed());
@@ -103,14 +108,14 @@ public class HttpHandler1PathTest {
   public Object[][] handleNotProvider() {
     return new Object[][] {
         {
-            new HttpPathMatcher0Exact("/foo"),
+            new RouteMatcherExact("/foo"),
             Map.of(),
             "/"
         },
         {
-            new HttpPathMatcher5List(List.of(
-                new HttpPathMatcher1Region("/foo/"),
-                new HttpPathMatcher3ParamLast("test")
+            new RouteMatcherList(List.of(
+                new RouteMatcherRegion("/foo/"),
+                new RouteMatcherParamLast("test")
             )),
             Map.of("test", PathParams.digits()),
             "/foo/xpto"
@@ -120,7 +125,7 @@ public class HttpHandler1PathTest {
 
   @SuppressWarnings("exports")
   @Test(dataProvider = "handleNotProvider")
-  public void handleNot(HttpPathMatcher matcher, Map<String, Predicate<String>> predicates, String path) {
+  public void handleNot(RouteMatcher matcher, Map<String, Predicate<String>> predicates, String path) {
     final HttpExchange http;
     http = HttpExchange.create(opts -> {
       opts.clock(Y.clockFixed());

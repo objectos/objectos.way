@@ -13,26 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectox.http.route;
 
 import java.util.HashMap;
 import java.util.Map;
 import objectos.internal.VisibleForTesting;
 
-final class HttpPath {
+public final class RoutePath {
 
   private final String path;
 
   private int index;
 
-  Map<String, String> params = Map.of();
+  public Map<String, String> params = Map.of();
 
-  HttpPath(String path) {
+  public RoutePath(String path) {
     this.path = path;
   }
 
   @VisibleForTesting
-  HttpPath(String path, int index) {
+  RoutePath(String path, int index) {
     this.path = path;
 
     this.index = index;

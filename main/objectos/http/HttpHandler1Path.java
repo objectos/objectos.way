@@ -18,16 +18,18 @@ package objectos.http;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
+import objectox.http.route.RoutePath;
+import objectox.http.route.RouteMatcher;
 
 final class HttpHandler1Path extends HttpHandler0Super {
 
-  private final HttpPathMatcher matcher;
+  private final RouteMatcher matcher;
 
   private final Map<String, Predicate<String>> predicates;
 
   private final List<HttpHandler> handlers;
 
-  HttpHandler1Path(HttpPathMatcher matcher, Map<String, Predicate<String>> predicates, List<HttpHandler> handlers) {
+  HttpHandler1Path(RouteMatcher matcher, Map<String, Predicate<String>> predicates, List<HttpHandler> handlers) {
     this.matcher = matcher;
 
     this.predicates = predicates;
@@ -40,8 +42,8 @@ final class HttpHandler1Path extends HttpHandler0Super {
     final String path;
     path = http.path();
 
-    final HttpPath httpPath;
-    httpPath = new HttpPath(path);
+    final RoutePath httpPath;
+    httpPath = new RoutePath(path);
 
     if (!matcher.matches(httpPath)) {
       return;

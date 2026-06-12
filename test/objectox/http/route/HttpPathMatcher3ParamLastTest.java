@@ -13,16 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectox.http.route;
 
 import static org.testng.Assert.assertEquals;
+
 import java.util.Map;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class HttpPathMatcher3ParamLastTest {
 
-  private final HttpPathMatcher matcher = new HttpPathMatcher3ParamLast("test");
+  private final RouteMatcher matcher = new RouteMatcherParamLast("test");
 
   @DataProvider
   public Object[][] validProvider() {
@@ -36,8 +37,8 @@ public class HttpPathMatcher3ParamLastTest {
 
   @Test(dataProvider = "validProvider")
   public void valid(String path, int index, String value) {
-    final HttpPath http;
-    http = new HttpPath(path, index);
+    final RoutePath http;
+    http = new RoutePath(path, index);
 
     assertEquals(matcher.matches(http), true);
 

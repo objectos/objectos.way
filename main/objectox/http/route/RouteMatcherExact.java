@@ -13,17 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectox.http.route;
 
-sealed interface HttpPathMatcher
-    permits
-    HttpPathMatcher0Exact,
-    HttpPathMatcher1Region,
-    HttpPathMatcher2Param,
-    HttpPathMatcher3ParamLast,
-    HttpPathMatcher4Wildcard,
-    HttpPathMatcher5List {
+public record RouteMatcherExact(String exact) implements RouteMatcher {
 
-  boolean matches(HttpPath path);
+  @Override
+  public final boolean matches(RoutePath path) {
+    final int thisLength;
+    thisLength = path.length();
+
+    final int thatLength;
+    thatLength = exact.length();
+
+    return thisLength == thatLength
+        && path.matches(exact);
+  }
 
 }

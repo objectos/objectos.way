@@ -25,6 +25,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 import objectos.http.HttpRoutes.Option;
 import objectox.http.RequestMethodEnum;
+import objectox.http.route.RouteMatcher;
 
 final class HttpRoutes1Path {
 
@@ -32,7 +33,7 @@ final class HttpRoutes1Path {
 
   private final List<HttpHandler> handlers = new ArrayList<>();
 
-  private final HttpPathMatcher matcher;
+  private final RouteMatcher matcher;
 
   private Map<RequestMethodEnum, HttpRoutes2Method> methods = Map.of();
 
@@ -40,7 +41,7 @@ final class HttpRoutes1Path {
 
   private Map<String, Predicate<String>> predicates = Map.of();
 
-  HttpRoutes1Path(HttpPathMatcher matcher, Set<String> paramNames) {
+  HttpRoutes1Path(RouteMatcher matcher, Set<String> paramNames) {
     this.matcher = matcher;
 
     this.paramNames = paramNames;

@@ -13,22 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectox.http.route;
 
-record HttpPathMatcher2Param(String paramName, char terminator) implements HttpPathMatcher {
+import java.util.List;
+
+public record RouteMatcherList(List<RouteMatcher> list) implements RouteMatcher {
 
   @Override
-  public final boolean matches(HttpPath path) {
-    final int terminatorIndex;
-    terminatorIndex = path.indexOf(terminator);
+  public final boolean matches(RoutePath path) {
+    for (RouteMatcher matcher : list) {
+      if (!matcher.matches(path)) {
+        path.clear();
 
-    if (terminatorIndex < 0) {
-      return false;
-    } else {
-      path.param(paramName, terminatorIndex);
-
-      return true;
+        return false;
+      }
     }
+
+    return true;
   }
 
 }

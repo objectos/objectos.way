@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.http;
+package objectox.http.route;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -25,6 +25,7 @@ import objectos.http.Handler;
 import objectos.http.HttpHandler;
 import objectos.http.Routing;
 import objectos.http.RoutingOption;
+import objectox.http.HandlerNoop;
 
 public final class RoutingPojo implements Routing {
 

@@ -20,6 +20,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import objectox.http.route.RouteMatcher;
+import objectox.http.route.RouteParser;
 
 final class HttpRoutes0 implements HttpRoutes {
 
@@ -52,10 +54,10 @@ final class HttpRoutes0 implements HttpRoutes {
       throw new IllegalArgumentException(msg);
     }
 
-    final HttpPathMatcherParser parser;
-    parser = new HttpPathMatcherParser(path);
+    final RouteParser parser;
+    parser = new RouteParser(path);
 
-    final HttpPathMatcher matcher;
+    final RouteMatcher matcher;
     matcher = parser.parse();
 
     final Set<String> paramNames;

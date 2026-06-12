@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectox.http.route;
 
 import static objectos.http.HttpY.arr;
 import static org.testng.Assert.assertEquals;
@@ -24,13 +24,14 @@ import java.util.List;
 import objectos.lang.Throwables;
 import objectos.way.Note;
 import objectos.way.Y;
+import objectox.http.Rfc;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class HttpPathMatcherParserTest {
+public class RouteParserTest {
 
-  private final String validDelims = Http.pathDelim();
+  private final String validDelims = Rfc.pathDelim();
 
   @DataProvider
   public Object[][] parsePathValidProvider() {
@@ -70,10 +71,10 @@ public class HttpPathMatcherParserTest {
 
   @Test(dataProvider = "parsePathValidProvider")
   public void parsePathValid(String path, Object expected) {
-    final HttpPathMatcherParser parser;
-    parser = new HttpPathMatcherParser(path);
+    final RouteParser parser;
+    parser = new RouteParser(path);
 
-    final HttpPathMatcher result;
+    final RouteMatcher result;
     result = parser.parse();
 
     assertEquals(result, expected);
@@ -120,8 +121,8 @@ public class HttpPathMatcherParserTest {
   @Test(dataProvider = "parsePathInvalidProvider")
   public void parsePathInvalid(String path, String expectedMessage) {
     try {
-      final HttpPathMatcherParser parser;
-      parser = new HttpPathMatcherParser(path);
+      final RouteParser parser;
+      parser = new RouteParser(path);
 
       parser.parse();
 
@@ -139,31 +140,31 @@ public class HttpPathMatcherParserTest {
     }
   }
 
-  private HttpPathMatcher pathExact(String value) {
-    return new HttpPathMatcher0Exact(value);
+  private RouteMatcher pathExact(String value) {
+    return new RouteMatcherExact(value);
   }
 
-  private HttpPathMatcher pathRegion(String value) {
-    return new HttpPathMatcher1Region(value);
+  private RouteMatcher pathRegion(String value) {
+    return new RouteMatcherRegion(value);
   }
 
-  private HttpPathMatcher pathParam(String paramName, char terminator) {
-    return new HttpPathMatcher2Param(paramName, terminator);
+  private RouteMatcher pathParam(String paramName, char terminator) {
+    return new RouteMatcherParam(paramName, terminator);
   }
 
-  private HttpPathMatcher pathParamLast(String paramName) {
-    return new HttpPathMatcher3ParamLast(paramName);
+  private RouteMatcher pathParamLast(String paramName) {
+    return new RouteMatcherParamLast(paramName);
   }
 
-  private HttpPathMatcher wildcard() {
-    return HttpPathMatcher4Wildcard.INSTANCE;
+  private RouteMatcher wildcard() {
+    return RouteMatcherWildcard.INSTANCE;
   }
 
-  private HttpPathMatcher pathList(HttpPathMatcher... parts) {
-    final List<HttpPathMatcher> list;
+  private RouteMatcher pathList(RouteMatcher... parts) {
+    final List<RouteMatcher> list;
     list = List.of(parts);
 
-    return new HttpPathMatcher5List(list);
+    return new RouteMatcherList(list);
   }
 
 }

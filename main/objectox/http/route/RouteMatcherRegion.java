@@ -13,23 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectox.http.route;
 
-import java.util.List;
-
-record HttpPathMatcher5List(List<HttpPathMatcher> list) implements HttpPathMatcher {
+public record RouteMatcherRegion(String value) implements RouteMatcher {
 
   @Override
-  public final boolean matches(HttpPath path) {
-    for (HttpPathMatcher matcher : list) {
-      if (!matcher.matches(path)) {
-        path.clear();
-
-        return false;
-      }
-    }
-
-    return true;
+  public final boolean matches(RoutePath path) {
+    return path.matches(value);
   }
 
 }

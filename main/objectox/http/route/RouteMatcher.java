@@ -13,13 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectox.http.route;
 
-record HttpPathMatcher1Region(String value) implements HttpPathMatcher {
+public sealed interface RouteMatcher
+    permits
+    RouteMatcherExact,
+    RouteMatcherRegion,
+    RouteMatcherParam,
+    RouteMatcherParamLast,
+    RouteMatcherWildcard,
+    RouteMatcherList {
 
-  @Override
-  public final boolean matches(HttpPath path) {
-    return path.matches(value);
-  }
+  boolean matches(RoutePath path);
 
 }

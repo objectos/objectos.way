@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectox.http.route;
 
 import static org.testng.Assert.assertEquals;
 
@@ -41,14 +41,14 @@ public class HttpPathMatcher5ListTest {
 
   @Test(dataProvider = "testCase01Provider")
   public void testCase01(String path, boolean matched, Map<String, String> params) {
-    final HttpPathMatcher matcher;
-    matcher = new HttpPathMatcher5List(List.of(
-        new HttpPathMatcher1Region("/foo/"),
-        new HttpPathMatcher3ParamLast("foo")
+    final RouteMatcher matcher;
+    matcher = new RouteMatcherList(List.of(
+        new RouteMatcherRegion("/foo/"),
+        new RouteMatcherParamLast("foo")
     ));
 
-    final HttpPath http;
-    http = new HttpPath(path);
+    final RoutePath http;
+    http = new RoutePath(path);
 
     assertEquals(matcher.matches(http), matched);
 
@@ -71,16 +71,16 @@ public class HttpPathMatcher5ListTest {
 
   @Test(dataProvider = "testCase02Provider")
   public void testCase02(String path, boolean matched, Map<String, String> params) {
-    final HttpPathMatcher matcher;
-    matcher = new HttpPathMatcher5List(List.of(
-        new HttpPathMatcher1Region("/foo/"),
-        new HttpPathMatcher2Param("foo", '/'),
-        new HttpPathMatcher1Region("bar/"),
-        new HttpPathMatcher3ParamLast("bar")
+    final RouteMatcher matcher;
+    matcher = new RouteMatcherList(List.of(
+        new RouteMatcherRegion("/foo/"),
+        new RouteMatcherParam("foo", '/'),
+        new RouteMatcherRegion("bar/"),
+        new RouteMatcherParamLast("bar")
     ));
 
-    final HttpPath http;
-    http = new HttpPath(path);
+    final RoutePath http;
+    http = new RoutePath(path);
 
     assertEquals(matcher.matches(http), matched);
 
@@ -99,17 +99,17 @@ public class HttpPathMatcher5ListTest {
 
   @Test(dataProvider = "testCase03Provider")
   public void testCase03(String path, boolean matched, Map<String, String> params) {
-    final HttpPathMatcher matcher;
-    matcher = new HttpPathMatcher5List(List.of(
-        new HttpPathMatcher1Region("/foo/"),
-        new HttpPathMatcher2Param("foo", '/'),
-        new HttpPathMatcher1Region("bar/"),
-        new HttpPathMatcher2Param("bar", '/'),
-        new HttpPathMatcher0Exact("pdf")
+    final RouteMatcher matcher;
+    matcher = new RouteMatcherList(List.of(
+        new RouteMatcherRegion("/foo/"),
+        new RouteMatcherParam("foo", '/'),
+        new RouteMatcherRegion("bar/"),
+        new RouteMatcherParam("bar", '/'),
+        new RouteMatcherExact("pdf")
     ));
 
-    final HttpPath http;
-    http = new HttpPath(path);
+    final RoutePath http;
+    http = new RoutePath(path);
 
     assertEquals(matcher.matches(http), matched);
 

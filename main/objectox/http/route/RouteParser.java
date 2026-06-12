@@ -13,18 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectox.http.route;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import objectox.http.Rfc;
 
-final class HttpPathMatcherParser {
+public final class RouteParser {
 
-  private enum State {
-    START_PATH,
+  enum State {
+    START,
 
     EXACT,
 
@@ -41,7 +42,7 @@ final class HttpPathMatcherParser {
 
   static {
     final String pathDelim;
-    pathDelim = Http.pathDelim();
+    pathDelim = Rfc.pathDelim();
 
     final char[] delims;
     delims = pathDelim.toCharArray();
@@ -57,21 +58,20 @@ final class HttpPathMatcherParser {
 
   private int pathIndex;
 
-  private final List<HttpPathMatcher> segments = new ArrayList<>();
+  private final List<RouteMatcher> segments = new ArrayList<>();
 
   private int startIndex;
 
-  HttpPathMatcherParser(String pathExpression) {
+  private State state = State.START;
+
+  public RouteParser(String pathExpression) {
     this.pathExpression = pathExpression;
   }
 
-  public final HttpPathMatcher parse() {
-    State state;
-    state = State.START_PATH;
-
+  public final RouteMatcher parse() {
     while (true) {
       switch (state) {
-        case START_PATH -> state = state0StartPath();
+        case START -> new RouteParserStart(this).parse();
 
         case EXACT -> state = state1Exact();
 
@@ -80,11 +80,11 @@ final class HttpPathMatcherParser {
         case REGION -> state = state3Region();
 
         case RESULT_EXACT -> {
-          return new HttpPathMatcher0Exact(pathExpression);
+          return new RouteMatcherExact(pathExpression);
         }
 
         case RESULT_LIST -> {
-          return new HttpPathMatcher5List(segments);
+          return new RouteMatcherList(segments);
         }
       }
     }
@@ -92,31 +92,6 @@ final class HttpPathMatcherParser {
 
   public final Set<String> paramNames() {
     return paramNames;
-  }
-
-  private State state0StartPath() {
-    if (pathExpression.isEmpty()) {
-      final String msg;
-      msg = "Invalid path expression: it must not be empty";
-
-      throw new IllegalArgumentException(msg);
-    }
-
-    final char first;
-    first = pathExpression.charAt(0);
-
-    if (first != '/') {
-      final String msg;
-      msg = "Invalid path expression: it must begin with the '/' character";
-
-      throw new IllegalArgumentException(msg);
-    }
-
-    startIndex = 0;
-
-    pathIndex = 1;
-
-    return State.EXACT;
   }
 
   private State state1Exact() {
@@ -151,7 +126,7 @@ final class HttpPathMatcherParser {
     last = bracket == lastIndex;
 
     if (name.isEmpty() && last) {
-      segments.add(HttpPathMatcher4Wildcard.INSTANCE);
+      segments.add(RouteMatcherWildcard.INSTANCE);
 
       return State.RESULT_LIST;
     }
@@ -196,8 +171,8 @@ final class HttpPathMatcherParser {
     }
 
     if (last) {
-      final HttpPathMatcher matcher;
-      matcher = new HttpPathMatcher3ParamLast(name);
+      final RouteMatcher matcher;
+      matcher = new RouteMatcherParamLast(name);
 
       segments.add(matcher);
 
@@ -215,13 +190,13 @@ final class HttpPathMatcherParser {
 
     if (validDelim < 0) {
       final String msg;
-      msg = "Invalid path expression: path parameter can only be either at the end of the expression or immediately followed by one of " + Http.pathDelim();
+      msg = "Invalid path expression: path parameter can only be either at the end of the expression or immediately followed by one of " + Rfc.pathDelim();
 
       throw new IllegalArgumentException(msg);
     }
 
-    final HttpPathMatcher matcher;
-    matcher = new HttpPathMatcher2Param(name, delim);
+    final RouteMatcher matcher;
+    matcher = new RouteMatcherParam(name, delim);
 
     segments.add(matcher);
 
@@ -241,8 +216,8 @@ final class HttpPathMatcherParser {
     final String value;
     value = pathExpression.substring(startIndex);
 
-    final HttpPathMatcher segment;
-    segment = new HttpPathMatcher0Exact(value);
+    final RouteMatcher segment;
+    segment = new RouteMatcherExact(value);
 
     segments.add(segment);
 
@@ -258,7 +233,7 @@ final class HttpPathMatcherParser {
 
     if (delimIdx < 0) {
       final String msg;
-      msg = "Invalid path expression: path parameter can only be immediately preceeded by one of " + Http.pathDelim();
+      msg = "Invalid path expression: path parameter can only be immediately preceeded by one of " + Rfc.pathDelim();
 
       throw new IllegalArgumentException(msg);
     }
@@ -267,8 +242,8 @@ final class HttpPathMatcherParser {
       final String value;
       value = pathExpression.substring(startIndex, bracket);
 
-      final HttpPathMatcher segment;
-      segment = new HttpPathMatcher1Region(value);
+      final RouteMatcher segment;
+      segment = new RouteMatcherRegion(value);
 
       segments.add(segment);
     }
@@ -278,6 +253,30 @@ final class HttpPathMatcherParser {
     pathIndex = startIndex + 1;
 
     return State.PARAM;
+  }
+
+  final boolean hasNext() {
+    return pathIndex < pathExpression.length();
+  }
+
+  final char next() {
+    return pathExpression.charAt(pathIndex++);
+  }
+
+  final int pathIndex() {
+    return pathIndex;
+  }
+
+  final int startIndex() {
+    return startIndex;
+  }
+
+  final State state() {
+    return state;
+  }
+
+  final void state(State value) {
+    state = value;
   }
 
 }

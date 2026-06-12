@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectox.http.route;
 
-record HttpPathMatcher3ParamLast(String paramName) implements HttpPathMatcher {
+public record RouteMatcherParamLast(String paramName) implements RouteMatcher {
 
   @Override
-  public final boolean matches(HttpPath path) {
+  public final boolean matches(RoutePath path) {
     path.param(paramName);
 
     return true;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectox.http.route;
 
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
@@ -25,11 +25,11 @@ import org.testng.annotations.Test;
 
 public class HttpPathMatcher0ExactTest {
 
-  private final HttpPathMatcher matcher = new HttpPathMatcher0Exact("/foo");
+  private final RouteMatcher matcher = new RouteMatcherExact("/foo");
 
   private boolean match(String path) {
-    final HttpPath pojo;
-    pojo = new HttpPath(path);
+    final RoutePath pojo;
+    pojo = new RoutePath(path);
 
     return matcher.matches(pojo);
   }

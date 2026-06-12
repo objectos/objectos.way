@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectox.http;
 
-enum HttpPathMatcher4Wildcard implements HttpPathMatcher {
+public final class Rfc {
 
-  INSTANCE;
+  private Rfc() {}
 
-  @Override
-  public final boolean matches(HttpPath http) {
-    return true;
+  public static String pathDelim() {
+    return "/-.";
   }
 
 }

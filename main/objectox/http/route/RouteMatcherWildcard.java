@@ -13,20 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectox.http.route;
 
-record HttpPathMatcher0Exact(String exact) implements HttpPathMatcher {
+public enum RouteMatcherWildcard implements RouteMatcher {
+
+  INSTANCE;
 
   @Override
-  public final boolean matches(HttpPath path) {
-    final int thisLength;
-    thisLength = path.length();
-
-    final int thatLength;
-    thatLength = exact.length();
-
-    return thisLength == thatLength
-        && path.matches(exact);
+  public final boolean matches(RoutePath http) {
+    return true;
   }
 
 }
