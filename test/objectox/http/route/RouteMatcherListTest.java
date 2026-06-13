@@ -22,7 +22,7 @@ import java.util.Map;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class HttpPathMatcher5ListTest {
+public class RouteMatcherListTest {
 
   @DataProvider
   public Object[][] testCase01Provider() {

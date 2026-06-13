@@ -21,7 +21,7 @@ import java.util.List;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class HttpPathMatcher4WildcardTest {
+public class RouteMatcherWildcardTest {
 
   @DataProvider
   public Object[][] testCase01Provider() {
