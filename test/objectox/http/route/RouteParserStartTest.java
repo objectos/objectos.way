@@ -30,56 +30,44 @@ public class RouteParserStartTest {
   }
 
   @Test(description = "path expresions must not be empty")
-  public void testCase01() {
+  public void execute01() {
     final RouteParserStart subject;
     subject = create("");
 
     try {
-      subject.parse();
+      subject.execute();
 
       Assert.fail("It should have thrown");
     } catch (IllegalArgumentException expected) {
-      final RouteParser ctx;
-      ctx = subject.unwrap();
-
-      assertEquals(ctx.state(), RouteParser.State.START);
-
       assertEquals(expected.getMessage(), "Invalid path expression: it must not be empty");
     }
   }
 
   @Test(description = "path expressions must start with '/'")
-  public void testCase02() {
+  public void execute02() {
     final RouteParserStart subject;
     subject = create("index.html");
 
     try {
-      subject.parse();
+      subject.execute();
 
       Assert.fail("It should have thrown");
     } catch (IllegalArgumentException expected) {
-      final RouteParser ctx;
-      ctx = subject.unwrap();
-
-      assertEquals(ctx.state(), RouteParser.State.START);
-
       assertEquals(expected.getMessage(), "Invalid path expression: it must begin with the '/' character");
     }
   }
 
   @Test(description = "Next state is EXACT")
-  public void testCase03() {
+  public void execute03() {
     final RouteParserStart subject;
     subject = create("/index.html");
 
-    subject.parse();
+    subject.execute();
 
     final RouteParser ctx;
-    ctx = subject.unwrap();
+    ctx = subject.ctx;
 
-    assertEquals(ctx.state(), RouteParser.State.EXACT);
-    assertEquals(ctx.startIndex(), 0);
-    assertEquals(ctx.pathIndex(), 1);
+    assertEquals(ctx.index(), 0);
   }
 
 }

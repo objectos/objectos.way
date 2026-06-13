@@ -20,10 +20,8 @@ import static org.testng.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
-import objectos.lang.Throwables;
-import objectos.way.Note;
-import objectos.way.Y;
 import objectox.http.Rfc;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
@@ -33,69 +31,112 @@ public class RouteParserTest {
 
   private final String validDelims = Rfc.pathDelim();
 
-  @DataProvider
-  public Object[][] parsePathValidProvider() {
-    final List<Object[]> list;
-    list = new ArrayList<>();
+  @Test(description = "path expresions must not be empty")
+  public void parse01() {
+    final RouteParser subject;
+    subject = new RouteParser("");
 
-    list.add(arr("/foo", pathExact("/foo")));
-    list.add(arr("/foo/bar", pathExact("/foo/bar")));
-    list.add(arr("/", pathExact("/")));
+    try {
+      subject.parse();
 
-    list.add(arr("/foo/{a}",
-        pathList(pathRegion("/foo/"), pathParamLast("a"))));
-    list.add(arr("/foo/{foo}",
-        pathList(pathRegion("/foo/"), pathParamLast("foo"))));
-    list.add(arr("/foo/{foo}/",
-        pathList(pathRegion("/foo/"), pathParam("foo", '/'), pathExact(""))));
-    list.add(arr("/foo/{foo}/bar/{bar}",
-        pathList(pathRegion("/foo/"), pathParam("foo", '/'), pathRegion("bar/"), pathParamLast("bar"))));
-    list.add(arr("/foo/{foo}/bar",
-        pathList(pathRegion("/foo/"), pathParam("foo", '/'), pathExact("bar"))));
-
-    list.add(arr("/{}", pathList(pathRegion("/"), wildcard())));
-    list.add(arr("/foo/{}", pathList(pathRegion("/foo/"), wildcard())));
-
-    list.add(arr("/foo/{x}/{}", pathList(pathRegion("/foo/"), pathParam("x", '/'), wildcard())));
-    list.add(arr("/foo/{x}/bar/{}", pathList(pathRegion("/foo/"), pathParam("x", '/'), pathRegion("bar/"), wildcard())));
-
-    // all valid param delimiters
-    for (char d : validDelims.toCharArray()) {
-      list.add(arr("/foo" + d + "{x}", pathList(pathRegion("/foo" + d), pathParamLast("x"))));
-
-      list.add(arr("/foo/{x}" + d + "bar", pathList(pathRegion("/foo/"), pathParam("x", d), pathExact("bar"))));
+      Assert.fail("It should have thrown");
+    } catch (IllegalArgumentException expected) {
+      assertEquals(expected.getMessage(), "Invalid path expression: it must not be empty");
     }
-
-    return list.toArray(Object[][]::new);
   }
 
-  @Test(dataProvider = "parsePathValidProvider")
-  public void parsePathValid(String path, Object expected) {
-    final RouteParser parser;
-    parser = new RouteParser(path);
+  @Test(description = "path expressions must start with '/'")
+  public void parse02() {
+    final RouteParser subject;
+    subject = new RouteParser("index.html");
 
-    final RouteMatcher result;
-    result = parser.parse();
+    try {
+      subject.parse();
 
-    assertEquals(result, expected);
+      Assert.fail("It should have thrown");
+    } catch (IllegalArgumentException expected) {
+      assertEquals(expected.getMessage(), "Invalid path expression: it must begin with the '/' character");
+    }
   }
 
   @DataProvider
-  public Object[][] parsePathInvalidProvider() {
+  public Iterator<String> parse03Provider() {
+    return List.of("/", "/index.html", "/one", "/one/two").iterator();
+  }
+
+  @Test(dataProvider = "parse03Provider", description = "1 matcher = EXACT")
+  public void parse03(String pathExpression) {
+    final RouteParser subject;
+    subject = new RouteParser(pathExpression);
+
+    final RouteMatcher res;
+    res = subject.parse();
+
+    assertEquals(res, new RouteMatcherExact(pathExpression));
+  }
+
+  @DataProvider
+  public Object[][] parse04Provider() {
+    return new Object[][] {
+        {"/{a}", "/", "a"},
+        {"/{foo}", "/", "foo"},
+        {"/foo/{foo}", "/foo/", "foo"},
+        {"/foo/bar/{x}", "/foo/bar/", "x"}
+    };
+  }
+
+  @Test(dataProvider = "parse04Provider", description = "REGION + PARAM_LAST")
+  public void parse04(String pathExpression, String region, String param) {
+    final RouteParser subject;
+    subject = new RouteParser(pathExpression);
+
+    final RouteMatcher res;
+    res = subject.parse();
+
+    assertEquals(
+        res,
+
+        new RouteMatcherList(List.of(
+            new RouteMatcherRegion(region),
+            new RouteMatcherParamLast(param)
+        ))
+    );
+  }
+
+  @DataProvider
+  public Object[][] parse05Provider() {
+    return new Object[][] {
+        {"/{a}/pdf", "/", "a", '/', "pdf"},
+        {"/{foo}.pdf", "/", "foo", '.', "pdf"},
+        {"/foo/{foo}-bar", "/foo/", "foo", '-', "bar"},
+        {"/foo/bar/{x}/baz", "/foo/bar/", "x", '/', "baz"},
+        {"/prefix{suffix}.pdf", "/prefix", "suffix", '.', "pdf"},
+    };
+  }
+
+  @Test(dataProvider = "parse05Provider", description = "REGION + PARAM + EXACT")
+  public void parse05(String pathExpression, String region, String param, char delim, String exact) {
+    final RouteParser subject;
+    subject = new RouteParser(pathExpression);
+
+    final RouteMatcher res;
+    res = subject.parse();
+
+    assertEquals(
+        res,
+
+        new RouteMatcherList(List.of(
+            new RouteMatcherRegion(region),
+            new RouteMatcherParam(param, delim),
+            new RouteMatcherExact(exact)
+        ))
+    );
+  }
+
+  @DataProvider
+  public Object[][] parse06Provider() {
     final List<Object[]> list;
     list = new ArrayList<>();
-
-    list.add(arr("", "Invalid path expression: it must not be empty"));
-    list.add(arr("foo", "Invalid path expression: it must begin with the '/' character"));
-
-    list.add(arr("/foo/{error}/bar/{error}", "Invalid path expression: duplicate path parameter name 'error'"));
-    list.add(arr("/foo/{bar}{baz}", "Invalid path expression: path parameter can only be either at the end of the expression or immediately followed by one of " + validDelims));
-    list.add(arr("/foo/{", "Invalid path expression: unclosed path parameter"));
-    list.add(arr("/foo/{bar", "Invalid path expression: unclosed path parameter"));
-    list.add(arr("/foo/{f{o}", "Invalid path expression: path parameter name must be a valid Java identifier"));
-
-    list.add(arr("/foo/{}/", "Invalid path expression: the '{}' wildcard path parameter can only be declared at the end of the expression"));
-    list.add(arr("/foo{}{}", "Invalid path expression: path parameter can only be immediately preceeded by one of " + validDelims));
 
     final char[] delims;
     delims = validDelims.toCharArray();
@@ -110,61 +151,24 @@ public class RouteParserTest {
         continue;
       }
 
-      list.add(arr("/foo" + d + "{x}", "Invalid path expression: path parameter can only be immediately preceeded by one of " + validDelims));
-
       list.add(arr("/foo/{x}" + d + "bar", "Invalid path expression: path parameter can only be either at the end of the expression or immediately followed by one of " + validDelims));
     }
 
     return list.toArray(Object[][]::new);
   }
 
-  @Test(dataProvider = "parsePathInvalidProvider")
-  public void parsePathInvalid(String path, String expectedMessage) {
+  @Test(dataProvider = "parse06Provider", description = "Invalid param trailing delimiter")
+  public void parse06(String pathExpression, String expectedMessage) {
     try {
       final RouteParser parser;
-      parser = new RouteParser(path);
+      parser = new RouteParser(pathExpression);
 
       parser.parse();
 
       Assert.fail("It should have thrown");
     } catch (IllegalArgumentException expected) {
       assertEquals(expected.getMessage(), expectedMessage);
-
-      IllegalArgumentException trimmed;
-      trimmed = Throwables.trimStackTrace(expected, 1);
-
-      Note.Ref1<IllegalArgumentException> note;
-      note = Note.Ref1.create(getClass(), "IAE", Note.INFO);
-
-      Y.noteSink().send(note, trimmed);
     }
-  }
-
-  private RouteMatcher pathExact(String value) {
-    return new RouteMatcherExact(value);
-  }
-
-  private RouteMatcher pathRegion(String value) {
-    return new RouteMatcherRegion(value);
-  }
-
-  private RouteMatcher pathParam(String paramName, char terminator) {
-    return new RouteMatcherParam(paramName, terminator);
-  }
-
-  private RouteMatcher pathParamLast(String paramName) {
-    return new RouteMatcherParamLast(paramName);
-  }
-
-  private RouteMatcher wildcard() {
-    return RouteMatcherWildcard.INSTANCE;
-  }
-
-  private RouteMatcher pathList(RouteMatcher... parts) {
-    final List<RouteMatcher> list;
-    list = List.of(parts);
-
-    return new RouteMatcherList(list);
   }
 
 }

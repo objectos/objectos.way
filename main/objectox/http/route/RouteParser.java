@@ -16,267 +16,138 @@
 package objectox.http.route;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import objectox.http.Rfc;
+import objectos.internal.VisibleForTesting;
 
 public final class RouteParser {
 
-  enum State {
-    START,
-
-    EXACT,
-
-    PARAM,
-
-    REGION,
-
-    RESULT_EXACT,
-
-    RESULT_LIST;
-  }
-
-  private static final char[] DELIMS;
-
-  static {
-    final String pathDelim;
-    pathDelim = Rfc.pathDelim();
-
-    final char[] delims;
-    delims = pathDelim.toCharArray();
-
-    Arrays.sort(delims);
-
-    DELIMS = delims;
-  }
+  private int index;
 
   private Set<String> paramNames = Set.of();
 
   private final String pathExpression;
 
-  private int pathIndex;
-
   private final List<RouteMatcher> segments = new ArrayList<>();
 
-  private int startIndex;
-
-  private State state = State.START;
+  private boolean stop;
 
   public RouteParser(String pathExpression) {
     this.pathExpression = pathExpression;
   }
 
+  @VisibleForTesting
+  RouteParser(String pathExpression, int index) {
+    this.pathExpression = pathExpression;
+
+    this.index = index;
+  }
+
   public final RouteMatcher parse() {
-    while (true) {
-      switch (state) {
-        case START -> new RouteParserStart(this).parse();
+    final RouteParserStart start;
+    start = new RouteParserStart(this);
 
-        case EXACT -> state = state1Exact();
+    start.execute();
 
-        case PARAM -> state = state2Param();
+    do {
+      final RouteParserLeft left;
+      left = new RouteParserLeft(this);
 
-        case REGION -> state = state3Region();
+      left.execute();
 
-        case RESULT_EXACT -> {
-          return new RouteMatcherExact(pathExpression);
-        }
-
-        case RESULT_LIST -> {
-          return new RouteMatcherList(segments);
-        }
+      if (stop) {
+        break;
       }
-    }
+
+      final RouteParserRight right;
+      right = new RouteParserRight(this);
+
+      right.execute();
+    } while (!stop);
+
+    return switch (segments.size()) {
+      case 0 -> throw new IllegalStateException("segments is empty");
+
+      case 1 -> segments.get(0);
+
+      default -> {
+        final List<RouteMatcher> copy;
+        copy = List.copyOf(segments);
+
+        yield new RouteMatcherList(copy);
+      }
+    };
   }
 
   public final Set<String> paramNames() {
     return paramNames;
   }
 
-  private State state1Exact() {
-    final int bracket;
-    bracket = pathExpression.indexOf('{', pathIndex);
-
-    if (bracket >= 0) {
-      return stateParamStart(bracket);
-    }
-
-    return State.RESULT_EXACT;
-  }
-
-  private State state2Param() {
-    final int bracket;
-    bracket = pathExpression.indexOf('}', pathIndex);
-
-    if (bracket < 0) {
-      final String msg;
-      msg = "Invalid path expression: unclosed path parameter";
-
-      throw new IllegalArgumentException(msg);
-    }
-
-    final String name;
-    name = pathExpression.substring(pathIndex, bracket);
-
-    final int lastIndex;
-    lastIndex = pathExpression.length() - 1;
-
-    final boolean last;
-    last = bracket == lastIndex;
-
-    if (name.isEmpty() && last) {
-      segments.add(RouteMatcherWildcard.INSTANCE);
-
-      return State.RESULT_LIST;
-    }
-
-    else if (name.isEmpty() && !last) {
-      final String msg;
-      msg = "Invalid path expression: the '{}' wildcard path parameter can only be declared at the end of the expression";
-
-      throw new IllegalArgumentException(msg);
-    }
-
-    // validate path parameter name
-    final boolean valid;
-    valid = name.codePoints().skip(1).allMatch(Character::isJavaIdentifierPart);
-
-    if (!valid) {
-      final String msg;
-      msg = "Invalid path expression: path parameter name must be a valid Java identifier";
-
-      throw new IllegalArgumentException(msg);
-    }
-
-    final int first;
-    first = name.codePointAt(0);
-
-    if (!Character.isJavaIdentifierStart(first)) {
-      final String msg;
-      msg = "Invalid path expression: path parameter name must be a valid Java identifier";
-
-      throw new IllegalArgumentException(msg);
-    }
-
+  final boolean add(String paramName) {
     if (paramNames.isEmpty()) {
       paramNames = new HashSet<>();
     }
 
-    if (!paramNames.add(name)) {
-      final String msg;
-      msg = "Invalid path expression: duplicate path parameter name '%s'".formatted(name);
-
-      throw new IllegalArgumentException(msg);
-    }
-
-    if (last) {
-      final RouteMatcher matcher;
-      matcher = new RouteMatcherParamLast(name);
-
-      segments.add(matcher);
-
-      return State.RESULT_LIST;
-    }
-
-    final int delimIndex;
-    delimIndex = bracket + 1;
-
-    final char delim;
-    delim = pathExpression.charAt(delimIndex);
-
-    final int validDelim;
-    validDelim = Arrays.binarySearch(DELIMS, delim);
-
-    if (validDelim < 0) {
-      final String msg;
-      msg = "Invalid path expression: path parameter can only be either at the end of the expression or immediately followed by one of " + Rfc.pathDelim();
-
-      throw new IllegalArgumentException(msg);
-    }
-
-    final RouteMatcher matcher;
-    matcher = new RouteMatcherParam(name, delim);
-
-    segments.add(matcher);
-
-    pathIndex = startIndex = delimIndex + 1;
-
-    return State.REGION;
+    return paramNames.add(paramName);
   }
 
-  private State state3Region() {
-    final int bracket;
-    bracket = pathExpression.indexOf('{', pathIndex);
-
-    if (bracket >= 0) {
-      return stateParamStart(bracket);
-    }
-
-    final String value;
-    value = pathExpression.substring(startIndex);
-
-    final RouteMatcher segment;
-    segment = new RouteMatcherExact(value);
-
+  final void add(RouteMatcher segment) {
     segments.add(segment);
-
-    return State.RESULT_LIST;
   }
 
-  private State stateParamStart(int bracket) {
-    final char delim;
-    delim = pathExpression.charAt(bracket - 1);
-
-    final int delimIdx;
-    delimIdx = Arrays.binarySearch(DELIMS, delim);
-
-    if (delimIdx < 0) {
-      final String msg;
-      msg = "Invalid path expression: path parameter can only be immediately preceeded by one of " + Rfc.pathDelim();
-
-      throw new IllegalArgumentException(msg);
-    }
-
-    if (startIndex < bracket) {
-      final String value;
-      value = pathExpression.substring(startIndex, bracket);
-
-      final RouteMatcher segment;
-      segment = new RouteMatcherRegion(value);
-
-      segments.add(segment);
-    }
-
-    startIndex = bracket;
-
-    pathIndex = startIndex + 1;
-
-    return State.PARAM;
+  final void end() {
+    stop = true;
   }
 
   final boolean hasNext() {
-    return pathIndex < pathExpression.length();
+    return index < pathExpression.length();
+  }
+
+  final int index() {
+    return index;
+  }
+
+  final int indexOf(char c) {
+    return pathExpression.indexOf(c, index);
+  }
+
+  final int length() {
+    return pathExpression.length();
   }
 
   final char next() {
-    return pathExpression.charAt(pathIndex++);
+    return pathExpression.charAt(index++);
   }
 
-  final int pathIndex() {
-    return pathIndex;
+  final char peek() {
+    return pathExpression.charAt(index);
   }
 
-  final int startIndex() {
-    return startIndex;
+  final Iterable<RouteMatcher> segments() {
+    return segments;
   }
 
-  final State state() {
-    return state;
+  final boolean stop() {
+    return stop;
   }
 
-  final void state(State value) {
-    state = value;
+  final String substring(int beginIndex) {
+    final String result;
+    result = pathExpression.substring(beginIndex);
+
+    index = pathExpression.length();
+
+    return result;
+  }
+
+  final String substring(int beginIndex, int endIndex) {
+    final String result;
+    result = pathExpression.substring(beginIndex, endIndex);
+
+    index = endIndex + 1;
+
+    return result;
   }
 
 }
