@@ -24,10 +24,9 @@ public record HandlerList(List<Handler> handlers) implements Handler {
 
   public HandlerList {
     if (handlers.isEmpty()) {
-      final String msg;
-      msg = "Handler list must not be empty";
-
-      throw new IllegalArgumentException(msg);
+      throw new IllegalArgumentException(
+          "Handler list must not be empty"
+      );
     }
   }
 
