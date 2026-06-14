@@ -18,7 +18,7 @@ package objectos.http;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.function.Consumer;
-import objectox.http.HandlerNoop;
+import objectox.http.handler.HandlerNoop;
 
 final class HostBuilder implements HostOptions {
 

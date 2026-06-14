@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 import objectos.way.Y;
 import objectos.y.SocketY;
-import objectox.http.HandlerNoop;
+import objectox.http.handler.HandlerNoop;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 

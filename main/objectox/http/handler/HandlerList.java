@@ -13,18 +13,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.http;
+package objectox.http.handler;
 
+import java.util.List;
 import objectos.http.Handler;
 import objectos.http.Request;
 import objectos.http.Result;
 
-public enum HandlerNoop implements Handler {
+public record HandlerList(List<Handler> handlers) implements Handler {
 
-  INSTANCE;
+  public HandlerList {
+    if (handlers.isEmpty()) {
+      final String msg;
+      msg = "Handler list must not be empty";
+
+      throw new IllegalArgumentException(msg);
+    }
+  }
+
+  public static HandlerList copyOf(List<Handler> handlers) {
+    final List<Handler> copy;
+    copy = List.copyOf(handlers);
+
+    return new HandlerList(copy);
+  }
 
   @Override
   public final Result handle(Request request) {
+    for (Handler handler : handlers) {
+      final Result result;
+      result = handler.handle(request);
+
+      if (result != request) {
+        return result;
+      }
+    }
+
     return request;
   }
 

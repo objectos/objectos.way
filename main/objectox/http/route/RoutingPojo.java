@@ -25,7 +25,7 @@ import objectos.http.Handler;
 import objectos.http.HttpHandler;
 import objectos.http.Routing;
 import objectos.http.RoutingOption;
-import objectox.http.HandlerNoop;
+import objectox.http.handler.HandlerNoop;
 
 public final class RoutingPojo implements Routing {
 
