@@ -13,14 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.http.route;
+package objectox.http.handler;
 
-public enum RouteMatcherWildcard implements RouteMatcher {
+import java.util.List;
 
-  INSTANCE;
+public record RouteMatcherList(List<RouteMatcher> list) implements RouteMatcher {
 
   @Override
-  public final boolean matches(RoutePath http) {
+  public final boolean matches(RoutePath path) {
+    for (RouteMatcher matcher : list) {
+      if (!matcher.matches(path)) {
+        path.clear();
+
+        return false;
+      }
+    }
+
     return true;
   }
 

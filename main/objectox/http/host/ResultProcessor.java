@@ -20,11 +20,11 @@ import objectos.http.ContentProvider;
 import objectos.http.HttpHeaderName;
 import objectos.http.HttpStatus;
 import objectos.http.MediaType;
-import objectos.http.Redirect;
+import objectos.http.Redirection;
 import objectos.http.Request;
 import objectos.http.Response;
 import objectos.http.Result;
-import objectox.http.RedirectPojo;
+import objectox.http.RedirectionPojo;
 import objectox.http.media.StaticFileContent;
 import objectox.http.resp.ResponseBuilder;
 
@@ -53,7 +53,7 @@ class ResultProcessor {
         yield processContent(content);
       }
 
-      case Redirect r -> processRedirect(r);
+      case Redirection r -> processRedirect(r);
 
       case Request r -> processRequest(r);
 
@@ -78,9 +78,9 @@ class ResultProcessor {
     return builder.build();
   }
 
-  protected Response processRedirect(Redirect redirect) {
-    final RedirectPojo pojo;
-    pojo = (RedirectPojo) redirect;
+  protected Response processRedirect(Redirection redirect) {
+    final RedirectionPojo pojo;
+    pojo = (RedirectionPojo) redirect;
 
     final ResponseBuilder builder;
     builder = new ResponseBuilder();

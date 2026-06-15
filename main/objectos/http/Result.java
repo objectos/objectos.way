@@ -22,7 +22,7 @@ public sealed interface Result
     permits
     Content,
     ContentProvider,
-    Redirect,
+    Redirection,
     Request,
     Response,
     StaticFile,

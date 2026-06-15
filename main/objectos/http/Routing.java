@@ -15,7 +15,7 @@
  */
 package objectos.http;
 
-import objectox.http.route.RoutingPojo;
+import objectox.http.handler.RoutingPojo;
 
 /// Allows for creating a `Handler` instance by declaring HTTP routes.
 ///

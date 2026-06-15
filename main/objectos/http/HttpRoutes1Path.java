@@ -25,7 +25,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 import objectos.http.HttpRoutes.Option;
 import objectox.http.RequestMethodEnum;
-import objectox.http.route.RouteMatcher;
+import objectox.http.handler.RouteMatcher;
 
 final class HttpRoutes1Path {
 

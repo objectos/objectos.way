@@ -31,7 +31,7 @@ import objectos.http.HttpHeaderName;
 import objectos.http.HttpHeaderValueBuilder;
 import objectos.http.HttpStatus;
 import objectos.http.MediaType;
-import objectos.http.Redirect;
+import objectos.http.Redirection;
 import objectos.http.Response;
 import objectos.lang.Throwables;
 import objectos.y.InputStreamY;
@@ -598,7 +598,7 @@ public class ServerTaskTest9ResultResponse {
           final String location;
           location = "/foo/" + veryLargeHex;
 
-          opts.host("www.example.com", _ -> Redirect.found(location));
+          opts.host("www.example.com", _ -> Redirection.found(location));
 
           opts.socket = SocketY.create(config -> {
             config.inputStream = InputStreamY.of("""

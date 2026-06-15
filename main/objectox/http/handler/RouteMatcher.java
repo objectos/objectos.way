@@ -13,22 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.http.route;
+package objectox.http.handler;
 
-public record RouteMatcherParam(String paramName, char terminator) implements RouteMatcher {
+import java.util.function.Predicate;
+import objectos.http.Request;
+
+public sealed interface RouteMatcher
+    extends Predicate<Request>
+    permits
+    RouteMatcherExact,
+    RouteMatcherRegion,
+    RouteMatcherParam,
+    RouteMatcherParamLast,
+    RouteMatcherWildcard,
+    RouteMatcherList {
+
+  boolean matches(RoutePath path);
 
   @Override
-  public final boolean matches(RoutePath path) {
-    final int terminatorIndex;
-    terminatorIndex = path.indexOf(terminator);
+  default boolean test(Request request) {
+    final String path;
+    path = request.path();
 
-    if (terminatorIndex < 0) {
-      return false;
-    } else {
-      path.param(paramName, terminatorIndex);
+    final RoutePath routePath;
+    routePath = new RoutePath(path);
 
-      return true;
-    }
+    return matches(routePath);
   }
 
 }

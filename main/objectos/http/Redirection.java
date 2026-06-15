@@ -16,10 +16,14 @@
 package objectos.http;
 
 import objectox.http.HttpStatus0;
-import objectox.http.RedirectPojo;
+import objectox.http.RedirectionPojo;
 
 /// A redirection message.
-public sealed interface Redirect extends Result permits RedirectPojo {
+public sealed interface Redirection
+    extends
+    Result,
+    RoutingOption
+    permits RedirectionPojo {
 
   /// Returns a new `301 Moved Permanently` redirection with the specified
   /// `Location` header.
@@ -27,8 +31,8 @@ public sealed interface Redirect extends Result permits RedirectPojo {
   /// @param location the value of the `Location` header
   ///
   /// @return a newly created redirection message
-  static Redirect movedPermanently(String location) {
-    return RedirectPojo.of(HttpStatus0.MOVED_PERMANENTLY, location);
+  static Redirection movedPermanently(String location) {
+    return RedirectionPojo.of(HttpStatus0.MOVED_PERMANENTLY, location);
   }
 
   /// Returns a new `302 Found` redirection with the specified `Location`
@@ -37,8 +41,8 @@ public sealed interface Redirect extends Result permits RedirectPojo {
   /// @param location the value of the `Location` header
   ///
   /// @return a newly created redirection message
-  static Redirect found(String location) {
-    return RedirectPojo.of(HttpStatus0.FOUND, location);
+  static Redirection found(String location) {
+    return RedirectionPojo.of(HttpStatus0.FOUND, location);
   }
 
   /// Returns a new `303 See Other` redirection with the specified `Location`
@@ -47,8 +51,8 @@ public sealed interface Redirect extends Result permits RedirectPojo {
   /// @param location the value of the `Location` header
   ///
   /// @return a newly created redirection message
-  static Redirect seeOther(String location) {
-    return RedirectPojo.of(HttpStatus0.SEE_OTHER, location);
+  static Redirection seeOther(String location) {
+    return RedirectionPojo.of(HttpStatus0.SEE_OTHER, location);
   }
 
 }

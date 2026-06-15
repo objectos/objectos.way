@@ -13,33 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.http.route;
+package objectox.http.handler;
 
-final class RouteParserStart {
+public enum RouteMatcherWildcard implements RouteMatcher {
 
-  final RouteParser ctx;
+  INSTANCE;
 
-  RouteParserStart(RouteParser ctx) {
-    this.ctx = ctx;
-  }
-
-  public final void execute() {
-    if (!ctx.hasNext()) {
-      final String msg;
-      msg = "Invalid path expression: it must not be empty";
-
-      throw new IllegalArgumentException(msg);
-    }
-
-    final char first;
-    first = ctx.peek();
-
-    if (first != '/') {
-      final String msg;
-      msg = "Invalid path expression: it must begin with the '/' character";
-
-      throw new IllegalArgumentException(msg);
-    }
+  @Override
+  public final boolean matches(RoutePath http) {
+    return true;
   }
 
 }

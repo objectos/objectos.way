@@ -17,7 +17,7 @@ package objectox.http.srv;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.http.Redirect;
+import objectos.http.Redirection;
 import org.testng.annotations.Test;
 
 public class ServerTaskTest9ResultRedirect {
@@ -33,7 +33,7 @@ public class ServerTaskTest9ResultRedirect {
           \r
           """);
 
-          opts.host("www.example.com", _ -> Redirect.movedPermanently("/login"));
+          opts.host("www.example.com", _ -> Redirection.movedPermanently("/login"));
         }),
 
         """
@@ -57,7 +57,7 @@ public class ServerTaskTest9ResultRedirect {
           \r
           """);
 
-          opts.host("www.example.com", _ -> Redirect.movedPermanently("/product/café/😀"));
+          opts.host("www.example.com", _ -> Redirection.movedPermanently("/product/café/😀"));
         }),
 
         """
@@ -87,7 +87,7 @@ public class ServerTaskTest9ResultRedirect {
           \r
           """);
 
-          opts.host("www.example.com", _ -> Redirect.movedPermanently(location));
+          opts.host("www.example.com", _ -> Redirection.movedPermanently(location));
         }),
 
         """
@@ -111,7 +111,7 @@ public class ServerTaskTest9ResultRedirect {
           \r
           """);
 
-          opts.host("www.example.com", _ -> Redirect.found("/login"));
+          opts.host("www.example.com", _ -> Redirection.found("/login"));
         }),
 
         """
@@ -135,7 +135,7 @@ public class ServerTaskTest9ResultRedirect {
           \r
           """);
 
-          opts.host("www.example.com", _ -> Redirect.found("/product/café/😀"));
+          opts.host("www.example.com", _ -> Redirection.found("/product/café/😀"));
         }),
 
         """
@@ -165,7 +165,7 @@ public class ServerTaskTest9ResultRedirect {
           \r
           """);
 
-          opts.host("www.example.com", _ -> Redirect.found(location));
+          opts.host("www.example.com", _ -> Redirection.found(location));
         }),
 
         """
@@ -189,7 +189,7 @@ public class ServerTaskTest9ResultRedirect {
           \r
           """);
 
-          opts.host("www.example.com", _ -> Redirect.seeOther("/page"));
+          opts.host("www.example.com", _ -> Redirection.seeOther("/page"));
         }),
 
         """
@@ -213,7 +213,7 @@ public class ServerTaskTest9ResultRedirect {
           \r
           """);
 
-          opts.host("www.example.com", _ -> Redirect.seeOther("/product/café/😀"));
+          opts.host("www.example.com", _ -> Redirection.seeOther("/product/café/😀"));
         }),
 
         """
@@ -243,7 +243,7 @@ public class ServerTaskTest9ResultRedirect {
           \r
           """);
 
-          opts.host("www.example.com", _ -> Redirect.seeOther(location));
+          opts.host("www.example.com", _ -> Redirection.seeOther(location));
         }),
 
         """

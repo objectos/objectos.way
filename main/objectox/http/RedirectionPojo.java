@@ -13,27 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.http.route;
+package objectox.http;
 
-import objectos.http.Handler;
-import objectos.http.Request;
-import objectos.http.Result;
+import java.util.Objects;
+import objectos.http.Redirection;
 
-record Route(RouteMatcher matcher, Handler handler) implements Handler {
+public record RedirectionPojo(HttpStatus0 status, String location) implements Redirection {
 
-  @Override
-  public final Result handle(Request request) {
-    final String path;
-    path = request.path();
+  public static Redirection of(HttpStatus0 status, String location) {
+    final String l;
+    l = Objects.requireNonNull(location, "location == null");
 
-    final RoutePath routePath;
-    routePath = new RoutePath(path);
+    final String raw;
+    raw = Rfc.raw(l);
 
-    if (matcher.matches(routePath)) {
-      return handler.handle(request);
-    } else {
-      return request;
-    }
+    return new RedirectionPojo(status, raw);
   }
 
 }

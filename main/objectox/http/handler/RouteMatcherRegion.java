@@ -13,23 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.http.route;
+package objectox.http.handler;
 
-import java.util.List;
-
-public record RouteMatcherList(List<RouteMatcher> list) implements RouteMatcher {
+public record RouteMatcherRegion(String value) implements RouteMatcher {
 
   @Override
   public final boolean matches(RoutePath path) {
-    for (RouteMatcher matcher : list) {
-      if (!matcher.matches(path)) {
-        path.clear();
-
-        return false;
-      }
-    }
-
-    return true;
+    return path.matches(value);
   }
 
 }

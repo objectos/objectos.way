@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.http.route;
+package objectox.http.handler;
 
 import static org.testng.Assert.assertEquals;
 
@@ -21,17 +21,17 @@ import java.util.Map;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class RouteMatcherParamTest {
+public class RouteMatcherParamLastTest {
 
-  private final RouteMatcher matcher = new RouteMatcherParam("test", '/');
+  private final RouteMatcher matcher = new RouteMatcherParamLast("test");
 
   @DataProvider
   public Object[][] validProvider() {
     return new Object[][] {
-        {"/foo/", 1, "foo"},
-        {"/bar/foo/", 5, "foo"},
-        {"/bar/foo/more", 5, "foo"},
-        {"/bar//", 5, ""}
+        {"/foo/", 1, "foo/"},
+        {"/bar/foo/", 5, "foo/"},
+        {"/bar/foo/more", 5, "foo/more"},
+        {"/bar//", 5, "/"}
     };
   }
 
@@ -43,23 +43,6 @@ public class RouteMatcherParamTest {
     assertEquals(matcher.matches(http), true);
 
     assertEquals(http.params, Map.of("test", value));
-  }
-
-  @DataProvider
-  public Object[][] invalidProvider() {
-    return new Object[][] {
-        {"/foo", 1},
-        {"/bar/foo", 5},
-        {"/bar/foo/more", 9}
-    };
-  }
-
-  @Test(dataProvider = "invalidProvider")
-  public void invalid(String path, int index) {
-    final RoutePath http;
-    http = new RoutePath(path, index);
-
-    assertEquals(matcher.matches(http), false);
   }
 
 }

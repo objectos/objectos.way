@@ -13,20 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.http.route;
+package objectox.http.handler;
 
-public record RouteMatcherExact(String exact) implements RouteMatcher {
+public record RouteMatcherParam(String paramName, char terminator) implements RouteMatcher {
 
   @Override
   public final boolean matches(RoutePath path) {
-    final int thisLength;
-    thisLength = path.length();
+    final int terminatorIndex;
+    terminatorIndex = path.indexOf(terminator);
 
-    final int thatLength;
-    thatLength = exact.length();
+    if (terminatorIndex < 0) {
+      return false;
+    } else {
+      path.param(paramName, terminatorIndex);
 
-    return thisLength == thatLength
-        && path.matches(exact);
+      return true;
+    }
   }
 
 }

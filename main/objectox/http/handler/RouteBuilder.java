@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.http.route;
+package objectox.http.handler;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import objectos.http.Handler;
+import objectos.http.Redirection;
 import objectos.http.Response;
-import objectox.http.handler.HandlerList;
-import objectox.http.handler.HandlerNoop;
-import objectox.http.handler.HandlerResult;
+import objectos.http.Result;
 
 final class RouteBuilder {
 
@@ -53,17 +52,12 @@ final class RouteBuilder {
     };
   }
 
-  public final void addResponse(Response response) {
-    if (result) {
-      final String msg;
-      msg = "A result has already been set";
+  public final void addRedirect(Redirection value) {
+    addResult(value);
+  }
 
-      throw new IllegalStateException(msg);
-    }
-
-    add(new HandlerResult(response));
-
-    result = true;
+  public final void addResponse(Response value) {
+    addResult(value);
   }
 
   private void add(Handler handler) {
@@ -72,6 +66,22 @@ final class RouteBuilder {
     }
 
     handlers.add(handler);
+  }
+
+  private void addResult(Result value) {
+    if (result) {
+      final String msg;
+      msg = "A result has already been set";
+
+      throw new IllegalStateException(msg);
+    }
+
+    final Handler handler;
+    handler = new HandlerResult(value);
+
+    add(handler);
+
+    result = true;
   }
 
 }

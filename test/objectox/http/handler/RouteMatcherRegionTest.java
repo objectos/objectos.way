@@ -13,40 +13,52 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.http.route;
+package objectox.http.handler;
 
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
-import java.util.Iterator;
-import java.util.List;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class RouteMatcherExactTest {
+public class RouteMatcherRegionTest {
 
-  private final RouteMatcher matcher = new RouteMatcherExact("/foo");
+  private final RouteMatcher matcher = new RouteMatcherRegion("/foo");
 
-  private boolean match(String path) {
-    final RoutePath pojo;
-    pojo = new RoutePath(path);
+  private boolean matches(String path, int index) {
+    final RoutePath http;
+    http = new RoutePath(path, index);
 
-    return matcher.matches(pojo);
-  }
-
-  @Test
-  public void valid() {
-    assertTrue(match("/foo"));
+    return matcher.matches(http);
   }
 
   @DataProvider
-  public Iterator<String> invalidProvider() {
-    return List.of("/fooo", "/foo/", "/foo/bar", "/bar", "/").iterator();
+  public Object[][] validProvider() {
+    return new Object[][] {
+        {"/foo", 0},
+        {"/fooo", 0},
+        {"/bar/foo", 4},
+        {"/bar/foo/", 4}
+    };
+  }
+
+  @Test(dataProvider = "validProvider")
+  public void valid(String path, int index) {
+    assertTrue(matches(path, index));
+  }
+
+  @DataProvider
+  public Object[][] invalidProvider() {
+    return new Object[][] {
+        {"/foo", 1},
+        {"/bar/foo", 3},
+        {"/bar/foo/", 5}
+    };
   }
 
   @Test(dataProvider = "invalidProvider")
-  public void invalid(String path) {
-    assertFalse(match(path));
+  public void invalid(String path, int index) {
+    assertFalse(matches(path, index));
   }
 
 }

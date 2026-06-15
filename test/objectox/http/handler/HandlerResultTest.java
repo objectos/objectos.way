@@ -24,7 +24,7 @@ import objectos.http.Content;
 import objectos.http.Handler;
 import objectos.http.HttpStatus;
 import objectos.http.MediaType;
-import objectos.http.Redirect;
+import objectos.http.Redirection;
 import objectos.http.Response;
 import objectos.http.Result;
 import objectos.http.StaticFile;
@@ -38,7 +38,7 @@ public class HandlerResultTest {
     return List.<Result> of(
         Content.of(MediaType.TEXT_PLAIN, "foo"),
 
-        Redirect.found("/login"),
+        Redirection.found("/login"),
 
         Response.create(_ -> {}),
 

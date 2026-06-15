@@ -13,20 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.http.route;
+package objectox.http.handler;
 
 import static org.testng.Assert.assertEquals;
+
 import java.util.function.Consumer;
 import objectos.http.HttpStatus;
+import objectos.http.Redirection;
 import objectos.http.Response;
-import objectox.http.handler.HandlerResult;
 import org.testng.annotations.Test;
 
 public class RouteBuilderTest {
 
   private final RouteMatcher matcher = new RouteMatcherExact("/");
 
-  private final Response okResp = Response.create(opts -> {
+  private final Redirection redir = Redirection.movedPermanently("/");
+
+  private final Response resp = Response.create(opts -> {
     opts.status(HttpStatus.OK);
   });
 
@@ -39,16 +42,28 @@ public class RouteBuilderTest {
     return builder.build();
   }
 
-  @Test(description = "add(response)")
-  public void addResponse01() {
+  @Test(description = "add(redir)")
+  public void addRedirect01() {
     final Route subject;
     subject = create(r -> {
-      r.addResponse(okResp);
+      r.addRedirect(redir);
     });
 
     assertEquals(subject.matcher(), matcher);
 
-    assertEquals(subject.handler(), new HandlerResult(okResp));
+    assertEquals(subject.handler(), new HandlerResult(redir));
+  }
+
+  @Test(description = "add(response)")
+  public void addResponse01() {
+    final Route subject;
+    subject = create(r -> {
+      r.addResponse(resp);
+    });
+
+    assertEquals(subject.matcher(), matcher);
+
+    assertEquals(subject.handler(), new HandlerResult(resp));
   }
 
 }

@@ -13,17 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.http.route;
+package objectox.http.handler;
 
-public sealed interface RouteMatcher
-    permits
-    RouteMatcherExact,
-    RouteMatcherRegion,
-    RouteMatcherParam,
-    RouteMatcherParamLast,
-    RouteMatcherWildcard,
-    RouteMatcherList {
+import org.testng.annotations.Test;
 
-  boolean matches(RoutePath path);
+public class RouteTest {
+
+  @Test(description = "pass-through if ")
+  public void handle01() {
+
+  }
 
 }

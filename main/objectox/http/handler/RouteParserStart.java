@@ -13,11 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectox.http.handler;
 
-/// An object that can be used as an option for a route declaration.
-public sealed interface RoutingOption
-    permits
-    Redirection,
-    RequestMethod,
-    Response {}
+final class RouteParserStart {
+
+  final RouteParser ctx;
+
+  RouteParserStart(RouteParser ctx) {
+    this.ctx = ctx;
+  }
+
+  public final void execute() {
+    if (!ctx.hasNext()) {
+      final String msg;
+      msg = "Invalid path expression: it must not be empty";
+
+      throw new IllegalArgumentException(msg);
+    }
+
+    final char first;
+    first = ctx.peek();
+
+    if (first != '/') {
+      final String msg;
+      msg = "Invalid path expression: it must begin with the '/' character";
+
+      throw new IllegalArgumentException(msg);
+    }
+  }
+
+}

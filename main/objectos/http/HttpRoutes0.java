@@ -20,8 +20,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import objectox.http.route.RouteMatcher;
-import objectox.http.route.RouteParser;
+import objectox.http.handler.RouteMatcher;
+import objectox.http.handler.RouteParser;
 
 final class HttpRoutes0 implements HttpRoutes {
 
