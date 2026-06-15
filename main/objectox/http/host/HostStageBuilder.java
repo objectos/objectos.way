@@ -28,9 +28,7 @@ import objectox.http.media.StaticFilesBuilder;
 import objectox.http.session.SessionSupport;
 import objectox.http.session.SessionSupportBuilder;
 
-public final class HostBuilder implements HostOptions {
-
-  private final HostGlobals globals;
+public final class HostStageBuilder implements HostOptions {
 
   private Handler handler = HandlerNoop.INSTANCE;
 
@@ -40,13 +38,31 @@ public final class HostBuilder implements HostOptions {
 
   private StaticFiles staticFiles;
 
-  HostBuilder(HostGlobals globals) {
-    this.globals = globals;
+  public final HostStage build() {
+    return new HostStage(
+        handler,
+
+        name,
+
+        sessionSupport,
+
+        staticFiles
+    );
   }
 
   @Override
   public final void name(String value) {
     name = Objects.requireNonNull(value, "value == null");
+
+    final int colon;
+    colon = name.indexOf(':');
+
+    if (colon != -1) {
+      final String msg;
+      msg = "Invalid host name: names must not include the port number '%s'".formatted(name);
+
+      throw new IllegalArgumentException(msg);
+    }
   }
 
   @Override
@@ -86,32 +102,6 @@ public final class HostBuilder implements HostOptions {
     opts.accept(builder);
 
     staticFiles = builder.build();
-  }
-
-  public final Host build() {
-    return new Host(
-        handler,
-
-        $name(),
-
-        new ResultProcessor(),
-
-        sessionSupport != null ? sessionSupport.request() : _ -> {},
-
-        sessionSupport != null ? sessionSupport.response() : (_, _) -> {},
-
-        staticFiles != null ? staticFiles : (_, result) -> result
-    );
-  }
-
-  private String $name() {
-    final int port;
-    port = globals.port();
-
-    final HostName hostName;
-    hostName = new HostName(name, port);
-
-    return hostName.get();
   }
 
 }

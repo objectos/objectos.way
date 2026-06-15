@@ -18,14 +18,9 @@ package objectox.http.srv;
 import java.io.IOException;
 import java.net.ServerSocket;
 import objectos.http.Server;
+import objectox.http.host.HostMap;
 
-public final class ServerPojo implements Server {
-
-  private final ServerSocket serverSocket;
-
-  ServerPojo(ServerSocket serverSocket) {
-    this.serverSocket = serverSocket;
-  }
+public record ServerPojo(HostMap hosts, ServerSocket serverSocket) implements Server {
 
   @Override
   public final void close() throws IOException {

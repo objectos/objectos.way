@@ -24,13 +24,13 @@ import java.util.Objects;
 import objectos.http.HttpHeaderName;
 import objectos.http.Request;
 import objectos.http.RequestMethod;
-import objectos.http.Request.Options;
+import objectos.http.RequestOptions;
 import objectox.http.RequestMethodEnum;
 import objectox.http.Version0;
 import objectox.http.session.Session;
 import objectox.http.session.SessionPojo;
 
-public final class RequestBuilder implements Options {
+public final class RequestBuilder implements RequestOptions {
 
   private final RequestAttributes attributes = new RequestAttributes();
 

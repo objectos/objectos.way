@@ -37,8 +37,8 @@ public final class HostY implements HostGlobals {
   }
 
   private Host build() {
-    final HostBuilder builder;
-    builder = new HostBuilder(this);
+    final HostStageBuilder builder;
+    builder = new HostStageBuilder();
 
     builder.handler(handler);
 
@@ -48,7 +48,10 @@ public final class HostY implements HostGlobals {
       builder.session(session);
     }
 
-    return builder.build();
+    final HostStage stage;
+    stage = builder.build();
+
+    return stage.toHost(this);
   }
 
   @Override

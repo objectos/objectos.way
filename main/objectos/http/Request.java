@@ -34,45 +34,12 @@ import objectox.http.req.RequestPojo;
 /// interface are decoded.
 public sealed interface Request extends Result permits RequestPojo {
 
-  /// Configures the creation of a stand-alone request instance.
-  sealed interface Options permits RequestBuilder {
-
-    /// Adds the specified header field to this request.
-    ///
-    /// @param name the header field name
-    /// @param value the header field value
-    void header(HttpHeaderName name, String value);
-
-    /// Sets the request method to the specified value. Defaults to the `GET`
-    /// method when not specified.
-    ///
-    /// @param value the HTTP method
-    void method(RequestMethod value);
-
-    /// Sets the request-target path component to the specified value. Defaults
-    /// to `/` when not specified.
-    ///
-    /// @param value the decoded path value
-    void path(String value);
-
-    /// Associates a session to this request and store the provided key-value
-    /// pair in the former.
-    ///
-    /// @param <T> the type of the attribute
-    /// @param key the class object providing the attribute name
-    /// @param value the value to be stored
-    ///
-    /// @return the previously associated value or `null`
-    <T> T sessionAttr(Class<T> key, T value);
-
-  }
-
   /// Creates a stand-alone request instance; typically used in test cases.
   ///
   /// @param opts allows for setting the options
   ///
   /// @return a newly created request instance with the configured options
-  static Request create(Consumer<? super Options> opts) {
+  static Request create(Consumer<? super RequestOptions> opts) {
     final RequestBuilder builder;
     builder = new RequestBuilder();
 

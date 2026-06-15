@@ -17,10 +17,10 @@ package objectos.http;
 
 import java.io.IOException;
 import java.util.function.Consumer;
-import objectox.http.host.HostBuilder;
+import objectox.http.host.HostStageBuilder;
 
 /// Configures a name-based web site to be served by a `Server` instance.
-public sealed interface HostOptions permits HostBuilder {
+public sealed interface HostOptions permits HostStageBuilder {
 
   /// Sets the name of this host.
   ///

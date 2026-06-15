@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import objectos.http.HttpHeaderName;
 import objectos.http.Response;
+import objectos.http.ResponseOptions;
 import objectox.http.Header;
 import objectox.http.HttpStatus0;
 
@@ -38,7 +39,7 @@ public record ResponsePojo(
 
 ) implements Response {
 
-  public static ResponsePojo create0(Consumer<? super Options> opts) {
+  public static ResponsePojo create0(Consumer<? super ResponseOptions> opts) {
     final ResponseBuilder builder;
     builder = new ResponseBuilder();
 

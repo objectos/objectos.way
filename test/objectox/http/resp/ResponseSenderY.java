@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.time.Clock;
 import java.util.function.Consumer;
-import objectos.http.Response;
+import objectos.http.ResponseOptions;
 import objectos.way.Y;
 
 final class ResponseSenderY {
@@ -41,7 +41,7 @@ final class ResponseSenderY {
     return y.build();
   }
 
-  public static String send(Consumer<? super ResponseSenderY> opts, Consumer<? super Response.Options> resp) throws IOException {
+  public static String send(Consumer<? super ResponseSenderY> opts, Consumer<? super ResponseOptions> resp) throws IOException {
     final ResponseSenderY y;
     y = new ResponseSenderY();
 

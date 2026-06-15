@@ -20,19 +20,94 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.SocketAddress;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import objectos.http.HostOptions;
 import objectos.http.ServerOptions;
 import objectos.way.Note.Sink;
+import objectox.http.host.Host;
+import objectox.http.host.HostGlobals;
+import objectox.http.host.HostMap;
+import objectox.http.host.HostStage;
+import objectox.http.host.HostStageBuilder;
 
-public final class ServerBuilder implements ServerOptions {
+public final class ServerBuilder
+    implements
+    ServerOptions {
 
   private InetAddress address;
 
+  private final Map<String, HostStage> hosts = new LinkedHashMap<>();
+
   private int port;
 
+  @Override
+  public final void host(Consumer<? super HostOptions> opts) {
+    final HostStageBuilder builder;
+    builder = new HostStageBuilder();
+
+    opts.accept(builder);
+
+    final HostStage stage;
+    stage = builder.build();
+
+    final String name;
+    name = stage.name();
+
+    final HostStage existing;
+    existing = hosts.put(name, stage);
+
+    if (existing != null) {
+      final String msg;
+      msg = "A host with the same name was already registered: %s".formatted(name);
+
+      throw new IllegalArgumentException(msg);
+    }
+  }
+
+  @Override
+  public final void noteSink(Sink value) {
+
+  }
+
+  @Override
+  public final void port(int value) {
+    if (value < 0 || value > 0xFFFF) {
+      throw new IllegalArgumentException("Invalid port: value must be in the interval 0 <= value < 65536 but found " + value);
+    }
+
+    this.port = value;
+  }
+
+  private record Globals(int port) implements HostGlobals {}
+
   public final ServerPojo build() throws IOException {
-    // socketAddress
+    final ServerSocket serverSocket;
+    serverSocket = buildServerSocket();
+
+    int localPort;
+    localPort = serverSocket.getLocalPort();
+
+    final Globals globals;
+    globals = new Globals(localPort);
+
+    return new ServerPojo(
+        buildHostMap(globals),
+
+        serverSocket
+    );
+  }
+
+  private HostMap buildHostMap(HostGlobals globals) {
+    final List<Host> list;
+    list = hosts.values().stream().map(stage -> stage.toHost(globals)).toList();
+
+    return HostMap.of(list);
+  }
+
+  private ServerSocket buildServerSocket() throws IOException {
     final InetAddress a;
 
     if (address == null) {
@@ -50,25 +125,7 @@ public final class ServerBuilder implements ServerOptions {
 
     serverSocket.bind(socketAddress);
 
-    return new ServerPojo(serverSocket);
-  }
-
-  @Override
-  public final void host(Consumer<? super HostOptions> opts) {
-  }
-
-  @Override
-  public final void noteSink(Sink value) {
-
-  }
-
-  @Override
-  public final void port(int value) {
-    if (value < 0 || value > 0xFFFF) {
-      throw new IllegalArgumentException("Invalid port: value must be in the interval 0 <= value < 65536 but found " + value);
-    }
-
-    this.port = value;
+    return serverSocket;
   }
 
 }

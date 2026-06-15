@@ -63,11 +63,18 @@ public sealed abstract class HostMap {
 
   public abstract Host get(String hostValue);
 
+  public abstract int size();
+
   private static final class HostMap0 extends HostMap {
 
     @Override
     public final Host get(String hostValue) {
       return null;
+    }
+
+    @Override
+    public final int size() {
+      return 0;
     }
 
   }
@@ -87,6 +94,11 @@ public sealed abstract class HostMap {
       }
 
       return null;
+    }
+
+    @Override
+    public final int size() {
+      return 1;
     }
 
   }
@@ -116,6 +128,11 @@ public sealed abstract class HostMap {
       return null;
     }
 
+    @Override
+    public final int size() {
+      return 2;
+    }
+
   }
 
   private static final class HostMapN extends HostMap {
@@ -129,6 +146,11 @@ public sealed abstract class HostMap {
     @Override
     public final Host get(String hostValue) {
       return map.get(hostValue);
+    }
+
+    @Override
+    public final int size() {
+      return map.size();
     }
 
   }

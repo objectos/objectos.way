@@ -25,12 +25,12 @@ import objectos.http.Content;
 import objectos.http.HttpHeaderName;
 import objectos.http.HttpHeaderValueBuilder;
 import objectos.http.HttpStatus;
-import objectos.http.Response;
+import objectos.http.ResponseOptions;
 import objectox.http.Header;
 import objectox.http.HttpHeaderValueBuilderImpl;
 import objectox.http.HttpStatus0;
 
-public final class ResponseBuilder implements Response.Options {
+public final class ResponseBuilder implements ResponseOptions {
 
   private ResponseEntity entity = ResponseEntity.OfEmpty.INSTANCE;
 

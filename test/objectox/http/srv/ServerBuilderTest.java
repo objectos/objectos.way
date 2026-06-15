@@ -16,10 +16,14 @@
 package objectox.http.srv;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.function.Consumer;
+import objectos.http.HostOptions;
+import objectox.http.host.HostMap;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -27,7 +31,59 @@ public class ServerBuilderTest {
 
   @Test(description = "reject null")
   public void host01() {
+    final ServerBuilder subject;
+    subject = new ServerBuilder();
 
+    try {
+      subject.host(null);
+
+      Assert.fail("It should have thrown");
+    } catch (NullPointerException expected) {}
+  }
+
+  @Test(description = "accept")
+  public void host02() throws IOException {
+    final ServerBuilder subject;
+    subject = new ServerBuilder();
+
+    final Consumer<? super HostOptions> opts;
+    opts = host -> {
+      host.name("www.example.com");
+    };
+
+    subject.host(opts);
+
+    final ServerPojo pojo;
+    pojo = subject.build();
+
+    final HostMap res;
+    res = pojo.hosts();
+
+    assertEquals(res.size(), 1);
+    assertNotNull(res.get("www.example.com:" + pojo.port()));
+  }
+
+  @Test(description = "reject host duplicate name")
+  public void host03() {
+    final ServerBuilder subject;
+    subject = new ServerBuilder();
+
+    try {
+      subject.host(host -> {
+        host.name("duplicate.example.com");
+      });
+
+      subject.host(host -> {
+        host.name("duplicate.example.com");
+      });
+
+      Assert.fail("It should have thrown");
+    } catch (IllegalArgumentException expected) {
+      final String msg;
+      msg = expected.getMessage();
+
+      assertEquals(msg, "A host with the same name was already registered: duplicate.example.com");
+    }
   }
 
   @Test(description = "reject negative")

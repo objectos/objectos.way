@@ -15,7 +15,7 @@
  */
 package objectox.http.host;
 
-interface HostGlobals {
+public interface HostGlobals {
 
   int port();
 
