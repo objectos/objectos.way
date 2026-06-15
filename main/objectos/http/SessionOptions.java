@@ -18,6 +18,7 @@ package objectos.http;
 import java.time.Duration;
 import java.time.InstantSource;
 import java.util.random.RandomGenerator;
+import objectox.http.session.SessionSupportBuilder;
 
 /// Configures the HTTP session related options of a `Server` instance.
 public sealed interface SessionOptions permits SessionSupportBuilder {

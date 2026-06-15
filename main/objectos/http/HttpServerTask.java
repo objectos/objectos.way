@@ -17,20 +17,17 @@ package objectos.http;
 
 import module java.base;
 import module objectos.way;
+import objectox.http.HttpClientException;
+import objectox.http.HttpServerException;
 import objectox.http.RequestMethodEnum;
+import objectox.http.req.RequestBodySupport;
+import objectox.http.req.RequestBodySupportFactory;
+import objectox.http.req.RequestHeaders;
+import objectox.http.req.RequestParser;
+import objectox.http.req.RequestPojo;
+import objectox.http.srv.ServerTaskMessage;
 
 final class HttpServerTask implements Runnable {
-
-  sealed interface Message
-      permits
-      HttpClientException,
-      HttpServerException {
-
-    HttpStatus status();
-
-    String message();
-
-  }
 
   static final Note.Long1Ref1<Throwable> THROW = Note.Long1Ref1.create(HttpServerTask.class, "THR", Note.ERROR);
 
@@ -172,7 +169,7 @@ final class HttpServerTask implements Runnable {
         : !response.closeConnection();
   }
 
-  private void handle(OutputStream outputStream, Message exception) {
+  private void handle(OutputStream outputStream, ServerTaskMessage exception) {
     final HttpResponse0 response;
     response = new HttpResponse0(buffer, clock, errorResponses, head, id, noteSink, outputStream, false);
 

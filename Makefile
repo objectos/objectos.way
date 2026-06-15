@@ -167,7 +167,12 @@ TEST_ADD_EXPORTS += objectos.way/objectos.way.dev=org.testng
 TEST_ADD_EXPORTS += objectos.way/objectos.y=org.testng
 TEST_ADD_EXPORTS += objectos.way/objectox.http=org.testng
 TEST_ADD_EXPORTS += objectos.way/objectox.http.handler=org.testng
+TEST_ADD_EXPORTS += objectos.way/objectox.http.host=org.testng
+TEST_ADD_EXPORTS += objectos.way/objectox.http.media=org.testng
+TEST_ADD_EXPORTS += objectos.way/objectox.http.req=org.testng
+TEST_ADD_EXPORTS += objectos.way/objectox.http.resp=org.testng
 TEST_ADD_EXPORTS += objectos.way/objectox.http.route=org.testng
+TEST_ADD_EXPORTS += objectos.way/objectox.http.session=org.testng
 TEST_ADD_EXPORTS += objectos.way/objectox.http.srv=org.testng
 
 ## test --add-reads

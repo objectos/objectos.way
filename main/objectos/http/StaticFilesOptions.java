@@ -16,6 +16,7 @@
 package objectos.http;
 
 import java.nio.file.Path;
+import objectox.http.media.StaticFilesBuilder;
 
 /// Configures the static files to be served by a `Server` instance.
 public sealed interface StaticFilesOptions permits StaticFilesBuilder {

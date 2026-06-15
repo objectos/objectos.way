@@ -34,7 +34,15 @@ import objectos.internal.NoOpSinkSingleton;
 import objectos.internal.Util;
 import objectos.lang.Key;
 import objectos.way.Note;
+import objectox.http.HttpToken;
 import objectox.http.RequestMethodEnum;
+import objectox.http.Rfc;
+import objectox.http.Version0;
+import objectox.http.req.RequestAttributes;
+import objectox.http.req.RequestBodyData;
+import objectox.http.req.RequestBodyForm;
+import objectox.http.req.RequestHeaders;
+import objectox.http.req.RequestPojo;
 
 final class HttpExchangeBuilder implements HttpExchange.Options {
 
@@ -113,7 +121,7 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
       formParams = new LinkedHashMap<>();
     }
 
-    Http.queryParamsAdd(formParams, name, value);
+    Rfc.queryParamsAdd(formParams, name, value);
   }
 
   @SuppressWarnings("unchecked")
@@ -221,7 +229,7 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
       queryParams = new LinkedHashMap<>();
     }
 
-    Http.queryParamsAdd(queryParams, name, value);
+    Rfc.queryParamsAdd(queryParams, name, value);
   }
 
   @Override

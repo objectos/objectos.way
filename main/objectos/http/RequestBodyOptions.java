@@ -15,6 +15,8 @@
  */
 package objectos.http;
 
+import objectox.http.req.RequestBodyOptionsBuilder;
+
 /// Configures the request body options of a `Server` instance.
 public sealed interface RequestBodyOptions permits RequestBodyOptionsBuilder {
 

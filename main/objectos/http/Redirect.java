@@ -15,6 +15,9 @@
  */
 package objectos.http;
 
+import objectox.http.HttpStatus0;
+import objectox.http.RedirectPojo;
+
 /// A redirection message.
 public sealed interface Redirect extends Result permits RedirectPojo {
 

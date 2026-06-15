@@ -15,6 +15,8 @@
  */
 package objectos.http;
 
+import objectox.http.HttpStatus0;
+
 /**
  * The status of an HTTP response message.
  */

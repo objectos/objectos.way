@@ -17,6 +17,8 @@ package objectos.http;
 
 import java.nio.file.Path;
 import java.util.function.Consumer;
+import objectox.http.resp.ResponseBuilder;
+import objectox.http.resp.ResponsePojo;
 
 /// An HTTP response message.
 public sealed interface Response

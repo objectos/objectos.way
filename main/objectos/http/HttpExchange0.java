@@ -18,6 +18,8 @@ package objectos.http;
 import module java.base;
 import module objectos.way;
 import objectos.lang.Key;
+import objectox.http.Version;
+import objectox.http.req.RequestPojo;
 
 final class HttpExchange0 implements HttpExchange {
 

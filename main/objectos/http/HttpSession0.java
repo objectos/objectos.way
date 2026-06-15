@@ -23,6 +23,7 @@ import java.util.Objects;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import objectos.lang.Key;
+import objectox.http.HttpToken;
 
 final class HttpSession0 implements HttpSession {
 

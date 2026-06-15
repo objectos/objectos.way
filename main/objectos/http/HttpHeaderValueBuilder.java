@@ -16,6 +16,7 @@
 package objectos.http;
 
 import java.nio.charset.Charset;
+import objectox.http.HttpHeaderValueBuilderImpl;
 
 /**
  * Configures the creation of a header value.

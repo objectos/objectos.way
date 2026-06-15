@@ -22,9 +22,9 @@ import objectox.http.srv.ServerBuilder;
 /// Configures the creation of an HTTP server.
 public sealed interface ServerOptions permits ServerBuilder {
 
-  /// Adds the specified name-based host to this server.
+  /// Adds a host with the specified configuration to this server.
   ///
-  /// @param opts allows for setting the options
+  /// @param opts allows for setting the host options
   void host(Consumer<? super HostOptions> opts);
 
   /// Sets the note sink to the specified value.

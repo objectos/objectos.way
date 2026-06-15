@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import objectos.internal.Bytes;
+import objectox.http.Rfc;
 
 final class HttpResponse3Chunked extends OutputStream {
 
@@ -190,7 +191,7 @@ final class HttpResponse3Chunked extends OutputStream {
     // must hold at least 1 digit of the chunk-size
     maxDataLength -= 1;
 
-    return Http.requiredHexDigits(maxDataLength);
+    return Rfc.requiredHexDigits(maxDataLength);
   }
 
   private void writeChunkEnd() {
@@ -205,14 +206,14 @@ final class HttpResponse3Chunked extends OutputStream {
     chunkLength = bufferIndex - dataIndex;
 
     final int hexDigits;
-    hexDigits = Http.requiredHexDigits(chunkLength);
+    hexDigits = Rfc.requiredHexDigits(chunkLength);
 
     for (int i = 0; i < hexDigits; i++) {
       final int nibble;
       nibble = chunkLength & 0xF;
 
       final byte digit;
-      digit = Http.hexDigit(nibble);
+      digit = Rfc.hexDigit(nibble);
 
       buffer[sizeIndex--] = digit;
 

@@ -25,6 +25,8 @@ import java.util.function.LongSupplier;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 import objectos.lang.Key;
+import objectox.http.req.RequestBuilder;
+import objectox.http.req.RequestPojo;
 
 /// An HTTP request message.
 ///

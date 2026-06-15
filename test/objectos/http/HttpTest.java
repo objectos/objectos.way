@@ -17,6 +17,7 @@ package objectos.http;
 
 import static org.testng.Assert.assertEquals;
 
+import objectox.http.Rfc;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -46,7 +47,7 @@ public class HttpTest {
 
   @Test(dataProvider = "rawValidProvider")
   public void rawValid(String source, String expected, String description) {
-    assertEquals(Http.raw(source), expected);
+    assertEquals(Rfc.raw(source), expected);
   }
 
   @DataProvider
@@ -61,7 +62,7 @@ public class HttpTest {
   @Test(dataProvider = "rawInvalidProvider")
   public void rawInvalid(String source, String expectedMessage) {
     try {
-      Http.raw(source);
+      Rfc.raw(source);
 
       Assert.fail("It should have thrown");
     } catch (IllegalArgumentException expected) {
@@ -162,18 +163,18 @@ public class HttpTest {
   @Test(dataProvider = "rfc8187ValidProvider")
   public void rfc8187Valid(String source, String expected, String description) {
     final String result;
-    result = Http.rfc8187(source);
+    result = Rfc.rfc8187(source);
 
     assertEquals(result, expected);
   }
 
   @Test
   public void requiredHexDigits() {
-    assertEquals(Http.requiredHexDigits(0b0000), 1);
-    assertEquals(Http.requiredHexDigits(0b0001), 1);
-    assertEquals(Http.requiredHexDigits(0b1000), 1);
-    assertEquals(Http.requiredHexDigits(0b1111), 1);
-    assertEquals(Http.requiredHexDigits(0b1_0000), 2);
+    assertEquals(Rfc.requiredHexDigits(0b0000), 1);
+    assertEquals(Rfc.requiredHexDigits(0b0001), 1);
+    assertEquals(Rfc.requiredHexDigits(0b1000), 1);
+    assertEquals(Rfc.requiredHexDigits(0b1111), 1);
+    assertEquals(Rfc.requiredHexDigits(0b1_0000), 2);
   }
 
 }

@@ -16,6 +16,7 @@
 package objectos.http;
 
 import java.util.Objects;
+import objectox.http.Rfc;
 
 record HttpResponse1Header(HttpHeaderName name, String value) {
 
@@ -57,43 +58,43 @@ record HttpResponse1Header(HttpHeaderName name, String value) {
       c = value.charAt(idx);
 
       if (c >= 128) {
-        throw Http.invalidFieldContent(idx, c);
+        throw Rfc.invalidFieldContent(idx, c);
       }
 
       final byte flag;
-      flag = Http.HEADER_VALUE_TABLE[c];
+      flag = Rfc.HEADER_VALUE_TABLE[c];
 
       switch (parser) {
         case START -> {
-          if (flag == Http.HEADER_VALUE_VALID) {
+          if (flag == Rfc.HEADER_VALUE_VALID) {
             parser = ValueParser.NORMAL;
           }
 
-          else if (flag == Http.HEADER_VALUE_WS) {
+          else if (flag == Rfc.HEADER_VALUE_WS) {
             throw new IllegalArgumentException("Leading SPACE or HTAB characters are not allowed");
           }
 
           else {
-            throw Http.invalidFieldContent(idx, c);
+            throw Rfc.invalidFieldContent(idx, c);
           }
         }
 
         case NORMAL, WS -> {
-          if (flag == Http.HEADER_VALUE_VALID) {
+          if (flag == Rfc.HEADER_VALUE_VALID) {
             parser = ValueParser.NORMAL;
           }
 
-          else if (flag == Http.HEADER_VALUE_WS) {
+          else if (flag == Rfc.HEADER_VALUE_WS) {
             parser = ValueParser.WS;
           }
 
           else {
-            throw Http.invalidFieldContent(idx, c);
+            throw Rfc.invalidFieldContent(idx, c);
           }
         }
 
         case INVALID -> {
-          throw Http.invalidFieldContent(idx, c);
+          throw Rfc.invalidFieldContent(idx, c);
         }
       }
     }

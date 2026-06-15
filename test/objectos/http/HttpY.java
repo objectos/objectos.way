@@ -27,6 +27,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import objectox.http.HttpToken;
+import objectox.http.Rfc;
 import org.testng.Assert;
 
 @SuppressWarnings("exports")
@@ -246,7 +248,7 @@ public final class HttpY {
     valid = new boolean[256];
 
     final String validString;
-    validString = Http.unreserved() + Http.subDelims() + ":@/?";
+    validString = Rfc.unreserved() + Rfc.subDelims() + ":@/?";
 
     for (int idx = 0, len = validString.length(); idx < len; idx++) {
       final char c;

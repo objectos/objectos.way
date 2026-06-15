@@ -18,6 +18,8 @@ package objectos.http;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import objectos.lang.BinaryObject;
+import objectox.http.media.ContentBinaryObject;
+import objectox.http.media.ContentBytes;
 
 /// Represents content associated to a `MediaType` to be transmitted over the
 /// HTTP protocol.

@@ -15,6 +15,8 @@
  */
 package objectos.http;
 
+import objectox.http.media.MediaTypePojo;
+
 /// Represents a media type such as `text/html; charset=utf-8`
 /// and `application/json`.
 public sealed interface MediaType permits MediaTypePojo {

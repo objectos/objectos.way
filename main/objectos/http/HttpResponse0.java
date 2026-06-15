@@ -17,7 +17,10 @@ package objectos.http;
 
 import module java.base;
 import module objectos.way;
+import objectox.http.HttpHeaderValueBuilderImpl;
+import objectox.http.HttpStatus0;
 import objectox.http.RequestMethodEnum;
+import objectox.http.Rfc;
 
 final class HttpResponse0 implements HttpResponse {
 
@@ -135,7 +138,7 @@ final class HttpResponse0 implements HttpResponse {
     Objects.requireNonNull(location, "location == null");
 
     final String raw;
-    raw = Http.raw(location);
+    raw = Rfc.raw(location);
 
     header(HttpHeaderName.DATE, now());
 

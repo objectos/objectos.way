@@ -17,6 +17,7 @@ package objectos.http;
 
 import java.io.IOException;
 import java.util.function.Consumer;
+import objectox.http.host.HostBuilder;
 
 /// Configures a name-based web site to be served by a `Server` instance.
 public sealed interface HostOptions permits HostBuilder {

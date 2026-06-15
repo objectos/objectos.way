@@ -22,6 +22,8 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.random.RandomGenerator;
+import objectox.http.HttpToken;
+import objectox.http.Rfc;
 
 final class HttpSessionStoreBuilder implements HttpSessionStore.Options {
 
@@ -57,7 +59,7 @@ final class HttpSessionStoreBuilder implements HttpSessionStore.Options {
     validTable = new boolean[128];
 
     final String tchar;
-    tchar = Http.tchar();
+    tchar = Rfc.tchar();
 
     for (int idx = 0, len = tchar.length(); idx < len; idx++) {
       final char c;

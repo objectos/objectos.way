@@ -22,9 +22,9 @@ import objectos.http.Handler;
 import objectos.http.HttpStatus;
 import objectos.http.Request;
 import objectos.http.RequestMethod;
-import objectos.http.RequestMethodY;
 import objectos.http.Response;
 import objectos.http.Result;
+import objectox.http.req.RequestMethodY;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 

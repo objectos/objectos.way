@@ -24,7 +24,9 @@ import java.util.function.Consumer;
 import java.util.random.RandomGenerator;
 import objectos.way.Y;
 import objectos.y.RandomGeneratorY;
+import objectox.http.HttpToken;
 import objectox.http.RequestMethodEnum;
+import objectox.http.Rfc;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -36,7 +38,7 @@ public class HttpSessionStoreTest {
   public Object[][] createCookieNameProvider() {
     return new Object[][] {
         {true, "all valid characters",
-            Http.tchar(), ""},
+            Rfc.tchar(), ""},
 
         {false, "empty",
             "", "Cookie name must not be blank"},

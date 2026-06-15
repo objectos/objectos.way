@@ -1,0 +1,156 @@
+/*
+ * Copyright (C) 2025-2026 Objectos Software LTDA.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package objectox.http.req;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertSame;
+
+import module java.base;
+import objectos.lang.Throwables;
+import objectos.way.Y;
+import objectos.y.SocketY;
+import objectox.http.HttpClientException;
+import objectox.http.RequestMethodEnum;
+import org.testng.Assert;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+
+@SuppressWarnings("exports")
+public class RequestParser2MethodTest {
+
+  private RequestMethodEnum parse(Object... data) throws IOException {
+    final Socket socket;
+    socket = SocketY.of(data);
+
+    final RequestParser0Input input;
+    input = RequestParser0Input.of(512, socket);
+
+    final RequestParser2Method parser;
+    parser = new RequestParser2Method(input);
+
+    return parser.parse();
+  }
+
+  @DataProvider
+  public Iterator<RequestMethodEnum> methodProvider() {
+    return Stream.of(RequestMethodEnum.VALUES).iterator();
+  }
+
+  @Test(dataProvider = "methodProvider", description = "method: valid")
+  public void parse01(RequestMethodEnum method) throws IOException {
+    assertEquals(
+        parse(
+            """
+            %s /index.html HTTP/1.1\r
+            Host: www.example.com\r
+            \r
+            """.formatted(method.name())
+        ),
+
+        method
+    );
+  }
+
+  @Test(dataProvider = "methodProvider", description = "method: valid + slow client")
+  public void parse03(RequestMethodEnum method) throws IOException {
+    if (!method.implemented) {
+      return;
+    }
+
+    assertEquals(
+        parse(
+            Y.slowStream(1, """
+            %s /index.html HTTP/1.1\r
+            Host: www.example.com\r
+            \r
+            """.formatted(method.name()))
+        ),
+
+        method
+    );
+  }
+
+  @DataProvider
+  public Object[][] badRequestProvider() {
+    return new Object[][] {
+        {
+            "",
+            "EOF while parsing method"
+        },
+        {
+            """
+            XYZ /path?key=value HTTP/1.1\r
+            Host: www.example.com\r
+            \r
+            """,
+            "Unexpected byte 0x58 while parsing method first char"
+        },
+        {
+            """
+            \r
+            \r
+            """,
+            "Unexpected byte 0x0D while parsing method first char"
+        },
+        {
+            """
+            POS /login HTTP/1.1\r
+            Host: www.example.com\r
+            \r
+            """,
+            "Unexpected byte 0x20 while parsing method POST"
+        }
+    };
+  }
+
+  @Test(dataProvider = "badRequestProvider")
+  public void badRequest(String request, String message) throws IOException {
+    try {
+      parse(
+          request
+      );
+
+      Assert.fail("It should have thrown");
+    } catch (HttpClientException expected) {
+      assertEquals(expected.getMessage(), message);
+
+      assertEquals(expected.kind, HttpClientException.Kind.INVALID_REQUEST_LINE);
+    }
+  }
+
+  @DataProvider
+  public Object[][] ioExceptionProvider() {
+    return new Object[][] {
+        {"GE", Throwables.trimStackTrace(new IOException(), 1), ""},
+        {"POS", Throwables.trimStackTrace(new IOException(), 1), ""}
+    };
+  }
+
+  @Test(dataProvider = "ioExceptionProvider")
+  public void ioException(String request, IOException ex, String description) {
+    try {
+      parse(
+          request,
+          ex
+      );
+
+      Assert.fail("It should have thrown");
+    } catch (IOException expected) {
+      assertSame(expected, ex);
+    }
+  }
+
+}

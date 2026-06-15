@@ -16,6 +16,7 @@
 package objectos.http;
 
 import objectos.way.Media;
+import objectox.http.HttpStatus0;
 
 interface HttpErrorResponses {
 

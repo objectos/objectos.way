@@ -16,15 +16,68 @@
 package objectox.http.srv;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class ServerBuilderTest {
 
+  @Test(description = "reject null")
+  public void host01() {
+
+  }
+
+  @Test(description = "reject negative")
+  public void port01() {
+    final ServerBuilder subject;
+    subject = new ServerBuilder();
+
+    try {
+      subject.port(-1);
+
+      Assert.fail("It should have thrown");
+    } catch (IllegalArgumentException expected) {
+      final String msg;
+      msg = expected.getMessage();
+
+      assertEquals(msg, "Invalid port: value must be in the interval 0 <= value < 65536 but found -1");
+    }
+  }
+
+  @Test(description = "reject above 0xffff")
+  public void port02() {
+    final ServerBuilder subject;
+    subject = new ServerBuilder();
+
+    try {
+      subject.port(0xFFFF + 1);
+
+      Assert.fail("It should have thrown");
+    } catch (IllegalArgumentException expected) {
+      final String msg;
+      msg = expected.getMessage();
+
+      assertEquals(msg, "Invalid port: value must be in the interval 0 <= value < 65536 but found 65536");
+    }
+  }
+
   @Test
-  public void port() throws IOException {
+  public void port03() throws IOException {
+    final ServerBuilder subject;
+    subject = new ServerBuilder();
+
+    try (ServerPojo res = subject.build()) {
+      assertTrue(res.port() > 0);
+
+      assertTrue(res.port() < 0xFFFF);
+    }
+  }
+
+  @Test
+  public void port04() throws IOException {
     final ServerBuilder subject;
     subject = new ServerBuilder();
 

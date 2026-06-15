@@ -22,7 +22,7 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import objectos.lang.BinaryObject;
 
-final class ContentY {
+public final class ContentY {
 
   private static final int LINE_LENGTH = 50;
 

@@ -18,6 +18,7 @@ package objectos.http;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import objectos.way.Media;
+import objectox.http.HttpStatus0;
 
 final class HttpErrorResponses0 implements HttpErrorResponses {
 

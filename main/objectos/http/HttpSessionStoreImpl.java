@@ -22,12 +22,15 @@ import java.util.EnumSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 import java.util.random.RandomGenerator;
-import objectos.http.HttpToken.ParseException;
 import objectos.internal.Ascii;
 import objectos.internal.NoOpSinkSingleton;
 import objectos.way.Media;
 import objectos.way.Note;
+import objectox.http.HttpCsrfToken;
+import objectox.http.HttpToken;
 import objectox.http.RequestMethodEnum;
+import objectox.http.SameSite;
+import objectox.http.HttpToken.ParseException;
 
 final class HttpSessionStoreImpl implements HttpSessionLoader, HttpSessionStore {
 
@@ -64,7 +67,7 @@ final class HttpSessionStoreImpl implements HttpSessionLoader, HttpSessionStore 
 
   private final String cookiePath;
 
-  private Http.SameSite cookieSameSite;
+  private SameSite cookieSameSite;
 
   private boolean cookieSecure = true;
 

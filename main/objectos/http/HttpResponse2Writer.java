@@ -26,6 +26,9 @@ import java.nio.file.Path;
 import objectos.internal.Bytes;
 import objectos.lang.Testable;
 import objectos.way.Media;
+import objectox.http.HttpHeaderName0;
+import objectox.http.HttpStatus0;
+import objectox.http.Rfc;
 
 final class HttpResponse2Writer {
 
@@ -48,7 +51,7 @@ final class HttpResponse2Writer {
       final String response;
       response = Integer.toString(status.code()) + " " + status.reasonPhrase() + "\r\n";
 
-      map[index] = Http.utf8(response);
+      map[index] = Rfc.utf8(response);
     }
 
     STATUS_LINES = map;

@@ -1,0 +1,275 @@
+/*
+ * Copyright (C) 2025-2026 Objectos Software LTDA.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package objectox.http.srv;
+
+import static org.testng.Assert.assertEquals;
+
+import objectos.http.Content;
+import objectos.http.HttpHeaderName;
+import objectos.http.HttpStatus;
+import objectos.http.MediaType;
+import objectos.http.Response;
+import objectos.y.SocketY;
+import org.testng.annotations.Test;
+
+public class ServerTaskTest8KeepAlive {
+
+  @Test
+  public void shouldHandle01() {
+    assertEquals(
+        ServerTaskY.resp(opts -> {
+          opts.host("www.example.com", _ -> Content.of(MediaType.TEXT_PLAIN, "1"));
+
+          opts.socket("""
+          GET /1 HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """);
+        }),
+
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 1\r
+        \r
+        1\
+        """
+    );
+  }
+
+  @Test
+  public void shouldHandle02() {
+    assertEquals(
+        ServerTaskY.resp(opts -> {
+          opts.host("www.example.com", http -> Content.of(MediaType.TEXT_PLAIN, http.path().substring(1)));
+
+          opts.socket("""
+          GET /1 HTTP/1.1\r
+          Host: www.example.com\r
+          \r
+          """, """
+          GET /2 HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """);
+        }),
+
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 1\r
+        \r
+        1\
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 1\r
+        \r
+        2\
+        """
+    );
+  }
+
+  @Test
+  public void shouldHandle03() {
+    assertEquals(
+        ServerTaskY.resp(opts -> {
+          opts.host("www.example.com", http -> Content.of(MediaType.TEXT_PLAIN, http.path().substring(1)));
+
+          opts.socket("""
+          GET /1 HTTP/1.1\r
+          Connection: keep-alive\r
+          Host: www.example.com\r
+          \r
+          """, """
+          GET /2 HTTP/1.1\r
+          Host: www.example.com\r
+          Connection: close\r
+          \r
+          """);
+        }),
+
+        """
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 1\r
+        \r
+        1\
+        HTTP/1.1 200 OK\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 1\r
+        \r
+        2\
+        """
+    );
+  }
+
+  @Test(description = "should not: bad request")
+  public void shouldNot01() {
+    assertEquals(
+        ServerTaskY.resp(opts -> {
+          opts.socket("""
+          GET bad HTTP/1.1\r
+          Host: www.example.com\r
+          \r
+          """);
+        }),
+
+        """
+        HTTP/1.1 400 Bad Request\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Connection: close\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 22\r
+        \r
+        Invalid request line.
+        """
+    );
+  }
+
+  @Test(description = "explicit close in response")
+  public void shouldNot02() {
+    assertEquals(
+        ServerTaskY.resp(opts -> {
+          opts.host("www.example.com", _ -> Response.create(resp -> {
+            resp.status(HttpStatus.OK);
+            resp.header(HttpHeaderName.CONTENT_LENGTH, 0L);
+            resp.header(HttpHeaderName.CONNECTION, "close");
+          }));
+
+          opts.socket("""
+          GET /1 HTTP/1.1\r
+          Host: www.example.com\r
+          \r
+          """);
+        }),
+
+        """
+        HTTP/1.1 200 OK\r
+        Content-Length: 0\r
+        Connection: close\r
+        \r
+        """
+    );
+  }
+
+  @Test(description = "should not: no host header")
+  public void shouldNot03() {
+    assertEquals(
+        ServerTaskY.resp(opts -> {
+          opts.socket = SocketY.of("""
+          GET /1 HTTP/1.1\r
+          Referer: x\r
+          User-Agent: x\r
+          \r
+          """);
+        }),
+
+        """
+        HTTP/1.1 400 Bad Request\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Connection: close\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 13\r
+        \r
+        Host header.
+        """
+    );
+  }
+
+  @Test(description = "should not: empty host header")
+  public void shouldNot04() {
+    assertEquals(
+        ServerTaskY.resp(opts -> {
+          opts.socket = SocketY.of("""
+          GET /1 HTTP/1.1\r
+          Host: \r
+          Referer: x\r
+          User-Agent: x\r
+          \r
+          """);
+        }),
+
+        """
+        HTTP/1.1 400 Bad Request\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Connection: close\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 13\r
+        \r
+        Host header.
+        """
+    );
+  }
+
+  @Test(description = "should not: multiple host headers")
+  public void shouldNot05() {
+    assertEquals(
+        ServerTaskY.resp(opts -> {
+          opts.socket = SocketY.of("""
+          GET /1 HTTP/1.1\r
+          Host: www.example.com\r
+          Host: example.com\r
+          Referer: x\r
+          User-Agent: x\r
+          \r
+          """);
+        }),
+
+        """
+        HTTP/1.1 400 Bad Request\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Connection: close\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 13\r
+        \r
+        Host header.
+        """
+    );
+  }
+
+  @Test(description = "Transfer-Encoding not implemented")
+  public void shouldNot06() {
+    assertEquals(
+        ServerTaskY.resp(opts -> {
+          opts.socket = SocketY.of("""
+          POST /1 HTTP/1.1\r
+          Host: www.example.com\r
+          Transfer-Encoding: chunked\r
+          \r
+          x
+          """);
+        }),
+
+        """
+        HTTP/1.1 501 Not Implemented\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Connection: close\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 69\r
+        \r
+        Support for the request Transfer-Encoding header is not implemented.
+        """
+    );
+  }
+
+}

@@ -55,7 +55,6 @@ public final class ServerBuilder implements ServerOptions {
 
   @Override
   public final void host(Consumer<? super HostOptions> opts) {
-
   }
 
   @Override
@@ -66,7 +65,7 @@ public final class ServerBuilder implements ServerOptions {
   @Override
   public final void port(int value) {
     if (value < 0 || value > 0xFFFF) {
-      throw new IllegalArgumentException("port out of range:" + value);
+      throw new IllegalArgumentException("Invalid port: value must be in the interval 0 <= value < 65536 but found " + value);
     }
 
     this.port = value;

@@ -15,6 +15,8 @@
  */
 package objectos.http;
 
+import objectox.http.req.RequestPojo;
+
 final class HttpHost5Pojo implements HttpHandler {
 
   private final HttpHandler handler;

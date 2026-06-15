@@ -16,6 +16,7 @@
 package objectos.http;
 
 import java.util.Objects;
+import objectox.http.media.StaticFileContent;
 
 /// A result that writes the associated content as a static file and responds
 /// with a `200 OK` message. Subsequent requests to the same path are handled as
