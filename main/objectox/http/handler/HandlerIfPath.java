@@ -15,13 +15,25 @@
  */
 package objectox.http.handler;
 
-import org.testng.annotations.Test;
+import objectos.http.Handler;
+import objectos.http.Request;
+import objectos.http.Result;
 
-public class RouteTest {
+public record HandlerIfPath(RouteMatcher pathMatcher, Handler handler) implements Handler {
 
-  @Test(description = "pass-through if ")
-  public void handle01() {
+  @Override
+  public final Result handle(Request request) {
+    final String path;
+    path = request.path();
 
+    final RoutePath pathCtx;
+    pathCtx = new RoutePath(path);
+
+    if (pathMatcher.matches(pathCtx)) {
+      return handler.handle(request);
+    }
+
+    return request;
   }
 
 }

@@ -22,13 +22,12 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 import objectos.http.Handler;
-import objectos.http.HttpHandler;
 import objectos.http.Routing;
 import objectos.http.RoutingOption;
 
 public final class RoutingPojo implements Routing {
 
-  private final List<HttpHandler> handlers = new ArrayList<>();
+  private final List<Handler> handlers = new ArrayList<>();
 
   private Set<String> paths = Set.of();
 
@@ -62,7 +61,37 @@ public final class RoutingPojo implements Routing {
       throw new IllegalArgumentException(msg);
     }
 
-    throw new UnsupportedOperationException("Implement me");
+    final RouteParser pathMatcherParser;
+    pathMatcherParser = new RouteParser(path);
+
+    final RouteMatcher pathMatcher;
+    pathMatcher = pathMatcherParser.parse();
+
+    final RoutingAt at;
+    at = new RoutingAt(pathMatcher);
+
+    at.option(
+        Objects.requireNonNull(first, "first == null")
+    );
+
+    for (int idx = 0; idx < rest.length; idx++) {
+      final RoutingOption option;
+      option = rest[idx];
+
+      if (option == null) {
+        final String msg;
+        msg = "rest[%d] == null".formatted(idx);
+
+        throw new NullPointerException(msg);
+      }
+
+      at.option(option);
+    }
+
+    final Handler handler;
+    handler = at.build();
+
+    handlers.add(handler);
   }
 
 }

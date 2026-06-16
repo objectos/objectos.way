@@ -16,24 +16,19 @@
 package objectox.http.handler;
 
 import objectos.http.Handler;
-import objectos.http.Request;
-import objectos.http.Result;
+import objectos.http.RequestMethod;
 
-record Route(RouteMatcher matcher, Handler handler) implements Handler {
+final class RoutingAtMethod extends RoutingAtCommon {
+
+  private final RequestMethod method;
+
+  RoutingAtMethod(RequestMethod method) {
+    this.method = method;
+  }
 
   @Override
-  public final Result handle(Request request) {
-    final String path;
-    path = request.path();
-
-    final RoutePath routePath;
-    routePath = new RoutePath(path);
-
-    if (matcher.matches(routePath)) {
-      return handler.handle(request);
-    } else {
-      return request;
-    }
+  final Handler build(Handler handler) {
+    return new HandlerIfMethod(method, handler);
   }
 
 }

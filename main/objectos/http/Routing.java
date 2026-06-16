@@ -26,9 +26,9 @@ public sealed interface Routing permits RoutingPojo {
 
   /// Adds a route for the specified path with the specified options.
   ///
-  /// @param path a path expression
+  /// @param pathExpression a path expression
   /// @param first the first option
   /// @param rest the remaining options
-  void at(String path, RoutingOption first, RoutingOption... rest);
+  void at(String pathExpression, RoutingOption first, RoutingOption... rest);
 
 }

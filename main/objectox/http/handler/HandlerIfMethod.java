@@ -15,15 +15,27 @@
  */
 package objectox.http.handler;
 
-public sealed interface RouteMatcher
-    permits
-    RouteMatcherExact,
-    RouteMatcherRegion,
-    RouteMatcherParam,
-    RouteMatcherParamLast,
-    RouteMatcherWildcard,
-    RouteMatcherList {
+import objectos.http.Handler;
+import objectos.http.Request;
+import objectos.http.RequestMethod;
+import objectos.http.Result;
 
-  boolean matches(RoutePath path);
+record HandlerIfMethod(RequestMethod method, Handler handler) implements Handler {
+
+  @Override
+  public final Result handle(Request request) {
+    final RequestMethod actual;
+    actual = request.method();
+
+    if (actual.equals(method)) {
+      return handler.handle(request);
+    }
+
+    if (actual.equals(RequestMethod.HEAD) && method.equals(RequestMethod.GET)) {
+      return handler.handle(request);
+    }
+
+    return request;
+  }
 
 }

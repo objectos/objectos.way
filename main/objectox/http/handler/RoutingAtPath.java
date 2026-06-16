@@ -15,15 +15,19 @@
  */
 package objectox.http.handler;
 
-public sealed interface RouteMatcher
-    permits
-    RouteMatcherExact,
-    RouteMatcherRegion,
-    RouteMatcherParam,
-    RouteMatcherParamLast,
-    RouteMatcherWildcard,
-    RouteMatcherList {
+import objectos.http.Handler;
 
-  boolean matches(RoutePath path);
+final class RoutingAtPath extends RoutingAtCommon {
+
+  private final RouteMatcher pathMatcher;
+
+  RoutingAtPath(RouteMatcher pathMatcher) {
+    this.pathMatcher = pathMatcher;
+  }
+
+  @Override
+  final Handler build(Handler handler) {
+    return new HandlerIfPath(pathMatcher, handler);
+  }
 
 }

@@ -17,50 +17,26 @@ package objectox.http.handler;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import objectos.http.Handler;
-import objectos.http.Redirection;
-import objectos.http.Response;
 import objectos.http.Result;
 
-final class RouteBuilder {
+sealed abstract class RoutingAtCommon permits RoutingAtMethod, RoutingAtPath {
 
   private List<Handler> handlers = List.of();
 
-  private final RouteMatcher matcher;
-
   private boolean result;
 
-  RouteBuilder(RouteMatcher matcher) {
-    this.matcher = Objects.requireNonNull(matcher, "matcher == null");
-  }
-
-  public final Route build() {
-    final Handler handler;
-    handler = buildHandler();
-
-    return new Route(matcher, handler);
-  }
-
-  private Handler buildHandler() {
+  public final Handler build() {
     return switch (handlers.size()) {
       case 0 -> HandlerNoop.INSTANCE;
 
-      case 1 -> handlers.get(0);
+      case 1 -> build(handlers.get(0));
 
-      default -> HandlerList.copyOf(handlers);
+      default -> build(HandlerList.copyOf(handlers));
     };
   }
 
-  public final void addRedirect(Redirection value) {
-    addResult(value);
-  }
-
-  public final void addResponse(Response value) {
-    addResult(value);
-  }
-
-  private void add(Handler handler) {
+  final void addHandler(Handler handler) {
     if (handlers.isEmpty()) {
       handlers = new ArrayList<>();
     }
@@ -68,7 +44,9 @@ final class RouteBuilder {
     handlers.add(handler);
   }
 
-  private void addResult(Result value) {
+  abstract Handler build(Handler handler);
+
+  final void result(Result value) {
     if (result) {
       final String msg;
       msg = "A result has already been set";
@@ -79,7 +57,7 @@ final class RouteBuilder {
     final Handler handler;
     handler = new HandlerResult(value);
 
-    add(handler);
+    addHandler(handler);
 
     result = true;
   }
