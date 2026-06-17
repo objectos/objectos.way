@@ -20,65 +20,65 @@ import static org.testng.Assert.assertEquals;
 import java.util.List;
 import org.testng.annotations.Test;
 
-public class RouteParserLeftTest {
+public class SegmentsParserLeftTest {
 
   @Test(description = "/")
   public void execute01() {
-    final RouteParser ctx;
-    ctx = new RouteParser("/", 0);
+    final SegmentsParser ctx;
+    ctx = new SegmentsParser("/", 0);
 
-    final RouteParserLeft subject;
-    subject = new RouteParserLeft(ctx);
+    final SegmentsParserLeft subject;
+    subject = new SegmentsParserLeft(ctx);
 
     subject.execute();
 
     assertEquals(ctx.index(), 1);
-    assertEquals(ctx.segments(), List.of(new RouteMatcherExact("/")));
+    assertEquals(ctx.segments(), List.of(new SegmentExact("/")));
     assertEquals(ctx.stop(), true);
   }
 
   @Test(description = "/foo")
   public void execute02() {
-    final RouteParser ctx;
-    ctx = new RouteParser("/foo", 0);
+    final SegmentsParser ctx;
+    ctx = new SegmentsParser("/foo", 0);
 
-    final RouteParserLeft subject;
-    subject = new RouteParserLeft(ctx);
+    final SegmentsParserLeft subject;
+    subject = new SegmentsParserLeft(ctx);
 
     subject.execute();
 
     assertEquals(ctx.index(), 4);
-    assertEquals(ctx.segments(), List.of(new RouteMatcherExact("/foo")));
+    assertEquals(ctx.segments(), List.of(new SegmentExact("/foo")));
     assertEquals(ctx.stop(), true);
   }
 
   @Test(description = "/{foo}.html")
   public void execute03() {
-    final RouteParser ctx;
-    ctx = new RouteParser("/{foo}.html", 7);
+    final SegmentsParser ctx;
+    ctx = new SegmentsParser("/{foo}.html", 7);
 
-    final RouteParserLeft subject;
-    subject = new RouteParserLeft(ctx);
+    final SegmentsParserLeft subject;
+    subject = new SegmentsParserLeft(ctx);
 
     subject.execute();
 
     assertEquals(ctx.index(), 11);
-    assertEquals(ctx.segments(), List.of(new RouteMatcherExact("html")));
+    assertEquals(ctx.segments(), List.of(new SegmentExact("html")));
     assertEquals(ctx.stop(), true);
   }
 
   @Test(description = "/{a}")
   public void execute04() {
-    final RouteParser ctx;
-    ctx = new RouteParser("/{a}", 0);
+    final SegmentsParser ctx;
+    ctx = new SegmentsParser("/{a}", 0);
 
-    final RouteParserLeft subject;
-    subject = new RouteParserLeft(ctx);
+    final SegmentsParserLeft subject;
+    subject = new SegmentsParserLeft(ctx);
 
     subject.execute();
 
     assertEquals(ctx.index(), 2);
-    assertEquals(ctx.segments(), List.of(new RouteMatcherRegion("/")));
+    assertEquals(ctx.segments(), List.of(new SegmentRegion("/")));
     assertEquals(ctx.stop(), false);
   }
 

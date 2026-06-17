@@ -22,6 +22,8 @@ import objectos.http.Handler;
 import objectos.http.MediaType;
 import objectos.http.Request;
 import objectos.http.Result;
+import objectos.http.RouteMatcher;
+import objectos.http.RouteMatcherExact;
 import org.testng.annotations.Test;
 
 public class HandlerIfPathTest {

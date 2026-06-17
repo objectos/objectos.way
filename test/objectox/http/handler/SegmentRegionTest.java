@@ -15,51 +15,50 @@
  */
 package objectox.http.handler;
 
-import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
-import java.util.Map;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class RouteMatcherParamTest {
+public class SegmentRegionTest {
 
-  private final RouteMatcher matcher = new RouteMatcherParam("test", '/');
+  private final Segment matcher = new SegmentRegion("/foo");
+
+  private boolean matches(String path, int index) {
+    final RequestPath reqPath;
+    reqPath = new RequestPath(path, index);
+
+    return matcher.matches(reqPath);
+  }
 
   @DataProvider
   public Object[][] validProvider() {
     return new Object[][] {
-        {"/foo/", 1, "foo"},
-        {"/bar/foo/", 5, "foo"},
-        {"/bar/foo/more", 5, "foo"},
-        {"/bar//", 5, ""}
+        {"/foo", 0},
+        {"/fooo", 0},
+        {"/bar/foo", 4},
+        {"/bar/foo/", 4}
     };
   }
 
   @Test(dataProvider = "validProvider")
-  public void valid(String path, int index, String value) {
-    final RoutePath http;
-    http = new RoutePath(path, index);
-
-    assertEquals(matcher.matches(http), true);
-
-    assertEquals(http.params, Map.of("test", value));
+  public void valid(String path, int index) {
+    assertTrue(matches(path, index));
   }
 
   @DataProvider
   public Object[][] invalidProvider() {
     return new Object[][] {
         {"/foo", 1},
-        {"/bar/foo", 5},
-        {"/bar/foo/more", 9}
+        {"/bar/foo", 3},
+        {"/bar/foo/", 5}
     };
   }
 
   @Test(dataProvider = "invalidProvider")
   public void invalid(String path, int index) {
-    final RoutePath http;
-    http = new RoutePath(path, index);
-
-    assertEquals(matcher.matches(http), false);
+    assertFalse(matches(path, index));
   }
 
 }

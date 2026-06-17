@@ -15,11 +15,13 @@
  */
 package objectox.http.handler;
 
-public record RouteMatcherRegion(String value) implements RouteMatcher {
+sealed interface Segment
+    permits
+    SegmentExact,
+    SegmentParam,
+    SegmentParamLast,
+    SegmentRegion {
 
-  @Override
-  public final boolean matches(RoutePath path) {
-    return path.matches(value);
-  }
+  boolean matches(RequestPath path);
 
 }

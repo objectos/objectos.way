@@ -21,15 +21,15 @@ import java.util.List;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class RouteParserRightTest {
+public class SegmentsParserRightTest {
 
   @Test(description = "reject unclosed parameter")
   public void execute01() {
-    final RouteParser ctx;
-    ctx = new RouteParser("/{", 2);
+    final SegmentsParser ctx;
+    ctx = new SegmentsParser("/{", 2);
 
-    final RouteParserRight subject;
-    subject = new RouteParserRight(ctx);
+    final SegmentsParserRight subject;
+    subject = new SegmentsParserRight(ctx);
 
     try {
       subject.execute();
@@ -40,45 +40,43 @@ public class RouteParserRightTest {
     }
   }
 
-  @Test(description = "wildcard")
+  @Test(description = "unnamed")
   public void execute02() {
-    final RouteParser ctx;
-    ctx = new RouteParser("/{}", 2);
+    final SegmentsParser ctx;
+    ctx = new SegmentsParser("/{}", 2);
 
-    final RouteParserRight subject;
-    subject = new RouteParserRight(ctx);
+    final SegmentsParserRight subject;
+    subject = new SegmentsParserRight(ctx);
 
     subject.execute();
 
     assertEquals(ctx.index(), 3);
-    assertEquals(ctx.segments(), List.of(RouteMatcherWildcard.INSTANCE));
+    assertEquals(ctx.segments(), List.of(new SegmentParamLast("")));
     assertEquals(ctx.stop(), true);
   }
 
-  @Test(description = "reject wildcard if not at the end")
+  @Test(description = "unnamed with delimiter")
   public void execute03() {
-    final RouteParser ctx;
-    ctx = new RouteParser("/{}.", 2);
+    final SegmentsParser ctx;
+    ctx = new SegmentsParser("/{}.pdf", 2);
 
-    final RouteParserRight subject;
-    subject = new RouteParserRight(ctx);
+    final SegmentsParserRight subject;
+    subject = new SegmentsParserRight(ctx);
 
-    try {
-      subject.execute();
+    subject.execute();
 
-      Assert.fail("It should have thrown");
-    } catch (IllegalArgumentException expected) {
-      assertEquals(expected.getMessage(), "Invalid path expression: the '{}' wildcard path parameter can only be declared at the end of the expression");
-    }
+    assertEquals(ctx.index(), 4);
+    assertEquals(ctx.segments(), List.of(new SegmentParam("", '.')));
+    assertEquals(ctx.stop(), false);
   }
 
   @Test(description = "reject param name: first char must be java identifier first")
   public void execute04() {
-    final RouteParser ctx;
-    ctx = new RouteParser("/{2fa}.", 2);
+    final SegmentsParser ctx;
+    ctx = new SegmentsParser("/{2fa}.", 2);
 
-    final RouteParserRight subject;
-    subject = new RouteParserRight(ctx);
+    final SegmentsParserRight subject;
+    subject = new SegmentsParserRight(ctx);
 
     try {
       subject.execute();
@@ -91,11 +89,11 @@ public class RouteParserRightTest {
 
   @Test(description = "reject param name: remaining chars must be java identifier chars")
   public void execute05() {
-    final RouteParser ctx;
-    ctx = new RouteParser("/{c#}.", 2);
+    final SegmentsParser ctx;
+    ctx = new SegmentsParser("/{c#}.", 2);
 
-    final RouteParserRight subject;
-    subject = new RouteParserRight(ctx);
+    final SegmentsParserRight subject;
+    subject = new SegmentsParserRight(ctx);
 
     try {
       subject.execute();
@@ -108,13 +106,13 @@ public class RouteParserRightTest {
 
   @Test(description = "reject duplicate param name")
   public void execute06() {
-    final RouteParser ctx;
-    ctx = new RouteParser("/{x}.", 2);
+    final SegmentsParser ctx;
+    ctx = new SegmentsParser("/{x}.", 2);
 
     ctx.add("x");
 
-    final RouteParserRight subject;
-    subject = new RouteParserRight(ctx);
+    final SegmentsParserRight subject;
+    subject = new SegmentsParserRight(ctx);
 
     try {
       subject.execute();
@@ -127,26 +125,26 @@ public class RouteParserRightTest {
 
   @Test(description = "param last")
   public void execute07() {
-    final RouteParser ctx;
-    ctx = new RouteParser("/{x}", 2);
+    final SegmentsParser ctx;
+    ctx = new SegmentsParser("/{x}", 2);
 
-    final RouteParserRight subject;
-    subject = new RouteParserRight(ctx);
+    final SegmentsParserRight subject;
+    subject = new SegmentsParserRight(ctx);
 
     subject.execute();
 
     assertEquals(ctx.index(), 4);
-    assertEquals(ctx.segments(), List.of(new RouteMatcherParamLast("x")));
+    assertEquals(ctx.segments(), List.of(new SegmentParamLast("x")));
     assertEquals(ctx.stop(), true);
   }
 
   @Test(description = "reject param with an invalid trailing delimiter")
   public void execute08() {
-    final RouteParser ctx;
-    ctx = new RouteParser("/{x}invalid", 2);
+    final SegmentsParser ctx;
+    ctx = new SegmentsParser("/{x}invalid", 2);
 
-    final RouteParserRight subject;
-    subject = new RouteParserRight(ctx);
+    final SegmentsParserRight subject;
+    subject = new SegmentsParserRight(ctx);
 
     try {
       subject.execute();
@@ -159,16 +157,16 @@ public class RouteParserRightTest {
 
   @Test(description = "param")
   public void execute09() {
-    final RouteParser ctx;
-    ctx = new RouteParser("/{x}/more", 2);
+    final SegmentsParser ctx;
+    ctx = new SegmentsParser("/{x}/more", 2);
 
-    final RouteParserRight subject;
-    subject = new RouteParserRight(ctx);
+    final SegmentsParserRight subject;
+    subject = new SegmentsParserRight(ctx);
 
     subject.execute();
 
     assertEquals(ctx.index(), 5);
-    assertEquals(ctx.segments(), List.of(new RouteMatcherParam("x", '/')));
+    assertEquals(ctx.segments(), List.of(new SegmentParam("x", '/')));
     assertEquals(ctx.stop(), false);
   }
 

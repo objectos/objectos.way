@@ -13,32 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectox.http.handler;
 
-import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
+import java.util.Iterator;
+import java.util.List;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class PathParamsTest {
+public class SegmentExactTest {
 
-  @DataProvider
-  public Object[][] digitsProvider() {
-    return new Object[][] {
-        {"1", true},
-        {"12", true},
-        {"123", true},
+  private final Segment segment = new SegmentExact("/foo");
 
-        {"", false},
-        {"a", false},
-        {"1a", false},
-        {"12a", false},
-    };
+  private boolean match(String path) {
+    final RequestPath reqPath;
+    reqPath = new RequestPath(path);
+
+    return segment.matches(reqPath);
   }
 
-  @Test(dataProvider = "digitsProvider")
-  public void digits(String value, boolean valid) {
-    assertEquals(PathParams.digits().test(value), valid);
+  @Test
+  public void valid() {
+    assertTrue(match("/foo"));
+  }
+
+  @DataProvider
+  public Iterator<String> invalidProvider() {
+    return List.of("/fooo", "/foo/", "/foo/bar", "/bar", "/").iterator();
+  }
+
+  @Test(dataProvider = "invalidProvider")
+  public void invalid(String path) {
+    assertFalse(match(path));
   }
 
 }

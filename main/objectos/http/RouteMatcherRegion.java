@@ -15,11 +15,11 @@
  */
 package objectos.http;
 
-/// An object that can be used as an option for a route declaration.
-public sealed interface RoutingOption
-    permits
-    Handler,
-    PathParam,
-    Redirection,
-    RequestMethod,
-    Response {}
+public record RouteMatcherRegion(String value) implements RouteMatcher {
+
+  @Override
+  public final boolean matches(RoutePath path) {
+    return path.matches(value);
+  }
+
+}

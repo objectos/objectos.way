@@ -18,11 +18,11 @@ package objectox.http.handler;
 import java.util.Arrays;
 import objectox.http.Rfc;
 
-final class RouteParserRight {
+final class SegmentsParserRight {
 
-  final RouteParser ctx;
+  final SegmentsParser ctx;
 
-  RouteParserRight(RouteParser ctx) {
+  SegmentsParserRight(SegmentsParser ctx) {
     this.ctx = ctx;
   }
 
@@ -55,36 +55,13 @@ final class RouteParserRight {
   }
 
   private void execute(String paramName, boolean last) {
-    if (paramName.isEmpty()) {
-      executeParamNameEmpty(last);
+    if (!paramName.isEmpty()) {
+      validateParamName(paramName);
     }
-
-    else {
-      executeParamName(paramName, last);
-    }
-  }
-
-  private void executeParamNameEmpty(boolean last) {
-    if (!last) {
-      final String msg;
-      msg = "Invalid path expression: the '{}' wildcard path parameter can only be declared at the end of the expression";
-
-      throw new IllegalArgumentException(msg);
-    }
-
-    else {
-      ctx.add(RouteMatcherWildcard.INSTANCE);
-
-      ctx.end();
-    }
-  }
-
-  private void executeParamName(String paramName, boolean last) {
-    validateParamName(paramName);
 
     if (last) {
-      final RouteMatcher segment;
-      segment = new RouteMatcherParamLast(paramName);
+      final Segment segment;
+      segment = new SegmentParamLast(paramName);
 
       ctx.add(segment);
 
@@ -95,8 +72,8 @@ final class RouteParserRight {
       final char delim;
       delim = validateTrailingDelim();
 
-      final RouteMatcherParam segment;
-      segment = new RouteMatcherParam(paramName, delim);
+      final Segment segment;
+      segment = new SegmentParam(paramName, delim);
 
       ctx.add(segment);
     }

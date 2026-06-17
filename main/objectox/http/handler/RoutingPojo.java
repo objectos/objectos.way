@@ -47,28 +47,22 @@ public final class RoutingPojo implements Routing {
   }
 
   @Override
-  public final void at(String path, RoutingOption first, RoutingOption... rest) {
-    Objects.requireNonNull(path, "path == null");
+  public final void at(String pathExpression, RoutingOption first, RoutingOption... rest) {
+    Objects.requireNonNull(pathExpression, "pathExpression == null");
 
     if (paths.isEmpty()) {
       paths = new HashSet<>();
     }
 
-    if (!paths.add(path)) {
+    if (!paths.add(pathExpression)) {
       final String msg;
-      msg = "Path already registered: " + path;
+      msg = "Path already registered: " + pathExpression;
 
       throw new IllegalArgumentException(msg);
     }
 
-    final RouteParser pathMatcherParser;
-    pathMatcherParser = new RouteParser(path);
-
-    final RouteMatcher pathMatcher;
-    pathMatcher = pathMatcherParser.parse();
-
     final RoutingAt at;
-    at = new RoutingAt(pathMatcher);
+    at = RoutingAt.of(pathExpression);
 
     at.option(
         Objects.requireNonNull(first, "first == null")

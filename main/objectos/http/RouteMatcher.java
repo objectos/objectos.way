@@ -13,15 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.http.handler;
+package objectos.http;
 
-public enum RouteMatcherWildcard implements RouteMatcher {
+public sealed interface RouteMatcher
+    permits
+    RouteMatcherExact,
+    RouteMatcherRegion,
+    RouteMatcherParam,
+    RouteMatcherParamLast,
+    RouteMatcherWildcard,
+    RouteMatcherList {
 
-  INSTANCE;
-
-  @Override
-  public final boolean matches(RoutePath http) {
-    return true;
-  }
+  boolean matches(RoutePath path);
 
 }

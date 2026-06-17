@@ -13,17 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.http.handler;
+package objectos.http;
 
-public sealed interface RouteMatcher
-    permits
-    RouteMatcherExact,
-    RouteMatcherRegion,
-    RouteMatcherParam,
-    RouteMatcherParamLast,
-    RouteMatcherWildcard,
-    RouteMatcherList {
+public record RouteMatcherParamLast(String paramName) implements RouteMatcher {
 
-  boolean matches(RoutePath path);
+  @Override
+  public final boolean matches(RoutePath path) {
+    path.param(paramName);
+
+    return true;
+  }
 
 }

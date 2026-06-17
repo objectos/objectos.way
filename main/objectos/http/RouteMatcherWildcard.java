@@ -15,11 +15,13 @@
  */
 package objectos.http;
 
-/// An object that can be used as an option for a route declaration.
-public sealed interface RoutingOption
-    permits
-    Handler,
-    PathParam,
-    Redirection,
-    RequestMethod,
-    Response {}
+public enum RouteMatcherWildcard implements RouteMatcher {
+
+  INSTANCE;
+
+  @Override
+  public final boolean matches(RoutePath http) {
+    return true;
+  }
+
+}

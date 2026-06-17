@@ -18,10 +18,13 @@ package objectox.http.handler;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 import objectos.http.Handler;
 import objectos.http.Redirection;
 import objectos.http.RequestMethod;
 import objectos.http.Response;
+import objectos.http.RouteMatcher;
+import objectos.http.RouteParser;
 import objectos.http.RoutingOption;
 
 final class RoutingAt {
@@ -32,10 +35,26 @@ final class RoutingAt {
 
   private final RoutingAtPath parent;
 
-  RoutingAt(RouteMatcher pathMatcher) {
-    parent = new RoutingAtPath(pathMatcher);
+  private RoutingAt(RoutingAtPath parent) {
+    this.parent = parent;
 
     current = parent;
+  }
+
+  public static RoutingAt of(String pathExpression) {
+    final RouteParser pathMatcherParser;
+    pathMatcherParser = new RouteParser(pathExpression);
+
+    final RouteMatcher pathMatcher;
+    pathMatcher = pathMatcherParser.parse();
+
+    final Set<String> paramNames;
+    paramNames = pathMatcherParser.paramNames();
+
+    final RoutingAtPath parent;
+    parent = new RoutingAtPath(pathMatcher, paramNames);
+
+    return new RoutingAt(parent);
   }
 
   public final Handler build() {
@@ -55,6 +74,8 @@ final class RoutingAt {
   public final void option(RoutingOption option) {
     switch (option) {
       case Handler handler -> current.handler(handler);
+
+      case PathParamNamed param -> parent.pathParamNamed(param);
 
       case Redirection redir -> current.result(redir);
 

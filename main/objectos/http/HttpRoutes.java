@@ -15,6 +15,8 @@
  */
 package objectos.http;
 
+import objectox.http.handler.PathParamNamed;
+
 /// Allows for creating a `HttpHandler` instance by declaring HTTP routes.
 ///
 /// If method-specific routes are configured, then the resulting handler responds
@@ -27,7 +29,7 @@ public sealed interface HttpRoutes permits HttpRoutes0 {
       permits
       HttpHandler,
       RequestMethod,
-      PathParam {}
+      PathParamNamed {}
 
   /// Adds a route for the specified path with the specified options.
   ///

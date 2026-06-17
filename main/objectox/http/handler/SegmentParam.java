@@ -15,18 +15,31 @@
  */
 package objectox.http.handler;
 
-public record RouteMatcherExact(String exact) implements RouteMatcher {
+import java.util.function.Predicate;
+
+record SegmentParam(String paramName, char delimiter, Predicate<String> condition) implements Segment {
+
+  public SegmentParam(String paramName, char delimiter) {
+    this(paramName, delimiter, PathParamPredicates.TRUE);
+  }
 
   @Override
-  public final boolean matches(RoutePath path) {
-    final int thisLength;
-    thisLength = path.length();
+  public final boolean matches(RequestPath path) {
+    final int delimiterIndex;
+    delimiterIndex = path.indexOf(delimiter);
 
-    final int thatLength;
-    thatLength = exact.length();
+    if (delimiterIndex < 0) {
+      return false;
+    }
 
-    return thisLength == thatLength
-        && path.matches(exact);
+    final String value;
+    value = path.substring(delimiterIndex);
+
+    if (!condition.test(value)) {
+      return false;
+    } else {
+      return path.param(paramName, value);
+    }
   }
 
 }

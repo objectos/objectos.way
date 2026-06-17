@@ -13,40 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.http.handler;
+package objectos.http;
 
-final class RouteParserLeft {
+final class RouteParserStart {
 
   final RouteParser ctx;
 
-  RouteParserLeft(RouteParser ctx) {
+  RouteParserStart(RouteParser ctx) {
     this.ctx = ctx;
   }
 
   public final void execute() {
-    final int startIndex;
-    startIndex = ctx.index();
+    if (!ctx.hasNext()) {
+      final String msg;
+      msg = "Invalid path expression: it must not be empty";
 
-    final int left;
-    left = ctx.indexOf('{');
+      throw new IllegalArgumentException(msg);
+    }
 
-    if (left == -1) {
-      final String exact;
-      exact = ctx.substring(startIndex);
+    final char first;
+    first = ctx.peek();
 
-      final RouteMatcherExact segment;
-      segment = new RouteMatcherExact(exact);
+    if (first != '/') {
+      final String msg;
+      msg = "Invalid path expression: it must begin with the '/' character";
 
-      ctx.add(segment);
-
-      ctx.end();
-    } else {
-      final String region = ctx.substring(startIndex, left);
-
-      final RouteMatcherRegion segment;
-      segment = new RouteMatcherRegion(region);
-
-      ctx.add(segment);
+      throw new IllegalArgumentException(msg);
     }
   }
 

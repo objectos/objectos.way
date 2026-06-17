@@ -17,32 +17,28 @@ package objectox.http.handler;
 
 import static org.testng.Assert.assertEquals;
 
-import java.util.Map;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class RouteMatcherParamLastTest {
-
-  private final RouteMatcher matcher = new RouteMatcherParamLast("test");
+public class PathParamPredicatesTest {
 
   @DataProvider
-  public Object[][] validProvider() {
+  public Object[][] digitsProvider() {
     return new Object[][] {
-        {"/foo/", 1, "foo/"},
-        {"/bar/foo/", 5, "foo/"},
-        {"/bar/foo/more", 5, "foo/more"},
-        {"/bar//", 5, "/"}
+        {"1", true},
+        {"12", true},
+        {"123", true},
+
+        {"", false},
+        {"a", false},
+        {"1a", false},
+        {"12a", false},
     };
   }
 
-  @Test(dataProvider = "validProvider")
-  public void valid(String path, int index, String value) {
-    final RoutePath http;
-    http = new RoutePath(path, index);
-
-    assertEquals(matcher.matches(http), true);
-
-    assertEquals(http.params, Map.of("test", value));
+  @Test(dataProvider = "digitsProvider")
+  public void digits(String value, boolean valid) {
+    assertEquals(PathParamPredicates.DIGITS.test(value), valid);
   }
 
 }

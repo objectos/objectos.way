@@ -15,8 +15,23 @@
  */
 package objectos.http;
 
-import java.util.function.Predicate;
+import objectox.http.handler.PathParamNamed;
+import objectox.http.handler.PathParamPredicates;
 
-record PathParam(String name, Predicate<String> predicate) implements HttpRoutes.Option {
+/// Allows for matching an individual route if a path parameter value conforms
+/// to a restriction.
+public sealed interface PathParam
+    extends RoutingOption
+    permits PathParamNamed {
+
+  /// Returns a new object that matches a path parameter with the specified name
+  /// only if its value contains only US-ASCII digits.
+  ///
+  /// @param name the path parameter name
+  ///
+  /// @return a newly created `PathParam` instance
+  static PathParam digits(String name) {
+    return PathParamPredicates.DIGITS.forName(name);
+  }
 
 }

@@ -29,6 +29,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import objectox.http.RequestMethodEnum;
+import objectox.http.handler.PathParamNamed;
 
 /// Provides helpers to declaring routes.
 public final class Http {
@@ -74,7 +75,7 @@ public final class Http {
 
     var p = Objects.requireNonNull(predicate, "predicate == null");
 
-    return new PathParam(n, p);
+    return new PathParamNamed(n, p);
   }
 
   static final String LINE_TERM = "Invalid line terminator.\n";

@@ -13,13 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectox.http.handler;
 
-/// An object that can be used as an option for a route declaration.
-public sealed interface RoutingOption
-    permits
-    Handler,
-    PathParam,
-    Redirection,
-    RequestMethod,
-    Response {}
+import java.util.function.Predicate;
+
+record SegmentParamLast(String paramName, Predicate<String> condition) implements Segment {
+
+  public SegmentParamLast(String paramName) {
+    this(paramName, PathParamPredicates.TRUE);
+  }
+
+  @Override
+  public final boolean matches(RequestPath path) {
+    final String value;
+    value = path.substring();
+
+    if (!condition.test(value)) {
+      return false;
+    } else {
+      return path.param(paramName, value);
+    }
+  }
+
+}

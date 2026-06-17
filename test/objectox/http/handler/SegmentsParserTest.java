@@ -22,12 +22,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import objectos.http.RouteMatcher;
+import objectos.http.RouteMatcherExact;
+import objectos.http.RouteMatcherList;
+import objectos.http.RouteMatcherParam;
+import objectos.http.RouteMatcherParamLast;
+import objectos.http.RouteMatcherRegion;
+import objectos.http.RouteParser;
 import objectox.http.Rfc;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class RouteParserTest {
+public class SegmentsParserTest {
 
   private final String validDelims = Rfc.pathDelim();
 

@@ -23,6 +23,8 @@ import objectos.http.HttpStatus;
 import objectos.http.Redirection;
 import objectos.http.RequestMethod;
 import objectos.http.Response;
+import objectos.http.RouteMatcher;
+import objectos.http.RouteMatcherExact;
 import org.testng.annotations.Test;
 
 public class RoutingAtTest {
@@ -37,7 +39,7 @@ public class RoutingAtTest {
 
   private final Handler create(Consumer<? super RoutingAt> opts) {
     final RoutingAt at;
-    at = new RoutingAt(pathMatcher);
+    at = RoutingAt.of("/");
 
     opts.accept(at);
 

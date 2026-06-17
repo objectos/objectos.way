@@ -15,30 +15,39 @@
  */
 package objectox.http.handler;
 
-final class RouteParserStart {
+final class SegmentsParserLeft {
 
-  final RouteParser ctx;
+  final SegmentsParser ctx;
 
-  RouteParserStart(RouteParser ctx) {
+  SegmentsParserLeft(SegmentsParser ctx) {
     this.ctx = ctx;
   }
 
   public final void execute() {
-    if (!ctx.hasNext()) {
-      final String msg;
-      msg = "Invalid path expression: it must not be empty";
+    final int startIndex;
+    startIndex = ctx.index();
 
-      throw new IllegalArgumentException(msg);
-    }
+    final int left;
+    left = ctx.indexOf('{');
 
-    final char first;
-    first = ctx.peek();
+    if (left == -1) {
+      final String exact;
+      exact = ctx.substring(startIndex);
 
-    if (first != '/') {
-      final String msg;
-      msg = "Invalid path expression: it must begin with the '/' character";
+      final Segment segment;
+      segment = new SegmentExact(exact);
 
-      throw new IllegalArgumentException(msg);
+      ctx.add(segment);
+
+      ctx.end();
+    } else {
+      final String region;
+      region = ctx.substring(startIndex, left);
+
+      final Segment segment;
+      segment = new SegmentRegion(region);
+
+      ctx.add(segment);
     }
   }
 

@@ -17,19 +17,4 @@ package objectox.http.handler;
 
 import java.util.List;
 
-public record RouteMatcherList(List<RouteMatcher> list) implements RouteMatcher {
-
-  @Override
-  public final boolean matches(RoutePath path) {
-    for (RouteMatcher matcher : list) {
-      if (!matcher.matches(path)) {
-        path.clear();
-
-        return false;
-      }
-    }
-
-    return true;
-  }
-
-}
+record Segments(List<Segment> segments) {}

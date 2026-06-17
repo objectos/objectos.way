@@ -15,13 +15,18 @@
  */
 package objectox.http.handler;
 
-public record RouteMatcherParamLast(String paramName) implements RouteMatcher {
+record SegmentExact(String exact) implements Segment {
 
   @Override
-  public final boolean matches(RoutePath path) {
-    path.param(paramName);
+  public final boolean matches(RequestPath path) {
+    final int thisLength;
+    thisLength = path.length();
 
-    return true;
+    final int thatLength;
+    thatLength = exact.length();
+
+    return thisLength == thatLength
+        && path.matches(exact);
   }
 
 }

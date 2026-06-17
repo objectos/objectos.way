@@ -18,6 +18,8 @@ package objectox.http.handler;
 import objectos.http.Handler;
 import objectos.http.Request;
 import objectos.http.Result;
+import objectos.http.RouteMatcher;
+import objectos.http.RoutePath;
 
 public record HandlerIfPath(RouteMatcher pathMatcher, Handler handler) implements Handler {
 

@@ -25,7 +25,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 import objectos.http.HttpRoutes.Option;
 import objectox.http.RequestMethodEnum;
-import objectox.http.handler.RouteMatcher;
+import objectox.http.handler.PathParamNamed;
 
 final class HttpRoutes1Path {
 
@@ -109,7 +109,7 @@ final class HttpRoutes1Path {
 
       case RequestMethodEnum method -> addMethod(method);
 
-      case PathParam param -> addPathParam(param);
+      case PathParamNamed param -> addPathParam(param);
     }
   }
 
@@ -140,7 +140,7 @@ final class HttpRoutes1Path {
     currentMethod = builder;
   }
 
-  private void addPathParam(PathParam param) {
+  private void addPathParam(PathParamNamed param) {
     final String name;
     name = param.name();
 

@@ -15,11 +15,18 @@
  */
 package objectos.http;
 
-/// An object that can be used as an option for a route declaration.
-public sealed interface RoutingOption
-    permits
-    Handler,
-    PathParam,
-    Redirection,
-    RequestMethod,
-    Response {}
+public record RouteMatcherExact(String exact) implements RouteMatcher {
+
+  @Override
+  public final boolean matches(RoutePath path) {
+    final int thisLength;
+    thisLength = path.length();
+
+    final int thatLength;
+    thatLength = exact.length();
+
+    return thisLength == thatLength
+        && path.matches(exact);
+  }
+
+}
