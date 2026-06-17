@@ -46,7 +46,7 @@ final class RoutingAt {
       final Handler handler;
       handler = m.build();
 
-      parent.addHandler(handler);
+      parent.handler(handler);
     }
 
     return parent.build();
@@ -54,6 +54,8 @@ final class RoutingAt {
 
   public final void option(RoutingOption option) {
     switch (option) {
+      case Handler handler -> current.handler(handler);
+
       case Redirection redir -> current.result(redir);
 
       case RequestMethod method -> method(method);

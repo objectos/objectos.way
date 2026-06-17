@@ -89,4 +89,28 @@ public class RoutingAtTest {
     );
   }
 
+  @Test(description = "at('/', GET, handler)")
+  public void testCase04() {
+    final Handler handler;
+    handler = new HandlerResult(resp);
+
+    assertEquals(
+        create(opts -> {
+          opts.option(RequestMethod.GET);
+
+          opts.option(handler);
+        }),
+
+        new HandlerIfPath(
+            pathMatcher,
+
+            new HandlerIfMethod(
+                RequestMethod.GET,
+
+                handler
+            )
+        )
+    );
+  }
+
 }

@@ -36,15 +36,15 @@ sealed abstract class RoutingAtCommon permits RoutingAtMethod, RoutingAtPath {
     };
   }
 
-  final void addHandler(Handler handler) {
+  abstract Handler build(Handler handler);
+
+  final void handler(Handler handler) {
     if (handlers.isEmpty()) {
       handlers = new ArrayList<>();
     }
 
     handlers.add(handler);
   }
-
-  abstract Handler build(Handler handler);
 
   final void result(Result value) {
     if (result) {
@@ -57,7 +57,7 @@ sealed abstract class RoutingAtCommon permits RoutingAtMethod, RoutingAtPath {
     final Handler handler;
     handler = new HandlerResult(value);
 
-    addHandler(handler);
+    handler(handler);
 
     result = true;
   }

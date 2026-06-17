@@ -17,7 +17,17 @@ package objectos.http;
 
 /// Processes an HTTP request to produce a result, e.g., an HTTP response.
 @FunctionalInterface
-public interface Handler {
+public non-sealed interface Handler extends RoutingOption {
+
+  /// Helper method for specifying a handler in a route declaration. The method
+  /// returns the specified handler as it is.
+  ///
+  /// @param h the handler instance to be returned
+  ///
+  /// @return always the specified handler
+  static Handler of(Handler h) {
+    return h;
+  }
 
   /// Handles the specified HTTP request and produces a `Result`.
   ///
