@@ -22,26 +22,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import objectos.http.RouteMatcher;
-import objectos.http.RouteMatcherExact;
-import objectos.http.RouteMatcherList;
-import objectos.http.RouteMatcherParam;
-import objectos.http.RouteMatcherParamLast;
-import objectos.http.RouteMatcherRegion;
-import objectos.http.RouteParser;
+import java.util.Set;
 import objectox.http.Rfc;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class SegmentsParserTest {
+public class PathExpressionParserTest {
 
   private final String validDelims = Rfc.pathDelim();
 
   @Test(description = "path expresions must not be empty")
   public void parse01() {
-    final RouteParser subject;
-    subject = new RouteParser("");
+    final PathExpressionParser subject;
+    subject = new PathExpressionParser("");
 
     try {
       subject.parse();
@@ -54,8 +48,8 @@ public class SegmentsParserTest {
 
   @Test(description = "path expressions must start with '/'")
   public void parse02() {
-    final RouteParser subject;
-    subject = new RouteParser("index.html");
+    final PathExpressionParser subject;
+    subject = new PathExpressionParser("index.html");
 
     try {
       subject.parse();
@@ -73,13 +67,23 @@ public class SegmentsParserTest {
 
   @Test(dataProvider = "parse03Provider", description = "1 matcher = EXACT")
   public void parse03(String pathExpression) {
-    final RouteParser subject;
-    subject = new RouteParser(pathExpression);
+    final PathExpressionParser subject;
+    subject = new PathExpressionParser(pathExpression);
 
-    final RouteMatcher res;
+    final PathExpression res;
     res = subject.parse();
 
-    assertEquals(res, new RouteMatcherExact(pathExpression));
+    assertEquals(
+        res,
+
+        new PathExpression(
+            Set.of(),
+
+            List.of(
+                new SegmentExact(pathExpression)
+            )
+        )
+    );
   }
 
   @DataProvider
@@ -94,19 +98,23 @@ public class SegmentsParserTest {
 
   @Test(dataProvider = "parse04Provider", description = "REGION + PARAM_LAST")
   public void parse04(String pathExpression, String region, String param) {
-    final RouteParser subject;
-    subject = new RouteParser(pathExpression);
+    final PathExpressionParser subject;
+    subject = new PathExpressionParser(pathExpression);
 
-    final RouteMatcher res;
+    final PathExpression res;
     res = subject.parse();
 
     assertEquals(
         res,
 
-        new RouteMatcherList(List.of(
-            new RouteMatcherRegion(region),
-            new RouteMatcherParamLast(param)
-        ))
+        new PathExpression(
+            Set.of(param),
+
+            List.of(
+                new SegmentRegion(region),
+                new SegmentParamLast(param)
+            )
+        )
     );
   }
 
@@ -123,20 +131,24 @@ public class SegmentsParserTest {
 
   @Test(dataProvider = "parse05Provider", description = "REGION + PARAM + EXACT")
   public void parse05(String pathExpression, String region, String param, char delim, String exact) {
-    final RouteParser subject;
-    subject = new RouteParser(pathExpression);
+    final PathExpressionParser subject;
+    subject = new PathExpressionParser(pathExpression);
 
-    final RouteMatcher res;
+    final PathExpression res;
     res = subject.parse();
 
     assertEquals(
         res,
 
-        new RouteMatcherList(List.of(
-            new RouteMatcherRegion(region),
-            new RouteMatcherParam(param, delim),
-            new RouteMatcherExact(exact)
-        ))
+        new PathExpression(
+            Set.of(param),
+
+            List.of(
+                new SegmentRegion(region),
+                new SegmentParam(param, delim),
+                new SegmentExact(exact)
+            )
+        )
     );
   }
 
@@ -167,8 +179,8 @@ public class SegmentsParserTest {
   @Test(dataProvider = "parse06Provider", description = "Invalid param trailing delimiter")
   public void parse06(String pathExpression, String expectedMessage) {
     try {
-      final RouteParser parser;
-      parser = new RouteParser(pathExpression);
+      final PathExpressionParser parser;
+      parser = new PathExpressionParser(pathExpression);
 
       parser.parse();
 

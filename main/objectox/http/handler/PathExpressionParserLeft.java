@@ -15,11 +15,11 @@
  */
 package objectox.http.handler;
 
-final class SegmentsParserLeft {
+final class PathExpressionParserLeft {
 
-  final SegmentsParser ctx;
+  final PathExpressionParser ctx;
 
-  SegmentsParserLeft(SegmentsParser ctx) {
+  PathExpressionParserLeft(PathExpressionParser ctx) {
     this.ctx = ctx;
   }
 

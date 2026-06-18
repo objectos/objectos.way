@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Set;
 import objectos.internal.VisibleForTesting;
 
-final class SegmentsParser {
+final class PathExpressionParser {
 
   private int index;
 
@@ -33,26 +33,26 @@ final class SegmentsParser {
 
   private boolean stop;
 
-  public SegmentsParser(String pathExpression) {
+  public PathExpressionParser(String pathExpression) {
     this.pathExpression = pathExpression;
   }
 
   @VisibleForTesting
-  SegmentsParser(String pathExpression, int index) {
+  PathExpressionParser(String pathExpression, int index) {
     this.pathExpression = pathExpression;
 
     this.index = index;
   }
 
-  public final Segments parse() {
-    final SegmentsParserStart start;
-    start = new SegmentsParserStart(this);
+  public final PathExpression parse() {
+    final PathExpressionParserStart start;
+    start = new PathExpressionParserStart(this);
 
     start.execute();
 
     do {
-      final SegmentsParserLeft left;
-      left = new SegmentsParserLeft(this);
+      final PathExpressionParserLeft left;
+      left = new PathExpressionParserLeft(this);
 
       left.execute();
 
@@ -60,8 +60,8 @@ final class SegmentsParser {
         break;
       }
 
-      final SegmentsParserRight right;
-      right = new SegmentsParserRight(this);
+      final PathExpressionParserRight right;
+      right = new PathExpressionParserRight(this);
 
       right.execute();
     } while (!stop);
@@ -70,11 +70,11 @@ final class SegmentsParser {
       throw new IllegalStateException("segments is empty");
     }
 
-    return new Segments(segments);
-  }
+    return new PathExpression(
+        paramNames,
 
-  public final Set<String> paramNames() {
-    return paramNames;
+        segments
+    );
   }
 
   final boolean add(String paramName) {

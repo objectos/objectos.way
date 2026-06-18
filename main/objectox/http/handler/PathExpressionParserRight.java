@@ -18,11 +18,11 @@ package objectox.http.handler;
 import java.util.Arrays;
 import objectox.http.Rfc;
 
-final class SegmentsParserRight {
+final class PathExpressionParserRight {
 
-  final SegmentsParser ctx;
+  final PathExpressionParser ctx;
 
-  SegmentsParserRight(SegmentsParser ctx) {
+  PathExpressionParserRight(PathExpressionParser ctx) {
     this.ctx = ctx;
   }
 

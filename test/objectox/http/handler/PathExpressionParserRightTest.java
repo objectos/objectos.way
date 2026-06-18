@@ -21,15 +21,15 @@ import java.util.List;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class SegmentsParserRightTest {
+public class PathExpressionParserRightTest {
 
   @Test(description = "reject unclosed parameter")
   public void execute01() {
-    final SegmentsParser ctx;
-    ctx = new SegmentsParser("/{", 2);
+    final PathExpressionParser ctx;
+    ctx = new PathExpressionParser("/{", 2);
 
-    final SegmentsParserRight subject;
-    subject = new SegmentsParserRight(ctx);
+    final PathExpressionParserRight subject;
+    subject = new PathExpressionParserRight(ctx);
 
     try {
       subject.execute();
@@ -42,11 +42,11 @@ public class SegmentsParserRightTest {
 
   @Test(description = "unnamed")
   public void execute02() {
-    final SegmentsParser ctx;
-    ctx = new SegmentsParser("/{}", 2);
+    final PathExpressionParser ctx;
+    ctx = new PathExpressionParser("/{}", 2);
 
-    final SegmentsParserRight subject;
-    subject = new SegmentsParserRight(ctx);
+    final PathExpressionParserRight subject;
+    subject = new PathExpressionParserRight(ctx);
 
     subject.execute();
 
@@ -57,11 +57,11 @@ public class SegmentsParserRightTest {
 
   @Test(description = "unnamed with delimiter")
   public void execute03() {
-    final SegmentsParser ctx;
-    ctx = new SegmentsParser("/{}.pdf", 2);
+    final PathExpressionParser ctx;
+    ctx = new PathExpressionParser("/{}.pdf", 2);
 
-    final SegmentsParserRight subject;
-    subject = new SegmentsParserRight(ctx);
+    final PathExpressionParserRight subject;
+    subject = new PathExpressionParserRight(ctx);
 
     subject.execute();
 
@@ -72,11 +72,11 @@ public class SegmentsParserRightTest {
 
   @Test(description = "reject param name: first char must be java identifier first")
   public void execute04() {
-    final SegmentsParser ctx;
-    ctx = new SegmentsParser("/{2fa}.", 2);
+    final PathExpressionParser ctx;
+    ctx = new PathExpressionParser("/{2fa}.", 2);
 
-    final SegmentsParserRight subject;
-    subject = new SegmentsParserRight(ctx);
+    final PathExpressionParserRight subject;
+    subject = new PathExpressionParserRight(ctx);
 
     try {
       subject.execute();
@@ -89,11 +89,11 @@ public class SegmentsParserRightTest {
 
   @Test(description = "reject param name: remaining chars must be java identifier chars")
   public void execute05() {
-    final SegmentsParser ctx;
-    ctx = new SegmentsParser("/{c#}.", 2);
+    final PathExpressionParser ctx;
+    ctx = new PathExpressionParser("/{c#}.", 2);
 
-    final SegmentsParserRight subject;
-    subject = new SegmentsParserRight(ctx);
+    final PathExpressionParserRight subject;
+    subject = new PathExpressionParserRight(ctx);
 
     try {
       subject.execute();
@@ -106,13 +106,13 @@ public class SegmentsParserRightTest {
 
   @Test(description = "reject duplicate param name")
   public void execute06() {
-    final SegmentsParser ctx;
-    ctx = new SegmentsParser("/{x}.", 2);
+    final PathExpressionParser ctx;
+    ctx = new PathExpressionParser("/{x}.", 2);
 
     ctx.add("x");
 
-    final SegmentsParserRight subject;
-    subject = new SegmentsParserRight(ctx);
+    final PathExpressionParserRight subject;
+    subject = new PathExpressionParserRight(ctx);
 
     try {
       subject.execute();
@@ -125,11 +125,11 @@ public class SegmentsParserRightTest {
 
   @Test(description = "param last")
   public void execute07() {
-    final SegmentsParser ctx;
-    ctx = new SegmentsParser("/{x}", 2);
+    final PathExpressionParser ctx;
+    ctx = new PathExpressionParser("/{x}", 2);
 
-    final SegmentsParserRight subject;
-    subject = new SegmentsParserRight(ctx);
+    final PathExpressionParserRight subject;
+    subject = new PathExpressionParserRight(ctx);
 
     subject.execute();
 
@@ -140,11 +140,11 @@ public class SegmentsParserRightTest {
 
   @Test(description = "reject param with an invalid trailing delimiter")
   public void execute08() {
-    final SegmentsParser ctx;
-    ctx = new SegmentsParser("/{x}invalid", 2);
+    final PathExpressionParser ctx;
+    ctx = new PathExpressionParser("/{x}invalid", 2);
 
-    final SegmentsParserRight subject;
-    subject = new SegmentsParserRight(ctx);
+    final PathExpressionParserRight subject;
+    subject = new PathExpressionParserRight(ctx);
 
     try {
       subject.execute();
@@ -157,11 +157,11 @@ public class SegmentsParserRightTest {
 
   @Test(description = "param")
   public void execute09() {
-    final SegmentsParser ctx;
-    ctx = new SegmentsParser("/{x}/more", 2);
+    final PathExpressionParser ctx;
+    ctx = new PathExpressionParser("/{x}/more", 2);
 
-    final SegmentsParserRight subject;
-    subject = new SegmentsParserRight(ctx);
+    final PathExpressionParserRight subject;
+    subject = new PathExpressionParserRight(ctx);
 
     subject.execute();
 

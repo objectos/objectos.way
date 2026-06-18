@@ -20,18 +20,18 @@ import static org.testng.Assert.assertEquals;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class SegmentsParserStartTest {
+public class PathExpressionParserStartTest {
 
-  private SegmentsParserStart create(String pathExpression) {
-    final SegmentsParser ctx;
-    ctx = new SegmentsParser(pathExpression);
+  private PathExpressionParserStart create(String pathExpression) {
+    final PathExpressionParser ctx;
+    ctx = new PathExpressionParser(pathExpression);
 
-    return new SegmentsParserStart(ctx);
+    return new PathExpressionParserStart(ctx);
   }
 
   @Test(description = "path expresions must not be empty")
   public void execute01() {
-    final SegmentsParserStart subject;
+    final PathExpressionParserStart subject;
     subject = create("");
 
     try {
@@ -45,7 +45,7 @@ public class SegmentsParserStartTest {
 
   @Test(description = "path expressions must start with '/'")
   public void execute02() {
-    final SegmentsParserStart subject;
+    final PathExpressionParserStart subject;
     subject = create("index.html");
 
     try {
@@ -59,12 +59,12 @@ public class SegmentsParserStartTest {
 
   @Test(description = "Next state is EXACT")
   public void execute03() {
-    final SegmentsParserStart subject;
+    final PathExpressionParserStart subject;
     subject = create("/index.html");
 
     subject.execute();
 
-    final SegmentsParser ctx;
+    final PathExpressionParser ctx;
     ctx = subject.ctx;
 
     assertEquals(ctx.index(), 0);

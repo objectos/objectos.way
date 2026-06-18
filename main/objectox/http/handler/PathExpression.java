@@ -15,31 +15,7 @@
  */
 package objectox.http.handler;
 
-final class SegmentsParserStart {
+import java.util.List;
+import java.util.Set;
 
-  final SegmentsParser ctx;
-
-  SegmentsParserStart(SegmentsParser ctx) {
-    this.ctx = ctx;
-  }
-
-  public final void execute() {
-    if (!ctx.hasNext()) {
-      final String msg;
-      msg = "Invalid path expression: it must not be empty";
-
-      throw new IllegalArgumentException(msg);
-    }
-
-    final char first;
-    first = ctx.peek();
-
-    if (first != '/') {
-      final String msg;
-      msg = "Invalid path expression: it must begin with the '/' character";
-
-      throw new IllegalArgumentException(msg);
-    }
-  }
-
-}
+record PathExpression(Set<String> paramNames, List<Segment> segments) {}

@@ -20,15 +20,15 @@ import static org.testng.Assert.assertEquals;
 import java.util.List;
 import org.testng.annotations.Test;
 
-public class SegmentsParserLeftTest {
+public class PathExpressionParserLeftTest {
 
   @Test(description = "/")
   public void execute01() {
-    final SegmentsParser ctx;
-    ctx = new SegmentsParser("/", 0);
+    final PathExpressionParser ctx;
+    ctx = new PathExpressionParser("/", 0);
 
-    final SegmentsParserLeft subject;
-    subject = new SegmentsParserLeft(ctx);
+    final PathExpressionParserLeft subject;
+    subject = new PathExpressionParserLeft(ctx);
 
     subject.execute();
 
@@ -39,11 +39,11 @@ public class SegmentsParserLeftTest {
 
   @Test(description = "/foo")
   public void execute02() {
-    final SegmentsParser ctx;
-    ctx = new SegmentsParser("/foo", 0);
+    final PathExpressionParser ctx;
+    ctx = new PathExpressionParser("/foo", 0);
 
-    final SegmentsParserLeft subject;
-    subject = new SegmentsParserLeft(ctx);
+    final PathExpressionParserLeft subject;
+    subject = new PathExpressionParserLeft(ctx);
 
     subject.execute();
 
@@ -54,11 +54,11 @@ public class SegmentsParserLeftTest {
 
   @Test(description = "/{foo}.html")
   public void execute03() {
-    final SegmentsParser ctx;
-    ctx = new SegmentsParser("/{foo}.html", 7);
+    final PathExpressionParser ctx;
+    ctx = new PathExpressionParser("/{foo}.html", 7);
 
-    final SegmentsParserLeft subject;
-    subject = new SegmentsParserLeft(ctx);
+    final PathExpressionParserLeft subject;
+    subject = new PathExpressionParserLeft(ctx);
 
     subject.execute();
 
@@ -69,11 +69,11 @@ public class SegmentsParserLeftTest {
 
   @Test(description = "/{a}")
   public void execute04() {
-    final SegmentsParser ctx;
-    ctx = new SegmentsParser("/{a}", 0);
+    final PathExpressionParser ctx;
+    ctx = new PathExpressionParser("/{a}", 0);
 
-    final SegmentsParserLeft subject;
-    subject = new SegmentsParserLeft(ctx);
+    final PathExpressionParserLeft subject;
+    subject = new PathExpressionParserLeft(ctx);
 
     subject.execute();
 
