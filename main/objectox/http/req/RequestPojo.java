@@ -16,7 +16,7 @@
 package objectox.http.req;
 
 import module java.base;
-import objectos.http.HttpHeaderName;
+import objectos.http.HeaderName;
 import objectos.http.Request;
 import objectos.http.RequestMethod;
 import objectos.lang.Key;
@@ -173,7 +173,7 @@ public record RequestPojo(
   }
 
   @Override
-  public final String header(HttpHeaderName name) {
+  public final String header(HeaderName name) {
     return headers.header(name);
   }
 

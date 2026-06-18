@@ -21,15 +21,14 @@ import java.io.UncheckedIOException;
 import java.time.Clock;
 import java.util.List;
 import java.util.function.Consumer;
-import objectos.http.HttpHeaderName;
+import objectos.http.HeaderName;
 import objectos.http.Response;
 import objectos.http.ResponseOptions;
 import objectox.http.Header;
-import objectox.http.HttpStatus0;
 
 public record ResponsePojo(
 
-    HttpStatus0 status,
+    StatusEnum status,
 
     List<Header> headers,
 
@@ -49,8 +48,8 @@ public record ResponsePojo(
   }
 
   public final void setCookie(String value) {
-    final HttpHeaderName name;
-    name = HttpHeaderName.SET_COOKIE;
+    final HeaderName name;
+    name = HeaderName.SET_COOKIE;
 
     final Header h;
     h = new Header(name, value);

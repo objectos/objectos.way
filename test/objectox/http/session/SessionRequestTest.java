@@ -18,7 +18,7 @@ package objectox.http.session;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 
-import objectos.http.HttpHeaderName;
+import objectos.http.HeaderName;
 import objectos.http.Request;
 import objectox.http.HttpToken;
 import org.testng.annotations.Test;
@@ -42,7 +42,7 @@ public class SessionRequestTest {
 
     final Request req;
     req = Request.create(opts -> {
-      opts.header(HttpHeaderName.COOKIE, "WAY=" + id.toString());
+      opts.header(HeaderName.COOKIE, "WAY=" + id.toString());
     });
 
     assertEquals(req.sessionPresent(), false);

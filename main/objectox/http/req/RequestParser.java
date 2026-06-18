@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
-import objectos.http.HttpHeaderName;
+import objectos.http.HeaderName;
 import objectox.http.HttpClientException;
 import objectox.http.HttpServerException;
 import objectox.http.RequestMethodEnum;
@@ -89,7 +89,7 @@ public final class RequestParser {
     final RequestParser6Headers headersParser;
     headersParser = new RequestParser6Headers(input);
 
-    final Map<HttpHeaderName, Object> headersMap;
+    final Map<HeaderName, Object> headersMap;
     headersMap = headersParser.parse();
 
     final RequestHeaders headers;
@@ -169,7 +169,7 @@ public final class RequestParser {
 
   private void validate(RequestHeaders headers) throws IOException {
     final List<String> hostHeader;
-    hostHeader = headers.headerAll(HttpHeaderName.HOST);
+    hostHeader = headers.headerAll(HeaderName.HOST);
 
     if (hostHeader.size() != 1) {
       final String msg;
@@ -189,7 +189,7 @@ public final class RequestParser {
     }
 
     final String transferEncoding;
-    transferEncoding = headers.header(HttpHeaderName.TRANSFER_ENCODING);
+    transferEncoding = headers.header(HeaderName.TRANSFER_ENCODING);
 
     if (transferEncoding != null) {
       throw new HttpServerException(HttpServerException.Kind.TRANSFER_ENCODING);

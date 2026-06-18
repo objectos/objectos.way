@@ -29,8 +29,8 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import objectos.http.Content;
-import objectos.http.HttpHeaderName;
-import objectos.http.HttpStatus;
+import objectos.http.HeaderName;
+import objectos.http.Status;
 import objectos.http.Request;
 import objectos.http.Result;
 import objectos.way.Note;
@@ -121,7 +121,7 @@ public final class StaticFiles implements BiFunction<Request, Result, Result> {
       etag = staticFilesETag.apply(attributes);
 
       final String ifNoneMatch;
-      ifNoneMatch = request.header(HttpHeaderName.IF_NONE_MATCH);
+      ifNoneMatch = request.header(HeaderName.IF_NONE_MATCH);
 
       if (etag.equals(ifNoneMatch)) {
         return staticFilesResponses.notModified(etag);
@@ -137,7 +137,7 @@ public final class StaticFiles implements BiFunction<Request, Result, Result> {
     } catch (StaticFilesErrTraversal e) {
       noteError(e);
 
-      return HttpStatus.BAD_REQUEST;
+      return Status.BAD_REQUEST;
     }
   }
 

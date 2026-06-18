@@ -20,7 +20,7 @@ import static org.testng.Assert.assertSame;
 
 import objectos.http.Content;
 import objectos.http.ContentProvider;
-import objectos.http.HttpStatus;
+import objectos.http.Status;
 import objectos.http.MediaType;
 import objectos.http.Request;
 import objectos.http.Response;
@@ -139,7 +139,7 @@ public class ResultProcessorTest {
   @Test
   public void status() {
     final Response res;
-    res = subject.process(HttpStatus.BAD_REQUEST);
+    res = subject.process(Status.BAD_REQUEST);
 
     assertEquals(
         ResponseY.toString(res),

@@ -23,7 +23,7 @@ final class HttpHandler4NotFound extends HttpHandler0Super {
 
   @Override
   final void handleImpl(HttpExchange http) {
-    http.error(HttpStatus.NOT_FOUND);
+    http.error(Status.NOT_FOUND);
   }
 
 }

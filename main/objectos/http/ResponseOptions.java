@@ -25,19 +25,19 @@ public sealed interface ResponseOptions permits ResponseBuilder {
   /// Sets the status of the response message.
   ///
   /// @param value the response status
-  void status(HttpStatus value);
+  void status(Status value);
 
   /// Adds the specified header field to the response message.
   ///
   /// @param name the header name
   /// @param value the header value
-  void header(HttpHeaderName name, long value);
+  void header(HeaderName name, long value);
 
   /// Adds the specified header field to the response message.
   ///
   /// @param name the header name
   /// @param value the header value
-  void header(HttpHeaderName name, String value);
+  void header(HeaderName name, String value);
 
   /// Adds the specified header field to the response message.
   ///
@@ -60,7 +60,7 @@ public sealed interface ResponseOptions permits ResponseBuilder {
   ///
   /// @param name the header name
   /// @param builder a handle for creating the header field value
-  void header(HttpHeaderName name, Consumer<? super HttpHeaderValueBuilder> builder);
+  void header(HeaderName name, Consumer<? super HttpHeaderValueBuilder> builder);
 
   /// Adds the `Date` header field with the server's current time.
   void date();
@@ -71,12 +71,20 @@ public sealed interface ResponseOptions permits ResponseBuilder {
   ///        response message
   void send(Path file);
 
-  /// Sends the specified `Content` object as part of this response message.
-  /// As a minimum, the `Content-Type` header field will be appended to the
+  /// Sends the specified `Content` object as part of this response message. As
+  /// a minimum, the `Content-Type` header field will be appended to the
   /// response, and the response body will be provided by the specified content
   /// object.
   ///
-  /// @param content the object to be sent as part of this response message
-  void send(Content content);
+  /// @param value the object to be sent as part of this response message
+  void send(Content value);
+
+  /// Sends the `Content` from the specified provider as part of this response
+  /// message. As a minimum, the `Content-Type` header field will be appended to
+  /// the response, and the response body will be provided by the specified
+  /// content object.
+  ///
+  /// @param value the object providing the `Content` object
+  void send(ContentProvider value);
 
 }

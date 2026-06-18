@@ -123,7 +123,7 @@ final class HttpServerTask implements Runnable {
     head = method == RequestMethodEnum.HEAD;
 
     final String hostValue;
-    hostValue = request.header(HttpHeaderName.HOST);
+    hostValue = request.header(HeaderName.HOST);
 
     final HttpHost5Pojo host;
     host = hosts.get(hostValue);
@@ -175,9 +175,9 @@ final class HttpServerTask implements Runnable {
 
     response.status(exception.status());
 
-    response.header(HttpHeaderName.DATE, response.now());
+    response.header(HeaderName.DATE, response.now());
 
-    response.header(HttpHeaderName.CONNECTION, "close");
+    response.header(HeaderName.CONNECTION, "close");
 
     final String msg;
     msg = exception.message();

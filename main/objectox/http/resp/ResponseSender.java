@@ -25,13 +25,12 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import objectos.http.Content;
-import objectos.http.HttpHeaderName;
+import objectos.http.HeaderName;
 import objectos.http.MediaType;
 import objectos.internal.Bytes;
 import objectos.lang.BinaryObject;
 import objectox.http.Header;
-import objectox.http.HttpHeaderName0;
-import objectox.http.HttpStatus0;
+import objectox.http.HeaderNamePojo;
 import objectox.http.Rfc;
 import objectox.http.media.ContentBinaryObject;
 import objectox.http.media.ContentBytes;
@@ -61,7 +60,7 @@ public final class ResponseSender {
   }
 
   private void send0(ResponsePojo pojo, boolean head) throws IOException {
-    final HttpStatus0 status;
+    final StatusEnum status;
     status = pojo.status();
 
     statusLine(status);
@@ -70,12 +69,12 @@ public final class ResponseSender {
     headers = pojo.headers();
 
     for (Header header : headers) {
-      final HttpHeaderName name;
+      final HeaderName name;
 
       final String value;
 
       if (header == Header.DATE) {
-        name = HttpHeaderName.DATE;
+        name = HeaderName.DATE;
 
         value = date.now();
       } else {
@@ -93,13 +92,13 @@ public final class ResponseSender {
     entity(entity, head);
   }
 
-  private static final Map<HttpStatus0, byte[]> STATUS_LINES = new EnumMap<>(HttpStatus0.class);
+  private static final Map<StatusEnum, byte[]> STATUS_LINES = new EnumMap<>(StatusEnum.class);
 
   static {
-    final HttpStatus0[] values;
-    values = HttpStatus0.values();
+    final StatusEnum[] values;
+    values = StatusEnum.values();
 
-    for (HttpStatus0 status : values) {
+    for (StatusEnum status : values) {
       final String response;
       response = "HTTP/1.1 " + Integer.toString(status.code()) + " " + status.reasonPhrase() + "\r\n";
 
@@ -110,7 +109,7 @@ public final class ResponseSender {
     }
   }
 
-  private void statusLine(HttpStatus0 status) throws IOException {
+  private void statusLine(StatusEnum status) throws IOException {
     final byte[] statusLine;
     statusLine = STATUS_LINES.get(status);
 
@@ -119,9 +118,9 @@ public final class ResponseSender {
 
   private static final byte[] COLONCRLF = ":\r\n".getBytes(StandardCharsets.US_ASCII);
 
-  private void header(HttpHeaderName name, String value) throws IOException {
-    final HttpHeaderName0 nameImpl;
-    nameImpl = (HttpHeaderName0) name;
+  private void header(HeaderName name, String value) throws IOException {
+    final HeaderNamePojo nameImpl;
+    nameImpl = (HeaderNamePojo) name;
 
     final byte[] nameBytes;
     nameBytes = nameImpl.headerCaseBytes();
@@ -149,9 +148,9 @@ public final class ResponseSender {
       case ResponseEntity.OfContent(Content content) -> {
         switch (content) {
           case ContentBinaryObject(MediaType contentType, BinaryObject contents) -> {
-            header(HttpHeaderName.CONTENT_TYPE, contentType.fullType());
+            header(HeaderName.CONTENT_TYPE, contentType.fullType());
 
-            header(HttpHeaderName.TRANSFER_ENCODING, "chunked");
+            header(HeaderName.TRANSFER_ENCODING, "chunked");
 
             outputStream.write(Bytes.CRLF);
 
@@ -165,7 +164,7 @@ public final class ResponseSender {
           }
 
           case ContentBytes(MediaType contentType, byte[] bytes) -> {
-            header(HttpHeaderName.CONTENT_TYPE, contentType.fullType());
+            header(HeaderName.CONTENT_TYPE, contentType.fullType());
 
             final int length;
             length = bytes.length;
@@ -173,7 +172,7 @@ public final class ResponseSender {
             final String contentLength;
             contentLength = Integer.toString(length);
 
-            header(HttpHeaderName.CONTENT_LENGTH, contentLength);
+            header(HeaderName.CONTENT_LENGTH, contentLength);
 
             outputStream.write(Bytes.CRLF);
 
@@ -197,7 +196,7 @@ public final class ResponseSender {
         final String contentLength;
         contentLength = Long.toString(length);
 
-        header(HttpHeaderName.CONTENT_LENGTH, contentLength);
+        header(HeaderName.CONTENT_LENGTH, contentLength);
 
         outputStream.write(Bytes.CRLF);
 

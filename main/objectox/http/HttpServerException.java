@@ -16,7 +16,7 @@
 package objectox.http;
 
 import java.io.IOException;
-import objectos.http.HttpStatus;
+import objectos.http.Status;
 import objectox.http.srv.ServerTaskMessage;
 
 @SuppressWarnings("serial")
@@ -24,19 +24,19 @@ public final class HttpServerException extends IOException implements ServerTask
 
   public enum Kind {
 
-    METHOD_NOT_IMPLEMENTED(HttpStatus.NOT_IMPLEMENTED, "The requested method is not implemented by this server.\n"),
+    METHOD_NOT_IMPLEMENTED(Status.NOT_IMPLEMENTED, "The requested method is not implemented by this server.\n"),
 
-    HTTP_VERSION_NOT_SUPPORTED(HttpStatus.HTTP_VERSION_NOT_SUPPORTED, "Supported versions: HTTP/1.1\n"),
+    HTTP_VERSION_NOT_SUPPORTED(Status.HTTP_VERSION_NOT_SUPPORTED, "Supported versions: HTTP/1.1\n"),
 
-    TRANSFER_ENCODING(HttpStatus.NOT_IMPLEMENTED, "Support for the request Transfer-Encoding header is not implemented.\n"),
+    TRANSFER_ENCODING(Status.NOT_IMPLEMENTED, "Support for the request Transfer-Encoding header is not implemented.\n"),
 
-    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "The server encountered an internal error and was unable to complete your request.\n");
+    INTERNAL_SERVER_ERROR(Status.INTERNAL_SERVER_ERROR, "The server encountered an internal error and was unable to complete your request.\n");
 
-    private final HttpStatus status;
+    private final Status status;
 
     private final String message;
 
-    private Kind(HttpStatus status, String message) {
+    private Kind(Status status, String message) {
       this.status = status;
 
       this.message = message;
@@ -57,7 +57,7 @@ public final class HttpServerException extends IOException implements ServerTask
   }
 
   @Override
-  public final HttpStatus status() {
+  public final Status status() {
     return kind.status;
   }
 

@@ -17,8 +17,8 @@ package objectox.http.host;
 
 import objectos.http.Content;
 import objectos.http.ContentProvider;
-import objectos.http.HttpHeaderName;
-import objectos.http.HttpStatus;
+import objectos.http.HeaderName;
+import objectos.http.Status;
 import objectos.http.MediaType;
 import objectos.http.Redirection;
 import objectos.http.Request;
@@ -61,7 +61,7 @@ class ResultProcessor {
 
       case StaticFileContent(Content content) -> processContent(content);
 
-      case HttpStatus s -> processStatus(s);
+      case Status s -> processStatus(s);
     };
   }
 
@@ -69,7 +69,7 @@ class ResultProcessor {
     final ResponseBuilder builder;
     builder = new ResponseBuilder();
 
-    builder.status(HttpStatus.OK);
+    builder.status(Status.OK);
 
     builder.date();
 
@@ -89,18 +89,18 @@ class ResultProcessor {
 
     builder.date();
 
-    builder.header(HttpHeaderName.CONTENT_LENGTH, "0");
+    builder.header(HeaderName.CONTENT_LENGTH, "0");
 
-    builder.header(HttpHeaderName.LOCATION, pojo.location());
+    builder.header(HeaderName.LOCATION, pojo.location());
 
     return builder.build();
   }
 
   protected Response processRequest(Request request) {
-    return processStatus(HttpStatus.NOT_FOUND);
+    return processStatus(Status.NOT_FOUND);
   }
 
-  protected Response processStatus(HttpStatus status) {
+  protected Response processStatus(Status status) {
     final ResponseBuilder builder;
     builder = new ResponseBuilder();
 

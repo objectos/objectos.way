@@ -21,8 +21,8 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.time.Clock;
 import objectos.http.Content;
-import objectos.http.HttpHeaderName;
-import objectos.http.HttpStatus;
+import objectos.http.HeaderName;
+import objectos.http.Status;
 import objectos.http.MediaType;
 import objectos.http.RequestMethod;
 import objectos.way.Note;
@@ -103,7 +103,7 @@ final class ServerTask implements Runnable {
           }
 
           final String hostValue;
-          hostValue = request.header(HttpHeaderName.HOST);
+          hostValue = request.header(HeaderName.HOST);
 
           final Host host;
           host = hostMap.get(hostValue);
@@ -114,7 +114,7 @@ final class ServerTask implements Runnable {
             final String msg;
             msg = "Invalid host: %s".formatted(hostValue);
 
-            response = error(HttpStatus.BAD_REQUEST, msg);
+            response = error(Status.BAD_REQUEST, msg);
           }
 
           else {
@@ -162,13 +162,13 @@ final class ServerTask implements Runnable {
     }
   }
 
-  private ResponsePojo error(HttpStatus status, String message) {
+  private ResponsePojo error(Status status, String message) {
     return ResponsePojo.create0(opts -> {
       opts.status(status);
 
       opts.date();
 
-      opts.header(HttpHeaderName.CONNECTION, "close");
+      opts.header(HeaderName.CONNECTION, "close");
 
       opts.send(Content.of(MediaType.TEXT_PLAIN, message));
     });

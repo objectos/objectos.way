@@ -64,16 +64,16 @@ public class HttpExchangeTest {
   public void header01() {
     HttpExchange http;
     http = HttpExchange.create(config -> {
-      config.header(HttpHeaderName.CONTENT_TYPE, "application/x-www-form-urlencoded");
-      config.header(HttpHeaderName.CONTENT_LENGTH, "0");
+      config.header(HeaderName.CONTENT_TYPE, "application/x-www-form-urlencoded");
+      config.header(HeaderName.CONTENT_LENGTH, "0");
 
-      config.header(HttpHeaderName.USER_AGENT, "first");
-      config.header(HttpHeaderName.USER_AGENT, "second");
+      config.header(HeaderName.USER_AGENT, "first");
+      config.header(HeaderName.USER_AGENT, "second");
     });
 
-    assertEquals(http.header(HttpHeaderName.CONTENT_TYPE), "application/x-www-form-urlencoded");
-    assertEquals(http.header(HttpHeaderName.CONTENT_LENGTH), "0");
-    assertEquals(http.header(HttpHeaderName.USER_AGENT), "first");
+    assertEquals(http.header(HeaderName.CONTENT_TYPE), "application/x-www-form-urlencoded");
+    assertEquals(http.header(HeaderName.CONTENT_LENGTH), "0");
+    assertEquals(http.header(HeaderName.USER_AGENT), "first");
   }
 
   @Test(description = "config.header should reject null names", expectedExceptions = NullPointerException.class)
@@ -88,7 +88,7 @@ public class HttpExchangeTest {
   @Test(description = "config.header should reject null values", expectedExceptions = NullPointerException.class)
   public void header03() {
     HttpExchange.create(config -> {
-      config.header(HttpHeaderName.CONTENT_TYPE, null);
+      config.header(HeaderName.CONTENT_TYPE, null);
     });
 
     Assert.fail("it should have thrown");
@@ -96,8 +96,8 @@ public class HttpExchangeTest {
 
   @Test
   public void header04() {
-    HttpHeaderName foo = HttpHeaderName.of("Foo");
-    HttpHeaderName name = HttpHeaderName.of("Name");
+    HeaderName foo = HeaderName.of("Foo");
+    HeaderName name = HeaderName.of("Name");
 
     HttpExchange http;
     http = HttpExchange.create(config -> {
@@ -301,7 +301,7 @@ public class HttpExchangeTest {
     HttpExchange http;
     http = http(_ -> {});
 
-    http.error(HttpStatus.BAD_REQUEST);
+    http.error(Status.BAD_REQUEST);
 
     assertEquals(
         http.toString(),

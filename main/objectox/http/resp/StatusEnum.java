@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.http;
+package objectox.http.resp;
 
-import objectos.http.HttpStatus;
+import objectos.http.Status;
 
-public enum HttpStatus0 implements HttpStatus {
+public enum StatusEnum implements Status {
 
   // 2.x.x
 
@@ -71,7 +71,7 @@ public enum HttpStatus0 implements HttpStatus {
 
   public final String reasonPhrase;
 
-  private HttpStatus0(int code, String reasonPhrase) {
+  private StatusEnum(int code, String reasonPhrase) {
     this.code = code;
 
     this.reasonPhrase = reasonPhrase;

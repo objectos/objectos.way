@@ -41,7 +41,7 @@ final class HttpHost4Handler implements HttpHandler {
       return;
     }
 
-    http.error(HttpStatus.NOT_FOUND);
+    http.error(Status.NOT_FOUND);
   }
 
 }

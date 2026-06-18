@@ -19,8 +19,8 @@ import static org.testng.Assert.assertEquals;
 
 import java.util.HashMap;
 import java.util.List;
-import objectos.http.HttpHeaderName;
-import objectos.http.HttpStatus;
+import objectos.http.HeaderName;
+import objectos.http.Status;
 import objectos.http.Request;
 import objectos.way.Y;
 import objectos.y.RandomGeneratorY;
@@ -40,7 +40,7 @@ public class SessionResponseTest {
 
     final ResponsePojo response;
     response = ResponsePojo.create0(opts -> {
-      opts.status(HttpStatus.OK);
+      opts.status(Status.OK);
     });
 
     final List<Header> headers;
@@ -71,7 +71,7 @@ public class SessionResponseTest {
 
     final ResponsePojo response;
     response = ResponsePojo.create0(opts -> {
-      opts.status(HttpStatus.NOT_FOUND);
+      opts.status(Status.NOT_FOUND);
     });
 
     final List<Header> headers;
@@ -102,7 +102,7 @@ public class SessionResponseTest {
 
     final ResponsePojo response;
     response = ResponsePojo.create0(opts -> {
-      opts.status(HttpStatus.OK);
+      opts.status(Status.OK);
     });
 
     final List<Header> headers;
@@ -139,7 +139,7 @@ public class SessionResponseTest {
 
     final ResponsePojo response;
     response = ResponsePojo.create0(opts -> {
-      opts.status(HttpStatus.OK);
+      opts.status(Status.OK);
     });
 
     final List<Header> headers;
@@ -169,7 +169,7 @@ public class SessionResponseTest {
     final Header header;
     header = headers.get(0);
 
-    assertEquals(header.name(), HttpHeaderName.SET_COOKIE);
+    assertEquals(header.name(), HeaderName.SET_COOKIE);
     assertEquals(header.value(), "WAY=" + HttpToken.of32(4, 5, 5, 6).toString());
   }
 

@@ -15,8 +15,8 @@
  */
 package objectos.http;
 
-import objectox.http.HttpStatus0;
 import objectox.http.RedirectionPojo;
+import objectox.http.resp.StatusEnum;
 
 /// A redirection message.
 public sealed interface Redirection
@@ -32,7 +32,7 @@ public sealed interface Redirection
   ///
   /// @return a newly created redirection message
   static Redirection movedPermanently(String location) {
-    return RedirectionPojo.of(HttpStatus0.MOVED_PERMANENTLY, location);
+    return RedirectionPojo.of(StatusEnum.MOVED_PERMANENTLY, location);
   }
 
   /// Returns a new `302 Found` redirection with the specified `Location`
@@ -42,7 +42,7 @@ public sealed interface Redirection
   ///
   /// @return a newly created redirection message
   static Redirection found(String location) {
-    return RedirectionPojo.of(HttpStatus0.FOUND, location);
+    return RedirectionPojo.of(StatusEnum.FOUND, location);
   }
 
   /// Returns a new `303 See Other` redirection with the specified `Location`
@@ -52,7 +52,7 @@ public sealed interface Redirection
   ///
   /// @return a newly created redirection message
   static Redirection seeOther(String location) {
-    return RedirectionPojo.of(HttpStatus0.SEE_OTHER, location);
+    return RedirectionPojo.of(StatusEnum.SEE_OTHER, location);
   }
 
 }

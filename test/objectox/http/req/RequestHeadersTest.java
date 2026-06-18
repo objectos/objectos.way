@@ -18,7 +18,7 @@ package objectox.http.req;
 import static org.testng.Assert.assertEquals;
 
 import java.util.Map;
-import objectos.http.HttpHeaderName;
+import objectos.http.HeaderName;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -28,15 +28,15 @@ public class RequestHeadersTest {
   public Object[][] closeConnectionProvider() {
     return new Object[][] {
         {Map.of(), false},
-        {Map.of(HttpHeaderName.HOST, "close"), false},
-        {Map.of(HttpHeaderName.CONNECTION, "keep-alive"), false},
-        {Map.of(HttpHeaderName.CONNECTION, "close"), true},
-        {Map.of(HttpHeaderName.CONNECTION, "ClOsE"), true}
+        {Map.of(HeaderName.HOST, "close"), false},
+        {Map.of(HeaderName.CONNECTION, "keep-alive"), false},
+        {Map.of(HeaderName.CONNECTION, "close"), true},
+        {Map.of(HeaderName.CONNECTION, "ClOsE"), true}
     };
   }
 
   @Test(dataProvider = "closeConnectionProvider")
-  public void closeConnection(Map<HttpHeaderName, Object> map, boolean expected) {
+  public void closeConnection(Map<HeaderName, Object> map, boolean expected) {
     final RequestHeaders headers;
     headers = new RequestHeaders(map);
 

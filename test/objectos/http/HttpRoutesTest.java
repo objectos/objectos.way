@@ -29,8 +29,8 @@ import org.testng.annotations.Test;
 @SuppressWarnings("exports")
 public class HttpRoutesTest {
 
-  private final HttpHandler ok = http -> { http.status(HttpStatus.OK); http.send(); };
-  private final HttpHandler notFound = http -> { http.status(HttpStatus.NOT_FOUND); http.send(); };
+  private final HttpHandler ok = http -> { http.status(Status.OK); http.send(); };
+  private final HttpHandler notFound = http -> { http.status(Status.NOT_FOUND); http.send(); };
 
   @Test(description = "Handlers should be applied in declaration order")
   public void handler02() {
@@ -90,7 +90,7 @@ public class HttpRoutesTest {
         id = counter.getAndIncrement();
 
         if (id == 2) {
-          http.status(HttpStatus.OK);
+          http.status(Status.OK);
           http.send();
         }
       }
@@ -161,7 +161,7 @@ public class HttpRoutesTest {
     );
   }
 
-  private static final HttpHeaderName TEST = HttpHeaderName.of("Way-Test");
+  private static final HeaderName TEST = HeaderName.of("Way-Test");
 
   @Test(
       description = "Method HttpHandler: allow declaring multiple methods",
@@ -171,7 +171,7 @@ public class HttpRoutesTest {
     record ThisHandler(String value) implements HttpHandler {
       @Override
       public void handle(HttpExchange http) {
-        http.status(HttpStatus.OK);
+        http.status(Status.OK);
         http.header(TEST, value);
         http.send();
       }
@@ -234,7 +234,7 @@ public class HttpRoutesTest {
         id = counter.getAndIncrement();
 
         if (id == 3) {
-          http.status(HttpStatus.OK);
+          http.status(Status.OK);
           http.header(TEST, value);
           http.send();
         }
@@ -357,7 +357,7 @@ public class HttpRoutesTest {
     test(
         r -> {
           r.at(expression, Http.GET, Http.handler(http -> {
-            http.status(HttpStatus.OK);
+            http.status(Status.OK);
 
             http.header(TEST, "p1=" + http.pathParam("p1"));
             http.header(TEST, "p2=" + http.pathParam("p2"));

@@ -20,7 +20,7 @@ import static org.testng.Assert.assertEquals;
 import java.util.Iterator;
 import java.util.List;
 import objectos.http.Handler;
-import objectos.http.HttpStatus;
+import objectos.http.Status;
 import objectos.http.RequestMethod;
 import objectox.http.req.RequestMethodY;
 import org.testng.Assert;
@@ -51,7 +51,7 @@ public class RoutingAtMethodTest {
     final RoutingAtMethod subject;
     subject = new RoutingAtMethod(method);
 
-    subject.result(HttpStatus.FORBIDDEN);
+    subject.result(Status.FORBIDDEN);
 
     assertEquals(
         subject.build(),
@@ -59,7 +59,7 @@ public class RoutingAtMethodTest {
         new HandlerIfMethod(
             method,
 
-            new HandlerResult(HttpStatus.FORBIDDEN)
+            new HandlerResult(Status.FORBIDDEN)
         )
     );
   }
@@ -69,10 +69,10 @@ public class RoutingAtMethodTest {
     final RoutingAtMethod subject;
     subject = new RoutingAtMethod(method);
 
-    subject.result(HttpStatus.FORBIDDEN);
+    subject.result(Status.FORBIDDEN);
 
     try {
-      subject.result(HttpStatus.BAD_REQUEST);
+      subject.result(Status.BAD_REQUEST);
 
       Assert.fail("It should have thrown");
     } catch (IllegalStateException expected) {
@@ -89,7 +89,7 @@ public class RoutingAtMethodTest {
     subject = new RoutingAtMethod(method);
 
     final Handler handler;
-    handler = new HandlerResult(HttpStatus.BAD_REQUEST);
+    handler = new HandlerResult(Status.BAD_REQUEST);
 
     subject.handler(handler);
 
@@ -110,12 +110,12 @@ public class RoutingAtMethodTest {
     subject = new RoutingAtMethod(method);
 
     final Handler h1;
-    h1 = new HandlerResult(HttpStatus.BAD_REQUEST);
+    h1 = new HandlerResult(Status.BAD_REQUEST);
 
     subject.handler(h1);
 
     final Handler h2;
-    h2 = new HandlerResult(HttpStatus.NOT_MODIFIED);
+    h2 = new HandlerResult(Status.NOT_MODIFIED);
 
     subject.handler(h2);
 

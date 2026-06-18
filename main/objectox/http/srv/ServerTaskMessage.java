@@ -15,7 +15,7 @@
  */
 package objectox.http.srv;
 
-import objectos.http.HttpStatus;
+import objectos.http.Status;
 import objectox.http.HttpClientException;
 import objectox.http.HttpServerException;
 
@@ -24,7 +24,7 @@ public sealed interface ServerTaskMessage
     HttpClientException,
     HttpServerException {
 
-  HttpStatus status();
+  Status status();
 
   String message();
 

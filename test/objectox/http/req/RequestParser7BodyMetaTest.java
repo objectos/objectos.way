@@ -19,7 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 import java.util.Map;
-import objectos.http.HttpHeaderName;
+import objectos.http.HeaderName;
 import objectox.http.HttpClientException;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 
 public class RequestParser7BodyMetaTest {
 
-  private RequestBodyMeta parse(Map<HttpHeaderName, Object> map) throws IOException {
+  private RequestBodyMeta parse(Map<HeaderName, Object> map) throws IOException {
     final RequestHeaders headers;
     headers = new RequestHeaders(map);
 
@@ -48,7 +48,7 @@ public class RequestParser7BodyMetaTest {
         },
         {
             Map.of(
-                HttpHeaderName.HOST, "www.example.com"
+                HeaderName.HOST, "www.example.com"
             ),
 
             RequestBodyMeta.ofEmpty(),
@@ -56,8 +56,8 @@ public class RequestParser7BodyMetaTest {
         },
         {
             Map.of(
-                HttpHeaderName.HOST, "www.example.com",
-                HttpHeaderName.CONTENT_LENGTH, "0"
+                HeaderName.HOST, "www.example.com",
+                HeaderName.CONTENT_LENGTH, "0"
             ),
 
             RequestBodyMeta.ofEmpty(),
@@ -65,8 +65,8 @@ public class RequestParser7BodyMetaTest {
         },
         {
             Map.of(
-                HttpHeaderName.HOST, "www.example.com",
-                HttpHeaderName.CONTENT_LENGTH, "123"
+                HeaderName.HOST, "www.example.com",
+                HeaderName.CONTENT_LENGTH, "123"
             ),
 
             RequestBodyMeta.of(123, RequestBodyMeta.TypeKind.NONE),
@@ -74,8 +74,8 @@ public class RequestParser7BodyMetaTest {
         },
         {
             Map.of(
-                HttpHeaderName.HOST, "www.example.com",
-                HttpHeaderName.CONTENT_LENGTH, "9223372036854775807"
+                HeaderName.HOST, "www.example.com",
+                HeaderName.CONTENT_LENGTH, "9223372036854775807"
             ),
 
             RequestBodyMeta.of(Long.MAX_VALUE, RequestBodyMeta.TypeKind.NONE),
@@ -83,9 +83,9 @@ public class RequestParser7BodyMetaTest {
         },
         {
             Map.of(
-                HttpHeaderName.HOST, "www.example.com",
-                HttpHeaderName.CONTENT_LENGTH, "47890",
-                HttpHeaderName.CONTENT_TYPE, "text/plain"
+                HeaderName.HOST, "www.example.com",
+                HeaderName.CONTENT_LENGTH, "47890",
+                HeaderName.CONTENT_TYPE, "text/plain"
             ),
 
             RequestBodyMeta.of(47890, RequestBodyMeta.TypeKind.NONE),
@@ -93,9 +93,9 @@ public class RequestParser7BodyMetaTest {
         },
         {
             Map.of(
-                HttpHeaderName.HOST, "www.example.com",
-                HttpHeaderName.CONTENT_LENGTH, "1209830",
-                HttpHeaderName.CONTENT_TYPE, "application/x-www-form-urlencoded"
+                HeaderName.HOST, "www.example.com",
+                HeaderName.CONTENT_LENGTH, "1209830",
+                HeaderName.CONTENT_TYPE, "application/x-www-form-urlencoded"
             ),
 
             RequestBodyMeta.of(1209830, RequestBodyMeta.TypeKind.APPLICATION_FORM_URLENCODED),
@@ -103,9 +103,9 @@ public class RequestParser7BodyMetaTest {
         },
         {
             Map.of(
-                HttpHeaderName.HOST, "www.example.com",
-                HttpHeaderName.CONTENT_LENGTH, "1209830",
-                HttpHeaderName.CONTENT_TYPE, "application/x-WWW-form-urlencoded"
+                HeaderName.HOST, "www.example.com",
+                HeaderName.CONTENT_LENGTH, "1209830",
+                HeaderName.CONTENT_TYPE, "application/x-WWW-form-urlencoded"
             ),
 
             RequestBodyMeta.of(1209830, RequestBodyMeta.TypeKind.APPLICATION_FORM_URLENCODED),
@@ -116,7 +116,7 @@ public class RequestParser7BodyMetaTest {
 
   @SuppressWarnings("exports")
   @Test(dataProvider = "validProvider")
-  public void valid(Map<HttpHeaderName, Object> map, RequestBodyMeta expected, String description) throws IOException {
+  public void valid(Map<HeaderName, Object> map, RequestBodyMeta expected, String description) throws IOException {
     assertEquals(
         parse(map),
 
@@ -129,8 +129,8 @@ public class RequestParser7BodyMetaTest {
     return new Object[][] {
         {
             Map.of(
-                HttpHeaderName.CONTENT_LENGTH, "two hundred bytes",
-                HttpHeaderName.CONTENT_TYPE, "application/x-www-form-urlencoded"
+                HeaderName.CONTENT_LENGTH, "two hundred bytes",
+                HeaderName.CONTENT_TYPE, "application/x-www-form-urlencoded"
             ),
 
             HttpClientException.Kind.INVALID_REQUEST_HEADERS,
@@ -138,9 +138,9 @@ public class RequestParser7BodyMetaTest {
         },
         {
             Map.of(
-                HttpHeaderName.CONTENT_LENGTH, "234",
-                HttpHeaderName.CONTENT_TYPE, "application/x-www-form-urlencoded",
-                HttpHeaderName.TRANSFER_ENCODING, "chunked"
+                HeaderName.CONTENT_LENGTH, "234",
+                HeaderName.CONTENT_TYPE, "application/x-www-form-urlencoded",
+                HeaderName.TRANSFER_ENCODING, "chunked"
             ),
 
             HttpClientException.Kind.INVALID_REQUEST_HEADERS,
@@ -148,7 +148,7 @@ public class RequestParser7BodyMetaTest {
         },
         {
             Map.of(
-                HttpHeaderName.CONTENT_LENGTH, "9223372036854775808"
+                HeaderName.CONTENT_LENGTH, "9223372036854775808"
             ),
 
             HttpClientException.Kind.CONTENT_TOO_LARGE,
@@ -156,7 +156,7 @@ public class RequestParser7BodyMetaTest {
         },
         {
             Map.of(
-                HttpHeaderName.CONTENT_TYPE, "application/json"
+                HeaderName.CONTENT_TYPE, "application/json"
             ),
 
             HttpClientException.Kind.LENGTH_REQUIRED,
@@ -167,7 +167,7 @@ public class RequestParser7BodyMetaTest {
 
   @SuppressWarnings("exports")
   @Test(dataProvider = "invalidProvider")
-  public void invalid(Map<HttpHeaderName, Object> map, HttpClientException.Kind kind, String msg) throws IOException {
+  public void invalid(Map<HeaderName, Object> map, HttpClientException.Kind kind, String msg) throws IOException {
     try {
       parse(map);
 

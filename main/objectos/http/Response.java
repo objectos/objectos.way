@@ -34,4 +34,72 @@ public sealed interface Response
     return ResponsePojo.create0(opts);
   }
 
+  /// Returns a new response instance with the specified status and content. In
+  /// addition to the specified arguments, the returned response contains the
+  /// `Date` header. In other words, the following invocation:
+  ///
+  /// ```java
+  /// Content content = ...
+  /// Response.of(Status.NOT_FOUND, content);
+  /// ```
+  ///
+  /// is equivalent to the following:
+  ///
+  /// ```java
+  /// Content content = ...
+  /// Response.create(opts -> {
+  ///   opts.status(Status.NOT_FOUND);
+  ///   opts.date();
+  ///   opts.send(content);
+  /// });
+  /// ```
+  ///
+  /// @param status the response status
+  /// @param content the content object to send as part of the response
+  ///
+  /// @return a newly created response object
+  static Response of(Status status, Content content) {
+    return create(opts -> {
+      opts.status(status);
+
+      opts.date();
+
+      opts.send(content);
+    });
+  }
+
+  /// Returns a new response instance with the specified status and content
+  /// provider. In addition to the specified arguments, the returned response
+  /// contains the `Date` header. In other words, the following invocation:
+  ///
+  /// ```java
+  /// ContentProvider provider = ...
+  /// Response.of(Status.NOT_FOUND, provider);
+  /// ```
+  ///
+  /// is equivalent to the following:
+  ///
+  /// ```java
+  /// ContentProvider provider = ...
+  /// Response.create(opts -> {
+  ///   opts.status(Status.NOT_FOUND);
+  ///   opts.date();
+  ///   opts.send(provider);
+  /// });
+  /// ```
+  ///
+  /// @param status the response status
+  /// @param provider the content provider
+  ///
+  /// @return a newly created response object
+  static Response of(Status status, ContentProvider provider) {
+    return create(opts -> {
+      opts.status(status);
+
+      opts.date();
+
+      opts.send(provider);
+    });
+  }
+
 }

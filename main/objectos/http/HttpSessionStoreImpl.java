@@ -138,7 +138,7 @@ final class HttpSessionStoreImpl implements HttpSessionLoader, HttpSessionStore 
 
     // prefer from the header
     String encoded;
-    encoded = http.header(HttpHeaderName.WAY_CSRF_TOKEN);
+    encoded = http.header(HeaderName.WAY_CSRF_TOKEN);
 
     if (encoded == null) {
       // obtain from form param
@@ -169,13 +169,13 @@ final class HttpSessionStoreImpl implements HttpSessionLoader, HttpSessionStore 
     if (!valid) {
       noteSink.send(notes.invalidCsrf, http);
 
-      http.error(HttpStatus.FORBIDDEN);
+      http.error(Status.FORBIDDEN);
     }
   }
 
   private HttpSession0 findSession(Request impl) {
     final String cookie;
-    cookie = impl.header(HttpHeaderName.COOKIE); // implicit null-check
+    cookie = impl.header(HeaderName.COOKIE); // implicit null-check
 
     if (cookie == null) {
       return null;

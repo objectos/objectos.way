@@ -48,7 +48,7 @@ final class HttpHost3StaticFiles implements HttpHandler {
 
       handle(http, file);
     } catch (HttpTraversalException e) {
-      http.error(HttpStatus.BAD_REQUEST, e);
+      http.error(Status.BAD_REQUEST, e);
     }
   }
 
@@ -114,7 +114,7 @@ final class HttpHost3StaticFiles implements HttpHandler {
     } catch (NoSuchFileException e) {
       return;
     } catch (IOException e) {
-      http.error(HttpStatus.INTERNAL_SERVER_ERROR, e);
+      http.error(Status.INTERNAL_SERVER_ERROR, e);
 
       return;
     }
@@ -127,13 +127,13 @@ final class HttpHost3StaticFiles implements HttpHandler {
     method = http.method();
 
     if (method != RequestMethodEnum.GET && method != RequestMethodEnum.HEAD) {
-      http.status(HttpStatus.METHOD_NOT_ALLOWED);
+      http.status(Status.METHOD_NOT_ALLOWED);
 
-      http.header(HttpHeaderName.DATE, http.now());
+      http.header(HeaderName.DATE, http.now());
 
-      http.header(HttpHeaderName.CONTENT_LENGTH, 0);
+      http.header(HeaderName.CONTENT_LENGTH, 0);
 
-      http.header(HttpHeaderName.ALLOW, "GET, HEAD");
+      http.header(HeaderName.ALLOW, "GET, HEAD");
 
       http.send();
 
@@ -144,16 +144,16 @@ final class HttpHost3StaticFiles implements HttpHandler {
     etag = etag(attributes);
 
     String ifNoneMatch;
-    ifNoneMatch = http.header(HttpHeaderName.IF_NONE_MATCH);
+    ifNoneMatch = http.header(HeaderName.IF_NONE_MATCH);
 
     if (etag.equals(ifNoneMatch)) {
-      http.status(HttpStatus.NOT_MODIFIED);
+      http.status(Status.NOT_MODIFIED);
 
-      http.header(HttpHeaderName.DATE, http.now());
+      http.header(HeaderName.DATE, http.now());
 
-      http.header(HttpHeaderName.CONTENT_LENGTH, 0);
+      http.header(HeaderName.CONTENT_LENGTH, 0);
 
-      http.header(HttpHeaderName.ETAG, etag);
+      http.header(HeaderName.ETAG, etag);
 
       http.send();
 
@@ -171,15 +171,15 @@ final class HttpHost3StaticFiles implements HttpHandler {
       contentType = defaultContentType;
     }
 
-    http.status(HttpStatus.OK);
+    http.status(Status.OK);
 
-    http.header(HttpHeaderName.CONTENT_TYPE, contentType);
+    http.header(HeaderName.CONTENT_TYPE, contentType);
 
-    http.header(HttpHeaderName.CONTENT_LENGTH, attributes.size());
+    http.header(HeaderName.CONTENT_LENGTH, attributes.size());
 
-    http.header(HttpHeaderName.DATE, http.now());
+    http.header(HeaderName.DATE, http.now());
 
-    http.header(HttpHeaderName.ETAG, etag);
+    http.header(HeaderName.ETAG, etag);
 
     http.send(file);
   }

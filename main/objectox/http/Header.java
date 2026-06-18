@@ -15,11 +15,11 @@
  */
 package objectox.http;
 
-import objectos.http.HttpHeaderName;
+import objectos.http.HeaderName;
 
-public record Header(HttpHeaderName name, String value) {
+public record Header(HeaderName name, String value) {
 
-  public static final Header DATE = new Header(HttpHeaderName.DATE, null);
+  public static final Header DATE = new Header(HeaderName.DATE, null);
 
   private enum ValueParser {
 
@@ -33,7 +33,7 @@ public record Header(HttpHeaderName name, String value) {
 
   }
 
-  public static Header of(HttpHeaderName name, String value) {
+  public static Header of(HeaderName name, String value) {
     final String v;
     v = checkValue(value);
 

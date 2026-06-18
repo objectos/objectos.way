@@ -16,14 +16,14 @@
 package objectos.http;
 
 import objectos.way.Media;
-import objectox.http.HttpStatus0;
+import objectox.http.resp.StatusEnum;
 
 interface HttpErrorResponses {
 
-  Media get(HttpStatus0 status);
+  Media get(StatusEnum status);
 
-  Media get(HttpStatus0 status, String message);
+  Media get(StatusEnum status, String message);
 
-  Media get(HttpStatus0 status, Throwable cause);
+  Media get(StatusEnum status, Throwable cause);
 
 }

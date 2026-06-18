@@ -89,7 +89,7 @@ final class HttpSession1 implements HttpSession {
       final String setCookie;
       setCookie = store.setCookie(created);
 
-      response.header(HttpHeaderName.SET_COOKIE, setCookie);
+      response.header(HeaderName.SET_COOKIE, setCookie);
 
       session = created;
     }

@@ -33,14 +33,14 @@ public class HttpHandler1PathTest {
     final String value;
     value = String.valueOf(test);
 
-    final HttpHeaderName testHeader;
-    testHeader = HttpHeaderName.of("Way-Test");
+    final HeaderName testHeader;
+    testHeader = HeaderName.of("Way-Test");
 
-    http.status(HttpStatus.OK);
+    http.status(Status.OK);
 
     http.header(testHeader, value);
 
-    http.header(HttpHeaderName.CONNECTION, "close");
+    http.header(HeaderName.CONNECTION, "close");
 
     http.send();
   };

@@ -18,7 +18,7 @@ package objectox.http.host;
 import static org.testng.Assert.assertSame;
 
 import objectos.http.Handler;
-import objectos.http.HttpHeaderName;
+import objectos.http.HeaderName;
 import objectos.http.Request;
 import objectos.http.Response;
 import org.testng.annotations.BeforeClass;
@@ -26,7 +26,7 @@ import org.testng.annotations.Test;
 
 public class HostHandlerTest {
 
-  private final HttpHeaderName test = HttpHeaderName.of("Way-Test");
+  private final HeaderName test = HeaderName.of("Way-Test");
 
   private final Response mainResp = Response.create(opts -> {
     opts.header(test, "main");

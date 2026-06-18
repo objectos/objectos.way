@@ -40,15 +40,15 @@ final class HttpHandler3MethodNotAllowed extends HttpHandler0Super {
       return;
     }
 
-    http.status(HttpStatus.METHOD_NOT_ALLOWED);
+    http.status(Status.METHOD_NOT_ALLOWED);
 
-    http.header(HttpHeaderName.DATE, http.now());
+    http.header(HeaderName.DATE, http.now());
 
-    http.header(HttpHeaderName.CONNECTION, "close");
+    http.header(HeaderName.CONNECTION, "close");
 
-    http.header(HttpHeaderName.CONTENT_LENGTH, 0L);
+    http.header(HeaderName.CONTENT_LENGTH, 0L);
 
-    http.header(HttpHeaderName.ALLOW, allowValue);
+    http.header(HeaderName.ALLOW, allowValue);
 
     http.send();
   }

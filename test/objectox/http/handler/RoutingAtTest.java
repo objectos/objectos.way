@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import objectos.http.Content;
 import objectos.http.Handler;
-import objectos.http.HttpStatus;
+import objectos.http.Status;
 import objectos.http.MediaType;
 import objectos.http.Redirection;
 import objectos.http.RequestMethod;
@@ -36,7 +36,7 @@ public class RoutingAtTest {
   private final Redirection redir = Redirection.movedPermanently("/");
 
   private final Response resp = Response.create(opts -> {
-    opts.status(HttpStatus.OK);
+    opts.status(Status.OK);
   });
 
   private final Handler create(Consumer<? super RoutingAt> opts) {

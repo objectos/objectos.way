@@ -16,20 +16,20 @@
 package objectox.http.media;
 
 import java.nio.file.Path;
-import objectos.http.HttpHeaderName;
-import objectos.http.HttpStatus;
+import objectos.http.HeaderName;
+import objectos.http.Status;
 import objectos.http.Response;
 
 final class StaticFilesResponses {
 
   private static final Response METHOD_NOT_ALLOWED = Response.create(opts -> {
-    opts.status(HttpStatus.METHOD_NOT_ALLOWED);
+    opts.status(Status.METHOD_NOT_ALLOWED);
 
     opts.date();
 
-    opts.header(HttpHeaderName.CONTENT_LENGTH, 0);
+    opts.header(HeaderName.CONTENT_LENGTH, 0);
 
-    opts.header(HttpHeaderName.ALLOW, "GET, HEAD");
+    opts.header(HeaderName.ALLOW, "GET, HEAD");
   });
 
   private final StaticFilesExtension staticFilesExtension;
@@ -48,23 +48,23 @@ final class StaticFilesResponses {
 
   public final Response notModified(String etag) {
     return Response.create(opts -> {
-      opts.status(HttpStatus.NOT_MODIFIED);
+      opts.status(Status.NOT_MODIFIED);
 
       opts.date();
 
-      opts.header(HttpHeaderName.ETAG, etag);
+      opts.header(HeaderName.ETAG, etag);
 
-      opts.header(HttpHeaderName.CONTENT_LENGTH, 0);
+      opts.header(HeaderName.CONTENT_LENGTH, 0);
     });
   }
 
   public final Response ok(Path file, String etag) {
     return Response.create(opts -> {
-      opts.status(HttpStatus.OK);
+      opts.status(Status.OK);
 
       opts.date();
 
-      opts.header(HttpHeaderName.ETAG, etag);
+      opts.header(HeaderName.ETAG, etag);
 
       final String extension;
       extension = staticFilesExtension.get(file);
@@ -72,7 +72,7 @@ final class StaticFilesResponses {
       final String contentType;
       contentType = staticFilesTypes.get(extension);
 
-      opts.header(HttpHeaderName.CONTENT_TYPE, contentType);
+      opts.header(HeaderName.CONTENT_TYPE, contentType);
 
       opts.send(file);
     });

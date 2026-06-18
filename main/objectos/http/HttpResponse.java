@@ -56,7 +56,7 @@ sealed interface HttpResponse permits HttpExchange, HttpResponse0 {
   ///
   /// @throws IllegalArgumentException if the status does not represent a client
   ///         nor a server error
-  void error(HttpStatus status);
+  void error(Status status);
 
   /// Responds with the standard message of the specified HTTP error status.
   ///
@@ -65,7 +65,7 @@ sealed interface HttpResponse permits HttpExchange, HttpResponse0 {
   ///
   /// @throws IllegalArgumentException if the status does not represent a client
   ///         nor a server error
-  void error(HttpStatus status, String message);
+  void error(Status status, String message);
 
   /// Responds with the standard message of the specified HTTP error status.
   ///
@@ -74,26 +74,26 @@ sealed interface HttpResponse permits HttpExchange, HttpResponse0 {
   ///
   /// @throws IllegalArgumentException if the status does not represent a client
   ///         nor a server error
-  void error(HttpStatus status, Throwable cause);
+  void error(Status status, Throwable cause);
 
   // low-level
 
   /// Sets the status of this HTTP response message.
   ///
   /// @param value the response status
-  void status(HttpStatus value);
+  void status(Status value);
 
   /// Adds the specified header field to this HTTP response message.
   ///
   /// @param name the header name
   /// @param value the header value
-  void header(HttpHeaderName name, long value);
+  void header(HeaderName name, long value);
 
   /// Adds the specified header field to this HTTP response message.
   ///
   /// @param name the header name
   /// @param value the header value
-  void header(HttpHeaderName name, String value);
+  void header(HeaderName name, String value);
 
   /// Adds the specified header field to this HTTP response message.
   ///
@@ -116,7 +116,7 @@ sealed interface HttpResponse permits HttpExchange, HttpResponse0 {
   ///
   /// @param name the header name
   /// @param builder a handle for creating the header field value
-  void header(HttpHeaderName name, Consumer<? super HttpHeaderValueBuilder> builder);
+  void header(HeaderName name, Consumer<? super HttpHeaderValueBuilder> builder);
 
   /// Returns the server's current time.
   ///

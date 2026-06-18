@@ -18,7 +18,7 @@ package objectos.way.dev;
 import module objectos.way;
 import objectos.css.CssSource;
 import objectos.http.HttpExchange;
-import objectos.http.HttpHeaderName;
+import objectos.http.HeaderName;
 
 /*
 
@@ -51,14 +51,14 @@ public final class ScriptSubmit00 extends AbstractDevScript {
         case "POST" -> {
           var input0 = http.formParam("input0");
 
-          var wayRequest = http.header(HttpHeaderName.WAY_REQUEST) != null;
+          var wayRequest = http.header(HeaderName.WAY_REQUEST) != null;
 
           http.found(
               "/script/submit/00/after?input0=" + input0 + "&wayRequest=" + wayRequest
           );
         }
 
-        default -> http.error(HttpStatus.METHOD_NOT_ALLOWED, "Allowed: GET, POST");
+        default -> http.error(Status.METHOD_NOT_ALLOWED, "Allowed: GET, POST");
       }
     } else {
       initial = false;

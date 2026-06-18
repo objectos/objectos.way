@@ -69,7 +69,7 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
 
   private final Version0 version = Version0.HTTP_1_1;
 
-  private Map<HttpHeaderName, Object> headers = Map.of();
+  private Map<HeaderName, Object> headers = Map.of();
 
   private Map<String, Object> formParams = Map.of();
 
@@ -126,7 +126,7 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
 
   @SuppressWarnings("unchecked")
   @Override
-  public final void header(HttpHeaderName name, String value) {
+  public final void header(HeaderName name, String value) {
     Objects.requireNonNull(name, "name == null");
     Objects.requireNonNull(value, "value == null");
 
@@ -358,19 +358,19 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
 
       // fields
 
-      final Map<HttpHeaderName, Object> h;
+      final Map<HeaderName, Object> h;
 
       if (headers == null) {
-        h = Map.of(HttpHeaderName.HOST, "test");
+        h = Map.of(HeaderName.HOST, "test");
       } else {
-        headers.putIfAbsent(HttpHeaderName.HOST, "test");
+        headers.putIfAbsent(HeaderName.HOST, "test");
 
         h = headers;
       }
 
       for (var entry : h.entrySet()) {
 
-        final HttpHeaderName name;
+        final HeaderName name;
         name = entry.getKey();
 
         final Object value;
@@ -443,8 +443,8 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
       headers = Util.createSequencedMap();
     }
 
-    if (!headers.containsKey(HttpHeaderName.CONTENT_TYPE)) {
-      headers.put(HttpHeaderName.CONTENT_TYPE, "application/x-www-form-urlencoded");
+    if (!headers.containsKey(HeaderName.CONTENT_TYPE)) {
+      headers.put(HeaderName.CONTENT_TYPE, "application/x-www-form-urlencoded");
     }
 
     final String form;
@@ -453,11 +453,11 @@ final class HttpExchangeBuilder implements HttpExchange.Options {
     final byte[] body;
     body = form.getBytes(StandardCharsets.UTF_8);
 
-    if (!headers.containsKey(HttpHeaderName.CONTENT_LENGTH)) {
+    if (!headers.containsKey(HeaderName.CONTENT_LENGTH)) {
       final String length;
       length = Integer.toString(body.length);
 
-      headers.put(HttpHeaderName.CONTENT_LENGTH, length);
+      headers.put(HeaderName.CONTENT_LENGTH, length);
     }
 
     return body;

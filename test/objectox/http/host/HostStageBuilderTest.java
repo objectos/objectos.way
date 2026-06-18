@@ -21,7 +21,7 @@ import static org.testng.Assert.assertSame;
 import java.util.function.Consumer;
 import objectos.http.Handler;
 import objectos.http.HostOptions;
-import objectos.http.HttpStatus;
+import objectos.http.Status;
 import objectox.http.handler.HandlerNoop;
 import objectox.http.handler.HandlerResult;
 import org.testng.Assert;
@@ -65,7 +65,7 @@ public class HostStageBuilderTest {
   @Test
   public void handler02() {
     final Handler handler;
-    handler = new HandlerResult(HttpStatus.NOT_FOUND);
+    handler = new HandlerResult(Status.NOT_FOUND);
 
     final HostStage res;
     res = create(opts -> {

@@ -17,10 +17,11 @@ package objectox.http;
 
 import java.util.Objects;
 import objectos.http.Redirection;
+import objectox.http.resp.StatusEnum;
 
-public record RedirectionPojo(HttpStatus0 status, String location) implements Redirection {
+public record RedirectionPojo(StatusEnum status, String location) implements Redirection {
 
-  public static Redirection of(HttpStatus0 status, String location) {
+  public static Redirection of(StatusEnum status, String location) {
     final String l;
     l = Objects.requireNonNull(location, "location == null");
 

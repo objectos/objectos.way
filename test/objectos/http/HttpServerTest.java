@@ -218,7 +218,7 @@ public class HttpServerTest {
     switch (impl) {
       case GET, HEAD -> testCase01Get(http);
 
-      default -> http.error(HttpStatus.METHOD_NOT_ALLOWED);
+      default -> http.error(Status.METHOD_NOT_ALLOWED);
     }
   }
 
@@ -278,7 +278,7 @@ public class HttpServerTest {
     switch (impl) {
       case GET, HEAD -> testCase02Get(http);
 
-      default -> http.error(HttpStatus.METHOD_NOT_ALLOWED);
+      default -> http.error(Status.METHOD_NOT_ALLOWED);
     }
   }
 
@@ -337,7 +337,7 @@ public class HttpServerTest {
 
       case POST -> testCase03Post(http);
 
-      default -> http.error(HttpStatus.METHOD_NOT_ALLOWED);
+      default -> http.error(Status.METHOD_NOT_ALLOWED);
     }
   }
 
@@ -437,7 +437,7 @@ public class HttpServerTest {
 
       case POST -> testCase04Post(http);
 
-      default -> http.error(HttpStatus.METHOD_NOT_ALLOWED);
+      default -> http.error(Status.METHOD_NOT_ALLOWED);
     }
   }
 
@@ -495,7 +495,7 @@ public class HttpServerTest {
     class NotFoundException extends Http.AbstractHandlerException {
       @Override
       public void handle(HttpExchange http) {
-        http.error(HttpStatus.NOT_FOUND);
+        http.error(Status.NOT_FOUND);
       }
     }
 

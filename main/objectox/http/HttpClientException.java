@@ -16,40 +16,40 @@
 package objectox.http;
 
 import java.io.IOException;
-import objectos.http.HttpStatus;
+import objectos.http.Status;
 
 @SuppressWarnings("serial")
 public final class HttpClientException extends IOException implements objectox.http.srv.ServerTaskMessage {
 
   public enum Kind {
 
-    INVALID_REQUEST_LINE(HttpStatus.BAD_REQUEST, "Invalid request line.\n"),
+    INVALID_REQUEST_LINE(Status.BAD_REQUEST, "Invalid request line.\n"),
 
-    URI_TOO_LONG(HttpStatus.URI_TOO_LONG, "Invalid request line.\n"),
+    URI_TOO_LONG(Status.URI_TOO_LONG, "Invalid request line.\n"),
 
-    INVALID_REQUEST_HEADERS(HttpStatus.BAD_REQUEST, "Invalid request headers.\n"),
+    INVALID_REQUEST_HEADERS(Status.BAD_REQUEST, "Invalid request headers.\n"),
 
-    REQUEST_HEADER_FIELDS_TOO_LARGE(HttpStatus.REQUEST_HEADER_FIELDS_TOO_LARGE, "Invalid request headers.\n"),
+    REQUEST_HEADER_FIELDS_TOO_LARGE(Status.REQUEST_HEADER_FIELDS_TOO_LARGE, "Invalid request headers.\n"),
 
-    HOST_HEADER(HttpStatus.BAD_REQUEST, "Host header.\n"),
+    HOST_HEADER(Status.BAD_REQUEST, "Host header.\n"),
 
-    HOST_NOT_FOUND(HttpStatus.NOT_FOUND, "Host not found.\n"),
+    HOST_NOT_FOUND(Status.NOT_FOUND, "Host not found.\n"),
 
-    LINE_TERMINATOR(HttpStatus.BAD_REQUEST, "Invalid line terminator.\n"),
+    LINE_TERMINATOR(Status.BAD_REQUEST, "Invalid line terminator.\n"),
 
-    CONTENT_TOO_LARGE(HttpStatus.CONTENT_TOO_LARGE, "The request message body exceeds the server's maximum allowed limit.\n"),
+    CONTENT_TOO_LARGE(Status.CONTENT_TOO_LARGE, "The request message body exceeds the server's maximum allowed limit.\n"),
 
-    LENGTH_REQUIRED(HttpStatus.LENGTH_REQUIRED, "Invalid request headers.\n"),
+    LENGTH_REQUIRED(Status.LENGTH_REQUIRED, "Invalid request headers.\n"),
 
-    INCOMPLETE_REQUEST_BODY(HttpStatus.BAD_REQUEST, "Incomplete request body.\n"),
+    INCOMPLETE_REQUEST_BODY(Status.BAD_REQUEST, "Incomplete request body.\n"),
 
-    INVALID_FORM(HttpStatus.BAD_REQUEST, "Invalid application/x-www-form-urlencoded content in request body.\n");
+    INVALID_FORM(Status.BAD_REQUEST, "Invalid application/x-www-form-urlencoded content in request body.\n");
 
-    private final HttpStatus status;
+    private final Status status;
 
     private final String message;
 
-    private Kind(HttpStatus status, String message) {
+    private Kind(Status status, String message) {
       this.status = status;
 
       this.message = message;
@@ -72,7 +72,7 @@ public final class HttpClientException extends IOException implements objectox.h
   }
 
   @Override
-  public final HttpStatus status() {
+  public final Status status() {
     return kind.status;
   }
 

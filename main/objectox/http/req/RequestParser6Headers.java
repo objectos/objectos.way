@@ -16,10 +16,10 @@
 package objectox.http.req;
 
 import module java.base;
-import objectos.http.HttpHeaderName;
+import objectos.http.HeaderName;
 import objectos.internal.Bytes;
 import objectox.http.HttpClientException;
-import objectox.http.HttpHeaderName0;
+import objectox.http.HeaderNamePojo;
 import objectox.http.Rfc;
 import objectox.http.HttpClientException.Kind;
 
@@ -27,7 +27,7 @@ final class RequestParser6Headers {
 
   private final RequestParser0Input input;
 
-  private Map<HttpHeaderName, Object> map = Map.of();
+  private Map<HeaderName, Object> map = Map.of();
 
   private final StringBuilder sb = new StringBuilder();
 
@@ -35,7 +35,7 @@ final class RequestParser6Headers {
     this.input = input;
   }
 
-  public final Map<HttpHeaderName, Object> parse() throws IOException {
+  public final Map<HeaderName, Object> parse() throws IOException {
     try {
       return parse0();
     } catch (RequestParser0Input.Eof e) {
@@ -51,13 +51,13 @@ final class RequestParser6Headers {
     }
   }
 
-  private Map<HttpHeaderName, Object> parse0() throws IOException {
+  private Map<HeaderName, Object> parse0() throws IOException {
     while (true) {
       if (parseTerminator()) {
         break;
       }
 
-      final HttpHeaderName name;
+      final HeaderName name;
       name = parseName();
 
       final String value;
@@ -101,33 +101,33 @@ final class RequestParser6Headers {
     };
   }
 
-  private HttpHeaderName parseName() throws IOException {
+  private HeaderName parseName() throws IOException {
     while (true) {
       final byte b;
       b = input.readByte();
 
       final byte mapped;
-      mapped = HttpHeaderName0.map(b);
+      mapped = HeaderNamePojo.map(b);
 
       switch (mapped) {
-        case HttpHeaderName0.INVALID -> {
+        case HeaderNamePojo.INVALID -> {
           final String msg;
           msg = "Invalid HTTP header field: unexpected byte 0x%02X while parsing name".formatted(b);
 
           throw new HttpClientException(msg, Kind.INVALID_REQUEST_HEADERS);
         }
 
-        case HttpHeaderName0.COLON -> {
+        case HeaderNamePojo.COLON -> {
           final String lowerCase;
           lowerCase = makeString();
 
-          final HttpHeaderName0 standard;
-          standard = HttpHeaderName0.byLowerCase(lowerCase);
+          final HeaderNamePojo standard;
+          standard = HeaderNamePojo.byLowerCase(lowerCase);
 
           if (standard != null) {
             return standard;
           } else {
-            return HttpHeaderName0.ofLowerCase(lowerCase);
+            return HeaderNamePojo.ofLowerCase(lowerCase);
           }
         }
 
@@ -286,7 +286,7 @@ final class RequestParser6Headers {
     return res;
   }
 
-  private void put(HttpHeaderName name, String value) {
+  private void put(HeaderName name, String value) {
     if (map.isEmpty()) {
       map = new HashMap<>();
     }

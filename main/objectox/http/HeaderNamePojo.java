@@ -21,45 +21,45 @@ import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import objectos.http.HttpHeaderName;
+import objectos.http.HeaderName;
 import objectos.internal.Util;
 
-public final class HttpHeaderName0 implements HttpHeaderName {
+public final class HeaderNamePojo implements HeaderName {
 
   private static Builder B = new Builder();
 
-  public static final HttpHeaderName0 ACCEPT_ENCODING = B.std("Accept-Encoding", HttpHeaderType.REQUEST);
-  public static final HttpHeaderName0 ALLOW = B.std("Allow", HttpHeaderType.RESPONSE);
-  public static final HttpHeaderName0 CONNECTION = B.std("Connection", HttpHeaderType.BOTH);
-  public static final HttpHeaderName0 CONTENT_DISPOSITION = B.std("Content-Disposition", HttpHeaderType.RESPONSE);
-  public static final HttpHeaderName0 CONTENT_LENGTH = B.std("Content-Length", HttpHeaderType.BOTH);
-  public static final HttpHeaderName0 CONTENT_TYPE = B.std("Content-Type", HttpHeaderType.BOTH);
-  public static final HttpHeaderName0 COOKIE = B.std("Cookie", HttpHeaderType.REQUEST);
-  public static final HttpHeaderName0 DATE = B.std("Date", HttpHeaderType.BOTH);
-  public static final HttpHeaderName0 ETAG = B.std("ETag", HttpHeaderType.RESPONSE);
-  public static final HttpHeaderName0 FROM = B.std("From", HttpHeaderType.REQUEST);
-  public static final HttpHeaderName0 HOST = B.std("Host", HttpHeaderType.REQUEST);
-  public static final HttpHeaderName0 IF_NONE_MATCH = B.std("If-None-Match", HttpHeaderType.REQUEST);
-  public static final HttpHeaderName0 LOCATION = B.std("Location", HttpHeaderType.RESPONSE);
-  public static final HttpHeaderName0 REFERER = B.std("Referer", HttpHeaderType.REQUEST);
-  public static final HttpHeaderName0 SET_COOKIE = B.std("Set-Cookie", HttpHeaderType.RESPONSE);
-  public static final HttpHeaderName0 TRANSFER_ENCODING = B.std("Transfer-Encoding", HttpHeaderType.BOTH);
-  public static final HttpHeaderName0 USER_AGENT = B.std("User-Agent", HttpHeaderType.REQUEST);
-  public static final HttpHeaderName0 WAY_CSRF_TOKEN = B.std("Way-CSRF-Token", HttpHeaderType.REQUEST);
-  public static final HttpHeaderName0 WAY_REQUEST = B.std("Way-Request", HttpHeaderType.REQUEST);
+  public static final HeaderNamePojo ACCEPT_ENCODING = B.std("Accept-Encoding", HttpHeaderType.REQUEST);
+  public static final HeaderNamePojo ALLOW = B.std("Allow", HttpHeaderType.RESPONSE);
+  public static final HeaderNamePojo CONNECTION = B.std("Connection", HttpHeaderType.BOTH);
+  public static final HeaderNamePojo CONTENT_DISPOSITION = B.std("Content-Disposition", HttpHeaderType.RESPONSE);
+  public static final HeaderNamePojo CONTENT_LENGTH = B.std("Content-Length", HttpHeaderType.BOTH);
+  public static final HeaderNamePojo CONTENT_TYPE = B.std("Content-Type", HttpHeaderType.BOTH);
+  public static final HeaderNamePojo COOKIE = B.std("Cookie", HttpHeaderType.REQUEST);
+  public static final HeaderNamePojo DATE = B.std("Date", HttpHeaderType.BOTH);
+  public static final HeaderNamePojo ETAG = B.std("ETag", HttpHeaderType.RESPONSE);
+  public static final HeaderNamePojo FROM = B.std("From", HttpHeaderType.REQUEST);
+  public static final HeaderNamePojo HOST = B.std("Host", HttpHeaderType.REQUEST);
+  public static final HeaderNamePojo IF_NONE_MATCH = B.std("If-None-Match", HttpHeaderType.REQUEST);
+  public static final HeaderNamePojo LOCATION = B.std("Location", HttpHeaderType.RESPONSE);
+  public static final HeaderNamePojo REFERER = B.std("Referer", HttpHeaderType.REQUEST);
+  public static final HeaderNamePojo SET_COOKIE = B.std("Set-Cookie", HttpHeaderType.RESPONSE);
+  public static final HeaderNamePojo TRANSFER_ENCODING = B.std("Transfer-Encoding", HttpHeaderType.BOTH);
+  public static final HeaderNamePojo USER_AGENT = B.std("User-Agent", HttpHeaderType.REQUEST);
+  public static final HeaderNamePojo WAY_CSRF_TOKEN = B.std("Way-CSRF-Token", HttpHeaderType.REQUEST);
+  public static final HeaderNamePojo WAY_REQUEST = B.std("Way-Request", HttpHeaderType.REQUEST);
 
   private static final class Builder {
 
     private int index;
 
-    private final Set<HttpHeaderName0> values = new LinkedHashSet<>();
+    private final Set<HeaderNamePojo> values = new LinkedHashSet<>();
 
-    final HttpHeaderName0 std(String headerCase, HttpHeaderType type) {
+    final HeaderNamePojo std(String headerCase, HttpHeaderType type) {
       final String lowerCase;
       lowerCase = headerCase.toLowerCase(Locale.US);
 
-      final HttpHeaderName0 name;
-      name = new HttpHeaderName0(index++, headerCase, lowerCase, type);
+      final HeaderNamePojo name;
+      name = new HeaderNamePojo(index++, headerCase, lowerCase, type);
 
       if (values.add(name)) {
         return name;
@@ -68,15 +68,15 @@ public final class HttpHeaderName0 implements HttpHeaderName {
       }
     }
 
-    final HttpHeaderName0[] values() {
-      return values.toArray(HttpHeaderName0[]::new);
+    final HeaderNamePojo[] values() {
+      return values.toArray(HeaderNamePojo[]::new);
     }
 
   }
 
-  public static final HttpHeaderName0[] VALUES;
+  public static final HeaderNamePojo[] VALUES;
 
-  private static final Map<String, HttpHeaderName0> BY_LOWER_CASE;
+  private static final Map<String, HeaderNamePojo> BY_LOWER_CASE;
 
   private static final byte[] TABLE;
 
@@ -87,10 +87,10 @@ public final class HttpHeaderName0 implements HttpHeaderName {
   static {
     VALUES = B.values();
 
-    final Map<String, HttpHeaderName0> byLowerCase;
+    final Map<String, HeaderNamePojo> byLowerCase;
     byLowerCase = Util.createMap();
 
-    for (HttpHeaderName0 value : VALUES) {
+    for (HeaderNamePojo value : VALUES) {
       byLowerCase.put(value.lowerCase, value);
     }
 
@@ -134,14 +134,14 @@ public final class HttpHeaderName0 implements HttpHeaderName {
 
   private final HttpHeaderType type;
 
-  private HttpHeaderName0(int index, String headerCase, String lowerCase, HttpHeaderType type) {
+  private HeaderNamePojo(int index, String headerCase, String lowerCase, HttpHeaderType type) {
     this.index = index;
     this.headerCase = headerCase;
     this.lowerCase = lowerCase;
     this.type = type;
   }
 
-  public static HttpHeaderName0 byLowerCase(String name) {
+  public static HeaderNamePojo byLowerCase(String name) {
     return BY_LOWER_CASE.get(name);
   }
 
@@ -165,9 +165,9 @@ public final class HttpHeaderName0 implements HttpHeaderName {
     return TABLE[b];
   }
 
-  public static HttpHeaderName0 of(String name) {
+  public static HeaderNamePojo of(String name) {
     // let's be optimistic
-    final HttpHeaderName0 first;
+    final HeaderNamePojo first;
     first = BY_LOWER_CASE.get(name);
 
     if (first != null) {
@@ -177,7 +177,7 @@ public final class HttpHeaderName0 implements HttpHeaderName {
     final String lowerCase;
     lowerCase = name.toLowerCase(Locale.US);
 
-    final HttpHeaderName0 second;
+    final HeaderNamePojo second;
     second = BY_LOWER_CASE.get(lowerCase);
 
     if (second != null) {
@@ -220,13 +220,13 @@ public final class HttpHeaderName0 implements HttpHeaderName {
     return ofLowerCase(lowerCaseName);
   }
 
-  public static HttpHeaderName0 ofLowerCase(String lowerCase) {
-    return new HttpHeaderName0(-1, null, lowerCase, HttpHeaderType.BOTH);
+  public static HeaderNamePojo ofLowerCase(String lowerCase) {
+    return new HeaderNamePojo(-1, null, lowerCase, HttpHeaderType.BOTH);
   }
 
   @Override
   public final boolean equals(Object obj) {
-    return obj == this || obj instanceof HttpHeaderName0 that
+    return obj == this || obj instanceof HeaderNamePojo that
         && lowerCase.contentEquals(that.lowerCase);
   }
 

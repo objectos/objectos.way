@@ -17,8 +17,8 @@ package objectox.http.session;
 
 import java.util.function.BiConsumer;
 import objectos.http.Request;
-import objectox.http.HttpStatus0;
 import objectox.http.HttpToken;
+import objectox.http.resp.StatusEnum;
 import objectox.http.resp.ResponsePojo;
 
 final class SessionResponse implements BiConsumer<Request, ResponsePojo> {
@@ -52,7 +52,7 @@ final class SessionResponse implements BiConsumer<Request, ResponsePojo> {
   }
 
   private void acceptLazy(ResponsePojo response, SessionLazy lazy) {
-    final HttpStatus0 status;
+    final StatusEnum status;
     status = response.status();
 
     if (status.isError()) {

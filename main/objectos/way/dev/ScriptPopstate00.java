@@ -18,7 +18,7 @@ package objectos.way.dev;
 import module objectos.way;
 import objectos.css.CssSource;
 import objectos.http.HttpExchange;
-import objectos.http.HttpHeaderName;
+import objectos.http.HeaderName;
 
 /*
 
@@ -38,7 +38,7 @@ public final class ScriptPopstate00 extends AbstractDevScript {
   public final void handle(HttpExchange http) {
     step = http.queryParamAsInt("step", 0);
 
-    wayRequest = http.header(HttpHeaderName.WAY_REQUEST) != null;
+    wayRequest = http.header(HeaderName.WAY_REQUEST) != null;
 
     super.handle(http);
   }

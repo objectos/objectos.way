@@ -18,7 +18,7 @@ package objectox.http.handler;
 import static org.testng.Assert.assertEquals;
 import java.util.List;
 import objectos.http.Handler;
-import objectos.http.HttpStatus;
+import objectos.http.Status;
 import objectos.http.PathParam;
 import objectos.http.Redirection;
 import objectos.http.RequestMethod;
@@ -26,7 +26,7 @@ import org.testng.annotations.Test;
 
 public class RoutingPojoTest {
 
-  private final Handler handler = new HandlerResult(HttpStatus.BAD_REQUEST);
+  private final Handler handler = new HandlerResult(Status.BAD_REQUEST);
 
   private final Redirection redir = Redirection.movedPermanently("/index.html");
 

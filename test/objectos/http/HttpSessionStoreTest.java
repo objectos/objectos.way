@@ -117,12 +117,12 @@ public class HttpSessionStoreTest {
     http = HttpExchange.create(config -> {
       config.method(method);
 
-      config.header(HttpHeaderName.COOKIE, cookie("OBJECTOSWAY", 1L, 2L, 3L, 4L));
+      config.header(HeaderName.COOKIE, cookie("OBJECTOSWAY", 1L, 2L, 3L, 4L));
 
       final HttpToken token;
       token = HttpToken.of32(5L, 6L, 7L, 8L);
 
-      config.header(HttpHeaderName.WAY_CSRF_TOKEN, token.toString());
+      config.header(HeaderName.WAY_CSRF_TOKEN, token.toString());
     });
 
     // store.loadSession(http);
@@ -150,7 +150,7 @@ public class HttpSessionStoreTest {
       config.method(method);
 
       // valid session
-      config.header(HttpHeaderName.COOKIE, cookie("OBJECTOSWAY", 1L, 2L, 3L, 4L));
+      config.header(HeaderName.COOKIE, cookie("OBJECTOSWAY", 1L, 2L, 3L, 4L));
 
       // no csrf token
     });
@@ -189,13 +189,13 @@ public class HttpSessionStoreTest {
       config.method(method);
 
       // valid session
-      config.header(HttpHeaderName.COOKIE, cookie("OBJECTOSWAY", 1L, 2L, 3L, 4L));
+      config.header(HeaderName.COOKIE, cookie("OBJECTOSWAY", 1L, 2L, 3L, 4L));
 
       // invalid csrf token
       final HttpToken token;
       token = HttpToken.of32(5L, 6L, 9L, 9L);
 
-      config.header(HttpHeaderName.WAY_CSRF_TOKEN, token.toString());
+      config.header(HeaderName.WAY_CSRF_TOKEN, token.toString());
     });
 
     // store.loadSession(http);
@@ -232,13 +232,13 @@ public class HttpSessionStoreTest {
       config.method(method);
 
       // invalid session
-      config.header(HttpHeaderName.COOKIE, cookie("OBJECTOSWAY", 1L, 1L, 1L, 1L));
+      config.header(HeaderName.COOKIE, cookie("OBJECTOSWAY", 1L, 1L, 1L, 1L));
 
       // invalid csrf token
       final HttpToken token;
       token = HttpToken.of32(2L, 2L, 2L, 2L);
 
-      config.header(HttpHeaderName.WAY_CSRF_TOKEN, token.toString());
+      config.header(HeaderName.WAY_CSRF_TOKEN, token.toString());
     });
 
     // store.loadSession(http);
@@ -274,7 +274,7 @@ public class HttpSessionStoreTest {
       config.method(method);
 
       // valid session
-      config.header(HttpHeaderName.COOKIE, cookie("OBJECTOSWAY", 1L, 2L, 3L, 4L));
+      config.header(HeaderName.COOKIE, cookie("OBJECTOSWAY", 1L, 2L, 3L, 4L));
 
       // no csrf token
     });

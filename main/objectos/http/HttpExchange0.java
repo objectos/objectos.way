@@ -86,7 +86,7 @@ final class HttpExchange0 implements HttpExchange {
   }
 
   @Override
-  public final String header(HttpHeaderName name) {
+  public final String header(HeaderName name) {
     return request.header(name);
   }
 
@@ -283,37 +283,37 @@ final class HttpExchange0 implements HttpExchange {
   }
 
   @Override
-  public final void error(HttpStatus status) {
+  public final void error(Status status) {
     response.error(status);
   }
 
   @Override
-  public final void error(HttpStatus status, String message) {
+  public final void error(Status status, String message) {
     response.error(status, message);
   }
 
   @Override
-  public final void error(HttpStatus status, Throwable cause) {
+  public final void error(Status status, Throwable cause) {
     response.error(status, cause);
   }
 
   @Override
-  public final void status(HttpStatus value) {
+  public final void status(Status value) {
     response.status(value);
   }
 
   @Override
-  public final void header(HttpHeaderName name, long value) {
+  public final void header(HeaderName name, long value) {
     response.header(name, value);
   }
 
   @Override
-  public final void header(HttpHeaderName name, String value) {
+  public final void header(HeaderName name, String value) {
     response.header(name, value);
   }
 
   @Override
-  public final void header(HttpHeaderName name, Consumer<? super HttpHeaderValueBuilder> builder) {
+  public final void header(HeaderName name, Consumer<? super HttpHeaderValueBuilder> builder) {
     response.header(name, builder);
   }
 
@@ -365,9 +365,9 @@ final class HttpExchange0 implements HttpExchange {
     try {
       staticFilesWriter.writeMedia(this, media);
     } catch (HttpTraversalException e) {
-      error(HttpStatus.BAD_REQUEST, e);
+      error(Status.BAD_REQUEST, e);
     } catch (IOException e) {
-      error(HttpStatus.INTERNAL_SERVER_ERROR, e);
+      error(Status.INTERNAL_SERVER_ERROR, e);
     }
   }
 

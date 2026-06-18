@@ -47,7 +47,7 @@ public class HttpServerTaskTest9Response {
           \r
           """);
 
-          opts.handler = http -> http.error(HttpStatus.BAD_REQUEST);
+          opts.handler = http -> http.error(Status.BAD_REQUEST);
         }),
 
         """
@@ -73,7 +73,7 @@ public class HttpServerTaskTest9Response {
           \r
           """);
 
-          opts.handler = http -> http.error(HttpStatus.FORBIDDEN, "Invalid credentials");
+          opts.handler = http -> http.error(Status.FORBIDDEN, "Invalid credentials");
         }),
 
         """
@@ -111,7 +111,7 @@ public class HttpServerTaskTest9Response {
           \r
           """);
 
-          opts.handler = http -> http.error(HttpStatus.INTERNAL_SERVER_ERROR, e);
+          opts.handler = http -> http.error(Status.INTERNAL_SERVER_ERROR, e);
         }),
 
         """

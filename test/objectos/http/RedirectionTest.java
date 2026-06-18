@@ -17,8 +17,8 @@ package objectos.http;
 
 import static org.testng.Assert.assertEquals;
 
-import objectox.http.HttpStatus0;
 import objectox.http.RedirectionPojo;
+import objectox.http.resp.StatusEnum;
 import org.testng.annotations.Test;
 
 public class RedirectionTest {
@@ -31,7 +31,7 @@ public class RedirectionTest {
     final RedirectionPojo pojo;
     pojo = (RedirectionPojo) res;
 
-    assertEquals(pojo.status(), HttpStatus0.FOUND);
+    assertEquals(pojo.status(), StatusEnum.FOUND);
 
     assertEquals(pojo.location(), "/foo");
   }
@@ -44,7 +44,7 @@ public class RedirectionTest {
     final RedirectionPojo pojo;
     pojo = (RedirectionPojo) res;
 
-    assertEquals(pojo.status(), HttpStatus0.MOVED_PERMANENTLY);
+    assertEquals(pojo.status(), StatusEnum.MOVED_PERMANENTLY);
 
     assertEquals(pojo.location(), "/foo");
   }
@@ -57,7 +57,7 @@ public class RedirectionTest {
     final RedirectionPojo pojo;
     pojo = (RedirectionPojo) res;
 
-    assertEquals(pojo.status(), HttpStatus0.SEE_OTHER);
+    assertEquals(pojo.status(), StatusEnum.SEE_OTHER);
 
     assertEquals(pojo.location(), "/foo");
   }

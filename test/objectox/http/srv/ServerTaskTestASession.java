@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
 import objectos.http.Content;
-import objectos.http.HttpStatus;
+import objectos.http.Status;
 import objectos.http.MediaType;
 import objectos.lang.Key;
 import objectos.y.RandomGeneratorY;
@@ -61,7 +61,7 @@ public class ServerTaskTestASession {
                   yield Content.of(MediaType.TEXT_PLAIN, attr);
                 }
 
-                default -> HttpStatus.NOT_FOUND;
+                default -> Status.NOT_FOUND;
               };
             };
 
@@ -144,7 +144,7 @@ public class ServerTaskTestASession {
                   yield ok;
                 }
 
-                default -> HttpStatus.NOT_FOUND;
+                default -> Status.NOT_FOUND;
               };
             };
 
@@ -253,7 +253,7 @@ public class ServerTaskTestASession {
                   yield Content.of(MediaType.TEXT_PLAIN, attr);
                 }
 
-                default -> HttpStatus.NOT_FOUND;
+                default -> Status.NOT_FOUND;
               };
             };
 
@@ -332,7 +332,7 @@ public class ServerTaskTestASession {
                   yield ok;
                 }
 
-                default -> HttpStatus.NOT_FOUND;
+                default -> Status.NOT_FOUND;
               };
             };
 
@@ -424,7 +424,7 @@ public class ServerTaskTestASession {
                   yield ok;
                 }
 
-                default -> HttpStatus.NOT_FOUND;
+                default -> Status.NOT_FOUND;
               };
             };
 

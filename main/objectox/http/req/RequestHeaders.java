@@ -18,25 +18,25 @@ package objectox.http.req;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import objectos.http.HttpHeaderName;
+import objectos.http.HeaderName;
 import objectox.http.Rfc;
 
-public record RequestHeaders(Map<HttpHeaderName, Object> headers) {
+public record RequestHeaders(Map<HeaderName, Object> headers) {
 
   public final boolean closeConnection() {
     final String connection;
-    connection = Rfc.queryParamsGet(headers, HttpHeaderName.CONNECTION);
+    connection = Rfc.queryParamsGet(headers, HeaderName.CONNECTION);
 
     return "close".equalsIgnoreCase(connection);
   }
 
-  public final String header(HttpHeaderName name) {
+  public final String header(HeaderName name) {
     Objects.requireNonNull(name, "name == null");
 
     return Rfc.queryParamsGet(headers, name);
   }
 
-  public final List<String> headerAll(HttpHeaderName name) {
+  public final List<String> headerAll(HeaderName name) {
     Objects.requireNonNull(name, "name == null");
 
     return Rfc.queryParamsGetAll(headers, name);

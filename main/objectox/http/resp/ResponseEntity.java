@@ -18,7 +18,7 @@ package objectox.http.resp;
 import java.nio.file.Path;
 import objectos.http.Content;
 
-sealed interface ResponseEntity {
+public sealed interface ResponseEntity {
 
   record OfContent(Content content) implements ResponseEntity {}
 

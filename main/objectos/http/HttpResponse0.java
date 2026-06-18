@@ -18,9 +18,9 @@ package objectos.http;
 import module java.base;
 import module objectos.way;
 import objectox.http.HttpHeaderValueBuilderImpl;
-import objectox.http.HttpStatus0;
 import objectox.http.RequestMethodEnum;
 import objectox.http.Rfc;
+import objectox.http.resp.StatusEnum;
 
 final class HttpResponse0 implements HttpResponse {
 
@@ -44,7 +44,7 @@ final class HttpResponse0 implements HttpResponse {
 
   private boolean processed;
 
-  private HttpStatus status = HttpStatus.OK;
+  private Status status = Status.OK;
 
   private final boolean testable;
 
@@ -92,25 +92,25 @@ final class HttpResponse0 implements HttpResponse {
   }
 
   private void ok(Media.Bytes media) {
-    status(HttpStatus.OK);
+    status(Status.OK);
 
-    header(HttpHeaderName.DATE, now());
+    header(HeaderName.DATE, now());
 
     send(media);
   }
 
   private void ok(Media.Stream media) {
-    status(HttpStatus.OK);
+    status(Status.OK);
 
-    header(HttpHeaderName.DATE, now());
+    header(HeaderName.DATE, now());
 
     send(media);
   }
 
   private void ok(Media.Text media) {
-    status(HttpStatus.OK);
+    status(Status.OK);
 
-    header(HttpHeaderName.DATE, now());
+    header(HeaderName.DATE, now());
 
     send(media);
   }
@@ -119,20 +119,20 @@ final class HttpResponse0 implements HttpResponse {
 
   @Override
   public final void movedPermanently(String location) {
-    location0(HttpStatus.MOVED_PERMANENTLY, location);
+    location0(Status.MOVED_PERMANENTLY, location);
   }
 
   @Override
   public final void found(String location) {
-    location0(HttpStatus.FOUND, location);
+    location0(Status.FOUND, location);
   }
 
   @Override
   public final void seeOther(String location) {
-    location0(HttpStatus.SEE_OTHER, location);
+    location0(Status.SEE_OTHER, location);
   }
 
-  private void location0(HttpStatus status, String location) {
+  private void location0(Status status, String location) {
     status(status);
 
     Objects.requireNonNull(location, "location == null");
@@ -140,11 +140,11 @@ final class HttpResponse0 implements HttpResponse {
     final String raw;
     raw = Rfc.raw(location);
 
-    header(HttpHeaderName.DATE, now());
+    header(HeaderName.DATE, now());
 
-    header(HttpHeaderName.CONTENT_LENGTH, 0L);
+    header(HeaderName.CONTENT_LENGTH, 0L);
 
-    header(HttpHeaderName.LOCATION, raw);
+    header(HeaderName.LOCATION, raw);
 
     send();
   }
@@ -152,8 +152,8 @@ final class HttpResponse0 implements HttpResponse {
   // 4xx responses
 
   @Override
-  public final void error(HttpStatus status) {
-    final HttpStatus0 impl;
+  public final void error(Status status) {
+    final StatusEnum impl;
     impl = checkStatus(status);
 
     final Media media;
@@ -163,8 +163,8 @@ final class HttpResponse0 implements HttpResponse {
   }
 
   @Override
-  public final void error(HttpStatus status, String message) {
-    final HttpStatus0 impl;
+  public final void error(Status status, String message) {
+    final StatusEnum impl;
     impl = checkStatus(status);
 
     Objects.requireNonNull(message, "message == null");
@@ -176,8 +176,8 @@ final class HttpResponse0 implements HttpResponse {
   }
 
   @Override
-  public final void error(HttpStatus status, Throwable cause) {
-    final HttpStatus0 impl;
+  public final void error(Status status, Throwable cause) {
+    final StatusEnum impl;
     impl = checkStatus(status);
 
     Objects.requireNonNull(cause, "cause == null");
@@ -188,9 +188,9 @@ final class HttpResponse0 implements HttpResponse {
     error0(impl, media);
   }
 
-  private HttpStatus0 checkStatus(HttpStatus status) {
-    final HttpStatus0 impl;
-    impl = (HttpStatus0) status;
+  private StatusEnum checkStatus(Status status) {
+    final StatusEnum impl;
+    impl = (StatusEnum) status;
 
     if (!impl.isError()) {
       final String msg;
@@ -202,12 +202,12 @@ final class HttpResponse0 implements HttpResponse {
     return impl;
   }
 
-  private void error0(HttpStatus0 status, Media media) {
+  private void error0(StatusEnum status, Media media) {
     status(status);
 
-    header(HttpHeaderName.DATE, now());
+    header(HeaderName.DATE, now());
 
-    header(HttpHeaderName.CONNECTION, "close");
+    header(HeaderName.CONNECTION, "close");
 
     send(media);
   }
@@ -218,26 +218,26 @@ final class HttpResponse0 implements HttpResponse {
     final String allow;
     allow = Arrays.stream(methods).map(RequestMethodEnum::name).collect(Collectors.joining(", "));
 
-    status(HttpStatus.METHOD_NOT_ALLOWED);
+    status(Status.METHOD_NOT_ALLOWED);
 
-    header(HttpHeaderName.DATE, now());
+    header(HeaderName.DATE, now());
 
-    header(HttpHeaderName.ALLOW, allow);
+    header(HeaderName.ALLOW, allow);
 
-    header(HttpHeaderName.CONTENT_LENGTH, 0L);
+    header(HeaderName.CONTENT_LENGTH, 0L);
 
     send();
   }
 
   @Override
-  public final void status(HttpStatus value) {
+  public final void status(Status value) {
     checkProcessed();
 
     status = Objects.requireNonNull(value, "value == null");
   }
 
   @Override
-  public final void header(HttpHeaderName name, long value) {
+  public final void header(HeaderName name, long value) {
     checkProcessed();
 
     headers.add(
@@ -246,7 +246,7 @@ final class HttpResponse0 implements HttpResponse {
   }
 
   @Override
-  public final void header(HttpHeaderName name, String value) {
+  public final void header(HeaderName name, String value) {
     checkProcessed();
 
     headers.add(
@@ -255,7 +255,7 @@ final class HttpResponse0 implements HttpResponse {
   }
 
   @Override
-  public final void header(HttpHeaderName name, Consumer<? super HttpHeaderValueBuilder> builder) {
+  public final void header(HeaderName name, Consumer<? super HttpHeaderValueBuilder> builder) {
     checkProcessed();
 
     Objects.requireNonNull(name, "name == null");
@@ -357,9 +357,9 @@ final class HttpResponse0 implements HttpResponse {
     final int length;
     length = bytes.length;
 
-    header(HttpHeaderName.CONTENT_TYPE, contentType);
+    header(HeaderName.CONTENT_TYPE, contentType);
 
-    header(HttpHeaderName.CONTENT_LENGTH, length);
+    header(HeaderName.CONTENT_LENGTH, length);
 
     try {
       final HttpResponse2Writer w;
@@ -387,9 +387,9 @@ final class HttpResponse0 implements HttpResponse {
       throw new IllegalArgumentException("The specified Media.Text provided a null charset");
     }
 
-    header(HttpHeaderName.CONTENT_TYPE, contentType);
+    header(HeaderName.CONTENT_TYPE, contentType);
 
-    header(HttpHeaderName.TRANSFER_ENCODING, "chunked");
+    header(HeaderName.TRANSFER_ENCODING, "chunked");
 
     try {
       final HttpResponse2Writer w;
@@ -410,9 +410,9 @@ final class HttpResponse0 implements HttpResponse {
       throw new IllegalArgumentException("The specified Media.Stream provided a null content-type");
     }
 
-    header(HttpHeaderName.CONTENT_TYPE, contentType);
+    header(HeaderName.CONTENT_TYPE, contentType);
 
-    header(HttpHeaderName.TRANSFER_ENCODING, "chunked");
+    header(HeaderName.TRANSFER_ENCODING, "chunked");
 
     try {
       final HttpResponse2Writer w;
@@ -459,7 +459,7 @@ final class HttpResponse0 implements HttpResponse {
     writer.status(status);
 
     for (var header : headers) {
-      final HttpHeaderName name;
+      final HeaderName name;
       name = header.name();
 
       final String value;
@@ -467,7 +467,7 @@ final class HttpResponse0 implements HttpResponse {
 
       writer.header(name, value);
 
-      if (name == HttpHeaderName.CONNECTION) {
+      if (name == HeaderName.CONNECTION) {
         closeConnection = "close".equalsIgnoreCase(value);
       }
     }

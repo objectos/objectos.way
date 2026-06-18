@@ -18,7 +18,7 @@ package objectos.http;
 import java.util.Objects;
 import objectox.http.Rfc;
 
-record HttpResponse1Header(HttpHeaderName name, String value) {
+record HttpResponse1Header(HeaderName name, String value) {
 
   public HttpResponse1Header {
 
@@ -28,7 +28,7 @@ record HttpResponse1Header(HttpHeaderName name, String value) {
 
   }
 
-  public HttpResponse1Header(HttpHeaderName name, long value) {
+  public HttpResponse1Header(HeaderName name, long value) {
 
     this(name, Long.toString(value));
 

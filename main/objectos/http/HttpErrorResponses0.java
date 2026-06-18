@@ -18,24 +18,24 @@ package objectos.http;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import objectos.way.Media;
-import objectox.http.HttpStatus0;
+import objectox.http.resp.StatusEnum;
 
 final class HttpErrorResponses0 implements HttpErrorResponses {
 
   static final HttpErrorResponses STANDARD = new HttpErrorResponses0();
 
   @Override
-  public final Media get(HttpStatus0 status) {
+  public final Media get(StatusEnum status) {
     return Media.Bytes.textPlain("" + status.code + " " + status.reasonPhrase + "\n");
   }
 
   @Override
-  public final Media get(HttpStatus0 status, String message) {
+  public final Media get(StatusEnum status, String message) {
     return Media.Bytes.textPlain("" + status.code + " " + status.reasonPhrase + "\n\n" + message + "\n");
   }
 
   @Override
-  public final Media get(HttpStatus0 status, Throwable cause) {
+  public final Media get(StatusEnum status, Throwable cause) {
     final StringWriter out;
     out = new StringWriter();
 

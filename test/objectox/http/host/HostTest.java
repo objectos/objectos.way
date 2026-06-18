@@ -19,8 +19,8 @@ import static org.testng.Assert.assertEquals;
 
 import objectos.http.Content;
 import objectos.http.Handler;
-import objectos.http.HttpHeaderName;
-import objectos.http.HttpStatus;
+import objectos.http.HeaderName;
+import objectos.http.Status;
 import objectos.http.MediaType;
 import objectos.http.Request;
 import objectos.http.Response;
@@ -43,7 +43,7 @@ public class HostTest {
     request = Request.create(opts -> {
       opts.method(RequestMethodEnum.GET);
 
-      opts.header(HttpHeaderName.HOST, "test.localhost");
+      opts.header(HeaderName.HOST, "test.localhost");
     });
 
     final ResponsePojo resp;
@@ -56,7 +56,7 @@ public class HostTest {
   public void handle01() {
     assertEquals(
         handle(_ -> Response.create(opts -> {
-          opts.status(HttpStatus.OK);
+          opts.status(Status.OK);
           opts.date();
         })),
 

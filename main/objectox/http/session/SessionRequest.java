@@ -16,7 +16,7 @@
 package objectox.http.session;
 
 import java.util.function.Consumer;
-import objectos.http.HttpHeaderName;
+import objectos.http.HeaderName;
 import objectos.http.Request;
 
 final class SessionRequest implements Consumer<Request> {
@@ -34,7 +34,7 @@ final class SessionRequest implements Consumer<Request> {
   @Override
   public final void accept(Request request) {
     final String cookieValue;
-    cookieValue = request.header(HttpHeaderName.COOKIE);
+    cookieValue = request.header(HeaderName.COOKIE);
 
     Session session;
     session = sessionCookieParser.parse(cookieValue, sessionFinder::find);

@@ -27,9 +27,9 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 import objectos.http.Content;
 import objectos.http.ContentY;
-import objectos.http.HttpHeaderName;
+import objectos.http.HeaderName;
 import objectos.http.HttpHeaderValueBuilder;
-import objectos.http.HttpStatus;
+import objectos.http.Status;
 import objectos.http.MediaType;
 import objectos.http.Redirection;
 import objectos.http.Response;
@@ -38,8 +38,8 @@ import objectos.y.InputStreamY;
 import objectos.y.OutputStreamY;
 import objectos.y.PathY;
 import objectos.y.SocketY;
-import objectox.http.HttpStatus0;
 import objectox.http.Rfc;
+import objectox.http.resp.StatusEnum;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -51,11 +51,11 @@ public class ServerTaskTest9ResultResponse {
     assertEquals(
         ServerTaskY.resp(opts -> {
           opts.host("www.example.com", _ -> Response.create(resp -> {
-            resp.status(HttpStatus.NOT_FOUND);
+            resp.status(Status.NOT_FOUND);
 
             resp.date();
 
-            resp.header(HttpHeaderName.CONTENT_LENGTH, 0L);
+            resp.header(HeaderName.CONTENT_LENGTH, 0L);
           }));
 
           opts.socket("""
@@ -80,7 +80,7 @@ public class ServerTaskTest9ResultResponse {
     assertEquals(
         ServerTaskY.resp(opts -> {
           opts.host("www.example.com", _ -> Response.create(resp -> {
-            resp.status(HttpStatus.OK);
+            resp.status(Status.OK);
 
             resp.date();
 
@@ -111,9 +111,9 @@ public class ServerTaskTest9ResultResponse {
     assertEquals(
         ServerTaskY.resp(opts -> {
           opts.host("www.example.com", _ -> Response.create(resp -> {
-            resp.status(HttpStatus.OK);
+            resp.status(Status.OK);
 
-            resp.header(HttpHeaderName.CONNECTION, "close");
+            resp.header(HeaderName.CONNECTION, "close");
 
             resp.date();
 
@@ -144,15 +144,15 @@ public class ServerTaskTest9ResultResponse {
   }
 
   @DataProvider
-  public Iterator<HttpStatus> statusProvider() {
-    final HttpStatus0[] values;
-    values = HttpStatus0.values();
+  public Iterator<Status> statusProvider() {
+    final StatusEnum[] values;
+    values = StatusEnum.values();
 
-    return Stream.of(values).map(HttpStatus.class::cast).iterator();
+    return Stream.of(values).map(Status.class::cast).iterator();
   }
 
   @Test(dataProvider = "statusProvider")
-  public void status(HttpStatus status) {
+  public void status(Status status) {
     assertEquals(
         ServerTaskY.resp(opts -> {
           opts.bufferSize = 256;
@@ -162,7 +162,7 @@ public class ServerTaskTest9ResultResponse {
 
             http.date();
 
-            http.header(HttpHeaderName.CONNECTION, "close");
+            http.header(HeaderName.CONNECTION, "close");
           }));
 
           opts.socket("""
@@ -215,11 +215,11 @@ public class ServerTaskTest9ResultResponse {
     assertEquals(
         ServerTaskY.resp(opts -> {
           opts.host("www.example.com", _ -> Response.create(http -> {
-            http.status(HttpStatus.OK);
+            http.status(Status.OK);
 
             http.date();
 
-            http.header(HttpHeaderName.ETAG, data.value);
+            http.header(HeaderName.ETAG, data.value);
           }));
 
           opts.socket("""
@@ -299,12 +299,12 @@ public class ServerTaskTest9ResultResponse {
           """);
 
           opts.host("www.example.com", _ -> Response.create(http -> {
-            http.status(HttpStatus.OK);
+            http.status(Status.OK);
 
             http.date();
 
             try {
-              http.header(HttpHeaderName.ETAG, data.value);
+              http.header(HeaderName.ETAG, data.value);
 
               Assert.fail();
             } catch (IllegalArgumentException expected) {
@@ -408,11 +408,11 @@ public class ServerTaskTest9ResultResponse {
     assertEquals(
         ServerTaskY.resp(opts -> {
           opts.host("www.example.com", _ -> Response.create(http -> {
-            http.status(HttpStatus.OK);
+            http.status(Status.OK);
 
             http.date();
 
-            http.header(HttpHeaderName.CONTENT_DISPOSITION, builder);
+            http.header(HeaderName.CONTENT_DISPOSITION, builder);
           }));
 
           opts.socket("""
@@ -455,12 +455,12 @@ public class ServerTaskTest9ResultResponse {
     assertEquals(
         ServerTaskY.resp(opts -> {
           opts.host("www.example.com", _ -> Response.create(http -> {
-            http.status(HttpStatus.OK);
+            http.status(Status.OK);
 
             http.date();
 
             try {
-              http.header(HttpHeaderName.ETAG, builder);
+              http.header(HeaderName.ETAG, builder);
 
               Assert.fail();
             } catch (RuntimeException runtime) {
@@ -498,11 +498,11 @@ public class ServerTaskTest9ResultResponse {
     assertEquals(
         ServerTaskY.resp(opts -> {
           opts.host("www.example.com", _ -> Response.create(http -> {
-            http.status(HttpStatus.OK);
+            http.status(Status.OK);
 
             http.date();
 
-            http.header(HttpHeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
+            http.header(HeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
 
             http.send(file01);
           }));
@@ -537,11 +537,11 @@ public class ServerTaskTest9ResultResponse {
     assertEquals(
         ServerTaskY.resp(opts -> {
           opts.host("www.example.com", _ -> Response.create(http -> {
-            http.status(HttpStatus.OK);
+            http.status(Status.OK);
 
             http.date();
 
-            http.header(HttpHeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
+            http.header(HeaderName.CONTENT_TYPE, "text/plain; charset=utf-8");
 
             http.send(file02);
           }));

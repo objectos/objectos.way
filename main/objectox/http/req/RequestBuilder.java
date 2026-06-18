@@ -21,7 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import objectos.http.HttpHeaderName;
+import objectos.http.HeaderName;
 import objectos.http.RequestMethod;
 import objectos.http.RequestOptions;
 import objectox.http.RequestMethodEnum;
@@ -37,7 +37,7 @@ public final class RequestBuilder implements RequestOptions {
 
   private RequestBodyForm bodyForm;
 
-  private Map<HttpHeaderName, Object> headers = Map.of();
+  private Map<HeaderName, Object> headers = Map.of();
 
   private RequestMethod method = RequestMethodEnum.GET;
 
@@ -70,7 +70,7 @@ public final class RequestBuilder implements RequestOptions {
   }
 
   @Override
-  public final void header(HttpHeaderName name, String value) {
+  public final void header(HeaderName name, String value) {
     Objects.requireNonNull(name, "name == null");
     Objects.requireNonNull(value, "value == null");
 

@@ -16,10 +16,10 @@
 package objectox.http.req;
 
 import java.io.IOException;
-import objectos.http.HttpHeaderName;
+import objectos.http.HeaderName;
 import objectos.internal.Ascii;
 import objectox.http.HttpClientException;
-import objectox.http.HttpHeaderName0;
+import objectox.http.HeaderNamePojo;
 import objectox.http.HttpServerException;
 import objectox.http.HttpClientException.Kind;
 
@@ -33,13 +33,13 @@ final class RequestParser7BodyMeta {
 
   public final RequestBodyMeta parse() throws IOException {
     final String contentLength;
-    contentLength = headers.header(HttpHeaderName.CONTENT_LENGTH);
+    contentLength = headers.header(HeaderName.CONTENT_LENGTH);
 
     final String contentType;
-    contentType = headers.header(HttpHeaderName0.CONTENT_TYPE);
+    contentType = headers.header(HeaderNamePojo.CONTENT_TYPE);
 
     final String transferEncoding;
-    transferEncoding = headers.header(HttpHeaderName.TRANSFER_ENCODING);
+    transferEncoding = headers.header(HeaderName.TRANSFER_ENCODING);
 
     if (contentLength != null) {
 

@@ -376,7 +376,7 @@ public sealed interface Request extends Result permits RequestPojo {
   ///
   /// @return the value of first field line or `null` if a field line with the
   ///         specified name is not present.
-  String header(HttpHeaderName name);
+  String header(HeaderName name);
 
   /// Returns an input stream that reads the bytes of this request body.
   ///

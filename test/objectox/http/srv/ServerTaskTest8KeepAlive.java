@@ -18,8 +18,8 @@ package objectox.http.srv;
 import static org.testng.Assert.assertEquals;
 
 import objectos.http.Content;
-import objectos.http.HttpHeaderName;
-import objectos.http.HttpStatus;
+import objectos.http.HeaderName;
+import objectos.http.Status;
 import objectos.http.MediaType;
 import objectos.http.Response;
 import objectos.y.SocketY;
@@ -151,9 +151,9 @@ public class ServerTaskTest8KeepAlive {
     assertEquals(
         ServerTaskY.resp(opts -> {
           opts.host("www.example.com", _ -> Response.create(resp -> {
-            resp.status(HttpStatus.OK);
-            resp.header(HttpHeaderName.CONTENT_LENGTH, 0L);
-            resp.header(HttpHeaderName.CONNECTION, "close");
+            resp.status(Status.OK);
+            resp.header(HeaderName.CONTENT_LENGTH, 0L);
+            resp.header(HeaderName.CONNECTION, "close");
           }));
 
           opts.socket("""

@@ -19,7 +19,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 
 import java.nio.charset.StandardCharsets;
-import objectos.http.HttpHeaderName;
+import objectos.http.HeaderName;
 import org.testng.annotations.Test;
 
 public class HttpHeaderNameTest {
@@ -35,22 +35,22 @@ public class HttpHeaderNameTest {
     assertEquals(tokenBytes.length, tokenChars.length());
 
     for (byte b : tokenBytes) {
-      assertEquals(HttpHeaderName0.map(b) > 0, true);
+      assertEquals(HeaderNamePojo.map(b) > 0, true);
     }
   }
 
   @Test
   public void of01() {
-    for (HttpHeaderName0 name : HttpHeaderName0.VALUES) {
-      assertSame(HttpHeaderName.of(name.headerCase()), name);
-      assertSame(HttpHeaderName.of(name.lowerCase()), name);
+    for (HeaderNamePojo name : HeaderNamePojo.VALUES) {
+      assertSame(HeaderName.of(name.headerCase()), name);
+      assertSame(HeaderName.of(name.lowerCase()), name);
     }
   }
 
   @Test
   public void of02() {
-    final HttpHeaderName0 res;
-    res = HttpHeaderName0.of("Foo-Bar");
+    final HeaderNamePojo res;
+    res = HeaderNamePojo.of("Foo-Bar");
 
     assertEquals(res.index(), -1);
     assertEquals(res.headerCase(), "Foo-Bar");
@@ -60,9 +60,9 @@ public class HttpHeaderNameTest {
   @SuppressWarnings("unlikely-arg-type")
   @Test(description = "equals() should work fine")
   public void testCase01() {
-    HttpHeaderName foo1 = HttpHeaderName0.of("Foo");
-    HttpHeaderName foo2 = HttpHeaderName0.of("Foo");
-    HttpHeaderName bar = HttpHeaderName0.of("Bar");
+    HeaderName foo1 = HeaderNamePojo.of("Foo");
+    HeaderName foo2 = HeaderNamePojo.of("Foo");
+    HeaderName bar = HeaderNamePojo.of("Bar");
 
     assertEquals(foo1.equals(foo2), true);
     assertEquals(foo2.equals(foo1), true);

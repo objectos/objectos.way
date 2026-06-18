@@ -18,7 +18,7 @@ package objectox.http.resp;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
-import objectos.http.HttpStatus;
+import objectos.http.Status;
 import objectos.y.OutputStreamY;
 import org.testng.annotations.Test;
 
@@ -35,7 +35,7 @@ public class ResponseSenderTest {
             },
 
             opts -> {
-              opts.status(HttpStatus.OK);
+              opts.status(Status.OK);
             }
         ),
 

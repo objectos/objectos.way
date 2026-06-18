@@ -26,7 +26,7 @@ public sealed interface Result
     Request,
     Response,
     StaticFile,
-    HttpStatus {
+    Status {
 
   /// Wraps the specified result in a runtime exception. If caught by the `Host`
   /// top-level handler, then the wrapped result is processed normally.

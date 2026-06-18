@@ -20,7 +20,7 @@ import static org.testng.Assert.assertEquals;
 import java.util.List;
 import java.util.Set;
 import objectos.http.Handler;
-import objectos.http.HttpStatus;
+import objectos.http.Status;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -61,7 +61,7 @@ public class RoutingAtPathTest {
     final RoutingAtPath subject;
     subject = new RoutingAtPath(expression);
 
-    subject.result(HttpStatus.FORBIDDEN);
+    subject.result(Status.FORBIDDEN);
 
     assertEquals(
         subject.build(),
@@ -69,7 +69,7 @@ public class RoutingAtPathTest {
         new HandlerRoute(
             segments,
 
-            new HandlerResult(HttpStatus.FORBIDDEN)
+            new HandlerResult(Status.FORBIDDEN)
         )
     );
   }
@@ -88,10 +88,10 @@ public class RoutingAtPathTest {
     final RoutingAtPath subject;
     subject = new RoutingAtPath(expression);
 
-    subject.result(HttpStatus.FORBIDDEN);
+    subject.result(Status.FORBIDDEN);
 
     try {
-      subject.result(HttpStatus.BAD_REQUEST);
+      subject.result(Status.BAD_REQUEST);
 
       Assert.fail("It should have thrown");
     } catch (IllegalStateException expected) {
@@ -117,7 +117,7 @@ public class RoutingAtPathTest {
     subject = new RoutingAtPath(expression);
 
     final Handler handler;
-    handler = new HandlerResult(HttpStatus.BAD_REQUEST);
+    handler = new HandlerResult(Status.BAD_REQUEST);
 
     subject.handler(handler);
 
@@ -147,12 +147,12 @@ public class RoutingAtPathTest {
     subject = new RoutingAtPath(expression);
 
     final Handler h1;
-    h1 = new HandlerResult(HttpStatus.BAD_REQUEST);
+    h1 = new HandlerResult(Status.BAD_REQUEST);
 
     subject.handler(h1);
 
     final Handler h2;
-    h2 = new HandlerResult(HttpStatus.NOT_MODIFIED);
+    h2 = new HandlerResult(Status.NOT_MODIFIED);
 
     subject.handler(h2);
 
@@ -187,7 +187,7 @@ public class RoutingAtPathTest {
 
     subject.pathParamNamed(new PathParamNamed("foo", PathParamPredicates.DIGITS));
 
-    subject.result(HttpStatus.BAD_REQUEST);
+    subject.result(Status.BAD_REQUEST);
 
     assertEquals(
         subject.build(),
@@ -195,7 +195,7 @@ public class RoutingAtPathTest {
         new HandlerRoute(
             List.of(new SegmentExact("/test"), new SegmentParamLast("foo", PathParamPredicates.DIGITS)),
 
-            new HandlerResult(HttpStatus.BAD_REQUEST)
+            new HandlerResult(Status.BAD_REQUEST)
         )
     );
   }

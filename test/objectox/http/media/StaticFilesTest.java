@@ -28,8 +28,8 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 import objectos.http.Content;
 import objectos.http.ContentProvider;
-import objectos.http.HttpHeaderName;
-import objectos.http.HttpStatus;
+import objectos.http.HeaderName;
+import objectos.http.Status;
 import objectos.http.MediaType;
 import objectos.http.Request;
 import objectos.http.Response;
@@ -106,7 +106,7 @@ public class StaticFilesTest {
         {Content.of(MediaType.TEXT_PLAIN, "ok\n")},
         {(ContentProvider) () -> Content.of(MediaType.TEXT_PLAIN, "ok\n")},
         {Response.create(_ -> {})},
-        {HttpStatus.NOT_FOUND}
+        {Status.NOT_FOUND}
     };
   }
 
@@ -375,7 +375,7 @@ public class StaticFilesTest {
     res = handler.handle(Request.create(opts -> {
       opts.path("/tc01.txt");
 
-      opts.header(HttpHeaderName.IF_NONE_MATCH, "18901e7e8f8-4");
+      opts.header(HeaderName.IF_NONE_MATCH, "18901e7e8f8-4");
     }));
 
     assertEquals(

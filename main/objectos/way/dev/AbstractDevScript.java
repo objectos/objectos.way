@@ -18,13 +18,13 @@ package objectos.way.dev;
 import module objectos.way;
 import objectos.http.HttpExchange;
 import objectos.http.HttpHandler;
-import objectos.http.HttpHeaderName;
+import objectos.http.HeaderName;
 
 abstract class AbstractDevScript extends Html.Template implements HttpHandler {
 
   static final Html.AttributeName DATA_TEST = Html.AttributeName.of("data-test");
 
-  static final HttpHeaderName WAY_TEST = HttpHeaderName.of("Way-Test");
+  static final HeaderName WAY_TEST = HeaderName.of("Way-Test");
 
   static final Html.Id SUBJECT = Html.Id.of("subject");
 

@@ -38,7 +38,7 @@ public final class ScriptSubmit03 extends AbstractDevScript {
     switch (http.method().name()) {
       case "GET", "POST" -> super.handle(http);
 
-      default -> http.error(HttpStatus.METHOD_NOT_ALLOWED, "Allowed: GET, POST");
+      default -> http.error(Status.METHOD_NOT_ALLOWED, "Allowed: GET, POST");
     }
   }
 

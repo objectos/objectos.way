@@ -24,11 +24,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import objectos.http.Content;
-import objectos.http.HttpHeaderName;
+import objectos.http.HeaderName;
 import objectos.http.MediaType;
 import objectos.way.Y;
 import objectos.y.SocketY;
-import objectox.http.HttpHeaderName0;
+import objectox.http.HeaderNamePojo;
 import objectox.http.Rfc;
 import objectox.http.handler.HandlerNoop;
 import objectox.http.req.RequestHeaders;
@@ -51,9 +51,9 @@ public class ServerTaskTest5Headers {
             """,
 
             Map.of(
-                HttpHeaderName.HOST, "www.example.com",
-                HttpHeaderName.CONNECTION, "close",
-                HttpHeaderName.USER_AGENT, "x"
+                HeaderName.HOST, "www.example.com",
+                HeaderName.CONNECTION, "close",
+                HeaderName.USER_AGENT, "x"
             ),
 
             "name: happy path"
@@ -66,9 +66,9 @@ public class ServerTaskTest5Headers {
             """,
 
             Map.of(
-                HttpHeaderName.HOST, "www.example.com",
-                HttpHeaderName.CONNECTION, "close",
-                HttpHeaderName.of("foo"), "x"
+                HeaderName.HOST, "www.example.com",
+                HeaderName.CONNECTION, "close",
+                HeaderName.of("foo"), "x"
             ),
 
             "name: unknown"
@@ -81,9 +81,9 @@ public class ServerTaskTest5Headers {
             """.formatted(Rfc.tchar()),
 
             Map.of(
-                HttpHeaderName.HOST, "www.example.com",
-                HttpHeaderName.CONNECTION, "close",
-                HttpHeaderName.of(Rfc.tchar()), "x"
+                HeaderName.HOST, "www.example.com",
+                HeaderName.CONNECTION, "close",
+                HeaderName.of(Rfc.tchar()), "x"
             ),
 
             "name: test all valid characters"
@@ -98,11 +98,11 @@ public class ServerTaskTest5Headers {
             """,
 
             Map.of(
-                HttpHeaderName.HOST, "www.example.com",
-                HttpHeaderName.CONNECTION, "close",
-                HttpHeaderName.ACCEPT_ENCODING, "gzip",
-                HttpHeaderName.REFERER, "www.google.com",
-                HttpHeaderName.USER_AGENT, "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
+                HeaderName.HOST, "www.example.com",
+                HeaderName.CONNECTION, "close",
+                HeaderName.ACCEPT_ENCODING, "gzip",
+                HeaderName.REFERER, "www.google.com",
+                HeaderName.USER_AGENT, "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
             ),
 
             "value: happy path"
@@ -117,11 +117,11 @@ public class ServerTaskTest5Headers {
             """,
 
             Map.of(
-                HttpHeaderName.HOST, "www.example.com",
-                HttpHeaderName.CONNECTION, "close",
-                HttpHeaderName.ACCEPT_ENCODING, "x",
-                HttpHeaderName.REFERER, "x  y",
-                HttpHeaderName.USER_AGENT, "z"
+                HeaderName.HOST, "www.example.com",
+                HeaderName.CONNECTION, "close",
+                HeaderName.ACCEPT_ENCODING, "x",
+                HeaderName.REFERER, "x  y",
+                HeaderName.USER_AGENT, "z"
             ),
 
             "value: trim"
@@ -136,11 +136,11 @@ public class ServerTaskTest5Headers {
             """,
 
             Map.of(
-                HttpHeaderName.HOST, "www.example.com",
-                HttpHeaderName.CONNECTION, "close",
-                HttpHeaderName.ACCEPT_ENCODING, "",
-                HttpHeaderName.REFERER, "",
-                HttpHeaderName.USER_AGENT, ""
+                HeaderName.HOST, "www.example.com",
+                HeaderName.CONNECTION, "close",
+                HeaderName.ACCEPT_ENCODING, "",
+                HeaderName.REFERER, "",
+                HeaderName.USER_AGENT, ""
             ),
 
             "value: empty"
@@ -153,9 +153,9 @@ public class ServerTaskTest5Headers {
             """.formatted(valueAllValidChars()),
 
             Map.of(
-                HttpHeaderName.HOST, "www.example.com",
-                HttpHeaderName.CONNECTION, "close",
-                HttpHeaderName.REFERER, valueAllValidChars()
+                HeaderName.HOST, "www.example.com",
+                HeaderName.CONNECTION, "close",
+                HeaderName.REFERER, valueAllValidChars()
             ),
 
             "value: all valid characters"
@@ -179,7 +179,7 @@ public class ServerTaskTest5Headers {
   }
 
   @Test(dataProvider = "validProvider")
-  public void valid(String payload, Map<HttpHeaderName, Object> expected, String description) throws IOException {
+  public void valid(String payload, Map<HeaderName, Object> expected, String description) throws IOException {
     assertEquals(
         ServerTaskY.resp(opts -> {
           opts.host("www.example.com", req -> {
@@ -213,18 +213,18 @@ public class ServerTaskTest5Headers {
   }
 
   @DataProvider
-  public Iterator<HttpHeaderName> validAllPredefinedNamesProvider() {
-    final List<HttpHeaderName> list;
+  public Iterator<HeaderName> validAllPredefinedNamesProvider() {
+    final List<HeaderName> list;
     list = new ArrayList<>();
 
-    for (HttpHeaderName0 name : HttpHeaderName0.VALUES) {
+    for (HeaderNamePojo name : HeaderNamePojo.VALUES) {
       if (name.isResponseOnly()) {
         continue;
       }
 
-      if (name.equals(HttpHeaderName0.TRANSFER_ENCODING) ||
-          name.equals(HttpHeaderName0.HOST) ||
-          name.equals(HttpHeaderName0.CONNECTION)) {
+      if (name.equals(HeaderNamePojo.TRANSFER_ENCODING) ||
+          name.equals(HeaderNamePojo.HOST) ||
+          name.equals(HeaderNamePojo.CONNECTION)) {
         continue;
       }
 
@@ -235,9 +235,9 @@ public class ServerTaskTest5Headers {
   }
 
   @Test(dataProvider = "validAllPredefinedNamesProvider")
-  public void validAllPredefinedNames(HttpHeaderName name) throws IOException {
+  public void validAllPredefinedNames(HeaderName name) throws IOException {
     valid(
-        name != HttpHeaderName.CONTENT_TYPE
+        name != HeaderName.CONTENT_TYPE
             ? """
               Host: www.example.com\r
               Connection: close\r
@@ -250,17 +250,17 @@ public class ServerTaskTest5Headers {
               Content-Length: 0\r
               """,
 
-        name != HttpHeaderName.CONTENT_TYPE
+        name != HeaderName.CONTENT_TYPE
             ? Map.of(
-                HttpHeaderName.HOST, "www.example.com",
-                HttpHeaderName.CONNECTION, "close",
+                HeaderName.HOST, "www.example.com",
+                HeaderName.CONNECTION, "close",
                 name, "0"
             )
             : Map.of(
-                HttpHeaderName.HOST, "www.example.com",
-                HttpHeaderName.CONNECTION, "close",
-                HttpHeaderName.CONTENT_TYPE, "x",
-                HttpHeaderName.CONTENT_LENGTH, "0"
+                HeaderName.HOST, "www.example.com",
+                HeaderName.CONNECTION, "close",
+                HeaderName.CONTENT_TYPE, "x",
+                HeaderName.CONTENT_LENGTH, "0"
             ),
 
         ""
@@ -450,7 +450,7 @@ public class ServerTaskTest5Headers {
   }
 
   @Test(dataProvider = "validProvider")
-  public void slowClient(String payload, Map<HttpHeaderName, Object> expected, String description) throws IOException {
+  public void slowClient(String payload, Map<HeaderName, Object> expected, String description) throws IOException {
     assertEquals(
         ServerTaskY.resp(opts -> {
           opts.host("www.example.com", req -> {

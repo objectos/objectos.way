@@ -24,7 +24,7 @@ public sealed interface RequestOptions permits RequestBuilder {
   ///
   /// @param name the header field name
   /// @param value the header field value
-  void header(HttpHeaderName name, String value);
+  void header(HeaderName name, String value);
 
   /// Sets the request method to the specified value. Defaults to the `GET`
   /// method when not specified.

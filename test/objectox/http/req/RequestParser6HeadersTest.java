@@ -23,12 +23,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import objectos.http.HttpHeaderName;
+import objectos.http.HeaderName;
 import objectos.way.Y;
 import objectos.y.SocketY;
 import objectox.http.HttpClientException;
 import objectox.http.HttpClientException.Kind;
-import objectox.http.HttpHeaderName0;
+import objectox.http.HeaderNamePojo;
 import objectox.http.Rfc;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
@@ -36,7 +36,7 @@ import org.testng.annotations.Test;
 
 public class RequestParser6HeadersTest {
 
-  private Map<HttpHeaderName, Object> parse(Object... data) throws IOException {
+  private Map<HeaderName, Object> parse(Object... data) throws IOException {
     final Socket socket;
     socket = SocketY.of(data);
 
@@ -61,9 +61,9 @@ public class RequestParser6HeadersTest {
             """,
 
             Map.of(
-                HttpHeaderName.ACCEPT_ENCODING, "x",
-                HttpHeaderName.REFERER, "x",
-                HttpHeaderName.USER_AGENT, "x"
+                HeaderName.ACCEPT_ENCODING, "x",
+                HeaderName.REFERER, "x",
+                HeaderName.USER_AGENT, "x"
             ),
 
             "name: happy path"
@@ -77,9 +77,9 @@ public class RequestParser6HeadersTest {
             """,
 
             Map.of(
-                HttpHeaderName.HOST, "x",
-                HttpHeaderName.of("foo"), "x",
-                HttpHeaderName.USER_AGENT, "x"
+                HeaderName.HOST, "x",
+                HeaderName.of("foo"), "x",
+                HeaderName.USER_AGENT, "x"
             ),
 
             "name: unknown"
@@ -91,7 +91,7 @@ public class RequestParser6HeadersTest {
             """.formatted(Rfc.tchar()),
 
             Map.of(
-                HttpHeaderName.of(Rfc.tchar()), "x"
+                HeaderName.of(Rfc.tchar()), "x"
             ),
 
             "name: test all valid characters"
@@ -105,9 +105,9 @@ public class RequestParser6HeadersTest {
             """,
 
             Map.of(
-                HttpHeaderName.ACCEPT_ENCODING, "gzip",
-                HttpHeaderName.REFERER, "www.google.com",
-                HttpHeaderName.USER_AGENT, "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
+                HeaderName.ACCEPT_ENCODING, "gzip",
+                HeaderName.REFERER, "www.google.com",
+                HeaderName.USER_AGENT, "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
             ),
 
             "value: happy path"
@@ -121,9 +121,9 @@ public class RequestParser6HeadersTest {
             """,
 
             Map.of(
-                HttpHeaderName.ACCEPT_ENCODING, "x",
-                HttpHeaderName.REFERER, "x  y",
-                HttpHeaderName.USER_AGENT, "z"
+                HeaderName.ACCEPT_ENCODING, "x",
+                HeaderName.REFERER, "x  y",
+                HeaderName.USER_AGENT, "z"
             ),
 
             "value: trim"
@@ -137,9 +137,9 @@ public class RequestParser6HeadersTest {
             """,
 
             Map.of(
-                HttpHeaderName.ACCEPT_ENCODING, "",
-                HttpHeaderName.REFERER, "",
-                HttpHeaderName.USER_AGENT, ""
+                HeaderName.ACCEPT_ENCODING, "",
+                HeaderName.REFERER, "",
+                HeaderName.USER_AGENT, ""
             ),
 
             "value: empty"
@@ -151,7 +151,7 @@ public class RequestParser6HeadersTest {
             """.formatted(valueAllValidChars()),
 
             Map.of(
-                HttpHeaderName.REFERER, valueAllValidChars()
+                HeaderName.REFERER, valueAllValidChars()
             ),
 
             "value: all valid characters"
@@ -175,7 +175,7 @@ public class RequestParser6HeadersTest {
   }
 
   @Test(dataProvider = "validProvider")
-  public void valid(String headers, Map<HttpHeaderName, Object> expected, String description) throws IOException {
+  public void valid(String headers, Map<HeaderName, Object> expected, String description) throws IOException {
     assertEquals(
         parse(
             iso8859(headers)
@@ -190,8 +190,8 @@ public class RequestParser6HeadersTest {
     StringBuilder in;
     in = new StringBuilder();
 
-    for (HttpHeaderName0 name : HttpHeaderName0.VALUES) {
-      if (!name.isResponseOnly() && !name.equals(HttpHeaderName0.TRANSFER_ENCODING)) {
+    for (HeaderNamePojo name : HeaderNamePojo.VALUES) {
+      if (!name.isResponseOnly() && !name.equals(HeaderNamePojo.TRANSFER_ENCODING)) {
         in.append(name.headerCase());
         in.append(": ");
         in.append(Integer.toString(name.index()));
@@ -202,7 +202,7 @@ public class RequestParser6HeadersTest {
     in.append("\r\n");
 
     final int contentLength;
-    contentLength = HttpHeaderName0.CONTENT_LENGTH.index();
+    contentLength = HeaderNamePojo.CONTENT_LENGTH.index();
 
     in.append("x".repeat(contentLength));
 
@@ -211,8 +211,8 @@ public class RequestParser6HeadersTest {
     );
 
     // headers
-    for (HttpHeaderName0 name : HttpHeaderName0.VALUES) {
-      if (!name.isResponseOnly() && !name.equals(HttpHeaderName0.TRANSFER_ENCODING)) {
+    for (HeaderNamePojo name : HeaderNamePojo.VALUES) {
+      if (!name.isResponseOnly() && !name.equals(HeaderNamePojo.TRANSFER_ENCODING)) {
         assertEquals(res.get(name), Integer.toString(name.index()));
       }
     }
@@ -377,7 +377,7 @@ public class RequestParser6HeadersTest {
   }
 
   @Test(dataProvider = "validProvider")
-  public void slowClient(String headers, Map<HttpHeaderName, Object> expected, String description) throws IOException {
+  public void slowClient(String headers, Map<HeaderName, Object> expected, String description) throws IOException {
     assertEquals(
         parse(
             Y.slowStream(1, iso8859("""

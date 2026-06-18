@@ -17,7 +17,7 @@ package objectox.http.req;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.http.HttpHeaderName;
+import objectos.http.HeaderName;
 import objectos.http.Request;
 import objectox.http.RequestMethodEnum;
 import org.testng.annotations.Test;
@@ -29,7 +29,7 @@ public class RequestTest {
     final Request r;
     r = Request.create(_ -> {});
 
-    assertEquals(r.header(HttpHeaderName.WAY_REQUEST), null);
+    assertEquals(r.header(HeaderName.WAY_REQUEST), null);
     assertEquals(r.method(), RequestMethodEnum.GET);
     assertEquals(r.path(), "/");
   }
@@ -38,14 +38,14 @@ public class RequestTest {
   public void create02() {
     final Request r;
     r = Request.create(opts -> {
-      opts.header(HttpHeaderName.WAY_REQUEST, "foo");
+      opts.header(HeaderName.WAY_REQUEST, "foo");
 
       opts.method(RequestMethodEnum.PATCH);
 
       opts.path("/test/123");
     });
 
-    assertEquals(r.header(HttpHeaderName.WAY_REQUEST), "foo");
+    assertEquals(r.header(HeaderName.WAY_REQUEST), "foo");
     assertEquals(r.method(), RequestMethodEnum.PATCH);
     assertEquals(r.path(), "/test/123");
   }

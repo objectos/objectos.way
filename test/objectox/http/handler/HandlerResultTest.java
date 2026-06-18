@@ -22,7 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 import objectos.http.Content;
 import objectos.http.Handler;
-import objectos.http.HttpStatus;
+import objectos.http.Status;
 import objectos.http.MediaType;
 import objectos.http.Redirection;
 import objectos.http.Response;
@@ -44,7 +44,7 @@ public class HandlerResultTest {
 
         StaticFile.of(Content.of(MediaType.TEXT_PLAIN, "static")),
 
-        HttpStatus.NOT_FOUND
+        Status.NOT_FOUND
     ).iterator();
   }
 

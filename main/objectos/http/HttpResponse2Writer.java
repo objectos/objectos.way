@@ -26,17 +26,17 @@ import java.nio.file.Path;
 import objectos.internal.Bytes;
 import objectos.lang.Testable;
 import objectos.way.Media;
-import objectox.http.HttpHeaderName0;
-import objectox.http.HttpStatus0;
+import objectox.http.HeaderNamePojo;
 import objectox.http.Rfc;
+import objectox.http.resp.StatusEnum;
 
 final class HttpResponse2Writer {
 
   private static final byte[][] STATUS_LINES;
 
   static {
-    final HttpStatus0[] values;
-    values = HttpStatus0.values();
+    final StatusEnum[] values;
+    values = StatusEnum.values();
 
     final int size;
     size = values.length;
@@ -44,7 +44,7 @@ final class HttpResponse2Writer {
     final byte[][] map;
     map = new byte[size][];
 
-    for (HttpStatus0 status : values) {
+    for (StatusEnum status : values) {
       final int index;
       index = status.ordinal();
 
@@ -81,11 +81,11 @@ final class HttpResponse2Writer {
     this.testable = testable;
   }
 
-  public final void status(HttpStatus status) throws IOException {
+  public final void status(Status status) throws IOException {
     writeBytes(HTTP_1_1);
 
-    final HttpStatus0 impl;
-    impl = (HttpStatus0) status;
+    final StatusEnum impl;
+    impl = (StatusEnum) status;
 
     final byte[] statusBytes;
     statusBytes = STATUS_LINES[impl.ordinal()];
@@ -93,9 +93,9 @@ final class HttpResponse2Writer {
     writeBytes(statusBytes);
   }
 
-  public final void header(HttpHeaderName name, String value) throws IOException {
-    final HttpHeaderName0 nameImpl;
-    nameImpl = (HttpHeaderName0) name;
+  public final void header(HeaderName name, String value) throws IOException {
+    final HeaderNamePojo nameImpl;
+    nameImpl = (HeaderNamePojo) name;
 
     final byte[] nameBytes;
     nameBytes = nameImpl.headerCaseBytes();
@@ -114,7 +114,7 @@ final class HttpResponse2Writer {
 
       writeBytes(valueBytes);
 
-      if (name == HttpHeaderName.TRANSFER_ENCODING) {
+      if (name == HeaderName.TRANSFER_ENCODING) {
         chunked = "chunked".equalsIgnoreCase(value);
       }
     }
