@@ -17,7 +17,9 @@ package objectox.http.handler;
 
 import java.util.HashMap;
 import java.util.Map;
+import objectos.http.Request;
 import objectos.internal.VisibleForTesting;
+import objectox.http.req.RequestPojo;
 
 final class RequestPath {
 
@@ -25,7 +27,7 @@ final class RequestPath {
 
   private int index;
 
-  public Map<String, String> params = Map.of();
+  private Map<String, String> params = Map.of();
 
   RequestPath(String path) {
     this.path = path;
@@ -95,6 +97,21 @@ final class RequestPath {
     params.put(name, value);
 
     return true;
+  }
+
+  public final void paramsIfNecessary(Request request) {
+    if (params.isEmpty()) {
+      return;
+    }
+
+    final Map<String, String> unmodifiable;
+    unmodifiable = Map.copyOf(params);
+
+    request.attr(RequestPojo.PATH_PARAMS, unmodifiable);
+  }
+
+  final Map<?, ?> params() {
+    return params;
   }
 
 }

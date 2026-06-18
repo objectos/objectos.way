@@ -36,6 +36,8 @@ final record HandlerRoute(List<Segment> segments, Handler handler) implements Ha
       }
     }
 
+    path.paramsIfNecessary(request);
+
     return handler.handle(request);
   }
 

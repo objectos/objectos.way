@@ -15,14 +15,17 @@
  */
 package objectox.http.handler;
 
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 
 import java.util.List;
+import java.util.Map;
 import objectos.http.Content;
 import objectos.http.Handler;
 import objectos.http.MediaType;
 import objectos.http.Request;
 import objectos.http.Result;
+import objectox.http.req.RequestPojo;
 import org.testng.annotations.Test;
 
 public class HandlerRouteTest {
@@ -45,6 +48,8 @@ public class HandlerRouteTest {
     final Result res;
     res = subject.handle(req);
 
+    assertEquals(req.attr(RequestPojo.PATH_PARAMS), null);
+
     assertSame(res, req);
   }
 
@@ -61,6 +66,27 @@ public class HandlerRouteTest {
 
     final Result res;
     res = subject.handle(req);
+
+    assertEquals(req.attr(RequestPojo.PATH_PARAMS), null);
+
+    assertSame(res, content);
+  }
+
+  @Test(description = "Path parameters")
+  public void handle03() {
+    final Request req;
+    req = Request.create(opts -> opts.path("/test/abc"));
+
+    final List<Segment> segments;
+    segments = List.of(new SegmentRegion("/test/"), new SegmentParamLast("foo"));
+
+    final Handler subject;
+    subject = new HandlerRoute(segments, handler);
+
+    final Result res;
+    res = subject.handle(req);
+
+    assertEquals(req.attr(RequestPojo.PATH_PARAMS), Map.of("foo", "abc"));
 
     assertSame(res, content);
   }

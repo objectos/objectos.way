@@ -25,7 +25,6 @@ import java.util.function.LongSupplier;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 import objectos.lang.Key;
-import objectox.http.req.RequestBuilder;
 import objectox.http.req.RequestPojo;
 
 /// An HTTP request message.
@@ -40,12 +39,7 @@ public sealed interface Request extends Result permits RequestPojo {
   ///
   /// @return a newly created request instance with the configured options
   static Request create(Consumer<? super RequestOptions> opts) {
-    final RequestBuilder builder;
-    builder = new RequestBuilder();
-
-    opts.accept(builder);
-
-    return builder.build();
+    return RequestPojo.create0(opts);
   }
 
   // ##################################################################
@@ -344,6 +338,35 @@ public sealed interface Request extends Result permits RequestPojo {
 
   // ##################################################################
   // # End: Request line
+  // ##################################################################
+
+  // ##################################################################
+  // # BEGIN: path parameters
+  // ##################################################################
+
+  /// Returns the value of the path parameter with the specified name if it
+  /// exists or returns `null` otherwise.
+  ///
+  /// @param name the name of the path parameter
+  ///
+  /// @return the value if it exists or `null` if it does not
+  String pathParam(String name);
+
+  /// Returns, as an `int`, the value of the path parameter with the specified
+  /// name. If the path parameter does not exist or if the value cannot be
+  /// converted to an `int` value then the specified default value is returned
+  /// instead.
+  ///
+  /// @param name the name of the path parameter
+  /// @param defaultValue the value to be returned if the parameter does exist of
+  ///        if its value cannot be converted to an `int` value
+  ///
+  /// @return the value converted to an `int` if it exists or the specified
+  ///         default value otherwise
+  int pathParamAsInt(String name, int defaultValue);
+
+  // ##################################################################
+  // # END: path parameters
   // ##################################################################
 
   /// Returns the value of the first field line having the specified name;

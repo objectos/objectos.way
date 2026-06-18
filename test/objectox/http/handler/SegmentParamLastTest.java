@@ -42,7 +42,7 @@ public class SegmentParamLastTest {
 
     assertEquals(segment.matches(reqPath), true);
 
-    assertEquals(reqPath.params, Map.of("test", value));
+    assertEquals(reqPath.params(), Map.of("test", value));
   }
 
 }

@@ -46,6 +46,17 @@ public record RequestPojo(
 
 ) implements Request {
 
+  public static final Key<Map<String, String>> PATH_PARAMS = Key.of("objectos.http.PathParams");
+
+  public static RequestPojo create0(Consumer<? super RequestBuilder> opts) {
+    final RequestBuilder builder;
+    builder = new RequestBuilder();
+
+    opts.accept(builder);
+
+    return builder.build();
+  }
+
   public final boolean closeConnection() {
     return headers.closeConnection();
   }
@@ -124,6 +135,26 @@ public record RequestPojo(
   }
 
   @Override
+  public final String pathParam(String name) {
+    final Map<String, String> pathParams;
+    pathParams = attr(PATH_PARAMS);
+
+    if (pathParams != null) {
+      return pathParams.get(name);
+    } else {
+      return null;
+    }
+  }
+
+  @Override
+  public final int pathParamAsInt(String name, int defaultValue) {
+    final String value;
+    value = pathParam(name);
+
+    return valueAsInt(value, defaultValue);
+  }
+
+  @Override
   public final String rawPath() {
     // TODO remove?
     throw new UnsupportedOperationException();
@@ -184,6 +215,18 @@ public record RequestPojo(
   @Override
   public final LongStream formParamAllAsLong(String name, long defaultValue) {
     return bodyForm.formParamAllAsLong(name, defaultValue);
+  }
+
+  private int valueAsInt(String value, int defaultValue) {
+    if (value == null) {
+      return defaultValue;
+    }
+
+    try {
+      return Integer.parseInt(value);
+    } catch (NumberFormatException expected) {
+      return defaultValue;
+    }
   }
 
 }

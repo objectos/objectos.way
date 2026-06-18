@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import objectos.http.HttpHeaderName;
-import objectos.http.Request;
 import objectos.http.RequestMethod;
 import objectos.http.RequestOptions;
 import objectox.http.RequestMethodEnum;
@@ -50,7 +49,7 @@ public final class RequestBuilder implements RequestOptions {
 
   private final Version0 version = Version0.HTTP_1_1;
 
-  public final Request build() {
+  public final RequestPojo build() {
     return new RequestPojo(
         attributes,
 
