@@ -44,6 +44,20 @@ public sealed interface Content
     );
   }
 
+  /// Returns a new `Content` object whose contents are the specified bytes.
+  ///
+  /// @param contentType the type of the content
+  /// @param contents the bytes
+  static Content of(MediaType contentType, byte[] bytes) {
+    final MediaType type;
+    type = Objects.requireNonNull(contentType, "contentType == null");
+
+    final byte[] value;
+    value = bytes.clone();
+
+    return new ContentBytes(type, value);
+  }
+
   /// Returns a new `Content` object whose contents are the `UTF-8` bytes of the
   /// specified string.
   ///
