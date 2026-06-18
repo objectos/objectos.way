@@ -55,9 +55,7 @@ final class PathExpressionParserRight {
   }
 
   private void execute(String paramName, boolean last) {
-    if (!paramName.isEmpty()) {
-      validateParamName(paramName);
-    }
+    validateParamName(paramName);
 
     if (last) {
       final Segment segment;
@@ -80,6 +78,13 @@ final class PathExpressionParserRight {
   }
 
   private void validateParamName(String paramName) {
+    if (paramName.isEmpty()) {
+      final String msg;
+      msg = "Invalid path expression: path parameters must be named";
+
+      throw new IllegalArgumentException(msg);
+    }
+
     final int idenStart;
     idenStart = paramName.codePointAt(0); // safe as name is not empty
 

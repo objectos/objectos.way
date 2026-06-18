@@ -17,16 +17,15 @@ package objectox.http.handler;
 
 import static org.testng.Assert.assertSame;
 
+import java.util.List;
 import objectos.http.Content;
 import objectos.http.Handler;
 import objectos.http.MediaType;
 import objectos.http.Request;
 import objectos.http.Result;
-import objectos.http.RouteMatcher;
-import objectos.http.RouteMatcherExact;
 import org.testng.annotations.Test;
 
-public class HandlerIfPathTest {
+public class HandlerRouteTest {
 
   private final Content content = Content.of(MediaType.TEXT_PLAIN, "Cond");
 
@@ -37,11 +36,11 @@ public class HandlerIfPathTest {
     final Request req;
     req = Request.create(opts -> opts.path("/other"));
 
-    final RouteMatcher matcher;
-    matcher = new RouteMatcherExact("/test");
+    final List<Segment> segments;
+    segments = List.of(new SegmentExact("/test"));
 
     final Handler subject;
-    subject = new HandlerIfPath(matcher, handler);
+    subject = new HandlerRoute(segments, handler);
 
     final Result res;
     res = subject.handle(req);
@@ -54,11 +53,11 @@ public class HandlerIfPathTest {
     final Request req;
     req = Request.create(opts -> opts.path("/test"));
 
-    final RouteMatcher matcher;
-    matcher = new RouteMatcherExact("/test");
+    final List<Segment> segments;
+    segments = List.of(new SegmentExact("/test"));
 
     final Handler subject;
-    subject = new HandlerIfPath(matcher, handler);
+    subject = new HandlerRoute(segments, handler);
 
     final Result res;
     res = subject.handle(req);

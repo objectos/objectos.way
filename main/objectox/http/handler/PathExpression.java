@@ -15,7 +15,80 @@
  */
 package objectox.http.handler;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+import java.util.function.Predicate;
 
-record PathExpression(Set<String> paramNames, List<Segment> segments) {}
+final class PathExpression {
+
+  private final Set<String> paramNames;
+
+  private final List<Segment> segments;
+
+  private Map<String, Predicate<String>> predicates = Map.of();
+
+  PathExpression(Set<String> paramNames, List<Segment> segments) {
+    this.paramNames = paramNames;
+
+    this.segments = segments;
+  }
+
+  public final List<Segment> build() {
+    return segments.stream().map(this::predicateIfNecessary).toList();
+  }
+
+  @Override
+  public final int hashCode() {
+    return Objects.hash(paramNames, segments);
+  }
+
+  @Override
+  public final boolean equals(Object obj) {
+    return obj instanceof PathExpression that
+        && Objects.equals(paramNames, that.paramNames)
+        && Objects.equals(segments, that.segments);
+  }
+
+  private Segment predicateIfNecessary(Segment original) {
+    return switch (original) {
+      case SegmentParam p -> p.with(predicates);
+
+      case SegmentParamLast p -> p.with(predicates);
+
+      default -> original;
+    };
+  }
+
+  public final void pathParamNamed(PathParamNamed param) {
+    final String name;
+    name = param.name();
+
+    if (!paramNames.contains(name)) {
+      final String msg;
+      msg = "Path expression does not declare a '%s' path parameter".formatted(name);
+
+      throw new IllegalArgumentException(msg);
+    }
+
+    if (predicates.isEmpty()) {
+      predicates = new HashMap<>();
+    }
+
+    final Predicate<String> predicate;
+    predicate = param.predicate();
+
+    final Predicate<String> existing;
+    existing = predicates.put(name, predicate);
+
+    if (existing != null) {
+      final Predicate<String> combined;
+      combined = existing.and(predicate);
+
+      predicates.put(name, combined);
+    }
+  }
+
+}

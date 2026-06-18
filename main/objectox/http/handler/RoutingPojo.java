@@ -42,7 +42,11 @@ public final class RoutingPojo implements Routing {
 
   private Handler build() {
     return switch (handlers.size()) {
-      default -> HandlerNoop.INSTANCE;
+      case 0 -> HandlerNoop.INSTANCE;
+
+      case 1 -> handlers.get(0);
+
+      default -> HandlerList.copyOf(handlers);
     };
   }
 

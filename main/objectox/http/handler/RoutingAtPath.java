@@ -15,59 +15,27 @@
  */
 package objectox.http.handler;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Predicate;
+import java.util.List;
 import objectos.http.Handler;
-import objectos.http.RouteMatcher;
 
 final class RoutingAtPath extends RoutingAtCommon {
 
-  private final RouteMatcher pathMatcher;
+  private final PathExpression pathExpression;
 
-  private final Set<String> paramNames;
-
-  private Map<String, Predicate<String>> predicates = Map.of();
-
-  RoutingAtPath(RouteMatcher pathMatcher, Set<String> paramNames) {
-    this.pathMatcher = pathMatcher;
-
-    this.paramNames = paramNames;
+  RoutingAtPath(PathExpression pathExpression) {
+    this.pathExpression = pathExpression;
   }
 
   public final void pathParamNamed(PathParamNamed param) {
-    final String name;
-    name = param.name();
-
-    if (!paramNames.contains(name)) {
-      final String msg;
-      msg = "Path expression does not declare a '%s' path parameter".formatted(name);
-
-      throw new IllegalArgumentException(msg);
-    }
-
-    if (predicates.isEmpty()) {
-      predicates = new HashMap<>();
-    }
-
-    final Predicate<String> predicate;
-    predicate = param.predicate();
-
-    final Predicate<String> existing;
-    existing = predicates.put(name, predicate);
-
-    if (existing != null) {
-      final Predicate<String> combined;
-      combined = existing.and(predicate);
-
-      predicates.put(name, combined);
-    }
+    pathExpression.pathParamNamed(param);
   }
 
   @Override
   final Handler build(Handler handler) {
-    return new HandlerIfPath(pathMatcher, handler);
+    final List<Segment> segments;
+    segments = pathExpression.build();
+
+    return new HandlerRoute(segments, handler);
   }
 
 }

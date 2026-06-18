@@ -15,27 +15,28 @@
  */
 package objectox.http.handler;
 
+import java.util.List;
 import objectos.http.Handler;
 import objectos.http.Request;
 import objectos.http.Result;
-import objectos.http.RouteMatcher;
-import objectos.http.RoutePath;
 
-public record HandlerIfPath(RouteMatcher pathMatcher, Handler handler) implements Handler {
+final record HandlerRoute(List<Segment> segments, Handler handler) implements Handler {
 
   @Override
   public final Result handle(Request request) {
-    final String path;
-    path = request.path();
+    final String original;
+    original = request.path();
 
-    final RoutePath pathCtx;
-    pathCtx = new RoutePath(path);
+    final RequestPath path;
+    path = new RequestPath(original);
 
-    if (pathMatcher.matches(pathCtx)) {
-      return handler.handle(request);
+    for (Segment segment : segments) {
+      if (!segment.matches(path)) {
+        return request;
+      }
     }
 
-    return request;
+    return handler.handle(request);
   }
 
 }

@@ -17,19 +17,18 @@ package objectox.http.handler;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.List;
 import java.util.function.Consumer;
 import objectos.http.Handler;
 import objectos.http.HttpStatus;
 import objectos.http.Redirection;
 import objectos.http.RequestMethod;
 import objectos.http.Response;
-import objectos.http.RouteMatcher;
-import objectos.http.RouteMatcherExact;
 import org.testng.annotations.Test;
 
 public class RoutingAtTest {
 
-  private final RouteMatcher pathMatcher = new RouteMatcherExact("/");
+  private final List<Segment> segments = List.of(new SegmentExact("/"));
 
   private final Redirection redir = Redirection.movedPermanently("/");
 
@@ -62,8 +61,8 @@ public class RoutingAtTest {
           opts.option(redir);
         }),
 
-        new HandlerIfPath(
-            pathMatcher,
+        new HandlerRoute(
+            segments,
 
             new HandlerResult(redir)
         )
@@ -79,8 +78,8 @@ public class RoutingAtTest {
           opts.option(resp);
         }),
 
-        new HandlerIfPath(
-            pathMatcher,
+        new HandlerRoute(
+            segments,
 
             new HandlerIfMethod(
                 RequestMethod.POST,
@@ -103,8 +102,8 @@ public class RoutingAtTest {
           opts.option(handler);
         }),
 
-        new HandlerIfPath(
-            pathMatcher,
+        new HandlerRoute(
+            segments,
 
             new HandlerIfMethod(
                 RequestMethod.GET,

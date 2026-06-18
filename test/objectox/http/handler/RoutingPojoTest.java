@@ -15,64 +15,64 @@
  */
 package objectox.http.handler;
 
-import static org.testng.Assert.assertSame;
-
-import java.util.Iterator;
+import static org.testng.Assert.assertEquals;
+import java.util.List;
 import objectos.http.Handler;
 import objectos.http.HttpStatus;
-import objectos.http.Request;
+import objectos.http.PathParam;
+import objectos.http.Redirection;
 import objectos.http.RequestMethod;
-import objectos.http.Response;
-import objectos.http.Result;
-import objectox.http.req.RequestMethodY;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class RoutingPojoTest {
 
-  private final Response okResp = Response.create(opts -> {
-    opts.status(HttpStatus.OK);
-  });
+  private final Handler handler = new HandlerResult(HttpStatus.BAD_REQUEST);
 
-  @Test(description = "empty => request")
+  private final Redirection redir = Redirection.movedPermanently("/index.html");
+
+  @Test(description = "() => HandlerNoop")
   public void testCase01() {
-    final Request request;
-    request = Request.create(_ -> {});
+    assertEquals(
+        RoutingPojo.create0(_ -> {}),
 
-    final Handler subject;
-    subject = RoutingPojo.create0(_ -> {});
-
-    final Result res;
-    res = subject.handle(request);
-
-    assertSame(res, request);
+        HandlerNoop.INSTANCE
+    );
   }
 
-  @DataProvider
-  public Iterator<RequestMethod> methodProvider() {
-    return RequestMethodY.iterator();
+  @Test(description = "('/', redir) => HandlerResult(redir)")
+  public void testCase02() {
+    assertEquals(
+        RoutingPojo.create0(r -> {
+          r.at("/", redir);
+        }),
+
+        new HandlerRoute(
+            List.of(new SegmentExact("/")),
+
+            new HandlerResult(redir)
+        )
+    );
   }
 
-  @Test(
-      enabled = false,
-      description = "Non-method HttpHandler should accept all methods",
-      dataProvider = "methodProvider"
-  )
-  public void testCase02(RequestMethod method) {
-    final Request request;
-    request = Request.create(opts -> {
-      opts.method(method);
-    });
+  @Test(description = "('/movie/{id}', digits('id'), GET, handler)")
+  public void testCase03() {
+    assertEquals(
+        RoutingPojo.create0(r -> {
+          r.at("/movie/{id}",
+              PathParam.digits("id"),
+              RequestMethod.GET, handler);
+        }),
 
-    final Handler subject;
-    subject = RoutingPojo.create0(r -> {
-      r.at("/test", okResp);
-    });
+        new HandlerRoute(
+            List.of(new SegmentRegion("/movie/"), new SegmentParamLast("id", PathParamPredicates.DIGITS)),
 
-    final Result res;
-    res = subject.handle(request);
+            new HandlerIfMethod(
+                RequestMethod.GET,
 
-    assertSame(res, okResp);
+                handler
+            )
+        )
+    );
   }
 
 }

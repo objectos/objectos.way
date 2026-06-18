@@ -18,13 +18,10 @@ package objectox.http.handler;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
 import objectos.http.Handler;
 import objectos.http.Redirection;
 import objectos.http.RequestMethod;
 import objectos.http.Response;
-import objectos.http.RouteMatcher;
-import objectos.http.RouteParser;
 import objectos.http.RoutingOption;
 
 final class RoutingAt {
@@ -42,17 +39,14 @@ final class RoutingAt {
   }
 
   public static RoutingAt of(String pathExpression) {
-    final RouteParser pathMatcherParser;
-    pathMatcherParser = new RouteParser(pathExpression);
+    final PathExpressionParser parser;
+    parser = new PathExpressionParser(pathExpression);
 
-    final RouteMatcher pathMatcher;
-    pathMatcher = pathMatcherParser.parse();
-
-    final Set<String> paramNames;
-    paramNames = pathMatcherParser.paramNames();
+    final PathExpression parsed;
+    parsed = parser.parse();
 
     final RoutingAtPath parent;
-    parent = new RoutingAtPath(pathMatcher, paramNames);
+    parent = new RoutingAtPath(parsed);
 
     return new RoutingAt(parent);
   }

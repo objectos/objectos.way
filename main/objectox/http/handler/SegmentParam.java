@@ -15,6 +15,7 @@
  */
 package objectox.http.handler;
 
+import java.util.Map;
 import java.util.function.Predicate;
 
 record SegmentParam(String paramName, char delimiter, Predicate<String> condition) implements Segment {
@@ -40,6 +41,19 @@ record SegmentParam(String paramName, char delimiter, Predicate<String> conditio
     } else {
       return path.param(paramName, value);
     }
+  }
+
+  public final SegmentParam with(Map<String, Predicate<String>> predicates) {
+    final String key;
+    key = paramName;
+
+    final Predicate<String> defaultValue;
+    defaultValue = condition;
+
+    final Predicate<String> predicate;
+    predicate = predicates.getOrDefault(key, defaultValue);
+
+    return new SegmentParam(paramName, delimiter, predicate);
   }
 
 }

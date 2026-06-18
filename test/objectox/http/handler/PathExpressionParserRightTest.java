@@ -40,7 +40,7 @@ public class PathExpressionParserRightTest {
     }
   }
 
-  @Test(description = "unnamed")
+  @Test(description = "reject unnamed")
   public void execute02() {
     final PathExpressionParser ctx;
     ctx = new PathExpressionParser("/{}", 2);
@@ -48,14 +48,16 @@ public class PathExpressionParserRightTest {
     final PathExpressionParserRight subject;
     subject = new PathExpressionParserRight(ctx);
 
-    subject.execute();
+    try {
+      subject.execute();
 
-    assertEquals(ctx.index(), 3);
-    assertEquals(ctx.segments(), List.of(new SegmentParamLast("")));
-    assertEquals(ctx.stop(), true);
+      Assert.fail("It should have thrown");
+    } catch (IllegalArgumentException expected) {
+      assertEquals(expected.getMessage(), "Invalid path expression: path parameters must be named");
+    }
   }
 
-  @Test(description = "unnamed with delimiter")
+  @Test(description = "reject unnamed with delimiter")
   public void execute03() {
     final PathExpressionParser ctx;
     ctx = new PathExpressionParser("/{}.pdf", 2);
@@ -63,11 +65,13 @@ public class PathExpressionParserRightTest {
     final PathExpressionParserRight subject;
     subject = new PathExpressionParserRight(ctx);
 
-    subject.execute();
+    try {
+      subject.execute();
 
-    assertEquals(ctx.index(), 4);
-    assertEquals(ctx.segments(), List.of(new SegmentParam("", '.')));
-    assertEquals(ctx.stop(), false);
+      Assert.fail("It should have thrown");
+    } catch (IllegalArgumentException expected) {
+      assertEquals(expected.getMessage(), "Invalid path expression: path parameters must be named");
+    }
   }
 
   @Test(description = "reject param name: first char must be java identifier first")
