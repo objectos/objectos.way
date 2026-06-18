@@ -24,6 +24,24 @@ public sealed interface MediaType permits MediaTypePojo {
   /// The `application/octet-stream` media type.
   MediaType APPLICATION_OCTET_STREAM = MediaTypePojo.of0("application/octet-stream");
 
+  /// The `image/jpeg` media type.
+  MediaType IMAGE_JPEG = MediaTypePojo.of0("image/jpeg");
+
+  /// The `image/png` media type.
+  MediaType IMAGE_PNG = MediaTypePojo.of0("image/png");
+
+  /// The `image/webp` media type.
+  MediaType IMAGE_WEBP = MediaTypePojo.of0("image/webp");
+
+  /// The `image/avif` media type.
+  MediaType IMAGE_AVIF = MediaTypePojo.of0("image/avif");
+
+  /// The `image/gif` media type.
+  MediaType IMAGE_GIF = MediaTypePojo.of0("image/gif");
+
+  /// The `image/svg+xml` media type.
+  MediaType IMAGE_SVG = MediaTypePojo.of0("image/svg+xml");
+
   /// The `text/css; charset=utf-8` media type.
   MediaType TEXT_CSS = MediaTypePojo.of0("text/css; charset=utf-8");
 
