@@ -22,4 +22,5 @@ public sealed interface RoutingOption
     PathParam,
     Redirection,
     RequestMethod,
-    Response {}
+    Response,
+    StaticFile {}

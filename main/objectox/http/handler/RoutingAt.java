@@ -23,6 +23,7 @@ import objectos.http.Redirection;
 import objectos.http.RequestMethod;
 import objectos.http.Response;
 import objectos.http.RoutingOption;
+import objectos.http.StaticFile;
 
 final class RoutingAt {
 
@@ -76,6 +77,8 @@ final class RoutingAt {
       case RequestMethod method -> method(method);
 
       case Response response -> current.result(response);
+
+      case StaticFile file -> current.result(file);
     }
   }
 

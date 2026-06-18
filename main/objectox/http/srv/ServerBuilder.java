@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import objectos.http.HostOptions;
 import objectos.http.ServerOptions;
-import objectos.way.Note.Sink;
+import objectos.way.Note;
 import objectox.http.host.Host;
 import objectox.http.host.HostGlobals;
 import objectox.http.host.HostMap;
@@ -68,7 +68,7 @@ public final class ServerBuilder
   }
 
   @Override
-  public final void noteSink(Sink value) {
+  public final void noteSink(Note.Sink value) {
 
   }
 

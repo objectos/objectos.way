@@ -25,7 +25,7 @@ import objectox.http.media.StaticFileContent;
 /// If static files support is not enabled, then this result produces as a `200
 /// OK` response with the specified content.
 public sealed interface StaticFile
-    extends Result
+    extends Result, RoutingOption
     permits StaticFileContent {
 
   /// Returns a new static file result of the specified content.
