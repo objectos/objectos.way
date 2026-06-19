@@ -21,89 +21,13 @@ public record Header(HeaderName name, String value) {
 
   public static final Header DATE = new Header(HeaderName.DATE, null);
 
-  private enum ValueParser {
-
-    START,
-
-    NORMAL,
-
-    WS,
-
-    INVALID;
-
-  }
-
   public static Header of(HeaderName name, String value) {
-    final String v;
-    v = checkValue(value);
+    final HeaderValueValidator valueValidator;
+    valueValidator = new HeaderValueValidator(value);
 
-    return new Header(name, v);
-  }
+    valueValidator.validate();
 
-  private static String checkValue(String value) {
-    final int len;
-    len = value.length(); // early implicit null-check
-
-    ValueParser parser;
-    parser = ValueParser.START;
-
-    for (int idx = 0; idx < len; idx++) {
-      final char c;
-      c = value.charAt(idx);
-
-      if (c >= 128) {
-        throw Rfc.invalidFieldContent(idx, c);
-      }
-
-      final byte flag;
-      flag = Rfc.HEADER_VALUE_TABLE[c];
-
-      switch (parser) {
-        case START -> {
-          if (flag == Rfc.HEADER_VALUE_VALID) {
-            parser = ValueParser.NORMAL;
-          }
-
-          else if (flag == Rfc.HEADER_VALUE_WS) {
-            throw new IllegalArgumentException("Leading SPACE or HTAB characters are not allowed");
-          }
-
-          else {
-            throw Rfc.invalidFieldContent(idx, c);
-          }
-        }
-
-        case NORMAL, WS -> {
-          if (flag == Rfc.HEADER_VALUE_VALID) {
-            parser = ValueParser.NORMAL;
-          }
-
-          else if (flag == Rfc.HEADER_VALUE_WS) {
-            parser = ValueParser.WS;
-          }
-
-          else {
-            throw Rfc.invalidFieldContent(idx, c);
-          }
-        }
-
-        case INVALID -> {
-          throw Rfc.invalidFieldContent(idx, c);
-        }
-      }
-    }
-
-    return switch (parser) {
-      case START, NORMAL -> value;
-
-      case WS -> {
-        throw new IllegalArgumentException("Trailing SPACE or HTAB characters are not allowed");
-      }
-
-      case INVALID -> {
-        throw new IllegalStateException("Unexpected INVALID state");
-      }
-    };
+    return new Header(name, value);
   }
 
 }

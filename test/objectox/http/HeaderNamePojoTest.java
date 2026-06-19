@@ -22,7 +22,7 @@ import java.nio.charset.StandardCharsets;
 import objectos.http.HeaderName;
 import org.testng.annotations.Test;
 
-public class HttpHeaderNameTest {
+public class HeaderNamePojoTest {
 
   @Test
   public void map01() {
