@@ -164,7 +164,16 @@ final class HeaderParamValueFormatter {
   }
 
   private IllegalArgumentException invalidChar() {
-    throw new UnsupportedOperationException("Implement me");
+    final int idx;
+    idx = index - 1;
+
+    final char c;
+    c = value.charAt(idx);
+
+    final String msg;
+    msg = "Invalid parameter value: character '%c' at index %d is not allowed".formatted(c, idx);
+
+    throw new IllegalArgumentException(msg);
   }
 
 }

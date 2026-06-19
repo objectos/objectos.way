@@ -17,6 +17,10 @@ package objectox.http;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -44,6 +48,63 @@ public class HeaderParamValueFormatterTest {
     res = subject.format();
 
     assertEquals(res, expected);
+  }
+
+  @DataProvider
+  public Object[][] invalidProvider() {
+    final List<Object[]> list;
+    list = new ArrayList<>();
+
+    final char[] validChars;
+    validChars = Rfc.vchar().toCharArray();
+
+    Arrays.sort(validChars);
+
+    for (char c = 0; c < 256; c++) {
+      final int search;
+      search = Arrays.binarySearch(validChars, c);
+
+      if (search >= 0 || c == ' ' || c == '\t') {
+        continue;
+      }
+
+      final String s;
+      s = Character.toString(c);
+
+      list.add(new Object[] {
+          s,
+
+          "Invalid parameter value: character '%s' at index 0 is not allowed".formatted(s)}
+      );
+
+      list.add(new Object[] {
+          "foo" + s,
+
+          "Invalid parameter value: character '%s' at index 3 is not allowed".formatted(s)}
+      );
+
+      list.add(new Object[] {
+          "[]-" + s,
+
+          "Invalid parameter value: character '%s' at index 3 is not allowed".formatted(s)}
+      );
+    }
+
+    return list.toArray(Object[][]::new);
+  }
+
+  @Test(dataProvider = "invalidProvider")
+  public void invalid(String value, String message) {
+    final HeaderParamValueFormatter subject;
+    subject = new HeaderParamValueFormatter(value);
+
+    try {
+      subject.format();
+
+      Assert.fail("It should have thrown");
+    } catch (IllegalArgumentException expected) {
+      assertEquals(expected.getMessage(), message);
+    }
   }
 
 }
