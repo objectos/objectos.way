@@ -17,7 +17,7 @@ package objectos.http;
 
 import module java.base;
 import module objectos.way;
-import objectox.http.HttpHeaderValueBuilderImpl;
+import objectox.http.HeaderValueBuilder;
 import objectox.http.RequestMethodEnum;
 import objectox.http.Rfc;
 import objectox.http.resp.StatusEnum;
@@ -255,13 +255,13 @@ final class HttpResponse0 implements HttpResponse {
   }
 
   @Override
-  public final void header(HeaderName name, Consumer<? super HttpHeaderValueBuilder> builder) {
+  public final void header(HeaderName name, Consumer<? super HeaderValueOptions> builder) {
     checkProcessed();
 
     Objects.requireNonNull(name, "name == null");
 
-    final HttpHeaderValueBuilderImpl valueBuilder;
-    valueBuilder = new HttpHeaderValueBuilderImpl();
+    final HeaderValueBuilder valueBuilder;
+    valueBuilder = new HeaderValueBuilder();
 
     builder.accept(valueBuilder);
 

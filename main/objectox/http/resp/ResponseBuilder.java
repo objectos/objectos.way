@@ -24,11 +24,11 @@ import java.util.function.Consumer;
 import objectos.http.Content;
 import objectos.http.ContentProvider;
 import objectos.http.HeaderName;
-import objectos.http.HttpHeaderValueBuilder;
+import objectos.http.HeaderValueOptions;
 import objectos.http.Status;
 import objectos.http.ResponseOptions;
 import objectox.http.Header;
-import objectox.http.HttpHeaderValueBuilderImpl;
+import objectox.http.HeaderValueBuilder;
 
 public final class ResponseBuilder implements ResponseOptions {
 
@@ -72,12 +72,12 @@ public final class ResponseBuilder implements ResponseOptions {
   }
 
   @Override
-  public final void header(HeaderName name, Consumer<? super HttpHeaderValueBuilder> builder) {
+  public final void header(HeaderName name, Consumer<? super HeaderValueOptions> builder) {
     final HeaderName n;
     n = Objects.requireNonNull(name, "name == null");
 
-    final HttpHeaderValueBuilderImpl valueBuilder;
-    valueBuilder = new HttpHeaderValueBuilderImpl();
+    final HeaderValueBuilder valueBuilder;
+    valueBuilder = new HeaderValueBuilder();
 
     builder.accept(valueBuilder);
 

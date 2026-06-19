@@ -60,7 +60,7 @@ public sealed interface ResponseOptions permits ResponseBuilder {
   ///
   /// @param name the header name
   /// @param builder a handle for creating the header field value
-  void header(HeaderName name, Consumer<? super HttpHeaderValueBuilder> builder);
+  void header(HeaderName name, Consumer<? super HeaderValueOptions> builder);
 
   /// Adds the `Date` header field with the server's current time.
   void date();

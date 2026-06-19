@@ -28,7 +28,7 @@ import java.util.stream.Stream;
 import objectos.http.Content;
 import objectos.http.ContentY;
 import objectos.http.HeaderName;
-import objectos.http.HttpHeaderValueBuilder;
+import objectos.http.HeaderValueOptions;
 import objectos.http.Status;
 import objectos.http.MediaType;
 import objectos.http.Redirection;
@@ -267,7 +267,7 @@ public class ServerTaskTest9ResultResponse {
         value = Character.toString(c);
 
         final String expected;
-        expected = "Invalid character at index 0: " + value;
+        expected = "Invalid header value: character '%s' at index 0 is not allowed".formatted(value);
 
         final String description;
         description = "Invalid character " + value;
@@ -279,10 +279,10 @@ public class ServerTaskTest9ResultResponse {
       }
     }
 
-    list.add(new HeaderValueData(" abc", "Leading SPACE or HTAB characters are not allowed", ""));
-    list.add(new HeaderValueData("\tabc", "Leading SPACE or HTAB characters are not allowed", ""));
-    list.add(new HeaderValueData("abc ", "Trailing SPACE or HTAB characters are not allowed", ""));
-    list.add(new HeaderValueData("abc\t", "Trailing SPACE or HTAB characters are not allowed", ""));
+    list.add(new HeaderValueData(" abc", "Invalid header value: leading SPACE or HTAB characters are not allowed", ""));
+    list.add(new HeaderValueData("\tabc", "Invalid header value: leading SPACE or HTAB characters are not allowed", ""));
+    list.add(new HeaderValueData("abc ", "Invalid header value: trailing SPACE or HTAB characters are not allowed", ""));
+    list.add(new HeaderValueData("abc\t", "Invalid header value: trailing SPACE or HTAB characters are not allowed", ""));
 
     return list.iterator();
   }
@@ -399,12 +399,12 @@ public class ServerTaskTest9ResultResponse {
     };
   }
 
-  private Consumer<HttpHeaderValueBuilder> builder(Consumer<HttpHeaderValueBuilder> builder) {
+  private Consumer<HeaderValueOptions> builder(Consumer<HeaderValueOptions> builder) {
     return builder;
   }
 
   @Test(dataProvider = "headerValueBuilderValidProvider")
-  public void headerValueBuilderValid(Consumer<? super HttpHeaderValueBuilder> builder, String expected) {
+  public void headerValueBuilderValid(Consumer<? super HeaderValueOptions> builder, String expected) {
     assertEquals(
         ServerTaskY.resp(opts -> {
           opts.host("www.example.com", _ -> Response.create(http -> {
@@ -439,19 +439,19 @@ public class ServerTaskTest9ResultResponse {
             builder(builder -> {
               builder.param("inva lid", "foo.txt");
             }),
-            "Parameter name contains an invalid character at index 4: ' '"
+            "Invalid parameter name: character ' ' at index 4 is not allowed"
         },
         {
             builder(builder -> {
               builder.param("[]", StandardCharsets.UTF_8, "foo.txt");
             }),
-            "Parameter name contains an invalid character at index 0: '['"
+            "Invalid parameter name: character '[' at index 0 is not allowed"
         }
     };
   }
 
   @Test(dataProvider = "headerValueBuilderInvalidProvider")
-  public void headerValueBuilderInvalid(Consumer<? super HttpHeaderValueBuilder> builder, String expectedMessage) {
+  public void headerValueBuilderInvalid(Consumer<? super HeaderValueOptions> builder, String expectedMessage) {
     assertEquals(
         ServerTaskY.resp(opts -> {
           opts.host("www.example.com", _ -> Response.create(http -> {

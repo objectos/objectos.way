@@ -116,7 +116,7 @@ sealed interface HttpResponse permits HttpExchange, HttpResponse0 {
   ///
   /// @param name the header name
   /// @param builder a handle for creating the header field value
-  void header(HeaderName name, Consumer<? super HttpHeaderValueBuilder> builder);
+  void header(HeaderName name, Consumer<? super HeaderValueOptions> builder);
 
   /// Returns the server's current time.
   ///

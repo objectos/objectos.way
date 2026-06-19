@@ -313,7 +313,7 @@ final class HttpExchange0 implements HttpExchange {
   }
 
   @Override
-  public final void header(HeaderName name, Consumer<? super HttpHeaderValueBuilder> builder) {
+  public final void header(HeaderName name, Consumer<? super HeaderValueOptions> builder) {
     response.header(name, builder);
   }
 
