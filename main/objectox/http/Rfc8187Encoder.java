@@ -15,23 +15,28 @@
  */
 package objectox.http;
 
-import java.util.Objects;
-import objectos.http.Redirection;
-import objectox.http.resp.StatusEnum;
+final class Rfc8187Encoder {
 
-public record RedirectionPojo(StatusEnum status, String location) implements Redirection {
+  private final String input;
 
-  public static Redirection of(StatusEnum status, String location) {
-    final String l;
-    l = Objects.requireNonNull(location, "location == null");
+  Rfc8187Encoder(String input) {
+    this.input = input;
+  }
 
-    final UrlEncoder encoder;
-    encoder = new UrlEncoder(l);
+  public final String encode() {
+    final String attrChars;
+    attrChars = "!#$&+-.^_`|~ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-    final String encoded;
-    encoded = encoder.encode();
+    final PercentDictionary dictionary;
+    dictionary = new PercentDictionary(attrChars);
 
-    return new RedirectionPojo(status, encoded);
+    final PercentEncoder encoder;
+    encoder = new PercentEncoder(dictionary, input);
+
+    final String result;
+    result = encoder.encode();
+
+    return "UTF-8''" + result;
   }
 
 }

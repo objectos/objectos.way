@@ -138,7 +138,7 @@ final class HttpResponse0 implements HttpResponse {
     Objects.requireNonNull(location, "location == null");
 
     final String raw;
-    raw = Rfc.raw(location);
+    raw = Rfc.urlEncode(location);
 
     header(HeaderName.DATE, now());
 

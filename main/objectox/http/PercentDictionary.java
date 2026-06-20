@@ -15,6 +15,7 @@
  */
 package objectox.http;
 
+import objectos.internal.Ascii;
 import objectos.internal.VisibleForTesting;
 
 final class PercentDictionary {
@@ -40,6 +41,12 @@ final class PercentDictionary {
     }
 
     dictionary = valid;
+  }
+
+  public static PercentDictionary forUrlEncoder() {
+    return new PercentDictionary(
+        Ascii.visible()
+    );
   }
 
   public final boolean test(char c) {

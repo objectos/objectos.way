@@ -29,7 +29,7 @@ public final class PercentEncoder {
     this.input = input;
   }
 
-  public final String encode(String input) {
+  public final String encode() {
     while (hasNext()) {
       final char c;
       c = next();

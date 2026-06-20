@@ -75,8 +75,11 @@ public final class HeaderValueBuilder implements HeaderValueOptions {
     stringBuilder.append(name);
     stringBuilder.append('=');
 
+    final Rfc8187Encoder encoder;
+    encoder = new Rfc8187Encoder(value);
+
     final String encoded;
-    encoded = Rfc.rfc8187(value);
+    encoded = encoder.encode();
 
     stringBuilder.append(encoded);
   }
