@@ -78,4 +78,8 @@ public final class PercentEncoder {
     return input.charAt(index++);
   }
 
+  final boolean test(char c) {
+    return dictionary.test(c);
+  }
+
 }

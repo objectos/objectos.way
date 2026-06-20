@@ -34,16 +34,16 @@ final class PercentUtf8 {
       final char c;
       c = parent.next();
 
-      if (c <= ' ') {
+      if (parent.test(c)) {
         highSurrogate = ensureZero(highSurrogate);
 
-        string.encode((byte) c);
+        string.append(c);
       }
 
       else if (c <= 0x7F) {
         highSurrogate = ensureZero(highSurrogate);
 
-        string.append(c);
+        string.encode(c);
       }
 
       else if (c <= 0x7FF) {
