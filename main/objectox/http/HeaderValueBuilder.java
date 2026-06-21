@@ -42,10 +42,6 @@ public final class HeaderValueBuilder implements HeaderValueOptions {
   public final void param(String name, String value) {
     checkParameterName(name);
 
-    if (stringBuilder.isEmpty()) {
-      throw new IllegalStateException("Cannot add a parameter: there's no current value");
-    }
-
     stringBuilder.append(';');
     stringBuilder.append(' ');
     stringBuilder.append(name);
@@ -89,6 +85,10 @@ public final class HeaderValueBuilder implements HeaderValueOptions {
   }
 
   private void checkParameterName(String name) {
+    if (stringBuilder.isEmpty()) {
+      throw new IllegalStateException("Cannot add a parameter: there's no current value");
+    }
+
     final HeaderParamNameValidator validator;
     validator = new HeaderParamNameValidator(name);
 

@@ -392,9 +392,10 @@ public class ServerTaskTest9ResultResponse {
         },
         {
             builder(b -> {
+              b.value("attachment");
               b.param("filename*", StandardCharsets.UTF_8, "");
             }),
-            "Content-Disposition: ; filename*=UTF-8''"
+            "Content-Disposition: attachment; filename*=UTF-8''"
         }
     };
   }
@@ -437,12 +438,14 @@ public class ServerTaskTest9ResultResponse {
     return new Object[][] {
         {
             builder(builder -> {
+              builder.value("x");
               builder.param("inva lid", "foo.txt");
             }),
             "Invalid parameter name: character ' ' at index 4 is not allowed"
         },
         {
             builder(builder -> {
+              builder.value("x");
               builder.param("[]", StandardCharsets.UTF_8, "foo.txt");
             }),
             "Invalid parameter name: character '[' at index 0 is not allowed"
