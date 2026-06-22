@@ -16,116 +16,69 @@
 package objectox.http.srv;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.ServerSocket;
-import java.net.SocketAddress;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.Clock;
+import java.util.Objects;
 import java.util.function.Consumer;
 import objectos.http.HostOptions;
 import objectos.http.ServerOptions;
+import objectos.internal.NoOpSinkSingleton;
 import objectos.way.Note;
-import objectox.http.host.Host;
-import objectox.http.host.HostGlobals;
-import objectox.http.host.HostMap;
-import objectox.http.host.HostStage;
-import objectox.http.host.HostStageBuilder;
+import objectox.http.host.HostMapBuilder;
+import objectox.http.req.RequestBodyOptionsPojo;
 
 public final class ServerBuilder
     implements
     ServerOptions {
 
-  private InetAddress address;
+  private final int bufferSize = 4096;
 
-  private final Map<String, HostStage> hosts = new LinkedHashMap<>();
+  private Clock clock;
 
-  private int port;
+  private final HostMapBuilder hostMapBuilder = new HostMapBuilder();
+
+  private Note.Sink noteSink = NoOpSinkSingleton.INSTANCE;
+
+  @SuppressWarnings("unused")
+  private RequestBodyOptionsPojo requestBodyOptions;
+
+  private final ServerSocketBuilder serverSocketBuilder = new ServerSocketBuilder();
 
   @Override
   public final void host(Consumer<? super HostOptions> opts) {
-    final HostStageBuilder builder;
-    builder = new HostStageBuilder();
-
-    opts.accept(builder);
-
-    final HostStage stage;
-    stage = builder.build();
-
-    final String name;
-    name = stage.name();
-
-    final HostStage existing;
-    existing = hosts.put(name, stage);
-
-    if (existing != null) {
-      final String msg;
-      msg = "A host with the same name was already registered: %s".formatted(name);
-
-      throw new IllegalArgumentException(msg);
-    }
+    hostMapBuilder.add(opts);
   }
 
   @Override
   public final void noteSink(Note.Sink value) {
-
+    noteSink = Objects.requireNonNull(value, "value == null");
   }
 
   @Override
   public final void port(int value) {
-    if (value < 0 || value > 0xFFFF) {
-      throw new IllegalArgumentException("Invalid port: value must be in the interval 0 <= value < 65536 but found " + value);
-    }
-
-    this.port = value;
+    serverSocketBuilder.port(value);
   }
 
-  private record Globals(int port) implements HostGlobals {}
+  public final ServerLoop build() throws IOException {
+    final ServerLoop loop;
+    loop = new ServerLoop(
+        bufferSize,
 
-  public final ServerPojo build() throws IOException {
-    final ServerSocket serverSocket;
-    serverSocket = buildServerSocket();
+        clock != null ? clock : Clock.systemUTC(),
 
-    int localPort;
-    localPort = serverSocket.getLocalPort();
+        hostMapBuilder.build(serverSocketBuilder),
 
-    final Globals globals;
-    globals = new Globals(localPort);
+        noteSink,
 
-    return new ServerPojo(
-        buildHostMap(globals),
+        null,
 
-        serverSocket
+        serverSocketBuilder.build(),
+
+        Thread.ofVirtual().name("http-", 1).factory()
     );
-  }
 
-  private HostMap buildHostMap(HostGlobals globals) {
-    final List<Host> list;
-    list = hosts.values().stream().map(stage -> stage.toHost(globals)).toList();
+    loop.start();
 
-    return HostMap.of(list);
-  }
-
-  private ServerSocket buildServerSocket() throws IOException {
-    final InetAddress a;
-
-    if (address == null) {
-      a = InetAddress.getLoopbackAddress();
-    } else {
-      a = address;
-    }
-
-    final SocketAddress socketAddress;
-    socketAddress = new InetSocketAddress(a, port);
-
-    // serverSocket
-    final ServerSocket serverSocket;
-    serverSocket = new ServerSocket();
-
-    serverSocket.bind(socketAddress);
-
-    return serverSocket;
+    return loop;
   }
 
 }

@@ -17,10 +17,10 @@ package objectos.http;
 
 import module java.base;
 import objectox.http.srv.ServerBuilder;
-import objectox.http.srv.ServerPojo;
+import objectox.http.srv.ServerLoop;
 
 /// An HTTP server.
-public sealed interface Server extends Closeable permits ServerPojo {
+public sealed interface Server extends Closeable permits ServerLoop {
 
   /// Creates a new HTTP server instance with the specified configuration. The
   /// server will be ready to accept connections after this method returns.
