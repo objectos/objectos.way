@@ -15,7 +15,7 @@
  */
 package objectox.http;
 
-public enum HttpHeaderType {
+public enum HeaderType {
 
   REQUEST,
 
