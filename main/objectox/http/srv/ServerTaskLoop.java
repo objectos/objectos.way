@@ -16,6 +16,8 @@
 package objectox.http.srv;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import objectos.http.Content;
 import objectos.http.HeaderName;
 import objectos.http.MediaType;
@@ -34,9 +36,10 @@ import objectox.http.resp.ResponseSender;
 
 final class ServerTaskLoop {
 
+  private static final Note.Ref1<Throwable> THROW = Note.Ref1.create(ServerTaskLoop.class, "THR", Note.ERROR);
+
   private final HostMap hostMap;
 
-  @SuppressWarnings("unused")
   private final Note.Sink noteSink;
 
   private final RequestParser requestParser;
@@ -67,7 +70,7 @@ final class ServerTaskLoop {
     try {
       execute1();
     } catch (HttpClientException | HttpServerException e) {
-      noteSink.send(ServerTask.THROW, e);
+      noteSink.send(THROW, e);
 
       final ResponsePojo response;
       response = error(e.status(), e.message());
@@ -114,7 +117,18 @@ final class ServerTaskLoop {
     try {
       return host.handle(request);
     } catch (Throwable e) {
-      throw new UnsupportedOperationException("Implement me");
+      final StringWriter out;
+      out = new StringWriter();
+
+      final PrintWriter printWriter;
+      printWriter = new PrintWriter(out);
+
+      e.printStackTrace(printWriter);
+
+      final String msg;
+      msg = out.toString();
+
+      return error(Status.INTERNAL_SERVER_ERROR, msg);
     }
   }
 

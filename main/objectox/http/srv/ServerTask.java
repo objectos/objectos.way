@@ -25,7 +25,7 @@ import objectox.http.resp.ResponseDate;
 
 final class ServerTask implements Runnable {
 
-  static final Note.Ref1<Throwable> THROW = Note.Ref1.create(ServerTask.class, "THR", Note.ERROR);
+  private static final Note.Ref1<Throwable> THROW = Note.Ref1.create(ServerTask.class, "THR", Note.ERROR);
 
   private final int bufferSize;
 
