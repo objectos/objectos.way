@@ -41,6 +41,10 @@ public final class RequestParser {
     this.requestBodySupport = requestBodySupport;
   }
 
+  public final boolean hasNext() throws IOException {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
   public final RequestPojo parse() throws IOException {
     // input
     final RequestParser0Input input;

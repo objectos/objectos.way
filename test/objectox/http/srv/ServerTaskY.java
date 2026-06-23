@@ -109,17 +109,19 @@ final class ServerTaskY {
 
   private ServerTask build() {
     return new ServerTask(
-        new byte[bufferSize],
+        new ServerConfig(
+            bufferSize,
 
-        clock,
+            clock,
 
-        HostMap.of(hosts),
+            HostMap.of(hosts),
 
-        noteSink,
+            noteSink,
 
-        requestBodySupportFactory != null
-            ? requestBodySupportFactory
-            : requestBodySupportFactory(),
+            requestBodySupportFactory != null
+                ? requestBodySupportFactory
+                : requestBodySupportFactory()
+        ),
 
         socket
     );

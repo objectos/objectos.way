@@ -30,12 +30,15 @@ public final class ServerBuilder
     implements
     ServerOptions {
 
+  @SuppressWarnings("unused")
   private final int bufferSize = 4096;
 
+  @SuppressWarnings("unused")
   private Clock clock;
 
   private final HostMapBuilder hostMapBuilder = new HostMapBuilder();
 
+  @SuppressWarnings("unused")
   private Note.Sink noteSink = NoOpSinkSingleton.INSTANCE;
 
   @SuppressWarnings("unused")
@@ -59,26 +62,7 @@ public final class ServerBuilder
   }
 
   public final ServerLoop build() throws IOException {
-    final ServerLoop loop;
-    loop = new ServerLoop(
-        bufferSize,
-
-        clock != null ? clock : Clock.systemUTC(),
-
-        hostMapBuilder.build(serverSocketBuilder),
-
-        noteSink,
-
-        null,
-
-        serverSocketBuilder.build(),
-
-        Thread.ofVirtual().name("http-", 1).factory()
-    );
-
-    loop.start();
-
-    return loop;
+    throw new UnsupportedOperationException("Implement me");
   }
 
 }
