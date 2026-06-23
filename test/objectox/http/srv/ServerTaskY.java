@@ -30,6 +30,7 @@ import objectox.http.host.Host;
 import objectox.http.host.HostMap;
 import objectox.http.host.HostY;
 import objectox.http.req.RequestBodySupportFactory;
+import objectox.http.resp.ResponseDate;
 
 final class ServerTaskY {
 
@@ -109,19 +110,17 @@ final class ServerTaskY {
 
   private ServerTask build() {
     return new ServerTask(
-        new ServerConfig(
-            bufferSize,
+        bufferSize,
 
-            clock,
+        HostMap.of(hosts),
 
-            HostMap.of(hosts),
+        noteSink,
 
-            noteSink,
+        requestBodySupportFactory != null
+            ? requestBodySupportFactory
+            : requestBodySupportFactory(),
 
-            requestBodySupportFactory != null
-                ? requestBodySupportFactory
-                : requestBodySupportFactory()
-        ),
+        new ResponseDate(clock),
 
         socket
     );

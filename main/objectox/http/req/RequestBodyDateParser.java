@@ -24,15 +24,15 @@ import java.nio.file.StandardOpenOption;
 import objectox.http.HttpClientException;
 import objectox.http.HttpClientException.Kind;
 
-final class RequestParser8BodyData {
+final class RequestBodyDateParser {
 
   private final RequestBodySupport bodySupport;
 
-  private final RequestParser0Input input;
+  private final RequestInputStream input;
 
   private final RequestBodyMeta.Data meta;
 
-  RequestParser8BodyData(RequestBodySupport bodySupport, RequestParser0Input input, RequestBodyMeta.Data meta) {
+  RequestBodyDateParser(RequestBodySupport bodySupport, RequestInputStream input, RequestBodyMeta.Data meta) {
     this.bodySupport = bodySupport;
 
     this.input = input;
@@ -43,7 +43,7 @@ final class RequestParser8BodyData {
   public final RequestBodyData parse() throws IOException {
     try {
       return parse0();
-    } catch (RequestParser0Input.Eof e) {
+    } catch (RequestInputStream.Eof e) {
       final String msg;
       msg = "EOF while reading request body";
 

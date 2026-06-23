@@ -27,39 +27,24 @@ import objectox.http.Version0;
 
 public final class RequestParser {
 
-  private final byte[] buffer;
-
-  private final InputStream inputStream;
-
   private final RequestBodySupport requestBodySupport;
 
-  public RequestParser(byte[] buffer, InputStream inputStream, RequestBodySupport requestBodySupport) {
-    this.buffer = buffer;
+  private final RequestInputStream requestInputStream;
 
-    this.inputStream = inputStream;
-
+  public RequestParser(RequestBodySupport requestBodySupport, RequestInputStream requestInputStream) {
     this.requestBodySupport = requestBodySupport;
+
+    this.requestInputStream = requestInputStream;
   }
 
   public final boolean hasNext() throws IOException {
-    throw new UnsupportedOperationException("Implement me");
+    return requestInputStream.start();
   }
 
   public final RequestPojo parse() throws IOException {
-    // input
-    final RequestParser0Input input;
-    input = new RequestParser0Input(buffer, inputStream);
-
-    final int bytesRead;
-    bytesRead = input.readToBuffer();
-
-    if (bytesRead < 0) {
-      return null;
-    }
-
     // method
-    final RequestParser2Method methodParser;
-    methodParser = new RequestParser2Method(input);
+    final RequestMethodParser methodParser;
+    methodParser = new RequestMethodParser(requestInputStream);
 
     final RequestMethodEnum method;
     method = methodParser.parse();
@@ -67,22 +52,22 @@ public final class RequestParser {
     validate(method);
 
     // path
-    final RequestParser3Path pathParser;
-    pathParser = new RequestParser3Path(input);
+    final RequestPathParser pathParser;
+    pathParser = new RequestPathParser(requestInputStream);
 
     final String path;
     path = pathParser.parse();
 
     // query
-    final RequestParser4Query queryParser;
-    queryParser = new RequestParser4Query(input);
+    final RequestQueryParser queryParser;
+    queryParser = new RequestQueryParser(requestInputStream);
 
     final Map<String, Object> queryParams;
     queryParams = queryParser.parse();
 
     // version
-    final RequestParser5Version versionParser;
-    versionParser = new RequestParser5Version(input);
+    final RequestVersionParser versionParser;
+    versionParser = new RequestVersionParser(requestInputStream);
 
     final Version0 version;
     version = versionParser.parse();
@@ -90,8 +75,8 @@ public final class RequestParser {
     validate(version);
 
     // headers
-    final RequestParser6Headers headersParser;
-    headersParser = new RequestParser6Headers(input);
+    final RequestHeadersParser headersParser;
+    headersParser = new RequestHeadersParser(requestInputStream);
 
     final Map<HeaderName, Object> headersMap;
     headersMap = headersParser.parse();
@@ -102,18 +87,18 @@ public final class RequestParser {
     validate(headers);
 
     // body meta
-    final RequestParser7BodyMeta bodyMetaParser;
-    bodyMetaParser = new RequestParser7BodyMeta(headers);
+    final RequestBodyMetaParser bodyMetaParser;
+    bodyMetaParser = new RequestBodyMetaParser(headers);
 
     final RequestBodyMeta bodyMeta;
     bodyMeta = bodyMetaParser.parse();
 
     // body data
-    final RequestParser8BodyData bodyDataParser;
-    bodyDataParser = new RequestParser8BodyData(
+    final RequestBodyDateParser bodyDataParser;
+    bodyDataParser = new RequestBodyDateParser(
         requestBodySupport,
 
-        input,
+        requestInputStream,
 
         bodyMeta.data()
     );
@@ -126,8 +111,8 @@ public final class RequestParser {
     formParams = switch (bodyMeta.type()) {
       case RequestBodyMeta.TypeKind.APPLICATION_FORM_URLENCODED -> {
         try (InputStream in = bodyData.open()) {
-          final RequestParser9BodyType0Form parser;
-          parser = new RequestParser9BodyType0Form(in);
+          final RequestBodyFormParser parser;
+          parser = new RequestBodyFormParser(in);
 
           yield parser.parse();
         }

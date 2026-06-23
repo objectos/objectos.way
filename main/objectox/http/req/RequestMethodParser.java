@@ -20,23 +20,23 @@ import objectox.http.HttpClientException;
 import objectox.http.RequestMethodEnum;
 import objectox.http.HttpClientException.Kind;
 
-final class RequestParser2Method {
+final class RequestMethodParser {
 
-  private final RequestParser0Input input;
+  private final RequestInputStream input;
 
-  RequestParser2Method(RequestParser0Input input) {
+  RequestMethodParser(RequestInputStream input) {
     this.input = input;
   }
 
   public final RequestMethodEnum parse() throws IOException {
     try {
       return parse0();
-    } catch (RequestParser0Input.Eof e) {
+    } catch (RequestInputStream.Eof e) {
       final String msg;
       msg = "EOF while parsing method";
 
       throw new HttpClientException(msg, e, Kind.INVALID_REQUEST_LINE);
-    } catch (RequestParser0Input.Overflow e) {
+    } catch (RequestInputStream.Overflow e) {
       final String msg;
       msg = "Buffer overflow while parsing method";
 

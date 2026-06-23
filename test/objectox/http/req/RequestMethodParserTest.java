@@ -29,17 +29,17 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 @SuppressWarnings("exports")
-public class RequestParser2MethodTest {
+public class RequestMethodParserTest {
 
   private RequestMethodEnum parse(Object... data) throws IOException {
     final Socket socket;
     socket = SocketY.of(data);
 
-    final RequestParser0Input input;
-    input = RequestParser0Input.of(512, socket);
+    final RequestInputStream input;
+    input = RequestInputStream.of(512, socket);
 
-    final RequestParser2Method parser;
-    parser = new RequestParser2Method(input);
+    final RequestMethodParser parser;
+    parser = new RequestMethodParser(input);
 
     return parser.parse();
   }

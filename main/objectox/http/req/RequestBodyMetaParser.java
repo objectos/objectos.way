@@ -23,11 +23,11 @@ import objectox.http.HeaderNamePojo;
 import objectox.http.HttpServerException;
 import objectox.http.HttpClientException.Kind;
 
-final class RequestParser7BodyMeta {
+final class RequestBodyMetaParser {
 
   private final RequestHeaders headers;
 
-  RequestParser7BodyMeta(RequestHeaders headers) {
+  RequestBodyMetaParser(RequestHeaders headers) {
     this.headers = headers;
   }
 

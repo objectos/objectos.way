@@ -30,17 +30,17 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 @SuppressWarnings("exports")
-public class RequestParser5VersionTest {
+public class RequestVersionParserTest {
 
   private Version parse(Object... data) throws IOException {
     final Socket socket;
     socket = SocketY.of(data);
 
-    final RequestParser0Input input;
-    input = RequestParser0Input.of(512, socket);
+    final RequestInputStream input;
+    input = RequestInputStream.of(512, socket);
 
-    final RequestParser5Version parser;
-    parser = new RequestParser5Version(input);
+    final RequestVersionParser parser;
+    parser = new RequestVersionParser(input);
 
     return parser.parse();
   }

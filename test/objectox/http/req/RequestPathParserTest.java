@@ -36,7 +36,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 @SuppressWarnings("exports")
-public class RequestParser3PathTest {
+public class RequestPathParserTest {
 
   private final String validString = Rfc.unreserved() + Rfc.subDelims() + ":@" + "/";
 
@@ -44,11 +44,11 @@ public class RequestParser3PathTest {
     final Socket socket;
     socket = SocketY.of(data);
 
-    final RequestParser0Input input;
-    input = RequestParser0Input.of(512, socket);
+    final RequestInputStream input;
+    input = RequestInputStream.of(512, socket);
 
-    final RequestParser3Path parser;
-    parser = new RequestParser3Path(input);
+    final RequestPathParser parser;
+    parser = new RequestPathParser(input);
 
     return parser.parse();
   }
@@ -163,11 +163,12 @@ public class RequestParser3PathTest {
   @Test(dataProvider = "pathInvalidProvider")
   public void pathInvalid(String path, String msg) throws IOException {
     try {
-      parse(
+      final String res;
+      res = parse(
           iso8859("%s HTTP/1.1".formatted(path))
       );
 
-      Assert.fail("It should have thrown");
+      Assert.fail("It should have thrown: " + res);
     } catch (HttpClientException expected) {
       assertEquals(expected.getMessage(), msg);
 

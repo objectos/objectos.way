@@ -21,7 +21,7 @@ import objectox.http.HttpClientException;
 import objectox.http.HttpClientException.Kind;
 import objectox.http.Rfc;
 
-final class RequestParser9BodyType0Form {
+final class RequestBodyFormParser {
 
   private boolean done;
 
@@ -31,9 +31,9 @@ final class RequestParser9BodyType0Form {
 
   private Map<String, Object> params = Map.of();
 
-  private RequestParser1UrlDecoder urlDecoder;
+  private RequestUrlDecoder urlDecoder;
 
-  RequestParser9BodyType0Form(InputStream input) {
+  RequestBodyFormParser(InputStream input) {
     this.input = input;
   }
 
@@ -245,7 +245,7 @@ final class RequestParser9BodyType0Form {
 
   private int decodePerc() throws IOException {
     if (urlDecoder == null) {
-      urlDecoder = new RequestParser1UrlDecoder(input);
+      urlDecoder = new RequestUrlDecoder(input);
     }
 
     return urlDecoder.decode(Kind.INVALID_FORM);

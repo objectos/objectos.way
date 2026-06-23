@@ -23,6 +23,7 @@ import objectox.http.RequestMethodEnum;
 import objectox.http.req.RequestBodySupport;
 import objectox.http.req.RequestBodySupportFactory;
 import objectox.http.req.RequestHeaders;
+import objectox.http.req.RequestInputStream;
 import objectox.http.req.RequestParser;
 import objectox.http.req.RequestPojo;
 import objectox.http.srv.ServerTaskMessage;
@@ -105,8 +106,11 @@ final class HttpServerTask implements Runnable {
   }
 
   private void run0(InputStream inputStream, OutputStream outputStream, RequestBodySupport bodySupport) throws IOException {
+    final RequestInputStream requestInputStream;
+    requestInputStream = new RequestInputStream(buffer, inputStream);
+
     final RequestParser requestParser;
-    requestParser = new RequestParser(buffer, inputStream, bodySupport);
+    requestParser = new RequestParser(bodySupport, requestInputStream);
 
     final RequestPojo request;
     request = requestParser.parse();

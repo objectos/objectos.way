@@ -23,25 +23,25 @@ import objectox.http.Version0;
 import objectox.http.HttpClientException.Kind;
 import objectox.http.Rfc;
 
-final class RequestParser5Version {
+final class RequestVersionParser {
 
   private boolean done;
 
-  private final RequestParser0Input input;
+  private final RequestInputStream input;
 
-  RequestParser5Version(RequestParser0Input input) {
+  RequestVersionParser(RequestInputStream input) {
     this.input = input;
   }
 
   public final Version0 parse() throws IOException {
     try {
       return parse0();
-    } catch (RequestParser0Input.Eof e) {
+    } catch (RequestInputStream.Eof e) {
       final String msg;
       msg = "EOF while parsing HTTP version";
 
       throw new HttpClientException(msg, e, Kind.INVALID_REQUEST_LINE);
-    } catch (RequestParser0Input.Overflow e) {
+    } catch (RequestInputStream.Overflow e) {
       final String msg;
       msg = "Buffer overflow while parsing HTTP version";
 

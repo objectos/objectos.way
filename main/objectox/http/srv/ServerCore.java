@@ -21,7 +21,7 @@ import objectox.http.host.HostMap;
 import objectox.http.req.RequestBodySupportFactory;
 import objectox.http.resp.ResponseDate;
 
-record ServerConfig(
+record ServerCore(
     int bufferSize,
 
     Clock clock,
@@ -39,6 +39,10 @@ record ServerConfig(
 
   public final ResponseDate responseDate() {
     return new ResponseDate(clock);
+  }
+
+  public final void send(Note.Ref0 note) {
+    noteSink.send(note);
   }
 
   public final <T1> void send(Note.Ref1<T1> note, T1 value) {

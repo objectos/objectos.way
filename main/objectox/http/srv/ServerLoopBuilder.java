@@ -26,7 +26,7 @@ import objectos.way.Note;
 import objectox.http.host.HostMapBuilder;
 import objectox.http.req.RequestBodyOptionsPojo;
 
-public final class ServerBuilder
+public final class ServerLoopBuilder
     implements
     ServerOptions {
 

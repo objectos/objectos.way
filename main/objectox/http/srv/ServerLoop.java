@@ -18,9 +18,13 @@ package objectox.http.srv;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.time.Clock;
 import java.util.concurrent.ThreadFactory;
 import objectos.http.Server;
 import objectos.way.Note;
+import objectox.http.host.HostMap;
+import objectox.http.req.RequestBodySupportFactory;
+import objectox.http.resp.ResponseDate;
 
 public final class ServerLoop extends Thread implements Server {
 
@@ -41,20 +45,44 @@ public final class ServerLoop extends Thread implements Server {
     THROW = Note.Ref1.create(s, "THR", Note.ERROR);
   }
 
-  private final ServerConfig serverCfg;
+  private final int bufferSize;
+
+  private final Clock clock;
+
+  private final HostMap hostMap;
+
+  private final Note.Sink noteSink;
+
+  private final RequestBodySupportFactory requestBodySupportFactory;
 
   private final ServerSocket serverSocket;
 
   private final ThreadFactory threadFactory;
 
   ServerLoop(
-      ServerConfig serverCfg,
+      int bufferSize,
+
+      Clock clock,
+
+      HostMap hostMap,
+
+      Note.Sink noteSink,
+
+      RequestBodySupportFactory requestBodySupportFactory,
 
       ServerSocket serverSocket,
 
       ThreadFactory threadFactory
   ) {
-    this.serverCfg = serverCfg;
+    this.bufferSize = bufferSize;
+
+    this.clock = clock;
+
+    this.hostMap = hostMap;
+
+    this.noteSink = noteSink;
+
+    this.requestBodySupportFactory = requestBodySupportFactory;
 
     this.serverSocket = serverSocket;
 
@@ -72,20 +100,20 @@ public final class ServerLoop extends Thread implements Server {
 
   @Override
   public final void run() {
-    final Note.Sink noteSink;
-    noteSink = serverCfg.noteSink();
-
     noteSink.send(STARTED);
 
     try (serverSocket) {
-      while (!Thread.currentThread().isInterrupted()) {
+      final ResponseDate responseDate;
+      responseDate = new ResponseDate(clock);
+
+      while (!isInterrupted()) {
         final Socket socket;
         socket = serverSocket.accept();
 
         noteSink.send(ACCEPTED, socket);
 
         final ServerTask task;
-        task = new ServerTask(serverCfg, socket);
+        task = new ServerTask(bufferSize, hostMap, noteSink, requestBodySupportFactory, responseDate, socket);
 
         final Thread thread;
         thread = threadFactory.newThread(task);

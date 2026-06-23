@@ -21,33 +21,33 @@ import objectox.http.HttpClientException;
 import objectox.http.Rfc;
 import objectox.http.HttpClientException.Kind;
 
-final class RequestParser3Path {
+final class RequestPathParser {
 
   private boolean done;
 
   private int dot;
 
-  private final RequestParser0Input input;
+  private final RequestInputStream input;
 
   private final StringBuilder path = new StringBuilder();
 
   private int solidus;
 
-  private RequestParser1UrlDecoder urlDecoder;
+  private RequestUrlDecoder urlDecoder;
 
-  RequestParser3Path(RequestParser0Input input) {
+  RequestPathParser(RequestInputStream input) {
     this.input = input;
   }
 
   public final String parse() throws IOException {
     try {
       return parse0();
-    } catch (RequestParser0Input.Eof e) {
+    } catch (RequestInputStream.Eof e) {
       final String msg;
       msg = "EOF while parsing path";
 
       throw new HttpClientException(msg, e, Kind.INVALID_REQUEST_LINE);
-    } catch (RequestParser0Input.Overflow e) {
+    } catch (RequestInputStream.Overflow e) {
       final String msg;
       msg = "Buffer overflow while parsing path";
 
@@ -222,7 +222,7 @@ final class RequestParser3Path {
 
   private int decodePerc() throws IOException {
     if (urlDecoder == null) {
-      urlDecoder = new RequestParser1UrlDecoder(input);
+      urlDecoder = new RequestUrlDecoder(input);
     }
 
     return urlDecoder.decode(Kind.INVALID_REQUEST_LINE);

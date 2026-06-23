@@ -21,31 +21,31 @@ import objectox.http.HttpClientException;
 import objectox.http.Rfc;
 import objectox.http.HttpClientException.Kind;
 
-final class RequestParser4Query {
+final class RequestQueryParser {
 
   private boolean done;
 
   private boolean emptyValue;
 
-  private final RequestParser0Input input;
+  private final RequestInputStream input;
 
   private Map<String, Object> params = Map.of();
 
-  private RequestParser1UrlDecoder urlDecoder;
+  private RequestUrlDecoder urlDecoder;
 
-  RequestParser4Query(RequestParser0Input input) {
+  RequestQueryParser(RequestInputStream input) {
     this.input = input;
   }
 
   public final Map<String, Object> parse() throws IOException {
     try {
       return parse0();
-    } catch (RequestParser0Input.Eof e) {
+    } catch (RequestInputStream.Eof e) {
       final String msg;
       msg = "EOF while parsing URI query";
 
       throw new HttpClientException(msg, e, Kind.INVALID_REQUEST_LINE);
-    } catch (RequestParser0Input.Overflow e) {
+    } catch (RequestInputStream.Overflow e) {
       final String msg;
       msg = "Buffer overflow while parsing URI query";
 
@@ -139,7 +139,8 @@ final class RequestParser4Query {
   }
 
   private String parseName() throws IOException {
-    input.mark();
+    final int startIndex;
+    startIndex = input.bufferIndex();
 
     while (true) {
       final byte b;
@@ -155,7 +156,7 @@ final class RequestParser4Query {
 
         case QUERY_PERCENT -> {
           final StringBuilder name;
-          name = input.makeStrBuilder();
+          name = input.makeStrBuilder(startIndex);
 
           final int decoded;
           decoded = decodePerc();
@@ -167,7 +168,7 @@ final class RequestParser4Query {
 
         case QUERY_PLUS -> {
           final StringBuilder name;
-          name = input.makeStrBuilder();
+          name = input.makeStrBuilder(startIndex);
 
           name.append(' ');
 
@@ -175,19 +176,19 @@ final class RequestParser4Query {
         }
 
         case QUERY_EQUALS -> {
-          return input.makeStr();
+          return input.makeStr(startIndex);
         }
 
         case QUERY_SPACE -> {
           done = true;
 
-          return input.makeStr();
+          return input.makeStr(startIndex);
         }
 
         case QUERY_AMPERSAND -> {
           emptyValue = true;
 
-          return input.makeStr();
+          return input.makeStr(startIndex);
         }
 
         default -> {
@@ -251,7 +252,7 @@ final class RequestParser4Query {
   }
 
   private String parseValue() throws IOException {
-    input.mark();
+    final int startIndex = input.bufferIndex();
 
     while (true) {
       final byte b;
@@ -267,7 +268,7 @@ final class RequestParser4Query {
 
         case QUERY_PERCENT -> {
           final StringBuilder value;
-          value = input.makeStrBuilder();
+          value = input.makeStrBuilder(startIndex);
 
           final int decoded;
           decoded = decodePerc();
@@ -279,7 +280,7 @@ final class RequestParser4Query {
 
         case QUERY_PLUS -> {
           final StringBuilder value;
-          value = input.makeStrBuilder();
+          value = input.makeStrBuilder(startIndex);
 
           value.append(' ');
 
@@ -287,13 +288,13 @@ final class RequestParser4Query {
         }
 
         case QUERY_AMPERSAND -> {
-          return input.makeStr();
+          return input.makeStr(startIndex);
         }
 
         case QUERY_SPACE -> {
           done = true;
 
-          return input.makeStr();
+          return input.makeStr(startIndex);
         }
 
         default -> {
@@ -366,7 +367,7 @@ final class RequestParser4Query {
 
   private int decodePerc() throws IOException {
     if (urlDecoder == null) {
-      urlDecoder = new RequestParser1UrlDecoder(input);
+      urlDecoder = new RequestUrlDecoder(input);
     }
 
     return urlDecoder.decode(Kind.INVALID_REQUEST_LINE);

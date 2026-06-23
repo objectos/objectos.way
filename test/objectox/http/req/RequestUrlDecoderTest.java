@@ -24,19 +24,19 @@ import objectox.http.HttpClientException.Kind;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class RequestParser1UrlDecoderTest {
+public class RequestUrlDecoderTest {
 
   private String decode(int initial, int length, Object... data) throws IOException {
     final Socket socket;
     socket = SocketY.of(data);
 
-    final RequestParser0Input input;
-    input = RequestParser0Input.of(initial, socket);
+    final RequestInputStream input;
+    input = RequestInputStream.of(initial, socket);
 
     assertEquals(input.readByte(), '%');
 
-    final RequestParser1UrlDecoder decoder;
-    decoder = new RequestParser1UrlDecoder(input);
+    final RequestUrlDecoder decoder;
+    decoder = new RequestUrlDecoder(input);
 
     final StringBuilder out;
     out = new StringBuilder(length);

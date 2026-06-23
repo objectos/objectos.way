@@ -20,22 +20,50 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import objectos.way.Note;
+import objectox.http.host.HostMap;
 import objectox.http.req.RequestBodySupport;
-import objectox.http.req.RequestBodySupportFactory;
+import objectox.http.req.RequestInputStream;
 import objectox.http.req.RequestParser;
 import objectox.http.resp.ResponseDate;
 import objectox.http.resp.ResponseSender;
 
 final class ServerTaskStage implements Closeable {
 
-  private final ServerConfig serverConfig;
+  private final int bufferSize;
+
+  private final HostMap hostMap;
+
+  private final Note.Sink noteSink;
+
+  private final RequestBodySupport requestBodySupport;
+
+  private final ResponseDate responseDate;
 
   private final Socket socket;
 
-  private RequestBodySupport requestBodySupport;
+  ServerTaskStage(
+      int bufferSize,
 
-  ServerTaskStage(ServerConfig serverCfg, Socket socket) {
-    this.serverConfig = serverCfg;
+      HostMap hostMap,
+
+      Note.Sink noteSink,
+
+      RequestBodySupport requestBodySupport,
+
+      ResponseDate responseDate,
+
+      Socket socket
+  ) {
+    this.bufferSize = bufferSize;
+
+    this.hostMap = hostMap;
+
+    this.noteSink = noteSink;
+
+    this.requestBodySupport = requestBodySupport;
+
+    this.responseDate = responseDate;
 
     this.socket = socket;
   }
@@ -45,29 +73,22 @@ final class ServerTaskStage implements Closeable {
     try {
       socket.close();
     } finally {
-      if (requestBodySupport != null) {
-        requestBodySupport.close();
-      }
+      requestBodySupport.close();
     }
   }
 
   public final ServerTaskLoop toLoop() throws IOException {
     final byte[] buffer;
-    buffer = serverConfig.buffer();
+    buffer = new byte[bufferSize];
 
     final InputStream inputStream;
     inputStream = socket.getInputStream();
 
-    final RequestBodySupportFactory requestBodySupportFactory;
-    requestBodySupportFactory = serverConfig.requestBodySupportFactory();
-
-    requestBodySupport = requestBodySupportFactory.create(0);
+    final RequestInputStream requestInputStream;
+    requestInputStream = new RequestInputStream(buffer, inputStream);
 
     final RequestParser requestParser;
-    requestParser = new RequestParser(buffer, inputStream, requestBodySupport);
-
-    final ResponseDate responseDate;
-    responseDate = serverConfig.responseDate();
+    requestParser = new RequestParser(requestBodySupport, requestInputStream);
 
     final OutputStream outputStream;
     outputStream = socket.getOutputStream();
@@ -76,9 +97,9 @@ final class ServerTaskStage implements Closeable {
     responseSender = new ResponseSender(buffer, responseDate, outputStream);
 
     return new ServerTaskLoop(
-        serverConfig.hostMap(),
+        hostMap,
 
-        serverConfig.noteSink(),
+        noteSink,
 
         requestParser,
 

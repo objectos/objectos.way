@@ -31,7 +31,7 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class RequestParser4QueryTest {
+public class RequestQueryParserTest {
 
   private final String validString = Rfc.unreserved() + Rfc.subDelims() + ":@/?";
 
@@ -39,13 +39,13 @@ public class RequestParser4QueryTest {
     final Socket socket;
     socket = SocketY.of(data);
 
-    final RequestParser0Input input;
-    input = RequestParser0Input.of(512, socket);
+    final RequestInputStream input;
+    input = RequestInputStream.of(512, socket);
 
     input.readByte(); // '?' or other
 
-    final RequestParser4Query parser;
-    parser = new RequestParser4Query(input);
+    final RequestQueryParser parser;
+    parser = new RequestQueryParser(input);
 
     return parser.parse();
   }

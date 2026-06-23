@@ -16,7 +16,7 @@
 package objectos.http;
 
 import module java.base;
-import objectox.http.srv.ServerBuilder;
+import objectox.http.srv.ServerLoopBuilder;
 import objectox.http.srv.ServerLoop;
 
 /// An HTTP server.
@@ -31,8 +31,8 @@ public sealed interface Server extends Closeable permits ServerLoop {
   ///
   /// @throws IOException if an I/O error occurs
   static Server create(Consumer<? super ServerOptions> opts) throws IOException {
-    ServerBuilder builder;
-    builder = new ServerBuilder();
+    ServerLoopBuilder builder;
+    builder = new ServerLoopBuilder();
 
     opts.accept(builder);
 

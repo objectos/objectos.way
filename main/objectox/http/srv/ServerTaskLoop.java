@@ -66,21 +66,14 @@ final class ServerTaskLoop {
   private void execute0() throws IOException {
     try {
       execute1();
-    } catch (HttpClientException e) {
-      //      noteSink.send(THROW, id, e);
-      //
-      //      final ResponsePojo response;
-      //      response = error(e.status(), e.message());
-      //
-      //      sender.send(response);
-      stop = true;
-    } catch (HttpServerException e) {
-      //      noteSink.send(THROW, id, e);
-      //
-      //      final ResponsePojo response;
-      //      response = error(e.status(), e.message());
-      //
-      //      sender.send(response);
+    } catch (HttpClientException | HttpServerException e) {
+      noteSink.send(ServerTask.THROW, e);
+
+      final ResponsePojo response;
+      response = error(e.status(), e.message());
+
+      responseSender.send(response);
+
       stop = true;
     }
   }
@@ -137,7 +130,7 @@ final class ServerTaskLoop {
     });
   }
 
-  public final boolean keepExecuting() {
+  public final boolean shouldExecute() {
     return !Thread.currentThread().isInterrupted()
         && !stop;
   }

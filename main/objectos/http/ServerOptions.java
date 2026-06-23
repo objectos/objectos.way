@@ -17,10 +17,10 @@ package objectos.http;
 
 import java.util.function.Consumer;
 import objectos.way.Note;
-import objectox.http.srv.ServerBuilder;
+import objectox.http.srv.ServerLoopBuilder;
 
 /// Configures the creation of an HTTP server.
-public sealed interface ServerOptions permits ServerBuilder {
+public sealed interface ServerOptions permits ServerLoopBuilder {
 
   /// Adds a host with the specified configuration to this server.
   ///

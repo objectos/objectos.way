@@ -23,27 +23,27 @@ import objectox.http.HeaderNamePojo;
 import objectox.http.Rfc;
 import objectox.http.HttpClientException.Kind;
 
-final class RequestParser6Headers {
+final class RequestHeadersParser {
 
-  private final RequestParser0Input input;
+  private final RequestInputStream input;
 
   private Map<HeaderName, Object> map = Map.of();
 
   private final StringBuilder sb = new StringBuilder();
 
-  RequestParser6Headers(RequestParser0Input input) {
+  RequestHeadersParser(RequestInputStream input) {
     this.input = input;
   }
 
   public final Map<HeaderName, Object> parse() throws IOException {
     try {
       return parse0();
-    } catch (RequestParser0Input.Eof e) {
+    } catch (RequestInputStream.Eof e) {
       final String msg;
       msg = "EOF while parsing HTTP headers";
 
       throw new HttpClientException(msg, e, Kind.INVALID_REQUEST_HEADERS);
-    } catch (RequestParser0Input.Overflow e) {
+    } catch (RequestInputStream.Overflow e) {
       final String msg;
       msg = "Buffer overflow while parsing HTTP headers";
 
@@ -170,9 +170,11 @@ final class RequestParser6Headers {
   }
 
   private String parseValue() throws IOException {
+    int startIndex;
+
     // skip OWS
     loop: while (true) {
-      input.mark();
+      startIndex = input.bufferIndex();
 
       final byte b;
       b = input.readByte(Kind.INVALID_REQUEST_HEADERS);
@@ -193,7 +195,7 @@ final class RequestParser6Headers {
           final int endIndex;
           endIndex = input.bufferIndex();
 
-          return parseHeaderValueCR(endIndex);
+          return parseHeaderValueCR(startIndex, endIndex);
         }
 
         case HEADER_VALUE_LF -> {
@@ -236,7 +238,7 @@ final class RequestParser6Headers {
           final int endIndex;
           endIndex = validIndex + 1;
 
-          return parseHeaderValueCR(endIndex);
+          return parseHeaderValueCR(startIndex, endIndex);
         }
 
         case HEADER_VALUE_LF -> {
@@ -256,9 +258,9 @@ final class RequestParser6Headers {
     }
   }
 
-  private String parseHeaderValueCR(int endIndex) throws IOException {
+  private String parseHeaderValueCR(int startIndex, int endIndex) throws IOException {
     final String value;
-    value = input.makeStr(endIndex);
+    value = input.makeStr(startIndex, endIndex);
 
     final byte lf;
     lf = input.readByte();

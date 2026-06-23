@@ -35,7 +35,7 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class RequestParser8BodyDataTest {
+public class RequestBodyDataParserTest {
 
   private static final class Cfg {
     Path bodyDirectory;
@@ -46,7 +46,7 @@ public class RequestParser8BodyDataTest {
 
     long id = 0;
 
-    RequestParser0Input input;
+    RequestInputStream input;
 
     RequestBodyMeta.Data meta;
 
@@ -54,20 +54,20 @@ public class RequestParser8BodyDataTest {
       return config;
     }
 
-    final RequestParser8BodyData build() {
+    final RequestBodyDateParser build() {
       final RequestBodySupport support;
       support = new RequestBodySupport(bodyDirectory, id, bodyMemoryMax, bodySizeMax);
 
-      return new RequestParser8BodyData(support, input, meta);
+      return new RequestBodyDateParser(support, input, meta);
     }
   }
 
-  private RequestParser0Input input(Object... data) {
+  private RequestInputStream input(Object... data) {
     try {
       final Socket socket;
       socket = SocketY.of(data);
 
-      return RequestParser0Input.of(512, socket);
+      return RequestInputStream.of(512, socket);
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     }
@@ -79,7 +79,7 @@ public class RequestParser8BodyDataTest {
 
     config.accept(c);
 
-    final RequestParser8BodyData parser;
+    final RequestBodyDateParser parser;
     parser = c.build();
 
     return parser.parse();

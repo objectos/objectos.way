@@ -19,21 +19,16 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 import objectos.way.Note;
-import objectos.way.Note.Long1Ref1;
 
 final class ServerTaskYNoteSink extends Note.NoOpSink {
-
-  long id;
 
   IOException thrown;
 
   @Override
-  public final <T1> void send(Long1Ref1<T1> note, long value1, T1 value2) {
+  public final <T1> void send(Note.Ref1<T1> note, T1 value2) {
     assertEquals(note.source(), ServerTask.class.getName());
 
     assertEquals(note.key(), "THR");
-
-    id = value1;
 
     thrown = (IOException) value2;
   }

@@ -25,14 +25,14 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class RequestParser7BodyMetaTest {
+public class RequestBodyMetaParserTest {
 
   private RequestBodyMeta parse(Map<HeaderName, Object> map) throws IOException {
     final RequestHeaders headers;
     headers = new RequestHeaders(map);
 
-    final RequestParser7BodyMeta parser;
-    parser = new RequestParser7BodyMeta(headers);
+    final RequestBodyMetaParser parser;
+    parser = new RequestBodyMetaParser(headers);
 
     return parser.parse();
   }

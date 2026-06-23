@@ -19,11 +19,11 @@ import module java.base;
 import objectos.internal.Bytes;
 import objectox.http.HttpClientException;
 
-final class RequestParser1UrlDecoder {
+final class RequestUrlDecoder {
 
   private final InputStream input;
 
-  RequestParser1UrlDecoder(InputStream input) {
+  RequestUrlDecoder(InputStream input) {
     this.input = input;
   }
 

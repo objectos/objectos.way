@@ -18,7 +18,7 @@ package objectox.http.req;
 import module java.base;
 import objectox.http.HttpClientException;
 
-final class RequestParser0Input extends InputStream {
+public final class RequestInputStream extends InputStream {
 
   @SuppressWarnings("serial")
   static final class Eof extends IOException {}
@@ -34,20 +34,14 @@ final class RequestParser0Input extends InputStream {
 
   private final InputStream inputStream;
 
-  private int mark;
-
-  RequestParser0Input(byte[] buffer, InputStream inputStream) {
+  public RequestInputStream(byte[] buffer, InputStream inputStream) {
     this.buffer = buffer;
 
     this.inputStream = inputStream;
   }
 
-  static RequestParser0Input of(int bufferSize, Socket socket) throws IOException {
-    if (bufferSize < 128) {
-      throw new IllegalArgumentException("Buffer size is too small");
-    }
-
-    return new RequestParser0Input(
+  static RequestInputStream of(int bufferSize, Socket socket) throws IOException {
+    return new RequestInputStream(
         new byte[bufferSize],
 
         socket.getInputStream()
@@ -71,31 +65,30 @@ final class RequestParser0Input extends InputStream {
     bufferIndex = nextIndex;
   }
 
-  public final String makeStr() {
-    return makeStr(bufferIndex);
+  public final String makeStr(int startIndex) {
+    return makeStr(startIndex, bufferIndex);
   }
 
-  public final String makeStr(int endIndex) {
-    endIndex = endIndex - 1;
+  public final String makeStr(int startIndex, int endIndex) {
+    final int length;
+    length = endIndex - startIndex - 1;
 
-    return bufferToAscii(mark, endIndex);
+    return new String(buffer, startIndex, length, StandardCharsets.US_ASCII);
   }
 
-  public final StringBuilder makeStrBuilder() {
+  public final StringBuilder makeStrBuilder(int startIndex) {
     final String prefix;
-    prefix = makeStr();
+    prefix = makeStr(startIndex);
 
     return new StringBuilder(prefix);
   }
 
-  public final int mark() {
-    return mark = bufferIndex;
-  }
-
   public final byte peekByte() throws IOException {
-    ensureBuffer();
-
-    return buffer[bufferIndex];
+    if (ensureBuffer() != -1) {
+      return buffer[bufferIndex];
+    } else {
+      throw new Eof();
+    }
   }
 
   public final byte peekPrev() {
@@ -104,20 +97,22 @@ final class RequestParser0Input extends InputStream {
 
   @Override
   public final int read() throws IOException {
-    try {
+    if (ensureBuffer() != -1) {
       final byte b;
-      b = readByte();
+      b = buffer[bufferIndex++];
 
       return Byte.toUnsignedInt(b);
-    } catch (Eof _) {
+    } else {
       return -1;
     }
   }
 
   public final byte readByte() throws IOException {
-    ensureBuffer();
-
-    return buffer[bufferIndex++];
+    if (ensureBuffer() != -1) {
+      return buffer[bufferIndex++];
+    } else {
+      throw new Eof();
+    }
   }
 
   public final byte readByte(HttpClientException.Kind kind) throws IOException {
@@ -182,34 +177,25 @@ final class RequestParser0Input extends InputStream {
     bufferIndex += 1;
   }
 
-  final String bufferToAscii() {
-    return new String(buffer, StandardCharsets.US_ASCII);
+  public final boolean start() throws IOException {
+    bufferIndex = bufferLimit = 0;
+
+    final int bytesRead;
+    bytesRead = readToBuffer();
+
+    return bytesRead != -1;
   }
 
-  final String bufferToAscii(int startIndex, int endIndex) {
-    final int length;
-    length = endIndex - startIndex;
-
-    return new String(buffer, startIndex, length, StandardCharsets.US_ASCII);
-  }
-
-  private void ensureBuffer() throws IOException {
+  private int ensureBuffer() throws IOException {
     final int readable;
     readable = bufferLimit - bufferIndex;
 
     if (readable > 0) {
-      return;
+      return 0;
     }
 
     if (readable == 0) {
-      final int bytesRead;
-      bytesRead = readToBuffer();
-
-      if (bytesRead < 0) {
-        throw new Eof();
-      }
-
-      return;
+      return readToBuffer();
     }
 
     throw new IllegalStateException("readable bytes < 0");

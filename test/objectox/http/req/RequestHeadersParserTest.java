@@ -34,17 +34,17 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class RequestParser6HeadersTest {
+public class RequestHeadersParserTest {
 
   private Map<HeaderName, Object> parse(Object... data) throws IOException {
     final Socket socket;
     socket = SocketY.of(data);
 
-    final RequestParser0Input input;
-    input = RequestParser0Input.of(256, socket);
+    final RequestInputStream input;
+    input = RequestInputStream.of(256, socket);
 
-    final RequestParser6Headers parser;
-    parser = new RequestParser6Headers(input);
+    final RequestHeadersParser parser;
+    parser = new RequestHeadersParser(input);
 
     return parser.parse();
   }

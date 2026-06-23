@@ -320,7 +320,6 @@ public class ServerTaskTest6Body {
         ""
     );
 
-    assertEquals(noteSink.id, Thread.currentThread().threadId());
     assertEquals(noteSink.thrown, ioe);
   }
 

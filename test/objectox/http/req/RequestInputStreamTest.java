@@ -24,14 +24,25 @@ import objectos.y.SocketY;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class RequestParser0InputTest {
+public class RequestInputStreamTest {
+
+  @Test(description = "Read into initial buffer")
+  public void read01() throws IOException {
+    final String req1;
+    req1 = "1".repeat(64);
+
+    final RequestInputStream input;
+    input = input(128, req1);
+
+    assertEquals(read0(input, 64), req1);
+  }
 
   @Test(description = "Read into initial buffer")
   public void readByte01() throws IOException {
     final String req1;
     req1 = "1".repeat(64);
 
-    final RequestParser0Input input;
+    final RequestInputStream input;
     input = input(128, req1);
 
     assertEquals(readByte0(input, 64), req1);
@@ -48,7 +59,7 @@ public class RequestParser0InputTest {
     final String req3;
     req3 = "3".repeat(64);
 
-    final RequestParser0Input input;
+    final RequestInputStream input;
     input = input(256, req1, req2, req3);
 
     assertEquals(readByte0(input, 64 + 64 + 64), req1 + req2 + req3);
@@ -62,7 +73,7 @@ public class RequestParser0InputTest {
     final String req2;
     req2 = "2".repeat(64);
 
-    final RequestParser0Input input;
+    final RequestInputStream input;
     input = input(128, req1, req2);
 
     assertEquals(readByte0(input, 128), req1);
@@ -71,7 +82,7 @@ public class RequestParser0InputTest {
       input.readByte();
 
       Assert.fail();
-    } catch (RequestParser0Input.Overflow expected) {
+    } catch (RequestInputStream.Overflow expected) {
       // noop
     }
   }
@@ -81,7 +92,7 @@ public class RequestParser0InputTest {
     final String req1;
     req1 = "1".repeat(64);
 
-    final RequestParser0Input input;
+    final RequestInputStream input;
     input = input(128, req1);
 
     assertEquals(readByte0(input, 64), req1);
@@ -90,7 +101,7 @@ public class RequestParser0InputTest {
       input.readByte();
 
       Assert.fail();
-    } catch (RequestParser0Input.Eof expected) {
+    } catch (RequestInputStream.Eof expected) {
       // noop
     }
   }
@@ -103,7 +114,7 @@ public class RequestParser0InputTest {
     final IOException exception;
     exception = Throwables.trimStackTrace(new IOException("Read Error"), 1);
 
-    final RequestParser0Input input;
+    final RequestInputStream input;
     input = input(128, req1, exception);
 
     assertEquals(readByte0(input, 64), req1);
@@ -117,7 +128,48 @@ public class RequestParser0InputTest {
     }
   }
 
-  private String readByte0(RequestParser0Input socket, int len) throws IOException {
+  @Test(description = "false on -1")
+  public void start01() throws IOException {
+    final RequestInputStream input;
+    input = input(128, "");
+
+    assertEquals(input.start(), false);
+  }
+
+  @Test(description = "start should reset state")
+  public void start02() throws IOException {
+    final String in1;
+    in1 = "1".repeat(64);
+
+    final String in2;
+    in2 = "2".repeat(64);
+
+    final RequestInputStream input;
+    input = input(64, in1, in2);
+
+    assertEquals(input.start(), true);
+
+    assertEquals(readByte0(input, 64), in1);
+
+    assertEquals(input.bufferIndex(), 64);
+
+    assertEquals(input.start(), true);
+
+    assertEquals(readByte0(input, 64), in2);
+  }
+
+  private String read0(RequestInputStream socket, int len) throws IOException {
+    final byte[] bytes;
+    bytes = new byte[len];
+
+    for (int i = 0; i < len; i++) {
+      bytes[i] = (byte) socket.read();
+    }
+
+    return new String(bytes, StandardCharsets.UTF_8);
+  }
+
+  private String readByte0(RequestInputStream socket, int len) throws IOException {
     final byte[] bytes;
     bytes = new byte[len];
 
@@ -128,8 +180,8 @@ public class RequestParser0InputTest {
     return new String(bytes, StandardCharsets.UTF_8);
   }
 
-  private RequestParser0Input input(int initial, Object... data) throws IOException {
-    return RequestParser0Input.of(
+  private RequestInputStream input(int initial, Object... data) throws IOException {
+    return RequestInputStream.of(
         initial,
 
         SocketY.of(data)

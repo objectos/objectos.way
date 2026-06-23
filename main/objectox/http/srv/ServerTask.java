@@ -18,35 +18,70 @@ package objectox.http.srv;
 import java.io.IOException;
 import java.net.Socket;
 import objectos.way.Note;
+import objectox.http.host.HostMap;
+import objectox.http.req.RequestBodySupport;
+import objectox.http.req.RequestBodySupportFactory;
+import objectox.http.resp.ResponseDate;
 
 final class ServerTask implements Runnable {
 
   static final Note.Ref1<Throwable> THROW = Note.Ref1.create(ServerTask.class, "THR", Note.ERROR);
 
-  private final ServerConfig serverConfig;
+  private final int bufferSize;
+
+  private final HostMap hostMap;
+
+  private final Note.Sink noteSink;
+
+  private final RequestBodySupportFactory requestBodySupportFactory;
+
+  private final ResponseDate responseDate;
 
   private final Socket socket;
 
-  ServerTask(ServerConfig serverConfig, Socket socket) {
-    this.serverConfig = serverConfig;
+  ServerTask(
+      int bufferSize,
+
+      HostMap hostMap,
+
+      Note.Sink noteSink,
+
+      RequestBodySupportFactory requestBodySupportFactory,
+
+      ResponseDate responseDate,
+
+      Socket socket
+  ) {
+    this.bufferSize = bufferSize;
+
+    this.hostMap = hostMap;
+
+    this.noteSink = noteSink;
+
+    this.requestBodySupportFactory = requestBodySupportFactory;
+
+    this.responseDate = responseDate;
 
     this.socket = socket;
   }
 
   @Override
   public final void run() {
+    final RequestBodySupport requestBodySupport;
+    requestBodySupport = requestBodySupportFactory.create(0);
+
     final ServerTaskStage stage;
-    stage = new ServerTaskStage(serverConfig, socket);
+    stage = new ServerTaskStage(bufferSize, hostMap, noteSink, requestBodySupport, responseDate, socket);
 
     try (stage) {
       final ServerTaskLoop loop;
       loop = stage.toLoop();
 
-      while (loop.keepExecuting()) {
+      while (loop.shouldExecute()) {
         loop.executeOne();
       }
     } catch (IOException e) {
-      serverConfig.send(THROW, e);
+      noteSink.send(THROW, e);
     }
   }
 
