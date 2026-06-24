@@ -23,26 +23,26 @@ import java.util.function.Supplier;
 
 final class ReloadingWatcher implements Closeable {
 
-  private final ReloadingFs fs;
+  private final ReloadingWatcherAdapter adapter;
 
   private final Lock lock = new ReentrantLock();
 
-  ReloadingWatcher(ReloadingFs fs) {
-    this.fs = fs;
+  ReloadingWatcher(ReloadingWatcherAdapter adapter) {
+    this.adapter = adapter;
   }
 
   @Override
   public final void close() throws IOException {
-    fs.close();
+    adapter.close();
   }
 
   public final <T> T getIf(Supplier<T> supplier, T defaultValue) {
     lock.lock();
     try {
-      final boolean reload;
-      reload = fs.changed();
+      final boolean changed;
+      changed = adapter.changed();
 
-      return reload ? supplier.get() : defaultValue;
+      return changed ? supplier.get() : defaultValue;
     } finally {
       lock.unlock();
     }

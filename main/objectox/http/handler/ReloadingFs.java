@@ -15,7 +15,6 @@
  */
 package objectox.http.handler;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
@@ -34,7 +33,7 @@ import java.util.Map;
 import java.util.Set;
 import objectos.way.Note;
 
-final class ReloadingFs implements Closeable {
+final class ReloadingFs implements ReloadingWatcherAdapter {
 
   private static final Note.Ref1<WatchKey> IGNORED = Note.Ref1.create(ReloadingFs.class, "IGN", Note.DEBUG);
 
@@ -93,6 +92,7 @@ final class ReloadingFs implements Closeable {
     watchService.close();
   }
 
+  @Override
   public final boolean changed() {
     final WatchKey key;
     key = watchService.poll();
