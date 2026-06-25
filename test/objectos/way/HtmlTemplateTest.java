@@ -1358,9 +1358,6 @@ public class HtmlTemplateTest {
 
     assertEquals(template.charset(), StandardCharsets.UTF_8);
 
-    final StringBuilder sb;
-    sb = new StringBuilder();
-
     template.writeTo(sb);
 
     assertEquals(sb.toString(), """

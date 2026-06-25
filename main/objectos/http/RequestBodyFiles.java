@@ -13,21 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.http.req;
+package objectos.http;
 
+import java.io.IOException;
 import java.nio.file.Path;
-import java.util.function.Consumer;
-import objectos.http.RequestBodyOptions;
 
-public record RequestBodyOptionsPojo(Path directory, int memoryMax, long sizeMax) {
+/// Provides the files for storing request body contents.
+@FunctionalInterface
+public interface RequestBodyFiles {
 
-  public static RequestBodyOptionsPojo create(Consumer<? super RequestBodyOptions> opts) {
-    final RequestBodyOptionsBuilder builder;
-    builder = new RequestBodyOptionsBuilder();
-
-    opts.accept(builder);
-
-    return builder.build();
-  }
+  /// Returns a new file for saving the body contents of the current request.
+  ///
+  /// @returns a new file that can be opened for writing
+  ///
+  /// @throws IOException if an I/O error occurs
+  Path get() throws IOException;
 
 }

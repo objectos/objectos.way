@@ -16,9 +16,11 @@
 package objectos.way.dev;
 
 import java.util.List;
-import module objectos.way;
 import objectos.css.CssSource;
-import objectos.http.HttpExchange;
+import objectos.http.Request;
+import objectos.http.Result;
+import objectos.script.Js;
+import objectos.script.JsAction;
 
 /*
 
@@ -40,10 +42,10 @@ public final class ScriptSubmit01 extends AbstractDevScript {
   private String search;
 
   @Override
-  public final void handle(HttpExchange http) {
+  public final Result handle(Request http) {
     search = http.queryParam("search");
 
-    super.handle(http);
+    return super.handle(http);
   }
 
   @Override

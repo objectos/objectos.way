@@ -19,8 +19,8 @@ import java.io.IOException;
 import java.net.Socket;
 import objectos.way.Note;
 import objectox.http.host.HostMap;
+import objectox.http.req.RequestBodyConfig;
 import objectox.http.req.RequestBodySupport;
-import objectox.http.req.RequestBodySupportFactory;
 import objectox.http.resp.ResponseDate;
 
 final class ServerTask implements Runnable {
@@ -33,7 +33,7 @@ final class ServerTask implements Runnable {
 
   private final Note.Sink noteSink;
 
-  private final RequestBodySupportFactory requestBodySupportFactory;
+  private final RequestBodyConfig requestBodyConfig;
 
   private final ResponseDate responseDate;
 
@@ -46,7 +46,7 @@ final class ServerTask implements Runnable {
 
       Note.Sink noteSink,
 
-      RequestBodySupportFactory requestBodySupportFactory,
+      RequestBodyConfig requestBodyConfig,
 
       ResponseDate responseDate,
 
@@ -58,7 +58,7 @@ final class ServerTask implements Runnable {
 
     this.noteSink = noteSink;
 
-    this.requestBodySupportFactory = requestBodySupportFactory;
+    this.requestBodyConfig = requestBodyConfig;
 
     this.responseDate = responseDate;
 
@@ -68,7 +68,7 @@ final class ServerTask implements Runnable {
   @Override
   public final void run() {
     final RequestBodySupport requestBodySupport;
-    requestBodySupport = requestBodySupportFactory.create(0);
+    requestBodySupport = new RequestBodySupport(requestBodyConfig);
 
     final ServerTaskStage stage;
     stage = new ServerTaskStage(bufferSize, hostMap, noteSink, requestBodySupport, responseDate, socket);

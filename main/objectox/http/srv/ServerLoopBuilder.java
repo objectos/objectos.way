@@ -16,35 +16,50 @@
 package objectox.http.srv;
 
 import java.io.IOException;
+import java.net.ServerSocket;
 import java.time.Clock;
 import java.util.Objects;
 import java.util.function.Consumer;
 import objectos.http.HostOptions;
+import objectos.http.RequestBodyOptions;
 import objectos.http.ServerOptions;
 import objectos.internal.NoOpSinkSingleton;
 import objectos.way.Note;
+import objectox.http.host.HostGlobals;
 import objectox.http.host.HostMapBuilder;
-import objectox.http.req.RequestBodyOptionsPojo;
+import objectox.http.req.RequestBodyConfigBuilder;
+import objectox.http.req.RequestBodyConfig;
 
 public final class ServerLoopBuilder
     implements
     ServerOptions {
 
-  @SuppressWarnings("unused")
   private final int bufferSize = 4096;
 
-  @SuppressWarnings("unused")
   private Clock clock;
 
   private final HostMapBuilder hostMapBuilder = new HostMapBuilder();
 
-  @SuppressWarnings("unused")
   private Note.Sink noteSink = NoOpSinkSingleton.INSTANCE;
 
-  @SuppressWarnings("unused")
-  private RequestBodyOptionsPojo requestBodyOptions;
+  private RequestBodyConfig requestBodyConfig;
 
   private final ServerSocketBuilder serverSocketBuilder = new ServerSocketBuilder();
+
+  @Override
+  public final void bufferSize(int value) {
+    if (value < 128) {
+      final String msg;
+      msg = "Invalid buffer size: buffers must hold at least 128 bytes";
+
+      throw new IllegalArgumentException(msg);
+    }
+  }
+
+  @Override
+  public final void clock(Clock value) {
+    clock = Objects.requireNonNull(value, "value == null");
+  }
 
   @Override
   public final void host(Consumer<? super HostOptions> opts) {
@@ -61,8 +76,49 @@ public final class ServerLoopBuilder
     serverSocketBuilder.port(value);
   }
 
+  @Override
+  public final void requestBody(Consumer<? super RequestBodyOptions> opts) {
+    final RequestBodyConfigBuilder builder;
+    builder = new RequestBodyConfigBuilder();
+
+    opts.accept(builder);
+
+    requestBodyConfig = builder.build();
+  }
+
   public final ServerLoop build() throws IOException {
-    throw new UnsupportedOperationException("Implement me");
+    final ServerLoop loop;
+    loop = unstarted();
+
+    loop.start();
+
+    return loop;
+  }
+
+  public final ServerLoop unstarted() throws IOException {
+    final ServerSocket serverSocket;
+    serverSocket = serverSocketBuilder.build();
+
+    return new ServerLoop(
+        bufferSize,
+
+        clock,
+
+        hostMapBuilder.build(new HostGlobals() {
+          @Override
+          public final int port() {
+            return serverSocket.getLocalPort();
+          }
+        }),
+
+        noteSink,
+
+        requestBodyConfig,
+
+        serverSocket,
+
+        Thread.ofVirtual().name("http-", 1).factory()
+    );
   }
 
 }

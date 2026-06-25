@@ -15,10 +15,11 @@
  */
 package objectos.way.dev;
 
-import module objectos.way;
 import objectos.css.CssSource;
-import objectos.http.HttpExchange;
-import objectos.http.HttpHandler;
+import objectos.http.Handler;
+import objectos.http.Request;
+import objectos.http.Result;
+import objectos.way.Html;
 
 /*
 
@@ -26,11 +27,11 @@ import objectos.http.HttpHandler;
 
 */
 @CssSource
-public final class ScriptPopstateIndex extends Html.Template implements HttpHandler {
+public final class ScriptPopstateIndex extends Html.Template implements Handler {
 
   @Override
-  public void handle(HttpExchange http) {
-    http.ok(this);
+  public Result handle(Request http) {
+    return this;
   }
 
   @Override

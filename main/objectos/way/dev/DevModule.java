@@ -15,8 +15,17 @@
  */
 package objectos.way.dev;
 
-import module java.base;
-import module objectos.way;
+import java.nio.file.Path;
+import objectos.css.StyleSheet;
+import objectos.http.Handler;
+import objectos.http.Request;
+import objectos.http.RequestMethod;
+import objectos.http.Result;
+import objectos.http.Routing;
+import objectos.http.StaticFile;
+import objectos.script.JsLibrary;
+import objectos.way.App;
+import objectos.way.Note;
 
 /// This class is not part of the Objectos Way JAR file. It is placed in the
 /// main source tree to ease the development.
@@ -28,26 +37,19 @@ public final class DevModule {
     this.injector = injector;
   }
 
-  public final void configure(HttpRoutes r) {
+  public final void configure(Routing r) {
     final ScriptModule scripts;
     scripts = new ScriptModule();
 
     scripts.configure(r);
 
-    r.at("/script.js", Http.GET, Http.handler(this::script));
+    r.at("/script.js", RequestMethod.GET, StaticFile.of(JsLibrary.of()));
 
-    r.at("/styles.css", Http.GET, Http.handler(this::styles));
+    r.at("/styles.css", RequestMethod.GET, Handler.of(this::styles));
   }
 
-  private void script(HttpExchange http) {
-    final JsLibrary library;
-    library = JsLibrary.of();
-
-    http.staticFile(library);
-  }
-
-  private void styles(HttpExchange http) {
-    http.ok(StyleSheet.create(opts -> {
+  private Result styles(Request http) {
+    return StyleSheet.create(opts -> {
       final Note.Sink noteSink;
       noteSink = injector.getInstance(Note.Sink.class);
 
@@ -57,7 +59,7 @@ public final class DevModule {
       classOutput = Path.of("work", "main");
 
       opts.scanDirectory(classOutput);
-    }));
+    });
   }
 
 }

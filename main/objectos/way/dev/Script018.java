@@ -15,10 +15,16 @@
  */
 package objectos.way.dev;
 
-import module objectos.way;
 import objectos.css.CssSource;
-import objectos.http.HttpExchange;
+import objectos.http.Content;
+import objectos.http.MediaType;
+import objectos.http.Request;
+import objectos.http.Result;
 import objectos.script.Js;
+import objectos.script.JsAction;
+import objectos.script.JsResponse;
+import objectos.script.JsString;
+import objectos.way.Html;
 
 /*
 
@@ -40,18 +46,15 @@ public final class Script018 extends AbstractDevScript {
   private String path;
 
   @Override
-  public final void handle(HttpExchange http) {
-    next = http.queryParam("next");
+  public final Result handle(Request req) {
+    next = req.queryParam("next");
 
     if (next != null) {
-      final Media.Bytes text;
-      text = Media.Bytes.textPlain(next);
-
-      http.ok(text);
+      return Content.of(MediaType.TEXT_PLAIN, next);
     } else {
-      path = http.path();
+      path = req.path();
 
-      super.handle(http);
+      return super.handle(req);
     }
   }
 

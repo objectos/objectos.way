@@ -26,6 +26,7 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.function.Consumer;
+import objectos.http.RequestBodyFiles;
 import objectos.lang.Throwables;
 import objectos.way.Y;
 import objectos.y.PathY;
@@ -37,7 +38,7 @@ import org.testng.annotations.Test;
 
 public class RequestBodyDataParserTest {
 
-  private static final class Cfg {
+  private static final class Cfg implements RequestBodyFiles {
     Path bodyDirectory;
 
     int bodyMemoryMax = 512;
@@ -54,9 +55,20 @@ public class RequestBodyDataParserTest {
       return config;
     }
 
+    @Override
+    public final Path get() throws IOException {
+      final String name;
+      name = Long.toString(id);
+
+      return bodyDirectory.resolve(name);
+    }
+
     final RequestBodyDateParser build() {
+      final RequestBodyConfig config;
+      config = new RequestBodyConfig(this, bodyMemoryMax, bodySizeMax);
+
       final RequestBodySupport support;
-      support = new RequestBodySupport(bodyDirectory, id, bodyMemoryMax, bodySizeMax);
+      support = new RequestBodySupport(config);
 
       return new RequestBodyDateParser(support, input, meta);
     }
@@ -158,7 +170,7 @@ public class RequestBodyDataParserTest {
               cfg.meta = new RequestBodyMeta.Fixed(data1.length());
             }),
 
-            RequestBodyData.of(directory.resolve("%019d.body".formatted(123L))),
+            RequestBodyData.of(directory.resolve("123")),
             data1,
             "file: happy-path"
         }

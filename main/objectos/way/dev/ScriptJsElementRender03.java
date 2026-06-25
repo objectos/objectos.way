@@ -15,9 +15,11 @@
  */
 package objectos.way.dev;
 
-import module objectos.way;
 import objectos.css.CssSource;
-import objectos.http.HttpExchange;
+import objectos.http.Request;
+import objectos.http.Result;
+import objectos.script.Js;
+import objectos.script.JsAction;
 
 /*
 
@@ -36,10 +38,10 @@ public final class ScriptJsElementRender03 extends AbstractDevScript {
   private String test;
 
   @Override
-  public final void handle(HttpExchange http) {
+  public final Result handle(Request http) {
     test = http.header(WAY_TEST);
 
-    super.handle(http);
+    return super.handle(http);
   }
 
   @Override

@@ -24,12 +24,12 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class RequestBodyOptionsTest {
+public class RequestBodyConfigTest {
 
   @Test
   public void testCase01() throws IOException {
-    final RequestBodyOptionsPojo pojo;
-    pojo = RequestBodyOptionsPojo.create(_ -> {});
+    final RequestBodyConfig pojo;
+    pojo = RequestBodyConfig.create(_ -> {});
 
     assertEquals(pojo.memoryMax(), 32 * 1024);
     assertEquals(pojo.sizeMax(), 10 * 1024 * 1024);
@@ -37,8 +37,8 @@ public class RequestBodyOptionsTest {
 
   @Test
   public void testCase02() throws IOException {
-    final RequestBodyOptionsPojo pojo;
-    pojo = RequestBodyOptionsPojo.create(opts -> {
+    final RequestBodyConfig pojo;
+    pojo = RequestBodyConfig.create(opts -> {
       opts.memoryMax(64 * 1024);
 
       opts.sizeMax(20 * 1024 * 1024);
@@ -59,7 +59,7 @@ public class RequestBodyOptionsTest {
   @Test(dataProvider = "testCase03Provider")
   public void testCase03(Consumer<? super RequestBodyOptions> opts, String message) {
     try {
-      RequestBodyOptionsPojo.create(opts);
+      RequestBodyConfig.create(opts);
 
       Assert.fail("It should have thrown");
     } catch (IllegalArgumentException expected) {

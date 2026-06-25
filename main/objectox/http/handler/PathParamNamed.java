@@ -16,12 +16,10 @@
 package objectox.http.handler;
 
 import java.util.function.Predicate;
-import objectos.http.HttpRoutes;
 import objectos.http.PathParam;
 
 public record PathParamNamed(String name, Predicate<String> predicate)
     implements
-    HttpRoutes.Option,
     PathParam {
 
 }

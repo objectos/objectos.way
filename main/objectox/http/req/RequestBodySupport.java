@@ -19,27 +19,16 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import objectos.http.RequestBodyFiles;
 
 public final class RequestBodySupport implements Closeable {
 
-  private final Path directory;
-
-  private final long id;
-
-  private final int memoryMax;
-
-  private final long sizeMax;
+  private final RequestBodyConfig config;
 
   private Path file;
 
-  RequestBodySupport(Path directory, long id, int memoryMax, long sizeMax) {
-    this.directory = directory;
-
-    this.id = id;
-
-    this.memoryMax = memoryMax;
-
-    this.sizeMax = sizeMax;
+  public RequestBodySupport(RequestBodyConfig config) {
+    this.config = config;
   }
 
   @Override
@@ -56,24 +45,31 @@ public final class RequestBodySupport implements Closeable {
 
   public final Path file() throws IOException {
     if (file == null) {
-      final String format;
-      format = id >= 0 ? "%019d.body" : "%019d.ydob";
+      final RequestBodyFiles files;
+      files = config.files();
 
-      final String fileName;
-      fileName = String.format(format, id);
+      final Path f;
+      f = files.get();
 
-      file = directory.resolve(fileName);
+      if (f == null) {
+        final String msg;
+        msg = "RequestBodyFiles provided a null file";
+
+        throw new NullPointerException(msg);
+      }
+
+      file = files.get();
     }
 
     return file;
   }
 
   public final int memoryMax() {
-    return memoryMax;
+    return config.memoryMax();
   }
 
   public final long sizeMax() {
-    return sizeMax;
+    return config.sizeMax();
   }
 
 }

@@ -30,6 +30,7 @@ import objectos.http.HttpHandler;
 import objectos.http.HttpRoutingXTest;
 import objectos.http.HttpServer;
 import objectos.http.HttpSessionStore;
+import objectos.http.Server;
 import objectos.y.RandomGeneratorY;
 
 public final class TestingHttpServer {
@@ -125,11 +126,11 @@ public final class TestingHttpServer {
       }
     }
 
-    private static HttpServer create0() throws IOException, InterruptedException {
+    private static Server create0() throws IOException, InterruptedException {
       HANDLER = new ThisHandlerFactory();
 
-      final HttpServer server;
-      server = HttpServer.create(opts -> {
+      final Server server;
+      server = Server.create(opts -> {
         opts.address(InetAddress.getLoopbackAddress());
 
         opts.host(host -> {

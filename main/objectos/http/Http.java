@@ -24,71 +24,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import objectox.http.RequestMethodEnum;
-import objectox.http.handler.PathParamNamed;
 
 /// Provides helpers to declaring routes.
 public final class Http {
-
-  // methods
-
-  /// The DELETE method.
-  public static final RequestMethod DELETE = RequestMethodEnum.DELETE;
-
-  /// The GET method.
-  public static final RequestMethod GET = RequestMethodEnum.GET;
-
-  /// The PATCH method.
-  public static final RequestMethod PATCH = RequestMethodEnum.PATCH;
-
-  /// The POST method.
-  public static final RequestMethod POST = RequestMethodEnum.POST;
-
-  /// The PUT method.
-  public static final RequestMethod PUT = RequestMethodEnum.PUT;
-
-  /// Helper method for specifying a handler in a route declaration. The method
-  /// returns the specified handler as it is.
-  ///
-  /// @param h the handler instance to be returned
-  ///
-  /// @return always the specified handler
-  public static HttpHandler handler(HttpHandler h) {
-    return h;
-  }
-
-  /// Restricts the value of the specified named path parameter with the
-  /// specified predicate. The route will only be matched if the value of the
-  /// path parameter conforms to the predicate.
-  ///
-  /// @param name the path parameter name
-  /// @param predicate the path parameter value should evaluate to `true` for the
-  ///        route to be matched
-  ///
-  /// @return a newly created route declaration option
-  public static HttpRoutes.Option pathParam(String name, Predicate<String> predicate) {
-    var n = Objects.requireNonNull(name, "name == null");
-
-    var p = Objects.requireNonNull(predicate, "predicate == null");
-
-    return new PathParamNamed(n, p);
-  }
 
   static final String LINE_TERM = "Invalid line terminator.\n";
 
   static final String REQ_LINE = "Invalid request line.\n";
 
   // exception types
-
-  static abstract class AbstractHandlerException extends RuntimeException implements HttpHandler {
-
-    private static final long serialVersionUID = -8277337261280606415L;
-
-  }
 
   /**
    * Thrown to indicate that a content type is not supported.

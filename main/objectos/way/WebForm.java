@@ -16,7 +16,7 @@
 package objectos.way;
 
 import java.util.List;
-import objectos.http.HttpExchange;
+import objectos.http.Request;
 import objectos.internal.UtilUnmodifiableList;
 
 final class WebForm implements Web.Form, Web.FormSpec {
@@ -59,7 +59,7 @@ final class WebForm implements Web.Form, Web.FormSpec {
   }
 
   @Override
-  public final Web.Form parse(HttpExchange http) {
+  public final Web.Form parse(Request http) {
     boolean valid;
     valid = true;
 

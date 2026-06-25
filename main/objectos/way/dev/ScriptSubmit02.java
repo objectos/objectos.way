@@ -15,9 +15,12 @@
  */
 package objectos.way.dev;
 
-import module objectos.way;
 import objectos.css.CssSource;
-import objectos.http.HttpExchange;
+import objectos.http.Request;
+import objectos.http.Result;
+import objectos.http.Status;
+import objectos.script.Js;
+import objectos.script.JsAction;
 
 /*
 
@@ -32,14 +35,14 @@ public final class ScriptSubmit02 extends AbstractDevScript {
   private boolean initial;
 
   @Override
-  public final void handle(HttpExchange http) {
-    switch (http.method().name()) {
-      case "GET" -> { initial = true; super.handle(http); }
+  public final Result handle(Request http) {
+    return switch (http.method().name()) {
+      case "GET" -> { initial = true; yield super.handle(http); }
 
-      case "POST" -> { initial = false; super.handle(http); }
+      case "POST" -> { initial = false; yield super.handle(http); }
 
-      default -> http.error(Status.METHOD_NOT_ALLOWED, "Allowed: GET, POST");
-    }
+      default -> Status.METHOD_NOT_ALLOWED;
+    };
   }
 
   @Override

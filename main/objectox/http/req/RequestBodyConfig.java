@@ -13,34 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectox.http.req;
 
-final class HttpHost1Name {
+import java.util.function.Consumer;
+import objectos.http.RequestBodyFiles;
+import objectos.http.RequestBodyOptions;
 
-  private final String name;
+public record RequestBodyConfig(RequestBodyFiles files, int memoryMax, long sizeMax) {
 
-  private final int port;
+  public static RequestBodyConfig create(Consumer<? super RequestBodyOptions> opts) {
+    final RequestBodyConfigBuilder builder;
+    builder = new RequestBodyConfigBuilder();
 
-  HttpHost1Name(String name, int port) {
-    this.name = name;
+    opts.accept(builder);
 
-    this.port = port;
-  }
-
-  public final String get() {
-    final String hostName;
-
-    if (name == null) {
-      hostName = "localhost";
-    } else {
-      hostName = name;
-    }
-
-    if (port == 80) {
-      return hostName;
-    } else {
-      return hostName + ":" + port;
-    }
+    return builder.build();
   }
 
 }

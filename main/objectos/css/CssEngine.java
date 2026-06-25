@@ -37,13 +37,13 @@ final class CssEngine implements StyleSheet {
   }
 
   @Override
-  public final String contentType() {
-    return "text/css; charset=utf-8";
-  }
+  public final void binaryTo(OutputStream out) throws IOException {
+    final OutputStreamWriter writer;
+    writer = new OutputStreamWriter(out);
 
-  @Override
-  public final Charset charset() {
-    return StandardCharsets.UTF_8;
+    writeTo(writer);
+
+    writer.flush();
   }
 
   @Override

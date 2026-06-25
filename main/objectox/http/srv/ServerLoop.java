@@ -23,7 +23,7 @@ import java.util.concurrent.ThreadFactory;
 import objectos.http.Server;
 import objectos.way.Note;
 import objectox.http.host.HostMap;
-import objectox.http.req.RequestBodySupportFactory;
+import objectox.http.req.RequestBodyConfig;
 import objectox.http.resp.ResponseDate;
 
 public final class ServerLoop extends Thread implements Server {
@@ -45,7 +45,7 @@ public final class ServerLoop extends Thread implements Server {
     THROW = Note.Ref1.create(s, "THR", Note.ERROR);
   }
 
-  private final int bufferSize;
+  final int bufferSize;
 
   private final Clock clock;
 
@@ -53,7 +53,7 @@ public final class ServerLoop extends Thread implements Server {
 
   private final Note.Sink noteSink;
 
-  private final RequestBodySupportFactory requestBodySupportFactory;
+  private final RequestBodyConfig requestBodyConfig;
 
   private final ServerSocket serverSocket;
 
@@ -68,7 +68,7 @@ public final class ServerLoop extends Thread implements Server {
 
       Note.Sink noteSink,
 
-      RequestBodySupportFactory requestBodySupportFactory,
+      RequestBodyConfig requestBodyConfig,
 
       ServerSocket serverSocket,
 
@@ -82,7 +82,7 @@ public final class ServerLoop extends Thread implements Server {
 
     this.noteSink = noteSink;
 
-    this.requestBodySupportFactory = requestBodySupportFactory;
+    this.requestBodyConfig = requestBodyConfig;
 
     this.serverSocket = serverSocket;
 
@@ -90,8 +90,10 @@ public final class ServerLoop extends Thread implements Server {
   }
 
   @Override
-  public final void close() {
+  public final void close() throws IOException {
     interrupt();
+
+    serverSocket.close();
   }
 
   public final int port() {
@@ -113,7 +115,7 @@ public final class ServerLoop extends Thread implements Server {
         noteSink.send(ACCEPTED, socket);
 
         final ServerTask task;
-        task = new ServerTask(bufferSize, hostMap, noteSink, requestBodySupportFactory, responseDate, socket);
+        task = new ServerTask(bufferSize, hostMap, noteSink, requestBodyConfig, responseDate, socket);
 
         final Thread thread;
         thread = threadFactory.newThread(task);

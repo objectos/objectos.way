@@ -15,13 +15,12 @@
  */
 package objectos.script;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import objectos.way.Media;
+import objectos.http.Content;
+import objectos.http.ContentProvider;
+import objectos.http.MediaType;
 
 /// Represents the source code of the Objectos Script JS library.
-public final class JsLibrary implements Media.Text {
+public final class JsLibrary implements ContentProvider {
 
   private static final JsLibrary INSTANCE = new JsLibrary(
       JsLibraryGenerated.SOURCE
@@ -40,30 +39,13 @@ public final class JsLibrary implements Media.Text {
     return INSTANCE;
   }
 
-  /// Returns `text/javascript; charset=utf-8`.
+  /// Returns the JS library contents as a new `Content` object having the
+  /// `text/javascript; charset=utf-8` type.
   ///
-  /// @return always `text/css; charset=utf-8`
+  /// @return a newly created `Content` object
   @Override
-  public final String contentType() {
-    return "text/javascript; charset=utf-8";
-  }
-
-  /// Returns `StandardCharsets.UTF_8`.
-  ///
-  /// @return always `StandardCharsets.UTF_8`
-  @Override
-  public final Charset charset() {
-    return StandardCharsets.UTF_8;
-  }
-
-  /// Writes the JS library source code to the specified `Appendable`.
-  ///
-  /// @param out where to append the source code
-  ///
-  /// @throws IOException if an I/O error occurs
-  @Override
-  public final void writeTo(Appendable out) throws IOException {
-    out.append(value);
+  public final Content toContent() {
+    return Content.of(MediaType.TEXT_JAVASCRIPT, value);
   }
 
 }

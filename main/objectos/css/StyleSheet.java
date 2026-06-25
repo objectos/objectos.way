@@ -20,7 +20,7 @@ import module objectos.way;
 
 /// A style sheet whose content is generated on demand by scanning Java class
 /// files for CSS utilities.
-public sealed interface StyleSheet extends Media.Text permits CssEngine {
+public sealed interface StyleSheet extends BinaryObject, ContentProvider permits CssEngine {
 
   /// Configures the creation of a `StyleSheet` instance.
   sealed interface Options extends CssLibrary.Options permits CssEngine.Configuring {
@@ -88,17 +88,10 @@ public sealed interface StyleSheet extends Media.Text permits CssEngine {
     return CssEngine.create0(options);
   }
 
-  /// Returns `text/css; charset=utf-8`.
-  ///
-  /// @return `@code text/css; charset=utf-8`
   @Override
-  String contentType();
-
-  /// Returns `StandardCharsets.UTF_8`.
-  ///
-  /// @return `StandardCharsets.UTF_8`
-  @Override
-  Charset charset();
+  default Content toContent() {
+    return Content.of(MediaType.TEXT_CSS, this);
+  }
 
   /**
    * Scans the configured Java class files for CSS utilities and returns the
@@ -118,7 +111,6 @@ public sealed interface StyleSheet extends Media.Text permits CssEngine {
    * @throws IOException
    *         if an I/O error occurs
    */
-  @Override
   void writeTo(Appendable out) throws IOException;
 
 }

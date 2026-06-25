@@ -17,7 +17,7 @@
  */
 package objectos.way;
 
-import objectos.http.HttpHandler;
+import objectos.http.Handler;
 import objectos.way.dev.DevModule;
 
 /// This class is not part of the Objectos Way JAR file. It is placed in the
@@ -26,7 +26,7 @@ public final class DevBoot {
 
   private DevBoot() {}
 
-  public static HttpHandler boot(App.Injector injector, Module original) {
+  public static Handler boot(App.Injector injector, Module original) {
     final Module reloaded;
     reloaded = DevBoot.class.getModule();
 
@@ -35,7 +35,7 @@ public final class DevBoot {
     final DevModule dev;
     dev = new DevModule(injector);
 
-    return HttpHandler.create(dev::configure);
+    return Handler.create(dev::configure);
   }
 
 }

@@ -15,16 +15,27 @@
  */
 package objectox.http.req;
 
-import java.nio.file.Path;
+import java.nio.file.Files;
+import java.util.Objects;
+import objectos.http.RequestBodyFiles;
 import objectos.http.RequestBodyOptions;
 
-public final class RequestBodyOptionsBuilder implements RequestBodyOptions {
+public final class RequestBodyConfigBuilder implements RequestBodyOptions {
 
-  private Path directory;
+  private RequestBodyFiles files = () -> Files.createTempFile("", "");
 
   private int memoryMax = 32 * 1024;
 
   private long sizeMax = 10 * 1024 * 1024;
+
+  public final RequestBodyConfig build() {
+    return new RequestBodyConfig(files, memoryMax, sizeMax);
+  }
+
+  @Override
+  public final void files(RequestBodyFiles value) {
+    files = Objects.requireNonNull(value, "value == null");
+  }
 
   @Override
   public final void memoryMax(int value) {
@@ -42,10 +53,6 @@ public final class RequestBodyOptionsBuilder implements RequestBodyOptions {
     }
 
     sizeMax = value;
-  }
-
-  final RequestBodyOptionsPojo build() {
-    return new RequestBodyOptionsPojo(directory, memoryMax, sizeMax);
   }
 
 }

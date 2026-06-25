@@ -15,10 +15,15 @@
  */
 package objectos.http;
 
-import objectox.http.req.RequestBodyOptionsBuilder;
+import objectox.http.req.RequestBodyConfigBuilder;
 
 /// Configures the request body options of a `Server` instance.
-public sealed interface RequestBodyOptions permits RequestBodyOptionsBuilder {
+public sealed interface RequestBodyOptions permits RequestBodyConfigBuilder {
+
+  /// Sets the file provider to the specified value.
+  ///
+  /// @param value the file provider
+  void files(RequestBodyFiles value);
 
   /// Sets the maximum request body size in bytes that will be stored in memory.
   /// A request body larger than this limit is serialized to a local file.

@@ -15,10 +15,14 @@
  */
 package objectos.way.dev;
 
-import module objectos.way;
 import objectos.css.CssSource;
-import objectos.http.HttpExchange;
 import objectos.http.HeaderName;
+import objectos.http.Redirection;
+import objectos.http.Request;
+import objectos.http.Result;
+import objectos.http.Status;
+import objectos.script.Js;
+import objectos.script.JsAction;
 
 /*
 
@@ -38,28 +42,28 @@ public final class ScriptSubmit00 extends AbstractDevScript {
   private boolean wayRequest;
 
   @Override
-  public final void handle(HttpExchange http) {
+  public final Result handle(Request http) {
     final String path;
     path = http.path();
 
     if (path.endsWith("00")) {
       initial = true;
 
-      switch (http.method().name()) {
-        case "GET" -> http.ok(this);
+      return switch (http.method().name()) {
+        case "GET" -> this;
 
         case "POST" -> {
           var input0 = http.formParam("input0");
 
           var wayRequest = http.header(HeaderName.WAY_REQUEST) != null;
 
-          http.found(
+          yield Redirection.found(
               "/script/submit/00/after?input0=" + input0 + "&wayRequest=" + wayRequest
           );
         }
 
-        default -> http.error(Status.METHOD_NOT_ALLOWED, "Allowed: GET, POST");
-      }
+        default -> Status.METHOD_NOT_ALLOWED;
+      };
     } else {
       initial = false;
 
@@ -67,7 +71,7 @@ public final class ScriptSubmit00 extends AbstractDevScript {
 
       wayRequest = "true".equals(http.queryParam("wayRequest"));
 
-      http.ok(this);
+      return this;
     }
   }
 

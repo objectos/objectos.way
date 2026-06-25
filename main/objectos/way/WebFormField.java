@@ -16,7 +16,7 @@
 package objectos.way;
 
 import java.util.List;
-import objectos.http.HttpExchange;
+import objectos.http.Request;
 
 sealed abstract class WebFormField implements Web.Form.Field permits WebFormTextInput {
 
@@ -84,6 +84,6 @@ sealed abstract class WebFormField implements Web.Form.Field permits WebFormText
     return errors;
   }
 
-  abstract WebFormField parse(HttpExchange http);
+  abstract WebFormField parse(Request req);
 
 }

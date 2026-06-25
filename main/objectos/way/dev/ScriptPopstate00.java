@@ -15,10 +15,12 @@
  */
 package objectos.way.dev;
 
-import module objectos.way;
 import objectos.css.CssSource;
-import objectos.http.HttpExchange;
 import objectos.http.HeaderName;
+import objectos.http.Request;
+import objectos.http.Result;
+import objectos.script.Js;
+import objectos.script.JsAction;
 
 /*
 
@@ -35,12 +37,12 @@ public final class ScriptPopstate00 extends AbstractDevScript {
   private boolean wayRequest;
 
   @Override
-  public final void handle(HttpExchange http) {
+  public final Result handle(Request http) {
     step = http.queryParamAsInt("step", 0);
 
     wayRequest = http.header(HeaderName.WAY_REQUEST) != null;
 
-    super.handle(http);
+    return super.handle(http);
   }
 
   @Override

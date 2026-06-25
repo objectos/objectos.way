@@ -20,7 +20,6 @@ import objectox.http.RequestMethodEnum;
 /// The method of an HTTP request message.
 public sealed interface RequestMethod
     extends
-    HttpRoutes.Option,
     RoutingOption
     permits
     RequestMethodEnum {
