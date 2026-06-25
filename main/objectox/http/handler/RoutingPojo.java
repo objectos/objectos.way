@@ -31,11 +31,11 @@ public final class RoutingPojo implements Routing {
 
   private Set<String> paths = Set.of();
 
-  public static Handler create0(Consumer<? super RoutingPojo> opts) {
+  public static Handler create0(Consumer<? super RoutingPojo> routes) {
     final RoutingPojo pojo;
     pojo = new RoutingPojo();
 
-    opts.accept(pojo);
+    routes.accept(pojo);
 
     return pojo.build();
   }

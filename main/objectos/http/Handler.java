@@ -15,9 +15,21 @@
  */
 package objectos.http;
 
+import java.util.function.Consumer;
+import objectox.http.handler.RoutingPojo;
+
 /// Processes an HTTP request to produce a result, e.g., an HTTP response.
 @FunctionalInterface
 public non-sealed interface Handler extends RoutingOption {
+
+  /// Returns a new handler for processing the specified routes.
+  ///
+  /// @param routes allows for defining the top-level routes
+  ///
+  /// @return a newly created handler for processing the routes
+  static Handler create(Consumer<? super Routing> routes) {
+    return RoutingPojo.create0(routes);
+  }
 
   /// Helper method for specifying a handler in a route declaration. The method
   /// returns the specified handler as it is.
