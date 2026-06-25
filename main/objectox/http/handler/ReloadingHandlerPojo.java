@@ -16,9 +16,9 @@
 package objectox.http.handler;
 
 import java.io.IOException;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import objectos.http.Handler;
+import objectos.http.ReloadingFunction;
 import objectos.http.ReloadingHandler;
 import objectos.http.Request;
 import objectos.http.Result;
@@ -36,7 +36,7 @@ public final class ReloadingHandlerPojo implements ReloadingHandler {
 
   private final Note.Sink noteSink;
 
-  private final Function<? super ClassLoader, ? extends Handler> reloadingFunction;
+  private final ReloadingFunction reloadingFunction;
 
   private final ReloadingModule reloadingModule;
 
@@ -49,7 +49,7 @@ public final class ReloadingHandlerPojo implements ReloadingHandler {
 
       Note.Sink noteSink,
 
-      Function<? super ClassLoader, ? extends Handler> reloadingFunction,
+      ReloadingFunction reloadingFunction,
 
       ReloadingModule reloadingModule,
 
@@ -99,7 +99,7 @@ public final class ReloadingHandlerPojo implements ReloadingHandler {
     final Handler instance;
 
     try {
-      instance = reloadingFunction.apply(loader);
+      instance = reloadingFunction.reload(loader);
     } catch (Throwable e) {
       noteSink.send(THROW, e);
 

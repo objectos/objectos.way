@@ -89,7 +89,7 @@ public enum StatusEnum implements Status {
 
   @Override
   public final String toString() {
-    return "HttpStatus[" + code + "=" + reasonPhrase + "]";
+    return "Status[" + code + "=" + reasonPhrase + "]";
   }
 
   public final boolean isError() {

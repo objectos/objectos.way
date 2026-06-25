@@ -29,9 +29,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.function.Predicate;
-import objectos.http.Handler;
+import objectos.http.ReloadingFunction;
 import objectos.http.ReloadingHandlerOptions;
 import objectos.internal.NoOpSinkSingleton;
 import objectos.way.Note;
@@ -46,7 +45,7 @@ public final class ReloadingHandlerBuilder implements ReloadingHandlerOptions {
 
   private Note.Sink noteSink = NoOpSinkSingleton.INSTANCE;
 
-  private Function<? super ClassLoader, ? extends Handler> reloadingFunction;
+  private ReloadingFunction reloadingFunction;
 
   private ReloadingModule reloadingModule;
 
@@ -144,7 +143,7 @@ public final class ReloadingHandlerBuilder implements ReloadingHandlerOptions {
   }
 
   @Override
-  public final void reloadingFunction(Function<? super ClassLoader, ? extends Handler> value) {
+  public final void reloadingFunction(ReloadingFunction value) {
     reloadingFunction = Objects.requireNonNull(value, "value == null");
   }
 

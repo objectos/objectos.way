@@ -16,7 +16,6 @@
 package objectos.http;
 
 import java.nio.file.Path;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import objectos.way.Note;
 import objectox.http.handler.ReloadingHandlerBuilder;
@@ -45,7 +44,7 @@ public sealed interface ReloadingHandlerOptions permits ReloadingHandlerBuilder 
   /// filesystem changes are processed.
   ///
   /// @param value the reloading function
-  void reloadingFunction(Function<? super ClassLoader, ? extends Handler> value);
+  void reloadingFunction(ReloadingFunction value);
 
   /// Uses the specified predicate to decide if a class of a given binary name
   /// should be reloaded or not. If no predicate is specified, then it tries to
