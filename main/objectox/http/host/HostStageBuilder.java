@@ -15,7 +15,6 @@
  */
 package objectox.http.host;
 
-import java.io.IOException;
 import java.util.Objects;
 import java.util.function.Consumer;
 import objectos.http.Handler;
@@ -23,8 +22,8 @@ import objectos.http.HostOptions;
 import objectos.http.SessionOptions;
 import objectos.http.StaticFilesOptions;
 import objectox.http.handler.HandlerNoop;
-import objectox.http.media.StaticFiles;
-import objectox.http.media.StaticFilesBuilder;
+import objectox.http.media.StaticFilesStageBuilder;
+import objectox.http.media.StaticFilesStage;
 import objectox.http.session.SessionSupport;
 import objectox.http.session.SessionSupportBuilder;
 
@@ -36,7 +35,7 @@ public final class HostStageBuilder implements HostOptions {
 
   private SessionSupport sessionSupport;
 
-  private StaticFiles staticFiles;
+  private StaticFilesStage staticFilesStage;
 
   public final HostStage build() {
     return new HostStage(
@@ -46,7 +45,7 @@ public final class HostStageBuilder implements HostOptions {
 
         sessionSupport,
 
-        staticFiles
+        staticFilesStage
     );
   }
 
@@ -88,20 +87,20 @@ public final class HostStageBuilder implements HostOptions {
   }
 
   @Override
-  public final void staticFiles(Consumer<? super StaticFilesOptions> opts) throws IOException {
-    if (staticFiles != null) {
+  public final void staticFiles(Consumer<? super StaticFilesOptions> opts) {
+    if (staticFilesStage != null) {
       final String msg;
       msg = "Static files support has already been configured";
 
       throw new IllegalStateException(msg);
     }
 
-    final StaticFilesBuilder builder;
-    builder = new StaticFilesBuilder();
+    final StaticFilesStageBuilder builder;
+    builder = new StaticFilesStageBuilder();
 
     opts.accept(builder);
 
-    staticFiles = builder.build();
+    staticFilesStage = builder.build();
   }
 
 }

@@ -46,26 +46,32 @@ import org.testng.annotations.Test;
 @SuppressWarnings("exports")
 public class StaticFilesTest {
 
-  private StaticFiles create(Consumer<? super StaticFilesBuilder> more) throws IOException {
-    return StaticFiles.create(opts -> {
-      opts.etag = attrs -> {
-        final Clock clock;
-        clock = Y.clockFixed();
+  private StaticFiles create(Consumer<? super StaticFilesStageBuilder> more) throws IOException {
+    final StaticFilesStageBuilder builder;
+    builder = new StaticFilesStageBuilder();
 
-        final Instant instant;
-        instant = clock.instant();
+    builder.etag = attrs -> {
+      final Clock clock;
+      clock = Y.clockFixed();
 
-        final BasicFileAttributes modified;
-        modified = BasicFileAttributesY.lastModifiedTime(attrs, instant);
+      final Instant instant;
+      instant = clock.instant();
 
-        final StaticFilesETag etag;
-        etag = new StaticFilesETag(0L);
+      final BasicFileAttributes modified;
+      modified = BasicFileAttributesY.lastModifiedTime(attrs, instant);
 
-        return etag.apply(modified);
-      };
+      final StaticFilesETag etag;
+      etag = new StaticFilesETag(0L);
 
-      more.accept(opts);
-    });
+      return etag.apply(modified);
+    };
+
+    more.accept(builder);
+
+    final StaticFilesStage stage;
+    stage = builder.build();
+
+    return stage.toStaticFiles();
   }
 
   @Test(description = "Result < Request should behave as handle")

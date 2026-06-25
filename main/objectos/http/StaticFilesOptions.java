@@ -16,10 +16,10 @@
 package objectos.http;
 
 import java.nio.file.Path;
-import objectox.http.media.StaticFilesBuilder;
+import objectox.http.media.StaticFilesStageBuilder;
 
 /// Configures the static files to be served by a `Server` instance.
-public sealed interface StaticFilesOptions permits StaticFilesBuilder {
+public sealed interface StaticFilesOptions permits StaticFilesStageBuilder {
 
   /// The default file extension to content type mappings.
   String DEFAULT_CONTENT_TYPES = """

@@ -15,12 +15,13 @@
  */
 package objectox.http.host;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.stream.Stream;
 import objectos.http.HostOptions;
 
 public final class HostMapBuilder {
@@ -50,18 +51,19 @@ public final class HostMapBuilder {
     }
   }
 
-  public final HostMap build(HostGlobals globals) {
+  public final HostMap build(HostGlobals globals) throws IOException {
+    final List<Host> list;
+    list = new ArrayList<>();
+
     final Collection<HostStage> stages;
     stages = hosts.values();
 
-    final Stream<HostStage> stream;
-    stream = stages.stream();
+    for (HostStage stage : stages) {
+      final Host host;
+      host = stage.toHost(globals);
 
-    final Stream<Host> hostStream;
-    hostStream = stream.map(stage -> stage.toHost(globals));
-
-    final List<Host> list;
-    list = hostStream.toList();
+      list.add(host);
+    }
 
     return HostMap.of(list);
   }

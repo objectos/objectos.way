@@ -26,7 +26,6 @@ import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.function.BiFunction;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import objectos.http.Content;
 import objectos.http.HeaderName;
@@ -75,15 +74,6 @@ public final class StaticFiles implements BiFunction<Request, Result, Result> {
     this.staticFilesResponses = staticFilesResponses;
 
     this.staticFilesRoot = staticFilesRoot;
-  }
-
-  public static StaticFiles create(Consumer<? super StaticFilesBuilder> opts) throws IOException {
-    final StaticFilesBuilder builder;
-    builder = new StaticFilesBuilder();
-
-    opts.accept(builder);
-
-    return builder.build();
   }
 
   @Override

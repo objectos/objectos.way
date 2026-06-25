@@ -44,6 +44,6 @@ public sealed interface HostOptions permits HostStageBuilder {
   /// @param opts allows for setting the static files options
   ///
   /// @throws IOException if an I/O error occurs
-  void staticFiles(Consumer<? super StaticFilesOptions> opts) throws IOException;
+  void staticFiles(Consumer<? super StaticFilesOptions> opts);
 
 }

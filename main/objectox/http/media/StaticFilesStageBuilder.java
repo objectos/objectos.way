@@ -15,7 +15,6 @@
  */
 package objectox.http.media;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
@@ -29,7 +28,7 @@ import objectos.internal.IOFunction;
 import objectos.internal.NoOpSinkSingleton;
 import objectos.way.Note;
 
-public final class StaticFilesBuilder implements StaticFilesOptions {
+public final class StaticFilesStageBuilder implements StaticFilesOptions {
 
   private static final LinkOption[] LINK = {LinkOption.NOFOLLOW_LINKS};
 
@@ -43,7 +42,7 @@ public final class StaticFilesBuilder implements StaticFilesOptions {
 
   private final StaticFilesTypesBuilder typesBuilder = new StaticFilesTypesBuilder("application/octet-stream");
 
-  public final StaticFiles build() throws IOException {
+  public final StaticFilesStage build() {
     final IOFunction<Path, BasicFileAttributes> reader;
     reader = file -> Files.readAttributes(file, BasicFileAttributes.class, LINK);
 
@@ -65,13 +64,9 @@ public final class StaticFilesBuilder implements StaticFilesOptions {
     final StaticFilesResponses staticFilesResponses;
     staticFilesResponses = new StaticFilesResponses(staticFilesExtension, staticFilesTypes);
 
-    final StaticFilesRootBuilder staticFilesRootBuilder;
-    staticFilesRootBuilder = new StaticFilesRootBuilder(directories);
+    return new StaticFilesStage(
+        directories,
 
-    final StaticFilesRoot staticFilesRoot;
-    staticFilesRoot = staticFilesRootBuilder.build();
-
-    return new StaticFiles(
         noteSink,
 
         staticFilesAttributes,
@@ -80,9 +75,7 @@ public final class StaticFilesBuilder implements StaticFilesOptions {
 
         staticFilesMethod,
 
-        staticFilesResponses,
-
-        staticFilesRoot
+        staticFilesResponses
     );
   }
 

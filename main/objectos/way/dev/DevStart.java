@@ -15,10 +15,14 @@
  */
 package objectos.way.dev;
 
-import module java.base;
-import module objectos.way;
-import objectos.http.HttpHandler;
-import objectos.http.HttpServer;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import objectos.http.Handler;
+import objectos.http.ReloadingFunction;
+import objectos.http.ReloadingHandler;
+import objectos.http.Server;
+import objectos.way.App;
+import objectos.way.Note;
 
 /// This class is not part of the Objectos Way JAR file. It is placed in the
 /// main source tree to ease the development.
@@ -48,24 +52,22 @@ public final class DevStart extends App.Bootstrap {
     shutdownHook = injector.getInstance(App.ShutdownHook.class);
 
     // Http.Handler
-    final HttpHandler serverHandler;
+    final Handler serverHandler;
     serverHandler = serverHandler(injector);
 
     shutdownHook.registerIfPossible(serverHandler);
 
     // Http.Server
     try {
-      final HttpServer httpServer;
-      httpServer = HttpServer.create(opts -> {
-        opts.bufferSize(8192);
+      final Server httpServer;
+      httpServer = Server.create(opts -> {
+        //opts.bufferSize(8192);
 
         opts.host(host -> {
           host.handler(serverHandler);
 
           host.staticFiles(files -> {
-            files.contentTypes("""
-            .js: text/javascript; charset=utf-8
-            """);
+            files.withDefaultContentTypes();
           });
         });
 
@@ -124,9 +126,9 @@ public final class DevStart extends App.Bootstrap {
     ctx.putInstance(App.ShutdownHook.class, shutdownHook);
   }
 
-  private record Reloader(App.Injector injector) implements App.Reloader.HandlerFactory {
+  private record Reloader(App.Injector injector) implements ReloadingFunction {
     @Override
-    public final HttpHandler reload(ClassLoader loader) throws Exception {
+    public final Handler reload(ClassLoader loader) throws Exception {
       final Class<?> bootClass;
       bootClass = loader.loadClass("objectos.way.DevBoot");
 
@@ -142,29 +144,29 @@ public final class DevStart extends App.Bootstrap {
       final Object instance;
       instance = method.invoke(null, injector, original);
 
-      return (HttpHandler) instance;
+      return (Handler) instance;
     }
   }
 
-  private HttpHandler serverHandler(App.Injector injector) {
+  private Handler serverHandler(App.Injector injector) {
     try {
-      return App.Reloader.create(opts -> {
-        final Reloader reloader;
-        reloader = new Reloader(injector);
-
-        opts.filerBinaryName(name -> {
-          return name.startsWith("objectos.way.dev")
-              || name.equals("objectos.way.DevBoot");
-        });
-
-        opts.handlerFactory(reloader);
-
+      return ReloadingHandler.create(opts -> {
         opts.moduleOf(DevStart.class);
 
         final Note.Sink noteSink;
         noteSink = injector.getInstance(Note.Sink.class);
 
         opts.noteSink(noteSink);
+
+        final Reloader reloader;
+        reloader = new Reloader(injector);
+
+        opts.reloadingFunction(reloader);
+
+        opts.withBinaryName(name -> {
+          return name.startsWith("objectos.way.dev")
+              || name.equals("objectos.way.DevBoot");
+        });
       });
     } catch (IOException e) {
       throw App.serviceFailed("App.Reloader", e);

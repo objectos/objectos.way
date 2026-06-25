@@ -15,8 +15,9 @@
  */
 package objectox.http.host;
 
+import java.io.IOException;
 import objectos.http.Handler;
-import objectox.http.media.StaticFiles;
+import objectox.http.media.StaticFilesStage;
 import objectox.http.session.SessionSupport;
 
 public record HostStage(
@@ -26,10 +27,10 @@ public record HostStage(
 
     SessionSupport sessionSupport,
 
-    StaticFiles staticFiles
+    StaticFilesStage staticFilesStage
 ) {
 
-  public final Host toHost(HostGlobals globals) {
+  public final Host toHost(HostGlobals globals) throws IOException {
     return new Host(
         handler,
 
@@ -41,7 +42,7 @@ public record HostStage(
 
         sessionSupport != null ? sessionSupport.response() : (_, _) -> {},
 
-        staticFiles != null ? staticFiles : (_, result) -> result
+        staticFilesStage != null ? staticFilesStage.toStaticFiles() : (_, result) -> result
     );
   }
 

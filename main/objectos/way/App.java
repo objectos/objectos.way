@@ -22,7 +22,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.nio.file.Path;
-import java.nio.file.WatchService;
 import java.time.Clock;
 import java.util.LinkedHashSet;
 import java.util.Objects;
@@ -30,7 +29,6 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import objectos.http.HttpHandler;
 import objectos.lang.Key;
 
 /// The <strong>Objectos App</strong> main class.
@@ -51,33 +49,30 @@ public final class App {
 
         /// Sets this option description.
         ///
-        /// @param value
-        ///        the option description
+        /// @param value the option description
         void description(String value);
 
         /// Sets this option name.
         ///
-        /// @param value
-        ///        the option name
+        /// @param value the option name
         void name(String value);
 
         /// Sets this option as required.
         void required();
 
-        /// Validates this option with the specified `predicate`.
-        /// The specified `reasonPhrase` will be used to inform of a failed validation.
-        /// Multiple validators may be specified and they will be applied in order.
+        /// Validates this option with the specified `predicate`. The specified
+        /// `reasonPhrase` will be used to inform of a failed validation.
+        /// Multiple validators may be specified and they will be applied in
+        /// order.
         ///
-        /// @param predicate
-        ///        it should evaluate to `true` when the option is valid; `false` otherwise
-        /// @param reasonPhrase
-        ///        the message to inform of a failed validation
+        /// @param predicate it should evaluate to `true` when the option is
+        ///        valid; `false` otherwise
+        /// @param reasonPhrase the message to inform of a failed validation
         void validator(Predicate<? super T> predicate, String reasonPhrase);
 
         /// Sets this option's initial value.
         ///
-        /// @param value
-        ///        the initial value
+        /// @param value the initial value
         void value(T value);
 
       }
@@ -158,12 +153,10 @@ public final class App {
 
     /// Creates a command line option with the specified converter and options.
     ///
-    /// @param <T>
-    ///        the type for the option value
-    /// @param converter
-    ///        converts a command line argument into an instance of the target option type
-    /// @param opts
-    ///        allows for setting the options
+    /// @param <T> the type for the option value
+    /// @param converter converts a command line argument into an instance of the
+    ///        target option type
+    /// @param opts allows for setting the options
     ///
     /// @return a newly created option
     protected final <T> Option<T> option(Function<String, T> converter, Consumer<? super Option.Options<T>> opts) {
@@ -174,8 +167,7 @@ public final class App {
 
     /// Creates an `Integer` command line option with the specified options.
     ///
-    /// @param opts
-    ///        allows for setting the options
+    /// @param opts allows for setting the options
     ///
     /// @return a newly created option
     protected final Option<Integer> optionInteger(Consumer<? super Option.Options<Integer>> opts) {
@@ -184,22 +176,20 @@ public final class App {
 
     /// Creates a `Path` command line option with the specified options.
     ///
-    /// @param opts
-    ///        allows for setting the options
+    /// @param opts allows for setting the options
     ///
     /// @return a newly created option
     protected final Option<Path> optionPath(Consumer<? super Option.Options<Path>> opts) {
       return option0(Path::of, opts);
     }
 
-    /// Creates a `Set` command line option with the specified converter and options.
+    /// Creates a `Set` command line option with the specified converter and
+    /// options.
     ///
-    /// @param <E>
-    ///        the element type
-    /// @param converter
-    ///        converts an option value to an instance of the element type
-    /// @param opts
-    ///        allows for setting the options
+    /// @param <E> the element type
+    /// @param converter converts an option value to an instance of the element
+    ///        type
+    /// @param opts allows for setting the options
     ///
     /// @return a newly created option
     protected final <E> Option<Set<E>> optionSet(Function<String, E> converter, Consumer<? super Option.Options<Set<E>>> opts) {
@@ -220,8 +210,7 @@ public final class App {
 
     /// Creates a `String` command line option with the specified options.
     ///
-    /// @param opts
-    ///        allows for setting the options
+    /// @param opts allows for setting the options
     ///
     /// @return a newly created option
     protected final Option<String> optionString(Consumer<? super Option.Options<String>> opts) {
@@ -289,8 +278,7 @@ public final class App {
 
     /// Creates a new injector with the specified options.
     ///
-    /// @param opts
-    ///        allows for setting the options
+    /// @param opts allows for setting the options
     ///
     /// @return a newly created injector instance
     static Injector create(Consumer<? super Options> opts) {
@@ -341,14 +329,12 @@ public final class App {
 
       /// Sets the clock to the specified value.
       ///
-      /// @param value
-      ///        a clock instance
+      /// @param value a clock instance
       void clock(Clock value);
 
       /// Sets the note filter to the specified value.
       ///
-      /// @param value
-      ///        a note predicate
+      /// @param value a note predicate
       void filter(Predicate<? super Note> value);
 
     }
@@ -390,103 +376,6 @@ public final class App {
     static NoteSink sysout() {
       return ofAppendable(System.out);
     }
-
-  }
-
-  /// An HTTP handler which reloads the classes of the configured module if
-  /// changes are observed in the module's location. It is meant to be used
-  /// during the development of an application.
-  public sealed interface Reloader extends Closeable, HttpHandler permits AppReloader {
-
-    /// Configures the creation of a `Reloader`.
-    public sealed interface Options permits AppReloaderBuilder {
-
-      /// Reloads the module when changes are observed in the specified directory.
-      /// @param value the directory to watch
-      /// @throws IllegalArgumentException if the path does not represent a directory
-      void directory(Path value);
-
-      /// Uses the specified predicate to decide if a class of a given binary name
-      /// should be reloaded or not. If no predicate is specified, then it tries
-      /// to reload the class of any binary name requested.
-      /// @param value the predicate instance
-      void filerBinaryName(Predicate<? super String> value);
-
-      /// Uses the specified factory to recreate the HTTP handler instance after
-      /// filesystem changes are processed.
-      /// @param value an HTTP handler factory instance
-      void handlerFactory(HandlerFactory value);
-
-      /// Sets the module to be reloaded to the one from the specified class.
-      /// @param value the class whose module is to be reloaded
-      void moduleOf(Class<?> value);
-
-      /// Sets the note sink to the specified value.
-      /// @param value a note sink instance
-      void noteSink(Note.Sink value);
-
-      /// Uses the specified watch service.
-      /// @param value the watch service to use
-      void watchService(WatchService value);
-
-    }
-
-    /**
-     * A factory for HTTP handler instances. Implementations MUST create the
-     * new HTTP handler instance using the provided class loader.
-     */
-    @FunctionalInterface
-    public interface HandlerFactory {
-
-      /**
-       * Creates a new HTTP handler by loading classes from the specified
-       * class
-       * loader.
-       *
-       * @param classLoader
-       *        a newly created class loader instance bound to the reloaded
-       *        module
-       *
-       * @return a newly created HTTP handler instance
-       *
-       * @throws Exception
-       *         when trying to load a non-existing class, trying to reflect a
-       *         non-existing member or other error preventing the creation of
-       *         a
-       *         new HTTP handler instance
-       */
-      HttpHandler reload(ClassLoader classLoader) throws Exception;
-
-    }
-
-    /**
-     * Creates a new reloader with the specified options.
-     *
-     * @param opts
-     *        allows for setting the options
-     *
-     * @return a newly created reloader instance
-     *
-     * @throws IOException
-     *         if an I/O error occurs
-     */
-    static Reloader create(Consumer<? super Options> opts) throws IOException {
-      final AppReloaderBuilder builder;
-      builder = new AppReloaderBuilder();
-
-      opts.accept(builder);
-
-      return builder.build();
-    }
-
-    /**
-     * Closes this class reloader.
-     *
-     * @throws IOException
-     *         if an I/O error occurs
-     */
-    @Override
-    void close() throws IOException;
 
   }
 
@@ -623,8 +512,7 @@ public final class App {
   /// Returns a new [ServiceFailedException] indicating that the service with
   /// the specified name failed to start.
   ///
-  /// @param name
-  /// the name of the service which failed to start
+  /// @param name the name of the service which failed to start
   ///
   /// @return a newly created `ServiceFailedException` instance
   public static ServiceFailedException serviceFailed(String name) {
@@ -634,10 +522,8 @@ public final class App {
   /// Returns a new [ServiceFailedException] indicating that the service with
   /// the specified name failed to start due to the specified cause.
   ///
-  /// @param name
-  /// the name of the service which failed to start
-  /// @param cause
-  /// the underlying cause
+  /// @param name the name of the service which failed to start
+  /// @param cause the underlying cause
   ///
   /// @return a newly created `ServiceFailedException` instance
   public static ServiceFailedException serviceFailed(String name, Throwable cause) {

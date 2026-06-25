@@ -46,7 +46,7 @@ public class HostStageBuilderTest {
     assertEquals(res.handler(), HandlerNoop.INSTANCE);
     assertEquals(res.name(), "localhost");
     assertEquals(res.sessionSupport(), null);
-    assertEquals(res.staticFiles(), null);
+    assertEquals(res.staticFilesStage(), null);
   }
 
   @Test

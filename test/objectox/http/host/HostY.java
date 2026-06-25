@@ -15,6 +15,8 @@
  */
 package objectox.http.host;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.function.Consumer;
 import objectos.http.Handler;
 import objectos.http.SessionOptions;
@@ -37,21 +39,25 @@ public final class HostY implements HostGlobals {
   }
 
   private Host build() {
-    final HostStageBuilder builder;
-    builder = new HostStageBuilder();
+    try {
+      final HostStageBuilder builder;
+      builder = new HostStageBuilder();
 
-    builder.handler(handler);
+      builder.handler(handler);
 
-    builder.name(name);
+      builder.name(name);
 
-    if (session != null) {
-      builder.session(session);
+      if (session != null) {
+        builder.session(session);
+      }
+
+      final HostStage stage;
+      stage = builder.build();
+
+      return stage.toHost(this);
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
     }
-
-    final HostStage stage;
-    stage = builder.build();
-
-    return stage.toHost(this);
   }
 
   @Override
