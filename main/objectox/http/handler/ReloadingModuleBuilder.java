@@ -63,7 +63,7 @@ final class ReloadingModuleBuilder {
     maybeLocation = reference.location();
 
     if (maybeLocation.isEmpty()) {
-      throw new IllegalArgumentException("Could not resolved location for " + moduleName);
+      throw new IllegalArgumentException("Could not resolve location for " + moduleName);
     }
 
     final URI uri;
