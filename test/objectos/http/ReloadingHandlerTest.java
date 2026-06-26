@@ -17,6 +17,7 @@ package objectos.http;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.concurrent.TimeUnit;
 import objectos.way.Y;
 import org.testng.annotations.Test;
 
@@ -78,6 +79,8 @@ public class ReloadingHandlerTest {
         """);
 
         assertEquals(y.compile(), true);
+
+        TimeUnit.MILLISECONDS.sleep(5);
 
         final Object res1;
         res1 = subject.handle(null);
