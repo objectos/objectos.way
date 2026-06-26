@@ -13,13 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.way;
+package objectos.http;
 
 import java.util.function.Consumer;
-import objectos.http.Handler;
-import objectos.http.Redirection;
-import objectos.http.RequestMethod;
-import objectos.http.Routing;
+import objectos.way.Html;
 
 final class MarketingSite implements Consumer<Routing> {
 

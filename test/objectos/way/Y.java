@@ -27,12 +27,9 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.UncheckedIOException;
 import java.io.Writer;
-import java.net.URI;
 import java.net.http.HttpClient.Version;
 import java.net.http.HttpHeaders;
-import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -42,7 +39,6 @@ import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.sql.ShardingKeyBuilder;
 import java.time.Clock;
-import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -50,7 +46,6 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Consumer;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.sql.DataSource;
@@ -97,38 +92,6 @@ public final class Y implements ISuiteListener {
     bootstrap = new DevStart();
 
     bootstrap.start(new String[0]);
-  }
-
-  public static HttpResponse<String> httpClient(String path, Consumer<HttpRequest.Builder> config) {
-    try {
-      // force early init
-      java.net.http.HttpClient client;
-      client = HttpClient.INSTANCE;
-
-      HttpRequest.Builder builder;
-      builder = HttpRequest.newBuilder();
-
-      int port;
-      port = TestingHttpServer.port();
-
-      URI uri;
-      uri = URI.create("http://localhost:" + port + path);
-
-      builder.uri(uri);
-
-      builder.timeout(Duration.ofMinutes(1));
-
-      config.accept(builder);
-
-      HttpRequest request;
-      request = builder.build();
-
-      return client.send(request, BodyHandlers.ofString(StandardCharsets.UTF_8));
-    } catch (IOException e) {
-      throw new UncheckedIOException(e);
-    } catch (InterruptedException e) {
-      throw new RuntimeException(e);
-    }
   }
 
   // ##################################################################

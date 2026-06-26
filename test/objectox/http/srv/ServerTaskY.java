@@ -58,11 +58,11 @@ final class ServerTaskY {
   }
 
   public static String resp(Consumer<? super ServerTaskY> opts) {
-    final ServerTaskY y;
-    y = run(opts);
+    final ServerTask task;
+    task = run(opts);
 
     final Socket socket;
-    socket = y.socket;
+    socket = task.socket;
 
     return socket.toString();
   }
@@ -76,7 +76,7 @@ final class ServerTaskY {
     return socket.toString();
   }
 
-  public static ServerTaskY run(Consumer<? super ServerTaskY> opts) {
+  public static ServerTask run(Consumer<? super ServerTaskY> opts) {
     final ServerTaskY y;
     y = new ServerTaskY();
 
@@ -87,7 +87,7 @@ final class ServerTaskY {
 
     task.run();
 
-    return y;
+    return task;
   }
 
   public final void host(Consumer<? super HostY> opts) {

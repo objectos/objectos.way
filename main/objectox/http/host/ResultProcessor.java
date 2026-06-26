@@ -108,11 +108,17 @@ class ResultProcessor {
 
     builder.date();
 
+    final int code;
+    code = status.code();
+
     final String reasonPhrase;
     reasonPhrase = status.reasonPhrase();
 
+    final String msg;
+    msg = code + " " + reasonPhrase + "\n";
+
     final Content content;
-    content = Content.of(MediaType.TEXT_PLAIN, reasonPhrase + "\n");
+    content = Content.of(MediaType.TEXT_PLAIN, msg);
 
     builder.send(content);
 

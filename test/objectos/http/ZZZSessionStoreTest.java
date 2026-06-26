@@ -15,25 +15,10 @@
  */
 package objectos.http;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
-
-import java.util.function.Consumer;
-import java.util.random.RandomGenerator;
-import objectos.way.Y;
-import objectos.y.RandomGeneratorY;
-import objectox.http.HttpToken;
-import objectox.http.RequestMethodEnum;
-import objectox.http.Rfc;
-import org.testng.Assert;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
-
 @SuppressWarnings("exports")
 public class ZZZSessionStoreTest {
 
+  /*
   @DataProvider
   public Object[][] safeMethodsProvider() {
     return new Object[][] {
@@ -41,7 +26,7 @@ public class ZZZSessionStoreTest {
         {RequestMethodEnum.HEAD}
     };
   }
-
+  
   @DataProvider
   public Object[][] unsafeMethodsProvider() {
     return new Object[][] {
@@ -51,64 +36,64 @@ public class ZZZSessionStoreTest {
         {RequestMethodEnum.DELETE}
     };
   }
-
+  
   @Test(enabled = false, dataProvider = "unsafeMethodsProvider")
   public void requireCsrfToken01(RequestMethodEnum method) {
     final HttpSessionStoreImpl store;
     store = create(options -> {
       options.csrfGenerator(generator(5L, 6L, 7L, 8L));
-
+  
       options.sessionGenerator(generator(1L, 2L, 3L, 4L));
     });
-
+  
     store.createSession();
-
+  
     final HttpExchange http;
     http = HttpExchange.create(config -> {
       config.method(method);
-
+  
       config.header(HeaderName.COOKIE, cookie("OBJECTOSWAY", 1L, 2L, 3L, 4L));
-
+  
       final HttpToken token;
       token = HttpToken.of32(5L, 6L, 7L, 8L);
-
+  
       config.header(HeaderName.WAY_CSRF_TOKEN, token.toString());
     });
-
+  
     // store.loadSession(http);
-
+  
     store.requireCsrfToken(http);
-
+  
     assertFalse(http.processed());
   }
-
+  
   @Test(enabled = false, dataProvider = "unsafeMethodsProvider")
   public void requireCsrfToken02(RequestMethodEnum method) {
     final HttpSessionStoreImpl store;
     store = create(options -> {
       options.csrfGenerator(generator(5L, 6L, 7L, 8L));
-
+  
       options.sessionGenerator(generator(1L, 2L, 3L, 4L));
     });
-
+  
     store.createSession();
-
+  
     final HttpExchange http;
     http = HttpExchange.create(config -> {
       config.clock(Y.clockFixed());
-
+  
       config.method(method);
-
+  
       // valid session
       config.header(HeaderName.COOKIE, cookie("OBJECTOSWAY", 1L, 2L, 3L, 4L));
-
+  
       // no csrf token
     });
-
+  
     // store.loadSession(http);
-
+  
     store.requireCsrfToken(http);
-
+  
     assertTrue(http.processed());
     assertEquals(http.toString(), """
     HTTP/1.1 403 Forbidden\r
@@ -120,38 +105,38 @@ public class ZZZSessionStoreTest {
     Invalid or missing CSRF token
     """);
   }
-
+  
   @Test(enabled = false, dataProvider = "unsafeMethodsProvider")
   public void requireCsrfToken03(RequestMethodEnum method) {
     final HttpSessionStoreImpl store;
     store = create(options -> {
       options.csrfGenerator(generator(5L, 6L, 7L, 8L));
-
+  
       options.sessionGenerator(generator(1L, 2L, 3L, 4L));
     });
-
+  
     store.createSession();
-
+  
     final HttpExchange http;
     http = HttpExchange.create(config -> {
       config.clock(Y.clockFixed());
-
+  
       config.method(method);
-
+  
       // valid session
       config.header(HeaderName.COOKIE, cookie("OBJECTOSWAY", 1L, 2L, 3L, 4L));
-
+  
       // invalid csrf token
       final HttpToken token;
       token = HttpToken.of32(5L, 6L, 9L, 9L);
-
+  
       config.header(HeaderName.WAY_CSRF_TOKEN, token.toString());
     });
-
+  
     // store.loadSession(http);
-
+  
     store.requireCsrfToken(http);
-
+  
     assertTrue(http.processed());
     assertEquals(http.toString(), """
     HTTP/1.1 403 Forbidden\r
@@ -163,38 +148,38 @@ public class ZZZSessionStoreTest {
     Invalid or missing CSRF token
     """);
   }
-
+  
   @Test(enabled = false, dataProvider = "unsafeMethodsProvider")
   public void requireCsrfToken04(RequestMethodEnum method) {
     final HttpSessionStoreImpl store;
     store = create(options -> {
       options.csrfGenerator(generator(5L, 6L, 7L, 8L));
-
+  
       options.sessionGenerator(generator(1L, 2L, 3L, 4L));
     });
-
+  
     store.createSession();
-
+  
     final HttpExchange http;
     http = HttpExchange.create(config -> {
       config.clock(Y.clockFixed());
-
+  
       config.method(method);
-
+  
       // invalid session
       config.header(HeaderName.COOKIE, cookie("OBJECTOSWAY", 1L, 1L, 1L, 1L));
-
+  
       // invalid csrf token
       final HttpToken token;
       token = HttpToken.of32(2L, 2L, 2L, 2L);
-
+  
       config.header(HeaderName.WAY_CSRF_TOKEN, token.toString());
     });
-
+  
     // store.loadSession(http);
-
+  
     store.requireCsrfToken(http);
-
+  
     assertTrue(http.processed());
     assertEquals(http.toString(), """
     HTTP/1.1 403 Forbidden\r
@@ -205,52 +190,53 @@ public class ZZZSessionStoreTest {
     Invalid or missing CSRF token
     """);
   }
-
+  
   @Test(enabled = false, dataProvider = "safeMethodsProvider")
   public void requireCsrfToken05(RequestMethodEnum method) {
     final HttpSessionStoreImpl store;
     store = create(options -> {
       options.csrfGenerator(generator(5L, 6L, 7L, 8L));
-
+  
       options.sessionGenerator(generator(1L, 2L, 3L, 4L));
     });
-
+  
     store.createSession();
-
+  
     final HttpExchange http;
     http = HttpExchange.create(config -> {
       config.clock(Y.clockFixed());
-
+  
       config.method(method);
-
+  
       // valid session
       config.header(HeaderName.COOKIE, cookie("OBJECTOSWAY", 1L, 2L, 3L, 4L));
-
+  
       // no csrf token
     });
-
+  
     // store.loadSession(http);
-
+  
     store.requireCsrfToken(http);
-
+  
     assertFalse(http.processed());
   }
-
+  
   private HttpSessionStoreImpl create(Consumer<HttpSessionStoreBuilder> options) {
     final HttpSessionStoreBuilder builder;
     builder = new HttpSessionStoreBuilder();
-
+  
     options.accept(builder);
-
+  
     return (HttpSessionStoreImpl) builder.build();
   }
-
+  
   private String cookie(String name, long l0, long l1, long l2, long l3) {
     return HttpY.cookie(name, l0, l1, l2, l3);
   }
-
+  
   private RandomGenerator generator(long... values) {
     return RandomGeneratorY.ofLongs(values);
   }
-
+  
+  */
 }
