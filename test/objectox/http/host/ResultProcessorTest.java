@@ -93,9 +93,9 @@ public class ResultProcessorTest {
         HTTP/1.1 404 Not Found\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
         Content-Type: text/plain; charset=utf-8\r
-        Content-Length: 10\r
+        Content-Length: 14\r
         \r
-        Not Found
+        404 Not Found
         """
     );
   }
@@ -148,9 +148,9 @@ public class ResultProcessorTest {
         HTTP/1.1 400 Bad Request\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
         Content-Type: text/plain; charset=utf-8\r
-        Content-Length: 12\r
+        Content-Length: 16\r
         \r
-        Bad Request
+        400 Bad Request
         """
     );
   }

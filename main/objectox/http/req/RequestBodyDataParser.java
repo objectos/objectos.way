@@ -19,12 +19,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import objectox.http.HttpClientException;
 import objectox.http.HttpClientException.Kind;
 
-final class RequestBodyDateParser {
+final class RequestBodyDataParser {
 
   private final RequestBodySupport bodySupport;
 
@@ -32,7 +33,7 @@ final class RequestBodyDateParser {
 
   private final RequestBodyMeta.Data meta;
 
-  RequestBodyDateParser(RequestBodySupport bodySupport, RequestInputStream input, RequestBodyMeta.Data meta) {
+  RequestBodyDataParser(RequestBodySupport bodySupport, RequestInputStream input, RequestBodyMeta.Data meta) {
     this.bodySupport = bodySupport;
 
     this.input = input;
@@ -79,11 +80,15 @@ final class RequestBodyDateParser {
     }
   }
 
+  private static final OpenOption[] FIXED_FILE = {
+      StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING
+  };
+
   private RequestBodyData parseFixedFile(long length) throws IOException {
     final Path file;
     file = bodySupport.file();
 
-    try (OutputStream output = Files.newOutputStream(file, StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE)) {
+    try (OutputStream output = Files.newOutputStream(file, FIXED_FILE)) {
       copy(length, output);
     }
 

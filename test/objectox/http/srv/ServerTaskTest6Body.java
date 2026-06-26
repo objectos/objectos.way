@@ -177,7 +177,7 @@ public class ServerTaskTest6Body {
             return ok;
           });
 
-          opts.requestBodyConfig(directory);
+          opts.requestBodyConfig(file);
 
           opts.socket("""
           GET / HTTP/1.1\r
@@ -223,7 +223,7 @@ public class ServerTaskTest6Body {
             return ok;
           });
 
-          opts.requestBodyConfig(directory);
+          opts.requestBodyConfig(file);
 
           opts.socket(Y.slowStream(1, """
           GET / HTTP/1.1\r

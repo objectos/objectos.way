@@ -115,7 +115,7 @@ public final class ServerLoopBuilder
 
         noteSink,
 
-        requestBodyConfig,
+        requestBodyConfig != null ? requestBodyConfig : RequestBodyConfigBuilder.standard(),
 
         serverSocket,
 

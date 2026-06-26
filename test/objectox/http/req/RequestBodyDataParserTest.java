@@ -63,14 +63,14 @@ public class RequestBodyDataParserTest {
       return bodyDirectory.resolve(name);
     }
 
-    final RequestBodyDateParser build() {
+    final RequestBodyDataParser build() {
       final RequestBodyConfig config;
       config = new RequestBodyConfig(this, bodyMemoryMax, bodySizeMax);
 
       final RequestBodySupport support;
       support = new RequestBodySupport(config);
 
-      return new RequestBodyDateParser(support, input, meta);
+      return new RequestBodyDataParser(support, input, meta);
     }
   }
 
@@ -91,7 +91,7 @@ public class RequestBodyDataParserTest {
 
     config.accept(c);
 
-    final RequestBodyDateParser parser;
+    final RequestBodyDataParser parser;
     parser = c.build();
 
     return parser.parse();

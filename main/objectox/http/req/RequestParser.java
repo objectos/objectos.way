@@ -94,8 +94,8 @@ public final class RequestParser {
     bodyMeta = bodyMetaParser.parse();
 
     // body data
-    final RequestBodyDateParser bodyDataParser;
-    bodyDataParser = new RequestBodyDateParser(
+    final RequestBodyDataParser bodyDataParser;
+    bodyDataParser = new RequestBodyDataParser(
         requestBodySupport,
 
         requestInputStream,

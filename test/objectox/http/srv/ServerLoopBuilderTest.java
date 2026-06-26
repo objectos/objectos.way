@@ -20,6 +20,7 @@ import static org.testng.Assert.assertEquals;
 import java.io.IOException;
 import java.time.Clock;
 import objectos.way.Y;
+import objectox.http.req.RequestBodyConfig;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -100,6 +101,56 @@ public class ServerLoopBuilderTest {
 
     try (var subject = builder.unstarted()) {
       assertEquals(subject.clock, Y.clockFixed());
+    }
+  }
+
+  @Test
+  public void requestBody01() {
+    final ServerLoopBuilder builder;
+    builder = new ServerLoopBuilder();
+
+    try {
+      builder.requestBody(null);
+
+      Assert.fail("It should have thrown");
+    } catch (NullPointerException expected) {
+      final String msg;
+      msg = expected.getMessage();
+
+      assertEquals(msg, "Cannot invoke \"java.util.function.Consumer.accept(Object)\" because \"opts\" is null");
+    }
+  }
+
+  @Test
+  public void requestBody02() throws IOException {
+    final ServerLoopBuilder builder;
+    builder = new ServerLoopBuilder();
+
+    try (var subject = builder.unstarted()) {
+      final RequestBodyConfig config;
+      config = subject.requestBodyConfig;
+
+      assertEquals(config.memoryMax(), 32 * 1024);
+      assertEquals(config.sizeMax(), 10 * 1024 * 1024);
+    }
+  }
+
+  @Test
+  public void requestBody03() throws IOException {
+    final ServerLoopBuilder builder;
+    builder = new ServerLoopBuilder();
+
+    builder.requestBody(opts -> {
+      opts.memoryMax(6789);
+      opts.sizeMax(123456L);
+    });
+
+    try (var subject = builder.unstarted()) {
+      final RequestBodyConfig config;
+      config = subject.requestBodyConfig;
+
+      assertEquals(config.memoryMax(), 6789);
+      assertEquals(config.sizeMax(), 123456L);
     }
   }
 

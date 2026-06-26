@@ -54,7 +54,7 @@ public final class ServerLoop extends Thread implements Server {
 
   private final Note.Sink noteSink;
 
-  private final RequestBodyConfig requestBodyConfig;
+  final RequestBodyConfig requestBodyConfig;
 
   private final ServerSocket serverSocket;
 

@@ -28,6 +28,10 @@ public final class RequestBodyConfigBuilder implements RequestBodyOptions {
 
   private long sizeMax = 10 * 1024 * 1024;
 
+  public static RequestBodyConfig standard() {
+    return new RequestBodyConfigBuilder().build();
+  }
+
   public final RequestBodyConfig build() {
     return new RequestBodyConfig(files, memoryMax, sizeMax);
   }
