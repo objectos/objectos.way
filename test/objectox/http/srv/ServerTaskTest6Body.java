@@ -161,14 +161,8 @@ public class ServerTaskTest6Body {
     final Path directory;
     directory = PathY.nextDir();
 
-    final long id;
-    id = Thread.currentThread().threadId();
-
-    final String filename;
-    filename = "%019d.body".formatted(id);
-
     final Path file;
-    file = directory.resolve(filename);
+    file = directory.resolve("foo.tmp");
 
     final String content;
     content = ".".repeat(1536);
@@ -183,7 +177,7 @@ public class ServerTaskTest6Body {
             return ok;
           });
 
-          opts.requestBodySupportFactory(directory);
+          opts.requestBodyConfig(directory);
 
           opts.socket("""
           GET / HTTP/1.1\r
@@ -213,14 +207,8 @@ public class ServerTaskTest6Body {
     final Path directory;
     directory = PathY.nextDir();
 
-    final long id;
-    id = Thread.currentThread().threadId();
-
-    final String filename;
-    filename = "%019d.body".formatted(id);
-
     final Path file;
-    file = directory.resolve(filename);
+    file = directory.resolve("slow.tmp");
 
     final String content;
     content = ".".repeat(1536);
@@ -235,7 +223,7 @@ public class ServerTaskTest6Body {
             return ok;
           });
 
-          opts.requestBodySupportFactory(directory);
+          opts.requestBodyConfig(directory);
 
           opts.socket(Y.slowStream(1, """
           GET / HTTP/1.1\r

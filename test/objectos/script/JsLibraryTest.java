@@ -15,11 +15,12 @@
  */
 package objectos.script;
 
-import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import objectos.http.Content;
 import org.testng.annotations.Test;
 
 public class JsLibraryTest {
@@ -29,16 +30,19 @@ public class JsLibraryTest {
     final JsLibrary library;
     library = JsLibrary.of();
 
-    assertEquals(library.contentType(), "text/javascript; charset=utf-8");
-    assertEquals(library.charset(), StandardCharsets.UTF_8);
+    final Content content;
+    content = library.toContent();
 
-    final StringBuilder out;
-    out = new StringBuilder();
+    final ByteArrayOutputStream out;
+    out = new ByteArrayOutputStream();
 
-    library.writeTo(out);
+    content.binaryTo(out);
+
+    final byte[] bytes;
+    bytes = out.toByteArray();
 
     final String result;
-    result = out.toString();
+    result = new String(bytes, StandardCharsets.UTF_8);
 
     assertTrue(result.contains("Objectos Software LTDA"));
     assertTrue(result.contains("END: private private"));

@@ -13,17 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectox.http;
 
 import static org.testng.Assert.assertEquals;
 
 import org.testng.annotations.Test;
 
-public class HttpResponseStatusTest {
+public class RfcTest {
 
   @Test
-  public void reasonPhrase() {
-    assertEquals(Status.INTERNAL_SERVER_ERROR.reasonPhrase(), "Internal Server Error");
+  public void requiredHexDigits() {
+    assertEquals(Rfc.requiredHexDigits(0b0000), 1);
+    assertEquals(Rfc.requiredHexDigits(0b0001), 1);
+    assertEquals(Rfc.requiredHexDigits(0b1000), 1);
+    assertEquals(Rfc.requiredHexDigits(0b1111), 1);
+    assertEquals(Rfc.requiredHexDigits(0b1_0000), 2);
   }
 
 }

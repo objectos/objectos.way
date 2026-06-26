@@ -25,8 +25,9 @@ import objectox.http.media.ContentBytes;
 /// HTTP protocol.
 public sealed interface Content
     extends
+    BinaryObject,
     Result,
-    BinaryObject
+    RoutingOption
     permits
     ContentBinaryObject,
     ContentBytes {

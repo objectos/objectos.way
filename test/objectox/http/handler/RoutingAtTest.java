@@ -141,4 +141,22 @@ public class RoutingAtTest {
     );
   }
 
+  @Test(description = "at('/foo', content)")
+  public void testCase06() {
+    final Content content;
+    content = Content.of(MediaType.TEXT_PLAIN, "ok\n");
+
+    assertEquals(
+        create(opts -> {
+          opts.option(content);
+        }),
+
+        new HandlerRoute(
+            segments,
+
+            new HandlerResult(content)
+        )
+    );
+  }
+
 }

@@ -20,6 +20,7 @@ import java.io.UncheckedIOException;
 import java.util.function.Consumer;
 import objectos.http.Handler;
 import objectos.http.SessionOptions;
+import objectos.http.StaticFilesOptions;
 
 public final class HostY implements HostGlobals {
 
@@ -28,6 +29,8 @@ public final class HostY implements HostGlobals {
   public String name;
 
   public Consumer<? super SessionOptions> session;
+
+  public Consumer<? super StaticFilesOptions> staticFiles;
 
   public static Host create(Consumer<? super HostY> opts) {
     final HostY y;
@@ -43,12 +46,18 @@ public final class HostY implements HostGlobals {
       final HostStageBuilder builder;
       builder = new HostStageBuilder();
 
-      builder.handler(handler);
+      if (handler != null) {
+        builder.handler(handler);
+      }
 
       builder.name(name);
 
       if (session != null) {
         builder.session(session);
+      }
+
+      if (staticFiles != null) {
+        builder.staticFiles(staticFiles);
       }
 
       final HostStage stage;

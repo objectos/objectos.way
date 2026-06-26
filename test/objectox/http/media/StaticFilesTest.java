@@ -50,7 +50,7 @@ public class StaticFilesTest {
     final StaticFilesStageBuilder builder;
     builder = new StaticFilesStageBuilder();
 
-    builder.etag = attrs -> {
+    builder.etag(attrs -> {
       final Clock clock;
       clock = Y.clockFixed();
 
@@ -64,7 +64,7 @@ public class StaticFilesTest {
       etag = new StaticFilesETag(0L);
 
       return etag.apply(modified);
-    };
+    });
 
     more.accept(builder);
 
@@ -133,7 +133,7 @@ public class StaticFilesTest {
     subject = create(opts -> {
       opts.contentTypes(".txt: text/plain");
 
-      opts.etag = _ -> "foo-bar";
+      opts.etag(_ -> "foo-bar");
     });
 
     final Request request;

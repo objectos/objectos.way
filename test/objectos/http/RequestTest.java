@@ -19,19 +19,16 @@ import static org.testng.Assert.assertEquals;
 
 import java.util.List;
 import java.util.function.Consumer;
-import objectos.way.Html;
-import objectos.way.Media;
-import objectos.way.Y;
 import objectox.http.RequestMethodEnum;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class HttpExchangeTest {
+public class RequestTest {
 
   @Test
   public void formParam01() {
-    HttpExchange http;
-    http = HttpExchange.create(config -> {
+    Request http;
+    http = Request.create(config -> {
       config.formParam("p1", "abc");
 
       config.formParam("p2", "val1");
@@ -46,8 +43,8 @@ public class HttpExchangeTest {
 
   @Test
   public void formParam02() {
-    HttpExchange http;
-    http = HttpExchange.create(config -> {
+    Request http;
+    http = Request.create(config -> {
       config.formParam("i0", Integer.MAX_VALUE);
       config.formParam("i1", Integer.MIN_VALUE);
       config.formParam("l0", Long.MAX_VALUE);
@@ -62,8 +59,8 @@ public class HttpExchangeTest {
 
   @Test
   public void header01() {
-    HttpExchange http;
-    http = HttpExchange.create(config -> {
+    Request http;
+    http = Request.create(config -> {
       config.header(HeaderName.CONTENT_TYPE, "application/x-www-form-urlencoded");
       config.header(HeaderName.CONTENT_LENGTH, "0");
 
@@ -78,7 +75,7 @@ public class HttpExchangeTest {
 
   @Test(description = "config.header should reject null names", expectedExceptions = NullPointerException.class)
   public void header02() {
-    HttpExchange.create(config -> {
+    Request.create(config -> {
       config.header(null, "application/x-www-form-urlencoded");
     });
 
@@ -87,7 +84,7 @@ public class HttpExchangeTest {
 
   @Test(description = "config.header should reject null values", expectedExceptions = NullPointerException.class)
   public void header03() {
-    HttpExchange.create(config -> {
+    Request.create(config -> {
       config.header(HeaderName.CONTENT_TYPE, null);
     });
 
@@ -99,8 +96,8 @@ public class HttpExchangeTest {
     HeaderName foo = HeaderName.of("Foo");
     HeaderName name = HeaderName.of("Name");
 
-    HttpExchange http;
-    http = HttpExchange.create(config -> {
+    Request http;
+    http = Request.create(config -> {
       config.header(foo, "bar");
       config.header(foo, "another bar");
       config.header(name, "some value");
@@ -110,38 +107,34 @@ public class HttpExchangeTest {
     assertEquals(http.header(name), "some value");
   }
 
-  private final HttpHandler moduleInterop = HttpHandler.create(r -> {
-    r.at("/tc01", Http.handler(http -> http.ok(Media.Bytes.textPlain("TC01"))));
+  private final Content content = Content.of(MediaType.TEXT_PLAIN, "TC01");
+
+  private final Handler moduleInterop = Handler.create(r -> {
+    r.at("/tc01", content);
   });
 
   @Test
   public void moduleInterop01() {
-    HttpExchange http;
+    final Request http;
     http = http(config -> {
       config.method(RequestMethodEnum.GET);
 
       config.path("/tc01");
     });
 
-    moduleInterop.handle(http);
+    final Result res;
+    res = moduleInterop.handle(http);
 
     assertEquals(
-        http.toString(),
+        res,
 
-        """
-        HTTP/1.1 200 OK\r
-        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-        Content-Type: text/plain; charset=utf-8\r
-        Content-Length: 4\r
-        \r
-        TC01\
-        """
+        content
     );
   }
 
   @Test
   public void pathParam01() {
-    HttpExchange http;
+    Request http;
     http = http(config -> {
       config.pathParam("id", "123");
     });
@@ -170,43 +163,37 @@ public class HttpExchangeTest {
 
   @Test
   public void sessionAttr01() {
-    HttpExchange http;
+    Request http;
     http = http(config -> {
       config.path("/restricted01");
 
-      config.session(User.class, new User("foo"));
+      config.sessionAttr(User.class, new User("foo"));
     });
 
-    final HttpHandler handler;
+    final Handler handler;
     handler = this::requireUser;
 
-    handler.handle(http);
+    final Result res;
+    res = handler.handle(http);
 
-    assertEquals(http.toString(), """
-    HTTP/1.1 200 OK\r
-    Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    Content-Type: text/plain; charset=utf-8\r
-    Content-Length: 3\r
-    \r
-    OK
-    """);
+    assertEquals(res, Content.of(MediaType.TEXT_PLAIN, "OK\n"));
   }
 
-  private void requireUser(HttpExchange http) {
+  private Result requireUser(Request http) {
     final User user;
-    user = http.session(User.class);
+    user = http.sessionAttr(User.class);
 
     if (user == null) {
-      http.found("/login");
+      return Redirection.found("/login");
     } else {
-      http.ok(Media.Bytes.textPlain("OK\n"));
+      return Content.of(MediaType.TEXT_PLAIN, "OK\n");
     }
   }
 
   @Test
   public void queryParam01() {
-    HttpExchange http;
-    http = HttpExchange.create(config -> {
+    Request http;
+    http = Request.create(config -> {
       config.queryParam("p1", "abc");
 
       config.queryParam("p2", "val1");
@@ -222,8 +209,8 @@ public class HttpExchangeTest {
 
   @Test
   public void queryParam02() {
-    HttpExchange http;
-    http = HttpExchange.create(config -> {
+    Request http;
+    http = Request.create(config -> {
       config.queryParam("i0", Integer.MAX_VALUE);
       config.queryParam("i1", Integer.MIN_VALUE);
       config.queryParam("l0", Long.MAX_VALUE);
@@ -249,73 +236,19 @@ public class HttpExchangeTest {
 
   @Test
   public void testCase01() {
-    HttpExchange http;
-    http = HttpExchange.create(config -> {
+    Request http;
+    http = Request.create(config -> {
       config.method(RequestMethodEnum.GET);
 
       config.path("/foo");
 
-      config.req(String.class, "Hello");
+      config.attr(String.class, "Hello");
     });
 
     assertEquals(http.method(), RequestMethodEnum.GET);
     assertEquals(http.path(), "/foo");
     assertEquals(http.pathParam("path"), null);
-    assertEquals(http.req(String.class), "Hello");
-  }
-
-  @Test(description = "Html.Template response")
-  public void testCase02() {
-    class Template extends Html.Template {
-      @Override
-      protected void render() {
-        div("tc02");
-      }
-    }
-
-    HttpExchange http;
-    http = http(_ -> {});
-
-    http.ok(new Template());
-
-    assertEquals(
-        http.toString(),
-
-        """
-        HTTP/1.1 200 OK\r
-        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-        Content-Type: text/html; charset=utf-8\r
-        Transfer-Encoding: chunked\r
-        \r
-        010\r
-        <div>tc02</div>
-        \r
-        0\r
-        \r
-        """
-    );
-  }
-
-  @Test(description = "respond method")
-  public void testCase03() {
-    HttpExchange http;
-    http = http(_ -> {});
-
-    http.error(Status.BAD_REQUEST);
-
-    assertEquals(
-        http.toString(),
-
-        """
-        HTTP/1.1 400 Bad Request\r
-        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-        Connection: close\r
-        Content-Type: text/plain; charset=utf-8\r
-        Content-Length: 16\r
-        \r
-        400 Bad Request
-        """
-    );
+    assertEquals(http.attr(String.class), "Hello");
   }
 
   @Test(enabled = false, description = "rawPath")
@@ -327,8 +260,8 @@ public class HttpExchangeTest {
   }
 
   private String rawPath(String string) {
-    HttpExchange http;
-    http = HttpExchange.create(config -> config.path(string));
+    Request http;
+    http = Request.create(config -> config.path(string));
 
     return http.rawPath();
   }
@@ -342,8 +275,8 @@ public class HttpExchangeTest {
   }
 
   private String rawQuery0(String... values) {
-    HttpExchange http;
-    http = HttpExchange.create(config -> {
+    Request http;
+    http = Request.create(config -> {
       for (int i = 0; i < values.length;) {
         String name;
         name = values[i++];
@@ -380,46 +313,9 @@ public class HttpExchangeTest {
     rawQueryWith("page", null);
   }
 
-  @Test
-  public void testable01() {
-    final Html.Component html = m -> {
-      m.testableH1("Testable");
-      m.div("ignore me!");
-      m.testableH2("Prints only testable");
-    };
-
-    final HttpExchange http;
-    http = HttpExchange.create(config -> {
-      config.clock(Y.clockFixed());
-
-      config.testable();
-    });
-
-    final HttpHandler handler;
-    handler = x -> x.ok(html);
-
-    handler.handle(http);
-
-    assertEquals(
-        http.toString(),
-
-        """
-        HTTP/1.1 200 OK\r
-        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-        Content-Type: text/html; charset=utf-8\r
-        Transfer-Encoding: chunked\r
-        \r
-        # Testable
-
-        ## Prints only testable
-
-        """
-    );
-  }
-
   private String rawQueryWith(String newName, String newValue, String... values) {
-    HttpExchange http;
-    http = HttpExchange.create(config -> {
+    Request http;
+    http = Request.create(config -> {
       for (int i = 0; i < values.length;) {
         String name;
         name = values[i++];
@@ -434,10 +330,8 @@ public class HttpExchangeTest {
     return http.rawQueryWith(newName, newValue);
   }
 
-  private HttpExchange http(Consumer<? super HttpExchange.Options> more) {
-    return HttpExchange.create(config -> {
-      config.clock(Y.clockFixed());
-
+  private Request http(Consumer<? super RequestOptions> more) {
+    return Request.create(config -> {
       more.accept(config);
     });
   }

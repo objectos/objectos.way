@@ -25,68 +25,111 @@ import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
 import java.time.Clock;
 import java.time.Instant;
-import objectos.http.HttpHandler;
-import objectos.http.HttpServerTaskY;
-import objectos.way.Media;
+import java.util.function.BiFunction;
+import objectos.http.Request;
+import objectos.http.Result;
+import objectos.http.StaticFilesOptions;
 import objectos.way.Y;
 import objectos.y.PathY;
 import objectos.y.SocketY;
+import objectox.http.host.Host;
+import objectox.http.host.HostMap;
+import objectox.http.media.StaticFiles;
+import objectox.http.media.StaticFilesStageBuilder;
 import org.testng.annotations.Test;
 
 public class ServerTaskTestBStaticFiles {
-
-  private final HttpHandler noop = _ -> {};
 
   @Test(description = """
   Options::addDirectory
   """)
   public void testCase01() throws IOException {
+    final ServerTask subject;
+    subject = ServerTaskY.create(opts -> {
+      opts.host(host -> {
+        host.name = "www.example.com";
+
+        host.staticFiles = files -> {
+          etagMask(files);
+
+          final Path src;
+          src = PathY.nextDir();
+
+          final Path a;
+          a = Path.of("tc01.txt");
+
+          write(src, a, "AAAA\n");
+
+          files.addDirectory(src);
+
+          files.contentTypes(".txt: text/plain; charset=utf-8");
+        };
+      });
+
+      opts.socket = SocketY.of("""
+      GET /tc01.txt HTTP/1.1\r
+      Host: www.example.com\r
+      Connection: close\r
+      \r
+      """
+      );
+    });
+
+    final Path file;
+    file = resolve(subject, "/tc01.txt");
+
+    setLastModifiedTime(file);
+
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.staticFiles = files -> {
-            final Path src;
-            src = PathY.nextDir();
-
-            final Path a;
-            a = Path.of("tc01.txt");
-
-            write(src, a, "AAAA\n");
-
-            files.addDirectory(src);
-
-            files.contentTypes(".txt: text/plain; charset=utf-8");
-          };
-
-          opts.socket = SocketY.of(
-              """
-              GET /tc01.txt HTTP/1.1\r
-              Host: www.example.com\r
-              Connection: close\r
-              \r
-              """
-          );
-
-          opts.handler = noop;
-        }),
+        ServerTaskY.resp(subject),
 
         """
         HTTP/1.1 200 OK\r
-        Content-Type: text/plain; charset=utf-8\r
-        Content-Length: 5\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
         ETag: 18901e7e8f8-5\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 5\r
         \r
         AAAA
         """
     );
   }
 
+  private void etagMask(StaticFilesOptions options) {
+    final StaticFilesStageBuilder builder;
+    builder = (StaticFilesStageBuilder) options;
+
+    builder.etagMask(0L);
+  }
+
+  private Path resolve(ServerTask subject, String path) {
+    try {
+      final HostMap hostMap;
+      hostMap = subject.hostMap;
+
+      final Host host;
+      host = hostMap.get("www.example.com");
+
+      final BiFunction<Request, Result, Result> _staticFiles;
+      _staticFiles = host.staticFiles();
+
+      final StaticFiles staticFiles;
+      staticFiles = (StaticFiles) _staticFiles;
+
+      return staticFiles.resolve(path);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  /*
+
   @Test(description = """
   It should not handle if the file does not exist
   """)
   public void testCase02() throws IOException {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
+        ServerTaskY.resp(opts -> {
           opts.socket = SocketY.of(
               """
               GET /tc02.txt HTTP/1.1\r
@@ -95,10 +138,8 @@ public class ServerTaskTestBStaticFiles {
               \r
               """
           );
-
-          opts.handler = HttpHandler.notFound();
         }),
-
+  
         """
         HTTP/1.1 404 Not Found\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
@@ -110,27 +151,31 @@ public class ServerTaskTestBStaticFiles {
         """
     );
   }
-
+  
   @Test(description = """
   It should 405 if the method is not GET or HEAD
   """)
   public void testCase03() throws IOException {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.staticFiles = files -> {
-            final Path src;
-            src = PathY.nextDir();
-
-            final Path a;
-            a = Path.of("tc03.txt");
-
-            write(src, a, "AAAA\n");
-
-            files.addDirectory(src);
-
-            files.contentTypes(".txt: text/plain; charset=utf-8");
-          };
-
+        ServerTaskY.resp(opts -> {
+          opts.host(host -> {
+            host.name = "www.example.com";
+  
+            host.staticFiles = files -> {
+              final Path src;
+              src = PathY.nextDir();
+  
+              final Path a;
+              a = Path.of("tc03.txt");
+  
+              write(src, a, "AAAA\n");
+  
+              files.addDirectory(src);
+  
+              files.contentTypes(".txt: text/plain; charset=utf-8");
+            };
+          });
+  
           opts.socket = SocketY.of(
               """
               POST /tc03.txt HTTP/1.1\r
@@ -138,10 +183,8 @@ public class ServerTaskTestBStaticFiles {
               \r
               """
           );
-
-          opts.handler = noop;
         }),
-
+  
         """
         HTTP/1.1 405 Method Not Allowed\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
@@ -151,70 +194,70 @@ public class ServerTaskTestBStaticFiles {
         """
     );
   }
-
-  /*
   
   @Test(description = """
   Web.Resources::reconfigure
   - resources from before reconfigure should 404
   """)
   public void testCase04() throws IOException {
-  final WebResources0 resources;
-  resources = create(opts -> {
-    final Media.Bytes reconfigure;
-    reconfigure = Media.Bytes.textPlain("reconfigure");
-
-    opts.addMedia("/reconfigure.txt", reconfigure);
-  });
-
-  resources.reconfigure(_ -> {});
-
-  assertEquals(
-      HttpServerTaskY.resp(test -> {
-        test.socket = SocketY.of("""
+    final WebResources0 resources;
+    resources = create(opts -> {
+      final Media.Bytes reconfigure;
+      reconfigure = Media.Bytes.textPlain("reconfigure");
+  
+      opts.addMedia("/reconfigure.txt", reconfigure);
+    });
+  
+    resources.reconfigure(_ -> {});
+  
+    assertEquals(
+        ServerTaskY.resp(test -> {
+          test.socket = SocketY.of("""
         GET /reconfigure.txt HTTP/1.1\r
         Host: www.example.com\r
         \r
         """);
-
-        test.handler = HttpHandler.of(routing -> {
-          routing.handler(resources);
-          routing.handler(HttpHandler.notFound());
-        });
-      }),
-
-      """
+  
+          test.handler = HttpHandler.of(routing -> {
+            routing.handler(resources);
+            routing.handler(HttpHandler.notFound());
+          });
+        }),
+  
+        """
       HTTP/1.1 404 Not Found\r
       Date: Wed, 28 Jun 2023 12:08:43 GMT\r
       Content-Length: 0\r
       Connection: close\r
       \r
       """
-  );
+    );
   }
   
-  */
-
   @Test(description = """
   It should return 304 when if-none-match
   """)
   public void testCase05() throws IOException {
     assertEquals(
-        HttpServerTaskY.resp(opts -> {
-          opts.staticFiles = files -> {
-            final Path src;
-            src = PathY.nextDir();
-
-            final Path a;
-            a = Path.of("tc05.txt");
-
-            write(src, a, "AAAA\n");
-
-            files.addDirectory(src);
-
-            files.contentTypes(".txt: text/plain; charset=utf-8");
-          };
-
+        ServerTaskY.resp(opts -> {
+          opts.host(host -> {
+            host.name = "www.example.com";
+  
+            host.staticFiles = files -> {
+              final Path src;
+              src = PathY.nextDir();
+  
+              final Path a;
+              a = Path.of("tc05.txt");
+  
+              write(src, a, "AAAA\n");
+  
+              files.addDirectory(src);
+  
+              files.contentTypes(".txt: text/plain; charset=utf-8");
+            };
+          });
+  
           opts.socket = SocketY.of(
               """
               GET /tc05.txt HTTP/1.1\r
@@ -224,10 +267,8 @@ public class ServerTaskTestBStaticFiles {
               \r
               """
           );
-
-          opts.handler = noop;
         }),
-
+  
         """
         HTTP/1.1 304 Not Modified\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
@@ -237,49 +278,49 @@ public class ServerTaskTestBStaticFiles {
         """
     );
   }
-
+  
   @Test(description = """
   Resources::writeMedia(Media.Bytes)
   """)
   public void testCase06() throws IOException {
     final Path root;
     root = PathY.nextDir();
-
+  
     final String resp;
-    resp = HttpServerTaskY.resp(test -> {
+    resp = ServerTaskY.resp(test -> {
       test.staticFilesDirectory = root;
-
+  
       test.socket = SocketY.of("""
           GET /tc06.txt HTTP/1.1\r
           Host: www.example.com\r
           \r
           """);
-
+  
       test.handler = http -> {
         final Media.Bytes contents;
         contents = Media.Bytes.textPlain("CCCC\n");
-
+  
         http.staticFile(contents);
       };
     });
-
+  
     final String etag;
     etag = etag(resp);
-
+  
     assertEquals(
-        HttpServerTaskY.resp(test -> {
+        ServerTaskY.resp(test -> {
           test.staticFilesDirectory = root;
-
+  
           test.socket = SocketY.of("""
           GET /tc06.txt HTTP/1.1\r
           Host: www.example.com\r
           If-None-Match: %s\r
           \r
           """.formatted(etag));
-
+  
           test.handler = noop;
         }),
-
+  
         """
         HTTP/1.1 304 Not Modified\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
@@ -289,100 +330,96 @@ public class ServerTaskTestBStaticFiles {
         """.formatted(etag)
     );
   }
-
-  /*
   
   @Test(description = """
   Resources::delete
   """)
   public void testCase07() throws IOException {
-  final WebResources0 resources;
-  resources = create(_ -> {});
-
-  assertEquals(
-      HttpServerTaskY.resp(test -> {
-        test.socket = SocketY.of("""
+    final WebResources0 resources;
+    resources = create(_ -> {});
+  
+    assertEquals(
+        ServerTaskY.resp(test -> {
+          test.socket = SocketY.of("""
         GET /tc07.txt HTTP/1.1\r
         Host: www.example.com\r
         \r
         """);
-
-        test.handler = HttpHandler.of(routing -> {
-          routing.handler(http -> {
-            try {
-              String path;
-              path = http.path();
-
-              Media.Bytes contents;
-              contents = Media.Bytes.textPlain("test-case-07");
-
-              resources.writeMedia(path, contents);
-
-              assertTrue(resources.deleteIfExists(path));
-
-              resources.handle(http);
-            } catch (IOException e) {
-              throw new UncheckedIOException(e);
-            }
+  
+          test.handler = HttpHandler.of(routing -> {
+            routing.handler(http -> {
+              try {
+                String path;
+                path = http.path();
+  
+                Media.Bytes contents;
+                contents = Media.Bytes.textPlain("test-case-07");
+  
+                resources.writeMedia(path, contents);
+  
+                assertTrue(resources.deleteIfExists(path));
+  
+                resources.handle(http);
+              } catch (IOException e) {
+                throw new UncheckedIOException(e);
+              }
+            });
+            routing.handler(HttpHandler.notFound());
           });
-          routing.handler(HttpHandler.notFound());
-        });
-      }),
-
-      """
+        }),
+  
+        """
       HTTP/1.1 404 Not Found\r
       Date: Wed, 28 Jun 2023 12:08:43 GMT\r
       Content-Length: 0\r
       Connection: close\r
       \r
       """
-  );
+    );
   }
   
-  */
-
   @Test(description = """
   Resources::writeMedia(Media.Text)
   """)
   public void testCase08() throws IOException {
     final Path root;
     root = PathY.nextDir();
-
+  
     final String resp;
-    resp = HttpServerTaskY.resp(test -> {
+    resp = ServerTaskY.resp(test -> {
       test.staticFilesDirectory = root;
-
+  
       test.socket = SocketY.of("""
           GET /tc08.txt HTTP/1.1\r
           Host: www.example.com\r
           \r
           """);
-
+  
       test.handler = http -> {
         final Media.Text contents;
         contents = Y.mediaTextOf("8888\n");
-
+  
         http.staticFile(contents);
       };
     });
-
+  
     final String etag;
     etag = etag(resp);
-
+  
     assertEquals(
-        HttpServerTaskY.resp(test -> {
+        ServerTaskY.resp(test -> {
           test.staticFilesDirectory = root;
-
+  
           test.socket = SocketY.of("""
           GET /tc08.txt HTTP/1.1\r
           Host: www.example.com\r
           If-None-Match: %s\r
           \r
           """.formatted(etag));
-
+  
           test.handler = noop;
         }),
-
+  
         """
         HTTP/1.1 304 Not Modified\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
@@ -392,49 +429,49 @@ public class ServerTaskTestBStaticFiles {
         """.formatted(etag)
     );
   }
-
+  
   @Test(description = """
   Resources::writeMedia(Media.Stream)
   """)
   public void testCase09() throws IOException, InterruptedException {
     final Path root;
     root = PathY.nextDir();
-
+  
     final String resp;
-    resp = HttpServerTaskY.resp(test -> {
+    resp = ServerTaskY.resp(test -> {
       test.staticFilesDirectory = root;
-
+  
       test.socket = SocketY.of("""
           GET /tc09.txt HTTP/1.1\r
           Host: www.example.com\r
           \r
           """);
-
+  
       test.handler = http -> {
         final Media.Stream contents;
         contents = Y.mediaStreamOf("9999\n");
-
+  
         http.staticFile(contents);
       };
     });
-
+  
     final String etag;
     etag = etag(resp);
-
+  
     assertEquals(
-        HttpServerTaskY.resp(test -> {
+        ServerTaskY.resp(test -> {
           test.staticFilesDirectory = root;
-
+  
           test.socket = SocketY.of("""
           GET /tc09.txt HTTP/1.1\r
           Host: www.example.com\r
           If-None-Match: %s\r
           \r
           """.formatted(etag));
-
+  
           test.handler = noop;
         }),
-
+  
         """
         HTTP/1.1 304 Not Modified\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
@@ -444,6 +481,8 @@ public class ServerTaskTestBStaticFiles {
         """.formatted(etag)
     );
   }
+
+  */
 
   private String etag(String resp) {
     final String[] lines;

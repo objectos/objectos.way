@@ -17,9 +17,11 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import objectos.http.Content;
 import org.testng.annotations.Test;
 
 public class HtmlTemplateTest {
@@ -1354,13 +1356,21 @@ public class HtmlTemplateTest {
       }
     };
 
-    assertEquals(template.contentType(), "text/html; charset=utf-8");
+    final Content content;
+    content = template.toContent();
 
-    assertEquals(template.charset(), StandardCharsets.UTF_8);
+    final ByteArrayOutputStream out;
+    out = new ByteArrayOutputStream();
 
-    template.writeTo(sb);
+    content.binaryTo(out);
 
-    assertEquals(sb.toString(), """
+    final byte[] bytes;
+    bytes = out.toByteArray();
+
+    final String result;
+    result = new String(bytes, StandardCharsets.UTF_8);
+
+    assertEquals(result, """
     <!DOCTYPE html>
     <html></html>
     """);

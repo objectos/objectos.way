@@ -119,7 +119,7 @@ public class ServerTaskTest7Form {
             return ok;
           });
 
-          opts.requestBodySupportFactory(directory);
+          opts.requestBodyConfig(file);
 
           opts.socket("""
           POST / HTTP/1.1\r
@@ -179,7 +179,7 @@ public class ServerTaskTest7Form {
             return ok;
           });
 
-          opts.requestBodySupportFactory(directory);
+          opts.requestBodyConfig(file);
 
           opts.socket(Y.slowStream(1, """
           POST / HTTP/1.1\r
@@ -347,7 +347,7 @@ public class ServerTaskTest7Form {
             return ok;
           });
 
-          opts.requestBodySupportFactory(PathY.nextDir(), 1);
+          opts.requestBodyConfig(PathY.nextFile(), 1);
 
           opts.socket("""
           POST / HTTP/1.1\r
@@ -387,7 +387,7 @@ public class ServerTaskTest7Form {
             return ok;
           });
 
-          opts.requestBodySupportFactory(PathY.nextDir(), 1);
+          opts.requestBodyConfig(PathY.nextFile(), 1);
 
           opts.socket(Y.slowStream(1, """
           POST / HTTP/1.1\r
@@ -500,7 +500,7 @@ public class ServerTaskTest7Form {
   public void appFormPercentInvalidWithFile(String payload, String description) {
     assertEquals(
         ServerTaskY.resp(opts -> {
-          opts.requestBodySupportFactory(PathY.nextDir(), 1);
+          opts.requestBodyConfig(PathY.nextFile(), 1);
 
           opts.socket = SocketY.of(
               """

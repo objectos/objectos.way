@@ -17,6 +17,7 @@ package objectox.http.srv;
 
 import java.io.IOException;
 import java.net.Socket;
+import objectos.internal.VisibleForTesting;
 import objectos.way.Note;
 import objectox.http.host.HostMap;
 import objectox.http.req.RequestBodyConfig;
@@ -29,7 +30,8 @@ final class ServerTask implements Runnable {
 
   private final int bufferSize;
 
-  private final HostMap hostMap;
+  @VisibleForTesting
+  final HostMap hostMap;
 
   private final Note.Sink noteSink;
 
@@ -37,7 +39,8 @@ final class ServerTask implements Runnable {
 
   private final ResponseDate responseDate;
 
-  private final Socket socket;
+  @VisibleForTesting
+  final Socket socket;
 
   ServerTask(
       int bufferSize,

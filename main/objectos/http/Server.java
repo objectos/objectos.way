@@ -39,4 +39,14 @@ public sealed interface Server extends Closeable permits ServerLoop {
     return builder.build();
   }
 
+  /// Returns the IP address this server is listening to.
+  ///
+  /// @return the IP address this server is listening to.
+  InetAddress address();
+
+  /// Returns the port number this server is listening to.
+  ///
+  /// @return the port number this server is listening to.
+  int port();
+
 }

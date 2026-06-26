@@ -17,6 +17,8 @@ package objectox.http.media;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Arrays;
+import java.util.Objects;
 import objectos.http.Content;
 import objectos.http.MediaType;
 
@@ -25,6 +27,13 @@ public record ContentBytes(MediaType contentType, byte[] bytes) implements Conte
   @Override
   public final void binaryTo(OutputStream out) throws IOException {
     out.write(bytes);
+  }
+
+  @Override
+  public final boolean equals(Object obj) {
+    return obj == this || obj instanceof ContentBytes that
+        && Objects.equals(contentType, that.contentType)
+        && Arrays.equals(bytes, that.bytes);
   }
 
 }

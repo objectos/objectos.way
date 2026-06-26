@@ -29,7 +29,6 @@ import java.util.function.Consumer;
 import objectos.lang.Stage;
 import objectos.lang.Throwables;
 import objectos.way.Html;
-import objectos.way.Media;
 import objectos.way.TestingSingleParagraph;
 import objectos.way.Y;
 import objectos.y.PathY;
@@ -37,38 +36,41 @@ import objectox.http.RequestMethodEnum;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class HttpServerTest {
+public class ZZZServerTest {
 
   private final Path root = PathY.nextDir();
 
-  private HttpServer server;
+  private Server server;
 
-  private static final class Host1 implements Consumer<HttpRoutes> {
-    private final HttpServerTest instance;
+  private static final class Host1 implements Consumer<Routing> {
+    private final ZZZServerTest instance;
 
-    Host1(HttpServerTest instance) {
+    Host1(ZZZServerTest instance) {
       this.instance = instance;
     }
 
     @Override
-    public final void accept(HttpRoutes r) {
-      r.at("/test/{name}", Http.handler(this::handle));
+    public final void accept(Routing r) {
+      r.at("/test/{name}", Handler.of(this::handle));
     }
 
-    private void handle(HttpExchange http) {
+    private Result handle(Request http) {
       final String methodName;
       methodName = http.pathParam("name");
 
       Throwable rethrow = null;
 
       try {
-        final Class<? extends HttpServerTest> testClass;
-        testClass = HttpServerTest.class;
+        final Class<? extends ZZZServerTest> testClass;
+        testClass = ZZZServerTest.class;
 
         final java.lang.reflect.Method handlingMethod;
-        handlingMethod = testClass.getDeclaredMethod(methodName, HttpExchange.class);
+        handlingMethod = testClass.getDeclaredMethod(methodName, Request.class);
 
-        handlingMethod.invoke(instance, http);
+        final Object result;
+        result = handlingMethod.invoke(instance, http);
+
+        return (Result) result;
       } catch (InvocationTargetException e) {
         Throwable cause;
         cause = e.getCause();
@@ -96,20 +98,14 @@ public class HttpServerTest {
     }
   }
 
-  private static final class Host2 implements Consumer<HttpRoutes> {
+  private static final class Host2 implements Consumer<Routing> {
     @Override
-    public void accept(HttpRoutes r) {
-      r.at("/host01", Http.GET, Http.handler(this::host01));
+    public void accept(Routing r) {
+      r.at("/host01",
+          RequestMethod.GET, Content.of(MediaType.TEXT_PLAIN, "HOST01"));
 
-      r.at("/staticFiles03", Http.GET, Http.handler(this::staticFiles03));
-    }
-
-    private void host01(HttpExchange http) {
-      http.ok(Media.Bytes.textPlain("HOST01"));
-    }
-
-    private void staticFiles03(HttpExchange http) {
-      http.staticFile(Media.Bytes.textPlain("SF03\n"));
+      r.at("/staticFiles03",
+          RequestMethod.GET, StaticFile.of(Content.of(MediaType.TEXT_PLAIN, "SF03\n")));
     }
   }
 
@@ -127,7 +123,7 @@ public class HttpServerTest {
 
     Files.writeString(sub.resolve("staticFiles01.txt"), "text\n");
 
-    server = HttpServer.create(opts -> {
+    server = Server.create(opts -> {
       opts.clock(Y.clockFixed());
 
       opts.noteSink(Y.noteSink());
@@ -140,8 +136,8 @@ public class HttpServerTest {
         final Host1 host1;
         host1 = new Host1(this);
 
-        final HttpHandler handler;
-        handler = HttpHandler.create(host1);
+        final Handler handler;
+        handler = Handler.create(host1);
 
         host.handler(handler);
 
@@ -162,8 +158,8 @@ public class HttpServerTest {
         final Host2 host2;
         host2 = new Host2();
 
-        final HttpHandler handler;
-        handler = HttpHandler.create(host2);
+        final Handler handler;
+        handler = Handler.create(host2);
 
         host.handler(handler);
 
@@ -210,23 +206,16 @@ public class HttpServerTest {
   }
 
   @SuppressWarnings("unused")
-  private void testCase01(HttpExchange http) {
+  private Result testCase01(Request http) {
     var method = http.method();
 
     var impl = (RequestMethodEnum) method;
 
-    switch (impl) {
-      case GET, HEAD -> testCase01Get(http);
+    return switch (impl) {
+      case GET, HEAD -> Content.of(MediaType.TEXT_PLAIN, "TC01\n");
 
-      default -> http.error(Status.METHOD_NOT_ALLOWED);
-    }
-  }
-
-  private void testCase01Get(HttpExchange http) {
-    final Media.Bytes object;
-    object = Media.Bytes.textPlain("TC01\n", StandardCharsets.UTF_8);
-
-    http.ok(object);
+      default -> Status.METHOD_NOT_ALLOWED;
+    };
   }
 
   @Test(description = """

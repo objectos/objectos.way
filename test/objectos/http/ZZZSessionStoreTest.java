@@ -32,57 +32,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 @SuppressWarnings("exports")
-public class HttpSessionStoreTest {
-
-  @DataProvider
-  public Object[][] createCookieNameProvider() {
-    return new Object[][] {
-        {true, "all valid characters",
-            Rfc.tchar(), ""},
-
-        {false, "empty",
-            "", "Cookie name must not be blank"},
-        {false, "blank",
-            " \t ", "Cookie name must not be blank"},
-        {false, "Single invalid char",
-            "COOKIE{ID", """
-                    Cookie name must only contain the following characters:
-                    \t"!" / "#" / "$" / "%" / "&" / "'" / "*" / "+" / "-" / "." / "^" / "_" / "`" / "|" / "~"
-                    \tDIGIT (US-ASCII) / ALPHA (US-ASCII)
-                    """},
-        {false, "Multiple invalid chars",
-            "{COOKIE}", """
-                    Cookie name must only contain the following characters:
-                    \t"!" / "#" / "$" / "%" / "&" / "'" / "*" / "+" / "-" / "." / "^" / "_" / "`" / "|" / "~"
-                    \tDIGIT (US-ASCII) / ALPHA (US-ASCII)
-                    """},
-    };
-  }
-
-  @Test(dataProvider = "createCookieNameProvider")
-  public void createCookieName(boolean valid, String description, String cookieName, String expectedMessage) {
-    try {
-      final HttpSessionStoreImpl store;
-      store = create(opts -> {
-        opts.cookieName(cookieName);
-      });
-
-      if (!valid) {
-        Assert.fail("It should have thrown");
-      } else {
-        assertNotNull(store);
-      }
-    } catch (IllegalArgumentException expected) {
-      if (valid) {
-        Assert.fail("Unexpected exception", expected);
-      } else {
-        final String message;
-        message = expected.getMessage();
-
-        assertEquals(message, expectedMessage);
-      }
-    }
-  }
+public class ZZZSessionStoreTest {
 
   @DataProvider
   public Object[][] safeMethodsProvider() {

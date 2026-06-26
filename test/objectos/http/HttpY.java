@@ -43,7 +43,7 @@ public final class HttpY {
     return name + "=" + token.toString();
   }
 
-  public static Socket socket(HttpServer server) throws IOException {
+  public static Socket socket(Server server) throws IOException {
     final InetAddress address;
     address = server.address();
 

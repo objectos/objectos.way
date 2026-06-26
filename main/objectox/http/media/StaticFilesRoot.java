@@ -36,6 +36,10 @@ final class StaticFilesRoot {
     final String path;
     path = request.path();
 
+    return resolve(path);
+  }
+
+  public final Path resolve(String path) throws StaticFilesErrTraversal {
     final String relative;
     relative = path.substring(1);
 

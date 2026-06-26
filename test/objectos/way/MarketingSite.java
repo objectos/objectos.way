@@ -16,24 +16,18 @@
 package objectos.way;
 
 import java.util.function.Consumer;
-import objectos.http.Http;
-import objectos.http.HttpExchange;
-import objectos.http.HttpHandler;
-import objectos.http.HttpRoutes;
+import objectos.http.Handler;
+import objectos.http.Redirection;
+import objectos.http.RequestMethod;
+import objectos.http.Routing;
 
-final class MarketingSite implements Consumer<HttpRoutes> {
+final class MarketingSite implements Consumer<Routing> {
 
   @Override
-  public final void accept(HttpRoutes r) {
-    r.at("/", Http.handler(http -> http.movedPermanently("/index.html")));
+  public final void accept(Routing r) {
+    r.at("/", Redirection.movedPermanently("/index.html"));
 
-    r.at("/index.html", Http.GET, Http.handler(this::indexHtml));
-
-    r.at("/{}", HttpHandler.notFound());
-  }
-
-  private void indexHtml(HttpExchange http) {
-    http.ok(new MarketingSiteHome());
+    r.at("/index.html", RequestMethod.GET, Handler.of(_ -> new MarketingSiteHome()));
   }
 
   private static class MarketingSiteHome extends Html.Template {

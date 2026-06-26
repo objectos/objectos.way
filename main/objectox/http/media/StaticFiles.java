@@ -30,6 +30,7 @@ import java.util.function.Function;
 import objectos.http.Content;
 import objectos.http.HeaderName;
 import objectos.http.Status;
+import objectos.internal.VisibleForTesting;
 import objectos.http.Request;
 import objectos.http.Result;
 import objectos.way.Note;
@@ -95,6 +96,11 @@ public final class StaticFiles implements BiFunction<Request, Result, Result> {
 
       return request;
     }
+  }
+
+  @VisibleForTesting
+  public final Path resolve(String path) throws StaticFilesErrTraversal {
+    return staticFilesRoot.resolve(path);
   }
 
   private Result handle0(Request request) throws StaticFilesErrNonRegular {

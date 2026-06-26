@@ -24,7 +24,9 @@ import java.util.Objects;
 import objectos.http.HeaderName;
 import objectos.http.RequestMethod;
 import objectos.http.RequestOptions;
+import objectos.lang.Key;
 import objectox.http.RequestMethodEnum;
+import objectox.http.Rfc;
 import objectox.http.Version0;
 import objectox.http.session.Session;
 import objectox.http.session.SessionPojo;
@@ -33,21 +35,23 @@ public final class RequestBuilder implements RequestOptions {
 
   private final RequestAttributes attributes = new RequestAttributes();
 
-  private RequestBodyData bodyData;
-
-  private RequestBodyForm bodyForm;
-
-  private Map<HeaderName, Object> headers = Map.of();
-
   private RequestMethod method = RequestMethodEnum.GET;
 
   private String path = "/";
 
-  private final Map<String, Object> queryParams = Map.of();
+  private Map<String, String> pathParams = Map.of();
 
-  private SessionPojo session;
+  private Map<String, Object> queryParams = Map.of();
 
   private final Version0 version = Version0.HTTP_1_1;
+
+  private Map<HeaderName, Object> headers = Map.of();
+
+  private RequestBodyData bodyData;
+
+  private Map<String, Object> bodyForm = Map.of();
+
+  private SessionPojo session;
 
   public final RequestPojo build() {
     return new RequestPojo(
@@ -65,8 +69,48 @@ public final class RequestBuilder implements RequestOptions {
 
         bodyData,
 
-        bodyForm
+        new RequestBodyForm(bodyForm)
     );
+  }
+
+  @Override
+  public final <T> void attr(Class<T> key, T value) {
+    attributes.set(key, value);
+  }
+
+  @Override
+  public final <T> void attr(Key<T> key, T value) {
+    attributes.set(key, value);
+  }
+
+  @Override
+  public final void formParam(String name, int value) {
+    Objects.requireNonNull(name, "name == null");
+
+    formParam0(name, Integer.toString(value));
+  }
+
+  @Override
+  public final void formParam(String name, long value) {
+    Objects.requireNonNull(name, "name == null");
+
+    formParam0(name, Long.toString(value));
+  }
+
+  @Override
+  public final void formParam(String name, String value) {
+    Objects.requireNonNull(name, "name == null");
+    Objects.requireNonNull(value, "value == null");
+
+    formParam0(name, value);
+  }
+
+  private void formParam0(String name, String value) {
+    if (bodyForm.isEmpty()) {
+      bodyForm = new LinkedHashMap<>();
+    }
+
+    Rfc.queryParamsAdd(bodyForm, name, value);
   }
 
   @Override
@@ -117,6 +161,55 @@ public final class RequestBuilder implements RequestOptions {
   @Override
   public final void path(String value) {
     path = Objects.requireNonNull(value, "value == null");
+  }
+
+  @Override
+  public final void pathParam(String name, String value) {
+    Objects.requireNonNull(name, "name == null");
+    Objects.requireNonNull(value, "value == null");
+
+    if (pathParams.isEmpty()) {
+      pathParams = new HashMap<>();
+
+      attr(RequestPojo.PATH_PARAMS, pathParams);
+    }
+
+    final String existing;
+    existing = pathParams.put(name, value);
+
+    if (existing != null) {
+      throw new IllegalArgumentException("Duplicate mapping for path parameter " + name);
+    }
+  }
+
+  @Override
+  public final void queryParam(String name, String value) {
+    Objects.requireNonNull(name, "name == null");
+    Objects.requireNonNull(value, "value == null");
+
+    queryParam0(name, value);
+  }
+
+  @Override
+  public final void queryParam(String name, int value) {
+    Objects.requireNonNull(name, "name == null");
+
+    queryParam0(name, Integer.toString(value));
+  }
+
+  @Override
+  public final void queryParam(String name, long value) {
+    Objects.requireNonNull(name, "name == null");
+
+    queryParam0(name, Long.toString(value));
+  }
+
+  private void queryParam0(String name, String value) {
+    if (queryParams.isEmpty()) {
+      queryParams = new LinkedHashMap<>();
+    }
+
+    Rfc.queryParamsAdd(queryParams, name, value);
   }
 
   @Override

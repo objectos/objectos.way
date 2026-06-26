@@ -29,7 +29,7 @@ import objectos.y.SocketY;
 import objectox.http.host.Host;
 import objectox.http.host.HostMap;
 import objectox.http.host.HostY;
-import objectox.http.req.RequestBodySupportFactory;
+import objectox.http.req.RequestBodyConfig;
 import objectox.http.resp.ResponseDate;
 
 final class ServerTaskY {
@@ -42,11 +42,20 @@ final class ServerTaskY {
 
   Note.Sink noteSink = Y.noteSink();
 
-  RequestBodySupportFactory requestBodySupportFactory;
+  RequestBodyConfig requestBodyConfig;
 
   Socket socket;
 
   private ServerTaskY() {}
+
+  public static ServerTask create(Consumer<? super ServerTaskY> opts) {
+    final ServerTaskY y;
+    y = new ServerTaskY();
+
+    opts.accept(y);
+
+    return y.build();
+  }
 
   public static String resp(Consumer<? super ServerTaskY> opts) {
     final ServerTaskY y;
@@ -58,6 +67,15 @@ final class ServerTaskY {
     return socket.toString();
   }
 
+  public static String resp(ServerTask task) {
+    task.run();
+
+    final Socket socket;
+    socket = task.socket;
+
+    return socket.toString();
+  }
+
   public static ServerTaskY run(Consumer<? super ServerTaskY> opts) {
     final ServerTaskY y;
     y = new ServerTaskY();
@@ -65,7 +83,7 @@ final class ServerTaskY {
     opts.accept(y);
 
     final ServerTask task;
-    task = y.build();
+    task = create(opts);
 
     task.run();
 
@@ -84,9 +102,9 @@ final class ServerTaskY {
     }));
   }
 
-  public final void requestBodySupportFactory(Path directory) {
-    requestBodySupportFactory = new RequestBodySupportFactory(
-        directory,
+  public final void requestBodyConfig(Path file) {
+    requestBodyConfig = new RequestBodyConfig(
+        () -> file,
 
         1024,
 
@@ -94,9 +112,9 @@ final class ServerTaskY {
     );
   }
 
-  public final void requestBodySupportFactory(Path directory, int memoryMax) {
-    requestBodySupportFactory = new RequestBodySupportFactory(
-        directory,
+  public final void requestBodyConfig(Path file, int memoryMax) {
+    requestBodyConfig = new RequestBodyConfig(
+        () -> file,
 
         memoryMax,
 
@@ -116,9 +134,9 @@ final class ServerTaskY {
 
         noteSink,
 
-        requestBodySupportFactory != null
-            ? requestBodySupportFactory
-            : requestBodySupportFactory(),
+        requestBodyConfig != null
+            ? requestBodyConfig
+            : requestBodyConfig(),
 
         new ResponseDate(clock),
 
@@ -126,9 +144,9 @@ final class ServerTaskY {
     );
   }
 
-  private RequestBodySupportFactory requestBodySupportFactory() {
-    return new RequestBodySupportFactory(
-        PathY.nextDir(),
+  private RequestBodyConfig requestBodyConfig() {
+    return new RequestBodyConfig(
+        () -> PathY.nextFile(),
 
         1024,
 

@@ -15,10 +15,46 @@
  */
 package objectos.http;
 
+import objectos.lang.Key;
 import objectox.http.req.RequestBuilder;
 
 /// Configures the creation of a stand-alone request instance.
 public sealed interface RequestOptions permits RequestBuilder {
+
+  /// Stores the provided key-value pair in the resulting request.
+  ///
+  /// @param key the key to be stored
+  /// @param value the value to be stored
+  /// @param <T> the type of the value
+  <T> void attr(Class<T> key, T value);
+
+  /// Stores the provided key-value pair in the resulting request.
+  ///
+  /// @param key the key to be stored
+  /// @param value the value to be stored
+  /// @param <T> the type of the value
+  <T> void attr(Key<T> key, T value);
+
+  /// Adds the specified field name and value to the request as if it were sent
+  /// by a HTML form. The name must be decoded.
+  ///
+  /// @param name the field name (decoded)
+  /// @param value the field value
+  void formParam(String name, int value);
+
+  /// Adds the specified field name and value to the request as if it were sent
+  /// by a HTML form. The name must be decoded.
+  ///
+  /// @param name the field name (decoded)
+  /// @param value the field value
+  void formParam(String name, long value);
+
+  /// Adds the specified field name and value to the request as if it were sent
+  /// by a HTML form. The name and value must be decoded.
+  ///
+  /// @param name the field name (decoded)
+  /// @param value the field value (decoded)
+  void formParam(String name, String value);
 
   /// Adds the specified header field to this request.
   ///
@@ -32,14 +68,41 @@ public sealed interface RequestOptions permits RequestBuilder {
   /// @param value the HTTP method
   void method(RequestMethod value);
 
-  /// Sets the request-target path component to the specified value. Defaults
-  /// to `/` when not specified.
+  /// Sets the request-target path component to the specified value. Defaults to
+  /// `/` when not specified.
   ///
   /// @param value the decoded path value
   void path(String value);
 
-  /// Associates a session to this request and store the provided key-value
-  /// pair in the former.
+  /// Sets the path parameter with the specified name to the specified value.
+  ///
+  /// @param name the name of the path parameter
+  /// @param value the decoded value of the path parameter
+  void pathParam(String name, String value);
+
+  /// Sets the request-target query parameter with the specified name to the
+  /// specified value.
+  ///
+  /// @param name the name of the query parameter
+  /// @param value the value of the query parameter
+  void queryParam(String name, int value);
+
+  /// Sets the request-target query parameter with the specified name to the
+  /// specified value.
+  ///
+  /// @param name the name of the query parameter
+  /// @param value the value of the query parameter
+  void queryParam(String name, long value);
+
+  /// Sets the request-target query parameter with the specified name to the
+  /// specified value.
+  ///
+  /// @param name the name of the query parameter
+  /// @param value the decoded value of the query parameter
+  void queryParam(String name, String value);
+
+  /// Associates a session to this request and store the provided key-value pair
+  /// in the former.
   ///
   /// @param <T> the type of the attribute
   /// @param key the class object providing the attribute name

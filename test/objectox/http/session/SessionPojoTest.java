@@ -13,32 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectox.http.session;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.testng.annotations.Test;
 
-public class HttpSessionTest {
+public class SessionPojoTest {
 
   @Test
   public void set0() {
-    final HttpSession0 session;
-    session = new HttpSession0(null);
+    final Map<Object, Object> attributes;
+    attributes = new HashMap<>();
 
-    assertEquals(session.get0(String.class), null);
+    final SessionPojo session;
+    session = new SessionPojo(attributes);
 
-    assertEquals(session.set0(String.class, "A"), null);
+    assertEquals(session.attr(String.class), null);
 
-    assertEquals(session.get0(String.class), "A");
+    assertEquals(session.attr(String.class, "A"), null);
 
-    assertEquals(session.set0(String.class, "B"), "A");
+    assertEquals(session.attr(String.class), "A");
 
-    assertEquals(session.get0(String.class), "B");
+    assertEquals(session.attr(String.class, "B"), "A");
 
-    assertEquals(session.set0(String.class, null), "B");
+    assertEquals(session.attr(String.class), "B");
 
-    assertEquals(session.get0(String.class), null);
+    assertEquals(session.attr(String.class, null), "B");
+
+    assertEquals(session.attr(String.class), null);
   }
 
 }

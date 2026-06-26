@@ -18,6 +18,7 @@ package objectox.http.handler;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import objectos.http.Content;
 import objectos.http.Handler;
 import objectos.http.Redirection;
 import objectos.http.RequestMethod;
@@ -68,6 +69,8 @@ final class RoutingAt {
 
   public final void option(RoutingOption option) {
     switch (option) {
+      case Content content -> current.result(content);
+
       case Handler handler -> current.handler(handler);
 
       case PathParamNamed param -> parent.pathParamNamed(param);

@@ -34,7 +34,7 @@ public final class StaticFilesStageBuilder implements StaticFilesOptions {
 
   private Set<Path> directories = Set.of();
 
-  Function<BasicFileAttributes, String> etag;
+  private Function<BasicFileAttributes, String> etag;
 
   private long etagMask = ThreadLocalRandom.current().nextLong();
 
@@ -98,6 +98,10 @@ public final class StaticFilesStageBuilder implements StaticFilesOptions {
   @Override
   public final void contentTypes(String propertiesString) {
     typesBuilder.contentTypes(propertiesString);
+  }
+
+  public final void etag(Function<BasicFileAttributes, String> value) {
+    etag = value;
   }
 
   public final void etagMask(long value) {

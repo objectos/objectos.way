@@ -17,7 +17,7 @@ package objectos.http;
 
 import java.util.function.Consumer;
 
-public class HttpRoutingXTest implements Consumer<HttpRoutes> {
+public class ZZZRoutingTest implements Consumer<HttpRoutes> {
 
   @Override
   public final void accept(HttpRoutes t) {}

@@ -18,6 +18,8 @@ package objectox.http.srv;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
+import java.time.Clock;
+import objectos.way.Y;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -49,6 +51,55 @@ public class ServerLoopBuilderTest {
 
     try (var subject = builder.unstarted()) {
       assertEquals(subject.bufferSize, 128);
+    }
+  }
+
+  @Test
+  public void bufferSize03() throws IOException {
+    final ServerLoopBuilder builder;
+    builder = new ServerLoopBuilder();
+
+    try (var subject = builder.unstarted()) {
+      assertEquals(subject.bufferSize, 4096);
+    }
+  }
+
+  @Test
+  public void clock01() {
+    final ServerLoopBuilder builder;
+    builder = new ServerLoopBuilder();
+
+    try {
+      builder.clock(null);
+
+      Assert.fail("It should have thrown");
+    } catch (NullPointerException expected) {
+      final String msg;
+      msg = expected.getMessage();
+
+      assertEquals(msg, "value == null");
+    }
+  }
+
+  @Test
+  public void clock02() throws IOException {
+    final ServerLoopBuilder builder;
+    builder = new ServerLoopBuilder();
+
+    try (var subject = builder.unstarted()) {
+      assertEquals(subject.clock, Clock.systemUTC());
+    }
+  }
+
+  @Test
+  public void clock03() throws IOException {
+    final ServerLoopBuilder builder;
+    builder = new ServerLoopBuilder();
+
+    builder.clock(Y.clockFixed());
+
+    try (var subject = builder.unstarted()) {
+      assertEquals(subject.clock, Y.clockFixed());
     }
   }
 

@@ -16,6 +16,7 @@
 package objectox.http.srv;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.time.Clock;
@@ -47,7 +48,7 @@ public final class ServerLoop extends Thread implements Server {
 
   final int bufferSize;
 
-  private final Clock clock;
+  final Clock clock;
 
   private final HostMap hostMap;
 
@@ -90,12 +91,18 @@ public final class ServerLoop extends Thread implements Server {
   }
 
   @Override
+  public final InetAddress address() {
+    return serverSocket.getInetAddress();
+  }
+
+  @Override
   public final void close() throws IOException {
     interrupt();
 
     serverSocket.close();
   }
 
+  @Override
   public final int port() {
     return serverSocket.getLocalPort();
   }

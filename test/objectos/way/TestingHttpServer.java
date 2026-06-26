@@ -27,7 +27,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import objectos.http.HttpExchange;
 import objectos.http.HttpHandler;
-import objectos.http.HttpRoutingXTest;
+import objectos.http.ZZZRoutingTest;
 import objectos.http.HttpServer;
 import objectos.http.HttpSessionStore;
 import objectos.http.Server;
@@ -37,7 +37,7 @@ public final class TestingHttpServer {
 
   private TestingHttpServer() {}
 
-  public static void bindHttpRoutingTest(HttpRoutingXTest test) {
+  public static void bindHttpRoutingTest(ZZZRoutingTest test) {
     ServerHolder.bindHttpRoutingTest(test);
   }
 
@@ -110,7 +110,7 @@ public final class TestingHttpServer {
 
     static ThisHandlerFactory HANDLER;
 
-    public static void bindHttpRoutingTest(HttpRoutingXTest test) {
+    public static void bindHttpRoutingTest(ZZZRoutingTest test) {
       HANDLER.httpModuleTest.delegate = HttpHandler.create(test);
     }
 

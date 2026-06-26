@@ -28,7 +28,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /// Provides helpers to declaring routes.
-public final class Http {
+final class Http {
 
   static final String LINE_TERM = "Invalid line terminator.\n";
 

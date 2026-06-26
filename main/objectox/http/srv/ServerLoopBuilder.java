@@ -34,7 +34,7 @@ public final class ServerLoopBuilder
     implements
     ServerOptions {
 
-  private final int bufferSize = 4096;
+  private int bufferSize = 4096;
 
   private Clock clock;
 
@@ -54,6 +54,8 @@ public final class ServerLoopBuilder
 
       throw new IllegalArgumentException(msg);
     }
+
+    bufferSize = value;
   }
 
   @Override
@@ -102,7 +104,7 @@ public final class ServerLoopBuilder
     return new ServerLoop(
         bufferSize,
 
-        clock,
+        clock != null ? clock : Clock.systemUTC(),
 
         hostMapBuilder.build(new HostGlobals() {
           @Override

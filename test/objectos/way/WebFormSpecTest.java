@@ -17,7 +17,7 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.http.HttpExchange;
+import objectos.http.Request;
 import objectos.lang.TestableFormatter;
 import org.testng.annotations.Test;
 
@@ -65,8 +65,8 @@ public class WebFormSpecTest {
       });
     });
 
-    HttpExchange http;
-    http = HttpExchange.create(config -> {
+    Request http;
+    http = Request.create(config -> {
       config.formParam("first_name", "First");
     });
 
@@ -104,8 +104,8 @@ public class WebFormSpecTest {
       });
     });
 
-    HttpExchange http;
-    http = HttpExchange.create(config -> {
+    Request http;
+    http = Request.create(config -> {
       config.formParam("last_name", "Last");
     });
 
@@ -138,8 +138,8 @@ public class WebFormSpecTest {
       });
     });
 
-    HttpExchange http;
-    http = HttpExchange.create(config -> {
+    Request http;
+    http = Request.create(config -> {
       config.formParam("first_name", "First");
     });
 

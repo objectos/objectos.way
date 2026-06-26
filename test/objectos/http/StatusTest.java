@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023-2026 Objectos Software LTDA.
+ * Copyright (C) 2025-2026 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,8 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.http.media;
+package objectos.http;
 
-public class StaticFilesHandlerTest {
+import static org.testng.Assert.assertEquals;
+
+import org.testng.annotations.Test;
+
+public class StatusTest {
+
+  @Test
+  public void reasonPhrase() {
+    assertEquals(Status.INTERNAL_SERVER_ERROR.reasonPhrase(), "Internal Server Error");
+  }
 
 }

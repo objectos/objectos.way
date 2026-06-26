@@ -27,7 +27,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 @SuppressWarnings("exports")
-public class HttpRoutesTest {
+public class ZZZRoutesTest {
 
   private final HttpHandler ok = http -> { http.status(Status.OK); http.send(); };
   private final HttpHandler notFound = http -> { http.status(Status.NOT_FOUND); http.send(); };
