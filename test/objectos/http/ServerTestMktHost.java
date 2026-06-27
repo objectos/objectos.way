@@ -15,10 +15,27 @@
  */
 package objectos.http;
 
+import static objectos.http.RequestMethod.GET;
+
 import java.util.function.Consumer;
 import objectos.way.Html;
 
-final class MarketingSite implements Consumer<Routing> {
+final class ServerTestMktHost implements Consumer<Routing> {
+
+  public final void host(HostOptions opts) {
+    opts.name("mkt.server.test");
+
+    final Handler handler;
+    handler = Handler.create(this::routes);
+
+    opts.handler(handler);
+  }
+
+  private void routes(Routing r) {
+    r.at("/", Redirection.movedPermanently("/index.html"));
+
+    r.at("/index.html", GET, Handler.of(_ -> new MarketingSiteHome()));
+  }
 
   @Override
   public final void accept(Routing r) {
