@@ -16,13 +16,15 @@
 package objectos.http;
 
 import java.util.function.Consumer;
+import objectos.lang.Testable;
 import objectox.http.resp.ResponsePojo;
 
 /// An HTTP response message.
 public sealed interface Response
     extends
     Result,
-    RoutingOption
+    RoutingOption,
+    Testable
     permits ResponsePojo {
 
   /// Creates a new response with the specified options.

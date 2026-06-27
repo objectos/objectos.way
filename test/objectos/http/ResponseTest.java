@@ -18,6 +18,7 @@ package objectos.http;
 import static org.testng.Assert.assertEquals;
 
 import java.util.List;
+import objectos.way.Html;
 import objectox.http.Header;
 import objectox.http.resp.ResponseEntity;
 import objectox.http.resp.ResponsePojo;
@@ -92,6 +93,51 @@ public class ResponseTest {
 
             false
         )
+    );
+  }
+
+  @Test(description = "empty string if content is not testable")
+  public void toTestableText01() {
+    final Content content;
+    content = Content.of(MediaType.TEXT_PLAIN, "test");
+
+    final Response subject;
+    subject = Response.create(opts -> {
+      opts.send(content);
+    });
+
+    assertEquals(
+        subject.toTestableText(),
+
+        ""
+    );
+  }
+
+  @Test(description = "testable text if content is testable")
+  public void toTestableText02() {
+    final ContentProvider html;
+    html = new Html.Template() {
+      @Override
+      protected void render() {
+        testableH1("Heading 1");
+
+        testableField("foo", "bar");
+      }
+    };
+
+    final Response subject;
+    subject = Response.create(opts -> {
+      opts.send(html);
+    });
+
+    assertEquals(
+        subject.toTestableText(),
+
+        """
+        # Heading 1
+
+        foo: bar
+        """
     );
   }
 
