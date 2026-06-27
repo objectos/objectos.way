@@ -48,4 +48,12 @@ public final class JsLibrary implements ContentProvider {
     return Content.of(MediaType.TEXT_JAVASCRIPT, value);
   }
 
+  /// Returns the JS library source code.
+  ///
+  /// @return the JS library source code
+  @Override
+  public final String toString() {
+    return value;
+  }
+
 }

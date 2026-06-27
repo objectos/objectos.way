@@ -18,33 +18,34 @@ package objectos.http;
 import static objectos.http.RequestMethod.GET;
 
 import java.util.function.Consumer;
+import objectos.script.JsLibrary;
 import objectos.way.Html;
 
-final class ServerTestMktHost implements Consumer<Routing> {
+final class ServerTestHostMain implements Consumer<HostOptions> {
 
-  public final void host(HostOptions opts) {
-    opts.name("mkt.server.test");
+  @Override
+  public final void accept(HostOptions opts) {
+    opts.name("main.server.test");
 
     final Handler handler;
     handler = Handler.create(this::routes);
 
     opts.handler(handler);
+
+    opts.staticFiles(files -> {
+      files.withDefaultContentTypes();
+    });
   }
 
   private void routes(Routing r) {
     r.at("/", Redirection.movedPermanently("/index.html"));
 
-    r.at("/index.html", GET, Handler.of(_ -> new MarketingSiteHome()));
+    r.at("/index.html", GET, Handler.ofSupplier(Home::new));
+
+    r.at("/script.js", StaticFile.of(JsLibrary.of()));
   }
 
-  @Override
-  public final void accept(Routing r) {
-    r.at("/", Redirection.movedPermanently("/index.html"));
-
-    r.at("/index.html", RequestMethod.GET, Handler.of(_ -> new MarketingSiteHome()));
-  }
-
-  private static class MarketingSiteHome extends Html.Template {
+  private static class Home extends Html.Template {
     @Override
     protected void render() {
       doctype();

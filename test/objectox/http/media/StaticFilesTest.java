@@ -32,6 +32,7 @@ import objectos.http.HeaderName;
 import objectos.http.Status;
 import objectos.http.MediaType;
 import objectos.http.Request;
+import objectos.http.RequestMethod;
 import objectos.http.Response;
 import objectos.http.Result;
 import objectos.http.StaticFile;
@@ -429,6 +430,29 @@ public class StaticFilesTest {
     final Request request;
     request = Request.create(opts -> {
       opts.path("/");
+    });
+
+    final Result res;
+    res = handler.handle(request);
+
+    assertSame(res, request);
+  }
+
+  @Test(description = """
+  skip:
+  - non-existing file
+  - invalid method (for static files)
+  """)
+  public void skip03() throws IOException {
+    final StaticFiles handler;
+    handler = create(_ -> {
+    });
+
+    final Request request;
+    request = Request.create(opts -> {
+      opts.method(RequestMethod.POST);
+
+      opts.path("/invalid-method.txt");
     });
 
     final Result res;

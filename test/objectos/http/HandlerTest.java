@@ -66,4 +66,15 @@ public class HandlerTest {
     assertSame(res2, req2);
   }
 
+  @Test
+  public void of() {
+    final Handler h;
+    h = _ -> Status.NOT_FOUND;
+
+    final Handler res;
+    res = Handler.of(h);
+
+    assertSame(res, h);
+  }
+
 }

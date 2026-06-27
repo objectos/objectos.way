@@ -105,13 +105,13 @@ public final class StaticFiles implements BiFunction<Request, Result, Result> {
 
   private Result handle0(Request request) throws StaticFilesErrNonRegular {
     try {
-      staticFilesMethod.validate(request);
-
       final Path file;
       file = staticFilesRoot.resolve(request);
 
       final BasicFileAttributes attributes;
       attributes = staticFilesAttributes.read(file);
+
+      staticFilesMethod.validate(request);
 
       final String etag;
       etag = staticFilesETag.apply(attributes);

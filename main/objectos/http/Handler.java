@@ -15,7 +15,10 @@
  */
 package objectos.http;
 
+import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
+import objectox.http.handler.HandlerOfSupplier;
 import objectox.http.handler.RoutingPojo;
 
 /// Processes an HTTP request to produce a result, e.g., an HTTP response.
@@ -39,6 +42,30 @@ public non-sealed interface Handler extends RoutingOption {
   /// @return always the specified handler
   static Handler of(Handler h) {
     return h;
+  }
+
+  /// Returns a new handler which provides the result from the specified
+  /// supplier. As a result, the supplier is invoked for each request processed.
+  ///
+  /// An invocation of the form:
+  ///
+  /// ```java
+  /// Handler h = Handler.ofSupplier(HomeTemplate::new);
+  /// ```
+  ///
+  /// Returns a handler that is equivalent to:
+  ///
+  /// ```java
+  /// Handler h = _ -> new HomeTemplate();
+  /// ```
+  ///
+  /// @param supplier the result supplier
+  ///
+  /// @return a newly created handler
+  static Handler ofSupplier(Supplier<? extends Result> supplier) {
+    return new HandlerOfSupplier(
+        Objects.requireNonNull(supplier, "supplier == null")
+    );
   }
 
   /// Handles the specified HTTP request and produces a `Result`.

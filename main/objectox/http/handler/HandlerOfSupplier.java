@@ -13,34 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.http.host;
+package objectox.http.handler;
 
+import java.util.function.Supplier;
 import objectos.http.Handler;
 import objectos.http.Request;
 import objectos.http.Result;
 
-final class HostHandler implements Handler {
+public final class HandlerOfSupplier implements Handler {
 
-  private final Handler main;
+  private final Supplier<? extends Result> supplier;
 
-  private final Handler staticFiles;
-
-  HostHandler(Handler main, Handler staticFiles) {
-    this.main = main;
-
-    this.staticFiles = staticFiles;
+  public HandlerOfSupplier(Supplier<? extends Result> supplier) {
+    this.supplier = supplier;
   }
 
   @Override
   public final Result handle(Request request) {
-    final Result maybeMain;
-    maybeMain = main.handle(request);
+    final Result result;
+    result = supplier.get();
 
-    if (!(maybeMain instanceof Request)) {
-      return maybeMain;
+    if (result == null) {
+      final String msg;
+      msg = "Supplier provided a null result";
+
+      throw new NullPointerException(msg);
     }
 
-    return staticFiles.handle(request);
+    return result;
   }
 
 }

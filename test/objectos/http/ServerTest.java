@@ -19,9 +19,9 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
+import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse.BodyHandlers;
+import objectos.script.JsLibrary;
 import objectos.way.Y;
 import objectos.y.HttpClientY;
 import org.testng.annotations.BeforeClass;
@@ -31,137 +31,223 @@ public class ServerTest {
 
   private Server server;
 
+  private String mainHost;
+
   @BeforeClass
-  public void beforeClass() throws Exception {
+  public void beforeClass() throws IOException {
     server = Server.create(opts -> {
-      opts.host(host -> {
-        host.name("server.test.localhost");
-
-        final ServerTestHost1 host1;
-        host1 = new ServerTestHost1();
-
-        final Handler handler;
-        handler = Handler.create(host1);
-
-        host.handler(handler);
-      });
+      opts.host(new ServerTestHostMain());
 
       opts.noteSink(Y.noteSink());
     });
 
+    mainHost = "main.server.test:" + server.port();
+
     Y.shutdownHook(server);
   }
 
-  @Test(description = """
-  Unmatched host
-  """)
-  public void general01() throws IOException {
-    final URI uri;
-    uri = HttpClientY.uri(server, "/");
-
-    final HttpRequest req;
-    req = HttpRequest.newBuilder(uri).header("Host", "server.test.localhost").build();
-
-    final HttpResponse<String> resp;
-    resp = HttpClientY.send(req, BodyHandlers.ofString());
-
-    assertEquals(resp.statusCode(), 400);
-    assertEquals(resp.body(), "Invalid host: server.test.localhost");
-  }
-
-  /*
-  
-  @SuppressWarnings("unused")
-  private void testCase02(HttpExchange http) {
-    var method = http.method();
-
-    var impl = (RequestMethodEnum) method;
-
-    switch (impl) {
-      case GET, HEAD -> testCase02Get(http);
-
-      default -> http.error(Status.METHOD_NOT_ALLOWED);
-    }
-  }
-
-  private void testCase02Get(HttpExchange http) {
-    final Media.Bytes object;
-    object = Media.Bytes.textPlain("TC02\n", StandardCharsets.UTF_8);
-
-    http.ok(object);
+  private URI uri(String path) {
+    return HttpClientY.uri(server, path);
   }
 
   @Test(description = """
-  GET handler should be used for HEAD requests as well
+  it should 400 on unmatched host
   """)
-  public void testCase02() throws IOException {
-    test(
-        """
-        HEAD /test/testCase02 HTTP/1.1\r
-        Host: server.test.localhost:%d\r
-        \r
-        """,
+  public void main01() {
+    ServerY.resp(
+        req -> {
+          req.GET();
+          req.uri(uri("/"));
+          req.header("Host", "unknown");
+        },
 
-        """
-        HTTP/1.1 200 OK\r
-        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-        Content-Type: text/plain; charset=utf-8\r
-        Content-Length: 5\r
-        \r
-        """,
+        BodyHandlers.ofString(),
 
-        """
-        GET /test/testCase02 HTTP/1.1\r
-        Host: server.test.localhost:%d\r
-        Connection: close\r
-        \r
-        """,
-
-        """
-        HTTP/1.1 200 OK\r
-        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-        Content-Type: text/plain; charset=utf-8\r
-        Content-Length: 5\r
-        \r
-        TC02
-        """
+        resp -> {
+          assertEquals(resp.statusCode(), 400);
+          assertEquals(resp.body(), "Invalid host: unknown");
+        }
     );
   }
 
-  @SuppressWarnings("unused")
-  private void testCase03(HttpExchange http) {
-    objectos.http.RequestMethod method = http.method();
+  @Test(description = """
+  it should redirect '/' to '/index.html'
+  """)
+  public void main02() {
+    ServerY.resp(
+        req -> {
+          req.GET();
+          req.uri(uri("/"));
+          req.header("Host", mainHost);
+        },
 
-    RequestMethodEnum impl = (RequestMethodEnum) method;
+        BodyHandlers.ofString(),
 
-    switch (impl) {
-      case GET, HEAD -> testCase03Get(http);
-
-      case POST -> testCase03Post(http);
-
-      default -> http.error(Status.METHOD_NOT_ALLOWED);
-    }
-  }
-
-  private void testCase03Get(HttpExchange http) {
-    http.ok(new TestingSingleParagraph("TC03 GET"));
-  }
-
-  private void testCase03Post(HttpExchange http) {
-    http.ok(new TestingSingleParagraph("TC03 POST"));
+        resp -> {
+          assertEquals(resp.statusCode(), 301);
+          assertEquals(resp.headers().firstValue("Location").get(), "/index.html");
+        }
+    );
   }
 
   @Test(description = """
+  GET /index.html should return 200 OK
+  """)
+  public void main03() {
+    ServerY.resp(
+        req -> {
+          req.GET();
+          req.uri(uri("/index.html"));
+          req.header("Host", mainHost);
+        },
+
+        BodyHandlers.ofString(),
+
+        resp -> {
+          assertEquals(resp.statusCode(), 200);
+          assertEquals(resp.body(), """
+          <!DOCTYPE html>
+          <h1>home</h1>
+          """);
+        }
+    );
+  }
+
+  @Test(description = """
+  HEAD /index.html should return 200 OK
+  """)
+  public void main04() {
+    ServerY.resp(
+        req -> {
+          req.HEAD();
+          req.uri(uri("/index.html"));
+          req.header("Host", mainHost);
+        },
+
+        BodyHandlers.ofString(),
+
+        resp -> {
+          assertEquals(resp.statusCode(), 200);
+          assertEquals(resp.body(), "");
+        }
+    );
+  }
+
+  @Test(description = """
+  Other methods to /index.html should return 404
+  """)
+  public void main05() {
+    ServerY.resp(
+        req -> {
+          req.POST(BodyPublishers.noBody());
+          req.uri(uri("/index.html"));
+          req.header("Host", mainHost);
+        },
+
+        BodyHandlers.ofString(),
+
+        resp -> {
+          assertEquals(resp.statusCode(), 404);
+        }
+    );
+  }
+
+  @Test(description = """
+  GET /i-do-not-exist should return 404
+  """)
+  public void main06() {
+    ServerY.resp(
+        req -> {
+          req.POST(BodyPublishers.noBody());
+          req.uri(uri("/i-do-not-exist"));
+          req.header("Host", mainHost);
+        },
+
+        BodyHandlers.ofString(),
+
+        resp -> {
+          assertEquals(resp.statusCode(), 404);
+        }
+    );
+  }
+
+  private String etag;
+
+  @Test(description = """
+  StaticFile:
+  - first request: 200
+  - second request: 304
+  """)
+  public void main07() {
+    ServerY.resp(
+        req -> {
+          req.GET();
+          req.uri(uri("/script.js"));
+          req.header("Host", mainHost);
+        },
+
+        BodyHandlers.ofString(),
+
+        resp -> {
+          assertEquals(resp.statusCode(), 200);
+          etag = resp.headers().firstValue("ETag").get();
+          assertEquals(resp.body(), JsLibrary.of().toString());
+        }
+    );
+
+    ServerY.resp(
+        req -> {
+          req.GET();
+          req.uri(uri("/script.js"));
+          req.header("Host", mainHost);
+          req.header("If-None-Match", etag);
+        },
+
+        BodyHandlers.ofString(),
+
+        resp -> {
+          assertEquals(resp.statusCode(), 304);
+          assertEquals(resp.body(), "");
+        }
+    );
+  }
+
+  /*
+
+  @SuppressWarnings("unused")
+  private void main03(HttpExchange http) {
+    objectos.http.RequestMethod method = http.method();
+  
+    RequestMethodEnum impl = (RequestMethodEnum) method;
+  
+    switch (impl) {
+      case GET, HEAD -> main03Get(http);
+  
+      case POST -> main03Post(http);
+  
+      default -> http.error(Status.METHOD_NOT_ALLOWED);
+    }
+  }
+  
+  private void main03Get(HttpExchange http) {
+    http.ok(new TestingSingleParagraph("TC03 GET"));
+  }
+  
+  private void main03Post(HttpExchange http) {
+    http.ok(new TestingSingleParagraph("TC03 POST"));
+  }
+  
+  @Test(description = """
   It should be possible to send pre-made 200 OK responses
   """)
-  public void testCase03() throws IOException, InterruptedException {
+  public void main03() throws IOException, InterruptedException {
     test(
         """
-        HEAD /test/testCase03 HTTP/1.1\r
+        HEAD /test/main03 HTTP/1.1\r
         Host: server.test.localhost:%d\r
         \r
         """,
-
+  
         """
         HTTP/1.1 200 OK\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
@@ -169,13 +255,13 @@ public class ServerTest {
         Transfer-Encoding: chunked\r
         \r
         """,
-
+  
         """
-        GET /test/testCase03 HTTP/1.1\r
+        GET /test/main03 HTTP/1.1\r
         Host: server.test.localhost:%d\r
         \r
         """,
-
+  
         """
         HTTP/1.1 200 OK\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
@@ -186,14 +272,14 @@ public class ServerTest {
         <p>TC03 GET</p>
         </html>
         """,
-
+  
         """
-        POST /test/testCase03 HTTP/1.1\r
+        POST /test/main03 HTTP/1.1\r
         Host: server.test.localhost:%d\r
         Connection: close\r
         \r
         """,
-
+  
         """
         HTTP/1.1 200 OK\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
@@ -206,64 +292,64 @@ public class ServerTest {
         """
     );
   }
-
+  
   private static final class AttributeTester extends Html.Template {
     private final HttpExchange http;
     private final Class<?> key;
-
+  
     public AttributeTester(HttpExchange http, Class<?> key) {
       this.http = http;
       this.key = key;
     }
-
+  
     @Override
     protected final void render() {
       Object o;
       o = http.req(key);
-
+  
       String text;
       text = String.valueOf(o);
-
+  
       p(text);
     }
   }
-
+  
   @SuppressWarnings("unused")
-  private void testCase04(HttpExchange http) {
+  private void main04(HttpExchange http) {
     var method = http.method();
-
+  
     var impl = (RequestMethodEnum) method;
-
+  
     switch (impl) {
-      case GET, HEAD -> testCase04Get(http);
-
-      case POST -> testCase04Post(http);
-
+      case GET, HEAD -> main04Get(http);
+  
+      case POST -> main04Post(http);
+  
       default -> http.error(Status.METHOD_NOT_ALLOWED);
     }
   }
-
-  private void testCase04Get(HttpExchange http) {
+  
+  private void main04Get(HttpExchange http) {
     http.req(String.class, "TC04 GET");
-
+  
     http.ok(new AttributeTester(http, String.class));
   }
-
-  private void testCase04Post(HttpExchange http) {
+  
+  private void main04Post(HttpExchange http) {
     http.ok(new AttributeTester(http, String.class));
   }
-
+  
   @Test(description = """
   Request attributes should be reset between requests
   """)
-  public void testCase04() throws IOException, InterruptedException {
+  public void main04() throws IOException, InterruptedException {
     test(
         """
-        GET /test/testCase04 HTTP/1.1\r
+        GET /test/main04 HTTP/1.1\r
         Host: server.test.localhost:%d\r
         \r
         """,
-
+  
         """
         HTTP/1.1 200 OK\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
@@ -272,14 +358,14 @@ public class ServerTest {
         \r
         <p>TC04 GET</p>
         """,
-
+  
         """
-        POST /test/testCase04 HTTP/1.1\r
+        POST /test/main04 HTTP/1.1\r
         Host: server.test.localhost:%d\r
         Connection: close\r
         \r
         """,
-
+  
         """
         HTTP/1.1 200 OK\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
@@ -290,9 +376,9 @@ public class ServerTest {
         """
     );
   }
-
+  
   @SuppressWarnings("unused")
-  private void testCase05(HttpExchange http) {
+  private void main05(HttpExchange http) {
     @SuppressWarnings("serial")
     class NotFoundException extends Http.AbstractHandlerException {
       @Override
@@ -300,22 +386,22 @@ public class ServerTest {
         http.error(Status.NOT_FOUND);
       }
     }
-
+  
     throw new NotFoundException();
   }
-
+  
   @Test(description = """
   An Http.AbstractHandlerException caught by the loop should call its handle method
   """)
-  public void testCase05() throws IOException {
+  public void main05() throws IOException {
     test(
         """
-        GET /test/testCase05 HTTP/1.1\r
+        GET /test/main05 HTTP/1.1\r
         Host: server.test.localhost:%d\r
         Connection: close\r
         \r
         """,
-
+  
         """
         HTTP/1.1 404 Not Found\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
@@ -327,22 +413,22 @@ public class ServerTest {
         """
     );
   }
-
+  
   @SuppressWarnings("unused")
-  private void testCase06(HttpExchange http) {
+  private void main06(HttpExchange http) {
     throw Throwables.trimStackTrace(new RuntimeException("Uh-Oh"), 1);
   }
-
+  
   @Test
-  public void testCase06() throws IOException {
+  public void main06() throws IOException {
     test(
         """
-        GET /test/testCase06 HTTP/1.1\r
+        GET /test/main06 HTTP/1.1\r
         Host: server.test.localhost:%d\r
         Connection: close\r
         \r
         """,
-
+  
         """
         HTTP/1.1 500 Internal Server Error\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
@@ -354,97 +440,7 @@ public class ServerTest {
         """
     );
   }
-
-  @Test
-  public void host01() throws IOException {
-    test(
-        """
-        GET /host01 HTTP/1.1\r
-        Host: server2.test.localhost:%d\r
-        Connection: close\r
-        \r
-        """,
-
-        """
-        HTTP/1.1 200 OK\r
-        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-        Content-Type: text/plain; charset=utf-8\r
-        Content-Length: 6\r
-        \r
-        HOST01\
-        """
-    );
-  }
-
-  @Test(description = "staticFiles::addDirectory")
-  public void staticFiles01() throws IOException {
-    test(
-        """
-        GET /staticFiles01 HTTP/1.1\r
-        Host: server.test.localhost:%d\r
-        \r
-        """,
-
-        """
-        HTTP/1.1 200 OK\r
-        Content-Type: application/octet-stream\r
-        Content-Length: 8\r
-        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-        ETag: 18901e7e8f8-8\r
-        \r
-        default
-        """,
-
-        """
-        GET /files/staticFiles01.txt HTTP/1.1\r
-        Host: server.test.localhost:%d\r
-        \r
-        """,
-
-        """
-        HTTP/1.1 200 OK\r
-        Content-Type: text/plain; charset=utf8\r
-        Content-Length: 5\r
-        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-        ETag: 18901e7e8f8-5\r
-        \r
-        text
-        """
-    );
-  }
-
-  @SuppressWarnings("unused")
-  private void staticFiles02(HttpExchange http) {
-    http.staticFile(Media.Bytes.textPlain("TC08\n"));
-
-    try {
-      setLastModifiedTime(root, "test/staticFiles02");
-    } catch (IOException e) {
-      throw new UncheckedIOException(e);
-    }
-  }
-
-  @Test(description = "HttpExchange::staticFile")
-  public void staticFiles02() throws IOException {
-    test(
-        """
-        GET /test/staticFiles02 HTTP/1.1\r
-        Host: server.test.localhost:%d\r
-        \r
-        """,
-
-        """
-        HTTP/1.1 200 OK\r
-        Content-Type: application/octet-stream\r
-        Content-Length: 5\r
-        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-        ETag: 18901e7e8f8-5\r
-        \r
-        TC08
-        """
-    );
-  }
-
+  
   @Test(description = "static files + dev mode")
   public void staticFiles03() throws IOException {
     test(
@@ -453,7 +449,7 @@ public class ServerTest {
         Host: server2.test.localhost:%d\r
         \r
         """,
-
+  
         """
         HTTP/1.1 200 OK\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
@@ -464,6 +460,6 @@ public class ServerTest {
         """
     );
   }
-
+  
   */
 }
