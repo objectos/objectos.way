@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.http.handler;
+package objectox.dev;
 
 import java.io.IOException;
 import java.lang.classfile.Annotation;
@@ -30,8 +30,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
-import objectos.http.ReloadingFunction;
-import objectos.http.ReloadingHandlerOptions;
+import objectos.dev.ReloadingFunction;
+import objectos.dev.ReloadingHandlerOptions;
 import objectos.internal.NoOpSinkSingleton;
 import objectos.way.Note;
 

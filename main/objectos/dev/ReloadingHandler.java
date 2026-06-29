@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectos.dev;
 
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.function.Consumer;
-import objectox.http.handler.ReloadingHandlerBuilder;
-import objectox.http.handler.ReloadingHandlerPojo;
+import objectos.http.Handler;
+import objectox.dev.ReloadingHandlerBuilder;
+import objectox.dev.ReloadingHandlerPojo;
 
 /// An HTTP handler which reloads the classes of the configured module if
 /// changes are observed in the module's location.

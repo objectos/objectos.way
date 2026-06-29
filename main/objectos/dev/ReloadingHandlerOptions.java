@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectos.dev;
 
 import java.nio.file.Path;
 import java.util.function.Predicate;
 import objectos.way.Note;
-import objectox.http.handler.ReloadingHandlerBuilder;
+import objectox.dev.ReloadingHandlerBuilder;
 
 /// Configures the creation of a `ReloadingHandler`.
 public sealed interface ReloadingHandlerOptions permits ReloadingHandlerBuilder {

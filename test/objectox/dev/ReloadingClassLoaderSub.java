@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.http.handler;
+package objectox.dev;
 
-public final class ReloadingClassLoaderOther {
+public final class ReloadingClassLoaderSub {
 
   @Override
   public final String toString() {

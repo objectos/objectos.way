@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.http.handler;
+package objectox.dev;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
@@ -23,11 +23,11 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import javax.tools.JavaCompiler;
+import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
-import javax.tools.JavaCompiler.CompilationTask;
 import objectos.way.Note;
 import objectos.way.Y;
 import objectos.y.PathY;
@@ -38,7 +38,7 @@ public final class ReloadingClassLoaderY {
 
   public Predicate<? super byte[]> classFileFilter = _ -> true;
 
-  public String className = "objectox.http.handler.ReloadingClassLoaderSub";
+  public String className = "objectox.dev.ReloadingClassLoaderSub";
 
   public Note.Sink noteSink = Y.noteSink();
 
@@ -119,7 +119,7 @@ public final class ReloadingClassLoaderY {
     fileManager.setLocationFromPaths(StandardLocation.CLASS_OUTPUT, List.of(cls));
 
     final Path javaFile;
-    javaFile = src.resolve("objectox/http/handler/ReloadingClassLoaderSub.java");
+    javaFile = src.resolve("objectox/dev/ReloadingClassLoaderSub.java");
 
     final Path parent;
     parent = javaFile.getParent();
@@ -127,7 +127,7 @@ public final class ReloadingClassLoaderY {
     Files.createDirectories(parent);
 
     Files.writeString(javaFile, """
-    package objectox.http.handler;
+    package objectox.dev;
 
     public final class ReloadingClassLoaderSub {
       @Override

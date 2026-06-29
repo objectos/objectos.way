@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.http.handler;
+package objectox.dev;
 
 import static org.testng.Assert.assertEquals;
 
@@ -36,7 +36,7 @@ public class ReloadingClassLoaderTest {
   public void testCase02() {
     assertEquals(
         ReloadingClassLoaderY.sub(opts -> {
-          opts.className = "objectox.http.handler.ReloadingClassLoaderOther";
+          opts.className = "objectox.dev.ReloadingClassLoaderOther";
         }),
 
         "original"
@@ -47,7 +47,7 @@ public class ReloadingClassLoaderTest {
   public void testCase03() {
     assertEquals(
         ReloadingClassLoaderY.sub(opts -> {
-          opts.binaryNameFilter = name -> "objectox.http.handler.ReloadingClassLoaderSub".equals(name);
+          opts.binaryNameFilter = name -> "objectox.dev.ReloadingClassLoaderSub".equals(name);
 
           opts.classFileFilter = _ -> false;
         }),
@@ -60,7 +60,7 @@ public class ReloadingClassLoaderTest {
   public void testCase04() {
     assertEquals(
         ReloadingClassLoaderY.sub(opts -> {
-          opts.binaryNameFilter = name -> "objectox.http.handler.ReloadingClassLoaderSub".equals(name);
+          opts.binaryNameFilter = name -> "objectox.dev.ReloadingClassLoaderSub".equals(name);
 
           opts.classFileFilter = _ -> true;
         }),

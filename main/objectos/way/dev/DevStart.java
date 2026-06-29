@@ -17,9 +17,9 @@ package objectos.way.dev;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import objectos.dev.ReloadingFunction;
+import objectos.dev.ReloadingHandler;
 import objectos.http.Handler;
-import objectos.http.ReloadingFunction;
-import objectos.http.ReloadingHandler;
 import objectos.http.Server;
 import objectos.way.App;
 import objectos.way.Note;

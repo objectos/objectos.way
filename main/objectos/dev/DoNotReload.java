@@ -13,12 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.http.handler;
+package objectos.dev;
 
-import java.io.Closeable;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-interface ReloadingWatcherAdapter extends Closeable {
-
-  boolean changed();
-
-}
+/// Prevents the annotated class from being reloaded by a
+/// {@link ReloadingHandler}.
+@Retention(RetentionPolicy.SOURCE)
+@Target(ElementType.TYPE)
+public @interface DoNotReload {}

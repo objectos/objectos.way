@@ -13,19 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectox.dev;
 
-/// Creates a new `Handler` instance from a provided `ClassLoader`.
-@FunctionalInterface
-public interface ReloadingFunction {
+public final class ReloadingClassLoaderOther {
 
-  /// Creates a new `Handler` instance from the provided `ClassLoader`.
-  ///
-  /// @param cl the class loader
-  ///
-  /// @return a new `Handler` instance
-  ///
-  /// @throws Exception if unable to create the new handler instance
-  Handler reload(ClassLoader cl) throws Exception;
+  @Override
+  public final String toString() {
+    return "original";
+  }
 
 }

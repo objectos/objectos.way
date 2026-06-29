@@ -13,16 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.http.handler;
+package objectox.dev;
 
 import java.io.IOException;
 import java.util.function.Predicate;
+import objectos.dev.ReloadingFunction;
+import objectos.dev.ReloadingHandler;
 import objectos.http.Handler;
-import objectos.http.ReloadingFunction;
-import objectos.http.ReloadingHandler;
 import objectos.http.Request;
 import objectos.http.Result;
 import objectos.way.Note;
+import objectox.http.handler.HandlerNoop;
 
 public final class ReloadingHandlerPojo implements ReloadingHandler {
 

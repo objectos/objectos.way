@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023-2026 Objectos Software LTDA.
+ * Copyright (C) 2025-2026 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.http.handler;
+package objectos.dev;
 
 import java.io.IOException;
 import java.lang.module.Configuration;
 import java.lang.module.ModuleFinder;
+import java.lang.reflect.Constructor;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.tools.JavaCompiler;
@@ -29,21 +29,21 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
+import objectos.http.Handler;
+import objectos.internal.Util;
 import objectos.y.PathY;
 
-final class ReloadingModuleY implements AutoCloseable {
+final class ReloadingHandlerY implements AutoCloseable {
 
   private final Path src;
-
   private final Path cls;
 
   private final JavaCompiler javaCompiler;
-
   private final StandardJavaFileManager fileManager;
 
-  private final Set<Path> sourceFiles = new HashSet<>();
+  private final List<Path> sourceFiles = Util.createList();
 
-  ReloadingModuleY(
+  public ReloadingHandlerY(
       Path src,
 
       Path cls,
@@ -61,7 +61,7 @@ final class ReloadingModuleY implements AutoCloseable {
     this.fileManager = fileManager;
   }
 
-  public static ReloadingModuleY of() throws IOException {
+  public static ReloadingHandlerY of() throws IOException {
     final Path root;
     root = PathY.nextDir();
 
@@ -87,7 +87,7 @@ final class ReloadingModuleY implements AutoCloseable {
 
     fileManager.setLocationFromPaths(StandardLocation.CLASS_OUTPUT, List.of(cls));
 
-    return new ReloadingModuleY(
+    return new ReloadingHandlerY(
         src,
 
         cls,
@@ -103,9 +103,25 @@ final class ReloadingModuleY implements AutoCloseable {
     fileManager.close();
   }
 
+  public final void javaFile(String pathName, String source) throws IOException {
+    final Path javaFile;
+    javaFile = src.resolve(pathName);
+
+    final Path parent;
+    parent = javaFile.getParent();
+
+    Files.createDirectories(parent);
+
+    Files.writeString(javaFile, source);
+
+    sourceFiles.add(javaFile);
+  }
+
   public final boolean compile() {
     final Iterable<? extends JavaFileObject> compilationUnits;
     compilationUnits = fileManager.getJavaFileObjectsFromPaths(sourceFiles);
+
+    sourceFiles.clear();
 
     final CompilationTask task;
     task = javaCompiler.getTask(null, fileManager, null, null, null, compilationUnits);
@@ -116,21 +132,11 @@ final class ReloadingModuleY implements AutoCloseable {
     return result.booleanValue();
   }
 
-  public final void javaFile(String pathName, String source) throws IOException {
-    final Path file;
-    file = src.resolve(pathName);
-
-    sourceFiles.add(file);
-
-    final Path parent;
-    parent = file.getParent();
-
-    Files.createDirectories(parent);
-
-    Files.writeString(file, source);
+  public final Path classOutput() {
+    return cls;
   }
 
-  public final ClassLoader classLoader(String moduleName) {
+  public final ClassLoader bootstrap() throws ClassNotFoundException {
     final ModuleLayer parentLayer;
     parentLayer = ModuleLayer.boot();
 
@@ -144,7 +150,7 @@ final class ReloadingModuleY implements AutoCloseable {
     after = ModuleFinder.of();
 
     final Set<String> roots;
-    roots = Set.of(moduleName);
+    roots = Set.of("test.way");
 
     final Configuration config;
     config = parentConfig.resolve(before, after, roots);
@@ -152,7 +158,20 @@ final class ReloadingModuleY implements AutoCloseable {
     final ModuleLayer layer;
     layer = parentLayer.defineModulesWithOneLoader(config, ClassLoader.getSystemClassLoader());
 
-    return layer.findLoader(moduleName);
+    return layer.findLoader("test.way");
+  }
+
+  public final Handler handler(ClassLoader classLoader) throws Exception {
+    final Class<?> subjectClass;
+    subjectClass = classLoader.loadClass("test.Subject");
+
+    final Constructor<?> constructor;
+    constructor = subjectClass.getConstructor();
+
+    final Object instance;
+    instance = constructor.newInstance();
+
+    return (Handler) instance;
   }
 
 }
