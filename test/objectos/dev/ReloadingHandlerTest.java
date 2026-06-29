@@ -90,4 +90,73 @@ public class ReloadingHandlerTest {
     }
   }
 
+  @Test(description = "Respect DoNotReload annotation")
+  public void testCase02() throws Exception {
+    try (var y = ReloadingHandlerY.of()) {
+      y.javaFile("module-info.java", """
+      module test.way {
+        exports test;
+
+        requires objectos.way;
+      }
+      """);
+
+      y.javaFile("test/Subject.java", """
+      package test;
+
+      @objectos.dev.DoNotReload
+      public final class Subject implements objectos.http.Handler {
+        @Override
+        public objectos.http.Result handle(objectos.http.Request req) {
+          return objectos.http.Status.NOT_FOUND;
+        }
+      }
+      """);
+
+      assertEquals(y.compile(), true);
+
+      final ClassLoader boot;
+      boot = y.bootstrap();
+
+      final Class<?> context;
+      context = boot.loadClass("test.Subject");
+
+      try (var subject = ReloadingHandler.create(opts -> {
+        opts.directory(y.classOutput());
+
+        opts.moduleOf(context);
+
+        opts.noteSink(Y.noteSink());
+
+        opts.reloadingFunction(loader -> y.handler(loader));
+      })) {
+        final Object res0;
+        res0 = subject.handle(null);
+
+        assertEquals(res0.toString(), "Status[404=Not Found]");
+
+        y.javaFile("test/Subject.java", """
+        package test;
+
+        @objectos.dev.DoNotReload
+        public final class Subject implements objectos.http.Handler {
+          @Override
+          public objectos.http.Result handle(objectos.http.Request req) {
+            return objectos.http.Status.FOUND;
+          }
+        }
+        """);
+
+        assertEquals(y.compile(), true);
+
+        TimeUnit.MILLISECONDS.sleep(5);
+
+        final Object res1;
+        res1 = subject.handle(null);
+
+        assertEquals(res1.toString(), "Status[404=Not Found]");
+      }
+    }
+  }
+
 }

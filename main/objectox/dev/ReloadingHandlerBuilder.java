@@ -83,7 +83,7 @@ public final class ReloadingHandlerBuilder implements ReloadingHandlerOptions {
           final Utf8Entry className;
           className = annotation.className();
 
-          if (className.equalsString("Lobjectos/way/App$DoNotReload;")) {
+          if (className.equalsString("Lobjectos/dev/DoNotReload;")) {
             return false;
           }
         }

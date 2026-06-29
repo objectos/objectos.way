@@ -22,6 +22,6 @@ import java.lang.annotation.Target;
 
 /// Prevents the annotated class from being reloaded by a
 /// {@link ReloadingHandler}.
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
 public @interface DoNotReload {}
