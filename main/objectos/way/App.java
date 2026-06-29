@@ -17,10 +17,6 @@ package objectos.way;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 import java.nio.file.Path;
 import java.time.Clock;
 import java.util.LinkedHashSet;
@@ -230,13 +226,6 @@ public final class App {
     }
 
   }
-
-  /**
-   * Prevents the annotated class from being reloaded by {@link Reloader}.
-   */
-  @Retention(RetentionPolicy.CLASS)
-  @Target(ElementType.TYPE)
-  public @interface DoNotReload {}
 
   /**
    * Allows for registering and obtaining application-level object instances.

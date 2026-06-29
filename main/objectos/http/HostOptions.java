@@ -15,7 +15,6 @@
  */
 package objectos.http;
 
-import java.io.IOException;
 import java.util.function.Consumer;
 import objectox.http.host.HostStageBuilder;
 
@@ -42,8 +41,6 @@ public sealed interface HostOptions permits HostStageBuilder {
   /// Enables for this host support for static files with the specified options.
   ///
   /// @param opts allows for setting the static files options
-  ///
-  /// @throws IOException if an I/O error occurs
   void staticFiles(Consumer<? super StaticFilesOptions> opts);
 
 }

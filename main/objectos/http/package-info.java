@@ -13,5 +13,5 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/// A virtual threads HTTP/1.1 server implementation.
+/// The Objectos Way HTTP server implementation.
 package objectos.http;

@@ -15,9 +15,7 @@
  */
 package objectos.way;
 
-import java.lang.annotation.Annotation;
 import java.util.Iterator;
-import java.util.function.Consumer;
 
 /**
  * The <strong>Objectos Lang</strong> main class.
@@ -47,72 +45,6 @@ public final class Lang {
 
   }
 
-  
-
-  // non-public types
-
-  sealed interface ClassReader permits LangClassReader {
-
-    void init(byte[] bytes);
-
-    boolean annotatedWith(Class<? extends Annotation> annotationType) throws InvalidClassFileException;
-
-    void visitStrings(Consumer<? super String> visitor) throws InvalidClassFileException;
-
-  }
-
-  static final class InvalidClassFileException extends Exception {
-    private static final long serialVersionUID = -601141059152548162L;
-
-    InvalidClassFileException(String message) {
-      super(message);
-    }
-
-    InvalidClassFileException(String message, Throwable cause) {
-      super(message, cause);
-    }
-  }
-
   private Lang() {}
-
-  static ClassReader createClassReader(Note.Sink noteSink) {
-    return new LangClassReader(noteSink);
-  }
-
-  private static final int UNSIGNED = 0xFF;
-
-  static int toBigEndianInt(byte b0, byte b1) {
-    int v0;
-    v0 = toInt(b0, 8);
-
-    int v1;
-    v1 = toInt(b1, 0);
-
-    return v1 | v0;
-  }
-
-  static int toBigEndianInt(byte b0, byte b1, byte b2, byte b3) {
-    int v0;
-    v0 = toInt(b0, 24);
-
-    int v1;
-    v1 = toInt(b1, 16);
-
-    int v2;
-    v2 = toInt(b2, 8);
-
-    int v3;
-    v3 = toInt(b3, 0);
-
-    return v3 | v2 | v1 | v0;
-  }
-
-  static int toUnsignedInt(byte b) {
-    return b & UNSIGNED;
-  }
-
-  private static int toInt(byte b, int shift) {
-    return toUnsignedInt(b) << shift;
-  }
 
 }

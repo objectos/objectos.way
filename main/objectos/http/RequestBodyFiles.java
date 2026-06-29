@@ -24,7 +24,7 @@ public interface RequestBodyFiles {
 
   /// Returns a new file for saving the body contents of the current request.
   ///
-  /// @returns a new file that can be opened for writing
+  /// @return a new file that can be opened for writing
   ///
   /// @throws IOException if an I/O error occurs
   Path get() throws IOException;

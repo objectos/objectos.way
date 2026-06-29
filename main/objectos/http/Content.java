@@ -37,6 +37,8 @@ public sealed interface Content
   ///
   /// @param contentType the type of the content
   /// @param contents the string providing the `UTF-8` bytes
+  ///
+  /// @return a newly created content object
   static Content of(MediaType contentType, BinaryObject contents) {
     return new ContentBinaryObject(
         Objects.requireNonNull(contentType, "contentType == null"),
@@ -48,7 +50,9 @@ public sealed interface Content
   /// Returns a new `Content` object whose contents are the specified bytes.
   ///
   /// @param contentType the type of the content
-  /// @param contents the bytes
+  /// @param bytes the contents
+  ///
+  /// @return a newly created content object
   static Content of(MediaType contentType, byte[] bytes) {
     final MediaType type;
     type = Objects.requireNonNull(contentType, "contentType == null");
@@ -64,6 +68,8 @@ public sealed interface Content
   ///
   /// @param contentType the type of the content
   /// @param contents the string providing the `UTF-8` bytes
+  ///
+  /// @return a newly created content object
   static Content of(MediaType contentType, String contents) {
     final MediaType type;
     type = Objects.requireNonNull(contentType, "contentType == null");
