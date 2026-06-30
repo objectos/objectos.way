@@ -54,6 +54,9 @@ public sealed interface MediaType permits MediaTypePojo {
   /// The `text/plain; charset=utf-8` media type.
   MediaType TEXT_PLAIN = MediaTypePojo.of0("text/plain; charset=utf-8");
 
+  /// The `text/xml` media type.
+  MediaType TEXT_XML = MediaTypePojo.of0("text/xml");
+
   /// Returns the full name of this media type, such as `text/html;
   /// charset=utf-8` or `application/json`.
   ///

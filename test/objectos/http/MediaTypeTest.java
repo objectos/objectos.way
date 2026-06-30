@@ -35,7 +35,8 @@ public class MediaTypeTest {
         {MediaType.TEXT_CSS, "text/css; charset=utf-8"},
         {MediaType.TEXT_HTML, "text/html; charset=utf-8"},
         {MediaType.TEXT_JAVASCRIPT, "text/javascript; charset=utf-8"},
-        {MediaType.TEXT_PLAIN, "text/plain; charset=utf-8"}
+        {MediaType.TEXT_PLAIN, "text/plain; charset=utf-8"},
+        {MediaType.TEXT_XML, "text/xml"}
     };
   }
 
