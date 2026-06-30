@@ -57,6 +57,16 @@ public sealed interface MediaType permits MediaTypePojo {
   /// The `text/xml` media type.
   MediaType TEXT_XML = MediaTypePojo.of0("text/xml");
 
+  /// Returns a new media type instance with the specified full name.
+  ///
+  /// @param the full type, such as `text/html; charset=utf-8` or
+  ///        `application/json`
+  ///
+  /// @return a newly created media type instance
+  static MediaType of(String fullType) {
+    return MediaTypePojo.of0(fullType);
+  }
+
   /// Returns the full name of this media type, such as `text/html;
   /// charset=utf-8` or `application/json`.
   ///

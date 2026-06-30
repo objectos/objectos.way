@@ -45,4 +45,21 @@ public class MediaTypeTest {
     assertEquals(subject.fullType(), expected);
   }
 
+  @DataProvider
+  public Object[][] ofProvider() {
+    return new Object[][] {
+        {"application/json"},
+        {"text/html"},
+        {"text/csv; charset=iso-8859-1"}
+    };
+  }
+
+  @Test(dataProvider = "ofProvider")
+  public void of(String fullType) {
+    final MediaType subject;
+    subject = MediaType.of(fullType);
+
+    assertEquals(subject.fullType(), fullType);
+  }
+
 }
