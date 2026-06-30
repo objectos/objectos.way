@@ -15,16 +15,22 @@
  */
 package objectox.http.media;
 
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
+import objectos.http.Content;
+import objectos.http.MediaType;
 import objectos.internal.IOFunction;
 import objectos.lang.Throwables;
+import objectos.way.Note;
+import objectos.way.Y;
 import objectos.y.BasicFileAttributesY;
-import org.testng.Assert;
+import objectos.y.PathY;
 import org.testng.annotations.Test;
 
 public class StaticFilesAttributesTest {
@@ -42,7 +48,12 @@ public class StaticFilesAttributesTest {
       this.path = path;
 
       if (exception != null) {
-        throw exception;
+        final IOException ex;
+        ex = exception;
+
+        exception = null;
+
+        throw ex;
       }
 
       return attributes;
@@ -50,10 +61,12 @@ public class StaticFilesAttributesTest {
 
   }
 
-  private final Path path = Path.of("");
+  private final Note.Sink noteSink = Y.noteSink();
+
+  private final Path path = PathY.nextFile();
 
   @Test(description = "ignore non-regular file")
-  public void read01() throws IOException {
+  public void read01() {
     final ReaderY reader;
     reader = new ReaderY();
 
@@ -63,19 +76,16 @@ public class StaticFilesAttributesTest {
     reader.attributes = attributes;
 
     final StaticFilesAttributes subject;
-    subject = new StaticFilesAttributes(reader);
+    subject = new StaticFilesAttributes(noteSink, reader);
 
-    try {
-      subject.read(path);
+    final BasicFileAttributes res;
+    res = subject.readOrCreate(path, null);
 
-      Assert.fail("It should have thrown");
-    } catch (StaticFilesErrNonRegular expected) {
-      assertSame(expected.path, path);
-    }
+    assertEquals(res, null);
   }
 
-  @Test(description = "ignore non-existing file")
-  public void read02() throws IOException {
+  @Test(description = "ignore non-existing file (contents == null)")
+  public void read02() {
     final ReaderY reader;
     reader = new ReaderY();
 
@@ -89,19 +99,16 @@ public class StaticFilesAttributesTest {
     reader.exception = new NoSuchFileException("");
 
     final StaticFilesAttributes subject;
-    subject = new StaticFilesAttributes(reader);
+    subject = new StaticFilesAttributes(noteSink, reader);
 
-    try {
-      subject.read(path);
+    final BasicFileAttributes res;
+    res = subject.readOrCreate(path, null);
 
-      Assert.fail("It should have thrown");
-    } catch (StaticFilesErrNonRegular expected) {
-      assertSame(expected.path, path);
-    }
+    assertEquals(res, null);
   }
 
-  @Test(description = "pass through IOException")
-  public void read03() throws StaticFilesErrNonRegular {
+  @Test(description = "ignore if IOException")
+  public void read03() {
     final ReaderY reader;
     reader = new ReaderY();
 
@@ -118,22 +125,16 @@ public class StaticFilesAttributesTest {
     reader.exception = exception;
 
     final StaticFilesAttributes subject;
-    subject = new StaticFilesAttributes(reader);
+    subject = new StaticFilesAttributes(noteSink, reader);
 
-    try {
-      subject.read(path);
+    final BasicFileAttributes res;
+    res = subject.readOrCreate(path, null);
 
-      Assert.fail("It should have thrown");
-    } catch (StaticFilesErrNonRegular expected) {
-      final Throwable cause;
-      cause = expected.getCause();
-
-      assertSame(cause, exception);
-    }
+    assertEquals(res, null);
   }
 
-  @Test(description = "return attrs")
-  public void read04() throws IOException, StaticFilesErrNonRegular {
+  @Test(description = "return attrs when existing")
+  public void read04() {
     final ReaderY reader;
     reader = new ReaderY();
 
@@ -145,14 +146,44 @@ public class StaticFilesAttributesTest {
     reader.attributes = attributes;
 
     final StaticFilesAttributes subject;
-    subject = new StaticFilesAttributes(reader);
+    subject = new StaticFilesAttributes(noteSink, reader);
 
     final BasicFileAttributes res;
-    res = subject.read(path);
+    res = subject.readOrCreate(path, null);
 
     assertSame(res, attributes);
 
     assertSame(reader.path, path);
+  }
+
+  @Test(description = "create when non-existing and contents != null")
+  public void read05() throws IOException {
+    final ReaderY reader;
+    reader = new ReaderY();
+
+    final BasicFileAttributes attributes;
+    attributes = BasicFileAttributesY.create(opts -> {
+      opts.regularFile = true;
+    });
+
+    reader.attributes = attributes;
+
+    reader.exception = new NoSuchFileException("");
+
+    final StaticFilesAttributes subject;
+    subject = new StaticFilesAttributes(noteSink, reader);
+
+    final Content c;
+    c = Content.of(MediaType.TEXT_PLAIN, "Created!");
+
+    final BasicFileAttributes res;
+    res = subject.readOrCreate(path, c);
+
+    assertSame(res, attributes);
+
+    assertSame(reader.path, path);
+
+    assertEquals(Files.readString(path), "Created!");
   }
 
 }

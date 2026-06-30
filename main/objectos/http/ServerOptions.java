@@ -17,6 +17,7 @@ package objectos.http;
 
 import java.time.Clock;
 import java.util.function.Consumer;
+import objectos.lang.Stage;
 import objectos.way.Note;
 import objectox.http.srv.ServerLoopBuilder;
 
@@ -65,5 +66,10 @@ public sealed interface ServerOptions permits ServerLoopBuilder {
   ///
   /// @param opts allows for setting the options
   void requestBody(Consumer<? super RequestBodyOptions> opts);
+
+  /// Sets the server's stage to the specified value.
+  ///
+  /// @param value the stage
+  void stage(Stage value);
 
 }

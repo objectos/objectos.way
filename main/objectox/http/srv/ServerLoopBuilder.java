@@ -24,6 +24,7 @@ import objectos.http.HostOptions;
 import objectos.http.RequestBodyOptions;
 import objectos.http.ServerOptions;
 import objectos.internal.NoOpSinkSingleton;
+import objectos.lang.Stage;
 import objectos.way.Note;
 import objectox.http.host.HostGlobals;
 import objectox.http.host.HostMapBuilder;
@@ -45,6 +46,9 @@ public final class ServerLoopBuilder
   private RequestBodyConfig requestBodyConfig;
 
   private final ServerSocketBuilder serverSocketBuilder = new ServerSocketBuilder();
+
+  @SuppressWarnings("unused")
+  private Stage stage = Stage.PROD;
 
   @Override
   public final void bufferSize(int value) {
@@ -86,6 +90,11 @@ public final class ServerLoopBuilder
     opts.accept(builder);
 
     requestBodyConfig = builder.build();
+  }
+
+  @Override
+  public final void stage(Stage value) {
+    stage = Objects.requireNonNull(value, "value == null");
   }
 
   public final ServerLoop build() throws IOException {

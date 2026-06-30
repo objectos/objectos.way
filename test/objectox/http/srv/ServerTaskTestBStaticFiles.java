@@ -311,24 +311,21 @@ public class ServerTaskTestBStaticFiles {
     builder.etagMask(0L);
   }
 
+  @SuppressWarnings("resource")
   private Path resolve(ServerTask subject, String path) {
-    try {
-      final HostMap hostMap;
-      hostMap = subject.hostMap;
+    final HostMap hostMap;
+    hostMap = subject.hostMap;
 
-      final Host host;
-      host = hostMap.get("www.example.com");
+    final Host host;
+    host = hostMap.get("www.example.com");
 
-      final BiFunction<Request, Result, Result> _staticFiles;
-      _staticFiles = host.staticFiles();
+    final BiFunction<Request, Result, Result> _staticFiles;
+    _staticFiles = host.staticFiles();
 
-      final StaticFiles staticFiles;
-      staticFiles = (StaticFiles) _staticFiles;
+    final StaticFiles staticFiles;
+    staticFiles = (StaticFiles) _staticFiles;
 
-      return staticFiles.resolve(path);
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
+    return staticFiles.resolve(path);
   }
 
   private void write(Path directory, Path file, String text) {

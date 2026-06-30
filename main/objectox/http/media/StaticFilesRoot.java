@@ -15,31 +15,40 @@
  */
 package objectox.http.media;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.nio.file.Path;
 import objectos.http.Request;
 import objectos.way.Io;
+import objectos.way.Note;
 
-final class StaticFilesRoot {
+final class StaticFilesRoot implements Closeable {
+
+  private static final Note.Ref1<String> TRAVERSAL = Note.Ref1.create(StaticFiles.class, "TRV", Note.ERROR);
 
   private final Path directory;
 
-  StaticFilesRoot(Path directory) {
+  private final Note.Sink noteSink;
+
+  StaticFilesRoot(Path directory, Note.Sink noteSink) {
     this.directory = directory;
+
+    this.noteSink = noteSink;
   }
 
-  public final void delete() throws IOException {
+  @Override
+  public final void close() throws IOException {
     Io.deleteRecursively(directory);
   }
 
-  public final Path resolve(Request request) throws StaticFilesErrTraversal {
+  public final Path resolve(Request request) {
     final String path;
     path = request.path();
 
     return resolve(path);
   }
 
-  public final Path resolve(String path) throws StaticFilesErrTraversal {
+  public final Path resolve(String path) {
     final String relative;
     relative = path.substring(1);
 
@@ -50,10 +59,12 @@ final class StaticFilesRoot {
     file = resolved.normalize();
 
     if (!file.startsWith(directory)) {
-      throw new StaticFilesErrTraversal(path);
-    }
+      noteSink.send(TRAVERSAL, path);
 
-    return file;
+      return null;
+    } else {
+      return file;
+    }
   }
 
 }

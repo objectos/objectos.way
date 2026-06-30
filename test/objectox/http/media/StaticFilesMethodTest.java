@@ -15,13 +15,11 @@
  */
 package objectox.http.media;
 
-import static org.testng.Assert.assertSame;
-
+import static org.testng.Assert.assertEquals;
 import java.util.EnumSet;
 import java.util.Iterator;
 import objectos.http.Request;
 import objectox.http.RequestMethodEnum;
-import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -36,13 +34,17 @@ public class StaticFilesMethodTest {
   }
 
   @Test(dataProvider = "validProvider")
-  public void valid(RequestMethodEnum method) throws StaticFilesErrMethod {
+  public void valid(RequestMethodEnum method) {
     final Request request;
     request = Request.create(opts -> {
       opts.method(method);
     });
 
-    subject.validate(request);
+    assertEquals(
+        subject.validate(request),
+
+        true
+    );
   }
 
   @DataProvider
@@ -57,13 +59,11 @@ public class StaticFilesMethodTest {
       opts.method(method);
     });
 
-    try {
-      subject.validate(request);
+    assertEquals(
+        subject.validate(request),
 
-      Assert.fail("It should have thrown");
-    } catch (StaticFilesErrMethod e) {
-      assertSame(e.method, method);
-    }
+        false
+    );
   }
 
 }

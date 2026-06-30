@@ -47,7 +47,7 @@ public final class StaticFilesStageBuilder implements StaticFilesOptions {
     reader = file -> Files.readAttributes(file, BasicFileAttributes.class, LINK);
 
     final StaticFilesAttributes staticFilesAttributes;
-    staticFilesAttributes = new StaticFilesAttributes(reader);
+    staticFilesAttributes = new StaticFilesAttributes(noteSink, reader);
 
     final Function<BasicFileAttributes, String> staticFilesETag;
     staticFilesETag = etag != null ? etag : new StaticFilesETag(etagMask);

@@ -25,10 +25,14 @@ import java.nio.file.Path;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import objectos.way.Note;
+import objectos.way.Y;
 import objectos.y.PathY;
 import org.testng.annotations.Test;
 
 public class StaticFilesRootBuilderTest {
+
+  private final Note.Sink noteSink = Y.noteSink();
 
   @Test
   public void create01() throws IOException {
@@ -36,7 +40,7 @@ public class StaticFilesRootBuilderTest {
     directories = Set.of();
 
     final StaticFilesRootBuilder subject;
-    subject = new StaticFilesRootBuilder(directories);
+    subject = new StaticFilesRootBuilder(directories, noteSink);
 
     final Path res;
     res = subject.create();
@@ -66,7 +70,7 @@ public class StaticFilesRootBuilderTest {
     directories = Set.of(fileAtRoot, fileAtSub);
 
     final StaticFilesRootBuilder subject;
-    subject = new StaticFilesRootBuilder(directories);
+    subject = new StaticFilesRootBuilder(directories, noteSink);
 
     final Path res;
     res = subject.create();

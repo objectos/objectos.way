@@ -16,35 +16,82 @@
 package objectox.http.media;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.CopyOption;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import objectos.internal.IOFunction;
+import objectos.lang.BinaryObject;
+import objectos.way.Note;
 
 final class StaticFilesAttributes {
 
+  private static final Note.Ref1<Throwable> THROW = Note.Ref1.create(StaticFilesAttributes.class, "THR", Note.ERROR);
+
+  private final Note.Sink noteSink;
+
   private final IOFunction<Path, BasicFileAttributes> reader;
 
-  StaticFilesAttributes(IOFunction<Path, BasicFileAttributes> reader) {
+  StaticFilesAttributes(Note.Sink noteSink, IOFunction<Path, BasicFileAttributes> reader) {
+    this.noteSink = noteSink;
+
     this.reader = reader;
   }
 
-  public final BasicFileAttributes read(Path path) throws StaticFilesErrNonRegular {
+  public final BasicFileAttributes readOrCreate(Path file, BinaryObject object) {
     try {
       final BasicFileAttributes attrs;
-      attrs = reader.apply(path);
+      attrs = reader.apply(file);
 
-      if (!attrs.isRegularFile()) {
-        throw new StaticFilesErrNonRegular(path);
+      if (attrs.isRegularFile()) {
+        return attrs;
+      } else {
+        return null;
       }
-
-      return attrs;
+    } catch (NoSuchFileException expected) {
+      return object != null ? create(file, object) : null;
     } catch (IOException e) {
-      throw new StaticFilesErrNonRegular(path, e);
+      noteSink.send(THROW, e);
+
+      return null;
     }
   }
 
-  public final BasicFileAttributes readDirect(Path file) throws IOException {
-    return reader.apply(file);
+  private static final CopyOption[] COPY = {StandardCopyOption.ATOMIC_MOVE};
+
+  private static final OpenOption[] OPEN = {StandardOpenOption.WRITE};
+
+  private BasicFileAttributes create(Path file, BinaryObject object) {
+    Path tmp = null;
+
+    try {
+      tmp = Files.createTempFile("http-static-file-", ".tmp");
+
+      try (OutputStream out = Files.newOutputStream(tmp, OPEN)) {
+        object.binaryTo(out);
+      }
+
+      Files.move(tmp, file, COPY);
+
+      return reader.apply(file);
+    } catch (IOException e) {
+      noteSink.send(THROW, e);
+
+      return null;
+    } finally {
+      if (tmp != null) {
+        try {
+          Files.deleteIfExists(tmp);
+        } catch (IOException suppressed) {
+          noteSink.send(THROW, suppressed);
+        }
+      }
+    }
   }
 
 }

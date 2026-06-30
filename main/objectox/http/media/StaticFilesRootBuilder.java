@@ -25,18 +25,25 @@ import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Set;
 import objectos.way.Io;
+import objectos.way.Note;
 
 final class StaticFilesRootBuilder {
 
   private final Set<Path> directories;
 
-  StaticFilesRootBuilder(Set<Path> directories) {
+  private final Note.Sink noteSink;
+
+  StaticFilesRootBuilder(Set<Path> directories, Note.Sink noteSink) {
     this.directories = directories;
+
+    this.noteSink = noteSink;
   }
 
   public final StaticFilesRoot build() throws IOException {
     return new StaticFilesRoot(
-        create()
+        create(),
+
+        noteSink
     );
   }
 

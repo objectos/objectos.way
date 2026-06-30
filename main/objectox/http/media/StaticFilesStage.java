@@ -38,14 +38,12 @@ public record StaticFilesStage(
 
   public final StaticFiles toStaticFiles() throws IOException {
     final StaticFilesRootBuilder staticFilesRootBuilder;
-    staticFilesRootBuilder = new StaticFilesRootBuilder(directories);
+    staticFilesRootBuilder = new StaticFilesRootBuilder(directories, noteSink);
 
     final StaticFilesRoot staticFilesRoot;
     staticFilesRoot = staticFilesRootBuilder.build();
 
     return new StaticFiles(
-        noteSink,
-
         staticFilesAttributes,
 
         staticFilesETag,

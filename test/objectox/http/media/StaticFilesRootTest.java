@@ -20,18 +20,22 @@ import static org.testng.Assert.assertEquals;
 import java.io.IOException;
 import java.nio.file.Path;
 import objectos.http.Request;
+import objectos.way.Note;
+import objectos.way.Y;
 import objectos.y.PathY;
-import org.testng.Assert;
 import org.testng.annotations.Test;
 
+@SuppressWarnings("resource")
 public class StaticFilesRootTest {
 
   private final Path directory = PathY.nextDir();
 
+  private final Note.Sink noteSink = Y.noteSink();
+
   @Test(description = "root is resolvable")
-  public void resolve01() throws IOException, StaticFilesErrTraversal {
+  public void resolve01() throws IOException {
     final StaticFilesRoot root;
-    root = new StaticFilesRoot(directory);
+    root = new StaticFilesRoot(directory, noteSink);
 
     final Request req;
     req = Request.create(opts -> {
@@ -45,9 +49,9 @@ public class StaticFilesRootTest {
   }
 
   @Test(description = "file @ root is resolvable")
-  public void resolve02() throws IOException, StaticFilesErrTraversal {
+  public void resolve02() throws IOException {
     final StaticFilesRoot root;
-    root = new StaticFilesRoot(directory);
+    root = new StaticFilesRoot(directory, noteSink);
 
     final Request req;
     req = Request.create(opts -> {
@@ -61,9 +65,9 @@ public class StaticFilesRootTest {
   }
 
   @Test(description = "dir @ root is resolvable")
-  public void resolve03() throws IOException, StaticFilesErrTraversal {
+  public void resolve03() throws IOException {
     final StaticFilesRoot root;
-    root = new StaticFilesRoot(directory);
+    root = new StaticFilesRoot(directory, noteSink);
 
     final Request req;
     req = Request.create(opts -> {
@@ -79,26 +83,23 @@ public class StaticFilesRootTest {
   @Test(description = "root parent is not resolvable")
   public void resolve04() throws IOException {
     final StaticFilesRoot root;
-    root = new StaticFilesRoot(directory);
+    root = new StaticFilesRoot(directory, noteSink);
 
     final Request req;
     req = Request.create(opts -> {
       opts.path("/subdir/../../forbidden.txt");
     });
 
-    try {
-      root.resolve(req);
+    final Path res;
+    res = root.resolve(req);
 
-      Assert.fail("It should have thrown");
-    } catch (StaticFilesErrTraversal expected) {
-      assertEquals(expected.getMessage(), "/subdir/../../forbidden.txt");
-    }
+    assertEquals(res, null);
   }
 
   @Test(description = "file @ root is resolvable, even if /.. are used")
-  public void resolve05() throws IOException, StaticFilesErrTraversal {
+  public void resolve05() throws IOException {
     final StaticFilesRoot root;
-    root = new StaticFilesRoot(directory);
+    root = new StaticFilesRoot(directory, noteSink);
 
     final Request req;
     req = Request.create(opts -> {
