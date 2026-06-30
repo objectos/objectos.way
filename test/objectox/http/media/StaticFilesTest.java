@@ -23,18 +23,23 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.Clock;
 import java.time.Instant;
+import java.util.Iterator;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 import objectos.http.Content;
 import objectos.http.ContentProvider;
+import objectos.http.HeaderName;
 import objectos.http.Status;
 import objectos.http.MediaType;
 import objectos.http.Request;
+import objectos.http.RequestMethod;
 import objectos.http.Response;
 import objectos.http.Result;
 import objectos.http.StaticFile;
 import objectos.way.Y;
 import objectos.y.BasicFileAttributesY;
 import objectos.y.PathY;
+import objectox.http.RequestMethodEnum;
 import objectox.http.resp.ResponseY;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -70,20 +75,104 @@ public class StaticFilesTest {
     return stage.toStaticFiles();
   }
 
-  @Test(description = "Result == Request should behave as handle")
+  @Test(description = "path traversal => bad request")
   public void apply01() throws IOException {
     try (StaticFiles subject = create(opts -> {
-      opts.contentTypes(".txt: text/plain");
+      opts.withDefaultContentTypes();
+    })) {
+      final Request req;
+      req = Request.create(opts -> {
+        opts.path("/foo/../../tc01.txt");
+      });
 
+      final Result res;
+      res = subject.apply(req, req);
+
+      assertEquals(res, Status.BAD_REQUEST);
+    }
+  }
+
+  @Test(description = "skip: non-existing file")
+  public void apply02() throws IOException {
+    try (StaticFiles subject = create(opts -> {
+      opts.withDefaultContentTypes();
+    })) {
+      final Request req;
+      req = Request.create(opts -> {
+        opts.path("/tc02.txt");
+      });
+
+      final Result res;
+      res = subject.apply(req, req);
+
+      assertSame(res, req);
+    }
+  }
+
+  @DataProvider
+  public Iterator<RequestMethod> methodProvider() {
+    return Stream.of(RequestMethodEnum.VALUES)
+        .filter(m -> !m.equals(RequestMethodEnum.GET) && !m.equals(RequestMethodEnum.HEAD))
+        .filter(v -> v.implemented)
+        .map(RequestMethod.class::cast)
+        .iterator();
+  }
+
+  @Test(dataProvider = "methodProvider")
+  public void apply03(RequestMethod method) throws IOException {
+    try (StaticFiles subject = create(opts -> {
       final Path root;
       root = PathY.nextDir();
 
-      PathY.write(root, "tc01.txt", "TC01");
+      PathY.write(root, "tc03.txt", "TC03");
 
       opts.addDirectory(root);
+
+      opts.withDefaultContentTypes();
     })) {
+      final Request req;
+      req = Request.create(opts -> {
+        opts.method(method);
+
+        opts.path("/tc03.txt");
+      });
+
       final Result res;
-      res = subject.apply(null, Request.create(opts -> { opts.path("/tc01.txt"); }));
+      res = subject.apply(req, req);
+
+      assertEquals(
+          ResponseY.toString(res),
+
+          """
+          HTTP/1.1 405 Method Not Allowed\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Content-Length: 0\r
+          Allow: GET, HEAD\r
+          \r
+          """
+      );
+    }
+  }
+
+  @Test(description = "ok: existing file")
+  public void apply04() throws IOException {
+    try (StaticFiles subject = create(opts -> {
+      final Path root;
+      root = PathY.nextDir();
+
+      PathY.write(root, "tc04.txt", "TC04");
+
+      opts.addDirectory(root);
+
+      opts.withDefaultContentTypes();
+    })) {
+      final Request req;
+      req = Request.create(opts -> {
+        opts.path("/tc04.txt");
+      });
+
+      final Result res;
+      res = subject.apply(req, req);
 
       assertEquals(
           ResponseY.toString(res),
@@ -92,10 +181,48 @@ public class StaticFilesTest {
           HTTP/1.1 200 OK\r
           Date: Wed, 28 Jun 2023 12:08:43 GMT\r
           ETag: 18901e7e8f8-4\r
-          Content-Type: text/plain\r
+          Content-Type: text/plain; charset=utf-8\r
           Content-Length: 4\r
           \r
-          TC01\
+          TC04\
+          """
+      );
+    }
+  }
+
+  @Test
+  public void apply05() throws IOException {
+    try (StaticFiles subject = create(opts -> {
+      final Path root;
+      root = PathY.nextDir();
+
+      PathY.write(root, "tc05.txt", "TC05");
+
+      opts.addDirectory(root);
+
+      opts.etag(_ -> "foo-bar");
+
+      opts.withDefaultContentTypes();
+    })) {
+      final Request req;
+      req = Request.create(opts -> {
+        opts.path("/tc05.txt");
+
+        opts.header(HeaderName.IF_NONE_MATCH, "foo-bar");
+      });
+
+      final Result res;
+      res = subject.apply(req, req);
+
+      assertEquals(
+          ResponseY.toString(res),
+
+          """
+          HTTP/1.1 304 Not Modified\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          ETag: foo-bar\r
+          Content-Length: 0\r
+          \r
           """
       );
     }
@@ -112,7 +239,7 @@ public class StaticFilesTest {
   }
 
   @Test(dataProvider = "passThroughProvider", description = "Result not Request nor StaticFile -> pass through")
-  public void apply02(Result initial) throws IOException {
+  public void apply06(Result initial) throws IOException {
     try (StaticFiles subject = create(_ -> {})) {
       final Result res;
       res = subject.apply(null, initial);
@@ -122,7 +249,7 @@ public class StaticFilesTest {
   }
 
   @Test(description = "It should create static file")
-  public void apply03() throws IOException {
+  public void apply07() throws IOException {
     try (StaticFiles subject = create(opts -> {
       opts.contentTypes(".txt: text/plain");
 
@@ -130,7 +257,7 @@ public class StaticFilesTest {
     })) {
       final Request request;
       request = Request.create(opts -> {
-        opts.path("/tc01.txt");
+        opts.path("/tc07.txt");
       });
 
       final Content content;
