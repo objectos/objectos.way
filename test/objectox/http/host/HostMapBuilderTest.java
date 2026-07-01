@@ -20,6 +20,7 @@ import static org.testng.Assert.assertNotNull;
 import java.io.IOException;
 import java.util.function.Consumer;
 import objectos.http.HostOptions;
+import objectos.lang.Stage;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -53,6 +54,11 @@ public class HostMapBuilderTest {
     globals = new HostGlobals() {
       @Override
       public final int port() { return 1234; }
+
+      @Override
+      public final Stage stage() {
+        return Stage.DEV;
+      }
     };
 
     final HostMap res;

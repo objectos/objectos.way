@@ -15,8 +15,12 @@
  */
 package objectox.http.host;
 
+import objectos.lang.Stage;
+
 public interface HostGlobals {
 
   int port();
+
+  Stage stage();
 
 }

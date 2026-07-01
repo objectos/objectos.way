@@ -19,6 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 import java.util.Map;
 import objectos.http.StaticFilesOptions;
+import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -48,7 +49,7 @@ public class StaticFilesTypesBuilderTest {
   }
 
   @Test(dataProvider = "contentTypesProvider")
-  public void contentTypes(String s, String defaultType, Map<String, String> expected) {
+  public void contentTypes01(String s, String defaultType, Map<String, String> expected) {
     final StaticFilesTypesBuilder subject;
     subject = new StaticFilesTypesBuilder("foo/bar");
 
@@ -59,6 +60,26 @@ public class StaticFilesTypesBuilderTest {
 
     assertEquals(res.defaultType, defaultType);
     assertEquals(res.types, expected);
+  }
+
+  @Test(description = "reject empty file extension")
+  public void contentTypes02() {
+    final StaticFilesTypesBuilder subject;
+    subject = new StaticFilesTypesBuilder("foo/bar");
+
+    try {
+      subject.contentTypes("""
+      .css: text/stylesheet
+      : invalid/value
+      """);
+
+      Assert.fail("It should have thrown");
+    } catch (IllegalArgumentException expected) {
+      final String msg;
+      msg = expected.getMessage();
+
+      assertEquals(msg, "File extension must not be empty");
+    }
   }
 
 }

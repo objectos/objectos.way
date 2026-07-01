@@ -18,7 +18,6 @@ package objectox.http.media;
 import java.io.Closeable;
 import java.io.IOException;
 import java.nio.file.Path;
-import objectos.http.Request;
 import objectos.way.Io;
 import objectos.way.Note;
 
@@ -39,13 +38,6 @@ final class StaticFilesRoot implements Closeable {
   @Override
   public final void close() throws IOException {
     Io.deleteRecursively(directory);
-  }
-
-  public final Path resolve(Request request) {
-    final String path;
-    path = request.path();
-
-    return resolve(path);
   }
 
   public final Path resolve(String path) {

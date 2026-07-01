@@ -38,11 +38,17 @@ public record HostStage(
 
         new ResultProcessor(),
 
-        sessionSupport != null ? sessionSupport.request() : _ -> {},
+        sessionSupport != null
+            ? sessionSupport.request()
+            : _ -> {},
 
-        sessionSupport != null ? sessionSupport.response() : (_, _) -> {},
+        sessionSupport != null
+            ? sessionSupport.response()
+            : (_, _) -> {},
 
-        staticFilesStage != null ? staticFilesStage.toStaticFiles() : (_, result) -> result
+        staticFilesStage != null
+            ? staticFilesStage.toStaticFiles(globals.stage())
+            : (_, result) -> result
     );
   }
 

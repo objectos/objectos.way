@@ -20,6 +20,7 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Set;
 import java.util.function.Function;
+import objectos.lang.Stage;
 import objectos.way.Note;
 
 public record StaticFilesStage(
@@ -36,7 +37,7 @@ public record StaticFilesStage(
     StaticFilesResponses staticFilesResponses
 ) {
 
-  public final StaticFiles toStaticFiles() throws IOException {
+  public final StaticFiles toStaticFiles(Stage stage) throws IOException {
     final StaticFilesRootBuilder staticFilesRootBuilder;
     staticFilesRootBuilder = new StaticFilesRootBuilder(directories, noteSink);
 
@@ -44,6 +45,8 @@ public record StaticFilesStage(
     staticFilesRoot = staticFilesRootBuilder.build();
 
     return new StaticFiles(
+        stage,
+
         staticFilesAttributes,
 
         staticFilesETag,

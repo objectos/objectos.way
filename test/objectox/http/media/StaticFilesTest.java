@@ -19,10 +19,12 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.Clock;
 import java.time.Instant;
+import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -30,6 +32,7 @@ import objectos.http.Content;
 import objectos.http.ContentProvider;
 import objectos.http.HeaderName;
 import objectos.http.Status;
+import objectos.lang.Stage;
 import objectos.http.MediaType;
 import objectos.http.Request;
 import objectos.http.RequestMethod;
@@ -44,10 +47,16 @@ import objectox.http.resp.ResponseY;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-@SuppressWarnings("exports")
 public class StaticFilesTest {
 
   private StaticFiles create(Consumer<? super StaticFilesStageBuilder> more) throws IOException {
+    final StaticFilesStage stage;
+    stage = stage(more);
+
+    return stage.toStaticFiles(Stage.PROD);
+  }
+
+  private StaticFilesStage stage(Consumer<? super StaticFilesStageBuilder> more) throws IOException {
     final StaticFilesStageBuilder builder;
     builder = new StaticFilesStageBuilder();
 
@@ -69,10 +78,7 @@ public class StaticFilesTest {
 
     more.accept(builder);
 
-    final StaticFilesStage stage;
-    stage = builder.build();
-
-    return stage.toStaticFiles();
+    return builder.build();
   }
 
   @Test(description = "path traversal => bad request")
@@ -251,12 +257,12 @@ public class StaticFilesTest {
   @Test(description = "It should create static file")
   public void apply07() throws IOException {
     try (StaticFiles subject = create(opts -> {
-      opts.contentTypes(".txt: text/plain");
-
       opts.etag(_ -> "foo-bar");
+
+      opts.withDefaultContentTypes();
     })) {
-      final Request request;
-      request = Request.create(opts -> {
+      final Request req;
+      req = Request.create(opts -> {
         opts.path("/tc07.txt");
       });
 
@@ -267,7 +273,7 @@ public class StaticFilesTest {
       file = StaticFile.of(content);
 
       final Result res;
-      res = subject.apply(request, file);
+      res = subject.apply(req, file);
 
       assertEquals(
           ResponseY.toString(res),
@@ -276,12 +282,63 @@ public class StaticFilesTest {
           HTTP/1.1 200 OK\r
           Date: Wed, 28 Jun 2023 12:08:43 GMT\r
           ETag: foo-bar\r
-          Content-Type: text/plain\r
+          Content-Type: text/plain; charset=utf-8\r
           Content-Length: 8\r
           \r
           CONTENT
           """
       );
+
+      final Path created;
+      created = subject.resolve(req.path());
+
+      assertEquals(Files.exists(created), true);
+    }
+  }
+
+  @DataProvider
+  public Iterator<Stage> apply08Provider() {
+    return EnumSet.complementOf(EnumSet.of(Stage.PROD)).iterator();
+  }
+
+  @Test(dataProvider = "apply08Provider", description = "It should NOT create static file in Stage != PROD")
+  public void apply08(Stage stage) throws IOException {
+    try (StaticFiles subject = stage(opts -> {
+      opts.etag(_ -> "foo-bar");
+
+      opts.withDefaultContentTypes();
+    }).toStaticFiles(stage)) {
+      final Request req;
+      req = Request.create(opts -> {
+        opts.path("/tc07.txt");
+      });
+
+      final Content content;
+      content = Content.of(MediaType.TEXT_PLAIN, "CONTENT\n");
+
+      final StaticFile file;
+      file = StaticFile.of(content);
+
+      final Result res;
+      res = subject.apply(req, file);
+
+      assertEquals(
+          ResponseY.toString(res),
+
+          """
+          HTTP/1.1 200 OK\r
+          Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+          Content-Type: text/plain; charset=utf-8\r
+          Content-Length: 8\r
+          \r
+          CONTENT
+          """
+      );
+
+      final Path created;
+      created = subject.resolve(req.path());
+
+      assertEquals(Files.exists(created), false);
     }
   }
 

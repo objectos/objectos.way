@@ -20,6 +20,7 @@ import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Function;
@@ -81,9 +82,12 @@ public final class StaticFilesStageBuilder implements StaticFilesOptions {
 
   @Override
   public final void addDirectory(Path directory) {
-    if (!Files.isDirectory(directory)) {
+    final Path d;
+    d = Objects.requireNonNull(directory, "directory == null");
+
+    if (!Files.isDirectory(d)) {
       final String msg;
-      msg = "Path " + directory + " does not represent a directory";
+      msg = "Path " + d + " does not represent a directory";
 
       throw new IllegalArgumentException(msg);
     }
@@ -92,7 +96,7 @@ public final class StaticFilesStageBuilder implements StaticFilesOptions {
       directories = new LinkedHashSet<>();
     }
 
-    directories.add(directory);
+    directories.add(d);
   }
 
   @Override

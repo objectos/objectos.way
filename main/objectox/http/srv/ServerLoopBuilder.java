@@ -106,21 +106,24 @@ public final class ServerLoopBuilder
     return loop;
   }
 
+  private record ThisGlobals(int port, Stage stage) implements HostGlobals {}
+
   public final ServerLoop unstarted() throws IOException {
     final ServerSocket serverSocket;
     serverSocket = serverSocketBuilder.build();
+
+    final int port;
+    port = serverSocket.getLocalPort();
+
+    final HostGlobals hostGlobals;
+    hostGlobals = new ThisGlobals(port, stage);
 
     return new ServerLoop(
         bufferSize,
 
         clock != null ? clock : Clock.systemUTC(),
 
-        hostMapBuilder.build(new HostGlobals() {
-          @Override
-          public final int port() {
-            return serverSocket.getLocalPort();
-          }
-        }),
+        hostMapBuilder.build(hostGlobals),
 
         noteSink,
 

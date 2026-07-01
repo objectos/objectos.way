@@ -21,6 +21,7 @@ import java.util.function.Consumer;
 import objectos.http.Handler;
 import objectos.http.SessionOptions;
 import objectos.http.StaticFilesOptions;
+import objectos.lang.Stage;
 
 public final class HostY implements HostGlobals {
 
@@ -29,6 +30,8 @@ public final class HostY implements HostGlobals {
   public String name;
 
   public Consumer<? super SessionOptions> session;
+
+  public Stage stage = Stage.PROD;
 
   public Consumer<? super StaticFilesOptions> staticFiles;
 
@@ -72,6 +75,11 @@ public final class HostY implements HostGlobals {
   @Override
   public final int port() {
     return 80;
+  }
+
+  @Override
+  public final Stage stage() {
+    return stage;
   }
 
 }

@@ -20,9 +20,8 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.SocketAddress;
-import objectox.http.host.HostGlobals;
 
-final class ServerSocketBuilder implements HostGlobals {
+final class ServerSocketBuilder {
 
   private InetAddress address;
 
@@ -48,7 +47,6 @@ final class ServerSocketBuilder implements HostGlobals {
     return serverSocket;
   }
 
-  @Override
   public final int port() {
     return port;
   }

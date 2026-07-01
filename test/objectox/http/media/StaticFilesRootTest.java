@@ -19,7 +19,6 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import objectos.http.Request;
 import objectos.way.Note;
 import objectos.way.Y;
 import objectos.y.PathY;
@@ -37,13 +36,8 @@ public class StaticFilesRootTest {
     final StaticFilesRoot root;
     root = new StaticFilesRoot(directory, noteSink);
 
-    final Request req;
-    req = Request.create(opts -> {
-      opts.path("/");
-    });
-
     final Path res;
-    res = root.resolve(req);
+    res = root.resolve("/");
 
     assertEquals(res, directory);
   }
@@ -53,13 +47,8 @@ public class StaticFilesRootTest {
     final StaticFilesRoot root;
     root = new StaticFilesRoot(directory, noteSink);
 
-    final Request req;
-    req = Request.create(opts -> {
-      opts.path("/at-root.txt");
-    });
-
     final Path res;
-    res = root.resolve(req);
+    res = root.resolve("/at-root.txt");
 
     assertEquals(res, directory.resolve("at-root.txt"));
   }
@@ -69,13 +58,8 @@ public class StaticFilesRootTest {
     final StaticFilesRoot root;
     root = new StaticFilesRoot(directory, noteSink);
 
-    final Request req;
-    req = Request.create(opts -> {
-      opts.path("/subdir");
-    });
-
     final Path res;
-    res = root.resolve(req);
+    res = root.resolve("/subdir");
 
     assertEquals(res, directory.resolve("subdir"));
   }
@@ -85,13 +69,8 @@ public class StaticFilesRootTest {
     final StaticFilesRoot root;
     root = new StaticFilesRoot(directory, noteSink);
 
-    final Request req;
-    req = Request.create(opts -> {
-      opts.path("/subdir/../../forbidden.txt");
-    });
-
     final Path res;
-    res = root.resolve(req);
+    res = root.resolve("/subdir/../../forbidden.txt");
 
     assertEquals(res, null);
   }
@@ -101,13 +80,8 @@ public class StaticFilesRootTest {
     final StaticFilesRoot root;
     root = new StaticFilesRoot(directory, noteSink);
 
-    final Request req;
-    req = Request.create(opts -> {
-      opts.path("/subdir/../accessible.txt");
-    });
-
     final Path res;
-    res = root.resolve(req);
+    res = root.resolve("/subdir/../accessible.txt");
 
     assertEquals(res, directory.resolve("accessible.txt"));
   }

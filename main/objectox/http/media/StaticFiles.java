@@ -26,10 +26,15 @@ import objectos.http.HeaderName;
 import objectos.http.Status;
 import objectos.internal.VisibleForTesting;
 import objectos.lang.BinaryObject;
+import objectos.lang.Stage;
 import objectos.http.Request;
+import objectos.http.Response;
 import objectos.http.Result;
 
 public final class StaticFiles implements BiFunction<Request, Result, Result>, Closeable {
+
+  @VisibleForTesting
+  final Stage stage;
 
   private final StaticFilesAttributes staticFilesAttributes;
 
@@ -42,6 +47,8 @@ public final class StaticFiles implements BiFunction<Request, Result, Result>, C
   private final StaticFilesRoot staticFilesRoot;
 
   StaticFiles(
+      Stage stage,
+
       StaticFilesAttributes staticFilesAttributes,
 
       Function<BasicFileAttributes, String> staticFilesETag,
@@ -52,6 +59,8 @@ public final class StaticFiles implements BiFunction<Request, Result, Result>, C
 
       StaticFilesRoot staticFilesRoot
   ) {
+    this.stage = stage;
+
     this.staticFilesAttributes = staticFilesAttributes;
 
     this.staticFilesETag = staticFilesETag;
@@ -68,7 +77,9 @@ public final class StaticFiles implements BiFunction<Request, Result, Result>, C
     return switch (initial) {
       case Request r -> handle(r, null);
 
-      case StaticFileContent(Content c) -> handle(request, c);
+      case StaticFileContent(Content content) -> stage == Stage.PROD
+          ? handle(request, content)
+          : Response.of(Status.OK, content);
 
       default -> initial;
     };
@@ -77,6 +88,11 @@ public final class StaticFiles implements BiFunction<Request, Result, Result>, C
   @Override
   public final void close() throws IOException {
     staticFilesRoot.close();
+  }
+
+  @VisibleForTesting
+  public final Path resolve(String path) {
+    return staticFilesRoot.resolve(path);
   }
 
   private Result handle(Request request, BinaryObject contents) {
@@ -114,11 +130,6 @@ public final class StaticFiles implements BiFunction<Request, Result, Result>, C
     else {
       return staticFilesResponses.ok(file, etag);
     }
-  }
-
-  @VisibleForTesting
-  public final Path resolve(String path) {
-    return staticFilesRoot.resolve(path);
   }
 
 }
