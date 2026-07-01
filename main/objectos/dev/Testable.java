@@ -13,10 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.lang;
+package objectos.dev;
 
 /// An object that produces a string representation suitable for testing.
 public interface Testable {
+
+  /// Formats the specified values as columns in a row. Columns are specified as
+  /// alternating value and length pairs.
+  ///
+  /// @param values an array where even indices represent column values (strings)
+  ///        and odd indices represent their respective lengths (integers).
+  ///
+  /// @throws IllegalArgumentException if the values array is not structured as
+  ///         alternating string and integer pairs or contains unsupported types.
+  static String toRow(Object... values) {
+    throw new UnsupportedOperationException("Implement me");
+  }
 
   /// Formats this testable instance using the specified formatter instance.
   ///

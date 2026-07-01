@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.lang;
+package objectox.dev;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
+import objectos.dev.TestableFormatter;
 
-final class TestableFormatter0 implements TestableFormatter {
+public final class TestableFormatterPojo implements TestableFormatter {
 
   private final StringBuilder out = new StringBuilder();
 
@@ -34,7 +35,7 @@ final class TestableFormatter0 implements TestableFormatter {
 
   private int padding;
 
-  TestableFormatter0(String cellSeparator) {
+  public TestableFormatterPojo(String cellSeparator) {
     this.cellSeparator = cellSeparator;
 
     firstCell = true;

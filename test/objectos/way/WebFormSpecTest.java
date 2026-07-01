@@ -17,8 +17,8 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.dev.TestableFormatter;
 import objectos.http.Request;
-import objectos.lang.TestableFormatter;
 import org.testng.annotations.Test;
 
 public class WebFormSpecTest {

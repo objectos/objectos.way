@@ -16,13 +16,14 @@
 package objectos.lang;
 
 import java.util.Objects;
+import objectox.lang.KeyPojo;
 
 /**
  * A typed key for associating values in map-like data structures.
  *
  * @param <T> the type of the objects to be mapped to the key
  */
-public sealed interface Key<T> permits Key0 {
+public sealed interface Key<T> permits KeyPojo {
 
   /**
    * Creates a new key instance whose equality is based on the
@@ -51,7 +52,7 @@ public sealed interface Key<T> permits Key0 {
   static <T> Key<T> of(Object unique) {
     Objects.requireNonNull(unique, "unique == null");
 
-    return new Key0<>(unique);
+    return new KeyPojo<>(unique);
   }
 
 }

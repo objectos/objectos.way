@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.lang;
+package objectox.dev;
 
 import static org.testng.Assert.assertEquals;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import objectos.dev.TestableFormatter;
 import org.testng.annotations.Test;
 
 public class TestableFormatterTest {

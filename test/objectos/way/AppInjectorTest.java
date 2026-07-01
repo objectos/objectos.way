@@ -107,7 +107,7 @@ public class AppInjectorTest {
 
       Assert.fail();
     } catch (IllegalArgumentException expected) {
-      assertEquals(expected.getMessage(), "Key0[unique=A] is already mapped to ABC");
+      assertEquals(expected.getMessage(), "Key[A] is already mapped to ABC");
     }
   }
 
@@ -122,7 +122,7 @@ public class AppInjectorTest {
 
       Assert.fail();
     } catch (IllegalArgumentException expected) {
-      assertEquals(expected.getMessage(), "No mappings were found for Key0[unique=B]");
+      assertEquals(expected.getMessage(), "No mappings were found for Key[B]");
     }
   }
 
@@ -138,7 +138,7 @@ public class AppInjectorTest {
 
       Assert.fail();
     } catch (IllegalArgumentException expected) {
-      assertEquals(expected.getMessage(), "No mappings were found for Key0[unique=B]");
+      assertEquals(expected.getMessage(), "No mappings were found for Key[B]");
     }
   }
 

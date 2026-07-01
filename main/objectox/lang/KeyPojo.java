@@ -13,6 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.lang;
+package objectox.lang;
 
-record Key0<T>(Object unique) implements Key<T> {}
+import objectos.lang.Key;
+
+public record KeyPojo<T>(Object unique) implements Key<T> {
+
+  @Override
+  public final String toString() {
+    return "Key[" + unique + "]";
+  }
+
+}

@@ -23,11 +23,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import objectos.lang.Testable;
-import objectos.lang.TestableFormatter;
+import objectos.dev.Testable;
+import objectos.dev.TestableFormatter;
+import objectos.way.Sql.Meta.QueryTables;
 import objectos.way.Sql.MetaTable;
 import objectos.way.Sql.Migrations;
-import objectos.way.Sql.Meta.QueryTables;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

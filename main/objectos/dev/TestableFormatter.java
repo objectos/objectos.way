@@ -13,19 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.lang;
+package objectos.dev;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import objectox.dev.TestableFormatterPojo;
 
 /// Formats the string representation of a testable component.
-public sealed interface TestableFormatter permits TestableFormatter0 {
+public sealed interface TestableFormatter permits TestableFormatterPojo {
 
   /// Creates a new formatter with the default settings.
   ///
   /// @return a new formatter with the default settings.
   static TestableFormatter create() {
-    return new TestableFormatter0("|");
+    return new TestableFormatterPojo("|");
   }
 
   /// Clears the content of this formatter, resetting it to an empty state.
