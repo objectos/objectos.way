@@ -18,7 +18,7 @@ package objectox.dev;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public final class TestableCellLocalDate extends TestableCell {
+public final class TestableCellLocalDate {
 
   private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -28,8 +28,7 @@ public final class TestableCellLocalDate extends TestableCell {
     this.value = value;
   }
 
-  @Override
-  public final String format(boolean last) {
+  public final String format() {
     if (value != null) {
       return FORMATTER.format(value);
     } else {

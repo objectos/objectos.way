@@ -26,19 +26,17 @@ public class TestableCellLocalDateTest {
   @DataProvider
   public Object[][] format01Provider() {
     return new Object[][] {
-        {LocalDate.of(2026, 1, 1), "2026-01-01", "2026-01-01"},
-        {null, "----------", "----------"}
+        {LocalDate.of(2026, 1, 1), "2026-01-01"},
+        {null, "----------",}
     };
   }
 
   @Test(dataProvider = "format01Provider", description = "format")
-  public void format01(LocalDate value, String lastFalse, String lastTrue) {
+  public void format01(LocalDate value, String expected) {
     final TestableCellLocalDate subject;
     subject = new TestableCellLocalDate(value);
 
-    assertEquals(subject.format(false), lastFalse);
-
-    assertEquals(subject.format(true), lastTrue);
+    assertEquals(subject.format(), expected);
   }
 
 }

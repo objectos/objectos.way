@@ -15,13 +15,13 @@
  */
 package objectox.dev;
 
-public final class TestableCellString {
+public final class TestableCellLong {
 
-  private final String value;
+  private final long value;
 
   private final int width;
 
-  TestableCellString(String value, int width) {
+  TestableCellLong(long value, int width) {
     if (width <= 0) {
       throw new IllegalArgumentException("Column width must be greater than zero");
     }
@@ -31,30 +31,56 @@ public final class TestableCellString {
     this.width = width;
   }
 
-  public final String format(boolean last) {
-    final String s;
-    s = value != null ? value : "null";
+  public final String format() {
+    if (value == 0) {
+      return "0".repeat(width);
+    }
 
-    final int length;
-    length = s.length();
+    final StringBuilder out;
+    out = new StringBuilder();
 
-    final int padding;
-    padding = width - length;
+    long v = value;
 
-    if (padding < 0) {
+    int d = width;
+
+    if (v < 0) {
+      out.append('-');
+
+      v = -v;
+
+      d--;
+    }
+
+    final long max;
+    max = (long) Math.pow(10, d);
+
+    if (v >= max) {
       final String msg;
       msg = "Formatted value length will exceed the column width of %d".formatted(width);
 
       throw new IllegalArgumentException(msg);
     }
 
-    else if (last || padding == 0) {
-      return s;
+    long divisor;
+    divisor = max / 10;
+
+    while (d > 0) {
+      long result;
+      result = v / divisor;
+
+      char c;
+      c = (char) (result + 48);
+
+      out.append(c);
+
+      v = v % divisor;
+
+      divisor = divisor / 10;
+
+      d--;
     }
 
-    else {
-      return s + " ".repeat(padding);
-    }
+    return out.toString();
   }
 
 }

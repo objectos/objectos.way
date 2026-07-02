@@ -21,15 +21,32 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class TestableCellStringTest {
+public class TestableCellLongTest {
 
   @Test(description = "reject value larger than width")
   public void format01() {
-    final TestableCellString subject;
-    subject = new TestableCellString("12345", 4);
+    final TestableCellLong subject;
+    subject = new TestableCellLong(12345L, 4);
 
     try {
-      subject.format(true);
+      subject.format();
+
+      Assert.fail("It should have thrown");
+    } catch (IllegalArgumentException expected) {
+      final String msg;
+      msg = expected.getMessage();
+
+      assertEquals(msg, "Formatted value length will exceed the column width of 4");
+    }
+  }
+
+  @Test(description = "reject negative value larger than width")
+  public void format02() {
+    final TestableCellLong subject;
+    subject = new TestableCellLong(-1234L, 4);
+
+    try {
+      subject.format();
 
       Assert.fail("It should have thrown");
     } catch (IllegalArgumentException expected) {
@@ -41,9 +58,9 @@ public class TestableCellStringTest {
   }
 
   @Test(description = "reject width <= 0")
-  public void format02() {
+  public void format03() {
     try {
-      new TestableCellString("12345", 0);
+      new TestableCellLong(12345, 0);
 
       Assert.fail("It should have thrown");
     } catch (IllegalArgumentException expected) {
@@ -55,26 +72,24 @@ public class TestableCellStringTest {
   }
 
   @DataProvider
-  public Object[][] format03Provider() {
+  public Object[][] format04Provider() {
     return new Object[][] {
-        {"abcde", 5, "abcde", "abcde"},
-        {"abcd", 5, "abcd ", "abcd"},
-        {"abc", 5, "abc  ", "abc"},
-        {"ab", 5, "ab   ", "ab"},
-        {"a", 5, "a    ", "a"},
-        {"", 5, "     ", ""},
-        {null, 5, "null ", "null"}
+        {12345L, 5, "12345"},
+        {1234L, 5, "01234"},
+        {123L, 5, "00123"},
+        {12L, 5, "00012"},
+        {1L, 5, "00001"},
+        {0L, 5, "00000"},
+        {-1234L, 5, "-1234"}
     };
   }
 
-  @Test(dataProvider = "format03Provider", description = "format")
-  public void format03(String value, int width, String lastFalse, String lastTrue) {
-    final TestableCellString subject;
-    subject = new TestableCellString(value, width);
+  @Test(dataProvider = "format04Provider", description = "format")
+  public void format04(long value, int width, String expected) {
+    final TestableCellLong subject;
+    subject = new TestableCellLong(value, width);
 
-    assertEquals(subject.format(false), lastFalse);
-
-    assertEquals(subject.format(true), lastTrue);
+    assertEquals(subject.format(), expected);
   }
 
 }
