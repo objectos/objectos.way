@@ -15,7 +15,7 @@
  */
 package objectox.dev;
 
-public final class TestableCellString {
+public final class TestableCellString extends TestableCell {
 
   private final String value;
 
@@ -31,13 +31,10 @@ public final class TestableCellString {
     this.width = width;
   }
 
-  public final String format(boolean pad) {
+  @Override
+  public final String format(boolean last) {
     final String s;
     s = value != null ? value : "null";
-
-    if (!pad) {
-      return s;
-    }
 
     final int length;
     length = s.length();
@@ -52,9 +49,11 @@ public final class TestableCellString {
       throw new IllegalArgumentException(msg);
     }
 
-    if (padding == 0) {
+    else if (last || padding == 0) {
       return s;
-    } else {
+    }
+
+    else {
       return s + " ".repeat(padding);
     }
   }

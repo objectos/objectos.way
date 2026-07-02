@@ -68,13 +68,13 @@ public class TestableCellStringTest {
   }
 
   @Test(dataProvider = "format03Provider", description = "format")
-  public void format03(String value, int width, String padTrue, String padFalse) {
+  public void format03(String value, int width, String lastFalse, String lastTrue) {
     final TestableCellString subject;
     subject = new TestableCellString(value, width);
 
-    assertEquals(subject.format(true), padTrue);
+    assertEquals(subject.format(false), lastFalse);
 
-    assertEquals(subject.format(false), padFalse);
+    assertEquals(subject.format(true), lastTrue);
   }
 
 }
