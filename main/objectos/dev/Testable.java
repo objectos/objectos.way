@@ -15,6 +15,9 @@
  */
 package objectos.dev;
 
+import objectox.dev.TestableJoin;
+import objectox.dev.TestableRow;
+
 /// An object that produces a string representation suitable for testing.
 public interface Testable {
 
@@ -26,8 +29,25 @@ public interface Testable {
   ///
   /// @throws IllegalArgumentException if the values array is not structured as
   ///         alternating string and integer pairs or contains unsupported types.
-  static String toRow(Object... values) {
-    throw new UnsupportedOperationException("Implement me");
+  static String asRow(Object... values) {
+    final TestableRow row;
+    row = new TestableRow(values);
+
+    return row.format();
+  }
+
+  /// Joins the formatted representation of each of the specified rows with a
+  /// line feed character.
+  ///
+  /// @param rows the testable instances whose formatted representation are to be
+  ///        joined together
+  ///
+  /// @return a new string representing the joined testable instances
+  static String join(Testable... rows) {
+    final TestableJoin join;
+    join = new TestableJoin(rows);
+
+    return join.format();
   }
 
   /// Formats this testable instance using the specified formatter instance.
