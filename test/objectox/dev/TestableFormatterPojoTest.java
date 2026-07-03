@@ -17,37 +17,121 @@ package objectox.dev;
 
 import static org.testng.Assert.assertEquals;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.function.BiConsumer;
-import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class TestableFormatterPojoTest {
 
+  private final BiConsumer<TestableFormatter2Pojo, String> h1 = (subject, value) -> subject.h1(value);
+  private final BiConsumer<TestableFormatter2Pojo, String> h2 = (subject, value) -> subject.h2(value);
+
   @DataProvider
-  public Iterator<BiConsumer<TestableFormatter2Pojo, String>> heading01Provider() {
-    return List.<BiConsumer<TestableFormatter2Pojo, String>> of(
-        (subject, value) -> subject.h1(value),
-        (subject, value) -> subject.h2(value)
-    ).iterator();
+  public Object[][] heading01Provider() {
+    return new Object[][] {
+        {h1, "# Title"},
+        {h2, "## Title"}
+    };
   }
 
   @Test(dataProvider = "heading01Provider", description = "reject null value")
-  public void heading01(BiConsumer<TestableFormatter2Pojo, String> method) {
+  public void heading01(BiConsumer<TestableFormatter2Pojo, String> method, String expected) {
     final TestableFormatter2Pojo subject;
     subject = new TestableFormatter2Pojo();
 
-    try {
-      method.accept(subject, null);
+    method.accept(subject, "Title");
 
-      Assert.fail("It should have thrown");
-    } catch (NullPointerException expected) {
-      final String msg = expected.getMessage();
+    assertEquals(subject.items, List.of(expected));
+  }
 
-      assertEquals(msg, "value == null");
-    }
+  @Test
+  public void table01() {
+    final TestableFormatter2Pojo subject;
+    subject = new TestableFormatter2Pojo();
+
+    subject.table(List.of(1, 2, 3), (rf, v) -> rf.cell(v, 1));
+
+    assertEquals(subject.items, List.of("""
+    | 1 |
+    | 2 |
+    | 3 |\
+    """));
+  }
+
+  @Test
+  public void toStringTest01() {
+    final TestableFormatter2Pojo subject;
+    subject = new TestableFormatter2Pojo();
+
+    assertEquals(
+        subject.toString(),
+
+        """
+        """
+    );
+  }
+
+  @Test
+  public void toStringTest02() {
+    final TestableFormatter2Pojo subject;
+    subject = new TestableFormatter2Pojo();
+
+    subject.h1("First Heading");
+
+    assertEquals(
+        subject.toString(),
+
+        """
+        # First Heading
+        """
+    );
+  }
+
+  @Test
+  public void toStringTest03() {
+    final TestableFormatter2Pojo subject;
+    subject = new TestableFormatter2Pojo();
+
+    subject.h1("First Heading");
+
+    subject.h2("Second Heading");
+
+    assertEquals(
+        subject.toString(),
+
+        """
+        # First Heading
+
+        ## Second Heading
+        """
+    );
+  }
+
+  @Test
+  public void toStringTest04() {
+    final TestableFormatter2Pojo subject;
+    subject = new TestableFormatter2Pojo();
+
+    subject.h1("First Heading");
+
+    subject.table(List.of(1, 2, 3), (rf, v) -> rf.cell(v, 1));
+
+    subject.h2("Second Heading");
+
+    assertEquals(
+        subject.toString(),
+
+        """
+        # First Heading
+
+        | 1 |
+        | 2 |
+        | 3 |
+
+        ## Second Heading
+        """
+    );
   }
 
 }

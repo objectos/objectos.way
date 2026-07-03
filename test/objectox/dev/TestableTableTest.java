@@ -62,4 +62,42 @@ public class TestableTableTest {
     );
   }
 
+  @Test(description = "single row")
+  public void format04() {
+    assertEquals(
+        table(
+            List.<Integer> of(1),
+
+            (r, v) -> {
+              r.cell(v, 1);
+              r.cell(Integer.toString(v), 1);
+            }
+        ),
+
+        """
+        | 1 | 1 |\
+        """
+    );
+  }
+
+  @Test(description = "multiple rows")
+  public void format05() {
+    assertEquals(
+        table(
+            List.<Integer> of(1, 2, 3),
+
+            (r, v) -> {
+              r.cell(v, 1);
+              r.cell(Integer.toString(v), 1);
+            }
+        ),
+
+        """
+        | 1 | 1 |
+        | 2 | 2 |
+        | 3 | 3 |\
+        """
+    );
+  }
+
 }

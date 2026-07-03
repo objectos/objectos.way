@@ -24,7 +24,7 @@ import objectos.dev.TestableRowFormatter;
 
 public final class TestableFormatter2Pojo implements TestableFormatter2 {
 
-  private final List<Object> items = new ArrayList<>();
+  final List<String> items = new ArrayList<>();
 
   @Override
   public final void h1(String value) {
@@ -41,21 +41,28 @@ public final class TestableFormatter2Pojo implements TestableFormatter2 {
     final TestableTable<T> table;
     table = new TestableTable<>(elements, format);
 
-    items.add(table);
+    add(table);
   }
 
   @Override
   public final String toString() {
-    return items.stream()
-        .map(Object::toString)
-        .collect(Collectors.joining("\n\n", "", "\n"));
+    return items.isEmpty()
+        ? ""
+        : items.stream().collect(Collectors.joining("\n\n", "", "\n"));
+  }
+
+  private void add(Object o) {
+    final String s;
+    s = o.toString();
+
+    items.add(s);
   }
 
   private void h(int level, String value) {
     final TestableHeading h;
     h = new TestableHeading(level, value);
 
-    items.add(h);
+    add(h);
   }
 
 }

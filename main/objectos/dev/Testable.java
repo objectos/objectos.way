@@ -16,13 +16,24 @@
 package objectos.dev;
 
 import java.util.function.Consumer;
+import objectox.dev.TestableFormatter2Pojo;
 import objectox.dev.TestableRow;
 
 /// An object that produces a string representation suitable for testing.
 public interface Testable {
 
+  /// Returns a formatted string suitable for testing.
+  ///
+  /// @param format allows for specifying the format
+  ///
+  /// @return a formatted string
   static String format(Consumer<? super TestableFormatter2> format) {
-    throw new UnsupportedOperationException("Implement me");
+    final TestableFormatter2Pojo formatter;
+    formatter = new TestableFormatter2Pojo();
+
+    format.accept(formatter);
+
+    return formatter.toString();
   }
 
   /// Formats the specified values as columns in a row. Columns are specified as
