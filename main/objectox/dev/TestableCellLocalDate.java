@@ -28,7 +28,8 @@ public final class TestableCellLocalDate {
     this.value = value;
   }
 
-  public final String format() {
+  @Override
+  public final String toString() {
     if (value != null) {
       return FORMATTER.format(value);
     } else {

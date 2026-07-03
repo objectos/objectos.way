@@ -17,37 +17,68 @@ package objectox.dev;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import objectos.dev.TestableRowFormatter;
 
 public final class TestableRowFormatterPojo implements TestableRowFormatter {
 
+  final List<String> columns = new ArrayList<>();
+
   @Override
   public final void cell(boolean value) {
-    throw new UnsupportedOperationException("Implement me");
+    final String s;
+    s = Boolean.toString(value);
+
+    final TestableCellString cell;
+    cell = new TestableCellString(s, 5);
+
+    add(cell);
   }
 
   @Override
   public final void cell(long value, int width) {
-    throw new UnsupportedOperationException("Implement me");
+    final TestableCellLong cell;
+    cell = new TestableCellLong(value, width);
+
+    add(cell);
   }
 
   @Override
   public final void cell(LocalDate value) {
-    throw new UnsupportedOperationException("Implement me");
+    final TestableCellLocalDate cell;
+    cell = new TestableCellLocalDate(value);
+
+    add(cell);
   }
 
   @Override
   public final void cell(LocalDateTime value) {
-    throw new UnsupportedOperationException("Implement me");
+    final TestableCellLocalDateTime cell;
+    cell = new TestableCellLocalDateTime(value);
+
+    add(cell);
   }
 
   @Override
   public final void cell(String value, int width) {
-    throw new UnsupportedOperationException("Implement me");
+    final TestableCellString cell;
+    cell = new TestableCellString(value, width);
+
+    add(cell);
   }
 
-  public final void consume() {
-    throw new UnsupportedOperationException("Implement me");
+  @Override
+  public final String toString() {
+    return columns.stream().collect(Collectors.joining(" | ", "| ", " |"));
+  }
+
+  private void add(Object o) {
+    final String column;
+    column = o.toString();
+
+    columns.add(column);
   }
 
 }

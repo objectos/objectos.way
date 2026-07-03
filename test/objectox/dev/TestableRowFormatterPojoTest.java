@@ -15,6 +15,114 @@
  */
 package objectox.dev;
 
+import static org.testng.Assert.assertEquals;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import org.testng.annotations.Test;
+
 public class TestableRowFormatterPojoTest {
+
+  @Test
+  public void cellBoolean() {
+    final TestableRowFormatterPojo subject;
+    subject = new TestableRowFormatterPojo();
+
+    subject.cell(true);
+    subject.cell(false);
+
+    assertEquals(
+        subject.columns,
+
+        List.of("true ", "false")
+    );
+  }
+
+  @Test
+  public void cellLong() {
+    final TestableRowFormatterPojo subject;
+    subject = new TestableRowFormatterPojo();
+
+    subject.cell(123, 5);
+    subject.cell(456L, 3);
+
+    assertEquals(
+        subject.columns,
+
+        List.of("00123", "456")
+    );
+  }
+
+  @Test
+  public void cellLocalDate() {
+    final TestableRowFormatterPojo subject;
+    subject = new TestableRowFormatterPojo();
+
+    subject.cell(LocalDate.of(2026, 1, 1));
+
+    assertEquals(
+        subject.columns,
+
+        List.of("2026-01-01")
+    );
+  }
+
+  @Test
+  public void cellLocalDateTime() {
+    final TestableRowFormatterPojo subject;
+    subject = new TestableRowFormatterPojo();
+
+    subject.cell(LocalDateTime.of(2026, 1, 1, 13, 0));
+
+    assertEquals(
+        subject.columns,
+
+        List.of("2026-01-01 13:00:00")
+    );
+  }
+
+  @Test
+  public void cellString() {
+    final TestableRowFormatterPojo subject;
+    subject = new TestableRowFormatterPojo();
+
+    subject.cell("foo", 5);
+
+    assertEquals(
+        subject.columns,
+
+        List.of("foo  ")
+    );
+  }
+
+  @Test
+  public void toStringTest01() {
+    final TestableRowFormatterPojo subject;
+    subject = new TestableRowFormatterPojo();
+
+    subject.cell("foo", 5);
+
+    assertEquals(
+        subject.toString(),
+
+        "| foo   |"
+    );
+  }
+
+  @Test
+  public void toStringTest02() {
+    final TestableRowFormatterPojo subject;
+    subject = new TestableRowFormatterPojo();
+
+    subject.cell("foo", 5);
+    subject.cell(true);
+
+    assertEquals(
+        subject.toString(),
+
+        "| foo   | true  |"
+    );
+  }
 
 }

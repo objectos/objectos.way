@@ -15,9 +15,12 @@
  */
 package objectox.dev;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 import objectos.dev.TestableRowFormatter;
 
 public final class TestableTable<T> {
@@ -38,19 +41,25 @@ public final class TestableTable<T> {
     iter = elements.iterator();
 
     if (iter.hasNext()) {
-      final TestableRowFormatterPojo rf;
-      rf = new TestableRowFormatterPojo();
+      final List<String> rows;
+      rows = new ArrayList<>();
 
       do {
+        final TestableRowFormatterPojo rf;
+        rf = new TestableRowFormatterPojo();
+
         final T value;
         value = iter.next();
 
         format.accept(rf, value);
 
-        rf.consume();
+        final String row;
+        row = rf.toString();
+
+        rows.add(row);
       } while (iter.hasNext());
 
-      return rf.toString();
+      return rows.stream().collect(Collectors.joining("\n"));
     } else {
       return "";
     }

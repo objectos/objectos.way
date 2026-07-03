@@ -29,7 +29,7 @@ public class TestableCellStringTest {
     subject = new TestableCellString("12345", 4);
 
     try {
-      subject.format(true);
+      subject.toString();
 
       Assert.fail("It should have thrown");
     } catch (IllegalArgumentException expected) {
@@ -57,24 +57,22 @@ public class TestableCellStringTest {
   @DataProvider
   public Object[][] format03Provider() {
     return new Object[][] {
-        {"abcde", 5, "abcde", "abcde"},
-        {"abcd", 5, "abcd ", "abcd"},
-        {"abc", 5, "abc  ", "abc"},
-        {"ab", 5, "ab   ", "ab"},
-        {"a", 5, "a    ", "a"},
-        {"", 5, "     ", ""},
-        {null, 5, "null ", "null"}
+        {"abcde", 5, "abcde"},
+        {"abcd", 5, "abcd "},
+        {"abc", 5, "abc  "},
+        {"ab", 5, "ab   "},
+        {"a", 5, "a    "},
+        {"", 5, "     "},
+        {null, 5, "null "}
     };
   }
 
   @Test(dataProvider = "format03Provider", description = "format")
-  public void format03(String value, int width, String lastFalse, String lastTrue) {
+  public void format03(String value, int width, String expected) {
     final TestableCellString subject;
     subject = new TestableCellString(value, width);
 
-    assertEquals(subject.format(false), lastFalse);
-
-    assertEquals(subject.format(true), lastTrue);
+    assertEquals(subject.toString(), expected);
   }
 
 }

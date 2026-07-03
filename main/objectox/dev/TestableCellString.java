@@ -15,6 +15,8 @@
  */
 package objectox.dev;
 
+import java.util.Objects;
+
 public final class TestableCellString {
 
   private final String value;
@@ -31,7 +33,15 @@ public final class TestableCellString {
     this.width = width;
   }
 
-  public final String format(boolean last) {
+  @Override
+  public final boolean equals(Object obj) {
+    return obj instanceof TestableCellString that
+        && Objects.equals(value, that.value)
+        && width == that.width;
+  }
+
+  @Override
+  public final String toString() {
     final String s;
     s = value != null ? value : "null";
 
@@ -48,7 +58,7 @@ public final class TestableCellString {
       throw new IllegalArgumentException(msg);
     }
 
-    else if (last || padding == 0) {
+    else if (padding == 0) {
       return s;
     }
 

@@ -70,14 +70,14 @@ public final class TestableRow {
     final TestableCellLocalDate cell;
     cell = new TestableCellLocalDate(value);
 
-    return cell.format();
+    return cell.toString();
   }
 
   private String cellLocalDateTime(LocalDateTime value) {
     final TestableCellLocalDateTime cell;
     cell = new TestableCellLocalDateTime(value);
 
-    return cell.format();
+    return cell.toString();
   }
 
   private String cellLong(long value) {
@@ -87,7 +87,7 @@ public final class TestableRow {
     final TestableCellLong cell;
     cell = new TestableCellLong(value, width);
 
-    return cell.format();
+    return cell.toString();
   }
 
   private String cellString(String value) {
@@ -101,10 +101,7 @@ public final class TestableRow {
     final TestableCellString cell;
     cell = new TestableCellString(value, width);
 
-    final boolean last;
-    last = !hasNext();
-
-    return cell.format(last);
+    return cell.toString();
   }
 
   private boolean hasNext() {

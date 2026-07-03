@@ -36,7 +36,7 @@ public class TestableCellLocalDateTest {
     final TestableCellLocalDate subject;
     subject = new TestableCellLocalDate(value);
 
-    assertEquals(subject.format(), expected);
+    assertEquals(subject.toString(), expected);
   }
 
 }

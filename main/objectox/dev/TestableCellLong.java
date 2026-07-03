@@ -31,7 +31,8 @@ public final class TestableCellLong {
     this.width = width;
   }
 
-  public final String format() {
+  @Override
+  public final String toString() {
     if (value == 0) {
       return "0".repeat(width);
     }

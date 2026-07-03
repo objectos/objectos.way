@@ -29,7 +29,7 @@ public class TestableCellLongTest {
     subject = new TestableCellLong(12345L, 4);
 
     try {
-      subject.format();
+      subject.toString();
 
       Assert.fail("It should have thrown");
     } catch (IllegalArgumentException expected) {
@@ -46,7 +46,7 @@ public class TestableCellLongTest {
     subject = new TestableCellLong(-1234L, 4);
 
     try {
-      subject.format();
+      subject.toString();
 
       Assert.fail("It should have thrown");
     } catch (IllegalArgumentException expected) {
@@ -89,7 +89,7 @@ public class TestableCellLongTest {
     final TestableCellLong subject;
     subject = new TestableCellLong(value, width);
 
-    assertEquals(subject.format(), expected);
+    assertEquals(subject.toString(), expected);
   }
 
 }

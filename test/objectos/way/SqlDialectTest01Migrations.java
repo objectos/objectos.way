@@ -72,25 +72,25 @@ public class SqlDialectTest01Migrations extends SqlDialectTest00Support {
           case H2 -> """
           # History
 
-          000 | SCHEMA_HISTORY table created   | SA                   | 2025-03-10 10:00:00 | true
-          001 | First Version                  | SA                   | 2025-03-10 10:01:00 | true
+          | 000 | SCHEMA_HISTORY table created   | SA                   | 2025-03-10 10:00:00 | true  |
+          | 001 | First Version                  | SA                   | 2025-03-10 10:01:00 | true  |
 
           # Tables
 
-          PUBLIC.SCHEMA_HISTORY
-          TEST.T1
+          | PUBLIC.SCHEMA_HISTORY
+          | TEST.T1
           """;
 
           case MYSQL -> """
           # History
 
-          000 | SCHEMA_HISTORY table created   | MIGRATE_01@localhost | 2025-03-10 10:00:00 | true
-          001 | First Version                  | MIGRATE_01@localhost | 2025-03-10 10:01:00 | true
+          | 000 | SCHEMA_HISTORY table created   | MIGRATE_01@localhost | 2025-03-10 10:00:00 | true  |
+          | 001 | First Version                  | MIGRATE_01@localhost | 2025-03-10 10:01:00 | true  |
 
           # Tables
 
-          MIGRATE_01.SCHEMA_HISTORY
-          MIGRATE_01.T1
+          | MIGRATE_01.SCHEMA_HISTORY                                                                 |
+          | MIGRATE_01.T1                                                                             |
           """;
 
           case TESTING -> throw new UnsupportedOperationException();
@@ -121,25 +121,25 @@ public class SqlDialectTest01Migrations extends SqlDialectTest00Support {
       case H2 -> """
       # History
 
-      000 | SCHEMA_HISTORY table created   | SA                   | 2025-03-10 10:00:00 | true
-      001 | First Version                  | SA                   | 2025-03-10 10:01:00 | true
+      | 000 | SCHEMA_HISTORY table created   | SA                   | 2025-03-10 10:00:00 | true  |
+      | 001 | First Version                  | SA                   | 2025-03-10 10:01:00 | true  |
 
       # Tables
 
-      PUBLIC.SCHEMA_HISTORY
-      TEST.T1
+      | PUBLIC.SCHEMA_HISTORY
+      | TEST.T1
       """;
 
       case MYSQL -> """
       # History
 
-      000 | SCHEMA_HISTORY table created   | MIGRATE_02@localhost | 2025-03-10 10:00:00 | true
-      001 | First Version                  | MIGRATE_02@localhost | 2025-03-10 10:01:00 | true
+      | 000 | SCHEMA_HISTORY table created   | MIGRATE_02@localhost | 2025-03-10 10:00:00 | true  |
+      | 001 | First Version                  | MIGRATE_02@localhost | 2025-03-10 10:01:00 | true  |
 
       # Tables
 
-      MIGRATE_02.SCHEMA_HISTORY
-      MIGRATE_02.T1
+      | MIGRATE_02.SCHEMA_HISTORY
+      | MIGRATE_02.T1
       """;
 
       case TESTING -> throw new UnsupportedOperationException();
@@ -151,11 +151,11 @@ public class SqlDialectTest01Migrations extends SqlDialectTest00Support {
         """
         # History
 
-        N/A
+        ||
 
         # Tables
 
-        N/A
+        ||
         """
     );
 
@@ -199,25 +199,25 @@ public class SqlDialectTest01Migrations extends SqlDialectTest00Support {
       case H2 -> """
       # History
 
-      000 | SCHEMA_HISTORY table created   | SA                   | 2025-03-10 10:00:00 | true
-      001 | First Version                  | SA                   | 2025-03-10 10:01:00 | true
+      | 000 | SCHEMA_HISTORY table created   | SA                   | 2025-03-10 10:00:00 | true  |
+      | 001 | First Version                  | SA                   | 2025-03-10 10:01:00 | true  |
 
       # Tables
 
-      PUBLIC.SCHEMA_HISTORY
-      TEST.T1
+      | PUBLIC.SCHEMA_HISTORY
+      | TEST.T1
       """;
 
       case MYSQL -> """
       # History
 
-      000 | SCHEMA_HISTORY table created   | MIGRATE_03@localhost | 2025-03-10 10:00:00 | true
-      001 | First Version                  | MIGRATE_03@localhost | 2025-03-10 10:01:00 | true
+      | 000 | SCHEMA_HISTORY table created   | MIGRATE_03@localhost | 2025-03-10 10:00:00 | true  |
+      | 001 | First Version                  | MIGRATE_03@localhost | 2025-03-10 10:01:00 | true  |
 
       # Tables
 
-      MIGRATE_03.SCHEMA_HISTORY
-      MIGRATE_03.T1
+      | MIGRATE_03.SCHEMA_HISTORY
+      | MIGRATE_03.T1
       """;
 
       case TESTING -> throw new UnsupportedOperationException();
@@ -241,29 +241,29 @@ public class SqlDialectTest01Migrations extends SqlDialectTest00Support {
       case H2 -> """
       # History
 
-      000 | SCHEMA_HISTORY table created   | SA                   | 2025-03-10 10:00:00 | true
-      001 | First Version                  | SA                   | 2025-03-10 10:01:00 | true
-      002 | Second Version                 | SA                   | 2025-03-10 10:02:00 | true
+      | 000 | SCHEMA_HISTORY table created   | SA                   | 2025-03-10 10:00:00 | true  |
+      | 001 | First Version                  | SA                   | 2025-03-10 10:01:00 | true  |
+      | 002 | Second Version                 | SA                   | 2025-03-10 10:02:00 | true  |
 
       # Tables
 
-      PUBLIC.SCHEMA_HISTORY
-      TEST.T1
-      TEST.T2
+      | PUBLIC.SCHEMA_HISTORY
+      | TEST.T1
+      | TEST.T2
       """;
 
       case MYSQL -> """
       # History
 
-      000 | SCHEMA_HISTORY table created   | MIGRATE_03@localhost | 2025-03-10 10:00:00 | true
-      001 | First Version                  | MIGRATE_03@localhost | 2025-03-10 10:01:00 | true
-      002 | Second Version                 | MIGRATE_03@localhost | 2025-03-10 10:02:00 | true
+      | 000 | SCHEMA_HISTORY table created   | MIGRATE_03@localhost | 2025-03-10 10:00:00 | true  |
+      | 001 | First Version                  | MIGRATE_03@localhost | 2025-03-10 10:01:00 | true  |
+      | 002 | Second Version                 | MIGRATE_03@localhost | 2025-03-10 10:02:00 | true  |
 
       # Tables
 
-      MIGRATE_03.SCHEMA_HISTORY
-      MIGRATE_03.T1
-      MIGRATE_03.T2
+      | MIGRATE_03.SCHEMA_HISTORY
+      | MIGRATE_03.T1
+      | MIGRATE_03.T2
       """;
 
       case TESTING -> throw new UnsupportedOperationException();
@@ -311,23 +311,23 @@ public class SqlDialectTest01Migrations extends SqlDialectTest00Support {
       case H2 -> """
       # History
 
-      000 | SCHEMA_HISTORY table created   | SA                   | 2025-03-10 10:00:00 | true
-      001 | First Version                  | SA                   | 2025-03-10 10:01:00 | false
+      | 000 | SCHEMA_HISTORY table created   | SA                   | 2025-03-10 10:00:00 | true  |
+      | 001 | First Version                  | SA                   | 2025-03-10 10:01:00 | false |
 
       # Tables
 
-      PUBLIC.SCHEMA_HISTORY
+      | PUBLIC.SCHEMA_HISTORY
       """;
 
       case MYSQL -> """
       # History
 
-      000 | SCHEMA_HISTORY table created   | MIGRATE_04@localhost | 2025-03-10 10:00:00 | true
-      001 | First Version                  | MIGRATE_04@localhost | 2025-03-10 10:01:00 | false
+      | 000 | SCHEMA_HISTORY table created   | MIGRATE_04@localhost | 2025-03-10 10:00:00 | true  |
+      | 001 | First Version                  | MIGRATE_04@localhost | 2025-03-10 10:01:00 | false |
 
       # Tables
 
-      MIGRATE_04.SCHEMA_HISTORY
+      | MIGRATE_04.SCHEMA_HISTORY
       """;
 
       case TESTING -> throw new UnsupportedOperationException();
