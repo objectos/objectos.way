@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import objectos.dev.Testable;
-import objectos.dev.TestableFormatter;
 import objectos.way.Sql.Meta.QueryTables;
 import objectos.way.Sql.MetaTable;
 import objectos.way.Sql.Migrations;
@@ -443,34 +442,26 @@ public class SqlDialectTest01Migrations extends SqlDialectTest00Support {
     return result;
   }
 
+  private record History(
+      int rank,
+      String description,
+      String installedBy,
+      LocalDateTime installedOn,
+      boolean success
+  ) {
+
+    static Sql.Mapper<History> MAPPER = Sql.Mapper.ofRecord(MethodHandles.lookup(), History.class);
+
+  }
+
   private String report(Sql.Transaction trx, ReportConfig config) {
-    TestableFormatter t;
-    t = TestableFormatter.create();
-
-    t.heading1("History");
-
-    record History(int rank, String description, String installedBy, LocalDateTime installedOn, boolean success)
-        implements Testable {
-
-      static Sql.Mapper<History> MAPPER = Sql.Mapper.ofRecord(MethodHandles.lookup(), History.class);
-
-      @Override
-      public void formatTestable(TestableFormatter t) {
-        t.row(
-            rank, 3,
-            description, 30,
-            installedBy, 20,
-            installedOn,
-            success
-        );
-      }
-    }
-
     final Sql.Meta meta;
     meta = trx.meta();
 
     final List<MetaTable> beforeSchemaHistory;
     beforeSchemaHistory = meta.queryTables(config.queryTables);
+
+    final List<History> historyRows;
 
     if (!beforeSchemaHistory.isEmpty()) {
 
@@ -487,20 +478,13 @@ public class SqlDialectTest01Migrations extends SqlDialectTest00Support {
 
       trx.format(config.schemaHistoryTableName);
 
-      List<History> historyRows;
       historyRows = trx.query(History.MAPPER);
-
-      for (History row : historyRows) {
-        row.formatTestable(t);
-      }
 
     } else {
 
-      t.fieldValue("N/A");
+      historyRows = List.of();
 
     }
-
-    t.heading1("Tables");
 
     final List<MetaTable> tables;
     tables = meta.queryTables();
@@ -508,28 +492,28 @@ public class SqlDialectTest01Migrations extends SqlDialectTest00Support {
     final Function<MetaTable, String> metaTableFun;
     metaTableFun = config.metaTable;
 
-    boolean empty = true;
+    return Testable.format(f -> {
+      f.h1("History");
 
-    for (MetaTable table : tables) {
+      f.table(historyRows, (rf, r) -> {
+        rf.cell(r.rank, 3);
+        rf.cell(r.description, 30);
+        rf.cell(r.installedBy, 20);
+        rf.cell(r.installedOn);
+        rf.cell(r.success);
+      });
 
-      final String value;
-      value = metaTableFun.apply(table);
+      f.h1("Tables");
 
-      if (value == null) {
-        continue;
-      }
+      f.table(tables, (rf, row) -> {
+        final String value;
+        value = metaTableFun.apply(row);
 
-      empty = false;
-
-      t.fieldValue(value);
-
-    }
-
-    if (empty) {
-      t.fieldValue("N/A");
-    }
-
-    return t.toString();
+        if (value != null) {
+          rf.cell(value, 50);
+        }
+      });
+    });
   }
 
 }

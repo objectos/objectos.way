@@ -15,34 +15,36 @@
  */
 package objectox.dev;
 
+import java.util.Iterator;
 import java.util.Objects;
 import objectos.dev.Testable;
 
 public final class TestableJoin {
 
-  private final Testable[] rows;
+  private final Iterable<? extends Testable> rows;
 
-  private int index;
-
-  public TestableJoin(Testable... rows) {
+  public TestableJoin(Iterable<? extends Testable> rows) {
     this.rows = Objects.requireNonNull(rows, "rows == null");
   }
 
   public final String format() {
-    if (hasNext()) {
+    final Iterator<? extends Testable> iter;
+    iter = rows.iterator();
+
+    if (iter.hasNext()) {
       final StringBuilder out;
       out = new StringBuilder();
 
       final String first;
-      first = next();
+      first = next(iter);
 
       out.append(first);
 
-      while (hasNext()) {
+      while (iter.hasNext()) {
         out.append('\n');
 
         final String next;
-        next = next();
+        next = next(iter);
 
         out.append(next);
       }
@@ -55,20 +57,13 @@ public final class TestableJoin {
     }
   }
 
-  private boolean hasNext() {
-    return index < rows.length;
-  }
-
-  private String next() {
-    final int idx;
-    idx = index++;
-
+  private String next(Iterator<? extends Testable> iter) {
     final Testable next;
-    next = rows[idx];
+    next = iter.next();
 
     if (next == null) {
       final String msg;
-      msg = "rows[%d] == null".formatted(idx);
+      msg = "rows provided a null instance";
 
       throw new NullPointerException(msg);
     }

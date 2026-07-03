@@ -17,6 +17,8 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.function.Function;
+import objectos.dev.Testable;
 import objectos.dev.TestableFormatter;
 import objectos.http.Request;
 import org.testng.annotations.Test;
@@ -195,7 +197,36 @@ public class WebFormSpecTest {
 
     }
 
-    assertEquals(w.toString(), expected);
+    final Function<Web.Form.Field, String> fieldFunction;
+    fieldFunction = field -> switch (field) {
+      case Web.Form.TextInput input -> Testable.asRow(
+          "TextInput", 10,
+          input.label(), 10,
+
+          input.value(), 15,
+          input.id(), 10,
+          input.name(), 10,
+          input.type(), 10
+      );
+    };
+
+    assertEquals(
+        """
+        # Form
+
+        %s
+
+        # Fields
+
+        %s
+        """.formatted(
+            Testable.asRow(form.action(), 10, form.isValid()),
+
+            form.fields().stream().map(mapper)
+        ),
+
+        expected
+    );
   }
 
   private void testSql(Web.Form form, String expected) {

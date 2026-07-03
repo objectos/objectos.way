@@ -13,27 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.dev;
+package objectox.dev;
 
-import static org.testng.Assert.assertEquals;
-
-import org.testng.annotations.Test;
-
-public class TestableTest {
-
-  record Row01(String c1, String c2, String c3, String c4, String c5) implements Testable {
-    @Override
-    public String toTestableText() {
-      return Testable.formatRow(c1, 5, c2, 5, c3, 5, c4, 5, c5, 5);
-    }
-  }
-
-  @Test
-  public void formatRow01() {
-    final Row01 subject;
-    subject = new Row01("abcde", "abcd", "abc", "ab", "a");
-
-    assertEquals(subject.toTestableText(), "abcde | abcd  | abc   | ab    | a");
-  }
+public class TestableRowFormatterPojoTest {
 
 }

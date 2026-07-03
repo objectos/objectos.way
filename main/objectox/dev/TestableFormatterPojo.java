@@ -311,56 +311,12 @@ public final class TestableFormatterPojo implements TestableFormatter {
   }
 
   @Override
-  public final void clear() {
-    out.setLength(0);
-  }
-
-  @Override
   public final void newLine() {
     out.append(System.lineSeparator());
 
     firstCell = true;
 
     padding = 0;
-  }
-
-  @Override
-  public final void row(Object... values) {
-    int idx;
-    idx = 0;
-
-    for (;;) {
-      Object value;
-      value = values[idx++];
-
-      switch (value) {
-        case Boolean b -> cell(b.booleanValue());
-
-        case Integer i -> cell(i.intValue(), intValue(values[idx++]));
-
-        case LocalDate ld -> cell(ld);
-
-        case LocalDateTime ldt -> cell(ldt);
-
-        case String s -> cell(s, intValue(values[idx++]));
-
-        default -> throw new IllegalArgumentException("Unsupported type=" + value.getClass());
-      }
-
-      if (idx == values.length) {
-        newLine();
-
-        break;
-      }
-    }
-  }
-
-  private int intValue(Object o) {
-    if (o instanceof Integer i) {
-      return i.intValue();
-    } else {
-      throw new IllegalArgumentException("Expected an int value but found " + o.getClass());
-    }
   }
 
   @Override

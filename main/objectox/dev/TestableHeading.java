@@ -13,27 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.dev;
+package objectox.dev;
 
-import static org.testng.Assert.assertEquals;
+import java.util.Objects;
 
-import org.testng.annotations.Test;
+final class TestableHeading {
 
-public class TestableTest {
+  private final String level;
 
-  record Row01(String c1, String c2, String c3, String c4, String c5) implements Testable {
-    @Override
-    public String toTestableText() {
-      return Testable.formatRow(c1, 5, c2, 5, c3, 5, c4, 5, c5, 5);
-    }
+  private final String value;
+
+  TestableHeading(int level, String value) {
+    this.level = switch (level) {
+      case 1 -> "#";
+
+      case 2 -> "##";
+
+      case 3 -> "###";
+
+      default -> "#".repeat(level);
+    };
+
+    this.value = Objects.requireNonNull(value, "value == null");
   }
 
-  @Test
-  public void formatRow01() {
-    final Row01 subject;
-    subject = new Row01("abcde", "abcd", "abc", "ab", "a");
-
-    assertEquals(subject.toTestableText(), "abcde | abcd  | abc   | ab    | a");
+  @Override
+  public final String toString() {
+    return level + " " + value;
   }
 
 }

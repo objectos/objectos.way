@@ -15,11 +15,15 @@
  */
 package objectos.dev;
 
-import objectox.dev.TestableJoin;
+import java.util.function.Consumer;
 import objectox.dev.TestableRow;
 
 /// An object that produces a string representation suitable for testing.
 public interface Testable {
+
+  static String format(Consumer<? super TestableFormatter2> format) {
+    throw new UnsupportedOperationException("Implement me");
+  }
 
   /// Formats the specified values as columns in a row. Columns are specified as
   /// alternating value and length pairs.
@@ -29,42 +33,16 @@ public interface Testable {
   ///
   /// @throws IllegalArgumentException if the values array is not structured as
   ///         alternating string and integer pairs or contains unsupported types.
-  static String asRow(Object... values) {
+  static String formatRow(Object... values) {
     final TestableRow row;
     row = new TestableRow(values);
 
     return row.format();
   }
 
-  /// Joins the formatted representation of each of the specified rows with a
-  /// line feed character.
-  ///
-  /// @param rows the testable instances whose formatted representation are to be
-  ///        joined together
-  ///
-  /// @return a new string representing the joined testable instances
-  static String join(Testable... rows) {
-    final TestableJoin join;
-    join = new TestableJoin(rows);
-
-    return join.format();
-  }
-
-  /// Formats this testable instance using the specified formatter instance.
-  ///
-  /// @param formatter the formatter to use
-  void formatTestable(TestableFormatter formatter);
-
   /// Returns the formatted string representation of this testable instance.
   ///
   /// @return the formatted string representation of this testable instance
-  default String toTestableText() {
-    final TestableFormatter f;
-    f = TestableFormatter.create();
-
-    formatTestable(f);
-
-    return f.toString();
-  }
+  String toTestableText();
 
 }

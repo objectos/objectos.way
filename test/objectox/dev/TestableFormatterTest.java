@@ -151,17 +151,23 @@ public class TestableFormatterTest {
     w = TestableFormatter.create();
 
     w.heading1("First");
-    w.row("test", 5);
+    w.cell("test", 5);
+    w.newLine();
     w.heading2("Second");
-    w.row("test", 5);
+    w.cell("test", 5);
+    w.newLine();
     w.heading3("Third");
-    w.row("test", 5);
+    w.cell("test", 5);
+    w.newLine();
     w.heading4("Fourth");
-    w.row("test", 5);
+    w.cell("test", 5);
+    w.newLine();
     w.heading5("Fifth");
-    w.row("test", 5);
+    w.cell("test", 5);
+    w.newLine();
     w.heading6("Sixth");
-    w.row("test", 5);
+    w.cell("test", 5);
+    w.newLine();
 
     assertEquals(w.toString(), """
     # First
@@ -187,18 +193,6 @@ public class TestableFormatterTest {
     ###### Sixth
 
     test
-    """);
-  }
-
-  @Test
-  public void row01() {
-    TestableFormatter w;
-    w = TestableFormatter.create();
-
-    w.row("abcde", 5, "abcd", 5, "abc", 5, "ab", 5, "a", 5);
-
-    assertEquals(w.toString(), """
-    abcde | abcd  | abc   | ab    | a
     """);
   }
 

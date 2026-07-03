@@ -1107,17 +1107,6 @@ public final class Html {
       writer.flush();
     }
 
-    /// Formats the testable nodes of this component.
-    ///
-    /// @param formatter the formatter instance
-    @Override
-    default void formatTestable(TestableFormatter formatter) {
-      final Html.Markup html;
-      html = new Html.Markup.OfTestable(formatter);
-
-      renderHtml(html);
-    }
-
     /// Returns the markup instance to be used by this component.
     ///
     /// @return the markup instance to be used by this component
@@ -1149,6 +1138,24 @@ public final class Html {
       renderHtml(html);
 
       return html.toHtml();
+    }
+
+    /// Returns the formatted string representation of the testable nodes of
+    /// this component.
+    ///
+    /// @return the formatted string representation of the testable nodes of
+    ///         this component
+    @Override
+    default String toTestableText() {
+      final TestableFormatter formatter;
+      formatter = TestableFormatter.create();
+
+      final Html.Markup html;
+      html = new Html.Markup.OfTestable(formatter);
+
+      renderHtml(html);
+
+      return formatter.toString();
     }
 
   }

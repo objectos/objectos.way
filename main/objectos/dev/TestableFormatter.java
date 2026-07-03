@@ -29,9 +29,6 @@ public sealed interface TestableFormatter permits TestableFormatterPojo {
     return new TestableFormatterPojo("|");
   }
 
-  /// Clears the content of this formatter, resetting it to an empty state.
-  void clear();
-
   /// Formats the specified boolean value as a table cell value.
   ///
   /// @param value the boolean value
@@ -130,15 +127,5 @@ public sealed interface TestableFormatter permits TestableFormatterPojo {
 
   /// Formats a line separator.
   void newLine();
-
-  /// Adds multiple columns to a single row. Columns are specified as
-  /// alternating value and length pairs.
-  ///
-  /// @param values an array where even indices represent column values (strings)
-  ///        and odd indices represent their respective lengths (integers).
-  ///
-  /// @throws IllegalArgumentException if the values array is not structured as
-  ///         alternating string and integer pairs or contains unsupported types.
-  void row(Object... values);
 
 }

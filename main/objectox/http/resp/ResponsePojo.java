@@ -22,7 +22,6 @@ import java.time.Clock;
 import java.util.List;
 import java.util.function.Consumer;
 import objectos.dev.Testable;
-import objectos.dev.TestableFormatter;
 import objectos.http.Content;
 import objectos.http.HeaderName;
 import objectos.http.MediaType;
@@ -51,23 +50,6 @@ public record ResponsePojo(
     opts.accept(builder);
 
     return builder.build();
-  }
-
-  @Override
-  public final void formatTestable(TestableFormatter formatter) {
-    if (!(entity instanceof ResponseEntity.OfContent(Content content))) {
-      return;
-    }
-
-    if (!(content instanceof ContentBinaryObject(MediaType _, BinaryObject contents))) {
-      return;
-    }
-
-    if (!(contents instanceof Testable testable)) {
-      return;
-    }
-
-    testable.formatTestable(formatter);
   }
 
   public final void setCookie(String value) {
@@ -112,6 +94,23 @@ public record ResponsePojo(
     bytes = outputStream.toByteArray();
 
     return new String(bytes);
+  }
+
+  @Override
+  public final String toTestableText() {
+    if (!(entity instanceof ResponseEntity.OfContent(Content content))) {
+      return "";
+    }
+
+    if (!(content instanceof ContentBinaryObject(MediaType _, BinaryObject contents))) {
+      return "";
+    }
+
+    if (!(contents instanceof Testable testable)) {
+      return "";
+    }
+
+    return testable.toTestableText();
   }
 
 }
