@@ -36,4 +36,14 @@ public record ContentBytes(MediaType contentType, byte[] bytes) implements Conte
         && Arrays.equals(bytes, that.bytes);
   }
 
+  public final String toTestableText() {
+    final String fullType;
+    fullType = contentType.fullType();
+
+    final String v;
+    v = bytes.toString();
+
+    return fullType + "\n" + v;
+  }
+
 }

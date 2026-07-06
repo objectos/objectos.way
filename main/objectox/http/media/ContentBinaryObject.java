@@ -17,6 +17,7 @@ package objectox.http.media;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import objectos.dev.Testable;
 import objectos.http.Content;
 import objectos.http.MediaType;
 import objectos.lang.BinaryObject;
@@ -26,6 +27,18 @@ public record ContentBinaryObject(MediaType contentType, BinaryObject contents) 
   @Override
   public final void binaryTo(OutputStream out) throws IOException {
     contents.binaryTo(out);
+  }
+
+  public final String toTestableText() {
+    final String fullType;
+    fullType = contentType.fullType();
+
+    final String v;
+    v = contents instanceof Testable t
+        ? t.toTestableText()
+        : contents.toString();
+
+    return fullType + "\n" + v;
   }
 
 }

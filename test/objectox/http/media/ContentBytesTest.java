@@ -20,6 +20,7 @@ import static org.testng.Assert.assertEquals;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.concurrent.ThreadLocalRandom;
+import objectos.http.MediaType;
 import org.testng.annotations.Test;
 
 public class ContentBytesTest {
@@ -46,6 +47,25 @@ public class ContentBytesTest {
     res = output.toByteArray();
 
     assertEquals(res, bytes);
+  }
+
+  @Test
+  public void toTestableText01() {
+    final byte[] bytes;
+    bytes = new byte[8192];
+
+    final ThreadLocalRandom random;
+    random = ThreadLocalRandom.current();
+
+    random.nextBytes(bytes);
+
+    final ContentBytes subject;
+    subject = new ContentBytes(MediaType.APPLICATION_OCTET_STREAM, bytes);
+
+    assertEquals(subject.toTestableText(), """
+    application/octet-stream
+    %s\
+    """.formatted(bytes.toString()));
   }
 
 }
