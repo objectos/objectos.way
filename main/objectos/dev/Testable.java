@@ -16,7 +16,7 @@
 package objectos.dev;
 
 import java.util.function.Consumer;
-import objectox.dev.TestableFormatter2Pojo;
+import objectox.dev.TestableFormatterPojo;
 
 /// An object that produces a string representation suitable for testing.
 public interface Testable {
@@ -26,9 +26,9 @@ public interface Testable {
   /// @param format allows for specifying the format
   ///
   /// @return a formatted string
-  static String format(Consumer<? super TestableFormatter2> format) {
-    final TestableFormatter2Pojo formatter;
-    formatter = new TestableFormatter2Pojo();
+  static String format(Consumer<? super TestableFormatter> format) {
+    final TestableFormatterPojo formatter;
+    formatter = new TestableFormatterPojo();
 
     format.accept(formatter);
 

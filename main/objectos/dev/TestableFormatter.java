@@ -15,117 +15,40 @@
  */
 package objectos.dev;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import objectox.dev.TestableFormatterPojo;
 
-/// Formats the string representation of a testable component.
+/// Formats a string representation that is suitable for a testable object.
 public sealed interface TestableFormatter permits TestableFormatterPojo {
-
-  /// Creates a new formatter with the default settings.
-  ///
-  /// @return a new formatter with the default settings.
-  static TestableFormatter create() {
-    return new TestableFormatterPojo("|");
-  }
-
-  /// Formats the specified boolean value as a table cell value.
-  ///
-  /// @param value the boolean value
-  void cell(boolean value);
-
-  /// Formats the specified integer value as a table cell value with the
-  /// specified fixed width.
-  ///
-  /// @param value the boolean value
-  /// @param width the fixed width of the cell.
-  void cell(int value, int width);
-
-  /// Formats the specified date as a table cell with the default `yyyy-MM-dd`
-  /// format.
-  ///
-  /// @param value the date value of the cell; may be `null`.
-  void cell(LocalDate value);
-
-  /// Formats the specified date-time as a table cell with the default
-  /// `yyyy-MM-dd HH:mm:ss` format.
-  ///
-  /// @param value the date-time value of the cell; may be `null`.
-  void cell(LocalDateTime value);
-
-  /// Formats the specified string as a table cell with the specified fixed
-  /// width.
-  ///
-  /// @param value the string value of the cell; may be `null`.
-  /// @param width the fixed width of the cell.
-  ///
-  /// @throws IllegalArgumentException if `length` is negative or if
-  ///         `value.length()` exceeds `length`.
-  void cell(String value, int width);
 
   /// Formats the specified string a level 1 heading.
   ///
   /// @param value the heading text
-  void heading1(String value);
+  void h1(String value);
 
   /// Formats the specified string a level 2 heading.
   ///
   /// @param value the heading text
-  void heading2(String value);
+  void h2(String value);
 
-  /// Formats the specified string a level 3 heading.
+  /// Formats a list of items.
   ///
-  /// @param value the heading text
-  void heading3(String value);
+  /// @param format allows for defining the format of the list
+  void list(Consumer<? super TestableListFormatter> format);
 
-  /// Formats the specified string a level 4 heading.
+  /// Formats the specified elements as a list of items.
   ///
-  /// @param value the heading text
-  void heading4(String value);
+  /// @param <T> the element type
+  /// @param elements the elements to be formatted
+  /// @param format allows for defining the format to be applied to each element
+  <T> void list(Iterable<? extends T> elements, BiConsumer<? super TestableListFormatter, T> format);
 
-  /// Formats the specified string a level 5 heading.
+  /// Formats the specified elements as a table.
   ///
-  /// @param value the heading text
-  void heading5(String value);
-
-  /// Formats the specified string a level 6 heading.
-  ///
-  /// @param value the heading text
-  void heading6(String value);
-
-  /// Formats the specified name and value as a field.
-  ///
-  /// Using the default field separator, the following invocation:
-  ///
-  /// ```java
-  /// writer.field("name", "Albert");
-  /// writer.field("age", "37");
-  /// ```
-  ///
-  /// Produces the following output:
-  ///
-  /// ```
-  /// name: Albert
-  /// age: 37
-  /// ```
-  ///
-  /// @param name the field name
-  /// @param value the field value
-  void field(String name, String value);
-
-  /// Formats the specified name as a field name. More specifically, writes out
-  /// the specified name immediately followed by the field separator.
-  ///
-  /// @param name the field name
-  void fieldName(String name);
-
-  /// Formats the specified value as a field value. More specifically, writes
-  /// out the value immediately followed by a line separator.
-  ///
-  /// @param value the field value
-  void fieldValue(String value);
-
-  /// Formats a line separator.
-  void newLine();
+  /// @param <T> the element type
+  /// @param elements the elements to be formatted
+  /// @param format allows for defining the format to be applied to each element
+  <T> void table(Iterable<? extends T> elements, BiConsumer<? super TestableRowFormatter, T> format);
 
 }

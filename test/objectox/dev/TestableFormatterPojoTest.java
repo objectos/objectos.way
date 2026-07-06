@@ -24,8 +24,8 @@ import org.testng.annotations.Test;
 
 public class TestableFormatterPojoTest {
 
-  private final BiConsumer<TestableFormatter2Pojo, String> h1 = (subject, value) -> subject.h1(value);
-  private final BiConsumer<TestableFormatter2Pojo, String> h2 = (subject, value) -> subject.h2(value);
+  private final BiConsumer<TestableFormatterPojo, String> h1 = (subject, value) -> subject.h1(value);
+  private final BiConsumer<TestableFormatterPojo, String> h2 = (subject, value) -> subject.h2(value);
 
   @DataProvider
   public Object[][] heading01Provider() {
@@ -36,9 +36,9 @@ public class TestableFormatterPojoTest {
   }
 
   @Test(dataProvider = "heading01Provider", description = "reject null value")
-  public void heading01(BiConsumer<TestableFormatter2Pojo, String> method, String expected) {
-    final TestableFormatter2Pojo subject;
-    subject = new TestableFormatter2Pojo();
+  public void heading01(BiConsumer<TestableFormatterPojo, String> method, String expected) {
+    final TestableFormatterPojo subject;
+    subject = new TestableFormatterPojo();
 
     method.accept(subject, "Title");
 
@@ -47,8 +47,8 @@ public class TestableFormatterPojoTest {
 
   @Test
   public void list01() {
-    final TestableFormatter2Pojo subject;
-    subject = new TestableFormatter2Pojo();
+    final TestableFormatterPojo subject;
+    subject = new TestableFormatterPojo();
 
     subject.list(lf -> {
       lf.item("Foo");
@@ -65,8 +65,8 @@ public class TestableFormatterPojoTest {
 
   @Test
   public void list02() {
-    final TestableFormatter2Pojo subject;
-    subject = new TestableFormatter2Pojo();
+    final TestableFormatterPojo subject;
+    subject = new TestableFormatterPojo();
 
     subject.list(
         List.of("Foo", "Bar", "Baz"),
@@ -82,8 +82,8 @@ public class TestableFormatterPojoTest {
 
   @Test
   public void table01() {
-    final TestableFormatter2Pojo subject;
-    subject = new TestableFormatter2Pojo();
+    final TestableFormatterPojo subject;
+    subject = new TestableFormatterPojo();
 
     subject.table(List.of(1, 2, 3), (rf, v) -> rf.cell(v, 1));
 
@@ -96,8 +96,8 @@ public class TestableFormatterPojoTest {
 
   @Test
   public void toStringTest01() {
-    final TestableFormatter2Pojo subject;
-    subject = new TestableFormatter2Pojo();
+    final TestableFormatterPojo subject;
+    subject = new TestableFormatterPojo();
 
     assertEquals(
         subject.toString(),
@@ -109,8 +109,8 @@ public class TestableFormatterPojoTest {
 
   @Test
   public void toStringTest02() {
-    final TestableFormatter2Pojo subject;
-    subject = new TestableFormatter2Pojo();
+    final TestableFormatterPojo subject;
+    subject = new TestableFormatterPojo();
 
     subject.h1("First Heading");
 
@@ -125,8 +125,8 @@ public class TestableFormatterPojoTest {
 
   @Test
   public void toStringTest03() {
-    final TestableFormatter2Pojo subject;
-    subject = new TestableFormatter2Pojo();
+    final TestableFormatterPojo subject;
+    subject = new TestableFormatterPojo();
 
     subject.h1("First Heading");
 
@@ -145,8 +145,8 @@ public class TestableFormatterPojoTest {
 
   @Test
   public void toStringTest04() {
-    final TestableFormatter2Pojo subject;
-    subject = new TestableFormatter2Pojo();
+    final TestableFormatterPojo subject;
+    subject = new TestableFormatterPojo();
 
     subject.h1("First Heading");
 
@@ -171,8 +171,8 @@ public class TestableFormatterPojoTest {
 
   @Test
   public void toStringTest05() {
-    final TestableFormatter2Pojo subject;
-    subject = new TestableFormatter2Pojo();
+    final TestableFormatterPojo subject;
+    subject = new TestableFormatterPojo();
 
     subject.h1("First Heading");
 

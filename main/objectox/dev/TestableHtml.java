@@ -1,0 +1,308 @@
+/*
+ * Copyright (C) 2023-2026 Objectos Software LTDA.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package objectox.dev;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Objects;
+
+public final class TestableHtml {
+
+  private final StringBuilder out = new StringBuilder();
+
+  private final String cellSeparator = "|";
+
+  private final char fieldSeparator = ':';
+
+  private final String nullValue = "null";
+
+  private boolean firstCell = true;
+
+  private int padding;
+
+  public TestableHtml() {
+  }
+
+  public final void heading1(String value) {
+    heading(value, "# ");
+  }
+
+  public final void heading2(String value) {
+    heading(value, "## ");
+  }
+
+  public final void heading3(String value) {
+    heading(value, "### ");
+  }
+
+  public final void heading4(String value) {
+    heading(value, "#### ");
+  }
+
+  public final void heading5(String value) {
+    heading(value, "##### ");
+  }
+
+  public final void heading6(String value) {
+    heading(value, "###### ");
+  }
+
+  private void heading(String value, String prefix) {
+    headingNewLineIfRequired();
+
+    out.append(prefix);
+    out.append(value);
+
+    newLine();
+    newLine();
+  }
+
+  private void headingNewLineIfRequired() {
+    String sep;
+    sep = System.lineSeparator();
+
+    int sepLength;
+    sepLength = sep.length();
+
+    int endIndex;
+    endIndex = out.length();
+
+    int startIndex;
+    startIndex = endIndex - sepLength;
+
+    if (startIndex < 0) {
+      return;
+    }
+
+    String suffix;
+    suffix = out.substring(startIndex, endIndex);
+
+    if (!suffix.equals(sep)) {
+      out.append(sep);
+      out.append(sep);
+
+      return;
+    }
+
+    endIndex = startIndex;
+
+    startIndex = endIndex - sepLength;
+
+    if (startIndex < 0) {
+      return;
+    }
+
+    suffix = out.substring(startIndex, endIndex);
+
+    if (!suffix.equals(sep)) {
+      out.append(sep);
+    }
+  }
+
+  public final void field(String name, String value) {
+    fieldName(name);
+    fieldValue(value);
+  }
+
+  public final void fieldName(String name) {
+    Objects.requireNonNull(name, "name == null");
+
+    out.append(name);
+    out.append(fieldSeparator);
+  }
+
+  public final void fieldValue(String value) {
+    if (!"".equals(value)) {
+
+      final int length;
+      length = out.length();
+
+      if (length > 0 && out.charAt(length - 1) == fieldSeparator) {
+        out.append(' ');
+      }
+
+      out.append(value);
+
+    }
+
+    out.append(System.lineSeparator());
+  }
+
+  private static final DateTimeFormatter LOCAL_DATE = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+  private static final DateTimeFormatter LOCAL_DATE_TIME = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+  public final void cell(boolean value) {
+    cellSeparatorIfRequired();
+
+    if (value) {
+      out.append("true");
+
+      padding = 1;
+    } else {
+      out.append("false");
+    }
+  }
+
+  public final void cell(int value, int width) {
+    cell((long) value, width);
+  }
+
+  public final void cell(long value, int width) {
+    cellSeparatorIfRequired();
+
+    if (value == 0) {
+      writeZeros(width);
+
+      return;
+    }
+
+    if (value < 0) {
+      out.append('-');
+
+      value = -value;
+
+      width--;
+    }
+
+    long max;
+    max = (long) Math.pow(10, width);
+
+    if (value >= max) {
+      throw new IllegalArgumentException("Value must have at most " + width + " digits");
+    }
+
+    long current;
+    current = value;
+
+    long divisor;
+    divisor = max / 10;
+
+    for (int i = width; i > 0; i--) {
+      long result;
+      result = current / divisor;
+
+      char c;
+      c = (char) (result + 48);
+
+      out.append(c);
+
+      current = current % divisor;
+
+      divisor = divisor / 10;
+    }
+  }
+
+  private void writeZeros(int width) {
+    if (width == 0) {
+      return;
+    }
+
+    if (width < 0) {
+      throw new IllegalArgumentException("Width must not be negative");
+    }
+
+    for (int i = 0; i < width; i++) {
+      out.append('0');
+    }
+  }
+
+  public final void cell(LocalDate value) {
+    cellSeparatorIfRequired();
+
+    if (value != null) {
+      LOCAL_DATE.formatTo(value, out);
+    } else {
+      out.append("----------");
+    }
+  }
+
+  public final void cell(LocalDateTime value) {
+    cellSeparatorIfRequired();
+
+    if (value != null) {
+      LOCAL_DATE_TIME.formatTo(value, out);
+    } else {
+      out.append("---------- --------");
+    }
+  }
+
+  public final void cell(String value, int length) {
+    cellSeparatorIfRequired();
+
+    if (value == null) {
+      value = nullValue;
+    }
+
+    int actualLength;
+    actualLength = value.length();
+
+    padding = length - actualLength;
+
+    if (padding < 0) {
+      throw new IllegalArgumentException("String length should not exceed " + length + " characters");
+    }
+
+    out.append(value);
+  }
+
+  private void cellSeparatorIfRequired() {
+    if (firstCell) {
+      firstCell = false;
+
+      return;
+    }
+
+    if (padding > 0) {
+      cellPadding(padding);
+
+      padding = 0;
+    }
+
+    out.append(' ');
+    out.append(cellSeparator);
+    out.append(' ');
+  }
+
+  private void cellPadding(int length) {
+    if (length == 0) {
+      return;
+    }
+
+    if (length < 0) {
+      throw new IllegalArgumentException("Length must not be negative");
+    }
+
+    for (int i = 0; i < length; i++) {
+      out.append(' ');
+    }
+  }
+
+  public final void newLine() {
+    out.append(System.lineSeparator());
+
+    firstCell = true;
+
+    padding = 0;
+  }
+
+  @Override
+  public final String toString() {
+    return out.toString();
+  }
+
+}

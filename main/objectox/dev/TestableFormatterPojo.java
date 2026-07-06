@@ -15,313 +15,78 @@
  */
 package objectox.dev;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import objectos.dev.TestableFormatter;
+import objectos.dev.TestableListFormatter;
+import objectos.dev.TestableRowFormatter;
 
 public final class TestableFormatterPojo implements TestableFormatter {
 
-  private final StringBuilder out = new StringBuilder();
+  final List<String> items = new ArrayList<>();
 
-  private final String cellSeparator;
-
-  private final char fieldSeparator = ':';
-
-  private final String nullValue = "null";
-
-  private boolean firstCell;
-
-  private int padding;
-
-  public TestableFormatterPojo(String cellSeparator) {
-    this.cellSeparator = cellSeparator;
-
-    firstCell = true;
+  @Override
+  public final void h1(String value) {
+    h(1, value);
   }
 
   @Override
-  public final void heading1(String value) {
-    heading(value, "# ");
+  public final void h2(String value) {
+    h(2, value);
   }
 
   @Override
-  public final void heading2(String value) {
-    heading(value, "## ");
+  public final void list(Consumer<? super TestableListFormatter> format) {
+    final TestableList list;
+    list = new TestableList();
+
+    format.accept(list);
+
+    add(list);
   }
 
   @Override
-  public final void heading3(String value) {
-    heading(value, "### ");
+  public final <T> void list(Iterable<? extends T> elements, BiConsumer<? super TestableListFormatter, T> format) {
+    final TestableList list;
+    list = new TestableList();
+
+    for (T item : elements) {
+      format.accept(list, item);
+    }
+
+    add(list);
   }
 
   @Override
-  public final void heading4(String value) {
-    heading(value, "#### ");
-  }
-
-  @Override
-  public final void heading5(String value) {
-    heading(value, "##### ");
-  }
-
-  @Override
-  public final void heading6(String value) {
-    heading(value, "###### ");
-  }
-
-  private void heading(String value, String prefix) {
-    headingNewLineIfRequired();
-
-    out.append(prefix);
-    out.append(value);
-
-    newLine();
-    newLine();
-  }
-
-  private void headingNewLineIfRequired() {
-    String sep;
-    sep = System.lineSeparator();
-
-    int sepLength;
-    sepLength = sep.length();
-
-    int endIndex;
-    endIndex = out.length();
-
-    int startIndex;
-    startIndex = endIndex - sepLength;
-
-    if (startIndex < 0) {
-      return;
-    }
-
-    String suffix;
-    suffix = out.substring(startIndex, endIndex);
-
-    if (!suffix.equals(sep)) {
-      out.append(sep);
-      out.append(sep);
-
-      return;
-    }
-
-    endIndex = startIndex;
-
-    startIndex = endIndex - sepLength;
-
-    if (startIndex < 0) {
-      return;
-    }
-
-    suffix = out.substring(startIndex, endIndex);
-
-    if (!suffix.equals(sep)) {
-      out.append(sep);
-    }
-  }
-
-  @Override
-  public final void field(String name, String value) {
-    fieldName(name);
-    fieldValue(value);
-  }
-
-  @Override
-  public final void fieldName(String name) {
-    Objects.requireNonNull(name, "name == null");
-
-    out.append(name);
-    out.append(fieldSeparator);
-  }
-
-  @Override
-  public final void fieldValue(String value) {
-    if (!"".equals(value)) {
-
-      final int length;
-      length = out.length();
-
-      if (length > 0 && out.charAt(length - 1) == fieldSeparator) {
-        out.append(' ');
-      }
-
-      out.append(value);
-
-    }
-
-    out.append(System.lineSeparator());
-  }
-
-  private static final DateTimeFormatter LOCAL_DATE = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-  private static final DateTimeFormatter LOCAL_DATE_TIME = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-  @Override
-  public final void cell(boolean value) {
-    cellSeparatorIfRequired();
-
-    if (value) {
-      out.append("true");
-
-      padding = 1;
-    } else {
-      out.append("false");
-    }
-  }
-
-  @Override
-  public final void cell(int value, int width) {
-    cell((long) value, width);
-  }
-
-  public final void cell(long value, int width) {
-    cellSeparatorIfRequired();
-
-    if (value == 0) {
-      writeZeros(width);
-
-      return;
-    }
-
-    if (value < 0) {
-      out.append('-');
-
-      value = -value;
-
-      width--;
-    }
-
-    long max;
-    max = (long) Math.pow(10, width);
-
-    if (value >= max) {
-      throw new IllegalArgumentException("Value must have at most " + width + " digits");
-    }
-
-    long current;
-    current = value;
-
-    long divisor;
-    divisor = max / 10;
-
-    for (int i = width; i > 0; i--) {
-      long result;
-      result = current / divisor;
-
-      char c;
-      c = (char) (result + 48);
-
-      out.append(c);
-
-      current = current % divisor;
-
-      divisor = divisor / 10;
-    }
-  }
-
-  private void writeZeros(int width) {
-    if (width == 0) {
-      return;
-    }
-
-    if (width < 0) {
-      throw new IllegalArgumentException("Width must not be negative");
-    }
-
-    for (int i = 0; i < width; i++) {
-      out.append('0');
-    }
-  }
-
-  @Override
-  public final void cell(LocalDate value) {
-    cellSeparatorIfRequired();
-
-    if (value != null) {
-      LOCAL_DATE.formatTo(value, out);
-    } else {
-      out.append("----------");
-    }
-  }
-
-  @Override
-  public final void cell(LocalDateTime value) {
-    cellSeparatorIfRequired();
-
-    if (value != null) {
-      LOCAL_DATE_TIME.formatTo(value, out);
-    } else {
-      out.append("---------- --------");
-    }
-  }
-
-  @Override
-  public final void cell(String value, int length) {
-    cellSeparatorIfRequired();
-
-    if (value == null) {
-      value = nullValue;
-    }
-
-    int actualLength;
-    actualLength = value.length();
-
-    padding = length - actualLength;
-
-    if (padding < 0) {
-      throw new IllegalArgumentException("String length should not exceed " + length + " characters");
-    }
-
-    out.append(value);
-  }
-
-  private void cellSeparatorIfRequired() {
-    if (firstCell) {
-      firstCell = false;
-
-      return;
-    }
-
-    if (padding > 0) {
-      cellPadding(padding);
-
-      padding = 0;
-    }
-
-    out.append(' ');
-    out.append(cellSeparator);
-    out.append(' ');
-  }
-
-  private void cellPadding(int length) {
-    if (length == 0) {
-      return;
-    }
-
-    if (length < 0) {
-      throw new IllegalArgumentException("Length must not be negative");
-    }
-
-    for (int i = 0; i < length; i++) {
-      out.append(' ');
-    }
-  }
-
-  @Override
-  public final void newLine() {
-    out.append(System.lineSeparator());
-
-    firstCell = true;
-
-    padding = 0;
+  public final <T> void table(Iterable<? extends T> elements, BiConsumer<? super TestableRowFormatter, T> format) {
+    final TestableTable<T> table;
+    table = new TestableTable<>(elements, format);
+
+    add(table);
   }
 
   @Override
   public final String toString() {
-    return out.toString();
+    return items.isEmpty()
+        ? ""
+        : items.stream().filter(s -> !s.isEmpty()).collect(Collectors.joining("\n\n", "", "\n"));
+  }
+
+  private void add(Object o) {
+    final String s;
+    s = o.toString();
+
+    items.add(s);
+  }
+
+  private void h(int level, String value) {
+    final TestableHeading h;
+    h = new TestableHeading(level, value);
+
+    add(h);
   }
 
 }

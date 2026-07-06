@@ -19,15 +19,14 @@ import static org.testng.Assert.assertEquals;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import objectos.dev.TestableFormatter;
 import org.testng.annotations.Test;
 
-public class TestableFormatterTest {
+public class TestableHtmlTest {
 
   @Test(description = "cell(String, length)")
   public void cell01() {
-    TestableFormatter w;
-    w = TestableFormatter.create();
+    TestableHtml w;
+    w = new TestableHtml();
 
     w.heading1("String cells");
 
@@ -66,8 +65,8 @@ public class TestableFormatterTest {
 
   @Test(description = "date cells")
   public void cell02() {
-    TestableFormatter w;
-    w = TestableFormatter.create();
+    TestableHtml w;
+    w = new TestableHtml();
 
     w.heading1("Date cells");
 
@@ -91,8 +90,8 @@ public class TestableFormatterTest {
 
   @Test
   public void field01() {
-    TestableFormatter w;
-    w = TestableFormatter.create();
+    TestableHtml w;
+    w = new TestableHtml();
 
     w.heading1("Field");
 
@@ -111,8 +110,8 @@ public class TestableFormatterTest {
 
   @Test
   public void field02() {
-    TestableFormatter w;
-    w = TestableFormatter.create();
+    TestableHtml w;
+    w = new TestableHtml();
 
     w.heading1("Field");
 
@@ -131,8 +130,8 @@ public class TestableFormatterTest {
 
   @Test
   public void field03() {
-    TestableFormatter w;
-    w = TestableFormatter.create();
+    TestableHtml w;
+    w = new TestableHtml();
 
     w.heading1("Field");
 
@@ -147,8 +146,8 @@ public class TestableFormatterTest {
 
   @Test
   public void heading01() {
-    TestableFormatter w;
-    w = TestableFormatter.create();
+    TestableHtml w;
+    w = new TestableHtml();
 
     w.heading1("First");
     w.cell("test", 5);

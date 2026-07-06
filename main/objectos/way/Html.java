@@ -21,13 +21,13 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import objectos.dev.Testable;
-import objectos.dev.TestableFormatter;
 import objectos.http.Content;
 import objectos.http.ContentProvider;
 import objectos.http.MediaType;
 import objectos.internal.Check;
 import objectos.lang.BinaryObject;
 import objectos.script.JsAction;
+import objectox.dev.TestableHtml;
 
 /**
  * The <strong>Objectos HTML</strong> main class.
@@ -1147,8 +1147,8 @@ public final class Html {
     ///         this component
     @Override
     default String toTestableText() {
-      final TestableFormatter formatter;
-      formatter = TestableFormatter.create();
+      final TestableHtml formatter;
+      formatter = new TestableHtml();
 
       final Html.Markup html;
       html = new Html.Markup.OfTestable(formatter);
@@ -1207,7 +1207,7 @@ public final class Html {
     /// Markup implementation for formatting testable objects.
     final class OfTestable extends HtmlMarkupOfTestable implements Markup {
 
-      OfTestable(TestableFormatter formatter) {
+      OfTestable(TestableHtml formatter) {
         super(formatter);
       }
 

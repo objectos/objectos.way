@@ -17,19 +17,19 @@ package objectos.way;
 
 import java.io.IOException;
 import java.util.Objects;
-import objectos.dev.TestableFormatter;
 import objectos.internal.Check;
 import objectos.way.Html.AttributeObject;
+import objectox.dev.TestableHtml;
 
 sealed abstract class HtmlMarkupOfTestable extends HtmlMarkup permits Html.Markup.OfTestable {
 
-  private final TestableFormatter formatter;
+  private final TestableHtml formatter;
 
   HtmlMarkupOfTestable() {
-    this(TestableFormatter.create());
+    formatter = new TestableHtml();
   }
 
-  HtmlMarkupOfTestable(TestableFormatter formatter) {
+  HtmlMarkupOfTestable(TestableHtml formatter) {
     this.formatter = formatter;
   }
 
