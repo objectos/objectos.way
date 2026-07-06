@@ -64,6 +64,23 @@ public class TestableFormatterPojoTest {
   }
 
   @Test
+  public void list02() {
+    final TestableFormatter2Pojo subject;
+    subject = new TestableFormatter2Pojo();
+
+    subject.list(
+        List.of("Foo", "Bar", "Baz"),
+        (lf, v) -> lf.item(v)
+    );
+
+    assertEquals(subject.items, List.of("""
+    - Foo
+    - Bar
+    - Baz\
+    """));
+  }
+
+  @Test
   public void table01() {
     final TestableFormatter2Pojo subject;
     subject = new TestableFormatter2Pojo();
@@ -146,6 +163,28 @@ public class TestableFormatterPojoTest {
         | 1 |
         | 2 |
         | 3 |
+
+        ## Second Heading
+        """
+    );
+  }
+
+  @Test
+  public void toStringTest05() {
+    final TestableFormatter2Pojo subject;
+    subject = new TestableFormatter2Pojo();
+
+    subject.h1("First Heading");
+
+    subject.table(List.<Integer> of(), (rf, v) -> rf.cell(v, 1));
+
+    subject.h2("Second Heading");
+
+    assertEquals(
+        subject.toString(),
+
+        """
+        # First Heading
 
         ## Second Heading
         """

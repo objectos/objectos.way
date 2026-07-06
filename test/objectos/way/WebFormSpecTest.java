@@ -17,9 +17,7 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
-import java.util.function.Function;
 import objectos.dev.Testable;
-import objectos.dev.TestableFormatter;
 import objectos.http.Request;
 import org.testng.annotations.Test;
 
@@ -44,11 +42,17 @@ public class WebFormSpecTest {
     testWebForm(form, """
     # Form
 
-    /test      | true
+    - /test
+    - true
 
     # Fields
 
-    TextInput  | First name |                 | some_id    | first_name | text
+    - TextInput
+    - First name
+    -
+    - some_id
+    - first_name
+    - text
     """);
   }
 
@@ -78,11 +82,17 @@ public class WebFormSpecTest {
     testWebForm(form, """
     # Form
 
-    /test      | true
+    - /test
+    - true
 
     # Fields
 
-    TextInput  | First name | First           | some_id    | first_name | text
+    - TextInput
+    - First name
+    - First
+    - some_id
+    - first_name
+    - text
     """);
 
     testSql(form, """
@@ -117,12 +127,18 @@ public class WebFormSpecTest {
     testWebForm(form, """
     # Form
 
-    /test      | false
+    - /test
+    - false
 
     # Fields
 
-    TextInput  | First name |                 | some_id    | first_name | text
-    Error      | Please enter a value
+    - TextInput
+    - First name
+    -
+    - some_id
+    - first_name
+    - text
+    - Please enter a value
     """);
   }
 
@@ -156,8 +172,13 @@ public class WebFormSpecTest {
 
     # Fields
 
-    TextInput  | First name | First           | some_id    | first_name | text
-    Error      | Maximum of 3 characters allowed; you entered 5
+    - TextInput
+    - First name
+    - First
+    - some_id
+    - first_name
+    - text
+    - Maximum of 3 characters allowed; you entered 5
     """);
   }
 
@@ -185,7 +206,7 @@ public class WebFormSpecTest {
           }
         }
 
-        for (Web.Form.Error error : field.errors()) {
+        for (Web.Form.Error error : v.errors()) {
           lf.item(error.message());
         }
       });

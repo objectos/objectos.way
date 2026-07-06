@@ -37,6 +37,13 @@ public sealed interface TestableFormatter2 permits TestableFormatter2Pojo {
   /// @param format allows for defining the format of the list
   void list(Consumer<? super TestableListFormatter> format);
 
+  /// Formats the specified elements as a list of items.
+  ///
+  /// @param <T> the element type
+  /// @param elements the elements to be formatted
+  /// @param format allows for defining the format to be applied to each element
+  <T> void list(Iterable<? extends T> elements, BiConsumer<? super TestableListFormatter, T> format);
+
   /// Formats the specified elements as a table.
   ///
   /// @param <T> the element type

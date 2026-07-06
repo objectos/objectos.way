@@ -41,11 +41,7 @@ public class SqlDialectTest01Migrations extends SqlDialectTest00Support {
         """
         # History
 
-        N/A
-
         # Tables
-
-        N/A
         """
     );
 
@@ -77,8 +73,8 @@ public class SqlDialectTest01Migrations extends SqlDialectTest00Support {
 
           # Tables
 
-          | PUBLIC.SCHEMA_HISTORY
-          | TEST.T1
+          - PUBLIC.SCHEMA_HISTORY
+          - TEST.T1
           """;
 
           case MYSQL -> """
@@ -89,8 +85,8 @@ public class SqlDialectTest01Migrations extends SqlDialectTest00Support {
 
           # Tables
 
-          | MIGRATE_01.SCHEMA_HISTORY                                                                 |
-          | MIGRATE_01.T1                                                                             |
+          - MIGRATE_01.SCHEMA_HISTORY
+          - MIGRATE_01.T1
           """;
 
           case TESTING -> throw new UnsupportedOperationException();
@@ -126,8 +122,8 @@ public class SqlDialectTest01Migrations extends SqlDialectTest00Support {
 
       # Tables
 
-      | PUBLIC.SCHEMA_HISTORY
-      | TEST.T1
+      - PUBLIC.SCHEMA_HISTORY
+      - TEST.T1
       """;
 
       case MYSQL -> """
@@ -138,8 +134,8 @@ public class SqlDialectTest01Migrations extends SqlDialectTest00Support {
 
       # Tables
 
-      | MIGRATE_02.SCHEMA_HISTORY
-      | MIGRATE_02.T1
+      - MIGRATE_02.SCHEMA_HISTORY
+      - MIGRATE_02.T1
       """;
 
       case TESTING -> throw new UnsupportedOperationException();
@@ -151,11 +147,7 @@ public class SqlDialectTest01Migrations extends SqlDialectTest00Support {
         """
         # History
 
-        ||
-
         # Tables
-
-        ||
         """
     );
 
@@ -204,8 +196,8 @@ public class SqlDialectTest01Migrations extends SqlDialectTest00Support {
 
       # Tables
 
-      | PUBLIC.SCHEMA_HISTORY
-      | TEST.T1
+      - PUBLIC.SCHEMA_HISTORY
+      - TEST.T1
       """;
 
       case MYSQL -> """
@@ -216,8 +208,8 @@ public class SqlDialectTest01Migrations extends SqlDialectTest00Support {
 
       # Tables
 
-      | MIGRATE_03.SCHEMA_HISTORY
-      | MIGRATE_03.T1
+      - MIGRATE_03.SCHEMA_HISTORY
+      - MIGRATE_03.T1
       """;
 
       case TESTING -> throw new UnsupportedOperationException();
@@ -247,9 +239,9 @@ public class SqlDialectTest01Migrations extends SqlDialectTest00Support {
 
       # Tables
 
-      | PUBLIC.SCHEMA_HISTORY
-      | TEST.T1
-      | TEST.T2
+      - PUBLIC.SCHEMA_HISTORY
+      - TEST.T1
+      - TEST.T2
       """;
 
       case MYSQL -> """
@@ -261,9 +253,9 @@ public class SqlDialectTest01Migrations extends SqlDialectTest00Support {
 
       # Tables
 
-      | MIGRATE_03.SCHEMA_HISTORY
-      | MIGRATE_03.T1
-      | MIGRATE_03.T2
+      - MIGRATE_03.SCHEMA_HISTORY
+      - MIGRATE_03.T1
+      - MIGRATE_03.T2
       """;
 
       case TESTING -> throw new UnsupportedOperationException();
@@ -275,11 +267,7 @@ public class SqlDialectTest01Migrations extends SqlDialectTest00Support {
         """
         # History
 
-        N/A
-
         # Tables
-
-        N/A
         """
     );
 
@@ -316,7 +304,7 @@ public class SqlDialectTest01Migrations extends SqlDialectTest00Support {
 
       # Tables
 
-      | PUBLIC.SCHEMA_HISTORY
+      - PUBLIC.SCHEMA_HISTORY
       """;
 
       case MYSQL -> """
@@ -327,7 +315,7 @@ public class SqlDialectTest01Migrations extends SqlDialectTest00Support {
 
       # Tables
 
-      | MIGRATE_04.SCHEMA_HISTORY
+      - MIGRATE_04.SCHEMA_HISTORY
       """;
 
       case TESTING -> throw new UnsupportedOperationException();
@@ -339,11 +327,7 @@ public class SqlDialectTest01Migrations extends SqlDialectTest00Support {
         """
         # History
 
-        N/A
-
         # Tables
-
-        N/A
         """
     );
 
@@ -505,12 +489,12 @@ public class SqlDialectTest01Migrations extends SqlDialectTest00Support {
 
       f.h1("Tables");
 
-      f.table(tables, (rf, row) -> {
+      f.list(tables, (rf, row) -> {
         final String value;
         value = metaTableFun.apply(row);
 
         if (value != null) {
-          rf.cell(value, 50);
+          rf.item(value);
         }
       });
     });

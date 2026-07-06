@@ -49,6 +49,18 @@ public final class TestableFormatter2Pojo implements TestableFormatter2 {
   }
 
   @Override
+  public final <T> void list(Iterable<? extends T> elements, BiConsumer<? super TestableListFormatter, T> format) {
+    final TestableList list;
+    list = new TestableList();
+
+    for (T item : elements) {
+      format.accept(list, item);
+    }
+
+    add(list);
+  }
+
+  @Override
   public final <T> void table(Iterable<? extends T> elements, BiConsumer<? super TestableRowFormatter, T> format) {
     final TestableTable<T> table;
     table = new TestableTable<>(elements, format);
@@ -60,7 +72,7 @@ public final class TestableFormatter2Pojo implements TestableFormatter2 {
   public final String toString() {
     return items.isEmpty()
         ? ""
-        : items.stream().collect(Collectors.joining("\n\n", "", "\n"));
+        : items.stream().filter(s -> !s.isEmpty()).collect(Collectors.joining("\n\n", "", "\n"));
   }
 
   private void add(Object o) {

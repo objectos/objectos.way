@@ -17,7 +17,6 @@ package objectos.dev;
 
 import java.util.function.Consumer;
 import objectox.dev.TestableFormatter2Pojo;
-import objectox.dev.TestableRow;
 
 /// An object that produces a string representation suitable for testing.
 public interface Testable {
@@ -34,21 +33,6 @@ public interface Testable {
     format.accept(formatter);
 
     return formatter.toString();
-  }
-
-  /// Formats the specified values as columns in a row. Columns are specified as
-  /// alternating value and length pairs.
-  ///
-  /// @param values an array where even indices represent column values (strings)
-  ///        and odd indices represent their respective lengths (integers).
-  ///
-  /// @throws IllegalArgumentException if the values array is not structured as
-  ///         alternating string and integer pairs or contains unsupported types.
-  static String formatRow(Object... values) {
-    final TestableRow row;
-    row = new TestableRow(values);
-
-    return row.format();
   }
 
   /// Returns the formatted string representation of this testable instance.

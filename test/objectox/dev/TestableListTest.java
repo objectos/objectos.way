@@ -98,4 +98,24 @@ public class TestableListTest {
     );
   }
 
+  @Test(description = "handle empty string item")
+  public void testCase06() {
+    final TestableList subject;
+    subject = new TestableList();
+
+    subject.item("Foo");
+    subject.item("");
+    subject.item("Bar");
+
+    assertEquals(
+        subject.toString(),
+
+        """
+        - Foo
+        -
+        - Bar\
+        """
+    );
+  }
+
 }

@@ -43,7 +43,13 @@ public final class TestableList implements TestableListFormatter {
 
   @Override
   public final String toString() {
-    return items.stream().map(s -> "- " + s).collect(Collectors.joining("\n"));
+    return items.stream().map(this::map).collect(Collectors.joining("\n"));
+  }
+
+  private String map(String value) {
+    return value.isEmpty()
+        ? "-"
+        : "- " + value;
   }
 
 }
