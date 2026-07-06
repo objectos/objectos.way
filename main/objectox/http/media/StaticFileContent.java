@@ -27,9 +27,7 @@ public record StaticFileContent(Content content)
     final String text;
     text = content.toTestableText();
 
-    return !text.isEmpty()
-        ? "static file:\n" + text
-        : "static file";
+    return "[static file]\n" + text;
   }
 
 }
