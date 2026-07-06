@@ -109,7 +109,10 @@ public class ResponseTest {
     assertEquals(
         subject.toTestableText(),
 
-        ""
+        """
+        200 OK
+        %s\
+        """.formatted(content.toTestableText())
     );
   }
 
@@ -134,6 +137,8 @@ public class ResponseTest {
         subject.toTestableText(),
 
         """
+        200 OK
+        text/html; charset=utf-8
         # Heading 1
 
         foo: bar

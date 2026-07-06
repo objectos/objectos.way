@@ -21,15 +21,10 @@ import java.io.UncheckedIOException;
 import java.time.Clock;
 import java.util.List;
 import java.util.function.Consumer;
-import objectos.dev.Testable;
-import objectos.http.Content;
 import objectos.http.HeaderName;
-import objectos.http.MediaType;
 import objectos.http.Response;
 import objectos.http.ResponseOptions;
-import objectos.lang.BinaryObject;
 import objectox.http.Header;
-import objectox.http.media.ContentBinaryObject;
 
 public record ResponsePojo(
 
@@ -98,19 +93,15 @@ public record ResponsePojo(
 
   @Override
   public final String toTestableText() {
-    if (!(entity instanceof ResponseEntity.OfContent(Content content))) {
-      return "";
-    }
+    final String prefix;
+    prefix = status.toTestableText();
 
-    if (!(content instanceof ContentBinaryObject(MediaType _, BinaryObject contents))) {
-      return "";
-    }
+    final String suffix;
+    suffix = entity.toTestableText();
 
-    if (!(contents instanceof Testable testable)) {
-      return "";
-    }
-
-    return testable.toTestableText();
+    return !suffix.isEmpty()
+        ? prefix + "\n" + suffix
+        : prefix;
   }
 
 }

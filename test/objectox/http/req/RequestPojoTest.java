@@ -22,7 +22,7 @@ import objectos.http.Request;
 import objectox.http.RequestMethodEnum;
 import org.testng.annotations.Test;
 
-public class RequestTest {
+public class RequestPojoTest {
 
   @Test
   public void create01() {
@@ -48,6 +48,17 @@ public class RequestTest {
     assertEquals(r.header(HeaderName.WAY_REQUEST), "foo");
     assertEquals(r.method(), RequestMethodEnum.PATCH);
     assertEquals(r.path(), "/test/123");
+  }
+
+  @Test
+  public void toTestableText() {
+    final RequestBuilder builder;
+    builder = new RequestBuilder();
+
+    final RequestPojo subject;
+    subject = builder.build();
+
+    assertEquals(subject.toTestableText(), "Request");
   }
 
 }

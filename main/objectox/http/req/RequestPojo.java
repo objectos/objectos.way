@@ -62,6 +62,11 @@ public record RequestPojo(
   }
 
   @Override
+  public final String toTestableText() {
+    return "Request";
+  }
+
+  @Override
   public final <T> T attr(Class<T> name) {
     return attributes.get(name);
   }

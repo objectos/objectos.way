@@ -29,6 +29,7 @@ public record ContentBinaryObject(MediaType contentType, BinaryObject contents) 
     contents.binaryTo(out);
   }
 
+  @Override
   public final String toTestableText() {
     final String fullType;
     fullType = contentType.fullType();

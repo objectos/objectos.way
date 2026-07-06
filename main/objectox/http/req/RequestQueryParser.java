@@ -359,7 +359,7 @@ final class RequestQueryParser {
 
   private void add(String name, String value) {
     if (params.isEmpty()) {
-      params = new HashMap<>();
+      params = new LinkedHashMap<>();
     }
 
     Rfc.queryParamsAdd(params, name, value);

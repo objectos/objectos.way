@@ -16,9 +16,12 @@
 package objectos.http;
 
 import java.util.Objects;
+import objectos.dev.Testable;
 
 /// The outcome of processing a `Request` instance by a `Handler`.
 public sealed interface Result
+    extends
+    Testable
     permits
     Content,
     ContentProvider,

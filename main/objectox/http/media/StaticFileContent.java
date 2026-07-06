@@ -20,4 +20,16 @@ import objectos.http.StaticFile;
 
 public record StaticFileContent(Content content)
     implements
-    StaticFile {}
+    StaticFile {
+
+  @Override
+  public final String toTestableText() {
+    final String text;
+    text = content.toTestableText();
+
+    return !text.isEmpty()
+        ? "static file:\n" + text
+        : "static file";
+  }
+
+}

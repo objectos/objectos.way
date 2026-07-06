@@ -87,17 +87,18 @@ public enum StatusEnum implements Status {
     return reasonPhrase;
   }
 
+  public final boolean isError() {
+    return code >= 400;
+  }
+
   @Override
   public final String toString() {
     return "Status[" + code + "=" + reasonPhrase + "]";
   }
 
+  @Override
   public final String toTestableText() {
     return code + " " + reasonPhrase;
-  }
-
-  public final boolean isError() {
-    return code >= 400;
   }
 
 }

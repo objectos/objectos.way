@@ -24,4 +24,12 @@ public non-sealed interface ContentProvider extends Result {
   /// @return a `Content` instance representing this object
   Content toContent();
 
+  /// Returns the testable representation of this object.
+  ///
+  /// @return the formatted testable representation of this content provider
+  @Override
+  default String toTestableText() {
+    return "ContentProvider";
+  }
+
 }

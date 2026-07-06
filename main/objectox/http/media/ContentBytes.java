@@ -36,6 +36,7 @@ public record ContentBytes(MediaType contentType, byte[] bytes) implements Conte
         && Arrays.equals(bytes, that.bytes);
   }
 
+  @Override
   public final String toTestableText() {
     final String fullType;
     fullType = contentType.fullType();

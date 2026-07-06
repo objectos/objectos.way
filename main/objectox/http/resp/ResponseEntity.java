@@ -16,16 +16,35 @@
 package objectox.http.resp;
 
 import java.nio.file.Path;
+import objectos.dev.Testable;
 import objectos.http.Content;
 
-public sealed interface ResponseEntity {
+public sealed interface ResponseEntity extends Testable {
 
-  record OfContent(Content content) implements ResponseEntity {}
+  record OfContent(Content content) implements ResponseEntity {
+    @Override
+    public final String toTestableText() {
+      return content.toTestableText();
+    }
+  }
 
   enum OfEmpty implements ResponseEntity {
     INSTANCE;
+
+    @Override
+    public final String toTestableText() {
+      return "";
+    }
   }
 
-  record OfFile(Path file) implements ResponseEntity {}
+  record OfFile(Path file) implements ResponseEntity {
+    @Override
+    public final String toTestableText() {
+      final Path fileName;
+      fileName = file.getFileName();
+
+      return fileName.toString();
+    }
+  }
 
 }
