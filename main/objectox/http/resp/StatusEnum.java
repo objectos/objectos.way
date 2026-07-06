@@ -92,6 +92,10 @@ public enum StatusEnum implements Status {
     return "Status[" + code + "=" + reasonPhrase + "]";
   }
 
+  public final String toTestableText() {
+    return code + " " + reasonPhrase;
+  }
+
   public final boolean isError() {
     return code >= 400;
   }

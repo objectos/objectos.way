@@ -15,27 +15,19 @@
  */
 package objectox.http;
 
-import java.util.Objects;
-import objectos.http.Redirection;
+import static org.testng.Assert.assertEquals;
+
 import objectox.http.resp.StatusEnum;
+import org.testng.annotations.Test;
 
-public record RedirectionPojo(StatusEnum status, String location) implements Redirection {
+public class RedirectionPojoTest {
 
-  public static Redirection of(StatusEnum status, String location) {
-    final String l;
-    l = Objects.requireNonNull(location, "location == null");
+  @Test
+  public void toTestableText01() {
+    final RedirectionPojo subject;
+    subject = new RedirectionPojo(StatusEnum.FOUND, "/index.html");
 
-    final UrlEncoder encoder;
-    encoder = new UrlEncoder(l);
-
-    final String encoded;
-    encoded = encoder.encode();
-
-    return new RedirectionPojo(status, encoded);
-  }
-
-  public final String toTestableText() {
-    return status.toTestableText() + " -> " + location;
+    assertEquals(subject.toTestableText(), "302 Found -> /index.html");
   }
 
 }
