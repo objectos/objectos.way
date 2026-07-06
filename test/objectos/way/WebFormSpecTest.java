@@ -151,7 +151,8 @@ public class WebFormSpecTest {
     testWebForm(form, """
     # Form
 
-    /test      | false
+    - /test
+    - false
 
     # Fields
 
@@ -161,69 +162,37 @@ public class WebFormSpecTest {
   }
 
   private void testWebForm(Web.Form form, String expected) {
-    TestableFormatter w;
-    w = TestableFormatter.create();
+    final String res;
+    res = Testable.format(f -> {
+      f.h1("Form");
 
-    w.heading1("Form");
+      f.list(lf -> {
+        lf.item(form.action());
+        lf.item(form.isValid());
+      });
 
-    w.row(
-        form.action(), 10,
-        Boolean.toString(form.isValid()), 5
-    );
+      f.h1("Fields");
 
-    w.heading1("Fields");
+      f.list(form.fields(), (lf, v) -> {
+        switch (v) {
+          case Web.Form.TextInput input -> {
+            lf.item("TextInput");
+            lf.item(input.label());
+            lf.item(input.value());
+            lf.item(input.id());
+            lf.item(input.name());
+            lf.item(input.type());
+          }
+        }
 
-    for (Web.Form.Field field : form.fields()) {
-      switch (field) {
-
-        case Web.Form.TextInput input -> w.row(
-            "TextInput", 10,
-            input.label(), 10,
-
-            input.value(), 15,
-            input.id(), 10,
-            input.name(), 10,
-            input.type(), 10
-        );
-
-      }
-
-      for (Web.Form.Error error : field.errors()) {
-        w.row(
-            "Error", 10,
-            error.message(), 50
-        );
-      }
-
-    }
-
-    final Function<Web.Form.Field, String> fieldFunction;
-    fieldFunction = field -> switch (field) {
-      case Web.Form.TextInput input -> Testable.asRow(
-          "TextInput", 10,
-          input.label(), 10,
-
-          input.value(), 15,
-          input.id(), 10,
-          input.name(), 10,
-          input.type(), 10
-      );
-    };
+        for (Web.Form.Error error : field.errors()) {
+          lf.item(error.message());
+        }
+      });
+    });
 
     assertEquals(
-        """
-        # Form
-
-        %s
-
-        # Fields
-
-        %s
-        """.formatted(
-            Testable.asRow(form.action(), 10, form.isValid()),
-
-            form.fields().stream().map(mapper)
-        ),
+        res,
 
         expected
     );

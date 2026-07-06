@@ -27,9 +27,9 @@ public final class TestableTable<T> {
 
   private final Iterable<? extends T> elements;
 
-  private final BiConsumer<TestableRowFormatter, T> format;
+  private final BiConsumer<? super TestableRowFormatter, T> format;
 
-  public TestableTable(Iterable<? extends T> elements, BiConsumer<TestableRowFormatter, T> format) {
+  public TestableTable(Iterable<? extends T> elements, BiConsumer<? super TestableRowFormatter, T> format) {
     this.elements = Objects.requireNonNull(elements, "elements == null");
 
     this.format = Objects.requireNonNull(format, "format == null");

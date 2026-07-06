@@ -46,6 +46,24 @@ public class TestableFormatterPojoTest {
   }
 
   @Test
+  public void list01() {
+    final TestableFormatter2Pojo subject;
+    subject = new TestableFormatter2Pojo();
+
+    subject.list(lf -> {
+      lf.item("Foo");
+      lf.item("Bar");
+      lf.item("Baz");
+    });
+
+    assertEquals(subject.items, List.of("""
+    - Foo
+    - Bar
+    - Baz\
+    """));
+  }
+
+  @Test
   public void table01() {
     final TestableFormatter2Pojo subject;
     subject = new TestableFormatter2Pojo();

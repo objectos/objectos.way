@@ -16,6 +16,7 @@
 package objectos.dev;
 
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import objectox.dev.TestableFormatter2Pojo;
 
 /// Formats a string representation that is suitable for a testable object.
@@ -31,11 +32,16 @@ public sealed interface TestableFormatter2 permits TestableFormatter2Pojo {
   /// @param value the heading text
   void h2(String value);
 
+  /// Formats a list of items.
+  ///
+  /// @param format allows for defining the format of the list
+  void list(Consumer<? super TestableListFormatter> format);
+
   /// Formats the specified elements as a table.
   ///
   /// @param <T> the element type
   /// @param elements the elements to be formatted
   /// @param format allows for defining the format to be applied to each element
-  <T> void table(Iterable<? extends T> elements, BiConsumer<TestableRowFormatter, T> format);
+  <T> void table(Iterable<? extends T> elements, BiConsumer<? super TestableRowFormatter, T> format);
 
 }

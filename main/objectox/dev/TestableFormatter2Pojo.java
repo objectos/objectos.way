@@ -18,8 +18,10 @@ package objectox.dev;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import objectos.dev.TestableFormatter2;
+import objectos.dev.TestableListFormatter;
 import objectos.dev.TestableRowFormatter;
 
 public final class TestableFormatter2Pojo implements TestableFormatter2 {
@@ -37,7 +39,17 @@ public final class TestableFormatter2Pojo implements TestableFormatter2 {
   }
 
   @Override
-  public final <T> void table(Iterable<? extends T> elements, BiConsumer<TestableRowFormatter, T> format) {
+  public final void list(Consumer<? super TestableListFormatter> format) {
+    final TestableList list;
+    list = new TestableList();
+
+    format.accept(list);
+
+    add(list);
+  }
+
+  @Override
+  public final <T> void table(Iterable<? extends T> elements, BiConsumer<? super TestableRowFormatter, T> format) {
     final TestableTable<T> table;
     table = new TestableTable<>(elements, format);
 
