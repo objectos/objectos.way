@@ -15,6 +15,13 @@
  */
 package objectos.way;
 
+import objectox.html.DomAttribute;
+import objectox.html.DomDocument;
+import objectox.html.DomElement;
+import objectox.html.DomRaw;
+import objectox.html.DomText;
+import objectox.html.HtmlMarkupOfHtml;
+
 /// The **Objectos DOM** main class, part of Objectos HTML.
 public final class Dom {
 

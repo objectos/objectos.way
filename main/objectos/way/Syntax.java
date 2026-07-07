@@ -15,6 +15,8 @@
  */
 package objectos.way;
 
+import objectox.html.HtmlAttributeName;
+
 /**
  * The <strong>Objectos Syntax</strong> main class, part of Objectos HTML.
  */

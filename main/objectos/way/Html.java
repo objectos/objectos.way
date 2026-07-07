@@ -28,6 +28,11 @@ import objectos.internal.Check;
 import objectos.lang.BinaryObject;
 import objectos.script.JsAction;
 import objectox.dev.TestableHtml;
+import objectox.html.AttributeOrNoOp;
+import objectox.html.HtmlAttributeName;
+import objectox.html.HtmlElementName;
+import objectox.html.HtmlInstruction;
+import objectox.html.HtmlMarkupOfHtml;
 import objectox.html.HtmlTestable;
 
 /**
@@ -1027,28 +1032,28 @@ public final class Html {
     /**
      * An instruction to generate an ambiguous element in a template.
      */
-    sealed interface OfAmbiguous extends OfAttribute, OfElement {}
+    sealed interface OfAmbiguous extends OfAttribute, OfElement permits HtmlInstruction {}
 
     /**
      * An instruction to generate an HTML attribute in template.
      */
-    sealed interface OfAttribute extends AsMethod, OfVoid {}
+    sealed interface OfAttribute extends AsMethod, OfVoid permits OfAmbiguous, AttributeOrNoOp {}
 
     /**
      * An instruction to generate a {@code data-on-*} HTML attribute in a
      * template.
      */
-    sealed interface OfDataOn extends AsMethod, OfVoid {}
+    sealed interface OfDataOn extends AsMethod, OfVoid permits AttributeOrNoOp {}
 
     /**
      * An instruction to generate an HTML element in a template.
      */
-    sealed interface OfElement extends AsMethod {}
+    sealed interface OfElement extends AsMethod permits OfAmbiguous, HtmlInstruction {}
 
     /**
      * An instruction to include an HTML fragment to a template.
      */
-    sealed interface OfFragment extends AsMethod, OfVoid {}
+    sealed interface OfFragment extends AsMethod, OfVoid permits HtmlInstruction {}
 
     /**
      * Class of instructions that are allowed as arguments to template
@@ -1057,30 +1062,16 @@ public final class Html {
     sealed interface OfVoid extends Instruction {}
 
     /// The no-op instruction.
-    sealed interface NoOp extends AsMethod, OfVoid {}
+    sealed interface NoOp extends AsMethod, OfVoid permits AttributeOrNoOp {}
 
     /// Returns the no-op instruction.
     ///
     /// @return the no-op instruction
     static NoOp noop() {
-      return Html.NOOP;
+      return HtmlInstruction.NOOP;
     }
 
   }
-
-  sealed interface AttributeOrNoOp extends Instruction.OfAttribute, Instruction.OfDataOn, Instruction.NoOp {}
-
-  private static final class HtmlInstruction
-      implements
-      AttributeOrNoOp,
-      Html.Instruction.OfAmbiguous,
-      Html.Instruction.OfElement,
-      Html.Instruction.OfFragment {}
-
-  static final Html.AttributeOrNoOp ATTRIBUTE = new HtmlInstruction();
-  static final HtmlInstruction ELEMENT = new HtmlInstruction();
-  static final Html.Instruction.OfFragment FRAGMENT = new HtmlInstruction();
-  static final Html.AttributeOrNoOp NOOP = new HtmlInstruction();
 
   /// An object that renders HTML on its own or as part of a larger
   /// HTML document.
@@ -1168,7 +1159,7 @@ public final class Html {
     non-sealed class OfHtml extends HtmlMarkupOfHtml implements Markup {
 
       /// Sole constructor.
-      protected OfHtml() {}
+      public OfHtml() {}
 
       OfHtml(HtmlTestable testable) { 
         super(testable); 
@@ -1189,7 +1180,7 @@ public final class Html {
 
         fragmentEnd(index);
 
-        return Html.FRAGMENT;
+        return HtmlInstruction.FRAGMENT;
       }
 
       /// {@inheritDoc}
@@ -1204,7 +1195,7 @@ public final class Html {
 
         fragmentEnd(index);
 
-        return Html.FRAGMENT;
+        return HtmlInstruction.FRAGMENT;
       }
 
     }
@@ -6543,63 +6534,7 @@ public final class Html {
   public static String formatAttrValue(String value) {
     Objects.requireNonNull(value, "value == null");
 
-    return formatAttrValue(value, new StringBuilder());
-  }
-
-  static String formatAttrValue(String value, StringBuilder sb) {
-    enum Parser {
-      START,
-
-      TEXT,
-
-      WS;
-    }
-
-    Parser parser;
-    parser = Parser.START;
-
-    sb.setLength(0);
-
-    for (int idx = 0, len = value.length(); idx < len; idx++) {
-      final char c;
-      c = value.charAt(idx);
-
-      switch (parser) {
-        case START -> {
-          if (Character.isWhitespace(c)) {
-            parser = Parser.START;
-          } else {
-            parser = Parser.TEXT;
-
-            sb.append(c);
-          }
-        }
-
-        case TEXT -> {
-          if (Character.isWhitespace(c)) {
-            parser = Parser.WS;
-          } else {
-            parser = Parser.TEXT;
-
-            sb.append(c);
-          }
-        }
-
-        case WS -> {
-          if (Character.isWhitespace(c)) {
-            parser = Parser.WS;
-          } else {
-            parser = Parser.TEXT;
-
-            sb.append(' ');
-
-            sb.append(c);
-          }
-        }
-      }
-    }
-
-    return sb.toString();
+    return HtmlAttributeName.formatAttrValue(value, new StringBuilder());
   }
 
 }
