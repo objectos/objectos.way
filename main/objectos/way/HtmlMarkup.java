@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.Objects;
 import objectos.script.JsAction;
 
-sealed abstract class HtmlMarkup permits HtmlMarkupOfHtml, HtmlMarkupOfTestable {
+sealed abstract class HtmlMarkup permits HtmlMarkupOfHtml {
 
   /// Renders the specified attribute at the root of a document or fragment.
   ///

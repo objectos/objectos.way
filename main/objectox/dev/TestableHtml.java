@@ -19,8 +19,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
+import objectox.html.HtmlTestable;
 
-public final class TestableHtml {
+public final class TestableHtml implements HtmlTestable {
 
   private final StringBuilder out = new StringBuilder();
 
@@ -37,26 +38,32 @@ public final class TestableHtml {
   public TestableHtml() {
   }
 
+  @Override
   public final void heading1(String value) {
     heading(value, "# ");
   }
 
+  @Override
   public final void heading2(String value) {
     heading(value, "## ");
   }
 
+  @Override
   public final void heading3(String value) {
     heading(value, "### ");
   }
 
+  @Override
   public final void heading4(String value) {
     heading(value, "#### ");
   }
 
+  @Override
   public final void heading5(String value) {
     heading(value, "##### ");
   }
 
+  @Override
   public final void heading6(String value) {
     heading(value, "###### ");
   }
@@ -113,11 +120,13 @@ public final class TestableHtml {
     }
   }
 
+  @Override
   public final void field(String name, String value) {
     fieldName(name);
     fieldValue(value);
   }
 
+  @Override
   public final void fieldName(String name) {
     Objects.requireNonNull(name, "name == null");
 
@@ -241,6 +250,7 @@ public final class TestableHtml {
     }
   }
 
+  @Override
   public final void cell(String value, int length) {
     cellSeparatorIfRequired();
 
@@ -292,6 +302,7 @@ public final class TestableHtml {
     }
   }
 
+  @Override
   public final void newLine() {
     out.append(System.lineSeparator());
 

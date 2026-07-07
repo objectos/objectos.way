@@ -28,6 +28,7 @@ import objectos.internal.Check;
 import objectos.lang.BinaryObject;
 import objectos.script.JsAction;
 import objectox.dev.TestableHtml;
+import objectox.html.HtmlTestable;
 
 /**
  * The <strong>Objectos HTML</strong> main class.
@@ -1151,7 +1152,7 @@ public final class Html {
       formatter = new TestableHtml();
 
       final Html.Markup html;
-      html = new Html.Markup.OfTestable(formatter);
+      html = new Html.Markup.OfHtml(formatter);
 
       renderHtml(html);
 
@@ -1161,13 +1162,17 @@ public final class Html {
   }
 
   /// Declares the structure of an HTML document using pure Java.
-  public sealed interface Markup {
+  public sealed interface Markup extends Testable {
 
     /// Markup implementation for generating HTML.
     non-sealed class OfHtml extends HtmlMarkupOfHtml implements Markup {
 
       /// Sole constructor.
       protected OfHtml() {}
+
+      OfHtml(HtmlTestable testable) { 
+        super(testable); 
+      }
 
       /// {@inheritDoc}
       @Override
@@ -1198,38 +1203,6 @@ public final class Html {
         }
 
         fragmentEnd(index);
-
-        return Html.FRAGMENT;
-      }
-
-    }
-
-    /// Markup implementation for formatting testable objects.
-    final class OfTestable extends HtmlMarkupOfTestable implements Markup {
-
-      OfTestable(TestableHtml formatter) {
-        super(formatter);
-      }
-
-      /// {@inheritDoc}
-      @Override
-      public final Html.Instruction.OfFragment c(Component... components) {
-        for (int idx = 0, len = components.length; idx < len; idx++) {
-          final Html.Component c;
-          c = Check.notNull(components[idx], "components[", idx, "] == null");
-
-          c.renderHtml(this);
-        }
-
-        return Html.FRAGMENT;
-      }
-
-      /// {@inheritDoc}
-      @Override
-      public final Html.Instruction.OfFragment c(Iterable<? extends Component> components) {
-        for (Html.Component c : components) {
-          c.renderHtml(this);
-        }
 
         return Html.FRAGMENT;
       }

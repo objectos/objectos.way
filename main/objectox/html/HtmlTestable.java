@@ -13,21 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.lang;
+package objectox.html;
 
-import java.io.IOException;
-import java.io.OutputStream;
+public interface HtmlTestable {
 
-/// Represents an object which can write a binary representation of itself.
-@FunctionalInterface
-public interface BinaryObject {
+  void cell(String value, int width);
 
-  /// Writes the binary representation of this object to the specified output
-  /// stream.
-  ///
-  /// @param out where bytes will be written to
-  ///
-  /// @throws IOException if an I/O error occurs
-  void binaryTo(OutputStream out) throws IOException;
+  void field(String name, String value);
+
+  void fieldName(String name);
+
+  void heading1(String value);
+
+  void heading2(String value);
+
+  void heading3(String value);
+
+  void heading4(String value);
+
+  void heading5(String value);
+
+  void heading6(String value);
+
+  void newLine();
 
 }

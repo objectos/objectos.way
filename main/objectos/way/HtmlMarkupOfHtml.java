@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.util.Objects;
 import objectos.internal.Check;
 import objectos.internal.Util;
+import objectox.html.HtmlTestable;
+import objectox.html.HtmlTestableNoop;
 
 sealed abstract class HtmlMarkupOfHtml extends HtmlMarkup permits Html.Markup.OfHtml {
 
@@ -56,6 +58,16 @@ sealed abstract class HtmlMarkupOfHtml extends HtmlMarkup permits Html.Markup.Of
 
   private final StringBuilder sb = new StringBuilder();
 
+  private final HtmlTestable testable;
+
+  HtmlMarkupOfHtml() {
+    testable = HtmlTestableNoop.INSTANCE;
+  }
+
+  HtmlMarkupOfHtml(HtmlTestable testable) {
+    this.testable = testable;
+  }
+
   // ##################################################################
   // # BEGIN: Public API
   // ##################################################################
@@ -92,6 +104,10 @@ sealed abstract class HtmlMarkupOfHtml extends HtmlMarkup permits Html.Markup.Of
     } catch (IOException e) {
       throw new AssertionError("StringBuilder does not throw IOException", e);
     }
+  }
+
+  public final String toTestableText() {
+    return testable.toString();
   }
 
   @Override
@@ -308,37 +324,81 @@ sealed abstract class HtmlMarkupOfHtml extends HtmlMarkup permits Html.Markup.Of
   // ##################################################################
 
   @Override
-  public final String testableCell(String value, int width) { return value; }
+  public final String testableCell(String value, int width) {
+    testable.cell(value, width);
+
+    return value;
+  }
 
   @Override
-  public final String testableField(String name, String value) { return value; }
+  public final String testableField(String name, String value) {
+    testable.field(name, value);
+
+    return value;
+  }
 
   @Override
-  public final String testableFieldName(String name) { return name; }
+  public final String testableFieldName(String name) {
+    testable.fieldName(name);
+
+    return name;
+  }
 
   @Override
-  public final String testableFieldValue(String value) { return value; }
+  public final String testableFieldValue(String value) {
+    testable.fieldName(value);
+
+    return value;
+  }
 
   @Override
-  public final String testableH1(String value) { return value; }
+  public final String testableH1(String value) {
+    testable.heading1(value);
+
+    return value;
+  }
 
   @Override
-  public final String testableH2(String value) { return value; }
+  public final String testableH2(String value) {
+    testable.heading2(value);
+
+    return value;
+  }
 
   @Override
-  public final String testableH3(String value) { return value; }
+  public final String testableH3(String value) {
+    testable.heading3(value);
+
+    return value;
+  }
 
   @Override
-  public final String testableH4(String value) { return value; }
+  public final String testableH4(String value) {
+    testable.heading4(value);
+
+    return value;
+  }
 
   @Override
-  public final String testableH5(String value) { return value; }
+  public final String testableH5(String value) {
+    testable.heading5(value);
+
+    return value;
+  }
 
   @Override
-  public final String testableH6(String value) { return value; }
+  public final String testableH6(String value) {
+    testable.heading6(value);
+
+    return value;
+  }
 
   @Override
-  public final Html.Instruction.NoOp testableNewLine() { return Html.NOOP; }
+  public final Html.Instruction.NoOp testableNewLine() {
+    testable.newLine();
+
+    return Html.NOOP;
+  }
 
   // ##################################################################
   // # END: Testable
@@ -348,7 +408,7 @@ sealed abstract class HtmlMarkupOfHtml extends HtmlMarkup permits Html.Markup.Of
   // Section: DOM related methods
   //
 
-  final Dom.Document compile() {
+  public final Dom.Document compile() {
     // we will use the aux list to store contexts
     auxIndex = 0;
 
