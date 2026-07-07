@@ -17,7 +17,6 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
-import objectox.dev.TestableHtml;
 import org.testng.annotations.Test;
 
 public class HtmlMarkupTest {
@@ -26,22 +25,6 @@ public class HtmlMarkupTest {
   public void toTestableText01() {
     final Html.Markup m;
     m = new Html.Markup.OfHtml();
-
-    m.testableH1("Testable");
-
-    m.h1("HTML");
-
-    assertEquals(
-        m.toTestableText(),
-
-        ""
-    );
-  }
-
-  @Test
-  public void toTestableText02() {
-    final Html.Markup m;
-    m = new Html.Markup.OfHtml(new TestableHtml());
 
     m.testableH1("Testable");
 

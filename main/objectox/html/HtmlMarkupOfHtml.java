@@ -21,6 +21,7 @@ import objectos.internal.Check;
 import objectos.internal.Util;
 import objectos.way.Dom;
 import objectos.way.Html;
+import objectox.dev.TestableHtml;
 
 public sealed abstract class HtmlMarkupOfHtml extends HtmlMarkup permits Html.Markup.OfHtml {
 
@@ -58,14 +59,9 @@ public sealed abstract class HtmlMarkupOfHtml extends HtmlMarkup permits Html.Ma
 
   private final StringBuilder sb = new StringBuilder();
 
-  private final HtmlTestable testable;
+  private final HtmlTestable testable = new TestableHtml();
 
   public HtmlMarkupOfHtml() {
-    testable = HtmlTestableNoop.INSTANCE;
-  }
-
-  public HtmlMarkupOfHtml(HtmlTestable testable) {
-    this.testable = testable;
   }
 
   // ##################################################################
