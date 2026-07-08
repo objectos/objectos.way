@@ -21,6 +21,13 @@ import objectos.http.Content;
 
 public sealed interface ResponseEntity extends Testable {
 
+  record OfBytes(byte[] bytes) implements ResponseEntity {
+    @Override
+    public final String toTestableText() {
+      return "bytes[length=" + bytes.length + "]";
+    }
+  }
+
   record OfContent(Content content) implements ResponseEntity {
     @Override
     public final String toTestableText() {

@@ -145,6 +145,21 @@ public final class ResponseSender {
 
   private void entity(ResponseEntity entity, boolean head) throws IOException {
     switch (entity) {
+      case ResponseEntity.OfBytes(byte[] bytes) -> {
+        final String contentLength;
+        contentLength = Integer.toString(bytes.length);
+
+        header(HeaderName.CONTENT_LENGTH, contentLength);
+
+        outputStream.write(Bytes.CRLF);
+
+        if (head) {
+          return;
+        }
+
+        outputStream.write(bytes);
+      }
+
       case ResponseEntity.OfContent(Content content) -> {
         switch (content) {
           case ContentBinaryObject(MediaType contentType, BinaryObject contents) -> {

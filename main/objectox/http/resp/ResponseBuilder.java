@@ -106,6 +106,14 @@ public final class ResponseBuilder implements ResponseOptions {
   }
 
   @Override
+  public final void send(byte[] value) {
+    final byte[] bytes;
+    bytes = Objects.requireNonNull(value, "value == null");
+
+    entity = new ResponseEntity.OfBytes(bytes);
+  }
+
+  @Override
   public final void send(Path file) {
     if (!Files.isRegularFile(file)) {
       throw new IllegalArgumentException(file + " does not represent a regular file");

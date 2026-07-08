@@ -18,6 +18,7 @@ package objectox.http.resp;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import objectos.http.Status;
 import objectos.y.OutputStreamY;
 import org.testng.annotations.Test;
@@ -25,7 +26,7 @@ import org.testng.annotations.Test;
 public class ResponseSenderTest {
 
   @Test
-  public void get01() throws IOException {
+  public void send01() throws IOException {
     assertEquals(
         ResponseSenderY.send(
             opts -> {
@@ -42,6 +43,35 @@ public class ResponseSenderTest {
         """
         HTTP/1.1 200 OK\r
         \r
+        """
+    );
+  }
+
+  @Test(description = "send(bytes)")
+  public void send02() throws IOException {
+    final byte[] bytes;
+    bytes = "send(bytes)".getBytes(StandardCharsets.US_ASCII);
+
+    assertEquals(
+        ResponseSenderY.send(
+            opts -> {
+              opts.bufferSize = 64;
+
+              opts.outputStream = OutputStreamY.create();
+            },
+
+            opts -> {
+              opts.status(Status.OK);
+
+              opts.send(bytes);
+            }
+        ),
+
+        """
+        HTTP/1.1 200 OK\r
+        Content-Length: 11\r
+        \r
+        send(bytes)\
         """
     );
   }

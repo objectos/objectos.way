@@ -270,6 +270,31 @@ public class ResponseBuilderTest {
     );
   }
 
+  @Test(description = "send(byte[])")
+  public void send04() {
+    final byte[] bytes;
+    bytes = new byte[4092];
+
+    final ResponseBuilder builder;
+    builder = new ResponseBuilder();
+
+    builder.send(bytes);
+
+    assertEquals(
+        builder.build(),
+
+        new ResponsePojo(
+            StatusEnum.OK,
+
+            List.of(),
+
+            new ResponseEntity.OfBytes(bytes),
+
+            false
+        )
+    );
+  }
+
   @Test(description = "set status")
   public void status01() {
     final ResponseBuilder builder;

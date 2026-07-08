@@ -65,7 +65,16 @@ public sealed interface ResponseOptions permits ResponseBuilder {
   /// Adds the `Date` header field with the server's current time.
   void date();
 
-  /// Sends the specified file as part of this response message.
+  /// Sends the specified bytes as part of this response message. More
+  /// specifically, the specified bytes will be sent as the response body; the
+  /// number of bytes may be sent as the `Content-Length` header value.
+  ///
+  /// @param value the bytes to be sent as part of this response message
+  void send(byte[] value);
+
+  /// Sends the specified file as part of this response message. More
+  /// specifically, the contents of the file will be sent as the response body;
+  /// the file length may be sent as the `Content-Length` header value.
   ///
   /// @param file the path to a regular file to be sent as part of this
   ///        response message
