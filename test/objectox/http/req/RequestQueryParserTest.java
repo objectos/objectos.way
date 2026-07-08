@@ -418,6 +418,24 @@ public class RequestQueryParserTest {
     assertEquals(q.queryParamNames(), Set.of("&", "foo"));
   }
 
+  @Test(description = "parse should return names in found order")
+  public void testCase11() throws IOException {
+    final Map<String, Object> map;
+    map = parse("?foo=a&bar=k&other=z&bar=v HTTP/1.1");
+
+    final Set<String> keys;
+    keys = map.keySet();
+
+    assertEquals(keys.size(), 3);
+
+    final Iterator<String> iter;
+    iter = keys.iterator();
+
+    assertEquals(iter.next(), "foo");
+    assertEquals(iter.next(), "bar");
+    assertEquals(iter.next(), "other");
+  }
+
   private Request queryOf(String q) {
     try {
       final Map<String, Object> map;
