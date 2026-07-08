@@ -18,17 +18,22 @@ package objectox.http.host;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 
+import java.io.IOException;
 import objectos.http.Content;
 import objectos.http.ContentProvider;
 import objectos.http.Status;
+import objectos.lang.Throwables;
 import objectos.http.MediaType;
 import objectos.http.Request;
 import objectos.http.Response;
+import objectos.http.Result;
 import objectos.http.StaticFile;
 import objectox.http.resp.ResponseY;
 import org.testng.annotations.Test;
 
 public class ResultProcessorTest {
+
+  private final IOException exception = Throwables.trimStackTrace(new IOException(), 1);
 
   private final ResultProcessor subject = new ResultProcessor();
 
@@ -151,6 +156,30 @@ public class ResultProcessorTest {
         Content-Length: 16\r
         \r
         400 Bad Request
+        """
+    );
+  }
+
+  @Test
+  public void statusThrowable() {
+    final Result result;
+    result = Result.error(Status.INTERNAL_SERVER_ERROR, exception);
+
+    final Response res;
+    res = subject.process(result);
+
+    assertEquals(
+        ResponseY.toString(res),
+
+        """
+        HTTP/1.1 500 Internal Server Error\r
+        Date: Wed, 28 Jun 2023 12:08:43 GMT\r
+        Content-Type: text/plain; charset=utf-8\r
+        Content-Length: 138\r
+        \r
+        500 Internal Server Error
+        java.io.IOException
+        	at objectos.way/objectox.http.host.ResultProcessorTest.<init>(ResultProcessorTest.java:36)
         """
     );
   }

@@ -17,6 +17,7 @@ package objectos.http;
 
 import java.util.Objects;
 import objectos.dev.Testable;
+import objectox.http.StatusThrowable;
 
 /// The outcome of processing a `Request` instance by a `Handler`.
 public sealed interface Result
@@ -29,19 +30,25 @@ public sealed interface Result
     Request,
     Response,
     StaticFile,
-    Status {
+    Status,
+    StatusThrowable {
 
-  /// Wraps the specified result in a runtime exception. If caught by the `Host`
-  /// top-level handler, then the wrapped result is processed normally.
-  ///
-  /// @param value the result to be wrapped
-  ///
-  /// @return a newly created runtime exception wrapping the result
-  static RuntimeException exception(Result value) {
-    final Result r;
-    r = Objects.requireNonNull(value, "value == null");
+  static Result error(Status status, Throwable cause) {
+    final int code;
+    code = status.code();
 
-    return new ResultException(r);
+    if (code < 400) {
+      final String msg;
+      msg = "Status does not represent a client error nor a server error";
+
+      throw new IllegalArgumentException(msg);
+    }
+
+    return new StatusThrowable(
+        status,
+
+        Objects.requireNonNull(cause, "cause == null")
+    );
   }
 
 }

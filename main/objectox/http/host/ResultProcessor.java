@@ -15,6 +15,8 @@
  */
 package objectox.http.host;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import objectos.http.Content;
 import objectos.http.ContentProvider;
 import objectos.http.HeaderName;
@@ -25,6 +27,7 @@ import objectos.http.Request;
 import objectos.http.Response;
 import objectos.http.Result;
 import objectox.http.RedirectionPojo;
+import objectox.http.StatusThrowable;
 import objectox.http.media.StaticFileContent;
 import objectox.http.resp.ResponseBuilder;
 
@@ -62,6 +65,8 @@ class ResultProcessor {
       case StaticFileContent(Content content) -> processContent(content);
 
       case Status s -> processStatus(s);
+
+      case StatusThrowable(Status status, Throwable cause) -> processStatus(status, cause);
     };
   }
 
@@ -116,6 +121,39 @@ class ResultProcessor {
 
     final String msg;
     msg = code + " " + reasonPhrase + "\n";
+
+    final Content content;
+    content = Content.of(MediaType.TEXT_PLAIN, msg);
+
+    builder.send(content);
+
+    return builder.build();
+  }
+
+  protected Response processStatus(Status status, Throwable cause) {
+    final ResponseBuilder builder;
+    builder = new ResponseBuilder();
+
+    builder.status(status);
+
+    builder.date();
+
+    final int code;
+    code = status.code();
+
+    final String reasonPhrase;
+    reasonPhrase = status.reasonPhrase();
+
+    final StringWriter writer;
+    writer = new StringWriter();
+
+    final PrintWriter pw;
+    pw = new PrintWriter(writer);
+
+    cause.printStackTrace(pw);
+
+    final String msg;
+    msg = code + " " + reasonPhrase + "\n" + writer.toString();
 
     final Content content;
     content = Content.of(MediaType.TEXT_PLAIN, msg);

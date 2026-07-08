@@ -13,15 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectox.http;
 
-@SuppressWarnings("serial")
-final class ResultException extends RuntimeException {
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import objectos.http.Result;
+import objectos.http.Status;
 
-  public final Result result;
+public record StatusThrowable(Status status, Throwable cause) implements Result {
 
-  ResultException(Result result) {
-    this.result = result;
+  @Override
+  public final String toTestableText() {
+    try (StringWriter writer = new StringWriter()) {
+      final PrintWriter pw;
+      pw = new PrintWriter(writer);
+
+      cause.printStackTrace(pw);
+
+      return status.toTestableText() + "\n" + writer;
+    } catch (IOException e) {
+      // StringWriter does not throw
+      return status.toTestableText();
+    }
   }
 
 }
