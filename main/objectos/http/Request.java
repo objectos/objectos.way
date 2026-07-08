@@ -297,44 +297,13 @@ public sealed interface Request extends Result permits RequestPojo {
   /// @return the names of all of the query parameters
   Set<String> queryParamNames();
 
-  /// The raw (encoded) value of the path component.
+  /// Returns the reconstructed query string of this request.
   ///
-  /// @return the raw (encoded) value of the path component
-  String rawPath();
-
-  /// The raw (encoded) value of the query component. This method returns `null`
-  /// if this request-target does not have a query component.
+  /// This method returns an empty string if the request did not contain a query
+  /// string, or if the request contained an empty query string.
   ///
-  /// @return the raw (encoded) value of the query component or `null`
-  String rawQuery();
-
-  /// Returns the raw (encoded) value of the query component with the specified
-  /// parameter added or replaced if it exists.
-  ///
-  /// If a parameter with the same name already exists in the query, its value is
-  /// replaced with the specified value. If no such parameter exists, a new
-  /// parameter is added.
-  ///
-  /// Usage example:
-  ///
-  /// ```java
-  /// // original query is "search=java&sort=asc";
-  /// Http.RequestTarget target = ...
-  ///
-  /// // returns "search=java&sort=desc"
-  /// target.rawQueryWith("sort", "desc");
-  ///
-  /// // returns "search=java&sort=asc&page=2"
-  /// target.rawQueryWith("page", "2");
-  /// ```
-  ///
-  /// @param name the name of the parameter to be added or replaced
-  /// @param value the value of the parameter to be added or set
-  ///
-  /// @return the raw query string with the updated parameter
-  ///
-  /// @throws IllegalArgumentException if `name` is blank
-  String rawQueryWith(String name, String value);
+  /// @return the reconstructed query string
+  String queryString();
 
   // ##################################################################
   // # End: Request line

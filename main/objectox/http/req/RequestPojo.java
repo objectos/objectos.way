@@ -140,6 +140,14 @@ public record RequestPojo(
   }
 
   @Override
+  public final String queryString() {
+    final QueryString queryString;
+    queryString = new QueryString(queryParams);
+
+    return queryString.toString();
+  }
+
+  @Override
   public final String pathParam(String name) {
     final Map<String, String> pathParams;
     pathParams = attr(PATH_PARAMS);
@@ -157,24 +165,6 @@ public record RequestPojo(
     value = pathParam(name);
 
     return valueAsInt(value, defaultValue);
-  }
-
-  @Override
-  public final String rawPath() {
-    // TODO remove?
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public final String rawQuery() {
-    // TODO remove?
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public final String rawQueryWith(String name, String value) {
-    // TODO remove?
-    throw new UnsupportedOperationException();
   }
 
   @Override

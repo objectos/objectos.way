@@ -16,6 +16,8 @@
 package objectos.way;
 
 import objectos.http.Request;
+import objectox.http.UrlEncoder;
+import objectox.http.req.QueryString;
 
 final record WebPaginator(Request request, Sql.Page page, int firstRow, int lastRow, int rowCount, int previousPage, int nextPage) implements Web.Paginator {
 
@@ -40,13 +42,25 @@ final record WebPaginator(Request request, Sql.Page page, int firstRow, int last
   }
 
   private String pageHref(int page) {
-    String value;
+    final String value;
     value = Integer.toString(page);
 
-    String query;
-    query = request.rawQueryWith("page", value);
+    final QueryString queryString;
+    queryString = QueryString.copyOf(request);
 
-    return request.rawPath() + "?" + query;
+    queryString.put("page", value);
+
+    final String query;
+    query = queryString.toString();
+
+    return encode(request.path()) + "?" + encode(query);
+  }
+
+  private String encode(String s) {
+    final UrlEncoder encoder;
+    encoder = new UrlEncoder(s);
+
+    return encoder.encode();
   }
 
 }

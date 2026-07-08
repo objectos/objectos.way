@@ -51,6 +51,24 @@ public class RequestPojoTest {
   }
 
   @Test
+  public void queryString01() {
+    final Request r;
+    r = Request.create(_ -> {});
+
+    assertEquals(r.queryString(), "");
+  }
+
+  @Test
+  public void queryString02() {
+    final Request r;
+    r = Request.create(opts -> {
+      opts.queryParam("param", "value");
+    });
+
+    assertEquals(r.queryString(), "param=value");
+  }
+
+  @Test
   public void toTestableText() {
     final RequestBuilder builder;
     builder = new RequestBuilder();

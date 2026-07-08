@@ -17,11 +17,11 @@ package objectox.http;
 
 import objectos.internal.Ascii;
 
-final class UrlEncoder {
+public final class UrlEncoder {
 
   private final String input;
 
-  UrlEncoder(String input) {
+  public UrlEncoder(String input) {
     this.input = input;
   }
 
