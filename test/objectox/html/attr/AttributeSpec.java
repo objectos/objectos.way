@@ -13,10 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html;
+package objectox.html.attr;
 
-import objectos.way.Html.Instruction;
+public record AttributeSpec(String constantName, String methodName, String htmlName, boolean booleanAttribute)
+    implements Comparable<AttributeSpec> {
+  @Override
+  public final int compareTo(AttributeSpec that) {
+    return constantName.compareTo(that.constantName);
+  }
 
-public sealed interface AttributeOrNoOp
-    extends Instruction.OfAttribute, Instruction.OfDataOn, Instruction.NoOp
-    permits HtmlInstruction {}
+  public final boolean eventAttribute() {
+    return constantName.startsWith("ON");
+  }
+}

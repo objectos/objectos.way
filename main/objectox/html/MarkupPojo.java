@@ -19,12 +19,16 @@ import java.io.IOException;
 import java.util.Objects;
 import objectos.html.AttributeName;
 import objectos.html.AttributeObject;
+import objectos.html.ElementName;
 import objectos.html.Markup;
 import objectos.internal.Check;
 import objectos.internal.Util;
 import objectos.way.Dom;
 import objectos.way.Html;
 import objectox.dev.TestableHtml;
+import objectox.html.attr.AttributeNamePojo;
+import objectox.html.attr.AttributeOrNoOp;
+import objectox.html.elem.ElementNamePojo;
 
 public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.OfHtml {
 
@@ -687,7 +691,7 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
     int elementIndex;
     elementIndex = startIndex;
 
-    HtmlElementName name;
+    ElementNamePojo name;
 
     // first proto should be the element's name
     byte proto;
@@ -701,7 +705,7 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
         int ordinal;
         ordinal = HtmlBytes.decodeInt(nameByte);
 
-        name = HtmlElementName.get(ordinal);
+        name = ElementNamePojo.get(ordinal);
       }
 
       default -> throw new IllegalArgumentException(
@@ -738,7 +742,7 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
     stateCAS(_ELEMENT_ATTRS_ITERABLE, _ELEMENT_ATTRS_ITERATOR);
   }
 
-  final boolean elementAttributesHasNext(Html.ElementName parent) {
+  final boolean elementAttributesHasNext(ElementName parent) {
     // state check
     switch (statePeek()) {
       case _ELEMENT_ATTRS_ITERATOR,
@@ -1061,7 +1065,7 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
           DomElement element;
           element = htmlElement();
 
-          HtmlElementName elementName;
+          ElementNamePojo elementName;
           elementName = element.name;
 
           if (!ambiguous.isAttributeOf(elementName)) {
@@ -1355,7 +1359,7 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
           DomElement element;
           element = htmlElement();
 
-          HtmlElementName parent;
+          ElementNamePojo parent;
           parent = element.name;
 
           if (ambiguous.isAttributeOf(parent)) {
@@ -1453,7 +1457,7 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
         HtmlAmbiguous ambiguous;
         ambiguous = HtmlAmbiguous.get(ordinal);
 
-        HtmlElementName element;
+        ElementNamePojo element;
         element = ambiguous.element;
 
         main = Util.growIfNecessary(main, mainIndex + 13);
@@ -1613,7 +1617,7 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
     aux[mainStart + 3] = HtmlBytes.encodeInt2(value);
   }
 
-  private HtmlElementName elementCtxNameLoad() {
+  private ElementNamePojo elementCtxNameLoad() {
     // restore start index
     byte b0;
     b0 = aux[mainStart + 7];
@@ -1627,7 +1631,7 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
     int startIndex;
     startIndex = HtmlBytes.decodeLength3(b0, b1, b2);
 
-    HtmlElementName name;
+    ElementNamePojo name;
 
     // first proto should be the element's name
     byte proto;
@@ -1641,7 +1645,7 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
         int ordinal;
         ordinal = HtmlBytes.decodeInt(nameByte);
 
-        name = HtmlElementName.get(ordinal);
+        name = ElementNamePojo.get(ordinal);
       }
 
       default -> throw new IllegalArgumentException(
@@ -1912,7 +1916,7 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
   }
 
   @Override
-  final Html.Instruction.OfElement elem0(Html.ElementName name, Html.Instruction... contents) {
+  final Html.Instruction.OfElement elem0(ElementName name, Html.Instruction... contents) {
     elementBegin(name);
 
     for (int i = 0; i < contents.length; i++) {
@@ -1928,7 +1932,7 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
   }
 
   @Override
-  final Html.Instruction.OfElement elem0(Html.ElementName name, String text) {
+  final Html.Instruction.OfElement elem0(ElementName name, String text) {
     Objects.requireNonNull(text, "text == null");
 
     textImpl(text);
@@ -1940,7 +1944,7 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
     return HtmlInstruction.ELEMENT;
   }
 
-  final void elementBegin(Html.ElementName name) {
+  final void elementBegin(ElementName name) {
     commonBegin();
 
     mainAdd(

@@ -17,8 +17,8 @@ package objectos.html;
 
 import java.util.Objects;
 import objectos.way.Html;
-import objectox.html.AttributeNamePojo;
-import objectox.html.ClassNamePojo;
+import objectox.html.attr.AttributeNamePojo;
+import objectox.html.attr.ClassNamePojo;
 
 /// Represents an HTML {@code class} attribute and its value.
 public sealed interface ClassName extends AttributeObject permits ClassNamePojo {

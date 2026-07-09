@@ -19,13 +19,13 @@ import java.util.Arrays;
 import java.util.HexFormat;
 import objectos.internal.Util;
 
-final class ByteArray {
+public final class ByteArray {
 
   private byte[] bytes;
 
   private int index;
 
-  ByteArray(int initialLength) {
+  public ByteArray(int initialLength) {
     bytes = new byte[initialLength];
   }
 
@@ -47,6 +47,11 @@ final class ByteArray {
     }
 
     return new ByteArray(copy);
+  }
+
+  public final void add(byte b0) {
+    bytes = Util.growIfNecessary(bytes, index + 0);
+    bytes[index++] = b0;
   }
 
   public final void add(byte b0, byte b1) {
@@ -93,6 +98,14 @@ final class ByteArray {
   public final boolean equals(Object obj) {
     return obj instanceof ByteArray that
         && Arrays.equals(bytes, 0, index, that.bytes, 0, that.index);
+  }
+
+  public final byte get(int idx) {
+    return bytes[idx];
+  }
+
+  public final int size() {
+    return index;
   }
 
   @Override

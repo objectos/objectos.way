@@ -17,6 +17,8 @@ package objectox.html;
 
 import java.util.Iterator;
 import java.util.Set;
+import objectox.html.attr.AttributeSpec;
+import objectox.html.elem.ElementSpec;
 
 public class HtmlMarkupGenImpl {
 
@@ -109,7 +111,7 @@ public class HtmlMarkupGenImpl {
     final Set<String> ambiguousNames;
     ambiguousNames = HtmlSpec.ambiguousElemNames();
 
-    for (HtmlSpec.ElementSpec elem : HtmlSpec.elements()) {
+    for (ElementSpec elem : HtmlSpec.elements()) {
       final String htmlName;
       htmlName = elem.htmlName();
 
@@ -194,7 +196,7 @@ public class HtmlMarkupGenImpl {
     final Set<String> ambiguous;
     ambiguous = HtmlSpec.ambiguousAttrNames();
 
-    for (HtmlSpec.AttributeSpec attr : HtmlSpec.attributes()) {
+    for (AttributeSpec attr : HtmlSpec.attributes()) {
       if (ambiguous.contains(attr.htmlName()) || attr.booleanAttribute()) {
         continue;
       }

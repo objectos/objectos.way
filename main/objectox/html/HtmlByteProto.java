@@ -15,7 +15,7 @@
  */
 package objectox.html;
 
-final class HtmlByteProto {
+public final class HtmlByteProto {
 
   // internal instructions
 

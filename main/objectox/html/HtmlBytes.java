@@ -15,9 +15,10 @@
  */
 package objectox.html;
 
-import objectos.way.Html;
+import objectos.html.ElementName;
+import objectox.html.elem.ElementNamePojo;
 
-final class HtmlBytes {
+public final class HtmlBytes {
 
   private static final int BYTE_MASK = 0xFF;
 
@@ -49,9 +50,9 @@ final class HtmlBytes {
     return (byte) (value >>> 16);
   }
 
-  public static byte encodeName(Html.ElementName name) {
-    final HtmlElementName impl;
-    impl = (HtmlElementName) name;
+  public static byte encodeName(ElementName name) {
+    final ElementNamePojo impl;
+    impl = (ElementNamePojo) name;
 
     final int ordinal;
     ordinal = impl.index();
@@ -125,6 +126,23 @@ final class HtmlBytes {
       case 2 -> decodeVarint(buf[endIndex], buf[endIndex - 1]);
 
       case 3 -> decodeVarint(buf[endIndex], buf[endIndex - 1], buf[endIndex - 2]);
+
+      default -> throw new IllegalArgumentException(
+          "HtmlTemplate is too large :: length=" + length
+      );
+    };
+  }
+
+  public static int decodeCommonEnd(ByteArray buf, int startIndex, int endIndex) {
+    int length;
+    length = endIndex - startIndex;
+
+    return switch (length) {
+      case 1 -> buf.get(endIndex);
+
+      case 2 -> decodeVarint(buf.get(endIndex), buf.get(endIndex - 1));
+
+      case 3 -> decodeVarint(buf.get(endIndex), buf.get(endIndex - 1), buf.get(endIndex - 2));
 
       default -> throw new IllegalArgumentException(
           "HtmlTemplate is too large :: length=" + length

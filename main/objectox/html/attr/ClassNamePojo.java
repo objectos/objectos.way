@@ -13,26 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html;
+package objectox.html.attr;
 
-import objectos.way.Html;
-import objectox.html.attr.AttributeOrNoOp;
+import objectos.html.ClassName;
 
-public final class HtmlInstruction
-    implements
-    AttributeOrNoOp,
-    Html.Instruction.OfAmbiguous,
-    Html.Instruction.OfElement,
-    Html.Instruction.OfFragment {
-
-  public static final AttributeOrNoOp ATTRIBUTE = new HtmlInstruction();
-
-  public static final HtmlInstruction ELEMENT = new HtmlInstruction();
-
-  public static final Html.Instruction.OfFragment FRAGMENT = new HtmlInstruction();
-
-  public static final AttributeOrNoOp NOOP = new HtmlInstruction();
-
-  private HtmlInstruction() {}
-
-}
+public record ClassNamePojo(String attrValue) implements ClassName {}

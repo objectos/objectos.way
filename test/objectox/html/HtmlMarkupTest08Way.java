@@ -19,6 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 import java.util.List;
 import objectos.html.Component;
+import objectos.html.ElementName;
 import objectos.way.Html;
 import org.testng.annotations.Test;
 
@@ -32,7 +33,7 @@ public class HtmlMarkupTest08Way {
   public void c1() {
     test(
         m -> m.elem(
-            Html.ElementName.UL,
+            ElementName.UL,
             m.c(
                 li1,
                 li2,
@@ -54,7 +55,7 @@ public class HtmlMarkupTest08Way {
   public void c2() {
     test(
         m -> m.elem(
-            Html.ElementName.UL,
+            ElementName.UL,
             m.c(List.of(
                 li1,
                 li2,
@@ -76,7 +77,7 @@ public class HtmlMarkupTest08Way {
   public void c3() {
     test(
         m -> m.elem(
-            Html.ElementName.UL,
+            ElementName.UL,
             m.c()
         ),
 
@@ -87,7 +88,7 @@ public class HtmlMarkupTest08Way {
 
     test(
         m -> m.elem(
-            Html.ElementName.UL,
+            ElementName.UL,
             m.c(List.of())
         ),
 

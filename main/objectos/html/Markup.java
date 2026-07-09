@@ -419,7 +419,7 @@ public sealed interface Markup extends BinaryObject, Testable {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element
-  Html.Instruction.OfElement elem(Html.ElementName name, Html.Instruction... contents);
+  Html.Instruction.OfElement elem(ElementName name, Html.Instruction... contents);
 
   /// Renders an HTML element with the specified name and text.
   ///
@@ -427,7 +427,7 @@ public sealed interface Markup extends BinaryObject, Testable {
   /// @param text the text value of this element
   ///
   /// @return an instruction representing the element
-  Html.Instruction.OfElement elem(Html.ElementName name, String text);
+  Html.Instruction.OfElement elem(ElementName name, String text);
 
   /// Renders the `<!DOCTYPE html>` doctype.
   void doctype();

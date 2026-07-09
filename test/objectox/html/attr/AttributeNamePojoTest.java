@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html;
+package objectox.html.attr;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -21,7 +21,7 @@ import static org.testng.Assert.assertTrue;
 import objectos.html.AttributeName;
 import org.testng.annotations.Test;
 
-public class HtmlAttributeNameTest {
+public class AttributeNamePojoTest {
 
   @Test
   public void canBeEncoded_WithSingleByte() {

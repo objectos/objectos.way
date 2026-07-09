@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2026 Objectos Software LTDA.
+ * Copyright (C) 2023-2026 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html;
+package objectox.html.elem;
 
-import static org.testng.Assert.assertTrue;
-
-import org.testng.annotations.Test;
-
-public class HtmlElementNameTest {
-
-  @Test
-  public void canBeEncoded_WithSingleByte() {
-    int size;
-    size = HtmlElementName.size();
-
-    int max;
-    max = 1 << 8;
-
-    assertTrue(size < max);
+public record ElementSpec(String javaName, String htmlName, boolean endTag)
+    implements Comparable<ElementSpec> {
+  @Override
+  public int compareTo(ElementSpec that) {
+    return javaName.compareTo(that.javaName);
   }
-
 }

@@ -13,12 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html;
+package objectox.html.attr;
 
+import java.util.Objects;
 import objectos.html.AttributeName;
 import objectos.way.Html;
+import objectox.html.ByteArray;
+import objectox.html.HtmlByteProto;
+import objectox.html.HtmlBytes;
+import objectox.html.HtmlInstruction;
+import objectox.html.ObjectArray;
 
-final class Attribute0Recorder {
+final class Attribute1Recorder {
 
   private final ByteArray main;
 
@@ -26,12 +32,16 @@ final class Attribute0Recorder {
 
   private final AttributeName name;
 
-  Attribute0Recorder(ByteArray main, ObjectArray objects, AttributeName name) {
+  private final Object value;
+
+  Attribute1Recorder(ByteArray main, ObjectArray objects, AttributeName name, Object value) {
     this.main = main;
 
     this.objects = objects;
 
     this.name = name;
+
+    this.value = Objects.requireNonNull(value, "value == null");
   }
 
   public final Html.Instruction record() {
@@ -39,26 +49,40 @@ final class Attribute0Recorder {
     index = name.index();
 
     if (index >= 0) {
+      final int valueIndex;
+      valueIndex = objects.add(value);
+
       main.add(
-          HtmlByteProto.ATTRIBUTE0,
+          HtmlByteProto.ATTRIBUTE1,
 
           // name
           HtmlBytes.encodeInt0(index),
 
-          HtmlByteProto.INTERNAL3
+          // value
+          HtmlBytes.encodeInt0(valueIndex),
+          HtmlBytes.encodeInt1(valueIndex),
+
+          HtmlByteProto.INTERNAL5
       );
     } else {
       final int customIndex;
       customIndex = objects.add(name);
 
+      final int valueIndex;
+      valueIndex = objects.add(value);
+
       main.add(
-          HtmlByteProto.CUSTOM_ATTR0,
+          HtmlByteProto.CUSTOM_ATTR1,
 
           // name
           HtmlBytes.encodeInt0(customIndex),
           HtmlBytes.encodeInt1(customIndex),
 
-          HtmlByteProto.INTERNAL4
+          // value
+          HtmlBytes.encodeInt0(valueIndex),
+          HtmlBytes.encodeInt1(valueIndex),
+
+          HtmlByteProto.INTERNAL6
       );
     }
 

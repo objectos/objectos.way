@@ -17,7 +17,7 @@ package objectos.html;
 
 import java.util.Objects;
 import objectos.way.Html.Instruction;
-import objectox.html.AttributeObjectPojo;
+import objectox.html.attr.AttributeObjectPojo;
 
 /// An object representing an instruction to render an HTML attribute. These
 /// instructions may be reused, unlike the instructions represented by methods of

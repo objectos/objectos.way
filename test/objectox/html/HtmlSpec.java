@@ -18,8 +18,10 @@ package objectox.html;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import objectox.html.attr.AttributeSpec;
+import objectox.html.elem.ElementSpec;
 
-final class HtmlSpec {
+public final class HtmlSpec {
 
   private HtmlSpec() {}
 
@@ -55,19 +57,7 @@ final class HtmlSpec {
   // # BEGIN: Attribute
   // ##################################################################
 
-  record AttributeSpec(String constantName, String methodName, String htmlName, boolean booleanAttribute)
-      implements Comparable<AttributeSpec> {
-    @Override
-    public final int compareTo(AttributeSpec that) {
-      return constantName.compareTo(that.constantName);
-    }
-
-    public final boolean eventAttribute() {
-      return constantName.startsWith("ON");
-    }
-  }
-
-  static List<AttributeSpec> attributes() {
+  public static List<AttributeSpec> attributes() {
     return attributes0().stream().sorted().toList();
   }
 
@@ -227,15 +217,7 @@ final class HtmlSpec {
   // # BEGIN: Element
   // ##################################################################
 
-  record ElementSpec(String javaName, String htmlName, boolean endTag)
-      implements Comparable<ElementSpec> {
-    @Override
-    public int compareTo(ElementSpec that) {
-      return javaName.compareTo(that.javaName);
-    }
-  }
-
-  static List<ElementSpec> elements() {
+  public static List<ElementSpec> elements() {
     return elements0().stream().sorted().toList();
   }
 
@@ -427,7 +409,7 @@ final class HtmlSpec {
   // # BEGIN: Way
   // ##################################################################
 
-  static List<AttributeSpec> dataAttrs() {
+  public static List<AttributeSpec> dataAttrs() {
     return List.of(
         new AttributeSpec("DATA_HIGH", "dataHigh", "data-high", false),
         new AttributeSpec("DATA_LINE", "dataLine", "data-line", false)

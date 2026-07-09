@@ -18,13 +18,13 @@ package objectox.html;
 import java.util.Arrays;
 import objectos.internal.Util;
 
-final class ObjectArray {
+public final class ObjectArray {
 
   private Object[] values = Util.EMPTY_OBJECT_ARRAY;
 
   private int index;
 
-  ObjectArray() {}
+  public ObjectArray() {}
 
   private ObjectArray(Object[] values) {
     this.values = values;
@@ -32,7 +32,7 @@ final class ObjectArray {
     index = values.length;
   }
 
-  public static Object of(Object... values) {
+  public static ObjectArray of(Object... values) {
     final Object[] copy;
     copy = values.clone();
 

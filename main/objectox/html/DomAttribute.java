@@ -17,6 +17,7 @@ package objectox.html;
 
 import objectos.script.JsAction;
 import objectos.way.Dom;
+import objectox.html.attr.AttributeNamePojo;
 
 public final class DomAttribute implements Dom.Attribute {
 

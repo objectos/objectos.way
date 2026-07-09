@@ -21,6 +21,7 @@ import java.util.Set;
 import objectos.html.Markup;
 import objectos.way.Dom;
 import objectos.way.Html;
+import objectox.html.elem.ElementNamePojo;
 
 class DomFormatter {
 
@@ -29,28 +30,28 @@ class DomFormatter {
   static final DomFormatter STANDARD = new DomFormatter();
 
   private static final Set<String> PHRASING = Set.of(
-      HtmlElementName.A.name(),
-      HtmlElementName.ABBR.name(),
-      HtmlElementName.B.name(),
-      HtmlElementName.BR.name(),
-      HtmlElementName.BUTTON.name(),
-      HtmlElementName.CODE.name(),
-      HtmlElementName.EM.name(),
-      HtmlElementName.IMG.name(),
-      HtmlElementName.INPUT.name(),
-      HtmlElementName.KBD.name(),
-      HtmlElementName.LABEL.name(),
-      HtmlElementName.PROGRESS.name(),
-      HtmlElementName.SAMP.name(),
-      HtmlElementName.SELECT.name(),
-      HtmlElementName.SMALL.name(),
-      HtmlElementName.SPAN.name(),
-      HtmlElementName.STRONG.name(),
-      HtmlElementName.SUB.name(),
-      HtmlElementName.SUP.name(),
-      HtmlElementName.SVG.name(),
-      HtmlElementName.TEMPLATE.name(),
-      HtmlElementName.TEXTAREA.name()
+      ElementNamePojo.A.name(),
+      ElementNamePojo.ABBR.name(),
+      ElementNamePojo.B.name(),
+      ElementNamePojo.BR.name(),
+      ElementNamePojo.BUTTON.name(),
+      ElementNamePojo.CODE.name(),
+      ElementNamePojo.EM.name(),
+      ElementNamePojo.IMG.name(),
+      ElementNamePojo.INPUT.name(),
+      ElementNamePojo.KBD.name(),
+      ElementNamePojo.LABEL.name(),
+      ElementNamePojo.PROGRESS.name(),
+      ElementNamePojo.SAMP.name(),
+      ElementNamePojo.SELECT.name(),
+      ElementNamePojo.SMALL.name(),
+      ElementNamePojo.SPAN.name(),
+      ElementNamePojo.STRONG.name(),
+      ElementNamePojo.SUB.name(),
+      ElementNamePojo.SUP.name(),
+      ElementNamePojo.SVG.name(),
+      ElementNamePojo.TEMPLATE.name(),
+      ElementNamePojo.TEXTAREA.name()
   );
 
   private static final Set<String> TEXT_AS_RAW = Set.of(

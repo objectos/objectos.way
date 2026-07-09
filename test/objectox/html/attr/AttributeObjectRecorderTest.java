@@ -13,12 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html;
+package objectox.html.attr;
 
 import static org.testng.Assert.assertEquals;
 
 import objectos.html.AttributeName;
 import objectos.html.AttributeObject;
+import objectox.html.ByteArray;
+import objectox.html.HtmlByteProto;
+import objectox.html.HtmlBytes;
+import objectox.html.ObjectArray;
 import org.testng.annotations.Test;
 
 public class AttributeObjectRecorderTest {

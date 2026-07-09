@@ -13,12 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html;
+package objectox.html.attr;
 
 import objectos.html.AttributeName;
 import objectos.html.AttributeObject;
+import objectox.html.ByteArray;
+import objectox.html.HtmlByteProto;
+import objectox.html.HtmlBytes;
+import objectox.html.ObjectArray;
 
-final class AttributeObjectRecorder {
+public final class AttributeObjectRecorder {
 
   private final ByteArray aux;
 
@@ -26,7 +30,7 @@ final class AttributeObjectRecorder {
 
   private final AttributeObject attr;
 
-  AttributeObjectRecorder(ByteArray aux, ObjectArray objects, AttributeObject attr) {
+  public AttributeObjectRecorder(ByteArray aux, ObjectArray objects, AttributeObject attr) {
     this.aux = aux;
 
     this.objects = objects;

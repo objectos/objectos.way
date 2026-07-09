@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html;
+package objectox.html.attr;
 
-import objectox.html.HtmlSpec.ElementSpec;
+import objectox.html.HtmlSpec;
 
-public class HtmlElementNameGenImpl {
+public class AttributeNameGenImpl {
 
   private final StringBuilder fields = new StringBuilder();
 
@@ -26,7 +26,7 @@ public class HtmlElementNameGenImpl {
   private int counter;
 
   public static void main(String[] args) {
-    System.out.println(new HtmlElementNameGenImpl());
+    System.out.println(new AttributeNameGenImpl());
   }
 
   @Override
@@ -36,25 +36,43 @@ public class HtmlElementNameGenImpl {
     return """
     %s
 
-      private static final HtmlElementName[] VALUES = {
+      private static final HtmlAttributeName[] VALUES = {
     %s
       };
     """.formatted(fields, values);
   }
 
   private void prepare() {
-    for (ElementSpec spec : HtmlSpec.elements()) {
+    fields.append("""
+
+      //
+      // DATA ATTRS
+      //
+    """);
+
+    for (AttributeSpec spec : HtmlSpec.dataAttrs()) {
+      spec(spec);
+    }
+
+    fields.append("""
+
+      //
+      // HTML
+      //
+    """);
+
+    for (AttributeSpec spec : HtmlSpec.attributes()) {
       spec(spec);
     }
   }
 
-  private void spec(ElementSpec spec) {
+  private void spec(AttributeSpec spec) {
     final int index;
     index = counter++;
 
     fields.append("""
-      static final HtmlElementName %s = new HtmlElementName(%s, %d, "%s");
-    """.formatted(spec.javaName(), spec.endTag(), index, spec.htmlName()));
+      static final HtmlAttributeName %s = new HtmlAttributeName(%s, %d, "%s");
+    """.formatted(spec.constantName(), spec.booleanAttribute(), index, spec.htmlName()));
 
     if (index != 0) {
       values.append(',');
@@ -63,7 +81,7 @@ public class HtmlElementNameGenImpl {
 
     values.append("    ");
 
-    values.append(spec.javaName());
+    values.append(spec.constantName());
   }
 
 }

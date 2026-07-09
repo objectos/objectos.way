@@ -21,8 +21,8 @@ import objectos.html.AttributeName;
 import objectos.html.AttributeObject;
 import objectos.html.ClassName;
 import objectos.html.Component;
+import objectos.html.ElementName;
 import objectos.html.Id;
-import objectos.way.Html;
 import org.testng.annotations.Test;
 
 public class HtmlMarkupTest07Element {
@@ -41,7 +41,7 @@ public class HtmlMarkupTest07Element {
 
     test(
         m -> m.elem(
-            Html.ElementName.BUTTON,
+            ElementName.BUTTON,
 
             Id.of("foo"),
 

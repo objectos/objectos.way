@@ -20,6 +20,8 @@ import objectos.html.ClassName;
 import objectos.html.Id;
 import objectos.html.Markup;
 import objectos.way.Html;
+import objectox.html.attr.AttributeNamePojo;
+import objectox.html.elem.ElementNamePojo;
 import org.testng.annotations.Test;
 
 public class HtmlMarkupTest01Recorder {
@@ -40,7 +42,7 @@ public class HtmlMarkupTest01Recorder {
         HtmlBytes.encodeInt0(5),
         HtmlBytes.encodeInt1(5),
         HtmlByteProto.STANDARD_NAME,
-        (byte) HtmlElementName.HTML.index(),
+        (byte) ElementNamePojo.HTML.index(),
         HtmlByteProto.END,
         HtmlBytes.encodeInt0(5),
         HtmlByteProto.INTERNAL
@@ -71,7 +73,7 @@ public class HtmlMarkupTest01Recorder {
         HtmlBytes.encodeInt0(7),
         HtmlBytes.encodeInt1(7),
         HtmlByteProto.STANDARD_NAME,
-        (byte) HtmlElementName.HTML.index(),
+        (byte) ElementNamePojo.HTML.index(),
         HtmlByteProto.ATTRIBUTE1,
         HtmlBytes.encodeInt0(11),
         HtmlByteProto.END,
@@ -111,7 +113,7 @@ public class HtmlMarkupTest01Recorder {
         HtmlBytes.encodeInt0(9),
         HtmlBytes.encodeInt1(9),
         HtmlByteProto.STANDARD_NAME,
-        (byte) HtmlElementName.HTML.index(),
+        (byte) ElementNamePojo.HTML.index(),
         HtmlByteProto.ATTRIBUTE1,
         HtmlBytes.encodeInt0(16),
         HtmlByteProto.ATTRIBUTE1,
@@ -140,7 +142,7 @@ public class HtmlMarkupTest01Recorder {
         HtmlBytes.encodeInt0(5),
         HtmlBytes.encodeInt1(5),
         HtmlByteProto.STANDARD_NAME,
-        (byte) HtmlElementName.HEAD.index(),
+        (byte) ElementNamePojo.HEAD.index(),
         HtmlByteProto.END,
         HtmlBytes.encodeInt0(5),
         HtmlByteProto.INTERNAL,
@@ -149,7 +151,7 @@ public class HtmlMarkupTest01Recorder {
         HtmlBytes.encodeInt0(7),
         HtmlBytes.encodeInt1(7),
         HtmlByteProto.STANDARD_NAME,
-        (byte) HtmlElementName.HTML.index(),
+        (byte) ElementNamePojo.HTML.index(),
         HtmlByteProto.ELEMENT,
         HtmlBytes.encodeInt0(14),
         HtmlByteProto.END,
@@ -178,7 +180,7 @@ public class HtmlMarkupTest01Recorder {
         HtmlBytes.encodeInt0(5),
         HtmlBytes.encodeInt1(5),
         HtmlByteProto.STANDARD_NAME,
-        (byte) HtmlElementName.HTML.index(),
+        (byte) ElementNamePojo.HTML.index(),
         HtmlByteProto.END,
         HtmlBytes.encodeInt0(5),
         HtmlByteProto.INTERNAL
@@ -228,7 +230,7 @@ public class HtmlMarkupTest01Recorder {
         HtmlBytes.encodeInt0(7),
         HtmlBytes.encodeInt1(7),
         HtmlByteProto.STANDARD_NAME,
-        (byte) HtmlElementName.META.index(),
+        (byte) ElementNamePojo.META.index(),
         HtmlByteProto.ATTRIBUTE1,
         HtmlBytes.encodeInt0(11),
         HtmlByteProto.END,
@@ -244,7 +246,7 @@ public class HtmlMarkupTest01Recorder {
         HtmlBytes.encodeInt0(7),
         HtmlBytes.encodeInt1(7),
         HtmlByteProto.STANDARD_NAME,
-        (byte) HtmlElementName.HEAD.index(),
+        (byte) ElementNamePojo.HEAD.index(),
         HtmlByteProto.ELEMENT,
         HtmlBytes.encodeInt0(19),
         HtmlByteProto.END,
@@ -255,7 +257,7 @@ public class HtmlMarkupTest01Recorder {
         HtmlBytes.encodeInt0(7),
         HtmlBytes.encodeInt1(7),
         HtmlByteProto.STANDARD_NAME,
-        (byte) HtmlElementName.HTML.index(),
+        (byte) ElementNamePojo.HTML.index(),
         HtmlByteProto.ELEMENT,
         HtmlBytes.encodeInt0(16),
         HtmlByteProto.END,
@@ -289,7 +291,7 @@ public class HtmlMarkupTest01Recorder {
         HtmlBytes.encodeInt0(9),
         HtmlBytes.encodeInt1(9),
         HtmlByteProto.STANDARD_NAME,
-        (byte) HtmlElementName.BODY.index(),
+        (byte) ElementNamePojo.BODY.index(),
         HtmlByteProto.ATTRIBUTE_EXT1,
         (byte) AttributeNamePojo.ID.index(),
         HtmlBytes.encodeInt0(0),
@@ -302,7 +304,7 @@ public class HtmlMarkupTest01Recorder {
         HtmlBytes.encodeInt0(11),
         HtmlBytes.encodeInt1(11),
         HtmlByteProto.STANDARD_NAME,
-        (byte) HtmlElementName.HTML.index(),
+        (byte) ElementNamePojo.HTML.index(),
         HtmlByteProto.ATTRIBUTE_EXT1,
         (byte) AttributeNamePojo.ID.index(),
         HtmlBytes.encodeInt0(1),
@@ -340,7 +342,7 @@ public class HtmlMarkupTest01Recorder {
         HtmlBytes.encodeInt0(7),
         HtmlBytes.encodeInt1(7),
         HtmlByteProto.STANDARD_NAME,
-        (byte) HtmlElementName.P.index(),
+        (byte) ElementNamePojo.P.index(),
         HtmlByteProto.TEXT,
         HtmlBytes.encodeInt0(10),
         HtmlByteProto.END,
@@ -351,7 +353,7 @@ public class HtmlMarkupTest01Recorder {
         HtmlBytes.encodeInt0(7),
         HtmlBytes.encodeInt1(7),
         HtmlByteProto.STANDARD_NAME,
-        (byte) HtmlElementName.BODY.index(),
+        (byte) ElementNamePojo.BODY.index(),
         HtmlByteProto.ELEMENT,
         HtmlBytes.encodeInt0(16),
         HtmlByteProto.END,
@@ -362,7 +364,7 @@ public class HtmlMarkupTest01Recorder {
         HtmlBytes.encodeInt0(7),
         HtmlBytes.encodeInt1(7),
         HtmlByteProto.STANDARD_NAME,
-        (byte) HtmlElementName.HTML.index(),
+        (byte) ElementNamePojo.HTML.index(),
         HtmlByteProto.ELEMENT,
         HtmlBytes.encodeInt0(16),
         HtmlByteProto.END,
@@ -400,7 +402,7 @@ public class HtmlMarkupTest01Recorder {
         HtmlBytes.encodeInt0(7),
         HtmlBytes.encodeInt1(7),
         HtmlByteProto.STANDARD_NAME,
-        (byte) HtmlElementName.HEAD.index(),
+        (byte) ElementNamePojo.HEAD.index(),
         HtmlByteProto.AMBIGUOUS1,
         HtmlBytes.encodeInt0(11),
         HtmlByteProto.END,
@@ -417,7 +419,7 @@ public class HtmlMarkupTest01Recorder {
         HtmlBytes.encodeInt0(7),
         HtmlBytes.encodeInt1(7),
         HtmlByteProto.STANDARD_NAME,
-        (byte) HtmlElementName.BODY.index(),
+        (byte) ElementNamePojo.BODY.index(),
         HtmlByteProto.AMBIGUOUS1,
         HtmlBytes.encodeInt0(11),
         HtmlByteProto.END,
@@ -428,7 +430,7 @@ public class HtmlMarkupTest01Recorder {
         HtmlBytes.encodeInt0(9),
         HtmlBytes.encodeInt1(9),
         HtmlByteProto.STANDARD_NAME,
-        (byte) HtmlElementName.HTML.index(),
+        (byte) ElementNamePojo.HTML.index(),
         HtmlByteProto.ELEMENT,
         HtmlBytes.encodeInt0(31),
         HtmlByteProto.ELEMENT,
@@ -470,7 +472,7 @@ public class HtmlMarkupTest01Recorder {
         HtmlBytes.encodeInt0(5),
         HtmlBytes.encodeInt1(5),
         HtmlByteProto.STANDARD_NAME,
-        (byte) HtmlElementName.NAV.index(),
+        (byte) ElementNamePojo.NAV.index(),
         HtmlByteProto.END,
         HtmlBytes.encodeInt0(5),
         HtmlByteProto.INTERNAL,
@@ -479,7 +481,7 @@ public class HtmlMarkupTest01Recorder {
         HtmlBytes.encodeInt0(7),
         HtmlBytes.encodeInt1(7),
         HtmlByteProto.STANDARD_NAME,
-        (byte) HtmlElementName.BODY.index(),
+        (byte) ElementNamePojo.BODY.index(),
         HtmlByteProto.ELEMENT,
         HtmlBytes.encodeInt0(14),
         HtmlByteProto.END,
@@ -537,7 +539,7 @@ public class HtmlMarkupTest01Recorder {
         HtmlBytes.encodeInt0(9),
         HtmlBytes.encodeInt1(9),
         HtmlByteProto.STANDARD_NAME,
-        (byte) HtmlElementName.INPUT.index(),
+        (byte) ElementNamePojo.INPUT.index(),
         HtmlByteProto.ATTRIBUTE1,
         HtmlBytes.encodeInt0(11),
         HtmlByteProto.ATTRIBUTE_EXT0,
@@ -571,7 +573,7 @@ public class HtmlMarkupTest01Recorder {
         HtmlBytes.encodeInt0(5),
         HtmlBytes.encodeInt1(5),
         HtmlByteProto.STANDARD_NAME,
-        (byte) HtmlElementName.LABEL.index(),
+        (byte) ElementNamePojo.LABEL.index(),
         HtmlByteProto.END,
         HtmlBytes.encodeInt0(5),
         HtmlByteProto.INTERNAL,
@@ -580,7 +582,7 @@ public class HtmlMarkupTest01Recorder {
         HtmlBytes.encodeInt0(5),
         HtmlBytes.encodeInt1(5),
         HtmlByteProto.STANDARD_NAME,
-        (byte) HtmlElementName.INPUT.index(),
+        (byte) ElementNamePojo.INPUT.index(),
         HtmlByteProto.END,
         HtmlBytes.encodeInt0(5),
         HtmlByteProto.INTERNAL,
@@ -600,7 +602,7 @@ public class HtmlMarkupTest01Recorder {
         HtmlBytes.encodeInt0(9),
         HtmlBytes.encodeInt1(9),
         HtmlByteProto.STANDARD_NAME,
-        (byte) HtmlElementName.FORM.index(),
+        (byte) ElementNamePojo.FORM.index(),
         HtmlByteProto.ELEMENT,
         HtmlBytes.encodeInt0(32),
         HtmlByteProto.ELEMENT,
@@ -632,7 +634,7 @@ public class HtmlMarkupTest01Recorder {
     html.elementValue(HtmlInstruction.ELEMENT);
     html.elementEnd();
 
-    html.elementBegin(HtmlElementName.DIV);
+    html.elementBegin(ElementNamePojo.DIV);
     html.elementValue(col);
     html.elementValue(HtmlInstruction.ELEMENT);
     html.elementEnd();
@@ -643,7 +645,7 @@ public class HtmlMarkupTest01Recorder {
     html.elementValue(HtmlInstruction.ELEMENT);
     html.elementEnd();
 
-    html.elementBegin(HtmlElementName.DIV);
+    html.elementBegin(ElementNamePojo.DIV);
     html.elementValue(col);
     html.elementValue(HtmlInstruction.ELEMENT);
     html.elementEnd();
@@ -653,7 +655,7 @@ public class HtmlMarkupTest01Recorder {
     html.elementValue(HtmlInstruction.ELEMENT);
     html.elementEnd();
 
-    html.elementBegin(HtmlElementName.DIV);
+    html.elementBegin(ElementNamePojo.DIV);
     html.elementValue(grd);
     html.elementValue(HtmlInstruction.ELEMENT);
     html.elementEnd();
@@ -679,7 +681,7 @@ public class HtmlMarkupTest01Recorder {
         HtmlBytes.encodeInt0(11),
         HtmlBytes.encodeInt1(11),
         HtmlByteProto.STANDARD_NAME,
-        (byte) HtmlElementName.DIV.index(),
+        (byte) ElementNamePojo.DIV.index(),
         HtmlByteProto.ATTRIBUTE_EXT1,
         (byte) AttributeNamePojo.CLASS.index(),
         HtmlBytes.encodeInt0(1),
@@ -708,7 +710,7 @@ public class HtmlMarkupTest01Recorder {
         HtmlBytes.encodeInt0(11),
         HtmlBytes.encodeInt1(11),
         HtmlByteProto.STANDARD_NAME,
-        (byte) HtmlElementName.DIV.index(),
+        (byte) ElementNamePojo.DIV.index(),
         HtmlByteProto.ATTRIBUTE_EXT1,
         (byte) AttributeNamePojo.CLASS.index(),
         HtmlBytes.encodeInt0(3),
@@ -734,7 +736,7 @@ public class HtmlMarkupTest01Recorder {
         HtmlBytes.encodeInt0(13),
         HtmlBytes.encodeInt1(13),
         HtmlByteProto.STANDARD_NAME,
-        (byte) HtmlElementName.DIV.index(),
+        (byte) ElementNamePojo.DIV.index(),
         HtmlByteProto.ATTRIBUTE_EXT1,
         (byte) AttributeNamePojo.CLASS.index(),
         HtmlBytes.encodeInt0(4),
@@ -783,7 +785,7 @@ public class HtmlMarkupTest01Recorder {
         HtmlBytes.encodeInt0(5),
         HtmlBytes.encodeInt1(5),
         HtmlByteProto.STANDARD_NAME,
-        (byte) HtmlElementName.HTML.index(),
+        (byte) ElementNamePojo.HTML.index(),
         HtmlByteProto.END,
         HtmlBytes.encodeInt0(5),
         HtmlByteProto.INTERNAL,

@@ -13,37 +13,57 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html;
+package objectox.html.elem;
 
-import objectox.html.HtmlSpec.AttributeSpec;
+import objectox.html.HtmlSpec;
 
-public class HtmlAttributeNameGen {
+public class ElementNameGenImpl {
 
   private final StringBuilder fields = new StringBuilder();
 
+  private final StringBuilder values = new StringBuilder();
+
+  private int counter;
+
   public static void main(String[] args) {
-    System.out.println(new HtmlAttributeNameGen());
+    System.out.println(new ElementNameGenImpl());
   }
 
   @Override
   public final String toString() {
     prepare();
 
-    return fields.toString();
+    return """
+    %s
+
+      private static final HtmlElementName[] VALUES = {
+    %s
+      };
+    """.formatted(fields, values);
   }
 
   private void prepare() {
-    for (AttributeSpec spec : HtmlSpec.attributes()) {
+    for (ElementSpec spec : HtmlSpec.elements()) {
       spec(spec);
     }
   }
 
-  private void spec(AttributeSpec spec) {
-    fields.append("""
+  private void spec(ElementSpec spec) {
+    final int index;
+    index = counter++;
 
-      /// The `%2$s` HTML attribute.
-      Html.AttributeName %1$s = HtmlAttributeName.%1$s;
-    """.formatted(spec.constantName(), spec.htmlName()));
+    fields.append("""
+      static final HtmlElementName %s = new HtmlElementName(%s, %d, "%s");
+    """.formatted(spec.javaName(), spec.endTag(), index, spec.htmlName()));
+
+    if (index != 0) {
+      values.append(',');
+      values.append('\n');
+    }
+
+    values.append("    ");
+
+    values.append(spec.javaName());
   }
 
 }

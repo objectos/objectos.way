@@ -18,6 +18,7 @@ package objectox.html;
 import java.util.Iterator;
 import objectos.way.Dom;
 import objectos.way.Lang;
+import objectox.html.elem.ElementNamePojo;
 
 public final class DomElement implements Dom.Element, Lang.IterableOnce<Dom.Node>, Iterator<Dom.Node> {
 
@@ -46,7 +47,7 @@ public final class DomElement implements Dom.Element, Lang.IterableOnce<Dom.Node
 
   private final MarkupPojo player;
 
-  HtmlElementName name;
+  ElementNamePojo name;
 
   DomElement(MarkupPojo player) {
     this.player = player;

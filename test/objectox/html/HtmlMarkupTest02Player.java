@@ -19,6 +19,8 @@ import static org.testng.Assert.assertEquals;
 
 import java.util.Arrays;
 import objectos.html.Markup;
+import objectox.html.attr.AttributeNamePojo;
+import objectox.html.elem.ElementNamePojo;
 import org.testng.annotations.Test;
 
 public class HtmlMarkupTest02Player {
@@ -30,7 +32,7 @@ public class HtmlMarkupTest02Player {
     MarkupPojo compiler;
     compiler = new Markup.OfHtml();
 
-    compiler.elementBegin(HtmlElementName.HTML);
+    compiler.elementBegin(ElementNamePojo.HTML);
     compiler.elementEnd();
 
     // document
@@ -77,7 +79,7 @@ public class HtmlMarkupTest02Player {
     DomElement elem;
     elem = (DomElement) compiler.documentNext();
 
-    assertEquals(elem.name, HtmlElementName.HTML);
+    assertEquals(elem.name, ElementNamePojo.HTML);
 
     testAux(
         compiler,
@@ -128,7 +130,7 @@ public class HtmlMarkupTest02Player {
     );
 
     // element.attributes.hasNext
-    assertEquals(compiler.elementAttributesHasNext(HtmlElementName.HTML), false);
+    assertEquals(compiler.elementAttributesHasNext(ElementNamePojo.HTML), false);
 
     testAux(
         compiler,
@@ -215,7 +217,7 @@ public class HtmlMarkupTest02Player {
 
     compiler.attr(AttributeNamePojo.LANG, "pt-BR");
 
-    compiler.elementBegin(HtmlElementName.HTML);
+    compiler.elementBegin(ElementNamePojo.HTML);
     compiler.elementValue(HtmlInstruction.ATTRIBUTE);
     compiler.elementEnd();
 
@@ -248,7 +250,7 @@ public class HtmlMarkupTest02Player {
     );
 
     // html.attrs.iterator.hasNext
-    assertEquals(compiler.elementAttributesHasNext(HtmlElementName.HTML), true);
+    assertEquals(compiler.elementAttributesHasNext(ElementNamePojo.HTML), true);
 
     testAux(
         compiler,
@@ -358,7 +360,7 @@ public class HtmlMarkupTest02Player {
     );
 
     // html.attributes.hasNext
-    assertEquals(compiler.elementAttributesHasNext(HtmlElementName.HTML), false);
+    assertEquals(compiler.elementAttributesHasNext(ElementNamePojo.HTML), false);
 
     testAux(
         compiler,
@@ -382,10 +384,10 @@ public class HtmlMarkupTest02Player {
     MarkupPojo compiler;
     compiler = new Markup.OfHtml();
 
-    compiler.elementBegin(HtmlElementName.HEAD);
+    compiler.elementBegin(ElementNamePojo.HEAD);
     compiler.elementEnd();
 
-    compiler.elementBegin(HtmlElementName.HTML);
+    compiler.elementBegin(ElementNamePojo.HTML);
     compiler.elementValue(HtmlInstruction.ELEMENT);
     compiler.elementEnd();
 
@@ -399,7 +401,7 @@ public class HtmlMarkupTest02Player {
     DomElement html;
     html = (DomElement) compiler.documentNext();
 
-    assertEquals(html.name, HtmlElementName.HTML);
+    assertEquals(html.name, ElementNamePojo.HTML);
 
     testAux(
         compiler,
@@ -418,7 +420,7 @@ public class HtmlMarkupTest02Player {
     // html.attributes
     compiler.elementAttributes();
     compiler.elementAttributesIterator();
-    assertEquals(compiler.elementAttributesHasNext(HtmlElementName.HTML), false);
+    assertEquals(compiler.elementAttributesHasNext(ElementNamePojo.HTML), false);
 
     // html.nodes
     compiler.elementNodes();
@@ -501,7 +503,7 @@ public class HtmlMarkupTest02Player {
     // head.attributes
     compiler.elementAttributes();
     compiler.elementAttributesIterator();
-    assertEquals(compiler.elementAttributesHasNext(HtmlElementName.HEAD), false);
+    assertEquals(compiler.elementAttributesHasNext(ElementNamePojo.HEAD), false);
 
     // head.nodes
     compiler.elementNodes();
@@ -566,17 +568,17 @@ public class HtmlMarkupTest02Player {
 
     compiler.ambiguous(HtmlAmbiguous.TITLE, "element");
 
-    compiler.elementBegin(HtmlElementName.HEAD);
+    compiler.elementBegin(ElementNamePojo.HEAD);
     compiler.elementValue(HtmlInstruction.ELEMENT);
     compiler.elementEnd();
 
     compiler.ambiguous(HtmlAmbiguous.TITLE, "attribute");
 
-    compiler.elementBegin(HtmlElementName.BODY);
+    compiler.elementBegin(ElementNamePojo.BODY);
     compiler.elementValue(HtmlInstruction.ELEMENT);
     compiler.elementEnd();
 
-    compiler.elementBegin(HtmlElementName.HTML);
+    compiler.elementBegin(ElementNamePojo.HTML);
     compiler.elementValue(HtmlInstruction.ELEMENT);
     compiler.elementValue(HtmlInstruction.ELEMENT);
     compiler.elementEnd();
@@ -590,12 +592,12 @@ public class HtmlMarkupTest02Player {
     // html
     DomElement html;
     html = (DomElement) compiler.documentNext();
-    assertEquals(html.name, HtmlElementName.HTML);
+    assertEquals(html.name, ElementNamePojo.HTML);
 
     // html.attributes
     compiler.elementAttributes();
     compiler.elementAttributesIterator();
-    assertEquals(compiler.elementAttributesHasNext(HtmlElementName.HTML), false);
+    assertEquals(compiler.elementAttributesHasNext(ElementNamePojo.HTML), false);
 
     // html.nodes
     compiler.elementNodes();
@@ -605,12 +607,12 @@ public class HtmlMarkupTest02Player {
     // head
     DomElement head;
     head = (DomElement) compiler.elementNodesNext();
-    assertEquals(head.name, HtmlElementName.HEAD);
+    assertEquals(head.name, ElementNamePojo.HEAD);
 
     // head.attributes
     compiler.elementAttributes();
     compiler.elementAttributesIterator();
-    assertEquals(compiler.elementAttributesHasNext(HtmlElementName.HEAD), false);
+    assertEquals(compiler.elementAttributesHasNext(ElementNamePojo.HEAD), false);
 
     // head.nodes
     compiler.elementNodes();
@@ -641,7 +643,7 @@ public class HtmlMarkupTest02Player {
     // title
     DomElement title;
     title = (DomElement) compiler.elementNodesNext();
-    assertEquals(title.name, HtmlElementName.TITLE);
+    assertEquals(title.name, ElementNamePojo.TITLE);
   }
 
   @Test(description = """
@@ -656,7 +658,7 @@ public class HtmlMarkupTest02Player {
     compiler.attr(AttributeNamePojo.TYPE, "email");
     compiler.attr(AttributeNamePojo.REQUIRED);
 
-    compiler.elementBegin(HtmlElementName.INPUT);
+    compiler.elementBegin(ElementNamePojo.INPUT);
     compiler.elementValue(HtmlInstruction.ATTRIBUTE);
     compiler.elementValue(HtmlInstruction.ATTRIBUTE);
     compiler.elementEnd();
@@ -689,7 +691,7 @@ public class HtmlMarkupTest02Player {
     // input.attrs
     compiler.elementAttributes();
     compiler.elementAttributesIterator();
-    assertEquals(compiler.elementAttributesHasNext(HtmlElementName.INPUT), true);
+    assertEquals(compiler.elementAttributesHasNext(ElementNamePojo.INPUT), true);
 
     // input[type]
     DomAttribute type;
@@ -750,7 +752,7 @@ public class HtmlMarkupTest02Player {
     );
 
     // input.attrs.hasNext
-    assertEquals(compiler.elementAttributesHasNext(HtmlElementName.INPUT), true);
+    assertEquals(compiler.elementAttributesHasNext(ElementNamePojo.INPUT), true);
 
     testAux(
         compiler,
@@ -787,7 +789,7 @@ public class HtmlMarkupTest02Player {
     );
 
     // input.attrs.hasNext
-    assertEquals(compiler.elementAttributesHasNext(HtmlElementName.INPUT), false);
+    assertEquals(compiler.elementAttributesHasNext(ElementNamePojo.INPUT), false);
 
     testAux(
         compiler,

@@ -17,7 +17,7 @@ package objectos.way;
 
 import objectos.html.AttributeName;
 import objectos.html.Component;
-import objectox.html.AttributeNamePojo;
+import objectox.html.attr.AttributeNamePojo;
 
 /**
  * The <strong>Objectos Syntax</strong> main class, part of Objectos HTML.

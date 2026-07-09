@@ -13,8 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html;
+package objectox.html.attr;
 
-import objectos.html.Id;
+import objectos.way.Html.Instruction;
+import objectox.html.HtmlInstruction;
 
-public record IdPojo(String attrValue) implements Id {}
+public sealed interface AttributeOrNoOp
+    extends Instruction.OfAttribute, Instruction.OfDataOn, Instruction.NoOp
+    permits HtmlInstruction {}

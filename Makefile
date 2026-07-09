@@ -167,6 +167,8 @@ TEST_ADD_EXPORTS += objectos.way/objectos.way.dev=org.testng
 TEST_ADD_EXPORTS += objectos.way/objectos.y=org.testng
 TEST_ADD_EXPORTS += objectos.way/objectox.dev=org.testng
 TEST_ADD_EXPORTS += objectos.way/objectox.html=org.testng
+TEST_ADD_EXPORTS += objectos.way/objectox.html.attr=org.testng
+TEST_ADD_EXPORTS += objectos.way/objectox.html.elem=org.testng
 TEST_ADD_EXPORTS += objectos.way/objectox.http=org.testng
 TEST_ADD_EXPORTS += objectos.way/objectox.http.handler=org.testng
 TEST_ADD_EXPORTS += objectos.way/objectox.http.host=org.testng

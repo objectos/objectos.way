@@ -21,6 +21,8 @@ import java.util.Iterator;
 import objectos.html.Markup;
 import objectos.way.Dom;
 import objectos.way.Lang;
+import objectox.html.attr.AttributeNamePojo;
+import objectox.html.elem.ElementNamePojo;
 import org.testng.annotations.Test;
 
 public class HtmlMarkupTest03Processor {
@@ -32,7 +34,7 @@ public class HtmlMarkupTest03Processor {
     MarkupPojo compiler;
     compiler = new Markup.OfHtml();
 
-    compiler.elementBegin(HtmlElementName.HTML);
+    compiler.elementBegin(ElementNamePojo.HTML);
     compiler.elementEnd();
 
     assertEquals(
@@ -54,7 +56,7 @@ public class HtmlMarkupTest03Processor {
 
     compiler.attr(AttributeNamePojo.LANG, "pt-BR");
 
-    compiler.elementBegin(HtmlElementName.HTML);
+    compiler.elementBegin(ElementNamePojo.HTML);
     compiler.elementValue(HtmlInstruction.ATTRIBUTE);
     compiler.elementEnd();
 

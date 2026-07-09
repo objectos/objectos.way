@@ -20,8 +20,11 @@ import java.util.Objects;
 import objectos.html.AttributeName;
 import objectos.html.AttributeObject;
 import objectos.html.Component;
+import objectos.html.ElementName;
 import objectos.script.JsAction;
 import objectos.way.Html;
+import objectox.html.attr.AttributeNamePojo;
+import objectox.html.elem.ElementNamePojo;
 
 sealed abstract class MarkupGenerated permits MarkupPojo {
 
@@ -299,9 +302,9 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   // ELEMENTS
   //
 
-  abstract Html.Instruction.OfElement elem0(Html.ElementName name, Html.Instruction... contents);
+  abstract Html.Instruction.OfElement elem0(ElementName name, Html.Instruction... contents);
 
-  abstract Html.Instruction.OfElement elem0(Html.ElementName name, String text);
+  abstract Html.Instruction.OfElement elem0(ElementName name, String text);
 
   /// Renders an HTML element with the specified name and contents.
   /// 
@@ -309,7 +312,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element
-  public final Html.Instruction.OfElement elem(Html.ElementName name, Html.Instruction... contents) {
+  public final Html.Instruction.OfElement elem(ElementName name, Html.Instruction... contents) {
     Objects.requireNonNull(name, "name == null");
     return elem0(name, contents);
   }
@@ -320,7 +323,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of this element
   /// 
   /// @return an instruction representing the element
-  public final Html.Instruction.OfElement elem(Html.ElementName name, String text) {
+  public final Html.Instruction.OfElement elem(ElementName name, String text) {
     Objects.requireNonNull(name, "name == null");
     return elem0(name, text);
   }
@@ -334,7 +337,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement a(Html.Instruction... contents) {
-    return elem0(HtmlElementName.A, contents);
+    return elem0(ElementNamePojo.A, contents);
   }
 
   /// Renders the `a` element with the specified text.
@@ -343,7 +346,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement a(String text) {
-    return elem0(HtmlElementName.A, text);
+    return elem0(ElementNamePojo.A, text);
   }
 
   /// Renders the `abbr` element with the specified content.
@@ -352,7 +355,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement abbr(Html.Instruction... contents) {
-    return elem0(HtmlElementName.ABBR, contents);
+    return elem0(ElementNamePojo.ABBR, contents);
   }
 
   /// Renders the `abbr` element with the specified text.
@@ -361,7 +364,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement abbr(String text) {
-    return elem0(HtmlElementName.ABBR, text);
+    return elem0(ElementNamePojo.ABBR, text);
   }
 
   /// Renders the `article` element with the specified content.
@@ -370,7 +373,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement article(Html.Instruction... contents) {
-    return elem0(HtmlElementName.ARTICLE, contents);
+    return elem0(ElementNamePojo.ARTICLE, contents);
   }
 
   /// Renders the `article` element with the specified text.
@@ -379,7 +382,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement article(String text) {
-    return elem0(HtmlElementName.ARTICLE, text);
+    return elem0(ElementNamePojo.ARTICLE, text);
   }
 
   /// Renders the `aside` element with the specified content.
@@ -388,7 +391,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement aside(Html.Instruction... contents) {
-    return elem0(HtmlElementName.ASIDE, contents);
+    return elem0(ElementNamePojo.ASIDE, contents);
   }
 
   /// Renders the `aside` element with the specified text.
@@ -397,7 +400,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement aside(String text) {
-    return elem0(HtmlElementName.ASIDE, text);
+    return elem0(ElementNamePojo.ASIDE, text);
   }
 
   /// Renders the `b` element with the specified content.
@@ -406,7 +409,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement b(Html.Instruction... contents) {
-    return elem0(HtmlElementName.B, contents);
+    return elem0(ElementNamePojo.B, contents);
   }
 
   /// Renders the `b` element with the specified text.
@@ -415,7 +418,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement b(String text) {
-    return elem0(HtmlElementName.B, text);
+    return elem0(ElementNamePojo.B, text);
   }
 
   /// Renders the `blockquote` element with the specified content.
@@ -424,7 +427,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement blockquote(Html.Instruction... contents) {
-    return elem0(HtmlElementName.BLOCKQUOTE, contents);
+    return elem0(ElementNamePojo.BLOCKQUOTE, contents);
   }
 
   /// Renders the `blockquote` element with the specified text.
@@ -433,7 +436,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement blockquote(String text) {
-    return elem0(HtmlElementName.BLOCKQUOTE, text);
+    return elem0(ElementNamePojo.BLOCKQUOTE, text);
   }
 
   /// Renders the `body` element with the specified content.
@@ -442,7 +445,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement body(Html.Instruction... contents) {
-    return elem0(HtmlElementName.BODY, contents);
+    return elem0(ElementNamePojo.BODY, contents);
   }
 
   /// Renders the `body` element with the specified text.
@@ -451,7 +454,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement body(String text) {
-    return elem0(HtmlElementName.BODY, text);
+    return elem0(ElementNamePojo.BODY, text);
   }
 
   /// Renders the `br` element with the specified content.
@@ -460,7 +463,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement br(Html.Instruction.OfVoid... contents) {
-    return elem0(HtmlElementName.BR, contents);
+    return elem0(ElementNamePojo.BR, contents);
   }
 
   /// Renders the `button` element with the specified content.
@@ -469,7 +472,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement button(Html.Instruction... contents) {
-    return elem0(HtmlElementName.BUTTON, contents);
+    return elem0(ElementNamePojo.BUTTON, contents);
   }
 
   /// Renders the `button` element with the specified text.
@@ -478,7 +481,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement button(String text) {
-    return elem0(HtmlElementName.BUTTON, text);
+    return elem0(ElementNamePojo.BUTTON, text);
   }
 
   /// Renders the `clipPath` element with the specified content.
@@ -487,7 +490,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement clipPath(Html.Instruction... contents) {
-    return elem0(HtmlElementName.CLIPPATH, contents);
+    return elem0(ElementNamePojo.CLIPPATH, contents);
   }
 
   /// Renders the `code` element with the specified content.
@@ -496,7 +499,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement code(Html.Instruction... contents) {
-    return elem0(HtmlElementName.CODE, contents);
+    return elem0(ElementNamePojo.CODE, contents);
   }
 
   /// Renders the `code` element with the specified text.
@@ -505,7 +508,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement code(String text) {
-    return elem0(HtmlElementName.CODE, text);
+    return elem0(ElementNamePojo.CODE, text);
   }
 
   /// Renders the `dd` element with the specified content.
@@ -514,7 +517,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement dd(Html.Instruction... contents) {
-    return elem0(HtmlElementName.DD, contents);
+    return elem0(ElementNamePojo.DD, contents);
   }
 
   /// Renders the `dd` element with the specified text.
@@ -523,7 +526,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement dd(String text) {
-    return elem0(HtmlElementName.DD, text);
+    return elem0(ElementNamePojo.DD, text);
   }
 
   /// Renders the `defs` element with the specified content.
@@ -532,7 +535,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement defs(Html.Instruction... contents) {
-    return elem0(HtmlElementName.DEFS, contents);
+    return elem0(ElementNamePojo.DEFS, contents);
   }
 
   /// Renders the `defs` element with the specified text.
@@ -541,7 +544,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement defs(String text) {
-    return elem0(HtmlElementName.DEFS, text);
+    return elem0(ElementNamePojo.DEFS, text);
   }
 
   /// Renders the `details` element with the specified content.
@@ -550,7 +553,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement details(Html.Instruction... contents) {
-    return elem0(HtmlElementName.DETAILS, contents);
+    return elem0(ElementNamePojo.DETAILS, contents);
   }
 
   /// Renders the `details` element with the specified text.
@@ -559,7 +562,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement details(String text) {
-    return elem0(HtmlElementName.DETAILS, text);
+    return elem0(ElementNamePojo.DETAILS, text);
   }
 
   /// Renders the `dialog` element with the specified content.
@@ -568,7 +571,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement dialog(Html.Instruction... contents) {
-    return elem0(HtmlElementName.DIALOG, contents);
+    return elem0(ElementNamePojo.DIALOG, contents);
   }
 
   /// Renders the `dialog` element with the specified text.
@@ -577,7 +580,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement dialog(String text) {
-    return elem0(HtmlElementName.DIALOG, text);
+    return elem0(ElementNamePojo.DIALOG, text);
   }
 
   /// Renders the `div` element with the specified content.
@@ -586,7 +589,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement div(Html.Instruction... contents) {
-    return elem0(HtmlElementName.DIV, contents);
+    return elem0(ElementNamePojo.DIV, contents);
   }
 
   /// Renders the `div` element with the specified text.
@@ -595,7 +598,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement div(String text) {
-    return elem0(HtmlElementName.DIV, text);
+    return elem0(ElementNamePojo.DIV, text);
   }
 
   /// Renders the `dl` element with the specified content.
@@ -604,7 +607,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement dl(Html.Instruction... contents) {
-    return elem0(HtmlElementName.DL, contents);
+    return elem0(ElementNamePojo.DL, contents);
   }
 
   /// Renders the `dl` element with the specified text.
@@ -613,7 +616,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement dl(String text) {
-    return elem0(HtmlElementName.DL, text);
+    return elem0(ElementNamePojo.DL, text);
   }
 
   /// Renders the `dt` element with the specified content.
@@ -622,7 +625,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement dt(Html.Instruction... contents) {
-    return elem0(HtmlElementName.DT, contents);
+    return elem0(ElementNamePojo.DT, contents);
   }
 
   /// Renders the `dt` element with the specified text.
@@ -631,7 +634,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement dt(String text) {
-    return elem0(HtmlElementName.DT, text);
+    return elem0(ElementNamePojo.DT, text);
   }
 
   /// Renders the `em` element with the specified content.
@@ -640,7 +643,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement em(Html.Instruction... contents) {
-    return elem0(HtmlElementName.EM, contents);
+    return elem0(ElementNamePojo.EM, contents);
   }
 
   /// Renders the `em` element with the specified text.
@@ -649,7 +652,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement em(String text) {
-    return elem0(HtmlElementName.EM, text);
+    return elem0(ElementNamePojo.EM, text);
   }
 
   /// Renders the `fieldset` element with the specified content.
@@ -658,7 +661,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement fieldset(Html.Instruction... contents) {
-    return elem0(HtmlElementName.FIELDSET, contents);
+    return elem0(ElementNamePojo.FIELDSET, contents);
   }
 
   /// Renders the `fieldset` element with the specified text.
@@ -667,7 +670,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement fieldset(String text) {
-    return elem0(HtmlElementName.FIELDSET, text);
+    return elem0(ElementNamePojo.FIELDSET, text);
   }
 
   /// Renders the `figure` element with the specified content.
@@ -676,7 +679,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement figure(Html.Instruction... contents) {
-    return elem0(HtmlElementName.FIGURE, contents);
+    return elem0(ElementNamePojo.FIGURE, contents);
   }
 
   /// Renders the `figure` element with the specified text.
@@ -685,7 +688,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement figure(String text) {
-    return elem0(HtmlElementName.FIGURE, text);
+    return elem0(ElementNamePojo.FIGURE, text);
   }
 
   /// Renders the `footer` element with the specified content.
@@ -694,7 +697,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement footer(Html.Instruction... contents) {
-    return elem0(HtmlElementName.FOOTER, contents);
+    return elem0(ElementNamePojo.FOOTER, contents);
   }
 
   /// Renders the `footer` element with the specified text.
@@ -703,7 +706,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement footer(String text) {
-    return elem0(HtmlElementName.FOOTER, text);
+    return elem0(ElementNamePojo.FOOTER, text);
   }
 
   /// Renders the `form` element with the specified content.
@@ -712,7 +715,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement form(Html.Instruction... contents) {
-    return elem0(HtmlElementName.FORM, contents);
+    return elem0(ElementNamePojo.FORM, contents);
   }
 
   /// Renders the `g` element with the specified content.
@@ -721,7 +724,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement g(Html.Instruction... contents) {
-    return elem0(HtmlElementName.G, contents);
+    return elem0(ElementNamePojo.G, contents);
   }
 
   /// Renders the `g` element with the specified text.
@@ -730,7 +733,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement g(String text) {
-    return elem0(HtmlElementName.G, text);
+    return elem0(ElementNamePojo.G, text);
   }
 
   /// Renders the `h1` element with the specified content.
@@ -739,7 +742,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement h1(Html.Instruction... contents) {
-    return elem0(HtmlElementName.H1, contents);
+    return elem0(ElementNamePojo.H1, contents);
   }
 
   /// Renders the `h1` element with the specified text.
@@ -748,7 +751,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement h1(String text) {
-    return elem0(HtmlElementName.H1, text);
+    return elem0(ElementNamePojo.H1, text);
   }
 
   /// Renders the `h2` element with the specified content.
@@ -757,7 +760,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement h2(Html.Instruction... contents) {
-    return elem0(HtmlElementName.H2, contents);
+    return elem0(ElementNamePojo.H2, contents);
   }
 
   /// Renders the `h2` element with the specified text.
@@ -766,7 +769,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement h2(String text) {
-    return elem0(HtmlElementName.H2, text);
+    return elem0(ElementNamePojo.H2, text);
   }
 
   /// Renders the `h3` element with the specified content.
@@ -775,7 +778,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement h3(Html.Instruction... contents) {
-    return elem0(HtmlElementName.H3, contents);
+    return elem0(ElementNamePojo.H3, contents);
   }
 
   /// Renders the `h3` element with the specified text.
@@ -784,7 +787,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement h3(String text) {
-    return elem0(HtmlElementName.H3, text);
+    return elem0(ElementNamePojo.H3, text);
   }
 
   /// Renders the `h4` element with the specified content.
@@ -793,7 +796,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement h4(Html.Instruction... contents) {
-    return elem0(HtmlElementName.H4, contents);
+    return elem0(ElementNamePojo.H4, contents);
   }
 
   /// Renders the `h4` element with the specified text.
@@ -802,7 +805,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement h4(String text) {
-    return elem0(HtmlElementName.H4, text);
+    return elem0(ElementNamePojo.H4, text);
   }
 
   /// Renders the `h5` element with the specified content.
@@ -811,7 +814,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement h5(Html.Instruction... contents) {
-    return elem0(HtmlElementName.H5, contents);
+    return elem0(ElementNamePojo.H5, contents);
   }
 
   /// Renders the `h5` element with the specified text.
@@ -820,7 +823,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement h5(String text) {
-    return elem0(HtmlElementName.H5, text);
+    return elem0(ElementNamePojo.H5, text);
   }
 
   /// Renders the `h6` element with the specified content.
@@ -829,7 +832,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement h6(Html.Instruction... contents) {
-    return elem0(HtmlElementName.H6, contents);
+    return elem0(ElementNamePojo.H6, contents);
   }
 
   /// Renders the `h6` element with the specified text.
@@ -838,7 +841,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement h6(String text) {
-    return elem0(HtmlElementName.H6, text);
+    return elem0(ElementNamePojo.H6, text);
   }
 
   /// Renders the `head` element with the specified content.
@@ -847,7 +850,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement head(Html.Instruction... contents) {
-    return elem0(HtmlElementName.HEAD, contents);
+    return elem0(ElementNamePojo.HEAD, contents);
   }
 
   /// Renders the `head` element with the specified text.
@@ -856,7 +859,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement head(String text) {
-    return elem0(HtmlElementName.HEAD, text);
+    return elem0(ElementNamePojo.HEAD, text);
   }
 
   /// Renders the `header` element with the specified content.
@@ -865,7 +868,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement header(Html.Instruction... contents) {
-    return elem0(HtmlElementName.HEADER, contents);
+    return elem0(ElementNamePojo.HEADER, contents);
   }
 
   /// Renders the `header` element with the specified text.
@@ -874,7 +877,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement header(String text) {
-    return elem0(HtmlElementName.HEADER, text);
+    return elem0(ElementNamePojo.HEADER, text);
   }
 
   /// Renders the `hgroup` element with the specified content.
@@ -883,7 +886,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement hgroup(Html.Instruction... contents) {
-    return elem0(HtmlElementName.HGROUP, contents);
+    return elem0(ElementNamePojo.HGROUP, contents);
   }
 
   /// Renders the `hgroup` element with the specified text.
@@ -892,7 +895,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement hgroup(String text) {
-    return elem0(HtmlElementName.HGROUP, text);
+    return elem0(ElementNamePojo.HGROUP, text);
   }
 
   /// Renders the `hr` element with the specified content.
@@ -901,7 +904,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement hr(Html.Instruction.OfVoid... contents) {
-    return elem0(HtmlElementName.HR, contents);
+    return elem0(ElementNamePojo.HR, contents);
   }
 
   /// Renders the `html` element with the specified content.
@@ -910,7 +913,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement html(Html.Instruction... contents) {
-    return elem0(HtmlElementName.HTML, contents);
+    return elem0(ElementNamePojo.HTML, contents);
   }
 
   /// Renders the `html` element with the specified text.
@@ -919,7 +922,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement html(String text) {
-    return elem0(HtmlElementName.HTML, text);
+    return elem0(ElementNamePojo.HTML, text);
   }
 
   /// Renders the `img` element with the specified content.
@@ -928,7 +931,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement img(Html.Instruction.OfVoid... contents) {
-    return elem0(HtmlElementName.IMG, contents);
+    return elem0(ElementNamePojo.IMG, contents);
   }
 
   /// Renders the `input` element with the specified content.
@@ -937,7 +940,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement input(Html.Instruction.OfVoid... contents) {
-    return elem0(HtmlElementName.INPUT, contents);
+    return elem0(ElementNamePojo.INPUT, contents);
   }
 
   /// Renders the `kbd` element with the specified content.
@@ -946,7 +949,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement kbd(Html.Instruction... contents) {
-    return elem0(HtmlElementName.KBD, contents);
+    return elem0(ElementNamePojo.KBD, contents);
   }
 
   /// Renders the `kbd` element with the specified text.
@@ -955,7 +958,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement kbd(String text) {
-    return elem0(HtmlElementName.KBD, text);
+    return elem0(ElementNamePojo.KBD, text);
   }
 
   /// Renders the `label` element with the specified content.
@@ -964,7 +967,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement label(Html.Instruction... contents) {
-    return elem0(HtmlElementName.LABEL, contents);
+    return elem0(ElementNamePojo.LABEL, contents);
   }
 
   /// Renders the `legend` element with the specified content.
@@ -973,7 +976,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement legend(Html.Instruction... contents) {
-    return elem0(HtmlElementName.LEGEND, contents);
+    return elem0(ElementNamePojo.LEGEND, contents);
   }
 
   /// Renders the `legend` element with the specified text.
@@ -982,7 +985,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement legend(String text) {
-    return elem0(HtmlElementName.LEGEND, text);
+    return elem0(ElementNamePojo.LEGEND, text);
   }
 
   /// Renders the `li` element with the specified content.
@@ -991,7 +994,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement li(Html.Instruction... contents) {
-    return elem0(HtmlElementName.LI, contents);
+    return elem0(ElementNamePojo.LI, contents);
   }
 
   /// Renders the `li` element with the specified text.
@@ -1000,7 +1003,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement li(String text) {
-    return elem0(HtmlElementName.LI, text);
+    return elem0(ElementNamePojo.LI, text);
   }
 
   /// Renders the `link` element with the specified content.
@@ -1009,7 +1012,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement link(Html.Instruction.OfVoid... contents) {
-    return elem0(HtmlElementName.LINK, contents);
+    return elem0(ElementNamePojo.LINK, contents);
   }
 
   /// Renders the `main` element with the specified content.
@@ -1018,7 +1021,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement main(Html.Instruction... contents) {
-    return elem0(HtmlElementName.MAIN, contents);
+    return elem0(ElementNamePojo.MAIN, contents);
   }
 
   /// Renders the `main` element with the specified text.
@@ -1027,7 +1030,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement main(String text) {
-    return elem0(HtmlElementName.MAIN, text);
+    return elem0(ElementNamePojo.MAIN, text);
   }
 
   /// Renders the `menu` element with the specified content.
@@ -1036,7 +1039,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement menu(Html.Instruction... contents) {
-    return elem0(HtmlElementName.MENU, contents);
+    return elem0(ElementNamePojo.MENU, contents);
   }
 
   /// Renders the `menu` element with the specified text.
@@ -1045,7 +1048,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement menu(String text) {
-    return elem0(HtmlElementName.MENU, text);
+    return elem0(ElementNamePojo.MENU, text);
   }
 
   /// Renders the `meta` element with the specified content.
@@ -1054,7 +1057,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement meta(Html.Instruction.OfVoid... contents) {
-    return elem0(HtmlElementName.META, contents);
+    return elem0(ElementNamePojo.META, contents);
   }
 
   /// Renders the `nav` element with the specified content.
@@ -1063,7 +1066,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement nav(Html.Instruction... contents) {
-    return elem0(HtmlElementName.NAV, contents);
+    return elem0(ElementNamePojo.NAV, contents);
   }
 
   /// Renders the `nav` element with the specified text.
@@ -1072,7 +1075,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement nav(String text) {
-    return elem0(HtmlElementName.NAV, text);
+    return elem0(ElementNamePojo.NAV, text);
   }
 
   /// Renders the `noscript` element with the specified content.
@@ -1081,7 +1084,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement noscript(Html.Instruction... contents) {
-    return elem0(HtmlElementName.NOSCRIPT, contents);
+    return elem0(ElementNamePojo.NOSCRIPT, contents);
   }
 
   /// Renders the `noscript` element with the specified text.
@@ -1090,7 +1093,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement noscript(String text) {
-    return elem0(HtmlElementName.NOSCRIPT, text);
+    return elem0(ElementNamePojo.NOSCRIPT, text);
   }
 
   /// Renders the `ol` element with the specified content.
@@ -1099,7 +1102,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement ol(Html.Instruction... contents) {
-    return elem0(HtmlElementName.OL, contents);
+    return elem0(ElementNamePojo.OL, contents);
   }
 
   /// Renders the `ol` element with the specified text.
@@ -1108,7 +1111,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement ol(String text) {
-    return elem0(HtmlElementName.OL, text);
+    return elem0(ElementNamePojo.OL, text);
   }
 
   /// Renders the `optgroup` element with the specified content.
@@ -1117,7 +1120,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement optgroup(Html.Instruction... contents) {
-    return elem0(HtmlElementName.OPTGROUP, contents);
+    return elem0(ElementNamePojo.OPTGROUP, contents);
   }
 
   /// Renders the `optgroup` element with the specified text.
@@ -1126,7 +1129,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement optgroup(String text) {
-    return elem0(HtmlElementName.OPTGROUP, text);
+    return elem0(ElementNamePojo.OPTGROUP, text);
   }
 
   /// Renders the `option` element with the specified content.
@@ -1135,7 +1138,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement option(Html.Instruction... contents) {
-    return elem0(HtmlElementName.OPTION, contents);
+    return elem0(ElementNamePojo.OPTION, contents);
   }
 
   /// Renders the `option` element with the specified text.
@@ -1144,7 +1147,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement option(String text) {
-    return elem0(HtmlElementName.OPTION, text);
+    return elem0(ElementNamePojo.OPTION, text);
   }
 
   /// Renders the `p` element with the specified content.
@@ -1153,7 +1156,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement p(Html.Instruction... contents) {
-    return elem0(HtmlElementName.P, contents);
+    return elem0(ElementNamePojo.P, contents);
   }
 
   /// Renders the `p` element with the specified text.
@@ -1162,7 +1165,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement p(String text) {
-    return elem0(HtmlElementName.P, text);
+    return elem0(ElementNamePojo.P, text);
   }
 
   /// Renders the `path` element with the specified content.
@@ -1171,7 +1174,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement path(Html.Instruction... contents) {
-    return elem0(HtmlElementName.PATH, contents);
+    return elem0(ElementNamePojo.PATH, contents);
   }
 
   /// Renders the `path` element with the specified text.
@@ -1180,7 +1183,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement path(String text) {
-    return elem0(HtmlElementName.PATH, text);
+    return elem0(ElementNamePojo.PATH, text);
   }
 
   /// Renders the `pre` element with the specified content.
@@ -1189,7 +1192,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement pre(Html.Instruction... contents) {
-    return elem0(HtmlElementName.PRE, contents);
+    return elem0(ElementNamePojo.PRE, contents);
   }
 
   /// Renders the `pre` element with the specified text.
@@ -1198,7 +1201,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement pre(String text) {
-    return elem0(HtmlElementName.PRE, text);
+    return elem0(ElementNamePojo.PRE, text);
   }
 
   /// Renders the `progress` element with the specified content.
@@ -1207,7 +1210,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement progress(Html.Instruction... contents) {
-    return elem0(HtmlElementName.PROGRESS, contents);
+    return elem0(ElementNamePojo.PROGRESS, contents);
   }
 
   /// Renders the `progress` element with the specified text.
@@ -1216,7 +1219,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement progress(String text) {
-    return elem0(HtmlElementName.PROGRESS, text);
+    return elem0(ElementNamePojo.PROGRESS, text);
   }
 
   /// Renders the `samp` element with the specified content.
@@ -1225,7 +1228,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement samp(Html.Instruction... contents) {
-    return elem0(HtmlElementName.SAMP, contents);
+    return elem0(ElementNamePojo.SAMP, contents);
   }
 
   /// Renders the `samp` element with the specified text.
@@ -1234,7 +1237,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement samp(String text) {
-    return elem0(HtmlElementName.SAMP, text);
+    return elem0(ElementNamePojo.SAMP, text);
   }
 
   /// Renders the `script` element with the specified content.
@@ -1243,7 +1246,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement script(Html.Instruction... contents) {
-    return elem0(HtmlElementName.SCRIPT, contents);
+    return elem0(ElementNamePojo.SCRIPT, contents);
   }
 
   /// Renders the `script` element with the specified text.
@@ -1252,7 +1255,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement script(String text) {
-    return elem0(HtmlElementName.SCRIPT, text);
+    return elem0(ElementNamePojo.SCRIPT, text);
   }
 
   /// Renders the `section` element with the specified content.
@@ -1261,7 +1264,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement section(Html.Instruction... contents) {
-    return elem0(HtmlElementName.SECTION, contents);
+    return elem0(ElementNamePojo.SECTION, contents);
   }
 
   /// Renders the `section` element with the specified text.
@@ -1270,7 +1273,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement section(String text) {
-    return elem0(HtmlElementName.SECTION, text);
+    return elem0(ElementNamePojo.SECTION, text);
   }
 
   /// Renders the `select` element with the specified content.
@@ -1279,7 +1282,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement select(Html.Instruction... contents) {
-    return elem0(HtmlElementName.SELECT, contents);
+    return elem0(ElementNamePojo.SELECT, contents);
   }
 
   /// Renders the `select` element with the specified text.
@@ -1288,7 +1291,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement select(String text) {
-    return elem0(HtmlElementName.SELECT, text);
+    return elem0(ElementNamePojo.SELECT, text);
   }
 
   /// Renders the `small` element with the specified content.
@@ -1297,7 +1300,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement small(Html.Instruction... contents) {
-    return elem0(HtmlElementName.SMALL, contents);
+    return elem0(ElementNamePojo.SMALL, contents);
   }
 
   /// Renders the `small` element with the specified text.
@@ -1306,7 +1309,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement small(String text) {
-    return elem0(HtmlElementName.SMALL, text);
+    return elem0(ElementNamePojo.SMALL, text);
   }
 
   /// Renders the `span` element with the specified content.
@@ -1315,7 +1318,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement span(Html.Instruction... contents) {
-    return elem0(HtmlElementName.SPAN, contents);
+    return elem0(ElementNamePojo.SPAN, contents);
   }
 
   /// Renders the `span` element with the specified text.
@@ -1324,7 +1327,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement span(String text) {
-    return elem0(HtmlElementName.SPAN, text);
+    return elem0(ElementNamePojo.SPAN, text);
   }
 
   /// Renders the `strong` element with the specified content.
@@ -1333,7 +1336,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement strong(Html.Instruction... contents) {
-    return elem0(HtmlElementName.STRONG, contents);
+    return elem0(ElementNamePojo.STRONG, contents);
   }
 
   /// Renders the `strong` element with the specified text.
@@ -1342,7 +1345,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement strong(String text) {
-    return elem0(HtmlElementName.STRONG, text);
+    return elem0(ElementNamePojo.STRONG, text);
   }
 
   /// Renders the `style` element with the specified content.
@@ -1351,7 +1354,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement style(Html.Instruction... contents) {
-    return elem0(HtmlElementName.STYLE, contents);
+    return elem0(ElementNamePojo.STYLE, contents);
   }
 
   /// Renders the `sub` element with the specified content.
@@ -1360,7 +1363,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement sub(Html.Instruction... contents) {
-    return elem0(HtmlElementName.SUB, contents);
+    return elem0(ElementNamePojo.SUB, contents);
   }
 
   /// Renders the `sub` element with the specified text.
@@ -1369,7 +1372,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement sub(String text) {
-    return elem0(HtmlElementName.SUB, text);
+    return elem0(ElementNamePojo.SUB, text);
   }
 
   /// Renders the `summary` element with the specified content.
@@ -1378,7 +1381,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement summary(Html.Instruction... contents) {
-    return elem0(HtmlElementName.SUMMARY, contents);
+    return elem0(ElementNamePojo.SUMMARY, contents);
   }
 
   /// Renders the `summary` element with the specified text.
@@ -1387,7 +1390,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement summary(String text) {
-    return elem0(HtmlElementName.SUMMARY, text);
+    return elem0(ElementNamePojo.SUMMARY, text);
   }
 
   /// Renders the `sup` element with the specified content.
@@ -1396,7 +1399,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement sup(Html.Instruction... contents) {
-    return elem0(HtmlElementName.SUP, contents);
+    return elem0(ElementNamePojo.SUP, contents);
   }
 
   /// Renders the `sup` element with the specified text.
@@ -1405,7 +1408,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement sup(String text) {
-    return elem0(HtmlElementName.SUP, text);
+    return elem0(ElementNamePojo.SUP, text);
   }
 
   /// Renders the `svg` element with the specified content.
@@ -1414,7 +1417,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement svg(Html.Instruction... contents) {
-    return elem0(HtmlElementName.SVG, contents);
+    return elem0(ElementNamePojo.SVG, contents);
   }
 
   /// Renders the `svg` element with the specified text.
@@ -1423,7 +1426,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement svg(String text) {
-    return elem0(HtmlElementName.SVG, text);
+    return elem0(ElementNamePojo.SVG, text);
   }
 
   /// Renders the `table` element with the specified content.
@@ -1432,7 +1435,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement table(Html.Instruction... contents) {
-    return elem0(HtmlElementName.TABLE, contents);
+    return elem0(ElementNamePojo.TABLE, contents);
   }
 
   /// Renders the `table` element with the specified text.
@@ -1441,7 +1444,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement table(String text) {
-    return elem0(HtmlElementName.TABLE, text);
+    return elem0(ElementNamePojo.TABLE, text);
   }
 
   /// Renders the `tbody` element with the specified content.
@@ -1450,7 +1453,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement tbody(Html.Instruction... contents) {
-    return elem0(HtmlElementName.TBODY, contents);
+    return elem0(ElementNamePojo.TBODY, contents);
   }
 
   /// Renders the `tbody` element with the specified text.
@@ -1459,7 +1462,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement tbody(String text) {
-    return elem0(HtmlElementName.TBODY, text);
+    return elem0(ElementNamePojo.TBODY, text);
   }
 
   /// Renders the `td` element with the specified content.
@@ -1468,7 +1471,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement td(Html.Instruction... contents) {
-    return elem0(HtmlElementName.TD, contents);
+    return elem0(ElementNamePojo.TD, contents);
   }
 
   /// Renders the `td` element with the specified text.
@@ -1477,7 +1480,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement td(String text) {
-    return elem0(HtmlElementName.TD, text);
+    return elem0(ElementNamePojo.TD, text);
   }
 
   /// Renders the `template` element with the specified content.
@@ -1486,7 +1489,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement template(Html.Instruction... contents) {
-    return elem0(HtmlElementName.TEMPLATE, contents);
+    return elem0(ElementNamePojo.TEMPLATE, contents);
   }
 
   /// Renders the `template` element with the specified text.
@@ -1495,7 +1498,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement template(String text) {
-    return elem0(HtmlElementName.TEMPLATE, text);
+    return elem0(ElementNamePojo.TEMPLATE, text);
   }
 
   /// Renders the `textarea` element with the specified content.
@@ -1504,7 +1507,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement textarea(Html.Instruction... contents) {
-    return elem0(HtmlElementName.TEXTAREA, contents);
+    return elem0(ElementNamePojo.TEXTAREA, contents);
   }
 
   /// Renders the `textarea` element with the specified text.
@@ -1513,7 +1516,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement textarea(String text) {
-    return elem0(HtmlElementName.TEXTAREA, text);
+    return elem0(ElementNamePojo.TEXTAREA, text);
   }
 
   /// Renders the `th` element with the specified content.
@@ -1522,7 +1525,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement th(Html.Instruction... contents) {
-    return elem0(HtmlElementName.TH, contents);
+    return elem0(ElementNamePojo.TH, contents);
   }
 
   /// Renders the `th` element with the specified text.
@@ -1531,7 +1534,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement th(String text) {
-    return elem0(HtmlElementName.TH, text);
+    return elem0(ElementNamePojo.TH, text);
   }
 
   /// Renders the `thead` element with the specified content.
@@ -1540,7 +1543,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement thead(Html.Instruction... contents) {
-    return elem0(HtmlElementName.THEAD, contents);
+    return elem0(ElementNamePojo.THEAD, contents);
   }
 
   /// Renders the `thead` element with the specified text.
@@ -1549,7 +1552,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement thead(String text) {
-    return elem0(HtmlElementName.THEAD, text);
+    return elem0(ElementNamePojo.THEAD, text);
   }
 
   /// Renders the `title` element with the specified content.
@@ -1558,7 +1561,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement title(Html.Instruction... contents) {
-    return elem0(HtmlElementName.TITLE, contents);
+    return elem0(ElementNamePojo.TITLE, contents);
   }
 
   /// Renders the `tr` element with the specified content.
@@ -1567,7 +1570,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement tr(Html.Instruction... contents) {
-    return elem0(HtmlElementName.TR, contents);
+    return elem0(ElementNamePojo.TR, contents);
   }
 
   /// Renders the `tr` element with the specified text.
@@ -1576,7 +1579,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement tr(String text) {
-    return elem0(HtmlElementName.TR, text);
+    return elem0(ElementNamePojo.TR, text);
   }
 
   /// Renders the `ul` element with the specified content.
@@ -1585,7 +1588,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement ul(Html.Instruction... contents) {
-    return elem0(HtmlElementName.UL, contents);
+    return elem0(ElementNamePojo.UL, contents);
   }
 
   /// Renders the `ul` element with the specified text.
@@ -1594,7 +1597,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the element.
   public final Html.Instruction.OfElement ul(String text) {
-    return elem0(HtmlElementName.UL, text);
+    return elem0(ElementNamePojo.UL, text);
   }
 
   //

@@ -16,46 +16,48 @@
 package objectox.html;
 
 import objectos.html.AttributeName;
-import objectos.way.Html;
+import objectos.html.ElementName;
+import objectox.html.attr.AttributeNamePojo;
+import objectox.html.elem.ElementNamePojo;
 
 enum HtmlAmbiguous {
 
-  CLIPPATH(AttributeNamePojo.CLIP_PATH, HtmlElementName.CLIPPATH) {
+  CLIPPATH(AttributeNamePojo.CLIP_PATH, ElementNamePojo.CLIPPATH) {
     @Override
-    public final boolean isAttributeOf(Html.ElementName element) {
-      return element != Html.ElementName.SVG;
+    public final boolean isAttributeOf(ElementName element) {
+      return element != ElementName.SVG;
     }
   },
 
-  FORM(AttributeNamePojo.FORM, HtmlElementName.FORM) {
+  FORM(AttributeNamePojo.FORM, ElementNamePojo.FORM) {
     @Override
-    public final boolean isAttributeOf(Html.ElementName element) {
-      return element == Html.ElementName.BUTTON
-          || element == Html.ElementName.INPUT
-          || element == Html.ElementName.SELECT
-          || element == Html.ElementName.TEXTAREA;
+    public final boolean isAttributeOf(ElementName element) {
+      return element == ElementName.BUTTON
+          || element == ElementName.INPUT
+          || element == ElementName.SELECT
+          || element == ElementName.TEXTAREA;
     }
   },
 
-  LABEL(AttributeNamePojo.LABEL, HtmlElementName.LABEL) {
+  LABEL(AttributeNamePojo.LABEL, ElementNamePojo.LABEL) {
     @Override
-    public final boolean isAttributeOf(Html.ElementName element) {
-      return element == Html.ElementName.OPTION;
+    public final boolean isAttributeOf(ElementName element) {
+      return element == ElementName.OPTION;
     }
   },
 
-  STYLE(AttributeNamePojo.STYLE, HtmlElementName.STYLE) {
+  STYLE(AttributeNamePojo.STYLE, ElementNamePojo.STYLE) {
     @Override
-    public final boolean isAttributeOf(Html.ElementName element) {
-      return element != Html.ElementName.HEAD;
+    public final boolean isAttributeOf(ElementName element) {
+      return element != ElementName.HEAD;
     }
   },
 
-  TITLE(AttributeNamePojo.TITLE, HtmlElementName.TITLE) {
+  TITLE(AttributeNamePojo.TITLE, ElementNamePojo.TITLE) {
     @Override
-    public final boolean isAttributeOf(Html.ElementName element) {
-      return element != Html.ElementName.HEAD
-          && element != Html.ElementName.SVG;
+    public final boolean isAttributeOf(ElementName element) {
+      return element != ElementName.HEAD
+          && element != ElementName.SVG;
     }
   };
 
@@ -63,11 +65,11 @@ enum HtmlAmbiguous {
 
   private final int attributeByteCode;
 
-  public final HtmlElementName element;
+  public final ElementNamePojo element;
 
   private final int elementByteCode;
 
-  private HtmlAmbiguous(AttributeName attribute, HtmlElementName element) {
+  private HtmlAmbiguous(AttributeName attribute, ElementNamePojo element) {
     this.attributeByteCode = attribute.index();
 
     this.element = element;
@@ -102,6 +104,6 @@ enum HtmlAmbiguous {
     return HtmlBytes.encodeInt0(attributeByteCode);
   }
 
-  public abstract boolean isAttributeOf(Html.ElementName element);
+  public abstract boolean isAttributeOf(ElementName element);
 
 }

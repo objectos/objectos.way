@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import objectos.html.ClassName;
+import objectos.html.ElementName;
 import objectos.html.Id;
 import objectos.http.Content;
 import objectos.way.Html;
@@ -1297,7 +1298,7 @@ public class HtmlTemplateTest {
           @Override
           protected final void render() {
             elem(
-                Html.ElementName.BLOCKQUOTE,
+                ElementName.BLOCKQUOTE,
                 className("foo")
             );
           }

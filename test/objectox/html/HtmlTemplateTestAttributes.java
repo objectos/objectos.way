@@ -24,6 +24,7 @@ import objectos.html.Markup;
 import objectos.script.Js;
 import objectos.script.JsAction;
 import objectos.way.Html;
+import objectox.html.attr.AttributeNamePojo;
 import org.testng.annotations.Test;
 
 public class HtmlTemplateTestAttributes {

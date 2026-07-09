@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html;
+package objectox.html.attr;
 
-import objectos.html.ClassName;
+import objectos.html.Id;
 
-public record ClassNamePojo(String attrValue) implements ClassName {}
+public record IdPojo(String attrValue) implements Id {}
