@@ -17,9 +17,11 @@ package objectos.way;
 
 import java.util.Objects;
 import java.util.Set;
+import objectos.html.Component;
+import objectos.html.Markup;
 import objectos.internal.Ascii;
 
-final class SyntaxJava implements Html.Component {
+final class SyntaxJava implements Component {
 
   private enum Context {
 
@@ -35,7 +37,7 @@ final class SyntaxJava implements Html.Component {
 
   private boolean eol;
 
-  private Html.Markup html;
+  private Markup html;
 
   private int line;
 
@@ -52,7 +54,7 @@ final class SyntaxJava implements Html.Component {
   }
 
   @Override
-  public final void renderHtml(Html.Markup m) {
+  public final void renderHtml(Markup m) {
     html = Objects.requireNonNull(m, "m == null");
 
     context = Context.NORMAL;

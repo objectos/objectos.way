@@ -15,6 +15,7 @@
  */
 package objectos.way;
 
+import objectos.html.Component;
 import objectox.html.HtmlAttributeName;
 
 /**
@@ -34,7 +35,7 @@ public final class Syntax {
 
   private Syntax() {}
 
-  public static Html.Component highlight(Language language, String source) {
+  public static Component highlight(Language language, String source) {
     return switch (language) {
       case SyntaxLanguage.JAVA -> new SyntaxJava(source);
     };

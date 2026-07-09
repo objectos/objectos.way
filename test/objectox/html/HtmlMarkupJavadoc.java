@@ -18,7 +18,8 @@ package objectox.html;
 import static org.testng.Assert.assertEquals;
 
 import java.util.List;
-import objectos.way.Html;
+import objectos.html.Component;
+import objectos.html.Markup;
 import org.testng.annotations.Test;
 
 public class HtmlMarkupJavadoc {
@@ -27,7 +28,7 @@ public class HtmlMarkupJavadoc {
   public void f0() {
     // @start region="f0"
     List<String> days = List.of("Mon", "Wed", "Fri");
-    Html.Component c = m -> m.ul(
+    Component c = m -> m.ul(
         m.f(() -> {
           for (String day : days) {
             m.li(day);
@@ -52,17 +53,17 @@ public class HtmlMarkupJavadoc {
   @Test
   public void f1() {
     // @start region="f1"
-    class MyComponent implements Html.Component {
+    class MyComponent implements Component {
       final List<String> days = List.of("Mon", "Wed", "Fri");
 
       @Override
-      public void renderHtml(Html.Markup m) {
+      public void renderHtml(Markup m) {
         m.ul(
             m.f(this::contents, m)
         );
       }
 
-      private void contents(Html.Markup m) {
+      private void contents(Markup m) {
         for (String day : days) {
           m.li(day);
         }
@@ -86,16 +87,16 @@ public class HtmlMarkupJavadoc {
   @Test
   public void f2() {
     // @start region="f2"
-    class MyComponent implements Html.Component {
+    class MyComponent implements Component {
       @Override
-      public void renderHtml(Html.Markup m) {
+      public void renderHtml(Markup m) {
         m.div(
             m.f(this::button, m, "OK"),
             m.f(this::button, m, "Cancel")
         );
       }
 
-      private void button(Html.Markup m, String text) {
+      private void button(Markup m, String text) {
         m.button(text);
       }
     }
@@ -113,16 +114,16 @@ public class HtmlMarkupJavadoc {
   @Test
   public void f3() {
     // @start region="f3"
-    class MyComponent implements Html.Component {
+    class MyComponent implements Component {
       @Override
-      public void renderHtml(Html.Markup m) {
+      public void renderHtml(Markup m) {
         m.div(
             m.f(this::item, m, "City", "Tokyo"),
             m.f(this::item, m, "Country", "Japan")
         );
       }
 
-      private void item(Html.Markup m, String name, String value) {
+      private void item(Markup m, String name, String value) {
         m.p(m.text(name), m.span(value));
       }
     }

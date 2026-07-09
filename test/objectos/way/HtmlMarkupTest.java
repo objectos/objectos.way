@@ -17,14 +17,15 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.html.Markup;
 import org.testng.annotations.Test;
 
 public class HtmlMarkupTest {
 
   @Test
   public void toTestableText01() {
-    final Html.Markup m;
-    m = new Html.Markup.OfHtml();
+    final Markup m;
+    m = new Markup.OfHtml();
 
     m.testableH1("Testable");
 

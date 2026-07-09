@@ -18,6 +18,7 @@ package objectox.html;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Set;
+import objectos.html.Markup;
 import objectos.way.Dom;
 import objectos.way.Html;
 
@@ -77,8 +78,8 @@ class DomFormatter {
     Objects.requireNonNull(template, "template == null");
     Objects.requireNonNull(appendable, "appendable == null");
 
-    final Html.Markup.OfHtml html;
-    html = new Html.Markup.OfHtml();
+    final Markup.OfHtml html;
+    html = new Markup.OfHtml();
 
     template.renderHtml(html);
 

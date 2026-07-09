@@ -17,34 +17,25 @@ package objectox.html;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.html.Component;
 import org.testng.annotations.Test;
 
-public class HtmlMarkupTest05Ambiguous {
+public class ObjectArrayTest {
 
   @Test
-  public void clipPath() {
-    test(
-        m -> {
-          m.div(
-              m.clipPath("at")
-          );
-          m.svg(
-              m.clipPath("el")
-          );
-        },
+  public void add01() {
+    final ObjectArray subject;
+    subject = new ObjectArray();
 
-        """
-        <div clip-path="at"></div>
-        <svg>
-        <clipPath>el</clipPath>
-        </svg>
-        """
-    );
+    assertEquals(subject.add("ABC"), 0);
   }
 
-  private void test(Component component, String expected) {
-    assertEquals(component.toHtml(), expected);
+  @Test
+  public void add02() {
+    final ObjectArray subject;
+    subject = new ObjectArray();
+
+    assertEquals(subject.add("ABC"), 0);
+    assertEquals(subject.add("XYZ"), 1);
   }
 
 }

@@ -15,12 +15,13 @@
  */
 package objectos.way;
 
+import objectos.html.Markup;
 import objectox.html.DomAttribute;
 import objectox.html.DomDocument;
 import objectox.html.DomElement;
 import objectox.html.DomRaw;
 import objectox.html.DomText;
-import objectox.html.HtmlMarkupOfHtml;
+import objectox.html.MarkupPojo;
 
 /// The **Objectos DOM** main class, part of Objectos HTML.
 public final class Dom {
@@ -68,8 +69,8 @@ public final class Dom {
     /// Creates a `Document` representing the HTML document declared by the specified markup.
     /// @param markup the markup instance
     /// @return a newly created document object
-    static Dom.Document of(Html.Markup.OfHtml markup) {
-      final HtmlMarkupOfHtml impl;
+    static Dom.Document of(Markup.OfHtml markup) {
+      final MarkupPojo impl;
       impl = markup;
 
       return impl.compile();
@@ -79,8 +80,8 @@ public final class Dom {
     /// @param template the HTML template
     /// @return a newly created document object
     static Dom.Document of(Html.Template template) {
-      final Html.Markup.OfHtml html;
-      html = new Html.Markup.OfHtml();
+      final Markup.OfHtml html;
+      html = new Markup.OfHtml();
 
       template.renderHtml(html);
 

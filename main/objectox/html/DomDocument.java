@@ -30,9 +30,9 @@ public final class DomDocument implements Dom.Document, Lang.IterableOnce<Dom.No
     }
   }
 
-  private final HtmlMarkupOfHtml player;
+  private final MarkupPojo player;
 
-  public DomDocument(HtmlMarkupOfHtml ctx) {
+  public DomDocument(MarkupPojo ctx) {
     this.player = ctx;
   }
 

@@ -17,6 +17,7 @@ package objectox.html;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.html.Component;
 import objectos.script.Js;
 import objectos.way.Html;
 import org.testng.annotations.Test;
@@ -58,7 +59,7 @@ public class HtmlMarkupTest06Attribute {
     );
   }
 
-  private void test(Html.Component component, String expected) {
+  private void test(Component component, String expected) {
     assertEquals(component.toHtml(), expected);
   }
 

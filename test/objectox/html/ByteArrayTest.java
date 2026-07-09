@@ -17,34 +17,30 @@ package objectox.html;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.html.Component;
 import org.testng.annotations.Test;
 
-public class HtmlMarkupTest05Ambiguous {
+public class ByteArrayTest {
 
   @Test
-  public void clipPath() {
-    test(
-        m -> {
-          m.div(
-              m.clipPath("at")
-          );
-          m.svg(
-              m.clipPath("el")
-          );
-        },
+  public void add03() {
+    final ByteArray subject;
+    subject = new ByteArray(0);
 
-        """
-        <div clip-path="at"></div>
-        <svg>
-        <clipPath>el</clipPath>
-        </svg>
-        """
-    );
+    subject.add((byte) 1, (byte) 2, (byte) 3);
+
+    assertEquals(subject, ByteArray.of(1, 2, 3));
+    assertEquals(subject.toString(), "010203");
   }
 
-  private void test(Component component, String expected) {
-    assertEquals(component.toHtml(), expected);
+  @Test
+  public void add04() {
+    final ByteArray subject;
+    subject = new ByteArray(0);
+
+    subject.add((byte) 1, (byte) 2, (byte) 3, (byte) 4);
+
+    assertEquals(subject, ByteArray.of(1, 2, 3, 4));
+    assertEquals(subject.toString(), "01020304");
   }
 
 }

@@ -16,6 +16,7 @@
 package objectox.html;
 
 import java.util.Arrays;
+import objectos.html.Markup;
 import objectos.way.Html;
 import org.testng.annotations.Test;
 
@@ -25,8 +26,8 @@ public class HtmlMarkupTest01Recorder {
   <html></html>
   """)
   public void testCase00() {
-    Html.Markup.OfHtml html;
-    html = new Html.Markup.OfHtml();
+    Markup.OfHtml html;
+    html = new Markup.OfHtml();
 
     html.html();
 
@@ -48,8 +49,8 @@ public class HtmlMarkupTest01Recorder {
   <html lang="pt-BR"></html>
   """)
   public void testCase01() {
-    Html.Markup.OfHtml html;
-    html = new Html.Markup.OfHtml();
+    Markup.OfHtml html;
+    html = new Markup.OfHtml();
 
     html.html(
         html.lang("pt-BR")
@@ -81,8 +82,8 @@ public class HtmlMarkupTest01Recorder {
   <html class="no-js" lang="pt-BR"></html>
   """)
   public void testCase02() {
-    Html.Markup.OfHtml html;
-    html = new Html.Markup.OfHtml();
+    Markup.OfHtml html;
+    html = new Markup.OfHtml();
 
     html.html(
         html.className("no-js"),
@@ -123,8 +124,8 @@ public class HtmlMarkupTest01Recorder {
   <html><head></head></html>
   """)
   public void testCase03() {
-    Html.Markup.OfHtml html;
-    html = new Html.Markup.OfHtml();
+    Markup.OfHtml html;
+    html = new Markup.OfHtml();
 
     html.html(
         html.head()
@@ -160,8 +161,8 @@ public class HtmlMarkupTest01Recorder {
   <html></html>
   """)
   public void testCase09() {
-    Html.Markup.OfHtml html;
-    html = new Html.Markup.OfHtml();
+    Markup.OfHtml html;
+    html = new Markup.OfHtml();
 
     html.doctype();
     html.html();
@@ -186,8 +187,8 @@ public class HtmlMarkupTest01Recorder {
   fragment inclusion
   """)
   public void testCase10() {
-    Html.Markup.OfHtml html;
-    html = new Html.Markup.OfHtml();
+    Markup.OfHtml html;
+    html = new Markup.OfHtml();
 
     Html.Fragment.Of0 action;
     action = () -> {
@@ -271,8 +272,8 @@ public class HtmlMarkupTest01Recorder {
     Html.Id bar;
     bar = Html.Id.of("bar");
 
-    Html.Markup.OfHtml html;
-    html = new Html.Markup.OfHtml();
+    Markup.OfHtml html;
+    html = new Markup.OfHtml();
 
     html.html(
         foo,
@@ -316,8 +317,8 @@ public class HtmlMarkupTest01Recorder {
   Text child element
   """)
   public void testCase14() {
-    Html.Markup.OfHtml html;
-    html = new Html.Markup.OfHtml();
+    Markup.OfHtml html;
+    html = new Markup.OfHtml();
 
     html.html(
         html.body(
@@ -372,8 +373,8 @@ public class HtmlMarkupTest01Recorder {
   Ambiguous
   """)
   public void testCase16() {
-    Html.Markup.OfHtml html;
-    html = new Html.Markup.OfHtml();
+    Markup.OfHtml html;
+    html = new Markup.OfHtml();
 
     html.html(
         html.head(
@@ -440,8 +441,8 @@ public class HtmlMarkupTest01Recorder {
   include template
   """)
   public void testCase20() {
-    Html.Markup.OfHtml html;
-    html = new Html.Markup.OfHtml();
+    Markup.OfHtml html;
+    html = new Markup.OfHtml();
 
     html.body(
         html.nav()
@@ -489,8 +490,8 @@ public class HtmlMarkupTest01Recorder {
   style/script => raw
   """)
   public void testCase25() {
-    Html.Markup.OfHtml html;
-    html = new Html.Markup.OfHtml();
+    Markup.OfHtml html;
+    html = new Markup.OfHtml();
 
     html.style(
         "@font-face {font-family: 'Foo';}"
@@ -513,12 +514,12 @@ public class HtmlMarkupTest01Recorder {
   - email input
   """)
   public void testCase31() {
-    Html.Markup.OfHtml html;
-    html = new Html.Markup.OfHtml();
+    Markup.OfHtml html;
+    html = new Markup.OfHtml();
 
     html.input(
         html.type("email"),
-        Html.Markup.required
+        Markup.required
     );
 
     test(
@@ -551,8 +552,8 @@ public class HtmlMarkupTest01Recorder {
   - flatten instruction
   """)
   public void testCase46() {
-    Html.Markup.OfHtml html;
-    html = new Html.Markup.OfHtml();
+    Markup.OfHtml html;
+    html = new Markup.OfHtml();
 
     html.form(
         html.flatten(
@@ -620,8 +621,8 @@ public class HtmlMarkupTest01Recorder {
     Html.ClassName col;
     col = Html.ClassName.of("col");
 
-    HtmlMarkupOfHtml html;
-    html = new Html.Markup.OfHtml();
+    MarkupPojo html;
+    html = new Markup.OfHtml();
 
     html.textImpl("A");
 
@@ -750,8 +751,8 @@ public class HtmlMarkupTest01Recorder {
   fragment at the root of the document
   """)
   public void testCase73() {
-    Html.Markup.OfHtml html;
-    html = new Html.Markup.OfHtml();
+    Markup.OfHtml html;
+    html = new Markup.OfHtml();
 
     Html.Fragment.Of0 action;
     action = () -> {
@@ -796,8 +797,8 @@ public class HtmlMarkupTest01Recorder {
   fragment at the root of the document
   """)
   public void testCase77() {
-    Html.Markup.OfHtml html;
-    html = new Html.Markup.OfHtml();
+    Markup.OfHtml html;
+    html = new Markup.OfHtml();
 
     Html.Fragment.Of0 action;
     action = () -> {};
@@ -824,7 +825,7 @@ public class HtmlMarkupTest01Recorder {
     );
   }
 
-  private void test(HtmlMarkupOfHtml html, byte... expected) {
+  private void test(MarkupPojo html, byte... expected) {
     byte[] result;
     result = Arrays.copyOf(html.main, html.mainIndex);
 

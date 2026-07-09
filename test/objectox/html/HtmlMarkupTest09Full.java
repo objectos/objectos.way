@@ -17,15 +17,15 @@ package objectox.html;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.way.Html;
+import objectos.html.Markup;
 import org.testng.annotations.Test;
 
 public class HtmlMarkupTest09Full {
 
   @Test
   public void testCase01() {
-    final Html.Markup m;
-    m = new Html.Markup.OfHtml();
+    final Markup m;
+    m = new Markup.OfHtml();
 
     m.doctype();
 
@@ -54,8 +54,8 @@ public class HtmlMarkupTest09Full {
 
   @Test
   public void testCase02() {
-    final Html.Markup m;
-    m = new Html.Markup.OfHtml();
+    final Markup m;
+    m = new Markup.OfHtml();
 
     m.p("1");
 

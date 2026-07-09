@@ -17,7 +17,7 @@ package objectox.html;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.way.Html;
+import objectos.html.Component;
 import org.testng.annotations.Test;
 
 public class HtmlMarkupTest04Text {
@@ -72,7 +72,7 @@ public class HtmlMarkupTest04Text {
     );
   }
 
-  private void test(Html.Component component, String expected) {
+  private void test(Component component, String expected) {
     assertEquals(component.toHtml(), expected);
   }
 

@@ -18,8 +18,8 @@ package objectox.html;
 import static org.testng.Assert.assertEquals;
 
 import java.util.Iterator;
+import objectos.html.Markup;
 import objectos.way.Dom;
-import objectos.way.Html;
 import objectos.way.Lang;
 import org.testng.annotations.Test;
 
@@ -29,8 +29,8 @@ public class HtmlMarkupTest03Processor {
   <html></html>
   """)
   public void testCase00() {
-    HtmlMarkupOfHtml compiler;
-    compiler = new Html.Markup.OfHtml();
+    MarkupPojo compiler;
+    compiler = new Markup.OfHtml();
 
     compiler.elementBegin(HtmlElementName.HTML);
     compiler.elementEnd();
@@ -49,8 +49,8 @@ public class HtmlMarkupTest03Processor {
   <html lang="pt-BR"></html>
   """)
   public void testCase01() {
-    HtmlMarkupOfHtml compiler;
-    compiler = new Html.Markup.OfHtml();
+    MarkupPojo compiler;
+    compiler = new Markup.OfHtml();
 
     compiler.attr(HtmlAttributeName.LANG, "pt-BR");
 
@@ -68,7 +68,7 @@ public class HtmlMarkupTest03Processor {
     );
   }
 
-  private String test(HtmlMarkupOfHtml compiler) {
+  private String test(MarkupPojo compiler) {
     StringBuilder out;
     out = new StringBuilder();
 

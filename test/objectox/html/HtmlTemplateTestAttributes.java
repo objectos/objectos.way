@@ -17,6 +17,8 @@ package objectox.html;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.html.Component;
+import objectos.html.Markup;
 import objectos.script.Js;
 import objectos.script.JsAction;
 import objectos.way.Html;
@@ -183,9 +185,9 @@ public class HtmlTemplateTestAttributes {
     final JsAction remove;
     remove = Js.target().invoke("Element", "remove");
 
-    class ThisComponent implements Html.Component {
+    class ThisComponent implements Component {
       @Override
-      public void renderHtml(Html.Markup m) {
+      public void renderHtml(Markup m) {
         m.button(
             m.onclick(remove)
         );

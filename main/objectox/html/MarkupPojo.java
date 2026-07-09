@@ -17,13 +17,14 @@ package objectox.html;
 
 import java.io.IOException;
 import java.util.Objects;
+import objectos.html.Markup;
 import objectos.internal.Check;
 import objectos.internal.Util;
 import objectos.way.Dom;
 import objectos.way.Html;
 import objectox.dev.TestableHtml;
 
-public sealed abstract class HtmlMarkupOfHtml extends HtmlMarkup permits Html.Markup.OfHtml {
+public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.OfHtml {
 
   static final byte _DOCUMENT_START = -1;
   static final byte _DOCUMENT_NODES_ITERABLE = -2;
@@ -61,7 +62,7 @@ public sealed abstract class HtmlMarkupOfHtml extends HtmlMarkup permits Html.Ma
 
   private final HtmlTestable testable = new TestableHtml();
 
-  public HtmlMarkupOfHtml() {
+  public MarkupPojo() {
   }
 
   // ##################################################################

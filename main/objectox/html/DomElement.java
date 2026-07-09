@@ -44,11 +44,11 @@ public final class DomElement implements Dom.Element, Lang.IterableOnce<Dom.Node
 
   private ThisAttributes attributes;
 
-  private final HtmlMarkupOfHtml player;
+  private final MarkupPojo player;
 
   HtmlElementName name;
 
-  DomElement(HtmlMarkupOfHtml player) {
+  DomElement(MarkupPojo player) {
     this.player = player;
   }
 

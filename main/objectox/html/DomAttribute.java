@@ -22,11 +22,11 @@ public final class DomAttribute implements Dom.Attribute {
 
   HtmlAttributeName name;
 
-  private final HtmlMarkupOfHtml player;
+  private final MarkupPojo player;
 
   Object value;
 
-  DomAttribute(HtmlMarkupOfHtml player) {
+  DomAttribute(MarkupPojo player) {
     this.player = player;
   }
 

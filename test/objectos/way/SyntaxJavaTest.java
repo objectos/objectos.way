@@ -17,6 +17,7 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.html.Component;
 import org.testng.annotations.Test;
 
 public class SyntaxJavaTest {
@@ -367,7 +368,7 @@ public class SyntaxJavaTest {
   }
 
   private void test(String java, String expected) {
-    final Html.Component component;
+    final Component component;
     component = Syntax.highlight(Syntax.JAVA, java);
 
     assertEquals(component.toHtml(), expected);

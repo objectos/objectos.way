@@ -17,6 +17,8 @@ package objectox.html;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.html.Component;
+import objectos.html.Markup;
 import objectos.way.Html;
 import org.testng.annotations.Test;
 
@@ -385,15 +387,15 @@ public class HtmlTemplateTestInclude {
 
   @Test
   public void testCase11() {
-    class Component implements Html.Component {
+    class ThisComponent implements Component {
       final String text;
 
-      public Component(String text) {
+      public ThisComponent(String text) {
         this.text = text;
       }
 
       @Override
-      public final void renderHtml(Html.Markup m) {
+      public final void renderHtml(Markup m) {
         m.div(
             m.className("component"),
 
@@ -412,7 +414,7 @@ public class HtmlTemplateTestInclude {
           private void body() {
             h1("Test");
 
-            c(new Component("Text"));
+            c(new ThisComponent("Text"));
           }
         },
 

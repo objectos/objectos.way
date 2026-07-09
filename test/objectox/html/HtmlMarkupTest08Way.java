@@ -18,14 +18,15 @@ package objectox.html;
 import static org.testng.Assert.assertEquals;
 
 import java.util.List;
+import objectos.html.Component;
 import objectos.way.Html;
 import org.testng.annotations.Test;
 
 public class HtmlMarkupTest08Way {
 
-  private final Html.Component li1 = m -> m.li("1");
-  private final Html.Component li2 = m -> m.li("2");
-  private final Html.Component li3 = m -> m.li("3");
+  private final Component li1 = m -> m.li("1");
+  private final Component li2 = m -> m.li("2");
+  private final Component li3 = m -> m.li("3");
 
   @Test
   public void c1() {
@@ -115,7 +116,7 @@ public class HtmlMarkupTest08Way {
     );
   }
 
-  private void test(Html.Component component, String expected) {
+  private void test(Component component, String expected) {
     assertEquals(component.toHtml(), expected);
   }
 

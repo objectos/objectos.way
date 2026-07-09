@@ -17,10 +17,11 @@ package objectox.html;
 
 import java.io.IOException;
 import java.util.Objects;
+import objectos.html.Component;
 import objectos.script.JsAction;
 import objectos.way.Html;
 
-sealed abstract class HtmlMarkup permits HtmlMarkupOfHtml {
+sealed abstract class MarkupGenerated permits MarkupPojo {
 
   /// Renders the specified attribute at the root of a document or fragment.
   ///
@@ -74,14 +75,14 @@ sealed abstract class HtmlMarkup permits HtmlMarkupOfHtml {
   /// @param components the components to be rendered as part of this document
   /// 
   /// @return an instruction representing the rendered components.
-  public abstract Html.Instruction.OfFragment c(Html.Component... components);
+  public abstract Html.Instruction.OfFragment c(Component... components);
 
   /// Renders the specified components in order as part of this document.
   /// 
   /// @param components the components to be rendered as part of this document
   /// 
   /// @return an instruction representing the rendered components.
-  public abstract Html.Instruction.OfFragment c(Iterable<? extends Html.Component> components);
+  public abstract Html.Instruction.OfFragment c(Iterable<? extends Component> components);
 
   /// Renders the specified fragment as part of this document.
   ///
