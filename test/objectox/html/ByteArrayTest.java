@@ -43,4 +43,26 @@ public class ByteArrayTest {
     assertEquals(subject.toString(), "01020304");
   }
 
+  @Test
+  public void add05() {
+    final ByteArray subject;
+    subject = new ByteArray(0);
+
+    subject.add((byte) 1, (byte) 2, (byte) 3, (byte) 4, (byte) 5);
+
+    assertEquals(subject, ByteArray.of(1, 2, 3, 4, 5));
+    assertEquals(subject.toString(), "0102030405");
+  }
+
+  @Test
+  public void add06() {
+    final ByteArray subject;
+    subject = new ByteArray(0);
+
+    subject.add((byte) 1, (byte) 2, (byte) 3, (byte) 4, (byte) 5, (byte) 6);
+
+    assertEquals(subject, ByteArray.of(1, 2, 3, 4, 5, 6));
+    assertEquals(subject.toString(), "010203040506");
+  }
+
 }

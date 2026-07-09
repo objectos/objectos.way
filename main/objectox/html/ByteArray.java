@@ -64,6 +64,25 @@ final class ByteArray {
     bytes[index++] = b3;
   }
 
+  public final void add(byte b0, byte b1, byte b2, byte b3, byte b4) {
+    bytes = Util.growIfNecessary(bytes, index + 4);
+    bytes[index++] = b0;
+    bytes[index++] = b1;
+    bytes[index++] = b2;
+    bytes[index++] = b3;
+    bytes[index++] = b4;
+  }
+
+  public final void add(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5) {
+    bytes = Util.growIfNecessary(bytes, index + 5);
+    bytes[index++] = b0;
+    bytes[index++] = b1;
+    bytes[index++] = b2;
+    bytes[index++] = b3;
+    bytes[index++] = b4;
+    bytes[index++] = b5;
+  }
+
   @Override
   public final boolean equals(Object obj) {
     return obj instanceof ByteArray that

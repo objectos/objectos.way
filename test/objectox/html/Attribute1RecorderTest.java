@@ -20,7 +20,7 @@ import static org.testng.Assert.assertEquals;
 import objectos.way.Html;
 import org.testng.annotations.Test;
 
-public class Attribute0RecorderTest {
+public class Attribute1RecorderTest {
 
   @Test
   public void record01() {
@@ -31,10 +31,13 @@ public class Attribute0RecorderTest {
     objects = new ObjectArray();
 
     final Html.AttributeName name;
-    name = Html.AttributeName.READONLY;
+    name = Html.AttributeName.ID;
 
-    final Attribute0Recorder subject;
-    subject = new Attribute0Recorder(main, objects, name);
+    final Object value;
+    value = "foo";
+
+    final Attribute1Recorder subject;
+    subject = new Attribute1Recorder(main, objects, name, value);
 
     assertEquals(subject.record(), HtmlInstruction.ATTRIBUTE);
 
@@ -42,18 +45,21 @@ public class Attribute0RecorderTest {
         main,
 
         ByteArray.of(
-            HtmlByteProto.ATTRIBUTE0,
+            HtmlByteProto.ATTRIBUTE1,
 
             HtmlBytes.encodeInt0(name.index()),
 
-            HtmlByteProto.INTERNAL3
+            HtmlBytes.encodeInt0(0),
+            HtmlBytes.encodeInt1(0),
+
+            HtmlByteProto.INTERNAL5
         )
     );
 
     assertEquals(
         objects,
 
-        ObjectArray.of()
+        ObjectArray.of(value)
     );
   }
 
@@ -68,8 +74,11 @@ public class Attribute0RecorderTest {
     final Html.AttributeName name;
     name = Html.AttributeName.of("foo");
 
-    final Attribute0Recorder subject;
-    subject = new Attribute0Recorder(main, objects, name);
+    final Object value;
+    value = "bar";
+
+    final Attribute1Recorder subject;
+    subject = new Attribute1Recorder(main, objects, name, value);
 
     assertEquals(subject.record(), HtmlInstruction.ATTRIBUTE);
 
@@ -77,19 +86,22 @@ public class Attribute0RecorderTest {
         main,
 
         ByteArray.of(
-            HtmlByteProto.CUSTOM_ATTR0,
+            HtmlByteProto.CUSTOM_ATTR1,
 
             HtmlBytes.encodeInt0(0),
             HtmlBytes.encodeInt1(0),
 
-            HtmlByteProto.INTERNAL4
+            HtmlBytes.encodeInt0(1),
+            HtmlBytes.encodeInt1(1),
+
+            HtmlByteProto.INTERNAL6
         )
     );
 
     assertEquals(
         objects,
 
-        ObjectArray.of(name)
+        ObjectArray.of(name, value)
     );
   }
 
