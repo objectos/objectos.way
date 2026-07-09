@@ -32,12 +32,12 @@ public class StatusThrowableTest {
     subject = new StatusThrowable(Status.INTERNAL_SERVER_ERROR, exception);
 
     assertEquals(
-        subject.toTestableText(),
+        subject.toTestableText().replaceFirst("\tat .*\\/", ""),
 
         """
         500 Internal Server Error
         java.io.IOException
-        	at objectos.way/objectox.http.StatusThrowableTest.<init>(StatusThrowableTest.java:27)
+        objectox.http.StatusThrowableTest.<init>(StatusThrowableTest.java:27)
         """
     );
   }

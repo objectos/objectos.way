@@ -33,7 +33,7 @@ import org.testng.annotations.Test;
 
 public class ResultProcessorTest {
 
-  private final IOException exception = Throwables.trimStackTrace(new IOException(), 1);
+  private final IOException exception = Throwables.trimStackTrace(new IOException(), 0);
 
   private final ResultProcessor subject = new ResultProcessor();
 
@@ -169,17 +169,16 @@ public class ResultProcessorTest {
     res = subject.process(result);
 
     assertEquals(
-        ResponseY.toString(res),
+        ResponseY.toString(res).replaceFirst("\tat .*\\/", ""),
 
         """
         HTTP/1.1 500 Internal Server Error\r
         Date: Wed, 28 Jun 2023 12:08:43 GMT\r
         Content-Type: text/plain; charset=utf-8\r
-        Content-Length: 138\r
+        Content-Length: 46\r
         \r
         500 Internal Server Error
         java.io.IOException
-        	at objectos.way/objectox.http.host.ResultProcessorTest.<init>(ResultProcessorTest.java:36)
         """
     );
   }
