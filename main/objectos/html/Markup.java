@@ -24,7 +24,6 @@ import objectos.internal.Check;
 import objectos.lang.BinaryObject;
 import objectos.script.JsAction;
 import objectos.way.Html;
-import objectos.way.Html.AttributeObject;
 import objectox.html.HtmlInstruction;
 import objectox.html.MarkupPojo;
 
@@ -111,43 +110,43 @@ public sealed interface Markup extends BinaryObject, Testable {
   // START generated code
 
   /// The `async` boolean attribute.
-  Html.AttributeObject async = Html.AttributeObject.of(Html.AttributeName.ASYNC);
+  AttributeObject async = AttributeObject.of(AttributeName.ASYNC);
 
   /// The `autofocus` boolean attribute.
-  Html.AttributeObject autofocus = Html.AttributeObject.of(Html.AttributeName.AUTOFOCUS);
+  AttributeObject autofocus = AttributeObject.of(AttributeName.AUTOFOCUS);
 
   /// The `checked` boolean attribute.
-  Html.AttributeObject checked = Html.AttributeObject.of(Html.AttributeName.CHECKED);
+  AttributeObject checked = AttributeObject.of(AttributeName.CHECKED);
 
   /// The `defer` boolean attribute.
-  Html.AttributeObject defer = Html.AttributeObject.of(Html.AttributeName.DEFER);
+  AttributeObject defer = AttributeObject.of(AttributeName.DEFER);
 
   /// The `disabled` boolean attribute.
-  Html.AttributeObject disabled = Html.AttributeObject.of(Html.AttributeName.DISABLED);
+  AttributeObject disabled = AttributeObject.of(AttributeName.DISABLED);
 
   /// The `hidden` boolean attribute.
-  Html.AttributeObject hidden = Html.AttributeObject.of(Html.AttributeName.HIDDEN);
+  AttributeObject hidden = AttributeObject.of(AttributeName.HIDDEN);
 
   /// The `multiple` boolean attribute.
-  Html.AttributeObject multiple = Html.AttributeObject.of(Html.AttributeName.MULTIPLE);
+  AttributeObject multiple = AttributeObject.of(AttributeName.MULTIPLE);
 
   /// The `nomodule` boolean attribute.
-  Html.AttributeObject nomodule = Html.AttributeObject.of(Html.AttributeName.NOMODULE);
+  AttributeObject nomodule = AttributeObject.of(AttributeName.NOMODULE);
 
   /// The `open` boolean attribute.
-  Html.AttributeObject open = Html.AttributeObject.of(Html.AttributeName.OPEN);
+  AttributeObject open = AttributeObject.of(AttributeName.OPEN);
 
   /// The `readonly` boolean attribute.
-  Html.AttributeObject readonly = Html.AttributeObject.of(Html.AttributeName.READONLY);
+  AttributeObject readonly = AttributeObject.of(AttributeName.READONLY);
 
   /// The `required` boolean attribute.
-  Html.AttributeObject required = Html.AttributeObject.of(Html.AttributeName.REQUIRED);
+  AttributeObject required = AttributeObject.of(AttributeName.REQUIRED);
 
   /// The `reversed` boolean attribute.
-  Html.AttributeObject reversed = Html.AttributeObject.of(Html.AttributeName.REVERSED);
+  AttributeObject reversed = AttributeObject.of(AttributeName.REVERSED);
 
   /// The `selected` boolean attribute.
-  Html.AttributeObject selected = Html.AttributeObject.of(Html.AttributeName.SELECTED);
+  AttributeObject selected = AttributeObject.of(AttributeName.SELECTED);
 
   //
   // WAY
@@ -1429,7 +1428,7 @@ public sealed interface Markup extends BinaryObject, Testable {
   /// @param name the attribute name
   ///
   /// @return an instruction representing the attribute
-  Html.Instruction.OfAttribute attr(Html.AttributeName name);
+  Html.Instruction.OfAttribute attr(AttributeName name);
 
   /// Renders an attribute with the specified name and value.
   ///
@@ -1437,7 +1436,7 @@ public sealed interface Markup extends BinaryObject, Testable {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  Html.Instruction.OfAttribute attr(Html.AttributeName name, String value);
+  Html.Instruction.OfAttribute attr(AttributeName name, String value);
 
   /// Renders the `accesskey` attribute with the specified value.
   ///

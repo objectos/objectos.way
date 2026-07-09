@@ -20,7 +20,7 @@ import objectos.way.Dom;
 
 public final class DomAttribute implements Dom.Attribute {
 
-  HtmlAttributeName name;
+  AttributeNamePojo name;
 
   private final MarkupPojo player;
 

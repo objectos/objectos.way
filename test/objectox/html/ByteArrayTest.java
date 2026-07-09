@@ -22,6 +22,17 @@ import org.testng.annotations.Test;
 public class ByteArrayTest {
 
   @Test
+  public void add02() {
+    final ByteArray subject;
+    subject = new ByteArray(0);
+
+    subject.add((byte) 1, (byte) 2);
+
+    assertEquals(subject, ByteArray.of(1, 2));
+    assertEquals(subject.toString(), "0102");
+  }
+
+  @Test
   public void add03() {
     final ByteArray subject;
     subject = new ByteArray(0);

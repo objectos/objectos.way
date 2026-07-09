@@ -16,7 +16,7 @@
 package objectos.script;
 
 import module java.base;
-import objectos.way.Html;
+import objectos.html.Id;
 
 /// The **Objectos Script** main class, part of Objectos HTML.
 public final class Js {
@@ -42,7 +42,7 @@ public final class Js {
   /// @param value the ID value
   ///
   /// @return the element
-  public static JsElement byId(Html.Id value) {
+  public static JsElement byId(Id value) {
     final String v;
     v = value.attrValue();
 

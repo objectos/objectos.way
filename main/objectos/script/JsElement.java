@@ -17,7 +17,7 @@ package objectos.script;
 
 import java.util.Objects;
 import java.util.function.Consumer;
-import objectos.way.Html;
+import objectos.html.AttributeName;
 
 /// A JS runtime `Element` instance.
 public final class JsElement extends JsNode {
@@ -63,7 +63,7 @@ public final class JsElement extends JsNode {
   /// @param name the attribute name
   ///
   /// @return the attribute value
-  public final JsString attr(Html.AttributeName name) {
+  public final JsString attr(AttributeName name) {
     final String attrName;
     attrName = name.name();
 
@@ -88,7 +88,7 @@ public final class JsElement extends JsNode {
   /// @param value the attribute value
   ///
   /// @return an object representing this action
-  public final JsAction attr(Html.AttributeName name, String value) {
+  public final JsAction attr(AttributeName name, String value) {
     Objects.requireNonNull(value, "value == null");
 
     final String attrName;
@@ -119,7 +119,7 @@ public final class JsElement extends JsNode {
   /// @param name the attribute name
   ///
   /// @return a boolean
-  public final JsBoolean hasAttribute(Html.AttributeName name) {
+  public final JsBoolean hasAttribute(AttributeName name) {
     final String attrName;
     attrName = name.name();
 

@@ -63,7 +63,7 @@ abstract class Navigate extends Fetch {
   ///
   /// @param first the `id` of the first element
   /// @param more the `id` of the additional elements
-  public final void update(Html.Id first, Html.Id... more) {
+  public final void update(Id first, Id... more) {
     final JsArray.Builder builder;
     builder = JsArray.rawBuilder();
 
@@ -72,7 +72,7 @@ abstract class Navigate extends Fetch {
     builder.rawString(first, "first");
 
     for (int i = 0; i < more.length; i++) {
-      final Html.Id id;
+      final Id id;
       id = more[i];
 
       builder.rawString(id, "more", i);

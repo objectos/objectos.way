@@ -49,6 +49,12 @@ final class ByteArray {
     return new ByteArray(copy);
   }
 
+  public final void add(byte b0, byte b1) {
+    bytes = Util.growIfNecessary(bytes, index + 1);
+    bytes[index++] = b0;
+    bytes[index++] = b1;
+  }
+
   public final void add(byte b0, byte b1, byte b2) {
     bytes = Util.growIfNecessary(bytes, index + 2);
     bytes[index++] = b0;

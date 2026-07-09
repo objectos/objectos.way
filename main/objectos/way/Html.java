@@ -16,12 +16,14 @@
 package objectos.way;
 
 import java.util.Objects;
+import objectos.html.AttributeName;
+import objectos.html.AttributeObject;
 import objectos.html.Component;
 import objectos.html.Markup;
 import objectos.internal.Check;
 import objectos.script.JsAction;
 import objectox.html.AttributeOrNoOp;
-import objectox.html.HtmlAttributeName;
+import objectox.html.AttributeNamePojo;
 import objectox.html.HtmlElementName;
 import objectox.html.HtmlInstruction;
 import objectox.html.MarkupPojo;
@@ -30,622 +32,6 @@ import objectox.html.MarkupPojo;
  * The <strong>Objectos HTML</strong> main class.
  */
 public final class Html {
-
-  /// An object representing an instruction to render an HTML attribute. These
-  /// instructions may be reused, unlike the instructions represented by methods
-  /// of the `Markup` or `Template` classes.
-  public non-sealed interface AttributeObject extends Instruction.AsObject, Instruction.OfVoid {
-
-    /// Creates an object representing an HTML boolean attribute with the
-    /// specified name.
-    ///
-    /// @param name the boolean attribute name
-    ///
-    /// @return a newly created object representing an HTML boolean attribute
-    static AttributeObject of(AttributeName name) {
-      return new DefaultAttributeObject(
-          Objects.requireNonNull(name, "name == null"),
-          null
-      );
-    }
-
-    /// Creates an object representing a HTML attribute with the specified name
-    /// and value.
-    ///
-    /// @param name the attribute name
-    /// @param value the attribute value
-    ///
-    /// @return a newly created object representing an HTML attribute
-    static AttributeObject of(AttributeName name, String value) {
-      return new DefaultAttributeObject(
-          Objects.requireNonNull(name, "name == null"),
-          Objects.requireNonNull(value, "value == null")
-      );
-    }
-
-    /// The HTML attribute name.
-    ///
-    /// @return the HTML attribute name
-    AttributeName attrName();
-
-    /// The HTML attribute value, or `null` if this object represents a boolean
-    /// HTML attribute.
-    ///
-    /// @return the HTML attribute value, or `null`
-    String attrValue();
-
-  }
-
-  private record DefaultAttributeObject(AttributeName attrName, String attrValue) implements AttributeObject {}
-
-  /// The name of an HTML attribute.
-  public sealed interface AttributeName permits HtmlAttributeName {
-
-    // BEGIN generated code
-
-    /// The `accesskey` HTML attribute.
-    Html.AttributeName ACCESSKEY = HtmlAttributeName.ACCESSKEY;
-
-    /// The `action` HTML attribute.
-    Html.AttributeName ACTION = HtmlAttributeName.ACTION;
-
-    /// The `align` HTML attribute.
-    Html.AttributeName ALIGN = HtmlAttributeName.ALIGN;
-
-    /// The `alignment-baseline` HTML attribute.
-    Html.AttributeName ALIGNMENT_BASELINE = HtmlAttributeName.ALIGNMENT_BASELINE;
-
-    /// The `alt` HTML attribute.
-    Html.AttributeName ALT = HtmlAttributeName.ALT;
-
-    /// The `aria-current` HTML attribute.
-    Html.AttributeName ARIA_CURRENT = HtmlAttributeName.ARIA_CURRENT;
-
-    /// The `aria-disabled` HTML attribute.
-    Html.AttributeName ARIA_DISABLED = HtmlAttributeName.ARIA_DISABLED;
-
-    /// The `aria-hidden` HTML attribute.
-    Html.AttributeName ARIA_HIDDEN = HtmlAttributeName.ARIA_HIDDEN;
-
-    /// The `aria-invalid` HTML attribute.
-    Html.AttributeName ARIA_INVALID = HtmlAttributeName.ARIA_INVALID;
-
-    /// The `aria-label` HTML attribute.
-    Html.AttributeName ARIA_LABEL = HtmlAttributeName.ARIA_LABEL;
-
-    /// The `aria-labelledby` HTML attribute.
-    Html.AttributeName ARIA_LABELLED_BY = HtmlAttributeName.ARIA_LABELLED_BY;
-
-    /// The `aria-modal` HTML attribute.
-    Html.AttributeName ARIA_MODAL = HtmlAttributeName.ARIA_MODAL;
-
-    /// The `aria-placeholder` HTML attribute.
-    Html.AttributeName ARIA_PLACEHOLDER = HtmlAttributeName.ARIA_PLACEHOLDER;
-
-    /// The `aria-readonly` HTML attribute.
-    Html.AttributeName ARIA_READONLY = HtmlAttributeName.ARIA_READONLY;
-
-    /// The `aria-required` HTML attribute.
-    Html.AttributeName ARIA_REQUIRED = HtmlAttributeName.ARIA_REQUIRED;
-
-    /// The `aria-selected` HTML attribute.
-    Html.AttributeName ARIA_SELECTED = HtmlAttributeName.ARIA_SELECTED;
-
-    /// The `as` HTML attribute.
-    Html.AttributeName AS = HtmlAttributeName.AS;
-
-    /// The `async` HTML attribute.
-    Html.AttributeName ASYNC = HtmlAttributeName.ASYNC;
-
-    /// The `autocomplete` HTML attribute.
-    Html.AttributeName AUTOCOMPLETE = HtmlAttributeName.AUTOCOMPLETE;
-
-    /// The `autofocus` HTML attribute.
-    Html.AttributeName AUTOFOCUS = HtmlAttributeName.AUTOFOCUS;
-
-    /// The `baseline-shift` HTML attribute.
-    Html.AttributeName BASELINE_SHIFT = HtmlAttributeName.BASELINE_SHIFT;
-
-    /// The `border` HTML attribute.
-    Html.AttributeName BORDER = HtmlAttributeName.BORDER;
-
-    /// The `cellpadding` HTML attribute.
-    Html.AttributeName CELLPADDING = HtmlAttributeName.CELLPADDING;
-
-    /// The `cellspacing` HTML attribute.
-    Html.AttributeName CELLSPACING = HtmlAttributeName.CELLSPACING;
-
-    /// The `charset` HTML attribute.
-    Html.AttributeName CHARSET = HtmlAttributeName.CHARSET;
-
-    /// The `checked` HTML attribute.
-    Html.AttributeName CHECKED = HtmlAttributeName.CHECKED;
-
-    /// The `cite` HTML attribute.
-    Html.AttributeName CITE = HtmlAttributeName.CITE;
-
-    /// The `class` HTML attribute.
-    Html.AttributeName CLASS = HtmlAttributeName.CLASS;
-
-    /// The `clip-path` HTML attribute.
-    Html.AttributeName CLIP_PATH = HtmlAttributeName.CLIP_PATH;
-
-    /// The `clip-rule` HTML attribute.
-    Html.AttributeName CLIP_RULE = HtmlAttributeName.CLIP_RULE;
-
-    /// The `closedby` HTML attribute.
-    Html.AttributeName CLOSEDBY = HtmlAttributeName.CLOSEDBY;
-
-    /// The `color` HTML attribute.
-    Html.AttributeName COLOR = HtmlAttributeName.COLOR;
-
-    /// The `color-interpolation` HTML attribute.
-    Html.AttributeName COLOR_INTERPOLATION = HtmlAttributeName.COLOR_INTERPOLATION;
-
-    /// The `color-interpolation-filters` HTML attribute.
-    Html.AttributeName COLOR_INTERPOLATION_FILTERS = HtmlAttributeName.COLOR_INTERPOLATION_FILTERS;
-
-    /// The `cols` HTML attribute.
-    Html.AttributeName COLS = HtmlAttributeName.COLS;
-
-    /// The `content` HTML attribute.
-    Html.AttributeName CONTENT = HtmlAttributeName.CONTENT;
-
-    /// The `contenteditable` HTML attribute.
-    Html.AttributeName CONTENTEDITABLE = HtmlAttributeName.CONTENTEDITABLE;
-
-    /// The `crossorigin` HTML attribute.
-    Html.AttributeName CROSSORIGIN = HtmlAttributeName.CROSSORIGIN;
-
-    /// The `cursor` HTML attribute.
-    Html.AttributeName CURSOR = HtmlAttributeName.CURSOR;
-
-    /// The `d` HTML attribute.
-    Html.AttributeName D = HtmlAttributeName.D;
-
-    /// The `defer` HTML attribute.
-    Html.AttributeName DEFER = HtmlAttributeName.DEFER;
-
-    /// The `dir` HTML attribute.
-    Html.AttributeName DIR = HtmlAttributeName.DIR;
-
-    /// The `direction` HTML attribute.
-    Html.AttributeName DIRECTION = HtmlAttributeName.DIRECTION;
-
-    /// The `dirname` HTML attribute.
-    Html.AttributeName DIRNAME = HtmlAttributeName.DIRNAME;
-
-    /// The `disabled` HTML attribute.
-    Html.AttributeName DISABLED = HtmlAttributeName.DISABLED;
-
-    /// The `display` HTML attribute.
-    Html.AttributeName DISPLAY = HtmlAttributeName.DISPLAY;
-
-    /// The `dominant-baseline` HTML attribute.
-    Html.AttributeName DOMINANT_BASELINE = HtmlAttributeName.DOMINANT_BASELINE;
-
-    /// The `download` HTML attribute.
-    Html.AttributeName DOWNLOAD = HtmlAttributeName.DOWNLOAD;
-
-    /// The `draggable` HTML attribute.
-    Html.AttributeName DRAGGABLE = HtmlAttributeName.DRAGGABLE;
-
-    /// The `enctype` HTML attribute.
-    Html.AttributeName ENCTYPE = HtmlAttributeName.ENCTYPE;
-
-    /// The `fill` HTML attribute.
-    Html.AttributeName FILL = HtmlAttributeName.FILL;
-
-    /// The `fill-opacity` HTML attribute.
-    Html.AttributeName FILL_OPACITY = HtmlAttributeName.FILL_OPACITY;
-
-    /// The `fill-rule` HTML attribute.
-    Html.AttributeName FILL_RULE = HtmlAttributeName.FILL_RULE;
-
-    /// The `filter` HTML attribute.
-    Html.AttributeName FILTER = HtmlAttributeName.FILTER;
-
-    /// The `flood-color` HTML attribute.
-    Html.AttributeName FLOOD_COLOR = HtmlAttributeName.FLOOD_COLOR;
-
-    /// The `flood-opacity` HTML attribute.
-    Html.AttributeName FLOOD_OPACITY = HtmlAttributeName.FLOOD_OPACITY;
-
-    /// The `for` HTML attribute.
-    Html.AttributeName FOR = HtmlAttributeName.FOR;
-
-    /// The `form` HTML attribute.
-    Html.AttributeName FORM = HtmlAttributeName.FORM;
-
-    /// The `glyph-orientation-horizontal` HTML attribute.
-    Html.AttributeName GLYPH_ORIENTATION_HORIZONTAL = HtmlAttributeName.GLYPH_ORIENTATION_HORIZONTAL;
-
-    /// The `glyph-orientation-vertical` HTML attribute.
-    Html.AttributeName GLYPH_ORIENTATION_VERTICAL = HtmlAttributeName.GLYPH_ORIENTATION_VERTICAL;
-
-    /// The `height` HTML attribute.
-    Html.AttributeName HEIGHT = HtmlAttributeName.HEIGHT;
-
-    /// The `hidden` HTML attribute.
-    Html.AttributeName HIDDEN = HtmlAttributeName.HIDDEN;
-
-    /// The `href` HTML attribute.
-    Html.AttributeName HREF = HtmlAttributeName.HREF;
-
-    /// The `http-equiv` HTML attribute.
-    Html.AttributeName HTTP_EQUIV = HtmlAttributeName.HTTP_EQUIV;
-
-    /// The `id` HTML attribute.
-    Html.AttributeName ID = HtmlAttributeName.ID;
-
-    /// The `image-rendering` HTML attribute.
-    Html.AttributeName IMAGE_RENDERING = HtmlAttributeName.IMAGE_RENDERING;
-
-    /// The `integrity` HTML attribute.
-    Html.AttributeName INTEGRITY = HtmlAttributeName.INTEGRITY;
-
-    /// The `label` HTML attribute.
-    Html.AttributeName LABEL = HtmlAttributeName.LABEL;
-
-    /// The `lang` HTML attribute.
-    Html.AttributeName LANG = HtmlAttributeName.LANG;
-
-    /// The `letter-spacing` HTML attribute.
-    Html.AttributeName LETTER_SPACING = HtmlAttributeName.LETTER_SPACING;
-
-    /// The `lighting-color` HTML attribute.
-    Html.AttributeName LIGHTING_COLOR = HtmlAttributeName.LIGHTING_COLOR;
-
-    /// The `marker-end` HTML attribute.
-    Html.AttributeName MARKER_END = HtmlAttributeName.MARKER_END;
-
-    /// The `marker-mid` HTML attribute.
-    Html.AttributeName MARKER_MID = HtmlAttributeName.MARKER_MID;
-
-    /// The `marker-start` HTML attribute.
-    Html.AttributeName MARKER_START = HtmlAttributeName.MARKER_START;
-
-    /// The `mask` HTML attribute.
-    Html.AttributeName MASK = HtmlAttributeName.MASK;
-
-    /// The `mask-type` HTML attribute.
-    Html.AttributeName MASK_TYPE = HtmlAttributeName.MASK_TYPE;
-
-    /// The `maxlength` HTML attribute.
-    Html.AttributeName MAXLENGTH = HtmlAttributeName.MAXLENGTH;
-
-    /// The `media` HTML attribute.
-    Html.AttributeName MEDIA = HtmlAttributeName.MEDIA;
-
-    /// The `method` HTML attribute.
-    Html.AttributeName METHOD = HtmlAttributeName.METHOD;
-
-    /// The `minlength` HTML attribute.
-    Html.AttributeName MINLENGTH = HtmlAttributeName.MINLENGTH;
-
-    /// The `multiple` HTML attribute.
-    Html.AttributeName MULTIPLE = HtmlAttributeName.MULTIPLE;
-
-    /// The `name` HTML attribute.
-    Html.AttributeName NAME = HtmlAttributeName.NAME;
-
-    /// The `nomodule` HTML attribute.
-    Html.AttributeName NOMODULE = HtmlAttributeName.NOMODULE;
-
-    /// The `onclick` HTML attribute.
-    Html.AttributeName ONCLICK = HtmlAttributeName.ONCLICK;
-
-    /// The `onload` HTML attribute.
-    Html.AttributeName ONLOAD = HtmlAttributeName.ONLOAD;
-
-    /// The `onpopstate` HTML attribute.
-    Html.AttributeName ONPOPSTATE = HtmlAttributeName.ONPOPSTATE;
-
-    /// The `onsubmit` HTML attribute.
-    Html.AttributeName ONSUBMIT = HtmlAttributeName.ONSUBMIT;
-
-    /// The `opacity` HTML attribute.
-    Html.AttributeName OPACITY = HtmlAttributeName.OPACITY;
-
-    /// The `open` HTML attribute.
-    Html.AttributeName OPEN = HtmlAttributeName.OPEN;
-
-    /// The `overflow` HTML attribute.
-    Html.AttributeName OVERFLOW = HtmlAttributeName.OVERFLOW;
-
-    /// The `paint-order` HTML attribute.
-    Html.AttributeName PAINT_ORDER = HtmlAttributeName.PAINT_ORDER;
-
-    /// The `placeholder` HTML attribute.
-    Html.AttributeName PLACEHOLDER = HtmlAttributeName.PLACEHOLDER;
-
-    /// The `pointer-events` HTML attribute.
-    Html.AttributeName POINTER_EVENTS = HtmlAttributeName.POINTER_EVENTS;
-
-    /// The `property` HTML attribute.
-    Html.AttributeName PROPERTY = HtmlAttributeName.PROPERTY;
-
-    /// The `readonly` HTML attribute.
-    Html.AttributeName READONLY = HtmlAttributeName.READONLY;
-
-    /// The `referrerpolicy` HTML attribute.
-    Html.AttributeName REFERRERPOLICY = HtmlAttributeName.REFERRERPOLICY;
-
-    /// The `rel` HTML attribute.
-    Html.AttributeName REL = HtmlAttributeName.REL;
-
-    /// The `required` HTML attribute.
-    Html.AttributeName REQUIRED = HtmlAttributeName.REQUIRED;
-
-    /// The `rev` HTML attribute.
-    Html.AttributeName REV = HtmlAttributeName.REV;
-
-    /// The `reversed` HTML attribute.
-    Html.AttributeName REVERSED = HtmlAttributeName.REVERSED;
-
-    /// The `role` HTML attribute.
-    Html.AttributeName ROLE = HtmlAttributeName.ROLE;
-
-    /// The `rows` HTML attribute.
-    Html.AttributeName ROWS = HtmlAttributeName.ROWS;
-
-    /// The `selected` HTML attribute.
-    Html.AttributeName SELECTED = HtmlAttributeName.SELECTED;
-
-    /// The `shape-rendering` HTML attribute.
-    Html.AttributeName SHAPE_RENDERING = HtmlAttributeName.SHAPE_RENDERING;
-
-    /// The `size` HTML attribute.
-    Html.AttributeName SIZE = HtmlAttributeName.SIZE;
-
-    /// The `sizes` HTML attribute.
-    Html.AttributeName SIZES = HtmlAttributeName.SIZES;
-
-    /// The `spellcheck` HTML attribute.
-    Html.AttributeName SPELLCHECK = HtmlAttributeName.SPELLCHECK;
-
-    /// The `src` HTML attribute.
-    Html.AttributeName SRC = HtmlAttributeName.SRC;
-
-    /// The `srcset` HTML attribute.
-    Html.AttributeName SRCSET = HtmlAttributeName.SRCSET;
-
-    /// The `start` HTML attribute.
-    Html.AttributeName START = HtmlAttributeName.START;
-
-    /// The `stop-color` HTML attribute.
-    Html.AttributeName STOP_COLOR = HtmlAttributeName.STOP_COLOR;
-
-    /// The `stop-opacity` HTML attribute.
-    Html.AttributeName STOP_OPACITY = HtmlAttributeName.STOP_OPACITY;
-
-    /// The `stroke` HTML attribute.
-    Html.AttributeName STROKE = HtmlAttributeName.STROKE;
-
-    /// The `stroke-dasharray` HTML attribute.
-    Html.AttributeName STROKE_DASHARRAY = HtmlAttributeName.STROKE_DASHARRAY;
-
-    /// The `stroke-dashoffset` HTML attribute.
-    Html.AttributeName STROKE_DASHOFFSET = HtmlAttributeName.STROKE_DASHOFFSET;
-
-    /// The `stroke-linecap` HTML attribute.
-    Html.AttributeName STROKE_LINECAP = HtmlAttributeName.STROKE_LINECAP;
-
-    /// The `stroke-linejoin` HTML attribute.
-    Html.AttributeName STROKE_LINEJOIN = HtmlAttributeName.STROKE_LINEJOIN;
-
-    /// The `stroke-miterlimit` HTML attribute.
-    Html.AttributeName STROKE_MITERLIMIT = HtmlAttributeName.STROKE_MITERLIMIT;
-
-    /// The `stroke-opacity` HTML attribute.
-    Html.AttributeName STROKE_OPACITY = HtmlAttributeName.STROKE_OPACITY;
-
-    /// The `stroke-width` HTML attribute.
-    Html.AttributeName STROKE_WIDTH = HtmlAttributeName.STROKE_WIDTH;
-
-    /// The `style` HTML attribute.
-    Html.AttributeName STYLE = HtmlAttributeName.STYLE;
-
-    /// The `tabindex` HTML attribute.
-    Html.AttributeName TABINDEX = HtmlAttributeName.TABINDEX;
-
-    /// The `target` HTML attribute.
-    Html.AttributeName TARGET = HtmlAttributeName.TARGET;
-
-    /// The `text-anchor` HTML attribute.
-    Html.AttributeName TEXT_ANCHOR = HtmlAttributeName.TEXT_ANCHOR;
-
-    /// The `text-decoration` HTML attribute.
-    Html.AttributeName TEXT_DECORATION = HtmlAttributeName.TEXT_DECORATION;
-
-    /// The `text-overflow` HTML attribute.
-    Html.AttributeName TEXT_OVERFLOW = HtmlAttributeName.TEXT_OVERFLOW;
-
-    /// The `text-rendering` HTML attribute.
-    Html.AttributeName TEXT_RENDERING = HtmlAttributeName.TEXT_RENDERING;
-
-    /// The `title` HTML attribute.
-    Html.AttributeName TITLE = HtmlAttributeName.TITLE;
-
-    /// The `transform` HTML attribute.
-    Html.AttributeName TRANSFORM = HtmlAttributeName.TRANSFORM;
-
-    /// The `transform-origin` HTML attribute.
-    Html.AttributeName TRANSFORM_ORIGIN = HtmlAttributeName.TRANSFORM_ORIGIN;
-
-    /// The `translate` HTML attribute.
-    Html.AttributeName TRANSLATE = HtmlAttributeName.TRANSLATE;
-
-    /// The `type` HTML attribute.
-    Html.AttributeName TYPE = HtmlAttributeName.TYPE;
-
-    /// The `unicode-bidi` HTML attribute.
-    Html.AttributeName UNICODE_BIDI = HtmlAttributeName.UNICODE_BIDI;
-
-    /// The `value` HTML attribute.
-    Html.AttributeName VALUE = HtmlAttributeName.VALUE;
-
-    /// The `vector-effect` HTML attribute.
-    Html.AttributeName VECTOR_EFFECT = HtmlAttributeName.VECTOR_EFFECT;
-
-    /// The `viewBox` HTML attribute.
-    Html.AttributeName VIEWBOX = HtmlAttributeName.VIEWBOX;
-
-    /// The `visibility` HTML attribute.
-    Html.AttributeName VISIBILITY = HtmlAttributeName.VISIBILITY;
-
-    /// The `white-space` HTML attribute.
-    Html.AttributeName WHITE_SPACE = HtmlAttributeName.WHITE_SPACE;
-
-    /// The `width` HTML attribute.
-    Html.AttributeName WIDTH = HtmlAttributeName.WIDTH;
-
-    /// The `word-spacing` HTML attribute.
-    Html.AttributeName WORD_SPACING = HtmlAttributeName.WORD_SPACING;
-
-    /// The `wrap` HTML attribute.
-    Html.AttributeName WRAP = HtmlAttributeName.WRAP;
-
-    /// The `writing-mode` HTML attribute.
-    Html.AttributeName WRITING_MODE = HtmlAttributeName.WRITING_MODE;
-
-    /// The `xmlns` HTML attribute.
-    Html.AttributeName XMLNS = HtmlAttributeName.XMLNS;
-
-    // END generated code
-
-    /// Creates a new HTML attribute name.
-    ///
-    /// @param name the name of the attribute
-    ///
-    /// @return the HTML attribute name instance
-    static AttributeName of(String name) {
-      return HtmlAttributeName.custom(name);
-    }
-
-    /// Index of this attribute.
-    ///
-    /// @return index of this attribute.
-    int index();
-
-    /// Name of the attribute.
-    ///
-    /// @return name of the attribute
-    String name();
-
-  }
-
-  /// Represents an HTML {@code class} attribute and its value.
-  public sealed interface ClassName extends AttributeObject {
-
-    /**
-     * Creates a new {@code ClassName} instance whose value is the result of
-     * joining the value of each of the specified {@code ClassName} instances
-     * around the space character.
-     *
-     * @param values
-     *        the {@code ClassName} instances to be joined into a single value
-     *
-     * @return a newly constructed {@code ClassName} instance
-     */
-    static ClassName of(ClassName... values) {
-      StringBuilder sb;
-      sb = new StringBuilder();
-
-      for (int i = 0, len = values.length; i < len; i++) {
-        if (i != 0) {
-          sb.append(' ');
-        }
-
-        ClassName cn;
-        cn = values[i];
-
-        String value;
-        value = cn.attrValue();
-
-        sb.append(value);
-      }
-
-      String value;
-      value = sb.toString();
-
-      return new DefaultClassName(value);
-    }
-
-    /**
-     * Creates a new {@code ClassName} instance with the specified value.
-     *
-     * @param value
-     *        the value of this HTML {@code class} attribute
-     *
-     * @return a newly constructed {@code ClassName} instance
-     */
-    static ClassName of(String value) {
-      Objects.requireNonNull(value, "value == null");
-
-      return new DefaultClassName(value);
-    }
-
-    /**
-     * Creates a new {@code ClassName} instance by processing the specified
-     * value.
-     *
-     * <p>
-     * This method is designed to work with Java text blocks. It first removes
-     * any leading and trailing whitespace. Additionally, any sequence of
-     * consecutive whitespace characters is replaced by a single space
-     * character.
-     *
-     * <p>
-     * For example, creating an instance like the following:
-     *
-     * <pre>{@code
-     * Html.ClassName.ofText("""
-     *     first \tsecond
-     *       third\r
-     *
-     *     fourth
-     *     """);
-     * }</pre>
-     *
-     * <p>
-     * Produces the same result as creating an instance with the
-     * {@code "first second third fourth"} string literal.
-     *
-     * @param value
-     *        the text block containing class names, possibly spread across
-     *        multiple lines
-     *
-     * @return a newly constructed {@code ClassName} instance
-     */
-    static Html.ClassName ofText(String value) {
-      String result;
-      result = Html.formatAttrValue(value);
-
-      return new DefaultClassName(result);
-    }
-
-    /**
-     * The {@code class} attribute name.
-     *
-     * @return the {@code class} attribute name
-     */
-    @Override
-    default AttributeName attrName() {
-      return HtmlAttributeName.CLASS;
-    }
-
-    /**
-     * The {@code class} value.
-     *
-     * @return the {@code class} value
-     */
-    @Override
-    String attrValue();
-
-  }
-
-  private record DefaultClassName(String attrValue) implements ClassName {}
 
   /// Represents the name of an HTML element.
   public sealed interface ElementName permits HtmlElementName {
@@ -957,47 +343,6 @@ public final class Html {
   }
 
   /**
-   * Represents an HTML {@code id} attribute and its value.
-   */
-  public sealed interface Id extends AttributeObject {
-
-    /**
-     * Creates a new {@code Id} instance with the specified value.
-     *
-     * @param value
-     *        the value of this HTML {@code id} attribute.
-     *
-     * @return a newly constructed {@code Id} instance
-     */
-    static Id of(String value) {
-      Objects.requireNonNull(value, "value == null");
-
-      return new DefaultId(value);
-    }
-
-    /**
-     * The {@code id} attribute name.
-     *
-     * @return the {@code id} attribute name
-     */
-    @Override
-    default AttributeName attrName() {
-      return HtmlAttributeName.ID;
-    }
-
-    /**
-     * The {@code id} value.
-     *
-     * @return the {@code id} value
-     */
-    @Override
-    String attrValue();
-
-  }
-
-  private record DefaultId(String attrValue) implements Id {}
-
-  /**
    * Represents an instruction that generates part of the output of an HTML
    * template.
    */
@@ -1009,7 +354,7 @@ public final class Html {
      * <p>
      * Instances of this interface can be safely reused in multiple templates.
      */
-    sealed interface AsObject extends Instruction {}
+    sealed interface AsObject extends Instruction permits AttributeObject {}
 
     /**
      * Class of instructions that are represented by methods of the
@@ -1050,7 +395,13 @@ public final class Html {
      * Class of instructions that are allowed as arguments to template
      * methods that represent void elements.
      */
-    sealed interface OfVoid extends Instruction {}
+    sealed interface OfVoid extends Instruction 
+        permits 
+        AttributeObject, 
+        OfAttribute,
+        OfDataOn,
+        OfFragment,
+        NoOp {}
 
     /// The no-op instruction.
     sealed interface NoOp extends AsMethod, OfVoid permits AttributeOrNoOp {}
@@ -1136,50 +487,50 @@ public final class Html {
     /// @param object the attribute
     ///
     /// @return an instruction representing the attribute
-    protected final Html.Instruction.OfAttribute attr(Html.AttributeObject object) {
+    protected final Html.Instruction.OfAttribute attr(AttributeObject object) {
       return $html().attr(object);
     }
 
     // START generated code
 
     /// The `async` boolean attribute.
-    protected static final Html.AttributeObject async = Markup.async;
+    protected static final AttributeObject async = Markup.async;
 
     /// The `autofocus` boolean attribute.
-    protected static final Html.AttributeObject autofocus = Markup.autofocus;
+    protected static final AttributeObject autofocus = Markup.autofocus;
 
     /// The `checked` boolean attribute.
-    protected static final Html.AttributeObject checked = Markup.checked;
+    protected static final AttributeObject checked = Markup.checked;
 
     /// The `defer` boolean attribute.
-    protected static final Html.AttributeObject defer = Markup.defer;
+    protected static final AttributeObject defer = Markup.defer;
 
     /// The `disabled` boolean attribute.
-    protected static final Html.AttributeObject disabled = Markup.disabled;
+    protected static final AttributeObject disabled = Markup.disabled;
 
     /// The `hidden` boolean attribute.
-    protected static final Html.AttributeObject hidden = Markup.hidden;
+    protected static final AttributeObject hidden = Markup.hidden;
 
     /// The `multiple` boolean attribute.
-    protected static final Html.AttributeObject multiple = Markup.multiple;
+    protected static final AttributeObject multiple = Markup.multiple;
 
     /// The `nomodule` boolean attribute.
-    protected static final Html.AttributeObject nomodule = Markup.nomodule;
+    protected static final AttributeObject nomodule = Markup.nomodule;
 
     /// The `open` boolean attribute.
-    protected static final Html.AttributeObject open = Markup.open;
+    protected static final AttributeObject open = Markup.open;
 
     /// The `readonly` boolean attribute.
-    protected static final Html.AttributeObject readonly = Markup.readonly;
+    protected static final AttributeObject readonly = Markup.readonly;
 
     /// The `required` boolean attribute.
-    protected static final Html.AttributeObject required = Markup.required;
+    protected static final AttributeObject required = Markup.required;
 
     /// The `reversed` boolean attribute.
-    protected static final Html.AttributeObject reversed = Markup.reversed;
+    protected static final AttributeObject reversed = Markup.reversed;
 
     /// The `selected` boolean attribute.
-    protected static final Html.AttributeObject selected = Markup.selected;
+    protected static final AttributeObject selected = Markup.selected;
 
     //
     // WAY
@@ -2783,7 +2134,7 @@ public final class Html {
     /// @param name the attribute name
     ///
     /// @return an instruction representing the attribute
-    protected final Html.Instruction.OfAttribute attr(Html.AttributeName name) {
+    protected final Html.Instruction.OfAttribute attr(AttributeName name) {
       return $html().attr(name);
     }
 
@@ -2793,7 +2144,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Html.Instruction.OfAttribute attr(Html.AttributeName name, String value) {
+    protected final Html.Instruction.OfAttribute attr(AttributeName name, String value) {
       return $html().attr(name, value);
     }
 
@@ -4068,7 +3419,7 @@ public final class Html {
   public static String formatAttrValue(String value) {
     Objects.requireNonNull(value, "value == null");
 
-    return HtmlAttributeName.formatAttrValue(value, new StringBuilder());
+    return AttributeNamePojo.formatAttrValue(value, new StringBuilder());
   }
 
 }

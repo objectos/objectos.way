@@ -16,8 +16,8 @@
 package objectox.html;
 
 import java.util.Objects;
+import objectos.html.AttributeName;
 import objectos.way.Html;
-import objectos.way.Html.AttributeName;
 
 final class Attribute1Recorder {
 

@@ -15,8 +15,9 @@
  */
 package objectos.way;
 
+import objectos.html.AttributeName;
 import objectos.html.Component;
-import objectox.html.HtmlAttributeName;
+import objectox.html.AttributeNamePojo;
 
 /**
  * The <strong>Objectos Syntax</strong> main class, part of Objectos HTML.
@@ -25,9 +26,9 @@ public final class Syntax {
 
   public sealed interface Language permits SyntaxLanguage {}
 
-  public static final Html.AttributeName DATA_LINE = HtmlAttributeName.DATA_LINE;
+  public static final AttributeName DATA_LINE = AttributeNamePojo.DATA_LINE;
 
-  public static final Html.AttributeName DATA_HIGH = HtmlAttributeName.DATA_HIGH;
+  public static final AttributeName DATA_HIGH = AttributeNamePojo.DATA_HIGH;
 
   // languages
 

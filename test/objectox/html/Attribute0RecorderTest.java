@@ -17,7 +17,7 @@ package objectox.html;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.way.Html;
+import objectos.html.AttributeName;
 import org.testng.annotations.Test;
 
 public class Attribute0RecorderTest {
@@ -30,8 +30,8 @@ public class Attribute0RecorderTest {
     final ObjectArray objects;
     objects = new ObjectArray();
 
-    final Html.AttributeName name;
-    name = Html.AttributeName.READONLY;
+    final AttributeName name;
+    name = AttributeName.READONLY;
 
     final Attribute0Recorder subject;
     subject = new Attribute0Recorder(main, objects, name);
@@ -65,8 +65,8 @@ public class Attribute0RecorderTest {
     final ObjectArray objects;
     objects = new ObjectArray();
 
-    final Html.AttributeName name;
-    name = Html.AttributeName.of("foo");
+    final AttributeName name;
+    name = AttributeName.of("foo");
 
     final Attribute0Recorder subject;
     subject = new Attribute0Recorder(main, objects, name);

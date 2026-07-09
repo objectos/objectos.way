@@ -16,11 +16,11 @@
 package objectos.way.dev;
 
 import objectos.css.CssSource;
+import objectos.html.Id;
 import objectos.http.Request;
 import objectos.http.Result;
 import objectos.script.Js;
 import objectos.script.JsAction;
-import objectos.way.Html;
 
 /*
 
@@ -32,7 +32,7 @@ import objectos.way.Html;
 @CssSource
 public final class ScriptFollow03 extends AbstractDevScript {
 
-  private static final Html.Id TARGET0 = Html.Id.of("tgt0");
+  private static final Id TARGET0 = Id.of("tgt0");
 
   public static final JsAction ACTION = Js.follow(opts -> opts.update(TARGET0));
 

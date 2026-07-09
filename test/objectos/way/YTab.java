@@ -22,6 +22,7 @@ import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Page.WaitForURLOptions;
 import java.util.concurrent.TimeUnit;
+import objectos.html.Id;
 
 final class YTab implements Y.Tab {
 
@@ -61,7 +62,7 @@ final class YTab implements Y.Tab {
   }
 
   @Override
-  public final Y.TabElem byId(Html.Id id) {
+  public final Y.TabElem byId(Id id) {
     final String selector;
     selector = "#" + id.attrValue();
 

@@ -15,8 +15,8 @@
  */
 package objectox.html;
 
+import objectos.html.AttributeName;
 import objectos.way.Html;
-import objectos.way.Html.AttributeName;
 
 final class Attribute0Recorder {
 

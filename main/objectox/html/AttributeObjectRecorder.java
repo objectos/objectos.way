@@ -1,0 +1,82 @@
+/*
+ * Copyright (C) 2023-2026 Objectos Software LTDA.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package objectox.html;
+
+import objectos.html.AttributeName;
+import objectos.html.AttributeObject;
+
+final class AttributeObjectRecorder {
+
+  private final ByteArray aux;
+
+  private final ObjectArray objects;
+
+  private final AttributeObject attr;
+
+  AttributeObjectRecorder(ByteArray aux, ObjectArray objects, AttributeObject attr) {
+    this.aux = aux;
+
+    this.objects = objects;
+
+    this.attr = attr;
+  }
+
+  public final void record() {
+    final AttributeName name;
+    name = attr.attrName();
+
+    if (name == null) {
+      final String msg;
+      msg = "Attribute object provided a null attribute name: " + attr;
+
+      throw new NullPointerException(msg);
+    }
+
+    final int nameIndex;
+    nameIndex = name.index();
+
+    if (nameIndex < 0) {
+      throw new UnsupportedOperationException("Custom attribute name");
+    }
+
+    final String attrValue;
+    attrValue = attr.attrValue();
+
+    if (attrValue == null) {
+      aux.add(
+          HtmlByteProto.ATTRIBUTE_EXT0,
+
+          // name
+          HtmlBytes.encodeInt0(nameIndex)
+      );
+    } else {
+      final int valueIndex;
+      valueIndex = objects.add(attrValue);
+
+      aux.add(
+          HtmlByteProto.ATTRIBUTE_EXT1,
+
+          // name
+          HtmlBytes.encodeInt0(nameIndex),
+
+          // value
+          HtmlBytes.encodeInt0(valueIndex),
+          HtmlBytes.encodeInt1(valueIndex)
+      );
+    }
+  }
+
+}

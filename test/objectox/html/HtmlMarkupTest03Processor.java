@@ -52,7 +52,7 @@ public class HtmlMarkupTest03Processor {
     MarkupPojo compiler;
     compiler = new Markup.OfHtml();
 
-    compiler.attr(HtmlAttributeName.LANG, "pt-BR");
+    compiler.attr(AttributeNamePojo.LANG, "pt-BR");
 
     compiler.elementBegin(HtmlElementName.HTML);
     compiler.elementValue(HtmlInstruction.ATTRIBUTE);

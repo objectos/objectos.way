@@ -213,7 +213,7 @@ public class HtmlMarkupTest02Player {
     MarkupPojo compiler;
     compiler = new Markup.OfHtml();
 
-    compiler.attr(HtmlAttributeName.LANG, "pt-BR");
+    compiler.attr(AttributeNamePojo.LANG, "pt-BR");
 
     compiler.elementBegin(HtmlElementName.HTML);
     compiler.elementValue(HtmlInstruction.ATTRIBUTE);
@@ -653,8 +653,8 @@ public class HtmlMarkupTest02Player {
     MarkupPojo compiler;
     compiler = new Markup.OfHtml();
 
-    compiler.attr(HtmlAttributeName.TYPE, "email");
-    compiler.attr(HtmlAttributeName.REQUIRED);
+    compiler.attr(AttributeNamePojo.TYPE, "email");
+    compiler.attr(AttributeNamePojo.REQUIRED);
 
     compiler.elementBegin(HtmlElementName.INPUT);
     compiler.elementValue(HtmlInstruction.ATTRIBUTE);

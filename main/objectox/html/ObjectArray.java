@@ -62,7 +62,7 @@ final class ObjectArray {
 
   @Override
   public final String toString() {
-    return super.toString();
+    return Arrays.toString(values);
   }
 
 }

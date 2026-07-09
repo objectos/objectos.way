@@ -18,7 +18,7 @@ package objectox.html;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
-import objectos.way.Html;
+import objectos.html.AttributeName;
 import org.testng.annotations.Test;
 
 public class HtmlAttributeNameTest {
@@ -26,7 +26,7 @@ public class HtmlAttributeNameTest {
   @Test
   public void canBeEncoded_WithSingleByte() {
     int size;
-    size = HtmlAttributeName.size();
+    size = AttributeNamePojo.size();
 
     int max;
     max = 1 << 8;
@@ -36,8 +36,8 @@ public class HtmlAttributeNameTest {
 
   @Test
   public void create01() {
-    final HtmlAttributeName active;
-    active = HtmlAttributeName.custom("data-active");
+    final AttributeNamePojo active;
+    active = AttributeNamePojo.custom("data-active");
 
     assertEquals(active.index(), -1);
     assertEquals(active.name(), "data-active");
@@ -45,14 +45,14 @@ public class HtmlAttributeNameTest {
 
   @Test
   public void create02() {
-    final Html.AttributeName active1;
-    active1 = HtmlAttributeName.custom("data-active");
+    final AttributeName active1;
+    active1 = AttributeNamePojo.custom("data-active");
 
-    final Html.AttributeName active2;
-    active2 = HtmlAttributeName.custom("data-active");
+    final AttributeName active2;
+    active2 = AttributeNamePojo.custom("data-active");
 
-    final Html.AttributeName other;
-    other = HtmlAttributeName.custom("data-other");
+    final AttributeName other;
+    other = AttributeNamePojo.custom("data-other");
 
     assertEquals(active1, active2);
     assertEquals(active2, active1);

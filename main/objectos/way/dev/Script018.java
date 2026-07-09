@@ -16,6 +16,7 @@
 package objectos.way.dev;
 
 import objectos.css.CssSource;
+import objectos.html.AttributeName;
 import objectos.http.Content;
 import objectos.http.MediaType;
 import objectos.http.Request;
@@ -24,7 +25,6 @@ import objectos.script.Js;
 import objectos.script.JsAction;
 import objectos.script.JsResponse;
 import objectos.script.JsString;
-import objectos.way.Html;
 
 /*
 
@@ -37,7 +37,7 @@ Test case 018
 @CssSource
 public final class Script018 extends AbstractDevScript {
 
-  public static final JsAction ACTION = Js.fetch(Js.target().attr(Html.AttributeName.HREF))
+  public static final JsAction ACTION = Js.fetch(Js.target().attr(AttributeName.HREF))
       .then(Js.args(0).as(JsResponse.type).text())
       .then(Js.byId("subject").textContent(Js.args(0).as(JsString.type)));
 

@@ -17,7 +17,9 @@ package objectox.html;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.html.AttributeName;
 import objectos.html.Component;
+import objectos.html.Id;
 import objectos.html.Markup;
 import objectos.script.Js;
 import objectos.script.JsAction;
@@ -26,9 +28,9 @@ import org.testng.annotations.Test;
 
 public class HtmlTemplateTestAttributes {
 
-  private final Html.Id foo = Html.Id.of("foo");
+  private final Id foo = Id.of("foo");
 
-  private final Html.AttributeName dataActive = HtmlAttributeName.custom("data-active");
+  private final AttributeName dataActive = AttributeNamePojo.custom("data-active");
 
   @Test
   public void aria() {

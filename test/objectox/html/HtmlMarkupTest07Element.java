@@ -17,7 +17,11 @@ package objectox.html;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.html.AttributeName;
+import objectos.html.AttributeObject;
+import objectos.html.ClassName;
 import objectos.html.Component;
+import objectos.html.Id;
 import objectos.way.Html;
 import org.testng.annotations.Test;
 
@@ -25,11 +29,11 @@ public class HtmlMarkupTest07Element {
 
   @Test
   public void elem01() {
-    enum Attr implements Html.AttributeObject {
+    enum Attr implements AttributeObject {
       INSTANCE;
 
       @Override
-      public final Html.AttributeName attrName() { return Html.AttributeName.CLASS; }
+      public final AttributeName attrName() { return AttributeName.CLASS; }
 
       @Override
       public final String attrValue() { return "background-color:gray-100"; }
@@ -39,9 +43,9 @@ public class HtmlMarkupTest07Element {
         m -> m.elem(
             Html.ElementName.BUTTON,
 
-            Html.Id.of("foo"),
+            Id.of("foo"),
 
-            Html.ClassName.ofText("""
+            ClassName.ofText("""
             display:block
             """),
 

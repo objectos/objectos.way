@@ -15,18 +15,19 @@
  */
 package objectox.html;
 
+import objectos.html.AttributeName;
 import objectos.way.Html;
 
 enum HtmlAmbiguous {
 
-  CLIPPATH(HtmlAttributeName.CLIP_PATH, HtmlElementName.CLIPPATH) {
+  CLIPPATH(AttributeNamePojo.CLIP_PATH, HtmlElementName.CLIPPATH) {
     @Override
     public final boolean isAttributeOf(Html.ElementName element) {
       return element != Html.ElementName.SVG;
     }
   },
 
-  FORM(HtmlAttributeName.FORM, HtmlElementName.FORM) {
+  FORM(AttributeNamePojo.FORM, HtmlElementName.FORM) {
     @Override
     public final boolean isAttributeOf(Html.ElementName element) {
       return element == Html.ElementName.BUTTON
@@ -36,21 +37,21 @@ enum HtmlAmbiguous {
     }
   },
 
-  LABEL(HtmlAttributeName.LABEL, HtmlElementName.LABEL) {
+  LABEL(AttributeNamePojo.LABEL, HtmlElementName.LABEL) {
     @Override
     public final boolean isAttributeOf(Html.ElementName element) {
       return element == Html.ElementName.OPTION;
     }
   },
 
-  STYLE(HtmlAttributeName.STYLE, HtmlElementName.STYLE) {
+  STYLE(AttributeNamePojo.STYLE, HtmlElementName.STYLE) {
     @Override
     public final boolean isAttributeOf(Html.ElementName element) {
       return element != Html.ElementName.HEAD;
     }
   },
 
-  TITLE(HtmlAttributeName.TITLE, HtmlElementName.TITLE) {
+  TITLE(AttributeNamePojo.TITLE, HtmlElementName.TITLE) {
     @Override
     public final boolean isAttributeOf(Html.ElementName element) {
       return element != Html.ElementName.HEAD
@@ -66,7 +67,7 @@ enum HtmlAmbiguous {
 
   private final int elementByteCode;
 
-  private HtmlAmbiguous(Html.AttributeName attribute, HtmlElementName element) {
+  private HtmlAmbiguous(AttributeName attribute, HtmlElementName element) {
     this.attributeByteCode = attribute.index();
 
     this.element = element;

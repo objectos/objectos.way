@@ -28,7 +28,7 @@ import objectos.script.Js;
 @CssSource
 public final class ScriptJsElement03 extends AbstractDevScript {
 
-  public static final JsAction ACTION = Js.byId("subject").attr(Html.AttributeName.CLASS, "background-color:yellow");
+  public static final JsAction ACTION = Js.byId("subject").attr(AttributeName.CLASS, "background-color:yellow");
 
   @Override
   final void renderBody() {

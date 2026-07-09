@@ -18,16 +18,18 @@ package objectos.way.dev;
 import objectos.http.Request;
 import objectos.http.Result;
 import objectos.way.Html;
+import objectos.html.AttributeName;
+import objectos.html.Id;
 import objectos.http.Handler;
 import objectos.http.HeaderName;
 
 abstract class AbstractDevScript extends Html.Template implements Handler {
 
-  static final Html.AttributeName DATA_TEST = Html.AttributeName.of("data-test");
+  static final AttributeName DATA_TEST = AttributeName.of("data-test");
 
   static final HeaderName WAY_TEST = HeaderName.of("Way-Test");
 
-  static final Html.Id SUBJECT = Html.Id.of("subject");
+  static final Id SUBJECT = Id.of("subject");
 
   @Override
   public Result handle(Request req) {

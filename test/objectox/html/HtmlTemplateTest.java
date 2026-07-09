@@ -21,6 +21,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import objectos.html.ClassName;
+import objectos.html.Id;
 import objectos.http.Content;
 import objectos.way.Html;
 import org.testng.annotations.Test;
@@ -281,8 +283,8 @@ public class HtmlTemplateTest {
   public void testCase13() {
     test(
         new Html.Template() {
-          final Html.Id FOO = Html.Id.of("foo");
-          final Html.Id BAR = Html.Id.of("bar");
+          final Id FOO = Id.of("foo");
+          final Id BAR = Id.of("bar");
 
           @Override
           protected final void render() {
@@ -487,9 +489,9 @@ public class HtmlTemplateTest {
   public void testCase21() {
     test(
         new Html.Template() {
-          private final Html.ClassName first = Html.ClassName.of("first");
+          private final ClassName first = ClassName.of("first");
 
-          private final Html.ClassName second = Html.ClassName.of("second");
+          private final ClassName second = ClassName.of("second");
 
           @Override
           protected final void render() {
@@ -826,8 +828,8 @@ public class HtmlTemplateTest {
   public void testCase35() {
     test(
         new Html.Template() {
-          private final Html.ClassName A = Html.ClassName.of("ca");
-          private final Html.ClassName B = Html.ClassName.of("cb");
+          private final ClassName A = ClassName.of("ca");
+          private final ClassName B = ClassName.of("cb");
 
           @Override
           protected final void render() {
@@ -999,9 +1001,9 @@ public class HtmlTemplateTest {
   public void testCase46b() {
     test(
         new Html.Template() {
-          List<Html.ClassName> styles = List.of(
-              Html.ClassName.of("cn1"),
-              Html.ClassName.of("cn2")
+          List<ClassName> styles = List.of(
+              ClassName.of("cn1"),
+              ClassName.of("cn2")
           );
 
           @Override
@@ -1086,7 +1088,7 @@ public class HtmlTemplateTest {
   public void testCase49() {
     test(
         new Html.Template() {
-          final Html.Id FOO = Html.Id.of("foo");
+          final Id FOO = Id.of("foo");
 
           @Override
           protected final void render() {

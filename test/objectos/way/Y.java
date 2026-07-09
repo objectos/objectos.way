@@ -55,6 +55,7 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
+import objectos.html.Id;
 import objectos.internal.Util;
 import objectos.way.dev.DevStart;
 import objectos.y.PathY;
@@ -420,7 +421,7 @@ public final class Y implements ISuiteListener {
   public sealed interface Tab extends AutoCloseable permits YTab {
 
     @SuppressWarnings("exports")
-    TabElem byId(Html.Id id);
+    TabElem byId(Id id);
 
     @SuppressWarnings("exports")
     TabElem bySelector(String selector);

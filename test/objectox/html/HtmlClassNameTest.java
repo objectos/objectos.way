@@ -17,7 +17,7 @@ package objectox.html;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.way.Html;
+import objectos.html.ClassName;
 import org.testng.annotations.Test;
 
 public class HtmlClassNameTest {
@@ -38,8 +38,8 @@ public class HtmlClassNameTest {
   }
 
   private void of(String value, String expected) {
-    Html.ClassName cn;
-    cn = Html.ClassName.of(value);
+    ClassName cn;
+    cn = ClassName.of(value);
 
     assertEquals(cn.attrValue(), expected);
   }
@@ -73,8 +73,8 @@ public class HtmlClassNameTest {
   }
 
   private void ofText(String value, String expected) {
-    Html.ClassName cn;
-    cn = Html.ClassName.ofText(value);
+    ClassName cn;
+    cn = ClassName.ofText(value);
 
     assertEquals(cn.attrValue(), expected);
   }

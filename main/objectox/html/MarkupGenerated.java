@@ -17,6 +17,8 @@ package objectox.html;
 
 import java.io.IOException;
 import java.util.Objects;
+import objectos.html.AttributeName;
+import objectos.html.AttributeObject;
 import objectos.html.Component;
 import objectos.script.JsAction;
 import objectos.way.Html;
@@ -28,7 +30,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param object the attribute
   ///
   /// @return an instruction representing the attribute
-  public abstract Html.Instruction.OfAttribute attr(Html.AttributeObject object);
+  public abstract Html.Instruction.OfAttribute attr(AttributeObject object);
 
   /// Generates and returns the HTML represented by this markup instance.
   ///
@@ -1599,16 +1601,16 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   // ATTRIBUTES
   //
 
-  abstract Html.Instruction.OfAttribute attr0(Html.AttributeName name);
+  abstract Html.Instruction.OfAttribute attr0(AttributeName name);
 
-  abstract Html.Instruction.OfAttribute attr0(Html.AttributeName name, Object value);
+  abstract Html.Instruction.OfAttribute attr0(AttributeName name, Object value);
 
   /// Renders an attribute with the specified name.
   /// 
   /// @param name the attribute name
   /// 
   /// @return an instruction representing the attribute
-  public final Html.Instruction.OfAttribute attr(Html.AttributeName name) {
+  public final Html.Instruction.OfAttribute attr(AttributeName name) {
     Objects.requireNonNull(name, "name == null");
     return attr0(name);
   }
@@ -1619,7 +1621,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final Html.Instruction.OfAttribute attr(Html.AttributeName name, String value) {
+  public final Html.Instruction.OfAttribute attr(AttributeName name, String value) {
     Objects.requireNonNull(name, "name == null");
     return attr0(name, value);
   }
@@ -1630,7 +1632,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute accesskey(String value) {
-    return attr0(HtmlAttributeName.ACCESSKEY, value);
+    return attr0(AttributeNamePojo.ACCESSKEY, value);
   }
 
   /// Renders the `action` attribute with the specified value.
@@ -1639,7 +1641,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute action(String value) {
-    return attr0(HtmlAttributeName.ACTION, value);
+    return attr0(AttributeNamePojo.ACTION, value);
   }
 
   /// Renders the `align` attribute with the specified value.
@@ -1648,7 +1650,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute align(String value) {
-    return attr0(HtmlAttributeName.ALIGN, value);
+    return attr0(AttributeNamePojo.ALIGN, value);
   }
 
   /// Renders the `alignment-baseline` attribute with the specified value.
@@ -1657,7 +1659,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute alignmentBaseline(String value) {
-    return attr0(HtmlAttributeName.ALIGNMENT_BASELINE, value);
+    return attr0(AttributeNamePojo.ALIGNMENT_BASELINE, value);
   }
 
   /// Renders the `alt` attribute with the specified value.
@@ -1666,7 +1668,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute alt(String value) {
-    return attr0(HtmlAttributeName.ALT, value);
+    return attr0(AttributeNamePojo.ALT, value);
   }
 
   /// Renders the `aria-current` attribute with the specified value.
@@ -1675,7 +1677,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute ariaCurrent(String value) {
-    return attr0(HtmlAttributeName.ARIA_CURRENT, value);
+    return attr0(AttributeNamePojo.ARIA_CURRENT, value);
   }
 
   /// Renders the `aria-disabled` attribute with the specified value.
@@ -1684,7 +1686,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute ariaDisabled(String value) {
-    return attr0(HtmlAttributeName.ARIA_DISABLED, value);
+    return attr0(AttributeNamePojo.ARIA_DISABLED, value);
   }
 
   /// Renders the `aria-hidden` attribute with the specified value.
@@ -1693,7 +1695,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute ariaHidden(String value) {
-    return attr0(HtmlAttributeName.ARIA_HIDDEN, value);
+    return attr0(AttributeNamePojo.ARIA_HIDDEN, value);
   }
 
   /// Renders the `aria-invalid` attribute with the specified value.
@@ -1702,7 +1704,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute ariaInvalid(String value) {
-    return attr0(HtmlAttributeName.ARIA_INVALID, value);
+    return attr0(AttributeNamePojo.ARIA_INVALID, value);
   }
 
   /// Renders the `aria-label` attribute with the specified value.
@@ -1711,7 +1713,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute ariaLabel(String value) {
-    return attr0(HtmlAttributeName.ARIA_LABEL, value);
+    return attr0(AttributeNamePojo.ARIA_LABEL, value);
   }
 
   /// Renders the `aria-labelledby` attribute with the specified value.
@@ -1720,7 +1722,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute ariaLabelledBy(String value) {
-    return attr0(HtmlAttributeName.ARIA_LABELLED_BY, value);
+    return attr0(AttributeNamePojo.ARIA_LABELLED_BY, value);
   }
 
   /// Renders the `aria-modal` attribute with the specified value.
@@ -1729,7 +1731,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute ariaModal(String value) {
-    return attr0(HtmlAttributeName.ARIA_MODAL, value);
+    return attr0(AttributeNamePojo.ARIA_MODAL, value);
   }
 
   /// Renders the `aria-placeholder` attribute with the specified value.
@@ -1738,7 +1740,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute ariaPlaceholder(String value) {
-    return attr0(HtmlAttributeName.ARIA_PLACEHOLDER, value);
+    return attr0(AttributeNamePojo.ARIA_PLACEHOLDER, value);
   }
 
   /// Renders the `aria-readonly` attribute with the specified value.
@@ -1747,7 +1749,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute ariaReadonly(String value) {
-    return attr0(HtmlAttributeName.ARIA_READONLY, value);
+    return attr0(AttributeNamePojo.ARIA_READONLY, value);
   }
 
   /// Renders the `aria-required` attribute with the specified value.
@@ -1756,7 +1758,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute ariaRequired(String value) {
-    return attr0(HtmlAttributeName.ARIA_REQUIRED, value);
+    return attr0(AttributeNamePojo.ARIA_REQUIRED, value);
   }
 
   /// Renders the `aria-selected` attribute with the specified value.
@@ -1765,7 +1767,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute ariaSelected(String value) {
-    return attr0(HtmlAttributeName.ARIA_SELECTED, value);
+    return attr0(AttributeNamePojo.ARIA_SELECTED, value);
   }
 
   /// Renders the `as` attribute with the specified value.
@@ -1774,7 +1776,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute as(String value) {
-    return attr0(HtmlAttributeName.AS, value);
+    return attr0(AttributeNamePojo.AS, value);
   }
 
   /// Renders the `autocomplete` attribute with the specified value.
@@ -1783,7 +1785,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute autocomplete(String value) {
-    return attr0(HtmlAttributeName.AUTOCOMPLETE, value);
+    return attr0(AttributeNamePojo.AUTOCOMPLETE, value);
   }
 
   /// Renders the `baseline-shift` attribute with the specified value.
@@ -1792,7 +1794,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute baselineShift(String value) {
-    return attr0(HtmlAttributeName.BASELINE_SHIFT, value);
+    return attr0(AttributeNamePojo.BASELINE_SHIFT, value);
   }
 
   /// Renders the `border` attribute with the specified value.
@@ -1801,7 +1803,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute border(String value) {
-    return attr0(HtmlAttributeName.BORDER, value);
+    return attr0(AttributeNamePojo.BORDER, value);
   }
 
   /// Renders the `cellpadding` attribute with the specified value.
@@ -1810,7 +1812,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute cellpadding(String value) {
-    return attr0(HtmlAttributeName.CELLPADDING, value);
+    return attr0(AttributeNamePojo.CELLPADDING, value);
   }
 
   /// Renders the `cellspacing` attribute with the specified value.
@@ -1819,7 +1821,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute cellspacing(String value) {
-    return attr0(HtmlAttributeName.CELLSPACING, value);
+    return attr0(AttributeNamePojo.CELLSPACING, value);
   }
 
   /// Renders the `charset` attribute with the specified value.
@@ -1828,7 +1830,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute charset(String value) {
-    return attr0(HtmlAttributeName.CHARSET, value);
+    return attr0(AttributeNamePojo.CHARSET, value);
   }
 
   /// Renders the `cite` attribute with the specified value.
@@ -1837,7 +1839,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute cite(String value) {
-    return attr0(HtmlAttributeName.CITE, value);
+    return attr0(AttributeNamePojo.CITE, value);
   }
 
   /// Renders the `class` attribute with the specified value.
@@ -1846,7 +1848,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute className(String value) {
-    return attr0(HtmlAttributeName.CLASS, value);
+    return attr0(AttributeNamePojo.CLASS, value);
   }
 
   /// Renders the `clip-rule` attribute with the specified value.
@@ -1855,7 +1857,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute clipRule(String value) {
-    return attr0(HtmlAttributeName.CLIP_RULE, value);
+    return attr0(AttributeNamePojo.CLIP_RULE, value);
   }
 
   /// Renders the `closedby` attribute with the specified value.
@@ -1864,7 +1866,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute closedby(String value) {
-    return attr0(HtmlAttributeName.CLOSEDBY, value);
+    return attr0(AttributeNamePojo.CLOSEDBY, value);
   }
 
   /// Renders the `color` attribute with the specified value.
@@ -1873,7 +1875,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute color(String value) {
-    return attr0(HtmlAttributeName.COLOR, value);
+    return attr0(AttributeNamePojo.COLOR, value);
   }
 
   /// Renders the `color-interpolation` attribute with the specified value.
@@ -1882,7 +1884,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute colorInterpolation(String value) {
-    return attr0(HtmlAttributeName.COLOR_INTERPOLATION, value);
+    return attr0(AttributeNamePojo.COLOR_INTERPOLATION, value);
   }
 
   /// Renders the `color-interpolation-filters` attribute with the specified
@@ -1892,7 +1894,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute colorInterpolationFilters(String value) {
-    return attr0(HtmlAttributeName.COLOR_INTERPOLATION_FILTERS, value);
+    return attr0(AttributeNamePojo.COLOR_INTERPOLATION_FILTERS, value);
   }
 
   /// Renders the `cols` attribute with the specified value.
@@ -1901,7 +1903,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute cols(String value) {
-    return attr0(HtmlAttributeName.COLS, value);
+    return attr0(AttributeNamePojo.COLS, value);
   }
 
   /// Renders the `content` attribute with the specified value.
@@ -1910,7 +1912,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute content(String value) {
-    return attr0(HtmlAttributeName.CONTENT, value);
+    return attr0(AttributeNamePojo.CONTENT, value);
   }
 
   /// Renders the `contenteditable` attribute with the specified value.
@@ -1919,7 +1921,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute contenteditable(String value) {
-    return attr0(HtmlAttributeName.CONTENTEDITABLE, value);
+    return attr0(AttributeNamePojo.CONTENTEDITABLE, value);
   }
 
   /// Renders the `crossorigin` attribute with the specified value.
@@ -1928,7 +1930,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute crossorigin(String value) {
-    return attr0(HtmlAttributeName.CROSSORIGIN, value);
+    return attr0(AttributeNamePojo.CROSSORIGIN, value);
   }
 
   /// Renders the `cursor` attribute with the specified value.
@@ -1937,7 +1939,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute cursor(String value) {
-    return attr0(HtmlAttributeName.CURSOR, value);
+    return attr0(AttributeNamePojo.CURSOR, value);
   }
 
   /// Renders the `d` attribute with the specified value.
@@ -1946,7 +1948,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute d(String value) {
-    return attr0(HtmlAttributeName.D, value);
+    return attr0(AttributeNamePojo.D, value);
   }
 
   /// Renders the `dir` attribute with the specified value.
@@ -1955,7 +1957,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute dir(String value) {
-    return attr0(HtmlAttributeName.DIR, value);
+    return attr0(AttributeNamePojo.DIR, value);
   }
 
   /// Renders the `direction` attribute with the specified value.
@@ -1964,7 +1966,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute direction(String value) {
-    return attr0(HtmlAttributeName.DIRECTION, value);
+    return attr0(AttributeNamePojo.DIRECTION, value);
   }
 
   /// Renders the `dirname` attribute with the specified value.
@@ -1973,7 +1975,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute dirname(String value) {
-    return attr0(HtmlAttributeName.DIRNAME, value);
+    return attr0(AttributeNamePojo.DIRNAME, value);
   }
 
   /// Renders the `display` attribute with the specified value.
@@ -1982,7 +1984,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute display(String value) {
-    return attr0(HtmlAttributeName.DISPLAY, value);
+    return attr0(AttributeNamePojo.DISPLAY, value);
   }
 
   /// Renders the `dominant-baseline` attribute with the specified value.
@@ -1991,7 +1993,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute dominantBaseline(String value) {
-    return attr0(HtmlAttributeName.DOMINANT_BASELINE, value);
+    return attr0(AttributeNamePojo.DOMINANT_BASELINE, value);
   }
 
   /// Renders the `download` attribute with the specified value.
@@ -2000,7 +2002,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute download(String value) {
-    return attr0(HtmlAttributeName.DOWNLOAD, value);
+    return attr0(AttributeNamePojo.DOWNLOAD, value);
   }
 
   /// Renders the `draggable` attribute with the specified value.
@@ -2009,7 +2011,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute draggable(String value) {
-    return attr0(HtmlAttributeName.DRAGGABLE, value);
+    return attr0(AttributeNamePojo.DRAGGABLE, value);
   }
 
   /// Renders the `enctype` attribute with the specified value.
@@ -2018,7 +2020,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute enctype(String value) {
-    return attr0(HtmlAttributeName.ENCTYPE, value);
+    return attr0(AttributeNamePojo.ENCTYPE, value);
   }
 
   /// Renders the `fill` attribute with the specified value.
@@ -2027,7 +2029,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute fill(String value) {
-    return attr0(HtmlAttributeName.FILL, value);
+    return attr0(AttributeNamePojo.FILL, value);
   }
 
   /// Renders the `fill-opacity` attribute with the specified value.
@@ -2036,7 +2038,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute fillOpacity(String value) {
-    return attr0(HtmlAttributeName.FILL_OPACITY, value);
+    return attr0(AttributeNamePojo.FILL_OPACITY, value);
   }
 
   /// Renders the `fill-rule` attribute with the specified value.
@@ -2045,7 +2047,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute fillRule(String value) {
-    return attr0(HtmlAttributeName.FILL_RULE, value);
+    return attr0(AttributeNamePojo.FILL_RULE, value);
   }
 
   /// Renders the `filter` attribute with the specified value.
@@ -2054,7 +2056,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute filter(String value) {
-    return attr0(HtmlAttributeName.FILTER, value);
+    return attr0(AttributeNamePojo.FILTER, value);
   }
 
   /// Renders the `flood-color` attribute with the specified value.
@@ -2063,7 +2065,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute floodColor(String value) {
-    return attr0(HtmlAttributeName.FLOOD_COLOR, value);
+    return attr0(AttributeNamePojo.FLOOD_COLOR, value);
   }
 
   /// Renders the `flood-opacity` attribute with the specified value.
@@ -2072,7 +2074,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute floodOpacity(String value) {
-    return attr0(HtmlAttributeName.FLOOD_OPACITY, value);
+    return attr0(AttributeNamePojo.FLOOD_OPACITY, value);
   }
 
   /// Renders the `for` attribute with the specified value.
@@ -2081,7 +2083,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute forId(String value) {
-    return attr0(HtmlAttributeName.FOR, value);
+    return attr0(AttributeNamePojo.FOR, value);
   }
 
   /// Renders the `glyph-orientation-horizontal` attribute with the specified
@@ -2091,7 +2093,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute glyphOrientationHorizontal(String value) {
-    return attr0(HtmlAttributeName.GLYPH_ORIENTATION_HORIZONTAL, value);
+    return attr0(AttributeNamePojo.GLYPH_ORIENTATION_HORIZONTAL, value);
   }
 
   /// Renders the `glyph-orientation-vertical` attribute with the specified
@@ -2101,7 +2103,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute glyphOrientationVertical(String value) {
-    return attr0(HtmlAttributeName.GLYPH_ORIENTATION_VERTICAL, value);
+    return attr0(AttributeNamePojo.GLYPH_ORIENTATION_VERTICAL, value);
   }
 
   /// Renders the `height` attribute with the specified value.
@@ -2110,7 +2112,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute height(String value) {
-    return attr0(HtmlAttributeName.HEIGHT, value);
+    return attr0(AttributeNamePojo.HEIGHT, value);
   }
 
   /// Renders the `href` attribute with the specified value.
@@ -2119,7 +2121,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute href(String value) {
-    return attr0(HtmlAttributeName.HREF, value);
+    return attr0(AttributeNamePojo.HREF, value);
   }
 
   /// Renders the `http-equiv` attribute with the specified value.
@@ -2128,7 +2130,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute httpEquiv(String value) {
-    return attr0(HtmlAttributeName.HTTP_EQUIV, value);
+    return attr0(AttributeNamePojo.HTTP_EQUIV, value);
   }
 
   /// Renders the `id` attribute with the specified value.
@@ -2137,7 +2139,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute id(String value) {
-    return attr0(HtmlAttributeName.ID, value);
+    return attr0(AttributeNamePojo.ID, value);
   }
 
   /// Renders the `image-rendering` attribute with the specified value.
@@ -2146,7 +2148,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute imageRendering(String value) {
-    return attr0(HtmlAttributeName.IMAGE_RENDERING, value);
+    return attr0(AttributeNamePojo.IMAGE_RENDERING, value);
   }
 
   /// Renders the `integrity` attribute with the specified value.
@@ -2155,7 +2157,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute integrity(String value) {
-    return attr0(HtmlAttributeName.INTEGRITY, value);
+    return attr0(AttributeNamePojo.INTEGRITY, value);
   }
 
   /// Renders the `lang` attribute with the specified value.
@@ -2164,7 +2166,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute lang(String value) {
-    return attr0(HtmlAttributeName.LANG, value);
+    return attr0(AttributeNamePojo.LANG, value);
   }
 
   /// Renders the `letter-spacing` attribute with the specified value.
@@ -2173,7 +2175,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute letterSpacing(String value) {
-    return attr0(HtmlAttributeName.LETTER_SPACING, value);
+    return attr0(AttributeNamePojo.LETTER_SPACING, value);
   }
 
   /// Renders the `lighting-color` attribute with the specified value.
@@ -2182,7 +2184,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute lightingColor(String value) {
-    return attr0(HtmlAttributeName.LIGHTING_COLOR, value);
+    return attr0(AttributeNamePojo.LIGHTING_COLOR, value);
   }
 
   /// Renders the `marker-end` attribute with the specified value.
@@ -2191,7 +2193,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute markerEnd(String value) {
-    return attr0(HtmlAttributeName.MARKER_END, value);
+    return attr0(AttributeNamePojo.MARKER_END, value);
   }
 
   /// Renders the `marker-mid` attribute with the specified value.
@@ -2200,7 +2202,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute markerMid(String value) {
-    return attr0(HtmlAttributeName.MARKER_MID, value);
+    return attr0(AttributeNamePojo.MARKER_MID, value);
   }
 
   /// Renders the `marker-start` attribute with the specified value.
@@ -2209,7 +2211,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute markerStart(String value) {
-    return attr0(HtmlAttributeName.MARKER_START, value);
+    return attr0(AttributeNamePojo.MARKER_START, value);
   }
 
   /// Renders the `mask` attribute with the specified value.
@@ -2218,7 +2220,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute mask(String value) {
-    return attr0(HtmlAttributeName.MASK, value);
+    return attr0(AttributeNamePojo.MASK, value);
   }
 
   /// Renders the `mask-type` attribute with the specified value.
@@ -2227,7 +2229,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute maskType(String value) {
-    return attr0(HtmlAttributeName.MASK_TYPE, value);
+    return attr0(AttributeNamePojo.MASK_TYPE, value);
   }
 
   /// Renders the `maxlength` attribute with the specified value.
@@ -2236,7 +2238,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute maxlength(String value) {
-    return attr0(HtmlAttributeName.MAXLENGTH, value);
+    return attr0(AttributeNamePojo.MAXLENGTH, value);
   }
 
   /// Renders the `media` attribute with the specified value.
@@ -2245,7 +2247,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute media(String value) {
-    return attr0(HtmlAttributeName.MEDIA, value);
+    return attr0(AttributeNamePojo.MEDIA, value);
   }
 
   /// Renders the `method` attribute with the specified value.
@@ -2254,7 +2256,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute method(String value) {
-    return attr0(HtmlAttributeName.METHOD, value);
+    return attr0(AttributeNamePojo.METHOD, value);
   }
 
   /// Renders the `minlength` attribute with the specified value.
@@ -2263,7 +2265,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute minlength(String value) {
-    return attr0(HtmlAttributeName.MINLENGTH, value);
+    return attr0(AttributeNamePojo.MINLENGTH, value);
   }
 
   /// Renders the `name` attribute with the specified value.
@@ -2272,7 +2274,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute name(String value) {
-    return attr0(HtmlAttributeName.NAME, value);
+    return attr0(AttributeNamePojo.NAME, value);
   }
 
   /// Renders the `onclick` attribute with the specified value.
@@ -2281,7 +2283,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute onclick(String value) {
-    return attr0(HtmlAttributeName.ONCLICK, value);
+    return attr0(AttributeNamePojo.ONCLICK, value);
   }
 
   /// Renders the `onclick` attribute with the specified action.
@@ -2290,7 +2292,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute onclick(JsAction value) {
-    return attr0(HtmlAttributeName.ONCLICK, value);
+    return attr0(AttributeNamePojo.ONCLICK, value);
   }
 
   /// Renders the `onload` attribute with the specified value.
@@ -2299,7 +2301,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute onload(String value) {
-    return attr0(HtmlAttributeName.ONLOAD, value);
+    return attr0(AttributeNamePojo.ONLOAD, value);
   }
 
   /// Renders the `onload` attribute with the specified action.
@@ -2308,7 +2310,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute onload(JsAction value) {
-    return attr0(HtmlAttributeName.ONLOAD, value);
+    return attr0(AttributeNamePojo.ONLOAD, value);
   }
 
   /// Renders the `onpopstate` attribute with the specified value.
@@ -2317,7 +2319,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute onpopstate(String value) {
-    return attr0(HtmlAttributeName.ONPOPSTATE, value);
+    return attr0(AttributeNamePojo.ONPOPSTATE, value);
   }
 
   /// Renders the `onpopstate` attribute with the specified action.
@@ -2326,7 +2328,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute onpopstate(JsAction value) {
-    return attr0(HtmlAttributeName.ONPOPSTATE, value);
+    return attr0(AttributeNamePojo.ONPOPSTATE, value);
   }
 
   /// Renders the `onsubmit` attribute with the specified value.
@@ -2335,7 +2337,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute onsubmit(String value) {
-    return attr0(HtmlAttributeName.ONSUBMIT, value);
+    return attr0(AttributeNamePojo.ONSUBMIT, value);
   }
 
   /// Renders the `onsubmit` attribute with the specified action.
@@ -2344,7 +2346,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute onsubmit(JsAction value) {
-    return attr0(HtmlAttributeName.ONSUBMIT, value);
+    return attr0(AttributeNamePojo.ONSUBMIT, value);
   }
 
   /// Renders the `opacity` attribute with the specified value.
@@ -2353,7 +2355,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute opacity(String value) {
-    return attr0(HtmlAttributeName.OPACITY, value);
+    return attr0(AttributeNamePojo.OPACITY, value);
   }
 
   /// Renders the `overflow` attribute with the specified value.
@@ -2362,7 +2364,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute overflow(String value) {
-    return attr0(HtmlAttributeName.OVERFLOW, value);
+    return attr0(AttributeNamePojo.OVERFLOW, value);
   }
 
   /// Renders the `paint-order` attribute with the specified value.
@@ -2371,7 +2373,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute paintOrder(String value) {
-    return attr0(HtmlAttributeName.PAINT_ORDER, value);
+    return attr0(AttributeNamePojo.PAINT_ORDER, value);
   }
 
   /// Renders the `placeholder` attribute with the specified value.
@@ -2380,7 +2382,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute placeholder(String value) {
-    return attr0(HtmlAttributeName.PLACEHOLDER, value);
+    return attr0(AttributeNamePojo.PLACEHOLDER, value);
   }
 
   /// Renders the `pointer-events` attribute with the specified value.
@@ -2389,7 +2391,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute pointerEvents(String value) {
-    return attr0(HtmlAttributeName.POINTER_EVENTS, value);
+    return attr0(AttributeNamePojo.POINTER_EVENTS, value);
   }
 
   /// Renders the `property` attribute with the specified value.
@@ -2398,7 +2400,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute property(String value) {
-    return attr0(HtmlAttributeName.PROPERTY, value);
+    return attr0(AttributeNamePojo.PROPERTY, value);
   }
 
   /// Renders the `referrerpolicy` attribute with the specified value.
@@ -2407,7 +2409,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute referrerpolicy(String value) {
-    return attr0(HtmlAttributeName.REFERRERPOLICY, value);
+    return attr0(AttributeNamePojo.REFERRERPOLICY, value);
   }
 
   /// Renders the `rel` attribute with the specified value.
@@ -2416,7 +2418,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute rel(String value) {
-    return attr0(HtmlAttributeName.REL, value);
+    return attr0(AttributeNamePojo.REL, value);
   }
 
   /// Renders the `rev` attribute with the specified value.
@@ -2425,7 +2427,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute rev(String value) {
-    return attr0(HtmlAttributeName.REV, value);
+    return attr0(AttributeNamePojo.REV, value);
   }
 
   /// Renders the `role` attribute with the specified value.
@@ -2434,7 +2436,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute role(String value) {
-    return attr0(HtmlAttributeName.ROLE, value);
+    return attr0(AttributeNamePojo.ROLE, value);
   }
 
   /// Renders the `rows` attribute with the specified value.
@@ -2443,7 +2445,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute rows(String value) {
-    return attr0(HtmlAttributeName.ROWS, value);
+    return attr0(AttributeNamePojo.ROWS, value);
   }
 
   /// Renders the `shape-rendering` attribute with the specified value.
@@ -2452,7 +2454,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute shapeRendering(String value) {
-    return attr0(HtmlAttributeName.SHAPE_RENDERING, value);
+    return attr0(AttributeNamePojo.SHAPE_RENDERING, value);
   }
 
   /// Renders the `size` attribute with the specified value.
@@ -2461,7 +2463,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute size(String value) {
-    return attr0(HtmlAttributeName.SIZE, value);
+    return attr0(AttributeNamePojo.SIZE, value);
   }
 
   /// Renders the `sizes` attribute with the specified value.
@@ -2470,7 +2472,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute sizes(String value) {
-    return attr0(HtmlAttributeName.SIZES, value);
+    return attr0(AttributeNamePojo.SIZES, value);
   }
 
   /// Renders the `spellcheck` attribute with the specified value.
@@ -2479,7 +2481,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute spellcheck(String value) {
-    return attr0(HtmlAttributeName.SPELLCHECK, value);
+    return attr0(AttributeNamePojo.SPELLCHECK, value);
   }
 
   /// Renders the `src` attribute with the specified value.
@@ -2488,7 +2490,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute src(String value) {
-    return attr0(HtmlAttributeName.SRC, value);
+    return attr0(AttributeNamePojo.SRC, value);
   }
 
   /// Renders the `srcset` attribute with the specified value.
@@ -2497,7 +2499,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute srcset(String value) {
-    return attr0(HtmlAttributeName.SRCSET, value);
+    return attr0(AttributeNamePojo.SRCSET, value);
   }
 
   /// Renders the `start` attribute with the specified value.
@@ -2506,7 +2508,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute start(String value) {
-    return attr0(HtmlAttributeName.START, value);
+    return attr0(AttributeNamePojo.START, value);
   }
 
   /// Renders the `stop-color` attribute with the specified value.
@@ -2515,7 +2517,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute stopColor(String value) {
-    return attr0(HtmlAttributeName.STOP_COLOR, value);
+    return attr0(AttributeNamePojo.STOP_COLOR, value);
   }
 
   /// Renders the `stop-opacity` attribute with the specified value.
@@ -2524,7 +2526,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute stopOpacity(String value) {
-    return attr0(HtmlAttributeName.STOP_OPACITY, value);
+    return attr0(AttributeNamePojo.STOP_OPACITY, value);
   }
 
   /// Renders the `stroke` attribute with the specified value.
@@ -2533,7 +2535,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute stroke(String value) {
-    return attr0(HtmlAttributeName.STROKE, value);
+    return attr0(AttributeNamePojo.STROKE, value);
   }
 
   /// Renders the `stroke-dasharray` attribute with the specified value.
@@ -2542,7 +2544,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute strokeDasharray(String value) {
-    return attr0(HtmlAttributeName.STROKE_DASHARRAY, value);
+    return attr0(AttributeNamePojo.STROKE_DASHARRAY, value);
   }
 
   /// Renders the `stroke-dashoffset` attribute with the specified value.
@@ -2551,7 +2553,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute strokeDashoffset(String value) {
-    return attr0(HtmlAttributeName.STROKE_DASHOFFSET, value);
+    return attr0(AttributeNamePojo.STROKE_DASHOFFSET, value);
   }
 
   /// Renders the `stroke-linecap` attribute with the specified value.
@@ -2560,7 +2562,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute strokeLinecap(String value) {
-    return attr0(HtmlAttributeName.STROKE_LINECAP, value);
+    return attr0(AttributeNamePojo.STROKE_LINECAP, value);
   }
 
   /// Renders the `stroke-linejoin` attribute with the specified value.
@@ -2569,7 +2571,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute strokeLinejoin(String value) {
-    return attr0(HtmlAttributeName.STROKE_LINEJOIN, value);
+    return attr0(AttributeNamePojo.STROKE_LINEJOIN, value);
   }
 
   /// Renders the `stroke-miterlimit` attribute with the specified value.
@@ -2578,7 +2580,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute strokeMiterlimit(String value) {
-    return attr0(HtmlAttributeName.STROKE_MITERLIMIT, value);
+    return attr0(AttributeNamePojo.STROKE_MITERLIMIT, value);
   }
 
   /// Renders the `stroke-opacity` attribute with the specified value.
@@ -2587,7 +2589,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute strokeOpacity(String value) {
-    return attr0(HtmlAttributeName.STROKE_OPACITY, value);
+    return attr0(AttributeNamePojo.STROKE_OPACITY, value);
   }
 
   /// Renders the `stroke-width` attribute with the specified value.
@@ -2596,7 +2598,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute strokeWidth(String value) {
-    return attr0(HtmlAttributeName.STROKE_WIDTH, value);
+    return attr0(AttributeNamePojo.STROKE_WIDTH, value);
   }
 
   /// Renders the `tabindex` attribute with the specified value.
@@ -2605,7 +2607,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute tabindex(String value) {
-    return attr0(HtmlAttributeName.TABINDEX, value);
+    return attr0(AttributeNamePojo.TABINDEX, value);
   }
 
   /// Renders the `target` attribute with the specified value.
@@ -2614,7 +2616,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute target(String value) {
-    return attr0(HtmlAttributeName.TARGET, value);
+    return attr0(AttributeNamePojo.TARGET, value);
   }
 
   /// Renders the `text-anchor` attribute with the specified value.
@@ -2623,7 +2625,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute textAnchor(String value) {
-    return attr0(HtmlAttributeName.TEXT_ANCHOR, value);
+    return attr0(AttributeNamePojo.TEXT_ANCHOR, value);
   }
 
   /// Renders the `text-decoration` attribute with the specified value.
@@ -2632,7 +2634,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute textDecoration(String value) {
-    return attr0(HtmlAttributeName.TEXT_DECORATION, value);
+    return attr0(AttributeNamePojo.TEXT_DECORATION, value);
   }
 
   /// Renders the `text-overflow` attribute with the specified value.
@@ -2641,7 +2643,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute textOverflow(String value) {
-    return attr0(HtmlAttributeName.TEXT_OVERFLOW, value);
+    return attr0(AttributeNamePojo.TEXT_OVERFLOW, value);
   }
 
   /// Renders the `text-rendering` attribute with the specified value.
@@ -2650,7 +2652,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute textRendering(String value) {
-    return attr0(HtmlAttributeName.TEXT_RENDERING, value);
+    return attr0(AttributeNamePojo.TEXT_RENDERING, value);
   }
 
   /// Renders the `transform` attribute with the specified value.
@@ -2659,7 +2661,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute transform(String value) {
-    return attr0(HtmlAttributeName.TRANSFORM, value);
+    return attr0(AttributeNamePojo.TRANSFORM, value);
   }
 
   /// Renders the `transform-origin` attribute with the specified value.
@@ -2668,7 +2670,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute transformOrigin(String value) {
-    return attr0(HtmlAttributeName.TRANSFORM_ORIGIN, value);
+    return attr0(AttributeNamePojo.TRANSFORM_ORIGIN, value);
   }
 
   /// Renders the `translate` attribute with the specified value.
@@ -2677,7 +2679,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute translate(String value) {
-    return attr0(HtmlAttributeName.TRANSLATE, value);
+    return attr0(AttributeNamePojo.TRANSLATE, value);
   }
 
   /// Renders the `type` attribute with the specified value.
@@ -2686,7 +2688,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute type(String value) {
-    return attr0(HtmlAttributeName.TYPE, value);
+    return attr0(AttributeNamePojo.TYPE, value);
   }
 
   /// Renders the `unicode-bidi` attribute with the specified value.
@@ -2695,7 +2697,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute unicodeBidi(String value) {
-    return attr0(HtmlAttributeName.UNICODE_BIDI, value);
+    return attr0(AttributeNamePojo.UNICODE_BIDI, value);
   }
 
   /// Renders the `value` attribute with the specified value.
@@ -2704,7 +2706,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute value(String value) {
-    return attr0(HtmlAttributeName.VALUE, value);
+    return attr0(AttributeNamePojo.VALUE, value);
   }
 
   /// Renders the `vector-effect` attribute with the specified value.
@@ -2713,7 +2715,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute vectorEffect(String value) {
-    return attr0(HtmlAttributeName.VECTOR_EFFECT, value);
+    return attr0(AttributeNamePojo.VECTOR_EFFECT, value);
   }
 
   /// Renders the `viewBox` attribute with the specified value.
@@ -2722,7 +2724,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute viewBox(String value) {
-    return attr0(HtmlAttributeName.VIEWBOX, value);
+    return attr0(AttributeNamePojo.VIEWBOX, value);
   }
 
   /// Renders the `visibility` attribute with the specified value.
@@ -2731,7 +2733,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute visibility(String value) {
-    return attr0(HtmlAttributeName.VISIBILITY, value);
+    return attr0(AttributeNamePojo.VISIBILITY, value);
   }
 
   /// Renders the `white-space` attribute with the specified value.
@@ -2740,7 +2742,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute whiteSpace(String value) {
-    return attr0(HtmlAttributeName.WHITE_SPACE, value);
+    return attr0(AttributeNamePojo.WHITE_SPACE, value);
   }
 
   /// Renders the `width` attribute with the specified value.
@@ -2749,7 +2751,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute width(String value) {
-    return attr0(HtmlAttributeName.WIDTH, value);
+    return attr0(AttributeNamePojo.WIDTH, value);
   }
 
   /// Renders the `word-spacing` attribute with the specified value.
@@ -2758,7 +2760,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute wordSpacing(String value) {
-    return attr0(HtmlAttributeName.WORD_SPACING, value);
+    return attr0(AttributeNamePojo.WORD_SPACING, value);
   }
 
   /// Renders the `wrap` attribute with the specified value.
@@ -2767,7 +2769,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute wrap(String value) {
-    return attr0(HtmlAttributeName.WRAP, value);
+    return attr0(AttributeNamePojo.WRAP, value);
   }
 
   /// Renders the `writing-mode` attribute with the specified value.
@@ -2776,7 +2778,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute writingMode(String value) {
-    return attr0(HtmlAttributeName.WRITING_MODE, value);
+    return attr0(AttributeNamePojo.WRITING_MODE, value);
   }
 
   /// Renders the `xmlns` attribute with the specified value.
@@ -2785,7 +2787,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute
   public final Html.Instruction.OfAttribute xmlns(String value) {
-    return attr0(HtmlAttributeName.XMLNS, value);
+    return attr0(AttributeNamePojo.XMLNS, value);
   }
 
   //

@@ -17,6 +17,8 @@ package objectox.html;
 
 import java.io.IOException;
 import java.util.Objects;
+import objectos.html.AttributeName;
+import objectos.html.AttributeObject;
 import objectos.html.Markup;
 import objectos.internal.Check;
 import objectos.internal.Util;
@@ -203,9 +205,9 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
   @Override
   public final Html.Instruction.OfAttribute css(String value) {
     final String formatted;
-    formatted = HtmlAttributeName.formatAttrValue(value, sb);
+    formatted = AttributeNamePojo.formatAttrValue(value, sb);
 
-    return attr0(HtmlAttributeName.CLASS, formatted);
+    return attr0(AttributeNamePojo.CLASS, formatted);
   }
 
   @Override
@@ -270,8 +272,8 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
   // ##################################################################
 
   @Override
-  public final Html.Instruction.OfAttribute attr(Html.AttributeObject object) {
-    final Html.AttributeName name;
+  public final Html.Instruction.OfAttribute attr(AttributeObject object) {
+    final AttributeName name;
     name = object.attrName();
 
     final String value;
@@ -967,18 +969,18 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
     return attribute;
   }
 
-  private HtmlAttributeName attributeName(byte attr) {
+  private AttributeNamePojo attributeName(byte attr) {
     int ordinal;
     ordinal = HtmlBytes.decodeInt(attr);
 
-    return HtmlAttributeName.get(ordinal);
+    return AttributeNamePojo.get(ordinal);
   }
 
-  private HtmlAttributeName attributeName(byte attr0, byte attr1) {
+  private AttributeNamePojo attributeName(byte attr0, byte attr1) {
     Object object;
     object = toObject(attr0, attr1);
 
-    return (HtmlAttributeName) object;
+    return (AttributeNamePojo) object;
   }
 
   private DomAttribute htmlAttribute() {
@@ -1020,7 +1022,7 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
     index = elementCtxAttrsIndexLoad();
 
     // current attribute
-    HtmlAttributeName attributeName;
+    AttributeNamePojo attributeName;
     attributeName = attribute.name;
 
     int attributeCode;
@@ -1111,7 +1113,7 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
           final byte name1;
           name1 = main[auxStart++];
 
-          final HtmlAttributeName customName;
+          final AttributeNamePojo customName;
           customName = attributeName(name0, name1);
 
           if (attributeName.equals(customName)) {
@@ -1830,7 +1832,7 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
   }
 
   @Override
-  final Html.Instruction.OfAttribute attr0(Html.AttributeName name) {
+  final Html.Instruction.OfAttribute attr0(AttributeName name) {
     int index;
     index = name.index();
 
@@ -1862,7 +1864,7 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
   }
 
   @Override
-  final AttributeOrNoOp attr0(Html.AttributeName name, Object value) {
+  final AttributeOrNoOp attr0(AttributeName name, Object value) {
     Objects.requireNonNull(value, "value == null");
 
     int index;
@@ -1997,8 +1999,8 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
       auxAdd(HtmlByteProto.INTERNAL);
     }
 
-    else if (value instanceof Html.AttributeObject ext) {
-      final Html.AttributeName name;
+    else if (value instanceof AttributeObject ext) {
+      final AttributeName name;
       name = ext.attrName();
 
       if (name == null) {

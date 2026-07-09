@@ -17,14 +17,14 @@ package objectox.html;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.html.AttributeName;
 import objectos.html.Component;
 import objectos.script.Js;
-import objectos.way.Html;
 import org.testng.annotations.Test;
 
 public class HtmlMarkupTest06Attribute {
 
-  private final Html.AttributeName custom = Html.AttributeName.of("custom");
+  private final AttributeName custom = AttributeName.of("custom");
 
   @Test
   public void attr01() {
