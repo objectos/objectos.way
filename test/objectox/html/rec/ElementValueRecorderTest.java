@@ -18,12 +18,14 @@ package objectox.html.rec;
 import static org.testng.Assert.assertEquals;
 
 import objectos.html.AttributeName;
+import objectos.html.AttributeObject;
 import objectos.way.Html;
 import objectox.html.ByteArray;
 import objectox.html.HtmlByteProto;
 import objectox.html.HtmlBytes;
 import objectox.html.HtmlInstruction;
 import objectox.html.ObjectArray;
+import objectox.html.attr.AttributeObjectPojo;
 import org.testng.annotations.Test;
 
 public class ElementValueRecorderTest {
@@ -32,8 +34,8 @@ public class ElementValueRecorderTest {
     final AttributeObjectRecorder attributeObjectRecorder;
     attributeObjectRecorder = new AttributeObjectRecorder(aux, objects);
 
-    final InstructionRecorder instructionRecorder;
-    instructionRecorder = new InstructionRecorder(aux, main);
+    final ElementInternalRecorder instructionRecorder;
+    instructionRecorder = new ElementInternalRecorder(aux, main);
 
     return new ElementValueRecorder(attributeObjectRecorder, instructionRecorder, instruction);
   }
@@ -266,6 +268,149 @@ public class ElementValueRecorderTest {
         objects,
 
         ObjectArray.of(name, value)
+    );
+  }
+
+  @Test(description = "record ATTRIBUTE_EXT0")
+  public void record05() {
+    final ByteArray aux;
+    aux = ByteArray.of();
+
+    final ByteArray main;
+    main = ByteArray.of();
+
+    final ObjectArray objects;
+    objects = ObjectArray.of();
+
+    final AttributeName name;
+    name = AttributeName.XMLNS;
+
+    final String value;
+    value = null;
+
+    final AttributeObject attr;
+    attr = new AttributeObjectPojo(name, value);
+
+    final ElementValueRecorder subject;
+    subject = create(aux, main, objects, attr);
+
+    final int mainContents;
+    mainContents = main.size();
+
+    assertEquals(subject.record(mainContents), 0);
+
+    assertEquals(
+        aux,
+
+        ByteArray.of(
+            HtmlByteProto.ATTRIBUTE_EXT0,
+
+            HtmlBytes.encodeInt0(name.index())
+        )
+    );
+
+    assertEquals(
+        main,
+
+        ByteArray.of()
+    );
+
+    assertEquals(
+        objects,
+
+        ObjectArray.of()
+    );
+  }
+
+  @Test(description = "record ATTRIBUTE_EXT1")
+  public void record06() {
+    final ByteArray aux;
+    aux = ByteArray.of();
+
+    final ByteArray main;
+    main = ByteArray.of();
+
+    final ObjectArray objects;
+    objects = ObjectArray.of();
+
+    final AttributeName name;
+    name = AttributeName.XMLNS;
+
+    final String value;
+    value = "abc";
+
+    final AttributeObject attr;
+    attr = new AttributeObjectPojo(name, value);
+
+    final ElementValueRecorder subject;
+    subject = create(aux, main, objects, attr);
+
+    final int mainContents;
+    mainContents = main.size();
+
+    assertEquals(subject.record(mainContents), 0);
+
+    assertEquals(
+        aux,
+
+        ByteArray.of(
+            HtmlByteProto.ATTRIBUTE_EXT1,
+
+            HtmlBytes.encodeInt0(name.index()),
+
+            HtmlBytes.encodeInt0(0),
+            HtmlBytes.encodeInt1(0)
+        )
+    );
+
+    assertEquals(
+        main,
+
+        ByteArray.of()
+    );
+
+    assertEquals(
+        objects,
+
+        ObjectArray.of(value)
+    );
+  }
+
+  @Test(description = "record NOOP")
+  public void record07() {
+    final ByteArray aux;
+    aux = ByteArray.of();
+
+    final ByteArray main;
+    main = ByteArray.of();
+
+    final ObjectArray objects;
+    objects = ObjectArray.of();
+
+    final ElementValueRecorder subject;
+    subject = create(aux, main, objects, HtmlInstruction.NOOP);
+
+    final int mainContents;
+    mainContents = main.size();
+
+    assertEquals(subject.record(mainContents), 0);
+
+    assertEquals(
+        aux,
+
+        ByteArray.of()
+    );
+
+    assertEquals(
+        main,
+
+        ByteArray.of()
+    );
+
+    assertEquals(
+        objects,
+
+        ObjectArray.of()
     );
   }
 

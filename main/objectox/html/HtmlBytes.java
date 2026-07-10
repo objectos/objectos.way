@@ -184,6 +184,42 @@ public final class HtmlBytes {
     );
   }
 
+  public static void encodeOffset(ByteArray buf, int value) {
+    if (value < 0) {
+      throw new IllegalArgumentException("value has to be >= 0");
+    }
+
+    else if (value <= VARINT_MAX1) {
+      buf.add(
+          (byte) value
+      );
+    }
+
+    else if (value <= VARINT_MAX2) {
+      buf.add(
+          encodeVarint(value, 0),
+
+          encodeVarintHigh(value, 7)
+      );
+    }
+
+    else if (value <= VARINT_MAX3) {
+      buf.add(
+          encodeVarint(value, 0),
+
+          encodeVarintHigh(value, 7),
+
+          encodeVarintHigh(value, 14)
+      );
+    }
+
+    else {
+      throw new IllegalArgumentException(
+          "HtmlTemplate is too large :: value=" + value
+      );
+    }
+  }
+
   public static int decodeOffset(byte[] buf, int startIndex, int endIndex) {
     int length;
     length = endIndex - startIndex;

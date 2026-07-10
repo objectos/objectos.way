@@ -25,11 +25,11 @@ final class ElementValueRecorder {
 
   private final AttributeObjectRecorder attributeObjectRecorder;
 
-  private final InstructionRecorder instructionRecorder;
+  private final ElementInternalRecorder instructionRecorder;
 
   private final Instruction[] contents;
 
-  ElementValueRecorder(AttributeObjectRecorder attributeObjectRecorder, InstructionRecorder instructionRecorder, Html.Instruction... contents) {
+  ElementValueRecorder(AttributeObjectRecorder attributeObjectRecorder, ElementInternalRecorder instructionRecorder, Html.Instruction... contents) {
     this.attributeObjectRecorder = attributeObjectRecorder;
 
     this.instructionRecorder = instructionRecorder;

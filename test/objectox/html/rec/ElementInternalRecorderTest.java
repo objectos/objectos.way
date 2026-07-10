@@ -23,7 +23,7 @@ import objectox.html.HtmlByteProto;
 import objectox.html.HtmlBytes;
 import org.testng.annotations.Test;
 
-public class InstructionRecorderTest {
+public class ElementInternalRecorderTest {
 
   @Test(description = "record ATTRIBUTE0")
   public final void record01() {
@@ -39,8 +39,8 @@ public class InstructionRecorderTest {
         HtmlByteProto.INTERNAL3
     );
 
-    final InstructionRecorder subject;
-    subject = new InstructionRecorder(aux, main);
+    final ElementInternalRecorder subject;
+    subject = new ElementInternalRecorder(aux, main);
 
     final int mainContents;
     mainContents = main.size();
@@ -81,8 +81,8 @@ public class InstructionRecorderTest {
         HtmlByteProto.INTERNAL4
     );
 
-    final InstructionRecorder subject;
-    subject = new InstructionRecorder(aux, main);
+    final ElementInternalRecorder subject;
+    subject = new ElementInternalRecorder(aux, main);
 
     final int mainContents;
     mainContents = main.size();
@@ -129,8 +129,8 @@ public class InstructionRecorderTest {
         HtmlByteProto.INTERNAL5
     );
 
-    final InstructionRecorder subject;
-    subject = new InstructionRecorder(aux, main);
+    final ElementInternalRecorder subject;
+    subject = new ElementInternalRecorder(aux, main);
 
     final int mainContents;
     mainContents = main.size();
@@ -177,8 +177,8 @@ public class InstructionRecorderTest {
         HtmlByteProto.INTERNAL6
     );
 
-    final InstructionRecorder subject;
-    subject = new InstructionRecorder(aux, main);
+    final ElementInternalRecorder subject;
+    subject = new ElementInternalRecorder(aux, main);
 
     final int mainContents;
     mainContents = main.size();

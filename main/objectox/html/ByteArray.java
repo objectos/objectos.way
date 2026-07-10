@@ -104,6 +104,10 @@ public final class ByteArray {
     return bytes[idx];
   }
 
+  public final void set(int idx, byte value) {
+    bytes[idx] = value;
+  }
+
   public final int size() {
     return index;
   }

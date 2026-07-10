@@ -19,13 +19,13 @@ import objectox.html.ByteArray;
 import objectox.html.HtmlByteProto;
 import objectox.html.HtmlBytes;
 
-final class InstructionRecorder {
+final class ElementInternalRecorder {
 
   private final ByteArray aux;
 
   private final ByteArray main;
 
-  InstructionRecorder(ByteArray aux, ByteArray main) {
+  ElementInternalRecorder(ByteArray aux, ByteArray main) {
     this.aux = aux;
 
     this.main = main;

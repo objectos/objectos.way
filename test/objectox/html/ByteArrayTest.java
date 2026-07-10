@@ -76,4 +76,14 @@ public class ByteArrayTest {
     assertEquals(subject.toString(), "010203040506");
   }
 
+  @Test
+  public void set01() {
+    final ByteArray subject;
+    subject = ByteArray.of((byte) 1, (byte) 10, (byte) 3);
+
+    subject.set(1, (byte) 2);
+
+    assertEquals(subject, ByteArray.of(1, 2, 3));
+  }
+
 }
