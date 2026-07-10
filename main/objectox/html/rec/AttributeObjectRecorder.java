@@ -28,17 +28,13 @@ public final class AttributeObjectRecorder {
 
   private final ObjectArray objects;
 
-  private final AttributeObject attr;
-
-  public AttributeObjectRecorder(ByteArray aux, ObjectArray objects, AttributeObject attr) {
+  public AttributeObjectRecorder(ByteArray aux, ObjectArray objects) {
     this.aux = aux;
 
     this.objects = objects;
-
-    this.attr = attr;
   }
 
-  public final void record() {
+  public final void record(AttributeObject attr) {
     final AttributeName name;
     name = attr.attrName();
 

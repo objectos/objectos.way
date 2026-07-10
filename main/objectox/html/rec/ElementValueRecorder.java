@@ -19,28 +19,20 @@ import java.util.Objects;
 import objectos.html.AttributeObject;
 import objectos.way.Html;
 import objectos.way.Html.Instruction;
-import objectox.html.ByteArray;
-import objectox.html.HtmlByteProto;
-import objectox.html.HtmlBytes;
 import objectox.html.HtmlInstruction;
-import objectox.html.ObjectArray;
 
 final class ElementValueRecorder {
 
-  private final ByteArray aux;
+  private final AttributeObjectRecorder attributeObjectRecorder;
 
-  private final ByteArray main;
-
-  private final ObjectArray objects;
+  private final InstructionRecorder instructionRecorder;
 
   private final Instruction[] contents;
 
-  public ElementValueRecorder(ByteArray aux, ByteArray main, ObjectArray objects, Html.Instruction... contents) {
-    this.aux = aux;
+  ElementValueRecorder(AttributeObjectRecorder attributeObjectRecorder, InstructionRecorder instructionRecorder, Html.Instruction... contents) {
+    this.attributeObjectRecorder = attributeObjectRecorder;
 
-    this.main = main;
-
-    this.objects = objects;
+    this.instructionRecorder = instructionRecorder;
 
     this.contents = Objects.requireNonNull(contents, "contents == null");
   }
@@ -69,63 +61,25 @@ final class ElementValueRecorder {
     if (value == HtmlInstruction.ATTRIBUTE ||
         value == HtmlInstruction.ELEMENT ||
         value == HtmlInstruction.FRAGMENT) {
-      // @ ByteProto
-      mainContents--;
-
-      byte proto;
-      proto = main.get(mainContents--);
-
-      switch (proto) {
-        case HtmlByteProto.INTERNAL -> {
-          int endIndex;
-          endIndex = mainContents;
-
-          byte maybeNeg;
-
-          do {
-            maybeNeg = main.get(mainContents--);
-          } while (maybeNeg < 0);
-
-          int length;
-          length = HtmlBytes.decodeCommonEnd(main, mainContents, endIndex);
-
-          mainContents -= length;
-        }
-
-        case HtmlByteProto.INTERNAL3 -> mainContents -= 3 - 2;
-
-        case HtmlByteProto.INTERNAL4 -> mainContents -= 4 - 2;
-
-        case HtmlByteProto.INTERNAL5 -> mainContents -= 5 - 2;
-
-        case HtmlByteProto.INTERNAL6 -> mainContents -= 6 - 2;
-
-        default -> throw new UnsupportedOperationException(
-            "Implement me :: proto=" + proto
-        );
-      }
-
-      aux.add(HtmlByteProto.INTERNAL);
+      return instructionRecorder.record(mainContents);
     }
 
-    else if (value instanceof AttributeObject ext) {
-      final AttributeObjectRecorder recorder;
-      recorder = new AttributeObjectRecorder(aux, objects, ext);
+    if (value instanceof AttributeObject attr) {
+      attributeObjectRecorder.record(attr);
 
-      recorder.record();
+      return mainContents;
     }
 
-    else if (value == HtmlInstruction.NOOP) {
+    if (value == HtmlInstruction.NOOP) {
       // no-op
+
+      return mainContents;
     }
 
-    else {
-      throw new UnsupportedOperationException(
-          "Implement me :: type=" + value.getClass()
-      );
-    }
+    final String msg;
+    msg = "Unsupported type %s".formatted(value.getClass());
 
-    return mainContents;
+    throw new UnsupportedOperationException(msg);
   }
 
 }

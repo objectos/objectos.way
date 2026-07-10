@@ -43,9 +43,9 @@ public class AttributeObjectRecorderTest {
     attr = new AttributeObjectPojo(null, "");
 
     final AttributeObjectRecorder subject;
-    subject = new AttributeObjectRecorder(aux, objects, attr);
+    subject = new AttributeObjectRecorder(aux, objects);
 
-    subject.record();
+    subject.record(attr);
   }
 
   @Test
@@ -66,9 +66,9 @@ public class AttributeObjectRecorderTest {
     attr = new AttributeObjectPojo(name, value);
 
     final AttributeObjectRecorder subject;
-    subject = new AttributeObjectRecorder(aux, objects, attr);
+    subject = new AttributeObjectRecorder(aux, objects);
 
-    subject.record();
+    subject.record(attr);
 
     assertEquals(
         aux,
@@ -105,9 +105,9 @@ public class AttributeObjectRecorderTest {
     attr = new AttributeObjectPojo(name, value);
 
     final AttributeObjectRecorder subject;
-    subject = new AttributeObjectRecorder(aux, objects, attr);
+    subject = new AttributeObjectRecorder(aux, objects);
 
-    subject.record();
+    subject.record(attr);
 
     assertEquals(
         aux,

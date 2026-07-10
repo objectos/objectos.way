@@ -18,25 +18,12 @@ package objectox.html.rec;
 import static org.testng.Assert.assertEquals;
 
 import objectos.html.AttributeName;
-import objectos.way.Html;
 import objectox.html.ByteArray;
 import objectox.html.HtmlByteProto;
 import objectox.html.HtmlBytes;
-import objectox.html.HtmlInstruction;
-import objectox.html.ObjectArray;
 import org.testng.annotations.Test;
 
-public class ElementValueRecorderTest {
-
-  private ElementValueRecorder create(ByteArray aux, ByteArray main, ObjectArray objects, Html.Instruction instruction) {
-    final AttributeObjectRecorder attributeObjectRecorder;
-    attributeObjectRecorder = new AttributeObjectRecorder(aux, objects);
-
-    final InstructionRecorder instructionRecorder;
-    instructionRecorder = new InstructionRecorder(aux, main);
-
-    return new ElementValueRecorder(attributeObjectRecorder, instructionRecorder, instruction);
-  }
+public class InstructionRecorderTest {
 
   @Test(description = "record ATTRIBUTE0")
   public final void record01() {
@@ -52,11 +39,8 @@ public class ElementValueRecorderTest {
         HtmlByteProto.INTERNAL3
     );
 
-    final ObjectArray objects;
-    objects = ObjectArray.of();
-
-    final ElementValueRecorder subject;
-    subject = create(aux, main, objects, HtmlInstruction.ATTRIBUTE);
+    final InstructionRecorder subject;
+    subject = new InstructionRecorder(aux, main);
 
     final int mainContents;
     mainContents = main.size();
@@ -80,12 +64,6 @@ public class ElementValueRecorderTest {
             HtmlByteProto.INTERNAL3
         )
     );
-
-    assertEquals(
-        objects,
-
-        ObjectArray.of()
-    );
   }
 
   @Test(description = "record CUSTOM_ATTR0")
@@ -103,14 +81,8 @@ public class ElementValueRecorderTest {
         HtmlByteProto.INTERNAL4
     );
 
-    final AttributeName name;
-    name = AttributeName.of("foo");
-
-    final ObjectArray objects;
-    objects = ObjectArray.of(name);
-
-    final ElementValueRecorder subject;
-    subject = create(aux, main, objects, HtmlInstruction.ATTRIBUTE);
+    final InstructionRecorder subject;
+    subject = new InstructionRecorder(aux, main);
 
     final int mainContents;
     mainContents = main.size();
@@ -135,21 +107,12 @@ public class ElementValueRecorderTest {
             HtmlByteProto.INTERNAL4
         )
     );
-
-    assertEquals(
-        objects,
-
-        ObjectArray.of(name)
-    );
   }
 
   @Test(description = "record ATTRIBUTE1")
   public final void record03() {
     final AttributeName name;
     name = AttributeName.ID;
-
-    final Object value;
-    value = "foo";
 
     final ByteArray aux;
     aux = ByteArray.of();
@@ -166,11 +129,8 @@ public class ElementValueRecorderTest {
         HtmlByteProto.INTERNAL5
     );
 
-    final ObjectArray objects;
-    objects = ObjectArray.of(value);
-
-    final ElementValueRecorder subject;
-    subject = create(aux, main, objects, HtmlInstruction.ATTRIBUTE);
+    final InstructionRecorder subject;
+    subject = new InstructionRecorder(aux, main);
 
     final int mainContents;
     mainContents = main.size();
@@ -197,12 +157,6 @@ public class ElementValueRecorderTest {
             HtmlByteProto.INTERNAL5
         )
     );
-
-    assertEquals(
-        objects,
-
-        ObjectArray.of(value)
-    );
   }
 
   @Test(description = "record CUSTOM_ATTR1")
@@ -223,17 +177,8 @@ public class ElementValueRecorderTest {
         HtmlByteProto.INTERNAL6
     );
 
-    final AttributeName name;
-    name = AttributeName.of("foo");
-
-    final Object value;
-    value = "bar";
-
-    final ObjectArray objects;
-    objects = ObjectArray.of(name, value);
-
-    final ElementValueRecorder subject;
-    subject = create(aux, main, objects, HtmlInstruction.ATTRIBUTE);
+    final InstructionRecorder subject;
+    subject = new InstructionRecorder(aux, main);
 
     final int mainContents;
     mainContents = main.size();
@@ -260,12 +205,6 @@ public class ElementValueRecorderTest {
 
             HtmlByteProto.INTERNAL6
         )
-    );
-
-    assertEquals(
-        objects,
-
-        ObjectArray.of(name, value)
     );
   }
 
