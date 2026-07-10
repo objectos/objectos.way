@@ -23,33 +23,43 @@ import objectox.html.HtmlBytes;
 import objectox.html.elem.ElementNamePojo;
 import org.testng.annotations.Test;
 
-public class ElementNameRecorderTest {
+public class ElementTrailerRecorderTest {
 
   @Test
   public void record01() {
     final ByteArray main;
-    main = ByteArray.of();
+    main = ByteArray.of(
+        HtmlByteProto.ELEMENT,
+        HtmlByteProto.NULL,
+        HtmlByteProto.NULL,
+        HtmlByteProto.STANDARD_NAME,
+        ElementNamePojo.DIV.index()
+    );
 
-    final ElementNameRecorder subject;
-    subject = new ElementNameRecorder(main);
+    final ElementTrailerRecorder subject;
+    subject = new ElementTrailerRecorder(main);
 
-    final ElementNamePojo name;
-    name = ElementNamePojo.DIV;
+    final int startIndex;
+    startIndex = 0;
 
-    subject.record(name);
+    final int contentsIndex;
+    contentsIndex = 0;
+
+    subject.record(startIndex, contentsIndex);
 
     assertEquals(
         main,
 
         ByteArray.of(
             HtmlByteProto.ELEMENT,
-
-            HtmlByteProto.NULL,
-            HtmlByteProto.NULL,
-
+            HtmlBytes.encodeInt0(5),
+            HtmlBytes.encodeInt1(5),
             HtmlByteProto.STANDARD_NAME,
+            ElementNamePojo.DIV.index(),
 
-            HtmlBytes.encodeInt0(name.index())
+            HtmlByteProto.END,
+            HtmlBytes.encodeInt0(5),
+            HtmlByteProto.INTERNAL
         )
     );
   }

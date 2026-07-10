@@ -25,15 +25,15 @@ final class ElementNameRecorder {
 
   private final ByteArray main;
 
-  private final ElementName name;
-
-  public ElementNameRecorder(ByteArray main, ElementName name) {
+  public ElementNameRecorder(ByteArray main) {
     this.main = main;
-
-    this.name = name;
   }
 
-  public final void record() {
+  public final int mainStart() {
+    return main.size();
+  }
+
+  public final void record(ElementName name) {
     main.add(
         HtmlByteProto.ELEMENT,
 

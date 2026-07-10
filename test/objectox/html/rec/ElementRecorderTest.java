@@ -17,40 +17,60 @@ package objectox.html.rec;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.html.ElementName;
 import objectox.html.ByteArray;
 import objectox.html.HtmlByteProto;
 import objectox.html.HtmlBytes;
+import objectox.html.ObjectArray;
 import objectox.html.elem.ElementNamePojo;
 import org.testng.annotations.Test;
 
-public class ElementNameRecorderTest {
+public class ElementRecorderTest {
 
   @Test
   public void record01() {
+    final ByteArray aux;
+    aux = ByteArray.of();
+
     final ByteArray main;
     main = ByteArray.of();
 
-    final ElementNameRecorder subject;
-    subject = new ElementNameRecorder(main);
+    final ObjectArray objects;
+    objects = ObjectArray.of();
 
-    final ElementNamePojo name;
-    name = ElementNamePojo.DIV;
+    final ElementRecorder subject;
+    subject = ElementRecorder.of(aux, main, objects);
+
+    final ElementName name;
+    name = ElementName.HTML;
 
     subject.record(name);
+
+    assertEquals(
+        aux,
+
+        ByteArray.of()
+    );
 
     assertEquals(
         main,
 
         ByteArray.of(
             HtmlByteProto.ELEMENT,
-
-            HtmlByteProto.NULL,
-            HtmlByteProto.NULL,
-
+            HtmlBytes.encodeInt0(5),
+            HtmlBytes.encodeInt1(5),
             HtmlByteProto.STANDARD_NAME,
-
-            HtmlBytes.encodeInt0(name.index())
+            (byte) ElementNamePojo.HTML.index(),
+            HtmlByteProto.END,
+            HtmlBytes.encodeInt0(5),
+            HtmlByteProto.INTERNAL
         )
+    );
+
+    assertEquals(
+        objects,
+
+        ObjectArray.of()
     );
   }
 

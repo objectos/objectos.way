@@ -15,53 +15,27 @@
  */
 package objectox.html.rec;
 
-import java.util.Objects;
 import objectos.html.AttributeObject;
 import objectos.way.Html;
-import objectos.way.Html.Instruction;
 import objectox.html.HtmlInstruction;
 
 final class ElementValueRecorder {
 
   private final AttributeObjectRecorder attributeObjectRecorder;
 
-  private final ElementInternalRecorder instructionRecorder;
+  private final ElementInternalRecorder elementInternalRecorder;
 
-  private final Instruction[] contents;
-
-  ElementValueRecorder(AttributeObjectRecorder attributeObjectRecorder, ElementInternalRecorder instructionRecorder, Html.Instruction... contents) {
+  ElementValueRecorder(AttributeObjectRecorder attributeObjectRecorder, ElementInternalRecorder elementInternalRecorder) {
     this.attributeObjectRecorder = attributeObjectRecorder;
 
-    this.instructionRecorder = instructionRecorder;
-
-    this.contents = Objects.requireNonNull(contents, "contents == null");
+    this.elementInternalRecorder = elementInternalRecorder;
   }
 
-  public final int record(int mainContents) {
-    int result = mainContents;
-
-    for (int idx = 0; idx < contents.length; idx++) {
-      final Instruction instruction;
-      instruction = contents[idx];
-
-      if (instruction == null) {
-        final String msg;
-        msg = "contents[%d] == null".formatted(idx);
-
-        throw new NullPointerException(msg);
-      }
-
-      result = record(result, instruction);
-    }
-
-    return result;
-  }
-
-  private int record(int mainContents, Html.Instruction value) {
+  public final int record(int mainContents, Html.Instruction value) {
     if (value == HtmlInstruction.ATTRIBUTE ||
         value == HtmlInstruction.ELEMENT ||
         value == HtmlInstruction.FRAGMENT) {
-      return instructionRecorder.record(mainContents);
+      return elementInternalRecorder.record(mainContents);
     }
 
     if (value instanceof AttributeObject attr) {

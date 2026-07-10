@@ -60,11 +60,11 @@ public final class HtmlBytes {
     return encodeInt0(ordinal);
   }
 
-  static final int VARINT_MAX1 = 0x7F;
+  public static final int VARINT_MAX1 = 0x7F;
 
-  static final int VARINT_MAX2 = (1 << 14) - 1;
+  public static final int VARINT_MAX2 = (1 << 14) - 1;
 
-  static final int VARINT_MAX3 = (1 << 21) - 1;
+  public static final int VARINT_MAX3 = (1 << 21) - 1;
 
   public static int encodeCommonEnd(byte[] buf, int off, int length) {
     if (length < 0) {
@@ -100,13 +100,13 @@ public final class HtmlBytes {
     );
   }
 
-  private static byte encodeVarintHigh(int value, int shift) {
+  public static byte encodeVarintHigh(int value, int shift) {
     value = value >>> shift;
 
     return (byte) value;
   }
 
-  private static byte encodeVarint(int value, int shift) {
+  public static byte encodeVarint(int value, int shift) {
     value = value >>> shift;
 
     value = value & VARINT_MAX1;

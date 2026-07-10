@@ -19,7 +19,6 @@ import static org.testng.Assert.assertEquals;
 
 import objectos.html.AttributeName;
 import objectos.html.AttributeObject;
-import objectos.way.Html;
 import objectox.html.ByteArray;
 import objectox.html.HtmlByteProto;
 import objectox.html.HtmlBytes;
@@ -30,14 +29,14 @@ import org.testng.annotations.Test;
 
 public class ElementValueRecorderTest {
 
-  private ElementValueRecorder create(ByteArray aux, ByteArray main, ObjectArray objects, Html.Instruction instruction) {
+  private ElementValueRecorder create(ByteArray aux, ByteArray main, ObjectArray objects) {
     final AttributeObjectRecorder attributeObjectRecorder;
     attributeObjectRecorder = new AttributeObjectRecorder(aux, objects);
 
     final ElementInternalRecorder instructionRecorder;
     instructionRecorder = new ElementInternalRecorder(aux, main);
 
-    return new ElementValueRecorder(attributeObjectRecorder, instructionRecorder, instruction);
+    return new ElementValueRecorder(attributeObjectRecorder, instructionRecorder);
   }
 
   @Test(description = "record ATTRIBUTE0")
@@ -58,12 +57,12 @@ public class ElementValueRecorderTest {
     objects = ObjectArray.of();
 
     final ElementValueRecorder subject;
-    subject = create(aux, main, objects, HtmlInstruction.ATTRIBUTE);
+    subject = create(aux, main, objects);
 
     final int mainContents;
     mainContents = main.size();
 
-    assertEquals(subject.record(mainContents), 0);
+    assertEquals(subject.record(mainContents, HtmlInstruction.ATTRIBUTE), 0);
 
     assertEquals(
         aux,
@@ -112,12 +111,12 @@ public class ElementValueRecorderTest {
     objects = ObjectArray.of(name);
 
     final ElementValueRecorder subject;
-    subject = create(aux, main, objects, HtmlInstruction.ATTRIBUTE);
+    subject = create(aux, main, objects);
 
     final int mainContents;
     mainContents = main.size();
 
-    assertEquals(subject.record(mainContents), 0);
+    assertEquals(subject.record(mainContents, HtmlInstruction.ATTRIBUTE), 0);
 
     assertEquals(
         aux,
@@ -172,12 +171,12 @@ public class ElementValueRecorderTest {
     objects = ObjectArray.of(value);
 
     final ElementValueRecorder subject;
-    subject = create(aux, main, objects, HtmlInstruction.ATTRIBUTE);
+    subject = create(aux, main, objects);
 
     final int mainContents;
     mainContents = main.size();
 
-    assertEquals(subject.record(mainContents), 0);
+    assertEquals(subject.record(mainContents, HtmlInstruction.ATTRIBUTE), 0);
 
     assertEquals(
         aux,
@@ -235,12 +234,12 @@ public class ElementValueRecorderTest {
     objects = ObjectArray.of(name, value);
 
     final ElementValueRecorder subject;
-    subject = create(aux, main, objects, HtmlInstruction.ATTRIBUTE);
+    subject = create(aux, main, objects);
 
     final int mainContents;
     mainContents = main.size();
 
-    assertEquals(subject.record(mainContents), 0);
+    assertEquals(subject.record(mainContents, HtmlInstruction.ATTRIBUTE), 0);
 
     assertEquals(
         aux,
@@ -292,12 +291,12 @@ public class ElementValueRecorderTest {
     attr = new AttributeObjectPojo(name, value);
 
     final ElementValueRecorder subject;
-    subject = create(aux, main, objects, attr);
+    subject = create(aux, main, objects);
 
     final int mainContents;
     mainContents = main.size();
 
-    assertEquals(subject.record(mainContents), 0);
+    assertEquals(subject.record(mainContents, attr), 0);
 
     assertEquals(
         aux,
@@ -343,12 +342,12 @@ public class ElementValueRecorderTest {
     attr = new AttributeObjectPojo(name, value);
 
     final ElementValueRecorder subject;
-    subject = create(aux, main, objects, attr);
+    subject = create(aux, main, objects);
 
     final int mainContents;
     mainContents = main.size();
 
-    assertEquals(subject.record(mainContents), 0);
+    assertEquals(subject.record(mainContents, attr), 0);
 
     assertEquals(
         aux,
@@ -388,12 +387,12 @@ public class ElementValueRecorderTest {
     objects = ObjectArray.of();
 
     final ElementValueRecorder subject;
-    subject = create(aux, main, objects, HtmlInstruction.NOOP);
+    subject = create(aux, main, objects);
 
     final int mainContents;
     mainContents = main.size();
 
-    assertEquals(subject.record(mainContents), 0);
+    assertEquals(subject.record(mainContents, HtmlInstruction.NOOP), 0);
 
     assertEquals(
         aux,
