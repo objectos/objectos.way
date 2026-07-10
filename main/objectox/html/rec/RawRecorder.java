@@ -21,13 +21,13 @@ import objectox.html.HtmlByteProto;
 import objectox.html.HtmlBytes;
 import objectox.html.ObjectArray;
 
-final class TextRecorder {
+final class RawRecorder {
 
   private final ByteArray main;
 
   private final ObjectArray objects;
 
-  TextRecorder(ByteArray main, ObjectArray objects) {
+  RawRecorder(ByteArray main, ObjectArray objects) {
     this.main = main;
 
     this.objects = objects;
@@ -41,7 +41,7 @@ final class TextRecorder {
     object = objects.add(v);
 
     main.add(
-        HtmlByteProto.TEXT,
+        HtmlByteProto.RAW,
 
         HtmlBytes.encodeInt0(object),
         HtmlBytes.encodeInt1(object),

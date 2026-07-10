@@ -461,4 +461,52 @@ public class ElementValueRecorderTest {
     );
   }
 
+  @Test(description = "record RAW")
+  public void record09() {
+    final ByteArray aux;
+    aux = ByteArray.of();
+
+    final ByteArray main;
+    main = ByteArray.of(
+        HtmlByteProto.RAW,
+        HtmlBytes.encodeInt0(0),
+        HtmlBytes.encodeInt1(0),
+        HtmlByteProto.INTERNAL4
+    );
+
+    final ObjectArray objects;
+    objects = ObjectArray.of("Ipsum");
+
+    final ElementValueRecorder subject;
+    subject = create(aux, main, objects);
+
+    final int mainContents;
+    mainContents = main.size();
+
+    assertEquals(subject.record(mainContents, HtmlInstruction.ELEMENT), 0);
+
+    assertEquals(
+        aux,
+
+        ByteArray.of(HtmlByteProto.INTERNAL)
+    );
+
+    assertEquals(
+        main,
+
+        ByteArray.of(
+            HtmlByteProto.RAW,
+            HtmlBytes.encodeInt0(0),
+            HtmlBytes.encodeInt1(0),
+            HtmlByteProto.INTERNAL4
+        )
+    );
+
+    assertEquals(
+        objects,
+
+        ObjectArray.of("Ipsum")
+    );
+  }
+
 }
