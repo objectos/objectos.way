@@ -208,4 +208,43 @@ public class ElementInternalRecorderTest {
     );
   }
 
+  @Test(description = "record TEXT")
+  public final void record05() {
+    final ByteArray aux;
+    aux = ByteArray.of();
+
+    final ByteArray main;
+    main = ByteArray.of(
+        HtmlByteProto.TEXT,
+        HtmlBytes.encodeInt0(0),
+        HtmlBytes.encodeInt1(0),
+        HtmlByteProto.INTERNAL4
+    );
+
+    final ElementInternalRecorder subject;
+    subject = new ElementInternalRecorder(aux, main);
+
+    final int mainContents;
+    mainContents = main.size();
+
+    assertEquals(subject.record(mainContents), 0);
+
+    assertEquals(
+        aux,
+
+        ByteArray.of(HtmlByteProto.INTERNAL)
+    );
+
+    assertEquals(
+        main,
+
+        ByteArray.of(
+            HtmlByteProto.TEXT,
+            HtmlBytes.encodeInt0(0),
+            HtmlBytes.encodeInt1(0),
+            HtmlByteProto.INTERNAL4
+        )
+    );
+  }
+
 }

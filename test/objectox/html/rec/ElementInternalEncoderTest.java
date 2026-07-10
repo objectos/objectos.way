@@ -176,4 +176,34 @@ public class ElementInternalEncoderTest {
     );
   }
 
+  @Test(description = "encode TEXT")
+  public final void encode05() {
+    final ByteArray main;
+    main = ByteArray.of(
+        HtmlByteProto.TEXT,
+        HtmlBytes.encodeInt0(0),
+        HtmlBytes.encodeInt1(0),
+        HtmlByteProto.INTERNAL4
+    );
+
+    final ElementInternalEncoder subject;
+    subject = new ElementInternalEncoder(main);
+
+    assertEquals(subject.encode(0), 4);
+
+    assertEquals(
+        main,
+
+        ByteArray.of(
+            HtmlByteProto.MARKED4,
+            HtmlBytes.encodeInt0(0),
+            HtmlBytes.encodeInt1(0),
+            HtmlByteProto.INTERNAL4,
+
+            HtmlByteProto.TEXT,
+            HtmlBytes.encodeInt0(5)
+        )
+    );
+  }
+
 }

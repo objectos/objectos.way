@@ -40,7 +40,9 @@ final class ElementInternalEncoder {
           return encodeInternal(index, proto, 3, HtmlByteProto.MARKED3);
         }
 
-        case HtmlByteProto.CUSTOM_ATTR0 -> {
+        case HtmlByteProto.CUSTOM_ATTR0,
+             HtmlByteProto.RAW,
+             HtmlByteProto.TEXT -> {
           return encodeInternal(index, proto, 4, HtmlByteProto.MARKED4);
         }
 
