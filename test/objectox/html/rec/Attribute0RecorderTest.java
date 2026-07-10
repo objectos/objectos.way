@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html.attr;
+package objectox.html.rec;
 
 import static org.testng.Assert.assertEquals;
 
@@ -25,7 +25,7 @@ import objectox.html.HtmlInstruction;
 import objectox.html.ObjectArray;
 import org.testng.annotations.Test;
 
-public class Attribute1RecorderTest {
+public class Attribute0RecorderTest {
 
   @Test
   public void record01() {
@@ -36,13 +36,10 @@ public class Attribute1RecorderTest {
     objects = new ObjectArray();
 
     final AttributeName name;
-    name = AttributeName.ID;
+    name = AttributeName.READONLY;
 
-    final Object value;
-    value = "foo";
-
-    final Attribute1Recorder subject;
-    subject = new Attribute1Recorder(main, objects, name, value);
+    final Attribute0Recorder subject;
+    subject = new Attribute0Recorder(main, objects, name);
 
     assertEquals(subject.record(), HtmlInstruction.ATTRIBUTE);
 
@@ -50,21 +47,18 @@ public class Attribute1RecorderTest {
         main,
 
         ByteArray.of(
-            HtmlByteProto.ATTRIBUTE1,
+            HtmlByteProto.ATTRIBUTE0,
 
             HtmlBytes.encodeInt0(name.index()),
 
-            HtmlBytes.encodeInt0(0),
-            HtmlBytes.encodeInt1(0),
-
-            HtmlByteProto.INTERNAL5
+            HtmlByteProto.INTERNAL3
         )
     );
 
     assertEquals(
         objects,
 
-        ObjectArray.of(value)
+        ObjectArray.of()
     );
   }
 
@@ -79,11 +73,8 @@ public class Attribute1RecorderTest {
     final AttributeName name;
     name = AttributeName.of("foo");
 
-    final Object value;
-    value = "bar";
-
-    final Attribute1Recorder subject;
-    subject = new Attribute1Recorder(main, objects, name, value);
+    final Attribute0Recorder subject;
+    subject = new Attribute0Recorder(main, objects, name);
 
     assertEquals(subject.record(), HtmlInstruction.ATTRIBUTE);
 
@@ -91,40 +82,20 @@ public class Attribute1RecorderTest {
         main,
 
         ByteArray.of(
-            HtmlByteProto.CUSTOM_ATTR1,
+            HtmlByteProto.CUSTOM_ATTR0,
 
             HtmlBytes.encodeInt0(0),
             HtmlBytes.encodeInt1(0),
 
-            HtmlBytes.encodeInt0(1),
-            HtmlBytes.encodeInt1(1),
-
-            HtmlByteProto.INTERNAL6
+            HtmlByteProto.INTERNAL4
         )
     );
 
     assertEquals(
         objects,
 
-        ObjectArray.of(name, value)
+        ObjectArray.of(name)
     );
-  }
-
-  @Test(expectedExceptions = NullPointerException.class, expectedExceptionsMessageRegExp = "value == null")
-  public void record03() {
-    final ByteArray main;
-    main = new ByteArray(0);
-
-    final ObjectArray objects;
-    objects = new ObjectArray();
-
-    final AttributeName name;
-    name = AttributeName.of("foo");
-
-    final Object value;
-    value = null;
-
-    new Attribute1Recorder(main, objects, name, value);
   }
 
 }

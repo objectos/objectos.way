@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html.attr;
+package objectox.html.rec;
 
 import static org.testng.Assert.assertEquals;
 
@@ -23,6 +23,7 @@ import objectox.html.ByteArray;
 import objectox.html.HtmlByteProto;
 import objectox.html.HtmlBytes;
 import objectox.html.ObjectArray;
+import objectox.html.attr.AttributeObjectPojo;
 import org.testng.annotations.Test;
 
 public class AttributeObjectRecorderTest {

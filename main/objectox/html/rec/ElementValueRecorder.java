@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html.elem;
+package objectox.html.rec;
 
 import java.util.Objects;
 import objectos.html.AttributeObject;
@@ -24,7 +24,6 @@ import objectox.html.HtmlByteProto;
 import objectox.html.HtmlBytes;
 import objectox.html.HtmlInstruction;
 import objectox.html.ObjectArray;
-import objectox.html.attr.AttributeObjectRecorder;
 
 final class ElementValueRecorder {
 
