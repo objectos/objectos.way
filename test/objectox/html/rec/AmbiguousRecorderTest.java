@@ -17,7 +17,7 @@ package objectox.html.rec;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.html.AttributeName;
+import objectox.html.Ambiguous;
 import objectox.html.ByteArray;
 import objectox.html.HtmlByteProto;
 import objectox.html.HtmlBytes;
@@ -25,76 +25,66 @@ import objectox.html.HtmlInstruction;
 import objectox.html.ObjectArray;
 import org.testng.annotations.Test;
 
-public class Attribute0RecorderTest {
+public class AmbiguousRecorderTest {
 
-  @Test
+  @Test(
+      description = "reject null value",
+      expectedExceptions = NullPointerException.class,
+      expectedExceptionsMessageRegExp = "value == null")
   public void record01() {
     final ByteArray main;
-    main = new ByteArray(0);
+    main = ByteArray.of();
 
     final ObjectArray objects;
-    objects = new ObjectArray();
+    objects = ObjectArray.of();
 
-    final AttributeName name;
-    name = AttributeName.READONLY;
+    final Ambiguous name;
+    name = Ambiguous.TITLE;
 
-    final Attribute0Recorder subject;
-    subject = new Attribute0Recorder(main, objects);
+    final String value;
+    value = null;
 
-    assertEquals(subject.record(name), HtmlInstruction.ATTRIBUTE);
+    final AmbiguousRecorder subject;
+    subject = new AmbiguousRecorder(main, objects);
 
-    assertEquals(
-        main,
-
-        ByteArray.of(
-            HtmlByteProto.ATTRIBUTE0,
-
-            HtmlBytes.encodeInt0(name.index()),
-
-            HtmlByteProto.INTERNAL3
-        )
-    );
-
-    assertEquals(
-        objects,
-
-        ObjectArray.of()
-    );
+    subject.record(name, value);
   }
 
   @Test
   public void record02() {
     final ByteArray main;
-    main = new ByteArray(0);
+    main = ByteArray.of();
 
     final ObjectArray objects;
-    objects = new ObjectArray();
+    objects = ObjectArray.of();
 
-    final AttributeName name;
-    name = AttributeName.of("foo");
+    final Ambiguous name;
+    name = Ambiguous.TITLE;
 
-    final Attribute0Recorder subject;
-    subject = new Attribute0Recorder(main, objects);
+    final String value;
+    value = "abc";
 
-    assertEquals(subject.record(name), HtmlInstruction.ATTRIBUTE);
+    final AmbiguousRecorder subject;
+    subject = new AmbiguousRecorder(main, objects);
+
+    assertEquals(subject.record(name, value), HtmlInstruction.ELEMENT);
 
     assertEquals(
         main,
 
         ByteArray.of(
-            HtmlByteProto.CUSTOM_ATTR0,
-
+            HtmlByteProto.AMBIGUOUS1,
+            HtmlBytes.encodeInt0(name.ordinal()),
             HtmlBytes.encodeInt0(0),
             HtmlBytes.encodeInt1(0),
-
-            HtmlByteProto.INTERNAL4
+            HtmlByteProto.INTERNAL5
         )
     );
 
     assertEquals(
         objects,
 
-        ObjectArray.of(name)
+        ObjectArray.of(value)
     );
   }
 

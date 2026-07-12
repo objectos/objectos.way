@@ -2797,7 +2797,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   // AMBIGUOUS
   //
 
-  abstract Html.Instruction.OfAmbiguous ambiguous(HtmlAmbiguous name, String text);
+  abstract Html.Instruction.OfAmbiguous ambiguous(Ambiguous name, String text);
 
   /// Renders the `clip-path` attribute or the `clipPath` element with the
   /// specified text.
@@ -2806,7 +2806,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute or the element
   public final Html.Instruction.OfAmbiguous clipPath(String text) {
-    return ambiguous(HtmlAmbiguous.CLIPPATH, text);
+    return ambiguous(Ambiguous.CLIPPATH, text);
   }
 
   /// Renders the `form` attribute or the `form` element with the specified
@@ -2816,7 +2816,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute or the element
   public final Html.Instruction.OfAmbiguous form(String text) {
-    return ambiguous(HtmlAmbiguous.FORM, text);
+    return ambiguous(Ambiguous.FORM, text);
   }
 
   /// Renders the `label` attribute or the `label` element with the specified
@@ -2826,7 +2826,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute or the element
   public final Html.Instruction.OfAmbiguous label(String text) {
-    return ambiguous(HtmlAmbiguous.LABEL, text);
+    return ambiguous(Ambiguous.LABEL, text);
   }
 
   /// Renders the `style` attribute or the `style` element with the specified
@@ -2836,7 +2836,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute or the element
   public final Html.Instruction.OfAmbiguous style(String text) {
-    return ambiguous(HtmlAmbiguous.STYLE, text);
+    return ambiguous(Ambiguous.STYLE, text);
   }
 
   /// Renders the `title` attribute or the `title` element with the specified
@@ -2846,7 +2846,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the attribute or the element
   public final Html.Instruction.OfAmbiguous title(String text) {
-    return ambiguous(HtmlAmbiguous.TITLE, text);
+    return ambiguous(Ambiguous.TITLE, text);
   }
 
   //

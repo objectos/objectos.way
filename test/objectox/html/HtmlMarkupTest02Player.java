@@ -566,13 +566,13 @@ public class HtmlMarkupTest02Player {
     MarkupPojo compiler;
     compiler = new Markup.OfHtml();
 
-    compiler.ambiguous(HtmlAmbiguous.TITLE, "element");
+    compiler.ambiguous(Ambiguous.TITLE, "element");
 
     compiler.elementBegin(ElementNamePojo.HEAD);
     compiler.elementValue(HtmlInstruction.ELEMENT);
     compiler.elementEnd();
 
-    compiler.ambiguous(HtmlAmbiguous.TITLE, "attribute");
+    compiler.ambiguous(Ambiguous.TITLE, "attribute");
 
     compiler.elementBegin(ElementNamePojo.BODY);
     compiler.elementValue(HtmlInstruction.ELEMENT);

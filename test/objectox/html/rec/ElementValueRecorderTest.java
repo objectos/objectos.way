@@ -19,6 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 import objectos.html.AttributeName;
 import objectos.html.AttributeObject;
+import objectox.html.Ambiguous;
 import objectox.html.ByteArray;
 import objectox.html.HtmlByteProto;
 import objectox.html.HtmlBytes;
@@ -506,6 +507,59 @@ public class ElementValueRecorderTest {
         objects,
 
         ObjectArray.of("Ipsum")
+    );
+  }
+
+  @Test(description = "record AMBIGUOUS1")
+  public void record10() {
+    final ByteArray aux;
+    aux = ByteArray.of();
+
+    final Ambiguous name;
+    name = Ambiguous.TITLE;
+
+    final ByteArray main;
+    main = ByteArray.of(
+        HtmlByteProto.AMBIGUOUS1,
+        HtmlBytes.encodeInt0(name.ordinal()),
+        HtmlBytes.encodeInt0(0),
+        HtmlBytes.encodeInt1(0),
+        HtmlByteProto.INTERNAL5
+    );
+
+    final ObjectArray objects;
+    objects = ObjectArray.of("abc");
+
+    final ElementValueRecorder subject;
+    subject = create(aux, main, objects);
+
+    final int mainContents;
+    mainContents = main.size();
+
+    assertEquals(subject.record(mainContents, HtmlInstruction.ELEMENT), 0);
+
+    assertEquals(
+        aux,
+
+        ByteArray.of(HtmlByteProto.INTERNAL)
+    );
+
+    assertEquals(
+        main,
+
+        ByteArray.of(
+            HtmlByteProto.AMBIGUOUS1,
+            HtmlBytes.encodeInt0(name.ordinal()),
+            HtmlBytes.encodeInt0(0),
+            HtmlBytes.encodeInt1(0),
+            HtmlByteProto.INTERNAL5
+        )
+    );
+
+    assertEquals(
+        objects,
+
+        ObjectArray.of("abc")
     );
   }
 

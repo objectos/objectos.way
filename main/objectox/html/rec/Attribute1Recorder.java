@@ -30,23 +30,17 @@ final class Attribute1Recorder {
 
   private final ObjectArray objects;
 
-  private final AttributeName name;
-
-  private final Object value;
-
-  Attribute1Recorder(ByteArray main, ObjectArray objects, AttributeName name, Object value) {
+  Attribute1Recorder(ByteArray main, ObjectArray objects) {
     this.main = main;
 
     this.objects = objects;
-
-    this.name = name;
-
-    this.value = Objects.requireNonNull(value, "value == null");
   }
 
-  public final Html.Instruction record() {
+  public final Html.Instruction record(AttributeName name, Object value) {
     final int index;
     index = name.index();
+
+    Objects.requireNonNull(value, "value == null");
 
     if (index >= 0) {
       final int valueIndex;

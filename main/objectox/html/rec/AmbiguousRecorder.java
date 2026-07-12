@@ -15,55 +15,51 @@
  */
 package objectox.html.rec;
 
-import objectos.html.AttributeName;
+import java.util.Objects;
 import objectos.way.Html;
+import objectox.html.Ambiguous;
 import objectox.html.ByteArray;
 import objectox.html.HtmlByteProto;
 import objectox.html.HtmlBytes;
 import objectox.html.HtmlInstruction;
 import objectox.html.ObjectArray;
 
-final class Attribute0Recorder {
+final class AmbiguousRecorder {
 
   private final ByteArray main;
 
   private final ObjectArray objects;
 
-  Attribute0Recorder(ByteArray main, ObjectArray objects) {
+  AmbiguousRecorder(ByteArray main, ObjectArray objects) {
     this.main = main;
 
     this.objects = objects;
   }
 
-  public final Html.Instruction record(AttributeName name) {
-    final int index;
-    index = name.index();
+  public final Html.Instruction record(Ambiguous name, String value) {
+    final String v;
+    v = Objects.requireNonNull(value, "value == null");
 
-    if (index >= 0) {
-      main.add(
-          HtmlByteProto.ATTRIBUTE0,
+    final int ordinal;
+    ordinal = name.ordinal();
 
-          // name
-          HtmlBytes.encodeInt0(index),
+    final int object;
+    object = objects.add(v);
 
-          HtmlByteProto.INTERNAL3
-      );
-    } else {
-      final int customIndex;
-      customIndex = objects.add(name);
+    main.add(
+        HtmlByteProto.AMBIGUOUS1,
 
-      main.add(
-          HtmlByteProto.CUSTOM_ATTR0,
+        // name
+        HtmlBytes.encodeInt0(ordinal),
 
-          // name
-          HtmlBytes.encodeInt0(customIndex),
-          HtmlBytes.encodeInt1(customIndex),
+        // value
+        HtmlBytes.encodeInt0(object),
+        HtmlBytes.encodeInt1(object),
 
-          HtmlByteProto.INTERNAL4
-      );
-    }
+        HtmlByteProto.INTERNAL5
+    );
 
-    return HtmlInstruction.ATTRIBUTE;
+    return HtmlInstruction.ELEMENT;
   }
 
 }

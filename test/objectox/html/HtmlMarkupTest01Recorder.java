@@ -393,7 +393,7 @@ public class HtmlMarkupTest01Recorder {
         html,
 
         HtmlByteProto.MARKED5,
-        (byte) HtmlAmbiguous.TITLE.code(),
+        (byte) Ambiguous.TITLE.code(),
         HtmlBytes.encodeInt0(0),
         HtmlBytes.encodeInt1(0),
         HtmlByteProto.INTERNAL5,
@@ -410,7 +410,7 @@ public class HtmlMarkupTest01Recorder {
         HtmlByteProto.INTERNAL,
 
         HtmlByteProto.MARKED5,
-        (byte) HtmlAmbiguous.TITLE.code(),
+        (byte) Ambiguous.TITLE.code(),
         HtmlBytes.encodeInt0(1),
         HtmlBytes.encodeInt1(1),
         HtmlByteProto.INTERNAL5,
@@ -505,7 +505,7 @@ public class HtmlMarkupTest01Recorder {
         html,
 
         HtmlByteProto.AMBIGUOUS1,
-        (byte) HtmlAmbiguous.STYLE.code(),
+        (byte) Ambiguous.STYLE.code(),
         HtmlBytes.encodeInt0(0),
         HtmlBytes.encodeInt1(0),
         HtmlByteProto.INTERNAL5

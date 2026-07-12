@@ -20,7 +20,7 @@ import objectos.html.ElementName;
 import objectox.html.attr.AttributeNamePojo;
 import objectox.html.elem.ElementNamePojo;
 
-enum HtmlAmbiguous {
+public enum Ambiguous {
 
   CLIPPATH(AttributeNamePojo.CLIP_PATH, ElementNamePojo.CLIPPATH) {
     @Override
@@ -61,7 +61,7 @@ enum HtmlAmbiguous {
     }
   };
 
-  private static final HtmlAmbiguous[] ALL = HtmlAmbiguous.values();
+  private static final Ambiguous[] ALL = Ambiguous.values();
 
   private final int attributeByteCode;
 
@@ -69,7 +69,7 @@ enum HtmlAmbiguous {
 
   private final int elementByteCode;
 
-  private HtmlAmbiguous(AttributeName attribute, ElementNamePojo element) {
+  private Ambiguous(AttributeName attribute, ElementNamePojo element) {
     this.attributeByteCode = attribute.index();
 
     this.element = element;
@@ -77,14 +77,14 @@ enum HtmlAmbiguous {
     this.elementByteCode = element.index();
   }
 
-  public static HtmlAmbiguous decode(byte b0) {
+  public static Ambiguous decode(byte b0) {
     int ordinal;
     ordinal = HtmlBytes.decodeInt(b0);
 
     return ALL[ordinal];
   }
 
-  public static HtmlAmbiguous get(int code) {
+  public static Ambiguous get(int code) {
     return ALL[code];
   }
 

@@ -18,6 +18,7 @@ package objectox.html.rec;
 import static org.testng.Assert.assertEquals;
 
 import objectos.html.AttributeName;
+import objectox.html.Ambiguous;
 import objectox.html.ByteArray;
 import objectox.html.HtmlByteProto;
 import objectox.html.HtmlBytes;
@@ -232,6 +233,41 @@ public class ElementInternalEncoderTest {
 
             HtmlByteProto.RAW,
             HtmlBytes.encodeInt0(5)
+        )
+    );
+  }
+
+  @Test(description = "encode AMBIGUOUS1")
+  public final void encode07() {
+    final Ambiguous name;
+    name = Ambiguous.TITLE;
+
+    final ByteArray main;
+    main = ByteArray.of(
+        HtmlByteProto.AMBIGUOUS1,
+        HtmlBytes.encodeInt0(name.ordinal()),
+        HtmlBytes.encodeInt0(0),
+        HtmlBytes.encodeInt1(0),
+        HtmlByteProto.INTERNAL5
+    );
+
+    final ElementInternalEncoder subject;
+    subject = new ElementInternalEncoder(main);
+
+    assertEquals(subject.encode(0), 5);
+
+    assertEquals(
+        main,
+
+        ByteArray.of(
+            HtmlByteProto.MARKED5,
+            HtmlBytes.encodeInt0(name.ordinal()),
+            HtmlBytes.encodeInt0(0),
+            HtmlBytes.encodeInt1(0),
+            HtmlByteProto.INTERNAL5,
+
+            HtmlByteProto.AMBIGUOUS1,
+            HtmlBytes.encodeInt0(6)
         )
     );
   }

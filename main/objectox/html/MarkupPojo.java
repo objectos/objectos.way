@@ -782,8 +782,8 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
           byte ordinalByte;
           ordinalByte = main[auxStart++];
 
-          HtmlAmbiguous ambiguous;
-          ambiguous = HtmlAmbiguous.decode(ordinalByte);
+          Ambiguous ambiguous;
+          ambiguous = Ambiguous.decode(ordinalByte);
 
           if (ambiguous.isAttributeOf(parent)) {
             index = rollbackIndex;
@@ -867,8 +867,8 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
         byte ordinalByte;
         ordinalByte = main[auxStart++];
 
-        HtmlAmbiguous ambiguous;
-        ambiguous = HtmlAmbiguous.decode(ordinalByte);
+        Ambiguous ambiguous;
+        ambiguous = Ambiguous.decode(ordinalByte);
 
         byte attr;
         attr = ambiguous.encodeAttribute();
@@ -1058,8 +1058,8 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
           int ordinal;
           ordinal = HtmlBytes.decodeInt(ordinalByte);
 
-          HtmlAmbiguous ambiguous;
-          ambiguous = HtmlAmbiguous.get(ordinal);
+          Ambiguous ambiguous;
+          ambiguous = Ambiguous.get(ordinal);
 
           // find out the parent
           DomElement element;
@@ -1352,8 +1352,8 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
           int ordinal;
           ordinal = HtmlBytes.decodeInt(ordinalByte);
 
-          HtmlAmbiguous ambiguous;
-          ambiguous = HtmlAmbiguous.get(ordinal);
+          Ambiguous ambiguous;
+          ambiguous = Ambiguous.get(ordinal);
 
           // find out parent element
           DomElement element;
@@ -1454,8 +1454,8 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
         int ordinal;
         ordinal = HtmlBytes.decodeInt(ordinalByte);
 
-        HtmlAmbiguous ambiguous;
-        ambiguous = HtmlAmbiguous.get(ordinal);
+        Ambiguous ambiguous;
+        ambiguous = Ambiguous.get(ordinal);
 
         ElementNamePojo element;
         element = ambiguous.element;
@@ -1810,7 +1810,7 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
   }
 
   @Override
-  final Html.Instruction.OfAmbiguous ambiguous(HtmlAmbiguous name, String value) {
+  final Html.Instruction.OfAmbiguous ambiguous(Ambiguous name, String value) {
     Objects.requireNonNull(value, "value == null");
 
     int ordinal;

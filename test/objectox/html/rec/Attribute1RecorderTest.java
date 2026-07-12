@@ -42,9 +42,9 @@ public class Attribute1RecorderTest {
     value = "foo";
 
     final Attribute1Recorder subject;
-    subject = new Attribute1Recorder(main, objects, name, value);
+    subject = new Attribute1Recorder(main, objects);
 
-    assertEquals(subject.record(), HtmlInstruction.ATTRIBUTE);
+    assertEquals(subject.record(name, value), HtmlInstruction.ATTRIBUTE);
 
     assertEquals(
         main,
@@ -83,9 +83,9 @@ public class Attribute1RecorderTest {
     value = "bar";
 
     final Attribute1Recorder subject;
-    subject = new Attribute1Recorder(main, objects, name, value);
+    subject = new Attribute1Recorder(main, objects);
 
-    assertEquals(subject.record(), HtmlInstruction.ATTRIBUTE);
+    assertEquals(subject.record(name, value), HtmlInstruction.ATTRIBUTE);
 
     assertEquals(
         main,
@@ -124,7 +124,10 @@ public class Attribute1RecorderTest {
     final Object value;
     value = null;
 
-    new Attribute1Recorder(main, objects, name, value);
+    final Attribute1Recorder subject;
+    subject = new Attribute1Recorder(main, objects);
+
+    subject.record(name, value);
   }
 
 }

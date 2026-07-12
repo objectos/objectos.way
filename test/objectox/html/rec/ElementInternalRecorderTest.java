@@ -18,6 +18,7 @@ package objectox.html.rec;
 import static org.testng.Assert.assertEquals;
 
 import objectos.html.AttributeName;
+import objectox.html.Ambiguous;
 import objectox.html.ByteArray;
 import objectox.html.HtmlByteProto;
 import objectox.html.HtmlBytes;
@@ -282,6 +283,50 @@ public class ElementInternalRecorderTest {
             HtmlBytes.encodeInt0(0),
             HtmlBytes.encodeInt1(0),
             HtmlByteProto.INTERNAL4
+        )
+    );
+  }
+
+  @Test(description = "record AMBIGUOUS1")
+  public final void record07() {
+    final ByteArray aux;
+    aux = ByteArray.of();
+
+    final Ambiguous name;
+    name = Ambiguous.TITLE;
+
+    final ByteArray main;
+    main = ByteArray.of(
+        HtmlByteProto.AMBIGUOUS1,
+        HtmlBytes.encodeInt0(name.ordinal()),
+        HtmlBytes.encodeInt0(0),
+        HtmlBytes.encodeInt1(0),
+        HtmlByteProto.INTERNAL5
+    );
+
+    final ElementInternalRecorder subject;
+    subject = new ElementInternalRecorder(aux, main);
+
+    final int mainContents;
+    mainContents = main.size();
+
+    assertEquals(subject.record(mainContents), 0);
+
+    assertEquals(
+        aux,
+
+        ByteArray.of(HtmlByteProto.INTERNAL)
+    );
+
+    assertEquals(
+        main,
+
+        ByteArray.of(
+            HtmlByteProto.AMBIGUOUS1,
+            HtmlBytes.encodeInt0(name.ordinal()),
+            HtmlBytes.encodeInt0(0),
+            HtmlBytes.encodeInt1(0),
+            HtmlByteProto.INTERNAL5
         )
     );
   }
