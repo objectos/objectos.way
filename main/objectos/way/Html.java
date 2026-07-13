@@ -20,6 +20,11 @@ import objectos.html.AttributeName;
 import objectos.html.AttributeObject;
 import objectos.html.Component;
 import objectos.html.ElementName;
+import objectos.html.Fragment0;
+import objectos.html.Fragment1;
+import objectos.html.Fragment2;
+import objectos.html.Fragment3;
+import objectos.html.Fragment4;
 import objectos.html.Markup;
 import objectos.internal.Check;
 import objectos.script.JsAction;
@@ -32,88 +37,6 @@ import objectox.html.attr.AttributeOrNoOp;
  * The <strong>Objectos HTML</strong> main class.
  */
 public final class Html {
-
-  /// A fragment represents a set of markup or template instructions to be
-  /// lazily applied.
-  ///
-  /// The set of instructions MUST be of the same markup or template instance
-  /// where this fragment will be included.
-  public sealed interface Fragment {
-
-    /// A fragment that takes no arguments.
-    @FunctionalInterface
-    non-sealed interface Of0 extends Fragment {
-
-      /// Invokes this set of instructions.
-      void invoke();
-
-    }
-
-    /// A fragment that takes one argument.
-    ///
-    /// @param <T1> the type of the argument
-    @FunctionalInterface
-    non-sealed interface Of1<T1> extends Fragment {
-
-      /// Invokes this set of instructions.
-      ///
-      /// @param arg1 the argument
-      void invoke(T1 arg1);
-
-    }
-
-    /// A fragment that takes two arguments.
-    ///
-    /// @param <T1> the type of the first argument
-    /// @param <T2> the type of the second argument
-    @FunctionalInterface
-    non-sealed interface Of2<T1, T2> extends Fragment {
-
-      /// Invokes this set of instructions.
-      ///
-      /// @param arg1 the first argument
-      /// @param arg2 the second argument
-      void invoke(T1 arg1, T2 arg2);
-
-    }
-
-    /// A fragment that takes three arguments.
-    ///
-    /// @param <T1> the type of the first argument
-    /// @param <T2> the type of the second argument
-    /// @param <T3> the type of the third argument
-    @FunctionalInterface
-    non-sealed interface Of3<T1, T2, T3> extends Fragment {
-
-      /// Invokes this set of instructions.
-      ///
-      /// @param arg1 the first argument
-      /// @param arg2 the second argument
-      /// @param arg3 the third argument
-      void invoke(T1 arg1, T2 arg2, T3 arg3);
-
-    }
-
-    /// A fragment that takes four arguments.
-    ///
-    /// @param <T1> the type of the first argument
-    /// @param <T2> the type of the second argument
-    /// @param <T3> the type of the third argument
-    /// @param <T4> the type of the fourth argument
-    @FunctionalInterface
-    non-sealed interface Of4<T1, T2, T3, T4> extends Fragment {
-
-      /// Invokes this set of instructions.
-      ///
-      /// @param arg1 the first argument
-      /// @param arg2 the second argument
-      /// @param arg3 the third argument
-      /// @param arg4 the fourth argument
-      void invoke(T1 arg1, T2 arg2, T3 arg3, T4 arg4);
-
-    }
-
-  }
 
   /**
    * Represents an instruction that generates part of the output of an HTML
@@ -370,7 +293,7 @@ public final class Html {
     /// @param fragment the fragment to include
     ///
     /// @return an instruction representing the fragment
-    protected final Html.Instruction.OfFragment f(Html.Fragment.Of0 fragment) {
+    protected final Html.Instruction.OfFragment f(Fragment0 fragment) {
       return $html().f(fragment);
     }
 
@@ -395,7 +318,7 @@ public final class Html {
     /// @param arg1 the first argument
     ///
     /// @return an instruction representing the fragment
-    protected final <T1> Html.Instruction.OfFragment f(Html.Fragment.Of1<T1> fragment, T1 arg1) {
+    protected final <T1> Html.Instruction.OfFragment f(Fragment1<T1> fragment, T1 arg1) {
       return $html().f(fragment, arg1);
     }
 
@@ -416,7 +339,7 @@ public final class Html {
     /// @param arg2 the second argument
     ///
     /// @return an instruction representing the fragment
-    protected final <T1, T2> Html.Instruction.OfFragment f(Html.Fragment.Of2<T1, T2> fragment, T1 arg1, T2 arg2) {
+    protected final <T1, T2> Html.Instruction.OfFragment f(Fragment2<T1, T2> fragment, T1 arg1, T2 arg2) {
       return $html().f(fragment, arg1, arg2);
     }
 
@@ -448,7 +371,7 @@ public final class Html {
     /// @param arg3 the third argument
     ///
     /// @return an instruction representing the fragment
-    protected final <T1, T2, T3> Html.Instruction.OfFragment f(Html.Fragment.Of3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3) {
+    protected final <T1, T2, T3> Html.Instruction.OfFragment f(Fragment3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3) {
       return $html().f(fragment, arg1, arg2, arg3);
     }
 
@@ -465,7 +388,7 @@ public final class Html {
     /// @param arg4 the fourth argument
     ///
     /// @return an instruction representing the fragment
-    protected final <T1, T2, T3, T4> Html.Instruction.OfFragment f(Html.Fragment.Of4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
+    protected final <T1, T2, T3, T4> Html.Instruction.OfFragment f(Fragment4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
       return $html().f(fragment, arg1, arg2, arg3, arg4);
     }
 

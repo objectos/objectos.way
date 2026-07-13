@@ -28,7 +28,9 @@ final class ElementRecorder {
 
   private final ElementValueRecorder elementValueRecorder;
 
-  private final ElementTrailerRecorder elementTrailerRecorder;
+  private final ForwardOffsetRecorder forwardOffsetRecorder;
+
+  private final ReverseOffsetRecorder reverseOffsetRecorder;
 
   ElementRecorder(
       ElementNameRecorder elementNameRecorder,
@@ -37,7 +39,9 @@ final class ElementRecorder {
 
       ElementValueRecorder elementValueRecorder,
 
-      ElementTrailerRecorder elementTrailerRecorder
+      ForwardOffsetRecorder forwardOffsetRecorder,
+
+      ReverseOffsetRecorder reverseOffsetRecorder
   ) {
     this.elementNameRecorder = elementNameRecorder;
 
@@ -45,7 +49,9 @@ final class ElementRecorder {
 
     this.elementValueRecorder = elementValueRecorder;
 
-    this.elementTrailerRecorder = elementTrailerRecorder;
+    this.forwardOffsetRecorder = forwardOffsetRecorder;
+
+    this.reverseOffsetRecorder = reverseOffsetRecorder;
   }
 
   public static ElementRecorder of(ByteArray aux, ByteArray main, ObjectArray objects) {
@@ -64,7 +70,9 @@ final class ElementRecorder {
             new ElementInternalRecorder(aux, main)
         ),
 
-        new ElementTrailerRecorder(main)
+        new ForwardOffsetRecorder(main),
+
+        new ReverseOffsetRecorder(main)
     );
   }
 
@@ -96,7 +104,9 @@ final class ElementRecorder {
 
     elementValueEncoder.encode(auxStart, mainContents);
 
-    elementTrailerRecorder.record(mainStart, mainContents);
+    reverseOffsetRecorder.record(mainContents);
+
+    forwardOffsetRecorder.two(mainStart);
   }
 
 }

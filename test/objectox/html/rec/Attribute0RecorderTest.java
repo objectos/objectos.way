@@ -48,9 +48,7 @@ public class Attribute0RecorderTest {
 
         ByteArray.of(
             HtmlByteProto.ATTRIBUTE0,
-
             HtmlBytes.encodeInt0(name.index()),
-
             HtmlByteProto.INTERNAL3
         )
     );

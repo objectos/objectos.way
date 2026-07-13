@@ -275,7 +275,7 @@ public final class HtmlBytes {
 
   static final int FIXED2_MAX = (1 << 16) - 1;
 
-  static final int FIXED3_MAX = (1 << 24) - 1;
+  public static final int FIXED3_MAX = (1 << 24) - 1;
 
   public static int encodeLength3(byte[] buf, int off, int length) {
     if (length < 0) {

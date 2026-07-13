@@ -20,6 +20,11 @@ import java.util.Objects;
 import objectos.html.AttributeName;
 import objectos.html.AttributeObject;
 import objectos.html.ElementName;
+import objectos.html.Fragment0;
+import objectos.html.Fragment1;
+import objectos.html.Fragment2;
+import objectos.html.Fragment3;
+import objectos.html.Fragment4;
 import objectos.html.Markup;
 import objectos.internal.Check;
 import objectos.internal.Util;
@@ -137,7 +142,7 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
   // ##################################################################
 
   @Override
-  public final Html.Instruction.OfFragment f(Html.Fragment.Of0 fragment) {
+  public final Html.Instruction.OfFragment f(Fragment0 fragment) {
     Objects.requireNonNull(fragment, "fragment == null");
 
     int index;
@@ -151,7 +156,7 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
   }
 
   @Override
-  public final <T1> Html.Instruction.OfFragment f(Html.Fragment.Of1<T1> fragment, T1 arg1) {
+  public final <T1> Html.Instruction.OfFragment f(Fragment1<T1> fragment, T1 arg1) {
     Objects.requireNonNull(fragment, "fragment == null");
 
     int index;
@@ -165,7 +170,7 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
   }
 
   @Override
-  public final <T1, T2> Html.Instruction.OfFragment f(Html.Fragment.Of2<T1, T2> fragment, T1 arg1, T2 arg2) {
+  public final <T1, T2> Html.Instruction.OfFragment f(Fragment2<T1, T2> fragment, T1 arg1, T2 arg2) {
     Objects.requireNonNull(fragment, "fragment == null");
 
     int index;
@@ -179,7 +184,7 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
   }
 
   @Override
-  public final <T1, T2, T3> Html.Instruction.OfFragment f(Html.Fragment.Of3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3) {
+  public final <T1, T2, T3> Html.Instruction.OfFragment f(Fragment3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3) {
     Objects.requireNonNull(fragment, "fragment == null");
 
     int index;
@@ -193,7 +198,7 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
   }
 
   @Override
-  public final <T1, T2, T3, T4> Html.Instruction.OfFragment f(Html.Fragment.Of4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
+  public final <T1, T2, T3, T4> Html.Instruction.OfFragment f(Fragment4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
     Objects.requireNonNull(fragment, "fragment == null");
 
     int index;

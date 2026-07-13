@@ -207,7 +207,7 @@ public sealed interface Markup extends BinaryObject, Testable {
   /// @param fragment the fragment to include
   ///
   /// @return an instruction representing the fragment
-  Html.Instruction.OfFragment f(Html.Fragment.Of0 fragment);
+  Html.Instruction.OfFragment f(Fragment0 fragment);
 
   /// Renders the specified fragment as part of this document.
   ///
@@ -230,7 +230,7 @@ public sealed interface Markup extends BinaryObject, Testable {
   /// @param arg1 the first argument
   ///
   /// @return an instruction representing the fragment
-  <T1> Html.Instruction.OfFragment f(Html.Fragment.Of1<T1> fragment, T1 arg1);
+  <T1> Html.Instruction.OfFragment f(Fragment1<T1> fragment, T1 arg1);
 
   /// Renders the specified fragment as part of this document.
   ///
@@ -249,7 +249,7 @@ public sealed interface Markup extends BinaryObject, Testable {
   /// @param arg2 the second argument
   ///
   /// @return an instruction representing the fragment
-  <T1, T2> Html.Instruction.OfFragment f(Html.Fragment.Of2<T1, T2> fragment, T1 arg1, T2 arg2);
+  <T1, T2> Html.Instruction.OfFragment f(Fragment2<T1, T2> fragment, T1 arg1, T2 arg2);
 
   /// Renders the specified fragment as part of this document.
   ///
@@ -279,7 +279,7 @@ public sealed interface Markup extends BinaryObject, Testable {
   /// @param arg3 the third argument
   ///
   /// @return an instruction representing the fragment
-  <T1, T2, T3> Html.Instruction.OfFragment f(Html.Fragment.Of3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3);
+  <T1, T2, T3> Html.Instruction.OfFragment f(Fragment3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3);
 
   /// Renders the specified fragment as part of this document.
   ///
@@ -294,7 +294,7 @@ public sealed interface Markup extends BinaryObject, Testable {
   /// @param arg4 the fourth argument
   ///
   /// @return an instruction representing the fragment
-  <T1, T2, T3, T4> Html.Instruction.OfFragment f(Html.Fragment.Of4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
+  <T1, T2, T3, T4> Html.Instruction.OfFragment f(Fragment4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
 
   /// Flattens the specified instructions so that each of the specified
   /// instructions is individually added, in order, to a receiving element.

@@ -17,9 +17,9 @@ package objectox.html;
 
 import java.util.Arrays;
 import objectos.html.ClassName;
+import objectos.html.Fragment0;
 import objectos.html.Id;
 import objectos.html.Markup;
-import objectos.way.Html;
 import objectox.html.attr.AttributeNamePojo;
 import objectox.html.elem.ElementNamePojo;
 import org.testng.annotations.Test;
@@ -194,7 +194,7 @@ public class HtmlMarkupTest01Recorder {
     Markup.OfHtml html;
     html = new Markup.OfHtml();
 
-    Html.Fragment.Of0 action;
+    Fragment0 action;
     action = () -> {
       html.meta(html.charset("utf-8"));
     };
@@ -758,7 +758,7 @@ public class HtmlMarkupTest01Recorder {
     Markup.OfHtml html;
     html = new Markup.OfHtml();
 
-    Html.Fragment.Of0 action;
+    Fragment0 action;
     action = () -> {
       html.doctype();
       html.html();
@@ -804,7 +804,7 @@ public class HtmlMarkupTest01Recorder {
     Markup.OfHtml html;
     html = new Markup.OfHtml();
 
-    Html.Fragment.Of0 action;
+    Fragment0 action;
     action = () -> {};
 
     int startIndex;

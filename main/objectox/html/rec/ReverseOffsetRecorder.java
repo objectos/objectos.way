@@ -19,21 +19,15 @@ import objectox.html.ByteArray;
 import objectox.html.HtmlByteProto;
 import objectox.html.HtmlBytes;
 
-final class ElementTrailerRecorder {
+final class ReverseOffsetRecorder {
 
   private final ByteArray main;
 
-  ElementTrailerRecorder(ByteArray main) {
+  ReverseOffsetRecorder(ByteArray main) {
     this.main = main;
   }
 
-  public final void record(final int mainStart, final int mainContents) {
-    reverseOffset(mainContents);
-
-    forwardOffset(mainStart);
-  }
-
-  private void reverseOffset(final int mainContents) {
+  public final void record(int from) {
     // mark the end
     final byte b0;
     b0 = HtmlByteProto.END;
@@ -46,7 +40,7 @@ final class ElementTrailerRecorder {
     mainIndex = main.size();
 
     final int offset;
-    offset = mainIndex - mainContents;
+    offset = mainIndex - from;
 
     if (offset <= HtmlBytes.VARINT_MAX1) {
       final byte b1;
@@ -79,27 +73,11 @@ final class ElementTrailerRecorder {
     }
 
     else {
-      throw new IllegalArgumentException(
-          "HtmlTemplate is too large :: length=" + offset
-      );
+      final String msg;
+      msg = "HTML is too large to record: offset=%d".formatted(offset);
+
+      throw new IllegalArgumentException(msg);
     }
-  }
-
-  private void forwardOffset(final int mainStart) {
-    final int mainIndex;
-    mainIndex = main.size();
-
-    int offset;
-
-    // set the end index of the declaration
-    offset = mainIndex - mainStart;
-
-    // skip ByteProto.FOO + len0 + len1
-    offset -= 3;
-
-    // we skip the first byte proto
-    main.set(mainStart + 1, HtmlBytes.encodeInt0(offset));
-    main.set(mainStart + 2, HtmlBytes.encodeInt1(offset));
   }
 
 }

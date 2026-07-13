@@ -21,6 +21,11 @@ import objectos.html.AttributeName;
 import objectos.html.AttributeObject;
 import objectos.html.Component;
 import objectos.html.ElementName;
+import objectos.html.Fragment0;
+import objectos.html.Fragment1;
+import objectos.html.Fragment2;
+import objectos.html.Fragment3;
+import objectos.html.Fragment4;
 import objectos.script.JsAction;
 import objectos.way.Html;
 import objectox.html.attr.AttributeNamePojo;
@@ -108,7 +113,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param fragment the fragment to include
   /// 
   /// @return an instruction representing the fragment
-  public abstract Html.Instruction.OfFragment f(Html.Fragment.Of0 fragment);
+  public abstract Html.Instruction.OfFragment f(Fragment0 fragment);
 
   /// Renders the specified fragment as part of this document.
   ///
@@ -131,7 +136,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param arg1 the first argument
   /// 
   /// @return an instruction representing the fragment
-  public abstract <T1> Html.Instruction.OfFragment f(Html.Fragment.Of1<T1> fragment, T1 arg1);
+  public abstract <T1> Html.Instruction.OfFragment f(Fragment1<T1> fragment, T1 arg1);
 
   /// Renders the specified fragment as part of this document.
   ///
@@ -150,7 +155,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param arg2 the second argument
   /// 
   /// @return an instruction representing the fragment
-  public abstract <T1, T2> Html.Instruction.OfFragment f(Html.Fragment.Of2<T1, T2> fragment, T1 arg1, T2 arg2);
+  public abstract <T1, T2> Html.Instruction.OfFragment f(Fragment2<T1, T2> fragment, T1 arg1, T2 arg2);
 
   /// Renders the specified fragment as part of this document.
   ///
@@ -178,7 +183,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param arg3 the third argument
   /// 
   /// @return an instruction representing the fragment
-  public abstract <T1, T2, T3> Html.Instruction.OfFragment f(Html.Fragment.Of3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3);
+  public abstract <T1, T2, T3> Html.Instruction.OfFragment f(Fragment3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3);
 
   /// Renders the specified fragment as part of this document.
   ///
@@ -193,7 +198,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param arg4 the fourth argument
   /// 
   /// @return an instruction representing the fragment
-  public abstract <T1, T2, T3, T4> Html.Instruction.OfFragment f(Html.Fragment.Of4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
+  public abstract <T1, T2, T3, T4> Html.Instruction.OfFragment f(Fragment4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
 
   /// Flattens the specified instructions so that each of the specified
   /// instructions is individually added, in order, to a receiving element.
