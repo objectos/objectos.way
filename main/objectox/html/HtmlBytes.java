@@ -237,11 +237,28 @@ public final class HtmlBytes {
     };
   }
 
+  public static int decodeOffset(ByteArray buf, int startIndex, int endIndex) {
+    int length;
+    length = endIndex - startIndex;
+
+    return switch (length) {
+      case 1 -> buf.get(startIndex);
+
+      case 2 -> decodeVarint(buf.get(startIndex), buf.get(startIndex + 1));
+
+      case 3 -> decodeVarint(buf.get(startIndex), buf.get(startIndex + 1), buf.get(startIndex + 2));
+
+      default -> throw new IllegalArgumentException(
+          "HtmlTemplate is too large :: length=" + length
+      );
+    };
+  }
+
   public static int toInt(byte b, int shift) {
     return (b & BYTE_MASK) << shift;
   }
 
-  private static int decodeVarint(byte b0, byte b1) {
+  public static int decodeVarint(byte b0, byte b1) {
     int int0;
     int0 = decodeVarintValue(b0, 0);
 
@@ -251,7 +268,7 @@ public final class HtmlBytes {
     return int0 | int1;
   }
 
-  private static int decodeVarint(byte b0, byte b1, byte b2) {
+  public static int decodeVarint(byte b0, byte b1, byte b2) {
     int int0;
     int0 = decodeVarintValue(b0, 0);
 

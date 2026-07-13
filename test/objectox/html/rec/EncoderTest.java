@@ -27,6 +27,16 @@ import org.testng.annotations.Test;
 
 public class EncoderTest {
 
+  private Encoder create(ByteArray main) {
+    return new Encoder(
+        main,
+
+        new FlattenEncoder(main),
+
+        new ElementEncoder(main)
+    );
+  }
+
   @Test(description = "encode ATTRIBUTE0")
   public final void encode01() {
     final ByteArray main;
@@ -37,7 +47,7 @@ public class EncoderTest {
     );
 
     final Encoder subject;
-    subject = new Encoder(main);
+    subject = create(main);
 
     assertEquals(subject.encode(0), 3);
 
@@ -65,7 +75,7 @@ public class EncoderTest {
     );
 
     final Encoder subject;
-    subject = new Encoder(main);
+    subject = create(main);
 
     assertEquals(subject.encode(0), 4);
 
@@ -98,7 +108,7 @@ public class EncoderTest {
     );
 
     final Encoder subject;
-    subject = new Encoder(main);
+    subject = create(main);
 
     assertEquals(subject.encode(0), 5);
 
@@ -130,7 +140,7 @@ public class EncoderTest {
     );
 
     final Encoder subject;
-    subject = new Encoder(main);
+    subject = create(main);
 
     assertEquals(subject.encode(0), 6);
 
@@ -161,7 +171,7 @@ public class EncoderTest {
     );
 
     final Encoder subject;
-    subject = new Encoder(main);
+    subject = create(main);
 
     assertEquals(subject.encode(0), 4);
 
@@ -190,7 +200,7 @@ public class EncoderTest {
     );
 
     final Encoder subject;
-    subject = new Encoder(main);
+    subject = create(main);
 
     assertEquals(subject.encode(0), 4);
 
@@ -223,7 +233,7 @@ public class EncoderTest {
     );
 
     final Encoder subject;
-    subject = new Encoder(main);
+    subject = create(main);
 
     assertEquals(subject.encode(0), 5);
 
@@ -256,7 +266,7 @@ public class EncoderTest {
     );
 
     final Encoder subject;
-    subject = new Encoder(main);
+    subject = create(main);
 
     assertEquals(subject.encode(0), 7);
 
@@ -299,7 +309,7 @@ public class EncoderTest {
     );
 
     final Encoder subject;
-    subject = new Encoder(main);
+    subject = create(main);
 
     assertEquals(subject.encode(0), 15);
 

@@ -23,8 +23,16 @@ final class Encoder {
 
   private final ByteArray main;
 
-  Encoder(ByteArray main) {
+  private final FlattenEncoder flattenEncoder;
+
+  private final ElementEncoder elementEncoder;
+
+  Encoder(ByteArray main, FlattenEncoder flattenEncoder, ElementEncoder elementEncoder) {
     this.main = main;
+
+    this.flattenEncoder = flattenEncoder;
+
+    this.elementEncoder = elementEncoder;
   }
 
   public final int encode(final int index) {
@@ -43,7 +51,9 @@ final class Encoder {
 
       case HtmlByteProto.CUSTOM_ATTR1 -> encodeInternal(index, proto, 6, HtmlByteProto.MARKED6);
 
-      case HtmlByteProto.ELEMENT -> encodeElement(index);
+      case HtmlByteProto.ELEMENT -> elementEncoder.encode(index);
+
+      case HtmlByteProto.FLATTEN -> flattenEncoder.encode(index);
 
       case HtmlByteProto.FRAGMENT -> encodeFragment(index);
 
@@ -53,37 +63,6 @@ final class Encoder {
         );
       }
     };
-  }
-
-  private int encodeElement(final int startIndex) {
-    int index;
-    index = startIndex;
-
-    // mark this element
-    main.set(index++, HtmlByteProto.LENGTH2);
-
-    // decode the length
-    final byte len0;
-    len0 = main.get(index++);
-
-    final byte len1;
-    len1 = main.get(index++);
-
-    // point to next element
-    final int offset;
-    offset = HtmlBytes.decodeInt(len0, len1);
-
-    final int nextIndex;
-    nextIndex = index + offset;
-
-    main.add(HtmlByteProto.ELEMENT);
-
-    final int length;
-    length = main.size() - startIndex;
-
-    HtmlBytes.encodeOffset(main, length);
-
-    return nextIndex;
   }
 
   private int encodeFragment(final int startIndex) {

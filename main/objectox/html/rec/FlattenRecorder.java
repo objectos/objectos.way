@@ -15,14 +15,15 @@
  */
 package objectox.html.rec;
 
-import objectos.html.ElementName;
+import java.util.Objects;
 import objectos.way.Html;
 import objectox.html.ByteArray;
-import objectox.html.ObjectArray;
+import objectox.html.HtmlByteProto;
+import objectox.html.HtmlInstruction;
 
-final class ElementRecorder {
+final class FlattenRecorder {
 
-  private final ElementNameRecorder elementNameRecorder;
+  private final ByteArray main;
 
   private final ElementValueEncoder elementValueEncoder;
 
@@ -32,8 +33,8 @@ final class ElementRecorder {
 
   private final ReverseOffsetRecorder reverseOffsetRecorder;
 
-  ElementRecorder(
-      ElementNameRecorder elementNameRecorder,
+  FlattenRecorder(
+      ByteArray main,
 
       ElementValueEncoder elementValueEncoder,
 
@@ -43,7 +44,7 @@ final class ElementRecorder {
 
       ReverseOffsetRecorder reverseOffsetRecorder
   ) {
-    this.elementNameRecorder = elementNameRecorder;
+    this.main = main;
 
     this.elementValueEncoder = elementValueEncoder;
 
@@ -54,49 +55,30 @@ final class ElementRecorder {
     this.reverseOffsetRecorder = reverseOffsetRecorder;
   }
 
-  public static ElementRecorder of(ByteArray aux, ByteArray main, ObjectArray objects) {
-    return new ElementRecorder(
-        new ElementNameRecorder(main),
+  public final Html.Instruction.OfElement record(Html.Instruction... contents) {
+    final Html.Instruction[] values;
+    values = Objects.requireNonNull(contents, "contents == null");
 
-        new ElementValueEncoder(
-            aux,
-
-            new Encoder(
-                main,
-
-                new FlattenEncoder(main),
-
-                new ElementEncoder(main)
-            )
-        ),
-
-        new ElementValueRecorder(
-            new AttributeObjectRecorder(aux, objects),
-
-            new ElementInternalRecorder(aux, main)
-        ),
-
-        new ForwardOffsetRecorder(main),
-
-        new ReverseOffsetRecorder(main)
-    );
-  }
-
-  public final void record(ElementName name, Html.Instruction... contents) {
     final int auxStart;
     auxStart = elementValueEncoder.auxStart();
 
     final int mainStart;
-    mainStart = elementNameRecorder.mainStart();
+    mainStart = main.size();
 
     int mainContents;
     mainContents = mainStart;
 
-    elementNameRecorder.record(name);
+    main.add(
+        HtmlByteProto.FLATTEN,
 
-    for (int idx = 0; idx < contents.length; idx++) {
+        // length takes 2 bytes
+        HtmlByteProto.NULL,
+        HtmlByteProto.NULL
+    );
+
+    for (int idx = 0; idx < values.length; idx++) {
       final Html.Instruction instruction;
-      instruction = contents[idx];
+      instruction = values[idx];
 
       if (instruction == null) {
         final String msg;
@@ -113,6 +95,8 @@ final class ElementRecorder {
     reverseOffsetRecorder.record(mainContents);
 
     forwardOffsetRecorder.two(mainStart);
+
+    return HtmlInstruction.ELEMENT;
   }
 
 }
