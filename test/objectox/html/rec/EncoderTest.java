@@ -22,23 +22,22 @@ import objectox.html.Ambiguous;
 import objectox.html.ByteArray;
 import objectox.html.HtmlByteProto;
 import objectox.html.HtmlBytes;
+import objectox.html.elem.ElementNamePojo;
 import org.testng.annotations.Test;
 
-public class ElementInternalEncoderTest {
+public class EncoderTest {
 
   @Test(description = "encode ATTRIBUTE0")
   public final void encode01() {
     final ByteArray main;
     main = ByteArray.of(
         HtmlByteProto.ATTRIBUTE0,
-
         HtmlBytes.encodeInt0(AttributeName.READONLY.index()),
-
         HtmlByteProto.INTERNAL3
     );
 
-    final ElementInternalEncoder subject;
-    subject = new ElementInternalEncoder(main);
+    final Encoder subject;
+    subject = new Encoder(main);
 
     assertEquals(subject.encode(0), 3);
 
@@ -47,13 +46,9 @@ public class ElementInternalEncoderTest {
 
         ByteArray.of(
             HtmlByteProto.MARKED3,
-
             HtmlBytes.encodeInt0(AttributeName.READONLY.index()),
-
             HtmlByteProto.INTERNAL3,
-
             HtmlByteProto.ATTRIBUTE0,
-
             HtmlBytes.encodeInt0(4)
         )
     );
@@ -64,15 +59,13 @@ public class ElementInternalEncoderTest {
     final ByteArray main;
     main = ByteArray.of(
         HtmlByteProto.CUSTOM_ATTR0,
-
         HtmlBytes.encodeInt0(0),
         HtmlBytes.encodeInt1(0),
-
         HtmlByteProto.INTERNAL4
     );
 
-    final ElementInternalEncoder subject;
-    subject = new ElementInternalEncoder(main);
+    final Encoder subject;
+    subject = new Encoder(main);
 
     assertEquals(subject.encode(0), 4);
 
@@ -81,14 +74,10 @@ public class ElementInternalEncoderTest {
 
         ByteArray.of(
             HtmlByteProto.MARKED4,
-
             HtmlBytes.encodeInt0(0),
             HtmlBytes.encodeInt1(0),
-
             HtmlByteProto.INTERNAL4,
-
             HtmlByteProto.CUSTOM_ATTR0,
-
             HtmlBytes.encodeInt0(5)
         )
     );
@@ -102,17 +91,14 @@ public class ElementInternalEncoderTest {
     final ByteArray main;
     main = ByteArray.of(
         HtmlByteProto.ATTRIBUTE1,
-
         HtmlBytes.encodeInt0(name.index()),
-
         HtmlBytes.encodeInt0(0),
         HtmlBytes.encodeInt1(0),
-
         HtmlByteProto.INTERNAL5
     );
 
-    final ElementInternalEncoder subject;
-    subject = new ElementInternalEncoder(main);
+    final Encoder subject;
+    subject = new Encoder(main);
 
     assertEquals(subject.encode(0), 5);
 
@@ -121,16 +107,11 @@ public class ElementInternalEncoderTest {
 
         ByteArray.of(
             HtmlByteProto.MARKED5,
-
             HtmlBytes.encodeInt0(name.index()),
-
             HtmlBytes.encodeInt0(0),
             HtmlBytes.encodeInt1(0),
-
             HtmlByteProto.INTERNAL5,
-
             HtmlByteProto.ATTRIBUTE1,
-
             HtmlBytes.encodeInt0(6)
         )
     );
@@ -141,18 +122,15 @@ public class ElementInternalEncoderTest {
     final ByteArray main;
     main = ByteArray.of(
         HtmlByteProto.CUSTOM_ATTR1,
-
         HtmlBytes.encodeInt0(0),
         HtmlBytes.encodeInt1(0),
-
         HtmlBytes.encodeInt0(1),
         HtmlBytes.encodeInt1(1),
-
         HtmlByteProto.INTERNAL6
     );
 
-    final ElementInternalEncoder subject;
-    subject = new ElementInternalEncoder(main);
+    final Encoder subject;
+    subject = new Encoder(main);
 
     assertEquals(subject.encode(0), 6);
 
@@ -161,17 +139,12 @@ public class ElementInternalEncoderTest {
 
         ByteArray.of(
             HtmlByteProto.MARKED6,
-
             HtmlBytes.encodeInt0(0),
             HtmlBytes.encodeInt1(0),
-
             HtmlBytes.encodeInt0(1),
             HtmlBytes.encodeInt1(1),
-
             HtmlByteProto.INTERNAL6,
-
             HtmlByteProto.CUSTOM_ATTR1,
-
             HtmlBytes.encodeInt0(7)
         )
     );
@@ -187,8 +160,8 @@ public class ElementInternalEncoderTest {
         HtmlByteProto.INTERNAL4
     );
 
-    final ElementInternalEncoder subject;
-    subject = new ElementInternalEncoder(main);
+    final Encoder subject;
+    subject = new Encoder(main);
 
     assertEquals(subject.encode(0), 4);
 
@@ -200,7 +173,6 @@ public class ElementInternalEncoderTest {
             HtmlBytes.encodeInt0(0),
             HtmlBytes.encodeInt1(0),
             HtmlByteProto.INTERNAL4,
-
             HtmlByteProto.TEXT,
             HtmlBytes.encodeInt0(5)
         )
@@ -217,8 +189,8 @@ public class ElementInternalEncoderTest {
         HtmlByteProto.INTERNAL4
     );
 
-    final ElementInternalEncoder subject;
-    subject = new ElementInternalEncoder(main);
+    final Encoder subject;
+    subject = new Encoder(main);
 
     assertEquals(subject.encode(0), 4);
 
@@ -230,7 +202,6 @@ public class ElementInternalEncoderTest {
             HtmlBytes.encodeInt0(0),
             HtmlBytes.encodeInt1(0),
             HtmlByteProto.INTERNAL4,
-
             HtmlByteProto.RAW,
             HtmlBytes.encodeInt0(5)
         )
@@ -251,8 +222,8 @@ public class ElementInternalEncoderTest {
         HtmlByteProto.INTERNAL5
     );
 
-    final ElementInternalEncoder subject;
-    subject = new ElementInternalEncoder(main);
+    final Encoder subject;
+    subject = new Encoder(main);
 
     assertEquals(subject.encode(0), 5);
 
@@ -265,9 +236,97 @@ public class ElementInternalEncoderTest {
             HtmlBytes.encodeInt0(0),
             HtmlBytes.encodeInt1(0),
             HtmlByteProto.INTERNAL5,
-
             HtmlByteProto.AMBIGUOUS1,
             HtmlBytes.encodeInt0(6)
+        )
+    );
+  }
+
+  @Test(description = "encode FRAGMENT")
+  public final void encode08() {
+    final ByteArray main;
+    main = ByteArray.of(
+        HtmlByteProto.FRAGMENT,
+        HtmlBytes.encodeInt0(3),
+        HtmlBytes.encodeInt1(3),
+        HtmlBytes.encodeInt2(3),
+        HtmlByteProto.END,
+        HtmlBytes.encodeInt0(4),
+        HtmlByteProto.INTERNAL
+    );
+
+    final Encoder subject;
+    subject = new Encoder(main);
+
+    assertEquals(subject.encode(0), 7);
+
+    assertEquals(
+        main,
+
+        ByteArray.of(
+            HtmlByteProto.LENGTH3,
+            HtmlBytes.encodeInt0(3),
+            HtmlBytes.encodeInt1(3),
+            HtmlBytes.encodeInt2(3),
+            HtmlByteProto.END,
+            HtmlBytes.encodeInt0(4),
+            HtmlByteProto.INTERNAL
+        )
+    );
+  }
+
+  @Test(description = "encode FRAGMENT w/ element")
+  public final void encode09() {
+    final ByteArray main;
+    main = ByteArray.of(
+        HtmlByteProto.FRAGMENT,
+        HtmlBytes.encodeInt0(3 + 8),
+        HtmlBytes.encodeInt1(3 + 8),
+        HtmlBytes.encodeInt2(3 + 8),
+
+        HtmlByteProto.ELEMENT,
+        HtmlBytes.encodeInt0(5),
+        HtmlBytes.encodeInt1(5),
+        HtmlByteProto.STANDARD_NAME,
+        (byte) ElementNamePojo.HTML.index(),
+        HtmlByteProto.END,
+        HtmlBytes.encodeInt0(5),
+        HtmlByteProto.INTERNAL,
+
+        HtmlByteProto.END,
+        HtmlBytes.encodeInt0(4 + 8),
+        HtmlByteProto.INTERNAL
+    );
+
+    final Encoder subject;
+    subject = new Encoder(main);
+
+    assertEquals(subject.encode(0), 15);
+
+    assertEquals(
+        main,
+
+        ByteArray.of(
+            HtmlByteProto.LENGTH3,
+            HtmlBytes.encodeInt0(3 + 8),
+            HtmlBytes.encodeInt1(3 + 8),
+            HtmlBytes.encodeInt2(3 + 8),
+
+            HtmlByteProto.LENGTH2,
+            HtmlBytes.encodeInt0(5),
+            HtmlBytes.encodeInt1(5),
+            HtmlByteProto.STANDARD_NAME,
+            (byte) ElementNamePojo.HTML.index(),
+            HtmlByteProto.END,
+            HtmlBytes.encodeInt0(5),
+            HtmlByteProto.INTERNAL,
+
+            HtmlByteProto.END,
+            HtmlBytes.encodeInt0(4 + 8),
+            HtmlByteProto.INTERNAL,
+
+            HtmlByteProto.ELEMENT,
+            HtmlBytes.encodeInt0(12)
         )
     );
   }

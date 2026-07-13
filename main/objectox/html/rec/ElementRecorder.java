@@ -61,7 +61,7 @@ final class ElementRecorder {
         new ElementValueEncoder(
             aux,
 
-            new ElementInternalEncoder(main)
+            new Encoder(main)
         ),
 
         new ElementValueRecorder(

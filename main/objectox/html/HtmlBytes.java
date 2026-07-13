@@ -302,13 +302,13 @@ public final class HtmlBytes {
   }
 
   public static int decodeLength3(byte b0, byte b1, byte b2) {
-    int int0;
+    final int int0;
     int0 = toInt(b0, 0);
 
-    int int1;
+    final int int1;
     int1 = toInt(b1, 8);
 
-    int int2;
+    final int int2;
     int2 = toInt(b2, 16);
 
     return int0 | int1 | int2;

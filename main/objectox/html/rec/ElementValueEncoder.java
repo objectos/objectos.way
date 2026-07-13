@@ -22,12 +22,12 @@ final class ElementValueEncoder {
 
   private final ByteArray aux;
 
-  private final ElementInternalEncoder elementInternalEncoder;
+  private final Encoder encoder;
 
-  ElementValueEncoder(ByteArray aux, ElementInternalEncoder elementInternalEncoder) {
+  ElementValueEncoder(ByteArray aux, Encoder encoder) {
     this.aux = aux;
 
-    this.elementInternalEncoder = elementInternalEncoder;
+    this.encoder = encoder;
   }
 
   public final int auxStart() {
@@ -49,7 +49,7 @@ final class ElementValueEncoder {
       mark = aux.get(index++);
 
       switch (mark) {
-        case HtmlByteProto.INTERNAL -> contents = elementInternalEncoder.encode(contents);
+        case HtmlByteProto.INTERNAL -> contents = encoder.encode(contents);
 
         default -> throw new UnsupportedOperationException(
             "Implement me :: mark=" + mark
