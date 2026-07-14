@@ -17,6 +17,8 @@ package objectox.html.rec;
 
 import java.util.Objects;
 import objectos.way.Html;
+import objectos.way.Html.Instruction;
+import objectos.way.Html.Instruction.OfElement;
 import objectox.html.ByteArray;
 import objectox.html.HtmlByteProto;
 import objectox.html.HtmlInstruction;
@@ -88,6 +90,47 @@ final class FlattenRecorder {
       }
 
       mainContents = elementValueRecorder.record(mainContents, instruction);
+    }
+
+    elementValueEncoder.encode(auxStart, mainContents);
+
+    reverseOffsetRecorder.record(mainContents);
+
+    forwardOffsetRecorder.two(mainStart);
+
+    return HtmlInstruction.ELEMENT;
+  }
+
+  public final OfElement record(Iterable<? extends Instruction> contents) {
+    final Iterable<? extends Instruction> values;
+    values = Objects.requireNonNull(contents, "contents == null");
+
+    final int auxStart;
+    auxStart = elementValueEncoder.auxStart();
+
+    final int mainStart;
+    mainStart = main.size();
+
+    int mainContents;
+    mainContents = mainStart;
+
+    main.add(
+        HtmlByteProto.FLATTEN,
+
+        // length takes 2 bytes
+        HtmlByteProto.NULL,
+        HtmlByteProto.NULL
+    );
+
+    for (Html.Instruction value : values) {
+      if (value == null) {
+        final String msg;
+        msg = "contents provided a null instruction";
+
+        throw new NullPointerException(msg);
+      }
+
+      mainContents = elementValueRecorder.record(mainContents, value);
     }
 
     elementValueEncoder.encode(auxStart, mainContents);

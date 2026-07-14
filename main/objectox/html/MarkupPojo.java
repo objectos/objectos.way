@@ -26,14 +26,13 @@ import objectos.html.Fragment2;
 import objectos.html.Fragment3;
 import objectos.html.Fragment4;
 import objectos.html.Markup;
-import objectos.internal.Check;
 import objectos.internal.Util;
 import objectos.way.Dom;
 import objectos.way.Html;
 import objectox.dev.TestableHtml;
 import objectox.html.attr.AttributeNamePojo;
-import objectox.html.attr.AttributeOrNoOp;
 import objectox.html.elem.ElementNamePojo;
+import objectox.html.rec.Recorder;
 
 public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.OfHtml {
 
@@ -67,7 +66,7 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
   private static final int OFFSET_TEXT = 2;
   private static final int OFFSET_RAW = 3;
 
-  private static final int OFFSET_MAX = OFFSET_RAW;
+  private final Recorder recorder = Recorder.create();
 
   private final StringBuilder sb = new StringBuilder();
 
@@ -143,72 +142,27 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
 
   @Override
   public final Html.Instruction.OfFragment f(Fragment0 fragment) {
-    Objects.requireNonNull(fragment, "fragment == null");
-
-    int index;
-    index = fragmentBegin();
-
-    fragment.invoke();
-
-    fragmentEnd(index);
-
-    return HtmlInstruction.FRAGMENT;
+    return recorder.f(fragment);
   }
 
   @Override
   public final <T1> Html.Instruction.OfFragment f(Fragment1<T1> fragment, T1 arg1) {
-    Objects.requireNonNull(fragment, "fragment == null");
-
-    int index;
-    index = fragmentBegin();
-
-    fragment.invoke(arg1);
-
-    fragmentEnd(index);
-
-    return HtmlInstruction.FRAGMENT;
+    return recorder.f(fragment, arg1);
   }
 
   @Override
   public final <T1, T2> Html.Instruction.OfFragment f(Fragment2<T1, T2> fragment, T1 arg1, T2 arg2) {
-    Objects.requireNonNull(fragment, "fragment == null");
-
-    int index;
-    index = fragmentBegin();
-
-    fragment.invoke(arg1, arg2);
-
-    fragmentEnd(index);
-
-    return HtmlInstruction.FRAGMENT;
+    return recorder.f(fragment, arg1, arg2);
   }
 
   @Override
   public final <T1, T2, T3> Html.Instruction.OfFragment f(Fragment3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3) {
-    Objects.requireNonNull(fragment, "fragment == null");
-
-    int index;
-    index = fragmentBegin();
-
-    fragment.invoke(arg1, arg2, arg3);
-
-    fragmentEnd(index);
-
-    return HtmlInstruction.FRAGMENT;
+    return recorder.f(fragment, arg1, arg2, arg3);
   }
 
   @Override
   public final <T1, T2, T3, T4> Html.Instruction.OfFragment f(Fragment4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
-    Objects.requireNonNull(fragment, "fragment == null");
-
-    int index;
-    index = fragmentBegin();
-
-    fragment.invoke(arg1, arg2, arg3, arg4);
-
-    fragmentEnd(index);
-
-    return HtmlInstruction.FRAGMENT;
+    return recorder.f(fragment, arg1, arg2, arg3, arg4);
   }
 
   @Override
@@ -221,37 +175,12 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
 
   @Override
   public final Html.Instruction.OfElement flatten(Html.Instruction... contents) {
-    Objects.requireNonNull(contents, "contents == null");
-
-    flattenBegin();
-
-    for (int i = 0; i < contents.length; i++) {
-      Html.Instruction inst;
-      inst = Check.notNull(contents[i], "contents[", i, "] == null");
-
-      elementValue(inst);
-    }
-
-    elementEnd();
-
-    return HtmlInstruction.ELEMENT;
+    return recorder.flatten(contents);
   }
 
   @Override
   public final Html.Instruction.OfElement flatten(Iterable<? extends Html.Instruction> contents) {
-    Objects.requireNonNull(contents, "contents == null");
-
-    flattenBegin();
-
-    for (Html.Instruction inst : contents) {
-      elementValue(
-          Objects.requireNonNull(inst, "inst == null")
-      );
-    }
-
-    elementEnd();
-
-    return HtmlInstruction.ELEMENT;
+    return recorder.flatten(contents);
   }
 
   @Override
@@ -269,7 +198,7 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
 
   @Override
   public final void doctype() {
-    mainAdd(HtmlByteProto.DOCTYPE);
+    recorder.doctype();
   }
 
   // ##################################################################
@@ -305,22 +234,17 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
 
   @Override
   public final Html.Instruction.OfElement nbsp() {
-    rawImpl("&nbsp;");
-    return HtmlInstruction.ELEMENT;
+    return recorder.raw("&nbsp;");
   }
 
   @Override
   public final Html.Instruction.OfElement raw(String text) {
-    Objects.requireNonNull(text, "text == null");
-    rawImpl(text);
-    return HtmlInstruction.ELEMENT;
+    return recorder.raw(text);
   }
 
   @Override
   public final Html.Instruction.OfElement text(String text) {
-    Objects.requireNonNull(text, "text == null");
-    textImpl(text);
-    return HtmlInstruction.ELEMENT;
+    return recorder.text(text);
   }
 
   // ##################################################################
@@ -417,32 +341,44 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
   //
 
   public final Dom.Document compile() {
+    final ByteArray $aux;
+    $aux = recorder.aux();
+
+    aux = $aux.unwrap();
+
     // we will use the aux list to store contexts
     auxIndex = 0;
 
     // holds decoded length
     auxStart = 0;
 
+    final ByteArray $main;
+    $main = recorder.main();
+
+    main = $main.unwrap();
+
     // holds maximum main index. DO NOT TOUCH!!!
-    // mainIndex
+    mainIndex = $main.size();
 
     // holds the current context
     mainStart = 0;
 
+    final ObjectArray $objects;
+    $objects = recorder.objects();
+
+    objectIndex = $objects.size();
+
     // we reuse objectArray reference to store our pseudo html objects
-    if (objectArray == null) {
-      objectArray = new Object[10];
-    } else {
-      objectArray = Util.growIfNecessary(objectArray, objectIndex + OFFSET_MAX);
-    }
 
-    objectArray[objectIndex + OFFSET_ELEMENT] = new DomElement(this);
+    $objects.add(new DomElement(this));
 
-    objectArray[objectIndex + OFFSET_ATTRIBUTE] = new DomAttribute(this);
+    $objects.add(new DomAttribute(this));
 
-    objectArray[objectIndex + OFFSET_TEXT] = new DomText();
+    $objects.add(new DomText());
 
-    objectArray[objectIndex + OFFSET_RAW] = new DomRaw();
+    $objects.add(new DomRaw());
+
+    objectArray = $objects.unwrap();
 
     documentCtx();
 
@@ -623,7 +559,9 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
         yield element(elementStartIndex, parentIndex);
       }
 
-      case HtmlByteProto.RAW -> {
+      case HtmlByteProto.RAW ->
+
+      {
         byte b0;
         b0 = main[index++];
 
@@ -636,7 +574,9 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
         yield htmlRaw(b0, b1);
       }
 
-      case HtmlByteProto.TEXT -> {
+      case HtmlByteProto.TEXT ->
+
+      {
         byte b0;
         b0 = main[index++];
 
@@ -649,9 +589,8 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
         yield htmlText(b0, b1);
       }
 
-      default -> throw new UnsupportedOperationException(
-          "Implement me :: proto=" + proto
-      );
+      default -> throw new UnsupportedOperationException("Implement me :: proto=" + proto);
+
     };
   }
 
@@ -836,7 +775,7 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
         }
 
         default -> throw new UnsupportedOperationException(
-            "Implement me :: proto=" + proto
+            "Implement me :: proto=%d; index=%d; main.length=%d".formatted(proto, index, main.length)
         );
       }
     }
@@ -1203,7 +1142,9 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
         yield toObject(v0, v1);
       }
 
-      case HtmlByteProto.ATTRIBUTE1 -> {
+      case HtmlByteProto.ATTRIBUTE1 ->
+
+      {
         index = jmp2(index);
 
         elementCtxAttrsIndexStore(index);
@@ -1220,7 +1161,9 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
         yield toObject(v0, v1);
       }
 
-      case HtmlByteProto.CUSTOM_ATTR1 -> {
+      case HtmlByteProto.CUSTOM_ATTR1 ->
+
+      {
         index = jmp2(index);
 
         elementCtxAttrsIndexStore(index);
@@ -1237,7 +1180,9 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
         yield toObject(v0, v1);
       }
 
-      case HtmlByteProto.ATTRIBUTE_EXT1 -> {
+      case HtmlByteProto.ATTRIBUTE_EXT1 ->
+
+      {
         // skip ordinal
         index++;
 
@@ -1252,9 +1197,8 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
         yield toObject(v0, v1);
       }
 
-      default -> throw new UnsupportedOperationException(
-          "Implement me :: proto=" + proto
-      );
+      default -> throw new UnsupportedOperationException("Implement me :: proto=" + proto);
+
     };
   }
 
@@ -1492,7 +1436,9 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
         yield element(elementStartIndex, parentIndex);
       }
 
-      case HtmlByteProto.ELEMENT -> {
+      case HtmlByteProto.ELEMENT ->
+
+      {
         index = jmp2(index);
 
         // skip fixed length
@@ -1509,7 +1455,9 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
         yield element(elementStartIndex, parentIndex);
       }
 
-      case HtmlByteProto.RAW -> {
+      case HtmlByteProto.RAW ->
+
+      {
         index = jmp2(index);
 
         byte v0;
@@ -1523,7 +1471,9 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
         yield htmlRaw(v0, v1);
       }
 
-      case HtmlByteProto.TEXT -> {
+      case HtmlByteProto.TEXT ->
+
+      {
         index = jmp2(index);
 
         byte v0;
@@ -1537,9 +1487,8 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
         yield htmlText(v0, v1);
       }
 
-      default -> throw new UnsupportedOperationException(
-          "Implement me :: proto=" + proto
-      );
+      default -> throw new UnsupportedOperationException("Implement me :: proto=" + proto);
+
     };
   }
 
@@ -1816,419 +1765,30 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
 
   @Override
   final Html.Instruction.OfAmbiguous ambiguous(Ambiguous name, String value) {
-    Objects.requireNonNull(value, "value == null");
-
-    int ordinal;
-    ordinal = name.ordinal();
-
-    int object;
-    object = objectAdd(value);
-
-    mainAdd(
-        HtmlByteProto.AMBIGUOUS1,
-
-        // name
-        HtmlBytes.encodeInt0(ordinal),
-
-        // value
-        HtmlBytes.encodeInt0(object),
-        HtmlBytes.encodeInt1(object),
-
-        HtmlByteProto.INTERNAL5
-    );
-
-    return HtmlInstruction.ELEMENT;
+    return recorder.ambiguous(name, value);
   }
 
   @Override
   final Html.Instruction.OfAttribute attr0(AttributeName name) {
-    int index;
-    index = name.index();
-
-    if (index >= 0) {
-      mainAdd(
-          HtmlByteProto.ATTRIBUTE0,
-
-          // name
-          HtmlBytes.encodeInt0(index),
-
-          HtmlByteProto.INTERNAL3
-      );
-    } else {
-      int nameIndex;
-      nameIndex = objectAdd(name);
-
-      mainAdd(
-          HtmlByteProto.CUSTOM_ATTR0,
-
-          // name
-          HtmlBytes.encodeInt0(nameIndex),
-          HtmlBytes.encodeInt1(nameIndex),
-
-          HtmlByteProto.INTERNAL4
-      );
-    }
-
-    return HtmlInstruction.ATTRIBUTE;
+    return recorder.attribute0(name);
   }
 
   @Override
-  final AttributeOrNoOp attr0(AttributeName name, Object value) {
-    Objects.requireNonNull(value, "value == null");
-
-    int index;
-    index = name.index();
-
-    if (index >= 0) {
-      int object;
-      object = objectAdd(value);
-
-      mainAdd(
-          HtmlByteProto.ATTRIBUTE1,
-
-          // name
-          HtmlBytes.encodeInt0(index),
-
-          // value
-          HtmlBytes.encodeInt0(object),
-          HtmlBytes.encodeInt1(object),
-
-          HtmlByteProto.INTERNAL5
-      );
-    } else {
-      int nameIndex;
-      nameIndex = objectAdd(name);
-
-      int valueIndex;
-      valueIndex = objectAdd(value);
-
-      mainAdd(
-          HtmlByteProto.CUSTOM_ATTR1,
-
-          // name
-          HtmlBytes.encodeInt0(nameIndex),
-          HtmlBytes.encodeInt1(nameIndex),
-
-          // value
-          HtmlBytes.encodeInt0(valueIndex),
-          HtmlBytes.encodeInt1(valueIndex),
-
-          HtmlByteProto.INTERNAL6
-      );
-    }
-
-    return HtmlInstruction.ATTRIBUTE;
+  final Html.Instruction.OfAttribute attr0(AttributeName name, Object value) {
+    return recorder.attribute1(name, value);
   }
 
   @Override
   final Html.Instruction.OfElement elem0(ElementName name, Html.Instruction... contents) {
-    elementBegin(name);
-
-    for (int i = 0; i < contents.length; i++) {
-      Html.Instruction inst;
-      inst = Check.notNull(contents[i], "contents[", i, "] == null");
-
-      elementValue(inst);
-    }
-
-    elementEnd();
-
-    return HtmlInstruction.ELEMENT;
+    return recorder.element(name, contents);
   }
 
   @Override
   final Html.Instruction.OfElement elem0(ElementName name, String text) {
-    Objects.requireNonNull(text, "text == null");
+    final Html.Instruction t;
+    t = recorder.text(text);
 
-    textImpl(text);
-
-    elementBegin(name);
-    elementValue(HtmlInstruction.ELEMENT);
-    elementEnd();
-
-    return HtmlInstruction.ELEMENT;
-  }
-
-  final void elementBegin(ElementName name) {
-    commonBegin();
-
-    mainAdd(
-        HtmlByteProto.ELEMENT,
-
-        // length takes 2 bytes
-        HtmlByteProto.NULL,
-        HtmlByteProto.NULL,
-
-        HtmlByteProto.STANDARD_NAME,
-
-        HtmlBytes.encodeName(name)
-    );
-  }
-
-  final void elementValue(Html.Instruction value) {
-    if (value == HtmlInstruction.ATTRIBUTE ||
-        value == HtmlInstruction.ELEMENT ||
-        value == HtmlInstruction.FRAGMENT) {
-      // @ ByteProto
-      mainContents--;
-
-      byte proto;
-      proto = main[mainContents--];
-
-      switch (proto) {
-        case HtmlByteProto.INTERNAL -> {
-          int endIndex;
-          endIndex = mainContents;
-
-          byte maybeNeg;
-
-          do {
-            maybeNeg = main[mainContents--];
-          } while (maybeNeg < 0);
-
-          int length;
-          length = HtmlBytes.decodeCommonEnd(main, mainContents, endIndex);
-
-          mainContents -= length;
-        }
-
-        case HtmlByteProto.INTERNAL3 -> mainContents -= 3 - 2;
-
-        case HtmlByteProto.INTERNAL4 -> mainContents -= 4 - 2;
-
-        case HtmlByteProto.INTERNAL5 -> mainContents -= 5 - 2;
-
-        case HtmlByteProto.INTERNAL6 -> mainContents -= 6 - 2;
-
-        default -> throw new UnsupportedOperationException(
-            "Implement me :: proto=" + proto
-        );
-      }
-
-      auxAdd(HtmlByteProto.INTERNAL);
-    }
-
-    else if (value instanceof AttributeObject ext) {
-      final AttributeName name;
-      name = ext.attrName();
-
-      if (name == null) {
-        throw new IllegalArgumentException("Html.AttributeObject provided a null Html.AttributeName\n\t" + ext);
-      }
-
-      int nameIndex;
-      nameIndex = name.index();
-
-      if (nameIndex < 0) {
-        throw new UnsupportedOperationException("Custom attribute name");
-      }
-
-      final String attrValue;
-      attrValue = ext.attrValue();
-
-      if (attrValue == null) {
-        auxAdd(
-            HtmlByteProto.ATTRIBUTE_EXT0,
-
-            // name
-            HtmlBytes.encodeInt0(nameIndex)
-        );
-      } else {
-        final int valueIndex;
-        valueIndex = externalValue(attrValue);
-
-        auxAdd(
-            HtmlByteProto.ATTRIBUTE_EXT1,
-
-            // name
-            HtmlBytes.encodeInt0(nameIndex),
-
-            // value
-            HtmlBytes.encodeInt0(valueIndex),
-            HtmlBytes.encodeInt1(valueIndex)
-        );
-      }
-    }
-
-    else if (value == HtmlInstruction.NOOP) {
-      // no-op
-    }
-
-    else {
-      throw new UnsupportedOperationException(
-          "Implement me :: type=" + value.getClass()
-      );
-    }
-  }
-
-  final void elementEnd() {
-    // we iterate over each value added via elementValue(Instruction)
-    int index;
-    index = auxStart;
-
-    int indexMax;
-    indexMax = auxIndex;
-
-    int contents;
-    contents = mainContents;
-
-    loop: while (index < indexMax) {
-      byte mark;
-      mark = aux[index++];
-
-      switch (mark) {
-        case HtmlByteProto.TEXT -> {
-          mainAdd(mark, aux[index++], aux[index++]);
-        }
-
-        case HtmlByteProto.ATTRIBUTE_EXT0 -> {
-          mainAdd(mark, aux[index++]);
-        }
-
-        case HtmlByteProto.ATTRIBUTE_EXT1 -> {
-          mainAdd(mark, aux[index++], aux[index++], aux[index++]);
-        }
-
-        case HtmlByteProto.INTERNAL -> {
-          while (true) {
-            byte proto;
-            proto = main[contents];
-
-            switch (proto) {
-              case HtmlByteProto.ATTRIBUTE0 -> {
-                contents = encodeInternal3(contents, proto);
-
-                continue loop;
-              }
-
-              case HtmlByteProto.CUSTOM_ATTR0 -> {
-                contents = encodeInternal4(contents, proto);
-
-                continue loop;
-              }
-
-              case HtmlByteProto.AMBIGUOUS1,
-                   HtmlByteProto.ATTRIBUTE1 -> {
-                contents = encodeInternal5(contents, proto);
-
-                continue loop;
-              }
-
-              case HtmlByteProto.CUSTOM_ATTR1 -> {
-                contents = encodeInternal6(contents, proto);
-
-                continue loop;
-              }
-
-              case HtmlByteProto.ELEMENT -> {
-                contents = encodeElement(contents, proto);
-
-                continue loop;
-              }
-
-              case HtmlByteProto.FLATTEN -> {
-                contents = encodeFlatten(contents);
-
-                continue loop;
-              }
-
-              case HtmlByteProto.FRAGMENT -> {
-                contents = encodeFragment(contents);
-
-                continue loop;
-              }
-
-              case HtmlByteProto.LENGTH2 -> contents = encodeLength2(contents);
-
-              case HtmlByteProto.LENGTH3 -> contents = encodeLength3(contents);
-
-              case HtmlByteProto.MARKED3 -> contents += 3;
-
-              case HtmlByteProto.MARKED4 -> contents += 4;
-
-              case HtmlByteProto.MARKED5 -> contents += 5;
-
-              case HtmlByteProto.MARKED6 -> contents += 6;
-
-              case HtmlByteProto.RAW,
-                   HtmlByteProto.TEXT -> {
-                contents = encodeInternal4(contents, proto);
-
-                continue loop;
-              }
-
-              default -> {
-                throw new UnsupportedOperationException(
-                    "Implement me :: proto=" + proto
-                );
-              }
-            }
-          }
-        }
-
-        default -> throw new UnsupportedOperationException(
-            "Implement me :: mark=" + mark
-        );
-      }
-    }
-
-    commonEnd(mainContents, mainStart);
-
-    // we clear the aux list
-    auxIndex = auxStart;
-  }
-
-  final void flattenBegin() {
-    commonBegin();
-
-    mainAdd(
-        HtmlByteProto.FLATTEN,
-
-        // length takes 2 bytes
-        HtmlByteProto.NULL,
-        HtmlByteProto.NULL
-    );
-  }
-
-  final void rawImpl(String value) {
-    int object;
-    object = objectAdd(value);
-
-    mainAdd(
-        HtmlByteProto.RAW,
-
-        // value
-        HtmlBytes.encodeInt0(object),
-        HtmlBytes.encodeInt1(object),
-
-        HtmlByteProto.INTERNAL4
-    );
-  }
-
-  final void textImpl(String value) {
-    int object;
-    object = objectAdd(value);
-
-    mainAdd(
-        HtmlByteProto.TEXT,
-
-        // value
-        HtmlBytes.encodeInt0(object),
-        HtmlBytes.encodeInt1(object),
-
-        HtmlByteProto.INTERNAL4
-    );
-  }
-
-  private void auxAdd(byte b0) {
-    aux = Util.growIfNecessary(aux, auxIndex + 0);
-    aux[auxIndex++] = b0;
-  }
-
-  private void auxAdd(byte b0, byte b1) {
-    aux = Util.growIfNecessary(aux, auxIndex + 1);
-    aux[auxIndex++] = b0;
-    aux[auxIndex++] = b1;
+    return recorder.element(name, t);
   }
 
   private void auxAdd(byte b0, byte b1, byte b2, byte b3) {
@@ -2237,441 +1797,6 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
     aux[auxIndex++] = b1;
     aux[auxIndex++] = b2;
     aux[auxIndex++] = b3;
-  }
-
-  private void commonBegin() {
-    // we mark the start of our aux list
-    auxStart = auxIndex;
-
-    // we mark:
-    // 1) the start of the contents of the current declaration
-    // 2) the start of our main list
-    mainContents = mainStart = mainIndex;
-  }
-
-  private void commonEnd(int contentsIndex, int startIndex) {
-    // ensure main can hold 5 more elements
-    // - ByteProto.END
-    // - length
-    // - length
-    // - length
-    // - ByteProto.INTERNAL
-    main = Util.growIfNecessary(main, mainIndex + 4);
-
-    // mark the end
-    main[mainIndex++] = HtmlByteProto.END;
-
-    // store the distance to the contents (yes, reversed)
-    int length;
-    length = mainIndex - contentsIndex - 1;
-
-    mainIndex = HtmlBytes.encodeCommonEnd(main, mainIndex, length);
-
-    // trailer proto
-    main[mainIndex++] = HtmlByteProto.INTERNAL;
-
-    // set the end index of the declaration
-    length = mainIndex - startIndex;
-
-    // skip ByteProto.FOO + len0 + len1
-    length -= 3;
-
-    // we skip the first byte proto
-    main[startIndex + 1] = HtmlBytes.encodeInt0(length);
-    main[startIndex + 2] = HtmlBytes.encodeInt1(length);
-  }
-
-  private int encodeElement(int contents, byte proto) {
-    // keep the start index handy
-    int startIndex;
-    startIndex = contents;
-
-    // mark this element
-    main[contents++] = HtmlByteProto.LENGTH2;
-
-    // decode the length
-    byte len0;
-    len0 = main[contents++];
-
-    byte len1;
-    len1 = main[contents++];
-
-    // point to next element
-    int offset;
-    offset = HtmlBytes.decodeInt(len0, len1);
-
-    // ensure main can hold least 4 elements
-    // 0   - ByteProto
-    // 1-3 - variable length
-    main = Util.growIfNecessary(main, mainIndex + 3);
-
-    main[mainIndex++] = proto;
-
-    int length;
-    length = mainIndex - startIndex;
-
-    mainIndex = HtmlBytes.encodeOffset(main, mainIndex, length);
-
-    return contents + offset;
-  }
-
-  private int encodeFlatten(int contents) {
-    int index;
-    index = contents;
-
-    // mark this fragment
-    main[index++] = HtmlByteProto.LENGTH2;
-
-    // decode the length
-    byte len0;
-    len0 = main[index++];
-
-    byte len1;
-    len1 = main[index++];
-
-    // point to next element
-    int offset;
-    offset = HtmlBytes.decodeInt(len0, len1);
-
-    int maxIndex;
-    maxIndex = index + offset;
-
-    loop: while (index < maxIndex) {
-      byte proto;
-      proto = main[index++];
-
-      switch (proto) {
-        case HtmlByteProto.ATTRIBUTE_EXT0 -> {
-          byte idx0;
-          idx0 = main[index++];
-
-          mainAdd(proto, idx0);
-        }
-
-        case HtmlByteProto.ATTRIBUTE_EXT1 -> {
-          byte idx0;
-          idx0 = main[index++];
-
-          byte idx1;
-          idx1 = main[index++];
-
-          byte idx2;
-          idx2 = main[index++];
-
-          mainAdd(proto, idx0, idx1, idx2);
-        }
-
-        case HtmlByteProto.AMBIGUOUS1,
-             HtmlByteProto.ATTRIBUTE0,
-             HtmlByteProto.ATTRIBUTE1,
-             HtmlByteProto.ELEMENT,
-             HtmlByteProto.TEXT,
-             HtmlByteProto.RAW -> {
-          int elementIndex;
-          elementIndex = index;
-
-          do {
-            len0 = main[index++];
-          } while (len0 < 0);
-
-          int len;
-          len = HtmlBytes.decodeOffset(main, elementIndex, index);
-
-          elementIndex -= len;
-
-          // ensure main can hold least 4 elements
-          // 0   - ByteProto
-          // 1-3 - variable length
-          main = Util.growIfNecessary(main, mainIndex + 3);
-
-          main[mainIndex++] = proto;
-
-          int length;
-          length = mainIndex - elementIndex;
-
-          mainIndex = HtmlBytes.encodeOffset(main, mainIndex, length);
-        }
-
-        case HtmlByteProto.END -> {
-          break loop;
-        }
-
-        default -> {
-          throw new UnsupportedOperationException(
-              "Implement me :: proto=" + proto
-          );
-        }
-      }
-    }
-
-    return maxIndex;
-  }
-
-  private int encodeFragment(int contents) {
-    int index;
-    index = contents;
-
-    // mark this fragment
-    main[index++] = HtmlByteProto.LENGTH3;
-
-    // decode the length
-    byte len0;
-    len0 = main[index++];
-
-    byte len1;
-    len1 = main[index++];
-
-    byte len2;
-    len2 = main[index++];
-
-    // point to next element
-    int offset;
-    offset = HtmlBytes.decodeLength3(len0, len1, len2);
-
-    int maxIndex;
-    maxIndex = index + offset;
-
-    loop: while (index < maxIndex) {
-      byte proto;
-      proto = main[index];
-
-      switch (proto) {
-        case HtmlByteProto.AMBIGUOUS1 -> index = encodeInternal5(index, proto);
-
-        case HtmlByteProto.ATTRIBUTE0 -> index = encodeInternal3(index, proto);
-
-        case HtmlByteProto.ATTRIBUTE1 -> index = encodeInternal5(index, proto);
-
-        case HtmlByteProto.CUSTOM_ATTR1 -> index = encodeInternal6(index, proto);
-
-        case HtmlByteProto.ELEMENT -> index = encodeElement(index, proto);
-
-        case HtmlByteProto.END -> {
-          break loop;
-        }
-
-        case HtmlByteProto.FRAGMENT -> index = encodeFragment(index);
-
-        case HtmlByteProto.LENGTH2 -> index = encodeLength2(index);
-
-        case HtmlByteProto.LENGTH3 -> index = encodeLength3(index);
-
-        case HtmlByteProto.MARKED3 -> index += 3;
-
-        case HtmlByteProto.MARKED4 -> index += 4;
-
-        case HtmlByteProto.MARKED5 -> index += 5;
-
-        case HtmlByteProto.MARKED6 -> index += 6;
-
-        case HtmlByteProto.RAW,
-             HtmlByteProto.TEXT -> index = encodeInternal4(index, proto);
-
-        default -> {
-          throw new UnsupportedOperationException(
-              "Implement me :: proto=" + proto
-          );
-        }
-      }
-    }
-
-    return maxIndex;
-  }
-
-  private int encodeInternal(int contents, byte proto, int offset, byte marked) {
-    // keep the start index handy
-    int startIndex;
-    startIndex = contents;
-
-    // mark this element
-    main[contents] = marked;
-
-    // ensure main can hold least 4 elements
-    // 0   - ByteProto
-    // 1-3 - variable length
-    main = Util.growIfNecessary(main, mainIndex + 3);
-
-    main[mainIndex++] = proto;
-
-    int length;
-    length = mainIndex - startIndex;
-
-    mainIndex = HtmlBytes.encodeOffset(main, mainIndex, length);
-
-    return contents + offset;
-  }
-
-  private int encodeInternal3(int contents, byte proto) {
-    return encodeInternal(contents, proto, 3, HtmlByteProto.MARKED3);
-  }
-
-  private int encodeInternal4(int contents, byte proto) {
-    return encodeInternal(contents, proto, 4, HtmlByteProto.MARKED4);
-  }
-
-  private int encodeInternal5(int contents, byte proto) {
-    return encodeInternal(contents, proto, 5, HtmlByteProto.MARKED5);
-  }
-
-  private int encodeInternal6(int contents, byte proto) {
-    return encodeInternal(contents, proto, 6, HtmlByteProto.MARKED6);
-  }
-
-  private int encodeLength2(int contents) {
-    contents++;
-
-    // decode the length
-    byte len0;
-    len0 = main[contents++];
-
-    byte len1;
-    len1 = main[contents++];
-
-    int length;
-    length = HtmlBytes.decodeInt(len0, len1);
-
-    // point to next element
-    return contents + length;
-  }
-
-  private int encodeLength3(int contents) {
-    contents++;
-
-    // decode the length
-    byte len0;
-    len0 = main[contents++];
-
-    byte len1;
-    len1 = main[contents++];
-
-    byte len2;
-    len2 = main[contents++];
-
-    int length;
-    length = HtmlBytes.decodeLength3(len0, len1, len2);
-
-    // point to next element
-    return contents + length;
-  }
-
-  private int externalValue(String value) {
-    String result;
-    result = value;
-
-    if (value == null) {
-      result = "null";
-    }
-
-    return objectAdd(result);
-  }
-
-  protected final int fragmentBegin() {
-    // we mark:
-    // 1) the start of the contents of the current declaration
-    int startIndex;
-    startIndex = mainIndex;
-
-    mainAdd(
-        HtmlByteProto.FRAGMENT,
-
-        // length takes 3 bytes
-        HtmlByteProto.NULL,
-        HtmlByteProto.NULL,
-        HtmlByteProto.NULL
-    );
-
-    return startIndex;
-  }
-
-  protected final void fragmentEnd(int startIndex) {
-    // ensure main can hold 5 more elements
-    // - ByteProto.END
-    // - length
-    // - length
-    // - length
-    // - ByteProto.INTERNAL
-    main = Util.growIfNecessary(main, mainIndex + 4);
-
-    // mark the end
-    main[mainIndex++] = HtmlByteProto.END;
-
-    // store the distance to the contents (yes, reversed)
-    int length;
-    length = mainIndex - startIndex - 1;
-
-    mainIndex = HtmlBytes.encodeCommonEnd(main, mainIndex, length);
-
-    // trailer proto
-    main[mainIndex++] = HtmlByteProto.INTERNAL;
-
-    // set the end index of the declaration
-    length = mainIndex - startIndex;
-
-    // skip ByteProto.FOO + len0 + len1 + len2
-    length -= 4;
-
-    // we skip the first byte proto
-    HtmlBytes.encodeLength3(main, startIndex + 1, length);
-  }
-
-  private void mainAdd(byte b0) {
-    main = Util.growIfNecessary(main, mainIndex + 0);
-    main[mainIndex++] = b0;
-  }
-
-  private void mainAdd(byte b0, byte b1) {
-    main = Util.growIfNecessary(main, mainIndex + 1);
-    main[mainIndex++] = b0;
-    main[mainIndex++] = b1;
-  }
-
-  private void mainAdd(byte b0, byte b1, byte b2) {
-    main = Util.growIfNecessary(main, mainIndex + 2);
-    main[mainIndex++] = b0;
-    main[mainIndex++] = b1;
-    main[mainIndex++] = b2;
-  }
-
-  private void mainAdd(byte b0, byte b1, byte b2, byte b3) {
-    main = Util.growIfNecessary(main, mainIndex + 3);
-    main[mainIndex++] = b0;
-    main[mainIndex++] = b1;
-    main[mainIndex++] = b2;
-    main[mainIndex++] = b3;
-  }
-
-  private void mainAdd(byte b0, byte b1, byte b2, byte b3, byte b4) {
-    main = Util.growIfNecessary(main, mainIndex + 4);
-    main[mainIndex++] = b0;
-    main[mainIndex++] = b1;
-    main[mainIndex++] = b2;
-    main[mainIndex++] = b3;
-    main[mainIndex++] = b4;
-  }
-
-  private void mainAdd(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5) {
-    main = Util.growIfNecessary(main, mainIndex + 5);
-    main[mainIndex++] = b0;
-    main[mainIndex++] = b1;
-    main[mainIndex++] = b2;
-    main[mainIndex++] = b3;
-    main[mainIndex++] = b4;
-    main[mainIndex++] = b5;
-  }
-
-  private int objectAdd(Object value) {
-    int index;
-    index = objectIndex++;
-
-    if (objectArray == null) {
-      objectArray = new Object[10];
-    }
-
-    objectArray = Util.growIfNecessary(objectArray, objectIndex);
-
-    objectArray[index] = value;
-
-    return index;
   }
 
   // ##################################################################

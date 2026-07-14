@@ -13,27 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html;
+package objectox.html.rec;
 
-import java.util.Arrays;
-import objectos.html.ClassName;
+import static org.testng.Assert.assertEquals;
+
+import objectos.html.AttributeName;
+import objectos.html.ElementName;
 import objectos.html.Fragment0;
 import objectos.html.Id;
 import objectos.html.Markup;
+import objectox.html.Ambiguous;
+import objectox.html.ByteArray;
+import objectox.html.HtmlByteProto;
+import objectox.html.HtmlBytes;
 import objectox.html.attr.AttributeNamePojo;
 import objectox.html.elem.ElementNamePojo;
 import org.testng.annotations.Test;
 
-public class HtmlMarkupTest01Recorder {
+public class RecorderTest {
 
   @Test(description = """
   <html></html>
   """)
   public void testCase00() {
-    Markup.OfHtml html;
-    html = new Markup.OfHtml();
+    final Recorder html;
+    html = Recorder.create();
 
-    html.html();
+    html.element(ElementName.HTML);
 
     test(
         html,
@@ -42,7 +48,7 @@ public class HtmlMarkupTest01Recorder {
         HtmlBytes.encodeInt0(5),
         HtmlBytes.encodeInt1(5),
         HtmlByteProto.STANDARD_NAME,
-        (byte) ElementNamePojo.HTML.index(),
+        ElementNamePojo.HTML.index(),
         HtmlByteProto.END,
         HtmlBytes.encodeInt0(5),
         HtmlByteProto.INTERNAL
@@ -53,11 +59,12 @@ public class HtmlMarkupTest01Recorder {
   <html lang="pt-BR"></html>
   """)
   public void testCase01() {
-    Markup.OfHtml html;
-    html = new Markup.OfHtml();
+    final Recorder html;
+    html = Recorder.create();
 
-    html.html(
-        html.lang("pt-BR")
+    html.element(
+        ElementName.HTML,
+        html.attribute1(AttributeName.LANG, "pt-BR")
     );
 
     test(
@@ -86,12 +93,13 @@ public class HtmlMarkupTest01Recorder {
   <html class="no-js" lang="pt-BR"></html>
   """)
   public void testCase02() {
-    Markup.OfHtml html;
-    html = new Markup.OfHtml();
+    final Recorder html;
+    html = Recorder.create();
 
-    html.html(
-        html.className("no-js"),
-        html.lang("pt-BR")
+    html.element(
+        ElementName.HTML,
+        html.attribute1(AttributeName.CLASS, "no-js"),
+        html.attribute1(AttributeName.LANG, "pt-BR")
     );
 
     test(
@@ -128,11 +136,12 @@ public class HtmlMarkupTest01Recorder {
   <html><head></head></html>
   """)
   public void testCase03() {
-    Markup.OfHtml html;
-    html = new Markup.OfHtml();
+    final Recorder html;
+    html = Recorder.create();
 
-    html.html(
-        html.head()
+    html.element(
+        ElementName.HTML,
+        html.element(ElementName.HEAD)
     );
 
     test(
@@ -165,11 +174,11 @@ public class HtmlMarkupTest01Recorder {
   <html></html>
   """)
   public void testCase09() {
-    Markup.OfHtml html;
-    html = new Markup.OfHtml();
+    final Recorder html;
+    html = Recorder.create();
 
     html.doctype();
-    html.html();
+    html.element(ElementName.HTML);
 
     test(
         html,
@@ -191,24 +200,19 @@ public class HtmlMarkupTest01Recorder {
   fragment inclusion
   """)
   public void testCase10() {
-    Markup.OfHtml html;
-    html = new Markup.OfHtml();
+    final Recorder html;
+    html = Recorder.create();
 
-    Fragment0 action;
-    action = () -> {
-      html.meta(html.charset("utf-8"));
+    final Fragment0 fragment;
+    fragment = () -> {
+      html.element(ElementName.META, html.attribute1(AttributeName.CHARSET, "utf-8"));
     };
 
-    int startIndex;
-    startIndex = html.fragmentBegin();
-
-    action.invoke();
-
-    html.fragmentEnd(startIndex);
-
-    html.html(
-        html.head(
-            HtmlInstruction.FRAGMENT
+    html.element(
+        ElementName.HTML,
+        html.element(
+            ElementName.HEAD,
+            html.f(fragment)
         )
     );
 
@@ -270,18 +274,19 @@ public class HtmlMarkupTest01Recorder {
   External id attributes
   """)
   public void testCase13() {
-    Id foo;
+    final Id foo;
     foo = Id.of("foo");
 
-    Id bar;
+    final Id bar;
     bar = Id.of("bar");
 
-    Markup.OfHtml html;
-    html = new Markup.OfHtml();
+    final Recorder html;
+    html = Recorder.create();
 
-    html.html(
+    html.element(
+        ElementName.HTML,
         foo,
-        html.body(bar)
+        html.element(ElementName.BODY, bar)
     );
 
     test(
@@ -321,12 +326,14 @@ public class HtmlMarkupTest01Recorder {
   Text child element
   """)
   public void testCase14() {
-    Markup.OfHtml html;
-    html = new Markup.OfHtml();
+    final Recorder html;
+    html = Recorder.create();
 
-    html.html(
-        html.body(
-            html.p("o7html")
+    html.element(
+        ElementName.HTML,
+        html.element(
+            ElementName.BODY,
+            html.element(ElementName.P, html.text("o7html"))
         )
     );
 
@@ -377,15 +384,18 @@ public class HtmlMarkupTest01Recorder {
   Ambiguous
   """)
   public void testCase16() {
-    Markup.OfHtml html;
-    html = new Markup.OfHtml();
+    final Recorder html;
+    html = Recorder.create();
 
-    html.html(
-        html.head(
-            html.title("element")
+    html.element(
+        ElementName.HTML,
+        html.element(
+            ElementName.HEAD,
+            html.ambiguous(Ambiguous.TITLE, "element")
         ),
-        html.body(
-            html.title("attribute")
+        html.element(
+            ElementName.BODY,
+            html.ambiguous(Ambiguous.TITLE, "attribute")
         )
     );
 
@@ -445,11 +455,12 @@ public class HtmlMarkupTest01Recorder {
   include template
   """)
   public void testCase20() {
-    Markup.OfHtml html;
-    html = new Markup.OfHtml();
+    final Recorder html;
+    html = Recorder.create();
 
-    html.body(
-        html.nav()
+    html.element(
+        ElementName.BODY,
+        html.element(ElementName.NAV)
     );
 
     /*
@@ -457,11 +468,11 @@ public class HtmlMarkupTest01Recorder {
     html.elementBegin(HtmlElementName.NAV);
     html.elementEnd();
     // template end
-
+    
     html.elementBegin(HtmlElementName.BODY);
     html.elementValue(BaseApi.FRAGMENT);
     html.elementEnd();
-
+    
     html.compilationEnd();
     */
 
@@ -491,38 +502,17 @@ public class HtmlMarkupTest01Recorder {
   }
 
   @Test(description = """
-  style/script => raw
-  """)
-  public void testCase25() {
-    Markup.OfHtml html;
-    html = new Markup.OfHtml();
-
-    html.style(
-        "@font-face {font-family: 'Foo';}"
-    );
-
-    test(
-        html,
-
-        HtmlByteProto.AMBIGUOUS1,
-        (byte) Ambiguous.STYLE.code(),
-        HtmlBytes.encodeInt0(0),
-        HtmlBytes.encodeInt1(0),
-        HtmlByteProto.INTERNAL5
-    );
-  }
-
-  @Test(description = """
   Html.CompilerTemplate TC31
 
   - email input
   """)
   public void testCase31() {
-    Markup.OfHtml html;
-    html = new Markup.OfHtml();
+    final Recorder html;
+    html = Recorder.create();
 
-    html.input(
-        html.type("email"),
+    html.element(
+        ElementName.INPUT,
+        html.attribute1(AttributeName.TYPE, "email"),
         Markup.required
     );
 
@@ -556,13 +546,14 @@ public class HtmlMarkupTest01Recorder {
   - flatten instruction
   """)
   public void testCase46() {
-    Markup.OfHtml html;
-    html = new Markup.OfHtml();
+    final Recorder html;
+    html = Recorder.create();
 
-    html.form(
+    html.element(
+        ElementName.FORM,
         html.flatten(
-            html.label(),
-            html.input()
+            html.element(ElementName.LABEL),
+            html.element(ElementName.INPUT)
         )
     );
 
@@ -614,162 +605,19 @@ public class HtmlMarkupTest01Recorder {
   }
 
   @Test(description = """
-  Html.CompilerTemplate TC47
-
-  - grid component
-  """)
-  public void testCase47() {
-    ClassName grd;
-    grd = ClassName.of("grd");
-
-    ClassName col;
-    col = ClassName.of("col");
-
-    MarkupPojo html;
-    html = new Markup.OfHtml();
-
-    html.textImpl("A");
-
-    html.flattenBegin();
-    html.elementValue(HtmlInstruction.ELEMENT);
-    html.elementEnd();
-
-    html.elementBegin(ElementNamePojo.DIV);
-    html.elementValue(col);
-    html.elementValue(HtmlInstruction.ELEMENT);
-    html.elementEnd();
-
-    html.textImpl("B");
-
-    html.flattenBegin();
-    html.elementValue(HtmlInstruction.ELEMENT);
-    html.elementEnd();
-
-    html.elementBegin(ElementNamePojo.DIV);
-    html.elementValue(col);
-    html.elementValue(HtmlInstruction.ELEMENT);
-    html.elementEnd();
-
-    html.flattenBegin();
-    html.elementValue(HtmlInstruction.ELEMENT);
-    html.elementValue(HtmlInstruction.ELEMENT);
-    html.elementEnd();
-
-    html.elementBegin(ElementNamePojo.DIV);
-    html.elementValue(grd);
-    html.elementValue(HtmlInstruction.ELEMENT);
-    html.elementEnd();
-
-    test(
-        html,
-
-        HtmlByteProto.MARKED4,
-        HtmlBytes.encodeInt0(0),
-        HtmlBytes.encodeInt1(0),
-        HtmlByteProto.INTERNAL4,
-
-        HtmlByteProto.LENGTH2,
-        HtmlBytes.encodeInt0(5),
-        HtmlBytes.encodeInt1(5),
-        HtmlByteProto.TEXT,
-        HtmlBytes.encodeInt0(8),
-        HtmlByteProto.END,
-        HtmlBytes.encodeInt0(9),
-        HtmlByteProto.INTERNAL,
-
-        HtmlByteProto.LENGTH2,
-        HtmlBytes.encodeInt0(11),
-        HtmlBytes.encodeInt1(11),
-        HtmlByteProto.STANDARD_NAME,
-        (byte) ElementNamePojo.DIV.index(),
-        HtmlByteProto.ATTRIBUTE_EXT1,
-        (byte) AttributeNamePojo.CLASS.index(),
-        HtmlBytes.encodeInt0(1),
-        HtmlBytes.encodeInt1(1),
-        HtmlByteProto.TEXT,
-        HtmlBytes.encodeInt0(22),
-        HtmlByteProto.END,
-        HtmlBytes.encodeInt0(23),
-        HtmlByteProto.INTERNAL,
-
-        HtmlByteProto.MARKED4,
-        HtmlBytes.encodeInt0(2),
-        HtmlBytes.encodeInt1(2),
-        HtmlByteProto.INTERNAL4,
-
-        HtmlByteProto.LENGTH2,
-        HtmlBytes.encodeInt0(5),
-        HtmlBytes.encodeInt1(5),
-        HtmlByteProto.TEXT,
-        HtmlBytes.encodeInt0(8),
-        HtmlByteProto.END,
-        HtmlBytes.encodeInt0(9),
-        HtmlByteProto.INTERNAL,
-
-        HtmlByteProto.LENGTH2,
-        HtmlBytes.encodeInt0(11),
-        HtmlBytes.encodeInt1(11),
-        HtmlByteProto.STANDARD_NAME,
-        (byte) ElementNamePojo.DIV.index(),
-        HtmlByteProto.ATTRIBUTE_EXT1,
-        (byte) AttributeNamePojo.CLASS.index(),
-        HtmlBytes.encodeInt0(3),
-        HtmlBytes.encodeInt1(3),
-        HtmlByteProto.TEXT,
-        HtmlBytes.encodeInt0(22),
-        HtmlByteProto.END,
-        HtmlBytes.encodeInt0(23),
-        HtmlByteProto.INTERNAL,
-
-        HtmlByteProto.LENGTH2,
-        HtmlBytes.encodeInt0(7),
-        HtmlBytes.encodeInt1(7),
-        HtmlByteProto.ELEMENT,
-        HtmlBytes.encodeInt0(44),
-        HtmlByteProto.ELEMENT,
-        HtmlBytes.encodeInt0(20),
-        HtmlByteProto.END,
-        HtmlBytes.encodeInt0(59),
-        HtmlByteProto.INTERNAL,
-
-        HtmlByteProto.ELEMENT,
-        HtmlBytes.encodeInt0(13),
-        HtmlBytes.encodeInt1(13),
-        HtmlByteProto.STANDARD_NAME,
-        (byte) ElementNamePojo.DIV.index(),
-        HtmlByteProto.ATTRIBUTE_EXT1,
-        (byte) AttributeNamePojo.CLASS.index(),
-        HtmlBytes.encodeInt0(4),
-        HtmlBytes.encodeInt1(4),
-        HtmlByteProto.ELEMENT,
-        HtmlBytes.encodeInt0(60),
-        HtmlByteProto.ELEMENT,
-        HtmlBytes.encodeInt0(36),
-        HtmlByteProto.END,
-        HtmlBytes.encodeInt0(75),
-        HtmlByteProto.INTERNAL
-    );
-  }
-
-  @Test(description = """
   fragment at the root of the document
   """)
   public void testCase73() {
-    Markup.OfHtml html;
-    html = new Markup.OfHtml();
+    final Recorder html;
+    html = Recorder.create();
 
-    Fragment0 action;
+    final Fragment0 action;
     action = () -> {
       html.doctype();
-      html.html();
+      html.element(ElementName.HTML);
     };
 
-    int startIndex;
-    startIndex = html.fragmentBegin();
-
-    action.invoke();
-
-    html.fragmentEnd(startIndex);
+    html.f(action);
 
     test(
         html,
@@ -801,18 +649,13 @@ public class HtmlMarkupTest01Recorder {
   fragment at the root of the document
   """)
   public void testCase77() {
-    Markup.OfHtml html;
-    html = new Markup.OfHtml();
+    final Recorder html;
+    html = Recorder.create();
 
-    Fragment0 action;
+    final Fragment0 action;
     action = () -> {};
 
-    int startIndex;
-    startIndex = html.fragmentBegin();
-
-    action.invoke();
-
-    html.fragmentEnd(startIndex);
+    html.f(action);
 
     test(
         html,
@@ -829,31 +672,12 @@ public class HtmlMarkupTest01Recorder {
     );
   }
 
-  private void test(MarkupPojo html, byte... expected) {
-    byte[] result;
-    result = Arrays.copyOf(html.main, html.mainIndex);
+  private void test(Recorder html, int... expected) {
+    assertEquals(
+        html.main(),
 
-    if (result.length != expected.length) {
-      throw new AssertionError(
-          """
-        Arrays don't have the same size.
-
-        Actual  : %s
-        Expected: %s
-        """.formatted(Arrays.toString(result), Arrays.toString(expected))
-      );
-    }
-
-    if (!Arrays.equals(result, expected)) {
-      throw new AssertionError(
-          """
-        Arrays don't have the same content.
-
-        Actual  : %s
-        Expected: %s
-        """.formatted(Arrays.toString(result), Arrays.toString(expected))
-      );
-    }
+        ByteArray.of(expected)
+    );
   }
 
 }

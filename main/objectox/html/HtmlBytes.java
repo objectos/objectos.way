@@ -207,7 +207,7 @@ public final class HtmlBytes {
       buf.add(
           encodeVarint(value, 0),
 
-          encodeVarintHigh(value, 7),
+          encodeVarint(value, 7),
 
           encodeVarintHigh(value, 14)
       );

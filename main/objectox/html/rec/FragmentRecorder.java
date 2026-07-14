@@ -17,7 +17,12 @@ package objectox.html.rec;
 
 import java.util.Objects;
 import objectos.html.Fragment0;
+import objectos.html.Fragment1;
+import objectos.html.Fragment2;
+import objectos.html.Fragment3;
+import objectos.html.Fragment4;
 import objectos.way.Html;
+import objectos.way.Html.Instruction.OfFragment;
 import objectox.html.ByteArray;
 import objectox.html.HtmlByteProto;
 import objectox.html.HtmlInstruction;
@@ -38,7 +43,7 @@ final class FragmentRecorder {
     this.reverseOffsetRecorder = reverseOffsetRecorder;
   }
 
-  public final Html.Instruction record(Fragment0 fragment) {
+  public final Html.Instruction.OfFragment record(Fragment0 fragment) {
     final Fragment0 f;
     f = Objects.requireNonNull(fragment, "fragment == null");
 
@@ -46,6 +51,62 @@ final class FragmentRecorder {
     index = fragmentBegin();
 
     f.invoke();
+
+    fragmentEnd(index);
+
+    return HtmlInstruction.FRAGMENT;
+  }
+
+  public final <T1> OfFragment record(Fragment1<T1> fragment, T1 arg1) {
+    final Fragment1<T1> f;
+    f = Objects.requireNonNull(fragment, "fragment == null");
+
+    final int index;
+    index = fragmentBegin();
+
+    f.invoke(arg1);
+
+    fragmentEnd(index);
+
+    return HtmlInstruction.FRAGMENT;
+  }
+
+  public final <T1, T2> OfFragment record(Fragment2<T1, T2> fragment, T1 arg1, T2 arg2) {
+    final Fragment2<T1, T2> f;
+    f = Objects.requireNonNull(fragment, "fragment == null");
+
+    final int index;
+    index = fragmentBegin();
+
+    f.invoke(arg1, arg2);
+
+    fragmentEnd(index);
+
+    return HtmlInstruction.FRAGMENT;
+  }
+
+  public final <T1, T2, T3> OfFragment record(Fragment3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3) {
+    final Fragment3<T1, T2, T3> f;
+    f = Objects.requireNonNull(fragment, "fragment == null");
+
+    final int index;
+    index = fragmentBegin();
+
+    f.invoke(arg1, arg2, arg3);
+
+    fragmentEnd(index);
+
+    return HtmlInstruction.FRAGMENT;
+  }
+
+  public final <T1, T2, T3, T4> OfFragment record(Fragment4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
+    final Fragment4<T1, T2, T3, T4> f;
+    f = Objects.requireNonNull(fragment, "fragment == null");
+
+    final int index;
+    index = fragmentBegin();
+
+    f.invoke(arg1, arg2, arg3, arg4);
 
     fragmentEnd(index);
 

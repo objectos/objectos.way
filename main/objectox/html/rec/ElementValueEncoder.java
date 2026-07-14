@@ -22,10 +22,14 @@ final class ElementValueEncoder {
 
   private final ByteArray aux;
 
+  private final ByteArray main;
+
   private final Encoder encoder;
 
-  ElementValueEncoder(ByteArray aux, Encoder encoder) {
+  ElementValueEncoder(ByteArray aux, ByteArray main, Encoder encoder) {
     this.aux = aux;
+
+    this.main = main;
 
     this.encoder = encoder;
   }
@@ -49,6 +53,22 @@ final class ElementValueEncoder {
       mark = aux.get(index++);
 
       switch (mark) {
+        case HtmlByteProto.ATTRIBUTE_EXT0 -> main.add(
+            mark,
+
+            aux.get(index++)
+        );
+
+        case HtmlByteProto.ATTRIBUTE_EXT1 -> main.add(
+            mark,
+
+            aux.get(index++),
+
+            aux.get(index++),
+
+            aux.get(index++)
+        );
+
         case HtmlByteProto.INTERNAL -> contents = encoder.encode(contents);
 
         default -> throw new UnsupportedOperationException(

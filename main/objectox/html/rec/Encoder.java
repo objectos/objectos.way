@@ -35,9 +35,34 @@ final class Encoder {
     this.elementEncoder = elementEncoder;
   }
 
-  public final int encode(final int index) {
-    final byte proto;
-    proto = main.get(index);
+  public final int encode(final int startIndex) {
+    int index;
+    index = startIndex;
+
+    byte proto;
+
+    while (true) {
+      byte maybe;
+      maybe = main.get(index);
+
+      switch (maybe) {
+        case HtmlByteProto.LENGTH2 -> { index = encodeLength2(index); continue; }
+
+        case HtmlByteProto.LENGTH3 -> { index = encodeLength3(index); continue; }
+
+        case HtmlByteProto.MARKED3 -> { index += 3; continue; }
+
+        case HtmlByteProto.MARKED4 -> { index += 4; continue; }
+
+        case HtmlByteProto.MARKED5 -> { index += 5; continue; }
+
+        case HtmlByteProto.MARKED6 -> { index += 6; continue; }
+      }
+
+      proto = maybe;
+
+      break;
+    }
 
     return switch (proto) {
       case HtmlByteProto.ATTRIBUTE0 -> encodeInternal(index, proto, 3, HtmlByteProto.MARKED3);
@@ -114,6 +139,45 @@ final class Encoder {
     HtmlBytes.encodeOffset(main, length);
 
     return startIndex + offset;
+  }
+
+  @SuppressWarnings("unused")
+  private int encodeLength2(int contents) {
+    contents++;
+
+    // decode the length
+    byte len0;
+    len0 = main.get(contents++);
+
+    byte len1;
+    len1 = main.get(contents++);
+
+    int length;
+    length = HtmlBytes.decodeInt(len0, len1);
+
+    // point to next element
+    return contents + length;
+  }
+
+  @SuppressWarnings("unused")
+  private int encodeLength3(int contents) {
+    contents++;
+
+    // decode the length
+    byte len0;
+    len0 = main.get(contents++);
+
+    byte len1;
+    len1 = main.get(contents++);
+
+    byte len2;
+    len2 = main.get(contents++);
+
+    int length;
+    length = HtmlBytes.decodeLength3(len0, len1, len2);
+
+    // point to next element
+    return contents + length;
   }
 
 }

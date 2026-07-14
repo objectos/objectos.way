@@ -34,8 +34,7 @@ public class HtmlMarkupTest03Processor {
     MarkupPojo compiler;
     compiler = new Markup.OfHtml();
 
-    compiler.elementBegin(ElementNamePojo.HTML);
-    compiler.elementEnd();
+    compiler.elem(ElementNamePojo.HTML);
 
     assertEquals(
         test(compiler),
@@ -54,11 +53,7 @@ public class HtmlMarkupTest03Processor {
     MarkupPojo compiler;
     compiler = new Markup.OfHtml();
 
-    compiler.attr(AttributeNamePojo.LANG, "pt-BR");
-
-    compiler.elementBegin(ElementNamePojo.HTML);
-    compiler.elementValue(HtmlInstruction.ATTRIBUTE);
-    compiler.elementEnd();
+    compiler.elem(ElementNamePojo.HTML, compiler.attr(AttributeNamePojo.LANG, "pt-BR"));
 
     assertEquals(
         test(compiler),

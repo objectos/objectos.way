@@ -18,16 +18,18 @@ package objectox.html.rec;
 import static org.testng.Assert.assertEquals;
 
 import objectos.html.ElementName;
+import objectox.html.Ambiguous;
 import objectox.html.ByteArray;
 import objectox.html.HtmlByteProto;
 import objectox.html.HtmlBytes;
+import objectox.html.HtmlInstruction;
 import objectox.html.ObjectArray;
 import objectox.html.elem.ElementNamePojo;
 import org.testng.annotations.Test;
 
 public class ElementRecorderTest {
 
-  @Test
+  @Test(description = "<html></html>")
   public void record01() {
     final ByteArray aux;
     aux = ByteArray.of();
@@ -71,6 +73,139 @@ public class ElementRecorderTest {
         objects,
 
         ObjectArray.of()
+    );
+  }
+
+  @Test(description = "<head><title>x</title></head>")
+  public void record02() {
+    final ByteArray aux;
+    aux = ByteArray.of();
+
+    final ByteArray main;
+    main = ByteArray.of(
+        HtmlByteProto.AMBIGUOUS1,
+        HtmlBytes.encodeInt0(Ambiguous.TITLE.ordinal()),
+        HtmlBytes.encodeInt0(0),
+        HtmlBytes.encodeInt1(0),
+        HtmlByteProto.INTERNAL5
+    );
+
+    final ObjectArray objects;
+    objects = ObjectArray.of("x");
+
+    final ElementRecorder subject;
+    subject = ElementRecorder.of(aux, main, objects);
+
+    final ElementName name;
+    name = ElementName.HEAD;
+
+    subject.record(name, HtmlInstruction.ELEMENT);
+
+    assertEquals(
+        aux,
+
+        ByteArray.of(HtmlByteProto.INTERNAL)
+    );
+
+    assertEquals(
+        main,
+
+        ByteArray.of(
+            HtmlByteProto.MARKED5,
+            HtmlBytes.encodeInt0(Ambiguous.TITLE.ordinal()),
+            HtmlBytes.encodeInt0(0),
+            HtmlBytes.encodeInt1(0),
+            HtmlByteProto.INTERNAL5,
+
+            HtmlByteProto.ELEMENT,
+            HtmlBytes.encodeInt0(7),
+            HtmlBytes.encodeInt1(7),
+            HtmlByteProto.STANDARD_NAME,
+            (byte) ElementNamePojo.HEAD.index(),
+            HtmlByteProto.AMBIGUOUS1,
+            HtmlBytes.encodeInt0(11),
+            HtmlByteProto.END,
+            HtmlBytes.encodeInt0(12),
+            HtmlByteProto.INTERNAL
+        )
+    );
+
+    assertEquals(
+        objects,
+
+        ObjectArray.of("x")
+    );
+  }
+
+  @Test(description = "<html><head><title>x</title></head></html>")
+  public void record03() {
+    final ByteArray aux;
+    aux = ByteArray.of(HtmlByteProto.INTERNAL);
+
+    final ByteArray main;
+    main = ByteArray.of(
+        HtmlByteProto.MARKED5,
+        HtmlBytes.encodeInt0(Ambiguous.TITLE.ordinal()),
+        HtmlBytes.encodeInt0(0),
+        HtmlBytes.encodeInt1(0),
+        HtmlByteProto.INTERNAL5,
+
+        HtmlByteProto.ELEMENT,
+        HtmlBytes.encodeInt0(7),
+        HtmlBytes.encodeInt1(7),
+        HtmlByteProto.STANDARD_NAME,
+        (byte) ElementNamePojo.HEAD.index(),
+        HtmlByteProto.AMBIGUOUS1,
+        HtmlBytes.encodeInt0(11),
+        HtmlByteProto.END,
+        HtmlBytes.encodeInt0(12),
+        HtmlByteProto.INTERNAL
+    );
+
+    final ObjectArray objects;
+    objects = ObjectArray.of("x");
+
+    final ElementRecorder subject;
+    subject = ElementRecorder.of(aux, main, objects);
+
+    final ElementName name;
+    name = ElementName.HTML;
+
+    subject.record(name, HtmlInstruction.ELEMENT);
+
+    assertEquals(
+        aux,
+
+        ByteArray.of(HtmlByteProto.INTERNAL)
+    );
+
+    assertEquals(
+        main,
+
+        ByteArray.of(
+            HtmlByteProto.MARKED5,
+            HtmlBytes.encodeInt0(Ambiguous.TITLE.ordinal()),
+            HtmlBytes.encodeInt0(0),
+            HtmlBytes.encodeInt1(0),
+            HtmlByteProto.INTERNAL5,
+
+            HtmlByteProto.ELEMENT,
+            HtmlBytes.encodeInt0(7),
+            HtmlBytes.encodeInt1(7),
+            HtmlByteProto.STANDARD_NAME,
+            (byte) ElementNamePojo.HEAD.index(),
+            HtmlByteProto.AMBIGUOUS1,
+            HtmlBytes.encodeInt0(11),
+            HtmlByteProto.END,
+            HtmlBytes.encodeInt0(12),
+            HtmlByteProto.INTERNAL
+        )
+    );
+
+    assertEquals(
+        objects,
+
+        ObjectArray.of("x")
     );
   }
 

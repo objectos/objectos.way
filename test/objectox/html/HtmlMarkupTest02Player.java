@@ -32,8 +32,7 @@ public class HtmlMarkupTest02Player {
     MarkupPojo compiler;
     compiler = new Markup.OfHtml();
 
-    compiler.elementBegin(ElementNamePojo.HTML);
-    compiler.elementEnd();
+    compiler.elem(ElementNamePojo.HTML);
 
     // document
     compiler.compile();
@@ -215,11 +214,10 @@ public class HtmlMarkupTest02Player {
     MarkupPojo compiler;
     compiler = new Markup.OfHtml();
 
-    compiler.attr(AttributeNamePojo.LANG, "pt-BR");
-
-    compiler.elementBegin(ElementNamePojo.HTML);
-    compiler.elementValue(HtmlInstruction.ATTRIBUTE);
-    compiler.elementEnd();
+    compiler.elem(
+        ElementNamePojo.HTML,
+        compiler.attr(AttributeNamePojo.LANG, "pt-BR")
+    );
 
     // document
     compiler.compile();
@@ -384,12 +382,7 @@ public class HtmlMarkupTest02Player {
     MarkupPojo compiler;
     compiler = new Markup.OfHtml();
 
-    compiler.elementBegin(ElementNamePojo.HEAD);
-    compiler.elementEnd();
-
-    compiler.elementBegin(ElementNamePojo.HTML);
-    compiler.elementValue(HtmlInstruction.ELEMENT);
-    compiler.elementEnd();
+    compiler.elem(ElementNamePojo.HTML, compiler.elem(ElementNamePojo.HEAD));
 
     // document
     compiler.compile();
@@ -566,22 +559,11 @@ public class HtmlMarkupTest02Player {
     MarkupPojo compiler;
     compiler = new Markup.OfHtml();
 
-    compiler.ambiguous(Ambiguous.TITLE, "element");
-
-    compiler.elementBegin(ElementNamePojo.HEAD);
-    compiler.elementValue(HtmlInstruction.ELEMENT);
-    compiler.elementEnd();
-
-    compiler.ambiguous(Ambiguous.TITLE, "attribute");
-
-    compiler.elementBegin(ElementNamePojo.BODY);
-    compiler.elementValue(HtmlInstruction.ELEMENT);
-    compiler.elementEnd();
-
-    compiler.elementBegin(ElementNamePojo.HTML);
-    compiler.elementValue(HtmlInstruction.ELEMENT);
-    compiler.elementValue(HtmlInstruction.ELEMENT);
-    compiler.elementEnd();
+    compiler.elem(
+        ElementNamePojo.HTML,
+        compiler.elem(ElementNamePojo.HEAD, compiler.ambiguous(Ambiguous.TITLE, "element")),
+        compiler.elem(ElementNamePojo.BODY, compiler.ambiguous(Ambiguous.TITLE, "attribute"))
+    );
 
     // document
     compiler.compile();
@@ -655,13 +637,11 @@ public class HtmlMarkupTest02Player {
     MarkupPojo compiler;
     compiler = new Markup.OfHtml();
 
-    compiler.attr(AttributeNamePojo.TYPE, "email");
-    compiler.attr(AttributeNamePojo.REQUIRED);
-
-    compiler.elementBegin(ElementNamePojo.INPUT);
-    compiler.elementValue(HtmlInstruction.ATTRIBUTE);
-    compiler.elementValue(HtmlInstruction.ATTRIBUTE);
-    compiler.elementEnd();
+    compiler.elem(
+        ElementNamePojo.INPUT,
+        compiler.attr(AttributeNamePojo.TYPE, "email"),
+        compiler.attr(AttributeNamePojo.REQUIRED)
+    );
 
     // document
     compiler.compile();

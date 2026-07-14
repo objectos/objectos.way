@@ -36,7 +36,7 @@ final class Attribute1Recorder {
     this.objects = objects;
   }
 
-  public final Html.Instruction record(AttributeName name, Object value) {
+  public final Html.Instruction.OfAttribute record(AttributeName name, Object value) {
     final int index;
     index = name.index();
 

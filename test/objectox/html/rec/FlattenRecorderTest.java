@@ -34,6 +34,8 @@ public class FlattenRecorderTest {
         new ElementValueEncoder(
             aux,
 
+            main,
+
             new Encoder(
                 main,
 

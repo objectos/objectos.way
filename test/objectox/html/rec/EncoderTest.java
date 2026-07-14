@@ -341,4 +341,58 @@ public class EncoderTest {
     );
   }
 
+  @Test(description = "skip MARKED5")
+  public void encode10() {
+    final ByteArray main;
+    main = ByteArray.of(
+        HtmlByteProto.MARKED5,
+        HtmlBytes.encodeInt0(Ambiguous.TITLE.ordinal()),
+        HtmlBytes.encodeInt0(0),
+        HtmlBytes.encodeInt1(0),
+        HtmlByteProto.INTERNAL5,
+
+        HtmlByteProto.ELEMENT,
+        HtmlBytes.encodeInt0(7),
+        HtmlBytes.encodeInt1(7),
+        HtmlByteProto.STANDARD_NAME,
+        (byte) ElementNamePojo.HEAD.index(),
+        HtmlByteProto.AMBIGUOUS1,
+        HtmlBytes.encodeInt0(11),
+        HtmlByteProto.END,
+        HtmlBytes.encodeInt0(12),
+        HtmlByteProto.INTERNAL
+    );
+
+    final Encoder subject;
+    subject = create(main);
+
+    assertEquals(subject.encode(0), 15);
+
+    assertEquals(
+        main,
+
+        ByteArray.of(
+            HtmlByteProto.MARKED5,
+            HtmlBytes.encodeInt0(Ambiguous.TITLE.ordinal()),
+            HtmlBytes.encodeInt0(0),
+            HtmlBytes.encodeInt1(0),
+            HtmlByteProto.INTERNAL5,
+
+            HtmlByteProto.LENGTH2,
+            HtmlBytes.encodeInt0(7),
+            HtmlBytes.encodeInt1(7),
+            HtmlByteProto.STANDARD_NAME,
+            (byte) ElementNamePojo.HEAD.index(),
+            HtmlByteProto.AMBIGUOUS1,
+            HtmlBytes.encodeInt0(11),
+            HtmlByteProto.END,
+            HtmlBytes.encodeInt0(12),
+            HtmlByteProto.INTERNAL,
+
+            HtmlByteProto.ELEMENT,
+            HtmlBytes.encodeInt0(11)
+        )
+    );
+  }
+
 }

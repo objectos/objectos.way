@@ -36,7 +36,7 @@ final class AmbiguousRecorder {
     this.objects = objects;
   }
 
-  public final Html.Instruction record(Ambiguous name, String value) {
+  public final Html.Instruction.OfAmbiguous record(Ambiguous name, String value) {
     final String v;
     v = Objects.requireNonNull(value, "value == null");
 

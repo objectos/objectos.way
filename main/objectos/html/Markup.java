@@ -20,11 +20,9 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import objectos.dev.Testable;
-import objectos.internal.Check;
 import objectos.lang.BinaryObject;
 import objectos.script.JsAction;
 import objectos.way.Html;
-import objectox.html.HtmlInstruction;
 import objectox.html.MarkupPojo;
 
 /// Declares the structure of an HTML document using pure Java.
@@ -39,34 +37,36 @@ public sealed interface Markup extends BinaryObject, Testable {
     /// {@inheritDoc}
     @Override
     public final Html.Instruction.OfFragment c(Component... components) {
-      int index;
-      index = fragmentBegin();
-
-      for (int idx = 0, len = components.length; idx < len; idx++) {
-        final Component c;
-        c = Check.notNull(components[idx], "components[", idx, "] == null");
-
-        c.renderHtml(this);
-      }
-
-      fragmentEnd(index);
-
-      return HtmlInstruction.FRAGMENT;
+//      int index;
+//      index = fragmentBegin();
+//
+//      for (int idx = 0, len = components.length; idx < len; idx++) {
+//        final Component c;
+//        c = Check.notNull(components[idx], "components[", idx, "] == null");
+//
+//        c.renderHtml(this);
+//      }
+//
+//      fragmentEnd(index);
+//
+//      return HtmlInstruction.FRAGMENT;
+      throw new UnsupportedOperationException("Implement me");
     }
 
     /// {@inheritDoc}
     @Override
     public final Html.Instruction.OfFragment c(Iterable<? extends Component> components) {
-      int index;
-      index = fragmentBegin();
-
-      for (Component c : components) {
-        c.renderHtml(this);
-      }
-
-      fragmentEnd(index);
-
-      return HtmlInstruction.FRAGMENT;
+//      int index;
+//      index = fragmentBegin();
+//
+//      for (Component c : components) {
+//        c.renderHtml(this);
+//      }
+//
+//      fragmentEnd(index);
+//
+//      return HtmlInstruction.FRAGMENT;
+      throw new UnsupportedOperationException("Implement me");
     }
 
   }

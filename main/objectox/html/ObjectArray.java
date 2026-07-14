@@ -60,9 +60,17 @@ public final class ObjectArray {
         && Arrays.equals(values, 0, index, that.values, 0, that.index);
   }
 
+  public final int size() {
+    return index;
+  }
+
   @Override
   public final String toString() {
     return Arrays.toString(values);
+  }
+
+  public final Object[] unwrap() {
+    return values;
   }
 
 }

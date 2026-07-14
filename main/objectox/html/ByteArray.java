@@ -120,4 +120,8 @@ public final class ByteArray {
     return format.formatHex(bytes, 0, index);
   }
 
+  public final byte[] unwrap() {
+    return bytes;
+  }
+
 }

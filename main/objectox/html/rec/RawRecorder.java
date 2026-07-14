@@ -16,9 +16,11 @@
 package objectox.html.rec;
 
 import java.util.Objects;
+import objectos.way.Html;
 import objectox.html.ByteArray;
 import objectox.html.HtmlByteProto;
 import objectox.html.HtmlBytes;
+import objectox.html.HtmlInstruction;
 import objectox.html.ObjectArray;
 
 final class RawRecorder {
@@ -33,7 +35,7 @@ final class RawRecorder {
     this.objects = objects;
   }
 
-  public final void record(String value) {
+  public final Html.Instruction.OfElement record(String value) {
     final String v;
     v = Objects.requireNonNull(value, "value == null");
 
@@ -48,6 +50,8 @@ final class RawRecorder {
 
         HtmlByteProto.INTERNAL4
     );
+
+    return HtmlInstruction.ELEMENT;
   }
 
 }

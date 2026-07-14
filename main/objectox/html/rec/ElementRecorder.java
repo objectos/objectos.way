@@ -18,6 +18,7 @@ package objectox.html.rec;
 import objectos.html.ElementName;
 import objectos.way.Html;
 import objectox.html.ByteArray;
+import objectox.html.HtmlInstruction;
 import objectox.html.ObjectArray;
 
 final class ElementRecorder {
@@ -61,6 +62,8 @@ final class ElementRecorder {
         new ElementValueEncoder(
             aux,
 
+            main,
+
             new Encoder(
                 main,
 
@@ -82,7 +85,7 @@ final class ElementRecorder {
     );
   }
 
-  public final void record(ElementName name, Html.Instruction... contents) {
+  public final Html.Instruction.OfElement record(ElementName name, Html.Instruction... contents) {
     final int auxStart;
     auxStart = elementValueEncoder.auxStart();
 
@@ -113,6 +116,8 @@ final class ElementRecorder {
     reverseOffsetRecorder.record(mainContents);
 
     forwardOffsetRecorder.two(mainStart);
+
+    return HtmlInstruction.ELEMENT;
   }
 
 }
