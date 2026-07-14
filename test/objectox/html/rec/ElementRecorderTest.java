@@ -176,7 +176,7 @@ public class ElementRecorderTest {
     assertEquals(
         aux,
 
-        ByteArray.of(HtmlByteProto.INTERNAL)
+        ByteArray.of(HtmlByteProto.INTERNAL, HtmlByteProto.INTERNAL)
     );
 
     assertEquals(
@@ -189,7 +189,7 @@ public class ElementRecorderTest {
             HtmlBytes.encodeInt1(0),
             HtmlByteProto.INTERNAL5,
 
-            HtmlByteProto.ELEMENT,
+            HtmlByteProto.LENGTH2,
             HtmlBytes.encodeInt0(7),
             HtmlBytes.encodeInt1(7),
             HtmlByteProto.STANDARD_NAME,
@@ -198,6 +198,17 @@ public class ElementRecorderTest {
             HtmlBytes.encodeInt0(11),
             HtmlByteProto.END,
             HtmlBytes.encodeInt0(12),
+            HtmlByteProto.INTERNAL,
+
+            HtmlByteProto.ELEMENT,
+            HtmlBytes.encodeInt0(7),
+            HtmlBytes.encodeInt1(7),
+            HtmlByteProto.STANDARD_NAME,
+            (byte) ElementNamePojo.HTML.index(),
+            HtmlByteProto.ELEMENT,
+            HtmlBytes.encodeInt0(16),
+            HtmlByteProto.END,
+            HtmlBytes.encodeInt0(22),
             HtmlByteProto.INTERNAL
         )
     );

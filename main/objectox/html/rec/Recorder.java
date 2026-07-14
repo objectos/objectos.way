@@ -16,12 +16,14 @@
 package objectox.html.rec;
 
 import objectos.html.AttributeName;
+import objectos.html.Component;
 import objectos.html.ElementName;
 import objectos.html.Fragment0;
 import objectos.html.Fragment1;
 import objectos.html.Fragment2;
 import objectos.html.Fragment3;
 import objectos.html.Fragment4;
+import objectos.html.Markup;
 import objectos.way.Html.Instruction;
 import objectos.way.Html.Instruction.OfAmbiguous;
 import objectos.way.Html.Instruction.OfAttribute;
@@ -46,6 +48,8 @@ public final class Recorder {
 
   private final Attribute1Recorder attribute1Recorder;
 
+  private final ComponentRecorder componentRecorder;
+
   private final ElementRecorder elementRecorder;
 
   private final FlattenRecorder flattenRecorder;
@@ -69,6 +73,8 @@ public final class Recorder {
 
       Attribute1Recorder attribute1Recorder,
 
+      ComponentRecorder componentRecorder,
+
       ElementRecorder elementRecorder,
 
       FlattenRecorder flattenRecorder,
@@ -90,6 +96,8 @@ public final class Recorder {
     this.attribute0Recorder = attribute0Recorder;
 
     this.attribute1Recorder = attribute1Recorder;
+
+    this.componentRecorder = componentRecorder;
 
     this.elementRecorder = elementRecorder;
 
@@ -152,6 +160,8 @@ public final class Recorder {
 
         new Attribute1Recorder(main, objects),
 
+        new ComponentRecorder(main, forwardOffsetRecorder, reverseOffsetRecorder),
+
         new ElementRecorder(
             new ElementNameRecorder(main),
 
@@ -194,6 +204,14 @@ public final class Recorder {
 
   public final OfAttribute attribute1(AttributeName name, Object value) {
     return attribute1Recorder.record(name, value);
+  }
+
+  public final OfFragment component(Markup ctx, Component... components) {
+    return componentRecorder.record(ctx, components);
+  }
+
+  public final OfFragment component(Markup ctx, Iterable<? extends Component> components) {
+    return componentRecorder.record(ctx, components);
   }
 
   public final void doctype() {

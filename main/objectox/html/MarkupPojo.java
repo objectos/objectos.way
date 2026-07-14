@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.Objects;
 import objectos.html.AttributeName;
 import objectos.html.AttributeObject;
+import objectos.html.Component;
 import objectos.html.ElementName;
 import objectos.html.Fragment0;
 import objectos.html.Fragment1;
@@ -34,7 +35,10 @@ import objectox.html.attr.AttributeNamePojo;
 import objectox.html.elem.ElementNamePojo;
 import objectox.html.rec.Recorder;
 
-public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.OfHtml {
+public sealed abstract class MarkupPojo
+    extends MarkupGenerated
+    implements Markup
+    permits Markup.OfHtml {
 
   static final byte _DOCUMENT_START = -1;
   static final byte _DOCUMENT_NODES_ITERABLE = -2;
@@ -113,6 +117,7 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
     }
   }
 
+  @Override
   public final String toTestableText() {
     return testable.toString();
   }
@@ -139,6 +144,16 @@ public sealed abstract class MarkupPojo extends MarkupGenerated permits Markup.O
   // ##################################################################
   // # BEGIN: Way Support
   // ##################################################################
+
+  @Override
+  public final Html.Instruction.OfFragment c(Component... components) {
+    return recorder.component(this, components);
+  }
+
+  @Override
+  public final Html.Instruction.OfFragment c(Iterable<? extends Component> components) {
+    return recorder.component(this, components);
+  }
 
   @Override
   public final Html.Instruction.OfFragment f(Fragment0 fragment) {

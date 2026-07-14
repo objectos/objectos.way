@@ -26,48 +26,13 @@ import objectos.way.Html;
 import objectox.html.MarkupPojo;
 
 /// Declares the structure of an HTML document using pure Java.
-public sealed interface Markup extends BinaryObject, Testable {
+public sealed interface Markup extends BinaryObject, Testable permits MarkupPojo {
 
   /// Markup implementation for generating HTML.
-  non-sealed class OfHtml extends MarkupPojo implements Markup {
+  non-sealed class OfHtml extends MarkupPojo  {
 
     /// Sole constructor.
     public OfHtml() {}
-
-    /// {@inheritDoc}
-    @Override
-    public final Html.Instruction.OfFragment c(Component... components) {
-//      int index;
-//      index = fragmentBegin();
-//
-//      for (int idx = 0, len = components.length; idx < len; idx++) {
-//        final Component c;
-//        c = Check.notNull(components[idx], "components[", idx, "] == null");
-//
-//        c.renderHtml(this);
-//      }
-//
-//      fragmentEnd(index);
-//
-//      return HtmlInstruction.FRAGMENT;
-      throw new UnsupportedOperationException("Implement me");
-    }
-
-    /// {@inheritDoc}
-    @Override
-    public final Html.Instruction.OfFragment c(Iterable<? extends Component> components) {
-//      int index;
-//      index = fragmentBegin();
-//
-//      for (Component c : components) {
-//        c.renderHtml(this);
-//      }
-//
-//      fragmentEnd(index);
-//
-//      return HtmlInstruction.FRAGMENT;
-      throw new UnsupportedOperationException("Implement me");
-    }
 
   }
 
