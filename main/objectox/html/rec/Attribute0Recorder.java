@@ -19,7 +19,6 @@ import objectos.html.AttributeName;
 import objectos.way.Html;
 import objectox.html.ByteArray;
 import objectox.html.HtmlByteProto;
-import objectox.html.HtmlBytes;
 import objectox.html.HtmlInstruction;
 import objectox.html.ObjectArray;
 
@@ -40,27 +39,20 @@ final class Attribute0Recorder {
     index = name.index();
 
     if (index >= 0) {
-      main.add(
-          HtmlByteProto.ATTRIBUTE0,
+      main.add(HtmlByteProto.ATTRIBUTE0);
 
-          // name
-          HtmlBytes.encodeInt0(index),
+      main.addInt8(index);
 
-          HtmlByteProto.INTERNAL3
-      );
+      main.add(HtmlByteProto.INTERNAL3);
     } else {
       final int customIndex;
       customIndex = objects.add(name);
 
-      main.add(
-          HtmlByteProto.CUSTOM_ATTR0,
+      main.add(HtmlByteProto.CUSTOM_ATTR0);
 
-          // name
-          HtmlBytes.encodeInt0(customIndex),
-          HtmlBytes.encodeInt1(customIndex),
+      main.addInt16(customIndex);
 
-          HtmlByteProto.INTERNAL4
-      );
+      main.add(HtmlByteProto.INTERNAL4);
     }
 
     return HtmlInstruction.ATTRIBUTE;

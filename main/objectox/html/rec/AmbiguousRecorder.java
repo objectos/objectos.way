@@ -20,7 +20,6 @@ import objectos.way.Html;
 import objectox.html.Ambiguous;
 import objectox.html.ByteArray;
 import objectox.html.HtmlByteProto;
-import objectox.html.HtmlBytes;
 import objectox.html.HtmlInstruction;
 import objectox.html.ObjectArray;
 
@@ -40,24 +39,19 @@ final class AmbiguousRecorder {
     final String v;
     v = Objects.requireNonNull(value, "value == null");
 
+    main.add(HtmlByteProto.AMBIGUOUS1);
+
     final int ordinal;
     ordinal = name.ordinal();
+
+    main.addInt8(ordinal);
 
     final int object;
     object = objects.add(v);
 
-    main.add(
-        HtmlByteProto.AMBIGUOUS1,
+    main.addInt16(object);
 
-        // name
-        HtmlBytes.encodeInt0(ordinal),
-
-        // value
-        HtmlBytes.encodeInt0(object),
-        HtmlBytes.encodeInt1(object),
-
-        HtmlByteProto.INTERNAL5
-    );
+    main.add(HtmlByteProto.INTERNAL5);
 
     return HtmlInstruction.ELEMENT;
   }

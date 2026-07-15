@@ -17,7 +17,6 @@ package objectox.html.rec;
 
 import objectox.html.ByteArray;
 import objectox.html.HtmlByteProto;
-import objectox.html.HtmlBytes;
 
 final class ReverseOffsetRecorder {
 
@@ -42,42 +41,11 @@ final class ReverseOffsetRecorder {
     final int offset;
     offset = mainIndex - from;
 
-    if (offset <= HtmlBytes.VARINT_MAX1) {
-      final byte b1;
-      b1 = (byte) offset;
+    main.add(b0);
 
-      main.add(b0, b1, bx);
-    }
+    main.addVarInt(offset);
 
-    else if (offset <= HtmlBytes.VARINT_MAX2) {
-      final byte b1;
-      b1 = HtmlBytes.encodeVarintHigh(offset, 7);
-
-      final byte b2;
-      b2 = HtmlBytes.encodeVarint(offset, 0);
-
-      main.add(b0, b1, b2, bx);
-    }
-
-    else if (offset <= HtmlBytes.VARINT_MAX3) {
-      final byte b1;
-      b1 = HtmlBytes.encodeVarintHigh(offset, 14);
-
-      final byte b2;
-      b2 = HtmlBytes.encodeVarint(offset, 7);
-
-      final byte b3;
-      b3 = HtmlBytes.encodeVarint(offset, 0);
-
-      main.add(b0, b1, b2, b3, bx);
-    }
-
-    else {
-      final String msg;
-      msg = "HTML is too large to record: offset=%d".formatted(offset);
-
-      throw new IllegalArgumentException(msg);
-    }
+    main.add(bx);
   }
 
 }

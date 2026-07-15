@@ -17,7 +17,6 @@ package objectox.html.rec;
 
 import objectox.html.ByteArray;
 import objectox.html.HtmlByteProto;
-import objectox.html.HtmlBytes;
 
 final class ElementEncoder {
 
@@ -34,16 +33,11 @@ final class ElementEncoder {
     // mark this element
     main.set(index++, HtmlByteProto.LENGTH2);
 
-    // decode the length
-    final byte len0;
-    len0 = main.get(index++);
-
-    final byte len1;
-    len1 = main.get(index++);
-
     // point to next element
     final int offset;
-    offset = HtmlBytes.decodeInt(len0, len1);
+    offset = main.getInt16(index++);
+
+    index++;
 
     final int nextIndex;
     nextIndex = index + offset;
@@ -53,7 +47,7 @@ final class ElementEncoder {
     final int length;
     length = main.size() - startIndex;
 
-    HtmlBytes.encodeOffset(main, length);
+    main.addVarIntLE(length);
 
     return nextIndex;
   }

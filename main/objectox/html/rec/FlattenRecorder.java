@@ -70,13 +70,9 @@ final class FlattenRecorder {
     int mainContents;
     mainContents = mainStart;
 
-    main.add(
-        HtmlByteProto.FLATTEN,
+    main.add(HtmlByteProto.FLATTEN);
 
-        // length takes 2 bytes
-        HtmlByteProto.NULL,
-        HtmlByteProto.NULL
-    );
+    main.addInt16(ByteArray.MAX_INT16);
 
     for (int idx = 0; idx < values.length; idx++) {
       final Html.Instruction instruction;
@@ -114,13 +110,9 @@ final class FlattenRecorder {
     int mainContents;
     mainContents = mainStart;
 
-    main.add(
-        HtmlByteProto.FLATTEN,
+    main.add(HtmlByteProto.FLATTEN);
 
-        // length takes 2 bytes
-        HtmlByteProto.NULL,
-        HtmlByteProto.NULL
-    );
+    main.addInt16(ByteArray.MAX_INT16);
 
     for (Html.Instruction value : values) {
       if (value == null) {

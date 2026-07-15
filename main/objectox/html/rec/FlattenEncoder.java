@@ -17,7 +17,6 @@ package objectox.html.rec;
 
 import objectox.html.ByteArray;
 import objectox.html.HtmlByteProto;
-import objectox.html.HtmlBytes;
 
 final class FlattenEncoder {
 
@@ -34,48 +33,27 @@ final class FlattenEncoder {
     // mark this fragment
     main.set(index++, HtmlByteProto.LENGTH2);
 
-    // decode the length
-    final byte len0;
-    len0 = main.get(index++);
-
-    final byte len1;
-    len1 = main.get(index++);
-
     // point to next element
     final int offset;
-    offset = HtmlBytes.decodeInt(len0, len1);
+    offset = main.getInt16(index++);
+
+    index++;
 
     final int maxIndex;
     maxIndex = index + offset;
 
     while (index < maxIndex) {
       final byte proto;
-      proto = main.get(index++);
+      proto = main.get(index);
 
       if (proto == HtmlByteProto.END) {
         break;
       }
 
       switch (proto) {
-        case HtmlByteProto.ATTRIBUTE_EXT0 -> {
-          byte idx0;
-          idx0 = main.get(index++);
+        case HtmlByteProto.ATTRIBUTE_EXT0 -> index = main.addBytes(main, index, 2);
 
-          main.add(proto, idx0);
-        }
-
-        case HtmlByteProto.ATTRIBUTE_EXT1 -> {
-          byte idx0;
-          idx0 = main.get(index++);
-
-          byte idx1;
-          idx1 = main.get(index++);
-
-          byte idx2;
-          idx2 = main.get(index++);
-
-          main.add(proto, idx0, idx1, idx2);
-        }
+        case HtmlByteProto.ATTRIBUTE_EXT1 -> index = main.addBytes(main, index, 4);
 
         case HtmlByteProto.AMBIGUOUS1,
              HtmlByteProto.ATTRIBUTE0,
@@ -83,26 +61,25 @@ final class FlattenEncoder {
              HtmlByteProto.ELEMENT,
              HtmlByteProto.TEXT,
              HtmlByteProto.RAW -> {
-          int elementIndex;
-          elementIndex = index;
+          index++;
 
-          int aux;
+          final int endIndex;
+          endIndex = main.varIntLEEndIndex(index);
 
-          do {
-            aux = main.get(index++);
-          } while (aux < 0);
+          final int len;
+          len = main.getVarIntLE(index, endIndex);
 
-          int len;
-          len = HtmlBytes.decodeOffset(main, elementIndex, index);
-
-          elementIndex -= len;
+          final int elementIndex;
+          elementIndex = index - len;
 
           main.add(proto);
 
           final int length;
           length = main.size() - elementIndex;
 
-          HtmlBytes.encodeOffset(main, length);
+          main.addVarIntLE(length);
+
+          index = endIndex;
         }
 
         default -> {

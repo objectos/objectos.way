@@ -119,14 +119,9 @@ final class FragmentRecorder {
     final int startIndex;
     startIndex = main.size();
 
-    main.add(
-        HtmlByteProto.FRAGMENT,
+    main.add(HtmlByteProto.FRAGMENT);
 
-        // length takes 3 bytes
-        HtmlByteProto.NULL,
-        HtmlByteProto.NULL,
-        HtmlByteProto.NULL
-    );
+    main.addInt24(ByteArray.MAX_INT24);
 
     return startIndex;
   }

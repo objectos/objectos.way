@@ -50,26 +50,14 @@ final class ElementValueEncoder {
 
     while (index < indexMax) {
       final byte mark;
-      mark = aux.get(index++);
+      mark = aux.get(index);
 
       switch (mark) {
-        case HtmlByteProto.ATTRIBUTE_EXT0 -> main.add(
-            mark,
+        case HtmlByteProto.ATTRIBUTE_EXT0 -> index = main.addBytes(aux, index, 2);
 
-            aux.get(index++)
-        );
+        case HtmlByteProto.ATTRIBUTE_EXT1 -> index = main.addBytes(aux, index, 4);
 
-        case HtmlByteProto.ATTRIBUTE_EXT1 -> main.add(
-            mark,
-
-            aux.get(index++),
-
-            aux.get(index++),
-
-            aux.get(index++)
-        );
-
-        case HtmlByteProto.INTERNAL -> contents = encoder.encode(contents);
+        case HtmlByteProto.INTERNAL -> { contents = encoder.encode(contents); index += 1; }
 
         default -> throw new UnsupportedOperationException(
             "Implement me :: mark=" + mark

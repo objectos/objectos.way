@@ -136,7 +136,7 @@ final class Encoder {
     final int length;
     length = main.size() - startIndex;
 
-    HtmlBytes.encodeOffset(main, length);
+    main.addVarIntLE(length);
 
     return startIndex + offset;
   }

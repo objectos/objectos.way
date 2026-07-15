@@ -20,7 +20,6 @@ import objectos.html.AttributeName;
 import objectos.way.Html;
 import objectox.html.ByteArray;
 import objectox.html.HtmlByteProto;
-import objectox.html.HtmlBytes;
 import objectox.html.HtmlInstruction;
 import objectox.html.ObjectArray;
 
@@ -46,18 +45,13 @@ final class Attribute1Recorder {
       final int valueIndex;
       valueIndex = objects.add(value);
 
-      main.add(
-          HtmlByteProto.ATTRIBUTE1,
+      main.add(HtmlByteProto.ATTRIBUTE1);
 
-          // name
-          HtmlBytes.encodeInt0(index),
+      main.addInt8(index);
 
-          // value
-          HtmlBytes.encodeInt0(valueIndex),
-          HtmlBytes.encodeInt1(valueIndex),
+      main.addInt16(valueIndex);
 
-          HtmlByteProto.INTERNAL5
-      );
+      main.add(HtmlByteProto.INTERNAL5);
     } else {
       final int customIndex;
       customIndex = objects.add(name);
@@ -65,19 +59,13 @@ final class Attribute1Recorder {
       final int valueIndex;
       valueIndex = objects.add(value);
 
-      main.add(
-          HtmlByteProto.CUSTOM_ATTR1,
+      main.add(HtmlByteProto.CUSTOM_ATTR1);
 
-          // name
-          HtmlBytes.encodeInt0(customIndex),
-          HtmlBytes.encodeInt1(customIndex),
+      main.addInt16(customIndex);
 
-          // value
-          HtmlBytes.encodeInt0(valueIndex),
-          HtmlBytes.encodeInt1(valueIndex),
+      main.addInt16(valueIndex);
 
-          HtmlByteProto.INTERNAL6
-      );
+      main.add(HtmlByteProto.INTERNAL6);
     }
 
     return HtmlInstruction.ATTRIBUTE;

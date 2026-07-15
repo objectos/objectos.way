@@ -34,17 +34,13 @@ final class ElementNameRecorder {
   }
 
   public final void record(ElementName name) {
-    main.add(
-        HtmlByteProto.ELEMENT,
+    main.add(HtmlByteProto.ELEMENT);
 
-        // length takes 2 bytes
-        HtmlByteProto.NULL,
-        HtmlByteProto.NULL,
+    main.addInt16(ByteArray.MAX_INT16);
 
-        HtmlByteProto.STANDARD_NAME,
+    main.add(HtmlByteProto.STANDARD_NAME);
 
-        encodeName(name)
-    );
+    main.add(encodeName(name));
   }
 
   private byte encodeName(ElementName name) {

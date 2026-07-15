@@ -77,19 +77,14 @@ public class FragmentRecorderTest {
 
     final Fragment0 f;
     f = () -> {
-      main.add(
-          HtmlByteProto.ELEMENT,
-          HtmlBytes.encodeInt0(5),
-          HtmlBytes.encodeInt1(5),
-          HtmlByteProto.STANDARD_NAME,
-          (byte) ElementNamePojo.HTML.index()
-      );
+      main.add(HtmlByteProto.ELEMENT);
+      main.addInt16(5);
+      main.add(HtmlByteProto.STANDARD_NAME);
+      main.addInt8(ElementNamePojo.HTML.index());
 
-      main.add(
-          HtmlByteProto.END,
-          HtmlBytes.encodeInt0(5),
-          HtmlByteProto.INTERNAL
-      );
+      main.add(HtmlByteProto.END);
+      main.addVarIntLE(5);
+      main.add(HtmlByteProto.INTERNAL);
     };
 
     assertEquals(subject.record(f), HtmlInstruction.FRAGMENT);

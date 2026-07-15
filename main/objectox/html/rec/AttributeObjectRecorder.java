@@ -19,7 +19,6 @@ import objectos.html.AttributeName;
 import objectos.html.AttributeObject;
 import objectox.html.ByteArray;
 import objectox.html.HtmlByteProto;
-import objectox.html.HtmlBytes;
 import objectox.html.ObjectArray;
 
 public final class AttributeObjectRecorder {
@@ -56,26 +55,18 @@ public final class AttributeObjectRecorder {
     attrValue = attr.attrValue();
 
     if (attrValue == null) {
-      aux.add(
-          HtmlByteProto.ATTRIBUTE_EXT0,
+      aux.add(HtmlByteProto.ATTRIBUTE_EXT0);
 
-          // name
-          HtmlBytes.encodeInt0(nameIndex)
-      );
+      aux.addInt8(nameIndex);
     } else {
       final int valueIndex;
       valueIndex = objects.add(attrValue);
 
-      aux.add(
-          HtmlByteProto.ATTRIBUTE_EXT1,
+      aux.add(HtmlByteProto.ATTRIBUTE_EXT1);
 
-          // name
-          HtmlBytes.encodeInt0(nameIndex),
+      aux.addInt8(nameIndex);
 
-          // value
-          HtmlBytes.encodeInt0(valueIndex),
-          HtmlBytes.encodeInt1(valueIndex)
-      );
+      aux.addInt16(valueIndex);
     }
   }
 

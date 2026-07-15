@@ -44,8 +44,8 @@ public class ElementNameRecorderTest {
         ByteArray.of(
             HtmlByteProto.ELEMENT,
 
-            HtmlByteProto.NULL,
-            HtmlByteProto.NULL,
+            -1,
+            -1,
 
             HtmlByteProto.STANDARD_NAME,
 

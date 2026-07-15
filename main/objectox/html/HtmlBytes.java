@@ -60,61 +60,7 @@ public final class HtmlBytes {
     return encodeInt0(ordinal);
   }
 
-  public static final int VARINT_MAX1 = 0x7F;
-
-  public static final int VARINT_MAX2 = (1 << 14) - 1;
-
-  public static final int VARINT_MAX3 = (1 << 21) - 1;
-
-  public static int encodeCommonEnd(byte[] buf, int off, int length) {
-    if (length < 0) {
-      throw new IllegalArgumentException("Length has to be >= 0");
-    }
-
-    if (length <= VARINT_MAX1) {
-      buf[off++] = (byte) length;
-
-      return off;
-    }
-
-    if (length <= VARINT_MAX2) {
-      buf[off++] = encodeVarintHigh(length, 7);
-
-      buf[off++] = encodeVarint(length, 0);
-
-      return off;
-    }
-
-    if (length <= VARINT_MAX3) {
-      buf[off++] = encodeVarintHigh(length, 14);
-
-      buf[off++] = encodeVarint(length, 7);
-
-      buf[off++] = encodeVarint(length, 0);
-
-      return off;
-    }
-
-    throw new IllegalArgumentException(
-        "HtmlTemplate is too large :: length=" + length
-    );
-  }
-
-  public static byte encodeVarintHigh(int value, int shift) {
-    value = value >>> shift;
-
-    return (byte) value;
-  }
-
-  public static byte encodeVarint(int value, int shift) {
-    value = value >>> shift;
-
-    value = value & VARINT_MAX1;
-
-    value = value | 0x80;
-
-    return (byte) value;
-  }
+  private static final int VARINT_MAX1 = 0x7F;
 
   public static int decodeCommonEnd(byte[] buf, int startIndex, int endIndex) {
     int length;
@@ -150,76 +96,6 @@ public final class HtmlBytes {
     };
   }
 
-  public static int encodeOffset(byte[] buf, int off, int value) {
-    if (value < 0) {
-      throw new IllegalArgumentException("value has to be >= 0");
-    }
-
-    if (value <= VARINT_MAX1) {
-      buf[off++] = (byte) value;
-
-      return off;
-    }
-
-    if (value <= VARINT_MAX2) {
-      buf[off++] = encodeVarint(value, 0);
-
-      buf[off++] = encodeVarintHigh(value, 7);
-
-      return off;
-    }
-
-    if (value <= VARINT_MAX3) {
-      buf[off++] = encodeVarint(value, 0);
-
-      buf[off++] = encodeVarint(value, 7);
-
-      buf[off++] = encodeVarintHigh(value, 14);
-
-      return off;
-    }
-
-    throw new IllegalArgumentException(
-        "HtmlTemplate is too large :: value=" + value
-    );
-  }
-
-  public static void encodeOffset(ByteArray buf, int value) {
-    if (value < 0) {
-      throw new IllegalArgumentException("value has to be >= 0");
-    }
-
-    else if (value <= VARINT_MAX1) {
-      buf.add(
-          (byte) value
-      );
-    }
-
-    else if (value <= VARINT_MAX2) {
-      buf.add(
-          encodeVarint(value, 0),
-
-          encodeVarintHigh(value, 7)
-      );
-    }
-
-    else if (value <= VARINT_MAX3) {
-      buf.add(
-          encodeVarint(value, 0),
-
-          encodeVarint(value, 7),
-
-          encodeVarintHigh(value, 14)
-      );
-    }
-
-    else {
-      throw new IllegalArgumentException(
-          "HtmlTemplate is too large :: value=" + value
-      );
-    }
-  }
-
   public static int decodeOffset(byte[] buf, int startIndex, int endIndex) {
     int length;
     length = endIndex - startIndex;
@@ -230,23 +106,6 @@ public final class HtmlBytes {
       case 2 -> decodeVarint(buf[startIndex], buf[startIndex + 1]);
 
       case 3 -> decodeVarint(buf[startIndex], buf[startIndex + 1], buf[startIndex + 2]);
-
-      default -> throw new IllegalArgumentException(
-          "HtmlTemplate is too large :: length=" + length
-      );
-    };
-  }
-
-  public static int decodeOffset(ByteArray buf, int startIndex, int endIndex) {
-    int length;
-    length = endIndex - startIndex;
-
-    return switch (length) {
-      case 1 -> buf.get(startIndex);
-
-      case 2 -> decodeVarint(buf.get(startIndex), buf.get(startIndex + 1));
-
-      case 3 -> decodeVarint(buf.get(startIndex), buf.get(startIndex + 1), buf.get(startIndex + 2));
 
       default -> throw new IllegalArgumentException(
           "HtmlTemplate is too large :: length=" + length
@@ -293,30 +152,6 @@ public final class HtmlBytes {
   static final int FIXED2_MAX = (1 << 16) - 1;
 
   public static final int FIXED3_MAX = (1 << 24) - 1;
-
-  public static int encodeLength3(byte[] buf, int off, int length) {
-    if (length < 0) {
-      throw new IllegalArgumentException("Length has to be >= 0");
-    }
-
-    if (length <= FIXED3_MAX) {
-      buf[off++] = (byte) length;
-
-      length = length >>> 8;
-
-      buf[off++] = (byte) length;
-
-      length = length >>> 8;
-
-      buf[off++] = (byte) length;
-
-      return off;
-    }
-
-    throw new IllegalArgumentException(
-        "HtmlTemplate is too large :: length=" + length
-    );
-  }
 
   public static int decodeLength3(byte b0, byte b1, byte b2) {
     final int int0;

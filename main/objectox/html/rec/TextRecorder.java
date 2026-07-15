@@ -19,7 +19,6 @@ import java.util.Objects;
 import objectos.way.Html.Instruction.OfElement;
 import objectox.html.ByteArray;
 import objectox.html.HtmlByteProto;
-import objectox.html.HtmlBytes;
 import objectox.html.HtmlInstruction;
 import objectox.html.ObjectArray;
 
@@ -42,14 +41,11 @@ final class TextRecorder {
     final int object;
     object = objects.add(v);
 
-    main.add(
-        HtmlByteProto.TEXT,
+    main.add(HtmlByteProto.TEXT);
 
-        HtmlBytes.encodeInt0(object),
-        HtmlBytes.encodeInt1(object),
+    main.addInt16(object);
 
-        HtmlByteProto.INTERNAL4
-    );
+    main.add(HtmlByteProto.INTERNAL4);
 
     return HtmlInstruction.ELEMENT;
   }
