@@ -65,6 +65,7 @@ public final class ByteArray {
 
   public final void add(byte b0) {
     bytes = Util.growIfNecessary(bytes, index + 0);
+
     bytes[index++] = b0;
   }
 
@@ -96,40 +97,15 @@ public final class ByteArray {
   }
 
   public final void addInt16(int value) {
-    if (value < 0 || value > MAX_INT16) {
-      final String msg;
-      msg = "Invalid 2-byte int value: %d".formatted(value);
+    bytes = Util.growIfNecessary(bytes, index + 2);
 
-      throw new IllegalArgumentException(msg);
-    }
-
-    final byte b0;
-    b0 = (byte) value;
-
-    final byte b1;
-    b1 = (byte) (value >>> 8);
-
-    add(b0, b1);
+    index = setInt16(index, value);
   }
 
   public final void addInt24(int value) {
-    if (value < 0 || value > MAX_INT24) {
-      final String msg;
-      msg = "Invalid 3-byte int value: %d".formatted(value);
+    bytes = Util.growIfNecessary(bytes, index + 3);
 
-      throw new IllegalArgumentException(msg);
-    }
-
-    final byte b0;
-    b0 = (byte) value;
-
-    final byte b1;
-    b1 = (byte) (value >>> 8);
-
-    final byte b2;
-    b2 = (byte) (value >>> 16);
-
-    add(b0, b1, b2);
+    index = setInt24(index, value);
   }
 
   public final void addVarInt(int value) {
@@ -294,6 +270,38 @@ public final class ByteArray {
 
   public final void set(int idx, byte value) {
     bytes[idx] = value;
+  }
+
+  public final int setInt16(int idx, int value) {
+    if (value < 0 || value > MAX_INT16) {
+      final String msg;
+      msg = "Invalid 2-byte int value: %d".formatted(value);
+
+      throw new IllegalArgumentException(msg);
+    }
+
+    bytes[idx + 0] = (byte) value;
+
+    bytes[idx + 1] = (byte) (value >>> 8);
+
+    return idx + 2;
+  }
+
+  public final int setInt24(int idx, int value) {
+    if (value < 0 || value > MAX_INT24) {
+      final String msg;
+      msg = "Invalid 3-byte int value: %d".formatted(value);
+
+      throw new IllegalArgumentException(msg);
+    }
+
+    bytes[idx + 0] = (byte) value;
+
+    bytes[idx + 1] = (byte) (value >>> 8);
+
+    bytes[idx + 2] = (byte) (value >>> 16);
+
+    return idx + 3;
   }
 
   public final int size() {

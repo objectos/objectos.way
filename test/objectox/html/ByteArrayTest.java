@@ -331,4 +331,24 @@ public class ByteArrayTest {
     assertEquals(subject, ByteArray.of(1, 2, 3));
   }
 
+  @Test
+  public void setInt16() {
+    final ByteArray subject;
+    subject = ByteArray.of((byte) 1, (byte) 2, (byte) 3);
+
+    subject.setInt16(1, ByteArray.MAX_INT16);
+
+    assertEquals(subject.toString(), "01ffff");
+  }
+
+  @Test
+  public void setInt24() {
+    final ByteArray subject;
+    subject = ByteArray.of((byte) 1, (byte) 2, (byte) 3, (byte) 4);
+
+    subject.setInt24(1, ByteArray.MAX_INT24);
+
+    assertEquals(subject.toString(), "01ffffff");
+  }
+
 }

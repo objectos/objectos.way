@@ -16,7 +16,6 @@
 package objectox.html.rec;
 
 import objectox.html.ByteArray;
-import objectox.html.HtmlBytes;
 
 final class ForwardOffsetRecorder {
 
@@ -39,8 +38,7 @@ final class ForwardOffsetRecorder {
     offset -= 3;
 
     // we skip the first byte proto
-    main.set(startIndex + 1, HtmlBytes.encodeInt0(offset));
-    main.set(startIndex + 2, HtmlBytes.encodeInt1(offset));
+    main.setInt16(startIndex + 1, offset);
   }
 
   public final void three(int startIndex) {
@@ -56,18 +54,7 @@ final class ForwardOffsetRecorder {
     offset -= 4;
 
     // we skip the first byte proto
-    if (offset <= HtmlBytes.FIXED3_MAX) {
-      main.set(startIndex + 1, HtmlBytes.encodeInt0(offset));
-      main.set(startIndex + 2, HtmlBytes.encodeInt1(offset));
-      main.set(startIndex + 3, HtmlBytes.encodeInt2(offset));
-    }
-
-    else {
-      final String msg;
-      msg = "HTML is too large to record: offset=%d".formatted(offset);
-
-      throw new IllegalArgumentException(msg);
-    }
+    main.setInt24(startIndex + 1, offset);
   }
 
 }
