@@ -242,4 +242,9 @@ public sealed interface ElementName permits ElementNamePojo {
   /// The `ul` element.
   ElementName UL = ElementNamePojo.UL;
 
+  /// Returns the element name.
+  ///
+  /// @return the element name
+  String name();
+
 }

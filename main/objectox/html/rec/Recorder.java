@@ -33,6 +33,7 @@ import objectox.html.Ambiguous;
 import objectox.html.ByteArray;
 import objectox.html.HtmlByteProto;
 import objectox.html.ObjectArray;
+import objectox.html.play.Player;
 
 public final class Recorder {
 
@@ -268,6 +269,10 @@ public final class Recorder {
 
   public final ObjectArray objects() {
     return objects;
+  }
+
+  public final Player toPlayer() {
+    return new Player(main, objects);
   }
 
 }

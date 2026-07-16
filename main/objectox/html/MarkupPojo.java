@@ -33,6 +33,7 @@ import objectos.way.Html;
 import objectox.dev.TestableHtml;
 import objectox.html.attr.AttributeNamePojo;
 import objectox.html.elem.ElementNamePojo;
+import objectox.html.play.Player;
 import objectox.html.rec.Recorder;
 
 public sealed abstract class MarkupPojo
@@ -354,6 +355,10 @@ public sealed abstract class MarkupPojo
   //
   // Section: DOM related methods
   //
+
+  public final Player toPlayer() {
+    return recorder.toPlayer();
+  }
 
   public final Dom.Document compile() {
     final ByteArray $aux;
