@@ -35,6 +35,13 @@ abstract class AbstractState implements State {
     return mainIndex < main.length;
   }
 
+  final UnsupportedOperationException implMe(byte proto) {
+    final String msg;
+    msg = "Implement me :: proto=%d".formatted(proto);
+
+    throw new UnsupportedOperationException(msg);
+  }
+
   final byte nextByte() {
     return main[mainIndex++];
   }
@@ -46,8 +53,22 @@ abstract class AbstractState implements State {
     return Byte.toUnsignedInt(b);
   }
 
+  final int nextInt16() {
+    final byte b0;
+    b0 = nextByte();
+
+    final byte b1;
+    b1 = nextByte();
+
+    return toInt(b0, 0) | toInt(b1, 8);
+  }
+
   final byte peekByte() {
-    return main[mainIndex];
+    return peekByte(mainIndex);
+  }
+
+  final byte peekByte(int index) {
+    return main[index];
   }
 
   final int set(byte value) {
@@ -65,6 +86,10 @@ abstract class AbstractState implements State {
 
   final void skipInt16() {
     skip(2);
+  }
+
+  private int toInt(byte b, int shift) {
+    return Byte.toUnsignedInt(b) << shift;
   }
 
 }

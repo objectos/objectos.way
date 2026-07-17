@@ -17,6 +17,7 @@ package objectox.html.play;
 
 import objectos.html.ElementName;
 import objectos.html.play.EndTag;
+import objectox.html.HtmlByteProto;
 
 public final class EndTagState extends AbstractState implements EndTag {
 
@@ -30,6 +31,23 @@ public final class EndTagState extends AbstractState implements EndTag {
     this.parentIndex = parentIndex;
 
     this.name = name;
+  }
+
+  @Override
+  public final State compute() {
+    final byte parentProto;
+    parentProto = peekByte(parentIndex);
+
+    return switch (parentProto) {
+      case HtmlByteProto.ROOT_ELEMENT -> {
+        final RootState root;
+        root = new RootState(main, parentIndex, objects);
+
+        yield root.endElement();
+      }
+
+      default -> throw implMe(parentProto);
+    };
   }
 
   @Override

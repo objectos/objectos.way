@@ -16,6 +16,7 @@
 package objectox.html.play;
 
 import objectos.html.ElementName;
+import objectos.html.play.Piece;
 import objectos.html.play.StartTag;
 import objectox.html.HtmlByteProto;
 
@@ -48,8 +49,18 @@ public final class StartTagState extends AbstractState implements StartTag {
   }
 
   @Override
+  public final boolean hasNext() {
+    return true;
+  }
+
+  @Override
   public final String name() {
     return name.name();
+  }
+
+  @Override
+  public final Piece next() {
+    return this;
   }
 
 }

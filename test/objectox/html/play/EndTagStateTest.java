@@ -17,35 +17,19 @@ package objectox.html.play;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.html.ElementName;
 import objectox.html.HtmlByteProto;
 import objectox.html.HtmlBytes;
 import objectox.html.elem.ElementNamePojo;
 import org.testng.annotations.Test;
 
-public class RootStateTest {
+public class EndTagStateTest {
 
   @Test
-  public void toEnd() {
-    final byte[] main;
-    main = new byte[] {};
-
-    final Object[] objects;
-    objects = new Object[] {};
-
-    final RootState subject;
-    subject = new RootState(main, 0, objects);
-
-    final State res;
-    res = subject.compute();
-
-    assertEquals(res, EndState.INSTANCE);
-  }
-
-  @Test(description = "<html></html>")
-  public void toStartTag01() {
+  public void toRoot01() {
     final byte[] main;
     main = new byte[] {
-        HtmlByteProto.ELEMENT,
+        HtmlByteProto.ROOT_ELEMENT,
         HtmlBytes.encodeInt0(5),
         HtmlBytes.encodeInt1(5),
         HtmlByteProto.STANDARD_NAME,
@@ -58,18 +42,13 @@ public class RootStateTest {
     final Object[] objects;
     objects = new Object[] {};
 
-    final RootState subject;
-    subject = new RootState(main, 0, objects);
+    final EndTagState subject;
+    subject = new EndTagState(main, 5, objects, 0, ElementName.HTML);
 
     final State res;
     res = subject.compute();
 
-    final StartTagState state;
-    state = (StartTagState) res;
-
-    assertEquals(state.hasNext(), true);
-    assertEquals(state.parentIndex, 0);
-    assertEquals(state.name, ElementNamePojo.HTML);
+    assertEquals(res, EndState.INSTANCE);
   }
 
 }

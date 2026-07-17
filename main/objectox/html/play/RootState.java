@@ -33,6 +33,20 @@ final class RootState extends AbstractState {
     }
   }
 
+  public final State endElement() {
+    final byte rootElement;
+    rootElement = nextByte();
+
+    assert rootElement == HtmlByteProto.ROOT_ELEMENT;
+
+    final int offset;
+    offset = nextInt16();
+
+    skip(offset);
+
+    return compute();
+  }
+
   private State compute0() {
     final byte proto;
     proto = skipIfNecessary();

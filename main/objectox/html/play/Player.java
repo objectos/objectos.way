@@ -23,6 +23,8 @@ import objectox.html.ObjectArray;
 
 public final class Player implements Iterator<Piece> {
 
+  private boolean computed;
+
   private State state;
 
   public Player(ByteArray main, ObjectArray objects) {
@@ -31,7 +33,11 @@ public final class Player implements Iterator<Piece> {
 
   @Override
   public final boolean hasNext() {
-    state = state.compute();
+    if (!computed) {
+      state = state.compute();
+
+      computed = true;
+    }
 
     return state.hasNext();
   }
@@ -41,7 +47,12 @@ public final class Player implements Iterator<Piece> {
     if (!hasNext()) {
       throw new NoSuchElementException();
     } else {
-      return state.next();
+      final Piece result;
+      result = state.next();
+
+      computed = false;
+
+      return result;
     }
   }
 
