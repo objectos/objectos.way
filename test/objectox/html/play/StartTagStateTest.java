@@ -17,32 +17,16 @@ package objectox.html.play;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.html.ElementName;
 import objectox.html.HtmlByteProto;
 import objectox.html.HtmlBytes;
 import objectox.html.elem.ElementNamePojo;
 import org.testng.annotations.Test;
 
-public class RootStateTest {
+public class StartTagStateTest {
 
   @Test
-  public void toEnd() {
-    final byte[] main;
-    main = new byte[] {};
-
-    final Object[] objects;
-    objects = new Object[] {};
-
-    final RootState subject;
-    subject = new RootState(main, 0, objects);
-
-    final State res;
-    res = subject.compute();
-
-    assertEquals(res, EndState.INSTANCE);
-  }
-
-  @Test(description = "<html></html>")
-  public void toStartTag01() {
+  public void toEndTag() {
     final byte[] main;
     main = new byte[] {
         HtmlByteProto.ELEMENT,
@@ -58,14 +42,14 @@ public class RootStateTest {
     final Object[] objects;
     objects = new Object[] {};
 
-    final RootState subject;
-    subject = new RootState(main, 0, objects);
+    final StartTagState subject;
+    subject = new StartTagState(main, 5, objects, 0, ElementName.HTML);
 
     final State res;
     res = subject.compute();
 
-    final StartTagState state;
-    state = (StartTagState) res;
+    final EndTagState state;
+    state = (EndTagState) res;
 
     assertEquals(state.parentIndex, 0);
     assertEquals(state.name, ElementNamePojo.HTML);

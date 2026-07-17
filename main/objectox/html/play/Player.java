@@ -26,11 +26,7 @@ public final class Player implements Iterator<Piece> {
   private State state;
 
   public Player(ByteArray main, ObjectArray objects) {
-    state = new RootState(
-        new BytePlayer(main),
-
-        objects
-    );
+    throw new UnsupportedOperationException("Implement me");
   }
 
   @Override

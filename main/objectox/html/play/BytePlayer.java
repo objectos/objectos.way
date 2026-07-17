@@ -61,6 +61,16 @@ final class BytePlayer {
         && Arrays.equals(bytes, 0, size, that.bytes, 0, that.size);
   }
 
+  public final BytePlayer forwardInt16() {
+    final int offset;
+    offset = nextInt16();
+
+    final int nextCursor;
+    nextCursor = cursor + offset;
+
+    return new BytePlayer(bytes, nextCursor, size);
+  }
+
   public final boolean hasNext() {
     return cursor < size;
   }
@@ -76,6 +86,16 @@ final class BytePlayer {
     return Byte.toUnsignedInt(b);
   }
 
+  public final int nextInt16() {
+    final byte b0;
+    b0 = next();
+
+    final byte b1;
+    b1 = next();
+
+    return toInt(b0, 0) | toInt(b1, 8);
+  }
+
   public final byte peek() {
     return bytes[cursor];
   }
@@ -84,8 +104,8 @@ final class BytePlayer {
     cursor += value;
   }
 
-  public final void skipInt16() {
-    skip(2);
+  private int toInt(byte b, int shift) {
+    return Byte.toUnsignedInt(b) << shift;
   }
 
 }

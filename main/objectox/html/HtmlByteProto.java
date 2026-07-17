@@ -53,6 +53,10 @@ public final class HtmlByteProto {
   public static final byte CUSTOM_ATTR0 = -26;
   public static final byte CUSTOM_ATTR1 = -27;
 
+  // transitional
+
+  public static final byte ROOT_ELEMENT = -28;
+
   private HtmlByteProto() {}
 
 }

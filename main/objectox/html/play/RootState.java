@@ -16,24 +16,17 @@
 package objectox.html.play;
 
 import objectox.html.HtmlByteProto;
-import objectox.html.ObjectArray;
 import objectox.html.elem.ElementNamePojo;
 
-final class RootState implements State {
+final class RootState extends AbstractState {
 
-  private final BytePlayer main;
-
-  private final ObjectArray objects;
-
-  RootState(BytePlayer main, ObjectArray objects) {
-    this.main = main;
-
-    this.objects = objects;
+  RootState(byte[] main, int mainIndex, Object[] objects) {
+    super(main, mainIndex, objects);
   }
 
   @Override
   public final State compute() {
-    if (main.hasNext()) {
+    if (hasMain()) {
       return compute0();
     } else {
       return EndState.INSTANCE;
@@ -41,13 +34,13 @@ final class RootState implements State {
   }
 
   private State compute0() {
-    skipIfNecessary();
-
     final byte proto;
-    proto = main.next();
+    proto = skipIfNecessary();
 
     return switch (proto) {
       case HtmlByteProto.ELEMENT -> toElement();
+
+      case HtmlByteProto.NULL -> EndState.INSTANCE;
 
       default -> {
         final String msg;
@@ -58,22 +51,22 @@ final class RootState implements State {
     };
   }
 
-  private void skipIfNecessary() {
-    while (main.hasNext()) {
+  private byte skipIfNecessary() {
+    while (hasMain()) {
       final byte proto;
-      proto = main.peek();
+      proto = peekByte();
 
       switch (proto) {
-        case HtmlByteProto.MARKED3 -> main.skip(3);
+        case HtmlByteProto.MARKED3 -> skip(3);
 
-        case HtmlByteProto.MARKED4 -> main.skip(4);
+        case HtmlByteProto.MARKED4 -> skip(4);
 
-        case HtmlByteProto.MARKED5 -> main.skip(5);
+        case HtmlByteProto.MARKED5 -> skip(5);
 
-        case HtmlByteProto.MARKED6 -> main.skip(6);
+        case HtmlByteProto.MARKED6 -> skip(6);
 
         case HtmlByteProto.ELEMENT -> {
-          return;
+          return proto;
         }
 
         default -> {
@@ -84,24 +77,29 @@ final class RootState implements State {
         }
       }
     }
+
+    return HtmlByteProto.NULL;
   }
 
   private State toElement() {
-    main.skipInt16();
+    final int parentIndex;
+    parentIndex = set(HtmlByteProto.ROOT_ELEMENT);
+
+    skipInt16();
 
     final byte standardName;
-    standardName = main.next();
+    standardName = nextByte();
 
     assert standardName == HtmlByteProto.STANDARD_NAME;
 
     final int ordinal;
-    ordinal = main.nextInt8();
+    ordinal = nextInt8();
 
     final ElementNamePojo name;
     name = ElementNamePojo.get(ordinal);
 
     return name.endTag()
-        ? new StartTagState(main, objects, name)
+        ? new StartTagState(main, mainIndex, objects, parentIndex, name)
         : null;
   }
 

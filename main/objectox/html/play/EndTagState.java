@@ -17,22 +17,17 @@ package objectox.html.play;
 
 import objectos.html.ElementName;
 import objectos.html.play.EndTag;
-import objectox.html.ObjectArray;
 
-public final class EndTagState implements EndTag {
+public final class EndTagState extends AbstractState implements EndTag {
 
-  @SuppressWarnings("unused")
-  private final BytePlayer main;
+  final int parentIndex;
 
-  @SuppressWarnings("unused")
-  private final ObjectArray objects;
+  final ElementName name;
 
-  private final ElementName name;
+  EndTagState(byte[] main, int mainIndex, Object[] objects, int parentIndex, ElementName name) {
+    super(main, mainIndex, objects);
 
-  EndTagState(BytePlayer main, ObjectArray objects, ElementName name) {
-    this.main = main;
-
-    this.objects = objects;
+    this.parentIndex = parentIndex;
 
     this.name = name;
   }

@@ -17,24 +17,34 @@ package objectox.html.play;
 
 import objectos.html.ElementName;
 import objectos.html.play.StartTag;
-import objectox.html.ObjectArray;
+import objectox.html.HtmlByteProto;
 
-public final class StartTagState implements State, StartTag {
+public final class StartTagState extends AbstractState implements StartTag {
 
-  @SuppressWarnings("unused")
-  private final BytePlayer main;
+  final int parentIndex;
 
-  @SuppressWarnings("unused")
-  private final ObjectArray objects;
+  final ElementName name;
 
-  private final ElementName name;
+  StartTagState(byte[] main, int mainIndex, Object[] objects, int parentIndex, ElementName name) {
+    super(main, mainIndex, objects);
 
-  StartTagState(BytePlayer main, ObjectArray objects, ElementName name) {
-    this.main = main;
-
-    this.objects = objects;
+    this.parentIndex = parentIndex;
 
     this.name = name;
+  }
+
+  @Override
+  public final State compute() {
+    final byte proto;
+    proto = peekByte();
+
+    if (proto == HtmlByteProto.END) {
+      return new EndTagState(main, mainIndex, objects, parentIndex, name);
+    }
+
+    else {
+      return super.compute();
+    }
   }
 
   @Override

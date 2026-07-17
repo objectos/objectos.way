@@ -17,11 +17,7 @@ package objectox.html.play;
 
 import objectos.html.play.Piece;
 
-sealed interface State
-    permits
-    EndState,
-    RootState,
-    StartTagState {
+interface State {
 
   default State compute() {
     throw new UnsupportedOperationException();
