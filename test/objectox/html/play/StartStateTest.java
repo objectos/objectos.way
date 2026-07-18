@@ -17,38 +17,43 @@ package objectox.html.play;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.html.ElementName;
 import objectox.html.HtmlByteProto;
-import objectox.html.HtmlBytes;
-import objectox.html.elem.ElementNamePojo;
 import org.testng.annotations.Test;
 
-public class EndTagStateTest {
+public class StartStateTest {
 
-  @Test
-  public void toRoot01() {
-    final byte[] main;
-    main = new byte[] {
-        HtmlByteProto.ROOT_ELEMENT,
-        HtmlBytes.encodeInt0(5),
-        HtmlBytes.encodeInt1(5),
-        HtmlByteProto.STANDARD_NAME,
-        (byte) ElementNamePojo.HTML.index(),
-        HtmlByteProto.END,
-        HtmlBytes.encodeInt0(5),
-        HtmlByteProto.INTERNAL
-    };
+  @Test(description = "empty")
+  public void compute00() {
+    final Tape tape;
+    tape = TapeY.create(opts -> {
+      opts.main();
+    });
 
-    final Object[] objects;
-    objects = new Object[] {};
-
-    final EndTagState subject;
-    subject = new EndTagState(main, 5, objects, 0, ElementName.HTML);
+    final StartState subject;
+    subject = new StartState(tape);
 
     final State res;
     res = subject.compute();
 
-    assertEquals(res, EndState.INSTANCE);
+    assertEquals(res.getClass(), BeginDocumentState.class);
+  }
+
+  @Test(description = "root element")
+  public void compute01() {
+    final Tape tape;
+    tape = TapeY.create(opts -> {
+      opts.main(
+          HtmlByteProto.ELEMENT
+      );
+    });
+
+    final StartState subject;
+    subject = new StartState(tape);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res.getClass(), BeginDocumentState.class);
   }
 
 }

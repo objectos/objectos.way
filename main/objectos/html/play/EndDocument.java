@@ -13,15 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html.play;
+package objectos.html.play;
 
-import objectos.html.play.EndTag;
+import objectox.html.play.*;
 
-public final class EndTagState implements EndTag {
-
-  @Override
-  public final String name() {
-    throw new UnsupportedOperationException("Implement me");
-  }
+/// The HTML document has ended.
+public sealed interface EndDocument
+    extends Piece
+    permits EndDocumentState {
 
 }

@@ -19,40 +19,30 @@ import static org.testng.Assert.assertEquals;
 
 import objectos.html.ElementName;
 import objectox.html.HtmlByteProto;
-import objectox.html.HtmlBytes;
-import objectox.html.elem.ElementNamePojo;
 import org.testng.annotations.Test;
 
-public class StartTagStateTest {
+public class BeginStartTagStateTest {
 
   @Test
-  public void toEndTag() {
-    final byte[] main;
-    main = new byte[] {
-        HtmlByteProto.ELEMENT,
-        HtmlBytes.encodeInt0(5),
-        HtmlBytes.encodeInt1(5),
-        HtmlByteProto.STANDARD_NAME,
-        (byte) ElementNamePojo.HTML.index(),
-        HtmlByteProto.END,
-        HtmlBytes.encodeInt0(5),
-        HtmlByteProto.INTERNAL
-    };
+  public void compute01() {
+    final Tape tape;
+    tape = TapeY.create(opts -> {
+      opts.main(
+          HtmlByteProto.ELEMENT,
+          HtmlByteProto.END
+      );
+    });
 
-    final Object[] objects;
-    objects = new Object[] {};
+    final Tape parent;
+    parent = tape.push(HtmlByteProto.ROOT_ELEMENT);
 
-    final StartTagState subject;
-    subject = new StartTagState(main, 5, objects, 0, ElementName.HTML);
+    final BeginStartTagState subject;
+    subject = new BeginStartTagState(tape, parent, ElementName.HTML);
 
     final State res;
     res = subject.compute();
 
-    final EndTagState state;
-    state = (EndTagState) res;
-
-    assertEquals(state.parentIndex, 0);
-    assertEquals(state.name, ElementNamePojo.HTML);
+    assertEquals(res.getClass(), EndStartTagState.class);
   }
 
 }

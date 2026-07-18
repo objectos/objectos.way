@@ -13,15 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html.play;
+package objectos.html.play;
 
-import objectos.html.play.EndTag;
+import objectox.html.play.BeginStartTagState;
 
-public final class EndTagState implements EndTag {
+/// The start tag of an HTML element has begun.
+public sealed interface BeginStartTag
+    extends Piece
+    permits BeginStartTagState {
 
-  @Override
-  public final String name() {
-    throw new UnsupportedOperationException("Implement me");
-  }
+  /// Returns the name of the HTML element.
+  ///
+  /// @return the name of the HTML element
+  String name();
 
 }

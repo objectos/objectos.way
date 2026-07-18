@@ -15,13 +15,36 @@
  */
 package objectox.html.play;
 
-import objectos.html.play.EndTag;
+import objectox.html.HtmlByteProto;
+import objectox.html.elem.ElementNamePojo;
 
-public final class EndTagState implements EndTag {
+final class StartElementState implements State {
+
+  private final Tape tape;
+
+  StartElementState(Tape tape) {
+    this.tape = tape;
+  }
 
   @Override
-  public final String name() {
-    throw new UnsupportedOperationException("Implement me");
+  public final State compute() {
+    final Tape parent;
+    parent = tape.push(HtmlByteProto.ROOT_ELEMENT);
+
+    tape.skipInt16();
+
+    final byte standardName;
+    standardName = tape.nextByte();
+
+    assert standardName == HtmlByteProto.STANDARD_NAME;
+
+    final int ordinal;
+    ordinal = tape.nextInt8();
+
+    final ElementNamePojo name;
+    name = ElementNamePojo.get(ordinal);
+
+    return new BeginStartTagState(tape, parent, name);
   }
 
 }

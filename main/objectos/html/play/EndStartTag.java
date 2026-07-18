@@ -15,16 +15,9 @@
  */
 package objectos.html.play;
 
-import objectox.html.play.StartTagState;
+import objectox.html.play.EndStartTagState;
 
-/// The start tag of an HTML element.
-public sealed interface StartTag
+/// The start tag of an HTML element has ended.
+public sealed interface EndStartTag
     extends Piece
-    permits StartTagState {
-
-  /// Returns the name of the HTML element.
-  ///
-  /// @return the name of the HTML element
-  String name();
-
-}
+    permits EndStartTagState {}

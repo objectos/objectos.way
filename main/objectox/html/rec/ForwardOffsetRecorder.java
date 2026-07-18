@@ -15,8 +15,6 @@
  */
 package objectox.html.rec;
 
-import objectox.html.ByteArray;
-
 final class ForwardOffsetRecorder {
 
   private final ByteArray main;

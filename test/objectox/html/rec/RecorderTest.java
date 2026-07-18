@@ -23,7 +23,6 @@ import objectos.html.Fragment0;
 import objectos.html.Id;
 import objectos.html.Markup;
 import objectox.html.Ambiguous;
-import objectox.html.ByteArray;
 import objectox.html.HtmlByteProto;
 import objectox.html.HtmlBytes;
 import objectox.html.attr.AttributeNamePojo;
@@ -32,33 +31,56 @@ import org.testng.annotations.Test;
 
 public class RecorderTest {
 
-  @Test(description = """
-  <html></html>
-  """)
+  @Test(description = "empty document")
   public void testCase00() {
     final Recorder html;
     html = Recorder.create();
 
     html.element(ElementName.HTML);
 
-    test(
-        html,
+    bytes(html.main(),
 
         HtmlByteProto.ELEMENT,
         HtmlBytes.encodeInt0(5),
         HtmlBytes.encodeInt1(5),
         HtmlByteProto.STANDARD_NAME,
-        ElementNamePojo.HTML.index(),
+        (byte) ElementNamePojo.HTML.index(),
         HtmlByteProto.END,
         HtmlBytes.encodeInt0(5),
         HtmlByteProto.INTERNAL
     );
+
+    objects(html.objects());
+  }
+
+  @Test(description = """
+  <html></html>
+  """)
+  public void testCase01() {
+    final Recorder html;
+    html = Recorder.create();
+
+    html.element(ElementName.HTML);
+
+    bytes(html.main(),
+
+        HtmlByteProto.ELEMENT,
+        HtmlBytes.encodeInt0(5),
+        HtmlBytes.encodeInt1(5),
+        HtmlByteProto.STANDARD_NAME,
+        (byte) ElementNamePojo.HTML.index(),
+        HtmlByteProto.END,
+        HtmlBytes.encodeInt0(5),
+        HtmlByteProto.INTERNAL
+    );
+
+    objects(html.objects());
   }
 
   @Test(description = """
   <html lang="pt-BR"></html>
   """)
-  public void testCase01() {
+  public void tc01() {
     final Recorder html;
     html = Recorder.create();
 
@@ -92,7 +114,7 @@ public class RecorderTest {
   @Test(description = """
   <html class="no-js" lang="pt-BR"></html>
   """)
-  public void testCase02() {
+  public void tc02() {
     final Recorder html;
     html = Recorder.create();
 
@@ -135,7 +157,7 @@ public class RecorderTest {
   @Test(description = """
   <html><head></head></html>
   """)
-  public void testCase03() {
+  public void tc03() {
     final Recorder html;
     html = Recorder.create();
 
@@ -173,7 +195,7 @@ public class RecorderTest {
   <!DOCTYPE html>
   <html></html>
   """)
-  public void testCase09() {
+  public void tc09() {
     final Recorder html;
     html = Recorder.create();
 
@@ -199,7 +221,7 @@ public class RecorderTest {
   @Test(description = """
   fragment inclusion
   """)
-  public void testCase10() {
+  public void tc10() {
     final Recorder html;
     html = Recorder.create();
 
@@ -273,7 +295,7 @@ public class RecorderTest {
   @Test(description = """
   External id attributes
   """)
-  public void testCase13() {
+  public void tc13() {
     final Id foo;
     foo = Id.of("foo");
 
@@ -325,7 +347,7 @@ public class RecorderTest {
   @Test(description = """
   Text child element
   """)
-  public void testCase14() {
+  public void tc14() {
     final Recorder html;
     html = Recorder.create();
 
@@ -383,7 +405,7 @@ public class RecorderTest {
   @Test(description = """
   Ambiguous
   """)
-  public void testCase16() {
+  public void tc16() {
     final Recorder html;
     html = Recorder.create();
 
@@ -454,7 +476,7 @@ public class RecorderTest {
   @Test(description = """
   include template
   """)
-  public void testCase20() {
+  public void tc20() {
     final Recorder html;
     html = Recorder.create();
 
@@ -468,11 +490,11 @@ public class RecorderTest {
     html.elementBegin(HtmlElementName.NAV);
     html.elementEnd();
     // template end
-    
+
     html.elementBegin(HtmlElementName.BODY);
     html.elementValue(BaseApi.FRAGMENT);
     html.elementEnd();
-    
+
     html.compilationEnd();
     */
 
@@ -506,7 +528,7 @@ public class RecorderTest {
 
   - email input
   """)
-  public void testCase31() {
+  public void tc31() {
     final Recorder html;
     html = Recorder.create();
 
@@ -545,7 +567,7 @@ public class RecorderTest {
 
   - flatten instruction
   """)
-  public void testCase46() {
+  public void tc46() {
     final Recorder html;
     html = Recorder.create();
 
@@ -607,7 +629,7 @@ public class RecorderTest {
   @Test(description = """
   fragment at the root of the document
   """)
-  public void testCase73() {
+  public void tc73() {
     final Recorder html;
     html = Recorder.create();
 
@@ -648,7 +670,7 @@ public class RecorderTest {
   @Test(description = """
   fragment at the root of the document
   """)
-  public void testCase77() {
+  public void tc77() {
     final Recorder html;
     html = Recorder.create();
 
@@ -669,6 +691,22 @@ public class RecorderTest {
         HtmlByteProto.END,
         HtmlBytes.encodeInt0(4),
         HtmlByteProto.INTERNAL
+    );
+  }
+
+  private void bytes(ByteArray source, byte... expected) {
+    assertEquals(
+        source,
+
+        new ByteArray(expected)
+    );
+  }
+
+  private void objects(ObjectArray source, Object... expected) {
+    assertEquals(
+        source,
+
+        ObjectArray.of(expected)
     );
   }
 

@@ -17,9 +17,7 @@ package objectox.html.rec;
 
 import objectos.html.AttributeName;
 import objectos.html.AttributeObject;
-import objectox.html.ByteArray;
 import objectox.html.HtmlByteProto;
-import objectox.html.ObjectArray;
 
 public final class AttributeObjectRecorder {
 

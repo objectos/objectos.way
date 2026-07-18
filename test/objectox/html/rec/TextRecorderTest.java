@@ -17,10 +17,8 @@ package objectox.html.rec;
 
 import static org.testng.Assert.assertEquals;
 
-import objectox.html.ByteArray;
 import objectox.html.HtmlByteProto;
 import objectox.html.HtmlBytes;
-import objectox.html.ObjectArray;
 import org.testng.annotations.Test;
 
 public class TextRecorderTest {

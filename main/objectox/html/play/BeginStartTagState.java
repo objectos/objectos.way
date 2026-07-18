@@ -17,19 +17,21 @@ package objectox.html.play;
 
 import objectos.html.ElementName;
 import objectos.html.play.Piece;
-import objectos.html.play.StartTag;
+import objectos.html.play.BeginStartTag;
 import objectox.html.HtmlByteProto;
 
-public final class StartTagState extends AbstractState implements StartTag {
+public final class BeginStartTagState implements BeginStartTag, State {
 
-  final int parentIndex;
+  private final Tape tape;
 
-  final ElementName name;
+  private final Tape parent;
 
-  StartTagState(byte[] main, int mainIndex, Object[] objects, int parentIndex, ElementName name) {
-    super(main, mainIndex, objects);
+  private final ElementName name;
 
-    this.parentIndex = parentIndex;
+  BeginStartTagState(Tape tape, Tape parent, ElementName name) {
+    this.tape = tape;
+
+    this.parent = parent;
 
     this.name = name;
   }
@@ -37,14 +39,14 @@ public final class StartTagState extends AbstractState implements StartTag {
   @Override
   public final State compute() {
     final byte proto;
-    proto = peekByte();
+    proto = tape.peekByte();
 
     if (proto == HtmlByteProto.END) {
-      return new EndTagState(main, mainIndex, objects, parentIndex, name);
+      return new EndStartTagState(tape, parent, name);
     }
 
     else {
-      return super.compute();
+      throw new UnsupportedOperationException("Implement me");
     }
   }
 
@@ -61,6 +63,11 @@ public final class StartTagState extends AbstractState implements StartTag {
   @Override
   public final Piece next() {
     return this;
+  }
+
+  @Override
+  public final String toString() {
+    return "BeginStartTag(" + name() + ")";
   }
 
 }

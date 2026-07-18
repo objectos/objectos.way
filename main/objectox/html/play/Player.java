@@ -18,8 +18,8 @@ package objectox.html.play;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import objectos.html.play.Piece;
-import objectox.html.ByteArray;
-import objectox.html.ObjectArray;
+import objectox.html.rec.ByteArray;
+import objectox.html.rec.ObjectArray;
 
 public final class Player implements Iterator<Piece> {
 
@@ -28,7 +28,10 @@ public final class Player implements Iterator<Piece> {
   private State state;
 
   public Player(ByteArray main, ObjectArray objects) {
-    throw new UnsupportedOperationException("Implement me");
+    final Tape tape;
+    tape = new Tape(main, objects);
+
+    state = new StartState(tape);
   }
 
   @Override

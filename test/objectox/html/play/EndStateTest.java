@@ -15,13 +15,29 @@
  */
 package objectox.html.play;
 
-import objectos.html.play.EndTag;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertSame;
 
-public final class EndTagState implements EndTag {
+import java.util.NoSuchElementException;
+import org.testng.annotations.Test;
 
-  @Override
-  public final String name() {
-    throw new UnsupportedOperationException("Implement me");
+public class EndStateTest {
+
+  private final EndState subject = EndState.INSTANCE;
+
+  @Test
+  public void compute00() {
+    assertSame(subject.compute(), subject);
+  }
+
+  @Test
+  public void hasNext() {
+    assertEquals(subject.hasNext(), false);
+  }
+
+  @Test(expectedExceptions = NoSuchElementException.class)
+  public void next() {
+    subject.next();
   }
 
 }

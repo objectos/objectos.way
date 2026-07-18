@@ -13,29 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html;
+package objectox.html.play;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertSame;
+import static org.testng.Assert.assertTrue;
 
 import org.testng.annotations.Test;
 
-public class ObjectArrayTest {
+public class EndDocumentStateTest {
+
+  private final EndDocumentState subject = EndDocumentState.INSTANCE;
 
   @Test
-  public void add01() {
-    final ObjectArray subject;
-    subject = new ObjectArray();
-
-    assertEquals(subject.add("ABC"), 0);
+  public void compute00() {
+    assertEquals(subject.compute(), EndState.INSTANCE);
   }
 
   @Test
-  public void add02() {
-    final ObjectArray subject;
-    subject = new ObjectArray();
+  public void hasNext() {
+    assertTrue(subject.hasNext());
+  }
 
-    assertEquals(subject.add("ABC"), 0);
-    assertEquals(subject.add("XYZ"), 1);
+  @Test
+  public void next() {
+    assertSame(subject.next(), subject);
   }
 
 }

@@ -15,13 +15,38 @@
  */
 package objectox.html.play;
 
-import objectos.html.play.EndTag;
+import java.util.function.Consumer;
+import objectos.internal.Util;
 
-public final class EndTagState implements EndTag {
+final class TapeY {
 
-  @Override
-  public final String name() {
-    throw new UnsupportedOperationException("Implement me");
+  byte[] main = Util.EMPTY_BYTE_ARRAY;
+
+  int mainIndex = 0;
+
+  Object[] objects = Util.EMPTY_OBJECT_ARRAY;
+
+  public static Tape create(Consumer<? super TapeY> opts) {
+    final TapeY y;
+    y = new TapeY();
+
+    opts.accept(y);
+
+    return y.build();
+  }
+
+  public final void main(byte... values) {
+    main = values;
+  }
+
+  private Tape build() {
+    return new Tape(
+        main,
+
+        mainIndex,
+
+        objects
+    );
   }
 
 }

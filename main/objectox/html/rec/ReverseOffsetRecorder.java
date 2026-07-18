@@ -15,7 +15,6 @@
  */
 package objectox.html.rec;
 
-import objectox.html.ByteArray;
 import objectox.html.HtmlByteProto;
 
 final class ReverseOffsetRecorder {

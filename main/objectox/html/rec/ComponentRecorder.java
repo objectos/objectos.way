@@ -18,7 +18,6 @@ package objectox.html.rec;
 import objectos.html.Component;
 import objectos.html.Markup;
 import objectos.way.Html;
-import objectox.html.ByteArray;
 import objectox.html.HtmlByteProto;
 import objectox.html.HtmlInstruction;
 

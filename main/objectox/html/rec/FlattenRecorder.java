@@ -19,7 +19,6 @@ import java.util.Objects;
 import objectos.way.Html;
 import objectos.way.Html.Instruction;
 import objectos.way.Html.Instruction.OfElement;
-import objectox.html.ByteArray;
 import objectox.html.HtmlByteProto;
 import objectox.html.HtmlInstruction;
 

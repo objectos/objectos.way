@@ -15,26 +15,50 @@
  */
 package objectox.html.play;
 
-import java.util.NoSuchElementException;
+import objectos.html.play.BeginDocument;
 import objectos.html.play.Piece;
+import objectox.html.HtmlByteProto;
 
-enum EndState implements State {
+public final class BeginDocumentState implements BeginDocument, State {
 
-  INSTANCE;
+  private final Tape tape;
+
+  BeginDocumentState(Tape tape) {
+    this.tape = tape;
+  }
 
   @Override
   public final State compute() {
-    return this;
+    if (!tape.hasByte()) {
+      return EndDocumentState.INSTANCE;
+    }
+
+    final byte proto;
+    proto = tape.peekByte();
+
+    final State step;
+    step = switch (proto) {
+      case HtmlByteProto.ELEMENT -> new StartElementState(tape);
+
+      default -> throw State.implMe(proto);
+    };
+
+    return step.compute();
   }
 
   @Override
   public final boolean hasNext() {
-    return false;
+    return true;
   }
 
   @Override
   public final Piece next() {
-    throw new NoSuchElementException();
+    return this;
+  }
+
+  @Override
+  public final String toString() {
+    return "BeginDocument";
   }
 
 }

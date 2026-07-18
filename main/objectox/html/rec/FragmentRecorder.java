@@ -23,7 +23,6 @@ import objectos.html.Fragment3;
 import objectos.html.Fragment4;
 import objectos.way.Html;
 import objectos.way.Html.Instruction.OfFragment;
-import objectox.html.ByteArray;
 import objectox.html.HtmlByteProto;
 import objectox.html.HtmlInstruction;
 

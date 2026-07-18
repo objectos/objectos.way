@@ -13,15 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html.play;
+package objectox.html.rec;
 
-import objectos.html.play.EndTag;
+import static org.testng.Assert.assertEquals;
 
-public final class EndTagState implements EndTag {
+import org.testng.annotations.Test;
 
-  @Override
-  public final String name() {
-    throw new UnsupportedOperationException("Implement me");
+public class ObjectArrayTest {
+
+  @Test
+  public void add01() {
+    final ObjectArray subject;
+    subject = new ObjectArray();
+
+    assertEquals(subject.add("ABC"), 0);
+  }
+
+  @Test
+  public void add02() {
+    final ObjectArray subject;
+    subject = new ObjectArray();
+
+    assertEquals(subject.add("ABC"), 0);
+    assertEquals(subject.add("XYZ"), 1);
   }
 
 }

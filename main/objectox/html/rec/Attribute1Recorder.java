@@ -18,10 +18,8 @@ package objectox.html.rec;
 import java.util.Objects;
 import objectos.html.AttributeName;
 import objectos.way.Html;
-import objectox.html.ByteArray;
 import objectox.html.HtmlByteProto;
 import objectox.html.HtmlInstruction;
-import objectox.html.ObjectArray;
 
 final class Attribute1Recorder {
 

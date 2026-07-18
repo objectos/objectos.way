@@ -15,15 +15,25 @@
  */
 package objectox.html.play;
 
-abstract class AbstractState implements State {
+import java.util.Arrays;
+import objectox.html.rec.ByteArray;
+import objectox.html.rec.ObjectArray;
 
-  final byte[] main;
+final class Tape {
 
-  int mainIndex;
+  private final byte[] main;
 
-  final Object[] objects;
+  private int mainIndex;
 
-  AbstractState(byte[] main, Object[] objects, int mainIndex) {
+  private final Object[] objects;
+
+  Tape(ByteArray main, ObjectArray objects) {
+    this.main = main.unwrap();
+
+    this.objects = objects.unwrap();
+  }
+
+  Tape(byte[] main, int mainIndex, Object[] objects) {
     this.main = main;
 
     this.mainIndex = mainIndex;
@@ -31,22 +41,30 @@ abstract class AbstractState implements State {
     this.objects = objects;
   }
 
-  final boolean hasByte() {
+  @Override
+  public final boolean equals(Object obj) {
+    return obj instanceof Tape that
+        && Arrays.equals(main, that.main)
+        && mainIndex == that.mainIndex
+        && Arrays.equals(objects, that.objects);
+  }
+
+  public final boolean hasByte() {
     return mainIndex < main.length;
   }
 
-  final byte nextByte() {
+  public final byte nextByte() {
     return main[mainIndex++];
   }
 
-  final int nextInt8() {
+  public final int nextInt8() {
     final byte b;
     b = nextByte();
 
     return Byte.toUnsignedInt(b);
   }
 
-  final int nextInt16() {
+  public final int nextInt16() {
     final byte b0;
     b0 = nextByte();
 
@@ -56,28 +74,24 @@ abstract class AbstractState implements State {
     return toInt(b0, 0) | toInt(b1, 8);
   }
 
-  final byte peekByte() {
-    return peekByte(mainIndex);
+  public final byte peekByte() {
+    return main[mainIndex];
   }
 
-  final byte peekByte(int index) {
-    return main[index];
-  }
-
-  final int set(byte value) {
+  public final Tape push(byte value) {
     final int idx;
     idx = mainIndex++;
 
     main[idx] = value;
 
-    return idx;
+    return new Tape(main, idx, objects);
   }
 
-  final void skip(int value) {
+  public final void skip(int value) {
     mainIndex += value;
   }
 
-  final void skipInt16() {
+  public final void skipInt16() {
     skip(2);
   }
 

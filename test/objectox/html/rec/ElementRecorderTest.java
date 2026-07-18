@@ -19,11 +19,9 @@ import static org.testng.Assert.assertEquals;
 
 import objectos.html.ElementName;
 import objectox.html.Ambiguous;
-import objectox.html.ByteArray;
 import objectox.html.HtmlByteProto;
 import objectox.html.HtmlBytes;
 import objectox.html.HtmlInstruction;
-import objectox.html.ObjectArray;
 import objectox.html.elem.ElementNamePojo;
 import org.testng.annotations.Test;
 

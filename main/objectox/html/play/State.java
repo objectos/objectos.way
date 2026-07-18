@@ -19,16 +19,21 @@ import objectos.html.play.Piece;
 
 interface State {
 
-  default State compute() {
-    throw new UnsupportedOperationException();
+  static UnsupportedOperationException implMe(byte proto) {
+    final String msg;
+    msg = "Implement me :: proto=%d".formatted(proto);
+
+    throw new UnsupportedOperationException(msg);
   }
 
+  State compute();
+
   default boolean hasNext() {
-    throw new UnsupportedOperationException();
+    throw new IllegalStateException("This is an intermediate state");
   }
 
   default Piece next() {
-    throw new UnsupportedOperationException();
+    throw new IllegalStateException("This is an intermediate state");
   }
 
 }

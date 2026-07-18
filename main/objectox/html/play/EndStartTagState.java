@@ -15,12 +15,30 @@
  */
 package objectox.html.play;
 
-import objectos.html.play.EndTag;
+import objectos.html.ElementName;
+import objectos.html.play.EndStartTag;
 
-public final class EndTagState implements EndTag {
+public final class EndStartTagState implements EndStartTag, State {
+
+  @SuppressWarnings("unused")
+  private final Tape tape;
+
+  @SuppressWarnings("unused")
+  private final Tape parent;
+
+  @SuppressWarnings("unused")
+  private final ElementName name;
+
+  EndStartTagState(Tape tape, Tape parent, ElementName name) {
+    this.tape = tape;
+
+    this.parent = parent;
+
+    this.name = name;
+  }
 
   @Override
-  public final String name() {
+  public final State compute() {
     throw new UnsupportedOperationException("Implement me");
   }
 

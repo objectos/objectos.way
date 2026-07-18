@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html;
+package objectox.html.rec;
 
 import java.util.Arrays;
 import objectos.internal.Util;
@@ -70,7 +70,7 @@ public final class ObjectArray {
   }
 
   public final Object[] unwrap() {
-    return values;
+    return Arrays.copyOf(values, index);
   }
 
 }

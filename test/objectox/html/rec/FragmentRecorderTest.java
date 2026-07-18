@@ -18,7 +18,6 @@ package objectox.html.rec;
 import static org.testng.Assert.assertEquals;
 
 import objectos.html.Fragment0;
-import objectox.html.ByteArray;
 import objectox.html.HtmlByteProto;
 import objectox.html.HtmlBytes;
 import objectox.html.HtmlInstruction;

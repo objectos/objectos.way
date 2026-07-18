@@ -18,5 +18,8 @@ package objectos.html.play;
 /// An Objectos HTML document is streamed as a sequence of pieces.
 public sealed interface Piece
     permits
+    BeginDocument,
+    EndDocument,
+    EndStartTag,
     EndTag,
-    StartTag {}
+    BeginStartTag {}

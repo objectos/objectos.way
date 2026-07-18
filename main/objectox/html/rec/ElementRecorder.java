@@ -17,9 +17,7 @@ package objectox.html.rec;
 
 import objectos.html.ElementName;
 import objectos.way.Html;
-import objectox.html.ByteArray;
 import objectox.html.HtmlInstruction;
-import objectox.html.ObjectArray;
 
 final class ElementRecorder {
 

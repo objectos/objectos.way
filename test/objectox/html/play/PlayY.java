@@ -13,44 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html.rec;
-
-import static org.testng.Assert.assertEquals;
+package objectox.html.play;
 
 import objectox.html.HtmlByteProto;
 import objectox.html.HtmlBytes;
 import objectox.html.elem.ElementNamePojo;
-import org.testng.annotations.Test;
 
-public class ElementNameRecorderTest {
+final class PlayY {
 
-  @Test
-  public void record01() {
-    final ByteArray main;
-    main = ByteArray.of();
+  private static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
 
-    final ElementNameRecorder subject;
-    subject = new ElementNameRecorder(main);
+  // TC00: empty document
+  public static final byte[] T00_MAIN = {};
+  public static final Object[] T00_OBJECTS = EMPTY_OBJECT_ARRAY;
 
-    final ElementNamePojo name;
-    name = ElementNamePojo.DIV;
+  // TC01: <html></html>
+  public static final byte[] T01_MAIN = {
+      HtmlByteProto.ELEMENT,
+      HtmlBytes.encodeInt0(5),
+      HtmlBytes.encodeInt1(5),
+      HtmlByteProto.STANDARD_NAME,
+      (byte) ElementNamePojo.HTML.index(),
+      HtmlByteProto.END,
+      HtmlBytes.encodeInt0(5),
+      HtmlByteProto.INTERNAL
+  };
+  public static final Object[] T01_OBJECTS = EMPTY_OBJECT_ARRAY;
 
-    subject.record(name);
-
-    assertEquals(
-        main,
-
-        ByteArray.of(
-            HtmlByteProto.ELEMENT,
-
-            -1,
-            -1,
-
-            HtmlByteProto.STANDARD_NAME,
-
-            HtmlBytes.encodeInt0(name.index())
-        )
-    );
-  }
+  private PlayY() {}
 
 }

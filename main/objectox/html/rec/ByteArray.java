@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html;
+package objectox.html.rec;
 
 import java.util.Arrays;
 import java.util.HexFormat;
@@ -43,7 +43,7 @@ public final class ByteArray {
     bytes = new byte[initialLength];
   }
 
-  private ByteArray(byte[] bytes) {
+  ByteArray(byte[] bytes) {
     this.bytes = bytes;
 
     index = bytes.length;
@@ -317,7 +317,7 @@ public final class ByteArray {
   }
 
   public final byte[] unwrap() {
-    return bytes;
+    return Arrays.copyOf(bytes, index);
   }
 
   public final int varIntLEEndIndex(int idx) {

@@ -15,13 +15,31 @@
  */
 package objectox.html.play;
 
-import objectos.html.play.EndTag;
+import objectos.html.play.EndDocument;
+import objectos.html.play.Piece;
 
-public final class EndTagState implements EndTag {
+public enum EndDocumentState implements EndDocument, State {
+
+  INSTANCE;
 
   @Override
-  public final String name() {
-    throw new UnsupportedOperationException("Implement me");
+  public final State compute() {
+    return EndState.INSTANCE;
+  }
+
+  @Override
+  public final boolean hasNext() {
+    return true;
+  }
+
+  @Override
+  public final Piece next() {
+    return this;
+  }
+
+  @Override
+  public final String toString() {
+    return "EndDocument";
   }
 
 }

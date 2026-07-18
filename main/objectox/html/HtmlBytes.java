@@ -17,6 +17,7 @@ package objectox.html;
 
 import objectos.html.ElementName;
 import objectox.html.elem.ElementNamePojo;
+import objectox.html.rec.ByteArray;
 
 public final class HtmlBytes {
 
