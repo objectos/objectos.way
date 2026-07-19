@@ -80,7 +80,7 @@ public class RecorderTest {
   @Test(description = """
   <html lang="pt-BR"></html>
   """)
-  public void tc01() {
+  public void testCase02() {
     final Recorder html;
     html = Recorder.create();
 
@@ -89,8 +89,7 @@ public class RecorderTest {
         html.attribute1(AttributeName.LANG, "pt-BR")
     );
 
-    test(
-        html,
+    bytes(html.main(),
 
         HtmlByteProto.MARKED5,
         (byte) AttributeNamePojo.LANG.index(),
@@ -108,6 +107,11 @@ public class RecorderTest {
         HtmlByteProto.END,
         HtmlBytes.encodeInt0(12),
         HtmlByteProto.INTERNAL
+    );
+
+    objects(html.objects(),
+
+        "pt-BR"
     );
   }
 

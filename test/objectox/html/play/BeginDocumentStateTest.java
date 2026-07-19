@@ -64,6 +64,34 @@ public class BeginDocumentStateTest {
   }
 
   @Test
+  public void compute02() {
+    final Tape tape;
+    tape = TapeY.create(opts -> {
+      opts.main(
+          HtmlByteProto.ELEMENT,
+          HtmlBytes.encodeInt0(7),
+          HtmlBytes.encodeInt1(7),
+          HtmlByteProto.STANDARD_NAME,
+          (byte) ElementNamePojo.HTML.index(),
+          HtmlByteProto.ATTRIBUTE1,
+          HtmlBytes.encodeInt0(11),
+          HtmlByteProto.END,
+          HtmlBytes.encodeInt0(12),
+          HtmlByteProto.INTERNAL
+      );
+    });
+
+    final BeginDocumentState subject;
+    subject = new BeginDocumentState(tape);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res.getClass(), BeginStartTagState.class);
+    assertEquals(tape.nextByte(), HtmlByteProto.ATTRIBUTE1);
+  }
+
+  @Test
   public void hasNext() {
     final Tape tape;
     tape = TapeY.create(opts -> {

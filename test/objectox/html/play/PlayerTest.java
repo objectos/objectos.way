@@ -82,4 +82,22 @@ public class PlayerTest {
     );
   }
 
+  @Test(description = """
+  <html lang="pt-BR"></html>
+  """)
+  public void testCase02() {
+    test(
+        m -> m.html(m.lang("pt-BR")),
+
+        """
+        BeginDocument
+        BeginStartTag(html)
+        Attribute(lang, pt-BR)
+        EndStartTag
+        EndTag(html)
+        EndDocument
+        """
+    );
+  }
+
 }

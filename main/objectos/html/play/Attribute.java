@@ -15,12 +15,21 @@
  */
 package objectos.html.play;
 
-/// An Objectos HTML document is streamed as a sequence of pieces.
-public sealed interface Piece
-    permits
-    Attribute,
-    BeginDocument,
-    BeginStartTag,
-    EndDocument,
-    EndStartTag,
-    EndTag {}
+import objectox.html.play.AttributeState;
+
+/// An non-boolean attribute in an element start tag.
+public sealed interface Attribute
+    extends Piece
+    permits AttributeState {
+
+  /// Returns the attribute name.
+  ///
+  /// @return the attribute name
+  String name();
+
+  /// Returns the attribute value.
+  ///
+  /// @return the attribute value
+  String value();
+
+}

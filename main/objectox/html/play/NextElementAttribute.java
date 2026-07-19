@@ -35,11 +35,9 @@ final class NextElementAttribute {
     proto = tape.nextByte();
 
     return switch (proto) {
+      case HtmlByteProto.ATTRIBUTE1 -> new NextAttribute1(tape, name).compute();
+
       case HtmlByteProto.END -> new EndStartTagState(tape, name);
-
-      case HtmlByteProto.AMBIGUOUS1 -> throw new UnsupportedOperationException("Implement me");
-
-      case HtmlByteProto.ATTRIBUTE0 -> throw new UnsupportedOperationException("Implement me");
 
       default -> throw State.implMe(proto);
     };

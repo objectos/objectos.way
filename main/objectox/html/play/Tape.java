@@ -75,6 +75,43 @@ final class Tape {
     return toInt(b0, 0) | toInt(b1, 8);
   }
 
+  public final int nextVarIntLE() {
+    final int startIndex;
+    startIndex = mainIndex;
+
+    byte aux;
+
+    do {
+      aux = nextByte();
+    } while (aux < 0);
+
+    final int length;
+    length = mainIndex - startIndex;
+
+    assert 0 < length && length <= 3;
+
+    int result;
+    result = 0;
+
+    for (int iter = 0; iter < length; iter++) {
+      final int idx;
+      idx = startIndex + iter;
+
+      final byte value;
+      value = main[idx];
+
+      final int intValue;
+      intValue = value & 0x7F;
+
+      final int shift;
+      shift = 7 * iter;
+
+      result |= intValue << shift;
+    }
+
+    return result;
+  }
+
   public final byte peekByte() {
     return main[mainIndex];
   }
@@ -103,6 +140,18 @@ final class Tape {
 
   public final void skipInt16() {
     skip(2);
+  }
+
+  public final void skipVarIntLE() {
+    byte aux;
+
+    do {
+      aux = nextByte();
+    } while (aux < 0);
+  }
+
+  public final String string(int idx) {
+    return (String) objects[idx];
   }
 
   private int toInt(byte b, int shift) {

@@ -17,6 +17,7 @@ package objectox.html.play;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.html.AttributeName;
 import objectos.html.ElementName;
 import objectox.html.HtmlByteProto;
 import objectox.html.HtmlBytes;
@@ -24,25 +25,7 @@ import objectox.html.attr.AttributeNamePojo;
 import objectox.html.elem.ElementNamePojo;
 import org.testng.annotations.Test;
 
-public class BeginStartTagStateTest {
-
-  @Test
-  public void compute01() {
-    final Tape tape;
-    tape = TapeY.create(opts -> {
-      opts.main(
-          HtmlByteProto.END
-      );
-    });
-
-    final BeginStartTagState subject;
-    subject = new BeginStartTagState(tape, ElementName.HTML);
-
-    final State res;
-    res = subject.compute();
-
-    assertEquals(res.getClass(), EndStartTagState.class);
-  }
+public class AttributeStateTest {
 
   @Test
   public void compute02() {
@@ -67,18 +50,18 @@ public class BeginStartTagStateTest {
           HtmlByteProto.INTERNAL
       );
 
-      opts.mainIndex = 10;
+      opts.mainIndex = 4;
 
-      opts.objects("pt-BR");
+      opts.stack(12);
     });
 
-    final BeginStartTagState subject;
-    subject = new BeginStartTagState(tape, ElementName.HTML);
+    final AttributeState subject;
+    subject = new AttributeState(tape, ElementName.HTML, AttributeName.LANG, "pt-BR");
 
     final State res;
     res = subject.compute();
 
-    assertEquals(res.getClass(), AttributeState.class);
+    assertEquals(res.getClass(), EndStartTagState.class);
   }
 
 }

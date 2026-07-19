@@ -16,39 +16,41 @@
 package objectox.html.play;
 
 import objectos.html.ElementName;
-import objectox.html.HtmlByteProto;
+import objectox.html.attr.AttributeNamePojo;
 
-final class NextElementNode {
+final class NextAttribute1 {
 
   private final Tape tape;
 
-  private final ElementName name;
+  private final ElementName elementName;
 
-  NextElementNode(Tape tape, ElementName name) {
+  NextAttribute1(Tape tape, ElementName name) {
     this.tape = tape;
 
-    this.name = name;
+    this.elementName = name;
   }
 
   public final State compute() {
-    while (tape.hasByte()) {
-      final byte proto;
-      proto = tape.nextByte();
+    final int offset;
+    offset = tape.nextVarIntLE();
 
-      switch (proto) {
-        case HtmlByteProto.ATTRIBUTE1 -> {
-          tape.skipVarIntLE();
-        }
+    tape.push(); // return 2 element
 
-        case HtmlByteProto.END -> {
-          return new EndTagState(tape, name);
-        }
+    tape.skip(-offset);
 
-        default -> throw State.implMe(proto);
-      }
-    }
+    final byte nameIndex;
+    nameIndex = tape.nextByte();
 
-    throw new IllegalStateException();
+    final AttributeNamePojo name;
+    name = AttributeNamePojo.get(nameIndex);
+
+    final int valueIndex;
+    valueIndex = tape.nextInt16();
+
+    final String value;
+    value = tape.string(valueIndex);
+
+    return new AttributeState(tape, elementName, name, value);
   }
 
 }

@@ -43,6 +43,10 @@ final class TapeY {
     main = values;
   }
 
+  public final void objects(Object... values) {
+    objects = values;
+  }
+
   public final void stack(int... values) {
     stack = values;
 
