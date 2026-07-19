@@ -13,13 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html.play;
+package objectox.html.play;
 
-/// An Objectos HTML document is streamed as a sequence of pieces.
-public sealed interface Piece
-    permits
-    BeginDocument,
-    BeginStartTag,
-    EndDocument,
-    EndStartTag,
-    EndTag {}
+import static org.testng.Assert.assertEquals;
+
+import objectos.html.ElementName;
+import objectox.html.HtmlByteProto;
+import org.testng.annotations.Test;
+
+public class EndStartTagStateTest {
+
+  @Test
+  public void compute01() {
+    final Tape tape;
+    tape = TapeY.create(opts -> {
+      opts.main(
+          HtmlByteProto.END
+      );
+
+      opts.stack(0);
+    });
+
+    final EndStartTagState subject;
+    subject = new EndStartTagState(tape, ElementName.HTML);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res.getClass(), EndTagState.class);
+  }
+
+}

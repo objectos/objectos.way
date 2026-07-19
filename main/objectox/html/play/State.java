@@ -29,11 +29,11 @@ interface State {
   State compute();
 
   default boolean hasNext() {
-    throw new IllegalStateException("This is an intermediate state");
+    throw new IllegalStateException("This is an intermediate state: " + getClass());
   }
 
   default Piece next() {
-    throw new IllegalStateException("This is an intermediate state");
+    throw new IllegalStateException("This is an intermediate state: " + getClass());
   }
 
 }

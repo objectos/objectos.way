@@ -13,13 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html.play;
+package objectox.html.play;
 
-/// An Objectos HTML document is streamed as a sequence of pieces.
-public sealed interface Piece
-    permits
-    BeginDocument,
-    BeginStartTag,
-    EndDocument,
-    EndStartTag,
-    EndTag {}
+import objectos.html.ElementName;
+import objectox.html.HtmlByteProto;
+
+final class NextElementNode {
+
+  private final Tape tape;
+
+  private final ElementName name;
+
+  NextElementNode(Tape tape, ElementName name) {
+    this.tape = tape;
+
+    this.name = name;
+  }
+
+  public final State compute() {
+    final byte proto;
+    proto = tape.nextByte();
+
+    return switch (proto) {
+      case HtmlByteProto.END -> new EndTagState(tape, name);
+
+      default -> throw State.implMe(proto);
+    };
+  }
+
+}

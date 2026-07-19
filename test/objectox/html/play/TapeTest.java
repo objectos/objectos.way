@@ -57,22 +57,6 @@ public class TapeTest {
   }
 
   @Test
-  public void push() {
-    final Tape subject;
-    subject = TapeY.create(opts -> {
-      opts.main = new byte[] {0, 1, 2};
-
-      opts.mainIndex = 1;
-    });
-
-    final Tape parent;
-    parent = subject.push((byte) 9);
-
-    assertEquals(subject.peekByte(), 2);
-    assertEquals(parent.peekByte(), 9);
-  }
-
-  @Test
   public void skip() {
     final Tape subject;
     subject = TapeY.create(opts -> {

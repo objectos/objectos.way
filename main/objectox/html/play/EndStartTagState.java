@@ -17,29 +17,43 @@ package objectox.html.play;
 
 import objectos.html.ElementName;
 import objectos.html.play.EndStartTag;
+import objectos.html.play.Piece;
 
 public final class EndStartTagState implements EndStartTag, State {
 
-  @SuppressWarnings("unused")
   private final Tape tape;
 
-  @SuppressWarnings("unused")
-  private final Tape parent;
-
-  @SuppressWarnings("unused")
   private final ElementName name;
 
-  EndStartTagState(Tape tape, Tape parent, ElementName name) {
+  EndStartTagState(Tape tape, ElementName name) {
     this.tape = tape;
-
-    this.parent = parent;
 
     this.name = name;
   }
 
   @Override
   public final State compute() {
-    throw new UnsupportedOperationException("Implement me");
+    tape.pop(); // return 2 element start
+
+    final NextElementNode next;
+    next = new NextElementNode(tape, name);
+
+    return next.compute();
+  }
+
+  @Override
+  public final boolean hasNext() {
+    return true;
+  }
+
+  @Override
+  public final Piece next() {
+    return this;
+  }
+
+  @Override
+  public final String toString() {
+    return "EndStartTag";
   }
 
 }

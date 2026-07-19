@@ -65,7 +65,7 @@ public class PlayerTest {
     );
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   <html></html>
   """)
   public void testCase01() {

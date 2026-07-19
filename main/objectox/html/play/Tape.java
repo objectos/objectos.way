@@ -15,7 +15,7 @@
  */
 package objectox.html.play;
 
-import java.util.Arrays;
+import objectos.internal.Util;
 import objectox.html.rec.ByteArray;
 import objectox.html.rec.ObjectArray;
 
@@ -25,7 +25,12 @@ final class Tape {
 
   private int mainIndex;
 
+  @SuppressWarnings("unused")
   private final Object[] objects;
+
+  private int[] stack = Util.EMPTY_INT_ARRAY;
+
+  private int stackIndex = -1;
 
   Tape(ByteArray main, ObjectArray objects) {
     this.main = main.unwrap();
@@ -33,20 +38,16 @@ final class Tape {
     this.objects = objects.unwrap();
   }
 
-  Tape(byte[] main, int mainIndex, Object[] objects) {
+  Tape(byte[] main, int mainIndex, Object[] objects, int[] stack, int stackIndex) {
     this.main = main;
 
     this.mainIndex = mainIndex;
 
     this.objects = objects;
-  }
 
-  @Override
-  public final boolean equals(Object obj) {
-    return obj instanceof Tape that
-        && Arrays.equals(main, that.main)
-        && mainIndex == that.mainIndex
-        && Arrays.equals(objects, that.objects);
+    this.stack = stack;
+
+    this.stackIndex = stackIndex;
   }
 
   public final boolean hasByte() {
@@ -78,17 +79,26 @@ final class Tape {
     return main[mainIndex];
   }
 
-  public final Tape push(byte value) {
-    final int idx;
-    idx = mainIndex++;
+  public final void pop() {
+    mainIndex = stack[stackIndex--];
+  }
 
-    main[idx] = value;
+  public final void push() {
+    stack = Util.growIfNecessary(stack, ++stackIndex);
 
-    return new Tape(main, idx, objects);
+    stack[stackIndex] = mainIndex;
+  }
+
+  public final void set(byte value) {
+    main[mainIndex] = value;
   }
 
   public final void skip(int value) {
     mainIndex += value;
+  }
+
+  public final void skipByte() {
+    skip(1);
   }
 
   public final void skipInt16() {

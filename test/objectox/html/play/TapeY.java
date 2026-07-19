@@ -26,6 +26,10 @@ final class TapeY {
 
   Object[] objects = Util.EMPTY_OBJECT_ARRAY;
 
+  int[] stack = Util.EMPTY_INT_ARRAY;
+
+  int stackIndex = -1;
+
   public static Tape create(Consumer<? super TapeY> opts) {
     final TapeY y;
     y = new TapeY();
@@ -39,13 +43,23 @@ final class TapeY {
     main = values;
   }
 
+  public final void stack(int... values) {
+    stack = values;
+
+    stackIndex = stack.length - 1;
+  }
+
   private Tape build() {
     return new Tape(
         main,
 
         mainIndex,
 
-        objects
+        objects,
+
+        stack,
+
+        stackIndex
     );
   }
 

@@ -18,18 +18,20 @@ package objectox.html.play;
 import objectox.html.HtmlByteProto;
 import objectox.html.elem.ElementNamePojo;
 
-final class StartElementState implements State {
+final class NextDocumentElement {
 
   private final Tape tape;
 
-  StartElementState(Tape tape) {
+  NextDocumentElement(Tape tape) {
     this.tape = tape;
   }
 
-  @Override
   public final State compute() {
-    final Tape parent;
-    parent = tape.push(HtmlByteProto.ROOT_ELEMENT);
+    tape.push();
+
+    tape.set(HtmlByteProto.ROOT_ELEMENT);
+
+    tape.skipByte();
 
     tape.skipInt16();
 
@@ -44,7 +46,7 @@ final class StartElementState implements State {
     final ElementNamePojo name;
     name = ElementNamePojo.get(ordinal);
 
-    return new BeginStartTagState(tape, parent, name);
+    return new BeginStartTagState(tape, name);
   }
 
 }

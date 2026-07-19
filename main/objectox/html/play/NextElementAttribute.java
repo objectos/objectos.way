@@ -15,47 +15,34 @@
  */
 package objectox.html.play;
 
-import objectos.html.play.BeginDocument;
-import objectos.html.play.Piece;
+import objectos.html.ElementName;
 import objectox.html.HtmlByteProto;
 
-public final class BeginDocumentState implements BeginDocument, State {
+final class NextElementAttribute {
 
   private final Tape tape;
 
-  BeginDocumentState(Tape tape) {
+  private final ElementName name;
+
+  NextElementAttribute(Tape tape, ElementName name) {
     this.tape = tape;
+
+    this.name = name;
   }
 
-  @Override
   public final State compute() {
-    if (!tape.hasByte()) {
-      return EndDocumentState.INSTANCE;
-    }
-
     final byte proto;
-    proto = tape.peekByte();
+    proto = tape.nextByte();
 
     return switch (proto) {
-      case HtmlByteProto.ELEMENT -> new NextDocumentElement(tape).compute();
+      case HtmlByteProto.END -> new EndStartTagState(tape, name);
+
+      case HtmlByteProto.AMBIGUOUS1 -> throw new UnsupportedOperationException("Implement me");
+
+      case HtmlByteProto.ATTRIBUTE0 -> throw new UnsupportedOperationException("Implement me");
 
       default -> throw State.implMe(proto);
     };
-  }
-
-  @Override
-  public final boolean hasNext() {
-    return true;
-  }
-
-  @Override
-  public final Piece next() {
-    return this;
-  }
-
-  @Override
-  public final String toString() {
-    return "BeginDocument";
   }
 
 }

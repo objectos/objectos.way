@@ -15,13 +15,62 @@
  */
 package objectox.html.play;
 
+import objectos.html.ElementName;
 import objectos.html.play.EndTag;
+import objectos.html.play.Piece;
+import objectox.html.HtmlByteProto;
 
-public final class EndTagState implements EndTag {
+public final class EndTagState implements EndTag, State {
+
+  private final Tape tape;
+
+  private final ElementName name;
+
+  EndTagState(Tape tape, ElementName name) {
+    this.tape = tape;
+
+    this.name = name;
+  }
+
+  @Override
+  public final State compute() {
+    tape.pop(); // return 2 parent
+
+    final byte proto;
+    proto = tape.nextByte();
+
+    return switch (proto) {
+      case HtmlByteProto.ROOT_ELEMENT -> {
+        final int offset;
+        offset = tape.nextInt16();
+
+        tape.skip(offset);
+
+        yield new NextDocumentNode(tape).compute();
+      }
+
+      default -> throw State.implMe(proto);
+    };
+  }
+
+  @Override
+  public final boolean hasNext() {
+    return true;
+  }
+
+  @Override
+  public final Piece next() {
+    return this;
+  }
 
   @Override
   public final String name() {
-    throw new UnsupportedOperationException("Implement me");
+    return name.name();
+  }
+
+  @Override
+  public final String toString() {
+    return "EndTag(" + name() + ")";
   }
 
 }

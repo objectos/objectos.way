@@ -18,36 +18,27 @@ package objectox.html.play;
 import objectos.html.ElementName;
 import objectos.html.play.Piece;
 import objectos.html.play.BeginStartTag;
-import objectox.html.HtmlByteProto;
 
 public final class BeginStartTagState implements BeginStartTag, State {
 
   private final Tape tape;
 
-  private final Tape parent;
-
   private final ElementName name;
 
-  BeginStartTagState(Tape tape, Tape parent, ElementName name) {
+  BeginStartTagState(Tape tape, ElementName name) {
     this.tape = tape;
-
-    this.parent = parent;
 
     this.name = name;
   }
 
   @Override
   public final State compute() {
-    final byte proto;
-    proto = tape.peekByte();
+    tape.push();
 
-    if (proto == HtmlByteProto.END) {
-      return new EndStartTagState(tape, parent, name);
-    }
+    final NextElementAttribute nextAttribute;
+    nextAttribute = new NextElementAttribute(tape, name);
 
-    else {
-      throw new UnsupportedOperationException("Implement me");
-    }
+    return nextAttribute.compute();
   }
 
   @Override
