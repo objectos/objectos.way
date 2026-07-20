@@ -16,13 +16,13 @@
 package objectox.html.rec;
 
 import java.util.Objects;
-import objectos.html.Fragment0;
-import objectos.html.Fragment1;
-import objectos.html.Fragment2;
-import objectos.html.Fragment3;
-import objectos.html.Fragment4;
-import objectos.way.Html;
-import objectos.way.Html.Instruction.OfFragment;
+import objectos.html.rec.Fragment0;
+import objectos.html.rec.Fragment1;
+import objectos.html.rec.Fragment2;
+import objectos.html.rec.Fragment3;
+import objectos.html.rec.Fragment4;
+import objectos.html.rec.Instruction;
+import objectos.html.rec.Instruction.OfFragment;
 import objectox.html.HtmlByteProto;
 import objectox.html.HtmlInstruction;
 
@@ -42,7 +42,7 @@ final class FragmentRecorder {
     this.reverseOffsetRecorder = reverseOffsetRecorder;
   }
 
-  public final Html.Instruction.OfFragment record(Fragment0 fragment) {
+  public final Instruction.OfFragment record(Fragment0 fragment) {
     final Fragment0 f;
     f = Objects.requireNonNull(fragment, "fragment == null");
 

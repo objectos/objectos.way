@@ -24,6 +24,8 @@ import java.util.List;
 import objectos.html.ClassName;
 import objectos.html.ElementName;
 import objectos.html.Id;
+import objectos.html.rec.ElementMarkup;
+import objectos.html.rec.Instruction;
 import objectos.http.Content;
 import objectos.way.Html;
 import org.testng.annotations.Test;
@@ -560,7 +562,7 @@ public class HtmlTemplateTest {
         new Html.Template() {
           @Override
           protected final void render() {
-            Html.Instruction.OfElement[] children = new Html.Instruction.OfElement[count];
+            ElementMarkup[] children = new ElementMarkup[count];
             for (int i = 0; i < count; i++) {
               children[i] = li(Integer.toString(i));
             }
@@ -1066,8 +1068,8 @@ public class HtmlTemplateTest {
         new Html.Template() {
           @Override
           protected final void render() {
-            Html.Instruction[] children;
-            children = new Html.Instruction[COUNT];
+            Instruction[] children;
+            children = new Instruction[COUNT];
 
             for (int i = 0; i < COUNT; i++) {
               children[i] = hr();

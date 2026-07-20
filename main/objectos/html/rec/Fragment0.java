@@ -13,18 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html;
+package objectos.html.rec;
 
-/// A fragment represents a set of markup or template instructions to be lazily
-/// applied.
-///
-/// The set of instructions MUST be of the same markup or template instance where
-/// this fragment will be included.
-public sealed interface Fragment
-    permits
-    Fragment0,
-    Fragment1,
-    Fragment2,
-    Fragment3,
-    Fragment4 {
+/// A fragment that takes no arguments.
+@FunctionalInterface
+public non-sealed interface Fragment0 extends Fragment {
+
+  /// Invokes this set of instructions.
+  void invoke();
+
 }

@@ -18,17 +18,17 @@ package objectox.html.rec;
 import objectos.html.AttributeName;
 import objectos.html.Component;
 import objectos.html.ElementName;
-import objectos.html.Fragment0;
-import objectos.html.Fragment1;
-import objectos.html.Fragment2;
-import objectos.html.Fragment3;
-import objectos.html.Fragment4;
 import objectos.html.Markup;
-import objectos.way.Html.Instruction;
-import objectos.way.Html.Instruction.OfAmbiguous;
-import objectos.way.Html.Instruction.OfAttribute;
-import objectos.way.Html.Instruction.OfElement;
-import objectos.way.Html.Instruction.OfFragment;
+import objectos.html.rec.ElementMarkup;
+import objectos.html.rec.Fragment0;
+import objectos.html.rec.Fragment1;
+import objectos.html.rec.Fragment2;
+import objectos.html.rec.Fragment3;
+import objectos.html.rec.Fragment4;
+import objectos.html.rec.Instruction;
+import objectos.html.rec.Instruction.OfAmbiguous;
+import objectos.html.rec.Instruction.OfAttribute;
+import objectos.html.rec.Instruction.OfFragment;
 import objectox.html.Ambiguous;
 import objectox.html.HtmlByteProto;
 import objectox.html.play.Player;
@@ -217,7 +217,7 @@ public final class Recorder {
     main.add(HtmlByteProto.DOCTYPE);
   }
 
-  public final OfElement element(ElementName name, Instruction... contents) {
+  public final ElementMarkup element(ElementName name, Instruction... contents) {
     return elementRecorder.record(name, contents);
   }
 
@@ -241,19 +241,19 @@ public final class Recorder {
     return fragmentRecorder.record(fragment, arg1, arg2, arg3, arg4);
   }
 
-  public final OfElement flatten(Instruction... contents) {
+  public final ElementMarkup flatten(Instruction... contents) {
     return flattenRecorder.record(contents);
   }
 
-  public final OfElement flatten(Iterable<? extends Instruction> contents) {
+  public final ElementMarkup flatten(Iterable<? extends Instruction> contents) {
     return flattenRecorder.record(contents);
   }
 
-  public final OfElement raw(String value) {
+  public final ElementMarkup raw(String value) {
     return rawRecorder.record(value);
   }
 
-  public final OfElement text(String value) {
+  public final ElementMarkup text(String value) {
     return textRecorder.record(value);
   }
 

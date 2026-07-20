@@ -18,6 +18,8 @@ module objectos.way {
   exports objectos.css;
   exports objectos.dev;
   exports objectos.html;
+  exports objectos.html.play;
+  exports objectos.html.rec;
   exports objectos.http;
   exports objectos.lang;
   exports objectos.script;

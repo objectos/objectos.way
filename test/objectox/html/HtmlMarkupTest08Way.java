@@ -20,7 +20,7 @@ import static org.testng.Assert.assertEquals;
 import java.util.List;
 import objectos.html.Component;
 import objectos.html.ElementName;
-import objectos.way.Html;
+import objectos.html.rec.Instruction;
 import org.testng.annotations.Test;
 
 public class HtmlMarkupTest08Way {
@@ -105,7 +105,7 @@ public class HtmlMarkupTest08Way {
             m.p("one"),
             m.noop(),
             m.p("two"),
-            Html.Instruction.noop()
+            Instruction.noop()
         ),
 
         """

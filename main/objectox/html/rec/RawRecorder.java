@@ -16,7 +16,7 @@
 package objectox.html.rec;
 
 import java.util.Objects;
-import objectos.way.Html;
+import objectos.html.rec.ElementMarkup;
 import objectox.html.HtmlByteProto;
 import objectox.html.HtmlInstruction;
 
@@ -32,7 +32,7 @@ final class RawRecorder {
     this.objects = objects;
   }
 
-  public final Html.Instruction.OfElement record(String value) {
+  public final ElementMarkup record(String value) {
     final String v;
     v = Objects.requireNonNull(value, "value == null");
 

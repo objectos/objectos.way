@@ -15,37 +15,36 @@
  */
 package objectox.html.rec;
 
-import java.util.Objects;
-import objectos.html.rec.ElementMarkup;
-import objectox.html.HtmlByteProto;
-import objectox.html.HtmlInstruction;
+import objectox.html.HtmlBytes;
 
-final class TextRecorder {
+final class DocumentRecorder {
 
-  private final ByteArray main;
+  final ByteArray main;
 
-  private final ObjectArray objects;
+  final ObjectArray objects;
 
-  TextRecorder(ByteArray main, ObjectArray objects) {
+  DocumentRecorder(ByteArray main, ObjectArray objects) {
     this.main = main;
 
     this.objects = objects;
   }
 
-  public final ElementMarkup record(String value) {
-    final String v;
-    v = Objects.requireNonNull(value, "value == null");
+  public static DocumentRecorder create() {
+    final ByteArray main;
+    main = new ByteArray(256);
 
-    final int object;
-    object = objects.add(v);
+    final ObjectArray objects;
+    objects = new ObjectArray();
 
-    main.add(HtmlByteProto.TEXT);
+    return new DocumentRecorder(main, objects);
+  }
 
-    main.addInt16(object);
+  public final void startDocument() {
+    main.add(HtmlBytes.START_DOCUMENT);
+  }
 
-    main.add(HtmlByteProto.INTERNAL4);
-
-    return HtmlInstruction.ELEMENT;
+  public final void endDocument() {
+    main.add(HtmlBytes.END_DOCUMENT);
   }
 
 }

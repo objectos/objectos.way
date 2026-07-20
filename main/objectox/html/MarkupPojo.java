@@ -21,15 +21,16 @@ import objectos.html.AttributeName;
 import objectos.html.AttributeObject;
 import objectos.html.Component;
 import objectos.html.ElementName;
-import objectos.html.Fragment0;
-import objectos.html.Fragment1;
-import objectos.html.Fragment2;
-import objectos.html.Fragment3;
-import objectos.html.Fragment4;
 import objectos.html.Markup;
+import objectos.html.rec.ElementMarkup;
+import objectos.html.rec.Fragment0;
+import objectos.html.rec.Fragment1;
+import objectos.html.rec.Fragment2;
+import objectos.html.rec.Fragment3;
+import objectos.html.rec.Fragment4;
+import objectos.html.rec.Instruction;
 import objectos.internal.Util;
 import objectos.way.Dom;
-import objectos.way.Html;
 import objectox.dev.TestableHtml;
 import objectox.html.attr.AttributeNamePojo;
 import objectox.html.elem.ElementNamePojo;
@@ -149,42 +150,42 @@ public sealed abstract class MarkupPojo
   // ##################################################################
 
   @Override
-  public final Html.Instruction.OfFragment c(Component... components) {
+  public final Instruction.OfFragment c(Component... components) {
     return recorder.component(this, components);
   }
 
   @Override
-  public final Html.Instruction.OfFragment c(Iterable<? extends Component> components) {
+  public final Instruction.OfFragment c(Iterable<? extends Component> components) {
     return recorder.component(this, components);
   }
 
   @Override
-  public final Html.Instruction.OfFragment f(Fragment0 fragment) {
+  public final Instruction.OfFragment f(Fragment0 fragment) {
     return recorder.f(fragment);
   }
 
   @Override
-  public final <T1> Html.Instruction.OfFragment f(Fragment1<T1> fragment, T1 arg1) {
+  public final <T1> Instruction.OfFragment f(Fragment1<T1> fragment, T1 arg1) {
     return recorder.f(fragment, arg1);
   }
 
   @Override
-  public final <T1, T2> Html.Instruction.OfFragment f(Fragment2<T1, T2> fragment, T1 arg1, T2 arg2) {
+  public final <T1, T2> Instruction.OfFragment f(Fragment2<T1, T2> fragment, T1 arg1, T2 arg2) {
     return recorder.f(fragment, arg1, arg2);
   }
 
   @Override
-  public final <T1, T2, T3> Html.Instruction.OfFragment f(Fragment3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3) {
+  public final <T1, T2, T3> Instruction.OfFragment f(Fragment3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3) {
     return recorder.f(fragment, arg1, arg2, arg3);
   }
 
   @Override
-  public final <T1, T2, T3, T4> Html.Instruction.OfFragment f(Fragment4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
+  public final <T1, T2, T3, T4> Instruction.OfFragment f(Fragment4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
     return recorder.f(fragment, arg1, arg2, arg3, arg4);
   }
 
   @Override
-  public final Html.Instruction.OfAttribute css(String value) {
+  public final Instruction.OfAttribute css(String value) {
     final String formatted;
     formatted = AttributeNamePojo.formatAttrValue(value, sb);
 
@@ -192,17 +193,17 @@ public sealed abstract class MarkupPojo
   }
 
   @Override
-  public final Html.Instruction.OfElement flatten(Html.Instruction... contents) {
+  public final ElementMarkup flatten(Instruction... contents) {
     return recorder.flatten(contents);
   }
 
   @Override
-  public final Html.Instruction.OfElement flatten(Iterable<? extends Html.Instruction> contents) {
+  public final ElementMarkup flatten(Iterable<? extends Instruction> contents) {
     return recorder.flatten(contents);
   }
 
   @Override
-  public final Html.Instruction.NoOp noop() {
+  public final Instruction.NoOp noop() {
     return HtmlInstruction.NOOP;
   }
 
@@ -228,7 +229,7 @@ public sealed abstract class MarkupPojo
   // ##################################################################
 
   @Override
-  public final Html.Instruction.OfAttribute attr(AttributeObject object) {
+  public final Instruction.OfAttribute attr(AttributeObject object) {
     final AttributeName name;
     name = object.attrName();
 
@@ -251,17 +252,17 @@ public sealed abstract class MarkupPojo
   // ##################################################################
 
   @Override
-  public final Html.Instruction.OfElement nbsp() {
+  public final ElementMarkup nbsp() {
     return recorder.raw("&nbsp;");
   }
 
   @Override
-  public final Html.Instruction.OfElement raw(String text) {
+  public final ElementMarkup raw(String text) {
     return recorder.raw(text);
   }
 
   @Override
-  public final Html.Instruction.OfElement text(String text) {
+  public final ElementMarkup text(String text) {
     return recorder.text(text);
   }
 
@@ -344,7 +345,7 @@ public sealed abstract class MarkupPojo
   }
 
   @Override
-  public final Html.Instruction.NoOp testableNewLine() {
+  public final Instruction.NoOp testableNewLine() {
     testable.newLine();
 
     return HtmlInstruction.NOOP;
@@ -1786,28 +1787,28 @@ public sealed abstract class MarkupPojo
   }
 
   @Override
-  final Html.Instruction.OfAmbiguous ambiguous(Ambiguous name, String value) {
+  final Instruction.OfAmbiguous ambiguous(Ambiguous name, String value) {
     return recorder.ambiguous(name, value);
   }
 
   @Override
-  final Html.Instruction.OfAttribute attr0(AttributeName name) {
+  final Instruction.OfAttribute attr0(AttributeName name) {
     return recorder.attribute0(name);
   }
 
   @Override
-  final Html.Instruction.OfAttribute attr0(AttributeName name, Object value) {
+  final Instruction.OfAttribute attr0(AttributeName name, Object value) {
     return recorder.attribute1(name, value);
   }
 
   @Override
-  final Html.Instruction.OfElement elem0(ElementName name, Html.Instruction... contents) {
+  final ElementMarkup elem0(ElementName name, Instruction... contents) {
     return recorder.element(name, contents);
   }
 
   @Override
-  final Html.Instruction.OfElement elem0(ElementName name, String text) {
-    final Html.Instruction t;
+  final ElementMarkup elem0(ElementName name, String text) {
+    final Instruction t;
     t = recorder.text(text);
 
     return recorder.element(name, t);

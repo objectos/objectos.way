@@ -16,7 +16,7 @@
 package objectox.html.rec;
 
 import java.util.Objects;
-import objectos.way.Html;
+import objectos.html.rec.Instruction;
 import objectox.html.Ambiguous;
 import objectox.html.HtmlByteProto;
 import objectox.html.HtmlInstruction;
@@ -33,7 +33,7 @@ final class AmbiguousRecorder {
     this.objects = objects;
   }
 
-  public final Html.Instruction.OfAmbiguous record(Ambiguous name, String value) {
+  public final Instruction.OfAmbiguous record(Ambiguous name, String value) {
     final String v;
     v = Objects.requireNonNull(value, "value == null");
 

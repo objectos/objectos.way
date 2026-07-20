@@ -15,21 +15,22 @@
  */
 package objectox.html;
 
-import objectos.way.Html;
+import objectos.html.rec.ElementMarkup;
+import objectos.html.rec.Instruction;
 import objectox.html.attr.AttributeOrNoOp;
 
 public final class HtmlInstruction
     implements
     AttributeOrNoOp,
-    Html.Instruction.OfAmbiguous,
-    Html.Instruction.OfElement,
-    Html.Instruction.OfFragment {
+    Instruction.OfAmbiguous,
+    ElementMarkup,
+    Instruction.OfFragment {
 
   public static final AttributeOrNoOp ATTRIBUTE = new HtmlInstruction();
 
   public static final HtmlInstruction ELEMENT = new HtmlInstruction();
 
-  public static final Html.Instruction.OfFragment FRAGMENT = new HtmlInstruction();
+  public static final Instruction.OfFragment FRAGMENT = new HtmlInstruction();
 
   public static final AttributeOrNoOp NOOP = new HtmlInstruction();
 

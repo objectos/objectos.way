@@ -13,23 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html;
+package objectos.html.rec;
 
-/// A fragment that takes four arguments.
+/// A fragment represents a set of markup or template instructions to be lazily
+/// applied.
 ///
-/// @param <T1> the type of the first argument
-/// @param <T2> the type of the second argument
-/// @param <T3> the type of the third argument
-/// @param <T4> the type of the fourth argument
-@FunctionalInterface
-public non-sealed interface Fragment4<T1, T2, T3, T4> extends Fragment {
-
-  /// Invokes this set of instructions.
-  ///
-  /// @param arg1 the first argument
-  /// @param arg2 the second argument
-  /// @param arg3 the third argument
-  /// @param arg4 the fourth argument
-  void invoke(T1 arg1, T2 arg2, T3 arg3, T4 arg4);
-
+/// The set of instructions MUST be of the same markup or template instance where
+/// this fragment will be included.
+public sealed interface Fragment
+    permits
+    Fragment0,
+    Fragment1,
+    Fragment2,
+    Fragment3,
+    Fragment4 {
 }

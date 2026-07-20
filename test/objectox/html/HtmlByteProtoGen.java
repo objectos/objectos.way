@@ -26,40 +26,9 @@ public class HtmlByteProtoGen extends FauxGenerator {
 
   @Override
   public final void execute() {
-    comment("internal instructions");
+    comment("document");
 
-    value("END");
-    value("INTERNAL");
-    value("INTERNAL3");
-    value("INTERNAL4");
-    value("INTERNAL5");
-    value("INTERNAL6");
-    value("LENGTH2");
-    value("LENGTH3");
-    value("MARKED3");
-    value("MARKED4");
-    value("MARKED5");
-    value("MARKED6");
-    value("NULL");
-    value("STANDARD_NAME");
-
-    comment("elements");
-
-    value("AMBIGUOUS1");
-    value("DOCTYPE");
-    value("ELEMENT");
-    value("FLATTEN");
-    value("FRAGMENT");
-    value("RAW");
-    value("TEXT");
-
-    comment("attributes");
-
-    value("ATTRIBUTE0");
-    value("ATTRIBUTE1");
-    value("ATTRIBUTE_EXT0");
-    value("ATTRIBUTE_EXT1");
-    value("CUSTOM_ATTR0");
-    value("CUSTOM_ATTR1");
+    value("START_DOCUMENT");
+    value("END_DOCUMENT");
   }
 }

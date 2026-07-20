@@ -13,11 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html.attr;
+package objectos.html.rec;
 
-import objectos.html.rec.Instruction;
-import objectox.html.HtmlInstruction;
+/// A fragment that takes two arguments.
+///
+/// @param <T1> the type of the first argument
+/// @param <T2> the type of the second argument
+@FunctionalInterface
+public non-sealed interface Fragment2<T1, T2> extends Fragment {
 
-public sealed interface AttributeOrNoOp
-    extends Instruction.OfAttribute, Instruction.OfDataOn, Instruction.NoOp
-    permits HtmlInstruction {}
+  /// Invokes this set of instructions.
+  ///
+  /// @param arg1 the first argument
+  /// @param arg2 the second argument
+  void invoke(T1 arg1, T2 arg2);
+
+}

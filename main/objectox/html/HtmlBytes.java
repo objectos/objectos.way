@@ -21,6 +21,9 @@ import objectox.html.rec.ByteArray;
 
 public final class HtmlBytes {
 
+  public static final byte START_DOCUMENT = -1;
+  public static final byte END_DOCUMENT = -2;
+
   private static final int BYTE_MASK = 0xFF;
 
   private HtmlBytes() {}

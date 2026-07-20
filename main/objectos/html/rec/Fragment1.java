@@ -13,13 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html;
+package objectos.html.rec;
 
-/// A fragment that takes no arguments.
+/// A fragment that takes one argument.
+///
+/// @param <T1> the type of the argument
 @FunctionalInterface
-public non-sealed interface Fragment0 extends Fragment {
+public non-sealed interface Fragment1<T1> extends Fragment {
 
   /// Invokes this set of instructions.
-  void invoke();
+  ///
+  /// @param arg1 the argument
+  void invoke(T1 arg1);
 
 }

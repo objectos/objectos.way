@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html.attr;
+package objectos.html.rec;
 
-import objectos.html.rec.Instruction;
+import objectos.html.rec.Instruction.AsMethod;
+import objectos.html.rec.Instruction.OfAmbiguous;
 import objectox.html.HtmlInstruction;
 
-public sealed interface AttributeOrNoOp
-    extends Instruction.OfAttribute, Instruction.OfDataOn, Instruction.NoOp
-    permits HtmlInstruction {}
+/// The encoded markup of an Objectos HTML element.
+public sealed interface ElementMarkup extends AsMethod permits OfAmbiguous, HtmlInstruction {}

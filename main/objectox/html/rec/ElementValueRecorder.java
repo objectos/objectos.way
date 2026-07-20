@@ -16,7 +16,7 @@
 package objectox.html.rec;
 
 import objectos.html.AttributeObject;
-import objectos.way.Html;
+import objectos.html.rec.Instruction;
 import objectox.html.HtmlInstruction;
 
 final class ElementValueRecorder {
@@ -31,7 +31,7 @@ final class ElementValueRecorder {
     this.elementInternalRecorder = elementInternalRecorder;
   }
 
-  public final int record(int mainContents, Html.Instruction value) {
+  public final int record(int mainContents, Instruction value) {
     if (value == HtmlInstruction.ATTRIBUTE ||
         value == HtmlInstruction.ELEMENT ||
         value == HtmlInstruction.FRAGMENT) {

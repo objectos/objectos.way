@@ -16,7 +16,8 @@
 package objectox.html.rec;
 
 import objectos.html.ElementName;
-import objectos.way.Html;
+import objectos.html.rec.ElementMarkup;
+import objectos.html.rec.Instruction;
 import objectox.html.HtmlInstruction;
 
 final class ElementRecorder {
@@ -83,7 +84,7 @@ final class ElementRecorder {
     );
   }
 
-  public final Html.Instruction.OfElement record(ElementName name, Html.Instruction... contents) {
+  public final ElementMarkup record(ElementName name, Instruction... contents) {
     final int auxStart;
     auxStart = elementValueEncoder.auxStart();
 
@@ -96,7 +97,7 @@ final class ElementRecorder {
     elementNameRecorder.record(name);
 
     for (int idx = 0; idx < contents.length; idx++) {
-      final Html.Instruction instruction;
+      final Instruction instruction;
       instruction = contents[idx];
 
       if (instruction == null) {

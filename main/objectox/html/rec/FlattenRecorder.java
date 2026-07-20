@@ -16,9 +16,8 @@
 package objectox.html.rec;
 
 import java.util.Objects;
-import objectos.way.Html;
-import objectos.way.Html.Instruction;
-import objectos.way.Html.Instruction.OfElement;
+import objectos.html.rec.ElementMarkup;
+import objectos.html.rec.Instruction;
 import objectox.html.HtmlByteProto;
 import objectox.html.HtmlInstruction;
 
@@ -56,8 +55,8 @@ final class FlattenRecorder {
     this.reverseOffsetRecorder = reverseOffsetRecorder;
   }
 
-  public final Html.Instruction.OfElement record(Html.Instruction... contents) {
-    final Html.Instruction[] values;
+  public final ElementMarkup record(Instruction... contents) {
+    final Instruction[] values;
     values = Objects.requireNonNull(contents, "contents == null");
 
     final int auxStart;
@@ -74,7 +73,7 @@ final class FlattenRecorder {
     main.addInt16(ByteArray.MAX_INT16);
 
     for (int idx = 0; idx < values.length; idx++) {
-      final Html.Instruction instruction;
+      final Instruction instruction;
       instruction = values[idx];
 
       if (instruction == null) {
@@ -96,7 +95,7 @@ final class FlattenRecorder {
     return HtmlInstruction.ELEMENT;
   }
 
-  public final OfElement record(Iterable<? extends Instruction> contents) {
+  public final ElementMarkup record(Iterable<? extends Instruction> contents) {
     final Iterable<? extends Instruction> values;
     values = Objects.requireNonNull(contents, "contents == null");
 
@@ -113,7 +112,7 @@ final class FlattenRecorder {
 
     main.addInt16(ByteArray.MAX_INT16);
 
-    for (Html.Instruction value : values) {
+    for (Instruction value : values) {
       if (value == null) {
         final String msg;
         msg = "contents provided a null instruction";

@@ -19,9 +19,9 @@ import static org.testng.Assert.assertEquals;
 
 import objectos.html.AttributeName;
 import objectos.html.ElementName;
-import objectos.html.Fragment0;
 import objectos.html.Id;
 import objectos.html.Markup;
+import objectos.html.rec.Fragment0;
 import objectox.html.Ambiguous;
 import objectox.html.HtmlByteProto;
 import objectox.html.HtmlBytes;
