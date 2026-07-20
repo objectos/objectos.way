@@ -87,11 +87,35 @@ public class PlayerTest {
   """)
   public void testCase02() {
     test(
-        m -> m.html(m.lang("pt-BR")),
+        m -> m.html(
+            m.lang("pt-BR")
+        ),
 
         """
         BeginDocument
         BeginStartTag(html)
+        Attribute(lang, pt-BR)
+        EndStartTag
+        EndTag(html)
+        EndDocument
+        """
+    );
+  }
+
+  @Test(description = """
+  <html class="no-js" lang="pt-BR"></html>
+  """)
+  public void testCase03() {
+    test(
+        m -> m.html(
+            m.className("no-js"),
+            m.lang("pt-BR")
+        ),
+
+        """
+        BeginDocument
+        BeginStartTag(html)
+        Attribute(class, no-js)
         Attribute(lang, pt-BR)
         EndStartTag
         EndTag(html)

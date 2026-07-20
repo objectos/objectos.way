@@ -118,7 +118,7 @@ public class RecorderTest {
   @Test(description = """
   <html class="no-js" lang="pt-BR"></html>
   """)
-  public void tc02() {
+  public void testCase03() {
     final Recorder html;
     html = Recorder.create();
 
@@ -128,8 +128,7 @@ public class RecorderTest {
         html.attribute1(AttributeName.LANG, "pt-BR")
     );
 
-    test(
-        html,
+    bytes(html.main(),
 
         HtmlByteProto.MARKED5,
         (byte) AttributeNamePojo.CLASS.index(),
@@ -156,12 +155,17 @@ public class RecorderTest {
         HtmlBytes.encodeInt0(19),
         HtmlByteProto.INTERNAL
     );
+
+    objects(html.objects(),
+
+        "no-js", "pt-BR"
+    );
   }
 
   @Test(description = """
   <html><head></head></html>
   """)
-  public void tc03() {
+  public void testCase04() {
     final Recorder html;
     html = Recorder.create();
 
@@ -170,8 +174,7 @@ public class RecorderTest {
         html.element(ElementName.HEAD)
     );
 
-    test(
-        html,
+    bytes(html.main(),
 
         HtmlByteProto.LENGTH2,
         HtmlBytes.encodeInt0(5),
@@ -193,6 +196,8 @@ public class RecorderTest {
         HtmlBytes.encodeInt0(15),
         HtmlByteProto.INTERNAL
     );
+
+    objects(html.objects());
   }
 
   @Test(description = """
