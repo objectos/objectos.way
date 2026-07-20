@@ -32,7 +32,16 @@ final class StartState implements State {
       proto = tape.peekByte();
 
       switch (proto) {
-        case HtmlByteProto.LENGTH2 -> { throw new UnsupportedOperationException("Implement me"); }
+        case HtmlByteProto.LENGTH2 -> {
+          tape.skipByte();
+
+          final int offset;
+          offset = tape.nextInt16();
+
+          tape.skip(offset);
+
+          continue;
+        }
 
         case HtmlByteProto.LENGTH3 -> { throw new UnsupportedOperationException("Implement me"); }
 

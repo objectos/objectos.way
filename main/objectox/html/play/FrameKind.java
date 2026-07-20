@@ -15,38 +15,16 @@
  */
 package objectox.html.play;
 
-import objectos.html.play.BeginDocument;
-import objectos.html.play.Piece;
+enum FrameKind {
 
-public final class BeginDocumentState implements BeginDocument, State {
+  DOC_ELEMENT,
 
-  private final Tape tape;
+  ELEMENT_NODES,
 
-  BeginDocumentState(Tape tape) {
-    this.tape = tape;
-  }
+  NEXT_ATTRIBUTE,
 
-  @Override
-  public final State compute() {
-    final NextDocumentNode next;
-    next = new NextDocumentNode(tape);
+  NEXT_ELEMENT_NODE,
 
-    return next.compute();
-  }
-
-  @Override
-  public final boolean hasNext() {
-    return true;
-  }
-
-  @Override
-  public final Piece next() {
-    return this;
-  }
-
-  @Override
-  public final String toString() {
-    return "BeginDocument";
-  }
+  ELEMENT_CHILD;
 
 }

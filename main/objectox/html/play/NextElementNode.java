@@ -22,12 +22,12 @@ final class NextElementNode {
 
   private final Tape tape;
 
-  private final ElementName name;
+  private final ElementName elementName;
 
-  NextElementNode(Tape tape, ElementName name) {
+  NextElementNode(Tape tape, ElementName elementName) {
     this.tape = tape;
 
-    this.name = name;
+    this.elementName = elementName;
   }
 
   public final State compute() {
@@ -36,12 +36,14 @@ final class NextElementNode {
       proto = tape.nextByte();
 
       switch (proto) {
-        case HtmlByteProto.ATTRIBUTE1 -> {
-          tape.skipVarIntLE();
+        case HtmlByteProto.ATTRIBUTE1 -> tape.skipVarIntLE();
+
+        case HtmlByteProto.ELEMENT -> {
+          return computeElement();
         }
 
         case HtmlByteProto.END -> {
-          return new EndTagState(tape, name);
+          return computeEnd();
         }
 
         default -> throw State.implMe(proto);
@@ -49,6 +51,27 @@ final class NextElementNode {
     }
 
     throw new IllegalStateException();
+  }
+
+  private State computeElement() {
+    final int offset;
+    offset = tape.nextVarIntLE();
+
+    tape.push(FrameKind.NEXT_ELEMENT_NODE);
+
+    tape.skip(-offset);
+
+    final NextElementElement next;
+    next = new NextElementElement(tape, elementName);
+
+    return next.compute();
+  }
+
+  private State computeEnd() {
+    final FrameKind parentKind;
+    parentKind = tape.pop();
+
+    return new EndTagState(tape, elementName, parentKind);
   }
 
 }

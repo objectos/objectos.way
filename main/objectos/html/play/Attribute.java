@@ -15,12 +15,12 @@
  */
 package objectos.html.play;
 
-import objectox.html.play.AttributeState;
+import objectox.html.play.AttributePiece;
 
 /// An non-boolean attribute in an element start tag.
 public sealed interface Attribute
     extends Piece
-    permits AttributeState {
+    permits AttributePiece {
 
   /// Returns the attribute name.
   ///

@@ -23,20 +23,18 @@ public final class EndStartTagState implements EndStartTag, State {
 
   private final Tape tape;
 
-  private final ElementName name;
+  private final ElementName elementName;
 
-  EndStartTagState(Tape tape, ElementName name) {
+  EndStartTagState(Tape tape, ElementName elementName) {
     this.tape = tape;
 
-    this.name = name;
+    this.elementName = elementName;
   }
 
   @Override
   public final State compute() {
-    tape.pop(); // return 2 element start
-
     final NextElementNode next;
-    next = new NextElementNode(tape, name);
+    next = new NextElementNode(tape, elementName);
 
     return next.compute();
   }

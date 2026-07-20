@@ -18,38 +18,31 @@ package objectox.html.play;
 import objectos.html.ElementName;
 import objectos.html.play.EndTag;
 import objectos.html.play.Piece;
-import objectox.html.HtmlByteProto;
 
 public final class EndTagState implements EndTag, State {
 
   private final Tape tape;
 
-  private final ElementName name;
+  private final ElementName elementName;
 
-  EndTagState(Tape tape, ElementName name) {
+  private final FrameKind parentKind;
+
+  EndTagState(Tape tape, ElementName elementName, FrameKind parentKind) {
     this.tape = tape;
 
-    this.name = name;
+    this.elementName = elementName;
+
+    this.parentKind = parentKind;
   }
 
   @Override
   public final State compute() {
-    tape.pop(); // return 2 parent
+    return switch (parentKind) {
+      case DOC_ELEMENT -> new NextDocumentNode(tape).compute();
 
-    final byte proto;
-    proto = tape.nextByte();
+      case ELEMENT_CHILD -> new NextElementNode(tape, elementName).compute();
 
-    return switch (proto) {
-      case HtmlByteProto.ROOT_ELEMENT -> {
-        final int offset;
-        offset = tape.nextInt16();
-
-        tape.skip(offset);
-
-        yield new NextDocumentNode(tape).compute();
-      }
-
-      default -> throw State.implMe(proto);
+      default -> throw new UnsupportedOperationException("Implement me :: parentKind=" + parentKind);
     };
   }
 
@@ -65,7 +58,7 @@ public final class EndTagState implements EndTag, State {
 
   @Override
   public final String name() {
-    return name.name();
+    return elementName.name();
   }
 
   @Override

@@ -19,47 +19,38 @@ import static org.testng.Assert.assertEquals;
 
 import objectox.html.HtmlByteProto;
 import objectox.html.HtmlBytes;
-import objectox.html.attr.AttributeNamePojo;
 import objectox.html.elem.ElementNamePojo;
 import org.testng.annotations.Test;
 
-public class AttributeStateTest {
+public class NextElementNodeTest {
 
   @Test
-  public void compute02() {
+  public void compute01() {
     final Tape tape;
     tape = TapeY.create(opts -> {
       opts.main(
-          HtmlByteProto.MARKED5,
-          (byte) AttributeNamePojo.LANG.index(),
-          HtmlBytes.encodeInt0(0),
-          HtmlBytes.encodeInt1(0),
-          HtmlByteProto.INTERNAL5,
-
           HtmlByteProto.ELEMENT,
-          HtmlBytes.encodeInt0(7),
-          HtmlBytes.encodeInt1(7),
+          HtmlBytes.encodeInt0(5),
+          HtmlBytes.encodeInt1(5),
           HtmlByteProto.STANDARD_NAME,
           (byte) ElementNamePojo.HTML.index(),
-          HtmlByteProto.ATTRIBUTE1,
-          HtmlBytes.encodeInt0(11),
           HtmlByteProto.END,
-          HtmlBytes.encodeInt0(12),
+          HtmlBytes.encodeInt0(5),
           HtmlByteProto.INTERNAL
       );
 
-      opts.mainIndex = 12;
+      opts.mainIndex = 5;
 
-      opts.frame(FrameKind.ELEMENT_NODES, 10);
+      opts.frame(FrameKind.DOC_ELEMENT, 8);
     });
 
-    final AttributeState subject;
-    subject = new AttributeState(tape, ElementNamePojo.HTML, null);
+    final NextElementNode subject;
+    subject = new NextElementNode(tape, ElementNamePojo.HTML);
 
     final State res;
     res = subject.compute();
 
-    assertEquals(res.getClass(), EndStartTagState.class);
+    assertEquals(res.getClass(), EndTagState.class);
   }
 
 }

@@ -35,7 +35,7 @@ final class NextDocumentNode {
 
   private State compute0() {
     final byte proto;
-    proto = tape.peekByte();
+    proto = tape.nextByte();
 
     return switch (proto) {
       case HtmlByteProto.ELEMENT -> new NextDocumentElement(tape).compute();

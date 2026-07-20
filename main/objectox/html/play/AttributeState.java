@@ -15,35 +15,27 @@
  */
 package objectox.html.play;
 
-import objectos.html.AttributeName;
 import objectos.html.ElementName;
-import objectos.html.play.Attribute;
 import objectos.html.play.Piece;
 
-public final class AttributeState implements Attribute, State {
+public final class AttributeState implements State {
 
   private final Tape tape;
 
   private final ElementName elementName;
 
-  private final AttributeName name;
+  private final AttributePiece attribute;
 
-  private final String value;
-
-  AttributeState(Tape tape, ElementName elementName, AttributeName name, String value) {
+  AttributeState(Tape tape, ElementName elementName, AttributePiece attribute) {
     this.tape = tape;
 
     this.elementName = elementName;
 
-    this.name = name;
-
-    this.value = value;
+    this.attribute = attribute;
   }
 
   @Override
   public final State compute() {
-    tape.pop();
-
     final NextElementAttribute next;
     next = new NextElementAttribute(tape, elementName);
 
@@ -57,22 +49,12 @@ public final class AttributeState implements Attribute, State {
 
   @Override
   public final Piece next() {
-    return this;
-  }
-
-  @Override
-  public final String name() {
-    return name.name();
-  }
-
-  @Override
-  public final String value() {
-    return value;
+    return attribute;
   }
 
   @Override
   public final String toString() {
-    return "Attribute(" + name() + ", " + value + ")";
+    return attribute.toString();
   }
 
 }

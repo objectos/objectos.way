@@ -207,6 +207,7 @@ public final class ElementNamePojo implements ElementName {
 
   public final int index() { return index; }
 
+  @Override
   public final String name() { return name; }
 
   private static final class Names {

@@ -16,39 +16,37 @@
 package objectox.html.play;
 
 import objectos.html.ElementName;
-import objectos.html.play.Piece;
 import objectos.html.play.BeginStartTag;
+import objectos.html.play.Piece;
 
 public final class BeginStartTagState implements BeginStartTag, State {
 
   private final Tape tape;
 
-  private final ElementName name;
+  private final ElementName elementName;
 
-  BeginStartTagState(Tape tape, ElementName name) {
+  BeginStartTagState(Tape tape, ElementName elementName) {
     this.tape = tape;
 
-    this.name = name;
+    this.elementName = elementName;
   }
 
   @Override
   public final State compute() {
-    tape.push();
-
     final NextElementAttribute nextAttribute;
-    nextAttribute = new NextElementAttribute(tape, name);
+    nextAttribute = new NextElementAttribute(tape, elementName);
 
     return nextAttribute.compute();
   }
 
   @Override
-  public final boolean hasNext() {
-    return true;
+  public final String name() {
+    return elementName.name();
   }
 
   @Override
-  public final String name() {
-    return name.name();
+  public final boolean hasNext() {
+    return true;
   }
 
   @Override
@@ -58,7 +56,7 @@ public final class BeginStartTagState implements BeginStartTag, State {
 
   @Override
   public final String toString() {
-    return "BeginStartTag(" + name() + ")";
+    return "BeginStartTag(" + elementName.name() + ")";
   }
 
 }

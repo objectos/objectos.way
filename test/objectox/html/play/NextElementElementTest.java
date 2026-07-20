@@ -22,34 +22,7 @@ import objectox.html.HtmlBytes;
 import objectox.html.elem.ElementNamePojo;
 import org.testng.annotations.Test;
 
-public class EndStartTagStateTest {
-
-  @Test(enabled = false)
-  public void compute01() {
-    final Tape tape;
-    tape = TapeY.create(opts -> {
-      opts.main(
-          HtmlByteProto.ELEMENT,
-          HtmlBytes.encodeInt0(5),
-          HtmlBytes.encodeInt1(5),
-          HtmlByteProto.STANDARD_NAME,
-          (byte) ElementNamePojo.HTML.index(),
-          HtmlByteProto.END,
-          HtmlBytes.encodeInt0(5),
-          HtmlByteProto.INTERNAL
-      );
-
-      opts.mainIndex = 5;
-    });
-
-    final EndStartTagState subject;
-    subject = new EndStartTagState(tape, ElementNamePojo.HTML);
-
-    final State res;
-    res = subject.compute();
-
-    assertEquals(res.getClass(), EndTagState.class);
-  }
+public class NextElementElementTest {
 
   @Test(enabled = false)
   public void compute04() {
@@ -77,21 +50,22 @@ public class EndStartTagStateTest {
           HtmlByteProto.INTERNAL
       );
 
-      opts.mainIndex = 13;
+      opts.mainIndex = 1;
     });
 
-    final EndStartTagState subject;
-    subject = new EndStartTagState(tape, ElementNamePojo.HTML);
+    final NextDocumentElement subject;
+    subject = new NextDocumentElement(tape);
 
-    final State res;
+    final BeginStartTagState res;
     res = subject.compute();
 
-    assertEquals(res.getClass(), BeginStartTagState.class);
+    assertEquals(res.hasNext(), true);
+    assertEquals(res.name(), "html");
     assertEquals(tape.nextByte(), HtmlByteProto.END);
     assertEquals(tape.pop(), FrameKind.ELEMENT_NODES);
     assertEquals(tape.nextByte(), HtmlByteProto.END);
-    assertEquals(tape.pop(), FrameKind.ELEMENT_CHILD);
-    assertEquals(tape.nextByte(), HtmlByteProto.END);
+    assertEquals(tape.pop(), FrameKind.DOC_ELEMENT);
+    assertEquals(tape.hasByte(), false);
   }
 
 }

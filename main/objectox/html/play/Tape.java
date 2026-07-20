@@ -25,12 +25,11 @@ final class Tape {
 
   private int mainIndex;
 
-  @SuppressWarnings("unused")
   private final Object[] objects;
 
-  private int[] stack = Util.EMPTY_INT_ARRAY;
+  private Frame[] frames = new Frame[10];
 
-  private int stackIndex = -1;
+  private int framesIndex;
 
   Tape(ByteArray main, ObjectArray objects) {
     this.main = main.unwrap();
@@ -38,16 +37,16 @@ final class Tape {
     this.objects = objects.unwrap();
   }
 
-  Tape(byte[] main, int mainIndex, Object[] objects, int[] stack, int stackIndex) {
+  Tape(byte[] main, int mainIndex, Object[] objects, Frame[] frames, int framesIndex) {
     this.main = main;
 
     this.mainIndex = mainIndex;
 
     this.objects = objects;
 
-    this.stack = stack;
+    this.frames = frames;
 
-    this.stackIndex = stackIndex;
+    this.framesIndex = framesIndex;
   }
 
   public final boolean hasByte() {
@@ -116,18 +115,31 @@ final class Tape {
     return main[mainIndex];
   }
 
-  public final void pop() {
-    mainIndex = stack[stackIndex--];
+  public final FrameKind pop() {
+    framesIndex--;
+
+    final Frame f;
+    f = frames[framesIndex];
+
+    mainIndex = f.index();
+
+    return f.kind();
   }
 
-  public final void push() {
-    stack = Util.growIfNecessary(stack, ++stackIndex);
-
-    stack[stackIndex] = mainIndex;
+  public final void push(FrameKind kind) {
+    push(kind, 0);
   }
 
-  public final void set(byte value) {
-    main[mainIndex] = value;
+  public final void push(FrameKind kind, int offset) {
+    final int value;
+    value = mainIndex + offset;
+
+    final int idx;
+    idx = framesIndex++;
+
+    frames = Util.growIfNecessary(frames, idx);
+
+    frames[idx] = new Frame(kind, value);
   }
 
   public final void skip(int value) {

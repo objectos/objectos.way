@@ -15,38 +15,19 @@
  */
 package objectox.html.play;
 
-import objectos.html.play.BeginDocument;
-import objectos.html.play.Piece;
+import objectos.html.AttributeName;
+import objectos.html.play.Attribute;
 
-public final class BeginDocumentState implements BeginDocument, State {
-
-  private final Tape tape;
-
-  BeginDocumentState(Tape tape) {
-    this.tape = tape;
-  }
+public record AttributePiece(AttributeName attributeName, String value) implements Attribute {
 
   @Override
-  public final State compute() {
-    final NextDocumentNode next;
-    next = new NextDocumentNode(tape);
-
-    return next.compute();
-  }
-
-  @Override
-  public final boolean hasNext() {
-    return true;
-  }
-
-  @Override
-  public final Piece next() {
-    return this;
+  public final String name() {
+    return attributeName.name();
   }
 
   @Override
   public final String toString() {
-    return "BeginDocument";
+    return "Attribute(" + name() + ", " + value + ")";
   }
 
 }

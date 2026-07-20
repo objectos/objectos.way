@@ -15,32 +15,87 @@
  */
 package objectox.html.play;
 
+import objectos.html.AttributeName;
 import objectos.html.ElementName;
 import objectox.html.HtmlByteProto;
+import objectox.html.attr.AttributeNamePojo;
 
 final class NextElementAttribute {
 
   private final Tape tape;
 
-  private final ElementName name;
+  private final ElementName elementName;
 
   NextElementAttribute(Tape tape, ElementName name) {
     this.tape = tape;
 
-    this.name = name;
+    this.elementName = name;
   }
 
   public final State compute() {
-    final byte proto;
-    proto = tape.nextByte();
+    while (tape.hasByte()) {
+      final byte proto;
+      proto = tape.nextByte();
 
-    return switch (proto) {
-      case HtmlByteProto.ATTRIBUTE1 -> new NextAttribute1(tape, name).compute();
+      switch (proto) {
+        case HtmlByteProto.ELEMENT -> tape.skipVarIntLE();
 
-      case HtmlByteProto.END -> new EndStartTagState(tape, name);
+        case HtmlByteProto.ATTRIBUTE1 -> {
+          return computeAttribute1();
+        }
 
-      default -> throw State.implMe(proto);
-    };
+        case HtmlByteProto.END -> {
+          return computeEnd();
+        }
+
+        default -> throw State.implMe(proto);
+      }
+    }
+
+    throw new IllegalStateException();
+  }
+
+  private State computeAttribute1() {
+    final int offset;
+    offset = tape.nextVarIntLE();
+
+    tape.push(FrameKind.NEXT_ATTRIBUTE);
+
+    tape.skip(-offset);
+
+    final byte nameIndex;
+    nameIndex = tape.nextByte();
+
+    final AttributeName attributeName;
+    attributeName = AttributeNamePojo.get(nameIndex);
+
+    final int valueIndex;
+    valueIndex = tape.nextInt16();
+
+    final String value;
+    value = tape.string(valueIndex);
+
+    final AttributePiece attribute;
+    attribute = new AttributePiece(attributeName, value);
+
+    final AttributeState result;
+    result = new AttributeState(tape, elementName, attribute);
+
+    final FrameKind frame;
+    frame = tape.pop();
+
+    assert frame == FrameKind.NEXT_ATTRIBUTE;
+
+    return result;
+  }
+
+  private State computeEnd() {
+    final FrameKind frame;
+    frame = tape.pop();
+
+    assert frame == FrameKind.ELEMENT_NODES;
+
+    return new EndStartTagState(tape, elementName);
   }
 
 }

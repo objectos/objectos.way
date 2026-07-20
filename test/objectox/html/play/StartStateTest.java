@@ -46,7 +46,14 @@ public class StartStateTest {
     final Tape tape;
     tape = TapeY.create(opts -> {
       opts.main(
-          HtmlByteProto.ELEMENT
+          HtmlByteProto.ELEMENT,
+          HtmlBytes.encodeInt0(5),
+          HtmlBytes.encodeInt1(5),
+          HtmlByteProto.STANDARD_NAME,
+          (byte) ElementNamePojo.HTML.index(),
+          HtmlByteProto.END,
+          HtmlBytes.encodeInt0(5),
+          HtmlByteProto.INTERNAL
       );
     });
 
@@ -121,6 +128,43 @@ public class StartStateTest {
           HtmlBytes.encodeInt0(13),
           HtmlByteProto.END,
           HtmlBytes.encodeInt0(19),
+          HtmlByteProto.INTERNAL
+      );
+    });
+
+    final StartState subject;
+    subject = new StartState(tape);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res.getClass(), BeginDocumentState.class);
+    assertEquals(tape.nextByte(), HtmlByteProto.ELEMENT);
+  }
+
+  @Test
+  public void compute04() {
+    final Tape tape;
+    tape = TapeY.create(opts -> {
+      opts.main(
+          HtmlByteProto.LENGTH2,
+          HtmlBytes.encodeInt0(5),
+          HtmlBytes.encodeInt1(5),
+          HtmlByteProto.STANDARD_NAME,
+          (byte) ElementNamePojo.HEAD.index(),
+          HtmlByteProto.END,
+          HtmlBytes.encodeInt0(5),
+          HtmlByteProto.INTERNAL,
+
+          HtmlByteProto.ELEMENT,
+          HtmlBytes.encodeInt0(7),
+          HtmlBytes.encodeInt1(7),
+          HtmlByteProto.STANDARD_NAME,
+          (byte) ElementNamePojo.HTML.index(),
+          HtmlByteProto.ELEMENT,
+          HtmlBytes.encodeInt0(14),
+          HtmlByteProto.END,
+          HtmlBytes.encodeInt0(15),
           HtmlByteProto.INTERNAL
       );
     });

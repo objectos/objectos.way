@@ -124,4 +124,26 @@ public class PlayerTest {
     );
   }
 
+  @Test(enabled = false, description = """
+  <html><head></head></html>
+  """)
+  public void testCase04() {
+    test(
+        m -> m.html(
+            m.head()
+        ),
+
+        """
+        BeginDocument
+        BeginStartTag(html)
+        EndStartTag
+        BeginStartTag(head)
+        EndStartTag
+        EndTag(head)
+        EndTag(html)
+        EndDocument
+        """
+    );
+  }
+
 }

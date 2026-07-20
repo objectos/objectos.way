@@ -140,7 +140,6 @@ final class Encoder {
     return startIndex + offset;
   }
 
-  @SuppressWarnings("unused")
   private int encodeLength2(int contents) {
     contents++;
 
@@ -158,7 +157,6 @@ final class Encoder {
     return contents + length;
   }
 
-  @SuppressWarnings("unused")
   private int encodeLength3(int contents) {
     contents++;
 

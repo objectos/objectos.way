@@ -17,7 +17,6 @@ package objectox.html.play;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.html.ElementName;
 import objectox.html.HtmlByteProto;
 import objectox.html.HtmlBytes;
 import objectox.html.elem.ElementNamePojo;
@@ -30,7 +29,7 @@ public class EndTagStateTest {
     final Tape tape;
     tape = TapeY.create(opts -> {
       opts.main(
-          HtmlByteProto.ROOT_ELEMENT,
+          HtmlByteProto.ELEMENT,
           HtmlBytes.encodeInt0(5),
           HtmlBytes.encodeInt1(5),
           HtmlByteProto.STANDARD_NAME,
@@ -38,11 +37,11 @@ public class EndTagStateTest {
           HtmlByteProto.END
       );
 
-      opts.stack(0);
+      opts.mainIndex = 6;
     });
 
     final EndTagState subject;
-    subject = new EndTagState(tape, ElementName.HTML);
+    subject = new EndTagState(tape, ElementNamePojo.HTML, FrameKind.DOC_ELEMENT);
 
     final State res;
     res = subject.compute();

@@ -16,41 +16,39 @@
 package objectox.html.play;
 
 import objectos.html.ElementName;
-import objectox.html.attr.AttributeNamePojo;
+import objectox.html.HtmlByteProto;
+import objectox.html.elem.ElementNamePojo;
 
-final class NextAttribute1 {
+final class NextElementElement {
 
   private final Tape tape;
 
+  @SuppressWarnings("unused")
   private final ElementName elementName;
 
-  NextAttribute1(Tape tape, ElementName name) {
+  NextElementElement(Tape tape, ElementName elementName) {
     this.tape = tape;
 
-    this.elementName = name;
+    this.elementName = elementName;
   }
 
-  public final State compute() {
-    final int offset;
-    offset = tape.nextVarIntLE();
+  public final BeginStartTagState compute() {
+    tape.skipInt16();
 
-    tape.push(); // return 2 element
+    final byte standardName;
+    standardName = tape.nextByte();
 
-    tape.skip(-offset);
+    assert standardName == HtmlByteProto.STANDARD_NAME;
 
-    final byte nameIndex;
-    nameIndex = tape.nextByte();
+    final int ordinal;
+    ordinal = tape.nextInt8();
 
-    final AttributeNamePojo name;
-    name = AttributeNamePojo.get(nameIndex);
+    final ElementNamePojo name;
+    name = ElementNamePojo.get(ordinal);
 
-    final int valueIndex;
-    valueIndex = tape.nextInt16();
+    tape.push(FrameKind.ELEMENT_NODES);
 
-    final String value;
-    value = tape.string(valueIndex);
-
-    return new AttributeState(tape, elementName, name, value);
+    return new BeginStartTagState(tape, name);
   }
 
 }

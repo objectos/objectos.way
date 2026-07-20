@@ -26,14 +26,11 @@ final class NextDocumentElement {
     this.tape = tape;
   }
 
-  public final State compute() {
-    tape.push();
+  public final BeginStartTagState compute() {
+    final int offset;
+    offset = tape.nextInt16();
 
-    tape.set(HtmlByteProto.ROOT_ELEMENT);
-
-    tape.skipByte();
-
-    tape.skipInt16();
+    tape.push(FrameKind.DOC_ELEMENT, offset);
 
     final byte standardName;
     standardName = tape.nextByte();
@@ -45,6 +42,8 @@ final class NextDocumentElement {
 
     final ElementNamePojo name;
     name = ElementNamePojo.get(ordinal);
+
+    tape.push(FrameKind.ELEMENT_NODES);
 
     return new BeginStartTagState(tape, name);
   }

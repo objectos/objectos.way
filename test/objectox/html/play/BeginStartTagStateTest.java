@@ -17,7 +17,6 @@ package objectox.html.play;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.html.ElementName;
 import objectox.html.HtmlByteProto;
 import objectox.html.HtmlBytes;
 import objectox.html.attr.AttributeNamePojo;
@@ -31,12 +30,23 @@ public class BeginStartTagStateTest {
     final Tape tape;
     tape = TapeY.create(opts -> {
       opts.main(
-          HtmlByteProto.END
+          HtmlByteProto.ELEMENT,
+          HtmlBytes.encodeInt0(5),
+          HtmlBytes.encodeInt1(5),
+          HtmlByteProto.STANDARD_NAME,
+          (byte) ElementNamePojo.HTML.index(),
+          HtmlByteProto.END,
+          HtmlBytes.encodeInt0(5),
+          HtmlByteProto.INTERNAL
       );
+
+      opts.mainIndex = 5;
+
+      opts.frame(FrameKind.ELEMENT_NODES, 5);
     });
 
     final BeginStartTagState subject;
-    subject = new BeginStartTagState(tape, ElementName.HTML);
+    subject = new BeginStartTagState(tape, ElementNamePojo.HTML);
 
     final State res;
     res = subject.compute();
@@ -70,15 +80,57 @@ public class BeginStartTagStateTest {
       opts.mainIndex = 10;
 
       opts.objects("pt-BR");
+
+      opts.frame(FrameKind.ELEMENT_NODES, 10);
     });
 
     final BeginStartTagState subject;
-    subject = new BeginStartTagState(tape, ElementName.HTML);
+    subject = new BeginStartTagState(tape, ElementNamePojo.HTML);
 
     final State res;
     res = subject.compute();
 
     assertEquals(res.getClass(), AttributeState.class);
+  }
+
+  @Test
+  public void compute04() {
+    final Tape tape;
+    tape = TapeY.create(opts -> {
+      opts.main(
+          HtmlByteProto.LENGTH2,
+          HtmlBytes.encodeInt0(5),
+          HtmlBytes.encodeInt1(5),
+          HtmlByteProto.STANDARD_NAME,
+          (byte) ElementNamePojo.HEAD.index(),
+          HtmlByteProto.END,
+          HtmlBytes.encodeInt0(5),
+          HtmlByteProto.INTERNAL,
+
+          HtmlByteProto.ELEMENT,
+          HtmlBytes.encodeInt0(7),
+          HtmlBytes.encodeInt1(7),
+          HtmlByteProto.STANDARD_NAME,
+          (byte) ElementNamePojo.HTML.index(),
+          HtmlByteProto.ELEMENT,
+          HtmlBytes.encodeInt0(14),
+          HtmlByteProto.END,
+          HtmlBytes.encodeInt0(15),
+          HtmlByteProto.INTERNAL
+      );
+
+      opts.mainIndex = 13;
+
+      opts.frame(FrameKind.ELEMENT_NODES, 13);
+    });
+
+    final BeginStartTagState subject;
+    subject = new BeginStartTagState(tape, ElementNamePojo.HTML);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res.getClass(), EndStartTagState.class);
   }
 
 }

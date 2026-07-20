@@ -26,9 +26,9 @@ final class TapeY {
 
   Object[] objects = Util.EMPTY_OBJECT_ARRAY;
 
-  int[] stack = Util.EMPTY_INT_ARRAY;
+  Frame[] frames = new Frame[0];
 
-  int stackIndex = -1;
+  int framesIndex;
 
   public static Tape create(Consumer<? super TapeY> opts) {
     final TapeY y;
@@ -47,10 +47,13 @@ final class TapeY {
     objects = values;
   }
 
-  public final void stack(int... values) {
-    stack = values;
+  public final void frame(FrameKind kind, int value) {
+    final int idx;
+    idx = framesIndex++;
 
-    stackIndex = stack.length - 1;
+    frames = Util.growIfNecessary(frames, idx);
+
+    frames[idx] = new Frame(kind, value);
   }
 
   private Tape build() {
@@ -61,9 +64,9 @@ final class TapeY {
 
         objects,
 
-        stack,
+        frames,
 
-        stackIndex
+        framesIndex
     );
   }
 
