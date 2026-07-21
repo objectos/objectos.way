@@ -18,6 +18,9 @@ package objectos.html.rec;
 import objectos.html.rec.Instruction.AsMethod;
 import objectos.html.rec.Instruction.OfAmbiguous;
 import objectox.html.HtmlInstruction;
+import objectox.html.rec.ElementInstruction;
 
-/// The encoded markup of an Objectos HTML element.
-public sealed interface ElementMarkup extends AsMethod permits OfAmbiguous, HtmlInstruction {}
+/// Represents the markup of an Objectos HTML element.
+public sealed interface ElementMarkup
+    extends AsMethod
+    permits OfAmbiguous, HtmlInstruction, ElementInstruction {}

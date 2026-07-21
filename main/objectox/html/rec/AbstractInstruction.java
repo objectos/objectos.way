@@ -13,12 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html.attr;
+package objectox.html.rec;
 
-import objectos.html.rec.AttributeMarkup;
-import objectos.html.rec.Instruction;
-import objectox.html.HtmlInstruction;
+abstract class AbstractInstruction {
 
-public sealed interface AttributeOrNoOp
-    extends AttributeMarkup, Instruction.OfDataOn, Instruction.NoOp
-    permits HtmlInstruction {}
+  private boolean consumed;
+
+  public final void consume() {
+    if (consumed) {
+      final String msg;
+      msg = "Markup instance has already been consumed: " + this;
+
+      throw new IllegalStateException(msg);
+    } else {
+      consumed = true;
+    }
+  }
+
+  public final boolean consumed() {
+    return consumed;
+  }
+
+}

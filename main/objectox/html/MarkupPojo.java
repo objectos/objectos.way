@@ -22,6 +22,7 @@ import objectos.html.AttributeObject;
 import objectos.html.Component;
 import objectos.html.ElementName;
 import objectos.html.Markup;
+import objectos.html.rec.AttributeMarkup;
 import objectos.html.rec.ElementMarkup;
 import objectos.html.rec.Fragment0;
 import objectos.html.rec.Fragment1;
@@ -185,7 +186,7 @@ public sealed abstract class MarkupPojo
   }
 
   @Override
-  public final Instruction.OfAttribute css(String value) {
+  public final AttributeMarkup css(String value) {
     final String formatted;
     formatted = AttributeNamePojo.formatAttrValue(value, sb);
 
@@ -229,7 +230,7 @@ public sealed abstract class MarkupPojo
   // ##################################################################
 
   @Override
-  public final Instruction.OfAttribute attr(AttributeObject object) {
+  public final AttributeMarkup attr(AttributeObject object) {
     final AttributeName name;
     name = object.attrName();
 
@@ -1792,12 +1793,12 @@ public sealed abstract class MarkupPojo
   }
 
   @Override
-  final Instruction.OfAttribute attr0(AttributeName name) {
+  final AttributeMarkup attr0(AttributeName name) {
     return recorder.attribute0(name);
   }
 
   @Override
-  final Instruction.OfAttribute attr0(AttributeName name, Object value) {
+  final AttributeMarkup attr0(AttributeName name, Object value) {
     return recorder.attribute1(name, value);
   }
 

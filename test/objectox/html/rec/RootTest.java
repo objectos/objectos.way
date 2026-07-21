@@ -16,56 +16,54 @@
 package objectox.html.rec;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertSame;
 
 import objectos.html.AttributeName;
 import objectos.html.ElementName;
+import objectos.html.rec.AttributeMarkup;
+import objectos.html.rec.ElementMarkup;
 import objectos.html.rec.Instruction;
 import org.testng.annotations.Test;
 
-public class DocumentRecorderTest {
+public class RootTest {
 
-  @Test(description = "empty document")
-  public void record00() {
-    final DocumentRecorder subject;
-    subject = DocumentRecorder.create();
+  @Test
+  public void testCase01() {
+    final Root subject;
+    subject = Root.create(1);
 
-    final Instruction[] res;
-    res = subject.record();
+    final AttributeMarkup attr;
+    attr = AttributeInstruction.of(AttributeName.LANG, "pt-BR");
 
-    assertEquals(res.length, 0);
-  }
-
-  @Test(description = """
-  <html></html>
-  """)
-  public void record01() {
-    final DocumentRecorder subject;
-    subject = DocumentRecorder.create();
-
-    subject.element(ElementName.HTML);
+    assertSame(subject.add(attr), attr);
 
     final Instruction[] res;
-    res = subject.record();
+    res = subject.compile();
 
     assertEquals(res.length, 1);
+    assertEquals(res[0], attr);
   }
 
-  @Test(description = """
-  <html lang="pt-BR"></html>
-  """)
-  public void record02() {
-    final DocumentRecorder subject;
-    subject = DocumentRecorder.create();
+  @Test
+  public void testCase02() {
+    final Root subject;
+    subject = Root.create(1);
 
-    subject.element(
-        ElementName.HTML,
-        subject.attribute(AttributeName.LANG, "pt-BR")
-    );
+    final AttributeMarkup attr;
+    attr = AttributeInstruction.of(AttributeName.LANG, "pt-BR");
+
+    assertSame(subject.add(attr), attr);
+
+    final ElementMarkup elem;
+    elem = ElementInstruction.of(ElementName.HTML, attr);
+
+    assertSame(subject.add(elem), elem);
 
     final Instruction[] res;
-    res = subject.record();
+    res = subject.compile();
 
     assertEquals(res.length, 1);
+    assertEquals(res[0], elem);
   }
 
 }

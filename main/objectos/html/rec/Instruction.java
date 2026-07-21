@@ -16,13 +16,15 @@
 package objectos.html.rec;
 
 import objectos.html.AttributeObject;
+import objectos.html.rec.Instruction.AsMethod;
+import objectos.html.rec.Instruction.AsObject;
+import objectos.html.rec.Instruction.OfVoid;
 import objectos.way.Html;
 import objectox.html.HtmlInstruction;
 import objectox.html.attr.AttributeOrNoOp;
 
-/// Represents an instruction that generates part of the output of an
-/// HTML template.
-public sealed interface Instruction {
+/// Represents some markup of an Objectos HTML document.
+public sealed interface Instruction permits AsObject, AsMethod, OfVoid {
 
   /**
    * Class of instructions that are represented by object instances.
@@ -43,7 +45,7 @@ public sealed interface Instruction {
       extends Instruction
       permits
       ElementMarkup,
-      OfAttribute,
+      AttributeMarkup,
       OfDataOn,
       OfFragment,
       NoOp {}
@@ -51,12 +53,7 @@ public sealed interface Instruction {
   /**
    * An instruction to generate an ambiguous element in a template.
    */
-  sealed interface OfAmbiguous extends OfAttribute, ElementMarkup permits HtmlInstruction {}
-
-  /**
-   * An instruction to generate an HTML attribute in template.
-   */
-  sealed interface OfAttribute extends AsMethod, OfVoid permits OfAmbiguous, AttributeOrNoOp {}
+  sealed interface OfAmbiguous extends AttributeMarkup, ElementMarkup permits HtmlInstruction {}
 
   /**
    * An instruction to generate a {@code data-on-*} HTML attribute in a
@@ -76,7 +73,7 @@ public sealed interface Instruction {
   sealed interface OfVoid extends Instruction
       permits
       AttributeObject,
-      OfAttribute,
+      AttributeMarkup,
       OfDataOn,
       OfFragment,
       NoOp {}
@@ -89,6 +86,18 @@ public sealed interface Instruction {
   /// @return the no-op instruction
   static NoOp noop() {
     return HtmlInstruction.NOOP;
+  }
+
+  /// Consumes this markup.
+  default void consume() {
+    // no-op
+  }
+
+  /// Returns `true` if this markup has been consumed as part of another markup.
+  ///
+  /// @return `true` if this markup has been consumed; `false` otherwise
+  default boolean consumed() {
+    return false;
   }
 
 }

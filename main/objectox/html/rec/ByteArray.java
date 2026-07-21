@@ -49,6 +49,10 @@ public final class ByteArray {
     index = bytes.length;
   }
 
+  public static ByteArray create() {
+    return new ByteArray(10);
+  }
+
   public static ByteArray of(int... values) {
     final int length;
     length = values.length;

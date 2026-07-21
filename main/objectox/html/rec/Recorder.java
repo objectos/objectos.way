@@ -19,6 +19,7 @@ import objectos.html.AttributeName;
 import objectos.html.Component;
 import objectos.html.ElementName;
 import objectos.html.Markup;
+import objectos.html.rec.AttributeMarkup;
 import objectos.html.rec.ElementMarkup;
 import objectos.html.rec.Fragment0;
 import objectos.html.rec.Fragment1;
@@ -27,7 +28,6 @@ import objectos.html.rec.Fragment3;
 import objectos.html.rec.Fragment4;
 import objectos.html.rec.Instruction;
 import objectos.html.rec.Instruction.OfAmbiguous;
-import objectos.html.rec.Instruction.OfAttribute;
 import objectos.html.rec.Instruction.OfFragment;
 import objectox.html.Ambiguous;
 import objectox.html.HtmlByteProto;
@@ -197,11 +197,11 @@ public final class Recorder {
     return ambiguousRecorder.record(name, value);
   }
 
-  public final OfAttribute attribute0(AttributeName name) {
+  public final AttributeMarkup attribute0(AttributeName name) {
     return attribute0Recorder.record(name);
   }
 
-  public final OfAttribute attribute1(AttributeName name, Object value) {
+  public final AttributeMarkup attribute1(AttributeName name, Object value) {
     return attribute1Recorder.record(name, value);
   }
 

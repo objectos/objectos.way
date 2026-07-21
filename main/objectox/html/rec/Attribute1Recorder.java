@@ -17,7 +17,7 @@ package objectox.html.rec;
 
 import java.util.Objects;
 import objectos.html.AttributeName;
-import objectos.html.rec.Instruction;
+import objectos.html.rec.AttributeMarkup;
 import objectox.html.HtmlByteProto;
 import objectox.html.HtmlInstruction;
 
@@ -33,7 +33,7 @@ final class Attribute1Recorder {
     this.objects = objects;
   }
 
-  public final Instruction.OfAttribute record(AttributeName name, Object value) {
+  public final AttributeMarkup record(AttributeName name, Object value) {
     final int index;
     index = name.index();
 

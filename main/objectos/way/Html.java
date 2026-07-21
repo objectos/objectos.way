@@ -21,6 +21,7 @@ import objectos.html.AttributeObject;
 import objectos.html.Component;
 import objectos.html.ElementName;
 import objectos.html.Markup;
+import objectos.html.rec.AttributeMarkup;
 import objectos.html.rec.ElementMarkup;
 import objectos.html.rec.Fragment0;
 import objectos.html.rec.Fragment1;
@@ -110,7 +111,7 @@ public final class Html {
     /// @param object the attribute
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute attr(AttributeObject object) {
+    protected final AttributeMarkup attr(AttributeObject object) {
       return $html().attr(object);
     }
 
@@ -179,7 +180,7 @@ public final class Html {
     ///        across multiple lines
     ///
     /// @return an instruction representing this attribute.
-    protected final Instruction.OfAttribute css(String value) {
+    protected final AttributeMarkup css(String value) {
       return $html().css(value);
     }
 
@@ -1757,7 +1758,7 @@ public final class Html {
     /// @param name the attribute name
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute attr(AttributeName name) {
+    protected final AttributeMarkup attr(AttributeName name) {
       return $html().attr(name);
     }
 
@@ -1767,7 +1768,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute attr(AttributeName name, String value) {
+    protected final AttributeMarkup attr(AttributeName name, String value) {
       return $html().attr(name, value);
     }
 
@@ -1776,7 +1777,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute accesskey(String value) {
+    protected final AttributeMarkup accesskey(String value) {
       return $html().accesskey(value);
     }
 
@@ -1785,7 +1786,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute action(String value) {
+    protected final AttributeMarkup action(String value) {
       return $html().action(value);
     }
 
@@ -1794,7 +1795,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute align(String value) {
+    protected final AttributeMarkup align(String value) {
       return $html().align(value);
     }
 
@@ -1803,7 +1804,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute alignmentBaseline(String value) {
+    protected final AttributeMarkup alignmentBaseline(String value) {
       return $html().alignmentBaseline(value);
     }
 
@@ -1812,7 +1813,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute alt(String value) {
+    protected final AttributeMarkup alt(String value) {
       return $html().alt(value);
     }
 
@@ -1821,7 +1822,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute ariaCurrent(String value) {
+    protected final AttributeMarkup ariaCurrent(String value) {
       return $html().ariaCurrent(value);
     }
 
@@ -1830,7 +1831,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute ariaDisabled(String value) {
+    protected final AttributeMarkup ariaDisabled(String value) {
       return $html().ariaDisabled(value);
     }
 
@@ -1839,7 +1840,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute ariaHidden(String value) {
+    protected final AttributeMarkup ariaHidden(String value) {
       return $html().ariaHidden(value);
     }
 
@@ -1848,7 +1849,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute ariaInvalid(String value) {
+    protected final AttributeMarkup ariaInvalid(String value) {
       return $html().ariaInvalid(value);
     }
 
@@ -1857,7 +1858,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute ariaLabel(String value) {
+    protected final AttributeMarkup ariaLabel(String value) {
       return $html().ariaLabel(value);
     }
 
@@ -1866,7 +1867,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute ariaLabelledBy(String value) {
+    protected final AttributeMarkup ariaLabelledBy(String value) {
       return $html().ariaLabelledBy(value);
     }
 
@@ -1875,7 +1876,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute ariaModal(String value) {
+    protected final AttributeMarkup ariaModal(String value) {
       return $html().ariaModal(value);
     }
 
@@ -1884,7 +1885,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute ariaPlaceholder(String value) {
+    protected final AttributeMarkup ariaPlaceholder(String value) {
       return $html().ariaPlaceholder(value);
     }
 
@@ -1893,7 +1894,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute ariaReadonly(String value) {
+    protected final AttributeMarkup ariaReadonly(String value) {
       return $html().ariaReadonly(value);
     }
 
@@ -1902,7 +1903,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute ariaRequired(String value) {
+    protected final AttributeMarkup ariaRequired(String value) {
       return $html().ariaRequired(value);
     }
 
@@ -1911,7 +1912,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute ariaSelected(String value) {
+    protected final AttributeMarkup ariaSelected(String value) {
       return $html().ariaSelected(value);
     }
 
@@ -1920,7 +1921,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute as(String value) {
+    protected final AttributeMarkup as(String value) {
       return $html().as(value);
     }
 
@@ -1929,7 +1930,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute autocomplete(String value) {
+    protected final AttributeMarkup autocomplete(String value) {
       return $html().autocomplete(value);
     }
 
@@ -1938,7 +1939,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute baselineShift(String value) {
+    protected final AttributeMarkup baselineShift(String value) {
       return $html().baselineShift(value);
     }
 
@@ -1947,7 +1948,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute border(String value) {
+    protected final AttributeMarkup border(String value) {
       return $html().border(value);
     }
 
@@ -1956,7 +1957,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute cellpadding(String value) {
+    protected final AttributeMarkup cellpadding(String value) {
       return $html().cellpadding(value);
     }
 
@@ -1965,7 +1966,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute cellspacing(String value) {
+    protected final AttributeMarkup cellspacing(String value) {
       return $html().cellspacing(value);
     }
 
@@ -1974,7 +1975,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute charset(String value) {
+    protected final AttributeMarkup charset(String value) {
       return $html().charset(value);
     }
 
@@ -1983,7 +1984,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute cite(String value) {
+    protected final AttributeMarkup cite(String value) {
       return $html().cite(value);
     }
 
@@ -1992,7 +1993,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute className(String value) {
+    protected final AttributeMarkup className(String value) {
       return $html().className(value);
     }
 
@@ -2001,7 +2002,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute clipRule(String value) {
+    protected final AttributeMarkup clipRule(String value) {
       return $html().clipRule(value);
     }
 
@@ -2010,7 +2011,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute closedby(String value) {
+    protected final AttributeMarkup closedby(String value) {
       return $html().closedby(value);
     }
 
@@ -2019,7 +2020,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute color(String value) {
+    protected final AttributeMarkup color(String value) {
       return $html().color(value);
     }
 
@@ -2028,7 +2029,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute colorInterpolation(String value) {
+    protected final AttributeMarkup colorInterpolation(String value) {
       return $html().colorInterpolation(value);
     }
 
@@ -2038,7 +2039,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute colorInterpolationFilters(String value) {
+    protected final AttributeMarkup colorInterpolationFilters(String value) {
       return $html().colorInterpolationFilters(value);
     }
 
@@ -2047,7 +2048,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute cols(String value) {
+    protected final AttributeMarkup cols(String value) {
       return $html().cols(value);
     }
 
@@ -2056,7 +2057,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute content(String value) {
+    protected final AttributeMarkup content(String value) {
       return $html().content(value);
     }
 
@@ -2065,7 +2066,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute contenteditable(String value) {
+    protected final AttributeMarkup contenteditable(String value) {
       return $html().contenteditable(value);
     }
 
@@ -2074,7 +2075,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute crossorigin(String value) {
+    protected final AttributeMarkup crossorigin(String value) {
       return $html().crossorigin(value);
     }
 
@@ -2083,7 +2084,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute cursor(String value) {
+    protected final AttributeMarkup cursor(String value) {
       return $html().cursor(value);
     }
 
@@ -2092,7 +2093,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute d(String value) {
+    protected final AttributeMarkup d(String value) {
       return $html().d(value);
     }
 
@@ -2101,7 +2102,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute dir(String value) {
+    protected final AttributeMarkup dir(String value) {
       return $html().dir(value);
     }
 
@@ -2110,7 +2111,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute direction(String value) {
+    protected final AttributeMarkup direction(String value) {
       return $html().direction(value);
     }
 
@@ -2119,7 +2120,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute dirname(String value) {
+    protected final AttributeMarkup dirname(String value) {
       return $html().dirname(value);
     }
 
@@ -2128,7 +2129,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute display(String value) {
+    protected final AttributeMarkup display(String value) {
       return $html().display(value);
     }
 
@@ -2137,7 +2138,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute dominantBaseline(String value) {
+    protected final AttributeMarkup dominantBaseline(String value) {
       return $html().dominantBaseline(value);
     }
 
@@ -2146,7 +2147,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute download(String value) {
+    protected final AttributeMarkup download(String value) {
       return $html().download(value);
     }
 
@@ -2155,7 +2156,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute draggable(String value) {
+    protected final AttributeMarkup draggable(String value) {
       return $html().draggable(value);
     }
 
@@ -2164,7 +2165,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute enctype(String value) {
+    protected final AttributeMarkup enctype(String value) {
       return $html().enctype(value);
     }
 
@@ -2173,7 +2174,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute fill(String value) {
+    protected final AttributeMarkup fill(String value) {
       return $html().fill(value);
     }
 
@@ -2182,7 +2183,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute fillOpacity(String value) {
+    protected final AttributeMarkup fillOpacity(String value) {
       return $html().fillOpacity(value);
     }
 
@@ -2191,7 +2192,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute fillRule(String value) {
+    protected final AttributeMarkup fillRule(String value) {
       return $html().fillRule(value);
     }
 
@@ -2200,7 +2201,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute filter(String value) {
+    protected final AttributeMarkup filter(String value) {
       return $html().filter(value);
     }
 
@@ -2209,7 +2210,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute floodColor(String value) {
+    protected final AttributeMarkup floodColor(String value) {
       return $html().floodColor(value);
     }
 
@@ -2218,7 +2219,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute floodOpacity(String value) {
+    protected final AttributeMarkup floodOpacity(String value) {
       return $html().floodOpacity(value);
     }
 
@@ -2227,7 +2228,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute forId(String value) {
+    protected final AttributeMarkup forId(String value) {
       return $html().forId(value);
     }
 
@@ -2237,7 +2238,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute glyphOrientationHorizontal(String value) {
+    protected final AttributeMarkup glyphOrientationHorizontal(String value) {
       return $html().glyphOrientationHorizontal(value);
     }
 
@@ -2247,7 +2248,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute glyphOrientationVertical(String value) {
+    protected final AttributeMarkup glyphOrientationVertical(String value) {
       return $html().glyphOrientationVertical(value);
     }
 
@@ -2256,7 +2257,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute height(String value) {
+    protected final AttributeMarkup height(String value) {
       return $html().height(value);
     }
 
@@ -2265,7 +2266,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute href(String value) {
+    protected final AttributeMarkup href(String value) {
       return $html().href(value);
     }
 
@@ -2274,7 +2275,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute httpEquiv(String value) {
+    protected final AttributeMarkup httpEquiv(String value) {
       return $html().httpEquiv(value);
     }
 
@@ -2283,7 +2284,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute id(String value) {
+    protected final AttributeMarkup id(String value) {
       return $html().id(value);
     }
 
@@ -2292,7 +2293,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute imageRendering(String value) {
+    protected final AttributeMarkup imageRendering(String value) {
       return $html().imageRendering(value);
     }
 
@@ -2301,7 +2302,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute integrity(String value) {
+    protected final AttributeMarkup integrity(String value) {
       return $html().integrity(value);
     }
 
@@ -2310,7 +2311,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute lang(String value) {
+    protected final AttributeMarkup lang(String value) {
       return $html().lang(value);
     }
 
@@ -2319,7 +2320,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute letterSpacing(String value) {
+    protected final AttributeMarkup letterSpacing(String value) {
       return $html().letterSpacing(value);
     }
 
@@ -2328,7 +2329,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute lightingColor(String value) {
+    protected final AttributeMarkup lightingColor(String value) {
       return $html().lightingColor(value);
     }
 
@@ -2337,7 +2338,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute markerEnd(String value) {
+    protected final AttributeMarkup markerEnd(String value) {
       return $html().markerEnd(value);
     }
 
@@ -2346,7 +2347,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute markerMid(String value) {
+    protected final AttributeMarkup markerMid(String value) {
       return $html().markerMid(value);
     }
 
@@ -2355,7 +2356,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute markerStart(String value) {
+    protected final AttributeMarkup markerStart(String value) {
       return $html().markerStart(value);
     }
 
@@ -2364,7 +2365,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute mask(String value) {
+    protected final AttributeMarkup mask(String value) {
       return $html().mask(value);
     }
 
@@ -2373,7 +2374,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute maskType(String value) {
+    protected final AttributeMarkup maskType(String value) {
       return $html().maskType(value);
     }
 
@@ -2382,7 +2383,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute maxlength(String value) {
+    protected final AttributeMarkup maxlength(String value) {
       return $html().maxlength(value);
     }
 
@@ -2391,7 +2392,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute media(String value) {
+    protected final AttributeMarkup media(String value) {
       return $html().media(value);
     }
 
@@ -2400,7 +2401,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute method(String value) {
+    protected final AttributeMarkup method(String value) {
       return $html().method(value);
     }
 
@@ -2409,7 +2410,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute minlength(String value) {
+    protected final AttributeMarkup minlength(String value) {
       return $html().minlength(value);
     }
 
@@ -2418,7 +2419,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute name(String value) {
+    protected final AttributeMarkup name(String value) {
       return $html().name(value);
     }
 
@@ -2427,7 +2428,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute onclick(String value) {
+    protected final AttributeMarkup onclick(String value) {
       return $html().onclick(value);
     }
 
@@ -2436,7 +2437,7 @@ public final class Html {
     /// @param value the action to execute
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute onclick(JsAction value) {
+    protected final AttributeMarkup onclick(JsAction value) {
       return $html().onclick(value);
     }
 
@@ -2445,7 +2446,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute onload(String value) {
+    protected final AttributeMarkup onload(String value) {
       return $html().onload(value);
     }
 
@@ -2454,7 +2455,7 @@ public final class Html {
     /// @param value the action to execute
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute onload(JsAction value) {
+    protected final AttributeMarkup onload(JsAction value) {
       return $html().onload(value);
     }
 
@@ -2463,7 +2464,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute onpopstate(String value) {
+    protected final AttributeMarkup onpopstate(String value) {
       return $html().onpopstate(value);
     }
 
@@ -2472,7 +2473,7 @@ public final class Html {
     /// @param value the action to execute
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute onpopstate(JsAction value) {
+    protected final AttributeMarkup onpopstate(JsAction value) {
       return $html().onpopstate(value);
     }
 
@@ -2481,7 +2482,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute onsubmit(String value) {
+    protected final AttributeMarkup onsubmit(String value) {
       return $html().onsubmit(value);
     }
 
@@ -2490,7 +2491,7 @@ public final class Html {
     /// @param value the action to execute
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute onsubmit(JsAction value) {
+    protected final AttributeMarkup onsubmit(JsAction value) {
       return $html().onsubmit(value);
     }
 
@@ -2499,7 +2500,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute opacity(String value) {
+    protected final AttributeMarkup opacity(String value) {
       return $html().opacity(value);
     }
 
@@ -2508,7 +2509,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute overflow(String value) {
+    protected final AttributeMarkup overflow(String value) {
       return $html().overflow(value);
     }
 
@@ -2517,7 +2518,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute paintOrder(String value) {
+    protected final AttributeMarkup paintOrder(String value) {
       return $html().paintOrder(value);
     }
 
@@ -2526,7 +2527,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute placeholder(String value) {
+    protected final AttributeMarkup placeholder(String value) {
       return $html().placeholder(value);
     }
 
@@ -2535,7 +2536,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute pointerEvents(String value) {
+    protected final AttributeMarkup pointerEvents(String value) {
       return $html().pointerEvents(value);
     }
 
@@ -2544,7 +2545,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute property(String value) {
+    protected final AttributeMarkup property(String value) {
       return $html().property(value);
     }
 
@@ -2553,7 +2554,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute referrerpolicy(String value) {
+    protected final AttributeMarkup referrerpolicy(String value) {
       return $html().referrerpolicy(value);
     }
 
@@ -2562,7 +2563,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute rel(String value) {
+    protected final AttributeMarkup rel(String value) {
       return $html().rel(value);
     }
 
@@ -2571,7 +2572,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute rev(String value) {
+    protected final AttributeMarkup rev(String value) {
       return $html().rev(value);
     }
 
@@ -2580,7 +2581,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute role(String value) {
+    protected final AttributeMarkup role(String value) {
       return $html().role(value);
     }
 
@@ -2589,7 +2590,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute rows(String value) {
+    protected final AttributeMarkup rows(String value) {
       return $html().rows(value);
     }
 
@@ -2598,7 +2599,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute shapeRendering(String value) {
+    protected final AttributeMarkup shapeRendering(String value) {
       return $html().shapeRendering(value);
     }
 
@@ -2607,7 +2608,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute size(String value) {
+    protected final AttributeMarkup size(String value) {
       return $html().size(value);
     }
 
@@ -2616,7 +2617,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute sizes(String value) {
+    protected final AttributeMarkup sizes(String value) {
       return $html().sizes(value);
     }
 
@@ -2625,7 +2626,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute spellcheck(String value) {
+    protected final AttributeMarkup spellcheck(String value) {
       return $html().spellcheck(value);
     }
 
@@ -2634,7 +2635,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute src(String value) {
+    protected final AttributeMarkup src(String value) {
       return $html().src(value);
     }
 
@@ -2643,7 +2644,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute srcset(String value) {
+    protected final AttributeMarkup srcset(String value) {
       return $html().srcset(value);
     }
 
@@ -2652,7 +2653,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute start(String value) {
+    protected final AttributeMarkup start(String value) {
       return $html().start(value);
     }
 
@@ -2661,7 +2662,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute stopColor(String value) {
+    protected final AttributeMarkup stopColor(String value) {
       return $html().stopColor(value);
     }
 
@@ -2670,7 +2671,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute stopOpacity(String value) {
+    protected final AttributeMarkup stopOpacity(String value) {
       return $html().stopOpacity(value);
     }
 
@@ -2679,7 +2680,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute stroke(String value) {
+    protected final AttributeMarkup stroke(String value) {
       return $html().stroke(value);
     }
 
@@ -2688,7 +2689,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute strokeDasharray(String value) {
+    protected final AttributeMarkup strokeDasharray(String value) {
       return $html().strokeDasharray(value);
     }
 
@@ -2697,7 +2698,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute strokeDashoffset(String value) {
+    protected final AttributeMarkup strokeDashoffset(String value) {
       return $html().strokeDashoffset(value);
     }
 
@@ -2706,7 +2707,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute strokeLinecap(String value) {
+    protected final AttributeMarkup strokeLinecap(String value) {
       return $html().strokeLinecap(value);
     }
 
@@ -2715,7 +2716,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute strokeLinejoin(String value) {
+    protected final AttributeMarkup strokeLinejoin(String value) {
       return $html().strokeLinejoin(value);
     }
 
@@ -2724,7 +2725,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute strokeMiterlimit(String value) {
+    protected final AttributeMarkup strokeMiterlimit(String value) {
       return $html().strokeMiterlimit(value);
     }
 
@@ -2733,7 +2734,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute strokeOpacity(String value) {
+    protected final AttributeMarkup strokeOpacity(String value) {
       return $html().strokeOpacity(value);
     }
 
@@ -2742,7 +2743,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute strokeWidth(String value) {
+    protected final AttributeMarkup strokeWidth(String value) {
       return $html().strokeWidth(value);
     }
 
@@ -2751,7 +2752,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute tabindex(String value) {
+    protected final AttributeMarkup tabindex(String value) {
       return $html().tabindex(value);
     }
 
@@ -2760,7 +2761,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute target(String value) {
+    protected final AttributeMarkup target(String value) {
       return $html().target(value);
     }
 
@@ -2769,7 +2770,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute textAnchor(String value) {
+    protected final AttributeMarkup textAnchor(String value) {
       return $html().textAnchor(value);
     }
 
@@ -2778,7 +2779,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute textDecoration(String value) {
+    protected final AttributeMarkup textDecoration(String value) {
       return $html().textDecoration(value);
     }
 
@@ -2787,7 +2788,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute textOverflow(String value) {
+    protected final AttributeMarkup textOverflow(String value) {
       return $html().textOverflow(value);
     }
 
@@ -2796,7 +2797,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute textRendering(String value) {
+    protected final AttributeMarkup textRendering(String value) {
       return $html().textRendering(value);
     }
 
@@ -2805,7 +2806,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute transform(String value) {
+    protected final AttributeMarkup transform(String value) {
       return $html().transform(value);
     }
 
@@ -2814,7 +2815,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute transformOrigin(String value) {
+    protected final AttributeMarkup transformOrigin(String value) {
       return $html().transformOrigin(value);
     }
 
@@ -2823,7 +2824,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute translate(String value) {
+    protected final AttributeMarkup translate(String value) {
       return $html().translate(value);
     }
 
@@ -2832,7 +2833,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute type(String value) {
+    protected final AttributeMarkup type(String value) {
       return $html().type(value);
     }
 
@@ -2841,7 +2842,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute unicodeBidi(String value) {
+    protected final AttributeMarkup unicodeBidi(String value) {
       return $html().unicodeBidi(value);
     }
 
@@ -2850,7 +2851,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute value(String value) {
+    protected final AttributeMarkup value(String value) {
       return $html().value(value);
     }
 
@@ -2859,7 +2860,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute vectorEffect(String value) {
+    protected final AttributeMarkup vectorEffect(String value) {
       return $html().vectorEffect(value);
     }
 
@@ -2868,7 +2869,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute viewBox(String value) {
+    protected final AttributeMarkup viewBox(String value) {
       return $html().viewBox(value);
     }
 
@@ -2877,7 +2878,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute visibility(String value) {
+    protected final AttributeMarkup visibility(String value) {
       return $html().visibility(value);
     }
 
@@ -2886,7 +2887,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute whiteSpace(String value) {
+    protected final AttributeMarkup whiteSpace(String value) {
       return $html().whiteSpace(value);
     }
 
@@ -2895,7 +2896,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute width(String value) {
+    protected final AttributeMarkup width(String value) {
       return $html().width(value);
     }
 
@@ -2904,7 +2905,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute wordSpacing(String value) {
+    protected final AttributeMarkup wordSpacing(String value) {
       return $html().wordSpacing(value);
     }
 
@@ -2913,7 +2914,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute wrap(String value) {
+    protected final AttributeMarkup wrap(String value) {
       return $html().wrap(value);
     }
 
@@ -2922,7 +2923,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute writingMode(String value) {
+    protected final AttributeMarkup writingMode(String value) {
       return $html().writingMode(value);
     }
 
@@ -2931,7 +2932,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final Instruction.OfAttribute xmlns(String value) {
+    protected final AttributeMarkup xmlns(String value) {
       return $html().xmlns(value);
     }
 

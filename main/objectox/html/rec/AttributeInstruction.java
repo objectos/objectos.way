@@ -15,34 +15,36 @@
  */
 package objectox.html.rec;
 
+import java.util.Objects;
 import objectos.html.AttributeName;
-import objectos.html.ElementName;
 import objectos.html.rec.AttributeMarkup;
-import objectos.html.rec.ElementMarkup;
-import objectos.html.rec.Instruction;
 
-final class DocumentRecorder {
+public final class AttributeInstruction
+    extends AbstractInstruction
+    implements AttributeMarkup {
 
-  private final Root root;
+  private final AttributeName name;
 
-  DocumentRecorder() {
-    root = Root.create(50);
+  private final String value;
+
+  AttributeInstruction(AttributeName name, String value) {
+    this.name = name;
+
+    this.value = value;
   }
 
-  public static DocumentRecorder create() {
-    return new DocumentRecorder();
+  public static AttributeMarkup of(AttributeName name, String value) {
+    final String v;
+    v = Objects.requireNonNull(value, "value == null");
+
+    return new AttributeInstruction(name, v);
   }
 
-  public final AttributeMarkup attribute(AttributeName name, String value) {
-    return root.add(AttributeInstruction.of(name, value));
-  }
-
-  public final ElementMarkup element(ElementName name, Instruction... contents) {
-    return root.add(ElementInstruction.of(name, contents));
-  }
-
-  public final Instruction[] record() {
-    return root.compile();
+  @Override
+  public final boolean equals(Object obj) {
+    return obj == this || obj instanceof AttributeInstruction that
+        && name.equals(that.name)
+        && value.equals(that.value);
   }
 
 }
