@@ -15,36 +15,8 @@
  */
 package objectox.html.rec;
 
-import java.util.Objects;
-import objectos.html.AttributeName;
 import objectos.html.rec.AttributeMarkup;
 
-public final class AttributeInstruction
-    extends AbstractInstruction
-    implements AttributeMarkup {
-
-  private final AttributeName name;
-
-  private final String value;
-
-  AttributeInstruction(AttributeName name, String value) {
-    this.name = name;
-
-    this.value = value;
-  }
-
-  public static AttributeMarkup of(AttributeName name, String value) {
-    final String v;
-    v = Objects.requireNonNull(value, "value == null");
-
-    return new AttributeInstruction(name, v);
-  }
-
-  @Override
-  public final boolean equals(Object obj) {
-    return obj == this || obj instanceof AttributeInstruction that
-        && name.equals(that.name)
-        && value.equals(that.value);
-  }
+public final record AttributeInstruction(int value) implements AttributeMarkup {
 
 }

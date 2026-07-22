@@ -15,23 +15,17 @@
  */
 package objectox.html.rec;
 
-abstract class AbstractInstruction {
+import java.util.function.Consumer;
 
-  private boolean consumed;
+public final class HtmlSinkY {
 
-  public final void consume() {
-    if (consumed) {
-      final String msg;
-      msg = "Markup instance has already been consumed: " + this;
+  public static HtmlSink create(Consumer<? super HtmlSink> opts) {
+    final HtmlSink y;
+    y = new HtmlSink();
 
-      throw new IllegalStateException(msg);
-    } else {
-      consumed = true;
-    }
-  }
+    opts.accept(y);
 
-  public final boolean consumed() {
-    return consumed;
+    return y;
   }
 
 }

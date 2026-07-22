@@ -49,7 +49,7 @@ public final class Recorder {
 
   private final ComponentRecorder componentRecorder;
 
-  private final ElementRecorder elementRecorder;
+  private final ZZZElementRecorder elementRecorder;
 
   private final FlattenRecorder flattenRecorder;
 
@@ -74,7 +74,7 @@ public final class Recorder {
 
       ComponentRecorder componentRecorder,
 
-      ElementRecorder elementRecorder,
+      ZZZElementRecorder elementRecorder,
 
       FlattenRecorder flattenRecorder,
 
@@ -161,7 +161,7 @@ public final class Recorder {
 
         new ComponentRecorder(main, forwardOffsetRecorder, reverseOffsetRecorder),
 
-        new ElementRecorder(
+        new ZZZElementRecorder(
             new ElementNameRecorder(main),
 
             elementValueEncoder,

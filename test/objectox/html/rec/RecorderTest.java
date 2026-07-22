@@ -36,19 +36,7 @@ public class RecorderTest {
     final Recorder html;
     html = Recorder.create();
 
-    html.element(ElementName.HTML);
-
-    bytes(html.main(),
-
-        HtmlByteProto.ELEMENT,
-        HtmlBytes.encodeInt0(5),
-        HtmlBytes.encodeInt1(5),
-        HtmlByteProto.STANDARD_NAME,
-        (byte) ElementNamePojo.HTML.index(),
-        HtmlByteProto.END,
-        HtmlBytes.encodeInt0(5),
-        HtmlByteProto.INTERNAL
-    );
+    bytes(html.main());
 
     objects(html.objects());
   }

@@ -17,55 +17,52 @@ package objectox.html.rec;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.html.AttributeName;
-import objectos.html.ElementName;
-import objectos.html.rec.Instruction;
+import objectox.html.HtmlByteProto;
+import objectox.html.elem.ElementNamePojo;
 import org.testng.annotations.Test;
 
 public class DocumentRecorderTest {
 
+  private DocumentRecorder create(HtmlSink sink) {
+    return new DocumentRecorder(
+        new ElementRecorder(sink)
+    );
+  }
+
+  @SuppressWarnings("unused")
   @Test(description = "empty document")
   public void record00() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
     final DocumentRecorder subject;
-    subject = DocumentRecorder.create();
+    subject = create(sink);
 
-    final Instruction[] res;
-    res = subject.record();
-
-    assertEquals(res.length, 0);
+    assertEquals(sink, HtmlSinkY.create(_ -> {}));
   }
 
   @Test(description = """
   <html></html>
   """)
   public void record01() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
     final DocumentRecorder subject;
-    subject = DocumentRecorder.create();
+    subject = create(sink);
 
-    subject.element(ElementName.HTML);
+    subject.element(ElementNamePojo.HTML);
 
-    final Instruction[] res;
-    res = subject.record();
+    assertEquals(
+        sink,
 
-    assertEquals(res.length, 1);
-  }
-
-  @Test(description = """
-  <html lang="pt-BR"></html>
-  """)
-  public void record02() {
-    final DocumentRecorder subject;
-    subject = DocumentRecorder.create();
-
-    subject.element(
-        ElementName.HTML,
-        subject.attribute(AttributeName.LANG, "pt-BR")
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlByteProto.ELEMENT);
+          opts.addByte(HtmlByteProto.STANDARD_NAME);
+          opts.addInt8(ElementNamePojo.HTML.index());
+          opts.addInt16(0);
+        })
     );
-
-    final Instruction[] res;
-    res = subject.record();
-
-    assertEquals(res.length, 1);
   }
 
 }

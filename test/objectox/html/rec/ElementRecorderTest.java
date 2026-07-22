@@ -29,48 +29,29 @@ public class ElementRecorderTest {
 
   @Test(description = "<html></html>")
   public void record01() {
-    final ByteArray aux;
-    aux = ByteArray.of();
-
-    final ByteArray main;
-    main = ByteArray.of();
-
-    final ObjectArray objects;
-    objects = ObjectArray.of();
+    final HtmlSink sink;
+    sink = new HtmlSink();
 
     final ElementRecorder subject;
-    subject = ElementRecorder.of(aux, main, objects);
+    subject = new ElementRecorder(sink);
 
-    final ElementName name;
-    name = ElementName.HTML;
+    final ElementNamePojo name;
+    name = ElementNamePojo.HTML;
 
-    subject.record(name);
+    final ElementInstruction res;
+    res = subject.record(name);
 
-    assertEquals(
-        aux,
-
-        ByteArray.of()
-    );
+    assertEquals(res.value(), 0);
 
     assertEquals(
-        main,
+        sink,
 
-        ByteArray.of(
-            HtmlByteProto.ELEMENT,
-            HtmlBytes.encodeInt0(5),
-            HtmlBytes.encodeInt1(5),
-            HtmlByteProto.STANDARD_NAME,
-            (byte) ElementNamePojo.HTML.index(),
-            HtmlByteProto.END,
-            HtmlBytes.encodeInt0(5),
-            HtmlByteProto.INTERNAL
-        )
-    );
-
-    assertEquals(
-        objects,
-
-        ObjectArray.of()
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlByteProto.ELEMENT);
+          opts.addByte(HtmlByteProto.STANDARD_NAME);
+          opts.addInt8(name.index());
+          opts.addInt16(0);
+        })
     );
   }
 
@@ -91,8 +72,8 @@ public class ElementRecorderTest {
     final ObjectArray objects;
     objects = ObjectArray.of("x");
 
-    final ElementRecorder subject;
-    subject = ElementRecorder.of(aux, main, objects);
+    final ZZZElementRecorder subject;
+    subject = ZZZElementRecorder.of(aux, main, objects);
 
     final ElementName name;
     name = ElementName.HEAD;
@@ -163,8 +144,8 @@ public class ElementRecorderTest {
     final ObjectArray objects;
     objects = ObjectArray.of("x");
 
-    final ElementRecorder subject;
-    subject = ElementRecorder.of(aux, main, objects);
+    final ZZZElementRecorder subject;
+    subject = ZZZElementRecorder.of(aux, main, objects);
 
     final ElementName name;
     name = ElementName.HTML;

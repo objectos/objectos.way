@@ -23,7 +23,7 @@ import objectos.way.Html;
 import objectox.html.HtmlInstruction;
 import objectox.html.attr.AttributeOrNoOp;
 
-/// Represents some markup of an Objectos HTML document.
+/// Represents some encoded markup of an Objectos HTML document.
 public sealed interface Instruction permits AsObject, AsMethod, OfVoid {
 
   /**
@@ -88,16 +88,11 @@ public sealed interface Instruction permits AsObject, AsMethod, OfVoid {
     return HtmlInstruction.NOOP;
   }
 
-  /// Consumes this markup.
-  default void consume() {
-    // no-op
-  }
-
-  /// Returns `true` if this markup has been consumed as part of another markup.
+  /// Returns the encoded value of this markup.
   ///
-  /// @return `true` if this markup has been consumed; `false` otherwise
-  default boolean consumed() {
-    return false;
+  /// @return the encoded value of this markup
+  default int value() {
+    return -1;
   }
 
 }

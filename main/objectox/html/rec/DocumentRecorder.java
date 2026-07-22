@@ -15,34 +15,19 @@
  */
 package objectox.html.rec;
 
-import objectos.html.AttributeName;
 import objectos.html.ElementName;
-import objectos.html.rec.AttributeMarkup;
-import objectos.html.rec.ElementMarkup;
 import objectos.html.rec.Instruction;
 
 final class DocumentRecorder {
 
-  private final Root root;
+  private final ElementRecorder elementRecorder;
 
-  DocumentRecorder() {
-    root = Root.create(50);
+  DocumentRecorder(ElementRecorder elementRecorder) {
+    this.elementRecorder = elementRecorder;
   }
 
-  public static DocumentRecorder create() {
-    return new DocumentRecorder();
-  }
-
-  public final AttributeMarkup attribute(AttributeName name, String value) {
-    return root.add(AttributeInstruction.of(name, value));
-  }
-
-  public final ElementMarkup element(ElementName name, Instruction... contents) {
-    return root.add(ElementInstruction.of(name, contents));
-  }
-
-  public final Instruction[] record() {
-    return root.compile();
+  public final ElementInstruction element(ElementName name, Instruction... contents) {
+    return elementRecorder.record(name, contents);
   }
 
 }

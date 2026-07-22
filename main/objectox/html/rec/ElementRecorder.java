@@ -15,108 +15,54 @@
  */
 package objectox.html.rec;
 
+import java.util.Objects;
 import objectos.html.ElementName;
-import objectos.html.rec.ElementMarkup;
 import objectos.html.rec.Instruction;
-import objectox.html.HtmlInstruction;
+import objectox.html.HtmlByteProto;
+import objectox.html.elem.ElementNamePojo;
 
 final class ElementRecorder {
 
-  private final ElementNameRecorder elementNameRecorder;
+  private final HtmlSink sink;
 
-  private final ElementValueEncoder elementValueEncoder;
-
-  private final ElementValueRecorder elementValueRecorder;
-
-  private final ForwardOffsetRecorder forwardOffsetRecorder;
-
-  private final ReverseOffsetRecorder reverseOffsetRecorder;
-
-  ElementRecorder(
-      ElementNameRecorder elementNameRecorder,
-
-      ElementValueEncoder elementValueEncoder,
-
-      ElementValueRecorder elementValueRecorder,
-
-      ForwardOffsetRecorder forwardOffsetRecorder,
-
-      ReverseOffsetRecorder reverseOffsetRecorder
-  ) {
-    this.elementNameRecorder = elementNameRecorder;
-
-    this.elementValueEncoder = elementValueEncoder;
-
-    this.elementValueRecorder = elementValueRecorder;
-
-    this.forwardOffsetRecorder = forwardOffsetRecorder;
-
-    this.reverseOffsetRecorder = reverseOffsetRecorder;
+  ElementRecorder(HtmlSink sink) {
+    this.sink = sink;
   }
 
-  public static ElementRecorder of(ByteArray aux, ByteArray main, ObjectArray objects) {
-    return new ElementRecorder(
-        new ElementNameRecorder(main),
+  public final ElementInstruction record(ElementName name, Instruction... contents) {
+    final Instruction[] insts;
+    insts = Objects.requireNonNull(contents, "contents == null");
 
-        new ElementValueEncoder(
-            aux,
+    final int startIndex;
+    startIndex = sink.addByte(HtmlByteProto.ELEMENT);
 
-            main,
+    final ElementNamePojo namePojo;
+    namePojo = (ElementNamePojo) name;
 
-            new Encoder(
-                main,
+    final int nameIndex;
+    nameIndex = namePojo.index();
 
-                new FlattenEncoder(main),
+    if (nameIndex >= 0) {
+      sink.addByte(HtmlByteProto.STANDARD_NAME);
 
-                new ElementEncoder(main)
-            )
-        ),
-
-        new ElementValueRecorder(
-            new AttributeObjectRecorder(aux, objects),
-
-            new ElementInternalRecorder(aux, main)
-        ),
-
-        new ForwardOffsetRecorder(main),
-
-        new ReverseOffsetRecorder(main)
-    );
-  }
-
-  public final ElementMarkup record(ElementName name, Instruction... contents) {
-    final int auxStart;
-    auxStart = elementValueEncoder.auxStart();
-
-    final int mainStart;
-    mainStart = elementNameRecorder.mainStart();
-
-    int mainContents;
-    mainContents = mainStart;
-
-    elementNameRecorder.record(name);
-
-    for (int idx = 0; idx < contents.length; idx++) {
-      final Instruction instruction;
-      instruction = contents[idx];
-
-      if (instruction == null) {
-        final String msg;
-        msg = "contents[%d] == null".formatted(idx);
-
-        throw new NullPointerException(msg);
-      }
-
-      mainContents = elementValueRecorder.record(mainContents, instruction);
+      sink.addInt8(nameIndex);
+    } else {
+      throw new UnsupportedOperationException();
     }
 
-    elementValueEncoder.encode(auxStart, mainContents);
+    final int length;
+    length = insts.length;
 
-    reverseOffsetRecorder.record(mainContents);
+    sink.addInt16(length);
 
-    forwardOffsetRecorder.two(mainStart);
+    for (Instruction inst : insts) {
+      final int value;
+      value = inst.value();
 
-    return HtmlInstruction.ELEMENT;
+      sink.addInt24(value);
+    }
+
+    return new ElementInstruction(startIndex);
   }
 
 }

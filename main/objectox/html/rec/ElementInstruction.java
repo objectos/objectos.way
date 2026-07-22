@@ -15,52 +15,8 @@
  */
 package objectox.html.rec;
 
-import java.util.Objects;
-import objectos.html.ElementName;
 import objectos.html.rec.ElementMarkup;
-import objectos.html.rec.Instruction;
 
-public final class ElementInstruction extends AbstractInstruction implements ElementMarkup {
-
-  @SuppressWarnings("unused")
-  private final ElementName name;
-
-  @SuppressWarnings("unused")
-  private final Instruction[] contents;
-
-  private ElementInstruction(ElementName name, Instruction[] contents) {
-    this.name = name;
-
-    this.contents = contents;
-  }
-
-  public static ElementInstruction of(ElementName name, Instruction... contents) {
-    final Instruction[] instructions;
-    instructions = Objects.requireNonNull(contents, "contents == null");
-
-    final int len;
-    len = instructions.length;
-
-    final Instruction[] copy;
-    copy = new Instruction[len];
-
-    for (int idx = 0; idx < len; idx++) {
-      final Instruction instruction;
-      instruction = instructions[idx];
-
-      if (instruction == null) {
-        final String msg;
-        msg = "contents[" + idx + "] == null";
-
-        throw new NullPointerException(msg);
-      }
-
-      instruction.consume();
-
-      copy[idx] = instruction;
-    }
-
-    return new ElementInstruction(name, copy);
-  }
+public record ElementInstruction(int value) implements ElementMarkup {
 
 }
