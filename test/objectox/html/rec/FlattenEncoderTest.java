@@ -19,7 +19,6 @@ import static org.testng.Assert.assertEquals;
 
 import objectos.html.AttributeName;
 import objectox.html.HtmlByteProto;
-import objectox.html.HtmlBytes;
 import org.testng.annotations.Test;
 
 public class FlattenEncoderTest {

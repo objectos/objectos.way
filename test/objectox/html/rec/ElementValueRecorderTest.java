@@ -21,7 +21,6 @@ import objectos.html.AttributeName;
 import objectos.html.AttributeObject;
 import objectox.html.Ambiguous;
 import objectox.html.HtmlByteProto;
-import objectox.html.HtmlBytes;
 import objectox.html.HtmlInstruction;
 import objectox.html.attr.AttributeObjectPojo;
 import org.testng.annotations.Test;

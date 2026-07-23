@@ -13,20 +13,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html;
+package objectox.html.rec;
 
 import objectos.html.ElementName;
 import objectox.html.elem.ElementNamePojo;
-import objectox.html.rec.ByteArray;
 
 public final class HtmlBytes {
 
-  public static final byte START_DOCUMENT = -1;
-  public static final byte END_DOCUMENT = -2;
+  public static final byte STARTTAG8 = -128;
+  public static final byte ENDTAG8 = -127;
+  public static final byte BOOLEAN8 = -126;
+  public static final byte VALUES0 = -125;
+  public static final byte VALUES8 = -124;
+  public static final byte VALUES16 = -123;
+  public static final byte VALUES24 = -122;
+
+  public static final byte XSTARTTAG8 = -99;
+  public static final byte XBOOLEAN8 = -98;
+
+  //
 
   private static final int BYTE_MASK = 0xFF;
 
   private HtmlBytes() {}
+
+  public static byte consume(byte source) {
+    return switch (source) {
+      case STARTTAG8, XSTARTTAG8 -> XSTARTTAG8;
+
+      case BOOLEAN8, XBOOLEAN8 -> XBOOLEAN8;
+
+      default -> throw new IllegalArgumentException("source=" + source);
+    };
+  }
+
+  //
 
   public static int decodeInt(byte b0) {
     return toInt(b0, 0);

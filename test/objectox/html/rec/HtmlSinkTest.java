@@ -26,7 +26,7 @@ public class HtmlSinkTest {
     final HtmlSink subject;
     subject = new HtmlSink();
 
-    subject.addByte((byte) 99);
+    assertEquals(subject.addByte((byte) 99), 0);
 
     assertEquals(
         subject,
@@ -113,6 +113,87 @@ public class HtmlSinkTest {
             ),
 
             objects()
+        )
+    );
+  }
+
+  @Test(
+      description = "reject int >= 16,777,216",
+      expectedExceptions = IllegalArgumentException.class,
+      expectedExceptionsMessageRegExp = "Invalid 3-byte int value: 16777216")
+  public void addInt24_01() {
+    final HtmlSink subject;
+    subject = new HtmlSink();
+
+    subject.addInt24(16777216);
+  }
+
+  @Test(
+      description = "reject int < 0",
+      expectedExceptions = IllegalArgumentException.class,
+      expectedExceptionsMessageRegExp = "Invalid 3-byte int value: -1")
+  public void addInt24_02() {
+    final HtmlSink subject;
+    subject = new HtmlSink();
+
+    subject.addInt24(-1);
+  }
+
+  @Test
+  public void addInt24_03() {
+    final HtmlSink subject;
+    subject = new HtmlSink();
+
+    subject.addInt24(0);
+    subject.addInt24(ByteArray.MAX_INT24);
+
+    assertEquals(
+        subject,
+
+        new HtmlSink(
+            code(
+                0x00, 0x00, 0x00,
+                0xff, 0xff, 0xff
+            ),
+
+            objects()
+        )
+    );
+  }
+
+  @Test
+  public void addObject01() {
+    final HtmlSink subject;
+    subject = new HtmlSink();
+
+    assertEquals(subject.addObject("ABC"), 0);
+
+    assertEquals(
+        subject,
+
+        new HtmlSink(
+            code(),
+
+            objects("ABC")
+        )
+    );
+  }
+
+  @Test
+  public void addObject02() {
+    final HtmlSink subject;
+    subject = new HtmlSink();
+
+    assertEquals(subject.addObject("ABC"), 0);
+    assertEquals(subject.addObject("XYZ"), 1);
+
+    assertEquals(
+        subject,
+
+        new HtmlSink(
+            code(),
+
+            objects("ABC", "XYZ")
         )
     );
   }

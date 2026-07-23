@@ -18,9 +18,9 @@ package objectox.html.play;
 import static org.testng.Assert.assertEquals;
 
 import objectox.html.HtmlByteProto;
-import objectox.html.HtmlBytes;
 import objectox.html.attr.AttributeNamePojo;
 import objectox.html.elem.ElementNamePojo;
+import objectox.html.rec.HtmlBytes;
 import org.testng.annotations.Test;
 
 public class StartStateTest {

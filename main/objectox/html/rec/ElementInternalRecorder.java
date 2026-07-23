@@ -16,7 +16,6 @@
 package objectox.html.rec;
 
 import objectox.html.HtmlByteProto;
-import objectox.html.HtmlBytes;
 
 final class ElementInternalRecorder {
 

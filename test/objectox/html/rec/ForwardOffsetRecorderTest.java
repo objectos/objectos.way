@@ -18,7 +18,6 @@ package objectox.html.rec;
 import static org.testng.Assert.assertEquals;
 
 import objectox.html.HtmlByteProto;
-import objectox.html.HtmlBytes;
 import org.testng.annotations.Test;
 
 public class ForwardOffsetRecorderTest {

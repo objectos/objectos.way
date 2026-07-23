@@ -20,13 +20,13 @@ import objectos.html.rec.AttributeMarkup;
 import objectox.html.HtmlByteProto;
 import objectox.html.HtmlInstruction;
 
-final class Attribute0Recorder {
+final class ZZZAttribute0Recorder {
 
   private final ByteArray main;
 
   private final ObjectArray objects;
 
-  Attribute0Recorder(ByteArray main, ObjectArray objects) {
+  ZZZAttribute0Recorder(ByteArray main, ObjectArray objects) {
     this.main = main;
 
     this.objects = objects;

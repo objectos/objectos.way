@@ -43,7 +43,7 @@ public final class Recorder {
 
   private final AmbiguousRecorder ambiguousRecorder;
 
-  private final Attribute0Recorder attribute0Recorder;
+  private final ZZZAttribute0Recorder attribute0Recorder;
 
   private final Attribute1Recorder attribute1Recorder;
 
@@ -68,7 +68,7 @@ public final class Recorder {
 
       AmbiguousRecorder ambiguousRecorder,
 
-      Attribute0Recorder attribute0Recorder,
+      ZZZAttribute0Recorder attribute0Recorder,
 
       Attribute1Recorder attribute1Recorder,
 
@@ -155,7 +155,7 @@ public final class Recorder {
 
         new AmbiguousRecorder(main, objects),
 
-        new Attribute0Recorder(main, objects),
+        new ZZZAttribute0Recorder(main, objects),
 
         new Attribute1Recorder(main, objects),
 

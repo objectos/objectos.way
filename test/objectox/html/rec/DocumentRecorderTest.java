@@ -17,16 +17,15 @@ package objectox.html.rec;
 
 import static org.testng.Assert.assertEquals;
 
-import objectox.html.HtmlByteProto;
+import objectos.html.ElementName;
+import objectox.html.attr.AttributeNamePojo;
 import objectox.html.elem.ElementNamePojo;
 import org.testng.annotations.Test;
 
 public class DocumentRecorderTest {
 
   private DocumentRecorder create(HtmlSink sink) {
-    return new DocumentRecorder(
-        new ElementRecorder(sink)
-    );
+    return DocumentRecorder.of(sink);
   }
 
   @SuppressWarnings("unused")
@@ -51,16 +50,52 @@ public class DocumentRecorderTest {
     final DocumentRecorder subject;
     subject = create(sink);
 
-    subject.element(ElementNamePojo.HTML);
+    final ElementNamePojo name;
+    name = ElementNamePojo.HTML;
+
+    subject.element(name);
 
     assertEquals(
         sink,
 
         HtmlSinkY.create(opts -> {
-          opts.addByte(HtmlByteProto.ELEMENT);
-          opts.addByte(HtmlByteProto.STANDARD_NAME);
+          opts.addByte(HtmlBytes.STARTTAG8);
+          opts.addInt8(name.index());
+          opts.addByte(HtmlBytes.VALUES0);
+          opts.addByte(HtmlBytes.ENDTAG8);
+          opts.addInt8(name.index());
+        })
+    );
+  }
+
+  @Test(description = """
+  <html autofocus></html>
+  """)
+  public void record02() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final DocumentRecorder subject;
+    subject = create(sink);
+
+    subject.element(
+        ElementName.HTML,
+        subject.attribute(AttributeNamePojo.AUTOFOCUS)
+    );
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.XBOOLEAN8);
+          opts.addInt8(AttributeNamePojo.AUTOFOCUS.index());
+          opts.addByte(HtmlBytes.STARTTAG8);
           opts.addInt8(ElementNamePojo.HTML.index());
-          opts.addInt16(0);
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(1);
+          opts.addInt8(0);
+          opts.addByte(HtmlBytes.ENDTAG8);
+          opts.addInt8(ElementNamePojo.HTML.index());
         })
     );
   }

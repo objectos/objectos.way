@@ -17,7 +17,6 @@ package objectox.html.rec;
 
 import objectos.html.ElementName;
 import objectox.html.HtmlByteProto;
-import objectox.html.HtmlBytes;
 import objectox.html.elem.ElementNamePojo;
 
 final class ElementNameRecorder {

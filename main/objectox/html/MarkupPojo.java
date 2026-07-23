@@ -37,6 +37,7 @@ import objectox.html.attr.AttributeNamePojo;
 import objectox.html.elem.ElementNamePojo;
 import objectox.html.play.Player;
 import objectox.html.rec.ByteArray;
+import objectox.html.rec.HtmlBytes;
 import objectox.html.rec.ObjectArray;
 import objectox.html.rec.Recorder;
 

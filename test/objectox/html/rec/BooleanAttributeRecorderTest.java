@@ -17,38 +17,34 @@ package objectox.html.rec;
 
 import static org.testng.Assert.assertEquals;
 
-import objectox.html.HtmlByteProto;
-import objectox.html.elem.ElementNamePojo;
+import objectox.html.attr.AttributeNamePojo;
 import org.testng.annotations.Test;
 
-public class ElementNameRecorderTest {
+public class BooleanAttributeRecorderTest {
 
   @Test
-  public void record01() {
-    final ByteArray main;
-    main = ByteArray.of();
+  public void record02() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
 
-    final ElementNameRecorder subject;
-    subject = new ElementNameRecorder(main);
+    final AttributeNamePojo name;
+    name = AttributeNamePojo.AUTOFOCUS;
 
-    final ElementNamePojo name;
-    name = ElementNamePojo.DIV;
+    final BooleanAttributeRecorder subject;
+    subject = new BooleanAttributeRecorder(sink);
 
-    subject.record(name);
+    final AttributeInstruction res;
+    res = subject.record(name);
+
+    assertEquals(res.value(), 0);
 
     assertEquals(
-        main,
+        sink,
 
-        ByteArray.of(
-            HtmlByteProto.ELEMENT,
-
-            -1,
-            -1,
-
-            HtmlByteProto.STANDARD_NAME,
-
-            HtmlBytes.encodeInt0(name.index())
-        )
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.BOOLEAN8);
+          opts.addInt8(name.index());
+        })
     );
   }
 

@@ -20,7 +20,6 @@ import static org.testng.Assert.assertEquals;
 import objectos.html.AttributeName;
 import objectos.html.AttributeObject;
 import objectox.html.HtmlByteProto;
-import objectox.html.HtmlBytes;
 import objectox.html.attr.AttributeObjectPojo;
 import org.testng.annotations.Test;
 

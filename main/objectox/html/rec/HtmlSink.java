@@ -16,6 +16,7 @@
 package objectox.html.rec;
 
 import java.util.Arrays;
+import java.util.HexFormat;
 import objectos.internal.Util;
 
 final class HtmlSink {
@@ -24,11 +25,13 @@ final class HtmlSink {
 
   public static final int MAX_INT16 = (1 << 16) - 1;
 
+  public static final int MAX_INT24 = (1 << 24) - 1;
+
   private byte[] code;
 
   private int codeIndex;
 
-  private final Object[] objects;
+  private Object[] objects;
 
   private int objectsIndex;
 
@@ -95,7 +98,47 @@ final class HtmlSink {
   }
 
   public final void addInt24(int value) {
-    throw new UnsupportedOperationException("Implement me");
+    if (value < 0 || value > MAX_INT24) {
+      final String msg;
+      msg = "Invalid 3-byte int value: %d".formatted(value);
+
+      throw new IllegalArgumentException(msg);
+    }
+
+    final int idx0;
+    idx0 = codeIndex++;
+
+    final int idx1;
+    idx1 = codeIndex++;
+
+    final int idx2;
+    idx2 = codeIndex++;
+
+    code = Util.growIfNecessary(code, idx2);
+
+    code[idx0] = (byte) (value >>> 16);
+
+    code[idx1] = (byte) (value >>> 8);
+
+    code[idx2] = (byte) value;
+  }
+
+  public final int addObject(Object value) {
+    final int idx;
+    idx = objectsIndex++;
+
+    objects = Util.growIfNecessary(objects, idx);
+
+    objects[idx] = value;
+
+    return idx;
+  }
+
+  public final void consume(int value) {
+    final byte original;
+    original = code[value];
+
+    code[value] = HtmlBytes.consume(original);
   }
 
   @Override
@@ -103,6 +146,20 @@ final class HtmlSink {
     return obj == this || obj instanceof HtmlSink that
         && Arrays.equals(code, 0, codeIndex, that.code, 0, that.codeIndex)
         && Arrays.equals(objects, 0, objectsIndex, that.objects, 0, that.objectsIndex);
+  }
+
+  @Override
+  public final String toString() {
+    final byte[] $code;
+    $code = Arrays.copyOf(code, codeIndex);
+
+    final Object[] $objects;
+    $objects = Arrays.copyOf(objects, objectsIndex);
+
+    return """
+    code    = %s
+    objects = %s
+    """.formatted(HexFormat.of().formatHex($code), Arrays.toString($objects));
   }
 
 }

@@ -17,39 +17,27 @@ package objectox.html.rec;
 
 import static org.testng.Assert.assertEquals;
 
-import objectox.html.HtmlByteProto;
-import objectox.html.elem.ElementNamePojo;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class ElementNameRecorderTest {
+public class HtmlBytesTest {
 
-  @Test
-  public void record01() {
-    final ByteArray main;
-    main = ByteArray.of();
+  @DataProvider
+  public Object[][] consumeProvider() {
+    return new Object[][] {
+        {HtmlBytes.STARTTAG8, HtmlBytes.XSTARTTAG8},
+        {HtmlBytes.XSTARTTAG8, HtmlBytes.XSTARTTAG8},
+        {HtmlBytes.BOOLEAN8, HtmlBytes.XBOOLEAN8},
+        {HtmlBytes.XBOOLEAN8, HtmlBytes.XBOOLEAN8}
+    };
+  }
 
-    final ElementNameRecorder subject;
-    subject = new ElementNameRecorder(main);
+  @Test(dataProvider = "consumeProvider")
+  public void consume(byte source, byte expected) {
+    final byte res;
+    res = HtmlBytes.consume(source);
 
-    final ElementNamePojo name;
-    name = ElementNamePojo.DIV;
-
-    subject.record(name);
-
-    assertEquals(
-        main,
-
-        ByteArray.of(
-            HtmlByteProto.ELEMENT,
-
-            -1,
-            -1,
-
-            HtmlByteProto.STANDARD_NAME,
-
-            HtmlBytes.encodeInt0(name.index())
-        )
-    );
+    assertEquals(res, expected);
   }
 
 }

@@ -15,15 +15,32 @@
  */
 package objectox.html.rec;
 
+import objectos.html.AttributeName;
 import objectos.html.ElementName;
 import objectos.html.rec.Instruction;
 
 final class DocumentRecorder {
 
+  private final BooleanAttributeRecorder booleanAttributeRecorder;
+
   private final ElementRecorder elementRecorder;
 
-  DocumentRecorder(ElementRecorder elementRecorder) {
+  DocumentRecorder(BooleanAttributeRecorder booleanAttributeRecorder, ElementRecorder elementRecorder) {
+    this.booleanAttributeRecorder = booleanAttributeRecorder;
+
     this.elementRecorder = elementRecorder;
+  }
+
+  public static DocumentRecorder of(HtmlSink sink) {
+    return new DocumentRecorder(
+        new BooleanAttributeRecorder(sink),
+
+        new ElementRecorder(sink)
+    );
+  }
+
+  public final AttributeInstruction attribute(AttributeName name) {
+    return booleanAttributeRecorder.record(name);
   }
 
   public final ElementInstruction element(ElementName name, Instruction... contents) {

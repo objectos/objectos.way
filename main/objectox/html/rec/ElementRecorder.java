@@ -18,23 +18,25 @@ package objectox.html.rec;
 import java.util.Objects;
 import objectos.html.ElementName;
 import objectos.html.rec.Instruction;
-import objectox.html.HtmlByteProto;
 import objectox.html.elem.ElementNamePojo;
 
 final class ElementRecorder {
 
   private final HtmlSink sink;
 
+  private final ContentsRecorder contentsRecorder;
+
   ElementRecorder(HtmlSink sink) {
     this.sink = sink;
+
+    contentsRecorder = new ContentsRecorder(sink, sink::consume);
   }
 
   public final ElementInstruction record(ElementName name, Instruction... contents) {
-    final Instruction[] insts;
-    insts = Objects.requireNonNull(contents, "contents == null");
+    final Instruction[] instructions;
+    instructions = Objects.requireNonNull(contents, "contents == null");
 
     final int startIndex;
-    startIndex = sink.addByte(HtmlByteProto.ELEMENT);
 
     final ElementNamePojo namePojo;
     namePojo = (ElementNamePojo) name;
@@ -42,24 +44,18 @@ final class ElementRecorder {
     final int nameIndex;
     nameIndex = namePojo.index();
 
-    if (nameIndex >= 0) {
-      sink.addByte(HtmlByteProto.STANDARD_NAME);
+    if (nameIndex <= HtmlSink.MAX_INT8) {
+      startIndex = sink.addByte(HtmlBytes.STARTTAG8);
+
+      sink.addInt8(nameIndex);
+
+      contentsRecorder.record(instructions);
+
+      sink.addByte(HtmlBytes.ENDTAG8);
 
       sink.addInt8(nameIndex);
     } else {
       throw new UnsupportedOperationException();
-    }
-
-    final int length;
-    length = insts.length;
-
-    sink.addInt16(length);
-
-    for (Instruction inst : insts) {
-      final int value;
-      value = inst.value();
-
-      sink.addInt24(value);
     }
 
     return new ElementInstruction(startIndex);

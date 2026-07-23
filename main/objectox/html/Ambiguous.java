@@ -19,6 +19,7 @@ import objectos.html.AttributeName;
 import objectos.html.ElementName;
 import objectox.html.attr.AttributeNamePojo;
 import objectox.html.elem.ElementNamePojo;
+import objectox.html.rec.HtmlBytes;
 
 public enum Ambiguous {
 
