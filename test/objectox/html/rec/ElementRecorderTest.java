@@ -17,10 +17,6 @@ package objectox.html.rec;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.html.ElementName;
-import objectox.html.Ambiguous;
-import objectox.html.HtmlByteProto;
-import objectox.html.HtmlInstruction;
 import objectox.html.elem.ElementNamePojo;
 import org.testng.annotations.Test;
 
@@ -97,86 +93,43 @@ public class ElementRecorderTest {
     );
   }
 
-  @Test(description = "<html><head><title>x</title></head></html>")
+  @Test(description = """
+  <html lang="pt-BR"></html>
+  """)
   public void record03() {
-    final ByteArray aux;
-    aux = ByteArray.of(HtmlByteProto.INTERNAL);
+    final HtmlSink sink;
+    sink = new HtmlSink();
 
-    final ByteArray main;
-    main = ByteArray.of(
-        HtmlByteProto.MARKED5,
-        HtmlBytes.encodeInt0(Ambiguous.TITLE.ordinal()),
-        HtmlBytes.encodeInt0(0),
-        HtmlBytes.encodeInt1(0),
-        HtmlByteProto.INTERNAL5,
+    final int attrIndex;
+    attrIndex = sink.addByte(HtmlBytes.ATTRIBUTE88);
 
-        HtmlByteProto.ELEMENT,
-        HtmlBytes.encodeInt0(7),
-        HtmlBytes.encodeInt1(7),
-        HtmlByteProto.STANDARD_NAME,
-        (byte) ElementNamePojo.HEAD.index(),
-        HtmlByteProto.AMBIGUOUS1,
-        HtmlBytes.encodeInt0(11),
-        HtmlByteProto.END,
-        HtmlBytes.encodeInt0(12),
-        HtmlByteProto.INTERNAL
-    );
+    final AttributeInstruction attr;
+    attr = new AttributeInstruction(attrIndex);
 
-    final ObjectArray objects;
-    objects = ObjectArray.of("x");
+    final ElementRecorder subject;
+    subject = new ElementRecorder(sink);
 
-    final ZZZElementRecorder subject;
-    subject = ZZZElementRecorder.of(aux, main, objects);
+    final ElementNamePojo name;
+    name = ElementNamePojo.HTML;
 
-    final ElementName name;
-    name = ElementName.HTML;
+    final ElementInstruction res;
+    res = subject.record(name, attr);
 
-    subject.record(name, HtmlInstruction.ELEMENT);
+    assertEquals(res.value(), 1);
 
     assertEquals(
-        aux,
+        sink,
 
-        ByteArray.of(HtmlByteProto.INTERNAL, HtmlByteProto.INTERNAL)
-    );
-
-    assertEquals(
-        main,
-
-        ByteArray.of(
-            HtmlByteProto.MARKED5,
-            HtmlBytes.encodeInt0(Ambiguous.TITLE.ordinal()),
-            HtmlBytes.encodeInt0(0),
-            HtmlBytes.encodeInt1(0),
-            HtmlByteProto.INTERNAL5,
-
-            HtmlByteProto.LENGTH2,
-            HtmlBytes.encodeInt0(7),
-            HtmlBytes.encodeInt1(7),
-            HtmlByteProto.STANDARD_NAME,
-            (byte) ElementNamePojo.HEAD.index(),
-            HtmlByteProto.AMBIGUOUS1,
-            HtmlBytes.encodeInt0(11),
-            HtmlByteProto.END,
-            HtmlBytes.encodeInt0(12),
-            HtmlByteProto.INTERNAL,
-
-            HtmlByteProto.ELEMENT,
-            HtmlBytes.encodeInt0(7),
-            HtmlBytes.encodeInt1(7),
-            HtmlByteProto.STANDARD_NAME,
-            (byte) ElementNamePojo.HTML.index(),
-            HtmlByteProto.ELEMENT,
-            HtmlBytes.encodeInt0(16),
-            HtmlByteProto.END,
-            HtmlBytes.encodeInt0(22),
-            HtmlByteProto.INTERNAL
-        )
-    );
-
-    assertEquals(
-        objects,
-
-        ObjectArray.of("x")
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.XATTRIBUTE88);
+          opts.addByte(HtmlBytes.STARTTAG8);
+          opts.addInt8(name.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(1);
+          opts.addInt8(0);
+          opts.addByte(HtmlBytes.ENDTAG8);
+          opts.addInt8(name.index());
+        })
     );
   }
 

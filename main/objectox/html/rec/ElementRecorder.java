@@ -36,29 +36,38 @@ final class ElementRecorder {
     final Instruction[] instructions;
     instructions = Objects.requireNonNull(contents, "contents == null");
 
-    final int startIndex;
-
     final ElementNamePojo namePojo;
     namePojo = (ElementNamePojo) name;
 
     final int nameIndex;
     nameIndex = namePojo.index();
 
-    if (nameIndex <= HtmlSink.MAX_INT8) {
-      startIndex = sink.addByte(HtmlBytes.STARTTAG8);
+    final IntSize nameSize;
+    nameSize = IntSize.of(nameIndex);
 
-      sink.addInt8(nameIndex);
+    final int startIndex;
+    startIndex = switch (nameSize) {
+      case BIT8 -> record8(nameIndex, instructions);
 
-      contentsRecorder.record(instructions);
-
-      sink.addByte(HtmlBytes.ENDTAG8);
-
-      sink.addInt8(nameIndex);
-    } else {
-      throw new UnsupportedOperationException();
-    }
+      case BIT16, BIT24 -> throw new UnsupportedOperationException();
+    };
 
     return new ElementInstruction(startIndex);
+  }
+
+  private int record8(int nameIndex, Instruction[] instructions) {
+    final int startIndex;
+    startIndex = sink.addByte(HtmlBytes.STARTTAG8);
+
+    sink.addInt8(nameIndex);
+
+    contentsRecorder.record(instructions);
+
+    sink.addByte(HtmlBytes.ENDTAG8);
+
+    sink.addInt8(nameIndex);
+
+    return startIndex;
   }
 
 }

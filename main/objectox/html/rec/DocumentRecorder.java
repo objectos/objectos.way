@@ -21,11 +21,15 @@ import objectos.html.rec.Instruction;
 
 final class DocumentRecorder {
 
+  private final AttributeRecorder attributeRecorder;
+
   private final BooleanAttributeRecorder booleanAttributeRecorder;
 
   private final ElementRecorder elementRecorder;
 
-  DocumentRecorder(BooleanAttributeRecorder booleanAttributeRecorder, ElementRecorder elementRecorder) {
+  DocumentRecorder(AttributeRecorder attributeRecorder, BooleanAttributeRecorder booleanAttributeRecorder, ElementRecorder elementRecorder) {
+    this.attributeRecorder = attributeRecorder;
+
     this.booleanAttributeRecorder = booleanAttributeRecorder;
 
     this.elementRecorder = elementRecorder;
@@ -33,6 +37,8 @@ final class DocumentRecorder {
 
   public static DocumentRecorder of(HtmlSink sink) {
     return new DocumentRecorder(
+        new AttributeRecorder(sink),
+
         new BooleanAttributeRecorder(sink),
 
         new ElementRecorder(sink)
@@ -41,6 +47,10 @@ final class DocumentRecorder {
 
   public final AttributeInstruction attribute(AttributeName name) {
     return booleanAttributeRecorder.record(name);
+  }
+
+  public final AttributeInstruction attribute(AttributeName name, String value) {
+    return attributeRecorder.record(name, value);
   }
 
   public final ElementInstruction element(ElementName name, Instruction... contents) {

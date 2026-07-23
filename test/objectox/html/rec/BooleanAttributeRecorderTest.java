@@ -22,8 +22,8 @@ import org.testng.annotations.Test;
 
 public class BooleanAttributeRecorderTest {
 
-  @Test
-  public void record02() {
+  @Test(description = "BOOLEAN8")
+  public void record01() {
     final HtmlSink sink;
     sink = new HtmlSink();
 

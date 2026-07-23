@@ -45,7 +45,7 @@ public final class Recorder {
 
   private final ZZZAttribute0Recorder attribute0Recorder;
 
-  private final Attribute1Recorder attribute1Recorder;
+  private final ZZZAttribute1Recorder attribute1Recorder;
 
   private final ComponentRecorder componentRecorder;
 
@@ -70,7 +70,7 @@ public final class Recorder {
 
       ZZZAttribute0Recorder attribute0Recorder,
 
-      Attribute1Recorder attribute1Recorder,
+      ZZZAttribute1Recorder attribute1Recorder,
 
       ComponentRecorder componentRecorder,
 
@@ -157,7 +157,7 @@ public final class Recorder {
 
         new ZZZAttribute0Recorder(main, objects),
 
-        new Attribute1Recorder(main, objects),
+        new ZZZAttribute1Recorder(main, objects),
 
         new ComponentRecorder(main, forwardOffsetRecorder, reverseOffsetRecorder),
 

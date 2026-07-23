@@ -51,23 +51,17 @@ final class ContentsRecorder {
     final int optmisticMax;
     optmisticMax = last.value();
 
+    final IntSize optmisticMaxSize;
+    optmisticMaxSize = IntSize.of(optmisticMax);
+
     final int actualMax;
+    actualMax = switch (optmisticMaxSize) {
+      case BIT8 -> record1(instructions, length, HtmlBytes.VALUES8, sink::addInt8);
 
-    if (optmisticMax <= HtmlSink.MAX_INT8) {
-      actualMax = record1(instructions, length, HtmlBytes.VALUES8, sink::addInt8);
-    }
+      case BIT16 -> record1(instructions, length, HtmlBytes.VALUES16, sink::addInt16);
 
-    else if (optmisticMax <= HtmlSink.MAX_INT16) {
-      actualMax = record1(instructions, length, HtmlBytes.VALUES16, sink::addInt16);
-    }
-
-    else if (optmisticMax <= HtmlSink.MAX_INT24) {
-      actualMax = record1(instructions, length, HtmlBytes.VALUES24, sink::addInt24);
-    }
-
-    else {
-      throw new UnsupportedOperationException("Implement me");
-    }
+      case BIT24 -> record1(instructions, length, HtmlBytes.VALUES24, sink::addInt24);
+    };
 
     if (actualMax != optmisticMax) {
       throw new UnsupportedOperationException("Implement me");

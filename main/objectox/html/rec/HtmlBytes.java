@@ -22,14 +22,20 @@ public final class HtmlBytes {
 
   public static final byte STARTTAG8 = -128;
   public static final byte ENDTAG8 = -127;
-  public static final byte BOOLEAN8 = -126;
-  public static final byte VALUES0 = -125;
-  public static final byte VALUES8 = -124;
-  public static final byte VALUES16 = -123;
-  public static final byte VALUES24 = -122;
+  public static final byte ATTRIBUTE88 = -126;
+  public static final byte ATTRIBUTE816 = -125;
+  public static final byte ATTRIBUTE824 = -124;
+  public static final byte BOOLEAN8 = -123;
+  public static final byte VALUES0 = -122;
+  public static final byte VALUES8 = -121;
+  public static final byte VALUES16 = -120;
+  public static final byte VALUES24 = -119;
 
   public static final byte XSTARTTAG8 = -99;
-  public static final byte XBOOLEAN8 = -98;
+  public static final byte XATTRIBUTE88 = -98;
+  public static final byte XATTRIBUTE816 = -97;
+  public static final byte XATTRIBUTE824 = -96;
+  public static final byte XBOOLEAN8 = -95;
 
   //
 
@@ -40,6 +46,12 @@ public final class HtmlBytes {
   public static byte consume(byte source) {
     return switch (source) {
       case STARTTAG8, XSTARTTAG8 -> XSTARTTAG8;
+
+      case ATTRIBUTE88, XATTRIBUTE88 -> XATTRIBUTE88;
+
+      case ATTRIBUTE816, XATTRIBUTE816 -> XATTRIBUTE816;
+
+      case ATTRIBUTE824, XATTRIBUTE824 -> XATTRIBUTE824;
 
       case BOOLEAN8, XBOOLEAN8 -> XBOOLEAN8;
 
