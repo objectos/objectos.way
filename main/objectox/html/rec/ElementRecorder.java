@@ -32,7 +32,7 @@ final class ElementRecorder {
     contentsRecorder = new ContentsRecorder(sink, sink::consume);
   }
 
-  public final ElementInstruction record(ElementName name, Instruction... contents) {
+  public final ElementPointer record(ElementName name, Instruction... contents) {
     final Instruction[] instructions;
     instructions = Objects.requireNonNull(contents, "contents == null");
 
@@ -52,7 +52,7 @@ final class ElementRecorder {
       case BIT16, BIT24 -> throw new UnsupportedOperationException();
     };
 
-    return new ElementInstruction(startIndex);
+    return new ElementPointer(startIndex);
   }
 
   private int record8(int nameIndex, Instruction[] instructions) {

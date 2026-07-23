@@ -22,8 +22,8 @@ import objectos.html.AttributeObject;
 import objectos.html.Component;
 import objectos.html.ElementName;
 import objectos.html.Markup;
-import objectos.html.rec.AttributeMarkup;
-import objectos.html.rec.ElementMarkup;
+import objectos.html.rec.AttributeInstruction;
+import objectos.html.rec.ElementInstruction;
 import objectos.html.rec.Fragment0;
 import objectos.html.rec.Fragment1;
 import objectos.html.rec.Fragment2;
@@ -187,7 +187,7 @@ public sealed abstract class MarkupPojo
   }
 
   @Override
-  public final AttributeMarkup css(String value) {
+  public final AttributeInstruction css(String value) {
     final String formatted;
     formatted = AttributeNamePojo.formatAttrValue(value, sb);
 
@@ -195,12 +195,12 @@ public sealed abstract class MarkupPojo
   }
 
   @Override
-  public final ElementMarkup flatten(Instruction... contents) {
+  public final ElementInstruction flatten(Instruction... contents) {
     return recorder.flatten(contents);
   }
 
   @Override
-  public final ElementMarkup flatten(Iterable<? extends Instruction> contents) {
+  public final ElementInstruction flatten(Iterable<? extends Instruction> contents) {
     return recorder.flatten(contents);
   }
 
@@ -231,7 +231,7 @@ public sealed abstract class MarkupPojo
   // ##################################################################
 
   @Override
-  public final AttributeMarkup attr(AttributeObject object) {
+  public final AttributeInstruction attr(AttributeObject object) {
     final AttributeName name;
     name = object.attrName();
 
@@ -254,17 +254,17 @@ public sealed abstract class MarkupPojo
   // ##################################################################
 
   @Override
-  public final ElementMarkup nbsp() {
+  public final ElementInstruction nbsp() {
     return recorder.raw("&nbsp;");
   }
 
   @Override
-  public final ElementMarkup raw(String text) {
+  public final ElementInstruction raw(String text) {
     return recorder.raw(text);
   }
 
   @Override
-  public final ElementMarkup text(String text) {
+  public final ElementInstruction text(String text) {
     return recorder.text(text);
   }
 
@@ -1794,22 +1794,22 @@ public sealed abstract class MarkupPojo
   }
 
   @Override
-  final AttributeMarkup attr0(AttributeName name) {
+  final AttributeInstruction attr0(AttributeName name) {
     return recorder.attribute0(name);
   }
 
   @Override
-  final AttributeMarkup attr0(AttributeName name, Object value) {
+  final AttributeInstruction attr0(AttributeName name, Object value) {
     return recorder.attribute1(name, value);
   }
 
   @Override
-  final ElementMarkup elem0(ElementName name, Instruction... contents) {
+  final ElementInstruction elem0(ElementName name, Instruction... contents) {
     return recorder.element(name, contents);
   }
 
   @Override
-  final ElementMarkup elem0(ElementName name, String text) {
+  final ElementInstruction elem0(ElementName name, String text) {
     final Instruction t;
     t = recorder.text(text);
 

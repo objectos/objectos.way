@@ -20,22 +20,60 @@ import objectox.html.elem.ElementNamePojo;
 
 public final class HtmlBytes {
 
+  // element
+
   public static final byte STARTTAG8 = -128;
   public static final byte ENDTAG8 = -127;
+
+  // attributes
+
   public static final byte ATTRIBUTE88 = -126;
   public static final byte ATTRIBUTE816 = -125;
   public static final byte ATTRIBUTE824 = -124;
   public static final byte BOOLEAN8 = -123;
-  public static final byte VALUES0 = -122;
-  public static final byte VALUES8 = -121;
-  public static final byte VALUES16 = -120;
-  public static final byte VALUES24 = -119;
 
-  public static final byte XSTARTTAG8 = -99;
-  public static final byte XATTRIBUTE88 = -98;
-  public static final byte XATTRIBUTE816 = -97;
-  public static final byte XATTRIBUTE824 = -96;
-  public static final byte XBOOLEAN8 = -95;
+  // text
+
+  public static final byte TEXT8 = -122;
+  public static final byte TEXT16 = -121;
+  public static final byte TEXT24 = -120;
+
+  // raw
+
+  public static final byte RAW8 = -119;
+  public static final byte RAW16 = -118;
+  public static final byte RAW24 = -117;
+
+  // contents
+
+  public static final byte VALUES0 = -116;
+  public static final byte VALUES8 = -115;
+  public static final byte VALUES16 = -114;
+  public static final byte VALUES24 = -113;
+
+  // xelement
+
+  public static final byte xSTARTTAG8 = -112;
+  public static final byte xENDTAG8 = -111;
+
+  // xattributes
+
+  public static final byte xATTRIBUTE88 = -110;
+  public static final byte xATTRIBUTE816 = -109;
+  public static final byte xATTRIBUTE824 = -108;
+  public static final byte xBOOLEAN8 = -107;
+
+  // xtext
+
+  public static final byte xTEXT8 = -106;
+  public static final byte xTEXT16 = -105;
+  public static final byte xTEXT24 = -104;
+
+  // xraw
+
+  public static final byte xRAW8 = -103;
+  public static final byte xRAW16 = -102;
+  public static final byte xRAW24 = -101;
 
   //
 
@@ -45,15 +83,27 @@ public final class HtmlBytes {
 
   public static byte consume(byte source) {
     return switch (source) {
-      case STARTTAG8, XSTARTTAG8 -> XSTARTTAG8;
+      case STARTTAG8, xSTARTTAG8 -> xSTARTTAG8;
 
-      case ATTRIBUTE88, XATTRIBUTE88 -> XATTRIBUTE88;
+      case ATTRIBUTE88, xATTRIBUTE88 -> xATTRIBUTE88;
 
-      case ATTRIBUTE816, XATTRIBUTE816 -> XATTRIBUTE816;
+      case ATTRIBUTE816, xATTRIBUTE816 -> xATTRIBUTE816;
 
-      case ATTRIBUTE824, XATTRIBUTE824 -> XATTRIBUTE824;
+      case ATTRIBUTE824, xATTRIBUTE824 -> xATTRIBUTE824;
 
-      case BOOLEAN8, XBOOLEAN8 -> XBOOLEAN8;
+      case BOOLEAN8, xBOOLEAN8 -> xBOOLEAN8;
+
+      case TEXT8, xTEXT8 -> xTEXT8;
+
+      case TEXT16, xTEXT16 -> xTEXT16;
+
+      case TEXT24, xTEXT24 -> xTEXT24;
+
+      case RAW8, xRAW8 -> xRAW8;
+
+      case RAW16, xRAW16 -> xRAW16;
+
+      case RAW24, xRAW24 -> xRAW24;
 
       default -> throw new IllegalArgumentException("source=" + source);
     };

@@ -15,7 +15,7 @@
  */
 package objectox.html;
 
-import objectos.html.rec.ElementMarkup;
+import objectos.html.rec.ElementInstruction;
 import objectos.html.rec.Instruction;
 import objectox.html.attr.AttributeOrNoOp;
 
@@ -23,7 +23,7 @@ public final class HtmlInstruction
     implements
     AttributeOrNoOp,
     Instruction.OfAmbiguous,
-    ElementMarkup,
+    ElementInstruction,
     Instruction.OfFragment {
 
   public static final AttributeOrNoOp ATTRIBUTE = new HtmlInstruction();

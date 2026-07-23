@@ -21,8 +21,8 @@ import objectos.html.AttributeObject;
 import objectos.html.Component;
 import objectos.html.ElementName;
 import objectos.html.Markup;
-import objectos.html.rec.AttributeMarkup;
-import objectos.html.rec.ElementMarkup;
+import objectos.html.rec.AttributeInstruction;
+import objectos.html.rec.ElementInstruction;
 import objectos.html.rec.Fragment0;
 import objectos.html.rec.Fragment1;
 import objectos.html.rec.Fragment2;
@@ -111,7 +111,7 @@ public final class Html {
     /// @param object the attribute
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup attr(AttributeObject object) {
+    protected final AttributeInstruction attr(AttributeObject object) {
       return $html().attr(object);
     }
 
@@ -180,7 +180,7 @@ public final class Html {
     ///        across multiple lines
     ///
     /// @return an instruction representing this attribute.
-    protected final AttributeMarkup css(String value) {
+    protected final AttributeInstruction css(String value) {
       return $html().css(value);
     }
 
@@ -326,7 +326,7 @@ public final class Html {
     /// @param contents the instructions to be flattened
     ///
     /// @return an instruction representing this flatten operation
-    protected final ElementMarkup flatten(Instruction... contents) {
+    protected final ElementInstruction flatten(Instruction... contents) {
       return $html().flatten(contents);
     }
 
@@ -336,7 +336,7 @@ public final class Html {
     /// @param contents the instructions to be flattened
     ///
     /// @return an instruction representing this flatten operation
-    protected final ElementMarkup flatten(Iterable<? extends Instruction> contents) {
+    protected final ElementInstruction flatten(Iterable<? extends Instruction> contents) {
       return $html().flatten(contents);
     }
 
@@ -461,7 +461,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element
-    protected final ElementMarkup elem(ElementName name, Instruction... contents) {
+    protected final ElementInstruction elem(ElementName name, Instruction... contents) {
       return $html().elem(name, contents);
     }
 
@@ -471,7 +471,7 @@ public final class Html {
     /// @param text the text value of this element
     ///
     /// @return an instruction representing the element
-    protected final ElementMarkup elem(ElementName name, String text) {
+    protected final ElementInstruction elem(ElementName name, String text) {
       return $html().elem(name, text);
     }
 
@@ -485,7 +485,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup a(Instruction... contents) {
+    protected final ElementInstruction a(Instruction... contents) {
       return $html().a(contents);
     }
 
@@ -494,7 +494,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup a(String text) {
+    protected final ElementInstruction a(String text) {
       return $html().a(text);
     }
 
@@ -503,7 +503,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup abbr(Instruction... contents) {
+    protected final ElementInstruction abbr(Instruction... contents) {
       return $html().abbr(contents);
     }
 
@@ -512,7 +512,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup abbr(String text) {
+    protected final ElementInstruction abbr(String text) {
       return $html().abbr(text);
     }
 
@@ -521,7 +521,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup article(Instruction... contents) {
+    protected final ElementInstruction article(Instruction... contents) {
       return $html().article(contents);
     }
 
@@ -530,7 +530,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup article(String text) {
+    protected final ElementInstruction article(String text) {
       return $html().article(text);
     }
 
@@ -539,7 +539,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup aside(Instruction... contents) {
+    protected final ElementInstruction aside(Instruction... contents) {
       return $html().aside(contents);
     }
 
@@ -548,7 +548,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup aside(String text) {
+    protected final ElementInstruction aside(String text) {
       return $html().aside(text);
     }
 
@@ -557,7 +557,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup b(Instruction... contents) {
+    protected final ElementInstruction b(Instruction... contents) {
       return $html().b(contents);
     }
 
@@ -566,7 +566,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup b(String text) {
+    protected final ElementInstruction b(String text) {
       return $html().b(text);
     }
 
@@ -575,7 +575,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup blockquote(Instruction... contents) {
+    protected final ElementInstruction blockquote(Instruction... contents) {
       return $html().blockquote(contents);
     }
 
@@ -584,7 +584,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup blockquote(String text) {
+    protected final ElementInstruction blockquote(String text) {
       return $html().blockquote(text);
     }
 
@@ -593,7 +593,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup body(Instruction... contents) {
+    protected final ElementInstruction body(Instruction... contents) {
       return $html().body(contents);
     }
 
@@ -602,7 +602,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup body(String text) {
+    protected final ElementInstruction body(String text) {
       return $html().body(text);
     }
 
@@ -611,7 +611,7 @@ public final class Html {
     /// @param contents the attributes of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup br(Instruction.OfVoid... contents) {
+    protected final ElementInstruction br(Instruction.OfVoid... contents) {
       return $html().br(contents);
     }
 
@@ -620,7 +620,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup button(Instruction... contents) {
+    protected final ElementInstruction button(Instruction... contents) {
       return $html().button(contents);
     }
 
@@ -629,7 +629,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup button(String text) {
+    protected final ElementInstruction button(String text) {
       return $html().button(text);
     }
 
@@ -638,7 +638,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup clipPath(Instruction... contents) {
+    protected final ElementInstruction clipPath(Instruction... contents) {
       return $html().clipPath(contents);
     }
 
@@ -647,7 +647,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup code(Instruction... contents) {
+    protected final ElementInstruction code(Instruction... contents) {
       return $html().code(contents);
     }
 
@@ -656,7 +656,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup code(String text) {
+    protected final ElementInstruction code(String text) {
       return $html().code(text);
     }
 
@@ -665,7 +665,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup dd(Instruction... contents) {
+    protected final ElementInstruction dd(Instruction... contents) {
       return $html().dd(contents);
     }
 
@@ -674,7 +674,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup dd(String text) {
+    protected final ElementInstruction dd(String text) {
       return $html().dd(text);
     }
 
@@ -683,7 +683,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup defs(Instruction... contents) {
+    protected final ElementInstruction defs(Instruction... contents) {
       return $html().defs(contents);
     }
 
@@ -692,7 +692,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup defs(String text) {
+    protected final ElementInstruction defs(String text) {
       return $html().defs(text);
     }
 
@@ -701,7 +701,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup details(Instruction... contents) {
+    protected final ElementInstruction details(Instruction... contents) {
       return $html().details(contents);
     }
 
@@ -710,7 +710,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup details(String text) {
+    protected final ElementInstruction details(String text) {
       return $html().details(text);
     }
 
@@ -719,7 +719,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup dialog(Instruction... contents) {
+    protected final ElementInstruction dialog(Instruction... contents) {
       return $html().dialog(contents);
     }
 
@@ -728,7 +728,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup dialog(String text) {
+    protected final ElementInstruction dialog(String text) {
       return $html().dialog(text);
     }
 
@@ -737,7 +737,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup div(Instruction... contents) {
+    protected final ElementInstruction div(Instruction... contents) {
       return $html().div(contents);
     }
 
@@ -746,7 +746,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup div(String text) {
+    protected final ElementInstruction div(String text) {
       return $html().div(text);
     }
 
@@ -755,7 +755,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup dl(Instruction... contents) {
+    protected final ElementInstruction dl(Instruction... contents) {
       return $html().dl(contents);
     }
 
@@ -764,7 +764,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup dl(String text) {
+    protected final ElementInstruction dl(String text) {
       return $html().dl(text);
     }
 
@@ -773,7 +773,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup dt(Instruction... contents) {
+    protected final ElementInstruction dt(Instruction... contents) {
       return $html().dt(contents);
     }
 
@@ -782,7 +782,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup dt(String text) {
+    protected final ElementInstruction dt(String text) {
       return $html().dt(text);
     }
 
@@ -791,7 +791,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup em(Instruction... contents) {
+    protected final ElementInstruction em(Instruction... contents) {
       return $html().em(contents);
     }
 
@@ -800,7 +800,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup em(String text) {
+    protected final ElementInstruction em(String text) {
       return $html().em(text);
     }
 
@@ -809,7 +809,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup fieldset(Instruction... contents) {
+    protected final ElementInstruction fieldset(Instruction... contents) {
       return $html().fieldset(contents);
     }
 
@@ -818,7 +818,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup fieldset(String text) {
+    protected final ElementInstruction fieldset(String text) {
       return $html().fieldset(text);
     }
 
@@ -827,7 +827,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup figure(Instruction... contents) {
+    protected final ElementInstruction figure(Instruction... contents) {
       return $html().figure(contents);
     }
 
@@ -836,7 +836,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup figure(String text) {
+    protected final ElementInstruction figure(String text) {
       return $html().figure(text);
     }
 
@@ -845,7 +845,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup footer(Instruction... contents) {
+    protected final ElementInstruction footer(Instruction... contents) {
       return $html().footer(contents);
     }
 
@@ -854,7 +854,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup footer(String text) {
+    protected final ElementInstruction footer(String text) {
       return $html().footer(text);
     }
 
@@ -863,7 +863,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup form(Instruction... contents) {
+    protected final ElementInstruction form(Instruction... contents) {
       return $html().form(contents);
     }
 
@@ -872,7 +872,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup g(Instruction... contents) {
+    protected final ElementInstruction g(Instruction... contents) {
       return $html().g(contents);
     }
 
@@ -881,7 +881,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup g(String text) {
+    protected final ElementInstruction g(String text) {
       return $html().g(text);
     }
 
@@ -890,7 +890,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup h1(Instruction... contents) {
+    protected final ElementInstruction h1(Instruction... contents) {
       return $html().h1(contents);
     }
 
@@ -899,7 +899,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup h1(String text) {
+    protected final ElementInstruction h1(String text) {
       return $html().h1(text);
     }
 
@@ -908,7 +908,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup h2(Instruction... contents) {
+    protected final ElementInstruction h2(Instruction... contents) {
       return $html().h2(contents);
     }
 
@@ -917,7 +917,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup h2(String text) {
+    protected final ElementInstruction h2(String text) {
       return $html().h2(text);
     }
 
@@ -926,7 +926,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup h3(Instruction... contents) {
+    protected final ElementInstruction h3(Instruction... contents) {
       return $html().h3(contents);
     }
 
@@ -935,7 +935,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup h3(String text) {
+    protected final ElementInstruction h3(String text) {
       return $html().h3(text);
     }
 
@@ -944,7 +944,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup h4(Instruction... contents) {
+    protected final ElementInstruction h4(Instruction... contents) {
       return $html().h4(contents);
     }
 
@@ -953,7 +953,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup h4(String text) {
+    protected final ElementInstruction h4(String text) {
       return $html().h4(text);
     }
 
@@ -962,7 +962,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup h5(Instruction... contents) {
+    protected final ElementInstruction h5(Instruction... contents) {
       return $html().h5(contents);
     }
 
@@ -971,7 +971,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup h5(String text) {
+    protected final ElementInstruction h5(String text) {
       return $html().h5(text);
     }
 
@@ -980,7 +980,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup h6(Instruction... contents) {
+    protected final ElementInstruction h6(Instruction... contents) {
       return $html().h6(contents);
     }
 
@@ -989,7 +989,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup h6(String text) {
+    protected final ElementInstruction h6(String text) {
       return $html().h6(text);
     }
 
@@ -998,7 +998,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup head(Instruction... contents) {
+    protected final ElementInstruction head(Instruction... contents) {
       return $html().head(contents);
     }
 
@@ -1007,7 +1007,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup head(String text) {
+    protected final ElementInstruction head(String text) {
       return $html().head(text);
     }
 
@@ -1016,7 +1016,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup header(Instruction... contents) {
+    protected final ElementInstruction header(Instruction... contents) {
       return $html().header(contents);
     }
 
@@ -1025,7 +1025,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup header(String text) {
+    protected final ElementInstruction header(String text) {
       return $html().header(text);
     }
 
@@ -1034,7 +1034,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup hgroup(Instruction... contents) {
+    protected final ElementInstruction hgroup(Instruction... contents) {
       return $html().hgroup(contents);
     }
 
@@ -1043,7 +1043,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup hgroup(String text) {
+    protected final ElementInstruction hgroup(String text) {
       return $html().hgroup(text);
     }
 
@@ -1052,7 +1052,7 @@ public final class Html {
     /// @param contents the attributes of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup hr(Instruction.OfVoid... contents) {
+    protected final ElementInstruction hr(Instruction.OfVoid... contents) {
       return $html().hr(contents);
     }
 
@@ -1061,7 +1061,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup html(Instruction... contents) {
+    protected final ElementInstruction html(Instruction... contents) {
       return $html().html(contents);
     }
 
@@ -1070,7 +1070,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup html(String text) {
+    protected final ElementInstruction html(String text) {
       return $html().html(text);
     }
 
@@ -1079,7 +1079,7 @@ public final class Html {
     /// @param contents the attributes of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup img(Instruction.OfVoid... contents) {
+    protected final ElementInstruction img(Instruction.OfVoid... contents) {
       return $html().img(contents);
     }
 
@@ -1088,7 +1088,7 @@ public final class Html {
     /// @param contents the attributes of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup input(Instruction.OfVoid... contents) {
+    protected final ElementInstruction input(Instruction.OfVoid... contents) {
       return $html().input(contents);
     }
 
@@ -1097,7 +1097,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup kbd(Instruction... contents) {
+    protected final ElementInstruction kbd(Instruction... contents) {
       return $html().kbd(contents);
     }
 
@@ -1106,7 +1106,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup kbd(String text) {
+    protected final ElementInstruction kbd(String text) {
       return $html().kbd(text);
     }
 
@@ -1115,7 +1115,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup label(Instruction... contents) {
+    protected final ElementInstruction label(Instruction... contents) {
       return $html().label(contents);
     }
 
@@ -1124,7 +1124,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup legend(Instruction... contents) {
+    protected final ElementInstruction legend(Instruction... contents) {
       return $html().legend(contents);
     }
 
@@ -1133,7 +1133,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup legend(String text) {
+    protected final ElementInstruction legend(String text) {
       return $html().legend(text);
     }
 
@@ -1142,7 +1142,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup li(Instruction... contents) {
+    protected final ElementInstruction li(Instruction... contents) {
       return $html().li(contents);
     }
 
@@ -1151,7 +1151,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup li(String text) {
+    protected final ElementInstruction li(String text) {
       return $html().li(text);
     }
 
@@ -1160,7 +1160,7 @@ public final class Html {
     /// @param contents the attributes of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup link(Instruction.OfVoid... contents) {
+    protected final ElementInstruction link(Instruction.OfVoid... contents) {
       return $html().link(contents);
     }
 
@@ -1169,7 +1169,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup main(Instruction... contents) {
+    protected final ElementInstruction main(Instruction... contents) {
       return $html().main(contents);
     }
 
@@ -1178,7 +1178,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup main(String text) {
+    protected final ElementInstruction main(String text) {
       return $html().main(text);
     }
 
@@ -1187,7 +1187,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup menu(Instruction... contents) {
+    protected final ElementInstruction menu(Instruction... contents) {
       return $html().menu(contents);
     }
 
@@ -1196,7 +1196,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup menu(String text) {
+    protected final ElementInstruction menu(String text) {
       return $html().menu(text);
     }
 
@@ -1205,7 +1205,7 @@ public final class Html {
     /// @param contents the attributes of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup meta(Instruction.OfVoid... contents) {
+    protected final ElementInstruction meta(Instruction.OfVoid... contents) {
       return $html().meta(contents);
     }
 
@@ -1214,7 +1214,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup nav(Instruction... contents) {
+    protected final ElementInstruction nav(Instruction... contents) {
       return $html().nav(contents);
     }
 
@@ -1223,7 +1223,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup nav(String text) {
+    protected final ElementInstruction nav(String text) {
       return $html().nav(text);
     }
 
@@ -1232,7 +1232,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup noscript(Instruction... contents) {
+    protected final ElementInstruction noscript(Instruction... contents) {
       return $html().noscript(contents);
     }
 
@@ -1241,7 +1241,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup noscript(String text) {
+    protected final ElementInstruction noscript(String text) {
       return $html().noscript(text);
     }
 
@@ -1250,7 +1250,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup ol(Instruction... contents) {
+    protected final ElementInstruction ol(Instruction... contents) {
       return $html().ol(contents);
     }
 
@@ -1259,7 +1259,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup ol(String text) {
+    protected final ElementInstruction ol(String text) {
       return $html().ol(text);
     }
 
@@ -1268,7 +1268,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup optgroup(Instruction... contents) {
+    protected final ElementInstruction optgroup(Instruction... contents) {
       return $html().optgroup(contents);
     }
 
@@ -1277,7 +1277,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup optgroup(String text) {
+    protected final ElementInstruction optgroup(String text) {
       return $html().optgroup(text);
     }
 
@@ -1286,7 +1286,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup option(Instruction... contents) {
+    protected final ElementInstruction option(Instruction... contents) {
       return $html().option(contents);
     }
 
@@ -1295,7 +1295,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup option(String text) {
+    protected final ElementInstruction option(String text) {
       return $html().option(text);
     }
 
@@ -1304,7 +1304,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup p(Instruction... contents) {
+    protected final ElementInstruction p(Instruction... contents) {
       return $html().p(contents);
     }
 
@@ -1313,7 +1313,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup p(String text) {
+    protected final ElementInstruction p(String text) {
       return $html().p(text);
     }
 
@@ -1322,7 +1322,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup path(Instruction... contents) {
+    protected final ElementInstruction path(Instruction... contents) {
       return $html().path(contents);
     }
 
@@ -1331,7 +1331,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup path(String text) {
+    protected final ElementInstruction path(String text) {
       return $html().path(text);
     }
 
@@ -1340,7 +1340,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup pre(Instruction... contents) {
+    protected final ElementInstruction pre(Instruction... contents) {
       return $html().pre(contents);
     }
 
@@ -1349,7 +1349,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup pre(String text) {
+    protected final ElementInstruction pre(String text) {
       return $html().pre(text);
     }
 
@@ -1358,7 +1358,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup progress(Instruction... contents) {
+    protected final ElementInstruction progress(Instruction... contents) {
       return $html().progress(contents);
     }
 
@@ -1367,7 +1367,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup progress(String text) {
+    protected final ElementInstruction progress(String text) {
       return $html().progress(text);
     }
 
@@ -1376,7 +1376,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup samp(Instruction... contents) {
+    protected final ElementInstruction samp(Instruction... contents) {
       return $html().samp(contents);
     }
 
@@ -1385,7 +1385,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup samp(String text) {
+    protected final ElementInstruction samp(String text) {
       return $html().samp(text);
     }
 
@@ -1394,7 +1394,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup script(Instruction... contents) {
+    protected final ElementInstruction script(Instruction... contents) {
       return $html().script(contents);
     }
 
@@ -1403,7 +1403,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup script(String text) {
+    protected final ElementInstruction script(String text) {
       return $html().script(text);
     }
 
@@ -1412,7 +1412,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup section(Instruction... contents) {
+    protected final ElementInstruction section(Instruction... contents) {
       return $html().section(contents);
     }
 
@@ -1421,7 +1421,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup section(String text) {
+    protected final ElementInstruction section(String text) {
       return $html().section(text);
     }
 
@@ -1430,7 +1430,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup select(Instruction... contents) {
+    protected final ElementInstruction select(Instruction... contents) {
       return $html().select(contents);
     }
 
@@ -1439,7 +1439,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup select(String text) {
+    protected final ElementInstruction select(String text) {
       return $html().select(text);
     }
 
@@ -1448,7 +1448,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup small(Instruction... contents) {
+    protected final ElementInstruction small(Instruction... contents) {
       return $html().small(contents);
     }
 
@@ -1457,7 +1457,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup small(String text) {
+    protected final ElementInstruction small(String text) {
       return $html().small(text);
     }
 
@@ -1466,7 +1466,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup span(Instruction... contents) {
+    protected final ElementInstruction span(Instruction... contents) {
       return $html().span(contents);
     }
 
@@ -1475,7 +1475,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup span(String text) {
+    protected final ElementInstruction span(String text) {
       return $html().span(text);
     }
 
@@ -1484,7 +1484,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup strong(Instruction... contents) {
+    protected final ElementInstruction strong(Instruction... contents) {
       return $html().strong(contents);
     }
 
@@ -1493,7 +1493,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup strong(String text) {
+    protected final ElementInstruction strong(String text) {
       return $html().strong(text);
     }
 
@@ -1502,7 +1502,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup style(Instruction... contents) {
+    protected final ElementInstruction style(Instruction... contents) {
       return $html().style(contents);
     }
 
@@ -1511,7 +1511,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup sub(Instruction... contents) {
+    protected final ElementInstruction sub(Instruction... contents) {
       return $html().sub(contents);
     }
 
@@ -1520,7 +1520,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup sub(String text) {
+    protected final ElementInstruction sub(String text) {
       return $html().sub(text);
     }
 
@@ -1529,7 +1529,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup summary(Instruction... contents) {
+    protected final ElementInstruction summary(Instruction... contents) {
       return $html().summary(contents);
     }
 
@@ -1538,7 +1538,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup summary(String text) {
+    protected final ElementInstruction summary(String text) {
       return $html().summary(text);
     }
 
@@ -1547,7 +1547,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup sup(Instruction... contents) {
+    protected final ElementInstruction sup(Instruction... contents) {
       return $html().sup(contents);
     }
 
@@ -1556,7 +1556,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup sup(String text) {
+    protected final ElementInstruction sup(String text) {
       return $html().sup(text);
     }
 
@@ -1565,7 +1565,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup svg(Instruction... contents) {
+    protected final ElementInstruction svg(Instruction... contents) {
       return $html().svg(contents);
     }
 
@@ -1574,7 +1574,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup svg(String text) {
+    protected final ElementInstruction svg(String text) {
       return $html().svg(text);
     }
 
@@ -1583,7 +1583,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup table(Instruction... contents) {
+    protected final ElementInstruction table(Instruction... contents) {
       return $html().table(contents);
     }
 
@@ -1592,7 +1592,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup table(String text) {
+    protected final ElementInstruction table(String text) {
       return $html().table(text);
     }
 
@@ -1601,7 +1601,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup tbody(Instruction... contents) {
+    protected final ElementInstruction tbody(Instruction... contents) {
       return $html().tbody(contents);
     }
 
@@ -1610,7 +1610,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup tbody(String text) {
+    protected final ElementInstruction tbody(String text) {
       return $html().tbody(text);
     }
 
@@ -1619,7 +1619,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup td(Instruction... contents) {
+    protected final ElementInstruction td(Instruction... contents) {
       return $html().td(contents);
     }
 
@@ -1628,7 +1628,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup td(String text) {
+    protected final ElementInstruction td(String text) {
       return $html().td(text);
     }
 
@@ -1637,7 +1637,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup template(Instruction... contents) {
+    protected final ElementInstruction template(Instruction... contents) {
       return $html().template(contents);
     }
 
@@ -1646,7 +1646,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup template(String text) {
+    protected final ElementInstruction template(String text) {
       return $html().template(text);
     }
 
@@ -1655,7 +1655,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup textarea(Instruction... contents) {
+    protected final ElementInstruction textarea(Instruction... contents) {
       return $html().textarea(contents);
     }
 
@@ -1664,7 +1664,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup textarea(String text) {
+    protected final ElementInstruction textarea(String text) {
       return $html().textarea(text);
     }
 
@@ -1673,7 +1673,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup th(Instruction... contents) {
+    protected final ElementInstruction th(Instruction... contents) {
       return $html().th(contents);
     }
 
@@ -1682,7 +1682,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup th(String text) {
+    protected final ElementInstruction th(String text) {
       return $html().th(text);
     }
 
@@ -1691,7 +1691,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup thead(Instruction... contents) {
+    protected final ElementInstruction thead(Instruction... contents) {
       return $html().thead(contents);
     }
 
@@ -1700,7 +1700,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup thead(String text) {
+    protected final ElementInstruction thead(String text) {
       return $html().thead(text);
     }
 
@@ -1709,7 +1709,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup title(Instruction... contents) {
+    protected final ElementInstruction title(Instruction... contents) {
       return $html().title(contents);
     }
 
@@ -1718,7 +1718,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup tr(Instruction... contents) {
+    protected final ElementInstruction tr(Instruction... contents) {
       return $html().tr(contents);
     }
 
@@ -1727,7 +1727,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup tr(String text) {
+    protected final ElementInstruction tr(String text) {
       return $html().tr(text);
     }
 
@@ -1736,7 +1736,7 @@ public final class Html {
     /// @param contents the attributes and children of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup ul(Instruction... contents) {
+    protected final ElementInstruction ul(Instruction... contents) {
       return $html().ul(contents);
     }
 
@@ -1745,7 +1745,7 @@ public final class Html {
     /// @param text the text value of the element
     ///
     /// @return an instruction representing the element.
-    protected final ElementMarkup ul(String text) {
+    protected final ElementInstruction ul(String text) {
       return $html().ul(text);
     }
 
@@ -1758,7 +1758,7 @@ public final class Html {
     /// @param name the attribute name
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup attr(AttributeName name) {
+    protected final AttributeInstruction attr(AttributeName name) {
       return $html().attr(name);
     }
 
@@ -1768,7 +1768,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup attr(AttributeName name, String value) {
+    protected final AttributeInstruction attr(AttributeName name, String value) {
       return $html().attr(name, value);
     }
 
@@ -1777,7 +1777,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup accesskey(String value) {
+    protected final AttributeInstruction accesskey(String value) {
       return $html().accesskey(value);
     }
 
@@ -1786,7 +1786,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup action(String value) {
+    protected final AttributeInstruction action(String value) {
       return $html().action(value);
     }
 
@@ -1795,7 +1795,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup align(String value) {
+    protected final AttributeInstruction align(String value) {
       return $html().align(value);
     }
 
@@ -1804,7 +1804,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup alignmentBaseline(String value) {
+    protected final AttributeInstruction alignmentBaseline(String value) {
       return $html().alignmentBaseline(value);
     }
 
@@ -1813,7 +1813,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup alt(String value) {
+    protected final AttributeInstruction alt(String value) {
       return $html().alt(value);
     }
 
@@ -1822,7 +1822,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup ariaCurrent(String value) {
+    protected final AttributeInstruction ariaCurrent(String value) {
       return $html().ariaCurrent(value);
     }
 
@@ -1831,7 +1831,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup ariaDisabled(String value) {
+    protected final AttributeInstruction ariaDisabled(String value) {
       return $html().ariaDisabled(value);
     }
 
@@ -1840,7 +1840,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup ariaHidden(String value) {
+    protected final AttributeInstruction ariaHidden(String value) {
       return $html().ariaHidden(value);
     }
 
@@ -1849,7 +1849,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup ariaInvalid(String value) {
+    protected final AttributeInstruction ariaInvalid(String value) {
       return $html().ariaInvalid(value);
     }
 
@@ -1858,7 +1858,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup ariaLabel(String value) {
+    protected final AttributeInstruction ariaLabel(String value) {
       return $html().ariaLabel(value);
     }
 
@@ -1867,7 +1867,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup ariaLabelledBy(String value) {
+    protected final AttributeInstruction ariaLabelledBy(String value) {
       return $html().ariaLabelledBy(value);
     }
 
@@ -1876,7 +1876,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup ariaModal(String value) {
+    protected final AttributeInstruction ariaModal(String value) {
       return $html().ariaModal(value);
     }
 
@@ -1885,7 +1885,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup ariaPlaceholder(String value) {
+    protected final AttributeInstruction ariaPlaceholder(String value) {
       return $html().ariaPlaceholder(value);
     }
 
@@ -1894,7 +1894,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup ariaReadonly(String value) {
+    protected final AttributeInstruction ariaReadonly(String value) {
       return $html().ariaReadonly(value);
     }
 
@@ -1903,7 +1903,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup ariaRequired(String value) {
+    protected final AttributeInstruction ariaRequired(String value) {
       return $html().ariaRequired(value);
     }
 
@@ -1912,7 +1912,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup ariaSelected(String value) {
+    protected final AttributeInstruction ariaSelected(String value) {
       return $html().ariaSelected(value);
     }
 
@@ -1921,7 +1921,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup as(String value) {
+    protected final AttributeInstruction as(String value) {
       return $html().as(value);
     }
 
@@ -1930,7 +1930,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup autocomplete(String value) {
+    protected final AttributeInstruction autocomplete(String value) {
       return $html().autocomplete(value);
     }
 
@@ -1939,7 +1939,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup baselineShift(String value) {
+    protected final AttributeInstruction baselineShift(String value) {
       return $html().baselineShift(value);
     }
 
@@ -1948,7 +1948,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup border(String value) {
+    protected final AttributeInstruction border(String value) {
       return $html().border(value);
     }
 
@@ -1957,7 +1957,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup cellpadding(String value) {
+    protected final AttributeInstruction cellpadding(String value) {
       return $html().cellpadding(value);
     }
 
@@ -1966,7 +1966,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup cellspacing(String value) {
+    protected final AttributeInstruction cellspacing(String value) {
       return $html().cellspacing(value);
     }
 
@@ -1975,7 +1975,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup charset(String value) {
+    protected final AttributeInstruction charset(String value) {
       return $html().charset(value);
     }
 
@@ -1984,7 +1984,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup cite(String value) {
+    protected final AttributeInstruction cite(String value) {
       return $html().cite(value);
     }
 
@@ -1993,7 +1993,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup className(String value) {
+    protected final AttributeInstruction className(String value) {
       return $html().className(value);
     }
 
@@ -2002,7 +2002,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup clipRule(String value) {
+    protected final AttributeInstruction clipRule(String value) {
       return $html().clipRule(value);
     }
 
@@ -2011,7 +2011,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup closedby(String value) {
+    protected final AttributeInstruction closedby(String value) {
       return $html().closedby(value);
     }
 
@@ -2020,7 +2020,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup color(String value) {
+    protected final AttributeInstruction color(String value) {
       return $html().color(value);
     }
 
@@ -2029,7 +2029,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup colorInterpolation(String value) {
+    protected final AttributeInstruction colorInterpolation(String value) {
       return $html().colorInterpolation(value);
     }
 
@@ -2039,7 +2039,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup colorInterpolationFilters(String value) {
+    protected final AttributeInstruction colorInterpolationFilters(String value) {
       return $html().colorInterpolationFilters(value);
     }
 
@@ -2048,7 +2048,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup cols(String value) {
+    protected final AttributeInstruction cols(String value) {
       return $html().cols(value);
     }
 
@@ -2057,7 +2057,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup content(String value) {
+    protected final AttributeInstruction content(String value) {
       return $html().content(value);
     }
 
@@ -2066,7 +2066,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup contenteditable(String value) {
+    protected final AttributeInstruction contenteditable(String value) {
       return $html().contenteditable(value);
     }
 
@@ -2075,7 +2075,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup crossorigin(String value) {
+    protected final AttributeInstruction crossorigin(String value) {
       return $html().crossorigin(value);
     }
 
@@ -2084,7 +2084,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup cursor(String value) {
+    protected final AttributeInstruction cursor(String value) {
       return $html().cursor(value);
     }
 
@@ -2093,7 +2093,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup d(String value) {
+    protected final AttributeInstruction d(String value) {
       return $html().d(value);
     }
 
@@ -2102,7 +2102,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup dir(String value) {
+    protected final AttributeInstruction dir(String value) {
       return $html().dir(value);
     }
 
@@ -2111,7 +2111,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup direction(String value) {
+    protected final AttributeInstruction direction(String value) {
       return $html().direction(value);
     }
 
@@ -2120,7 +2120,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup dirname(String value) {
+    protected final AttributeInstruction dirname(String value) {
       return $html().dirname(value);
     }
 
@@ -2129,7 +2129,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup display(String value) {
+    protected final AttributeInstruction display(String value) {
       return $html().display(value);
     }
 
@@ -2138,7 +2138,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup dominantBaseline(String value) {
+    protected final AttributeInstruction dominantBaseline(String value) {
       return $html().dominantBaseline(value);
     }
 
@@ -2147,7 +2147,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup download(String value) {
+    protected final AttributeInstruction download(String value) {
       return $html().download(value);
     }
 
@@ -2156,7 +2156,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup draggable(String value) {
+    protected final AttributeInstruction draggable(String value) {
       return $html().draggable(value);
     }
 
@@ -2165,7 +2165,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup enctype(String value) {
+    protected final AttributeInstruction enctype(String value) {
       return $html().enctype(value);
     }
 
@@ -2174,7 +2174,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup fill(String value) {
+    protected final AttributeInstruction fill(String value) {
       return $html().fill(value);
     }
 
@@ -2183,7 +2183,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup fillOpacity(String value) {
+    protected final AttributeInstruction fillOpacity(String value) {
       return $html().fillOpacity(value);
     }
 
@@ -2192,7 +2192,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup fillRule(String value) {
+    protected final AttributeInstruction fillRule(String value) {
       return $html().fillRule(value);
     }
 
@@ -2201,7 +2201,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup filter(String value) {
+    protected final AttributeInstruction filter(String value) {
       return $html().filter(value);
     }
 
@@ -2210,7 +2210,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup floodColor(String value) {
+    protected final AttributeInstruction floodColor(String value) {
       return $html().floodColor(value);
     }
 
@@ -2219,7 +2219,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup floodOpacity(String value) {
+    protected final AttributeInstruction floodOpacity(String value) {
       return $html().floodOpacity(value);
     }
 
@@ -2228,7 +2228,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup forId(String value) {
+    protected final AttributeInstruction forId(String value) {
       return $html().forId(value);
     }
 
@@ -2238,7 +2238,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup glyphOrientationHorizontal(String value) {
+    protected final AttributeInstruction glyphOrientationHorizontal(String value) {
       return $html().glyphOrientationHorizontal(value);
     }
 
@@ -2248,7 +2248,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup glyphOrientationVertical(String value) {
+    protected final AttributeInstruction glyphOrientationVertical(String value) {
       return $html().glyphOrientationVertical(value);
     }
 
@@ -2257,7 +2257,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup height(String value) {
+    protected final AttributeInstruction height(String value) {
       return $html().height(value);
     }
 
@@ -2266,7 +2266,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup href(String value) {
+    protected final AttributeInstruction href(String value) {
       return $html().href(value);
     }
 
@@ -2275,7 +2275,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup httpEquiv(String value) {
+    protected final AttributeInstruction httpEquiv(String value) {
       return $html().httpEquiv(value);
     }
 
@@ -2284,7 +2284,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup id(String value) {
+    protected final AttributeInstruction id(String value) {
       return $html().id(value);
     }
 
@@ -2293,7 +2293,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup imageRendering(String value) {
+    protected final AttributeInstruction imageRendering(String value) {
       return $html().imageRendering(value);
     }
 
@@ -2302,7 +2302,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup integrity(String value) {
+    protected final AttributeInstruction integrity(String value) {
       return $html().integrity(value);
     }
 
@@ -2311,7 +2311,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup lang(String value) {
+    protected final AttributeInstruction lang(String value) {
       return $html().lang(value);
     }
 
@@ -2320,7 +2320,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup letterSpacing(String value) {
+    protected final AttributeInstruction letterSpacing(String value) {
       return $html().letterSpacing(value);
     }
 
@@ -2329,7 +2329,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup lightingColor(String value) {
+    protected final AttributeInstruction lightingColor(String value) {
       return $html().lightingColor(value);
     }
 
@@ -2338,7 +2338,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup markerEnd(String value) {
+    protected final AttributeInstruction markerEnd(String value) {
       return $html().markerEnd(value);
     }
 
@@ -2347,7 +2347,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup markerMid(String value) {
+    protected final AttributeInstruction markerMid(String value) {
       return $html().markerMid(value);
     }
 
@@ -2356,7 +2356,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup markerStart(String value) {
+    protected final AttributeInstruction markerStart(String value) {
       return $html().markerStart(value);
     }
 
@@ -2365,7 +2365,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup mask(String value) {
+    protected final AttributeInstruction mask(String value) {
       return $html().mask(value);
     }
 
@@ -2374,7 +2374,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup maskType(String value) {
+    protected final AttributeInstruction maskType(String value) {
       return $html().maskType(value);
     }
 
@@ -2383,7 +2383,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup maxlength(String value) {
+    protected final AttributeInstruction maxlength(String value) {
       return $html().maxlength(value);
     }
 
@@ -2392,7 +2392,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup media(String value) {
+    protected final AttributeInstruction media(String value) {
       return $html().media(value);
     }
 
@@ -2401,7 +2401,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup method(String value) {
+    protected final AttributeInstruction method(String value) {
       return $html().method(value);
     }
 
@@ -2410,7 +2410,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup minlength(String value) {
+    protected final AttributeInstruction minlength(String value) {
       return $html().minlength(value);
     }
 
@@ -2419,7 +2419,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup name(String value) {
+    protected final AttributeInstruction name(String value) {
       return $html().name(value);
     }
 
@@ -2428,7 +2428,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup onclick(String value) {
+    protected final AttributeInstruction onclick(String value) {
       return $html().onclick(value);
     }
 
@@ -2437,7 +2437,7 @@ public final class Html {
     /// @param value the action to execute
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup onclick(JsAction value) {
+    protected final AttributeInstruction onclick(JsAction value) {
       return $html().onclick(value);
     }
 
@@ -2446,7 +2446,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup onload(String value) {
+    protected final AttributeInstruction onload(String value) {
       return $html().onload(value);
     }
 
@@ -2455,7 +2455,7 @@ public final class Html {
     /// @param value the action to execute
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup onload(JsAction value) {
+    protected final AttributeInstruction onload(JsAction value) {
       return $html().onload(value);
     }
 
@@ -2464,7 +2464,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup onpopstate(String value) {
+    protected final AttributeInstruction onpopstate(String value) {
       return $html().onpopstate(value);
     }
 
@@ -2473,7 +2473,7 @@ public final class Html {
     /// @param value the action to execute
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup onpopstate(JsAction value) {
+    protected final AttributeInstruction onpopstate(JsAction value) {
       return $html().onpopstate(value);
     }
 
@@ -2482,7 +2482,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup onsubmit(String value) {
+    protected final AttributeInstruction onsubmit(String value) {
       return $html().onsubmit(value);
     }
 
@@ -2491,7 +2491,7 @@ public final class Html {
     /// @param value the action to execute
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup onsubmit(JsAction value) {
+    protected final AttributeInstruction onsubmit(JsAction value) {
       return $html().onsubmit(value);
     }
 
@@ -2500,7 +2500,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup opacity(String value) {
+    protected final AttributeInstruction opacity(String value) {
       return $html().opacity(value);
     }
 
@@ -2509,7 +2509,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup overflow(String value) {
+    protected final AttributeInstruction overflow(String value) {
       return $html().overflow(value);
     }
 
@@ -2518,7 +2518,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup paintOrder(String value) {
+    protected final AttributeInstruction paintOrder(String value) {
       return $html().paintOrder(value);
     }
 
@@ -2527,7 +2527,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup placeholder(String value) {
+    protected final AttributeInstruction placeholder(String value) {
       return $html().placeholder(value);
     }
 
@@ -2536,7 +2536,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup pointerEvents(String value) {
+    protected final AttributeInstruction pointerEvents(String value) {
       return $html().pointerEvents(value);
     }
 
@@ -2545,7 +2545,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup property(String value) {
+    protected final AttributeInstruction property(String value) {
       return $html().property(value);
     }
 
@@ -2554,7 +2554,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup referrerpolicy(String value) {
+    protected final AttributeInstruction referrerpolicy(String value) {
       return $html().referrerpolicy(value);
     }
 
@@ -2563,7 +2563,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup rel(String value) {
+    protected final AttributeInstruction rel(String value) {
       return $html().rel(value);
     }
 
@@ -2572,7 +2572,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup rev(String value) {
+    protected final AttributeInstruction rev(String value) {
       return $html().rev(value);
     }
 
@@ -2581,7 +2581,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup role(String value) {
+    protected final AttributeInstruction role(String value) {
       return $html().role(value);
     }
 
@@ -2590,7 +2590,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup rows(String value) {
+    protected final AttributeInstruction rows(String value) {
       return $html().rows(value);
     }
 
@@ -2599,7 +2599,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup shapeRendering(String value) {
+    protected final AttributeInstruction shapeRendering(String value) {
       return $html().shapeRendering(value);
     }
 
@@ -2608,7 +2608,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup size(String value) {
+    protected final AttributeInstruction size(String value) {
       return $html().size(value);
     }
 
@@ -2617,7 +2617,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup sizes(String value) {
+    protected final AttributeInstruction sizes(String value) {
       return $html().sizes(value);
     }
 
@@ -2626,7 +2626,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup spellcheck(String value) {
+    protected final AttributeInstruction spellcheck(String value) {
       return $html().spellcheck(value);
     }
 
@@ -2635,7 +2635,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup src(String value) {
+    protected final AttributeInstruction src(String value) {
       return $html().src(value);
     }
 
@@ -2644,7 +2644,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup srcset(String value) {
+    protected final AttributeInstruction srcset(String value) {
       return $html().srcset(value);
     }
 
@@ -2653,7 +2653,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup start(String value) {
+    protected final AttributeInstruction start(String value) {
       return $html().start(value);
     }
 
@@ -2662,7 +2662,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup stopColor(String value) {
+    protected final AttributeInstruction stopColor(String value) {
       return $html().stopColor(value);
     }
 
@@ -2671,7 +2671,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup stopOpacity(String value) {
+    protected final AttributeInstruction stopOpacity(String value) {
       return $html().stopOpacity(value);
     }
 
@@ -2680,7 +2680,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup stroke(String value) {
+    protected final AttributeInstruction stroke(String value) {
       return $html().stroke(value);
     }
 
@@ -2689,7 +2689,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup strokeDasharray(String value) {
+    protected final AttributeInstruction strokeDasharray(String value) {
       return $html().strokeDasharray(value);
     }
 
@@ -2698,7 +2698,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup strokeDashoffset(String value) {
+    protected final AttributeInstruction strokeDashoffset(String value) {
       return $html().strokeDashoffset(value);
     }
 
@@ -2707,7 +2707,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup strokeLinecap(String value) {
+    protected final AttributeInstruction strokeLinecap(String value) {
       return $html().strokeLinecap(value);
     }
 
@@ -2716,7 +2716,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup strokeLinejoin(String value) {
+    protected final AttributeInstruction strokeLinejoin(String value) {
       return $html().strokeLinejoin(value);
     }
 
@@ -2725,7 +2725,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup strokeMiterlimit(String value) {
+    protected final AttributeInstruction strokeMiterlimit(String value) {
       return $html().strokeMiterlimit(value);
     }
 
@@ -2734,7 +2734,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup strokeOpacity(String value) {
+    protected final AttributeInstruction strokeOpacity(String value) {
       return $html().strokeOpacity(value);
     }
 
@@ -2743,7 +2743,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup strokeWidth(String value) {
+    protected final AttributeInstruction strokeWidth(String value) {
       return $html().strokeWidth(value);
     }
 
@@ -2752,7 +2752,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup tabindex(String value) {
+    protected final AttributeInstruction tabindex(String value) {
       return $html().tabindex(value);
     }
 
@@ -2761,7 +2761,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup target(String value) {
+    protected final AttributeInstruction target(String value) {
       return $html().target(value);
     }
 
@@ -2770,7 +2770,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup textAnchor(String value) {
+    protected final AttributeInstruction textAnchor(String value) {
       return $html().textAnchor(value);
     }
 
@@ -2779,7 +2779,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup textDecoration(String value) {
+    protected final AttributeInstruction textDecoration(String value) {
       return $html().textDecoration(value);
     }
 
@@ -2788,7 +2788,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup textOverflow(String value) {
+    protected final AttributeInstruction textOverflow(String value) {
       return $html().textOverflow(value);
     }
 
@@ -2797,7 +2797,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup textRendering(String value) {
+    protected final AttributeInstruction textRendering(String value) {
       return $html().textRendering(value);
     }
 
@@ -2806,7 +2806,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup transform(String value) {
+    protected final AttributeInstruction transform(String value) {
       return $html().transform(value);
     }
 
@@ -2815,7 +2815,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup transformOrigin(String value) {
+    protected final AttributeInstruction transformOrigin(String value) {
       return $html().transformOrigin(value);
     }
 
@@ -2824,7 +2824,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup translate(String value) {
+    protected final AttributeInstruction translate(String value) {
       return $html().translate(value);
     }
 
@@ -2833,7 +2833,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup type(String value) {
+    protected final AttributeInstruction type(String value) {
       return $html().type(value);
     }
 
@@ -2842,7 +2842,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup unicodeBidi(String value) {
+    protected final AttributeInstruction unicodeBidi(String value) {
       return $html().unicodeBidi(value);
     }
 
@@ -2851,7 +2851,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup value(String value) {
+    protected final AttributeInstruction value(String value) {
       return $html().value(value);
     }
 
@@ -2860,7 +2860,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup vectorEffect(String value) {
+    protected final AttributeInstruction vectorEffect(String value) {
       return $html().vectorEffect(value);
     }
 
@@ -2869,7 +2869,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup viewBox(String value) {
+    protected final AttributeInstruction viewBox(String value) {
       return $html().viewBox(value);
     }
 
@@ -2878,7 +2878,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup visibility(String value) {
+    protected final AttributeInstruction visibility(String value) {
       return $html().visibility(value);
     }
 
@@ -2887,7 +2887,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup whiteSpace(String value) {
+    protected final AttributeInstruction whiteSpace(String value) {
       return $html().whiteSpace(value);
     }
 
@@ -2896,7 +2896,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup width(String value) {
+    protected final AttributeInstruction width(String value) {
       return $html().width(value);
     }
 
@@ -2905,7 +2905,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup wordSpacing(String value) {
+    protected final AttributeInstruction wordSpacing(String value) {
       return $html().wordSpacing(value);
     }
 
@@ -2914,7 +2914,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup wrap(String value) {
+    protected final AttributeInstruction wrap(String value) {
       return $html().wrap(value);
     }
 
@@ -2923,7 +2923,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup writingMode(String value) {
+    protected final AttributeInstruction writingMode(String value) {
       return $html().writingMode(value);
     }
 
@@ -2932,7 +2932,7 @@ public final class Html {
     /// @param value the attribute value
     ///
     /// @return an instruction representing the attribute
-    protected final AttributeMarkup xmlns(String value) {
+    protected final AttributeInstruction xmlns(String value) {
       return $html().xmlns(value);
     }
 
@@ -2998,7 +2998,7 @@ public final class Html {
     ///
     /// @return an instruction representing the non-breaking space
     ///         character entity.
-    protected final ElementMarkup nbsp() {
+    protected final ElementInstruction nbsp() {
       return $html().nbsp();
     }
 
@@ -3007,7 +3007,7 @@ public final class Html {
     /// @param value the raw HTML value
     ///
     /// @return a raw HTML instruction
-    protected final ElementMarkup raw(String value) {
+    protected final ElementInstruction raw(String value) {
       return $html().raw(value);
     }
 
@@ -3017,7 +3017,7 @@ public final class Html {
     /// @param value the text value
     ///
     /// @return an instruction representing the text node
-    protected final ElementMarkup text(String value) {
+    protected final ElementInstruction text(String value) {
       return $html().text(value);
     }
 

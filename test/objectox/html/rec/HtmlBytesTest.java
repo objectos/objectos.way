@@ -25,16 +25,16 @@ public class HtmlBytesTest {
   @DataProvider
   public Object[][] consumeProvider() {
     return new Object[][] {
-        {HtmlBytes.STARTTAG8, HtmlBytes.XSTARTTAG8},
-        {HtmlBytes.ATTRIBUTE88, HtmlBytes.XATTRIBUTE88},
-        {HtmlBytes.ATTRIBUTE816, HtmlBytes.XATTRIBUTE816},
-        {HtmlBytes.ATTRIBUTE824, HtmlBytes.XATTRIBUTE824},
-        {HtmlBytes.BOOLEAN8, HtmlBytes.XBOOLEAN8},
-        {HtmlBytes.XSTARTTAG8, HtmlBytes.XSTARTTAG8},
-        {HtmlBytes.XATTRIBUTE88, HtmlBytes.XATTRIBUTE88},
-        {HtmlBytes.XATTRIBUTE816, HtmlBytes.XATTRIBUTE816},
-        {HtmlBytes.XATTRIBUTE824, HtmlBytes.XATTRIBUTE824},
-        {HtmlBytes.XBOOLEAN8, HtmlBytes.XBOOLEAN8}
+        {HtmlBytes.STARTTAG8, HtmlBytes.xSTARTTAG8},
+        {HtmlBytes.ATTRIBUTE88, HtmlBytes.xATTRIBUTE88},
+        {HtmlBytes.ATTRIBUTE816, HtmlBytes.xATTRIBUTE816},
+        {HtmlBytes.ATTRIBUTE824, HtmlBytes.xATTRIBUTE824},
+        {HtmlBytes.BOOLEAN8, HtmlBytes.xBOOLEAN8},
+        {HtmlBytes.xSTARTTAG8, HtmlBytes.xSTARTTAG8},
+        {HtmlBytes.xATTRIBUTE88, HtmlBytes.xATTRIBUTE88},
+        {HtmlBytes.xATTRIBUTE816, HtmlBytes.xATTRIBUTE816},
+        {HtmlBytes.xATTRIBUTE824, HtmlBytes.xATTRIBUTE824},
+        {HtmlBytes.xBOOLEAN8, HtmlBytes.xBOOLEAN8}
     };
   }
 

@@ -33,7 +33,7 @@ public class BooleanAttributeRecorderTest {
     final BooleanAttributeRecorder subject;
     subject = new BooleanAttributeRecorder(sink);
 
-    final AttributeInstruction res;
+    final AttributePointer res;
     res = subject.record(name);
 
     assertEquals(res.value(), 0);

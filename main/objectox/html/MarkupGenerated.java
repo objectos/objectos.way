@@ -21,8 +21,8 @@ import objectos.html.AttributeName;
 import objectos.html.AttributeObject;
 import objectos.html.Component;
 import objectos.html.ElementName;
-import objectos.html.rec.AttributeMarkup;
-import objectos.html.rec.ElementMarkup;
+import objectos.html.rec.AttributeInstruction;
+import objectos.html.rec.ElementInstruction;
 import objectos.html.rec.Fragment0;
 import objectos.html.rec.Fragment1;
 import objectos.html.rec.Fragment2;
@@ -40,7 +40,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param object the attribute
   ///
   /// @return an instruction representing the attribute
-  public abstract AttributeMarkup attr(AttributeObject object);
+  public abstract AttributeInstruction attr(AttributeObject object);
 
   /// Generates and returns the HTML represented by this markup instance.
   ///
@@ -80,7 +80,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   ///        multiple lines
   /// 
   /// @return an instruction representing this attribute.
-  public abstract AttributeMarkup css(String value);
+  public abstract AttributeInstruction css(String value);
 
   /// Renders the specified components in order as part of this document.
   /// 
@@ -208,7 +208,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the instructions to be flattened
   /// 
   /// @return an instruction representing this flatten operation
-  public abstract ElementMarkup flatten(Instruction... contents);
+  public abstract ElementInstruction flatten(Instruction... contents);
 
   /// Flattens the specified instructions so that each of the specified
   /// instructions is individually added, in order, to a receiving element.
@@ -216,7 +216,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the instructions to be flattened
   /// 
   /// @return an instruction representing this flatten operation
-  public abstract ElementMarkup flatten(Iterable<? extends Instruction> contents);
+  public abstract ElementInstruction flatten(Iterable<? extends Instruction> contents);
 
   /// The no-op instruction.
   /// 
@@ -309,9 +309,9 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   // ELEMENTS
   //
 
-  abstract ElementMarkup elem0(ElementName name, Instruction... contents);
+  abstract ElementInstruction elem0(ElementName name, Instruction... contents);
 
-  abstract ElementMarkup elem0(ElementName name, String text);
+  abstract ElementInstruction elem0(ElementName name, String text);
 
   /// Renders an HTML element with the specified name and contents.
   /// 
@@ -319,7 +319,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element
-  public final ElementMarkup elem(ElementName name, Instruction... contents) {
+  public final ElementInstruction elem(ElementName name, Instruction... contents) {
     Objects.requireNonNull(name, "name == null");
     return elem0(name, contents);
   }
@@ -330,7 +330,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of this element
   /// 
   /// @return an instruction representing the element
-  public final ElementMarkup elem(ElementName name, String text) {
+  public final ElementInstruction elem(ElementName name, String text) {
     Objects.requireNonNull(name, "name == null");
     return elem0(name, text);
   }
@@ -343,7 +343,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup a(Instruction... contents) {
+  public final ElementInstruction a(Instruction... contents) {
     return elem0(ElementNamePojo.A, contents);
   }
 
@@ -352,7 +352,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup a(String text) {
+  public final ElementInstruction a(String text) {
     return elem0(ElementNamePojo.A, text);
   }
 
@@ -361,7 +361,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup abbr(Instruction... contents) {
+  public final ElementInstruction abbr(Instruction... contents) {
     return elem0(ElementNamePojo.ABBR, contents);
   }
 
@@ -370,7 +370,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup abbr(String text) {
+  public final ElementInstruction abbr(String text) {
     return elem0(ElementNamePojo.ABBR, text);
   }
 
@@ -379,7 +379,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup article(Instruction... contents) {
+  public final ElementInstruction article(Instruction... contents) {
     return elem0(ElementNamePojo.ARTICLE, contents);
   }
 
@@ -388,7 +388,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup article(String text) {
+  public final ElementInstruction article(String text) {
     return elem0(ElementNamePojo.ARTICLE, text);
   }
 
@@ -397,7 +397,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup aside(Instruction... contents) {
+  public final ElementInstruction aside(Instruction... contents) {
     return elem0(ElementNamePojo.ASIDE, contents);
   }
 
@@ -406,7 +406,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup aside(String text) {
+  public final ElementInstruction aside(String text) {
     return elem0(ElementNamePojo.ASIDE, text);
   }
 
@@ -415,7 +415,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup b(Instruction... contents) {
+  public final ElementInstruction b(Instruction... contents) {
     return elem0(ElementNamePojo.B, contents);
   }
 
@@ -424,7 +424,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup b(String text) {
+  public final ElementInstruction b(String text) {
     return elem0(ElementNamePojo.B, text);
   }
 
@@ -433,7 +433,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup blockquote(Instruction... contents) {
+  public final ElementInstruction blockquote(Instruction... contents) {
     return elem0(ElementNamePojo.BLOCKQUOTE, contents);
   }
 
@@ -442,7 +442,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup blockquote(String text) {
+  public final ElementInstruction blockquote(String text) {
     return elem0(ElementNamePojo.BLOCKQUOTE, text);
   }
 
@@ -451,7 +451,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup body(Instruction... contents) {
+  public final ElementInstruction body(Instruction... contents) {
     return elem0(ElementNamePojo.BODY, contents);
   }
 
@@ -460,7 +460,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup body(String text) {
+  public final ElementInstruction body(String text) {
     return elem0(ElementNamePojo.BODY, text);
   }
 
@@ -469,7 +469,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup br(Instruction.OfVoid... contents) {
+  public final ElementInstruction br(Instruction.OfVoid... contents) {
     return elem0(ElementNamePojo.BR, contents);
   }
 
@@ -478,7 +478,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup button(Instruction... contents) {
+  public final ElementInstruction button(Instruction... contents) {
     return elem0(ElementNamePojo.BUTTON, contents);
   }
 
@@ -487,7 +487,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup button(String text) {
+  public final ElementInstruction button(String text) {
     return elem0(ElementNamePojo.BUTTON, text);
   }
 
@@ -496,7 +496,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup clipPath(Instruction... contents) {
+  public final ElementInstruction clipPath(Instruction... contents) {
     return elem0(ElementNamePojo.CLIPPATH, contents);
   }
 
@@ -505,7 +505,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup code(Instruction... contents) {
+  public final ElementInstruction code(Instruction... contents) {
     return elem0(ElementNamePojo.CODE, contents);
   }
 
@@ -514,7 +514,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup code(String text) {
+  public final ElementInstruction code(String text) {
     return elem0(ElementNamePojo.CODE, text);
   }
 
@@ -523,7 +523,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup dd(Instruction... contents) {
+  public final ElementInstruction dd(Instruction... contents) {
     return elem0(ElementNamePojo.DD, contents);
   }
 
@@ -532,7 +532,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup dd(String text) {
+  public final ElementInstruction dd(String text) {
     return elem0(ElementNamePojo.DD, text);
   }
 
@@ -541,7 +541,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup defs(Instruction... contents) {
+  public final ElementInstruction defs(Instruction... contents) {
     return elem0(ElementNamePojo.DEFS, contents);
   }
 
@@ -550,7 +550,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup defs(String text) {
+  public final ElementInstruction defs(String text) {
     return elem0(ElementNamePojo.DEFS, text);
   }
 
@@ -559,7 +559,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup details(Instruction... contents) {
+  public final ElementInstruction details(Instruction... contents) {
     return elem0(ElementNamePojo.DETAILS, contents);
   }
 
@@ -568,7 +568,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup details(String text) {
+  public final ElementInstruction details(String text) {
     return elem0(ElementNamePojo.DETAILS, text);
   }
 
@@ -577,7 +577,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup dialog(Instruction... contents) {
+  public final ElementInstruction dialog(Instruction... contents) {
     return elem0(ElementNamePojo.DIALOG, contents);
   }
 
@@ -586,7 +586,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup dialog(String text) {
+  public final ElementInstruction dialog(String text) {
     return elem0(ElementNamePojo.DIALOG, text);
   }
 
@@ -595,7 +595,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup div(Instruction... contents) {
+  public final ElementInstruction div(Instruction... contents) {
     return elem0(ElementNamePojo.DIV, contents);
   }
 
@@ -604,7 +604,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup div(String text) {
+  public final ElementInstruction div(String text) {
     return elem0(ElementNamePojo.DIV, text);
   }
 
@@ -613,7 +613,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup dl(Instruction... contents) {
+  public final ElementInstruction dl(Instruction... contents) {
     return elem0(ElementNamePojo.DL, contents);
   }
 
@@ -622,7 +622,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup dl(String text) {
+  public final ElementInstruction dl(String text) {
     return elem0(ElementNamePojo.DL, text);
   }
 
@@ -631,7 +631,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup dt(Instruction... contents) {
+  public final ElementInstruction dt(Instruction... contents) {
     return elem0(ElementNamePojo.DT, contents);
   }
 
@@ -640,7 +640,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup dt(String text) {
+  public final ElementInstruction dt(String text) {
     return elem0(ElementNamePojo.DT, text);
   }
 
@@ -649,7 +649,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup em(Instruction... contents) {
+  public final ElementInstruction em(Instruction... contents) {
     return elem0(ElementNamePojo.EM, contents);
   }
 
@@ -658,7 +658,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup em(String text) {
+  public final ElementInstruction em(String text) {
     return elem0(ElementNamePojo.EM, text);
   }
 
@@ -667,7 +667,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup fieldset(Instruction... contents) {
+  public final ElementInstruction fieldset(Instruction... contents) {
     return elem0(ElementNamePojo.FIELDSET, contents);
   }
 
@@ -676,7 +676,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup fieldset(String text) {
+  public final ElementInstruction fieldset(String text) {
     return elem0(ElementNamePojo.FIELDSET, text);
   }
 
@@ -685,7 +685,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup figure(Instruction... contents) {
+  public final ElementInstruction figure(Instruction... contents) {
     return elem0(ElementNamePojo.FIGURE, contents);
   }
 
@@ -694,7 +694,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup figure(String text) {
+  public final ElementInstruction figure(String text) {
     return elem0(ElementNamePojo.FIGURE, text);
   }
 
@@ -703,7 +703,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup footer(Instruction... contents) {
+  public final ElementInstruction footer(Instruction... contents) {
     return elem0(ElementNamePojo.FOOTER, contents);
   }
 
@@ -712,7 +712,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup footer(String text) {
+  public final ElementInstruction footer(String text) {
     return elem0(ElementNamePojo.FOOTER, text);
   }
 
@@ -721,7 +721,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup form(Instruction... contents) {
+  public final ElementInstruction form(Instruction... contents) {
     return elem0(ElementNamePojo.FORM, contents);
   }
 
@@ -730,7 +730,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup g(Instruction... contents) {
+  public final ElementInstruction g(Instruction... contents) {
     return elem0(ElementNamePojo.G, contents);
   }
 
@@ -739,7 +739,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup g(String text) {
+  public final ElementInstruction g(String text) {
     return elem0(ElementNamePojo.G, text);
   }
 
@@ -748,7 +748,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup h1(Instruction... contents) {
+  public final ElementInstruction h1(Instruction... contents) {
     return elem0(ElementNamePojo.H1, contents);
   }
 
@@ -757,7 +757,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup h1(String text) {
+  public final ElementInstruction h1(String text) {
     return elem0(ElementNamePojo.H1, text);
   }
 
@@ -766,7 +766,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup h2(Instruction... contents) {
+  public final ElementInstruction h2(Instruction... contents) {
     return elem0(ElementNamePojo.H2, contents);
   }
 
@@ -775,7 +775,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup h2(String text) {
+  public final ElementInstruction h2(String text) {
     return elem0(ElementNamePojo.H2, text);
   }
 
@@ -784,7 +784,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup h3(Instruction... contents) {
+  public final ElementInstruction h3(Instruction... contents) {
     return elem0(ElementNamePojo.H3, contents);
   }
 
@@ -793,7 +793,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup h3(String text) {
+  public final ElementInstruction h3(String text) {
     return elem0(ElementNamePojo.H3, text);
   }
 
@@ -802,7 +802,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup h4(Instruction... contents) {
+  public final ElementInstruction h4(Instruction... contents) {
     return elem0(ElementNamePojo.H4, contents);
   }
 
@@ -811,7 +811,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup h4(String text) {
+  public final ElementInstruction h4(String text) {
     return elem0(ElementNamePojo.H4, text);
   }
 
@@ -820,7 +820,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup h5(Instruction... contents) {
+  public final ElementInstruction h5(Instruction... contents) {
     return elem0(ElementNamePojo.H5, contents);
   }
 
@@ -829,7 +829,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup h5(String text) {
+  public final ElementInstruction h5(String text) {
     return elem0(ElementNamePojo.H5, text);
   }
 
@@ -838,7 +838,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup h6(Instruction... contents) {
+  public final ElementInstruction h6(Instruction... contents) {
     return elem0(ElementNamePojo.H6, contents);
   }
 
@@ -847,7 +847,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup h6(String text) {
+  public final ElementInstruction h6(String text) {
     return elem0(ElementNamePojo.H6, text);
   }
 
@@ -856,7 +856,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup head(Instruction... contents) {
+  public final ElementInstruction head(Instruction... contents) {
     return elem0(ElementNamePojo.HEAD, contents);
   }
 
@@ -865,7 +865,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup head(String text) {
+  public final ElementInstruction head(String text) {
     return elem0(ElementNamePojo.HEAD, text);
   }
 
@@ -874,7 +874,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup header(Instruction... contents) {
+  public final ElementInstruction header(Instruction... contents) {
     return elem0(ElementNamePojo.HEADER, contents);
   }
 
@@ -883,7 +883,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup header(String text) {
+  public final ElementInstruction header(String text) {
     return elem0(ElementNamePojo.HEADER, text);
   }
 
@@ -892,7 +892,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup hgroup(Instruction... contents) {
+  public final ElementInstruction hgroup(Instruction... contents) {
     return elem0(ElementNamePojo.HGROUP, contents);
   }
 
@@ -901,7 +901,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup hgroup(String text) {
+  public final ElementInstruction hgroup(String text) {
     return elem0(ElementNamePojo.HGROUP, text);
   }
 
@@ -910,7 +910,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup hr(Instruction.OfVoid... contents) {
+  public final ElementInstruction hr(Instruction.OfVoid... contents) {
     return elem0(ElementNamePojo.HR, contents);
   }
 
@@ -919,7 +919,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup html(Instruction... contents) {
+  public final ElementInstruction html(Instruction... contents) {
     return elem0(ElementNamePojo.HTML, contents);
   }
 
@@ -928,7 +928,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup html(String text) {
+  public final ElementInstruction html(String text) {
     return elem0(ElementNamePojo.HTML, text);
   }
 
@@ -937,7 +937,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup img(Instruction.OfVoid... contents) {
+  public final ElementInstruction img(Instruction.OfVoid... contents) {
     return elem0(ElementNamePojo.IMG, contents);
   }
 
@@ -946,7 +946,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup input(Instruction.OfVoid... contents) {
+  public final ElementInstruction input(Instruction.OfVoid... contents) {
     return elem0(ElementNamePojo.INPUT, contents);
   }
 
@@ -955,7 +955,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup kbd(Instruction... contents) {
+  public final ElementInstruction kbd(Instruction... contents) {
     return elem0(ElementNamePojo.KBD, contents);
   }
 
@@ -964,7 +964,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup kbd(String text) {
+  public final ElementInstruction kbd(String text) {
     return elem0(ElementNamePojo.KBD, text);
   }
 
@@ -973,7 +973,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup label(Instruction... contents) {
+  public final ElementInstruction label(Instruction... contents) {
     return elem0(ElementNamePojo.LABEL, contents);
   }
 
@@ -982,7 +982,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup legend(Instruction... contents) {
+  public final ElementInstruction legend(Instruction... contents) {
     return elem0(ElementNamePojo.LEGEND, contents);
   }
 
@@ -991,7 +991,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup legend(String text) {
+  public final ElementInstruction legend(String text) {
     return elem0(ElementNamePojo.LEGEND, text);
   }
 
@@ -1000,7 +1000,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup li(Instruction... contents) {
+  public final ElementInstruction li(Instruction... contents) {
     return elem0(ElementNamePojo.LI, contents);
   }
 
@@ -1009,7 +1009,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup li(String text) {
+  public final ElementInstruction li(String text) {
     return elem0(ElementNamePojo.LI, text);
   }
 
@@ -1018,7 +1018,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup link(Instruction.OfVoid... contents) {
+  public final ElementInstruction link(Instruction.OfVoid... contents) {
     return elem0(ElementNamePojo.LINK, contents);
   }
 
@@ -1027,7 +1027,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup main(Instruction... contents) {
+  public final ElementInstruction main(Instruction... contents) {
     return elem0(ElementNamePojo.MAIN, contents);
   }
 
@@ -1036,7 +1036,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup main(String text) {
+  public final ElementInstruction main(String text) {
     return elem0(ElementNamePojo.MAIN, text);
   }
 
@@ -1045,7 +1045,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup menu(Instruction... contents) {
+  public final ElementInstruction menu(Instruction... contents) {
     return elem0(ElementNamePojo.MENU, contents);
   }
 
@@ -1054,7 +1054,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup menu(String text) {
+  public final ElementInstruction menu(String text) {
     return elem0(ElementNamePojo.MENU, text);
   }
 
@@ -1063,7 +1063,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup meta(Instruction.OfVoid... contents) {
+  public final ElementInstruction meta(Instruction.OfVoid... contents) {
     return elem0(ElementNamePojo.META, contents);
   }
 
@@ -1072,7 +1072,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup nav(Instruction... contents) {
+  public final ElementInstruction nav(Instruction... contents) {
     return elem0(ElementNamePojo.NAV, contents);
   }
 
@@ -1081,7 +1081,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup nav(String text) {
+  public final ElementInstruction nav(String text) {
     return elem0(ElementNamePojo.NAV, text);
   }
 
@@ -1090,7 +1090,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup noscript(Instruction... contents) {
+  public final ElementInstruction noscript(Instruction... contents) {
     return elem0(ElementNamePojo.NOSCRIPT, contents);
   }
 
@@ -1099,7 +1099,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup noscript(String text) {
+  public final ElementInstruction noscript(String text) {
     return elem0(ElementNamePojo.NOSCRIPT, text);
   }
 
@@ -1108,7 +1108,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup ol(Instruction... contents) {
+  public final ElementInstruction ol(Instruction... contents) {
     return elem0(ElementNamePojo.OL, contents);
   }
 
@@ -1117,7 +1117,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup ol(String text) {
+  public final ElementInstruction ol(String text) {
     return elem0(ElementNamePojo.OL, text);
   }
 
@@ -1126,7 +1126,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup optgroup(Instruction... contents) {
+  public final ElementInstruction optgroup(Instruction... contents) {
     return elem0(ElementNamePojo.OPTGROUP, contents);
   }
 
@@ -1135,7 +1135,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup optgroup(String text) {
+  public final ElementInstruction optgroup(String text) {
     return elem0(ElementNamePojo.OPTGROUP, text);
   }
 
@@ -1144,7 +1144,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup option(Instruction... contents) {
+  public final ElementInstruction option(Instruction... contents) {
     return elem0(ElementNamePojo.OPTION, contents);
   }
 
@@ -1153,7 +1153,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup option(String text) {
+  public final ElementInstruction option(String text) {
     return elem0(ElementNamePojo.OPTION, text);
   }
 
@@ -1162,7 +1162,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup p(Instruction... contents) {
+  public final ElementInstruction p(Instruction... contents) {
     return elem0(ElementNamePojo.P, contents);
   }
 
@@ -1171,7 +1171,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup p(String text) {
+  public final ElementInstruction p(String text) {
     return elem0(ElementNamePojo.P, text);
   }
 
@@ -1180,7 +1180,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup path(Instruction... contents) {
+  public final ElementInstruction path(Instruction... contents) {
     return elem0(ElementNamePojo.PATH, contents);
   }
 
@@ -1189,7 +1189,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup path(String text) {
+  public final ElementInstruction path(String text) {
     return elem0(ElementNamePojo.PATH, text);
   }
 
@@ -1198,7 +1198,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup pre(Instruction... contents) {
+  public final ElementInstruction pre(Instruction... contents) {
     return elem0(ElementNamePojo.PRE, contents);
   }
 
@@ -1207,7 +1207,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup pre(String text) {
+  public final ElementInstruction pre(String text) {
     return elem0(ElementNamePojo.PRE, text);
   }
 
@@ -1216,7 +1216,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup progress(Instruction... contents) {
+  public final ElementInstruction progress(Instruction... contents) {
     return elem0(ElementNamePojo.PROGRESS, contents);
   }
 
@@ -1225,7 +1225,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup progress(String text) {
+  public final ElementInstruction progress(String text) {
     return elem0(ElementNamePojo.PROGRESS, text);
   }
 
@@ -1234,7 +1234,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup samp(Instruction... contents) {
+  public final ElementInstruction samp(Instruction... contents) {
     return elem0(ElementNamePojo.SAMP, contents);
   }
 
@@ -1243,7 +1243,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup samp(String text) {
+  public final ElementInstruction samp(String text) {
     return elem0(ElementNamePojo.SAMP, text);
   }
 
@@ -1252,7 +1252,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup script(Instruction... contents) {
+  public final ElementInstruction script(Instruction... contents) {
     return elem0(ElementNamePojo.SCRIPT, contents);
   }
 
@@ -1261,7 +1261,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup script(String text) {
+  public final ElementInstruction script(String text) {
     return elem0(ElementNamePojo.SCRIPT, text);
   }
 
@@ -1270,7 +1270,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup section(Instruction... contents) {
+  public final ElementInstruction section(Instruction... contents) {
     return elem0(ElementNamePojo.SECTION, contents);
   }
 
@@ -1279,7 +1279,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup section(String text) {
+  public final ElementInstruction section(String text) {
     return elem0(ElementNamePojo.SECTION, text);
   }
 
@@ -1288,7 +1288,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup select(Instruction... contents) {
+  public final ElementInstruction select(Instruction... contents) {
     return elem0(ElementNamePojo.SELECT, contents);
   }
 
@@ -1297,7 +1297,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup select(String text) {
+  public final ElementInstruction select(String text) {
     return elem0(ElementNamePojo.SELECT, text);
   }
 
@@ -1306,7 +1306,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup small(Instruction... contents) {
+  public final ElementInstruction small(Instruction... contents) {
     return elem0(ElementNamePojo.SMALL, contents);
   }
 
@@ -1315,7 +1315,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup small(String text) {
+  public final ElementInstruction small(String text) {
     return elem0(ElementNamePojo.SMALL, text);
   }
 
@@ -1324,7 +1324,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup span(Instruction... contents) {
+  public final ElementInstruction span(Instruction... contents) {
     return elem0(ElementNamePojo.SPAN, contents);
   }
 
@@ -1333,7 +1333,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup span(String text) {
+  public final ElementInstruction span(String text) {
     return elem0(ElementNamePojo.SPAN, text);
   }
 
@@ -1342,7 +1342,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup strong(Instruction... contents) {
+  public final ElementInstruction strong(Instruction... contents) {
     return elem0(ElementNamePojo.STRONG, contents);
   }
 
@@ -1351,7 +1351,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup strong(String text) {
+  public final ElementInstruction strong(String text) {
     return elem0(ElementNamePojo.STRONG, text);
   }
 
@@ -1360,7 +1360,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup style(Instruction... contents) {
+  public final ElementInstruction style(Instruction... contents) {
     return elem0(ElementNamePojo.STYLE, contents);
   }
 
@@ -1369,7 +1369,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup sub(Instruction... contents) {
+  public final ElementInstruction sub(Instruction... contents) {
     return elem0(ElementNamePojo.SUB, contents);
   }
 
@@ -1378,7 +1378,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup sub(String text) {
+  public final ElementInstruction sub(String text) {
     return elem0(ElementNamePojo.SUB, text);
   }
 
@@ -1387,7 +1387,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup summary(Instruction... contents) {
+  public final ElementInstruction summary(Instruction... contents) {
     return elem0(ElementNamePojo.SUMMARY, contents);
   }
 
@@ -1396,7 +1396,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup summary(String text) {
+  public final ElementInstruction summary(String text) {
     return elem0(ElementNamePojo.SUMMARY, text);
   }
 
@@ -1405,7 +1405,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup sup(Instruction... contents) {
+  public final ElementInstruction sup(Instruction... contents) {
     return elem0(ElementNamePojo.SUP, contents);
   }
 
@@ -1414,7 +1414,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup sup(String text) {
+  public final ElementInstruction sup(String text) {
     return elem0(ElementNamePojo.SUP, text);
   }
 
@@ -1423,7 +1423,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup svg(Instruction... contents) {
+  public final ElementInstruction svg(Instruction... contents) {
     return elem0(ElementNamePojo.SVG, contents);
   }
 
@@ -1432,7 +1432,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup svg(String text) {
+  public final ElementInstruction svg(String text) {
     return elem0(ElementNamePojo.SVG, text);
   }
 
@@ -1441,7 +1441,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup table(Instruction... contents) {
+  public final ElementInstruction table(Instruction... contents) {
     return elem0(ElementNamePojo.TABLE, contents);
   }
 
@@ -1450,7 +1450,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup table(String text) {
+  public final ElementInstruction table(String text) {
     return elem0(ElementNamePojo.TABLE, text);
   }
 
@@ -1459,7 +1459,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup tbody(Instruction... contents) {
+  public final ElementInstruction tbody(Instruction... contents) {
     return elem0(ElementNamePojo.TBODY, contents);
   }
 
@@ -1468,7 +1468,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup tbody(String text) {
+  public final ElementInstruction tbody(String text) {
     return elem0(ElementNamePojo.TBODY, text);
   }
 
@@ -1477,7 +1477,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup td(Instruction... contents) {
+  public final ElementInstruction td(Instruction... contents) {
     return elem0(ElementNamePojo.TD, contents);
   }
 
@@ -1486,7 +1486,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup td(String text) {
+  public final ElementInstruction td(String text) {
     return elem0(ElementNamePojo.TD, text);
   }
 
@@ -1495,7 +1495,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup template(Instruction... contents) {
+  public final ElementInstruction template(Instruction... contents) {
     return elem0(ElementNamePojo.TEMPLATE, contents);
   }
 
@@ -1504,7 +1504,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup template(String text) {
+  public final ElementInstruction template(String text) {
     return elem0(ElementNamePojo.TEMPLATE, text);
   }
 
@@ -1513,7 +1513,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup textarea(Instruction... contents) {
+  public final ElementInstruction textarea(Instruction... contents) {
     return elem0(ElementNamePojo.TEXTAREA, contents);
   }
 
@@ -1522,7 +1522,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup textarea(String text) {
+  public final ElementInstruction textarea(String text) {
     return elem0(ElementNamePojo.TEXTAREA, text);
   }
 
@@ -1531,7 +1531,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup th(Instruction... contents) {
+  public final ElementInstruction th(Instruction... contents) {
     return elem0(ElementNamePojo.TH, contents);
   }
 
@@ -1540,7 +1540,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup th(String text) {
+  public final ElementInstruction th(String text) {
     return elem0(ElementNamePojo.TH, text);
   }
 
@@ -1549,7 +1549,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup thead(Instruction... contents) {
+  public final ElementInstruction thead(Instruction... contents) {
     return elem0(ElementNamePojo.THEAD, contents);
   }
 
@@ -1558,7 +1558,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup thead(String text) {
+  public final ElementInstruction thead(String text) {
     return elem0(ElementNamePojo.THEAD, text);
   }
 
@@ -1567,7 +1567,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup title(Instruction... contents) {
+  public final ElementInstruction title(Instruction... contents) {
     return elem0(ElementNamePojo.TITLE, contents);
   }
 
@@ -1576,7 +1576,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup tr(Instruction... contents) {
+  public final ElementInstruction tr(Instruction... contents) {
     return elem0(ElementNamePojo.TR, contents);
   }
 
@@ -1585,7 +1585,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup tr(String text) {
+  public final ElementInstruction tr(String text) {
     return elem0(ElementNamePojo.TR, text);
   }
 
@@ -1594,7 +1594,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param contents the attributes and children of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup ul(Instruction... contents) {
+  public final ElementInstruction ul(Instruction... contents) {
     return elem0(ElementNamePojo.UL, contents);
   }
 
@@ -1603,7 +1603,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param text the text value of the element
   /// 
   /// @return an instruction representing the element.
-  public final ElementMarkup ul(String text) {
+  public final ElementInstruction ul(String text) {
     return elem0(ElementNamePojo.UL, text);
   }
 
@@ -1611,16 +1611,16 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   // ATTRIBUTES
   //
 
-  abstract AttributeMarkup attr0(AttributeName name);
+  abstract AttributeInstruction attr0(AttributeName name);
 
-  abstract AttributeMarkup attr0(AttributeName name, Object value);
+  abstract AttributeInstruction attr0(AttributeName name, Object value);
 
   /// Renders an attribute with the specified name.
   /// 
   /// @param name the attribute name
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup attr(AttributeName name) {
+  public final AttributeInstruction attr(AttributeName name) {
     Objects.requireNonNull(name, "name == null");
     return attr0(name);
   }
@@ -1631,7 +1631,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup attr(AttributeName name, String value) {
+  public final AttributeInstruction attr(AttributeName name, String value) {
     Objects.requireNonNull(name, "name == null");
     return attr0(name, value);
   }
@@ -1641,7 +1641,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup accesskey(String value) {
+  public final AttributeInstruction accesskey(String value) {
     return attr0(AttributeNamePojo.ACCESSKEY, value);
   }
 
@@ -1650,7 +1650,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup action(String value) {
+  public final AttributeInstruction action(String value) {
     return attr0(AttributeNamePojo.ACTION, value);
   }
 
@@ -1659,7 +1659,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup align(String value) {
+  public final AttributeInstruction align(String value) {
     return attr0(AttributeNamePojo.ALIGN, value);
   }
 
@@ -1668,7 +1668,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup alignmentBaseline(String value) {
+  public final AttributeInstruction alignmentBaseline(String value) {
     return attr0(AttributeNamePojo.ALIGNMENT_BASELINE, value);
   }
 
@@ -1677,7 +1677,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup alt(String value) {
+  public final AttributeInstruction alt(String value) {
     return attr0(AttributeNamePojo.ALT, value);
   }
 
@@ -1686,7 +1686,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup ariaCurrent(String value) {
+  public final AttributeInstruction ariaCurrent(String value) {
     return attr0(AttributeNamePojo.ARIA_CURRENT, value);
   }
 
@@ -1695,7 +1695,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup ariaDisabled(String value) {
+  public final AttributeInstruction ariaDisabled(String value) {
     return attr0(AttributeNamePojo.ARIA_DISABLED, value);
   }
 
@@ -1704,7 +1704,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup ariaHidden(String value) {
+  public final AttributeInstruction ariaHidden(String value) {
     return attr0(AttributeNamePojo.ARIA_HIDDEN, value);
   }
 
@@ -1713,7 +1713,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup ariaInvalid(String value) {
+  public final AttributeInstruction ariaInvalid(String value) {
     return attr0(AttributeNamePojo.ARIA_INVALID, value);
   }
 
@@ -1722,7 +1722,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup ariaLabel(String value) {
+  public final AttributeInstruction ariaLabel(String value) {
     return attr0(AttributeNamePojo.ARIA_LABEL, value);
   }
 
@@ -1731,7 +1731,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup ariaLabelledBy(String value) {
+  public final AttributeInstruction ariaLabelledBy(String value) {
     return attr0(AttributeNamePojo.ARIA_LABELLED_BY, value);
   }
 
@@ -1740,7 +1740,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup ariaModal(String value) {
+  public final AttributeInstruction ariaModal(String value) {
     return attr0(AttributeNamePojo.ARIA_MODAL, value);
   }
 
@@ -1749,7 +1749,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup ariaPlaceholder(String value) {
+  public final AttributeInstruction ariaPlaceholder(String value) {
     return attr0(AttributeNamePojo.ARIA_PLACEHOLDER, value);
   }
 
@@ -1758,7 +1758,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup ariaReadonly(String value) {
+  public final AttributeInstruction ariaReadonly(String value) {
     return attr0(AttributeNamePojo.ARIA_READONLY, value);
   }
 
@@ -1767,7 +1767,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup ariaRequired(String value) {
+  public final AttributeInstruction ariaRequired(String value) {
     return attr0(AttributeNamePojo.ARIA_REQUIRED, value);
   }
 
@@ -1776,7 +1776,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup ariaSelected(String value) {
+  public final AttributeInstruction ariaSelected(String value) {
     return attr0(AttributeNamePojo.ARIA_SELECTED, value);
   }
 
@@ -1785,7 +1785,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup as(String value) {
+  public final AttributeInstruction as(String value) {
     return attr0(AttributeNamePojo.AS, value);
   }
 
@@ -1794,7 +1794,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup autocomplete(String value) {
+  public final AttributeInstruction autocomplete(String value) {
     return attr0(AttributeNamePojo.AUTOCOMPLETE, value);
   }
 
@@ -1803,7 +1803,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup baselineShift(String value) {
+  public final AttributeInstruction baselineShift(String value) {
     return attr0(AttributeNamePojo.BASELINE_SHIFT, value);
   }
 
@@ -1812,7 +1812,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup border(String value) {
+  public final AttributeInstruction border(String value) {
     return attr0(AttributeNamePojo.BORDER, value);
   }
 
@@ -1821,7 +1821,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup cellpadding(String value) {
+  public final AttributeInstruction cellpadding(String value) {
     return attr0(AttributeNamePojo.CELLPADDING, value);
   }
 
@@ -1830,7 +1830,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup cellspacing(String value) {
+  public final AttributeInstruction cellspacing(String value) {
     return attr0(AttributeNamePojo.CELLSPACING, value);
   }
 
@@ -1839,7 +1839,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup charset(String value) {
+  public final AttributeInstruction charset(String value) {
     return attr0(AttributeNamePojo.CHARSET, value);
   }
 
@@ -1848,7 +1848,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup cite(String value) {
+  public final AttributeInstruction cite(String value) {
     return attr0(AttributeNamePojo.CITE, value);
   }
 
@@ -1857,7 +1857,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup className(String value) {
+  public final AttributeInstruction className(String value) {
     return attr0(AttributeNamePojo.CLASS, value);
   }
 
@@ -1866,7 +1866,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup clipRule(String value) {
+  public final AttributeInstruction clipRule(String value) {
     return attr0(AttributeNamePojo.CLIP_RULE, value);
   }
 
@@ -1875,7 +1875,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup closedby(String value) {
+  public final AttributeInstruction closedby(String value) {
     return attr0(AttributeNamePojo.CLOSEDBY, value);
   }
 
@@ -1884,7 +1884,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup color(String value) {
+  public final AttributeInstruction color(String value) {
     return attr0(AttributeNamePojo.COLOR, value);
   }
 
@@ -1893,7 +1893,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup colorInterpolation(String value) {
+  public final AttributeInstruction colorInterpolation(String value) {
     return attr0(AttributeNamePojo.COLOR_INTERPOLATION, value);
   }
 
@@ -1903,7 +1903,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup colorInterpolationFilters(String value) {
+  public final AttributeInstruction colorInterpolationFilters(String value) {
     return attr0(AttributeNamePojo.COLOR_INTERPOLATION_FILTERS, value);
   }
 
@@ -1912,7 +1912,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup cols(String value) {
+  public final AttributeInstruction cols(String value) {
     return attr0(AttributeNamePojo.COLS, value);
   }
 
@@ -1921,7 +1921,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup content(String value) {
+  public final AttributeInstruction content(String value) {
     return attr0(AttributeNamePojo.CONTENT, value);
   }
 
@@ -1930,7 +1930,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup contenteditable(String value) {
+  public final AttributeInstruction contenteditable(String value) {
     return attr0(AttributeNamePojo.CONTENTEDITABLE, value);
   }
 
@@ -1939,7 +1939,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup crossorigin(String value) {
+  public final AttributeInstruction crossorigin(String value) {
     return attr0(AttributeNamePojo.CROSSORIGIN, value);
   }
 
@@ -1948,7 +1948,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup cursor(String value) {
+  public final AttributeInstruction cursor(String value) {
     return attr0(AttributeNamePojo.CURSOR, value);
   }
 
@@ -1957,7 +1957,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup d(String value) {
+  public final AttributeInstruction d(String value) {
     return attr0(AttributeNamePojo.D, value);
   }
 
@@ -1966,7 +1966,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup dir(String value) {
+  public final AttributeInstruction dir(String value) {
     return attr0(AttributeNamePojo.DIR, value);
   }
 
@@ -1975,7 +1975,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup direction(String value) {
+  public final AttributeInstruction direction(String value) {
     return attr0(AttributeNamePojo.DIRECTION, value);
   }
 
@@ -1984,7 +1984,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup dirname(String value) {
+  public final AttributeInstruction dirname(String value) {
     return attr0(AttributeNamePojo.DIRNAME, value);
   }
 
@@ -1993,7 +1993,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup display(String value) {
+  public final AttributeInstruction display(String value) {
     return attr0(AttributeNamePojo.DISPLAY, value);
   }
 
@@ -2002,7 +2002,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup dominantBaseline(String value) {
+  public final AttributeInstruction dominantBaseline(String value) {
     return attr0(AttributeNamePojo.DOMINANT_BASELINE, value);
   }
 
@@ -2011,7 +2011,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup download(String value) {
+  public final AttributeInstruction download(String value) {
     return attr0(AttributeNamePojo.DOWNLOAD, value);
   }
 
@@ -2020,7 +2020,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup draggable(String value) {
+  public final AttributeInstruction draggable(String value) {
     return attr0(AttributeNamePojo.DRAGGABLE, value);
   }
 
@@ -2029,7 +2029,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup enctype(String value) {
+  public final AttributeInstruction enctype(String value) {
     return attr0(AttributeNamePojo.ENCTYPE, value);
   }
 
@@ -2038,7 +2038,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup fill(String value) {
+  public final AttributeInstruction fill(String value) {
     return attr0(AttributeNamePojo.FILL, value);
   }
 
@@ -2047,7 +2047,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup fillOpacity(String value) {
+  public final AttributeInstruction fillOpacity(String value) {
     return attr0(AttributeNamePojo.FILL_OPACITY, value);
   }
 
@@ -2056,7 +2056,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup fillRule(String value) {
+  public final AttributeInstruction fillRule(String value) {
     return attr0(AttributeNamePojo.FILL_RULE, value);
   }
 
@@ -2065,7 +2065,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup filter(String value) {
+  public final AttributeInstruction filter(String value) {
     return attr0(AttributeNamePojo.FILTER, value);
   }
 
@@ -2074,7 +2074,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup floodColor(String value) {
+  public final AttributeInstruction floodColor(String value) {
     return attr0(AttributeNamePojo.FLOOD_COLOR, value);
   }
 
@@ -2083,7 +2083,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup floodOpacity(String value) {
+  public final AttributeInstruction floodOpacity(String value) {
     return attr0(AttributeNamePojo.FLOOD_OPACITY, value);
   }
 
@@ -2092,7 +2092,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup forId(String value) {
+  public final AttributeInstruction forId(String value) {
     return attr0(AttributeNamePojo.FOR, value);
   }
 
@@ -2102,7 +2102,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup glyphOrientationHorizontal(String value) {
+  public final AttributeInstruction glyphOrientationHorizontal(String value) {
     return attr0(AttributeNamePojo.GLYPH_ORIENTATION_HORIZONTAL, value);
   }
 
@@ -2112,7 +2112,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup glyphOrientationVertical(String value) {
+  public final AttributeInstruction glyphOrientationVertical(String value) {
     return attr0(AttributeNamePojo.GLYPH_ORIENTATION_VERTICAL, value);
   }
 
@@ -2121,7 +2121,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup height(String value) {
+  public final AttributeInstruction height(String value) {
     return attr0(AttributeNamePojo.HEIGHT, value);
   }
 
@@ -2130,7 +2130,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup href(String value) {
+  public final AttributeInstruction href(String value) {
     return attr0(AttributeNamePojo.HREF, value);
   }
 
@@ -2139,7 +2139,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup httpEquiv(String value) {
+  public final AttributeInstruction httpEquiv(String value) {
     return attr0(AttributeNamePojo.HTTP_EQUIV, value);
   }
 
@@ -2148,7 +2148,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup id(String value) {
+  public final AttributeInstruction id(String value) {
     return attr0(AttributeNamePojo.ID, value);
   }
 
@@ -2157,7 +2157,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup imageRendering(String value) {
+  public final AttributeInstruction imageRendering(String value) {
     return attr0(AttributeNamePojo.IMAGE_RENDERING, value);
   }
 
@@ -2166,7 +2166,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup integrity(String value) {
+  public final AttributeInstruction integrity(String value) {
     return attr0(AttributeNamePojo.INTEGRITY, value);
   }
 
@@ -2175,7 +2175,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup lang(String value) {
+  public final AttributeInstruction lang(String value) {
     return attr0(AttributeNamePojo.LANG, value);
   }
 
@@ -2184,7 +2184,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup letterSpacing(String value) {
+  public final AttributeInstruction letterSpacing(String value) {
     return attr0(AttributeNamePojo.LETTER_SPACING, value);
   }
 
@@ -2193,7 +2193,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup lightingColor(String value) {
+  public final AttributeInstruction lightingColor(String value) {
     return attr0(AttributeNamePojo.LIGHTING_COLOR, value);
   }
 
@@ -2202,7 +2202,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup markerEnd(String value) {
+  public final AttributeInstruction markerEnd(String value) {
     return attr0(AttributeNamePojo.MARKER_END, value);
   }
 
@@ -2211,7 +2211,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup markerMid(String value) {
+  public final AttributeInstruction markerMid(String value) {
     return attr0(AttributeNamePojo.MARKER_MID, value);
   }
 
@@ -2220,7 +2220,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup markerStart(String value) {
+  public final AttributeInstruction markerStart(String value) {
     return attr0(AttributeNamePojo.MARKER_START, value);
   }
 
@@ -2229,7 +2229,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup mask(String value) {
+  public final AttributeInstruction mask(String value) {
     return attr0(AttributeNamePojo.MASK, value);
   }
 
@@ -2238,7 +2238,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup maskType(String value) {
+  public final AttributeInstruction maskType(String value) {
     return attr0(AttributeNamePojo.MASK_TYPE, value);
   }
 
@@ -2247,7 +2247,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup maxlength(String value) {
+  public final AttributeInstruction maxlength(String value) {
     return attr0(AttributeNamePojo.MAXLENGTH, value);
   }
 
@@ -2256,7 +2256,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup media(String value) {
+  public final AttributeInstruction media(String value) {
     return attr0(AttributeNamePojo.MEDIA, value);
   }
 
@@ -2265,7 +2265,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup method(String value) {
+  public final AttributeInstruction method(String value) {
     return attr0(AttributeNamePojo.METHOD, value);
   }
 
@@ -2274,7 +2274,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup minlength(String value) {
+  public final AttributeInstruction minlength(String value) {
     return attr0(AttributeNamePojo.MINLENGTH, value);
   }
 
@@ -2283,7 +2283,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup name(String value) {
+  public final AttributeInstruction name(String value) {
     return attr0(AttributeNamePojo.NAME, value);
   }
 
@@ -2292,7 +2292,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup onclick(String value) {
+  public final AttributeInstruction onclick(String value) {
     return attr0(AttributeNamePojo.ONCLICK, value);
   }
 
@@ -2301,7 +2301,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the action to be executed
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup onclick(JsAction value) {
+  public final AttributeInstruction onclick(JsAction value) {
     return attr0(AttributeNamePojo.ONCLICK, value);
   }
 
@@ -2310,7 +2310,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup onload(String value) {
+  public final AttributeInstruction onload(String value) {
     return attr0(AttributeNamePojo.ONLOAD, value);
   }
 
@@ -2319,7 +2319,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the action to be executed
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup onload(JsAction value) {
+  public final AttributeInstruction onload(JsAction value) {
     return attr0(AttributeNamePojo.ONLOAD, value);
   }
 
@@ -2328,7 +2328,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup onpopstate(String value) {
+  public final AttributeInstruction onpopstate(String value) {
     return attr0(AttributeNamePojo.ONPOPSTATE, value);
   }
 
@@ -2337,7 +2337,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the action to be executed
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup onpopstate(JsAction value) {
+  public final AttributeInstruction onpopstate(JsAction value) {
     return attr0(AttributeNamePojo.ONPOPSTATE, value);
   }
 
@@ -2346,7 +2346,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup onsubmit(String value) {
+  public final AttributeInstruction onsubmit(String value) {
     return attr0(AttributeNamePojo.ONSUBMIT, value);
   }
 
@@ -2355,7 +2355,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the action to be executed
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup onsubmit(JsAction value) {
+  public final AttributeInstruction onsubmit(JsAction value) {
     return attr0(AttributeNamePojo.ONSUBMIT, value);
   }
 
@@ -2364,7 +2364,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup opacity(String value) {
+  public final AttributeInstruction opacity(String value) {
     return attr0(AttributeNamePojo.OPACITY, value);
   }
 
@@ -2373,7 +2373,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup overflow(String value) {
+  public final AttributeInstruction overflow(String value) {
     return attr0(AttributeNamePojo.OVERFLOW, value);
   }
 
@@ -2382,7 +2382,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup paintOrder(String value) {
+  public final AttributeInstruction paintOrder(String value) {
     return attr0(AttributeNamePojo.PAINT_ORDER, value);
   }
 
@@ -2391,7 +2391,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup placeholder(String value) {
+  public final AttributeInstruction placeholder(String value) {
     return attr0(AttributeNamePojo.PLACEHOLDER, value);
   }
 
@@ -2400,7 +2400,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup pointerEvents(String value) {
+  public final AttributeInstruction pointerEvents(String value) {
     return attr0(AttributeNamePojo.POINTER_EVENTS, value);
   }
 
@@ -2409,7 +2409,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup property(String value) {
+  public final AttributeInstruction property(String value) {
     return attr0(AttributeNamePojo.PROPERTY, value);
   }
 
@@ -2418,7 +2418,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup referrerpolicy(String value) {
+  public final AttributeInstruction referrerpolicy(String value) {
     return attr0(AttributeNamePojo.REFERRERPOLICY, value);
   }
 
@@ -2427,7 +2427,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup rel(String value) {
+  public final AttributeInstruction rel(String value) {
     return attr0(AttributeNamePojo.REL, value);
   }
 
@@ -2436,7 +2436,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup rev(String value) {
+  public final AttributeInstruction rev(String value) {
     return attr0(AttributeNamePojo.REV, value);
   }
 
@@ -2445,7 +2445,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup role(String value) {
+  public final AttributeInstruction role(String value) {
     return attr0(AttributeNamePojo.ROLE, value);
   }
 
@@ -2454,7 +2454,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup rows(String value) {
+  public final AttributeInstruction rows(String value) {
     return attr0(AttributeNamePojo.ROWS, value);
   }
 
@@ -2463,7 +2463,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup shapeRendering(String value) {
+  public final AttributeInstruction shapeRendering(String value) {
     return attr0(AttributeNamePojo.SHAPE_RENDERING, value);
   }
 
@@ -2472,7 +2472,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup size(String value) {
+  public final AttributeInstruction size(String value) {
     return attr0(AttributeNamePojo.SIZE, value);
   }
 
@@ -2481,7 +2481,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup sizes(String value) {
+  public final AttributeInstruction sizes(String value) {
     return attr0(AttributeNamePojo.SIZES, value);
   }
 
@@ -2490,7 +2490,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup spellcheck(String value) {
+  public final AttributeInstruction spellcheck(String value) {
     return attr0(AttributeNamePojo.SPELLCHECK, value);
   }
 
@@ -2499,7 +2499,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup src(String value) {
+  public final AttributeInstruction src(String value) {
     return attr0(AttributeNamePojo.SRC, value);
   }
 
@@ -2508,7 +2508,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup srcset(String value) {
+  public final AttributeInstruction srcset(String value) {
     return attr0(AttributeNamePojo.SRCSET, value);
   }
 
@@ -2517,7 +2517,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup start(String value) {
+  public final AttributeInstruction start(String value) {
     return attr0(AttributeNamePojo.START, value);
   }
 
@@ -2526,7 +2526,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup stopColor(String value) {
+  public final AttributeInstruction stopColor(String value) {
     return attr0(AttributeNamePojo.STOP_COLOR, value);
   }
 
@@ -2535,7 +2535,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup stopOpacity(String value) {
+  public final AttributeInstruction stopOpacity(String value) {
     return attr0(AttributeNamePojo.STOP_OPACITY, value);
   }
 
@@ -2544,7 +2544,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup stroke(String value) {
+  public final AttributeInstruction stroke(String value) {
     return attr0(AttributeNamePojo.STROKE, value);
   }
 
@@ -2553,7 +2553,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup strokeDasharray(String value) {
+  public final AttributeInstruction strokeDasharray(String value) {
     return attr0(AttributeNamePojo.STROKE_DASHARRAY, value);
   }
 
@@ -2562,7 +2562,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup strokeDashoffset(String value) {
+  public final AttributeInstruction strokeDashoffset(String value) {
     return attr0(AttributeNamePojo.STROKE_DASHOFFSET, value);
   }
 
@@ -2571,7 +2571,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup strokeLinecap(String value) {
+  public final AttributeInstruction strokeLinecap(String value) {
     return attr0(AttributeNamePojo.STROKE_LINECAP, value);
   }
 
@@ -2580,7 +2580,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup strokeLinejoin(String value) {
+  public final AttributeInstruction strokeLinejoin(String value) {
     return attr0(AttributeNamePojo.STROKE_LINEJOIN, value);
   }
 
@@ -2589,7 +2589,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup strokeMiterlimit(String value) {
+  public final AttributeInstruction strokeMiterlimit(String value) {
     return attr0(AttributeNamePojo.STROKE_MITERLIMIT, value);
   }
 
@@ -2598,7 +2598,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup strokeOpacity(String value) {
+  public final AttributeInstruction strokeOpacity(String value) {
     return attr0(AttributeNamePojo.STROKE_OPACITY, value);
   }
 
@@ -2607,7 +2607,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup strokeWidth(String value) {
+  public final AttributeInstruction strokeWidth(String value) {
     return attr0(AttributeNamePojo.STROKE_WIDTH, value);
   }
 
@@ -2616,7 +2616,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup tabindex(String value) {
+  public final AttributeInstruction tabindex(String value) {
     return attr0(AttributeNamePojo.TABINDEX, value);
   }
 
@@ -2625,7 +2625,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup target(String value) {
+  public final AttributeInstruction target(String value) {
     return attr0(AttributeNamePojo.TARGET, value);
   }
 
@@ -2634,7 +2634,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup textAnchor(String value) {
+  public final AttributeInstruction textAnchor(String value) {
     return attr0(AttributeNamePojo.TEXT_ANCHOR, value);
   }
 
@@ -2643,7 +2643,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup textDecoration(String value) {
+  public final AttributeInstruction textDecoration(String value) {
     return attr0(AttributeNamePojo.TEXT_DECORATION, value);
   }
 
@@ -2652,7 +2652,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup textOverflow(String value) {
+  public final AttributeInstruction textOverflow(String value) {
     return attr0(AttributeNamePojo.TEXT_OVERFLOW, value);
   }
 
@@ -2661,7 +2661,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup textRendering(String value) {
+  public final AttributeInstruction textRendering(String value) {
     return attr0(AttributeNamePojo.TEXT_RENDERING, value);
   }
 
@@ -2670,7 +2670,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup transform(String value) {
+  public final AttributeInstruction transform(String value) {
     return attr0(AttributeNamePojo.TRANSFORM, value);
   }
 
@@ -2679,7 +2679,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup transformOrigin(String value) {
+  public final AttributeInstruction transformOrigin(String value) {
     return attr0(AttributeNamePojo.TRANSFORM_ORIGIN, value);
   }
 
@@ -2688,7 +2688,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup translate(String value) {
+  public final AttributeInstruction translate(String value) {
     return attr0(AttributeNamePojo.TRANSLATE, value);
   }
 
@@ -2697,7 +2697,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup type(String value) {
+  public final AttributeInstruction type(String value) {
     return attr0(AttributeNamePojo.TYPE, value);
   }
 
@@ -2706,7 +2706,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup unicodeBidi(String value) {
+  public final AttributeInstruction unicodeBidi(String value) {
     return attr0(AttributeNamePojo.UNICODE_BIDI, value);
   }
 
@@ -2715,7 +2715,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup value(String value) {
+  public final AttributeInstruction value(String value) {
     return attr0(AttributeNamePojo.VALUE, value);
   }
 
@@ -2724,7 +2724,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup vectorEffect(String value) {
+  public final AttributeInstruction vectorEffect(String value) {
     return attr0(AttributeNamePojo.VECTOR_EFFECT, value);
   }
 
@@ -2733,7 +2733,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup viewBox(String value) {
+  public final AttributeInstruction viewBox(String value) {
     return attr0(AttributeNamePojo.VIEWBOX, value);
   }
 
@@ -2742,7 +2742,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup visibility(String value) {
+  public final AttributeInstruction visibility(String value) {
     return attr0(AttributeNamePojo.VISIBILITY, value);
   }
 
@@ -2751,7 +2751,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup whiteSpace(String value) {
+  public final AttributeInstruction whiteSpace(String value) {
     return attr0(AttributeNamePojo.WHITE_SPACE, value);
   }
 
@@ -2760,7 +2760,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup width(String value) {
+  public final AttributeInstruction width(String value) {
     return attr0(AttributeNamePojo.WIDTH, value);
   }
 
@@ -2769,7 +2769,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup wordSpacing(String value) {
+  public final AttributeInstruction wordSpacing(String value) {
     return attr0(AttributeNamePojo.WORD_SPACING, value);
   }
 
@@ -2778,7 +2778,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup wrap(String value) {
+  public final AttributeInstruction wrap(String value) {
     return attr0(AttributeNamePojo.WRAP, value);
   }
 
@@ -2787,7 +2787,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup writingMode(String value) {
+  public final AttributeInstruction writingMode(String value) {
     return attr0(AttributeNamePojo.WRITING_MODE, value);
   }
 
@@ -2796,7 +2796,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the attribute value
   /// 
   /// @return an instruction representing the attribute
-  public final AttributeMarkup xmlns(String value) {
+  public final AttributeInstruction xmlns(String value) {
     return attr0(AttributeNamePojo.XMLNS, value);
   }
 
@@ -2864,14 +2864,14 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// 
   /// @return an instruction representing the non-breaking space
   ///         character entity.
-  public abstract ElementMarkup nbsp();
+  public abstract ElementInstruction nbsp();
 
   /// Renders the specified value as raw HTML.
   /// 
   /// @param value the raw HTML value
   /// 
   /// @return a raw HTML instruction
-  public abstract ElementMarkup raw(String value);
+  public abstract ElementInstruction raw(String value);
 
   /// Renders a text node with the specified value. The text value is escaped
   /// before being emitted to the output.
@@ -2879,7 +2879,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param value the text value
   /// 
   /// @return an instruction representing the text node
-  public abstract ElementMarkup text(String value);
+  public abstract ElementInstruction text(String value);
 
   // END generated code
 

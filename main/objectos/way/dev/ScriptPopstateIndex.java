@@ -16,7 +16,7 @@
 package objectos.way.dev;
 
 import objectos.css.CssSource;
-import objectos.html.rec.ElementMarkup;
+import objectos.html.rec.ElementInstruction;
 import objectos.http.Handler;
 import objectos.http.Request;
 import objectos.http.Result;
@@ -59,7 +59,7 @@ public final class ScriptPopstateIndex extends Html.Template implements Handler 
     );
   }
 
-  private ElementMarkup item(String href, String text) {
+  private ElementInstruction item(String href, String text) {
     return li(
         a(
             css("""

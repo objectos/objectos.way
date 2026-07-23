@@ -19,8 +19,8 @@ import objectos.html.AttributeName;
 import objectos.html.Component;
 import objectos.html.ElementName;
 import objectos.html.Markup;
-import objectos.html.rec.AttributeMarkup;
-import objectos.html.rec.ElementMarkup;
+import objectos.html.rec.AttributeInstruction;
+import objectos.html.rec.ElementInstruction;
 import objectos.html.rec.Fragment0;
 import objectos.html.rec.Fragment1;
 import objectos.html.rec.Fragment2;
@@ -55,9 +55,9 @@ public final class Recorder {
 
   private final FragmentRecorder fragmentRecorder;
 
-  private final RawRecorder rawRecorder;
+  private final ZZZRawRecorder rawRecorder;
 
-  private final TextRecorder textRecorder;
+  private final ZZZTextRecorder textRecorder;
 
   private Recorder(
       ByteArray aux,
@@ -80,9 +80,9 @@ public final class Recorder {
 
       FragmentRecorder fragmentRecorder,
 
-      RawRecorder rawRecorder,
+      ZZZRawRecorder rawRecorder,
 
-      TextRecorder textRecorder
+      ZZZTextRecorder textRecorder
   ) {
     this.aux = aux;
 
@@ -187,9 +187,9 @@ public final class Recorder {
 
         new FragmentRecorder(main, forwardOffsetRecorder, reverseOffsetRecorder),
 
-        new RawRecorder(main, objects),
+        new ZZZRawRecorder(main, objects),
 
-        new TextRecorder(main, objects)
+        new ZZZTextRecorder(main, objects)
     );
   }
 
@@ -197,11 +197,11 @@ public final class Recorder {
     return ambiguousRecorder.record(name, value);
   }
 
-  public final AttributeMarkup attribute0(AttributeName name) {
+  public final AttributeInstruction attribute0(AttributeName name) {
     return attribute0Recorder.record(name);
   }
 
-  public final AttributeMarkup attribute1(AttributeName name, Object value) {
+  public final AttributeInstruction attribute1(AttributeName name, Object value) {
     return attribute1Recorder.record(name, value);
   }
 
@@ -217,7 +217,7 @@ public final class Recorder {
     main.add(HtmlByteProto.DOCTYPE);
   }
 
-  public final ElementMarkup element(ElementName name, Instruction... contents) {
+  public final ElementInstruction element(ElementName name, Instruction... contents) {
     return elementRecorder.record(name, contents);
   }
 
@@ -241,19 +241,19 @@ public final class Recorder {
     return fragmentRecorder.record(fragment, arg1, arg2, arg3, arg4);
   }
 
-  public final ElementMarkup flatten(Instruction... contents) {
+  public final ElementInstruction flatten(Instruction... contents) {
     return flattenRecorder.record(contents);
   }
 
-  public final ElementMarkup flatten(Iterable<? extends Instruction> contents) {
+  public final ElementInstruction flatten(Iterable<? extends Instruction> contents) {
     return flattenRecorder.record(contents);
   }
 
-  public final ElementMarkup raw(String value) {
+  public final ElementInstruction raw(String value) {
     return rawRecorder.record(value);
   }
 
-  public final ElementMarkup text(String value) {
+  public final ElementInstruction text(String value) {
     return textRecorder.record(value);
   }
 

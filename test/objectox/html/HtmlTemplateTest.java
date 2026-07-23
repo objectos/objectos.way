@@ -24,7 +24,7 @@ import java.util.List;
 import objectos.html.ClassName;
 import objectos.html.ElementName;
 import objectos.html.Id;
-import objectos.html.rec.ElementMarkup;
+import objectos.html.rec.ElementInstruction;
 import objectos.html.rec.Instruction;
 import objectos.http.Content;
 import objectos.way.Html;
@@ -562,7 +562,7 @@ public class HtmlTemplateTest {
         new Html.Template() {
           @Override
           protected final void render() {
-            ElementMarkup[] children = new ElementMarkup[count];
+            ElementInstruction[] children = new ElementInstruction[count];
             for (int i = 0; i < count; i++) {
               children[i] = li(Integer.toString(i));
             }

@@ -154,7 +154,7 @@ public class ContentsRecorderTest {
       final int value;
       value = values[idx];
 
-      result[idx] = new AttributeInstruction(value);
+      result[idx] = new AttributePointer(value);
     }
 
     return result;

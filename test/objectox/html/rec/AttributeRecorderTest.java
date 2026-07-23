@@ -58,7 +58,7 @@ public class AttributeRecorderTest {
     final String value;
     value = "foo";
 
-    final AttributeInstruction res;
+    final AttributePointer res;
     res = subject.record(name, value);
 
     assertEquals(res.value(), 0);
@@ -88,7 +88,7 @@ public class AttributeRecorderTest {
     final String value;
     value = "foo";
 
-    final AttributeInstruction res;
+    final AttributePointer res;
     res = subject.record(name, value);
 
     assertEquals(res.value(), 0);
@@ -119,7 +119,7 @@ public class AttributeRecorderTest {
     final String value;
     value = "foo";
 
-    final AttributeInstruction res;
+    final AttributePointer res;
     res = subject.record(name, value);
 
     assertEquals(res.value(), 0);

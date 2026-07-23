@@ -15,10 +15,10 @@
  */
 package objectox.html.attr;
 
-import objectos.html.rec.AttributeMarkup;
+import objectos.html.rec.AttributeInstruction;
 import objectos.html.rec.Instruction;
 import objectox.html.HtmlInstruction;
 
 public sealed interface AttributeOrNoOp
-    extends AttributeMarkup, Instruction.OfDataOn, Instruction.NoOp
+    extends AttributeInstruction, Instruction.OfDataOn, Instruction.NoOp
     permits HtmlInstruction {}

@@ -16,7 +16,7 @@
 package objectox.html.rec;
 
 import objectos.html.ElementName;
-import objectos.html.rec.ElementMarkup;
+import objectos.html.rec.ElementInstruction;
 import objectos.html.rec.Instruction;
 import objectox.html.HtmlInstruction;
 
@@ -84,7 +84,7 @@ final class ZZZElementRecorder {
     );
   }
 
-  public final ElementMarkup record(ElementName name, Instruction... contents) {
+  public final ElementInstruction record(ElementName name, Instruction... contents) {
     final int auxStart;
     auxStart = elementValueEncoder.auxStart();
 

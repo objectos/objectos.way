@@ -13,10 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html.rec;
+package objectos.html.rec;
 
-import objectos.html.rec.ElementMarkup;
+import objectos.html.rec.Instruction.AsMethod;
+import objectos.html.rec.Instruction.OfAmbiguous;
+import objectos.html.rec.Instruction.OfVoid;
+import objectox.html.attr.AttributeOrNoOp;
+import objectox.html.rec.AttributePointer;
 
-public record ElementInstruction(int value) implements ElementMarkup {
-
-}
+/// Represents an instruction to render an Objectos HTML attribute.
+public sealed interface AttributeInstruction
+    extends AsMethod, OfVoid
+    permits OfAmbiguous, AttributeOrNoOp, AttributePointer {}

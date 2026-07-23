@@ -25,7 +25,7 @@ final class BooleanAttributeRecorder {
     this.sink = sink;
   }
 
-  public final AttributeInstruction record(AttributeName name) {
+  public final AttributePointer record(AttributeName name) {
     final int startIndex;
 
     final int nameIndex;
@@ -39,7 +39,7 @@ final class BooleanAttributeRecorder {
       throw new UnsupportedOperationException("Implement me");
     }
 
-    return new AttributeInstruction(startIndex);
+    return new AttributePointer(startIndex);
   }
 
 }

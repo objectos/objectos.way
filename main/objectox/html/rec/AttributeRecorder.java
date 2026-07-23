@@ -26,7 +26,7 @@ final class AttributeRecorder {
     this.sink = sink;
   }
 
-  public final AttributeInstruction record(AttributeName name, String value) {
+  public final AttributePointer record(AttributeName name, String value) {
     final String v;
     v = Objects.requireNonNull(value, "value == null");
 
@@ -55,7 +55,7 @@ final class AttributeRecorder {
       case BIT16, BIT24 -> throw new UnsupportedOperationException();
     };
 
-    return new AttributeInstruction(startIndex);
+    return new AttributePointer(startIndex);
   }
 
   private int record88(int nameIndex, int valueIndex) {

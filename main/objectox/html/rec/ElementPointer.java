@@ -15,8 +15,8 @@
  */
 package objectox.html.rec;
 
-import objectos.html.rec.AttributeMarkup;
+import objectos.html.rec.ElementInstruction;
 
-public final record AttributeInstruction(int value) implements AttributeMarkup {
+public record ElementPointer(int value) implements ElementInstruction {
 
 }

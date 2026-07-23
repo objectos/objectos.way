@@ -87,7 +87,7 @@ public class DocumentRecorderTest {
         sink,
 
         HtmlSinkY.create(opts -> {
-          opts.addByte(HtmlBytes.XBOOLEAN8);
+          opts.addByte(HtmlBytes.xBOOLEAN8);
           opts.addInt8(AttributeNamePojo.AUTOFOCUS.index());
           opts.addByte(HtmlBytes.STARTTAG8);
           opts.addInt8(ElementNamePojo.HTML.index());
@@ -119,7 +119,7 @@ public class DocumentRecorderTest {
         sink,
 
         HtmlSinkY.create(opts -> {
-          opts.addByte(HtmlBytes.XATTRIBUTE88);
+          opts.addByte(HtmlBytes.xATTRIBUTE88);
           opts.addInt8(AttributeNamePojo.LANG.index());
           opts.addInt8(opts.addObject("pt-BR"));
           opts.addByte(HtmlBytes.STARTTAG8);
@@ -129,6 +129,73 @@ public class DocumentRecorderTest {
           opts.addInt8(0);
           opts.addByte(HtmlBytes.ENDTAG8);
           opts.addInt8(ElementNamePojo.HTML.index());
+        })
+    );
+  }
+
+  @Test(description = """
+  <html><head></head></html>
+  """)
+  public void record04() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final DocumentRecorder subject;
+    subject = create(sink);
+
+    subject.element(
+        ElementNamePojo.HTML,
+        subject.element(ElementNamePojo.HEAD)
+    );
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.xSTARTTAG8);
+          opts.addInt8(ElementNamePojo.HEAD.index());
+          opts.addByte(HtmlBytes.VALUES0);
+          opts.addByte(HtmlBytes.ENDTAG8);
+          opts.addInt8(ElementNamePojo.HEAD.index());
+          opts.addByte(HtmlBytes.STARTTAG8);
+          opts.addInt8(ElementNamePojo.HTML.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(1);
+          opts.addInt8(0);
+          opts.addByte(HtmlBytes.ENDTAG8);
+          opts.addInt8(ElementNamePojo.HTML.index());
+        })
+    );
+  }
+
+  @Test(description = """
+  <span>ipsum</span>
+  """)
+  public void record05() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final DocumentRecorder subject;
+    subject = create(sink);
+
+    subject.element(
+        ElementNamePojo.SPAN,
+        subject.text("ipsum")
+    );
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.xTEXT8);
+          opts.addInt8(opts.addObject("ipsum"));
+          opts.addByte(HtmlBytes.STARTTAG8);
+          opts.addInt8(ElementNamePojo.SPAN.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(1);
+          opts.addInt8(0);
+          opts.addByte(HtmlBytes.ENDTAG8);
+          opts.addInt8(ElementNamePojo.SPAN.index());
         })
     );
   }

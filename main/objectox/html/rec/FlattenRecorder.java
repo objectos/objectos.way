@@ -16,7 +16,7 @@
 package objectox.html.rec;
 
 import java.util.Objects;
-import objectos.html.rec.ElementMarkup;
+import objectos.html.rec.ElementInstruction;
 import objectos.html.rec.Instruction;
 import objectox.html.HtmlByteProto;
 import objectox.html.HtmlInstruction;
@@ -55,7 +55,7 @@ final class FlattenRecorder {
     this.reverseOffsetRecorder = reverseOffsetRecorder;
   }
 
-  public final ElementMarkup record(Instruction... contents) {
+  public final ElementInstruction record(Instruction... contents) {
     final Instruction[] values;
     values = Objects.requireNonNull(contents, "contents == null");
 
@@ -95,7 +95,7 @@ final class FlattenRecorder {
     return HtmlInstruction.ELEMENT;
   }
 
-  public final ElementMarkup record(Iterable<? extends Instruction> contents) {
+  public final ElementInstruction record(Iterable<? extends Instruction> contents) {
     final Iterable<? extends Instruction> values;
     values = Objects.requireNonNull(contents, "contents == null");
 

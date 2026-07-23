@@ -23,8 +23,15 @@ import objectos.way.Html;
 import objectox.html.HtmlInstruction;
 import objectox.html.attr.AttributeOrNoOp;
 
-/// Represents some encoded markup of an Objectos HTML document.
-public sealed interface Instruction permits AsObject, AsMethod, OfVoid {
+/// Represents an instruction to render some markup of an Objectos
+/// HTML document.
+public sealed interface Instruction
+    permits
+    AsObject,
+    AsMethod,
+    OfVoid,
+    RawInstruction,
+    TextInstruction {
 
   /**
    * Class of instructions that are represented by object instances.
@@ -44,8 +51,8 @@ public sealed interface Instruction permits AsObject, AsMethod, OfVoid {
   sealed interface AsMethod
       extends Instruction
       permits
-      ElementMarkup,
-      AttributeMarkup,
+      ElementInstruction,
+      AttributeInstruction,
       OfDataOn,
       OfFragment,
       NoOp {}
@@ -53,7 +60,7 @@ public sealed interface Instruction permits AsObject, AsMethod, OfVoid {
   /**
    * An instruction to generate an ambiguous element in a template.
    */
-  sealed interface OfAmbiguous extends AttributeMarkup, ElementMarkup permits HtmlInstruction {}
+  sealed interface OfAmbiguous extends AttributeInstruction, ElementInstruction permits HtmlInstruction {}
 
   /**
    * An instruction to generate a {@code data-on-*} HTML attribute in a
@@ -73,7 +80,7 @@ public sealed interface Instruction permits AsObject, AsMethod, OfVoid {
   sealed interface OfVoid extends Instruction
       permits
       AttributeObject,
-      AttributeMarkup,
+      AttributeInstruction,
       OfDataOn,
       OfFragment,
       NoOp {}

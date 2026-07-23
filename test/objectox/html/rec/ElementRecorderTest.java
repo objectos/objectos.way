@@ -35,7 +35,7 @@ public class ElementRecorderTest {
     final ElementNamePojo name;
     name = ElementNamePojo.HTML;
 
-    final ElementInstruction res;
+    final ElementPointer res;
     res = subject.record(name);
 
     assertEquals(res.value(), 0);
@@ -63,8 +63,8 @@ public class ElementRecorderTest {
     final int attrIndex;
     attrIndex = sink.addByte(HtmlBytes.BOOLEAN8);
 
-    final AttributeInstruction attr;
-    attr = new AttributeInstruction(attrIndex);
+    final AttributePointer attr;
+    attr = new AttributePointer(attrIndex);
 
     final ElementRecorder subject;
     subject = new ElementRecorder(sink);
@@ -72,7 +72,7 @@ public class ElementRecorderTest {
     final ElementNamePojo name;
     name = ElementNamePojo.HTML;
 
-    final ElementInstruction res;
+    final ElementPointer res;
     res = subject.record(name, attr);
 
     assertEquals(res.value(), 1);
@@ -81,7 +81,7 @@ public class ElementRecorderTest {
         sink,
 
         HtmlSinkY.create(opts -> {
-          opts.addByte(HtmlBytes.XBOOLEAN8);
+          opts.addByte(HtmlBytes.xBOOLEAN8);
           opts.addByte(HtmlBytes.STARTTAG8);
           opts.addInt8(name.index());
           opts.addByte(HtmlBytes.VALUES8);
@@ -103,8 +103,8 @@ public class ElementRecorderTest {
     final int attrIndex;
     attrIndex = sink.addByte(HtmlBytes.ATTRIBUTE88);
 
-    final AttributeInstruction attr;
-    attr = new AttributeInstruction(attrIndex);
+    final AttributePointer attr;
+    attr = new AttributePointer(attrIndex);
 
     final ElementRecorder subject;
     subject = new ElementRecorder(sink);
@@ -112,7 +112,7 @@ public class ElementRecorderTest {
     final ElementNamePojo name;
     name = ElementNamePojo.HTML;
 
-    final ElementInstruction res;
+    final ElementPointer res;
     res = subject.record(name, attr);
 
     assertEquals(res.value(), 1);
@@ -121,7 +121,7 @@ public class ElementRecorderTest {
         sink,
 
         HtmlSinkY.create(opts -> {
-          opts.addByte(HtmlBytes.XATTRIBUTE88);
+          opts.addByte(HtmlBytes.xATTRIBUTE88);
           opts.addByte(HtmlBytes.STARTTAG8);
           opts.addInt8(name.index());
           opts.addByte(HtmlBytes.VALUES8);
@@ -129,6 +129,44 @@ public class ElementRecorderTest {
           opts.addInt8(0);
           opts.addByte(HtmlBytes.ENDTAG8);
           opts.addInt8(name.index());
+        })
+    );
+  }
+
+  @Test(description = """
+  <html><head></head></html>
+  """)
+  public void record04() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final ElementRecorder subject;
+    subject = new ElementRecorder(sink);
+
+    final ElementPointer res;
+    res = subject.record(
+        ElementNamePojo.HTML,
+        subject.record(ElementNamePojo.HEAD)
+    );
+
+    assertEquals(res.value(), 5);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.xSTARTTAG8);
+          opts.addInt8(ElementNamePojo.HEAD.index());
+          opts.addByte(HtmlBytes.VALUES0);
+          opts.addByte(HtmlBytes.ENDTAG8);
+          opts.addInt8(ElementNamePojo.HEAD.index());
+          opts.addByte(HtmlBytes.STARTTAG8);
+          opts.addInt8(ElementNamePojo.HTML.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(1);
+          opts.addInt8(0);
+          opts.addByte(HtmlBytes.ENDTAG8);
+          opts.addInt8(ElementNamePojo.HTML.index());
         })
     );
   }

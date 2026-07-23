@@ -15,12 +15,13 @@
  */
 package objectos.html.rec;
 
-import objectos.html.rec.Instruction.AsMethod;
-import objectos.html.rec.Instruction.OfAmbiguous;
-import objectox.html.HtmlInstruction;
-import objectox.html.rec.ElementInstruction;
+import objectox.html.rec.RawPointer;
 
-/// Represents the markup of an Objectos HTML element.
-public sealed interface ElementMarkup
-    extends AsMethod
-    permits OfAmbiguous, HtmlInstruction, ElementInstruction {}
+/// Represents an instruction to render a raw text node in a Objectos
+/// HTML document.
+public sealed interface RawInstruction
+    extends
+    Instruction
+    permits
+    RawPointer {
+}

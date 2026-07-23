@@ -15,13 +15,12 @@
  */
 package objectos.html.rec;
 
-import objectos.html.rec.Instruction.AsMethod;
-import objectos.html.rec.Instruction.OfAmbiguous;
-import objectos.html.rec.Instruction.OfVoid;
-import objectox.html.attr.AttributeOrNoOp;
-import objectox.html.rec.AttributeInstruction;
+import objectox.html.rec.TextPointer;
 
-/// Represents the markup of an Objectos HTML attribute.
-public sealed interface AttributeMarkup
-    extends AsMethod, OfVoid
-    permits OfAmbiguous, AttributeOrNoOp, AttributeInstruction {}
+/// Represents an instruction to render a text node in a Objectos HTML document.
+public sealed interface TextInstruction
+    extends
+    Instruction
+    permits
+    TextPointer {
+}

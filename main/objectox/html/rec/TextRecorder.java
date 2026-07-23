@@ -16,36 +16,62 @@
 package objectox.html.rec;
 
 import java.util.Objects;
-import objectos.html.rec.ElementMarkup;
-import objectox.html.HtmlByteProto;
-import objectox.html.HtmlInstruction;
 
 final class TextRecorder {
 
-  private final ByteArray main;
+  private final HtmlSink sink;
 
-  private final ObjectArray objects;
-
-  TextRecorder(ByteArray main, ObjectArray objects) {
-    this.main = main;
-
-    this.objects = objects;
+  TextRecorder(HtmlSink sink) {
+    this.sink = sink;
   }
 
-  public final ElementMarkup record(String value) {
+  public final TextPointer record(String value) {
     final String v;
     v = Objects.requireNonNull(value, "value == null");
 
-    final int object;
-    object = objects.add(v);
+    final int valueIndex;
+    valueIndex = sink.addObject(v);
 
-    main.add(HtmlByteProto.TEXT);
+    final IntSize valueSize;
+    valueSize = IntSize.of(valueIndex);
 
-    main.addInt16(object);
+    final int startIndex;
+    startIndex = switch (valueSize) {
+      case BIT8 -> record8(valueIndex);
 
-    main.add(HtmlByteProto.INTERNAL4);
+      case BIT16 -> record16(valueIndex);
 
-    return HtmlInstruction.ELEMENT;
+      case BIT24 -> record24(valueIndex);
+    };
+
+    return new TextPointer(startIndex);
+  }
+
+  private int record8(int valueIndex) {
+    final int startIndex;
+    startIndex = sink.addByte(HtmlBytes.TEXT8);
+
+    sink.addInt8(valueIndex);
+
+    return startIndex;
+  }
+
+  private int record16(int valueIndex) {
+    final int startIndex;
+    startIndex = sink.addByte(HtmlBytes.TEXT16);
+
+    sink.addInt16(valueIndex);
+
+    return startIndex;
+  }
+
+  private int record24(int valueIndex) {
+    final int startIndex;
+    startIndex = sink.addByte(HtmlBytes.TEXT24);
+
+    sink.addInt24(valueIndex);
+
+    return startIndex;
   }
 
 }

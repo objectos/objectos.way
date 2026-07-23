@@ -27,12 +27,30 @@ final class DocumentRecorder {
 
   private final ElementRecorder elementRecorder;
 
-  DocumentRecorder(AttributeRecorder attributeRecorder, BooleanAttributeRecorder booleanAttributeRecorder, ElementRecorder elementRecorder) {
+  private final RawRecorder rawRecorder;
+
+  private final TextRecorder textRecorder;
+
+  DocumentRecorder(
+      AttributeRecorder attributeRecorder,
+
+      BooleanAttributeRecorder booleanAttributeRecorder,
+
+      ElementRecorder elementRecorder,
+
+      RawRecorder rawRecorder,
+
+      TextRecorder textRecorder
+  ) {
     this.attributeRecorder = attributeRecorder;
 
     this.booleanAttributeRecorder = booleanAttributeRecorder;
 
     this.elementRecorder = elementRecorder;
+
+    this.rawRecorder = rawRecorder;
+
+    this.textRecorder = textRecorder;
   }
 
   public static DocumentRecorder of(HtmlSink sink) {
@@ -41,20 +59,32 @@ final class DocumentRecorder {
 
         new BooleanAttributeRecorder(sink),
 
-        new ElementRecorder(sink)
+        new ElementRecorder(sink),
+
+        new RawRecorder(sink),
+
+        new TextRecorder(sink)
     );
   }
 
-  public final AttributeInstruction attribute(AttributeName name) {
+  public final AttributePointer attribute(AttributeName name) {
     return booleanAttributeRecorder.record(name);
   }
 
-  public final AttributeInstruction attribute(AttributeName name, String value) {
+  public final AttributePointer attribute(AttributeName name, String value) {
     return attributeRecorder.record(name, value);
   }
 
-  public final ElementInstruction element(ElementName name, Instruction... contents) {
+  public final ElementPointer element(ElementName name, Instruction... contents) {
     return elementRecorder.record(name, contents);
+  }
+
+  public final RawPointer raw(String value) {
+    return rawRecorder.record(value);
+  }
+
+  public final TextPointer text(String value) {
+    return textRecorder.record(value);
   }
 
 }
