@@ -16,42 +16,79 @@
 package objectox.html.rec;
 
 import java.util.Objects;
-import objectos.html.rec.Instruction;
 import objectox.html.Ambiguous;
-import objectox.html.HtmlByteProto;
-import objectox.html.HtmlInstruction;
 
 final class AmbiguousRecorder {
 
-  private final ByteArray main;
+  private final HtmlSink sink;
 
-  private final ObjectArray objects;
-
-  AmbiguousRecorder(ByteArray main, ObjectArray objects) {
-    this.main = main;
-
-    this.objects = objects;
+  AmbiguousRecorder(HtmlSink sink) {
+    this.sink = sink;
   }
 
-  public final Instruction.OfAmbiguous record(Ambiguous name, String value) {
+  public final AmbiguousPointer record(Ambiguous ambiguous, String value) {
     final String v;
     v = Objects.requireNonNull(value, "value == null");
 
-    main.add(HtmlByteProto.AMBIGUOUS1);
+    final int ambiguousIndex;
+    ambiguousIndex = ambiguous.code();
 
-    final int ordinal;
-    ordinal = name.ordinal();
+    final IntSize ambiguousSize;
+    ambiguousSize = IntSize.of(ambiguousIndex);
 
-    main.addInt8(ordinal);
+    final int valueIndex;
+    valueIndex = sink.addObject(v);
 
-    final int object;
-    object = objects.add(v);
+    final IntSize valueSize;
+    valueSize = IntSize.of(valueIndex);
 
-    main.addInt16(object);
+    final int startIndex;
+    startIndex = switch (ambiguousSize) {
+      case BIT8 -> switch (valueSize) {
+        case BIT8 -> record88(ambiguousIndex, valueIndex);
 
-    main.add(HtmlByteProto.INTERNAL5);
+        case BIT16 -> record816(ambiguousIndex, valueIndex);
 
-    return HtmlInstruction.ELEMENT;
+        case BIT24 -> record824(ambiguousIndex, valueIndex);
+      };
+
+      case BIT16, BIT24 -> throw new UnsupportedOperationException();
+    };
+
+    return new AmbiguousPointer(startIndex);
+  }
+
+  private int record88(int nameIndex, int valueIndex) {
+    final int startIndex;
+    startIndex = sink.addByte(HtmlBytes.AMBIGUOUS88);
+
+    sink.addInt8(nameIndex);
+
+    sink.addInt8(valueIndex);
+
+    return startIndex;
+  }
+
+  private int record816(int nameIndex, int valueIndex) {
+    final int startIndex;
+    startIndex = sink.addByte(HtmlBytes.AMBIGUOUS816);
+
+    sink.addInt8(nameIndex);
+
+    sink.addInt16(valueIndex);
+
+    return startIndex;
+  }
+
+  private int record824(int nameIndex, int valueIndex) {
+    final int startIndex;
+    startIndex = sink.addByte(HtmlBytes.AMBIGUOUS824);
+
+    sink.addInt8(nameIndex);
+
+    sink.addInt24(valueIndex);
+
+    return startIndex;
   }
 
 }

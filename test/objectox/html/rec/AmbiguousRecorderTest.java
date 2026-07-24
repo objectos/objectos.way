@@ -17,9 +17,9 @@ package objectox.html.rec;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.stream.IntStream;
+import objectos.internal.Util;
 import objectox.html.Ambiguous;
-import objectox.html.HtmlByteProto;
-import objectox.html.HtmlInstruction;
 import org.testng.annotations.Test;
 
 public class AmbiguousRecorderTest {
@@ -29,59 +29,110 @@ public class AmbiguousRecorderTest {
       expectedExceptions = NullPointerException.class,
       expectedExceptionsMessageRegExp = "value == null")
   public void record01() {
-    final ByteArray main;
-    main = ByteArray.of();
+    final HtmlSink sink;
+    sink = new HtmlSink();
 
-    final ObjectArray objects;
-    objects = ObjectArray.of();
+    final AmbiguousRecorder subject;
+    subject = new AmbiguousRecorder(sink);
 
-    final Ambiguous name;
-    name = Ambiguous.TITLE;
+    final Ambiguous ambiguous;
+    ambiguous = Ambiguous.TITLE;
 
     final String value;
     value = null;
 
-    final AmbiguousRecorder subject;
-    subject = new AmbiguousRecorder(main, objects);
-
-    subject.record(name, value);
+    subject.record(ambiguous, value);
   }
 
-  @Test
+  @Test(description = "AMBIGUOUS88")
   public void record02() {
-    final ByteArray main;
-    main = ByteArray.of();
-
-    final ObjectArray objects;
-    objects = ObjectArray.of();
-
-    final Ambiguous name;
-    name = Ambiguous.TITLE;
-
-    final String value;
-    value = "abc";
+    final HtmlSink sink;
+    sink = new HtmlSink();
 
     final AmbiguousRecorder subject;
-    subject = new AmbiguousRecorder(main, objects);
+    subject = new AmbiguousRecorder(sink);
 
-    assertEquals(subject.record(name, value), HtmlInstruction.ELEMENT);
+    final Ambiguous ambiguous;
+    ambiguous = Ambiguous.TITLE;
+
+    final String value;
+    value = "foo";
+
+    final AmbiguousPointer res;
+    res = subject.record(ambiguous, value);
+
+    assertEquals(res.value(), 0);
 
     assertEquals(
-        main,
+        sink,
 
-        ByteArray.of(
-            HtmlByteProto.AMBIGUOUS1,
-            HtmlBytes.encodeInt0(name.ordinal()),
-            HtmlBytes.encodeInt0(0),
-            HtmlBytes.encodeInt1(0),
-            HtmlByteProto.INTERNAL5
-        )
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.AMBIGUOUS88);
+          opts.addInt8(ambiguous.code());
+          opts.addInt8(opts.addObject(value));
+        })
     );
+  }
+
+  @Test(description = "AMBIGUOUS816")
+  public void record03() {
+    final HtmlSink sink;
+    sink = new HtmlSink(Util.EMPTY_BYTE_ARRAY, new Object[256]);
+
+    final AmbiguousRecorder subject;
+    subject = new AmbiguousRecorder(sink);
+
+    final Ambiguous ambiguous;
+    ambiguous = Ambiguous.TITLE;
+
+    final String value;
+    value = "foo";
+
+    final AmbiguousPointer res;
+    res = subject.record(ambiguous, value);
+
+    assertEquals(res.value(), 0);
 
     assertEquals(
-        objects,
+        sink,
 
-        ObjectArray.of(value)
+        HtmlSinkY.create(opts -> {
+          IntStream.range(0, 256).forEach(_ -> opts.addObject(null));
+          opts.addByte(HtmlBytes.AMBIGUOUS816);
+          opts.addInt8(ambiguous.code());
+          opts.addInt16(opts.addObject("foo"));
+        })
+    );
+  }
+
+  @Test(description = "AMBIGUOUS824")
+  public void record04() {
+    final HtmlSink sink;
+    sink = new HtmlSink(Util.EMPTY_BYTE_ARRAY, new Object[1 << 16]);
+
+    final AmbiguousRecorder subject;
+    subject = new AmbiguousRecorder(sink);
+
+    final Ambiguous ambiguous;
+    ambiguous = Ambiguous.TITLE;
+
+    final String value;
+    value = "foo";
+
+    final AmbiguousPointer res;
+    res = subject.record(ambiguous, value);
+
+    assertEquals(res.value(), 0);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          IntStream.range(0, 1 << 16).forEach(_ -> opts.addObject(null));
+          opts.addByte(HtmlBytes.AMBIGUOUS824);
+          opts.addInt8(ambiguous.code());
+          opts.addInt24(opts.addObject("foo"));
+        })
     );
   }
 

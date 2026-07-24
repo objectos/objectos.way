@@ -41,7 +41,7 @@ public final class Recorder {
 
   private final ObjectArray objects;
 
-  private final AmbiguousRecorder ambiguousRecorder;
+  private final ZZZAmbiguousRecorder ambiguousRecorder;
 
   private final ZZZAttribute0Recorder attribute0Recorder;
 
@@ -66,7 +66,7 @@ public final class Recorder {
 
       ObjectArray objects,
 
-      AmbiguousRecorder ambiguousRecorder,
+      ZZZAmbiguousRecorder ambiguousRecorder,
 
       ZZZAttribute0Recorder attribute0Recorder,
 
@@ -153,7 +153,7 @@ public final class Recorder {
 
         objects,
 
-        new AmbiguousRecorder(main, objects),
+        new ZZZAmbiguousRecorder(main, objects),
 
         new ZZZAttribute0Recorder(main, objects),
 
