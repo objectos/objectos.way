@@ -17,8 +17,9 @@ package objectox.html.attr;
 
 import objectos.html.rec.AttributeInstruction;
 import objectos.html.rec.Instruction;
+import objectos.html.rec.NoOpInstruction;
 import objectox.html.HtmlInstruction;
 
 public sealed interface AttributeOrNoOp
-    extends AttributeInstruction, Instruction.OfDataOn, Instruction.NoOp
+    extends AttributeInstruction, Instruction.OfDataOn, NoOpInstruction
     permits HtmlInstruction {}

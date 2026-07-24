@@ -17,13 +17,13 @@ package objectos.way.dev;
 
 import objectos.http.Request;
 import objectos.http.Result;
-import objectos.way.Html;
 import objectos.html.AttributeName;
 import objectos.html.Id;
+import objectos.html.Template;
 import objectos.http.Handler;
 import objectos.http.HeaderName;
 
-abstract class AbstractDevScript extends Html.Template implements Handler {
+abstract class AbstractDevScript extends Template implements Handler {
 
   static final AttributeName DATA_TEST = AttributeName.of("data-test");
 

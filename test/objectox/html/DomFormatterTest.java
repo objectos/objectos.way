@@ -18,7 +18,7 @@ package objectox.html;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
-import objectos.way.Html;
+import objectos.html.Template;
 import objectox.html.DomFormatter.Quotes;
 import org.testng.annotations.Test;
 
@@ -33,7 +33,7 @@ public class DomFormatterTest {
   """)
   public void testCase01() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             html();
@@ -53,7 +53,7 @@ public class DomFormatterTest {
   """)
   public void testCase02() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             doctype();
@@ -75,7 +75,7 @@ public class DomFormatterTest {
   """)
   public void testCase03() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             doctype();
@@ -103,7 +103,7 @@ public class DomFormatterTest {
   """)
   public void testCase04() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             doctype();
@@ -136,7 +136,7 @@ public class DomFormatterTest {
   """)
   public void testCase05() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             doctype();
@@ -172,7 +172,7 @@ public class DomFormatterTest {
   """)
   public void testCase06() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             doctype();
@@ -203,7 +203,7 @@ public class DomFormatterTest {
   """)
   public void testCase07() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             doctype();
@@ -233,7 +233,7 @@ public class DomFormatterTest {
   """)
   public void testCase08() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             doctype();
@@ -273,7 +273,7 @@ public class DomFormatterTest {
   """)
   public void testCase09() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             doctype();
@@ -325,7 +325,7 @@ public class DomFormatterTest {
   """)
   public void testCase10() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             doctype();
@@ -340,7 +340,7 @@ public class DomFormatterTest {
     );
   }
 
-  private void test(Html.Template template, String expected) {
+  private void test(Template template, String expected) {
     try {
       StringBuilder out;
       out = new StringBuilder();

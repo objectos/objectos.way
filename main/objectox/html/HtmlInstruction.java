@@ -15,15 +15,15 @@
  */
 package objectox.html;
 
+import objectos.html.rec.AmbiguousInstruction;
 import objectos.html.rec.ElementInstruction;
 import objectos.html.rec.FragmentInstruction;
-import objectos.html.rec.Instruction;
 import objectox.html.attr.AttributeOrNoOp;
 
 public final class HtmlInstruction
     implements
     AttributeOrNoOp,
-    Instruction.OfAmbiguous,
+    AmbiguousInstruction,
     ElementInstruction,
     FragmentInstruction {
 

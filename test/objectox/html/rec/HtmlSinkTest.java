@@ -145,7 +145,7 @@ public class HtmlSinkTest {
     subject = new HtmlSink();
 
     subject.addInt24(0);
-    subject.addInt24(ByteArray.MAX_INT24);
+    subject.addInt24(HtmlSink.MAX_INT24);
 
     assertEquals(
         subject,

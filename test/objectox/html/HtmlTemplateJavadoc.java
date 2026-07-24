@@ -18,7 +18,7 @@ package objectox.html;
 import static org.testng.Assert.assertEquals;
 
 import java.util.List;
-import objectos.way.Html;
+import objectos.html.Template;
 import org.testng.annotations.Test;
 
 public class HtmlTemplateJavadoc {
@@ -26,7 +26,7 @@ public class HtmlTemplateJavadoc {
   @Test
   public void main() {
     // @start region="main"
-    class HelloWorld extends Html.Template {
+    class HelloWorld extends Template {
       @Override
       protected void render() {
         doctype();
@@ -63,7 +63,7 @@ public class HtmlTemplateJavadoc {
   @Test
   public void main_iteration() {
     // @start region="main-iteration"
-    class HelloWorld extends Html.Template {
+    class HelloWorld extends Template {
       @Override
       protected void render() {
         ul(
@@ -99,7 +99,7 @@ public class HtmlTemplateJavadoc {
   @Test
   public void main_condition01() {
     // @start region="main-condition01"
-    class HelloWorld extends Html.Template {
+    class HelloWorld extends Template {
       @Override
       protected void render() {
         div(
@@ -136,7 +136,7 @@ public class HtmlTemplateJavadoc {
   @Test
   public void main_condition02() {
     // @start region="main-condition02"
-    class HelloWorld extends Html.Template {
+    class HelloWorld extends Template {
       @Override
       protected void render() {
         div(

@@ -28,7 +28,7 @@ import objectox.html.attr.AttributeNamePojo;
 import objectox.html.elem.ElementNamePojo;
 import org.testng.annotations.Test;
 
-public class RecorderTest {
+public class ZZZRecorderTest {
 
   @Test(description = "empty document")
   public void testCase00() {

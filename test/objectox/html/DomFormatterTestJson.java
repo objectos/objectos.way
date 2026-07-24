@@ -17,7 +17,7 @@ package objectox.html;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.way.Html;
+import objectos.html.Template;
 import org.testng.annotations.Test;
 
 public class DomFormatterTestJson {
@@ -27,7 +27,7 @@ public class DomFormatterTestJson {
   """)
   public void testCase01() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             html();
@@ -44,7 +44,7 @@ public class DomFormatterTestJson {
   """)
   public void testCase02() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             div(id("foo"));
@@ -61,7 +61,7 @@ public class DomFormatterTestJson {
   """)
   public void testCase03() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             StringBuilder sb;
@@ -90,7 +90,7 @@ public class DomFormatterTestJson {
   """)
   public void testCase04() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             StringBuilder sb;
@@ -116,7 +116,7 @@ public class DomFormatterTestJson {
   """)
   public void testCase05() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             div("foo");
@@ -132,7 +132,7 @@ public class DomFormatterTestJson {
   """)
   public void testCase06() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             StringBuilder sb;
@@ -161,7 +161,7 @@ public class DomFormatterTestJson {
   """)
   public void testCase07() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             StringBuilder sb;
@@ -187,7 +187,7 @@ public class DomFormatterTestJson {
   """)
   public void testCase08() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             div(raw("foo"));
@@ -203,7 +203,7 @@ public class DomFormatterTestJson {
   """)
   public void testCase09() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             StringBuilder sb;
@@ -232,7 +232,7 @@ public class DomFormatterTestJson {
   """)
   public void testCase10() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             StringBuilder sb;
@@ -253,7 +253,7 @@ public class DomFormatterTestJson {
     );
   }
 
-  private void test(Html.Template template, String expected) {
+  private void test(Template template, String expected) {
     assertEquals(template.toJsonString(), expected);
   }
 

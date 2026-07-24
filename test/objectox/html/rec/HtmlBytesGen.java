@@ -25,6 +25,10 @@ public class HtmlBytesGen {
   }
 
   public final void execute() {
+    comment("document");
+
+    value("DOCTYPE");
+
     comment("element");
 
     value("STARTTAG8");

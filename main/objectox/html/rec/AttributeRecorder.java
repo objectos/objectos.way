@@ -26,8 +26,8 @@ final class AttributeRecorder {
     this.sink = sink;
   }
 
-  public final AttributePointer record(AttributeName name, String value) {
-    final String v;
+  public final AttributePointer record(AttributeName name, Object value) {
+    final Object v;
     v = Objects.requireNonNull(value, "value == null");
 
     final int nameIndex;

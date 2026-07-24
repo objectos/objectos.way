@@ -19,8 +19,8 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.Set;
 import objectos.html.Markup;
+import objectos.html.Template;
 import objectos.way.Dom;
-import objectos.way.Html;
 import objectox.html.elem.ElementNamePojo;
 
 class DomFormatter {
@@ -75,7 +75,7 @@ class DomFormatter {
     format(document, appendable);
   }
 
-  public final void formatTo(Html.Template template, Appendable appendable) throws IOException {
+  public final void formatTo(Template template, Appendable appendable) throws IOException {
     Objects.requireNonNull(template, "template == null");
     Objects.requireNonNull(appendable, "appendable == null");
 

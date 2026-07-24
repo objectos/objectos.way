@@ -17,7 +17,7 @@ package objectox.html;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.way.Html;
+import objectos.html.Template;
 import org.testng.annotations.Test;
 
 public class HtmlTemplateTestElements {
@@ -25,7 +25,7 @@ public class HtmlTemplateTestElements {
   @Test
   public void aside() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             aside();
@@ -47,7 +47,7 @@ public class HtmlTemplateTestElements {
   @Test
   public void dialog() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             dialog();
@@ -73,7 +73,7 @@ public class HtmlTemplateTestElements {
   @Test
   public void noscript() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             noscript();
@@ -92,7 +92,7 @@ public class HtmlTemplateTestElements {
     );
   }
 
-  private void test(Html.Template template, String expected) {
+  private void test(Template template, String expected) {
     String result;
     result = template.toString();
 

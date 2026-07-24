@@ -23,12 +23,17 @@ import objectos.html.rec.Fragment2;
 import objectos.html.rec.Fragment3;
 import objectos.html.rec.Fragment4;
 import objectos.html.rec.Instruction;
+import objectox.html.Ambiguous;
 
-final class DocumentRecorder {
+public final class DocumentRecorder {
+
+  private final AmbiguousRecorder ambiguousRecorder;
 
   private final AttributeRecorder attributeRecorder;
 
   private final BooleanAttributeRecorder booleanAttributeRecorder;
+
+  private final DoctypeRecorder doctypeRecorder;
 
   private final ElementRecorder elementRecorder;
 
@@ -41,9 +46,13 @@ final class DocumentRecorder {
   private final TextRecorder textRecorder;
 
   DocumentRecorder(
+      AmbiguousRecorder ambiguousRecorder,
+
       AttributeRecorder attributeRecorder,
 
       BooleanAttributeRecorder booleanAttributeRecorder,
+
+      DoctypeRecorder doctypeRecorder,
 
       ElementRecorder elementRecorder,
 
@@ -55,9 +64,13 @@ final class DocumentRecorder {
 
       TextRecorder textRecorder
   ) {
+    this.ambiguousRecorder = ambiguousRecorder;
+
     this.attributeRecorder = attributeRecorder;
 
     this.booleanAttributeRecorder = booleanAttributeRecorder;
+
+    this.doctypeRecorder = doctypeRecorder;
 
     this.elementRecorder = elementRecorder;
 
@@ -70,14 +83,22 @@ final class DocumentRecorder {
     this.textRecorder = textRecorder;
   }
 
+  public static DocumentRecorder create() {
+    return of(new HtmlSink());
+  }
+
   public static DocumentRecorder of(HtmlSink sink) {
     final ContentsRecorder contentsRecorder;
     contentsRecorder = new ContentsRecorder(sink);
 
     return new DocumentRecorder(
+        new AmbiguousRecorder(sink),
+
         new AttributeRecorder(sink),
 
         new BooleanAttributeRecorder(sink),
+
+        new DoctypeRecorder(sink),
 
         new ElementRecorder(sink, contentsRecorder),
 
@@ -91,12 +112,20 @@ final class DocumentRecorder {
     );
   }
 
+  public final AmbiguousPointer ambiguous(Ambiguous ambiguous, String value) {
+    return ambiguousRecorder.record(ambiguous, value);
+  }
+
   public final AttributePointer attribute(AttributeName name) {
     return booleanAttributeRecorder.record(name);
   }
 
-  public final AttributePointer attribute(AttributeName name, String value) {
+  public final AttributePointer attribute(AttributeName name, Object value) {
     return attributeRecorder.record(name, value);
+  }
+
+  public final void doctype() {
+    doctypeRecorder.record();
   }
 
   public final ElementPointer element(ElementName name, Instruction... contents) {

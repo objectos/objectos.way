@@ -13,29 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html.rec;
+package objectos.html.rec;
 
-import static org.testng.Assert.assertEquals;
+import objectos.html.rec.Instruction.AsMethod;
+import objectos.html.rec.Instruction.OfVoid;
+import objectox.html.attr.AttributeOrNoOp;
 
-import org.testng.annotations.Test;
-
-public class ObjectArrayTest {
-
-  @Test
-  public void add01() {
-    final ObjectArray subject;
-    subject = new ObjectArray();
-
-    assertEquals(subject.add("ABC"), 0);
-  }
-
-  @Test
-  public void add02() {
-    final ObjectArray subject;
-    subject = new ObjectArray();
-
-    assertEquals(subject.add("ABC"), 0);
-    assertEquals(subject.add("XYZ"), 1);
-  }
-
-}
+/// Represents a no-op instruction.
+public sealed interface NoOpInstruction
+    extends
+    AsMethod,
+    OfVoid
+    permits
+    AttributeOrNoOp {}

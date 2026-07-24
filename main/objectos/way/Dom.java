@@ -16,6 +16,7 @@
 package objectos.way;
 
 import objectos.html.Markup;
+import objectos.html.Template;
 import objectox.html.DomAttribute;
 import objectox.html.DomDocument;
 import objectox.html.DomElement;
@@ -79,7 +80,7 @@ public final class Dom {
     /// Creates a `Document` representing the specified HTML template.
     /// @param template the HTML template
     /// @return a newly created document object
-    static Dom.Document of(Html.Template template) {
+    static Dom.Document of(Template template) {
       final Markup.OfHtml html;
       html = new Markup.OfHtml();
 

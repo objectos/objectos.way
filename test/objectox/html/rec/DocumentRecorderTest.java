@@ -33,6 +33,25 @@ public class DocumentRecorderTest {
     return DocumentRecorder.of(sink);
   }
 
+  @Test(description = "<!DOCTYPE html>")
+  public void doctype01() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final DocumentRecorder subject;
+    subject = create(sink);
+
+    subject.doctype();
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.DOCTYPE);
+        })
+    );
+  }
+
   @SuppressWarnings("unused")
   @Test(description = "empty document")
   public void record00() {

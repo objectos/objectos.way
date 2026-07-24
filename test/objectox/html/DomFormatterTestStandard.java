@@ -17,7 +17,7 @@ package objectox.html;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.way.Html;
+import objectos.html.Template;
 import org.testng.annotations.Test;
 
 public class DomFormatterTestStandard {
@@ -29,7 +29,7 @@ public class DomFormatterTestStandard {
   """)
   public void testCase01() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             html();
@@ -49,7 +49,7 @@ public class DomFormatterTestStandard {
   """)
   public void testCase02() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             doctype();
@@ -71,7 +71,7 @@ public class DomFormatterTestStandard {
   """)
   public void testCase03() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             doctype();
@@ -99,7 +99,7 @@ public class DomFormatterTestStandard {
   """)
   public void testCase04() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             doctype();
@@ -132,7 +132,7 @@ public class DomFormatterTestStandard {
   """)
   public void testCase05() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             doctype();
@@ -168,7 +168,7 @@ public class DomFormatterTestStandard {
   """)
   public void testCase06() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             doctype();
@@ -199,7 +199,7 @@ public class DomFormatterTestStandard {
   """)
   public void testCase07() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             doctype();
@@ -229,7 +229,7 @@ public class DomFormatterTestStandard {
   """)
   public void testCase08() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             doctype();
@@ -269,7 +269,7 @@ public class DomFormatterTestStandard {
   """)
   public void testCase09() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             doctype();
@@ -321,7 +321,7 @@ public class DomFormatterTestStandard {
   """)
   public void testCase10() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             doctype();
@@ -336,7 +336,7 @@ public class DomFormatterTestStandard {
     );
   }
 
-  private void test(Html.Template template, String expected) {
+  private void test(Template template, String expected) {
     assertEquals(template.toString(), expected);
   }
 

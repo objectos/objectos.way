@@ -16,7 +16,6 @@
 package objectos.html.rec;
 
 import objectos.html.rec.Instruction.AsMethod;
-import objectos.html.rec.Instruction.OfAmbiguous;
 import objectos.html.rec.Instruction.OfVoid;
 import objectox.html.attr.AttributeOrNoOp;
 import objectox.html.rec.AttributePointer;
@@ -24,4 +23,4 @@ import objectox.html.rec.AttributePointer;
 /// Represents an instruction to render an Objectos HTML attribute.
 public sealed interface AttributeInstruction
     extends AsMethod, OfVoid
-    permits OfAmbiguous, AttributeOrNoOp, AttributePointer {}
+    permits AmbiguousInstruction, AttributeOrNoOp, AttributePointer {}

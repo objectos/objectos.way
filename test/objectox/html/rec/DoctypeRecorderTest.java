@@ -17,38 +17,26 @@ package objectox.html.rec;
 
 import static org.testng.Assert.assertEquals;
 
-import objectox.html.HtmlByteProto;
-import objectox.html.elem.ElementNamePojo;
 import org.testng.annotations.Test;
 
-public class ElementNameRecorderTest {
+public class DoctypeRecorderTest {
 
-  @Test
+  @Test(description = "record doctype")
   public void record01() {
-    final ByteArray main;
-    main = ByteArray.of();
+    final HtmlSink sink;
+    sink = new HtmlSink();
 
-    final ElementNameRecorder subject;
-    subject = new ElementNameRecorder(main);
+    final DoctypeRecorder subject;
+    subject = new DoctypeRecorder(sink);
 
-    final ElementNamePojo name;
-    name = ElementNamePojo.DIV;
-
-    subject.record(name);
+    subject.record();
 
     assertEquals(
-        main,
+        sink,
 
-        ByteArray.of(
-            HtmlByteProto.ELEMENT,
-
-            -1,
-            -1,
-
-            HtmlByteProto.STANDARD_NAME,
-
-            HtmlBytes.encodeInt0(name.index())
-        )
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.DOCTYPE);
+        })
     );
   }
 

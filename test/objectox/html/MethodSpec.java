@@ -13,38 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html.rec;
+package objectox.html;
 
-import objectox.html.HtmlByteProto;
-
-final class ReverseOffsetRecorder {
-
-  private final ByteArray main;
-
-  ReverseOffsetRecorder(ByteArray main) {
-    this.main = main;
-  }
-
-  public final void record(int from) {
-    // mark the end
-    final byte b0;
-    b0 = HtmlByteProto.END;
-
-    final byte bx;
-    bx = HtmlByteProto.INTERNAL;
-
-    // store the distance to the contents (yes, reversed)
-    final int mainIndex;
-    mainIndex = main.size();
-
-    final int offset;
-    offset = mainIndex - from;
-
-    main.add(b0);
-
-    main.addVarInt(offset);
-
-    main.add(bx);
-  }
-
-}
+public record MethodSpec(String sig, String invocation, String javadocs) {}

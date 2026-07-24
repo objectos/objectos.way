@@ -16,11 +16,11 @@
 package objectos.way.dev;
 
 import objectos.css.CssSource;
+import objectos.html.Template;
 import objectos.html.rec.ElementInstruction;
 import objectos.http.Handler;
 import objectos.http.Request;
 import objectos.http.Result;
-import objectos.way.Html;
 
 /*
 
@@ -28,7 +28,7 @@ import objectos.way.Html;
 
 */
 @CssSource
-public final class ScriptPopstateIndex extends Html.Template implements Handler {
+public final class ScriptPopstateIndex extends Template implements Handler {
 
   @Override
   public Result handle(Request http) {

@@ -13,16 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html;
+package objectos.html;
 
 import static org.testng.Assert.assertEquals;
 
 import java.util.List;
-import objectos.html.Component;
-import objectos.html.Markup;
 import org.testng.annotations.Test;
 
-public class HtmlMarkupJavadoc {
+public class MarkupJavadoc {
 
   @Test
   public void f0() {

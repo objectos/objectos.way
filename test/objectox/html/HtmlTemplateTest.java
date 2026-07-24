@@ -24,10 +24,10 @@ import java.util.List;
 import objectos.html.ClassName;
 import objectos.html.ElementName;
 import objectos.html.Id;
+import objectos.html.Template;
 import objectos.html.rec.ElementInstruction;
 import objectos.html.rec.Instruction;
 import objectos.http.Content;
-import objectos.way.Html;
 import org.testng.annotations.Test;
 
 public class HtmlTemplateTest {
@@ -39,7 +39,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase00() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             html();
@@ -59,7 +59,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase01() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             html(lang("pt-BR"));
@@ -79,7 +79,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase02() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             html(className("no-js"), lang("pt-BR"));
@@ -99,7 +99,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase03() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             html(
@@ -124,7 +124,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase04() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             html(
@@ -150,7 +150,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase05() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             html(
@@ -180,7 +180,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase06() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             html(
@@ -209,7 +209,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase07() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             html(
@@ -235,7 +235,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase08() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             html(
@@ -263,7 +263,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase09() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             doctype();
@@ -285,7 +285,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase13() {
     test(
-        new Html.Template() {
+        new Template() {
           final Id FOO = Id.of("foo");
           final Id BAR = Id.of("bar");
 
@@ -313,7 +313,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase14() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             html(
@@ -341,7 +341,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase15() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             div(
@@ -367,7 +367,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase16() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             html(
@@ -399,7 +399,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase17() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             html(
@@ -438,7 +438,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase18() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             body(
@@ -465,7 +465,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase19() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             body(
@@ -491,7 +491,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase21() {
     test(
-        new Html.Template() {
+        new Template() {
           private final ClassName first = ClassName.of("first");
 
           private final ClassName second = ClassName.of("second");
@@ -515,7 +515,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase22() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             div(
@@ -559,7 +559,7 @@ public class HtmlTemplateTest {
     ul.append("</ul>\n");
 
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             ElementInstruction[] children = new ElementInstruction[count];
@@ -581,7 +581,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase24() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             pre(
@@ -603,7 +603,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase25() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             head(
@@ -631,7 +631,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase27() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             head(
@@ -659,7 +659,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase28() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             div(
@@ -700,7 +700,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase29() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             div(
@@ -770,7 +770,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase30() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             head(
@@ -798,7 +798,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase31() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             input(
@@ -830,7 +830,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase35() {
     test(
-        new Html.Template() {
+        new Template() {
           private final ClassName A = ClassName.of("ca");
           private final ClassName B = ClassName.of("cb");
 
@@ -873,7 +873,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase36() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             div(
@@ -899,7 +899,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase37() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             div(
@@ -922,7 +922,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase38() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             div(
@@ -955,7 +955,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase39() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             div(
@@ -977,7 +977,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase46a() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             form(
@@ -1003,7 +1003,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase46b() {
     test(
-        new Html.Template() {
+        new Template() {
           List<ClassName> styles = List.of(
               ClassName.of("cn1"),
               ClassName.of("cn2")
@@ -1030,7 +1030,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase47() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             span("foo");
@@ -1065,7 +1065,7 @@ public class HtmlTemplateTest {
     expected.append("</html>\n");
 
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             Instruction[] children;
@@ -1090,7 +1090,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase49() {
     test(
-        new Html.Template() {
+        new Template() {
           final Id FOO = Id.of("foo");
 
           @Override
@@ -1116,7 +1116,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase50() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             html(
@@ -1148,7 +1148,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase51() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             html(
@@ -1176,7 +1176,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase56() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             div(f(this::test));
@@ -1198,7 +1198,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase57() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             div(
@@ -1223,7 +1223,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase58() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             div(
@@ -1274,7 +1274,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase63() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             svg(
@@ -1296,7 +1296,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase64() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             elem(
@@ -1317,7 +1317,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase69() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             div(
@@ -1354,7 +1354,7 @@ public class HtmlTemplateTest {
   The Media.Text methods
   """)
   public void testCase70() throws IOException {
-    var template = new Html.Template() {
+    var template = new Template() {
       @Override
       protected final void render() {
         doctype();
@@ -1385,7 +1385,7 @@ public class HtmlTemplateTest {
   @Test(description = "root fragment 01: one")
   public void testCase73() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             f(this::root);
@@ -1407,7 +1407,7 @@ public class HtmlTemplateTest {
   @Test(description = "root fragment 02: two")
   public void testCase74() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             f(this::root1);
@@ -1433,7 +1433,7 @@ public class HtmlTemplateTest {
   @Test(description = "root fragment 03: nested")
   public void testCase75() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             f(this::root1);
@@ -1459,7 +1459,7 @@ public class HtmlTemplateTest {
   @Test(description = "root fragment 04: one + element")
   public void testCase76() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             f(this::root1);
@@ -1481,7 +1481,7 @@ public class HtmlTemplateTest {
   @Test(description = "root fragment 05: empty")
   public void testCase77() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             f(this::root1);
@@ -1498,7 +1498,7 @@ public class HtmlTemplateTest {
   @Test(description = "root fragment 05: empty nested")
   public void testCase78() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             f(this::root1);
@@ -1518,7 +1518,7 @@ public class HtmlTemplateTest {
     );
   }
 
-  private void test(Html.Template template, String expected) {
+  private void test(Template template, String expected) {
     String result;
     result = template.toString();
 

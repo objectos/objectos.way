@@ -15,40 +15,16 @@
  */
 package objectox.html.rec;
 
-import objectox.html.HtmlByteProto;
+final class DoctypeRecorder {
 
-final class ElementEncoder {
+  private final HtmlSink sink;
 
-  private final ByteArray main;
-
-  ElementEncoder(ByteArray main) {
-    this.main = main;
+  DoctypeRecorder(HtmlSink sink) {
+    this.sink = sink;
   }
 
-  public final int encode(final int startIndex) {
-    int index;
-    index = startIndex;
-
-    // mark this element
-    main.set(index++, HtmlByteProto.LENGTH2);
-
-    // point to next element
-    final int offset;
-    offset = main.getInt16(index++);
-
-    index++;
-
-    final int nextIndex;
-    nextIndex = index + offset;
-
-    main.add(HtmlByteProto.ELEMENT);
-
-    final int length;
-    length = main.size() - startIndex;
-
-    main.addVarIntLE(length);
-
-    return nextIndex;
+  public final void record() {
+    sink.addByte(HtmlBytes.DOCTYPE);
   }
 
 }

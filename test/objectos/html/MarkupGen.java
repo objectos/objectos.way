@@ -13,20 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html;
+package objectos.html;
 
 import java.util.Iterator;
 import java.util.Set;
+import objectox.html.AmbiguousSpec;
+import objectox.html.HtmlSpec;
+import objectox.html.MethodSpec;
 import objectox.html.attr.AttributeSpec;
 import objectox.html.elem.ElementSpec;
 
-public class HtmlMarkupGen {
+public class MarkupGen {
   private final StringBuilder fields = new StringBuilder();
 
   private final StringBuilder methods = new StringBuilder();
 
   public static void main(String[] args) {
-    System.out.println(new HtmlMarkupGen());
+    System.out.println(new MarkupGen());
   }
 
   @Override
@@ -56,25 +59,32 @@ public class HtmlMarkupGen {
   private void way() {
     methods.append("""
 
-      //
-      // WAY
-      //
+    //
+    // WAY
+    //
+
+    // @formatter:off
     """);
 
-    for (HtmlSpec.MethodSpec spec : HtmlSpec.wayNodes()) {
+    for (MethodSpec spec : HtmlSpec.wayNodes()) {
       methodSpec(spec);
     }
+
+    methods.append("""
+
+    // @formatter:on
+    """);
   }
 
   private void testable() {
     methods.append("""
 
-      //
-      // TESTABLE
-      //
+    //
+    // TESTABLE
+    //
     """);
 
-    for (HtmlSpec.MethodSpec spec : HtmlSpec.testableNodes()) {
+    for (MethodSpec spec : HtmlSpec.testableNodes()) {
       methods.append('\n');
 
       final String javadocs;
@@ -95,14 +105,12 @@ public class HtmlMarkupGen {
       while (lines.hasNext()) {
         methods.append('\n');
 
-        methods.append("  /// ");
+        methods.append("/// ");
 
         methods.append(lines.next());
       }
 
       methods.append('\n');
-
-      methods.append("  ");
 
       methods.append(spec.sig());
 
@@ -115,24 +123,24 @@ public class HtmlMarkupGen {
   private void elements() {
     methods.append("""
 
-      //
-      // ELEMENTS
-      //
+    //
+    // ELEMENTS
+    //
 
-      /// Renders an HTML element with the specified name and contents.
-      /// @param name the element name
-      /// @param contents the attributes and children of the element
-      /// @return an instruction representing the element
-      Html.Instruction.OfElement elem(Html.ElementName name, Html.Instruction... contents);
+    /// Renders an HTML element with the specified name and contents.
+    /// @param name the element name
+    /// @param contents the attributes and children of the element
+    /// @return an instruction representing the element
+    ElementInstruction elem(ElementName name, Instruction... contents);
 
-      /// Renders an HTML element with the specified name and text.
-      /// @param name the element name
-      /// @param text the text value of this element
-      /// @return an instruction representing the element
-      Html.Instruction.OfElement elem(Html.ElementName name, String text);
+    /// Renders an HTML element with the specified name and text.
+    /// @param name the element name
+    /// @param text the text value of this element
+    /// @return an instruction representing the element
+    ElementInstruction elem(ElementName name, String text);
 
-      /// Renders the `<!DOCTYPE html>` doctype.
-      void doctype();
+    /// Renders the `<!DOCTYPE html>` doctype.
+    void doctype();
     """);
 
     final Set<String> ambiguousNames;
@@ -145,35 +153,35 @@ public class HtmlMarkupGen {
       if (ambiguousNames.contains(htmlName)) {
         methods.append("""
 
-          /// Renders the `%s` element with the specified content.
-          /// @param contents the attributes and children of the element
-          /// @return an instruction representing the element.
-          Html.Instruction.OfElement %s(Html.Instruction... contents);
+        /// Renders the `%s` element with the specified content.
+        /// @param contents the attributes and children of the element
+        /// @return an instruction representing the element.
+        ElementInstruction %s(Instruction... contents);
         """.formatted(elem.htmlName(), elem.htmlName()));
       }
 
       else if (elem.endTag()) {
         methods.append("""
 
-          /// Renders the `%1$s` element with the specified content.
-          /// @param contents the attributes and children of the element
-          /// @return an instruction representing the element.
-          Html.Instruction.OfElement %2$s(Html.Instruction... contents);
+        /// Renders the `%1$s` element with the specified content.
+        /// @param contents the attributes and children of the element
+        /// @return an instruction representing the element.
+        ElementInstruction %2$s(Instruction... contents);
 
-          /// Renders the `%1$s` element with the specified text.
-          /// @param text the text value of the element
-          /// @return an instruction representing the element.
-          Html.Instruction.OfElement %2$s(String text);
+        /// Renders the `%1$s` element with the specified text.
+        /// @param text the text value of the element
+        /// @return an instruction representing the element.
+        ElementInstruction %2$s(String text);
         """.formatted(elem.htmlName(), elem.htmlName(), elem.javaName()));
       }
 
       else {
         methods.append("""
 
-          /// Renders the `%s` element with the specified content.
-          /// @param contents the attributes of the element
-          /// @return an instruction representing the element.
-          Html.Instruction.OfElement %s(Html.Instruction.OfVoid... contents);
+        /// Renders the `%s` element with the specified content.
+        /// @param contents the attributes of the element
+        /// @return an instruction representing the element.
+        ElementInstruction %s(Instruction.OfVoid... contents);
         """.formatted(elem.htmlName(), elem.htmlName()));
       }
     }
@@ -183,20 +191,20 @@ public class HtmlMarkupGen {
   private void attributes() {
     methods.append("""
 
-      //
-      // ATTRIBUTES
-      //
+    //
+    // ATTRIBUTES
+    //
 
-      /// Renders an attribute with the specified name.
-      /// @param name the attribute name
-      /// @return an instruction representing the attribute
-      Html.Instruction.OfAttribute attr(Html.AttributeName name);
+    /// Renders an attribute with the specified name.
+    /// @param name the attribute name
+    /// @return an instruction representing the attribute
+    AttributeInstruction attr(AttributeName name);
 
-      /// Renders an attribute with the specified name and value.
-      /// @param name the attribute name
-      /// @param value the attribute value
-      /// @return an instruction representing the attribute
-      Html.Instruction.OfAttribute attr(Html.AttributeName name, String value);
+    /// Renders an attribute with the specified name and value.
+    /// @param name the attribute name
+    /// @param value the attribute value
+    /// @return an instruction representing the attribute
+    AttributeInstruction attr(AttributeName name, String value);
     """);
 
     final Set<String> ambiguous;
@@ -210,27 +218,27 @@ public class HtmlMarkupGen {
       else if (attr.booleanAttribute()) {
         fields.append("""
 
-          /// The `%s` boolean attribute.
-          Html.AttributeObject %s = Html.AttributeObject.of(Html.AttributeName.%s);
+        /// The `%s` boolean attribute.
+        AttributeObject %s = AttributeObject.of(AttributeName.%s);
         """.formatted(attr.htmlName(), attr.methodName(), attr.constantName()));
       }
 
       else {
         methods.append("""
 
-          /// Renders the `%s` attribute with the specified value.
-          /// @param value the attribute value
-          /// @return an instruction representing the attribute
-          Html.Instruction.OfAttribute %s(String value);
+        /// Renders the `%s` attribute with the specified value.
+        /// @param value the attribute value
+        /// @return an instruction representing the attribute
+        AttributeInstruction %s(String value);
         """.formatted(attr.htmlName(), attr.methodName()));
 
         if (attr.eventAttribute()) {
           methods.append("""
 
-          /// Renders the `%s` attribute with the specified action.
-          /// @param value the action to be executed
-          /// @return an instruction representing the attribute
-          Html.Instruction.OfAttribute %s(JsAction value);
+        /// Renders the `%s` attribute with the specified action.
+        /// @param value the action to be executed
+        /// @return an instruction representing the attribute
+        AttributeInstruction %s(JsAction value);
         """.formatted(attr.htmlName(), attr.methodName()));
         }
       }
@@ -240,18 +248,18 @@ public class HtmlMarkupGen {
   private void ambiguous() {
     methods.append("""
 
-      //
-      // AMBIGUOUS
-      //
+    //
+    // AMBIGUOUS
+    //
     """);
 
-    for (HtmlSpec.AmbiguousSpec spec : HtmlSpec.ambiguous()) {
+    for (AmbiguousSpec spec : HtmlSpec.ambiguous()) {
       methods.append("""
 
-        /// Renders the `%s` attribute or the `%s` element with the specified text.
-        /// @param text the attribute value or the text content of the element
-        /// @return an instruction representing the attribute or the element
-        Html.Instruction.OfAmbiguous %s(String text);
+      /// Renders the `%s` attribute or the `%s` element with the specified text.
+      /// @param text the attribute value or the text content of the element
+      /// @return an instruction representing the attribute or the element
+      AmbiguousInstruction %s(String text);
       """.formatted(spec.attributeName(), spec.elementName(), spec.methodName(), spec.constantName()));
     }
   }
@@ -259,17 +267,17 @@ public class HtmlMarkupGen {
   private void text() {
     methods.append("""
 
-      //
-      // TEXT
-      //
+    //
+    // TEXT
+    //
     """);
 
-    for (HtmlSpec.MethodSpec spec : HtmlSpec.textNodes()) {
+    for (MethodSpec spec : HtmlSpec.textNodes()) {
       methodSpec(spec);
     }
   }
 
-  private void methodSpec(HtmlSpec.MethodSpec spec) {
+  private void methodSpec(MethodSpec spec) {
     final String javadocs;
     javadocs = spec.javadocs();
 
@@ -279,14 +287,12 @@ public class HtmlMarkupGen {
     while (lines.hasNext()) {
       methods.append('\n');
 
-      methods.append("  /// ");
+      methods.append("/// ");
 
       methods.append(lines.next());
     }
 
     methods.append('\n');
-
-    methods.append("  ");
 
     methods.append(spec.sig());
 

@@ -21,9 +21,9 @@ import objectos.html.AttributeName;
 import objectos.html.Component;
 import objectos.html.Id;
 import objectos.html.Markup;
+import objectos.html.Template;
 import objectos.script.Js;
 import objectos.script.JsAction;
-import objectos.way.Html;
 import objectox.html.attr.AttributeNamePojo;
 import org.testng.annotations.Test;
 
@@ -36,7 +36,7 @@ public class HtmlTemplateTestAttributes {
   @Test
   public void aria() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             div(
@@ -75,7 +75,7 @@ public class HtmlTemplateTestAttributes {
   @Test
   public void as() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             link(rel("preload"), href("/foo.css"), as("style"));
@@ -91,7 +91,7 @@ public class HtmlTemplateTestAttributes {
   @Test
   public void attr01() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             div(
@@ -109,7 +109,7 @@ public class HtmlTemplateTestAttributes {
   @Test
   public void attr02() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             div(
@@ -131,7 +131,7 @@ public class HtmlTemplateTestAttributes {
   @Test
   public void attr03() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             div(
@@ -150,7 +150,7 @@ public class HtmlTemplateTestAttributes {
   @Test
   public void attr04() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             div(
@@ -170,7 +170,7 @@ public class HtmlTemplateTestAttributes {
   @Test
   public void checked() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             input(type("checkbox"), checked);
@@ -198,7 +198,7 @@ public class HtmlTemplateTestAttributes {
     }
 
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             div(
@@ -216,7 +216,7 @@ public class HtmlTemplateTestAttributes {
   @Test
   public void onload() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             body(
@@ -234,7 +234,7 @@ public class HtmlTemplateTestAttributes {
   @Test
   public void form() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             form(foo);
@@ -262,7 +262,7 @@ public class HtmlTemplateTestAttributes {
   @Test
   public void download() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             a(href("https://example.com/document.pdf"), download("hey.pdf"));
@@ -278,7 +278,7 @@ public class HtmlTemplateTestAttributes {
   @Test
   public void open() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             dialog(open);
@@ -295,7 +295,7 @@ public class HtmlTemplateTestAttributes {
     );
   }
 
-  private void test(Html.Template template, String expected) {
+  private void test(Template template, String expected) {
     String result;
     result = template.toString();
 

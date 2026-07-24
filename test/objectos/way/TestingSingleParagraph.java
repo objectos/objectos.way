@@ -15,7 +15,9 @@
  */
 package objectos.way;
 
-public final class TestingSingleParagraph extends Html.Template {
+import objectos.html.Template;
+
+public final class TestingSingleParagraph extends Template {
   private final String text;
 
   public TestingSingleParagraph(String text) {

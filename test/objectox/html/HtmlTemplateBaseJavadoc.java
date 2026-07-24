@@ -18,9 +18,9 @@ package objectox.html;
 import static org.testng.Assert.assertEquals;
 
 import java.util.List;
+import objectos.html.Template;
 import objectos.html.rec.ElementInstruction;
 import objectos.html.rec.Instruction;
-import objectos.way.Html;
 import org.testng.annotations.Test;
 
 public class HtmlTemplateBaseJavadoc {
@@ -28,7 +28,7 @@ public class HtmlTemplateBaseJavadoc {
   @Test
   public void flatten() {
     // @start region="flatten"
-    class MyTemplate extends Html.Template {
+    class MyTemplate extends Template {
       @Override
       protected void render() {
         body(
@@ -70,7 +70,7 @@ public class HtmlTemplateBaseJavadoc {
   @Test
   public void renderFragment0() {
     // @start region="renderFragment0"
-    class FragmentExample extends Html.Template {
+    class FragmentExample extends Template {
       @Override
       protected void render() {
         doctype();
@@ -117,7 +117,7 @@ public class HtmlTemplateBaseJavadoc {
   @Test
   public void renderFragment1() {
     // @start region="renderFragment1"
-    class FragmentExample extends Html.Template {
+    class FragmentExample extends Template {
       @Override
       protected void render() {
         List<String> names = List.of("Foo", "Bar");
@@ -150,7 +150,7 @@ public class HtmlTemplateBaseJavadoc {
   @Test
   public void renderFragment2() {
     // @start region="renderFragment2"
-    class FragmentExample extends Html.Template {
+    class FragmentExample extends Template {
       @Override
       protected void render() {
         body(
@@ -179,7 +179,7 @@ public class HtmlTemplateBaseJavadoc {
 
   @Test
   public void noop() {
-    class NoopExample extends Html.Template {
+    class NoopExample extends Template {
       boolean error_;
 
       @Override
@@ -225,7 +225,7 @@ public class HtmlTemplateBaseJavadoc {
   @Test
   public void testable() {
     // @start region="testable0"
-    class TestableExample extends Html.Template {
+    class TestableExample extends Template {
       @Override
       protected void render() {
         dl(
@@ -270,7 +270,7 @@ public class HtmlTemplateBaseJavadoc {
 
   @Test
   public void text() {
-    class Example extends Html.Template {
+    class Example extends Template {
       @Override
       protected void render() {
         // @start region="text"

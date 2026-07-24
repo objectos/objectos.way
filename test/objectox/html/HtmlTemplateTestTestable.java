@@ -17,7 +17,7 @@ package objectox.html;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.way.Html;
+import objectos.html.Template;
 import org.testng.annotations.Test;
 
 public class HtmlTemplateTestTestable {
@@ -25,7 +25,7 @@ public class HtmlTemplateTestTestable {
   @Test
   public void cell01() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected void render() {
             table(
@@ -69,7 +69,7 @@ public class HtmlTemplateTestTestable {
   @Test
   public void field01() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected void render() {
             testableH1("Test");
@@ -106,7 +106,7 @@ public class HtmlTemplateTestTestable {
   """)
   public void field02() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             div(className("x"), text(testableField("x", "123")));
@@ -128,7 +128,7 @@ public class HtmlTemplateTestTestable {
   """)
   public void field03() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             div(testableField("empty", ""));
@@ -150,7 +150,7 @@ public class HtmlTemplateTestTestable {
   """)
   public void field04() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             div(f(this::fragment));
@@ -178,7 +178,7 @@ public class HtmlTemplateTestTestable {
   @Test
   public void field05() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             div("before");
@@ -201,7 +201,7 @@ public class HtmlTemplateTestTestable {
   @Test
   public void heading01() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             h1(testableH1("Level 1"));
@@ -239,7 +239,7 @@ public class HtmlTemplateTestTestable {
     );
   }
 
-  private void test(Html.Template template, String expectedHtml, String expectedTestable) {
+  private void test(Template template, String expectedHtml, String expectedTestable) {
     assertEquals(template.toString(), expectedHtml);
 
     assertEquals(template.toTestableText(), expectedTestable);

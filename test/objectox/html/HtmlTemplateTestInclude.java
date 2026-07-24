@@ -19,7 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 import objectos.html.Component;
 import objectos.html.Markup;
-import objectos.way.Html;
+import objectos.html.Template;
 import org.testng.annotations.Test;
 
 public class HtmlTemplateTestInclude {
@@ -31,7 +31,7 @@ public class HtmlTemplateTestInclude {
   """)
   public void testCase01() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             html(
@@ -63,7 +63,7 @@ public class HtmlTemplateTestInclude {
   """)
   public void testCase02() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             html(
@@ -103,7 +103,7 @@ public class HtmlTemplateTestInclude {
   """)
   public void testCase03() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             html(
@@ -145,8 +145,8 @@ public class HtmlTemplateTestInclude {
   """)
   public void testCase04() {
     test(
-        new Html.Template() {
-          private final Html.Template nav = new Html.Template() {
+        new Template() {
+          private final Template nav = new Template() {
             @Override
             protected final void render() {
               nav(
@@ -155,7 +155,7 @@ public class HtmlTemplateTestInclude {
             }
           };
 
-          private final Html.Template hero = new Html.Template() {
+          private final Template hero = new Template() {
             @Override
             protected final void render() {
               section(
@@ -191,7 +191,7 @@ public class HtmlTemplateTestInclude {
   """)
   public void testCase05() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             div(
@@ -241,7 +241,7 @@ public class HtmlTemplateTestInclude {
   """)
   public void testCase06() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             head(
@@ -271,7 +271,7 @@ public class HtmlTemplateTestInclude {
   """)
   public void testCase07() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             h1(f(this::heading1));
@@ -295,7 +295,7 @@ public class HtmlTemplateTestInclude {
   """)
   public void testCase08() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             h1(f(this::heading1));
@@ -314,8 +314,8 @@ public class HtmlTemplateTestInclude {
 
   @Test
   public void testCase09() {
-    Html.Template component;
-    component = new Html.Template() {
+    Template component;
+    component = new Template() {
       @Override
       protected final void render() {
         div(
@@ -331,7 +331,7 @@ public class HtmlTemplateTestInclude {
     };
 
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             body(
@@ -352,8 +352,8 @@ public class HtmlTemplateTestInclude {
 
   @Test
   public void testCase10() {
-    Html.Template component;
-    component = new Html.Template() {
+    Template component;
+    component = new Template() {
       @Override
       protected final void render() {
         div(
@@ -363,7 +363,7 @@ public class HtmlTemplateTestInclude {
     };
 
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             body(f(this::body));
@@ -405,7 +405,7 @@ public class HtmlTemplateTestInclude {
     }
 
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             body(f(this::body));
@@ -431,7 +431,7 @@ public class HtmlTemplateTestInclude {
 
   @Test
   public void testCase14() {
-    class Contents extends Html.Template {
+    class Contents extends Template {
       @Override
       protected final void render() {
         head("hd");
@@ -441,7 +441,7 @@ public class HtmlTemplateTestInclude {
     }
 
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             html(
@@ -462,7 +462,7 @@ public class HtmlTemplateTestInclude {
   @Test
   public void testCase15() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             html(
@@ -502,7 +502,7 @@ public class HtmlTemplateTestInclude {
     expected.append("</html>\n");
 
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             html(
@@ -524,7 +524,7 @@ public class HtmlTemplateTestInclude {
   @Test(description = "it should allow attributes at the root of lambda")
   public void testCase17() {
     test(
-        new Html.Template() {
+        new Template() {
           @Override
           protected final void render() {
             input(f(this::attributes));
@@ -543,7 +543,7 @@ public class HtmlTemplateTestInclude {
     );
   }
 
-  private void test(Html.Template template, String expected) {
+  private void test(Template template, String expected) {
     String result;
     result = template.toString();
 

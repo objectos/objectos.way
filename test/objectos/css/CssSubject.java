@@ -15,9 +15,9 @@
  */
 package objectos.css;
 
-import objectos.way.Html;
+import objectos.html.Template;
 
-abstract class CssSubject extends Html.Template {
+abstract class CssSubject extends Template {
   @Override
   protected final void render() {
     div(

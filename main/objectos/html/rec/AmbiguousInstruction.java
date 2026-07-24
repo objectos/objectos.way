@@ -15,12 +15,15 @@
  */
 package objectos.html.rec;
 
+import objectox.html.HtmlInstruction;
 import objectox.html.rec.AmbiguousPointer;
 
 /// Represents an instruction that may render an attribute or element in an
 /// Objectos HTML document.
 public sealed interface AmbiguousInstruction
     extends
-    Instruction
+    AttributeInstruction,
+    ElementInstruction
     permits
-    AmbiguousPointer {}
+    AmbiguousPointer,
+    HtmlInstruction {}

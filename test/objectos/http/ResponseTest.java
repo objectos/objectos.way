@@ -18,7 +18,7 @@ package objectos.http;
 import static org.testng.Assert.assertEquals;
 
 import java.util.List;
-import objectos.way.Html;
+import objectos.html.Template;
 import objectox.http.Header;
 import objectox.http.resp.ResponseEntity;
 import objectox.http.resp.ResponsePojo;
@@ -119,7 +119,7 @@ public class ResponseTest {
   @Test(description = "testable text if content is testable")
   public void toTestableText02() {
     final ContentProvider html;
-    html = new Html.Template() {
+    html = new Template() {
       @Override
       protected void render() {
         testableH1("Heading 1");

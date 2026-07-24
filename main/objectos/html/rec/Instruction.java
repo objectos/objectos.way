@@ -16,10 +16,10 @@
 package objectos.html.rec;
 
 import objectos.html.AttributeObject;
+import objectos.html.Template;
 import objectos.html.rec.Instruction.AsMethod;
 import objectos.html.rec.Instruction.AsObject;
 import objectos.html.rec.Instruction.OfVoid;
-import objectos.way.Html;
 import objectox.html.HtmlInstruction;
 import objectox.html.attr.AttributeOrNoOp;
 
@@ -30,7 +30,6 @@ public sealed interface Instruction
     AsObject,
     AsMethod,
     OfVoid,
-    AmbiguousInstruction,
     FlattenInstruction,
     RawInstruction,
     TextInstruction {
@@ -45,7 +44,7 @@ public sealed interface Instruction
 
   /**
    * Class of instructions that are represented by methods of the
-   * {@link Html.Template} class.
+   * {@link Template} class.
    *
    * <p>
    * Instances of this interface MUST NOT be reused in a template.
@@ -57,12 +56,7 @@ public sealed interface Instruction
       AttributeInstruction,
       OfDataOn,
       FragmentInstruction,
-      NoOp {}
-
-  /**
-   * An instruction to generate an ambiguous element in a template.
-   */
-  sealed interface OfAmbiguous extends AttributeInstruction, ElementInstruction permits HtmlInstruction {}
+      NoOpInstruction {}
 
   /**
    * An instruction to generate a {@code data-on-*} HTML attribute in a
@@ -80,15 +74,12 @@ public sealed interface Instruction
       AttributeInstruction,
       OfDataOn,
       FragmentInstruction,
-      NoOp {}
-
-  /// The no-op instruction.
-  sealed interface NoOp extends AsMethod, OfVoid permits AttributeOrNoOp {}
+      NoOpInstruction {}
 
   /// Returns the no-op instruction.
   ///
   /// @return the no-op instruction
-  static NoOp noop() {
+  static NoOpInstruction noop() {
     return HtmlInstruction.NOOP;
   }
 

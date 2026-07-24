@@ -18,8 +18,8 @@ package objectos.http;
 import static objectos.http.RequestMethod.GET;
 
 import java.util.function.Consumer;
+import objectos.html.Template;
 import objectos.script.JsLibrary;
-import objectos.way.Html;
 
 final class ServerTestHostMain implements Consumer<HostOptions> {
 
@@ -45,7 +45,7 @@ final class ServerTestHostMain implements Consumer<HostOptions> {
     r.at("/script.js", StaticFile.of(JsLibrary.of()));
   }
 
-  private static class Home extends Html.Template {
+  private static class Home extends Template {
     @Override
     protected void render() {
       doctype();
