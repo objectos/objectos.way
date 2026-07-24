@@ -15,121 +15,47 @@
  */
 package objectox.html.rec;
 
+import java.util.Collection;
 import java.util.Objects;
-import objectos.html.rec.ElementInstruction;
 import objectos.html.rec.Instruction;
-import objectox.html.HtmlByteProto;
-import objectox.html.HtmlInstruction;
 
 final class FlattenRecorder {
 
-  private final ByteArray main;
+  private final HtmlSink sink;
 
-  private final ElementValueEncoder elementValueEncoder;
+  private final ContentsRecorder contentsRecorder;
 
-  private final ElementValueRecorder elementValueRecorder;
+  FlattenRecorder(HtmlSink sink, ContentsRecorder contentsRecorder) {
+    this.sink = sink;
 
-  private final ForwardOffsetRecorder forwardOffsetRecorder;
-
-  private final ReverseOffsetRecorder reverseOffsetRecorder;
-
-  FlattenRecorder(
-      ByteArray main,
-
-      ElementValueEncoder elementValueEncoder,
-
-      ElementValueRecorder elementValueRecorder,
-
-      ForwardOffsetRecorder forwardOffsetRecorder,
-
-      ReverseOffsetRecorder reverseOffsetRecorder
-  ) {
-    this.main = main;
-
-    this.elementValueEncoder = elementValueEncoder;
-
-    this.elementValueRecorder = elementValueRecorder;
-
-    this.forwardOffsetRecorder = forwardOffsetRecorder;
-
-    this.reverseOffsetRecorder = reverseOffsetRecorder;
+    this.contentsRecorder = contentsRecorder;
   }
 
-  public final ElementInstruction record(Instruction... contents) {
-    final Instruction[] values;
-    values = Objects.requireNonNull(contents, "contents == null");
+  public final FlattenPointer record(Instruction... contents) {
+    final Instruction[] instructions;
+    instructions = Objects.requireNonNull(contents, "contents == null");
 
-    final int auxStart;
-    auxStart = elementValueEncoder.auxStart();
+    final int startIndex;
+    startIndex = sink.addByte(HtmlBytes.STARTFLAT);
 
-    final int mainStart;
-    mainStart = main.size();
+    contentsRecorder.record(instructions);
 
-    int mainContents;
-    mainContents = mainStart;
-
-    main.add(HtmlByteProto.FLATTEN);
-
-    main.addInt16(ByteArray.MAX_INT16);
-
-    for (int idx = 0; idx < values.length; idx++) {
-      final Instruction instruction;
-      instruction = values[idx];
-
-      if (instruction == null) {
-        final String msg;
-        msg = "contents[%d] == null".formatted(idx);
-
-        throw new NullPointerException(msg);
-      }
-
-      mainContents = elementValueRecorder.record(mainContents, instruction);
-    }
-
-    elementValueEncoder.encode(auxStart, mainContents);
-
-    reverseOffsetRecorder.record(mainContents);
-
-    forwardOffsetRecorder.two(mainStart);
-
-    return HtmlInstruction.ELEMENT;
+    return new FlattenPointer(startIndex);
   }
 
-  public final ElementInstruction record(Iterable<? extends Instruction> contents) {
-    final Iterable<? extends Instruction> values;
+  public final FlattenPointer record(Collection<? extends Instruction> contents) {
+    final Collection<? extends Instruction> values;
     values = Objects.requireNonNull(contents, "contents == null");
 
-    final int auxStart;
-    auxStart = elementValueEncoder.auxStart();
+    final int startIndex;
+    startIndex = sink.addByte(HtmlBytes.STARTFLAT);
 
-    final int mainStart;
-    mainStart = main.size();
+    final Instruction[] array;
+    array = values.toArray(Instruction[]::new);
 
-    int mainContents;
-    mainContents = mainStart;
+    contentsRecorder.record(array);
 
-    main.add(HtmlByteProto.FLATTEN);
-
-    main.addInt16(ByteArray.MAX_INT16);
-
-    for (Instruction value : values) {
-      if (value == null) {
-        final String msg;
-        msg = "contents provided a null instruction";
-
-        throw new NullPointerException(msg);
-      }
-
-      mainContents = elementValueRecorder.record(mainContents, value);
-    }
-
-    elementValueEncoder.encode(auxStart, mainContents);
-
-    reverseOffsetRecorder.record(mainContents);
-
-    forwardOffsetRecorder.two(mainStart);
-
-    return HtmlInstruction.ELEMENT;
+    return new FlattenPointer(startIndex);
   }
 
 }

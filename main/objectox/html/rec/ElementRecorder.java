@@ -29,7 +29,13 @@ final class ElementRecorder {
   ElementRecorder(HtmlSink sink) {
     this.sink = sink;
 
-    contentsRecorder = new ContentsRecorder(sink, sink::consume);
+    contentsRecorder = new ContentsRecorder(sink);
+  }
+
+  ElementRecorder(HtmlSink sink, ContentsRecorder contentsRecorder) {
+    this.sink = sink;
+
+    this.contentsRecorder = contentsRecorder;
   }
 
   public final ElementPointer record(ElementName name, Instruction... contents) {

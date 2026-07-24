@@ -51,7 +51,7 @@ public final class Recorder {
 
   private final ZZZElementRecorder elementRecorder;
 
-  private final FlattenRecorder flattenRecorder;
+  private final ZZZFlattenRecorder flattenRecorder;
 
   private final ZZZFragmentRecorder fragmentRecorder;
 
@@ -76,7 +76,7 @@ public final class Recorder {
 
       ZZZElementRecorder elementRecorder,
 
-      FlattenRecorder flattenRecorder,
+      ZZZFlattenRecorder flattenRecorder,
 
       ZZZFragmentRecorder fragmentRecorder,
 
@@ -173,7 +173,7 @@ public final class Recorder {
             reverseOffsetRecorder
         ),
 
-        new FlattenRecorder(
+        new ZZZFlattenRecorder(
             main,
 
             elementValueEncoder,

@@ -17,133 +17,78 @@ package objectox.html.rec;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.html.AttributeName;
-import objectox.html.HtmlByteProto;
-import objectox.html.HtmlInstruction;
 import org.testng.annotations.Test;
 
 public class FlattenRecorderTest {
 
-  private FlattenRecorder create(ByteArray aux, ByteArray main, ObjectArray objects) {
+  private FlattenRecorder create(HtmlSink sink) {
     return new FlattenRecorder(
-        main,
+        sink,
 
-        new ElementValueEncoder(
-            aux,
-
-            main,
-
-            new Encoder(
-                main,
-
-                new FlattenEncoder(main),
-
-                new ElementEncoder(main)
-            )
-        ),
-
-        new ElementValueRecorder(
-            new AttributeObjectRecorder(aux, objects),
-
-            new ElementInternalRecorder(aux, main)
-        ),
-
-        new ForwardOffsetRecorder(main),
-
-        new ReverseOffsetRecorder(main)
+        new ContentsRecorder(sink)
     );
   }
 
   @Test
   public void record01() {
-    final ByteArray aux;
-    aux = ByteArray.of();
-
-    final ByteArray main;
-    main = ByteArray.of();
-
-    final ObjectArray objects;
-    objects = ObjectArray.of();
+    final HtmlSink sink;
+    sink = new HtmlSink();
 
     final FlattenRecorder subject;
-    subject = create(aux, main, objects);
+    subject = create(sink);
 
-    assertEquals(subject.record(), HtmlInstruction.ELEMENT);
+    final FlattenPointer res;
+    res = subject.record();
 
-    assertEquals(
-        aux,
-
-        ByteArray.of()
-    );
+    assertEquals(res.value(), 0);
 
     assertEquals(
-        main,
+        sink,
 
-        ByteArray.of(
-            HtmlByteProto.FLATTEN,
-            HtmlBytes.encodeInt0(3),
-            HtmlBytes.encodeInt1(3),
-            HtmlByteProto.END,
-            HtmlBytes.encodeInt0(3),
-            HtmlByteProto.INTERNAL
-        )
-    );
-
-    assertEquals(
-        objects,
-
-        ObjectArray.of()
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.STARTFLAT);
+          opts.addByte(HtmlBytes.VALUES0);
+        })
     );
   }
 
   @Test
   public void record02() {
-    final ByteArray aux;
-    aux = ByteArray.of();
+    final HtmlSink sink;
+    sink = new HtmlSink();
 
-    final ByteArray main;
-    main = ByteArray.of(
-        HtmlByteProto.ATTRIBUTE0,
-        HtmlBytes.encodeInt0(AttributeName.READONLY.index()),
-        HtmlByteProto.INTERNAL3
-    );
+    final int attrIndex;
+    attrIndex = sink.addByte(HtmlBytes.ATTRIBUTE88);
 
-    final ObjectArray objects;
-    objects = ObjectArray.of();
+    final AttributePointer attr;
+    attr = new AttributePointer(attrIndex);
+
+    final int elemIndex;
+    elemIndex = sink.addByte(HtmlBytes.STARTTAG8);
+
+    final ElementPointer elem;
+    elem = new ElementPointer(elemIndex);
 
     final FlattenRecorder subject;
-    subject = create(aux, main, objects);
+    subject = create(sink);
 
-    assertEquals(subject.record(HtmlInstruction.ATTRIBUTE), HtmlInstruction.ELEMENT);
+    final FlattenPointer res;
+    res = subject.record(attr, elem);
 
-    assertEquals(
-        aux,
-
-        ByteArray.of(HtmlByteProto.INTERNAL)
-    );
+    assertEquals(res.value(), 2);
 
     assertEquals(
-        main,
+        sink,
 
-        ByteArray.of(
-            HtmlByteProto.MARKED3,
-            HtmlBytes.encodeInt0(AttributeName.READONLY.index()),
-            HtmlByteProto.INTERNAL3,
-            HtmlByteProto.FLATTEN,
-            HtmlBytes.encodeInt0(5),
-            HtmlBytes.encodeInt1(5),
-            HtmlByteProto.ATTRIBUTE0,
-            HtmlBytes.encodeInt0(7),
-            HtmlByteProto.END,
-            HtmlBytes.encodeInt0(8),
-            HtmlByteProto.INTERNAL
-        )
-    );
-
-    assertEquals(
-        objects,
-
-        ObjectArray.of()
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.xATTRIBUTE88);
+          opts.addByte(HtmlBytes.xSTARTTAG8);
+          opts.addByte(HtmlBytes.STARTFLAT);
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(2);
+          opts.addInt8(0);
+          opts.addInt8(1);
+        })
     );
   }
 

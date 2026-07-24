@@ -32,6 +32,8 @@ final class DocumentRecorder {
 
   private final ElementRecorder elementRecorder;
 
+  private final FlattenRecorder flattenRecorder;
+
   private final FragmentRecorder fragmentRecorder;
 
   private final RawRecorder rawRecorder;
@@ -45,6 +47,8 @@ final class DocumentRecorder {
 
       ElementRecorder elementRecorder,
 
+      FlattenRecorder flattenRecorder,
+
       FragmentRecorder fragmentRecorder,
 
       RawRecorder rawRecorder,
@@ -57,6 +61,8 @@ final class DocumentRecorder {
 
     this.elementRecorder = elementRecorder;
 
+    this.flattenRecorder = flattenRecorder;
+
     this.fragmentRecorder = fragmentRecorder;
 
     this.rawRecorder = rawRecorder;
@@ -65,12 +71,17 @@ final class DocumentRecorder {
   }
 
   public static DocumentRecorder of(HtmlSink sink) {
+    final ContentsRecorder contentsRecorder;
+    contentsRecorder = new ContentsRecorder(sink);
+
     return new DocumentRecorder(
         new AttributeRecorder(sink),
 
         new BooleanAttributeRecorder(sink),
 
-        new ElementRecorder(sink),
+        new ElementRecorder(sink, contentsRecorder),
+
+        new FlattenRecorder(sink, contentsRecorder),
 
         new FragmentRecorder(sink),
 
@@ -90,6 +101,10 @@ final class DocumentRecorder {
 
   public final ElementPointer element(ElementName name, Instruction... contents) {
     return elementRecorder.record(name, contents);
+  }
+
+  public final FlattenPointer flatten(Instruction... contents) {
+    return flattenRecorder.record(contents);
   }
 
   public final FragmentPointer fragment(Fragment0 fragment) {

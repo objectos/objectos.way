@@ -44,45 +44,53 @@ public final class HtmlBytes {
   public static final byte RAW16 = -118;
   public static final byte RAW24 = -117;
 
+  // flatten
+
+  public static final byte STARTFLAT = -116;
+
   // fragment
 
-  public static final byte STARTFRAG = -116;
-  public static final byte ENDFRAG = -115;
+  public static final byte STARTFRAG = -115;
+  public static final byte ENDFRAG = -114;
 
   // contents
 
-  public static final byte VALUES0 = -114;
-  public static final byte VALUES8 = -113;
-  public static final byte VALUES16 = -112;
-  public static final byte VALUES24 = -111;
+  public static final byte VALUES0 = -113;
+  public static final byte VALUES8 = -112;
+  public static final byte VALUES16 = -111;
+  public static final byte VALUES24 = -110;
 
   // xelement
 
-  public static final byte xSTARTTAG8 = -110;
-  public static final byte xENDTAG8 = -109;
+  public static final byte xSTARTTAG8 = -109;
+  public static final byte xENDTAG8 = -108;
 
   // xattributes
 
-  public static final byte xATTRIBUTE88 = -108;
-  public static final byte xATTRIBUTE816 = -107;
-  public static final byte xATTRIBUTE824 = -106;
-  public static final byte xBOOLEAN8 = -105;
+  public static final byte xATTRIBUTE88 = -107;
+  public static final byte xATTRIBUTE816 = -106;
+  public static final byte xATTRIBUTE824 = -105;
+  public static final byte xBOOLEAN8 = -104;
 
   // xtext
 
-  public static final byte xTEXT8 = -104;
-  public static final byte xTEXT16 = -103;
-  public static final byte xTEXT24 = -102;
+  public static final byte xTEXT8 = -103;
+  public static final byte xTEXT16 = -102;
+  public static final byte xTEXT24 = -101;
 
   // xraw
 
-  public static final byte xRAW8 = -101;
-  public static final byte xRAW16 = -100;
-  public static final byte xRAW24 = -99;
+  public static final byte xRAW8 = -100;
+  public static final byte xRAW16 = -99;
+  public static final byte xRAW24 = -98;
+
+  // xflatten
+
+  public static final byte xSTARTFLAT = -97;
 
   // xfragment
 
-  public static final byte xSTARTFRAG = -98;
+  public static final byte xSTARTFRAG = -96;
 
   //
 
@@ -113,6 +121,8 @@ public final class HtmlBytes {
       case RAW16, xRAW16 -> xRAW16;
 
       case RAW24, xRAW24 -> xRAW24;
+
+      case STARTFLAT, xSTARTFLAT -> xSTARTFLAT;
 
       case STARTFRAG, xSTARTFRAG -> xSTARTFRAG;
 

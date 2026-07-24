@@ -205,8 +205,62 @@ public class DocumentRecorderTest {
     );
   }
 
+  @Test(description = """
+  flatten instruction
+  """)
+  public void flatten01() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final DocumentRecorder subject;
+    subject = create(sink);
+
+    final ElementPointer res;
+    res = subject.element(
+        ElementName.UL,
+        subject.flatten(
+            subject.element(ElementName.LI),
+            subject.element(ElementName.LI)
+        )
+    );
+
+    assertEquals(res.value(), 15);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          int li0 = opts.addByte(HtmlBytes.xSTARTTAG8);
+          opts.addInt8(ElementNamePojo.LI.index());
+          opts.addByte(HtmlBytes.VALUES0);
+          opts.addByte(HtmlBytes.ENDTAG8);
+          opts.addInt8(ElementNamePojo.LI.index());
+
+          int li1 = opts.addByte(HtmlBytes.xSTARTTAG8);
+          opts.addInt8(ElementNamePojo.LI.index());
+          opts.addByte(HtmlBytes.VALUES0);
+          opts.addByte(HtmlBytes.ENDTAG8);
+          opts.addInt8(ElementNamePojo.LI.index());
+
+          int flat = opts.addByte(HtmlBytes.xSTARTFLAT);
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(2);
+          opts.addInt8(li0);
+          opts.addInt8(li1);
+
+          opts.addByte(HtmlBytes.STARTTAG8);
+          opts.addInt8(ElementNamePojo.UL.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(1);
+          opts.addInt8(flat);
+          opts.addByte(HtmlBytes.ENDTAG8);
+          opts.addInt8(ElementNamePojo.UL.index());
+        })
+    );
+  }
+
   @Test(description = "fragment")
-  public void record06() {
+  public void fragment01() {
     final HtmlSink sink;
     sink = new HtmlSink();
 
@@ -239,7 +293,7 @@ public class DocumentRecorderTest {
   }
 
   @Test(description = "fragment1")
-  public void record07() {
+  public void fragment02() {
     final HtmlSink sink;
     sink = new HtmlSink();
 
@@ -272,7 +326,7 @@ public class DocumentRecorderTest {
   }
 
   @Test(description = "fragment2")
-  public void record08() {
+  public void fragment03() {
     final HtmlSink sink;
     sink = new HtmlSink();
 
@@ -315,7 +369,7 @@ public class DocumentRecorderTest {
   }
 
   @Test(description = "fragment3")
-  public void record09() {
+  public void fragment04() {
     final HtmlSink sink;
     sink = new HtmlSink();
 
@@ -366,7 +420,7 @@ public class DocumentRecorderTest {
   }
 
   @Test(description = "fragment4")
-  public void record10() {
+  public void fragment05() {
     final HtmlSink sink;
     sink = new HtmlSink();
 

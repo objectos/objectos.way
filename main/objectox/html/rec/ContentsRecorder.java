@@ -24,6 +24,10 @@ final class ContentsRecorder {
 
   private final IntConsumer marker;
 
+  ContentsRecorder(HtmlSink sink) {
+    this(sink, sink::consume);
+  }
+
   ContentsRecorder(HtmlSink sink, IntConsumer marker) {
     this.sink = sink;
 

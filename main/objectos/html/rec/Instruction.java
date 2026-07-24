@@ -30,6 +30,7 @@ public sealed interface Instruction
     AsObject,
     AsMethod,
     OfVoid,
+    FlattenInstruction,
     RawInstruction,
     TextInstruction {
 

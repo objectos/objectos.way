@@ -49,6 +49,10 @@ public class HtmlBytesGen {
     value("RAW16");
     value("RAW24");
 
+    comment("flatten");
+
+    value("STARTFLAT");
+
     comment("fragment");
 
     value("STARTFRAG");
@@ -84,6 +88,10 @@ public class HtmlBytesGen {
     value("xRAW8");
     value("xRAW16");
     value("xRAW24");
+
+    comment("xflatten");
+
+    value("xSTARTFLAT");
 
     comment("xfragment");
 
