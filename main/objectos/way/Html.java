@@ -28,6 +28,7 @@ import objectos.html.rec.Fragment1;
 import objectos.html.rec.Fragment2;
 import objectos.html.rec.Fragment3;
 import objectos.html.rec.Fragment4;
+import objectos.html.rec.FragmentInstruction;
 import objectos.html.rec.Instruction;
 import objectos.internal.Check;
 import objectos.script.JsAction;
@@ -189,7 +190,7 @@ public final class Html {
     /// @param components the components to be rendered as part of this document
     ///
     /// @return an instruction representing the rendered components.
-    protected final Instruction.OfFragment c(Component... components) {
+    protected final FragmentInstruction c(Component... components) {
       return $html().c(components);
     }
 
@@ -198,7 +199,7 @@ public final class Html {
     /// @param components the components to be rendered as part of this document
     ///
     /// @return an instruction representing the rendered components.
-    protected final Instruction.OfFragment c(Iterable<? extends Component> components) {
+    protected final FragmentInstruction c(Iterable<? extends Component> components) {
       return $html().c(components);
     }
 
@@ -221,7 +222,7 @@ public final class Html {
     /// @param fragment the fragment to include
     ///
     /// @return an instruction representing the fragment
-    protected final Instruction.OfFragment f(Fragment0 fragment) {
+    protected final FragmentInstruction f(Fragment0 fragment) {
       return $html().f(fragment);
     }
 
@@ -246,7 +247,7 @@ public final class Html {
     /// @param arg1 the first argument
     ///
     /// @return an instruction representing the fragment
-    protected final <T1> Instruction.OfFragment f(Fragment1<T1> fragment, T1 arg1) {
+    protected final <T1> FragmentInstruction f(Fragment1<T1> fragment, T1 arg1) {
       return $html().f(fragment, arg1);
     }
 
@@ -267,7 +268,7 @@ public final class Html {
     /// @param arg2 the second argument
     ///
     /// @return an instruction representing the fragment
-    protected final <T1, T2> Instruction.OfFragment f(Fragment2<T1, T2> fragment, T1 arg1, T2 arg2) {
+    protected final <T1, T2> FragmentInstruction f(Fragment2<T1, T2> fragment, T1 arg1, T2 arg2) {
       return $html().f(fragment, arg1, arg2);
     }
 
@@ -299,7 +300,7 @@ public final class Html {
     /// @param arg3 the third argument
     ///
     /// @return an instruction representing the fragment
-    protected final <T1, T2, T3> Instruction.OfFragment f(Fragment3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3) {
+    protected final <T1, T2, T3> FragmentInstruction f(Fragment3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3) {
       return $html().f(fragment, arg1, arg2, arg3);
     }
 
@@ -316,7 +317,7 @@ public final class Html {
     /// @param arg4 the fourth argument
     ///
     /// @return an instruction representing the fragment
-    protected final <T1, T2, T3, T4> Instruction.OfFragment f(Fragment4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
+    protected final <T1, T2, T3, T4> FragmentInstruction f(Fragment4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
       return $html().f(fragment, arg1, arg2, arg3, arg4);
     }
 

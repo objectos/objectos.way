@@ -16,6 +16,7 @@
 package objectox.html;
 
 import objectos.html.rec.ElementInstruction;
+import objectos.html.rec.FragmentInstruction;
 import objectos.html.rec.Instruction;
 import objectox.html.attr.AttributeOrNoOp;
 
@@ -24,13 +25,13 @@ public final class HtmlInstruction
     AttributeOrNoOp,
     Instruction.OfAmbiguous,
     ElementInstruction,
-    Instruction.OfFragment {
+    FragmentInstruction {
 
   public static final AttributeOrNoOp ATTRIBUTE = new HtmlInstruction();
 
   public static final HtmlInstruction ELEMENT = new HtmlInstruction();
 
-  public static final Instruction.OfFragment FRAGMENT = new HtmlInstruction();
+  public static final FragmentInstruction FRAGMENT = new HtmlInstruction();
 
   public static final AttributeOrNoOp NOOP = new HtmlInstruction();
 

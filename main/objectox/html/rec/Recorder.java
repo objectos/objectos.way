@@ -26,9 +26,9 @@ import objectos.html.rec.Fragment1;
 import objectos.html.rec.Fragment2;
 import objectos.html.rec.Fragment3;
 import objectos.html.rec.Fragment4;
+import objectos.html.rec.FragmentInstruction;
 import objectos.html.rec.Instruction;
 import objectos.html.rec.Instruction.OfAmbiguous;
-import objectos.html.rec.Instruction.OfFragment;
 import objectox.html.Ambiguous;
 import objectox.html.HtmlByteProto;
 import objectox.html.play.Player;
@@ -53,7 +53,7 @@ public final class Recorder {
 
   private final FlattenRecorder flattenRecorder;
 
-  private final FragmentRecorder fragmentRecorder;
+  private final ZZZFragmentRecorder fragmentRecorder;
 
   private final ZZZRawRecorder rawRecorder;
 
@@ -78,7 +78,7 @@ public final class Recorder {
 
       FlattenRecorder flattenRecorder,
 
-      FragmentRecorder fragmentRecorder,
+      ZZZFragmentRecorder fragmentRecorder,
 
       ZZZRawRecorder rawRecorder,
 
@@ -185,7 +185,7 @@ public final class Recorder {
             reverseOffsetRecorder
         ),
 
-        new FragmentRecorder(main, forwardOffsetRecorder, reverseOffsetRecorder),
+        new ZZZFragmentRecorder(main, forwardOffsetRecorder, reverseOffsetRecorder),
 
         new ZZZRawRecorder(main, objects),
 
@@ -205,11 +205,11 @@ public final class Recorder {
     return attribute1Recorder.record(name, value);
   }
 
-  public final OfFragment component(Markup ctx, Component... components) {
+  public final FragmentInstruction component(Markup ctx, Component... components) {
     return componentRecorder.record(ctx, components);
   }
 
-  public final OfFragment component(Markup ctx, Iterable<? extends Component> components) {
+  public final FragmentInstruction component(Markup ctx, Iterable<? extends Component> components) {
     return componentRecorder.record(ctx, components);
   }
 
@@ -221,23 +221,23 @@ public final class Recorder {
     return elementRecorder.record(name, contents);
   }
 
-  public final OfFragment f(Fragment0 fragment) {
+  public final FragmentInstruction f(Fragment0 fragment) {
     return fragmentRecorder.record(fragment);
   }
 
-  public final <T1> OfFragment f(Fragment1<T1> fragment, T1 arg1) {
+  public final <T1> FragmentInstruction f(Fragment1<T1> fragment, T1 arg1) {
     return fragmentRecorder.record(fragment, arg1);
   }
 
-  public final <T1, T2> OfFragment f(Fragment2<T1, T2> fragment, T1 arg1, T2 arg2) {
+  public final <T1, T2> FragmentInstruction f(Fragment2<T1, T2> fragment, T1 arg1, T2 arg2) {
     return fragmentRecorder.record(fragment, arg1, arg2);
   }
 
-  public final <T1, T2, T3> OfFragment f(Fragment3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3) {
+  public final <T1, T2, T3> FragmentInstruction f(Fragment3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3) {
     return fragmentRecorder.record(fragment, arg1, arg2, arg3);
   }
 
-  public final <T1, T2, T3, T4> OfFragment f(Fragment4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
+  public final <T1, T2, T3, T4> FragmentInstruction f(Fragment4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
     return fragmentRecorder.record(fragment, arg1, arg2, arg3, arg4);
   }
 

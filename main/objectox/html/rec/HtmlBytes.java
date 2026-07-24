@@ -44,36 +44,45 @@ public final class HtmlBytes {
   public static final byte RAW16 = -118;
   public static final byte RAW24 = -117;
 
+  // fragment
+
+  public static final byte STARTFRAG = -116;
+  public static final byte ENDFRAG = -115;
+
   // contents
 
-  public static final byte VALUES0 = -116;
-  public static final byte VALUES8 = -115;
-  public static final byte VALUES16 = -114;
-  public static final byte VALUES24 = -113;
+  public static final byte VALUES0 = -114;
+  public static final byte VALUES8 = -113;
+  public static final byte VALUES16 = -112;
+  public static final byte VALUES24 = -111;
 
   // xelement
 
-  public static final byte xSTARTTAG8 = -112;
-  public static final byte xENDTAG8 = -111;
+  public static final byte xSTARTTAG8 = -110;
+  public static final byte xENDTAG8 = -109;
 
   // xattributes
 
-  public static final byte xATTRIBUTE88 = -110;
-  public static final byte xATTRIBUTE816 = -109;
-  public static final byte xATTRIBUTE824 = -108;
-  public static final byte xBOOLEAN8 = -107;
+  public static final byte xATTRIBUTE88 = -108;
+  public static final byte xATTRIBUTE816 = -107;
+  public static final byte xATTRIBUTE824 = -106;
+  public static final byte xBOOLEAN8 = -105;
 
   // xtext
 
-  public static final byte xTEXT8 = -106;
-  public static final byte xTEXT16 = -105;
-  public static final byte xTEXT24 = -104;
+  public static final byte xTEXT8 = -104;
+  public static final byte xTEXT16 = -103;
+  public static final byte xTEXT24 = -102;
 
   // xraw
 
-  public static final byte xRAW8 = -103;
-  public static final byte xRAW16 = -102;
-  public static final byte xRAW24 = -101;
+  public static final byte xRAW8 = -101;
+  public static final byte xRAW16 = -100;
+  public static final byte xRAW24 = -99;
+
+  // xfragment
+
+  public static final byte xSTARTFRAG = -98;
 
   //
 
@@ -104,6 +113,8 @@ public final class HtmlBytes {
       case RAW16, xRAW16 -> xRAW16;
 
       case RAW24, xRAW24 -> xRAW24;
+
+      case STARTFRAG, xSTARTFRAG -> xSTARTFRAG;
 
       default -> throw new IllegalArgumentException("source=" + source);
     };

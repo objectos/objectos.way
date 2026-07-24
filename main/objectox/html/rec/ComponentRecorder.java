@@ -17,7 +17,7 @@ package objectox.html.rec;
 
 import objectos.html.Component;
 import objectos.html.Markup;
-import objectos.html.rec.Instruction;
+import objectos.html.rec.FragmentInstruction;
 import objectox.html.HtmlByteProto;
 import objectox.html.HtmlInstruction;
 
@@ -37,7 +37,7 @@ final class ComponentRecorder {
     this.reverseOffsetRecorder = reverseOffsetRecorder;
   }
 
-  public final Instruction.OfFragment record(Markup ctx, Component... components) {
+  public final FragmentInstruction record(Markup ctx, Component... components) {
     final int startIndex;
     startIndex = begin();
 
@@ -60,7 +60,7 @@ final class ComponentRecorder {
     return HtmlInstruction.FRAGMENT;
   }
 
-  public final Instruction.OfFragment record(Markup ctx, Iterable<? extends Component> components) {
+  public final FragmentInstruction record(Markup ctx, Iterable<? extends Component> components) {
     final int startIndex;
     startIndex = begin();
 

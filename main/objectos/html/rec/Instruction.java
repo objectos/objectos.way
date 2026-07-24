@@ -54,7 +54,7 @@ public sealed interface Instruction
       ElementInstruction,
       AttributeInstruction,
       OfDataOn,
-      OfFragment,
+      FragmentInstruction,
       NoOp {}
 
   /**
@@ -69,11 +69,6 @@ public sealed interface Instruction
   sealed interface OfDataOn extends AsMethod, OfVoid permits AttributeOrNoOp {}
 
   /**
-   * An instruction to include an HTML fragment to a template.
-   */
-  sealed interface OfFragment extends AsMethod, OfVoid permits HtmlInstruction {}
-
-  /**
    * Class of instructions that are allowed as arguments to template
    * methods that represent void elements.
    */
@@ -82,7 +77,7 @@ public sealed interface Instruction
       AttributeObject,
       AttributeInstruction,
       OfDataOn,
-      OfFragment,
+      FragmentInstruction,
       NoOp {}
 
   /// The no-op instruction.

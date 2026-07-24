@@ -29,6 +29,7 @@ import objectos.html.rec.Fragment1;
 import objectos.html.rec.Fragment2;
 import objectos.html.rec.Fragment3;
 import objectos.html.rec.Fragment4;
+import objectos.html.rec.FragmentInstruction;
 import objectos.html.rec.Instruction;
 import objectos.internal.Util;
 import objectos.way.Dom;
@@ -152,37 +153,37 @@ public sealed abstract class MarkupPojo
   // ##################################################################
 
   @Override
-  public final Instruction.OfFragment c(Component... components) {
+  public final FragmentInstruction c(Component... components) {
     return recorder.component(this, components);
   }
 
   @Override
-  public final Instruction.OfFragment c(Iterable<? extends Component> components) {
+  public final FragmentInstruction c(Iterable<? extends Component> components) {
     return recorder.component(this, components);
   }
 
   @Override
-  public final Instruction.OfFragment f(Fragment0 fragment) {
+  public final FragmentInstruction f(Fragment0 fragment) {
     return recorder.f(fragment);
   }
 
   @Override
-  public final <T1> Instruction.OfFragment f(Fragment1<T1> fragment, T1 arg1) {
+  public final <T1> FragmentInstruction f(Fragment1<T1> fragment, T1 arg1) {
     return recorder.f(fragment, arg1);
   }
 
   @Override
-  public final <T1, T2> Instruction.OfFragment f(Fragment2<T1, T2> fragment, T1 arg1, T2 arg2) {
+  public final <T1, T2> FragmentInstruction f(Fragment2<T1, T2> fragment, T1 arg1, T2 arg2) {
     return recorder.f(fragment, arg1, arg2);
   }
 
   @Override
-  public final <T1, T2, T3> Instruction.OfFragment f(Fragment3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3) {
+  public final <T1, T2, T3> FragmentInstruction f(Fragment3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3) {
     return recorder.f(fragment, arg1, arg2, arg3);
   }
 
   @Override
-  public final <T1, T2, T3, T4> Instruction.OfFragment f(Fragment4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
+  public final <T1, T2, T3, T4> FragmentInstruction f(Fragment4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
     return recorder.f(fragment, arg1, arg2, arg3, arg4);
   }
 

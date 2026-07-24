@@ -49,6 +49,11 @@ public class HtmlBytesGen {
     value("RAW16");
     value("RAW24");
 
+    comment("fragment");
+
+    value("STARTFRAG");
+    value("ENDFRAG");
+
     comment("contents");
 
     value("VALUES0");
@@ -79,6 +84,10 @@ public class HtmlBytesGen {
     value("xRAW8");
     value("xRAW16");
     value("xRAW24");
+
+    comment("xfragment");
+
+    value("xSTARTFRAG");
   }
 
   protected int value = -128;

@@ -18,97 +18,259 @@ package objectox.html.rec;
 import static org.testng.Assert.assertEquals;
 
 import objectos.html.rec.Fragment0;
-import objectox.html.HtmlByteProto;
-import objectox.html.HtmlInstruction;
-import objectox.html.elem.ElementNamePojo;
+import objectos.html.rec.Fragment1;
+import objectos.html.rec.Fragment2;
+import objectos.html.rec.Fragment3;
+import objectos.html.rec.Fragment4;
+import objectox.html.attr.AttributeNamePojo;
 import org.testng.annotations.Test;
 
 public class FragmentRecorderTest {
 
-  private FragmentRecorder create(ByteArray main) {
-    return new FragmentRecorder(
-        main,
-
-        new ForwardOffsetRecorder(main),
-
-        new ReverseOffsetRecorder(main)
-    );
-  }
-
   @Test
   public void record01() {
-    final ByteArray main;
-    main = ByteArray.of();
+    final HtmlSink sink;
+    sink = new HtmlSink();
 
     final FragmentRecorder subject;
-    subject = create(main);
+    subject = new FragmentRecorder(sink);
 
     final Fragment0 f;
     f = () -> {
 
     };
 
-    assertEquals(subject.record(f), HtmlInstruction.FRAGMENT);
+    final FragmentPointer res;
+    res = subject.record(f);
+
+    assertEquals(res.value(), 0);
 
     assertEquals(
-        main,
+        sink,
 
-        ByteArray.of(
-            HtmlByteProto.FRAGMENT,
-            HtmlBytes.encodeInt0(3),
-            HtmlBytes.encodeInt1(3),
-            HtmlBytes.encodeInt2(3),
-            HtmlByteProto.END,
-            HtmlBytes.encodeInt0(4),
-            HtmlByteProto.INTERNAL
-        )
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.STARTFRAG);
+          opts.addByte(HtmlBytes.ENDFRAG);
+        })
     );
   }
 
   @Test
   public void record02() {
-    final ByteArray main;
-    main = ByteArray.of();
+    final HtmlSink sink;
+    sink = new HtmlSink();
 
     final FragmentRecorder subject;
-    subject = create(main);
+    subject = new FragmentRecorder(sink);
 
     final Fragment0 f;
     f = () -> {
-      main.add(HtmlByteProto.ELEMENT);
-      main.addInt16(5);
-      main.add(HtmlByteProto.STANDARD_NAME);
-      main.addInt8(ElementNamePojo.HTML.index());
-
-      main.add(HtmlByteProto.END);
-      main.addVarIntLE(5);
-      main.add(HtmlByteProto.INTERNAL);
+      sink.addByte(HtmlBytes.ATTRIBUTE88);
+      sink.addInt8(AttributeNamePojo.ID.index());
+      sink.addInt8(sink.addObject("foo"));
     };
 
-    assertEquals(subject.record(f), HtmlInstruction.FRAGMENT);
+    final FragmentPointer res;
+    res = subject.record(f);
+
+    assertEquals(res.value(), 0);
 
     assertEquals(
-        main,
+        sink,
 
-        ByteArray.of(
-            HtmlByteProto.FRAGMENT,
-            HtmlBytes.encodeInt0(3 + 8),
-            HtmlBytes.encodeInt1(3 + 8),
-            HtmlBytes.encodeInt2(3 + 8),
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.STARTFRAG);
+          opts.addByte(HtmlBytes.ATTRIBUTE88);
+          opts.addInt8(AttributeNamePojo.ID.index());
+          opts.addInt8(opts.addObject("foo"));
+          opts.addByte(HtmlBytes.ENDFRAG);
+        })
+    );
+  }
 
-            HtmlByteProto.ELEMENT,
-            HtmlBytes.encodeInt0(5),
-            HtmlBytes.encodeInt1(5),
-            HtmlByteProto.STANDARD_NAME,
-            (byte) ElementNamePojo.HTML.index(),
-            HtmlByteProto.END,
-            HtmlBytes.encodeInt0(5),
-            HtmlByteProto.INTERNAL,
+  @Test
+  public void record03() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
 
-            HtmlByteProto.END,
-            HtmlBytes.encodeInt0(4 + 8),
-            HtmlByteProto.INTERNAL
-        )
+    final FragmentRecorder subject;
+    subject = new FragmentRecorder(sink);
+
+    final Fragment1<String> f;
+    f = value -> {
+      sink.addByte(HtmlBytes.ATTRIBUTE88);
+      sink.addInt8(AttributeNamePojo.ID.index());
+      sink.addInt8(sink.addObject(value));
+    };
+
+    final FragmentPointer res;
+    res = subject.record(f, "foo");
+
+    assertEquals(res.value(), 0);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.STARTFRAG);
+          opts.addByte(HtmlBytes.ATTRIBUTE88);
+          opts.addInt8(AttributeNamePojo.ID.index());
+          opts.addInt8(opts.addObject("foo"));
+          opts.addByte(HtmlBytes.ENDFRAG);
+        })
+    );
+  }
+
+  @Test
+  public void record04() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final FragmentRecorder subject;
+    subject = new FragmentRecorder(sink);
+
+    final Fragment2<String, String> f;
+    f = (value1, value2) -> {
+      sink.addByte(HtmlBytes.ATTRIBUTE88);
+      sink.addInt8(AttributeNamePojo.ID.index());
+      sink.addInt8(sink.addObject(value1));
+
+      sink.addByte(HtmlBytes.ATTRIBUTE88);
+      sink.addInt8(AttributeNamePojo.ID.index());
+      sink.addInt8(sink.addObject(value2));
+    };
+
+    final FragmentPointer res;
+    res = subject.record(f, "foo", "bar");
+
+    assertEquals(res.value(), 0);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.STARTFRAG);
+
+          opts.addByte(HtmlBytes.ATTRIBUTE88);
+          opts.addInt8(AttributeNamePojo.ID.index());
+          opts.addInt8(opts.addObject("foo"));
+
+          opts.addByte(HtmlBytes.ATTRIBUTE88);
+          opts.addInt8(AttributeNamePojo.ID.index());
+          opts.addInt8(opts.addObject("bar"));
+
+          opts.addByte(HtmlBytes.ENDFRAG);
+        })
+    );
+  }
+
+  @Test
+  public void record05() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final FragmentRecorder subject;
+    subject = new FragmentRecorder(sink);
+
+    final Fragment3<String, String, String> f;
+    f = (value1, value2, value3) -> {
+      sink.addByte(HtmlBytes.ATTRIBUTE88);
+      sink.addInt8(AttributeNamePojo.ID.index());
+      sink.addInt8(sink.addObject(value1));
+
+      sink.addByte(HtmlBytes.ATTRIBUTE88);
+      sink.addInt8(AttributeNamePojo.ID.index());
+      sink.addInt8(sink.addObject(value2));
+
+      sink.addByte(HtmlBytes.ATTRIBUTE88);
+      sink.addInt8(AttributeNamePojo.ID.index());
+      sink.addInt8(sink.addObject(value3));
+    };
+
+    final FragmentPointer res;
+    res = subject.record(f, "foo", "bar", "baz");
+
+    assertEquals(res.value(), 0);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.STARTFRAG);
+
+          opts.addByte(HtmlBytes.ATTRIBUTE88);
+          opts.addInt8(AttributeNamePojo.ID.index());
+          opts.addInt8(opts.addObject("foo"));
+
+          opts.addByte(HtmlBytes.ATTRIBUTE88);
+          opts.addInt8(AttributeNamePojo.ID.index());
+          opts.addInt8(opts.addObject("bar"));
+
+          opts.addByte(HtmlBytes.ATTRIBUTE88);
+          opts.addInt8(AttributeNamePojo.ID.index());
+          opts.addInt8(opts.addObject("baz"));
+
+          opts.addByte(HtmlBytes.ENDFRAG);
+        })
+    );
+  }
+
+  @Test
+  public void record06() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final FragmentRecorder subject;
+    subject = new FragmentRecorder(sink);
+
+    final Fragment4<String, String, String, String> f;
+    f = (value1, value2, value3, value4) -> {
+      sink.addByte(HtmlBytes.ATTRIBUTE88);
+      sink.addInt8(AttributeNamePojo.ID.index());
+      sink.addInt8(sink.addObject(value1));
+
+      sink.addByte(HtmlBytes.ATTRIBUTE88);
+      sink.addInt8(AttributeNamePojo.ID.index());
+      sink.addInt8(sink.addObject(value2));
+
+      sink.addByte(HtmlBytes.ATTRIBUTE88);
+      sink.addInt8(AttributeNamePojo.ID.index());
+      sink.addInt8(sink.addObject(value3));
+
+      sink.addByte(HtmlBytes.ATTRIBUTE88);
+      sink.addInt8(AttributeNamePojo.ID.index());
+      sink.addInt8(sink.addObject(value4));
+    };
+
+    final FragmentPointer res;
+    res = subject.record(f, "foo", "bar", "baz", "qux");
+
+    assertEquals(res.value(), 0);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.STARTFRAG);
+
+          opts.addByte(HtmlBytes.ATTRIBUTE88);
+          opts.addInt8(AttributeNamePojo.ID.index());
+          opts.addInt8(opts.addObject("foo"));
+
+          opts.addByte(HtmlBytes.ATTRIBUTE88);
+          opts.addInt8(AttributeNamePojo.ID.index());
+          opts.addInt8(opts.addObject("bar"));
+
+          opts.addByte(HtmlBytes.ATTRIBUTE88);
+          opts.addInt8(AttributeNamePojo.ID.index());
+          opts.addInt8(opts.addObject("baz"));
+
+          opts.addByte(HtmlBytes.ATTRIBUTE88);
+          opts.addInt8(AttributeNamePojo.ID.index());
+          opts.addInt8(opts.addObject("qux"));
+
+          opts.addByte(HtmlBytes.ENDFRAG);
+        })
     );
   }
 

@@ -30,11 +30,25 @@ public class HtmlBytesTest {
         {HtmlBytes.ATTRIBUTE816, HtmlBytes.xATTRIBUTE816},
         {HtmlBytes.ATTRIBUTE824, HtmlBytes.xATTRIBUTE824},
         {HtmlBytes.BOOLEAN8, HtmlBytes.xBOOLEAN8},
+        {HtmlBytes.TEXT8, HtmlBytes.xTEXT8},
+        {HtmlBytes.TEXT16, HtmlBytes.xTEXT16},
+        {HtmlBytes.TEXT24, HtmlBytes.xTEXT24},
+        {HtmlBytes.RAW8, HtmlBytes.xRAW8},
+        {HtmlBytes.RAW16, HtmlBytes.xRAW16},
+        {HtmlBytes.RAW24, HtmlBytes.xRAW24},
+        {HtmlBytes.STARTFRAG, HtmlBytes.xSTARTFRAG},
         {HtmlBytes.xSTARTTAG8, HtmlBytes.xSTARTTAG8},
         {HtmlBytes.xATTRIBUTE88, HtmlBytes.xATTRIBUTE88},
         {HtmlBytes.xATTRIBUTE816, HtmlBytes.xATTRIBUTE816},
         {HtmlBytes.xATTRIBUTE824, HtmlBytes.xATTRIBUTE824},
-        {HtmlBytes.xBOOLEAN8, HtmlBytes.xBOOLEAN8}
+        {HtmlBytes.xBOOLEAN8, HtmlBytes.xBOOLEAN8},
+        {HtmlBytes.xTEXT8, HtmlBytes.xTEXT8},
+        {HtmlBytes.xTEXT16, HtmlBytes.xTEXT16},
+        {HtmlBytes.xTEXT24, HtmlBytes.xTEXT24},
+        {HtmlBytes.xRAW8, HtmlBytes.xRAW8},
+        {HtmlBytes.xRAW16, HtmlBytes.xRAW16},
+        {HtmlBytes.xRAW24, HtmlBytes.xRAW24},
+        {HtmlBytes.xSTARTFRAG, HtmlBytes.xSTARTFRAG}
     };
   }
 

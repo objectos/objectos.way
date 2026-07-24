@@ -21,114 +21,83 @@ import objectos.html.rec.Fragment1;
 import objectos.html.rec.Fragment2;
 import objectos.html.rec.Fragment3;
 import objectos.html.rec.Fragment4;
-import objectos.html.rec.Instruction;
-import objectos.html.rec.Instruction.OfFragment;
-import objectox.html.HtmlByteProto;
-import objectox.html.HtmlInstruction;
 
 final class FragmentRecorder {
 
-  private final ByteArray main;
+  private final HtmlSink sink;
 
-  private final ForwardOffsetRecorder forwardOffsetRecorder;
-
-  private final ReverseOffsetRecorder reverseOffsetRecorder;
-
-  FragmentRecorder(ByteArray main, ForwardOffsetRecorder forwardOffsetRecorder, ReverseOffsetRecorder reverseOffsetRecorder) {
-    this.main = main;
-
-    this.forwardOffsetRecorder = forwardOffsetRecorder;
-
-    this.reverseOffsetRecorder = reverseOffsetRecorder;
+  FragmentRecorder(HtmlSink sink) {
+    this.sink = sink;
   }
 
-  public final Instruction.OfFragment record(Fragment0 fragment) {
+  public final FragmentPointer record(Fragment0 fragment) {
     final Fragment0 f;
     f = Objects.requireNonNull(fragment, "fragment == null");
 
-    final int index;
-    index = fragmentBegin();
+    final int startIndex;
+    startIndex = sink.addByte(HtmlBytes.STARTFRAG);
 
     f.invoke();
 
-    fragmentEnd(index);
+    sink.addByte(HtmlBytes.ENDFRAG);
 
-    return HtmlInstruction.FRAGMENT;
+    return new FragmentPointer(startIndex);
   }
 
-  public final <T1> OfFragment record(Fragment1<T1> fragment, T1 arg1) {
+  public final <T1> FragmentPointer record(Fragment1<T1> fragment, T1 arg1) {
     final Fragment1<T1> f;
     f = Objects.requireNonNull(fragment, "fragment == null");
 
-    final int index;
-    index = fragmentBegin();
+    final int startIndex;
+    startIndex = sink.addByte(HtmlBytes.STARTFRAG);
 
     f.invoke(arg1);
 
-    fragmentEnd(index);
+    sink.addByte(HtmlBytes.ENDFRAG);
 
-    return HtmlInstruction.FRAGMENT;
+    return new FragmentPointer(startIndex);
   }
 
-  public final <T1, T2> OfFragment record(Fragment2<T1, T2> fragment, T1 arg1, T2 arg2) {
+  public final <T1, T2> FragmentPointer record(Fragment2<T1, T2> fragment, T1 arg1, T2 arg2) {
     final Fragment2<T1, T2> f;
     f = Objects.requireNonNull(fragment, "fragment == null");
 
-    final int index;
-    index = fragmentBegin();
+    final int startIndex;
+    startIndex = sink.addByte(HtmlBytes.STARTFRAG);
 
     f.invoke(arg1, arg2);
 
-    fragmentEnd(index);
+    sink.addByte(HtmlBytes.ENDFRAG);
 
-    return HtmlInstruction.FRAGMENT;
+    return new FragmentPointer(startIndex);
   }
 
-  public final <T1, T2, T3> OfFragment record(Fragment3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3) {
+  public final <T1, T2, T3> FragmentPointer record(Fragment3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3) {
     final Fragment3<T1, T2, T3> f;
     f = Objects.requireNonNull(fragment, "fragment == null");
 
-    final int index;
-    index = fragmentBegin();
+    final int startIndex;
+    startIndex = sink.addByte(HtmlBytes.STARTFRAG);
 
     f.invoke(arg1, arg2, arg3);
 
-    fragmentEnd(index);
+    sink.addByte(HtmlBytes.ENDFRAG);
 
-    return HtmlInstruction.FRAGMENT;
+    return new FragmentPointer(startIndex);
   }
 
-  public final <T1, T2, T3, T4> OfFragment record(Fragment4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
+  public final <T1, T2, T3, T4> FragmentPointer record(Fragment4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
     final Fragment4<T1, T2, T3, T4> f;
     f = Objects.requireNonNull(fragment, "fragment == null");
 
-    final int index;
-    index = fragmentBegin();
+    final int startIndex;
+    startIndex = sink.addByte(HtmlBytes.STARTFRAG);
 
     f.invoke(arg1, arg2, arg3, arg4);
 
-    fragmentEnd(index);
+    sink.addByte(HtmlBytes.ENDFRAG);
 
-    return HtmlInstruction.FRAGMENT;
-  }
-
-  private int fragmentBegin() {
-    // we mark:
-    // 1) the start of the contents of the current declaration
-    final int startIndex;
-    startIndex = main.size();
-
-    main.add(HtmlByteProto.FRAGMENT);
-
-    main.addInt24(ByteArray.MAX_INT24);
-
-    return startIndex;
-  }
-
-  private void fragmentEnd(int startIndex) {
-    reverseOffsetRecorder.record(startIndex);
-
-    forwardOffsetRecorder.three(startIndex);
+    return new FragmentPointer(startIndex);
   }
 
 }
