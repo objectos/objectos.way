@@ -18,6 +18,10 @@ package objectox.html.rec;
 import objectos.html.AttributeName;
 import objectos.html.ElementName;
 import objectos.html.rec.Fragment0;
+import objectos.html.rec.Fragment1;
+import objectos.html.rec.Fragment2;
+import objectos.html.rec.Fragment3;
+import objectos.html.rec.Fragment4;
 import objectos.html.rec.Instruction;
 
 final class DocumentRecorder {
@@ -90,6 +94,22 @@ final class DocumentRecorder {
 
   public final FragmentPointer fragment(Fragment0 fragment) {
     return fragmentRecorder.record(fragment);
+  }
+
+  public final <T1> FragmentPointer fragment(Fragment1<T1> fragment, T1 arg1) {
+    return fragmentRecorder.record(fragment, arg1);
+  }
+
+  public final <T1, T2> FragmentPointer fragment(Fragment2<T1, T2> fragment, T1 arg1, T2 arg2) {
+    return fragmentRecorder.record(fragment, arg1, arg2);
+  }
+
+  public final <T1, T2, T3> FragmentPointer fragment(Fragment3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3) {
+    return fragmentRecorder.record(fragment, arg1, arg2, arg3);
+  }
+
+  public final <T1, T2, T3, T4> FragmentPointer fragment(Fragment4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
+    return fragmentRecorder.record(fragment, arg1, arg2, arg3, arg4);
   }
 
   public final RawPointer raw(String value) {
