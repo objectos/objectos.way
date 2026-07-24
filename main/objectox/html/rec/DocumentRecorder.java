@@ -17,6 +17,7 @@ package objectox.html.rec;
 
 import objectos.html.AttributeName;
 import objectos.html.ElementName;
+import objectos.html.rec.Fragment0;
 import objectos.html.rec.Instruction;
 
 final class DocumentRecorder {
@@ -26,6 +27,8 @@ final class DocumentRecorder {
   private final BooleanAttributeRecorder booleanAttributeRecorder;
 
   private final ElementRecorder elementRecorder;
+
+  private final FragmentRecorder fragmentRecorder;
 
   private final RawRecorder rawRecorder;
 
@@ -38,6 +41,8 @@ final class DocumentRecorder {
 
       ElementRecorder elementRecorder,
 
+      FragmentRecorder fragmentRecorder,
+
       RawRecorder rawRecorder,
 
       TextRecorder textRecorder
@@ -47,6 +52,8 @@ final class DocumentRecorder {
     this.booleanAttributeRecorder = booleanAttributeRecorder;
 
     this.elementRecorder = elementRecorder;
+
+    this.fragmentRecorder = fragmentRecorder;
 
     this.rawRecorder = rawRecorder;
 
@@ -60,6 +67,8 @@ final class DocumentRecorder {
         new BooleanAttributeRecorder(sink),
 
         new ElementRecorder(sink),
+
+        new FragmentRecorder(sink),
 
         new RawRecorder(sink),
 
@@ -77,6 +86,10 @@ final class DocumentRecorder {
 
   public final ElementPointer element(ElementName name, Instruction... contents) {
     return elementRecorder.record(name, contents);
+  }
+
+  public final FragmentPointer fragment(Fragment0 fragment) {
+    return fragmentRecorder.record(fragment);
   }
 
   public final RawPointer raw(String value) {

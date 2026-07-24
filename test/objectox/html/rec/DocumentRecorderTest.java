@@ -18,6 +18,7 @@ package objectox.html.rec;
 import static org.testng.Assert.assertEquals;
 
 import objectos.html.ElementName;
+import objectos.html.rec.Fragment0;
 import objectox.html.attr.AttributeNamePojo;
 import objectox.html.elem.ElementNamePojo;
 import org.testng.annotations.Test;
@@ -196,6 +197,39 @@ public class DocumentRecorderTest {
           opts.addInt8(0);
           opts.addByte(HtmlBytes.ENDTAG8);
           opts.addInt8(ElementNamePojo.SPAN.index());
+        })
+    );
+  }
+
+  @Test(description = "fragment")
+  public void record06() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final DocumentRecorder subject;
+    subject = create(sink);
+
+    final Fragment0 fragment;
+    fragment = () -> {
+      sink.addByte(HtmlBytes.ATTRIBUTE88);
+      sink.addInt8(AttributeNamePojo.ID.index());
+      sink.addInt8(sink.addObject("foo"));
+    };
+
+    final FragmentPointer res;
+    res = subject.fragment(fragment);
+
+    assertEquals(res.value(), 0);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.STARTFRAG);
+          opts.addByte(HtmlBytes.ATTRIBUTE88);
+          opts.addInt8(AttributeNamePojo.ID.index());
+          opts.addInt8(opts.addObject("foo"));
+          opts.addByte(HtmlBytes.ENDFRAG);
         })
     );
   }
