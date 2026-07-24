@@ -15,26 +15,24 @@
  */
 package objectox.html.rec;
 
-import java.util.Objects;
-
 final class TextEscaper {
 
-  TextEscaper() {
+  private final String value;
+
+  TextEscaper(String value) {
+    this.value = value;
   }
 
-  public final String escape(String value) {
-    final String v;
-    v = Objects.requireNonNull(value, "value == null");
-
+  public final String escape() {
     final int len;
-    len = v.length();
+    len = value.length();
 
     int idx;
     idx = 0;
 
     for (; idx < len; idx++) {
       final char c;
-      c = v.charAt(idx);
+      c = value.charAt(idx);
 
       if (c == '&' || c == '<' || c == '>') {
         break;
@@ -42,17 +40,17 @@ final class TextEscaper {
     }
 
     if (idx == len) {
-      return v;
+      return value;
     }
 
     final StringBuilder out;
     out = new StringBuilder(len + 16);
 
-    out.append(v, 0, idx);
+    out.append(value, 0, idx);
 
     for (; idx < len; idx++) {
       final char c;
-      c = v.charAt(idx);
+      c = value.charAt(idx);
 
       switch (c) {
         case '&' -> out.append("&amp;");

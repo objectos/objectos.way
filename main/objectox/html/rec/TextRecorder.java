@@ -29,8 +29,14 @@ final class TextRecorder {
     final String v;
     v = Objects.requireNonNull(value, "value == null");
 
+    final TextEscaper escaper;
+    escaper = new TextEscaper(v);
+
+    final String escaped;
+    escaped = escaper.escape();
+
     final int valueIndex;
-    valueIndex = sink.addObject(v);
+    valueIndex = sink.addObject(escaped);
 
     final IntSize valueSize;
     valueSize = IntSize.of(valueIndex);

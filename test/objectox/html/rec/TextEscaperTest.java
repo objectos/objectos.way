@@ -21,7 +21,12 @@ import org.testng.annotations.Test;
 
 public class TextEscaperTest {
 
-  private final TextEscaper subject = new TextEscaper();
+  private String escape(String value) {
+    final TextEscaper subject;
+    subject = new TextEscaper(value);
+
+    return subject.escape();
+  }
 
   @Test(description = "empty string")
   public void escape01() {
@@ -29,7 +34,7 @@ public class TextEscaperTest {
     input = "";
 
     final String res;
-    res = subject.escape(input);
+    res = escape(input);
 
     assertEquals(res, "");
   }
@@ -40,7 +45,7 @@ public class TextEscaperTest {
     input = "Hello World";
 
     final String res;
-    res = subject.escape(input);
+    res = escape(input);
 
     assertEquals(res, "Hello World");
   }
@@ -51,7 +56,7 @@ public class TextEscaperTest {
     input = "A&B";
 
     final String res;
-    res = subject.escape(input);
+    res = escape(input);
 
     assertEquals(res, "A&amp;B");
   }
@@ -62,7 +67,7 @@ public class TextEscaperTest {
     input = "A<B";
 
     final String res;
-    res = subject.escape(input);
+    res = escape(input);
 
     assertEquals(res, "A&lt;B");
   }
@@ -73,7 +78,7 @@ public class TextEscaperTest {
     input = "A>B";
 
     final String res;
-    res = subject.escape(input);
+    res = escape(input);
 
     assertEquals(res, "A&gt;B");
   }
@@ -84,7 +89,7 @@ public class TextEscaperTest {
     input = "A&B<C>D";
 
     final String res;
-    res = subject.escape(input);
+    res = escape(input);
 
     assertEquals(res, "A&amp;B&lt;C&gt;D");
   }
@@ -95,7 +100,7 @@ public class TextEscaperTest {
     input = "&&";
 
     final String res;
-    res = subject.escape(input);
+    res = escape(input);
 
     assertEquals(res, "&amp;&amp;");
   }
@@ -106,7 +111,7 @@ public class TextEscaperTest {
     input = "<<";
 
     final String res;
-    res = subject.escape(input);
+    res = escape(input);
 
     assertEquals(res, "&lt;&lt;");
   }
@@ -117,7 +122,7 @@ public class TextEscaperTest {
     input = ">>";
 
     final String res;
-    res = subject.escape(input);
+    res = escape(input);
 
     assertEquals(res, "&gt;&gt;");
   }
@@ -128,17 +133,9 @@ public class TextEscaperTest {
     input = "&amp;";
 
     final String res;
-    res = subject.escape(input);
+    res = escape(input);
 
     assertEquals(res, "&amp;amp;");
-  }
-
-  @Test(
-      description = "reject null value",
-      expectedExceptions = NullPointerException.class,
-      expectedExceptionsMessageRegExp = "value == null")
-  public void escape11() {
-    subject.escape(null);
   }
 
 }
