@@ -17,6 +17,8 @@ package objectox.html.play;
 
 import static org.testng.Assert.assertEquals;
 
+import objectox.html.elem.ElementNamePojo;
+import objectox.html.rec.HtmlBytes;
 import org.testng.annotations.Test;
 
 public class StartStateTest {
@@ -25,6 +27,26 @@ public class StartStateTest {
   public void compute00() {
     final HtmlSource source;
     source = HtmlSourceY.create(_ -> {});
+
+    final StartState subject;
+    subject = new StartState(source);
+
+    final BeginDocumentState res;
+    res = subject.compute();
+
+    assertEquals(res.startIndex, 0);
+  }
+
+  @Test(description = "<html></html>")
+  public void compute01() {
+    final HtmlSource source;
+    source = HtmlSourceY.create(opts -> {
+      opts.addByte(HtmlBytes.STARTTAG8);
+      opts.addInt8(ElementNamePojo.HTML.index());
+      opts.addByte(HtmlBytes.VALUES0);
+      opts.addByte(HtmlBytes.ENDTAG8);
+      opts.addInt8(ElementNamePojo.HTML.index());
+    });
 
     final StartState subject;
     subject = new StartState(source);

@@ -49,12 +49,51 @@ public final class HtmlSource implements Html {
     return StreamSupport.stream(spliterator, false);
   }
 
+  public final int endInt8(int index) {
+    return index + 1;
+  }
+
+  public final int endInt16(int index) {
+    return index + 2;
+  }
+
+  public final int endInt24(int index) {
+    return index + 3;
+  }
+
   public final byte getByte(int index) {
     return code[index];
   }
 
+  public final int getInt(int startIndex, int endIndex) {
+    final int length;
+    length = endIndex - startIndex;
+
+    return switch (length) {
+      case 1 -> toInt(startIndex, 0);
+
+      case 2 -> toInt(startIndex, 8) | toInt(startIndex + 1, 0);
+
+      case 3 -> toInt(startIndex, 16) | toInt(startIndex + 1, 8) | toInt(startIndex + 2, 0);
+
+      default -> throw new IllegalArgumentException(
+          "Invalid byte count: " + length
+      );
+    };
+  }
+
   public final boolean hasByte(int index) {
     return index < code.length;
+  }
+
+  private int toInt(int index, int shift) {
+    final byte byteValue;
+    byteValue = code[index];
+
+    final int intValue;
+    intValue = Byte.toUnsignedInt(byteValue);
+
+    return intValue << shift;
   }
 
 }

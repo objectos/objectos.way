@@ -15,6 +15,8 @@
  */
 package objectox.html.play;
 
+import objectox.html.rec.HtmlBytes;
+
 final class NextDocumentNode {
 
   private final HtmlSource source;
@@ -36,7 +38,24 @@ final class NextDocumentNode {
   }
 
   private State compute0() {
-    throw new UnsupportedOperationException("Implement me");
+    int idx;
+    idx = startIndex;
+
+    final byte node;
+    node = source.getByte(idx++);
+
+    return switch (node) {
+      case HtmlBytes.STARTTAG8 -> element(idx, source.endInt8(idx));
+
+      default -> throw new UnsupportedOperationException("Implement me :: node=" + node);
+    };
+  }
+
+  private State element(final int nameStart, final int nameEnd) {
+    final int nameIndex = source.getInt(nameStart, nameEnd);
+
+    final int nameIndex = source.getInt8(idx++);
+    return null;
   }
 
 }
