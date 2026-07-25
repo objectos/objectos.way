@@ -17,6 +17,7 @@ package objectox.html.rec;
 
 import java.util.function.IntConsumer;
 import objectos.html.rec.Instruction;
+import objectox.html.IntSize;
 
 final class ContentsRecorder {
 

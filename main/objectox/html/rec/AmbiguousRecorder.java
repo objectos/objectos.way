@@ -17,6 +17,7 @@ package objectox.html.rec;
 
 import java.util.Objects;
 import objectox.html.Ambiguous;
+import objectox.html.IntSize;
 
 final class AmbiguousRecorder {
 

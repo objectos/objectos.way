@@ -15,6 +15,8 @@
  */
 package objectox.html.play;
 
+import objectos.html.ElementName;
+import objectox.html.elem.ElementNamePojo;
 import objectox.html.rec.HtmlBytes;
 
 final class NextDocumentNode {
@@ -52,9 +54,11 @@ final class NextDocumentNode {
   }
 
   private State element(final int nameStart, final int nameEnd) {
-    final int nameIndex = source.getInt(nameStart, nameEnd);
+    final int nameIndex;
+    nameIndex = source.getInt(nameStart, nameEnd);
 
-    final int nameIndex = source.getInt8(idx++);
+    final ElementName elementName = ElementNamePojo.get(nameIndex);
+
     return null;
   }
 

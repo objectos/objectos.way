@@ -16,6 +16,7 @@
 package objectox.html.rec;
 
 import java.util.Objects;
+import objectox.html.IntSize;
 
 final class TextRecorder {
 

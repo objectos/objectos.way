@@ -17,6 +17,7 @@ package objectox.html.rec;
 
 import java.util.Objects;
 import objectos.html.AttributeName;
+import objectox.html.IntSize;
 
 final class AttributeRecorder {
 

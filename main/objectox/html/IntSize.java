@@ -13,9 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html.rec;
+package objectox.html;
 
-enum IntSize {
+import objectox.html.rec.HtmlSink;
+
+public enum IntSize {
 
   BIT8,
 
@@ -49,6 +51,16 @@ enum IntSize {
 
       throw new IllegalArgumentException(msg);
     }
+  }
+
+  public final int skip(int index) {
+    return switch (this) {
+      case BIT8 -> index + 1;
+
+      case BIT16 -> index + 2;
+
+      case BIT24 -> index + 3;
+    };
   }
 
 }

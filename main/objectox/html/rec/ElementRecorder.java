@@ -18,6 +18,7 @@ package objectox.html.rec;
 import java.util.Objects;
 import objectos.html.ElementName;
 import objectos.html.rec.Instruction;
+import objectox.html.IntSize;
 import objectox.html.elem.ElementNamePojo;
 
 final class ElementRecorder {
