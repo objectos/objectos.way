@@ -13,14 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html.play;
+package objectox.html.rec;
 
-/// An Objectos HTML document is streamed as a sequence of pieces.
-public sealed interface Piece
-    permits
-    Attribute,
-    BeginDocument,
-    BeginStartTag,
-    EndDocument,
-    EndStartTag,
-    EndTag {}
+import objectos.html.Html;
+import objectox.html.play.HtmlSource;
+
+final class DocumentCompiler {
+
+  private final HtmlSink sink;
+
+  DocumentCompiler(HtmlSink sink) {
+    this.sink = sink;
+  }
+
+  public final Html compile() {
+    return new HtmlSource(sink);
+  }
+
+}

@@ -13,17 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html;
+package objectox.html.play;
 
-import objectos.way.Dom;
+enum StopState implements State {
 
-public final class DomText implements Dom.Text {
-
-  String value;
+  INSTANCE;
 
   @Override
-  public final String value() {
-    return value;
+  public final State compute() {
+    return this;
   }
 
 }

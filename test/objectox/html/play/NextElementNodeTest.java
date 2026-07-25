@@ -27,7 +27,7 @@ public class NextElementNodeTest {
   @Test
   public void compute01() {
     final Tape tape;
-    tape = TapeY.create(opts -> {
+    tape = HtmlSourceY.create(opts -> {
       opts.main(
           HtmlByteProto.ELEMENT,
           HtmlBytes.encodeInt0(5),

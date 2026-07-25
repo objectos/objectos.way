@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.way;
+package objectos.html;
 
 import java.util.Objects;
+import java.util.stream.Stream;
+import objectos.html.play.HtmlEvent;
 import objectox.html.attr.AttributeNamePojo;
+import objectox.html.play.HtmlSource;
 
-/**
- * The <strong>Objectos HTML</strong> main class.
- */
-public final class Html {
-
-  private Html() {}
+/// Represents a compiled HTML document.
+public sealed interface Html permits HtmlSource {
 
   /// Formats the specified string to be used as an HTML attribute value. More
   /// specifically, this method returns a string whose value is the specified
@@ -38,10 +37,15 @@ public final class Html {
   /// @param value the string to be formatted
   ///
   /// @return the formatted string
-  public static String formatAttrValue(String value) {
+  static String formatAttrValue(String value) {
     Objects.requireNonNull(value, "value == null");
 
     return AttributeNamePojo.formatAttrValue(value, new StringBuilder());
   }
+
+  /// Returns the contents of this Objectos HTML document as a stream of events.
+  ///
+  /// @return the contents of this document as stream of events
+  Stream<HtmlEvent> events();
 
 }

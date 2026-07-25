@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.HexFormat;
 import objectos.internal.Util;
 
-final class HtmlSink {
+public final class HtmlSink {
 
   public static final int MAX_INT8 = (1 << 8) - 1;
 
@@ -160,6 +160,14 @@ final class HtmlSink {
     code    = %s
     objects = %s
     """.formatted(HexFormat.of().formatHex($code), Arrays.toString($objects));
+  }
+
+  public final byte[] code() {
+    return Arrays.copyOf(code, codeIndex);
+  }
+
+  public final Object[] objects() {
+    return Arrays.copyOf(objects, objectsIndex);
   }
 
 }

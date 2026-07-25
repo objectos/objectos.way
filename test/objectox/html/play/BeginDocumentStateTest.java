@@ -16,105 +16,23 @@
 package objectox.html.play;
 
 import static org.testng.Assert.assertEquals;
-import objectox.html.HtmlByteProto;
-import objectox.html.elem.ElementNamePojo;
-import objectox.html.rec.HtmlBytes;
+
 import org.testng.annotations.Test;
 
 public class BeginDocumentStateTest {
 
   @Test
   public void compute00() {
-    final Tape tape;
-    tape = TapeY.create(opts -> {
-      opts.main();
-    });
+    final HtmlSource source;
+    source = HtmlSourceY.create(_ -> {});
 
     final BeginDocumentState subject;
-    subject = new BeginDocumentState(tape);
+    subject = new BeginDocumentState(source, 0);
 
     final State res;
     res = subject.compute();
 
-    assertEquals(res, EndDocumentState.INSTANCE);
-  }
-
-  @Test
-  public void compute01() {
-    final Tape tape;
-    tape = TapeY.create(opts -> {
-      opts.main(
-          HtmlByteProto.ELEMENT,
-          HtmlBytes.encodeInt0(5),
-          HtmlBytes.encodeInt1(5),
-          HtmlByteProto.STANDARD_NAME,
-          (byte) ElementNamePojo.HTML.index(),
-          HtmlByteProto.END
-      );
-    });
-
-    final BeginDocumentState subject;
-    subject = new BeginDocumentState(tape);
-
-    final State res;
-    res = subject.compute();
-
-    assertEquals(res.getClass(), BeginStartTagState.class);
-    assertEquals(tape.nextByte(), HtmlByteProto.END);
-  }
-
-  @Test
-  public void compute02() {
-    final Tape tape;
-    tape = TapeY.create(opts -> {
-      opts.main(
-          HtmlByteProto.ELEMENT,
-          HtmlBytes.encodeInt0(7),
-          HtmlBytes.encodeInt1(7),
-          HtmlByteProto.STANDARD_NAME,
-          (byte) ElementNamePojo.HTML.index(),
-          HtmlByteProto.ATTRIBUTE1,
-          HtmlBytes.encodeInt0(11),
-          HtmlByteProto.END,
-          HtmlBytes.encodeInt0(12),
-          HtmlByteProto.INTERNAL
-      );
-    });
-
-    final BeginDocumentState subject;
-    subject = new BeginDocumentState(tape);
-
-    final State res;
-    res = subject.compute();
-
-    assertEquals(res.getClass(), BeginStartTagState.class);
-    assertEquals(tape.nextByte(), HtmlByteProto.ATTRIBUTE1);
-  }
-
-  @Test
-  public void hasNext() {
-    final Tape tape;
-    tape = TapeY.create(opts -> {
-      opts.main();
-    });
-
-    final BeginDocumentState subject;
-    subject = new BeginDocumentState(tape);
-
-    assertEquals(subject.hasNext(), true);
-  }
-
-  @Test
-  public void next() {
-    final Tape tape;
-    tape = TapeY.create(opts -> {
-      opts.main();
-    });
-
-    final BeginDocumentState subject;
-    subject = new BeginDocumentState(tape);
-
-    assertEquals(subject.next(), subject);
+    assertEquals(res.getClass(), EndDocumentState.class);
   }
 
 }

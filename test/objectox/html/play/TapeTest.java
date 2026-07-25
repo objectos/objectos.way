@@ -24,7 +24,7 @@ public class TapeTest {
   @Test
   public void nextByte() {
     final Tape subject;
-    subject = TapeY.create(opts -> {
+    subject = HtmlSourceY.create(opts -> {
       opts.main = new byte[] {0, 1, 2, 3};
 
       opts.mainIndex = 1;
@@ -42,7 +42,7 @@ public class TapeTest {
   @Test
   public void peekByte() {
     final Tape subject;
-    subject = TapeY.create(opts -> {
+    subject = HtmlSourceY.create(opts -> {
       opts.main = new byte[] {0, 1, 2, 3};
 
       opts.mainIndex = 1;
@@ -59,7 +59,7 @@ public class TapeTest {
   @Test
   public void skip() {
     final Tape subject;
-    subject = TapeY.create(opts -> {
+    subject = HtmlSourceY.create(opts -> {
       opts.main = new byte[] {0, 1, 2, 3};
 
       opts.mainIndex = 1;

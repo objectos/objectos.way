@@ -15,33 +15,31 @@
  */
 package objectox.html.play;
 
-import objectos.html.play.BeginDocument;
-import objectos.html.play.Piece;
+import objectos.html.play.HtmlEvent;
 
-public final class BeginDocumentState implements BeginDocument, State {
+public final class BeginDocumentState implements State {
 
-  private final Tape tape;
+  private final HtmlSource source;
 
-  BeginDocumentState(Tape tape) {
-    this.tape = tape;
+  final int startIndex;
+
+  BeginDocumentState(HtmlSource source, int startIndex) {
+    this.source = source;
+
+    this.startIndex = startIndex;
   }
 
   @Override
   public final State compute() {
     final NextDocumentNode next;
-    next = new NextDocumentNode(tape);
+    next = new NextDocumentNode(source, startIndex);
 
     return next.compute();
   }
 
   @Override
-  public final boolean hasNext() {
-    return true;
-  }
-
-  @Override
-  public final Piece next() {
-    return this;
+  public final HtmlEvent event() {
+    return HtmlEventPojo.BEGIN_DOCUMENT;
   }
 
   @Override

@@ -19,7 +19,6 @@ import objectos.html.AttributeName;
 import objectos.html.ElementName;
 import objectox.html.attr.AttributeNamePojo;
 import objectox.html.elem.ElementNamePojo;
-import objectox.html.rec.HtmlBytes;
 
 public enum Ambiguous {
 
@@ -78,13 +77,6 @@ public enum Ambiguous {
     this.elementByteCode = element.index();
   }
 
-  public static Ambiguous decode(byte b0) {
-    int ordinal;
-    ordinal = HtmlBytes.decodeInt(b0);
-
-    return ALL[ordinal];
-  }
-
   public static Ambiguous get(int code) {
     return ALL[code];
   }
@@ -99,10 +91,6 @@ public enum Ambiguous {
 
   public final int elementByteCode() {
     return elementByteCode;
-  }
-
-  public final byte encodeAttribute() {
-    return HtmlBytes.encodeInt0(attributeByteCode);
   }
 
   public abstract boolean isAttributeOf(ElementName element);

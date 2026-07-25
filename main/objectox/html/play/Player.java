@@ -17,21 +17,16 @@ package objectox.html.play;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import objectos.html.play.Piece;
-import objectox.html.rec.ByteArray;
-import objectox.html.rec.ObjectArray;
+import objectos.html.play.HtmlEvent;
 
-public final class Player implements Iterator<Piece> {
+public final class Player implements Iterator<HtmlEvent> {
 
   private boolean computed;
 
   private State state;
 
-  public Player(ByteArray main, ObjectArray objects) {
-    final Tape tape;
-    tape = new Tape(main, objects);
-
-    state = new StartState(tape);
+  public Player(HtmlSource source) {
+    state = new StartState(source);
   }
 
   @Override
@@ -42,20 +37,17 @@ public final class Player implements Iterator<Piece> {
       computed = true;
     }
 
-    return state.hasNext();
+    return state.event() != null;
   }
 
   @Override
-  public final Piece next() {
+  public final HtmlEvent next() {
     if (!hasNext()) {
       throw new NoSuchElementException();
     } else {
-      final Piece result;
-      result = state.next();
-
       computed = false;
 
-      return result;
+      return state.event();
     }
   }
 

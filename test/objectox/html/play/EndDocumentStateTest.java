@@ -16,9 +16,6 @@
 package objectox.html.play;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertSame;
-import static org.testng.Assert.assertTrue;
-
 import org.testng.annotations.Test;
 
 public class EndDocumentStateTest {
@@ -27,17 +24,7 @@ public class EndDocumentStateTest {
 
   @Test
   public void compute00() {
-    assertEquals(subject.compute(), EndState.INSTANCE);
-  }
-
-  @Test
-  public void hasNext() {
-    assertTrue(subject.hasNext());
-  }
-
-  @Test
-  public void next() {
-    assertSame(subject.next(), subject);
+    assertEquals(subject.compute(), StopState.INSTANCE);
   }
 
 }

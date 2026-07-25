@@ -108,14 +108,14 @@ public class HtmlMarkupTest03Processor {
     out.append('<');
     out.append(elementName);
 
-    Lang.IterableOnce<Dom.Attribute> attrs;
+    Lang.IterableOnce<RenderAttribute.Attribute> attrs;
     attrs = element.attributes();
 
-    Iterator<Dom.Attribute> attrsIter;
+    Iterator<RenderAttribute.Attribute> attrsIter;
     attrsIter = attrs.iterator();
 
     while (attrsIter.hasNext()) {
-      Dom.Attribute attr;
+      RenderAttribute.Attribute attr;
       attr = attrsIter.next();
 
       attribute(out, attr);
@@ -159,7 +159,7 @@ public class HtmlMarkupTest03Processor {
     out.append('\n');
   }
 
-  private void attribute(StringBuilder out, Dom.Attribute attribute) {
+  private void attribute(StringBuilder out, RenderAttribute.Attribute attribute) {
     String name;
     name = attribute.name();
 

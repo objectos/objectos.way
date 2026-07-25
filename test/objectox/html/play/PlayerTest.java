@@ -18,37 +18,25 @@ package objectox.html.play;
 import static org.testng.Assert.assertEquals;
 
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import objectos.html.Html;
 import objectos.html.Markup;
 import objectox.html.MarkupPojo;
 import org.testng.annotations.Test;
 
 public class PlayerTest {
 
-  private void test(Consumer<? super Markup> html, String expected) {
+  private void test(Consumer<? super Markup> opts, String expected) {
     final MarkupPojo m;
     m = new Markup.OfHtml();
 
-    html.accept(m);
+    opts.accept(m);
 
-    final Player subject;
-    subject = m.toPlayer();
-
-    final StringBuilder out;
-    out = new StringBuilder();
-
-    if (subject.hasNext()) {
-      out.append(subject.next());
-
-      while (subject.hasNext()) {
-        out.append('\n');
-        out.append(subject.next());
-      }
-    }
-
-    out.append('\n');
+    final Html html;
+    html = m.compile();
 
     final String res;
-    res = out.toString();
+    res = html.events().map(Object::toString).collect(Collectors.joining("\n", "", "\n"));
 
     assertEquals(res, expected);
   }

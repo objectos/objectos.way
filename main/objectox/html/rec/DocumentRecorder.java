@@ -17,6 +17,7 @@ package objectox.html.rec;
 
 import objectos.html.AttributeName;
 import objectos.html.ElementName;
+import objectos.html.Html;
 import objectos.html.rec.Fragment0;
 import objectos.html.rec.Fragment1;
 import objectos.html.rec.Fragment2;
@@ -34,6 +35,8 @@ public final class DocumentRecorder {
   private final BooleanAttributeRecorder booleanAttributeRecorder;
 
   private final DoctypeRecorder doctypeRecorder;
+
+  private final DocumentCompiler documentCompiler;
 
   private final ElementRecorder elementRecorder;
 
@@ -54,6 +57,8 @@ public final class DocumentRecorder {
 
       DoctypeRecorder doctypeRecorder,
 
+      DocumentCompiler documentCompiler,
+
       ElementRecorder elementRecorder,
 
       FlattenRecorder flattenRecorder,
@@ -71,6 +76,8 @@ public final class DocumentRecorder {
     this.booleanAttributeRecorder = booleanAttributeRecorder;
 
     this.doctypeRecorder = doctypeRecorder;
+
+    this.documentCompiler = documentCompiler;
 
     this.elementRecorder = elementRecorder;
 
@@ -100,6 +107,8 @@ public final class DocumentRecorder {
 
         new DoctypeRecorder(sink),
 
+        new DocumentCompiler(sink),
+
         new ElementRecorder(sink, contentsRecorder),
 
         new FlattenRecorder(sink, contentsRecorder),
@@ -122,6 +131,10 @@ public final class DocumentRecorder {
 
   public final AttributePointer attribute(AttributeName name, Object value) {
     return attributeRecorder.record(name, value);
+  }
+
+  public final Html compile() {
+    return documentCompiler.compile();
   }
 
   public final void doctype() {

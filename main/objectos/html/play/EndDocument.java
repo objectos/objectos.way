@@ -15,9 +15,9 @@
  */
 package objectos.html.play;
 
-import objectox.html.play.EndDocumentState;
+import objectox.html.play.HtmlEventPojo;
 
 /// The HTML document has ended.
 public sealed interface EndDocument
-    extends Piece
-    permits EndDocumentState {}
+    extends HtmlEvent
+    permits HtmlEventPojo {}

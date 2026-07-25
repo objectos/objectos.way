@@ -18,8 +18,8 @@ package objectos.html.play;
 import objectox.html.play.AttributePiece;
 
 /// An non-boolean attribute in an element start tag.
-public sealed interface Attribute
-    extends Piece
+public sealed interface RenderAttribute
+    extends HtmlEvent
     permits AttributePiece {
 
   /// Returns the attribute name.

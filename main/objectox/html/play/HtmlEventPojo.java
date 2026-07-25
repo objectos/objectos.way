@@ -13,17 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html;
+package objectox.html.play;
 
-import objectos.way.Dom;
+import objectos.html.play.BeginDocument;
+import objectos.html.play.EndDocument;
 
-public final class DomRaw implements Dom.Raw {
+public final class HtmlEventPojo
+    implements
+    BeginDocument,
+    EndDocument {
 
-  String value;
+  static final BeginDocument BEGIN_DOCUMENT = new HtmlEventPojo(BeginDocument.class);
+
+  static final EndDocument END_DOCUMENT = new HtmlEventPojo(EndDocument.class);
+
+  private final String name;
+
+  private HtmlEventPojo(Class<?> type) {
+    this.name = type.getSimpleName();
+  }
 
   @Override
-  public final String value() {
-    return value;
+  public final String toString() {
+    return name;
   }
 
 }

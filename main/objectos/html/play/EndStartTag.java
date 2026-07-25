@@ -19,5 +19,5 @@ import objectox.html.play.EndStartTagState;
 
 /// The start tag of an HTML element has ended.
 public sealed interface EndStartTag
-    extends Piece
+    extends HtmlEvent
     permits EndStartTagState {}

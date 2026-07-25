@@ -15,49 +15,51 @@
  */
 package objectox.html.play;
 
-import objectox.html.HtmlByteProto;
+import objectox.html.rec.HtmlBytes;
 
 final class StartState implements State {
 
-  private final Tape tape;
+  private final HtmlSource source;
 
-  StartState(Tape tape) {
-    this.tape = tape;
+  StartState(HtmlSource source) {
+    this.source = source;
   }
 
   @Override
-  public final State compute() {
-    while (tape.hasByte()) {
+  public final BeginDocumentState compute() {
+    int index;
+    index = 0;
+
+    while (source.hasByte(index)) {
       final byte proto;
-      proto = tape.peekByte();
+      proto = source.getByte(index);
 
       switch (proto) {
-        case HtmlByteProto.LENGTH2 -> {
-          tape.skipByte();
+        case HtmlBytes.xSTARTTAG8 -> throw new UnsupportedOperationException("Implement me");
 
-          final int offset;
-          offset = tape.nextInt16();
+        case HtmlBytes.xSTARTFLAT -> throw new UnsupportedOperationException("Implement me");
 
-          tape.skip(offset);
+        case HtmlBytes.xSTARTFRAG -> throw new UnsupportedOperationException("Implement me");
 
-          continue;
-        }
+        case HtmlBytes.xAMBIGUOUS88, HtmlBytes.xATTRIBUTE88 -> { index += 1 + 1 + 1; continue; }
 
-        case HtmlByteProto.LENGTH3 -> { throw new UnsupportedOperationException("Implement me"); }
+        case HtmlBytes.xAMBIGUOUS816, HtmlBytes.xATTRIBUTE816 -> { index += 1 + 1 + 2; continue; }
 
-        case HtmlByteProto.MARKED3 -> { tape.skip(3); continue; }
+        case HtmlBytes.xAMBIGUOUS824, HtmlBytes.xATTRIBUTE824 -> { index += 1 + 1 + 3; continue; }
 
-        case HtmlByteProto.MARKED4 -> { tape.skip(4); continue; }
+        case HtmlBytes.xBOOLEAN8 -> { index += 1 + 1; continue; }
 
-        case HtmlByteProto.MARKED5 -> { tape.skip(5); continue; }
+        case HtmlBytes.xRAW8, HtmlBytes.xTEXT8 -> { index += 1 + 1; continue; }
 
-        case HtmlByteProto.MARKED6 -> { tape.skip(6); continue; }
+        case HtmlBytes.xRAW16, HtmlBytes.xTEXT16 -> { index += 1 + 2; continue; }
+
+        case HtmlBytes.xRAW24, HtmlBytes.xTEXT24 -> { index += 1 + 3; continue; }
       }
 
       break;
     }
 
-    return new BeginDocumentState(tape);
+    return new BeginDocumentState(source, index);
   }
 
 }

@@ -50,6 +50,11 @@ public sealed interface Markup extends BinaryObject, Testable permits MarkupPojo
 
   }
 
+  /// Returns the HTML declared by this instance as a compiled artifact.
+  ///
+  /// @return a compiled HTML artifact
+  Html compile();
+
   /// Renders the specified attribute at the root of a document or fragment.
   ///
   /// @param object the attribute
@@ -283,88 +288,88 @@ public sealed interface Markup extends BinaryObject, Testable permits MarkupPojo
 
   /// Formats the specified value as a testable table cell with the specified
   /// fixed width (optional operation).
-  /// 
+  ///
   /// @param value the cell value
   /// @param width the fixed width of the cell
-  /// 
+  ///
   /// @return always the cell value
   String testableCell(String value, int width);
 
   /// Formats the specified name and value as a testable field (optional
   /// operation).
-  /// 
+  ///
   /// @param name the field name
   /// @param value the field value
-  /// 
+  ///
   /// @return always the field value
   String testableField(String name, String value);
 
   /// Formats the specified name as a testable field name (optional operation).
-  /// 
+  ///
   /// @param name the field name
-  /// 
+  ///
   /// @return the specified field name
   String testableFieldName(String name);
 
   /// Formats the specified value as a testable field value (optional
   /// operation).
-  /// 
+  ///
   /// @param value the field value
-  /// 
+  ///
   /// @return the specified field value
   String testableFieldValue(String value);
 
   /// Formats the specified value as a testable heading level 1 (optional
   /// operation).
-  /// 
+  ///
   /// @param value the heading value
-  /// 
+  ///
   /// @return the specified value
   String testableH1(String value);
 
   /// Formats the specified value as a testable heading level 2 (optional
   /// operation).
-  /// 
+  ///
   /// @param value the heading value
-  /// 
+  ///
   /// @return the specified value
   String testableH2(String value);
 
   /// Formats the specified value as a testable heading level 3 (optional
   /// operation).
-  /// 
+  ///
   /// @param value the heading value
-  /// 
+  ///
   /// @return the specified value
   String testableH3(String value);
 
   /// Formats the specified value as a testable heading level 4 (optional
   /// operation).
-  /// 
+  ///
   /// @param value the heading value
-  /// 
+  ///
   /// @return the specified value
   String testableH4(String value);
 
   /// Formats the specified value as a testable heading level 5 (optional
   /// operation).
-  /// 
+  ///
   /// @param value the heading value
-  /// 
+  ///
   /// @return the specified value
   String testableH5(String value);
 
   /// Formats the specified value as a testable heading level 6 (optional
   /// operation).
-  /// 
+  ///
   /// @param value the heading value
-  /// 
+  ///
   /// @return the specified value
   String testableH6(String value);
 
   /// Formats a line separator at the testable output exclusively (optional
   /// operation).
-  /// 
+  ///
   /// @return a no-op instruction
   NoOpInstruction testableNewLine();
 
@@ -373,18 +378,18 @@ public sealed interface Markup extends BinaryObject, Testable permits MarkupPojo
   //
 
   /// Renders an HTML element with the specified name and contents.
-  /// 
+  ///
   /// @param name the element name
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element
   ElementInstruction elem(ElementName name, Instruction... contents);
 
   /// Renders an HTML element with the specified name and text.
-  /// 
+  ///
   /// @param name the element name
   /// @param text the text value of this element
-  /// 
+  ///
   /// @return an instruction representing the element
   ElementInstruction elem(ElementName name, String text);
 
@@ -392,989 +397,989 @@ public sealed interface Markup extends BinaryObject, Testable permits MarkupPojo
   void doctype();
 
   /// Renders the `a` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction a(Instruction... contents);
 
   /// Renders the `a` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction a(String text);
 
   /// Renders the `abbr` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction abbr(Instruction... contents);
 
   /// Renders the `abbr` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction abbr(String text);
 
   /// Renders the `article` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction article(Instruction... contents);
 
   /// Renders the `article` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction article(String text);
 
   /// Renders the `aside` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction aside(Instruction... contents);
 
   /// Renders the `aside` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction aside(String text);
 
   /// Renders the `b` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction b(Instruction... contents);
 
   /// Renders the `b` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction b(String text);
 
   /// Renders the `blockquote` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction blockquote(Instruction... contents);
 
   /// Renders the `blockquote` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction blockquote(String text);
 
   /// Renders the `body` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction body(Instruction... contents);
 
   /// Renders the `body` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction body(String text);
 
   /// Renders the `br` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction br(Instruction.OfVoid... contents);
 
   /// Renders the `button` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction button(Instruction... contents);
 
   /// Renders the `button` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction button(String text);
 
   /// Renders the `clipPath` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction clipPath(Instruction... contents);
 
   /// Renders the `code` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction code(Instruction... contents);
 
   /// Renders the `code` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction code(String text);
 
   /// Renders the `dd` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction dd(Instruction... contents);
 
   /// Renders the `dd` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction dd(String text);
 
   /// Renders the `defs` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction defs(Instruction... contents);
 
   /// Renders the `defs` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction defs(String text);
 
   /// Renders the `details` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction details(Instruction... contents);
 
   /// Renders the `details` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction details(String text);
 
   /// Renders the `dialog` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction dialog(Instruction... contents);
 
   /// Renders the `dialog` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction dialog(String text);
 
   /// Renders the `div` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction div(Instruction... contents);
 
   /// Renders the `div` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction div(String text);
 
   /// Renders the `dl` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction dl(Instruction... contents);
 
   /// Renders the `dl` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction dl(String text);
 
   /// Renders the `dt` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction dt(Instruction... contents);
 
   /// Renders the `dt` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction dt(String text);
 
   /// Renders the `em` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction em(Instruction... contents);
 
   /// Renders the `em` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction em(String text);
 
   /// Renders the `fieldset` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction fieldset(Instruction... contents);
 
   /// Renders the `fieldset` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction fieldset(String text);
 
   /// Renders the `figure` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction figure(Instruction... contents);
 
   /// Renders the `figure` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction figure(String text);
 
   /// Renders the `footer` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction footer(Instruction... contents);
 
   /// Renders the `footer` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction footer(String text);
 
   /// Renders the `form` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction form(Instruction... contents);
 
   /// Renders the `g` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction g(Instruction... contents);
 
   /// Renders the `g` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction g(String text);
 
   /// Renders the `h1` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction h1(Instruction... contents);
 
   /// Renders the `h1` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction h1(String text);
 
   /// Renders the `h2` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction h2(Instruction... contents);
 
   /// Renders the `h2` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction h2(String text);
 
   /// Renders the `h3` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction h3(Instruction... contents);
 
   /// Renders the `h3` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction h3(String text);
 
   /// Renders the `h4` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction h4(Instruction... contents);
 
   /// Renders the `h4` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction h4(String text);
 
   /// Renders the `h5` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction h5(Instruction... contents);
 
   /// Renders the `h5` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction h5(String text);
 
   /// Renders the `h6` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction h6(Instruction... contents);
 
   /// Renders the `h6` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction h6(String text);
 
   /// Renders the `head` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction head(Instruction... contents);
 
   /// Renders the `head` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction head(String text);
 
   /// Renders the `header` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction header(Instruction... contents);
 
   /// Renders the `header` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction header(String text);
 
   /// Renders the `hgroup` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction hgroup(Instruction... contents);
 
   /// Renders the `hgroup` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction hgroup(String text);
 
   /// Renders the `hr` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction hr(Instruction.OfVoid... contents);
 
   /// Renders the `html` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction html(Instruction... contents);
 
   /// Renders the `html` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction html(String text);
 
   /// Renders the `img` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction img(Instruction.OfVoid... contents);
 
   /// Renders the `input` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction input(Instruction.OfVoid... contents);
 
   /// Renders the `kbd` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction kbd(Instruction... contents);
 
   /// Renders the `kbd` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction kbd(String text);
 
   /// Renders the `label` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction label(Instruction... contents);
 
   /// Renders the `legend` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction legend(Instruction... contents);
 
   /// Renders the `legend` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction legend(String text);
 
   /// Renders the `li` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction li(Instruction... contents);
 
   /// Renders the `li` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction li(String text);
 
   /// Renders the `link` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction link(Instruction.OfVoid... contents);
 
   /// Renders the `main` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction main(Instruction... contents);
 
   /// Renders the `main` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction main(String text);
 
   /// Renders the `menu` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction menu(Instruction... contents);
 
   /// Renders the `menu` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction menu(String text);
 
   /// Renders the `meta` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction meta(Instruction.OfVoid... contents);
 
   /// Renders the `nav` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction nav(Instruction... contents);
 
   /// Renders the `nav` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction nav(String text);
 
   /// Renders the `noscript` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction noscript(Instruction... contents);
 
   /// Renders the `noscript` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction noscript(String text);
 
   /// Renders the `ol` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction ol(Instruction... contents);
 
   /// Renders the `ol` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction ol(String text);
 
   /// Renders the `optgroup` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction optgroup(Instruction... contents);
 
   /// Renders the `optgroup` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction optgroup(String text);
 
   /// Renders the `option` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction option(Instruction... contents);
 
   /// Renders the `option` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction option(String text);
 
   /// Renders the `p` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction p(Instruction... contents);
 
   /// Renders the `p` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction p(String text);
 
   /// Renders the `path` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction path(Instruction... contents);
 
   /// Renders the `path` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction path(String text);
 
   /// Renders the `pre` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction pre(Instruction... contents);
 
   /// Renders the `pre` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction pre(String text);
 
   /// Renders the `progress` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction progress(Instruction... contents);
 
   /// Renders the `progress` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction progress(String text);
 
   /// Renders the `samp` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction samp(Instruction... contents);
 
   /// Renders the `samp` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction samp(String text);
 
   /// Renders the `script` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction script(Instruction... contents);
 
   /// Renders the `script` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction script(String text);
 
   /// Renders the `section` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction section(Instruction... contents);
 
   /// Renders the `section` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction section(String text);
 
   /// Renders the `select` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction select(Instruction... contents);
 
   /// Renders the `select` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction select(String text);
 
   /// Renders the `small` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction small(Instruction... contents);
 
   /// Renders the `small` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction small(String text);
 
   /// Renders the `span` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction span(Instruction... contents);
 
   /// Renders the `span` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction span(String text);
 
   /// Renders the `strong` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction strong(Instruction... contents);
 
   /// Renders the `strong` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction strong(String text);
 
   /// Renders the `style` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction style(Instruction... contents);
 
   /// Renders the `sub` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction sub(Instruction... contents);
 
   /// Renders the `sub` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction sub(String text);
 
   /// Renders the `summary` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction summary(Instruction... contents);
 
   /// Renders the `summary` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction summary(String text);
 
   /// Renders the `sup` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction sup(Instruction... contents);
 
   /// Renders the `sup` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction sup(String text);
 
   /// Renders the `svg` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction svg(Instruction... contents);
 
   /// Renders the `svg` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction svg(String text);
 
   /// Renders the `table` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction table(Instruction... contents);
 
   /// Renders the `table` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction table(String text);
 
   /// Renders the `tbody` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction tbody(Instruction... contents);
 
   /// Renders the `tbody` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction tbody(String text);
 
   /// Renders the `td` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction td(Instruction... contents);
 
   /// Renders the `td` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction td(String text);
 
   /// Renders the `template` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction template(Instruction... contents);
 
   /// Renders the `template` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction template(String text);
 
   /// Renders the `textarea` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction textarea(Instruction... contents);
 
   /// Renders the `textarea` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction textarea(String text);
 
   /// Renders the `th` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction th(Instruction... contents);
 
   /// Renders the `th` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction th(String text);
 
   /// Renders the `thead` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction thead(Instruction... contents);
 
   /// Renders the `thead` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction thead(String text);
 
   /// Renders the `title` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction title(Instruction... contents);
 
   /// Renders the `tr` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction tr(Instruction... contents);
 
   /// Renders the `tr` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction tr(String text);
 
   /// Renders the `ul` element with the specified content.
-  /// 
+  ///
   /// @param contents the attributes and children of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction ul(Instruction... contents);
 
   /// Renders the `ul` element with the specified text.
-  /// 
+  ///
   /// @param text the text value of the element
-  /// 
+  ///
   /// @return an instruction representing the element.
   ElementInstruction ul(String text);
 
@@ -1383,923 +1388,923 @@ public sealed interface Markup extends BinaryObject, Testable permits MarkupPojo
   //
 
   /// Renders an attribute with the specified name.
-  /// 
+  ///
   /// @param name the attribute name
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction attr(AttributeName name);
 
   /// Renders an attribute with the specified name and value.
-  /// 
+  ///
   /// @param name the attribute name
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction attr(AttributeName name, String value);
 
   /// Renders the `accesskey` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction accesskey(String value);
 
   /// Renders the `action` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction action(String value);
 
   /// Renders the `align` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction align(String value);
 
   /// Renders the `alignment-baseline` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction alignmentBaseline(String value);
 
   /// Renders the `alt` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction alt(String value);
 
   /// Renders the `aria-current` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction ariaCurrent(String value);
 
   /// Renders the `aria-disabled` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction ariaDisabled(String value);
 
   /// Renders the `aria-hidden` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction ariaHidden(String value);
 
   /// Renders the `aria-invalid` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction ariaInvalid(String value);
 
   /// Renders the `aria-label` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction ariaLabel(String value);
 
   /// Renders the `aria-labelledby` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction ariaLabelledBy(String value);
 
   /// Renders the `aria-modal` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction ariaModal(String value);
 
   /// Renders the `aria-placeholder` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction ariaPlaceholder(String value);
 
   /// Renders the `aria-readonly` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction ariaReadonly(String value);
 
   /// Renders the `aria-required` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction ariaRequired(String value);
 
   /// Renders the `aria-selected` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction ariaSelected(String value);
 
   /// Renders the `as` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction as(String value);
 
   /// Renders the `autocomplete` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction autocomplete(String value);
 
   /// Renders the `baseline-shift` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction baselineShift(String value);
 
   /// Renders the `border` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction border(String value);
 
   /// Renders the `cellpadding` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction cellpadding(String value);
 
   /// Renders the `cellspacing` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction cellspacing(String value);
 
   /// Renders the `charset` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction charset(String value);
 
   /// Renders the `cite` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction cite(String value);
 
   /// Renders the `class` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction className(String value);
 
   /// Renders the `clip-rule` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction clipRule(String value);
 
   /// Renders the `closedby` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction closedby(String value);
 
   /// Renders the `color` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction color(String value);
 
   /// Renders the `color-interpolation` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction colorInterpolation(String value);
 
   /// Renders the `color-interpolation-filters` attribute with the specified
   /// value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction colorInterpolationFilters(String value);
 
   /// Renders the `cols` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction cols(String value);
 
   /// Renders the `content` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction content(String value);
 
   /// Renders the `contenteditable` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction contenteditable(String value);
 
   /// Renders the `crossorigin` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction crossorigin(String value);
 
   /// Renders the `cursor` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction cursor(String value);
 
   /// Renders the `d` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction d(String value);
 
   /// Renders the `dir` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction dir(String value);
 
   /// Renders the `direction` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction direction(String value);
 
   /// Renders the `dirname` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction dirname(String value);
 
   /// Renders the `display` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction display(String value);
 
   /// Renders the `dominant-baseline` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction dominantBaseline(String value);
 
   /// Renders the `download` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction download(String value);
 
   /// Renders the `draggable` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction draggable(String value);
 
   /// Renders the `enctype` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction enctype(String value);
 
   /// Renders the `fill` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction fill(String value);
 
   /// Renders the `fill-opacity` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction fillOpacity(String value);
 
   /// Renders the `fill-rule` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction fillRule(String value);
 
   /// Renders the `filter` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction filter(String value);
 
   /// Renders the `flood-color` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction floodColor(String value);
 
   /// Renders the `flood-opacity` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction floodOpacity(String value);
 
   /// Renders the `for` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction forId(String value);
 
   /// Renders the `glyph-orientation-horizontal` attribute with the specified
   /// value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction glyphOrientationHorizontal(String value);
 
   /// Renders the `glyph-orientation-vertical` attribute with the specified
   /// value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction glyphOrientationVertical(String value);
 
   /// Renders the `height` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction height(String value);
 
   /// Renders the `href` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction href(String value);
 
   /// Renders the `http-equiv` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction httpEquiv(String value);
 
   /// Renders the `id` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction id(String value);
 
   /// Renders the `image-rendering` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction imageRendering(String value);
 
   /// Renders the `integrity` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction integrity(String value);
 
   /// Renders the `lang` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction lang(String value);
 
   /// Renders the `letter-spacing` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction letterSpacing(String value);
 
   /// Renders the `lighting-color` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction lightingColor(String value);
 
   /// Renders the `marker-end` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction markerEnd(String value);
 
   /// Renders the `marker-mid` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction markerMid(String value);
 
   /// Renders the `marker-start` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction markerStart(String value);
 
   /// Renders the `mask` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction mask(String value);
 
   /// Renders the `mask-type` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction maskType(String value);
 
   /// Renders the `maxlength` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction maxlength(String value);
 
   /// Renders the `media` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction media(String value);
 
   /// Renders the `method` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction method(String value);
 
   /// Renders the `minlength` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction minlength(String value);
 
   /// Renders the `name` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction name(String value);
 
   /// Renders the `onclick` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction onclick(String value);
 
   /// Renders the `onclick` attribute with the specified action.
-  /// 
+  ///
   /// @param value the action to be executed
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction onclick(JsAction value);
 
   /// Renders the `onload` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction onload(String value);
 
   /// Renders the `onload` attribute with the specified action.
-  /// 
+  ///
   /// @param value the action to be executed
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction onload(JsAction value);
 
   /// Renders the `onpopstate` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction onpopstate(String value);
 
   /// Renders the `onpopstate` attribute with the specified action.
-  /// 
+  ///
   /// @param value the action to be executed
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction onpopstate(JsAction value);
 
   /// Renders the `onsubmit` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction onsubmit(String value);
 
   /// Renders the `onsubmit` attribute with the specified action.
-  /// 
+  ///
   /// @param value the action to be executed
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction onsubmit(JsAction value);
 
   /// Renders the `opacity` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction opacity(String value);
 
   /// Renders the `overflow` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction overflow(String value);
 
   /// Renders the `paint-order` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction paintOrder(String value);
 
   /// Renders the `placeholder` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction placeholder(String value);
 
   /// Renders the `pointer-events` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction pointerEvents(String value);
 
   /// Renders the `property` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction property(String value);
 
   /// Renders the `referrerpolicy` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction referrerpolicy(String value);
 
   /// Renders the `rel` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction rel(String value);
 
   /// Renders the `rev` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction rev(String value);
 
   /// Renders the `role` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction role(String value);
 
   /// Renders the `rows` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction rows(String value);
 
   /// Renders the `shape-rendering` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction shapeRendering(String value);
 
   /// Renders the `size` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction size(String value);
 
   /// Renders the `sizes` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction sizes(String value);
 
   /// Renders the `spellcheck` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction spellcheck(String value);
 
   /// Renders the `src` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction src(String value);
 
   /// Renders the `srcset` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction srcset(String value);
 
   /// Renders the `start` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction start(String value);
 
   /// Renders the `stop-color` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction stopColor(String value);
 
   /// Renders the `stop-opacity` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction stopOpacity(String value);
 
   /// Renders the `stroke` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction stroke(String value);
 
   /// Renders the `stroke-dasharray` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction strokeDasharray(String value);
 
   /// Renders the `stroke-dashoffset` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction strokeDashoffset(String value);
 
   /// Renders the `stroke-linecap` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction strokeLinecap(String value);
 
   /// Renders the `stroke-linejoin` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction strokeLinejoin(String value);
 
   /// Renders the `stroke-miterlimit` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction strokeMiterlimit(String value);
 
   /// Renders the `stroke-opacity` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction strokeOpacity(String value);
 
   /// Renders the `stroke-width` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction strokeWidth(String value);
 
   /// Renders the `tabindex` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction tabindex(String value);
 
   /// Renders the `target` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction target(String value);
 
   /// Renders the `text-anchor` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction textAnchor(String value);
 
   /// Renders the `text-decoration` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction textDecoration(String value);
 
   /// Renders the `text-overflow` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction textOverflow(String value);
 
   /// Renders the `text-rendering` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction textRendering(String value);
 
   /// Renders the `transform` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction transform(String value);
 
   /// Renders the `transform-origin` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction transformOrigin(String value);
 
   /// Renders the `translate` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction translate(String value);
 
   /// Renders the `type` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction type(String value);
 
   /// Renders the `unicode-bidi` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction unicodeBidi(String value);
 
   /// Renders the `value` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction value(String value);
 
   /// Renders the `vector-effect` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction vectorEffect(String value);
 
   /// Renders the `viewBox` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction viewBox(String value);
 
   /// Renders the `visibility` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction visibility(String value);
 
   /// Renders the `white-space` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction whiteSpace(String value);
 
   /// Renders the `width` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction width(String value);
 
   /// Renders the `word-spacing` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction wordSpacing(String value);
 
   /// Renders the `wrap` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction wrap(String value);
 
   /// Renders the `writing-mode` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction writingMode(String value);
 
   /// Renders the `xmlns` attribute with the specified value.
-  /// 
+  ///
   /// @param value the attribute value
-  /// 
+  ///
   /// @return an instruction representing the attribute
   AttributeInstruction xmlns(String value);
 
@@ -2309,41 +2314,41 @@ public sealed interface Markup extends BinaryObject, Testable permits MarkupPojo
 
   /// Renders the `clip-path` attribute or the `clipPath` element with the
   /// specified text.
-  /// 
+  ///
   /// @param text the attribute value or the text content of the element
-  /// 
+  ///
   /// @return an instruction representing the attribute or the element
   AmbiguousInstruction clipPath(String text);
 
   /// Renders the `form` attribute or the `form` element with the specified
   /// text.
-  /// 
+  ///
   /// @param text the attribute value or the text content of the element
-  /// 
+  ///
   /// @return an instruction representing the attribute or the element
   AmbiguousInstruction form(String text);
 
   /// Renders the `label` attribute or the `label` element with the specified
   /// text.
-  /// 
+  ///
   /// @param text the attribute value or the text content of the element
-  /// 
+  ///
   /// @return an instruction representing the attribute or the element
   AmbiguousInstruction label(String text);
 
   /// Renders the `style` attribute or the `style` element with the specified
   /// text.
-  /// 
+  ///
   /// @param text the attribute value or the text content of the element
-  /// 
+  ///
   /// @return an instruction representing the attribute or the element
   AmbiguousInstruction style(String text);
 
   /// Renders the `title` attribute or the `title` element with the specified
   /// text.
-  /// 
+  ///
   /// @param text the attribute value or the text content of the element
-  /// 
+  ///
   /// @return an instruction representing the attribute or the element
   AmbiguousInstruction title(String text);
 
@@ -2352,23 +2357,23 @@ public sealed interface Markup extends BinaryObject, Testable permits MarkupPojo
   //
 
   /// Renders the non-breaking space `&nbsp;` HTML character entity.
-  /// 
+  ///
   /// @return an instruction representing the non-breaking space
   ///         character entity.
   RawInstruction nbsp();
 
   /// Renders the specified value as raw HTML.
-  /// 
+  ///
   /// @param value the raw HTML value
-  /// 
+  ///
   /// @return a raw HTML instruction
   RawInstruction raw(String value);
 
   /// Renders a text node with the specified value. The text value is escaped
   /// before being emitted to the output.
-  /// 
+  ///
   /// @param value the text value
-  /// 
+  ///
   /// @return an instruction representing the text node
   TextInstruction text(String value);
 

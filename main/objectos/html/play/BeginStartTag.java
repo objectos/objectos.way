@@ -19,7 +19,7 @@ import objectox.html.play.BeginStartTagState;
 
 /// The start tag of an HTML element has begun.
 public sealed interface BeginStartTag
-    extends Piece
+    extends HtmlEvent
     permits BeginStartTagState {
 
   /// Returns the name of the HTML element.

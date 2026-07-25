@@ -17,7 +17,7 @@ package objectox.html.play;
 
 import objectos.html.ElementName;
 import objectos.html.play.BeginStartTag;
-import objectos.html.play.Piece;
+import objectos.html.play.HtmlEvent;
 
 public final class BeginStartTagState implements BeginStartTag, State {
 
@@ -50,7 +50,7 @@ public final class BeginStartTagState implements BeginStartTag, State {
   }
 
   @Override
-  public final Piece next() {
+  public final HtmlEvent next() {
     return this;
   }
 

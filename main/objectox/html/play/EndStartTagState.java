@@ -17,7 +17,7 @@ package objectox.html.play;
 
 import objectos.html.ElementName;
 import objectos.html.play.EndStartTag;
-import objectos.html.play.Piece;
+import objectos.html.play.HtmlEvent;
 
 public final class EndStartTagState implements EndStartTag, State {
 
@@ -45,7 +45,7 @@ public final class EndStartTagState implements EndStartTag, State {
   }
 
   @Override
-  public final Piece next() {
+  public final HtmlEvent next() {
     return this;
   }
 

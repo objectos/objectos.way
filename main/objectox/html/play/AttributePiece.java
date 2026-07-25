@@ -16,9 +16,9 @@
 package objectox.html.play;
 
 import objectos.html.AttributeName;
-import objectos.html.play.Attribute;
+import objectos.html.play.RenderAttribute;
 
-public record AttributePiece(AttributeName attributeName, String value) implements Attribute {
+public record AttributePiece(AttributeName attributeName, String value) implements RenderAttribute {
 
   @Override
   public final String name() {

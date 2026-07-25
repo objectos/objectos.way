@@ -15,25 +15,14 @@
  */
 package objectox.html.play;
 
-import objectos.html.play.Piece;
+import objectos.html.play.HtmlEvent;
 
 interface State {
 
-  static UnsupportedOperationException implMe(byte proto) {
-    final String msg;
-    msg = "Implement me :: proto=%d".formatted(proto);
-
-    throw new UnsupportedOperationException(msg);
-  }
-
   State compute();
 
-  default boolean hasNext() {
-    throw new IllegalStateException("This is an intermediate state: " + getClass());
-  }
-
-  default Piece next() {
-    throw new IllegalStateException("This is an intermediate state: " + getClass());
+  default HtmlEvent event() {
+    return null;
   }
 
 }

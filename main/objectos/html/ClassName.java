@@ -16,7 +16,6 @@
 package objectos.html;
 
 import java.util.Objects;
-import objectos.way.Html;
 import objectox.html.attr.AttributeNamePojo;
 import objectox.html.attr.ClassNamePojo;
 

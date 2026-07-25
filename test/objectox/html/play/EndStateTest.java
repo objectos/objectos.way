@@ -23,7 +23,7 @@ import org.testng.annotations.Test;
 
 public class EndStateTest {
 
-  private final EndState subject = EndState.INSTANCE;
+  private final StopState subject = StopState.INSTANCE;
 
   @Test
   public void compute00() {

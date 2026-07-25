@@ -16,10 +16,10 @@
 package objectox.html.play;
 
 import objectos.html.ElementName;
-import objectos.html.play.EndTag;
-import objectos.html.play.Piece;
+import objectos.html.play.RenderEndTag;
+import objectos.html.play.HtmlEvent;
 
-public final class EndTagState implements EndTag, State {
+public final class EndTagState implements RenderEndTag, State {
 
   private final Tape tape;
 
@@ -52,7 +52,7 @@ public final class EndTagState implements EndTag, State {
   }
 
   @Override
-  public final Piece next() {
+  public final HtmlEvent next() {
     return this;
   }
 

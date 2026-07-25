@@ -20,6 +20,7 @@ import java.util.Collection;
 import objectos.html.AttributeName;
 import objectos.html.AttributeObject;
 import objectos.html.ElementName;
+import objectos.html.Html;
 import objectos.html.Markup;
 import objectos.html.rec.AmbiguousInstruction;
 import objectos.html.rec.AttributeInstruction;
@@ -49,9 +50,10 @@ public sealed abstract class MarkupPojo
     recorder = DocumentRecorder.create();
   }
 
-  // ##################################################################
-  // # BEGIN: Public API
-  // ##################################################################
+  @Override
+  public final Html compile() {
+    return recorder.compile();
+  }
 
   @Override
   public final String toHtml() {

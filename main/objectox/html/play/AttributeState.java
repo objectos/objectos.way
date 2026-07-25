@@ -16,7 +16,7 @@
 package objectox.html.play;
 
 import objectos.html.ElementName;
-import objectos.html.play.Piece;
+import objectos.html.play.HtmlEvent;
 
 public final class AttributeState implements State {
 
@@ -48,7 +48,7 @@ public final class AttributeState implements State {
   }
 
   @Override
-  public final Piece next() {
+  public final HtmlEvent next() {
     return attribute;
   }
 

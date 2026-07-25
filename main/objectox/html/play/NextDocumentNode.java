@@ -15,18 +15,20 @@
  */
 package objectox.html.play;
 
-import objectox.html.HtmlByteProto;
-
 final class NextDocumentNode {
 
-  private final Tape tape;
+  private final HtmlSource source;
 
-  NextDocumentNode(Tape tape) {
-    this.tape = tape;
+  private final int startIndex;
+
+  NextDocumentNode(HtmlSource source, int startIndex) {
+    this.source = source;
+
+    this.startIndex = startIndex;
   }
 
   public final State compute() {
-    if (tape.hasByte()) {
+    if (source.hasByte(startIndex)) {
       return compute0();
     } else {
       return EndDocumentState.INSTANCE;
@@ -34,14 +36,7 @@ final class NextDocumentNode {
   }
 
   private State compute0() {
-    final byte proto;
-    proto = tape.nextByte();
-
-    return switch (proto) {
-      case HtmlByteProto.ELEMENT -> new NextDocumentElement(tape).compute();
-
-      default -> throw State.implMe(proto);
-    };
+    throw new UnsupportedOperationException("Implement me");
   }
 
 }

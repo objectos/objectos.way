@@ -28,7 +28,7 @@ public class BeginStartTagStateTest {
   @Test
   public void compute01() {
     final Tape tape;
-    tape = TapeY.create(opts -> {
+    tape = HtmlSourceY.create(opts -> {
       opts.main(
           HtmlByteProto.ELEMENT,
           HtmlBytes.encodeInt0(5),
@@ -57,7 +57,7 @@ public class BeginStartTagStateTest {
   @Test
   public void compute02() {
     final Tape tape;
-    tape = TapeY.create(opts -> {
+    tape = HtmlSourceY.create(opts -> {
       opts.main(
           HtmlByteProto.MARKED5,
           (byte) AttributeNamePojo.LANG.index(),
@@ -96,7 +96,7 @@ public class BeginStartTagStateTest {
   @Test
   public void compute04() {
     final Tape tape;
-    tape = TapeY.create(opts -> {
+    tape = HtmlSourceY.create(opts -> {
       opts.main(
           HtmlByteProto.LENGTH2,
           HtmlBytes.encodeInt0(5),

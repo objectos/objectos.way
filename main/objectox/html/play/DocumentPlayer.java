@@ -15,26 +15,53 @@
  */
 package objectox.html.play;
 
+import java.util.Iterator;
 import java.util.NoSuchElementException;
-import objectos.html.play.Piece;
+import objectos.html.play.HtmlEvent;
 
-enum EndState implements State {
+public final class DocumentPlayer implements Iterator<HtmlEvent> {
 
-  INSTANCE;
+  private boolean computed;
 
-  @Override
-  public final State compute() {
-    return this;
+  private int index;
+
+  private HtmlEvent next;
+
+  private final Tape source;
+
+  DocumentPlayer(Tape source) {
+    this.source = source;
   }
 
   @Override
   public final boolean hasNext() {
-    return false;
+    if (!computed) {
+      next = computeNext();
+
+      computed = true;
+    }
+
+    return next != null;
   }
 
   @Override
-  public final Piece next() {
-    throw new NoSuchElementException();
+  public final HtmlEvent next() {
+    if (!hasNext()) {
+      throw new NoSuchElementException();
+    } else {
+      final HtmlEvent result;
+      result = next;
+
+      computed = false;
+
+      next = null;
+
+      return result;
+    }
+  }
+
+  final HtmlEvent computeNext() {
+    return null;
   }
 
 }

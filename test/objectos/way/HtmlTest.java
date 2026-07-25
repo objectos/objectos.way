@@ -17,6 +17,7 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.html.Html;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 

@@ -18,8 +18,8 @@ package objectos.html.play;
 import objectox.html.play.EndTagState;
 
 /// The end tag of an HTML element.
-public sealed interface EndTag
-    extends Piece
+public sealed interface RenderEndTag
+    extends HtmlEvent
     permits EndTagState {
 
   /// Returns the name of the HTML element.

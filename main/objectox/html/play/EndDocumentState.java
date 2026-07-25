@@ -15,26 +15,20 @@
  */
 package objectox.html.play;
 
-import objectos.html.play.EndDocument;
-import objectos.html.play.Piece;
+import objectos.html.play.HtmlEvent;
 
-public enum EndDocumentState implements EndDocument, State {
+public enum EndDocumentState implements State {
 
   INSTANCE;
 
   @Override
   public final State compute() {
-    return EndState.INSTANCE;
+    return StopState.INSTANCE;
   }
 
   @Override
-  public final boolean hasNext() {
-    return true;
-  }
-
-  @Override
-  public final Piece next() {
-    return this;
+  public final HtmlEvent event() {
+    return HtmlEventPojo.END_DOCUMENT;
   }
 
   @Override
