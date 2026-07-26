@@ -41,8 +41,8 @@ public class StartStateTest {
 
   @Test(description = "<html></html>")
   public void compute01() {
-    final HtmlSource source;
-    source = CtxY.create(opts -> {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
       opts.addByte(HtmlBytes.STARTTAG8);
       opts.addInt8(ElementNamePojo.HTML.index());
       opts.addByte(HtmlBytes.VALUES8);
@@ -52,12 +52,12 @@ public class StartStateTest {
     });
 
     final StartState subject;
-    subject = new StartState(source);
+    subject = new StartState(ctx);
 
-    final BeginDocumentTransition res;
+    final State res;
     res = subject.compute();
 
-    assertEquals(res.startIndex, 0);
+    assertEquals(res, State.BEGIN_DOCUMENT);
   }
 
 }

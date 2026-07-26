@@ -17,6 +17,8 @@ package objectox.html.play;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.NoSuchElementException;
+import objectos.html.play.HtmlEvent;
 import org.testng.annotations.Test;
 
 public class CtxTest {
@@ -39,6 +41,26 @@ public class CtxTest {
     assertEquals(subject.hasByte(), false);
   }
 
+  @Test(description = "false when result is null")
+  public void hasEvent01() {
+    final Ctx subject;
+    subject = CtxY.create(_ -> {});
+
+    subject.result(null);
+
+    assertEquals(subject.hasEvent(), false);
+  }
+
+  @Test(description = "true when result is set")
+  public void hasEvent02() {
+    final Ctx subject;
+    subject = CtxY.create(_ -> {});
+
+    subject.result(HtmlEventPojo.BEGIN_DOCUMENT);
+
+    assertEquals(subject.hasEvent(), true);
+  }
+
   @Test(description = "iterate over code bytes")
   public void nextByte01() {
     final Ctx subject;
@@ -55,6 +77,33 @@ public class CtxTest {
     assertEquals(subject.hasByte(), true);
     assertEquals(subject.nextByte(), 3);
     assertEquals(subject.hasByte(), false);
+  }
+
+  @Test(
+      description = "throws when no event",
+      expectedExceptions = NoSuchElementException.class)
+  public void nextEvent01() {
+    final Ctx subject;
+    subject = CtxY.create(_ -> {});
+
+    subject.nextEvent();
+  }
+
+  @Test(description = "returns the result and clears state")
+  public void nextEvent02() {
+    final Ctx subject;
+    subject = CtxY.create(_ -> {});
+
+    subject.result(HtmlEventPojo.BEGIN_DOCUMENT);
+
+    assertEquals(subject.hasEvent(), true);
+
+    final HtmlEvent res;
+    res = subject.nextEvent();
+
+    assertEquals(res, HtmlEventPojo.BEGIN_DOCUMENT);
+
+    assertEquals(subject.hasEvent(), false);
   }
 
   @Test(description = "push and pop")
@@ -80,6 +129,77 @@ public class CtxTest {
 
     assertEquals(subject.hasByte(), true);
     assertEquals(subject.nextByte(), 3);
+    assertEquals(subject.hasByte(), false);
+  }
+
+  @Test(description = "sets the result")
+  public void result01() {
+    final Ctx subject;
+    subject = CtxY.create(_ -> {});
+
+    subject.result(HtmlEventPojo.BEGIN_DOCUMENT);
+
+    assertEquals(subject.hasEvent(), true);
+  }
+
+  @Test(
+      description = "throws when already set",
+      expectedExceptions = IllegalStateException.class,
+      expectedExceptionsMessageRegExp = "Result has not been consumed yet")
+  public void result02() {
+    final Ctx subject;
+    subject = CtxY.create(_ -> {});
+
+    subject.result(HtmlEventPojo.BEGIN_DOCUMENT);
+    subject.result(HtmlEventPojo.END_DOCUMENT);
+  }
+
+  @Test(description = "true initially")
+  public void shouldCompute01() {
+    final Ctx subject;
+    subject = CtxY.create(_ -> {});
+
+    assertEquals(subject.shouldCompute(), true);
+  }
+
+  @Test(description = "false after result, true after nextEvent")
+  public void shouldCompute02() {
+    final Ctx subject;
+    subject = CtxY.create(_ -> {});
+
+    subject.result(HtmlEventPojo.BEGIN_DOCUMENT);
+
+    assertEquals(subject.shouldCompute(), false);
+
+    subject.nextEvent();
+
+    assertEquals(subject.shouldCompute(), true);
+  }
+
+  @Test(description = "advances position")
+  public void skip01() {
+    final Ctx subject;
+    subject = CtxY.create(opts -> {
+      opts.addByte((byte) 1);
+      opts.addByte((byte) 2);
+      opts.addByte((byte) 3);
+    });
+
+    subject.skip(2);
+
+    assertEquals(subject.nextByte(), 3);
+  }
+
+  @Test(description = "skip past end makes hasByte false")
+  public void skip02() {
+    final Ctx subject;
+    subject = CtxY.create(opts -> {
+      opts.addByte((byte) 1);
+      opts.addByte((byte) 2);
+    });
+
+    subject.skip(2);
+
     assertEquals(subject.hasByte(), false);
   }
 

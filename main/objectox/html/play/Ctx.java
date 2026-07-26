@@ -15,6 +15,7 @@
  */
 package objectox.html.play;
 
+import java.util.NoSuchElementException;
 import objectos.html.play.HtmlEvent;
 import objectos.internal.Util;
 
@@ -22,7 +23,11 @@ final class Ctx {
 
   private final byte[] code;
 
+  private boolean computed;
+
   private final Object[] objects;
+
+  private HtmlEvent result;
 
   private int[] stack = Util.EMPTY_INT_ARRAY;
 
@@ -41,11 +46,22 @@ final class Ctx {
   }
 
   public final boolean hasEvent() {
-    throw new UnsupportedOperationException("Implement me");
+    return result != null;
   }
 
   public final HtmlEvent nextEvent() {
-    throw new UnsupportedOperationException("Implement me");
+    if (!computed) {
+      throw new NoSuchElementException();
+    }
+
+    final HtmlEvent res;
+    res = result;
+
+    computed = false;
+
+    result = null;
+
+    return res;
   }
 
   public final byte nextByte() {
@@ -69,15 +85,24 @@ final class Ctx {
   }
 
   public final boolean shouldCompute() {
-    throw new UnsupportedOperationException("Implement me");
+    return !computed;
   }
 
   public final void skip(int value) {
-    throw new UnsupportedOperationException("Implement me");
+    stack[stackIndex] += value;
   }
 
-  public final void result(HtmlEvent event) {
-    throw new UnsupportedOperationException("Implement me");
+  public final void result(HtmlEvent value) {
+    if (computed) {
+      final String msg;
+      msg = "Result has not been consumed yet";
+
+      throw new IllegalStateException(msg);
+    }
+
+    computed = true;
+
+    result = value;
   }
 
 }
