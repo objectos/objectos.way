@@ -15,8 +15,7 @@
  */
 package objectox.html.play;
 
-import objectos.html.ElementName;
-import objectox.html.elem.ElementNamePojo;
+import objectox.html.IntSize;
 import objectox.html.rec.HtmlBytes;
 
 final class NextDocumentNode {
@@ -40,26 +39,27 @@ final class NextDocumentNode {
   }
 
   private State compute0() {
-    int idx;
-    idx = startIndex;
-
     final byte node;
-    node = source.getByte(idx++);
+    node = source.getByte(startIndex);
 
     return switch (node) {
-      case HtmlBytes.STARTTAG8 -> element(idx, source.endInt8(idx));
+      case HtmlBytes.STARTTAG8 -> element(IntSize.BIT8);
 
       default -> throw new UnsupportedOperationException("Implement me :: node=" + node);
     };
   }
 
-  private State element(final int nameStart, final int nameEnd) {
-    final int nameIndex;
-    nameIndex = source.getInt(nameStart, nameEnd);
+  private State element(final IntSize size) {
+    final NextElement next;
+    next = new NextElement(source, startIndex, size);
 
-    final ElementName elementName = ElementNamePojo.get(nameIndex);
+    final int returnIndex;
+    returnIndex = next.endIndex();
 
-    return null;
+    final Frame frame;
+    frame = new Frame(FrameKind.DOCUMENT, returnIndex);
+
+    return next.compute(frame);
   }
 
 }

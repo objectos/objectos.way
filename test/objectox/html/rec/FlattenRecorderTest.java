@@ -47,7 +47,8 @@ public class FlattenRecorderTest {
 
         HtmlSinkY.create(opts -> {
           opts.addByte(HtmlBytes.STARTFLAT);
-          opts.addByte(HtmlBytes.VALUES0);
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(0);
         })
     );
   }

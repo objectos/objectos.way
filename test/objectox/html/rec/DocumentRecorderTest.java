@@ -85,7 +85,8 @@ public class DocumentRecorderTest {
         HtmlSinkY.create(opts -> {
           opts.addByte(HtmlBytes.STARTTAG8);
           opts.addInt8(name.index());
-          opts.addByte(HtmlBytes.VALUES0);
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(0);
           opts.addByte(HtmlBytes.ENDTAG8);
           opts.addInt8(name.index());
         })
@@ -178,7 +179,8 @@ public class DocumentRecorderTest {
         HtmlSinkY.create(opts -> {
           opts.addByte(HtmlBytes.xSTARTTAG8);
           opts.addInt8(ElementNamePojo.HEAD.index());
-          opts.addByte(HtmlBytes.VALUES0);
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(0);
           opts.addByte(HtmlBytes.ENDTAG8);
           opts.addInt8(ElementNamePojo.HEAD.index());
           opts.addByte(HtmlBytes.STARTTAG8);
@@ -219,13 +221,15 @@ public class DocumentRecorderTest {
         HtmlSinkY.create(opts -> {
           int li0 = opts.addByte(HtmlBytes.xSTARTTAG8);
           opts.addInt8(ElementNamePojo.LI.index());
-          opts.addByte(HtmlBytes.VALUES0);
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(0);
           opts.addByte(HtmlBytes.ENDTAG8);
           opts.addInt8(ElementNamePojo.LI.index());
 
           int li1 = opts.addByte(HtmlBytes.xSTARTTAG8);
           opts.addInt8(ElementNamePojo.LI.index());
-          opts.addByte(HtmlBytes.VALUES0);
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(0);
           opts.addByte(HtmlBytes.ENDTAG8);
           opts.addInt8(ElementNamePojo.LI.index());
 

@@ -33,6 +33,7 @@ public class HtmlBytesGen {
 
     value("STARTTAG8");
     value("ENDTAG8");
+    value("VOIDELEM");
 
     comment("attributes");
 
@@ -70,7 +71,6 @@ public class HtmlBytesGen {
 
     comment("contents");
 
-    value("VALUES0");
     value("VALUES8");
     value("VALUES16");
     value("VALUES24");
@@ -78,7 +78,6 @@ public class HtmlBytesGen {
     comment("xelement");
 
     value("xSTARTTAG8");
-    value("xENDTAG8");
 
     comment("xattributes");
 

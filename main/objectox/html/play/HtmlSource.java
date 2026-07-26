@@ -21,6 +21,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import objectos.html.Html;
 import objectos.html.play.HtmlEvent;
+import objectox.html.IntSize;
 import objectox.html.rec.HtmlSink;
 
 public final class HtmlSource implements Html {
@@ -49,36 +50,17 @@ public final class HtmlSource implements Html {
     return StreamSupport.stream(spliterator, false);
   }
 
-  public final int endInt8(int index) {
-    return index + 1;
-  }
-
-  public final int endInt16(int index) {
-    return index + 2;
-  }
-
-  public final int endInt24(int index) {
-    return index + 3;
-  }
-
   public final byte getByte(int index) {
     return code[index];
   }
 
-  public final int getInt(int startIndex, int endIndex) {
-    final int length;
-    length = endIndex - startIndex;
+  public final int getInt(int index, IntSize size) {
+    return switch (size) {
+      case BIT8 -> toInt(index, 0);
 
-    return switch (length) {
-      case 1 -> toInt(startIndex, 0);
+      case BIT16 -> toInt(index, 8) | toInt(index + 1, 0);
 
-      case 2 -> toInt(startIndex, 8) | toInt(startIndex + 1, 0);
-
-      case 3 -> toInt(startIndex, 16) | toInt(startIndex + 1, 8) | toInt(startIndex + 2, 0);
-
-      default -> throw new IllegalArgumentException(
-          "Invalid byte count: " + length
-      );
+      case BIT24 -> toInt(index, 16) | toInt(index + 1, 8) | toInt(index + 2, 0);
     };
   }
 

@@ -17,6 +17,7 @@ package objectox.html.play;
 
 import static org.testng.Assert.assertEquals;
 
+import objectox.html.IntSize;
 import org.testng.annotations.Test;
 
 public class HtmlSourceTest {
@@ -28,14 +29,8 @@ public class HtmlSourceTest {
       sink.addInt8(42);
     });
 
-    final int start;
-    start = 0;
-
-    final int end;
-    end = source.endInt8(start);
-
     final int res;
-    res = source.getInt(start, end);
+    res = source.getInt(0, IntSize.BIT8);
 
     assertEquals(res, 42);
   }
@@ -47,14 +42,8 @@ public class HtmlSourceTest {
       sink.addInt8(255);
     });
 
-    final int start;
-    start = 0;
-
-    final int end;
-    end = source.endInt8(start);
-
     final int res;
-    res = source.getInt(start, end);
+    res = source.getInt(0, IntSize.BIT8);
 
     assertEquals(res, 255);
   }
@@ -66,14 +55,8 @@ public class HtmlSourceTest {
       sink.addInt16(12345);
     });
 
-    final int start;
-    start = 0;
-
-    final int end;
-    end = source.endInt16(start);
-
     final int res;
-    res = source.getInt(start, end);
+    res = source.getInt(0, IntSize.BIT16);
 
     assertEquals(res, 12345);
   }
@@ -85,14 +68,8 @@ public class HtmlSourceTest {
       sink.addInt16(65535);
     });
 
-    final int start;
-    start = 0;
-
-    final int end;
-    end = source.endInt16(start);
-
     final int res;
-    res = source.getInt(start, end);
+    res = source.getInt(0, IntSize.BIT16);
 
     assertEquals(res, 65535);
   }
@@ -104,14 +81,8 @@ public class HtmlSourceTest {
       sink.addInt24(987654);
     });
 
-    final int start;
-    start = 0;
-
-    final int end;
-    end = source.endInt24(start);
-
     final int res;
-    res = source.getInt(start, end);
+    res = source.getInt(0, IntSize.BIT24);
 
     assertEquals(res, 987654);
   }
@@ -123,36 +94,10 @@ public class HtmlSourceTest {
       sink.addInt24(16777215);
     });
 
-    final int start;
-    start = 0;
-
-    final int end;
-    end = source.endInt24(start);
-
     final int res;
-    res = source.getInt(start, end);
+    res = source.getInt(0, IntSize.BIT24);
 
     assertEquals(res, 16777215);
-  }
-
-  @Test(
-      description = "reject 4 or more bytes",
-      expectedExceptions = IllegalArgumentException.class)
-  public void getInt07() {
-    final HtmlSource source;
-    source = HtmlSourceY.create(_ -> {});
-
-    source.getInt(0, 4);
-  }
-
-  @Test(
-      description = "reject negative byte length",
-      expectedExceptions = IllegalArgumentException.class)
-  public void getInt08() {
-    final HtmlSource source;
-    source = HtmlSourceY.create(_ -> {});
-
-    source.getInt(1, 0);
   }
 
 }

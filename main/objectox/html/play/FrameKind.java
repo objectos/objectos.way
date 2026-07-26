@@ -17,14 +17,6 @@ package objectox.html.play;
 
 enum FrameKind {
 
-  DOC_ELEMENT,
-
-  ELEMENT_NODES,
-
-  NEXT_ATTRIBUTE,
-
-  NEXT_ELEMENT_NODE,
-
-  ELEMENT_CHILD;
+  DOCUMENT;
 
 }

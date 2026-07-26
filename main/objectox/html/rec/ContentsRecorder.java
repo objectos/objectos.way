@@ -40,7 +40,9 @@ final class ContentsRecorder {
     length = instructions.length;
 
     if (length == 0) {
-      sink.addByte(HtmlBytes.VALUES0);
+      sink.addByte(HtmlBytes.VALUES8);
+
+      sink.addInt8(0);
     } else {
       record0(instructions, length);
     }

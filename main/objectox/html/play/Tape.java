@@ -27,7 +27,7 @@ final class Tape {
 
   private final Object[] objects;
 
-  private Frame[] frames = new Frame[10];
+  private Parent[] frames = new Parent[10];
 
   private int framesIndex;
 
@@ -37,7 +37,7 @@ final class Tape {
     this.objects = objects.unwrap();
   }
 
-  Tape(byte[] main, int mainIndex, Object[] objects, Frame[] frames, int framesIndex) {
+  Tape(byte[] main, int mainIndex, Object[] objects, Parent[] frames, int framesIndex) {
     this.main = main;
 
     this.mainIndex = mainIndex;
@@ -118,7 +118,7 @@ final class Tape {
   public final FrameKind pop() {
     framesIndex--;
 
-    final Frame f;
+    final Parent f;
     f = frames[framesIndex];
 
     mainIndex = f.index();
@@ -139,7 +139,7 @@ final class Tape {
 
     frames = Util.growIfNecessary(frames, idx);
 
-    frames[idx] = new Frame(kind, value);
+    frames[idx] = new Parent(kind, value);
   }
 
   public final void skip(int value) {
