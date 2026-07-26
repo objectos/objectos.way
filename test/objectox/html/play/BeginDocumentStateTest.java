@@ -17,6 +17,7 @@ package objectox.html.play;
 
 import static org.testng.Assert.assertEquals;
 
+import objectox.html.IntSize;
 import objectox.html.elem.ElementNamePojo;
 import objectox.html.rec.HtmlBytes;
 import org.testng.annotations.Test;
@@ -26,13 +27,13 @@ public class BeginDocumentStateTest {
   @Test
   public void compute00() {
     final HtmlSource source;
-    source = HtmlSourceY.create(_ -> {});
+    source = CtxY.create(_ -> {});
 
-    final BeginDocumentState subject;
-    subject = new BeginDocumentState(source, 0);
+    final BeginDocumentTransition subject;
+    subject = new BeginDocumentTransition(source, 0);
 
     final State res;
-    res = subject.compute();
+    res = subject.nextState();
 
     assertEquals(res.getClass(), EndDocumentState.class);
   }
@@ -40,21 +41,24 @@ public class BeginDocumentStateTest {
   @Test(description = "<html></html>")
   public void compute01() {
     final HtmlSource source;
-    source = HtmlSourceY.create(opts -> {
+    source = CtxY.create(opts -> {
       opts.addByte(HtmlBytes.STARTTAG8);
       opts.addInt8(ElementNamePojo.HTML.index());
-      opts.addByte(HtmlBytes.VALUES0);
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(0);
       opts.addByte(HtmlBytes.ENDTAG8);
       opts.addInt8(ElementNamePojo.HTML.index());
     });
 
-    final BeginDocumentState subject;
-    subject = new BeginDocumentState(source, 0);
+    final BeginDocumentTransition subject;
+    subject = new BeginDocumentTransition(source, 0);
 
-    final State res;
-    res = subject.compute();
+    final BeginStartTagState res;
+    res = (BeginStartTagState) subject.nextState();
 
-    assertEquals(res.getClass(), BeginStartTagState.class);
+    assertEquals(res.stack, Stack.of(6));
+    assertEquals(res.elementName, ElementNamePojo.HTML);
+    assertEquals(res.values, Values.of(4, IntSize.BIT8, 0));
   }
 
 }

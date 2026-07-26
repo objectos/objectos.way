@@ -25,7 +25,7 @@ public class HtmlSourceTest {
   @Test(description = "decode 1 byte")
   public void getInt01() {
     final HtmlSource source;
-    source = HtmlSourceY.create(sink -> {
+    source = CtxY.create(sink -> {
       sink.addInt8(42);
     });
 
@@ -38,7 +38,7 @@ public class HtmlSourceTest {
   @Test(description = "decode 1 byte max value")
   public void getInt02() {
     final HtmlSource source;
-    source = HtmlSourceY.create(sink -> {
+    source = CtxY.create(sink -> {
       sink.addInt8(255);
     });
 
@@ -51,7 +51,7 @@ public class HtmlSourceTest {
   @Test(description = "decode 2 bytes")
   public void getInt03() {
     final HtmlSource source;
-    source = HtmlSourceY.create(sink -> {
+    source = CtxY.create(sink -> {
       sink.addInt16(12345);
     });
 
@@ -64,7 +64,7 @@ public class HtmlSourceTest {
   @Test(description = "decode 2 bytes max value")
   public void getInt04() {
     final HtmlSource source;
-    source = HtmlSourceY.create(sink -> {
+    source = CtxY.create(sink -> {
       sink.addInt16(65535);
     });
 
@@ -77,7 +77,7 @@ public class HtmlSourceTest {
   @Test(description = "decode 3 bytes")
   public void getInt05() {
     final HtmlSource source;
-    source = HtmlSourceY.create(sink -> {
+    source = CtxY.create(sink -> {
       sink.addInt24(987654);
     });
 
@@ -90,7 +90,7 @@ public class HtmlSourceTest {
   @Test(description = "decode 3 bytes max value")
   public void getInt06() {
     final HtmlSource source;
-    source = HtmlSourceY.create(sink -> {
+    source = CtxY.create(sink -> {
       sink.addInt24(16777215);
     });
 

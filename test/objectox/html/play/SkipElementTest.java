@@ -22,36 +22,37 @@ import objectox.html.elem.ElementNamePojo;
 import objectox.html.rec.HtmlBytes;
 import org.testng.annotations.Test;
 
-public class NextElementTest {
+public class SkipElementTest {
 
   @Test(description = """
   <html></html>
   """)
-  public void endIndex01() {
+  public void compute01() {
     final HtmlSource source;
-    source = HtmlSourceY.create(opts -> {
+    source = CtxY.create(opts -> {
       opts.addByte(HtmlBytes.STARTTAG8);
       opts.addInt8(ElementNamePojo.HTML.index());
-      opts.addByte(HtmlBytes.VALUES0);
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(0);
       opts.addByte(HtmlBytes.ENDTAG8);
       opts.addInt8(ElementNamePojo.HTML.index());
     });
 
-    final NextElement subject;
-    subject = new NextElement(source, 0, IntSize.BIT8);
+    final SkipElement subject;
+    subject = new SkipElement(source, 0, IntSize.BIT8);
 
-    final int endIndex;
-    endIndex = subject.endIndex();
+    final int compute;
+    compute = subject.compute();
 
-    assertEquals(endIndex, 5);
+    assertEquals(compute, 6);
   }
 
   @Test(description = """
   <html autofocus></html>
   """)
-  public void endIndex02() {
+  public void compute02() {
     final HtmlSource source;
-    source = HtmlSourceY.create(opts -> {
+    source = CtxY.create(opts -> {
       opts.addByte(HtmlBytes.xBOOLEAN8);
 
       opts.addByte(HtmlBytes.STARTTAG8);
@@ -63,21 +64,21 @@ public class NextElementTest {
       opts.addInt8(ElementNamePojo.HTML.index());
     });
 
-    final NextElement subject;
-    subject = new NextElement(source, 1, IntSize.BIT8);
+    final SkipElement subject;
+    subject = new SkipElement(source, 1, IntSize.BIT8);
 
-    final int endIndex;
-    endIndex = subject.endIndex();
+    final int compute;
+    compute = subject.compute();
 
-    assertEquals(endIndex, 8);
+    assertEquals(compute, 8);
   }
 
   @Test(description = """
   <html lang="pt-BR"></html>
   """)
-  public void endIndex03() {
+  public void compute03() {
     final HtmlSource source;
-    source = HtmlSourceY.create(opts -> {
+    source = CtxY.create(opts -> {
       opts.addByte(HtmlBytes.xATTRIBUTE88);
 
       opts.addByte(HtmlBytes.STARTTAG8);
@@ -89,13 +90,13 @@ public class NextElementTest {
       opts.addInt8(ElementNamePojo.HTML.index());
     });
 
-    final NextElement subject;
-    subject = new NextElement(source, 1, IntSize.BIT8);
+    final SkipElement subject;
+    subject = new SkipElement(source, 1, IntSize.BIT8);
 
-    final int endIndex;
-    endIndex = subject.endIndex();
+    final int compute;
+    compute = subject.compute();
 
-    assertEquals(endIndex, 8);
+    assertEquals(compute, 8);
   }
 
 }

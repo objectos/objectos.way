@@ -15,14 +15,10 @@
  */
 package objectox.html.play;
 
-import objectos.html.play.HtmlEvent;
+enum State {
 
-interface State {
+  START,
 
-  State compute();
-
-  default HtmlEvent event() {
-    return null;
-  }
+  BEGIN_DOCUMENT;
 
 }

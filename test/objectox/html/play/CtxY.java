@@ -17,15 +17,46 @@ package objectox.html.play;
 
 import java.util.function.Consumer;
 import objectox.html.rec.HtmlSink;
-import objectox.html.rec.HtmlSinkY;
 
-final class HtmlSourceY {
+final class CtxY {
 
-  public static HtmlSource create(Consumer<? super HtmlSink> opts) {
-    final HtmlSink y;
-    y = HtmlSinkY.create(opts);
+  private final HtmlSink sink = new HtmlSink();
 
-    return new HtmlSource(y);
+  public static Ctx create(Consumer<? super CtxY> opts) {
+    final CtxY y;
+    y = new CtxY();
+
+    opts.accept(y);
+
+    return y.build();
+  }
+
+  public final int addByte(byte value) {
+    return sink.addByte(value);
+  }
+
+  public final void addInt8(int value) {
+    sink.addInt8(value);
+  }
+
+  public final void addInt16(int value) {
+    sink.addInt16(value);
+  }
+
+  public final void addInt24(int value) {
+    sink.addInt24(value);
+  }
+
+  public final int addObject(Object value) {
+    return sink.addObject(value);
+  }
+
+  private Ctx build() {
+    return new Ctx(
+        sink.code(),
+
+        sink.objects()
+    );
   }
 
 }

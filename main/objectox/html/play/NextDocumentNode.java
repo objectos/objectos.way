@@ -50,16 +50,19 @@ final class NextDocumentNode {
   }
 
   private State element(final IntSize size) {
-    final NextElement next;
-    next = new NextElement(source, startIndex, size);
+    final SkipElement skip;
+    skip = new SkipElement(source, startIndex, size);
 
     final int returnIndex;
-    returnIndex = next.endIndex();
+    returnIndex = skip.compute();
 
-    final Frame frame;
-    frame = new Frame(FrameKind.DOCUMENT, returnIndex);
+    final Stack stack;
+    stack = Stack.of(returnIndex);
 
-    return next.compute(frame);
+    final BeginElement next;
+    next = new BeginElement(source, startIndex, size, stack);
+
+    return next.compute();
   }
 
 }

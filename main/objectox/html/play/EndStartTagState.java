@@ -16,10 +16,8 @@
 package objectox.html.play;
 
 import objectos.html.ElementName;
-import objectos.html.play.EndStartTag;
-import objectos.html.play.HtmlEvent;
 
-public final class EndStartTagState implements EndStartTag, State {
+public final class EndStartTagState implements State {
 
   private final Tape tape;
 
@@ -37,16 +35,6 @@ public final class EndStartTagState implements EndStartTag, State {
     next = new NextElementNode(tape, elementName);
 
     return next.compute();
-  }
-
-  @Override
-  public final boolean hasNext() {
-    return true;
-  }
-
-  @Override
-  public final HtmlEvent next() {
-    return this;
   }
 
   @Override

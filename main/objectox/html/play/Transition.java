@@ -15,4 +15,8 @@
  */
 package objectox.html.play;
 
-record Frame(FrameKind kind, int index) {}
+interface Transition {
+
+  State compute();
+
+}

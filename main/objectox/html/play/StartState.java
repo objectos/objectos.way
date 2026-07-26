@@ -17,22 +17,19 @@ package objectox.html.play;
 
 import objectox.html.rec.HtmlBytes;
 
-final class StartState implements State {
+final class StartState implements Transition {
 
-  private final HtmlSource source;
+  private final Ctx ctx;
 
-  StartState(HtmlSource source) {
-    this.source = source;
+  StartState(Ctx context) {
+    this.ctx = context;
   }
 
   @Override
-  public final BeginDocumentState compute() {
-    int index;
-    index = 0;
-
-    while (source.hasByte(index)) {
+  public final State compute() {
+    while (ctx.hasByte()) {
       final byte proto;
-      proto = source.getByte(index);
+      proto = ctx.nextByte();
 
       switch (proto) {
         case HtmlBytes.xSTARTTAG8 -> throw new UnsupportedOperationException("Implement me");
@@ -41,25 +38,27 @@ final class StartState implements State {
 
         case HtmlBytes.xSTARTFRAG -> throw new UnsupportedOperationException("Implement me");
 
-        case HtmlBytes.xAMBIGUOUS88, HtmlBytes.xATTRIBUTE88 -> { index += 1 + 1 + 1; continue; }
+        case HtmlBytes.xAMBIGUOUS88, HtmlBytes.xATTRIBUTE88 -> { ctx.skip(1 + 1 + 1); continue; }
 
-        case HtmlBytes.xAMBIGUOUS816, HtmlBytes.xATTRIBUTE816 -> { index += 1 + 1 + 2; continue; }
+        case HtmlBytes.xAMBIGUOUS816, HtmlBytes.xATTRIBUTE816 -> { ctx.skip(1 + 1 + 2); continue; }
 
-        case HtmlBytes.xAMBIGUOUS824, HtmlBytes.xATTRIBUTE824 -> { index += 1 + 1 + 3; continue; }
+        case HtmlBytes.xAMBIGUOUS824, HtmlBytes.xATTRIBUTE824 -> { ctx.skip(1 + 1 + 3); continue; }
 
-        case HtmlBytes.xBOOLEAN8 -> { index += 1 + 1; continue; }
+        case HtmlBytes.xBOOLEAN8 -> { ctx.skip(1 + 1); continue; }
 
-        case HtmlBytes.xRAW8, HtmlBytes.xTEXT8 -> { index += 1 + 1; continue; }
+        case HtmlBytes.xRAW8, HtmlBytes.xTEXT8 -> { ctx.skip(1 + 1); continue; }
 
-        case HtmlBytes.xRAW16, HtmlBytes.xTEXT16 -> { index += 1 + 2; continue; }
+        case HtmlBytes.xRAW16, HtmlBytes.xTEXT16 -> { ctx.skip(1 + 2); continue; }
 
-        case HtmlBytes.xRAW24, HtmlBytes.xTEXT24 -> { index += 1 + 3; continue; }
+        case HtmlBytes.xRAW24, HtmlBytes.xTEXT24 -> { ctx.skip(1 + 3); continue; }
       }
 
       break;
     }
 
-    return new BeginDocumentState(source, index);
+    ctx.result(HtmlEventPojo.BEGIN_DOCUMENT);
+
+    return State.BEGIN_DOCUMENT;
   }
 
 }

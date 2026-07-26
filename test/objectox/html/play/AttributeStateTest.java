@@ -28,7 +28,7 @@ public class AttributeStateTest {
   @Test
   public void compute02() {
     final Tape tape;
-    tape = HtmlSourceY.create(opts -> {
+    tape = CtxY.create(opts -> {
       opts.main(
           HtmlByteProto.MARKED5,
           (byte) AttributeNamePojo.LANG.index(),

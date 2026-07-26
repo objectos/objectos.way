@@ -27,7 +27,7 @@ public class NextDocumentElementTest {
   @Test
   public void compute01() {
     final Tape tape;
-    tape = HtmlSourceY.create(opts -> {
+    tape = CtxY.create(opts -> {
       opts.main(
           HtmlByteProto.ELEMENT,
           HtmlBytes.encodeInt0(5),

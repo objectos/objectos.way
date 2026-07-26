@@ -53,6 +53,16 @@ public enum IntSize {
     }
   }
 
+  public final int bytes() {
+    return switch (this) {
+      case BIT8 -> 1;
+
+      case BIT16 -> 2;
+
+      case BIT24 -> 3;
+    };
+  }
+
   public final int skip(int index) {
     return switch (this) {
       case BIT8 -> index + 1;

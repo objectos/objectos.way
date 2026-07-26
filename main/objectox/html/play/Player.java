@@ -21,23 +21,24 @@ import objectos.html.play.HtmlEvent;
 
 public final class Player implements Iterator<HtmlEvent> {
 
-  private boolean computed;
+  private final Ctx ctx;
 
-  private State state;
+  private State state = State.START;
 
-  public Player(HtmlSource source) {
-    state = new StartState(source);
+  Player(Ctx ctx) {
+    this.ctx = ctx;
   }
 
   @Override
   public final boolean hasNext() {
-    if (!computed) {
-      state = state.compute();
+    while (ctx.shouldCompute()) {
+      final Transition t;
+      t = transition();
 
-      computed = true;
+      state = t.compute();
     }
 
-    return state.event() != null;
+    return ctx.hasEvent();
   }
 
   @Override
@@ -45,10 +46,16 @@ public final class Player implements Iterator<HtmlEvent> {
     if (!hasNext()) {
       throw new NoSuchElementException();
     } else {
-      computed = false;
-
-      return state.event();
+      return ctx.nextEvent();
     }
+  }
+
+  private Transition transition() {
+    return switch (state) {
+      case START -> new StartState(ctx);
+
+      case BEGIN_DOCUMENT -> throw new UnsupportedOperationException("Unimplemented case: " + state);
+    };
   }
 
 }

@@ -35,7 +35,7 @@ public final class HtmlSink {
 
   private int objectsIndex;
 
-  HtmlSink() {
+  public HtmlSink() {
     code = Util.EMPTY_BYTE_ARRAY;
 
     objects = Util.EMPTY_OBJECT_ARRAY;

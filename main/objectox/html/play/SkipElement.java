@@ -18,7 +18,7 @@ package objectox.html.play;
 import objectox.html.IntSize;
 import objectox.html.rec.HtmlBytes;
 
-final class NextElement {
+final class SkipElement {
 
   private final HtmlSource source;
 
@@ -26,7 +26,7 @@ final class NextElement {
 
   private final IntSize nameSize;
 
-  NextElement(HtmlSource source, int startIndex, IntSize nameSize) {
+  SkipElement(HtmlSource source, int startIndex, IntSize nameSize) {
     this.source = source;
 
     this.startIndex = startIndex;
@@ -34,41 +34,57 @@ final class NextElement {
     this.nameSize = nameSize;
   }
 
-  public final State compute(Frame frame) {
-    throw new UnsupportedOperationException("Implement me");
-  }
+  public final int compute() {
+    final int nameIndex;
+    nameIndex = startIndex + 1;
 
-  public final int endIndex() {
     final int valuesIndex;
-    valuesIndex = nameSize.skip(startIndex + 1);
+    valuesIndex = nameSize.skip(nameIndex);
 
     final byte valuesByte;
     valuesByte = source.getByte(valuesIndex);
 
     return switch (valuesByte) {
-      case HtmlBytes.VALUES0 -> throw new UnsupportedOperationException("Implement me");
+      case HtmlBytes.VALUES8 -> compute0(valuesIndex, IntSize.BIT8);
 
-      case HtmlBytes.VALUES8 -> IntSize.BIT8;
+      case HtmlBytes.VALUES16 -> compute0(valuesIndex, IntSize.BIT16);
 
-      case HtmlBytes.VALUES16 -> IntSize.BIT16;
-
-      case HtmlBytes.VALUES24 -> IntSize.BIT24;
+      case HtmlBytes.VALUES24 -> compute0(valuesIndex, IntSize.BIT24);
 
       default -> throw new UnsupportedOperationException(
           "Implement me :: " + valuesByte
       );
     };
+  }
+
+  private int compute0(int valuesIndex, IntSize valuesSize) {
+    final int lengthIndex;
+    lengthIndex = valuesIndex + 1;
 
     final int length;
-    length = source.getInt(index, valueSize);
+    length = source.getInt(lengthIndex, valuesSize);
 
-    index = valueSize.skip(index);
+    final int offset;
+    offset = length * valuesSize.bytes();
 
-    index += length * valueSize.skip(0);
+    final int firstIndex;
+    firstIndex = valuesSize.skip(lengthIndex);
 
-    index = nameSize.skip(index + 1);
+    final int afterValuesIndex;
+    afterValuesIndex = firstIndex + offset;
 
-    return index;
+    final byte endTag;
+    endTag = source.getByte(afterValuesIndex);
+
+    return switch (endTag) {
+      case HtmlBytes.VOIDELEM -> afterValuesIndex;
+
+      case HtmlBytes.ENDTAG8 -> afterValuesIndex + 1 + 1;
+
+      default -> throw new UnsupportedOperationException(
+          "Implement me :: " + endTag
+      );
+    };
   }
 
 }

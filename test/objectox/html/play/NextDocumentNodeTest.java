@@ -26,10 +26,11 @@ public class NextDocumentNodeTest {
   @Test(description = "<html></html>")
   public void compute01() {
     final HtmlSource source;
-    source = HtmlSourceY.create(opts -> {
+    source = CtxY.create(opts -> {
       opts.addByte(HtmlBytes.STARTTAG8);
       opts.addInt8(ElementNamePojo.HTML.index());
-      opts.addByte(HtmlBytes.VALUES0);
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(0);
       opts.addByte(HtmlBytes.ENDTAG8);
       opts.addInt8(ElementNamePojo.HTML.index());
     });

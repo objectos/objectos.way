@@ -17,120 +17,38 @@ package objectox.html.play;
 
 import static org.testng.Assert.assertEquals;
 
-import objectox.html.HtmlByteProto;
-import objectox.html.attr.AttributeNamePojo;
+import objectox.html.IntSize;
 import objectox.html.elem.ElementNamePojo;
 import objectox.html.rec.HtmlBytes;
 import org.testng.annotations.Test;
 
 public class BeginStartTagStateTest {
 
-  @Test
+  @Test(description = "<html></html>")
   public void compute01() {
-    final Tape tape;
-    tape = HtmlSourceY.create(opts -> {
-      opts.main(
-          HtmlByteProto.ELEMENT,
-          HtmlBytes.encodeInt0(5),
-          HtmlBytes.encodeInt1(5),
-          HtmlByteProto.STANDARD_NAME,
-          (byte) ElementNamePojo.HTML.index(),
-          HtmlByteProto.END,
-          HtmlBytes.encodeInt0(5),
-          HtmlByteProto.INTERNAL
-      );
-
-      opts.mainIndex = 5;
-
-      opts.frame(FrameKind.ELEMENT_NODES, 5);
+    final HtmlSource source;
+    source = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.STARTTAG8);
+      opts.addInt8(ElementNamePojo.HTML.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ENDTAG8);
+      opts.addInt8(ElementNamePojo.HTML.index());
     });
 
     final BeginStartTagState subject;
-    subject = new BeginStartTagState(tape, ElementNamePojo.HTML);
+    subject = new BeginStartTagState(
+        source,
+        Stack.of(6),
+        ElementNamePojo.HTML,
+        Values.of(4, IntSize.BIT8, 0)
+    );
 
-    final State res;
-    res = subject.compute();
+    final EndStartTagState res;
+    res = (EndStartTagState) subject.compute();
 
-    assertEquals(res.getClass(), EndStartTagState.class);
-  }
-
-  @Test
-  public void compute02() {
-    final Tape tape;
-    tape = HtmlSourceY.create(opts -> {
-      opts.main(
-          HtmlByteProto.MARKED5,
-          (byte) AttributeNamePojo.LANG.index(),
-          HtmlBytes.encodeInt0(0),
-          HtmlBytes.encodeInt1(0),
-          HtmlByteProto.INTERNAL5,
-
-          HtmlByteProto.ELEMENT,
-          HtmlBytes.encodeInt0(7),
-          HtmlBytes.encodeInt1(7),
-          HtmlByteProto.STANDARD_NAME,
-          (byte) ElementNamePojo.HTML.index(),
-          HtmlByteProto.ATTRIBUTE1,
-          HtmlBytes.encodeInt0(11),
-          HtmlByteProto.END,
-          HtmlBytes.encodeInt0(12),
-          HtmlByteProto.INTERNAL
-      );
-
-      opts.mainIndex = 10;
-
-      opts.objects("pt-BR");
-
-      opts.frame(FrameKind.ELEMENT_NODES, 10);
-    });
-
-    final BeginStartTagState subject;
-    subject = new BeginStartTagState(tape, ElementNamePojo.HTML);
-
-    final State res;
-    res = subject.compute();
-
-    assertEquals(res.getClass(), AttributeState.class);
-  }
-
-  @Test
-  public void compute04() {
-    final Tape tape;
-    tape = HtmlSourceY.create(opts -> {
-      opts.main(
-          HtmlByteProto.LENGTH2,
-          HtmlBytes.encodeInt0(5),
-          HtmlBytes.encodeInt1(5),
-          HtmlByteProto.STANDARD_NAME,
-          (byte) ElementNamePojo.HEAD.index(),
-          HtmlByteProto.END,
-          HtmlBytes.encodeInt0(5),
-          HtmlByteProto.INTERNAL,
-
-          HtmlByteProto.ELEMENT,
-          HtmlBytes.encodeInt0(7),
-          HtmlBytes.encodeInt1(7),
-          HtmlByteProto.STANDARD_NAME,
-          (byte) ElementNamePojo.HTML.index(),
-          HtmlByteProto.ELEMENT,
-          HtmlBytes.encodeInt0(14),
-          HtmlByteProto.END,
-          HtmlBytes.encodeInt0(15),
-          HtmlByteProto.INTERNAL
-      );
-
-      opts.mainIndex = 13;
-
-      opts.frame(FrameKind.ELEMENT_NODES, 13);
-    });
-
-    final BeginStartTagState subject;
-    subject = new BeginStartTagState(tape, ElementNamePojo.HTML);
-
-    final State res;
-    res = subject.compute();
-
-    assertEquals(res.getClass(), EndStartTagState.class);
+    assertEquals(res.elementName, ElementNamePojo.HTML);
+    assertEquals(res.stack, Stack.of(6));
   }
 
 }

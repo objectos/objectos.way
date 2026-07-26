@@ -15,36 +15,29 @@
  */
 package objectox.html.play;
 
-import objectos.html.play.HtmlEvent;
+import static org.testng.Assert.assertEquals;
 
-public final class BeginDocumentState implements State {
+import objectox.html.IntSize;
+import org.testng.annotations.Test;
 
-  private final HtmlSource source;
+public class ValuesTest {
 
-  final int startIndex;
+  @Test(description = "hasNext => false")
+  public void hasNext01() {
+    final Values values;
+    values = Values.of(0, IntSize.BIT8, 0);
 
-  BeginDocumentState(HtmlSource source, int startIndex) {
-    this.source = source;
-
-    this.startIndex = startIndex;
+    assertEquals(values.hasNext(0), false);
   }
 
-  @Override
-  public final State compute() {
-    final NextDocumentNode next;
-    next = new NextDocumentNode(source, startIndex);
+  @Test(description = "hasNext => true")
+  public void hasNext02() {
+    final Values values;
+    values = Values.of(0, IntSize.BIT8, 2);
 
-    return next.compute();
-  }
-
-  @Override
-  public final HtmlEvent event() {
-    return HtmlEventPojo.BEGIN_DOCUMENT;
-  }
-
-  @Override
-  public final String toString() {
-    return "BeginDocument";
+    assertEquals(values.hasNext(0), true);
+    assertEquals(values.hasNext(1), true);
+    assertEquals(values.hasNext(2), false);
   }
 
 }
