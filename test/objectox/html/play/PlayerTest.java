@@ -70,7 +70,7 @@ public class PlayerTest {
     );
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   <html lang="pt-BR"></html>
   """)
   public void testCase02() {
@@ -82,9 +82,9 @@ public class PlayerTest {
         """
         BeginDocument
         BeginStartTag(html)
-        Attribute(lang, pt-BR)
+        RenderAttribute(lang, pt-BR)
         EndStartTag
-        EndTag(html)
+        RenderEndTag(html)
         EndDocument
         """
     );

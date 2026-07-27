@@ -15,16 +15,28 @@
  */
 package objectox.html.play;
 
-final class Frame {
-
-  final FrameKind kind;
+sealed abstract class Frame
+    permits
+    JumpFrame,
+    ScanDocumentNodeFrame,
+    ScanElementAttributeFrame,
+    ScanElementNodeFrame {
 
   int index;
 
-  Frame(FrameKind kind, int index) {
-    this.kind = kind;
-
+  Frame(int index) {
     this.index = index;
+  }
+
+  public final <T extends Frame> T as(Class<T> type) {
+    return type.cast(this);
+  }
+
+  public final IllegalStateException expected(Class<?> expectedType) {
+    final String msg;
+    msg = "Expected frame %s but got %s".formatted(expectedType.getSimpleName(), getClass().getSimpleName());
+
+    return new IllegalStateException(msg);
   }
 
 }

@@ -28,12 +28,14 @@ final class EndElementState implements State {
     final Frame frame;
     frame = ctx.pop();
 
-    return switch (frame.kind) {
-      case DOCUMENT -> {
-        ctx.push(frame);
+    return switch (frame) {
+      case ScanDocumentNodeFrame f -> {
+        ctx.push(f);
 
         yield new ScanDocumentNodeState(ctx);
       }
+
+      default -> throw new UnsupportedOperationException("Implement me");
     };
   }
 

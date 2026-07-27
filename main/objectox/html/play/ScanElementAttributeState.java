@@ -15,35 +15,53 @@
  */
 package objectox.html.play;
 
+import objectox.html.IntSize;
+import objectox.html.rec.HtmlBytes;
+
 final class ScanElementAttributeState implements State {
 
   private final Ctx ctx;
 
-  private final Values values;
-
-  private final int valueIndex;
-
-  ScanElementAttributeState(Ctx ctx, Values values, int valueIndex) {
+  ScanElementAttributeState(Ctx ctx) {
     this.ctx = ctx;
-
-    this.values = values;
-
-    this.valueIndex = valueIndex;
   }
 
   @Override
   public final State compute() {
-    if (values.hasNext(valueIndex)) {
-      return compute0();
-    } else {
+    final Frame f;
+    f = ctx.peekFrame();
+
+    final ScanElementAttributeFrame frame;
+    frame = f.as(ScanElementAttributeFrame.class);
+
+    if (!frame.hasNext()) {
+      ctx.pop();
+
       ctx.result(EndStartTagEvent.INSTANCE);
 
-      return new ScanElementNodeState(ctx, values, 0);
+      return new ScanElementNodeState(ctx);
     }
+
+    return compute0(frame);
   }
 
-  private State compute0() {
-    throw new UnsupportedOperationException("Implement me");
+  private State compute0(ScanElementAttributeFrame frame) {
+    final int jmpIndex;
+    jmpIndex = frame.nextInt(ctx);
+
+    final JumpFrame jmpFrame;
+    jmpFrame = new JumpFrame(jmpIndex);
+
+    ctx.push(jmpFrame);
+
+    final byte code;
+    code = ctx.nextByte();
+
+    return switch (code) {
+      case HtmlBytes.xATTRIBUTE88 -> new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT8);
+
+      default -> throw State.implCode(code);
+    };
   }
 
 }

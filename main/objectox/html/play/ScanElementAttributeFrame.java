@@ -17,14 +17,28 @@ package objectox.html.play;
 
 import objectox.html.IntSize;
 
-record Values(int startIndex, IntSize size, int length) {
+final class ScanElementAttributeFrame extends Frame {
 
-  static Values of(int startIndex, IntSize size, int length) {
-    return new Values(startIndex, size, length);
+  private final IntSize size;
+
+  private int current;
+
+  private final int length;
+
+  ScanElementAttributeFrame(int index, IntSize size, int length) {
+    super(index);
+
+    this.size = size;
+
+    this.length = length;
   }
 
-  public final boolean hasNext(int index) {
-    return index < length;
+  public final boolean hasNext() {
+    return current < length;
+  }
+
+  public final int nextInt(Ctx ctx) {
+    return ctx.nextInt(size);
   }
 
 }

@@ -27,7 +27,7 @@ public class ScanDocumentNodeStateTest {
   public void compute00() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
-      opts.push(FrameKind.DOCUMENT, 0);
+      opts.push(ScanDocumentNodeFrame.of(0));
     });
 
     final ScanDocumentNodeState subject;
@@ -52,7 +52,7 @@ public class ScanDocumentNodeStateTest {
       opts.addByte(HtmlBytes.ENDTAG8);
       opts.addInt8(ElementNamePojo.HTML.index());
 
-      opts.push(FrameKind.DOCUMENT, 0);
+      opts.push(ScanDocumentNodeFrame.of(0));
     });
 
     final ScanDocumentNodeState subject;

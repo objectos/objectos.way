@@ -15,29 +15,24 @@
  */
 package objectox.html.play;
 
-import static org.testng.Assert.assertEquals;
+import objectos.html.AttributeName;
+import objectos.html.play.RenderAttribute;
+import objectox.html.attr.AttributeNamePojo;
 
-import objectox.html.IntSize;
-import org.testng.annotations.Test;
+public record RenderAttributeEvent(AttributeName attributeName, String value) implements RenderAttribute {
 
-public class ValuesTest {
-
-  @Test(description = "hasNext => false")
-  public void hasNext01() {
-    final Values values;
-    values = Values.of(0, IntSize.BIT8, 0);
-
-    assertEquals(values.hasNext(0), false);
+  public static RenderAttributeEvent of(AttributeNamePojo attributeName, String value) {
+    return new RenderAttributeEvent(attributeName, value);
   }
 
-  @Test(description = "hasNext => true")
-  public void hasNext02() {
-    final Values values;
-    values = Values.of(0, IntSize.BIT8, 2);
+  @Override
+  public final String name() {
+    return attributeName.name();
+  }
 
-    assertEquals(values.hasNext(0), true);
-    assertEquals(values.hasNext(1), true);
-    assertEquals(values.hasNext(2), false);
+  @Override
+  public final String toString() {
+    return "Attribute(" + name() + ", " + value + ")";
   }
 
 }

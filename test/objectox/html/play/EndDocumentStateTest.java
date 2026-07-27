@@ -34,7 +34,7 @@ public class EndDocumentStateTest {
       opts.addByte(HtmlBytes.ENDTAG8);
       opts.addInt8(ElementNamePojo.HTML.index());
 
-      opts.push(FrameKind.DOCUMENT, 6);
+      opts.push(ScanDocumentNodeFrame.of(6));
     });
 
     final EndDocumentState subject;

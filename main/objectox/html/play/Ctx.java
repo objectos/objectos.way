@@ -101,6 +101,13 @@ class Ctx {
     };
   }
 
+  public final String objString(int index) {
+    final Object o;
+    o = objects[index];
+
+    return (String) o;
+  }
+
   private int toInt(int index, int shift) {
     final byte byteValue;
     byteValue = code[index];
@@ -121,11 +128,8 @@ class Ctx {
     return code[idx];
   }
 
-  public final int peekStack() {
-    final Frame frame;
-    frame = stack[stackIndex];
-
-    return frame.index;
+  public final Frame peekFrame() {
+    return stack[stackIndex];
   }
 
   public final Frame pop() {
@@ -139,13 +143,6 @@ class Ctx {
     stack = Util.growIfNecessary(stack, index);
 
     stack[index] = frame;
-  }
-
-  public final void push(FrameKind kind, int value) {
-    final Frame frame;
-    frame = new Frame(kind, value);
-
-    push(frame);
   }
 
   public final boolean shouldCompute() {

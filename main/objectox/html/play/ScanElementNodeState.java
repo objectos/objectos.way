@@ -19,28 +19,12 @@ final class ScanElementNodeState implements State {
 
   private final Ctx ctx;
 
-  private final Values values;
-
-  private final int valueIndex;
-
-  ScanElementNodeState(Ctx ctx, Values values, int valueIndex) {
+  ScanElementNodeState(Ctx ctx) {
     this.ctx = ctx;
-
-    this.values = values;
-
-    this.valueIndex = valueIndex;
   }
 
   @Override
   public final State compute() {
-    if (values.hasNext(valueIndex)) {
-      return compute0();
-    } else {
-      return new RenderEndTagState(ctx);
-    }
-  }
-
-  private State compute0() {
     throw new UnsupportedOperationException("Implement me");
   }
 

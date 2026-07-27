@@ -15,8 +15,14 @@
  */
 package objectox.html.play;
 
-enum FrameKind {
+final class ScanDocumentNodeFrame extends Frame {
 
-  DOCUMENT;
+  private ScanDocumentNodeFrame(int index) {
+    super(index);
+  }
+
+  public static ScanDocumentNodeFrame of(int index) {
+    return new ScanDocumentNodeFrame(index);
+  }
 
 }

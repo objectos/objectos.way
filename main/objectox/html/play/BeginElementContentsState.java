@@ -46,13 +46,23 @@ final class BeginElementContentsState implements State {
     final int length;
     length = ctx.nextInt(size);
 
+    final Frame frame;
+    frame = ctx.peekFrame();
+
     final int startIndex;
-    startIndex = ctx.peekStack();
+    startIndex = frame.index;
 
-    final Values values;
-    values = Values.of(startIndex, size, length);
+    final ScanElementNodeFrame nodeFrame;
+    nodeFrame = new ScanElementNodeFrame(startIndex, size, length);
 
-    return new ScanElementAttributeState(ctx, values, 0);
+    ctx.push(nodeFrame);
+
+    final ScanElementAttributeFrame attrFrame;
+    attrFrame = new ScanElementAttributeFrame(startIndex, size, length);
+
+    ctx.push(attrFrame);
+
+    return new ScanElementAttributeState(ctx);
   }
 
 }

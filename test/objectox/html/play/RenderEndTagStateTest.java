@@ -35,7 +35,7 @@ public class RenderEndTagStateTest {
       opts.addByte(HtmlBytes.ENDTAG8);
       opts.addInt8(ElementNamePojo.HTML.index());
 
-      opts.push(FrameKind.DOCUMENT, 4);
+      opts.push(ScanDocumentNodeFrame.of(4));
     });
 
     final RenderEndTagState subject;

@@ -15,19 +15,10 @@
  */
 package objectox.html.play;
 
-import objectos.html.AttributeName;
-import objectos.html.play.RenderAttribute;
+final class JumpFrame extends Frame {
 
-public record AttributePiece(AttributeName attributeName, String value) implements RenderAttribute {
-
-  @Override
-  public final String name() {
-    return attributeName.name();
-  }
-
-  @Override
-  public final String toString() {
-    return "Attribute(" + name() + ", " + value + ")";
+  JumpFrame(int index) {
+    super(index);
   }
 
 }

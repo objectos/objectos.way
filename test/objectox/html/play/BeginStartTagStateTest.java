@@ -35,7 +35,7 @@ public class BeginStartTagStateTest {
       opts.addByte(HtmlBytes.ENDTAG8);
       opts.addInt8(ElementNamePojo.HTML.index());
 
-      opts.push(FrameKind.DOCUMENT, 1);
+      opts.push(ScanDocumentNodeFrame.of(1));
     });
 
     final BeginStartTagState subject;

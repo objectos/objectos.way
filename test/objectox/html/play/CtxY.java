@@ -56,13 +56,13 @@ final class CtxY {
     return sink.addObject(value);
   }
 
-  public final void push(FrameKind kind, int value) {
+  public final void push(Frame value) {
     final int index;
     index = ++stackIndex;
 
     stack = Util.growIfNecessary(stack, index);
 
-    stack[index] = new Frame(kind, value);
+    stack[index] = value;
   }
 
   private Ctx build() {

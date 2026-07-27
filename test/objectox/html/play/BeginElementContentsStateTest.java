@@ -34,7 +34,7 @@ public class BeginElementContentsStateTest {
       opts.addByte(HtmlBytes.ENDTAG8);
       opts.addInt8(ElementNamePojo.HTML.index());
 
-      opts.push(FrameKind.DOCUMENT, 2);
+      opts.push(ScanDocumentNodeFrame.of(2));
     });
 
     final BeginElementContentsState subject;
