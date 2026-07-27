@@ -94,41 +94,9 @@ public class RecorderTest {
   }
 
   @Test(description = """
-  <html autofocus></html>
-  """)
-  public void record02() {
-    final HtmlSink sink;
-    sink = new HtmlSink();
-
-    final Recorder subject;
-    subject = create(sink);
-
-    subject.element(
-        ElementName.HTML,
-        subject.attribute(AttributeNamePojo.AUTOFOCUS)
-    );
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
-          opts.addByte(HtmlBytes.xBOOLEAN8);
-          opts.addInt8(AttributeNamePojo.AUTOFOCUS.index());
-          opts.addByte(HtmlBytes.STARTTAG8);
-          opts.addInt8(ElementNamePojo.HTML.index());
-          opts.addByte(HtmlBytes.VALUES8);
-          opts.addInt8(1);
-          opts.addInt8(0);
-          opts.addByte(HtmlBytes.ENDTAG8);
-          opts.addInt8(ElementNamePojo.HTML.index());
-        })
-    );
-  }
-
-  @Test(description = """
   <html lang="pt-BR"></html>
   """)
-  public void record03() {
+  public void record02() {
     final HtmlSink sink;
     sink = new HtmlSink();
 
@@ -147,6 +115,38 @@ public class RecorderTest {
           opts.addByte(HtmlBytes.xATTRIBUTE88);
           opts.addInt8(AttributeNamePojo.LANG.index());
           opts.addInt8(opts.addObject("pt-BR"));
+          opts.addByte(HtmlBytes.STARTTAG8);
+          opts.addInt8(ElementNamePojo.HTML.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(1);
+          opts.addInt8(0);
+          opts.addByte(HtmlBytes.ENDTAG8);
+          opts.addInt8(ElementNamePojo.HTML.index());
+        })
+    );
+  }
+
+  @Test(description = """
+  <html autofocus></html>
+  """)
+  public void record03() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final Recorder subject;
+    subject = create(sink);
+
+    subject.element(
+        ElementName.HTML,
+        subject.attribute(AttributeNamePojo.AUTOFOCUS)
+    );
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.xBOOLEAN8);
+          opts.addInt8(AttributeNamePojo.AUTOFOCUS.index());
           opts.addByte(HtmlBytes.STARTTAG8);
           opts.addInt8(ElementNamePojo.HTML.index());
           opts.addByte(HtmlBytes.VALUES8);

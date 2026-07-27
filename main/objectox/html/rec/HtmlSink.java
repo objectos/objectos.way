@@ -52,6 +52,16 @@ public final class HtmlSink {
     objectsIndex = objects.length;
   }
 
+  private HtmlSink(byte[] code, int codeIndex, Object[] objects, int objectsIndex) {
+    this.code = code;
+
+    this.codeIndex = codeIndex;
+
+    this.objects = objects;
+
+    this.objectsIndex = objectsIndex;
+  }
+
   public final int addByte(byte value) {
     final int idx;
     idx = codeIndex++;
@@ -63,7 +73,7 @@ public final class HtmlSink {
     return idx;
   }
 
-  public final void addInt(IntSize size, int value) {
+  public final int addInt(IntSize size, int value) {
     switch (size) {
       case BIT8 -> addInt8(value);
 
@@ -71,6 +81,8 @@ public final class HtmlSink {
 
       case BIT24 -> addInt24(value);
     }
+
+    return codeIndex;
   }
 
   public final void addInt8(int value) {
@@ -157,6 +169,34 @@ public final class HtmlSink {
     return obj == this || obj instanceof HtmlSink that
         && Arrays.equals(code, 0, codeIndex, that.code, 0, that.codeIndex)
         && Arrays.equals(objects, 0, objectsIndex, that.objects, 0, that.objectsIndex);
+  }
+
+  public final int ensure(int offset, IntSize size, int length) {
+    final int multiplier;
+    multiplier = size.bytes();
+
+    final int bytes;
+    bytes = length * multiplier;
+
+    final int requiredIndex;
+    requiredIndex = codeIndex + bytes + offset;
+
+    code = Util.growIfNecessary(code, requiredIndex);
+
+    return requiredIndex;
+  }
+
+  public final HtmlSink offset(int offset, int length, IntSize size) {
+    final int multiplier;
+    multiplier = size.bytes();
+
+    final int bytes;
+    bytes = length * multiplier;
+
+    final int requiredIndex;
+    requiredIndex = codeIndex + bytes + offset;
+
+    return new HtmlSink(code, requiredIndex, objects, objectsIndex);
   }
 
   @Override

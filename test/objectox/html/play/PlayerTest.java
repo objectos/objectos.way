@@ -26,7 +26,7 @@ import org.testng.annotations.Test;
 
 public class PlayerTest {
 
-  private void test(Consumer<? super Markup> opts, String expected) {
+  private void events(Consumer<? super Markup> opts, String expected) {
     final MarkupPojo m;
     m = new Markup.OfHtml();
 
@@ -42,8 +42,8 @@ public class PlayerTest {
   }
 
   @Test(description = "empty document")
-  public void testCase00() {
-    test(
+  public void events00() {
+    events(
         _ -> {},
 
         """
@@ -56,8 +56,8 @@ public class PlayerTest {
   @Test(description = """
   <html></html>
   """)
-  public void testCase01() {
-    test(
+  public void events01() {
+    events(
         m -> m.html(),
 
         """
@@ -73,8 +73,8 @@ public class PlayerTest {
   @Test(description = """
   <html lang="pt-BR"></html>
   """)
-  public void testCase02() {
-    test(
+  public void events02() {
+    events(
         m -> m.html(
             m.lang("pt-BR")
         ),
@@ -93,8 +93,8 @@ public class PlayerTest {
   @Test(description = """
   <html autofocus></html>
   """)
-  public void testCase03() {
-    test(
+  public void events03() {
+    events(
         m -> m.html(
             Markup.autofocus
         ),
@@ -114,7 +114,7 @@ public class PlayerTest {
   <html><head></head></html>
   """)
   public void testCase04() {
-    test(
+    events(
         m -> m.html(
             m.head()
         ),

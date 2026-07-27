@@ -19,7 +19,11 @@ import static org.testng.Assert.assertEquals;
 
 import java.util.Arrays;
 import java.util.function.IntConsumer;
+import objectos.html.AttributeName;
+import objectos.html.AttributeObject;
 import objectos.html.rec.Instruction;
+import objectox.html.attr.AttributeNamePojo;
+import objectox.html.elem.ElementNamePojo;
 import org.testng.annotations.Test;
 
 public class ContentsRecorderTest {
@@ -142,6 +146,48 @@ public class ContentsRecorderTest {
     );
 
     assertEquals(marker.values(), new int[] {0, HtmlSink.MAX_INT24});
+  }
+
+  @Test
+  public void record05() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    sink.addByte(HtmlBytes.STARTTAG8);
+    sink.addInt8(ElementNamePojo.HTML.index());
+
+    final Marker marker;
+    marker = new Marker();
+
+    final ContentsRecorder subject;
+    subject = new ContentsRecorder(sink, marker);
+
+    subject.record(
+        2,
+        new AttributePointer(11),
+        AttributeObject.of(AttributeName.AUTOFOCUS),
+        new AttributePointer(22)
+    );
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.STARTTAG8);
+          opts.addInt8(ElementNamePojo.HTML.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(3);
+          opts.addInt8(11);
+          opts.addInt8(9);
+          opts.addInt8(22);
+          opts.addByte((byte) 0);
+          opts.addByte((byte) 0);
+          opts.addByte(HtmlBytes.BOOLEAN8);
+          opts.addInt8(AttributeNamePojo.AUTOFOCUS.index());
+        })
+    );
+
+    assertEquals(marker.values(), new int[] {11, 9, 22});
   }
 
   private Instruction[] values(int... values) {

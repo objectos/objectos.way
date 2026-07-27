@@ -19,9 +19,7 @@ import java.util.Objects;
 import objectox.html.attr.AttributeNamePojo;
 import objectox.html.attr.IdPojo;
 
-/**
- * Represents an HTML {@code id} attribute and its value.
- */
+/// Represents an HTML {@code id} attribute and its value.
 public sealed interface Id extends AttributeObject permits IdPojo {
 
   /**

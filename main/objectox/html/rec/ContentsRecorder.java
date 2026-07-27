@@ -15,7 +15,12 @@
  */
 package objectox.html.rec;
 
+import java.util.OptionalInt;
 import java.util.function.IntConsumer;
+import java.util.function.ToIntFunction;
+import java.util.stream.Stream;
+import objectos.html.AttributeName;
+import objectos.html.AttributeObject;
 import objectos.html.rec.Instruction;
 import objectox.html.IntSize;
 
@@ -36,6 +41,10 @@ final class ContentsRecorder {
   }
 
   public final void record(Instruction... instructions) {
+    record(0, instructions);
+  }
+
+  public final void record(int offset, Instruction... instructions) {
     final int length;
     length = instructions.length;
 
@@ -44,11 +53,11 @@ final class ContentsRecorder {
 
       sink.addInt8(0);
     } else {
-      record0(instructions, length);
+      record0(offset, instructions, length);
     }
   }
 
-  private void record0(Instruction[] instructions, int length) {
+  private void record0(int offset, Instruction[] instructions, int length) {
     final int lastIndex;
     lastIndex = length - 1;
 
@@ -58,18 +67,9 @@ final class ContentsRecorder {
     final int optmisticMax;
     optmisticMax = last.value();
 
-    final IntSize optmisticMaxSize;
-    optmisticMaxSize = IntSize.of(optmisticMax);
+    final IntSize size;
+    size = IntSize.of(optmisticMax);
 
-    final int actualMax;
-    actualMax = record1(instructions, length, optmisticMaxSize);
-
-    if (actualMax != optmisticMax) {
-      throw new UnsupportedOperationException("Implement me");
-    }
-  }
-
-  private int record1(Instruction[] instructions, int length, IntSize size) {
     final byte proto;
     proto = proto(size);
 
@@ -77,21 +77,18 @@ final class ContentsRecorder {
 
     sink.addInt(size, length);
 
-    int max;
-    max = 0;
+    final Recorder f;
+    f = new Recorder(offset, length, size);
 
-    for (Instruction instruction : instructions) {
-      final int value;
-      value = instruction.value();
+    final OptionalInt max;
+    max = Stream.of(instructions).mapToInt(f).max();
 
-      sink.addInt(size, value);
+    final int actualMax;
+    actualMax = max.getAsInt();
 
-      marker.accept(value);
-
-      max = Math.max(max, value);
+    if (actualMax != optmisticMax) {
+      throw new UnsupportedOperationException("Implement me");
     }
-
-    return max;
   }
 
   private byte proto(IntSize size) {
@@ -102,6 +99,81 @@ final class ContentsRecorder {
 
       case BIT24 -> HtmlBytes.VALUES24;
     };
+  }
+
+  private class Recorder implements ToIntFunction<Instruction> {
+
+    private AttributeRecorder attributeRecorder;
+
+    private BooleanAttributeRecorder booleanAttributeRecorder;
+
+    private HtmlSink offsetSink;
+
+    final int offset;
+
+    final int length;
+
+    final IntSize size;
+
+    Recorder(int offset, int length, IntSize size) {
+      this.offset = offset;
+
+      this.length = length;
+
+      this.size = size;
+    }
+
+    @Override
+    public final int applyAsInt(Instruction instruction) {
+      final Instruction pre;
+      pre = pre(instruction);
+
+      final int result;
+      result = pre.value();
+
+      sink.addInt(size, result);
+
+      marker.accept(result);
+
+      return result;
+    }
+
+    private Instruction pre(Instruction instruction) {
+      if (instruction instanceof AttributeObject attr) {
+        return attr(attr);
+      } else {
+        return instruction;
+      }
+    }
+
+    private Instruction attr(AttributeObject attr) {
+      if (offsetSink == null) {
+        offsetSink = sink.offset(offset, length, size);
+      }
+
+      final AttributeName name;
+      name = attr.attrName();
+
+      final String value;
+      value = attr.attrValue();
+
+      if (value == null) {
+        if (booleanAttributeRecorder == null) {
+          booleanAttributeRecorder = new BooleanAttributeRecorder(offsetSink);
+        }
+
+        return booleanAttributeRecorder.record(name);
+      }
+
+      else {
+        if (attributeRecorder == null) {
+          attributeRecorder = new AttributeRecorder(offsetSink);
+        }
+
+        return attributeRecorder.record(name, value);
+      }
+    }
+
   }
 
 }

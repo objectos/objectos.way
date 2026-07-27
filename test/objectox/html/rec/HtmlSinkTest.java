@@ -17,6 +17,7 @@ package objectox.html.rec;
 
 import static org.testng.Assert.assertEquals;
 
+import objectox.html.IntSize;
 import org.testng.annotations.Test;
 
 public class HtmlSinkTest {
@@ -196,6 +197,28 @@ public class HtmlSinkTest {
             objects("ABC", "XYZ")
         )
     );
+  }
+
+  @Test
+  public void ensure01() {
+    final HtmlSink subject;
+    subject = new HtmlSink();
+
+    final int res;
+    res = subject.ensure(0, IntSize.BIT8, 8);
+
+    assertEquals(res, 8);
+  }
+
+  @Test
+  public void ensure02() {
+    final HtmlSink subject;
+    subject = new HtmlSink();
+
+    final int res;
+    res = subject.ensure(2, IntSize.BIT16, 2);
+
+    assertEquals(res, 6);
   }
 
   private byte[] code(int... values) {
