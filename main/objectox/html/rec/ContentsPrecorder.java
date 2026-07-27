@@ -15,6 +15,7 @@
  */
 package objectox.html.rec;
 
+import java.util.Arrays;
 import objectos.html.AttributeName;
 import objectos.html.AttributeObject;
 import objectos.html.rec.Instruction;
@@ -36,55 +37,43 @@ final class ContentsPrecorder {
       final Instruction instruction;
       instruction = instructions[idx];
 
-      if (!(instruction instanceof AttributeObject attr)) {
+      if (!(instruction instanceof AttributeObject)) {
         continue;
       }
 
-      return precord1(instructions, idx, attr);
+      return precord1(instructions, idx);
     }
 
     return instructions;
   }
 
-  private Instruction[] precord1(Instruction[] instructions, final int startIndex, AttributeObject first) {
+  private Instruction[] precord1(Instruction[] instructions, final int startIndex) {
     final int length;
     length = instructions.length;
 
     final Instruction[] result;
-    result = new Instruction[length];
+    result = Arrays.copyOf(instructions, length);
 
-    for (int idx = 0; idx < startIndex; idx++) {
-      result[idx] = instructions[idx];
-    }
-
-    result[startIndex] = record0(first);
-
-    for (int idx = startIndex + 1; idx < length; idx++) {
+    for (int idx = startIndex; idx < length; idx++) {
       final Instruction instruction;
       instruction = instructions[idx];
 
-      if (instruction instanceof AttributeObject attr) {
-        result[idx] = record0(attr);
-      } else {
-        result[idx] = instruction;
+      if (!(instruction instanceof AttributeObject attr)) {
+        continue;
       }
+
+      final AttributeName name;
+      name = attr.attrName();
+
+      final String value;
+      value = attr.attrValue();
+
+      result[idx] = value == null
+          ? booleanAttributeRecorder.record(name)
+          : attributeRecorder.record(name, value);
     }
 
     return result;
-  }
-
-  private Instruction record0(AttributeObject attr) {
-    final AttributeName name;
-    name = attr.attrName();
-
-    final String value;
-    value = attr.attrValue();
-
-    if (value == null) {
-      return booleanAttributeRecorder.record(name);
-    } else {
-      return attributeRecorder.record(name, value);
-    }
   }
 
 }
