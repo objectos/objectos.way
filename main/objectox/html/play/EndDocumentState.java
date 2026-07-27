@@ -15,25 +15,19 @@
  */
 package objectox.html.play;
 
-import objectos.html.play.HtmlEvent;
+final class EndDocumentState implements State {
 
-public enum EndDocumentState implements State {
+  private final Ctx ctx;
 
-  INSTANCE;
+  EndDocumentState(Ctx ctx) {
+    this.ctx = ctx;
+  }
 
   @Override
   public final State compute() {
-    return StopState.INSTANCE;
-  }
+    ctx.result(EndDocumentEvent.INSTANCE);
 
-  @Override
-  public final HtmlEvent event() {
-    return HtmlEventPojo.END_DOCUMENT;
-  }
-
-  @Override
-  public final String toString() {
-    return "EndDocument";
+    return new StopState(ctx);
   }
 
 }

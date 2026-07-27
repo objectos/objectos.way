@@ -26,29 +26,27 @@ public class BeginStartTagStateTest {
 
   @Test(description = "<html></html>")
   public void compute01() {
-    final HtmlSource source;
-    source = CtxY.create(opts -> {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
       opts.addByte(HtmlBytes.STARTTAG8);
       opts.addInt8(ElementNamePojo.HTML.index());
       opts.addByte(HtmlBytes.VALUES8);
       opts.addInt8(0);
       opts.addByte(HtmlBytes.ENDTAG8);
       opts.addInt8(ElementNamePojo.HTML.index());
+
+      opts.push(FrameKind.DOCUMENT, 1);
     });
 
     final BeginStartTagState subject;
-    subject = new BeginStartTagState(
-        source,
-        Stack.of(6),
-        ElementNamePojo.HTML,
-        Values.of(4, IntSize.BIT8, 0)
-    );
+    subject = new BeginStartTagState(ctx, IntSize.BIT8);
 
-    final EndStartTagState res;
-    res = (EndStartTagState) subject.compute();
+    final State res;
+    res = subject.compute();
 
-    assertEquals(res.elementName, ElementNamePojo.HTML);
-    assertEquals(res.stack, Stack.of(6));
+    assertEquals(res.getClass(), BeginElementContentsState.class);
+    assertEquals(ctx.hasEvent(), true);
+    assertEquals(ctx.nextEvent(), BeginStartTagEvent.of(ElementNamePojo.HTML));
   }
 
 }

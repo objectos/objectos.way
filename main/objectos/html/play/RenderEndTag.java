@@ -15,12 +15,12 @@
  */
 package objectos.html.play;
 
-import objectox.html.play.EndTagState;
+import objectox.html.play.RenderEndTagEvent;
 
 /// The end tag of an HTML element.
 public sealed interface RenderEndTag
     extends HtmlEvent
-    permits EndTagState {
+    permits RenderEndTagEvent {
 
   /// Returns the name of the HTML element.
   ///

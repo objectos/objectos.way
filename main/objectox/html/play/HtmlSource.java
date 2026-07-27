@@ -39,7 +39,7 @@ public final class HtmlSource implements Html {
   @Override
   public final Stream<HtmlEvent> events() {
     final Player player;
-    player = new Player(this);
+    player = new Player(code, objects);
 
     final int attrs;
     attrs = Spliterator.ORDERED | Spliterator.IMMUTABLE | Spliterator.NONNULL;

@@ -36,8 +36,8 @@ public final class AttributeState implements State {
 
   @Override
   public final State compute() {
-    final NextElementAttribute next;
-    next = new NextElementAttribute(tape, elementName);
+    final ScanElementAttributeState next;
+    next = new ScanElementAttributeState(tape, elementName);
 
     return next.compute();
   }

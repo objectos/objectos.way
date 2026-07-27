@@ -42,13 +42,13 @@ public class EndStartTagStateTest {
       opts.mainIndex = 5;
     });
 
-    final EndStartTagState subject;
-    subject = new EndStartTagState(tape, ElementNamePojo.HTML);
+    final EndStartTagEvent subject;
+    subject = new EndStartTagEvent(tape, ElementNamePojo.HTML);
 
     final State res;
     res = subject.compute();
 
-    assertEquals(res.getClass(), EndTagState.class);
+    assertEquals(res.getClass(), RenderEndTagEvent.class);
   }
 
   @Test(enabled = false)
@@ -80,8 +80,8 @@ public class EndStartTagStateTest {
       opts.mainIndex = 13;
     });
 
-    final EndStartTagState subject;
-    subject = new EndStartTagState(tape, ElementNamePojo.HTML);
+    final EndStartTagEvent subject;
+    subject = new EndStartTagEvent(tape, ElementNamePojo.HTML);
 
     final State res;
     res = subject.compute();

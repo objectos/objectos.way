@@ -15,12 +15,12 @@
  */
 package objectos.html.play;
 
-import objectox.html.play.BeginStartTagState;
+import objectox.html.play.BeginStartTagEvent;
 
 /// The start tag of an HTML element has begun.
 public sealed interface BeginStartTag
     extends HtmlEvent
-    permits BeginStartTagState {
+    permits BeginStartTagEvent {
 
   /// Returns the name of the HTML element.
   ///

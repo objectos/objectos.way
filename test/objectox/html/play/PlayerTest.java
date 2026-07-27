@@ -64,7 +64,7 @@ public class PlayerTest {
         BeginDocument
         BeginStartTag(html)
         EndStartTag
-        EndTag(html)
+        RenderEndTag(html)
         EndDocument
         """
     );

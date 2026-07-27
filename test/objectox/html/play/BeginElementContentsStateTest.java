@@ -17,48 +17,34 @@ package objectox.html.play;
 
 import static org.testng.Assert.assertEquals;
 
-import objectox.html.IntSize;
 import objectox.html.elem.ElementNamePojo;
 import objectox.html.rec.HtmlBytes;
 import org.testng.annotations.Test;
 
-public class BeginDocumentStateTest {
-
-  @Test
-  public void compute00() {
-    final HtmlSource source;
-    source = CtxY.create(_ -> {});
-
-    final BeginDocumentTransition subject;
-    subject = new BeginDocumentTransition(source, 0);
-
-    final State res;
-    res = subject.nextState();
-
-    assertEquals(res.getClass(), EndDocumentState.class);
-  }
+public class BeginElementContentsStateTest {
 
   @Test(description = "<html></html>")
   public void compute01() {
-    final HtmlSource source;
-    source = CtxY.create(opts -> {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
       opts.addByte(HtmlBytes.STARTTAG8);
       opts.addInt8(ElementNamePojo.HTML.index());
       opts.addByte(HtmlBytes.VALUES8);
       opts.addInt8(0);
       opts.addByte(HtmlBytes.ENDTAG8);
       opts.addInt8(ElementNamePojo.HTML.index());
+
+      opts.push(FrameKind.DOCUMENT, 2);
     });
 
-    final BeginDocumentTransition subject;
-    subject = new BeginDocumentTransition(source, 0);
+    final BeginElementContentsState subject;
+    subject = new BeginElementContentsState(ctx);
 
-    final BeginStartTagState res;
-    res = (BeginStartTagState) subject.nextState();
+    final State res;
+    res = subject.compute();
 
-    assertEquals(res.stack, Stack.of(6));
-    assertEquals(res.elementName, ElementNamePojo.HTML);
-    assertEquals(res.values, Values.of(4, IntSize.BIT8, 0));
+    assertEquals(res.getClass(), ScanElementAttributeState.class);
+    assertEquals(ctx.hasEvent(), false);
   }
 
 }

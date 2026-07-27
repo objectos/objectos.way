@@ -59,7 +59,7 @@ public class AttributeStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res.getClass(), EndStartTagState.class);
+    assertEquals(res.getClass(), EndStartTagEvent.class);
   }
 
 }

@@ -15,22 +15,17 @@
  */
 package objectox.html.play;
 
-import objectos.html.play.HtmlEvent;
+import objectos.html.play.EndDocument;
 
-public final class BeginDocumentTransition implements Transition {
+public final class EndDocumentEvent implements EndDocument {
 
-  private final Ctx ctx;
+  static final EndDocumentEvent INSTANCE = new EndDocumentEvent();
 
-  BeginDocumentTransition(Ctx ctx) {
-    this.ctx = ctx;
-  }
+  private EndDocumentEvent() {}
 
   @Override
-  public final State nextState() {
-    final NextDocumentNode next;
-    next = new NextDocumentNode(source, startIndex);
-
-    return next.compute();
+  public final String toString() {
+    return "EndDocument";
   }
 
 }

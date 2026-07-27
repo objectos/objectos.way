@@ -15,32 +15,17 @@
  */
 package objectox.html.play;
 
-final class NextElementAttribute {
+import objectos.html.play.BeginDocument;
 
-  private final HtmlSource source;
+public final class BeginDocumentEvent implements BeginDocument {
 
-  final Stack stack;
+  static final BeginDocumentEvent INSTANCE = new BeginDocumentEvent();
 
-  final Values values;
+  private BeginDocumentEvent() {}
 
-  final int valueIndex;
-
-  NextElementAttribute(HtmlSource source, Stack stack, Values values, int valueIndex) {
-    this.source = source;
-
-    this.stack = stack;
-
-    this.values = values;
-
-    this.valueIndex = valueIndex;
-  }
-
-  public final State compute() {
-    if (values.hasNext(valueIndex)) {
-      throw new UnsupportedOperationException("Implement me");
-    } else {
-      throw new UnsupportedOperationException("Implement me");
-    }
+  @Override
+  public final String toString() {
+    return "BeginDocument";
   }
 
 }

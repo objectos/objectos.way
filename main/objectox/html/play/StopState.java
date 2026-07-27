@@ -15,12 +15,18 @@
  */
 package objectox.html.play;
 
-enum StopState implements State {
+final class StopState implements State {
 
-  INSTANCE;
+  private final Ctx ctx;
+
+  StopState(Ctx ctx) {
+    this.ctx = ctx;
+  }
 
   @Override
   public final State compute() {
+    ctx.result(null);
+
     return this;
   }
 

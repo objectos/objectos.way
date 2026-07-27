@@ -15,9 +15,9 @@
  */
 package objectos.html.play;
 
-import objectox.html.play.HtmlEventPojo;
+import objectox.html.play.BeginDocumentEvent;
 
 /// The HTML document has begun.
 public sealed interface BeginDocument
     extends HtmlEvent
-    permits HtmlEventPojo {}
+    permits BeginDocumentEvent {}

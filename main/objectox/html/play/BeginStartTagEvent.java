@@ -15,8 +15,24 @@
  */
 package objectox.html.play;
 
-interface Transition {
+import objectos.html.ElementName;
+import objectos.html.play.BeginStartTag;
+import objectox.html.elem.ElementNamePojo;
 
-  State compute();
+public record BeginStartTagEvent(ElementName elementName) implements BeginStartTag {
+
+  static BeginStartTagEvent of(ElementNamePojo elementName) {
+    return new BeginStartTagEvent(elementName);
+  }
+
+  @Override
+  public final String name() {
+    return elementName.name();
+  }
+
+  @Override
+  public final String toString() {
+    return "BeginStartTag(" + name() + ")";
+  }
 
 }

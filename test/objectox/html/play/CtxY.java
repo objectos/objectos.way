@@ -16,11 +16,16 @@
 package objectox.html.play;
 
 import java.util.function.Consumer;
+import objectos.internal.Util;
 import objectox.html.rec.HtmlSink;
 
 final class CtxY {
 
   private final HtmlSink sink = new HtmlSink();
+
+  private Frame[] stack = Ctx.EMPTY_STACK;
+
+  private int stackIndex = -1;
 
   public static Ctx create(Consumer<? super CtxY> opts) {
     final CtxY y;
@@ -51,11 +56,24 @@ final class CtxY {
     return sink.addObject(value);
   }
 
+  public final void push(FrameKind kind, int value) {
+    final int index;
+    index = ++stackIndex;
+
+    stack = Util.growIfNecessary(stack, index);
+
+    stack[index] = new Frame(kind, value);
+  }
+
   private Ctx build() {
     return new Ctx(
         sink.code(),
 
-        sink.objects()
+        sink.objects(),
+
+        stack,
+
+        stackIndex
     );
   }
 

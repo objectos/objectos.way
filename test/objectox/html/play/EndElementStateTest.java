@@ -17,36 +17,33 @@ package objectox.html.play;
 
 import static org.testng.Assert.assertEquals;
 
-import objectox.html.HtmlByteProto;
 import objectox.html.elem.ElementNamePojo;
 import objectox.html.rec.HtmlBytes;
 import org.testng.annotations.Test;
 
-public class EndTagStateTest {
+public class EndElementStateTest {
 
-  @Test
+  @Test(description = "<html></html>")
   public void compute01() {
-    final Tape tape;
-    tape = CtxY.create(opts -> {
-      opts.main(
-          HtmlByteProto.ELEMENT,
-          HtmlBytes.encodeInt0(5),
-          HtmlBytes.encodeInt1(5),
-          HtmlByteProto.STANDARD_NAME,
-          (byte) ElementNamePojo.HTML.index(),
-          HtmlByteProto.END
-      );
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.STARTTAG8);
+      opts.addInt8(ElementNamePojo.HTML.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ENDTAG8);
+      opts.addInt8(ElementNamePojo.HTML.index());
 
-      opts.mainIndex = 6;
+      opts.push(FrameKind.DOCUMENT, 6);
     });
 
-    final EndTagState subject;
-    subject = new EndTagState(tape, ElementNamePojo.HTML, FrameKind.DOC_ELEMENT);
+    final EndElementState subject;
+    subject = new EndElementState(ctx);
 
     final State res;
     res = subject.compute();
 
-    assertEquals(res, EndDocumentState.INSTANCE);
+    assertEquals(res.getClass(), ScanDocumentNodeState.class);
   }
 
 }

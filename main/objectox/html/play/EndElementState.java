@@ -15,27 +15,26 @@
  */
 package objectox.html.play;
 
-import objectos.html.play.BeginDocument;
-import objectos.html.play.EndDocument;
+final class EndElementState implements State {
 
-public final class HtmlEventPojo
-    implements
-    BeginDocument,
-    EndDocument {
+  private final Ctx ctx;
 
-  static final BeginDocument BEGIN_DOCUMENT = new HtmlEventPojo(BeginDocument.class);
-
-  static final EndDocument END_DOCUMENT = new HtmlEventPojo(EndDocument.class);
-
-  private final String name;
-
-  private HtmlEventPojo(Class<?> type) {
-    this.name = type.getSimpleName();
+  EndElementState(Ctx ctx) {
+    this.ctx = ctx;
   }
 
   @Override
-  public final String toString() {
-    return name;
+  public final State compute() {
+    final Frame frame;
+    frame = ctx.pop();
+
+    return switch (frame.kind) {
+      case DOCUMENT -> {
+        ctx.push(frame);
+
+        yield new ScanDocumentNodeState(ctx);
+      }
+    };
   }
 
 }

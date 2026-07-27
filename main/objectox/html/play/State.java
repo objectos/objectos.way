@@ -15,10 +15,22 @@
  */
 package objectox.html.play;
 
-enum State {
+interface State {
 
-  START,
+  static UnsupportedOperationException implCode(byte code) {
+    final String msg;
+    msg = "Implement me: code=%d".formatted(code);
 
-  BEGIN_DOCUMENT;
+    return new UnsupportedOperationException(msg);
+  }
+
+  static IllegalArgumentException malformed() {
+    final String msg;
+    msg = "Invalid compiled HTML code";
+
+    return new IllegalArgumentException(msg);
+  }
+
+  State compute();
 
 }

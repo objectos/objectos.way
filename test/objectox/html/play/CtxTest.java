@@ -17,7 +17,6 @@ package objectox.html.play;
 
 import static org.testng.Assert.assertEquals;
 
-import java.util.NoSuchElementException;
 import objectos.html.play.HtmlEvent;
 import org.testng.annotations.Test;
 
@@ -79,18 +78,8 @@ public class CtxTest {
     assertEquals(subject.hasByte(), false);
   }
 
-  @Test(
-      description = "throws when no event",
-      expectedExceptions = NoSuchElementException.class)
-  public void nextEvent01() {
-    final Ctx subject;
-    subject = CtxY.create(_ -> {});
-
-    subject.nextEvent();
-  }
-
   @Test(description = "returns the result and clears state")
-  public void nextEvent02() {
+  public void nextEvent01() {
     final Ctx subject;
     subject = CtxY.create(_ -> {});
 

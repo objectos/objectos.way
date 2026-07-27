@@ -17,19 +17,21 @@ package objectox.html.play;
 
 import objectox.html.rec.HtmlBytes;
 
-final class StartState implements Transition {
+final class StartState implements State {
 
   private final Ctx ctx;
 
-  StartState(Ctx context) {
-    this.ctx = context;
+  StartState(Ctx ctx) {
+    this.ctx = ctx;
   }
 
   @Override
-  public final State compute() {
+  public final ScanDocumentNodeState compute() {
+    ctx.push(FrameKind.DOCUMENT, 0);
+
     while (ctx.hasByte()) {
       final byte proto;
-      proto = ctx.nextByte();
+      proto = ctx.peekByte();
 
       switch (proto) {
         case HtmlBytes.xSTARTTAG8 -> throw new UnsupportedOperationException("Implement me");
@@ -56,9 +58,9 @@ final class StartState implements Transition {
       break;
     }
 
-    ctx.result(HtmlEventPojo.BEGIN_DOCUMENT);
+    ctx.result(BeginDocumentEvent.INSTANCE);
 
-    return State.BEGIN_DOCUMENT;
+    return new ScanDocumentNodeState(ctx);
   }
 
 }

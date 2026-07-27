@@ -19,26 +19,27 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import objectos.html.play.HtmlEvent;
 
-public final class Player implements Iterator<HtmlEvent> {
+public final class Player extends Ctx implements Iterator<HtmlEvent> {
 
-  private final Ctx ctx;
+  private State state;
 
-  private State state = State.START;
+  Player(byte[] code, Object[] objects) {
+    this(code, objects, EMPTY_STACK, 0);
+  }
 
-  Player(Ctx ctx) {
-    this.ctx = ctx;
+  Player(byte[] code, Object[] objects, Frame[] stack, int stackIndex) {
+    super(code, objects, stack, stackIndex);
+
+    state = new StartState(this);
   }
 
   @Override
   public final boolean hasNext() {
-    while (ctx.shouldCompute()) {
-      final Transition t;
-      t = transition();
-
-      state = t.compute();
+    while (shouldCompute()) {
+      state = state.compute();
     }
 
-    return ctx.hasEvent();
+    return hasEvent();
   }
 
   @Override
@@ -46,16 +47,8 @@ public final class Player implements Iterator<HtmlEvent> {
     if (!hasNext()) {
       throw new NoSuchElementException();
     } else {
-      return ctx.nextEvent();
+      return nextEvent();
     }
-  }
-
-  private Transition transition() {
-    return switch (state) {
-      case START -> new StartState(ctx);
-
-      case BEGIN_DOCUMENT -> throw new UnsupportedOperationException("Unimplemented case: " + state);
-    };
   }
 
 }

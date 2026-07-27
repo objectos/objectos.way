@@ -15,27 +15,13 @@
  */
 package objectox.html.play;
 
-import objectos.html.ElementName;
+import objectos.html.play.EndStartTag;
 
-public final class EndStartTagState implements State {
+public final class EndStartTagEvent implements EndStartTag {
 
-  private final Tape tape;
+  static final EndStartTagEvent INSTANCE = new EndStartTagEvent();
 
-  private final ElementName elementName;
-
-  EndStartTagState(Tape tape, ElementName elementName) {
-    this.tape = tape;
-
-    this.elementName = elementName;
-  }
-
-  @Override
-  public final State compute() {
-    final NextElementNode next;
-    next = new NextElementNode(tape, elementName);
-
-    return next.compute();
-  }
+  private EndStartTagEvent() {}
 
   @Override
   public final String toString() {

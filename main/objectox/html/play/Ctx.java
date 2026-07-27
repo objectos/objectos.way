@@ -15,34 +15,42 @@
  */
 package objectox.html.play;
 
-import java.util.NoSuchElementException;
 import objectos.html.play.HtmlEvent;
 import objectos.internal.Util;
+import objectox.html.IntSize;
 
-final class Ctx {
+class Ctx {
+
+  static final Frame[] EMPTY_STACK = new Frame[0];
 
   private final byte[] code;
 
   private boolean computed;
 
+  @SuppressWarnings("unused")
   private final Object[] objects;
 
   private HtmlEvent result;
 
-  private int[] stack = Util.EMPTY_INT_ARRAY;
+  private Frame[] stack;
 
   private int stackIndex = -1;
 
-  Ctx(byte[] code, Object[] objects) {
+  Ctx(byte[] code, Object[] objects, Frame[] stack, int stackIndex) {
     this.code = code;
 
     this.objects = objects;
 
-    push(0);
+    this.stack = stack;
+
+    this.stackIndex = stackIndex;
   }
 
   public final boolean hasByte() {
-    return stack[stackIndex] < code.length;
+    final Frame frame;
+    frame = stack[stackIndex];
+
+    return frame.index < code.length;
   }
 
   public final boolean hasEvent() {
@@ -50,10 +58,6 @@ final class Ctx {
   }
 
   public final HtmlEvent nextEvent() {
-    if (!computed) {
-      throw new NoSuchElementException();
-    }
-
     final HtmlEvent res;
     res = result;
 
@@ -65,23 +69,83 @@ final class Ctx {
   }
 
   public final byte nextByte() {
+    final Frame frame;
+    frame = stack[stackIndex];
+
     final int idx;
-    idx = stack[stackIndex]++;
+    idx = frame.index;
+
+    final byte result;
+    result = code[idx];
+
+    frame.index = idx + 1;
+
+    return result;
+  }
+
+  public final int nextInt(IntSize size) {
+    final Frame frame;
+    frame = stack[stackIndex];
+
+    final int startIndex;
+    startIndex = frame.index;
+
+    frame.index = size.skip(startIndex);
+
+    return switch (size) {
+      case BIT8 -> toInt(startIndex, 0);
+
+      case BIT16 -> toInt(startIndex, 8) | toInt(startIndex + 1, 0);
+
+      case BIT24 -> toInt(startIndex, 16) | toInt(startIndex + 1, 8) | toInt(startIndex + 2, 0);
+    };
+  }
+
+  private int toInt(int index, int shift) {
+    final byte byteValue;
+    byteValue = code[index];
+
+    final int intValue;
+    intValue = Byte.toUnsignedInt(byteValue);
+
+    return intValue << shift;
+  }
+
+  public final byte peekByte() {
+    final Frame frame;
+    frame = stack[stackIndex];
+
+    final int idx;
+    idx = frame.index;
 
     return code[idx];
   }
 
-  public final void pop() {
-    stackIndex--;
+  public final int peekStack() {
+    final Frame frame;
+    frame = stack[stackIndex];
+
+    return frame.index;
   }
 
-  public final void push(int value) {
+  public final Frame pop() {
+    return stack[stackIndex--];
+  }
+
+  public final void push(Frame frame) {
     final int index;
     index = ++stackIndex;
 
     stack = Util.growIfNecessary(stack, index);
 
-    stack[index] = value;
+    stack[index] = frame;
+  }
+
+  public final void push(FrameKind kind, int value) {
+    final Frame frame;
+    frame = new Frame(kind, value);
+
+    push(frame);
   }
 
   public final boolean shouldCompute() {
@@ -89,7 +153,10 @@ final class Ctx {
   }
 
   public final void skip(int value) {
-    stack[stackIndex] += value;
+    final Frame frame;
+    frame = stack[stackIndex];
+
+    frame.index += value;
   }
 
   public final void result(HtmlEvent value) {

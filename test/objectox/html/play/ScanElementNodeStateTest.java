@@ -17,31 +17,38 @@ package objectox.html.play;
 
 import static org.testng.Assert.assertEquals;
 
+import objectox.html.IntSize;
 import objectox.html.elem.ElementNamePojo;
 import objectox.html.rec.HtmlBytes;
 import org.testng.annotations.Test;
 
-public class NextDocumentNodeTest {
+public class ScanElementNodeStateTest {
 
   @Test(description = "<html></html>")
   public void compute01() {
-    final HtmlSource source;
-    source = CtxY.create(opts -> {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
       opts.addByte(HtmlBytes.STARTTAG8);
       opts.addInt8(ElementNamePojo.HTML.index());
       opts.addByte(HtmlBytes.VALUES8);
       opts.addInt8(0);
       opts.addByte(HtmlBytes.ENDTAG8);
       opts.addInt8(ElementNamePojo.HTML.index());
+
+      opts.push(FrameKind.DOCUMENT, 4);
     });
 
-    final NextDocumentNode subject;
-    subject = new NextDocumentNode(source, 0);
+    final Values values;
+    values = Values.of(4, IntSize.BIT8, 0);
+
+    final ScanElementNodeState subject;
+    subject = new ScanElementNodeState(ctx, values, 0);
 
     final State res;
     res = subject.compute();
 
-    assertEquals(res.getClass(), BeginStartTagState.class);
+    assertEquals(res.getClass(), RenderEndTagState.class);
+    assertEquals(ctx.hasEvent(), false);
   }
 
 }

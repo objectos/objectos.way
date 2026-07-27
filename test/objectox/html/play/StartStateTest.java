@@ -34,9 +34,9 @@ public class StartStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res, State.BEGIN_DOCUMENT);
+    assertEquals(res.getClass(), ScanDocumentNodeState.class);
     assertEquals(ctx.hasEvent(), true);
-    assertEquals(ctx.nextEvent(), HtmlEventPojo.BEGIN_DOCUMENT);
+    assertEquals(ctx.nextEvent(), BeginDocumentEvent.INSTANCE);
   }
 
   @Test(description = "<html></html>")
@@ -57,7 +57,10 @@ public class StartStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res, State.BEGIN_DOCUMENT);
+    assertEquals(res.getClass(), ScanDocumentNodeState.class);
+    assertEquals(ctx.peekByte(), HtmlBytes.STARTTAG8);
+    assertEquals(ctx.hasEvent(), true);
+    assertEquals(ctx.nextEvent(), BeginDocumentEvent.INSTANCE);
   }
 
 }

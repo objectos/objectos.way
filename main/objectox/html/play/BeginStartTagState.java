@@ -15,39 +15,35 @@
  */
 package objectox.html.play;
 
-import objectos.html.ElementName;
+import objectox.html.IntSize;
+import objectox.html.elem.ElementNamePojo;
 
-public final class BeginStartTagState implements State {
+final class BeginStartTagState implements State {
 
-  private final HtmlSource source;
+  private final Ctx ctx;
 
-  final Stack stack;
+  private final IntSize nameSize;
 
-  final ElementName elementName;
+  BeginStartTagState(Ctx ctx, IntSize nameSize) {
+    this.ctx = ctx;
 
-  final Values values;
-
-  BeginStartTagState(HtmlSource source, Stack stack, ElementName elementName, Values values) {
-    this.source = source;
-
-    this.stack = stack;
-
-    this.elementName = elementName;
-
-    this.values = values;
+    this.nameSize = nameSize;
   }
 
   @Override
   public final State compute() {
-    final NextElementAttribute nextAttribute;
-    nextAttribute = new NextElementAttribute(source, stack, values, 0);
+    final int nameIndex;
+    nameIndex = ctx.nextInt(nameSize);
 
-    return nextAttribute.compute();
-  }
+    final ElementNamePojo elementName;
+    elementName = ElementNamePojo.get(nameIndex);
 
-  @Override
-  public final String toString() {
-    return "BeginStartTag(" + elementName.name() + ")";
+    final BeginStartTagEvent event;
+    event = new BeginStartTagEvent(elementName);
+
+    ctx.result(event);
+
+    return new BeginElementContentsState(ctx);
   }
 
 }
