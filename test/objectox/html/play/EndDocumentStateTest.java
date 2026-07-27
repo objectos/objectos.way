@@ -16,15 +16,36 @@
 package objectox.html.play;
 
 import static org.testng.Assert.assertEquals;
+
+import objectox.html.elem.ElementNamePojo;
+import objectox.html.rec.HtmlBytes;
 import org.testng.annotations.Test;
 
 public class EndDocumentStateTest {
 
-  private final EndDocumentState subject = EndDocumentState.INSTANCE;
+  @Test(description = "<html></html>")
+  public void compute01() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.STARTTAG8);
+      opts.addInt8(ElementNamePojo.HTML.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ENDTAG8);
+      opts.addInt8(ElementNamePojo.HTML.index());
 
-  @Test
-  public void compute00() {
-    assertEquals(subject.compute(), StopState.INSTANCE);
+      opts.push(FrameKind.DOCUMENT, 6);
+    });
+
+    final EndDocumentState subject;
+    subject = new EndDocumentState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res.getClass(), StopState.class);
+    assertEquals(ctx.hasEvent(), true);
+    assertEquals(ctx.nextEvent(), EndDocumentEvent.INSTANCE);
   }
 
 }

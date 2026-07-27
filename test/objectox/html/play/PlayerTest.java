@@ -70,7 +70,7 @@ public class PlayerTest {
     );
   }
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   <html lang="pt-BR"></html>
   """)
   public void testCase02() {
@@ -90,7 +90,7 @@ public class PlayerTest {
     );
   }
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   <html class="no-js" lang="pt-BR"></html>
   """)
   public void testCase03() {

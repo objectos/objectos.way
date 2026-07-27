@@ -16,28 +16,34 @@
 package objectox.html.play;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertSame;
-
-import java.util.NoSuchElementException;
+import objectox.html.elem.ElementNamePojo;
+import objectox.html.rec.HtmlBytes;
 import org.testng.annotations.Test;
 
-public class EndStateTest {
+public class StopStateTest {
 
-  private final StopState subject = StopState.INSTANCE;
+  @Test(description = "<html></html>")
+  public void compute01() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.STARTTAG8);
+      opts.addInt8(ElementNamePojo.HTML.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ENDTAG8);
+      opts.addInt8(ElementNamePojo.HTML.index());
 
-  @Test
-  public void compute00() {
-    assertSame(subject.compute(), subject);
-  }
+      opts.push(FrameKind.DOCUMENT, 6);
+    });
 
-  @Test
-  public void hasNext() {
-    assertEquals(subject.hasNext(), false);
-  }
+    final StopState subject;
+    subject = new StopState(ctx);
 
-  @Test(expectedExceptions = NoSuchElementException.class)
-  public void next() {
-    subject.next();
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res.getClass(), StopState.class);
+    assertEquals(ctx.hasEvent(), false);
   }
 
 }
