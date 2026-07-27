@@ -17,6 +17,7 @@ package objectox.html.rec;
 
 import static org.testng.Assert.assertEquals;
 
+import objectox.html.attr.AttributeNamePojo;
 import objectox.html.elem.ElementNamePojo;
 import org.testng.annotations.Test;
 
@@ -169,6 +170,55 @@ public class ElementRecorderTest {
           opts.addInt8(0);
           opts.addByte(HtmlBytes.ENDTAG8);
           opts.addInt8(ElementNamePojo.HTML.index());
+        })
+    );
+  }
+
+  @Test(description = """
+  <head><meta charset="UTF-8"></head>
+  """)
+  public void record05() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    int charset = sink.addByte(HtmlBytes.ATTRIBUTE88);
+    sink.addInt8(AttributeNamePojo.CHARSET.index());
+    sink.addInt8(sink.addObject("UTF-8"));
+
+    final AttributePointer charsetPointer;
+    charsetPointer = new AttributePointer(charset);
+
+    final ElementRecorder subject;
+    subject = new ElementRecorder(sink);
+
+    final ElementPointer res;
+    res = subject.record(
+        ElementNamePojo.HEAD,
+        subject.record(ElementNamePojo.META, charsetPointer)
+    );
+
+    assertEquals(res.value(), 9);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.xATTRIBUTE88);
+          opts.addInt8(AttributeNamePojo.CHARSET.index());
+          opts.addInt8(opts.addObject("UTF-8"));
+          opts.addByte(HtmlBytes.xSTARTTAG8);
+          opts.addInt8(ElementNamePojo.META.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(1);
+          opts.addInt8(0);
+          opts.addByte(HtmlBytes.VOIDELEM);
+          opts.addByte(HtmlBytes.STARTTAG8);
+          opts.addInt8(ElementNamePojo.HEAD.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(1);
+          opts.addInt8(3);
+          opts.addByte(HtmlBytes.ENDTAG8);
+          opts.addInt8(ElementNamePojo.HEAD.index());
         })
     );
   }

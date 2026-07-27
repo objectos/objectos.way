@@ -54,7 +54,7 @@ final class ElementRecorder {
 
     final int startIndex;
     startIndex = switch (nameSize) {
-      case BIT8 -> record8(nameIndex, instructions);
+      case BIT8 -> record8(nameIndex, instructions, namePojo);
 
       case BIT16, BIT24 -> throw new UnsupportedOperationException();
     };
@@ -62,7 +62,7 @@ final class ElementRecorder {
     return new ElementPointer(startIndex);
   }
 
-  private int record8(int nameIndex, Instruction[] instructions) {
+  private int record8(int nameIndex, Instruction[] instructions, ElementNamePojo namePojo) {
     final int startIndex;
     startIndex = sink.addByte(HtmlBytes.STARTTAG8);
 
@@ -70,9 +70,13 @@ final class ElementRecorder {
 
     contentsRecorder.record(instructions);
 
-    sink.addByte(HtmlBytes.ENDTAG8);
+    if (namePojo.endTag()) {
+      sink.addByte(HtmlBytes.ENDTAG8);
 
-    sink.addInt8(nameIndex);
+      sink.addInt8(nameIndex);
+    } else {
+      sink.addByte(HtmlBytes.VOIDELEM);
+    }
 
     return startIndex;
   }

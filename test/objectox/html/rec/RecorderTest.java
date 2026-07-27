@@ -195,6 +195,48 @@ public class RecorderTest {
   }
 
   @Test(description = """
+  <head><meta charset="UTF-8"></head>
+  """)
+  public void record05() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final Recorder subject;
+    subject = create(sink);
+
+    subject.element(
+        ElementNamePojo.HEAD,
+        subject.element(
+            ElementNamePojo.META,
+            subject.attribute(AttributeNamePojo.CHARSET, "UTF-8")
+        )
+    );
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.xATTRIBUTE88);
+          opts.addInt8(AttributeNamePojo.CHARSET.index());
+          opts.addInt8(opts.addObject("UTF-8"));
+          opts.addByte(HtmlBytes.xSTARTTAG8);
+          opts.addInt8(ElementNamePojo.META.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(1);
+          opts.addInt8(0);
+          opts.addByte(HtmlBytes.VOIDELEM);
+          opts.addByte(HtmlBytes.STARTTAG8);
+          opts.addInt8(ElementNamePojo.HEAD.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(1);
+          opts.addInt8(3);
+          opts.addByte(HtmlBytes.ENDTAG8);
+          opts.addInt8(ElementNamePojo.HEAD.index());
+        })
+    );
+  }
+
+  @Test(description = """
   flatten instruction
   """)
   public void flatten01() {
