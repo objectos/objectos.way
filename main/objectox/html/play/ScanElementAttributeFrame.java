@@ -38,6 +38,8 @@ final class ScanElementAttributeFrame extends Frame {
   }
 
   public final int nextInt(Ctx ctx) {
+    current += 1;
+
     return ctx.nextInt(size);
   }
 

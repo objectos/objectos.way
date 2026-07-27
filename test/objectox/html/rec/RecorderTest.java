@@ -27,10 +27,10 @@ import objectox.html.attr.AttributeNamePojo;
 import objectox.html.elem.ElementNamePojo;
 import org.testng.annotations.Test;
 
-public class DocumentRecorderTest {
+public class RecorderTest {
 
-  private DocumentRecorder create(HtmlSink sink) {
-    return DocumentRecorder.of(sink);
+  private Recorder create(HtmlSink sink) {
+    return Recorder.of(sink);
   }
 
   @Test(description = "<!DOCTYPE html>")
@@ -38,7 +38,7 @@ public class DocumentRecorderTest {
     final HtmlSink sink;
     sink = new HtmlSink();
 
-    final DocumentRecorder subject;
+    final Recorder subject;
     subject = create(sink);
 
     subject.doctype();
@@ -58,7 +58,7 @@ public class DocumentRecorderTest {
     final HtmlSink sink;
     sink = new HtmlSink();
 
-    final DocumentRecorder subject;
+    final Recorder subject;
     subject = create(sink);
 
     assertEquals(sink, HtmlSinkY.create(_ -> {}));
@@ -71,7 +71,7 @@ public class DocumentRecorderTest {
     final HtmlSink sink;
     sink = new HtmlSink();
 
-    final DocumentRecorder subject;
+    final Recorder subject;
     subject = create(sink);
 
     final ElementNamePojo name;
@@ -100,7 +100,7 @@ public class DocumentRecorderTest {
     final HtmlSink sink;
     sink = new HtmlSink();
 
-    final DocumentRecorder subject;
+    final Recorder subject;
     subject = create(sink);
 
     subject.element(
@@ -132,7 +132,7 @@ public class DocumentRecorderTest {
     final HtmlSink sink;
     sink = new HtmlSink();
 
-    final DocumentRecorder subject;
+    final Recorder subject;
     subject = create(sink);
 
     subject.element(
@@ -165,7 +165,7 @@ public class DocumentRecorderTest {
     final HtmlSink sink;
     sink = new HtmlSink();
 
-    final DocumentRecorder subject;
+    final Recorder subject;
     subject = create(sink);
 
     subject.element(
@@ -201,7 +201,7 @@ public class DocumentRecorderTest {
     final HtmlSink sink;
     sink = new HtmlSink();
 
-    final DocumentRecorder subject;
+    final Recorder subject;
     subject = create(sink);
 
     final ElementPointer res;
@@ -255,7 +255,7 @@ public class DocumentRecorderTest {
     final HtmlSink sink;
     sink = new HtmlSink();
 
-    final DocumentRecorder subject;
+    final Recorder subject;
     subject = create(sink);
 
     final Fragment0 fragment;
@@ -288,7 +288,7 @@ public class DocumentRecorderTest {
     final HtmlSink sink;
     sink = new HtmlSink();
 
-    final DocumentRecorder subject;
+    final Recorder subject;
     subject = create(sink);
 
     final Fragment1<String> fragment;
@@ -321,7 +321,7 @@ public class DocumentRecorderTest {
     final HtmlSink sink;
     sink = new HtmlSink();
 
-    final DocumentRecorder subject;
+    final Recorder subject;
     subject = create(sink);
 
     final Fragment2<String, String> fragment;
@@ -364,7 +364,7 @@ public class DocumentRecorderTest {
     final HtmlSink sink;
     sink = new HtmlSink();
 
-    final DocumentRecorder subject;
+    final Recorder subject;
     subject = create(sink);
 
     final Fragment3<String, String, String> fragment;
@@ -415,7 +415,7 @@ public class DocumentRecorderTest {
     final HtmlSink sink;
     sink = new HtmlSink();
 
-    final DocumentRecorder subject;
+    final Recorder subject;
     subject = create(sink);
 
     final Fragment4<String, String, String, String> fragment;
@@ -476,7 +476,7 @@ public class DocumentRecorderTest {
     final HtmlSink sink;
     sink = new HtmlSink();
 
-    final DocumentRecorder subject;
+    final Recorder subject;
     subject = create(sink);
 
     subject.element(

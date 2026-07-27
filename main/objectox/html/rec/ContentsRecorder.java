@@ -62,23 +62,20 @@ final class ContentsRecorder {
     optmisticMaxSize = IntSize.of(optmisticMax);
 
     final int actualMax;
-    actualMax = switch (optmisticMaxSize) {
-      case BIT8 -> record1(instructions, length, HtmlBytes.VALUES8, sink::addInt8);
-
-      case BIT16 -> record1(instructions, length, HtmlBytes.VALUES16, sink::addInt16);
-
-      case BIT24 -> record1(instructions, length, HtmlBytes.VALUES24, sink::addInt24);
-    };
+    actualMax = record1(instructions, length, optmisticMaxSize);
 
     if (actualMax != optmisticMax) {
       throw new UnsupportedOperationException("Implement me");
     }
   }
 
-  private int record1(Instruction[] instructions, int length, byte proto, IntConsumer consumer) {
+  private int record1(Instruction[] instructions, int length, IntSize size) {
+    final byte proto;
+    proto = proto(size);
+
     sink.addByte(proto);
 
-    consumer.accept(length);
+    sink.addInt(size, length);
 
     int max;
     max = 0;
@@ -87,7 +84,7 @@ final class ContentsRecorder {
       final int value;
       value = instruction.value();
 
-      consumer.accept(value);
+      sink.addInt(size, value);
 
       marker.accept(value);
 
@@ -95,6 +92,16 @@ final class ContentsRecorder {
     }
 
     return max;
+  }
+
+  private byte proto(IntSize size) {
+    return switch (size) {
+      case BIT8 -> HtmlBytes.VALUES8;
+
+      case BIT16 -> HtmlBytes.VALUES16;
+
+      case BIT24 -> HtmlBytes.VALUES24;
+    };
   }
 
 }

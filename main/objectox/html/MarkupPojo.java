@@ -37,17 +37,17 @@ import objectos.html.rec.NoOpInstruction;
 import objectos.html.rec.RawInstruction;
 import objectos.html.rec.TextInstruction;
 import objectox.html.attr.AttributeNamePojo;
-import objectox.html.rec.DocumentRecorder;
+import objectox.html.rec.Recorder;
 
 public sealed abstract class MarkupPojo
     extends MarkupGenerated
     implements Markup
     permits Markup.OfHtml {
 
-  private final DocumentRecorder recorder;
+  private final Recorder recorder;
 
   public MarkupPojo() {
-    recorder = DocumentRecorder.create();
+    recorder = Recorder.create();
   }
 
   @Override

@@ -54,6 +54,17 @@ final class RenderEndTagState implements State {
 
     ctx.result(event);
 
+    final Frame f;
+    f = ctx.pop();
+
+    final ScanElementNodeFrame previous;
+    previous = f.as(ScanElementNodeFrame.class);
+
+    final Frame current;
+    current = ctx.peekFrame();
+
+    current.updateIfNecessary(previous);
+
     return new EndElementState(ctx);
   }
 

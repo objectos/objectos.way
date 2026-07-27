@@ -26,7 +26,7 @@ import objectos.html.rec.Fragment4;
 import objectos.html.rec.Instruction;
 import objectox.html.Ambiguous;
 
-public final class DocumentRecorder {
+public final class Recorder {
 
   private final AmbiguousRecorder ambiguousRecorder;
 
@@ -48,7 +48,7 @@ public final class DocumentRecorder {
 
   private final TextRecorder textRecorder;
 
-  DocumentRecorder(
+  Recorder(
       AmbiguousRecorder ambiguousRecorder,
 
       AttributeRecorder attributeRecorder,
@@ -90,15 +90,15 @@ public final class DocumentRecorder {
     this.textRecorder = textRecorder;
   }
 
-  public static DocumentRecorder create() {
+  public static Recorder create() {
     return of(new HtmlSink());
   }
 
-  public static DocumentRecorder of(HtmlSink sink) {
+  public static Recorder of(HtmlSink sink) {
     final ContentsRecorder contentsRecorder;
     contentsRecorder = new ContentsRecorder(sink);
 
-    return new DocumentRecorder(
+    return new Recorder(
         new AmbiguousRecorder(sink),
 
         new AttributeRecorder(sink),

@@ -15,6 +15,8 @@
  */
 package objectox.html.play;
 
+import objectox.html.rec.HtmlBytes;
+
 final class ScanElementNodeState implements State {
 
   private final Ctx ctx;
@@ -25,7 +27,42 @@ final class ScanElementNodeState implements State {
 
   @Override
   public final State compute() {
-    throw new UnsupportedOperationException("Implement me");
+    final Frame f;
+    f = ctx.peekFrame();
+
+    final ScanElementNodeFrame frame;
+    frame = f.as(ScanElementNodeFrame.class);
+
+    if (frame.hasNext()) {
+      return compute0(frame);
+    } else {
+      return new RenderEndTagState(ctx);
+    }
+  }
+
+  private State compute0(ScanElementNodeFrame frame) {
+    final int jmpIndex;
+    jmpIndex = frame.nextInt(ctx);
+
+    final JumpFrame jmpFrame;
+    jmpFrame = new JumpFrame(jmpIndex);
+
+    ctx.push(jmpFrame);
+
+    final byte code;
+    code = ctx.nextByte();
+
+    return switch (code) {
+      case HtmlBytes.xATTRIBUTE88 -> skip();
+
+      default -> throw State.implCode(code);
+    };
+  }
+
+  private State skip() {
+    ctx.pop(); // jmp frame
+
+    return this;
   }
 
 }

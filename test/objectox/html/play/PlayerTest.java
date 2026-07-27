@@ -90,23 +90,21 @@ public class PlayerTest {
     );
   }
 
-  @Test(enabled = false, description = """
-  <html class="no-js" lang="pt-BR"></html>
+  @Test(description = """
+  <html autofocus></html>
   """)
   public void testCase03() {
     test(
         m -> m.html(
-            m.className("no-js"),
-            m.lang("pt-BR")
+            Markup.autofocus
         ),
 
         """
         BeginDocument
         BeginStartTag(html)
-        Attribute(class, no-js)
-        Attribute(lang, pt-BR)
+        RenderBooleanAttribute(autofocus)
         EndStartTag
-        EndTag(html)
+        RenderEndTag(html)
         EndDocument
         """
     );

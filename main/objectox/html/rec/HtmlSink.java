@@ -18,6 +18,7 @@ package objectox.html.rec;
 import java.util.Arrays;
 import java.util.HexFormat;
 import objectos.internal.Util;
+import objectox.html.IntSize;
 
 public final class HtmlSink {
 
@@ -60,6 +61,16 @@ public final class HtmlSink {
     code[idx] = value;
 
     return idx;
+  }
+
+  public final void addInt(IntSize size, int value) {
+    switch (size) {
+      case BIT8 -> addInt8(value);
+
+      case BIT16 -> addInt16(value);
+
+      case BIT24 -> addInt24(value);
+    }
   }
 
   public final void addInt8(int value) {

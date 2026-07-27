@@ -34,15 +34,11 @@ final class ScanElementAttributeState implements State {
     final ScanElementAttributeFrame frame;
     frame = f.as(ScanElementAttributeFrame.class);
 
-    if (!frame.hasNext()) {
-      ctx.pop();
-
-      ctx.result(EndStartTagEvent.INSTANCE);
-
-      return new ScanElementNodeState(ctx);
+    if (frame.hasNext()) {
+      return compute0(frame);
+    } else {
+      return end();
     }
-
-    return compute0(frame);
   }
 
   private State compute0(ScanElementAttributeFrame frame) {
@@ -62,6 +58,14 @@ final class ScanElementAttributeState implements State {
 
       default -> throw State.implCode(code);
     };
+  }
+
+  private State end() {
+    ctx.pop();
+
+    ctx.result(EndStartTagEvent.INSTANCE);
+
+    return new ScanElementNodeState(ctx);
   }
 
 }

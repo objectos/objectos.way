@@ -32,7 +32,7 @@ public record RenderAttributeEvent(AttributeName attributeName, String value) im
 
   @Override
   public final String toString() {
-    return "Attribute(" + name() + ", " + value + ")";
+    return "RenderAttribute(" + name() + ", " + value + ")";
   }
 
 }
