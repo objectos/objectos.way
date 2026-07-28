@@ -95,23 +95,32 @@ public final class Recorder {
   }
 
   public static Recorder of(HtmlSink sink) {
+    final AttributeRecorder attributeRecorder;
+    attributeRecorder = new AttributeRecorder(sink);
+
+    final BooleanAttributeRecorder booleanAttributeRecorder;
+    booleanAttributeRecorder = new BooleanAttributeRecorder(sink);
+
+    final ContentsPrecorder contentsPrecorder;
+    contentsPrecorder = new ContentsPrecorder(attributeRecorder, booleanAttributeRecorder);
+
     final ContentsRecorder contentsRecorder;
     contentsRecorder = new ContentsRecorder(sink);
 
     return new Recorder(
         new AmbiguousRecorder(sink),
 
-        new AttributeRecorder(sink),
+        attributeRecorder,
 
-        new BooleanAttributeRecorder(sink),
+        booleanAttributeRecorder,
 
         new DoctypeRecorder(sink),
 
         new DocumentCompiler(sink),
 
-        new ElementRecorder(sink, contentsRecorder),
+        new ElementRecorder(sink, contentsPrecorder, contentsRecorder),
 
-        new FlattenRecorder(sink, contentsRecorder),
+        new FlattenRecorder(sink, contentsPrecorder, contentsRecorder),
 
         new FragmentRecorder(sink),
 

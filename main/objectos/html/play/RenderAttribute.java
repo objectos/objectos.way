@@ -17,7 +17,7 @@ package objectos.html.play;
 
 import objectox.html.play.RenderAttributeEvent;
 
-/// An non-boolean attribute in an element start tag.
+/// Render a non-boolean attribute in an element start tag.
 public sealed interface RenderAttribute
     extends HtmlEvent
     permits RenderAttributeEvent {

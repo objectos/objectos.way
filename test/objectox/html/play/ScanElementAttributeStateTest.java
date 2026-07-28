@@ -83,4 +83,35 @@ public class ScanElementAttributeStateTest {
     assertEquals(ctx.nextInt(IntSize.BIT8), AttributeNamePojo.LANG.index());
   }
 
+  @Test(description = """
+  <html autofocus></html>
+  """)
+  public void compute03() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xBOOLEAN8);
+      opts.addInt8(AttributeNamePojo.AUTOFOCUS.index());
+      opts.addByte(HtmlBytes.STARTTAG8);
+      opts.addInt8(ElementNamePojo.HTML.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ENDTAG8);
+      opts.addInt8(ElementNamePojo.HTML.index());
+
+      opts.push(new ScanElementNodeFrame(6, IntSize.BIT8, 1));
+      opts.push(new ScanElementAttributeFrame(6, IntSize.BIT8, 1));
+    });
+
+    final ScanElementAttributeState subject;
+    subject = new ScanElementAttributeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res.getClass(), RenderBooleanAttributeState.class);
+    assertEquals(ctx.hasEvent(), false);
+    assertEquals(ctx.nextInt(IntSize.BIT8), AttributeNamePojo.AUTOFOCUS.index());
+  }
+
 }

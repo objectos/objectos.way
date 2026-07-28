@@ -17,7 +17,7 @@ package objectos.html.play;
 
 import objectox.html.play.RenderEndTagEvent;
 
-/// The end tag of an HTML element.
+/// Render the end tag of an HTML element.
 public sealed interface RenderEndTag
     extends HtmlEvent
     permits RenderEndTagEvent {

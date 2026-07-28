@@ -23,10 +23,14 @@ final class FlattenRecorder {
 
   private final HtmlSink sink;
 
+  private final ContentsPrecorder contentsPrecorder;
+
   private final ContentsRecorder contentsRecorder;
 
-  FlattenRecorder(HtmlSink sink, ContentsRecorder contentsRecorder) {
+  FlattenRecorder(HtmlSink sink, ContentsPrecorder contentsPrecorder, ContentsRecorder contentsRecorder) {
     this.sink = sink;
+
+    this.contentsPrecorder = contentsPrecorder;
 
     this.contentsRecorder = contentsRecorder;
   }
@@ -35,10 +39,13 @@ final class FlattenRecorder {
     final Instruction[] instructions;
     instructions = Objects.requireNonNull(contents, "contents == null");
 
+    final Instruction[] precorded;
+    precorded = contentsPrecorder.precord(instructions);
+
     final int startIndex;
     startIndex = sink.addByte(HtmlBytes.STARTFLAT);
 
-    contentsRecorder.record(instructions);
+    contentsRecorder.record(precorded);
 
     return new FlattenPointer(startIndex);
   }
@@ -47,13 +54,16 @@ final class FlattenRecorder {
     final Collection<? extends Instruction> values;
     values = Objects.requireNonNull(contents, "contents == null");
 
-    final int startIndex;
-    startIndex = sink.addByte(HtmlBytes.STARTFLAT);
-
     final Instruction[] array;
     array = values.toArray(Instruction[]::new);
 
-    contentsRecorder.record(array);
+    final Instruction[] precorded;
+    precorded = contentsPrecorder.precord(array);
+
+    final int startIndex;
+    startIndex = sink.addByte(HtmlBytes.STARTFLAT);
+
+    contentsRecorder.record(precorded);
 
     return new FlattenPointer(startIndex);
   }

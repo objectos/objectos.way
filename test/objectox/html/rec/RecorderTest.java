@@ -255,7 +255,7 @@ public class RecorderTest {
         )
     );
 
-    assertEquals(res.value(), 15);
+    assertEquals(res.value(), 17);
 
     assertEquals(
         sink,

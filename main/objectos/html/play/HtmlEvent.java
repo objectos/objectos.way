@@ -18,9 +18,10 @@ package objectos.html.play;
 /// An Objectos HTML document is streamed as a sequence of events.
 public sealed interface HtmlEvent
     permits
-    RenderAttribute,
     BeginDocument,
     BeginStartTag,
     EndDocument,
     EndStartTag,
+    RenderAttribute,
+    RenderBooleanAttribute,
     RenderEndTag {}

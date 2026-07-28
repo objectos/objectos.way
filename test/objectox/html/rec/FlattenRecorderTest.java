@@ -25,6 +25,12 @@ public class FlattenRecorderTest {
     return new FlattenRecorder(
         sink,
 
+        new ContentsPrecorder(
+            new AttributeRecorder(sink),
+
+            new BooleanAttributeRecorder(sink)
+        ),
+
         new ContentsRecorder(sink)
     );
   }

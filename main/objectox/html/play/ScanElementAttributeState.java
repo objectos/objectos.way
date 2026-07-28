@@ -56,6 +56,8 @@ final class ScanElementAttributeState implements State {
     return switch (code) {
       case HtmlBytes.xATTRIBUTE88 -> new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT8);
 
+      case HtmlBytes.xBOOLEAN8 -> new RenderBooleanAttributeState(ctx, IntSize.BIT8);
+
       default -> throw State.implCode(code);
     };
   }

@@ -25,16 +25,14 @@ final class ElementRecorder {
 
   private final HtmlSink sink;
 
+  private final ContentsPrecorder contentsPrecorder;
+
   private final ContentsRecorder contentsRecorder;
 
-  ElementRecorder(HtmlSink sink) {
+  ElementRecorder(HtmlSink sink, ContentsPrecorder contentsPrecorder, ContentsRecorder contentsRecorder) {
     this.sink = sink;
 
-    contentsRecorder = new ContentsRecorder(sink);
-  }
-
-  ElementRecorder(HtmlSink sink, ContentsRecorder contentsRecorder) {
-    this.sink = sink;
+    this.contentsPrecorder = contentsPrecorder;
 
     this.contentsRecorder = contentsRecorder;
   }
@@ -42,6 +40,9 @@ final class ElementRecorder {
   public final ElementPointer record(ElementName name, Instruction... contents) {
     final Instruction[] instructions;
     instructions = Objects.requireNonNull(contents, "contents == null");
+
+    final Instruction[] precorded;
+    precorded = contentsPrecorder.precord(instructions);
 
     final ElementNamePojo namePojo;
     namePojo = (ElementNamePojo) name;
@@ -54,7 +55,7 @@ final class ElementRecorder {
 
     final int startIndex;
     startIndex = switch (nameSize) {
-      case BIT8 -> record8(nameIndex, instructions, namePojo);
+      case BIT8 -> record8(nameIndex, precorded, namePojo);
 
       case BIT16, BIT24 -> throw new UnsupportedOperationException();
     };

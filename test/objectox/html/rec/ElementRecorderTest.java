@@ -17,11 +17,28 @@ package objectox.html.rec;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.html.AttributeObject;
 import objectox.html.attr.AttributeNamePojo;
 import objectox.html.elem.ElementNamePojo;
 import org.testng.annotations.Test;
 
 public class ElementRecorderTest {
+
+  private ElementRecorder create(HtmlSink sink) {
+    final AttributeRecorder attributeRecorder;
+    attributeRecorder = new AttributeRecorder(sink);
+
+    final BooleanAttributeRecorder booleanAttributeRecorder;
+    booleanAttributeRecorder = new BooleanAttributeRecorder(sink);
+
+    final ContentsPrecorder contentsPrecorder;
+    contentsPrecorder = new ContentsPrecorder(attributeRecorder, booleanAttributeRecorder);
+
+    final ContentsRecorder contentsRecorder;
+    contentsRecorder = new ContentsRecorder(sink);
+
+    return new ElementRecorder(sink, contentsPrecorder, contentsRecorder);
+  }
 
   @Test(description = """
   <html></html>
@@ -31,7 +48,7 @@ public class ElementRecorderTest {
     sink = new HtmlSink();
 
     final ElementRecorder subject;
-    subject = new ElementRecorder(sink);
+    subject = create(sink);
 
     final ElementNamePojo name;
     name = ElementNamePojo.HTML;
@@ -69,7 +86,7 @@ public class ElementRecorderTest {
     attr = new AttributePointer(attrIndex);
 
     final ElementRecorder subject;
-    subject = new ElementRecorder(sink);
+    subject = create(sink);
 
     final ElementNamePojo name;
     name = ElementNamePojo.HTML;
@@ -102,14 +119,11 @@ public class ElementRecorderTest {
     final HtmlSink sink;
     sink = new HtmlSink();
 
-    final int attrIndex;
-    attrIndex = sink.addByte(HtmlBytes.BOOLEAN8);
-
-    final AttributePointer attr;
-    attr = new AttributePointer(attrIndex);
+    final AttributeObject attr;
+    attr = AttributeObject.of(AttributeNamePojo.AUTOFOCUS);
 
     final ElementRecorder subject;
-    subject = new ElementRecorder(sink);
+    subject = create(sink);
 
     final ElementNamePojo name;
     name = ElementNamePojo.HTML;
@@ -117,13 +131,14 @@ public class ElementRecorderTest {
     final ElementPointer res;
     res = subject.record(name, attr);
 
-    assertEquals(res.value(), 1);
+    assertEquals(res.value(), 2);
 
     assertEquals(
         sink,
 
         HtmlSinkY.create(opts -> {
           opts.addByte(HtmlBytes.xBOOLEAN8);
+          opts.addInt8(AttributeNamePojo.AUTOFOCUS.index());
           opts.addByte(HtmlBytes.STARTTAG8);
           opts.addInt8(name.index());
           opts.addByte(HtmlBytes.VALUES8);
@@ -143,7 +158,7 @@ public class ElementRecorderTest {
     sink = new HtmlSink();
 
     final ElementRecorder subject;
-    subject = new ElementRecorder(sink);
+    subject = create(sink);
 
     final ElementPointer res;
     res = subject.record(
@@ -151,7 +166,7 @@ public class ElementRecorderTest {
         subject.record(ElementNamePojo.HEAD)
     );
 
-    assertEquals(res.value(), 5);
+    assertEquals(res.value(), 6);
 
     assertEquals(
         sink,
@@ -189,7 +204,7 @@ public class ElementRecorderTest {
     charsetPointer = new AttributePointer(charset);
 
     final ElementRecorder subject;
-    subject = new ElementRecorder(sink);
+    subject = create(sink);
 
     final ElementPointer res;
     res = subject.record(

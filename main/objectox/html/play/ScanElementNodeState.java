@@ -53,7 +53,8 @@ final class ScanElementNodeState implements State {
     code = ctx.nextByte();
 
     return switch (code) {
-      case HtmlBytes.xATTRIBUTE88 -> skip();
+      case HtmlBytes.xATTRIBUTE88,
+           HtmlBytes.xBOOLEAN8 -> skip();
 
       default -> throw State.implCode(code);
     };
