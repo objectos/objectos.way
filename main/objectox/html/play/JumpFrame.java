@@ -21,4 +21,9 @@ final class JumpFrame extends Frame {
     super(index);
   }
 
+  @Override
+  public final State newState(Ctx ctx) {
+    throw new UnsupportedOperationException();
+  }
+
 }

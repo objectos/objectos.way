@@ -20,71 +20,50 @@ import objectox.html.rec.HtmlBytes;
 
 final class SkipElement {
 
-  private final HtmlSource source;
+  private final Ctx ctx;
 
-  private final int startIndex;
-
-  private final IntSize nameSize;
-
-  SkipElement(HtmlSource source, int startIndex, IntSize nameSize) {
-    this.source = source;
-
-    this.startIndex = startIndex;
-
-    this.nameSize = nameSize;
+  SkipElement(Ctx ctx) {
+    this.ctx = ctx;
   }
 
-  public final int compute() {
-    final int nameIndex;
-    nameIndex = startIndex + 1;
+  public final void execute(IntSize nameSize) {
+    final int startTag;
+    startTag = 1 + nameSize.bytes();
 
-    final int valuesIndex;
-    valuesIndex = nameSize.skip(nameIndex);
+    ctx.skip(startTag);
 
     final byte valuesByte;
-    valuesByte = source.getByte(valuesIndex);
+    valuesByte = ctx.nextByte();
 
-    return switch (valuesByte) {
-      case HtmlBytes.VALUES8 -> compute0(valuesIndex, IntSize.BIT8);
+    final IntSize valuesSize;
+    valuesSize = switch (valuesByte) {
+      case HtmlBytes.VALUES8 -> IntSize.BIT8;
 
-      case HtmlBytes.VALUES16 -> compute0(valuesIndex, IntSize.BIT16);
+      case HtmlBytes.VALUES16 -> IntSize.BIT16;
 
-      case HtmlBytes.VALUES24 -> compute0(valuesIndex, IntSize.BIT24);
+      case HtmlBytes.VALUES24 -> IntSize.BIT24;
 
-      default -> throw new UnsupportedOperationException(
-          "Implement me :: " + valuesByte
-      );
+      default -> throw State.malformed();
     };
-  }
-
-  private int compute0(int valuesIndex, IntSize valuesSize) {
-    final int lengthIndex;
-    lengthIndex = valuesIndex + 1;
 
     final int length;
-    length = source.getInt(lengthIndex, valuesSize);
+    length = ctx.nextInt(valuesSize);
 
-    final int offset;
-    offset = length * valuesSize.bytes();
+    final int values;
+    values = length * valuesSize.bytes();
 
-    final int firstIndex;
-    firstIndex = valuesSize.skip(lengthIndex);
-
-    final int afterValuesIndex;
-    afterValuesIndex = firstIndex + offset;
+    ctx.skip(values);
 
     final byte endTag;
-    endTag = source.getByte(afterValuesIndex);
+    endTag = ctx.nextByte();
 
-    return switch (endTag) {
-      case HtmlBytes.VOIDELEM -> afterValuesIndex;
+    switch (endTag) {
+      case HtmlBytes.VOIDELEM -> {}
 
-      case HtmlBytes.ENDTAG8 -> afterValuesIndex + 1 + 1;
+      case HtmlBytes.ENDTAG8 -> ctx.skip(1);
 
-      default -> throw new UnsupportedOperationException(
-          "Implement me :: " + endTag
-      );
-    };
+      default -> throw State.malformed();
+    }
   }
 
 }

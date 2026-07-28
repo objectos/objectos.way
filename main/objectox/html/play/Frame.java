@@ -39,8 +39,10 @@ sealed abstract class Frame
     return new IllegalStateException(msg);
   }
 
+  public abstract State newState(Ctx ctx);
+
   public void updateIfNecessary(ScanElementNodeFrame previous) {
-    throw new UnsupportedOperationException();
+    // noop
   }
 
 }

@@ -15,6 +15,7 @@
  */
 package objectox.html.play;
 
+import objectox.html.IntSize;
 import objectox.html.rec.HtmlBytes;
 
 final class ScanElementNodeState implements State {
@@ -53,6 +54,8 @@ final class ScanElementNodeState implements State {
     code = ctx.nextByte();
 
     return switch (code) {
+      case HtmlBytes.xSTARTTAG8 -> new BeginStartTagState(ctx, IntSize.BIT8);
+
       case HtmlBytes.xATTRIBUTE88,
            HtmlBytes.xBOOLEAN8 -> skip();
 

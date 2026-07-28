@@ -58,6 +58,8 @@ final class ScanElementAttributeState implements State {
 
       case HtmlBytes.xBOOLEAN8 -> new RenderBooleanAttributeState(ctx, IntSize.BIT8);
 
+      case HtmlBytes.xSTARTTAG8 -> skip();
+
       default -> throw State.implCode(code);
     };
   }
@@ -68,6 +70,12 @@ final class ScanElementAttributeState implements State {
     ctx.result(EndStartTagEvent.INSTANCE);
 
     return new ScanElementNodeState(ctx);
+  }
+
+  private State skip() {
+    ctx.pop(); // jmp frame
+
+    return this;
   }
 
 }

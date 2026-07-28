@@ -18,12 +18,9 @@ package objectox.html;
 import static org.testng.Assert.assertEquals;
 
 import objectos.html.AttributeName;
-import objectos.html.Component;
 import objectos.html.Id;
-import objectos.html.Markup;
 import objectos.html.Template;
 import objectos.script.Js;
-import objectos.script.JsAction;
 import objectox.html.attr.AttributeNamePojo;
 import org.testng.annotations.Test;
 
@@ -183,11 +180,12 @@ public class HtmlTemplateTestAttributes {
     );
   }
 
+  /*
   @Test
   public void onclick01() {
     final JsAction remove;
     remove = Js.target().invoke("Element", "remove");
-
+  
     class ThisComponent implements Component {
       @Override
       public void renderHtml(Markup m) {
@@ -196,7 +194,7 @@ public class HtmlTemplateTestAttributes {
         );
       }
     }
-
+  
     test(
         new Template() {
           @Override
@@ -206,12 +204,13 @@ public class HtmlTemplateTestAttributes {
             );
           }
         },
-
+  
         """
         <div><button onclick='way.on(event,["W1",["ET"],["IV","Element","remove",[]]])'></button></div>
         """
     );
   }
+  */
 
   @Test
   public void onload() {

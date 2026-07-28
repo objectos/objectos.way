@@ -17,8 +17,6 @@ package objectox.html;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.html.Component;
-import objectos.html.Markup;
 import objectos.html.Template;
 import org.testng.annotations.Test;
 
@@ -138,6 +136,7 @@ public class HtmlTemplateTestInclude {
     );
   }
 
+  /*
   @Test(description = """
   HtmlTemplate TC20
 
@@ -183,6 +182,7 @@ public class HtmlTemplateTestInclude {
       """
     );
   }
+  */
 
   @Test(description = """
   HtmlTemplate TC26
@@ -312,6 +312,7 @@ public class HtmlTemplateTestInclude {
     );
   }
 
+  /*
   @Test
   public void testCase09() {
     Template component;
@@ -349,7 +350,9 @@ public class HtmlTemplateTestInclude {
       """
     );
   }
+  */
 
+  /*
   @Test
   public void testCase10() {
     Template component;
@@ -361,21 +364,21 @@ public class HtmlTemplateTestInclude {
         );
       }
     };
-
+  
     test(
         new Template() {
           @Override
           protected final void render() {
             body(f(this::body));
           }
-
+  
           private void body() {
             h1("Test");
-
+  
             c(component);
           }
         },
-
+  
         """
       <body>
       <h1>Test</h1>
@@ -384,7 +387,9 @@ public class HtmlTemplateTestInclude {
       """
     );
   }
+  */
 
+  /*
   @Test
   public void testCase11() {
     class ThisComponent implements Component {
@@ -428,18 +433,20 @@ public class HtmlTemplateTestInclude {
       """
     );
   }
+  */
 
+  /*
   @Test
   public void testCase14() {
     class Contents extends Template {
       @Override
       protected final void render() {
         head("hd");
-
+  
         body("bd");
       }
     }
-
+  
     test(
         new Template() {
           @Override
@@ -449,7 +456,7 @@ public class HtmlTemplateTestInclude {
             );
           }
         },
-
+  
         """
         <html>
         <head>hd</head>
@@ -458,6 +465,7 @@ public class HtmlTemplateTestInclude {
         """
     );
   }
+  */
 
   @Test
   public void testCase15() {

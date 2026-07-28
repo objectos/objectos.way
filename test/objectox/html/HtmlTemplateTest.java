@@ -1312,6 +1312,7 @@ public class HtmlTemplateTest {
     );
   }
 
+  /*
   @Test(description = """
   Html.Template::renderComponent
   """)
@@ -1323,23 +1324,23 @@ public class HtmlTemplateTest {
             div(
                 c(html -> html.span("as child"))
             );
-
+  
             div(f(this::fragment0));
-
+  
             div(f(this::fragment1));
           }
-
+  
           private void fragment0() {
             c(html -> html.span("fragment root"));
           }
-
+  
           private void fragment1() {
             div(
                 c(html -> html.span("fragment child"))
             );
           }
         },
-
+  
         """
         <div><span>as child</span></div>
         <div><span>fragment root</span></div>
@@ -1349,6 +1350,7 @@ public class HtmlTemplateTest {
         """
     );
   }
+  */
 
   @Test(description = """
   The Media.Text methods

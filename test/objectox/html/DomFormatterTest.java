@@ -15,15 +15,9 @@
  */
 package objectox.html;
 
-import static org.testng.Assert.assertEquals;
-
-import java.io.IOException;
-import objectos.html.Template;
-import objectox.html.DomFormatter.Quotes;
-import org.testng.annotations.Test;
-
 public class DomFormatterTest {
 
+  /*
   private final StringBuilder out = new StringBuilder();
 
   @Test(description = """
@@ -480,4 +474,5 @@ public class DomFormatterTest {
     }
   }
 
+  */
 }

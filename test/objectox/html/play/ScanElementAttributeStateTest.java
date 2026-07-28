@@ -114,4 +114,36 @@ public class ScanElementAttributeStateTest {
     assertEquals(ctx.nextInt(IntSize.BIT8), AttributeNamePojo.AUTOFOCUS.index());
   }
 
+  @Test(description = "<html><head></head></html>")
+  public void compute04() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xSTARTTAG8);
+      opts.addInt8(ElementNamePojo.HEAD.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ENDTAG8);
+      opts.addInt8(ElementNamePojo.HEAD.index());
+      opts.addByte(HtmlBytes.STARTTAG8);
+      opts.addInt8(ElementNamePojo.HTML.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ENDTAG8);
+      opts.addInt8(ElementNamePojo.HTML.index());
+
+      opts.push(new ScanElementNodeFrame(10, IntSize.BIT8, 1));
+      opts.push(new ScanElementAttributeFrame(10, IntSize.BIT8, 1));
+    });
+
+    final ScanElementAttributeState subject;
+    subject = new ScanElementAttributeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res.getClass(), ScanElementAttributeState.class);
+    assertEquals(ctx.hasEvent(), false);
+  }
+
 }

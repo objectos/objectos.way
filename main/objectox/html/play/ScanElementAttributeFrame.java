@@ -43,4 +43,9 @@ final class ScanElementAttributeFrame extends Frame {
     return ctx.nextInt(size);
   }
 
+  @Override
+  public final State newState(Ctx ctx) {
+    return new ScanElementAttributeState(ctx);
+  }
+
 }

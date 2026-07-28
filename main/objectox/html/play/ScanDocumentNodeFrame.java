@@ -26,6 +26,11 @@ final class ScanDocumentNodeFrame extends Frame {
   }
 
   @Override
+  public final State newState(Ctx ctx) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
   public final void updateIfNecessary(ScanElementNodeFrame previous) {
     index = previous.index;
   }

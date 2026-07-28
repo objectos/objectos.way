@@ -15,11 +15,14 @@
  */
 package objectox.html.play;
 
+import objectox.html.IntSize;
 import objectox.html.rec.HtmlBytes;
 
 final class StartState implements State {
 
   private final Ctx ctx;
+
+  private SkipElement skipElement;
 
   StartState(Ctx ctx) {
     this.ctx = ctx;
@@ -34,7 +37,7 @@ final class StartState implements State {
       proto = ctx.peekByte();
 
       switch (proto) {
-        case HtmlBytes.xSTARTTAG8 -> throw new UnsupportedOperationException("Implement me");
+        case HtmlBytes.xSTARTTAG8 -> skipElement().execute(IntSize.BIT8);
 
         case HtmlBytes.xSTARTFLAT -> throw new UnsupportedOperationException("Implement me");
 
@@ -61,6 +64,14 @@ final class StartState implements State {
     ctx.result(BeginDocumentEvent.INSTANCE);
 
     return new ScanDocumentNodeState(ctx);
+  }
+
+  private SkipElement skipElement() {
+    if (skipElement == null) {
+      skipElement = new SkipElement(ctx);
+    }
+
+    return skipElement;
   }
 
 }

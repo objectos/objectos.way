@@ -110,10 +110,10 @@ public class PlayerTest {
     );
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   <html><head></head></html>
   """)
-  public void testCase04() {
+  public void events04() {
     events(
         m -> m.html(
             m.head()
@@ -125,8 +125,8 @@ public class PlayerTest {
         EndStartTag
         BeginStartTag(head)
         EndStartTag
-        EndTag(head)
-        EndTag(html)
+        RenderEndTag(head)
+        RenderEndTag(html)
         EndDocument
         """
     );
