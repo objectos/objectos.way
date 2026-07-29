@@ -15,7 +15,7 @@
  */
 package objectox.html.play;
 
-import objectos.html.play.HtmlEvent;
+import objectos.html.play.Event;
 import objectos.internal.Util;
 import objectox.html.IntSize;
 
@@ -30,7 +30,7 @@ class Ctx {
   @SuppressWarnings("unused")
   private final Object[] objects;
 
-  private HtmlEvent result;
+  private Event result;
 
   private Frame[] stack;
 
@@ -57,8 +57,8 @@ class Ctx {
     return result != null;
   }
 
-  public final HtmlEvent nextEvent() {
-    final HtmlEvent res;
+  public final Event nextEvent() {
+    final Event res;
     res = result;
 
     computed = false;
@@ -156,7 +156,7 @@ class Ctx {
     frame.index += value;
   }
 
-  public final void result(HtmlEvent value) {
+  public final void result(Event value) {
     if (computed) {
       final String msg;
       msg = "Result has not been consumed yet";

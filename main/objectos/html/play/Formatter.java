@@ -15,13 +15,12 @@
  */
 package objectos.html.play;
 
-/// An Objectos HTML document is streamed as a sequence of events.
-public sealed interface HtmlEvent
-    permits
-    BeginDocument,
-    BeginStartTag,
-    EndDocument,
-    EndStartTag,
-    RenderAttribute,
-    RenderBooleanAttribute,
-    RenderEndTag {}
+import java.io.IOException;
+
+public interface Formatter {
+
+  Formatter STANDARD = null;
+
+  void formatTo(Event event, Appendable out) throws IOException;
+
+}

@@ -19,7 +19,7 @@ import objectox.html.play.RenderAttributeEvent;
 
 /// Render a non-boolean attribute in an element start tag.
 public sealed interface RenderAttribute
-    extends HtmlEvent
+    extends Event
     permits RenderAttributeEvent {
 
   /// Returns the attribute name.

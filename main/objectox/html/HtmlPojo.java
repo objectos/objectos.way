@@ -13,69 +13,70 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html.play;
+package objectox.html;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.Reader;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import objectos.html.Html;
-import objectos.html.play.HtmlEvent;
-import objectox.html.IntSize;
+import objectos.html.play.Formatter;
+import objectos.html.play.Event;
+import objectox.html.play.Player;
 import objectox.html.rec.HtmlSink;
 
-public final class HtmlSource implements Html {
+public final class HtmlPojo implements Html {
 
   private final byte[] code;
 
   private final Object[] objects;
 
-  public HtmlSource(HtmlSink sink) {
+  public HtmlPojo(HtmlSink sink) {
     code = sink.code();
 
     objects = sink.objects();
   }
 
   @Override
-  public final Stream<HtmlEvent> events() {
+  public final Stream<Event> events() {
     final Player player;
-    player = new Player(code, objects);
+    player = Player.of(code, objects);
 
     final int attrs;
     attrs = Spliterator.ORDERED | Spliterator.IMMUTABLE | Spliterator.NONNULL;
 
-    final Spliterator<HtmlEvent> spliterator;
+    final Spliterator<Event> spliterator;
     spliterator = Spliterators.spliteratorUnknownSize(player, attrs);
 
     return StreamSupport.stream(spliterator, false);
   }
 
-  public final byte getByte(int index) {
-    return code[index];
+  @Override
+  public final void binaryTo(OutputStream out) throws IOException {
+    throw new UnsupportedOperationException("Implement me");
   }
 
-  public final int getInt(int index, IntSize size) {
-    return switch (size) {
-      case BIT8 -> toInt(index, 0);
-
-      case BIT16 -> toInt(index, 8) | toInt(index + 1, 0);
-
-      case BIT24 -> toInt(index, 16) | toInt(index + 1, 8) | toInt(index + 2, 0);
-    };
+  @Override
+  public final Reader openStream(Formatter formatter) {
+    throw new UnsupportedOperationException("Implement me");
   }
 
-  public final boolean hasByte(int index) {
-    return index < code.length;
+  @Override
+  public final String toJsonString() {
+    throw new UnsupportedOperationException("Implement me");
   }
 
-  private int toInt(int index, int shift) {
-    final byte byteValue;
-    byteValue = code[index];
+  @Override
+  public final String toString() {
+    return super.toString();
+  }
 
-    final int intValue;
-    intValue = Byte.toUnsignedInt(byteValue);
-
-    return intValue << shift;
+  @Override
+  public final String toTestableText() {
+    throw new UnsupportedOperationException("Implement me");
   }
 
 }

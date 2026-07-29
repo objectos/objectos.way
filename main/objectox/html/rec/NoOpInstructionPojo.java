@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html.attr;
+package objectox.html.rec;
 
-import objectos.html.rec.AttributeInstruction;
-import objectos.html.rec.Instruction;
 import objectos.html.rec.NoOpInstruction;
-import objectox.html.HtmlInstruction;
 
-public sealed interface AttributeOrNoOp
-    extends AttributeInstruction, Instruction.OfDataOn, NoOpInstruction
-    permits HtmlInstruction {}
+public final class NoOpInstructionPojo implements NoOpInstruction {
+
+  public static final NoOpInstruction INSTANCE = new NoOpInstructionPojo();
+
+  private NoOpInstructionPojo() {}
+
+}

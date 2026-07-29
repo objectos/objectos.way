@@ -16,7 +16,7 @@
 package objectox.html.rec;
 
 import objectos.html.Html;
-import objectox.html.play.HtmlSource;
+import objectox.html.HtmlPojo;
 
 final class DocumentCompiler {
 
@@ -27,7 +27,7 @@ final class DocumentCompiler {
   }
 
   public final Html compile() {
-    return new HtmlSource(sink);
+    return new HtmlPojo(sink);
   }
 
 }

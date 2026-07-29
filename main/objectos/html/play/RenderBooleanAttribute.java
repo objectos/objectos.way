@@ -19,7 +19,7 @@ import objectox.html.play.RenderBooleanAttributeEvent;
 
 /// Render a boolean attribute in an element start tag.
 public sealed interface RenderBooleanAttribute
-    extends HtmlEvent
+    extends Event
     permits RenderBooleanAttributeEvent {
 
   /// Returns the attribute name.

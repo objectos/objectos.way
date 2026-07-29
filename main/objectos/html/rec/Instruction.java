@@ -20,8 +20,6 @@ import objectos.html.Template;
 import objectos.html.rec.Instruction.AsMethod;
 import objectos.html.rec.Instruction.AsObject;
 import objectos.html.rec.Instruction.OfVoid;
-import objectox.html.HtmlInstruction;
-import objectox.html.attr.AttributeOrNoOp;
 
 /// Represents an instruction to render some markup of an Objectos
 /// HTML document.
@@ -54,15 +52,8 @@ public sealed interface Instruction
       permits
       ElementInstruction,
       AttributeInstruction,
-      OfDataOn,
       FragmentInstruction,
       NoOpInstruction {}
-
-  /**
-   * An instruction to generate a {@code data-on-*} HTML attribute in a
-   * template.
-   */
-  sealed interface OfDataOn extends AsMethod, OfVoid permits AttributeOrNoOp {}
 
   /**
    * Class of instructions that are allowed as arguments to template
@@ -72,16 +63,8 @@ public sealed interface Instruction
       permits
       AttributeObject,
       AttributeInstruction,
-      OfDataOn,
       FragmentInstruction,
       NoOpInstruction {}
-
-  /// Returns the no-op instruction.
-  ///
-  /// @return the no-op instruction
-  static NoOpInstruction noop() {
-    return HtmlInstruction.NOOP;
-  }
 
   /// Returns the encoded value of this markup.
   ///

@@ -13,32 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.way;
+package objectos.html.play;
 
-import static org.testng.Assert.assertEquals;
-
-import objectos.html.Markup;
-import org.testng.annotations.Test;
-
-public class HtmlMarkupTest {
-
-  @Test
-  public void toTestableText01() {
-    final Markup m;
-    m = new Markup.OfHtml();
-
-    m.testableH1("Testable");
-
-    m.h1("HTML");
-
-    assertEquals(
-        m.toTestableText(),
-
-        """
-        # Testable
-
-        """
-    );
-  }
-
-}
+/// An Objectos HTML document is streamed as a sequence of events.
+public sealed interface Event
+    permits
+    BeginDocument,
+    BeginStartTag,
+    EndDocument,
+    EndStartTag,
+    RenderAttribute,
+    RenderBooleanAttribute,
+    RenderEndTag {}

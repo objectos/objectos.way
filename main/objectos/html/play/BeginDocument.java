@@ -19,5 +19,5 @@ import objectox.html.play.BeginDocumentEvent;
 
 /// The HTML document has begun.
 public sealed interface BeginDocument
-    extends HtmlEvent
+    extends Event
     permits BeginDocumentEvent {}

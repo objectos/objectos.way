@@ -17,9 +17,9 @@ package objectox.html.play;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import objectos.html.play.HtmlEvent;
+import objectos.html.play.Event;
 
-public final class Player extends Ctx implements Iterator<HtmlEvent> {
+public final class Player extends Ctx implements Iterator<Event> {
 
   private State state;
 
@@ -33,6 +33,18 @@ public final class Player extends Ctx implements Iterator<HtmlEvent> {
     state = new StartState(this);
   }
 
+  public static Player of(byte[] code, Object[] objects) {
+    return new Player(
+        code,
+
+        objects,
+
+        EMPTY_STACK,
+
+        0
+    );
+  }
+
   @Override
   public final boolean hasNext() {
     while (shouldCompute()) {
@@ -43,7 +55,7 @@ public final class Player extends Ctx implements Iterator<HtmlEvent> {
   }
 
   @Override
-  public final HtmlEvent next() {
+  public final Event next() {
     if (!hasNext()) {
       throw new NoSuchElementException();
     } else {

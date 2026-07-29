@@ -17,7 +17,6 @@ package objectos.html.rec;
 
 import objectos.html.rec.Instruction.AsMethod;
 import objectos.html.rec.Instruction.OfVoid;
-import objectox.html.HtmlInstruction;
 import objectox.html.rec.FragmentPointer;
 
 /// Represents an instruction to include a fragment to an Objectos
@@ -25,5 +24,4 @@ import objectox.html.rec.FragmentPointer;
 public sealed interface FragmentInstruction
     extends AsMethod, OfVoid
     permits
-    HtmlInstruction,
     FragmentPointer {}

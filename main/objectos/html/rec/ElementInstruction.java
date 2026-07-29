@@ -16,10 +16,9 @@
 package objectos.html.rec;
 
 import objectos.html.rec.Instruction.AsMethod;
-import objectox.html.HtmlInstruction;
 import objectox.html.rec.ElementPointer;
 
 /// Represents an instruction to render an Objectos HTML element.
 public sealed interface ElementInstruction
     extends AsMethod
-    permits AmbiguousInstruction, HtmlInstruction, ElementPointer {}
+    permits AmbiguousInstruction, ElementPointer {}

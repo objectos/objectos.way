@@ -19,7 +19,7 @@ import objectox.html.play.RenderEndTagEvent;
 
 /// Render the end tag of an HTML element.
 public sealed interface RenderEndTag
-    extends HtmlEvent
+    extends Event
     permits RenderEndTagEvent {
 
   /// Returns the name of the HTML element.

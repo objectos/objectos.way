@@ -15,7 +15,6 @@
  */
 package objectos.html.rec;
 
-import objectox.html.HtmlInstruction;
 import objectox.html.rec.AmbiguousPointer;
 
 /// Represents an instruction that may render an attribute or element in an
@@ -25,5 +24,4 @@ public sealed interface AmbiguousInstruction
     AttributeInstruction,
     ElementInstruction
     permits
-    AmbiguousPointer,
-    HtmlInstruction {}
+    AmbiguousPointer {}

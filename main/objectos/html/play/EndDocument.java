@@ -19,5 +19,5 @@ import objectox.html.play.EndDocumentEvent;
 
 /// The HTML document has ended.
 public sealed interface EndDocument
-    extends HtmlEvent
+    extends Event
     permits EndDocumentEvent {}

@@ -17,7 +17,7 @@ package objectos.html.rec;
 
 import objectos.html.rec.Instruction.AsMethod;
 import objectos.html.rec.Instruction.OfVoid;
-import objectox.html.attr.AttributeOrNoOp;
+import objectox.html.rec.NoOpInstructionPojo;
 
 /// Represents a no-op instruction.
 public sealed interface NoOpInstruction
@@ -25,4 +25,4 @@ public sealed interface NoOpInstruction
     AsMethod,
     OfVoid
     permits
-    AttributeOrNoOp {}
+    NoOpInstructionPojo {}
