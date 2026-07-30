@@ -19,8 +19,9 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.Iterator;
 import java.util.Objects;
-import objectos.html.play.Formatter;
+import objectos.html.format.Formatter;
 import objectos.html.play.Event;
+import objectox.html.format.HtmlWriter;
 
 public class HtmlReader extends Reader {
 

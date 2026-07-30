@@ -13,14 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html.play;
+package objectox.html.format;
 
-import java.io.IOException;
+import java.util.Objects;
+import objectos.html.format.BeginDocumentOptions;
 
-public interface Formatter {
+public final class BeginDocumentFormatterBuilder implements BeginDocumentOptions {
 
-  Formatter STANDARD = null;
+  private String comment;
 
-  void formatTo(Event event, Appendable out) throws IOException;
+  public final BeginDocumentFormatter build() {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  @Override
+  public final void comment(String value) {
+    comment = Objects.requireNonNull(value);
+  }
 
 }

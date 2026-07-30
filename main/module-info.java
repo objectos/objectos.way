@@ -18,6 +18,7 @@ module objectos.way {
   exports objectos.css;
   exports objectos.dev;
   exports objectos.html;
+  exports objectos.html.format;
   exports objectos.html.play;
   exports objectos.html.rec;
   exports objectos.http;

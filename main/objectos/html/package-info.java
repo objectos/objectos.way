@@ -13,5 +13,5 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/// Generate HTML using pure Java.
+/// The Objectos HTML API: generate HTML using pure Java.
 package objectos.html;

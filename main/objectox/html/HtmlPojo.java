@@ -18,12 +18,14 @@ package objectox.html;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.io.UncheckedIOException;
+import java.util.Objects;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import objectos.html.Html;
-import objectos.html.play.Formatter;
+import objectos.html.format.Formatter;
 import objectos.html.play.Event;
 import objectox.html.play.Player;
 import objectox.html.rec.HtmlSink;
@@ -61,7 +63,13 @@ public final class HtmlPojo implements Html {
 
   @Override
   public final Reader openStream(Formatter formatter) {
-    throw new UnsupportedOperationException("Implement me");
+    final Formatter $formatter;
+    $formatter = Objects.requireNonNull(formatter, "formatter == null");
+
+    final Player player;
+    player = Player.of(code, objects);
+
+    return new HtmlReader(player, $formatter);
   }
 
   @Override
@@ -71,7 +79,11 @@ public final class HtmlPojo implements Html {
 
   @Override
   public final String toString() {
-    return super.toString();
+    try (final Reader r = openStream()) {
+      return r.readAllAsString();
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
   }
 
   @Override
