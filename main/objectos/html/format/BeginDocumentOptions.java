@@ -23,7 +23,7 @@ public sealed interface BeginDocumentOptions
     permits
     BeginDocumentFormatterBuilder {
 
-  /// Emits the specified comment on each event.
+  /// Emits the specified comment on an event.
   ///
   /// @param value the comment
   void comment(String value);

@@ -17,6 +17,7 @@ package objectos.html.format;
 
 import java.util.function.Consumer;
 import objectos.html.play.BeginDocument;
+import objectos.html.play.EndDocument;
 import objectox.html.format.FormatterBuilder;
 
 /// Configures the creation of a [Formatter] instance.

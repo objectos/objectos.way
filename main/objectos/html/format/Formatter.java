@@ -48,7 +48,7 @@ public sealed interface Formatter permits FormatterPojo {
   /// Formats an event to an `Appendable` using this formatter.
   ///
   /// @param event the event to format, not `null`
-  /// @param the appendable to format to, not `null`
+  /// @param out the appendable to format to, not `null`
   ///
   /// @throws IOException if an I/O error occurs
   void formatTo(Event event, Appendable out) throws IOException;

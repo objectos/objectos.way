@@ -13,5 +13,5 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/// The Objectos HTML API: generate HTML using pure Java.
+/// An API for declaring the structure of an HTML document using pure Java.
 package objectos.html;

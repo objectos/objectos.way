@@ -59,7 +59,7 @@ public sealed interface MediaType permits MediaTypePojo {
 
   /// Returns a new media type instance with the specified full name.
   ///
-  /// @param the full type, such as `text/html; charset=utf-8` or
+  /// @param fullType the full type, such as `text/html; charset=utf-8` or
   ///        `application/json`
   ///
   /// @return a newly created media type instance
