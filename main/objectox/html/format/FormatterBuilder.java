@@ -17,6 +17,7 @@ package objectox.html.format;
 
 import java.util.function.Consumer;
 import objectos.html.format.BeginDocumentOptions;
+import objectos.html.format.EndDocumentOptions;
 import objectos.html.format.Formatter;
 import objectos.html.format.FormatterOptions;
 
@@ -24,9 +25,13 @@ public final class FormatterBuilder implements FormatterOptions {
 
   private BeginDocumentFormatter beginDocumentFormatter;
 
+  private EndDocumentFormatter endDocumentFormatter;
+
   public final Formatter build() {
     return new FormatterPojo(
-        beginDocumentFormatter == null ? BeginDocumentFormatter.STANDARD : beginDocumentFormatter
+        beginDocumentFormatter == null ? BeginDocumentFormatter.STANDARD : beginDocumentFormatter,
+
+        endDocumentFormatter == null ? EndDocumentFormatter.STANDARD : endDocumentFormatter
     );
   }
 
@@ -38,6 +43,16 @@ public final class FormatterBuilder implements FormatterOptions {
     opts.accept(builder);
 
     beginDocumentFormatter = builder.build();
+  }
+
+  @Override
+  public final void endDocument(Consumer<? super EndDocumentOptions> opts) {
+    final EndDocumentFormatterBuilder builder;
+    builder = new EndDocumentFormatterBuilder();
+
+    opts.accept(builder);
+
+    endDocumentFormatter = builder.build();
   }
 
 }

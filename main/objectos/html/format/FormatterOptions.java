@@ -29,4 +29,9 @@ public sealed interface FormatterOptions
   /// @param opts allows for setting the options
   void beginDocument(Consumer<? super BeginDocumentOptions> opts);
 
+  /// Sets the [EndDocument] options.
+  ///
+  /// @param opts allows for setting the options
+  void endDocument(Consumer<? super EndDocumentOptions> opts);
+
 }

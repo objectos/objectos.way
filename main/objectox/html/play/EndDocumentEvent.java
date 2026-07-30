@@ -19,7 +19,7 @@ import objectos.html.play.EndDocument;
 
 public final class EndDocumentEvent implements EndDocument {
 
-  static final EndDocumentEvent INSTANCE = new EndDocumentEvent();
+  public static final EndDocumentEvent INSTANCE = new EndDocumentEvent();
 
   private EndDocumentEvent() {}
 

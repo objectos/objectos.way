@@ -30,8 +30,16 @@ public final class FormatterPojo implements Formatter {
 
   private final BeginDocumentFormatter beginDocumentFormatter;
 
-  FormatterPojo(BeginDocumentFormatter beginDocumentFormatter) {
+  private final EndDocumentFormatter endDocumentFormatter;
+
+  FormatterPojo(
+      BeginDocumentFormatter beginDocumentFormatter,
+
+      EndDocumentFormatter endDocumentFormatter
+  ) {
     this.beginDocumentFormatter = beginDocumentFormatter;
+
+    this.endDocumentFormatter = endDocumentFormatter;
   }
 
   @Override
@@ -49,7 +57,7 @@ public final class FormatterPojo implements Formatter {
 
       case RenderEndTag endTag -> renderEndTag(endTag, out);
 
-      case EndDocument end -> endDocument(end, out);
+      case EndDocument end -> endDocumentFormatter.format(end, out);
     }
   }
 
@@ -69,10 +77,6 @@ public final class FormatterPojo implements Formatter {
     out.append(event.name());
 
     out.append('>');
-  }
-
-  private void endDocument(EndDocument event, Appendable out) throws IOException {
-    out.append("<!-- END Objectos HTML -->\n");
   }
 
   private void format(Event event, Appendable out) {
