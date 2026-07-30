@@ -21,7 +21,7 @@ import objectos.html.ElementName;
 import objectox.html.IntSize;
 import objectox.html.attr.AttributeNamePojo;
 import objectox.html.elem.ElementNamePojo;
-import objectox.html.rec.HtmlBytes;
+import objectox.html.markup.HtmlBytes;
 import org.testng.annotations.Test;
 
 public class RenderEndTagStateTest {

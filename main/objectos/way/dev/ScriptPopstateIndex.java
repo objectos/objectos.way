@@ -17,7 +17,7 @@ package objectos.way.dev;
 
 import objectos.css.CssSource;
 import objectos.html.Template;
-import objectos.html.rec.ElementInstruction;
+import objectos.html.markup.ElementInstruction;
 import objectos.http.Handler;
 import objectos.http.Request;
 import objectos.http.Result;

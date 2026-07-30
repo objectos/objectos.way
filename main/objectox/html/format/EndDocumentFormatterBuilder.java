@@ -17,7 +17,7 @@ package objectox.html.format;
 
 import java.util.Objects;
 import objectos.html.format.EndDocumentOptions;
-import objectox.html.rec.CommentEscaper;
+import objectox.html.markup.CommentEscaper;
 
 public final class EndDocumentFormatterBuilder implements EndDocumentOptions {
 

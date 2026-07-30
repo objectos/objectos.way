@@ -17,7 +17,7 @@ package objectox.html.stream;
 
 import java.util.function.Consumer;
 import objectos.internal.Util;
-import objectox.html.rec.HtmlSink;
+import objectox.html.markup.HtmlSink;
 
 final class CtxY {
 

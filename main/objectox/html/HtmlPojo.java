@@ -27,7 +27,7 @@ import java.util.stream.StreamSupport;
 import objectos.html.Html;
 import objectos.html.format.Formatter;
 import objectos.html.stream.Event;
-import objectox.html.rec.HtmlSink;
+import objectox.html.markup.HtmlSink;
 import objectox.html.stream.Player;
 
 public final class HtmlPojo implements Html {

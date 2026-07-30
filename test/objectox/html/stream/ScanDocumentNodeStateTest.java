@@ -18,7 +18,7 @@ package objectox.html.stream;
 import static org.testng.Assert.assertEquals;
 
 import objectox.html.elem.ElementNamePojo;
-import objectox.html.rec.HtmlBytes;
+import objectox.html.markup.HtmlBytes;
 import org.testng.annotations.Test;
 
 public class ScanDocumentNodeStateTest {

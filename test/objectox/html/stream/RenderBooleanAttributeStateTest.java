@@ -20,7 +20,7 @@ import static org.testng.Assert.assertEquals;
 import objectox.html.IntSize;
 import objectox.html.attr.AttributeNamePojo;
 import objectox.html.elem.ElementNamePojo;
-import objectox.html.rec.HtmlBytes;
+import objectox.html.markup.HtmlBytes;
 import org.testng.annotations.Test;
 
 public class RenderBooleanAttributeStateTest {

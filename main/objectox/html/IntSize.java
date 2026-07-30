@@ -15,7 +15,7 @@
  */
 package objectox.html;
 
-import objectox.html.rec.HtmlSink;
+import objectox.html.markup.HtmlSink;
 
 public enum IntSize {
 

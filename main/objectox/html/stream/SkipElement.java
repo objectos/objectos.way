@@ -16,7 +16,7 @@
 package objectox.html.stream;
 
 import objectox.html.IntSize;
-import objectox.html.rec.HtmlBytes;
+import objectox.html.markup.HtmlBytes;
 
 final class SkipElement {
 

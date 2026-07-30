@@ -16,20 +16,20 @@
 package objectos.html;
 
 import java.util.Collection;
-import objectos.html.rec.AmbiguousInstruction;
-import objectos.html.rec.AttributeInstruction;
-import objectos.html.rec.ElementInstruction;
-import objectos.html.rec.FlattenInstruction;
-import objectos.html.rec.Fragment0;
-import objectos.html.rec.Fragment1;
-import objectos.html.rec.Fragment2;
-import objectos.html.rec.Fragment3;
-import objectos.html.rec.Fragment4;
-import objectos.html.rec.FragmentInstruction;
-import objectos.html.rec.Instruction;
-import objectos.html.rec.NoOpInstruction;
-import objectos.html.rec.RawInstruction;
-import objectos.html.rec.TextInstruction;
+import objectos.html.markup.AmbiguousInstruction;
+import objectos.html.markup.AttributeInstruction;
+import objectos.html.markup.ElementInstruction;
+import objectos.html.markup.FlattenInstruction;
+import objectos.html.markup.Fragment0;
+import objectos.html.markup.Fragment1;
+import objectos.html.markup.Fragment2;
+import objectos.html.markup.Fragment3;
+import objectos.html.markup.Fragment4;
+import objectos.html.markup.FragmentInstruction;
+import objectos.html.markup.Instruction;
+import objectos.html.markup.NoOpInstruction;
+import objectos.html.markup.RawInstruction;
+import objectos.html.markup.TextInstruction;
 import objectos.script.JsAction;
 import objectox.html.MarkupPojo;
 

@@ -20,7 +20,7 @@ module objectos.way {
   exports objectos.html;
   exports objectos.html.format;
   exports objectos.html.stream;
-  exports objectos.html.rec;
+  exports objectos.html.markup;
   exports objectos.http;
   exports objectos.lang;
   exports objectos.script;
