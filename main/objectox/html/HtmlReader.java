@@ -20,7 +20,7 @@ import java.io.Reader;
 import java.util.Iterator;
 import java.util.Objects;
 import objectos.html.format.Formatter;
-import objectos.html.play.Event;
+import objectos.html.stream.Event;
 import objectox.html.format.HtmlWriter;
 
 public class HtmlReader extends Reader {

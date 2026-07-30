@@ -18,7 +18,7 @@ package objectox.html.format;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
-import objectox.html.play.EndDocumentEvent;
+import objectox.html.stream.EndDocumentEvent;
 import org.testng.annotations.Test;
 
 public class EndDocumentFormatterTest {

@@ -20,7 +20,7 @@ import java.util.Objects;
 import java.util.stream.Stream;
 import objectos.dev.Testable;
 import objectos.html.format.Formatter;
-import objectos.html.play.Event;
+import objectos.html.stream.Event;
 import objectos.lang.BinaryObject;
 import objectox.html.HtmlPojo;
 import objectox.html.attr.AttributeNamePojo;

@@ -18,7 +18,7 @@ package objectox.html.format;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
-import objectox.html.play.BeginDocumentEvent;
+import objectox.html.stream.BeginDocumentEvent;
 import org.testng.annotations.Test;
 
 public class BeginDocumentFormatterTest {

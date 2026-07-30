@@ -17,7 +17,7 @@ package objectos.html.format;
 
 import java.io.IOException;
 import java.util.function.Consumer;
-import objectos.html.play.Event;
+import objectos.html.stream.Event;
 import objectox.html.format.FormatterBuilder;
 import objectox.html.format.FormatterPojo;
 

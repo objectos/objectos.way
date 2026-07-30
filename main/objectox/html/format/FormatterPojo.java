@@ -17,14 +17,14 @@ package objectox.html.format;
 
 import java.io.IOException;
 import objectos.html.format.Formatter;
-import objectos.html.play.BeginDocument;
-import objectos.html.play.BeginStartTag;
-import objectos.html.play.EndDocument;
-import objectos.html.play.EndStartTag;
-import objectos.html.play.Event;
-import objectos.html.play.RenderAttribute;
-import objectos.html.play.RenderBooleanAttribute;
-import objectos.html.play.RenderEndTag;
+import objectos.html.stream.BeginDocument;
+import objectos.html.stream.BeginStartTag;
+import objectos.html.stream.EndDocument;
+import objectos.html.stream.EndStartTag;
+import objectos.html.stream.Event;
+import objectos.html.stream.RenderAttribute;
+import objectos.html.stream.RenderBooleanAttribute;
+import objectos.html.stream.RenderEndTag;
 
 public final class FormatterPojo implements Formatter {
 

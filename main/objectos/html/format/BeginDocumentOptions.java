@@ -15,7 +15,7 @@
  */
 package objectos.html.format;
 
-import objectos.html.play.BeginDocument;
+import objectos.html.stream.BeginDocument;
 import objectox.html.format.BeginDocumentFormatterBuilder;
 
 /// Configures the formatting of the [BeginDocument] event.

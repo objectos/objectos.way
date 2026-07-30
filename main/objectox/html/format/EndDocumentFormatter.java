@@ -16,7 +16,7 @@
 package objectox.html.format;
 
 import java.io.IOException;
-import objectos.html.play.EndDocument;
+import objectos.html.stream.EndDocument;
 
 final class EndDocumentFormatter {
 

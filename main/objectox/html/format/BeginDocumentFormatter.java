@@ -16,7 +16,7 @@
 package objectox.html.format;
 
 import java.io.IOException;
-import objectos.html.play.BeginDocument;
+import objectos.html.stream.BeginDocument;
 
 final class BeginDocumentFormatter {
 

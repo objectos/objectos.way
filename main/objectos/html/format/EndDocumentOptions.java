@@ -15,7 +15,7 @@
  */
 package objectos.html.format;
 
-import objectos.html.play.EndDocument;
+import objectos.html.stream.EndDocument;
 import objectox.html.format.EndDocumentFormatterBuilder;
 
 /// Configures the formatting of the [EndDocument] event.
