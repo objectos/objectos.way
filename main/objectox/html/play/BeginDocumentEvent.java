@@ -19,7 +19,7 @@ import objectos.html.play.BeginDocument;
 
 public final class BeginDocumentEvent implements BeginDocument {
 
-  static final BeginDocumentEvent INSTANCE = new BeginDocumentEvent();
+  public static final BeginDocumentEvent INSTANCE = new BeginDocumentEvent();
 
   private BeginDocumentEvent() {}
 

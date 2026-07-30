@@ -15,14 +15,27 @@
  */
 package objectox.html.format;
 
+import java.io.IOException;
 import objectos.html.play.BeginDocument;
 
 final class BeginDocumentFormatter {
 
-  public static final BeginDocumentFormatter STANDARD = new BeginDocumentFormatter();
+  public static final BeginDocumentFormatter STANDARD = new BeginDocumentFormatter("BEGIN Objectos HTML");
 
-  public final void format(BeginDocument event, Appendable out) {
+  final String comment;
 
+  BeginDocumentFormatter(String comment) {
+    this.comment = comment;
+  }
+
+  public final void format(BeginDocument event, Appendable out) throws IOException {
+    if (comment != null) {
+      out.append("<!-- ");
+
+      out.append(comment);
+
+      out.append(" -->\n");
+    }
   }
 
 }

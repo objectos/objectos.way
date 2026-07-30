@@ -17,18 +17,25 @@ package objectox.html.format;
 
 import java.util.Objects;
 import objectos.html.format.BeginDocumentOptions;
+import objectox.html.rec.CommentEscaper;
 
 public final class BeginDocumentFormatterBuilder implements BeginDocumentOptions {
 
   private String comment;
 
   public final BeginDocumentFormatter build() {
-    throw new UnsupportedOperationException("Implement me");
+    return new BeginDocumentFormatter(comment);
   }
 
   @Override
   public final void comment(String value) {
-    comment = Objects.requireNonNull(value);
+    final String original;
+    original = Objects.requireNonNull(value);
+
+    final CommentEscaper escaper;
+    escaper = new CommentEscaper(original);
+
+    comment = escaper.escape();
   }
 
 }
