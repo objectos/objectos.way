@@ -15,7 +15,6 @@
  */
 package objectox.html.format;
 
-import java.io.IOException;
 import objectos.html.format.Formatter;
 import objectos.html.stream.BeginDocument;
 import objectos.html.stream.BeginStartTag;
@@ -48,8 +47,7 @@ public final class FormatterPojo implements Formatter {
     this.endDocumentFormatter = endDocumentFormatter;
   }
 
-  @Override
-  public final void formatTo(Event event, Appendable out) throws IOException {
+  public final void formatTo(Event event, Output out) {
     switch (event) {
       case BeginDocument begin -> beginDocumentFormatter.format(begin, out);
 
@@ -67,11 +65,11 @@ public final class FormatterPojo implements Formatter {
     }
   }
 
-  private void endStartTag(EndStartTag event, Appendable out) throws IOException {
+  private void endStartTag(EndStartTag event, Output out) {
     out.append('>');
   }
 
-  private void renderEndTag(RenderEndTag event, Appendable out) throws IOException {
+  private void renderEndTag(RenderEndTag event, Output out) {
     out.append("</");
 
     out.append(event.name());
@@ -79,7 +77,7 @@ public final class FormatterPojo implements Formatter {
     out.append('>');
   }
 
-  private void format(Event event, Appendable out) {
+  private void format(Event event, Output out) {
     throw new UnsupportedOperationException("Implement me :: type=" + event.getClass().getSimpleName());
   }
 

@@ -15,6 +15,8 @@
  */
 package objectox.html.format;
 
+import objectos.html.format.IndentationStyle;
+
 final class Indentation {
 
   private int level;
@@ -38,6 +40,14 @@ final class Indentation {
     }
 
     level--;
+  }
+
+  public final void format(IndentationStyle style, Output out) {
+    switch (style) {
+      case IndentationOption.NEVER -> {}
+
+      case IndentationOption.START_OF_LINE -> {}
+    }
   }
 
   @Override

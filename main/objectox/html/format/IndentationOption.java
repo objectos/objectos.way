@@ -17,10 +17,10 @@ package objectox.html.format;
 
 import objectos.html.format.IndentationStyle;
 
-public enum IndentationStyleEnum implements IndentationStyle {
+public enum IndentationOption implements IndentationStyle {
 
-  ALWAYS,
+  NEVER,
 
-  NEVER;
+  START_OF_LINE;
 
 }

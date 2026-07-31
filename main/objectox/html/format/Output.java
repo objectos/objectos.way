@@ -15,7 +15,7 @@
  */
 package objectox.html.format;
 
-public class HtmlWriter implements Appendable {
+public final class Output {
 
   private final char[] buffer;
 
@@ -27,7 +27,7 @@ public class HtmlWriter implements Appendable {
 
   private int written;
 
-  private HtmlWriter(char[] buffer, int index, int limit) {
+  private Output(char[] buffer, int index, int limit) {
     this.buffer = buffer;
 
     this.index = index;
@@ -35,15 +35,14 @@ public class HtmlWriter implements Appendable {
     this.limit = limit;
   }
 
-  public static HtmlWriter wrap(char[] cbuf, int off, int len) {
+  public static Output wrap(char[] cbuf, int off, int len) {
     final int limit;
     limit = off + len;
 
-    return new HtmlWriter(cbuf, off, limit);
+    return new Output(cbuf, off, limit);
   }
 
-  @Override
-  public final Appendable append(char c) {
+  public final void append(char c) {
     written += 1;
 
     if (index < limit) {
@@ -51,36 +50,14 @@ public class HtmlWriter implements Appendable {
     } else {
       sb.append(c);
     }
-
-    return this;
   }
 
-  @Override
-  public final Appendable append(CharSequence csq) {
+  public final void append(CharSequence csq) {
     final CharSequence s;
     s = normalize(csq);
 
     final int len;
     len = s.length();
-
-    append0(s, 0, len);
-
-    return this;
-  }
-
-  @Override
-  public final Appendable append(CharSequence csq, int start, int end) {
-    final CharSequence s;
-    s = normalize(csq);
-
-    append0(s, start, end);
-
-    return this;
-  }
-
-  private void append0(CharSequence s, int start, int end) {
-    final int len;
-    len = end - start;
 
     written += len;
 
@@ -88,15 +65,15 @@ public class HtmlWriter implements Appendable {
     remaining = limit - index;
 
     if (len <= remaining) {
-      s.getChars(start, end, buffer, index);
+      s.getChars(0, len, buffer, index);
 
       index += len;
     } else {
-      s.getChars(start, start + remaining, buffer, index);
+      s.getChars(0, remaining, buffer, index);
 
       index = limit;
 
-      sb.append(s, start + remaining, end);
+      sb.append(s, remaining, len);
     }
   }
 
@@ -108,12 +85,57 @@ public class HtmlWriter implements Appendable {
     return index == limit;
   }
 
+  public final boolean startOfLine() {
+    if (written == 0) {
+      return true;
+    }
+
+    final char lastChar;
+
+    if (sb.length() > 0) {
+      final int lastIndex;
+      lastIndex = sb.length() - 1;
+
+      lastChar = sb.charAt(lastIndex);
+    } else {
+      final int lastIndex;
+      lastIndex = index - 1;
+
+      lastChar = buffer[lastIndex];
+    }
+
+    return lastChar == '\n' || lastChar == '\r';
+  }
+
   public final String overflow() {
     return sb.toString();
   }
 
   public final int written() {
     return written == 0 ? -1 : written;
+  }
+
+  @Override
+  public final String toString() {
+    final int overflowLen;
+    overflowLen = sb.length();
+
+    final int bufferLen;
+    bufferLen = written - overflowLen;
+
+    final int startIndex;
+    startIndex = index - bufferLen;
+
+    final String fromBuffer;
+    fromBuffer = new String(buffer, startIndex, bufferLen);
+
+    if (overflowLen == 0) {
+      return fromBuffer;
+    }
+
+    else {
+      return fromBuffer + overflow();
+    }
   }
 
 }

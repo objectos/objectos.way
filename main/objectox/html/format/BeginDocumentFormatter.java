@@ -15,7 +15,6 @@
  */
 package objectox.html.format;
 
-import java.io.IOException;
 import objectos.html.format.NewLineStyle;
 import objectos.html.stream.BeginDocument;
 
@@ -35,7 +34,7 @@ final class BeginDocumentFormatter {
     this.newLineStyle = newLineStyle;
   }
 
-  public final void format(BeginDocument event, Appendable out) throws IOException {
+  public final void format(BeginDocument event, Output out) {
     if (comment.isEmpty()) {
       newLine.empty(newLineStyle, out);
     } else {

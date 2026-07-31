@@ -15,17 +15,25 @@
  */
 package objectox.html.format;
 
+import java.util.Objects;
 import objectos.html.format.BeginStartTagOptions;
 import objectos.html.format.IndentationStyle;
 
 public final class BeginStartTagFormatterBuilder implements BeginStartTagOptions {
 
-  public final BeginStartTagFormatter build(Indentation ctx) {
-    return new BeginStartTagFormatter(ctx);
+  private IndentationStyle indentationStyle = IndentationStyle.startOfLine();
+
+  public final BeginStartTagFormatter build(Indentation indentation) {
+    return new BeginStartTagFormatter(
+        indentation,
+
+        indentationStyle
+    );
   }
 
   @Override
   public final void indentationStyle(IndentationStyle value) {
+    indentationStyle = Objects.requireNonNull(value, "value == null");
   }
 
 }

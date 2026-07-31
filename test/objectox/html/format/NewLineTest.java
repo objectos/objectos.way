@@ -17,36 +17,33 @@ package objectox.html.format;
 
 import static org.testng.Assert.assertEquals;
 
-import java.io.IOException;
 import objectos.html.format.NewLineStyle;
 import org.testng.annotations.Test;
 
 public class NewLineTest {
 
   private String empty(NewLine subject, NewLineStyle style) {
-    try {
-      final StringBuilder out;
-      out = new StringBuilder();
+    final char[] buf;
+    buf = new char[256];
 
-      subject.empty(style, out);
+    final Output out;
+    out = Output.wrap(buf, 0, buf.length);
 
-      return out.toString();
-    } catch (IOException e) {
-      throw new AssertionError("StringBuilder does not throw", e);
-    }
+    subject.empty(style, out);
+
+    return out.toString();
   }
 
   private String notEmpty(NewLine subject, NewLineStyle style) {
-    try {
-      final StringBuilder out;
-      out = new StringBuilder();
+    final char[] buf;
+    buf = new char[256];
 
-      subject.notEmpty(style, out);
+    final Output out;
+    out = Output.wrap(buf, 0, buf.length);
 
-      return out.toString();
-    } catch (IOException e) {
-      throw new AssertionError("StringBuilder does not throw", e);
-    }
+    subject.notEmpty(style, out);
+
+    return out.toString();
   }
 
   @Test(description = "ALWAYS emits newline")

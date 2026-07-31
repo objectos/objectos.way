@@ -27,6 +27,7 @@ import java.util.stream.StreamSupport;
 import objectos.html.Html;
 import objectos.html.format.Formatter;
 import objectos.html.stream.Event;
+import objectox.html.format.FormatterPojo;
 import objectox.html.markup.HtmlSink;
 import objectox.html.stream.Player;
 
@@ -63,13 +64,16 @@ public final class HtmlPojo implements Html {
 
   @Override
   public final Reader openStream(Formatter formatter) {
-    final Formatter $formatter;
-    $formatter = Objects.requireNonNull(formatter, "formatter == null");
+    final Formatter f;
+    f = Objects.requireNonNull(formatter, "formatter == null");
+
+    final FormatterPojo pojo;
+    pojo = (FormatterPojo) f;
 
     final Player player;
     player = Player.of(code, objects);
 
-    return new HtmlReader(player, $formatter);
+    return new HtmlReader(player, pojo);
   }
 
   @Override

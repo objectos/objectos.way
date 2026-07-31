@@ -15,19 +15,24 @@
  */
 package objectox.html.format;
 
-import java.io.IOException;
+import objectos.html.format.IndentationStyle;
 import objectos.html.stream.BeginStartTag;
 
 final class BeginStartTagFormatter {
 
-  @SuppressWarnings("unused")
   private final Indentation indentation;
 
-  BeginStartTagFormatter(Indentation indentation) {
+  private final IndentationStyle indentationStyle;
+
+  BeginStartTagFormatter(Indentation indentation, IndentationStyle indentationStyle) {
     this.indentation = indentation;
+
+    this.indentationStyle = indentationStyle;
   }
 
-  public final void format(BeginStartTag event, Appendable out) throws IOException {
+  public final void format(BeginStartTag event, Output out) {
+    indentation.format(indentationStyle, out);
+
     out.append('<');
 
     out.append(event.name());

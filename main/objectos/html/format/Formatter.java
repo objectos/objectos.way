@@ -15,9 +15,7 @@
  */
 package objectos.html.format;
 
-import java.io.IOException;
 import java.util.function.Consumer;
-import objectos.html.stream.Event;
 import objectox.html.format.FormatterBuilder;
 import objectox.html.format.FormatterPojo;
 
@@ -44,13 +42,5 @@ public sealed interface Formatter permits FormatterPojo {
   static Formatter standard() {
     return create(_ -> {});
   }
-
-  /// Formats an event to an `Appendable` using this formatter.
-  ///
-  /// @param event the event to format, not `null`
-  /// @param out the appendable to format to, not `null`
-  ///
-  /// @throws IOException if an I/O error occurs
-  void formatTo(Event event, Appendable out) throws IOException;
 
 }

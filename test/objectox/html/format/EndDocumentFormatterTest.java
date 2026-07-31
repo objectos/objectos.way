@@ -17,7 +17,6 @@ package objectox.html.format;
 
 import static org.testng.Assert.assertEquals;
 
-import java.io.IOException;
 import objectos.html.format.NewLineStyle;
 import objectox.html.stream.EndDocumentEvent;
 import org.testng.annotations.Test;
@@ -25,16 +24,15 @@ import org.testng.annotations.Test;
 public class EndDocumentFormatterTest {
 
   private String format(EndDocumentFormatter subject, EndDocumentEvent event) {
-    try {
-      final StringBuilder out;
-      out = new StringBuilder();
+    final char[] buf;
+    buf = new char[256];
 
-      subject.format(event, out);
+    final Output out;
+    out = Output.wrap(buf, 0, buf.length);
 
-      return out.toString();
-    } catch (IOException e) {
-      throw new AssertionError("StringBuilder does not throw", e);
-    }
+    subject.format(event, out);
+
+    return out.toString();
   }
 
   @Test(description = "empty comment emits nothing")

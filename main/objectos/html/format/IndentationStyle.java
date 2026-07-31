@@ -15,25 +15,31 @@
  */
 package objectos.html.format;
 
-import objectox.html.format.IndentationStyleEnum;
+import objectox.html.format.IndentationOption;
 
-/// Represents different indentation styles.
+/// Configures when to emit indentation during formatting. Indentation is
+/// emitted *before* the event.
 public sealed interface IndentationStyle
     permits
-    IndentationStyleEnum {
-
-  /// Returns the style to always apply an indentation on an event.
-  ///
-  /// @return the style to always apply an indentation on an event
-  static IndentationStyle always() {
-    return IndentationStyleEnum.ALWAYS;
-  }
+    IndentationOption {
 
   /// Returns the style to never apply an indentation on an event.
   ///
   /// @return the style to never apply an indentation on an event
   static IndentationStyle never() {
-    return IndentationStyleEnum.NEVER;
+    return IndentationOption.NEVER;
+  }
+
+  /// Returns a style that emits an indentation at the start of a line. For the
+  /// purposes of indentation, the start of a line occurs when:
+  ///
+  /// - the output is currently empty.
+  /// - the output currently ends in a `\n` (line feed) or `\r` (carriage return)
+  ///   character
+  ///
+  /// @return a style that emits an indentation at the start of a line
+  static IndentationStyle startOfLine() {
+    return IndentationOption.START_OF_LINE;
   }
 
 }

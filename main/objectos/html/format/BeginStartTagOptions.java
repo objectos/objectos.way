@@ -24,7 +24,7 @@ public sealed interface BeginStartTagOptions
     BeginStartTagFormatterBuilder {
 
   /// Sets the indentation style to the specified value. Defaults to
-  /// [IndentationStyle#ALWAYS] if not set.
+  /// [IndentationStyle#startOfLine] if not set.
   ///
   /// @param value the indentation style value
   void indentationStyle(IndentationStyle value);

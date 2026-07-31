@@ -19,21 +19,21 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.Iterator;
 import java.util.Objects;
-import objectos.html.format.Formatter;
 import objectos.html.stream.Event;
-import objectox.html.format.HtmlWriter;
+import objectox.html.format.FormatterPojo;
+import objectox.html.format.Output;
 
-public class HtmlReader extends Reader {
+public final class HtmlReader extends Reader {
 
   private boolean closed;
 
   private final Iterator<Event> events;
 
-  private final Formatter formatter;
+  private final FormatterPojo formatter;
 
   private String overflow = "";
 
-  HtmlReader(Iterator<Event> events, Formatter formatter) {
+  HtmlReader(Iterator<Event> events, FormatterPojo formatter) {
     this.events = events;
 
     this.formatter = formatter;
@@ -54,8 +54,8 @@ public class HtmlReader extends Reader {
       return 0;
     }
 
-    final HtmlWriter out;
-    out = HtmlWriter.wrap(cbuf, off, len);
+    final Output out;
+    out = Output.wrap(cbuf, off, len);
 
     out.append(overflow);
 
